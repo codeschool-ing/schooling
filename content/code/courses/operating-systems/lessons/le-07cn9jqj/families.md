@@ -4,7 +4,7 @@ version: 1
 ---
 
 There are hundreds of distributions and **four families** cover almost all of what you will meet at
-work. A family shares a **package format** and a **package tool**, and usually a way of laying out
+work. A family shares a *package format* and a *package tool*, and usually a way of laying out
 configuration.
 
 ```schooling-figure
@@ -29,7 +29,7 @@ ana@server:~$ apt-cache dumpavail | grep -c '^Original-Maintainer:.*debian'
 
 - **`trixie/sid`** is a Debian name. Every Ubuntu release starts as a copy of Debian's development
   branch, *sid*, taken while Debian was preparing *trixie*, its release 13.
-- The `bash` package names **two** maintainers: Ubuntu's list, and an **original** maintainer at
+- The `bash` package names *two* maintainers: Ubuntu's list, and an *original* maintainer at
   `debian.org`. Ubuntu took Debian's package and rebuilt it.
 - Of the 86537 packages this server can install, **64815** name a Debian original maintainer. About
   three in four.
@@ -42,15 +42,15 @@ Ubuntu.
 
 The other family you will meet at work runs downwards in the same way:
 
-1. **Fedora** is where new things arrive first: a new release about every six months, each supported
+1. *Fedora* is where new things arrive first: a new release about every six months, each supported
    for about thirteen.
-2. **CentOS Stream** is the preview of the next Red Hat Enterprise Linux release.
-3. **RHEL**, *Red Hat Enterprise Linux*, is the paid, certified product, with ten years of support.
-4. **Rocky Linux** and **AlmaLinux** are free rebuilds that aim to behave exactly like RHEL.
+2. *CentOS Stream* is the preview of the next Red Hat Enterprise Linux release.
+3. *RHEL*, *Red Hat Enterprise Linux*, is the paid, certified product, with ten years of support.
+4. *Rocky Linux* and *AlmaLinux* are free rebuilds that aim to behave exactly like RHEL.
 
 That last step is why the accounting vendor's "RHEL only" is less narrow than it sounds: the
 rebuilds exist so that software certified on RHEL runs on them, although the vendor's *support* may
 still ask for the real thing.
 
-**SUSE** and **Arch** complete the four. **Alpine** stands on its own: tiny, with `apk` and a different
+*SUSE* and *Arch* complete the four. **Alpine** stands on its own: tiny, with `apk` and a different
 C library, and found mostly inside containers, which is where the virtualization course meets it.

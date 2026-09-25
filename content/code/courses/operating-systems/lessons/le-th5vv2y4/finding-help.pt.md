@@ -30,11 +30,11 @@ Push-Location
 Set-Location
 ```
 
-- **`--help`** depois de quase qualquer comando do Linux imprime as opções dele. É comprido, então
+- `--help` depois de quase qualquer comando do Linux imprime as opções dele. É comprido, então
   costuma ser lido pelo `head`, ou pelo `less` para rolar.
-- **`type`** diz o que um nome é de fato. O `cd` é um **builtin**, parte do próprio shell, e é por isso
+- `type` diz o que um nome é de fato. O `cd` é um **builtin**, parte do próprio shell, e é por isso
   que ele consegue mudar a pasta do próprio shell; o `ls` é um programa no disco, em `/usr/bin/ls`.
-- **`Get-Command`** faz os dois trabalhos no PowerShell. O `-Verb Get` contou 61 cmdlets cujo nome
+- `Get-Command` faz os dois trabalhos no PowerShell. O `-Verb Get` contou 61 cmdlets cujo nome
   começa com `Get-` nesta instalação, e o `-Noun Location` achou todo cmdlet que trabalha com locais,
   incluindo dois que você não sabia que devia procurar.
 

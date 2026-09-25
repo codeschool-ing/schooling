@@ -43,8 +43,8 @@ invoices:
 clients-backup.csv
 ```
 
-- **`cp`** copies, and **`cp -r`** copies a folder with everything inside it.
-- **`mv`** moves, and **moving within a folder is renaming**: there is no separate rename command.
+- `cp` copies, and `cp -r` copies a folder with everything inside it.
+- `mv` moves, and **moving within a folder is renaming**: there is no separate rename command.
   `mv todo.txt notes-todo.txt` renamed; `mv clients-backup.csv invoices/` moved.
 - The trailing `/` on `invoices/` is a habit worth having. If `invoices` did not exist, `mv` would
   refuse instead of quietly renaming the file to `invoices`.

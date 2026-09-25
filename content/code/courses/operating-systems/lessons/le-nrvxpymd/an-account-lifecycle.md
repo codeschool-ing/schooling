@@ -21,7 +21,7 @@ ana@server:~$ sudo ls -A /home/carla
 ```
 
 - `getent` shows the new line, with the **next free ID, 1001**.
-- **`passwd -S` says `L`**: the account exists, and it is **locked** because it has no password yet.
+- `passwd -S` says `L`: the account exists, and it is *locked* because it has no password yet.
   Nobody can log in to it, which is the safe way for an account to be born.
 - ana could not list carla's home, the `drwxr-x---` of lesson 9, and with `sudo` could: the new home
   was filled from **`/etc/skel`**, the files every new user starts with.
@@ -41,7 +41,7 @@ carla P 2026-09-25 0 99999 7 -1
 not even asterisks, so somebody watching cannot count the characters. The status is now `P`, a usable
 password.
 
-**`su`** switches to another user, and asks for **that user's** password:
+`su` switches to another user, and asks for **that user's** password:
 
 ```
 ana@server:~$ su - carla

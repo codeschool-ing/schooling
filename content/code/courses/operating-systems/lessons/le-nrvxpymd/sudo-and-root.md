@@ -30,7 +30,7 @@ User ana may run the following commands on server:
 `(ALL : ALL) ALL` is the sudo group's rule: any command, as any user. The `NOPASSWD` line is this test
 machine's staging, the reason no transcript in this course shows sudo asking for a password; a real
 installation does not have it. The rules live in **`/etc/sudoers`** and the files in
-**`/etc/sudoers.d/`**, and they are edited only with **`visudo`**, which refuses to save a file with a
+`/etc/sudoers.d/`, and they are edited only with `visudo`, which refuses to save a file with a
 mistake in it. A broken sudoers file is how an administrator locks themselves out.
 
 **2. Every use is recorded, with who asked.**
@@ -42,7 +42,7 @@ ana@server:~$ sudo journalctl _COMM=sudo --no-pager -o cat | grep COMMAND | tail
      ana : PWD=/home/ana ; USER=root ; COMMAND=/usr/bin/journalctl _COMM=sudo --no-pager -o cat
 ```
 
-Each line says **who** (`ana`), **from where**, **as whom** and **exactly what**. On a machine several
+Each line says *who* (`ana`), *from where*, *as whom* and *exactly what*. On a machine several
 people administer, that is the answer to "who changed this?", which `root` logging in directly would
 never give: every root session looks the same.
 

@@ -73,9 +73,9 @@ ana@server:~$ tree -L 1 /etc/apt
 7 directories, 0 files
 ```
 
-O que a instalação disse, em ordem: o que vai instalar, quanto baixa (**47.4 kB**) e quanto ocupa em
-disco (**111 kB**), de onde veio (`noble-updates/universe`), e os passos que o dpkg faz por baixo,
-**desempacotar** e **configurar**. O `apt` é a frente amigável; o **`dpkg`** é a ferramenta que de fato
+O que a instalação disse, em ordem: o que vai instalar, quanto baixa (*47.4 kB*) e quanto ocupa em
+disco (*111 kB*), de onde veio (`noble-updates/universe`), e os passos que o dpkg faz por baixo,
+*desempacotar* e *configurar*. O `apt` é a frente amigável; o **`dpkg`** é a ferramenta que de fato
 põe os arquivos no disco e guarda o registro deles.
 
 O `dpkg -L` lista **todo arquivo que um pacote instalou**, que é como você descobre onde um programa pôs

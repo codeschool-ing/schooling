@@ -26,16 +26,16 @@ PS /home/ana> (Get-ChildItem work -Recurse -File | Measure-Object -Property Leng
 3000112
 ```
 
-- **`df -h`** answers **how full is the disk**, per file system: size, used, available, and the
+- `df -h` answers **how full is the disk**, per file system: size, used, available, and the
   percentage. `-h` is lesson 8's *human* sizes.
-- **`du -sh`** answers **what is taking the space**, per folder: `work` holds 2.9 MB, and the second
+- `du -sh` answers **what is taking the space**, per folder: `work` holds 2.9 MB, and the second
   command shows that nearly all of it is `reports`. `-s` gives one total per argument instead of every
   subfolder.
 - PowerShell's **`Get-PSDrive`** lists drives; on Linux there is one, `/`, plus `Temp`. On Windows it
   lists `C:`, `D:` and the rest with their used and free space. **Summing `Length`** over every file is
   PowerShell's `du`: 3000112 bytes, the same 2.9 MB.
 
-The order matters in practice: **`df` first** to see which disk is full, **then `du`** on that disk,
+The order matters in practice: *`df` first* to see which disk is full, *then `du`* on that disk,
 working down into the biggest folder each time.
 
 ```sh

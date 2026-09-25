@@ -40,7 +40,7 @@ cat: reports/q3.txt: Permission denied
 ana@server:/srv/office$ chmod o+x reports
 ```
 
-Com `r` e sem `x` para os outros, o bruno **conseguiu listar os nomes** em `reports` e **não conseguiu
+Com `r` e sem `x` para os outros, o bruno *conseguiu listar os nomes* em `reports` e **não conseguiu
 abrir o arquivo de dentro**, embora o próprio `q3.txt` seja legível por todos. Para alcançar qualquer
 coisa numa pasta você precisa de `x` nela, e em toda pasta acima. É também por isso que as pastas
 pessoais do Ubuntu deixam os outros de fora: sem `x` em `/home/ana`, nada lá dentro é alcançável, digam

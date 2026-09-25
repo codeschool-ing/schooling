@@ -28,10 +28,10 @@ Count
    12
 ```
 
-- **`ps`** lists processes; `-eo` chooses the columns. The first lines are lesson 1's first process,
+- `ps` lists processes; `-eo` chooses the columns. The first lines are lesson 1's first process,
   `systemd`, and the services it started.
-- **`pgrep -a`** finds processes by name and prints their ID and command line.
-- **`Get-Process -Name`** found the same process, with the same ID, from PowerShell, and **counted 12**
+- `pgrep -a` finds processes by name and prints their ID and command line.
+- `Get-Process -Name` found the same process, with the same ID, from PowerShell, and **counted 12**
   on the whole machine. A desktop runs hundreds; this is a minimal server.
 
 Stopping it takes the ID:

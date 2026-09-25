@@ -27,11 +27,11 @@ stages whatever it runs:
 
 Because when a computer does not start, *where it stops* tells you what is broken:
 
-- **Nothing on screen, or a firmware message** about the disk: the machine never reached the boot
+- *Nothing on screen, or a firmware message* about the disk: the machine never reached the boot
   loader. Hardware, or the firmware's settings.
-- **The boot loader appears but the system does not start**: the kernel, or the disk it is on.
-- **The logo spins forever**: the kernel started and something in the services is stuck.
-- **It reaches login and then fails**: the problem belongs to that user, not to the machine.
+- *The boot loader appears but the system does not start*: the kernel, or the disk it is on.
+- *The logo spins forever*: the kernel started and something in the services is stuck.
+- *It reaches login and then fails*: the problem belongs to that user, not to the machine.
 
 Every one of those has its own tools, and lesson 17 goes through them. For now, the order is the map:
 each stage only runs if the one before it succeeded.

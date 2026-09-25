@@ -42,7 +42,7 @@ says `Notes.txt` can work there for years and fail on the server on its first ru
 
 ## On Windows
 
-Paths use **`\`**, start with a **drive letter**, and are **case-insensitive**: `cd c:\users` and
+Paths use `\`, start with a **drive letter**, and are *case-insensitive*: `cd c:\users` and
 `cd C:\Users` go to the same place. Spaces need quotes the same way, and they are everywhere in
 Windows paths, `C:\Program Files` first among them. PowerShell also accepts `/`, which is why the
 same PowerShell line often works on both systems.

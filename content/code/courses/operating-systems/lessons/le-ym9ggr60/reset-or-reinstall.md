@@ -14,8 +14,8 @@ they keep:
   Windows Update. Files, programs and settings all come across. The right choice when the old system
   works and simply needs to be newer.
 - **Reset this PC**: *Settings > System > Recovery*. It reinstalls Windows from the computer itself, or
-  from a fresh download with the **cloud download** option, and asks whether to **keep my files** or
-  **remove everything**. Programs are removed either way, and Windows leaves a list of the ones it
+  from a fresh download with the *cloud download* option, and asks whether to *keep my files* or
+  *remove everything*. Programs are removed either way, and Windows leaves a list of the ones it
   removed on the desktop.
 - **Clean install**: the USB stick and the partition screen of section 04. Nothing on that disk
   survives.
@@ -26,15 +26,15 @@ Move from left to right only when the lighter option fails or cannot be trusted:
 
 - A machine that is slow, cluttered with trial software or behaving strangely: **reset, keeping
   files**. It removes the programs, which is usually where the trouble is.
-- A computer changing hands, to a new employee or out of the office: **reset, removing everything**,
+- A computer changing hands, to a new employee or out of the office: *reset, removing everything*,
   so the next person does not inherit the last one's files and accounts.
 - A computer with malware you cannot be sure you removed, a disk being replaced, or a machine being
-  standardised with the others: **clean install**.
+  standardised with the others: *clean install*.
 
 ## At office scale
 
-Eight computers are installed by hand. Two hundred are not: companies prepare one **image** and apply it
-to every machine, or use **Windows Autopilot**, where a new computer out of the box signs in with a work
+Eight computers are installed by hand. Two hundred are not: companies prepare one *image* and apply it
+to every machine, or use *Windows Autopilot*, where a new computer out of the box signs in with a work
 account and configures itself from the organisation's settings. The decisions are the same as in this
 lesson, made once, written down, and applied to every machine the same way. That is the habit worth
 taking from here even at eight machines.

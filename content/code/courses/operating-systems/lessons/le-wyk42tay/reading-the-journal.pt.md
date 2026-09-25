@@ -16,13 +16,13 @@ Sep 25 11:42:08 server cron[41]: (CRON) INFO (Running @reboot jobs)
 ana@server:~$ sudo journalctl -b -p err --no-pager -o cat | cut -c1-90 | tail -2
 ```
 
-- **`--disk-usage`**: o journal guarda histórico, aqui 39.6 MB dele, e se apara conforme cresce.
-- **`-u cron -n 3`**: as três últimas linhas de uma unidade. Cada linha tem **quando**, **qual máquina**,
-  **qual programa e processo**, e **o quê**. O `-u` é o filtro que você mais vai usar, depois da aula 14.
+- `--disk-usage`: o journal guarda histórico, aqui 39.6 MB dele, e se apara conforme cresce.
+- `-u cron -n 3`: as três últimas linhas de uma unidade. Cada linha tem *quando*, *qual máquina*,
+  *qual programa e processo*, e *o quê*. O `-u` é o filtro que você mais vai usar, depois da aula 14.
   A primeira linha é um aviso sobre uma variável não definida, `EXTRA_OPTS`, de que o cron não precisa:
   **um aviso no log não é necessariamente o problema que você procura**, e decidir isso faz parte da
   habilidade.
-- **`-b -p err`**: só esta inicialização (`-b`), só erros e piores (`-p err`); o `-o cat` tira as
+- `-b -p err`: só esta inicialização (`-b`), só erros e piores (`-p err`); o `-o cat` tira as
   colunas de data e o `cut` mantém 90 caracteres. Não imprimiu **nada**: este servidor foi iniciado logo
   antes da gravação, e nada desde então foi registrado como erro. Uma resposta vazia ainda é uma
   resposta, e a seção 03 é uma falha que nunca chega a esta lista.

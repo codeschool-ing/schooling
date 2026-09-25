@@ -33,10 +33,10 @@ LOGO=ubuntu-logo
 
 Three lines of that are for programs rather than people:
 
-- **`ID=ubuntu`** is the distribution, in a form a script can compare.
-- **`ID_LIKE=debian`** is the family it belongs to. A script that knows how to install something on
+- `ID=ubuntu` is the distribution, in a form a script can compare.
+- `ID_LIKE=debian` is the family it belongs to. A script that knows how to install something on
   Debian can read this line and conclude that the same commands work here. That is section 02.
-- **`VERSION_CODENAME=noble`** is the release, by name. Ubuntu's codenames go alphabetically, so the
+- `VERSION_CODENAME=noble` is the release, by name. Ubuntu's codenames go alphabetically, so the
   letter tells you roughly how old a release is.
 
 `/etc/os-release` exists on Fedora, Debian, Arch, SUSE and Alpine too, with the same keys. It is the
@@ -46,7 +46,7 @@ anything.
 ## Why the differences matter
 
 The kernel and the basic commands are close to identical everywhere, which is why most of lesson 12's
-commands work on any of them. What changes are the **top layers**: the command that installs
+commands work on any of them. What changes are the *top layers*: the command that installs
 software, the name of a package, the path of a configuration file, and above all **how long the
 release in front of you will receive security fixes**. A tutorial that says `dnf install` is no use
 on this server, and a forum answer for Arch can quietly assume a newer version of everything.

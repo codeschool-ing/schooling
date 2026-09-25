@@ -43,7 +43,7 @@ diz `Notes.txt` pode funcionar ali por anos e falhar no servidor na primeira vez
 
 ## No Windows
 
-Os caminhos usam **`\`**, começam com uma **letra de unidade** e **não diferenciam maiúsculas**:
+Os caminhos usam `\`, começam com uma **letra de unidade** e *não diferenciam maiúsculas*:
 `cd c:\users` e `cd C:\Users` vão para o mesmo lugar. Espaços precisam de aspas do mesmo jeito, e eles
 estão em todo canto dos caminhos do Windows, a começar por `C:\Program Files`. O PowerShell também
 aceita `/`, e é por isso que a mesma linha de PowerShell muitas vezes funciona nos dois sistemas.

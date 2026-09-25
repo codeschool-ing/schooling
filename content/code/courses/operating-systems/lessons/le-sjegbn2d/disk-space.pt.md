@@ -26,15 +26,15 @@ PS /home/ana> (Get-ChildItem work -Recurse -File | Measure-Object -Property Leng
 3000112
 ```
 
-- O **`df -h`** responde **quão cheio está o disco**, por sistema de arquivos: tamanho, usado,
+- O `df -h` responde **quão cheio está o disco**, por sistema de arquivos: tamanho, usado,
   disponível e a porcentagem. O `-h` são os tamanhos *humanos* da aula 8.
-- O **`du -sh`** responde **o que está ocupando o espaço**, por pasta: `work` tem 2.9 MB, e o segundo
+- O `du -sh` responde **o que está ocupando o espaço**, por pasta: `work` tem 2.9 MB, e o segundo
   comando mostra que quase tudo é `reports`. O `-s` dá um total por argumento em vez de cada subpasta.
-- O **`Get-PSDrive`** do PowerShell lista as unidades; no Linux há uma, `/`, mais a `Temp`. No Windows
+- O `Get-PSDrive` do PowerShell lista as unidades; no Linux há uma, `/`, mais a `Temp`. No Windows
   ele lista `C:`, `D:` e as outras com o espaço usado e livre. **Somar o `Length`** de todo arquivo é o
   `du` do PowerShell: 3000112 bytes, os mesmos 2.9 MB.
 
-A ordem importa na prática: **o `df` primeiro** para ver qual disco está cheio, **depois o `du`** nesse
+A ordem importa na prática: *o `df` primeiro* para ver qual disco está cheio, *depois o `du`* nesse
 disco, descendo a cada vez para a pasta maior.
 
 ```sh

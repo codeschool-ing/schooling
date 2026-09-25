@@ -3,7 +3,7 @@ title: The same walk in PowerShell
 version: 1
 ---
 
-PowerShell's commands are called **cmdlets**, and every one is named **Verb-Noun**: `Get-Location`,
+PowerShell's commands are called *cmdlets*, and every one is named *Verb-Noun*: `Get-Location`,
 `Set-Location`, `Get-ChildItem`. It is longer to type and far easier to guess. Here is the same walk,
 in PowerShell 7 on the same server:
 
@@ -42,12 +42,12 @@ Path
 /home/ana/office/clients
 ```
 
-- **`Get-Location`** is `pwd`, and answers with a small table, because what it returns is an object
+- `Get-Location` is `pwd`, and answers with a small table, because what it returns is an object
   with a `Path` property. Section 06 comes back to that.
-- **`Set-Location`** is `cd`. Quotes work the same way around `'invoices 2026'`.
-- **`Get-ChildItem`** is `ls`, and on Linux it shows the same permission string in a column called
+- `Set-Location` is `cd`. Quotes work the same way around `'invoices 2026'`.
+- `Get-ChildItem` is `ls`, and on Linux it shows the same permission string in a column called
   `UnixMode`.
-- The last two lines typed **`cd`** and **`pwd`**, and they worked, because PowerShell defines short
+- The last two lines typed `cd` and `pwd`, and they worked, because PowerShell defines short
   **aliases** for its cmdlets.
 
 ## Aliases, and why they differ between systems

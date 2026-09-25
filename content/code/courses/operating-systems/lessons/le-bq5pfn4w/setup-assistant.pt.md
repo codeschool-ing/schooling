@@ -29,10 +29,10 @@ depois.
 
 ## A conta do computador
 
-Três campos: **nome completo**, **nome da conta** e **senha**. O nome da conta é preenchido a partir do
+Três campos: *nome completo*, *nome da conta* e *senha*. O nome da conta é preenchido a partir do
 nome completo, e é nele que se presta atenção:
 
-- ele vira a **pasta pessoal**, `/Users/ana`, e o nome que o `whoami` imprime;
+- ele vira a *pasta pessoal*, `/Users/ana`, e o nome que o `whoami` imprime;
 - ele **não pode simplesmente ser editado depois**. Renomear exige um procedimento com uma segunda
   conta de administrador e a troca do nome da pasta, e um erro deixa a pessoa com uma pasta vazia;
 - ele é curto, em minúsculas, sem espaços nem acentos: `ana`, não `Ana Paula Souza`.
@@ -43,7 +43,7 @@ deveria ser padrão, e como.
 ## FileVault
 
 O Assistente de Configuração oferece ligar o FileVault, e ele deve ficar ligado. Ele pergunta para onde
-vai a **chave de recuperação**: deixar a Conta Apple destravar o disco, ou mostrar uma **chave de
-recuperação** para anotar. Num Mac do escritório, escolha a chave de recuperação e guarde-a onde foi a
+vai a *chave de recuperação*: deixar a Conta Apple destravar o disco, ou mostrar uma *chave de
+recuperação* para anotar. Num Mac do escritório, escolha a chave de recuperação e guarde-a onde foi a
 chave do BitLocker da aula 2. Se o único jeito de entrar no disco é a Conta Apple de uma pessoa, o disco
 é dela.

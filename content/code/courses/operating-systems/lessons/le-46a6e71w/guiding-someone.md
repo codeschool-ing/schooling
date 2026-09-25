@@ -14,8 +14,8 @@ into a five-minute one.
    layout is. It is the reason the first row of section 05's table matters most.
 4. **Ask for a screenshot.** The shortcut from section 05, and the picture pasted into the chat,
    replaces five questions. It also records the exact error text.
-5. **When it is still unclear, look.** Windows has **Quick Assist**, built in: the person reads you a
-   code, and you see their screen and can control it. macOS has **Screen Sharing**, and GNOME has
+5. **When it is still unclear, look.** Windows has *Quick Assist*, built in: the person reads you a
+   code, and you see their screen and can control it. macOS has *Screen Sharing*, and GNOME has
    remote desktop in its Settings. The tech-support course's lesson on remote access covers the consent
    and the logging that go with them.
 

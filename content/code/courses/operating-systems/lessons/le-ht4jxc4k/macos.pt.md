@@ -15,8 +15,8 @@ sozinhos. Muitos apps profissionais não estão nela, e chegam de uma de duas ou
 
 ## Gatekeeper
 
-A primeira vez que um app baixado abre, o macOS o confere. O **Gatekeeper** permite apps da App Store e
-de **desenvolvedores identificados** cujos apps a Apple **notarizou**, examinou e assinou. Qualquer
+A primeira vez que um app baixado abre, o macOS o confere. O *Gatekeeper* permite apps da App Store e
+de *desenvolvedores identificados* cujos apps a Apple *notarizou*, examinou e assinou. Qualquer
 outro é recusado com uma mensagem dizendo que não pode ser verificado. O próprio download carrega uma
 marca, o atributo de *quarentena*, dizendo de onde veio; é essa marca que dispara a checagem.
 

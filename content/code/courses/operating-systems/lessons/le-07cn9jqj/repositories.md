@@ -27,14 +27,14 @@ Package: cowsay
 Section: universe/games
 ```
 
-- **`URIs`** are the servers. `security.ubuntu.com` is separate so that security fixes reach machines
+- `URIs` are the servers. `security.ubuntu.com` is separate so that security fixes reach machines
   even when a mirror of the main archive is behind.
-- **`Suites`**: `noble` is the release as it came out, `noble-updates` the fixes since, and
+- `Suites`: `noble` is the release as it came out, `noble-updates` the fixes since, and
   `noble-security` the security fixes. `noble-backports` offers some newer versions, and apt does not
   pick from it unless asked.
-- **`Signed-By`** is the key every package list must be signed with. A download that does not match
+- `Signed-By` is the key every package list must be signed with. A download that does not match
   it is refused, which is lesson 3's checksum done by apt every time.
-- **`Components`** are four sections of the archive, and they differ in **who fixes the software**:
+- `Components` are four sections of the archive, and they differ in **who fixes the software**:
 
 | component | what it holds | security fixes from |
 |---|---|---|
@@ -52,11 +52,11 @@ support dates of section 04 are.
 Some software is not in them, or is too old there. The ways around it, in order of how much trust they
 ask for:
 
-- **Snap** and **Flatpak**, formats that bundle a program with what it needs and run on any
+- *Snap* and *Flatpak*, formats that bundle a program with what it needs and run on any
   distribution.
-- **The maker's own repository**, added as another `.sources` file with its key. Browsers, Docker and
+- *The maker's own repository*, added as another `.sources` file with its key. Browsers, Docker and
   databases often ship this way.
-- **A PPA**, a *Personal Package Archive*: one person's repository on Launchpad. It can replace any
+- *A PPA*, a *Personal Package Archive*: one person's repository on Launchpad. It can replace any
   package on the system, and whoever runs it can push anything to every machine that trusts it.
 
 Lesson 11 installs software each of these ways.

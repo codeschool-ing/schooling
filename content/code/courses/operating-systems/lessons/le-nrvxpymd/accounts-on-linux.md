@@ -18,8 +18,8 @@ ana@server:~$ awk -F: '$3 >= 1000 && $3 < 65534' /etc/passwd
 ana:x:1000:1000::/home/ana:/bin/bash
 ```
 
-Taking `ana`'s line apart: **name**, `x` (the password is kept elsewhere), **user ID** 1000, **group
-ID** 1000, a comment for the person's full name (empty for ana), **home folder**, and the **shell**
+Taking `ana`'s line apart: *name*, `x` (the password is kept elsewhere), *user ID* 1000, *group
+ID* 1000, a comment for the person's full name (empty for ana), *home folder*, and the *shell*
 that starts when she logs in.
 
 ```schooling-figure

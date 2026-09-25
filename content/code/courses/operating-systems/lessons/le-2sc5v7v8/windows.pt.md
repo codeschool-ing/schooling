@@ -7,7 +7,7 @@ O Windows guarda as mesmas duas ideias com outros nomes.
 
 ## Serviços
 
-O **`services.msc`** lista todo serviço com o **Status** (em execução ou parado, o *agora* do systemd) e o
+O `services.msc` lista todo serviço com o *Status* (em execução ou parado, o *agora* do systemd) e o
 **Tipo de inicialização**, o *no boot* do systemd:
 
 | tipo de inicialização | quer dizer |
@@ -31,8 +31,8 @@ reiniciá-lo é a cura clássica para um trabalho de impressão travado, e a aul
 
 ## Tarefas agendadas
 
-O **Agendador de Tarefas**, `taskschd.msc`, é o timer. Uma tarefa tem **disparadores** (um horário, o
-logon, a inicialização, um evento), **ações** (um programa a rodar) e **condições** (só na tomada, só
+O **Agendador de Tarefas**, `taskschd.msc`, é o timer. Uma tarefa tem *disparadores* (um horário, o
+logon, a inicialização, um evento), *ações* (um programa a rodar) e *condições* (só na tomada, só
 quando ocioso). *Executar estando o usuário conectado ou não* é o ajuste que faz um trabalho noturno
 funcionar às duas sem ninguém lá.
 
@@ -44,7 +44,7 @@ Get-ScheduledTask | Where-Object State -eq Ready | Select-Object -First 5 TaskNa
 
 ## Apps de inicialização
 
-O que inicia quando uma **pessoa** entra é separado dos serviços: *Configurações > Aplicativos >
+O que inicia quando uma *pessoa* entra é separado dos serviços: *Configurações > Aplicativos >
 Inicialização*, ou a aba *Aplicativos de inicialização* do Gerenciador de Tarefas, que também estima o
-**impacto na inicialização** de cada um. É o primeiro lugar a olhar num PC que demora a ficar usável
+*impacto na inicialização* de cada um. É o primeiro lugar a olhar num PC que demora a ficar usável
 depois do login.

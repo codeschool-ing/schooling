@@ -6,12 +6,12 @@ version: 1
 The rules of section 03 apply, and matter more: a text file broken by a typo is fixed with an editor, a
 registry broken in the wrong key can stop Windows from starting.
 
-1. **Export before changing.** In `regedit`, *File > Export* the key you are about to touch; the `.reg`
+1. *Export before changing.* In `regedit`, *File > Export* the key you are about to touch; the `.reg`
    file it writes can be double-clicked to put it back.
-2. **Prefer the setting's own screen.** Almost everything in the registry has a place in Settings, a
+2. *Prefer the setting's own screen.* Almost everything in the registry has a place in Settings, a
    program's options or Group Policy that writes the value for you, correctly typed. Group Policy, lesson
    5, writes its settings under `HKLM\SOFTWARE\Policies`.
-3. **Change the smallest thing**, in **HKCU** when it concerns one person.
+3. *Change the smallest thing*, in *HKCU* when it concerns one person.
 
 From the command line, in the Command Prompt and in PowerShell:
 

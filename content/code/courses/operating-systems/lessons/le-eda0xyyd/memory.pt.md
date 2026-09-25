@@ -27,18 +27,18 @@ Swap:             0B          0B          0B
 
 Leia da direita para a esquerda, porque a coluna que importa é a última:
 
-- **total**: a RAM da máquina, 15 GiB aqui.
-- **used**: ocupada por processos.
-- **buff/cache**: arquivos que o kernel manteve na RAM porque foram lidos há pouco. Não é
+- *total*: a RAM da máquina, 15 GiB aqui.
+- *used*: ocupada por processos.
+- *buff/cache*: arquivos que o kernel manteve na RAM porque foram lidos há pouco. Não é
   desperdício; lê-los de novo é instantâneo. E é devolvida no momento em que um programa precisa.
-- **available**: o que um programa novo conseguiria agora, cache incluído. **Este é o número para
+- *available*: o que um programa novo conseguiria agora, cache incluído. **Este é o número para
   olhar.** Uma máquina com pouca memória *free* e bastante *available* está saudável.
 
 ## Quando ela acaba
 
 Quando os programas querem mais RAM do que existe, o kernel move para o disco pedaços que ninguém
-está usando no momento, e os traz de volta quando são necessários. Essa área do disco é o **swap**
-no Linux, o **pagefile** (`pagefile.sys`) no Windows e os **arquivos de swap** no macOS. Windows e
+está usando no momento, e os traz de volta quando são necessários. Essa área do disco é o *swap*
+no Linux, o *pagefile* (`pagefile.sys`) no Windows e os *arquivos de swap* no macOS. Windows e
 macOS também comprimem a memória antes de recorrer ao disco.
 
 Isso mantém a máquina funcionando, e é lento: um disco é milhares de vezes mais lento que a RAM. Um

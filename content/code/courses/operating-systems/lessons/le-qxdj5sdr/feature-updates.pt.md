@@ -4,8 +4,8 @@ version: 1
 ---
 
 O Windows 11 não é um sistema que recebe correções para sempre. **Uma vez por ano ele recebe uma
-atualização de recursos**, 24H2, depois 25H2, e **cada atualização de recursos tem o próprio fim de
-suporte**:
+atualização de recursos**, 24H2, depois 25H2, e cada atualização de recursos tem o próprio fim de
+suporte:
 
 | edição | suporte por atualização de recursos |
 |---|---|
@@ -26,16 +26,16 @@ baixar, um driver antigo que bloqueia, ou uma política que alguém definiu e es
 
 ## Atualizações mensais
 
-Entre as atualizações de recursos vêm as **atualizações cumulativas mensais**, lançadas na segunda
-terça-feira do mês, que o pessoal de TI chama de **Patch Tuesday**. Cada uma contém todas as correções
+Entre as atualizações de recursos vêm as *atualizações cumulativas mensais*, lançadas na segunda
+terça-feira do mês, que o pessoal de TI chama de *Patch Tuesday*. Cada uma contém todas as correções
 anteriores, então um PC que perdeu três meses se põe em dia com uma só. São elas que sobem o número de
 revisão da seção 01.
 
 ## Windows 10
 
-**O Windows 10 chegou ao fim do suporte em outubro de 2025.** A Microsoft oferece as **Atualizações de
-Segurança Estendidas** (*ESU*), pagas para organizações, por até três anos, e para PCs domésticos por
-um ano, até **outubro de 2026**. O ESU entrega só correções de segurança; nada novo.
+**O Windows 10 chegou ao fim do suporte em outubro de 2025.** A Microsoft oferece as *Atualizações de
+Segurança Estendidas* (*ESU*), pagas para organizações, por até três anos, e para PCs domésticos por
+um ano, até *outubro de 2026*. O ESU entrega só correções de segurança; nada novo.
 
 Para um escritório em setembro de 2026, isso quer dizer que um PC com Windows 10 ou está num plano ESU
 pago, com data para acabar, ou já está desprotegido. Nenhum dos dois é lugar para ficar: a checagem de

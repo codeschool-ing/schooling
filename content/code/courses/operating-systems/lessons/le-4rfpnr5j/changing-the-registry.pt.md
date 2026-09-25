@@ -6,12 +6,12 @@ version: 1
 As regras da seção 03 valem, e importam mais: um arquivo de texto quebrado por um erro de digitação se
 conserta com um editor, um registro quebrado na chave errada pode impedir o Windows de iniciar.
 
-1. **Exporte antes de mudar.** No `regedit`, *Arquivo > Exportar* a chave que você vai mexer; o arquivo
+1. *Exporte antes de mudar.* No `regedit`, *Arquivo > Exportar* a chave que você vai mexer; o arquivo
    `.reg` que ele grava pode ser aberto com clique duplo para pô-la de volta.
-2. **Prefira a tela do próprio ajuste.** Quase tudo no registro tem um lugar nas Configurações, nas
+2. *Prefira a tela do próprio ajuste.* Quase tudo no registro tem um lugar nas Configurações, nas
    opções de um programa ou na Política de Grupo, que grava o valor por você, com o tipo certo. A
    Política de Grupo, da aula 5, grava os ajustes embaixo de `HKLM\SOFTWARE\Policies`.
-3. **Mude a menor coisa**, no **HKCU** quando o assunto é uma pessoa.
+3. *Mude a menor coisa*, no *HKCU* quando o assunto é uma pessoa.
 
 Pela linha de comando, no Prompt de Comando e no PowerShell:
 

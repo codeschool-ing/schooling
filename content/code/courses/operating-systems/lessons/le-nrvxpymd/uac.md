@@ -15,9 +15,9 @@ When an administrator signs in, Windows builds **two tokens**, the bundles of gr
 program carries. Everything starts with the **standard** one. When a program needs more, installing
 software, writing to `C:\Program Files`, changing a system setting, Windows shows a prompt:
 
-- **For an administrator**, the prompt asks **Yes or No**. That is the *consent* prompt. Yes starts
+- *For an administrator*, the prompt asks *Yes or No*. That is the *consent* prompt. Yes starts
   that one program with the full token, and nothing else changes.
-- **For a standard user**, the same prompt asks for **an administrator's name and password**. That is
+- *For a standard user*, the same prompt asks for **an administrator's name and password**. That is
   the *credential* prompt, and it is how Ana installs something on the reception PC without the
   receptionist ever being an administrator.
 

@@ -25,18 +25,18 @@ troca de licença, não uma reinstalação (seção 05), o que diz o quanto elas
 
 Alguns termos da tabela:
 
-- O **Active Directory** é o diretório que o Windows Server do próprio escritório mantém, com cada
+- O *Active Directory* é o diretório que o Windows Server do próprio escritório mantém, com cada
   usuário e cada PC. O **Microsoft Entra ID** é a mesma ideia mantida pela Microsoft na nuvem, e é nele
   que uma *conta corporativa ou de estudante* entra. Entrar num deles é o que deixa uma organização
   gerenciar um PC.
-- A **Política de Grupo** é como configurações são empurradas para muitos PCs de uma vez, e o
+- A *Política de Grupo* é como configurações são empurradas para muitos PCs de uma vez, e o
   `gpedit.msc` a edita num só.
-- A **criptografia do dispositivo** da Home é o BitLocker sem controles: ela se liga sozinha quando o PC
+- A *criptografia do dispositivo* da Home é o BitLocker sem controles: ela se liga sozinha quando o PC
   entra com uma conta Microsoft e guarda a chave de recuperação nessa conta. A Pro dá o BitLocker
   completo, com escolha de onde a chave vai.
-- **Receber Área de Trabalho Remota** quer dizer aceitar conexões. A Home consegue se conectar a outro
+- *Receber Área de Trabalho Remota* quer dizer aceitar conexões. A Home consegue se conectar a outro
   PC, mas ninguém consegue se conectar a ela.
 
-A **Education** é a Enterprise com preço para escolas, e a **Pro for Workstations** é a Pro para
+A *Education* é a Enterprise com preço para escolas, e a *Pro for Workstations* é a Pro para
 máquinas com mais de 2 TB de memória ou mais de dois processadores. Nenhuma das duas é vendida numa loja
 comum.

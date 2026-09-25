@@ -8,7 +8,7 @@ ser reinstalado.** Como as edições são um sistema só com mais coisas ligadas
 licença:
 
 1. *Configurações > Sistema > Ativação*.
-2. **Atualizar a edição do Windows**: ou digite uma **chave do produto Pro**, ou compre a atualização na
+2. *Atualizar a edição do Windows*: ou digite uma *chave do produto Pro*, ou compre a atualização na
    Microsoft Store na mesma tela.
 3. O Windows liga os recursos e reinicia. Arquivos, programas e configurações ficam.
 
@@ -29,8 +29,8 @@ DISM /Online /Get-TargetEditions            # what this installation can be upgr
 slmgr /dli                                  # the licence: edition, channel, activation state
 ```
 
-**Nenhum destes foi rodado para esta aula.** O `DISM` chama a Home de **Core** e a Pro de
-**Professional**, que são os nomes internos; você vai encontrá-los em logs e no `EditionID` do
+**Nenhum destes foi rodado para esta aula.** O `DISM` chama a Home de *Core* e a Pro de
+*Professional*, que são os nomes internos; você vai encontrá-los em logs e no `EditionID` do
 registro. O `slmgr` também mostra o **canal da licença**:
 
 | canal | como a licença veio |

@@ -14,8 +14,8 @@ and doing them in this order saves restarts:
    are done.
 3. **Activation.** *Settings > System > Activation* should say *Windows is activated*. If it does not,
    fix it now; an unactivated Windows nags the user and restricts personalisation.
-4. **Encryption, and where its key is.** Most new computers turn on **device encryption** or
-   **BitLocker** by themselves. The disk can then be read only with the computer's TPM or with a
+4. **Encryption, and where its key is.** Most new computers turn on *device encryption* or
+   *BitLocker* by themselves. The disk can then be read only with the computer's TPM or with a
    48-digit **recovery key**, which Windows saves to the account from the last section. **Find out
    where that key is before the computer leaves your desk.** A firmware update or a motherboard repair
    can make Windows ask for it, and without it the data on the disk is gone for good.

@@ -22,7 +22,7 @@ msiexec /i agent.msi /qn                    # an .msi, silently, as a deployment
   para cada um. Ele roda esse instalador em silêncio. Então um programa instalado pelo winget é igual a
   um instalado à mão, e o `winget upgrade --all` atualiza programas **seja quem for que os instalou**,
   desde que o winget os reconheça.
-- **Não há dependências compartilhadas**: cada instalador traz as dele, como a seção 03 disse.
+- *Não há dependências compartilhadas*: cada instalador traz as dele, como a seção 03 disse.
 
 A **Microsoft Store** instala apps por usuário, muitas vezes sem administrador, e os atualiza sozinha.
 Em máquinas de escritório gerenciadas por uma organização, ela pode ser restrita a uma lista aprovada.

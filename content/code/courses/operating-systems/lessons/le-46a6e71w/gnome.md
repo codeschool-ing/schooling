@@ -8,31 +8,31 @@ version: 1
 ```
 
 GNOME is built around one key: **Super**, the key with the Windows logo on a PC keyboard. Pressing it
-opens **Activities**, which shows every open window at once, a search box already listening, and the
-**workspaces**, extra desktops to spread windows across. Type a name and press Enter; that is how most
+opens *Activities*, which shows every open window at once, a search box already listening, and the
+*workspaces*, extra desktops to spread windows across. Type a name and press Enter; that is how most
 people start programs on it.
 
-**Super+A** jumps to the grid of all apps, and the **Show Apps** button at the bottom of the dock does
+*Super+A* jumps to the grid of all apps, and the *Show Apps* button at the bottom of the dock does
 the same.
 
-The **system menu** at the top right replaces the tray: network, Bluetooth, sound, power, and the way
-into **Settings**. Notifications gather under the clock.
+The *system menu* at the top right replaces the tray: network, Bluetooth, sound, power, and the way
+into *Settings*. Notifications gather under the clock.
 
 ## Files
 
 The file manager is called **Files** (the program is *Nautilus*).
 
-- **Ctrl+L** turns the path at the top into a box you can type in, `/etc` or `~/Downloads`.
-- **Ctrl+H** shows and hides hidden files, the ones whose names start with a dot. Lesson 3's home
+- *Ctrl+L* turns the path at the top into a box you can type in, `/etc` or `~/Downloads`.
+- *Ctrl+H* shows and hides hidden files, the ones whose names start with a dot. Lesson 3's home
   folder has several.
 - *Other Locations*, in the sidebar, lists the disks and the network shares, which is where lesson 3's
   mounted USB stick appears.
 
 ## And
 
-- **Ctrl+Alt+T** opens a terminal, a shortcut Ubuntu adds.
-- **System Monitor** is the process list, with a *Resources* tab for the memory graphs of lesson 1.
-- **Super+L** locks the screen.
+- *Ctrl+Alt+T* opens a terminal, a shortcut Ubuntu adds.
+- *System Monitor* is the process list, with a *Resources* tab for the memory graphs of lesson 1.
+- *Super+L* locks the screen.
 
 The same key ideas carry over to KDE Plasma and Cinnamon, where the Super key opens a menu that looks
 more like Windows' Start. Ask which desktop before giving directions.

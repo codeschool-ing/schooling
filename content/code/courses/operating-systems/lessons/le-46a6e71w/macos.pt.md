@@ -19,21 +19,21 @@ tem vinte apps abertos sem nenhuma janela.
 
 ## Finder
 
-- **Command-Shift-G**, *Ir para a Pasta*, aceita um caminho digitado, `~/Library` ou `/Applications`. É a
+- *Command-Shift-G*, *Ir para a Pasta*, aceita um caminho digitado, `~/Library` ou `/Applications`. É a
   barra de endereço do Finder.
-- **Command-Shift-.** (ponto) mostra e esconde os arquivos ocultos.
+- *Command-Shift-.* (ponto) mostra e esconde os arquivos ocultos.
 - *Visualizar > Mostrar Barra de Caminho* põe o caminho completo da pasta atual no pé da janela.
-- **Não existe Recortar para arquivos.** Copie com **Command-C**, depois **Command-Option-V** para
+- *Não existe Recortar para arquivos.* Copie com *Command-C*, depois *Command-Option-V* para
   *movê-los* para lá.
 
 ## O resto
 
-- O **Spotlight**, **Command-Espaço**, abre qualquer coisa pelo nome, apps e ajustes incluídos.
-- O **botão direito** é **Control-clique**, ou um toque com dois dedos no trackpad.
-- **Forçar Encerrar**, **Command-Option-Esc**, é o jeito rápido de parar um app travado. O **Monitor de
-  Atividade** é a lista completa, os processos da aula 1.
-- Os **Ajustes do Sistema** têm uma caixa de busca no topo da barra lateral, e ela é o jeito mais rápido
+- O *Spotlight*, *Command-Espaço*, abre qualquer coisa pelo nome, apps e ajustes incluídos.
+- O *botão direito* é *Control-clique*, ou um toque com dois dedos no trackpad.
+- *Forçar Encerrar*, *Command-Option-Esc*, é o jeito rápido de parar um app travado. O *Monitor de
+  Atividade* é a lista completa, os processos da aula 1.
+- Os *Ajustes do Sistema* têm uma caixa de busca no topo da barra lateral, e ela é o jeito mais rápido
   de achar qualquer ajuste que mudou de lugar na última versão.
 
-A tecla **Command** faz no Mac o que o **Ctrl** faz no Windows e no Linux: copiar, colar, salvar,
+A tecla *Command* faz no Mac o que o *Ctrl* faz no Windows e no Linux: copiar, colar, salvar,
 buscar. O Ctrl continua existindo, e faz outra coisa.

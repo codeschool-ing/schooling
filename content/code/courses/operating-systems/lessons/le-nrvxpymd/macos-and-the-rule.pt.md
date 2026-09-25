@@ -3,7 +3,7 @@ title: O macOS, e a regra que os três compartilham
 version: 1
 ---
 
-Um Mac tem dois tipos de conta: **Administrador** e **Padrão**, definidos em *Ajustes do Sistema >
+Um Mac tem dois tipos de conta: *Administrador* e *Padrão*, definidos em *Ajustes do Sistema >
 Usuários e Grupos*. O Assistente de Configuração da aula 4 fez da primeira conta uma administradora.
 
 Quando um usuário Padrão, ou um administrador, faz algo que precisa de mais, uma janela pede **nome e

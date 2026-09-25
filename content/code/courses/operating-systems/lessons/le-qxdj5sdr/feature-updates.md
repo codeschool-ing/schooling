@@ -3,7 +3,7 @@ title: Feature updates, and how long each one lasts
 version: 1
 ---
 
-Windows 11 is not one system that gets patched forever. **Once a year it receives a feature update**,
+Windows 11 is not one system that gets patched forever. Once a year it receives a feature update,
 24H2, then 25H2, and **each feature update has its own end of support**:
 
 | edition | support per feature update |
@@ -25,15 +25,15 @@ an old driver that blocks it, or a policy somebody set and forgot.
 
 ## Monthly updates
 
-Between feature updates come the **monthly cumulative updates**, released on the second Tuesday of the
-month, which people in IT call **Patch Tuesday**. Each one contains every fix before it, so a PC that
+Between feature updates come the *monthly cumulative updates*, released on the second Tuesday of the
+month, which people in IT call *Patch Tuesday*. Each one contains every fix before it, so a PC that
 missed three months catches up with one. They are what raises the revision number from section 01.
 
 ## Windows 10
 
-**Windows 10 reached its end of support in October 2025.** Microsoft offers **Extended Security
-Updates** (*ESU*), paid for organisations, for up to three years, and for home PCs one year, to
-**October 2026**. ESU delivers security fixes only; nothing new.
+**Windows 10 reached its end of support in October 2025.** Microsoft offers *Extended Security
+Updates* (*ESU*), paid for organisations, for up to three years, and for home PCs one year, to
+*October 2026*. ESU delivers security fixes only; nothing new.
 
 For an office in September 2026 that means a Windows 10 PC is either on a paid ESU plan with a date
 on it, or already unprotected. Neither is a place to stay: lesson 2's hardware check decides whether it

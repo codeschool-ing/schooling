@@ -25,15 +25,15 @@ licence change, not a reinstall (section 05), which tells you how close they are
 
 A few terms from that table:
 
-- **Active Directory** is the directory an office's own Windows Server keeps, of every user and PC.
+- *Active Directory* is the directory an office's own Windows Server keeps, of every user and PC.
   **Microsoft Entra ID** is the same idea kept by Microsoft in the cloud, and it is what a *work or
   school account* signs into. Joining one of them is what lets an organisation manage a PC.
-- **Group Policy** is how settings are pushed to many PCs at once, and `gpedit.msc` edits it on one.
-- **Device encryption** on Home is BitLocker with no controls: it turns itself on when the PC signs in
+- *Group Policy* is how settings are pushed to many PCs at once, and `gpedit.msc` edits it on one.
+- *Device encryption* on Home is BitLocker with no controls: it turns itself on when the PC signs in
   with a Microsoft account and keeps the recovery key in that account. Pro gives the full BitLocker,
   with a choice of where the key goes.
-- **Remote Desktop host** means being connected *to*. Home can connect to another PC but nobody can
+- *Remote Desktop host* means being connected *to*. Home can connect to another PC but nobody can
   connect to it.
 
-**Education** is Enterprise priced for schools, and **Pro for Workstations** is Pro for machines with
+*Education* is Enterprise priced for schools, and *Pro for Workstations* is Pro for machines with
 more than 2 TB of memory or more than two processors. Neither is sold in an ordinary shop.

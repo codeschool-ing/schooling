@@ -20,7 +20,7 @@ ana@server:~$ systemctl is-active cron
 active
 ```
 
-Depois do **`stop`**, o cron ficou **inactive**, e continuou **enabled**. No próximo boot ele iniciaria
+Depois do `stop`, o cron ficou **inactive**, e continuou *enabled*. No próximo boot ele iniciaria
 de novo. Isso está certo para um teste rápido, e errado para um serviço que deve ficar desligado: aí é
 preciso o **`disable`** também, e o `disable --now` faz os dois.
 
@@ -43,5 +43,5 @@ algo de que ninguém precisa, e a aula 16 volta à inicialização quando uma m�
 ## restart e reload
 
 O **`restart`** para e inicia um serviço, e é o que fazer depois de mudar o arquivo de configuração
-dele. O **`reload`**, onde o serviço aceita, relê a configuração **sem** parar, então as conexões que ele
+dele. O `reload`, onde o serviço aceita, relê a configuração **sem** parar, então as conexões que ele
 mantém não caem. Na dúvida, o `restart` é o que sempre funciona.

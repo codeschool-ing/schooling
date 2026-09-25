@@ -3,8 +3,8 @@ title: Onde tudo mora: uma árvore, sem letras
 version: 1
 ---
 
-A primeira surpresa para quem vem do Windows é que não existe `C:`. O Linux tem **uma árvore de pastas**,
-começando em `/`, a **raiz**, e todo disco, pendrive e compartilhamento de rede aparece em algum lugar
+A primeira surpresa para quem vem do Windows é que não existe `C:`. O Linux tem *uma árvore de pastas*,
+começando em `/`, a *raiz*, e todo disco, pendrive e compartilhamento de rede aparece em algum lugar
 dentro dela:
 
 ```schooling-figure
@@ -42,7 +42,7 @@ ignorados.
 Prender um disco a uma pasta da árvore se chama **montar** o disco. Ligue um pendrive na versão Desktop
 e ele aparece em `/media/ana/`, com o nome do pendrive depois. No servidor, nada é montado
 automaticamente; a aula 12 faz isso à mão. O princípio é o da figura: no Linux um segundo disco é uma
-**pasta**, no Windows é uma **letra**, e nos dois casos os arquivos são os mesmos.
+*pasta*, no Windows é uma *letra*, e nos dois casos os arquivos são os mesmos.
 
 ## Maiúsculas e minúsculas
 

@@ -29,17 +29,17 @@ Pass --all to see loaded but inactive timers, too.
 ```
 
 - Five packages were set up: the tool and four it needs.
-- **`20auto-upgrades`** is two switches: refresh the package lists daily (`"1"`), and apply upgrades
+- `20auto-upgrades` is two switches: refresh the package lists daily (`"1"`), and apply upgrades
   daily.
-- **`50unattended-upgrades`** decides **which** upgrades: by default the release and its **`-security`**
+- `50unattended-upgrades` decides **which** upgrades: by default the release and its `-security`
   suite. Ordinary updates from `-updates` are not in the list, so they wait for a person.
-- **`apt-daily-upgrade.timer`**, a lesson 14 timer, is what runs it: at a randomised time each morning,
+- `apt-daily-upgrade.timer`, a lesson 14 timer, is what runs it: at a randomised time each morning,
   so that thousands of servers do not all ask the archive at once.
 
 ## Windows and macOS
 
 **Windows Update** downloads and installs security and quality updates on its own on Home and Pro.
-What an office controls is **when**: *active hours*, during which it will not restart, and **pause**,
+What an office controls is *when*: *active hours*, during which it will not restart, and *pause*,
 up to five weeks. On Pro, Group Policy can delay feature updates for months, which is lesson 5's point
 about Home and Pro again.
 

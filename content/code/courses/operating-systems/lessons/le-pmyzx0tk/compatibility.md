@@ -3,7 +3,7 @@ title: Why a program refuses to run
 version: 1
 ---
 
-A program is built for **a processor architecture**, **a system**, and often **particular versions** of
+A program is built for *a processor architecture*, *a system*, and often *particular versions* of
 the libraries it uses. Any of the three can refuse it.
 
 ```
@@ -23,13 +23,13 @@ PS /home/ana> $PSVersionTable.PSVersion.ToString()
 7.6.6
 ```
 
-- **`amd64`** is this server's architecture, the 64-bit Intel and AMD one. A program built for `arm64`,
+- `amd64` is this server's architecture, the 64-bit Intel and AMD one. A program built for `arm64`,
   lesson 4's Apple silicon and lesson 5's Windows on Arm, does not run here without an emulator.
-- **`ldd`** lists the **shared libraries** a program needs. `ls` needs a few, among them **`libc.so.6`**,
+- `ldd` lists the **shared libraries** a program needs. `ls` needs a few, among them `libc.so.6`,
   the C library, here **glibc 2.39**. A program built on a newer system against glibc 2.40 refuses to
   start on this one, which is why a binary copied from a newer distribution fails with *version
   GLIBC_2.40 not found*, and why packages come from the distribution rather than from another one.
-- PowerShell says which one it is: **`Core`** is PowerShell 7; **`Desktop`** is Windows PowerShell 5.1.
+- PowerShell says which one it is: **`Core`** is PowerShell 7; `Desktop` is Windows PowerShell 5.1.
   A script written for one can fail on the other, lesson 5's point about which you will meet.
 
 ## The same three on each system

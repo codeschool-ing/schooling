@@ -19,7 +19,7 @@ funcionando no quinto.
 
 ## Versões contínuas
 
-O **Arch**, o **openSUSE Tumbleweed** e o **sid** do Debian **não têm versões**. Cada pacote passa
+O *Arch*, o *openSUSE Tumbleweed* e o *sid* do Debian *não têm versões*. Cada pacote passa
 para a versão mais nova quando ela fica pronta, e uma atualização pode trazer uma nova versão principal
 de qualquer coisa em qualquer dia. Nunca há uma atualização de versão a fazer, porque o sistema está
 sempre no mais recente.
@@ -32,6 +32,6 @@ compartilhamento de arquivos mude de comportamento na semana em que o contador f
 
 O Ubuntu publica uma versão a cada **abril e outubro**, numerada por ano e mês: 24.04 é abril de 2024.
 A cada dois abris a versão é uma **LTS**, *long-term support*, suporte de longo prazo. As do meio são
-versões **intermediárias**, com suporte por **nove meses**, feitas para experimentar o que vem por aí.
+versões *intermediárias*, com suporte por *nove meses*, feitas para experimentar o que vem por aí.
 
 A seção 04 põe números nisso, e o servidor consegue lê-los sozinho.

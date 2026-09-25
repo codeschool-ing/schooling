@@ -3,8 +3,8 @@ title: Uma tarefa agendada, escrita do zero
 version: 1
 ---
 
-O backup noturno precisa de três coisas: **um script** que faz o trabalho, **um serviço** que roda o
-script, e **um timer** que inicia o serviço. O script, `/usr/local/bin/office-backup`, compacta o
+O backup noturno precisa de três coisas: *um script* que faz o trabalho, *um serviço* que roda o
+script, e *um timer* que inicia o serviço. O script, `/usr/local/bin/office-backup`, compacta o
 `/etc/apt` em `/var/backups`. Os outros dois são arquivos de texto curtos:
 
 ```
@@ -27,11 +27,11 @@ Persistent=true
 WantedBy=timers.target
 ```
 
-- O **serviço** é `Type=oneshot`: roda, termina e para, em vez de ficar de pé como o cron.
-- O **timer** tem o mesmo nome, e é assim que ele sabe qual serviço iniciar. O
+- O *serviço* é `Type=oneshot`: roda, termina e para, em vez de ficar de pé como o cron.
+- O *timer* tem o mesmo nome, e é assim que ele sabe qual serviço iniciar. O
   **`OnCalendar=Mon..Fri 02:00`** é todo dia útil às duas. O **`Persistent=true`** quer dizer que, se o
   servidor estava desligado às duas, o backup roda assim que ele voltar, em vez de ser pulado.
-- O **`WantedBy=timers.target`** é onde o `enable` engata o timer, para ele ficar armado a cada boot.
+- O `WantedBy=timers.target` é onde o `enable` engata o timer, para ele ficar armado a cada boot.
 
 ```
 ana@server:~$ sudo systemctl daemon-reload
@@ -52,11 +52,11 @@ ana@server:~$ ls -lh /var/backups/etc-apt.tar.gz
 -rw-r--r-- 1 root root 3.6K Sep 25 11:24 /var/backups/etc-apt.tar.gz
 ```
 
-1. O **`daemon-reload`** avisa o systemd para ler os arquivos novos. Esquecê-lo é o motivo de sempre de
+1. O `daemon-reload` avisa o systemd para ler os arquivos novos. Esquecê-lo é o motivo de sempre de
    uma unidade "não existir" logo depois de escrita.
-2. O **`enable --now`** armou o timer agora e a cada boot; o `enable` imprimiu o link que criou.
-3. O **`list-timers`** mostra quando ele roda da próxima vez.
-4. O **`start office-backup.service`** rodou o backup **agora**, sem esperar o timer. É assim que se
+2. O `enable --now` armou o timer agora e a cada boot; o `enable` imprimiu o link que criou.
+3. O `list-timers` mostra quando ele roda da próxima vez.
+4. O `start office-backup.service` rodou o backup **agora**, sem esperar o timer. É assim que se
    testa uma tarefa agendada, e ela deve ser testada antes de alguém confiar nela.
 5. O journal guardou a saída do script, **`backup written`**, e o arquivo está lá.
 

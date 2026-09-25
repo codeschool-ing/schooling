@@ -25,7 +25,7 @@ course: for anything shared, pay for the thing that lets it be managed.
 
 ## The Enterprise question
 
-Enterprise is not bought in a shop. It comes with the **Microsoft 365** enterprise plans, E3 and E5, as a
+Enterprise is not bought in a shop. It comes with the *Microsoft 365* enterprise plans, E3 and E5, as a
 subscription per user, and a PC with Pro **steps up to Enterprise by itself** when a user with that
 licence signs in. An eight-person office rarely needs it; a company where security teams want
 Credential Guard and 36-month versions does.

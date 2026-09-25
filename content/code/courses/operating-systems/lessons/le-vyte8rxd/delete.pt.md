@@ -16,12 +16,12 @@ ana@server:~/work$ ls
 backup.log  clients.csv  invoices  notes-todo.txt  notes.txt  reports
 ```
 
-- O **`rm`** apaga arquivos. O `rm invoices/*.tmp` removeu os dois nomes que o `echo` tinha mostrado na
+- O `rm` apaga arquivos. O `rm invoices/*.tmp` removeu os dois nomes que o `echo` tinha mostrado na
   seção 04, e nada mais.
-- O **`rmdir`** apaga só uma pasta **vazia**, e recusou `reports-copy`. Essa recusa é uma rede de
+- O `rmdir` apaga só uma pasta **vazia**, e recusou `reports-copy`. Essa recusa é uma rede de
   segurança: ele não consegue remover nada que você ainda não esvaziou.
-- O **`rm -r`** apaga uma pasta e tudo o que há dentro, em qualquer profundidade.
-- O **`rm -i`** pergunta sobre cada arquivo. Responder `n` manteve o `notes.txt`.
+- O `rm -r` apaga uma pasta e tudo o que há dentro, em qualquer profundidade.
+- O `rm -i` pergunta sobre cada arquivo. Responder `n` manteve o `notes.txt`.
 
 **Não há Lixeira na linha de comando.** Um arquivo removido pelo `rm` sumiu, para o sistema; recuperá-lo
 quer dizer um backup. Então os hábitos, em ordem:
@@ -35,5 +35,5 @@ quer dizer um backup. Então os hábitos, em ordem:
 
 ## Windows e macOS
 
-Nos dois, apagar pela linha de comando também pula a Lixeira. O **`del`** e o **`Remove-Item`** no
-Windows e o **`rm`** no Mac são tão definitivos quanto aqui.
+Nos dois, apagar pela linha de comando também pula a Lixeira. O **`del`** e o `Remove-Item` no
+Windows e o `rm` no Mac são tão definitivos quanto aqui.

@@ -14,8 +14,8 @@ mantêm:
   Windows Update. Arquivos, programas e configurações vêm todos junto. A escolha certa quando o sistema
   antigo funciona e só precisa ser mais novo.
 - **Restaurar o PC**: *Configurações > Sistema > Recuperação*. Reinstala o Windows a partir do próprio
-  computador, ou de um download novo com a opção **download na nuvem**, e pergunta se deve **manter
-  meus arquivos** ou **remover tudo**. Os programas são removidos de qualquer jeito, e o Windows deixa na
+  computador, ou de um download novo com a opção *download na nuvem*, e pergunta se deve *manter
+  meus arquivos* ou *remover tudo*. Os programas são removidos de qualquer jeito, e o Windows deixa na
   área de trabalho uma lista dos que removeu.
 - **Instalação limpa**: o pendrive e a tela de partições da seção 04. Nada naquele disco sobrevive.
 
@@ -25,15 +25,15 @@ Ande da esquerda para a direita só quando a opção mais leve falhar ou não fo
 
 - Uma máquina lenta, cheia de software de teste ou se comportando de um jeito estranho: **restaurar,
   mantendo os arquivos**. Remove os programas, que é em geral onde o problema está.
-- Um computador mudando de mãos, para um funcionário novo ou para fora do escritório: **restaurar,
-  removendo tudo**, para a próxima pessoa não herdar os arquivos e as contas da anterior.
+- Um computador mudando de mãos, para um funcionário novo ou para fora do escritório: *restaurar,
+  removendo tudo*, para a próxima pessoa não herdar os arquivos e as contas da anterior.
 - Um computador com um malware que você não tem certeza de ter removido, um disco sendo trocado, ou
-  uma máquina sendo padronizada com as outras: **instalação limpa**.
+  uma máquina sendo padronizada com as outras: *instalação limpa*.
 
 ## Na escala de uma empresa
 
-Oito computadores se instalam à mão. Duzentos, não: as empresas preparam uma **imagem** e a aplicam em
-toda máquina, ou usam o **Windows Autopilot**, em que um computador novo, recém-tirado da caixa, entra
+Oito computadores se instalam à mão. Duzentos, não: as empresas preparam uma *imagem* e a aplicam em
+toda máquina, ou usam o *Windows Autopilot*, em que um computador novo, recém-tirado da caixa, entra
 com uma conta corporativa e se configura sozinho a partir das definições da organização. As decisões
 são as mesmas desta aula, tomadas uma vez, anotadas e aplicadas a toda máquina do mesmo jeito. Esse é o
 hábito que vale levar daqui, mesmo com oito máquinas.

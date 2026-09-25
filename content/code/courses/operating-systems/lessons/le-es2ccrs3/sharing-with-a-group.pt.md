@@ -24,10 +24,10 @@ total 0
 
 Passo a passo:
 
-1. O **`groupadd accounts`** cria o grupo, e o **`usermod -aG accounts bruno`** põe o bruno nele. O `-a`
+1. O `groupadd accounts` cria o grupo, e o **`usermod -aG accounts bruno`** põe o bruno nele. O `-a`
    importa: sem ele, o `-G` *substitui* todos os grupos do bruno por este.
 2. A pasta pertence a **`root:accounts`**, então as letras do grupo são as que contam.
-3. **`2770`**: tudo para o dono e o grupo, nada para os outros, e o **2** na frente, o bit **setgid**,
+3. `2770`: tudo para o dono e o grupo, nada para os outros, e o **2** na frente, o bit *setgid*,
    mostrado como o `s` em `rws`.
 4. O bruno, membro, criou um arquivo. A carla, que não é, foi recusada.
 5. O grupo do arquivo novo é **`accounts`**, não o grupo particular do bruno. **É isso que o setgid faz
@@ -40,8 +40,8 @@ lista antiga, que é o motivo de sempre para "eu a coloquei no grupo e ainda diz
 
 ## O padrão dos arquivos novos
 
-De onde veio o `-rw-rw-r--` do arquivo novo? Da **umask**, as permissões com que todo arquivo novo
-nasce **sem**:
+De onde veio o `-rw-rw-r--` do arquivo novo? Da *umask*, as permissões com que todo arquivo novo
+nasce *sem*:
 
 ```
 ana@server:/srv/office$ umask

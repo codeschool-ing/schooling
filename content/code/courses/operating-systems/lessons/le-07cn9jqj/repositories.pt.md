@@ -27,14 +27,14 @@ Package: cowsay
 Section: universe/games
 ```
 
-- **`URIs`** são os servidores. O `security.ubuntu.com` é separado para que as correções de segurança
+- `URIs` são os servidores. O `security.ubuntu.com` é separado para que as correções de segurança
   cheguem às máquinas mesmo quando um espelho do arquivo principal está atrasado.
-- **`Suites`**: `noble` é a versão como saiu, `noble-updates` as correções desde então, e
+- `Suites`: `noble` é a versão como saiu, `noble-updates` as correções desde então, e
   `noble-security` as correções de segurança. O `noble-backports` oferece algumas versões mais novas, e
   o apt não pega nada dele a não ser que alguém peça.
-- **`Signed-By`** é a chave com que toda lista de pacotes tem de estar assinada. Um download que não
+- `Signed-By` é a chave com que toda lista de pacotes tem de estar assinada. Um download que não
   bate com ela é recusado, que é o checksum da aula 3 feito pelo apt toda vez.
-- **`Components`** são quatro seções do arquivo, e elas diferem em **quem corrige o software**:
+- `Components` são quatro seções do arquivo, e elas diferem em **quem corrige o software**:
 
 | componente | o que guarda | correções de segurança de |
 |---|---|---|
@@ -52,11 +52,11 @@ a promessa que as datas de suporte da seção 04 representam.
 Algum software não está neles, ou está velho demais lá. Os caminhos alternativos, em ordem de quanta
 confiança pedem:
 
-- **Snap** e **Flatpak**, formatos que empacotam um programa com o que ele precisa e rodam em qualquer
+- *Snap* e *Flatpak*, formatos que empacotam um programa com o que ele precisa e rodam em qualquer
   distribuição.
-- **O repositório do próprio fabricante**, acrescentado como mais um arquivo `.sources` com a chave
+- *O repositório do próprio fabricante*, acrescentado como mais um arquivo `.sources` com a chave
   dele. Navegadores, o Docker e bancos de dados muitas vezes vêm assim.
-- **Um PPA**, um *Personal Package Archive*: o repositório de uma pessoa no Launchpad. Ele pode trocar
+- *Um PPA*, um *Personal Package Archive*: o repositório de uma pessoa no Launchpad. Ele pode trocar
   qualquer pacote do sistema, e quem o mantém pode empurrar qualquer coisa para toda máquina que confia
   nele.
 

@@ -3,8 +3,8 @@ title: O que uma atualização contém de fato
 version: 1
 ---
 
-"Instale as atualizações" esconde várias coisas diferentes: **correções de segurança**, **correções de
-bugs**, **recursos novos**, **drivers** novos e **firmware** do próprio hardware. Num servidor Linux, o
+"Instale as atualizações" esconde várias coisas diferentes: *correções de segurança*, *correções de
+bugs*, *recursos novos*, *drivers* novos e *firmware* do próprio hardware. Num servidor Linux, o
 primeiro tipo pode ser lido, linha por linha, no changelog de cada pacote:
 
 ```
@@ -29,12 +29,12 @@ ana@server:~$ zcat /usr/share/doc/openssl/changelog.Debian.gz | grep -c 'SECURIT
 58
 ```
 
-- O **`apt-cache policy`** mostra a versão instalada, `3.0.13-0ubuntu3.15`, e a candidata, a mesma: nada
+- O `apt-cache policy` mostra a versão instalada, `3.0.13-0ubuntu3.15`, e a candidata, a mesma: nada
   está esperando.
-- O **changelog** diz o que essa versão mudou. A entrada do topo, do `noble-security`, lista **SECURITY
-  UPDATE** atrás de SECURITY UPDATE, cada uma com um número **CVE**: *Common Vulnerabilities and
+- O **changelog** diz o que essa versão mudou. A entrada do topo, do `noble-security`, lista *SECURITY
+  UPDATE* atrás de SECURITY UPDATE, cada uma com um número *CVE*: *Common Vulnerabilities and
   Exposures*, o identificador público de uma falha publicada.
-- **58** entradas assim no changelog do openssl, que volta anos atrás, para uma biblioteca. O número da
+- 58 entradas assim no changelog do openssl, que volta anos atrás, para uma biblioteca. O número da
   versão desta quase não mexeu: o `3.0.13` ficou, e só a parte do
   Ubuntu depois dele subiu. É a versão fixa da aula 6: **correções, não versões novas**.
 

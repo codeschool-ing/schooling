@@ -20,7 +20,7 @@ Seja qual for o sistema, um programa chega a um computador de um de três jeitos
 
 **Prefira-os na ordem da tabela, de baixo para cima.** Quando um programa só existe como instalador,
 pegue-o **no site do próprio fabricante**, chegando lá digitando o endereço e não por um resultado de
-busca, e confira como a aula 3 conferiu a imagem do Ubuntu: um checksum publicado, ou no Windows a aba
+busca. Depois confira como a aula 3 conferiu a imagem do Ubuntu: um checksum publicado, ou no Windows a aba
 *Assinaturas Digitais* das propriedades do arquivo.
 
 **Instalar precisa de direitos de administrador** nos três sistemas, pelo motivo que a aula 10 deu: o

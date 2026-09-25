@@ -11,7 +11,7 @@ Há três jeitos de restaurar um Mac, e o que parece mais completo é o que dá 
 
 ## Reinstalar o macOS
 
-Pela Recuperação, **Reinstalar o macOS** põe uma cópia nova do sistema no lugar e **deixa o volume de
+Pela Recuperação, *Reinstalar o macOS* põe uma cópia nova do sistema no lugar e **deixa o volume de
 dados em paz**. Arquivos, apps e ajustes continuam lá depois. É a versão do Mac para a atualização no
 lugar da aula 2: a escolha certa quando o próprio macOS está se comportando mal e a pessoa vai ficar com
 o Mac.

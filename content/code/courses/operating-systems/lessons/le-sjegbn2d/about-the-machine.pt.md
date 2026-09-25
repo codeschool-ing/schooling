@@ -21,7 +21,7 @@ PS /home/ana> [Environment]::ProcessorCount
 O `hostname` é a mesma palavra nos três sistemas. O `nproc` conta processadores; o **`uptime`** diz há
 quanto tempo foi a última inicialização, e um PC que "está lento" com quarenta dias ligado tem uma
 resposta antes de qualquer outro comando. O PowerShell pediu ao .NET os mesmos dois dados,
-**`[Environment]::MachineName`** e **`ProcessorCount`**, e é por isso que essas linhas funcionam sem
+**`[Environment]::MachineName`** e `ProcessorCount`, e é por isso que essas linhas funcionam sem
 mudança no Windows.
 
 No Windows, PowerShell:

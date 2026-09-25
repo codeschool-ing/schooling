@@ -21,7 +21,7 @@ ana@server:~$ sudo ls -A /home/carla
 ```
 
 - O `getent` mostra a linha nova, com o **próximo ID livre, 1001**.
-- **O `passwd -S` diz `L`**: a conta existe, e está **bloqueada** porque ainda não tem senha. Ninguém
+- O `passwd -S` diz `L`: a conta existe, e está *bloqueada* porque ainda não tem senha. Ninguém
   consegue entrar nela, que é o jeito seguro de uma conta nascer.
 - A ana não conseguiu listar a pasta pessoal da carla, o `drwxr-x---` da aula 9, e com `sudo` conseguiu:
   a pasta nova foi preenchida a partir do **`/etc/skel`**, os arquivos com que todo usuário novo começa.
@@ -41,7 +41,7 @@ carla P 2026-09-25 0 99999 7 -1
 comporta: nem asteriscos, para que alguém olhando não consiga contar os caracteres. O status agora é
 `P`, uma senha utilizável.
 
-O **`su`** troca para outro usuário, e pede a senha **desse usuário**:
+O `su` troca para outro usuário, e pede a senha **desse usuário**:
 
 ```
 ana@server:~$ su - carla

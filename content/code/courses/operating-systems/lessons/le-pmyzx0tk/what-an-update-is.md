@@ -3,8 +3,8 @@ title: What an update actually contains
 version: 1
 ---
 
-"Install the updates" hides several different things: **security fixes**, **bug fixes**, **new
-features**, new **drivers**, and **firmware** for the hardware itself. On a Linux server the first kind
+"Install the updates" hides several different things: *security fixes*, *bug fixes*, *new
+features*, new *drivers*, and *firmware* for the hardware itself. On a Linux server the first kind
 can be read, line by line, in every package's changelog:
 
 ```
@@ -29,12 +29,12 @@ ana@server:~$ zcat /usr/share/doc/openssl/changelog.Debian.gz | grep -c 'SECURIT
 58
 ```
 
-- **`apt-cache policy`** shows the installed version, `3.0.13-0ubuntu3.15`, and the candidate, the same:
+- `apt-cache policy` shows the installed version, `3.0.13-0ubuntu3.15`, and the candidate, the same:
   nothing is waiting.
 - The **changelog** says what that version changed. Its top entry, from `noble-security`, lists
-  **SECURITY UPDATE** after security update, each with a **CVE** number: *Common Vulnerabilities and
+  *SECURITY UPDATE* after security update, each with a *CVE* number: *Common Vulnerabilities and
   Exposures*, the public identifier of a published flaw.
-- **58** such entries in openssl's changelog, which goes back years, for one library. The version
+- 58 such entries in openssl's changelog, which goes back years, for one library. The version
   number of this one barely moved: `3.0.13` stayed, and only the Ubuntu part after it rose.
   That is lesson 6's fixed release: **fixes, not new versions**.
 

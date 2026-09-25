@@ -20,7 +20,7 @@ Whatever the system, a program reaches a computer in one of three ways.
 
 **Prefer them in the order of the table, bottom first.** When a program is only available as an
 installer, get it **from the publisher's own site**, reached by typing its address rather than through
-a search result, and check it as lesson 3 checked the Ubuntu image: a published checksum, or on
+a search result. Then check it as lesson 3 checked the Ubuntu image: a published checksum, or on
 Windows the *Digital Signatures* tab of the file's properties.
 
 **Installing needs administrator rights** on all three systems, for the reason lesson 10 gave: what one

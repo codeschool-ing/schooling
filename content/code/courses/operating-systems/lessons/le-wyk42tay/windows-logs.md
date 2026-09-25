@@ -12,10 +12,10 @@ Windows keeps its record in **Event Viewer**, `eventvwr.msc`. The logs that matt
 | **Application** | programs: crashes, errors they report |
 | **Security** | sign-ins and audited actions, lesson 10's record |
 
-Each event has a **level** (*Critical*, *Error*, *Warning*, *Information*), a **source**, and an **Event
-ID**, a number that means the same thing on every Windows PC and is what to search for. Two worth
-knowing: **41** from *Kernel-Power* means the PC restarted without shutting down cleanly, the reception
-PC's symptom; **7000** from the *Service Control Manager* means a service failed to start.
+Each event has a *level* (*Critical*, *Error*, *Warning*, *Information*), a *source*, and an *Event
+ID*, a number that means the same thing on every Windows PC and is what to search for. Two worth
+knowing: *41* from *Kernel-Power* means the PC restarted without shutting down cleanly, the reception
+PC's symptom; *7000* from the *Service Control Manager* means a service failed to start.
 
 ```sh
 Get-WinEvent -LogName System -MaxEvents 5
@@ -25,7 +25,7 @@ perfmon /rel                                                             # Relia
 ```
 
 **None of the Windows commands were run for this lesson.** **Reliability Monitor**, the last line, draws
-the same events as a timeline with a stability score per day, and is the fastest answer to *since when,
+the same events as a timeline with a stability score per day. It is the fastest answer to *since when,
 and what changed?*: the day the line drops usually has an update or a new program installed on it.
 
 ## When Windows' own files are damaged

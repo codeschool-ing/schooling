@@ -24,11 +24,11 @@ total 0
 
 Step by step:
 
-1. **`groupadd accounts`** creates the group, and **`usermod -aG accounts bruno`** adds bruno to it.
+1. `groupadd accounts` creates the group, and **`usermod -aG accounts bruno`** adds bruno to it.
    The `-a` matters: without it, `-G` *replaces* all of bruno's groups with this one.
 2. The folder belongs to **`root:accounts`**, so the group's letters are the ones that count.
-3. **`2770`**: everything for the owner and the group, nothing for others, and the leading **2**, the
-   **setgid** bit, shown as the `s` in `rws`.
+3. `2770`: everything for the owner and the group, nothing for others, and the leading **2**, the
+   *setgid* bit, shown as the `s` in `rws`.
 4. bruno, a member, created a file. carla, who is not, was refused.
 5. The new file's group is **`accounts`**, not bruno's own group. **That is what setgid does on a
    folder**: every new file inside joins the folder's group, so the next member can open it. Without it
@@ -40,8 +40,8 @@ has the old list, which is the usual reason "I added her and it still says Permi
 
 ## The default for new files
 
-Where did `-rw-rw-r--` on the new file come from? From the **umask**, the permissions every new file
-starts **without**:
+Where did `-rw-rw-r--` on the new file come from? From the *umask*, the permissions every new file
+starts *without*:
 
 ```
 ana@server:/srv/office$ umask

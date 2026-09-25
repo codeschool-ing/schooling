@@ -16,13 +16,13 @@ Sep 25 11:42:08 server cron[41]: (CRON) INFO (Running @reboot jobs)
 ana@server:~$ sudo journalctl -b -p err --no-pager -o cat | cut -c1-90 | tail -2
 ```
 
-- **`--disk-usage`**: the journal keeps history, here 39.6 MB of it, and trims itself as it grows.
-- **`-u cron -n 3`**: the last three lines from one unit. Each line has **when**, **which machine**,
-  **which program and process**, and **what**. `-u` is the filter you will use most, after lesson 14.
+- `--disk-usage`: the journal keeps history, here 39.6 MB of it, and trims itself as it grows.
+- `-u cron -n 3`: the last three lines from one unit. Each line has *when*, *which machine*,
+  *which program and process*, and *what*. `-u` is the filter you will use most, after lesson 14.
   The first line is a warning about an unset variable, `EXTRA_OPTS`, which cron does not need: **a
   warning in the log is not necessarily the problem you are looking for**, and deciding that is part of
   the skill.
-- **`-b -p err`**: only this boot (`-b`), only errors and worse (`-p err`); `-o cat` drops the date
+- `-b -p err`: only this boot (`-b`), only errors and worse (`-p err`); `-o cat` drops the date
   columns and `cut` keeps 90 characters. It printed **nothing**: this server was started just before the
   recording, and nothing since has been recorded as an error. An empty answer is still an answer, and
   section 03 is a failure that never reaches this list.

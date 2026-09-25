@@ -25,7 +25,7 @@ deste curso: para qualquer coisa compartilhada, pague pelo que deixa aquilo ser 
 
 ## A questão da Enterprise
 
-A Enterprise não se compra em loja. Ela vem com os planos corporativos do **Microsoft 365**, E3 e E5,
-como assinatura por usuário, e um PC com Pro **sobe para Enterprise sozinho** quando um usuário com essa
+A Enterprise não se compra em loja. Ela vem com os planos corporativos do *Microsoft 365*, E3 e E5,
+como assinatura por usuário, e um PC com Pro *sobe para Enterprise sozinho* quando um usuário com essa
 licença entra. Um escritório de oito pessoas raramente precisa dela; uma empresa em que a equipe de
 segurança quer Credential Guard e versões de 36 meses precisa.

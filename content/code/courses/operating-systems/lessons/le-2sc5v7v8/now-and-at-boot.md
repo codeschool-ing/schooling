@@ -20,7 +20,7 @@ ana@server:~$ systemctl is-active cron
 active
 ```
 
-After **`stop`**, cron was **inactive**, and it was still **enabled**. At the next boot it would start
+After `stop`, cron was **inactive**, and it was still *enabled*. At the next boot it would start
 again. That is right for a quick test, and wrong for a service that should stay off: that needs
 **`disable`** as well, and `disable --now` does both.
 
@@ -43,5 +43,5 @@ something nobody needs, and lesson 16 comes back to startup when a machine is sl
 ## Restart and reload
 
 **`restart`** stops and starts a service, and is what to do after changing its configuration file.
-**`reload`**, where a service supports it, rereads the configuration **without** stopping, so the
+`reload`, where a service supports it, rereads the configuration **without** stopping, so the
 connections it holds are not dropped. When unsure, `restart` is the one that always works.

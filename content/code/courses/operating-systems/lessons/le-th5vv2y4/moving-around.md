@@ -3,8 +3,8 @@ title: Moving around: where, what, go
 version: 1
 ---
 
-Three commands do almost all of it: **`pwd`** says where you are, **`ls`** lists what is there, and
-**`cd`** goes somewhere else.
+Three commands do almost all of it: **`pwd`** says where you are, `ls` lists what is there, and
+`cd` goes somewhere else.
 
 ```
 ana@server:~$ pwd
@@ -38,7 +38,7 @@ Everything else in that transcript is about **paths**, and there are two kinds:
   are. `cd /etc` worked from the home folder and would work from anywhere.
 - **Relative** paths start from where you are. `cd clients` worked because `office` holds a folder
   called `clients`; typed anywhere else, it fails.
-- Three shorthands: **`..`** is the folder above, **`~`** is your home, and **`cd -`** goes back to
+- Three shorthands: `..` is the folder above, `~` is your home, and **`cd -`** goes back to
   the previous folder and prints where that was.
 
 ## Asking ls for more

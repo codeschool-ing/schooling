@@ -50,13 +50,13 @@ ana@server:~$ dpkg -l man-db 2>&1 | tail -1
 dpkg-query: no packages found matching man-db
 ```
 
-1. **`apt remove man-db`** removed the program and said, before doing so, that four packages **were
+1. `apt remove man-db` removed the program and said, before doing so, that four packages **were
    automatically installed and are no longer required**. It did not remove them.
-2. **`dpkg -l`** then showed `rc`: **r**emoved, but **c**onfiguration files remain. `remove` keeps the
+2. `dpkg -l` then showed `rc`: **r**emoved, but **c**onfiguration files remain. `remove` keeps the
    settings in `/etc`, so a reinstall picks up where it left off.
-3. **`apt autoremove`** removed the four dependencies nothing needs any more, **4186 kB**. It knew
+3. `apt autoremove` removed the four dependencies nothing needs any more, **4186 kB**. It knew
    which ones because apt marked them as automatic when it installed them.
-4. **`apt purge`** removed the configuration too. After it, dpkg has no record of `man-db` at all.
+4. `apt purge` removed the configuration too. After it, dpkg has no record of `man-db` at all.
 
 | command | removes the program | removes its settings | removes what it brought |
 |---|---|---|---|

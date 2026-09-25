@@ -21,11 +21,11 @@ mais memória. A seção 06 vê um programa fazendo exatamente isso.
 
 ## Do que ele cuida
 
-- **Processos**: todo programa em execução, quais existem, qual roda em seguida.
-- **Memória**: quem fica com qual parte da RAM, e o que acontece quando ela não basta.
-- **Dispositivos**: discos, teclados, telas, impressoras e placas de rede, cada um por meio de um
-  **driver**.
-- **Arquivos**: transformar um disco cheio de blocos numerados em pastas e nomes.
+- *Processos*: todo programa em execução, quais existem, qual roda em seguida.
+- *Memória*: quem fica com qual parte da RAM, e o que acontece quando ela não basta.
+- *Dispositivos*: discos, teclados, telas, impressoras e placas de rede, cada um por meio de um
+  *driver*.
+- *Arquivos*: transformar um disco cheio de blocos numerados em pastas e nomes.
 
 Ele também controla os **usuários** e o que cada um pode fazer, que é o assunto das aulas 9 e 10.
 

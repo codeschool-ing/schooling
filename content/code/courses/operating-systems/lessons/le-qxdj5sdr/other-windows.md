@@ -7,7 +7,7 @@ Four more kinds of Windows turn up in support work, and each answers a different
 
 ## LTSC: the one that does not change
 
-**Windows 11 Enterprise LTSC** (*Long-Term Servicing Channel*) receives **security updates only, for
+*Windows 11 Enterprise LTSC* (*Long-Term Servicing Channel*) receives **security updates only, for
 years**, and never a feature update. No new apps appear, no settings move. It is meant for machines
 that must behave the same on the last day as on the first: a hospital device, a factory terminal, a
 cash register. The IoT variant of LTSC 2024 is supported for ten years.
@@ -32,6 +32,6 @@ point about drivers being written for one piece of hardware, arriving in a new p
 
 ## N editions
 
-In Europe, **Windows 11 Pro N** and **Home N** are sold without some media apps, for competition
+In Europe, *Windows 11 Pro N* and *Home N* are sold without some media apps, for competition
 reasons. They are otherwise identical, and the missing pieces are a free download called the *Media
 Feature Pack*. A video call that fails on one office PC and works on the next can be exactly this.

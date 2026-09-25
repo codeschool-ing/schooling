@@ -3,8 +3,8 @@ title: Andando por aí: onde, o quê, vá
 version: 1
 ---
 
-Três comandos fazem quase tudo: o **`pwd`** diz onde você está, o **`ls`** lista o que há ali, e o
-**`cd`** vai para outro lugar.
+Três comandos fazem quase tudo: o **`pwd`** diz onde você está, o `ls` lista o que há ali, e o
+`cd` vai para outro lugar.
 
 ```
 ana@server:~$ pwd
@@ -39,7 +39,7 @@ Todo o resto desse registro é sobre **caminhos**, e eles são de dois tipos:
   lugar.
 - Caminhos **relativos** partem de onde você está. O `cd clients` funcionou porque `office` tem uma
   pasta chamada `clients`; digitado em outro lugar, falha.
-- Três atalhos: **`..`** é a pasta de cima, **`~`** é a sua pasta pessoal, e **`cd -`** volta para a
+- Três atalhos: `..` é a pasta de cima, `~` é a sua pasta pessoal, e **`cd -`** volta para a
   pasta anterior e imprime qual era.
 
 ## Pedindo mais ao ls

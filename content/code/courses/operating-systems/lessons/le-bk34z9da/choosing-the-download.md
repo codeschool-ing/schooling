@@ -4,16 +4,16 @@ version: 1
 ---
 
 Lesson 6 covers the families of Linux distributions properly. For this lesson the choice is made:
-**Ubuntu**, the most common distribution on both office desktops and small servers, and specifically an
-**LTS** release.
+*Ubuntu*, the most common distribution on both office desktops and small servers, and specifically an
+*LTS* release.
 
 **LTS** means *long-term support*. Ubuntu publishes a new version every six months, and every two years,
-in April, one of them is LTS: it receives security updates for **five years** as standard, and longer
-with Canonical's paid **Ubuntu Pro**. The version number is the year and month: **24.04** is April 2024.
+in April, one of them is LTS: it receives security updates for *five years* as standard, and longer
+with Canonical's paid *Ubuntu Pro*. The version number is the year and month: **24.04** is April 2024.
 For a machine that has to keep working without anybody thinking about it, like the office server, only
 an LTS makes sense.
 
-There are two downloads: **Desktop**, with the graphical interface, and **Server**, without one. Both are
+There are two downloads: *Desktop*, with the graphical interface, and *Server*, without one. Both are
 ISO files of a few gigabytes (lesson 2).
 
 ## Check what you downloaded

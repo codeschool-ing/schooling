@@ -24,8 +24,8 @@ modinfo e1000e | head -3                       # about one kernel driver
 machine and has no hardware of its own to show, which is the virtualization course's subject. `lspci -k`
 is the one to remember: each device, and *Kernel driver in use*.
 
-**On Windows**, Device Manager is the place: right-click a device for **Update driver**, **Roll back
-driver** (if a previous one was kept), **Disable** and **Uninstall**. From the command line:
+*On Windows*, Device Manager is the place: right-click a device for *Update driver*, *Roll back
+driver* (if a previous one was kept), *Disable* and *Uninstall*. From the command line:
 
 ```sh
 driverquery                                    # every driver, Command Prompt
@@ -43,6 +43,6 @@ The scanner stopped after a feature update. In order:
 1. **Device Manager**: is it there, with a warning triangle? Then the driver failed to load.
 2. **Roll back driver**, if Windows replaced a working one with a generic one.
 3. **The maker's site**, for a driver for the new version. Many makers stop after a few years.
-4. If there is none, the choices are **a generic driver** (many scanners speak a standard, *WIA* on
+4. If there is none, the choices are *a generic driver* (many scanners speak a standard, *WIA* on
    Windows and *SANE* on Linux), **keeping one machine on the older version** as long as it is still
-   supported, or **replacing the scanner**. The third is often the cheapest over a year.
+   supported, or *replacing the scanner*. The third is often the cheapest over a year.

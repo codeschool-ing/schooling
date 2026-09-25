@@ -15,7 +15,7 @@ usuário, e fazê-las nesta ordem economiza reinicializações:
 3. **Ativação.** *Configurações > Sistema > Ativação* deve dizer *O Windows está ativado*. Se não
    disser, resolva agora; um Windows não ativado fica cobrando o usuário e restringe a personalização.
 4. **Criptografia, e onde está a chave.** A maioria dos computadores novos liga sozinha a
-   **criptografia do dispositivo** ou o **BitLocker**. O disco passa a ser lido só com o TPM do
+   *criptografia do dispositivo* ou o *BitLocker*. O disco passa a ser lido só com o TPM do
    computador ou com uma **chave de recuperação** de 48 dígitos, que o Windows salva na conta da seção
    anterior. **Descubra onde está essa chave antes de o computador sair da sua mesa.** Uma atualização
    de firmware ou um conserto na placa-mãe pode fazer o Windows pedi-la, e sem ela os dados do disco se

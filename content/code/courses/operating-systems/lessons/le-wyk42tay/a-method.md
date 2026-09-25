@@ -22,6 +22,6 @@ The tools change between systems; the order of the questions does not.
    what happened, what fixed it, and how you knew. The next person with this problem may be you, in a
    year.
 
-This course ends here, with the three systems installed, understood and kept running. The **tech-support**
-course takes the method further, with the person at the other end of the ticket; **virtualization**
+This course ends here, with the three systems installed, understood and kept running. The *tech-support*
+course takes the method further, with the person at the other end of the ticket; *virtualization*
 runs all three systems side by side on one machine.

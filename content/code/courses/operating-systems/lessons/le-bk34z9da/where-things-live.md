@@ -3,8 +3,8 @@ title: Where everything lives: one tree, no letters
 version: 1
 ---
 
-The first surprise for somebody coming from Windows is that there is no `C:`. Linux has **one tree of
-folders**, starting at `/`, the **root**, and every disk, stick and network share appears somewhere
+The first surprise for somebody coming from Windows is that there is no `C:`. Linux has *one tree of
+folders*, starting at `/`, the *root*, and every disk, stick and network share appears somewhere
 inside it:
 
 ```schooling-figure
@@ -41,7 +41,7 @@ The names ending in `.usr-is-merged` are leftovers of a recent Ubuntu change and
 Attaching a disk to a folder in the tree is called **mounting** it. Plug in a USB stick on the desktop
 version and it appears under `/media/ana/`, the name of the stick after it. On the server, nothing is
 mounted automatically; lesson 12 does it by hand. The principle is the one in the figure: on Linux a
-second disk is a **folder**, on Windows it is a **letter**, and in both cases the files are the same.
+second disk is a *folder*, on Windows it is a *letter*, and in both cases the files are the same.
 
 ## Upper and lower case
 

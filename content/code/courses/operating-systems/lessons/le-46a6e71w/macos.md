@@ -19,20 +19,20 @@ twenty apps open with no windows.
 
 ## Finder
 
-- **Command-Shift-G**, *Go to Folder*, takes a typed path, `~/Library` or `/Applications`. It is
+- *Command-Shift-G*, *Go to Folder*, takes a typed path, `~/Library` or `/Applications`. It is
   Finder's address bar.
-- **Command-Shift-.** (period) shows and hides hidden files.
+- *Command-Shift-.* (period) shows and hides hidden files.
 - *View > Show Path Bar* puts the current folder's full path at the bottom of the window.
-- **There is no Cut for files.** Copy with **Command-C**, then **Command-Option-V** to *move* them there.
+- *There is no Cut for files.* Copy with *Command-C*, then *Command-Option-V* to *move* them there.
 
 ## The rest
 
-- **Spotlight**, **Command-Space**, opens anything by name, apps and settings included.
-- **Right-click** is **Control-click**, or a two-finger tap on a trackpad.
-- **Force Quit**, **Command-Option-Esc**, is the quick way to stop a frozen app. **Activity Monitor**
+- *Spotlight*, *Command-Space*, opens anything by name, apps and settings included.
+- *Right-click* is *Control-click*, or a two-finger tap on a trackpad.
+- *Force Quit*, *Command-Option-Esc*, is the quick way to stop a frozen app. *Activity Monitor*
   is the full list, lesson 1's processes.
-- **System Settings** has a search box at the top of its sidebar, and it is the quickest way to find
+- *System Settings* has a search box at the top of its sidebar, and it is the quickest way to find
   any setting whose place moved in the last release.
 
-The **Command** key does on a Mac what **Ctrl** does on Windows and Linux: copy, paste, save, find.
+The *Command* key does on a Mac what *Ctrl* does on Windows and Linux: copy, paste, save, find.
 Ctrl still exists, and does something else.

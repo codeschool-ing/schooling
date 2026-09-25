@@ -8,7 +8,7 @@ diferente.
 
 ## LTSC: o que não muda
 
-O **Windows 11 Enterprise LTSC** (*Long-Term Servicing Channel*, canal de manutenção de longo prazo)
+O *Windows 11 Enterprise LTSC* (*Long-Term Servicing Channel*, canal de manutenção de longo prazo)
 recebe **só atualizações de segurança, por anos**, e nunca uma atualização de recursos. Nenhum app novo
 aparece, nenhuma configuração muda de lugar. Ele é feito para máquinas que precisam se comportar no
 último dia como no primeiro: um aparelho de hospital, um terminal de fábrica, um caixa de loja. A
@@ -34,7 +34,7 @@ da aula 1 sobre drivers serem escritos para um hardware, chegando a um lugar nov
 
 ## Edições N
 
-Na Europa, o **Windows 11 Pro N** e o **Home N** são vendidos sem alguns apps de mídia, por questões de
+Na Europa, o *Windows 11 Pro N* e o *Home N* são vendidos sem alguns apps de mídia, por questões de
 concorrência. No resto são idênticos, e as peças que faltam são um download gratuito chamado *Media
 Feature Pack*. Uma chamada de vídeo que falha num PC do escritório e funciona no seguinte pode ser
 exatamente isso.

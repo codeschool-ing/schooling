@@ -24,7 +24,7 @@ PS /home/ana> $env:USER
 ana
 ```
 
-- O **`$HOME`** é a pasta pessoal e o **`$USER`** o nome da conta. O `echo` os imprime; o `printenv`
+- O **`$HOME`** é a pasta pessoal e o `$USER` o nome da conta. O `echo` os imprime; o `printenv`
   também, sem o `$`.
 - O **`$PATH`** é a lista de pastas procuradas, em ordem, quando você digita o nome de um comando. É por
   isso que o `ls` roda o `/usr/bin/ls` sem ninguém digitar a pasta, e por que um programa instalado num
@@ -44,6 +44,6 @@ $env:USERPROFILE                  # C:\Users\ana
 $env:Path -split ';'              # one folder per line
 ```
 
-**`%NOME%`** no Prompt de Comando, **`$env:NOME`** no PowerShell, e as pastas do `PATH` separadas por
-**`;`**, porque o `:` já aparece em todo caminho do Windows depois da letra da unidade. A pasta pessoal é
+**`%NOME%`** no Prompt de Comando, `$env:NOME` no PowerShell, e as pastas do `PATH` separadas por
+`;`, porque o `:` já aparece em todo caminho do Windows depois da letra da unidade. A pasta pessoal é
 **`USERPROFILE`**, não `HOME`.

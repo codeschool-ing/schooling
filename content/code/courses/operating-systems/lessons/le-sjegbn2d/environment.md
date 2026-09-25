@@ -24,7 +24,7 @@ PS /home/ana> $env:USER
 ana
 ```
 
-- **`$HOME`** is the home folder and **`$USER`** the account name. `echo` prints them; `printenv` does
+- **`$HOME`** is the home folder and `$USER` the account name. `echo` prints them; `printenv` does
   too, without the `$`.
 - **`$PATH`** is the list of folders searched, in order, when you type a command's name. It is why `ls`
   runs `/usr/bin/ls` without anybody typing the folder, and why a program installed somewhere not on the
@@ -44,6 +44,6 @@ $env:USERPROFILE                  # C:\Users\ana
 $env:Path -split ';'              # one folder per line
 ```
 
-**`%NAME%`** in the Command Prompt, **`$env:NAME`** in PowerShell, and the folders in `PATH` separated
-by **`;`**, because `:` already appears in every Windows path after the drive letter. The home folder is
+**`%NAME%`** in the Command Prompt, `$env:NAME` in PowerShell, and the folders in `PATH` separated
+by `;`, because `:` already appears in every Windows path after the drive letter. The home folder is
 **`USERPROFILE`**, not `HOME`.

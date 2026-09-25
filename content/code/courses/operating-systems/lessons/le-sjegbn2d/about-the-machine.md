@@ -21,7 +21,7 @@ PS /home/ana> [Environment]::ProcessorCount
 `hostname` is the same word on all three systems. `nproc` counts processors; **`uptime`** says how long
 since the last start, and a PC that "is slow" with an uptime of forty days has an answer before any
 other command. PowerShell asked .NET for the same two facts, **`[Environment]::MachineName`** and
-**`ProcessorCount`**, which is why those lines work unchanged on Windows.
+`ProcessorCount`, which is why those lines work unchanged on Windows.
 
 On Windows, PowerShell:
 

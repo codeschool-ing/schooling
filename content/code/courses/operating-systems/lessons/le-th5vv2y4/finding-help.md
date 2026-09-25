@@ -30,11 +30,11 @@ Push-Location
 Set-Location
 ```
 
-- **`--help`** after almost any Linux command prints its options. It is long, so it is usually read
+- `--help` after almost any Linux command prints its options. It is long, so it is usually read
   through `head`, or `less` to scroll.
-- **`type`** says what a name actually is. `cd` is a **builtin**, part of the shell itself, which is
+- `type` says what a name actually is. `cd` is a **builtin**, part of the shell itself, which is
   why it can change the shell's own folder; `ls` is a program on the disk, at `/usr/bin/ls`.
-- **`Get-Command`** does both jobs in PowerShell. `-Verb Get` counted 61 cmdlets whose name starts with
+- `Get-Command` does both jobs in PowerShell. `-Verb Get` counted 61 cmdlets whose name starts with
   `Get-` on this installation, and `-Noun Location` found every cmdlet that works on locations,
   including two you did not know to look for.
 

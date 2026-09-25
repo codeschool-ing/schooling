@@ -45,9 +45,9 @@ works with every program**, including ones written in 1985 that know nothing abo
 
 ## Three habits for any shell
 
-- **Tab** completes names, section 03's safety check.
-- **The up arrow** brings back the previous command, and **Ctrl+R** searches all of them.
-- **Ctrl+C** stops a command that is running, and it is what to press when something scrolls forever.
+- *Tab* completes names, section 03's safety check.
+- *The up arrow* brings back the previous command, and *Ctrl+R* searches all of them.
+- *Ctrl+C* stops a command that is running, and it is what to press when something scrolls forever.
 
 The shell keeps the list, and it can show it:
 

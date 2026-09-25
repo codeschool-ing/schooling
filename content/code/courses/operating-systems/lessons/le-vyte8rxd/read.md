@@ -24,14 +24,14 @@ ana@server:~/work$ grep -c ok backup.log
 240
 ```
 
-- **`cat`** prints a whole file. It is right for a short one, like the four-line list of clients.
-- **`wc -l`** counts lines first: the log has **240**. Nobody reads 240 lines to find out whether last
+- `cat` prints a whole file. It is right for a short one, like the four-line list of clients.
+- `wc -l` counts lines first: the log has **240**. Nobody reads 240 lines to find out whether last
   night's backup ran.
-- **`head`** shows the start and **`tail`** the end. `tail -2` answered the real question, the last two
+- `head` shows the start and `tail` the end. `tail -2` answered the real question, the last two
   backups, in two lines.
-- **`grep -c ok`** counted the lines containing `ok`: all 240. A log where that count is lower than the
+- `grep -c ok` counted the lines containing `ok`: all 240. A log where that count is lower than the
   line count has a failure in it, and `grep` without `-c` would print which lines.
 
-Two more for longer work: **`less`** opens a file to scroll, search with `/` and quit with `q`, and
+Two more for longer work: `less` opens a file to scroll, search with `/` and quit with `q`, and
 **`tail -f`** keeps printing new lines as a program writes them, which is how a log is watched while
 something is being tested. Lesson 17 uses both on the system's own logs.

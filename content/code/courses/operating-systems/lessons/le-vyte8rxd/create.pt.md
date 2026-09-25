@@ -21,14 +21,14 @@ reports/2026
 reports/2026/q3
 ```
 
-- O **`mkdir`** faz uma pasta. O `mkdir reports/2026/q3` **falhou**, porque `reports` e `2026` ainda não
+- O `mkdir` faz uma pasta. O `mkdir reports/2026/q3` **falhou**, porque `reports` e `2026` ainda não
   existiam. O **`-p`** faz as pastas de cima que faltam, e não diz nada se já existirem, e é por isso que
   scripts sempre o usam.
-- O **`touch`** cria um arquivo vazio ou, se o arquivo existe, só atualiza a data dele. Não muda conteúdo
+- O `touch` cria um arquivo vazio ou, se o arquivo existe, só atualiza a data dele. Não muda conteúdo
   em nenhum dos casos.
-- O **`echo "…" > todo.txt`** cria um arquivo com uma linha. O `>` manda a saída do `echo` para o arquivo
+- O `echo "…" > todo.txt` cria um arquivo com uma linha. O `>` manda a saída do `echo` para o arquivo
   em vez da tela, o assunto da seção 03.
-- O **`ls -F`** marca pastas com `/`, e o **`find`** lista tudo abaixo de uma pasta, por mais fundo que
+- O `ls -F` marca pastas com `/`, e o `find` lista tudo abaixo de uma pasta, por mais fundo que
   seja.
 
 A maioria dos comandos que dão certo **não imprime nada**. O silêncio é a resposta; erros são a única

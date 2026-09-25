@@ -4,7 +4,7 @@ version: 1
 ---
 
 Há centenas de distribuições, e **quatro famílias** cobrem quase tudo o que você vai encontrar no
-trabalho. Uma família compartilha um **formato de pacote** e uma **ferramenta de pacotes**, e em geral
+trabalho. Uma família compartilha um *formato de pacote* e uma *ferramenta de pacotes*, e em geral
 um jeito de organizar a configuração.
 
 ```schooling-figure
@@ -29,7 +29,7 @@ ana@server:~$ apt-cache dumpavail | grep -c '^Original-Maintainer:.*debian'
 
 - **`trixie/sid`** é um nome do Debian. Toda versão do Ubuntu começa como uma cópia do ramo de
   desenvolvimento do Debian, o *sid*, tirada enquanto o Debian preparava o *trixie*, a versão 13 dele.
-- O pacote `bash` cita **dois** mantenedores: a lista do Ubuntu, e um mantenedor **original** em
+- O pacote `bash` cita *dois* mantenedores: a lista do Ubuntu, e um mantenedor *original* em
   `debian.org`. O Ubuntu pegou o pacote do Debian e o recompilou.
 - Dos 86537 pacotes que este servidor pode instalar, **64815** citam um mantenedor original do Debian.
   Mais ou menos três em cada quatro.
@@ -46,13 +46,13 @@ A outra família que você vai encontrar no trabalho desce do mesmo jeito:
    cada uma com suporte por uns treze.
 2. O **CentOS Stream** é a prévia da próxima versão do Red Hat Enterprise Linux.
 3. O **RHEL**, *Red Hat Enterprise Linux*, é o produto pago e certificado, com dez anos de suporte.
-4. O **Rocky Linux** e o **AlmaLinux** são reconstruções gratuitas que procuram se comportar exatamente
+4. O *Rocky Linux* e o *AlmaLinux* são reconstruções gratuitas que procuram se comportar exatamente
    como o RHEL.
 
 Esse último degrau é o motivo de o "só RHEL" do fornecedor da contabilidade ser menos estreito do que
 parece: as reconstruções existem para que o software certificado no RHEL rode nelas, embora o
 *suporte* do fornecedor ainda possa pedir o original.
 
-O **SUSE** e o **Arch** completam as quatro. O **Alpine** fica à parte: minúsculo, com `apk` e uma
+O *SUSE* e o *Arch* completam as quatro. O **Alpine** fica à parte: minúsculo, com `apk` e uma
 biblioteca C diferente, e encontrado principalmente dentro de contêineres, que é onde o curso de
 virtualização o encontra.

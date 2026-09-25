@@ -8,32 +8,32 @@ version: 1
 ```
 
 O GNOME gira em torno de uma tecla: a **Super**, a que tem o logo do Windows num teclado de PC.
-Apertá-la abre as **Atividades**, que mostram todas as janelas abertas de uma vez, uma caixa de busca
-que já está ouvindo, e os **espaços de trabalho**, áreas de trabalho extras para espalhar as janelas.
+Apertá-la abre as *Atividades*, que mostram todas as janelas abertas de uma vez, uma caixa de busca
+que já está ouvindo, e os *espaços de trabalho*, áreas de trabalho extras para espalhar as janelas.
 Digite um nome e aperte Enter; é assim que a maioria das pessoas abre programas nele.
 
-**Super+A** pula para a grade de todos os apps, e o botão **Mostrar aplicativos** no pé do dock faz o
+*Super+A* pula para a grade de todos os apps, e o botão *Mostrar aplicativos* no pé do dock faz o
 mesmo.
 
-O **menu do sistema** no canto superior direito faz o papel da bandeja: rede, Bluetooth, som, energia,
-e o caminho para as **Configurações**. As notificações se juntam embaixo do relógio.
+O *menu do sistema* no canto superior direito faz o papel da bandeja: rede, Bluetooth, som, energia,
+e o caminho para as *Configurações*. As notificações se juntam embaixo do relógio.
 
 ## Arquivos
 
 O gerenciador de arquivos se chama **Arquivos** (o programa é o *Nautilus*).
 
-- **Ctrl+L** transforma o caminho no topo numa caixa em que se digita, `/etc` ou `~/Downloads`.
-- **Ctrl+H** mostra e esconde os arquivos ocultos, os que têm nome começando com ponto. A pasta pessoal
+- *Ctrl+L* transforma o caminho no topo numa caixa em que se digita, `/etc` ou `~/Downloads`.
+- *Ctrl+H* mostra e esconde os arquivos ocultos, os que têm nome começando com ponto. A pasta pessoal
   da aula 3 tem vários.
 - *Outros locais*, na barra lateral, lista os discos e os compartilhamentos de rede, que é onde o
   pendrive montado da aula 3 aparece.
 
 ## E mais
 
-- **Ctrl+Alt+T** abre um terminal, um atalho que o Ubuntu acrescenta.
-- O **Monitor do sistema** é a lista de processos, com uma aba *Recursos* para os gráficos de memória
+- *Ctrl+Alt+T* abre um terminal, um atalho que o Ubuntu acrescenta.
+- O *Monitor do sistema* é a lista de processos, com uma aba *Recursos* para os gráficos de memória
   da aula 1.
-- **Super+L** bloqueia a tela.
+- *Super+L* bloqueia a tela.
 
 As mesmas ideias valem no KDE Plasma e no Cinnamon, em que a tecla Super abre um menu mais parecido com
 o Iniciar do Windows. Pergunte qual é o desktop antes de dar instruções.

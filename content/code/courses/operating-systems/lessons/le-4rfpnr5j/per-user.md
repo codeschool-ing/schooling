@@ -27,12 +27,12 @@ PS /home/ana> $PROFILE
 /home/ana/.config/powershell/Microsoft.PowerShell_profile.ps1
 ```
 
-- **`.bashrc`** is read by every new bash, and holds ana's shell settings: 96 non-empty lines here,
+- `.bashrc` is read by every new bash, and holds ana's shell settings: 96 non-empty lines here,
   among them `HISTSIZE=1000`, how many commands lesson 8's `history` remembers.
-- **`.profile`** is read once at login.
-- **`.config`** and **`.local`** hold newer programs' settings and data, one folder per program. The
+- `.profile` is read once at login.
+- `.config` and `.local` hold newer programs' settings and data, one folder per program. The
   `.config` folder does not exist yet in this home; the first program that needs it creates it.
-- **`$PROFILE`** is PowerShell's own `.bashrc`: the path it would read, under `~/.config/powershell`,
+- `$PROFILE` is PowerShell's own `.bashrc`: the path it would read, under `~/.config/powershell`,
   even though no such file has been written.
 
 A user setting overrides the machine's for that person only, which is what makes it safe: a broken

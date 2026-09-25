@@ -28,8 +28,8 @@ Seis serviços neste servidor mínimo, cada um com uma descrição de uma linha:
 clássico da seção 05; o `dbus`, como os programas conversam entre si; o journal, que junta todo log; os
 logins; a resolução de nomes; e um gerenciador da sessão da própria ana.
 
-O `systemctl status` dá o quadro completo de um serviço: **Loaded**, que arquivo o define e se ele está
-**habilitado**; **Active**, se roda agora e desde quando; e o **Main PID**, o processo que você veria no
+O `systemctl status` dá o quadro completo de um serviço: *Loaded*, que arquivo o define e se ele está
+*habilitado*; *Active*, se roda agora e desde quando; e o *Main PID*, o processo que você veria no
 `ps`. O `-n 0` deixou de fora as linhas de log que o `status` normalmente acrescenta no fim; a seção 04
 lê o log de um serviço de propósito.
 

@@ -42,8 +42,8 @@ their sum:
 step. `stat` prints the number for a file that already exists, which is the quickest way to learn to
 read them.
 
-The numbers worth knowing by heart: **644** for an ordinary file, **600** for a private one, **755**
-for a program or a folder anyone may enter, **700** for a private folder.
+The numbers worth knowing by heart: `644` for an ordinary file, `600` for a private one, `755`
+for a program or a folder anyone may enter, `700` for a private folder.
 
 ## Owners
 

@@ -3,7 +3,7 @@ title: macOS, and the rule all three share
 version: 1
 ---
 
-A Mac has two kinds of account: **Administrator** and **Standard**, set in *System Settings > Users &
+A Mac has two kinds of account: *Administrator* and *Standard*, set in *System Settings > Users &
 Groups*. Lesson 4's Setup Assistant made the first account an administrator.
 
 When a Standard user, or an administrator, does something that needs more, a dialog asks for **an

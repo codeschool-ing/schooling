@@ -25,8 +25,8 @@ modinfo e1000e | head -3                       # about one kernel driver
 máquina e não tem hardware próprio para mostrar, que é o assunto do curso de virtualização. O `lspci -k`
 é o que vale lembrar: cada dispositivo, e o *Kernel driver in use*.
 
-**No Windows**, o Gerenciador de Dispositivos é o lugar: botão direito num dispositivo para **Atualizar
-driver**, **Reverter driver** (se um anterior foi guardado), **Desabilitar** e **Desinstalar**. Pela
+*No Windows*, o Gerenciador de Dispositivos é o lugar: botão direito num dispositivo para *Atualizar
+driver*, *Reverter driver* (se um anterior foi guardado), *Desabilitar* e *Desinstalar*. Pela
 linha de comando:
 
 ```sh
@@ -47,6 +47,6 @@ O scanner parou depois de uma atualização de recursos. Em ordem:
 2. **Reverter driver**, se o Windows trocou um que funcionava por um genérico.
 3. **O site do fabricante**, atrás de um driver para a versão nova. Muitos fabricantes param depois de
    alguns anos.
-4. Se não houver, as escolhas são **um driver genérico** (muitos scanners falam um padrão, o *WIA* no
+4. Se não houver, as escolhas são *um driver genérico* (muitos scanners falam um padrão, o *WIA* no
    Windows e o *SANE* no Linux), **manter uma máquina na versão mais velha** enquanto ela ainda tiver
-   suporte, ou **trocar o scanner**. A terceira costuma ser a mais barata ao longo de um ano.
+   suporte, ou *trocar o scanner*. A terceira costuma ser a mais barata ao longo de um ano.

@@ -20,9 +20,9 @@ msiexec /i agent.msi /qn                    # an .msi, silently, as a deployment
 
 - winget's list is **a catalogue of where to download each publisher's own installer**, with a checksum
   for each. It runs that installer silently. So a program installed by winget is the same as one
-  installed by hand, and `winget upgrade --all` updates programs **whatever installed them**, as long as
+  installed by hand, and `winget upgrade --all` updates programs *whatever installed them*, as long as
   winget recognises them.
-- There are **no shared dependencies**: each installer brings its own, as section 03 said.
+- There are *no shared dependencies*: each installer brings its own, as section 03 said.
 
 **The Microsoft Store** installs apps per user, often without an administrator, and updates them on its
 own. For office machines managed by an organisation it can be restricted to an approved list.

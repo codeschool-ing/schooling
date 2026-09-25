@@ -30,9 +30,9 @@ ana@server:~$ ubuntu-distro-info --devel
 stonking
 ```
 
-- O `--days=eol` conta os dias até o fim do **suporte padrão** da 24.04: 979 a partir do dia em que
+- O `--days=eol` conta os dias até o fim do *suporte padrão* da 24.04: 979 a partir do dia em que
   isto foi registrado, um pouco mais de dois anos e meio.
-- O `--days=eol-esm` conta até o fim da **Expanded Security Maintenance**: 2769 dias, a marca dos dez
+- O `--days=eol-esm` conta até o fim da *Expanded Security Maintenance*: 2769 dias, a marca dos dez
   anos. A ESM vem com o **Ubuntu Pro**, gratuito para uso pessoal em poucas máquinas e pago para
   empresas.
 - O `--supported` lista o que ainda tem manutenção. **A 24.04 não é mais a LTS mais nova**: a 26.04,

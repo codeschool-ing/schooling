@@ -4,16 +4,16 @@ version: 1
 ---
 
 A aula 6 trata direito das famílias de distribuições Linux. Para esta aula, a escolha está feita: o
-**Ubuntu**, a distribuição mais comum tanto em computadores de escritório quanto em servidores
-pequenos, e especificamente uma versão **LTS**.
+*Ubuntu*, a distribuição mais comum tanto em computadores de escritório quanto em servidores
+pequenos, e especificamente uma versão *LTS*.
 
 **LTS** quer dizer *long-term support*, suporte de longo prazo. O Ubuntu publica uma versão nova a cada
-seis meses, e a cada dois anos, em abril, uma delas é LTS: recebe atualizações de segurança por **cinco
-anos** no padrão, e por mais tempo com o **Ubuntu Pro**, pago, da Canonical. O número da versão é o ano
+seis meses, e a cada dois anos, em abril, uma delas é LTS: recebe atualizações de segurança por *cinco
+anos* no padrão, e por mais tempo com o *Ubuntu Pro*, pago, da Canonical. O número da versão é o ano
 e o mês: **24.04** é abril de 2024. Para uma máquina que tem de continuar funcionando sem ninguém
 pensar nela, como o servidor do escritório, só uma LTS faz sentido.
 
-Há dois downloads: **Desktop**, com a interface gráfica, e **Server**, sem ela. Os dois são arquivos ISO
+Há dois downloads: *Desktop*, com a interface gráfica, e *Server*, sem ela. Os dois são arquivos ISO
 de alguns gigabytes (aula 2).
 
 ## Confira o que você baixou

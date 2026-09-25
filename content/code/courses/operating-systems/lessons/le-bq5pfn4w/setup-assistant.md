@@ -28,10 +28,10 @@ sign in to the App Store alone later.
 
 ## The computer account
 
-Three fields: **full name**, **account name** and **password**. The account name is filled in from the
+Three fields: *full name*, *account name* and *password*. The account name is filled in from the
 full name, and it is the one to look at:
 
-- it becomes the **home folder**, `/Users/ana`, and the name `whoami` prints;
+- it becomes the *home folder*, `/Users/ana`, and the name `whoami` prints;
 - it **cannot simply be edited later**. Renaming it means a procedure with a second administrator
   account and renaming the folder, and a mistake leaves the person with an empty home;
 - it is short, lower-case and without spaces or accents: `ana`, not `Ana Paula Souza`.
@@ -41,7 +41,7 @@ be a standard one, and how.
 
 ## FileVault
 
-Setup Assistant offers to turn FileVault on, and it should be on. It asks where the **recovery key**
-goes: let the Apple Account unlock the disk, or show a **recovery key** to write down. On an office Mac,
+Setup Assistant offers to turn FileVault on, and it should be on. It asks where the *recovery key*
+goes: let the Apple Account unlock the disk, or show a *recovery key* to write down. On an office Mac,
 choose the recovery key and keep it where lesson 2's BitLocker key went. If the only way into the disk
 is one person's Apple Account, the disk is theirs.

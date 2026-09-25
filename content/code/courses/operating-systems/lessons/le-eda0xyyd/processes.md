@@ -26,15 +26,15 @@ ana@server:~/office$ ps -o pid,ppid,stat,comm
 
 Each line is a process:
 
-- **PID**, the *process id*: a number the kernel gives each process when it starts, and never gives
+- *PID*, the *process id*: a number the kernel gives each process when it starts, and never gives
   to another process while that one is alive. `[1]` and the number after it are the shell telling
   you the first background job, and the PID it got.
-- **PPID**, the parent's PID. Both `sleep`s and `ps` itself were started by the shell, `bash`, so
+- *PPID*, the parent's PID. Both `sleep`s and `ps` itself were started by the shell, `bash`, so
   their PPID is the PID of `bash` on the first line. Every process except the very first one was started by another; lesson 14
   comes back to that first one.
-- **STAT**, its state: `S` is *sleeping*, waiting for something (here, for time to pass); `R` is
+- *STAT*, its state: `S` is *sleeping*, waiting for something (here, for time to pass); `R` is
   *running*, which is `ps` itself, busy printing this list.
-- **COMMAND**, the name of the program it is running.
+- *COMMAND*, the name of the program it is running.
 
 ## Looking at one process
 

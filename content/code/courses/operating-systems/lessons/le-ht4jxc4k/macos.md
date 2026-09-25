@@ -15,8 +15,8 @@ Many professional apps are not in it, and arrive in one of two other forms:
 
 ## Gatekeeper
 
-The first time a downloaded app opens, macOS checks it. **Gatekeeper** allows apps from the App Store and
-from **identified developers** whose apps Apple has **notarised**, scanned and signed. Anything else is
+The first time a downloaded app opens, macOS checks it. *Gatekeeper* allows apps from the App Store and
+from *identified developers* whose apps Apple has *notarised*, scanned and signed. Anything else is
 refused with a message saying it cannot be verified. The download itself carries a mark, the
 *quarantine* attribute, saying where it came from; that mark is what triggers the check.
 

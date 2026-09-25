@@ -21,14 +21,14 @@ reports/2026
 reports/2026/q3
 ```
 
-- **`mkdir`** makes a folder. `mkdir reports/2026/q3` **failed**, because `reports` and `2026` did not
+- `mkdir` makes a folder. `mkdir reports/2026/q3` **failed**, because `reports` and `2026` did not
   exist yet. **`-p`** makes the missing parents too, and says nothing if they already exist, which is why
   scripts always use it.
-- **`touch`** creates an empty file, or, if the file exists, only updates its date. It changes no
+- `touch` creates an empty file, or, if the file exists, only updates its date. It changes no
   contents either way.
-- **`echo "…" > todo.txt`** creates a file with one line in it. The `>` sends the output of `echo` into
+- `echo "…" > todo.txt` creates a file with one line in it. The `>` sends the output of `echo` into
   the file instead of the screen, the subject of section 03.
-- **`ls -F`** marks folders with a `/`, and **`find`** lists everything below a folder, however deep.
+- `ls -F` marks folders with a `/`, and `find` lists everything below a folder, however deep.
 
 Most commands that succeed **print nothing**. The silence is the answer; errors are the only thing
 worth printing, and `mkdir` showed one.

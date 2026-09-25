@@ -25,7 +25,7 @@ opens it in an editor; here a line was piped in with `crontab -` to keep the tra
 ```
 
 The system has its own schedules as well: files in **`/etc/cron.d`**, and scripts dropped into
-**`/etc/cron.daily`**, `weekly` and `monthly`, which run once a day, week or month without anybody
+`/etc/cron.daily`, `weekly` and `monthly`, which run once a day, week or month without anybody
 writing a time. On this server `apt` and `dpkg`, lesson 11's tools, each keep a script there.
 
 | | cron | systemd timer |
@@ -36,5 +36,5 @@ writing a time. On this server `apt` and `dpkg`, lesson 11's tools, each keep a 
 | test it now | run the command by hand | `systemctl start` the service |
 | on macOS | yes | no |
 
-**Choose timers on a systemd server** for the journal and the missed-run behaviour; **read crontabs**
+**Choose timers on a systemd server** for the journal and the missed-run behaviour; *read crontabs*
 because every inherited server has some.

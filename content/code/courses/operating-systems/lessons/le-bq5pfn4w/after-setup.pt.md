@@ -35,9 +35,9 @@ no fim.
 
 ## Muitos Macs
 
-Uma empresa com cinquenta Macs não faz nada disso à mão. Ela usa o **Apple Business Manager** com um
-serviço de **gerenciamento de dispositivos** (*MDM*): os Macs comprados pela conta da empresa ficam
-registrados nela desde a fábrica, e quando um novo entra no Wi-Fi pela primeira vez, o Assistente de
+Uma empresa com cinquenta Macs não faz nada disso à mão. Ela usa o *Apple Business Manager* com um
+serviço de *gerenciamento de dispositivos* (*MDM*): os Macs comprados pela conta da empresa ficam
+registrados nela desde a fábrica. Quando um novo entra no Wi-Fi pela primeira vez, o Assistente de
 Configuração o inscreve, aplica os ajustes, liga o FileVault e guarda a chave de recuperação num lugar
 central. **O Bloqueio de Ativação passa a ser gerenciado pela organização**, e não por quem tirou o Mac
 da caixa. É o Autopilot da aula 2 com o nome da Apple, e faz as mesmas perguntas uma vez em vez de em

@@ -29,19 +29,19 @@ Pass --all to see loaded but inactive timers, too.
 ```
 
 - Cinco pacotes foram configurados: a ferramenta e quatro de que ela precisa.
-- O **`20auto-upgrades`** são dois interruptores: atualizar as listas de pacotes todo dia (`"1"`), e
+- O `20auto-upgrades` são dois interruptores: atualizar as listas de pacotes todo dia (`"1"`), e
   aplicar as atualizações todo dia.
-- O **`50unattended-upgrades`** decide **quais** atualizações: por padrão a versão e a suite
-  **`-security`** dela. As atualizações comuns do `-updates` não estão na lista, então esperam uma
+- O `50unattended-upgrades` decide **quais** atualizações: por padrão a versão e a suite
+  `-security` dela. As atualizações comuns do `-updates` não estão na lista, então esperam uma
   pessoa.
-- O **`apt-daily-upgrade.timer`**, um timer da aula 14, é o que o roda: num horário sorteado a cada manhã,
+- O `apt-daily-upgrade.timer`, um timer da aula 14, é o que o roda: num horário sorteado a cada manhã,
   para milhares de servidores não pedirem ao arquivo todos ao mesmo tempo.
 
 ## Windows e macOS
 
 O **Windows Update** baixa e instala sozinho as atualizações de segurança e de qualidade na Home e na
-Pro. O que um escritório controla é **quando**: o *horário ativo*, durante o qual ele não reinicia, e a
-**pausa**, de até cinco semanas. Na Pro, a Política de Grupo pode adiar atualizações de recursos por
+Pro. O que um escritório controla é *quando*: o *horário ativo*, durante o qual ele não reinicia, e a
+*pausa*, de até cinco semanas. Na Pro, a Política de Grupo pode adiar atualizações de recursos por
 meses, que é o ponto da aula 5 sobre a Home e a Pro de novo.
 
 ```sh

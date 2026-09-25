@@ -8,7 +8,7 @@ reinstalled.** Because the editions are one system with more switched on, going 
 licence:
 
 1. *Settings > System > Activation*.
-2. **Upgrade your edition of Windows**: either enter a **Pro product key**, or buy the upgrade from
+2. *Upgrade your edition of Windows*: either enter a *Pro product key*, or buy the upgrade from
    the Microsoft Store on the same screen.
 3. Windows switches the features on and restarts. Files, programs and settings stay.
 
@@ -29,7 +29,7 @@ DISM /Online /Get-TargetEditions            # what this installation can be upgr
 slmgr /dli                                  # the licence: edition, channel, activation state
 ```
 
-**None of these were run for this lesson.** `DISM` calls Home **Core** and Pro **Professional**,
+**None of these were run for this lesson.** `DISM` calls Home *Core* and Pro *Professional*,
 which are the internal names; you will meet them in logs and in the registry's `EditionID`. `slmgr`
 also shows the **licence channel**:
 

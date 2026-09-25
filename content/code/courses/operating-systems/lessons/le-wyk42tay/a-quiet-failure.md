@@ -19,8 +19,8 @@ Finished office-report.service - Write the daily disk report.
 ```
 
 **systemd reports no failed units, and there is no report.** The journal explains it: line 2 of the
-script **could not create** the file, because `/srv/reports` does not exist, and then the script went
-on, printed `report written`, and **exited successfully**. A shell script continues after a failed
+script *could not create* the file, because `/srv/reports` does not exist, and then the script went
+on, printed `report written`, and *exited successfully*. A shell script continues after a failed
 command unless told not to, and a service is judged by its **last** command. So the service said
 *Deactivated successfully*, every night, for a week.
 

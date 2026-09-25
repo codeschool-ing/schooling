@@ -41,8 +41,8 @@ soma delas:
 O `chmod 640 payroll.txt` deu ao dono leitura e gravação, ao grupo leitura, e aos outros nada, num passo
 só. O `stat` imprime o número de um arquivo que já existe, que é o jeito mais rápido de aprender a lê-los.
 
-Os números que vale saber de cor: **644** para um arquivo comum, **600** para um particular, **755**
-para um programa ou uma pasta em que qualquer um pode entrar, **700** para uma pasta particular.
+Os números que vale saber de cor: `644` para um arquivo comum, `600` para um particular, `755`
+para um programa ou uma pasta em que qualquer um pode entrar, `700` para uma pasta particular.
 
 ## Donos
 

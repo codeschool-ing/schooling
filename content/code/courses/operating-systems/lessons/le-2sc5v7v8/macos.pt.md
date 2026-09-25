@@ -30,6 +30,6 @@ quando uma pessoa entra, e uma lista de itens em segundo plano que cada app acre
 
 Para qualquer máquina, seja qual for o sistema:
 
-1. **O que roda em segundo plano, e alguém precisa disso?**
-2. **O que inicia no boot ou no login**, e essa lista é curta?
-3. **O que está agendado**, quando, em qual fuso, e foi **testado rodando agora**?
+1. *O que roda em segundo plano*, e alguém precisa disso?
+2. *O que inicia no boot ou no login*, e essa lista é curta?
+3. *O que está agendado*, quando, em qual fuso, e foi **testado rodando agora**?

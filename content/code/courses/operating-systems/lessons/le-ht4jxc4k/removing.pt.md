@@ -50,14 +50,14 @@ ana@server:~$ dpkg -l man-db 2>&1 | tail -1
 dpkg-query: no packages found matching man-db
 ```
 
-1. O **`apt remove man-db`** removeu o programa e disse, antes, que quatro pacotes **were automatically
+1. O `apt remove man-db` removeu o programa e disse, antes, que quatro pacotes **were automatically
    installed and are no longer required**, foram instalados automaticamente e não são mais necessários.
    Ele não os removeu.
-2. O **`dpkg -l`** mostrou então `rc`: removido (*removed*), mas os arquivos de **c**onfiguração ficaram.
+2. O `dpkg -l` mostrou então `rc`: removido (*removed*), mas os arquivos de **c**onfiguração ficaram.
    O `remove` mantém os ajustes em `/etc`, então uma reinstalação continua de onde parou.
-3. O **`apt autoremove`** removeu as quatro dependências de que nada mais precisa, **4186 kB**. Ele
+3. O `apt autoremove` removeu as quatro dependências de que nada mais precisa, **4186 kB**. Ele
    sabia quais porque o apt as marcou como automáticas ao instalá-las.
-4. O **`apt purge`** removeu a configuração também. Depois dele, o dpkg não tem registro nenhum do
+4. O `apt purge` removeu a configuração também. Depois dele, o dpkg não tem registro nenhum do
    `man-db`.
 
 | comando | remove o programa | remove os ajustes | remove o que ele trouxe |

@@ -40,7 +40,7 @@ cat: reports/q3.txt: Permission denied
 ana@server:/srv/office$ chmod o+x reports
 ```
 
-With `r` and no `x` for others, bruno **could list the names** in `reports` and **could not open the
+With `r` and no `x` for others, bruno *could list the names* in `reports` and **could not open the
 file inside**, even though `q3.txt` itself is readable by everybody. To reach anything in a folder you
 need `x` on it, and on every folder above it. That is also why Ubuntu's home folders keep others out:
 without `x` on `/home/ana`, nothing inside is reachable, whatever its own permissions say.

@@ -12,10 +12,10 @@ primeiro ficam em *Logs do Windows*:
 | **Aplicativo** | os programas: travamentos, erros que eles informam |
 | **Segurança** | logins e ações auditadas, o registro da aula 10 |
 
-Cada evento tem um **nível** (*Crítico*, *Erro*, *Aviso*, *Informações*), uma **fonte**, e um **ID de
-evento**, um número que quer dizer a mesma coisa em todo PC com Windows e é o que se busca. Dois que vale
-conhecer: o **41** da fonte *Kernel-Power* quer dizer que o PC reiniciou sem desligar direito, o sintoma
-do PC da recepção; o **7000** do *Service Control Manager* quer dizer que um serviço falhou ao iniciar.
+Cada evento tem um *nível* (*Crítico*, *Erro*, *Aviso*, *Informações*), uma *fonte*, e um *ID de
+evento*, um número que quer dizer a mesma coisa em todo PC com Windows e é o que se busca. Dois que vale
+conhecer: o *41* da fonte *Kernel-Power* quer dizer que o PC reiniciou sem desligar direito, o sintoma
+do PC da recepção; o *7000* do *Service Control Manager* quer dizer que um serviço falhou ao iniciar.
 
 ```sh
 Get-WinEvent -LogName System -MaxEvents 5
@@ -25,7 +25,7 @@ perfmon /rel                                                             # Relia
 ```
 
 **Nenhum dos comandos do Windows foi rodado para esta aula.** O **Monitor de Confiabilidade**, a última
-linha, desenha os mesmos eventos como uma linha do tempo com uma nota de estabilidade por dia, e é a
+linha, desenha os mesmos eventos como uma linha do tempo com uma nota de estabilidade por dia. É a
 resposta mais rápida para *desde quando, e o que mudou?*: o dia em que a linha cai em geral tem uma
 atualização ou um programa novo instalado.
 

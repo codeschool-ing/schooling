@@ -3,8 +3,8 @@ title: A scheduled task, written from scratch
 version: 1
 ---
 
-The nightly backup needs three things: **a script** that does the work, **a service** that runs the
-script, and **a timer** that starts the service. The script, `/usr/local/bin/office-backup`, compresses
+The nightly backup needs three things: *a script* that does the work, *a service* that runs the
+script, and *a timer* that starts the service. The script, `/usr/local/bin/office-backup`, compresses
 `/etc/apt` into `/var/backups`. The other two are short text files:
 
 ```
@@ -27,11 +27,11 @@ Persistent=true
 WantedBy=timers.target
 ```
 
-- The **service** is `Type=oneshot`: it runs, finishes and stops, rather than staying up like cron.
-- The **timer** has the same name, so it knows which service to start. **`OnCalendar=Mon..Fri 02:00`**
+- The *service* is `Type=oneshot`: it runs, finishes and stops, rather than staying up like cron.
+- The *timer* has the same name, so it knows which service to start. **`OnCalendar=Mon..Fri 02:00`**
   is every weekday at two. **`Persistent=true`** means that if the server was off at two, the backup runs
   as soon as it starts again, instead of being skipped.
-- **`WantedBy=timers.target`** is what `enable` hooks the timer into, so it is armed at every boot.
+- `WantedBy=timers.target` is what `enable` hooks the timer into, so it is armed at every boot.
 
 ```
 ana@server:~$ sudo systemctl daemon-reload
@@ -52,11 +52,11 @@ ana@server:~$ ls -lh /var/backups/etc-apt.tar.gz
 -rw-r--r-- 1 root root 3.6K Sep 25 11:24 /var/backups/etc-apt.tar.gz
 ```
 
-1. **`daemon-reload`** tells systemd to read the new files. Forgetting it is the usual reason a unit
+1. `daemon-reload` tells systemd to read the new files. Forgetting it is the usual reason a unit
    "does not exist" right after being written.
-2. **`enable --now`** armed the timer now and at every boot; `enable` printed the link it created.
-3. **`list-timers`** shows when it will run next.
-4. **`start office-backup.service`** ran the backup **now**, without waiting for the timer. It is how a
+2. `enable --now` armed the timer now and at every boot; `enable` printed the link it created.
+3. `list-timers` shows when it will run next.
+4. `start office-backup.service` ran the backup **now**, without waiting for the timer. It is how a
    scheduled task is tested, and it should be tested before anybody relies on it.
 5. The journal kept the script's output, **`backup written`**, and the file is there.
 

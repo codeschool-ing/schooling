@@ -3,7 +3,7 @@ title: O mesmo passeio no PowerShell
 version: 1
 ---
 
-Os comandos do PowerShell se chamam **cmdlets**, e todos têm nome no formato **Verbo-Substantivo**:
+Os comandos do PowerShell se chamam *cmdlets*, e todos têm nome no formato *Verbo-Substantivo*:
 `Get-Location`, `Set-Location`, `Get-ChildItem`. São mais longos para digitar e muito mais fáceis de
 adivinhar. Eis o mesmo passeio, no PowerShell 7 do mesmo servidor:
 
@@ -42,12 +42,12 @@ Path
 /home/ana/office/clients
 ```
 
-- **`Get-Location`** é o `pwd`, e responde com uma tabelinha, porque o que ele devolve é um objeto com
+- `Get-Location` é o `pwd`, e responde com uma tabelinha, porque o que ele devolve é um objeto com
   uma propriedade `Path`. A seção 06 volta a isso.
-- **`Set-Location`** é o `cd`. As aspas funcionam do mesmo jeito em volta de `'invoices 2026'`.
-- **`Get-ChildItem`** é o `ls`, e no Linux mostra a mesma sequência de permissões numa coluna chamada
+- `Set-Location` é o `cd`. As aspas funcionam do mesmo jeito em volta de `'invoices 2026'`.
+- `Get-ChildItem` é o `ls`, e no Linux mostra a mesma sequência de permissões numa coluna chamada
   `UnixMode`.
-- As duas últimas linhas digitaram **`cd`** e **`pwd`**, e funcionaram, porque o PowerShell define
+- As duas últimas linhas digitaram `cd` e `pwd`, e funcionaram, porque o PowerShell define
   **aliases**, apelidos curtos, para os cmdlets.
 
 ## Aliases, e por que eles mudam entre sistemas

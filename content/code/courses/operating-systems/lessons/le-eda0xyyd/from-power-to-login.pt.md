@@ -28,11 +28,11 @@ seja qual for o sistema:
 
 Porque, quando um computador não liga, *onde ele para* diz o que está quebrado:
 
-- **Nada na tela, ou uma mensagem do firmware** sobre o disco: a máquina nunca chegou ao
+- *Nada na tela, ou uma mensagem do firmware* sobre o disco: a máquina nunca chegou ao
   carregador de boot. Hardware, ou as configurações do firmware.
-- **O carregador aparece mas o sistema não inicia**: o kernel, ou o disco em que ele está.
-- **O logotipo gira para sempre**: o kernel iniciou e alguma coisa nos serviços travou.
-- **Chega ao login e aí falha**: o problema é daquele usuário, não da máquina.
+- *O carregador aparece mas o sistema não inicia*: o kernel, ou o disco em que ele está.
+- *O logotipo gira para sempre*: o kernel iniciou e alguma coisa nos serviços travou.
+- *Chega ao login e aí falha*: o problema é daquele usuário, não da máquina.
 
 Cada um desses tem as próprias ferramentas, e a aula 17 passa por elas. Por enquanto, a ordem é o
 mapa: cada etapa só roda se a anterior deu certo.

@@ -31,9 +31,9 @@ ana@server:~$ ubuntu-distro-info --devel
 stonking
 ```
 
-- `--days=eol` counts the days to the end of **standard support** for 24.04: 979 from the day this was
+- `--days=eol` counts the days to the end of *standard support* for 24.04: 979 from the day this was
   recorded, a little over two and a half years.
-- `--days=eol-esm` counts to the end of **Expanded Security Maintenance**: 2769 days, the ten-year
+- `--days=eol-esm` counts to the end of *Expanded Security Maintenance*: 2769 days, the ten-year
   mark. ESM comes with **Ubuntu Pro**, free for personal use on a few machines and paid for companies.
 - `--supported` lists what is still maintained. **24.04 is no longer the newest LTS**: 26.04,
   *Resolute Raccoon*, came out in April 2026. 26.10 is in the list too, and `--devel` shows it is the

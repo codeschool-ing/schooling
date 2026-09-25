@@ -33,10 +33,10 @@ LOGO=ubuntu-logo
 
 Três dessas linhas são para programas, não para pessoas:
 
-- **`ID=ubuntu`** é a distribuição, numa forma que um script consegue comparar.
-- **`ID_LIKE=debian`** é a família a que ela pertence. Um script que sabe instalar algo no Debian pode
+- `ID=ubuntu` é a distribuição, numa forma que um script consegue comparar.
+- `ID_LIKE=debian` é a família a que ela pertence. Um script que sabe instalar algo no Debian pode
   ler essa linha e concluir que os mesmos comandos funcionam aqui. Isso é a seção 02.
-- **`VERSION_CODENAME=noble`** é a versão, pelo nome. Os codinomes do Ubuntu seguem o alfabeto, então
+- `VERSION_CODENAME=noble` é a versão, pelo nome. Os codinomes do Ubuntu seguem o alfabeto, então
   a letra diz mais ou menos a idade de uma versão.
 
 O `/etc/os-release` existe também no Fedora, no Debian, no Arch, no SUSE e no Alpine, com as mesmas
@@ -46,7 +46,7 @@ comando que instale alguma coisa.
 ## Por que as diferenças importam
 
 O kernel e os comandos básicos são quase idênticos em todo lugar, e é por isso que a maior parte dos
-comandos da aula 12 funciona em qualquer uma. O que muda são as **camadas de cima**: o comando que
+comandos da aula 12 funciona em qualquer uma. O que muda são as *camadas de cima*: o comando que
 instala software, o nome de um pacote, o caminho de um arquivo de configuração e, acima de tudo, **por
 quanto tempo a versão à sua frente vai receber correções de segurança**. Um tutorial que diz
 `dnf install` não serve neste servidor, e uma resposta de fórum para o Arch pode supor, sem avisar, uma

@@ -3,7 +3,7 @@ title: Finding files, and finding words inside them
 version: 1
 ---
 
-Again two questions: **which files are called this**, and **which files contain this**.
+Again two questions: **which files are called this**, and *which files contain this*.
 
 ```
 ana@server:~$ find work -name '*.txt'
@@ -21,11 +21,11 @@ work/invoices/104.txt:1:Invoice 104 for Acme Ltd
 work/clients.csv:2:1,Acme Ltd,Sao Paulo
 ```
 
-- **`find`** searches by **name** (and size, date, owner), walking down from a folder. The pattern is
+- `find` searches by **name** (and size, date, owner), walking down from a folder. The pattern is
   quoted, so that `find` receives the `*` rather than the shell expanding it first, lesson 12's point.
-- **`grep -rn`** searches **inside** files: `-r` walks folders, `-n` prints the line number. It found
+- `grep -rn` searches **inside** files: `-r` walks folders, `-n` prints the line number. It found
   `Acme` in the invoice and in the client list.
-- **`Get-ChildItem -Recurse -Filter`** is PowerShell's `find`, and **`Select-String`** is its `grep`,
+- `Get-ChildItem -Recurse -Filter` is PowerShell's `find`, and `Select-String` is its `grep`,
   printing the file, line number and line in the same form.
 
 In the Command Prompt:

@@ -43,8 +43,8 @@ invoices:
 clients-backup.csv
 ```
 
-- O **`cp`** copia, e o **`cp -r`** copia uma pasta com tudo o que há dentro.
-- O **`mv`** move, e **mover dentro da mesma pasta é renomear**: não existe um comando separado para
+- O `cp` copia, e o `cp -r` copia uma pasta com tudo o que há dentro.
+- O `mv` move, e **mover dentro da mesma pasta é renomear**: não existe um comando separado para
   renomear. O `mv todo.txt notes-todo.txt` renomeou; o `mv clients-backup.csv invoices/` moveu.
 - A `/` no fim de `invoices/` é um hábito que vale ter. Se `invoices` não existisse, o `mv` recusaria em
   vez de renomear o arquivo para `invoices` em silêncio.

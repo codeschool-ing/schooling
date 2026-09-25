@@ -3,8 +3,8 @@ title: Por que um programa se recusa a rodar
 version: 1
 ---
 
-Um programa é feito para **uma arquitetura de processador**, **um sistema**, e muitas vezes para
-**versões específicas** das bibliotecas que usa. Qualquer uma das três pode recusá-lo.
+Um programa é feito para *uma arquitetura de processador*, *um sistema*, e muitas vezes para
+*versões específicas* das bibliotecas que usa. Qualquer uma das três pode recusá-lo.
 
 ```
 ana@server:~$ dpkg --print-architecture
@@ -23,14 +23,14 @@ PS /home/ana> $PSVersionTable.PSVersion.ToString()
 7.6.6
 ```
 
-- **`amd64`** é a arquitetura deste servidor, a de 64 bits da Intel e da AMD. Um programa feito para
+- `amd64` é a arquitetura deste servidor, a de 64 bits da Intel e da AMD. Um programa feito para
   `arm64`, o Apple silicon da aula 4 e o Windows on Arm da aula 5, não roda aqui sem um emulador.
-- O **`ldd`** lista as **bibliotecas compartilhadas** de que um programa precisa. O `ls` precisa de
-  algumas, entre elas a **`libc.so.6`**, a biblioteca C, aqui a **glibc 2.39**. Um programa compilado num
+- O `ldd` lista as **bibliotecas compartilhadas** de que um programa precisa. O `ls` precisa de
+  algumas, entre elas a `libc.so.6`, a biblioteca C, aqui a **glibc 2.39**. Um programa compilado num
   sistema mais novo contra a glibc 2.40 se recusa a iniciar neste, e é por isso que um binário copiado de
   uma distribuição mais nova falha com *version GLIBC_2.40 not found*, e por que os pacotes vêm da
   distribuição e não de outra.
-- O PowerShell diz qual é: **`Core`** é o PowerShell 7; **`Desktop`** é o Windows PowerShell 5.1. Um
+- O PowerShell diz qual é: **`Core`** é o PowerShell 7; `Desktop` é o Windows PowerShell 5.1. Um
   script escrito para um pode falhar no outro, o ponto da aula 5 sobre qual você vai encontrar.
 
 ## As mesmas três em cada sistema

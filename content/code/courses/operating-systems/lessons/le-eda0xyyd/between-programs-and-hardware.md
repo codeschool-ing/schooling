@@ -21,10 +21,10 @@ memory. Section 06 watches a program do exactly that.
 
 ## What it looks after
 
-- **Processes**: every running program, which ones exist, which one runs next.
-- **Memory**: who gets which part of the RAM, and what happens when there is not enough.
-- **Devices**: disks, keyboards, screens, printers and network cards, each through a **driver**.
-- **Files**: turning a disk full of numbered blocks into folders and names.
+- *Processes*: every running program, which ones exist, which one runs next.
+- *Memory*: who gets which part of the RAM, and what happens when there is not enough.
+- *Devices*: disks, keyboards, screens, printers and network cards, each through a *driver*.
+- *Files*: turning a disk full of numbered blocks into folders and names.
 
 It also keeps track of **users** and what each one is allowed to do, which is lessons 9 and 10.
 

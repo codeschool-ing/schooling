@@ -48,9 +48,9 @@ Nenhum arquivo assim, então nenhuma reinicialização está pendente. No Window
 
 ## O caminho de volta
 
-- **Windows**: *Configurações > Windows Update > Histórico de atualizações > Desinstalar atualizações*,
+- *Windows*: *Configurações > Windows Update > Histórico de atualizações > Desinstalar atualizações*,
   ou o `wusa` da seção 02; uma atualização de recursos pode ser revertida em até dez dias, em *Sistema >
   Recuperação > Voltar*.
-- **Linux**: o `apt install pacote=versão` põe de volta uma versão mais velha enquanto o arquivo ainda a
+- *Linux*: o `apt install pacote=versão` põe de volta uma versão mais velha enquanto o arquivo ainda a
   tiver, e um snapshot ou backup do disco do servidor é o caminho de volta maior.
-- **Qualquer um**: o backup feito antes, do qual a aula 17 depende.
+- *Qualquer um*: o backup feito antes, do qual a aula 17 depende.

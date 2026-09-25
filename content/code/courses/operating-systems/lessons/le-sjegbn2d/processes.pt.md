@@ -28,10 +28,10 @@ Count
    12
 ```
 
-- O **`ps`** lista processos; o `-eo` escolhe as colunas. As primeiras linhas são o primeiro processo da
+- O `ps` lista processos; o `-eo` escolhe as colunas. As primeiras linhas são o primeiro processo da
   aula 1, o `systemd`, e os serviços que ele iniciou.
-- O **`pgrep -a`** acha processos pelo nome e imprime o ID e a linha de comando deles.
-- O **`Get-Process -Name`** achou o mesmo processo, com o mesmo ID, pelo PowerShell, e **contou 12** na
+- O `pgrep -a` acha processos pelo nome e imprime o ID e a linha de comando deles.
+- O `Get-Process -Name` achou o mesmo processo, com o mesmo ID, pelo PowerShell, e **contou 12** na
   máquina inteira. Um desktop roda centenas; este é um servidor mínimo.
 
 Para parar, usa-se o ID:

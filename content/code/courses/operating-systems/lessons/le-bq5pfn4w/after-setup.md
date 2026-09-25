@@ -12,7 +12,7 @@ The same idea as lesson 2's list, with the Mac's names:
    FileVault*. Record the recovery key.
 3. **A name.** *System Settings > General > Sharing*, at the bottom, sets the **local hostname**, which
    is how the Mac appears on the network. `OFFICE-MAC-01`, not *Ana's MacBook Pro*.
-4. **The firewall.** macOS ships with it **off**. *System Settings > Network > Firewall*. On a laptop
+4. **The firewall.** macOS ships with it *off*. *System Settings > Network > Firewall*. On a laptop
    that joins café Wi-Fi it belongs on.
 5. **A backup.** **Time Machine**, in *System Settings > General*, to an external disk or a network
    share. It keeps hourly copies for a day and daily ones for a month, and it is what *Restore from
@@ -34,9 +34,9 @@ what people see in Finder, and *LocalHostName* is what the network uses, with `.
 
 ## Many Macs
 
-A company with fifty Macs does not do any of this by hand. It uses **Apple Business Manager** with a
-**device management** service (*MDM*): Macs bought through the company's account are registered to it
-from the factory, and when a new one first joins Wi-Fi, Setup Assistant enrols it, applies the
+A company with fifty Macs does not do any of this by hand. It uses *Apple Business Manager* with a
+*device management* service (*MDM*): Macs bought through the company's account are registered to it
+from the factory. When a new one first joins Wi-Fi, Setup Assistant enrols it, applies the
 settings, turns on FileVault and stores the recovery key centrally. **Activation Lock is then managed
 by the organisation**, not by whoever unpacked the Mac. It is lesson 2's Autopilot with Apple's name
 on it, and it asks the same questions once rather than at every desk.

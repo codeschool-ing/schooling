@@ -30,6 +30,6 @@ being quit is usually one of those.
 
 For any machine, whichever system:
 
-1. **What runs in the background, and does anybody need it?**
-2. **What starts at boot or at login**, and is that list short?
-3. **What is scheduled**, when, in which time zone, and has it been **tested by running it now**?
+1. *What runs in the background*, and does anybody need it?
+2. *What starts at boot or at login*, and is that list short?
+3. *What is scheduled*, when, in which time zone, and has it been **tested by running it now**?

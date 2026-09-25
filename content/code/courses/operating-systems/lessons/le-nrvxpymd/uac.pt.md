@@ -15,9 +15,9 @@ Quando um administrador entra, o Windows monta **dois tokens**, os pacotes de gr
 um programa carrega. Tudo começa com o **padrão**. Quando um programa precisa de mais, instalar
 software, gravar em `C:\Program Files`, mudar uma configuração do sistema, o Windows mostra um aviso:
 
-- **Para um administrador**, o aviso pergunta **Sim ou Não**. É o aviso de *consentimento*. O Sim inicia
+- *Para um administrador*, o aviso pergunta *Sim ou Não*. É o aviso de *consentimento*. O Sim inicia
   aquele programa com o token completo, e nada mais muda.
-- **Para um usuário padrão**, o mesmo aviso pede **nome e senha de um administrador**. É o aviso de
+- *Para um usuário padrão*, o mesmo aviso pede **nome e senha de um administrador**. É o aviso de
   *credenciais*, e é como a Ana instala algo no PC da recepção sem a recepcionista jamais ser
   administradora.
 

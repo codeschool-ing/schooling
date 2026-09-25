@@ -28,8 +28,8 @@ Six services on this minimal server, each with a one-line description: `cron`, t
 section 05; `dbus`, how programs talk to each other; the journal, which collects every log; logins; name
 resolution; and a manager for ana's own session.
 
-`systemctl status` gives one service's full picture: **Loaded**, which file defines it and whether it is
-**enabled**; **Active**, whether it runs now and since when; and its **Main PID**, the process you
+`systemctl status` gives one service's full picture: *Loaded*, which file defines it and whether it is
+*enabled*; *Active*, whether it runs now and since when; and its *Main PID*, the process you
 would see in `ps`. The `-n 0` left out the log lines that `status` normally adds at the end; section 04
 reads a service's log on purpose.
 

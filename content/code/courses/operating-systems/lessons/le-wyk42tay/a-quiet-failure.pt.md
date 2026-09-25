@@ -19,8 +19,8 @@ Finished office-report.service - Write the daily disk report.
 ```
 
 **O systemd não informa unidade nenhuma com falha, e não há relatório.** O journal explica: a linha 2 do
-script **não conseguiu criar** o arquivo, porque o `/srv/reports` não existe, e aí o script seguiu em
-frente, imprimiu `report written` e **terminou com sucesso**. Um script de shell continua depois de um
+script *não conseguiu criar* o arquivo, porque o `/srv/reports` não existe, e aí o script seguiu em
+frente, imprimiu `report written` e *terminou com sucesso*. Um script de shell continua depois de um
 comando que falhou, a não ser que alguém mande parar, e um serviço é julgado pelo **último** comando.
 Então o serviço disse *Deactivated successfully*, toda noite, por uma semana.
 

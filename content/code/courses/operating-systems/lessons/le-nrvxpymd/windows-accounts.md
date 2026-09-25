@@ -11,11 +11,11 @@ A Windows PC can have three kinds of account, and lesson 2 chose among them at s
 | **Microsoft account** | an e-mail address | Microsoft, synced to the PC |
 | **work or school account** | the organisation's address | Entra ID or the office's Active Directory |
 
-Whatever the kind, **two groups decide what it may do**: **Administrators** and **Users**. A member of
+Whatever the kind, **two groups decide what it may do**: *Administrators* and *Users*. A member of
 Users is a **standard user**, who can run programs and change their own settings but cannot install for
 everybody, change system settings or read other people's files.
 
-Windows also has a built-in account named **Administrator**, **disabled by default** since Windows
+Windows also has a built-in account named *Administrator*, *disabled by default* since Windows
 Vista. Like Ubuntu's root, it is there and nobody signs in as it.
 
 ```sh

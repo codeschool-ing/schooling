@@ -12,7 +12,7 @@ most trouble.
 
 ## Reinstall macOS
 
-From Recovery, **Reinstall macOS** puts a fresh copy of the system in place and **leaves the Data
+From Recovery, *Reinstall macOS* puts a fresh copy of the system in place and **leaves the Data
 volume alone**. Files, apps and settings are all still there afterwards. It is the Mac's version of
 lesson 2's in-place upgrade: the right choice when macOS itself is misbehaving and the person is
 keeping the Mac.

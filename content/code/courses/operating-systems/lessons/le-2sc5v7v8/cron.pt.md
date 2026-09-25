@@ -26,7 +26,7 @@ ficar curto.
 ```
 
 O sistema tem os próprios agendamentos também: arquivos em **`/etc/cron.d`**, e scripts deixados em
-**`/etc/cron.daily`**, `weekly` e `monthly`, que rodam uma vez por dia, semana ou mês sem ninguém escrever
+`/etc/cron.daily`, `weekly` e `monthly`, que rodam uma vez por dia, semana ou mês sem ninguém escrever
 um horário. Neste servidor o `apt` e o `dpkg`, as ferramentas da aula 11, mantêm um script cada ali.
 
 | | cron | timer do systemd |
@@ -38,4 +38,4 @@ um horário. Neste servidor o `apt` e o `dpkg`, as ferramentas da aula 11, mant�
 | no macOS | sim | não |
 
 **Escolha timers num servidor com systemd** pelo journal e pelo comportamento com execuções perdidas;
-**saiba ler crontabs** porque todo servidor herdado tem alguma.
+*saiba ler crontabs* porque todo servidor herdado tem alguma.

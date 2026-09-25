@@ -23,6 +23,6 @@ As ferramentas mudam entre sistemas; a ordem das perguntas não.
    que aconteceu, o que resolveu e como você soube. A próxima pessoa com esse problema pode ser você,
    daqui a um ano.
 
-Este curso termina aqui, com os três sistemas instalados, entendidos e funcionando. O curso de **suporte
-técnico** leva o método adiante, com a pessoa do outro lado do chamado; o de **virtualização** roda os
+Este curso termina aqui, com os três sistemas instalados, entendidos e funcionando. O curso de *suporte
+técnico* leva o método adiante, com a pessoa do outro lado do chamado; o de *virtualização* roda os
 três sistemas lado a lado numa máquina só.

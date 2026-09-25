@@ -11,11 +11,11 @@ Um PC com Windows pode ter três tipos de conta, e a aula 2 escolheu entre elas 
 | **conta Microsoft** | um endereço de e-mail | na Microsoft, sincronizada com o PC |
 | **conta corporativa ou de estudante** | o endereço da organização | no Entra ID ou no Active Directory do escritório |
 
-Seja qual for o tipo, **dois grupos decidem o que ela pode**: **Administradores** e **Usuários**. Um
+Seja qual for o tipo, **dois grupos decidem o que ela pode**: *Administradores* e *Usuários*. Um
 membro de Usuários é um **usuário padrão**, que roda programas e muda os próprios ajustes, mas não
 instala para todos, não muda configurações do sistema nem lê arquivos dos outros.
 
-O Windows também tem uma conta embutida chamada **Administrador**, **desativada por padrão** desde o
+O Windows também tem uma conta embutida chamada *Administrador*, *desativada por padrão* desde o
 Windows Vista. Como o root do Ubuntu, ela existe e ninguém entra nela.
 
 ```sh

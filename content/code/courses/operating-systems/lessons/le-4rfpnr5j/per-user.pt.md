@@ -27,13 +27,13 @@ PS /home/ana> $PROFILE
 /home/ana/.config/powershell/Microsoft.PowerShell_profile.ps1
 ```
 
-- O **`.bashrc`** é lido por todo bash novo, e guarda os ajustes do shell da ana: 96 linhas não vazias
+- O `.bashrc` é lido por todo bash novo, e guarda os ajustes do shell da ana: 96 linhas não vazias
   aqui, entre elas `HISTSIZE=1000`, quantos comandos o `history` da aula 8 lembra.
-- O **`.profile`** é lido uma vez no login.
-- O **`.config`** e o **`.local`** guardam os ajustes e dados de programas mais novos, uma pasta por
+- O `.profile` é lido uma vez no login.
+- O `.config` e o `.local` guardam os ajustes e dados de programas mais novos, uma pasta por
   programa. A pasta `.config` ainda não existe nesta pasta pessoal; o primeiro programa que precisar dela
   a cria.
-- O **`$PROFILE`** é o `.bashrc` do próprio PowerShell: o caminho que ele leria, embaixo de
+- O `$PROFILE` é o `.bashrc` do próprio PowerShell: o caminho que ele leria, embaixo de
   `~/.config/powershell`, embora nenhum arquivo assim tenha sido escrito.
 
 Um ajuste do usuário se sobrepõe ao da máquina só para aquela pessoa, e é isso que o torna seguro: um
