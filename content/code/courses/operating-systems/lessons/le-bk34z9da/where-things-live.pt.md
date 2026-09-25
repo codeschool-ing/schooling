@@ -15,9 +15,9 @@ Aqui está o topo dessa árvore no servidor recém-instalado:
 
 ```
 ana@server:~$ ls /
-bin		   dev	 lib		    media  proc  sbin		     sys  var
-bin.usr-is-merged  etc	 lib.usr-is-merged  mnt    root  sbin.usr-is-merged  tmp
-boot		   home  lib64		    opt    run	 srv		     usr
+bin                dev   lib                media  proc  sbin                sys  var
+bin.usr-is-merged  etc   lib.usr-is-merged  mnt    root  sbin.usr-is-merged  tmp
+boot               home  lib64              opt    run   srv                 usr
 ana@server:~$ ls /home
 ana
 ```

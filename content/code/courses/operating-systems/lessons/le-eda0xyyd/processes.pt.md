@@ -45,11 +45,11 @@ dentro de `/proc`:
 ana@server:~/office$ sleep 600 &
 [1] 769
 ana@server:~/office$ grep -E '^(Name|State|PPid|Threads|VmRSS)' /proc/$!/status
-Name:	sleep
-State:	S (sleeping)
-PPid:	767
-VmRSS:	    2124 kB
-Threads:	1
+Name:   sleep
+State:  S (sleeping)
+PPid:   767
+VmRSS:      2124 kB
+Threads:        1
 ana@server:~/office$ kill %1
 ana@server:~/office$ ps -o pid,comm
     PID COMMAND

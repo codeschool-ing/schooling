@@ -59,9 +59,9 @@ uma nova:
 ana@server:~$ sudo passwd -e carla
 passwd: password changed.
 ana@server:~$ sudo chage -l carla | head -3
-Last password change					: password must be changed
-Password expires					: password must be changed
-Password inactive					: password must be changed
+Last password change                                    : password must be changed
+Password expires                                        : password must be changed
+Password inactive                                       : password must be changed
 ```
 
 ## Saindo
