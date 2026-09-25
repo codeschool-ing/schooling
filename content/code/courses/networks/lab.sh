@@ -63,7 +63,7 @@ ROUTERS="router isp core"
 need() {
   local missing=()
   for p in iproute2 bind9 bind9-dnsutils unbound nginx openssl tcpdump traceroute mtr-tiny \
-           netcat-openbsd curl openssh-server nftables; do
+           netcat-openbsd curl openssh-server nftables vsftpd tnftp rsync; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
   done
   [ ${#missing[@]} -eq 0 ] || { echo "install first: ${missing[*]}" >&2; exit 1; }
@@ -127,7 +127,7 @@ NFT
 # ip netns exec already mounts /etc/netns/HOST/* over /etc/*. The rest of what
 # tells one machine from another lives under /lab/HOST and is mounted over the
 # real path when something runs "on" that host.
-OVERLAY="home etc/bind var/cache/bind run/named etc/unbound etc/nginx var/www var/log/nginx etc/ssh var/log/ssh etc/ssl/private"
+OVERLAY="home etc/bind var/cache/bind run/named etc/unbound etc/nginx var/www var/log/nginx etc/ssh var/log/ssh etc/ssl/private etc/vsftpd.conf"
 overlay() {
   local h=$1 p
   for p in $OVERLAY; do
@@ -493,6 +493,53 @@ NFT
   printf '<h1>Office server: backups</h1>\n<p>Last backup: finished.</p>\n' > "$LAB/server/var/www/admin/index.html"
 }
 
+# -------------------------------------------------------------- file transfer
+build_files() {
+  # The hosting account that owns the website: whoever logs in as it by FTP
+  # lands in the site's own directory, and what they upload is what is served.
+  id example >/dev/null 2>&1 || useradd -M -d /var/www/example -s /bin/bash example
+  echo 'example:Sunflower-77' | chpasswd
+  chown -R example:example "$LAB/www/var/www/example"
+  mkdir -p /var/run/vsftpd/empty
+  cat > "$LAB/www/etc/vsftpd.conf" <<'C'
+listen=YES
+listen_address=192.0.2.80
+listen_ipv6=NO
+background=NO
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+local_umask=022
+chroot_local_user=YES
+allow_writeable_chroot=YES
+pasv_min_port=40000
+pasv_max_port=40009
+secure_chroot_dir=/var/run/vsftpd/empty
+pam_service_name=vsftpd
+seccomp_sandbox=NO
+xferlog_enable=YES
+ssl_enable=YES
+rsa_cert_file=/etc/ssl/private/example.com.crt
+rsa_private_key_file=/etc/ssl/private/example.com.key
+allow_anon_ssl=NO
+force_local_logins_ssl=NO
+force_local_data_ssl=NO
+require_ssl_reuse=NO
+C
+  # The office scanner drops its scans on the server by SFTP, and may do
+  # nothing else: no shell, and no view of anything above its own folder.
+  id scans >/dev/null 2>&1 || useradd -M -d /srv/scans -s /bin/bash scans
+  echo 'scans:scanner-2026' | chpasswd
+  mkdir -p /srv/scans/inbox; chown root:root /srv/scans; chmod 755 /srv/scans
+  chown scans:scans /srv/scans/inbox
+  cat >> "$LAB/server/etc/ssh/sshd_config" <<'C'
+Match User scans
+    ForceCommand internal-sftp
+    ChrootDirectory /srv/scans
+    AllowTcpForwarding no
+C
+}
+
 # --------------------------------------------------------------------- start
 daemon() {  # daemon HOST COMMAND
   exec_on "$1" root "$2 </dev/null >/dev/null 2>&1 &"
@@ -505,6 +552,7 @@ start() {
   daemon server "/usr/sbin/sshd -f /etc/ssh/sshd_config -E /var/log/ssh/sshd.log"
   daemon www "/usr/sbin/sshd -f /etc/ssh/sshd_config -E /var/log/ssh/sshd.log"
   daemon server "python3 -m http.server --bind 127.0.0.1 --directory /var/www/admin 8080"
+  daemon www "vsftpd /etc/vsftpd.conf"
   # Wait until the resolver can answer, so the first lesson line is not a timeout.
   for _ in $(seq 50); do
     exec_on laptop ana 'dig +short +time=1 +tries=1 www.example.com' 2>/dev/null | grep -q . && break
@@ -537,6 +585,7 @@ up() {
   build_tls
   build_web
   build_ssh
+  build_files
   start
 }
 
