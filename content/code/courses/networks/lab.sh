@@ -236,6 +236,9 @@ shop         CNAME  www.example.com.
 mail         A      192.0.2.25
 office       A      203.0.113.2
 _dmarc       TXT    "v=DMARC1; p=reject; rua=mailto:dmarc@example.com"
+; a subdomain handed to a server that does not answer for it: a lame delegation
+old          NS     ns2.example.com.
+ns2          A      192.0.2.20
 Z
   zone ns1 example.net. <<Z
 \$TTL 3600
