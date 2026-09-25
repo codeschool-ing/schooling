@@ -1,0 +1,28 @@
+---
+title: Três jeitos de um programa chegar
+version: 1
+---
+
+Seja qual for o sistema, um programa chega a um computador de um de três jeitos.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 180\" role=\"img\" aria-label=\"Três jeitos de instalar um programa, comparados. Um instalador baixado de um site: conferido por você, se alguém conferiu; atualizado pelo próprio programa, se ele quiser; removido pelo desinstalador dele. Uma loja, como a Microsoft Store ou a App Store: conferido, atualizado e removido pela loja. Um gerenciador de pacotes, como o apt: conferido pela distribuição, que assina cada pacote; tudo atualizado com um comando; removido de forma limpa com um comando.\"><defs><marker id=\"rt-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"238\" y=\"16\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">quem conferiu</text><text x=\"398\" y=\"16\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">quem atualiza</text><text x=\"568\" y=\"16\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">como sai</text><rect x=\"20\" y=\"30\" width=\"680\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"48\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">um instalador de um site</text><text x=\"238\" y=\"48\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">você, se alguém</text><text x=\"398\" y=\"48\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">o programa, se quiser</text><text x=\"568\" y=\"48\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">o desinstalador dele</text><rect x=\"20\" y=\"76\" width=\"680\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"94\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">uma loja</text><text x=\"238\" y=\"94\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">a loja</text><text x=\"398\" y=\"94\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">a loja</text><text x=\"568\" y=\"94\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">a loja</text><rect x=\"20\" y=\"122\" width=\"680\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"140\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">um gerenciador de pacotes</text><text x=\"238\" y=\"140\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">a distribuição, assinado</text><text x=\"398\" y=\"140\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">um comando, tudo</text><text x=\"568\" y=\"140\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">um comando, limpo</text></svg>", "caption": "Descendo a tabela, outra pessoa assume mais do trabalho. A linha de cima é a que deixa uma máquina com vinte programas, cada um se atualizando ou não."}
+```
+
+- **Um instalador de um site.** Um `.exe` ou `.msi` no Windows, um `.dmg` ou `.pkg` no Mac. Funciona, e
+  toda pergunta do desenho fica com você: este é o site de verdade, este é o arquivo de verdade, e este
+  programa vai se atualizar algum dia?
+- **Uma loja.** A Microsoft Store e a App Store do Mac conferem o que publicam, instalam sem
+  administrador na maioria das máquinas, e atualizam tudo o que instalaram.
+- **Um gerenciador de pacotes.** O `apt` no Ubuntu, o `winget` no Windows, o Homebrew no Mac. Ele
+  instala a partir de uma lista que alguém mantém, com dependências e assinaturas, por um comando que
+  pode ser anotado e repetido na próxima máquina.
+
+**Prefira-os na ordem da tabela, de baixo para cima.** Quando um programa só existe como instalador,
+pegue-o **no site do próprio fabricante**, chegando lá digitando o endereço e não por um resultado de
+busca, e confira como a aula 3 conferiu a imagem do Ubuntu: um checksum publicado, ou no Windows a aba
+*Assinaturas Digitais* das propriedades do arquivo.
+
+**Instalar precisa de direitos de administrador** nos três sistemas, pelo motivo que a aula 10 deu: o
+que uma pessoa instala para a máquina inteira roda para todo mundo. É por isso que a resposta ao
+contador é a Ana instalar, e não o contador virar administrador.
