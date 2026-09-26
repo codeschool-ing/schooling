@@ -28,7 +28,8 @@
 #   sudo bash lab.sh seed NAME          the cloud-init disk, for a guest made by hand
 #   sudo bash lab.sh wait NAME          until the guest answers ssh, then name it in /etc/hosts
 #   sudo bash lab.sh rm NAME
-#   sudo bash lab.sh down               every guest and every network but default
+#   sudo bash lab.sh office             a stand-in for the office network, for lesson 11 on
+#   sudo bash lab.sh down               every guest, every network but default, and the office
 set -euo pipefail
 
 IMAGES=/var/lib/libvirt/images
@@ -62,8 +63,53 @@ up() {
   chown ana:ana /home/ana/.ssh/config
 }
 
-address() {  # address NAME: the guest's IPv4 address, from DHCP or from the agent
-  virsh domifaddr "$1" 2>/dev/null | awk '/ipv4/{sub(/\/.*/, "", $4); print $4; exit}'
+address() {  # address NAME: the guest's IPv4 address, from libvirt's DHCP or from the agent
+  local a
+  a=$(virsh domifaddr "$1" 2>/dev/null | awk '/ipv4/{sub(/\/.*/, "", $4); print $4; exit}') || true
+  # a guest on a bridged network gets its address from the office's DHCP, which
+  # libvirt never sees, so the guest agent is asked instead
+  [ -n "$a" ] || a=$(virsh domifaddr "$1" --source agent 2>/dev/null |
+                     awk '/ipv4/ && $4 !~ /^127\./ {sub(/\/.*/, "", $4); print $4; exit}') || true
+  echo "$a"
+}
+
+office() {  # the office network: a bridge on host, and one other device on it
+  # On your own computer, your real network is this, and a bridged guest joins
+  # it through your network card. The computer the lab was recorded on has no
+  # network card of its own to lend, so this stands in: a bridge called lan0 on
+  # which host is 10.0.0.1, and a device called printer at 10.0.0.50, which
+  # answers HTTP, logs who asked, and hands out the office's addresses by DHCP.
+  ip link show lan0 >/dev/null 2>&1 && return
+  ip link add lan0 type bridge
+  ip addr add 10.0.0.1/24 dev lan0
+  ip link set lan0 up
+  ip netns add printer
+  ip link add prn0 type veth peer name prn0-lan
+  ip link set prn0-lan master lan0 up
+  ip link set prn0 netns printer
+  ip -n printer addr add 10.0.0.50/24 dev prn0
+  ip -n printer link set prn0 up
+  ip -n printer link set lo up
+  mkdir -p /var/tmp/office-www
+  echo "office printer: ready" > /var/tmp/office-www/index.html
+  ip netns exec printer dnsmasq --interface=prn0 --bind-interfaces --port=0 \
+    --dhcp-range=10.0.0.100,10.0.0.150,12h --dhcp-option=option:router,10.0.0.1 \
+    --dhcp-leasefile=/run/office-dhcp.leases --pid-file=/run/office-dhcp.pid
+  ip netns exec printer setsid python3 -m http.server 80 --directory /var/tmp/office-www \
+    >/var/log/office-http.log 2>&1 < /dev/null &
+  local i
+  for i in $(seq 40); do
+    ip netns exec printer bash -c ': > /dev/tcp/127.0.0.1/80' 2>/dev/null && break
+    sleep 0.25
+  done
+}
+
+office_down() {
+  [ -f /run/office-dhcp.pid ] && kill "$(cat /run/office-dhcp.pid)" 2>/dev/null || true
+  ip netns pids printer 2>/dev/null | xargs -r kill 2>/dev/null || true
+  ip netns del printer 2>/dev/null || true
+  ip link del lan0 2>/dev/null || true
+  rm -f /run/office-dhcp.pid /run/office-dhcp.leases
 }
 
 seed() {  # seed NAME: the cloud-init disk that names a guest and lets ana in
@@ -123,6 +169,7 @@ down() {
     virsh net-destroy "$n" >/dev/null 2>&1 || true; virsh net-undefine "$n" >/dev/null 2>&1 || true
   done
   rm -f /home/ana/.ssh/known_hosts
+  office_down
   # the default network's DHCP leases, so an old guest's address is not handed
   # to a new one with the same name, and no lesson reads another's leftovers
   if virsh net-info default >/dev/null 2>&1; then
@@ -138,6 +185,7 @@ case "${1:-}" in
   wait) wait_vm "$2" ;;
   rm) rm_vm "$2" ;;
   down) down ;;
+  office) office ;;
   reset) down; up ;;
-  *) echo "usage: lab.sh up|down|reset|vm NAME [NETWORK] [MEMORY_MB] [VCPUS]|rm NAME" >&2; exit 2 ;;
+  *) echo "usage: lab.sh up|down|reset|office|vm NAME [NETWORK] [MEMORY_MB] [VCPUS]|rm NAME" >&2; exit 2 ;;
 esac
