@@ -24,7 +24,7 @@ ana@host:~$ ls -lsh /var/lib/libvirt/images/vm1.qcow2
 ```
 
 O `snapshot-create-as` tirou um snapshot chamado `clean` de um convidado **ligado**, e o `snapshot-list`
-mostra o estado dele como `running`: ele guarda o disco como estava e a **memória** como estava também,
+mostra o estado dele como `running`. Ele guarda o disco como estava e a **memória** como estava também,
 então voltar a ele põe o convidado de volta no meio do que fazia, programas abertos, em vez de desligado.
 O `qemu-img info` mostra para onde ele foi: dentro do próprio `vm1.qcow2`, com um `VM SIZE` de 426 MiB, a
 memória salva. O arquivo cresceu para 453M.

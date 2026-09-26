@@ -24,7 +24,7 @@ ana@host:~$ ls -lsh /var/lib/libvirt/images/vm1.qcow2
 ```
 
 `snapshot-create-as` took a snapshot called `clean` of a **running** guest, and `snapshot-list` shows its
-state as `running`: it holds the disk as it was and the **memory** as it was too, so returning to it
+state as `running`. It holds the disk as it was and the **memory** as it was too, so returning to it
 puts the guest back mid-flight, programs open, rather than switched off. `qemu-img info` shows where it
 went: inside `vm1.qcow2` itself, with a `VM SIZE` of 426 MiB, the saved memory. The file grew to
 453M.

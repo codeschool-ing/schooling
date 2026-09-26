@@ -5,7 +5,7 @@ version: 1
 
 To see a guest from the other side, there has to be another side. On your own computer it is your real
 network. The computer this course was recorded on has no card of its own to lend, so `lab.sh office`
-builds a small office network instead: a bridge called `lan0`, where host is `10.0.0.1`, and one other
+builds a small office network instead. It is a bridge called `lan0`, where host is `10.0.0.1`, and one other
 device on it, a **printer** at `10.0.0.50` that answers web requests, writes down who asked, and runs
 the office's DHCP:
 

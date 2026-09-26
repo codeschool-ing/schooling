@@ -10,7 +10,7 @@ As redes do Hyper-V são switches virtuais, de três tipos, mais um que o Window
 ```
 
 Quando um convidado num laptop Windows "está sem internet", confira primeiro em que switch está a placa
-dele: o Default Switch quase sempre funciona, e um switch Externo preso à placa cabeada não funciona
+dele. O Default Switch quase sempre funciona. Um switch Externo preso à placa cabeada não funciona
 enquanto o laptop está no Wi-Fi, o mesmo defeito da VMnet0 da aula 5.
 
 No PowerShell, como administrador:

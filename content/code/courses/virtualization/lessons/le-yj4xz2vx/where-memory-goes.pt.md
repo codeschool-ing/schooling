@@ -41,7 +41,7 @@ residentes: o convidado tocou menos da metade do que recebeu. As outras áreas g
 `rwx`, memória que pode ser executada, e são 16, com 1046796 KiB entre elas.
 
 Isso é **código traduzido**. Sem VT-x, o QEMU transforma as instruções do convidado em instruções para o
-processador do host e guarda o resultado, para não ter de traduzir o mesmo laço duas vezes; ele reserva
+processador do host e guarda o resultado, para não ter de traduzir o mesmo laço duas vezes. Ele reserva
 até 1 GiB para isso por padrão, e um convidado que já deu boot o encheu.
 
 ```schooling-figure

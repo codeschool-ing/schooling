@@ -7,8 +7,8 @@ VirtualBox is a type 2 hypervisor, lesson 2, and it runs on Windows, macOS and L
 Oracle publishes it, with an optional *Extension Pack* under a different licence that adds a few
 features, such as remote display, and which businesses may have to pay for.
 
-It is an application, but not only an application: to use the processor's virtualisation features it
-installs a **driver in the host's kernel**, called `vboxdrv` on Linux. Here is VirtualBox 7.0.16 on this
+It is an application, and it also installs a **driver in the host's kernel**, called `vboxdrv` on Linux,
+to use the processor's virtualisation features. Here is VirtualBox 7.0.16 on this
 course's host:
 
 ```

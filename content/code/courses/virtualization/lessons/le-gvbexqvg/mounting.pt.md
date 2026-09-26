@@ -23,7 +23,7 @@ how to reset the printer
 `share` e `docs` são as etiquetas da descrição; `trans=virtio` diz que os arquivos viajam por um canal
 virtio, aula 8. As duas pastas mostram os arquivos do host, e o convidado consegue lê-los.
 
-Uma montagem feita à mão dura até o convidado reiniciar. Para mantê-la, ela vai para o `/etc/fstab`:
+**Uma montagem feita à mão dura até o convidado reiniciar.** Para mantê-la, ela vai para o `/etc/fstab`:
 
 ```
 ana@vm1:~$ echo "share /mnt/share 9p trans=virtio,version=9p2000.L,nofail 0 0" | sudo tee -a /etc/fstab

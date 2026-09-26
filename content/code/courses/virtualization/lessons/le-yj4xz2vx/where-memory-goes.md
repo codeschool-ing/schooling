@@ -41,7 +41,7 @@ resident: the guest has touched less than half of what it was given. The other l
 `rwx`, memory that can be executed, and there are 16 of them holding 1046796 KiB between them.
 
 That is **translated code**. Without VT-x, QEMU turns the guest's instructions into instructions for the
-host's processor and keeps the result, so that it does not have to translate the same loop twice; it
+host's processor and keeps the result, so that it does not have to translate the same loop twice. It
 sets aside up to 1 GiB for that by default, and a guest that has booted has filled it.
 
 ```schooling-figure
