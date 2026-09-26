@@ -18,4 +18,4 @@ primeira tentativa valer:
    respostas a questões em vez do assunto das questões.
 
 Marque a prova quando a lista de objetivos não tiver mais nenhuma linha no terceiro grupo, não antes. Uma data
-no calendário ajuda algumas pessoas a estudar; uma data cedo demais é o jeito mais comum de pagar duas vezes.
+no calendário ajuda algumas pessoas a estudar; uma data cedo demais é um jeito fácil de pagar duas vezes.

@@ -19,4 +19,4 @@ attempt count:
    and they teach answers to questions rather than the subject the questions are about.
 
 Book the exam when the objectives list has no line left in the third group, not before. A date in the
-calendar helps some people study; a date too early is the most common way to pay twice.
+calendar helps some people study; a date set too early is an easy way to pay twice.

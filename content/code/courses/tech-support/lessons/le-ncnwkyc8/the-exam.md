@@ -5,7 +5,7 @@ version: 1
 
 The three follow the same pattern, and each exam's page on comptia.org has the current details:
 
-- **Question types.** Multiple-choice questions, and **performance-based questions**, which ask you to do
+- **Question types.** Multiple-choice questions, and *performance-based questions*, which ask you to do
   something in a simulation: configure a setting, put steps in order, match items. The second kind is why
   labs matter: it asks what you would type or click, not what you remember reading.
 - **Where.** At a test centre run by Pearson VUE, CompTIA's exam provider, or online with a remote proctor

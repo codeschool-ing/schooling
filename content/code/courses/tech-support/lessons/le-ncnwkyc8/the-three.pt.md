@@ -7,10 +7,10 @@ version: 1
 |---|---|---|---|
 | para | o trabalho inteiro do técnico de suporte | as redes sobre as quais o suporte trabalha | administrar sistemas Linux |
 | provas | **duas**, Core 1 e Core 2, as duas necessárias | uma | uma |
-| lugar habitual | a primeira certificação de uma carreira de suporte | depois do A+, ou no lugar dele para uma função de redes | para funções com servidores Linux |
+| lugar habitual | muitas vezes a primeira certificação de uma carreira de suporte | depois do A+, ou no lugar dele para uma função de redes | para funções com servidores Linux |
 | nesta trilha | a maior parte, na figura abaixo | o curso de redes, e mais profundidade | o curso de Linux, e mais profundidade |
 
-O **A+** é o que mais aparece em anúncios de vagas de suporte. A primeira prova é sobre hardware, dispositivos
+O **A+** é o que foi escrito para o trabalho do técnico de suporte como um todo. A primeira prova é sobre hardware, dispositivos
 móveis, redes e virtualização, a segunda sobre sistemas operacionais, segurança, solução de problemas de
 software e o que a CompTIA chama de procedimentos operacionais: documentação, gestão de mudanças,
 comunicação e profissionalismo, ou seja, boa parte deste curso.

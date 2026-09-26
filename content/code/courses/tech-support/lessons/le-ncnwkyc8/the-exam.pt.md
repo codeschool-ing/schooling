@@ -5,7 +5,7 @@ version: 1
 
 As três seguem o mesmo padrão, e a página de cada prova em comptia.org tem os detalhes atuais:
 
-- **Tipos de questão.** Questões de múltipla escolha, e **questões baseadas em desempenho**, que pedem que você
+- **Tipos de questão.** Questões de múltipla escolha, e *questões baseadas em desempenho*, que pedem que você
   faça algo numa simulação: configurar uma opção, pôr passos em ordem, ligar itens. O segundo tipo é o motivo
   de os laboratórios importarem: ele pergunta o que você digitaria ou clicaria, não o que você lembra de ter
   lido.

@@ -7,10 +7,10 @@ version: 1
 |---|---|---|---|
 | for | the support technician's whole job | the networks a support job runs on | administering Linux systems |
 | exams | **two**, Core 1 and Core 2, both needed | one | one |
-| usual place | the first certification of a support career | after A+, or instead of it for a network role | for roles with Linux servers |
+| usual place | often the first certification of a support career | after A+, or instead of it for a network role | for roles with Linux servers |
 | in this track | most of it, the figure below | the networks course, and more depth | the Linux course, and more depth |
 
-**A+** is the one most often asked for in support job adverts. Its first exam is about hardware,
+**A+** is the one written for the support technician's job as a whole. Its first exam is about hardware,
 mobile devices, networking and virtualisation, the second about operating systems, security, software
 troubleshooting and what CompTIA calls operational procedures: documentation, change management,
 communication and professionalism, which is to say a good part of this course.
