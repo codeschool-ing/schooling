@@ -9,7 +9,7 @@ Para que um técnico de suporte usa máquinas virtuais, na ordem em que você de
   você não tem certeza: primeiro num convidado, depois no computador do cliente.
 - **Outro sistema operacional.** Um convidado Windows num laptop Linux, ou o contrário, para seguir os
   passos de um cliente no sistema que ele tem de fato.
-- **Um laboratório.** Um cliente, um servidor e algo para atacar ou consertar, num computador só, numa
+- **Um laboratório.** Um cliente, um servidor e algo quebrado para consertar, num computador só, numa
   rede só deles. As aulas 14 e 15 montam um, e os cursos depois deste o usam.
 - **Software antigo.** Um programa que só roda num sistema antigo continua rodando num convidado desse
   sistema depois que o último computador de verdade que o rodava já se foi.

@@ -9,7 +9,7 @@ What a support technician uses virtual machines for, in the order you are likely
   a guest first, on the customer's computer after.
 - **Another operating system.** A Windows guest on a Linux laptop, or the reverse, to follow a
   customer's steps on the system they actually have.
-- **A lab.** A client, a server and something to attack or repair, on one computer, on a network of
+- **A lab.** A client, a server and something broken to repair, on one computer, on a network of
   their own. Lessons 14 and 15 build one, and the courses after this one use it.
 - **Old software.** A program that only runs on an old system keeps running inside a guest of that
   system after the last real computer that ran it has gone.
