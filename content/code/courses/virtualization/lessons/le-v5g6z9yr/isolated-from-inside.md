@@ -19,12 +19,12 @@ Connection to 10.10.10.1 53 port [tcp/domain] succeeded!
 vmi has `10.10.10.37` from libvirt's DHCP, and its routing table has **no `default via` line** at all: it
 knows its own network and nothing past it. The printer is out of reach, and so is everything else off
 `10.10.10.0/24`. This is what a lab wants for a machine that must not touch anything real, such as a
-target that is going to be attacked on purpose, lesson 14.
+target broken on purpose, lesson 14.
 
 But one thing on the list answered: **`10.10.10.1` port 53, the host.** An isolated network is
 isolated from the world, not from the host: the host has an address on it, libvirt's DHCP and DNS server
 listens there, and so does anything else the host runs on every address. For most labs that is fine;
-for a guest running something hostile, it is a door into the one machine that holds all the others.
+for a guest running something you do not trust, it is a door into the one machine that holds all the others.
 Lesson 15 closes it.
 
 The fourth mode of the table, **internal** or **private**, removes even that: a network with no address

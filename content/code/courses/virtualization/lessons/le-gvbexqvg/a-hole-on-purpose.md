@@ -15,5 +15,5 @@ can create, change and delete files in it, and they are the host's files:
 
 So share what the guest needs and nothing more, **read-only whenever the guest only has to read**, as
 `docs` was, and never share a whole home folder or a disk. A guest that is going to run anything
-hostile gets no shared folder at all, lesson 15, and files reach it the long way, over the network, one at
+you do not trust gets no shared folder at all, lesson 15, and files reach it the long way, over the network, one at
 a time.
