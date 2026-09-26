@@ -5,7 +5,7 @@ version: 1
 
 Para ver um convidado pelo outro lado, precisa existir um outro lado. No seu computador, é a sua rede de
 verdade. O computador em que este curso foi gravado não tem placa própria para emprestar, então o
-`lab.sh office` monta uma rede de escritório pequena no lugar: uma ponte chamada `lan0`, onde o host é
+`lab.sh office` monta uma rede de escritório pequena no lugar. É uma ponte chamada `lan0`, onde o host é
 `10.0.0.1`, e um outro aparelho nela, uma **impressora** em `10.0.0.50` que responde a pedidos web,
 anota quem pediu e roda o DHCP do escritório:
 

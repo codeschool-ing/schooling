@@ -24,9 +24,9 @@ Domain 'vm1' has been undefined
 ```
 
 Before: vm1's machine-id was `f2b0a97d568b4cd0bb0179512eaab5f9` and its host key's fingerprint `SHA256:SUFzDOz3YLtSwoKTtEuZewisO99n/s8q8qZUtrMDzHM`. `cloud-init clean`
-forgot everything it did on the first boot: `--logs` its logs, `--seed` the settings it was given,
-`--machine-id` the machine-id, now `uninitialized` so the next boot makes a new one, and `--configs all`
-the files it wrote, **the network configuration pinned to vm1's MAC** among them. The host keys were
+forgot everything it did on the first boot: `--logs` its logs, `--seed` the settings it was given, and
+`--machine-id` the machine-id, now `uninitialized` so the next boot makes a new one. `--configs all`
+removed the files it wrote, **the network configuration pinned to vm1's MAC** among them. The host keys were
 deleted by hand, and the next boot generates new ones. Then vm1 was switched off, removed from libvirt,
 and its disk kept, renamed and made **read-only**, like the lab's base.
 

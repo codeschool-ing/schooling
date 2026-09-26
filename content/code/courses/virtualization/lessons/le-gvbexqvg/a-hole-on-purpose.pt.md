@@ -16,5 +16,5 @@ convidado pode criar, mudar e apagar arquivos nela, e eles são arquivos do host
 
 Então compartilhe o que o convidado precisa e nada mais, **só de leitura sempre que o convidado só
 precisar ler**, como era a `docs`, e nunca compartilhe uma pasta pessoal inteira ou um disco. Um convidado
-que vai rodar algo hostil não recebe pasta compartilhada nenhuma, aula 15, e os arquivos chegam a ele
+que vai rodar algo em que você não confia não recebe pasta compartilhada nenhuma, aula 15, e os arquivos chegam a ele
 pelo caminho longo, pela rede, um de cada vez.

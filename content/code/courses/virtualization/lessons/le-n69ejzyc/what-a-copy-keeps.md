@@ -39,8 +39,8 @@ it never even asks for an address.
 ```
 
 The network is only the part that fails loudly. Everything the system wrote about itself on its first
-boot came along too: the **hostname**; the **machine-id**, a number systemd and many programs use to
-tell one installation from another; and the **SSH host keys**, which are how an SSH client knows it is
+boot came along too. The **hostname**. The **machine-id**, a number systemd and many programs use to
+tell one installation from another. And the **SSH host keys**, which are how an SSH client knows it is
 talking to the machine it trusted before. Two machines with one set of keys are, to SSH, the same
 machine, and monitoring or management software that identifies machines by the machine-id sees one
 where there are two.

@@ -38,7 +38,7 @@ baixo. Ele é independente: a original pode ser apagada e o clone nem percebe.
 
 O `virt-clone` também mudou as duas coisas que são do hypervisor. A vm2 tem **um MAC novo**, `52:54:00:c9:25:bc` onde
 a vm1 tem `52:54:00:bb:a6:55`, e um UUID novo no libvirt. Duas placas com um MAC numa rede brigariam por cada pacote,
-então todo hypervisor muda o MAC ao clonar, a menos que mandem não mudar: o diálogo de clonagem do
+então todo hypervisor muda o MAC ao clonar, a menos que mandem não mudar. O diálogo de clonagem do
 VirtualBox chama isso de *política de endereço MAC*, e manter os MACs antigos só é certo para um clone
 que nunca vai rodar ao lado da original.
 

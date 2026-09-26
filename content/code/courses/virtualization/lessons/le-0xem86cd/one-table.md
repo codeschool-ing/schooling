@@ -16,9 +16,9 @@ open during a call about a product you have not used:
 | the guests' switch | virbr0 | per network mode | VMnet0, 1, 8 | vSwitch | virtual switch | vmbr0 |
 | managed from | virsh, virt-manager | its window, VBoxManage | its window, vmrun | Host Client, vCenter | Hyper-V Manager, PowerShell | a browser, qm |
 
-The rows that matter most for support are **disk**, because a disk can always be carried to another
-hypervisor and converted, lesson 5, and **agent**, because a guest without its agent is the cause of a
-great many small complaints: a screen that will not resize, a clipboard that does nothing, a shutdown
+The rows that matter most for support are **disk** and **agent**. A disk can always be carried to
+another hypervisor and converted, lesson 5. A guest without its agent is the cause of a great many
+small complaints: a screen that will not resize, a clipboard that does nothing, a shutdown
 that has to be forced, an address the host cannot show.
 
 **Lessons 8 to 15 use libvirt for everything**, because it is what the lab can run. Each thing they do

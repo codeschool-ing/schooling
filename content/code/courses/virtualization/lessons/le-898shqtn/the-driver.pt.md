@@ -7,8 +7,8 @@ O VirtualBox é um hypervisor tipo 2, aula 2, e roda no Windows, no macOS e no L
 Oracle o publica, com um *Extension Pack* opcional sob outra licença, que acrescenta alguns recursos,
 como a tela remota, e pelo qual empresas podem ter de pagar.
 
-Ele é um aplicativo, mas não só um aplicativo: para usar os recursos de virtualização do processador,
-ele instala um **driver no kernel do host**, chamado `vboxdrv` no Linux. Eis o VirtualBox 7.0.16 no host
+Ele é um aplicativo, e também instala um **driver no kernel do host**, chamado `vboxdrv` no Linux, para
+usar os recursos de virtualização do processador. Eis o VirtualBox 7.0.16 no host
 deste curso:
 
 ```

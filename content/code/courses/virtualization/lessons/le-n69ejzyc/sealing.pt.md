@@ -25,8 +25,8 @@ Domain 'vm1' has been undefined
 
 Antes: o machine-id da vm1 era `f2b0a97d568b4cd0bb0179512eaab5f9` e a impressão digital da chave de host dela `SHA256:SUFzDOz3YLtSwoKTtEuZewisO99n/s8q8qZUtrMDzHM`. O
 `cloud-init clean` esqueceu tudo o que fez no primeiro boot: o `--logs` os logs dele, o `--seed` as
-configurações que recebeu, o `--machine-id` o machine-id, agora `uninitialized` para o próximo boot fazer
-um novo, e o `--configs all` os arquivos que escreveu, **a configuração de rede presa ao MAC da vm1**
+configurações que recebeu e o `--machine-id` o machine-id, agora `uninitialized` para o próximo boot fazer
+um novo. O `--configs all` removeu os arquivos que escreveu, **a configuração de rede presa ao MAC da vm1**
 entre eles. As chaves de host foram apagadas à mão, e o próximo boot gera novas. Depois a vm1 foi
 desligada, tirada do libvirt, e o disco dela guardado, renomeado e tornado **só de leitura**, como a base
 do laboratório.

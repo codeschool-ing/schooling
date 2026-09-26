@@ -22,7 +22,7 @@ how to reset the printer
 `share` and `docs` are the tags from the description; `trans=virtio` says the files travel over a virtio
 channel, lesson 8. Both folders show the host's files, and the guest can read them.
 
-A mount made by hand lasts until the guest reboots. To keep it, it goes into `/etc/fstab`:
+**A mount made by hand lasts until the guest reboots.** To keep it, it goes into `/etc/fstab`:
 
 ```
 ana@vm1:~$ echo "share /mnt/share 9p trans=virtio,version=9p2000.L,nofail 0 0" | sudo tee -a /etc/fstab

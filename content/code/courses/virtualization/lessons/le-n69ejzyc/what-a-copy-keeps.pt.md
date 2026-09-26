@@ -39,8 +39,8 @@ chega a pedir endereço.
 ```
 
 A rede é só a parte que falha de forma barulhenta. Tudo o que o sistema escreveu sobre si mesmo no
-primeiro boot veio junto também: o **hostname**; o **machine-id**, um número que o systemd e muitos
-programas usam para distinguir uma instalação de outra; e as **chaves de host do SSH**, que são como um
+primeiro boot veio junto também. O **hostname**. O **machine-id**, um número que o systemd e muitos
+programas usam para distinguir uma instalação de outra. E as **chaves de host do SSH**, que são como um
 cliente SSH sabe que está falando com a máquina em que confiou antes. Duas máquinas com um conjunto de
 chaves são, para o SSH, a mesma máquina, e um software de monitoramento ou gerência que identifica
 máquinas pelo machine-id vê uma onde há duas.

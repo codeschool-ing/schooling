@@ -38,7 +38,7 @@ It is independent: the original can be deleted and the clone does not notice.
 
 `virt-clone` also changed the two things that belong to the hypervisor. vm2 has **a new MAC**,
 `52:54:00:c9:25:bc` where vm1 has `52:54:00:bb:a6:55`, and a new UUID in libvirt. Two cards with one MAC on one network would
-fight over every packet, so every hypervisor changes it when cloning, unless told not to: VirtualBox's
+fight over every packet, so every hypervisor changes it when cloning, unless told not to. VirtualBox's
 clone dialog calls it the *MAC address policy*, and keeping the old MACs is only right for a clone that
 will never run beside its original.
 
