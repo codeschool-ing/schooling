@@ -436,10 +436,22 @@ so they are **absent from `graders` in `internal/grade` rather than stubbed**, a
 answers `ErrUnknownType` instead of guessing. The rule above is the requirement, not a description
 of today.
 
-The distinction matters when a course is being planned rather than written: a course whose
-practice *is* writing a program cannot be finished until that sandbox exists, and one that has no
-programming in it is not waiting on anything. `ROADMAP.md` has carried the honest count all along;
-this file has not, and a reader planning against ten working types would have planned wrong.
+The distinction matters when a course is being planned rather than written, and since `C-38` it
+blocks nothing. A course whose practice *is* writing a program has the student write and run it on
+their own machine, and its questions and its exam are closed types. `EXECUTOR.md` says what would
+reopen the sandbox. `ROADMAP.md` has carried the honest count all along; this file has not, and a
+reader planning against ten working types would have planned wrong.
+
+**A track whose practice needs an environment opens with the student's lab.** One lesson, early,
+before the first one that asks them to type anything: the three paths, installed, in a virtual
+machine and online, with **one recommended and the others named**, what each costs the student's
+computer, and a section on what to do when the setup fails, because that is where a student gives
+up. It is captured on a real machine like every other lesson. The track's later lessons may then
+assume the lab exists, and say which lesson built it.
+
+Two courses are most of the way there already: `python` lesson 1 installs the interpreter, and
+`operating-systems` lessons 2 to 4 install the three systems. What the rule adds to lessons like
+those is the other two paths and the section on failure, not a new lesson.
 
 ### `exercises.pt.json`
 

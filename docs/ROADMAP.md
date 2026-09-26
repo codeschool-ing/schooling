@@ -229,7 +229,7 @@ student cannot do today and which every ticked box below was consistent with.*
 
 ### Assessment
 
-- [ ] The ten types: `quiz`, `multiple-choice`, `ordering`, `matching`, `cloze`, `numeric`, `labelling`, `expression-answer` **done — eight graders, each with a conformance fixture**; `code` and `expected-output` need a sandbox that runs a student's program, which is why they are absent from `graders` rather than stubbed
+- [ ] The ten types: `quiz`, `multiple-choice`, `ordering`, `matching`, `cloze`, `numeric`, `labelling`, `expression-answer` **done — eight graders, each with a conformance fixture**; `code` and `expected-output` need a sandbox that runs a student's program, which is why they are absent from `graders` rather than stubbed. **Deferred by `C-38`**: the student's machine is the lab, and `EXECUTOR.md` names the trigger that reopens it
 - [x] Conformance fixtures, per type — no longer between two graders (A-09 is retired: a client that could mark an answer would be a client holding the key) but between the grader and the questions, so a change that alters a verdict has to change a file somebody wrote. A gradable type with no fixture fails the build
 - [x] A question is **presented** rather than sent — the answer removed, the order shuffled where the order is the answer, and the permutation kept here
 - [x] Course exams and track exams — a sealed paper per attempt, one open attempt at a time, marked once on hand-in against the questions as they were actually asked
