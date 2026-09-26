@@ -578,7 +578,9 @@ attack, tables with the right defects — that reads as an environment problem a
 
 **And four courses have no path at any price**: `operating-systems`, `virtualization`, `ios-apps`
 and the iOS lessons of `api-mobile-automation`. Three of the four are somebody's licence rather
-than an engineering limit.
+than an engineering limit. The first two have since been written on the student's own machine,
+`C-38` in `PLAN.md`, so "no path" turned out to mean no path for the platform, which is a different
+thing.
 
 ### What the sweep found that no single sheet could
 

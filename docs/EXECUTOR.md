@@ -16,6 +16,43 @@ difference is not decoration: a proposal recorded as a decision is how a documen
 
 ---
 
+## Deferred, and what replaces it
+
+**The executor is deferred, and the student's own machine is the lab** (`C-38`). A course whose
+practice needs an environment teaches the student to have one: installed on their computer, in a
+virtual machine, or in an online service, and a lesson early in the track walks through all three.
+The platform grades what it can grade by itself, the closed types and the exams, and runs nothing a
+student wrote.
+
+Four reasons, and the first two would each be enough:
+
+- **It costs nothing per student**, where the executor costs something per execution and a ceiling
+  to hold it.
+- **It has no attack surface here.** Every row under *Isolation* and *Abuse* below exists because a
+  stranger's program would run on this platform's account. A program that runs on the student's
+  computer is the student's.
+- **Setting up the environment is itself worth teaching.** A support technician, a developer and an
+  analyst all have to do it on the first day of a job, and a course that hid it behind a sandbox
+  would leave it out. `virtualization` is built on this: its last two lessons are the student's own
+  lab, and its sheet had already said *"the environment is theirs, not ours"*.
+- **Nothing is waiting on it.** 6,692 questions across the catalogue, and none of them is `code` or
+  `expected-output`. `operating-systems`, `networks` and `virtualization` were written with every
+  command captured on a real machine, and a student repeats them on their own.
+
+What it gives up is a verdict on a program the student wrote. Their practice happens where the
+platform cannot see it, and what the platform asserts about them rests on the closed questions and
+the exam. That is a real loss for one kind of course, and it is named in the trigger.
+
+**The trigger that reopens it**: a course whose practice IS writing a program reaches the front of
+the queue, **and** its exam cannot be written in closed types without losing what it measures.
+Both halves, because the first alone describes `python`, whose exam is 100 closed questions that
+measure it well enough.
+
+Everything below stays as the design for that day. It was written so that the decisions would be
+cheap when they are made, and deferring the build does not make them any less cheap.
+
+---
+
 ## The word is doing two jobs
 
 "Sandbox" in `PLAN.md` means **an environment** — *"a runtime, a browser, a database, a cluster, a
@@ -77,7 +114,7 @@ the next person can disagree with it rather than rediscover it.
 | Decision | Why | State |
 |---|---|---|
 | **No interactive terminal on the server** | It is the expensive shape: a container held per concurrent student, and a student who leaves a tab open holds it. It also has no grading value — see the verdict row. | Refused |
-| **A shell in the browser instead**, for teaching | It runs on the student's machine, so it costs nothing per student and has no security surface here. `PLAN.md` already uses this argument for a database: *"a database has a version that runs in the browser with no server at all."* It is less real than a machine — but for paths, permissions, processes and text tools it is close enough to teach with. It has **no grading authority** and must never be given any. | Proposed |
+| **A shell in the browser instead**, for teaching | It runs on the student's machine, so it costs nothing per student and has no security surface here. `PLAN.md` already uses this argument for a database: *"a database has a version that runs in the browser with no server at all."* It is less real than a machine — but for paths, permissions, processes and text tools it is close enough to teach with. It has **no grading authority** and must never be given any. Since `C-38` it is optional: the student's own terminal is the default, and this is a convenience on top of it. | Proposed |
 | No GPUs, no topologies, no persistent student machines | Each is a different product with a different bill. The sweep in `PLAN.md` lists them as separate blockers for separate courses, and none of them is this. | Decided |
 
 ---
@@ -132,4 +169,5 @@ browser shell above is what makes them feel like a terminal.
 **Which is the order this argues for.** Write the material that needs no runtime — it is most of
 the catalogue — and build the executor when a course whose practice IS a program reaches the front
 of the queue. It is a week of work that buys nothing until then, and its cost starts the day it
-exists.
+exists. `C-38` sharpens that trigger, at the top of this file: until then, the runtime is the
+student's.
