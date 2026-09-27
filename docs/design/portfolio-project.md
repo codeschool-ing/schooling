@@ -49,6 +49,8 @@ In **16 tracks** — `ai`(14), `backend`(14), `bi`(17), `cloud-engineering`(10),
 
 **2 ·** **It must be track-aware and the content model has no way to be.** Lesson 3 is literally "Choosing by track: what somebody hiring in your field actually opens" — the course knows it has sixteen audiences. Nothing in `content/` lets a course, a lesson or a section differ by the track that reached it. So either the material is generic, which is exactly what a portfolio course must not be, or the mechanism is built. **This is the second sheet in this batch to want it** — `design-patterns` wants it for four languages — which turns a nice-to-have into a decision with two courses behind it.
 
+*Built since, as `C-39`: a section carries a group of `::: track` blocks with a `*` block for everybody else, and a reader sees the passage for their track. It varies a paragraph, not a course — lesson 3 is still one lesson, with the part that differs per field written per track inside it.*
+
 **3 ·** **Nothing graded, and the least graded course in the catalogue.** Of the eight graders, this course can use them only on its own periphery. The assessment that matters is a human reading a repository, and `C-27`'s honesty about what a course carries should extend to saying so on the page rather than shipping quizzes about portfolios.
 
 **4 ·** **Sixty hours, paid, in sixteen tracks, and nothing requires it.** By the graph it is a leaf. By the funnel it is the last thing standing between a student and finishing. Those two readings disagree about how much it matters, and the funnel is the one that pays.

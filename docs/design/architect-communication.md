@@ -45,7 +45,7 @@ In **2 tracks** — `software-architecture`(13), `tech-lead`(4).
 
 ## Flags
 
-**1 ·** **Two tracks reach it and they want different courses.** In `tech-lead` it is communication for somebody who leads people: mentoring, conflict, feedback. In `software-architecture` it is communication for somebody who has decided something and must now defend it: the RFC, the proposal, translating technical risk into business risk. The lesson list serves both, and the **prose has to be written without knowing which reader arrived** — the content model has no way for a course to differ by the track that reached it. Naming both audiences in the material is the cheap answer and it is probably the right one.
+**1 ·** **Two tracks reach it and they want different courses.** In `tech-lead` it is communication for somebody who leads people: mentoring, conflict, feedback. In `software-architecture` it is communication for somebody who has decided something and must now defend it: the RFC, the proposal, translating technical risk into business risk. The lesson list serves both, and the **prose has to be written without knowing which reader arrived** — the content model has no way for a course to differ by the track that reached it. Naming both audiences in the material is the cheap answer and it is probably the right one. *Since `C-39` a paragraph can differ per track — `::: track tech-lead` beside `::: track *` — which serves the two readers where a sentence is true for only one of them; the lesson list still has to serve both.*
 
 **2 ·** **The same grading problem as `people-leadership`, at 50 hours instead of 60.** The rescue is the same and so is the bill: scenario questions with three wrong answers that are wrong for a findable reason.
 
