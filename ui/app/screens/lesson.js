@@ -39,14 +39,14 @@
    ========================================================================== */
 
 import * as api from '../api.js';
-import { courseLessons, courseById, courseAddress } from '../catalog.js';
+import { courseLessons, courseById, courseAddress, trackById } from '../catalog.js';
 import { lessonSections, sectionMaterials } from '../lessons.js';
 import { materialList } from '../materials.js';
-import { sectionDone, visitSection, noteFor, saveNote, answerFor, markSection } from '../state.js';
+import { sectionDone, visitSection, noteFor, saveNote, answerFor, markSection, now } from '../state.js';
 import { buildAssessment } from '../exercises/index.js';
 import { empty, videoFrame, playsOnClick, subscribeInvite } from './common.js';
 import { wireReport } from '../report.js';
-import { esc, prose } from '../text.js';
+import { esc, prose, wirePassages } from '../text.js';
 
 const ARROW = (d) => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
   'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + d + '"/></svg>';
@@ -188,6 +188,15 @@ export default async function lesson({ id, ix, sec }) {
   const hasVideo = hasVideoHere;
   const videoReady = hasVideo && typeof section.video === 'string' && section.video;
 
+  /* WHO IS READING, for a section that says something different to each track.
+     The track is the one the student has open (`api.js`, `enrol`) — there is
+     no enrolment on the server to ask — and a student who came straight to the
+     course from the catalogue is on none, and reads the `*` passage. */
+  const reader = {
+    track: (now().enrollment || {}).trackId || '',
+    trackName: (tid) => (trackById(tid) || {}).name,
+  };
+
   el.innerHTML =
     sideArrow(previous && routeTo(previous), 'left', ARROW_LEFT, txt('previous section')) +
     sideArrow(nextTarget, 'right', ARROW_RIGHT, txt('complete and go to the next section'), true) +
@@ -223,7 +232,7 @@ export default async function lesson({ id, ix, sec }) {
          to come" notice, which would be false there: the content is the video.
          The notice still holds for a lesson with nothing written yet. */
       : (section.body
-        ? '<section class="block lesson-text">' + prose(section.body) + '</section>' +
+        ? '<section class="block lesson-text">' + prose(section.body, reader) + '</section>' +
           /* AND THE SECTION'S OWN QUESTIONS, AFTER ITS WORDS. Empty until the
              fetch below fills it, and left out of the document entirely when
              this section has none, so a reading with nothing to ask does not
@@ -445,6 +454,7 @@ export default async function lesson({ id, ix, sec }) {
   }
 
   playsOnClick(el, section.title);
+  wirePassages(el);
 
   /* The note saves itself, after a pause following the last keystroke. A save
      button would be one more chance to lose what you wrote. */

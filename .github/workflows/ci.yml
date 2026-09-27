@@ -108,7 +108,7 @@ jobs:
           # two share the operator through it, and a directory left out of this
           # line is a suite that never runs on the change that broke it.
           # `tools/` is narrowed to the ones it actually runs.
-          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|lang-test|frame-test|exam-offer-test|bundle|bundle-test|figure-fit|figure-contrast|fetch-once|check-highlight)/|\.github/workflows/ci\.yml$)'
+          browser='^(ui/|content/|migrations/|internal/|cmd/|package(-lock)?\.json$|go\.(mod|sum)$|tools/(lib|graph-test|a11y-test|landing-test|mfa-test|console-test|lang-test|track-test|frame-test|exam-offer-test|bundle|bundle-test|figure-fit|figure-contrast|fetch-once|check-highlight)/|\.github/workflows/ci\.yml$)'
 
           # NARROW ON PURPOSE. The Terraform reads nothing in this repository —
           # not the Go, not the content, not the workflows it deploys from — so
@@ -709,6 +709,12 @@ jobs:
           # neighbour of the defect above and the opposite failure: that one
           # fetched too often, this one never again.
           node tools/lang-test/lang-test.mjs
+
+          # AND THAT A SECTION WRITTEN FOR ONE TRACK SAYS IT TO THAT TRACK. The
+          # markers are read twice — by `internal/trackblock` in Go and by
+          # `api.js` in the browser — and every Go test can be green while the
+          # screen shows the wrong passage, or all of them, or a `:::`.
+          node tools/track-test/track-test.mjs
 
           # AND WHAT THE FRAME SAYS, WHICH NOTHING HAS EVER READ. The suite
           # above asks whether the banners follow a language switch; this one

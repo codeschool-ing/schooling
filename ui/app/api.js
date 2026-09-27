@@ -664,6 +664,11 @@ export async function loadLessonStructure() {
    it from the start: a `- ` item wrapped onto a second line ended the list at
    the wrap, and the continuation became a paragraph of its own between two
    lists. `continued` below is what folds those back, for both kinds of list. */
+const isTrackOpener = (line) => {
+  const t = String(line).trimEnd();
+  return t === '::: track' || t.startsWith('::: track ');
+};
+
 function blocksOf(text) {
   if (typeof text !== 'string') return text;   // already a list: the offline copy
 
@@ -713,6 +718,46 @@ function blocksOf(text) {
       } else {
         out.push({ code: kind, text: inside });
       }
+      continue;
+    }
+
+    /* PASSAGES WRITTEN FOR ONE TRACK, and the one for every other reader.
+
+       `::: track <id> …` opens one, `:::` closes it, and blocks that follow
+       each other with nothing but blank lines between are ONE GROUP: a reader
+       sees one passage of it. Past the loader the markers name tracks by id,
+       which is how the student's own track is known here (`enrolment()`); `*`
+       is the reader whose track the group does not name, or who is on none.
+
+       The grammar is `internal/trackblock`'s and this is its one other reader.
+       What keeps the two the same is `tools/track-test`, which opens a lesson
+       carrying a group and asserts which passage is on the screen — the Go
+       tests cannot see this file and nothing here can see the Go.
+
+       EACH PASSAGE IS READ WITH THIS SAME FUNCTION, so a capture, a figure or
+       a worked example inside one is the block it would be anywhere else. A
+       fence inside a passage is skipped whole while looking for its `:::`, for
+       the reason the Go side gives: a capture may print one. */
+    if (isTrackOpener(line)) {
+      const passages = [];
+      while (i < lines.length && isTrackOpener(lines[i])) {
+        const tracks = lines[i].trim().slice('::: track'.length).trim().split(/\s+/).filter(Boolean);
+        const inside = [];
+        let fenced = false;
+        i += 1;
+        while (i < lines.length && (fenced || lines[i].trim() !== ':::')) {
+          if (lines[i].startsWith('```')) fenced = !fenced;
+          inside.push(lines[i]);
+          i += 1;
+        }
+        i += 1;                                 // the closing `:::`
+        passages.push({ tracks, blocks: blocksOf(inside.join('\n')) });
+        let next = i;
+        while (next < lines.length && lines[next].trim() === '') next += 1;
+        if (next < lines.length && isTrackOpener(lines[next])) i = next;
+        else break;
+      }
+      out.push({ passages });
       continue;
     }
 

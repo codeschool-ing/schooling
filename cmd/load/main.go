@@ -437,12 +437,20 @@ func write(ctx context.Context, tx pgx.Tx, tenantID uuid.UUID, school *catalog.S
 			}
 
 			for _, prose := range lesson.Text {
+				/* A PASSAGE WRITTEN FOR ONE TRACK NAMES IT BY SLUG, like
+				   everything else in `content/`, and past here it names it by
+				   id — the same translation as a track's courses above. The
+				   interface picks the passage by comparing with the id of the
+				   track the student is on, which is the only name it has for
+				   it; a slug left in the mirror would match nobody, and every
+				   reader would get `*` with nothing on screen to say why. */
+				body := catalog.TrackBlocksWithIDs(prose.Body, school.Tracks)
 				if _, err := tx.Exec(ctx, `
 					INSERT INTO catalog_prose
 						(tenant_id, course_id, lesson_id, section_id, locale, title, body, version)
 					VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 				`, tenantID, course.ID, lesson.ID, prose.SectionID, prose.Locale,
-					prose.Title, prose.Body, prose.Version); err != nil {
+					prose.Title, body, prose.Version); err != nil {
 					return fmt.Errorf("writing the prose of %s: %w", prose.SectionID, err)
 				}
 			}
