@@ -1,0 +1,472 @@
+{
+  "ex-wqxxfgth": {
+    "prompt": "Quem escreve o endereço de origem num pacote IP?",
+    "hint": "Algo no IP confere esse campo?",
+    "choices": [
+      {
+        "text": "O primeiro roteador, a partir da interface por onde o pacote chegou",
+        "why": "Roteadores repassam o campo como o encontram."
+      },
+      {
+        "text": "O remetente",
+        "why": "Isso. E nada no IP confere o que ele escreveu."
+      },
+      {
+        "text": "O firewall, depois de consultar a tabela de rotas",
+        "why": "Um firewall consegue conferir, mas não escreve o campo."
+      },
+      {
+        "text": "A camada IP do receptor, a partir do cabeçalho Ethernet",
+        "why": "O receptor lê o que o remetente colocou ali."
+      }
+    ]
+  },
+  "ex-447k2rde": {
+    "prompt": "remote mandou uma requisição à loja a partir de 192.168.20.99 e o curl estourou o tempo, mas o SYN chegou ao www. Por que estourou o tempo?",
+    "hint": "Para onde o www mandou a resposta?",
+    "choices": [
+      {
+        "text": "O fw descartou o SYN na borda",
+        "why": "A gravação no www mostra que o SYN chegou."
+      },
+      {
+        "text": "O www respondeu a 192.168.20.99, que não está na internet",
+        "why": "Isso. A resposta não foi a lugar útil nenhum."
+      },
+      {
+        "text": "O www recusa conexões da faixa dos servidores",
+        "why": "Ele respondeu; a resposta é que foi para outro lugar."
+      },
+      {
+        "text": "O certificado não citava o endereço forjado",
+        "why": "O handshake nem chegou ao TLS."
+      }
+    ]
+  },
+  "ex-3zw6kzez": {
+    "prompt": "Ligue cada uso de um endereço de origem forjado ao motivo de funcionar.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "passar por uma regra que confia num endereço",
+        "right": "a regra acredita no campo de origem"
+      },
+      {
+        "left": "reflexão e amplificação",
+        "right": "as respostas vão para o endereço forjado, a vítima"
+      },
+      {
+        "left": "esconder de onde vem uma enxurrada",
+        "right": "cada pacote declara uma origem diferente e aleatória"
+      }
+    ],
+    "right_distractors": [
+      "o switch aprende a porta errada para um MAC"
+    ]
+  },
+  "ex-3r6tdqj9": {
+    "prompt": "Depois de carregar as regras anti-spoofing, quantos pacotes da requisição forjada a regra de origens privadas descartou?",
+    "hint": "O contador da primeira regra."
+  },
+  "ex-nc5y0hb7": {
+    "prompt": "O que a regra fib saddr . iif oif missing descarta?",
+    "hint": "Ela faz à tabela de rotas uma pergunta sobre a origem.",
+    "choices": [
+      {
+        "text": "Pacotes cuja origem está numa faixa privada",
+        "why": "Essa é a primeira regra, que precisa de uma lista."
+      },
+      {
+        "text": "Pacotes cujo destino não tem rota de saída no fw",
+        "why": "Ela olha a origem, não o destino."
+      },
+      {
+        "text": "Pacotes cuja origem não é alcançável de volta pela interface por onde entraram",
+        "why": "Isso. É a filtragem de caminho reverso."
+      },
+      {
+        "text": "Respostas a conexões que o fw não viu",
+        "why": "Isso é tarefa do rastreamento de conexões."
+      }
+    ]
+  },
+  "ex-bbwk4rnk": {
+    "prompt": "Um firewall tem dois provedores de internet, e parte do tráfego chega por um e sai pelo outro. Que valor de rp_filter serve para ele?",
+    "hint": "Qual modo descarta clientes reais ali?",
+    "choices": [
+      {
+        "text": "1, estrito, como um firewall como o fw deveria usar",
+        "why": "O estrito descarta o tráfego que volta pelo outro provedor."
+      },
+      {
+        "text": "2, frouxo",
+        "why": "Isso. Qualquer rota de volta serve."
+      },
+      {
+        "text": "0, com a regra fib fazendo a mesma checagem",
+        "why": "A regra fib é a checagem estrita, com o mesmo problema."
+      },
+      {
+        "text": "1, porque ele age apenas sobre pacotes de faixas privadas",
+        "why": "Vale para qualquer origem, privada ou não."
+      }
+    ]
+  },
+  "ex-0my1n03d": {
+    "prompt": "O que o BCP 38 pede que toda rede faça?",
+    "hint": "Em que sentido?",
+    "choices": [
+      {
+        "text": "Descartar pacotes que chegam de faixas privadas",
+        "why": "Isso protege você do que chega."
+      },
+      {
+        "text": "Descartar pacotes que saem com origem que não é sua",
+        "why": "Isso. Protege todos os outros."
+      },
+      {
+        "text": "Recusar resolver nomes para estranhos",
+        "why": "Isso é não ser um resolvedor aberto."
+      },
+      {
+        "text": "Assinar sua zona DNS",
+        "why": "Isso é DNSSEC."
+      }
+    ]
+  },
+  "ex-0r6eqfz2": {
+    "prompt": "O laptop tentou chegar à internet a partir de 198.51.100.7 e o fw descartou 1 pacote. Qual regra o pegou?",
+    "hint": "O contador de qual regra mudou?",
+    "choices": [
+      {
+        "text": "A regra de origens privadas, já que o endereço não é da LAN",
+        "why": "Essa regra casa com eth0 e faixas privadas; 198.51.100.7 não é nenhum dos dois."
+      },
+      {
+        "text": "A regra fib, a mesma que barrou a requisição forjada",
+        "why": "Isso. O fw não tem rota para ele pela interface da LAN."
+      },
+      {
+        "text": "Uma regra BCP 38 separada em forward",
+        "why": "Nenhuma regra nova foi criada."
+      },
+      {
+        "text": "O NAT, que o reescreveu",
+        "why": "O NAT o teria mandado adiante, não descartado."
+      }
+    ]
+  },
+  "ex-b9hangf9": {
+    "prompt": "Atrás de NAT, rumo à internet há uma única origem legítima: o ___ público do firewall.",
+    "hint": "O último parágrafo da seção.",
+    "blanks": [
+      {
+        "accept": [
+          "endereço",
+          "IP",
+          "endereço IP"
+        ]
+      }
+    ]
+  },
+  "ex-2261rae8": {
+    "prompt": "Uma máquina da LAN é tomada e mandada participar da enxurrada de alguém com origens forjadas. O que o filtro de saída dá à empresa?",
+    "hint": "Duas coisas: uma para a vítima, outra para os defensores.",
+    "choices": [
+      {
+        "text": "O malware é removido da máquina",
+        "why": "Um filtro no fw não mexe no software do laptop."
+      },
+      {
+        "text": "O tráfego honesto da máquina também é bloqueado, até ela ser limpa",
+        "why": "Sem o endereço forjado o laptop conectou normalmente."
+      },
+      {
+        "text": "Os pacotes forjados param no fw, e um contador mostra a tentativa",
+        "why": "Isso. Inútil para a enxurrada, e visível."
+      },
+      {
+        "text": "A vítima fica sabendo qual máquina ataca",
+        "why": "Os pacotes descartados não chegam à vítima."
+      }
+    ]
+  },
+  "ex-ezzhkrx3": {
+    "prompt": "Por que uma resposta falsa no cache de um resolvedor vale mais para um atacante do que uma resposta forjada a um cliente?",
+    "hint": "Quem lê o cache?",
+    "choices": [
+      {
+        "text": "Quem pergunta ali a recebe até expirar",
+        "why": "Isso."
+      },
+      {
+        "text": "O cache a guarda depois de o TTL acabar",
+        "why": "Dura o quanto o TTL permitir."
+      },
+      {
+        "text": "Uma resposta em cache passa por cima do DNSSEC",
+        "why": "Um resolvedor que valida confere antes de guardar."
+      },
+      {
+        "text": "O resolvedor a manda para outros resolvedores",
+        "why": "Ele atende seus próprios clientes."
+      }
+    ]
+  },
+  "ex-bxvnqbb0": {
+    "prompt": "A porta de origem do resolvedor é conhecida e os IDs de transação são aleatórios. Que chance uma resposta forjada tem de levar o ID certo?",
+    "hint": "O ID tem 16 bits.",
+    "choices": [
+      {
+        "text": "1 em 16",
+        "why": "16 é o número de bits, não de valores."
+      },
+      {
+        "text": "1 em 4.294.967.296",
+        "why": "Isso seria um ID de 32 bits."
+      },
+      {
+        "text": "1 em 65.536",
+        "why": "Isso. 2 elevado a 16."
+      },
+      {
+        "text": "1 em 256",
+        "why": "Isso são 8 bits."
+      }
+    ]
+  },
+  "ex-qqyqg7mn": {
+    "prompt": "Quais defesas tornam menos provável que uma resposta DNS forjada seja aceita, sem conferir a resposta em si? Escolha todas as que se aplicam.",
+    "hint": "Uma linha da tabela confere a própria resposta.",
+    "choices": [
+      {
+        "text": "IDs de transação aleatórios",
+        "why": "Isso. O forjador precisa acertar um em 65.536."
+      },
+      {
+        "text": "Portas de origem aleatórias",
+        "why": "Isso. Multiplicam a adivinhação."
+      },
+      {
+        "text": "DNSSEC",
+        "why": "O DNSSEC confere a própria resposta, então a falsificação é inútil."
+      },
+      {
+        "text": "Não ser um resolvedor aberto",
+        "why": "Isso. Estranhos não escolhem quando ele pergunta."
+      }
+    ]
+  },
+  "ex-51bpym1r": {
+    "prompt": "Um laptop resolve a loja para um endereço estranho; os vizinhos, que usam o mesmo resolvedor, recebem o certo. Onde você olharia primeiro?",
+    "hint": "Quem mais um resolvedor envenenado afetaria?",
+    "choices": [
+      {
+        "text": "O cache do resolvedor compartilhado",
+        "why": "Um cache envenenado enganaria os vizinhos também."
+      },
+      {
+        "text": "As assinaturas DNSSEC da zona, que expiraram",
+        "why": "Isso dá SERVFAIL para todos, não um endereço estranho."
+      },
+      {
+        "text": "O arquivo hosts e o DNS configurado nele",
+        "why": "Isso. Uma máquina diferente das vizinhas aponta para algo local."
+      },
+      {
+        "text": "Os IDs de transação que o resolvedor tem usado",
+        "why": "Uma corrida vencida contra o resolvedor chegaria aos outros clientes."
+      }
+    ]
+  },
+  "ex-8qqwqgc2": {
+    "prompt": "Ligue cada parte do DNSSEC no laboratório ao que ela é.",
+    "hint": "Os primeiros parágrafos da seção.",
+    "pairs": [
+      {
+        "left": "RRSIG",
+        "right": "a assinatura sobre um conjunto de registros"
+      },
+      {
+        "left": "DNSKEY",
+        "right": "a chave pública publicada da zona"
+      },
+      {
+        "left": "a flag ad",
+        "right": "a palavra do resolvedor de que conferiu a assinatura"
+      },
+      {
+        "left": "trust-anchor-file",
+        "right": "a chave em que o Unbound confia sem perguntar a ninguém"
+      }
+    ],
+    "right_distractors": [
+      "a chave privada do dono da zona"
+    ]
+  },
+  "ex-xpfz635p": {
+    "prompt": "O laboratório não tem zona raiz. Como o Unbound no laptop passa a confiar na zona da empresa?",
+    "hint": "Veja o grep da configuração.",
+    "choices": [
+      {
+        "text": "Busca a chave da raiz na internet ao iniciar",
+        "why": "O laboratório não tem raiz de onde encadear."
+      },
+      {
+        "text": "Recebe a chave da zona como âncora de confiança",
+        "why": "Isso. A cadeia, encurtada."
+      },
+      {
+        "text": "Confia no que o endereço stub lhe servir, seja o que for",
+        "why": "O stub diz onde perguntar, não em que acreditar."
+      },
+      {
+        "text": "Pede à zona pai uma impressão da chave",
+        "why": "Esse é o jeito da internet; o laboratório não tem zona pai."
+      }
+    ]
+  },
+  "ex-45sp7vaj": {
+    "prompt": "Um laptop usa um resolvedor que valida em outro ponto da rede e lê a flag ad. O que ainda fica sem proteção?",
+    "hint": "Quem conferiu a assinatura, e quem confia na palavra de quem?",
+    "choices": [
+      {
+        "text": "A assinatura, porque a ad esconde o RRSIG",
+        "why": "O RRSIG aparece junto da resposta."
+      },
+      {
+        "text": "A chave privada da zona, que o resolvedor guarda",
+        "why": "O resolvedor guarda a chave pública; o dono guarda a privada."
+      },
+      {
+        "text": "O caminho, porque a ad é assinada pela zona",
+        "why": "A ad é uma flag que o resolvedor liga, não uma assinatura."
+      },
+      {
+        "text": "O trecho entre os dois, se não usar DNS sobre TLS ou HTTPS",
+        "why": "Isso. Uma ad forjada nesse trecho seria aceita."
+      }
+    ]
+  },
+  "ex-fddedmjt": {
+    "prompt": "Depois de trocar o endereço sem assinar de novo, o que o dig do laptop recebeu?",
+    "hint": "Veja a linha de status.",
+    "choices": [
+      {
+        "text": "203.0.113.66, sem a flag ad",
+        "why": "O resolvedor não entregou endereço algum."
+      },
+      {
+        "text": "192.0.2.80, do cache",
+        "why": "A resposta em cache tinha sido descartada."
+      },
+      {
+        "text": "SERVFAIL, e nenhum endereço",
+        "why": "Isso. A validação falhou, e nada foi repassado."
+      },
+      {
+        "text": "NXDOMAIN, como se o nome não existisse",
+        "why": "O nome existe; a assinatura dele falhou."
+      }
+    ]
+  },
+  "ex-w9ks7nwe": {
+    "prompt": "Por que o dig +cd mostrou 203.0.113.66 quando a consulta normal falhou?",
+    "hint": "cd quer dizer alguma coisa.",
+    "choices": [
+      {
+        "text": "O +cd pede ao resolvedor que pule a validação",
+        "why": "Isso. Checagem desativada."
+      },
+      {
+        "text": "O +cd pergunta direto ao servidor da zona, sem passar pelo Unbound",
+        "why": "Ainda perguntou a 127.0.0.1."
+      },
+      {
+        "text": "O +cd ignora o cache, e o cache guardava o SERVFAIL",
+        "why": "A diferença é a checagem, não o cache."
+      },
+      {
+        "text": "A assinatura tinha sido corrigida nesse meio-tempo",
+        "why": "Ninguém assinou a zona de novo."
+      }
+    ]
+  },
+  "ex-fn060dpy": {
+    "prompt": "As assinaturas do laboratório valem até 31 de dezembro de 2026. Se ninguém assinar a zona de novo, o que clientes que validam recebem em 1 de janeiro de 2027?",
+    "hint": "Como é a cara de um erro?",
+    "choices": [
+      {
+        "text": "As respostas de antes, só que sem ad",
+        "why": "Uma checagem falha não dá resposta, nem mesmo sem marca."
+      },
+      {
+        "text": "Os últimos endereços em cache, até alguém assinar de novo",
+        "why": "As entradas em cache expiram com o TTL de 300 segundos."
+      },
+      {
+        "text": "SERVFAIL para os nomes da zona",
+        "why": "Isso. Uma assinatura vencida falha como uma forjada."
+      },
+      {
+        "text": "As respostas de antes; a data é só indicativa",
+        "why": "O resolvedor confere as datas de validade."
+      }
+    ]
+  },
+  "ex-4xfq40ke": {
+    "prompt": "Ordene o que aconteceu quando o laptop pediu o nome adulterado, do primeiro ao último.",
+    "hint": "A linha do log e a linha de status.",
+    "items": [
+      "o Unbound busca a resposta no dns, porta 5300",
+      "ele confere o RRSIG com a chave da zona",
+      "a assinatura não bate com o endereço trocado",
+      "o dig recebe SERVFAIL e nenhum endereço"
+    ],
+    "trap": "O cliente não recebe nada antes de a checagem ser feita."
+  },
+  "ex-k9xhwn0x": {
+    "prompt": "Respostas DNS forjadas chegam da internet pela eth0 do fw, dizendo vir de 192.168.20.53, o servidor DNS interno da empresa. Qual regra desta aula as descarta primeiro?",
+    "hint": "Qual regra vem primeiro no prerouting, e com o que ela casa?",
+    "choices": [
+      {
+        "text": "A regra fib, já que a origem mora atrás de outra interface",
+        "why": "Descartaria, mas a regra acima dela casa antes."
+      },
+      {
+        "text": "A regra de origens privadas na eth0",
+        "why": "Isso. 192.168.0.0/16 não chega da internet."
+      },
+      {
+        "text": "A validação DNSSEC no resolvedor",
+        "why": "Ela as recusaria, mas depois, com o fw já tendo deixado entrar."
+      },
+      {
+        "text": "O rp_filter na eth0 do fw",
+        "why": "O fw está com rp_filter em 0."
+      }
+    ]
+  },
+  "ex-qc8spcdc": {
+    "prompt": "A empresa assina sua zona. Alguém da equipe num hotel usa o resolvedor do hotel, que não valida. O que a assinatura faz por essa pessoa?",
+    "hint": "Quem confere uma assinatura?",
+    "choices": [
+      {
+        "text": "O laptop recusa respostas forjadas sozinho",
+        "why": "Conferir é trabalho do resolvedor que valida."
+      },
+      {
+        "text": "Esconde a pergunta da rede do hotel",
+        "why": "O DNSSEC não esconde nada."
+      },
+      {
+        "text": "Nada: o resolvedor dela não confere",
+        "why": "Isso. Uma assinatura que ninguém confere não protege ninguém."
+      },
+      {
+        "text": "Respostas forjadas chegam como SERVFAIL",
+        "why": "SERVFAIL por assinatura ruim vem de um resolvedor que valida."
+      }
+    ]
+  }
+}

@@ -80,8 +80,8 @@ ROUTERS="fw branch"
 need() {
   local missing=()
   for p in iproute2 nftables conntrack tcpdump openssl nginx libnginx-mod-http-modsecurity modsecurity-crs suricata jq wireguard-tools wireguard-go \
-           dnsmasq bind9-dnsutils netcat-openbsd curl iputils-ping iputils-arping socat openssh-server \
-           softflowd nfdump aide hostapd wpasupplicant python3; do
+           dnsmasq bind9 bind9-dnsutils unbound netcat-openbsd curl iputils-ping iputils-arping socat openssh-server \
+           softflowd nfdump aide hostapd wpasupplicant python3 python3-cryptography python3-cffi-backend; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
   done
   [ ${#missing[@]} -eq 0 ] || { echo "install first: ${missing[*]}" >&2; exit 1; }
@@ -144,7 +144,7 @@ build_net() {
 # ip netns exec already mounts /etc/netns/HOST/* over /etc/*. The rest of what
 # tells one machine from another lives under /lab/HOST and is mounted over the
 # real path when something runs "on" that host.
-OVERLAY="root home etc/nginx var/www var/log/nginx etc/ssh etc/ssl/private etc/suricata var/log/suricata var/lib/suricata etc/aide var/lib/aide etc/wireguard etc/dnsmasq.d var/log/lab srv"
+OVERLAY="root home etc/nginx var/www var/log/nginx etc/ssh etc/ssl/private etc/suricata var/log/suricata var/lib/suricata etc/aide var/lib/aide etc/wireguard etc/dnsmasq.d var/log/lab srv etc/bind var/cache/bind etc/unbound var/lib/unbound run/wireguard"
 overlay() {
   local h=$1 p
   for p in $OVERLAY; do
@@ -153,19 +153,26 @@ overlay() {
   return 0
 }
 
+# The machines run Ubuntu 24.04's own Python, 3.12, whatever python3 means on
+# the computer hosting the lab: /lab/bin comes first on every PATH.
+python_shim() {
+  mkdir -p "$LAB/bin"
+  ln -sf /usr/bin/python3.12 "$LAB/bin/python3"
+}
+
 exec_on() {  # exec_on HOST USER COMMAND
   local h=$1 u=$2 c=$3
   ip netns exec "$h" unshare --uts bash -c '
     '"$(declare -f overlay)"'; LAB='"$LAB"'; OVERLAY="'"$OVERLAY"'"
     hostname "$1"; overlay "$1"
-    if [ "$2" = root ]; then cd /root; exec env -i HOME=/root USER=root LOGNAME=root PATH=/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin TZ='"$TZ_LAB"' LANG=C.UTF-8 TERM=xterm COLUMNS=100 WG_I_PREFER_BUGGY_USERSPACE_TO_POLISHED_KMOD=1 bash -c "$3"
-    else exec runuser -u "$2" -- env -i HOME=/home/"$2" USER="$2" LOGNAME="$2" PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin TZ='"$TZ_LAB"' LANG=C.UTF-8 TERM=xterm COLUMNS=100 bash -c "cd; $3"
+    if [ "$2" = root ]; then cd /root; exec env -i HOME=/root USER=root LOGNAME=root PATH=/lab/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin TZ='"$TZ_LAB"' LANG=C.UTF-8 TERM=xterm COLUMNS=100 WG_I_PREFER_BUGGY_USERSPACE_TO_POLISHED_KMOD=1 bash -c "$3"
+    else exec runuser -u "$2" -- env -i HOME=/home/"$2" USER="$2" LOGNAME="$2" PATH=/lab/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin TZ='"$TZ_LAB"' LANG=C.UTF-8 TERM=xterm COLUMNS=100 bash -c "cd; $3"
     fi' _ "$h" "$u" "$c"
 }
 
 hostfiles() {
   for h in $HOSTS; do
-    mkdir -p "/etc/netns/$h" "$LAB/$h/home/ana" "$LAB/$h/var/log/lab" "$LAB/$h/srv" "$LAB/$h/root"
+    mkdir -p "/etc/netns/$h" "$LAB/$h/home/ana" "$LAB/$h/var/log/lab" "$LAB/$h/srv" "$LAB/$h/root" "$LAB/$h/run/wireguard"
     chmod 700 "$LAB/$h/root"
     {
       printf '127.0.0.1 localhost\n127.0.1.1 %s\n' "$h"
@@ -239,9 +246,70 @@ host-record=dns.example.com,192.0.2.53
 host-record=vpn.example.com,203.0.113.2
 host-record=app.corp.example.com,192.168.20.10
 host-record=db.corp.example.com,192.168.20.30
+log-queries
+log-facility=/var/log/lab/dnsmasq.log
 CONF
 }
 
+
+# -------------------------------------------------------------------- DNSSEC
+# Lesson 8's signed zone. dns keeps answering the company's names with dnsmasq
+# on port 53; beside it, BIND serves the same zone SIGNED on port 5300, and
+# laptop runs a validating resolver, Unbound, on its own loopback, which asks
+# BIND and trusts the zone's key because it was told to. The keys are made
+# fresh on every build, so key tags and signatures differ between runs.
+build_dnssec() {
+  local b="$LAB/dns/etc/bind" c="$LAB/dns/var/cache/bind"
+  mkdir -p "$b" "$c"
+  cp -a /etc/bind/. "$b/"
+  cat > "$b/db.example.com" <<'Z'
+$TTL 300
+@        SOA  dns.example.com. hostmaster.example.com. 2026092801 3600 900 1209600 300
+@        NS   dns.example.com.
+dns      A    192.0.2.53
+www      A    192.0.2.80
+Z
+  ( cd "$b" && dnssec-keygen -q -a ECDSAP256SHA256 -f KSK example.com >/dev/null && dnssec-keygen -q -a ECDSAP256SHA256 example.com >/dev/null
+    for k in Kexample.com.*.key; do echo "\$INCLUDE $k" >> db.example.com; done
+    dnssec-signzone -q -S -K . -o example.com -N keep -s 20260901000000 -e 20261231000000 -f db.example.com.signed db.example.com >/dev/null
+    grep -h 'DNSKEY 257' Kexample.com.*.key | awk '{print $1, "DNSKEY", $4, $5, $6, $7 $8 $9 $10}' > "$LAB/ksk.txt" )
+  cat > "$b/named.conf" <<'CONF'
+options {
+  directory "/var/cache/bind";
+  listen-on port 5300 { 192.0.2.53; };
+  listen-on-v6 { none; };
+  recursion no;
+  pid-file "/var/cache/bind/named.pid";
+};
+zone "example.com" { type primary; file "/etc/bind/db.example.com.signed"; };
+CONF
+  chown -R bind:bind "$b" "$c"
+  local u="$LAB/laptop/etc/unbound"
+  mkdir -p "$u" "$LAB/laptop/var/lib/unbound"
+  grep 'DNSKEY 257' "$b"/Kexample.com.*.key | sed 's/^[^:]*://' > "$u/example.com.key"
+  cat > "$u/unbound.conf" <<'CONF'
+server:
+  interface: 127.0.0.1
+  port: 53
+  do-not-query-localhost: no
+  username: ""
+  chroot: ""
+  pidfile: "/var/lib/unbound/unbound.pid"
+  use-syslog: no
+  logfile: "/var/lib/unbound/unbound.log"
+  verbosity: 1
+  val-log-level: 2
+  module-config: "validator iterator"
+  trust-anchor-file: "/etc/unbound/example.com.key"
+remote-control:
+  control-enable: yes
+  control-interface: 127.0.0.1
+  control-use-cert: no
+stub-zone:
+  name: "example.com"
+  stub-addr: 192.0.2.53@5300
+CONF
+}
 
 # ------------------------------------------------------------------ probe
 # probe HOST:PORT...  tries a TCP connection to each and says what happened,
@@ -439,6 +507,8 @@ start() {
   daemon db "socat TCP-LISTEN:5432,bind=192.168.20.30,fork,reuseaddr SYSTEM:'echo db ready'"
   daemon www "nginx"
   for h in remote app db; do daemon "$h" "/usr/sbin/sshd -f /etc/ssh/sshd_config"; done
+  daemon dns "named -u bind -c /etc/bind/named.conf"
+  daemon laptop "unbound -d -c /etc/unbound/unbound.conf"
   daemon dns "dnsmasq --conf-dir=/etc/dnsmasq.d --pid-file=/var/log/lab/dnsmasq.pid --user=root"
   for _ in $(seq 50); do
     exec_on laptop ana 'curl -s -m 1 -o /dev/null http://www.example.com/' 2>/dev/null && break
@@ -468,10 +538,12 @@ up() {
   # the real paths the overlay mounts over have to exist on the computer
   for p in $OVERLAY; do mkdir -p "/$p"; done
   build_net
+  python_shim
   hostfiles
   build_services
   build_baseline
   build_probe
+  build_dnssec
   build_tls
   build_ssh
   build_suricata

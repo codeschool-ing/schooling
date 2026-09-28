@@ -1,0 +1,687 @@
+[
+  {
+    "id": "ex-wqxxfgth",
+    "version": 1,
+    "section": "forged-sources",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who writes the source address in an IP packet?",
+    "hint": "Does anything in IP check it?",
+    "choices": [
+      {
+        "text": "The first router, from the interface the packet arrived on",
+        "correct": false,
+        "why": "Routers forward the field as they find it."
+      },
+      {
+        "text": "The sender",
+        "correct": true,
+        "why": "Right. And nothing in IP checks what it wrote."
+      },
+      {
+        "text": "The firewall, once it has checked the routing table",
+        "correct": false,
+        "why": "A firewall can check it, but it does not write it."
+      },
+      {
+        "text": "The receiver's IP layer, from the Ethernet header",
+        "correct": false,
+        "why": "The receiver reads what the sender put there."
+      }
+    ]
+  },
+  {
+    "id": "ex-447k2rde",
+    "version": 1,
+    "section": "forged-sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "remote sent a request to the shop from 192.168.20.99 and curl timed out, yet the SYN reached www. Why did it time out?",
+    "hint": "Where did www send its answer?",
+    "choices": [
+      {
+        "text": "fw dropped the SYN at the edge",
+        "correct": false,
+        "why": "The recording on www shows the SYN arrived."
+      },
+      {
+        "text": "www answered 192.168.20.99, an address that is not on the internet",
+        "correct": true,
+        "why": "Right. The answer went nowhere useful."
+      },
+      {
+        "text": "www refuses connections from the servers range",
+        "correct": false,
+        "why": "It answered; the answer just went elsewhere."
+      },
+      {
+        "text": "The certificate did not name the forged address",
+        "correct": false,
+        "why": "The handshake never got as far as TLS."
+      }
+    ]
+  },
+  {
+    "id": "ex-3zw6kzez",
+    "version": 1,
+    "section": "forged-sources",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each use of a forged source address to why it works.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "getting past a rule that trusts an address",
+        "right": "the rule believes the source field"
+      },
+      {
+        "left": "reflection and amplification",
+        "right": "the answers go to the forged address, the victim"
+      },
+      {
+        "left": "hiding where a flood comes from",
+        "right": "each packet claims a different, random source"
+      }
+    ],
+    "right_distractors": [
+      "the switch learns the wrong port for a MAC"
+    ]
+  },
+  {
+    "id": "ex-3r6tdqj9",
+    "version": 1,
+    "section": "filtering-at-the-edge",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the anti-spoofing rules were loaded, how many packets of the forged request did the private-sources rule drop?",
+    "hint": "The counter on the first rule.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-nc5y0hb7",
+    "version": 1,
+    "section": "filtering-at-the-edge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the rule fib saddr . iif oif missing drop?",
+    "hint": "It asks the routing table a question about the source.",
+    "choices": [
+      {
+        "text": "Packets whose source is in a private range",
+        "correct": false,
+        "why": "That is the first rule, which needs a list."
+      },
+      {
+        "text": "Packets whose destination has no route out of fw",
+        "correct": false,
+        "why": "It looks at the source, not the destination."
+      },
+      {
+        "text": "Packets whose source is not reachable back through the interface they came in on",
+        "correct": true,
+        "why": "Right. That is reverse path filtering."
+      },
+      {
+        "text": "Replies to connections fw has not seen",
+        "correct": false,
+        "why": "That is connection tracking's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbwk4rnk",
+    "version": 1,
+    "section": "filtering-at-the-edge",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A firewall has two internet providers, and some traffic arrives through one and leaves through the other. Which rp_filter value fits it?",
+    "hint": "Which mode drops real customers there?",
+    "choices": [
+      {
+        "text": "1, strict, as a firewall like fw should use",
+        "correct": false,
+        "why": "Strict drops traffic that returns by the other provider."
+      },
+      {
+        "text": "2, loose",
+        "correct": true,
+        "why": "Right. Any route back will do."
+      },
+      {
+        "text": "0, with the fib rule doing the same check",
+        "correct": false,
+        "why": "The fib rule is the strict check, with the same problem."
+      },
+      {
+        "text": "1, because it acts on packets from private ranges alone",
+        "correct": false,
+        "why": "It applies to every source, private or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-0my1n03d",
+    "version": 1,
+    "section": "sending-only-your-own",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does BCP 38 ask every network to do?",
+    "hint": "Which direction?",
+    "choices": [
+      {
+        "text": "Drop incoming packets from private ranges",
+        "correct": false,
+        "why": "That protects you from what arrives."
+      },
+      {
+        "text": "Drop outgoing packets whose source is not one of its own",
+        "correct": true,
+        "why": "Right. It protects everybody else."
+      },
+      {
+        "text": "Refuse to resolve names for strangers",
+        "correct": false,
+        "why": "That is not being an open resolver."
+      },
+      {
+        "text": "Sign its DNS zone",
+        "correct": false,
+        "why": "That is DNSSEC."
+      }
+    ]
+  },
+  {
+    "id": "ex-0r6eqfz2",
+    "version": 1,
+    "section": "sending-only-your-own",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "laptop tried to reach the internet from 198.51.100.7 and fw dropped 1 packet. Which rule caught it?",
+    "hint": "Which rule's counter moved?",
+    "choices": [
+      {
+        "text": "The private-sources rule, since the address is not the LAN's",
+        "correct": false,
+        "why": "That rule matches on eth0 and private ranges; 198.51.100.7 is neither."
+      },
+      {
+        "text": "The fib rule, the same one that stopped the forged request",
+        "correct": true,
+        "why": "Right. fw has no route to it through the LAN interface."
+      },
+      {
+        "text": "A separate BCP 38 rule in forward",
+        "correct": false,
+        "why": "No new rule was added."
+      },
+      {
+        "text": "NAT, which rewrote it",
+        "correct": false,
+        "why": "NAT would have sent it on, not dropped it."
+      }
+    ]
+  },
+  {
+    "id": "ex-b9hangf9",
+    "version": 1,
+    "section": "sending-only-your-own",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Behind NAT, towards the internet there is one legitimate source: the firewall's public ___.",
+    "hint": "The last paragraph of the section.",
+    "blanks": [
+      {
+        "accept": [
+          "address",
+          "IP",
+          "IP address"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2261rae8",
+    "version": 1,
+    "section": "sending-only-your-own",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A LAN machine is taken over and told to join somebody's flood with forged sources. What does the egress filter give the company?",
+    "hint": "Two things: one for the victim, one for the defenders.",
+    "choices": [
+      {
+        "text": "The malware is removed from the machine",
+        "correct": false,
+        "why": "A filter on fw does nothing to the laptop's software."
+      },
+      {
+        "text": "The machine's honest traffic is blocked as well, until it is cleaned",
+        "correct": false,
+        "why": "Without the forged address laptop connected normally."
+      },
+      {
+        "text": "Its forged packets stop at fw, and a counter shows the attempt",
+        "correct": true,
+        "why": "Right. Useless for the flood, and visible."
+      },
+      {
+        "text": "The victim is told which machine is attacking",
+        "correct": false,
+        "why": "The dropped packets do not reach the victim."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezzhkrx3",
+    "version": 1,
+    "section": "dns-poisoning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a false answer in a resolver's cache worth more to an attacker than one forged reply to one client?",
+    "hint": "Who reads the cache?",
+    "choices": [
+      {
+        "text": "Everybody who asks there is sent it until the entry expires",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The cache keeps it after the TTL runs out",
+        "correct": false,
+        "why": "It lasts as long as the TTL allows."
+      },
+      {
+        "text": "A cached answer bypasses DNSSEC",
+        "correct": false,
+        "why": "A validating resolver checks before caching."
+      },
+      {
+        "text": "The resolver sends it to other resolvers",
+        "correct": false,
+        "why": "It serves its own clients."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxvnqbb0",
+    "version": 1,
+    "section": "dns-poisoning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The resolver's source port is known and its transaction IDs are random. What chance does one forged answer have of carrying the right ID?",
+    "hint": "The ID is 16 bits.",
+    "choices": [
+      {
+        "text": "1 in 16",
+        "correct": false,
+        "why": "16 is the number of bits, not of values."
+      },
+      {
+        "text": "1 in 4,294,967,296",
+        "correct": false,
+        "why": "That would be a 32-bit ID."
+      },
+      {
+        "text": "1 in 65,536",
+        "correct": true,
+        "why": "Right. 2 to the 16th."
+      },
+      {
+        "text": "1 in 256",
+        "correct": false,
+        "why": "That is 8 bits."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqyqg7mn",
+    "version": 1,
+    "section": "dns-poisoning",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which defences make a forged DNS answer less likely to be accepted, without checking the answer itself? Choose all that apply.",
+    "hint": "One entry in the table checks the answer itself.",
+    "choices": [
+      {
+        "text": "Random transaction IDs",
+        "correct": true,
+        "why": "Right. The forger has to guess one in 65,536."
+      },
+      {
+        "text": "Random source ports",
+        "correct": true,
+        "why": "Right. They multiply the guessing."
+      },
+      {
+        "text": "DNSSEC",
+        "correct": false,
+        "why": "DNSSEC checks the answer itself, so a forgery is useless."
+      },
+      {
+        "text": "Not being an open resolver",
+        "correct": true,
+        "why": "Right. Strangers cannot choose when it asks."
+      }
+    ]
+  },
+  {
+    "id": "ex-51bpym1r",
+    "version": 1,
+    "section": "dns-poisoning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One laptop resolves the shop to a strange address; its neighbours, using the same resolver, get the right one. Where would you look first?",
+    "hint": "Who else would a poisoned resolver affect?",
+    "choices": [
+      {
+        "text": "The shared resolver's cache",
+        "correct": false,
+        "why": "A poisoned cache would mislead the neighbours too."
+      },
+      {
+        "text": "The zone's DNSSEC signatures, which have expired",
+        "correct": false,
+        "why": "That gives SERVFAIL to everybody, not a strange address."
+      },
+      {
+        "text": "Its own hosts file and DNS settings",
+        "correct": true,
+        "why": "Right. One machine differing from its neighbours points to something local."
+      },
+      {
+        "text": "The transaction IDs the resolver has been using lately",
+        "correct": false,
+        "why": "A race won against the resolver would reach its other clients."
+      }
+    ]
+  },
+  {
+    "id": "ex-8qqwqgc2",
+    "version": 1,
+    "section": "dnssec-in-the-lab",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of DNSSEC in the lab to what it is.",
+    "hint": "The first paragraphs of the section.",
+    "pairs": [
+      {
+        "left": "RRSIG",
+        "right": "the signature over a set of records"
+      },
+      {
+        "left": "DNSKEY",
+        "right": "the zone's published public key"
+      },
+      {
+        "left": "the ad flag",
+        "right": "the resolver's word that it checked the signature"
+      },
+      {
+        "left": "trust-anchor-file",
+        "right": "the key Unbound trusts without asking anybody"
+      }
+    ],
+    "right_distractors": [
+      "the zone owner's private key"
+    ]
+  },
+  {
+    "id": "ex-xpfz635p",
+    "version": 1,
+    "section": "dnssec-in-the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lab has no root zone. How does Unbound on laptop come to trust the company's zone?",
+    "hint": "Look at the configuration grep.",
+    "choices": [
+      {
+        "text": "It fetches the root's key from the internet at start-up",
+        "correct": false,
+        "why": "The lab has no root to chain from."
+      },
+      {
+        "text": "It is given the zone's key as a trust anchor",
+        "correct": true,
+        "why": "Right. The chain, cut short."
+      },
+      {
+        "text": "It trusts whatever the stub address serves",
+        "correct": false,
+        "why": "The stub says where to ask, not what to believe."
+      },
+      {
+        "text": "It asks the parent zone for a fingerprint of the key",
+        "correct": false,
+        "why": "That is the internet's way; the lab has no parent."
+      }
+    ]
+  },
+  {
+    "id": "ex-45sp7vaj",
+    "version": 1,
+    "section": "dnssec-in-the-lab",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A laptop uses a validating resolver elsewhere on the network and reads the ad flag. What is still unprotected?",
+    "hint": "Who checked the signature, and who is trusting their word?",
+    "choices": [
+      {
+        "text": "The signature, because ad hides the RRSIG",
+        "correct": false,
+        "why": "The RRSIG is shown beside the answer."
+      },
+      {
+        "text": "The zone's private key, which the resolver holds",
+        "correct": false,
+        "why": "The resolver holds the public key; the owner keeps the private one."
+      },
+      {
+        "text": "The path, because ad is signed by the zone",
+        "correct": false,
+        "why": "ad is a flag the resolver sets, not a signature."
+      },
+      {
+        "text": "The hop between the two, unless it uses DNS over TLS or HTTPS",
+        "correct": true,
+        "why": "Right. A forged ad on that hop would be believed."
+      }
+    ]
+  },
+  {
+    "id": "ex-fddedmjt",
+    "version": 1,
+    "section": "a-tampered-answer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the address was changed without re-signing, what did laptop's dig receive?",
+    "hint": "Look at the status line.",
+    "choices": [
+      {
+        "text": "203.0.113.66, without the ad flag",
+        "correct": false,
+        "why": "The resolver handed over no address at all."
+      },
+      {
+        "text": "192.0.2.80, from the cache",
+        "correct": false,
+        "why": "The cached answer had been flushed."
+      },
+      {
+        "text": "SERVFAIL, and no address",
+        "correct": true,
+        "why": "Right. Validation failed, so nothing was handed on."
+      },
+      {
+        "text": "NXDOMAIN, as if the name did not exist",
+        "correct": false,
+        "why": "The name exists; its signature failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9ks7nwe",
+    "version": 1,
+    "section": "a-tampered-answer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did dig +cd print 203.0.113.66 when the plain query failed?",
+    "hint": "cd stands for something.",
+    "choices": [
+      {
+        "text": "+cd asks the resolver to skip validation",
+        "correct": true,
+        "why": "Right. Checking disabled."
+      },
+      {
+        "text": "+cd asks the zone's server directly, past Unbound",
+        "correct": false,
+        "why": "It still asked 127.0.0.1."
+      },
+      {
+        "text": "+cd bypasses the cache, and the cache held the SERVFAIL",
+        "correct": false,
+        "why": "The difference is the check, not the cache."
+      },
+      {
+        "text": "The signature had been fixed in between",
+        "correct": false,
+        "why": "Nobody re-signed the zone."
+      }
+    ]
+  },
+  {
+    "id": "ex-fn060dpy",
+    "version": 1,
+    "section": "a-tampered-answer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The lab's signatures are valid until 31 December 2026. If nobody re-signs the zone, what do validating clients get on 1 January 2027?",
+    "hint": "What does a mistake look like?",
+    "choices": [
+      {
+        "text": "The answers as before, but without ad",
+        "correct": false,
+        "why": "A failed check gives no answer, not an unmarked one."
+      },
+      {
+        "text": "The last cached addresses, until somebody re-signs",
+        "correct": false,
+        "why": "Cached entries expire with their TTL of 300 seconds."
+      },
+      {
+        "text": "SERVFAIL for the zone's names",
+        "correct": true,
+        "why": "Right. An expired signature fails like a forged one."
+      },
+      {
+        "text": "The answers as before; the date is advisory",
+        "correct": false,
+        "why": "The resolver checks the validity dates."
+      }
+    ]
+  },
+  {
+    "id": "ex-4xfq40ke",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what happened when laptop asked for the tampered name, from first to last.",
+    "hint": "The log line and the status line.",
+    "items": [
+      "Unbound fetches the answer from dns on port 5300",
+      "it checks the RRSIG against the zone's key",
+      "the signature does not match the changed address",
+      "dig gets SERVFAIL and no address"
+    ],
+    "trap": "The client hears nothing until the check has been made."
+  },
+  {
+    "id": "ex-k9xhwn0x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Forged DNS answers arrive from the internet at fw's eth0, claiming to come from 192.168.20.53, the company's internal DNS server. Which rule in this lesson drops them first?",
+    "hint": "Which rule comes first in prerouting, and what does it match?",
+    "choices": [
+      {
+        "text": "The fib rule, since the source lives behind another interface",
+        "correct": false,
+        "why": "It would, but the rule above it matches first."
+      },
+      {
+        "text": "The private-sources rule on eth0",
+        "correct": true,
+        "why": "Right. 192.168.0.0/16 never arrives from the internet."
+      },
+      {
+        "text": "DNSSEC validation on the resolver",
+        "correct": false,
+        "why": "It would refuse them, but later, after fw has let them in."
+      },
+      {
+        "text": "rp_filter on fw's eth0",
+        "correct": false,
+        "why": "fw has rp_filter at 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-qc8spcdc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The company signs its zone. A member of staff at a hotel uses the hotel's resolver, which does not validate. What does the signing do for them?",
+    "hint": "Who checks a signature?",
+    "choices": [
+      {
+        "text": "The laptop refuses forged answers by itself",
+        "correct": false,
+        "why": "Checking is the validating resolver's job."
+      },
+      {
+        "text": "It hides the question from the hotel's network",
+        "correct": false,
+        "why": "DNSSEC hides nothing."
+      },
+      {
+        "text": "Nothing: their resolver does not check it",
+        "correct": true,
+        "why": "Right. A signature nobody checks protects nobody."
+      },
+      {
+        "text": "Forged answers reach them as SERVFAIL",
+        "correct": false,
+        "why": "SERVFAIL for a bad signature comes from a validating resolver."
+      }
+    ]
+  }
+]
