@@ -25,8 +25,8 @@ for the other's. Clients are spread between the two addresses, usually by DNS re
 is idle, which is the attraction.
 
 The common belief is that active-active therefore doubles the capacity and keeps the redundancy. **It
-does one or the other, never both at once.** If two balancers each run at 70% of what one machine can
-handle, the site has 140% of one machine's capacity on a normal day, and on the day one of them fails the
+does one or the other, never both at once.** Take two balancers that each run at 70% of what one machine can
+handle. On a normal day the site has 140% of one machine's capacity. On the day one of them fails, the
 survivor is asked for 140% and falls over, taking the half that was still working with it. Active-active
 is only redundant while the two together carry no more than one of them could alone, and at that load it
 buys exactly the capacity active-passive has, with more machinery. The last section of this lesson puts

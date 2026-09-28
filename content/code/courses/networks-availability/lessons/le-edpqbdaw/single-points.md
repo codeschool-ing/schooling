@@ -15,8 +15,8 @@ whether it has a twin:
 ```
 
 The servers are fine. Three web servers behind two balancers survive the loss of any one of them, and
-lesson 16 measures it: when the balancer on `lb1` was killed, `lb2` took over and the site answered again
-after 2.694 seconds, and when `web2` stopped, the balancer sent every request to `web1` and `web3`
+lesson 16 measures it. When the balancer on `lb1` was killed, `lb2` took over and the site answered again
+after 2.694 seconds; when `web2` stopped, the balancer sent every request to `web1` and `web3`
 instead. **Everything else in the drawing is single.** There is one router to the internet, `isp`, on one
 link. There is one DNS server, `ns`: if it stops, a browser that has not already cached the address
 cannot find `www.example.com` at all, and five healthy machines are unreachable by name. And every

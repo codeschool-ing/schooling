@@ -67,13 +67,14 @@ instance went to `FAULT`. And `lb2` now holds `192.0.2.80`.
 The gateway failover of lesson 15 left a gap of 3.264 seconds; this one is 2.694, with the same
 one-second advertisements. The difference is who noticed. In lesson 15 the master's cable was pulled, so
 it went silent, and the backup had to wait out its master down interval of silence. Here the master
-itself found out first, through its own script, and **a master that gives up the address says so**: VRRP
+itself found out first, through its own script, and **a master that gives up the address says so**. VRRP
 defines an advertisement with priority 0 as "I am leaving, take over now", and a backup that hears one
 waits only its short skew instead of three seconds of silence. That last packet is not in the capture,
 but the times leave no room for anything else: `lb1` went to `FAULT` at 18:11:48, and `lb2` was serving
 by 18:11:49.610, well before 3.61 seconds of silence could have run out.
 
-So the 2.694 seconds are made of detection, not of the switch. **Two failed checks at one a second is
+No link in the lab has any delay, so none of the 2.694 seconds is the network, and most of it is
+detection rather than the switch. **Two failed checks at one a second is
 about two seconds of the gap**, and the rest is the move. Checking every 200 milliseconds would shrink
 it, and lesson 14 said what that costs on a busy machine: a check that times out because the machine is
 loaded looks exactly like one that failed because it is dead.

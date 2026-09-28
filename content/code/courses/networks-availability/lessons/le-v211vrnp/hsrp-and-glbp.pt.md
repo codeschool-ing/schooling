@@ -30,24 +30,22 @@ aprendeu VRRP espera que ele assuma, quem aprendeu HSRP espera que não, e uma e
 durante uma queda qual suposição a configuração fez. A regra de tracking do fim da seção anterior é onde
 isso mais importa.
 
-**O MAC virtual.** O HSRP sempre usa o MAC virtual, então um failover não muda entrada ARP nenhuma, o
-comportamento que o padrão do VRRP pede e que o modo padrão do keepalived pula. Também é uma impressão
-digital útil: `0000.0c07.ac0a` na tabela ARP de um host quer dizer que o gateway é o grupo HSRP 10.
+**O MAC virtual.** O HSRP sempre usa um, então um failover não muda entrada ARP nenhuma, que é o que o
+padrão do VRRP pede e o modo padrão do keepalived pula. Também é uma impressão digital: `0000.0c07.ac0a` na
+tabela ARP de um host quer dizer que o gateway é o grupo HSRP 10.
 
 ## Usando os dois roteadores ao mesmo tempo
 
-VRRP e HSRP deixam o backup parado. Ele está aquecido, está pronto, e não encaminha nada, o que é bom para
-resiliência e um desperdício para um par de roteadores caros. A resposta clássica são **dois grupos**: o
-grupo 1 com `hq` como master do `.1`, o grupo 2 com `hq2` como master do `.4`, e metade dos hosts recebendo
-do DHCP o `.1` e metade o `.4`. Cada roteador é backup do endereço do outro. Funciona, e dobra a
-configuração e divide os hosts à mão.
+VRRP e HSRP deixam o backup parado, o que é bom para resiliência e um desperdício para um par de
+roteadores caros. A resposta clássica são **dois grupos**: `hq` master do `.1`, `hq2` master do `.4`, e o
+DHCP mandando metade dos hosts usar cada um. Cada roteador é backup do endereço do outro, ao preço do dobro
+de configuração e de hosts divididos à mão.
 
-O **GLBP**, Gateway Load Balancing Protocol, faz a divisão sozinho. Um roteador, o gateway virtual ativo,
-responde a todo pedido ARP para o único endereço virtual, e responde a hosts diferentes com MACs virtuais
-diferentes, cada um pertencente a um de até quatro roteadores que encaminham. Todo host tem o mesmo
-endereço de gateway e, sem saber, metade manda para um roteador e metade para o outro. Se um dos que
-encaminham morre, outro assume o MAC dele.
+O **GLBP**, Gateway Load Balancing Protocol, faz a divisão sozinho. Um roteador responde a todo pedido
+ARP para o único endereço virtual, e dá a hosts diferentes MACs virtuais diferentes, cada um pertencente a
+um de até quatro roteadores que encaminham. Todo host tem o mesmo gateway e, sem saber, metade manda para
+um roteador e metade para o outro. Se um dos que encaminham morre, outro assume o MAC dele.
 
 Dois grupos com um master em cada é o formato que a aula 16 usa para balanceadores, onde se chama
-ativo-ativo, e vem com uma regra que vale igualmente para roteadores: **cada um dos dois precisa dar conta
+ativo-ativo. Vem com uma regra que vale igualmente para roteadores: **cada um dos dois precisa dar conta
 de tudo sozinho**, senão no dia em que um falhar o outro fica sobrecarregado em vez de redundante.

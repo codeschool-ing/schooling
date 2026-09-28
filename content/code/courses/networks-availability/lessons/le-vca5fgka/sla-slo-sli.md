@@ -5,8 +5,12 @@ version: 1
 
 A contract that says "99.9% availability" reads like a guarantee that the service will be up. **An SLA
 is not a guarantee of anything. It is the price the provider pays when the service falls short**, and
-the price is almost always small. Three terms travel together and are routinely mixed up, and the
-difference between them is most of what this section is about:
+the price is almost always small. No incident was staged in the lab for this lesson, so there is no
+capture: its numbers are arithmetic, run as a program where there is a calculation, and the two
+failovers measured in lessons 15 and 16.
+
+Three terms travel together and are routinely mixed up, and the difference between them is most of what
+this section is about:
 
 | term | what it is | an example |
 |---|---|---|

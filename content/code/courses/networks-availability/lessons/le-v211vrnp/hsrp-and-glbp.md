@@ -30,24 +30,22 @@ when nobody has thought about it, which is why they are worth knowing.
 finds out during an outage which assumption the configuration made. The tracking rule at the end of the
 previous section is where this matters most.
 
-**The virtual MAC.** HSRP always uses its virtual MAC, so a failover changes no ARP entries at all, the
-behaviour VRRP's standard asks for and keepalived's default mode skips. It is also a handy fingerprint:
-`0000.0c07.ac0a` in a host's ARP table means the gateway is HSRP group 10.
+**The virtual MAC.** HSRP always uses one, so a failover changes no ARP entry, which is what VRRP's
+standard asks for and keepalived's default mode skips. It is also a fingerprint: `0000.0c07.ac0a` in a
+host's ARP table means the gateway is HSRP group 10.
 
 ## Using both routers at once
 
-VRRP and HSRP both leave the backup idle. It is warm, it is ready, and it forwards nothing, which is fine
-for resilience and wasteful for a pair of expensive routers. The classic answer is **two groups**: group 1
-with `hq` as master for `.1`, group 2 with `hq2` as master for `.4`, and half the hosts told by DHCP to use
-`.1` and half `.4`. Each router backs up the other's address. It works, and it doubles the configuration
-and splits the hosts by hand.
+VRRP and HSRP both leave the backup idle, which is fine for resilience and wasteful for a pair of
+expensive routers. The classic answer is **two groups**: `hq` master for `.1`, `hq2` master for `.4`, and
+DHCP telling half the hosts to use each. Each router backs up the other's address, at the price of twice
+the configuration and hosts split by hand.
 
-**GLBP**, the Gateway Load Balancing Protocol, does the splitting itself. One router, the active virtual
-gateway, answers every ARP request for the single virtual address, and it answers different hosts with
-different virtual MACs, each belonging to one of up to four forwarding routers. Every host has the same
-gateway address and, without knowing it, half of them send to one router and half to the other. If a
-forwarder dies, another one takes over its MAC.
+**GLBP**, the Gateway Load Balancing Protocol, does the splitting itself. One router answers every ARP
+request for the single virtual address, and gives different hosts different virtual MACs, each belonging
+to one of up to four forwarding routers. Every host has the same gateway, and without knowing it half of
+them send to one router and half to the other. If a forwarder dies, another takes over its MAC.
 
 Two groups with a master on each is the shape lesson 16 uses for load balancers, where it is called
-active-active, and it comes with a rule that applies to routers just as much: **each of the two has to be
+active-active. It comes with a rule that applies to routers just as much: **each of the two has to be
 able to carry everything alone**, or the day one fails the other is overloaded instead of redundant.

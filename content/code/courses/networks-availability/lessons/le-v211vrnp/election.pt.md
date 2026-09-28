@@ -21,7 +21,7 @@ Mon Sep 28 18:10:59 2026: (office) Entering BACKUP STATE
 ```
 
 **`hq` tem `192.168.10.2`, o dele, e `192.168.10.1`, o virtual.** `hq2` só tem o próprio. Os dois logs
-contam como chegaram lá, e se leem melhor lado a lado.
+contam como chegaram lá.
 
 `hq2` começou às 18:10:54 como backup e não ouviu nada. `hq` começou às 18:10:55 e fez o mesmo, e por
 alguns segundos dois backups ficaram ouvindo o silêncio um do outro. A espera de `hq2` acabou primeiro,
@@ -63,11 +63,10 @@ depende da prioridade do próprio backup, (256 − prioridade) / 256 de segundo.
 dá 3 + 156/256, cerca de 3,61 segundos. O skew existe para LANs com vários backups: o de maior prioridade
 tem a espera mais curta, então fala primeiro, e os outros o ouvem e ficam quietos.
 
-`authtype none` merece uma segunda olhada. Nada no anúncio prova que ele veio de um roteador, e um host na
-LAN que mandasse anúncios com prioridade maior viraria o gateway do escritório. O VRRPv3 tirou a
-autenticação de vez, com o argumento de que uma senha mandada em texto claro na mesma LAN não protegia
-nada. **A defesa é manter máquinas não confiáveis fora do segmento dos roteadores**: os roteadores numa VLAN
-própria, ou filtros no switch que só aceitam VRRP vindo das portas dos roteadores.
+`authtype none` quer dizer que nada prova que um anúncio veio de um roteador, então um host que anunciasse
+uma prioridade maior viraria o gateway. O VRRPv3 tirou a autenticação de vez, já que uma senha mandada em
+texto claro na mesma LAN não protegia nada. **A defesa é manter máquinas não confiáveis fora do segmento
+dos roteadores**: uma VLAN própria, ou filtros no switch que só aceitam VRRP das portas deles.
 
 ## Qual endereço de hardware os hosts aprendem
 
@@ -80,9 +79,8 @@ eth0@if1244      UP             52:54:00:a8:0a:14 <BROADCAST,MULTICAST,UP,LOWER_
 192.168.10.1 dev eth0 lladdr 52:54:00:a8:0a:02 DELAY 
 ```
 
-O MAC do próprio laptop termina em `:14`, e ele aprendeu `52:54:00:a8:0a:02` para o gateway, que é o
-endereço de hardware do próprio `hq`. O padrão pretende outra coisa: um **MAC virtual**, `00-00-5E-00-01-`
-seguido do VRID em hexadecimal, aqui seria `00:00:5e:00:01:0a`, de quem estiver como master, para que um
-failover nunca mude as entradas ARP dos hosts. O keepalived sabe fazer isso, com uma opção chamada
-`use_vmac`, e este laboratório não a usa. **No modo padrão do keepalived o novo master precisa avisar todos
+O MAC do próprio laptop termina em `:14`, e para o gateway ele aprendeu `52:54:00:a8:0a:02`, o endereço
+de hardware do próprio `hq`. O padrão pretende, em vez disso, um **MAC virtual**, `00-00-5E-00-01-` e o VRID
+em hexadecimal, aqui `00:00:5e:00:01:0a`, de quem estiver como master, para que um failover nunca mude uma
+entrada ARP. A opção `use_vmac` do keepalived faz isso, e este laboratório não a usa. **No modo padrão do keepalived o novo master precisa avisar todos
 os hosts de que o endereço mudou de lugar**, e as duas próximas seções o veem fazendo isso.

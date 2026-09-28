@@ -25,9 +25,9 @@ backup do endereço do outro. Os clientes se espalham entre os dois endereços, 
 devolvendo os dois. Nada fica parado, e essa é a atração.
 
 A crença comum é que o ativo-ativo, então, dobra a capacidade e mantém a redundância. **Ele faz uma coisa
-ou a outra, nunca as duas ao mesmo tempo.** Se dois balanceadores rodam cada um a 70% do que uma máquina
-aguenta, o site tem 140% da capacidade de uma máquina num dia normal, e no dia em que um deles falha o
-sobrevivente recebe um pedido de 140% e cai, levando junto a metade que ainda funcionava. O ativo-ativo só
+ou a outra, nunca as duas ao mesmo tempo.** Pegue dois balanceadores que rodam cada um a 70% do que uma
+máquina aguenta. Num dia normal o site tem 140% da capacidade de uma máquina. No dia em que um deles
+falha, o sobrevivente recebe um pedido de 140% e cai, levando junto a metade que ainda funcionava. O ativo-ativo só
 é redundante enquanto os dois juntos não levam mais do que um deles levaria sozinho, e com essa carga ele
 compra exatamente a capacidade que o ativo-passivo tem, com mais maquinário. A última seção desta aula põe
 números nisso.

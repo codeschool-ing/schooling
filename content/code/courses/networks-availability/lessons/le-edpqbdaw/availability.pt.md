@@ -11,8 +11,10 @@ ano anterior.
 
 A fração é dita em noves, e o erro comum é ler os noves como quase a mesma coisa. 99% parece quase
 perfeito. Permite mais de três dias e meio fora do ar por ano. Cada nove a mais divide a margem por dez,
-então o passo de três noves para quatro é o passo de quase um dia de trabalho para menos de uma hora. Este
-programa faz a conta para um ano de 365 dias, um doze avos desse ano e um dia:
+então o passo de três noves para quatro é o passo de quase um dia de trabalho para menos de uma hora. Nada
+no laboratório falha nesta aula, então não há captura aqui: os números são aritmética, feita por programas
+pequenos que foram executados, e as falhas que ela cita foram medidas nas aulas 15 e 16. Este faz a conta
+dos noves para um ano de 365 dias, um doze avos desse ano e um dia:
 
 ```schooling-example
 {"language": "python", "file": "nines.py", "parts": [{"code": "YEAR = 365 * 24 * 60 * 60  # seconds in a year that is not a leap year", "note": "Um ano de 365 dias, em segundos. Tudo é calculado em segundos e só convertido na hora de imprimir."}, {"code": "for nines in (2, 3, 4, 5):\n    up = 1 - 10 ** -nines  # 0.99, 0.999, 0.9999, 0.99999\n    down = YEAR * (1 - up)  # the seconds the rest of the year is allowed", "note": "Dois noves são 1 − 10⁻², ou seja, 0,99. Cada nove a mais divide por dez o que sobra, e `down` é essa fatia que sobra do ano."}, {"code": "    print(f\"{up * 100:>7g}%  \"\n          f\"{down / 3600:6.2f} h = {down / 60:7.1f} min a year  \"\n          f\"{down / 60 / 12:6.2f} min a month  \"\n          f\"{down / 365:6.2f} s a day\")", "note": "A mesma margem de três jeitos: horas e minutos num ano, minutos em um doze avos do ano e segundos num dia."}], "output": "     99%   87.60 h =  5256.0 min a year  438.00 min a month  864.00 s a day\n   99.9%    8.76 h =   525.6 min a year   43.80 min a month   86.40 s a day\n  99.99%    0.88 h =    52.6 min a year    4.38 min a month    8.64 s a day\n 99.999%    0.09 h =     5.3 min a year    0.44 min a month    0.86 s a day"}

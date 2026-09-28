@@ -67,13 +67,14 @@ seguidas, `fall 2`, e a instância foi para `FAULT`. E `lb2` agora tem `192.0.2.
 O failover de gateway da aula 15 deixou um buraco de 3,264 segundos; este tem 2,694, com os mesmos
 anúncios de um segundo. A diferença está em quem percebeu. Na aula 15 o cabo do master foi puxado, então
 ele ficou em silêncio, e o backup teve de esperar o master down interval inteiro de silêncio. Aqui o
-próprio master descobriu primeiro, pelo próprio script, e **um master que abre mão do endereço avisa**: o
+próprio master descobriu primeiro, pelo próprio script, e **um master que abre mão do endereço avisa**. O
 VRRP define um anúncio com prioridade 0 como "estou saindo, assuma agora", e um backup que ouve um espera
 só o seu skew curto em vez de três segundos de silêncio. Esse último pacote não está na captura, mas os
 horários não deixam espaço para outra coisa: `lb1` foi para `FAULT` às 18:11:48, e `lb2` estava servindo
 às 18:11:49.610, bem antes de 3,61 segundos de silêncio poderem ter terminado.
 
-Então os 2,694 segundos são feitos de detecção, não da troca. **Dois checks falhos a um por segundo são uns
+Nenhum enlace do laboratório tem atraso, então nada dos 2,694 segundos é a rede, e quase tudo é
+detecção, não a troca. **Dois checks falhos a um por segundo são uns
 dois segundos do buraco**, e o resto é a mudança. Verificar a cada 200 milissegundos o encolheria, e a aula
 14 disse quanto isso custa numa máquina ocupada: um check que estoura o tempo porque a máquina está
 carregada é idêntico a um que falhou porque ela está morta.

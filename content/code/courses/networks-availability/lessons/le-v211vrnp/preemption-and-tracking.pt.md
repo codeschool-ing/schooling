@@ -41,18 +41,16 @@ endereço de hardware de quem manda, dentro do pedido, `52:54:00:a8:0a:02`. Todo
 entrada ARP para `192.168.10.1` a atualiza para o MAC de quem mandou, e a entrada do laptop voltou para o
 `:02` de `hq` sem o laptop ter perguntado nada. Isso é um **ARP gratuito** (gratuitous ARP), e é assim que
 o novo master de um failover redireciona todos os hosts com um só broadcast, em vez de esperar os caches
-expirarem. `STALE` só quer dizer que a entrada não foi confirmada recentemente, e o laptop vai conferi-la
-na próxima vez que mandar alguma coisa.
+expirarem. `STALE` só quer dizer que a entrada não foi confirmada recentemente.
 
 ## O custo de pegar de volta
 
 Preempção quer dizer que **o escritório passa por uma segunda troca quando o roteador que falhou volta**,
-uma troca curta, já que `hq` se anuncia na hora em vez de esperar um silêncio. Nenhum ping estava rodando
-durante essa volta, então este laboratório não mediu esse segundo buraco. Se vale a pena depende do motivo
-de os roteadores terem prioridades diferentes. Se `hq` é o roteador melhor, um enlace mais rápido ou uma
-máquina maior, pegar de volta faz sentido. Se são iguais, a preempção compra uma segunda interrupção e mais
-nada, e o `nopreempt` do keepalived a desliga, ou o `preempt_delay` faz o roteador que volta esperar, para
-que um roteador instável não arraste o gateway junto a cada oscilação.
+uma troca curta, já que `hq` se anuncia na hora em vez de esperar um silêncio; nenhum ping estava rodando
+durante essa volta, então ela não foi medida. Faz sentido quando `hq` é o roteador melhor, com um enlace
+mais rápido ou uma máquina maior. Quando os dois são iguais, compra uma interrupção e mais nada, e o
+`nopreempt` do keepalived a desliga, ou o `preempt_delay` faz o roteador que volta esperar, para que um
+que fica oscilando não arraste o gateway junto.
 
 ## Tracking: entregando o endereço de propósito
 
@@ -96,8 +94,7 @@ Mon Sep 28 18:11:26 2026: (office) Entering MASTER STATE
 
 O enlace de `hq` subiu às 18:11:22, ele voltou como backup e pegou o endereço de volta às 18:11:26.
 
-Os roteadores da Cisco fazem a mesma coisa de outro jeito, e vale saber porque isso confunde muita gente:
-lá uma interface rastreada costuma **baixar a prioridade** de um valor fixo, em vez de tirar o roteador da
-eleição. O roteador continua no grupo com prioridade abaixo da do parceiro, e o parceiro só assume se
-tiver permissão para fazer preempção. Uma regra de tracking que baixa `hq` para 90 não faz nada enquanto
-`hq2` estiver com a preempção desligada.
+Os roteadores da Cisco rastreiam de outro jeito, e isso confunde muita gente: lá uma interface rastreada
+costuma **baixar a prioridade** de um valor fixo em vez de sair da eleição. O parceiro então só assume se
+tiver permissão para fazer preempção, então uma regra que baixa `hq` para 90 não faz nada enquanto `hq2`
+estiver com a preempção desligada.

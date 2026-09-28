@@ -41,17 +41,16 @@ address inside the request, `52:54:00:a8:0a:02`. Every host that already has an 
 `192.168.10.1` updates it to the sender's MAC, and the laptop's entry is back to `hq`'s `:02` without the
 laptop having asked. This is a **gratuitous ARP**, and it is how the new master of a failover repoints
 every host in one broadcast instead of waiting for their caches to expire. `STALE` only means the entry
-has not been confirmed recently, and the laptop will check it the next time it sends.
+has not been confirmed recently.
 
 ## The cost of taking it back
 
 Preemption means **the office goes through a second switch-over when the failed router returns**, a
-short one, since `hq` announces itself at once instead of waiting for a silence. No ping was running
-during this return, so this lab did not measure that second gap. Whether it is worth it depends on why
-the routers have different priorities. If `hq` is the better router, a faster link or a bigger box,
-taking back makes sense. If they are equal, preemption buys a second interruption and nothing else, and
-keepalived's `nopreempt` turns it off, or `preempt_delay` makes the returning router wait, so that a
-router that is flapping does not drag the gateway with it every time.
+short one, since `hq` announces itself at once instead of waiting for a silence; no ping was running
+during this return, so it was not measured. It makes sense when `hq` is the better router, with a faster
+link or a bigger box. When the two are equal it buys an interruption and nothing else, and keepalived's
+`nopreempt` turns it off, or `preempt_delay` makes a returning router wait, so that one that keeps
+flapping does not drag the gateway with it.
 
 ## Tracking: giving the address away on purpose
 
@@ -95,8 +94,6 @@ Mon Sep 28 18:11:26 2026: (office) Entering MASTER STATE
 
 `hq`'s link came up at 18:11:22, it rejoined as a backup, and took the address back at 18:11:26.
 
-Cisco's routers do the same thing a different way, and it is worth knowing because it trips people up:
-a tracked interface there usually **lowers the priority** by a set amount, rather than dropping the
-router out of the election. The router stays in the group with a priority below its partner's, and the
-partner only takes over if it is allowed to preempt. A tracking rule that lowers `hq` to 90 does nothing
-at all while `hq2` has preemption switched off.
+Cisco's routers track differently, and it trips people up: a tracked interface there usually **lowers
+the priority** by a set amount instead of leaving the election. The partner then takes over only if it is
+allowed to preempt, so a rule that lowers `hq` to 90 does nothing while `hq2` has preemption off.

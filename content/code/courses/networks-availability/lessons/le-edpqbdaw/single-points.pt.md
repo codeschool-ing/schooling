@@ -15,8 +15,8 @@ pintada conforme tem ou não um gêmeo:
 ```
 
 Os servidores estão bem. Três servidores web atrás de dois balanceadores sobrevivem à perda de qualquer um
-deles, e a aula 16 mede isso: quando o balanceador de `lb1` foi morto, `lb2` assumiu e o site voltou a
-responder depois de 2,694 segundos, e quando `web2` parou, o balanceador mandou todas as requisições para
+deles, e a aula 16 mede isso. Quando o balanceador de `lb1` foi morto, `lb2` assumiu e o site voltou a
+responder depois de 2,694 segundos; quando `web2` parou, o balanceador mandou todas as requisições para
 `web1` e `web3`. **Todo o resto do desenho é único.** Há um roteador para a internet, `isp`, num enlace
 só. Há um servidor DNS, `ns`: se ele parar, um navegador que ainda não guardou o endereço em cache não
 encontra `www.example.com` de jeito nenhum, e cinco máquinas saudáveis ficam inalcançáveis pelo nome. E

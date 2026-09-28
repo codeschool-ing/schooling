@@ -5,8 +5,11 @@ version: 1
 
 Um contrato que diz "99,9% de disponibilidade" parece uma garantia de que o serviço vai estar no ar. **Um
 SLA não garante nada. É o preço que o fornecedor paga quando o serviço fica aquém**, e o preço quase sempre
-é pequeno. Três termos andam juntos e vivem sendo confundidos, e a diferença entre eles é quase tudo de que
-esta seção trata:
+é pequeno. Nenhum incidente foi montado no laboratório para esta aula, então não há captura: os números
+dela são aritmética, rodada como programa onde há uma conta, e os dois failovers medidos nas aulas 15 e 16.
+
+Três termos andam juntos e vivem sendo confundidos, e a diferença entre eles é quase tudo de que esta
+seção trata:
 
 | termo | o que é | um exemplo |
 |---|---|---|
