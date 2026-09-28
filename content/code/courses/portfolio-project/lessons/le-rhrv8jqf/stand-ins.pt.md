@@ -1,0 +1,47 @@
+---
+title: Substitutos que fazem o mesmo trabalho
+version: 1
+---
+
+Cortar uma funcionalidade não precisa deixar um buraco. A maioria das funcionalidades existe para fazer um
+trabalho, e **algo muito menor muitas vezes faz o mesmo trabalho por enquanto**. Essa coisa menor é um
+substituto.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 330\" role=\"img\" aria-label=\"Duas colunas. À esquerda, oito coisas que a Marta imaginou; à direita, o que saiu para cada uma. Três ficaram como eram: recusar um segundo empréstimo; listar, emprestar e receber; mostrar o que está atrasado. Quatro foram trocadas por um substituto: contas e senhas por um nome digitado; uma tela para cadastrar itens pelo comando python3 app.py add; relatórios para a direção por uma consulta SQL; lembretes por e-mail pelo atraso marcado na página. Uma foi cortada: a biblioteca, marcada como ainda não.\"><defs><marker id=\"ct6-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"160\" y=\"16\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper-dim)\">o que a Marta imaginou</text><text x=\"560\" y=\"16\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper-dim)\">o que saiu</text><rect x=\"20\" y=\"30\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"44\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">recusar um segundo empréstimo</text><path d=\"M302 44 L416 44\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"30\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"44\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">recusar um segundo empréstimo</text><rect x=\"20\" y=\"67\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"81\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">listar, emprestar, receber</text><path d=\"M302 81 L416 81\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"67\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"81\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">listar, emprestar, receber</text><rect x=\"20\" y=\"104\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"118\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">mostrar o que está atrasado</text><path d=\"M302 118 L416 118\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"104\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"118\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">mostrar o que está atrasado</text><rect x=\"20\" y=\"141\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"155\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">contas e senhas</text><path d=\"M302 155 L416 155\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"141\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"155\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">um nome digitado</text><rect x=\"20\" y=\"178\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"192\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">uma tela para cadastrar itens</text><path d=\"M302 192 L416 192\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"178\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"192\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">python3 app.py add</text><rect x=\"20\" y=\"215\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"229\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">relatórios para a direção</text><path d=\"M302 229 L416 229\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"215\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"229\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">uma consulta SQL</text><rect x=\"20\" y=\"252\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"266\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">lembretes por e-mail</text><path d=\"M302 266 L416 266\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"252\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"266\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">atraso marcado na página</text><rect x=\"20\" y=\"289\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"303\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">a biblioteca</text><path d=\"M302 303 L416 303\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\" stroke-dasharray=\"4 3\"></path><rect x=\"420\" y=\"289\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\"></rect><text x=\"432\" y=\"303\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">(ainda não)</text></svg>", "caption": "Três mantidas, quatro trocadas por algo menor que faz o mesmo trabalho, uma deixada para depois. O ponto do projeto está na primeira linha, e ela não foi tocada."}
+```
+
+O loanbook tem quatro, e dois deles dá para mostrar rodando. Primeiro o projeto terminado ganha alguns
+dados, do script da aula 17, que enche um banco vazio com uma semana de empréstimos:
+
+```
+ana@laptop:~/loanbook$ python3 seed.py
+seeded 8 items, 4 of them out
+```
+
+**Cadastrar equipamento.** A Marta imaginou uma tela com um formulário. O substituto é um comando, que
+quem cuida do servidor digita uma vez por item novo:
+
+```
+ana@laptop:~/loanbook$ python3 app.py add "Projector 3"
+added Projector 3
+```
+
+**Relatórios para a direção.** O substituto é uma consulta. Aqui ela responde à pergunta para a qual um
+relatório serviria, *o que está atrasado e com quem*:
+
+```
+ana@laptop:~/loanbook$ sqlite3 -header -column loanbook.db "SELECT i.name, l.borrower, l.due_on FROM loans l JOIN items i ON i.id = l.item_id WHERE l.returned_on IS NULL AND l.due_on < date('now')"
+name       borrower       due_on    
+---------  -------------  ----------
+Laptop 03  Carlos Mendes  2026-09-25
+```
+
+Os outros dois são mais simples ainda: **contas** viraram um nome digitado no formulário, e **lembretes
+por e-mail** viraram a palavra *overdue* na página, que é o que um lembrete teria dito à Marta de qualquer
+jeito.
+
+Um bom substituto tem três propriedades. **Faz o trabalho**, para quem tem o problema agora: a Marta
+cadastra itens e vê o que está atrasado. **É honesto sobre o que é**: nada na página finge que existe uma
+tela de relatórios. E **deixa a porta aberta**: a consulta é exatamente o que uma tela de relatórios
+rodaria, então construí-la depois começa de algo que já funciona.

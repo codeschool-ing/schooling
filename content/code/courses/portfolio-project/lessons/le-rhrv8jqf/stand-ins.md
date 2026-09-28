@@ -1,0 +1,46 @@
+---
+title: Stand-ins that do the same job
+version: 1
+---
+
+Cutting a feature does not have to leave a hole. Most features exist to do a job, and **a much smaller
+thing can often do the same job for now**. That smaller thing is a stand-in.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 330\" role=\"img\" aria-label=\"Two columns. On the left, eight things Marta imagined; on the right, what shipped for each. Three are kept as they were: refuse a second loan; list, lend and take back; show what is late. Four are replaced by a stand-in: accounts and passwords by a name typed in; a screen to add equipment by the command python3 app.py add; reports for the head by one SQL query; e-mail reminders by late loans marked on the page. One is cut: the library, marked not yet.\"><defs><marker id=\"ct6-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"160\" y=\"16\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper-dim)\">what Marta imagined</text><text x=\"560\" y=\"16\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper-dim)\">what shipped</text><rect x=\"20\" y=\"30\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"44\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">refuse a second loan</text><path d=\"M302 44 L416 44\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"30\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"44\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">refuse a second loan</text><rect x=\"20\" y=\"67\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"81\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">list, lend, take back</text><path d=\"M302 81 L416 81\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"67\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"81\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">list, lend, take back</text><rect x=\"20\" y=\"104\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"118\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">show what is late</text><path d=\"M302 118 L416 118\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"104\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"118\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">show what is late</text><rect x=\"20\" y=\"141\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"155\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">accounts and passwords</text><path d=\"M302 155 L416 155\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"141\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"155\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">a name typed in</text><rect x=\"20\" y=\"178\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"192\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">a screen to add equipment</text><path d=\"M302 192 L416 192\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"178\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"192\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">python3 app.py add</text><rect x=\"20\" y=\"215\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"229\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">reports for the head</text><path d=\"M302 229 L416 229\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"215\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"229\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">one SQL query</text><rect x=\"20\" y=\"252\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"266\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">e-mail reminders</text><path d=\"M302 266 L416 266\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\"></path><rect x=\"420\" y=\"252\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"432\" y=\"266\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">late, marked on the page</text><rect x=\"20\" y=\"289\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"303\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">the library</text><path d=\"M302 303 L416 303\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ct6-ah)\" stroke-dasharray=\"4 3\"></path><rect x=\"420\" y=\"289\" width=\"280\" height=\"28\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\"></rect><text x=\"432\" y=\"303\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">(not yet)</text></svg>", "caption": "Three kept, four replaced by something smaller that does the same job, one left for later. The point of the project is in the first row, and it is untouched."}
+```
+
+loanbook has four, and two of them can be shown running. First the finished project gets some data,
+from the seed script of lesson 17, which fills an empty database with a week of loans:
+
+```
+ana@laptop:~/loanbook$ python3 seed.py
+seeded 8 items, 4 of them out
+```
+
+**Adding equipment.** Marta imagined a screen with a form. The stand-in is one command, which whoever
+runs the server types once per new item:
+
+```
+ana@laptop:~/loanbook$ python3 app.py add "Projector 3"
+added Projector 3
+```
+
+**Reports for the head.** The stand-in is a query. Here it answers the question a report would be
+for, *what is late and who has it*:
+
+```
+ana@laptop:~/loanbook$ sqlite3 -header -column loanbook.db "SELECT i.name, l.borrower, l.due_on FROM loans l JOIN items i ON i.id = l.item_id WHERE l.returned_on IS NULL AND l.due_on < date('now')"
+name       borrower       due_on    
+---------  -------------  ----------
+Laptop 03  Carlos Mendes  2026-09-25
+```
+
+The other two are simpler still: **accounts** became a name typed into the form, and **e-mail
+reminders** became the word *overdue* on the page, which is what a reminder would have told Marta
+anyway.
+
+A good stand-in has three properties. **It does the job**, for the people who have it now: Marta can
+add items and see what is late. **It is honest about what it is**: nothing on the page pretends there
+is a report screen. And **it leaves the door open**: the query is exactly what a report screen would run,
+so building one later starts from something that already works.
