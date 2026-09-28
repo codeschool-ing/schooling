@@ -81,7 +81,7 @@ need() {
   local missing=()
   for p in iproute2 nftables conntrack tcpdump openssl nginx libnginx-mod-http-modsecurity modsecurity-crs suricata jq wireguard-tools wireguard-go \
            dnsmasq bind9 bind9-dnsutils unbound netcat-openbsd curl iputils-ping iputils-arping socat openssh-server \
-           softflowd nfdump aide hostapd wpasupplicant python3 python3-cryptography python3-cffi-backend ethtool; do
+           ulogd2 ulogd2-json rsyslog aide hostapd wpasupplicant python3 python3-cryptography python3-cffi-backend ethtool; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
   done
   [ ${#missing[@]} -eq 0 ] || { echo "install first: ${missing[*]}" >&2; exit 1; }
