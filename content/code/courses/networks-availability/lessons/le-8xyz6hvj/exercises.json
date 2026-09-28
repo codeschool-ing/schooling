@@ -1,0 +1,613 @@
+[
+  {
+    "id": "ex-ydgagwr5",
+    "version": 1,
+    "section": "two-answers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a policer do with a packet that arrives when the rate has been used up?",
+    "hint": "It has no queue.",
+    "choices": [
+      {
+        "text": "Holds it in a queue until there is room",
+        "correct": false,
+        "why": "That is a shaper, and it costs delay."
+      },
+      {
+        "text": "Drops it, or re-marks it",
+        "correct": true,
+        "why": "Right. Nothing waits; the excess is gone or demoted."
+      },
+      {
+        "text": "Sends it anyway and bills the customer for it",
+        "correct": false,
+        "why": "A policer enforces the rate; it does not meter extra use."
+      },
+      {
+        "text": "Splits it into fragments small enough to fit",
+        "correct": false,
+        "why": "Fragmenting changes size, not rate: the same bytes would still be over."
+      }
+    ]
+  },
+  {
+    "id": "ex-b93d8v1b",
+    "version": 1,
+    "section": "two-answers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which symptom does a shaper cause that a policer does not?",
+    "hint": "Where does the excess go?",
+    "choices": [
+      {
+        "text": "Steady loss that TCP has to retransmit",
+        "correct": false,
+        "why": "That is the policer's symptom: 1337 retransmissions in this lesson."
+      },
+      {
+        "text": "Extra delay, as packets wait their turn",
+        "correct": true,
+        "why": "Right. 22 ms for a ping through the shaper, 0.070 ms through the policer."
+      },
+      {
+        "text": "Bursts clipped at the rate, with nothing delayed",
+        "correct": false,
+        "why": "Clipping without delay is exactly what a policer does."
+      },
+      {
+        "text": "A new DSCP value on the packets over the rate",
+        "correct": false,
+        "why": "Re-marking is one of a policer's options, not a shaper's."
+      }
+    ]
+  },
+  {
+    "id": "ex-9g96j8fz",
+    "version": 1,
+    "section": "two-answers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each term to what it does.",
+    "hint": "Two limits and the mechanism they share.",
+    "pairs": [
+      {
+        "left": "shaper",
+        "right": "Keeps the excess and sends it later"
+      },
+      {
+        "left": "policer",
+        "right": "Discards the excess on the spot"
+      },
+      {
+        "left": "token bucket",
+        "right": "Decides whether rate is left for a packet"
+      }
+    ],
+    "right_distractors": [
+      "Orders packets by their DSCP"
+    ]
+  },
+  {
+    "id": "ex-cxgc0atn",
+    "version": 1,
+    "section": "token-bucket",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes a second does a 5 Mbit/s token bucket earn?",
+    "hint": "A byte is 8 bits.",
+    "value": 625000,
+    "tolerance": 0,
+    "unit": "bytes a second"
+  },
+  {
+    "id": "ex-se9vwkyg",
+    "version": 1,
+    "section": "token-bucket",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An empty bucket of 16,384 bytes refills at 625,000 bytes a second. How many milliseconds until it is full?",
+    "hint": "Size over rate.",
+    "value": 26,
+    "tolerance": 1,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-t1xvxsvg",
+    "version": 1,
+    "section": "token-bucket",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the bucket's size, the burst, decide?",
+    "hint": "Tokens saved up while the link was quiet.",
+    "choices": [
+      {
+        "text": "The average rate over a minute",
+        "correct": false,
+        "why": "The rate decides that; the size only lets it be exceeded briefly."
+      },
+      {
+        "text": "How much may go at once after a quiet spell",
+        "correct": true,
+        "why": "Right. 16 KB is about ten full-size frames straight through."
+      },
+      {
+        "text": "How long a packet may wait before it is dropped",
+        "correct": false,
+        "why": "That is the shaper's queue limit, latency 50ms here."
+      },
+      {
+        "text": "How many queues the link has",
+        "correct": false,
+        "why": "A token bucket has no queues at all; classes do."
+      }
+    ]
+  },
+  {
+    "id": "ex-n48j2rvv",
+    "version": 1,
+    "section": "token-bucket",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A policer is configured with a bucket of 1000 bytes. What happens to 1514-byte frames?",
+    "hint": "How many tokens can the bucket ever hold?",
+    "choices": [
+      {
+        "text": "They pass, at a lower rate",
+        "correct": false,
+        "why": "A frame needs 1514 tokens at once, and the bucket never holds that many."
+      },
+      {
+        "text": "One passes each time the bucket refills",
+        "correct": false,
+        "why": "A full bucket is 1000 tokens, still short of 1514."
+      },
+      {
+        "text": "Not one of them ever passes",
+        "correct": true,
+        "why": "Right. The bucket must be at least one frame deep."
+      },
+      {
+        "text": "The policer fragments them to fit",
+        "correct": false,
+        "why": "A policer passes or drops; it never rewrites a packet's size."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydwa14qy",
+    "version": 1,
+    "section": "token-bucket",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Given the same burst of 40 frames, the model's shaper sent all 40, and its policer sent 18 and ___ 22.",
+    "hint": "It did not wait for tokens.",
+    "blanks": [
+      {
+        "accept": [
+          "dropped",
+          "discarded",
+          "lost"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z2zyx6me",
+    "version": 1,
+    "section": "shaping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Through the shaper, the upload lost 248 packets in its first second and none after. Why none after?",
+    "hint": "What does a shaper do with an early packet?",
+    "choices": [
+      {
+        "text": "TCP switches retransmission off after a loss",
+        "correct": false,
+        "why": "TCP never switches it off; there was simply nothing to resend."
+      },
+      {
+        "text": "The shaper held each packet until its tokens came",
+        "correct": true,
+        "why": "Right. Once TCP settled at the rate, the queue absorbed the rest."
+      },
+      {
+        "text": "The ISP began buffering the extra packets",
+        "correct": false,
+        "why": "The ISP had no limit configured in this run."
+      },
+      {
+        "text": "The bucket grew to fit the upload",
+        "correct": false,
+        "why": "tc -s still shows burst 16Kb."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5bnzksd",
+    "version": 1,
+    "section": "shaping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shaped upload's sender line says 6.42 Mbits/sec and its receiver line 4.70. Which describes the link?",
+    "hint": "One of them counts bytes still queued.",
+    "choices": [
+      {
+        "text": "The sender's 6.42, since it sent them",
+        "correct": false,
+        "why": "It counts what went into its socket, including the first second's backlog."
+      },
+      {
+        "text": "The average of the two, about 5.56",
+        "correct": false,
+        "why": "Averaging a wrong figure with a right one gives a wrong one."
+      },
+      {
+        "text": "The receiver's 4.70: what arrived",
+        "correct": true,
+        "why": "Right. And 5 × 1448 ÷ 1514 caps the file at about 4.78."
+      },
+      {
+        "text": "The per-second 5.24, the steadiest number",
+        "correct": false,
+        "why": "That column is counted at the sender too, in iperf3's blocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-r2ytedhw",
+    "version": 1,
+    "section": "shaping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A ping during the shaped upload took about 22 ms. What was it waiting for?",
+    "hint": "Cwnd said 14.1 KBytes.",
+    "choices": [
+      {
+        "text": "The shaper holds ICMP back on purpose",
+        "correct": false,
+        "why": "tbf does not know what a ping is; it has one queue for everything."
+      },
+      {
+        "text": "A full 16 KB bucket before each ping",
+        "correct": false,
+        "why": "A ping needs 98 tokens, not a full bucket."
+      },
+      {
+        "text": "About 14 KB of the upload ahead of it in the queue",
+        "correct": true,
+        "why": "Right. 14.1 KB at 5 Mbit/s is about 23 ms."
+      },
+      {
+        "text": "The ISP's router, which slows under load",
+        "correct": false,
+        "why": "Under the policer, with the same upload, the ping took 0.070 ms."
+      }
+    ]
+  },
+  {
+    "id": "ex-fzmqw31f",
+    "version": 1,
+    "section": "shaping",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shaper at 4.5 Mbit/s counts 1514-byte frames, each carrying 1448 bytes of the file. What is the most the file can reach, in Mbit/s?",
+    "hint": "Rate × data ÷ frame.",
+    "value": 4.3,
+    "tolerance": 0.05,
+    "unit": "Mbit/s"
+  },
+  {
+    "id": "ex-p99x9yv6",
+    "version": 1,
+    "section": "policing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under the policer, a ping took 0.070 ms while the upload ran. Why so fast?",
+    "hint": "Where would it have waited?",
+    "choices": [
+      {
+        "text": "A policer has no queue to wait in",
+        "correct": true,
+        "why": "Right. A packet fits the bucket and goes, or does not and is dropped."
+      },
+      {
+        "text": "The policer gives ICMP priority",
+        "correct": false,
+        "why": "The rule matches every packet from 203.0.113.2, pings included."
+      },
+      {
+        "text": "The upload had already finished",
+        "correct": false,
+        "why": "It started two seconds into the eight-second upload."
+      },
+      {
+        "text": "The ISP's router is faster than hq",
+        "correct": false,
+        "why": "Both are namespaces on the same computer."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqtvrjnw",
+    "version": 1,
+    "section": "policing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The policer counted 1335 packets and 2,002,500 bytes. What does dividing one by the other say?",
+    "hint": "2,002,500 ÷ 1335.",
+    "choices": [
+      {
+        "text": "That most of the dropped packets were pings",
+        "correct": false,
+        "why": "A ping is 84 bytes; these average exactly 1500."
+      },
+      {
+        "text": "That every dropped packet was a full 1500-byte one",
+        "correct": true,
+        "why": "Right. The drops fell on the upload's full-size segments."
+      },
+      {
+        "text": "That the drops were spread over every size",
+        "correct": false,
+        "why": "An exact 1500 average from 1335 packets leaves no room for small ones."
+      },
+      {
+        "text": "That the policer drops headers and keeps data",
+        "correct": false,
+        "why": "A policer drops whole packets or none."
+      }
+    ]
+  },
+  {
+    "id": "ex-fznbtbra",
+    "version": 1,
+    "section": "policing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A voice call shares the policed link with a large upload. What does the call suffer?",
+    "hint": "No queue, so no waiting.",
+    "choices": [
+      {
+        "text": "Delay, as its packets queue behind the upload",
+        "correct": false,
+        "why": "There is no queue to stand in; that was the shaper."
+      },
+      {
+        "text": "Gaps, when its packets meet an empty bucket",
+        "correct": true,
+        "why": "Right. They are dropped, not delayed, and voice has no time to resend."
+      },
+      {
+        "text": "Nothing, since a policer drops only TCP",
+        "correct": false,
+        "why": "The rule matches by address, whatever the protocol."
+      },
+      {
+        "text": "Echo, from voice packets that are sent twice",
+        "correct": false,
+        "why": "Voice over UDP does not retransmit; a lost packet stays lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-marzr698",
+    "version": 1,
+    "section": "policing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under the policer, the Cwnd column swung between 5.66 and 129 KBytes. Why?",
+    "hint": "TCP's reaction to loss.",
+    "choices": [
+      {
+        "text": "The policer resizes TCP's window directly",
+        "correct": false,
+        "why": "A policer only drops; the sender changes its own window."
+      },
+      {
+        "text": "iperf3 changes its block size every second",
+        "correct": false,
+        "why": "The blocks stay the same; the per-second column reads 640 KBytes throughout."
+      },
+      {
+        "text": "TCP grows until a run is dropped, then cuts back",
+        "correct": true,
+        "why": "Right. With no queue to absorb a burst, every climb ends in a loss."
+      },
+      {
+        "text": "The receiver's buffer keeps filling and emptying",
+        "correct": false,
+        "why": "Cwnd is the sender's congestion window, not the receiver's buffer."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkrx6d8v",
+    "version": 1,
+    "section": "shape-under-police",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With hq shaping at 4500 kbit, the policer's counter stayed at 0 packets. Where were the 208 retransmitted packets lost?",
+    "hint": "The only other limit on the path.",
+    "choices": [
+      {
+        "text": "At the ISP's policer, which counts only some drops",
+        "correct": false,
+        "why": "The counter counts every packet the rule drops."
+      },
+      {
+        "text": "At web1, which could not keep up",
+        "correct": false,
+        "why": "web1 took 2.91 Gbit/s at the start of the lesson."
+      },
+      {
+        "text": "At hq's own shaper",
+        "correct": true,
+        "why": "Right. Inside the customer's router, in a queue the customer controls."
+      },
+      {
+        "text": "Nowhere: iperf3 counts duplicates as retransmissions",
+        "correct": false,
+        "why": "A retransmission is a segment sent again because the first was lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzx12ta7",
+    "version": 1,
+    "section": "shape-under-police",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the customer's shaper set a little below the contracted rate rather than exactly at it?",
+    "hint": "Two separate machines measuring.",
+    "choices": [
+      {
+        "text": "Providers charge extra at exactly the contracted rate",
+        "correct": false,
+        "why": "The rate is what was bought; nothing extra is charged for using it."
+      },
+      {
+        "text": "They count bytes differently, and need room for it",
+        "correct": true,
+        "why": "Right. Frame or packet, their own bucket and clock: the margin absorbs the difference."
+      },
+      {
+        "text": "A shaper set at the rate would drop every packet",
+        "correct": false,
+        "why": "The 5 Mbit/s shaper delivered 4.70 Mbit/s with no losses after the first second."
+      },
+      {
+        "text": "The policer lets nothing through above 90% of the rate",
+        "correct": false,
+        "why": "It passed 5.37 Mbit/s on its own; there is no 90% rule in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxa2h4kp",
+    "version": 1,
+    "section": "shape-under-police",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the customer gain by shaping just under the contract? Choose all that apply.",
+    "hint": "Compare 4.31 with 5.37, and the counters.",
+    "choices": [
+      {
+        "text": "The losses happen in its own router",
+        "correct": true,
+        "why": "Right: the policer counted 0."
+      },
+      {
+        "text": "More throughput than the policer alone allowed",
+        "correct": false,
+        "why": "It got less: 4.31 Mbit/s against 5.37."
+      },
+      {
+        "text": "A queue its QoS classes can arrange",
+        "correct": true,
+        "why": "Right: the bottleneck is now in its router, where lesson 18's classes act."
+      },
+      {
+        "text": "No queueing delay at all",
+        "correct": false,
+        "why": "A shaper is a queue; the delay moves to your router, it does not vanish."
+      }
+    ]
+  },
+  {
+    "id": "ex-s35evdvh",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what a shaper does with one full-size frame when its bucket is short.",
+    "hint": "It never drops a frame that fits its queue.",
+    "items": [
+      "The frame arrives and joins the queue",
+      "The bucket is topped up for the time since it was last checked",
+      "The frame waits until the bucket holds 1514 tokens",
+      "The frame leaves, and its 1514 tokens are removed"
+    ],
+    "trap": "A policer would stop at the third step and drop the frame instead of waiting."
+  },
+  {
+    "id": "ex-hjz9fsr9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A small office's calls break up during uploads. Its 20 Mbit/s line is policed by the provider. What should the office configure?",
+    "hint": "Own the bottleneck, then arrange it.",
+    "choices": [
+      {
+        "text": "A policer at 20 Mbit/s on its own router",
+        "correct": false,
+        "why": "A second policer adds loss and gives the calls no queue to be put first in."
+      },
+      {
+        "text": "A shaper a little under 20 Mbit/s, with a voice class inside it",
+        "correct": true,
+        "why": "Right. The queue forms in the office's router, and the voice class skips it."
+      },
+      {
+        "text": "Nothing, since the provider's policer already limits the rate",
+        "correct": false,
+        "why": "It limits it by dropping, calls included, with no way to prefer them."
+      },
+      {
+        "text": "A shaper above 20 Mbit/s, to use every bit bought",
+        "correct": false,
+        "why": "Above the contract, the provider's policer drops the excess and the shaper never forms a queue."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6a68x49",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each counter from this lesson to where it was counted.",
+    "hint": "tc, nft and iperf3.",
+    "pairs": [
+      {
+        "left": "dropped 248, overlimits 10246",
+        "right": "The shaper on hq's eth1"
+      },
+      {
+        "left": "packets 1335 bytes 2002500",
+        "right": "The policer on the ISP's router"
+      },
+      {
+        "left": "Retr 1337",
+        "right": "The laptop, retransmitting"
+      }
+    ],
+    "right_distractors": [
+      "web1's nginx log"
+    ]
+  }
+]
