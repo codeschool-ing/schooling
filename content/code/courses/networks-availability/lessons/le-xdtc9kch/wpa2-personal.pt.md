@@ -4,7 +4,7 @@ version: 1
 ---
 
 Numa **rede aberta nada é criptografado**. Todo quadro, depois do cabeçalho de rádio, pode ser lido por
-qualquer receptor ao alcance, e é por isso que o Wi-Fi de uma cafeteria só é tão privado quanto o que roda
+qualquer receptor ao alcance. É por isso que o Wi-Fi de uma cafeteria só é tão privado quanto o que roda
 por cima dele, HTTPS por exemplo (aula 5 de `networks`). O WPA2-Personal acrescenta criptografia com um
 segredo compartilhado, a **passphrase**: de 8 a 63 caracteres, digitada em todos os aparelhos.
 

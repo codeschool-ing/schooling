@@ -11,7 +11,7 @@ menor deles. Quatro partes de 99,9% cada dão 99,6%, antes de acontecer qualquer
 
 **Partes em paralelo multiplicam as falhas.** Dois balanceadores, qualquer um dos quais dá conta da carga,
 só ficam fora juntos quando os dois caem ao mesmo tempo. Se cada um fica fora 0,1% do tempo, os dois ficam
-fora 0,1% de 0,1%, um milionésimo. Essa é a aritmética por trás de todo par redundante.
+fora 0,1% de 0,1%, um milionésimo.
 
 Este programa aplica as duas regras ao data center do laboratório. As disponibilidades nele são
 suposições, números redondos para uma máquina de cada tipo, e não medidas de nada do laboratório:

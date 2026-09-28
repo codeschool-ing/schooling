@@ -4,8 +4,7 @@ version: 1
 ---
 
 A failover is only as good as the gap it leaves, and a gap can be measured. The laptop pings `web1` in
-the data centre, beyond the gateway, five times a second: `-i 0.2`. `-D` puts a timestamp in front of each
-line, in seconds since 1970, and `-O` prints a line for every reply that has not come back by the time the
+the data centre, beyond the gateway, five times a second: `-i 0.2`. `-D` puts a timestamp in front of each line, in seconds since 1970. `-O` prints a line for every reply that has not come back by the time the
 next ping goes out, so a missing reply shows up as a line rather than as nothing. A little over two seconds in, `hq`'s
 cable to the LAN was pulled:
 

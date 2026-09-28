@@ -62,11 +62,9 @@ achou as duas requisições pelo que elas são, e `http.response.code >= 400` ac
 de `web3`; para o BPF cada uma delas era só um segmento TCP com bytes dentro. Um SYN sem ACK é uma
 conexão sendo aberta, e foram três: `web1` na 80 e na 443, e `web3` na 80.
 
-A última imprime dois campos em vez de uma linha de resumo, e o que ela achou merece uma segunda
-olhada. **O nome do site HTTPS, `www.example.com`, atravessou o fio em texto claro**, no Client Hello,
+A última imprime dois campos em vez de uma linha de resumo. **O nome do site HTTPS, `www.example.com`, atravessou o fio em texto claro**, no Client Hello,
 embora tudo depois dele seja criptografado. A aula 13 abre esse handshake.
 
-**A regra de trabalho é capturar largo e exibir estreito.** Dê à captura um filtro simples, que só
-tire o que você tem certeza de que não vai precisar, como o `not arp` acima, ou `not port 22` para não
+**A regra de trabalho é capturar largo e exibir estreito.** Dê à captura um filtro simples, que só tire o que você tem certeza de que não vai precisar: o `not arp` acima, ou `not port 22` para não
 gravar a sua própria sessão SSH. Depois filtre a exibição quantas vezes a pergunta mudar. Um filtro de
 captura estreito demais custa uma segunda captura, e a falha pode não se repetir enquanto você espera.

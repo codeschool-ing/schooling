@@ -32,7 +32,7 @@ que os dados são copiados para outro lugar, que é a última seção desta aula
 | um banco de dados com backup noturno, restaurado à mão | horas: buscar, restaurar, conferir | até 24 horas de gravações |
 | um banco de dados com réplica síncrona, promovida automaticamente | de segundos a minutos | nada confirmado se perde |
 
-A segunda linha merece uma olhada, porque um RPO não é só assunto de banco de dados. O que vivia na memória
+A segunda linha mostra que um RPO não é só assunto de banco de dados. O que vivia na memória
 da máquina que falhou, um download pela metade ou uma sessão guardada na RAM, se foi, e a aula 16 terminou
 no que é preciso para guardar esse tipo de estado num lugar que sobreviva.
 

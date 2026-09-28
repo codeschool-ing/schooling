@@ -33,5 +33,5 @@ next one on its channel shares airtime with it.
 **A dense network is many quiet cells, not a few loud ones.** It is the airtime arithmetic of lesson 6
 seen from the other side. A phone close to a quiet access point runs at a high rate and finishes
 quickly; a phone far from a loud one runs slowly and holds the channel for everybody. Controllers and cloud-managed systems, lesson 9, set the power and the channel of every
-access point automatically for this reason, and the numbers they choose are a starting point for a
+access point automatically for this reason. The numbers they choose are a starting point for a
 site survey, lesson 10, rather than a replacement for one.

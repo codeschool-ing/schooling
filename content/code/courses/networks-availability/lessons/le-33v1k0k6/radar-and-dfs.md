@@ -42,5 +42,4 @@ a hospital's voice handsets for instance, on a network that uses only UNII-1 and
 ## And 6 GHz
 
 The 6 GHz band has neither problem. Its channels are numbered from its own base, 5950 MHz, so channel
-1 is at 5955 and channel 233 at 7115, as the program in the previous section printed, and none of
-them is shared with radar in the way 5 GHz is. Indoor low-power access points need no DFS there at all.
+1 is at 5955 and channel 233 at 7115, as the program in the previous section printed. None of them is shared with radar in the way 5 GHz is. Indoor low-power access points need no DFS there at all.

@@ -39,7 +39,7 @@ flapping): o serviço vai e volta, e cada mudança custa alguns segundos da pró
 A defesa é a histerese: pedir mais evidência para mudar de estado do que para ficar nele. Os checks de
 servidor do HAProxy na aula 16 estão escritos `check inter 1s fall 2 rise 2`, o que quer dizer um check
 por segundo, duas falhas seguidas para marcar um servidor como fora e dois sucessos seguidos para trazê-lo
-de volta. **Um check que falha não muda nada, e esse é o objetivo da regra.** Muitos sistemas também
+de volta. **Um check que falha não muda nada.** Muitos sistemas também
 esperam antes de devolver o controle a uma máquina que acabou de se recuperar, ou nunca o devolvem
 sozinhos; a aula 15 mostra essa escolha, chamada preempção.
 

@@ -5,11 +5,9 @@ version: 1
 
 Um contrato que diz "99,9% de disponibilidade" parece uma garantia de que o serviço vai estar no ar. **Um
 SLA não garante nada. É o preço que o fornecedor paga quando o serviço fica aquém**, e o preço quase sempre
-é pequeno. Nenhum incidente foi montado no laboratório para esta aula, então não há captura: os números
-dela são aritmética, rodada como programa onde há uma conta, e os dois failovers medidos nas aulas 15 e 16.
+é pequeno. Nenhum incidente foi montado no laboratório para esta aula, então não há captura. Os números dela são aritmética, rodada como programa onde há uma conta, e os dois failovers medidos nas aulas 15 e 16.
 
-Três termos andam juntos e vivem sendo confundidos, e a diferença entre eles é quase tudo de que esta
-seção trata:
+Três termos andam juntos e vivem sendo confundidos:
 
 | termo | o que é | um exemplo |
 |---|---|---|
@@ -29,16 +27,16 @@ equipe que mira 99,95% e erra descobre antes de um contrato que promete 99,9% se
 
 Dois SLAs que dizem 99,9% podem prometer coisas bem diferentes, e a diferença está em cinco lugares:
 
-- **A janela.** Um mês do calendário zera no dia primeiro; 30 dias corridos nunca esquecem uma semana ruim.
-- **O que conta como fora do ar.** Só inalcançável, ou também respondendo com erro, ou também respondendo
+- A janela: um mês do calendário zera no dia primeiro; 30 dias corridos nunca esquecem uma semana ruim.
+- O que conta como fora do ar: só inalcançável, ou também respondendo com erro, ou também respondendo
   tão devagar que ninguém espera. Um site que leva trinta segundos por página está no ar pela primeira
   definição.
-- **Onde se mede.** No monitoramento do próprio fornecedor, dentro da rede dele, ou em algo que vê o que um
+- Onde se mede: no monitoramento do próprio fornecedor, dentro da rede dele, ou em algo que vê o que um
   cliente vê de fora.
-- **O que fica de fora.** Manutenção anunciada com antecedência, quedas que o cliente causou, recursos
+- O que fica de fora: manutenção anunciada com antecedência, quedas que o cliente causou, recursos
   marcados como beta, eventos fora do controle de qualquer um. Uma lista de exclusões pode tirar a maior
   parte das horas que importam.
-- **Como se pede um crédito.** Muitas vezes só se o cliente pedir, dentro de um número de dias, com
+- Como se pede um crédito: muitas vezes só se o cliente pedir, dentro de um número de dias, com
   evidência.
 
 E o crédito em si tem teto no valor da mensalidade. Um formato típico, como ilustração e não a tabela de

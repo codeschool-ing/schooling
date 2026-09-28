@@ -5,14 +5,13 @@ version: 1
 
 O datasheet de um ponto de acesso diz que ele suporta algumas centenas de clientes, e o número é
 verdadeiro no sentido estreito de que ele mantém essa quantidade associada. **O que acaba primeiro é o
-tempo de ar.** Um canal leva uma transmissão por vez, como a aula 6 mostrou, então todo cliente nele
-espera a vez, e a vez de um cliente dura o tempo que os dados dele levam para ir na taxa dele.
+tempo de ar.** Um canal leva uma transmissão por vez, como a aula 6 mostrou, então todo cliente nele espera a vez. E a vez de um cliente dura o tempo que os dados dele levam para ir na taxa dele.
 
 É por isso que o cliente grudento da primeira seção importa para todo mundo. O mesmo download, em três
 taxas de dados:
 
 ```schooling-example
-{"language": "python", "file": "airtime.py", "parts": [{"code": "payload_bits = 10 * 8_000_000        # a 10 MB download", "note": "Um download, o mesmo para todos os clientes: dez megabytes são oitenta milhões de bits."}, {"code": "rates = [(\"near the AP\", 400), (\"mid-cell\", 150), (\"sticky, far away\", 12)]\nfor where, mbps in rates:\n    seconds = payload_bits / (mbps * 1_000_000)\n    print(f\"{where:18} {mbps:4} Mbit/s  {seconds:6.2f} s of airtime\")", "note": "Três clientes em três taxas de dados. As taxas são ilustrativas e tratadas como a velocidade a que os dados de fato andam, deixando de fora o custo do protocolo que a aula 6 contou, o que alonga cada linha e não muda nada na comparação."}, {"code": "near = payload_bits / 400e6\nfar = payload_bits / 12e6\nprint(f\"the far client holds the channel {far / near:.0f} times as long\")", "note": "A razão é o que importa. Enquanto o cliente distante transmite, ninguém mais naquele canal transmite."}], "output": "near the AP         400 Mbit/s    0.20 s of airtime\nmid-cell            150 Mbit/s    0.53 s of airtime\nsticky, far away     12 Mbit/s    6.67 s of airtime\nthe far client holds the channel 33 times as long"}
+{"language": "python", "file": "airtime.py", "parts": [{"code": "payload_bits = 10 * 8_000_000        # a 10 MB download", "note": "Um download, o mesmo para todos os clientes: dez megabytes são oitenta milhões de bits."}, {"code": "rates = [(\"near the AP\", 400), (\"mid-cell\", 150), (\"sticky, far away\", 12)]\nfor where, mbps in rates:\n    seconds = payload_bits / (mbps * 1_000_000)\n    print(f\"{where:18} {mbps:4} Mbit/s  {seconds:6.2f} s of airtime\")", "note": "Três clientes em três taxas de dados. As taxas são ilustrativas e tratadas como a velocidade a que os dados de fato andam. Elas deixam de fora o custo do protocolo que a aula 6 contou, o que alonga cada linha e não muda nada na comparação."}, {"code": "near = payload_bits / 400e6\nfar = payload_bits / 12e6\nprint(f\"the far client holds the channel {far / near:.0f} times as long\")", "note": "A razão é o que importa. Enquanto o cliente distante transmite, ninguém mais naquele canal transmite."}], "output": "near the AP         400 Mbit/s    0.20 s of airtime\nmid-cell            150 Mbit/s    0.53 s of airtime\nsticky, far away     12 Mbit/s    6.67 s of airtime\nthe far client holds the channel 33 times as long"}
 ```
 
 **O cliente distante segura o canal 33 vezes mais tempo** que um cliente ao lado do AP pelos mesmos dez
@@ -32,7 +31,7 @@ Então um projeto começa pelo que os clientes vão fazer, não por quantos são
 Os guias de planejamento dos fabricantes costumam citar algumas dezenas de clientes ativos por rádio para
 uso de escritório, e menos para voz ou vídeo. **Esses são pontos de partida para conferir contra o passo
 3, não limites.** Um auditório com 200 notebooks precisa de vários rádios em canais diferentes, postos de
-modo que cada um ouça só a sua parte da sala, e o conselho da aula 7 vale aqui: mais APs com menos
+modo que cada um ouça só a sua parte da sala. O conselho da aula 7 vale aqui: mais APs com menos
 potência, não menos APs gritando.
 
 ## Band steering

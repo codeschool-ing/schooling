@@ -9,8 +9,7 @@ is a per-hop behaviour**: each router decides for itself what a mark means, and 
 configured decides that it means nothing.
 
 On the public internet that is the normal case. A provider that honoured its customers' marks would be
-giving priority away to whoever writes `0xb8`, which is the trust problem of the last section at the
-scale of a continent, so providers ignore the byte or reset it at their edge. The exception is a service
+giving priority away to whoever writes `0xb8`: the trust problem of the last section at the scale of a continent. So providers ignore the byte or reset it at their edge. The exception is a service
 bought as such: a provider's MPLS VPN between a company's sites can carry a few classes by contract,
 and then the contract, not the mark, is what the company is paying for.
 

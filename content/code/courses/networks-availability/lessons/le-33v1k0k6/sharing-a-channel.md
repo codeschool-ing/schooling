@@ -45,6 +45,6 @@ decode, the second row of the table.
   work near 1.9 GHz, outside every Wi-Fi band.
 
 **Wi-Fi's own tools cannot name any of these.** A client sees retries and a low rate, and an access
-point sees a noisy channel; only a spectrum analyser, which draws energy against frequency without
+point sees a noisy channel. Only a spectrum analyser, which draws energy against frequency without
 decoding anything, shows the shape of the culprit. Many enterprise access points can turn one radio
 into one. The lab has no radio of any kind, so this section has no capture of one.

@@ -34,8 +34,7 @@ A worked case: one switch, sixteen APs that need 802.3at, and six cameras on 802
 {"language": "python", "file": "poe.py", "parts": [{"code": "budget_w = 370                  # the switch's PoE budget, from its data sheet\nreserve_w = {\"802.3af\": 15.4, \"802.3at\": 30.0, \"802.3bt type 3\": 60.0}", "note": "The switch's total, and what a port reserves per standard when the switch allocates by class: the power at the switch port, before the cable's loss. 370 W is an example figure for a 24-port switch, not a standard."}, {"code": "aps, cameras = 16, 6\nneed = aps * reserve_w[\"802.3at\"] + cameras * reserve_w[\"802.3af\"]\nprint(f\"reserved: {aps} x 30.0 + {cameras} x 15.4 = {need:.1f} W of {budget_w} W\")\nprint(f\"short by {need - budget_w:.1f} W\")", "note": "Sixteen access points that need 802.3at, and six cameras on 802.3af, all on one switch."}, {"code": "fits = int((budget_w - cameras * reserve_w[\"802.3af\"]) // reserve_w[\"802.3at\"])\nprint(f\"802.3at access points that fit beside the cameras: {fits}\")", "note": "What does fit, once the cameras have their share."}], "output": "reserved: 16 x 30.0 + 6 x 15.4 = 572.4 W of 370 W\nshort by 202.4 W\n802.3at access points that fit beside the cameras: 9"}
 ```
 
-**572.4 W reserved against a 370 W budget.** The switch powers ports in its own order of priority until the
-budget is spent, and the rest are refused power. With the cameras served, **nine APs
+**572.4 W reserved against a 370 W budget.** The switch powers ports in its own order of priority until the budget is spent, and refuses the rest. With the cameras served, **nine APs
 fit**. The fixes are a switch with a larger budget, a second switch, or APs spread over the switches that
 the design already has.
 

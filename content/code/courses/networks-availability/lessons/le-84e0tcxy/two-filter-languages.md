@@ -61,7 +61,7 @@ two requests by what they are, and `http.response.code >= 400` found the one tha
 `web3`; to BPF each of them was only a TCP segment with bytes in it. A SYN without an ACK is a
 connection being opened, and there were three: `web1` on 80 and 443, and `web3` on 80.
 
-The last one prints two fields instead of a summary line, and what it found deserves a second look.
+The last one prints two fields instead of a summary line.
 **The name of the HTTPS site, `www.example.com`, crossed the wire in clear text**, in the Client
 Hello, although everything after it is encrypted. Lesson 13 opens that handshake.
 

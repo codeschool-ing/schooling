@@ -30,11 +30,11 @@ one measured, not the one estimated.
 A replica is a second copy kept up to date continuously. How closely it follows is the choice that sets
 the RPO:
 
-- **Synchronous**: the primary confirms a write to the application only after the replica has it too.
+- In **synchronous** replication, the primary confirms a write to the application only after the replica has it too.
   Nothing confirmed is ever lost, an RPO of zero. Every write pays a round trip to the replica, so
   distance costs: light in fibre covers about 200 km a millisecond, and a replica 1000 km away adds about
   10 ms to every write.
-- **Asynchronous**: the primary confirms at once and sends the change on afterwards. Writes are fast, and
+- In **asynchronous** replication, the primary confirms at once and sends the change on afterwards. Writes are fast, and
   the RPO is whatever the replica was behind at the moment of the failure, the **replication lag**:
   usually seconds, and much more when the primary is busy, which is when failures tend to happen.
 

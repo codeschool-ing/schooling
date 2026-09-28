@@ -31,7 +31,7 @@ somewhere else, which is the last section of this lesson.
 | a database with a nightly backup, restored by hand | hours: fetch, restore, check | up to 24 hours of writes |
 | a database with a synchronous replica, promoted automatically | seconds to minutes | nothing committed is lost |
 
-The second row is worth a look, because an RPO is not only about databases. Whatever lived in the memory
+The second row shows that an RPO is not only about databases. Whatever lived in the memory
 of the failed machine, a half-finished download or a session kept in RAM, is gone, and lesson 16 ended on
 what it takes to keep that kind of state somewhere that survives.
 

@@ -58,9 +58,7 @@ Interface #0 info:
 ```
 
 Forty packets, captured in 0.018971 seconds, between two timestamps written to the microsecond.
-**`File size` is 664 bytes more than `Data size`**, and that is the pcap format itself: a 24-byte
-header at the start of the file, and 16 bytes in front of every packet recording when it arrived and
-how long it was, 24 + 40 × 16 = 664. `Packet size limit: 262144` is the snap length, how much of each
+**`File size` is 664 bytes more than `Data size`**, and that is the pcap format itself. It puts a 24-byte header at the start of the file, and 16 bytes in front of every packet recording when it arrived and how long it was: 24 + 40 × 16 = 664. `Packet size limit: 262144` is the snap length, how much of each
 packet was kept, and the section on snap length makes it smaller on purpose.
 
 **The two hashes are for later.** Whoever receives this file can run `capinfos` on their copy and

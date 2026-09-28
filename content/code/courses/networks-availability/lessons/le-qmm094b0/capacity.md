@@ -12,12 +12,11 @@ That is why the sticky client of the first section matters to everybody else. Th
 data rates:
 
 ```schooling-example
-{"language": "python", "file": "airtime.py", "parts": [{"code": "payload_bits = 10 * 8_000_000        # a 10 MB download", "note": "One download, the same for every client: ten megabytes is eighty million bits."}, {"code": "rates = [(\"near the AP\", 400), (\"mid-cell\", 150), (\"sticky, far away\", 12)]\nfor where, mbps in rates:\n    seconds = payload_bits / (mbps * 1_000_000)\n    print(f\"{where:18} {mbps:4} Mbit/s  {seconds:6.2f} s of airtime\")", "note": "Three clients at three data rates. The rates are illustrative, and they are treated as the speed the data actually moves at, leaving out the protocol overhead lesson 6 counted, which makes every line longer and changes nothing about the comparison."}, {"code": "near = payload_bits / 400e6\nfar = payload_bits / 12e6\nprint(f\"the far client holds the channel {far / near:.0f} times as long\")", "note": "The ratio is the point. While the far client is transmitting, nobody else on that channel is."}], "output": "near the AP         400 Mbit/s    0.20 s of airtime\nmid-cell            150 Mbit/s    0.53 s of airtime\nsticky, far away     12 Mbit/s    6.67 s of airtime\nthe far client holds the channel 33 times as long"}
+{"language": "python", "file": "airtime.py", "parts": [{"code": "payload_bits = 10 * 8_000_000        # a 10 MB download", "note": "One download, the same for every client: ten megabytes is eighty million bits."}, {"code": "rates = [(\"near the AP\", 400), (\"mid-cell\", 150), (\"sticky, far away\", 12)]\nfor where, mbps in rates:\n    seconds = payload_bits / (mbps * 1_000_000)\n    print(f\"{where:18} {mbps:4} Mbit/s  {seconds:6.2f} s of airtime\")", "note": "Three clients at three data rates. The rates are illustrative, and they are treated as the speed the data actually moves at. They leave out the protocol overhead lesson 6 counted, which makes every line longer and changes nothing about the comparison."}, {"code": "near = payload_bits / 400e6\nfar = payload_bits / 12e6\nprint(f\"the far client holds the channel {far / near:.0f} times as long\")", "note": "The ratio is the point. While the far client is transmitting, nobody else on that channel is."}], "output": "near the AP         400 Mbit/s    0.20 s of airtime\nmid-cell            150 Mbit/s    0.53 s of airtime\nsticky, far away     12 Mbit/s    6.67 s of airtime\nthe far client holds the channel 33 times as long"}
 ```
 
 **The far client holds the channel 33 times as long** as a client beside the AP for the same ten
-megabytes, and for 6.67 seconds nobody else on that channel transmits. A room full of clients at good
-rates can be slower than one with a few clients at bad ones.
+megabytes, and for 6.67 seconds nobody else on that channel transmits. A room full of clients at good rates can be faster than one with a few clients at bad ones.
 
 ## Planning from demand
 
@@ -31,8 +30,7 @@ So a design starts from what the clients will do, not from how many there are:
 
 Vendors' planning guides commonly quote a few dozen active clients per radio for office use, and fewer
 for voice or video. **Those are starting points to check against step 3, not limits.** A lecture theatre
-with 200 laptops needs several radios on different channels, placed so that each hears only its share of
-the room, and lesson 7's advice holds here: more APs at lower power, not fewer shouting.
+with 200 laptops needs several radios on different channels, placed so that each hears only its share of the room. Lesson 7's advice holds here: more APs at lower power, not fewer shouting.
 
 ## Band steering
 

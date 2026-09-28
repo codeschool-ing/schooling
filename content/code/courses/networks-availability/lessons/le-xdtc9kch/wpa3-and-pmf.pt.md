@@ -16,8 +16,7 @@ aleatórios que nunca saem de nenhum dos lados, então não há nada neles contr
 Cada palpite exige uma troca SAE ao vivo com o AP, o que é lento, visível e algo que o AP pode limitar e
 registrar. Uma senha fraca continua sendo má ideia, e deixou de ser um problema offline.
 
-**Ele tem sigilo futuro.** A PMK não é função só da senha, então descobrir a senha depois não decifra nada
-gravado antes, e um membro da rede não consegue derivar as chaves de outro a partir de uma gravação do
+**Ele tem sigilo futuro.** A PMK não é função só da senha, então descobrir a senha depois não decifra nada gravado antes. E um membro da rede não consegue derivar as chaves de outro a partir de uma gravação do
 handshake dele.
 
 ## Quadros de gerência protegidos
@@ -30,7 +29,7 @@ do handshake com chaves derivadas dele. Um cliente com PMF ignora uma desconexã
 verificar.
 
 **O PMF é opcional no WPA2 e obrigatório no WPA3.** Beacons e probe responses vêm antes de existir
-qualquer chave e não são cobertos, e nenhum protocolo impede um transmissor de afogar o canal: esse é um
+qualquer chave e não são cobertos. E nenhum protocolo impede um transmissor de afogar o canal: esse é um
 problema físico, encontrado por análise de espectro (aula 10).
 
 ## O modo de transição, e quando sair dele
@@ -42,7 +41,7 @@ o handshake do WPA2, e o PMF vira opcional para que os antigos consigam entrar.
 O custo é que **a passphrase fica exatamente tão exposta quanto no WPA2**: qualquer handshake WPA2 gravado
 nessa rede permite os palpites offline descritos acima, não importa o que os clientes WPA3 façam. A
 especificação do WPA3 acrescenta uma indicação de **Transition Disable**, para que um cliente que entrou
-uma vez com WPA3 se recuse a usar WPA2 nessa rede de novo, o que protege os clientes modernos de serem
+uma vez com WPA3 se recuse a usar WPA2 nessa rede de novo. Isso protege os clientes modernos de serem
 levados de volta ao método antigo. Ela não protege a passphrase. Duas saídas:
 
 - aposentar o último aparelho WPA2 e passar o SSID para só SAE;

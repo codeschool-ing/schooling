@@ -28,8 +28,7 @@ and an empty line is a poor way to learn why. The capture says it plainly.
 **The transaction id pairs each response with its query.** `0x301b` asked about `www` and `0x301b`
 answered, with reply code 0 and the address `192.0.2.80`. `0x26af` asked about `nosuch` and was
 answered with reply code 3, which is NXDOMAIN, "no such name", and no address. UDP has no connection
-to hold a question and its answer together, so the id is what does it, and a response whose id
-matches no outstanding query is thrown away by the client.
+to hold a question and its answer together, so the id does it, and the client throws away a response whose id matches no outstanding query.
 
 For the whole of one response, `-O dns` prints the DNS layer in full. The same missing name was looked
 up once more for this, so its id is new:
@@ -65,7 +64,7 @@ four bits are the reply code, `0011`, 3, No such name. The answer section is emp
 section holds one record, the zone's SOA, which tells resolvers how long they may remember that the
 name does not exist; lesson 11's capture showed it as `SOA ns.example.com`.
 
-Two lines at the top are worth a second look. The IP source is `192.0.2.53`, the DNS server in the
+At the top of the output, the IP source is `192.0.2.53`, the DNS server in the
 data centre. The Ethernet source is `52:54:00:a8:0a:01`, which in this lab's scheme is the MAC of
 `192.168.10.1`, the office router. **The IP addresses say who talked; the MAC addresses say only the
 last hop**, and they are rewritten at every router on the way.

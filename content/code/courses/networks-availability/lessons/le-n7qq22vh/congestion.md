@@ -56,7 +56,7 @@ there, and waited its turn. The arithmetic says how bad a full queue is: 100 pac
 ```
 
 Why is the queue full, rather than now and then? Because that is what TCP does. It sends faster and
-faster until a packet is lost, slows down, and starts climbing again, so **a single upload keeps the
+faster until a packet is lost, slows down, and starts climbing again. So **a single upload keeps the
 queue in front of a slow link topped up for as long as it runs.** A second upload, run in the foreground once
 the first had finished, shows the losses in its summary, 163 retransmissions in five seconds:
 

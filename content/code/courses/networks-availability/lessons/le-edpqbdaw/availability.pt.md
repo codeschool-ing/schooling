@@ -12,8 +12,7 @@ ano anterior.
 A fração é dita em noves, e o erro comum é ler os noves como quase a mesma coisa. 99% parece quase
 perfeito. Permite mais de três dias e meio fora do ar por ano. Cada nove a mais divide a margem por dez,
 então o passo de três noves para quatro é o passo de quase um dia de trabalho para menos de uma hora. Nada
-no laboratório falha nesta aula, então não há captura aqui: os números são aritmética, feita por programas
-pequenos que foram executados, e as falhas que ela cita foram medidas nas aulas 15 e 16. Este faz a conta
+no laboratório falha nesta aula, então não há captura aqui. Os números são aritmética, feita por programas pequenos que foram executados, e as falhas que a aula cita foram medidas nas aulas 15 e 16. O primeiro programa faz a conta
 dos noves para um ano de 365 dias, um doze avos desse ano e um dia:
 
 ```schooling-example
@@ -43,6 +42,5 @@ a ele um gêmeo que assume em três segundos e o servidor falha exatamente tanta
 o MTBF dele não mudou. O que mudou foi o tempo de reparo como o cliente o vê, que foi de nove horas para
 três segundos, enquanto o servidor quebrado continua esperando o técnico.
 
-**Redundância não faz nada falhar menos. Faz cada falha durar menos**, e tudo nesta aula e nas duas
-seguintes se apoia nessa frase. Ela também explica por que redundância não vale nada se a troca for lenta:
+**Redundância não faz nada falhar menos. Faz cada falha durar menos.** Isso também explica por que redundância não vale nada se a troca for lenta:
 um gêmeo que precisa de alguém para entrar e ligá-lo tem o tempo de reparo do técnico, não o da máquina.

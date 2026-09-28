@@ -30,11 +30,11 @@ medido, não o estimado.
 Uma réplica é uma segunda cópia mantida atualizada o tempo todo. O quanto ela acompanha de perto é a
 escolha que define o RPO:
 
-- **Síncrona**: o primário só confirma uma gravação para a aplicação depois que a réplica também a tem.
+- Na replicação **síncrona**, o primário só confirma uma gravação para a aplicação depois que a réplica também a tem.
   Nada confirmado se perde jamais, um RPO de zero. Toda gravação paga uma ida e volta até a réplica, então
   a distância custa: a luz na fibra percorre cerca de 200 km por milissegundo, e uma réplica a 1000 km
   acrescenta uns 10 ms a cada gravação.
-- **Assíncrona**: o primário confirma na hora e manda a mudança depois. As gravações são rápidas, e o RPO é
+- Na replicação **assíncrona**, o primário confirma na hora e manda a mudança depois. As gravações são rápidas, e o RPO é
   o quanto a réplica estava atrasada no momento da falha, o **atraso de replicação** (replication lag): em
   geral segundos, e muito mais quando o primário está ocupado, que é quando as falhas costumam acontecer.
 

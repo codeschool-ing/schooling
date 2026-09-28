@@ -60,6 +60,4 @@ failover consegue de fato resolver.
 
 O segundo check só é tão bom quanto a página que pede. `GET /` provou que o nginx em `web2` respondeu com
 `200`. Passaria do mesmo jeito para um servidor cuja conexão com o banco de dados tivesse morrido, se a
-página inicial não usar o banco. **Um check que pede uma página que exercita as dependências reais**, muitas
-vezes um caminho `/health` próprio da aplicação que consulta o banco e informa o que encontrou, é a
-diferença entre saber que o processo está rodando e saber que o serviço funciona.
+página inicial não usar o banco. O remédio é **um check que pede uma página que exercita as dependências reais**, muitas vezes um caminho `/health` próprio da aplicação que consulta o banco e informa o que encontrou. É essa a diferença entre saber que o processo está rodando e saber que o serviço funciona.

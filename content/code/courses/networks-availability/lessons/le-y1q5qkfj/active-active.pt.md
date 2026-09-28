@@ -60,8 +60,7 @@ num dia normal:
 
 Quanto mais membros, menos capacidade fica parada de reserva, e é por isso que sites grandes espalham a
 carga por muitos balanceadores em vez de dois grandes. **Um grupo de dois roda cada membro na metade, que é
-exatamente a capacidade que o ativo-passivo tem**; o que o ativo-ativo acrescenta com dois é um reserva
-comprovado por tráfego de verdade todo dia, como a primeira seção disse.
+exatamente a capacidade que o ativo-passivo tem.**
 
 ## Sessões e estado
 
@@ -75,9 +74,7 @@ não está lá.
 As soluções são todas a mesma ideia: **guardar o estado num lugar que sobreviva à máquina**. As sessões vão
 para um repositório compartilhado, um banco de dados ou um cache que também é replicado, para que qualquer
 servidor atenda qualquer usuário. Ou o estado viaja com o usuário, num cookie ou token assinado que o
-servidor consegue conferir sem lembrar de nada. Os balanceadores podem ir além e copiar as próprias tabelas
-um para o outro: o HAProxy sincroniza as tabelas de persistência entre peers, e o conntrackd do Linux
+servidor consegue conferir sem lembrar de nada. Os balanceadores podem ir além e copiar as próprias tabelas um para o outro. O HAProxy sincroniza as tabelas de persistência entre peers, e o conntrackd do Linux
 consegue copiar a tabela de conexões de um firewall para que as conexões sobrevivam a um failover; nenhum
-dos dois foi usado aqui. **Uma máquina sem estado é fácil de substituir, e deixar as máquinas sem estado é
-quase todo o trabalho de projetar um cluster.** O que não pode ficar sem estado, o próprio banco de dados, é
+dos dois foi usado aqui. **Uma máquina sem estado é fácil de substituir. Deixar as máquinas sem estado é quase todo o trabalho de projetar um cluster.** O que não pode ficar sem estado, o próprio banco de dados, é
 onde entram o split brain da aula 14 e a replicação da aula 17.

@@ -18,19 +18,16 @@ um para o outro.
 | pegar de volta depois de voltar | ligado por padrão | desligado por padrão | desligado por padrão para o gateway que responde ARP |
 | divide a carga | não, um master por grupo | não, um active por grupo | sim, dentro de um grupo |
 
-Três linhas merecem uma frase cada.
-
-**Os timers.** Os padrões do HSRP, um hello a cada três segundos e dez segundos antes de o standby agir,
-dão um buraco em torno de dez segundos, onde os padrões do VRRP deram 3,264 nesta aula. Os dois podem ser
+Os padrões do HSRP, um hello a cada três segundos e dez segundos antes de o standby agir, dão **um buraco em torno de dez segundos, onde os padrões do VRRP deram 3,264** nesta aula. Os dois podem ser
 baixados, o HSRP até milissegundos, e a aula 14 disse quanto custa baixá-los. Os padrões são o que uma rede
 recebe quando ninguém pensou no assunto, e é por isso que vale conhecê-los.
 
-**Preempção.** No HSRP um roteador que volta não assume a menos que esteja configurado com `preempt`. Quem
+**No HSRP um roteador que volta não assume a menos que esteja configurado com `preempt`.** Quem
 aprendeu VRRP espera que ele assuma, quem aprendeu HSRP espera que não, e uma equipe misturada descobre
 durante uma queda qual suposição a configuração fez. A regra de tracking do fim da seção anterior é onde
 isso mais importa.
 
-**O MAC virtual.** O HSRP sempre usa um, então um failover não muda entrada ARP nenhuma, que é o que o
+**O HSRP sempre usa um MAC virtual**, então um failover não muda entrada ARP nenhuma, que é o que o
 padrão do VRRP pede e o modo padrão do keepalived pula. Também é uma impressão digital: `0000.0c07.ac0a` na
 tabela ARP de um host quer dizer que o gateway é o grupo HSRP 10.
 

@@ -28,8 +28,7 @@ vazia é um jeito ruim de descobrir o motivo. A captura diz com todas as letras.
 **O id da transação casa cada resposta com a sua consulta.** `0x301b` perguntou por `www` e `0x301b`
 respondeu, com código de resposta 0 e o endereço `192.0.2.80`. `0x26af` perguntou por `nosuch` e
 recebeu o código 3, que é NXDOMAIN, "nome inexistente", e nenhum endereço. O UDP não tem conexão para
-manter pergunta e resposta juntas, então é o id que faz isso, e uma resposta cujo id não corresponde a
-nenhuma consulta pendente é jogada fora pelo cliente.
+manter pergunta e resposta juntas, então é o id que faz isso, e o cliente joga fora uma resposta cujo id não corresponde a nenhuma consulta pendente.
 
 Para uma resposta inteira, `-O dns` imprime a camada DNS completa. O mesmo nome inexistente foi
 consultado mais uma vez para isso, então o id é novo:
@@ -65,7 +64,7 @@ disse. O laptop pediu recursão e o servidor a oferece. Os últimos quatro bits 
 zona, que diz aos resolvedores por quanto tempo podem lembrar que o nome não existe; a captura da aula
 11 o mostrou como `SOA ns.example.com`.
 
-Duas linhas no topo merecem uma segunda olhada. A origem IP é `192.0.2.53`, o servidor DNS no data
+No topo da saída, a origem IP é `192.0.2.53`, o servidor DNS no data
 center. A origem Ethernet é `52:54:00:a8:0a:01`, que no esquema deste laboratório é o MAC de
 `192.168.10.1`, o roteador do escritório. **Os endereços IP dizem quem conversou; os endereços MAC
 dizem só o último salto**, e são reescritos a cada roteador do caminho.

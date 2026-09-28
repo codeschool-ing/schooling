@@ -45,11 +45,8 @@ expirarem. `STALE` só quer dizer que a entrada não foi confirmada recentemente
 
 ## O custo de pegar de volta
 
-Preempção quer dizer que **o escritório passa por uma segunda troca quando o roteador que falhou volta**,
-uma troca curta, já que `hq` se anuncia na hora em vez de esperar um silêncio; nenhum ping estava rodando
-durante essa volta, então ela não foi medida. Faz sentido quando `hq` é o roteador melhor, com um enlace
-mais rápido ou uma máquina maior. Quando os dois são iguais, compra uma interrupção e mais nada, e o
-`nopreempt` do keepalived a desliga, ou o `preempt_delay` faz o roteador que volta esperar, para que um
+Preempção quer dizer que **o escritório passa por uma segunda troca quando o roteador que falhou volta.** É uma troca curta, já que `hq` se anuncia na hora em vez de esperar um silêncio. Nenhum ping estava rodando durante essa volta, então ela não foi medida. Faz sentido quando `hq` é o roteador melhor, com um enlace
+mais rápido ou uma máquina maior. Quando os dois são iguais, compra uma interrupção e mais nada. O `nopreempt` do keepalived a desliga, ou o `preempt_delay` faz o roteador que volta esperar, para que um
 que fica oscilando não arraste o gateway junto.
 
 ## Tracking: entregando o endereço de propósito

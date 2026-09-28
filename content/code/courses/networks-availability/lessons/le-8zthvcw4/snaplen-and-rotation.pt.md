@@ -36,8 +36,7 @@ deixa 30 da requisição**, o bastante para `GET / HTTP/1.1` e não para os cabe
 atravessou dois roteadores, `hq` e o do provedor.
 
 O arquivo tem 3608 bytes, contra 4690 para os mesmos quarenta pacotes guardados inteiros. A economia é
-pequena aqui porque a maioria dos pacotes era confirmação sem dados para cortar; **numa captura de
-transferências grandes o snap length tira a maior parte do arquivo**, e a maior parte do que um
+pequena aqui porque a maioria dos pacotes era confirmação sem dados para cortar. **Numa captura de transferências grandes o snap length tira a maior parte do arquivo**, e a maior parte do que um
 estranho poderia ler nele. Guardar só os cabeçalhos é também a medida de privacidade mais simples que
 existe.
 

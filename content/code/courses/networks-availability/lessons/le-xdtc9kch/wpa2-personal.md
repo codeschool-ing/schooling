@@ -3,8 +3,7 @@ title: WPA2-Personal, one passphrase for everybody
 version: 1
 ---
 
-On an **open network nothing is encrypted**. Every frame after the radio header can be read by any
-receiver in range, which is why a coffee shop's Wi-Fi is only as private as whatever runs on top of it,
+On an **open network nothing is encrypted**. Every frame after the radio header can be read by any receiver in range. That is why a coffee shop's Wi-Fi is only as private as whatever runs on top of it,
 HTTPS for instance (lesson 5 of `networks`). WPA2-Personal adds encryption with one shared secret, the
 **passphrase**: 8 to 63 characters, typed on every device.
 

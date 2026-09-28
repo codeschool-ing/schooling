@@ -27,8 +27,7 @@ Capturing on 'eth0'
 ```
 
 `tcp.flags.str` desenha os doze bits de flag como pontos, com uma letra onde o bit está ligado: `S`
-SYN, `A` ACK, `P` push, `F` FIN. Leia as colunas de cima para baixo e a conexão conta a própria
-história.
+SYN, `A` ACK, `P` push, `F` FIN. Leia a saída coluna por coluna, de cima para baixo.
 
 **Os quadros 1 a 3 são o handshake.** O laptop manda um SYN com sequência 0. O servidor responde com um
 SYN próprio, sequência 0, e confirma 1: "recebi o seu byte 0, mande o 1". O laptop confirma o 0 do

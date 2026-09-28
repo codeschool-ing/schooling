@@ -38,8 +38,7 @@ prevent.
 
 The defence is hysteresis: asking for more evidence to change state than to stay in it. HAProxy's server
 checks in lesson 16 are written `check inter 1s fall 2 rise 2`, which means a check every second, two
-failures in a row to mark a server down, and two successes in a row to bring it back. **One failed check
-changes nothing, and that is the point of the rule.** Many systems also wait before handing control back
+failures in a row to mark a server down, and two successes in a row to bring it back. **One failed check changes nothing.** Many systems also wait before handing control back
 to a machine that has just recovered, or never hand it back on their own; lesson 15 shows that choice,
 called preemption.
 

@@ -19,7 +19,7 @@ product.
 The chain includes things nobody in the company runs: the cloud provider's database, the DNS provider, the
 payment gateway, the ISP. Each has an SLA of its own, and **a promise built on top of them can be no
 stronger than theirs multiplied together**. A shop promising 99.99% while its database provider promises
-99.9% is promising what it has not bought, and when the provider misses, the credit the shop receives is
+99.9% is promising what it has not bought. When the provider misses, the credit the shop receives is
 a fraction of the provider's fee, while the credit the shop owes is a fraction of its own customers' fees.
 The two do not cancel.
 
@@ -36,7 +36,7 @@ promises are possible at all:
 | 99.99% | 4.32 min | automatic failover everywhere, no single point left, changes tested before they reach production |
 
 The step that matters is between the second and third rows. **Above about 99.9% a month, any failure
-that waits for a person breaks the promise by itself**, so every failure mode that matters has to be
+that waits for a person breaks the promise by itself.** So every failure mode that matters has to be
 handled by a machine, and every one of them has to have been seen to work.
 
 That last part is why lessons 15 and 16 pulled cables and killed processes with a clock running rather

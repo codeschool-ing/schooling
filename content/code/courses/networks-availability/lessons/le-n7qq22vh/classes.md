@@ -72,7 +72,5 @@ Why give the voice class a rate at all, when it could simply go first? Because a
 first and has no limit can take the whole link. If every packet in the office were marked EF, a strict
 priority queue would send nothing else, ever. Here the guarantees prevent that: `1:20` is promised
 **4 Mbit/s whatever happens in `1:10`**, so the worst a flood of EF can do is take the one megabit it is
-guaranteed and whatever `1:20` is not using. Routers from other vendors reach the same result another
-way, Cisco's low-latency queueing for instance polices its priority queue to a fixed rate, which was not
-run here. Either way, **the priority class is kept small on purpose**, sized for the calls the office
+guaranteed and whatever `1:20` is not using. Routers from other vendors reach the same result another way. Cisco's low-latency queueing, for instance, polices its priority queue to a fixed rate; it was not run here. Either way, **the priority class is kept small on purpose**, sized for the calls the office
 really makes.

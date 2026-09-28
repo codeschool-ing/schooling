@@ -11,7 +11,7 @@ product of theirs, and a product of numbers below one is lower than the lowest o
 
 **Parts in parallel multiply their failures instead.** Two load balancers, either of which can carry the
 load, are down together only when both are down at the same time. If each is down 0.1% of the time,
-both are down 0.1% of 0.1%, one millionth. That is the arithmetic behind every redundant pair.
+both are down 0.1% of 0.1%, one millionth.
 
 This program applies both rules to the lab's data centre. The availabilities in it are assumptions,
 round figures for one machine of each kind, and not measurements of anything in the lab:

@@ -22,9 +22,7 @@ is the part that decides.
 
 ## Indoors, the walls decide
 
-Free space is the best case. Indoor measurements are commonly fitted with the same shape and a steeper
-slope: loss grows by 10 × *n* dB for every tenfold increase in distance, where *n* is 2 in free space and
-**typically 3 to 4 inside an office**, so 9 to 12 dB per doubling instead of 6. Walls come on top, and
+Free space is the best case. Indoor measurements are commonly fitted with the same shape and a steeper slope. Loss grows by 10 × *n* dB for every tenfold increase in distance, where *n* is 2 in free space and **typically 3 to 4 inside an office**. That is 9 to 12 dB per doubling instead of 6. Walls come on top, and
 the losses below are the kind of values survey tools and vendors' design guides carry. They are typical,
 not exact: the same word covers very different walls, and a single measurement of one of yours beats the
 whole table.

@@ -23,8 +23,7 @@ BSSID para outro dentro do mesmo SSID é roaming, e a aula 9 trata de como isso 
 ## Esconder o nome não esconde nada
 
 **Um SSID oculto não é medida de segurança.** O AP deixa o nome fora dos beacons, mas um cliente que quer
-entrar ainda precisa dizer o nome da rede, nos probe requests e no pedido de associação, e esses quadros
-não são criptografados. Qualquer um ouvindo enquanto um aparelho entra fica sabendo o nome.
+entrar ainda precisa dizer o nome da rede, nos probe requests e no pedido de associação. Esses quadros não são criptografados. Qualquer um ouvindo enquanto um aparelho entra fica sabendo o nome.
 
 E isso ainda custa alguma coisa. Um aparelho configurado para uma rede oculta não pode esperar ouvir o
 nome, então pergunta por ele, pelo nome, aonde quer que vá: no aeroporto, no café, em casa. **Esconder o

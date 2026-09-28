@@ -15,9 +15,7 @@ what stops when that place is unreachable.
 ## Autonomous
 
 An autonomous AP, also called standalone, holds its own configuration and makes its own decisions:
-channel, power, who may join. It works with nothing else on the network, which is its strength. **Each
-change is made once per AP**, the channel plan is only as coherent as whoever set it by hand, and keys are
-not shared, so fast roaming between two autonomous APs is limited to whatever their vendor added.
+channel, power, who may join. It works with nothing else on the network, which is its strength. **Each change is made once per AP**, and the channel plan is only as coherent as whoever set it by hand. Keys are not shared, so fast roaming between two autonomous APs is limited to whatever their vendor added.
 
 ## Controller-based
 

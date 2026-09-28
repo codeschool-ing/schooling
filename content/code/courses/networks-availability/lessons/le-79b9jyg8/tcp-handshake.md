@@ -29,7 +29,7 @@ Capturing on 'eth0'
 ```
 
 `tcp.flags.str` draws the twelve flag bits as dots, with a letter where a bit is set: `S` SYN,
-`A` ACK, `P` push, `F` FIN. Read down the columns and the connection tells its own story.
+`A` ACK, `P` push, `F` FIN. Read the output down its columns.
 
 **Frames 1 to 3 are the handshake.** The laptop sends a SYN with sequence 0. The server answers with
 a SYN of its own, sequence 0, and acknowledges 1: "I have your byte 0, send me 1". The laptop

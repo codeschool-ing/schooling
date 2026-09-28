@@ -11,8 +11,7 @@ chama **split brain**.
 Para dois roteadores que dividem um endereço virtual, split brain quer dizer duas máquinas respondendo
 por um endereço. As entradas ARP dos hosts oscilam entre dois endereços de hardware e o tráfego vai para
 quem respondeu por último. É feio, e acaba no instante em que o enlace volta. O VRRP, o protocolo da aula
-15, é em parte protegido pelo lugar por onde manda os heartbeats: a própria LAN que ele atende, então uma
-quebra que separa os dois roteadores costuma separar os hosts também, e cada metade fica com um gateway
+15, é em parte protegido pelo lugar por onde manda os heartbeats: a própria LAN que ele atende. Uma quebra que separa os dois roteadores costuma separar os hosts também, e cada metade fica com um gateway
 que funciona para ela.
 
 Para qualquer coisa que guarda dados, um par de servidores de banco de dados ou de arquivos, split brain é
@@ -36,9 +35,7 @@ têm maioria ao mesmo tempo, então no máximo uma delas age.
 | 5 | 3 | 2 |
 
 A tabela explica um hábito que parece superstição: **clusters têm número ímpar de membros**. Um quarto
-votante não aguenta mais falhas do que três; só acrescenta uma máquina que pode quebrar. Dois votantes não
-aguentam nenhuma, e é por isso que um cluster de dois nós que se importa com os dados acrescenta um
-terceiro voto que não faz trabalho nenhum, uma **testemunha** (witness), muitas vezes uma máquina pequena
+votante não aguenta mais falhas do que três; só acrescenta uma máquina que pode quebrar. Dois votantes não aguentam nenhuma. Por isso um cluster de dois nós que se importa com os dados acrescenta um terceiro voto que não faz trabalho nenhum: uma **testemunha** (witness), muitas vezes uma máquina pequena
 ou um serviço de nuvem num terceiro lugar.
 
 A outra ferramenta é o **fencing**, o isolamento. Antes de assumir, o sobrevivente se certifica de que o

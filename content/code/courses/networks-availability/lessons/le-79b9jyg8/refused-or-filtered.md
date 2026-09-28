@@ -52,9 +52,7 @@ person in front of it.
 | `curl` says | `Couldn't connect to server` | `Connection timed out` |
 | what it proves | the host is up, the port is closed | something dropped the SYN, or its answer |
 
-**The second column does not say where the packet died.** Silence looks the same from the client
-whether a firewall on the server dropped the SYN, a firewall on the path dropped it, the server is
-switched off, or the SYN-ACK was lost on the way back. The capture narrows it to "no answer arrived
+**The second column does not say where the packet died.** From the client, silence looks the same in four cases: a firewall on the server dropped the SYN, a firewall on the path dropped it, the server is switched off, or the SYN-ACK was lost on the way back. The capture narrows it to "no answer arrived
 here"; capturing on the other end, as lesson 12 did on `web1`, is what says whether the SYN arrived.
 And a firewall can be told to reject instead of drop, answering with a reset of its own, in which
 case a filtered port looks refused. Nothing in this lab was set up that way.

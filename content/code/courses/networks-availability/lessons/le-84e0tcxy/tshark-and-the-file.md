@@ -75,8 +75,7 @@ apart from the count, and `-a duration:8` stops after eight seconds. **45 packet
 the file was created with mode `-rw-------`, readable by `ana` and nobody else. A capture file holds
 whatever crossed the wire, so that is the right default, and lesson 12 comes back to it.
 
-Reading it back with `-r` prints one line per packet, in the columns the window shows: the frame
-number, the seconds since the first packet, source and destination, the protocol Wireshark decided
+Reading it back with `-r` prints one line per packet, in the columns the window shows. They are the frame number, the seconds since the first packet, source and destination, the protocol Wireshark decided
 it was, the length on the wire, and a summary. **Every time in this lab is one computer talking to
 itself**, so the whole page, frames 1 to 10, took under a millisecond. On a real network the gap
 between frame 1 and frame 2 is the round trip to the server, and it is often the first number worth

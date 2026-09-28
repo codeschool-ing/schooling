@@ -9,8 +9,7 @@ por salto** (per-hop behaviour): cada roteador decide sozinho o que uma marcaç�
 sem classes configuradas decide que ela não significa nada.
 
 Na internet pública esse é o caso normal. Um provedor que respeitasse as marcações dos clientes estaria
-dando prioridade de graça a quem escrevesse `0xb8`, que é o problema de confiança da seção anterior na
-escala de um continente, então os provedores ignoram o byte ou o zeram na borda. A exceção é um serviço
+dando prioridade de graça a quem escrevesse `0xb8`: o problema de confiança da seção anterior na escala de um continente. Por isso os provedores ignoram o byte ou o zeram na borda. A exceção é um serviço
 comprado como tal: a VPN MPLS de um provedor entre os sites de uma empresa pode levar algumas classes por
 contrato, e aí o que a empresa paga é o contrato, não a marcação.
 

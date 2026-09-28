@@ -57,9 +57,7 @@ enough. For an active-active group it sets a ceiling on how busy each member may
 | 4 | 75% | 100% on each of three |
 
 The more members, the less capacity sits idle in reserve, which is why large sites spread their load over
-many balancers rather than two big ones. **A group of two runs each member at half, which is exactly the
-capacity active-passive has**; what active-active adds with two is a spare that is proven by real traffic
-every day, as the first section said.
+many balancers rather than two big ones. **A group of two runs each member at half, which is exactly the capacity active-passive has.**
 
 ## Sessions and state
 
@@ -72,7 +70,7 @@ balancer's persistence moves the user elsewhere (lesson 19), the session is simp
 The fixes are all the same idea: **keep the state somewhere that survives the machine**. Sessions go into
 a shared store, a database or a cache that is itself replicated, so any server can serve any user. Or the
 state travels with the user, in a signed cookie or token the server can check without remembering
-anything. Balancers can go further and copy their own tables to each other: HAProxy synchronises its
+anything. Balancers can go further and copy their own tables to each other. HAProxy synchronises its
 stickiness tables between peers, and Linux's conntrackd can copy a firewall's connection table so that
 connections survive a failover; neither was used here. **A stateless machine is easy to replace, and
 making machines stateless is most of what a cluster design is.** What cannot be made stateless, the

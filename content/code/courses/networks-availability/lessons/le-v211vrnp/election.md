@@ -25,10 +25,7 @@ two logs tell how they got there.
 
 `hq2` started at 18:10:54 as a backup and heard nothing. `hq` started at 18:10:55 and did the same, and
 for a few seconds two backups listened to each other's silence. `hq2`'s wait ran out first, because it had
-started first: at 18:10:58 it concluded that no master existed and became master itself. A second later
-`hq`'s wait ran out too, and it had never heard anybody with a priority above its own 150, so at 18:10:59
-it became master, and `hq2`, now hearing 150 against its own 100, went back to being a backup in the same
-second. For about a second the office's gateway was `hq2`, and nobody on the LAN would have noticed.
+started first: at 18:10:58 it concluded that no master existed and became master itself. A second later `hq`'s wait ran out too. It had never heard anybody with a priority above its own 150, so at 18:10:59 it became master, and `hq2`, now hearing 150 against its own 100, went back to being a backup in the same second. For about a second the office's gateway was `hq2`, and nobody on the LAN would have noticed.
 
 Neither router took over the instant it started. **A router that has just started waits to hear whether
 a master already exists**, because taking the address first and asking afterwards is how two routers end
@@ -81,5 +78,4 @@ eth0@if1244      UP             52:54:00:a8:0a:14 <BROADCAST,MULTICAST,UP,LOWER_
 The laptop's own MAC ends in `:14`, and for the gateway it has learnt `52:54:00:a8:0a:02`, `hq`'s own
 hardware address. The standard intends a **virtual MAC** instead, `00-00-5E-00-01-` and the VRID in hex,
 here `00:00:5e:00:01:0a`, owned by whichever router is master, so that a failover never changes an ARP
-entry. keepalived's `use_vmac` option does that, and this lab does not use it. **In keepalived's default mode the new master has to tell
-every host that the address has moved**, and the next two sections watch it doing so.
+entry. keepalived's `use_vmac` option does that, and this lab does not use it. **In keepalived's default mode the new master has to tell every host that the address has moved.**

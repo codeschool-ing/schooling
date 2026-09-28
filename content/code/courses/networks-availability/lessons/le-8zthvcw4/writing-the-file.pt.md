@@ -58,9 +58,7 @@ Interface #0 info:
 ```
 
 Quarenta pacotes, capturados em 0.018971 segundo, entre dois horários gravados com microssegundos.
-**`File size` tem 664 bytes a mais que `Data size`**, e isso é o próprio formato pcap: um cabeçalho de
-24 bytes no início do arquivo, e 16 bytes na frente de cada pacote registrando quando ele chegou e qual
-era o tamanho, 24 + 40 × 16 = 664. `Packet size limit: 262144` é o snap length, quanto de cada pacote
+**`File size` tem 664 bytes a mais que `Data size`**, e isso é o próprio formato pcap. Ele põe um cabeçalho de 24 bytes no início do arquivo, e 16 bytes na frente de cada pacote registrando quando ele chegou e qual era o tamanho: 24 + 40 × 16 = 664. `Packet size limit: 262144` é o snap length, quanto de cada pacote
 foi guardado, e a seção sobre snap length o diminui de propósito.
 
 **Os dois hashes são para depois.** Quem receber este arquivo pode rodar o `capinfos` na própria cópia

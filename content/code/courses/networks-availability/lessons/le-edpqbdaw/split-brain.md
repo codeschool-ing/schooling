@@ -11,7 +11,7 @@ over. This is called **split brain**.
 For two routers sharing a virtual address, split brain means two machines answering for one address.
 Hosts' ARP entries swing between two hardware addresses and traffic goes to whichever answered last. It
 is ugly, and it ends the moment the link comes back. VRRP, lesson 15's protocol, is partly protected by
-where it sends its heartbeats: over the very LAN it serves, so a break that splits the two routers
+where it sends its heartbeats: over the very LAN it serves. A break that splits the two routers
 usually splits the hosts as well, and each half keeps a gateway that works for it.
 
 For anything that holds data, a pair of database servers or file servers, split brain is far worse.
@@ -35,9 +35,7 @@ majority at once, so at most one of them acts.
 | 5 | 3 | 2 |
 
 The table explains a habit that looks like superstition: **clusters have odd numbers of members**. A
-fourth voter survives no more failures than three do; it only adds a machine that can break. Two voters
-survive none, which is why a two-node cluster that cares about its data adds a third vote that does no
-work, a **witness**, often a small machine or a cloud service in a third place.
+fourth voter survives no more failures than three do; it only adds a machine that can break. Two voters survive none. That is why a two-node cluster that cares about its data adds a third vote that does no work: a **witness**, often a small machine or a cloud service in a third place.
 
 The other tool is **fencing**. Before taking over, the survivor makes sure the other really is off, by
 cutting its power through a managed power strip or cutting its access to the shared storage. The

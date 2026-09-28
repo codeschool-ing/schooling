@@ -18,7 +18,7 @@ SAE exchange with the AP, which is slow, visible and something an AP can rate-li
 password is still a bad idea, and it is no longer an offline problem.
 
 **It has forward secrecy.** The PMK is not a function of the password alone, so learning the password
-later does not decrypt anything recorded earlier, and one member of the network cannot derive another
+later does not decrypt anything recorded earlier. And one member of the network cannot derive another
 member's keys from a recording of their handshake.
 
 ## Protected management frames
@@ -29,9 +29,7 @@ disconnecting a client was trivial and the client had no way to tell. **Protecte
 PMF, from the amendment 802.11w, sign the management frames sent after the handshake with keys derived
 from it. A client with PMF ignores a disconnection it cannot verify.
 
-**PMF is optional in WPA2 and mandatory in WPA3.** Beacons and probe responses come before any key
-exists and are not covered, and no protocol stops a transmitter drowning the channel: that is a physical
-problem, found by spectrum analysis (lesson 10).
+**PMF is optional in WPA2 and mandatory in WPA3.** Beacons and probe responses come before any key exists and are not covered. And no protocol stops a transmitter drowning the channel: that is a physical problem, found by spectrum analysis (lesson 10).
 
 ## Transition mode, and when to leave it
 
@@ -41,8 +39,7 @@ and PMF becomes optional so the old ones can join.
 
 The cost is that **the passphrase is exactly as exposed as in WPA2**: any WPA2 handshake recorded on that
 network allows the offline guessing described above, whatever the WPA3 clients do. The WPA3
-specification adds a **Transition Disable** indication so that a client which has joined with WPA3 once
-refuses to use WPA2 on that network again, which protects the modern clients from being steered down to
+specification adds a **Transition Disable** indication so that a client which has joined with WPA3 once refuses to use WPA2 on that network again. That protects the modern clients from being steered down to
 the old method. It does not protect the passphrase. Two ways out:
 
 - retire the last WPA2 device and switch the SSID to SAE only;

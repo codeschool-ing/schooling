@@ -45,7 +45,7 @@ que ele não decodifica, a segunda linha da tabela.
   Brasil e na Europa trabalham perto de 1,9 GHz, fora de todas as faixas do Wi-Fi.
 
 **As ferramentas do próprio Wi-Fi não conseguem dar nome a nenhum desses.** Um cliente vê
-retransmissões e taxa baixa, e um ponto de acesso vê um canal ruidoso; só um analisador de espectro, que
+retransmissões e taxa baixa, e um ponto de acesso vê um canal ruidoso. Só um analisador de espectro, que
 desenha energia contra frequência sem decodificar nada, mostra a forma do culpado. Muitos pontos de
 acesso corporativos conseguem transformar um dos rádios em um. O laboratório não tem rádio de espécie
 nenhuma, então esta seção não tem captura de um.

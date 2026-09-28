@@ -41,8 +41,7 @@ served by web1
 Stream 0 is the first TCP connection in the file, frames 1 to 10. `tshark` put the bytes of both
 directions back in order: 73 from `192.168.10.10:59928`, then the 243 of the answer, marked with a
 tab in front of the count, ending in the page itself, `served by web1`. **That is everything plain
-HTTP ever was on the wire**: headers and body in clear text, readable by anyone who can copy the
-packets, which after the section on mirror ports means anyone who can change a switch's
+HTTP ever was on the wire**: headers and body in clear text, readable by anyone who can copy the packets. After the section on mirror ports, that means anyone who can change a switch's
 configuration. The same command on the HTTPS connection was not run here; it would show records of
 bytes that mean nothing without the session's keys.
 
@@ -80,7 +79,7 @@ eth                                      frames:45 bytes:7008
 ```
 
 The conversations table is one line per pair of addresses. `web1` comes first with 27 frames and
-5065 bytes, because it served both the page and the HTTPS request, and the arrows are read from the
+5065 bytes, because it served both the page and the HTTPS request. The arrows are read from the
 first address: `files` sent 15 frames, 1800 bytes, and received 12 frames, 3265 bytes. **A client
 that receives more than it sends is the usual shape of browsing**, and a machine that suddenly sends
 far more than it receives is one of the first things an analyst looks at.

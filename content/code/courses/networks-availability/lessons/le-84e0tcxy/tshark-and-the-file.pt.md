@@ -75,8 +75,7 @@ pela contagem, e `-a duration:8` para depois de oito segundos. **45 pacotes em 8
 arquivo foi criado com modo `-rw-------`, legível por `ana` e por mais ninguém. Um arquivo de captura
 guarda tudo o que passou pelo fio, então esse é o padrão certo, e a aula 12 volta a ele.
 
-Lido de volta com `-r`, ele imprime uma linha por pacote, nas colunas que a janela mostra: o número do
-quadro, os segundos desde o primeiro pacote, origem e destino, o protocolo que o Wireshark concluiu
+Lido de volta com `-r`, ele imprime uma linha por pacote, nas colunas que a janela mostra. São o número do quadro, os segundos desde o primeiro pacote, origem e destino, o protocolo que o Wireshark concluiu
 que era, o tamanho no fio e um resumo. **Todo tempo deste laboratório é um computador falando consigo
 mesmo**, então a página inteira, quadros 1 a 10, levou menos de um milissegundo. Numa rede de verdade,
 o intervalo entre o quadro 1 e o quadro 2 é a ida e volta até o servidor, e muitas vezes é o primeiro

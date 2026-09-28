@@ -4,8 +4,7 @@ version: 1
 ---
 
 Um failover é tão bom quanto o buraco que deixa, e um buraco pode ser medido. O laptop pinga `web1` no data
-center, depois do gateway, cinco vezes por segundo: `-i 0.2`. O `-D` põe um carimbo de tempo na frente de
-cada linha, em segundos desde 1970, e o `-O` imprime uma linha para cada resposta que não voltou até a
+center, depois do gateway, cinco vezes por segundo: `-i 0.2`. O `-D` põe um carimbo de tempo na frente de cada linha, em segundos desde 1970. O `-O` imprime uma linha para cada resposta que não voltou até a
 saída do próximo ping, então uma resposta que falta aparece como uma linha, e não como nada. Pouco mais de
 dois segundos depois do início, o cabo de `hq` para a LAN foi puxado:
 
@@ -85,8 +84,7 @@ interface da LAN caiu não consegue atender essa LAN, então o keepalived abre m
 
 A seção anterior calculou o master down interval de `hq2` em cerca de 3,61 segundos, e o buraco medido é
 menor. **O backup conta a partir do último anúncio que ouviu, não a partir da falha.** `hq` anunciava uma
-vez por segundo, então o último anúncio dele saiu entre zero e um segundo antes de o cabo ser puxado, e os
-3,61 segundos de `hq2` já estavam correndo havia esse tanto. O buraco que um host vê fica, portanto, entre
+vez por segundo, então o último anúncio dele saiu entre zero e um segundo antes de o cabo ser puxado, e os 3,61 segundos de `hq2` já corriam havia esse tanto. O buraco que um host vê fica, portanto, entre
 cerca de 2,61 e 3,61 segundos, mais o instante que o laptop leva para saber para onde o endereço foi, e
 3,264 cai dentro disso. Os mesmos timers dão um buraco diferente cada vez que o teste é repetido.
 

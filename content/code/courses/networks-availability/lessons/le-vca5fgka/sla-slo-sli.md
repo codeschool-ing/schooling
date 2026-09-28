@@ -5,12 +5,10 @@ version: 1
 
 A contract that says "99.9% availability" reads like a guarantee that the service will be up. **An SLA
 is not a guarantee of anything. It is the price the provider pays when the service falls short**, and
-the price is almost always small. No incident was staged in the lab for this lesson, so there is no
-capture: its numbers are arithmetic, run as a program where there is a calculation, and the two
+the price is almost always small. No incident was staged in the lab for this lesson, so there is no capture. Its numbers are arithmetic, run as a program where there is a calculation, and the two
 failovers measured in lessons 15 and 16.
 
-Three terms travel together and are routinely mixed up, and the difference between them is most of what
-this section is about:
+Three terms travel together and are routinely mixed up:
 
 | term | what it is | an example |
 |---|---|---|
@@ -30,14 +28,14 @@ act: a team that aims at 99.95% and misses finds out before a contract promising
 
 Two SLAs that both say 99.9% can promise very different things, and the difference is in five places:
 
-- **The window.** A calendar month resets on the first; a rolling 30 days never forgets a bad week.
-- **What counts as down.** Unreachable only, or also answering with errors, or also answering so slowly
+- The window: a calendar month resets on the first; a rolling 30 days never forgets a bad week.
+- What counts as down: unreachable only, or also answering with errors, or also answering so slowly
   that nobody waits. A site that takes thirty seconds per page is up by the first definition.
-- **Where it is measured.** The provider's own monitoring inside its network, or something that sees what
+- Where it is measured: the provider's own monitoring inside its network, or something that sees what
   a customer sees from outside.
-- **What is excluded.** Maintenance announced in advance, outages the customer caused, features marked as
+- What is excluded: maintenance announced in advance, outages the customer caused, features marked as
   beta, events outside anyone's control. An exclusion list can remove most of the hours that matter.
-- **How a credit is claimed.** Often only if the customer asks, within a set number of days, with evidence.
+- How a credit is claimed: often only if the customer asks, within a set number of days, with evidence.
 
 And the credit itself is capped at the fee. A typical shape, as an illustration rather than any real
 provider's table, is 10% of the month's fee below the promised figure and 25% well below it. **A four-hour

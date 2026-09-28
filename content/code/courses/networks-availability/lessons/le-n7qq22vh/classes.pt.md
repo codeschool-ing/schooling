@@ -72,8 +72,6 @@ Por que dar uma rate à classe de voz, se ela podia simplesmente ir primeiro? Po
 vai primeiro e não tem limite pode tomar o enlace inteiro. Se todo pacote do escritório fosse marcado como
 EF, uma fila de prioridade estrita não enviaria mais nada, nunca. Aqui as garantias impedem isso: `1:20`
 tem **4 Mbit/s prometidos, aconteça o que acontecer em `1:10`**, então o pior que uma enxurrada de EF
-consegue fazer é pegar o megabit garantido dela e o que `1:20` não estiver usando. Roteadores de outros
-fabricantes chegam ao mesmo resultado por outro caminho; o low-latency queueing da Cisco, por exemplo,
-aplica um policiamento à fila de prioridade numa taxa fixa, o que não foi executado aqui. De um jeito ou
+consegue fazer é pegar o megabit garantido dela e o que `1:20` não estiver usando. Roteadores de outros fabricantes chegam ao mesmo resultado por outro caminho. O low-latency queueing da Cisco, por exemplo, aplica um policiamento à fila de prioridade numa taxa fixa; isso não foi executado aqui. De um jeito ou
 de outro, **a classe de prioridade é mantida pequena de propósito**, dimensionada para as ligações que o
 escritório faz de verdade.

@@ -18,19 +18,15 @@ other.
 | taking back after a return | on by default | off by default | off by default for the gateway that answers ARP |
 | shares the load | no, one master per group | no, one active per group | yes, within one group |
 
-Three rows deserve a sentence each.
-
-**The timers.** HSRP's defaults, a hello every three seconds and ten seconds before the standby acts, give
-a gap of around ten seconds where VRRP's defaults gave 3.264 in this lesson. Both can be lowered, HSRP
+HSRP's defaults, a hello every three seconds and ten seconds before the standby acts, give **a gap of around ten seconds, where VRRP's defaults gave 3.264** in this lesson. Both can be lowered, HSRP
 down to milliseconds, and lesson 14 said what lowering them costs. The defaults are what a network gets
 when nobody has thought about it, which is why they are worth knowing.
 
-**Preemption.** In HSRP a router that comes back does not take over unless it is configured with
-`preempt`. People who learned VRRP expect it to, people who learned HSRP expect it not to, and a mixed team
+**In HSRP a router that comes back does not take over unless it is configured with `preempt`.** People who learned VRRP expect it to, people who learned HSRP expect it not to, and a mixed team
 finds out during an outage which assumption the configuration made. The tracking rule at the end of the
 previous section is where this matters most.
 
-**The virtual MAC.** HSRP always uses one, so a failover changes no ARP entry, which is what VRRP's
+**HSRP always uses a virtual MAC**, so a failover changes no ARP entry, which is what VRRP's
 standard asks for and keepalived's default mode skips. It is also a fingerprint: `0000.0c07.ac0a` in a
 host's ARP table means the gateway is HSRP group 10.
 

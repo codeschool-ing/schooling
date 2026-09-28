@@ -18,8 +18,7 @@ A separação acontece em cada camada, e cada camada tem a sua ferramenta:
 | 3 | um firewall: internet sim, faixas internas não | visitantes alcançarem qualquer coisa lá dentro |
 | uso | um limite de taxa por cliente e por SSID | o download de um visitante tomar o tempo de ar dos funcionários |
 
-**A regra do firewall é a que faz o trabalho.** A VLAN de visitantes ganha sub-rede, DHCP e DNS próprios,
-e uma política que a deixa sair para a internet e recusa toda faixa privada que a empresa usa, inclusive os
+**A regra do firewall é a que faz o trabalho.** A VLAN de visitantes ganha sub-rede, DHCP e DNS próprios. A política dela a deixa sair para a internet e recusa toda faixa privada que a empresa usa, inclusive os
 endereços em que os APs e os switches são gerenciados. Escrita como "recusar 10.0.0.0/8, 172.16.0.0/12 e
 192.168.0.0/16, depois liberar o resto", ela continua certa quando alguém acrescenta uma rede interna nova
 no ano que vem.

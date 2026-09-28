@@ -19,7 +19,7 @@ partes em série se multiplicam, e a promessa não pode ser mais forte do que o 
 A corrente inclui coisas que ninguém da empresa opera: o banco de dados do provedor de nuvem, o provedor
 de DNS, o gateway de pagamento, o provedor de internet. Cada um tem o próprio SLA, e **uma promessa feita
 em cima deles não pode ser mais forte do que os deles multiplicados**. Uma loja que promete 99,99% enquanto
-o fornecedor do banco de dados promete 99,9% está prometendo o que não comprou, e quando o fornecedor erra,
+o fornecedor do banco de dados promete 99,9% está prometendo o que não comprou. Quando o fornecedor erra,
 o crédito que a loja recebe é uma fração da mensalidade do fornecedor, enquanto o crédito que a loja deve é
 uma fração do que os clientes dela pagam. Os dois não se anulam.
 
@@ -36,7 +36,7 @@ promessas são possíveis:
 | 99,99% | 4,32 min | failover automático em tudo, nenhum ponto único, mudanças testadas antes de chegarem à produção |
 
 O degrau que importa fica entre a segunda e a terceira linhas. **Acima de uns 99,9% por mês, qualquer
-falha que espera uma pessoa quebra a promessa sozinha**, então todo modo de falha que importa precisa ser
+falha que espera uma pessoa quebra a promessa sozinha.** Então todo modo de falha que importa precisa ser
 resolvido por uma máquina, e cada um deles precisa ter sido visto funcionando.
 
 Essa última parte é o motivo de as aulas 15 e 16 terem puxado cabos e matado processos com um relógio

@@ -23,9 +23,7 @@ parte que decide.
 
 ## Em ambiente interno, quem decide são as paredes
 
-Espaço livre é o melhor caso. Medições em ambiente interno costumam ser ajustadas com o mesmo formato e
-uma inclinação maior: a perda cresce 10 × *n* dB a cada dez vezes de distância, onde *n* é 2 em espaço
-livre e **tipicamente de 3 a 4 dentro de um escritório**, ou seja, 9 a 12 dB por dobra em vez de 6. As
+Espaço livre é o melhor caso. Medições em ambiente interno costumam ser ajustadas com o mesmo formato e uma inclinação maior. A perda cresce 10 × *n* dB a cada dez vezes de distância, onde *n* é 2 em espaço livre e **tipicamente de 3 a 4 dentro de um escritório**. Isso dá 9 a 12 dB por dobra em vez de 6. As
 paredes vêm por cima, e as perdas abaixo são o tipo de valor que as ferramentas de survey e os guias de
 projeto dos fabricantes trazem. São típicas, não exatas: a mesma palavra cobre paredes muito diferentes, e
 uma única medição de uma das suas vale mais que a tabela inteira.

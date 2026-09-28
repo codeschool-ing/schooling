@@ -60,6 +60,4 @@ can actually fix.
 
 The second check is only as good as the page it requests. `GET /` proved that nginx on `web2` answered
 with `200`. It would pass just as happily for a server whose database connection had died, if the home
-page does not touch the database. **A check that asks for a page which exercises the real dependencies**,
-often a dedicated `/health` path on the application that queries its database and reports what it
-found, is the difference between knowing that the process is running and knowing that the service works.
+page does not touch the database. The remedy is **a check that asks for a page which exercises the real dependencies**, often a dedicated `/health` path on the application that queries its database and reports what it found. That is the difference between knowing that the process is running and knowing that the service works.

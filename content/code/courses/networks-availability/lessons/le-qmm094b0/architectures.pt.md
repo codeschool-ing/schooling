@@ -15,9 +15,7 @@ compartilhadas são tomadas**, e portanto no que para quando esse lugar fica ina
 ## Autônomo
 
 Um AP autônomo, também chamado de standalone, guarda a própria configuração e toma as próprias decisões:
-canal, potência, quem pode entrar. Ele funciona sem mais nada na rede, e essa é a força dele. **Cada
-mudança é feita uma vez por AP**, o plano de canais só é tão coerente quanto quem o montou à mão, e as
-chaves não são compartilhadas, então o roaming rápido entre dois APs autônomos se limita ao que o
+canal, potência, quem pode entrar. Ele funciona sem mais nada na rede, e essa é a força dele. **Cada mudança é feita uma vez por AP**, e o plano de canais só é tão coerente quanto quem o montou à mão. As chaves não são compartilhadas, então o roaming rápido entre dois APs autônomos se limita ao que o
 fabricante deles acrescentou.
 
 ## Com controladora

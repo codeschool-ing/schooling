@@ -23,8 +23,7 @@ one BSSID to another inside the same SSID is roaming, and lesson 9 is about how 
 ## Hiding the name hides nothing
 
 **A hidden SSID is not a security measure.** The AP leaves the name out of its beacons, but a client that
-wants to join still has to name the network, in its probe requests and in its association request, and
-those frames are not encrypted. Anybody listening while one device joins has the name.
+wants to join still has to name the network, in its probe requests and in its association request. Those frames are not encrypted. Anybody listening while one device joins has the name.
 
 It also costs something. A device configured for a hidden network cannot wait to hear the name, so it
 asks for it, by name, wherever it goes: in the airport, in the café, at home. **Hiding the office's SSID

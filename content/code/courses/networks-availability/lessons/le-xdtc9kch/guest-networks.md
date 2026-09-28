@@ -18,8 +18,7 @@ Separation happens at every layer, and each layer has its own tool:
 | 3 | a firewall: internet yes, internal ranges no | guests reaching anything inside |
 | use | a rate limit per client and per SSID | one guest's download taking the staff's airtime |
 
-**The firewall rule is the one that does the work.** The guest VLAN gets its own subnet, DHCP and DNS,
-and a policy that lets it out to the internet and refuses every private range the company uses,
+**The firewall rule is the one that does the work.** The guest VLAN gets its own subnet, DHCP and DNS. Its policy lets it out to the internet and refuses every private range the company uses,
 including the addresses the APs and switches are managed on. Written as "refuse 10.0.0.0/8,
 172.16.0.0/12 and 192.168.0.0/16, then allow the rest", it stays right when somebody adds a new internal
 network next year.

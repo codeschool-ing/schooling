@@ -45,11 +45,8 @@ has not been confirmed recently.
 
 ## The cost of taking it back
 
-Preemption means **the office goes through a second switch-over when the failed router returns**, a
-short one, since `hq` announces itself at once instead of waiting for a silence; no ping was running
-during this return, so it was not measured. It makes sense when `hq` is the better router, with a faster
-link or a bigger box. When the two are equal it buys an interruption and nothing else, and keepalived's
-`nopreempt` turns it off, or `preempt_delay` makes a returning router wait, so that one that keeps
+Preemption means **the office goes through a second switch-over when the failed router returns.** It is a short one, since `hq` announces itself at once instead of waiting for a silence. No ping was running during this return, so it was not measured. It makes sense when `hq` is the better router, with a faster
+link or a bigger box. When the two are equal it buys an interruption and nothing else. keepalived's `nopreempt` turns it off, or `preempt_delay` makes a returning router wait, so that one that keeps
 flapping does not drag the gateway with it.
 
 ## Tracking: giving the address away on purpose

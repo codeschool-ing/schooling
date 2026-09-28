@@ -44,6 +44,5 @@ hospital por exemplo, numa rede que use só UNII-1 e UNII-3.
 ## E o 6 GHz
 
 A faixa de 6 GHz não tem nenhum dos dois problemas. Os canais dela são numerados a partir da sua própria
-base, 5950 MHz, então o canal 1 fica em 5955 e o canal 233 em 7115, como o programa da seção anterior
-imprimiu, e nenhum deles é dividido com radar do jeito que o 5 GHz é. Pontos de acesso internos de baixa
+base, 5950 MHz, então o canal 1 fica em 5955 e o canal 233 em 7115, como o programa da seção anterior imprimiu. Nenhum deles é dividido com radar do jeito que o 5 GHz é. Pontos de acesso internos de baixa
 potência não precisam de DFS lá.

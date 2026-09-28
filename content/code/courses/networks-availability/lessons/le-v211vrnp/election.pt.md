@@ -25,9 +25,7 @@ contam como chegaram lá.
 
 `hq2` começou às 18:10:54 como backup e não ouviu nada. `hq` começou às 18:10:55 e fez o mesmo, e por
 alguns segundos dois backups ficaram ouvindo o silêncio um do outro. A espera de `hq2` acabou primeiro,
-porque ele começou primeiro: às 18:10:58 concluiu que não existia master e virou master ele mesmo. Um
-segundo depois a espera de `hq` também acabou, e ele nunca tinha ouvido ninguém com prioridade acima dos
-seus 150, então às 18:10:59 virou master, e `hq2`, ouvindo agora 150 contra os seus 100, voltou a ser
+porque ele começou primeiro: às 18:10:58 concluiu que não existia master e virou master ele mesmo. Um segundo depois a espera de `hq` também acabou. Ele nunca tinha ouvido ninguém com prioridade acima dos seus 150, então às 18:10:59 virou master, e `hq2`, ouvindo agora 150 contra os seus 100, voltou a ser
 backup no mesmo segundo. Por cerca de um segundo o gateway do escritório foi `hq2`, e ninguém na LAN teria
 percebido.
 
@@ -82,5 +80,4 @@ eth0@if1244      UP             52:54:00:a8:0a:14 <BROADCAST,MULTICAST,UP,LOWER_
 O MAC do próprio laptop termina em `:14`, e para o gateway ele aprendeu `52:54:00:a8:0a:02`, o endereço
 de hardware do próprio `hq`. O padrão pretende, em vez disso, um **MAC virtual**, `00-00-5E-00-01-` e o VRID
 em hexadecimal, aqui `00:00:5e:00:01:0a`, de quem estiver como master, para que um failover nunca mude uma
-entrada ARP. A opção `use_vmac` do keepalived faz isso, e este laboratório não a usa. **No modo padrão do keepalived o novo master precisa avisar todos
-os hosts de que o endereço mudou de lugar**, e as duas próximas seções o veem fazendo isso.
+entrada ARP. A opção `use_vmac` do keepalived faz isso, e este laboratório não a usa. **No modo padrão do keepalived o novo master precisa avisar todos os hosts de que o endereço mudou de lugar.**

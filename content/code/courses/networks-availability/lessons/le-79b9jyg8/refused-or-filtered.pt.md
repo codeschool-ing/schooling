@@ -53,9 +53,7 @@ dele também.
 | o `curl` diz | `Couldn't connect to server` | `Connection timed out` |
 | o que prova | o host está no ar, a porta está fechada | algo descartou o SYN, ou a resposta dele |
 
-**A segunda coluna não diz onde o pacote morreu.** O silêncio parece igual, visto do cliente, seja um
-firewall no servidor que descartou o SYN, um firewall no caminho, o servidor desligado ou o SYN-ACK
-perdido na volta. A captura estreita a pergunta para "nenhuma resposta chegou aqui"; capturar na outra
+**A segunda coluna não diz onde o pacote morreu.** Visto do cliente, o silêncio parece igual em quatro casos: um firewall no servidor descartou o SYN, um firewall no caminho o descartou, o servidor está desligado ou o SYN-ACK se perdeu na volta. A captura estreita a pergunta para "nenhuma resposta chegou aqui"; capturar na outra
 ponta, como a aula 12 fez em `web1`, é o que diz se o SYN chegou. E um firewall pode ser configurado
 para rejeitar em vez de descartar, respondendo com um reset próprio, e aí uma porta filtrada parece
 recusada. Nada neste laboratório foi montado assim.

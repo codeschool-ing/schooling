@@ -58,7 +58,7 @@ quase cheia.
 ```
 
 Por que a fila fica cheia, e não só de vez em quando? Porque é isso que o TCP faz. Ele envia cada vez mais
-rápido até um pacote se perder, desacelera e volta a subir, então **um único upload mantém cheia a fila na
+rápido até um pacote se perder, desacelera e volta a subir. Assim, **um único upload mantém cheia a fila na
 frente de um enlace lento enquanto durar.** Um segundo upload, rodado em primeiro plano depois que o
 primeiro terminou, mostra as perdas no resumo, 163 retransmissões em cinco segundos:
 

@@ -41,8 +41,7 @@ served by web1
 O stream 0 é a primeira conexão TCP do arquivo, quadros 1 a 10. O `tshark` pôs os bytes dos dois
 sentidos de volta em ordem: 73 vindos de `192.168.10.10:59928`, depois os 243 da resposta, marcados
 com um tab antes da contagem, terminando na própria página, `served by web1`. **Isso é tudo o que o
-HTTP simples sempre foi no fio**: cabeçalhos e corpo em texto claro, legíveis por quem conseguir
-copiar os pacotes, o que, depois da seção sobre portas espelho, quer dizer qualquer um que consiga
+HTTP simples sempre foi no fio**: cabeçalhos e corpo em texto claro, legíveis por quem conseguir copiar os pacotes. Depois da seção sobre portas espelho, isso quer dizer qualquer um que consiga
 mudar a configuração de um switch. O mesmo comando na conexão HTTPS não foi rodado aqui; ele mostraria
 registros de bytes que não significam nada sem as chaves da sessão.
 
@@ -80,7 +79,7 @@ eth                                      frames:45 bytes:7008
 ```
 
 A tabela de conversas tem uma linha por par de endereços. `web1` vem primeiro, com 27 quadros e 5065
-bytes, porque serviu tanto a página quanto a requisição HTTPS, e as setas se leem a partir do primeiro
+bytes, porque serviu tanto a página quanto a requisição HTTPS. As setas se leem a partir do primeiro
 endereço: `files` mandou 15 quadros, 1800 bytes, e recebeu 12 quadros, 3265 bytes. **Um cliente que
 recebe mais do que manda é o formato normal de quem navega**, e uma máquina que de repente manda muito
 mais do que recebe é uma das primeiras coisas que um analista olha.
