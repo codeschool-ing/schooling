@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The terminal sessions quoted in lesson 12 of networks-availability, as a
+# The terminal sessions quoted in lesson 20 of networks-availability, as a
 # script that produces them.
 #
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in
@@ -15,10 +15,15 @@
 # office (hq), a branch, a home behind its own NAT, an ISP and a small data
 # centre, as network namespaces on one Linux computer.
 #
+# THERE IS NO SLOW LINK IN THE LAB, SO ONE IS MADE, and the lesson shows each
+# command that makes it: a shaper (tc's token bucket, tbf) on hq's uplink,
+# and a policer (an nftables limit that drops what exceeds it) on the ISP's
+# side of the same link, which is where a provider polices a contract.
+#
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; and the traffic each capture catches,
-# generated on laptop by the commands beside each bg line below (a few
-# requests to web1, and one download of its 20 MB file).
+# itself, built by lab.sh reset; the shaper removed as root before the
+# policer is set; and the policer's counter zeroed, by deleting the rule and
+# adding it again as root, before the last block.
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -47,47 +52,30 @@ bg() {
 }
 fg() { wait "$(cat "$BG/pid")" 2>/dev/null || true; cat "$BG/out"; }
 block() { printf '##### %s\n' "$1"; }
-requests() { lab exec laptop ana 'for i in 1 2 3; do curl -s http://192.0.2.21/ >/dev/null; done; curl -s http://192.0.2.21/missing >/dev/null' >/dev/null 2>&1; }
 
 lab reset
 
-block permission
-on web1 'tcpdump -i eth0'
+block baseline
+on laptop 'iperf3 -c 192.0.2.21 -t 3 | tail -n 4'
 
-block line
-bg web1 'sudo tcpdump -i eth0 -c 4 tcp port 80'
-lab exec laptop ana 'curl -s http://192.0.2.21/' >/dev/null 2>&1
+block shape
+on hq 'sudo tc qdisc add dev eth1 root tbf rate 5mbit burst 16kb latency 50ms'
+BG_WAIT=0.2 bg laptop 'sleep 2; ping -c 5 -q 192.0.2.21 | tail -n 2'
+on laptop 'iperf3 -c 192.0.2.21 -t 8'
 fg
-bg web1 'sudo tcpdump -n -i eth0 -c 4 tcp port 80'
-lab exec laptop ana 'curl -s http://192.0.2.21/' >/dev/null 2>&1
+on hq 'tc -s qdisc show dev eth1'
+
+block police
+quiet hq 'tc qdisc del dev eth1 root'
+on isp 'sudo nft add table ip contract && sudo nft add chain ip contract police "{ type filter hook forward priority 0; }"'
+on isp 'sudo nft add rule ip contract police iifname eth0 ip saddr 203.0.113.2 limit rate over 625 kbytes/second burst 16 kbytes counter drop'
+BG_WAIT=0.2 bg laptop 'sleep 2; ping -c 5 -q 192.0.2.21 | tail -n 2'
+on laptop 'iperf3 -c 192.0.2.21 -t 8'
 fg
+on isp 'sudo nft list chain ip contract police'
 
-block write
-bg web1 'sudo tcpdump -n -i eth0 -c 40 -Z ana -w web1.pcap tcp port 80'
-requests
-fg
-on web1 'ls -l web1.pcap'
-on web1 'capinfos web1.pcap'
-
-block read
-on web1 'tcpdump -n -r web1.pcap | head -n 6'
-on web1 'tcpdump -n -r web1.pcap "tcp[tcpflags] & tcp-syn != 0"'
-on web1 'tcpdump -n -A -r web1.pcap "tcp[tcpflags] & tcp-push != 0" | grep -E "GET|HTTP/1.1 [0-9]"'
-
-block snaplen
-bg web1 'sudo tcpdump -n -i eth0 -s 96 -c 40 -Z ana -w short.pcap tcp port 80'
-requests
-fg
-on web1 'tcpdump -n -r short.pcap -v "tcp[tcpflags] & tcp-push != 0" | head -n 4'
-on web1 'ls -l web1.pcap short.pcap'
-
-block rotate
-bg web1 'sudo tcpdump -n -i eth0 -C 1 -W 3 -Z ana -w ring.pcap tcp port 80'
-lab exec laptop ana 'curl -s -o /dev/null http://192.0.2.21/big.bin' >/dev/null 2>&1
-sleep 1
-lab kill web1 'tcpdump -n -i eth0 -C 1' INT
-fg
-on web1 'ls -l ring.pcap*'
-
-block tshark
-on web1 'tshark -r web1.pcap -q -z http,tree'
+block both
+on hq 'sudo tc qdisc add dev eth1 root tbf rate 4500kbit burst 16kb latency 50ms'
+quiet isp 'nft flush chain ip contract police; nft add rule ip contract police iifname eth0 ip saddr 203.0.113.2 limit rate over 625 kbytes/second burst 16 kbytes counter drop'
+on laptop 'iperf3 -c 192.0.2.21 -t 8 | tail -n 4'
+on isp 'sudo nft list chain ip contract police | grep counter'

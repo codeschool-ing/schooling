@@ -47,7 +47,7 @@ BG=$(mktemp -d)
 bg() {
   local h=$1; shift
   printf 'ana@%s:~$ %s\n' "$h" "$*" > "$BG/out"
-  ( lab exec "$h" ana "$*" >> "$BG/out" 2>&1 || true ) &
+  ( timeout -s INT 40 sudo bash "$LAB_SH" exec "$h" ana "$*" >> "$BG/out" 2>&1 || true ) &
   echo $! > "$BG/pid"
   sleep "${BG_WAIT:-1.5}"
 }

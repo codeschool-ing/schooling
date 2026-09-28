@@ -136,6 +136,10 @@ build_net() {
     ip -n "$h" link set "$ifc" address "$(mac "$addr")"
     ip -n "$h" addr add "$addr" dev "$ifc"
     ip -n "$h" link set "$ifc" up
+    # A real cable carries frames of at most 1514 bytes. A virtual one lets the
+    # kernel pass 64 KB lumps and split them later, which would make every
+    # capture, shaper and policer in the course count the wrong thing.
+    ip netns exec "$h" ethtool -K "$ifc" tso off gso off gro off >/dev/null 2>&1
     ip link set "$peer" netns wire
     ip -n wire link set "$peer" master "br-$seg"
     ip -n wire link set "$peer" up

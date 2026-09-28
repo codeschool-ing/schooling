@@ -46,7 +46,7 @@ BG=$(mktemp -d)
 bg() {
   local h=$1; shift
   printf 'ana@%s:~$ %s\n' "$h" "$*" > "$BG/out"
-  ( lab exec "$h" ana "$*" >> "$BG/out" 2>&1 || true ) &
+  ( timeout -s INT 40 sudo bash "$LAB_SH" exec "$h" ana "$*" >> "$BG/out" 2>&1 || true ) &
   echo $! > "$BG/pid"
   sleep "${BG_WAIT:-1.5}"
 }
@@ -78,7 +78,7 @@ block dns
 bg laptop 'tshark -n -i eth0 -c 4 -f "udp port 53" -T fields -e dns.id -e dns.flags.response -e dns.flags.rcode -e dns.qry.name -e dns.a'
 on laptop 'dig +short www.example.com; dig +short nosuch.example.com'
 fg
-bg laptop 'tshark -n -i eth0 -c 2 -f "udp port 53" -O dns'
+bg laptop 'tshark -n -i eth0 -c 2 -f "udp port 53" -O dns 2>/dev/null | sed -n "/^Frame 2/,/Authority RRs/p"'
 lab exec laptop ana 'dig +short nosuch.example.com' >/dev/null 2>&1
 fg
 
