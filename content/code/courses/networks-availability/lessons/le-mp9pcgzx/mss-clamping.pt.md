@@ -47,13 +47,11 @@ a reescreve no caminho para dentro do túnel, onde a captura não olhou.
 A correção foi conferida com **o mesmo teste que encontrou a falha**, o download de `big.bin`, e não com
 um ping ou uma página pequena, que funcionaram o tempo todo e não provariam nada.
 
-Dois limites mantêm o resultado honesto:
-
-- **O clamping só ajuda o TCP.** O MSS é uma opção do TCP, então qualquer outra coisa que mande pacotes
-  cheios com Don't Fragment ligado continua esbarrando na mensagem descartada no túnel.
-- **A regra que causou tudo continua em `hq`**, descartando todo destination unreachable que o roteador
-  enviaria, inclusive os que avisam um cliente de que um host ou uma porta não pode ser alcançado. Essas
-  falhas agora chegam como timeouts em vez de erros.
+Dois limites mantêm o resultado honesto. **O clamping só ajuda o TCP**: o MSS é uma opção do TCP, então
+qualquer outra coisa que mande pacotes cheios com Don't Fragment ligado continua esbarrando na mensagem
+descartada no túnel. E **a regra que causou tudo continua em `hq`**, descartando todo destination
+unreachable que o roteador enviaria, inclusive os que avisam um cliente de que um host ou uma porta não
+pode ser alcançado; essas falhas agora chegam como timeouts em vez de erros.
 
 Então a correção completa são as duas coisas: limitar o MSS e deixar o "fragmentation needed" sair. A
 segunda metade não foi rodada neste laboratório. A aula 23 registra o caso inteiro como um registro de

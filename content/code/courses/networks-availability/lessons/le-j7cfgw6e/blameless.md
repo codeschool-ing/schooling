@@ -11,8 +11,8 @@ person who made it, while it is still small.
 A blameless post-mortem asks a different question: **what made the mistake easy to make and hard to
 see?** Dropping outbound "destination unreachable" is a hardening step people recommend in good faith,
 because it stops a router from telling a scanner which addresses and ports are closed. The lab does not
-say why the `hardening` table was added to `hq`, or when, and a real post-mortem would find out by asking
-questions like these rather than by guessing:
+say why the `hardening` table was added to `hq`, or when. A real post-mortem would find out by asking
+questions like these, rather than by guessing:
 
 - Was there a tunnel on `hq` when the rule went in, or did the tunnel arrive later and meet it?
 - What did whoever wrote the rule know about what "destination unreachable" carries?

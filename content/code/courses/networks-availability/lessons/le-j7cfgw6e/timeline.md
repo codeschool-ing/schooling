@@ -7,7 +7,7 @@ The timeline is the spine of a record: what happened, in order, with the time ea
 how cause is told from coincidence, as in "the downloads stopped a few minutes after the firewall change
 was pushed", and how your notes are lined up with logs from machines you do not run. The moments worth a
 line are the first symptom, the first report, the start of the diagnosis, the cause found, the fix
-applied and the fix verified, because **the gaps between them are what lesson 17's promises are measured
+applied and the fix verified. **The gaps between them are what lesson 17's promises are measured
 against**: time to notice, time to restore.
 
 Lesson 21's transcripts carry no clock time at all. Each command and its output is there, and their order

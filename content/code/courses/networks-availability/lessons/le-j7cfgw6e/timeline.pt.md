@@ -7,7 +7,7 @@ A linha do tempo é a espinha de um registro: o que aconteceu, em ordem, com a h
 vista. É como se separa causa de coincidência, como em "os downloads pararam poucos minutos depois de a
 mudança no firewall ser aplicada", e como suas notas se alinham com logs de máquinas que você não
 administra. Os momentos que merecem uma linha são o primeiro sintoma, o primeiro chamado, o início do
-diagnóstico, a causa encontrada, a correção aplicada e a correção conferida, porque **os intervalos entre
+diagnóstico, a causa encontrada, a correção aplicada e a correção conferida. **Os intervalos entre
 eles são aquilo contra o que as promessas da aula 17 são medidas**: tempo para perceber, tempo para
 restabelecer.
 

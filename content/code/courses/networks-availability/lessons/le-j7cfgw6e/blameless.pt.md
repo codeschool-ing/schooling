@@ -11,7 +11,7 @@ cedo, de quem o cometeu, enquanto ainda é pequeno.
 Um post-mortem sem culpados faz outra pergunta: **o que tornou o erro fácil de cometer e difícil de
 ver?** Descartar "destination unreachable" na saída é um passo de endurecimento que as pessoas recomendam
 de boa-fé, porque impede um roteador de contar a um scanner quais endereços e portas estão fechados. O
-laboratório não diz por que a tabela `hardening` foi posta em `hq`, nem quando, e um post-mortem de
+laboratório não diz por que a tabela `hardening` foi posta em `hq`, nem quando. Um post-mortem de
 verdade descobriria fazendo perguntas como estas, e não adivinhando:
 
 - Havia um túnel em `hq` quando a regra entrou, ou o túnel chegou depois e esbarrou nela?

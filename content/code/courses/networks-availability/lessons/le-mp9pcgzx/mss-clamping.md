@@ -46,13 +46,11 @@ rule rewrites it on its way into the tunnel, where the capture did not look.
 The fix was checked with **the same test that found the fault**, the download of `big.bin`, and not with
 a ping or a small page, which worked all along and would have proved nothing.
 
-Two limits keep the result honest:
-
-- **Clamping only helps TCP.** The MSS is a TCP option, so anything else that sends full-size packets
-  with Don't Fragment set still meets the dropped message at the tunnel.
-- **The rule that caused it is still on `hq`**, dropping every destination unreachable the router would
-  send, including the ones that tell a client a host or a port cannot be reached. Those failures now
-  arrive as timeouts instead of errors.
+Two limits keep the result honest. **Clamping only helps TCP**: the MSS is a TCP option, so anything
+else that sends full-size packets with Don't Fragment set still meets the dropped message at the tunnel.
+And **the rule that caused it is still on `hq`**, dropping every destination unreachable the router would
+send, including the ones that tell a client a host or a port cannot be reached; those failures now arrive
+as timeouts instead of errors.
 
 So the complete fix is both: clamp, and let "fragmentation needed" out. The second half was not run in
 this lab. Lesson 23 writes the whole case up as an incident record, with the symptom, each hypothesis,
