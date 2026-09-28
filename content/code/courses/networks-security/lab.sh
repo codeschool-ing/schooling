@@ -80,7 +80,7 @@ ROUTERS="fw branch"
 need() {
   local missing=()
   for p in iproute2 nftables conntrack tcpdump openssl nginx libnginx-mod-http-modsecurity modsecurity-crs suricata jq wireguard-tools wireguard-go \
-           dnsmasq bind9-dnsutils netcat-openbsd curl iputils-ping arping socat openssh-server \
+           dnsmasq bind9-dnsutils netcat-openbsd curl iputils-ping iputils-arping socat openssh-server \
            softflowd nfdump aide hostapd wpasupplicant python3; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
   done
@@ -455,7 +455,7 @@ down() {
     ip netns pids "$h" 2>/dev/null | xargs -r kill -9 2>/dev/null || true
     ip netns del "$h"
   done
-  for h in $HOSTS; do rm -rf "/etc/netns/$h"; done
+  for h in $HOSTS printer; do rm -rf "/etc/netns/$h"; done
   rm -f /usr/local/share/ca-certificates/example-corp-root-ca.crt
   update-ca-certificates --fresh >/dev/null 2>&1 || true
   rm -rf "$LAB"
@@ -478,10 +478,31 @@ up() {
   start
 }
 
+# A device plugged into a segment of a running lab, with a MAC given by hand
+# rather than derived from its address: lesson 7's printer, configured by
+# mistake with an address somebody else already has.
+plug() {  # plug HOST SEGMENT ADDRESS/PREFIX MAC
+  local h=$1 seg=$2 addr=$3 m=$4 peer="p-$1"
+  ip netns add "$h"
+  ip -n "$h" link set lo up
+  ip link add "$peer" type veth peer name lab-plug
+  ip link set lab-plug netns "$h"
+  ip -n "$h" link set lab-plug name eth0
+  ip -n "$h" link set eth0 address "$m"
+  ip -n "$h" addr add "$addr" dev eth0
+  ip -n "$h" link set eth0 up
+  ip link set "$peer" netns wire
+  ip -n wire link set "$peer" master "br-$seg"
+  ip -n wire link set "$peer" up
+  mkdir -p "/etc/netns/$h" "$LAB/$h/root" "$LAB/$h/home/ana"
+  printf '%s\n' "$h" > "/etc/netns/$h/hostname"
+}
+
 case "${1:-}" in
   up) up ;;
   down) down ;;
   reset) down; up ;;
   exec) shift; exec_on "$@" ;;
-  *) echo "usage: lab.sh up|down|reset|exec HOST USER COMMAND" >&2; exit 2 ;;
+  plug) shift; plug "$@" ;;
+  *) echo "usage: lab.sh up|down|reset|exec HOST USER COMMAND|plug HOST SEGMENT ADDRESS MAC" >&2; exit 2 ;;
 esac
