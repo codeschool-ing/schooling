@@ -81,7 +81,7 @@ need() {
   local missing=()
   for p in iproute2 nftables conntrack tcpdump openssl nginx libnginx-mod-http-modsecurity modsecurity-crs suricata jq wireguard-tools wireguard-go \
            dnsmasq bind9 bind9-dnsutils unbound netcat-openbsd curl iputils-ping iputils-arping socat openssh-server \
-           softflowd nfdump aide hostapd wpasupplicant python3 python3-cryptography python3-cffi-backend; do
+           softflowd nfdump aide hostapd wpasupplicant python3 python3-cryptography python3-cffi-backend ethtool; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
   done
   [ ${#missing[@]} -eq 0 ] || { echo "install first: ${missing[*]}" >&2; exit 1; }
@@ -600,9 +600,37 @@ inline() {
     ip -n ips link set "$i" up
     ip netns exec ips ethtool -K "$i" gro off gso off tso off >/dev/null 2>&1 || true
   done
+  # Virtual cables leave TCP checksums for hardware that is not there to fill
+  # in; a packet Suricata copies from one side to the other would arrive with
+  # an unfinished one and be dropped. The machines on both sides compute them.
+  ip netns exec fw ethtool -K eth1 tx off >/dev/null 2>&1 || true
+  for h in www dns; do ip netns exec "$h" ethtool -K eth0 tx off >/dev/null 2>&1 || true; done
   mkdir -p "/etc/netns/ips" "$LAB/ips/root" "$LAB/ips/home/ana" "$LAB/ips/var/log/suricata" "$LAB/ips/var/lib/suricata"
   printf 'ips\n' > /etc/netns/ips/hostname
-  cp -a "$LAB/sensor/etc/suricata" "$LAB/ips/etc/" 2>/dev/null || { mkdir -p "$LAB/ips/etc"; cp -a "$LAB/sensor/etc/suricata" "$LAB/ips/etc/"; }
+  mkdir -p "$LAB/ips/etc"
+  cp -a "$LAB/sensor/etc/suricata" "$LAB/ips/etc/"
+  # the two interfaces Suricata joins, and one flow table across both: with
+  # use-for-tracking on, Suricata 7 keeps a flow per interface, sees the
+  # answer to a connection as a stranger, and drops it
+  cat > "$LAB/ips/etc/suricata/inline.yaml" <<'Y'
+%YAML 1.1
+---
+af-packet:
+  - interface: eth0
+    copy-mode: ips
+    copy-iface: eth1
+    cluster-id: 98
+    cluster-type: cluster_flow
+    defrag: no
+  - interface: eth1
+    copy-mode: ips
+    copy-iface: eth0
+    cluster-id: 97
+    cluster-type: cluster_flow
+    defrag: no
+livedev:
+  use-for-tracking: false
+Y
 }
 
 case "${1:-}" in
