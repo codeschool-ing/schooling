@@ -1,0 +1,478 @@
+{
+  "ex-h083y39w": {
+    "prompt": "Quando o laboratório sobe, remote alcança o banco de dados em db. Por quê?",
+    "hint": "Veja o que o fw fazia antes de qualquer regra ser digitada.",
+    "choices": [
+      {
+        "text": "O banco de dados tinha uma senha fraca",
+        "why": "Nenhuma senha entrou na história: a conexão abriu antes de qualquer login."
+      },
+      {
+        "text": "O fw roteou os pacotes e não perguntou nada sobre eles",
+        "why": "Isso. Rotear entrega; filtrar é a pergunta separada que ninguém tinha feito ainda."
+      },
+      {
+        "text": "remote explorou uma falha no firmware do roteador para passar por ele",
+        "why": "Nada foi quebrado. O roteador fez exatamente o que um roteador faz."
+      },
+      {
+        "text": "db estava na DMZ",
+        "why": "db está no segmento de servidores, 192.168.20.0/24."
+      }
+    ]
+  },
+  "ex-nd9vyn90": {
+    "prompt": "Ligue cada pacote ao hook do nftables no fw que o vê.",
+    "hint": "O fw é o destino, a origem ou nenhum dos dois?",
+    "pairs": [
+      {
+        "left": "laptop alcançando app através do fw",
+        "right": "forward"
+      },
+      {
+        "left": "admin abrindo SSH no próprio fw",
+        "right": "input"
+      },
+      {
+        "left": "o fw perguntando um nome ao servidor DNS",
+        "right": "output"
+      }
+    ],
+    "right_distractors": [
+      "prerouting"
+    ]
+  },
+  "ex-rnay19zr": {
+    "prompt": "Por que uma regra no fw testa a interface por onde o pacote chegou, e não só o endereço de origem?",
+    "hint": "Quem escreve cada um dos dois?",
+    "choices": [
+      {
+        "text": "Interfaces são mais rápidas de comparar que endereços, o que pesa sob carga",
+        "why": "Velocidade não é o motivo; os dois são baratos."
+      },
+      {
+        "text": "Um endereço não pode ser escrito numa regra do nftables",
+        "why": "ip saddr e ip daddr estão nas regras desta própria aula."
+      },
+      {
+        "text": "Quem envia preenche o campo de origem; a fiação decide o outro",
+        "why": "Isso. Um endereço de origem é uma alegação; a interface é um fato sobre o caminho."
+      },
+      {
+        "text": "Endereços mudam toda vez que o laboratório é reiniciado",
+        "why": "Os endereços do laboratório são fixos."
+      }
+    ]
+  },
+  "ex-ev6b0y2q": {
+    "prompt": "Endereço de origem e de destino, protocolo, e porta de origem e de destino juntos se chamam ___-tupla.",
+    "hint": "Conte-os.",
+    "blanks": [
+      {
+        "accept": [
+          "cinco",
+          "5"
+        ]
+      }
+    ]
+  },
+  "ex-02stka6y": {
+    "prompt": "Com só a regra para dport 8080 carregada, o curl do laptop terminou com exit 28. O que aconteceu?",
+    "hint": "Dois pacotes viajam a cada pedido: qual deles tinha regra?",
+    "choices": [
+      {
+        "text": "O pedido foi descartado pelo fw no caminho até app",
+        "why": "O pedido casou com a regra e chegou a app."
+      },
+      {
+        "text": "A resposta não tinha regra",
+        "why": "Isso. Um filtro sem estado trata a resposta como só mais um pacote."
+      },
+      {
+        "text": "app recusou a conexão porque nada escutava ali",
+        "why": "Uma recusa volta na hora; exit 28 é um tempo esgotado."
+      },
+      {
+        "text": "o curl não conseguiu resolver o nome do servidor para um endereço",
+        "why": "O pedido usou um endereço, não um nome."
+      }
+    ]
+  },
+  "ex-a07d798m": {
+    "prompt": "Um conjunto de regras sem estado precisa permitir que a LAN alcance três serviços diferentes no segmento de servidores, e nada mais. De quantas regras de aceitação ele precisa?",
+    "hint": "Uma por direção, por serviço."
+  },
+  "ex-3jvf6j6n": {
+    "prompt": "O que decide o policy drop na chain forward?",
+    "hint": "É a última palavra da chain.",
+    "choices": [
+      {
+        "text": "Que todo pacote é descartado, digam o que disserem as regras",
+        "why": "Uma regra que aceita encerra o assunto antes da política."
+      },
+      {
+        "text": "Que pacotes endereçados ao próprio fw são descartados",
+        "why": "Esses são input, não forward."
+      },
+      {
+        "text": "O veredito para o que nenhuma regra aceitou",
+        "why": "Isso. É o que acontece depois da última regra."
+      },
+      {
+        "text": "Que os pacotes descartados são registrados",
+        "why": "Registrar exige uma regra própria."
+      }
+    ]
+  },
+  "ex-bcahz2qe": {
+    "prompt": "A partir de db, nc -p 8080 alcançou a porta 9999 do laptop pelas regras sem estado. O que tornou isso possível?",
+    "hint": "Quem escolhe uma porta de origem?",
+    "choices": [
+      {
+        "text": "Uma falha no nc que forja os cabeçalhos do pacote",
+        "why": "O nc só pediu ao sistema uma porta de origem, o que qualquer programa pode fazer."
+      },
+      {
+        "text": "A regra de retorno casa com qualquer sport 8080",
+        "why": "Isso. Foi escrita para respostas e não distingue uma resposta de outra coisa."
+      },
+      {
+        "text": "db está do lado da LAN, então nenhuma regra valeu para ele",
+        "why": "db está no segmento de servidores e atravessou o fw."
+      },
+      {
+        "text": "A política da chain era accept em vez de drop",
+        "why": "A primeira tentativa, sem -p 8080, foi descartada."
+      }
+    ]
+  },
+  "ex-bd6qt42f": {
+    "prompt": "Quais regras de retorno sem estado deixam entrar mais do que respostas? Escolha todas as que se aplicam.",
+    "hint": "Um número de porta é escrito por quem envia.",
+    "choices": [
+      {
+        "text": "tcp sport 80 accept",
+        "why": "Qualquer conexão a partir da porta 80 para qualquer porta de dentro."
+      },
+      {
+        "text": "udp sport 53 accept",
+        "why": "Qualquer datagrama que alegue a porta de um servidor DNS."
+      },
+      {
+        "text": "tcp sport 8080 accept",
+        "why": "A regra pela qual esta aula viu db passar."
+      },
+      {
+        "text": "ct state established accept",
+        "why": "Essa tem estado: só casa com conversas já permitidas."
+      }
+    ]
+  },
+  "ex-cy6q774w": {
+    "prompt": "Uma ACL sem estado acrescenta um teste de que as flags TCP parecem de resposta. O que isso ainda não consegue estabelecer?",
+    "hint": "Do que ela teria de se lembrar?",
+    "choices": [
+      {
+        "text": "Se o pacote é mesmo TCP, e não UDP ou ICMP",
+        "why": "Testar flags já pressupõe TCP."
+      },
+      {
+        "text": "Por qual interface o pacote chegou e por qual vai sair",
+        "why": "Interfaces podem ser testadas sem estado."
+      },
+      {
+        "text": "Se a porta de destino está aberta",
+        "why": "Nenhuma regra de firewall sabe disso."
+      },
+      {
+        "text": "Que o pacote pertence a uma conversa que ela permitiu",
+        "why": "Isso. Flags descrevem um pacote; pertencer exige memória das conversas."
+      }
+    ]
+  },
+  "ex-qwckf98v": {
+    "prompt": "Ligue cada estado do conntrack ao pacote que ele descreve.",
+    "hint": "Quatro estados, e uma descrição não pertence a nenhum.",
+    "pairs": [
+      {
+        "left": "new",
+        "right": "o primeiro pacote de uma conversa ainda fora da tabela"
+      },
+      {
+        "left": "established",
+        "right": "um pacote de uma conversa já na tabela"
+      },
+      {
+        "left": "related",
+        "right": "um erro ICMP sobre uma conversa conhecida"
+      },
+      {
+        "left": "invalid",
+        "right": "uma confirmação para uma conexão nunca vista"
+      }
+    ],
+    "right_distractors": [
+      "um pacote que o firewall decidiu registrar"
+    ]
+  },
+  "ex-87vexdb7": {
+    "prompt": "No conjunto de regras com estado, qual regra substitui todas as regras de retorno?",
+    "hint": "É a primeira.",
+    "choices": [
+      {
+        "text": "ct state established,related accept",
+        "why": "Isso. Respostas de toda conversa permitida, nos dois sentidos."
+      },
+      {
+        "text": "ct state invalid drop",
+        "why": "Essa joga fora o que não pertence a nada."
+      },
+      {
+        "text": "policy drop",
+        "why": "Isso é o que acontece com tudo o que sobra."
+      },
+      {
+        "text": "ct state new accept",
+        "why": "Essa decide quais conversas podem começar."
+      }
+    ]
+  },
+  "ex-d9c291pj": {
+    "prompt": "A entrada do conntrack da conexão aberta mostrava 431999 segundos restantes. Quantos dias, aproximadamente, tem o tempo limite completo de 432000 segundos?",
+    "hint": "Divida por 86.400."
+  },
+  "ex-16v4f6h2": {
+    "prompt": "Por que uma entrada do conntrack guarda a direção da resposta além da original?",
+    "hint": "Com o que um pacote vindo de app é comparado?",
+    "choices": [
+      {
+        "text": "Para manter uma linha de log separada para cada sentido do tráfego",
+        "why": "Registrar não é para que serve a tabela."
+      },
+      {
+        "text": "Para que um pacote de volta seja associado à conversa",
+        "why": "Isso. A segunda tupla é exatamente como uma resposta tem de ser."
+      },
+      {
+        "text": "Porque o TCP precisa de duas conexões, uma por direção",
+        "why": "Uma conexão TCP carrega os dois sentidos."
+      },
+      {
+        "text": "Para contar bytes em cada direção para cobrança",
+        "why": "Contar é possível, mas não é por isso que a tupla está ali."
+      }
+    ]
+  },
+  "ex-903wehr4": {
+    "prompt": "O primeiro pacote de uma conversa é descartado pela política. O que o conntrack lembra dela depois?",
+    "hint": "Uma entrada é criada quando uma regra aceita.",
+    "choices": [
+      {
+        "text": "Uma entrada marcada como invalid",
+        "why": "invalid é um veredito sobre um pacote, não uma entrada."
+      },
+      {
+        "text": "Uma entrada que expira em 30 segundos",
+        "why": "Nenhuma entrada foi criada para expirar."
+      },
+      {
+        "text": "Nada: nenhuma entrada foi criada",
+        "why": "Isso. Então as respostas não têm com o que casar."
+      },
+      {
+        "text": "Uma entrada mantida até a conexão esgotar o tempo",
+        "why": "Um pacote descartado não deixa nada na tabela."
+      }
+    ]
+  },
+  "ex-0rx0cpcv": {
+    "prompt": "O dig perguntou a app, que não roda DNS, e imprimiu connection refused na hora. Qual regra deixou a resposta passar?",
+    "hint": "A resposta foi uma mensagem ICMP sobre a consulta.",
+    "choices": [
+      {
+        "text": "ct state established accept",
+        "why": "O contador dela mexeu pela resposta do servidor DNS real, não por esta."
+      },
+      {
+        "text": "ct state related accept",
+        "why": "Isso. Um ICMP port unreachable sobre um fluxo conhecido é related."
+      },
+      {
+        "text": "A regra que permite udp dport 53 para app",
+        "why": "Essa regra casa só com pacotes new em direção a app."
+      },
+      {
+        "text": "A política",
+        "why": "A política é drop."
+      }
+    ]
+  },
+  "ex-q4438twf": {
+    "prompt": "O que dá errado se related não for aceito? Escolha todas as que se aplicam.",
+    "hint": "Pense nas mensagens ICMP que relatam um problema.",
+    "choices": [
+      {
+        "text": "Programas esperam um tempo esgotar em vez de falhar na hora",
+        "why": "A recusa nunca chega."
+      },
+      {
+        "text": "Quem envia nunca descobre que seus pacotes são grandes demais",
+        "why": "Essa mensagem também é related, e as conexões travam."
+      },
+      {
+        "text": "Conexões estabelecidas são descartadas",
+        "why": "established é um estado separado, com regra própria."
+      },
+      {
+        "text": "Conexões novas da LAN são recusadas",
+        "why": "new é decidido pela regra própria dele."
+      }
+    ]
+  },
+  "ex-y530rgjz": {
+    "prompt": "Depois de carregar o conjunto de regras com contadores, remote tentou o banco uma vez. Quantos pacotes o último contador registrou?",
+    "hint": "A primeira tentativa e uma retransmissão."
+  },
+  "ex-z0etpctw": {
+    "prompt": "Por que ct state established,related é a primeira regra da chain?",
+    "hint": "Veja os contadores depois de três pedidos.",
+    "choices": [
+      {
+        "text": "Quase todo pacote casa com ela, então as outras raramente são testadas",
+        "why": "Isso. 34 pacotes ali contra 3 na regra de new."
+      },
+      {
+        "text": "O nftables recusa uma chain cuja primeira regra seja outra",
+        "why": "Qualquer ordem carrega; a ordem muda o custo e o sentido."
+      },
+      {
+        "text": "Ela precisa vir antes de a política ser lida",
+        "why": "A política se aplica depois da última regra, onde quer que esta esteja."
+      },
+      {
+        "text": "Regras abaixo dela são puladas para pacotes new",
+        "why": "Um pacote new passa por ela até as regras de baixo."
+      }
+    ]
+  },
+  "ex-9jmb5naq": {
+    "prompt": "Uma única pergunta DNS e sua resposta passam pelo fw. Por quanto tempo o conntrack mantém o fluxo se nada mais chegar?",
+    "hint": "É o valor UDP mais curto.",
+    "choices": [
+      {
+        "text": "Cinco dias",
+        "why": "Isso é para uma conexão TCP estabelecida."
+      },
+      {
+        "text": "120 segundos",
+        "why": "Isso é para um stream UDP, com tráfego de ida e volta."
+      },
+      {
+        "text": "30 segundos",
+        "why": "Isso. nf_conntrack_udp_timeout = 30."
+      },
+      {
+        "text": "Até a tabela encher",
+        "why": "Toda entrada tem um tempo limite."
+      }
+    ]
+  },
+  "ex-884zcm6s": {
+    "prompt": "Ligue cada lugar ao tipo de filtro que combina com ele.",
+    "hint": "Memória custa; quais lugares não podem pagar por ela ou não precisam dela?",
+    "pairs": [
+      {
+        "left": "um roteador de borda com milhões de fluxos",
+        "right": "sem estado, descartando o que nunca pode ser legítimo"
+      },
+      {
+        "left": "o firewall que decide quais conversas podem começar",
+        "right": "com estado, com rastreamento de conexões"
+      },
+      {
+        "left": "um switch comparando cabeçalhos em hardware",
+        "right": "uma ACL que não guarda tabela"
+      }
+    ],
+    "right_distractors": [
+      "um WAF lendo o pedido HTTP"
+    ]
+  },
+  "ex-0f81kyev": {
+    "prompt": "Um firewall Linux reinicia no meio do dia. O que acontece com uma conexão TCP que estava aberta através dele, com as configurações padrão mostradas na aula?",
+    "hint": "nf_conntrack_tcp_loose = 1.",
+    "choices": [
+      {
+        "text": "Ela é descartada como invalid no próximo pacote",
+        "why": "É o que faz um firewall mais estrito, com loose desligado."
+      },
+      {
+        "text": "Ela é retomada como new, com uma entrada nova",
+        "why": "Isso, se uma regra o permitir como new: o Linux adota TCP no meio do fluxo por padrão."
+      },
+      {
+        "text": "A entrada sobrevive ao reinício, salva em disco antes",
+        "why": "A tabela vive na memória."
+      },
+      {
+        "text": "O cliente é avisado pelo fw para reconectar",
+        "why": "O fw não envia nada do tipo."
+      }
+    ]
+  },
+  "ex-f7zbakqk": {
+    "prompt": "Uma auditoria encontra numa ACL de roteador a regra permit tcp any eq 443 any, feita para respostas de servidores web. Que mudança fecha o que ela abre sem quebrar as respostas?",
+    "hint": "A correção da aula para o mesmo formato.",
+    "choices": [
+      {
+        "text": "Trocar 443 por uma porta acima de 1024",
+        "why": "Qualquer número que quem envia pode escolher tem o mesmo problema."
+      },
+      {
+        "text": "Registrar a regra e revisar o log toda semana",
+        "why": "Registrar observa o buraco; não o fecha."
+      },
+      {
+        "text": "Levar o filtro para um firewall com estado que aceita established e permite só as conexões de saída",
+        "why": "Isso. As respostas passam então por pertencerem a uma conversa, não por causa de um número."
+      },
+      {
+        "text": "Acrescentar uma segunda regra para a porta 80",
+        "why": "Isso dobra o buraco."
+      }
+    ]
+  },
+  "ex-11a7rmqf": {
+    "prompt": "Com o conjunto de regras com estado desta aula, admin tenta abrir SSH em app. O que acontece?",
+    "hint": "Qual regra deixa uma conversa começar?",
+    "choices": [
+      {
+        "text": "É descartado",
+        "why": "Isso. Só a LAN, para app na 8080, pode começar uma conversa; admin está na mgmt."
+      },
+      {
+        "text": "Passa, porque o SSH é cifrado e o fw não consegue lê-lo",
+        "why": "As regras leem cabeçalhos, e a cifra não esconde a porta."
+      },
+      {
+        "text": "Passa como established depois do primeiro pacote",
+        "why": "O primeiro pacote é new e nada o aceita, então não há entrada."
+      },
+      {
+        "text": "O fw responde com connection refused",
+        "why": "Um drop não devolve nada; o cliente espera o tempo esgotar."
+      }
+    ]
+  },
+  "ex-1aax4jn2": {
+    "prompt": "Ponha em ordem o que acontece com o primeiro pacote do laptop para app na 8080 sob o conjunto de regras com estado.",
+    "hint": "O conntrack olha antes das regras.",
+    "items": [
+      "o conntrack não acha entrada e marca o pacote como new",
+      "a regra established,related não casa",
+      "a regra de new da LAN para app na 8080 o aceita",
+      "uma entrada é criada para as respostas casarem"
+    ],
+    "trap": "A entrada só existe depois que uma regra aceitou o pacote new."
+  }
+}
