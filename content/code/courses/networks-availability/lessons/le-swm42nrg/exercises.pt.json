@@ -1,0 +1,444 @@
+{
+  "ex-kthta6r8": {
+    "prompt": "No OpenVPN, para que serve o TLS?",
+    "hint": "Dois canais, um deles TLS.",
+    "choices": [
+      {
+        "text": "Cifrar cada pacote do túnel como um registro TLS",
+        "why": "O tráfego vai nos pacotes de dados do próprio OpenVPN, não em registros TLS."
+      },
+      {
+        "text": "Conferir certificados e combinar chaves",
+        "why": "Isso. Esse é o canal de controle; o canal de dados usa as chaves que ele produziu."
+      },
+      {
+        "text": "Substituir o IKE na porta UDP 500",
+        "why": "O OpenVPN roda na própria porta, a 1194 aqui, e não tem nada a ver com o IKE."
+      },
+      {
+        "text": "Levar só as páginas web que o laptop abre",
+        "why": "Tudo o que é roteado para o tun0 passa pelo túnel, web ou não."
+      }
+    ]
+  },
+  "ex-xg19pzxq": {
+    "prompt": "Uma máquina impostora apresenta um certificado que a autoridade do laboratório assinou de verdade, para um servidor chamado files.example.com. Qual linha do client.conf faz o laptop recusá-lo?",
+    "hint": "É um certificado de servidor legítimo, com o nome errado.",
+    "choices": [
+      {
+        "text": "`remote-cert-tls server`",
+        "why": "Essa exige um certificado de servidor, e este é um, então passa."
+      },
+      {
+        "text": "`ca ca.crt`",
+        "why": "A mesma autoridade o assinou, então a cadeia confere."
+      },
+      {
+        "text": "`verify-x509-name vpn.example.com name`",
+        "why": "Isso. O nome é files.example.com, não vpn.example.com."
+      },
+      {
+        "text": "`dev tun`",
+        "why": "Essa escolhe o tipo de interface, e não confere nada."
+      }
+    ]
+  },
+  "ex-529yf8qg": {
+    "prompt": "O que `push \"route 192.168.10.0 255.255.255.0\"` no arquivo do servidor faz?",
+    "hint": "Push, de empurrar para alguém.",
+    "choices": [
+      {
+        "text": "Acrescenta no servidor uma rota para os clientes",
+        "why": "O servidor conhece 10.8.0.0/24 pela linha `server`."
+      },
+      {
+        "text": "Dá aos clientes uma rota para 192.168.10.0/24",
+        "why": "Isso. A rota do laptop via 10.8.0.1 chegou assim."
+      },
+      {
+        "text": "Anuncia a rede do escritório ao provedor",
+        "why": "O provedor nunca aprende uma rede privada; a rota fica nos clientes."
+      },
+      {
+        "text": "Deixa os clientes se alcançarem",
+        "why": "Isso é outra opção; esta rota leva a 192.168.10.0/24."
+      }
+    ]
+  },
+  "ex-fkvywxvg": {
+    "prompt": "Na primeira configuração do laboratório, o servidor OpenVPN escutava na porta UDP ___.",
+    "hint": "A linha depois de `proto udp`.",
+    "blanks": [
+      {
+        "accept": [
+          "1194"
+        ]
+      }
+    ]
+  },
+  "ex-9qqpjgk8": {
+    "prompt": "O tshark rotulou o Client Hello do laptop como `TLSv1`, e tudo depois do Server Hello como `TLSv1.3`. O que aconteceu?",
+    "hint": "Veja o que o log disse que foi combinado.",
+    "choices": [
+      {
+        "text": "O cliente ofereceu TLS 1.0 e o servidor subiu a versão",
+        "why": "Um servidor não sobe uma versão que o cliente não ofereceu; o cliente pediu 1.3 lá dentro."
+      },
+      {
+        "text": "O tshark não conseguiu decodificar o primeiro pacote",
+        "why": "Decodificou o bastante para chamá-lo de Client Hello."
+      },
+      {
+        "text": "O cabeçalho do registro leva uma versão antiga de propósito",
+        "why": "Isso. A versão real vai lá dentro, e o Server Hello decide."
+      },
+      {
+        "text": "O reset do OpenVPN forçou TLS 1.0 por um pacote",
+        "why": "Os resets abrem a sessão do OpenVPN e não escolhem versão de TLS."
+      }
+    ]
+  },
+  "ex-f7x85fq4": {
+    "prompt": "Por que o tshark não conseguiu mostrar o certificado do servidor na captura?",
+    "hint": "Como o tshark chamou o pacote depois do Server Hello?",
+    "choices": [
+      {
+        "text": "O OpenVPN o comprime antes de mandar",
+        "why": "Nada foi comprimido; foi cifrado."
+      },
+      {
+        "text": "Ele viaja no canal de dados",
+        "why": "O canal de dados leva os pacotes do tun0, depois do handshake."
+      },
+      {
+        "text": "O tshark guarda só os primeiros 1264 bytes de um pacote",
+        "why": "1264 é o tamanho do pacote, não um limite da captura."
+      },
+      {
+        "text": "O TLS 1.3 o cifra",
+        "why": "Isso. Depois do Server Hello ele fica dentro do que o tshark só conseguiu chamar de Application Data."
+      }
+    ]
+  },
+  "ex-v6g1nt7r": {
+    "prompt": "Ligue cada mensagem que o tshark decodificou ao que ela era.",
+    "hint": "Duas são do próprio OpenVPN, duas são TLS.",
+    "pairs": [
+      {
+        "left": "`P_CONTROL_HARD_RESET_CLIENT_V2`",
+        "right": "O OpenVPN abrindo uma sessão"
+      },
+      {
+        "left": "`P_ACK_V1`",
+        "right": "O OpenVPN confirmando um pacote de controle"
+      },
+      {
+        "left": "`Client Hello`",
+        "right": "O TLS começando dentro do canal de controle"
+      },
+      {
+        "left": "`Continuation Data`",
+        "right": "O resto de um registro TLS, em outro pacote"
+      }
+    ],
+    "right_distractors": [
+      "Um pacote vindo do tun0"
+    ]
+  },
+  "ex-6j62eraa": {
+    "prompt": "De onde veio a rota do laptop `192.168.10.0/24 via 10.8.0.1 dev tun0`?",
+    "hint": "Ela não está no client.conf.",
+    "choices": [
+      {
+        "text": "A linha `remote` do client.conf",
+        "why": "Essa diz o servidor a conectar, não uma rede atrás dele."
+      },
+      {
+        "text": "O DHCP do roteador doméstico",
+        "why": "O roteador doméstico não sabe nada da rede do escritório."
+      },
+      {
+        "text": "O servidor a empurrou",
+        "why": "Isso. A linha `push` do server.conf, pelo canal de controle."
+      },
+      {
+        "text": "Foi digitada no laptop à mão",
+        "why": "Ninguém configurou rota no laptop."
+      }
+    ]
+  },
+  "ex-jn380ya6": {
+    "prompt": "Depois do certificado do servidor, os pacotes 9 a 11 foram do laptop para hq, cerca de 2,7 kilobytes. O que eram?",
+    "hint": "O servidor também confere alguém.",
+    "choices": [
+      {
+        "text": "O certificado e a prova do laptop, cifrados",
+        "why": "Isso. O servidor confere o cliente como o cliente conferiu o servidor."
+      },
+      {
+        "text": "Os primeiros pacotes do tráfego do túnel",
+        "why": "O tráfego do túnel vai no canal de dados, depois do handshake."
+      },
+      {
+        "text": "Um Client Hello retransmitido",
+        "why": "Nada se perdeu, e o tshark os nomeou de outro jeito."
+      },
+      {
+        "text": "As confirmações do OpenVPN aos pacotes do servidor",
+        "why": "Essas são os pacotes P_ACK_V1 pequenos, de 68 e 72 bytes."
+      }
+    ]
+  },
+  "ex-b8n95ev8": {
+    "prompt": "Atrás do roteador doméstico restritivo, o cliente UDP imprimiu só `link remote` por oito segundos, e nenhum erro. Por que nenhum erro?",
+    "hint": "O que uma política drop manda de volta?",
+    "choices": [
+      {
+        "text": "O OpenVPN esconde erros abaixo do nível de log 4",
+        "why": "O nível 3 imprime erros; não havia nada a imprimir."
+      },
+      {
+        "text": "O servidor rejeitou o certificado sem dizer nada",
+        "why": "Nada chegou ao servidor para ser rejeitado."
+      },
+      {
+        "text": "vpn.example.com não resolveu",
+        "why": "A linha mostra 203.0.113.2, então o nome resolveu; o DNS podia sair."
+      },
+      {
+        "text": "O roteador descartou tudo, sem responder",
+        "why": "Isso. Silêncio, e o cliente continuou esperando."
+      }
+    ]
+  },
+  "ex-9k703cjk": {
+    "prompt": "Qual regra da cadeia do roteador doméstico deixou o túnel TCP 443 começar?",
+    "hint": "O primeiro pacote de uma conexão não é resposta.",
+    "choices": [
+      {
+        "text": "`ct state established,related accept`",
+        "why": "Essa deixa passar o que vem depois; o primeiro pacote da conexão precisa de outra regra."
+      },
+      {
+        "text": "`iifname \"eth0\" tcp dport 443 accept`",
+        "why": "Isso. O lado do laptop é a eth0, e o túnel foi para TCP 443."
+      },
+      {
+        "text": "`iifname \"eth0\" udp dport 53 accept`",
+        "why": "Essa deixa o DNS sair, o que resolveu o nome mas não levou túnel."
+      },
+      {
+        "text": "`policy drop`",
+        "why": "A política é o que bloqueou a UDP 1194."
+      }
+    ]
+  },
+  "ex-8gv45s5e": {
+    "prompt": "Num enlace móvel com perda, o mesmo túnel fica muito mais lento sobre TCP 443 do que sobre UDP. O que explica?",
+    "hint": "Quantas camadas retransmitem?",
+    "choices": [
+      {
+        "text": "O TLS é mais lento sobre TCP do que sobre UDP",
+        "why": "A cifra é a mesma; o que muda é o que acontece na perda."
+      },
+      {
+        "text": "Duas camadas de TCP se recuperando da mesma perda",
+        "why": "Isso. O túnel trava tudo atrás de um pacote perdido, e o TCP de dentro retransmite por cima."
+      },
+      {
+        "text": "As operadoras deixam a porta 443 lenta de propósito",
+        "why": "Tráfego web é a última coisa que uma operadora atrasa; a perda é a causa."
+      },
+      {
+        "text": "O cabeçalho do TCP é maior que o do UDP",
+        "why": "Doze bytes a mais por pacote não deixam um túnel muito mais lento."
+      }
+    ]
+  },
+  "ex-r17yfx25": {
+    "prompt": "O que um portal de VPN SSL sem cliente dá a quem entra nele?",
+    "hint": "Não há túnel.",
+    "choices": [
+      {
+        "text": "Uma rota para a rede inteira do escritório",
+        "why": "Nenhuma rota é instalada; o navegador só conversa com o portal."
+      },
+      {
+        "text": "Um endereço do pool da VPN",
+        "why": "Endereços vão para clientes de túnel; o portal não tem nenhum a dar."
+      },
+      {
+        "text": "Aplicações web internas, repassadas pelo gateway",
+        "why": "Isso. Um proxy reverso com um login na frente."
+      },
+      {
+        "text": "Acesso de camada 2 à LAN do escritório",
+        "why": "Isso seria um dispositivo tap ou VXLAN, e um portal não é nenhum dos dois."
+      }
+    ]
+  },
+  "ex-h8dr620t": {
+    "prompt": "O MTU do vx0 é 1450 sobre um enlace de 1500 bytes. Quantos bytes o VXLAN põe na frente do pacote IP interno?",
+    "hint": "O cabeçalho Ethernet interno está entre eles.",
+    "unit": "bytes"
+  },
+  "ex-xa0s2kst": {
+    "prompt": "Os cabeçalhos IP externo, UDP e VXLAN somam 36 bytes. Por que o vx0 perde 50 do MTU, e não 36?",
+    "hint": "O que o vx0 entrega ao túnel: um pacote ou um quadro?",
+    "choices": [
+      {
+        "text": "O cabeçalho Ethernet externo conta contra o MTU",
+        "why": "Um MTU conta o pacote IP; o cabeçalho do próprio enlace nunca entra."
+      },
+      {
+        "text": "O cabeçalho Ethernet interno também vai dentro",
+        "why": "Isso. 20 + 8 + 8 + 14 = 50."
+      },
+      {
+        "text": "O VXLAN preenche cada quadro com 14 bytes",
+        "why": "Nada é preenchido; os 14 bytes são um cabeçalho com endereços."
+      },
+      {
+        "text": "O checksum do UDP ocupa mais 14",
+        "why": "O checksum fica dentro dos 8 bytes do UDP."
+      }
+    ]
+  },
+  "ex-4enbes26": {
+    "prompt": "O ping de hq para 172.16.0.2 pelo vx0 voltou com `ttl=64`. O que isso diz?",
+    "hint": "Túneis anteriores davam 62 ou 63.",
+    "choices": [
+      {
+        "text": "Nenhum roteador entre as duas pontas",
+        "why": "Isso. Para o pacote interno, as duas pontas dividem um segmento."
+      },
+      {
+        "text": "O provedor encaminhou o pacote interno",
+        "why": "O provedor só encaminhou o externo, e senão teria custado um TTL."
+      },
+      {
+        "text": "O pacote nunca foi encapsulado",
+        "why": "A captura o mostra dentro de UDP 4789."
+      },
+      {
+        "text": "hq respondeu ao próprio ping",
+        "why": "A resposta veio de 172.16.0.2, a ponta de branch."
+      }
+    ]
+  },
+  "ex-vqzh6wk9": {
+    "prompt": "Para que serve a entrada `00:00:00:00:00:00 dst 198.51.100.2` na tabela de encaminhamento do vx0?",
+    "hint": "O pedido ARP foi mandado para todo mundo.",
+    "choices": [
+      {
+        "text": "É o endereço MAC da interface real de branch",
+        "why": "Esse seria um endereço real; este é todo zero."
+      },
+      {
+        "text": "Uma sobra que nada usa",
+        "why": "O primeiro broadcast ARP passou justamente por ela."
+      },
+      {
+        "text": "Broadcasts e destinos desconhecidos",
+        "why": "Isso. É a lista de inundação: para onde vai um quadro que nenhuma entrada aprendida atende."
+      },
+      {
+        "text": "A rota padrão da rede por baixo",
+        "why": "Rotas ficam na tabela de rotas, não na tabela MAC de uma ponte."
+      }
+    ]
+  },
+  "ex-6qeyjnwt": {
+    "prompt": "O VXLAN leva quadros Ethernet inteiros dentro de UDP, mandados para a porta ___.",
+    "hint": "O filtro do tcpdump na captura.",
+    "blanks": [
+      {
+        "accept": [
+          "4789"
+        ]
+      }
+    ]
+  },
+  "ex-7ry2xfsn": {
+    "prompt": "Dois escritórios dividem um segmento esticado. Qual destes atravessa a WAN? Marque todos que se aplicam.",
+    "hint": "Um domínio de broadcast.",
+    "choices": [
+      {
+        "text": "Um pedido ARP em qualquer dos escritórios",
+        "why": "Isso: é um broadcast, e a captura mostrou um atravessando."
+      },
+      {
+        "text": "Um DHCP discover de um laptop novo",
+        "why": "Isso: também é um broadcast."
+      },
+      {
+        "text": "A inundação de um loop num dos escritórios",
+        "why": "Isso: a inundação de um loop chega a todas as partes do segmento."
+      },
+      {
+        "text": "O tráfego entre duas máquinas no mesmo switch de um escritório",
+        "why": "Os quadros delas são aprendidos como locais e ficam naquele switch."
+      },
+      {
+        "text": "As atualizações de roteamento do próprio provedor",
+        "why": "A rede do provedor fica por baixo do túnel, não dentro dele."
+      }
+    ]
+  },
+  "ex-hrxe1yts": {
+    "prompt": "Ponha em ordem o começo da conexão OpenVPN, como o tshark e o log mostraram.",
+    "hint": "O OpenVPN abre antes do TLS.",
+    "items": [
+      "As duas mensagens HARD_RESET",
+      "O Client Hello do laptop",
+      "Server Hello, com o certificado do servidor cifrado",
+      "O certificado do laptop, cifrado",
+      "Tráfego no canal de dados, AES-256-GCM"
+    ],
+    "trap": "As chaves do canal de dados saem do handshake, então nenhum tráfego passa antes de os dois certificados serem conferidos."
+  },
+  "ex-4bjk6mh0": {
+    "prompt": "O firewall de um cliente lê os primeiros bytes de toda conexão para a porta 443 e só deixa passar HTTPS. O túnel do laboratório em TCP 443 passa?",
+    "hint": "Qual é a primeira mensagem da conexão?",
+    "choices": [
+      {
+        "text": "Sim, já que tudo na porta 443 é HTTPS para um firewall",
+        "why": "Este firewall olha o conteúdo, não só a porta."
+      },
+      {
+        "text": "Sim, porque o handshake é TLS 1.3 de verdade",
+        "why": "O TLS vai embrulhado nos pacotes do próprio OpenVPN, depois do reset do OpenVPN."
+      },
+      {
+        "text": "Não: ele abre com o reset do OpenVPN, não com um Client Hello",
+        "why": "Isso. A porta 443 só vence um firewall que filtra por porta."
+      },
+      {
+        "text": "Não, porque a porta 443 é reservada a navegadores",
+        "why": "Nada reserva uma porta para um tipo de programa; o conteúdo é que o entregou."
+      }
+    ]
+  },
+  "ex-tp5r4m2w": {
+    "prompt": "Um gerente quer os dois escritórios numa sub-rede só, \"para ficar mais simples\". Nada precisa da mesma sub-rede nos dois lugares. O que você recomenda?",
+    "hint": "O que um segmento esticado divide?",
+    "choices": [
+      {
+        "text": "VXLAN, já que o kernel já tem",
+        "why": "Estar disponível não é motivo; os broadcasts e os loops vêm junto."
+      },
+      {
+        "text": "OpenVPN com `dev tap`, porque é cifrado",
+        "why": "A cifragem não diminui o domínio de broadcast."
+      },
+      {
+        "text": "Duas sub-redes, roteadas pelo túnel",
+        "why": "Isso. Uma falha ou uma tempestade num escritório então fica nele."
+      },
+      {
+        "text": "Esticar, com spanning tree rodando pela WAN",
+        "why": "Isso junta os dois escritórios numa árvore, e uma mudança de topologia chega aos dois."
+      }
+    ]
+  }
+}
