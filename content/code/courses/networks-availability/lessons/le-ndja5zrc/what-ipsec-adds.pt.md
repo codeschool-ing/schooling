@@ -1,0 +1,55 @@
+---
+title: O que o IPsec acrescenta a um túnel
+version: 1
+---
+
+A aula 1 terminou com um túnel que mostrava ao provedor cada byte que levava. O IPsec é a resposta de
+costume, e costuma ser chamado de protocolo de VPN, como se fosse uma coisa só. **O IPsec é uma família:
+o ESP protege pacotes, o AH é um jeito mais antigo de protegê-los, e o IKE é como duas máquinas combinam
+as chaves.** Esta seção trata dos dois primeiros.
+
+## ESP
+
+O ESP, Encapsulating Security Payload, é o protocolo IP 50. Ele mantém o pacote dentro de um pacote da
+aula 1 e responde às perguntas que o túnel simples deixou em aberto:
+
+| | um túnel simples | ESP |
+|---|---|---|
+| alguém no caminho consegue ler? | sim, tudo | não: a carga vai cifrada |
+| veio do outro escritório? | ninguém confere | só quem tem a chave poderia ter feito o valor de verificação |
+| foi alterado no caminho? | ninguém confere | o valor de verificação cobre todos os bytes |
+| é cópia de um pacote antigo? | ninguém confere | um número de sequência, e um registro dos já vistos |
+
+O valor de verificação é o **ICV**, integrity check value: alguns bytes no fim de cada pacote,
+calculados com uma chave que só as duas pontas têm. **Um pacote cujo ICV não confere é descartado antes
+de qualquer coisa ser decifrada, e quem enviou não fica sabendo.** O número de sequência sobe a cada
+pacote, então um pacote que alguém gravou e reenvia chega com um número já usado, e também é descartado.
+
+## AH
+
+O AH, Authentication Header, é o protocolo IP 51. Ele autentica e não cifra nada, e ainda cobre os
+endereços do cabeçalho IP externo. **O NAT reescreve justamente os endereços que o AH protege**, então o
+AH não sobrevive a um NAT. O ESP consegue autenticar sem cifrar, se um dia isso for desejado, então o AH
+perdeu a única coisa que fazia sozinho. Desde a RFC 4301 o suporte ao AH é opcional, e é o ESP que você
+vai configurar.
+
+## Modo túnel e modo transporte
+
+No **modo túnel**, o pacote original inteiro é cifrado e levado dentro de um pacote novo entre dois
+gateways: o túnel da aula 1 com o lado de dentro trancado. **O provedor vê `hq` e `branch`, e não qual
+laptop está falando com qual caixa.** As VPNs site a site são assim, e todas as capturas desta aula
+também.
+
+No **modo transporte**, o cabeçalho IP original fica na frente e o ESP protege o que vem depois dele.
+Economiza 20 bytes e só protege o tráfego entre as duas máquinas que rodam o IPsec, cujos endereços
+continuam legíveis. O uso mais comum é por baixo do GRE: dois roteadores rodam GRE para que o multicast
+de um protocolo de roteamento passe, e protegem o GRE com ESP em modo transporte.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 266\" role=\"img\" aria-label=\"Dois pacotes desenhados como fileiras de campos. Modo túnel, o ping capturado de 140 bytes: um cabeçalho IP novo de 20 bytes, um cabeçalho ESP de 8, um IV de 8, o pacote inteiro do laptop de 84 bytes, 4 bytes de enchimento e trailer e um ICV de 16 bytes. O trecho cifrado vai do pacote interno até o trailer; o trecho coberto pelo ICV começa no cabeçalho ESP. Modo transporte, desenhado e não capturado: o cabeçalho IP original do laptop fica na frente, seguido de ESP, IV, a mensagem ICMP e os dados, enchimento e trailer, e o ICV; só a mensagem ICMP, os dados e o trailer são cifrados.\"><text x=\"20\" y=\"26\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Modo túnel: o ping capturado, 140 bytes no fio</text><rect x=\"20\" y=\"40\" width=\"80\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"60.0\" y=\"54\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">IP novo</text><text x=\"60.0\" y=\"69\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">20 bytes</text><rect x=\"104\" y=\"40\" width=\"56\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"132.0\" y=\"54\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">ESP</text><text x=\"132.0\" y=\"69\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">8 bytes</text><rect x=\"164\" y=\"40\" width=\"56\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"192.0\" y=\"54\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">IV</text><text x=\"192.0\" y=\"69\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">8 bytes</text><rect x=\"224\" y=\"40\" width=\"200\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"324.0\" y=\"54\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">IP interno + ICMP + dados</text><text x=\"324.0\" y=\"69\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">84 bytes</text><rect x=\"428\" y=\"40\" width=\"126\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"491.0\" y=\"54\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">enchimento + trailer</text><text x=\"491.0\" y=\"69\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">4 bytes</text><rect x=\"558\" y=\"40\" width=\"64\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"590.0\" y=\"54\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">ICV</text><text x=\"590.0\" y=\"69\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">16 bytes</text><path d=\"M224 87 L224 92 L554 92 L554 87\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"389.0\" y=\"103\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">cifrado</text><path d=\"M104 115 L104 120 L554 120 L554 115\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"329.0\" y=\"131\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">coberto pelo ICV</text><text x=\"20\" y=\"160\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Modo transporte: o mesmo ping, desenhado e não capturado</text><rect x=\"20\" y=\"174\" width=\"90\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"65.0\" y=\"191\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">IP original</text><rect x=\"114\" y=\"174\" width=\"56\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"142.0\" y=\"191\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">ESP</text><rect x=\"174\" y=\"174\" width=\"56\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"202.0\" y=\"191\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">IV</text><rect x=\"234\" y=\"174\" width=\"150\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"309.0\" y=\"191\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">ICMP + dados</text><rect x=\"388\" y=\"174\" width=\"126\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"451.0\" y=\"191\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">enchimento + trailer</text><rect x=\"518\" y=\"174\" width=\"64\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"550.0\" y=\"191\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">ICV</text><path d=\"M234 215 L234 220 L514 220 L514 215\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"374.0\" y=\"231\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">cifrado</text><rect x=\"20\" y=\"247\" width=\"14\" height=\"10\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"40\" y=\"252\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">posto pelo IPsec</text><rect x=\"190\" y=\"247\" width=\"14\" height=\"10\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"210\" y=\"252\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">o próprio pacote do laptop</text></svg>", "caption": "No modo túnel os endereços do laptop ficam dentro da parte cifrada; no modo transporte eles ficam na frente, legíveis, e nenhum segundo cabeçalho IP é posto. A fileira do túnel é o pacote capturado: 140 bytes em volta de um ping de 84. A divisão dos 36 bytes do ESP vem do AES-GCM, com IV de 8 bytes e ICV de 16.", "same": ["ESP", "IV", "ICV"]}
+```
+
+**O modo transporte está desenhado aqui, e não capturado.** O kernel em que este curso foi gravado não
+tem ESP, então o laboratório usa a implementação do strongSwan em espaço de usuário, o
+`kernel-libipsec`, que só fala modo túnel. A fileira do túnel é um pacote real, o ping de 84 bytes do
+laptop como o provedor o capturou, e a seção sobre associações de segurança lê essa captura.

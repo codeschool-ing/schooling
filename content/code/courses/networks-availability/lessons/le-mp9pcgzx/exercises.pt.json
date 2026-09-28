@@ -1,0 +1,431 @@
+{
+  "ex-r5h7vy6f": {
+    "prompt": "Um ping do laptop para o endereço de web1 volta. O que esse único teste descartou?",
+    "hint": "Uma resposta precisa de todas as camadas abaixo do IP, nos dois sentidos.",
+    "choices": [
+      {
+        "text": "Um servidor web parado",
+        "why": "O ping nunca toca a porta 80: nesta aula o web1 respondeu ao ping com o nginx parado."
+      },
+      {
+        "text": "Um enlace ou uma rota quebrada no caminho",
+        "why": "Isso. O eco foi e voltou, então todo enlace e toda rota entre os dois funcionam."
+      },
+      {
+        "text": "Um servidor DNS errado no /etc/resolv.conf",
+        "why": "Um ping para um endereço nunca consulta o DNS, então não diz nada sobre o resolvedor."
+      },
+      {
+        "text": "Um firewall descartando TCP para a porta 80",
+        "why": "ICMP e TCP são filtrados separadamente; um passar não prova nada sobre o outro."
+      }
+    ]
+  },
+  "ex-4ya5z8za": {
+    "prompt": "Ninguém sabe ainda onde está a falha. Por que um ping para o endereço da outra ponta é o primeiro teste de costume?",
+    "hint": "Dividir para conquistar.",
+    "choices": [
+      {
+        "text": "É o único teste que dispensa root",
+        "why": "curl, dig e ip route também dispensam root; não é por isso que ele vem primeiro."
+      },
+      {
+        "text": "Firewalls deixam o ICMP passar, então ele sempre tem resposta",
+        "why": "Firewalls descartam ICMP o tempo todo, e o caso resolvido desta aula é um que fazia isso."
+      },
+      {
+        "text": "A resposta diz se a falha está acima do IP ou no IP e abaixo",
+        "why": "Isso. Um comando corta a busca pela metade, e o teste seguinte corta o que sobrou."
+      },
+      {
+        "text": "Ele também mede a banda do caminho",
+        "why": "O ping mede uma ida e volta, não vazão; a aula 22 usa o iperf3 para isso."
+      }
+    ]
+  },
+  "ex-vnac6c92": {
+    "prompt": "Um técnico reinicia o roteador, troca o servidor DNS do laptop e atualiza um driver, tudo de uma vez, e a falha some. O que se perdeu?",
+    "hint": "Uma mudança de cada vez.",
+    "choices": [
+      {
+        "text": "Nada: a falha sumiu, e esse era o objetivo",
+        "why": "Ela sumiu sem explicação, então quando voltar vai custar o mesmo de novo."
+      },
+      {
+        "text": "Qual das três mudanças resolveu",
+        "why": "Isso. Três mudanças juntas não dão crédito a nenhuma, e as outras duas podem ter trazido falhas próprias."
+      },
+      {
+        "text": "A configuração do roteador, que um reinício apaga",
+        "why": "Um reinício carrega a configuração salva; o que ele apaga é o estado que poderia ter explicado a falha."
+      },
+      {
+        "text": "Só os logs do roteador; as mudanças no laptop eram seguras juntas",
+        "why": "Quaisquer duas mudanças feitas juntas escondem qual importou, no laptop tanto quanto no roteador."
+      }
+    ]
+  },
+  "ex-vt3ebr25": {
+    "prompt": "`ip -br link` mostra `DOWN` e `<NO-CARRIER,BROADCAST,MULTICAST,UP>`. O que significa o `UP` dentro dos colchetes?",
+    "hint": "Software contra sinal.",
+    "choices": [
+      {
+        "text": "A interface está ligada no software",
+        "why": "Isso. Ela está ligada; o que falta é a portadora, que o LOWER_UP indicaria."
+      },
+      {
+        "text": "O cabo está conectado nas duas pontas",
+        "why": "NO-CARRIER diz que a placa não ouve nada da outra ponta."
+      },
+      {
+        "text": "O gateway respondeu ao último ping",
+        "why": "As flags do enlace não dizem nada sobre o gateway, e o ping não teve resposta."
+      },
+      {
+        "text": "O enlace voltou depois do ping",
+        "why": "A coluna de estado ainda diz DOWN."
+      }
+    ]
+  },
+  "ex-xpjjhy05": {
+    "prompt": "`ip neigh show 192.168.10.99` imprimiu `INCOMPLETE`. O que tinha acontecido?",
+    "hint": "O laptop precisa de um endereço de hardware antes de enviar.",
+    "choices": [
+      {
+        "text": "Duas máquinas respondiam por esse endereço",
+        "why": "Um conflito mostraria um endereço de hardware, talvez trocando, e não nenhum."
+      },
+      {
+        "text": "A tabela de rotas não tinha rota para ele",
+        "why": "Tinha: a rota padrão apontava direto para ele."
+      },
+      {
+        "text": "O ARP perguntou quem o tem, e ninguém respondeu",
+        "why": "Isso. Nenhuma máquina tem 192.168.10.99, então a pergunta ficou em aberto."
+      },
+      {
+        "text": "O gateway respondeu com um endereço malformado",
+        "why": "Não houve resposta para estar malformada; INCOMPLETE é a ausência de uma."
+      }
+    ]
+  },
+  "ex-dhnbvw6b": {
+    "prompt": "Um laptop pinga uma impressora na própria sub-rede, mas toda conexão além dela falha depois de uns três segundos. Qual verificação vem primeiro?",
+    "hint": "O que todos os destinos que falham têm em comum?",
+    "choices": [
+      {
+        "text": "ethtool, para ver se o enlace é detectado",
+        "why": "A impressora respondendo já prova o enlace e a placa."
+      },
+      {
+        "text": "dig contra um segundo servidor DNS",
+        "why": "Conexões por endereço também falham, e uma falha de nome é instantânea, não de três segundos."
+      },
+      {
+        "text": "ip route, depois ip neigh",
+        "why": "Isso. A única coisa que todo destino fora da sub-rede compartilha é o gateway, e três segundos é o ARP desistindo."
+      },
+      {
+        "text": "ss -tln em cada um dos servidores",
+        "why": "Todos os servidores falhando juntos apontam para o caminho de saída, não para as portas de cada um."
+      }
+    ]
+  },
+  "ex-emqej2hn": {
+    "prompt": "Quando a placa de rede não ouve nada da outra ponta, o `ip -br link` mostra a flag ___ onde estaria o LOWER_UP.",
+    "hint": "Nenhum sinal no fio.",
+    "blanks": [
+      {
+        "accept": [
+          "NO-CARRIER",
+          "NO CARRIER",
+          "NOCARRIER"
+        ]
+      }
+    ]
+  },
+  "ex-02v251nt": {
+    "prompt": "O curl imprimiu `Could not resolve host: www.example.com`. A que ele tentou se conectar?",
+    "hint": "Uma conexão precisa de um endereço.",
+    "choices": [
+      {
+        "text": "O servidor DNS, na porta 80",
+        "why": "O curl pede um endereço ao resolvedor; nunca se conecta ao DNS na 80."
+      },
+      {
+        "text": "O servidor web, que recusou",
+        "why": "Uma recusa é o erro 7, Couldn't connect; este é o erro 6."
+      },
+      {
+        "text": "Nada: ainda sem endereço",
+        "why": "Isso. A resolução de nome falhou antes de qualquer tentativa de conexão."
+      },
+      {
+        "text": "O gateway, que não respondeu ao ARP",
+        "why": "Essa foi a falha anterior, e falhou por endereço depois de três segundos."
+      }
+    ]
+  },
+  "ex-xs2ka0gz": {
+    "prompt": "Um `dig` simples imprimiu `communications error to 192.0.2.54#53: timed out`, e `dig @192.0.2.53` respondeu `192.0.2.80`. Onde está a falha?",
+    "hint": "A qual servidor cada comando perguntou?",
+    "choices": [
+      {
+        "text": "No ns, ocupado demais para responder",
+        "why": "O ns respondeu na hora à consulta com @."
+      },
+      {
+        "text": "Na rota do escritório até o data center",
+        "why": "Um ping para 192.0.2.53 voltou, e a consulta com @ atravessou a mesma rota."
+      },
+      {
+        "text": "Na zona example.com, que perdeu um registro",
+        "why": "A zona deu a resposta certa assim que foi consultada."
+      },
+      {
+        "text": "Na configuração de resolvedor do laptop",
+        "why": "Isso. O resolv.conf apontava 192.0.2.54, onde ninguém escuta."
+      }
+    ]
+  },
+  "ex-vg7vdk2b": {
+    "prompt": "Dois curl imprimem `Couldn't connect to server`, um depois de 3057 ms e outro depois de 0 ms. O que o de 0 ms diz?",
+    "hint": "Uma resposta instantânea ainda é uma resposta.",
+    "choices": [
+      {
+        "text": "Uma máquina respondeu ao SYN com um reset",
+        "why": "Isso. Algo recebeu e recusou: uma porta fechada, ou um firewall configurado para rejeitar."
+      },
+      {
+        "text": "O pacote nem saiu do laptop",
+        "why": "Isso se parece mais com o caso de 3057 ms, em que o ARP do gateway falhou."
+      },
+      {
+        "text": "A consulta do nome falhou antes",
+        "why": "Uma consulta falha é outro erro, com outras palavras: Could not resolve host."
+      },
+      {
+        "text": "O servidor está sobrecarregado e descartou o pedido",
+        "why": "Um descarte faz o cliente esperar; nada que descarta responde em 0 ms."
+      }
+    ]
+  },
+  "ex-7t7agpwc": {
+    "prompt": "Ligue o que o cliente viu à camada em que esta aula encontrou a falha.",
+    "hint": "O tempo que uma falha leva faz parte da leitura.",
+    "pairs": [
+      {
+        "left": "Sem resposta, sem erro, NO-CARRIER na interface",
+        "right": "Camadas 1 e 2"
+      },
+      {
+        "left": "Couldn't connect, depois de 3057 ms",
+        "right": "Camada 3"
+      },
+      {
+        "left": "Couldn't connect, depois de 0 ms",
+        "right": "Camada 4"
+      },
+      {
+        "left": "Um 404 para /reports/",
+        "right": "Camada 7"
+      }
+    ],
+    "right_distractors": [
+      "Resolução de nomes"
+    ]
+  },
+  "ex-31frh9eg": {
+    "prompt": "Um usuário diz que `/reports/` no web1 responde 404. O que a equipe de rede deve entregar a quem cuida da aplicação?",
+    "hint": "Quais camadas o 404 provou?",
+    "choices": [
+      {
+        "text": "Um novo registro DNS para a página de relatórios",
+        "why": "O nome já resolveu, senão nenhum pedido teria chegado."
+      },
+      {
+        "text": "A evidência de que a rede entregou o pedido",
+        "why": "Isso. Um nome resolveu, uma porta aceitou e um programa respondeu; o resto é com eles, com o log aberto."
+      },
+      {
+        "text": "Uma regra de firewall abrindo a porta 80 para o escritório",
+        "why": "A porta 80 aceitou a conexão, senão não haveria código de status."
+      },
+      {
+        "text": "Um reinício do nginx no web1",
+        "why": "O nginx está rodando: é o programa que respondeu 404."
+      }
+    ]
+  },
+  "ex-0ryghwkr": {
+    "prompt": "Por que a página de 16 bytes carregou de files e o big.bin não?",
+    "hint": "Tamanho.",
+    "choices": [
+      {
+        "text": "A página estava em cache na filial",
+        "why": "Nada faz cache no laboratório: o pedido atravessou o túnel toda vez."
+      },
+      {
+        "text": "A regra hardening bloqueia respostas HTTP grandes",
+        "why": "A regra descarta o ICMP que o próprio hq envia, não HTTP."
+      },
+      {
+        "text": "Ela cabe num pacote pequeno; o arquivo precisa de pacotes cheios",
+        "why": "Isso. Só pacotes acima de 1420 bytes são descartados no wg0."
+      },
+      {
+        "text": "O WireGuard limita cada conexão a alguns kilobytes",
+        "why": "Depois da correção, 20000000 bytes atravessaram o mesmo túnel."
+      }
+    ]
+  },
+  "ex-dvsnrjmh": {
+    "prompt": "Na captura da falha cada segmento leva 1448 bytes de dados, com cabeçalho TCP de 32 bytes e IP de 20. Qual o tamanho de cada pacote IP?",
+    "hint": "Some e compare com o wg0.",
+    "unit": "bytes"
+  },
+  "ex-jkrb8qhj": {
+    "prompt": "De files, `ping -M do -s 1400` para o caixa teve 100% de perda e nenhum `+1 errors`. Na aula 1 o mesmo teste pelo IP-in-IP imprimiu `Frag needed`. Para onde a diferença aponta?",
+    "hint": "Quem teria mandado o erro?",
+    "choices": [
+      {
+        "text": "A mensagem ICMP de hq não chegando a files",
+        "why": "Isso. hq descartou o pacote como devia, e a explicação dele foi descartada na saída."
+      },
+      {
+        "text": "O caixa desligado naquele momento",
+        "why": "O ping de 1392 bytes chegou a ele logo antes."
+      },
+      {
+        "text": "O WireGuard não ter MTU próprio",
+        "why": "O ip link imprimiu mtu 1420 para o wg0."
+      },
+      {
+        "text": "files ignorando a opção -M do",
+        "why": "O bit foi respeitado: 1392 passou e 1400 não, exatamente no MTU."
+      }
+    ]
+  },
+  "ex-261waazb": {
+    "prompt": "O MTU do wg0 é 1420 e o ping soma 8 bytes de ICMP e 20 de IP. Qual o maior `-s` que atravessa com Don't Fragment ligado?",
+    "hint": "1420 − 28.",
+    "unit": "bytes"
+  },
+  "ex-17g00ara": {
+    "prompt": "Ponha o buraco negro em ordem, do primeiro segmento cheio até o segundo.",
+    "hint": "A mensagem nasce e morre no mesmo roteador.",
+    "items": [
+      "files manda um pacote de 1500 bytes para o caixa",
+      "hq vê que ele é grande demais para o wg0 e o descarta",
+      "hq escreve uma mensagem 'fragmentation needed' para files",
+      "A regra hardening descarta essa mensagem na saída de hq",
+      "files manda o próximo segmento cheio, sem saber de nada"
+    ],
+    "trap": "A mensagem é escrita antes de ser descartada, e as duas coisas acontecem em hq; files nunca vê nada."
+  },
+  "ex-dtj7gb1x": {
+    "prompt": "O MTU do wg0 é 1420. Que MSS mantém todo segmento TCP dentro dele, com 20 bytes de cabeçalho IP e 20 de TCP?",
+    "hint": "O MTU menos os dois cabeçalhos.",
+    "unit": "bytes"
+  },
+  "ex-h3wknkfw": {
+    "prompt": "Por que a correção foi conferida baixando o big.bin, e não pingando o caixa?",
+    "hint": "O que funcionava antes da correção?",
+    "choices": [
+      {
+        "text": "Um ping não atravessa um túnel WireGuard",
+        "why": "Pings atravessaram o tempo todo, até 1392 bytes de dados."
+      },
+      {
+        "text": "Pings pequenos sempre funcionaram e não provam nada",
+        "why": "Isso. A correção se confere com o teste que achou a falha, e esse era o download."
+      },
+      {
+        "text": "O clamping bloqueia ICMP, então um ping falharia de qualquer jeito",
+        "why": "As regras de clamping só mexem em SYN de TCP; os pings passam intactos."
+      },
+      {
+        "text": "O curl informa o MSS que cada lado negociou",
+        "why": "O curl informou bytes e um status; o MSS veio do tcpdump ao lado."
+      }
+    ]
+  },
+  "ex-wpznr9gm": {
+    "prompt": "As regras de clamping entraram, e a regra hardening continua em hq. Quais destes ainda falham? Marque todos que se aplicam.",
+    "hint": "O clamping reescreve uma opção do TCP; a regra descarta ICMP.",
+    "choices": [
+      {
+        "text": "Um programa UDP mandando pacotes de 1500 bytes com Don't Fragment ligado",
+        "why": "Isso: o UDP não tem MSS para limitar, e a mensagem de que ele precisa continua descartada."
+      },
+      {
+        "text": "Um download TCP do big.bin de files para o caixa",
+        "why": "É isso que o clamping consertou: chegaram 20000000 bytes."
+      },
+      {
+        "text": "hq avisando um cliente de que um host não pode ser alcançado",
+        "why": "Isso: esse também é um destination unreachable, e a regra descarta todos."
+      },
+      {
+        "text": "A página de 16 bytes de files",
+        "why": "Ela funcionava antes e depois; cabe num pacote pequeno."
+      }
+    ]
+  },
+  "ex-s18saaxs": {
+    "prompt": "Quem trabalha de casa pela VPN consegue abrir a página de login da intranet, mas depois do login o painel nunca carrega, sem erro. Pings para o servidor funcionam. Qual hipótese você testa primeiro?",
+    "hint": "Coisas pequenas funcionam e coisas grandes travam.",
+    "choices": [
+      {
+        "text": "O nome do painel não resolve",
+        "why": "Uma falha de nome é imediata e avisa; isto trava em silêncio."
+      },
+      {
+        "text": "A porta 443 do servidor web está fechada",
+        "why": "A página de login veio dessa porta um momento antes."
+      },
+      {
+        "text": "O MTU do caminho pelo túnel, com ping -M do em tamanhos crescentes",
+        "why": "Isso. Pequeno funciona, grande trava, nenhum erro: a assinatura do buraco negro."
+      },
+      {
+        "text": "Um cabo solto nos laptops dos usuários",
+        "why": "Um enlace morto pararia a página de login e os pings também."
+      }
+    ]
+  },
+  "ex-d89wfgn8": {
+    "prompt": "Qual destes é uma hipótese no sentido que esta aula usa?",
+    "hint": "Uma hipótese aponta um teste que pode provar que ela está errada.",
+    "choices": [
+      {
+        "text": "Tem alguma coisa errada com a rede",
+        "why": "Nenhum teste conseguiria provar que isso é falso, então não guia nada."
+      },
+      {
+        "text": "O laptop pergunta ao DNS errado, então dig @ns vai responder",
+        "why": "Isso. Ela nomeia a causa e o teste que a refutaria."
+      },
+      {
+        "text": "Reiniciar o roteador e ver o que acontece",
+        "why": "Isso é uma ação, e destrói o estado que poderia explicar a falha."
+      },
+      {
+        "text": "Ontem funcionava",
+        "why": "Uma observação que vale anotar, mas não prevê nada para testar."
+      }
+    ]
+  },
+  "ex-588bgsn0": {
+    "prompt": "Um buraco negro desse tipo se encontra com pings com Don't Fragment em tamanhos crescentes: o tamanho em que eles começam a sumir sem erro fica logo acima do ___ do túnel.",
+    "hint": "1420 no wg0.",
+    "blanks": [
+      {
+        "accept": [
+          "MTU",
+          "unidade máxima de transmissão"
+        ]
+      }
+    ]
+  }
+}

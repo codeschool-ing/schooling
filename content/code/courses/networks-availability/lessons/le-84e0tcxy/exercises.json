@@ -1,0 +1,639 @@
+[
+  {
+    "id": "ex-vfyn2cyq",
+    "version": 1,
+    "section": "where-to-capture",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`laptop` captured everything to or from `files` for five seconds while `files` fetched a page from `web1`. Both are on the same switch. What did the capture hold?",
+    "hint": "Where does a switch send a unicast frame?",
+    "choices": [
+      {
+        "text": "The whole HTTP exchange, request and page",
+        "correct": false,
+        "why": "A switch sends a unicast frame out of one port; the page never reached the laptop's."
+      },
+      {
+        "text": "Only the SYN that opened the connection",
+        "correct": false,
+        "why": "The SYN is unicast too, from files to its gateway, and went nowhere near the laptop."
+      },
+      {
+        "text": "One ARP request, which is a broadcast",
+        "correct": true,
+        "why": "Right. A broadcast goes out of every port, so it was the only thing the laptop could see."
+      },
+      {
+        "text": "Nothing, because the laptop was not on a mirror port",
+        "correct": false,
+        "why": "It did capture one packet: a port that is not a mirror still receives broadcasts."
+      }
+    ]
+  },
+  {
+    "id": "ex-66pmgy5k",
+    "version": 1,
+    "section": "where-to-capture",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`mon` captured the whole conversation on the mirror port without an IP address. Why does it need none?",
+    "hint": "Is mon part of the conversation?",
+    "choices": [
+      {
+        "text": "The switch lends it the address of the mirrored port",
+        "correct": false,
+        "why": "A switch lends no addresses; it copies frames."
+      },
+      {
+        "text": "It sends nothing and is sent nothing; it reads copies",
+        "correct": true,
+        "why": "Right. An address is for taking part, and mon only listens."
+      },
+      {
+        "text": "tshark gives the interface a temporary address while capturing",
+        "correct": false,
+        "why": "tshark assigns nothing; the interface stayed unaddressed."
+      },
+      {
+        "text": "Members of the wireshark group may capture without one",
+        "correct": false,
+        "why": "The group is about permission to capture, not about addressing."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd56fsy5",
+    "version": 1,
+    "section": "where-to-capture",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A busy 10 Gbit/s uplink is mirrored to an analyser on a 1 Gbit/s port. The capture shows gaps where acknowledgements refer to data that is not in the file. What is the first explanation to rule out?",
+    "hint": "Where can a copy be lost?",
+    "choices": [
+      {
+        "text": "The network is losing packets between the two hosts",
+        "correct": false,
+        "why": "The acknowledgements say the data arrived; what is missing is the copy."
+      },
+      {
+        "text": "A display filter is hiding part of the traffic",
+        "correct": false,
+        "why": "Clearing a display filter brings everything back, and would be checked in a second anyway."
+      },
+      {
+        "text": "The switch dropped copies it had no room for on the mirror port",
+        "correct": true,
+        "why": "Right. Ten gigabits do not fit into one, and the loss happens on the way to the analyser."
+      },
+      {
+        "text": "The analyser is not in the wireshark group",
+        "correct": false,
+        "why": "Without permission it would capture nothing at all, not most of the traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-5nfys5pg",
+    "version": 1,
+    "section": "where-to-capture",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each place to capture from with what it gives you.",
+    "hint": "One of them depends on the switch's configuration.",
+    "pairs": [
+      {
+        "left": "A mirror port",
+        "right": "Copies of one port or VLAN, set up on the switch"
+      },
+      {
+        "left": "A tap",
+        "right": "Both directions of one cable, whatever the switch does"
+      },
+      {
+        "left": "The server itself",
+        "right": "Everything that one machine sends and receives"
+      }
+    ],
+    "right_distractors": [
+      "Every unicast frame of the LAN, from any ordinary port"
+    ]
+  },
+  {
+    "id": "ex-rch9c6d5",
+    "version": 1,
+    "section": "tshark-and-the-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why could `ana` run `tshark -i eth0` on `mon` without `sudo`?",
+    "hint": "Look at id -nG.",
+    "choices": [
+      {
+        "text": "tshark needs no privilege to capture",
+        "correct": false,
+        "why": "Capturing does need one; lesson 12 shows tcpdump refused without it."
+      },
+      {
+        "text": "mon has no address, so nothing on it is protected",
+        "correct": false,
+        "why": "Permissions on a machine do not depend on its addresses."
+      },
+      {
+        "text": "She is in the wireshark group",
+        "correct": true,
+        "why": "Right. The package lets that group run the helper that opens the interface."
+      },
+      {
+        "text": "tshark only ever reads files",
+        "correct": false,
+        "why": "It captured live from eth0 in the same lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2nqjxrp",
+    "version": 1,
+    "section": "tshark-and-the-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is gained by capturing as a member of a group rather than running the whole analyser as root?",
+    "hint": "Which code reads what strangers send?",
+    "choices": [
+      {
+        "text": "The dissectors that parse untrusted packets run without privileges",
+        "correct": true,
+        "why": "Right. Only the small helper that opens the interface is privileged."
+      },
+      {
+        "text": "A group member's capture loses fewer packets",
+        "correct": false,
+        "why": "Who runs it changes nothing about how many packets arrive."
+      },
+      {
+        "text": "Root cannot write pcap files in a home directory",
+        "correct": false,
+        "why": "Root can write anywhere; that is the problem, not the benefit."
+      },
+      {
+        "text": "The display filters only work for ordinary users",
+        "correct": false,
+        "why": "Display filters work the same for anyone."
+      }
+    ]
+  },
+  {
+    "id": "ex-13jmm5bs",
+    "version": 1,
+    "section": "tshark-and-the-file",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many packets did the eight-second capture write to `files.pcap`?",
+    "hint": "tshark printed the count when it stopped.",
+    "value": 45,
+    "tolerance": 0,
+    "unit": "packets"
+  },
+  {
+    "id": "ex-h8ekprh2",
+    "version": 1,
+    "section": "tshark-and-the-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`files.pcap` was created with mode `-rw-------`. Why is that the right default for a capture file?",
+    "hint": "What did the file contain?",
+    "choices": [
+      {
+        "text": "tshark cannot read a file other users can read",
+        "correct": false,
+        "why": "tshark reads any file it has permission to; the mode protects the contents."
+      },
+      {
+        "text": "It stops a second capture from writing into it",
+        "correct": false,
+        "why": "A second capture run by ana could still write it; the point is who reads."
+      },
+      {
+        "text": "It holds what crossed the wire, clear-text pages included",
+        "correct": true,
+        "why": "Right. Anything readable on the wire is readable in the file."
+      },
+      {
+        "text": "A private file takes less space on disk",
+        "correct": false,
+        "why": "Permissions do not change a file's size."
+      }
+    ]
+  },
+  {
+    "id": "ex-k124p2z7",
+    "version": 1,
+    "section": "two-filter-languages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A capture filter rejects a packet. What can you do about it afterwards?",
+    "hint": "It acts before saving.",
+    "choices": [
+      {
+        "text": "Clear the filter and the packet reappears",
+        "correct": false,
+        "why": "That is the display filter, which only hides."
+      },
+      {
+        "text": "Find it in a separate file of rejected packets",
+        "correct": false,
+        "why": "No such file is kept."
+      },
+      {
+        "text": "Read it with `tshark -r` and no `-Y`",
+        "correct": false,
+        "why": "Reading the file shows only what was recorded."
+      },
+      {
+        "text": "Nothing: it was never recorded",
+        "correct": true,
+        "why": "Right. The only remedy is a second capture."
+      }
+    ]
+  },
+  {
+    "id": "ex-ev4hp0pj",
+    "version": 1,
+    "section": "two-filter-languages",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each expression with where it works.",
+    "hint": "Field names have dots in them.",
+    "pairs": [
+      {
+        "left": "`host 192.0.2.21`",
+        "right": "A capture filter, or tcpdump: it is BPF"
+      },
+      {
+        "left": "`ip.addr == 192.0.2.21`",
+        "right": "A display filter naming a field"
+      },
+      {
+        "left": "`http.response.code >= 400`",
+        "right": "A display filter only: BPF cannot see inside HTTP"
+      }
+    ],
+    "right_distractors": [
+      "Either bar, typed exactly the same"
+    ]
+  },
+  {
+    "id": "ex-xhzsjpcp",
+    "version": 1,
+    "section": "two-filter-languages",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A web server returns an error about once an hour, and you want to see those responses. Which plan keeps the evidence?",
+    "hint": "Which filter can lose a packet for good?",
+    "choices": [
+      {
+        "text": "A capture filter of `http.response.code >= 500`, so the file holds only failures",
+        "correct": false,
+        "why": "That is a display filter's language; as a capture filter it is refused."
+      },
+      {
+        "text": "Capture `tcp port 80` to a file, then display `http.response.code >= 500`",
+        "correct": true,
+        "why": "Right. Wide enough to catch it, and narrowed afterwards as often as needed."
+      },
+      {
+        "text": "Capture five minutes with `-a duration:300` and filter those",
+        "correct": false,
+        "why": "An error once an hour is unlikely to fall inside five minutes."
+      },
+      {
+        "text": "Capture `tcp port 443`, which is where web errors go",
+        "correct": false,
+        "why": "Errors come back on whatever port the request used, and 443 is encrypted besides."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbrhdwf9",
+    "version": 1,
+    "section": "two-filter-languages",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Client Hello carried the site's name, `www.example.com`, in ___ although everything after it was encrypted.",
+    "hint": "The opposite of encrypted.",
+    "blanks": [
+      {
+        "accept": [
+          "clear text",
+          "cleartext",
+          "plain text",
+          "plaintext",
+          "clear"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kqejpn81",
+    "version": 1,
+    "section": "two-filter-languages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`tcp.flags.syn == 1 && tcp.flags.ack == 0` found three frames in `files.pcap`. What were you counting?",
+    "hint": "A SYN/ACK is the server's answer.",
+    "choices": [
+      {
+        "text": "Connections that failed to open",
+        "correct": false,
+        "why": "A SYN alone says nothing about whether the answer came; all three did."
+      },
+      {
+        "text": "Connections the client opened",
+        "correct": true,
+        "why": "Right. The first packet of each: web1 on 80 and 443, web3 on 80."
+      },
+      {
+        "text": "The servers' replies to the client",
+        "correct": false,
+        "why": "Those carry ACK as well, so the filter excludes them."
+      },
+      {
+        "text": "Packets that were sent twice",
+        "correct": false,
+        "why": "A retransmission would be marked as one; these are three different ports and servers."
+      }
+    ]
+  },
+  {
+    "id": "ex-j74mzeh7",
+    "version": 1,
+    "section": "filter-mistakes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The display filter `port 80` was refused. What should have been typed?",
+    "hint": "A display filter names a field.",
+    "choices": [
+      {
+        "text": "`port == 80`",
+        "correct": false,
+        "why": "There is no field called port on its own; it belongs to a protocol."
+      },
+      {
+        "text": "`tcp port == 80`",
+        "correct": false,
+        "why": "Half BPF and half field: neither language reads it."
+      },
+      {
+        "text": "`tcp.port == 80`",
+        "correct": true,
+        "why": "Right. The protocol, a dot, the field, and a comparison."
+      },
+      {
+        "text": "`\"port 80\"`, in quotes",
+        "correct": false,
+        "why": "The quotes were already there for the shell; the words are the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6c7p738",
+    "version": 1,
+    "section": "filter-mistakes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the version recorded here, `ip.addr != 192.0.2.21` showed 18 packets. Which packets were they?",
+    "hint": "It gave the same count as !(ip.addr == 192.0.2.21).",
+    "choices": [
+      {
+        "text": "Those with at least one address other than 192.0.2.21",
+        "correct": false,
+        "why": "That is the older reading, and it matches nearly every packet, not 18."
+      },
+      {
+        "text": "Those whose source was not 192.0.2.21",
+        "correct": false,
+        "why": "That would include every request sent to web1."
+      },
+      {
+        "text": "Those sent by 192.0.2.21 and nobody else",
+        "correct": false,
+        "why": "That would be ip.src == 192.0.2.21, the opposite question."
+      },
+      {
+        "text": "Those in which neither address was 192.0.2.21",
+        "correct": true,
+        "why": "Right. 45 packets in the file, 27 to or from web1, 18 left."
+      }
+    ]
+  },
+  {
+    "id": "ex-r9afkrvr",
+    "version": 1,
+    "section": "filter-mistakes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file holds 45 packets, and the conversation statistics count 27 to or from `192.0.2.21`. How many does `!(ip.addr == 192.0.2.21)` show?",
+    "hint": "Every packet is either in the conversation or not.",
+    "value": 18,
+    "tolerance": 0,
+    "unit": "packets"
+  },
+  {
+    "id": "ex-37r62gvj",
+    "version": 1,
+    "section": "filter-mistakes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague captures on his own desk port with a correct filter for a server's traffic, records nothing, and writes in the ticket that the server sent nothing. What is the flaw?",
+    "hint": "A correct filter in the wrong place.",
+    "choices": [
+      {
+        "text": "He should have captured without `sudo`",
+        "correct": false,
+        "why": "Privilege decides whether the capture runs at all, and his did."
+      },
+      {
+        "text": "His port could never have seen it, so an empty file proves nothing",
+        "correct": true,
+        "why": "Right. On a switch, only a mirror port, a tap or the server itself sees that traffic."
+      },
+      {
+        "text": "A display filter was hiding the packets",
+        "correct": false,
+        "why": "The file itself was empty; a display filter cannot empty a file."
+      },
+      {
+        "text": "The server's traffic was encrypted",
+        "correct": false,
+        "why": "Encrypted packets are still captured; they are only unreadable."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zsgjqd5",
+    "version": 1,
+    "section": "streams-and-statistics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Following TCP stream 0 printed the request and the page, ending in `served by web1`. What does that show about plain HTTP?",
+    "hint": "Who else could have run that command?",
+    "choices": [
+      {
+        "text": "Anyone who copies the packets reads all of it",
+        "correct": true,
+        "why": "Right. Headers and body cross the wire in clear text."
+      },
+      {
+        "text": "Only the headers are readable; the body is compressed",
+        "correct": false,
+        "why": "The body, served by web1, was printed as it was sent."
+      },
+      {
+        "text": "It is readable only from a mirror port",
+        "correct": false,
+        "why": "Anywhere the packets pass, a tap or the server itself, reads the same bytes."
+      },
+      {
+        "text": "tshark decrypted it with the server's key",
+        "correct": false,
+        "why": "There was nothing to decrypt."
+      }
+    ]
+  },
+  {
+    "id": "ex-becyvrry",
+    "version": 1,
+    "section": "streams-and-statistics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Between `files` and `web1` the conversation table shows 15 frames, 1800 bytes one way and 12 frames, 3265 bytes the other. What explains the difference?",
+    "hint": "Which side sent the pages?",
+    "choices": [
+      {
+        "text": "Three of the client's frames were lost on the way",
+        "correct": false,
+        "why": "Nothing was lost; the counts come from what both sides sent."
+      },
+      {
+        "text": "The mirror port dropped the server's copies",
+        "correct": false,
+        "why": "The server's direction is the one with more bytes, not fewer."
+      },
+      {
+        "text": "The server's answers carried the data; the client mostly sent requests and acknowledgements",
+        "correct": true,
+        "why": "Right. More frames from the client, more bytes from the server: the shape of browsing."
+      },
+      {
+        "text": "web1 retransmitted its answers",
+        "correct": false,
+        "why": "A retransmission would add frames on web1's side, and it has fewer."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmar2e1r",
+    "version": 1,
+    "section": "streams-and-statistics",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can the protocol hierarchy tell you? Choose all that apply.",
+    "hint": "It counts frames per protocol, nothing else.",
+    "choices": [
+      {
+        "text": "That a protocol nobody expected is on the network",
+        "correct": true,
+        "why": "Right: it is a line in the tree."
+      },
+      {
+        "text": "Which page a client asked for",
+        "correct": false,
+        "why": "That is a stream to follow, not a count."
+      },
+      {
+        "text": "How many frames carried DNS",
+        "correct": true,
+        "why": "Right: 4 in files.pcap."
+      },
+      {
+        "text": "The round-trip time of each connection",
+        "correct": false,
+        "why": "It has no times in it at all."
+      },
+      {
+        "text": "What share of TCP carried HTTP or TLS",
+        "correct": true,
+        "why": "Right: 4 and 8 of 37 frames."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g2kyref",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of an investigation with Wireshark in order.",
+    "hint": "The only irreversible choices come first.",
+    "items": [
+      "Choose a place that can see the traffic",
+      "Capture to a file with a broad capture filter",
+      "Narrow the view with display filters",
+      "Follow the conversation that matters"
+    ],
+    "trap": "A display filter works on what was saved, so capturing has to come before it; and nothing is saved from a port that cannot see the traffic."
+  },
+  {
+    "id": "ex-kmyat4px",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You must see the traffic between two servers on a switch, and all you have is a laptop on an ordinary port. What gets you the packets?",
+    "hint": "What decides where a frame goes?",
+    "choices": [
+      {
+        "text": "Putting the laptop's interface in promiscuous mode",
+        "correct": false,
+        "why": "Promiscuous mode accepts every frame that arrives, and the switch still sends none of theirs to that port."
+      },
+      {
+        "text": "Running Wireshark as root on the laptop",
+        "correct": false,
+        "why": "Privilege on the laptop changes nothing about what reaches its port."
+      },
+      {
+        "text": "A display filter on the two servers' addresses",
+        "correct": false,
+        "why": "It can only show what was captured, and none of it was."
+      },
+      {
+        "text": "A mirror of one server's port to the laptop's",
+        "correct": true,
+        "why": "Right. Or capture on one of the servers itself, lesson 12's way."
+      }
+    ]
+  }
+]
