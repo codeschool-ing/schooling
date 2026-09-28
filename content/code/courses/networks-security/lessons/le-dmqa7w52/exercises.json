@@ -1,0 +1,639 @@
+[
+  {
+    "id": "ex-0q999z1x",
+    "version": 1,
+    "section": "what-an-acl-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A packet crosses an interface and matches none of the ACL's lines. What happens to it?",
+    "hint": "Look at the last row but one of the table.",
+    "choices": [
+      {
+        "text": "It passes, since no line refused it",
+        "correct": false,
+        "why": "An ACL ends in a deny you cannot see."
+      },
+      {
+        "text": "It is forwarded and counted as unmatched",
+        "correct": false,
+        "why": "Unmatched packets are not forwarded."
+      },
+      {
+        "text": "The implicit deny drops it",
+        "correct": true,
+        "why": "Right. It sits at the end, invisible in the configuration."
+      },
+      {
+        "text": "It goes to the ACL on the other direction",
+        "correct": false,
+        "why": "Each direction's list decides alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-19887mmr",
+    "version": 1,
+    "section": "what-an-acl-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An ACL has line 10 `permit tcp any any eq 80` and line 20 `deny ip host 10.0.0.5 any`. 10.0.0.5 sends a packet to port 80. What happens?",
+    "hint": "Lines are compared from the top.",
+    "choices": [
+      {
+        "text": "Denied, because a deny line outranks a permit line",
+        "correct": false,
+        "why": "There is no ranking by action; order decides."
+      },
+      {
+        "text": "Denied, because the line naming the host is more specific",
+        "correct": false,
+        "why": "That is how a routing table chooses, not an ACL."
+      },
+      {
+        "text": "Permitted, and logged as a conflict between lines",
+        "correct": false,
+        "why": "Nothing detects a conflict; line 20 is simply never reached."
+      },
+      {
+        "text": "Permitted by line 10",
+        "correct": true,
+        "why": "Right. The first line that matches decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzmy4dn9",
+    "version": 1,
+    "section": "what-an-acl-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each property to how an ACL has it.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "memory",
+        "right": "none: each packet is judged alone"
+      },
+      {
+        "left": "where it applies",
+        "right": "one interface, in one direction"
+      },
+      {
+        "left": "when nothing matches",
+        "right": "a deny that is not written down"
+      },
+      {
+        "left": "where it runs",
+        "right": "in the switching hardware, at port speed"
+      }
+    ],
+    "right_distractors": [
+      "connection tracking"
+    ]
+  },
+  {
+    "id": "ex-1dgkh22w",
+    "version": 1,
+    "section": "standard-acls",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a standard ACL test in a packet?",
+    "hint": "It says who, and not where.",
+    "choices": [
+      {
+        "text": "Its source and destination addresses",
+        "correct": false,
+        "why": "The destination is an extended ACL's field."
+      },
+      {
+        "text": "Its source address",
+        "correct": true,
+        "why": "Right. Nothing else."
+      },
+      {
+        "text": "Its source address and its port",
+        "correct": false,
+        "why": "Ports need an extended ACL."
+      },
+      {
+        "text": "The destination it is heading for",
+        "correct": false,
+        "why": "It is the opposite field."
+      }
+    ]
+  },
+  {
+    "id": "ex-npxa28h6",
+    "version": 1,
+    "section": "standard-acls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the standard ACL loaded on branch, what did guest's probe report for remote:80 and remote:443?",
+    "hint": "guest is 192.168.30.21, not .20.",
+    "choices": [
+      {
+        "text": "80 open and 443 blocked",
+        "correct": false,
+        "why": "A standard ACL cannot tell ports apart."
+      },
+      {
+        "text": "Both refused, answered by the router",
+        "correct": false,
+        "why": "Nothing answered; the packets were dropped."
+      },
+      {
+        "text": "Both open, because guest shares branchpc's segment",
+        "correct": false,
+        "why": "The ACL tests the address, not the segment."
+      },
+      {
+        "text": "Both blocked",
+        "correct": true,
+        "why": "Right. Every destination and port, since only the source is tested."
+      }
+    ]
+  },
+  {
+    "id": "ex-a2fajd91",
+    "version": 1,
+    "section": "standard-acls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the nftables version carry a line accepting ARP that the IOS ACL does not need?",
+    "hint": "How early does the netdev hook see traffic?",
+    "choices": [
+      {
+        "text": "The ingress hook sees every frame, and dropping ARP would stop the machines finding the router",
+        "correct": true,
+        "why": "Right. A router's IP ACL never sees ARP."
+      },
+      {
+        "text": "ARP carries the source address the ACL tests",
+        "correct": false,
+        "why": "The line accepts ARP whatever it carries."
+      },
+      {
+        "text": "nft refuses a chain whose rules are all IP",
+        "correct": false,
+        "why": "The chain would load; the segment would break."
+      },
+      {
+        "text": "It replaces the implicit deny",
+        "correct": false,
+        "why": "policy drop is the implicit deny."
+      }
+    ]
+  },
+  {
+    "id": "ex-s3w9dv9h",
+    "version": 1,
+    "section": "extended-acls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before any ACL, remote:22 was refused. With the extended ACL, it is blocked. What does that change show?",
+    "hint": "Who answered in each case?",
+    "choices": [
+      {
+        "text": "remote stopped its SSH server",
+        "correct": false,
+        "why": "It had none; that is why it refused."
+      },
+      {
+        "text": "The SYN no longer reaches remote",
+        "correct": true,
+        "why": "Right. Refused was remote's reset; blocked is silence."
+      },
+      {
+        "text": "The router now answers with a reset on remote's behalf",
+        "correct": false,
+        "why": "A reset would still read as refused."
+      },
+      {
+        "text": "remote's firewall started to drop port 22",
+        "correct": false,
+        "why": "The counter on branch caught it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6jpq0th5",
+    "version": 1,
+    "section": "extended-acls",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many packets had the web line (tcp dport 80, 443) counted after the test?",
+    "hint": "counter packets ...",
+    "value": 12,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-tre3511e",
+    "version": 1,
+    "section": "extended-acls",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can an extended ACL test that a standard ACL does not? Choose all that apply.",
+    "hint": "Compare with lesson 1's rules.",
+    "choices": [
+      {
+        "text": "The destination address",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The source address",
+        "correct": false,
+        "why": "Both kinds test it; it is the standard ACL's one field."
+      },
+      {
+        "text": "The protocol, such as tcp or udp",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Whether the packet belongs to a connection already open",
+        "correct": false,
+        "why": "An ACL keeps no state, of either kind."
+      },
+      {
+        "text": "The TCP or UDP port",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-a8dm0j30",
+    "version": 1,
+    "section": "wildcard-masks",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the third byte of the wildcard mask for a /20?",
+    "hint": "255 minus the netmask's third byte.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-71mv35v2",
+    "version": 1,
+    "section": "wildcard-masks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The IOS shorthand for the wildcard 255.255.255.255 is ___.",
+    "hint": "It matches every address.",
+    "blanks": [
+      {
+        "accept": [
+          "any"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dvkxhahr",
+    "version": 1,
+    "section": "wildcard-masks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which wildcard mask matches the network 10.8.4.0/22?",
+    "hint": "A /22's netmask is 255.255.252.0.",
+    "choices": [
+      {
+        "text": "255.255.252.0",
+        "correct": false,
+        "why": "That is the netmask, not inverted."
+      },
+      {
+        "text": "0.0.4.255",
+        "correct": false,
+        "why": "255 - 252 is 3, not 4."
+      },
+      {
+        "text": "0.0.3.255",
+        "correct": true,
+        "why": "Right. 255 - 252 = 3."
+      },
+      {
+        "text": "0.0.0.255",
+        "correct": false,
+        "why": "That is a /24."
+      }
+    ]
+  },
+  {
+    "id": "ex-gaw0y4gr",
+    "version": 1,
+    "section": "wildcard-masks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which addresses does `192.168.0.1 0.0.254.0` match?",
+    "hint": "Write 254 in binary: which bit must match?",
+    "choices": [
+      {
+        "text": "Every address from 192.168.0.1 to 192.168.254.1",
+        "correct": false,
+        "why": "The lowest bit of the third byte must be 0, so odd values are out."
+      },
+      {
+        "text": "192.168.0.1 and 192.168.254.1, and no others",
+        "correct": false,
+        "why": "Every 1 bit in 254 is free, so many values match."
+      },
+      {
+        "text": "The whole of 192.168.0.0/16",
+        "correct": false,
+        "why": "The last byte must be 1."
+      },
+      {
+        "text": "Host .1 in every even third byte",
+        "correct": true,
+        "why": "Right: 192.168.0.1, 192.168.2.1 and so on."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbmzct7b",
+    "version": 1,
+    "section": "where-to-apply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does a standard ACL belong, and why?",
+    "hint": "What can it see?",
+    "choices": [
+      {
+        "text": "Close to the source, so unwanted traffic is dropped as early as possible",
+        "correct": false,
+        "why": "That is the rule for an extended ACL."
+      },
+      {
+        "text": "Close to the destination, since it knows the source and nothing more",
+        "correct": true,
+        "why": "Right. Near the source it would cut that source off from everything."
+      },
+      {
+        "text": "On the router's internet side, outbound",
+        "correct": false,
+        "why": "The kind of ACL decides the place, not the internet."
+      },
+      {
+        "text": "Anywhere, since it tests a single field",
+        "correct": false,
+        "why": "That single field is exactly why the place matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-2g7sx8d2",
+    "version": 1,
+    "section": "where-to-apply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is an inbound ACL usually preferred over an outbound one?",
+    "hint": "When does the router route?",
+    "choices": [
+      {
+        "text": "Outbound ACLs cannot test source addresses",
+        "correct": false,
+        "why": "Both directions test the same fields."
+      },
+      {
+        "text": "Inbound ACLs keep connection state",
+        "correct": false,
+        "why": "Neither direction keeps state."
+      },
+      {
+        "text": "It drops before routing, and it protects the router",
+        "correct": true,
+        "why": "Right. Outbound cannot protect the router itself."
+      },
+      {
+        "text": "Outbound ACLs run in software and inbound in hardware",
+        "correct": false,
+        "why": "The section does not split them that way."
+      }
+    ]
+  },
+  {
+    "id": "ex-hw1cykgr",
+    "version": 1,
+    "section": "where-to-apply",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You are changing the ACL on the interface your session to a remote router uses. Put the steps in order.",
+    "hint": "A way back comes first.",
+    "items": [
+      "schedule `reload in 5`",
+      "apply the ACL to the interface",
+      "test that you still reach the router",
+      "run `reload cancel`"
+    ],
+    "trap": "Cancelling the reload before the test leaves no way back if the ACL cut you off."
+  },
+  {
+    "id": "ex-7psprh0y",
+    "version": 1,
+    "section": "the-established-keyword",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which packets does the IOS `established` keyword match?",
+    "hint": "It reads a flag, not a table.",
+    "choices": [
+      {
+        "text": "Packets of connections the router saw open",
+        "correct": false,
+        "why": "An ACL keeps no table of connections."
+      },
+      {
+        "text": "A connection's first SYN",
+        "correct": false,
+        "why": "That is what it fails."
+      },
+      {
+        "text": "Any reply, TCP or UDP",
+        "correct": false,
+        "why": "It exists for TCP alone."
+      },
+      {
+        "text": "TCP packets with ACK or RST set",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-a04xaxsm",
+    "version": 1,
+    "section": "the-established-keyword",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A TCP packet with ACK set, belonging to no connection, reaches a line with `established`. What happens?",
+    "hint": "The line checks a flag the sender sets.",
+    "choices": [
+      {
+        "text": "It passes, and the host answers with a reset",
+        "correct": true,
+        "why": "Right. No connection opens, but the ACL let it through."
+      },
+      {
+        "text": "The line drops it, as no connection exists",
+        "correct": false,
+        "why": "The line has no idea whether one exists."
+      },
+      {
+        "text": "It passes and the host opens a connection",
+        "correct": false,
+        "why": "The host resets it; nothing is open."
+      },
+      {
+        "text": "The router answers it with a reset",
+        "correct": false,
+        "why": "The ACL passes or drops; the host answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-zkgtptrr",
+    "version": 1,
+    "section": "the-established-keyword",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An inbound ACL uses `established` for web replies. How do the branch's DNS answers get in?",
+    "hint": "DNS answers travel over UDP.",
+    "choices": [
+      {
+        "text": "Through the same line, since a DNS answer has ACK set",
+        "correct": false,
+        "why": "UDP has no ACK flag."
+      },
+      {
+        "text": "Through a line of their own permitting source port 53",
+        "correct": true,
+        "why": "Right. And that line is lesson 1's hole."
+      },
+      {
+        "text": "They cannot; the implicit deny drops them",
+        "correct": false,
+        "why": "A line for them can be written."
+      },
+      {
+        "text": "Through an `established` on a udp line",
+        "correct": false,
+        "why": "The keyword is for TCP."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9bjcayj",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each requirement to the filter that fits it.",
+    "hint": "What does each one need to know?",
+    "pairs": [
+      {
+        "left": "keep guest away from one server at head office",
+        "right": "an extended ACL near the source"
+      },
+      {
+        "left": "drop between VLANs what can never be legitimate, at port speed",
+        "right": "a plain ACL on the core switch"
+      },
+      {
+        "left": "let in replies to connections actually opened, and nothing else",
+        "right": "a stateful firewall"
+      }
+    ],
+    "right_distractors": [
+      "a standard ACL on branch's LAN side"
+    ]
+  },
+  {
+    "id": "ex-m64enfhc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the extended ACL on branch, the branch's machines stop syncing time over NTP (UDP 123), and the implicit-deny counter rises. Why?",
+    "hint": "Read the lines that permit.",
+    "choices": [
+      {
+        "text": "established blocks UDP replies",
+        "correct": false,
+        "why": "The NTP request never left the LAN."
+      },
+      {
+        "text": "The wildcard 0.0.0.255 on the permit lines leaves the NTP servers out",
+        "correct": false,
+        "why": "The destination is any; the wildcard is on the source."
+      },
+      {
+        "text": "No line permits udp 123, so the implicit deny takes it",
+        "correct": true,
+        "why": "Right. The counter is where it shows."
+      },
+      {
+        "text": "The arp line catches NTP before the UDP line",
+        "correct": false,
+        "why": "NTP is IP, not ARP."
+      }
+    ]
+  },
+  {
+    "id": "ex-10gs5qgn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A standard ACL reads `access-list 20 permit 172.16.8.0 0.0.7.255`. Which source does it permit?",
+    "hint": "The third byte may be 8 plus anything up to 7.",
+    "choices": [
+      {
+        "text": "172.16.16.1",
+        "correct": false,
+        "why": "16 is past 8 + 7."
+      },
+      {
+        "text": "172.16.7.255",
+        "correct": false,
+        "why": "7 is below the network's 8."
+      },
+      {
+        "text": "172.16.24.9",
+        "correct": false,
+        "why": "24 is outside 8 to 15."
+      },
+      {
+        "text": "172.16.15.200",
+        "correct": true,
+        "why": "Right. 8 to 15 in the third byte."
+      }
+    ]
+  }
+]
