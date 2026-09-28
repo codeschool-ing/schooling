@@ -1,0 +1,438 @@
+{
+  "ex-6ca6512e": {
+    "prompt": "Que lacuna deixada pelas assinaturas digitais uma infraestrutura de chaves públicas fecha?",
+    "hint": "A aula 11 terminou nela.",
+    "choices": [
+      {
+        "text": "Assinaturas são lentas demais para a web",
+        "why": "Velocidade não foi o problema apontado."
+      },
+      {
+        "text": "Saber de quem é a chave pública que você tem",
+        "why": "Isso. Um terceiro em quem os dois confiam atesta o vínculo."
+      },
+      {
+        "text": "Assinaturas não cifram a mensagem",
+        "why": "Uma PKI não acrescenta cifragem a uma assinatura."
+      },
+      {
+        "text": "A chave privada precisa ser enviada antes à outra parte",
+        "why": "A chave privada não é enviada; a questão é a pública."
+      }
+    ]
+  },
+  "ex-9dhgcdj8": {
+    "prompt": "Um site de phishing num nome parecido mostra um cadeado válido. O que o certificado dele estabeleceu?",
+    "hint": "Leia a coluna da direita da tabela.",
+    "choices": [
+      {
+        "text": "Que a CA julgou o site legítimo",
+        "why": "Uma CA verifica o controle de um nome, não a honestidade."
+      },
+      {
+        "text": "Nada: uma CA recusa nomes parecidos",
+        "why": "Ela verifica o controle do nome pedido."
+      },
+      {
+        "text": "Que a conexão chega ao nome parecido",
+        "why": "Isso. O cadeado não diz nada sobre o próprio nome."
+      },
+      {
+        "text": "Que não existe outro certificado para esse nome",
+        "why": "Um certificado não diz isso."
+      }
+    ]
+  },
+  "ex-kfxdp443": {
+    "prompt": "Quais destas coisas um certificado afirma? Escolha todas as que se aplicam.",
+    "hint": "A coluna da esquerda.",
+    "choices": [
+      {
+        "text": "Quem tem a chave controlava o nome quando ele foi emitido",
+        "why": "Isso. Na emissão, não hoje."
+      },
+      {
+        "text": "A chave ainda está nas mãos certas hoje",
+        "why": "Ele não tem como saber; para isso existe a revogação."
+      },
+      {
+        "text": "A CA verificou esse controle como a política dela diz",
+        "why": "Isso."
+      },
+      {
+        "text": "O vínculo vale entre duas datas",
+        "why": "Isso: notBefore e notAfter."
+      },
+      {
+        "text": "O site por trás do nome é seguro de usar",
+        "why": "Segurança não é o que uma CA verifica."
+      }
+    ]
+  },
+  "ex-exnazzcf": {
+    "prompt": "Ligue cada certificado da empresa ao que ele pode assinar.",
+    "hint": "Basic Constraints na captura.",
+    "pairs": [
+      {
+        "left": "Example Corp Root CA",
+        "right": "certificados de CA e certificados finais"
+      },
+      {
+        "left": "Example Corp Issuing CA",
+        "right": "certificados finais, nenhuma outra CA"
+      },
+      {
+        "left": "www.example.com",
+        "right": "nenhum certificado"
+      }
+    ],
+    "right_distractors": [
+      "outras raízes, e nada abaixo delas"
+    ]
+  },
+  "ex-h1s3n9tz": {
+    "prompt": "O subject e o issuer da raiz são iguais. O que faz o laptop confiar nela?",
+    "hint": "Olhe /etc/ssl/certs.",
+    "choices": [
+      {
+        "text": "A CA emissora atesta por ela",
+        "why": "A seta aponta no sentido contrário."
+      },
+      {
+        "text": "A assinatura confere com a própria chave",
+        "why": "Qualquer raiz feita por qualquer um passaria nisso."
+      },
+      {
+        "text": "CA:TRUE no Basic Constraints",
+        "why": "Isso diz o que ela pode assinar, não quem acredita nela."
+      },
+      {
+        "text": "Foi instalada no laptop",
+        "why": "Isso. Nada atesta por uma raiz."
+      }
+    ]
+  },
+  "ex-znwd0ewb": {
+    "prompt": "Por que a raiz assina a CA emissora uma vez e fica offline em vez de assinar servidores todo dia?",
+    "hint": "Compare perder cada chave.",
+    "choices": [
+      {
+        "text": "Perder a chave dela obriga a reconfigurar toda máquina que confia nela",
+        "why": "Isso. A perda da emissora é reparada pela raiz."
+      },
+      {
+        "text": "pathlen:0 a impede de assinar servidores",
+        "why": "O pathlen:0 está na CA emissora."
+      },
+      {
+        "text": "As assinaturas de uma raiz são mais lentas",
+        "why": "O custo é risco, não velocidade."
+      },
+      {
+        "text": "Os dez anos dela durariam mais que os servidores",
+        "why": "As datas de cada certificado são definidas nele."
+      }
+    ]
+  },
+  "ex-ra699eqn": {
+    "prompt": "O openssl verify recebeu a raiz como confiável e www.example.com.crt, sem intermediária. Que número de erro ele imprimiu?",
+    "hint": "unable to get local issuer certificate."
+  },
+  "ex-xvpmr5yg": {
+    "prompt": "Na cadeia que www.example.com enviou ao laptop, qual certificado faltava, e por quê?",
+    "hint": "Foram enviadas as profundidades 0 e 1.",
+    "choices": [
+      {
+        "text": "A emissora, porque o laptop já a tem",
+        "why": "A profundidade 1 era a emissora."
+      },
+      {
+        "text": "A raiz: o laptop já a tem",
+        "why": "Isso."
+      },
+      {
+        "text": "O do servidor, guardado da vez anterior",
+        "why": "A profundidade 0 era o do servidor."
+      },
+      {
+        "text": "Nenhum faltava: os três foram enviados",
+        "why": "Voltaram só duas linhas."
+      }
+    ]
+  },
+  "ex-sggspta5": {
+    "prompt": "Por que a intermediária é passada ao openssl verify com -untrusted em vez de entrar no -CAfile?",
+    "hint": "Quais certificados são aceitos por si mesmos?",
+    "choices": [
+      {
+        "text": "O -CAfile aceita um arquivo",
+        "why": "O chain.pem da seção de revogação tinha dois."
+      },
+      {
+        "text": "Uma intermediária não tem assinatura a verificar",
+        "why": "A raiz a assinou, e isso é verificado."
+      },
+      {
+        "text": "Ela é verificada na subida",
+        "why": "Isso. Raízes são confiáveis; intermediárias são verificadas."
+      },
+      {
+        "text": "O -untrusted faz o openssl pular as datas dela",
+        "why": "As datas são verificadas como as de qualquer elo."
+      }
+    ]
+  },
+  "ex-h57kz729": {
+    "prompt": "O openssl imprimiu 'Certificate request self-signature verify OK' para app.csr. O que isso estabelece?",
+    "hint": "Qual chave assinou a requisição?",
+    "choices": [
+      {
+        "text": "A CA aprovou a requisição",
+        "why": "Nada chegou à CA ainda."
+      },
+      {
+        "text": "Quem a fez tem a chave privada que corresponde à pública dentro dela",
+        "why": "Isso."
+      },
+      {
+        "text": "O requerente controla app.corp.example.com",
+        "why": "Verificar o nome é trabalho da CA, depois."
+      },
+      {
+        "text": "A chave da CA emissora a assinou",
+        "why": "A CA assina o certificado, não a requisição."
+      }
+    ]
+  },
+  "ex-98hrdx72": {
+    "prompt": "Ordene a emissão do certificado de app, do primeiro ao último passo.",
+    "hint": "A chave nunca troca de mãos.",
+    "items": [
+      "app gera sua chave e uma requisição de assinatura",
+      "a CA confere o requerente segundo seu processo",
+      "a CA assina com suas próprias extensões e datas",
+      "uma linha V do novo serial entra no registro"
+    ],
+    "trap": "Decidir se assina vem antes de assinar; o registro anota o que foi assinado."
+  },
+  "ex-cp4rra1a": {
+    "prompt": "Que número de série a CA deu ao certificado de app.corp.example.com?",
+    "hint": "openssl x509 -serial."
+  },
+  "ex-0mar5hyc": {
+    "prompt": "CAs públicas verificam o controle do nome e então emitem automaticamente pelo protocolo ___.",
+    "hint": "Quatro letras.",
+    "blanks": [
+      {
+        "accept": [
+          "ACME"
+        ]
+      }
+    ]
+  },
+  "ex-efa1neaj": {
+    "prompt": "Depois que o serial 1003 foi revogado, que número de erro o openssl verify -crl_check imprimiu para app.crt?",
+    "hint": "certificate revoked."
+  },
+  "ex-mgfmxpbj": {
+    "prompt": "O Next Update da CRL fica sete dias depois do Last Update. O que essa data quer dizer?",
+    "hint": "Quem promete o quê até lá?",
+    "choices": [
+      {
+        "text": "Os seriais revogados saem da lista nesse dia",
+        "why": "A revogação continua listada; a lista é que se renova."
+      },
+      {
+        "text": "O certificado 1003 volta a valer depois dessa data",
+        "why": "Aqui a revogação não é suspensão."
+      },
+      {
+        "text": "Clientes a guardam até lá, quando sai outra",
+        "why": "Isso."
+      },
+      {
+        "text": "A chave da CA expira nessa data",
+        "why": "A CA emissora vale até 2031."
+      }
+    ]
+  },
+  "ex-p66ysqc8": {
+    "prompt": "Ligue cada mecanismo de revogação à sua fraqueza.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "CRL",
+        "right": "as listas crescem e clientes as pulam"
+      },
+      {
+        "left": "OCSP",
+        "right": "a CA fica sabendo o que todos visitam"
+      },
+      {
+        "left": "OCSP stapling",
+        "right": "só ajuda se o cliente exigir"
+      },
+      {
+        "left": "validade curta",
+        "right": "exige automação em toda parte"
+      }
+    ],
+    "right_distractors": [
+      "a raiz tem de voltar a ficar online"
+    ]
+  },
+  "ex-r0vjxg7d": {
+    "prompt": "Por que a CA de uma empresa consegue fazer a revogação funcionar onde a web pública tem dificuldade?",
+    "hint": "Quem configura os clientes?",
+    "choices": [
+      {
+        "text": "CRLs internas são pequenas o bastante para baixar a cada vez",
+        "why": "Tamanho não é o que faz clientes verificarem."
+      },
+      {
+        "text": "Certificados internos duram mais",
+        "why": "Uma vida mais longa torna a revogação mais importante."
+      },
+      {
+        "text": "OCSP não funciona com nomes internos",
+        "why": "Funciona; o motivo não é esse."
+      },
+      {
+        "text": "Controla as duas pontas e obriga a verificar",
+        "why": "Isso. Todo cliente verifica a CRL e recusa quando não consegue."
+      }
+    ]
+  },
+  "ex-fs5xngjk": {
+    "prompt": "O que uma restrição de nomes a corp.example.com muda em instalar a CA da empresa nos laptops da equipe?",
+    "hint": "Por quais nomes ela pode atestar?",
+    "choices": [
+      {
+        "text": "Sites públicos saem do risco",
+        "why": "Isso. A CA atesta só pelos nomes da empresa."
+      },
+      {
+        "text": "Os laptops deixam de precisar de um repositório de confiança",
+        "why": "A raiz ainda precisa ser instalada."
+      },
+      {
+        "text": "A revogação fica desnecessária",
+        "why": "Uma chave roubada dentro do domínio ainda precisa ser revogada."
+      },
+      {
+        "text": "A equipe acessa corp.example.com de casa",
+        "why": "Restrições limitam a assinatura, não o alcance."
+      }
+    ]
+  },
+  "ex-qxefgew1": {
+    "prompt": "Segundo a seção, que falha de PKI é muito mais comum que qualquer ataque?",
+    "hint": "A pane das 3 da manhã.",
+    "choices": [
+      {
+        "text": "Uma chave raiz copiada de um disco",
+        "why": "Chaves em hardware respondem a isso, e é mais raro."
+      },
+      {
+        "text": "Um certificado esquecido que expira",
+        "why": "Isso. Um inventário responde a isso."
+      },
+      {
+        "text": "Uma CA assinando uma requisição que devia recusar",
+        "why": "Uma política escrita responde a isso, e é mais rara."
+      },
+      {
+        "text": "Uma CA interna usada para se passar por um site público",
+        "why": "Restrições de nome respondem a isso."
+      }
+    ]
+  },
+  "ex-fs83abcj": {
+    "prompt": "O que monitorar os logs de Certificate Transparency dá à empresa?",
+    "hint": "Um controle de detecção.",
+    "choices": [
+      {
+        "text": "Impede qualquer CA de emitir para os nomes dela",
+        "why": "Os logs registram a emissão; não a impedem."
+      },
+      {
+        "text": "Revoga na hora certificados não pedidos",
+        "why": "Revogar é ato da CA emissora."
+      },
+      {
+        "text": "Aviso em horas de um certificado para seus nomes que ela não pediu",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma cópia de toda chave privada dos seus domínios",
+        "why": "Os logs guardam certificados, nunca chaves."
+      }
+    ]
+  },
+  "ex-f2pzk1rf": {
+    "prompt": "Depois que um servidor web é reinstalado, navegadores que já o visitaram conectam, mas clientes novos falham com 'unable to get local issuer certificate'. Qual a causa mais provável?",
+    "hint": "O erro 20, visto do lado do servidor.",
+    "choices": [
+      {
+        "text": "A raiz foi removida do repositório dos clientes novos",
+        "why": "Então os visitantes antigos falhariam também."
+      },
+      {
+        "text": "O certificado do servidor expirou",
+        "why": "Isso falharia em todo cliente, com outro erro."
+      },
+      {
+        "text": "Ele deixou de enviar a intermediária",
+        "why": "Isso. Clientes que já a viram preenchem a lacuna."
+      },
+      {
+        "text": "O certificado dele foi revogado",
+        "why": "Revogação é o erro 23, para clientes antigos e novos."
+      }
+    ]
+  },
+  "ex-sq6rkwb0": {
+    "prompt": "A chave da CA emissora é roubada. O que precisa mudar nos repositórios de confiança dos laptops da equipe?",
+    "hint": "Em que os laptops de fato confiam?",
+    "choices": [
+      {
+        "text": "A raiz é trocada em cada um",
+        "why": "Esse é o preço de perder a raiz, não a emissora."
+      },
+      {
+        "text": "Nada: a raiz troca a emissora",
+        "why": "Isso. Os servidores recebem certificados novos; os repositórios ficam como estão."
+      },
+      {
+        "text": "A emissora é incluída em cada um, como confiável",
+        "why": "Intermediárias são verificadas, não confiáveis."
+      },
+      {
+        "text": "A impressão digital da chave roubada é bloqueada em cada um",
+        "why": "Repositórios guardam raízes, não uma lista de bloqueio; a CRL leva a revogação."
+      }
+    ]
+  },
+  "ex-45ejjf09": {
+    "prompt": "Um agente de monitoramento antigo nunca busca CRLs e não pode ser alterado. Que prática limita por quanto tempo uma chave de serviço roubada continua útil contra ele?",
+    "hint": "Qual defesa não depende de o cliente verificar?",
+    "choices": [
+      {
+        "text": "Publicar a CRL com mais frequência",
+        "why": "Ele não lê nenhuma, por mais nova que seja."
+      },
+      {
+        "text": "Manter a raiz offline",
+        "why": "Isso protege a raiz, não uma chave de serviço."
+      },
+      {
+        "text": "Restrições de nome na CA emissora",
+        "why": "O certificado roubado está dentro dos nomes permitidos."
+      },
+      {
+        "text": "Validade curta dos certificados",
+        "why": "Isso. O certificado expira no prazo, verificado ou não."
+      }
+    ]
+  }
+}

@@ -531,7 +531,7 @@ down() {
     ip netns pids "$h" 2>/dev/null | xargs -r kill -9 2>/dev/null || true
     ip netns del "$h"
   done
-  for h in $HOSTS printer; do rm -rf "/etc/netns/$h"; done
+  for h in $HOSTS printer ips; do rm -rf "/etc/netns/$h"; done
   rm -f /usr/local/share/ca-certificates/example-corp-root-ca.crt
   update-ca-certificates --fresh >/dev/null 2>&1 || true
   rm -rf "$LAB"
@@ -576,11 +576,41 @@ plug() {  # plug HOST SEGMENT ADDRESS/PREFIX MAC
   printf '%s\n' "$h" > "/etc/netns/$h/hostname"
 }
 
+# Lessons 14 and 15's intrusion prevention: a machine called ips put INLINE on
+# the DMZ's link to fw, a bump in the wire with two interfaces and no address.
+# fw's DMZ cable is unplugged from the DMZ switch and plugged into ips:eth0;
+# ips:eth1 goes to the switch. Nothing reaches the DMZ from fw, or leaves it
+# towards fw, without crossing ips. Suricata bridges the two in its IPS mode
+# (af-packet, copy-mode ips), so if Suricata stops, the link stops too.
+inline() {
+  local fwport
+  fwport=$(ip -n wire -o link show master br-dmz | awk -F': ' '{print $2}' | grep -- '-fw@' | cut -d@ -f1)
+  ip netns add ips
+  ip -n ips link set lo up
+  ip -n wire link set "$fwport" nomaster
+  ip -n wire link set "$fwport" netns ips
+  ip -n ips link set "$fwport" name eth0
+  ip link add i-ips type veth peer name lab-ips
+  ip link set lab-ips netns ips
+  ip -n ips link set lab-ips name eth1
+  ip link set i-ips netns wire
+  ip -n wire link set i-ips master br-dmz
+  ip -n wire link set i-ips up
+  for i in eth0 eth1; do
+    ip -n ips link set "$i" up
+    ip netns exec ips ethtool -K "$i" gro off gso off tso off >/dev/null 2>&1 || true
+  done
+  mkdir -p "/etc/netns/ips" "$LAB/ips/root" "$LAB/ips/home/ana" "$LAB/ips/var/log/suricata" "$LAB/ips/var/lib/suricata"
+  printf 'ips\n' > /etc/netns/ips/hostname
+  cp -a "$LAB/sensor/etc/suricata" "$LAB/ips/etc/" 2>/dev/null || { mkdir -p "$LAB/ips/etc"; cp -a "$LAB/sensor/etc/suricata" "$LAB/ips/etc/"; }
+}
+
 case "${1:-}" in
   up) up ;;
   down) down ;;
   reset) down; up ;;
   exec) shift; exec_on "$@" ;;
   plug) shift; plug "$@" ;;
+  inline) inline ;;
   *) echo "usage: lab.sh up|down|reset|exec HOST USER COMMAND|plug HOST SEGMENT ADDRESS MAC" >&2; exit 2 ;;
 esac
