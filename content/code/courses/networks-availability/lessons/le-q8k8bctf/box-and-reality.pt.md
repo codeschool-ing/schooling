@@ -22,8 +22,7 @@ e **o primeiro deles é que só um aparelho fala de cada vez**:
 - Um quadro perdido para o ruído ou numa colisão é enviado de novo, e um cliente que perde muitos passa
   para uma modulação mais lenta.
 
-Quanto sobra depende de quantos dados cada transmissão leva, mas o valor citado para um único cliente
-perto do ponto de acesso, com TCP, fica **em torno de 50 a 70% da taxa de enlace**. É um valor típico da
+O valor citado para um único cliente perto do ponto de acesso, com TCP, fica **em torno de 50 a 70% da taxa de enlace**. É um valor típico da
 prática, não um número que algum padrão define. O programa abaixo usa 60%.
 
 ## O recurso é o tempo de ar

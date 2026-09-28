@@ -28,8 +28,7 @@ to miss:
 **How much of each band may be used is the regulator's decision, country by country.** The United States
 opened all 1200 MHz of 6 GHz; the European Union opened the lower 480 MHz, 5945 to 6425. In Brazil the
 rules are Anatel's. An access point is told which country it is in, and that setting, not the hardware,
-decides which channels it will offer. Lesson 7 goes through the channels themselves, including the part
-of 5 GHz that has to give way to radar.
+decides which channels it will offer; lesson 7 goes through them.
 
 2.4 GHz survives because of its reach and because everything speaks it. A thermostat, a printer and a
 ten-year-old phone all have a 2.4 GHz radio, and many have nothing else. The price is crowding: three

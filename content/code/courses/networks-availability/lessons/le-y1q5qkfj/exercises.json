@@ -1,0 +1,672 @@
+[
+  {
+    "id": "ex-fh0egdkk",
+    "version": 1,
+    "section": "two-shapes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the active-passive pair, what is lb2 doing while lb1 is healthy?",
+    "hint": "Passive does not mean off.",
+    "choices": [
+      {
+        "text": "Carrying half the requests",
+        "correct": false,
+        "why": "That is active-active; here lb1 carries all of it."
+      },
+      {
+        "text": "Powered off, to be started on failure",
+        "correct": false,
+        "why": "It is running, and so is its HAProxy; nothing has to start at failover."
+      },
+      {
+        "text": "Running, configured the same, serving nothing",
+        "correct": true,
+        "why": "Right. Its log printed nothing at all."
+      },
+      {
+        "text": "Answering health checks for lb1",
+        "correct": false,
+        "why": "Each balancer's keepalived checks its own HAProxy."
+      }
+    ]
+  },
+  {
+    "id": "ex-c60wfgc4",
+    "version": 1,
+    "section": "two-shapes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two balancers run active-active, each at 70% of what one machine can handle. One of them fails. What happens?",
+    "hint": "Add the two loads.",
+    "choices": [
+      {
+        "text": "Nothing visible: the other takes over its address",
+        "correct": false,
+        "why": "It takes the address, and with it a load it cannot carry."
+      },
+      {
+        "text": "The survivor is asked for 140% and falls over",
+        "correct": true,
+        "why": "Right. And its own health check fails, so it gives up both addresses."
+      },
+      {
+        "text": "The survivor runs at 70%, as before",
+        "correct": false,
+        "why": "It now carries its own 70% and the other's 70%."
+      },
+      {
+        "text": "DNS removes the failed address at once",
+        "correct": false,
+        "why": "DNS knows nothing of the failure, and caches keep the answer anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-gkzfw6cr",
+    "version": 1,
+    "section": "two-shapes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With two balancers each kept at a safe load, what does active-active give that active-passive does not?",
+    "hint": "It is not capacity.",
+    "choices": [
+      {
+        "text": "Twice the capacity of one balancer",
+        "correct": false,
+        "why": "At a safe load each runs at half, which is one balancer's worth."
+      },
+      {
+        "text": "Failover with no gap at all",
+        "correct": false,
+        "why": "The address still moves by VRRP, with the same kind of gap."
+      },
+      {
+        "text": "Sessions that survive a failure",
+        "correct": false,
+        "why": "State dies with the machine in both shapes, unless it is stored elsewhere."
+      },
+      {
+        "text": "A spare proven by real traffic every day",
+        "correct": true,
+        "why": "Right. A passive machine can sit broken for months unnoticed."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gbwvzmm",
+    "version": 1,
+    "section": "active-passive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the lab set net.ipv4.ip_nonlocal_bind on both balancers?",
+    "hint": "HAProxy on lb2 listens on 192.0.2.80.",
+    "choices": [
+      {
+        "text": "So lb2's HAProxy can listen on an address it does not hold yet",
+        "correct": true,
+        "why": "Right. It is already listening when keepalived brings the address."
+      },
+      {
+        "text": "So the balancers accept traffic from outside",
+        "correct": false,
+        "why": "Any listening socket accepts outside traffic; this is about the address."
+      },
+      {
+        "text": "To let VRRP cross routers",
+        "correct": false,
+        "why": "VRRP stays on its LAN; this setting is about binding."
+      },
+      {
+        "text": "To hide the real address in the log",
+        "correct": false,
+        "why": "The log shows the client, 203.0.113.2, whatever this is set to."
+      }
+    ]
+  },
+  {
+    "id": "ex-12jyxkkc",
+    "version": 1,
+    "section": "active-passive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The vrrp_script runs curl -sf against /health every second. What does keepalived read from it?",
+    "hint": "-s is silent.",
+    "choices": [
+      {
+        "text": "The text of the page",
+        "correct": false,
+        "why": "-o /dev/null throws the page away."
+      },
+      {
+        "text": "How long the request took",
+        "correct": false,
+        "why": "A slow answer that arrives passes."
+      },
+      {
+        "text": "curl's exit code",
+        "correct": true,
+        "why": "Right. 0 passes; anything else, such as 7, fails."
+      },
+      {
+        "text": "The number of web servers up",
+        "correct": false,
+        "why": "/health knows nothing about the web servers."
+      }
+    ]
+  },
+  {
+    "id": "ex-2w6xceas",
+    "version": 1,
+    "section": "active-passive",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With fall 2, two failed runs of the script in a row put keepalived's instance into the ___ state, and it gives the address up.",
+    "hint": "It is written in capitals in the log.",
+    "blanks": [
+      {
+        "accept": [
+          "FAULT"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pk032erm",
+    "version": 1,
+    "section": "active-passive",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After six requests, lb2's `tail -n 3 /run/haproxy.log` printed nothing. Why?",
+    "hint": "Who holds 192.0.2.80?",
+    "choices": [
+      {
+        "text": "Its HAProxy had crashed",
+        "correct": false,
+        "why": "It was running; it was the one that took over later."
+      },
+      {
+        "text": "Logging is off on the standby",
+        "correct": false,
+        "why": "Both have the same file; the log is there, and empty."
+      },
+      {
+        "text": "The laptop sent every request to lb1's own address, 192.0.2.11",
+        "correct": false,
+        "why": "It sent them to www.example.com, which is 192.0.2.80."
+      },
+      {
+        "text": "It holds no public address, so it served nothing",
+        "correct": true,
+        "why": "Right. That is the passive half."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjbvckn5",
+    "version": 1,
+    "section": "active-passive",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line of haproxy.cfg to what it does.",
+    "hint": "One of them is keepalived's job, not HAProxy's.",
+    "pairs": [
+      {
+        "left": "bind 192.0.2.80:80",
+        "right": "Listens on the public address"
+      },
+      {
+        "left": "monitor-uri /health",
+        "right": "A page HAProxy answers itself"
+      },
+      {
+        "left": "option httpchk GET /",
+        "right": "Checks each server with a real request"
+      },
+      {
+        "left": "balance roundrobin",
+        "right": "Sends to the servers in turn"
+      }
+    ],
+    "right_distractors": [
+      "Moves the address to the other balancer"
+    ]
+  },
+  {
+    "id": "ex-bm7rtwpe",
+    "version": 1,
+    "section": "balancer-fails",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The last answer before the failure left at 18:11:46.916 and the first after it at 18:11:49.610. How long was the site silent, in seconds?",
+    "hint": "Subtract the times.",
+    "value": 2.694,
+    "tolerance": 0.001,
+    "unit": "s"
+  },
+  {
+    "id": "ex-7gnktcgy",
+    "version": 1,
+    "section": "balancer-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The first six failures are 0.21 s apart, and the seventh is followed by a 1.213 s pause. What do the two spacings say?",
+    "hint": "curl -m 1, and sleep 0.2.",
+    "choices": [
+      {
+        "text": "The laptop slowed down under load",
+        "correct": false,
+        "why": "The laptop's loop is the same each time; the spacing comes from the answers."
+      },
+      {
+        "text": "Six were refused at once; the seventh went unanswered",
+        "correct": true,
+        "why": "Right. lb1 held the address with nothing listening; the seventh left while the address moved."
+      },
+      {
+        "text": "lb2 answered slowly at first",
+        "correct": false,
+        "why": "lb2 answered nothing until 18:11:49.610, and then at the usual pace."
+      },
+      {
+        "text": "All seven timed out after a second",
+        "correct": false,
+        "why": "Then all seven would be 1.2 s apart, not six of them 0.21 s."
+      }
+    ]
+  },
+  {
+    "id": "ex-ex84q2nn",
+    "version": 1,
+    "section": "balancer-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "keepalived's log says `Script haproxy_alive now returning 7`. What does the 7 mean?",
+    "hint": "It is the script's exit status.",
+    "choices": [
+      {
+        "text": "Seven checks have failed so far",
+        "correct": false,
+        "why": "It failed once at that point; fall 2 acted on the second."
+      },
+      {
+        "text": "The page answered with HTTP status 7",
+        "correct": false,
+        "why": "HTTP statuses are three digits; this is curl's own exit code."
+      },
+      {
+        "text": "curl could not connect to the health page",
+        "correct": true,
+        "why": "Right. HAProxy was dead, so nothing listened on 127.0.0.1:8404."
+      },
+      {
+        "text": "The priority dropped by 7",
+        "correct": false,
+        "why": "A vrrp_script without a weight does not change the priority; it puts the instance in FAULT."
+      }
+    ]
+  },
+  {
+    "id": "ex-f0311g9f",
+    "version": 1,
+    "section": "balancer-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The balancer failover took 2.694 s and lesson 15's gateway failover 3.264 s, with the same one-second advertisements. Why was this one faster?",
+    "hint": "Who noticed the failure?",
+    "choices": [
+      {
+        "text": "lb1 found its own fault and announced it was leaving",
+        "correct": true,
+        "why": "Right. A priority-0 advertisement lets the backup skip three seconds of silence."
+      },
+      {
+        "text": "The data centre's links are faster than the office's",
+        "correct": false,
+        "why": "No link in the lab has any delay; the gap is all waiting."
+      },
+      {
+        "text": "lb2 has a higher priority than hq2",
+        "correct": false,
+        "why": "Both backups have priority 100."
+      },
+      {
+        "text": "HAProxy moves the address itself",
+        "correct": false,
+        "why": "keepalived moves it; HAProxy only listens."
+      }
+    ]
+  },
+  {
+    "id": "ex-nb7fkj0m",
+    "version": 1,
+    "section": "balancer-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A user was halfway through a download through lb1 when its HAProxy was killed. What happened to that download?",
+    "hint": "What moved: the address or the connections?",
+    "choices": [
+      {
+        "text": "lb2 resumed it from the same byte",
+        "correct": false,
+        "why": "lb2 has never heard of that connection."
+      },
+      {
+        "text": "It broke: the connection died with the process",
+        "correct": true,
+        "why": "Right. The address moves; the connections through it do not."
+      },
+      {
+        "text": "It paused for 2.694 s and carried on",
+        "correct": false,
+        "why": "Only new connections reach lb2; the old one belonged to a dead process."
+      },
+      {
+        "text": "web1 finished sending it directly",
+        "correct": false,
+        "why": "web1 was talking to lb1's HAProxy, not to the user."
+      }
+    ]
+  },
+  {
+    "id": "ex-7sjtby51",
+    "version": 1,
+    "section": "health-checks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "HAProxy marked web2 DOWN with `Layer4 connection problem, info: \"Connection refused\"`. What does that mean?",
+    "hint": "Layer 4 is TCP.",
+    "choices": [
+      {
+        "text": "web2 answered with an HTTP error",
+        "correct": false,
+        "why": "That would be a Layer7 problem; the check never got as far as HTTP."
+      },
+      {
+        "text": "Nothing listened on web2's port 80",
+        "correct": true,
+        "why": "Right. nginx had been stopped, so the TCP connection was refused."
+      },
+      {
+        "text": "web2 was unreachable on the network",
+        "correct": false,
+        "why": "A refusal comes from web2 itself, so it was reachable."
+      },
+      {
+        "text": "The balancer refused to check web2",
+        "correct": false,
+        "why": "The balancer ran the check; web2 refused the connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-zbk45k0k",
+    "version": 1,
+    "section": "health-checks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After nginx on web2 stopped, which of these were true? Choose all that apply.",
+    "hint": "show stat and the six requests.",
+    "choices": [
+      {
+        "text": "The backend as a whole was still UP",
+        "correct": true,
+        "why": "Right. web,BACKEND,UP: two of three servers are enough."
+      },
+      {
+        "text": "Requests went to web1 and web3 in turn",
+        "correct": true,
+        "why": "Right. Six requests, none to web2."
+      },
+      {
+        "text": "keepalived moved 192.0.2.80 to the other balancer",
+        "correct": false,
+        "why": "keepalived checks HAProxy, which was fine; a web server is HAProxy's business."
+      },
+      {
+        "text": "Users saw errors until web2 returned",
+        "correct": false,
+        "why": "All six requests after it were answered."
+      }
+    ]
+  },
+  {
+    "id": "ex-8grj1jpc",
+    "version": 1,
+    "section": "health-checks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "All three web servers go down at once. Does the haproxy_alive check make keepalived move the address?",
+    "hint": "Who answers /health?",
+    "choices": [
+      {
+        "text": "Yes, and the other balancer serves the site",
+        "correct": false,
+        "why": "The other balancer sends to the same three dead servers."
+      },
+      {
+        "text": "Yes, both balancers go to FAULT",
+        "correct": false,
+        "why": "/health does not depend on the web servers, so neither fails its check."
+      },
+      {
+        "text": "No: HAProxy answers /health itself",
+        "correct": true,
+        "why": "Right, and on purpose: moving the address could not reach a live server anyway."
+      },
+      {
+        "text": "No, because checks are paused during failures",
+        "correct": false,
+        "why": "Checks run every second, failure or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-2fpkebpt",
+    "version": 1,
+    "section": "health-checks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A web server's database connection dies, but its home page is a static file. What does `option httpchk GET /` report about it?",
+    "hint": "What does GET / exercise?",
+    "choices": [
+      {
+        "text": "DOWN, because the application is broken",
+        "correct": false,
+        "why": "The check asks for a page that works; it cannot see the database."
+      },
+      {
+        "text": "DOWN after a Layer4 timeout",
+        "correct": false,
+        "why": "TCP connects fine: nginx is running."
+      },
+      {
+        "text": "It depends on the round robin",
+        "correct": false,
+        "why": "The check runs on every server regardless of the rotation."
+      },
+      {
+        "text": "UP, with a Layer7 pass",
+        "correct": true,
+        "why": "Right. A check has to request a page that uses the real dependencies."
+      }
+    ]
+  },
+  {
+    "id": "ex-jfg0wet0",
+    "version": 1,
+    "section": "active-active",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An active-active group has 3 members. Following N+1, what is the most each may carry on a normal day, in percent of its capacity, rounded to a whole number?",
+    "hint": "Two must carry what three carried.",
+    "value": 67,
+    "tolerance": 1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-vxmt41xe",
+    "version": 1,
+    "section": "active-active",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After HAProxy on lb2 was killed, lb1 showed both 192.0.2.80 and 192.0.2.81. What does that mean for lb1?",
+    "hint": "Both addresses, one machine.",
+    "choices": [
+      {
+        "text": "It now carries the traffic of both",
+        "correct": true,
+        "why": "Right. The moment N+1 exists for."
+      },
+      {
+        "text": "It is in split brain with lb2",
+        "correct": false,
+        "why": "lb2 gave its address up; only lb1 holds it."
+      },
+      {
+        "text": "It splits each address's traffic with lb2",
+        "correct": false,
+        "why": "lb2 has no address left to serve."
+      },
+      {
+        "text": "Clients of .81 must be moved to .80 by DNS first",
+        "correct": false,
+        "why": "They keep using .81, which now lives on lb1."
+      }
+    ]
+  },
+  {
+    "id": "ex-4dmvj7kx",
+    "version": 1,
+    "section": "active-active",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of this lesson's active-active failover in order.",
+    "hint": "The check fails before the address moves.",
+    "items": [
+      "lb1 serves .80 and lb2 serves .81",
+      "HAProxy on lb2 is killed",
+      "lb2's haproxy_alive check fails twice",
+      "lb2 goes to FAULT and gives up .81",
+      "lb1 holds both addresses"
+    ],
+    "trap": "keepalived acts on the second failed check, never on the kill itself."
+  },
+  {
+    "id": "ex-e5ajhnnr",
+    "version": 1,
+    "section": "active-active",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A shop keeps each user's basket in the memory of the web server that served them. That server dies. What is the fix that survives it?",
+    "hint": "Keep the state somewhere that survives the machine.",
+    "choices": [
+      {
+        "text": "A faster failover of the balancer",
+        "correct": false,
+        "why": "The balancer was fine; the basket died with the web server."
+      },
+      {
+        "text": "Cookie persistence to the same server",
+        "correct": false,
+        "why": "It sends the user back to a server that no longer exists."
+      },
+      {
+        "text": "A shared, replicated session store",
+        "correct": true,
+        "why": "Right. Any server can then serve any user."
+      },
+      {
+        "text": "A third web server",
+        "correct": false,
+        "why": "More servers, each still holding its own users' baskets."
+      }
+    ]
+  },
+  {
+    "id": "ex-ak1388wv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A site runs two balancers active-active at 45% each and three web servers at 75% each. One balancer and one web server fail. What breaks?",
+    "hint": "Apply N+1 to each layer.",
+    "choices": [
+      {
+        "text": "The surviving balancer, at 90%",
+        "correct": false,
+        "why": "90% is heavy but within one machine's capacity."
+      },
+      {
+        "text": "The two web servers left, at 112.5% each",
+        "correct": true,
+        "why": "Right. 225% of one server's work over two servers."
+      },
+      {
+        "text": "Nothing: both layers have a spare",
+        "correct": false,
+        "why": "Having a spare is not enough if the load does not fit on what is left."
+      },
+      {
+        "text": "Both layers, equally",
+        "correct": false,
+        "why": "The balancers end at 90%, which fits."
+      }
+    ]
+  },
+  {
+    "id": "ex-rqdvd9rp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An engineer changes the keepalived script on both balancers to fetch the home page through HAProxy instead of /health. During a deploy all three web servers are down for a minute. What happens to 192.0.2.80?",
+    "hint": "Both checks now depend on the web servers.",
+    "choices": [
+      {
+        "text": "It moves to lb2, which serves the site",
+        "correct": false,
+        "why": "lb2 reaches the same dead web servers."
+      },
+      {
+        "text": "Nothing: keepalived ignores web servers",
+        "correct": false,
+        "why": "The new script makes it depend on them."
+      },
+      {
+        "text": "Both balancers fail their checks and nobody holds it",
+        "correct": true,
+        "why": "Right. Both go to FAULT: the check asks a question the failover cannot fix."
+      },
+      {
+        "text": "It flaps between lb1 and lb2 every second",
+        "correct": false,
+        "why": "Neither passes its check, so neither takes it."
+      }
+    ]
+  }
+]

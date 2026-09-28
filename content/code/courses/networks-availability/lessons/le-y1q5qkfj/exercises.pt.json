@@ -1,0 +1,456 @@
+{
+  "ex-fh0egdkk": {
+    "prompt": "No par ativo-passivo, o que lb2 está fazendo enquanto lb1 está saudável?",
+    "hint": "Passivo não quer dizer desligado.",
+    "choices": [
+      {
+        "text": "Levando metade das requisições",
+        "why": "Isso é ativo-ativo; aqui lb1 leva tudo."
+      },
+      {
+        "text": "Desligado, para ser ligado na falha",
+        "why": "Ele está rodando, e o HAProxy dele também; nada precisa ser iniciado no failover."
+      },
+      {
+        "text": "Rodando, configurado igual, sem servir nada",
+        "why": "Isso. O log dele não imprimiu nada."
+      },
+      {
+        "text": "Respondendo health checks por lb1",
+        "why": "O keepalived de cada balanceador verifica o próprio HAProxy."
+      }
+    ]
+  },
+  "ex-c60wfgc4": {
+    "prompt": "Dois balanceadores rodam em ativo-ativo, cada um a 70% do que uma máquina aguenta. Um deles falha. O que acontece?",
+    "hint": "Some as duas cargas.",
+    "choices": [
+      {
+        "text": "Nada visível: o outro assume o endereço dele",
+        "why": "Ele assume o endereço, e junto uma carga que não aguenta."
+      },
+      {
+        "text": "O sobrevivente recebe 140% e cai",
+        "why": "Isso. E o próprio health check dele falha, então ele abre mão dos dois endereços."
+      },
+      {
+        "text": "O sobrevivente roda a 70%, como antes",
+        "why": "Agora leva os próprios 70% e os 70% do outro."
+      },
+      {
+        "text": "O DNS tira o endereço que falhou na hora",
+        "why": "O DNS não sabe da falha, e os caches guardam a resposta de todo jeito."
+      }
+    ]
+  },
+  "ex-gkzfw6cr": {
+    "prompt": "Com dois balanceadores cada um numa carga segura, o que o ativo-ativo dá que o ativo-passivo não dá?",
+    "hint": "Não é capacidade.",
+    "choices": [
+      {
+        "text": "O dobro da capacidade de um balanceador",
+        "why": "Numa carga segura cada um roda na metade, o que vale um balanceador."
+      },
+      {
+        "text": "Failover sem buraco nenhum",
+        "why": "O endereço ainda muda pelo VRRP, com o mesmo tipo de buraco."
+      },
+      {
+        "text": "Sessões que sobrevivem a uma falha",
+        "why": "O estado morre com a máquina nos dois formatos, a menos que seja guardado em outro lugar."
+      },
+      {
+        "text": "Um reserva comprovado por tráfego real todo dia",
+        "why": "Isso. Uma máquina passiva pode ficar meses quebrada sem ninguém notar."
+      }
+    ]
+  },
+  "ex-1gbwvzmm": {
+    "prompt": "Por que o laboratório ligou net.ipv4.ip_nonlocal_bind nos dois balanceadores?",
+    "hint": "O HAProxy em lb2 escuta em 192.0.2.80.",
+    "choices": [
+      {
+        "text": "Para o HAProxy de lb2 escutar num endereço que ainda não tem",
+        "why": "Isso. Ele já está escutando quando o keepalived traz o endereço."
+      },
+      {
+        "text": "Para os balanceadores aceitarem tráfego de fora",
+        "why": "Qualquer socket escutando aceita tráfego de fora; isto é sobre o endereço."
+      },
+      {
+        "text": "Para o VRRP atravessar roteadores",
+        "why": "O VRRP fica na LAN dele; esta opção é sobre bind."
+      },
+      {
+        "text": "Para esconder o endereço real no log",
+        "why": "O log mostra o cliente, 203.0.113.2, qualquer que seja esta opção."
+      }
+    ]
+  },
+  "ex-12jyxkkc": {
+    "prompt": "O vrrp_script roda curl -sf contra /health a cada segundo. O que o keepalived lê disso?",
+    "hint": "-s é silencioso.",
+    "choices": [
+      {
+        "text": "O texto da página",
+        "why": "-o /dev/null joga a página fora."
+      },
+      {
+        "text": "Quanto tempo a requisição levou",
+        "why": "Uma resposta lenta que chega passa."
+      },
+      {
+        "text": "O código de saída do curl",
+        "why": "Isso. 0 passa; qualquer outro, como 7, falha."
+      },
+      {
+        "text": "O número de servidores web no ar",
+        "why": "/health não sabe nada dos servidores web."
+      }
+    ]
+  },
+  "ex-2w6xceas": {
+    "prompt": "Com fall 2, duas execuções do script falhando seguidas põem a instância do keepalived no estado ___, e ela abre mão do endereço.",
+    "hint": "Aparece em maiúsculas no log.",
+    "blanks": [
+      {
+        "accept": [
+          "FAULT"
+        ]
+      }
+    ]
+  },
+  "ex-pk032erm": {
+    "prompt": "Depois de seis requisições, o `tail -n 3 /run/haproxy.log` de lb2 não imprimiu nada. Por quê?",
+    "hint": "Quem tem 192.0.2.80?",
+    "choices": [
+      {
+        "text": "O HAProxy dele tinha caído",
+        "why": "Estava rodando; foi ele que assumiu depois."
+      },
+      {
+        "text": "O log fica desligado no reserva",
+        "why": "Os dois têm o mesmo arquivo; o log existe, e está vazio."
+      },
+      {
+        "text": "O laptop mandou toda requisição para o endereço de lb1, 192.0.2.11",
+        "why": "Mandou para www.example.com, que é 192.0.2.80."
+      },
+      {
+        "text": "Não tem endereço público, então não serviu nada",
+        "why": "Isso. Essa é a metade passiva."
+      }
+    ]
+  },
+  "ex-gjbvckn5": {
+    "prompt": "Ligue cada linha do haproxy.cfg ao que ela faz.",
+    "hint": "Um deles é trabalho do keepalived, não do HAProxy.",
+    "pairs": [
+      {
+        "left": "bind 192.0.2.80:80",
+        "right": "Escuta no endereço público"
+      },
+      {
+        "left": "monitor-uri /health",
+        "right": "Uma página que o próprio HAProxy responde"
+      },
+      {
+        "left": "option httpchk GET /",
+        "right": "Verifica cada servidor com uma requisição real"
+      },
+      {
+        "left": "balance roundrobin",
+        "right": "Manda para os servidores em rodízio"
+      }
+    ],
+    "right_distractors": [
+      "Move o endereço para o outro balanceador"
+    ]
+  },
+  "ex-bm7rtwpe": {
+    "prompt": "A última resposta antes da falha saiu às 18:11:46.916 e a primeira depois dela às 18:11:49.610. Por quanto tempo o site ficou em silêncio, em segundos?",
+    "hint": "Subtraia os horários.",
+    "unit": "s"
+  },
+  "ex-7gnktcgy": {
+    "prompt": "As seis primeiras falhas estão a 0,21 s uma da outra, e a sétima é seguida de uma pausa de 1,213 s. O que os dois espaçamentos dizem?",
+    "hint": "curl -m 1, e sleep 0.2.",
+    "choices": [
+      {
+        "text": "O laptop ficou lento com a carga",
+        "why": "O loop do laptop é igual a cada vez; o espaçamento vem das respostas."
+      },
+      {
+        "text": "Seis foram recusadas na hora; a sétima ficou sem resposta",
+        "why": "Isso. lb1 tinha o endereço sem nada escutando; a sétima saiu enquanto o endereço mudava."
+      },
+      {
+        "text": "lb2 respondeu devagar no começo",
+        "why": "lb2 não respondeu nada até 18:11:49.610, e depois no ritmo normal."
+      },
+      {
+        "text": "As sete estouraram o tempo depois de um segundo",
+        "why": "Então as sete estariam a 1,2 s uma da outra, não seis delas a 0,21 s."
+      }
+    ]
+  },
+  "ex-ex84q2nn": {
+    "prompt": "O log do keepalived diz `Script haproxy_alive now returning 7`. O que o 7 quer dizer?",
+    "hint": "É o status de saída do script.",
+    "choices": [
+      {
+        "text": "Sete checks falharam até agora",
+        "why": "Falhou uma vez naquele ponto; o fall 2 agiu na segunda."
+      },
+      {
+        "text": "A página respondeu com status HTTP 7",
+        "why": "Status HTTP têm três dígitos; este é o código de saída do próprio curl."
+      },
+      {
+        "text": "O curl não conseguiu conectar à página de health",
+        "why": "Isso. O HAProxy estava morto, então nada escutava em 127.0.0.1:8404."
+      },
+      {
+        "text": "A prioridade caiu 7",
+        "why": "Um vrrp_script sem weight não muda a prioridade; ele põe a instância em FAULT."
+      }
+    ]
+  },
+  "ex-f0311g9f": {
+    "prompt": "O failover do balanceador levou 2,694 s e o do gateway na aula 15, 3,264 s, com os mesmos anúncios de um segundo. Por que este foi mais rápido?",
+    "hint": "Quem percebeu a falha?",
+    "choices": [
+      {
+        "text": "lb1 achou a própria falha e avisou que estava saindo",
+        "why": "Isso. Um anúncio com prioridade 0 deixa o backup pular três segundos de silêncio."
+      },
+      {
+        "text": "Os enlaces do data center são mais rápidos que os do escritório",
+        "why": "Nenhum enlace do laboratório tem atraso; o buraco é todo espera."
+      },
+      {
+        "text": "lb2 tem prioridade maior que hq2",
+        "why": "Os dois backups têm prioridade 100."
+      },
+      {
+        "text": "O próprio HAProxy move o endereço",
+        "why": "O keepalived o move; o HAProxy só escuta."
+      }
+    ]
+  },
+  "ex-nb7fkj0m": {
+    "prompt": "Um usuário estava no meio de um download por lb1 quando o HAProxy foi morto. O que aconteceu com esse download?",
+    "hint": "O que mudou de lugar: o endereço ou as conexões?",
+    "choices": [
+      {
+        "text": "lb2 continuou de onde parou",
+        "why": "lb2 nunca ouviu falar dessa conexão."
+      },
+      {
+        "text": "Quebrou: a conexão morreu com o processo",
+        "why": "Isso. O endereço muda de lugar; as conexões por ele, não."
+      },
+      {
+        "text": "Pausou 2,694 s e continuou",
+        "why": "Só conexões novas chegam a lb2; a antiga pertencia a um processo morto."
+      },
+      {
+        "text": "web1 terminou de mandar direto",
+        "why": "web1 estava falando com o HAProxy de lb1, não com o usuário."
+      }
+    ]
+  },
+  "ex-7sjtby51": {
+    "prompt": "O HAProxy marcou web2 como DOWN com `Layer4 connection problem, info: \"Connection refused\"`. O que isso quer dizer?",
+    "hint": "A camada 4 é o TCP.",
+    "choices": [
+      {
+        "text": "web2 respondeu com um erro HTTP",
+        "why": "Isso seria um problema de Layer7; o check nem chegou ao HTTP."
+      },
+      {
+        "text": "Nada escutava na porta 80 de web2",
+        "why": "Isso. O nginx tinha sido parado, então a conexão TCP foi recusada."
+      },
+      {
+        "text": "web2 estava inalcançável na rede",
+        "why": "Uma recusa vem do próprio web2, então ele estava alcançável."
+      },
+      {
+        "text": "O balanceador se recusou a verificar web2",
+        "why": "O balanceador rodou o check; web2 recusou a conexão."
+      }
+    ]
+  },
+  "ex-zbk45k0k": {
+    "prompt": "Depois que o nginx de web2 parou, quais destes eram verdade? Marque todos que se aplicam.",
+    "hint": "show stat e as seis requisições.",
+    "choices": [
+      {
+        "text": "O backend como um todo continuava UP",
+        "why": "Isso. web,BACKEND,UP: dois de três servidores bastam."
+      },
+      {
+        "text": "As requisições foram para web1 e web3 em rodízio",
+        "why": "Isso. Seis requisições, nenhuma para web2."
+      },
+      {
+        "text": "O keepalived moveu 192.0.2.80 para o outro balanceador",
+        "why": "O keepalived verifica o HAProxy, que estava bem; um servidor web é assunto do HAProxy."
+      },
+      {
+        "text": "Os usuários viram erros até web2 voltar",
+        "why": "As seis requisições depois disso foram respondidas."
+      }
+    ]
+  },
+  "ex-8grj1jpc": {
+    "prompt": "Os três servidores web caem de uma vez. O check haproxy_alive faz o keepalived mover o endereço?",
+    "hint": "Quem responde /health?",
+    "choices": [
+      {
+        "text": "Sim, e o outro balanceador serve o site",
+        "why": "O outro balanceador manda para os mesmos três servidores mortos."
+      },
+      {
+        "text": "Sim, os dois balanceadores vão para FAULT",
+        "why": "/health não depende dos servidores web, então nenhum falha no check."
+      },
+      {
+        "text": "Não: o HAProxy responde /health sozinho",
+        "why": "Isso, e de propósito: mover o endereço não alcançaria um servidor vivo de qualquer forma."
+      },
+      {
+        "text": "Não, porque os checks param durante falhas",
+        "why": "Os checks rodam a cada segundo, com falha ou sem."
+      }
+    ]
+  },
+  "ex-2fpkebpt": {
+    "prompt": "A conexão de um servidor web com o banco de dados morre, mas a página inicial dele é um arquivo estático. O que `option httpchk GET /` informa sobre ele?",
+    "hint": "O que o GET / exercita?",
+    "choices": [
+      {
+        "text": "DOWN, porque a aplicação está quebrada",
+        "why": "O check pede uma página que funciona; não consegue ver o banco."
+      },
+      {
+        "text": "DOWN depois de um timeout de Layer4",
+        "why": "O TCP conecta bem: o nginx está rodando."
+      },
+      {
+        "text": "Depende do rodízio",
+        "why": "O check roda em todo servidor, independente do rodízio."
+      },
+      {
+        "text": "UP, com um Layer7 que passa",
+        "why": "Isso. Um check precisa pedir uma página que use as dependências reais."
+      }
+    ]
+  },
+  "ex-jfg0wet0": {
+    "prompt": "Um grupo ativo-ativo tem 3 membros. Seguindo o N+1, qual é o máximo que cada um pode levar num dia normal, em porcentagem da capacidade, arredondado para inteiro?",
+    "hint": "Dois precisam levar o que três levavam.",
+    "unit": "%"
+  },
+  "ex-vxmt41xe": {
+    "prompt": "Depois que o HAProxy de lb2 foi morto, lb1 mostrou 192.0.2.80 e 192.0.2.81. O que isso quer dizer para lb1?",
+    "hint": "Dois endereços, uma máquina.",
+    "choices": [
+      {
+        "text": "Agora leva o tráfego dos dois",
+        "why": "Isso. O momento para o qual o N+1 existe."
+      },
+      {
+        "text": "Está em split brain com lb2",
+        "why": "lb2 abriu mão do endereço; só lb1 o tem."
+      },
+      {
+        "text": "Divide o tráfego de cada endereço com lb2",
+        "why": "lb2 não tem mais endereço para servir."
+      },
+      {
+        "text": "Os clientes do .81 precisam ser movidos para o .80 pelo DNS antes",
+        "why": "Continuam usando o .81, que agora mora em lb1."
+      }
+    ]
+  },
+  "ex-4dmvj7kx": {
+    "prompt": "Ponha em ordem os passos do failover ativo-ativo desta aula.",
+    "hint": "O check falha antes de o endereço mudar.",
+    "items": [
+      "lb1 atende o .80 e lb2 atende o .81",
+      "O HAProxy de lb2 é morto",
+      "O check haproxy_alive de lb2 falha duas vezes",
+      "lb2 vai para FAULT e abre mão do .81",
+      "lb1 fica com os dois endereços"
+    ],
+    "trap": "O keepalived age no segundo check falho, nunca no próprio kill."
+  },
+  "ex-e5ajhnnr": {
+    "prompt": "Uma loja guarda o carrinho de cada usuário na memória do servidor web que o atendeu. Esse servidor morre. Qual é a solução que sobrevive a isso?",
+    "hint": "Guarde o estado num lugar que sobreviva à máquina.",
+    "choices": [
+      {
+        "text": "Um failover mais rápido do balanceador",
+        "why": "O balanceador estava bem; o carrinho morreu com o servidor web."
+      },
+      {
+        "text": "Persistência por cookie para o mesmo servidor",
+        "why": "Manda o usuário de volta para um servidor que não existe mais."
+      },
+      {
+        "text": "Um repositório de sessões compartilhado e replicado",
+        "why": "Isso. Aí qualquer servidor atende qualquer usuário."
+      },
+      {
+        "text": "Um terceiro servidor web",
+        "why": "Mais servidores, cada um ainda guardando os carrinhos dos próprios usuários."
+      }
+    ]
+  },
+  "ex-ak1388wv": {
+    "prompt": "Um site roda dois balanceadores em ativo-ativo a 45% cada e três servidores web a 75% cada. Um balanceador e um servidor web falham. O que quebra?",
+    "hint": "Aplique o N+1 a cada camada.",
+    "choices": [
+      {
+        "text": "O balanceador que sobra, a 90%",
+        "why": "90% é pesado, mas cabe na capacidade de uma máquina."
+      },
+      {
+        "text": "Os dois servidores web que sobram, a 112,5% cada",
+        "why": "Isso. 225% do trabalho de um servidor divididos por dois."
+      },
+      {
+        "text": "Nada: as duas camadas têm reserva",
+        "why": "Ter um reserva não basta se a carga não couber no que sobra."
+      },
+      {
+        "text": "As duas camadas, igualmente",
+        "why": "Os balanceadores ficam em 90%, o que cabe."
+      }
+    ]
+  },
+  "ex-rqdvd9rp": {
+    "prompt": "Um engenheiro muda o script do keepalived nos dois balanceadores para buscar a página inicial pelo HAProxy em vez de /health. Durante um deploy os três servidores web ficam fora por um minuto. O que acontece com 192.0.2.80?",
+    "hint": "Os dois checks agora dependem dos servidores web.",
+    "choices": [
+      {
+        "text": "Vai para lb2, que serve o site",
+        "why": "lb2 chega aos mesmos servidores web mortos."
+      },
+      {
+        "text": "Nada: o keepalived ignora os servidores web",
+        "why": "O script novo faz ele depender deles."
+      },
+      {
+        "text": "Os dois balanceadores falham nos checks e ninguém fica com ele",
+        "why": "Isso. Os dois vão para FAULT: o check pergunta algo que o failover não resolve."
+      },
+      {
+        "text": "Fica alternando entre lb1 e lb2 a cada segundo",
+        "why": "Nenhum passa no check, então nenhum o assume."
+      }
+    ]
+  }
+}

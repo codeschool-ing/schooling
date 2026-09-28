@@ -28,8 +28,7 @@ escala, a diferença salta aos olhos:
 **Quanto de cada faixa pode ser usado é decisão do órgão regulador, país a país.** Os Estados Unidos
 liberaram os 1200 MHz inteiros de 6 GHz; a União Europeia liberou os 480 MHz de baixo, de 5945 a 6425.
 No Brasil as regras são da Anatel. O ponto de acesso é informado do país em que está, e é essa
-configuração, não o hardware, que decide quais canais ele vai oferecer. A aula 7 percorre os próprios
-canais, inclusive a parte de 5 GHz que precisa dar lugar ao radar.
+configuração, não o hardware, que decide quais canais ele vai oferecer; a aula 7 percorre esses canais.
 
 O 2,4 GHz sobrevive pelo alcance e porque todo mundo fala nele. Um termostato, uma impressora e um
 celular de dez anos têm rádio de 2,4 GHz, e muitos não têm outro. O preço é a lotação: três canais

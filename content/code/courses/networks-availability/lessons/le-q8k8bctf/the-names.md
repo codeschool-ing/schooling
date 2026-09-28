@@ -27,15 +27,14 @@ common, and it is not an official name.
 | 802.11be | Wi-Fi 7 | 2024 | 2.4, 5 and 6 GHz | 320 MHz | 16 | 46 Gbit/s |
 
 Two columns of that table need a word. The year is the year the IEEE published the amendment, and
-products came before it: Wi-Fi 6 certification opened in 2019, two years before 802.11ax was final.
+products came before it: Wi-Fi 6 certification opened in 2019, well before 802.11ax was final.
 And the top rate is **a ceiling the standard writes down, never a speed anybody measures**. It assumes
 the widest channel, the most streams and a signal clean enough for the densest modulation, all at
-once. The section on channel width computes each of those rates from the standard's own numbers, and
+once. The section on channel width computes every one of them from 802.11a on, from the standard's own numbers, and
 the last section of this lesson says how much of one a phone gets.
 
-**Wi-Fi 6E is the same 802.11ax, allowed into a third band.** Nothing about the radio's modulation
-changed; the E is for the extension to 6 GHz, which the Wi-Fi Alliance started certifying in 2021. A
-Wi-Fi 6 router with no 6E on the box does not transmit at 6 GHz, whatever its number suggests.
+**Wi-Fi 6E is the same 802.11ax, allowed into a third band**, and certified since 2021. A Wi-Fi 6
+router with no 6E on the box does not transmit at 6 GHz, whatever its number suggests.
 
 **The standards are backwards compatible inside a band.** An 802.11ax access point on 2.4 GHz still
 talks to an 802.11b client from 1999, and on 5 GHz to an 802.11a one. It does so at the old client's

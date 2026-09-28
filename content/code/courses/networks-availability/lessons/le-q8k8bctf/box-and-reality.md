@@ -22,8 +22,7 @@ with a fault, and **the first of them is that only one device talks at a time**:
 - A frame lost to noise or to a collision is sent again, and a client that loses many is moved to a
   slower modulation.
 
-How much is left depends on how much data each transmission carries, but the figure usually quoted
-for a single client close to the access point, with TCP, is **about 50 to 70% of the link rate**. That
+The figure quoted for a single client close to the access point, with TCP, is **about 50 to 70% of the link rate**. That
 is a typical value from practice, not a number any standard sets. The program below takes 60%.
 
 ## Airtime is the resource

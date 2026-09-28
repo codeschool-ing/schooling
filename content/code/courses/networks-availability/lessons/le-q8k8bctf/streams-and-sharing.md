@@ -39,5 +39,5 @@ changes is the cost of many small things: voice, the acknowledgements TCP sends 
 reporting a temperature. A crowded room of phones is made of exactly those, which is why a Wi-Fi 6
 network feels better in a lecture hall long before anybody measures a faster download.
 
-Both MU-MIMO and OFDMA need the client to support them, as well as the access point. A Wi-Fi 5 laptop
-on a Wi-Fi 6 network is served the old way, one at a time, whatever the access point can do.
+Both need support in the client as well as the access point: a Wi-Fi 5 laptop on a Wi-Fi 6 network
+is served the old way.

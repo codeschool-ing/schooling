@@ -42,6 +42,5 @@ manda de volta, um sensor informando uma temperatura. Uma sala cheia de celulare
 disso, e é por isso que uma rede Wi-Fi 6 parece melhor num auditório muito antes de alguém medir um
 download mais rápido.
 
-Tanto o MU-MIMO quanto o OFDMA precisam de suporte no cliente, além do ponto de acesso. Um laptop Wi-Fi 5
-numa rede Wi-Fi 6 é atendido do jeito antigo, um de cada vez, seja o que for que o ponto de acesso saiba
-fazer.
+Os dois precisam de suporte no cliente, além do ponto de acesso: um laptop Wi-Fi 5 numa rede Wi-Fi 6
+é atendido do jeito antigo.

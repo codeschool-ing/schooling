@@ -27,15 +27,14 @@ comum, e não é um nome oficial.
 | 802.11be | Wi-Fi 7 | 2024 | 2,4, 5 e 6 GHz | 320 MHz | 16 | 46 Gbit/s |
 
 Duas colunas dessa tabela pedem uma palavra. O ano é o ano em que o IEEE publicou a emenda, e os
-produtos vieram antes: a certificação Wi-Fi 6 abriu em 2019, dois anos antes de o 802.11ax ficar pronto.
+produtos vieram antes: a certificação Wi-Fi 6 abriu em 2019, bem antes de o 802.11ax ficar pronto.
 E a taxa máxima é **um teto que o padrão escreve, nunca uma velocidade que alguém mede**. Ela supõe o
 canal mais largo, o maior número de fluxos e um sinal limpo o bastante para a modulação mais densa, tudo
-ao mesmo tempo. A seção sobre largura de canal calcula cada uma dessas taxas a partir dos números do
-próprio padrão, e a última seção desta aula diz quanto disso chega a um celular.
+ao mesmo tempo. A seção sobre largura de canal calcula todas elas, do 802.11a em diante, a partir dos números
+do próprio padrão, e a última seção desta aula diz quanto disso chega a um celular.
 
-**O Wi-Fi 6E é o mesmo 802.11ax, autorizado numa terceira faixa.** Nada na modulação do rádio mudou; o
-E é da extensão para 6 GHz, que a Wi-Fi Alliance começou a certificar em 2021. Um roteador Wi-Fi 6 sem
-6E na caixa não transmite em 6 GHz, apesar do que o número sugere.
+**O Wi-Fi 6E é o mesmo 802.11ax, autorizado numa terceira faixa**, e certificado desde 2021. Um
+roteador Wi-Fi 6 sem 6E na caixa não transmite em 6 GHz, apesar do que o número sugere.
 
 **Os padrões são compatíveis com os anteriores dentro de uma faixa.** Um ponto de acesso 802.11ax em 2,4
 GHz ainda conversa com um cliente 802.11b de 1999, e em 5 GHz com um 802.11a. Só que na velocidade do
