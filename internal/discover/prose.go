@@ -2,6 +2,8 @@ package discover
 
 import (
 	"strings"
+
+	"github.com/codeschool-ing/schooling/internal/trackblock"
 )
 
 /*
@@ -51,7 +53,15 @@ type Prose struct {
 const fence = "```"
 
 // Extract is what a lesson says, as text. See the file comment.
+//
+// A PASSAGE WRITTEN FOR ONE TRACK IS NOT ON THIS PAGE. Nobody arriving from a
+// search engine is on a track, so the page says what the lesson says to a
+// reader on none — the `*` passage of each group — rather than every
+// alternative in a row, which would read as a section repeating itself with
+// small differences, and index as one.
 func Extract(markdown string) []Prose {
+	markdown = trackblock.For(markdown, "")
+
 	var out []Prose
 	var paragraph []string
 

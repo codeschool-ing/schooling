@@ -368,8 +368,17 @@ func loadLesson(dir fs.FS, base, name string) (*Lesson, []error) {
 		}
 		title, version, text, bad := frontMatter(base+"/"+f.Name(), string(body))
 		problems = append(problems, bad...)
+
+		// The body is the file's tail, so where it starts is where its text
+		// first appears — the front matter cannot contain the whole body.
+		whole := strings.ReplaceAll(string(body), "\r\n", "\n")
+		above := 0
+		if at := strings.Index(whole, text); text != "" && at > 0 {
+			above = strings.Count(whole[:at], "\n")
+		}
 		lesson.Text = append(lesson.Text, Prose{
 			SectionID: section, Locale: locale, Title: title, Body: text, Version: version,
+			Above: above,
 		})
 	}
 

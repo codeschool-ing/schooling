@@ -298,7 +298,7 @@ ON CONFLICT DO NOTHING;
    each one arrives as an element rather than as its own source text. */
 INSERT INTO catalog_prose (tenant_id, course_id, lesson_id, section_id, locale, title, body)
 SELECT id, :'wf', :'les', :'sec', 'en', 'The two roles',
-$prose$The words **client** and **server** name a moment, not a machine.
+replace($prose$The words **client** and **server** name a moment, not a machine.
 
 ## Who asks, and who waits
 
@@ -323,9 +323,27 @@ the *exchange*, and **never to the *machine* it runs on**.
 ```
 browser -> server -> database
 ```
-$prose$
+
+::: track TRACK
+On the front-end track, the client you write is the page in the browser.
+:::
+
+::: track *
+Whatever you build, the part that asks is the client.
+:::
+$prose$, 'TRACK', :'trk')
 FROM tenants WHERE slug = :'slug'
 ON CONFLICT DO NOTHING;
+
+/* AND ONE GROUP OF PASSAGES, AT THE END OF THE SAME PROSE.
+
+   A passage for the fixture's only track and one for every other reader. The
+   loader renames a marker's slugs to ids, so the mirror carries the track's
+   ID here — which is why the body goes through `replace` with `:'trk'` rather
+   than naming `frontend`, and what `tools/track-test` asserts the screen
+   chooses by: a reader on no track meets the `*` passage, a reader who opened
+   the track meets its own, and the choice beside the group moves between
+   them. */
 
 /* ---------- AND THE SAME SECTION IN A SECOND LANGUAGE ----------
 

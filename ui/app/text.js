@@ -221,13 +221,14 @@ export function codeBar(text, language, trailing) {
 
    The block keys stay in Portuguese because they are content-file fields, and
    the content files are written by the school. */
-export function prose(body) {
+export function prose(body, reader = {}) {
   if (!body || !body.length) return '';
   return body.map((block) => {
     if (Array.isArray(block)) {
       return '<ul class="prose-list">' + block.map((i) => '<li>' + formatted(i) + '</li>').join('') + '</ul>';
     }
     if (block && typeof block === 'object') {
+      if (block.passages) return passages(block.passages, reader);
       if (block.example) return annotatedExample(block.example);
       if (block.image || block.svg) return figure(block);
       if (block.heading !== undefined) {
@@ -265,6 +266,66 @@ export function prose(body) {
     }
     return '<p>' + formatted(block) + '</p>';
   }).join('');
+}
+
+/* ---------- a passage for each track ----------
+
+   A GROUP IS ALTERNATIVES AND THE READER SEES ONE OF THEM: the passage naming
+   the track they are on, or the `*` passage when the group does not name it —
+   which is also the one for a reader on no track at all. `reader.track` is that
+   track's id and `reader.trackName` turns an id into what a person calls it.
+
+   EVERY PASSAGE IS IN THE DOCUMENT AND THE OTHERS ARE `hidden`. A student on
+   `data` reading a portfolio lesson may want to see what the front-end reader
+   is told, and the choice beside the passage lets them; drawing only one would
+   make that a round trip, and would make the choice a lie about what exists.
+
+   THE CHOICE IS A NATIVE `select` WITH A LABEL, for the reason `ordering` is
+   buttons and `matching` is a select (X-06): it is operable by keyboard and
+   announced correctly by a screen reader with nothing written for either.
+   Changing it moves nothing but this group — `wirePassages` in the lesson
+   screen — and nothing is remembered: the track a student is on is decided by
+   the map they have open (`api.js`, `enrol`), and a second place remembering a
+   different answer would disagree with it. */
+function passages(list, reader) {
+  const named = (p) => p.tracks.filter((t) => t !== '*');
+  const mine = list.find((p) => reader.track && named(p).includes(reader.track))
+    || list.find((p) => p.tracks.includes('*'))
+    || list[0];
+
+  const name = (id) => (reader.trackName ? reader.trackName(id) : id) || id;
+  // The option that says what is on screen: the reader's own track when the
+  // group names it, `*` when it is the passage for everybody else.
+  const chosen = mine.tracks.includes('*') ? '*'
+    : (named(mine).includes(reader.track) ? reader.track : named(mine)[0]);
+  const options = list.flatMap((p) => (p.tracks.includes('*')
+    ? [{ value: '*', label: txt('any other track') }]
+    : named(p).map((id) => ({ value: id, label: name(id) }))));
+
+  return '<div class="prose-track">' +
+    '<p class="mono dim"><label>' + txt('Written for') + ' ' +
+      '<select class="prose-track-pick">' +
+        options.map((o) => '<option value="' + esc(o.value) + '"' + (o.value === chosen ? ' selected' : '') + '>' +
+          esc(o.label) + '</option>').join('') +
+      '</select></label></p>' +
+    list.map((p) => '<div class="prose-track-passage" data-tracks="' + esc(p.tracks.join(' ')) + '"' +
+      (p === mine ? '' : ' hidden') + '>' + prose(p.blocks, reader) + '</div>').join('') +
+  '</div>';
+}
+
+/* The choice beside a group, made to move its passage. Called by the screen
+   after it draws a section; a group it never reaches keeps the passage it was
+   drawn with, which is the reader's own. */
+export function wirePassages(root) {
+  for (const group of root.querySelectorAll('.prose-track')) {
+    const pick = group.querySelector('.prose-track-pick');
+    if (!pick) continue;
+    pick.addEventListener('change', () => {
+      for (const p of group.querySelectorAll(':scope > .prose-track-passage')) {
+        p.hidden = !p.dataset.tracks.split(' ').includes(pick.value);
+      }
+    });
+  }
 }
 
 /* ---------- table ----------

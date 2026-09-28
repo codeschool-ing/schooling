@@ -400,6 +400,51 @@ the same argument — here accessibility is a rule rather than a preference.
 staged the way the section stages it, the process list filtered to something a reader should see.
 Photographing the wrong machine is not an improvement on drawing it.
 
+#### A passage for one track, and one for everybody else
+
+A course can sit in more than one track, and a sentence that is right for one of them can be
+wrong for the other: "the portfolio you are building" means a web app on `frontend` and a
+documented home lab on `it-support`. Where only a paragraph differs, the section says it per
+track inside the same file (`C-39`):
+
+```markdown
+::: track frontend
+Your portfolio piece is the app itself, deployed where a reviewer can click it.
+:::
+
+::: track it-support backend
+Your portfolio piece is the write-up: what you set up, what broke and how you found out.
+:::
+
+::: track *
+Your portfolio piece is whatever a reviewer can open and understand in five minutes.
+:::
+```
+
+`::: track` opens a block and `:::` closes it. Blocks separated only by blank lines are one
+**group**, and a reader sees exactly one passage of each group: the one naming their track, or
+the `*` block when none does. Everything outside the groups is read by everybody.
+
+The rules, each refused by `validate-content` with the file and the line:
+
+- **every group has a `*` block.** A student on no track — somebody who came to the course from
+  the catalogue — and a student on a track the group does not name both read it. The public pages
+  show only this one.
+- **a slug is a track this school has, and that track contains the course.** A typo reads
+  perfectly and is never shown; a track that cannot reach the course is a passage nobody reads.
+- **no track twice in a group, and `*` alone on its line.** Either would make the passage a
+  reader meets depend on which block came first.
+- **a translation varies the same way.** The `.pt.md` has the same groups naming the same tracks
+  in the same order, so a student reads the passage for their track in either language.
+- nothing nests, and a marker inside a fence is code rather than a marker.
+
+The file names tracks by slug like everything else in `content/`; `cmd/load` renames them to ids,
+because the interface knows a student's track by id. Beside each group the reader gets a labelled
+choice, so somebody on one track can read what the section says to another.
+
+Use it for a paragraph, never for a section. A section whose whole text differs per track is two
+sections, and belongs in two courses or two lessons.
+
 ### `exercises.json`
 
 Every exercise belongs to a lesson, joins by id, and declares the grader that judges it.
@@ -547,6 +592,8 @@ keys through the same machinery that grades a student.
   (C-13)
 - every `reading` section has prose; a published section with neither prose nor video is an error
 - every translation key names an id that exists
+- every `::: track` group has a `*` block and names tracks that contain the course, and its
+  translation varies the same way
 
 **The graph**
 

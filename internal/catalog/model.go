@@ -367,6 +367,11 @@ type Prose struct {
 	// that has gone stale becomes visible — today `ls` shows only that it
 	// exists.
 	Version int
+
+	// Above is how many lines of the file come before Body — the front matter
+	// and the blank lines after it. A problem found in the body is reported at
+	// the line a person opens the FILE to, which is this plus the body's own.
+	Above int
 }
 
 // Topic is one entry of a course's technical contents — which is also one

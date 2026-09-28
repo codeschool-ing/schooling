@@ -107,6 +107,9 @@ var libraries = map[string]string{
 	"grade": "the rules of grading, as functions over JSON values. It owns no table and serves " +
 		"no route; `exam` marks with it and so does the content checker, which is what a " +
 		"library is rather than a module two things happen to need",
+	"trackblock": "the grammar of a passage written for one track, as functions over a " +
+		"section's Markdown. `catalog` refuses a malformed one, `cmd/load` renames what it " +
+		"names and `discover` keeps the passage for any reader — one grammar, three readers",
 }
 
 func isLibrary(imp string) bool {

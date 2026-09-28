@@ -399,6 +399,14 @@ compares them. The one exception is a block labelled `localised` in BOTH files: 
 laid out in mono, or a formula a spreadsheet spells per locale. It is never allowed on a capture,
 because what a machine printed is not the reader's to reword.
 
+**A paragraph can differ per track; a section cannot** (C-39). A course sits in several tracks,
+and where one sentence is true for one and false for another the section carries a group of
+`::: track <slugs>` blocks and a `::: track *` block, and each reader sees one of them. The `*`
+block is compulsory — a student on no track exists and reads it, and so does every public page.
+**It is parsed twice**, by `internal/trackblock` for the checker, the loader and the public pages,
+and by `ui/app/api.js` for the screen, because a browser cannot import Go; `tools/track-test`
+asks the screen, since every Go test can be green while the two disagree.
+
 ## The catalogue is a mirror, and only one thing writes it
 
 `content/` is the truth; the `catalog_*` tables are derived (C-01). **A test scans the source for
@@ -1703,6 +1711,8 @@ node tools/mfa-test/mfa-test.mjs        # enrol a second factor, sign in with it
 node tools/lang-test/lang-test.mjs      # a language switch reaches the lessons,
                                         # and nothing that runs after it takes
                                         # it back
+node tools/track-test/track-test.mjs     # a section written per track shows the
+                                        # reader's passage, and `*` to the rest
 node tools/frame-test/frame-test.mjs    # and what the frame SAYS: the build the
                                         # badge names, and the notice that the
                                         # build has moved on

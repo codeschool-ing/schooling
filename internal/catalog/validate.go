@@ -29,6 +29,7 @@ func Validate(school *School) []error {
 	problems = append(problems, checkRequires(school)...)
 	problems = append(problems, checkCourseText(school)...)
 	problems = append(problems, checkExerciseText(school)...)
+	problems = append(problems, checkTrackBlocks(school)...)
 
 	sort.Slice(problems, func(i, j int) bool {
 		return problems[i].Error() < problems[j].Error()

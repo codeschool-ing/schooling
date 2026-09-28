@@ -404,4 +404,12 @@ window.I18N.pt.ui = Object.assign(window.I18N.pt.ui || {}, {
   'track': 'trilha',
   'course': 'curso',
   'section': 'seção',
+
+  /* ---------- a passage written for one track ----------
+
+     The label beside a group of passages, and the option for the reader whose
+     track the group does not name. "Escrito para" rather than "Para a trilha",
+     because the last option is not a track. */
+  'Written for': 'Escrito para',
+  'any other track': 'qualquer outra trilha',
 });

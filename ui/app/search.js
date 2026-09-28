@@ -49,6 +49,12 @@ const fold = (s) => String(s || '')
 const plainText = (body) => (body || [])
   .map((b) => {
     if (Array.isArray(b)) return b.join(' ');
+    /* Every passage of a group, whichever the reader is shown: somebody
+       searching for a word in the `frontend` passage is looking for this
+       section, and the screen will offer the passage when they arrive. */
+    if (b && typeof b === 'object' && b.passages) {
+      return b.passages.map((p) => plainText(p.blocks)).join(' ');
+    }
     if (b && typeof b === 'object') return b.text || '';
     return b;
   })
