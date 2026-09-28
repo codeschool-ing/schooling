@@ -1,0 +1,424 @@
+{
+  "ex-twm29tsa": {
+    "prompt": "O que um túnel faz com o pacote que leva?",
+    "hint": "Os endereços internos chegam intactos.",
+    "choices": [
+      {
+        "text": "Criptografa o pacote",
+        "why": "Túneis simples não criptografam nada; é isso que as aulas 2 a 4 acrescentam."
+      },
+      {
+        "text": "Embrulha o pacote dentro de outro, novo",
+        "why": "Isso. Cabeçalhos e tudo vão dentro, e um cabeçalho IP novo vai na frente."
+      },
+      {
+        "text": "Reescreve os endereços privados como públicos",
+        "why": "Isso é NAT. O pacote interno mantém 192.168.10.20 e 192.168.20.30."
+      },
+      {
+        "text": "Passa um cabo particular entre as duas pontas",
+        "why": "Não há cabo: cada pacote atravessa os mesmos roteadores que os de todo mundo."
+      }
+    ]
+  },
+  "ex-rm2m2rq4": {
+    "prompt": "Quais roteadores leem os endereços do pacote interno no caminho do laptop até o caixa?",
+    "hint": "Onde o cabeçalho externo é posto e tirado?",
+    "choices": [
+      {
+        "text": "Todo roteador do caminho",
+        "why": "O roteador do provedor só lê o cabeçalho externo."
+      },
+      {
+        "text": "Só o do provedor",
+        "why": "O provedor vê 203.0.113.2 e 198.51.100.2 e mais nada sobre o que agir."
+      },
+      {
+        "text": "hq e branch, as duas pontas",
+        "why": "Isso. Cada um roteia o pacote interno para dentro ou para fora do túnel."
+      },
+      {
+        "text": "Nenhum, os endereços ficam escondidos",
+        "why": "Não ficam escondidos; o tcpdump os imprimiu. As pontas é que roteiam por eles."
+      }
+    ]
+  },
+  "ex-g77rk6cj": {
+    "prompt": "Quantos bytes um cabeçalho IPv4 externo acrescenta a um pacote tunelado?",
+    "hint": "104 − 84.",
+    "unit": "bytes"
+  },
+  "ex-8gkxz7wy": {
+    "prompt": "Por que o provedor descartou o ping do laptop para 192.168.20.30?",
+    "hint": "Leia a tabela de rotas dele.",
+    "choices": [
+      {
+        "text": "Nenhuma rota dele corresponde a um endereço privado",
+        "why": "Isso. Ele conhece três redes públicas e nenhuma 192.168."
+      },
+      {
+        "text": "Um firewall na filial bloqueia os pedidos de eco ICMP",
+        "why": "O pacote nunca chegou à filial: morreu no segundo salto."
+      },
+      {
+        "text": "O NAT de hq tinha sido desligado para o teste",
+        "why": "O NAT só mudaria a origem; o destino continua privado."
+      },
+      {
+        "text": "O caixa estava desligado",
+        "why": "Nada chegou ao caixa para saber."
+      }
+    ]
+  },
+  "ex-w8a6b287": {
+    "prompt": "Duas empresas usam 192.168.20.0/24 por dentro. Por que nenhum roteador da internet conseguiria levar um pacote para 192.168.20.30?",
+    "hint": "RFC 1918.",
+    "choices": [
+      {
+        "text": "Pacotes privados vão criptografados",
+        "why": "Nada num endereço privado é criptografado."
+      },
+      {
+        "text": "O endereço é longo demais para rotear",
+        "why": "É um endereço comum de 32 bits."
+      },
+      {
+        "text": "Não teria como saber de qual se trata",
+        "why": "Isso. As faixas são privadas porque todo mundo as reutiliza."
+      },
+      {
+        "text": "Provedores cobram a mais por eles",
+        "why": "Não há preço que faça sentido numa rota para um endereço reutilizado."
+      }
+    ]
+  },
+  "ex-xag30m2n": {
+    "prompt": "A tabela de rotas do provedor listava três redes públicas e nenhuma rede ___, então o ping para o caixa morreu ali.",
+    "hint": "Faixas da RFC 1918.",
+    "blanks": [
+      {
+        "accept": [
+          "privada",
+          "privadas"
+        ]
+      }
+    ]
+  },
+  "ex-58bpy22t": {
+    "prompt": "A resposta do caixa chegou com ttl=62, tendo saído com 64. Quais roteadores tiraram um cada?",
+    "hint": "O provedor nunca viu o pacote interno.",
+    "choices": [
+      {
+        "text": "branch e o provedor",
+        "why": "O provedor decrementou o TTL do cabeçalho externo, não o do interno."
+      },
+      {
+        "text": "branch e hq",
+        "why": "Isso. As duas pontas roteiam o pacote interno; o provedor só encaminha o externo."
+      },
+      {
+        "text": "hq e o provedor",
+        "why": "Mesmo engano: o provedor só mexe no TTL externo."
+      },
+      {
+        "text": "O caixa e o laptop",
+        "why": "Hosts não decrementam o TTL dos próprios pacotes."
+      }
+    ]
+  },
+  "ex-17bdp18x": {
+    "prompt": "O que a rota `192.168.20.0/24 via 10.0.0.2` em hq faz?",
+    "hint": "10.0.0.2 é a outra ponta de tun0.",
+    "choices": [
+      {
+        "text": "Dá um endereço novo ao laptop",
+        "why": "O endereço do laptop não muda."
+      },
+      {
+        "text": "Diz ao provedor onde fica a filial",
+        "why": "O provedor nunca fica sabendo de 192.168.20.0/24."
+      },
+      {
+        "text": "O tráfego da filial entra no tun0",
+        "why": "Isso. Sem ela a interface existe e nada entra nela."
+      },
+      {
+        "text": "Abre a porta do túnel no firewall",
+        "why": "IP-in-IP não tem porta; é o protocolo IP 4."
+      }
+    ]
+  },
+  "ex-hzhfqw4s": {
+    "prompt": "tun0 mostra POINTOPOINT e NOARP. Por que NOARP faz sentido num túnel?",
+    "hint": "O que o ARP perguntaria?",
+    "choices": [
+      {
+        "text": "Não há endereço de hardware a perguntar",
+        "why": "Isso. O ARP associa um IP a um MAC, e um túnel não tem cabo nem MAC."
+      },
+      {
+        "text": "O ARP vazaria os endereços privados para o provedor",
+        "why": "O ARP nunca sai de um segmento local, com túnel ou sem."
+      },
+      {
+        "text": "O ARP é lento demais para túneis",
+        "why": "Velocidade não tem nada a ver."
+      },
+      {
+        "text": "O MAC da outra ponta vai escrito no cabeçalho externo",
+        "why": "Um cabeçalho IP não leva MAC nenhum."
+      }
+    ]
+  },
+  "ex-9nhdn6h2": {
+    "prompt": "Na captura do GRE, o pacote externo tem 112 bytes e o ping dentro dele 84. De onde vêm os outros 28?",
+    "hint": "Três camadas.",
+    "choices": [
+      {
+        "text": "28 bytes de cabeçalho IP externo, com as opções",
+        "why": "Um cabeçalho IPv4 sem opções tem 20."
+      },
+      {
+        "text": "20 de cabeçalho GRE e 8 de preenchimento depois",
+        "why": "O GRE é o menor dos dois, e nada é preenchido."
+      },
+      {
+        "text": "Um cabeçalho UDP mais um checksum no fim",
+        "why": "O GRE roda direto sobre IP, protocolo 47, sem UDP."
+      },
+      {
+        "text": "20 de IP externo, 4 de GRE e 4 de chave",
+        "why": "Isso. O tcpdump mostrou o tamanho do próprio GRE como 92, 84 mais 8."
+      }
+    ]
+  },
+  "ex-e0wz6wbs": {
+    "prompt": "Um colega propõe usar a chave do GRE como segredo compartilhado, para que nenhum estranho injete pacotes. O que há de errado nisso?",
+    "hint": "Olhe a captura de novo.",
+    "choices": [
+      {
+        "text": "Chaves com mais de 32 bits não são aceitas",
+        "why": "O tamanho não é o problema; a visibilidade é."
+      },
+      {
+        "text": "Ela vai em texto claro",
+        "why": "Isso. O tcpdump imprimiu key=0x2a em todas as linhas, para qualquer um no caminho copiar."
+      },
+      {
+        "text": "Uma chave errada faz o roteador responder com erro",
+        "why": "Ele não responde nada; o pacote é descartado em silêncio."
+      },
+      {
+        "text": "A chave muda toda vez que o túnel reinicia",
+        "why": "Ela é configurada e fica a mesma."
+      }
+    ]
+  },
+  "ex-pkt4df59": {
+    "prompt": "Ligue cada fato ao IP-in-IP ou ao GRE.",
+    "hint": "Números de protocolo primeiro.",
+    "pairs": [
+      {
+        "left": "Protocolo IP 4",
+        "right": "IP-in-IP"
+      },
+      {
+        "left": "Protocolo IP 47",
+        "right": "GRE"
+      },
+      {
+        "left": "Acrescenta exatamente 20 bytes",
+        "right": "IP-in-IP, que não tem cabeçalho próprio"
+      },
+      {
+        "left": "Leva IPv6 e multicast",
+        "right": "GRE, cujo cabeçalho diz o que vai dentro"
+      }
+    ],
+    "right_distractors": [
+      "Os dois, porque os dois criptografam"
+    ]
+  },
+  "ex-f47v7sax": {
+    "prompt": "Com chave 42 em hq e 43 em branch, o que o laptop viu?",
+    "hint": "O roteador da filial descarta o que não espera.",
+    "choices": [
+      {
+        "text": "Um erro dizendo que as chaves diferem",
+        "why": "Nada avisa ninguém; esse é o problema."
+      },
+      {
+        "text": "Silêncio: 100% de perda",
+        "why": "Isso. Os pacotes chegam a branch e são descartados lá, sem uma palavra."
+      },
+      {
+        "text": "Respostas do provedor em vez do caixa",
+        "why": "O provedor não responde nada de dentro do túnel."
+      },
+      {
+        "text": "Só um ping sim, outro não",
+        "why": "Todo pacote leva a mesma chave errada, então todos são descartados."
+      }
+    ]
+  },
+  "ex-bwqmahgs": {
+    "prompt": "Um enlace Ethernet tem MTU 1500. Qual é o maior pacote interno que um túnel GRE com chave consegue levar por ele, em bytes?",
+    "hint": "Subtraia todo o custo do túnel.",
+    "unit": "bytes"
+  },
+  "ex-4qakd8re": {
+    "prompt": "`ping -M do -s 1472` pelo túnel IP-in-IP recebeu `Frag needed and DF set (mtu = 1480)`. Quem mandou essa mensagem?",
+    "hint": "A linha começa com From.",
+    "choices": [
+      {
+        "text": "O caixa, que não aceitava 1500 bytes",
+        "why": "O caixa nunca o viu; o pacote parou antes do túnel."
+      },
+      {
+        "text": "O provedor, cujo enlace é pequeno demais",
+        "why": "Os enlaces do provedor levam 1500; a recusa veio da entrada do túnel."
+      },
+      {
+        "text": "hq, cujo túnel só leva 1480",
+        "why": "Isso. Ele não conseguia encaminhar o pacote para o tun0 sem fragmentá-lo, e o DF proibia."
+      },
+      {
+        "text": "O próprio kernel do laptop",
+        "why": "O enlace do laptop é 1500, então ele mandou o pacote."
+      }
+    ]
+  },
+  "ex-kxgfc6mt": {
+    "prompt": "Uma filial abre a página de login da intranet, mas todo download grande trava sem erro. O que explica isso melhor?",
+    "hint": "Pequeno funciona, grande trava.",
+    "choices": [
+      {
+        "text": "O servidor web está sobrecarregado",
+        "why": "Um servidor sobrecarregado é lento para páginas pequenas também."
+      },
+      {
+        "text": "O DNS devolve outro endereço para arquivos grandes",
+        "why": "O DNS não sabe o tamanho de um arquivo."
+      },
+      {
+        "text": "A chave GRE do túnel não confere do lado da filial",
+        "why": "Uma chave errada pararia a página de login também."
+      },
+      {
+        "text": "Pacotes grandes morrem no túnel, sem aviso",
+        "why": "Isso. Um buraco negro de PMTU; a aula 21 encontra um."
+      }
+    ]
+  },
+  "ex-c0dznpke": {
+    "prompt": "Depois da recusa, `ip route get` mostrou o laptop guardando o tamanho menor: `cache expires 599sec mtu ___`.",
+    "hint": "O MTU do túnel IP-in-IP.",
+    "blanks": [
+      {
+        "accept": [
+          "1480"
+        ]
+      }
+    ]
+  },
+  "ex-kxn2gxac": {
+    "prompt": "Capturando GRE no roteador do provedor com `tcpdump -A`, o que dava para ler?",
+    "hint": "Procure o GET.",
+    "choices": [
+      {
+        "text": "Só os endereços externos dos dois roteadores",
+        "why": "Os endereços internos e a carga também foram impressos."
+      },
+      {
+        "text": "Os endereços, mas não a página que voltou",
+        "why": "`served by files` é a página."
+      },
+      {
+        "text": "Tudo: endereços, requisição e página",
+        "why": "Isso. Um túnel simples não criptografa nada."
+      },
+      {
+        "text": "Nada, o GRE esconde a carga",
+        "why": "O GRE não esconde nada."
+      }
+    ]
+  },
+  "ex-em2byh56": {
+    "prompt": "Qual destes um túnel GRE simples NÃO oferece? Marque todos que se aplicam.",
+    "hint": "Três perguntas, uma respondida.",
+    "choices": [
+      {
+        "text": "Confidencialidade da carga",
+        "why": "Isso: o tcpdump leu a página."
+      },
+      {
+        "text": "Prova de que um pacote veio do outro escritório",
+        "why": "Isso: qualquer um com os endereços externos e a chave impressa seria aceito."
+      },
+      {
+        "text": "Entrega de endereços privados entre os escritórios",
+        "why": "Isso ele oferece; é a única coisa para que serve."
+      },
+      {
+        "text": "Detecção de um pacote alterado no caminho",
+        "why": "Isso: nada confere a integridade."
+      }
+    ]
+  },
+  "ex-ta1av62c": {
+    "prompt": "Ponha em ordem os passos de um pacote do laptop até o caixa pelo túnel.",
+    "hint": "Embrulhado, levado, desembrulhado.",
+    "items": [
+      "O laptop manda para 192.168.20.30 pelo gateway",
+      "A rota de hq manda o pacote para o tun0",
+      "hq põe um cabeçalho externo de 203.0.113.2 para 198.51.100.2",
+      "O provedor o encaminha pelo cabeçalho externo",
+      "branch tira o cabeçalho externo e o entrega"
+    ],
+    "trap": "O provedor só age sobre o cabeçalho externo, que hq põe antes de o pacote sair."
+  },
+  "ex-7vxzxwrf": {
+    "prompt": "Um túnel GRE entre dois escritórios funciona, e a equipe de segurança pede que ele fique seguro para atravessar a internet. Qual é a menor mudança que resolve?",
+    "hint": "O assunto da aula 2.",
+    "choices": [
+      {
+        "text": "Trocar a chave por um número aleatório longo",
+        "why": "A chave continua impressa em texto claro em todo pacote."
+      },
+      {
+        "text": "Mudar o túnel para IP-in-IP",
+        "why": "O IP-in-IP não criptografa nada a mais que o GRE."
+      },
+      {
+        "text": "Proteger o tráfego GRE com IPsec",
+        "why": "Isso. Criptografia e autenticação em volta do túnel."
+      },
+      {
+        "text": "Diminuir o MTU do túnel",
+        "why": "Isso muda o tamanho, não quem consegue ler."
+      }
+    ]
+  },
+  "ex-wg5s6x7b": {
+    "prompt": "Uma chamada de voz manda pacotes de 160 bytes por um túnel GRE com chave. Por que o custo do túnel pesa mais aqui do que numa transferência de arquivo?",
+    "hint": "Os mesmos 28 bytes, num pacote menor.",
+    "choices": [
+      {
+        "text": "Os mesmos 28 bytes são uma fatia bem maior de um pacote pequeno",
+        "why": "Isso. Menos de 2% em 1500 bytes, muito mais em 160."
+      },
+      {
+        "text": "Pacotes de voz precisam ser fragmentados dentro de um túnel",
+        "why": "Eles estão bem abaixo de qualquer MTU."
+      },
+      {
+        "text": "O GRE acrescenta mais cabeçalho ao UDP do que ao TCP",
+        "why": "O GRE acrescenta o mesmo, seja o que for que vai dentro."
+      },
+      {
+        "text": "Um túnel reordena pacotes pequenos",
+        "why": "Nada no GRE reordena coisa alguma."
+      }
+    ]
+  }
+}
