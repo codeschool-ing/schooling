@@ -279,6 +279,11 @@ options {
   listen-on port 5300 { 192.0.2.53; };
   listen-on-v6 { none; };
   recursion no;
+  # nothing here may ask the real internet anything: no trust anchor
+  # telemetry and no DNSSEC validation of its own, both of which make BIND
+  # query the real root servers
+  dnssec-validation no;
+  trust-anchor-telemetry no;
   pid-file "/var/cache/bind/named.pid";
 };
 zone "example.com" { type primary; file "/etc/bind/db.example.com.signed"; };
