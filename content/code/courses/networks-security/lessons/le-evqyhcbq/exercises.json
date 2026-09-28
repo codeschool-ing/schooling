@@ -1,0 +1,622 @@
+[
+  {
+    "id": "ex-vbhjy5cz",
+    "version": 1,
+    "section": "default-deny",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under the blocklist, the new cache on db port 6379 was open to remote. Why?",
+    "hint": "What does a blocklist allow?",
+    "choices": [
+      {
+        "text": "6379 is a port that firewalls leave open",
+        "correct": false,
+        "why": "No port is special; the policy was accept."
+      },
+      {
+        "text": "Everything not named is allowed, and nobody named it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The cache opened the firewall itself",
+        "correct": false,
+        "why": "Nothing touched the firewall."
+      },
+      {
+        "text": "The database rule on 5432 covered the cache as well, by mistake",
+        "correct": false,
+        "why": "That rule named 5432 only."
+      }
+    ]
+  },
+  {
+    "id": "ex-xr853rtx",
+    "version": 1,
+    "section": "default-deny",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the cost of an allowlist, and why is it the better failure?",
+    "hint": "Loud or silent?",
+    "choices": [
+      {
+        "text": "Something legitimate is refused and somebody complains within the day",
+        "correct": true,
+        "why": "Right. The blocklist's failure is silent."
+      },
+      {
+        "text": "It is slower, because every packet is compared with every rule",
+        "correct": false,
+        "why": "Speed is not the trade."
+      },
+      {
+        "text": "It cannot express a rule for the internet",
+        "correct": false,
+        "why": "The baseline has rules for the internet."
+      },
+      {
+        "text": "Nothing; it has no cost",
+        "correct": false,
+        "why": "It refuses what nobody listed, legitimate or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-acqmkr4g",
+    "version": 1,
+    "section": "default-deny",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under the blocklist, which of these were open to the internet? Choose all that apply.",
+    "hint": "probe from remote.",
+    "choices": [
+      {
+        "text": "app:22",
+        "correct": true,
+        "why": "Nobody listed SSH."
+      },
+      {
+        "text": "app:8080",
+        "correct": true,
+        "why": "Nobody listed the application."
+      },
+      {
+        "text": "db:6379",
+        "correct": true,
+        "why": "Started after the list was written."
+      },
+      {
+        "text": "db:5432",
+        "correct": false,
+        "why": "That one was on the list and blocked."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfsncw57",
+    "version": 1,
+    "section": "loading-safely",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does nft -c -f do?",
+    "hint": "c for check.",
+    "choices": [
+      {
+        "text": "Loads the file and prints a copy of it",
+        "correct": false,
+        "why": "It loads nothing."
+      },
+      {
+        "text": "Checks the file, changing nothing",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Clears the counters first, then loads",
+        "correct": false,
+        "why": "That is not what -c means."
+      },
+      {
+        "text": "Compiles the file into a faster form",
+        "correct": false,
+        "why": "Nothing is compiled for later."
+      }
+    ]
+  },
+  {
+    "id": "ex-hetwxhas",
+    "version": 1,
+    "section": "loading-safely",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After nft -f failed on the misspelt file, how many accept lines did the running rule set have?",
+    "hint": "The same as before.",
+    "value": 11,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-6b38rk4q",
+    "version": 1,
+    "section": "loading-safely",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A file starts with flush ruleset and has an error on line 7. Without atomic loading, what would the firewall be left with?",
+    "hint": "Which lines would have run?",
+    "choices": [
+      {
+        "text": "The old rule set, untouched",
+        "correct": false,
+        "why": "That is what atomic loading gives, not what its absence does."
+      },
+      {
+        "text": "The whole new file, minus line 7",
+        "correct": false,
+        "why": "Loading stops at the error."
+      },
+      {
+        "text": "A flushed firewall with lines 1 to 6 loaded",
+        "correct": true,
+        "why": "Right. Neither the old policy nor the new."
+      },
+      {
+        "text": "No rules and a policy of drop on every chain",
+        "correct": false,
+        "why": "The chain definitions come from lines that may not have run."
+      }
+    ]
+  },
+  {
+    "id": "ex-1a291w9v",
+    "version": 1,
+    "section": "loading-safely",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script of fifty iptables commands fails at the twentieth. What state is the firewall in?",
+    "hint": "iptables applies one rule per command.",
+    "choices": [
+      {
+        "text": "Unchanged, as with nft -f",
+        "correct": false,
+        "why": "Each command applied on its own."
+      },
+      {
+        "text": "Nineteen new rules applied, the rest missing",
+        "correct": true,
+        "why": "Right. iptables-restore exists for this."
+      },
+      {
+        "text": "Every rule applied except the twentieth one that failed",
+        "correct": false,
+        "why": "The script stops at the failure unless told otherwise."
+      },
+      {
+        "text": "Rolled back automatically to the rules saved at boot",
+        "correct": false,
+        "why": "Nothing saved them."
+      }
+    ]
+  },
+  {
+    "id": "ex-53bgsw2k",
+    "version": 1,
+    "section": "a-way-back",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the safe way to change a remote firewall in order.",
+    "hint": "The way back is scheduled before the change.",
+    "items": [
+      "save the working rule set, starting with flush ruleset",
+      "schedule a job that reloads it in a few minutes",
+      "load the new rule set",
+      "test from where you are, then cancel the job"
+    ],
+    "trap": "Scheduling after the change is too late if the change locks you out."
+  },
+  {
+    "id": "ex-qgx8pcd3",
+    "version": 1,
+    "section": "a-way-back",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The rollback restored the saved output of nft list ruleset, and the count of accept lines came back as 13 instead of 11. Why?",
+    "hint": "What does the listing not start with?",
+    "choices": [
+      {
+        "text": "The counters were saved as extra rules",
+        "correct": false,
+        "why": "Counters are part of rules, not new ones."
+      },
+      {
+        "text": "The background job ran twice",
+        "correct": false,
+        "why": "It ran once; rollback.log has one line."
+      },
+      {
+        "text": "The listing has no flush ruleset, so it merged with the loaded rules",
+        "correct": true,
+        "why": "Right. The tighter chain's two rules appeared twice."
+      },
+      {
+        "text": "nft -f doubles rules loaded from a listing",
+        "correct": false,
+        "why": "It adds what the file says; the file said too little."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqxwwsw0",
+    "version": 1,
+    "section": "a-way-back",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A saved rule set replaces the running one only if its first line is ___ ruleset.",
+    "hint": "Two words, the first is a verb.",
+    "blanks": [
+      {
+        "accept": [
+          "flush"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k5483s9b",
+    "version": 1,
+    "section": "the-firewall-itself",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which chain protects fw itself, rather than the zones behind it?",
+    "hint": "Lesson 1's hooks.",
+    "choices": [
+      {
+        "text": "input",
+        "correct": true,
+        "why": "Right. Packets addressed to fw."
+      },
+      {
+        "text": "forward",
+        "correct": false,
+        "why": "That is traffic crossing fw."
+      },
+      {
+        "text": "output",
+        "correct": false,
+        "why": "That is traffic fw makes."
+      },
+      {
+        "text": "postrouting",
+        "correct": false,
+        "why": "That is where NAT happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-ss0cahjq",
+    "version": 1,
+    "section": "the-firewall-itself",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each ICMP message to what breaks without it.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "fragmentation needed",
+        "right": "path MTU discovery, and large transfers stall"
+      },
+      {
+        "left": "time exceeded",
+        "right": "traceroute past this hop"
+      },
+      {
+        "left": "echo request",
+        "right": "ping"
+      }
+    ],
+    "right_distractors": [
+      "DNS lookups"
+    ]
+  },
+  {
+    "id": "ex-er2zq3p9",
+    "version": 1,
+    "section": "the-firewall-itself",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From admin, probe fw:22 said refused. What does refused show here?",
+    "hint": "Who answered?",
+    "choices": [
+      {
+        "text": "The input chain rejected it",
+        "correct": false,
+        "why": "The chain drops; it sends nothing back."
+      },
+      {
+        "text": "admin is not in the management range that input allows",
+        "correct": false,
+        "why": "192.168.99.10 is in 192.168.99.0/24."
+      },
+      {
+        "text": "The rule let it in, and fw runs no SSH server",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "SSH is blocked on the loopback",
+        "correct": false,
+        "why": "admin reaches eth4, not lo."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgf0db7n",
+    "version": 1,
+    "section": "logging-drops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the log rule carry limit rate 5/second?",
+    "hint": "Who controls how many packets are dropped?",
+    "choices": [
+      {
+        "text": "nflog accepts at most five packets a second from the kernel",
+        "correct": false,
+        "why": "The limit is a choice, not nflog's."
+      },
+      {
+        "text": "Otherwise the disk fills with anybody's dropped packets",
+        "correct": true,
+        "why": "Right. The log would become the attack."
+      },
+      {
+        "text": "It slows the attacker down to five packets a second, at most",
+        "correct": false,
+        "why": "It limits logging, not the traffic."
+      },
+      {
+        "text": "tcpdump reads no faster than that",
+        "correct": false,
+        "why": "It reads far faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-gcve9gek",
+    "version": 1,
+    "section": "logging-drops",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Of the three drops logged, which deserves a person's attention first?",
+    "hint": "Which is the internet's background noise?",
+    "choices": [
+      {
+        "text": "203.0.113.50 to the database",
+        "correct": false,
+        "why": "The internet tries doors all day."
+      },
+      {
+        "text": "203.0.113.50 to SSH on app",
+        "correct": false,
+        "why": "Also the internet's background noise."
+      },
+      {
+        "text": "192.168.10.20 to port 6379",
+        "correct": true,
+        "why": "Right. A LAN machine reaching for a service it was never given."
+      },
+      {
+        "text": "None; drops mean the firewall worked",
+        "correct": false,
+        "why": "It worked, and one of them still says something."
+      }
+    ]
+  },
+  {
+    "id": "ex-2htpg3zf",
+    "version": 1,
+    "section": "logging-drops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the log rule the last rule of the chain?",
+    "hint": "What would it record anywhere else?",
+    "choices": [
+      {
+        "text": "Placed earlier, it logs traffic later rules allow",
+        "correct": true,
+        "why": "Right. Last means about to be dropped."
+      },
+      {
+        "text": "nftables refuses a log rule placed anywhere else in a chain",
+        "correct": false,
+        "why": "It accepts it anywhere."
+      },
+      {
+        "text": "The policy reads the last rule as its own log target",
+        "correct": false,
+        "why": "The policy has no log target."
+      },
+      {
+        "text": "So its rate limit applies to every rule",
+        "correct": false,
+        "why": "A rule's limit applies to that rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-hng0nb5y",
+    "version": 1,
+    "section": "structure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a network with IPv6, what does a firewall with only a table ip do to IPv6 packets?",
+    "hint": "A table ip handles one family.",
+    "choices": [
+      {
+        "text": "Drops them, since no rule accepts them",
+        "correct": false,
+        "why": "No chain of that family exists to drop them."
+      },
+      {
+        "text": "Nothing: they pass unfiltered",
+        "correct": true,
+        "why": "Right. An invisible policy of accept."
+      },
+      {
+        "text": "Translates them to IPv4 first",
+        "correct": false,
+        "why": "Nothing translates them."
+      },
+      {
+        "text": "Applies the same rules automatically",
+        "correct": false,
+        "why": "That is what the inet family does, not ip."
+      }
+    ]
+  },
+  {
+    "id": "ex-179bbrw2",
+    "version": 1,
+    "section": "structure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After 192.168.99.11 was added to the admins set, what changed in the rules?",
+    "hint": "Where does the address live?",
+    "choices": [
+      {
+        "text": "A new rule was added for the new address",
+        "correct": false,
+        "why": "No rule was added."
+      },
+      {
+        "text": "Every rule was reloaded from the file on disk, with the address in it",
+        "correct": false,
+        "why": "Only the set changed."
+      },
+      {
+        "text": "No rule changed; every rule naming the set now includes it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The set's comment was updated",
+        "correct": false,
+        "why": "The comment stayed."
+      }
+    ]
+  },
+  {
+    "id": "ex-pfh2rpey",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On Friday evening an administrator must tighten fw's input chain over SSH from admin. Which plan is safe?",
+    "hint": "Check, save, schedule, load, test, confirm.",
+    "choices": [
+      {
+        "text": "Load the new file, then save a backup",
+        "correct": false,
+        "why": "If the load locks you out, the backup does nothing."
+      },
+      {
+        "text": "Edit the running rules one by one with nft add",
+        "correct": false,
+        "why": "Each step applies alone, and the file drifts."
+      },
+      {
+        "text": "Check with nft -c, save with flush ruleset, schedule the rollback, load, test, cancel",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Set the input policy to accept while working",
+        "correct": false,
+        "why": "That opens fw to every zone."
+      }
+    ]
+  },
+  {
+    "id": "ex-9a0svpxs",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which habits make a rule set safer for the next person? Choose all that apply.",
+    "hint": "The section on structure.",
+    "choices": [
+      {
+        "text": "A comment on every accept naming the decision",
+        "correct": true,
+        "why": "The rule cannot say why."
+      },
+      {
+        "text": "The file in version control, changed by commits",
+        "correct": true,
+        "why": "A history with reasons."
+      },
+      {
+        "text": "Named sets for groups used in several rules",
+        "correct": true,
+        "why": "One change, applied everywhere."
+      },
+      {
+        "text": "Editing the running rules directly, then exporting",
+        "correct": false,
+        "why": "The file should be the source, not a copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3b2e384",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An office turns IPv6 on for its staff LAN and keeps its table ip rule set. What have they opened?",
+    "hint": "The rule set filters one family.",
+    "choices": [
+      {
+        "text": "Nothing, since the policy is drop",
+        "correct": false,
+        "why": "That policy belongs to the ip family's chains."
+      },
+      {
+        "text": "Every zone, over IPv6, to anything routed",
+        "correct": true,
+        "why": "Right. Move the tables to inet."
+      },
+      {
+        "text": "Only ICMPv6, which the rule set never names",
+        "correct": false,
+        "why": "Every IPv6 packet, not only ICMPv6."
+      },
+      {
+        "text": "Nothing new, as IPv6 has its own firewall built in",
+        "correct": false,
+        "why": "IPv6 has no built-in firewall."
+      }
+    ]
+  }
+]

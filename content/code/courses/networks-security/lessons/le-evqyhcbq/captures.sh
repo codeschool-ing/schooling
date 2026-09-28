@@ -107,11 +107,11 @@ on laptop 'ping -c1 -W1 192.168.10.1 | tail -2'
 block log
 quiet fw 'nft add rule ip filter forward limit rate 5/second log group 1 prefix \"fw-drop \" comment \"what the policy is about to drop\"'
 root fw 'nft list chain ip filter forward | tail -3'
-quiet fw 'setsid timeout 8 tcpdump -n -l -i nflog:1 -c 3 > /root/drops.txt 2>/dev/null </dev/null &'
-sleep 1
+quiet fw 'setsid timeout 10 tcpdump -n -l -i nflog:1 -c 3 > /root/drops.txt 2>/dev/null </dev/null &'
+sleep 3
 on remote 'probe db:5432 app:22'
 on laptop 'probe db:6379'
-sleep 1
+sleep 2
 root fw 'cat drops.txt'
 
 block inet
