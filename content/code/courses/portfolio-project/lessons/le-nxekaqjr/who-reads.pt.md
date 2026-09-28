@@ -1,0 +1,30 @@
+---
+title: Quem abre, e até onde vai
+version: 1
+---
+
+Um portfólio tem leitores, e eles não são a mesma pessoa. Em geral encontra três, às vezes uma pessoa só
+fazendo os três papéis, e cada um lê até uma profundidade diferente.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Três leitores de um portfólio, cada um descendo um nível. A triagem abre o perfil, os repositórios fixados e a primeira tela de um README, e pergunta se há algo terminado ali. Quem contrata abre o README, o link no ar ou a demo e as decisões, e pergunta se essa pessoa resolveria o seu tipo de problema. A entrevista técnica abre o código, os commits, os testes e a parte difícil, e pergunta se a pessoa sabe explicar o que construiu.\"><defs><marker id=\"rd1-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"28\" y=\"18\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper-dim)\">quem</text><text x=\"198\" y=\"18\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper-dim)\">o que abre</text><text x=\"478\" y=\"18\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper-dim)\">a pergunta que responde</text><rect x=\"20\" y=\"36\" width=\"160\" height=\"54\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"63\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">a triagem</text><text x=\"198\" y=\"54\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">o perfil, os repositórios fixados,</text><text x=\"198\" y=\"72\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">a primeira tela de um README</text><text x=\"478\" y=\"63\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">tem algo terminado aqui?</text><path d=\"M50 92 L64 104\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#rd1-ah)\"></path><rect x=\"28\" y=\"106\" width=\"152\" height=\"54\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"38\" y=\"133\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">quem contrata</text><text x=\"198\" y=\"124\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">o README, o link no ar ou a demo,</text><text x=\"198\" y=\"142\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">as decisões</text><text x=\"478\" y=\"133\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">essa pessoa resolveria o nosso tipo de problema?</text><path d=\"M58 162 L72 174\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#rd1-ah)\"></path><rect x=\"36\" y=\"176\" width=\"144\" height=\"54\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\"></rect><text x=\"46\" y=\"203\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">a entrevista técnica</text><text x=\"198\" y=\"194\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">o código, os commits,</text><text x=\"198\" y=\"212\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">os testes, a parte difícil</text><text x=\"478\" y=\"203\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">ela sabe explicar o que construiu?</text></svg>", "caption": "Três leitores, três profundidades. Cada um para no primeiro nível que responde à sua pergunta, e a maioria nunca chega ao terceiro."}
+```
+
+**A triagem** vem primeiro. Pode ser alguém de recrutamento ou uma pessoa do time, e a pergunta é
+estreita: tem alguma coisa terminada aqui? Ela olha o seu perfil, os repositórios que você escolheu
+fixar e a primeira tela de um README. Se essa primeira tela diz o que é o projeto e mostra ele
+funcionando, o portfólio cumpriu o seu papel nesse nível. Se abre numa lista de passos de instalação de
+algo que ela não consegue imaginar, não cumpriu.
+
+**Quem contrata** lê mais fundo. Quer saber se você resolveria o tipo de problema que o time tem. Lê o
+README, abre o link no ar ou assiste à demo, e procura o trecho em que você explica uma decisão: por que
+esse banco, por que sem login, o que ficou de fora.
+
+**A entrevista técnica** lê o código, em geral para se preparar para conversar com você. Olha os
+commits, os testes, a parte do projeto que foi difícil, e depois pergunta sobre ela. O que está sendo
+verificado é menos o código do que a sua capacidade de explicá-lo.
+
+Daí saem duas coisas. **A maioria dos leitores para no primeiro nível**, então a primeira tela pesa mais
+do que tudo o que está abaixo dela. E **cada nível precisa se sustentar sozinho**: um README forte sobre
+um código que você não sabe explicar falha no terceiro leitor, e um bom código atrás de um README que não
+diz nada nunca chega ao segundo.

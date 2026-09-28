@@ -1,0 +1,28 @@
+---
+title: Three filters
+version: 1
+---
+
+By now you probably have more ideas than you can build. Put each one through three filters, in this
+order, and keep the first that passes all three.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" aria-label=\"Three filters in a column, with ideas going in at the top and one project coming out at the bottom. The filters ask: can I finish it in about six weeks; does it use the core skill of my track; can a stranger open it and check it. Beside each filter, an idea it stops: a social network fails the first, a to-do list the second, a private tool nobody else can run the third.\"><defs><marker id=\"fl3-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"200\" y=\"16\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper-dim)\">ideas</text><path d=\"M200 26 L200 44\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#fl3-ah)\"></path><rect x=\"40\" y=\"48\" width=\"320\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"200\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">can I finish it in about six weeks?</text><path d=\"M362 70 L430 70\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#fl3-ah)\"></path><rect x=\"434\" y=\"54\" width=\"266\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\"></rect><text x=\"446\" y=\"70\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">✗ a social network</text><path d=\"M200 94 L200 120\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#fl3-ah)\"></path><rect x=\"40\" y=\"124\" width=\"320\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"200\" y=\"146\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">does it use the core skill of my track?</text><path d=\"M362 146 L430 146\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#fl3-ah)\"></path><rect x=\"434\" y=\"130\" width=\"266\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\"></rect><text x=\"446\" y=\"146\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">✗ a to-do list</text><path d=\"M200 170 L200 196\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#fl3-ah)\"></path><rect x=\"40\" y=\"200\" width=\"320\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"200\" y=\"222\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">can a stranger open it and check it?</text><path d=\"M362 222 L430 222\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#fl3-ah)\"></path><rect x=\"434\" y=\"206\" width=\"266\" height=\"32\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\"></rect><text x=\"446\" y=\"222\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">✗ a private tool nobody else can run</text><path d=\"M200 246 L200 272\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#fl3-ah)\"></path><rect x=\"120\" y=\"272\" width=\"160\" height=\"26\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"200\" y=\"285\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">the project</text></svg>", "caption": "Each filter stops a different kind of idea. What passes all three is usually small, specific, and more interesting than it first looks."}
+```
+
+**Can I finish it in about six weeks?** Six weeks of evenings and weekends is roughly the size of
+project that reaches lesson 2's definition of finished without being abandoned. It is a guide, not
+a rule; the point is to have a size in mind before starting, because everything grows once you do.
+A social network fails here, however good the idea.
+
+**Does it use the core skill of my track?** The one from the section above: a pipeline for data
+engineering, an evaluation for AI, a restore test for support. A to-do list fails here for almost
+every track, not because it is simple but because nothing in it exercises what the job is about.
+
+**Can a stranger open it and check it?** Lesson 1's evidence test. A tool that only works on your
+company's internal network, or needs your personal account to log in to a paid service, fails here:
+nobody reading your portfolio can see it run.
+
+What passes all three tends to be **small, specific and more interesting than it first looks**. An
+equipment loan register sounds dull until you find that two people can lend the same projector at
+the same second.
