@@ -20,14 +20,14 @@ wearing the clothes of a fact, and the record that starts with it has already ru
 same thing measured. Both belong in the record: the user's words are what the next person will search
 for, and the measurement is what they will compare against.
 
-**A hypothesis is one cause, and the record keeps the ones that were wrong.** In lesson 21 the small page
+**A hypothesis is one cause, and the record keeps the ones that were wrong**. In lesson 21 the small page
 refuted a whole family at once: the name, the route, the tunnel and the web server were all working, or
 16 bytes could not have arrived. Writing that down saves the next person checking the same four things
 again. A refuted hypothesis is a result, and often the most useful one in the record.
 
 **A test names its machine.** `ping -M do -s 1400` from `files` and the same command from the till cross
-the tunnel in opposite directions and hit different routers' rules, so the record says where it ran;
-lesson 21 ran only the first. It also says what would count against the hypothesis before the result is in, which is what keeps a
+the tunnel in opposite directions and hit different routers' rules, so the record says where it ran.
+Lesson 21 ran only the first. It also says what would count against the hypothesis before the result is in, which is what keeps a
 result from being read to fit.
 
 **A result is pasted.** "The big ping failed" loses the detail that solved the case: the statistics line

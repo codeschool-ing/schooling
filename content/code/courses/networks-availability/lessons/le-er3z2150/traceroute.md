@@ -35,9 +35,9 @@ path look broken.
 All three runs found the same three hops: `hq` at `192.168.10.1`, the ISP at `203.0.113.1` and the
 server. **The stars in the second and third runs are not a fault**, and nothing was staged for them.
 Routers limit how fast they send ICMP errors, traceroute fires its probes in quick bursts, and some
-answers are simply not sent; the next section measures that limit. The times need the same care. The
+answers are simply not sent. The next section measures that limit. The times need the same care. The
 TCP probes' first two hops took about 5 ms while the server answered in 0.338. **A hop's time is how
-long that router took to answer**, and a router writes error messages at low priority, so a slow middle
+long that router took to answer.** A router writes error messages at low priority, so a slow middle
 hop followed by a fast destination measures the router's attention, not the path.
 
 ## A silent hop

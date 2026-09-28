@@ -34,7 +34,7 @@ o que dá 24 Mbit/s durante 20 ms.
 ```
 
 **O shaper enviou os 40 e fez o último esperar 51,2 ms; o policer enviou 18 e descartou 22 sem atrasar
-nada.** Vale citar uma simplificação: este shaper guarda tudo o que recebe, enquanto o shaper do `tc` é
+nada.** O shaper do modelo guarda tudo o que recebe. O shaper do `tc` é
 informado de quanto pode guardar, na próxima seção com `latency 50ms`, e descarta o que não cabe. Uma
 rajada de 40 quadros fica perto desse limite. Um upload TCP, que continua enviando até algo se perder,
 passa dele, e os contadores da próxima seção mostram os descartes.

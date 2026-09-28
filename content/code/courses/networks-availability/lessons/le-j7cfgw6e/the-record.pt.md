@@ -27,7 +27,7 @@ Uma hipótese refutada é um resultado, e muitas vezes o mais útil do registro.
 
 **Um teste diz a sua máquina.** `ping -M do -s 1400` a partir de `files` e o mesmo comando a partir do
 caixa atravessam o túnel em sentidos opostos e esbarram nas regras de roteadores diferentes, então o
-registro diz onde rodou; a aula 21 rodou só o primeiro. Ele também diz o que contaria contra a hipótese antes de o resultado sair, o que impede
+registro diz onde rodou. A aula 21 rodou só o primeiro. Ele também diz o que contaria contra a hipótese antes de o resultado sair, o que impede
 que o resultado seja lido do jeito que convém.
 
 **Um resultado é colado.** "O ping grande falhou" perde o detalhe que resolveu o caso: a linha de

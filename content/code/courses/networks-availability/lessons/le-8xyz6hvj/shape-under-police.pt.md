@@ -35,8 +35,8 @@ menos que os 5,37 que o policer permitia, e esse é o preço. Em troca, o client
 
 **Fazer shaping abaixo do contrato traz o gargalo para dentro do seu roteador**, e o gargalo é o único
 lugar onde o QoS consegue agir. Por que abaixo, e não na própria taxa? Porque são duas máquinas medindo
-separadamente. Cada uma conta bytes do seu jeito, um quadro com o cabeçalho Ethernet ou um pacote sem ele,
-cada uma tem o próprio balde e o próprio relógio, e um shaper configurado exatamente no contrato não deixa
+separadamente. Cada uma conta bytes do seu jeito, um quadro com o cabeçalho Ethernet ou um pacote sem ele.
+Cada uma tem o próprio balde e o próprio relógio, e um shaper configurado exatamente no contrato não deixa
 folga para as diferenças. Dez por cento é uma margem comum e não uma regra; o número certo é aquele em que
 o contador do provedor fica em zero.
 
@@ -47,5 +47,5 @@ o contador do provedor fica em zero.
 
 O mesmo raciocínio vale ao contrário para os downloads, com os papéis trocados: a fila que enche é a do
 provedor, e a aula 18 terminou justamente nesse problema. Fazer shaping do que chega, um pouco abaixo da
-velocidade da linha, transforma essa fila em sua também; isso se faz com as mesmas ferramentas no lado de
+velocidade da linha, transforma essa fila em sua também. Isso se faz com as mesmas ferramentas no lado de
 entrada de uma interface, e não foi executado aqui.

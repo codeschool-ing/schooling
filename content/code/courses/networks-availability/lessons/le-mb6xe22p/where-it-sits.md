@@ -5,11 +5,11 @@ version: 1
 
 A load balancer is often pictured as a switch that sprays packets across servers. **It does not
 spread packets; it chooses a server once per connection or once per request**, and everything it sends
-afterwards follows that choice. The interesting question is what it reads before choosing, and there are
-two answers, named after the layer they stop at.
+afterwards follows that choice. The two kinds differ in what they read before choosing, and each is named
+after the layer it stops at.
 
 **A layer 4 balancer reads addresses and ports and nothing else.** A TCP connection arrives for the
-service's address on port 80 or 443, the balancer picks a server and forwards that connection's packets
+service's address on port 80 or 443. The balancer picks a server and forwards that connection's packets
 to it, rewriting an address on the way, much as NAT does. It never looks inside the stream, so it cannot
 tell `GET /` from `GET /slow.txt`, and it can carry TLS through without holding a certificate. It is
 cheap and fast, and it has only the connection to go on.

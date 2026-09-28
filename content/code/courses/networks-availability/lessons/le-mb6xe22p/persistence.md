@@ -74,7 +74,7 @@ served by web1
 
 The same client, with the same `SERVERID=w3`, was served by **`web1` and given a new cookie, `w1`**, so
 its next request goes straight to `web1` without being redispatched again. That is the best a balancer
-can do, and it is worth being clear about what it does not do: **whatever the visitor's session held in
+can do. **Whatever the visitor's session held in
 `web3`'s memory died with `web3`.** The basket is empty and the login is gone. Persistence moves a
 visitor back to the same server; it cannot move their state off a server that has stopped, and that is
 the strongest argument for the shared store in this section's first paragraph.

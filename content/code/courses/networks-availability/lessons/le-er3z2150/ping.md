@@ -5,7 +5,7 @@ version: 1
 
 ping is the first tool anybody reaches for and the one most often read for more than it says. **It
 measures one thing: whether an ICMP echo went to an address and came back, and how long the round trip
-took.** It says nothing about a port, a program or bandwidth, and a machine whose firewall drops ICMP
+took**. It says nothing about a port, a program or bandwidth, and a machine whose firewall drops ICMP
 answers nothing while serving web pages perfectly well. From the laptop to web1:
 
 ```
@@ -22,7 +22,7 @@ rtt min/avg/max/mdev = 0.080/0.237/0.679/0.255 ms
 ```
 
 Four echoes, four replies. The first is the slowest, 0.679 ms against 0.080 to 0.105 for the other
-three; the first packet of a conversation often waits while a machine on the way looks up a hardware
+three. The first packet of a conversation often waits while a machine on the way looks up a hardware
 address, so read the rest and not the first. **None of these times belongs to a network.** The lab's
 links have no delay, and every time printed here is one computer talking to itself. On a real line the
 same output carries the distance and the queues, and `mdev`, the spread, is the number that says how
@@ -71,7 +71,7 @@ rtt min/avg/max/mdev = 0.065/0.094/0.615/0.080 ms
 ```
 
 Twelve per cent, not twenty. Nothing is wrong with ping; **a loss figure from a short run is a sample,
-and fifty is short.** A few lines of Python say how far a run of pings can stray from the true rate,
+and fifty is short**. A few lines of Python say how far a run of pings can stray from the true rate,
 using the binomial distribution: each ping is lost or not, with the same chance, independently.
 
 ```schooling-example

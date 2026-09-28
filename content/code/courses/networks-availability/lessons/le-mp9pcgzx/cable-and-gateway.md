@@ -97,6 +97,6 @@ rtt min/avg/max/mdev = 0.360/0.360/0.360/0.000 ms
 ```
 
 `ttl=62` means two routers between the laptop and the data centre, `hq` and the ISP's, which lesson 22
-reads more closely. **A wrong gateway is rarely typed by hand.** It arrives from a DHCP server with a
+reads more closely. **A wrong gateway is rarely typed by hand**. It arrives from a DHCP server with a
 wrong option, or with a router replaced by one on a different address, and from the laptop it looks
 exactly like this: the local network works and nothing beyond it does.

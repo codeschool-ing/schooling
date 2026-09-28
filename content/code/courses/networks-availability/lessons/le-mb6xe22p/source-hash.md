@@ -6,7 +6,7 @@ version: 1
 Some applications need every request from one client to reach the same server, a problem the next
 section takes up properly. The oldest way to get that without reading the request is **to hash the
 client's address: the same address always produces the same number, so it always picks the same
-server.** HAProxy calls it `balance source`, and it works for any TCP service, not only HTTP. Five
+server**. HAProxy calls it `balance source`, and it works for any TCP service, not only HTTP. Five
 machines of the lab each send four requests:
 
 ```

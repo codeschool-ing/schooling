@@ -36,7 +36,7 @@ than the 5.37 the policer allowed, and that is the price. For it, the customer h
 
 **Shaping below the contract moves the bottleneck into your router**, and the bottleneck is the only
 place QoS can act. Why below, rather than at the rate itself? Because they are two machines measuring separately.
-Each counts bytes its own way, a frame with its Ethernet header or a packet without, each has its own
+Each counts bytes its own way, a frame with its Ethernet header or a packet without. Each has its own
 bucket and its own clock, and a shaper set exactly at the contract leaves no room for the differences. Ten per cent is a common margin and not a rule; the right figure is the one at
 which the provider's counter stays at zero.
 
@@ -47,5 +47,5 @@ which the provider's counter stays at zero.
 
 The same reasoning runs the other way for downloads, with the roles swapped: the queue that fills is the
 provider's, and lesson 18 ended on exactly that problem. Shaping what arrives, a little under the line's
-speed, turns that queue into yours as well; it is done with the same tools on an interface's incoming
+speed, turns that queue into yours as well. It is done with the same tools on an interface's incoming
 side, and it was not run here.

@@ -38,7 +38,7 @@ served by web1
 A primeira requisição, sem cookie, recebeu **`SERVERID=w1`**, porque o round robin a mandou para `web1`.
 Quatro requisições com `SERVERID=w3` foram todas para `web3`, e três sem cookie nenhum continuaram
 distribuídas entre `web2`, `web3` e `web1`. **O cookie prende os clientes que o têm e deixa o resto para o
-algoritmo.** O valor é um rótulo que a configuração escolheu, de `w1` a `w3`, não o endereço do servidor,
+algoritmo**. O valor é um rótulo que a configuração escolheu, de `w1` a `w3`, não o endereço do servidor,
 então não conta nada a um visitante curioso sobre a rede atrás do balanceador.
 
 ## O servidor fixado morre
@@ -74,7 +74,7 @@ served by web1
 
 O mesmo cliente, com o mesmo `SERVERID=w3`, foi atendido por **`web1` e recebeu um cookie novo, `w1`**,
 então a próxima requisição dele vai direto para `web1`, sem ser redirecionada de novo. É o melhor que um
-balanceador pode fazer, e vale deixar claro o que ele não faz: **o que a sessão do visitante tinha na
+balanceador pode fazer. **O que a sessão do visitante tinha na
 memória de `web3` morreu com `web3`.** O carrinho está vazio e o login se foi. A persistência leva um
 visitante de volta ao mesmo servidor; não consegue tirar o estado dele de um servidor que parou, e esse é o
 argumento mais forte para o armazenamento compartilhado do primeiro parágrafo desta seção.

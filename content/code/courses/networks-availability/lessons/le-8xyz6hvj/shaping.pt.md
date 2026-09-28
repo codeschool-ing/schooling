@@ -67,7 +67,7 @@ rtt min/avg/max/mdev = 20.932/21.989/22.950/0.805 ms
 
 **22 ms em média**, contra 0,08 ms num enlace ocioso na aula 18. Isso é a fila, e as colunas do próprio
 upload explicam. A coluna `Cwnd` diz que o TCP manteve uns **14,1 KBytes** em trânsito, e em regime isso
-é mais ou menos o que fica na fila do shaper: 14,1 × 1024 × 8 = 115.507 bits, que a 5.000.000 de bits
+é mais ou menos o que fica na fila do shaper. São 14,1 × 1024 × 8 = 115.507 bits, que a 5.000.000 de bits
 por segundo levam **23 ms** para sair. O ping esperou atrás da janela do upload.
 
 O shaper guarda o próprio placar:

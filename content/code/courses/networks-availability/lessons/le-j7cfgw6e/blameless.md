@@ -9,7 +9,7 @@ to hide the next mistake**. The next mistake is the one you most need to hear ab
 person who made it, while it is still small.
 
 A blameless post-mortem asks a different question: **what made the mistake easy to make and hard to
-see?** Dropping outbound "destination unreachable" is a hardening step people recommend in good faith,
+see**? Dropping outbound "destination unreachable" is a hardening step people recommend in good faith,
 because it stops a router from telling a scanner which addresses and ports are closed. The lab does not
 say why the `hardening` table was added to `hq`, or when. A real post-mortem would find out by asking
 questions like these, rather than by guessing:

@@ -4,7 +4,7 @@ version: 1
 ---
 
 O ping é a primeira ferramenta que todo mundo usa e a mais lida além do que ela diz. **Ele mede uma
-coisa só: se um eco ICMP foi até um endereço e voltou, e quanto tempo levou a ida e volta.** Não diz nada
+coisa só: se um eco ICMP foi até um endereço e voltou, e quanto tempo levou a ida e volta**. Não diz nada
 sobre uma porta, um programa ou banda, e uma máquina cujo firewall descarta ICMP não responde nada
 enquanto serve páginas web perfeitamente. Do laptop para o web1:
 
@@ -22,7 +22,7 @@ rtt min/avg/max/mdev = 0.080/0.237/0.679/0.255 ms
 ```
 
 Quatro ecos, quatro respostas. A primeira é a mais lenta, 0.679 ms contra 0.080 a 0.105 das outras
-três; o primeiro pacote de uma conversa muitas vezes espera enquanto uma máquina no caminho procura um
+três. O primeiro pacote de uma conversa muitas vezes espera enquanto uma máquina no caminho procura um
 endereço de hardware, então leia o resto e não o primeiro. **Nenhum desses tempos é de uma rede.** Os
 enlaces do laboratório não têm atraso, e todo tempo impresso aqui é um computador falando consigo mesmo.
 Numa linha de verdade a mesma saída traz a distância e as filas, e o `mdev`, a dispersão, é o número que
@@ -71,7 +71,7 @@ rtt min/avg/max/mdev = 0.065/0.094/0.615/0.080 ms
 ```
 
 Doze por cento, não vinte. Não há nada de errado com o ping; **uma perda medida numa rodada curta é uma
-amostra, e cinquenta é pouco.** Umas linhas de Python mostram o quanto uma rodada de pings pode se afastar
+amostra, e cinquenta é pouco**. Umas linhas de Python mostram o quanto uma rodada de pings pode se afastar
 da taxa verdadeira, usando a distribuição binomial: cada ping se perde ou não, com a mesma chance, de
 forma independente.
 

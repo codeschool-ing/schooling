@@ -5,7 +5,7 @@ version: 1
 
 Algumas aplicações precisam que toda requisição de um cliente chegue ao mesmo servidor, um problema que a
 próxima seção trata a fundo. O jeito mais antigo de conseguir isso sem ler a requisição é **fazer o hash do
-endereço do cliente: o mesmo endereço sempre dá o mesmo número, então sempre escolhe o mesmo servidor.** O
+endereço do cliente: o mesmo endereço sempre dá o mesmo número, então sempre escolhe o mesmo servidor**. O
 HAProxy chama isso de `balance source`, e funciona com qualquer serviço TCP, não só HTTP. Cinco máquinas do
 laboratório enviam quatro requisições cada:
 

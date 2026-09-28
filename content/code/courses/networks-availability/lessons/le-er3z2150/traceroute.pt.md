@@ -35,9 +35,9 @@ caminho saudável parecer quebrado.
 As três rodadas acharam os mesmos três saltos: `hq` em `192.168.10.1`, o provedor em `203.0.113.1` e o
 servidor. **As estrelas da segunda e da terceira rodada não são falha**, e nada foi encenado para elas.
 Roteadores limitam a velocidade com que mandam erros ICMP, o traceroute dispara as sondas em rajadas
-rápidas, e algumas respostas simplesmente não são enviadas; a próxima seção mede esse limite. Os tempos
+rápidas, e algumas respostas simplesmente não são enviadas. A próxima seção mede esse limite. Os tempos
 pedem o mesmo cuidado. Os dois primeiros saltos das sondas TCP levaram uns 5 ms enquanto o servidor
-respondeu em 0.338. **O tempo de um salto é quanto aquele roteador levou para responder**, e um roteador
+respondeu em 0.338. **O tempo de um salto é quanto aquele roteador levou para responder.** Um roteador
 escreve mensagens de erro com baixa prioridade, então um salto do meio lento seguido de um destino rápido
 mede a atenção do roteador, não o caminho.
 

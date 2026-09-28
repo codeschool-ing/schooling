@@ -83,7 +83,7 @@ table ip hardening {
 Uma tabela chamada `hardening`, uma chain no hook `output` do roteador e uma regra: descartar todo ICMP
 destination unreachable que o próprio `hq` envia. "Fragmentation needed" é um tipo de destination
 unreachable, então **a regra descarta exatamente a mensagem de que a descoberta do MTU do caminho
-depende**. `files` manda segmentos de 1448 bytes, `hq` descarta cada um na entrada do `wg0`, a explicação
+depende**. `files` manda segmentos de 1448 bytes e `hq` descarta cada um na entrada do `wg0`. A explicação
 é jogada fora na saída, e `files` continua tentando um tamanho que nunca vai caber até o curl do caixa
 desistir.
 

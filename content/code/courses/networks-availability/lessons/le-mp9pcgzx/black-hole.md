@@ -83,7 +83,7 @@ table ip hardening {
 A table called `hardening`, a chain on the router's `output` hook, and one rule: drop every ICMP
 destination unreachable that `hq` itself sends. "Fragmentation needed" is one kind of destination
 unreachable, so **the rule drops exactly the message path MTU discovery depends on**. `files` sends
-1448-byte segments, `hq` drops each one at the entrance to `wg0`, the explanation is thrown away on the
+1448-byte segments and `hq` drops each one at the entrance to `wg0`. The explanation is thrown away on the
 way out, and `files` goes on trying a size that will never fit until the till's curl gives up.
 
 ```schooling-figure

@@ -5,11 +5,11 @@ version: 1
 
 Muita gente imagina um balanceador de carga como um switch que espalha pacotes entre os servidores. **Ele
 não espalha pacotes; ele escolhe um servidor uma vez por conexão ou uma vez por requisição**, e tudo o que
-envia depois segue essa escolha. A pergunta interessante é o que ele lê antes de escolher, e há duas
-respostas, com o nome da camada em que param.
+envia depois segue essa escolha. Os dois tipos diferem no que leem antes de escolher, e cada um leva o
+nome da camada em que para.
 
 **Um balanceador de camada 4 lê endereços e portas e mais nada.** Uma conexão TCP chega para o endereço
-do serviço na porta 80 ou 443, o balanceador escolhe um servidor e encaminha os pacotes dessa conexão para
+do serviço na porta 80 ou 443. O balanceador escolhe um servidor e encaminha os pacotes dessa conexão para
 ele, reescrevendo um endereço no caminho, mais ou menos como o NAT faz. Ele nunca olha dentro do fluxo,
 então não distingue `GET /` de `GET /slow.txt`, e pode repassar TLS sem ter certificado nenhum. É barato e
 rápido, e só tem a conexão para decidir.

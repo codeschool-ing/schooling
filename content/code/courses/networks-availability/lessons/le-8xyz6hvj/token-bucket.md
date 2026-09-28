@@ -34,7 +34,6 @@ millisecond, which is 24 Mbit/s for 20 ms.
 ```
 
 **The shaper sent all 40 and made the last one wait 51.2 ms; the policer sent 18 and dropped 22 without
-delaying anything.** One simplification is worth naming: this shaper holds everything it is given, while
-`tc`'s shaper is told how much it may hold, in the next section with `latency 50ms`, and drops what does
+delaying anything.** The model's shaper holds everything it is given. `tc`'s shaper is told how much it may hold, in the next section with `latency 50ms`, and drops what does
 not fit. A burst of 40 frames sits near that limit. A TCP upload, which keeps sending until something is
 lost, goes past it, and the next section's counters show the drops.

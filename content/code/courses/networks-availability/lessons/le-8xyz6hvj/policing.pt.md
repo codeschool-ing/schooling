@@ -74,5 +74,5 @@ descartes caíram nos pacotes de tamanho máximo do upload, e são dois a menos 
 do emissor, o que é o mais perto que dois contadores em dois programas diferentes vão chegar.
 
 Então a mesma taxa, segurada de dois jeitos, deu sintomas opostos: **o shaper custou 22 ms de atraso e
-quase nenhuma perda, o policer não custou atraso nenhum e custou um fluxo constante de perdas.** Qual dos
+quase nenhuma perda, o policer não custou atraso nenhum e custou um fluxo constante de perdas**. Qual dos
 dois um enlace deve ter depende de quem é o dono dele.
