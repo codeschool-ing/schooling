@@ -1,0 +1,3014 @@
+[
+  {
+    "id": "ex-0ce2q957",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Two offices use 192.168.10.0/24 and 192.168.20.0/24 and are joined only by the internet. Why does a ping from one to the other fail before any tunnel exists?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Private addresses are blocked by every firewall",
+        "correct": false,
+        "why": "No firewall was involved: the ISP simply had no route."
+      },
+      {
+        "text": "The ISP has no route to a private network",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "ICMP cannot cross a NAT",
+        "correct": false,
+        "why": "Pings to public addresses cross it every day."
+      },
+      {
+        "text": "The two masks do not match",
+        "correct": false,
+        "why": "Both are /24, and masks are local anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-zk2mqrhs",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Over a link with an MTU of 1500 bytes, what is the MTU of an IP-in-IP tunnel, in bytes?",
+    "hint": "Lesson 1.",
+    "value": 1480,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-106hgs1z",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "GRE is carried directly on IP, as IP protocol number ___.",
+    "hint": "Lesson 1.",
+    "blanks": [
+      {
+        "accept": [
+          "47"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2rh4jawy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Two GRE tunnels run between the same pair of routers. What tells their packets apart?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "The source port",
+        "correct": false,
+        "why": "GRE has no ports; it is not UDP or TCP."
+      },
+      {
+        "text": "The inner packet's TTL",
+        "correct": false,
+        "why": "The TTL says nothing about which tunnel."
+      },
+      {
+        "text": "The key in the GRE header",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An encrypted tag added by each router",
+        "correct": false,
+        "why": "GRE encrypts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-t94xqm19",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Somebody captures a GRE tunnel between two offices on the ISP's router. What can they read?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Only the outer addresses and the key",
+        "correct": false,
+        "why": "The inner packet is in clear text too."
+      },
+      {
+        "text": "The whole conversation inside",
+        "correct": true,
+        "why": "Right: a plain tunnel encrypts nothing."
+      },
+      {
+        "text": "Nothing without the GRE key",
+        "correct": false,
+        "why": "The key is printed in the header and protects nothing."
+      },
+      {
+        "text": "The inner addresses, but not the payload",
+        "correct": false,
+        "why": "tcpdump -A printed the request and the page."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnpzp5mh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In the lab, the first ping from laptop to till was lost and the next two answered. Why?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "It started the IKE negotiation",
+        "correct": true,
+        "why": "Right: start_action = trap starts IKE on the first matching packet."
+      },
+      {
+        "text": "The till's firewall drops the first ping of a burst",
+        "correct": false,
+        "why": "Nothing at the till was filtering."
+      },
+      {
+        "text": "ESP needs one packet to learn the MTU",
+        "correct": false,
+        "why": "The MTU had nothing to do with it."
+      },
+      {
+        "text": "ARP had not resolved the till yet",
+        "correct": false,
+        "why": "ARP resolves in far less than a second on a LAN, and would not lose the packet."
+      }
+    ]
+  },
+  {
+    "id": "ex-v168anh0",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put the four IKEv2 messages of the lab's capture in order.",
+    "hint": "Lesson 2.",
+    "items": [
+      "IKE_SA_INIT request",
+      "IKE_SA_INIT response",
+      "IKE_AUTH request",
+      "IKE_AUTH response"
+    ],
+    "trap": "Keys are agreed before identities are proved, so the authentication travels encrypted."
+  },
+  {
+    "id": "ex-162nvb29",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`swanctl --initiate` ended with `received AUTHENTICATION_FAILED notify error`. What is the first thing to compare on both sides?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "The ESP encryption algorithm",
+        "correct": false,
+        "why": "A proposal mismatch fails earlier, with NO_PROPOSAL_CHOSEN."
+      },
+      {
+        "text": "The traffic selectors",
+        "correct": false,
+        "why": "Those give TS_UNACCEPTABLE, after authentication."
+      },
+      {
+        "text": "The key and the identities",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The MTU of the WAN link",
+        "correct": false,
+        "why": "The IKE messages arrived; they were rejected."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7jv04wt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A home user behind a NAT router connects to the office with IPsec. Why does the capture show UDP 4500 instead of ESP?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "ESP is too slow for home links",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "The home router encrypts it a second time",
+        "correct": false,
+        "why": "The home router only translates addresses and ports."
+      },
+      {
+        "text": "IKEv2 uses UDP 4500 for every connection",
+        "correct": false,
+        "why": "Between the two offices, with no NAT, ESP went raw and IKE stayed on 500."
+      },
+      {
+        "text": "ESP has no ports for a NAT",
+        "correct": true,
+        "why": "Right: detected in IKE_SA_INIT, then everything moves into UDP 4500."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwj0mesy",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "In `ESP(spi=0x2f80bb89,seq=0x3)`, the number that says which security association a packet belongs to is the ___.",
+    "hint": "Lesson 2.",
+    "blanks": [
+      {
+        "accept": [
+          "spi",
+          "security parameter index"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nae8vr9j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "What makes OpenVPN a TLS VPN?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "It runs only over TCP port 443",
+        "correct": false,
+        "why": "The lab ran it over UDP 1194 first."
+      },
+      {
+        "text": "Its control channel is TLS",
+        "correct": true,
+        "why": "Right: tshark decoded Client Hello and Server Hello inside it."
+      },
+      {
+        "text": "It is used from a web browser",
+        "correct": false,
+        "why": "That is the clientless portal, a different product."
+      },
+      {
+        "text": "It encrypts HTTP and nothing else",
+        "correct": false,
+        "why": "It carries whole IP packets through tun0."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ew79gc5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A hotel network lets only TCP 443 out. Why does an OpenVPN server on TCP 443 get through where UDP 1194 did not?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "It uses what the firewall allows",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "TCP is encrypted and UDP is not",
+        "correct": false,
+        "why": "Neither is encrypted by itself; OpenVPN encrypts both."
+      },
+      {
+        "text": "Port 443 bypasses NAT",
+        "correct": false,
+        "why": "It goes through the NAT like any connection."
+      },
+      {
+        "text": "The hotel decrypts and re-encrypts it",
+        "correct": false,
+        "why": "Nobody in the path holds the keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-8vvqv9q7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Why is carrying TCP inside a TCP tunnel slower under loss than inside a UDP tunnel?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "TCP headers are larger than UDP headers",
+        "correct": false,
+        "why": "Twelve bytes do not explain a collapse."
+      },
+      {
+        "text": "TCP tunnels cannot use encryption",
+        "correct": false,
+        "why": "They encrypt the same way."
+      },
+      {
+        "text": "Both layers retransmit the same loss",
+        "correct": true,
+        "why": "Right: the inner TCP times out while the outer one is still recovering."
+      },
+      {
+        "text": "UDP tunnels skip the TLS handshake",
+        "correct": false,
+        "why": "The lab's UDP tunnel did the full handshake."
+      }
+    ]
+  },
+  {
+    "id": "ex-41vvdeqy",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A VXLAN tunnel over a 1500-byte link got an MTU of 1450. How many bytes of overhead does VXLAN add?",
+    "hint": "Lesson 3.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-mbfjf1ys",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Through the VXLAN tunnel, an ARP request from hq reached branch. What does that show about a layer 2 VPN?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "That ARP works across any router",
+        "correct": false,
+        "why": "It crossed because the tunnel carries frames, not because routers forward ARP."
+      },
+      {
+        "text": "The two sites share one broadcast domain",
+        "correct": true,
+        "why": "Right, and every broadcast now crosses the WAN."
+      },
+      {
+        "text": "The tunnel encrypts broadcasts",
+        "correct": false,
+        "why": "VXLAN encrypts nothing."
+      },
+      {
+        "text": "The branch now has its own subnet",
+        "correct": false,
+        "why": "The opposite: both ends are on 172.16.0.0/24."
+      }
+    ]
+  },
+  {
+    "id": "ex-bg1segrs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In WireGuard, what does a peer's AllowedIPs decide?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Only which addresses may log in",
+        "correct": false,
+        "why": "It is also the route, in the other direction."
+      },
+      {
+        "text": "The address the interface gets",
+        "correct": false,
+        "why": "That is Address, in [Interface]."
+      },
+      {
+        "text": "Routing and filtering, together",
+        "correct": true,
+        "why": "Right: cryptokey routing."
+      },
+      {
+        "text": "How often the keys rotate",
+        "correct": false,
+        "why": "Rekeying is automatic and not configured there."
+      }
+    ]
+  },
+  {
+    "id": "ex-bq444hsy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`wg show` lists a peer with no `latest handshake` line, and a capture shows an initiation every five seconds with no reply. What is most likely wrong?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "A public key does not match its peer",
+        "correct": true,
+        "why": "Right: the other side silently ignores what it cannot authenticate."
+      },
+      {
+        "text": "AllowedIPs is missing the tunnel address",
+        "correct": false,
+        "why": "That would still complete the handshake."
+      },
+      {
+        "text": "The MTU is too large",
+        "correct": false,
+        "why": "A handshake is small and fits any MTU."
+      },
+      {
+        "text": "PersistentKeepalive is off",
+        "correct": false,
+        "why": "Keepalives do not make a handshake succeed."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1bx5sdy",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A WireGuard peer behind NAT sends a packet every 25 seconds so the NAT keeps its mapping; the option is Persistent___.",
+    "hint": "Lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "Keepalive"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2psgzxsq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "With `tls-crypt`, tshark no longer showed a Client Hello in the OpenVPN handshake. What did that option change?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "It replaced TLS with a static key",
+        "correct": false,
+        "why": "TLS still runs; it is wrapped."
+      },
+      {
+        "text": "It encrypts the control channel",
+        "correct": true,
+        "why": "Right: without the key, the handshake is opaque and gets no answer."
+      },
+      {
+        "text": "It moved the tunnel to TCP",
+        "correct": false,
+        "why": "The capture was still UDP 1194."
+      },
+      {
+        "text": "It turned off certificate checks",
+        "correct": false,
+        "why": "Certificates are still verified inside."
+      }
+    ]
+  },
+  {
+    "id": "ex-15qr1aqg",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each property to WireGuard or OpenVPN.",
+    "hint": "Lesson 4.",
+    "pairs": [
+      {
+        "left": "Negotiates its cipher with TLS",
+        "right": "OpenVPN"
+      },
+      {
+        "left": "A fixed set of algorithms, no negotiation",
+        "right": "WireGuard"
+      },
+      {
+        "left": "Can run over TCP 443",
+        "right": "OpenVPN, which has a TCP mode"
+      },
+      {
+        "left": "A peer is its public key",
+        "right": "WireGuard, which has no certificates"
+      }
+    ],
+    "right_distractors": [
+      "Both, since both use IPsec"
+    ]
+  },
+  {
+    "id": "ex-rzvj6wky",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "In a site-to-site VPN, what does a user at the branch configure to reach head office?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Nothing: the routers carry the traffic",
+        "correct": true,
+        "why": "Right: the till's traceroute showed the tunnel as one hop."
+      },
+      {
+        "text": "A VPN client with their own key",
+        "correct": false,
+        "why": "That is remote access."
+      },
+      {
+        "text": "A route to 10.20.0.1",
+        "correct": false,
+        "why": "The till's table had only its default route."
+      },
+      {
+        "text": "A proxy in the browser",
+        "correct": false,
+        "why": "Nothing in the browser knows about the tunnel."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4e0w85t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "With a full tunnel, web1's log recorded the remote worker as 203.0.113.2. Why?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "The home router changed its public address",
+        "correct": false,
+        "why": "It kept 198.51.100.77."
+      },
+      {
+        "text": "web1 logs the VPN server's address for everybody",
+        "correct": false,
+        "why": "With a split tunnel the log showed 198.51.100.77."
+      },
+      {
+        "text": "hq was the way out, with its NAT",
+        "correct": true,
+        "why": "Right: full tunnel means the office is the way out."
+      },
+      {
+        "text": "WireGuard hides the client's address",
+        "correct": false,
+        "why": "It is the route, not WireGuard, that decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-japfb61w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`wg-quick up` failed with `RTNETLINK answers: File exists` when AllowedIPs included 192.168.1.0/24. What was the conflict?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Two peers had the same public key",
+        "correct": false,
+        "why": "The keys were fine."
+      },
+      {
+        "text": "The home network already used that range",
+        "correct": true,
+        "why": "Right: the same route already existed on eth0."
+      },
+      {
+        "text": "The tunnel's MTU was too small for it",
+        "correct": false,
+        "why": "MTU has nothing to do with a route clash."
+      },
+      {
+        "text": "The office had already given that range away",
+        "correct": false,
+        "why": "The clash was on the laptop, with its own LAN."
+      }
+    ]
+  },
+  {
+    "id": "ex-x4h31drx",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which are reasons to prefer a split tunnel? Choose all that apply.",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "The office's uplink does not carry everybody's video calls",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Internet traffic takes a shorter path",
+        "correct": true,
+        "why": "Right: laptop to ISP directly."
+      },
+      {
+        "text": "The office's security filtering sees all traffic",
+        "correct": false,
+        "why": "That is the argument for a full tunnel."
+      },
+      {
+        "text": "Overlapping home networks stop mattering",
+        "correct": false,
+        "why": "A split tunnel is exactly where they collide."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9jn253a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A company wants each employee to reach one internal application, not the whole office network. Which approach fits?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "A site-to-site tunnel to every home",
+        "correct": false,
+        "why": "That joins whole networks."
+      },
+      {
+        "text": "A full-tunnel remote-access VPN",
+        "correct": false,
+        "why": "That puts the laptop on the whole network."
+      },
+      {
+        "text": "A layer 2 VPN",
+        "correct": false,
+        "why": "That shares a broadcast domain, the widest access of all."
+      },
+      {
+        "text": "Per-application access",
+        "correct": true,
+        "why": "Right: the zero-trust shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4h93rvx",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Match each IEEE standard to its Wi-Fi generation name.",
+    "hint": "Lesson 6.",
+    "pairs": [
+      {
+        "left": "802.11n",
+        "right": "Wi-Fi 4"
+      },
+      {
+        "left": "802.11ac",
+        "right": "Wi-Fi 5"
+      },
+      {
+        "left": "802.11ax",
+        "right": "Wi-Fi 6 and 6E"
+      },
+      {
+        "left": "802.11be",
+        "right": "Wi-Fi 7"
+      }
+    ],
+    "right_distractors": [
+      "Wi-Fi 3"
+    ]
+  },
+  {
+    "id": "ex-hc6sjgad",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does 2.4 GHz reach further through a building than 5 GHz at the same power?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "It carries more data per second",
+        "correct": false,
+        "why": "It carries less; range and rate are different things."
+      },
+      {
+        "text": "Lower frequencies lose less",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Access points transmit louder on 2.4 GHz by law",
+        "correct": false,
+        "why": "The comparison is at the same power."
+      },
+      {
+        "text": "2.4 GHz channels are wider",
+        "correct": false,
+        "why": "They are narrower, 20 MHz in practice."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pbwbczp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An access point advertises 1200 Mbit/s and a laptop next to it measures about half of that. What is the main reason?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "The access point is faulty",
+        "correct": false,
+        "why": "It is how every radio link measures."
+      },
+      {
+        "text": "The encryption halves the rate",
+        "correct": false,
+        "why": "Encryption costs far less than that."
+      },
+      {
+        "text": "Shared, half-duplex air",
+        "correct": true,
+        "why": "Right: the advertised figure is a raw signalling rate."
+      },
+      {
+        "text": "5 GHz is limited to 600 Mbit/s",
+        "correct": false,
+        "why": "No band has that limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jye6rwm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A new office has only Wi-Fi 6E and Wi-Fi 7 laptops. What does the 6 GHz band give them that 5 GHz does not?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Many wide channels free of older devices",
+        "correct": true,
+        "why": "Right: only 6E and later can use it."
+      },
+      {
+        "text": "Longer range through walls",
+        "correct": false,
+        "why": "A higher frequency reaches less far."
+      },
+      {
+        "text": "Compatibility with 802.11g clients",
+        "correct": false,
+        "why": "802.11g never used 6 GHz."
+      },
+      {
+        "text": "No need for encryption",
+        "correct": false,
+        "why": "6 GHz requires WPA3 or enhanced open."
+      }
+    ]
+  },
+  {
+    "id": "ex-ns51qx3z",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "How many 20 MHz channels does one 80 MHz channel occupy?",
+    "hint": "Lesson 6.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "channels"
+  },
+  {
+    "id": "ex-p1ha7yrn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Which set of 2.4 GHz channels does not overlap with 20 MHz channels?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "1, 2 and 3",
+        "correct": false,
+        "why": "Neighbouring channels overlap almost entirely."
+      },
+      {
+        "text": "1, 6 and 11",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "1, 7 and 13 everywhere",
+        "correct": false,
+        "why": "13 is not allowed in every country, and the plan is 1/6/11."
+      },
+      {
+        "text": "Any three with even numbers",
+        "correct": false,
+        "why": "Parity has nothing to do with spacing."
+      }
+    ]
+  },
+  {
+    "id": "ex-477n7yk1",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A transmitter is at 20 dBm. What is its power in milliwatts?",
+    "hint": "Lesson 7.",
+    "value": 100,
+    "tolerance": 0,
+    "unit": "mW"
+  },
+  {
+    "id": "ex-1zj4evq2",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An access point goes from 17 dBm to 14 dBm. By what factor is its power divided?",
+    "hint": "Lesson 7.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-3jbh2036",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Two access points in the same room share channel 6. What happens to their clients?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Their signals corrupt each other constantly",
+        "correct": false,
+        "why": "That is adjacent-channel interference; on the same channel they hear each other and wait."
+      },
+      {
+        "text": "They take turns on the air",
+        "correct": true,
+        "why": "Right: co-channel contention."
+      },
+      {
+        "text": "Each gets its own half of the channel",
+        "correct": false,
+        "why": "A channel is not split by frequency between cells."
+      },
+      {
+        "text": "Nothing, if both use WPA3",
+        "correct": false,
+        "why": "Security has nothing to do with airtime."
+      }
+    ]
+  },
+  {
+    "id": "ex-yncda5jd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why can turning an access point's power down improve a busy office network?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Lower power raises the data rate",
+        "correct": false,
+        "why": "Each client's rate does not rise with less power."
+      },
+      {
+        "text": "Phones can then transmit louder",
+        "correct": false,
+        "why": "Their power does not depend on the AP's."
+      },
+      {
+        "text": "Smaller cells hear fewer neighbours",
+        "correct": true,
+        "why": "Right, and the link becomes less lopsided."
+      },
+      {
+        "text": "It saves the access point's radio",
+        "correct": false,
+        "why": "Wear is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-qnzxnrt0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Does hiding the SSID protect a wireless network?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "No: clients reveal it when they connect",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Yes, it encrypts the network name",
+        "correct": false,
+        "why": "Nothing is encrypted by hiding it."
+      },
+      {
+        "text": "Yes, against everyone without the password",
+        "correct": false,
+        "why": "The password protects; the hidden name does not."
+      },
+      {
+        "text": "Only on 5 GHz",
+        "correct": false,
+        "why": "The band does not change it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4aeh5kj4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does WPA2-Personal need a long, random passphrase?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "The access point limits login attempts badly",
+        "correct": false,
+        "why": "The guesses do not go to the access point at all."
+      },
+      {
+        "text": "A recorded handshake lets guesses be tested offline",
+        "correct": true,
+        "why": "Right: length and randomness are the defence."
+      },
+      {
+        "text": "Short passphrases are sent in clear text",
+        "correct": false,
+        "why": "No passphrase is sent in clear text."
+      },
+      {
+        "text": "The standard rejects anything under 20 characters",
+        "correct": false,
+        "why": "The minimum is 8."
+      }
+    ]
+  },
+  {
+    "id": "ex-336v2pvg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What does SAE, in WPA3-Personal, change about a shared password?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "It makes the password unnecessary",
+        "correct": false,
+        "why": "There is still a password."
+      },
+      {
+        "text": "It gives every user their own password",
+        "correct": false,
+        "why": "That is 802.1X, the enterprise mode."
+      },
+      {
+        "text": "Nothing to test guesses against offline",
+        "correct": true,
+        "why": "Right, and each session gets fresh keys."
+      },
+      {
+        "text": "It hides the SSID",
+        "correct": false,
+        "why": "SAE says nothing about the SSID."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5asfxhs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An employee leaves a company whose Wi-Fi uses WPA2-Enterprise with 802.1X. What has to change?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Disable that person's account in the directory",
+        "correct": true,
+        "why": "Right: credentials are per person."
+      },
+      {
+        "text": "Change the passphrase on every access point",
+        "correct": false,
+        "why": "That is what a shared key forces, and why Enterprise exists."
+      },
+      {
+        "text": "Rename the SSID",
+        "correct": false,
+        "why": "The name grants nothing."
+      },
+      {
+        "text": "Nothing, the RADIUS server forgets people after a month",
+        "correct": false,
+        "why": "Nothing expires by itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-fd3vx6ve",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which belong in a guest network's design? Choose all that apply.",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Its own VLAN, with no route to internal networks",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Client isolation between guests",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The same SSID as staff, with a different password",
+        "correct": false,
+        "why": "One SSID maps to one network and one security setting."
+      },
+      {
+        "text": "A rate limit per client",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-hbvehwps",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "In Wi-Fi, who decides when a client moves to another access point?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "The access point it is leaving",
+        "correct": false,
+        "why": "It can suggest, not decide."
+      },
+      {
+        "text": "The controller",
+        "correct": false,
+        "why": "It can steer; the client still chooses."
+      },
+      {
+        "text": "The client",
+        "correct": true,
+        "why": "Right, which is why sticky clients exist."
+      },
+      {
+        "text": "The RADIUS server",
+        "correct": false,
+        "why": "It authenticates; it does not move anyone."
+      }
+    ]
+  },
+  {
+    "id": "ex-28kkkg0h",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each amendment to what it does for roaming.",
+    "hint": "Lesson 9.",
+    "pairs": [
+      {
+        "left": "802.11k",
+        "right": "Tells the client which neighbours exist"
+      },
+      {
+        "left": "802.11v",
+        "right": "Lets the network suggest a better access point"
+      },
+      {
+        "left": "802.11r",
+        "right": "Shortens the key exchange when moving"
+      }
+    ],
+    "right_distractors": [
+      "Encrypts the management frames"
+    ]
+  },
+  {
+    "id": "ex-ca7y45c5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A phone keeps talking to a distant access point at a low rate while a closer one is free. What is this called?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "A sticky client",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Band steering",
+        "correct": false,
+        "why": "That moves clients between bands of the same access point."
+      },
+      {
+        "text": "Co-channel interference",
+        "correct": false,
+        "why": "That is two cells on one channel."
+      },
+      {
+        "text": "A rogue access point",
+        "correct": false,
+        "why": "Both access points are the company's."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7rp3zv9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A PoE switch has a budget of 370 W. How many access points drawing 25.5 W each can it power at once?",
+    "hint": "Lesson 9.",
+    "value": 14,
+    "tolerance": 0,
+    "unit": "access points"
+  },
+  {
+    "id": "ex-harymfwt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "With a controller-based design, the controller fails and the access points keep their tunnels to it. What stops working first?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "The radios switch off",
+        "correct": false,
+        "why": "The radios are in the access points."
+      },
+      {
+        "text": "Tunnelled traffic",
+        "correct": true,
+        "why": "Right: which is why controllers are deployed in pairs."
+      },
+      {
+        "text": "Only guest access",
+        "correct": false,
+        "why": "Everything tunnelled through it stops."
+      },
+      {
+        "text": "Nothing, access points cache everything",
+        "correct": false,
+        "why": "Some designs fall back locally; tunnelled traffic does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-77rrf7x7",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each kind of survey to how it is done.",
+    "hint": "Lesson 10.",
+    "pairs": [
+      {
+        "left": "Predictive",
+        "right": "Software models the floor plan and walls"
+      },
+      {
+        "left": "Passive",
+        "right": "Listening to beacons while walking the site"
+      },
+      {
+        "left": "Active",
+        "right": "Connected, measuring throughput and loss"
+      }
+    ],
+    "right_distractors": [
+      "Asking users how the signal feels"
+    ]
+  },
+  {
+    "id": "ex-6vtg7pcz",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Using FSPL(dB) = 20·log10(d in m) + 20·log10(f in MHz) − 27.55, what is the free-space loss at 10 m on 2400 MHz, to the nearest dB?",
+    "hint": "Lesson 10.",
+    "value": 60,
+    "tolerance": 1,
+    "unit": "dB"
+  },
+  {
+    "id": "ex-2pk6k09c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A voice-over-Wi-Fi design asks for at least −67 dBm everywhere. A spot measures −72 dBm. Is it enough?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "No: −72 is 5 dB weaker than −67",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Yes: 72 is a larger number than 67",
+        "correct": false,
+        "why": "In negative dBm, larger means weaker."
+      },
+      {
+        "text": "Yes, if the noise floor is −95 dBm",
+        "correct": false,
+        "why": "The design's own threshold is not met."
+      },
+      {
+        "text": "It depends on the SSID",
+        "correct": false,
+        "why": "The name changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-mg0c4kjm",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "The signal is −65 dBm and the noise floor −92 dBm. What is the signal-to-noise ratio, in dB?",
+    "hint": "Lesson 10.",
+    "value": 27,
+    "tolerance": 0,
+    "unit": "dB"
+  },
+  {
+    "id": "ex-4zkbj22f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why is a survey repeated after the access points are installed?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "The first survey is only an estimate for the budget",
+        "correct": false,
+        "why": "It is a design; the second one checks it."
+      },
+      {
+        "text": "To verify the real building matches the design",
+        "correct": true,
+        "why": "Right: furniture, people and materials differ from any model."
+      },
+      {
+        "text": "Access points change channel every day",
+        "correct": false,
+        "why": "That is not why it is repeated."
+      },
+      {
+        "text": "The law requires two surveys",
+        "correct": false,
+        "why": "No law says that."
+      }
+    ]
+  },
+  {
+    "id": "ex-dzetymze",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "On a switched network, the laptop captured traffic between files and the router. What did it see?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The whole conversation",
+        "correct": false,
+        "why": "A switch sends unicast only to the destination's port."
+      },
+      {
+        "text": "Only a broadcast, an ARP request",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The conversation, encrypted",
+        "correct": false,
+        "why": "It was plain HTTP, and it never reached the laptop."
+      },
+      {
+        "text": "An error from the switch",
+        "correct": false,
+        "why": "Switches do not report that."
+      }
+    ]
+  },
+  {
+    "id": "ex-120by43s",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each filter to the language it is written in.",
+    "hint": "Lesson 11.",
+    "pairs": [
+      {
+        "left": "tcp port 80",
+        "right": "A capture filter (BPF)"
+      },
+      {
+        "left": "http.request",
+        "right": "A display filter"
+      },
+      {
+        "left": "host 192.0.2.21",
+        "right": "A capture filter, by address"
+      },
+      {
+        "left": "ip.addr == 192.0.2.21",
+        "right": "A display filter, by field"
+      }
+    ],
+    "right_distractors": [
+      "A firewall rule"
+    ]
+  },
+  {
+    "id": "ex-zkhmbq0k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`tshark -Y \"port 80\"` refused with `\"80\" was unexpected in this context`. What went wrong?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Port 80 was not in the file",
+        "correct": false,
+        "why": "An empty result would not be a syntax error."
+      },
+      {
+        "text": "tshark needs root to read a file",
+        "correct": false,
+        "why": "Reading a file needs no privilege."
+      },
+      {
+        "text": "A capture filter used as a display filter",
+        "correct": true,
+        "why": "Right: tcp.port == 80 is the display filter."
+      },
+      {
+        "text": "Quotes are not allowed around filters",
+        "correct": false,
+        "why": "The quotes were fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-65g6k46f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A switch has no mirror port and the server cannot run a capture. Where else can the traffic be seen without changing the server?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "A network tap inline on its cable",
+        "correct": true,
+        "why": "Right: it copies both directions in hardware."
+      },
+      {
+        "text": "Any laptop plugged into the same switch",
+        "correct": false,
+        "why": "The switch will not send it the server's unicast."
+      },
+      {
+        "text": "The DNS server's logs",
+        "correct": false,
+        "why": "Those show names asked for, not the traffic."
+      },
+      {
+        "text": "The server's routing table",
+        "correct": false,
+        "why": "A table is not traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnjt3qxx",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Rather than running as root, ana captured with tshark because she belonged to the group ___.",
+    "hint": "Lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "wireshark"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gmgdfhb1",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Put the TCP flags tcpdump printed for the start of a connection in order.",
+    "hint": "Lesson 12.",
+    "items": [
+      "[S]",
+      "[S.]",
+      "[.]",
+      "[P.]"
+    ],
+    "trap": "SYN, SYN-ACK, ACK, then the first data with PUSH."
+  },
+  {
+    "id": "ex-d6msyq79",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why was the capture written with `-Z ana`?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "To capture only ana's traffic",
+        "correct": false,
+        "why": "-Z says nothing about which traffic."
+      },
+      {
+        "text": "So the file belongs to ana",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To compress the file",
+        "correct": false,
+        "why": "Compression is a different option."
+      },
+      {
+        "text": "To limit the file to one megabyte",
+        "correct": false,
+        "why": "That is -C."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6mp2pa0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A capture made with `-s 96` shows `GET / HTTP/1.1 [|http]`. What does `[|http]` mean?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "The request was malformed",
+        "correct": false,
+        "why": "It was a normal request."
+      },
+      {
+        "text": "The server rejected it",
+        "correct": false,
+        "why": "The capture says nothing about the reply here."
+      },
+      {
+        "text": "The packet was cut short",
+        "correct": true,
+        "why": "Right: only 96 bytes of each packet were kept."
+      },
+      {
+        "text": "HTTP was running inside TLS",
+        "correct": false,
+        "why": "It was plain HTTP."
+      }
+    ]
+  },
+  {
+    "id": "ex-394f66nx",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`tcpdump -C 1 -W 3` rotates files of about 1 MB. After a 20 MB download, how many capture files are left on disk?",
+    "hint": "Lesson 12.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "files"
+  },
+  {
+    "id": "ex-hp66d56y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A colleague wants to leave a full capture running on the payment server for a week, just in case. What is the strongest objection?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "tcpdump stops by itself after a day",
+        "correct": false,
+        "why": "It runs until stopped."
+      },
+      {
+        "text": "Captures slow a server down by half",
+        "correct": false,
+        "why": "The cost is far smaller than that."
+      },
+      {
+        "text": "pcap files cannot be larger than 1 GB",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "It stores whatever sensitive data crossed the wire",
+        "correct": true,
+        "why": "Right: capture the least, for the shortest time, and delete it."
+      }
+    ]
+  },
+  {
+    "id": "ex-afe9nxc1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A connection to port 81 failed in 0 ms and the capture shows `[RST, ACK]` from the server. What does it mean?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "The host is up and nothing listens on that port",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A firewall silently dropped the SYN",
+        "correct": false,
+        "why": "A silent drop gives retransmissions, not a reset."
+      },
+      {
+        "text": "The server is down",
+        "correct": false,
+        "why": "A down host sends nothing at all."
+      },
+      {
+        "text": "The TLS certificate is wrong",
+        "correct": false,
+        "why": "There was no TLS on port 81."
+      }
+    ]
+  },
+  {
+    "id": "ex-th7skq9q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A capture shows the same SYN at 0, 1.0 and 2.0 seconds with no reply. What is the most likely cause?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "The port is closed",
+        "correct": false,
+        "why": "A closed port answers with RST."
+      },
+      {
+        "text": "A firewall drops the SYN without answering",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The client's clock is wrong",
+        "correct": false,
+        "why": "Clocks do not stop a handshake."
+      },
+      {
+        "text": "DNS returned the wrong address",
+        "correct": false,
+        "why": "The capture was already to the right address."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cc37bt8",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "In the capture of `nosuch.example.com`, what was the DNS reply code (rcode) for NXDOMAIN?",
+    "hint": "Lesson 13.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-t4x3vdgd",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Match each failure to what the client sent after the Server Hello.",
+    "hint": "Lesson 13.",
+    "pairs": [
+      {
+        "left": "An expired certificate",
+        "right": "Alert: Certificate Expired"
+      },
+      {
+        "left": "A certificate from an untrusted authority",
+        "right": "Alert: Unknown CA"
+      },
+      {
+        "left": "A certificate for another name",
+        "right": "An alert inside Application Data"
+      }
+    ],
+    "right_distractors": [
+      "A new Client Hello"
+    ]
+  },
+  {
+    "id": "ex-yk3b0784",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "In TLS 1.3, why could the capture read the server name but not the certificate?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "The certificate is sent over UDP",
+        "correct": false,
+        "why": "It was all TCP 443."
+      },
+      {
+        "text": "tshark cannot decode certificates",
+        "correct": false,
+        "why": "It decodes TLS 1.2 certificates fine."
+      },
+      {
+        "text": "The certificate is sent encrypted",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The certificate was expired",
+        "correct": false,
+        "why": "The good one was hidden just the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-4syqwj6m",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A service promises 99.9% availability over a 365-day year. How many hours of downtime does that allow, to one decimal place?",
+    "hint": "Lesson 14.",
+    "value": 8.8,
+    "tolerance": 0.05,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-2mp7b10c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A web page needs the load balancer (99.9%) AND the database (99.9%). What is the availability of the pair, in series?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "99.9%, the same as each",
+        "correct": false,
+        "why": "Two chances to fail are worse than one."
+      },
+      {
+        "text": "About 99.8%",
+        "correct": true,
+        "why": "Right: 0.999 × 0.999."
+      },
+      {
+        "text": "99.9999%",
+        "correct": false,
+        "why": "That is two in parallel."
+      },
+      {
+        "text": "It cannot be computed without traffic figures",
+        "correct": false,
+        "why": "It is arithmetic on the two availabilities."
+      }
+    ]
+  },
+  {
+    "id": "ex-g9ph4rt6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A data centre has two load balancers and three web servers, but one ISP link and one DNS server. Where is the single point of failure?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "The web servers, because there are three",
+        "correct": false,
+        "why": "Three can lose one and carry on."
+      },
+      {
+        "text": "The load balancers, because only one is active",
+        "correct": false,
+        "why": "The standby takes over; that is the point of it."
+      },
+      {
+        "text": "The two things there is one of",
+        "correct": true,
+        "why": "Right: each is alone."
+      },
+      {
+        "text": "There is none, since the servers are redundant",
+        "correct": false,
+        "why": "Redundant servers behind one link still go dark together."
+      }
+    ]
+  },
+  {
+    "id": "ex-fs1ew6yz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Two cluster nodes lose contact with each other and both decide to be active. What prevents this split brain?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "A quorum",
+        "correct": true,
+        "why": "Right, often with a third voter."
+      },
+      {
+        "text": "Faster heartbeats",
+        "correct": false,
+        "why": "They detect the loss sooner, and both still decide."
+      },
+      {
+        "text": "Giving both nodes the same priority",
+        "correct": false,
+        "why": "That makes the tie worse."
+      },
+      {
+        "text": "A longer failover timer",
+        "correct": false,
+        "why": "It delays the split; it does not prevent it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2dsavke",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A component whose loss alone stops the whole service is called a single point of ___.",
+    "hint": "Lesson 14.",
+    "blanks": [
+      {
+        "accept": [
+          "failure"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xx9fgzht",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Why does a LAN need a protocol like VRRP to have a redundant gateway?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Hosts cannot route at all",
+        "correct": false,
+        "why": "They route, to one gateway."
+      },
+      {
+        "text": "Hosts know one gateway address",
+        "correct": true,
+        "why": "Right: VRRP keeps that address alive on whichever router is up."
+      },
+      {
+        "text": "Two routers on one LAN cause a loop",
+        "correct": false,
+        "why": "They do not; hosts just use one of them."
+      },
+      {
+        "text": "DHCP cannot hand out two gateways",
+        "correct": false,
+        "why": "Most hosts would use only the first anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-8pthbzzh",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "VRRP advertisements go to the multicast address 224.0.0.___.",
+    "hint": "Lesson 15.",
+    "blanks": [
+      {
+        "accept": [
+          "18"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wje6tj8p",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In the lab's failover, pings ran every 0.2 s and 15 went unanswered. Roughly how many seconds was the gateway gone?",
+    "hint": "Lesson 15.",
+    "value": 3,
+    "tolerance": 0.5,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-ar6bxrz7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "After failover, the laptop's ARP entry for 192.168.10.1 showed a new MAC. What made it change so fast?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "The laptop flushed its ARP cache on its own",
+        "correct": false,
+        "why": "It did nothing; it was told."
+      },
+      {
+        "text": "The new master sent gratuitous ARPs",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "DHCP renewed the gateway",
+        "correct": false,
+        "why": "The lab uses static addresses."
+      },
+      {
+        "text": "The switch rewrote the MAC",
+        "correct": false,
+        "why": "Switches do not rewrite ARP."
+      }
+    ]
+  },
+  {
+    "id": "ex-2959tv7p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "hq's WAN link failed while its LAN side stayed up. Without interface tracking, what would the office have seen?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "No internet, and no failover",
+        "correct": true,
+        "why": "Right: VRRP only sees the LAN."
+      },
+      {
+        "text": "An immediate failover to hq2",
+        "correct": false,
+        "why": "Nothing would have told VRRP."
+      },
+      {
+        "text": "Both routers answering for the address",
+        "correct": false,
+        "why": "The adverts kept flowing, so hq2 stayed backup."
+      },
+      {
+        "text": "Slower internet, through the backup",
+        "correct": false,
+        "why": "Traffic would not have moved at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-ktcersbz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In the lab's active-passive pair, what moved the virtual address when HAProxy on lb1 was killed?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "HAProxy on lb2 took it",
+        "correct": false,
+        "why": "HAProxy does not manage addresses."
+      },
+      {
+        "text": "keepalived's failed health check",
+        "correct": true,
+        "why": "Right: FAULT on lb1, MASTER on lb2."
+      },
+      {
+        "text": "DNS changed www to lb2's address",
+        "correct": false,
+        "why": "www stayed 192.0.2.80."
+      },
+      {
+        "text": "The web servers redirected clients",
+        "correct": false,
+        "why": "They never knew."
+      }
+    ]
+  },
+  {
+    "id": "ex-fad933fk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "HAProxy logged `Server web/web2 is DOWN, reason: Layer4 connection problem`. What happens to new requests?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "Every third request fails",
+        "correct": false,
+        "why": "A server marked down gets none."
+      },
+      {
+        "text": "They wait until web2 returns",
+        "correct": false,
+        "why": "They go elsewhere at once."
+      },
+      {
+        "text": "They go only to web1 and web3",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "HAProxy answers them with a cached page",
+        "correct": false,
+        "why": "It was not configured to cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-nm0sm0gb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Two load balancers run active-active, each at 70% of its capacity. One fails. What happens?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "The survivor gets 140% of its capacity and struggles",
+        "correct": true,
+        "why": "Right: each must stay under 50% to survive the other's loss."
+      },
+      {
+        "text": "Nothing: that is what active-active is for",
+        "correct": false,
+        "why": "Only if the survivor can carry both loads."
+      },
+      {
+        "text": "Traffic is shed evenly by DNS",
+        "correct": false,
+        "why": "DNS does not know about capacity."
+      },
+      {
+        "text": "The failed one's clients are refused",
+        "correct": false,
+        "why": "Its address moves to the survivor."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfapne8k",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "In an active-___ pair, one node serves and the other waits to take over.",
+    "hint": "Lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "passive"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-90r7gm3j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why was `net.ipv4.ip_nonlocal_bind` set on the two balancers?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "To let keepalived send adverts",
+        "correct": false,
+        "why": "Adverts need no special setting."
+      },
+      {
+        "text": "To listen on an address not yet held",
+        "correct": true,
+        "why": "Right: the standby is ready the moment the address arrives."
+      },
+      {
+        "text": "To allow two nodes to share one MAC",
+        "correct": false,
+        "why": "MACs are not involved."
+      },
+      {
+        "text": "To speed up health checks",
+        "correct": false,
+        "why": "It has nothing to do with checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-95kthw8r",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Match each term to what it is.",
+    "hint": "Lesson 17.",
+    "pairs": [
+      {
+        "left": "SLI",
+        "right": "What is measured, such as the share of successful requests"
+      },
+      {
+        "left": "SLO",
+        "right": "The internal target for that measure"
+      },
+      {
+        "left": "SLA",
+        "right": "The promise to a customer, with consequences"
+      }
+    ],
+    "right_distractors": [
+      "The recovery point for backups"
+    ]
+  },
+  {
+    "id": "ex-2jpkwc1j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What does RPO measure?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "How long the service may be down",
+        "correct": false,
+        "why": "That is RTO."
+      },
+      {
+        "text": "How much recent data may be lost",
+        "correct": true,
+        "why": "Right: measured back from the failure."
+      },
+      {
+        "text": "How often backups are tested",
+        "correct": false,
+        "why": "Important, but not RPO."
+      },
+      {
+        "text": "The percentage of uptime promised",
+        "correct": false,
+        "why": "That is the SLA's availability."
+      }
+    ]
+  },
+  {
+    "id": "ex-x0c4nf0s",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A 30-day month has 43,200 minutes. With an SLO of 99.9%, how many minutes of downtime is the error budget?",
+    "hint": "Lesson 17.",
+    "value": 43.2,
+    "tolerance": 0.05,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-6bttm4k3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A database replicates asynchronously to a second site, a few seconds behind. The primary site burns down. What is the RPO in practice?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Zero, because there is a replica",
+        "correct": false,
+        "why": "An asynchronous replica is behind by design."
+      },
+      {
+        "text": "The writes not yet copied",
+        "correct": true,
+        "why": "Right: those writes are gone."
+      },
+      {
+        "text": "The time until the replica is promoted",
+        "correct": false,
+        "why": "That is part of RTO."
+      },
+      {
+        "text": "One day, the backup interval",
+        "correct": false,
+        "why": "The replica is far closer than the backup."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjnpsgyh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A contract promises 99.99% for a service whose load balancer failover alone takes about three seconds each time. What should be checked first?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Whether the load balancer can be replaced by DNS",
+        "correct": false,
+        "why": "DNS changes are slower, not faster."
+      },
+      {
+        "text": "Whether three seconds count as downtime",
+        "correct": false,
+        "why": "The measurement window decides, and it must be read first either way."
+      },
+      {
+        "text": "How many failovers a year fit in the 52-minute budget",
+        "correct": true,
+        "why": "Right: promise what the architecture can deliver."
+      },
+      {
+        "text": "Whether the web servers are fast enough",
+        "correct": false,
+        "why": "Speed is not availability."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzende08",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "When does QoS change anything on a link?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Always, since it speeds up marked traffic",
+        "correct": false,
+        "why": "Nothing goes faster than the link."
+      },
+      {
+        "text": "Only under congestion",
+        "correct": true,
+        "why": "Right: idle, the ping was under a millisecond either way."
+      },
+      {
+        "text": "Only on wireless links",
+        "correct": false,
+        "why": "The lab's link was a cable."
+      },
+      {
+        "text": "Only for traffic crossing the internet",
+        "correct": false,
+        "why": "It acts wherever a queue forms."
+      }
+    ]
+  },
+  {
+    "id": "ex-tdz2jwfx",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "tcpdump printed `tos 0xb8` for an EF packet. What is the DSCP value, in decimal?",
+    "hint": "Lesson 18.",
+    "value": 46,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-y6ct173y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In one shared queue, a ping marked EF still waited behind an upload. Why?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "The mark was stripped by the router",
+        "correct": false,
+        "why": "tcpdump saw tos 0xb8 on the other side."
+      },
+      {
+        "text": "A mark alone changes no queue",
+        "correct": true,
+        "why": "Right: classes and priority did that."
+      },
+      {
+        "text": "EF only works on UDP",
+        "correct": false,
+        "why": "DSCP is in the IP header, whatever is inside."
+      },
+      {
+        "text": "The upload was also marked EF",
+        "correct": false,
+        "why": "It was unmarked."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwe8d9kf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Why did the office re-mark everything arriving from the LAN to CS0 before marking its own voice traffic?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Any host marks itself EF if it likes, so the edge decides",
+        "correct": true,
+        "why": "Right: the trust boundary."
+      },
+      {
+        "text": "CS0 is faster than no marking",
+        "correct": false,
+        "why": "CS0 is the same as no marking."
+      },
+      {
+        "text": "The ISP rejects packets with DSCP set",
+        "correct": false,
+        "why": "It forwards them; it just ignores the mark."
+      },
+      {
+        "text": "nftables requires it before any other rule",
+        "correct": false,
+        "why": "It is a design choice, not a syntax rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-251ydsvm",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put the steps of giving voice priority on an uplink in order.",
+    "hint": "Lesson 18.",
+    "items": [
+      "Decide which traffic is voice",
+      "Mark it at the edge with DSCP EF",
+      "Classify EF into its own queue",
+      "Serve that queue first, up to its rate"
+    ],
+    "trap": "Marking before deciding marks the wrong things; a queue before classification has nothing in it."
+  },
+  {
+    "id": "ex-yf423z2b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Round robin sent six requests to web1, web2, web3, web1, web2, web3. What does it not look at?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "How busy each server is",
+        "correct": true,
+        "why": "Right: a slow request still got company."
+      },
+      {
+        "text": "The order of the servers",
+        "correct": false,
+        "why": "That is all it looks at."
+      },
+      {
+        "text": "Whether a server is marked down",
+        "correct": false,
+        "why": "With health checks, down servers are skipped."
+      },
+      {
+        "text": "The weights in the configuration",
+        "correct": false,
+        "why": "Weighted round robin reads them."
+      }
+    ]
+  },
+  {
+    "id": "ex-98xwtv79",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "With weights 2, 1 and 1, how many of 8 requests went to the server with weight 2?",
+    "hint": "Lesson 19.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-ztj2e7ge",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "While web1 served a slow download, least connections sent four quick requests elsewhere. What was it counting?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Requests served so far",
+        "correct": false,
+        "why": "That is a total, not what is open now."
+      },
+      {
+        "text": "Each server's CPU load",
+        "correct": false,
+        "why": "HAProxy cannot see the servers' CPU."
+      },
+      {
+        "text": "Connections open right now on each server",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The response time of the last request",
+        "correct": false,
+        "why": "That is a different algorithm."
+      }
+    ]
+  },
+  {
+    "id": "ex-tzmenh8x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "With `balance source`, four of five clients landed on web1. Why did hashing balance so badly?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "The hash was misconfigured",
+        "correct": false,
+        "why": "It did what a hash does."
+      },
+      {
+        "text": "Too few distinct sources",
+        "correct": true,
+        "why": "Right: a hash evens out only over many clients."
+      },
+      {
+        "text": "web1 had the highest weight",
+        "correct": false,
+        "why": "No weights were set."
+      },
+      {
+        "text": "Source hashing always prefers the first server",
+        "correct": false,
+        "why": "ns landed on web2."
+      }
+    ]
+  },
+  {
+    "id": "ex-7r8gkcfz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A client pinned by cookie to web3 got a 503 when web3 stopped. What fixed it?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Deleting the cookie in the browser",
+        "correct": false,
+        "why": "That works for one user, not for the service."
+      },
+      {
+        "text": "Switching to source hashing",
+        "correct": false,
+        "why": "Any persistence meets the same dead server."
+      },
+      {
+        "text": "Health checks with redispatch",
+        "correct": true,
+        "why": "Right: the client was moved and got a new cookie."
+      },
+      {
+        "text": "A longer server timeout",
+        "correct": false,
+        "why": "Waiting longer on a dead server gains nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-zthtg0ak",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "What does a shaper do with a packet that exceeds the rate?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Holds it in a queue until its turn",
+        "correct": true,
+        "why": "Right: delay instead of loss."
+      },
+      {
+        "text": "Drops it at once",
+        "correct": false,
+        "why": "That is a policer."
+      },
+      {
+        "text": "Marks it and sends it anyway",
+        "correct": false,
+        "why": "Some policers do that; a shaper queues."
+      },
+      {
+        "text": "Compresses it",
+        "correct": false,
+        "why": "Nothing is compressed."
+      }
+    ]
+  },
+  {
+    "id": "ex-01kgzqv4",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "How many kilobytes per second is 5 Mbit/s, taking 1 kB as 1000 bytes?",
+    "hint": "Lesson 20.",
+    "value": 625,
+    "tolerance": 0,
+    "unit": "kB/s"
+  },
+  {
+    "id": "ex-9wnrmsac",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Under policing, iperf3 showed many retransmissions and the ping stayed under a millisecond. Under shaping, the ping rose to about 22 ms. What explains the difference?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "The policer was faster hardware",
+        "correct": false,
+        "why": "Both ran on the same kind of router."
+      },
+      {
+        "text": "Queue versus drop",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Pings are exempt from policing",
+        "correct": false,
+        "why": "They were simply not over the rate."
+      },
+      {
+        "text": "The shaper had a lower rate",
+        "correct": false,
+        "why": "Both were 5 Mbit/s."
+      }
+    ]
+  },
+  {
+    "id": "ex-m76360r5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An ISP polices a line at 5 Mbit/s. What should the customer's router do?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Police at 5 Mbit/s too",
+        "correct": false,
+        "why": "That only moves the drops closer."
+      },
+      {
+        "text": "Send as fast as possible and let TCP adapt",
+        "correct": false,
+        "why": "That is how the lab got 1349 retransmissions."
+      },
+      {
+        "text": "Shape at exactly 5 Mbit/s",
+        "correct": false,
+        "why": "Bursts and overheads still trip the policer."
+      },
+      {
+        "text": "Shape a little below 5 Mbit/s",
+        "correct": true,
+        "why": "Right: the lab's 4500 kbit shaper met no drops."
+      }
+    ]
+  },
+  {
+    "id": "ex-52dvq537",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In a token bucket, the rate is how fast tokens arrive, and the ___ is how many can pile up for a short spike.",
+    "hint": "Lesson 20.",
+    "blanks": [
+      {
+        "accept": [
+          "burst",
+          "bucket size"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mpafqwgx",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Put a bottom-up diagnosis in order.",
+    "hint": "Lesson 21.",
+    "items": [
+      "Is there a link?",
+      "Is there an address and a gateway?",
+      "Does the name resolve?",
+      "Does the port answer?",
+      "Does the application answer correctly?"
+    ],
+    "trap": "Each question assumes the one below it works."
+  },
+  {
+    "id": "ex-92cpecpp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`curl` fails with `Could not resolve host`, yet `ping 192.0.2.53` works. Where is the fault?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "The cable",
+        "correct": false,
+        "why": "A ping crossed it."
+      },
+      {
+        "text": "The web server",
+        "correct": false,
+        "why": "It was never reached."
+      },
+      {
+        "text": "The configured resolver",
+        "correct": true,
+        "why": "Right: resolv.conf named a server that does not answer."
+      },
+      {
+        "text": "The gateway",
+        "correct": false,
+        "why": "The ping to 192.0.2.53 went through it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gt5gyn84",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`curl` gets `Connection refused` in 0 ms and `ping` to the same host works. What next?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "Look for a listener",
+        "correct": true,
+        "why": "Right: ss -tln showed no :80."
+      },
+      {
+        "text": "Check the cable",
+        "correct": false,
+        "why": "The host answered."
+      },
+      {
+        "text": "Check DNS",
+        "correct": false,
+        "why": "curl was given an address."
+      },
+      {
+        "text": "Lower the MTU",
+        "correct": false,
+        "why": "Nothing large was sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0g0rs5d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Through the tunnel, a small page loads but a big file never starts; 1448-byte segments leave the server and are never acknowledged. What fixed it in the lab?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "Raising the tunnel's MTU to 1500",
+        "correct": false,
+        "why": "The tunnel cannot carry 1500 inside 1500."
+      },
+      {
+        "text": "Clamping the TCP MSS to 1380 on the router",
+        "correct": true,
+        "why": "Right: the SYN then carried mss 1380."
+      },
+      {
+        "text": "Restarting the web server",
+        "correct": false,
+        "why": "The server was fine."
+      },
+      {
+        "text": "Switching the tunnel to TCP",
+        "correct": false,
+        "why": "That changes nothing about packet size."
+      }
+    ]
+  },
+  {
+    "id": "ex-sb84sh4s",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A WireGuard tunnel has an MTU of 1420. With 20 bytes of IP header and 20 of TCP header, what is the largest MSS that fits?",
+    "hint": "Lesson 21.",
+    "value": 1380,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-ncwe3627",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "mtr shows 80% loss at hops 1 and 2 and 0% at the destination. What is it?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "Real loss that the destination recovers",
+        "correct": false,
+        "why": "Lost packets are not recovered by the next hop."
+      },
+      {
+        "text": "Routers rate-limiting their ICMP replies",
+        "correct": true,
+        "why": "Right: icmp_ratelimit, and the traffic itself passed."
+      },
+      {
+        "text": "A broken first router",
+        "correct": false,
+        "why": "Everything after it got through."
+      },
+      {
+        "text": "A wrong DNS answer",
+        "correct": false,
+        "why": "mtr -n does not even use DNS."
+      }
+    ]
+  },
+  {
+    "id": "ex-h2pmg04t",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A Linux host sends with a TTL of 64 and the reply arrives with ttl=62. How many routers are in between?",
+    "hint": "Lesson 22.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "routers"
+  },
+  {
+    "id": "ex-373b00re",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "iperf3 measured about 20 Mbit/s upload and over 3 Gbit/s with `-R`. What does `-R` change?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "It uses UDP instead of TCP",
+        "correct": false,
+        "why": "That is -u."
+      },
+      {
+        "text": "The server sends and the client receives",
+        "correct": true,
+        "why": "Right: the other direction, unshaped in the lab."
+      },
+      {
+        "text": "It opens several streams",
+        "correct": false,
+        "why": "That is -P."
+      },
+      {
+        "text": "It repeats the test",
+        "correct": false,
+        "why": "It runs once, reversed."
+      }
+    ]
+  },
+  {
+    "id": "ex-pjcd4wn6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A UDP test at 30 Mbit/s over a 20 Mbit/s path reported 34% loss. Is the path broken?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "Yes: any loss means a fault",
+        "correct": false,
+        "why": "It was offered more than it can carry."
+      },
+      {
+        "text": "Yes: UDP should never lose packets",
+        "correct": false,
+        "why": "UDP has no retransmission; excess is dropped."
+      },
+      {
+        "text": "No: a third of 30 did not fit in 20",
+        "correct": true,
+        "why": "Right: the 10 Mbit/s test lost nothing."
+      },
+      {
+        "text": "It cannot be told without a traceroute",
+        "correct": false,
+        "why": "The arithmetic already tells."
+      }
+    ]
+  },
+  {
+    "id": "ex-h7txztcb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "traceroute printed `2  *` and then the destination answered at hop 3. What does the star mean?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "Hop 2 did not answer, but it forwarded",
+        "correct": true,
+        "why": "Right: a silent hop is not a broken one."
+      },
+      {
+        "text": "Packets are lost at hop 2",
+        "correct": false,
+        "why": "The destination answered through it."
+      },
+      {
+        "text": "Hop 2 is the destination",
+        "correct": false,
+        "why": "The destination is hop 3."
+      },
+      {
+        "text": "The path is too long",
+        "correct": false,
+        "why": "It is three hops."
+      }
+    ]
+  },
+  {
+    "id": "ex-9awbvghh",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Put the parts of an incident record in the order the work happens.",
+    "hint": "Lesson 23.",
+    "items": [
+      "Symptom",
+      "Hypothesis",
+      "Test",
+      "Result",
+      "Fix"
+    ],
+    "trap": "A fix before a tested hypothesis is a guess that happened to work, or did not."
+  },
+  {
+    "id": "ex-4nynmp61",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why do incident timelines give times with their offset, or in UTC?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "UTC clocks are more accurate",
+        "correct": false,
+        "why": "Accuracy is the same."
+      },
+      {
+        "text": "Logs from many zones must align",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The law requires UTC",
+        "correct": false,
+        "why": "No law is the reason."
+      },
+      {
+        "text": "Local time cannot show seconds",
+        "correct": false,
+        "why": "It can."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzw9660t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What makes a post-mortem blameless?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "Nobody's actions are mentioned",
+        "correct": false,
+        "why": "Actions are described; people are not blamed for them."
+      },
+      {
+        "text": "It looks for causes in the system",
+        "correct": true,
+        "why": "Right: so people report what really happened."
+      },
+      {
+        "text": "It is written by someone outside the team",
+        "correct": false,
+        "why": "Who writes it is not the point."
+      },
+      {
+        "text": "It has no action items",
+        "correct": false,
+        "why": "It should end with them."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3d9smf2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An incident record's action item reads \"be more careful with firewalls\". What is wrong with it?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "It blames the firewall vendor",
+        "correct": false,
+        "why": "It blames nobody; it does nothing."
+      },
+      {
+        "text": "It is too specific",
+        "correct": false,
+        "why": "It is the opposite."
+      },
+      {
+        "text": "Firewalls should not appear in incident records",
+        "correct": false,
+        "why": "They often belong there."
+      },
+      {
+        "text": "It cannot be checked",
+        "correct": true,
+        "why": "Right: \"allow ICMP type 3 on hq, by Friday, Ana\" can be checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-ys18nhfa",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "An idea about the cause that can be proved wrong by one test is a ___.",
+    "hint": "Lesson 23.",
+    "blanks": [
+      {
+        "accept": [
+          "hypothesis"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
