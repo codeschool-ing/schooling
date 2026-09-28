@@ -18,7 +18,8 @@
 # What is STAGED rather than typed, and not shown in the lesson:
 # the lab itself, built by lab.sh reset, with the baseline rule set of lesson 4
 # loaded on fw; seal.py written to ana's home on laptop, shown whole in the
-# lesson as an annotated example; a recording on fw's internet interface with
+# lesson as an annotated example; the two X25519 public keys copied between
+# laptop and app, as they would be sent by any channel at all; a recording on fw's internet interface with
 # tcpdump in the background, read afterwards; the two WireGuard configuration
 # files written between blocks, each shown with cat before it is used. The
 # tunnel runs on wireguard-go, WireGuard's implementation in user space,
@@ -56,7 +57,6 @@ on laptop 'openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000 -in payroll.enc -pas
 
 block aead
 quiet laptop 'cat > /home/ana/seal.py <<"PY"
-import sys
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 key = AESGCM.generate_key(bit_length=256)
@@ -109,5 +109,5 @@ quiet fw 'setsid timeout 8 tcpdump -n -i eth0 -c 6 "host 203.0.113.70" > /root/w
 sleep 2
 on branchpc 'curl -s -m5 http://192.168.20.10:8080/health'
 sleep 2
-root fw 'wg show wg0 | sed "s/^  endpoint/  endpoint/" | grep -vE "public key|private key"'
+root fw 'wg show wg0 | grep -vE "public key|private key"'
 root fw 'cut -d" " -f2- wire.txt'

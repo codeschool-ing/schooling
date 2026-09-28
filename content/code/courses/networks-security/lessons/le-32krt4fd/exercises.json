@@ -1,0 +1,615 @@
+[
+  {
+    "id": "ex-rmy79ssr",
+    "version": 1,
+    "section": "one-key-or-two",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In TLS, SSH and WireGuard, which kind of cryptography encrypts the bytes of the conversation itself?",
+    "hint": "What does each family do well?",
+    "choices": [
+      {
+        "text": "Asymmetric, because the data is what matters most",
+        "correct": false,
+        "why": "Asymmetric runs for a few milliseconds at the start and carries no bulk data."
+      },
+      {
+        "text": "Symmetric",
+        "correct": true,
+        "why": "Right. The asymmetric half only agrees on the symmetric key."
+      },
+      {
+        "text": "Both in turn, one packet each",
+        "correct": false,
+        "why": "Nothing alternates: agreement once, then symmetric for every byte."
+      },
+      {
+        "text": "Whichever the client proposes first",
+        "correct": false,
+        "why": "The division of labour is fixed by what each half is good at."
+      }
+    ]
+  },
+  {
+    "id": "ex-gkz82b5r",
+    "version": 1,
+    "section": "one-key-or-two",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report says a 2048-bit RSA key is eight times stronger than a 256-bit AES key. What is wrong with the comparison?",
+    "hint": "Where do key lengths compare?",
+    "choices": [
+      {
+        "text": "Nothing: more bits is more strength across families",
+        "correct": false,
+        "why": "Bits mean different things in different families."
+      },
+      {
+        "text": "RSA keys are measured in bytes, so it is sixty-four times",
+        "correct": false,
+        "why": "Both are in bits; the families are what differ."
+      },
+      {
+        "text": "Key lengths only compare within one family",
+        "correct": true,
+        "why": "Right. RSA-2048 is roughly a 112-bit symmetric key."
+      },
+      {
+        "text": "AES-256 is broken, so any RSA key wins",
+        "correct": false,
+        "why": "AES with a 256-bit key is considered strong."
+      }
+    ]
+  },
+  {
+    "id": "ex-dm95meh0",
+    "version": 1,
+    "section": "one-key-or-two",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague wants the payroll file encrypted with RSA instead of AES \"because asymmetric is the stronger kind\". What does the lesson answer?",
+    "hint": "What is each family for?",
+    "choices": [
+      {
+        "text": "He is right; AES is kept for data nobody cares about",
+        "correct": false,
+        "why": "AES carries every byte of TLS, SSH and WireGuard."
+      },
+      {
+        "text": "Each family has its own job; bulk data is the symmetric one's",
+        "correct": true,
+        "why": "Right. Asymmetric agrees on keys and signs."
+      },
+      {
+        "text": "RSA would be fine if the key were 4096 bits",
+        "correct": false,
+        "why": "Size is not the issue; RSA is the wrong tool for bulk data."
+      },
+      {
+        "text": "Use both at once on every byte, for twice the strength",
+        "correct": false,
+        "why": "Stacking ciphers is not the design any of these protocols uses."
+      }
+    ]
+  },
+  {
+    "id": "ex-r673hh2v",
+    "version": 1,
+    "section": "symmetric-in-practice",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "seal.py encrypted a 30-byte instruction and printed how many bytes it sealed. How many of those bytes are the tag?",
+    "hint": "Subtract the message from what was printed.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-v5n9bnmd",
+    "version": 1,
+    "section": "symmetric-in-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody flips bits in payroll.enc, the AES-256-CBC file. What happens when it is decrypted with the right key?",
+    "hint": "What does CBC say about changes?",
+    "choices": [
+      {
+        "text": "openssl reports that the file was altered",
+        "correct": false,
+        "why": "CBC has no tag to check, so there is nothing to report with."
+      },
+      {
+        "text": "The original message comes back, since the key is right",
+        "correct": false,
+        "why": "The changed bits change the output."
+      },
+      {
+        "text": "A different message comes out, and nothing says so",
+        "correct": true,
+        "why": "Right. Secret, but not protected against change."
+      },
+      {
+        "text": "Decryption refuses with InvalidTag",
+        "correct": false,
+        "why": "That is AES-GCM, which CBC is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ttgs62t",
+    "version": 1,
+    "section": "symmetric-in-practice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After one bit of the sealed message was flipped, what did box.decrypt return?",
+    "hint": "Read the last line of the output.",
+    "choices": [
+      {
+        "text": "The message with one character changed",
+        "correct": false,
+        "why": "That is how a bare cipher behaves."
+      },
+      {
+        "text": "The message, plus a warning in the output",
+        "correct": false,
+        "why": "Nothing of the message came back."
+      },
+      {
+        "text": "Garbled bytes from the flipped block onwards",
+        "correct": false,
+        "why": "GCM checks the tag before returning anything."
+      },
+      {
+        "text": "Nothing: it raised InvalidTag",
+        "correct": true,
+        "why": "Right. The message is refused whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-44dvpfjx",
+    "version": 1,
+    "section": "symmetric-in-practice",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "GCM's one hard rule: two messages are never encrypted with the same key and the same ___.",
+    "hint": "A number used once.",
+    "blanks": [
+      {
+        "accept": [
+          "nonce"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xxnjc2rj",
+    "version": 1,
+    "section": "agreeing-on-a-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the X25519 exchange between laptop and app, what crossed the network?",
+    "hint": "Which files were copied?",
+    "choices": [
+      {
+        "text": "The two public keys",
+        "correct": true,
+        "why": "Right. The private keys and the secret stayed where they were made."
+      },
+      {
+        "text": "The shared secret, encrypted with app.pub",
+        "correct": false,
+        "why": "The secret was computed on each side and never sent."
+      },
+      {
+        "text": "ana.key, so that app could compute the same secret",
+        "correct": false,
+        "why": "A private key that travels is no longer private."
+      },
+      {
+        "text": "The sha256sum of the secret, to compare",
+        "correct": false,
+        "why": "The hash was printed for the reader, not exchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-56byhr4t",
+    "version": 1,
+    "section": "agreeing-on-a-key",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both machines printed 72338c44…c5a2 after pkeyutl -derive. Which statements are true? Choose all that apply.",
+    "hint": "What went into each derivation?",
+    "choices": [
+      {
+        "text": "Each side combined its own private key with the other's public key",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The printed value is a hash of the secret, not the secret",
+        "correct": true,
+        "why": "Right. That is why it was safe to show."
+      },
+      {
+        "text": "Somebody who recorded both public keys could compute the same value",
+        "correct": false,
+        "why": "Without a private key the secret is out of reach."
+      },
+      {
+        "text": "It proves that app.pub really came from app",
+        "correct": false,
+        "why": "Agreement proves nothing about identity."
+      }
+    ]
+  },
+  {
+    "id": "ex-2sqgyp97",
+    "version": 1,
+    "section": "agreeing-on-a-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the way to laptop, app.pub was replaced by another machine's public key. laptop derives a secret as before. What does it end up with?",
+    "hint": "Whose private key matches the public key laptop used?",
+    "choices": [
+      {
+        "text": "An error, because the key does not belong to app",
+        "correct": false,
+        "why": "Nothing in X25519 knows which machine a key belongs to."
+      },
+      {
+        "text": "A secret shared with app, since app's private key is unchanged",
+        "correct": false,
+        "why": "laptop used the other public key, so app computes something else."
+      },
+      {
+        "text": "A secret shared with whoever holds the matching private key",
+        "correct": true,
+        "why": "Right. Perfectly encrypted, to the wrong party: identity is lessons 11 and 12."
+      },
+      {
+        "text": "No usable secret, because the two hashes no longer match",
+        "correct": false,
+        "why": "Nobody compares hashes in a real protocol; the secret works fine with the impostor."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqmfh3da",
+    "version": 1,
+    "section": "agreeing-on-a-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server's long-term key is stolen a year after a session was recorded. The session used fresh key pairs, thrown away afterwards. What does the thief get from the recording?",
+    "hint": "Which keys made the session's secret?",
+    "choices": [
+      {
+        "text": "The whole session, since the long-term key unlocks it",
+        "correct": false,
+        "why": "That is the case forward secrecy removes."
+      },
+      {
+        "text": "The first packet, which the long-term key signed",
+        "correct": false,
+        "why": "Signing does not encrypt anything."
+      },
+      {
+        "text": "Half the session: the direction the server sent",
+        "correct": false,
+        "why": "Both directions used the discarded keys."
+      },
+      {
+        "text": "Nothing of the content",
+        "correct": true,
+        "why": "Right. That is forward secrecy, as in TLS 1.3 and WireGuard."
+      }
+    ]
+  },
+  {
+    "id": "ex-vj2nh9b8",
+    "version": 1,
+    "section": "what-each-costs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many RSA-2048 signatures a second did openssl speed measure on laptop?",
+    "hint": "The sign/s column.",
+    "value": 3313,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-4xydss7r",
+    "version": 1,
+    "section": "what-each-costs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each operation to how often a connection runs it.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "AES-256-GCM",
+        "right": "on every byte of the connection"
+      },
+      {
+        "left": "X25519 key agreement",
+        "right": "once, to agree the key"
+      },
+      {
+        "left": "RSA-2048 signature",
+        "right": "once, by the server, to prove its identity"
+      }
+    ],
+    "right_distractors": [
+      "once per packet, to check the tag"
+    ]
+  },
+  {
+    "id": "ex-m921rggj",
+    "version": 1,
+    "section": "what-each-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You run openssl speed on a small ARM board and every number is lower than laptop's. What should still hold?",
+    "hint": "The section says what travels.",
+    "choices": [
+      {
+        "text": "The 3,313 signatures a second, since RSA-2048 is a fixed amount of work",
+        "correct": false,
+        "why": "The absolute numbers belong to one machine on one afternoon."
+      },
+      {
+        "text": "Symmetric far ahead of the key agreement and the signature",
+        "correct": true,
+        "why": "Right. The ratios are what travel."
+      },
+      {
+        "text": "X25519 beats AES-GCM there, lacking the AES instructions",
+        "correct": false,
+        "why": "Nothing in the lesson supports the order flipping."
+      },
+      {
+        "text": "None of it; each machine is a new design question",
+        "correct": false,
+        "why": "The design rests on ratios that hold across machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytysqavq",
+    "version": 1,
+    "section": "a-tunnel-to-the-branch",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In wire.txt, how many bytes did the two handshake packets carry together?",
+    "hint": "The first two lengths.",
+    "value": 240,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-84208j8x",
+    "version": 1,
+    "section": "a-tunnel-to-the-branch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A packet arrives at fw through wg0 from the branch's peer with source address 192.168.40.5. What happens to it?",
+    "hint": "Read the peer's AllowedIPs.",
+    "choices": [
+      {
+        "text": "It is forwarded, since it came through the encrypted tunnel",
+        "correct": false,
+        "why": "The tunnel checks the source too."
+      },
+      {
+        "text": "Dropped: that source is outside AllowedIPs",
+        "correct": true,
+        "why": "Right. AllowedIPs is a filter as well as a route."
+      },
+      {
+        "text": "It is answered with a new handshake",
+        "correct": false,
+        "why": "A handshake does not widen what a peer may send."
+      },
+      {
+        "text": "It is routed back to the internet segment through eth0",
+        "correct": false,
+        "why": "It never gets that far."
+      }
+    ]
+  },
+  {
+    "id": "ex-7sq25mgh",
+    "version": 1,
+    "section": "a-tunnel-to-the-branch",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does somebody recording the internet segment between the two routers learn?",
+    "hint": "Look at wire.txt.",
+    "choices": [
+      {
+        "text": "The URL the branch asked for",
+        "correct": false,
+        "why": "The request travelled inside ChaCha20-Poly1305."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "The addresses, the port, the times and the sizes are in the clear."
+      },
+      {
+        "text": "The session key, from the 148-byte packet",
+        "correct": false,
+        "why": "The handshake agrees the key without sending it."
+      },
+      {
+        "text": "That the offices talk, when, and how much",
+        "correct": true,
+        "why": "Right. Not what was said."
+      }
+    ]
+  },
+  {
+    "id": "ex-mpjrrc6a",
+    "version": 1,
+    "section": "a-tunnel-to-the-branch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "From a branch computer, somebody tries SSH on port 22 of 192.168.20.10 through the tunnel. What decides the outcome, and what is it?",
+    "hint": "What does a packet leaving wg0 still cross?",
+    "choices": [
+      {
+        "text": "WireGuard: the peer is trusted, so it connects",
+        "correct": false,
+        "why": "A VPN decides who joins, not what they reach."
+      },
+      {
+        "text": "AllowedIPs, which lists ports; 22 is absent",
+        "correct": false,
+        "why": "AllowedIPs lists addresses, not ports."
+      },
+      {
+        "text": "fw's forward chain, whose rule allows the branch only 8080",
+        "correct": true,
+        "why": "Right. The matrix of lesson 4 still applies."
+      },
+      {
+        "text": "The handshake, which refuses non-HTTP traffic",
+        "correct": false,
+        "why": "The handshake knows nothing of what will be carried."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehvvamzy",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what happens between fw and branch, from first to last.",
+    "hint": "Keys, configuration, handshake, data.",
+    "items": [
+      "each router makes a Curve25519 key pair",
+      "each configuration names the other side's public key",
+      "the handshake turns the key pairs into fresh symmetric keys",
+      "ChaCha20-Poly1305 carries the request and its answer"
+    ],
+    "trap": "A handshake needs the peer's public key already in the configuration."
+  },
+  {
+    "id": "ex-jyvgdpn2",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each requirement to the mechanism in this lesson that meets it.",
+    "hint": "One from each section.",
+    "pairs": [
+      {
+        "left": "a changed bit must be refused",
+        "right": "an AEAD tag"
+      },
+      {
+        "left": "two ends that never met need a common key",
+        "right": "X25519 key agreement"
+      },
+      {
+        "left": "a key stolen next year must not open today's recording",
+        "right": "fresh key pairs per session"
+      },
+      {
+        "left": "the tunnel accepts only the branch's addresses",
+        "right": "AllowedIPs"
+      }
+    ],
+    "right_distractors": [
+      "600,000 rounds of PBKDF2"
+    ]
+  },
+  {
+    "id": "ex-azy1k5hn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team plans to encrypt 40 GB of nightly backups for a remote site by running every block through RSA with the site's public key. What design does this lesson point to instead?",
+    "hint": "Which operation is fast, and which runs once?",
+    "choices": [
+      {
+        "text": "Keep RSA, with 4096-bit keys for backups",
+        "correct": false,
+        "why": "A larger key makes each operation slower still."
+      },
+      {
+        "text": "A symmetric AEAD for the data, with the asymmetric half used once for its key",
+        "correct": true,
+        "why": "Right. Slow once, fast for every byte."
+      },
+      {
+        "text": "AES-CBC with a password, run through 600,000 PBKDF2 rounds",
+        "correct": false,
+        "why": "Fast, but a changed backup would decrypt without complaint."
+      },
+      {
+        "text": "X25519 on every block instead of RSA",
+        "correct": false,
+        "why": "X25519 agrees keys; it does not encrypt data."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6tf1pec",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An internal tool stores payment instructions encrypted with AES-256-CBC. Nobody else has the key. What should an audit report about it?",
+    "hint": "Secret is one property. What is the other?",
+    "choices": [
+      {
+        "text": "An altered instruction would decrypt without error; use AES-GCM",
+        "correct": true,
+        "why": "Right. Authenticated encryption refuses it."
+      },
+      {
+        "text": "Nothing, since only the tool holds the key",
+        "correct": false,
+        "why": "Keeping the key secret does not detect a change."
+      },
+      {
+        "text": "AES-256 is too weak; move the instructions to RSA-2048",
+        "correct": false,
+        "why": "RSA-2048 is about 112-bit strength, below AES-256."
+      },
+      {
+        "text": "Raise -iter above 600,000",
+        "correct": false,
+        "why": "Iterations harden a typed password, not the message."
+      }
+    ]
+  }
+]

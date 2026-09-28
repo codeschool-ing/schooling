@@ -399,7 +399,6 @@ authorityKeyIdentifier = keyid
 basicConstraints = critical,CA:FALSE
 keyUsage = critical,digitalSignature
 extendedKeyUsage = serverAuth
-subjectAltName = \${ENV::SAN}
 authorityKeyIdentifier = keyid
 [client]
 basicConstraints = critical,CA:FALSE
@@ -409,14 +408,21 @@ authorityKeyIdentifier = keyid
 CNF
 }
 # issue NAME EXTENSIONS SIGNER START END [SAN]  -> $LAB/ca/NAME.{key,crt}
+# A name goes in through an extension file of its own, because the names are
+# the one extension that differs between two servers.
 issue() {
   local n=$1 ext=$2 signer=$3 start=$4 end=$5 san=${6:-}
   cd "$LAB/ca"
   openssl req -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -subj "$(subj "$n")" -keyout "$n.key" -out "$n.csr" 2>/dev/null
   if [ "$signer" = self ]; then
-    SAN=$san openssl ca -batch -config ca.cnf -selfsign -keyfile "$n.key" -extensions "$ext" -startdate "$start" -enddate "$end" -in "$n.csr" -out "$n.crt" -notext 2>/dev/null
+    openssl ca -batch -config ca.cnf -selfsign -keyfile "$n.key" -extensions "$ext" -startdate "$start" -enddate "$end" -in "$n.csr" -out "$n.crt" -notext 2>/dev/null
   else
-    SAN=$san openssl ca -batch -config ca.cnf -cert "$signer.crt" -keyfile "$signer.key" -extensions "$ext" -startdate "$start" -enddate "$end" -in "$n.csr" -out "$n.crt" -notext 2>/dev/null
+    if [ -n "$san" ]; then
+      { sed -n "/^\[$ext\]/,/^\[/p" ca.cnf | sed '$d'; echo "subjectAltName = $san"; } > "$n.ext"
+      openssl ca -batch -config ca.cnf -cert "$signer.crt" -keyfile "$signer.key" -extfile "$n.ext" -extensions "$ext" -startdate "$start" -enddate "$end" -in "$n.csr" -out "$n.crt" -notext 2>/dev/null
+    else
+      openssl ca -batch -config ca.cnf -cert "$signer.crt" -keyfile "$signer.key" -extensions "$ext" -startdate "$start" -enddate "$end" -in "$n.csr" -out "$n.crt" -notext 2>/dev/null
+    fi
   fi
 }
 subj() {
