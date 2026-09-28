@@ -536,7 +536,7 @@ down() {
     ip netns pids "$h" 2>/dev/null | xargs -r kill -9 2>/dev/null || true
     ip netns del "$h"
   done
-  for h in $HOSTS printer ips; do rm -rf "/etc/netns/$h"; done
+  for h in $HOSTS printer ips guest; do rm -rf "/etc/netns/$h"; done
   rm -f /usr/local/share/ca-certificates/example-corp-root-ca.crt
   update-ca-certificates --fresh >/dev/null 2>&1 || true
   rm -rf "$LAB"
@@ -577,8 +577,10 @@ plug() {  # plug HOST SEGMENT ADDRESS/PREFIX MAC
   ip link set "$peer" netns wire
   ip -n wire link set "$peer" master "br-$seg"
   ip -n wire link set "$peer" up
-  mkdir -p "/etc/netns/$h" "$LAB/$h/root" "$LAB/$h/home/ana"
+  mkdir -p "/etc/netns/$h" "$LAB/$h/root" "$LAB/$h/home/ana" "$LAB/$h/run/wireguard"
   printf '%s\n' "$h" > "/etc/netns/$h/hostname"
+  cp /etc/netns/laptop/hosts /etc/netns/laptop/resolv.conf "/etc/netns/$h/"
+  cp -a /etc/skel/. "$LAB/$h/home/ana/"; chown -R ana:ana "$LAB/$h/home/ana"
 }
 
 # Lessons 14 and 15's intrusion prevention: a machine called ips put INLINE on
