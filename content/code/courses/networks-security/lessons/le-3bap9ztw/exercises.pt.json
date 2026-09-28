@@ -1,0 +1,429 @@
+{
+  "ex-tw5tz0gr": {
+    "prompt": "No 802.1X, qual parte confere as credenciais e diz sim ou não?",
+    "hint": "Não é o switch quem julga.",
+    "choices": [
+      {
+        "text": "O autenticador, o switch de acesso",
+        "why": "Ele repassa a troca e abre a porta quando mandam."
+      },
+      {
+        "text": "O suplicante na máquina que pede para entrar",
+        "why": "Ele prova quem é; não decide."
+      },
+      {
+        "text": "O servidor de autenticação",
+        "why": "Isso. Numa rede real, um servidor RADIUS."
+      },
+      {
+        "text": "O servidor DHCP que entrega o endereço",
+        "why": "Endereço não é acesso; o DHCP não participa do 802.1X."
+      }
+    ]
+  },
+  "ex-2qyr19yp": {
+    "prompt": "Ligue cada parte do 802.1X à sua função.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "suplicante",
+        "right": "prova quem a máquina é"
+      },
+      {
+        "left": "autenticador",
+        "right": "mantém a porta fechada e repassa o EAP"
+      },
+      {
+        "left": "servidor de autenticação",
+        "right": "confere as credenciais e responde"
+      }
+    ],
+    "right_distractors": [
+      "emite o certificado de cada dispositivo"
+    ]
+  },
+  "ex-xtmq3v1q": {
+    "prompt": "Antes de qualquer autenticação, a chain de cada porta aceita o EtherType 0x888e e descarta o resto. Por que esse?",
+    "hint": "O que viaja nele?",
+    "choices": [
+      {
+        "text": "É ARP, de que a máquina precisa para achar o gateway",
+        "why": "O ARP também é descartado até a porta abrir."
+      },
+      {
+        "text": "É EAPOL: a máquina precisa de um jeito de pedir",
+        "why": "Isso. Sem ele nenhuma troca começaria."
+      },
+      {
+        "text": "É DHCP, para a máquina pegar o endereço antes",
+        "why": "newpc configurou o próprio endereço; DHCP não é EAPOL."
+      },
+      {
+        "text": "É tráfego RADIUS entre switch e servidor",
+        "why": "O RADIUS vai para o servidor, não pelo cabo do cliente."
+      }
+    ]
+  },
+  "ex-2znbd9e8": {
+    "prompt": "newpc tem 192.168.10.30/24 na eth0, mas o ping para 192.168.10.1 perde 100% dos pacotes. Por quê?",
+    "hint": "Olhe o conjunto.",
+    "choices": [
+      {
+        "text": "O endereço está errado para a sub-rede",
+        "why": "Está em 192.168.10.0/24, como o gateway."
+      },
+      {
+        "text": "O gateway não responde a ICMP",
+        "why": "Ele responde quando a porta abre."
+      },
+      {
+        "text": "A porta e o MAC dele ainda não estão no conjunto authorised",
+        "why": "Isso. O endereço não é o acesso."
+      },
+      {
+        "text": "Os quadros EAPOL estão bloqueados",
+        "why": "EAPOL é a única coisa aceita."
+      }
+    ]
+  },
+  "ex-e9v13k2w": {
+    "prompt": "O que faz eap_server=1 no hostapd-p1.conf?",
+    "hint": "Onde a troca termina?",
+    "choices": [
+      {
+        "text": "O hostapd responde à troca EAP ele mesmo, não o RADIUS",
+        "why": "Isso. O atalho do laboratório; a troca é a mesma."
+      },
+      {
+        "text": "Liga a autenticação da porta",
+        "why": "Isso é ieee8021x=1."
+      },
+      {
+        "text": "Envia cada pedido para um servidor RADIUS",
+        "why": "Faz o contrário: responde em vez de encaminhar."
+      },
+      {
+        "text": "Abre a porta no nftables depois de um sucesso",
+        "why": "O hostapd não mexe no filtro; o script mexe."
+      }
+    ]
+  },
+  "ex-wzvh8g3f": {
+    "prompt": "O arquivo eap_user tem uma linha, * TLS. O que isso significa para quem quer entrar com senha?",
+    "hint": "A estrela é toda identidade.",
+    "choices": [
+      {
+        "text": "São mandados para o PEAP",
+        "why": "Nenhum outro método é oferecido."
+      },
+      {
+        "text": "Podem usar senha se a identidade casar com *",
+        "why": "* casa com toda identidade, e toda uma recebe TLS."
+      },
+      {
+        "text": "Nenhum método de senha é oferecido",
+        "why": "Isso. Toda identidade deve usar EAP-TLS."
+      },
+      {
+        "text": "Entram pelo endereço MAC",
+        "why": "Isso é MAB, que este switch não faz."
+      }
+    ]
+  },
+  "ex-3a1yfdxm": {
+    "prompt": "Ordene o que acontece quando newpc é admitido, do primeiro ao último.",
+    "hint": "Siga o port-control.sh.",
+    "items": [
+      "a troca EAP-TLS dá certo",
+      "o hostapd_cli roda o script com AP-STA-CONNECTED",
+      "o par p1 e o MAC entra em authorised",
+      "uma linha com a identidade vai para o ports.log"
+    ],
+    "trap": "A porta abre porque a autenticação deu certo, nunca antes dela."
+  },
+  "ex-kdyymrx5": {
+    "prompt": "No wpa.log, qual número de método EAP foi escolhido para TLS?",
+    "hint": "CTRL-EVENT-EAP-METHOD."
+  },
+  "ex-rmsw988k": {
+    "prompt": "Qual certificado é a linha depth=0 no wpa.log do newpc?",
+    "hint": "A base da cadeia.",
+    "choices": [
+      {
+        "text": "O certificado do próprio newpc",
+        "why": "O suplicante registra a cadeia do outro lado, a da rede."
+      },
+      {
+        "text": "Example Corp Root CA",
+        "why": "A raiz é depth=2."
+      },
+      {
+        "text": "Example Corp Issuing CA, que assinou o laptop",
+        "why": "Isso é depth=1."
+      },
+      {
+        "text": "O do switch, nac.corp.example.com",
+        "why": "Isso. Conferido antes de o laptop oferecer qualquer coisa."
+      }
+    ]
+  },
+  "ex-fgdnfgdr": {
+    "prompt": "Contra o que o ca_cert no wpa.conf do laptop protege?",
+    "hint": "O certificado de quem é conferido contra ele?",
+    "choices": [
+      {
+        "text": "Um visitante com certificado autoassinado",
+        "why": "O servidor confere isso, contra a CA dele."
+      },
+      {
+        "text": "Completar a troca com um autenticador que outra pessoa ligou",
+        "why": "Isso. A autenticação é mútua."
+      },
+      {
+        "text": "O certificado do laptop vencer",
+        "why": "A validade está no certificado, não nesta linha."
+      },
+      {
+        "text": "Uma segunda máquina pegando o MAC do laptop",
+        "why": "O par porta e MAC cuida disso."
+      }
+    ]
+  },
+  "ex-5n2xa3ty": {
+    "prompt": "Quais afirmações sobre métodos EAP são verdadeiras, segundo a aula? Escolha todas as que se aplicam.",
+    "hint": "Compare o que cada método envia.",
+    "choices": [
+      {
+        "text": "No EAP-TLS os dois lados apresentam certificado e não existe senha",
+        "why": "Isso."
+      },
+      {
+        "text": "PEAP e EAP-TTLS enviam uma senha dentro de um túnel TLS",
+        "why": "Isso."
+      },
+      {
+        "text": "Com EAP-TLS, conferir o certificado do servidor é opcional",
+        "why": "A aula diz que conferir o servidor não é opcional em método algum."
+      },
+      {
+        "text": "O EAP-TLS evita emitir um certificado para cada dispositivo",
+        "why": "Esse é justamente o custo dele."
+      }
+    ]
+  },
+  "ex-czxzj395": {
+    "prompt": "O wpa.log do visitor termina em CTRL-EVENT-EAP-FAILURE. Qual lado recusou, e por quê?",
+    "hint": "Leia o log do switch.",
+    "choices": [
+      {
+        "text": "O cliente, porque o certificado do switch não foi verificado",
+        "why": "O cliente aceitou a cadeia genuína da rede."
+      },
+      {
+        "text": "O servidor: o certificado do cliente é autoassinado",
+        "why": "Isso. error 18 em '/CN=visitor'."
+      },
+      {
+        "text": "O servidor, porque o certificado estava vencido",
+        "why": "Vale até 28 de outubro de 2026."
+      },
+      {
+        "text": "O servidor, porque o visitor propôs um tipo EAP desconhecido",
+        "why": "O tipo EAP 0 é contabilidade, não a falha."
+      }
+    ]
+  },
+  "ex-8em9ywr9": {
+    "prompt": "O visitor, na p2, assume o MAC do newpc, 52:54:00:a8:0a:1e, enquanto o newpc está autorizado na p1. O que acontece?",
+    "hint": "Qual é a chave do conjunto?",
+    "choices": [
+      {
+        "text": "O visitor entra, porque o MAC está no conjunto",
+        "why": "O conjunto guarda o par, e a porta dele é p1."
+      },
+      {
+        "text": "O newpc perde o acesso para o visitor",
+        "why": "O ping do newpc continua dando certo."
+      },
+      {
+        "text": "Os dois ficam de fora até o newpc se reautenticar",
+        "why": "A entrada do newpc não foi tocada."
+      },
+      {
+        "text": "O visitor fica de fora",
+        "why": "Isso. p2 com esse MAC não está no conjunto."
+      }
+    ]
+  },
+  "ex-857c4dvb": {
+    "prompt": "Depois do error 18, o hostapd registra authentication failed - EAP type: 0 (unknown). Como o administrador deve ler isso?",
+    "hint": "A seção separa dois tipos de linha.",
+    "choices": [
+      {
+        "text": "Uma segunda falha: o visitor não usou método EAP",
+        "why": "Usou 13, TLS, como diz a linha seguinte."
+      },
+      {
+        "text": "Contabilidade depois do veredito",
+        "why": "Isso. O motivo é o error 18."
+      },
+      {
+        "text": "A porta foi aberta com um método desconhecido",
+        "why": "O conjunto ficou vazio."
+      },
+      {
+        "text": "Falta uma linha para o visitor no arquivo eap_user",
+        "why": "* TLS cobre a identidade do visitor também."
+      }
+    ]
+  },
+  "ex-nwhys9tm": {
+    "prompt": "Ligue cada brecha do 802.1X ao que a fecha.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "um dispositivo atrás de uma porta autorizada",
+        "right": "MACsec no link"
+      },
+      {
+        "left": "impressoras e telefones sem suplicante",
+        "right": "um segmento separado com regras próprias"
+      },
+      {
+        "left": "um convidado recusado ou um laptop doente",
+        "right": "uma VLAN de convidados ou quarentena"
+      }
+    ],
+    "right_distractors": [
+      "um filtro com chave só no endereço MAC"
+    ]
+  },
+  "ex-jahw7n0b": {
+    "prompt": "Segundo o ports.log, por quantos segundos a p1 ficou aberta para o newpc?",
+    "hint": "Subtraia os dois horários."
+  },
+  "ex-bd03gg73": {
+    "prompt": "O ports.log liga um MAC a um nome; as ___ do servidor DHCP ligam o MAC a um endereço IP, e juntos dizem de quem era a máquina com esse endereço.",
+    "hint": "O que o servidor DHCP registra quando entrega um endereço.",
+    "blanks": [
+      {
+        "accept": [
+          "concessões",
+          "concessoes",
+          "leases",
+          "lease"
+        ]
+      }
+    ]
+  },
+  "ex-vdcvne7t": {
+    "prompt": "O newpc passou no EAP-TLS. O que isso não provou?",
+    "hint": "Identidade contra estado.",
+    "choices": [
+      {
+        "text": "Que ele tem um certificado da CA da empresa",
+        "why": "É exatamente o que provou."
+      },
+      {
+        "text": "Que está atualizado e livre de malware",
+        "why": "Isso. Esse é o papel da avaliação de postura."
+      },
+      {
+        "text": "Que o switch com que falou é a rede verdadeira",
+        "why": "O ca_cert conferiu isso."
+      },
+      {
+        "text": "Qual identidade está atrás da porta p1",
+        "why": "O dot1xAuthSessionUserName registra isso."
+      }
+    ]
+  },
+  "ex-2f2rxh1b": {
+    "prompt": "Por que a aula chama o ports.log de dado pessoal?",
+    "hint": "O que uma linha liga?",
+    "choices": [
+      {
+        "text": "Guarda a chave privada do laptop",
+        "why": "Guarda um horário, uma porta, um MAC e um nome."
+      },
+      {
+        "text": "Contém as senhas dos usuários",
+        "why": "O EAP-TLS não tem senhas."
+      },
+      {
+        "text": "Registra que pessoa estava em que mesa, e quando",
+        "why": "Isso. Precisa de justificativa, prazo de guarda e exclusão."
+      },
+      {
+        "text": "É escrito pelo hostapd, que roda como root",
+        "why": "Quem escreve o log não o torna pessoal."
+      }
+    ]
+  },
+  "ex-72x910h0": {
+    "prompt": "Uma impressora não tem suplicante, então o administrador a deixa entrar pelo MAC. Que arranjo impede que isso enfraqueça a LAN?",
+    "hint": "Um endereço MAC é segredo?",
+    "choices": [
+      {
+        "text": "Manter o MAC da impressora em sigilo",
+        "why": "Está numa etiqueta e aparece no fio."
+      },
+      {
+        "text": "Amarrar o MAC à porta, como o conjunto do laboratório",
+        "why": "Quem desconecta a impressora fica com a porta dela."
+      },
+      {
+        "text": "Um segmento próprio cujas regras só permitem imprimir",
+        "why": "Isso. Quem copiar o MAC ganha só isso."
+      },
+      {
+        "text": "Um período de reautenticação menor na porta",
+        "why": "O MAB não tem credencial para reconferir."
+      }
+    ]
+  },
+  "ex-tx561t7q": {
+    "prompt": "Um laptop se autenticou às 08:50 numa porta com dot1xAuthReAuthPeriod=3600 e check_crl ligado. O certificado é revogado às 09:00. Quando a porta fecha para ele?",
+    "hint": "Quando ele é perguntado de novo?",
+    "choices": [
+      {
+        "text": "Às 09:00, no momento da revogação",
+        "why": "O switch não pergunta de novo até a reautenticação."
+      },
+      {
+        "text": "Às 10:00, uma hora depois da revogação",
+        "why": "A hora conta da última autenticação."
+      },
+      {
+        "text": "Por volta das 09:50",
+        "why": "Isso. A próxima reautenticação falha."
+      },
+      {
+        "text": "Quando alguém o tira do switch à mão",
+        "why": "É isso que o período torna desnecessário."
+      }
+    ]
+  },
+  "ex-ccasd653": {
+    "prompt": "O Wi-Fi de uma empresa usa PEAP, e os laptops aceitam qualquer certificado de servidor. O que deve mudar primeiro?",
+    "hint": "O que o suplicante entrega a quem responder?",
+    "choices": [
+      {
+        "text": "Indicar a CA à qual o certificado da rede deve se encadear",
+        "why": "Isso. Senão o desafio e a resposta vão para qualquer um."
+      },
+      {
+        "text": "Aumentar as senhas dos usuários",
+        "why": "O servidor continua sem conferência."
+      },
+      {
+        "text": "Passar a rede para MAC authentication bypass",
+        "why": "MAC não é segredo; isso é mais fraco."
+      },
+      {
+        "text": "Encurtar o período de reautenticação",
+        "why": "Cada troca ainda iria para qualquer um."
+      }
+    ]
+  }
+}

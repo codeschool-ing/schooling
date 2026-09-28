@@ -726,12 +726,40 @@ C
   cat > "$LAB/sw/root/port-control.sh" <<'SH'
 #!/bin/bash
 # called by hostapd_cli -a: $1 interface, $2 event, $3 the client's MAC
+# the port opens for that address alone, and the line in ports.log says who
 case $2 in
-  AP-STA-CONNECTED)    nft add element netdev ports authorised "{ $3 }" ;;
-  AP-STA-DISCONNECTED) nft delete element netdev ports authorised "{ $3 }" ;;
+  AP-STA-CONNECTED)
+    nft add element netdev ports authorised "{ $1 . $3 }"
+    who=$(hostapd_cli -p /root/hostapd-ctrl -i "$1" sta "$3" | sed -n 's/^dot1xAuthSessionUserName=//p')
+    echo "$(date +%FT%T%z) $1 $3 open $who" >> /var/log/lab/ports.log ;;
+  AP-STA-DISCONNECTED)
+    nft delete element netdev ports authorised "{ $1 . $3 }"
+    echo "$(date +%FT%T%z) $1 $3 closed" >> /var/log/lab/ports.log ;;
 esac
 SH
   chmod +x "$LAB/sw/root/port-control.sh"
+  # every access port starts closed: EAPOL in, and nothing else until the
+  # authenticator puts the port and the address it saw into the set
+  cat > "$LAB/sw/root/ports.nft" <<'NFT'
+table netdev ports {
+	set authorised {
+		type ifname . ether_addr
+	}
+
+	chain p1 {
+		type filter hook ingress device "p1" priority filter; policy drop;
+		ether type 0x888e accept
+		iifname . ether saddr @authorised accept
+	}
+
+	chain p2 {
+		type filter hook ingress device "p2" priority filter; policy drop;
+		ether type 0x888e accept
+		iifname . ether saddr @authorised accept
+	}
+}
+NFT
+  ip netns exec sw nft -f "$LAB/sw/root/ports.nft"
 }
 
 case "${1:-}" in
