@@ -40,10 +40,10 @@ um em 40 MHz, e pode acabar com uma taxa menor do que teria no canal mais estrei
 
 **Mais exposição a um vizinho.** Um canal de 160 MHz se sobrepõe a qualquer coisa que transmita em
 qualquer uma das suas oito partes de 20 MHz. Desde o 802.11ac um ponto de acesso consegue recuar para
-parte do canal quando o resto está ocupado, e desde o 802.11ax (e mais ainda no Wi-Fi 7) consegue deixar
-de fora uma fatia ocupada, mas ainda assim transmite menos vezes do que transmitiria num canal só dele.
+parte do canal quando o resto está ocupado, e desde o 802.11ax consegue deixar de fora uma fatia
+ocupada. Ainda assim transmite menos vezes do que transmitiria num canal só dele.
 
-Então a escolha é feita por faixa e por prédio, e a prática se acomodou num padrão que é costume e não
-está escrito em lugar nenhum: **20 MHz em 2,4 GHz, sempre**, 20 ou 40 MHz em 5 GHz onde os pontos de
+Então a escolha é feita por faixa e por prédio. A prática se acomodou num padrão que nenhuma norma
+escreve: **20 MHz em 2,4 GHz, sempre**, 20 ou 40 MHz em 5 GHz onde os pontos de
 acesso são densos, e 80 ou 160 em 6 GHz, onde há canais para todo mundo. Uma casa com um ponto de acesso
 e nenhum vizinho pode usar o canal mais largo que tiver, porque não há com quem dividi-lo.

@@ -30,7 +30,7 @@ E o do cliente, que é mais curto porque o servidor empurra o que o cliente prec
 
 **Os dois lados provam quem são com um certificado**, assinado pela autoridade do próprio laboratório, o
 `ca.crt`. **Não há segredo compartilhado em nenhum dos dois arquivos**, então tirar uma pessoa quer
-dizer revogar um certificado, o problema com que a aula anterior terminou. O certificado do servidor diz
+dizer revogar um certificado, o problema com que a aula 2 terminou. O certificado do servidor diz
 `vpn.example.com`, e o cliente recusa qualquer outro nome, exatamente como um navegador recusa um
 servidor web cujo certificado nomeia outra pessoa.
 

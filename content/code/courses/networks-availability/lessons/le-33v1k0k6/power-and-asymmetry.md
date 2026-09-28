@@ -26,13 +26,12 @@ point that cannot hear it back at all. The user sees full bars and nothing loadi
 Turning the access point **down** to roughly what the clients transmit fixes three things at once.
 The link becomes symmetric, so the bars tell the truth. The cell shrinks, so a phone walking away
 stops clinging to a distant access point and moves to a closer one; lesson 9 is about that decision,
-which belongs to the phone. And fewer access points hear each other on the same channel, which is the
-co-channel contention of this lesson's third section: with three channels on 2.4 GHz, every access
-point loud enough to reach the next one on the same channel is sharing airtime with it.
+which belongs to the phone. And fewer access points hear each other on the same channel. That is the co-channel contention of
+this lesson's third section: with three channels on 2.4 GHz, an access point loud enough to reach the
+next one on its channel shares airtime with it.
 
-**A dense network is many quiet cells, not a few loud ones.** It is the same arithmetic as the
-airtime of lesson 6 seen from the other side: a phone close to a quiet access point runs at a high
-rate and finishes quickly, and a phone far from a loud one runs slowly and holds the channel for
-everybody. Controllers and cloud-managed systems, lesson 9, set the power and the channel of every
+**A dense network is many quiet cells, not a few loud ones.** It is the airtime arithmetic of lesson 6
+seen from the other side. A phone close to a quiet access point runs at a high rate and finishes
+quickly; a phone far from a loud one runs slowly and holds the channel for everybody. Controllers and cloud-managed systems, lesson 9, set the power and the channel of every
 access point automatically for this reason, and the numbers they choose are a starting point for a
 site survey, lesson 10, rather than a replacement for one.

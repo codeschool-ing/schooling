@@ -38,11 +38,11 @@ have had on the narrower channel.
 
 **More exposure to a neighbour.** A 160 MHz channel overlaps anything transmitting in any of its
 eight 20 MHz parts. Since 802.11ac an access point can fall back to part of its channel when the rest is
-busy, and since 802.11ax (and more so in Wi-Fi 7) it can leave out a busy slice, but it still transmits
-less often than it would on a channel of its own.
+busy, and since 802.11ax it can leave out a busy slice. It still transmits less often than it would on a
+channel of its own.
 
-So the choice is made per band and per building, and practice has settled into a pattern that is
-common rather than written anywhere: **20 MHz on 2.4 GHz, always**, 20 or 40 MHz on 5 GHz where access
-points are dense, and 80 or 160 on 6 GHz, where there are channels enough to go round. A house with
+So the choice is made per band and per building. Practice has settled on a pattern that no standard
+writes down: **20 MHz on 2.4 GHz, always**, 20 or 40 MHz on 5 GHz where access points are dense, and 80
+or 160 on 6 GHz, where there are channels enough to go round. A house with
 one access point and no neighbours can take the widest channel it has, because there is nobody to
 share it with.

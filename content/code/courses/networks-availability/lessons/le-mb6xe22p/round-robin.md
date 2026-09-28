@@ -47,6 +47,6 @@ The shares are the weights over their total: 2 of 4 is half the requests, 1 of 4
 also how a server is brought into service gently. A new or freshly patched server can start at a low
 weight and be raised once it has shown it copes, which HAProxy allows at run time without a restart.
 
-Round robin's one assumption is in the phrase "about the same". It counts requests, not work. A request
+Round robin's one assumption is in the phrase "about the same". **It counts requests, not work.** A request
 that streams a large file and one that returns a line of text are both one turn, and the next section
 shows what that costs.

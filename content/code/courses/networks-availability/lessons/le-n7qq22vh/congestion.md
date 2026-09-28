@@ -8,9 +8,9 @@ idle link it does neither, because there is nothing to be faster than. **Quality
 decides who waits when packets arrive faster than a link can send them**, and that happens in one
 place: the queue in front of the slowest link on the path.
 
-The lab has no slow link. Every cable in it is a virtual one on one computer, and a ping from the
-laptop to `web1` in the data centre comes back in a fraction of a millisecond, which measures that
-computer talking to itself and nothing else:
+The lab has no slow link. Every cable in it is a virtual one on one computer. A ping from the laptop
+to `web1` in the data centre comes back in a fraction of a millisecond, which measures that computer
+talking to itself and nothing else:
 
 ```
 ana@laptop:~$ ping -c 5 -q 192.0.2.21 | tail -n 1

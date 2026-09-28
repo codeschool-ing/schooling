@@ -49,6 +49,6 @@ servem para pôr um servidor em serviço aos poucos. Um servidor novo, ou recém
 peso baixo e subir depois de mostrar que aguenta, o que o HAProxy permite em tempo de execução, sem
 reiniciar.
 
-A única suposição do round robin está na expressão "mais ou menos o mesmo". Ele conta requisições, não
-trabalho. Uma requisição que transmite um arquivo grande e uma que devolve uma linha de texto são, as duas,
+A única suposição do round robin está na expressão "mais ou menos o mesmo". **Ele conta requisições, não
+trabalho.** Uma requisição que transmite um arquivo grande e uma que devolve uma linha de texto são, as duas,
 uma vez, e a próxima seção mostra quanto isso custa.

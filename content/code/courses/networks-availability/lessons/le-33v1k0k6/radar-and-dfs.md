@@ -30,9 +30,9 @@ selection, and DFS is a set of obligations with fixed times in them:
 
 So a network on channel 100 that has been fine all morning can vanish at noon, reappear on channel 36,
 and have every client reconnect. **Nothing is broken when that happens; the law was obeyed.** What
-is worth checking is how often it happens: a building near an airport or a weather station can see
-it many times a day, and a false detection, noise that the radio mistook for a pulse, looks exactly
-the same in the log.
+is worth checking is how often it happens. A building near an airport or a weather station can see
+it many times a day, and a false detection, noise the radio mistook for a pulse, looks exactly the
+same in the log.
 
 The choice is a trade. Leaving out the radar channels leaves nine, on which a dense building will
 put several access points to a channel. Keeping them gives sixteen more, and a sudden move now and

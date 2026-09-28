@@ -29,7 +29,7 @@ fila se forme no seu roteador, onde estão as suas classes, e não no do provedo
 
 Mais uma ferramenta merece nome, porque ataca o problema pela outra ponta. **Uma fila mais curta ajuda
 todo mundo, com classes ou sem.** Gerenciadores ativos de fila como o `fq_codel` descartam ou marcam
-pacotes cedo, antes de a fila crescer para centenas de milissegundos, e dão a cada fluxo uma fila própria;
-eles não foram executados neste laboratório, cuja fila era um `pfifo` simples de propósito, para que o
+pacotes cedo, antes de a fila crescer para centenas de milissegundos, e dão a cada fluxo uma fila própria.
+Eles não foram executados neste laboratório, cuja fila era um `pfifo` simples de propósito, para que o
 estrago ficasse visível. As classes decidem quem sofre com o que sobra, e num enlace cuja fila nunca cresce
 sobra muito menos para decidir.

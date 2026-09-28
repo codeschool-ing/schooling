@@ -26,13 +26,13 @@ ponto de acesso que não consegue ouvi-lo de volta. O usuário vê as barrinhas 
 **Baixar** o ponto de acesso para mais ou menos o que os clientes transmitem conserta três coisas de uma
 vez. O enlace fica simétrico, então as barrinhas dizem a verdade. A célula encolhe, então um celular que
 se afasta para de se agarrar a um ponto de acesso distante e passa para um mais perto; a aula 9 trata
-dessa decisão, que é do celular. E menos pontos de acesso se ouvem no mesmo canal, que é a contenção
-cocanal da terceira seção desta aula: com três canais em 2,4 GHz, todo ponto de acesso alto o bastante
-para alcançar o próximo do mesmo canal está dividindo tempo de ar com ele.
+dessa decisão, que é do celular. E menos pontos de acesso se ouvem no mesmo canal. Essa é a contenção cocanal da terceira seção desta
+aula: com três canais em 2,4 GHz, um ponto de acesso alto o bastante para alcançar o próximo do seu canal
+divide tempo de ar com ele.
 
-**Uma rede densa é feita de muitas células baixas, não de poucas altas.** É a mesma conta do tempo de ar
-da aula 6 vista do outro lado: um celular perto de um ponto de acesso baixo anda numa taxa alta e termina
-rápido, e um celular longe de um ponto de acesso alto anda devagar e segura o canal para todo mundo.
+**Uma rede densa é feita de muitas células baixas, não de poucas altas.** É a conta do tempo de ar da aula 6
+vista do outro lado. Um celular perto de um ponto de acesso baixo anda numa taxa alta e termina rápido;
+um celular longe de um ponto de acesso alto anda devagar e segura o canal para todo mundo.
 Controladoras e sistemas gerenciados pela nuvem, aula 9, ajustam a potência e o canal de cada ponto de
 acesso automaticamente por esse motivo, e os números que escolhem são um ponto de partida para um site
 survey, aula 10, e não um substituto dele.

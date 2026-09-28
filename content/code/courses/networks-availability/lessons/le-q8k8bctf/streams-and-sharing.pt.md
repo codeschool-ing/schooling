@@ -5,8 +5,8 @@ version: 1
 
 A última coluna pela qual a tabela de taxas multiplica é o número de **fluxos espaciais** (spatial
 streams). Com várias antenas em cada ponta, um transmissor consegue mandar dados diferentes por cada
-antena ao mesmo tempo, no mesmo canal, e um receptor com o mesmo número de antenas consegue separar os
-fluxos de novo, porque cada um chega até ele por caminhos ligeiramente diferentes. Isso é **MIMO**,
+antena ao mesmo tempo, no mesmo canal. Um receptor com o mesmo número de antenas separa os fluxos de
+novo, porque cada um chega até ele por caminhos ligeiramente diferentes. Isso é **MIMO**,
 múltiplas entradas e múltiplas saídas, e chegou com o 802.11n. Dois fluxos levam o dobro de dados de um,
 no mesmo espectro.
 

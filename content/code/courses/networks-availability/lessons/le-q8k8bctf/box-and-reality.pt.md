@@ -42,18 +42,15 @@ o canal por 4,3 dos 4,6 segundos**, e puxaram o canal inteiro para 69,3 Mbit/s, 
 mesma sala teriam dividido 720,6. Ninguém naquela sala reclama da impressora. Reclamam que o Wi-Fi está
 lento.
 
-É essa a conta por trás de três conselhos que as próximas aulas usam: mais pontos de acesso perto dos
-clientes em vez de um só, alto e longe (aulas 7, 9 e 10), desligar as taxas mais antigas para que nada
-lento entre, e levar o que puder para 5 ou 6 GHz, longe da faixa onde moram os aparelhos mais velhos.
-Alguns pontos de acesso também dividem o ar **por tempo, e não por bytes**, dando a cada cliente uma
-parcela igual de segundos; os fabricantes chamam isso de airtime fairness, e protege os clientes rápidos
-dos lentos sem deixar os lentos nem um pouco mais rápidos.
+As aulas 7, 9 e 10 partem dessa conta: mais pontos de acesso, cada um perto dos seus clientes, e as
+taxas mais antigas desligadas para que nada tão lento entre. Alguns pontos de acesso também dividem o ar
+**por tempo, e não por bytes**, uma parcela igual de segundos por cliente. Os fabricantes chamam isso de
+airtime fairness. Protege os clientes rápidos dos lentos e não deixa ninguém mais rápido.
 
 ## O que este laboratório não consegue mostrar
 
-O laboratório **não tem rádio**: as máquinas dele são ligadas por Ethernet virtual, que é full duplex,
-nunca perde um quadro por ruído e não tem tempo de ar a dividir. Nada nesta aula pôde ser capturado, e
-nada foi: as taxas vêm da aritmética do padrão e a fração de vazão é uma premissa declarada. Num laptop
-Linux de verdade, `iw dev wlan0 link` informa a taxa de enlace que o rádio está usando, e o `iperf3`, que
-a aula 22 roda nos fios do laboratório, mede o que realmente chega. Nenhum dos dois foi executado pelo ar
-para esta aula, e a diferença entre os dois números é o que esta seção descreve.
+O laboratório **não tem rádio**. As máquinas dele são ligadas por Ethernet virtual, que é full duplex,
+nunca perde um quadro por ruído e não tem tempo de ar a dividir, então nada nesta aula é captura: as
+taxas são a aritmética do padrão e os 60% são uma premissa declarada. Num laptop Linux de verdade, `iw
+dev wlan0 link` informa a taxa de enlace e o `iperf3`, que a aula 22 roda nos fios do laboratório, mede o
+que chega. Nenhum dos dois foi executado pelo ar para esta aula.

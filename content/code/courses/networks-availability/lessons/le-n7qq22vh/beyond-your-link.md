@@ -29,6 +29,6 @@ your router, where your classes are, rather than in the provider's. That is less
 
 One more tool deserves a name, because it attacks the problem from the other end. **A shorter queue helps
 everybody, classes or not.** Active queue managers such as `fq_codel` drop or mark packets early, before
-the queue grows to hundreds of milliseconds, and give each flow a queue of its own; they were not run in
+the queue grows to hundreds of milliseconds, and give each flow a queue of its own. They were not run in
 this lab, whose queue was a plain `pfifo` on purpose, so that the damage would be visible. Classes decide
 who suffers what is left, and on a link whose queue never grows there is much less left to decide.

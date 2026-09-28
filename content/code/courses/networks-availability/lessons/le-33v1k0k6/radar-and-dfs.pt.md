@@ -32,7 +32,7 @@ obrigações com tempos fixos:
 
 Então uma rede no canal 100 que funcionou bem a manhã toda pode sumir ao meio-dia, reaparecer no canal 36
 e fazer todos os clientes se reconectarem. **Nada está quebrado quando isso acontece; a lei foi
-cumprida.** O que vale verificar é com que frequência acontece: um prédio perto de um aeroporto ou de uma
+cumprida.** O que vale verificar é com que frequência acontece. Um prédio perto de um aeroporto ou de uma
 estação meteorológica pode ver isso muitas vezes por dia, e uma detecção falsa, um ruído que o rádio
 confundiu com um pulso, aparece exatamente igual no log.
 

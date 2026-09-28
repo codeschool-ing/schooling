@@ -41,18 +41,15 @@ channel for 4.3 of its 4.6 seconds**, and pulled the whole channel down to 69.3 
 phones in the same room would have shared 720.6. Nobody in that room complains about the printer.
 They complain that the Wi-Fi is slow.
 
-This is the arithmetic behind three pieces of advice later lessons build on: put more access points
-closer to their clients rather than one loud one far away (lessons 7, 9 and 10), switch off the oldest rates so
-that nothing slow is allowed to join, and move what can move to 5 or 6 GHz, away from the band where
-the oldest devices live. Some access points also share the air by **time rather than by bytes**,
-giving each client an equal share of seconds; vendors call it airtime fairness, and it protects the
-fast clients from the slow ones without making the slow ones any faster.
+Lessons 7, 9 and 10 build on this arithmetic: more access points, each close to its clients, and
+the oldest rates switched off so that nothing that slow can join. Some access points also share the
+air **by time rather than by bytes**, an equal share of seconds per client. Vendors call it airtime
+fairness. It protects the fast clients from the slow ones and makes nobody faster.
 
 ## What this lab cannot show
 
-The lab has **no radio**: its machines are joined by virtual Ethernet, which is full duplex, never
-loses a frame to noise, and has no airtime to share. Nothing in this lesson could be captured, and
-none of it is: the rates come from the standard's arithmetic and the throughput share is a stated
-assumption. On a real Linux laptop, `iw dev wlan0 link` reports the link rate the radio is using, and
-`iperf3`, which lesson 22 runs over the lab's wires, measures what actually arrives. Neither was run
-over the air for this lesson, and the gap between their two numbers is what this section describes.
+The lab has **no radio**. Its machines are joined by virtual Ethernet, which is full duplex, never
+loses a frame to noise and has no airtime to share, so nothing in this lesson is a capture: the rates
+are the standard's arithmetic and the 60% is a stated assumption. On a real Linux laptop, `iw dev
+wlan0 link` reports the link rate and `iperf3`, which lesson 22 runs over the lab's wires, measures
+what arrives. Neither was run over the air for this lesson.

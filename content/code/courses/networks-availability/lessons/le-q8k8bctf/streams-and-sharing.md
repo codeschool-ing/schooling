@@ -5,8 +5,8 @@ version: 1
 
 The last column the rate table multiplies by is the number of **spatial streams**. With several
 antennas at each end, a transmitter can send different data from each antenna at the same time, on
-the same channel, and a receiver with as many antennas can pull the streams apart again, because each
-one reaches it by slightly different paths. That is **MIMO**, multiple input and multiple output, and
+the same channel. A receiver with as many antennas pulls the streams apart again, because each one
+reaches it by slightly different paths. That is **MIMO**, multiple input and multiple output, and
 it arrived with 802.11n. Two streams carry twice the data of one, in the same spectrum.
 
 Radios are described as `4x4:4`: four transmit chains, four receive chains, four streams. The belief

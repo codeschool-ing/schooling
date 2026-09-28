@@ -9,7 +9,7 @@ mais rápido. **A qualidade de serviço só decide quem espera quando os pacotes
 um enlace consegue enviá-los**, e isso acontece num lugar só: a fila na frente do enlace mais lento do
 caminho.
 
-O laboratório não tem enlace lento. Todo cabo nele é virtual, num único computador, e um ping do laptop
+O laboratório não tem enlace lento. Todo cabo nele é virtual, num único computador. Um ping do laptop
 para `web1`, no datacenter, volta numa fração de milissegundo, o que mede esse computador falando consigo
 mesmo e mais nada:
 

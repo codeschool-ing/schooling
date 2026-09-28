@@ -29,7 +29,7 @@ And the client's, which is shorter because the server pushes what the client nee
 
 **Both sides prove who they are with a certificate**, signed by the lab's own authority, `ca.crt`.
 **There is no shared secret anywhere in either file**, so removing one person means revoking one
-certificate, the problem the last lesson ended on. The server's certificate says `vpn.example.com`, and
+certificate, the problem lesson 2 ended on. The server's certificate says `vpn.example.com`, and
 the client refuses any other name, exactly as a browser refuses a web server whose certificate names
 somebody else.
 
