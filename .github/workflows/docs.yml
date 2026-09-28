@@ -46,10 +46,26 @@ jobs:
 
           # [text](target) where the target is not a URL and not an anchor
           LINK = re.compile(r'\[[^\]]*\]\(([^)#][^)]*)\)')
+          # A LINK INSIDE A FENCE IS NOT A LINK. A fence is shown as it is,
+          # and in a lesson it is usually a capture: `head README.md` in a
+          # project somewhere else prints that project's `![...](docs/x.png)`,
+          # which resolves in that project and never here — and a capture is
+          # the one thing in `content/` nobody may edit to please a check.
+          FENCE = re.compile(r'^\s*(```|~~~)')
           broken = []
 
           for md in pathlib.Path('.').rglob('*.md'):
+              fenced = None
               for line, text in enumerate(md.read_text().splitlines(), 1):
+                  m = FENCE.match(text)
+                  if m:
+                      if fenced is None:
+                          fenced = m.group(1)
+                      elif m.group(1) == fenced:
+                          fenced = None
+                      continue
+                  if fenced:
+                      continue
                   for target in LINK.findall(text):
                       if '://' in target or target.startswith('mailto:'):
                           continue
