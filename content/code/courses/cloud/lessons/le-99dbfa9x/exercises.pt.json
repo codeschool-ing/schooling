@@ -1,0 +1,771 @@
+{
+  "ex-75xnva5c": {
+    "prompt": "Você cria um bucket na sa-east-1. Onde ficam os objetos dele?",
+    "hint": "Uma região é um lugar, não um rótulo.",
+    "choices": [
+      {
+        "text": "Onde o provedor tiver capacidade sobrando naquele dia",
+        "why": "Essa é a imagem que a seção substitui. Um recurso é criado numa região e fica ali."
+      },
+      {
+        "text": "Em São Paulo, até você configurar uma cópia em outro lugar",
+        "why": "Certo. O provedor não copia para outra região por conta própria; replicação é algo que você configura e paga."
+      },
+      {
+        "text": "Em todas as regiões, para usuários de qualquer lugar lerem rápido",
+        "why": "Cópias em outras regiões só existem se você criá-las, e cada uma leva dados por uma fronteira que você escolheu."
+      },
+      {
+        "text": "Na região da conta dona dele",
+        "why": "Uma conta não tem região. Uma conta guarda recursos em muitas regiões, cada uma escolhida por recurso."
+      }
+    ]
+  },
+  "ex-c32d36pf": {
+    "prompt": "Uma t3.micro roda por um mês de 30 dias, 720 horas. Quantos dólares a mais ela custa na sa-east-1 do que na us-east-1, pelos preços sob demanda da planilha?",
+    "hint": "0.01680 contra 0.01040 por hora.",
+    "unit": "dólares"
+  },
+  "ex-9d9gt9h7": {
+    "prompt": "Nas linhas sob demanda da planilha, como o preço de São Paulo se compara com o da Virgínia para a mesma instância?",
+    "hint": "Divida duas linhas.",
+    "choices": [
+      {
+        "text": "Igual: é a mesma máquina em todo lugar",
+        "why": "A máquina é a mesma; o preço não. Toda linha do bloco tem dois números diferentes."
+      },
+      {
+        "text": "Exatamente 1,5 vez, um multiplicador regional fixo",
+        "why": "Não há multiplicador fixo: as razões mudam de linha para linha, de 1,54 a 1,62."
+      },
+      {
+        "text": "Entre 1,54 e 1,62 vez, conforme a linha da planilha",
+        "why": "Certo. 0,01680 / 0,01040 dá 1,615 e 0,13755 / 0,08925 dá 1,541; a razão muda um pouco de linha para linha."
+      },
+      {
+        "text": "Menor, já que a região brasileira é mais nova",
+        "why": "Toda linha da planilha é maior na sa-east-1. A planilha diz quais são os preços, não por quê."
+      }
+    ]
+  },
+  "ex-pj4evcfn": {
+    "prompt": "O seu projeto depende de um serviço de fila gerenciado que o provedor anunciou no mês passado. Antes de alguém desenhar a arquitetura, o que você deve conferir?",
+    "hint": "Uma região não é cópia de todas as outras.",
+    "choices": [
+      {
+        "text": "O preço dele na us-east-1, já que serviços novos têm preço lá primeiro",
+        "why": "Preço é uma troca entre regiões que ainda estão no páreo; ele não diz se o serviço existe onde você vai rodar."
+      },
+      {
+        "text": "Nada: um serviço que o provedor anunciou existe em todas as regiões dele",
+        "why": "Serviços novos chegam a algumas regiões antes das outras, e alguns faltam numa região por anos."
+      },
+      {
+        "text": "A latência dos seus usuários até o local de borda mais próximo do provedor",
+        "why": "A borda guarda cache e roda código pequeno; uma fila gerenciada vive numa região, então a borda responde outra pergunta."
+      },
+      {
+        "text": "Se o serviço existe na região onde você precisa rodar",
+        "why": "Certo. Se não existir, a escolha é entre refazer o projeto sem ele e mudar de região, e a lei talvez descarte a segunda."
+      }
+    ]
+  },
+  "ex-8d5sptyg": {
+    "prompt": "O que é uma zona de disponibilidade?",
+    "hint": "A definição da própria AWS, na seção.",
+    "choices": [
+      {
+        "text": "Um ou mais datacenters com energia e rede próprias",
+        "why": "Certo. Cada zona é isolada das outras para que a falha de um prédio fique naquela zona."
+      },
+      {
+        "text": "Um único rack de servidores, dividindo a energia e a refrigeração de uma sala",
+        "why": "Uma zona é pelo menos um datacenter inteiro, e às vezes vários; um rack divide a energia e a refrigeração da sala."
+      },
+      {
+        "text": "Outro nome para uma região",
+        "why": "Uma região contém várias zonas. A região se escolhe por lei, latência e preço; as zonas são por onde você se espalha."
+      },
+      {
+        "text": "Uma cidade onde o provedor guarda conteúdo em cache perto dos usuários",
+        "why": "Isso descreve um local de borda, que não é zona nem região."
+      }
+    ]
+  },
+  "ex-zg5v92nk": {
+    "prompt": "A sua aplicação roda numa conta da AWS e o banco em outra. Os dois times puseram a sua parte \"na sa-east-1a\" para manter o tráfego numa zona. O que eles devem comparar para ter certeza?",
+    "hint": "Um nome é um rótulo por conta.",
+    "choices": [
+      {
+        "text": "Os nomes das zonas, já que os dois dizem sa-east-1a",
+        "why": "Essa é a armadilha: a AWS associa nomes a zonas físicas de forma independente por conta, então nomes iguais não provam nada."
+      },
+      {
+        "text": "Os IDs das zonas, como sae1-az1",
+        "why": "Certo. O ID da zona nomeia a mesma zona física em toda conta."
+      },
+      {
+        "text": "Os códigos de região das duas contas",
+        "why": "Os dois recursos já estão na sa-east-1; a pergunta é qual prédio dentro dela, e um código de região não responde isso."
+      },
+      {
+        "text": "As faixas de IP que cada conta recebeu do ip-ranges.json",
+        "why": "Esse arquivo lista os blocos de endereços públicos da AWS por região e serviço, não a associação dos nomes de zona da sua conta."
+      }
+    ]
+  },
+  "ex-tymhtqy8": {
+    "prompt": "Uma versão com bug é implantada nas instâncias das duas zonas ao mesmo tempo, e a aplicação começa a falhar. O que rodar em duas zonas fez por você?",
+    "hint": "Pergunte que tipo de falha uma zona foi feita para conter.",
+    "choices": [
+      {
+        "text": "Manteve uma zona saudável, porque as zonas são isoladas",
+        "why": "Zonas isolam energia, refrigeração e rede. Não isolam a sua própria mudança quando você a empurra para as duas."
+      },
+      {
+        "text": "Desfez a versão na segunda zona",
+        "why": "Nada numa zona sabe das suas versões. Desfazer é algo que o seu processo de implantação faz."
+      },
+      {
+        "text": "Nada: a falha não é local de um prédio",
+        "why": "Certo. Duas zonas defendem contra o chão sob um prédio, e um bug enviado para todo lado não é isso."
+      },
+      {
+        "text": "Desviou o tráfego para outra região automaticamente",
+        "why": "Zonas ficam dentro de uma região; ir para outra região é um plano de recuperação que alguém precisa construir."
+      }
+    ]
+  },
+  "ex-ct2zewtp": {
+    "prompt": "Duas zonas estão a 60 km uma da outra em linha reta. A 200 km por milissegundo na fibra, qual é o tempo mínimo de ida e volta entre elas, em milissegundos?",
+    "hint": "Ida e volta.",
+    "unit": "ms"
+  },
+  "ex-k51dcyhv": {
+    "prompt": "Para que o ip-ranges.json é publicado?",
+    "hint": "Quem precisa de uma lista de endereços?",
+    "choices": [
+      {
+        "text": "Para anunciar regiões novas aos clientes",
+        "why": "Ele reflete as regiões, e até traz algumas que o CLI não conhece, mas anunciar não é a função dele."
+      },
+      {
+        "text": "Para listar os endereços que as suas instâncias vão receber",
+        "why": "As suas instâncias recebem endereços quando você as cria; este arquivo lista os blocos públicos da AWS, não atribuições a você."
+      },
+      {
+        "text": "Para regras de firewall sobre endereços da AWS",
+        "why": "Certo. Uma lista de permissão para o S3 em São Paulo, ou para a CDN na frente do seu servidor, sai dele."
+      },
+      {
+        "text": "Para cobrança, mostrando para onde foi o seu tráfego",
+        "why": "Cobrança é por conta e exige uma; este arquivo não exige conta nenhuma."
+      }
+    ]
+  },
+  "ex-wtpcztvp": {
+    "prompt": "No ip-ranges.json, 492 blocos IPv4 trazem a região \"GLOBAL\", muitos deles CLOUDFRONT e GLOBALACCELERATOR. O que esse valor significa?",
+    "hint": "Olhe os serviços sob ele.",
+    "choices": [
+      {
+        "text": "Uma região nos Estados Unidos que atende o mundo inteiro",
+        "why": "Essa região não existe. O rótulo marca endereços que não estão presos a nenhuma região."
+      },
+      {
+        "text": "Serviços que respondem de muitos lugares ao mesmo tempo",
+        "why": "Certo. Uma CDN e um ponto de entrada global respondem perto do usuário, onde quer que ele esteja."
+      },
+      {
+        "text": "Blocos reservados e ainda sem uso por nenhum serviço",
+        "why": "Os serviços nomeados sob ele estão em uso; só o CloudFront tem 118 desses blocos."
+      },
+      {
+        "text": "Uma partição como China ou GovCloud",
+        "why": "Essas são partições separadas com códigos próprios, cn- e us-gov-. GLOBAL não é nenhuma delas."
+      }
+    ]
+  },
+  "ex-qhbm00bb": {
+    "prompt": "China, AWS GovCloud e a European Sovereign Cloud são cópias separadas da AWS, com contas próprias. A lista do CLI chama cada uma de ___.",
+    "hint": "O arquivo tem o nome delas.",
+    "blanks": [
+      {
+        "accept": [
+          "partição",
+          "particao",
+          "partition"
+        ]
+      }
+    ]
+  },
+  "ex-1h7bwm4h": {
+    "prompt": "Contando regiões pelo ip-ranges.json, quais valores você deve tirar para chegar às regiões que uma conta comum pode usar? Escolha todas as que se aplicam.",
+    "hint": "Três tipos de valor não entram na conta.",
+    "choices": [
+      {
+        "text": "GLOBAL",
+        "why": "Certo. Ele marca endereços que não pertencem a nenhuma região."
+      },
+      {
+        "text": "cn-north-1",
+        "why": "Certo. Ele está na partição aws-cn, que uma conta comum não usa."
+      },
+      {
+        "text": "sa-east-1",
+        "why": "São Paulo é uma região comum em que os dois arquivos concordam."
+      },
+      {
+        "text": "sa-west-1",
+        "why": "Certo. Ela tem espaço de endereços e é desconhecida do CLI 2.37.4; o que ela é, nenhum dos arquivos diz."
+      }
+    ]
+  },
+  "ex-g5tag269": {
+    "prompt": "Um servidor está a 1.000 km em linha reta. Qual é o tempo mínimo de ida e volta pela fibra, em milissegundos?",
+    "hint": "200 km por milissegundo, ida e volta.",
+    "unit": "ms"
+  },
+  "ex-kay8p61g": {
+    "prompt": "O floor.py diz que São Paulo até Ashburn leva pelo menos 76,6 ms. Por que um ping real voltaria mais lento?",
+    "hint": "O programa mediu uma linha numa esfera.",
+    "choices": [
+      {
+        "text": "Porque a luz na fibra é mais lenta que 200 km por milissegundo em cabos longos",
+        "why": "A velocidade no vidro é a mesma num cabo longo e num curto; o que cresce é a distância e as paradas pelo caminho."
+      },
+      {
+        "text": "Porque o programa arredonda a distância para baixo",
+        "why": "Ele imprime até o décimo de milissegundo; a diferença para uma medição real não é arredondamento."
+      },
+      {
+        "text": "Não voltaria: 76,6 ms é o que um ping real mede",
+        "why": "Nada na seção foi medido numa rede. O programa calculou um piso, e caminhos reais só somam a ele."
+      },
+      {
+        "text": "Cabos seguem a costa e os pontos de chegada, e roteadores enfileiram pacotes",
+        "why": "Certo. O caminho real é mais longo que o grande círculo, e cada roteador e servidor nele acrescenta tempo."
+      }
+    ]
+  },
+  "ex-y2mvyhv9": {
+    "prompt": "Um contrato exige que toda resposta chegue a usuários em São Paulo em até 30 ms, com a ida e volta incluída. A região mais barata fica a uns 4.000 km. O que o piso diz antes de qualquer teste?",
+    "hint": "Calcule o piso para 4.000 km.",
+    "choices": [
+      {
+        "text": "Descartada: só a luz já precisa de 40 ms para ir e voltar",
+        "why": "Certo. 2 x 4.000 / 200 dá 40 ms, acima de 30 com uma rede perfeita e um servidor instantâneo."
+      },
+      {
+        "text": "Está bom se a região tiver um link rápido o bastante",
+        "why": "Largura de banda não move o piso. A 4.000 km só a luz precisa de 40 ms ida e volta."
+      },
+      {
+        "text": "Nada: só uma medição decide latência",
+        "why": "Uma medição diz quanto acima do piso você está. O piso já descarta este projeto."
+      },
+      {
+        "text": "Cumpre o contrato com 10 ms de folga",
+        "why": "Isso lê 4.000 km como 20 ms só de ida e esquece a volta."
+      }
+    ]
+  },
+  "ex-tcs1j3vs": {
+    "prompt": "Uma página faz 12 chamadas de API a Ashburn, cada uma esperando a anterior. Usando o piso de 76,6 ms por ida e volta, qual é o tempo mínimo de espera, em milissegundos?",
+    "hint": "Chamadas em sequência se somam.",
+    "unit": "ms"
+  },
+  "ex-k6nwfwfh": {
+    "prompt": "A página com vinte chamadas em sequência à Virgínia está lenta. Alguém propõe um link dez vezes mais rápido. O que isso muda?",
+    "hint": "Cada resposta tem 2 KB.",
+    "choices": [
+      {
+        "text": "Corta a espera para um décimo, uns 153 ms",
+        "why": "Isso trata a espera como tempo de transferência. A espera é a ida e volta, e largura de banda não a encurta."
+      },
+      {
+        "text": "Quase nada: uns 3 ms de mais de 1.500",
+        "why": "Certo. Uma resposta de 2 KB leva 0,16 ms a 100 Mbit/s e 0,016 ms a dez vezes isso; vinte delas economizam 2,9 ms."
+      },
+      {
+        "text": "Elimina os handshakes TLS",
+        "why": "Handshakes também são idas e voltas, e um link mais largo não encurta uma ida e volta. Reaproveitar conexões os elimina."
+      },
+      {
+        "text": "Corta a espera pela metade, já que as respostas chegam duas vezes mais rápido",
+        "why": "Nem a conta nem a causa batem: o tempo é a luz cruzando o continente, não os bytes."
+      }
+    ]
+  },
+  "ex-kwjtdfk7": {
+    "prompt": "O mesmo código abre uma conexão HTTPS nova para cada uma de 10 chamadas em sequência a Ashburn: um handshake TCP, um handshake TLS 1.3 e o pedido. Com um piso de 76,6 ms por ida e volta, qual é o total mínimo, em milissegundos?",
+    "hint": "Três idas e voltas por chamada.",
+    "unit": "ms"
+  },
+  "ex-kps6ksft": {
+    "prompt": "Ligue cada correção ao que ela economiza.",
+    "hint": "Toda correção que funciona faz menos viagens ou viagens mais curtas.",
+    "pairs": [
+      {
+        "left": "Uma chamada que devolve tudo",
+        "right": "Dezenove de vinte idas e voltas"
+      },
+      {
+        "left": "Chamadas independentes enviadas em paralelo",
+        "right": "A espera entre chamadas que não dependem umas das outras"
+      },
+      {
+        "left": "Keep-alive e pools de conexão",
+        "right": "Os handshakes antes de cada pedido"
+      },
+      {
+        "left": "Uma região mais perto dos usuários",
+        "right": "Parte do comprimento de toda viagem"
+      }
+    ],
+    "right_distractors": [
+      "O tempo que os bytes levam para chegar"
+    ]
+  },
+  "ex-dbe2cv4b": {
+    "prompt": "Quais das cinco perguntas a seção trata como restrições, capazes de descartar uma região custe o que custar? Escolha todas as que se aplicam.",
+    "hint": "Duas das cinco não são trocas.",
+    "choices": [
+      {
+        "text": "Quanto custa lá",
+        "why": "O preço é pesado contra as outras entre as regiões que passam nas restrições."
+      },
+      {
+        "text": "Se a lei deixa os dados ficarem lá",
+        "why": "Certo. Uma região que desrespeita uma regra de residência está fora, e uma réplica lá também."
+      },
+      {
+        "text": "Onde estão os seus outros sistemas",
+        "why": "É uma troca: ela empurra as partes que conversam muito para perto, e um sistema pode ser movido."
+      },
+      {
+        "text": "Se existe lá um serviço do qual você não abre mão",
+        "why": "Certo. Sem ele a região está fora, a menos que você refaça o projeto sem esse serviço."
+      }
+    ]
+  },
+  "ex-gh8mr398": {
+    "prompt": "O relatório noturno da clínica usa dados anonimizados e ninguém espera por ele. Ele lê o banco de registros na sa-east-1 vinte mil vezes por noite. Para onde a seção pende para rodá-lo?",
+    "hint": "A quinta pergunta.",
+    "choices": [
+      {
+        "text": "us-east-1, porque uma m7i.large é mais barata lá",
+        "why": "A instância é mais barata, mas vinte mil leituras atravessando um continente pagam em idas e voltas e em transferência para fora de São Paulo."
+      },
+      {
+        "text": "Ao lado dos dados, na sa-east-1",
+        "why": "Certo. Um job que conversa com o banco tantas vezes pertence ao lado dele; a instância mais barata é comida pela distância."
+      },
+      {
+        "text": "Na borda, já que ninguém espera por ele",
+        "why": "Locais de borda rodam código pequeno perto dos usuários; um job em lote que lê um banco pertence à região do banco."
+      },
+      {
+        "text": "Numa região diferente a cada noite, para espalhar o custo",
+        "why": "Mudá-lo de lugar não muda a distância até o único banco que ele lê."
+      }
+    ]
+  },
+  "ex-e03x8389": {
+    "prompt": "Uma empresa em Lisboa cria um app para clientes que estão todos no Brasil. Nenhuma lei restringe onde os dados ficam, e todo serviço de que ela precisa existe na sa-east-1 e na eu-west-1. Que pergunta agora decide entre as duas?",
+    "hint": "O time não é o usuário.",
+    "choices": [
+      {
+        "text": "Onde o time trabalha, já que ele implanta todo dia",
+        "why": "O time paga a distância algumas vezes por dia; os clientes pagam em toda página que carregam."
+      },
+      {
+        "text": "Não sobra nada a decidir: as duas passam nas restrições",
+        "why": "Passar nas restrições é onde as trocas começam, e a primeira delas aponta claramente para um lado aqui."
+      },
+      {
+        "text": "Onde estão os usuários: no Brasil, então sa-east-1",
+        "why": "Certo. Com as duas restrições cumpridas, a latência até os clientes pesa mais, e todos eles estão no Brasil."
+      },
+      {
+        "text": "O preço, já que a empresa paga a conta em euros",
+        "why": "A moeda da conta não é uma pergunta da lista, e o preço é pesado depois da latência para clientes que esperam em toda página."
+      }
+    ]
+  },
+  "ex-np6g45fa": {
+    "prompt": "Em quantas zonas vive uma única instância?",
+    "hint": "Para onde ela vai quando a zona dela tem um dia ruim?",
+    "choices": [
+      {
+        "text": "Todas as zonas da região",
+        "why": "Essa é a suposição confortável que a seção começa derrubando. Uma instância fica numa zona."
+      },
+      {
+        "text": "Duas, já que o provedor mantém uma cópia de reserva",
+        "why": "Um standby só existe se você construir um, e aí é uma segunda instância que você paga."
+      },
+      {
+        "text": "Exatamente uma, a zona onde foi criada",
+        "why": "Certo. Sobreviver a uma zona é rodar uma segunda instância numa segunda zona."
+      },
+      {
+        "text": "Nenhuma: instâncias vivem na região",
+        "why": "Uma região é um grupo de zonas; a instância roda numa delas."
+      }
+    ]
+  },
+  "ex-375b72mj": {
+    "prompt": "Uma instância na sa-east-1b lê 800 GB por mês de um banco primário na sa-east-1a. A planilha cobra 0.0100 por GB entre zonas, em cada sentido. Quantos dólares por mês custa esse tráfego?",
+    "hint": "Sai de uma zona, entra na outra.",
+    "unit": "dólares"
+  },
+  "ex-4wzhb9dz": {
+    "prompt": "A sua aplicação roda em duas zonas da sa-east-1, com um banco standby, tudo configurado corretamente. Um problema atinge os sistemas de controle regionais do provedor na sa-east-1. Do que o projeto multi-AZ protege você?",
+    "hint": "O que as duas zonas compartilham?",
+    "choices": [
+      {
+        "text": "De nada: uma falha no nível da região alcança as duas zonas igualmente",
+        "why": "Certo. Duas zonas sobrevivem a uma zona; um problema no nível da região alcança todas as zonas dela."
+      },
+      {
+        "text": "De tudo, já que o standby está em outra zona",
+        "why": "O standby protege contra a queda da zona do primário, não contra uma falha que as duas zonas compartilham."
+      },
+      {
+        "text": "De tudo: o load balancer leva o tráfego a uma região saudável",
+        "why": "O load balancer espalha tráfego entre zonas dentro da própria região; ele não tem uma segunda região para onde mandar."
+      },
+      {
+        "text": "Da metade, já que uma zona continua rodando",
+        "why": "As duas zonas estão sob os mesmos sistemas regionais, então não há metade fora do problema."
+      }
+    ]
+  },
+  "ex-h4keb1m5": {
+    "prompt": "A zona do banco primário cai. Ponha os passos do failover em ordem.",
+    "hint": "O standby precisa virar outra coisa antes que alguém possa usá-lo.",
+    "items": [
+      "A zona do primário cai",
+      "O standby é promovido a primário",
+      "A aplicação se reconecta ao novo primário",
+      "As escritas voltam a ser aceitas"
+    ],
+    "trap": "Reconectar antes da promoção encontra um standby que ainda recusa escritas."
+  },
+  "ex-xgksv3v7": {
+    "prompt": "Quantos dados você pode se dar ao luxo de perder depois de um desastre, medido em tempo, é o ___.",
+    "hint": "Três letras; o P é de point.",
+    "blanks": [
+      {
+        "accept": [
+          "RPO",
+          "objetivo de ponto de recuperação",
+          "recovery point objective"
+        ]
+      }
+    ]
+  },
+  "ex-38913pbr": {
+    "prompt": "Quanto tempo o negócio aguenta o sistema fora do ar é o ___.",
+    "hint": "Três letras; o T é de time.",
+    "blanks": [
+      {
+        "accept": [
+          "RTO",
+          "objetivo de tempo de recuperação",
+          "recovery time objective"
+        ]
+      }
+    ]
+  },
+  "ex-rfae193w": {
+    "prompt": "Ponha as estratégias de recuperação de desastre em ordem do custo de mantê-las, da mais barata para a mais cara.",
+    "hint": "Conte o que está rodando na segunda região.",
+    "items": [
+      "Backup e restauração",
+      "Pilot light",
+      "Warm standby",
+      "Ativo-ativo"
+    ],
+    "trap": "Pilot light antes do warm standby: os servidores dele estão definidos e desligados, enquanto o warm standby mantém uma cópia pequena rodando."
+  },
+  "ex-143vedt3": {
+    "prompt": "Um banco na sa-east-1 replica 200 GB por mês para um standby na us-east-1. A planilha cobra 0.1380 por GB da sa-east-1 para a outra região. Quantos dólares por mês custa a transferência?",
+    "hint": "O preço da região de onde os dados saem.",
+    "unit": "dólares"
+  },
+  "ex-atm1x3h3": {
+    "prompt": "Os mesmos 500 GB replicados de São Paulo para a Virgínia custam 69,00 dólares, e da Virgínia para São Paulo, 10,00. O que define o preço?",
+    "hint": "Leia as duas colunas de uma linha.",
+    "choices": [
+      {
+        "text": "A região onde os dados chegam",
+        "why": "Dados entrando têm preço 0.0000 na planilha; a cobrança é na saída."
+      },
+      {
+        "text": "A distância entre as regiões",
+        "why": "A distância é a mesma nos dois sentidos, e os preços não."
+      },
+      {
+        "text": "Qual região tem o banco primário",
+        "why": "O primário só importa porque os dados saem dele; uma cópia fluindo ao contrário tem preço pela própria origem."
+      },
+      {
+        "text": "A região de onde os dados saem",
+        "why": "Certo. Cada coluna é o preço dos dados saindo daquela região: 0.1380 saindo da sa-east-1, 0.0200 saindo da us-east-1."
+      }
+    ]
+  },
+  "ex-yntm4pz2": {
+    "prompt": "Um time quer zero perda de dados entre São Paulo e a Virgínia, e propõe replicação síncrona. O que o piso prevê para o banco deles?",
+    "hint": "Um commit síncrono espera a outra cópia.",
+    "choices": [
+      {
+        "text": "Nenhuma mudança, já que a replicação acontece em segundo plano",
+        "why": "Isso descreve a replicação assíncrona, a que perde o que estava a caminho. Síncrona quer dizer que o commit espera."
+      },
+      {
+        "text": "Todo commit espera pelo menos 76,6 ms pela Virgínia",
+        "why": "Certo. Cada commit paga a ida e volta antes de ser confirmado, e é por isso que a replicação entre regiões é quase sempre assíncrona."
+      },
+      {
+        "text": "Commits esperam cerca de 1 ms, como entre zonas",
+        "why": "O piso de 1 ms é para zonas a menos de 100 km. A Virgínia fica a 7.664 km."
+      },
+      {
+        "text": "Os commits ficam mais rápidos, já que dois bancos dividem a carga",
+        "why": "Um standby síncrono não divide as escritas; ele acrescenta uma espera a cada uma."
+      }
+    ]
+  },
+  "ex-t90q9g6k": {
+    "prompt": "Ligue cada estratégia ao que roda na segunda região.",
+    "hint": "De nada rodando a tudo atendendo.",
+    "pairs": [
+      {
+        "left": "Backup e restauração",
+        "right": "Cópias dos dados e nada rodando"
+      },
+      {
+        "left": "Pilot light",
+        "right": "Dados replicados, servidores definidos e desligados"
+      },
+      {
+        "left": "Warm standby",
+        "right": "Uma cópia pequena e completa, sem tráfego de clientes"
+      },
+      {
+        "left": "Ativo-ativo",
+        "right": "Uma cópia inteira atendendo usuários reais"
+      }
+    ],
+    "right_distractors": [
+      "Uma segunda zona na mesma região"
+    ]
+  },
+  "ex-n4f0038k": {
+    "prompt": "O que um local de borda faz bem?",
+    "hint": "Duas coisas, segundo a seção.",
+    "choices": [
+      {
+        "text": "Guarda cópias de conteúdo e roda código curto",
+        "why": "Certo. Cache e funções pequenas, a uma viagem curta do usuário."
+      },
+      {
+        "text": "Hospeda o seu banco de dados perto dos usuários",
+        "why": "O sistema de registro fica numa região, com zonas e armazenamento durável por trás."
+      },
+      {
+        "text": "Oferece todos os serviços de uma região, em mais lugares",
+        "why": "Um local de borda é um site pequeno, muitas vezes um rack; ele não traz o catálogo de uma região."
+      },
+      {
+        "text": "Substitui as zonas de disponibilidade no failover",
+        "why": "Zonas ficam dentro de uma região e guardam os sistemas que rodam; a borda não é nenhuma das duas coisas."
+      }
+    ]
+  },
+  "ex-r5n7y6q0": {
+    "prompt": "Uma função num local de borda em Fortaleza responde cada pedido consultando um banco na Virgínia cinco vezes, uma consulta após a outra. Comparada com um servidor ao lado do banco, a página fica:",
+    "hint": "Conte as viagens longas.",
+    "choices": [
+      {
+        "text": "Mais rápida, já que o usuário chegou à borda numa viagem curta",
+        "why": "O usuário economizou uma viagem curta, e a função depois gastou cinco longas."
+      },
+      {
+        "text": "Igual, já que o banco faz o mesmo trabalho",
+        "why": "O trabalho é o mesmo; as viagens para chegar a ele não."
+      },
+      {
+        "text": "Mais lenta: cinco viagens longas substituem cinco bem curtas",
+        "why": "Certo. Ao lado do banco, essas cinco consultas quase não cruzam distância; da borda, cada uma cruza um continente."
+      },
+      {
+        "text": "Mais rápida, se a borda guardar os resultados em cache",
+        "why": "Resultados pessoais de cada pedido não são iguais para todo mundo, e um cache só ajuda o que é."
+      }
+    ]
+  },
+  "ex-m1dtpb4a": {
+    "prompt": "Ligue cada peça ao lugar onde a seção a põe.",
+    "hint": "Cópias e código pequeno na borda; a verdade na região.",
+    "pairs": [
+      {
+        "left": "Uma foto de produto",
+        "right": "Um cache de borda, copiado perto dos usuários"
+      },
+      {
+        "left": "O banco de pedidos",
+        "right": "Uma região, em duas zonas"
+      },
+      {
+        "left": "Uma verificação de token assinado",
+        "right": "Código na borda, perto do usuário"
+      },
+      {
+        "left": "Uma página que consulta o banco vinte vezes",
+        "right": "Um servidor ao lado do banco"
+      }
+    ],
+    "right_distractors": [
+      "Uma zona só, sem cópia"
+    ]
+  },
+  "ex-mfqafc7e": {
+    "prompt": "Lançar uma instância nova é uma chamada a qual parte do serviço?",
+    "hint": "Criar, mudar, apagar.",
+    "choices": [
+      {
+        "text": "O plano de dados",
+        "why": "O plano de dados executa o que já existe: a instância respondendo, o bucket servindo."
+      },
+      {
+        "text": "A borda",
+        "why": "A borda guarda cache e roda código pequeno perto dos usuários; ela não cria instâncias."
+      },
+      {
+        "text": "O load balancer em si",
+        "why": "Um load balancer encaminha tráfego para instâncias que já existem, o que é trabalho de plano de dados."
+      },
+      {
+        "text": "O plano de controle",
+        "why": "Certo. Criar, mudar e apagar passam pelo plano de controle."
+      }
+    ]
+  },
+  "ex-6sx2pmbm": {
+    "prompt": "Dois projetos sobrevivem à perda da zona a. O primeiro lança instâncias substitutas na zona b quando a cai. O segundo já roda capacidade suficiente na zona b. Durante um problema no plano de controle, qual ainda funciona?",
+    "hint": "Que passo precisa do plano de controle?",
+    "choices": [
+      {
+        "text": "O primeiro, já que lançar é mais rápido que manter capacidade parada",
+        "why": "Lançar é uma chamada ao plano de controle, e o plano de controle é justamente a parte que está falhando."
+      },
+      {
+        "text": "O segundo: verificações de saúde são plano de dados",
+        "why": "Certo. Isso é estabilidade estática: nada precisa mudar para ele continuar funcionando."
+      },
+      {
+        "text": "Os dois, já que cada um sobrevive à perda de uma zona",
+        "why": "Os dois sobrevivem a uma zona num dia normal. Só um sobrevive num dia em que o plano de controle também está com problema."
+      },
+      {
+        "text": "Nenhum, já que um problema no plano de controle para as instâncias que rodam",
+        "why": "Instâncias rodando são plano de dados e continuam atendendo; o que para é criar e mudar coisas."
+      }
+    ]
+  },
+  "ex-c71bgcc1": {
+    "prompt": "Tudo o que você roda está na sa-east-1. O seu plano de failover começa com \"apontar o registro DNS para o standby\". A saúde de qual região esse primeiro passo depende?",
+    "hint": "Onde rodam os planos de controle de alguns serviços globais?",
+    "choices": [
+      {
+        "text": "Da us-east-1, onde as mudanças de DNS são feitas",
+        "why": "Certo. A AWS documenta o plano de controle do Route 53 na us-east-1, uma região que você nunca escolheu."
+      },
+      {
+        "text": "Só da sa-east-1, já que tudo o que você roda está lá",
+        "why": "Os seus recursos estão lá; o plano de controle que edita registros DNS não está."
+      },
+      {
+        "text": "De nenhuma, já que DNS é um serviço global",
+        "why": "O plano de dados dele é espalhado e continua respondendo. Mudar um registro é uma chamada ao plano de controle, que roda numa região."
+      },
+      {
+        "text": "Da região do local de borda mais perto dos seus usuários",
+        "why": "Locais de borda respondem consultas e guardam cache; a mudança passa pelo plano de controle, não pela borda."
+      }
+    ]
+  },
+  "ex-mw4fjccm": {
+    "prompt": "Um sistema que continua funcionando durante uma falha sem precisar mudar nada tem o que a AWS chama de ___ estática.",
+    "hint": "A propriedade que a seção nomeia.",
+    "blanks": [
+      {
+        "accept": [
+          "estabilidade",
+          "stability"
+        ]
+      }
+    ]
+  },
+  "ex-60gfjt4j": {
+    "prompt": "Uma página de pagamento em São Paulo faz 6 chamadas em sequência a uma API em Frankfurt. Qual mudança única elimina mais espera?",
+    "hint": "Compare os pisos: 98,3 ms por viagem até Frankfurt.",
+    "choices": [
+      {
+        "text": "Mudar a API para São Paulo",
+        "why": "Certo. As seis viagens passam a cruzar uma cidade em vez de um oceano, o que elimina quase todos os 589,8 ms."
+      },
+      {
+        "text": "Um link com dez vezes a largura de banda",
+        "why": "Largura de banda deixa o piso de 98,3 ms intacto; seis viagens continuam custando pelo menos 589,8 ms."
+      },
+      {
+        "text": "Mudar a API para a Virgínia",
+        "why": "Seis viagens a 76,6 ms dão 459,6 ms: menos que Frankfurt, e ainda o caminho longo."
+      },
+      {
+        "text": "Guardar a página em cache num local de borda em São Paulo",
+        "why": "Uma página de pagamento é pessoal do usuário; um cache só ajuda o que é igual para todo mundo."
+      }
+    ]
+  },
+  "ex-cd6j4mb5": {
+    "prompt": "Ligue cada número desta lição ao que ele é.",
+    "hint": "Dois são preços por GB, um é um tempo.",
+    "pairs": [
+      {
+        "left": "0.0100",
+        "right": "Por GB entre zonas, em cada sentido"
+      },
+      {
+        "left": "0.1380",
+        "right": "Por GB saindo da sa-east-1 para a outra região"
+      },
+      {
+        "left": "0.0200",
+        "right": "Por GB saindo da us-east-1 para a outra região"
+      },
+      {
+        "left": "76.6 ms",
+        "right": "O piso de São Paulo até Ashburn, ida e volta"
+      }
+    ],
+    "right_distractors": [
+      "Por GB entrando da internet"
+    ]
+  },
+  "ex-efkaz7h6": {
+    "prompt": "Ponha estas idas e voltas a partir de um servidor em São Paulo em ordem de piso, da mais curta para a mais longa.",
+    "hint": "Um milissegundo a cada 100 km em linha reta.",
+    "items": [
+      "Até outra zona da sa-east-1",
+      "Até Fortaleza",
+      "Até Ashburn",
+      "Até Frankfurt"
+    ],
+    "trap": "Ashburn antes de Frankfurt: 7.664 km contra 9.829 km, então 76,6 ms contra 98,3 ms."
+  }
+}
