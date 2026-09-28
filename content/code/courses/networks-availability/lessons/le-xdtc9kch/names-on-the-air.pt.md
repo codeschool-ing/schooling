@@ -28,8 +28,7 @@ não são criptografados. Qualquer um ouvindo enquanto um aparelho entra fica sa
 
 E isso ainda custa alguma coisa. Um aparelho configurado para uma rede oculta não pode esperar ouvir o
 nome, então pergunta por ele, pelo nome, aonde quer que vá: no aeroporto, no café, em casa. **Esconder o
-SSID do escritório faz todo notebook anunciá-lo em público.** Alguns aparelhos também lidam mal com redes
-ocultas na hora do roaming.
+SSID do escritório faz todo notebook anunciá-lo em público.**
 
 Filtrar por endereço MAC falha do mesmo jeito. Todo quadro leva o endereço de quem envia em claro, então um
 endereço permitido é fácil de observar. E os celulares e notebooks atuais usam por padrão um **endereço MAC

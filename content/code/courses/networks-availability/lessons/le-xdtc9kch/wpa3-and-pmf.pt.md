@@ -20,9 +20,6 @@ registrar. Uma senha fraca continua sendo má ideia, e deixou de ser um problema
 gravado antes, e um membro da rede não consegue derivar as chaves de outro a partir de uma gravação do
 handshake dele.
 
-O que o SAE não muda é que a senha é compartilhada. Revogar uma pessoa ainda significa trocá-la para todo
-mundo.
-
 ## Quadros de gerência protegidos
 
 No 802.11 original, **os quadros de gerência não eram autenticados de jeito nenhum**. Um quadro de

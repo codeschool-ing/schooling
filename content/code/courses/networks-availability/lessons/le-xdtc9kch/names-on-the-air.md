@@ -28,7 +28,7 @@ those frames are not encrypted. Anybody listening while one device joins has the
 
 It also costs something. A device configured for a hidden network cannot wait to hear the name, so it
 asks for it, by name, wherever it goes: in the airport, in the café, at home. **Hiding the office's SSID
-makes every laptop announce it in public.** Some devices also handle hidden networks badly when roaming.
+makes every laptop announce it in public.**
 
 Filtering by MAC address fails the same way. Every frame carries the sender's address in clear, so an
 allowed address is easy to observe. And current phones and laptops use a **random MAC address per

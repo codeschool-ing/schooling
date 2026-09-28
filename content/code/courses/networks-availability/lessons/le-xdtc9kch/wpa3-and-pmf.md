@@ -21,9 +21,6 @@ password is still a bad idea, and it is no longer an offline problem.
 later does not decrypt anything recorded earlier, and one member of the network cannot derive another
 member's keys from a recording of their handshake.
 
-What SAE does not change is that the password is shared. Revoking one person still means changing it for
-everybody.
-
 ## Protected management frames
 
 In the original 802.11, **management frames were not authenticated at all**. A deauthentication frame,
