@@ -1,0 +1,27 @@
+---
+title: What a junior is hired to do
+version: 1
+---
+
+A company hiring a junior is not buying knowledge. It is buying **somebody who will finish small,
+defined pieces of work, and who will ask before a small problem becomes a large one**. Everything else it
+expects to teach.
+
+That changes what the first weeks look like. A junior is handed a task somebody else has already cut to
+size: fix this bug, add this field, reset these accounts, document this procedure. Somebody more senior
+decided that it was worth doing and roughly how. The junior's job is to do it properly, to say when it is
+done, and to say early when it is not going to be.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Four rungs of a ladder, bottom to top. Intern, estágio in Brazil: learning is the job, supervised all the time. Junior, júnior: delivers small, defined tasks and asks often. Mid-level, pleno: delivers a whole piece and asks when it matters. Senior, sênior: decides how, and unblocks other people.\"><defs><marker id=\"lad01-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"40\" y=\"26\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">title</text><text x=\"170\" y=\"26\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">in Brazil</text><text x=\"290\" y=\"26\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">what is expected</text><rect x=\"30\" y=\"40\" width=\"660\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"40\" y=\"65\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">senior</text><text x=\"170\" y=\"65\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">sênior</text><text x=\"290\" y=\"65\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">decides how; unblocks other people</text><rect x=\"30\" y=\"90\" width=\"660\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"40\" y=\"115\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">mid-level</text><text x=\"170\" y=\"115\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">pleno</text><text x=\"290\" y=\"115\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">delivers a whole piece; asks when it matters</text><rect x=\"30\" y=\"140\" width=\"660\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"40\" y=\"165\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">junior</text><text x=\"170\" y=\"165\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">júnior</text><text x=\"290\" y=\"165\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">delivers small, defined tasks; asks often</text><rect x=\"30\" y=\"190\" width=\"660\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"40\" y=\"215\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">intern</text><text x=\"170\" y=\"215\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">estágio</text><text x=\"290\" y=\"215\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">learning is the job; supervised all the time</text></svg>", "caption": "What changes up the ladder is not how much you know but how much of a task you can be handed without somebody checking on you. A junior is handed a small piece and is expected to ask."}
+```
+
+The ladder is the same idea one rung at a time. Moving up it is **being handed a larger piece with less
+checking**, not knowing more commands. A mid-level person is handed a whole feature, or a whole office
+network, and asks when a decision matters. A senior decides how the work should be done and spends part of
+the day unblocking everybody else.
+
+Two consequences follow for the rest of this course. The first is that **asking is part of the job
+description**, not a weakness to hide in an interview. The second is that what you show a company, in the
+CV and in the interview, is evidence that you finish things. The portfolio project was built for exactly
+that.
