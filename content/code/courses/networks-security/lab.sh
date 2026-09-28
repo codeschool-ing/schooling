@@ -19,6 +19,9 @@
 #   mgmt      192.168.99.0/24  where administration comes from: admin
 #   branch    192.168.30.0/24  behind branch: branchpc
 #
+# sensor is plugged into the DMZ with no address at all, the way an intrusion
+# detection sensor listens: it reads the segment and never speaks on it.
+#
 # NOTHING HERE REACHES THE REAL INTERNET, and nothing in it is anybody else's.
 # The addresses and names are the ones reserved for documentation and testing
 # (RFC 5737, RFC 1918, RFC 2606), which is why they are safe to print.
@@ -54,6 +57,7 @@ servers  app      eth0 192.168.20.10/24
 servers  db       eth0 192.168.20.30/24
 mgmt     fw       eth4 192.168.99.1/24
 mgmt     admin    eth0 192.168.99.10/24
+dmz      sensor   eth0 none
 branch   branch   eth1 192.168.30.1/24
 branch   branchpc eth0 192.168.30.20/24
 "
@@ -75,7 +79,7 @@ ROUTERS="fw branch"
 
 need() {
   local missing=()
-  for p in iproute2 nftables conntrack tcpdump openssl nginx suricata jq wireguard-tools wireguard-go \
+  for p in iproute2 nftables conntrack tcpdump openssl nginx libnginx-mod-http-modsecurity modsecurity-crs suricata jq wireguard-tools wireguard-go \
            dnsmasq bind9-dnsutils netcat-openbsd curl iputils-ping arping socat openssh-server \
            softflowd nfdump aide hostapd wpasupplicant python3; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
@@ -113,8 +117,12 @@ build_net() {
     ip link add "$peer" type veth peer name "lab-tmp$n"
     ip link set "lab-tmp$n" netns "$h"
     ip -n "$h" link set "lab-tmp$n" name "$ifc"
-    ip -n "$h" link set "$ifc" address "$(mac "$addr")"
-    ip -n "$h" addr add "$addr" dev "$ifc"
+    if [ "$addr" = none ]; then
+      ip -n "$h" link set "$ifc" address 52:54:00:00:00:99
+    else
+      ip -n "$h" link set "$ifc" address "$(mac "$addr")"
+      ip -n "$h" addr add "$addr" dev "$ifc"
+    fi
     ip -n "$h" link set "$ifc" up
     ip link set "$peer" netns wire
     ip -n wire link set "$peer" master "br-$seg"
@@ -161,7 +169,7 @@ hostfiles() {
     {
       printf '127.0.0.1 localhost\n127.0.1.1 %s\n' "$h"
       # every machine knows the others by name, as an internal DNS would say
-      echo "$LINKS" | awk 'NF && $2 != "fw" && $2 != "branch" {split($4,a,"/"); print a[1], $2}'
+      echo "$LINKS" | awk 'NF && $2 != "fw" && $2 != "branch" && $4 != "none" {split($4,a,"/"); print a[1], $2}'
       printf '192.168.10.1 fw\n192.0.2.80 www.example.com\n203.0.113.70 branch\n'
     } > "/etc/netns/$h/hosts"
     printf 'nameserver 192.0.2.53\n' > "/etc/netns/$h/resolv.conf"
@@ -216,14 +224,150 @@ host-record=db.corp.example.com,192.168.20.30
 CONF
 }
 
+
+# ------------------------------------------------------------------------ TLS
+# The company's own certificate authority: a root that signs an issuing CA
+# that signs the servers. Every date is fixed, so every certificate printed in
+# the course says the same thing on every run: openssl ca is the one tool here
+# that takes explicit dates.
+CA_START=20260901000000Z
+ca_conf() {
+  cat > "$LAB/ca/ca.cnf" <<CNF
+[ca]
+default_ca = ca
+[ca]
+dir = $LAB/ca
+database = \$dir/index.txt
+new_certs_dir = \$dir/newcerts
+serial = \$dir/serial
+default_md = sha256
+policy = anything
+unique_subject = no
+copy_extensions = none
+[anything]
+organizationName = optional
+commonName = supplied
+[root]
+basicConstraints = critical,CA:TRUE
+keyUsage = critical,keyCertSign,cRLSign
+subjectKeyIdentifier = hash
+[issuing]
+basicConstraints = critical,CA:TRUE,pathlen:0
+keyUsage = critical,keyCertSign,cRLSign
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid
+[server]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature
+extendedKeyUsage = serverAuth
+subjectAltName = \${ENV::SAN}
+authorityKeyIdentifier = keyid
+[client]
+basicConstraints = critical,CA:FALSE
+keyUsage = critical,digitalSignature
+extendedKeyUsage = clientAuth
+authorityKeyIdentifier = keyid
+CNF
+}
+# issue NAME EXTENSIONS SIGNER START END [SAN]  -> $LAB/ca/NAME.{key,crt}
+issue() {
+  local n=$1 ext=$2 signer=$3 start=$4 end=$5 san=${6:-}
+  cd "$LAB/ca"
+  openssl req -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -subj "$(subj "$n")" -keyout "$n.key" -out "$n.csr" 2>/dev/null
+  if [ "$signer" = self ]; then
+    SAN=$san openssl ca -batch -config ca.cnf -selfsign -keyfile "$n.key" -extensions "$ext" -startdate "$start" -enddate "$end" -in "$n.csr" -out "$n.crt" -notext 2>/dev/null
+  else
+    SAN=$san openssl ca -batch -config ca.cnf -cert "$signer.crt" -keyfile "$signer.key" -extensions "$ext" -startdate "$start" -enddate "$end" -in "$n.csr" -out "$n.crt" -notext 2>/dev/null
+  fi
+}
+subj() {
+  case $1 in
+    root) echo "/O=Example Corp/CN=Example Corp Root CA" ;;
+    issuing) echo "/O=Example Corp/CN=Example Corp Issuing CA" ;;
+    *) echo "/CN=$1" ;;
+  esac
+}
+build_tls() {
+  mkdir -p "$LAB/ca/newcerts"; : > "$LAB/ca/index.txt"; echo 1000 > "$LAB/ca/serial"
+  ca_conf
+  issue root root self $CA_START 20360901000000Z
+  issue issuing issuing root $CA_START 20310901000000Z
+  issue www.example.com server issuing $CA_START 20261130000000Z "DNS:www.example.com,DNS:example.com"
+  cat "$LAB/ca/www.example.com.crt" "$LAB/ca/issuing.crt" > "$LAB/ca/www.example.com.chain"
+  cp "$LAB/ca/root.crt" /usr/local/share/ca-certificates/example-corp-root-ca.crt
+  update-ca-certificates >/dev/null 2>&1
+  mkdir -p "$LAB/www/etc/ssl/private"
+  cp "$LAB/ca/www.example.com.chain" "$LAB/www/etc/ssl/private/www.crt"
+  cp "$LAB/ca/www.example.com.key" "$LAB/www/etc/ssl/private/www.key"
+  cat >> "$LAB/www/etc/nginx/sites-enabled/shop" <<'CONF'
+server {
+    listen 192.0.2.80:443 ssl;
+    server_name www.example.com;
+    ssl_certificate     /etc/ssl/private/www.crt;
+    ssl_certificate_key /etc/ssl/private/www.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    location / {
+        proxy_pass http://192.168.20.10:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}
+CONF
+}
+
+# ------------------------------------------------------------------------ SSH
+sshd_conf() {  # sshd_conf HOST ADDRESS PORT
+  local s="$LAB/$1/etc/ssh"
+  mkdir -p "$s"
+  cp -a /etc/ssh/. "$s/"
+  rm -f "$s"/ssh_host_*
+  ssh-keygen -q -t ed25519 -N '' -C "root@$1" -f "$s/ssh_host_ed25519_key"
+  cat > "$s/sshd_config" <<C
+ListenAddress $2:$3
+HostKey /etc/ssh/ssh_host_ed25519_key
+PidFile /run/sshd-$1.pid
+KbdInteractiveAuthentication no
+PasswordAuthentication no
+UsePAM yes
+PrintMotd no
+Subsystem sftp internal-sftp
+C
+}
+build_ssh() {
+  mkdir -p /run/sshd
+  # remote runs SSH on 443, the port a firewall leaves open for HTTPS: what
+  # lesson 2 shows a port number cannot tell apart.
+  sshd_conf remote 203.0.113.50 443
+  for h in app db; do sshd_conf "$h" "$(echo "$LINKS" | awk -v h=$h '$2==h{split($4,a,"/");print a[1]}')" 22; done
+}
+
+# --------------------------------------------------------------------- sensor
+# Suricata's configuration for the two machines that run it: fw, reading its
+# own LAN interface (lesson 2), and sensor, listening on the DMZ (lessons 14
+# to 16). Only the rules a lesson writes are loaded: local.rules starts empty.
+build_suricata() {
+  for h in fw sensor; do
+    local d="$LAB/$h/etc/suricata"
+    mkdir -p "$d/rules" "$LAB/$h/var/log/suricata" "$LAB/$h/var/lib/suricata"
+    cp -a /etc/suricata/. "$d/"
+    sed -i 's#^default-rule-path: .*#default-rule-path: /etc/suricata/rules#' "$d/suricata.yaml"
+    sed -i '/^rule-files:/{n;s#.*#  - local.rules#}' "$d/suricata.yaml"
+    sed -i 's#^    HOME_NET: .*#    HOME_NET: "[192.168.0.0/16,192.0.2.0/24]"#' "$d/suricata.yaml"
+    : > "$d/rules/local.rules"
+    # two copies may run at once, so neither takes the one command socket
+    sed -i '/^unix-command:/,/^[a-z]/{s/^  enabled: .*/  enabled: no/}' "$d/suricata.yaml"
+  done
+}
+
 daemon() {  # daemon HOST COMMAND
   exec_on "$1" root "setsid $2 </dev/null >/dev/null 2>&1 &"
 }
 
 start() {
-  daemon app "python3 -m http.server --bind 192.168.20.10 --directory /srv/app 8080"
+  exec_on app root "setsid python3 -u -m http.server --bind 192.168.20.10 --directory /srv/app 8080 </dev/null >>/var/log/lab/app.log 2>&1 &"
   daemon db "socat TCP-LISTEN:5432,bind=192.168.20.30,fork,reuseaddr SYSTEM:'echo db ready'"
   daemon www "nginx"
+  for h in remote app db; do daemon "$h" "/usr/sbin/sshd -f /etc/ssh/sshd_config"; done
   daemon dns "dnsmasq --conf-dir=/etc/dnsmasq.d --pid-file=/var/log/lab/dnsmasq.pid --user=root"
   for _ in $(seq 50); do
     exec_on laptop ana 'curl -s -m 1 -o /dev/null http://www.example.com/' 2>/dev/null && break
@@ -241,6 +385,8 @@ down() {
     ip netns del "$h"
   done
   for h in $HOSTS; do rm -rf "/etc/netns/$h"; done
+  rm -f /usr/local/share/ca-certificates/example-corp-root-ca.crt
+  update-ca-certificates --fresh >/dev/null 2>&1 || true
   rm -rf "$LAB"
 }
 
@@ -253,6 +399,9 @@ up() {
   build_net
   hostfiles
   build_services
+  build_tls
+  build_ssh
+  build_suricata
   start
 }
 
