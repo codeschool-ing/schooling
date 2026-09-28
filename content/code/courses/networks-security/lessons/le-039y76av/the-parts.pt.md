@@ -1,0 +1,31 @@
+---
+title: As partes de uma decisão Zero Trust
+version: 1
+---
+
+Toda decisão de acesso em um projeto Zero Trust tem as mesmas partes, qualquer que seja o produto que
+as implementa:
+
+| parte | o que é | no laboratório desta aula |
+|---|---|---|
+| **sujeito** | o usuário ou a máquina que faz a requisição | o proxy, `www` |
+| **recurso** | o que ele quer alcançar | a aplicação em `app` |
+| **identidade** | algo que o sujeito prova, e não algo que ele alega | um certificado de cliente da CA da empresa |
+| **ponto de decisão de política** (*policy decision point*, PDP) | onde as regras são avaliadas | a configuração TLS em `app`: qual CA, qual nome |
+| **ponto de aplicação de política** (*policy enforcement point*, PEP) | o que deixa a requisição passar ou a barra | o listener TLS na frente da aplicação |
+| **sinais** | o que mais a decisão pode considerar | a validade do certificado; nos produtos, a saúde do dispositivo, o horário, o risco |
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 230\" role=\"img\" aria-label=\"Uma decisão Zero Trust no laboratório. O sujeito, www, apresenta seu certificado de cliente ao ponto de aplicação da política, o listener TLS de app na porta 8443. O ponto de aplicação consulta a decisão de política: o certificado é válido, assinado pela CA da empresa, não expirou, e o nome é www-client? Se sim, o pedido chega ao recurso, a aplicação na 8080. O laptop, dentro da rede mas sem certificado, para no ponto de aplicação.\"><defs><marker id=\"zt-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"zt-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker><marker id=\"zt-ah-wire\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--wire)\"></path></marker></defs><rect x=\"20\" y=\"30\" width=\"150\" height=\"46\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"46\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">www</text><text x=\"30\" y=\"63\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">sujeito: CN=www-client</text><rect x=\"20\" y=\"150\" width=\"150\" height=\"46\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"166\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">laptop</text><text x=\"30\" y=\"183\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">sem certificado</text><rect x=\"270\" y=\"90\" width=\"180\" height=\"46\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"280\" y=\"106\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">app :8443</text><text x=\"280\" y=\"123\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">ponto de aplicação</text><rect x=\"560\" y=\"90\" width=\"140\" height=\"46\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"570\" y=\"106\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">app :8080</text><text x=\"570\" y=\"123\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">o recurso</text><path d=\"M170 55 L270 105\" fill=\"none\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" marker-end=\"url(#zt-ah-phosphor)\"></path><path d=\"M170 172 L270 125\" fill=\"none\" stroke=\"var(--amber)\" stroke-width=\"1.4\" marker-end=\"url(#zt-ah-amber)\" stroke-dasharray=\"4 3\"></path><text x=\"180\" y=\"196\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">400: sem certificado</text><path d=\"M450 113 L560 113\" fill=\"none\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" marker-end=\"url(#zt-ah-phosphor)\"></path><text x=\"505\" y=\"102\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">permitido</text><rect x=\"270\" y=\"170\" width=\"180\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"280\" y=\"186\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">decisão: válido, nossa CA,</text><text x=\"280\" y=\"204\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">não expirado, nome www-client</text><path d=\"M360 136 L360 170\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></path></svg>", "caption": "A rede deixa os dois pacotes chegarem. A identidade decide qual vai adiante."}
+```
+
+Três consequências vêm de pôr a identidade no centro:
+
+- **toda conexão é autenticada**, inclusive entre servidores que ficam no mesmo segmento; estar
+  *dentro* deixa de ser um motivo;
+- **a autorização é por recurso**, então uma identidade válida para um serviço não abre outro;
+- **as decisões são registradas com a identidade**, então a pergunta *quem fez isso* tem uma resposta
+  que não é só um endereço.
+
+A rede não desaparece. O firewall continua limitando o que alcança o quê, e a aula 21 o estreita ainda
+mais. O que muda é que passar pelo firewall é **necessário e deixa de ser suficiente**.

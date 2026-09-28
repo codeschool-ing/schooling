@@ -1,0 +1,457 @@
+{
+  "ex-0kqpr1x4": {
+    "prompt": "Em que suposição se apoiava toda regra de firewall do curso antes desta aula?",
+    "hint": "Pense no motivo de a LAN da equipe poder usar a aplicação.",
+    "choices": [
+      {
+        "text": "Que tráfego cifrado é seguro para deixar passar",
+        "why": "Cifragem nunca foi o motivo de uma regra permitir algo."
+      },
+      {
+        "text": "Que a origem de um pacote diz se ele merece confiança",
+        "why": "Isso. Zonas e endereços eram a credencial."
+      },
+      {
+        "text": "Que todo usuário já entrou com login",
+        "why": "Nenhuma regra perguntava quem era o usuário."
+      },
+      {
+        "text": "Que a porta de um servidor fica fechada se nada escuta",
+        "why": "Vale para sockets, mas não é no que as regras confiavam."
+      }
+    ]
+  },
+  "ex-3gej9nx3": {
+    "prompt": "De que formas confiar na origem de um pacote deixa de funcionar? Escolha todas as que se aplicam.",
+    "hint": "A seção cita três, cada uma de uma aula anterior.",
+    "choices": [
+      {
+        "text": "Uma máquina dentro da zona é comprometida",
+        "why": "Isso. Tudo o que a zona alcança fica exposto."
+      },
+      {
+        "text": "A tabela de conexões do firewall enche",
+        "why": "Isso é negação de serviço, não falha de confiança."
+      },
+      {
+        "text": "Um endereço é emprestado ou forjado",
+        "why": "Isso. O endereço passa a responder pela máquina errada."
+      },
+      {
+        "text": "Laptops em casa e serviços em outros datacenters deixam de ter um lado de dentro",
+        "why": "Isso. A rede deixa de ter um lado de dentro."
+      },
+      {
+        "text": "O TLS esconde a porta do firewall",
+        "why": "O TLS cifra o conteúdo; a porta continua visível."
+      }
+    ]
+  },
+  "ex-hnzezykm": {
+    "prompt": "O laptop buscou o console de administração na porta 8080 e recebeu a página. Do que dependeu essa resposta?",
+    "hint": "O que alguém perguntou?",
+    "choices": [
+      {
+        "text": "A senha da Ana para a página de admin",
+        "why": "Nenhuma senha foi pedida."
+      },
+      {
+        "text": "O certificado que o laptop apresentou",
+        "why": "Não apresentou nenhum; a 8080 é HTTP puro."
+      },
+      {
+        "text": "De onde veio o pedido: a LAN da equipe",
+        "why": "Isso. Só o endereço da LAN da equipe importou."
+      },
+      {
+        "text": "A aplicação conferindo o nome do laptop numa lista",
+        "why": "Nada conferiu nome; o firewall liberou a LAN."
+      }
+    ]
+  },
+  "ex-sscfghch": {
+    "prompt": "Ligue cada parte de uma decisão Zero Trust ao que a representa no laboratório desta aula.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "sujeito",
+        "right": "o proxy, www"
+      },
+      {
+        "left": "recurso",
+        "right": "a aplicação em app"
+      },
+      {
+        "left": "identidade",
+        "right": "um certificado de cliente da CA da empresa"
+      },
+      {
+        "left": "ponto de aplicação da política (PEP)",
+        "right": "o listener TLS na frente da aplicação"
+      }
+    ],
+    "right_distractors": [
+      "a faixa de endereços da LAN da equipe"
+    ]
+  },
+  "ex-cmbc0ktc": {
+    "prompt": "No laboratório, onde fica o ponto de decisão da política?",
+    "hint": "Onde as regras são avaliadas: qual CA, qual nome?",
+    "choices": [
+      {
+        "text": "A configuração TLS em app: qual CA, qual nome",
+        "why": "Isso. Ela diz qual CA e qual nome são aceitos."
+      },
+      {
+        "text": "A cadeia forward do firewall em fw",
+        "why": "O firewall decide para onde vão os pacotes, não quem pede."
+      },
+      {
+        "text": "A CA emissora da empresa, que assina os certificados",
+        "why": "Ela emite identidades; não avalia pedidos."
+      },
+      {
+        "text": "O proxy em www, que apresenta o certificado",
+        "why": "Esse é o sujeito que faz o pedido."
+      }
+    ]
+  },
+  "ex-gzhtzp41": {
+    "prompt": "Um segundo serviço interno confia na mesma CA, mas só admite CN=billing-client. O proxy apresenta ali seu certificado válido www-client. O que deve acontecer?",
+    "hint": "Autenticação e autorização são dois passos.",
+    "choices": [
+      {
+        "text": "Admitido, pois o certificado é válido e da mesma CA",
+        "why": "Válido prova quem é, não o que pode alcançar."
+      },
+      {
+        "text": "Recusado no handshake TLS, pois a CA é desconhecida",
+        "why": "A CA é a mesma em que o serviço confia."
+      },
+      {
+        "text": "Recusado: a autorização é por recurso",
+        "why": "Isso. A identidade de um serviço não abre outro."
+      },
+      {
+        "text": "Admitido, se o firewall deixar www chegar lá",
+        "why": "Passar pelo firewall é necessário e não é mais suficiente."
+      }
+    ]
+  },
+  "ex-j9zv1sxc": {
+    "prompt": "O laptop, liberado pelo firewall até a 8443, recebeu 400 No required SSL certificate was sent. Por quê?",
+    "hint": "O que o ssl_verify_client on exige?",
+    "choices": [
+      {
+        "text": "O firewall descartou a conexão no meio",
+        "why": "O firewall deixou passar; o nginx respondeu."
+      },
+      {
+        "text": "O certificado do laptop tinha expirado",
+        "why": "Isso diria erro de certificado, e o laptop não mandou nenhum."
+      },
+      {
+        "text": "O CN do laptop não era www-client",
+        "why": "Um CN errado leva 403 do if, depois da verificação."
+      },
+      {
+        "text": "O laptop não apresentou certificado de cliente",
+        "why": "Isso. Sem certificado, sem conexão."
+      }
+    ]
+  },
+  "ex-rkztwff3": {
+    "prompt": "Na configuração do nginx em app, a linha ssl_verify_client ___ torna obrigatório um certificado de cliente válido.",
+    "hint": "O valor no bloco server.",
+    "blanks": [
+      {
+        "accept": [
+          "on"
+        ]
+      }
+    ]
+  },
+  "ex-bjjtjc5p": {
+    "prompt": "Um laptop tem um certificado válido da mesma CA emissora, com CN=laptop. O que app responde na 8443?",
+    "hint": "A verificação passa; depois o if roda.",
+    "choices": [
+      {
+        "text": "A página de admin, porque o certificado é válido",
+        "why": "Válido não basta; o nome tem de ser www-client."
+      },
+      {
+        "text": "403, do if que confere o sujeito do certificado",
+        "why": "Isso. Essa é a metade da autorização."
+      },
+      {
+        "text": "400 No required SSL certificate was sent",
+        "why": "Ele mandou um."
+      },
+      {
+        "text": "Nada: o firewall bloqueia o laptop na 8443",
+        "why": "Na aula, o laptop chegou à 8443 passando pelo firewall."
+      }
+    ]
+  },
+  "ex-vgcsgmty": {
+    "prompt": "Quantas regras do firewall para a porta 8080 foram apagadas da cadeia forward do fw?",
+    "hint": "Conte os handles."
+  },
+  "ex-t4mrz4p2": {
+    "prompt": "O certificado www-client tem o uso estendido de chave TLS Web Client Authentication. O que isso permite?",
+    "hint": "Qual lado de uma conexão TLS?",
+    "choices": [
+      {
+        "text": "Assinar outros certificados da empresa",
+        "why": "Isso é papel de uma CA."
+      },
+      {
+        "text": "Rodar um servidor TLS como www",
+        "why": "Autenticação de cliente não serve para rodar servidor."
+      },
+      {
+        "text": "Provar sua identidade a um servidor",
+        "why": "Isso. E nada do lado servidor."
+      },
+      {
+        "text": "Cifrar e-mails enviados de www para a equipe",
+        "why": "Isso seria outro uso."
+      }
+    ]
+  },
+  "ex-z344by3a": {
+    "prompt": "De notBefore a notAfter, por quantos meses vale o certificado www-client?",
+    "hint": "De 28 de setembro a 28 de dezembro."
+  },
+  "ex-0ccxwyh0": {
+    "prompt": "Qual linha do bloco location do proxy faz ele conferir que fala mesmo com app.corp.example.com?",
+    "hint": "Uma ponta apresenta; a outra verifica.",
+    "choices": [
+      {
+        "text": "proxy_ssl_certificate /root/tls/www-client.crt",
+        "why": "Isso apresenta a identidade do próprio proxy."
+      },
+      {
+        "text": "proxy_ssl_verify on",
+        "why": "Isso. Com o proxy_ssl_name dando o nome esperado."
+      },
+      {
+        "text": "ssl_verify_client on",
+        "why": "Isso fica em app, conferindo o cliente."
+      },
+      {
+        "text": "proxy_set_header Host $host",
+        "why": "Repassa um cabeçalho; não confere nada."
+      }
+    ]
+  },
+  "ex-t47dx3gs": {
+    "prompt": "Qual pedido escreveu a linha 192.168.10.20 - NONE /admin/ 400?",
+    "hint": "NONE é o resultado da verificação.",
+    "choices": [
+      {
+        "text": "A tentativa do laptop sem certificado",
+        "why": "Isso. Nada a verificar, recusado com 400."
+      },
+      {
+        "text": "O pedido do cliente através do proxy",
+        "why": "Esse chegou como CN=www-client, 200."
+      },
+      {
+        "text": "O proxy apresentando o certificado expirado",
+        "why": "Essa linha diz FAILED e cita www-client-old."
+      },
+      {
+        "text": "Uma verificação do fw que o nginx não casou com regra de certificado",
+        "why": "O fw não mandou pedido; o endereço é do laptop."
+      }
+    ]
+  },
+  "ex-0cgm8f2b": {
+    "prompt": "O certificado antigo foi recusado com certificate has expired. O que precisou acontecer para isso?",
+    "hint": "Onde está escrita a data final?",
+    "choices": [
+      {
+        "text": "Alguém o revogou na CA",
+        "why": "Ninguém revogou nada."
+      },
+      {
+        "text": "O firewall foi instruído a bloquear www-client-old",
+        "why": "O firewall não vê certificados."
+      },
+      {
+        "text": "A configuração de app foi editada para citá-lo",
+        "why": "A configuração não foi mexida."
+      },
+      {
+        "text": "Nada: o notAfter, 31 de agosto de 2026, tinha passado e a checagem o leu nesse pedido",
+        "why": "Isso. A credencial traz a própria data de fim."
+      }
+    ]
+  },
+  "ex-9mbbfjfh": {
+    "prompt": "Com o sujeito em toda linha do log de acesso, por onde começa uma investigação?",
+    "hint": "Compare com um log só de endereços.",
+    "choices": [
+      {
+        "text": "Por qual endereço, e quem o tinha na hora",
+        "why": "É o que um log só de endereços obriga."
+      },
+      {
+        "text": "Por quem fez o pedido",
+        "why": "Isso. Cada decisão carrega sua identidade."
+      },
+      {
+        "text": "Pelos contadores do firewall da porta 8443",
+        "why": "Contadores dizem quantos, não quem."
+      },
+      {
+        "text": "Pela lista de certificados que a CA emitiu",
+        "why": "Isso lista identidades, não o que fizeram."
+      }
+    ]
+  },
+  "ex-1pjfcc4e": {
+    "prompt": "Ordene o trabalho prático para levar serviços ao Zero Trust, do primeiro ao último.",
+    "hint": "A tabela no fim da seção.",
+    "items": [
+      "inventariar cada serviço e como ele autentica",
+      "emitir identidades para pessoas e máquinas",
+      "levar primeiro os serviços mais valiosos para a checagem",
+      "remover o caminho só pela rede"
+    ],
+    "trap": "Remover o caminho antigo antes de os clientes terem identidades trancaria todo mundo do lado de fora."
+  },
+  "ex-hxws5mfv": {
+    "prompt": "Um fornecedor oferece um gateway de acesso remoto chamado Zero Trust. Comprá-lo lhe dá o quê?",
+    "hint": "Zero Trust é produto ou projeto?",
+    "choices": [
+      {
+        "text": "Uma rede Zero Trust",
+        "why": "Não é produto; nenhuma caixa é o projeto."
+      },
+      {
+        "text": "Uma parte que um projeto Zero Trust poderia usar",
+        "why": "Isso. O projeto é a decisão de checar cada pedido."
+      },
+      {
+        "text": "Um substituto para o firewall",
+        "why": "O laboratório manteve o firewall de propósito."
+      },
+      {
+        "text": "Identidades para cada serviço, emitidas automaticamente",
+        "why": "Um gateway não emite os certificados dos seus serviços."
+      }
+    ]
+  },
+  "ex-6d73qah8": {
+    "prompt": "A checagem de identidade na 8443 está no lugar, mas as duas regras para a 8080 ficaram no firewall. Quanto vale a checagem?",
+    "hint": "Uma porta da frente ao lado de...",
+    "choices": [
+      {
+        "text": "Valor total, já que clientes preferem TLS",
+        "why": "Quem quiser evitar a checagem usa a 8080."
+      },
+      {
+        "text": "Quase todo, já que a 8080 serve só a página de admin",
+        "why": "A página de admin é justamente o que era alcançável."
+      },
+      {
+        "text": "Pouco, enquanto o caminho antigo continua aberto",
+        "why": "Isso. Apagar as regras antigas é que deu sentido à checagem."
+      },
+      {
+        "text": "Nada, porque o nginx desliga a 8080 quando a 8443 entra",
+        "why": "A 8080 continuou rodando atrás da 8443 como proxy_pass."
+      }
+    ]
+  },
+  "ex-c1ry1740": {
+    "prompt": "Por que o laboratório mantém o firewall depois que a aplicação checa identidade?",
+    "hint": "Duas camadas, duas perguntas.",
+    "choices": [
+      {
+        "text": "A checagem de identidade não consegue ver o endereço de origem",
+        "why": "O log o registra em toda linha."
+      },
+      {
+        "text": "Se a checagem de identidade tiver falha, a rede limita quem chega a tentá-la",
+        "why": "Isso. Dois controles em vez de um."
+      },
+      {
+        "text": "Removê-lo seria outra migração que ninguém planejou",
+        "why": "O motivo é defesa, não agenda."
+      },
+      {
+        "text": "O TLS precisa do firewall para abrir a porta",
+        "why": "O nginx escuta com ou sem regra."
+      }
+    ]
+  },
+  "ex-3n1xsbnk": {
+    "prompt": "A equipe se conecta a uma VPN e, conectada, alcança toda aplicação interna sem outra checagem. Como isso se encaixa no Zero Trust?",
+    "hint": "Em que a aplicação se baseia depois que o túnel sobe?",
+    "choices": [
+      {
+        "text": "É Zero Trust, pois a VPN pediu senha",
+        "why": "Uma checagem na borda, depois o endereço volta a decidir."
+      },
+      {
+        "text": "Não é: o túnel faz da localização a credencial de novo",
+        "why": "Isso. Cada aplicação tem de checar cada pedido."
+      },
+      {
+        "text": "É Zero Trust, desde que a VPN autentique com certificados de cliente",
+        "why": "Como o túnel autentica não muda no que as aplicações confiam."
+      },
+      {
+        "text": "Não é, porque o tráfego da VPN não é cifrado de ponta a ponta",
+        "why": "A cifragem não é o que falta; a identidade por pedido é."
+      }
+    ]
+  },
+  "ex-eker5ndt": {
+    "prompt": "O log de app mostra CN=www-client SUCCESS vindo de 192.168.10.20, que não é o endereço do proxy. Para o que isso aponta?",
+    "hint": "O que o SUCCESS prova sobre a chave?",
+    "choices": [
+      {
+        "text": "Um erro de log, já que a checagem do certificado passou",
+        "why": "O log registra exatamente o que foi verificado."
+      },
+      {
+        "text": "O firewall está repassando o tráfego do proxy pela LAN",
+        "why": "Os pedidos do proxy chegam de 192.0.2.80."
+      },
+      {
+        "text": "A chave privada do www-client está em uso fora de www",
+        "why": "Isso. Revogue-a e emita outra."
+      },
+      {
+        "text": "Alguém adivinhou o CN e o digitou num pedido",
+        "why": "Um CN se prova com a chave, não se digita."
+      }
+    ]
+  },
+  "ex-nstv26cv": {
+    "prompt": "O laboratório emitiu duas identidades de máquina à mão. A empresa tem duzentos serviços. O que mantém isso gerenciável?",
+    "hint": "O problema difícil é a distribuição.",
+    "choices": [
+      {
+        "text": "Certificados válidos por dez anos, para renovar pouco",
+        "why": "Validades longas fazem a revogação pesar mais."
+      },
+      {
+        "text": "Um certificado compartilhado que os duzentos serviços apresentam",
+        "why": "Aí nenhum serviço seria distinguível no log ou na política."
+      },
+      {
+        "text": "Voltar a regras por endereço para os serviços menores",
+        "why": "Isso reabre o caminho só pela rede."
+      },
+      {
+        "text": "Automação de certificados ou service mesh, com validade de horas",
+        "why": "Isso. Validades curtas fazem a revogação pesar menos."
+      }
+    ]
+  }
+}
