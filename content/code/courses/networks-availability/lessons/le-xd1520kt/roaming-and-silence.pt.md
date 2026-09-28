@@ -35,7 +35,7 @@ handshake. O laboratório não mudou o laptop de lugar, então isto é o mecanis
 
 O NAT tem uma pegadinha. `homegw` mantém o mapeamento da porta 40817 para `192.168.1.50` só enquanto há
 tráfego usando-o, e um roteador doméstico geralmente esquece um mapeamento UDP ocioso depois de um ou
-dois minutos. O WireGuard não manda nada quando não tem o que mandar, então depois de um tempo quieto um
+dois minutos. O WireGuard não manda nada quando não tem o que mandar. Depois de um tempo quieto, um
 pacote de `hq` para `198.51.100.77:40817` chegaria a uma porta que não existe mais, e o escritório não
 alcançaria a Ana até ela mandar alguma coisa primeiro.
 

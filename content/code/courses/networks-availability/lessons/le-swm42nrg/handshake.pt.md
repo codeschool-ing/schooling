@@ -21,7 +21,7 @@ servidor, `CN=vpn.example.com`, assinado por essa raiz, e o nome que `verify-x50
 qualquer uma das duas conferências falhasse, o log diria isso aqui e o túnel não subiria.
 
 A linha seguinte é todo o trabalho do TLS: `Control Channel: TLSv1.3`, um certificado RSA de 2048 bits no
-servidor e uma troca de chaves X25519, o Diffie-Hellman de curva elíptica que o `dh none` deixou como
+servidor e uma troca de chaves X25519. É o Diffie-Hellman de curva elíptica que o `dh none` deixou como
 único tipo. A última linha é a outra metade. **`Data Channel: cipher 'AES-256-GCM'` não é TLS**: o
 tráfego não viaja como registros TLS, e sim nos pacotes do próprio OpenVPN, cifrados com chaves que o
 handshake produziu.
@@ -58,8 +58,8 @@ do laptop, e a resposta do servidor, `Server Hello, Change Cipher Spec, Applicat
 
 `Continuation Data` é o resto de um registro, dividido em pacotes de 1264 bytes. **Os pacotes `P_ACK_V1`
 são o OpenVPN confirmando ele mesmo os pacotes de controle, porque o UDP não confirma.** Os pacotes 9 a
-11 são o certificado e a prova do próprio laptop indo no outro sentido, cifrados, cerca de 2,7
-kilobytes, que é a conferência que o servidor faz do cliente. Doze pacotes, 3,8 milissegundos, num
+11 vão no outro sentido: o certificado e a prova do próprio laptop, cifrados, cerca de 2,7 kilobytes.
+São a conferência que o servidor faz do cliente. Doze pacotes, 3,8 milissegundos, num
 computador conversando consigo mesmo.
 
 O `tshark` rotula o `Client Hello` como `TLSv1`, e isso não é rebaixamento. Um cliente TLS 1.3 escreve
@@ -78,6 +78,6 @@ ana@remote:~$ curl -s http://192.168.10.10/
 served by files
 ```
 
-O `tun0` recebeu `10.8.0.2`, o primeiro endereço que o servidor distribui, e **a rota para
-`192.168.10.0/24` nunca foi configurada no laptop**: ela é a linha `push` do arquivo do servidor, e
-chegou pelo canal de controle.
+O `tun0` recebeu `10.8.0.2`, o primeiro endereço que o servidor distribui. **Ninguém configurou no laptop
+a rota para `192.168.10.0/24`**: ela é a linha `push` do arquivo do servidor, e chegou pelo canal de
+controle.

@@ -3,8 +3,7 @@ title: O que o IPsec acrescenta a um túnel
 version: 1
 ---
 
-A aula 1 terminou com um túnel que mostrava ao provedor cada byte que levava. O IPsec é a resposta de
-costume, e costuma ser chamado de protocolo de VPN, como se fosse uma coisa só. **O IPsec é uma família:
+A aula 1 terminou com um túnel que mostrava ao provedor cada byte que levava. O IPsec é a resposta de costume, e as pessoas o chamam de protocolo de VPN, como se fosse uma coisa só. **O IPsec é uma família:
 o ESP protege pacotes, o AH é um jeito mais antigo de protegê-los, e o IKE é como duas máquinas combinam
 as chaves.** Esta seção trata dos dois primeiros.
 
@@ -21,13 +20,13 @@ aula 1 e responde às perguntas que o túnel simples deixou em aberto:
 | é cópia de um pacote antigo? | ninguém confere | um número de sequência, e um registro dos já vistos |
 
 O valor de verificação é o **ICV**, integrity check value: alguns bytes no fim de cada pacote,
-calculados com uma chave que só as duas pontas têm. **Um pacote cujo ICV não confere é descartado antes
-de qualquer coisa ser decifrada, e quem enviou não fica sabendo.** O número de sequência sobe a cada
-pacote, então um pacote que alguém gravou e reenvia chega com um número já usado, e também é descartado.
+calculados com uma chave que só as duas pontas têm. **Quem recebe descarta um pacote cujo ICV não confere
+antes de decifrar qualquer coisa, e não avisa quem enviou.** O número de sequência sobe a cada pacote,
+então um pacote que alguém gravou e reenvia chega com um número já usado. Esse também é descartado.
 
 ## AH
 
-O AH, Authentication Header, é o protocolo IP 51. Ele autentica e não cifra nada, e ainda cobre os
+O AH, Authentication Header, é o protocolo IP 51. Ele autentica sem cifrar, e ainda cobre os
 endereços do cabeçalho IP externo. **O NAT reescreve justamente os endereços que o AH protege**, então o
 AH não sobrevive a um NAT. O ESP consegue autenticar sem cifrar, se um dia isso for desejado, então o AH
 perdeu a única coisa que fazia sozinho. Desde a RFC 4301 o suporte ao AH é opcional, e é o ESP que você

@@ -93,7 +93,7 @@ ana@hq:~$ sudo swanctl --initiate --child lans 2>&1 | tail -5
 inaceitáveis. Os dois roteadores confiam um no outro e não levam nada, o estado que o pessoal chama de
 "fase 1 de pé, fase 2 caída". A regra segura é fazer os seletores dos dois lados se espelharem
 exatamente. O IKEv2 deixa quem responde estreitar um pedido para a parte que aceita, e as implementações
-usam isso de jeitos diferentes, então um `/24` contra um `/16` pode funcionar com um par de roteadores e
+usam isso de jeitos diferentes. Um `/24` contra um `/16` pode funcionar com um par de roteadores e
 falhar com outro.
 
 Cada engano é recusado num passo diferente, e é isso que faz o log valer a leitura:

@@ -8,10 +8,10 @@ administra.
 
 ## DNS, que as rotas não decidem
 
-As rotas decidem para onde os pacotes vão; não dizem nada sobre nomes. **Um nome interno é respondido
-pelo servidor DNS da empresa, e um laptop em casa pergunta ao resolvedor que o roteador de casa lhe
-entregou.** Esse resolvedor nunca ouviu falar dos nomes internos da empresa, então eles falham, e um nome
-interno que também existe no DNS público se resolve, sem aviso, para o endereço público.
+As rotas decidem para onde os pacotes vão; não dizem nada sobre nomes. **O servidor DNS da empresa responde os nomes
+internos, e um laptop em casa pergunta ao resolvedor que o roteador de casa lhe entregou.** Esse
+resolvedor nunca ouviu falar dos nomes internos da empresa, então eles falham. Um nome interno que
+também existe no DNS público se resolve, sem aviso, para o endereço público.
 
 A correção é o split DNS: consultas dos domínios da própria empresa vão para o resolvedor dela, pelo
 túnel, e o resto para o local. No Linux, o `systemd-resolved` faz isso por interface, e o `wg-quick`

@@ -42,7 +42,7 @@ ana@isp:~$ ip route
 ```
 
 **O provedor conhece três redes públicas e nenhuma privada.** Um pacote para `192.168.20.30` não
-corresponde a nenhuma das rotas dele, então é descartado. Não é defeito deste provedor. As faixas da RFC
+corresponde a nenhuma das rotas dele, então o provedor o descarta. Não é defeito deste provedor. As faixas da RFC
 1918 são privadas porque milhares de empresas usam as mesmas, e nenhum roteador da internet saberia de
 qual `192.168.20.30` o pacote está falando.
 

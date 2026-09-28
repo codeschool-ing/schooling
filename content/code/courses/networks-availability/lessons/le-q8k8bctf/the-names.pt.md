@@ -31,7 +31,7 @@ produtos vieram antes: a certificação Wi-Fi 6 abriu em 2019, bem antes de o 80
 E a taxa máxima é **um teto que o padrão escreve, nunca uma velocidade que alguém mede**. Ela supõe o
 canal mais largo, o maior número de fluxos e um sinal limpo o bastante para a modulação mais densa, tudo
 ao mesmo tempo. A seção sobre largura de canal calcula todas elas, do 802.11a em diante, a partir dos números
-do próprio padrão, e a última seção desta aula diz quanto disso chega a um celular.
+do próprio padrão. A última seção desta aula diz quanto disso chega a um celular.
 
 **O Wi-Fi 6E é o mesmo 802.11ax, autorizado numa terceira faixa**, e certificado desde 2021. Um
 roteador Wi-Fi 6 sem 6E na caixa não transmite em 6 GHz, apesar do que o número sugere.

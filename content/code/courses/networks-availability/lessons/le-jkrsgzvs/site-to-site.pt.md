@@ -29,9 +29,9 @@ laboratório tem atraso, então todo tempo aqui é trabalho de um computador só
 
 A tabela de rotas do caixa é a outra metade da prova. Ela tem uma rota padrão para o gateway e a
 própria LAN, e mais nada: nenhum endereço de túnel, nenhum software de VPN, nenhuma chave. Ela seria
-igual se os dois escritórios estivessem ligados por uma linha dedicada, e esse é o ponto. **Qual tráfego
+igual se os dois escritórios estivessem ligados por uma linha dedicada. **Qual tráfego
 vai para o outro escritório é decidido uma vez, no roteador, para todo dispositivo atrás dele**,
-impressoras, câmeras e caixas incluídos, e nenhum deles conseguiria rodar um cliente de VPN se alguém
+impressoras, câmeras e caixas incluídos. Nenhum deles conseguiria rodar um cliente de VPN se alguém
 pedisse.
 
 ```schooling-figure

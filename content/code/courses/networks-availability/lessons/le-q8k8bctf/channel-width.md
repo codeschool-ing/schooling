@@ -21,7 +21,7 @@ the width slightly more than doubles the rate**, because a wider channel wastes 
 subcarriers on its edges. That looks like a reason to always pick the widest channel. It is not,
 because width has three costs, and none of them shows in the program.
 
-**Fewer channels to go round.** A band has a fixed amount of spectrum, so every doubling halves the
+**Width leaves fewer channels to go round.** A band has a fixed amount of spectrum, so every doubling halves the
 number of channels in it. Access points near each other need different channels, or they take turns
 (lesson 7 says how), and in 2.4 GHz a single 40 MHz channel takes nearly half the band. The 6 GHz band, the widest there is, shows the trade in numbers, where all 1200 MHz of it is open:
 
@@ -30,19 +30,19 @@ number of channels in it. Access points near each other need different channels,
 | channels that do not overlap | 59 | 29 | 14 | 7 | 3 |
 | one 802.11ax stream, Mbit/s (the program above) | 143.4 | 286.8 | 600.5 | 1201.0 | not in 802.11ax |
 
-**Less signal against the noise.** A transmitter has a fixed power, and a wider channel spreads it
+**Width leaves less signal against the noise.** A transmitter has a fixed power, and a wider channel spreads it
 thinner, while the noise a receiver hears grows with the width it listens to. Double the width and the
 signal's total stays the same while the noise doubles: **each doubling costs 3 dB of signal-to-noise
 ratio**. At the edge of a cell, a client on 160 MHz drops to a slower modulation sooner than one on 40 MHz, and can end up with a lower rate than it would
 have had on the narrower channel.
 
-**More exposure to a neighbour.** A 160 MHz channel overlaps anything transmitting in any of its
+**Width means more exposure to a neighbour.** A 160 MHz channel overlaps anything transmitting in any of its
 eight 20 MHz parts. Since 802.11ac an access point can fall back to part of its channel when the rest is
 busy, and since 802.11ax it can leave out a busy slice. It still transmits less often than it would on a
 channel of its own.
 
 So the choice is made per band and per building. Practice has settled on a pattern that no standard
-writes down: **20 MHz on 2.4 GHz, always**, 20 or 40 MHz on 5 GHz where access points are dense, and 80
-or 160 on 6 GHz, where there are channels enough to go round. A house with
+writes down: **20 MHz on 2.4 GHz, always**, and 20 or 40 MHz on 5 GHz where access points are dense. On
+6 GHz, where there are channels enough to go round, it is 80 or 160. A house with
 one access point and no neighbours can take the widest channel it has, because there is nobody to
 share it with.

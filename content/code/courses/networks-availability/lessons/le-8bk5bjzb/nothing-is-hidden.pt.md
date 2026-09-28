@@ -41,13 +41,12 @@ Um enlace entre escritórios precisa responder três perguntas, e um túnel simp
 | alguém no caminho consegue lê-lo? | sim, inteiro | criptografia |
 | veio mesmo do outro escritório, sem alteração? | ninguém confere | autenticação e integridade |
 
-Um pacote GRE com os endereços externos certos e a chave certa seria aceito por `branch` vindo de
-qualquer um, e a chave está impressa em cada linha acima. **Criptografia e autenticação são o que
-transformam um túnel numa VPN**, e dá para acrescentá-las de dois jeitos: em volta do túnel, que é o
-IPsec da aula 2, ou embutidas no túnel desde o começo, que são as VPNs baseadas em TLS da aula 3 e o
-WireGuard da aula 4.
+`branch` aceitaria de qualquer um um pacote GRE com os endereços externos certos e a chave certa, e a
+chave está impressa em cada linha acima. **Criptografia e autenticação são o que transformam um túnel
+numa VPN.** Dá para acrescentá-las de dois jeitos: em volta do túnel, que é o IPsec da aula 2, ou
+embutidas no túnel desde o começo, que são as VPNs baseadas em TLS da aula 3 e o WireGuard da aula 4.
 
 O GRE simples ainda tem seu lugar. Dentro de uma conexão IPsec ele leva o que o IPsec sozinho não leva,
 como o multicast de um protocolo de roteamento, e dentro de um datacenter leva tráfego entre redes que
-nunca saem de um enlace privado. A regra é simples: **um túnel que atravessa uma rede que você não
-controla é criptografado.**
+nunca saem de um enlace privado. **Um túnel que atravessa uma rede que você não controla é
+criptografado.**

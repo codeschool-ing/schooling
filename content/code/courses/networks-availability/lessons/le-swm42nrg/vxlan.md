@@ -72,8 +72,8 @@ ana@hq:~$ ip neigh show dev vx0; bridge fdb show dev vx0
 
 The forwarding table is a switch's MAC table, lesson 18 of `networks-addressing`, with one difference:
 **each entry points not at a port but at the public address of the other end.** `96:6b:a3:79:75:aa` was
-learnt from the reply and lives behind `198.51.100.2`. The all-zeros entry is where a broadcast or an
-unknown destination goes, the flood list; with more sites there would be one such line per site, and a
+learnt from the reply and lives behind `198.51.100.2`. The all-zeros entry is the flood list, where a
+broadcast or an unknown destination goes. With more sites there would be one such line per site, and a
 broadcast would be copied to each of them.
 
 **Nothing in any of this is encrypted.** The ISP read the ARP request and the ping as easily as it read

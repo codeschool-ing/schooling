@@ -42,12 +42,11 @@ first:
 | can anybody on the path read it? | yes, all of it | encryption |
 | did it really come from the other office, unchanged? | nobody checks | authentication and integrity |
 
-A GRE packet with the right outer addresses and the right key would be accepted by `branch` from
-anybody, and the key is printed in every line above. **Encryption and authentication are what turn a
-tunnel into a VPN**, and they can be added in two ways: around the tunnel, which is IPsec in lesson 2,
-or built into the tunnel from the start, which is TLS-based VPNs in lesson 3 and WireGuard in lesson 4.
+`branch` would accept a GRE packet with the right outer addresses and the right key from anybody, and
+the key is printed in every line above. **Encryption and authentication are what turn a tunnel into a
+VPN.** They can be added in two ways: around the tunnel, which is IPsec in lesson 2, or built into the
+tunnel from the start, which is TLS-based VPNs in lesson 3 and WireGuard in lesson 4.
 
 Plain GRE still has a place. Inside an IPsec connection it carries what IPsec on its own will not, such
 as a routing protocol's multicast, and inside a data centre it carries traffic between networks that
-never leave a private link. The rule is simple: **a tunnel that crosses a network you do not control
-gets encrypted.**
+never leave a private link. **A tunnel that crosses a network you do not control gets encrypted.**

@@ -58,8 +58,8 @@ Data`.** TLS 1.3 encrypts certificates, and lesson 5 of `networks` saw the same 
 
 `Continuation Data` is the rest of one record, split across packets of 1264 bytes. **The `P_ACK_V1`
 packets are OpenVPN acknowledging its control packets itself, because UDP does not.** Packets 9 to 11
-are the laptop's own certificate and proof going the other way, encrypted, about 2.7 kilobytes of them,
-which is the check the server makes of the client. Twelve packets, 3.8 milliseconds, on one computer
+go the other way: the laptop's own certificate and proof, encrypted, about 2.7 kilobytes of them. They
+are the check the server makes of the client. Twelve packets, 3.8 milliseconds, on one computer
 talking to itself.
 
 `tshark` labels the `Client Hello` `TLSv1`, and that is not a downgrade. A TLS 1.3 client writes an old
@@ -77,6 +77,6 @@ ana@remote:~$ curl -s http://192.168.10.10/
 served by files
 ```
 
-`tun0` got `10.8.0.2`, the first address the server hands out, and **the route to `192.168.10.0/24` was
-never configured on the laptop**: it is the `push` line of the server's file, and it arrived over the
+`tun0` got `10.8.0.2`, the first address the server hands out. **Nobody configured the route to
+`192.168.10.0/24` on the laptop**: it is the `push` line of the server's file, and it arrived over the
 control channel.

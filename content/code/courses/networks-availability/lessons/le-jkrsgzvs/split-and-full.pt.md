@@ -28,8 +28,8 @@ served by web1
 ```
 
 O `AllowedIPs` lista a rede do túnel e a LAN da matriz, e mais nada. O `ip route get` pergunta ao kernel
-por onde um pacote iria, sem mandar nenhum: para o `files` pelo `wg0`, com o endereço de túnel dela,
-`10.20.0.3`; para o `web1` pela `eth0`, via o roteador de casa, `192.168.1.1`. O traceroute concorda:
+por onde um pacote iria, sem mandar nenhum. Para o `files`, pelo `wg0`, com o endereço de túnel dela,
+`10.20.0.3`; para o `web1`, pela `eth0`, via o roteador de casa, `192.168.1.1`. O traceroute concorda:
 roteador de casa, provedor, `web1`. **A empresa nunca vê o tráfego web dela.**
 
 Depois o arquivo dela foi mudado para `AllowedIPs = 0.0.0.0/0`, com o túnel derrubado antes, como root
@@ -98,10 +98,11 @@ internet e o traduziu para o próprio endereço (NAT, aula 11 de `networks-addre
 ```
 
 Esse segundo endereço é quase todo o argumento a favor do túnel completo. O firewall, os filtros e os
-logs da empresa se aplicam a tudo o que ela faz, um serviço que só aceita o endereço do escritório
-funciona da cozinha dela, e no Wi-Fi de um café o tráfego dela atravessa a rede do café criptografado, desde que o
-DNS dela vá pelo mesmo caminho, o que a próxima seção mostra que não é automático. O custo é o caminho da figura: **toda chamada de vídeo e todo download atravessam duas vezes o
-link de internet da matriz**, entrando e saindo, e quando esse link cai ela perde a internet além do
+logs da empresa se aplicam a tudo o que ela faz. Um serviço que só aceita o endereço do escritório
+funciona da cozinha dela. No Wi-Fi de um café, o tráfego dela atravessa a rede do café criptografado,
+desde que o DNS dela vá pelo mesmo caminho, e a próxima seção mostra que isso não é automático. O custo
+é o caminho da figura: **toda chamada de vídeo e todo download atravessam duas vezes o
+link de internet da matriz**, entrando e saindo. Quando esse link cai, ela perde a internet além do
 escritório.
 
 Um túnel dividido é a troca oposta. A matriz leva só o próprio tráfego e as chamadas dela saem direto,

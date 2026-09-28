@@ -41,7 +41,7 @@ ana@isp:~$ ip route
 ```
 
 **The ISP knows three public networks and no private one.** A packet for `192.168.20.30` matches none
-of its routes, so it is dropped. That is not a fault of this ISP. The ranges in RFC 1918 are private
+of its routes, so the ISP drops it. That is not a fault of this ISP. The ranges in RFC 1918 are private
 because thousands of companies use the same ones, and no router on the internet could know which
 `192.168.20.30` a packet meant.
 

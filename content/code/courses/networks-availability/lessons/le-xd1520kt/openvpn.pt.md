@@ -56,9 +56,9 @@ Hello, nem versão, nem lista de cifras**, só `Continuation Data`, que é o `ts
 esperava registros TLS que conseguisse interpretar. A captura da aula 3, sem `tls-crypt`, nomeava cada
 passo.
 
-O que um observador deixa de ler importa menos do que o que o servidor deixa de fazer. Um pacote cuja
-autenticação `tls-crypt` falha é descartado antes de o código TLS do OpenVPN o ver, então **quem não tem
-o `tc.key` nem consegue começar um handshake**, que é o silêncio que o WireGuard obtém das chaves dele,
+O que um observador deixa de ler importa menos do que o que o servidor deixa de fazer. O servidor descarta um
+pacote cuja autenticação `tls-crypt` falha antes de o código TLS do OpenVPN o ver. **Quem não tem o
+`tc.key` nem consegue começar um handshake**: é o silêncio que o WireGuard obtém das chaves dele,
 comprado aqui com um arquivo compartilhado. Um cliente que sai da empresa continua com esse arquivo, e
 é por isso que ele protege a porta e quem decide quem entra continua sendo o certificado.
 
@@ -81,8 +81,8 @@ ana@hq:~$ sudo grep -E "Peer Connection|primary virtual" /run/openvpn.log
 2026-09-28 18:08:59 ana/198.51.100.77:35979 MULTI: primary virtual IP for ana/198.51.100.77:35979: 10.8.0.2
 ```
 
-**O OpenVPN dá nome à pessoa.** `ana` é o Common Name do certificado com que ela conectou, ao lado do
-endereço real de onde veio, `198.51.100.77:35979`, o roteador de casa de novo, e do endereço de túnel
+**O OpenVPN dá nome à pessoa.** `ana` é o Common Name do certificado com que ela conectou. Ao lado estão o
+endereço real de onde veio, `198.51.100.77:35979`, o roteador de casa de novo, e o endereço de túnel
 que ela recebeu do pool, `10.8.0.2`. O log diz o mesmo, com horário. Tirar a Ana significa revogar o
 certificado dela, com uma lista de revogação que o servidor consulta (`crl-verify`, não configurado
 aqui), e o acesso de mais ninguém muda. Com o WireGuard significa apagar a chave pública dela do arquivo

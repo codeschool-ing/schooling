@@ -22,7 +22,7 @@ total 8
 
 `wg genkey` writes a private key and `wg pubkey` derives the public one from it. The reverse is not
 possible, which is the whole point of the pair. The `umask 077` in front makes the new file readable by
-its owner alone, and `ls -l` shows the result: **`hq.key` is `-rw-------`, root's and nobody else's**,
+its owner alone. `ls -l` shows the result: **`hq.key` is `-rw-------`, root's and nobody else's**,
 while `hq.pub` is readable by everybody. Both are 45 bytes, 44 characters of base64 and a newline.
 
 The public key was printed because it is the half that gets handed to other machines. The private key

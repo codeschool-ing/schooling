@@ -10,7 +10,7 @@ vai e quanto espaço há para usar, e as duas coisas puxam em sentidos opostos.
 
 **Uma frequência mais baixa vai mais longe; uma mais alta tem muito mais espaço.** Com a mesma potência
 de transmissão, um sinal de 5 GHz chega mais fraco que um de 2,4 GHz à mesma distância, cerca de 6 dB a
-céu aberto, e paredes e corpos tiram ainda mais dele. A aula 10 põe números nessa perda. Em troca, as
+céu aberto. Paredes e corpos tiram ainda mais dele. A aula 10 põe números nessa perda. Em troca, as
 faixas mais altas são largas o bastante para caber muitos canais, e canais largos. Desenhadas na mesma
 escala, a diferença salta aos olhos:
 

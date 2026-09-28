@@ -41,8 +41,8 @@ PING 192.168.20.30 (192.168.20.30) 56(84) bytes of data.
 ```
 
 Todo o resto estava intacto. `hq` continuava com a rota, o handshake continuava funcionando, e o ping
-do laptop foi criptografado e entregue a `branch`. Lá ele foi decifrado, visto como vindo de
-`192.168.10.20`, que não está em `10.20.0.1/32`, e descartado. **Nada imprimiu erro em nenhum dos
+do laptop foi criptografado e entregue a `branch`. Lá `branch` o decifrou, viu que vinha de
+`192.168.10.20`, que não está em `10.20.0.1/32`, e o descartou. **Nada imprimiu erro em nenhum dos
 lados**: o laptop viu 100% de perda, como com a chave GRE errada da aula 1. Pôr a LAN do escritório de
 volta na lista traz o caixa de volta:
 
@@ -62,7 +62,7 @@ Duas consequências valem mais que o mecanismo.
 **O endereço de origem de um pacote que sai de `wg0` é prova de quem o mandou.** Um pacote de
 `192.168.20.30` que saiu do túnel em `hq` foi decifrado com a chave de `branch`, porque nenhum outro par
 pode usar esse endereço. Então uma regra de firewall em `hq` escrita para `192.168.20.0/24` é uma regra
-sobre a filial, e o laptop da Ana, com `10.20.0.3/32` e mais nada, não consegue mandar um pacote se
+sobre a filial. O laptop da Ana, com `10.20.0.3/32` e mais nada, não consegue mandar um pacote se
 passando pelo caixa. É isso que o WireGuard tem no lugar de contas de usuário.
 
 **Uma faixa pertence a um par de cada vez.** Dar `192.168.20.0/24` a um segundo par a tira do primeiro,

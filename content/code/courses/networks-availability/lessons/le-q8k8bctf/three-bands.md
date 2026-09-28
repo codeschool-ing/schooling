@@ -9,8 +9,8 @@ band, because nothing in the rate arithmetic depends on the frequency. What diff
 signal goes and how much room there is to use, and the two pull in opposite directions.
 
 **A lower frequency reaches further; a higher one has far more room.** At the same transmit power, a
-5 GHz signal arrives weaker than a 2.4 GHz one over the same distance, by about 6 dB in open air, and
-walls and bodies take more from it again. Lesson 10 puts numbers on the loss. In exchange, the higher
+5 GHz signal arrives weaker than a 2.4 GHz one over the same distance, by about 6 dB in open air.
+Walls and bodies take more from it again. Lesson 10 puts numbers on the loss. In exchange, the higher
 bands are wide enough to hold many channels, and wide ones. Drawn to one scale, the difference is hard
 to miss:
 

@@ -22,7 +22,7 @@ Everywhere else, what the offices share is what they suffer together:
 | one subnet | if the WAN link fails, the subnet splits in two halves that each believe they are whole |
 | one gateway | a machine moved to the branch still sends to its gateway at head office, and back, across the WAN |
 
-The last row has a name, **tromboning**: traffic between two machines in the same building goes out
+The last row has a name, **tromboning**. Traffic between two machines in the same building goes out
 across the WAN to a router in the other one and comes back, because that is where the subnet's gateway
 lives. **The split in the row above it is worse, because nothing reports it**: each half keeps answering
 for the addresses it still has.

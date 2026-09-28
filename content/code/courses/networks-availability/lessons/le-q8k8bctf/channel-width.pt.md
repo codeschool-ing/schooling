@@ -21,7 +21,7 @@ largura dobra, a taxa um pouco mais que dobra**, porque um canal mais largo desp
 menos subportadoras nas bordas. Isso parece um motivo para escolher sempre o canal mais largo. Não é,
 porque a largura tem três custos, e nenhum deles aparece no programa.
 
-**Menos canais para dividir.** Uma faixa tem uma quantidade fixa de espectro, então cada vez que a
+**A largura deixa menos canais para dividir.** Uma faixa tem uma quantidade fixa de espectro, então cada vez que a
 largura dobra o número de canais nela cai pela metade. Pontos de acesso próximos precisam de canais
 diferentes, ou se revezam (a aula 7 explica como), e em 2,4 GHz um único canal de 40 MHz ocupa quase
 metade da faixa. A faixa de 6 GHz, a mais larga que existe, mostra a troca em números, onde os 1200 MHz
@@ -32,18 +32,18 @@ estão liberados:
 | canais que não se sobrepõem | 59 | 29 | 14 | 7 | 3 |
 | um fluxo 802.11ax, Mbit/s (o programa acima) | 143,4 | 286,8 | 600,5 | 1201,0 | não existe no 802.11ax |
 
-**Menos sinal contra o ruído.** Um transmissor tem potência fixa, e um canal mais largo a espalha mais
+**A largura deixa menos sinal contra o ruído.** Um transmissor tem potência fixa, e um canal mais largo a espalha mais
 fino, enquanto o ruído que o receptor ouve cresce com a largura que ele escuta. Dobre a largura e o total
 do sinal fica igual enquanto o ruído dobra: **cada vez que a largura dobra, perdem-se 3 dB de relação
 sinal-ruído**. Na borda de uma célula, um cliente em 160 MHz cai para uma modulação mais lenta antes de
 um em 40 MHz, e pode acabar com uma taxa menor do que teria no canal mais estreito.
 
-**Mais exposição a um vizinho.** Um canal de 160 MHz se sobrepõe a qualquer coisa que transmita em
+**A largura traz mais exposição a um vizinho.** Um canal de 160 MHz se sobrepõe a qualquer coisa que transmita em
 qualquer uma das suas oito partes de 20 MHz. Desde o 802.11ac um ponto de acesso consegue recuar para
 parte do canal quando o resto está ocupado, e desde o 802.11ax consegue deixar de fora uma fatia
 ocupada. Ainda assim transmite menos vezes do que transmitiria num canal só dele.
 
 Então a escolha é feita por faixa e por prédio. A prática se acomodou num padrão que nenhuma norma
-escreve: **20 MHz em 2,4 GHz, sempre**, 20 ou 40 MHz em 5 GHz onde os pontos de
-acesso são densos, e 80 ou 160 em 6 GHz, onde há canais para todo mundo. Uma casa com um ponto de acesso
+escreve: **20 MHz em 2,4 GHz, sempre**, e 20 ou 40 MHz em 5 GHz onde os pontos de acesso são densos. Em
+6 GHz, onde há canais para todo mundo, são 80 ou 160. Uma casa com um ponto de acesso
 e nenhum vizinho pode usar o canal mais largo que tiver, porque não há com quem dividi-lo.

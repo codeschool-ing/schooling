@@ -29,7 +29,7 @@ time here is one computer's own work.
 
 The till's routing table is the other half of the evidence. It has a default route to its gateway and
 its own LAN, and nothing else: no tunnel address, no VPN software, no key. It would look the same if the
-two offices were joined by a leased line, and that is the point. **Which traffic goes to the other
+two offices were joined by a leased line. **Which traffic goes to the other
 office is decided once, on the router, for every device behind it**, printers, cameras and tills
 included, none of which could run a VPN client if asked.
 

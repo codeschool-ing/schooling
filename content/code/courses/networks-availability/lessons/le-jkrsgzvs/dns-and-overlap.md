@@ -8,10 +8,10 @@ not run.
 
 ## DNS, which the routes do not decide
 
-Routes decide where packets go; they say nothing about names. **An internal name is answered by the
-company's DNS server, and a laptop at home asks whatever resolver the home router handed it.** That
-resolver has never heard of the company's internal names, so they fail, and an internal name that also
-exists in public DNS quietly resolves to the public address instead.
+Routes decide where packets go; they say nothing about names. **The company's DNS server answers internal
+names, and a laptop at home asks whatever resolver the home router handed it.** That resolver has never
+heard of the company's internal names, so they fail. An internal name that also exists in public DNS
+quietly resolves to the public address instead.
 
 The fix is split DNS: queries for the company's own domains go to its resolver, through the tunnel, and
 everything else to the local one. On Linux, `systemd-resolved` does it per interface, and `wg-quick`

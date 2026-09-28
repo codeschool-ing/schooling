@@ -41,8 +41,8 @@ PING 192.168.20.30 (192.168.20.30) 56(84) bytes of data.
 ```
 
 Everything else was intact. `hq` still had its route, the handshake still worked, and the laptop's
-ping was encrypted and delivered to `branch`. There it was decrypted, found to come from
-`192.168.10.20`, which is not in `10.20.0.1/32`, and dropped. **Nothing printed an error on either
+ping was encrypted and delivered to `branch`. There `branch` decrypted it, found that it came from
+`192.168.10.20`, which is not in `10.20.0.1/32`, and dropped it. **Nothing printed an error on either
 side**: the laptop saw 100% loss, as it did with the wrong GRE key in lesson 1. Putting the office LAN
 back into the list brings the till back:
 
@@ -61,7 +61,7 @@ Two consequences are worth more than the mechanism.
 
 **The source address of a packet leaving `wg0` is proof of who sent it.** A packet from `192.168.20.30`
 that came out of the tunnel on `hq` was decrypted with `branch`'s key, because no other peer may use
-that address. So a firewall rule on `hq` written for `192.168.20.0/24` is a rule about the branch, and
+that address. So a firewall rule on `hq` written for `192.168.20.0/24` is a rule about the branch.
 Ana's laptop, allowed `10.20.0.3/32` and nothing else, cannot send a packet claiming to be the till.
 That is what WireGuard has in place of user accounts.
 

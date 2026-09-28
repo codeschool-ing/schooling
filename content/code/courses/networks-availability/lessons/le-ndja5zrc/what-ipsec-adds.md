@@ -3,8 +3,7 @@ title: What IPsec adds to a tunnel
 version: 1
 ---
 
-Lesson 1 ended with a tunnel that showed every byte it carried to the ISP. IPsec is the usual answer, and
-it is usually called a VPN protocol, as if it were one thing. **IPsec is a family: ESP protects packets,
+Lesson 1 ended with a tunnel that showed every byte it carried to the ISP. IPsec is the usual answer, and people call it a VPN protocol, as if it were one thing. **IPsec is a family: ESP protects packets,
 AH is an older way of protecting them, and IKE is how two machines agree on the keys.** This section is
 about the first two.
 
@@ -21,13 +20,14 @@ answers the questions a plain tunnel left open:
 | is it a copy of an old packet? | nobody checks | a sequence number, and a record of those already seen |
 
 The check value is the **ICV**, integrity check value: a few bytes at the end of each packet, computed
-with a key only the two ends hold. **A packet whose ICV does not match is dropped before anything is
-decrypted, and the sender is not told.** The sequence number goes up with every packet, so a packet
-somebody recorded and sends again arrives with a number already used, and is dropped too.
+with a key only the two ends hold. **The receiver drops a packet whose ICV does not match before
+decrypting anything, and does not tell the sender.** The sequence number goes up with every packet, so a
+packet somebody recorded and sends again arrives with a number already used. The receiver drops that one
+too.
 
 ## AH
 
-AH, Authentication Header, is IP protocol 51. It authenticates and encrypts nothing, and it also covers
+AH, Authentication Header, is IP protocol 51. It authenticates without encrypting, and it also covers
 the addresses in the outer IP header. **NAT rewrites exactly the addresses AH protects**, so AH does not
 survive a NAT. ESP can authenticate without encrypting if that is ever wanted, so AH lost the one thing
 it did alone. Since RFC 4301, support for AH has been optional, and ESP is what you will configure.

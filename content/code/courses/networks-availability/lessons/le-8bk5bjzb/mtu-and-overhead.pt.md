@@ -30,8 +30,7 @@ PING 192.168.20.30 (192.168.20.30) 1452(1480) bytes of data.
 rtt min/avg/max/mdev = 0.606/0.606/0.606/0.000 ms
 ```
 
-O pacote de 1500 bytes foi recusado por `hq`, `192.168.10.1`, com **`Frag needed and DF set (mtu =
-1480)`**. O de 1480 passou. O laptop não só imprimiu a mensagem, ele guardou a informação:
+`hq`, `192.168.10.1`, recusou o pacote de 1500 bytes com **`Frag needed and DF set (mtu = 1480)`**. O de 1480 passou. O laptop não só imprimiu a mensagem, ele guardou a informação:
 
 ```
 ana@laptop:~$ ip route get 192.168.20.30

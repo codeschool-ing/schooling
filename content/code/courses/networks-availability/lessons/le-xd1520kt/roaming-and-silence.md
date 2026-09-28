@@ -36,7 +36,7 @@ capture of it.
 
 NAT has a catch. `homegw` keeps the mapping from port 40817 to `192.168.1.50` only while traffic uses
 it, and a home router typically forgets an idle UDP mapping after a minute or two. WireGuard sends
-nothing when it has nothing to send, so after a quiet spell a packet from `hq` to `198.51.100.77:40817`
+nothing when it has nothing to send. After a quiet spell, a packet from `hq` to `198.51.100.77:40817`
 would reach a door that is no longer there, and the office could not reach Ana until she sent something
 first.
 

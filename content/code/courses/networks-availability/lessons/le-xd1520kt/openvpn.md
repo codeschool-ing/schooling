@@ -54,8 +54,8 @@ Server Hello, no version and no list of ciphers**, only `Continuation Data`, whi
 bytes where it expected TLS records it could parse. Lesson 3's capture, without `tls-crypt`, named every
 step.
 
-What an observer can no longer read matters less than what the server no longer does. A packet whose
-`tls-crypt` authentication fails is dropped before OpenVPN's TLS code sees it. **Somebody without
+What an observer can no longer read matters less than what the server no longer does. The server drops a
+packet whose `tls-crypt` authentication fails before OpenVPN's TLS code sees it. **Somebody without
 `tc.key` cannot even begin a handshake**: it is the silence WireGuard gets from its keys, bought here
 with one shared file. A client that leaves the company still has that file, which is why it protects
 the door and the certificate still decides who comes in.
@@ -79,9 +79,9 @@ ana@hq:~$ sudo grep -E "Peer Connection|primary virtual" /run/openvpn.log
 2026-09-28 18:08:59 ana/198.51.100.77:35979 MULTI: primary virtual IP for ana/198.51.100.77:35979: 10.8.0.2
 ```
 
-**OpenVPN names the person.** `ana` is the Common Name in the certificate she connected with, beside the
-real address it came from, `198.51.100.77:35979`, the home router again, and the tunnel address she got
-from the pool, `10.8.0.2`. The log says the same with a time. Removing Ana means revoking her
+**OpenVPN names the person.** `ana` is the Common Name in the certificate she connected with. Beside it are
+the real address it came from, `198.51.100.77:35979`, the home router again, and the tunnel address she
+got from the pool, `10.8.0.2`. The log says the same with a time. Removing Ana means revoking her
 certificate, with a revocation list the server checks (`crl-verify`, not configured here), and nobody
 else's access changes. With WireGuard it means deleting her public key from `hq`'s file; the name *Ana*
 was only ever a comment.

@@ -5,8 +5,8 @@ version: 1
 
 A maioria das VPNs começa com uma autoridade certificadora, um banco de usuários e páginas de
 configuração. **O WireGuard começa com duas chaves por máquina e um arquivo de uma dúzia de linhas.** Não
-há usuário, nem senha, nem negociação de algoritmos: cada ponta é conhecida pela chave pública, e a
-criptografia é fixada pelo protocolo, Curve25519 para combinar as chaves e ChaCha20-Poly1305 para
+há usuário, nem senha, nem negociação de algoritmos. Cada ponta é conhecida pela chave pública, e a
+criptografia é fixada pelo protocolo: Curve25519 para combinar as chaves, ChaCha20-Poly1305 para
 criptografar e autenticar os dados.
 
 O par de chaves é gerado na máquina que vai usá-lo:
@@ -22,7 +22,7 @@ total 8
 ```
 
 O `wg genkey` grava uma chave privada e o `wg pubkey` deriva dela a pública. O inverso não é possível, e
-esse é o sentido do par. O `umask 077` na frente faz o arquivo novo ser legível só pelo dono, e o `ls -l`
+esse é o sentido do par. O `umask 077` na frente faz o arquivo novo ser legível só pelo dono. O `ls -l`
 mostra o resultado: **`hq.key` é `-rw-------`, do root e de mais ninguém**, enquanto `hq.pub` pode ser
 lido por todos. Os dois têm 45 bytes, 44 caracteres de base64 e uma quebra de linha.
 

@@ -90,7 +90,7 @@ ana@hq:~$ sudo swanctl --initiate --child lans 2>&1 | tail -5
 **The IKE SA was established and the CHILD SA was refused**: `TS_UNACCEPTABLE`, traffic selectors
 unacceptable. The two routers trust each other and carry nothing, the state people call "phase 1 up,
 phase 2 down". The safe rule is to make the selectors on the two sides mirror each other exactly. IKEv2
-lets a responder narrow a request to the part it accepts, and implementations use that differently, so a
+lets a responder narrow a request to the part it accepts, and implementations use that differently. A
 `/24` against a `/16` may work with one pair of routers and fail with another.
 
 Each mistake is refused at a different step, which is what makes the log worth reading:

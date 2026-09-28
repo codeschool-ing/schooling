@@ -74,9 +74,9 @@ ana@hq:~$ ip neigh show dev vx0; bridge fdb show dev vx0
 
 A tabela de encaminhamento é a tabela MAC de um switch, a aula 18 de `networks-addressing`, com uma
 diferença: **cada entrada aponta não para uma porta, e sim para o endereço público da outra ponta.**
-`96:6b:a3:79:75:aa` foi aprendido da resposta e mora atrás de `198.51.100.2`. A entrada de zeros é para
-onde vai um broadcast ou um destino desconhecido, a lista de inundação; com mais sites haveria uma linha
-dessas por site, e um broadcast seria copiado para cada um.
+`96:6b:a3:79:75:aa` foi aprendido da resposta e mora atrás de `198.51.100.2`. A entrada de zeros é a
+lista de inundação, para onde vai um broadcast ou um destino desconhecido. Com mais sites haveria uma
+linha dessas por site, e um broadcast seria copiado para cada um.
 
 **Nada disso vai cifrado.** O provedor leu o pedido ARP e o ping tão facilmente quanto leu o GRE da aula
 1. O VXLAN foi feito para data centers, sobre enlaces que o operador controla; atravessando uma rede que

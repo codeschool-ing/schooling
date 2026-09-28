@@ -28,9 +28,9 @@ Error: Unknown device type.
 [#] ip -4 route add 192.168.20.0/24 dev wg0
 ```
 
-O primeiro comando falha com `Unknown device type`, o jeito do kernel de dizer que não tem o módulo do
-WireGuard, **então o `wg-quick` recorre ao `wireguard-go`**, o mesmo protocolo escrito como um programa
-comum, pelo mesmo autor. Visto de fora ele se comporta igual, só que mais devagar.
+O primeiro comando falha com `Unknown device type`: o kernel não tem o módulo do WireGuard. **Então o
+`wg-quick` recorre ao `wireguard-go`**, o mesmo protocolo escrito como um programa comum, pelo mesmo
+autor. Visto de fora ele se comporta igual, só que mais devagar.
 
 **O aviso logo abaixo está errado sobre esta máquina.** Ele diz que o kernel tem suporte de primeira
 classe ao WireGuard, uma linha depois de o kernel se recusar a criar o dispositivo. O WireGuard faz
@@ -79,9 +79,9 @@ mostra por que isso importa. `counter=0` marca o primeiro pacote de dados em cad
 sobe um por pacote e o receptor recusa um número que já viu, então um pacote gravado não pode ser
 reenviado depois.
 
-Os tamanhos fecham. Um pacote de dados tem 170 bytes no fio para um ping de 84: 14 de Ethernet, 20 de IP
-externo, 8 de UDP, 16 de cabeçalho do WireGuard, o ping completado até 96 bytes, que é o `datalen=96`,
-e 16 de tag de autenticação. A primeira resposta levou 2,85 ms e a segunda 0,944 ms, porque a primeira
+Os tamanhos fecham. Um pacote de dados tem 170 bytes no fio para um ping de 84. São 14 de Ethernet, 20
+de IP externo, 8 de UDP e 16 de cabeçalho do WireGuard, depois o ping completado até 96 bytes, que é o
+`datalen=96`, e 16 de tag de autenticação. A primeira resposta levou 2,85 ms e a segunda 0,944 ms, porque a primeira
 esperou o handshake; sem atraso em nenhum enlace, os dois tempos são um computador falando consigo
 mesmo. **O primeiro ping não se perdeu**: o WireGuard segura o pacote enquanto a sessão é combinada.
 
@@ -105,7 +105,7 @@ peer: FYBqYy68QPdITaZcZGko576tjvRUt5cUWsMsdGzbgkE=
 ```
 
 O par da filial tem endpoint, um handshake de um segundo atrás e contadores de bytes que batem com a
-captura: **404 B enviados são 148 + 128 + 128**, a carga UDP da iniciação e dois pacotes de dados, e 348
+captura. **404 B enviados são 148 + 128 + 128**, a carga UDP da iniciação e dois pacotes de dados, e 348
 B recebidos são 92 + 128 + 128. O par de casa só tem os IPs permitidos. Ele nunca mandou nada, então
 `hq` não tem endpoint nem handshake para ele.
 

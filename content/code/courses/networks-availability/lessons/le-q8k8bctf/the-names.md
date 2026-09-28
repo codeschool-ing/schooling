@@ -30,8 +30,8 @@ Two columns of that table need a word. The year is the year the IEEE published t
 products came before it: Wi-Fi 6 certification opened in 2019, well before 802.11ax was final.
 And the top rate is **a ceiling the standard writes down, never a speed anybody measures**. It assumes
 the widest channel, the most streams and a signal clean enough for the densest modulation, all at
-once. The section on channel width computes every one of them from 802.11a on, from the standard's own numbers, and
-the last section of this lesson says how much of one a phone gets.
+once. The section on channel width computes every one of them from 802.11a on, from the standard's own numbers.
+The last section of this lesson says how much of one a phone gets.
 
 **Wi-Fi 6E is the same 802.11ax, allowed into a third band**, and certified since 2021. A Wi-Fi 6
 router with no 6E on the box does not transmit at 6 GHz, whatever its number suggests.

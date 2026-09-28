@@ -27,7 +27,7 @@ served by web1
 ```
 
 `AllowedIPs` names the tunnel's network and the head office LAN, nothing else. `ip route get` asks the
-kernel which way a packet would go without sending one: to `files` through `wg0`, from her tunnel
+kernel which way a packet would go without sending one. To `files` through `wg0`, from her tunnel
 address `10.20.0.3`; to `web1` out of `eth0`, through the home router `192.168.1.1`. The traceroute
 agrees, home router, ISP, `web1`. **The company never sees her web traffic at all.**
 
@@ -97,11 +97,10 @@ address (NAT, lesson 11 of `networks-addressing`).
 ```
 
 That second address is most of the case for a full tunnel. The company's firewall, filtering and logs
-apply to everything she does, a service that accepts only the office's address works from her kitchen,
-and on a café's Wi-Fi her traffic crosses the café's network encrypted, provided her DNS goes
-the same way, which the next section shows is not automatic. The cost is the path in
-the figure: **every video call and every download crosses the head office's internet link twice**, in
-and out, and when that link fails, she loses the internet as well as the office.
+apply to everything she does. A service that accepts only the office's address works from her kitchen.
+On a café's Wi-Fi her traffic crosses the café's network encrypted, provided her DNS goes the same way,
+and the next section shows that this is not automatic. The cost is the path in the figure: **every video call and every download crosses the head office's internet link twice**, in
+and out. When that link fails, she loses the internet as well as the office.
 
 A split tunnel is the opposite trade. The head office carries only its own traffic and her calls go
 straight out, but whatever else she does is outside the company's view, and so is the rest of the

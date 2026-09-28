@@ -29,7 +29,7 @@ PING 192.168.20.30 (192.168.20.30) 1452(1480) bytes of data.
 rtt min/avg/max/mdev = 0.606/0.606/0.606/0.000 ms
 ```
 
-The 1500-byte packet was refused by `hq`, `192.168.10.1`, with **`Frag needed and DF set (mtu = 1480)`**.
+`hq`, `192.168.10.1`, refused the 1500-byte packet with **`Frag needed and DF set (mtu = 1480)`**.
 The 1480-byte one went through. The laptop did not just print that message, it remembered it:
 
 ```

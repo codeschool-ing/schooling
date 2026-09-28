@@ -22,7 +22,7 @@ Em qualquer outro caso, o que os escritórios dividem é o que sofrem juntos:
 | uma sub-rede | se o enlace da WAN cai, a sub-rede se parte em duas metades que acreditam estar inteiras |
 | um gateway | uma máquina movida para a filial continua mandando para o gateway na matriz, e de volta, pela WAN |
 
-A última linha tem nome, **tromboning**: o tráfego entre duas máquinas no mesmo prédio sai pela WAN até
+A última linha tem nome, **tromboning**. O tráfego entre duas máquinas no mesmo prédio sai pela WAN até
 um roteador no outro e volta, porque é lá que mora o gateway da sub-rede. **A divisão da linha acima é
 pior, porque nada a denuncia**: cada metade continua respondendo pelos endereços que ainda tem.
 
