@@ -37,11 +37,11 @@ level at every point**, so that there is somewhere to roam to.
 ## The direction a survey does not measure
 
 A survey adapter measures what the AP sends. The AP has to hear the client too, and **the client's
-transmitter is the weaker one**: lesson 7 put an AP at around 20 dBm and a phone well below that. A cell
+transmitter is the weaker one**, the asymmetry of lesson 7: an AP transmits louder than a phone. A cell
 drawn from the AP's signal can therefore be wider than a phone at its edge can answer across. That is one
 more reason to size cells by the weakest client's needs rather than by turning the AP's power up until
 the map turns green.
 
 The adapter matters as well. **Two adapters can read the same spot several dB apart**, and neither
-matches the phone in anybody's pocket. A survey worth its report says which adapter it used and how it
+matches the phone in anybody's pocket. A survey worth reading says which adapter it used and how it
 compared with the devices that will use the network, which the last section returns to.
