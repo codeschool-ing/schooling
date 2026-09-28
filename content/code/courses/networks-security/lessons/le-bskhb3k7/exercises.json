@@ -1,0 +1,595 @@
+[
+  {
+    "id": "ex-hzgbq9r5",
+    "version": 1,
+    "section": "segments-of-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can the central firewall not enforce microsegmentation on its own?",
+    "hint": "Which packets does it see?",
+    "choices": [
+      {
+        "text": "It has too few rules for two hundred machines",
+        "correct": false,
+        "why": "The count of rules is not the obstacle."
+      },
+      {
+        "text": "Traffic inside a segment does not cross it",
+        "correct": true,
+        "why": "Right. Two machines on one switch talk past it."
+      },
+      {
+        "text": "It filters by port, and microsegmentation needs roles",
+        "correct": false,
+        "why": "The generated host rules filter by address and port too."
+      },
+      {
+        "text": "Stateful firewalls cannot be placed between zones",
+        "correct": false,
+        "why": "Lesson 4 put exactly that between the zones."
+      }
+    ]
+  },
+  {
+    "id": "ex-f75nfwye",
+    "version": 1,
+    "section": "segments-of-one",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each property to its value under microsegmentation.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "the unit",
+        "right": "one workload"
+      },
+      {
+        "left": "enforced by",
+        "right": "each host, or the hypervisor next to it"
+      },
+      {
+        "left": "written as",
+        "right": "a table of roles"
+      },
+      {
+        "left": "inside a zone",
+        "right": "closed unless a rule allows it"
+      }
+    ],
+    "right_distractors": [
+      "a matrix of zones"
+    ]
+  },
+  {
+    "id": "ex-6604medy",
+    "version": 1,
+    "section": "segments-of-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs 300 containers and wants each one isolated from the rest. What keeps that from becoming 300 rule sets nobody can keep consistent?",
+    "hint": "Where is the policy written, and how many times?",
+    "choices": [
+      {
+        "text": "A larger central firewall with one rule per container pair",
+        "correct": false,
+        "why": "Traffic between containers on one host never reaches it."
+      },
+      {
+        "text": "Putting the containers back into three zones",
+        "correct": false,
+        "why": "That reopens everything inside each zone."
+      },
+      {
+        "text": "One policy by role, with the platform generating each container's rules",
+        "correct": true,
+        "why": "Right. The mechanism differs; the policy has the same shape."
+      },
+      {
+        "text": "Writing each container's rules by hand, carefully",
+        "correct": false,
+        "why": "Hand-written host firewalls drift apart at that scale."
+      }
+    ]
+  },
+  {
+    "id": "ex-e54erpxj",
+    "version": 1,
+    "section": "policy-as-a-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A second application server is added to policy.txt with the role app. What does it need before it can reach the database?",
+    "hint": "Where is a role turned into addresses?",
+    "choices": [
+      {
+        "text": "A new accept line typed into db's rules",
+        "correct": false,
+        "why": "Nobody edits db's rules; they are generated."
+      },
+      {
+        "text": "The rules generated again",
+        "correct": true,
+        "why": "Right. Its address joins the role app at the next generation."
+      },
+      {
+        "text": "A new row naming db in its from column",
+        "correct": false,
+        "why": "The from column names roles that connect in, not the target."
+      },
+      {
+        "text": "Its address added to db's row, next to app",
+        "correct": false,
+        "why": "Addresses never appear in the from column."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rfzszaf",
+    "version": 1,
+    "section": "policy-as-a-table",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After loading its generated rules, how many lines of db's input chain contain accept?",
+    "hint": "grep -c accept counted them.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-zmxgtnat",
+    "version": 1,
+    "section": "policy-as-a-table",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The from column names roles, and each role is turned into ___ only when the rules are generated.",
+    "hint": "What does the generated rule put after ip saddr?",
+    "blanks": [
+      {
+        "accept": [
+          "addresses",
+          "IP addresses",
+          "addresses IP",
+          "IPs"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sqgze71j",
+    "version": 1,
+    "section": "policy-as-a-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each generated accept rule carry a comment such as \"postgres from app\"?",
+    "hint": "Whose words are in it?",
+    "choices": [
+      {
+        "text": "nft refuses an accept rule without one",
+        "correct": false,
+        "why": "A comment is optional in nft."
+      },
+      {
+        "text": "The generator reads it back to find the role",
+        "correct": false,
+        "why": "It reads policy.txt, not its own output."
+      },
+      {
+        "text": "So the rule says why it exists, in the policy's words",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It records who generated the rule and when",
+        "correct": false,
+        "why": "It holds the service and the roles, not an author."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpy9s8px",
+    "version": 1,
+    "section": "east-west",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these connections is east-west?",
+    "hint": "Between whom does it run?",
+    "choices": [
+      {
+        "text": "A browser at home reaching www",
+        "correct": false,
+        "why": "Client to server is north-south."
+      },
+      {
+        "text": "An employee's laptop reaching the proxy",
+        "correct": false,
+        "why": "Still a client reaching a server."
+      },
+      {
+        "text": "A DNS answer returning to a laptop",
+        "correct": false,
+        "why": "A reply to a client, north-south."
+      },
+      {
+        "text": "app connecting to db on 5432",
+        "correct": true,
+        "why": "Right. Server to server."
+      }
+    ]
+  },
+  {
+    "id": "ex-28d2yafr",
+    "version": 1,
+    "section": "east-west",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which probes came back open after the generated rules were loaded? Choose all that apply.",
+    "hint": "Compare each with the policy's rows.",
+    "choices": [
+      {
+        "text": "app to db:5432",
+        "correct": true,
+        "why": "postgres from app."
+      },
+      {
+        "text": "www to app:8080",
+        "correct": true,
+        "why": "http from proxy, and www is the proxy."
+      },
+      {
+        "text": "db to app:22",
+        "correct": false,
+        "why": "SSH is from the admin role."
+      },
+      {
+        "text": "admin to db:5432",
+        "correct": false,
+        "why": "postgres is from app; admin gets SSH."
+      },
+      {
+        "text": "admin to db:22",
+        "correct": true,
+        "why": "ssh from admin, on every host."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkhedqgv",
+    "version": 1,
+    "section": "east-west",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An attacker takes over app. With the generated rules in place, what on the servers segment can app still reach?",
+    "hint": "Read app's probe of db.",
+    "choices": [
+      {
+        "text": "Everything on its segment, since fw is not in the way",
+        "correct": false,
+        "why": "That was before this lesson."
+      },
+      {
+        "text": "db's SSH and the database, as its neighbour",
+        "correct": false,
+        "why": "db:22 came back blocked."
+      },
+      {
+        "text": "Port 5432 on db",
+        "correct": true,
+        "why": "Right. The one port the application needs."
+      },
+      {
+        "text": "No other machine at all",
+        "correct": false,
+        "why": "db:5432 came back open."
+      }
+    ]
+  },
+  {
+    "id": "ex-46afqkgs",
+    "version": 1,
+    "section": "east-west",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An operator adds an accept rule on db by hand to fix an outage, and a week later the policy changes. What happens to the hand-made rule?",
+    "hint": "How does every generated file start?",
+    "choices": [
+      {
+        "text": "It stays, because nft merges old rules into new ones",
+        "correct": false,
+        "why": "The file starts with flush ruleset."
+      },
+      {
+        "text": "The next generation removes it without a word",
+        "correct": true,
+        "why": "Right. The fix belongs in the policy file."
+      },
+      {
+        "text": "The generator refuses to run until it is removed",
+        "correct": false,
+        "why": "The generator does not read the host's rules."
+      },
+      {
+        "text": "It is copied into policy.txt automatically",
+        "correct": false,
+        "why": "Nothing flows from a host back to the policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5n7gjp3",
+    "version": 1,
+    "section": "continuous-verification",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "db's accept line for app on 5432 was removed while a session was open. Why did the client's second line still arrive?",
+    "hint": "Which rule comes first on every host?",
+    "choices": [
+      {
+        "text": "nft -f takes a minute to apply",
+        "correct": false,
+        "why": "The count of 5432 rules was already 0."
+      },
+      {
+        "text": "The admin role still had access to db",
+        "correct": false,
+        "why": "admin reaches SSH, and the client was app."
+      },
+      {
+        "text": "ct state established accepted it, as the session predated the change",
+        "correct": true,
+        "why": "Right. The new policy governs new connections."
+      },
+      {
+        "text": "The line travelled over UDP, which the rule did not cover",
+        "correct": false,
+        "why": "It was a TCP session on 5432."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpj10w30",
+    "version": 1,
+    "section": "continuous-verification",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds after its first line did app send the second one?",
+    "hint": "The section says it.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-rpyrvttp",
+    "version": 1,
+    "section": "continuous-verification",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An employee is removed from the VPN's allowed group at noon while connected. With only the rule changed, when does their access end?",
+    "hint": "What did db do with the session that was already open?",
+    "choices": [
+      {
+        "text": "At noon, when the rule changes",
+        "correct": false,
+        "why": "The rule decides new connections, not open ones."
+      },
+      {
+        "text": "When that session ends and they try to connect again",
+        "correct": true,
+        "why": "Right. Until then, nothing re-verifies it."
+      },
+      {
+        "text": "At the next packet they send after noon",
+        "correct": false,
+        "why": "The second line on db went through after the change."
+      },
+      {
+        "text": "After the TIME_WAIT of the change expires",
+        "correct": false,
+        "why": "TIME_WAIT belongs to a closed connection, not to a rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2525751",
+    "version": 1,
+    "section": "ending-what-is-open",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many conntrack flow entries did the withdrawal delete on db?",
+    "hint": "The message after conntrack -D.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-kv20p6cq",
+    "version": 1,
+    "section": "ending-what-is-open",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Only one session was open, yet conntrack deleted two entries. What was the other?",
+    "hint": "Think of the earlier run.",
+    "choices": [
+      {
+        "text": "The reply direction of the same session",
+        "correct": false,
+        "why": "One entry holds both directions."
+      },
+      {
+        "text": "admin's SSH session to db",
+        "correct": false,
+        "why": "The deletion matched port 5432 from app."
+      },
+      {
+        "text": "A UDP flow on 5432",
+        "correct": false,
+        "why": "-p tcp matched TCP entries."
+      },
+      {
+        "text": "The previous session, closed and waiting out TIME_WAIT",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjw4etrg",
+    "version": 1,
+    "section": "ending-what-is-open",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each layer to how a live session is ended there.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "a Linux host firewall",
+        "right": "delete the conntrack entries"
+      },
+      {
+        "left": "a network firewall",
+        "right": "clear its session table for the address"
+      },
+      {
+        "left": "an application",
+        "right": "invalidate the session on the server side"
+      },
+      {
+        "left": "single sign-on",
+        "right": "revoke the tokens and keep lifetimes short"
+      }
+    ],
+    "right_distractors": [
+      "flush the browser's cookies"
+    ]
+  },
+  {
+    "id": "ex-dqhfgkjz",
+    "version": 1,
+    "section": "ending-what-is-open",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company revokes a contractor's SSO account, and nothing ends the sessions already open. Which setting decides when their access really stops?",
+    "hint": "A revocation that leaves sessions running is a schedule. Of what?",
+    "choices": [
+      {
+        "text": "The tokens' lifetime",
+        "correct": true,
+        "why": "Right. It takes effect within one lifetime."
+      },
+      {
+        "text": "The password policy's minimum length",
+        "correct": false,
+        "why": "A password is checked at sign-in, which is over."
+      },
+      {
+        "text": "The firewall's conntrack timeout for established TCP",
+        "correct": false,
+        "why": "That is a host firewall's clock, not the SSO grant's."
+      },
+      {
+        "text": "How often the account directory is backed up",
+        "correct": false,
+        "why": "A backup does not re-verify anybody."
+      }
+    ]
+  },
+  {
+    "id": "ex-akyx5map",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps that withdraw app from the database completely, from first to last.",
+    "hint": "Policy first, open sessions last.",
+    "items": [
+      "remove app from the from roles of db's row in policy.txt",
+      "generate db's rules with segment.py",
+      "load the new rules on db with nft -f",
+      "delete app's conntrack entries for port 5432"
+    ],
+    "trap": "Deleting the entries before the new rules are loaded lets the next packet open a new session under the old rule."
+  },
+  {
+    "id": "ex-rz6ret2r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new reporting server, role report, must read the database. What is the reviewed change?",
+    "hint": "Where does a change of who may reach the database live?",
+    "choices": [
+      {
+        "text": "An accept line for its address, typed on db and reloaded",
+        "correct": false,
+        "why": "The next generation would flush it."
+      },
+      {
+        "text": "A row for the host, and report added to db's from roles",
+        "correct": true,
+        "why": "Right. A diff to policy.txt, then generation."
+      },
+      {
+        "text": "A rule on fw between its segment and the servers",
+        "correct": false,
+        "why": "db's own rules would still drop it."
+      },
+      {
+        "text": "The role app for the new server",
+        "correct": false,
+        "why": "It would then also be accepted wherever app is."
+      }
+    ]
+  },
+  {
+    "id": "ex-em4va53k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a change to the policy, which check shows the east-west matrix is really what the table says?",
+    "hint": "Where was each cell tested from?",
+    "choices": [
+      {
+        "text": "Reading the generated files for the right accept lines",
+        "correct": false,
+        "why": "That checks the file, not what is loaded and reachable."
+      },
+      {
+        "text": "Probing each server from fw",
+        "correct": false,
+        "why": "East-west traffic never crosses fw."
+      },
+      {
+        "text": "Counting accept lines on each host",
+        "correct": false,
+        "why": "Four lines can still be the wrong four."
+      },
+      {
+        "text": "Probing every cell from its own source machine",
+        "correct": true,
+        "why": "Right. That is how the section tested it."
+      }
+    ]
+  }
+]

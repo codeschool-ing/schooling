@@ -536,7 +536,7 @@ down() {
     ip netns pids "$h" 2>/dev/null | xargs -r kill -9 2>/dev/null || true
     ip netns del "$h"
   done
-  for h in $HOSTS printer ips guest; do rm -rf "/etc/netns/$h"; done
+  for h in $HOSTS printer ips guest sw newpc visitor admin2; do rm -rf "/etc/netns/$h"; done
   rm -f /usr/local/share/ca-certificates/example-corp-root-ca.crt
   update-ca-certificates --fresh >/dev/null 2>&1 || true
   rm -rf "$LAB"
@@ -640,6 +640,100 @@ livedev:
 Y
 }
 
+# Lesson 22's access switch. sw is a switch in a namespace: a bridge joining
+# its uplink, plugged into the staff LAN, to two access ports, p1 and p2, where
+# newpc and visitor are plugged in. hostapd runs 802.1X on both ports as the
+# authenticator, with its own EAP server and EAP-TLS: a client proves itself
+# with a certificate from the company's CA.
+#
+# A real switch keeps an unauthenticated port closed in its hardware. Linux
+# does not do that for a bridge port, so the lab does it the way it is written
+# out in the lesson: a netdev chain on each port lets through nothing but
+# 802.1X frames (EtherType 0x888e) until hostapd reports the port authorised,
+# and hostapd_cli, on that event, adds the client's MAC to the set of
+# authorised stations.
+nac() {
+  local ca="$LAB/ca" a b
+  ip netns add sw; ip -n sw link set lo up
+  ip -n sw link add br0 type bridge
+  ip link add up1 type veth peer name v-swup
+  ip link set up1 netns sw; ip -n sw link set up1 master br0
+  ip link set v-swup netns wire; ip -n wire link set v-swup master br-lan; ip -n wire link set v-swup up
+  for pair in "p1 newpc 192.168.10.30 52:54:00:a8:0a:1e" "p2 visitor 192.168.10.31 52:54:00:a8:0a:1f"; do
+    set -- $pair
+    ip netns add "$2"; ip -n "$2" link set lo up
+    ip link add "$1" type veth peer name lab-nac
+    ip link set "$1" netns sw; ip -n sw link set "$1" master br0; ip -n sw link set "$1" up
+    ip link set lab-nac netns "$2"; ip -n "$2" link set lab-nac name eth0
+    ip -n "$2" link set eth0 address "$4"
+    ip -n "$2" addr add "$3/24" dev eth0; ip -n "$2" link set eth0 up
+    ip -n "$2" route add default via 192.168.10.1
+    mkdir -p "/etc/netns/$2" "$LAB/$2/root" "$LAB/$2/home/ana" "$LAB/$2/var/log/lab" "$LAB/$2/run/wireguard"
+    printf '%s\n' "$2" > "/etc/netns/$2/hostname"
+    cp /etc/netns/laptop/hosts /etc/netns/laptop/resolv.conf "/etc/netns/$2/"
+    cp -a /etc/skel/. "$LAB/$2/home/ana/"; chown -R ana:ana "$LAB/$2/home/ana"
+  done
+  ip -n sw link set up1 up; ip -n sw link set br0 up
+  mkdir -p /etc/netns/sw "$LAB/sw/root" "$LAB/sw/var/log/lab" "$LAB/sw/run/wireguard"
+  printf 'sw\n' > /etc/netns/sw/hostname
+  # the certificates: the authenticator's, and one for newpc; visitor gets a
+  # certificate it signed itself, which is what an unmanaged device can offer
+  ( cd "$ca"
+    for n in "nac.corp.example.com server DNS:nac.corp.example.com" "newpc.corp.example.com client"; do
+      set -- $n
+      openssl req -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -subj "/CN=$1" -keyout "$1.key" -out "$1.csr" 2>/dev/null
+      { sed -n "/^\[$2\]/,/^\[/p" ca.cnf | sed '$d'; [ -n "${3:-}" ] && echo "subjectAltName = $3"; } > "$1.ext"
+      openssl ca -batch -config ca.cnf -cert issuing.crt -keyfile issuing.key -extfile "$1.ext" -extensions "$2" \
+        -startdate 20260928000000Z -enddate 20261228000000Z -in "$1.csr" -out "$1.crt" -notext 2>/dev/null
+    done )
+  cp "$ca/nac.corp.example.com.crt" "$LAB/sw/root/server.crt"; cp "$ca/nac.corp.example.com.key" "$LAB/sw/root/server.key"
+  cat "$ca/issuing.crt" "$ca/root.crt" > "$LAB/sw/root/ca.crt"
+  for h in newpc visitor; do cat "$ca/issuing.crt" "$ca/root.crt" > "$LAB/$h/root/ca.crt"; done
+  cp "$ca/newpc.corp.example.com.crt" "$LAB/newpc/root/client.crt"; cp "$ca/newpc.corp.example.com.key" "$LAB/newpc/root/client.key"
+  openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:P-256 -nodes -days 30 -subj "/CN=visitor" \
+    -keyout "$LAB/visitor/root/client.key" -out "$LAB/visitor/root/client.crt" 2>/dev/null
+  for h in newpc visitor; do
+    cat > "$LAB/$h/root/wpa.conf" <<C
+ctrl_interface=/root/wpa-ctrl
+ap_scan=0
+network={
+    key_mgmt=IEEE8021X
+    eap=TLS
+    identity="$h.corp.example.com"
+    ca_cert="/root/ca.crt"
+    client_cert="/root/client.crt"
+    private_key="/root/client.key"
+    eapol_flags=0
+}
+C
+  done
+  for port in p1 p2; do
+    cat > "$LAB/sw/root/hostapd-$port.conf" <<C
+interface=$port
+driver=wired
+logger_stdout=-1
+logger_stdout_level=2
+ieee8021x=1
+eap_server=1
+eap_user_file=/root/eap_user
+ca_cert=/root/ca.crt
+server_cert=/root/server.crt
+private_key=/root/server.key
+ctrl_interface=/root/hostapd-ctrl
+C
+  done
+  printf '* TLS\n' > "$LAB/sw/root/eap_user"
+  cat > "$LAB/sw/root/port-control.sh" <<'SH'
+#!/bin/bash
+# called by hostapd_cli -a: $1 interface, $2 event, $3 the client's MAC
+case $2 in
+  AP-STA-CONNECTED)    nft add element netdev ports authorised "{ $3 }" ;;
+  AP-STA-DISCONNECTED) nft delete element netdev ports authorised "{ $3 }" ;;
+esac
+SH
+  chmod +x "$LAB/sw/root/port-control.sh"
+}
+
 case "${1:-}" in
   up) up ;;
   down) down ;;
@@ -647,5 +741,6 @@ case "${1:-}" in
   exec) shift; exec_on "$@" ;;
   plug) shift; plug "$@" ;;
   inline) inline ;;
+  nac) nac ;;
   *) echo "usage: lab.sh up|down|reset|exec HOST USER COMMAND|plug HOST SEGMENT ADDRESS MAC" >&2; exit 2 ;;
 esac

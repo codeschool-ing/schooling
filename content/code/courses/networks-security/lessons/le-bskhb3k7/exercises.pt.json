@@ -1,0 +1,401 @@
+{
+  "ex-hzgbq9r5": {
+    "prompt": "Por que o firewall central não consegue aplicar a microssegmentação sozinho?",
+    "hint": "Quais pacotes ele vê?",
+    "choices": [
+      {
+        "text": "Ele tem regras de menos para duzentas máquinas",
+        "why": "A quantidade de regras não é o obstáculo."
+      },
+      {
+        "text": "O tráfego dentro de um segmento não passa por ele",
+        "why": "Isso. Duas máquinas no mesmo switch conversam sem passar por ele."
+      },
+      {
+        "text": "Ele filtra por porta, e a microssegmentação precisa de papéis",
+        "why": "As regras geradas nos hosts também filtram por endereço e porta."
+      },
+      {
+        "text": "Firewalls com estado não podem ficar entre zonas",
+        "why": "A aula 4 colocou exatamente isso entre as zonas."
+      }
+    ]
+  },
+  "ex-f75nfwye": {
+    "prompt": "Ligue cada propriedade ao seu valor na microssegmentação.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "a unidade",
+        "right": "uma carga de trabalho"
+      },
+      {
+        "left": "aplicada por",
+        "right": "cada host, ou o hipervisor ao lado dele"
+      },
+      {
+        "left": "escrita como",
+        "right": "uma tabela de papéis"
+      },
+      {
+        "left": "dentro de uma zona",
+        "right": "fechado, a menos que uma regra permita"
+      }
+    ],
+    "right_distractors": [
+      "uma matriz de zonas"
+    ]
+  },
+  "ex-6604medy": {
+    "prompt": "Uma equipe roda 300 contêineres e quer cada um isolado dos demais. O que impede que isso vire 300 conjuntos de regras que ninguém mantém coerentes?",
+    "hint": "Onde a política é escrita, e quantas vezes?",
+    "choices": [
+      {
+        "text": "Um firewall central maior, com uma regra por par de contêineres",
+        "why": "O tráfego entre contêineres do mesmo host não chega até ele."
+      },
+      {
+        "text": "Pôr os contêineres de volta em três zonas",
+        "why": "Isso reabre tudo dentro de cada zona."
+      },
+      {
+        "text": "Uma política por papel, com a plataforma gerando as regras de cada contêiner",
+        "why": "Isso. O mecanismo muda; a política tem o mesmo formato."
+      },
+      {
+        "text": "Escrever à mão as regras de cada contêiner, com cuidado",
+        "why": "Firewalls escritos à mão divergem nessa escala."
+      }
+    ]
+  },
+  "ex-e54erpxj": {
+    "prompt": "Um segundo servidor de aplicação entra no policy.txt com o papel app. Do que ele precisa para alcançar o banco?",
+    "hint": "Onde um papel vira endereços?",
+    "choices": [
+      {
+        "text": "Uma linha de accept nova digitada nas regras de db",
+        "why": "Ninguém edita as regras de db; elas são geradas."
+      },
+      {
+        "text": "As regras geradas de novo",
+        "why": "Isso. O endereço dele entra no papel app na próxima geração."
+      },
+      {
+        "text": "Uma linha nova citando db na coluna from",
+        "why": "A coluna from nomeia os papéis que se conectam, não o destino."
+      },
+      {
+        "text": "O endereço dele na linha de db, ao lado de app",
+        "why": "Endereços não aparecem na coluna from."
+      }
+    ]
+  },
+  "ex-3rfzszaf": {
+    "prompt": "Depois de carregar as regras geradas, quantas linhas da chain input de db contêm accept?",
+    "hint": "O grep -c accept contou."
+  },
+  "ex-zmxgtnat": {
+    "prompt": "A coluna from nomeia papéis, e cada papel é convertido em ___ apenas quando as regras são geradas.",
+    "hint": "O que a regra gerada põe depois de ip saddr?",
+    "blanks": [
+      {
+        "accept": [
+          "endereços",
+          "endereços IP",
+          "IPs",
+          "enderecos"
+        ]
+      }
+    ]
+  },
+  "ex-sqgze71j": {
+    "prompt": "Por que cada regra de accept gerada leva um comentário como \"postgres from app\"?",
+    "hint": "De quem são as palavras nele?",
+    "choices": [
+      {
+        "text": "O nft recusa uma regra de accept sem comentário",
+        "why": "Comentário é opcional no nft."
+      },
+      {
+        "text": "O gerador lê o comentário de volta para achar o papel",
+        "why": "Ele lê o policy.txt, não a própria saída."
+      },
+      {
+        "text": "Para a regra dizer por que existe, com as palavras da política",
+        "why": "Isso."
+      },
+      {
+        "text": "Registra quem gerou a regra e quando",
+        "why": "Guarda o serviço e os papéis, não um autor."
+      }
+    ]
+  },
+  "ex-fpy9s8px": {
+    "prompt": "Qual destas conexões é leste-oeste?",
+    "hint": "Entre quem ela corre?",
+    "choices": [
+      {
+        "text": "Um navegador em casa chegando ao www",
+        "why": "Cliente para servidor é norte-sul."
+      },
+      {
+        "text": "O laptop de um funcionário chegando ao proxy",
+        "why": "Ainda é um cliente chegando a um servidor."
+      },
+      {
+        "text": "Uma resposta de DNS voltando a um laptop",
+        "why": "Resposta a um cliente, norte-sul."
+      },
+      {
+        "text": "app se conectando a db na 5432",
+        "why": "Isso. Servidor para servidor."
+      }
+    ]
+  },
+  "ex-28d2yafr": {
+    "prompt": "Quais sondagens voltaram abertas depois de carregadas as regras geradas? Escolha todas as que se aplicam.",
+    "hint": "Compare cada uma com as linhas da política.",
+    "choices": [
+      {
+        "text": "app para db:5432",
+        "why": "postgres from app."
+      },
+      {
+        "text": "www para app:8080",
+        "why": "http from proxy, e www é o proxy."
+      },
+      {
+        "text": "db para app:22",
+        "why": "SSH vem do papel admin."
+      },
+      {
+        "text": "admin para db:5432",
+        "why": "postgres vem de app; admin recebe SSH."
+      },
+      {
+        "text": "admin para db:22",
+        "why": "ssh from admin, em todo host."
+      }
+    ]
+  },
+  "ex-hkhedqgv": {
+    "prompt": "Um atacante toma o app. Com as regras geradas, o que no segmento de servidores o app ainda alcança?",
+    "hint": "Leia a sondagem de app para db.",
+    "choices": [
+      {
+        "text": "Tudo no segmento, já que o fw não está no caminho",
+        "why": "Isso era antes desta aula."
+      },
+      {
+        "text": "O SSH de db e o banco, por ser vizinho",
+        "why": "db:22 voltou bloqueado."
+      },
+      {
+        "text": "A porta 5432 de db",
+        "why": "Isso. A única porta de que a aplicação precisa."
+      },
+      {
+        "text": "Nenhuma outra máquina",
+        "why": "db:5432 voltou aberto."
+      }
+    ]
+  },
+  "ex-46afqkgs": {
+    "prompt": "Um operador adiciona à mão uma regra de accept em db para resolver uma queda, e uma semana depois a política muda. O que acontece com a regra feita à mão?",
+    "hint": "Como começa todo arquivo gerado?",
+    "choices": [
+      {
+        "text": "Fica, porque o nft junta as regras antigas às novas",
+        "why": "O arquivo começa com flush ruleset."
+      },
+      {
+        "text": "A próxima geração a remove em silêncio",
+        "why": "Isso. A correção vai no arquivo da política."
+      },
+      {
+        "text": "O gerador se recusa a rodar até ela sair",
+        "why": "O gerador não lê as regras do host."
+      },
+      {
+        "text": "Ela é copiada para o policy.txt automaticamente",
+        "why": "Nada volta do host para a política."
+      }
+    ]
+  },
+  "ex-m5n7gjp3": {
+    "prompt": "A linha de accept de db para app na 5432 foi removida com uma sessão aberta. Por que a segunda linha do cliente ainda chegou?",
+    "hint": "Qual regra vem primeiro em todo host?",
+    "choices": [
+      {
+        "text": "O nft -f leva um minuto para valer",
+        "why": "A contagem de regras da 5432 já era 0."
+      },
+      {
+        "text": "O papel admin ainda tinha acesso a db",
+        "why": "admin chega ao SSH, e o cliente era o app."
+      },
+      {
+        "text": "O ct state established aceitou, pois a sessão era anterior à mudança",
+        "why": "Isso. A política nova vale para conexões novas."
+      },
+      {
+        "text": "A linha foi por UDP, que a regra não cobria",
+        "why": "Era uma sessão TCP na 5432."
+      }
+    ]
+  },
+  "ex-hpj10w30": {
+    "prompt": "Quantos segundos depois da primeira linha o app enviou a segunda?",
+    "hint": "A seção diz."
+  },
+  "ex-rpyrvttp": {
+    "prompt": "Um funcionário sai do grupo autorizado da VPN ao meio-dia, conectado. Mudando só a regra, quando o acesso dele acaba?",
+    "hint": "O que db fez com a sessão já aberta?",
+    "choices": [
+      {
+        "text": "Ao meio-dia, quando a regra muda",
+        "why": "A regra decide conexões novas, não as abertas."
+      },
+      {
+        "text": "Quando essa sessão acabar e ele tentar de novo",
+        "why": "Isso. Até lá, nada a verifica de novo."
+      },
+      {
+        "text": "No próximo pacote que ele enviar depois do meio-dia",
+        "why": "A segunda linha em db passou depois da mudança."
+      },
+      {
+        "text": "Quando o TIME_WAIT da mudança expira",
+        "why": "TIME_WAIT é de uma conexão fechada, não de uma regra."
+      }
+    ]
+  },
+  "ex-x2525751": {
+    "prompt": "Quantas entradas de fluxo do conntrack a retirada apagou em db?",
+    "hint": "A mensagem depois do conntrack -D."
+  },
+  "ex-kv20p6cq": {
+    "prompt": "Havia uma sessão aberta, mas o conntrack apagou duas entradas. Qual era a outra?",
+    "hint": "Pense na execução anterior.",
+    "choices": [
+      {
+        "text": "A direção de resposta da mesma sessão",
+        "why": "Uma entrada guarda as duas direções."
+      },
+      {
+        "text": "A sessão SSH de admin para db",
+        "why": "A remoção casou a porta 5432 vinda de app."
+      },
+      {
+        "text": "Um fluxo UDP na 5432",
+        "why": "O -p tcp casou entradas TCP."
+      },
+      {
+        "text": "A sessão anterior, já fechada e cumprindo o TIME_WAIT",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-yjw4etrg": {
+    "prompt": "Ligue cada camada a como uma sessão viva é encerrada nela.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "um firewall de host Linux",
+        "right": "apagar as entradas do conntrack"
+      },
+      {
+        "left": "um firewall de rede",
+        "right": "limpar a tabela de sessões do endereço"
+      },
+      {
+        "left": "uma aplicação",
+        "right": "invalidar a sessão do lado do servidor"
+      },
+      {
+        "left": "login único (SSO)",
+        "right": "revogar os tokens e manter vidas curtas"
+      }
+    ],
+    "right_distractors": [
+      "apagar os cookies do navegador"
+    ]
+  },
+  "ex-dqhfgkjz": {
+    "prompt": "Uma empresa revoga a conta SSO de um terceirizado, e nada encerra as sessões já abertas. Qual configuração decide quando o acesso dele para de fato?",
+    "hint": "Uma revogação que deixa sessões rodando é um cronograma. De quê?",
+    "choices": [
+      {
+        "text": "A vida dos tokens",
+        "why": "Isso. Vale dentro de uma vida de token."
+      },
+      {
+        "text": "O tamanho mínimo da política de senhas",
+        "why": "Senha é verificada no login, que já passou."
+      },
+      {
+        "text": "O timeout do conntrack para TCP estabelecido",
+        "why": "Esse é o relógio de um firewall de host, não do SSO."
+      },
+      {
+        "text": "A frequência de backup do diretório de contas",
+        "why": "Backup não verifica ninguém de novo."
+      }
+    ]
+  },
+  "ex-akyx5map": {
+    "prompt": "Ordene os passos que retiram o app do banco por completo, do primeiro ao último.",
+    "hint": "A política primeiro, as sessões abertas por último.",
+    "items": [
+      "tirar o app dos papéis from da linha de db no policy.txt",
+      "gerar as regras de db com o segment.py",
+      "carregar as regras novas em db com nft -f",
+      "apagar as entradas do conntrack de app na porta 5432"
+    ],
+    "trap": "Apagar as entradas antes de carregar as regras novas deixa o próximo pacote abrir uma sessão nova sob a regra antiga."
+  },
+  "ex-rz6ret2r": {
+    "prompt": "Um servidor de relatórios novo, papel report, precisa ler o banco. Qual é a mudança revisada?",
+    "hint": "Onde fica uma mudança de quem alcança o banco?",
+    "choices": [
+      {
+        "text": "Uma linha de accept para o endereço, digitada em db e recarregada",
+        "why": "A próxima geração a apagaria."
+      },
+      {
+        "text": "Uma linha para o host, e report nos papéis from de db",
+        "why": "Isso. Um diff no policy.txt, depois a geração."
+      },
+      {
+        "text": "Uma regra no fw entre o segmento dele e os servidores",
+        "why": "As regras de db ainda o descartariam."
+      },
+      {
+        "text": "O papel app para o novo servidor",
+        "why": "Ele passaria a ser aceito onde app é aceito."
+      }
+    ]
+  },
+  "ex-em4va53k": {
+    "prompt": "Depois de mudar a política, que verificação mostra que a matriz leste-oeste é mesmo o que a tabela diz?",
+    "hint": "De onde cada célula foi testada?",
+    "choices": [
+      {
+        "text": "Ler os arquivos gerados procurando os accept certos",
+        "why": "Isso verifica o arquivo, não o que está carregado e alcançável."
+      },
+      {
+        "text": "Sondar cada servidor a partir do fw",
+        "why": "O tráfego leste-oeste não cruza o fw."
+      },
+      {
+        "text": "Contar as linhas de accept de cada host",
+        "why": "Quatro linhas podem ser as quatro erradas."
+      },
+      {
+        "text": "Sondar cada célula a partir da máquina de origem",
+        "why": "Isso. Foi assim que a seção testou."
+      }
+    ]
+  }
+}
