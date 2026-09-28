@@ -19,8 +19,9 @@
 # itself, built by lab.sh reset; www's address, 192.0.2.80, put on lb1 by
 # hand (lesson 16 is where two balancers share it); each backend section
 # written into lb1's haproxy.cfg as root (the lesson shows each one with
-# grep), and HAProxy restarted as root after every change; and web2's nginx
-# stopped and started again as root for the health block.
+# grep), and HAProxy restarted as root after every change; and web3's nginx
+# stopped as root before the last two requests of the cookie block, and started
+# again after them.
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
