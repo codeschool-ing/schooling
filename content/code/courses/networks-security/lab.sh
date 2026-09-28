@@ -144,7 +144,7 @@ build_net() {
 # ip netns exec already mounts /etc/netns/HOST/* over /etc/*. The rest of what
 # tells one machine from another lives under /lab/HOST and is mounted over the
 # real path when something runs "on" that host.
-OVERLAY="home etc/nginx var/www var/log/nginx etc/ssh etc/ssl/private etc/suricata var/log/suricata var/lib/suricata etc/aide var/lib/aide etc/wireguard etc/dnsmasq.d var/log/lab srv"
+OVERLAY="root home etc/nginx var/www var/log/nginx etc/ssh etc/ssl/private etc/suricata var/log/suricata var/lib/suricata etc/aide var/lib/aide etc/wireguard etc/dnsmasq.d var/log/lab srv"
 overlay() {
   local h=$1 p
   for p in $OVERLAY; do
@@ -165,7 +165,8 @@ exec_on() {  # exec_on HOST USER COMMAND
 
 hostfiles() {
   for h in $HOSTS; do
-    mkdir -p "/etc/netns/$h" "$LAB/$h/home/ana" "$LAB/$h/var/log/lab" "$LAB/$h/srv"
+    mkdir -p "/etc/netns/$h" "$LAB/$h/home/ana" "$LAB/$h/var/log/lab" "$LAB/$h/srv" "$LAB/$h/root"
+    chmod 700 "$LAB/$h/root"
     {
       printf '127.0.0.1 localhost\n127.0.1.1 %s\n' "$h"
       # every machine knows the others by name, as an internal DNS would say
@@ -190,6 +191,23 @@ build_services() {
   printf 'orders service: ok\n' > "$LAB/app/srv/app/index.html"
   printf 'admin console\n' > "$LAB/app/srv/app/admin/index.html"
   printf 'status: ok\n' > "$LAB/app/srv/app/health"
+  # GET serves the directory; POST takes a form and says so, the way the
+  # support form of any shop would
+  cat > "$LAB/app/srv/app.py" <<'PY'
+import http.server, functools
+class App(http.server.SimpleHTTPRequestHandler):
+    def do_POST(self):
+        n = int(self.headers.get('Content-Length') or 0)
+        self.rfile.read(n)
+        body = b'received\n'
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/plain')
+        self.send_header('Content-Length', str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+handler = functools.partial(App, directory='/srv/app')
+http.server.ThreadingHTTPServer(('192.168.20.10', 8080), handler).serve_forever()
+PY
 
   # the reverse proxy on www
   mkdir -p "$LAB/www/etc/nginx" "$LAB/www/var/www" "$LAB/www/var/log/nginx"
@@ -224,6 +242,59 @@ host-record=db.corp.example.com,192.168.20.30
 CONF
 }
 
+
+# ------------------------------------------------------------------ probe
+# probe HOST:PORT...  tries a TCP connection to each and says what happened,
+# one line each: open (it answered), refused (a machine said nothing listens
+# there), or blocked (nothing came back within a second: a firewall dropped
+# it). The one tool in the lab that is not a standard command; it is nc -z
+# with the result written in words.
+build_probe() {
+  cat > /usr/local/bin/probe <<'SH'
+#!/bin/bash
+for t in "$@"; do
+  h=${t%:*}; p=${t##*:}
+  out=$(nc -z -v -w1 "$h" "$p" 2>&1)
+  case $out in
+    *succeeded*) r=open ;;
+    *refused*) r=refused ;;
+    *) r=blocked ;;
+  esac
+  printf '%-22s %s\n' "$t" "$r"
+done
+SH
+  chmod 755 /usr/local/bin/probe
+}
+
+# ------------------------------------------------------------ the baseline
+# The company's policy as lesson 4 leaves it, written to fw as a file and NOT
+# loaded: a lesson that needs it loads it in front of the reader, or says in
+# its capture script that it was loaded before the lesson began.
+build_baseline() {
+  cat > "$LAB/fw/root/baseline.nft" <<'NFT'
+flush ruleset
+table ip filter {
+  chain forward {
+    type filter hook forward priority filter; policy drop;
+    ct state established,related accept
+    ct state invalid drop
+    iifname "eth2" oifname { "eth0", "eth1" } tcp dport { 80, 443 } ct state new accept comment "staff browse"
+    iifname "eth2" oifname "eth1" ip daddr 192.0.2.53 meta l4proto { tcp, udp } th dport 53 ct state new accept comment "staff resolve names"
+    iifname "eth2" oifname "eth3" ip daddr 192.168.20.10 tcp dport 8080 ct state new accept comment "staff use the application"
+    iifname "eth0" oifname "eth1" ip daddr 192.0.2.80 tcp dport { 80, 443 } ct state new accept comment "the world reaches the shop"
+    iifname "eth0" oifname "eth1" ip daddr 192.0.2.53 udp dport 53 ct state new accept comment "the world asks our names"
+    iifname "eth1" oifname "eth3" ip saddr 192.0.2.80 ip daddr 192.168.20.10 tcp dport 8080 ct state new accept comment "the proxy reaches the application"
+    iifname "eth4" oifname { "eth1", "eth3" } tcp dport 22 ct state new accept comment "administration over SSH"
+  }
+  chain input {
+    type filter hook input priority filter; policy drop;
+    ct state established,related accept
+    iifname "lo" accept
+    iifname "eth4" ip saddr 192.168.99.0/24 tcp dport 22 ct state new accept comment "fw is administered from mgmt only"
+  }
+}
+NFT
+}
 
 # ------------------------------------------------------------------------ TLS
 # The company's own certificate authority: a root that signs an issuing CA
@@ -364,7 +435,7 @@ daemon() {  # daemon HOST COMMAND
 }
 
 start() {
-  exec_on app root "setsid python3 -u -m http.server --bind 192.168.20.10 --directory /srv/app 8080 </dev/null >>/var/log/lab/app.log 2>&1 &"
+  exec_on app root "setsid python3 -u /srv/app.py </dev/null >>/var/log/lab/app.log 2>&1 &"
   daemon db "socat TCP-LISTEN:5432,bind=192.168.20.30,fork,reuseaddr SYSTEM:'echo db ready'"
   daemon www "nginx"
   for h in remote app db; do daemon "$h" "/usr/sbin/sshd -f /etc/ssh/sshd_config"; done
@@ -399,6 +470,8 @@ up() {
   build_net
   hostfiles
   build_services
+  build_baseline
+  build_probe
   build_tls
   build_ssh
   build_suricata

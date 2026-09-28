@@ -1,0 +1,638 @@
+[
+  {
+    "id": "ex-p2ydp8hn",
+    "version": 1,
+    "section": "reverse-proxy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After remote loaded the shop, which client address did app's log show?",
+    "hint": "Who opened the connection to app?",
+    "choices": [
+      {
+        "text": "203.0.113.50, remote's",
+        "correct": false,
+        "why": "That is in www's log; app never saw remote."
+      },
+      {
+        "text": "192.0.2.80, the proxy's",
+        "correct": true,
+        "why": "Right. The proxy made its own request."
+      },
+      {
+        "text": "203.0.113.2, the firewall's outside address",
+        "correct": false,
+        "why": "fw routes; it does not rewrite addresses here."
+      },
+      {
+        "text": "No address; HTTP carries none",
+        "correct": false,
+        "why": "The log line starts with the client's address."
+      }
+    ]
+  },
+  {
+    "id": "ex-hc3c2539",
+    "version": 1,
+    "section": "reverse-proxy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why may app trust X-Forwarded-For in this lab, when an application reachable from the internet should not?",
+    "hint": "Who is able to write that header on a request that reaches app?",
+    "choices": [
+      {
+        "text": "The header is signed by nginx",
+        "correct": false,
+        "why": "It is plain text; nothing signs it."
+      },
+      {
+        "text": "HTTPS protects every header from being changed",
+        "correct": false,
+        "why": "TLS protects in transit; the client writes what it likes."
+      },
+      {
+        "text": "The firewall lets only www reach app, and www writes the header itself",
+        "correct": true,
+        "why": "Right. Directly reachable, a client could send any value."
+      },
+      {
+        "text": "X-Forwarded-For carries the address from the IP header",
+        "correct": false,
+        "why": "It is an HTTP header anyone may send."
+      }
+    ]
+  },
+  {
+    "id": "ex-bactafdh",
+    "version": 1,
+    "section": "reverse-proxy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does it mean that the proxy terminates TLS?",
+    "hint": "Where does the encrypted connection end?",
+    "choices": [
+      {
+        "text": "The encryption ends on www, which holds the key",
+        "correct": true,
+        "why": "Right, and the next hop is a new connection."
+      },
+      {
+        "text": "It passes the encrypted bytes through to app unchanged",
+        "correct": false,
+        "why": "That would be a TCP pass-through, not termination."
+      },
+      {
+        "text": "It refuses clients that offer TLS 1.1",
+        "correct": false,
+        "why": "That is ssl_protocols, a separate setting."
+      },
+      {
+        "text": "It closes TLS sessions after one request",
+        "correct": false,
+        "why": "Terminate here means where the encryption ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-4kx0jmzh",
+    "version": 1,
+    "section": "reverse-proxy",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does putting a reverse proxy in front of the application give? Choose all that apply.",
+    "hint": "The table at the end of the section.",
+    "choices": [
+      {
+        "text": "One place that holds the certificate",
+        "correct": true,
+        "why": "TLS ends there."
+      },
+      {
+        "text": "A place to refuse requests before the application sees them",
+        "correct": true,
+        "why": "The rest of the lesson uses it."
+      },
+      {
+        "text": "The application's machine stays unreachable from the internet",
+        "correct": true,
+        "why": "remote's direct attempt timed out."
+      },
+      {
+        "text": "The application's own bugs stop mattering",
+        "correct": false,
+        "why": "A proxy passes valid-looking requests through, bugs and all."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yp1wk77",
+    "version": 1,
+    "section": "what-the-proxy-refuses",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each request from remote to the answer the proxy gave.",
+    "hint": "The captures in the section.",
+    "pairs": [
+      {
+        "left": "GET /admin/",
+        "right": "403"
+      },
+      {
+        "left": "20000 bytes of POST body",
+        "right": "413"
+      },
+      {
+        "left": "plain HTTP to port 80",
+        "right": "301"
+      },
+      {
+        "left": "GET /",
+        "right": "200"
+      }
+    ],
+    "right_distractors": [
+      "429"
+    ]
+  },
+  {
+    "id": "ex-p4bga2a1",
+    "version": 1,
+    "section": "what-the-proxy-refuses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson turn server_tokens off?",
+    "hint": "Is it a defence, and what does it stop volunteering?",
+    "choices": [
+      {
+        "text": "It patches known vulnerabilities in nginx",
+        "correct": false,
+        "why": "It only changes a header."
+      },
+      {
+        "text": "It makes the server invisible to scanners",
+        "correct": false,
+        "why": "It still answers, and says nginx."
+      },
+      {
+        "text": "A version tells a stranger what to try first",
+        "correct": true,
+        "why": "Right. Not a defence, just nothing volunteered."
+      },
+      {
+        "text": "HTTP/2 requires the header to be empty",
+        "correct": false,
+        "why": "No such requirement."
+      }
+    ]
+  },
+  {
+    "id": "ex-81p3kgt0",
+    "version": 1,
+    "section": "what-the-proxy-refuses",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every refusal in this section was written without knowing what an attack looks like. What were they written from instead?",
+    "hint": "Compare with the firewall's policy drop.",
+    "choices": [
+      {
+        "text": "A list of attack signatures kept by the vendor",
+        "correct": false,
+        "why": "That is the WAF's approach, the next sections."
+      },
+      {
+        "text": "The access log of past incidents",
+        "correct": false,
+        "why": "Nothing here came from past incidents."
+      },
+      {
+        "text": "What the shop legitimately receives",
+        "correct": true,
+        "why": "Right. Allow what is used, refuse the rest."
+      },
+      {
+        "text": "The defaults of the OWASP Core Rule Set, as shipped",
+        "correct": false,
+        "why": "CRS is not loaded yet in this section."
+      }
+    ]
+  },
+  {
+    "id": "ex-btf1mzaf",
+    "version": 1,
+    "section": "what-the-proxy-refuses",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The nginx directive that refuses a request body above a size is client_max_body___.",
+    "hint": "Read the example's fourth part.",
+    "blanks": [
+      {
+        "accept": [
+          "_size"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-aahkpa7r",
+    "version": 1,
+    "section": "rate-limits",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of remote's 30 quick requests, how many were refused with 429?",
+    "hint": "uniq -c counted them.",
+    "value": 14,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-spk9sc7q",
+    "version": 1,
+    "section": "rate-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During remote's burst, laptop's request was served. Why?",
+    "hint": "What is the limit keyed on?",
+    "choices": [
+      {
+        "text": "The LAN is exempt from rate limits by default",
+        "correct": false,
+        "why": "Nothing exempts it; it has its own counter."
+      },
+      {
+        "text": "It has a counter of its own",
+        "correct": true,
+        "why": "Right: $binary_remote_addr, one counter per address."
+      },
+      {
+        "text": "The burst had already refilled completely",
+        "correct": false,
+        "why": "remote was still over its limit."
+      },
+      {
+        "text": "laptop used HTTPS and remote used HTTP",
+        "correct": false,
+        "why": "Both used HTTPS."
+      }
+    ]
+  },
+  {
+    "id": "ex-fw2cnk3m",
+    "version": 1,
+    "section": "rate-limits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why set limit_req_status 429 instead of keeping nginx's default?",
+    "hint": "What does the default say to the client?",
+    "choices": [
+      {
+        "text": "429 makes the limit stricter",
+        "correct": false,
+        "why": "The status code does not change the rate."
+      },
+      {
+        "text": "The default closes the connection and sends nothing back to the client",
+        "correct": false,
+        "why": "The default answers 503."
+      },
+      {
+        "text": "Browsers retry a 503 forever",
+        "correct": false,
+        "why": "That is not why."
+      },
+      {
+        "text": "503 claims the server is broken; 429 says too many requests",
+        "correct": true,
+        "why": "Right. The status should say what happened."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hmz520r",
+    "version": 1,
+    "section": "rate-limits",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where does a per-address rate limit get the wrong answer? Choose all that apply.",
+    "hint": "One address is assumed to be one client.",
+    "choices": [
+      {
+        "text": "A whole office behind one NAT address",
+        "correct": true,
+        "why": "They share one counter and hit it together."
+      },
+      {
+        "text": "Traffic spread over thousands of addresses",
+        "correct": true,
+        "why": "Each stays under the limit."
+      },
+      {
+        "text": "One script hammering from one address",
+        "correct": false,
+        "why": "That is exactly the case it handles."
+      },
+      {
+        "text": "A client asking once a minute",
+        "correct": false,
+        "why": "Nowhere near the limit, correctly served."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0tx53g2",
+    "version": 1,
+    "section": "waf-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In detection-only mode, the test string returned 200. What did the WAF do?",
+    "hint": "Look at the audit log.",
+    "choices": [
+      {
+        "text": "Nothing; the rules were not loaded",
+        "correct": false,
+        "why": "921 rules loaded."
+      },
+      {
+        "text": "Scored it and logged that it would have blocked",
+        "correct": true,
+        "why": "Right: three matches, score 15, rule 949110."
+      },
+      {
+        "text": "Removed the script tag and passed the rest",
+        "correct": false,
+        "why": "ModSecurity here does not rewrite requests."
+      },
+      {
+        "text": "Blocked it, but the proxy's cache answered",
+        "correct": false,
+        "why": "There is no cache in this configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-d55t3x1t",
+    "version": 1,
+    "section": "waf-rules",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What total anomaly score did the test string reach?",
+    "hint": "Rule 949110's message.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-9rrvast3",
+    "version": 1,
+    "section": "waf-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With CRS's default threshold of 5, what is the smallest set of matches that blocks a request?",
+    "hint": "A critical match is worth 5.",
+    "choices": [
+      {
+        "text": "Three matches of any severity",
+        "correct": false,
+        "why": "Points add up by severity, not by count."
+      },
+      {
+        "text": "One critical match",
+        "correct": true,
+        "why": "Right. The false positive in the next section scored exactly 5."
+      },
+      {
+        "text": "Every rule of one category matching",
+        "correct": false,
+        "why": "Far more than needed."
+      },
+      {
+        "text": "Any match at paranoia level 2 or above",
+        "correct": false,
+        "why": "Paranoia decides which rules run, not the threshold."
+      }
+    ]
+  },
+  {
+    "id": "ex-zkbyc2ye",
+    "version": 1,
+    "section": "waf-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A customer reads another customer's order by changing the number in /orders/17 to /orders/18. Why does the WAF not stop it?",
+    "hint": "What does a WAF know about?",
+    "choices": [
+      {
+        "text": "The request was encrypted",
+        "correct": false,
+        "why": "TLS ended at the proxy, where the WAF reads."
+      },
+      {
+        "text": "The paranoia level was too low",
+        "correct": false,
+        "why": "No level sees ownership of an order."
+      },
+      {
+        "text": "The WAF inspects POST bodies and lets GET requests through uninspected",
+        "correct": false,
+        "why": "The test string was a GET."
+      },
+      {
+        "text": "It knows attack patterns, not who owns what",
+        "correct": true,
+        "why": "Right. It is a flaw in the application's logic."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bzv1ws0",
+    "version": 1,
+    "section": "false-positives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The support message containing SQL was refused. What kind of result is that?",
+    "hint": "Was the request legitimate? Was the WAF right about what it saw?",
+    "choices": [
+      {
+        "text": "A false positive",
+        "correct": true,
+        "why": "Right: legitimate, and the rule saw SQL correctly."
+      },
+      {
+        "text": "A false negative",
+        "correct": false,
+        "why": "That would be an attack let through."
+      },
+      {
+        "text": "A true positive",
+        "correct": false,
+        "why": "The request was not an attack."
+      },
+      {
+        "text": "A parsing error in the WAF",
+        "correct": false,
+        "why": "Rule 942100 matched as designed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ref7cn6p",
+    "version": 1,
+    "section": "false-positives",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these fixes for the false positive from broadest to narrowest.",
+    "hint": "The narrowest is the one the lesson used.",
+    "items": [
+      "switch the whole WAF to detection-only",
+      "remove rule 942100 from the whole site",
+      "remove rule 942100 under /support",
+      "stop rule 942100 reading ARGS:comment under /support"
+    ],
+    "trap": "Each step keeps more of the protection running; the last keeps everything except one field for one rule."
+  },
+  {
+    "id": "ex-2x1hj35w",
+    "version": 1,
+    "section": "false-positives",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the exclusion, which of these requests to /support are still refused? Choose all that apply.",
+    "hint": "The exclusion names one rule and one field.",
+    "choices": [
+      {
+        "text": "comment=<script>alert(1)</script>",
+        "correct": true,
+        "why": "The XSS rules were never touched."
+      },
+      {
+        "text": "name=select id from orders where total > 100",
+        "correct": true,
+        "why": "Only comment was excluded."
+      },
+      {
+        "text": "comment=select id from orders where total > 100",
+        "correct": false,
+        "why": "That is what the exclusion lets through."
+      },
+      {
+        "text": "comment=my order has not arrived",
+        "correct": false,
+        "why": "Nothing in it matches any rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-0pq3jmbw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop adds a page for customers to upload photos of damaged goods, and uploads fail with 413. What is the right change?",
+    "hint": "Narrow, like the exclusion.",
+    "choices": [
+      {
+        "text": "Raise client_max_body_size for the whole site",
+        "correct": false,
+        "why": "Every form would then accept large bodies."
+      },
+      {
+        "text": "Switch the WAF to detection-only",
+        "correct": false,
+        "why": "413 comes from nginx's size limit, not the WAF."
+      },
+      {
+        "text": "A larger limit on the upload page alone",
+        "correct": true,
+        "why": "Right, as the example's note said."
+      },
+      {
+        "text": "Remove the limit and rely on the rate limit",
+        "correct": false,
+        "why": "A rate limit counts requests, not their size."
+      }
+    ]
+  },
+  {
+    "id": "ex-dntqysct",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem to the control in this lesson that handles it.",
+    "hint": "Four controls, four problems.",
+    "pairs": [
+      {
+        "left": "a script requesting the login page 200 times a second",
+        "right": "limit_req"
+      },
+      {
+        "left": "a request carrying script tags in a parameter",
+        "right": "the Core Rule Set"
+      },
+      {
+        "left": "a DELETE request the shop never uses",
+        "right": "limit_except"
+      },
+      {
+        "left": "the admin pages seen from the internet",
+        "right": "allow and deny"
+      }
+    ],
+    "right_distractors": [
+      "ssl_protocols"
+    ]
+  },
+  {
+    "id": "ex-a66zegvn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A request arrives at www. Which check happens last?",
+    "hint": "app is the last hop.",
+    "choices": [
+      {
+        "text": "fw accepting TCP to port 443",
+        "correct": false,
+        "why": "That is before www sees anything."
+      },
+      {
+        "text": "TLS being terminated",
+        "correct": false,
+        "why": "It must happen before the request can be read."
+      },
+      {
+        "text": "The WAF scoring the request",
+        "correct": false,
+        "why": "It happens before the proxy passes it on."
+      },
+      {
+        "text": "app handling it",
+        "correct": true,
+        "why": "Right. It only arrives if every check before it passed."
+      }
+    ]
+  }
+]
