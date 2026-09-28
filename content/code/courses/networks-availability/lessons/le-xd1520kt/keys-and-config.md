@@ -5,8 +5,8 @@ version: 1
 
 Most VPNs begin with a certificate authority, a user database and pages of settings. **WireGuard begins
 with two keys per machine and a file of about a dozen lines.** There is no user, no password and no
-negotiation of algorithms: each end is known by its public key, and the cryptography is fixed by the
-protocol, Curve25519 to agree keys and ChaCha20-Poly1305 to encrypt and authenticate the data.
+negotiation of algorithms. Each end is known by its public key, and the cryptography is fixed by the
+protocol: Curve25519 to agree keys, ChaCha20-Poly1305 to encrypt and authenticate the data.
 
 The key pair is made on the machine that will use it:
 

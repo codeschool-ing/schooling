@@ -1,0 +1,413 @@
+{
+  "ex-1zcjkkf3": {
+    "prompt": "A requisição do laptop tinha 73 bytes, a partir do número de sequência relativo 1. Que número de confirmação o servidor devolve?",
+    "hint": "O próximo byte que ele espera.",
+    "unit": ""
+  },
+  "ex-z8yheywg": {
+    "prompt": "O FIN do laptop estava na sequência 74 e não levava dados, mas o servidor confirmou 75. Por quê?",
+    "hint": "O SYN fez o mesmo no começo.",
+    "choices": [
+      {
+        "text": "O servidor contou o cabeçalho TCP como um byte",
+        "why": "Cabeçalhos nunca entram na conta dos números de sequência."
+      },
+      {
+        "text": "Um FIN gasta um número de sequência, como um SYN",
+        "why": "Isso. Os dois são confirmados como se fossem um byte."
+      },
+      {
+        "text": "Um byte da página se perdeu e foi reenviado",
+        "why": "Nada foi retransmitido naquela captura."
+      },
+      {
+        "text": "O servidor confirma um byte à frente como margem de segurança",
+        "why": "A confirmação é exata: o próximo byte desejado."
+      }
+    ]
+  },
+  "ex-a1126aaw": {
+    "prompt": "Com números brutos, o SYN do laptop levou `3237057867`. Que número de confirmação bruto o SYN-ACK levou?",
+    "hint": "O relativo 1 é o início mais um.",
+    "unit": ""
+  },
+  "ex-bc89p567": {
+    "prompt": "Cada lado escolhe um número de sequência inicial aleatório. O que daria errado se toda conexão começasse em 0?",
+    "hint": "Pense em alguém que não enxerga os pacotes.",
+    "choices": [
+      {
+        "text": "Duas conexões nas mesmas portas não poderiam ser separadas",
+        "why": "Portas e endereços separam as conexões, não os números de sequência."
+      },
+      {
+        "text": "O Wireshark não conseguiria mais mostrar números relativos",
+        "why": "Mostraria sem esforço; o relativo seria igual ao bruto."
+      },
+      {
+        "text": "Um atacante às cegas injetaria pacotes",
+        "why": "Isso. Um início aleatório deixa uma chance em cerca de quatro bilhões."
+      },
+      {
+        "text": "Os dados iriam sem criptografia",
+        "why": "O TCP não criptografa nada, sejam quais forem os números."
+      }
+    ]
+  },
+  "ex-wfx8d8yj": {
+    "prompt": "Uma captura mostra `[SYN]` para a porta 81, depois `[RST, ACK]` de `192.0.2.21` 72 microssegundos mais tarde. O que isso prova?",
+    "hint": "Alguém respondeu.",
+    "choices": [
+      {
+        "text": "Host no ar, porta fechada",
+        "why": "Isso. O próprio kernel do host respondeu pela porta fechada."
+      },
+      {
+        "text": "Um firewall no caminho descartou o SYN",
+        "why": "Um descarte é silêncio; isto foi uma resposta."
+      },
+      {
+        "text": "O servidor aceitou e depois caiu",
+        "why": "Ele nunca aceitou: não há SYN-ACK."
+      },
+      {
+        "text": "A rede perdeu o SYN no caminho",
+        "why": "O reset prova que o SYN chegou."
+      }
+    ]
+  },
+  "ex-jhcskqr4": {
+    "prompt": "Para a porta 8080 a captura mostra um SYN em 0 s, depois `[TCP Retransmission]` em 1.02 s e 2.05 s, e nada do servidor. O que dá para concluir do lado do cliente?",
+    "hint": "O silêncio tem várias causas.",
+    "choices": [
+      {
+        "text": "O servidor está no ar e a porta está fechada",
+        "why": "Uma porta fechada num host vivo responde com reset."
+      },
+      {
+        "text": "O serviço aceitou a conexão e travou",
+        "why": "Aceitar teria produzido um SYN-ACK."
+      },
+      {
+        "text": "O nome não foi resolvido",
+        "why": "O SYN foi para um endereço, então a resolução já tinha acontecido."
+      },
+      {
+        "text": "Nada voltou; a causa está em aberto",
+        "why": "Isso. Um descarte no servidor, no caminho, ou uma resposta perdida, tudo fica assim."
+      }
+    ]
+  },
+  "ex-041kggah": {
+    "prompt": "A captura do cliente mostra só SYNs retransmitidos. Que passo único diz se o SYN chegou ao servidor?",
+    "hint": "A aula 12 capturou em outro lugar.",
+    "choices": [
+      {
+        "text": "Capturar de novo no cliente com `-n`",
+        "why": "O cliente já mostrou tudo o que consegue ver."
+      },
+      {
+        "text": "Capturar no servidor ao mesmo tempo",
+        "why": "Isso. Se o SYN está lá, a perda é no servidor ou na volta."
+      },
+      {
+        "text": "Aumentar o `--max-time` do curl para um minuto",
+        "why": "Esperar mais acrescenta retransmissões, não informação."
+      },
+      {
+        "text": "Pingar o endereço do servidor",
+        "why": "O ICMP pode passar onde o TCP 8080 é descartado, e o contrário."
+      }
+    ]
+  },
+  "ex-bk19b7j9": {
+    "prompt": "Ligue o que você vê ao que isso quer dizer.",
+    "hint": "Uma resposta, uma repetição, um limite.",
+    "pairs": [
+      {
+        "left": "`[RST, ACK]` logo depois do SYN",
+        "right": "Um host vivo com a porta fechada"
+      },
+      {
+        "left": "`[TCP Retransmission]` do SYN",
+        "right": "Nenhuma resposta chegou, então o cliente tenta de novo"
+      },
+      {
+        "left": "`Connection timed out after 5002 milliseconds`",
+        "right": "O limite do próprio cliente acabou"
+      }
+    ],
+    "right_distractors": [
+      "O serviço respondeu, só que devagar"
+    ]
+  },
+  "ex-gdycpbth": {
+    "prompt": "Uma captura imprimiu esta linha para uma resposta DNS: `0x26af\tTrue\t3\tnosuch.example.com`. O que o 3 diz?",
+    "hint": "O terceiro campo é o código de resposta.",
+    "choices": [
+      {
+        "text": "Voltaram três respostas",
+        "why": "A coluna do endereço está vazia; não houve resposta nenhuma."
+      },
+      {
+        "text": "O servidor falhou e não conseguiu responder",
+        "why": "Esse é outro código; este servidor respondeu com certeza."
+      },
+      {
+        "text": "O nome não existe: NXDOMAIN",
+        "why": "Isso. Código de resposta 3, No such name."
+      },
+      {
+        "text": "É a terceira consulta com este id",
+        "why": "Cada consulta tem o próprio id; o 3 é o código de resposta."
+      }
+    ]
+  },
+  "ex-75a41nc7": {
+    "prompt": "O DNS roda sobre UDP, sem conexão. Como o laptop sabe qual resposta responde a qual consulta?",
+    "hint": "Olhe a primeira coluna da captura.",
+    "choices": [
+      {
+        "text": "Pela ordem em que as respostas chegam",
+        "why": "Respostas podem chegar em qualquer ordem; a ordem não prova nada."
+      },
+      {
+        "text": "Pelo id da transação, o mesmo nas duas",
+        "why": "Isso. 0x301b perguntou e 0x301b respondeu."
+      },
+      {
+        "text": "Pela conexão TCP que cada uma usou",
+        "why": "Estas consultas foram UDP, porta 53, sem conexão."
+      },
+      {
+        "text": "Pelo nome, que só uma consulta pode perguntar",
+        "why": "O mesmo nome foi perguntado duas vezes nesta aula, com dois ids."
+      }
+    ]
+  },
+  "ex-gen4tghm": {
+    "prompt": "A resposta DNS veio do IP `192.0.2.53`, mas a origem Ethernet era `52:54:00:a8:0a:01`, o MAC do roteador do escritório. Por que os dois discordam?",
+    "hint": "Qual cabeçalho sobrevive a um roteador?",
+    "choices": [
+      {
+        "text": "O roteador respondeu à consulta sozinho, do cache",
+        "why": "A resposta era autoritativa, de ns; o roteador só a encaminhou."
+      },
+      {
+        "text": "O NAT reescreveu o MAC para esconder o servidor",
+        "why": "MACs são reescritos a cada salto, com NAT ou sem."
+      },
+      {
+        "text": "Um MAC nomeia o último salto; o IP nomeia quem mandou",
+        "why": "Isso. Cada roteador escreve um cabeçalho Ethernet novo e mantém o IP."
+      },
+      {
+        "text": "A captura foi feita numa porta espelho",
+        "why": "Foi feita no laptop; e uma porta espelho não muda nada num quadro."
+      }
+    ]
+  },
+  "ex-ms240kht": {
+    "prompt": "O código de resposta 3 numa resposta DNS se chama ___: o nome consultado não existe.",
+    "hint": "Domínio inexistente, numa palavra.",
+    "blanks": [
+      {
+        "accept": [
+          "NXDOMAIN"
+        ]
+      }
+    ]
+  },
+  "ex-xskv5ks3": {
+    "prompt": "Na sessão TLS 1.3 que funcionou, qual destes alguém no caminho conseguiria ler?",
+    "hint": "O quadro 4.",
+    "choices": [
+      {
+        "text": "O certificado do servidor",
+        "why": "No TLS 1.3 ele está dentro dos registros criptografados do quadro 6."
+      },
+      {
+        "text": "O caminho da página pedida",
+        "why": "A requisição é Application Data, criptografada."
+      },
+      {
+        "text": "O nome do site",
+        "why": "Isso. O SNI, www.example.com, vai no Client Hello em claro."
+      },
+      {
+        "text": "A página que voltou",
+        "why": "Criptografada, como tudo depois do Server Hello."
+      }
+    ]
+  },
+  "ex-656gnsed": {
+    "prompt": "A captura da porta 8443 terminou com `8 0.026663340 192.168.10.20 → 192.0.2.21   TLSv1.3 73 Alert (Level: Fatal, Description: Certificate Expired)`. Quem mandou, e por que o tshark conseguiu ler?",
+    "hint": "Leia o sentido da seta.",
+    "choices": [
+      {
+        "text": "O servidor, avisando que o próprio certificado tinha vencido",
+        "why": "Ele vem de 192.168.10.20, o laptop."
+      },
+      {
+        "text": "O laptop, e o tshark o decifrou com as chaves da sessão",
+        "why": "O tshark não recebeu chave nenhuma; não havia o que decifrar."
+      },
+      {
+        "text": "O laptop, antes de criptografar o próprio lado",
+        "why": "Isso. 7 bytes de TLS em claro: um cabeçalho de registro e um alerta de dois bytes."
+      },
+      {
+        "text": "Um firewall no caminho, bloqueando o certificado velho",
+        "why": "A origem é o endereço do laptop, e nada no caminho conseguia ler o certificado."
+      }
+    ]
+  },
+  "ex-d5r97zbh": {
+    "prompt": "O quadro do alerta tem 73 bytes, e um segmento TCP vazio neste enlace tem 66. Quantos bytes de TLS o alerta leva?",
+    "hint": "Um cabeçalho de registro de 5 mais o próprio alerta.",
+    "unit": "bytes"
+  },
+  "ex-epxq4hkf": {
+    "prompt": "Para o certificado do nome errado, o quadro 8 foi `Change Cipher Spec, Application Data`, 146 bytes, igual ao sucesso. Um colega conclui que o TLS estava bem e a falha está em outro lugar. O que há de errado nisso?",
+    "hint": "Quando o nome foi comparado?",
+    "choices": [
+      {
+        "text": "O curl recusou o nome depois, dentro da criptografia",
+        "why": "Isso. Ela aparece como Application Data, como uma requisição; o erro do curl diz qual foi a divergência."
+      },
+      {
+        "text": "Nada; um nome errado teria produzido um alerta legível",
+        "why": "A captura mostra que não produziu."
+      },
+      {
+        "text": "146 bytes é curto demais para ser um Finished de verdade",
+        "why": "São os mesmos 146 da sessão que funcionou."
+      },
+      {
+        "text": "O servidor é que deveria ter mandado o alerta, não o laptop",
+        "why": "O servidor não julga o próprio certificado; quem julga é o cliente."
+      }
+    ]
+  },
+  "ex-sf3h3dhc": {
+    "prompt": "Todo Client Hello da aula aparece como `TLSv1`, enquanto o resto da sessão é `TLSv1.3`. Por quê?",
+    "hint": "Equipamento antigo no caminho.",
+    "choices": [
+      {
+        "text": "O laptop só fala TLS 1.0 até o servidor o promover",
+        "why": "Ele oferece 1.3 dentro do Client Hello, e foi 1.3 que se usou."
+      },
+      {
+        "text": "O registro externo diz 1.0 por compatibilidade",
+        "why": "Isso. As versões de verdade vão numa extensão do Client Hello."
+      },
+      {
+        "text": "Alguém no caminho está forçando um rebaixamento",
+        "why": "O Server Hello e tudo depois dele são 1.3."
+      },
+      {
+        "text": "O tshark não consegue decodificar um Client Hello 1.3",
+        "why": "Ele decodificou o SNI dele sem problema."
+      }
+    ]
+  },
+  "ex-8efmg56f": {
+    "prompt": "O `openssl s_client` para a porta 9443 imprimiu `subject=CN = shop.example.net` e `Verify return code: 0 (ok)`, embora tivesse pedido `www.example.com`. O que o código 0 estabelece?",
+    "hint": "O -servername só manda o SNI.",
+    "choices": [
+      {
+        "text": "Que o certificado é o certo para www.example.com",
+        "why": "O subject diz shop.example.net; o nome não foi conferido."
+      },
+      {
+        "text": "Que o servidor aceitou o SNI e trocou de nome",
+        "why": "O servidor mandou o único certificado que tem naquela porta."
+      },
+      {
+        "text": "Uma cadeia confiável e dentro da validade, e nada sobre o nome",
+        "why": "Isso. O -verify_hostname teria conferido; não foi rodado."
+      },
+      {
+        "text": "Que a conexão foi criptografada sem problema nenhum",
+        "why": "Criptografada, sim, e para o nome errado, o que é um problema."
+      }
+    ]
+  },
+  "ex-n3djg2qe": {
+    "prompt": "Ligue cada mensagem à sua causa.",
+    "hint": "Duas vieram do openssl, uma do curl.",
+    "pairs": [
+      {
+        "left": "`Verify return code: 10`",
+        "right": "O certificado passou da data NotAfter"
+      },
+      {
+        "left": "`Verify return code: 21`",
+        "right": "Nenhuma cadeia dele até algo confiável"
+      },
+      {
+        "left": "`no alternative certificate subject name matches`",
+        "right": "O certificado é de outro nome"
+      }
+    ],
+    "right_distractors": [
+      "O servidor não escuta naquela porta"
+    ]
+  },
+  "ex-dvrbdkye": {
+    "prompt": "Em `failing.pcap`, o quadro 9 é o `[FIN, ACK]` de `web1` e o quadro 10 o `[RST, ACK]` do laptop. Por que um reset em vez de um FIN?",
+    "hint": "O que o curl fez depois do alerta?",
+    "choices": [
+      {
+        "text": "Um firewall resetou a conexão em nome do laptop",
+        "why": "Nada neste caminho filtra a porta 8443."
+      },
+      {
+        "text": "O laptop já tinha fechado a ponta dele",
+        "why": "Isso. Um pacote para uma conexão que não existe mais recebe um reset."
+      },
+      {
+        "text": "O FIN do servidor chegou danificado",
+        "why": "Os números dele, Seq=1444 Ack=525, batem exatamente."
+      },
+      {
+        "text": "Um reset é o jeito como o TLS 1.3 sempre fecha",
+        "why": "O TLS fecha acima do TCP; isto é o TCP respondendo por um socket fechado."
+      }
+    ]
+  },
+  "ex-65edrsrd": {
+    "prompt": "Ponha estes pacotes de `failing.pcap` na ordem em que passaram pelo fio.",
+    "hint": "TCP primeiro, TLS dentro dele, TCP de novo no fim.",
+    "items": [
+      "[SYN] do laptop",
+      "Client Hello com o SNI",
+      "Server Hello e o certificado criptografado",
+      "Alert: Certificate Expired",
+      "[FIN, ACK] de web1",
+      "[RST, ACK] do laptop"
+    ],
+    "trap": "O alerta é o veredito do laptop sobre um certificado que ele precisa receber antes, e web1 só fecha depois de ouvi-lo."
+  },
+  "ex-718qjmxd": {
+    "prompt": "Depois de uma mudança no servidor, os usuários dizem que o site não carrega. Uma captura mostra o Client Hello, o Server Hello, depois `Alert (Level: Fatal, Description: Unknown CA)` de cada cliente. Qual é a causa mais provável?",
+    "hint": "Os clientes disseram por quê.",
+    "choices": [
+      {
+        "text": "O certificado novo já venceu",
+        "why": "O alerta diria Certificate Expired."
+      },
+      {
+        "text": "Um firewall agora bloqueia a porta 443",
+        "why": "Aí não haveria Server Hello, só SYNs retransmitidos."
+      },
+      {
+        "text": "O certificado é de outro site",
+        "why": "Esse é conferido depois do handshake e não apareceria em claro."
+      },
+      {
+        "text": "Os clientes não confiam no emissor",
+        "why": "Isso. Um certificado da autoridade errada, ou uma cadeia que os clientes não conseguem completar."
+      }
+    ]
+  }
+}

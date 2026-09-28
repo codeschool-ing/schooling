@@ -4,17 +4,16 @@ version: 1
 ---
 
 Lesson 3 brought OpenVPN up and read its TLS handshake off the wire, Client Hello and all. Here it is
-set up the way a remote-access server usually is, on `hq`, for Ana. The server's file, as `cat
-/etc/openvpn/server.conf` printed it:
+set up the way a remote-access server usually is, on `hq`, for Ana. This is the server's file, as
+`cat /etc/openvpn/server.conf` printed it:
 
 ```schooling-example
 {"language": "conf", "file": "server.conf", "parts": [{"code": "dev tun\nproto udp\nport 1194", "note": "A layer 3 tunnel, `tun`, over UDP on OpenVPN's registered port."}, {"code": "server 10.8.0.0 255.255.255.0\ntopology subnet", "note": "A pool for the clients. The server takes `10.8.0.1` and hands out the rest, one address per connection, all in one subnet."}, {"code": "ca ca.crt\ncert vpn-server.crt\nkey vpn-server.key", "note": "The authority both sides trust, and the server's own certificate and key. Each client has a certificate of its own from the same authority, and that is its identity."}, {"code": "dh none", "note": "No file of Diffie-Hellman parameters: the key exchange is done on elliptic curves instead."}, {"code": "tls-crypt tc.key", "note": "A key shared by the server and every client, which encrypts and authenticates the control channel, handshake included."}, {"code": "push \"route 192.168.10.0 255.255.255.0\"", "note": "Sent to each client as it connects: route the head office LAN into the tunnel, and nothing else. A split tunnel, which lesson 5 is about."}, {"code": "keepalive 10 60", "note": "A ping through the tunnel every 10 seconds, and a client restarts the connection after 60 without an answer. The server waits twice as long."}, {"code": "status /run/openvpn-status.log 5\nverb 3", "note": "Rewrite the list of who is connected into a file every 5 seconds, and log at the usual level."}]}
 ```
 
-**Where WireGuard names a peer by a key written into the server's file, OpenVPN names a person by a
+**WireGuard names a peer by a key written into the server's file. OpenVPN names a person by a
 certificate the server has never seen before.** Any client whose certificate the lab's authority signed
-can connect, and the server needs no line per user. That is the difference the rest of this section
-keeps meeting.
+can connect, and the server needs no line per user.
 
 `tls-crypt` needs a key of its own, generated once on the server and copied to every client, here to
 Ana's laptop, as root and not shown:
@@ -49,19 +48,19 @@ PING 192.168.10.10 (192.168.10.10) 56(84) bytes of data.
 rtt min/avg/max/mdev = 0.859/0.859/0.859/0.000 ms
 ```
 
-`tshark` still knows it is OpenVPN: the first two packets, the client's and the server's
+`tshark` still knows it is OpenVPN. The first two packets, the client's and the server's
 `HARD_RESET`, carry their message type where it can read it. **After that there is no Client Hello, no
 Server Hello, no version and no list of ciphers**, only `Continuation Data`, which is `tshark` finding
 bytes where it expected TLS records it could parse. Lesson 3's capture, without `tls-crypt`, named every
 step.
 
 What an observer can no longer read matters less than what the server no longer does. A packet whose
-`tls-crypt` authentication fails is dropped before OpenVPN's TLS code sees it, so **somebody without
-`tc.key` cannot even begin a handshake**, which is the silence WireGuard gets from its keys, bought here
+`tls-crypt` authentication fails is dropped before OpenVPN's TLS code sees it. **Somebody without
+`tc.key` cannot even begin a handshake**: it is the silence WireGuard gets from its keys, bought here
 with one shared file. A client that leaves the company still has that file, which is why it protects
 the door and the certificate still decides who comes in.
 
-Ten seconds later the server's status file said who was connected:
+The status file, rewritten ten seconds after she connected, said who was there:
 
 ```
 ana@hq:~$ sudo cat /run/openvpn-status.log

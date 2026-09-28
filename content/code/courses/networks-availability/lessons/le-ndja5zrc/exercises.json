@@ -1,0 +1,681 @@
+[
+  {
+    "id": "ex-z1mvnk9f",
+    "version": 1,
+    "section": "what-ipsec-adds",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "tcpdump on the ISP's router printed the tunnel's packets as `proto ESP (…)`. What IP protocol number is ESP?",
+    "hint": "AH is the next number up.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "protocol number"
+  },
+  {
+    "id": "ex-wbctbf7a",
+    "version": 1,
+    "section": "what-ipsec-adds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A partner insists on AH because it also protects the IP header. Their office sits behind a NAT router. What happens?",
+    "hint": "What does NAT change, and what does AH cover?",
+    "choices": [
+      {
+        "text": "It works, because AH skips whatever NAT changes",
+        "correct": false,
+        "why": "AH covers the addresses on purpose; that is exactly what breaks it."
+      },
+      {
+        "text": "The NAT router refuses to forward protocol 51",
+        "correct": false,
+        "why": "It forwards it; the failure shows up at the far end, in the check."
+      },
+      {
+        "text": "Every packet fails its check at the far end",
+        "correct": true,
+        "why": "Right. NAT rewrote an address the check value covered."
+      },
+      {
+        "text": "It works as long as both sides use tunnel mode",
+        "correct": false,
+        "why": "In tunnel mode the outer header is what NAT rewrites, and AH covers it."
+      }
+    ]
+  },
+  {
+    "id": "ex-07pg4twm",
+    "version": 1,
+    "section": "what-ipsec-adds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With ESP in tunnel mode, what source address does the ISP's router read on a packet going from the laptop to the till?",
+    "hint": "Which header is outside the encryption?",
+    "choices": [
+      {
+        "text": "192.168.10.20",
+        "correct": false,
+        "why": "The laptop's address is in the inner header, which is encrypted."
+      },
+      {
+        "text": "203.0.113.2",
+        "correct": true,
+        "why": "Right. The new outer header carries hq's public address."
+      },
+      {
+        "text": "198.51.100.2",
+        "correct": false,
+        "why": "That is branch, the destination of the outer packet."
+      },
+      {
+        "text": "192.168.10.1",
+        "correct": false,
+        "why": "hq's LAN address never appears on the ISP's side."
+      }
+    ]
+  },
+  {
+    "id": "ex-995h7vmz",
+    "version": 1,
+    "section": "what-ipsec-adds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each thing ESP guarantees to the part of ESP that provides it.",
+    "hint": "One part only selects the key.",
+    "pairs": [
+      {
+        "left": "Nobody on the path reads the payload",
+        "right": "the encryption"
+      },
+      {
+        "left": "A changed byte is noticed",
+        "right": "the ICV"
+      },
+      {
+        "left": "A recorded packet sent again is refused",
+        "right": "the sequence number"
+      }
+    ],
+    "right_distractors": [
+      "the SPI"
+    ]
+  },
+  {
+    "id": "ex-ectp4t0m",
+    "version": 1,
+    "section": "what-ipsec-adds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two Linux servers in one data centre must encrypt the database traffic between them, and nothing else. Which mode fits, and why?",
+    "hint": "Who are the endpoints of the traffic?",
+    "choices": [
+      {
+        "text": "Tunnel mode, because only it encrypts the payload",
+        "correct": false,
+        "why": "Both modes encrypt what follows the header they keep."
+      },
+      {
+        "text": "Transport mode, because it hides their addresses from the switch",
+        "correct": false,
+        "why": "Transport mode leaves the addresses readable."
+      },
+      {
+        "text": "Tunnel mode, since transport mode cannot cross a switch",
+        "correct": false,
+        "why": "A switch forwards frames whatever the mode inside them."
+      },
+      {
+        "text": "Transport: the servers are the endpoints",
+        "correct": true,
+        "why": "Right. No gateway is involved, so no second IP header is needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-r2ae71dg",
+    "version": 1,
+    "section": "ike",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the pre-shared key in swanctl.conf do?",
+    "hint": "The traffic keys come from somewhere else.",
+    "choices": [
+      {
+        "text": "Encrypts the traffic between the two networks",
+        "correct": false,
+        "why": "The traffic keys come from the Diffie-Hellman exchange, fresh each time."
+      },
+      {
+        "text": "Proves to each router who the other one is",
+        "correct": true,
+        "why": "Right. It is used for the proof in IKE_AUTH and for nothing else."
+      },
+      {
+        "text": "Decides which algorithms the two sides use",
+        "correct": false,
+        "why": "That is what `proposals` and `esp_proposals` do."
+      },
+      {
+        "text": "Encrypts the IKE messages, but not the traffic",
+        "correct": false,
+        "why": "IKE_AUTH is encrypted with keys from the Diffie-Hellman exchange too."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fnh1pcc",
+    "version": 1,
+    "section": "ike",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `start_action = trap`, the laptop's first ping to the till was lost and the next two came back. Why?",
+    "hint": "It happened again after the connection was torn down.",
+    "choices": [
+      {
+        "text": "The till's router was still learning the laptop's MAC",
+        "correct": false,
+        "why": "Address resolution does not lose a ping; the loss followed the tunnel starting, both times."
+      },
+      {
+        "text": "It set the negotiation off and was dropped while it ran",
+        "correct": true,
+        "why": "Right. There were no keys yet to protect it with."
+      },
+      {
+        "text": "The first ESP packet of an SA always fails its ICV",
+        "correct": false,
+        "why": "It never became ESP at all; there was no SA yet."
+      },
+      {
+        "text": "The capture on the ISP's router held it back",
+        "correct": false,
+        "why": "A capture copies packets; it never stops one."
+      }
+    ]
+  },
+  {
+    "id": "ex-rt644rqz",
+    "version": 1,
+    "section": "ike",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can the ISP read in the IKE exchange between hq and branch?",
+    "hint": "Which exchange goes in clear?",
+    "choices": [
+      {
+        "text": "The names hq.example.com and branch.example.com",
+        "correct": false,
+        "why": "The identities travel in IKE_AUTH, which is encrypted."
+      },
+      {
+        "text": "A hash of the pre-shared key",
+        "correct": false,
+        "why": "The key never crosses, and the proof made with it is in the encrypted exchange."
+      },
+      {
+        "text": "The algorithms each side offered",
+        "correct": true,
+        "why": "Right. IKE_SA_INIT is in clear, offers and all."
+      },
+      {
+        "text": "The two networks the tunnel will join",
+        "correct": false,
+        "why": "The traffic selectors are in IKE_AUTH, encrypted."
+      }
+    ]
+  },
+  {
+    "id": "ex-nagh0g2t",
+    "version": 1,
+    "section": "ike",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the start of the tunnel in order, from the laptop's first ping.",
+    "hint": "Nothing can be encrypted before there is a secret.",
+    "items": [
+      "The laptop's ping falls into the trap",
+      "IKE_SA_INIT goes out and comes back, in clear",
+      "Both routers compute the same secret",
+      "IKE_AUTH goes out and comes back, encrypted",
+      "ESP carries the next ping"
+    ],
+    "trap": "The secret comes from the first exchange's public values, so IKE_AUTH cannot be encrypted before it."
+  },
+  {
+    "id": "ex-21f74qx6",
+    "version": 1,
+    "section": "ike",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With no NAT in the way and MOBIKE off, all four IKE messages between the offices used UDP port ___.",
+    "hint": "The port tcpdump filtered on first.",
+    "blanks": [
+      {
+        "accept": [
+          "500"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-skvk1j83",
+    "version": 1,
+    "section": "security-associations",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The laptop's ping was 84 bytes inside the tunnel and 140 on the wire. How many bytes did IPsec add?",
+    "hint": "The new IP header is part of it.",
+    "value": 56,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-hf2zh9dc",
+    "version": 1,
+    "section": "security-associations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "hq's listing shows `out 41b696e1`. Which packets carry `spi=0x41b696e1` on the wire?",
+    "hint": "An SA is one direction.",
+    "choices": [
+      {
+        "text": "Those branch sends to hq",
+        "correct": false,
+        "why": "Those carry 7fdf3ac6, hq's `in`."
+      },
+      {
+        "text": "The IKE messages, in both directions",
+        "correct": false,
+        "why": "The IKE SA has its own 64-bit SPIs."
+      },
+      {
+        "text": "Every ESP packet of the tunnel, both ways",
+        "correct": false,
+        "why": "Each direction has its own SA and its own SPI."
+      },
+      {
+        "text": "Only those hq sends to branch",
+        "correct": true,
+        "why": "Right. The reply in the capture carried 0x7fdf3ac6."
+      }
+    ]
+  },
+  {
+    "id": "ex-bcc7fp19",
+    "version": 1,
+    "section": "security-associations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Both counters of the CHILD SA said 168 bytes for 2 packets, while the ISP saw ESP packets of 140 bytes. Why do the two not agree?",
+    "hint": "Divide 168 by 2.",
+    "choices": [
+      {
+        "text": "The SA counts the packets before encryption",
+        "correct": true,
+        "why": "Right. 168 / 2 = 84, the laptop's ping as it sent it."
+      },
+      {
+        "text": "tcpdump on the ISP counted the Ethernet header too",
+        "correct": false,
+        "why": "140 is the IP length, and 2 × 140 would be 280 anyway."
+      },
+      {
+        "text": "One of the two pings was lost between the routers",
+        "correct": false,
+        "why": "Two packets were counted, 84 bytes each."
+      },
+      {
+        "text": "AES-GCM compresses the payload before sending it",
+        "correct": false,
+        "why": "Encryption compresses nothing; the wire packet is the larger one."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2c68wdg",
+    "version": 1,
+    "section": "security-associations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With ESP in tunnel mode between the offices, what can the ISP still learn?",
+    "hint": "What is outside the encryption?",
+    "choices": [
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "The outer header, the SPI and the sizes are all readable."
+      },
+      {
+        "text": "Which machines inside the offices are talking",
+        "correct": false,
+        "why": "The inner addresses are encrypted."
+      },
+      {
+        "text": "That the offices talk, when, and how much",
+        "correct": true,
+        "why": "Right. Encryption hides contents, not the fact of the conversation."
+      },
+      {
+        "text": "The URLs requested, but not the pages",
+        "correct": false,
+        "why": "grep found GET in none of the ten packets."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkacysp4",
+    "version": 1,
+    "section": "security-associations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The CHILD SA said `rekeying in 3288s, expires in 3957s`. What happens at the rekey?",
+    "hint": "It comes before the expiry for a reason.",
+    "choices": [
+      {
+        "text": "The tunnel goes down until IKE runs again",
+        "correct": false,
+        "why": "Rekeying before the expiry exists precisely so it does not."
+      },
+      {
+        "text": "The pre-shared key is replaced by a new one",
+        "correct": false,
+        "why": "The pre-shared key is configured; only the traffic keys change."
+      },
+      {
+        "text": "New keys are made while the old ones still work",
+        "correct": true,
+        "why": "Right. Traffic never waits for a negotiation after the first."
+      },
+      {
+        "text": "The sequence number goes back to zero, nothing else",
+        "correct": false,
+        "why": "A new SA comes with new keys and new SPIs, not just a new count."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e85v79v",
+    "version": 1,
+    "section": "reading-the-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A log shows `selected proposal: IKE:…` and then ends with `received AUTHENTICATION_FAILED notify error`. What does that rule out?",
+    "hint": "Which step succeeded?",
+    "choices": [
+      {
+        "text": "A wrong pre-shared key on one side",
+        "correct": false,
+        "why": "That is one of the causes of exactly this message."
+      },
+      {
+        "text": "That the two sides share no algorithm",
+        "correct": true,
+        "why": "Right. A proposal was selected in IKE_SA_INIT, so they agreed on algorithms."
+      },
+      {
+        "text": "A wrong id configured for the peer",
+        "correct": false,
+        "why": "A wrong id ends in the same notification."
+      },
+      {
+        "text": "Nothing; every mistake ends this way",
+        "correct": false,
+        "why": "Different networks end in TS_UNACCEPTABLE, and no common algorithm in NO_PROPOSAL_CHOSEN."
+      }
+    ]
+  },
+  {
+    "id": "ex-361g1kmr",
+    "version": 1,
+    "section": "reading-the-log",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A partner's router has your side as 10.50.0.0/16, while yours offers 10.50.1.0/24 and 172.20.0.0/24. The IKE SA comes up, and the CHILD SA fails with TS_UNACCEPTABLE. What do you change first?",
+    "hint": "Which step failed, and what is decided there?",
+    "choices": [
+      {
+        "text": "The pre-shared key, on both routers",
+        "correct": false,
+        "why": "Authentication succeeded; the IKE SA is up."
+      },
+      {
+        "text": "Both routers to AH, which has no selectors",
+        "correct": false,
+        "why": "AH has selectors like ESP, and no NAT-friendliness."
+      },
+      {
+        "text": "Make the two sides' selectors mirror each other",
+        "correct": true,
+        "why": "Right. 172.20.0.0/24 is in no network the partner allows, and nothing narrows it into one."
+      },
+      {
+        "text": "Open UDP 4500 on the partner's firewall",
+        "correct": false,
+        "why": "IKE got through fine; this is about which networks the tunnel joins."
+      }
+    ]
+  },
+  {
+    "id": "ex-9yxyndms",
+    "version": 1,
+    "section": "reading-the-log",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line in the initiator's log to its most likely cause.",
+    "hint": "Each is refused at a different step.",
+    "pairs": [
+      {
+        "left": "`N(AUTH_FAILED)` in the IKE_AUTH response",
+        "right": "The secrets or ids differ"
+      },
+      {
+        "left": "`TS_UNACCEPTABLE`, keeping the IKE SA",
+        "right": "The networks differ"
+      },
+      {
+        "left": "`NO_PROPOSAL_CHOSEN`",
+        "right": "No algorithm in common"
+      }
+    ],
+    "right_distractors": [
+      "A NAT rewrote the addresses"
+    ]
+  },
+  {
+    "id": "ex-rtgk9sr0",
+    "version": 1,
+    "section": "reading-the-log",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "tshark showed the first IKE_SA_INIT as a 506-byte frame, and strongSwan logged the same message as 464 bytes. How many bytes of headers wrap each IKE message on that link?",
+    "hint": "Ethernet, IP and UDP.",
+    "value": 42,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-y98z16ts",
+    "version": 1,
+    "section": "nat-traversal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the laptop's tunnel move to UDP port 4500?",
+    "hint": "What does the home router need in order to share one address?",
+    "choices": [
+      {
+        "text": "Port 500 is reserved for site-to-site tunnels",
+        "correct": false,
+        "why": "Port 500 is IKE's, for any tunnel; the laptop started on it."
+      },
+      {
+        "text": "ESP needs a port number in order to be encrypted",
+        "correct": false,
+        "why": "Encryption has nothing to do with ports; the offices' ESP had none."
+      },
+      {
+        "text": "ESP has no ports for the NAT to tell it apart by",
+        "correct": true,
+        "why": "Right. Inside UDP it has ports like any other conversation."
+      },
+      {
+        "text": "The office's firewall blocks protocol 50",
+        "correct": false,
+        "why": "The offices' own tunnel used protocol 50 through the same router."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv7axwg4",
+    "version": 1,
+    "section": "nat-traversal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does hq give the home laptop 10.30.0.1 rather than letting it use 192.168.1.50 inside the tunnel?",
+    "hint": "How many homes use 192.168.1.0/24?",
+    "choices": [
+      {
+        "text": "Private addresses are not allowed inside ESP",
+        "correct": false,
+        "why": "The offices' own tunnel carried 192.168 addresses."
+      },
+      {
+        "text": "The virtual address hides the laptop from the ISP",
+        "correct": false,
+        "why": "The ISP sees 198.51.100.77 either way, and the inside is encrypted anyway."
+      },
+      {
+        "text": "The home router would rewrite 192.168.1.50 inside the tunnel",
+        "correct": false,
+        "why": "A NAT cannot see inside ESP at all."
+      },
+      {
+        "text": "Thousands of homes use it; the office could not route it back",
+        "correct": true,
+        "why": "Right. An address the office hands out is one it knows how to reach."
+      }
+    ]
+  },
+  {
+    "id": "ex-7mgrhqsk",
+    "version": 1,
+    "section": "nat-traversal",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the capture on the ISP's router show for the laptop at home? Choose all that apply.",
+    "hint": "The ISP is on the far side of the home router.",
+    "choices": [
+      {
+        "text": "IKE_SA_INIT on port 500",
+        "correct": true,
+        "why": "Right: `198.51.100.77.500 > 203.0.113.2.500`."
+      },
+      {
+        "text": "IKE_AUTH on port 4500, marked NONESP-encap",
+        "correct": true,
+        "why": "Right: the second exchange had already moved."
+      },
+      {
+        "text": "The laptop's home address, 192.168.1.50",
+        "correct": false,
+        "why": "The home router rewrote it; only remote's own log shows it."
+      },
+      {
+        "text": "ESP inside UDP, with its SPI readable",
+        "correct": true,
+        "why": "Right: `UDP-encap: ESP(spi=0x0d6d6c89,seq=0x1)`."
+      },
+      {
+        "text": "ESP as bare protocol 50, with no UDP",
+        "correct": false,
+        "why": "That was the offices' tunnel; behind a NAT every packet was UDP."
+      }
+    ]
+  },
+  {
+    "id": "ex-46c9bg92",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Fifty staff connect from home with one shared pre-shared key. One of them leaves on bad terms. Which change removes the problem rather than today's symptom?",
+    "hint": "The next person will leave too.",
+    "choices": [
+      {
+        "text": "Change the key and send it to the other forty-nine",
+        "correct": false,
+        "why": "It fixes today and repeats the problem with the next departure."
+      },
+      {
+        "text": "A certificate or login per person, each revocable alone",
+        "correct": true,
+        "why": "Right. Removing one person then touches nobody else."
+      },
+      {
+        "text": "Move the connections from port 500 to 4500",
+        "correct": false,
+        "why": "The port has nothing to do with who holds the key."
+      },
+      {
+        "text": "Switch the ESP proposal to a longer key",
+        "correct": false,
+        "why": "The traffic keys were never the leak; the shared secret is."
+      }
+    ]
+  },
+  {
+    "id": "ex-6th8bxes",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new branch sits behind its carrier's NAT. Its IKE_SA_INIT gets an answer, then IKE_AUTH is retransmitted until it times out. Tunnels between offices without NAT work. What fits best?",
+    "hint": "Where does IKE_AUTH travel when a NAT is detected?",
+    "choices": [
+      {
+        "text": "The pre-shared key differs between the two sides",
+        "correct": false,
+        "why": "A wrong key gets an answer, AUTH_FAILED, not silence."
+      },
+      {
+        "text": "The traffic selectors do not mirror each other",
+        "correct": false,
+        "why": "That fails after a successful IKE_AUTH, with TS_UNACCEPTABLE."
+      },
+      {
+        "text": "Something on the path drops UDP 4500",
+        "correct": true,
+        "why": "Right. Port 500 worked; after the NAT was detected IKE moved to 4500, and nothing came back from there."
+      },
+      {
+        "text": "The two sides have no algorithm in common",
+        "correct": false,
+        "why": "IKE_SA_INIT was answered, so a proposal was chosen."
+      }
+    ]
+  }
+]

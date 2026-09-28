@@ -1,0 +1,669 @@
+[
+  {
+    "id": "ex-22t3dca2",
+    "version": 1,
+    "section": "ping",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "From the laptop, `hq` replied with `ttl=64` and web1 with `ttl=62`. How many routers did web1's reply cross?",
+    "hint": "Linux starts at 64 and each router takes one.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "routers"
+  },
+  {
+    "id": "ex-x339fxpn",
+    "version": 1,
+    "section": "ping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Fifty pings to web2 lost 12%, and the rule on the ISP drops 20% at random. What does the gap tell you?",
+    "hint": "Run the arithmetic of the example.",
+    "choices": [
+      {
+        "text": "The rule is dropping less than it was set to",
+        "correct": false,
+        "why": "At a true 20%, fifty pings report 12% or less in about one run in ten; the rule is fine."
+      },
+      {
+        "text": "Nothing: fifty pings are too few to pin the rate",
+        "correct": true,
+        "why": "Right. Fifty pings report anything from 10% to 32% in ninety-five runs out of a hundred."
+      },
+      {
+        "text": "ping undercounts loss when the interval is short",
+        "correct": false,
+        "why": "Each echo came back or it did not; ping counts both exactly."
+      },
+      {
+        "text": "ping resent the lost echoes and some got through",
+        "correct": false,
+        "why": "ping never resends: each sequence number is sent once."
+      }
+    ]
+  },
+  {
+    "id": "ex-27zfypbg",
+    "version": 1,
+    "section": "ping",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ping -s 1400` printed `1400(1428) bytes of data`. What are the other 28 bytes?",
+    "hint": "An echo is ICMP inside IP.",
+    "choices": [
+      {
+        "text": "The Ethernet header and its checksum",
+        "correct": false,
+        "why": "Ethernet is below the packet and is not in either figure."
+      },
+      {
+        "text": "A TCP header and an IP header",
+        "correct": false,
+        "why": "ping sends ICMP; there is no TCP in an echo."
+      },
+      {
+        "text": "8 of ICMP header and 20 of IP",
+        "correct": true,
+        "why": "Right. The data plus both headers is the packet on the wire."
+      },
+      {
+        "text": "Padding ping adds to round the size up",
+        "correct": false,
+        "why": "Nothing is padded; the 28 are headers."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejwnf9hx",
+    "version": 1,
+    "section": "ping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server's ping replies arrive with `ttl=125`. What can you say about the path?",
+    "hint": "Where did the count start?",
+    "choices": [
+      {
+        "text": "It is 125 routers away",
+        "correct": false,
+        "why": "TTL counts down from a starting value; nothing starts at zero."
+      },
+      {
+        "text": "Three hops, if it started at 128",
+        "correct": true,
+        "why": "Right. Windows starts at 128, so a reply at 125 crossed three routers; TTL is a distance only once you know the start."
+      },
+      {
+        "text": "The path is congested and packets are ageing",
+        "correct": false,
+        "why": "TTL drops once per router, not with time spent in a queue."
+      },
+      {
+        "text": "It is 125 milliseconds away",
+        "correct": false,
+        "why": "TTL is a hop count here, not a time; the time is the time= field."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rredww1",
+    "version": 1,
+    "section": "traceroute",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `traceroute -n -q 1`, hop 2 shows `*` and hop 3, the server, answers. What do you conclude?",
+    "hint": "Every probe that reached hop 3 crossed hop 2.",
+    "choices": [
+      {
+        "text": "Hop 2 forwards but stays quiet",
+        "correct": true,
+        "why": "Right. Forwarding works; only the router's own time exceeded is missing."
+      },
+      {
+        "text": "Hop 2 is down and traffic went round it",
+        "correct": false,
+        "why": "There is no way round in this path, and the server answered through it."
+      },
+      {
+        "text": "The server sits behind a firewall",
+        "correct": false,
+        "why": "The server answered; the silence is at hop 2."
+      },
+      {
+        "text": "The path loses packets at hop 2",
+        "correct": false,
+        "why": "A lossy hop would lose probes to hop 3 as well, and none were lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-fy47t5hg",
+    "version": 1,
+    "section": "traceroute",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does the default Linux traceroute know that it has reached the destination?",
+    "hint": "Its probes are UDP to high ports.",
+    "choices": [
+      {
+        "text": "The destination answers time exceeded",
+        "correct": false,
+        "why": "Time exceeded comes from the routers before it, where the TTL runs out."
+      },
+      {
+        "text": "It stops after three hops",
+        "correct": false,
+        "why": "The limit is 30 hops, as its first line says; three is how many probes per hop."
+      },
+      {
+        "text": "The destination answers port unreachable",
+        "correct": true,
+        "why": "Right. Nothing listens on those ports, so the destination says so, and that answer ends the trace."
+      },
+      {
+        "text": "The destination's reply has a TTL of zero",
+        "correct": false,
+        "why": "A reply's TTL starts high, at 64 on Linux."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxrn6jr1",
+    "version": 1,
+    "section": "traceroute",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `traceroute -n -T -p 80` run with `sudo`?",
+    "hint": "How are the probes made?",
+    "choices": [
+      {
+        "text": "Port 80 is below 1024, which only root may use",
+        "correct": false,
+        "why": "That rule is about listening on a port, not sending to one; any user can connect to port 80."
+      },
+      {
+        "text": "It builds its TCP packets on a raw socket",
+        "correct": true,
+        "why": "Right. Setting the TTL of a hand-made SYN needs a raw socket, and that needs root."
+      },
+      {
+        "text": "A firewall stops ordinary users sending TCP probes",
+        "correct": false,
+        "why": "No firewall knows which user on the laptop sent a packet."
+      },
+      {
+        "text": "sudo gives the probes a higher priority",
+        "correct": false,
+        "why": "sudo changes who runs the program, not how the network treats its packets."
+      }
+    ]
+  },
+  {
+    "id": "ex-269zkg9k",
+    "version": 1,
+    "section": "traceroute",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each traceroute to what its probes are.",
+    "hint": "The default is not ICMP.",
+    "pairs": [
+      {
+        "left": "traceroute -n",
+        "right": "UDP to high ports, ended by port unreachable"
+      },
+      {
+        "left": "traceroute -n -I",
+        "right": "ICMP echoes, like ping"
+      },
+      {
+        "left": "traceroute -n -T -p 80",
+        "right": "TCP SYNs to a port a firewall lets through"
+      }
+    ],
+    "right_distractors": [
+      "GRE packets through a tunnel"
+    ]
+  },
+  {
+    "id": "ex-mrs3t7k5",
+    "version": 1,
+    "section": "mtr",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An mtr report shows 80.0% loss at hops 1 and 2, and 0.0% at the destination. What is losing packets?",
+    "hint": "Read the last line first.",
+    "choices": [
+      {
+        "text": "hq, which drops four packets in five",
+        "correct": false,
+        "why": "Then nothing past hq could do better than one in five, and the destination got all 50."
+      },
+      {
+        "text": "The ISP router, where the loss continues",
+        "correct": false,
+        "why": "It does not continue: the destination lost nothing."
+      },
+      {
+        "text": "Nothing on the path",
+        "correct": true,
+        "why": "Right. The routers limit their own time exceeded answers; the destination's echo reply is not limited, and all 50 came back."
+      },
+      {
+        "text": "The destination, which hides its loss",
+        "correct": false,
+        "why": "A destination cannot answer a probe it never received."
+      }
+    ]
+  },
+  {
+    "id": "ex-qbkpb7dv",
+    "version": 1,
+    "section": "mtr",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An mtr report shows 0% at hops 1 to 4, then 15% at hop 5, and 15% at hops 6 and 7, the destination. Where do you look?",
+    "hint": "Where does the loss begin and stay?",
+    "choices": [
+      {
+        "text": "At hop 7, the destination",
+        "correct": false,
+        "why": "The loss began two hops earlier and was carried through."
+      },
+      {
+        "text": "At hop 5, or the link into it",
+        "correct": true,
+        "why": "Right. Loss that starts at a hop and stays to the end is real, and starts there."
+      },
+      {
+        "text": "Nowhere: it is ICMP rate limiting",
+        "correct": false,
+        "why": "Rate limiting never reaches the destination; this does."
+      },
+      {
+        "text": "At hop 1, because loss adds up along the path",
+        "correct": false,
+        "why": "Hop 1 lost nothing; loss shows where it happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygz92gcv",
+    "version": 1,
+    "section": "mtr",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`icmp_ratemask = 6168` is 4096 + 2048 + 16 + 8. Which bit, the ICMP type every intermediate hop answers traceroute with, makes the 2048?",
+    "hint": "2048 is 2 to the power of what?",
+    "value": 11,
+    "tolerance": 0,
+    "unit": "bit"
+  },
+  {
+    "id": "ex-94b7baef",
+    "version": 1,
+    "section": "mtr",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first mtr, at one probe a second, showed 0.0% at hops 1 and 2; the second, at ten a second, showed 80.0%. Why the difference?",
+    "hint": "icmp_ratelimit = 1000.",
+    "choices": [
+      {
+        "text": "One a second stayed inside the ICMP limit; ten did not",
+        "correct": true,
+        "why": "Right. After a small burst each router answers one probe a second."
+      },
+      {
+        "text": "Removing the drop rule created loss at the hops",
+        "correct": false,
+        "why": "Removing a drop cannot add loss, and that rule touched only traffic to web2."
+      },
+      {
+        "text": "Loss grows as more probes are sent",
+        "correct": false,
+        "why": "A percentage does not grow with the count; 20 probes and 50 measure the same rate."
+      },
+      {
+        "text": "The second run went to web1 by another path",
+        "correct": false,
+        "why": "Both crossed hq and the ISP, the same two hops."
+      }
+    ]
+  },
+  {
+    "id": "ex-wm1e5mj5",
+    "version": 1,
+    "section": "nslookup",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "nslookup printed `** server can't find nosuch.example.com: NXDOMAIN`. What happened?",
+    "hint": "NXDOMAIN is an rcode in a reply.",
+    "choices": [
+      {
+        "text": "The server could not be reached",
+        "correct": false,
+        "why": "That prints timeouts and no servers could be reached, with no server line."
+      },
+      {
+        "text": "The server answered that the name does not exist",
+        "correct": true,
+        "why": "Right. A server was reached, looked, and said so."
+      },
+      {
+        "text": "The name exists but has no address record",
+        "correct": false,
+        "why": "That is a different answer, with no error code; NXDOMAIN says the name itself is absent."
+      },
+      {
+        "text": "The laptop's resolver setting is wrong",
+        "correct": false,
+        "why": "The configured server, 192.0.2.53, answered, so the setting worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-vb5m2bxp",
+    "version": 1,
+    "section": "nslookup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of nslookup's output answers the question 'was I asking the right server?'",
+    "hint": "The header comes before the answer.",
+    "choices": [
+      {
+        "text": "`Name:`",
+        "correct": false,
+        "why": "That repeats the name asked about."
+      },
+      {
+        "text": "The `Server:` line at the top",
+        "correct": true,
+        "why": "Right. It names the server that answered, before any answer."
+      },
+      {
+        "text": "`Address: 192.0.2.80`",
+        "correct": false,
+        "why": "That is the answer, the name's address, not who gave it."
+      },
+      {
+        "text": "The last, empty line",
+        "correct": false,
+        "why": "It ends the output and says nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbe28r2n",
+    "version": 1,
+    "section": "nslookup",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "NXDOMAIN comes from a server that looked the name up; three timeouts mean that no ___ came back at all.",
+    "hint": "The opposite of NXDOMAIN, not the same failure.",
+    "blanks": [
+      {
+        "accept": [
+          "answer",
+          "reply",
+          "response"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ykmdz2b2",
+    "version": 1,
+    "section": "iperf",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of iperf3's two summary lines is the throughput to quote?",
+    "hint": "What arrived, not what was pushed.",
+    "choices": [
+      {
+        "text": "The receiver's",
+        "correct": true,
+        "why": "Right. 19.1 Mbit/s is what reached web1."
+      },
+      {
+        "text": "The sender's, the higher one",
+        "correct": false,
+        "why": "20.1 is what was pushed, including what had to be sent again."
+      },
+      {
+        "text": "The first second, the peak",
+        "correct": false,
+        "why": "26.2 was TCP overshooting before the drops; it is not the path's rate."
+      },
+      {
+        "text": "The average of sender and receiver",
+        "correct": false,
+        "why": "An average of two different things is neither of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-h40cj6tj",
+    "version": 1,
+    "section": "iperf",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Upload measured 19.1 Mbit/s received and `-R` measured 3.31 Gbit/s. Why the difference?",
+    "hint": "Where was the shaper?",
+    "choices": [
+      {
+        "text": "-R uses UDP, which the shaper ignores",
+        "correct": false,
+        "why": "-R is still TCP; it only swaps who sends."
+      },
+      {
+        "text": "Only hq's upload was shaped",
+        "correct": true,
+        "why": "Right. The shaper sat on what leaves hq towards the ISP; the download direction had none."
+      },
+      {
+        "text": "web1 sends faster than the laptop can",
+        "correct": false,
+        "why": "Both are namespaces on one computer; the 20 Mbit/s cap is a shaper, not a machine."
+      },
+      {
+        "text": "The reverse test opens four streams",
+        "correct": false,
+        "why": "That is -P 4, and four streams made 20.8 Mbit/s, not gigabits."
+      }
+    ]
+  },
+  {
+    "id": "ex-7081x9av",
+    "version": 1,
+    "section": "iperf",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`-P 4` made 20.8 Mbit/s against 20.1 for one stream. In which situation would parallel streams have raised the number?",
+    "hint": "What caps the total here, and what caps one connection elsewhere?",
+    "choices": [
+      {
+        "text": "On any link, since four streams get four shares",
+        "correct": false,
+        "why": "Against this shaper four streams made the same 20; the total was the limit."
+      },
+      {
+        "text": "On a shaped link, to get round the shaper",
+        "correct": false,
+        "why": "A shaper caps the total, so extra streams only split it."
+      },
+      {
+        "text": "On a link that loses UDP",
+        "correct": false,
+        "why": "-P 4 here is TCP, and loss slows TCP streams whatever their number."
+      },
+      {
+        "text": "On a long path where one stream's window is the limit",
+        "correct": true,
+        "why": "Right. Each stream has its own window, so four can fill a path one cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-38jw5m0s",
+    "version": 1,
+    "section": "iperf",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At `-u -b 30M` the receiver got 19.5 Mbit/s and 34% loss. What did UDP do that TCP did not?",
+    "hint": "TCP backs off; UDP has no mechanism to.",
+    "choices": [
+      {
+        "text": "It resent the lost datagrams",
+        "correct": false,
+        "why": "UDP resends nothing; the 4432 lost stayed lost."
+      },
+      {
+        "text": "It kept sending at the asked rate",
+        "correct": true,
+        "why": "Right. It held 30 Mbit/s and nothing told it to slow down, so the shaper dropped what did not fit."
+      },
+      {
+        "text": "It slowed down when jitter rose",
+        "correct": false,
+        "why": "The sender held 30.0 Mbit/s throughout."
+      },
+      {
+        "text": "It compressed the data to fit the link",
+        "correct": false,
+        "why": "Nothing compresses here; 19.5 is what survived."
+      }
+    ]
+  },
+  {
+    "id": "ex-kq0ddspq",
+    "version": 1,
+    "section": "iperf",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A browser speed test reads well below the plan's rate. Which of these could explain it? Choose all that apply.",
+    "hint": "The test counts data, over the whole path.",
+    "choices": [
+      {
+        "text": "The Wi-Fi between the laptop and the router",
+        "correct": true,
+        "why": "Right: it is part of the path the test measures."
+      },
+      {
+        "text": "Headers the plan counts and the test does not",
+        "correct": true,
+        "why": "Right: the line carries them, the test reports only data."
+      },
+      {
+        "text": "ICMP rate limiting at the provider's routers",
+        "correct": false,
+        "why": "A speed test moves data over TCP; ICMP limits never touch it."
+      },
+      {
+        "text": "The test server sitting close to the provider",
+        "correct": false,
+        "why": "A near server flatters the number; it cannot explain a low one."
+      }
+    ]
+  },
+  {
+    "id": "ex-y01m2f5c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A user says a site 'does not exist'. `nslookup` prints three `communications error ... timed out` lines and `no servers could be reached`. Where do you look?",
+    "hint": "No server line, no answer.",
+    "choices": [
+      {
+        "text": "At the site's DNS record, missing from the server",
+        "correct": false,
+        "why": "A missing record comes back as NXDOMAIN, from a server that answered."
+      },
+      {
+        "text": "At the path to DNS, or the resolver setting",
+        "correct": true,
+        "why": "Right. Nothing answered, so nothing is known about the name yet."
+      },
+      {
+        "text": "At the web server, which is down",
+        "correct": false,
+        "why": "The web server has not been reached: there is no address to reach it at."
+      },
+      {
+        "text": "At the browser's cache",
+        "correct": false,
+        "why": "nslookup never uses the browser; the failure is its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-3yk3gra8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these in the order they answer 'can the laptop fetch www.example.com quickly?'",
+    "hint": "A name before an address; reaching before carrying.",
+    "items": [
+      "nslookup www.example.com: does the name resolve?",
+      "ping 192.0.2.80: does the address answer?",
+      "mtr 192.0.2.80: is anything lost on the way, and where?",
+      "iperf3 to a machine at the far end: how much does the path carry?"
+    ],
+    "trap": "Without a name there is no address to ping, and a throughput test on a path that loses packets measures the loss."
+  },
+  {
+    "id": "ex-q8gppeys",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which tool answers 'is anything being lost between here and web2, and at which hop?'",
+    "hint": "Whether, and where, over many rounds.",
+    "choices": [
+      {
+        "text": "ping",
+        "correct": false,
+        "why": "ping says whether and how much, but not at which hop."
+      },
+      {
+        "text": "traceroute, run once",
+        "correct": false,
+        "why": "Three probes a hop, once, cannot measure a rate of loss."
+      },
+      {
+        "text": "mtr",
+        "correct": true,
+        "why": "Right. It probes every hop round after round and counts the losses per hop."
+      },
+      {
+        "text": "iperf3 in UDP mode",
+        "correct": false,
+        "why": "It measures loss end to end, with no hops at all."
+      }
+    ]
+  }
+]

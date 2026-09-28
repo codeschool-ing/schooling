@@ -62,7 +62,7 @@ o `tc.key` nem consegue começar um handshake**, que é o silêncio que o WireGu
 comprado aqui com um arquivo compartilhado. Um cliente que sai da empresa continua com esse arquivo, e
 é por isso que ele protege a porta e quem decide quem entra continua sendo o certificado.
 
-Dez segundos depois, o arquivo de status do servidor dizia quem estava conectado:
+O arquivo de status, regravado dez segundos depois de ela conectar, dizia quem estava lá:
 
 ```
 ana@hq:~$ sudo cat /run/openvpn-status.log
