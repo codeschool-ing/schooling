@@ -46,7 +46,7 @@ o que os dados são.
 
 ## Por que o RPO raramente é zero entre regiões
 
-O piso calculado antes nesta lição decide isso. Um commit síncrono espera até a outra cópia ter a
+O piso calculado antes nesta aula decide isso. Um commit síncrono espera até a outra cópia ter a
 escrita. Entre duas zonas é uma espera curta; entre São Paulo e a Virgínia são pelo menos 76,6 ms em
 cada commit, antes de qualquer atraso real de rede. **Por isso a maior parte da replicação entre
 regiões é assíncrona**: o primário confirma na hora e manda a mudança depois, e o que estava a caminho

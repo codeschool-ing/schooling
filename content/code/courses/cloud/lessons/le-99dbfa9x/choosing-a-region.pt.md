@@ -8,7 +8,7 @@ console mostrou primeiro. **Uma região se escolhe com cinco perguntas, e elas n
 duas primeiras são restrições: uma região que falha em qualquer uma está fora, custe o que custar. As
 outras três são trocas, pesadas umas contra as outras entre as regiões que sobraram.
 
-1. O que a lei diz sobre onde os dados podem ficar? É a pergunta de residência de dados da lição 2, e
+1. O que a lei diz sobre onde os dados podem ficar? É a pergunta de residência de dados da aula 2, e
    quem responde é a região, porque a região é onde os dados ficam fisicamente. Se dados pessoais
    precisam ficar no país, uma região fora dele não é opção, e uma réplica lá também não.
 2. O serviço de que você precisa existe lá? Todo serviço gerenciado e tipo de instância que você

@@ -6,7 +6,7 @@ version: 1
 Em 2011 o NIST, o instituto nacional de padrões e tecnologia dos Estados Unidos, publicou um documento
 curto, a Special Publication 800-145, *The NIST Definition of Cloud Computing*. Ele nomeia **cinco
 características essenciais**, três modelos de serviço e quatro modelos de implantação. Os modelos de
-serviço são esta lição, e os de implantação são a lição 2. Ainda é a definição que as pessoas citam,
+serviço são esta aula, e os de implantação são a aula 2. Ainda é a definição que as pessoas citam,
 porque descreve propriedades que um serviço tem, e não produtos que alguém vende, e propriedades não
 envelhecem.
 
@@ -43,14 +43,14 @@ A capacidade **cresce e diminui depressa, e pode fazer isso sozinha**. Uma loja 
 o ano todo, dez na semana de uma promoção e duas de novo depois dela, e do ponto de vista do cliente a
 oferta parece ilimitada. A elasticidade é o que o agrupamento compra: as dez máquinas estão lá porque o
 provedor mantém capacidade de sobra compartilhada por todos, não porque você as encomendou em outubro.
-A lição 4 mostra como o crescer e o encolher são automatizados.
+A aula 4 mostra como o crescer e o encolher são automatizados.
 
 ## Serviço medido
 
 O uso é **medido, e o medidor é por onde você paga**. A tabela de preços do curso cota uma máquina por
 hora, armazenamento por gigabyte-mês e o Lambda por milhão de requisições e por GB-segundo. Como o
 provedor mede, você também pode medir: os mesmos números que formam a conta mostram qual parte de um
-sistema está custando quanto, e é disso que trata a lição 10.
+sistema está custando quanto, e é disso que trata a aula 10.
 
 ## Um servidor alugado, comparado com as cinco
 
@@ -71,5 +71,5 @@ antes e paga, tenha acertado ou não.
 
 A fronteira entre os dois ficou menos nítida desde 2011. Algumas empresas que alugam servidores
 dedicados hoje os entregam por uma API em minutos e cobram por hora, o que as faz subir na tabela, e a
-lição 3 encontra provedores dos dois lados. As cinco são o teste a aplicar, seja qual for o nome que a
+aula 3 encontra provedores dos dois lados. As cinco são o teste a aplicar, seja qual for o nome que a
 empresa dá a si mesma.

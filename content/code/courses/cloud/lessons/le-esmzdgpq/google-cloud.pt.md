@@ -4,7 +4,7 @@ version: 1
 ---
 
 O Google chegou à venda de infraestrutura pela outra ponta. O seu primeiro produto de nuvem, o App
-Engine, em 2008, era uma plataforma no sentido da lição 1: você enviava uma aplicação e o Google a
+Engine, em 2008, era uma plataforma no sentido da aula 1: você enviava uma aplicação e o Google a
 rodava, sem máquina nenhuma à vista. As máquinas virtuais vieram depois, com o Compute Engine. Duas
 coisas que o Google construiu para si muito antes de vendê-las ainda são aquilo pelo que ele é
 conhecido: **lidar com volumes muito grandes de dados, e rodar contêineres em muitas máquinas ao
@@ -31,12 +31,12 @@ ideia:
 
 Esta é a diferença que muda projetos. Na AWS uma VPC pertence a uma região, e o mesmo vale para uma
 rede virtual do Azure: uma máquina em São Paulo e uma em Frankfurt estão em duas redes, e ligá-las é
-trabalho extra que a lição 6 nomeia. **No Google Cloud uma rede VPC é global.** As sub-redes são
+trabalho extra que a aula 6 nomeia. **No Google Cloud uma rede VPC é global.** As sub-redes são
 regionais, mas uma rede só contém todas elas, então uma máquina em São Paulo (`southamerica-east1`)
 e uma na Bélgica (`europe-west1`) estão na mesma rede privada, sem nenhuma ligação entre duas redes
 para construir. As regras de firewall continuam decidindo o que pode passar.
 
-Isso não encurta a distância: um pacote de São Paulo à Bélgica ainda atravessa um oceano, e a lição 9
+Isso não encurta a distância: um pacote de São Paulo à Bélgica ainda atravessa um oceano, e a aula 9
 mede quanto isso custa. O que some é o encanamento.
 
 ## Dados e Kubernetes
@@ -44,7 +44,7 @@ mede quanto isso custa. O que some é o encanamento.
 O **BigQuery** é o produto em que essa fama com dados se apoia. É um data warehouse que roda SQL sobre
 tabelas muito grandes sem servidor nenhum para dimensionar: você carrega os dados, roda uma consulta,
 e paga pelos dados que a consulta lê ou por capacidade reservada antes. É a ideia de serverless da
-lição 8, aplicada à análise de dados.
+aula 8, aplicada à análise de dados.
 
 **O Kubernetes saiu do Google.** Foi projetado por engenheiros do Google a partir do que tinham
 aprendido operando o Borg, o sistema interno da empresa para distribuir contêineres pelas máquinas, e

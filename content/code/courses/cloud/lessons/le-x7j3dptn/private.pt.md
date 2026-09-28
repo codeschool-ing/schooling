@@ -5,7 +5,7 @@ version: 1
 
 Uma empresa tem uma sala de servidores rodando um hipervisor, algumas centenas de máquinas virtuais
 neles, e um slide que diz *nossa nuvem privada*. Pode ser uma. Mais vezes é **um datacenter
-virtualizado**, e a diferença não está no hardware. Está em se as cinco características da lição 1
+virtualizado**, e a diferença não está no hardware. Está em se as cinco características da aula 1
 valem.
 
 Pegue o arranjo de costume, em que o desenvolvedor que precisa de uma máquina abre um chamado e um
@@ -32,7 +32,7 @@ O software que transforma uma sala de servidores em nuvem privada é uma pilha c
 recebe pedidos, acha um host com espaço, cria a máquina, o disco e a rede, e registra quem pediu. O
 **OpenStack** é a pilha de código aberto mais conhecida. Pilhas montadas sobre produtos da
 **VMware** são uma escolha comercial comum, sobretudo onde a empresa já virtualizava com eles. As
-duas dão às equipes da organização algo que, do lado delas, parece o IaaS da lição 1.
+duas dão às equipes da organização algo que, do lado delas, parece o IaaS da aula 1.
 
 ## Na empresa, ou hospedada
 
@@ -60,4 +60,4 @@ espalhada entre todos os clientes; essa divisão é exatamente o que a nuvem pri
 Isso não faz dela um erro. Os motivos que se sustentam são específicos: dados ou regras que proíbem
 hardware compartilhado, cargas tão estáveis que a margem ociosa fica pequena, sistemas na empresa que
 precisam estar a poucos metros, e hardware e gente que a empresa já tem. A seção sobre repatriação
-põe números no segundo desses; os outros estão na tabela do fim da lição.
+põe números no segundo desses; os outros estão na tabela do fim da aula.

@@ -3,8 +3,8 @@ title: A mesma coisa com muitos nomes
 version: 1
 ---
 
-Todo provedor desta lição vende o mesmo punhado de ideias, e cada um as batiza de um jeito. **Quando
-você souber traduzir, as lições 4 a 8 se leem igual em qualquer um deles**, e o mesmo vale para um
+Todo provedor desta aula vende o mesmo punhado de ideias, e cada um as batiza de um jeito. **Quando
+você souber traduzir, as aulas 4 a 8 se leem igual em qualquer um deles**, e o mesmo vale para um
 anúncio de vaga que pede "experiência com EC2 ou Compute Engine". Esta é a tradução para as três
 hyperscalers, uma linha por ideia:
 
@@ -18,8 +18,8 @@ hyperscalers, uma linha por ideia:
 | funções | Lambda | Azure Functions | Cloud Run functions |
 | identidade e acesso | IAM | Entra ID com Azure RBAC | Cloud IAM |
 
-Cada linha é uma lição deste curso: máquinas e discos na lição 4, armazenamento na lição 5, redes na
-lição 6, identidade na lição 7 e funções na lição 8. O curso ensina a ideia e dá o nome do produto;
+Cada linha é uma aula deste curso: máquinas e discos na aula 4, armazenamento na aula 5, redes na
+aula 6, identidade na aula 7 e funções na aula 8. O curso ensina a ideia e dá o nome do produto;
 os cursos de cada fornecedor ensinam o produto.
 
 ## Uma aplicação, três conjuntos de nomes
@@ -39,7 +39,7 @@ vez em termos gerais, consegue desenhá-la em qualquer provedor procurando os no
 
 A conclusão errada a tirar da tabela é que **cada linha é o mesmo produto com outra etiqueta**. As
 ideias são as mesmas; as bordas não, e é nas bordas que uma migração dói. Três exemplos, todos desta
-lição:
+aula:
 
 - **Uma rede privada tem outro alcance.** Uma VPC da AWS e uma rede virtual do Azure pertencem a uma
   região; uma rede VPC do Google Cloud é global, com sub-redes regionais. O mesmo projeto precisa de
@@ -63,5 +63,5 @@ as ideias primeiro.
 Os provedores menores cabem nas mesmas linhas, com menos delas preenchidas: a DigitalOcean chama as
 máquinas de Droplets e o armazenamento de objetos de Spaces; a Akamai chama um balanceador de
 NodeBalancer; a Hetzner chama as máquinas de cloud servers. A coluna de identidade é a que fica rala.
-**As políticas detalhadas da lição 7 são coisa de hyperscaler**, e na lista curta o acesso é mais uma
+**As políticas detalhadas da aula 7 são coisa de hyperscaler**, e na lista curta o acesso é mais uma
 questão de quem está na equipe e com qual papel.

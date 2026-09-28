@@ -3,7 +3,7 @@ title: Quatro modelos de implantação, uma pergunta cada
 version: 1
 ---
 
-A lição 1 definiu nuvem pelo que ela faz: autoatendimento, acesso pela rede, recursos agrupados,
+A aula 1 definiu nuvem pelo que ela faz: autoatendimento, acesso pela rede, recursos agrupados,
 elasticidade e medição. Nenhuma dessas cinco diz **onde o hardware fica nem quem mais o usa**. O
 mesmo documento da NIST, a SP 800-145, responde isso à parte, com quatro *modelos de implantação*:
 pública, privada, comunitária e híbrida.
@@ -39,12 +39,12 @@ o lado privado carrega a carga até lotar, e o excedente vai para o lado públic
 
 A rigor, a híbrida da NIST liga duas nuvens. Na prática a palavra é usada com mais folga, e um
 datacenter comum ligado a uma região pública é chamado de híbrido por quase todo mundo, os
-provedores inclusive. Esta lição segue o uso comum. A diferença importa num lugar só, e é por isso
+provedores inclusive. Esta aula segue o uso comum. A diferença importa num lugar só, e é por isso
 que a seção sobre nuvem privada pergunta o que falta a um datacenter para ele contar como nuvem.
 
 ## Dois eixos, não uma lista
 
-O modelo de implantação e o modelo de serviço da lição 1 são **perguntas independentes**. IaaS,
+O modelo de implantação e o modelo de serviço da aula 1 são **perguntas independentes**. IaaS,
 PaaS e SaaS dizem quanto da pilha o provedor opera por você; pública, privada e comunitária dizem
 quem divide o hardware por baixo. OpenStack rodando dentro de um banco dá às equipes do banco IaaS
 numa nuvem privada. Um webmail vendido a qualquer um com cartão é SaaS numa nuvem pública. Qualquer
@@ -60,5 +60,5 @@ Reduzido a uma pergunta, cada modelo responde **quem mais roda no mesmo hardware
 - qualquer um que se cadastre e pague: pública.
 
 A híbrida muda a pergunta do hardware para a ligação. O que precisa passar entre os dois lados,
-quanto custa passar, e o que quebra quando o link cai. A maior parte do resto desta lição é sobre
+quanto custa passar, e o que quebra quando o link cai. A maior parte do resto desta aula é sobre
 essa ligação, porque é nela que estão as surpresas.

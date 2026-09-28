@@ -37,8 +37,8 @@ ex-funcionário segue funcionando.
 As duas fileiras de cima são suas em todo modelo, e o desenho mostra por que precisam ser. Os dados são
 o que o seu negócio coletou, e só você sabe quais importam, por quanto tempo precisam ser guardados e
 quem pode vê-los. A identidade e o acesso decidem quem na sua organização pode fazer o quê, e só você
-sabe quem trabalha lá. Um provedor pode dar ferramentas excelentes para as duas coisas, e a lição 7
-passa uma lição inteira nas ferramentas de acesso. **Ele não pode usá-las por você.**
+sabe quem trabalha lá. Um provedor pode dar ferramentas excelentes para as duas coisas, e a aula 7
+passa uma aula inteira nas ferramentas de acesso. **Ele não pode usá-las por você.**
 
 ## A linha é traçada por serviço, não por empresa
 

@@ -10,27 +10,27 @@ as primeiras eliminam mais.
 
 | pergunte | por que vem aqui | onde este curso trata disso |
 | --- | --- | --- |
-| De quais serviços gerenciados o projeto precisa? | um serviço que só as hyperscalers vendem elimina o resto de uma vez | esta lição, lições 4 a 8 |
-| Onde estão os usuários, e onde os dados podem ficar? | latência e lei, e alguns provedores não têm região lá | lições 2 e 9 |
-| O que a equipe já sabe? | o provedor que você consegue operar sai mais barato que o que você não consegue | esta lição |
-| De que suporte você vai precisar, e a que horas? | uma queda às 3 da manhã é quando o suporte é testado | esta lição |
-| Quanto custaria sair? | transferência de dados para fora, e cada serviço proprietário usado | esta lição, lição 10 |
-| Que formato a conta vai ter? | muitos medidores, ou poucos preços mensais | lição 10 |
+| De quais serviços gerenciados o projeto precisa? | um serviço que só as hyperscalers vendem elimina o resto de uma vez | esta aula, aulas 4 a 8 |
+| Onde estão os usuários, e onde os dados podem ficar? | latência e lei, e alguns provedores não têm região lá | aulas 2 e 9 |
+| O que a equipe já sabe? | o provedor que você consegue operar sai mais barato que o que você não consegue | esta aula |
+| De que suporte você vai precisar, e a que horas? | uma queda às 3 da manhã é quando o suporte é testado | esta aula |
+| Quanto custaria sair? | transferência de dados para fora, e cada serviço proprietário usado | esta aula, aula 10 |
+| Que formato a conta vai ter? | muitos medidores, ou poucos preços mensais | aula 10 |
 
 ## Os serviços primeiro
 
 Anote cada peça que o seu projeto pressupõe, e marque as que você não está disposto a operar. Se a
-lista é uma máquina, um banco PostgreSQL e armazenamento de objetos, **todo provedor desta lição
+lista é uma máquina, um banco PostgreSQL e armazenamento de objetos, **todo provedor desta aula
 serve**, e as outras perguntas decidem. Se a lista inclui um data warehouse, uma fila gerenciada ou
 um diretório dos funcionários da empresa, a escolha já está entre as hyperscalers, e às vezes já é
 uma delas.
 
 ## Depois, onde
 
-A lição 9 mede a latência; aqui a pergunta é só se o provedor está lá. Para usuários no Brasil, a AWS
+A aula 9 mede a latência; aqui a pergunta é só se o provedor está lá. Para usuários no Brasil, a AWS
 tem `sa-east-1`, o Azure tem Brazil South, o Google Cloud tem `southamerica-east1`, e a Akamai tem
 uma região em São Paulo. **A DigitalOcean e a Hetzner não têm nenhuma na América do Sul.** Onde dados
-pessoais podem ficar é a outra metade, e a lição 2 a discutiu: uma região no país nem sempre é
+pessoais podem ficar é a outra metade, e a aula 2 a discutiu: uma região no país nem sempre é
 exigida, mas quando é, não se negocia.
 
 ## A equipe, e o suporte

@@ -28,7 +28,7 @@ Sair de um provedor é raro, mas o custo disso é decidido no dia em que você e
 em que sai.
 
 Em IaaS, uma máquina rodando Ubuntu, PostgreSQL e a sua aplicação roda do mesmo jeito em qualquer
-provedor que alugue máquinas virtuais, e a lição 3 cita vários. Mudar dá trabalho, mas é o mesmo
+provedor que alugue máquinas virtuais, e a aula 3 cita vários. Mudar dá trabalho, mas é o mesmo
 trabalho em todo lugar. Em PaaS, uma aplicação escrita em convenções comuns, que escuta numa porta e lê
 as configurações de variáveis de ambiente, muda com alterações modestas; os arquivos de build, os
 complementos e os serviços próprios da plataforma precisam ser refeitos para a próxima. Em SaaS você
@@ -49,17 +49,17 @@ que está o resto do custo do IaaS.
 **O custo sai das pessoas e vai para a conta.** Para três desenvolvedores sem ninguém que queira aplicar
 patches em servidores, a conta mais alta da plataforma sai mais barata que as horas; para uma equipe com
 alguém cujo trabalho é operar máquinas, e uma carga que quase não muda, máquinas virtuais podem custar
-menos no total. A lição 10 trata de ler a conta; as horas ficam para você contar.
+menos no total. A aula 10 trata de ler a conta; as horas ficam para você contar.
 
 ## Uma tabela curta
 
 | se isto vale para o sistema | puxe para |
 |---|---|
 | a tarefa é uma que todo negócio tem: e-mail, documentos, uma loja padrão | SaaS |
-| você escreveu a aplicação e ninguém quer operar servidores | PaaS, ou funções (lição 8) |
+| você escreveu a aplicação e ninguém quer operar servidores | PaaS, ou funções (aula 8) |
 | ele precisa de sistema operacional próprio, pacotes de sistema ou processos longos | IaaS |
 | ele precisa mudar de provedor com o mínimo de retrabalho | IaaS, com software que você rodaria em qualquer lugar |
-| os dados dele precisam ficar no Brasil | qualquer modelo, de um provedor com região aqui (lição 9) |
+| os dados dele precisam ficar no Brasil | qualquer modelo, de um provedor com região aqui (aula 9) |
 
 A última linha está ali porque é outra pergunta. O modelo diz quem opera cada fileira; a **região** diz
 onde as fileiras rodam, e as duas coisas se escolhem separadamente.

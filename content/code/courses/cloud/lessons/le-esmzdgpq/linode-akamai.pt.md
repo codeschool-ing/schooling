@@ -49,11 +49,11 @@ próprias páginas, que este curso não capturou.
 
 ## Uma região em São Paulo
 
-Dos três provedores menores do título desta lição, **o da Akamai é o que tem uma região em São
+Dos três provedores menores do título desta aula, **o da Akamai é o que tem uma região em São
 Paulo**. Para uma equipe brasileira que quer a lista curta e a conta simples, mas precisa das
 máquinas no país por latência ou por lei, esse único fato pode decidir entre os três antes mesmo de
 alguém olhar o preço.
 
-Ele também mostra por que a lista de verificação no fim desta lição põe as regiões antes do preço.
+Ele também mostra por que a lista de verificação no fim desta aula põe as regiões antes do preço.
 Um provedor mais barato e em outro continente não é mais barato para um usuário que sente cada ida e
-volta, e a lição 9 é onde essa viagem ganha um número.
+volta, e a aula 9 é onde essa viagem ganha um número.

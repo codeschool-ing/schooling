@@ -37,7 +37,7 @@ Um failover sem teste é um plano para descobrir durante a queda.
 Uma segunda região do mesmo provedor protege contra a perda de uma região com **um conjunto de
 ferramentas, um sistema de identidade e uma conta**. O que um segundo provedor acrescenta a isso é
 proteção contra o provedor inteiro cair de uma vez, e se esse risco vale o preço é uma pergunta para
-responder com números, não por padrão. A lição 9 mostra o que envolve uma segunda região.
+responder com números, não por padrão. A aula 9 mostra o que envolve uma segunda região.
 
 ## O que custa, mesmo quando o motivo é bom
 
@@ -49,7 +49,7 @@ motivo de estar numa nuvem — são abandonados ou construídos duas vezes, uma 
 Dois de todo o resto vêm em seguida:
 
 - dois sistemas de identidade, com dois modelos de usuários, papéis e políticas que diferem nos
-  detalhes que importam (a lição 7 mostra um);
+  detalhes que importam (a aula 7 mostra um);
 - duas redes, ligadas pelo mesmo tipo de emenda de uma híbrida, e pagando saída de dados dos dois
   lados;
 - duas contas, em dois formatos, conciliadas por alguém todo mês;

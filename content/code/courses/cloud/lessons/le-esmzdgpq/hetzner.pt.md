@@ -14,7 +14,7 @@ e o hardware. Isso é mais antigo que a nuvem, e ainda é o jeito mais barato de
 computação que roda o dia todo, todos os dias. A Hetzner mantém até um leilão de servidores usados,
 cujo preço cai enquanto esperam.
 
-Em troca, fica com você tudo o que a lição 1 arquivou como "responsabilidade sua". Um disco que falha é
+Em troca, fica com você tudo o que a aula 1 arquivou como "responsabilidade sua". Um disco que falha é
 trocado pela equipe da Hetzner quando você pede, mas o RAID que manteve os dados vivos, os backups, o
 sistema operacional e as atualizações dele são seus. **Um servidor dedicado leva de minutos a horas
 para chegar, não segundos, e não cresce com uma chamada de API.** Você o compra para uma carga que já
@@ -53,5 +53,5 @@ nenhum na América do Sul.**
 
 Ser uma empresa alemã com data centers na União Europeia é um argumento por si só para clientes de
 lá: os dados ficam sob a lei europeia e em prédios europeus, o que pesa para o GDPR, o equivalente
-europeu da LGPD que a lição 2 discutiu. Para um público brasileiro, o mesmo fato corta para o outro
-lado, e a distância através do Atlântico é mais uma linha que a lição 9 transforma em milissegundos.
+europeu da LGPD que a aula 2 discutiu. Para um público brasileiro, o mesmo fato corta para o outro
+lado, e a distância através do Atlântico é mais uma linha que a aula 9 transforma em milissegundos.

@@ -8,7 +8,7 @@ menos de um minuto, com um preço na página que dispensava calculadora. As suas
 chamam **Droplets**, e o resto da linha de produtos é curto. Volumes é o armazenamento em bloco, e
 Spaces o armazenamento de objetos compatível com S3. Ao lado deles ficam bancos de dados
 gerenciados, balanceadores de carga, redes privadas e Kubernetes gerenciado. O último é o App
-Platform, uma plataforma no sentido da lição 1 que monta e roda uma aplicação a partir do
+Platform, uma plataforma no sentido da aula 1 que monta e roda uma aplicação a partir do
 repositório dela.
 
 ## Pensada para desenvolvedores, na prática
@@ -46,11 +46,11 @@ Nenhuma delas é grande. O ponto é que **na DigitalOcean a conta de um projeto 
 linhas que dá para prever de antemão**, e numa hyperscaler ela é a soma de vários medidores.
 
 Os valores estão nas páginas de preço da DigitalOcean, que este curso não capturou. A comparação
-fica com você, com o método do fim desta lição.
+fica com você, com o método do fim desta aula.
 
 ## Regiões
 
 A DigitalOcean tem data centers na América do Norte, na Europa, na Ásia e na Austrália, e **nenhum na
 América do Sul**. Uma loja no Brasil com clientes no Brasil os atende de outro continente, o que
-custa latência (lição 9) e levanta a questão de onde dados pessoais podem ficar (lição 2). Isso não é
-motivo para descartá-la; é uma linha da lista de verificação no fim desta lição.
+custa latência (aula 9) e levanta a questão de onde dados pessoais podem ficar (aula 2). Isso não é
+motivo para descartá-la; é uma linha da lista de verificação no fim desta aula.

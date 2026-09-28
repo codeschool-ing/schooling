@@ -35,7 +35,7 @@ balancer, que são plano de dados, desviam o tráfego.
 
 A própria orientação da AWS chama essa propriedade de **estabilidade estática**, em inglês static
 stability: um sistema que continua funcionando durante uma falha sem precisar mudar nada. Ela custa
-capacidade que você paga e não usa num dia normal, que é a mesma troca que a lição inteira vem fazendo.
+capacidade que você paga e não usa num dia normal, que é a mesma troca que a aula inteira vem fazendo.
 
 ## Serviços globais que vivem numa região
 
@@ -54,7 +54,7 @@ nunca escolheu.**
 
 ## Saiba onde vivem as suas dependências
 
-A lição prática é uma tabela, escrita antes do dia em que ela for necessária. Para cada dependência,
+A aula prática é uma tabela, escrita antes do dia em que ela for necessária. Para cada dependência,
 anote onde ela roda e o que você perde quando aquele lugar falha:
 
 | dependência | onde roda | se aquele lugar falhar |

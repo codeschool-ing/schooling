@@ -12,7 +12,7 @@ alguém pergunta.
 
 Cada provedor registra as chamadas feitas à sua API. Na AWS é o **CloudTrail**; no Google Cloud, o
 Cloud Audit Logs; no Azure, o Activity Log, com o Entra ID mantendo um registro próprio dos logins.
-As entradas têm o formato com que esta lição começou, porque registram o pedido:
+As entradas têm o formato com que esta aula começou, porque registram o pedido:
 
 - quem: o principal e, para uma role, a sessão que a assumiu, de modo que uma chamada feita por uma
   role compartilhada ainda pode ser rastreada até a pessoa ou máquina que a assumiu;
@@ -54,7 +54,7 @@ o dia em que é abusado. Essa assimetria é o motivo de a resposta padrão, quan
 por que uma permissão existe, ser removê-la.
 
 ::: track devsecops security
-Na sua trilha esta lição é o piso. O `cloud-security` vem em seguida e parte dela: federação montada
+Na sua trilha esta aula é o piso. O `cloud-security` vem em seguida e parte dela: federação montada
 na prática, chaves e a rotação delas, e os caminhos de escalada que ninguém revogou. Um deles é o
 `iam:PassRole`, que deixa uma identidade entregar uma role a uma máquina que ela lança e então agir
 com tudo o que aquela role pode fazer. Guarde as três regras de avaliação e a cadeia de credenciais;

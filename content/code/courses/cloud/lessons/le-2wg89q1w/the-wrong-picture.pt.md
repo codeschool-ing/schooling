@@ -48,7 +48,7 @@ Uma máquina virtual deixa para você o sistema operacional e tudo acima dele. U
 um webmail, deixa quase nada, mas não nada.
 
 "Fomos para a nuvem" não responde, portanto, *quem aplica os patches no servidor*. É o começo da
-pergunta, e os três nomes de que esta lição trata, IaaS, PaaS e SaaS, são três respostas para ela.
+pergunta, e os três nomes de que esta aula trata, IaaS, PaaS e SaaS, são três respostas para ela.
 
 Vale nomear uma segunda imagem errada enquanto você está aqui: **a nuvem como o lugar para onde os
 arquivos vão**, a pasta que sincroniza entre o celular e o laptop. Esse é um tipo de serviço de nuvem,

@@ -1,0 +1,810 @@
+{
+  "ex-s59kqcs8": {
+    "prompt": "Dois clientes do mesmo provedor dão às suas VPCs a faixa 10.0.0.0/16, na mesma região. O que acontece?",
+    "hint": "Pense em que uma VPC é recortada, e como.",
+    "choices": [
+      {
+        "text": "As duas funcionam, e nenhuma vê um pacote da outra",
+        "why": "Isso. Cada VPC é recortada da rede do provedor em software, e os mesmos endereços privados podem existir nas duas."
+      },
+      {
+        "text": "A segunda VPC é recusada: essa faixa já está em uso na região",
+        "why": "Uma faixa privada não é um recurso que alguém possui. Ela só importa quando duas redes são ligadas."
+      },
+      {
+        "text": "O provedor renumera uma delas para uma faixa livre",
+        "why": "A faixa é escolha sua, e nada a renumera por você."
+      },
+      {
+        "text": "As duas funcionam, mas dividem o tráfego de broadcast",
+        "why": "Nada passa entre duas VPCs a menos que alguém construa um caminho, como um peering."
+      }
+    ]
+  },
+  "ex-dc2ta5wg": {
+    "prompt": "A rede do escritório usa 10.0.0.0/16, e a VPC da empresa também foi criada com 10.0.0.0/16. Agora querem uma VPN entre as duas. Qual é o problema?",
+    "hint": "Um roteador recebe um pacote para 10.0.5.9.",
+    "choices": [
+      {
+        "text": "Nenhum, desde que o túnel seja cifrado",
+        "why": "A cifra protege os bytes no caminho. Ela não diz a um roteador de que lado está um endereço."
+      },
+      {
+        "text": "Só os nomes DNS do escritório precisam mudar",
+        "why": "Nomes resolvem para endereços, e os endereços continuam ambíguos depois."
+      },
+      {
+        "text": "10.0.5.9 existiria dos dois lados",
+        "why": "Isso. Faixas sobrepostas não podem ser ligadas, e é por isso que a faixa é escolhida com a do escritório na mão."
+      },
+      {
+        "text": "A VPC precisa antes passar para uma faixa pública",
+        "why": "Uma faixa pública pertence a outra pessoa. O conserto é uma faixa privada diferente de um dos lados."
+      }
+    ]
+  },
+  "ex-nt2pcxh2": {
+    "prompt": "Quais destas são faixas privadas da RFC 1918, adequadas a uma VPC? Marque todas as que se aplicam.",
+    "hint": "A faixa do meio vai de 172.16 a 172.31.",
+    "choices": [
+      {
+        "text": "10.20.0.0/16",
+        "why": "Dentro de 10.0.0.0/8."
+      },
+      {
+        "text": "172.31.0.0/16",
+        "why": "Dentro de 172.16.0.0/12, bem no topo: é a faixa da VPC padrão da AWS."
+      },
+      {
+        "text": "172.40.0.0/16",
+        "why": "Passa de 172.31, então está fora de 172.16.0.0/12: são endereços públicos."
+      },
+      {
+        "text": "192.168.10.0/24",
+        "why": "Dentro de 192.168.0.0/16."
+      }
+    ]
+  },
+  "ex-camnnm2b": {
+    "prompt": "Quantos endereços tem um bloco /22?",
+    "hint": "2 elevado a (32 − 22).",
+    "unit": "endereços"
+  },
+  "ex-jfg2647p": {
+    "prompt": "Quantas sub-redes /24 cabem em 10.0.0.0/16?",
+    "hint": "2 elevado a (24 − 16).",
+    "unit": "sub-redes"
+  },
+  "ex-6w2mcqmc": {
+    "prompt": "Ordene estes blocos do maior para o menor.",
+    "hint": "Menos bits fixos, mais endereços.",
+    "items": [
+      "10.0.0.0/8",
+      "172.16.0.0/12",
+      "10.0.0.0/16",
+      "10.0.0.0/20",
+      "10.0.1.0/24"
+    ],
+    "trap": "Uma barra com número maior é um bloco menor: /24 são 256 endereços e /8 passa de dezesseis milhões."
+  },
+  "ex-xvffbtcf": {
+    "prompt": "10.0.33.7 pertence a 10.0.16.0/20?",
+    "hint": "Um /20 anda com o terceiro número em passos de 16.",
+    "choices": [
+      {
+        "text": "Sim: começa com 10.0",
+        "why": "Essa é a leitura de um /16. Um /20 fixa mais quatro bits, dentro do terceiro número."
+      },
+      {
+        "text": "Sim, porque 33 é maior que 16",
+        "why": "O bloco tem fim além de começo: de 16 a 31."
+      },
+      {
+        "text": "Não, porque um /20 só cobre os terceiros números de 16 a 20",
+        "why": "O 20 é a contagem de bits fixos, não um número do endereço."
+      },
+      {
+        "text": "Não: esse /20 vai de 10.0.16.0 a 10.0.31.255",
+        "why": "Isso. 33 cai no /20 seguinte, 10.0.32.0/20."
+      }
+    ]
+  },
+  "ex-s7qw2h5p": {
+    "prompt": "O Python recusa 10.0.8.0/20 como rede porque um dos bits de ___ dele já está ligado.",
+    "hint": "São os bits deixados livres para variar.",
+    "blanks": [
+      {
+        "accept": [
+          "host",
+          "hospedeiro"
+        ]
+      }
+    ]
+  },
+  "ex-kp913vzj": {
+    "prompt": "Você precisa de sub-redes com pelo menos 1.000 endereços utilizáveis cada, na AWS. Qual é o menor bloco que serve?",
+    "hint": "Lembre dos cinco endereços que a AWS guarda.",
+    "choices": [
+      {
+        "text": "Um /23",
+        "why": "512 endereços: metade do necessário."
+      },
+      {
+        "text": "Um /21",
+        "why": "2.048 endereços serve, mas é o dobro do menor que serve."
+      },
+      {
+        "text": "Um /22",
+        "why": "Isso. 1.024 menos os cinco reservados deixa 1.019."
+      },
+      {
+        "text": "Um /24",
+        "why": "256 endereços, 251 utilizáveis: longe disso."
+      }
+    ]
+  },
+  "ex-whrydhgn": {
+    "prompt": "Quantos endereços de uma sub-rede /24 você pode dar a máquinas na AWS?",
+    "hint": "Cinco ficam guardados.",
+    "unit": "endereços"
+  },
+  "ex-fzdjjx3v": {
+    "prompt": "Na AWS, uma aplicação precisa sobreviver à perda de uma zona de disponibilidade. Do que os servidores de aplicação precisam, no mínimo?",
+    "hint": "Na AWS, onde vive uma sub-rede?",
+    "choices": [
+      {
+        "text": "Uma sub-rede esticada por duas zonas",
+        "why": "É assim que o Google Cloud e o Azure desenham. Na AWS uma sub-rede fica em exatamente uma zona."
+      },
+      {
+        "text": "Uma sub-rede com uma faixa maior",
+        "why": "O tamanho não tira uma sub-rede da zona dela."
+      },
+      {
+        "text": "Duas VPCs, uma por zona",
+        "why": "Uma VPC já abrange as zonas da região; uma segunda só acrescenta uma ligação para manter."
+      },
+      {
+        "text": "Duas sub-redes, cada uma numa zona diferente",
+        "why": "Isso. É por isso que os layouts desta aula vêm em pares."
+      }
+    ]
+  },
+  "ex-5088yf0r": {
+    "prompt": "Na sub-rede 10.0.1.0/24 da AWS, qual endereço é o roteador da VPC, para onde toda instância manda?",
+    "hint": "É um dos quatro primeiros.",
+    "choices": [
+      {
+        "text": "10.0.1.0",
+        "why": "Esse é o endereço da rede."
+      },
+      {
+        "text": "10.0.1.1",
+        "why": "Isso. O segundo endereço de toda sub-rede é o roteador."
+      },
+      {
+        "text": "10.0.1.2",
+        "why": "Esse fica para o DNS do provedor."
+      },
+      {
+        "text": "10.0.1.255",
+        "why": "O último: broadcast, reservado embora a VPC não transporte nenhum."
+      }
+    ]
+  },
+  "ex-4nspye5y": {
+    "prompt": "Você refaz no Google Cloud o desenho em duas zonas que fez para a AWS. O que muda nas sub-redes?",
+    "hint": "No Google Cloud, a que uma sub-rede pertence?",
+    "choices": [
+      {
+        "text": "Uma sub-rede por papel, abrangendo as zonas",
+        "why": "Isso. Uma sub-rede do Google Cloud abrange todas as zonas da região, então a zona passa da sub-rede para a instância."
+      },
+      {
+        "text": "Nada: você ainda precisa de uma sub-rede por zona",
+        "why": "Essa é a regra da AWS, não do Google Cloud."
+      },
+      {
+        "text": "Lá as sub-redes são globais, então zonas deixam de importar",
+        "why": "A VPC network é global; as sub-redes pertencem a uma região, e zonas continuam falhando."
+      },
+      {
+        "text": "Cada zona precisa de uma VPC network própria",
+        "why": "Uma VPC network tem sub-redes em muitas regiões, e cada sub-rede abrange as zonas da sua região."
+      }
+    ]
+  },
+  "ex-pfgm7bdj": {
+    "prompt": "Uma sub-rede é pública quando a tabela de rotas dela manda 0.0.0.0/0 para o ___ gateway.",
+    "hint": "A porta da VPC para fora, uma por VPC.",
+    "blanks": [
+      {
+        "accept": [
+          "internet"
+        ]
+      }
+    ]
+  },
+  "ex-c7dj0x3e": {
+    "prompt": "Uma tabela de rotas tem 10.0.0.0/16 → local e 0.0.0.0/0 → o internet gateway. Para onde vai um pacote para 10.0.40.7?",
+    "hint": "Quando duas rotas casam, uma delas é mais específica.",
+    "choices": [
+      {
+        "text": "Para o internet gateway, já que 0.0.0.0/0 casa com todo endereço",
+        "why": "Casa, sim, e 10.0.0.0/16 também, que fixa dezesseis bits contra nenhum."
+      },
+      {
+        "text": "Para lugar nenhum: duas rotas que casam são um conflito",
+        "why": "Rotas sobrepostas são normais; vence a mais específica."
+      },
+      {
+        "text": "Fica dentro da VPC, porque a rota local é mais específica",
+        "why": "Isso. O /16 é mais específico que o /0, exatamente como numa máquina Linux."
+      },
+      {
+        "text": "Pela rota que foi acrescentada primeiro à tabela",
+        "why": "A ordem na tabela não decide; a especificidade decide."
+      }
+    ]
+  },
+  "ex-vxvax0m7": {
+    "prompt": "Uma instância tem endereço IPv4 público, mas a tabela de rotas da sub-rede dela só tem a rota local. O que acontece quando você tenta alcançá-la pela internet?",
+    "hint": "O endereço e a rota são duas condições separadas.",
+    "choices": [
+      {
+        "text": "Nada passa: não há rota para fora",
+        "why": "Isso. Parece pública na página de detalhes e é inalcançável."
+      },
+      {
+        "text": "Funciona, porque o endereço público a torna pública",
+        "why": "O endereço é só metade; sem rota para o internet gateway, nada sai."
+      },
+      {
+        "text": "O provedor acrescenta sozinho a rota que falta",
+        "why": "Rotas são suas para escrever; nada acrescenta 0.0.0.0/0 por você."
+      },
+      {
+        "text": "SSH funciona, e toda outra porta fica bloqueada",
+        "why": "Rotas não sabem nada de portas. Sem rota, toda porta falha igual."
+      }
+    ]
+  },
+  "ex-dw4v9dp8": {
+    "prompt": "Um endereço IPv4 público custa 0,0050 dólar por hora na tabela. Quanto custam três endereços num mês de 730 horas?",
+    "hint": "Um endereço dá 3,65 por mês.",
+    "unit": "dólares"
+  },
+  "ex-q7h46kpr": {
+    "prompt": "Em us-east-1, um NAT gateway existe por 730 horas e processa 200 GB. Quanto somam as duas cobranças?",
+    "hint": "0,0450 por hora e 0,0450 por GB.",
+    "unit": "dólares"
+  },
+  "ex-0kw90ndp": {
+    "prompt": "Alguém na internet manda um pacote para o endereço público do NAT gateway, tentando abrir uma conexão com uma instância privada. O que acontece?",
+    "hint": "Em que o gateway procura o pacote?",
+    "choices": [
+      {
+        "text": "Chega à instância se o security group dela permitir",
+        "why": "O grupo só importaria se o pacote tivesse por onde entrar, e ele não tem."
+      },
+      {
+        "text": "É passado para a primeira instância da sub-rede privada",
+        "why": "Não existe 'primeira instância'; o gateway só encaminha o que casa com uma conexão."
+      },
+      {
+        "text": "Não casa com nenhuma conexão da tabela do gateway e não vai a lugar nenhum",
+        "why": "Isso. A conversa tem de começar do lado de dentro; essa é toda a propriedade de segurança."
+      },
+      {
+        "text": "É encaminhado só para portas acima de 1024",
+        "why": "Portas não abrem caminho para dentro. Só uma conexão existente abre."
+      }
+    ]
+  },
+  "ex-59wfd6ma": {
+    "prompt": "Uma frota privada em sa-east-1 baixa 5 TB de imagens de contêiner por mês da internet, por um NAT gateway. Qual cobrança cresce com esses downloads?",
+    "hint": "Olhe as duas linhas do NAT gateway, e os dados que entram.",
+    "choices": [
+      {
+        "text": "Nenhuma, já que dados entrando da internet são de graça",
+        "why": "A transferência de entrada é de graça na tabela; o processamento pelo gateway não é, em nenhuma direção."
+      },
+      {
+        "text": "O processamento, cobrado por gigabyte",
+        "why": "Isso. Todo gigabyte que passa pelo gateway é processado, e 5 TB a 0,0930 é uma linha própria."
+      },
+      {
+        "text": "Só a linha de transferência de saída",
+        "why": "As imagens entram. Transferência de saída é para bytes que saem para a internet."
+      },
+      {
+        "text": "A cobrança por hora, que acompanha o tráfego",
+        "why": "A cobrança por hora é fixa por gateway, passe o que passar por ele."
+      }
+    ]
+  },
+  "ex-r2evgg3d": {
+    "prompt": "Onde fica o próprio NAT gateway?",
+    "hint": "Ele precisa alcançar o internet gateway.",
+    "choices": [
+      {
+        "text": "Na sub-rede privada que ele atende",
+        "why": "Então ele também não teria rota para o internet gateway."
+      },
+      {
+        "text": "Fora da VPC, como o internet gateway",
+        "why": "O internet gateway é preso à VPC; um NAT gateway vive numa sub-rede."
+      },
+      {
+        "text": "Em todas as sub-redes da VPC ao mesmo tempo",
+        "why": "Ele vive numa sub-rede, numa zona."
+      },
+      {
+        "text": "Numa sub-rede pública",
+        "why": "Isso. Sub-redes privadas mandam 0.0.0.0/0 para ele, e ele manda adiante ao internet gateway."
+      }
+    ]
+  },
+  "ex-dn93pefw": {
+    "prompt": "Um security group permite TCP 443 de entrada. De que regra as respostas a esses pedidos precisam?",
+    "hint": "O provedor acompanha as conexões.",
+    "choices": [
+      {
+        "text": "Uma regra de saída para a porta 443",
+        "why": "Respostas vão para a porta do cliente, e um security group as deixa sair de qualquer jeito."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "Isso. O grupo tem estado: ele se lembra do pedido e deixa a resposta sair."
+      },
+      {
+        "text": "Uma regra de saída para as portas 1024 a 65535",
+        "why": "É disso que uma network ACL precisa, porque ela não tem estado."
+      },
+      {
+        "text": "Uma regra de entrada para as portas efêmeras",
+        "why": "As respostas saem, não entram, e o grupo se lembra delas."
+      }
+    ]
+  },
+  "ex-kbj2ydwh": {
+    "prompt": "Por que o security group do banco nomeia o grupo da aplicação como origem, em vez dos endereços dos servidores de aplicação?",
+    "hint": "O que o autoscaling faz com os endereços?",
+    "choices": [
+      {
+        "text": "Faixas de endereço não são aceitas como origem",
+        "why": "São aceitas: a regra de SSH da seção usa uma."
+      },
+      {
+        "text": "Uma regra de grupo também deixa a aplicação alcançar a internet",
+        "why": "Regras de entrada no banco não dizem nada sobre a saída da aplicação."
+      },
+      {
+        "text": "Regras de grupo são conferidas antes das de endereço",
+        "why": "Toda regra é considerada junto; não há ordem num security group."
+      },
+      {
+        "text": "O autoscaling troca as máquinas, e a participação no grupo fica",
+        "why": "Isso. A regra casa com a participação no grupo, então os servidores de hoje e de amanhã são todos admitidos."
+      }
+    ]
+  },
+  "ex-hkvrphr8": {
+    "prompt": "No JSON que --ip-permissions recebe, uma regra cuja origem é outro security group o lista sob a chave ___.",
+    "hint": "O esqueleto da CLI a imprimiu por último.",
+    "blanks": [
+      {
+        "accept": [
+          "UserIdGroupPairs"
+        ]
+      }
+    ]
+  },
+  "ex-q5z8jc3e": {
+    "prompt": "O grupo dos seus servidores web permite 443 de 0.0.0.0/0, e uma faixa de endereços está abusando. O que um security group pode fazer contra essa faixa?",
+    "hint": "Que tipos de regra um security group tem?",
+    "choices": [
+      {
+        "text": "Acrescentar uma regra de negação para essa faixa acima da permissão",
+        "why": "Um security group não tem regra de negação nenhuma."
+      },
+      {
+        "text": "Prender um segundo grupo que exclua a faixa",
+        "why": "Grupos se somam: um pacote que qualquer grupo permite entra."
+      },
+      {
+        "text": "Nada: um security group não tem negação",
+        "why": "Isso. Um security group só permite. Uma regra de negação na ACL da sub-rede recusa a faixa para toda máquina ali."
+      },
+      {
+        "text": "Tirar 0.0.0.0/0, e a faixa sai junto",
+        "why": "E todo outro cliente também: isso fecha o site."
+      }
+    ]
+  },
+  "ex-mmbt1c7t": {
+    "prompt": "Ligue cada pergunta à resposta dela para os dois filtros.",
+    "hint": "Um tem estado e o outro não.",
+    "pairs": [
+      {
+        "left": "Security group: preso a",
+        "right": "a interface de rede de uma instância"
+      },
+      {
+        "left": "Network ACL: presa a",
+        "right": "uma sub-rede"
+      },
+      {
+        "left": "Security group: as respostas",
+        "right": "passam automaticamente"
+      },
+      {
+        "left": "Network ACL: as respostas",
+        "right": "precisam de uma regra própria"
+      }
+    ],
+    "right_distractors": [
+      "o internet gateway"
+    ]
+  },
+  "ex-fc48434d": {
+    "prompt": "Regras de entrada: a 100 permite TCP 443 de 0.0.0.0/0; a 110 nega tudo de 198.51.100.0/24. Chega um pedido de 198.51.100.7 para a porta 443. O que acontece?",
+    "hint": "O menor número primeiro, e a primeira que casa decide.",
+    "choices": [
+      {
+        "text": "Permitido: a regra 100 casa primeiro, e a negação nem é lida",
+        "why": "Isso. Para recusar a faixa, a negação precisa de um número abaixo de 100."
+      },
+      {
+        "text": "É negado, porque negar sempre vence permitir",
+        "why": "Numa network ACL quem decide é a ordem, não a ação."
+      },
+      {
+        "text": "É negado, porque a faixa mais específica vence",
+        "why": "A mais específica vence numa tabela de rotas. Uma ACL lê as regras pelo número."
+      },
+      {
+        "text": "Depende das regras de negação do security group",
+        "why": "Security groups não têm regras de negação para consultar."
+      }
+    ]
+  },
+  "ex-34a18g93": {
+    "prompt": "Uma network ACL nova numa sub-rede web permite TCP 443 de entrada de 0.0.0.0/0, e a lista de saída só tem o * final de negação. Os clientes dão timeout. Por quê?",
+    "hint": "Para onde vai a resposta?",
+    "choices": [
+      {
+        "text": "A porta 443 também precisa ser permitida na saída",
+        "why": "A resposta vai para a porta do cliente, não para a 443, então uma regra para a 443 não casa com ela."
+      },
+      {
+        "text": "Respostas às portas efêmeras não saem",
+        "why": "Isso. A ACL não se lembra de nada, então as respostas precisam de uma regra de saída para 1024 a 65535."
+      },
+      {
+        "text": "O security group também precisa ficar sem estado",
+        "why": "Um security group sempre tem estado, e não é essa a parte que falha aqui."
+      },
+      {
+        "text": "Regras de permissão só funcionam com números abaixo de 100",
+        "why": "Qualquer número funciona; só importa a ordem entre as regras."
+      }
+    ]
+  },
+  "ex-p6fk3ehz": {
+    "prompt": "A resposta a um pedido na 443 volta para a porta temporária que o cliente escolheu, chamada de porta ___.",
+    "hint": "A faixa de sempre é de 1024 a 65535.",
+    "blanks": [
+      {
+        "accept": [
+          "efêmera",
+          "efemera",
+          "ephemeral"
+        ]
+      }
+    ]
+  },
+  "ex-xb8s0ykc": {
+    "prompt": "Ligue cada termo ao que ele significa.",
+    "hint": "Os quatro vêm da seção.",
+    "pairs": [
+      {
+        "left": "Health check",
+        "right": "tira do rodízio um alvo que falha"
+      },
+      {
+        "left": "Terminação TLS",
+        "right": "o balanceador guarda o certificado"
+      },
+      {
+        "left": "X-Forwarded-For",
+        "right": "leva o endereço do cliente até o alvo"
+      },
+      {
+        "left": "Alvo",
+        "right": "uma máquina atrás do balanceador"
+      }
+    ],
+    "right_distractors": [
+      "dá um endereço público a cada alvo"
+    ]
+  },
+  "ex-5y2vre85": {
+    "prompt": "Uma aplicação atrás de um application load balancer registra o endereço de origem de toda conexão TCP que aceita. Qual endereço vai parar no registro?",
+    "hint": "Quem abre a conexão com o alvo?",
+    "choices": [
+      {
+        "text": "O do cliente",
+        "why": "O endereço do cliente chega no X-Forwarded-For, não como origem da conexão."
+      },
+      {
+        "text": "O do internet gateway",
+        "why": "O gateway traduz endereços; não abre conexões com alvos."
+      },
+      {
+        "text": "O do balanceador de carga",
+        "why": "Isso. Ele encerrou a conexão do cliente e abriu a sua própria com o alvo."
+      },
+      {
+        "text": "O do NAT gateway",
+        "why": "O NAT gateway carrega conexões que saem, não pedidos que entram."
+      }
+    ]
+  },
+  "ex-s1qzv86s": {
+    "prompt": "Que tipo de balanceador de carga manda pedidos para /images/ a um grupo de alvos e todo o resto a outro?",
+    "hint": "O caminho está dentro do pedido HTTP.",
+    "choices": [
+      {
+        "text": "Um application load balancer, na camada 7",
+        "why": "Isso. Ele lê o pedido, então pode rotear pelo caminho."
+      },
+      {
+        "text": "Um network load balancer, já que ele vê portas",
+        "why": "Portas são camada 4. O caminho está no pedido HTTP, que ele não lê."
+      },
+      {
+        "text": "Qualquer um; é uma configuração de DNS",
+        "why": "O DNS resolve nomes para endereços; ele nunca vê um caminho."
+      },
+      {
+        "text": "Nenhum: isso exige dois balanceadores",
+        "why": "Um application load balancer roteia por caminho para quantos grupos de alvos precisar."
+      }
+    ]
+  },
+  "ex-tmdgpsqd": {
+    "prompt": "Dois application load balancers rodam em sa-east-1 por 730 horas cada. Quanto dão juntas as cobranças por hora deles?",
+    "hint": "Um dá 24,82 por mês.",
+    "unit": "dólares"
+  },
+  "ex-397jkwa5": {
+    "prompt": "Ponha em ordem o que o pedido de um aluno atravessa no caminho do navegador até os dados.",
+    "hint": "A camada pública primeiro.",
+    "items": [
+      "O internet gateway",
+      "O balanceador de carga, na 443",
+      "Um servidor de aplicação, na 8080",
+      "O banco, na 5432"
+    ],
+    "trap": "O balanceador vem antes de qualquer servidor de aplicação: o grupo da aplicação só admite conexões do grupo do balanceador."
+  },
+  "ex-v4jm5hg8": {
+    "prompt": "No layout de três camadas, quais sub-redes não têm rota nenhuma para 0.0.0.0/0?",
+    "hint": "Qual camada não tem nada a baixar?",
+    "choices": [
+      {
+        "text": "As sub-redes de aplicação",
+        "why": "Elas mandam 0.0.0.0/0 para o NAT gateway da zona delas."
+      },
+      {
+        "text": "As sub-redes públicas",
+        "why": "A delas vai para o internet gateway; é isso que as torna públicas."
+      },
+      {
+        "text": "Nenhuma: toda sub-rede precisa de uma saída",
+        "why": "A camada de dados fica mais segura sem nenhuma, e um banco gerenciado não precisa."
+      },
+      {
+        "text": "As sub-redes de dados",
+        "why": "Isso. Só a rota local: nada ali alcança a internet."
+      }
+    ]
+  },
+  "ex-y2tx1jcg": {
+    "prompt": "Para economizar, o time roda um NAT gateway só, na zona a, para as duas zonas. A zona a cai. O que acontece na zona b?",
+    "hint": "Siga a rota da zona b para 0.0.0.0/0.",
+    "choices": [
+      {
+        "text": "Nada: um NAT gateway é regional e passa para a zona b",
+        "why": "Um NAT gateway vive numa sub-rede, numa zona."
+      },
+      {
+        "text": "Ainda respondem pedidos, mas nada neles consegue sair",
+        "why": "Isso. O balanceador ainda os alcança; a rota deles para o NAT gateway leva a uma zona que caiu."
+      },
+      {
+        "text": "O balanceador para de mandar para a zona b",
+        "why": "O balanceador tem um nó próprio na sub-rede pública da zona b."
+      },
+      {
+        "text": "Os servidores da zona b ficam alcançáveis pela internet",
+        "why": "Perder uma saída nunca abre uma entrada."
+      }
+    ]
+  },
+  "ex-5gnd2617": {
+    "prompt": "Ligue cada necessidade ao caminho privado que a atende.",
+    "hint": "Um parágrafo para cada na seção.",
+    "pairs": [
+      {
+        "left": "Instâncias privadas gravam no S3 sem o NAT gateway",
+        "right": "um gateway endpoint"
+      },
+      {
+        "left": "Duas VPCs se alcançam por endereço privado",
+        "right": "VPC peering"
+      },
+      {
+        "left": "Um túnel cifrado até o escritório pela internet",
+        "right": "uma VPN site-to-site"
+      },
+      {
+        "left": "Um circuito privado até a rede do provedor",
+        "right": "um link dedicado"
+      }
+    ],
+    "right_distractors": [
+      "um segundo internet gateway"
+    ]
+  },
+  "ex-kw7zm83y": {
+    "prompt": "Na AWS, a VPC A tem peering com B, e B com C. Uma instância em A alcança C através de B?",
+    "hint": "Um peering é transitivo?",
+    "choices": [
+      {
+        "text": "Não: A precisa do próprio peering com C",
+        "why": "Isso. Peering não é transitivo; passando de um punhado de VPCs, um hub é mais simples."
+      },
+      {
+        "text": "Sim, desde que nenhuma das três faixas se sobreponha",
+        "why": "Faixas sem sobreposição são exigidas para cada peering; não tornam o peering transitivo."
+      },
+      {
+        "text": "Sim: B encaminha o tráfego adiante",
+        "why": "Um peering carrega tráfego entre as duas pontas dele e mais nada."
+      },
+      {
+        "text": "Só para tráfego com destino à internet",
+        "why": "Um peering nunca vira caminho para a internet do outro lado."
+      }
+    ]
+  },
+  "ex-p6nqj6zm": {
+    "prompt": "Ponha em ordem a lista para uma instância inalcançável, da máquina para fora.",
+    "hint": "As verificações mais baratas ficam mais perto da máquina.",
+    "items": [
+      "O serviço está escutando, e em qual endereço?",
+      "Os security groups da instância",
+      "A network ACL da sub-rede",
+      "A tabela de rotas da sub-rede",
+      "O endereço público, ou o health check do balanceador"
+    ],
+    "trap": "Conferir a tabela de rotas antes do serviço gasta tempo com a rede quando a resposta estava na máquina: um serviço escutando só em 127.0.0.1 parece defeito de rede visto de fora."
+  },
+  "ex-c66rk397": {
+    "prompt": "Um curl para o endereço público de uma instância imprime \"Connection refused\" na hora. Onde você olha primeiro?",
+    "hint": "Quem manda uma recusa, e quem fica em silêncio?",
+    "choices": [
+      {
+        "text": "O security group, que rejeitou a conexão",
+        "why": "Um security group descarta sem dizer nada. Uma recusa quer dizer que o pacote passou por ele."
+      },
+      {
+        "text": "A tabela de rotas da sub-rede da instância",
+        "why": "Sem rota não há resposta nenhuma, então o cliente daria timeout."
+      },
+      {
+        "text": "A network ACL",
+        "why": "Ela também descarta em silêncio, como o grupo."
+      },
+      {
+        "text": "O serviço na máquina",
+        "why": "Isso. A máquina respondeu, então nada escuta naquela porta ou naquele endereço."
+      }
+    ]
+  },
+  "ex-0gg9fxw3": {
+    "prompt": "Um servidor web novo dá timeout pela internet. De outra instância na mesma VPC, o nc para o endereço privado dele na porta 80 funciona. O que você aprendeu?",
+    "hint": "Que partes do caminho o teste de dentro atravessou?",
+    "choices": [
+      {
+        "text": "Que toda regra de security group está correta",
+        "why": "A regra para aquela origem de dentro está; a regra para clientes da internet nunca foi testada."
+      },
+      {
+        "text": "O serviço funciona; o defeito está mais para fora",
+        "why": "Isso. Olhe a origem da regra para clientes de fora, a ACL, a rota e o endereço público."
+      },
+      {
+        "text": "Que a tabela de rotas não precisa ser conferida",
+        "why": "O teste de dentro usou a rota local, não a rota para o internet gateway."
+      },
+      {
+        "text": "Nada: testes de lugares diferentes não se comparam",
+        "why": "Comparar é o ponto: cada um atravessa uma parte diferente do caminho."
+      }
+    ]
+  },
+  "ex-htrqvgpg": {
+    "prompt": "O ss -tln numa instância mostra 127.0.0.1:8080, e o balanceador marca a instância como não saudável. Por quê?",
+    "hint": "Quem pode se conectar a 127.0.0.1?",
+    "choices": [
+      {
+        "text": "O security group bloqueia tráfego para 127.0.0.1",
+        "why": "Nada de fora é endereçado a 127.0.0.1; o grupo não entra nisso."
+      },
+      {
+        "text": "A tabela de rotas precisa de uma rota local para 127.0.0.1",
+        "why": "127.0.0.1 nunca sai da máquina, então nenhuma rota da VPC vale para ele."
+      },
+      {
+        "text": "Só aceita conexões da própria máquina",
+        "why": "Isso. O health check chega pelo endereço privado e é recusado. Escutar em 0.0.0.0 resolve."
+      },
+      {
+        "text": "Health checks só funcionam na porta 80",
+        "why": "A verificação usa a porta e o caminho que receber."
+      }
+    ]
+  },
+  "ex-py7mjrz5": {
+    "prompt": "Uma instância privada não consegue baixar atualizações. Quais destes poderiam causar isso? Marque todas as que se aplicam.",
+    "hint": "Siga o pedido para fora e a resposta de volta.",
+    "choices": [
+      {
+        "text": "A sub-rede dela não tem rota para 0.0.0.0/0 até um NAT gateway",
+        "why": "Sem ela, o pedido não tem por onde sair."
+      },
+      {
+        "text": "O security group dela não tem regra de entrada para 443",
+        "why": "As respostas aos pedidos dela voltam sozinhas: o grupo tem estado."
+      },
+      {
+        "text": "A network ACL da sub-rede não deixa entrar respostas nas portas efêmeras",
+        "why": "A ACL não tem estado, então as respostas precisam de regra de entrada."
+      },
+      {
+        "text": "Ela não tem endereço IPv4 público",
+        "why": "Uma instância privada sai pelo endereço do NAT gateway; não precisa de um próprio."
+      }
+    ]
+  },
+  "ex-6jnrmr0v": {
+    "prompt": "Em sa-east-1, o layout de três camadas roda dois NAT gateways e um application load balancer por 730 horas, e os NAT gateways processam 300 GB entre os dois. Quanto somam as cobranças por hora e de processamento?",
+    "hint": "O layout vazio deu 160,60; some os gigabytes a 0,0930.",
+    "unit": "dólares"
+  },
+  "ex-bd4jxnpr": {
+    "prompt": "Para simplificar, toda VPC de uma empresa é criada como 10.0.0.0/16. Quanto isso custa depois?",
+    "hint": "Isoladas hoje, ligadas amanhã.",
+    "choices": [
+      {
+        "text": "Nada: VPCs são isoladas, então as faixas nunca se encontram",
+        "why": "Elas são isoladas até o dia em que alguém faz peering entre duas, ou liga uma ao escritório."
+      },
+      {
+        "text": "Cada uma fica limitada a uma zona só",
+        "why": "Zonas não têm nada a ver com a faixa; uma VPC abrange as zonas da região."
+      },
+      {
+        "text": "Toda sub-rede nelas precisa ser /24",
+        "why": "O tamanho da sub-rede é outra escolha e não decorre da faixa da VPC."
+      },
+      {
+        "text": "Nenhum par delas aceita peering nem VPN",
+        "why": "Isso. Faixas sobrepostas não podem ser ligadas, e na AWS a primeira faixa não pode ser mudada."
+      }
+    ]
+  }
+}

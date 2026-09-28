@@ -32,12 +32,12 @@ ExpressRoute e o Google de Cloud Interconnect. Ele tem uma taxa pela porta, com 
 pode levar semanas para ser contratado, e em troca a capacidade e a latência ficam estáveis. De
 qualquer jeito, **as faixas de endereços privados dos dois lados não podem se sobrepor**: se a rede
 do escritório e a rede na nuvem usam a mesma faixa, os roteadores de cada lado não sabem para qual
-delas vai um pacote. A lição 6 monta o lado da nuvem dessa rede.
+delas vai um pacote. A aula 6 monta o lado da nuvem dessa rede.
 
 A identidade vem em segundo. Pessoas e programas de um lado precisam de acesso a recursos do outro, e
 manter duas listas de usuários separadas é como a conta de alguém que saiu da empresa sobrevive num
 dos lados. A resposta de costume é a *federação*: o lado da nuvem confia no diretório da empresa para
-dizer quem a pessoa é, e só decide o que ela pode fazer. A lição 7 trata de papéis e políticas.
+dizer quem a pessoa é, e só decide o que ela pode fazer. A aula 7 trata de papéis e políticas.
 
 Os dados vêm em terceiro, e são eles que decidem o desenho. Qual cópia é a verdadeira, como o outro
 lado é mantido em dia, e com que frequência alguém lê através do link. **Toda leitura através da

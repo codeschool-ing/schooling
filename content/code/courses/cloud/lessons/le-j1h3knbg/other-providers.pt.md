@@ -3,7 +3,7 @@ title: As mesmas ideias no Google Cloud e no Azure
 version: 1
 ---
 
-Toda ideia desta lição existe nos outros grandes provedores: um principal, uma ação sobre um recurso,
+Toda ideia desta aula existe nos outros grandes provedores: um principal, uma ação sobre um recurso,
 negação por padrão, credenciais temporárias para máquinas. O que muda é o vocabulário, e uma palavra
 muda de sentido de um jeito que pega quem transita entre eles.
 
@@ -56,7 +56,7 @@ foi criada só para ele.
 
 A negação por padrão vale nos três: sem concessão, a resposta é não. O Google Cloud e o Azure também
 têm regras de negação, as deny policies e as deny assignments, mas o trabalho do dia a dia ali é
-feito quase todo com concessões. A pergunta a fazer a qualquer concessão é a que esta lição faz a
+feito quase todo com concessões. A pergunta a fazer a qualquer concessão é a que esta aula faz a
 uma política da AWS: qual principal, quais ações, sobre o quê, e até onde ela desce. Os cursos de cada
 fornecedor, `aws-foundations`, `gcp-foundations` e `azure-foundations`, levam cada uma dessas ideias
 para o próprio console e a própria linha de comando.

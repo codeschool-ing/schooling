@@ -41,7 +41,7 @@ sair ainda é uma escolha e não uma emergência.
 
 ## Onde fica a linha
 
-Na pilha do começo desta lição, o SaaS leva a linha além da aplicação e para logo abaixo dos dados.
+Na pilha do começo desta aula, o SaaS leva a linha além da aplicação e para logo abaixo dos dados.
 Sobram duas fileiras acima dela, os dados e a identidade e o acesso, e a configuração da aplicação fica
 bem em cima da linha, um ajuste no software do provedor que é você quem escolhe.
 

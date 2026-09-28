@@ -84,7 +84,7 @@ partições, que não têm nenhum endereço no `ip-ranges.json`.
 `us-south-1`. Nenhum dos dois arquivos diz o que eles são. Eles têm espaço de endereços, então há algo
 da AWS lá; são desconhecidos para o CLI 2.37.4, então ele não consegue endereçá-los. O último comando
 mostra como a `sa-west-1` é magra: 27 + 2 + 7 + 1 + 2 = 39 blocos. Lê-la como uma região em
-construção é um palpite, e esta lição a deixa como palpite.
+construção é um palpite, e esta aula a deixa como palpite.
 
 A conta, então: 43 valores, menos o `GLOBAL`, são 42 nomes; menos os 5 de outras partições, 37; menos
 os 3 que o CLI não conhece, **34 regiões comuns em que os dois arquivos concordam**. É uma

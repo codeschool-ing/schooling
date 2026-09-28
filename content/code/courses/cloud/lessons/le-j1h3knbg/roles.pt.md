@@ -38,7 +38,7 @@ para quem a copiou, não um ano, e ninguém precisou lembrar de fazer rotação 
 Uma role carrega dois documentos, e eles respondem a perguntas diferentes.
 
 **A política de confiança diz quem pode assumir a role.** Ela nomeia principais: outra conta AWS, um
-serviço do provedor ou um provedor de identidade de fora. Esta deixa as máquinas virtuais da lição 4
+serviço do provedor ou um provedor de identidade de fora. Esta deixa as máquinas virtuais da aula 4
 assumirem a role, e ninguém mais:
 
 ```json
@@ -70,7 +70,7 @@ a lista de quem pode se tornar esta identidade.
 Tudo o que não é uma pessoa sentada no console, e cada vez mais as pessoas também:
 
 - uma máquina virtual, pela role anexada a ela, que a AWS chama de instance profile;
-- uma função, pela sua role de execução, que a lição 8 dá a toda função que escreve;
+- uma função, pela sua role de execução, que a aula 8 dá a toda função que escreve;
 - uma pessoa de outra conta, que assume uma role nesta em vez de ter um usuário aqui;
 - uma pessoa que fez login pelo provedor de identidade da organização;
 - um pipeline de build fora da nuvem, que prova quem é com um token emitido pela própria plataforma.

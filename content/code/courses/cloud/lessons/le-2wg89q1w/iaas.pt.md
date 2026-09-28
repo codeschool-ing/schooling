@@ -10,7 +10,7 @@ onde ela parte, como o Ubuntu 24.04. A partir do momento em que ela liga, tudo d
 é seu.
 
 O Amazon EC2, o Azure Virtual Machines e o Google Compute Engine são IaaS, e também as máquinas que
-provedores menores, como DigitalOcean e Hetzner, alugam. A lição 4 trata das máquinas em si, e a lição 5
+provedores menores, como DigitalOcean e Hetzner, alugam. A aula 4 trata das máquinas em si, e a aula 5
 dos discos delas.
 
 ## Quanto custa, linha por linha
@@ -26,7 +26,7 @@ máquina.
 
 **Cada linha desse total é algo que você poderia desligar separadamente**, e cada uma é cobrada esteja a
 máquina fazendo trabalho útil ou não. Os dados enviados para a internet são cobrados por cima, por
-gigabyte, e a lição 10 volta a isso.
+gigabyte, e a aula 10 volta a isso.
 
 ## O que sobra para você
 

@@ -26,7 +26,7 @@ A resposta do próprio provedor a uma carga estável vem primeiro, e está na ta
 
 Um compromisso de um ano tira mais de um terço, sem comprar hardware nenhum. Então a pergunta honesta
 da repatriação não é "hardware próprio contra o preço sob demanda". É **hardware próprio contra o
-preço com compromisso**, e a lição 10 trata de compromissos e dos outros modelos de cobrança.
+preço com compromisso**, e a aula 10 trata de compromissos e dos outros modelos de cobrança.
 
 ## Os custos que as pessoas esquecem
 

@@ -34,7 +34,7 @@ A ANPD publicou depois um regulamento de transferência internacional, com o tex
 contratuais, na Resolução CD/ANPD nº 19, de 2024. Então **uma transferência para o exterior é lícita
 quando cabe num desses casos**, e o trabalho é mostrar em qual. Se um arranjo específico é uma
 transferência, e qual caso o cobre, é pergunta para quem responde pela conformidade da organização,
-com a lei e o regulamento abertos. Esta lição não responde por você, e a página de marketing de um
+com a lei e o regulamento abertos. Esta aula não responde por você, e a página de marketing de um
 provedor também não.
 
 Regras de setor podem acrescentar o que a LGPD não traz. O setor financeiro, por exemplo, tem regras
@@ -64,5 +64,5 @@ Residência tem preço, e a tabela mostra. A mesma `t3.medium` custa 0,06720 USD
 0,02300. Manter dados no Brasil é uma escolha com uma linha na conta, e saber o que a lei de fato
 exige é como uma equipe evita pagar por uma obrigação que não existe, ou pular uma que existe.
 Residência também não é soberania: a seção sobre nuvens soberanas mostrou que onde o dado fica e
-quais tribunais o alcançam são perguntas separadas. A lição 9 vai mais fundo em regiões e em como
+quais tribunais o alcançam são perguntas separadas. A aula 9 vai mais fundo em regiões e em como
 escolher uma.

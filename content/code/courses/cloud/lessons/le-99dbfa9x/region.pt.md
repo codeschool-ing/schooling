@@ -10,7 +10,7 @@ datacenters agrupados em zonas isoladas, que são o assunto da próxima seção.
 máquina virtual, um bucket ou um banco de dados, ele é criado numa região e fica fisicamente ali.
 
 Cada provedor dá nomes do seu jeito. A AWS chama São Paulo de `sa-east-1`, a Azure chama de
-`brazilsouth` e o Google Cloud, de `southamerica-east1`. Os nomes mudam e a ideia não, então esta lição
+`brazilsouth` e o Google Cloud, de `southamerica-east1`. Os nomes mudam e a ideia não, então esta aula
 usa os nomes da AWS porque a planilha de preços do curso usa.
 
 A região se escolhe por recurso, não por conta. Uma conta pode ter uma instância em São Paulo, um
@@ -21,8 +21,8 @@ Três consequências vêm da escolha, e cada uma já pegou alguém.
 
 **Um recurso vive na sua região até você movê-lo.** Um bucket criado em `sa-east-1` guarda os
 objetos em São Paulo. O provedor não os copia para outra região por conta própria: copiar entre
-regiões é algo que você configura, e paga, como mostra a seção desta lição sobre várias regiões.
-Então a região é onde a promessa de residência de dados da lição 2 é cumprida, e uma réplica que você
+regiões é algo que você configura, e paga, como mostra a seção desta aula sobre várias regiões.
+Então a região é onde a promessa de residência de dados da aula 2 é cumprida, e uma réplica que você
 monta em outro país é onde ela é quebrada.
 
 ## Os serviços mudam de região para região
@@ -71,6 +71,6 @@ Num mês de 30 dias, 720 horas, uma `m7i.large` sai por 0,16065 × 720 = 115,67 
 região e de mais nada.
 
 A planilha diz quais são os preços, não por que diferem. Sejam quais forem os motivos, eles são do
-provedor, e o que você pode usar é o número. Ele é uma das cinco perguntas do checklist desta lição
+provedor, e o que você pode usar é o número. Ele é uma das cinco perguntas do checklist desta aula
 para escolher uma região, e raramente é a primeira: uma região mais barata que desrespeita a lei a que
 você está sujeito, ou que põe seus usuários a cem milissegundos de distância, não é mais barata.

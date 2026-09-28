@@ -66,7 +66,7 @@ conta lendo um bucket de outra precisa de um `Allow` dos **dois** lados: a polí
 identidade tem de permitir a ação, e a política do bucket tem de permitir a conta dele ou ele. Dentro
 de uma conta só, um `Allow` das políticas da identidade ou da política do recurso basta.
 
-A AWS também tem limites que ficam acima das políticas desta lição e nunca concedem nada sozinhos:
+A AWS também tem limites que ficam acima das políticas desta aula e nunca concedem nada sozinhos:
 um **limite de permissões** (permission boundary) restringe o que as políticas de um usuário ou de
 uma role podem dar a eles. Uma service control policy faz o mesmo para contas inteiras de uma
 organização. Com qualquer um dos dois no lugar, um pedido precisa de um `Allow` de toda camada que se

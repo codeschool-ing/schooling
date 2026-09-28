@@ -89,4 +89,4 @@ na agenda. Os provedores ajudam com as evidências. A AWS mostra, para cada iden
 serviço foi usado por ela pela última vez, e uma permissão sem uso há meses é uma pergunta a fazer ao
 dono. Alguns provedores vão além e conseguem rascunhar uma política mais estreita a partir das
 chamadas que uma identidade de fato fez. Seja como for, a revisão é uma pessoa decidindo, e a seção
-de auditoria no fim desta lição diz o que ela examina.
+de auditoria no fim desta aula diz o que ela examina.

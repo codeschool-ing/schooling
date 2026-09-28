@@ -6,7 +6,7 @@ version: 1
 Toda conta de nuvem começa com uma identidade: o e-mail e a senha que a abriram. A AWS a chama de
 **usuário root**. Ele pode fazer tudo na conta, e nenhuma política de permissões dentro da conta
 consegue limitá-lo, porque políticas são a forma de a conta limitar suas identidades e o root é a
-única para a qual elas não foram escritas. Tudo o que esta lição monta é um conjunto de freios, e o
+única para a qual elas não foram escritas. Tudo o que esta aula monta é um conjunto de freios, e o
 root é a identidade que não tem nenhum.
 
 ## "Só tem eu aqui, então vou usar o root"
@@ -19,7 +19,7 @@ rodado no terminal errado ou um cookie de navegador roubado podem fazer qualquer
 encerrar a conta. Uma identidade com direitos de administrador é quase tão forte, mas pode ser
 limitada, observada e removida; o root só pode ser protegido.
 
-**O log não distingue as pessoas.** O log de auditoria (a última seção de leitura desta lição)
+**O log não distingue as pessoas.** O log de auditoria (a última seção de leitura desta aula)
 registra a identidade que fez cada chamada. No dia em que uma segunda pessoa entra e recebe a mesma
 senha, toda entrada diz "root", e a pergunta "quem apagou o banco de dados na terça" não tem resposta
 que o log possa dar.

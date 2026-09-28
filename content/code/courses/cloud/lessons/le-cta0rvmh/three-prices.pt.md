@@ -68,7 +68,7 @@ milhão de uploads custa 7.00, e um milhão de `GET` a 0.00056 por 1.000 custa 0
 servidos ao público, a linha que pesa não é nenhuma dessas, e sim a transferência para a internet,
 que a aula 10 põe na conta.
 
-A coluna da direita é a outra lição da tabela. Cada uma das três linhas custa entre 1.76 e 1.9 vezes
+A coluna da direita é a outra aula da tabela. Cada uma das três linhas custa entre 1.76 e 1.9 vezes
 mais em São Paulo do que na Virgínia do Norte: 0.04050 / 0.02300 dá 1.76, e 0.1520 / 0.0800 e
 0.5700 / 0.3000 dão 1.9. Onde os dados podem morar é uma pergunta com preço, e a aula 9 pesa esse
 preço contra a distância até quem os lê.

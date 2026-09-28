@@ -23,7 +23,7 @@ alcançar duas delas, perto o bastante para a ida e volta entre elas continuar c
 **Perto o bastante importa, porque as zonas foram feitas para serem usadas juntas.** Elas se ligam por
 links dedicados de alta largura de banda e baixa latência, para que uma aplicação rode em duas zonas ao
 mesmo tempo e um banco de dados mantenha uma cópia numa segunda zona enquanto faz o commit. Cem
-quilômetros de fibra, ida e volta, são 200 km, e aos 200 km por milissegundo que esta lição calcula
+quilômetros de fibra, ida e volta, são 200 km, e aos 200 km por milissegundo que esta aula calcula
 duas seções adiante, isso dá um piso de 1 ms. Conversar entre duas zonas é barato em tempo. Não é
 de graça em dinheiro, e a seção sobre sobreviver à queda de uma zona põe preço nisso.
 
@@ -51,7 +51,7 @@ zona**, sempre que houver mais de uma conta envolvida.
 
 Uma zona protege contra uma falha local de um prédio. Ela não faz nada contra um erro que não é local.
 Um deploy ruim que você empurra para as duas zonas quebra as duas zonas. Um problema regional no
-próprio software do provedor, do tipo que a última seção desta lição trata, alcança todas as zonas
+próprio software do provedor, do tipo que a última seção desta aula trata, alcança todas as zonas
 daquela região, porque as zonas compartilham os sistemas de controle da região. Duas zonas são uma
 defesa contra o chão sob um prédio, e só isso.
 

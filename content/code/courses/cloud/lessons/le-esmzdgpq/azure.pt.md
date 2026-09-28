@@ -18,13 +18,13 @@ A maioria dos escritórios faz o login dos funcionários com a Microsoft: e-mail
 reuniões pelo Microsoft 365, e por trás disso um diretório de pessoas e grupos que a Microsoft hoje
 chama de **Entra ID**. Ele se chamava Azure Active Directory até 2023, e você vai encontrar o nome
 antigo em documentação mais velha e na boca das pessoas. Muitos desses escritórios também rodam o
-Active Directory local, mais antigo, ligado ao Entra ID, que é o arranjo híbrido que a lição 2
+Active Directory local, mais antigo, ligado ao Entra ID, que é o arranjo híbrido que a aula 2
 descreveu.
 
 O Azure usa esse mesmo diretório para o seu próprio controle de acesso. Então **a conta que a pessoa
 já usa para o e-mail é a conta que entra na nuvem**, e quando alguém sai da empresa, desativá-lo num
 lugar fecha as duas coisas. Num provedor com um sistema de identidade separado são dois passos, e o
-segundo é o que alguém esquece. A lição 7 trata de identidade e acesso em geral; aqui o ponto é que o
+segundo é o que alguém esquece. A aula 7 trata de identidade e acesso em geral; aqui o ponto é que o
 Azure começa pelo diretório que a empresa já tem.
 
 As licenças são a outra metade. Uma empresa que já tem licenças de Windows Server e SQL Server pode

@@ -18,10 +18,10 @@ AWS, Azure e Google Cloud são chamadas de hyperscalers. Cada uma vende centenas
 gerenciados: não só máquinas e discos, mas filas, data warehouses, streaming, machine learning,
 diretórios de usuários, entrega de conteúdo, gestão de chaves. Cada uma tem regiões em vários
 continentes, e cada uma cobra cada serviço à parte, então a lista de preços completa chega a dezenas
-de milhares de linhas. Você vai contá-las na AWS no fim desta lição: um único serviço, o EC2, lista
+de milhares de linhas. Você vai contá-las na AWS no fim desta aula: um único serviço, o EC2, lista
 mais de sessenta e cinco mil produtos numa só região.
 
-No vocabulário da lição 1, uma hyperscaler vende todas as camadas. Você pode alugar uma máquina
+No vocabulário da aula 1, uma hyperscaler vende todas as camadas. Você pode alugar uma máquina
 virtual crua e rodar tudo por conta própria, que é IaaS, ou alugar uma fila e nunca ver a máquina em
 que ela roda, que é PaaS. **A amplitude é o produto**: seja o que for que o seu projeto precise, uma
 das três vende gerenciado.
@@ -62,4 +62,4 @@ problema", a lista curta pode ser tudo de que você precisa.
 
 O meio do campo também existe: Oracle, IBM, Alibaba e OVHcloud vendem mais que a lista curta e menos
 que as três, cada uma com um motivo próprio para existir. Elas ganham um parágrafo cada mais adiante
-nesta lição.
+nesta aula.

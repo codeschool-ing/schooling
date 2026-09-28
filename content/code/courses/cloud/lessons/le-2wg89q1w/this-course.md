@@ -50,8 +50,8 @@ and exclude tax. Each comes from the **offer version** printed at the top, so ru
 next year prints the same sheet even though the prices themselves will have moved; for today's
 prices you would change the versions. And there are two columns. `sa-east-1` is São Paulo, the AWS
 region inside Brazil, which is where a company goes when its users are here or its data has to stay
-in the country. `us-east-1` is Northern Virginia, the oldest AWS region, and it is **cheaper on every
-line of this sheet**: a `t3.micro` machine costs 0.01680 dollars an hour in São Paulo and 0.01040 in
+in the country. `us-east-1` is Northern Virginia, the oldest AWS region, and it is **cheaper on most
+lines of this sheet**, and dearer on none: a `t3.micro` machine costs 0.01680 dollars an hour in São Paulo and 0.01040 in
 Virginia. Lesson 9 is about what the cheaper column costs you in distance, and lesson 10 about the
 bill itself.
 

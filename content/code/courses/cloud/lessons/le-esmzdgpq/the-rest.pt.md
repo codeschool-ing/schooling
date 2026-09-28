@@ -3,7 +3,7 @@ title: O resto do campo
 version: 1
 ---
 
-Seis nomes num título de lição deixam de fora a maior parte do mercado. Os provedores abaixo não são
+Seis nomes num título de aula deixam de fora a maior parte do mercado. Os provedores abaixo não são
 versões menores das três grandes; **cada um existe por um motivo que um tipo particular de cliente
 tem**, e conhecer o motivo basta para saber quando você vai encontrá-lo.
 
@@ -20,7 +20,7 @@ região em São Paulo.
 A nuvem da IBM atende clientes que já dependem da IBM, e o fio que a costura é a **Red Hat**, que a
 IBM comprou em 2019. O OpenShift da Red Hat, uma plataforma Kubernetes, roda na nuvem da IBM e nas
 outras, e a IBM o vende como o jeito de rodar a mesma plataforma no data center da própria empresa e
-na nuvem. É o arranjo híbrido da lição 2, vendido como produto.
+na nuvem. É o arranjo híbrido da aula 2, vendido como produto.
 
 ## Alibaba Cloud
 
@@ -36,7 +36,7 @@ maior: servidores dedicados, máquinas virtuais, armazenamento de objetos e uma 
 serviços gerenciados, em data centers que ela mesma constrói. O argumento dela para compradores
 europeus é a **jurisdição**. Uma empresa europeia responde à lei europeia, enquanto as três
 hyperscalers são empresas americanas, sujeitas à lei americana onde quer que estejam os data
-centers. Para organizações que tratam isso como risco, essa é a decisão inteira. A lição 2 discutiu
+centers. Para organizações que tratam isso como risco, essa é a decisão inteira. A aula 2 discutiu
 por que a lei do lugar importa tanto quanto o lugar.
 
 ## Cloudflare
@@ -44,9 +44,9 @@ por que a lei do lugar importa tanto quanto o lugar.
 A Cloudflare é outro tipo de provedor, e está aqui para que você não procure nela a coisa errada.
 **Você não aluga uma máquina virtual da Cloudflare.** Ela opera uma rede grande na frente dos
 servidores de outras pessoas, protegendo e fazendo cache deles. Nessa rede ela roda o seu código na
-borda (Workers, lição 8), guarda objetos (R2, compatível com S3 e sem cobrança pelos dados que saem
+borda (Workers, aula 8), guarda objetos (R2, compatível com S3 e sem cobrança pelos dados que saem
 dele) e mantém bancos de dados pequenos. Plataformas como Vercel e Netlify ficam no mesmo nível,
-acima das nuvens e não ao lado delas; a lição 8 também é delas.
+acima das nuvens e não ao lado delas; a aula 8 também é delas.
 
 ## Provedores brasileiros
 

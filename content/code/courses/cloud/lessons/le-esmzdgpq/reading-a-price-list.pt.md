@@ -3,7 +3,7 @@ title: Lendo uma lista de preços
 version: 1
 ---
 
-Todo provedor desta lição publica preços, e cada um publica de um jeito. **A AWS publica a lista de
+Todo provedor desta aula publica preços, e cada um publica de um jeito. **A AWS publica a lista de
 preços inteira como arquivos JSON que qualquer um pode baixar, sem conta e sem chave.** O Azure tem
 uma API pública própria de preços de varejo, e os outros publicam os preços em páginas web. Este
 curso fixou só a lista da AWS, e é por isso que todo preço nele é da AWS; as páginas dos outros
@@ -62,7 +62,7 @@ ana@laptop:~/cloud$ jq '.products | length' ~/.cache/cloud-prices/AmazonEC2-2026
 O Lambda tem 389 produtos em São Paulo. O EC2 tem 65.165, porque cada tamanho de máquina é um
 produto várias vezes: por sistema operacional, por modelo de licença, por tipo de locação. Essa
 contagem é o que "uma lista de preços com dezenas de milhares de linhas" queria dizer antes nesta
-lição, e é de um serviço numa região.
+aula, e é de um serviço numa região.
 
 ## Duas linhas da tabela
 
@@ -129,7 +129,7 @@ claras, e é ele que você vai estender ao comparar provedores:
 ```
 
 Uma máquina que roda o mês inteiro em São Paulo custa `117.27` USD a preço de tabela, e `73.58` na
-Virgínia. A diferença é real, e também é só uma linha. A lição 9 trata do que a distância até a
+Virgínia. A diferença é real, e também é só uma linha. A aula 9 trata do que a distância até a
 Virgínia custa a um usuário no Brasil, que é o outro lado da mesma escolha.
 
 ## O que a lista não diz
@@ -137,7 +137,7 @@ Virgínia custa a um usuário no Brasil, que é o outro lado da mesma escolha.
 Uma lista de preços é o ponto de partida de uma fatura, não a fatura. Ela deixa de fora três coisas:
 
 - Descontos. A tabela traz preços reservados ao lado dos preços sob demanda, e clientes grandes
-  negociam os próprios. A lição 10 trata dos dois.
+  negociam os próprios. A aula 10 trata dos dois.
 - Níveis gratuitos. Alguns serviços dão uma quantidade por mês, e o bloco do Lambda na tabela lista a
   dele.
 - O formato da fatura. Uma máquina chega com um disco, um endereço e os dados que envia, cada um com

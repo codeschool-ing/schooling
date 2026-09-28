@@ -13,7 +13,7 @@ entregue a quem receber uma cópia.**
 - Uma imagem de contêiner guarda todo arquivo de toda camada com que foi construída, então uma chave
   copiada para dentro e apagada num passo seguinte continua dentro da imagem.
 - Um arquivo de configuração num servidor está nos backups e nos snapshots de disco dele, e nas
-  imagens da lição 4 feitas a partir desse servidor.
+  imagens da aula 4 feitas a partir desse servidor.
 
 E uma chave num repositório público é encontrada por gente que vasculha repositórios públicos atrás
 exatamente desse formato de texto. Ninguém do seu lado precisa perceber o vazamento para ele ser
@@ -34,7 +34,7 @@ uma URL a mando de um atacante pode ser levada a buscar o endereço de metadados
 bastava para entregar as credenciais da role. Um pedido que exige um `PUT` e um token antes é muito
 mais difícil de arrancar de uma aplicação.
 
-Uma função funciona do mesmo jeito pela sua role de execução, que a lição 8 usa, e um contêiner
+Uma função funciona do mesmo jeito pela sua role de execução, que a aula 8 usa, e um contêiner
 rodando num serviço gerenciado tem um endpoint equivalente próprio.
 
 ## Como um programa acha as credenciais
@@ -42,7 +42,7 @@ rodando num serviço gerenciado tem um endpoint equivalente próprio.
 A CLI e os SDKs não olham num lugar só: eles percorrem uma cadeia de fontes numa ordem fixa e usam a
 primeira que responde. Dá para ver a busca num laptop com a AWS CLI e nenhuma credencial. Nada aqui
 chega a uma conta AWS; o ambiente e o diretório home estão vazios de propósito, como o `captures.sh`
-da lição prepara.
+da aula prepara.
 
 ```
 ana@laptop:~/cloud$ aws --version
@@ -81,7 +81,7 @@ Looking for credentials via: container-role
 Looking for credentials via: iam-role
 ```
 
-Doze fontes, e a ordem é a lição. **O ambiente vem primeiro**: variáveis como `AWS_ACCESS_KEY_ID`
+Doze fontes, e a ordem é a aula. **O ambiente vem primeiro**: variáveis como `AWS_ACCESS_KEY_ID`
 vencem tudo abaixo delas. Depois vêm os arquivos de configuração e de credenciais em `~/.aws`,
 incluindo as formas de um perfil ali apontar para uma role, para um login pelo navegador (`sso`,
 `login`) ou para um programa que busca credenciais (`custom-process`). As duas últimas são da própria

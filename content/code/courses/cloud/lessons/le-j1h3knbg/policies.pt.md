@@ -22,7 +22,7 @@ coisas.
 
 Aqui está uma política para alguém que precisa ler os relatórios deste ano e mais nada: os objetos
 abaixo de `2026/` no bucket `example-reports`, e uma listagem do que existe ali. Ela foi escrita para
-esta lição e não está aplicada em lugar nenhum, porque não há conta neste curso; é o documento que
+esta aula e não está aplicada em lugar nenhum, porque não há conta neste curso; é o documento que
 você anexaria a um usuário, um grupo ou uma role.
 
 ```schooling-example

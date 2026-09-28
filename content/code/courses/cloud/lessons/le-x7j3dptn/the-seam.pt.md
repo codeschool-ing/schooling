@@ -137,4 +137,4 @@ Para um desenho híbrido a regra prática vem daí: ponha o processamento do lad
 que ele mais lê, e mande resultados pela emenda, não dados brutos. Um relatório de poucos megabytes
 atravessando uma vez por noite custa uma fração de centavo; a tabela de onde ele saiu atravessando a
 cada hora é a conta acima, de novo e de novo. O tempo de ida e volta também se soma a cada travessia,
-e a lição 9 mede isso entre regiões.
+e a aula 9 mede isso entre regiões.

@@ -42,7 +42,7 @@ levar antes de ser cortada, quanta memória uma cópia pode usar, e se um arquiv
 disco local sobrevive a um reinício. Em muitas plataformas não sobrevive. As cópias são descartadas e
 substituídas à vontade, então o que foi gravado localmente vai junto, e uma loja que salva no próprio
 disco as fotos de produto enviadas perde todas no próximo deploy. O lugar delas é o armazenamento de
-objetos, que a lição 5 descreve.
+objetos, que a aula 5 descreve.
 
 ## O que continua seu
 
@@ -59,4 +59,4 @@ consegue trocar a sua loja por outra coisa.
 
 O PaaS tira o maior bloco de trabalho de rotina da pilha e deixa para você as partes específicas do seu
 negócio. **Se a troca é boa depende de você precisar ou não das partes que ele levou**, e a última
-seção de leitura desta lição transforma isso numa tabela.
+seção de leitura desta aula transforma isso numa tabela.
