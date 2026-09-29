@@ -61,7 +61,7 @@ node() {  # node NAME [router]
   ip netns add "$n"
   ip -n "$n" link set lo up
   echo "$n" >> "$LAB/nodes"
-  mkdir -p "/etc/netns/$n" "$LAB/$n"
+  mkdir -p "/etc/netns/$n" "$LAB/$n/dhcp"
   printf '127.0.0.1 localhost\n127.0.1.1 %s\n' "$n" > "/etc/netns/$n/hosts"
   printf 'nameserver 127.0.0.1\n' > "/etc/netns/$n/resolv.conf"
   ip netns exec "$n" sysctl -qw net.ipv4.ping_group_range="0 2147483647"
@@ -158,8 +158,11 @@ wait_for() {  # wait_for SECONDS COMMAND... : until it succeeds, or say so
 exec_on() {  # exec_on HOST USER COMMAND
   local h=$1 u=$2 c=$3
   local shim="vtysh() { command vtysh -N $h \"\$@\"; }; lldpcli() { command lldpcli -u $LAB/$h/lldpd.socket \"\$@\"; }; export -f vtysh lldpcli 2>/dev/null;"
+  # Each device keeps its DHCP leases in its own /var/lib/dhcp, as a separate
+  # machine would; ip netns exec already gives every command its own mounts.
   ip netns exec "$h" unshare --uts bash -c '
     hostname "$1"
+    mount --bind '"$LAB"'/"$1"/dhcp /var/lib/dhcp
     if [ "$2" = root ]; then cd /root; exec env -i HOME=/root USER=root LOGNAME=root PATH=/usr/sbin:/usr/bin:/sbin:/bin TZ='"$TZ_LAB"' LANG=C.UTF-8 TERM=xterm COLUMNS=100 bash -c "$3"
     else exec runuser -u "$2" -- env -i HOME=/home/"$2" USER="$2" LOGNAME="$2" PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin TZ='"$TZ_LAB"' LANG=C.UTF-8 TERM=xterm COLUMNS=100 bash -c "cd; $3"
     fi' _ "$h" "$u" "$shim $c"
@@ -168,16 +171,18 @@ exec_on() {  # exec_on HOST USER COMMAND
 down() {
   local f n
   if [ -f "$LAB/pidfiles" ]; then
-    while read -r f; do [ -f "$f" ] && kill "$(cat "$f")" 2>/dev/null; done < "$LAB/pidfiles"
+    while read -r f; do [ -f "$f" ] && kill "$(cat "$f")" 2>/dev/null || true; done < "$LAB/pidfiles"
     sleep 1
   fi
   if [ -f "$LAB/nodes" ]; then
+    # anything still running inside a device, such as a DHCP client renewing
+    while read -r n; do ip netns pids "$n" 2>/dev/null | xargs -r kill 2>/dev/null || true; done < "$LAB/nodes"
+    sleep 1
     while read -r n; do
       ip netns del "$n" 2>/dev/null || true
       rm -rf "/etc/netns/$n" "/etc/frr/$n" "/var/run/frr/$n"
     done < "$LAB/nodes"
   fi
-  rm -f /etc/dhcp/lab-*.conf /var/lib/dhcp/lab-*.leases
   rm -rf "$LAB"
 }
 
@@ -369,10 +374,129 @@ scenario_campus() {
   wait_for 90 ip netns exec pc1 ping -c1 -W1 10.20.12.22
 }
 
+# dualstack: an office LAN that speaks IPv4 and IPv6 at once. r1 announces
+# the office's IPv6 prefix with radvd and the PCs build their own addresses
+# from it; srv is given its IPv6 address by hand, as a server usually is.
+#
+#   pc1 pc2 srv --- sw1 --- r1 === isp --- web
+#   10.20.10.0/24           203.0.113.0/30        192.0.2.0/24
+#   2001:db8:20:10::/64     2001:db8:ffff::/64    2001:db8:99::/64
+scenario_dualstack() {
+  local n
+  for n in pc1 pc2 srv sw1 web; do node $n; done
+  node r1 router; node isp router
+  link pc1 eth0 sw1 p1; link pc2 eth0 sw1 p2; link srv eth0 sw1 p4; link r1 eth0 sw1 p8
+  switch sw1 "p1 p2 p4 p8"
+  addr pc1 eth0 10.20.10.21/24; addr pc2 eth0 10.20.10.22/24; addr srv eth0 10.20.10.10/24
+  addr r1 eth0 10.20.10.1/24; addr r1 eth0 2001:db8:20:10::1/64
+  addr srv eth0 2001:db8:20:10::10/64
+  ip netns exec srv sysctl -qw net.ipv6.conf.eth0.autoconf=0   # its one address is the one it was given
+  for n in pc1 pc2 srv; do gw $n 10.20.10.1; done
+  ip -n srv -6 route add default via 2001:db8:20:10::1
+  link r1 eth1 isp eth0
+  addr r1 eth1 203.0.113.2/30; addr isp eth0 203.0.113.1/30; gw r1 203.0.113.1
+  addr r1 eth1 2001:db8:ffff::2/64; addr isp eth0 2001:db8:ffff::1/64
+  ip -n r1 -6 route add default via 2001:db8:ffff::1
+  ip -n isp -6 route add 2001:db8:20::/48 via 2001:db8:ffff::2
+  link isp eth1 web eth0
+  addr isp eth1 192.0.2.1/24; addr web eth0 192.0.2.80/24; gw web 192.0.2.1
+  addr isp eth1 2001:db8:99::1/64; addr web eth0 2001:db8:99::80/64
+  ip -n web -6 route add default via 2001:db8:99::1
+  ip netns exec r1 nft -f - <<'NFT'
+table ip nat {
+  chain postrouting {
+    type nat hook postrouting priority srcnat;
+    oifname "eth1" masquerade
+  }
+}
+NFT
+  cat > "$LAB/r1/radvd.conf" <<'RA'
+interface eth0 {
+  AdvSendAdvert on;
+  MinRtrAdvInterval 30;
+  MaxRtrAdvInterval 100;
+  prefix 2001:db8:20:10::/64 {
+    AdvOnLink on;
+    AdvAutonomous on;
+  };
+};
+RA
+  daemon r1 "$LAB/r1/radvd.pid" radvd -n -C "$LAB/r1/radvd.conf" -p "$LAB/r1/radvd.pidfile" -m stderr
+  echo "$LAB/r1/radvd.pid" >> "$LAB/pidfiles"
+  web web '::'
+  for n in pc1 pc2 srv r1; do
+    host $n 10.20.10.10 srv; host $n 2001:db8:20:10::10 srv
+    host $n 192.0.2.80 web; host $n 2001:db8:99::80 web
+  done
+}
+
+# dhcp: an office whose PCs get their addresses from a DHCP server. srv
+# serves the office LAN and, through a relay on r1, a second floor on its own
+# subnet. prn is a printer with a reservation. rogue is a PC that a lesson
+# turns into a second DHCP server nobody asked for.
+#
+#   pc1 pc2 prn rogue srv --- sw1 --- r1 --- pc4
+#   10.20.10.0/24 (srv .10, r1 .1)       10.20.20.0/24 (r1 .1)
+dhcpd_on() {  # dhcpd_on NODE IFACE CONFIG-FILE
+  touch "$LAB/$1/dhcp/dhcpd.leases"
+  daemon "$1" "$LAB/$1/dhcpd.pid" unshare --mount sh -c \
+    "mount --bind $LAB/$1/dhcp /var/lib/dhcp; exec dhcpd -4 -f -d -cf $3 -pf $LAB/$1/dhcpd.pidfile $2"
+  echo "$LAB/$1/dhcpd.pid" >> "$LAB/pidfiles"
+}
+scenario_dhcp() {
+  local n
+  for n in pc1 pc2 prn rogue srv sw1 pc4; do node $n; done
+  node r1 router
+  link pc1 eth0 sw1 p1; link pc2 eth0 sw1 p2; link prn eth0 sw1 p3; link rogue eth0 sw1 p5
+  link srv eth0 sw1 p4; link r1 eth0 sw1 p8
+  switch sw1 "p1 p2 p3 p4 p5 p8"
+  link r1 eth2 pc4 eth0
+  addr srv eth0 10.20.10.10/24; addr r1 eth0 10.20.10.1/24; addr r1 eth2 10.20.20.1/24
+  gw srv 10.20.10.1
+  cat > "$LAB/srv/dhcpd.conf" <<CONF
+# the office's DHCP server
+authoritative;
+default-lease-time 600;
+max-lease-time 7200;
+option domain-name-servers 10.20.10.10;
+
+subnet 10.20.10.0 netmask 255.255.255.0 {
+  range 10.20.10.100 10.20.10.199;
+  option routers 10.20.10.1;
+}
+
+subnet 10.20.20.0 netmask 255.255.255.0 {
+  range 10.20.20.100 10.20.20.199;
+  option routers 10.20.20.1;
+}
+
+host prn {
+  hardware ethernet $(mac prn eth0);
+  fixed-address 10.20.10.50;
+}
+CONF
+  dhcpd_on srv eth0 "$LAB/srv/dhcpd.conf"
+}
+# rogue: a second DHCP server on the office LAN, answering with its own idea
+# of the gateway. Started by lesson 10 and never by a scenario.
+rogue_dhcp() {
+  addr rogue eth0 10.20.10.66/24
+  cat > "$LAB/rogue/dhcpd.conf" <<'CONF'
+default-lease-time 600;
+subnet 10.20.10.0 netmask 255.255.255.0 {
+  range 10.20.10.200 10.20.10.220;
+  option routers 10.20.10.66;
+  option domain-name-servers 10.20.10.66;
+}
+CONF
+  dhcpd_on rogue eth0 "$LAB/rogue/dhcpd.conf"
+}
+
 case "${1:-}" in
   up) up "${2:?which scenario? try: lab.sh list}" ;;
   down) down ;;
   exec) shift; exec_on "$@" ;;
+  rogue) rogue_dhcp ;;
   list) declare -F | awk '$3 ~ /^scenario_/ {sub("scenario_", "", $3); print $3}' ;;
   *) sed -n '2,/^set -euo/p' "$0" | sed '$d; s/^# \{0,1\}//'; exit 2 ;;
 esac
