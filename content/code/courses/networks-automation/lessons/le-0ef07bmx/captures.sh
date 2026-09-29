@@ -43,6 +43,15 @@ typed() {
   lab exec ctl ana "( $script ) | ssh -tt netops@$h 2>&1 | tr -d '\\r'" || true
 }
 block() { printf '##### %s\n' "$1"; }
+# A command left running on one machine while others are typed, the way a
+# second terminal would be: its prompt and output are printed when it ends.
+bgon() {
+  printf 'ana@%s:~$ %s\n' "$1" "$2" > /tmp/bg.out
+  lab exec "$1" ana "$2" >> /tmp/bg.out 2>&1 &
+  BG=$!
+  sleep "${3:-1.5}"
+}
+fgon() { wait "$BG"; cat /tmp/bg.out; rm -f /tmp/bg.out; }
 
 lab reset
 

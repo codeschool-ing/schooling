@@ -118,6 +118,15 @@ tools() {
     git clone -q --depth 1 --branch v0.42.0 https://github.com/openconfig/gnmic.git /opt/labsrc/gnmic
     (cd /opt/labsrc/gnmic && go build -o /usr/local/bin/gnmic .)
   fi
+  if [ ! -d /opt/labsrc/openconfig ]; then          # OpenConfig's published models, 806f013
+    git clone -q --filter=blob:none --sparse https://github.com/openconfig/public.git /opt/labsrc/openconfig
+    git -C /opt/labsrc/openconfig checkout -q 806f013
+    git -C /opt/labsrc/openconfig sparse-checkout set --no-cone '/release/models/interfaces/*' \
+      '/release/models/types/*' /release/models/openconfig-extensions.yang \
+      /release/models/system/openconfig-system.yang \
+      /release/models/optical-transport/openconfig-transport-types.yang \
+      /release/models/platform/openconfig-platform-types.yang
+  fi
   if [ ! -x "$NETBOX/venv/bin/gunicorn" ]; then     # NetBox v4.6.10
     apt-get install -y -qq libpq-dev python3.12-dev
     git clone -q --depth 1 --branch v4.6.10 https://github.com/netbox-community/netbox.git "$NETBOX"
@@ -917,8 +926,10 @@ ROUTES = [
 
 
 # ------------------------------------------------------------------------ gNMI
-MODELS = [("openconfig-interfaces", "OpenConfig working group", "3.7.1"),
-          ("openconfig-system", "OpenConfig working group", "2.1.0")]
+# The versions of the published models this subset is shaped like: the ones in
+# openconfig/public at the commit lab.sh names (release/models).
+MODELS = [("openconfig-interfaces", "OpenConfig working group", "3.11.0"),
+          ("openconfig-system", "OpenConfig working group", "3.3.0")]
 
 
 def state_tree():
