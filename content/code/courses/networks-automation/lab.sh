@@ -301,6 +301,7 @@ build_frr() {
 # netops is the account automation logs in with. Its shell is vtysh, so an SSH
 # session lands in the router's CLI and not in Linux, as it would on a router.
 NETOPS_PASSWORD='lab-netops-26'
+DEVAPI_READONLY_PASSWORD='lab-audit-26'
 build_ssh() {
   id netops >/dev/null 2>&1 || useradd -M -d /home/netops -s /usr/bin/vtysh -G frrvty netops
   echo "netops:$NETOPS_PASSWORD" | chpasswd
@@ -349,6 +350,16 @@ C
     [ "$h" = nc1 ] || exec_on "$h" root '/usr/sbin/sshd -f /etc/ssh/sshd_config'
   done
   chown -R ana:ana "$k"; chmod 700 "$k"
+  # The passwords ana's programs read, one file each, readable by her alone:
+  # a secret in a file with 0600 is the lab's stand-in for a vault.
+  printf '%s\n' "$NETOPS_PASSWORD" > "$LAB/ctl/home/ana/.netops-password"
+  printf '%s\n' "$DEVAPI_READONLY_PASSWORD" > "$LAB/ctl/home/ana/.audit-password"
+  chown ana:ana "$LAB/ctl/home/ana/".*-password; chmod 600 "$LAB/ctl/home/ana/".*-password
+  # and a .netrc, which is where curl -n finds credentials for HTTP Basic
+  for h in $ROUTERS nc1; do
+    printf 'machine %s.example.net login netops password %s\n' "$h" "$NETOPS_PASSWORD"
+  done > "$LAB/ctl/home/ana/.netrc"
+  chown ana:ana "$LAB/ctl/home/ana/.netrc"; chmod 600 "$LAB/ctl/home/ana/.netrc"
 }
 
 # ------------------------------------------------------ the lab's certificates
@@ -372,7 +383,6 @@ build_ca() {
 }
 
 # ---------------------------------------------------- the routers' own API
-DEVAPI_READONLY_PASSWORD='lab-audit-26'
 build_devapi() {
   mkdir -p /opt/lab
   write_devapi > /opt/lab/devapi.py
@@ -1821,6 +1831,12 @@ wait_ready() {
   local i
   for i in $(seq 120); do
     [ "$(exec_on core1 root 'vtysh -c "show ip ospf neighbor"' | grep -c Full)" = 2 ] && break
+    sleep 1
+  done
+  # and each branch has learnt the other one's LAN, which is what routing is for
+  for i in $(seq 120); do
+    exec_on edge1 root 'ip route show 203.0.113.64/26' | grep -q via &&
+      exec_on edge2 root 'ip route show 203.0.113.0/26' | grep -q via && break
     sleep 1
   done
   for a in 192.0.2.11:443 192.0.2.12:443 192.0.2.13:443 192.0.2.11:9339 192.0.2.12:9339 \
