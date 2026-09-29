@@ -19,8 +19,8 @@ origens cobrem quase tudo para o que as funções são usadas.
   tira as mensagens de lá e as entrega à função em lotes. Uma mensagem em que a função falha volta
   para a fila e é tentada de novo.
 - Um arquivo que chega num bucket. O armazenamento de objetos, assunto da aula 5, pode anunciar cada
-  objeto novo, e o anúncio pode chamar uma função: sobe uma foto, uma função gera a miniatura. O
-  evento traz o bucket e a chave, não o conteúdo; a própria função lê o objeto.
+  objeto novo, e o anúncio pode chamar uma função: sobe uma foto, uma função gera a miniatura. **O
+  evento traz o bucket e a chave, não o conteúdo**; a própria função lê o objeto.
 - Um agendamento. Uma regra como `rate(5 minutes)`, ou uma expressão cron, chama a função pelo
   relógio: uma limpeza toda noite, um relatório toda segunda-feira. É o cron sem uma máquina para
   rodar o cron.
@@ -49,7 +49,7 @@ vez, então uma duplicata faz parte do contrato, não é defeito. Uma miniatura 
 mal. Um e-mail enviado duas vezes, ou um cartão cobrado duas vezes, faz.
 
 Um handler que faz algo que deve acontecer uma vez só precisa reconhecer um evento que já tratou,
-normalmente registrando um id que vem no evento e conferindo esse id antes de agir. Um handler assim
-se chama idempotente: rodá-lo duas vezes com o mesmo evento deixa o mundo como rodá-lo uma vez
-deixou. Não é uma ideia de serverless, ela pertence a todo sistema construído sobre filas, mas uma
-função atrás de uma fila é onde a maioria das pessoas a encontra primeiro.
+normalmente registrando um id que vem no evento e conferindo esse id antes de agir. **Um handler
+assim se chama idempotente: rodá-lo duas vezes com o mesmo evento deixa o mundo como rodá-lo uma vez
+deixou.** A ideia pertence a todo sistema construído sobre filas; uma função atrás de uma fila é só
+onde a maioria das pessoas a encontra primeiro.

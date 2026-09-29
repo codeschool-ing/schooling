@@ -29,7 +29,7 @@ pública de São Paulo, em dólares americanos e sem impostos.
 Duas palavras dessa tabela fazem mais trabalho do que parece. Um volume gp3 é cobrado pelo tamanho que
 você **provisionou**: um volume de 100 GB com 3 GB de arquivos custa os mesmos 15,20 dólares por mês que
 um cheio. Um bucket do S3 é cobrado pelo que **guarda**: 3 GB nele custam 0,12 dólar. A aula 5
-desenhou a diferença entre um dispositivo de blocos e um armazenamento de objetos; a conta desenha de
+desenhou a diferença entre um dispositivo de blocos e um armazenamento de objetos; a conta a desenha de
 novo.
 
 ## Cobrado por existir, cobrado por uso
@@ -38,7 +38,7 @@ As unidades se dividem em duas famílias, e separar uma da outra é boa parte de
 
 **Algumas unidades são cobradas por existir.** Uma hora de instância, um gigabyte de disco
 provisionado, uma hora de NAT gateway, uma hora de endereço público: cada uma acumula aconteça algo ou
-não. Uma `m7i.large` que não atende nenhuma requisição a noite toda custa os mesmos 0.16065 por hora que
+não. Uma `m7i.large` que não atende nenhuma requisição a noite toda custa os mesmos 0,16065 por hora que
 uma ocupada. Uma instância parada deixa de somar horas de instância, mas o volume ligado a ela continua
 somando GB-mês, porque o disco ainda existe.
 

@@ -5,8 +5,8 @@ version: 1
 
 A pergunta "nossa empresa deve ser pública, privada ou híbrida?" não tem boa resposta, porque **uma
 empresa não é uma carga**. Os modelos descrevem onde um sistema roda e quem divide o hardware dele, e
-uma empresa costuma ter sistemas que pertencem a lugares diferentes. A pergunta útil é feita por
-sistema, a partir das características dele.
+uma empresa costuma ter sistemas que pertencem a lugares diferentes. A pergunta útil se faz sistema
+por sistema, a partir das características de cada um.
 
 ## A tabela
 
@@ -40,7 +40,7 @@ vai para a mesma região, o que mantém o dado em repouso em São Paulo, e a equ
 backups, logs, a ferramenta de suporte — antes de dar a pergunta por encerrada.
 
 O ERP cuida do depósito e roda há anos em dois servidores no rack do próprio depósito. Ele conversa
-com leitores de código de barras no chão e com nada na internet. Carga estável, latência local,
+com leitores de código de barras no chão do depósito e com nada na internet. Carga estável, latência local,
 hardware já pago: **ele fica na empresa**, e nada nos modelos diz que ele precisa sair.
 
 A vitrine precisa dos níveis de estoque do ERP. Isso torna o arranjo **híbrido**: uma VPN entre o

@@ -28,8 +28,8 @@ projects inside those, and resources such as buckets and virtual machines inside
 level has an allow policy, a list of bindings, each binding saying "these principals have this role
 here". A binding is inherited downwards: a role granted on a folder applies to every project and
 resource in it. That makes the question "who can read this bucket" an answer collected from the
-bucket, its project, its folders and the organisation, and a grant made high up for convenience is
-a grant on everything below it.
+bucket, its project, its folders and the organisation. **A grant made high up for convenience is a
+grant on everything below it.**
 
 Roles come in three kinds. The **basic roles**, Owner, Editor and Viewer, are broad and predate the
 rest; Editor on a project can change nearly everything in it. Predefined roles are narrow ones per

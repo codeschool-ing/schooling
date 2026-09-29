@@ -37,7 +37,7 @@ Quatro coisas mudam, e nenhuma delas é de quem é o computador:
 - por quanto tempo fica com ela: até devolver, o que pode ser amanhã;
 - como você paga: pela unidade que usou, uma hora, um gigabyte ou uma requisição.
 
-A próxima seção dá a essas quatro os nomes oficiais, mais uma.
+A próxima seção dá nome oficial a essas quatro, e a mais uma.
 
 ## A segunda coisa que ela esconde
 
@@ -45,13 +45,13 @@ A frase também esconde uma pergunta que importa mais que o preço. Com o servid
 toda tarefa era sua: a energia, os discos, o sistema operacional, os backups. Com o computador de outra
 pessoa, **algumas dessas tarefas passam a ser dela**, e quais depende inteiramente do que você alugou.
 Uma máquina virtual deixa para você o sistema operacional e tudo acima dele. Uma aplicação pronta, como
-um webmail, deixa quase nada, mas não nada.
+um webmail, deixa quase nada para você, mas nunca nada.
 
-"Fomos para a nuvem" não responde, portanto, *quem aplica os patches no servidor*. É o começo da
+"Fomos para a nuvem" não responde, portanto, à pergunta *quem aplica os patches no servidor*. É o começo da
 pergunta, e os três nomes de que esta aula trata, IaaS, PaaS e SaaS, são três respostas para ela.
 
 Vale nomear uma segunda imagem errada enquanto você está aqui: **a nuvem como o lugar para onde os
 arquivos vão**, a pasta que sincroniza entre o celular e o laptop. Esse é um tipo de serviço de nuvem,
-uma aplicação pronta para guardar arquivos, e é um canto do assunto. Este curso trata dele inteiro: as
+uma aplicação pronta para guardar arquivos, e é só um canto do assunto. Este curso trata do assunto inteiro: as
 máquinas, os discos e as redes sobre os quais serviços assim são construídos, e os serviços feitos para
 quem escreve software, e não para quem guarda fotos.

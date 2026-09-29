@@ -4,10 +4,11 @@ version: 1
 ---
 
 O nome sugere código que roda em cima de nada. **Os servidores existem, tantos quanto sempre
-existiram: serverless quer dizer que eles não são seus.** Você não escolhe tipo de instância, não abre
-sessão SSH, não aplica patch de kernel e não decide quantas máquinas devem estar ligadas às três da
-manhã. Você entrega ao provedor uma função e diz o que deve fazê-la rodar. O provedor acha onde
-rodá-la, com tantas cópias ao mesmo tempo quanto o tráfego pedir, e nenhuma quando ninguém pede.
+existiram: serverless quer dizer que eles não são seus.** Você não escolhe tipo de instância, não
+abre sessão SSH, não aplica patch de kernel e não decide quantas máquinas devem estar ligadas às
+três da manhã. **Você entrega ao provedor uma função e diz o que deve fazê-la rodar.** O provedor
+acha onde rodá-la, com tantas cópias ao mesmo tempo quanto o tráfego pedir, e nenhuma quando ninguém
+pede.
 
 Daí saem três propriedades, e juntas elas são o que a palavra significa na prática:
 
@@ -19,11 +20,11 @@ Daí saem três propriedades, e juntas elas são o que a palavra significa na pr
 - Ela escala até zero, e a partir do zero. Dez requisições chegando juntas ganham dez cópias da
   função; uma noite parada não ganha nenhuma.
 
-**A terceira é a ruptura com a aula 4.** Um grupo de autoscaling de máquinas virtuais também cresce e
-encolhe, mas tem um mínimo de uma ou duas instâncias, porque alguma coisa precisa estar rodando quando
-a primeira requisição chega. Uma função não tem mínimo: a primeira requisição depois de uma hora
-parada é o que faz uma cópia existir. É por isso que serverless sai barato para cargas calmas, e isso
-tem um custo próprio, que a seção sobre cold starts desmonta.
+**A terceira é a ruptura com a aula 4.** Um grupo de autoscaling de máquinas virtuais também cresce
+e encolhe, mas tem um mínimo de uma ou duas instâncias, porque alguma coisa precisa estar rodando
+quando a primeira requisição chega. **Uma função não tem mínimo: a primeira requisição depois de uma
+hora parada é o que faz uma cópia existir.** É por isso que serverless sai barato para cargas
+calmas, e isso tem um custo próprio, que a seção sobre cold starts desmonta.
 
 ## Onde ele fica na linha da aula 1
 
@@ -52,7 +53,7 @@ linha, rode o provedor o que rodar:
 - os logs, os alarmes e saber quando ela falha, que é o assunto do curso `observability`;
 - a conta, que agora acompanha o tráfego e não o número de máquinas que você escolheu.
 
-**Serverless também é uma palavra mais larga que funções.** Os provedores a usam para qualquer coisa
+**Serverless também é uma palavra mais ampla que funções.** Os provedores a usam para qualquer coisa
 cobrada por uso que escala sem você escolher um tamanho, inclusive filas e alguns bancos de dados.
 Esta aula é sobre funções, muitas vezes chamadas de FaaS, de *functions as a service*, porque é ali
 que o modelo fica mais claro e onde os limites dele aparecem primeiro.

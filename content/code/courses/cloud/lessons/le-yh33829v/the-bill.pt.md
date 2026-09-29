@@ -6,8 +6,8 @@ version: 1
 Uma função é cobrada em dois medidores. **As requisições contam quantas vezes ela foi chamada; os
 GB-segundos contam quanta memória ela segurou e por quanto tempo.** Um GB-segundo é um gigabyte de
 memória configurada durante um segundo de execução: uma função configurada com 512 MB que roda por
-120 ms gasta 0,5 × 0,120 = 0,06 GB-segundo por chamada. A memória é a que você configurou, não a que o
-código usou, e o Lambda cobra a duração por milissegundo, arredondada para cima.
+120 ms gasta 0,5 × 0,120 = 0,06 GB-segundo por chamada. **A memória é a que você configurou, não a
+que o código usou**, e o Lambda cobra a duração por milissegundo, arredondada para cima.
 
 Estas são as linhas de Lambda da tabela de preços do curso, a lista pública de preços da AWS para
 `sa-east-1` (São Paulo) e `us-east-1` (Norte da Virgínia), em dólares americanos, sem impostos, nas
@@ -62,8 +62,9 @@ A mesma conta como programa, para os números poderem ser trocados e rodados de 
 escreve e os dados que ela manda para a internet são cobrados pelos seus próprios serviços, e nenhum
 deles está neste total. A aula 10 é sobre achar linhas assim antes de elas chegarem.
 
-O número para levar não é 3,60, e sim o que o move. O dobro de requisições é o dobro da conta. O dobro
-de memória, ou o dobro de duração, dobra a parte da duração. E uma função que passa 100 ms dos seus
-120 esperando um banco de dados é cobrada pela espera, porque os GB-segundos contam o tempo em que o
-ambiente ficou ocupado, não o tempo em que o processador trabalhou. Numa máquina que você já paga por
-hora, uma consulta lenta custa latência; aqui ela custa dinheiro também.
+Os 3,60 mudam com a carga de um jeito que dá para ler nos medidores. O dobro de requisições é o
+dobro da conta. O dobro de memória, ou o dobro de duração, dobra a parte da duração. E **uma função
+que passa 100 ms dos seus 120 esperando um banco de dados é cobrada pela espera**, porque os
+GB-segundos contam o tempo em que o ambiente ficou ocupado, não o tempo em que o processador
+trabalhou. Numa máquina que você já paga por hora, uma consulta lenta custa latência; aqui ela custa
+dinheiro também.

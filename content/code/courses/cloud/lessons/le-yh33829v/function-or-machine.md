@@ -56,8 +56,8 @@ Lambda, per million     1.20 USD
 
 Read as traffic, 25.3 million requests a month is 9.6 a second on average, all day, every day.
 **Below that, the function beats even one bare machine; above 64.3 million, a properly built pair
-beats the function.** Most small APIs, internal tools and back offices sit far to the left of the
-first crossing. A busy public API sits to the right of the second.
+beats the function.** **Most small APIs, internal tools and back offices sit far to the left of the
+first crossing.** A busy public API sits to the right of the second.
 
 ## What the chart leaves out
 
@@ -67,10 +67,10 @@ Every line on it is from the sheet, and each of these would move a line:
   arithmetic. If it cannot, the machine line steps up to bigger machines.
 - The function line leaves out the API gateway, which bills per request and so moves the crossings
   to the left.
-- The machine line leaves out the disks, the load balancer's charge for the traffic it handles,
-  which is billed apart from its hourly price and is not on the sheet, and the hours somebody spends
-  patching and watching the machines: the operations cost serverless removes, which no price sheet
-  lists.
+- The machine line leaves out the disks and the load balancer's charge for the traffic it handles,
+  which is billed apart from its hourly price and is not on the sheet. It also leaves out the hours
+  somebody spends patching and watching the machines: the operations cost serverless removes, which
+  no price sheet lists.
 - Reserved pricing, lesson 10's subject, lowers the machine line. The sheet's 1-year price for a
   t3.medium in `us-east-1` is 0.02610 USD an hour: 0.02610 × 730 = 19.05 USD a month, and
   19.05 / 1.20 moves the first crossing from 25.3 to 15.9 million.
@@ -79,5 +79,4 @@ Every line on it is from the sheet, and each of these would move a line:
 not the average one. Take two workloads with the same monthly total, one steady and one that arrives
 in a two-hour rush every evening. They cost the function the same and cost the machine very
 differently, because the rushed one needs a bigger machine that idles for the other twenty-two
-hours. Spiky traffic moves
-your real position to the left of the chart, towards the function.
+hours. **Spiky traffic moves your real position to the left of the chart, towards the function.**

@@ -20,7 +20,7 @@ The sheet has an on-demand price and a reserved price for every machine and no s
 not an omission of `prices.py`. The published price list carries prices that are fixed until the next
 version. **A spot price moves with supply and demand**, per machine type and per zone, and AWS publishes
 it through a separate price history rather than in the offer files. A number printed in this lesson
-would be wrong before you read it, which is the honest reason there is none.
+would be wrong before you read it, which is why there is none.
 
 ## What it is good for
 

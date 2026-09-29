@@ -6,7 +6,7 @@ version: 1
 Não existe modelo melhor, e a crença de que existe, em geral "serverless é o futuro" ou "engenheiro de
 verdade roda as próprias máquinas", é o que vale deixar para trás. **Cada degrau acima na linha tira
 trabalho e tira controle, e tira os dois juntos, fileira por fileira.** A escolha é quais fileiras você
-precisa manter. Três perguntas decidem.
+precisa manter. Três perguntas decidem isso.
 
 ## Que fileiras você precisa controlar?
 
@@ -24,13 +24,13 @@ provavelmente já fez isso mais vezes do que você.
 
 ## O que você consegue levar junto?
 
-Sair de um provedor é raro, mas o custo disso é decidido no dia em que você escolhe o modelo, não no dia
+Sair de um provedor é raro, mas você decide quanto isso custa no dia em que escolhe o modelo, não no dia
 em que sai.
 
 Em IaaS, uma máquina rodando Ubuntu, PostgreSQL e a sua aplicação roda do mesmo jeito em qualquer
 provedor que alugue máquinas virtuais, e a aula 3 cita vários. Mudar dá trabalho, mas é o mesmo
-trabalho em todo lugar. Em PaaS, uma aplicação escrita em convenções comuns, que escuta numa porta e lê
-as configurações de variáveis de ambiente, muda com alterações modestas; os arquivos de build, os
+trabalho em todo lugar. Em PaaS, uma aplicação escrita segundo convenções comuns, que escuta numa porta
+e lê as configurações de variáveis de ambiente, muda de plataforma com poucas alterações; os arquivos de build, os
 complementos e os serviços próprios da plataforma precisam ser refeitos para a próxima. Em SaaS você
 leva o que a exportação entrega e refaz todo o resto à mão.
 
@@ -43,11 +43,11 @@ mais barato conhecê-lo antes de assinar.
 Uma plataforma cobra pelas tarefas que faz. Por unidade de computação, uma plataforma ou um banco
 gerenciado costuma custar mais que uma máquina virtual do mesmo tamanho, porque os patches, os reinícios
 e os backups estão no preço. Pela tabela do curso, uma máquina pequena em São Paulo com um disco e um
-endereço deu 18,95 dólares por mês. Esse número não tem hora de trabalho de ninguém dentro, e é no tempo
-que está o resto do custo do IaaS.
+endereço deu 18,95 dólares por mês. Esse número não inclui nenhuma hora de trabalho, e é no tempo que está
+o resto do custo do IaaS.
 
 **O custo sai das pessoas e vai para a conta.** Para três desenvolvedores sem ninguém que queira aplicar
-patches em servidores, a conta mais alta da plataforma sai mais barata que as horas; para uma equipe com
+patches em servidores, a conta mais alta da plataforma sai mais barata que as horas. Para uma equipe com
 alguém cujo trabalho é operar máquinas, e uma carga que quase não muda, máquinas virtuais podem custar
 menos no total. A aula 10 trata de ler a conta; as horas ficam para você contar.
 

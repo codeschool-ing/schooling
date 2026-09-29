@@ -21,13 +21,13 @@ Três peças fazem isso funcionar, e as aulas 4 e 6 construíram duas delas:
 - Um banco de dados com um standby na segunda zona. O primário recebe as escritas e mantém o standby
   atualizado; se a zona do primário cai, o standby é promovido e a aplicação se reconecta a ele.
 
-Bancos gerenciados oferecem a terceira peça como uma configuração só, em geral chamada de multi-AZ. O
-que ela faz é o mesmo, seja num clique ou construído à mão: uma segunda cópia, num segundo prédio,
+Bancos gerenciados oferecem a terceira peça como uma configuração só, em geral chamada de multi-AZ. Ela
+faz a mesma coisa ativada num clique ou construída à mão: uma segunda cópia, num segundo prédio,
 mantida em dia.
 
 ## Quanto custa
 
-**O primeiro custo é a segunda cópia de tudo.** Duas instâncias `t3.medium` na `sa-east-1`, a 0.06720
+**O primeiro custo é a segunda cópia de tudo.** Duas instâncias `t3.medium` na `sa-east-1`, a 0,06720
 por hora cada, dão 2 × 0,06720 × 720 = 96,77 dólares num mês de 30 dias, onde uma daria 48,38. O
 standby é um segundo servidor de banco inteiro, que não atende nenhuma consulta num dia normal. Dobrar
 é o preço do projeto, e ele é pago toda hora, caia uma zona ou não.
@@ -57,14 +57,14 @@ Data transfer, USD per GB
 ```
 
 "Each direction", em cada sentido, é a parte para ler devagar. **Um gigabyte que passa de uma zona
-para outra é cobrado 0.0100 ao sair e 0.0100 ao chegar**, então custa 0,0200 no total. É igual nas duas
+para outra é cobrado 0,0100 ao sair e 0,0100 ao chegar**, então custa 0,0200 no total. É igual nas duas
 regiões da planilha.
 
 Olhe a figura de novo. A instância da `sa-east-1b` lê do banco primário na `sa-east-1a`, então tudo o
 que ela lê cruza uma zona. Suponha que essa instância puxe 1.500 GB de resultados de consulta num mês:
 1.500 × 0,0200 = 30,00 dólares. Ninguém comprou isso de propósito; é a conta por pôr a aplicação em
 duas zonas e o primário do banco numa delas. É também o preço de o projeto funcionar como deveria,
-então a resposta de costume é mantê-lo e saber que ele está ali, em vez de voltar tudo para uma zona
+então a resposta habitual é mantê-lo e saber que ele está ali, em vez de voltar tudo para uma zona
 só para economizá-lo.
 
 ::: track dba

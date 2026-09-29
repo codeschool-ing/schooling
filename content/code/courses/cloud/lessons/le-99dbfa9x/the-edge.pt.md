@@ -6,7 +6,7 @@ version: 1
 Redes de distribuição de conteúdo anunciam centenas de locais, e a conclusão fácil é que um provedor
 com centenas de locais tem centenas de lugares para rodar a sua aplicação. **Um local de borda não é
 uma região.** É um site pequeno, muitas vezes um rack de máquinas dentro do datacenter de outra pessoa
-ou de um ponto de troca de tráfego, posto perto de onde os usuários estão. Ele faz duas coisas bem:
+ou de um ponto de troca de tráfego, instalado perto de onde os usuários estão. Ele faz duas coisas bem:
 guarda cópias de conteúdo e roda pedaços pequenos de código. Ele não guarda o seu banco de dados, e
 não oferece o catálogo de serviços que uma região oferece.
 
@@ -52,5 +52,5 @@ suas cinco consultas por alguns metros de cabo.
 
 Então a regra da borda é a regra da aula inteira, aplicada mais uma vez: deixe juntas as partes que
 conversam muito. Conteúdo estático e código que não precisa de nada de longe pertencem à borda. Código
-que conversa com o banco muitas vezes pertence ao lado do banco, na região, e o trabalho da borda para
+que conversa com o banco muitas vezes fica ao lado do banco, na região, e o trabalho da borda para
 esses pedidos é repassá-los depressa.

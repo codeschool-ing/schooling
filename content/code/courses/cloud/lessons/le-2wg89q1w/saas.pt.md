@@ -19,9 +19,9 @@ errado de forma mais visível.
 morre ou um prédio que alaga. O que essas cópias não cobrem é o seu lado: um funcionário que apaga uma
 pasta, um script que sobrescreve mil contatos, uma conta invadida por alguém que a esvazia. Muitos
 serviços guardam itens apagados por um prazo limitado e depois os removem de vez, e o tamanho desse
-prazo está escrito na documentação deles, não é escolhido por você.
+prazo está escrito na documentação deles, e não é você quem escolhe.
 
-**A questão de quem tem acesso também.** As contas no serviço são suas para administrar: quem tem uma,
+**A questão de quem tem acesso também.** Administrar as contas no serviço é com você: quem tem uma,
 quais delas são de administrador, se a entrada exige um segundo fator, e se a pessoa que saiu em março
 ainda tem um login funcionando em outubro. O provedor confere a senha que recebe; **ele não tem como
 saber que a pessoa digitando já devia ter sido removida**.
@@ -30,7 +30,7 @@ saber que a pessoa digitando já devia ter sido removida**.
 pasta de contratos num serviço de documentos, compartilhada como *qualquer pessoa com o link pode ver*.
 A segurança do provedor pode ser impecável, o armazenamento criptografado e o prédio vigiado, e os
 contratos continuam públicos, porque a configuração que você escolheu diz isso. O mesmo
-formato aparece como uma agenda publicada para a internet inteira, ou como a conta de um funcionário da
+problema aparece como uma agenda publicada para a internet inteira, ou como a conta de um funcionário da
 loja que pode fazer reembolsos quando só precisava ver os pedidos.
 
 **E a saída também.** Em algum momento você pode querer sair: um produto melhor, um aumento de preço, um

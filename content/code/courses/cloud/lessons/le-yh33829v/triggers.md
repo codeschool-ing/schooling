@@ -19,8 +19,8 @@ is waiting for the answer.** Four sources cover most of what functions are used 
   platform takes messages off it and hands them to the function in batches. A message the function
   fails on goes back on the queue and is tried again.
 - A file landing in a bucket. Object storage, lesson 5's subject, can announce each new object, and
-  the announcement can call a function: a photo is uploaded, a function makes the thumbnail. The
-  event names the bucket and the key, not the contents; the function reads the object itself.
+  the announcement can call a function: a photo is uploaded, a function makes the thumbnail. **The
+  event names the bucket and the key, not the contents**; the function reads the object itself.
 - A schedule. A rule such as `rate(5 minutes)`, or a cron expression, calls the function on the
   clock: a nightly clean-up, a report every Monday. It is cron without a machine to run cron on.
 
@@ -48,7 +48,7 @@ is part of the contract, not a fault. A thumbnail made twice is harmless. An e-m
 a card charged twice, is not.
 
 A handler that does something which must happen once has to recognise an event it has already
-handled, usually by recording an id carried in the event and checking it before acting. Such a
-handler is called idempotent: running it twice on the same event leaves the world as running it
-once did. It is not a serverless idea, it belongs to every system built on queues, but a function
-behind a queue is where most people meet it first.
+handled, usually by recording an id carried in the event and checking it before acting. **Such a
+handler is called idempotent: running it twice on the same event leaves the world as running it once
+did.** The idea belongs to every system built on queues; a function behind a queue is only where
+most people meet it first.

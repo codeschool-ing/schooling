@@ -75,18 +75,18 @@ A próxima seção desmonta essa linha, o tráfego de saída e os três endereç
 
 Uma estimativa é honesta quando diz o que não contou. Esta deixa de fora:
 
-- **impostos**, que a lista de preços exclui e a conta acrescenta;
-- **um plano de suporte**, que os provedores vendem à parte e cobram como uma parcela da conta ou um
+- impostos, que a lista de preços exclui e a conta acrescenta;
+- um plano de suporte, que os provedores vendem à parte e cobram como uma parcela da conta ou um
   mínimo mensal;
-- **as unidades de capacidade do load balancer**. Um application load balancer é cobrado por hora, o
+- as unidades de capacidade do load balancer. Um application load balancer é cobrado por hora, o
   que está na tabela, e também por uma medida do tráfego e das conexões que atende, que não está;
-- **requisições**: cada GET e PUT no bucket do S3, 0.00056 e 0.00700 por mil;
-- **logs e métricas**, cujo armazenamento cresce a cada mês que a aplicação roda;
-- **snapshots e backups** dos volumes;
-- **tráfego entre as duas zonas**, 0.0100 por GB em cada sentido, sempre que uma máquina conversa com
+- requisições: cada GET e PUT no bucket do S3, 0,00056 e 0,00700 por mil;
+- logs e métricas, cujo armazenamento cresce a cada mês que a aplicação roda;
+- snapshots e backups dos volumes;
+- tráfego entre as duas zonas, 0,0100 por GB em cada sentido, sempre que uma máquina conversa com
   algo na outra zona;
 - DNS, um domínio e o que for comprado fora do provedor;
-- **franquias gratuitas**. A lista de preços dá a toda conta os primeiros 100 GB de saída para a
+- franquias gratuitas. A lista de preços dá a toda conta os primeiros 100 GB de saída para a
   internet por mês sem custo, o que tiraria 15,00 da última linha; a seção sobre camadas gratuitas diz
   por que uma estimativa as deixa de fora.
 

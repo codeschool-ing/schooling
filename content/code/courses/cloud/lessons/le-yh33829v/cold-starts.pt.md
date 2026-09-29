@@ -35,8 +35,8 @@ quentes quer dizer uns quarenta e cinco ambientes novos criados de uma vez, cada
 primeiros passos.
 
 Esta aula não cita durações. Nenhuma foi medida aqui, e elas dependem do runtime, do tamanho do
-código e do que o init faz. O que dá para dizer sem cronômetro é de quem é cada parte: o passo 2 é da
-plataforma, e o passo 3 é, na maior parte, o código que você pôs no nível do módulo.
+código e do que o init faz. O que dá para dizer sem cronômetro é de quem é cada parte: **o passo 2 é
+da plataforma, e o passo 3 é, na maior parte, o código que você pôs no nível do módulo.**
 
 ## Tire o trabalho do handler, e deixe o init pequeno
 
@@ -51,8 +51,9 @@ quente ou fria.
 só um caminho raro usa faz todo cold start pagar por ela, inclusive os que nunca passam por esse
 caminho. Importe-a dentro do ramo que precisa dela.
 
-Os provedores vendem jeitos de contornar o cold start. No Lambda, a provisioned concurrency mantém um
-número de ambientes inicializados de antemão e é cobrada pelo tempo em que está configurada, usada ou
-não, o que devolve parte do que escalar até zero economizou. O SnapStart restaura um ambiente a partir
-de um snapshot tirado depois do init, nos runtimes que têm suporte. Nenhum dos dois acaba com a
-troca; cada um a desloca. O Cloudflare Workers faz uma troca diferente, três seções adiante.
+Os provedores vendem jeitos de contornar o cold start. No Lambda, a provisioned concurrency mantém
+um número de ambientes inicializados de antemão e é cobrada pelo tempo em que está configurada,
+usada ou não, o que devolve parte do que escalar até zero economizou. O SnapStart restaura um
+ambiente a partir de um snapshot tirado depois do init, nos runtimes que têm suporte. **Nenhum dos
+dois acaba com a troca; cada um a desloca.** O Cloudflare Workers faz uma troca diferente, três
+seções adiante.

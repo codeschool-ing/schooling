@@ -55,9 +55,10 @@ Lambda, per million     1.20 USD
 ```
 
 Lido como tráfego, 25,3 milhões de requisições por mês são 9,6 por segundo em média, o dia inteiro,
-todo dia. **Abaixo disso a função ganha até de uma máquina sozinha; acima de 64,3 milhões, um par bem
-montado ganha da função.** A maioria das APIs pequenas, ferramentas internas e sistemas de retaguarda
-fica bem à esquerda do primeiro cruzamento. Uma API pública movimentada fica à direita do segundo.
+todo dia. **Abaixo disso a função ganha até de uma máquina sozinha; acima de 64,3 milhões, um par
+bem montado ganha da função.** **A maioria das APIs pequenas, ferramentas internas e sistemas de
+retaguarda fica bem à esquerda do primeiro cruzamento.** Uma API pública movimentada fica à direita
+do segundo.
 
 ## O que o gráfico deixa de fora
 
@@ -67,17 +68,17 @@ Cada linha dele vem da tabela, e cada item abaixo moveria uma linha:
   conta. Se não der, a linha da máquina sobe para máquinas maiores.
 - A linha da função deixa de fora o API gateway, que cobra por requisição e, portanto, empurra os
   cruzamentos para a esquerda.
-- A linha da máquina deixa de fora os discos, a cobrança do balanceador pelo tráfego que ele atende,
-  que vem separada do preço por hora e não está na tabela, e as horas que alguém passa aplicando
-  patches e vigiando as máquinas: o custo de operação que o serverless tira, e que nenhuma tabela de
-  preços lista.
+- A linha da máquina deixa de fora os discos e a cobrança do balanceador pelo tráfego que ele
+  atende, que vem separada do preço por hora e não está na tabela. Também deixa de fora as horas que
+  alguém passa aplicando patches e vigiando as máquinas: o custo de operação que o serverless tira,
+  e que nenhuma tabela de preços lista.
 - O preço reservado, assunto da aula 10, baixa a linha da máquina. O preço de 1 ano da tabela para
   uma t3.medium em `us-east-1` é 0,02610 USD por hora: 0,02610 × 730 = 19,05 USD por mês, e
   19,05 / 1,20 leva o primeiro cruzamento de 25,3 para 15,9 milhões.
 
 **E uma média esconde o formato do tráfego.** Uma máquina precisa ser dimensionada para a hora mais
-cheia, não para a média. Pense em duas cargas com o mesmo total no mês, uma constante e outra que chega
-numa correria de duas horas toda noite. Elas custam o mesmo para a função e custam muito diferente
-para a máquina, porque a da correria precisa de uma máquina maior, que fica ociosa nas outras vinte
-e duas horas.
-Tráfego em picos leva a sua posição real para a esquerda do gráfico, na direção da função.
+cheia, não para a média. Pense em duas cargas com o mesmo total no mês, uma constante e outra que
+chega numa correria de duas horas toda noite. Elas custam o mesmo para a função e custam muito
+diferente para a máquina, porque a da correria precisa de uma máquina maior, que fica ociosa nas
+outras vinte e duas horas. **Tráfego em picos leva a sua posição real para a esquerda do gráfico, na
+direção da função.**

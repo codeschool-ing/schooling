@@ -5,8 +5,8 @@ version: 1
 
 The name suggests code that runs on nothing. **There are servers, as many as there ever were:
 serverless means they are not yours.** You do not choose an instance type, open an SSH session,
-apply a kernel patch or decide how many machines should be running at three in the morning. You
-hand the provider a function and say what should make it run. The provider finds somewhere to run
+apply a kernel patch or decide how many machines should be running at three in the morning. **You
+hand the provider a function and say what should make it run.** The provider finds somewhere to run
 it, as many copies at once as the traffic asks for, and none at all when nobody asks.
 
 Three properties follow, and between them they are what the word means in practice:
@@ -20,10 +20,10 @@ Three properties follow, and between them they are what the word means in practi
   function; a quiet night gets none.
 
 **The third one is the break with lesson 4.** An autoscaling group of virtual machines also grows
-and shrinks, but it has a minimum of one or two instances, because something has to be running
-when the first request arrives. A function has no minimum: the first request after a quiet hour is
-what makes a copy exist. That is why serverless is cheap for quiet workloads, and it has a cost of
-its own, which the section on cold starts takes apart.
+and shrinks, but it has a minimum of one or two instances, because something has to be running when
+the first request arrives. **A function has no minimum: the first request after a quiet hour is what
+makes a copy exist.** That is why serverless is cheap for quiet workloads, and it has a cost of its
+own, which the section on cold starts takes apart.
 
 ## Where it sits on lesson 1's line
 

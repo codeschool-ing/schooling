@@ -55,8 +55,8 @@ without a second factor, however broad the `Allow` that would otherwise have cov
 ```
 
 `BoolIfExists` rather than `Bool` matters here. A request signed with a long-lived access key
-carries no MFA key at all, and plain `Bool` would find nothing to compare and not apply; the
-`IfExists` form treats a missing key as a match, so the deny catches those requests too.
+carries no MFA key at all, so plain `Bool` would find nothing to compare and would not apply. The
+`IfExists` form treats a missing key as a match, and the deny catches those requests too.
 
 ## Where the rules stop being the whole story
 

@@ -35,7 +35,7 @@ some forty-five new ones created at once, each paying the first three steps.
 
 This lesson quotes no durations. None were measured here, and they depend on the runtime, on the
 size of the code and on what the init does. What can be said without a stopwatch is which part is
-whose: step 2 belongs to the platform, and step 3 is mostly the code you put at module level.
+whose: **step 2 belongs to the platform, and step 3 is mostly the code you put at module level.**
 
 ## Keep the work out of the handler, and the init small
 
@@ -52,5 +52,5 @@ it inside the branch that needs it.
 Providers sell ways around the cold start itself. On Lambda, provisioned concurrency keeps a number
 of environments initialised in advance and is charged for the time it is configured, used or not,
 which gives back part of what scaling to zero saved. SnapStart restores an environment from a
-snapshot taken after the init, for the runtimes that support it. Neither removes the trade; each
-moves it. Cloudflare Workers make a different trade, three sections on.
+snapshot taken after the init, for the runtimes that support it. **Neither removes the trade; each
+moves it.** Cloudflare Workers make a different trade, three sections on.

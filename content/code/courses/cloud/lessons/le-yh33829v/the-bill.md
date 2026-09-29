@@ -5,8 +5,8 @@ version: 1
 
 A function is billed on two meters. **Requests count how many times it was called; GB-seconds count
 how much memory it held and for how long.** A GB-second is one gigabyte of configured memory for one
-second of running: a function set to 512 MB that runs for 120 ms uses 0.5 × 0.120 = 0.06
-GB-seconds per call. The memory is what you configured, not what the code used, and Lambda bills the
+second of running: a function set to 512 MB that runs for 120 ms uses 0.5 × 0.120 = 0.06 GB-seconds
+per call. **The memory is what you configured, not what the code used**, and Lambda bills the
 duration by the millisecond, rounded up.
 
 These are the Lambda lines of the course's price sheet, the AWS public price list for `sa-east-1`
@@ -62,8 +62,8 @@ The same arithmetic as a program, so the numbers can be changed and run again:
 logs it writes and the data it sends to the internet are billed by their own services, and none of
 them is in this total. Lesson 10 is about finding lines like those before they arrive.
 
-The number to take away is not 3.60 but what it moves with. Twice the requests is twice the bill.
-Twice the memory, or twice the duration, doubles the duration part. And a function that spends
-100 ms of its 120 waiting on a database is billed for the waiting, because GB-seconds count the time
-the environment was held, not the time the processor worked. On a machine you already pay for by
-the hour, a slow query costs latency; here it costs money as well.
+The 3.60 moves with the workload in ways you can read off the meters. Twice the requests is twice
+the bill. Twice the memory, or twice the duration, doubles the duration part. And **a function that
+spends 100 ms of its 120 waiting on a database is billed for the waiting**, because GB-seconds count
+the time the environment was held, not the time the processor worked. On a machine you already pay
+for by the hour, a slow query costs latency; here it costs money as well.

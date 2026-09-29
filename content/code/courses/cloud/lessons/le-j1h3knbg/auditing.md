@@ -24,8 +24,8 @@ entries have the shape this lesson started with, because they record the request
 What gets recorded without anybody asking is narrower than people assume. All three keep the calls
 that *change* things, such as creating, deleting or granting, and keep them for a limited time: AWS
 and Azure both keep ninety days of those on their own. Reads of the data itself, such as each
-`GetObject` on a bucket, are a separate kind of event that AWS does not record unless it is
-configured to, and Google Cloud's data-access logs are off by default for most services. Anything
+`GetObject` on a bucket, are a separate kind of event that AWS does not record unless somebody
+configures it to, and Google Cloud's data-access logs are off by default for most services. Anything
 longer than the default retention, or any record of who read what, is a decision somebody makes and
 pays for.
 
@@ -38,8 +38,8 @@ itself one of the entries already kept.
 
 ## The review
 
-The log answers questions about the past. The review is how the present stays honest. On a
-calendar, every quarter is a common rhythm, somebody goes through the identities and asks, for each:
+The log answers questions about the past. The review is how the present stays honest. On a calendar
+— every quarter is a common rhythm — somebody goes through the identities and asks, for each:
 
 1. Does this person or program still need to exist? Leavers and retired services first.
 2. Which groups and roles does it have, and does the job still need each one?

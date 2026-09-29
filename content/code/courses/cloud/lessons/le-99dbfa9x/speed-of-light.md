@@ -22,7 +22,7 @@ coordinates written into it; it sends no packet and measures nothing:
 
 **The floor from São Paulo to Northern Virginia is 76.6 ms.** To Fortaleza, which is still in Brazil,
 it is 23.7 ms, and to Frankfurt it is 98.3 ms. Divide two of them and the shape appears: 76.6 / 23.7
-is 3.2, so every round trip to Virginia costs at least three times as much time as one to Fortaleza.
+is 3.2, so the floor to Virginia is more than three times the floor to Fortaleza.
 
 ## Why real numbers are higher
 
@@ -55,8 +55,8 @@ server does.
 takes a page that waits for twenty of them, one after another, and the floor turns into more than a
 second of waiting that the user sees on every load.
 
-A rule of thumb follows directly from the constant, and it is worth keeping: **one millisecond of round
-trip for every 100 km of straight-line distance.** São Paulo to Fortaleza is 2,370 km, so at least
+A rule of thumb follows directly from the constant: **one millisecond of round trip for every 100 km
+of straight-line distance.** São Paulo to Fortaleza is 2,370 km, so at least
 23.7 ms. The rule is the same division the program does, done in your head, and it is why the choice
 of region in the next sections is a question about geography before it is a question about anything
 else.

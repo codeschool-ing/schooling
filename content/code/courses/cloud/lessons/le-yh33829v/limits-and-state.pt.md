@@ -23,19 +23,20 @@ documenta com clareza:
 
 ## Nenhum estado entre chamadas
 
-O handler desta aula já mostrou isso com um contador. **O que uma função guarda na memória pertence a
-um ambiente de execução, e a plataforma cria e descarta esses ambientes quando quer.** Então todo
-pedaço de estado mora fora: num banco de dados, num cache, num armazenamento de objetos ou numa fila.
-A sessão de um usuário é uma linha ou um token assinado, não uma variável. Um arquivo em processamento
-está num bucket, não no `/tmp` esperando a próxima chamada encontrá-lo.
+O handler desta aula já mostrou isso com um contador. **O que uma função guarda na memória pertence
+a um ambiente de execução, e a plataforma cria e descarta esses ambientes quando quer.** **Então
+todo pedaço de estado mora fora: num banco de dados, num cache, num armazenamento de objetos ou numa
+fila.** A sessão de um usuário é uma linha ou um token assinado, não uma variável. Um arquivo em
+processamento está num bucket, não no `/tmp` esperando a próxima chamada encontrá-lo.
 
 ## Milhares de funções, um banco de dados
 
-A falha que isso produz é específica e comum. **Um banco de dados relacional aceita um número limitado
-de conexões, e cada ambiente de execução abre as suas.** Uma aplicação de servidor mantém um pool de,
-digamos, vinte conexões e as divide entre todas as requisições. Funções não conseguem dividir entre
-ambientes, então um pico que cria 800 ambientes pode abrir 800 conexões, e o banco recusa as que
-passam do limite, ou fica lento com o resto, justamente quando o tráfego chega ao máximo.
+A falha que isso produz é específica e comum. **Um banco de dados relacional aceita um número
+limitado de conexões, e cada ambiente de execução abre as suas.** Uma aplicação de servidor mantém
+um pool de, digamos, vinte conexões e as divide entre todas as requisições. Funções não conseguem
+dividir entre ambientes, então **um pico que cria 800 ambientes pode abrir 800 conexões**, e o banco
+recusa as que passam do limite, ou fica lento com o resto, justamente quando o tráfego chega ao
+máximo.
 
 Há três respostas:
 

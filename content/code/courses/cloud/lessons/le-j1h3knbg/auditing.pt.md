@@ -19,8 +19,8 @@ As entradas têm o formato com que esta aula começou, porque registram o pedido
 - o quê: a ação, como `DeleteObject` ou `TerminateInstances`;
 - sobre o quê: o recurso;
 - quando, e de qual endereço;
-- o resultado, **inclusive as recusas**. Uma sequência de `AccessDenied` vinda de uma identidade é a
-  cara que uma chave roubada tentando a sorte tem vista de dentro.
+- o resultado, **inclusive as recusas**. Uma sequência de `AccessDenied` vinda de uma identidade é o
+  jeito como uma chave roubada tentando a sorte aparece vista de dentro.
 
 O que fica registrado sem ninguém pedir é mais estreito do que se imagina. Os três guardam as
 chamadas que *mudam* coisas, como criar, apagar ou conceder, e guardam por um tempo limitado: a AWS e o
@@ -39,7 +39,8 @@ e impedir é, por si só, uma das entradas já guardadas.
 ## A revisão
 
 O log responde perguntas sobre o passado. A revisão é como o presente se mantém honesto. Com data na
-agenda, a cada trimestre é um ritmo comum, alguém percorre as identidades e pergunta, para cada uma:
+agenda — a cada trimestre é um ritmo comum —, alguém percorre as identidades e pergunta, para cada
+uma:
 
 1. Esta pessoa ou programa ainda precisa existir? Quem saiu e serviços aposentados primeiro.
 2. Que grupos e roles ela tem, e o trabalho ainda precisa de cada um?
@@ -47,11 +48,11 @@ agenda, a cada trimestre é um ritmo comum, alguém percorre as identidades e pe
    candidata a remoção, e os dados de último uso do provedor são a evidência.
 4. Há chaves de longa duração, e cada uma tem um motivo e uma rotação recente?
 
-**Uma revisão é uma pessoa decidindo, com o dono do time junto**, porque só ele sabe se a permissão do
-incidente de dezoito meses atrás ainda é necessária. Remover um acesso que alguém usa provoca um
+**Uma revisão é uma pessoa decidindo, com o dono do time junto**, porque só ele sabe se a permissão
+do incidente de dezoito meses atrás ainda é necessária. Remover um acesso que alguém usa provoca um
 pedido recusado e uma mensagem na mesma tarde; manter um acesso que ninguém usa não provoca nada até
-o dia em que é abusado. Essa assimetria é o motivo de a resposta padrão, quando ninguém sabe dizer
-por que uma permissão existe, ser removê-la.
+o dia em que é abusado. Por causa dessa assimetria, quando ninguém sabe dizer por que uma permissão
+existe, a resposta padrão é removê-la.
 
 ::: track devsecops security
 Na sua trilha esta aula é o piso. O `cloud-security` vem em seguida e parte dela: federação montada

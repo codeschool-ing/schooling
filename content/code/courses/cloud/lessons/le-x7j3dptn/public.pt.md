@@ -12,7 +12,7 @@ inquilino, é um cliente, e multi-tenant quer dizer muitos deles num mesmo hardw
 
 A imagem errada é que dividir o hardware é dividir os dados, como se o vizinho no mesmo servidor
 pudesse abrir o seu disco ou ler os seus pacotes. Manter os inquilinos separados é o produto central
-do provedor, e isso é feito em duas camadas.
+do provedor, e ele faz isso em duas camadas.
 
 ## Duas camadas de isolamento
 
@@ -27,7 +27,7 @@ a identidade que a fez, então as suas credenciais abrem os seus recursos e os d
 7). A rede de cada cliente é uma rede privada própria, que não carrega tráfego de ou para a de outro
 cliente a menos que um deles ligue as duas de propósito (aula 6).
 
-A fronteira é forte e não é mágica. Em janeiro de 2018 os ataques chamados Spectre e Meltdown
+A fronteira é forte, e não é perfeita. Em janeiro de 2018 os ataques chamados Spectre e Meltdown
 mostraram que um programa conseguia deduzir memória que nunca teve permissão de ler, pelo jeito como
 os processadores executam adiantado a instrução em que estão. Os provedores corrigiram hosts e
 hipervisores em toda a frota. Para clientes que não podem dividir hardware de jeito nenhum, os
@@ -45,7 +45,7 @@ Vêm junto serviços que ninguém montaria para uma empresa só: bancos de dados
 de DNS com servidores pelo mundo, regiões em vários continentes. E o prédio, a energia, a
 refrigeração e a troca do hardware passam a ser problema do provedor.
 
-## O que você entrega
+## Do que você abre mão
 
 - a escolha de hardware e de lugar: você escolhe uma região e um tipo de máquina, não um rack nem um
   fornecedor;
@@ -57,4 +57,4 @@ refrigeração e a troca do hardware passam a ser problema do provedor.
   emenda calcula quanto.
 
 E a linha da aula 1 continua valendo. O provedor protege o hardware e o hipervisor; as permissões,
-as regras de rede e o bucket deixado legível para o mundo são seus, quantos inquilinos o host tiver.
+as regras de rede e o bucket deixado legível para o mundo são seus, não importa quantos inquilinos dividam o host.

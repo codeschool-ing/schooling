@@ -54,7 +54,7 @@ nunca escolheu.**
 
 ## Saiba onde vivem as suas dependências
 
-A aula prática é uma tabela, escrita antes do dia em que ela for necessária. Para cada dependência,
+Na prática, isso vira uma tabela, escrita antes do dia em que ela for necessária. Para cada dependência,
 anote onde ela roda e o que você perde quando aquele lugar falha:
 
 | dependência | onde roda | se aquele lugar falhar |

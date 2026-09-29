@@ -17,8 +17,7 @@ A service is cloud computing, in NIST's sense, when it has all five.
 You get computing, a machine or a disk or storage space, **when you ask for it and without a person
 at the provider taking part**. The request goes to an API; the provider's software checks your
 account and your limits and creates the thing. A console where you click "create" is the same
-request with a form in front of it. What matters is that nobody at the other end has to read it,
-so it is answered at three in the morning as fast as at noon.
+request with a form in front of it. Nobody at the other end has to read it, so it is answered at three in the morning as fast as at noon.
 
 ## Broad network access
 
@@ -65,8 +64,8 @@ ordered through a form and installed by a technician. Hold it against the list.
 | measured service | no: the price is the same whatever you used |
 
 **One of five.** It is somebody else's computer and it is on the internet, and neither of those
-makes it cloud. The distinction is not a label for its own sake: each "no" in that table is a
-decision you take months ahead and pay for whether you were right or not.
+makes it cloud. Each "no" in that table is a decision you take months ahead and pay for whether you
+were right or not.
 
 The line between the two has blurred since 2011. Some companies that rent dedicated servers now
 provision them through an API in minutes and bill them by the hour, which moves them up the table,

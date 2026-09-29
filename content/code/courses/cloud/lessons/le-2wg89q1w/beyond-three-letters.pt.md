@@ -22,7 +22,7 @@ pouco acima do PaaS, porque não existe nem um processo seu rodando para adminis
 disso, com o nome pelo qual costuma ser vendido, *serverless*.
 
 **Banco de dados como serviço**, o DBaaS, é um motor de banco de dados que o provedor instala, corrige,
-replica e copia num horário que você define. O Amazon RDS, o Google Cloud SQL e o Azure SQL Database são
+replica e põe em backup num horário que você define. O Amazon RDS, o Google Cloud SQL e o Azure SQL Database são
 exemplos. A linha passa no meio do banco: o motor é deles, e **o esquema, as consultas, os índices, os
 usuários e os dados são seus**. Uma consulta lenta continua lenta num banco gerenciado, e continua sendo
 você quem precisa descobrir por quê.
@@ -37,7 +37,7 @@ serviço, e as respostas o situam:
    dos meus dados.
 2. O que continua meu depois? Tudo acima do que eu entreguei, e sempre as duas fileiras de cima.
 
-Um banco de dados gerenciado respondido assim: eu entrego um esquema e os meus dados; o motor, os
+Aplicadas a um banco de dados gerenciado, as duas perguntas dão isto: eu entrego um esquema e os meus dados; o motor, os
 patches dele e os discos são deles; as minhas consultas, os meus usuários e os meus dados continuam
 meus. Essa é uma descrição completa do serviço, no único vocabulário que este curso usa, e seria a
 mesma em qualquer um dos três grandes provedores.

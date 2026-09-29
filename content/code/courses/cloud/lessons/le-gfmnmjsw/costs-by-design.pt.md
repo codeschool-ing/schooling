@@ -19,15 +19,15 @@ numa propriedade que você escolhe.
 | zonas | 9 | uma segunda zona dobra as máquinas e acrescenta 0,02 por GB que atravessa |
 | funções ou máquinas | 8 | veja abaixo |
 
-Nenhuma delas tem uma resposta certa só, e **cada economia é comprada com outra coisa**. O dobro de
-máquina é o dobro do preço, e só está certo quando as medições dizem que a menor está cheia. A máquina
+Nenhuma delas tem uma resposta certa só, e **cada economia é comprada com outra coisa**. Uma máquina
+duas vezes maior custa o dobro, e só está certa quando as medições dizem que a menor está cheia. A máquina
 Arm é mais barata e precisa de software compilado para Arm. O Glacier Flexible Retrieval custa cerca de
 um quinto para guardar, e leva de minutos a horas para devolver os dados, e cobra por isso. A Virgínia é
 mais barata na maior parte das linhas da tabela e fica a uma longa ida e volta de São Paulo, que é o
 assunto da aula 9. Duas zonas custam mais que uma, e um desenho numa zona só cai junto com ela.
 
 A última linha é o exemplo mais claro de um ponto de virada. Uma função com 512 MB rodando 100 ms por
-requisição custa 0.20 por milhão de requisições mais 1.000.000 × 0,1 s × 0,5 GB × 0,0000166667 = 0,83 em
+requisição custa 0,20 por milhão de requisições mais 1.000.000 × 0,1 s × 0,5 GB × 0,0000166667 = 0,83 em
 GB-segundos: cerca de 1,03 USD por milhão de requisições. Uma `t3.medium` custa 49,06 por mês, atenda o
 que atender. **As duas se igualam em cerca de 47 milhões de requisições por mês**, umas dezoito por
 segundo em média. Abaixo disso, as funções da aula 8 saem mais baratas, e muito mais baratas no lado
@@ -40,9 +40,9 @@ carga é uma pergunta para as medições da aula 4, não para a lista de preços
 No seu trabalho, **armazenamento e movimentação de dados dominam a conta**, e as máquinas são a parte
 menor. Um data warehouse cobrado pelos dados que cada consulta varre transforma uma consulta descuidada
 numa linha da conta. Uma réplica em outra zona paga 0,02 por gigabyte de alterações que atravessa, todo
-mês. Backups guardados por anos são GB-mês que nunca param de acumular. Releia as aulas 5 e 9 com a tabela ao lado. As linhas de custo a vigiar são classes de armazenamento,
-retenção e tráfego entre zonas, e a maioria delas é decidida no schema e na política de backup, não no
-tamanho da máquina.
+mês. Backups guardados por anos são GB-mês que nunca param de acumular. Releia as aulas 5 e 9 com a tabela ao lado. As linhas de
+custo a vigiar são classes de armazenamento, retenção e tráfego entre zonas, e a maioria delas é
+decidida no schema e na política de backup, não no tamanho da máquina.
 :::
 
 ::: track devops cloud-engineering

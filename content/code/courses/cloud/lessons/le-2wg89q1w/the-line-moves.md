@@ -37,8 +37,8 @@ the former employee's login keeps working.
 The top two rows are yours on every model, and the drawing shows why they have to be. The data is
 what your business collected, and only you know which of it matters, how long it has to be kept, and
 who is allowed to see it. Identity and access decides who in your organisation may do what, and only
-you know who works there. A provider can give you excellent tools for both, and lesson 7 spends a
-whole lesson on the tools for access. **It cannot use them for you.**
+you know who works there. A provider can give you excellent tools for both, and lesson 7 is about
+the tools for access. **It cannot use them for you.**
 
 ## The line is drawn per service, not per company
 

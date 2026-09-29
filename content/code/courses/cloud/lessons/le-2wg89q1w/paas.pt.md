@@ -3,11 +3,11 @@ title: "PaaS: você entrega o código, e a plataforma o roda"
 version: 1
 ---
 
-Com a **plataforma como serviço** não existe máquina onde entrar. Você entrega à plataforma a sua
+Com a **plataforma como serviço** não existe máquina em que fazer login. Você entrega à plataforma a sua
 aplicação, e ela a monta, a inicia, a reinicia quando cai e manda para ela as requisições que chegam.
 O que você entrega é uma de duas coisas: o código-fonte, com um arquivo que lista os pacotes de que ele
 precisa e uma linha dizendo qual comando o inicia; ou uma **imagem de contêiner**, a aplicação já
-empacotada com o runtime, que é o assunto da próxima seção.
+empacotada com o runtime, que volta como CaaS na seção sobre FaaS, CaaS e DBaaS.
 
 O Heroku foi um dos primeiros a vender esse formato, e o Google App Engine, o AWS Elastic Beanstalk e o
 Azure App Service são outros. Eles diferem nos detalhes e compartilham a ideia: a linha subiu além do
@@ -15,7 +15,7 @@ sistema operacional e além do runtime, e **a plataforma opera tudo até a borda
 
 ## O que a plataforma assume
 
-Comparada com a pilha, a plataforma agora faz as tarefas que enchiam a maior parte da lista do IaaS:
+Olhando a pilha, a plataforma agora faz as tarefas que enchiam a maior parte da lista do IaaS:
 
 - ela escolhe o sistema operacional, instala e aplica os patches;
 - ela instala o runtime que você indicou, o Python 3.11 por exemplo, e aplica as correções de segurança
@@ -48,7 +48,7 @@ objetos, que a aula 5 descreve.
 
 A linha fica na aplicação, então a aplicação está do seu lado dela, **com tudo o que ela importa**. A
 plataforma aplica os patches no interpretador Python; ela não corrige o framework web que o seu código
-lista entre os pacotes. Uma falha conhecida nesse framework é sua para corrigir, exatamente como seria
+lista entre os pacotes. Corrigir uma falha conhecida nesse framework é tarefa sua, exatamente como seria
 numa máquina virtual.
 
 A configuração também é sua: a senha do banco de dados que a aplicação lê, as configurações que mudam

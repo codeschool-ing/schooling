@@ -19,7 +19,7 @@ outras três são trocas, pesadas umas contra as outras entre as regiões que so
    milissegundo de ida e volta a cada 100 km, e depois pense em quantas idas e voltas uma página faz.
    Um relatório interno que roda uma vez por noite não se importa; uma página de pagamento com vinte
    chamadas se importa.
-4. Quanto custa lá? A planilha mostrou São Paulo entre 1,54 e 1,62 vez a Virgínia para as mesmas
+4. Quanto custa lá? A planilha mostrou São Paulo entre 1,54 e 1,62 vezes o preço da Virgínia para as mesmas
    instâncias, e as próximas seções mostram que tirar dados de São Paulo também custa mais.
 5. Onde estão os seus outros sistemas? O banco de dados, as APIs dos parceiros, o provedor de
    identidade, o gateway de pagamento. Tudo com que o seu código conversa muitas vezes por pedido
@@ -41,11 +41,11 @@ enquanto um paciente em São Paulo estaria a 76,6 ms da Virgínia.
 
 **O preço é a troca que sobrou, e ele ainda pode ganhar em algum lugar.** O sistema também gera, uma vez
 por noite, relatórios a partir de estatísticas anonimizadas: sem dados pessoais, sem usuário
-esperando. Esse job poderia rodar na `us-east-1` numa `m7i.large` a 0.10080 por hora em vez de
-0.16065, se a lei permitir que os dados anonimizados saiam e os advogados concordarem que estão
+esperando. Esse job poderia rodar na `us-east-1` numa `m7i.large` a 0,10080 por hora em vez de
+0,16065, se a lei permitir que os dados anonimizados saiam e os advogados concordarem que estão
 anonimizados. É também exatamente o tipo de job contra o qual a última pergunta avisa: se ele lê o
 banco de registros vinte mil vezes por noite atravessando um continente, as idas e voltas e a
-transferência para fora de São Paulo podem comer a economia. A resposta, nesse caso, tende a ser
+transferência para fora de São Paulo podem comer a economia. A resposta costuma ser
 "rode ao lado dos dados", e o checklist é o que faz você conferir em vez de supor.
 
 **A pergunta sobre o serviço é a outra restrição, e ela pode derrubar a primeira resposta.** Se o projeto da clínica
@@ -61,5 +61,5 @@ negócio. Ele também não decide quantas zonas: dentro da região escolhida a r
 e a próxima seção diz por quê e quanto isso custa.
 
 E ele não fica decidido para sempre. Preços mudam, serviços chegam a regiões novas, e a `sa-west-1`
-aparece num arquivo publicado antes que alguém possa usá-la. Uma região escolhida por bons motivos há
+aparece num arquivo publicado que o CLI 2.37.4 não lista. Uma região escolhida por bons motivos há
 três anos merece as mesmas cinco perguntas de novo.

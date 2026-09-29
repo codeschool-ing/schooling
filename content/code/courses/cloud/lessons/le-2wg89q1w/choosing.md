@@ -23,8 +23,8 @@ more times than you have.
 
 ## What can you take with you?
 
-Leaving a provider is rare, but its cost is decided on the day you choose the model, not the day you
-leave.
+Leaving a provider is rare, but you decide what it costs on the day you choose the model, not the day
+you leave.
 
 On IaaS, a machine running Ubuntu, PostgreSQL and your application runs the same way on any provider
 that rents virtual machines, and lesson 3 names several. Moving it is work, but it is the same work
@@ -46,7 +46,7 @@ dollars a month. That figure has no hours of anybody's time in it, and the time 
 the IaaS cost is.
 
 **The cost moves from people to the bill.** For three developers with no one who wants to patch
-servers, the platform's higher bill is cheaper than the hours; for a team with somebody whose job is
+servers, the platform's higher bill is cheaper than the hours. For a team with somebody whose job is
 running machines, and a load that barely changes, virtual machines may cost less in total. Lesson 10 is
 about reading the bill; the hours are for you to count.
 

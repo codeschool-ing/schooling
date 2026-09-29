@@ -35,7 +35,7 @@ Ele vira um pedido. O principal é a identidade cujas credenciais o assinaram. A
 `arn:aws:s3:::example-reports/2026/q3.csv`; os campos vazios entre os dois-pontos são a região e o
 número da conta, que o nome de um bucket dispensa porque nomes de bucket são globais. As
 circunstâncias vêm junto sem ninguém escrevê-las: o endereço de onde o pedido veio, a hora, se a
-sessão foi aberta com um segundo fator, se ele viajou sobre TLS. A AWS chama isso de **chaves de
+sessão foi aberta com um segundo fator, se ele trafegou por TLS. A AWS chama isso de **chaves de
 contexto** e as nomeia `aws:SourceIp`, `aws:CurrentTime`, `aws:MultiFactorAuthPresent` e
 `aws:SecureTransport`, e uma política pode testar qualquer uma delas.
 
@@ -65,8 +65,8 @@ uma assinatura que não consegue verificar com um 403 de código `SignatureDoesN
 portão; e responde a um pedido bem assinado que nenhuma política permite com um 403 de código
 `AccessDenied`, o segundo.
 
-Esta também é uma camada diferente da aula 6. Um security group decide quais **pacotes** chegam a
-uma máquina virtual; identidade e acesso decidem quais **chamadas de API** dão certo. Uma VM atrás de
-um security group perfeito ainda pode ser excluída por qualquer pessoa com uma credencial que permita
+Esta também é uma camada diferente da aula 6. **Um security group decide quais pacotes chegam a uma
+máquina virtual; identidade e acesso decidem quais chamadas de API dão certo.** Uma VM atrás de um
+security group perfeito ainda pode ser excluída por qualquer pessoa com uma credencial que permita
 `ec2:TerminateInstances`, e nenhuma regra de firewall vai ver isso acontecer, porque esse pedido vai
 para a API do provedor e nunca para a máquina.

@@ -25,7 +25,7 @@ lê os três, e este curso usa a versão neutra acima.
 aplicar patch no hipervisor ou trocar um disco no prédio deles, então não adianta planejar isso, nem se
 preocupar: é assunto deles, e o contrato diz quão bem eles fazem.
 
-**Acima da linha, você faz a tarefa e o provedor não faz.** Essa metade é a que morde. O provedor não
+**Acima da linha, você faz a tarefa e o provedor não faz.** É nessa metade que os problemas aparecem. O provedor não
 está sendo pouco prestativo quando deixa a sua máquina virtual sem patches; mexer nela seria entrar no
 servidor de um cliente, que é justamente o que ele prometeu não fazer. Nada acima da linha acontece sem
 que alguém do seu lado faça acontecer, e **quando ninguém faz, geralmente não aparece mensagem de erro
@@ -38,7 +38,7 @@ As duas fileiras de cima são suas em todo modelo, e o desenho mostra por que pr
 o que o seu negócio coletou, e só você sabe quais importam, por quanto tempo precisam ser guardados e
 quem pode vê-los. A identidade e o acesso decidem quem na sua organização pode fazer o quê, e só você
 sabe quem trabalha lá. Um provedor pode dar ferramentas excelentes para as duas coisas, e a aula 7
-passa uma aula inteira nas ferramentas de acesso. **Ele não pode usá-las por você.**
+trata das ferramentas de acesso. **Ele não pode usá-las por você.**
 
 ## A linha é traçada por serviço, não por empresa
 

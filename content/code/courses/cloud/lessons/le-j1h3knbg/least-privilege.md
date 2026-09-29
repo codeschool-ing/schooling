@@ -11,8 +11,7 @@ day somebody else uses it.
 
 So the order is the other way round. Start from nothing, which the implicit deny already gives you,
 and add the actions the job turns out to need. A refused request during development is cheap: it
-names the action it wanted, and adding it is one line. An unused permission in production costs
-nothing until the day it costs everything.
+names the action it wanted, and adding it is one line.
 
 ## A policy to read with suspicion
 

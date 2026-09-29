@@ -7,7 +7,7 @@ O atalho tentador é "vamos rodar em duas regiões", dito como se fosse multi-AZ
 **Uma segunda região é um plano de recuperação de desastre, e quanto dele você compra é definido por
 dois números** que o negócio, não a engenharia, precisa declarar primeiro.
 
-**RPO, o objetivo de ponto de recuperação, é quanto dado você pode se dar ao luxo de perder**, medido
+**RPO, o objetivo de ponto de recuperação, é quantos dados você pode perder**, medido
 em tempo. Um RPO de uma hora quer dizer que depois de um desastre você pode voltar com o estado de uma
 hora atrás, e tudo o que foi escrito nessa hora se perdeu. Um RPO perto de zero quer dizer que toda
 escrita confirmada já precisa estar em outro lugar quando a região cai.
@@ -42,7 +42,7 @@ horas.
 Ativo-ativo atende usuários reais pelas duas regiões ao mesmo tempo. Perder uma quer dizer que a outra
 carrega todo mundo, e ela precisa ter tamanho para isso. Tem o menor RTO e a maior conta, e traz um
 problema que os outros evitam: duas regiões aceitando escritas ao mesmo tempo precisam concordar sobre
-o que os dados são.
+qual é o estado dos dados.
 
 ## Por que o RPO raramente é zero entre regiões
 
@@ -56,8 +56,8 @@ entre regiões" é uma frase bem mais cara do que parece.
 ## A conta de transferência, e o seu sentido
 
 A replicação move dados entre regiões, e a planilha precifica isso na linha "to the other region". As
-duas colunas são o preço dos dados saindo de cada região: 0.1380 por GB saindo da `sa-east-1`, e
-0.0200 por GB saindo da `us-east-1`. **O sentido decide o preço.**
+duas colunas são o preço dos dados saindo de cada região: 0,1380 por GB saindo da `sa-east-1`, e
+0,0200 por GB saindo da `us-east-1`. **O sentido decide o preço.**
 
 Replique 500 GB por mês de um primário em São Paulo para um standby na Virgínia: 500 × 0,1380 = 69,00
 dólares por mês. Rode a mesma replicação ao contrário, primário na Virgínia e standby em São Paulo:

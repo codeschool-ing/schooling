@@ -92,7 +92,8 @@ this course draws into files.
 ::: track devsecops security
 `cloud-security` comes straight after this course, and it starts from the line this lesson draws:
 the provider secures what is below it, and everything above it is yours to get right or wrong. Read
-lesson 7, on identity, with most care. It is the one layer that stays yours in every model.
+lesson 7, on identity, with most care. Identity and access is one of the two rows that stay yours in
+every model.
 :::
 
 ::: track networks-infra

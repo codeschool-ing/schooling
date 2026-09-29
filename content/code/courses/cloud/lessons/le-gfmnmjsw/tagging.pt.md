@@ -4,8 +4,8 @@ version: 1
 ---
 
 Uma conta agrupada por serviço responde o que está sendo comprado: tanto de EC2, tanto de NAT gateway,
-tanto de S3. Ela não responde **quem está comprando**, e é nessa pergunta que toda conversa sobre custo
-vira. Três times dividem uma conta; a conta subiu um terço; cada time tem certeza de que não foi ele.
+tanto de S3. Ela não responde **quem está comprando**, e toda conversa sobre custo acaba
+nessa pergunta. Três times dividem uma conta; a conta subiu um terço; cada time tem certeza de que não foi ele.
 **Um custo que você não consegue atribuir a alguém é um custo que ninguém consegue gerenciar**, porque
 ninguém pode decidir mudá-lo.
 

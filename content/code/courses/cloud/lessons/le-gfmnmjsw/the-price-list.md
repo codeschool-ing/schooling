@@ -98,7 +98,7 @@ commitments comes to.
 
 ## What a line is
 
-The sheet is arithmetic on the JSON, and there is no magic in it. Here is Lambda's request price in
+The sheet is arithmetic on the JSON. Here is Lambda's request price in
 São Paulo, read out of the raw file with `curl` and `jq`, in two steps:
 
 ```
@@ -137,7 +137,7 @@ is **tiered**. Traffic out to the internet is the clearest case on the sheet: 0.
 first 10 TB of the month, then 0.1380, 0.1260 and 0.1140 as the volume grows. Each tier is its own
 price dimension of the same product, with its own range. A tier applies to the gigabytes inside its
 range, not to the whole month, so the 11th terabyte costs less than the first ten and the first ten
-still cost 0.1500 each.
+still cost 0.1500 a gigabyte.
 
 Free allowances are tiers as well, as the section on free tiers shows with the same query: a price of
 zero, up to a limit.

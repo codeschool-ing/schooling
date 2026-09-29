@@ -3,8 +3,8 @@ title: Por que idas e voltas custam mais que largura de banda
 version: 1
 ---
 
-**Uma página que espera vinte respostas, uma após a outra, paga a ida e volta vinte vezes.** Essa
-frase é a seção inteira, e os números da seção anterior a tornam concreta.
+**Uma página que espera vinte respostas, uma após a outra, paga a ida e volta vinte vezes.** Os
+números da seção anterior tornam isso concreto.
 
 Pegue uma página cujo código no servidor chama uma API, lê a resposta e só então decide o que
 perguntar em seguida, vinte vezes antes de poder responder. Isso é comum: uma lista de pedidos, depois
@@ -30,8 +30,7 @@ A correção errada é a primeira que a maioria procura: um link mais rápido. C
 Digamos que cada resposta tenha 2 KB, ou seja, 16.000 bits. Num link de 100 Mbit/s ela leva
 16.000 / 100.000.000 s = 0,16 ms para chegar depois que começa a fluir; num link dez vezes mais
 rápido, 0,016 ms. **A melhoria economiza 0,144 ms por chamada**, 2,9 ms em vinte chamadas, de 1.532. O
-link nunca foi o problema. O tempo é gasto esperando a luz cruzar um continente e voltar, e esse tempo
-não tem nada a ver com a largura do cano.
+link nunca foi o problema. O tempo vai embora esperando a luz cruzar um continente e voltar.
 
 Largura de banda decide quanto demora uma transferência grande: um backup, um vídeo, a cópia de um
 banco de dados. Latência decide quanto demora uma conversa, e quase tudo o que uma aplicação faz é
@@ -62,6 +61,6 @@ Toda correção que funciona faz uma de duas coisas: diminui o número de viagen
   dessas viagens é uma fração pequena de milissegundo de distância. Um servidor web em São Paulo lendo
   um banco na Virgínia transforma cada consulta numa viagem continente acima.
 
-A última é um erro fácil de cometer sem querer: alguém cria o banco na região que o console estava
+A última costuma dar errado sem querer: alguém cria o banco na região que o console estava
 mostrando por acaso, e a aplicação na região certa. **Onde estão os seus outros sistemas** é uma das
 perguntas do checklist da próxima seção exatamente por isso.

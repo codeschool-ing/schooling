@@ -29,7 +29,7 @@ Data transfer, USD per GB
   in from the internet                     0.0000       0.0000
 ```
 
-A última linha é a primeira a notar. **Dado entrando da internet não custa nada**, nas duas regiões.
+Repare primeiro na última linha. **Dado entrando da internet não custa nada**, nas duas regiões.
 Dado saindo para a internet é cobrado por gigabyte, a um preço que cai conforme o volume do mês cresce.
 Mover dados entre duas zonas de uma região custa 0,0100 USD por GB em cada sentido, e mandar de São
 Paulo para outra região custa 0,1380 por GB. A lista não diz por que os sentidos são diferentes. O
@@ -136,5 +136,5 @@ costuma decidir onde as próximas aplicações vão rodar.
 Para um desenho híbrido a regra prática vem daí: ponha o processamento do lado onde já estão os dados
 que ele mais lê, e mande resultados pela emenda, não dados brutos. Um relatório de poucos megabytes
 atravessando uma vez por noite custa uma fração de centavo; a tabela de onde ele saiu atravessando a
-cada hora é a conta acima, de novo e de novo. O tempo de ida e volta também se soma a cada travessia,
+cada hora é a conta acima, vez após vez. O tempo de ida e volta também se soma a cada travessia,
 e a aula 9 mede isso entre regiões.

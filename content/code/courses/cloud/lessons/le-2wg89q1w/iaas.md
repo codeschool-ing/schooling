@@ -38,8 +38,8 @@ the parts that feel like maintenance:
 - the virtual network's firewall rules, which decide whether the database port is open to the whole
   internet;
 - the operating system's patches. Nobody at the provider logs in to update your machine; if
-  updates arrive on their own, it is because the image you chose switched them on, and a new kernel
-  still waits for a reboot that nobody schedules for you;
+  updates arrive on their own, the image you chose switched them on. A new kernel still waits for a
+  reboot that nobody schedules for you;
 - the runtime and the application, their versions and their dependencies;
 - the backups: the provider sells snapshots of the disk, and taking them, keeping them and testing a
   restore is your job;
@@ -59,6 +59,6 @@ a database tuned by hand: IaaS runs them all, because to the program it is just 
 
 It is also the model that moves most easily. An Ubuntu machine running PostgreSQL and a Python
 application is the same system on any provider that rents virtual machines. That is why **IaaS is
-where a move to the cloud usually starts**: the servers a company already had are rebuilt as virtual machines
-with as little change as possible, which the trade calls *lift and shift*. It is the smallest step
+where a move to the cloud usually starts**: a company rebuilds the servers it already had as virtual
+machines, changing as little as possible, which the trade calls *lift and shift*. It is the smallest step
 from the server room, and it leaves the most work behind.

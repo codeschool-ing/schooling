@@ -40,8 +40,8 @@ compute is 1,000,000 GB-seconds, of which 600,000 are past the allowance, at 0.0
 The month costs 11.80. Nothing broke and nothing was changed; the allowance was simply used up, and the
 second line, which had been zero for as long as anybody had looked, became most of the bill.
 
-Traffic has an allowance too, and it is not on the sheet, which prints only the priced tiers. It is in the data
-transfer offer, under a usage type that also starts with `Global`:
+Traffic has an allowance too, and it is not on the sheet, which prints only the priced tiers. It is in
+the data transfer offer, under a usage type that also starts with `Global`:
 
 ```
 ana@laptop:~/cloud$ dt=https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSDataTransfer/20260916132208/sa-east-1/index.json
@@ -72,8 +72,8 @@ upgrade, that protection is gone.
 Apart from that one case, **nothing in a free tier stops usage when the free part ends**. An allowance
 that is exceeded is billed at list price. A function called in a loop by a bug does not stop at a
 million requests; it carries on at 0.20 per million, and at the GB-second price, for as long as the loop
-runs. A limit that stops spending has to be built, and the section on budgets is honest about how far
-the providers' tools go towards that.
+runs. A limit that stops spending has to be built, and the section on budgets shows how far the
+providers' tools go towards that.
 
 So treat a free tier as what it is: a discount on the first units, useful for learning and for small
 products, with a date or a quantity after which the ordinary sheet applies. Estimate as if it were not

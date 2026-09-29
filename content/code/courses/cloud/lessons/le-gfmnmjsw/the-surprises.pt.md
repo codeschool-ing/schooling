@@ -13,17 +13,17 @@ depois que todo mundo parou de olhar. A estimativa da seção anterior já traz 
 
 ## Dados que saem
 
-O tráfego **para dentro** do provedor é gratuito: a linha `in from the internet` da tabela é 0.0000. O
-tráfego **para fora**, para a internet, custa 0.1500 por GB em São Paulo, depois que os primeiros 100 GB do mês da conta,
-que são gratuitos, acabam. A
-assimetria é proposital, e quer dizer que o que um desenho envia aos usuários é um custo que cresce com o
-sucesso dele. Uma página de download que serve um instalador de 2 GB a 500 pessoas por mês envia 1.000
-GB, que são 150,00 USD, mais do que as duas máquinas da estimativa juntas.
+O tráfego **para dentro** do provedor é gratuito: a linha `in from the internet` da tabela é 0,0000. O
+tráfego **para fora**, para a internet, custa 0,1500 por GB em São Paulo, depois que acabam os
+primeiros 100 GB do mês da conta, que são gratuitos. A assimetria é proposital, e quer dizer que o que
+um desenho envia aos usuários é um custo que cresce com o sucesso dele. Uma página de download que serve
+um instalador de 2 GB a 500 pessoas por mês envia 1.000 GB, que são 150,00 USD antes dos 100 GB
+gratuitos, mais do que as duas máquinas da estimativa juntas.
 
 ## O NAT gateway
 
 Um NAT gateway, da aula 6, deixa máquinas em sub-redes privadas saírem. **Ele é cobrado duas vezes**:
-0.0930 por hora por existir, que são os 67,89 da estimativa, e 0.0930 por gigabyte que processa, nos dois
+0,0930 por hora por existir, que são os 67,89 da estimativa, e 0,0930 por gigabyte que processa, nos dois
 sentidos. A segunda cobrança vem além de qualquer cobrança de saída pelos mesmos bytes.
 
 O caso caro é o tráfego que nem precisava sair. Se as máquinas leem os 200 GB de imagens do S3 através
@@ -36,10 +36,15 @@ não tem cobrança por hora nem por GB, então as mesmas leituras não custam na
 Desde fevereiro de 2024 a AWS cobra por todo endereço IPv4 público, inclusive os ligados aos load
 balancers e NAT gateways dela. A lista de preços diz isso com as próprias palavras:
 
-@@CAP:ipv4@@
+```
+ana@laptop:~/cloud$ vpc=https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonVPC/20260917190528/sa-east-1/index.json
+ana@laptop:~/cloud$ curl -s "$vpc" | jq -r '(.products[] | select(.attributes.usagetype | endswith("Address")) | .sku) as $s | .terms.OnDemand[$s][].priceDimensions[].description'
+$0.005 per In-use public IPv4 address per hour
+$0.005 per Idle public IPv4 address per hour
+```
 
-Um endereço custa o mesmo fazendo alguma coisa ou não. A 0.0050 por hora, um endereço é 3,65 USD por
-mês e **43,80 USD por ano**: 0.0050 × 8.760 horas. É pouco até você contar quantos são. Um Elastic IP
+Um endereço custa o mesmo fazendo alguma coisa ou não. A 0,0050 por hora, um endereço é 3,65 USD por
+mês e **43,80 USD por ano**: 0,0050 × 8.760 horas. É pouco até você contar quantos são. Um Elastic IP
 reservado para uma máquina que depois foi apagada continua cobrando como ocioso, e o mesmo vale para
 cada endereço de uma conta de teste que ninguém abre desde o ano passado.
 
@@ -49,12 +54,12 @@ Apagar uma máquina não apaga tudo o que ela usava. Um volume raiz criado com a
 ela por padrão, mas **um volume ligado depois sobrevive à instância por padrão**, e o mesmo vale para
 cada snapshot já tirado. Nada num volume sem máquina parece errado numa lista de volumes. Um volume gp3
 de 100 GB esquecido custa 15,20 por mês, que são 182,40 por ano por um disco que ninguém lembra de ter
-ligado. Os snapshots dele custam 0.0680 por GB-mês a mais, enquanto existirem.
+ligado. Os snapshots dele custam 0,0680 por GB-mês a mais, enquanto existirem.
 
 ## Tráfego entre zonas
 
 A aula 9 pôs as duas máquinas em duas zonas para que uma sobrevivesse à falha da outra. O tráfego entre
-zonas é cobrado a 0.0100 por GB **em cada sentido**: uma vez ao sair de uma zona e outra ao entrar na
+zonas é cobrado a 0,0100 por GB **em cada sentido**: uma vez ao sair de uma zona e outra ao entrar na
 outra, então 0,02 por gigabyte que atravessa. Uma réplica de banco de dados na segunda zona que recebe 2
 TB de alterações por mês custa 40,00 só pela travessia. É o preço da disponibilidade que a aula 9
 comprou, e é certo pagá-lo; errado é não saber que ele está lá.

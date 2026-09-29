@@ -20,7 +20,7 @@ A tabela tem um preço sob demanda e um preço reservado para cada máquina, e n
 é uma falha do `prices.py`. A lista de preços publicada traz preços fixos até a próxima versão. **Um
 preço spot se move com a oferta e a procura**, por tipo de máquina e por zona, e a AWS o publica num
 histórico de preços à parte, não nos arquivos de oferta. Um número impresso nesta aula estaria errado
-antes de você lê-lo, e esse é o motivo honesto de não haver nenhum.
+antes de você lê-lo, e por isso não há nenhum.
 
 ## Para que serve
 

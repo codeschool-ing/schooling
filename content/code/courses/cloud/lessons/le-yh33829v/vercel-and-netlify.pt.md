@@ -19,8 +19,8 @@ O fluxo de trabalho é o produto:
 4. Voltar atrás é apontar o endereço no ar para um build anterior, que já existe e não precisa ser
    construído de novo.
 
-O terceiro passo é o motivo pelo qual as equipes adotam essas plataformas. Uma mudança numa página é
-revisada como página, por quem precisa vê-la, e não como diff, por quem sabe ler um.
+O terceiro passo é o motivo pelo qual as equipes adotam essas plataformas. **Uma mudança numa página
+é revisada como página, por quem precisa vê-la, e não como diff, por quem sabe ler um.**
 
 ## As funções vão junto
 
@@ -42,8 +42,8 @@ Elas se encaixam num site institucional, num site de documentação, num portfó
 aplicação cujo back-end mora em outro lugar e num produto pequeno cuja API inteira é um punhado de
 funções.
 
-**Elas se encaixam mal quando o back-end é a maior parte do produto.** Tarefas longas, filas, trabalho
-pesado contra um banco de dados e qualquer coisa que precise da sua própria rede ficam melhor numa
-plataforma feita para isso, com o front-end na Vercel ou na Netlify chamando-a. E as convenções de
-cada plataforma, as pastas e o arquivo de configuração, são dela, então mudar de uma para a outra é
-uma pequena migração, não uma cópia.
+**Elas se encaixam mal quando o back-end é a maior parte do produto.** Tarefas longas, filas,
+trabalho pesado contra um banco de dados e qualquer coisa que precise da sua própria rede ficam
+melhor numa plataforma feita para isso, com o front-end na Vercel ou na Netlify chamando-a. E as
+convenções de cada plataforma, as pastas e o arquivo de configuração, são dela, então **mudar de uma
+para a outra é uma pequena migração, não uma cópia.**

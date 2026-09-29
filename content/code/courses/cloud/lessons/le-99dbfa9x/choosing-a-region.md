@@ -42,8 +42,8 @@ reports from anonymised statistics once a night: no personal data, no user waiti
 run in `us-east-1` on an `m7i.large` at 0.10080 an hour instead of 0.16065, if the law allows the
 anonymised data out and the lawyers agree it is anonymised. It is also exactly the kind of job the
 last question warns about: if it reads the records database twenty thousand times a night across a
-continent, the round trips and the transfer out of São Paulo may eat the saving. The worked answer is
-usually "run it next to the data", and the checklist is what makes you check rather than assume.
+continent, the round trips and the transfer out of São Paulo may eat the saving. The usual answer is
+"run it next to the data", and the checklist is what makes you check rather than assume.
 
 **The service question is the other constraint, and it can overrule the first answer.** If the clinic's design depends on a
 managed service that does not exist in `sa-east-1`, the choice is not between regions any more. It is
@@ -58,5 +58,5 @@ business. It does not decide how many zones either: inside the chosen region, th
 two, and the next section says why and what that costs.
 
 And it does not stay decided. Prices move, services arrive in new regions, and `sa-west-1` shows up in
-a published file before anybody can use it. A region chosen for good reasons three years ago deserves
+a published file that CLI 2.37.4 does not list. A region chosen for good reasons three years ago deserves
 the same five questions again.

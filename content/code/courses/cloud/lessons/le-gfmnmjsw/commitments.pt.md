@@ -50,10 +50,12 @@ e seis na hora mais cheia do mês mais cheio, e no resto do ano fica em algum po
 **Comprometa-se com o piso do seu uso, não com o pico.** As máquinas que rodam todas as horas do ano são
 aquelas para as quais um compromisso existe: estão sempre em uso, então cada hora da promessa vale o
 desconto. As máquinas acima do piso vêm e vão, e pagar sob demanda por elas é o que compra a liberdade de
-tirá-las. Comprometa-se com o pico e as horas entre o pico e o uso real são pagas e desperdiçadas. Com 42,6% de desconto, uma `t3.medium` reservada que fica ociosa mais de 42,6% das horas custou mais do que
-teria custado sob demanda.
+tirá-las. Comprometa-se com o pico e as horas entre o pico e o uso real são pagas e desperdiçadas. Com 42,6% de desconto, uma
+`t3.medium` reservada que fica ociosa mais de 42,6% das horas custou mais do que teria custado sob
+demanda.
 
 Mais duas regras decorrem da mesma ideia. Comprometa-se com o que você mediu ao longo de meses, não com a
-estimativa, porque a estimativa nunca foi testada contra um mês de verdade. E, na dúvida, prefira o compromisso mais fácil de reaproveitar. Um Savings Plan que acompanha o seu gasto para outro tipo de
+estimativa, porque a estimativa nunca foi testada contra um mês de verdade. E, na dúvida, prefira o
+compromisso mais fácil de reaproveitar. Um Savings Plan que acompanha o seu gasto para outro tipo de
 máquina dá um desconto menor que uma reserva de um tipo só, e vale muito mais no dia em que você troca de
 tipo.

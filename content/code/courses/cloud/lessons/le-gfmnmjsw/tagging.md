@@ -57,6 +57,6 @@ the convention down and lets the provider check it:
 - whether a resource without the required tags may be created at all.
 
 AWS Organizations has tag policies and Azure has Azure Policy, which can refuse or flag a resource;
-`aws-foundations` and `azure-foundations` show the syntax. The
-strongest enforcement is the one nobody has to remember: when infrastructure is written as code, as in
-the `iac` course, the tags are set once as a default and every resource carries them.
+`aws-foundations` and `azure-foundations` show the syntax. The strongest
+enforcement is the one nobody has to remember: when infrastructure is written as code, as in the `iac`
+course, the tags are set once as a default and every resource carries them.

@@ -3,7 +3,7 @@ title: Quatro modelos de implantação, uma pergunta cada
 version: 1
 ---
 
-A aula 1 definiu nuvem pelo que ela faz: autoatendimento, acesso pela rede, recursos agrupados,
+A aula 1 definiu nuvem pelo que ela faz: autosserviço, acesso pela rede, recursos agrupados,
 elasticidade e medição. Nenhuma dessas cinco diz **onde o hardware fica nem quem mais o usa**. O
 mesmo documento da NIST, a SP 800-145, responde isso à parte, com quatro *modelos de implantação*:
 pública, privada, comunitária e híbrida.
@@ -25,7 +25,7 @@ Lado a lado, nos termos da NIST e em palavras simples:
 | pública | uso aberto pelo público em geral | nas instalações do provedor | uma empresa, uma universidade, um órgão de governo, ou uma combinação |
 | híbrida | duas ou mais das anteriores, ainda distintas, ligadas por tecnologia que deixa dados e aplicações passarem de uma para outra | onde ficarem suas partes | quem opera cada parte |
 
-Leia a tabela por coluna e duas coisas saltam dela.
+Leia a tabela por coluna e duas coisas ficam claras.
 
 Primeiro, **uma nuvem privada pode ficar no prédio de outra empresa**. Uma empresa que aluga uma
 sala de servidores dedicados num datacenter de colocation e roda uma pilha de nuvem neles tem uma
@@ -35,9 +35,9 @@ quem usa, não do endereço no portão.
 Segundo, **híbrida não é um quarto tipo de hardware**. Não existe servidor híbrido para comprar. A
 palavra nomeia uma composição: duas nuvens que continuam separadas e são ligadas de modo que uma carga
 possa passar de uma para a outra, ou rodar nas duas. O exemplo da própria NIST é o *cloud bursting*:
-o lado privado carrega a carga até lotar, e o excedente vai para o lado público.
+o lado privado atende a carga até lotar, e o excedente vai para o lado público.
 
-A rigor, a híbrida da NIST liga duas nuvens. Na prática a palavra é usada com mais folga, e um
+A rigor, a híbrida da NIST liga duas nuvens. Na prática a palavra é usada de forma mais solta, e um
 datacenter comum ligado a uma região pública é chamado de híbrido por quase todo mundo, os
 provedores inclusive. Esta aula segue o uso comum. A diferença importa num lugar só, e é por isso
 que a seção sobre nuvem privada pergunta o que falta a um datacenter para ele contar como nuvem.

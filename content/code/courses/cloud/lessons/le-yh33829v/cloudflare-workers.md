@@ -19,8 +19,8 @@ one piece of code with its own memory and no way to reach another's. Creating an
 cheaper than starting even a small virtual machine, so a Worker starts almost at once, and cold
 starts mostly stop being a subject.
 
-The same greeting as a Worker looks like this. It was not run here, because running it needs a
-Cloudflare account:
+The same greeting as a Worker looks like this. This course did not run it, because running it needs
+a Cloudflare account:
 
 ```javascript
 export default {
@@ -32,13 +32,13 @@ export default {
 };
 ```
 
-The shape is the web platform's rather than a vendor's: a `Request` in and a `Response` out, the same
-objects a browser's `fetch` uses, where Lambda hands over an event dict and expects a status-code
-dict back.
+**The shape is the web platform's rather than a vendor's**: a `Request` in and a `Response` out, the
+same objects a browser's `fetch` uses, where Lambda hands over an event dict and expects a
+status-code dict back.
 
 ## What the design costs
 
-The trade comes with the isolate, and it is real:
+The isolate brings three costs with it:
 
 - The runtime is JavaScript's. Code written in JavaScript or TypeScript runs as it is, and other
   languages arrive compiled to WebAssembly. It is not Node.js: a Worker gets the web platform's APIs
@@ -61,6 +61,6 @@ headers, checking a token before a request reaches the origin, choosing between 
 page, a small API over Cloudflare's own storage.
 
 It is a poor fit for long computation, for libraries that need a full Node.js or native code, and,
-less obviously, for anything that calls one database in one region on every request. A Worker in
+less obviously, for anything that calls one database in one region on every request. **A Worker in
 Lisbon that asks a database in Virginia three questions per request has moved the code to the user
-and left the data an ocean away; the edge saved nothing.
+and left the data an ocean away**; the edge saved nothing.

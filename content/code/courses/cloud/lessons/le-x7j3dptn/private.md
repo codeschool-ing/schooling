@@ -53,7 +53,7 @@ the month-end batch wants 600, the portal answers with a refusal or a queue, how
 automation is. More capacity is a purchase order, a delivery and a day of racking, measured in
 weeks rather than minutes.
 
-So a private cloud is sized for its peak, plus the growth expected before the next purchase, plus
+So a company sizes a private cloud for its peak, plus the growth expected before the next purchase, plus
 a spare margin, and most of that sits idle outside the peak. **Idle capacity is the price of
 control**, and it is paid whether or not anybody uses it. A public region has the same idle
 capacity, spread across all its customers; that sharing is exactly what a private cloud gives up.

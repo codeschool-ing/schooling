@@ -19,7 +19,7 @@ um pedaço de código com a sua própria memória e nenhum jeito de alcançar a 
 é muito mais barato que subir até uma máquina virtual pequena, então um Worker começa quase na hora, e
 o cold start praticamente deixa de ser assunto.
 
-A mesma saudação como Worker fica assim. Ela não foi rodada aqui, porque rodá-la exige uma conta na
+A mesma saudação como Worker fica assim. Este curso não a rodou, porque rodá-la exige uma conta na
 Cloudflare:
 
 ```javascript
@@ -32,13 +32,13 @@ export default {
 };
 ```
 
-O formato é o da plataforma web, não o de um fornecedor: um `Request` entra e um `Response` sai, os
-mesmos objetos que o `fetch` de um navegador usa, enquanto o Lambda entrega um dict de evento e espera
-de volta um dict com código de status.
+**O formato é o da plataforma web, não o de um fornecedor**: um `Request` entra e um `Response` sai,
+os mesmos objetos que o `fetch` de um navegador usa, enquanto o Lambda entrega um dict de evento e
+espera de volta um dict com código de status.
 
 ## O que o desenho custa
 
-A troca vem junto com o isolate, e é de verdade:
+O isolate traz três custos junto com ele:
 
 - O runtime é o do JavaScript. Código escrito em JavaScript ou TypeScript roda como está, e as outras
   linguagens chegam compiladas para WebAssembly. Não é Node.js: um Worker tem as APIs da plataforma
@@ -62,7 +62,7 @@ escolher entre duas versões de uma página, uma API pequena sobre o armazenamen
 Cloudflare.
 
 Ele se encaixa mal em computação longa, em bibliotecas que precisam de um Node.js completo ou de
-código nativo e, de um jeito menos óbvio, em qualquer coisa que consulte um único banco de dados numa
-única região a cada requisição. Um Worker em Lisboa que faz três perguntas a um banco na Virgínia por
-requisição levou o código até o usuário e deixou os dados do outro lado do oceano; a borda não
-economizou nada.
+código nativo e, de um jeito menos óbvio, em qualquer coisa que consulte um único banco de dados
+numa única região a cada requisição. **Um Worker em Lisboa que faz três perguntas a um banco na
+Virgínia por requisição levou o código até o usuário e deixou os dados do outro lado do oceano**; a
+borda não economizou nada.

@@ -15,8 +15,8 @@ named `sa-east-1a`, `sa-east-1b` and `sa-east-1c`.
 The point of a zone is **isolation**. Each one has its own power feeds, its own cooling and its own
 network equipment, so that the ordinary disasters of a building stay inside it. A failed power feed,
 a cooling plant that stops, a flood in a basement, a bad change to one set of switches: each of those
-is meant to stop at the zone's boundary. AWS documents
-its zones as separated by a meaningful distance, many kilometres, and all within 100 km of each other.
+is meant to stop at the zone's boundary.
+AWS documents its zones as separated by a meaningful distance, many kilometres, and all within 100 km of each other.
 That distance is the compromise the whole design rests on: far enough apart that one local event does
 not reach two of them, close enough that the round trip between them stays short.
 

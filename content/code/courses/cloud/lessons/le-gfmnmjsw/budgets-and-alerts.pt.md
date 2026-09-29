@@ -4,7 +4,7 @@ version: 1
 ---
 
 Um orçamento é **um número para um período, com limiares que mandam uma mensagem quando o gasto os
-cruza**. É só isso. A crença comum é que definir um orçamento de 400 dólares quer dizer que a conta não
+cruza**. A crença comum é que definir um orçamento de 400 dólares quer dizer que a conta não
 consegue gastar 401. **Um alerta avisa; ele não para nada.** O gasto continua passando por todos os
 limiares até que uma pessoa, ou algo que uma pessoa construiu, mude o que está rodando.
 
@@ -44,7 +44,7 @@ pedido da operação `CreateBudget`, como um arquivo JSON que a AWS CLI sabe ler
 
 Ele **não foi criado em lugar nenhum**: este curso não tem conta. O que a CLI faz antes de procurar
 credenciais é conferir o arquivo contra a definição da operação, e isso dá para rodar num laptop. A
-primeira tentativa chegou até pedir credenciais, o que quer dizer que o arquivo passou; a segunda tem
+primeira tentativa chegou a procurar credenciais, o que quer dizer que o arquivo passou; a segunda tem
 uma letra a menos e não passa:
 
 ```

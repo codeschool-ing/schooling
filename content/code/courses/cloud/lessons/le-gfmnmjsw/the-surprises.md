@@ -15,10 +15,9 @@ after everybody stopped looking. The estimate from the previous section already 
 
 Traffic **into** the provider is free: the sheet's line `in from the internet` is 0.0000. Traffic **out**
 to the internet costs 0.1500 per GB in São Paulo, once the account's first 100 GB of the month, which
-are free, have gone. The asymmetry is
-deliberate, and it means that what a design sends to users is a cost that grows with its success. A
-download page serving a 2 GB installer to 500 people a month sends 1,000 GB, which is 150.00 USD, more
-than both machines of the estimate together.
+are free, have gone. The asymmetry is deliberate, and it means that what a design sends to users is a
+cost that grows with its success. A download page serving a 2 GB installer to 500 people a month sends
+1,000 GB, which is 150.00 USD before the free 100 GB, more than both machines of the estimate together.
 
 ## The NAT gateway
 
@@ -36,7 +35,12 @@ traffic privately and carries no hourly or per-GB charge, so the same reads cost
 Since February 2024 AWS has charged for every public IPv4 address, including the ones attached to its
 own load balancers and NAT gateways. The price list says so, in its own words:
 
-@@CAP:ipv4@@
+```
+ana@laptop:~/cloud$ vpc=https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonVPC/20260917190528/sa-east-1/index.json
+ana@laptop:~/cloud$ curl -s "$vpc" | jq -r '(.products[] | select(.attributes.usagetype | endswith("Address")) | .sku) as $s | .terms.OnDemand[$s][].priceDimensions[].description'
+$0.005 per In-use public IPv4 address per hour
+$0.005 per Idle public IPv4 address per hour
+```
 
 An address costs the same whether it is doing anything or not. At 0.0050 an hour, one address is 3.65
 USD a month and **43.80 USD a year**: 0.0050 × 8,760 hours. That is small until you count them. An
@@ -61,9 +65,8 @@ bought, and it is right to pay it; it is wrong not to know it is there.
 
 ## Logs kept forever
 
-A log group in CloudWatch Logs, AWS's log service, is created with a retention of never expire, and
-it keeps that until somebody changes it. Storage that nobody deletes is a line that
-grows every month without anybody deciding anything. An application writing 50 GB of logs a month into
+A log group in CloudWatch Logs, AWS's log service, is created with its retention set to never expire, and
+it keeps that until somebody changes it. Storage that nobody deletes is a line that grows every month without anybody deciding anything. An application writing 50 GB of logs a month into
 S3 Standard stores 1,200 GB after two years, which costs 48.60 a month by then; the sum of those
 twenty-four monthly bills is 607.50. **A retention rule is a cost decision**, written once, and lesson
 5's lifecycle rules are how it is written for a bucket.

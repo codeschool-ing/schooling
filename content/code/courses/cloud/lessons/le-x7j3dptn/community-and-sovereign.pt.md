@@ -13,8 +13,8 @@ Os exemplos grandes mais claros são as regiões de governo dos grandes provedor
 e a Azure Government são regiões separadas para órgãos do governo americano e para as empresas que
 trabalham para eles, separadas física e logicamente das regiões comerciais dos provedores, e operadas
 sob regras sobre quem pode fazer parte da equipe. Elas rodam o software do provedor e não estão
-abertas ao público: a organização precisa se qualificar antes de entrar. É o modelo comunitário em
-escala continental. Existem menores onde quer que um setor junte infraestrutura, como universidades
+abertas ao público: a organização precisa se qualificar antes que o provedor a deixe entrar. É o modelo comunitário em
+escala continental. Existem exemplos menores onde quer que um setor junte infraestrutura, como universidades
 dividindo uma nuvem de pesquisa.
 
 ## Soberana: um rótulo, não um modelo

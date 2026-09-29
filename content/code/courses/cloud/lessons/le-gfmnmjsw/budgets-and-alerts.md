@@ -4,7 +4,7 @@ version: 1
 ---
 
 A budget is **a number for a period, with thresholds that send a message when spending crosses them**.
-That is all it is. The common belief is that setting a budget of 400 dollars means the account cannot
+The common belief is that setting a budget of 400 dollars means the account cannot
 spend 401. **An alert tells you; it does not stop anything.** Spending carries on past every threshold
 until a person, or something a person built, changes what is running.
 
@@ -44,7 +44,7 @@ is the estimate, 298.64, rounded up to 400.
 
 It was **not created anywhere**: this course has no account. What the CLI does before it looks for
 credentials is check the file against the operation's definition, and that much can be run on a
-laptop. The first attempt got as far as asking for credentials, which means the file passed; the
+laptop. The first attempt got as far as looking for credentials, which means the file passed; the
 second has one letter missing and does not:
 
 ```

@@ -4,7 +4,7 @@ version: 1
 ---
 
 Antes que alguém possa dizer quem opera o quê, é preciso uma lista do **que existe para operar**. O
-site de uma loja que responde a uma requisição está de pé sobre nove camadas, e cada uma tem tarefas
+site de uma loja que responde a uma requisição se apoia em nove camadas, e cada uma tem tarefas
 que voltam toda semana, esteja alguém olhando ou não.
 
 ```schooling-figure
@@ -44,10 +44,10 @@ banco de dados; uma pessoa com o acesso errado à aplicação pode apagar os ped
 
 ## As tarefas não vão embora
 
-O desenho diz uma coisa sobre a qual o resto desta aula se apoia. **Toda camada tem tarefas, e ir para
+O resto desta aula se apoia numa coisa que o desenho mostra. **Toda camada tem tarefas, e ir para
 a nuvem não elimina nenhuma delas.** Os discos continuam quebrando, o sistema operacional continua
 precisando de patches, os dados continuam precisando de backup. O que muda é quem faz cada tarefa, e se
-você consegue ver ela sendo feita.
+você consegue vê-la sendo feita.
 
 Isso dá à pergunta da seção anterior uma forma precisa. Para qualquer serviço que você alugue, dá para
 subir por esta pilha e perguntar de cada camada: isto ainda é meu? As próximas três seções fazem isso

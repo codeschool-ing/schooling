@@ -27,7 +27,7 @@ valores que ainda podem mudar até o mês ser fechado. Nenhuma é um medidor ao 
 ## Custo unitário
 
 Um total sozinho não diz se uma conta está saudável. A aplicação da estimativa desta aula custa 298,64
-por mês; um ano depois, custa 900. Isso é um problema ou uma ótima notícia, e o total não sabe dizer
+por mês; um ano depois, custa 900. Isso pode ser um problema ou uma ótima notícia, e o total não sabe dizer
 qual.
 
 **Custo unitário é o total dividido pela coisa que o negócio vende**: custo por cliente, por mil

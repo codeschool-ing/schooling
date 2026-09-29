@@ -55,9 +55,9 @@ sem segundo fator, por mais amplo que seja o `Allow` que de outro modo a cobriri
 ```
 
 `BoolIfExists` em vez de `Bool` faz diferença aqui. Um pedido assinado com uma chave de acesso de
-longa duração não carrega a chave de MFA, e o `Bool` simples não acharia nada para comparar e não se
-aplicaria; a forma `IfExists` trata a chave ausente como uma correspondência, e o deny pega esses
-pedidos também.
+longa duração não carrega a chave de MFA, então o `Bool` simples não acharia nada para comparar e
+não se aplicaria. A forma `IfExists` trata a chave ausente como uma correspondência, e o deny pega
+esses pedidos também.
 
 ## Onde as regras deixam de ser a história toda
 

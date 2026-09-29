@@ -50,7 +50,7 @@ E as listas de uma declaração se multiplicam. Uma declaração com três açõ
 toda ação sobre todo recurso, seis pares ao todo, e não três pares casados. Se os pares precisam ser
 casados — leitura aqui, escrita ali —, precisam ser declarações separadas.
 
-## Ações têm nomes que se consultam
+## Ações têm nomes que dá para consultar
 
 Cada provedor publica a lista de ações por serviço, com o recurso sobre o qual cada ação trabalha e
 as chaves de condição que ela entende. Na AWS é a *Service Authorization Reference*. A lista é longa:

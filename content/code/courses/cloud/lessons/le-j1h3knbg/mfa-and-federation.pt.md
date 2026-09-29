@@ -27,7 +27,7 @@ Um login fica assim:
 4. A Ana recebe credenciais temporárias de uma dessas roles — no console ou na linha de comando —,
    e elas expiram como as de qualquer role.
 
-Na AWS o serviço que faz isso para pessoas é o IAM Identity Center, e a captura da seção anterior
+Na AWS o serviço que faz isso para pessoas é o IAM Identity Center. A captura da seção anterior
 mostrou o rastro dele: `sso` na cadeia de credenciais é a CLI procurando uma sessão deixada por um
 login desse tipo. Nada disso foi executado aqui; também não há provedor de identidade neste curso.
 
@@ -42,21 +42,21 @@ Um segundo fator quer dizer que uma senha roubada não basta. Eles não são tod
 
 - uma chave de segurança física, com FIDO2 ou WebAuthn, só responde ao site verdadeiro em que foi
   registrada, então uma página de login falsa convincente não consegue nada dela;
-- um app autenticador gera um código de seis dígitos que muda a cada trinta segundos; ele barra uma
+- um app autenticador gera um código de seis dígitos que muda a cada trinta segundos. Ele barra uma
   senha roubada ontem, mas uma pessoa numa página falsa pode ser convencida a digitar nela o código
   de hoje;
 - um código enviado por SMS é o mais fraco dos três, porque o próprio número de telefone pode ser
   levado para outro chip por alguém que convença a operadora a fazer isso.
 
-Ponha o fator no provedor de identidade, por onde passa todo login, e no usuário root de cada conta,
-que não entra por ele.
+**Ponha o fator no provedor de identidade, por onde passa todo login, e no usuário root de cada
+conta, que não entra por ele.**
 
 ## Programas fora da nuvem, também
 
 A mesma confiança funciona para máquinas que não estão na nuvem. Um pipeline de build que faz deploy
 numa conta precisava de uma chave de acesso guardada. Hoje a própria plataforma do pipeline emite um
-token assinado para cada execução, a conta confia nessa plataforma na política de confiança de uma
-role, e o pipeline assume a role com o token — `assume-role-with-web-identity`, a terceira linha da
+token assinado para cada execução, e a conta confia nessa plataforma na política de confiança de uma
+role. O pipeline assume a role com o token — `assume-role-with-web-identity`, a terceira linha da
 cadeia de credenciais. O GitHub Actions e o GitLab CI oferecem isso. Não há chave para guardar, e
 portanto nenhuma para vazar.
 

@@ -7,7 +7,8 @@ With **platform as a service** there is no machine to log in to. You hand the pl
 application, and it builds it, starts it, restarts it when it crashes, and sends it the requests that
 arrive for it. What you hand over is one of two things: the source code, with a file naming the
 packages it needs and a line saying which command starts it; or a **container image**, the application
-already packaged with its runtime, which is the next section's subject.
+already packaged with its runtime, which comes back under CaaS in the section on FaaS, CaaS and
+DBaaS.
 
 Heroku was one of the first to sell this shape, and Google App Engine, AWS Elastic Beanstalk and Azure
 App Service are others. They differ in detail and share the idea: the line has moved up past the

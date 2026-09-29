@@ -40,7 +40,7 @@ neither does a provider's marketing page.
 
 Sector rules can add what the LGPD does not. The financial sector, for one, has rules from its
 regulator on contracting cloud services, including services abroad. Where a requirement about
-location exists, it is in rules like those, and they are read in their own words.
+location exists, it is in rules like those, and you read them in their own words.
 
 ## The region is the lever
 

@@ -12,7 +12,7 @@ The clearest large examples are the government regions of the big providers. AWS
 and Azure Government are regions set apart for US government agencies and the companies that work
 for them, physically and logically separate from the providers' commercial regions, and operated
 under rules about who the staff may be. They run the provider's software, and they are not open to
-the public: an organisation has to qualify before it is let in. That is the community model at
+the public: an organisation has to qualify before the provider lets it in. That is the community model at
 continental scale. Smaller ones exist wherever a sector pools infrastructure, such as universities
 sharing a research cloud.
 

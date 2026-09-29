@@ -15,7 +15,8 @@ dos discos delas.
 
 ## Quanto custa, linha por linha
 
-Como o IaaS é medido por peça, uma máquina pequena pode ser precificada pela tabela do curso. Pegue a
+Como o IaaS é medido por peça, dá para calcular o preço de uma máquina pequena pela tabela do
+curso. Pegue a
 menor de São Paulo, um disco de 20 GB do tipo SSD comum e um endereço IPv4 público para a internet
 chegar a ela. O programa abaixo faz a conta; os preços são linhas da tabela, e nada aqui criou uma
 máquina.
@@ -38,7 +39,7 @@ parecem manutenção:
 - as regras de firewall da rede virtual, que decidem se a porta do banco de dados fica aberta para a
   internet inteira;
 - os patches do sistema operacional. Ninguém do provedor entra na sua máquina para atualizá-la; se as
-  atualizações chegam sozinhas, é porque a imagem que você escolheu as ligou, e um kernel novo ainda
+  atualizações chegam sozinhas, foi a imagem que você escolheu que as ligou. Um kernel novo ainda
   espera um reinício que ninguém agenda por você;
 - o runtime e a aplicação, as versões deles e as dependências;
 - os backups: o provedor vende snapshots do disco, e tirá-los, guardá-los e testar uma restauração é
@@ -57,8 +58,8 @@ porta, qualquer ajuste do kernel. Um programa que precisa de uma biblioteca de s
 processo que roda por três dias, um banco de dados ajustado à mão: o IaaS roda todos, porque para o
 programa aquilo é só um servidor.
 
-É também o modelo que se muda com mais facilidade. Uma máquina Ubuntu rodando PostgreSQL e uma aplicação
+É também o modelo mais fácil de levar para outro provedor. Uma máquina Ubuntu rodando PostgreSQL e uma aplicação
 Python é o mesmo sistema em qualquer provedor que alugue máquinas virtuais. Por isso **a ida para a
-nuvem costuma começar pelo IaaS**: os servidores que a empresa já tinha são refeitos como máquinas
-virtuais com o mínimo de mudança possível, o que o mercado chama de *lift and shift*. É o menor passo a
+nuvem costuma começar pelo IaaS**: a empresa refaz como máquinas virtuais os servidores que já tinha,
+mudando o mínimo possível, o que o mercado chama de *lift and shift*. É o menor passo a
 partir da sala de servidores, e é o que deixa mais trabalho para trás.

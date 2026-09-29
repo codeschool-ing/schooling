@@ -16,8 +16,8 @@ entregue a quem receber uma cópia.**
   imagens da aula 4 feitas a partir desse servidor.
 
 E uma chave num repositório público é encontrada por gente que vasculha repositórios públicos atrás
-exatamente desse formato de texto. Ninguém do seu lado precisa perceber o vazamento para ele ser
-usado.
+exatamente desse formato de texto. Ninguém do seu lado precisa perceber o vazamento para outra
+pessoa usar a chave.
 
 ## A máquina recebe uma role no lugar
 
@@ -84,11 +84,11 @@ Looking for credentials via: iam-role
 Doze fontes, e a ordem é a aula. **O ambiente vem primeiro**: variáveis como `AWS_ACCESS_KEY_ID`
 vencem tudo abaixo delas. Depois vêm os arquivos de configuração e de credenciais em `~/.aws`,
 incluindo as formas de um perfil ali apontar para uma role, para um login pelo navegador (`sso`,
-`login`) ou para um programa que busca credenciais (`custom-process`). As duas últimas são da própria
-máquina: `container-role` para o endpoint de um contêiner e `iam-role` para o serviço de metadados da
-instância. A consequência é uma armadilha que vale lembrar: numa máquina virtual com uma role de
-escopo perfeito, um `AWS_ACCESS_KEY_ID` esquecido no ambiente vence, e toda chamada passa a rodar em
-silêncio como o dono daquela chave.
+`login`) ou para um programa que busca credenciais (`custom-process`). As duas últimas são da
+própria máquina: `container-role` para o endpoint de um contêiner e `iam-role` para o serviço de
+metadados da instância. **Numa máquina virtual com uma role de escopo perfeito, um
+`AWS_ACCESS_KEY_ID` esquecido no ambiente vence**, e toda chamada passa a rodar em silêncio como o
+dono daquela chave.
 
 É assim que uma chave de longa duração aparece quando alguém de fato a põe num arquivo. O par é o
 exemplo que a AWS imprime na própria documentação e não pertence a ninguém:

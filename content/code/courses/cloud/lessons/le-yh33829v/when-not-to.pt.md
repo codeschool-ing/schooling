@@ -16,17 +16,17 @@ anterior desta aula.
 - Estado pesado. Um cache aquecido ao longo de horas, um modelo grande guardado na memória, um
   servidor de jogo segurando uma sala: trabalho cujo valor está no que o processo lembra é trabalho
   que uma função foi feita para esquecer.
-- Latência rígida com tráfego esparso. Quando toda requisição precisa ser rápida e as requisições são
-  poucas, os cold starts caem em usuários de verdade. A provisioned concurrency resolve pagando por
-  cópias ociosas, e aí a função vira de novo uma máquina, com outra conta.
+- Latência rígida com tráfego esparso. Quando toda requisição precisa ser rápida e as requisições
+  são poucas, os cold starts caem em usuários de verdade. A provisioned concurrency resolve pagando
+  por cópias ociosas, **e aí a função vira de novo uma máquina, com outra conta.**
 - Portabilidade. A assinatura de um handler, os formatos de evento, os gatilhos e as permissões são de
   um fornecedor. **A lógica dentro de uma função pode ficar portável; a fiação em volta dela, não.**
   Levar uma função do Lambda para o Workers é reescrever as bordas dela, e um sistema com duzentas
   delas é um projeto de migração.
 
 Nenhum desses é motivo para evitar funções. São os motivos para escolhê-las nas partes de um sistema
-que têm o formato certo, e não no resto. É assim que a maioria dos sistemas acaba: algumas máquinas
-ou contêineres para o núcleo constante, e funções em volta para o que chega em picos.
+que têm o formato certo, e não no resto. É assim que a maioria dos sistemas acaba: **algumas
+máquinas ou contêineres para o núcleo constante, e funções em volta para o que chega em picos.**
 
 ::: track data
 Num pipeline de dados, o primeiro uso natural de uma função é o que esta aula desenhou entre os
@@ -48,8 +48,8 @@ dependência.
 :::
 
 ::: track *
-A versão curta: **serverless é excelente em trabalho em picos, no formato de eventos, e fraco em
-trabalho constante e longo.** Uma API calma na maior parte do dia, um arquivo para processar quando
-chega e uma tarefa agendada são o formato dele. Quando o trabalho não tem esse formato, uma máquina ou
-um contêiner é a resposta mais simples.
+**Serverless é excelente em trabalho em picos, no formato de eventos, e fraco em trabalho constante
+e longo.** Uma API calma na maior parte do dia, um arquivo para processar quando chega e uma tarefa
+agendada são o formato dele. Quando o trabalho não tem esse formato, uma máquina ou um contêiner é a
+resposta mais simples.
 :::

@@ -27,7 +27,7 @@ ana@laptop:~/cloud$ curl -s "$url" | jq '(.products[] | select(.attributes.usage
 ```
 
 Duas coisas nessa resposta importam. O intervalo termina em `1000000`, e depois dele vale o preço
-comum, 0.20 por milhão de requisições. E a consulta escolheu o produto pelo tipo de uso `Global-Request`,
+comum, 0,20 por milhão de requisições. E a consulta escolheu o produto pelo tipo de uso `Global-Request`,
 não `SAE1-Request`: **a franquia é da conta, não de uma região nem de uma função.** Vinte funções em três
 regiões dividem o mesmo milhão de requisições.
 
@@ -37,9 +37,9 @@ vezes num mês. As requisições além da franquia são 2 milhões, que custam 0
 USD.**
 
 Agora o produto cresce para 10 milhões de requisições. As requisições além da franquia são 9 milhões,
-1,80. O processamento é 1.000.000 de GB-segundos, dos quais 600.000 passam da franquia, a 0.0000166667
+1,80. O processamento é 1.000.000 de GB-segundos, dos quais 600.000 passam da franquia, a 0,0000166667
 cada: 10,00. O mês custa 11,80. Nada quebrou e nada mudou; a franquia simplesmente acabou, e a segunda
-linha, que era zero desde que alguém olhou pela primeira vez, virou a maior parte da conta.
+linha, que tinha sido zero todas as vezes que alguém olhou, virou a maior parte da conta.
 
 O tráfego também tem franquia, e ela não está na tabela, que imprime só as faixas pagas. Está na oferta de
 transferência de dados, sob um tipo de uso que também começa com `Global`:
@@ -72,8 +72,8 @@ Depois da conversão, essa proteção acaba.
 
 Fora esse caso, **nada numa camada gratuita para o uso quando a parte grátis acaba**. Uma franquia
 excedida é cobrada pelo preço de lista. Uma função chamada em loop por um bug não para em um milhão de
-requisições; ela continua a 0.20 por milhão, e ao preço do GB-segundo, enquanto o loop rodar. Um limite
-que pare o gasto precisa ser construído, e a seção sobre orçamentos é honesta sobre até onde as
+requisições; ela continua a 0,20 por milhão, e ao preço do GB-segundo, enquanto o loop rodar. Um limite
+que pare o gasto precisa ser construído, e a seção sobre orçamentos mostra até onde as
 ferramentas dos provedores chegam nisso.
 
 Então trate uma camada gratuita pelo que ela é: um desconto nas primeiras unidades, útil para aprender e

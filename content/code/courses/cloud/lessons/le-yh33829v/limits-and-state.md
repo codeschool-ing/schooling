@@ -25,17 +25,17 @@ documents plainly:
 
 This lesson's handler already showed it with a counter. **Whatever a function keeps in memory
 belongs to one execution environment, and the platform creates and discards those as it chooses.**
-So every piece of state lives outside: in a database, a cache, an object store or a queue. A user's
-session is a row or a signed token, not a variable. A file being processed is in a bucket, not in
-`/tmp` waiting for the next call to find it.
+**So every piece of state lives outside: in a database, a cache, an object store or a queue.** A
+user's session is a row or a signed token, not a variable. A file being processed is in a bucket,
+not in `/tmp` waiting for the next call to find it.
 
 ## Thousands of functions, one database
 
 The failure this produces is specific and common. **A relational database accepts a limited number
 of connections, and each execution environment opens its own.** A server application keeps a pool
 of, say, twenty connections and shares them among all its requests. Functions cannot share across
-environments, so a burst that creates 800 environments can open 800 connections, and the database
-refuses the ones past its limit, or slows under the rest, at the moment traffic peaks.
+environments, so **a burst that creates 800 environments can open 800 connections**, and the
+database refuses the ones past its limit, or slows under the rest, at the moment traffic peaks.
 
 There are three answers:
 

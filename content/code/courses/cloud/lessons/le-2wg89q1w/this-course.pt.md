@@ -57,8 +57,8 @@ em si.
 
 O bloco mostrado é o do Lambda, um serviço de que trata a aula 8, e é uma boa primeira amostra de
 como a nuvem é vendida: 20 centavos por milhão de requisições, e uma unidade chamada GB-segundo que
-ninguém encontra em nenhum outro lugar. A lista da AWS é a usada porque é publicada inteira, num
-formato que um programa lê, e não porque o curso recomende a AWS. Os outros provedores cobram os
+ninguém encontra em nenhum outro lugar. O curso usa a lista da AWS porque ela é publicada inteira,
+num formato que um programa lê, e não porque o curso recomende a AWS. Os outros provedores cobram os
 mesmos tipos de coisa nos mesmos tipos de unidade, e **são essas unidades que estas aulas ensinam você
 a ler**.
 
@@ -94,7 +94,7 @@ curso desenha.
 ::: track devsecops security
 `cloud-security` vem logo depois deste curso, e parte da linha que esta aula desenha: o provedor
 protege o que está abaixo dela, e tudo acima é seu para acertar ou errar. Leia com mais cuidado a aula
-7, sobre identidade. É a única camada que continua sua em todo modelo.
+7, sobre identidade. Identidade e acesso é uma das duas linhas que continuam suas em todo modelo.
 :::
 
 ::: track networks-infra
@@ -110,6 +110,6 @@ sistema precisa aguentar perder.
 :::
 
 ::: track *
-Seja o que for que venha depois deste curso para você, as aulas 1, 7 e 10 são as que todo curso de
-nuvem seguinte pressupõe: em que modelo você está, quem pode fazer o quê na conta, e quanto custa.
+Venha o que vier depois deste curso, as aulas 1, 7 e 10 são as que todo curso de nuvem seguinte
+pressupõe: em que modelo você está, quem pode fazer o quê na conta, e quanto custa.
 :::

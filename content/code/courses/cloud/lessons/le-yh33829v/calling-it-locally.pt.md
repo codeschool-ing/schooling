@@ -38,11 +38,11 @@ linha de status, `headers` os cabeçalhos, e `body` é uma string com JSON dentr
 dict com aspas simples; o corpo dentro dele tem aspas duplas, porque quem o escreveu foi o
 `json.dumps`.
 
-A segunda chamada respondeu `world`, que é o valor padrão fazendo o seu trabalho. O contador diz `2`.
-**As duas chamadas rodaram no mesmo processo Python, então dividiram o módulo e o contador.** Na
-plataforma não existe essa promessa: a segunda requisição poderia ter ido para outro ambiente de
-execução e ser respondida com `1`. O notebook mostra o caso mais otimista, uma cópia quente atendendo
-tudo, e nada nele consegue mostrar o outro.
+A segunda chamada respondeu `world`, que é o valor padrão fazendo o seu trabalho. O contador diz
+`2`. **As duas chamadas rodaram no mesmo processo Python, então dividiram o módulo e o contador.**
+Na plataforma não existe essa promessa: a segunda requisição poderia ter ido para outro ambiente de
+execução e ser respondida com `1`. **O notebook mostra o caso mais otimista**, uma cópia quente
+atendendo tudo, e nada nele consegue mostrar o outro.
 
 O que este teste não diz:
 
@@ -52,7 +52,7 @@ O que este teste não diz:
 - nada sobre permissões, timeout, memória, cold starts ou concorrência, que só existem na plataforma;
 - se o gateway está configurado para mandar a requisição a este handler.
 
-O que ele diz é se a lógica está certa, e ele roda em qualquer framework de testes, porque para o
-`pytest` um handler é uma função como outra qualquer. Existem ferramentas que chegam mais perto do
+**O que ele diz é se a lógica está certa**, e ele roda em qualquer framework de testes, porque para
+o `pytest` um handler é uma função como outra qualquer. Existem ferramentas que chegam mais perto do
 real: a linha de comando SAM da AWS, por exemplo, roda um handler dentro de um contêiner feito para
 imitar o ambiente do Lambda. Continua sendo uma imitação, e este curso não a usa.

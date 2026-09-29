@@ -19,10 +19,10 @@ A exigência de um cliente ou de um regulador. O contrato de um cliente grande p
 onde os dados dele devem ficar, e um produto vendido pelo marketplace de cada provedor precisa rodar
 em cada um deles.
 
-Uma aquisição. A empresa comprou outra empresa, e a outra rodava no outro provedor. Muita multicloud
-começa assim, e ninguém planejou.
+Uma aquisição. A empresa comprou outra empresa, e a outra rodava no outro provedor. Muito ambiente
+multicloud começa assim, sem que ninguém tenha planejado.
 
-Negociação. Um cliente que conseguiria sair tem com o que barganhar quando os preços entram na
+Negociação. Um cliente capaz de sair tem com o que barganhar quando os preços entram na
 conversa. **O argumento só funciona se a saída for real**, o que quer dizer que o trabalho de
 conseguir sair já foi feito e pago.
 
@@ -46,11 +46,11 @@ usar o que os dois oferecem de forma compatível: máquinas virtuais, armazename
 de banco de dados que os dois hospedam. Os serviços gerenciados de cada provedor — muitas vezes o
 motivo de estar numa nuvem — são abandonados ou construídos duas vezes, uma por provedor.
 
-Dois de todo o resto vêm em seguida:
+Depois vem todo o resto, em dobro:
 
 - dois sistemas de identidade, com dois modelos de usuários, papéis e políticas que diferem nos
   detalhes que importam (a aula 7 mostra um);
-- duas redes, ligadas pelo mesmo tipo de emenda de uma híbrida, e pagando saída de dados dos dois
+- duas redes, ligadas pelo mesmo tipo de emenda de uma nuvem híbrida, e pagando saída de dados dos dois
   lados;
 - duas contas, em dois formatos, conciliadas por alguém todo mês;
 - dois conjuntos de habilidades, e um plantão que conheça os dois.

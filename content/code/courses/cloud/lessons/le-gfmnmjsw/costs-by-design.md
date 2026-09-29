@@ -40,16 +40,16 @@ measurements, not for the price list.
 In your work, **storage and data movement dominate the bill**, and machines are the smaller part. A
 warehouse charged by the data each query scans turns a careless query into a line of the bill. A replica
 in another zone pays 0.02 for every gigabyte of changes that crosses, every month. Backups kept for years
-are GB-months that never stop accruing. Read lessons 5 and 9 again with the sheet beside them. The cost lines to watch are storage classes,
-retention and traffic between zones, and most of them are decided in the schema and the backup policy
+are GB-months that never stop accruing. Read lessons 5 and 9 again with the sheet beside them. The cost
+lines to watch are storage classes, retention and traffic between zones, and most of them are decided in the schema and the backup policy
 rather than in the machine size.
 :::
 
 ::: track devops cloud-engineering
 In your work, **you are the person who receives the alert**. Budgets, tags and the estimate are part of
 every change you ship, not a report somebody else reads. A pull request that adds a NAT gateway adds
-67.89 a month, and saying so in the description is part of the review. The `iac` course shows the next step,
-where the cost of a change is estimated from the code before it is applied, so the conversation happens
+67.89 a month, and saying so in the description is part of the review. The `iac` course shows the next
+step, where the cost of a change is estimated from the code before it is applied, so the conversation happens
 before the money is spent.
 :::
 

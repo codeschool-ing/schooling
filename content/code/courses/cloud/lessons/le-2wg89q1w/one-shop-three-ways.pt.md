@@ -3,7 +3,7 @@ title: Uma loja, três jeitos, uma terça-feira
 version: 1
 ---
 
-Os modelos ficam mais fáceis de distinguir quando se vê o mesmo negócio vivendo em cada um. Pegue a
+Os modelos ficam mais fáceis de distinguir quando se vê o mesmo negócio funcionando em cada um. Pegue a
 **Barro**, uma pequena loja virtual de cerâmica feita à mão: três pessoas, um catálogo de duzentas
 peças, algumas dezenas de pedidos por dia. Ela poderia ser hospedada de três jeitos.
 

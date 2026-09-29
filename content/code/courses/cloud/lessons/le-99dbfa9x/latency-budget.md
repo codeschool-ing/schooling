@@ -3,8 +3,8 @@ title: Why round trips cost more than bandwidth
 version: 1
 ---
 
-**A page that waits for twenty answers, one after another, pays the round trip twenty times.** That
-sentence is the whole section, and the numbers from the previous one make it concrete.
+**A page that waits for twenty answers, one after another, pays the round trip twenty times.** The
+numbers from the previous section make that concrete.
 
 Take a page whose server code calls an API, reads the answer, then decides what to ask next, twenty
 times before it can reply. This is ordinary: a list of orders, then each order's customer, then each
@@ -30,8 +30,7 @@ The wrong fix is the one most people reach for first: a faster link. Work out wh
 answer is 2 KB, which is 16,000 bits. On a 100 Mbit/s link it takes 16,000 / 100,000,000 s = 0.16 ms
 to arrive once it is flowing; on a link ten times faster, 0.016 ms. **The upgrade saves 0.144 ms per
 call**, 2.9 ms over twenty calls, out of 1,532. The link was never the problem. The time is spent
-waiting for light to cross a continent and come back, and that time has nothing to do with how wide
-the pipe is.
+waiting for light to cross a continent and come back.
 
 Bandwidth decides how long a large transfer takes: a backup, a video, a copy of a database. Latency
 decides how long a conversation takes, and most of what an application does is conversation.
@@ -61,7 +60,6 @@ Every fix that works does one of two things: it makes fewer trips, or it makes e
   fraction of a millisecond of distance. A web server in São Paulo reading a database in Virginia
   turns every query into a trip up the continent.
 
-The last one is a mistake that is easy to make by accident: somebody creates the
-database in whichever region the console happened to be showing, and the application in the right
+The last one usually goes wrong by accident: somebody creates the database in whichever region the console happened to be showing, and the application in the right
 one. **Where your other systems are** is one of the questions in the next section's checklist for
 exactly this reason.

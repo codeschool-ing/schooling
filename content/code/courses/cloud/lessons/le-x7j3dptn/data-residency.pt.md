@@ -39,7 +39,7 @@ provedor também não.
 
 Regras de setor podem acrescentar o que a LGPD não traz. O setor financeiro, por exemplo, tem regras
 do seu regulador sobre contratar serviços de nuvem, inclusive no exterior. Onde existe uma exigência
-sobre local, ela está em regras assim, e elas são lidas nas próprias palavras.
+sobre local, ela está em regras assim, e é preciso lê-las no texto delas.
 
 ## A região é a alavanca
 
@@ -59,10 +59,10 @@ Cada uma dessas pode pôr dados pessoais em outro país sem que o banco em si sa
 para onde os dados vão é o primeiro documento de que a pergunta de conformidade precisa, e é um
 documento de engenharia.
 
-Residência tem preço, e a tabela mostra. A mesma `t3.medium` custa 0,06720 USD por hora em
+Residência tem preço, e a tabela mostra qual. A mesma `t3.medium` custa 0,06720 USD por hora em
 `sa-east-1` e 0,04160 em `us-east-1`; armazenamento S3 Standard custa 0,04050 por GB-mês contra
 0,02300. Manter dados no Brasil é uma escolha com uma linha na conta, e saber o que a lei de fato
-exige é como uma equipe evita pagar por uma obrigação que não existe, ou pular uma que existe.
+exige é como uma equipe evita pagar por uma obrigação que não existe, ou ignorar uma que existe.
 Residência também não é soberania: a seção sobre nuvens soberanas mostrou que onde o dado fica e
 quais tribunais o alcançam são perguntas separadas. A aula 9 vai mais fundo em regiões e em como
 escolher uma.

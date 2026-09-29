@@ -15,8 +15,8 @@ energia, rede e conectividade redundantes**, dentro de uma região. A `sa-east-1
 A razão de ser de uma zona é o **isolamento**. Cada uma tem suas próprias entradas de energia, sua
 própria refrigeração e seu próprio equipamento de rede, para que os desastres comuns de um prédio
 fiquem dentro dele. Uma entrada de energia que cai, uma central de refrigeração que para, uma enchente
-no subsolo, uma mudança errada num conjunto de switches: cada um deles deve parar na fronteira da zona. A AWS documenta que suas zonas ficam separadas
-por uma distância significativa, muitos quilômetros, e todas a menos de 100 km umas das outras. Essa
+no subsolo, uma mudança errada num conjunto de switches: cada um deles deve parar na fronteira da zona.
+A AWS documenta que suas zonas ficam separadas por uma distância significativa, muitos quilômetros, e todas a menos de 100 km umas das outras. Essa
 distância é o meio-termo em que o projeto inteiro se apoia: longe o bastante para um evento local não
 alcançar duas delas, perto o bastante para a ida e volta entre elas continuar curta.
 
@@ -58,4 +58,4 @@ defesa contra o chão sob um prédio, e só isso.
 Azure e Google Cloud também têm zonas, com nomes próprios: a Azure numera as zonas como 1, 2 e 3
 dentro de uma região, e o Google dá a elas o nome da região com uma letra, como
 `southamerica-east1-a`. A forma é a mesma em todo lugar: uma região é a unidade que você escolhe por
-lei, latência e preço, e uma zona é a unidade pela qual você se espalha contra falhas.
+lei, latência e preço, e as zonas são as unidades entre as quais você se espalha contra falhas.

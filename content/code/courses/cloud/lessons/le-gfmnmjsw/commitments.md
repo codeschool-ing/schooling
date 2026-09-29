@@ -50,10 +50,10 @@ at the busiest hour of the busiest month, and the rest of the year somewhere bet
 **Commit to the floor of your usage, not to the peak.** The machines that run every hour of the year are
 the ones a commitment is for: they are always used, so every hour of the promise is worth its discount.
 The machines above the floor come and go, and paying on demand for them is what buys the freedom to
-remove them. Commit to the peak and the hours between the peak and the real usage are paid for and wasted. At a 42.6% discount, a reserved `t3.medium` that sits idle for more than 42.6% of its hours
-has cost more than paying on demand would have.
+remove them. Commit to the peak and the hours between the peak and the real usage are paid for and wasted. At a 42.6% discount, a reserved `t3.medium`
+that sits idle for more than 42.6% of its hours has cost more than paying on demand would have.
 
 Two more rules follow from the same idea. Commit to what you have measured over months, not to the
-estimate, because the estimate has never been tested against a real month. And when you are unsure, prefer the commitment
-that is easier to reuse. A Savings Plan that follows your spend to another machine type gives a smaller
+estimate, because the estimate has never been tested against a real month. And when you are unsure, prefer the
+commitment that is easier to reuse. A Savings Plan that follows your spend to another machine type gives a smaller
 discount than a reservation for one type, and is worth much more the day you change type.

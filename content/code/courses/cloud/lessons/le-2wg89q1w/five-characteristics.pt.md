@@ -17,7 +17,7 @@ Um serviço é computação em nuvem, no sentido do NIST, quando tem as cinco.
 Você obtém computação, uma máquina, um disco ou espaço de armazenamento, **quando pede e sem que uma
 pessoa do provedor participe**. O pedido vai para uma API; o software do provedor confere a sua conta e
 os seus limites e cria a coisa. Um console onde você clica em "criar" é o mesmo pedido com um formulário
-na frente. O que importa é que ninguém do outro lado precisa ler o pedido, então ele é atendido às três
+na frente. Ninguém do outro lado precisa ler o pedido, então ele é atendido às três
 da manhã tão rápido quanto ao meio-dia.
 
 ## Amplo acesso pela rede
@@ -32,8 +32,8 @@ servir uma página.
 
 Os recursos físicos do provedor **atendem muitos clientes ao mesmo tempo**, e são entregues e
 recolhidos conforme a demanda muda. Você não sabe em que servidor a sua máquina roda nem que disco
-guarda os seus dados; você escolhe o local num nível mais grosso, uma região como `sa-east-1`, e o
-provedor coloca você dentro dela. A tabela mostra o agrupamento nos tamanhos que vende: um `t3.micro`
+guarda os seus dados; você escolhe o local num nível menos detalhado, uma região como `sa-east-1`, e o
+provedor coloca você dentro dela. A tabela mostra o agrupamento nos tamanhos à venda: um `t3.micro`
 tem 2 vCPU e 1 GiB de memória, muito menos que qualquer servidor que alguém construa. É uma fatia de um
 servidor maior, e o resto desse servidor pertence a outros clientes.
 
@@ -41,9 +41,9 @@ servidor maior, e o resto desse servidor pertence a outros clientes.
 
 A capacidade **cresce e diminui depressa, e pode fazer isso sozinha**. Uma loja roda duas máquinas quase
 o ano todo, dez na semana de uma promoção e duas de novo depois dela, e do ponto de vista do cliente a
-oferta parece ilimitada. A elasticidade é o que o agrupamento compra: as dez máquinas estão lá porque o
+oferta parece ilimitada. A elasticidade é o que o agrupamento torna possível: as dez máquinas estão lá porque o
 provedor mantém capacidade de sobra compartilhada por todos, não porque você as encomendou em outubro.
-A aula 4 mostra como o crescer e o encolher são automatizados.
+A aula 4 mostra como se automatiza o crescer e o encolher.
 
 ## Serviço medido
 
@@ -66,7 +66,7 @@ formulário e instalado por um técnico. Compare com a lista.
 | serviço medido | não: o preço é o mesmo, use o que usar |
 
 **Uma de cinco.** É o computador de outra pessoa e está na internet, e nenhuma das duas coisas faz dele
-nuvem. A distinção não é um rótulo por si só: cada "não" dessa tabela é uma decisão que você toma meses
+nuvem. Cada "não" dessa tabela é uma decisão que você toma meses
 antes e paga, tenha acertado ou não.
 
 A fronteira entre os dois ficou menos nítida desde 2011. Algumas empresas que alugam servidores

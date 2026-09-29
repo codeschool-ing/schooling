@@ -19,8 +19,8 @@ The workflow is the product:
 4. Rolling back is pointing the live address at an earlier build, which already exists and does not
    have to be built again.
 
-The third step is the one teams adopt these platforms for. A change to a page is reviewed as a page,
-by whoever needs to see it, rather than as a diff by whoever can read one.
+The third step is the one teams adopt these platforms for. **A change to a page is reviewed as a
+page, by whoever needs to see it, rather than as a diff by whoever can read one.**
 
 ## The functions ride along
 
@@ -43,4 +43,5 @@ back end lives elsewhere, and a small product whose whole API is a handful of fu
 **They fit badly when the back end is most of the product.** Long jobs, queues, heavy work against a
 database and anything needing its own network belong on a platform built for them, with the front
 end on Vercel or Netlify calling it. And each platform's conventions, its folders and its
-configuration file are its own, so moving between the two is a small migration rather than a copy.
+configuration file are its own, so **moving between the two is a small migration rather than a
+copy.**

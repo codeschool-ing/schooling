@@ -75,18 +75,18 @@ takes that line, the traffic out and the three addresses apart.
 
 An estimate is honest when it says what it did not count. This one leaves out:
 
-- **tax**, which the price list excludes and the bill adds;
-- **a support plan**, which the providers sell separately and charge as a share of the bill or a
+- tax, which the price list excludes and the bill adds;
+- a support plan, which the providers sell separately and charge as a share of the bill or a
   monthly minimum;
-- **the load balancer's capacity units**. An application load balancer is billed by the hour, which is
+- the load balancer's capacity units. An application load balancer is billed by the hour, which is
   on the sheet, and also by a measure of the traffic and connections it handles, which is not;
-- **requests**: every GET and PUT on the S3 bucket, 0.00056 and 0.00700 per thousand;
-- **logs and metrics**, whose storage grows every month the application runs;
-- **snapshots and backups** of the volumes;
-- **traffic between the two zones**, 0.0100 per GB each way, whenever one machine talks to something in
+- requests: every GET and PUT on the S3 bucket, 0.00056 and 0.00700 per thousand;
+- logs and metrics, whose storage grows every month the application runs;
+- snapshots and backups of the volumes;
+- traffic between the two zones, 0.0100 per GB each way, whenever one machine talks to something in
   the other zone;
 - DNS, a domain and anything bought outside the provider;
-- **free allowances**. The price list gives every account its first 100 GB out to the internet each
+- free allowances. The price list gives every account its first 100 GB out to the internet each
   month for nothing, which would take 15.00 off the last line; the section on free tiers says why an
   estimate leaves them out.
 

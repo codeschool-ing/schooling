@@ -9,10 +9,9 @@ trabalham: o comum é começar amplo para as coisas funcionarem, com a intençã
 depois raramente chega, porque uma política que permite demais não produz erro, nem chamado, nem
 reclamação. O único momento em que alguém percebe é o dia em que outra pessoa a usa.
 
-Então a ordem é a inversa. Comece do nada, que a negação implícita já dá, e acrescente as ações que o
-trabalho mostrar que precisa. Um pedido recusado durante o desenvolvimento é barato: ele diz a ação
-que queria, e acrescentá-la é uma linha. Uma permissão sem uso em produção não custa nada até o dia em
-que custa tudo.
+Então a ordem é a inversa. Comece do nada, que a negação implícita já dá, e acrescente as ações que
+o trabalho mostrar que precisa. Um pedido recusado durante o desenvolvimento é barato: ele diz a
+ação que queria, e acrescentá-la é uma linha.
 
 ## Uma política para ler com desconfiança
 

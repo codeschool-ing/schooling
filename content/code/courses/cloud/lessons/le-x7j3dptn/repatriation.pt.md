@@ -11,8 +11,8 @@ fala da carga**, e é a carga que decide.
 
 ## O formato da carga
 
-Um preço sob demanda paga mais do que a máquina. Paga o provedor manter capacidade pronta para
-clientes que ainda não chegaram, e deixar você devolver a máquina depois de uma hora. Uma carga **com
+Um preço sob demanda paga mais do que a máquina. Paga para o provedor manter capacidade pronta
+para clientes que ainda não chegaram, e para deixar você devolver a máquina depois de uma hora. Uma carga **com
 picos** usa isso: as cem máquinas do teste de carga, a semana da Black Friday, o lote de fim de mês.
 Uma carga **estável** — as mesmas máquinas, ocupadas dia e noite, todo dia, por anos — paga por uma
 flexibilidade que nunca usa.
@@ -24,7 +24,7 @@ A resposta do próprio provedor a uma carga estável vem primeiro, e está na ta
 - reserva de 1 ano, sem pagamento adiantado: 0,09956 × 730 = 72,68 USD por mês;
 - a economia: 1 − 0,09956 / 0,16065 = 0,38, então o compromisso custa 38% menos.
 
-Um compromisso de um ano tira mais de um terço, sem comprar hardware nenhum. Então a pergunta honesta
+Um compromisso de um ano tira mais de um terço do preço, sem comprar hardware nenhum. Então a pergunta honesta
 da repatriação não é "hardware próprio contra o preço sob demanda". É **hardware próprio contra o
 preço com compromisso**, e a aula 10 trata de compromissos e dos outros modelos de cobrança.
 

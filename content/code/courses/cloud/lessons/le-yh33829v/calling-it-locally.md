@@ -41,7 +41,7 @@ with single quotes; the body inside it has double quotes, because `json.dumps` w
 The second call answered `world`, which is the default doing its job. The counter says `2`. **Both
 calls ran in the same Python process, so they shared the module and its counter.** On the platform
 there is no such promise: the second request could have gone to a different execution environment
-and been answered with `1`. The laptop shows the most optimistic case, one warm copy serving
+and been answered with `1`. **The laptop shows the most optimistic case**, one warm copy serving
 everything, and nothing on it can show the other.
 
 What this test cannot tell you:
@@ -53,7 +53,7 @@ What this test cannot tell you:
   the platform;
 - whether the gateway is set up to send the request to this handler at all.
 
-What it does tell you is whether the logic is right, and it runs in any test framework, because to
-`pytest` a handler is a function like any other. Tools exist that get closer to the real thing: AWS's
-SAM command line, for one, runs a handler inside a container built to imitate Lambda's environment.
-It is still an imitation, and this course does not use it.
+**What it does tell you is whether the logic is right**, and it runs in any test framework, because
+to `pytest` a handler is a function like any other. Tools exist that get closer to the real thing:
+AWS's SAM command line, for one, runs a handler inside a container built to imitate Lambda's
+environment. It is still an imitation, and this course does not use it.

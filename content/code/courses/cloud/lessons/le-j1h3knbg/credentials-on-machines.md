@@ -16,7 +16,7 @@ copy.**
   images built from that server.
 
 And a key in a public repository is found by people who search public repositories for exactly that
-shape of string. The leak does not have to be noticed by anybody on your side for it to be used.
+shape of string. Nobody on your side has to notice the leak for somebody else to use it.
 
 ## The machine gets a role instead
 
@@ -83,12 +83,11 @@ Looking for credentials via: iam-role
 
 Twelve sources, and the order is the lesson. **The environment comes first**: variables such as
 `AWS_ACCESS_KEY_ID` beat everything below them. Then the configuration and credentials files in
-`~/.aws`, including the ways a profile there can point at a role, a sign-in in the browser
-(`sso`, `login`) or a program that fetches credentials (`custom-process`). The last two are the
-machine's own: `container-role` for a container's endpoint and `iam-role` for the instance metadata
-service. The consequence is a trap worth remembering: on a virtual machine with a perfectly scoped
-role, one forgotten `AWS_ACCESS_KEY_ID` in the environment wins, and every call quietly runs as
-whoever that key belongs to.
+`~/.aws`, including the ways a profile there can point at a role, a sign-in in the browser (`sso`,
+`login`) or a program that fetches credentials (`custom-process`). The last two are the machine's
+own: `container-role` for a container's endpoint and `iam-role` for the instance metadata service.
+**On a virtual machine with a perfectly scoped role, one forgotten `AWS_ACCESS_KEY_ID` in the
+environment wins**, and every call quietly runs as whoever that key belongs to.
 
 This is what a long-lived key looks like when somebody does put one in a file. The pair is the example
 AWS prints in its own documentation and belongs to nobody:

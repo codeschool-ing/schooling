@@ -98,7 +98,7 @@ seção sobre compromissos.
 
 ## O que é uma linha
 
-A tabela é aritmética sobre o JSON, e não há mágica nela. Aqui está o preço por requisição do Lambda em
+A tabela é aritmética sobre o JSON. Aqui está o preço por requisição do Lambda em
 São Paulo, lido do arquivo bruto com `curl` e `jq`, em dois passos:
 
 ```
@@ -122,7 +122,7 @@ preço. É a definição de um medidor.
 
 O segundo passo lê o **termo** do produto. `OnDemand` é o termo sem compromisso; o arquivo do EC2 também
 traz termos `Reserved`, que é de onde vem o segundo bloco de preços de máquinas da tabela. Dentro do
-termo, cada **dimensão de preço** traz a unidade e o preço de uma unidade: 0.0000002 USD por requisição.
+termo, cada **dimensão de preço** traz a unidade e o preço de uma unidade: 0,0000002 USD por requisição.
 Multiplique por um milhão e você tem a linha da tabela, `per 1 million requests 0.20`.
 
 **Uma linha da tabela, então, são três coisas juntas**: um produto que diz o que é medido e onde, um
@@ -133,11 +133,11 @@ termo que diz em que condições, e uma dimensão de preço que diz quanto por u
 
 Uma dimensão de preço também tem `beginRange` e `endRange`, que ficaram fora da consulta acima porque,
 nas requisições do Lambda, valem `0` e `Inf`: um preço só para toda requisição. Onde não é assim, o
-produto é **em faixas**. O tráfego de saída para a internet é o caso mais claro da tabela: 0.1500 por GB
-nos primeiros 10 TB do mês, depois 0.1380, 0.1260 e 0.1140 conforme o volume cresce. Cada faixa é uma
+produto é **em faixas**. O tráfego de saída para a internet é o caso mais claro da tabela: 0,1500 por GB
+nos primeiros 10 TB do mês, depois 0,1380, 0,1260 e 0,1140 conforme o volume cresce. Cada faixa é uma
 dimensão de preço do mesmo produto, com seu próprio intervalo. Uma faixa vale para os gigabytes dentro
 do intervalo dela, não para o mês inteiro, então o 11º terabyte custa menos que os dez primeiros, e os
-dez primeiros continuam custando 0.1500 cada.
+dez primeiros continuam custando 0,1500 por gigabyte.
 
 As franquias gratuitas também são faixas, como a seção sobre camadas gratuitas mostra com a mesma
 consulta: um preço de zero, até um limite.

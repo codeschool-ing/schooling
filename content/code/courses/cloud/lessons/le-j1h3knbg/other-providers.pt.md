@@ -25,11 +25,11 @@ Viewer" com o sentido da AWS na cabeça manda você procurar uma política de co
 
 O Google Cloud guarda os recursos numa hierarquia: uma **organização** no topo, pastas dentro dela,
 projetos dentro delas, e recursos como buckets e máquinas virtuais dentro dos projetos. Cada nível
-tem uma política de permissão, uma lista de vínculos, cada vínculo dizendo "estes principais têm este
-papel aqui". Um vínculo é herdado para baixo: um papel concedido numa pasta vale para todo projeto e
-recurso dentro dela. Com isso, a pergunta "quem pode ler este bucket" é uma resposta reunida a partir
-do bucket, do projeto, das pastas e da organização, e uma concessão feita lá em cima por conveniência
-é uma concessão sobre tudo o que está abaixo.
+tem uma política de permissão, uma lista de vínculos, cada vínculo dizendo "estes principais têm
+este papel aqui". Um vínculo é herdado para baixo: um papel concedido numa pasta vale para todo
+projeto e recurso dentro dela. Com isso, a pergunta "quem pode ler este bucket" é uma resposta
+reunida a partir do bucket, do projeto, das pastas e da organização. **Uma concessão feita lá em
+cima por conveniência é uma concessão sobre tudo o que está abaixo.**
 
 Os papéis vêm em três tipos. Os **papéis básicos**, Owner, Editor e Viewer, são amplos e anteriores ao
 resto; Editor num projeto pode mudar quase tudo nele. Papéis predefinidos são estreitos, por serviço,

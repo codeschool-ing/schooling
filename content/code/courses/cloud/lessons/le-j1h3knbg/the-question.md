@@ -64,8 +64,8 @@ two numbers apart, so read the error code rather than the status. S3 answers a s
 verify with a 403 whose code is `SignatureDoesNotMatch`, the first gate; it answers a correctly
 signed request that no policy allows with a 403 whose code is `AccessDenied`, the second.
 
-This is also a different layer from lesson 6. A security group decides which **packets** reach a
-virtual machine; identity and access decide which **API calls** succeed. A VM behind a perfect
+This is also a different layer from lesson 6. **A security group decides which packets reach a
+virtual machine; identity and access decide which API calls succeed.** A VM behind a perfect
 security group can still be deleted by anybody holding a credential that allows
 `ec2:TerminateInstances`, and no firewall rule will see it happen, because that request goes to the
 provider's API and never to the machine.

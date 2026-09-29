@@ -4,12 +4,12 @@ version: 1
 ---
 
 Uma empresa tem uma sala de servidores rodando um hipervisor, algumas centenas de máquinas virtuais
-neles, e um slide que diz *nossa nuvem privada*. Pode ser uma. Mais vezes é **um datacenter
-virtualizado**, e a diferença não está no hardware. Está em se as cinco características da aula 1
-valem.
+neles, e um slide que diz *nossa nuvem privada*. Pode ser uma. Na maioria das vezes, é **um datacenter
+virtualizado**, e a diferença não está no hardware. Está em as cinco características da aula 1
+valerem ou não.
 
 Pegue o arranjo de costume, em que o desenvolvedor que precisa de uma máquina abre um chamado e um
-administrador a cria dois dias depois, e confira contra as cinco:
+administrador a cria dois dias depois, e compare com as cinco:
 
 | característica | o datacenter virtualizado com fila de chamados |
 |---|---|
@@ -52,10 +52,10 @@ o lote de fim de mês quer 600, o portal responde com uma recusa ou uma fila, po
 automação. Mais capacidade é um pedido de compra, uma entrega e um dia montando rack, coisa medida em
 semanas e não em minutos.
 
-Então a nuvem privada é dimensionada para o pico, mais o crescimento esperado até a próxima compra,
+Então a empresa dimensiona a nuvem privada para o pico, mais o crescimento esperado até a próxima compra,
 mais uma margem de folga, e a maior parte disso fica ociosa fora do pico. **Capacidade ociosa é o
-preço do controle**, e é paga usando ou não. Uma região pública tem a mesma capacidade ociosa,
-espalhada entre todos os clientes; essa divisão é exatamente o que a nuvem privada abre mão.
+preço do controle**, e ela é paga quer alguém a use, quer não. Uma região pública tem a mesma capacidade ociosa,
+espalhada entre todos os clientes; essa divisão é exatamente do que a nuvem privada abre mão.
 
 Isso não faz dela um erro. Os motivos que se sustentam são específicos: dados ou regras que proíbem
 hardware compartilhado, cargas tão estáveis que a margem ociosa fica pequena, sistemas na empresa que

@@ -16,17 +16,17 @@ section of this lesson.
 - Heavy state. A cache warmed over hours, a large model held in memory, a game server holding a
   room: work whose value is in what the process remembers is work a function is built to forget.
 - Strict latency on sparse traffic. When every request has to be fast and requests are few, cold
-  starts land on real users. Provisioned concurrency fixes it by paying for idle copies, at which
-  point the function is a machine again with a different bill.
+  starts land on real users. Provisioned concurrency fixes it by paying for idle copies, **at which
+  point the function is a machine again with a different bill.**
 - Portability. A handler's signature, its event shapes, its triggers and its permissions are one
   vendor's. **The logic inside a function can be kept portable; the wiring around it cannot.** Moving
   one function from Lambda to Workers means rewriting its edges, and a system of two hundred of them
   is a migration project.
 
-None of these is a reason to avoid functions. They are the reasons to choose them for the parts of
-a system that have the right shape, and not for the rest. That is how most systems end up: a few
+None of these is a reason to avoid functions. They are the reasons to choose them for the parts of a
+system that have the right shape, and not for the rest. That is how most systems end up: **a few
 machines or containers for the steady core, and functions around the edges for what arrives in
-bursts.
+bursts.**
 
 ::: track data
 In a data pipeline the first natural use of a function is the one this lesson drew among its
@@ -46,8 +46,7 @@ decision record like any other dependency.
 :::
 
 ::: track *
-The short version: **serverless is excellent at spiky, event-shaped work and poor at steady,
-long-running work.** An API that is quiet most of the day, a file to process when it arrives and a
-job on a schedule are its shape. When the work does not have that shape, a machine or a container is
-the plainer answer.
+**Serverless is excellent at spiky, event-shaped work and poor at steady, long-running work.** An
+API that is quiet most of the day, a file to process when it arrives and a job on a schedule are its
+shape. When the work does not have that shape, a machine or a container is the plainer answer.
 :::

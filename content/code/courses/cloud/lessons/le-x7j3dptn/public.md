@@ -12,7 +12,7 @@ multi-tenant means many of them on one set of hardware.
 
 The wrong picture is that sharing the hardware means sharing the data, as if the neighbour on the
 same server could open your disk or read your packets. Keeping tenants apart is the provider's
-core product, and it is done in two layers.
+core product, and it does that in two layers.
 
 ## Two layers of isolation
 
@@ -27,7 +27,7 @@ against the identity that made it, so your credentials open your resources and n
 (lesson 7). Every customer's network is a private network of its own, which carries no traffic to
 or from another customer's unless one of them connects the two on purpose (lesson 6).
 
-The boundary is strong and it is not magic. In January 2018 the attacks called Spectre and
+The boundary is strong, and it is not perfect. In January 2018 the attacks called Spectre and
 Meltdown showed that a program could infer memory it was never allowed to read, through the way
 processors speculate ahead of the instruction they are on. Providers patched hosts and hypervisors
 across their fleets. For customers who must not share hardware at all, providers sell dedicated

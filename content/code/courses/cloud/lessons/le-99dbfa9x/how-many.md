@@ -68,6 +68,12 @@ GLOBAL
 me-west-1
 sa-west-1
 us-south-1
+ana@laptop:~/cloud$ jq -r '.prefixes[] | select(.region == "sa-west-1") | .service' ip-ranges.json | sort | uniq -c
+     27 AMAZON
+      2 DYNAMODB
+      7 EC2
+      1 ROUTE53_HEALTHCHECKS_PUBLISHING
+      2 S3
 ```
 
 **`GLOBAL` is not a region.** It labels addresses that belong to no single region, and the services

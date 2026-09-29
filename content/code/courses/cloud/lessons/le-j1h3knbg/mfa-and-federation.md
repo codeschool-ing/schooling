@@ -28,10 +28,9 @@ A sign-in then goes like this:
 4. Ana gets temporary credentials for one of those roles — in the console, or on the command line —
    and they expire like any role's.
 
-At AWS the service that does this for people is IAM Identity Center, and the capture in the previous
+At AWS the service that does this for people is IAM Identity Center. The capture in the previous
 section showed its trace: `sso` in the credential chain is the CLI looking for a session left by a
-sign-in of this kind. Nothing of it was run here; there is no identity provider in this
-course either.
+sign-in of this kind. None of it was run here; there is no identity provider in this course either.
 
 **Leaving becomes one change.** Disable Ana at the identity provider and she cannot sign in to any
 account that trusts it. There is one honest gap: credentials already handed out keep working until
@@ -44,20 +43,20 @@ A second factor means that a stolen password is not enough. They are not all equ
 
 - a hardware security key, using FIDO2 or WebAuthn, answers only to the real site it was
   registered with, so a convincing fake sign-in page gets nothing from it;
-- an authenticator app produces a six-digit code that changes every thirty seconds; it stops a
+- an authenticator app produces a six-digit code that changes every thirty seconds. It stops a
   password stolen yesterday, but a person on a fake page can be persuaded to type today's code into
   it;
 - a code sent by text message is the weakest of the three, because the phone number itself can be
   moved to another SIM by somebody who talks the phone company into it.
 
-Put the factor at the identity provider, where every sign-in passes, and at the root user of every
-account, which does not sign in through it.
+**Put the factor at the identity provider, where every sign-in passes, and at the root user of every
+account, which does not sign in through it.**
 
 ## Programs outside the cloud, too
 
 The same trust works for machines that are not in the cloud. A build pipeline that deploys to an
 account used to need a stored access key. Now the pipeline's own platform issues it a signed token
-for each run, the account trusts that platform in a role's trust policy, and the pipeline assumes
+for each run, and the account trusts that platform in a role's trust policy. The pipeline assumes
 the role with the token — `assume-role-with-web-identity`, the third line of the credential chain.
 GitHub Actions and GitLab CI both offer it. There is no key to store, and so none to leak.
 
