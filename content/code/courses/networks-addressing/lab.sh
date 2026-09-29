@@ -127,7 +127,7 @@ frr() {  # frr NODE  (configuration on stdin)
   cat > "/etc/frr/$n/frr.conf"
   : > "/etc/frr/$n/vtysh.conf"
   chown frr:frr "/etc/frr/$n/frr.conf" "/etc/frr/$n/vtysh.conf"
-  local daemons="zebra staticd"
+  local daemons="zebra staticd ${FRR_EXTRA:-}"   # FRR_EXTRA: daemons to start whatever the file says
   grep -q '^router ospf'  "/etc/frr/$n/frr.conf" && daemons+=" ospfd"
   grep -q '^router rip'   "/etc/frr/$n/frr.conf" && daemons+=" ripd"
   grep -q '^router bgp'   "/etc/frr/$n/frr.conf" && daemons+=" bgpd"
@@ -557,6 +557,64 @@ scenario_chain() {
   link r1 eth1 r2 eth1; addr r1 eth1 10.20.12.1/30; addr r2 eth1 10.20.12.2/30
   link r2 eth2 r3 eth2; addr r2 eth2 10.20.23.1/30; addr r3 eth2 10.20.23.2/30
   link r1 eth3 r3 eth3; addr r1 eth3 10.20.13.1/30; addr r3 eth3 10.20.13.2/30
+}
+
+# igp: lesson 3's ring of four routers, with no routing protocol configured.
+# FRR runs on every router with only its hostname, and every daemon lesson 16
+# needs is started; the lesson types RIP, OSPF and EIGRP into it.
+scenario_igp() {
+  ring_build
+  local n
+  for n in r1 r2 r3 r4; do echo "hostname $n" | FRR_EXTRA="ripd ospfd eigrpd" frr $n; done
+}
+
+# bgp: a company with its own block, 203.0.113.0/24, and its own autonomous
+# system, 64500, connected to two providers that also peer with each other.
+# The providers are configured here; the company's router, edge, starts with
+# nothing, and lesson 17 types its BGP configuration.
+#
+#            www 203.0.113.10
+#                 |
+#               edge (AS 64500)
+#              /              \
+#   192.0.2.0/30              192.0.2.4/30
+#            /                  \
+#   ispa (AS 64501) --------- ispb (AS 64502)
+#        |         192.0.2.8/30      |
+#   a1 198.51.100.10          b1 198.51.100.130
+#   (198.51.100.0/25)         (198.51.100.128/25)
+isp_bgp() {  # isp_bgp NODE ASN OWN-PREFIX CUSTOMER-ADDRESS PEER-ADDRESS PEER-ASN
+  frr "$1" <<CONF
+hostname $1
+ip prefix-list CUSTOMER seq 5 permit 203.0.113.0/24
+route-map FROM-CUSTOMER permit 10
+ match ip address prefix-list CUSTOMER
+route-map ANY permit 10
+router bgp $2
+ bgp router-id $4
+ neighbor 192.0.2.$([ "$2" = 64501 ] && echo 1 || echo 5) remote-as 64500
+ neighbor $5 remote-as $6
+ address-family ipv4 unicast
+  network $3
+  neighbor 192.0.2.$([ "$2" = 64501 ] && echo 1 || echo 5) route-map FROM-CUSTOMER in
+  neighbor 192.0.2.$([ "$2" = 64501 ] && echo 1 || echo 5) route-map ANY out
+  neighbor $5 route-map ANY in
+  neighbor $5 route-map ANY out
+ exit-address-family
+CONF
+}
+scenario_bgp() {
+  node www; node a1; node b1
+  node edge router; node ispa router; node ispb router
+  link www eth0 edge eth0;  addr www eth0 203.0.113.10/24; addr edge eth0 203.0.113.1/24; gw www 203.0.113.1
+  link edge eth1 ispa eth0; addr edge eth1 192.0.2.1/30; addr ispa eth0 192.0.2.2/30
+  link edge eth2 ispb eth0; addr edge eth2 192.0.2.5/30; addr ispb eth0 192.0.2.6/30
+  link ispa eth1 ispb eth1; addr ispa eth1 192.0.2.9/30; addr ispb eth1 192.0.2.10/30
+  link a1 eth0 ispa eth2;   addr a1 eth0 198.51.100.10/25;  addr ispa eth2 198.51.100.1/25;   gw a1 198.51.100.1
+  link b1 eth0 ispb eth2;   addr b1 eth0 198.51.100.130/25; addr ispb eth2 198.51.100.129/25; gw b1 198.51.100.129
+  isp_bgp ispa 64501 198.51.100.0/25   192.0.2.2 192.0.2.10 64502
+  isp_bgp ispb 64502 198.51.100.128/25 192.0.2.6 192.0.2.9  64501
+  echo "hostname edge" | FRR_EXTRA=bgpd frr edge
 }
 
 case "${1:-}" in
