@@ -17,7 +17,7 @@ faturamento que paga por ele, e constrói lá dentro. Um projeto tem um id que v
 como `shop-prod-2291`, e esse id não pode ser mudado depois, então vale escolher bem.
 
 Projetos podem ser agrupados em pastas sob uma **organização**, que está ligada ao domínio da
-empresa. Desligar um projeto para tudo o que está dentro dele de uma vez, e o projeto fica guardado
+empresa. Desligar um projeto interrompe de uma vez tudo o que está dentro dele, e o projeto fica guardado
 por trinta dias, para o caso de ter sido um engano, antes de ser apagado de vez.
 
 Ponha as caixas dos três provedores lado a lado e a diferença está em quantos níveis existem, não na
@@ -31,8 +31,7 @@ ideia:
 
 Esta é a diferença que muda projetos. Na AWS uma VPC pertence a uma região, e o mesmo vale para uma
 rede virtual do Azure: uma máquina em São Paulo e uma em Frankfurt estão em duas redes, e ligá-las é
-trabalho extra que a aula 6 nomeia. **No Google Cloud uma rede VPC é global.** As sub-redes são
-regionais, mas uma rede só contém todas elas, então uma máquina em São Paulo (`southamerica-east1`)
+trabalho extra que a aula 6 nomeia. **No Google Cloud uma rede VPC é global.** As sub-redes são regionais, mas uma rede só contém todas elas. Uma máquina em São Paulo (`southamerica-east1`)
 e uma na Bélgica (`europe-west1`) estão na mesma rede privada, sem nenhuma ligação entre duas redes
 para construir. As regras de firewall continuam decidindo o que pode passar.
 
@@ -57,6 +56,6 @@ de São Paulo é `southamerica-east1`. O produto de funções se chamava Cloud F
 é o **Cloud Run functions**, parte do Cloud Run, o serviço para rodar contêineres sem administrar
 servidores; tutoriais mais velhos usam o nome antigo.
 
-O curso `gcp-foundations` parte deste com o console, o comando `gcloud` e as políticas da
+O curso `gcp-foundations` continua a partir deste com o console, o comando `gcloud` e as políticas da
 organização. O que levar daqui: **o projeto é a caixa, a rede é global, e os argumentos mais fortes
 do Google são dados e Kubernetes.**

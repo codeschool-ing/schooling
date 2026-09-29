@@ -9,13 +9,12 @@ way that costs money in both directions. Teams pay hyperscaler prices for three 
 and a database, and other teams pick a small provider for a design that needs a managed service
 only a hyperscaler sells.
 
-The honest split is not big and small. It is **how much of the stack the provider will run for
+The split that matters is not big and small. It is **how much of the stack the provider will run for
 you**.
 
 ## Hyperscalers
 
-AWS, Azure and Google Cloud are called hyperscalers. Each one sells hundreds of managed services:
-not only machines and disks, but queues, data warehouses, streaming, machine learning, directories
+AWS, Azure and Google Cloud are called hyperscalers. Each one sells hundreds of managed services: machines and disks, and beyond them queues, data warehouses, streaming, machine learning, directories
 of users, content delivery, key management. Each one runs regions on several continents, and each
 one prices every service separately, so the full price list runs to tens of thousands of lines. You
 will count them for AWS at the end of this lesson: one service, EC2, lists more than sixty-five
@@ -59,5 +58,4 @@ application", you need a hyperscaler, or a design that uses only the core. If th
 database and a queue, happily", the short list may be all you need.
 
 The middle of the field exists too: Oracle, IBM, Alibaba and OVHcloud sell more than the short
-list and less than the three, each with a reason of its own to exist. They get a paragraph each
-further down this lesson.
+list and less than the three, each with a reason of its own to exist. They get a paragraph each in "The rest of the field".

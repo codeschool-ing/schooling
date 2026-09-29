@@ -9,13 +9,13 @@ semana.** Ela está errada de um jeito que custa dinheiro nas duas direções. H
 de hyperscaler por três máquinas virtuais e um banco de dados, e há equipes que escolhem um provedor
 pequeno para um projeto que precisa de um serviço gerenciado que só uma hyperscaler vende.
 
-A divisão honesta não é entre grande e pequeno. É **quanto da pilha o provedor vai operar por
+A divisão que importa não é entre grande e pequeno. É **quanto da pilha o provedor vai operar por
 você**.
 
 ## Hyperscalers
 
 AWS, Azure e Google Cloud são chamadas de hyperscalers. Cada uma vende centenas de serviços
-gerenciados: não só máquinas e discos, mas filas, data warehouses, streaming, machine learning,
+gerenciados: máquinas e discos e, além deles, filas, data warehouses, streaming, machine learning,
 diretórios de usuários, entrega de conteúdo, gestão de chaves. Cada uma tem regiões em vários
 continentes, e cada uma cobra cada serviço à parte, então a lista de preços completa chega a dezenas
 de milhares de linhas. Você vai contá-las na AWS no fim desta aula: um único serviço, o EC2, lista
@@ -61,5 +61,4 @@ de uma hyperscaler, ou de um projeto que use só o núcleo. Se a resposta é "um
 problema", a lista curta pode ser tudo de que você precisa.
 
 O meio do campo também existe: Oracle, IBM, Alibaba e OVHcloud vendem mais que a lista curta e menos
-que as três, cada uma com um motivo próprio para existir. Elas ganham um parágrafo cada mais adiante
-nesta aula.
+que as três, cada uma com um motivo próprio para existir. Elas ganham um parágrafo cada em "O resto do campo".

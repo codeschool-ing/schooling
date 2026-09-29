@@ -95,8 +95,7 @@ ana@laptop:~/cloud$ python3 -c 'print(round(0.16065 / 0.10080, 2))'
 A tabela é a lista pública de `sa-east-1` (São Paulo) e `us-east-1` (Norte da Virgínia), em dólares
 americanos, sem impostos, nas versões de oferta que ela imprime. Leia uma linha de ponta a ponta:
 `m7i.large`, dois processadores virtuais e 8 GiB de memória, custa `0.16065` USD por hora em São
-Paulo e `0.10080` na Virgínia. **A mesma máquina, do mesmo provedor, custa 1,59 vez mais em São
-Paulo.** As outras linhas mais ou menos concordam: `t3.micro` custa `0.01680` contra `0.01040`, que
+Paulo e `0.10080` na Virgínia. **A mesma máquina, do mesmo provedor, custa em São Paulo 1,59 vez o preço da Virgínia.** As outras linhas mais ou menos concordam: `t3.micro` custa `0.01680` contra `0.01040`, que
 dá 1,62.
 
 Um preço por hora é difícil de sentir, então transforme-o num mês. O programa abaixo faz a conta às

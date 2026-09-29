@@ -34,7 +34,7 @@ them costs in milliseconds.
 `us-east-1` is the oldest region, and it is special in a way that surprises people. Some things
 that serve the whole world are managed there: a TLS certificate for AWS's content delivery network,
 CloudFront, has to be requested in `us-east-1` whichever region the rest of your system lives in.
-Even the price list you will read later in this lesson is served from an address with
+Even the price list this lesson reads, in "Reading a price list", is served from an address with
 `us-east-1` in it.
 
 ## What it is known for

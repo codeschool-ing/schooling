@@ -64,7 +64,7 @@ pode ser interrompido e retomado se encaixa: tarefas em lote que salvam o progre
 testes, uma fila de vídeo em que um trabalho perdido é simplesmente refeito. Um banco de dados, ou a
 única cópia de qualquer coisa, não.
 
-O preço spot não está na tabela, e não por esquecimento: a lista pública de preços que este curso lê
+O preço spot não está na tabela: a lista pública de preços que este curso lê
 não o traz, porque ele muda com a oferta em vez de ser publicado como lista. Então este curso não cita
 nenhum valor spot, e a figura abaixo o desenha sem um.
 

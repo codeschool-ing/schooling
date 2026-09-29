@@ -24,9 +24,7 @@ data centre and in the cloud. That is the hybrid arrangement of lesson 2, sold a
 ## Alibaba Cloud
 
 Alibaba Cloud belongs to the Chinese Alibaba group. It sells a catalogue on the scale of the
-hyperscalers, and its reason for being on this list is geography: **a company that has to serve
-customers inside mainland China** meets it first, because operating there brings rules of its own
-that a provider based there is built around.
+hyperscalers. Its reason for being on this list is geography: **a company that has to serve customers inside mainland China** meets it first. Operating there brings rules of its own, and a provider based there is built around them.
 
 ## OVHcloud
 

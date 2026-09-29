@@ -65,7 +65,7 @@ instance when it needs the capacity back; AWS gives two minutes' warning before 
 can be interrupted and resumed fits: batch jobs that checkpoint, test runners, a video queue where a
 lost job is simply retried. A database, or the only copy of anything, does not.
 
-The spot price is not on the sheet, and not because it was forgotten: the public price list this
+The spot price is not on the sheet: the public price list this
 course reads does not carry it, because it changes with supply rather than being published as a
 list. So this course quotes no spot figure, and the figure below draws it without one.
 

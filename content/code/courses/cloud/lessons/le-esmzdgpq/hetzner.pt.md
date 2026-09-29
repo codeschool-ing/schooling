@@ -4,7 +4,7 @@ version: 1
 ---
 
 A Hetzner é uma empresa alemã, fundada em 1997, dona dos seus próprios data centers, que ela mesma
-opera. Ela vende duas coisas que vale manter separadas, porque são trocas diferentes.
+opera. Ela vende duas coisas que vale manter separadas, porque envolvem trocas diferentes.
 
 ## Servidores dedicados
 
@@ -35,8 +35,7 @@ máquinas. Para uma equipe à vontade com isso, o motivo para aceitar é o preç
 
 A Hetzner é conhecida por preços baixos, e a fama é merecida: para a mesma quantidade de
 processadores e de memória, os preços de tabela dela ficam bem abaixo dos das hyperscalers. Este
-curso não capturou as páginas de preço da Hetzner, então não há número aqui para citar. O que vale
-entender é **de onde vem a diferença**, porque isso diz se ela se aplica a você:
+curso não capturou as páginas de preço da Hetzner, então não há número aqui para citar. **De onde vem a diferença** diz se ela se aplica a você:
 
 - o catálogo é curto, então o preço não carrega a engenharia de centenas de serviços;
 - a empresa constrói e opera os próprios data centers, em poucos lugares, e os enche de máquinas que
@@ -51,7 +50,5 @@ Os data centers próprios da Hetzner ficam na Alemanha, em Nuremberg e Falkenste
 em Helsinque. A Hetzner Cloud também tem locais nos Estados Unidos e em Singapura. **Ela não tem
 nenhum na América do Sul.**
 
-Ser uma empresa alemã com data centers na União Europeia é um argumento por si só para clientes de
-lá: os dados ficam sob a lei europeia e em prédios europeus, o que pesa para o GDPR, o equivalente
-europeu da LGPD que a aula 2 discutiu. Para um público brasileiro, o mesmo fato corta para o outro
-lado, e a distância através do Atlântico é mais uma linha que a aula 9 transforma em milissegundos.
+Ser uma empresa alemã com data centers na União Europeia é um argumento por si só para clientes de lá. Os dados deles ficam sob a lei europeia e em prédios europeus, o que pesa para o GDPR, o equivalente
+europeu da LGPD que a aula 2 discutiu. Para um público brasileiro, o mesmo fato pesa no sentido contrário, e a distância através do Atlântico é mais uma linha que a aula 9 transforma em milissegundos.

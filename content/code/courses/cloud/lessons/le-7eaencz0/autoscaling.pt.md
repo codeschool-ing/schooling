@@ -41,8 +41,7 @@ responder com sucesso é marcada como não saudável. É a verificação que vê
 um grupo que atende tráfego web deve usá-la.
 
 **Uma instância não saudável não é consertada, é substituída.** O grupo a encerra e lança uma nova a
-partir do template, e a contagem volta para onde estava. Ninguém é chamado para entrar, porque não há
-nada na máquina antiga que valha a pena, que é exatamente a propriedade que a última seção desta aula
+partir do template, e a contagem volta para onde estava. Ninguém é chamado para entrar, porque não há nada na máquina antiga que justifique entrar nela, que é exatamente a propriedade que a última seção desta aula
 exige.
 
 Uma configuração impede que isso dê errado do jeito óbvio. Uma instância nova leva um tempo para dar

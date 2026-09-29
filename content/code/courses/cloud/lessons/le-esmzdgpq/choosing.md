@@ -63,7 +63,6 @@ Akamai, and a Brazilian provider if its catalogue covers the core; the team's sk
 of the bill decide among them.
 
 A company whose staff sign in through Microsoft 365, running SQL Server on Windows machines in its
-own building, starts with Azure ahead on identity and licences, and the comparison has to be won by
-somebody else rather than lost by Azure.
+own building, starts with Azure ahead on identity and licences. Another provider has to win that comparison; Azure does not have to lose it.
 
 Neither case produces a winner the next company could copy, and neither was meant to.

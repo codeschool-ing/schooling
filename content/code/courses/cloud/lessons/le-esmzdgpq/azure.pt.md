@@ -42,7 +42,7 @@ O Azure tem mais caixas que a AWS, e cada uma faz um trabalho diferente:
 - um **grupo de recursos** (resource group) é uma pasta dentro de uma assinatura. Todo recurso
   pertence a exatamente um.
 
-O grupo de recursos é a caixa que não tem equivalente nas outras duas, e vale entendê-lo. O uso
+O grupo de recursos é a caixa que não tem equivalente nas outras duas. O uso
 previsto é juntar os recursos que vivem e morrem juntos: a máquina de uma aplicação, o disco, o banco
 e a rede. **Apagar um grupo de recursos apaga tudo o que está nele**, que é exatamente o que você quer
 quando um ambiente de teste acabou, e exatamente o que você não quer quando um banco de produção foi
@@ -60,7 +60,6 @@ desenvolvimento da Microsoft, Visual Studio e GitHub entre elas, se conectam a e
 configuração. A linguagem própria dele para descrever infraestrutura é o Bicep, que compila para os
 templates ARM, mais antigos. O curso `iac` usa Terraform, que fala com os três provedores.
 
-O curso `azure-foundations` parte deste com o portal, a CLI e a governança de muitas assinaturas. O
+O curso `azure-foundations` continua a partir deste com o portal, a CLI e a governança de muitas assinaturas. O
 que levar daqui: **uma empresa que já está dentro do Microsoft 365 começa a comparação do Azure com
-vantagem em identidade e licenças**, e essa vantagem é dinheiro e segurança de verdade, não uma frase
-de marketing.
+vantagem em identidade e licenças**, e essa vantagem é dinheiro e segurança de verdade.

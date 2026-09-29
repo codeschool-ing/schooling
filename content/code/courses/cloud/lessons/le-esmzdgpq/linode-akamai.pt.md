@@ -9,7 +9,7 @@ maior parte da vida ele se pareceu com o que a DigitalOcean é hoje: uma lista c
 preço mensal por plano com transferência incluída, e clientes que eram, na maioria, desenvolvedores
 e empresas pequenas.
 
-**Em 2022 a Akamai o comprou**, e isso mudou para que ele serve.
+**Em 2022 a Akamai o comprou**, e isso mudou a função dele.
 
 ## O que a Akamai acrescenta
 

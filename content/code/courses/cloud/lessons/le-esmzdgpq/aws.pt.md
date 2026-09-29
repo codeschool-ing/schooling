@@ -35,7 +35,7 @@ delas.
 `us-east-1` é a região mais antiga, e é especial de um jeito que surpreende. Algumas coisas que
 servem o mundo inteiro são geridas ali: um certificado TLS para a rede de entrega de conteúdo da
 AWS, o CloudFront, tem de ser pedido em `us-east-1`, esteja o resto do seu sistema na região que
-for. Até a lista de preços que você vai ler mais adiante nesta aula é servida de um endereço com
+for. Até a lista de preços que esta aula lê, em "Lendo uma lista de preços", é servida de um endereço com
 `us-east-1` no nome.
 
 ## Pelo que ela é conhecida

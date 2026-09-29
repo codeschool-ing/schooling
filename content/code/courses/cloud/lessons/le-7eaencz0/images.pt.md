@@ -47,7 +47,7 @@ dois lados, e os dois importam quando há mais de uma máquina.
 A terceira linha é o **drift**: máquinas que deveriam ser iguais e não são. Uma configuração que roda
 `apt install nginx` no boot pega a versão do `nginx` que o espelho tem naquele dia, então um grupo que
 cresceu ao longo de um mês pode ter três versões dele sem que ninguém tenha decidido isso. Uma imagem
-embutida não sofre drift, porque os bytes dela foram fixados na construção. Ela envelhece, e a única
+embutida não sofre drift, porque os bytes dela foram fixados na construção. Em vez disso, ela envelhece, e a única
 cura é reconstruí-la e trocar toda máquina que roda a antiga.
 
 A segunda linha importa no dia em que falha. Uma máquina que instala o software no boot precisa que

@@ -24,10 +24,7 @@ na nuvem. É o arranjo híbrido da aula 2, vendido como produto.
 
 ## Alibaba Cloud
 
-A Alibaba Cloud pertence ao grupo chinês Alibaba. Vende um catálogo na escala das hyperscalers, e o
-motivo para estar nesta lista é a geografia: **uma empresa que precisa atender clientes na China
-continental** a encontra primeiro, porque operar lá traz regras próprias em torno das quais um
-provedor de lá foi construído.
+A Alibaba Cloud pertence ao grupo chinês Alibaba. Vende um catálogo na escala das hyperscalers. O motivo para estar nesta lista é a geografia: **uma empresa que precisa atender clientes na China continental** a encontra primeiro. Operar lá traz regras próprias, e um provedor de lá foi construído em torno delas.
 
 ## OVHcloud
 

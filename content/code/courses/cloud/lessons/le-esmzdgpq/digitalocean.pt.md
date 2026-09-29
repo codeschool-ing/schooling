@@ -13,19 +13,17 @@ repositório dela.
 
 ## Pensada para desenvolvedores, na prática
 
-"Pensada para desenvolvedores" é um slogan até você olhar o que isso quer dizer aqui. Quer dizer que
-**os padrões são escolhidos para uma pessoa com um projeto**: um Droplet é criado num formulário
+Aqui, "pensada para desenvolvedores" quer dizer que **os padrões são escolhidos para uma pessoa com um projeto**: um Droplet é criado num formulário
 curto, chega à internet com um endereço público e aceita a chave SSH que você informou. Quer dizer
 uma biblioteca grande de tutoriais escritos sobre configurar servidores e programas, que muita gente
 leu muito antes de ter conta lá, porque eles explicam administração de Linux, e não a DigitalOcean.
 
 E quer dizer deixar coisas de fora. Não há um catálogo de centenas de serviços gerenciados, nem data
-warehouse, nem fila do tipo do SQS. Uma equipe que precise de uma roda num Droplet ou compra de outro
-lugar.
+warehouse, nem fila do tipo do SQS. Uma equipe que precise de um deles o roda num Droplet ou o compra de outro lugar.
 
 ## O modelo de preço
 
-O modelo é a parte que vale entender, porque é o oposto da medição que você viu na seção da AWS.
+O modelo de preço é o oposto da medição que você viu na seção da AWS.
 **Cada tamanho de Droplet tem um preço mensal**, e a mesma página o mostra também como valor por
 hora. Você paga pelo tempo em que o Droplet existe, e um Droplet que existe o mês todo custa o preço
 mensal e nada mais. Uma quantidade de transferência de saída vem com cada Droplet, somada numa cota
@@ -42,7 +40,7 @@ Compare o que custa ler o preço de uma única máquina em cada tipo de provedor
 
 A tabela da AWS neste curso mostra que as linhas à parte são reais: um endereço IPv4 público custa
 `0.0050` USD por hora nas duas regiões, e um disco gp3 custa `0.1520` USD por GB-mês em `sa-east-1`.
-Nenhuma delas é grande. O ponto é que **na DigitalOcean a conta de um projeto pequeno são poucas
+Nenhuma delas é grande, mas **na DigitalOcean a conta de um projeto pequeno são poucas
 linhas que dá para prever de antemão**, e numa hyperscaler ela é a soma de vários medidores.
 
 Os valores estão nas páginas de preço da DigitalOcean, que este curso não capturou. A comparação

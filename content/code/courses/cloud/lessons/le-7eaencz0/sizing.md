@@ -68,7 +68,7 @@ its network traffic and tax. The `xlarge` is 234.55, twice as much, as the doubl
 0.13010 an hour and the Intel one 0.16065: 0.03055 less, which is 19% of the Intel price, and
 22.30 USD a month at 730 hours.
 
-That saving is real on one condition, and it is two conditions in practice. Your software has to
+That saving holds on two conditions. Your software has to
 run on Arm, which the previous section covered. And it has to run at least as fast on it, which
 nobody can tell you without trying, because two vCPU are one core on the `m7i` and two on the
 `m7g`. For some programs the Graviton machine is faster and the saving is larger than 19%; for
@@ -77,8 +77,7 @@ others it is slower, and the saving disappears into needing a bigger size.
 ## Right-sizing: measure, then choose
 
 The common mistake is to choose by guessing, and to guess big "just in case". An `m7i.xlarge`
-that sits at 10% CPU all month does the work of an `m7i.large` and costs 117.27 USD a month more
-for the privilege. Nobody notices, because nothing is broken.
+that sits at 10% CPU all month does the work of an `m7i.large` and costs 234.55 USD a month instead of 117.27. Nobody notices, because nothing is broken.
 
 **Size from a measurement.** Run the program on a size you can afford, under a realistic load, for
 long enough to see its busiest hour, and look at two numbers:

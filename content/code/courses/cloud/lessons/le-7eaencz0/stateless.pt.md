@@ -58,7 +58,7 @@ dele.
 
 ::: track cloud-engineering data
 O curso `docker` vem depois deste, e empacota a mesma ideia num tamanho menor. Em vez da imagem de uma
-máquina inteira, com sistema operacional e kernel, uma imagem de contêiner guarda o sistema de arquivos de uma aplicação. Muitas delas rodam lado a lado numa máquina como as desta aula. As regras
+máquina inteira, com sistema operacional e kernel, uma imagem de contêiner guarda o sistema de arquivos de uma aplicação. Muitos contêineres rodam lado a lado numa máquina como as desta aula. As regras
 desta seção valem sem mudança: um contêiner é jogado fora e substituído com ainda mais facilidade que
 uma instância, então também não pode guardar nada.
 :::

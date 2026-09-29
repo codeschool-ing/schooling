@@ -12,7 +12,7 @@ builds and runs an application from its repository.
 
 ## Developer-first, in practice
 
-"Developer-first" is a slogan until you look at what it means here. It means **the defaults are
+Here "developer-first" means **the defaults are
 chosen for one person with one project**: a Droplet is created from a short form, reaches the
 internet with a public address, and accepts the SSH key you gave it. It means a large library of
 written tutorials on setting up servers and software, which many people read long before they had
@@ -24,7 +24,7 @@ someone else.
 
 ## The price model
 
-The model is the part worth understanding, because it is the opposite of the metering you met in
+The price model is the opposite of the metering you met in
 the AWS section. **Each Droplet size has one monthly price**, and the same page shows it as an
 hourly rate too. You are charged for the time the Droplet exists, and a Droplet that exists all
 month costs the monthly price and no more. A quantity of outbound data transfer comes with each
@@ -40,8 +40,7 @@ Compare what a single machine costs to read at each kind of provider:
 | data it sends out | a separate line, per GB | included up to an allowance |
 
 The AWS sheet in this course shows the separate lines are real: a public IPv4 address is `0.0050`
-USD an hour in both regions, and a gp3 disk is `0.1520` USD per GB-month in `sa-east-1`. None of
-them is large. The point is that **at DigitalOcean the bill for a small project is a few lines you
+USD an hour in both regions, and a gp3 disk is `0.1520` USD per GB-month in `sa-east-1`. None of them is large, but **at DigitalOcean the bill for a small project is a few lines you
 could predict in advance**, and at a hyperscaler it is the sum of several meters.
 
 The amounts themselves are on DigitalOcean's pricing pages, which this course did not capture. The

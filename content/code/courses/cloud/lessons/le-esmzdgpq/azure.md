@@ -40,8 +40,7 @@ Azure has more boxes than AWS, and each one does a different job:
   one per environment or per department, the way it keeps several AWS accounts;
 - a **resource group** is a folder inside a subscription. Every resource belongs to exactly one.
 
-The resource group is the box that has no equivalent in the other two, and it is worth
-understanding. The intended use is to put together the resources that live and die together: an
+The resource group is the box with no equivalent in the other two. The intended use is to put together the resources that live and die together: an
 application's machine, its disk, its database and its network. **Deleting a resource group deletes
 everything in it**, which is exactly what you want when a test environment is finished, and exactly
 what you do not want when a production database was put in the wrong group.
@@ -60,5 +59,4 @@ speaks to all three providers.
 
 The `azure-foundations` course builds on this one with the portal, the CLI and the governance of
 many subscriptions. What to keep from here: **a company already inside Microsoft 365 starts its
-Azure comparison with a head start in identity and licences**, and that head start is real money
-and real safety, not a marketing line.
+Azure comparison with a head start in identity and licences**, and that head start is real money and real safety.

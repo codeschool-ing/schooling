@@ -35,8 +35,7 @@ price.
 
 Hetzner is known for low prices, and the reputation is earned: for the same processor count and
 memory, its list prices sit well below the hyperscalers'. This course did not capture Hetzner's
-price pages, so there is no figure here to quote. What is worth understanding is **where the
-difference comes from**, because that tells you whether it applies to you:
+price pages, so there is no figure here to quote. **Where the difference comes from** tells you whether it applies to you:
 
 - the catalogue is short, so the price is not carrying the engineering of hundreds of services;
 - the company builds and runs its own data centres, in a few places, and fills them with machines
@@ -51,8 +50,7 @@ Hetzner's own data centres are in Germany, at Nuremberg and Falkenstein, and in 
 Helsinki. Hetzner Cloud also has locations in the United States and in Singapore. **It has none in
 South America.**
 
-Being a German company with data centres in the European Union is an argument of its own for
-customers there: their data stays under European law and in European buildings, which matters for
+Being a German company with data centres in the European Union is an argument of its own for customers there. Their data stays under European law and in European buildings, which matters for
 the GDPR, the European counterpart of the LGPD that lesson 2 discussed. For a Brazilian audience,
 the same fact cuts the other way, and the distance across the Atlantic is one more line that lesson
 9 turns into milliseconds.

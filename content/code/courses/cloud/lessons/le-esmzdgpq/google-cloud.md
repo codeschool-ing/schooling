@@ -30,8 +30,7 @@ not in the idea:
 
 This is the difference that changes designs. In AWS a VPC belongs to one region, and so does an
 Azure virtual network: a machine in São Paulo and a machine in Frankfurt are on two networks, and
-joining them is extra work that lesson 6 names. **In Google Cloud a VPC network is global.** Its
-subnets are regional, but one network holds all of them, so a machine in São Paulo
+joining them is extra work that lesson 6 names. **In Google Cloud a VPC network is global.** Its subnets are regional, but one network holds all of them. A machine in São Paulo
 (`southamerica-east1`) and one in Belgium (`europe-west1`) are on the same private network, with no
 connection between two networks to build. Firewall rules still decide what may pass.
 

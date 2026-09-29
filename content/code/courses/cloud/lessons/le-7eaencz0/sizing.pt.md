@@ -69,7 +69,7 @@ disco, do tráfego de rede e dos impostos. A `xlarge` custa 234,55, o dobro, com
 hora e a Intel 0,16065: 0,03055 a menos, que são 19% do preço da Intel, e 22,30 USD por mês em 730
 horas.
 
-Essa economia é real com uma condição, que na prática são duas. O seu software precisa rodar em Arm,
+Essa economia vale sob duas condições. O seu software precisa rodar em Arm,
 o que a seção anterior tratou. E precisa rodar pelo menos tão rápido nele, o que ninguém consegue
 dizer sem testar, porque duas vCPU são um núcleo na `m7i` e dois na `m7g`. Para alguns programas a
 máquina Graviton é mais rápida e a economia passa de 19%; para outros ela é mais lenta, e a economia
@@ -78,7 +78,7 @@ some na necessidade de um tamanho maior.
 ## Dimensionar certo: medir, depois escolher
 
 O erro comum é escolher no chute, e chutar alto "por via das dúvidas". Uma `m7i.xlarge` que passa o
-mês em 10% de CPU faz o trabalho de uma `m7i.large` e custa 117,27 USD a mais por mês pelo privilégio.
+mês em 10% de CPU faz o trabalho de uma `m7i.large` e custa 234,55 USD por mês em vez de 117,27.
 Ninguém repara, porque nada está quebrado.
 
 **Dimensione a partir de uma medição.** Rode o programa num tamanho que você possa pagar, com uma

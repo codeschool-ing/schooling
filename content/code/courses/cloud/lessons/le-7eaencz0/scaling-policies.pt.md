@@ -5,7 +5,7 @@ version: 1
 
 O número desejado de um grupo pode ser mudado à mão, mas a graça de um grupo é que ele se move
 sozinho. Uma **política de escala** é a regra que o move. Há três tipos, e cada um responde a
-pergunta "de quantas precisamos agora?" de um jeito.
+pergunta "de quantas precisamos agora?" de um jeito diferente.
 
 ## Target tracking: manter um número perto de um alvo
 
