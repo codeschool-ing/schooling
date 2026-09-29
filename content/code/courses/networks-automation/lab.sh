@@ -83,7 +83,7 @@ need() {
   local missing=()
   for p in iproute2 iputils-ping traceroute frr frr-pythontools openssh-server ansible yamllint \
            git curl jq postgresql redis-server openssl python3-venv libyang-tools openvswitch-switch \
-           libxml2-utils netcat-openbsd; do
+           libxml2-utils netcat-openbsd python3-paramiko; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
   done
   [ ${#missing[@]} -eq 0 ] || { echo "install first: ${missing[*]}" >&2; exit 1; }
@@ -97,6 +97,10 @@ need() {
 # Run once; `up` refuses to start without it.
 tools() {
   useradd -m -s /bin/bash ana 2>/dev/null || true
+  # Ubuntu's Ansible runs on Ubuntu's Python; an image whose python3 points
+  # elsewhere breaks it, so python3 is the distribution's 3.12.
+  update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 2 >/dev/null
+  update-alternatives --set python3 /usr/bin/python3.12
   usermod -aG frrvty ana    # frr-reload.py reads /etc/frr/vtysh.conf on ctl
   [ -x "$VENV/bin/python" ] || /usr/bin/python3.12 -m venv "$VENV"
   # shellcheck disable=SC2086

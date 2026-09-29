@@ -1,0 +1,727 @@
+[
+  {
+    "id": "ex-yjzrrj3e",
+    "version": 1,
+    "section": "inventory",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab's project, which file gives edge1 its own `router_id`?",
+    "hint": "A file named after the host.",
+    "choices": [
+      {
+        "text": "`group_vars/routers.yaml`",
+        "correct": false,
+        "why": "That applies to every router."
+      },
+      {
+        "text": "`inventory/hosts.yaml`, next to its address",
+        "correct": false,
+        "why": "The inventory holds `ansible_host` only."
+      },
+      {
+        "text": "`ansible.cfg`",
+        "correct": false,
+        "why": "That says where the inventory is."
+      },
+      {
+        "text": "`host_vars/edge1.yaml`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5dn0ana",
+    "version": 1,
+    "section": "inventory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `ansible_connection: ansible.netcommon.network_cli` change about how Ansible works on a host?",
+    "hint": "A router cannot run Python.",
+    "choices": [
+      {
+        "text": "It uses NETCONF",
+        "correct": false,
+        "why": "That is `ansible.netcommon.netconf`."
+      },
+      {
+        "text": "It logs in to the CLI over SSH instead of running Python on the host",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It skips authentication",
+        "correct": false,
+        "why": "It logs in with `ansible_user` and the key."
+      },
+      {
+        "text": "It runs tasks one host at a time instead of in parallel, which routers require",
+        "correct": false,
+        "why": "It still runs hosts in parallel."
+      }
+    ]
+  },
+  {
+    "id": "ex-gg44gg6g",
+    "version": 1,
+    "section": "inventory",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ansible-inventory --___ edge1` prints the variables Ansible will use for that router, merged from every file.",
+    "hint": "The option is named after what edge1 is in the inventory.",
+    "blanks": [
+      {
+        "accept": [
+          "host"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s76mbmfj",
+    "version": 1,
+    "section": "inventory",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each connection variable to what it says.",
+    "hint": "From `group_vars/routers.yaml`.",
+    "pairs": [
+      {
+        "left": "`ansible_network_os`",
+        "right": "Which platform's prompts and commands"
+      },
+      {
+        "left": "`ansible_network_cli_ssh_type`",
+        "right": "Which SSH library"
+      },
+      {
+        "left": "`ansible_user`",
+        "right": "Which account logs in"
+      },
+      {
+        "left": "`ansible_host`",
+        "right": "Which address to connect to"
+      }
+    ],
+    "right_distractors": [
+      "Which vault password"
+    ]
+  },
+  {
+    "id": "ex-d5ra3xrw",
+    "version": 1,
+    "section": "a-playbook",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order Ansible's structure from the outermost to the innermost.",
+    "hint": "A playbook contains plays.",
+    "items": [
+      "Playbook",
+      "Play",
+      "Task",
+      "Module and its arguments"
+    ]
+  },
+  {
+    "id": "ex-txr79w2v",
+    "version": 1,
+    "section": "a-playbook",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`show.yaml` reported `ok` and not `changed` for its `cli_command` task. Why?",
+    "hint": "What did the task do to the router?",
+    "choices": [
+      {
+        "text": "The router refused the command",
+        "correct": false,
+        "why": "That would be `failed`."
+      },
+      {
+        "text": "`gather_facts: false` hides changes",
+        "correct": false,
+        "why": "It only skips fact gathering."
+      },
+      {
+        "text": "It only read, and it says so",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The recap counts changes only after the second run of the same playbook",
+        "correct": false,
+        "why": "It counts every run."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jqqgfcy",
+    "version": 1,
+    "section": "a-playbook",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `show.yaml`, the Jinja2 filter that parses the router's JSON is ___.",
+    "hint": "It reads from a format.",
+    "blanks": [
+      {
+        "accept": [
+          "from_json"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-atxxjrbm",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bgp.yaml` is the same file for all three routers. Why did core1 get two neighbours and each edge one?",
+    "hint": "Where does the loop get its list?",
+    "choices": [
+      {
+        "text": "`frr_bgp` discovers neighbours by itself",
+        "correct": false,
+        "why": "It configures what it is given."
+      },
+      {
+        "text": "core1 ran the playbook twice",
+        "correct": false,
+        "why": "It ran once, with two loop items."
+      },
+      {
+        "text": "OSPF told core1 about the edges, and the module read the neighbours from OSPF",
+        "correct": false,
+        "why": "The module reads no routing protocol."
+      },
+      {
+        "text": "Each host's `bgp_neighbours` from its host_vars",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pdx8qjeh",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does a platform module like `frr_bgp` do that `cli_config` with the same lines does not?",
+    "hint": "Data or lines?",
+    "choices": [
+      {
+        "text": "It skips SSH",
+        "correct": false,
+        "why": "Both use the network_cli connection."
+      },
+      {
+        "text": "It saves the configuration to startup, which `cli_config` leaves out",
+        "correct": false,
+        "why": "Saving is not the difference."
+      },
+      {
+        "text": "It runs faster",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "It takes the configuration as data and works out the commands",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-582xvcqm",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bgp_check.yaml` uses `assert`. What happens if one peer is not `Established`?",
+    "hint": "An assertion turns an expectation into a result.",
+    "choices": [
+      {
+        "text": "The peer is restarted",
+        "correct": false,
+        "why": "assert changes nothing."
+      },
+      {
+        "text": "The task fails for that router, and the recap shows it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A warning is printed, and the play still reports success for that router",
+        "correct": false,
+        "why": "It fails."
+      },
+      {
+        "text": "Ansible waits until the session comes up, then carries on with the play",
+        "correct": false,
+        "why": "assert does not wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-xx0jsnqb",
+    "version": 1,
+    "section": "modules",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many BGP sessions did `bgp_check.yaml` find `Established`, across the three routers?",
+    "hint": "One line per item.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "sessions"
+  },
+  {
+    "id": "ex-ms9830ax",
+    "version": 1,
+    "section": "idempotency",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`mgmt.yaml` ran twice. What did the second recap say for every router?",
+    "hint": "Nothing was left to do.",
+    "choices": [
+      {
+        "text": "`changed=0`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`changed=1`",
+        "correct": false,
+        "why": "That was the first run."
+      },
+      {
+        "text": "`failed=1`, because the line exists",
+        "correct": false,
+        "why": "An existing line is success."
+      },
+      {
+        "text": "`skipped=1`",
+        "correct": false,
+        "why": "The task ran and found nothing to send."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5mjbzjn",
+    "version": 1,
+    "section": "idempotency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `--check --diff` do?",
+    "hint": "A dry run.",
+    "choices": [
+      {
+        "text": "Shows what would change, without changing it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Applies the change and shows it afterwards",
+        "correct": false,
+        "why": "`--check` applies nothing."
+      },
+      {
+        "text": "Checks the YAML syntax of the playbook without connecting to any device",
+        "correct": false,
+        "why": "That is `--syntax-check`."
+      },
+      {
+        "text": "Compares two playbooks",
+        "correct": false,
+        "why": "It compares the device with the play."
+      }
+    ]
+  },
+  {
+    "id": "ex-9e4tf7fc",
+    "version": 1,
+    "section": "idempotency",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`cli_config` warned that lines should be written as the router prints them. What goes wrong if they are not?",
+    "hint": "How does it decide a line is missing?",
+    "choices": [
+      {
+        "text": "They look new every time, so the task reports `changed` on every run",
+        "correct": true,
+        "why": "Right: idempotence is lost."
+      },
+      {
+        "text": "The router refuses them",
+        "correct": false,
+        "why": "The router may accept them."
+      },
+      {
+        "text": "Ansible rewrites them to match the router's spacing",
+        "correct": false,
+        "why": "It warns; it does not rewrite."
+      },
+      {
+        "text": "They are sent twice",
+        "correct": false,
+        "why": "They are sent once per run."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4719wya",
+    "version": 1,
+    "section": "idempotency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A nightly run of the playbooks reports `changed=3`. What does that tell the team?",
+    "hint": "The network should have matched already.",
+    "choices": [
+      {
+        "text": "Three routers failed",
+        "correct": false,
+        "why": "That would be `failed`."
+      },
+      {
+        "text": "Three things had drifted and were put back; somebody should find out why",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: it is normal for every run",
+        "correct": false,
+        "why": "An idempotent run on a matching network reports 0."
+      },
+      {
+        "text": "The playbook ran three times",
+        "correct": false,
+        "why": "It counts changes, not runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-hhpwv07s",
+    "version": 1,
+    "section": "secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What in `group_vars/all.yaml` is safe to commit, and why?",
+    "hint": "What would a reader of the repository see?",
+    "choices": [
+      {
+        "text": "The token, since it is only valid inside the lab",
+        "correct": false,
+        "why": "The file holds no readable token."
+      },
+      {
+        "text": "The ciphertext, since it is useless without the vault password",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: vault files are never committed",
+        "correct": false,
+        "why": "Committing them is the point of Vault."
+      },
+      {
+        "text": "The vault password, stored next to it so that the playbook can find it",
+        "correct": false,
+        "why": "The password stays in `~/.vault-pass`."
+      }
+    ]
+  },
+  {
+    "id": "ex-48e9406f",
+    "version": 1,
+    "section": "secrets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ticket.yaml` failed without the vault password, and its error was replaced by a `censored` message. Why?",
+    "hint": "The task hides everything about itself.",
+    "choices": [
+      {
+        "text": "Vault encrypts error messages too",
+        "correct": false,
+        "why": "It encrypts values, not output."
+      },
+      {
+        "text": "The service desk censored the reply",
+        "correct": false,
+        "why": "The request was never sent."
+      },
+      {
+        "text": "`grep` removed the message from the output",
+        "correct": false,
+        "why": "grep showed the only fatal line."
+      },
+      {
+        "text": "`no_log: true` hides the task's result, the reason for a failure included",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bc6j3aa",
+    "version": 1,
+    "section": "secrets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The `uri` task created a ticket and reported `ok`. What should it have in it?",
+    "hint": "A task should tell the truth about change.",
+    "choices": [
+      {
+        "text": "`no_log: false`",
+        "correct": false,
+        "why": "That shows the token again."
+      },
+      {
+        "text": "`changed_when: true`, or a condition on the status code",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`--check`",
+        "correct": false,
+        "why": "That is a run option, not part of a task."
+      },
+      {
+        "text": "A second `uri` task that reads the ticket back",
+        "correct": false,
+        "why": "Useful, and it still would not change the first task's status."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvs3399h",
+    "version": 1,
+    "section": "secrets",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ansible-vault ___` turns one value into an encrypted variable to paste into a variables file.",
+    "hint": "Two words joined by an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "encrypt_string"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5mnpvxam",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A playbook must set interface descriptions on 200 routers every night and change nothing on routers that already match. Which part of this lesson matters most?",
+    "hint": "The second run.",
+    "choices": [
+      {
+        "text": "Vault",
+        "correct": false,
+        "why": "No secret is involved."
+      },
+      {
+        "text": "`gather_facts: false`, to keep the nightly run short",
+        "correct": false,
+        "why": "It only skips Linux facts."
+      },
+      {
+        "text": "A single host per play, so that one failure cannot stop the others",
+        "correct": false,
+        "why": "Plays run on many hosts, and a failed host does not stop the rest."
+      },
+      {
+        "text": "Idempotent tasks that report `changed` truthfully",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-kdv399zv",
+    "version": 1,
+    "section": "a-playbook",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In what order does Ansible report a task's result for each host?",
+    "hint": "Hosts are worked on at the same time.",
+    "choices": [
+      {
+        "text": "Alphabetically, by host name in the inventory file",
+        "correct": false,
+        "why": "They are reported as they finish."
+      },
+      {
+        "text": "In the order of the `hosts` line",
+        "correct": false,
+        "why": "They are reported as they finish."
+      },
+      {
+        "text": "Failed hosts first, then the rest of the hosts that succeeded",
+        "correct": false,
+        "why": "There is no such sorting."
+      },
+      {
+        "text": "In whatever order the hosts finished",
+        "correct": true,
+        "why": "Right: they run in parallel."
+      }
+    ]
+  },
+  {
+    "id": "ex-ceft5248",
+    "version": 1,
+    "section": "a-playbook",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line of an Ansible run does a pipeline read first to decide whether it went well?",
+    "hint": "It counts statuses per host.",
+    "choices": [
+      {
+        "text": "The first task's line, which carries the connection status for every host",
+        "correct": false,
+        "why": "The recap counts every task."
+      },
+      {
+        "text": "The `PLAY [...]` header with the play's name",
+        "correct": false,
+        "why": "It names the play, and says nothing about results."
+      },
+      {
+        "text": "The play recap",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The last task's output",
+        "correct": false,
+        "why": "That is one task of many."
+      }
+    ]
+  },
+  {
+    "id": "ex-cd4jtdaq",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `facts.yaml` run on edge1 and edge2 only?",
+    "hint": "Look at the play's `hosts`.",
+    "choices": [
+      {
+        "text": "`frr_facts` refuses to run on a core router",
+        "correct": false,
+        "why": "It runs on any FRR router."
+      },
+      {
+        "text": "core1 was down at the time, so Ansible skipped it without a word",
+        "correct": false,
+        "why": "A down host is reported as unreachable."
+      },
+      {
+        "text": "core1 has no host_vars file",
+        "correct": false,
+        "why": "It has one, and it does not decide where a play runs."
+      },
+      {
+        "text": "Its `hosts` is the `branches` group",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ynmet35",
+    "version": 1,
+    "section": "secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the vault password stay in the lab?",
+    "hint": "It must not be next to what it opens.",
+    "choices": [
+      {
+        "text": "In `group_vars/all.yaml`, just above the encrypted value",
+        "correct": false,
+        "why": "Then the encryption would protect nothing."
+      },
+      {
+        "text": "In `ansible.cfg`, which is committed with the rest of the project",
+        "correct": false,
+        "why": "The file can point to the password; it must not hold it."
+      },
+      {
+        "text": "In the inventory",
+        "correct": false,
+        "why": "The inventory is committed too."
+      },
+      {
+        "text": "In `~/.vault-pass`, readable by `ana` alone",
+        "correct": true,
+        "why": "Right, or in a pipeline's secret store."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwzqc2th",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague's playbook uses `cli_command` to send `router bgp` lines. What is the case for `frr_bgp` instead?",
+    "hint": "Which of the two reads the device first?",
+    "choices": [
+      {
+        "text": "It is the only module that can reach an FRR router over SSH at all",
+        "correct": false,
+        "why": "Both use the same connection."
+      },
+      {
+        "text": "It works out the commands from data and from the current state",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It needs no inventory",
+        "correct": false,
+        "why": "Every module runs on inventory hosts."
+      },
+      {
+        "text": "It hides the commands",
+        "correct": false,
+        "why": "It sends commands over SSH like any other module."
+      }
+    ]
+  }
+]

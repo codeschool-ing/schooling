@@ -1,0 +1,493 @@
+{
+  "ex-yjzrrj3e": {
+    "prompt": "No projeto do laboratório, que arquivo dá ao edge1 o próprio `router_id`?",
+    "hint": "Um arquivo com o nome do host.",
+    "choices": [
+      {
+        "text": "`group_vars/routers.yaml`",
+        "why": "Esse vale para todo roteador."
+      },
+      {
+        "text": "`inventory/hosts.yaml`, ao lado do endereço",
+        "why": "O inventário só guarda `ansible_host`."
+      },
+      {
+        "text": "`ansible.cfg`",
+        "why": "Esse diz onde está o inventário."
+      },
+      {
+        "text": "`host_vars/edge1.yaml`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-z5dn0ana": {
+    "prompt": "O que `ansible_connection: ansible.netcommon.network_cli` muda no jeito como o Ansible trabalha num host?",
+    "hint": "Um roteador não roda Python.",
+    "choices": [
+      {
+        "text": "Usa NETCONF",
+        "why": "Isso é `ansible.netcommon.netconf`."
+      },
+      {
+        "text": "Entra no CLI por SSH em vez de rodar Python no host",
+        "why": "Isso."
+      },
+      {
+        "text": "Pula a autenticação",
+        "why": "Ele entra com `ansible_user` e a chave."
+      },
+      {
+        "text": "Roda as tarefas um host por vez em vez de em paralelo, o que roteadores exigem",
+        "why": "Ele continua rodando os hosts em paralelo."
+      }
+    ]
+  },
+  "ex-gg44gg6g": {
+    "prompt": "`ansible-inventory --___ edge1` imprime as variáveis que o Ansible vai usar para esse roteador, mescladas de todos os arquivos.",
+    "hint": "A opção tem o nome do que o edge1 é no inventário.",
+    "blanks": [
+      {
+        "accept": [
+          "host"
+        ]
+      }
+    ]
+  },
+  "ex-s76mbmfj": {
+    "prompt": "Ligue cada variável de conexão ao que ela diz.",
+    "hint": "Do `group_vars/routers.yaml`.",
+    "pairs": [
+      {
+        "left": "`ansible_network_os`",
+        "right": "Os prompts e comandos de qual plataforma"
+      },
+      {
+        "left": "`ansible_network_cli_ssh_type`",
+        "right": "Qual biblioteca SSH"
+      },
+      {
+        "left": "`ansible_user`",
+        "right": "Qual conta entra"
+      },
+      {
+        "left": "`ansible_host`",
+        "right": "A que endereço conectar"
+      }
+    ],
+    "right_distractors": [
+      "Qual senha do vault"
+    ]
+  },
+  "ex-d5ra3xrw": {
+    "prompt": "Ordene a estrutura do Ansible da mais externa para a mais interna.",
+    "hint": "Um playbook contém plays.",
+    "items": [
+      "Playbook",
+      "Play",
+      "Tarefa",
+      "Módulo e argumentos"
+    ]
+  },
+  "ex-txr79w2v": {
+    "prompt": "O `show.yaml` informou `ok` e não `changed` na tarefa `cli_command`. Por quê?",
+    "hint": "O que a tarefa fez com o roteador?",
+    "choices": [
+      {
+        "text": "O roteador recusou o comando",
+        "why": "Isso seria `failed`."
+      },
+      {
+        "text": "`gather_facts: false` esconde mudanças",
+        "why": "Ele só pula a coleta de fatos."
+      },
+      {
+        "text": "Só leu, e diz isso",
+        "why": "Isso."
+      },
+      {
+        "text": "O recap só conta mudanças depois da segunda execução do mesmo playbook",
+        "why": "Ele conta toda execução."
+      }
+    ]
+  },
+  "ex-7jqqgfcy": {
+    "prompt": "No `show.yaml`, o filtro Jinja2 que lê o JSON do roteador é ___.",
+    "hint": "Ele lê de um formato.",
+    "blanks": [
+      {
+        "accept": [
+          "from_json"
+        ]
+      }
+    ]
+  },
+  "ex-atxxjrbm": {
+    "prompt": "O `bgp.yaml` é o mesmo arquivo para os três roteadores. Por que o core1 recebeu dois vizinhos e cada roteador de borda um?",
+    "hint": "De onde o laço tira a lista?",
+    "choices": [
+      {
+        "text": "O `frr_bgp` descobre vizinhos sozinho",
+        "why": "Ele configura o que recebe."
+      },
+      {
+        "text": "O core1 rodou o playbook duas vezes",
+        "why": "Rodou uma vez, com dois itens no laço."
+      },
+      {
+        "text": "O OSPF contou ao core1 sobre os edges, e o módulo leu os vizinhos do OSPF",
+        "why": "O módulo não lê protocolo de roteamento."
+      },
+      {
+        "text": "O `bgp_neighbours` de cada host, dos host_vars",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-pdx8qjeh": {
+    "prompt": "O que um módulo de plataforma como o `frr_bgp` faz que o `cli_config` com as mesmas linhas não faz?",
+    "hint": "Dados ou linhas?",
+    "choices": [
+      {
+        "text": "Pula o SSH",
+        "why": "Os dois usam a conexão network_cli."
+      },
+      {
+        "text": "Salva a configuração no startup, que o `cli_config` deixa de fora",
+        "why": "Salvar não é a diferença."
+      },
+      {
+        "text": "Roda mais rápido",
+        "why": "Velocidade não é o ponto."
+      },
+      {
+        "text": "Recebe a configuração como dado e calcula os comandos",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-582xvcqm": {
+    "prompt": "O `bgp_check.yaml` usa `assert`. O que acontece se um par não estiver `Established`?",
+    "hint": "Uma asserção transforma uma expectativa num resultado.",
+    "choices": [
+      {
+        "text": "O par é reiniciado",
+        "why": "assert não muda nada."
+      },
+      {
+        "text": "A tarefa falha naquele roteador, e o recap mostra",
+        "why": "Isso."
+      },
+      {
+        "text": "Um aviso é impresso, e o play ainda informa sucesso para aquele roteador",
+        "why": "Ele falha."
+      },
+      {
+        "text": "O Ansible espera a sessão subir e depois segue com o play",
+        "why": "assert não espera."
+      }
+    ]
+  },
+  "ex-xx0jsnqb": {
+    "prompt": "Quantas sessões BGP o `bgp_check.yaml` achou `Established`, somando os três roteadores?",
+    "hint": "Uma linha por item.",
+    "unit": "sessões"
+  },
+  "ex-ms9830ax": {
+    "prompt": "O `mgmt.yaml` rodou duas vezes. O que o segundo recap disse para cada roteador?",
+    "hint": "Não sobrou nada a fazer.",
+    "choices": [
+      {
+        "text": "`changed=0`",
+        "why": "Isso."
+      },
+      {
+        "text": "`changed=1`",
+        "why": "Isso foi a primeira execução."
+      },
+      {
+        "text": "`failed=1`, porque a linha existe",
+        "why": "Uma linha existente é sucesso."
+      },
+      {
+        "text": "`skipped=1`",
+        "why": "A tarefa rodou e não achou nada a enviar."
+      }
+    ]
+  },
+  "ex-w5mjbzjn": {
+    "prompt": "O que `--check --diff` faz?",
+    "hint": "Uma simulação.",
+    "choices": [
+      {
+        "text": "Mostra o que mudaria, sem mudar",
+        "why": "Isso."
+      },
+      {
+        "text": "Aplica a mudança e mostra depois",
+        "why": "`--check` não aplica nada."
+      },
+      {
+        "text": "Confere a sintaxe YAML do playbook sem conectar em nenhum equipamento",
+        "why": "Isso é `--syntax-check`."
+      },
+      {
+        "text": "Compara dois playbooks",
+        "why": "Compara o equipamento com o play."
+      }
+    ]
+  },
+  "ex-9e4tf7fc": {
+    "prompt": "O `cli_config` avisou que as linhas devem ser escritas como o roteador as imprime. O que dá errado se não forem?",
+    "hint": "Como ele decide que uma linha falta?",
+    "choices": [
+      {
+        "text": "Parecem novas toda vez, e a tarefa informa `changed` em toda execução",
+        "why": "Isso: a idempotência se perde."
+      },
+      {
+        "text": "O roteador as recusa",
+        "why": "O roteador pode aceitá-las."
+      },
+      {
+        "text": "O Ansible as reescreve para bater com o espaçamento do roteador",
+        "why": "Ele avisa; não reescreve."
+      },
+      {
+        "text": "São enviadas duas vezes",
+        "why": "São enviadas uma vez por execução."
+      }
+    ]
+  },
+  "ex-t4719wya": {
+    "prompt": "Uma execução noturna dos playbooks informa `changed=3`. O que isso diz à equipe?",
+    "hint": "A rede já deveria bater.",
+    "choices": [
+      {
+        "text": "Três roteadores falharam",
+        "why": "Isso seria `failed`."
+      },
+      {
+        "text": "Três coisas tinham derivado e foram corrigidas; alguém deve descobrir por quê",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: é normal em toda execução",
+        "why": "Uma execução idempotente numa rede que bate informa 0."
+      },
+      {
+        "text": "O playbook rodou três vezes",
+        "why": "Conta mudanças, não execuções."
+      }
+    ]
+  },
+  "ex-hhpwv07s": {
+    "prompt": "O que em `group_vars/all.yaml` é seguro de fazer commit, e por quê?",
+    "hint": "O que um leitor do repositório veria?",
+    "choices": [
+      {
+        "text": "O token, já que só vale dentro do laboratório",
+        "why": "O arquivo não guarda token legível."
+      },
+      {
+        "text": "O texto cifrado, já que é inútil sem a senha do vault",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: arquivos do vault nunca vão para o repositório",
+        "why": "Colocá-los no repositório é o propósito do Vault."
+      },
+      {
+        "text": "A senha do vault, guardada ao lado para o playbook conseguir achá-la",
+        "why": "A senha fica em `~/.vault-pass`."
+      }
+    ]
+  },
+  "ex-48e9406f": {
+    "prompt": "O `ticket.yaml` falhou sem a senha do vault, e o erro foi trocado por uma mensagem `censored`. Por quê?",
+    "hint": "A tarefa esconde tudo sobre si.",
+    "choices": [
+      {
+        "text": "O Vault criptografa mensagens de erro também",
+        "why": "Ele criptografa valores, não saída."
+      },
+      {
+        "text": "A central de chamados censurou a resposta",
+        "why": "A requisição nunca foi enviada."
+      },
+      {
+        "text": "O `grep` tirou a mensagem da saída",
+        "why": "O grep mostrou a única linha fatal."
+      },
+      {
+        "text": "`no_log: true` esconde o resultado da tarefa, inclusive o motivo de uma falha",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-5bc6j3aa": {
+    "prompt": "A tarefa `uri` criou um chamado e informou `ok`. O que ela deveria ter?",
+    "hint": "Uma tarefa deve dizer a verdade sobre mudança.",
+    "choices": [
+      {
+        "text": "`no_log: false`",
+        "why": "Isso mostra o token de novo."
+      },
+      {
+        "text": "`changed_when: true`, ou uma condição sobre o código de status",
+        "why": "Isso."
+      },
+      {
+        "text": "`--check`",
+        "why": "Isso é opção de execução, não parte de tarefa."
+      },
+      {
+        "text": "Uma segunda tarefa `uri` que lê o chamado de volta",
+        "why": "Útil, e ainda assim não mudaria o status da primeira tarefa."
+      }
+    ]
+  },
+  "ex-fvs3399h": {
+    "prompt": "`ansible-vault ___` transforma um valor numa variável cifrada para colar num arquivo de variáveis.",
+    "hint": "Duas palavras unidas por um sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "encrypt_string"
+        ]
+      }
+    ]
+  },
+  "ex-5mnpvxam": {
+    "prompt": "Um playbook precisa definir descrições de interface em 200 roteadores toda noite e não mudar nada nos que já batem. Que parte desta aula importa mais?",
+    "hint": "A segunda execução.",
+    "choices": [
+      {
+        "text": "O Vault",
+        "why": "Nenhum segredo está envolvido."
+      },
+      {
+        "text": "`gather_facts: false`, para a execução noturna ser curta",
+        "why": "Só pula fatos de Linux."
+      },
+      {
+        "text": "Um host por play, para que uma falha não pare os outros",
+        "why": "Plays rodam em muitos hosts, e um host que falha não para os demais."
+      },
+      {
+        "text": "Tarefas idempotentes que informam `changed` com verdade",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-kdv399zv": {
+    "prompt": "Em que ordem o Ansible informa o resultado de uma tarefa para cada host?",
+    "hint": "Os hosts são trabalhados ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "Em ordem alfabética, pelo nome do host no inventário",
+        "why": "São informados conforme terminam."
+      },
+      {
+        "text": "Na ordem da linha `hosts`",
+        "why": "São informados conforme terminam."
+      },
+      {
+        "text": "Primeiro os hosts que falharam, depois o resto dos que deram certo",
+        "why": "Não existe essa ordenação."
+      },
+      {
+        "text": "Na ordem em que os hosts terminaram",
+        "why": "Isso: eles rodam em paralelo."
+      }
+    ]
+  },
+  "ex-ceft5248": {
+    "prompt": "Que linha de uma execução do Ansible um pipeline lê primeiro para decidir se correu bem?",
+    "hint": "Ela conta os status por host.",
+    "choices": [
+      {
+        "text": "A linha da primeira tarefa, que traz o status de conexão de cada host",
+        "why": "O recap conta todas as tarefas."
+      },
+      {
+        "text": "O cabeçalho `PLAY [...]` com o nome do play",
+        "why": "Ele nomeia o play e não diz nada de resultados."
+      },
+      {
+        "text": "O play recap",
+        "why": "Isso."
+      },
+      {
+        "text": "A saída da última tarefa",
+        "why": "Essa é uma tarefa entre muitas."
+      }
+    ]
+  },
+  "ex-cd4jtdaq": {
+    "prompt": "Por que o `facts.yaml` rodou só no edge1 e no edge2?",
+    "hint": "Olhe o `hosts` do play.",
+    "choices": [
+      {
+        "text": "O `frr_facts` se recusa a rodar num roteador de núcleo",
+        "why": "Ele roda em qualquer roteador FRR."
+      },
+      {
+        "text": "O core1 estava fora do ar na hora, e o Ansible o pulou sem avisar",
+        "why": "Um host fora do ar aparece como unreachable."
+      },
+      {
+        "text": "O core1 não tem arquivo em host_vars",
+        "why": "Tem, e isso não decide onde um play roda."
+      },
+      {
+        "text": "O `hosts` dele é o grupo `branches`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-2ynmet35": {
+    "prompt": "Onde fica a senha do vault no laboratório?",
+    "hint": "Ela não pode ficar ao lado do que abre.",
+    "choices": [
+      {
+        "text": "Em `group_vars/all.yaml`, logo acima do valor cifrado",
+        "why": "Aí a criptografia não protegeria nada."
+      },
+      {
+        "text": "Em `ansible.cfg`, que vai para o repositório com o resto do projeto",
+        "why": "O arquivo pode apontar para a senha; não pode guardá-la."
+      },
+      {
+        "text": "No inventário",
+        "why": "O inventário também vai para o repositório."
+      },
+      {
+        "text": "Em `~/.vault-pass`, legível só pela `ana`",
+        "why": "Isso, ou no cofre de segredos de um pipeline."
+      }
+    ]
+  },
+  "ex-fwzqc2th": {
+    "prompt": "O playbook de um colega usa `cli_command` para mandar linhas de `router bgp`. Qual o argumento a favor do `frr_bgp`?",
+    "hint": "Qual dos dois lê o equipamento antes?",
+    "choices": [
+      {
+        "text": "É o único módulo que consegue chegar num roteador FRR por SSH",
+        "why": "Os dois usam a mesma conexão."
+      },
+      {
+        "text": "Calcula os comandos a partir de dados e do estado atual",
+        "why": "Isso."
+      },
+      {
+        "text": "Não precisa de inventário",
+        "why": "Todo módulo roda em hosts do inventário."
+      },
+      {
+        "text": "Esconde os comandos",
+        "why": "Ele manda comandos por SSH como qualquer outro módulo."
+      }
+    ]
+  }
+}
