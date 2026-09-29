@@ -1,0 +1,33 @@
+---
+title: What the CLI cannot promise
+version: 1
+---
+
+Lesson 1 sent configuration as lines of text, one after another, and lesson 2 sent it as JSON to
+an API that applied each request on its own. Both share a weakness that shows the day a change
+has more than one part. **If the third line of five is refused, the first two are already in
+force**, and the device is left in a state nobody designed: neither the old configuration nor the
+new one.
+
+NETCONF, RFC 6241, was written by people who had lived through that. It is a protocol for
+configuration and nothing else, and it makes four promises the CLI does not:
+
+- **Structure.** The configuration is a tree of data defined by a **YANG model**, not text to be
+  parsed. Every element has a name, a type and a place. Lesson 5 is about the models.
+- **Separate datastores.** A change is written to a **candidate** configuration, checked, and only
+  then made **running**. There is a third, **startup**, for what the device boots with.
+- **Transactions.** A commit applies the whole candidate or none of it.
+- **A way back.** A **confirmed commit** undoes itself unless it is confirmed in time.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" aria-label=\"nc1&#x27;s three datastores. A script&#x27;s edit-config writes to the candidate. Validate checks the candidate against the YANG model. Commit copies the whole candidate to running, the configuration in force, or nothing if any part is invalid. Discard-changes resets the candidate to running. Copy-config writes running to startup, what the device boots with.\"><defs><marker id=\"ds-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"20\" y=\"110\" width=\"130\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"85.0\" y=\"132.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">a script</text><text x=\"85.0\" y=\"148.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">ncclient</text><rect x=\"220\" y=\"110\" width=\"150\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"295.0\" y=\"132.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">candidate</text><text x=\"295.0\" y=\"148.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">a working copy</text><rect x=\"450\" y=\"110\" width=\"150\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"525.0\" y=\"132.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">running</text><text x=\"525.0\" y=\"148.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">in force</text><rect x=\"450\" y=\"230\" width=\"150\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"525.0\" y=\"247.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">startup</text><text x=\"525.0\" y=\"263.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">read at boot</text><path d=\"M152 140 L216 140\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ds-ah)\"></path><text x=\"184\" y=\"128\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">edit-config</text><path d=\"M372 132 L446 132\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ds-ah)\"></path><text x=\"409\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">commit</text><path d=\"M446 152 L374 152\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ds-ah)\"></path><text x=\"409\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">discard-changes</text><path d=\"M525 172 L525 226\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ds-ah)\"></path><text x=\"535\" y=\"200\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper)\">copy-config</text><path d=\"M295 108 L295 70 L250 70\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><rect x=\"90\" y=\"50\" width=\"160\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"5 4\"></rect><text x=\"170.0\" y=\"70.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">validate</text><text x=\"295\" y=\"40\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">checked against YANG</text><text x=\"525\" y=\"85\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">all of it, or none</text></svg>", "caption": "An edit never touches running directly. It becomes real at commit, whole, or not at all."}
+```
+
+**RESTCONF**, RFC 8040, puts the same data and the same models behind HTTPS. It is lesson 2's REST
+with the resources defined by YANG instead of by whoever wrote the API. Section 09 uses it.
+
+The device for this lesson is **`nc1`**. Its management plane is Clixon, open-source software that
+real products build on: it holds a configuration shaped by the standard models `ietf-interfaces`
+and `ietf-ip`, checks every change against them, and serves NETCONF on port 830 and RESTCONF on
+port 443. **`nc1` forwards no traffic.** Its interfaces exist only in its configuration, which is
+all this lesson needs, because what it teaches is how configuration is changed.
