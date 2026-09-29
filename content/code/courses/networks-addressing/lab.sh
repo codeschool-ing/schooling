@@ -640,6 +640,65 @@ scenario_vlans() {
   switch sw2 "p1 p2 p3 p24" vlan_filtering 1
 }
 
+# stp: three switches cabled in a triangle, a PC on each, and spanning tree
+# off. The cable from sw3 to sw1 is left unplugged (its sw3 end set down),
+# because with spanning tree off a triangle is a loop the moment it closes;
+# lesson 20 plugs it in on purpose.
+#
+#          pc1
+#           | p10
+#          sw1
+#     p2  /    \  p3
+#     p1 /      \ p1   (unplugged)
+#      sw2 ---- sw3
+#       | p3  p2 |
+#      pc2      pc3   (both on p10)
+scenario_stp() {
+  local n
+  for n in sw1 sw2 sw3 pc1 pc2 pc3; do node $n; done
+  link sw1 p2 sw2 p1; link sw2 p3 sw3 p2; link sw3 p1 sw1 p3
+  link pc1 eth0 sw1 p10; link pc2 eth0 sw2 p10; link pc3 eth0 sw3 p10
+  ip -n sw3 link set p1 down
+  switch sw1 "p2 p3 p10"; switch sw2 "p1 p3 p10"; switch sw3 "p1 p2 p10"
+  addr pc1 eth0 10.20.10.21/24; addr pc2 eth0 10.20.10.22/24; addr pc3 eth0 10.20.10.23/24
+}
+
+# lag: two switches joined by two cables (e1 and e2 on each end) that are not
+# yet part of either switch. pc1 is on sw1; pc2, pc3 and pc4 on sw2. Lesson 21
+# bundles the two cables with LACP.
+#
+#   pc1 -- sw1 ==(e1, e2)== sw2 -- pc2, pc3, pc4
+scenario_lag() {
+  local n
+  for n in sw1 sw2 pc1 pc2 pc3 pc4; do node $n; done
+  link sw1 e1 sw2 e1; link sw1 e2 sw2 e2
+  link pc1 eth0 sw1 p1; link pc2 eth0 sw2 p1; link pc3 eth0 sw2 p2; link pc4 eth0 sw2 p3
+  switch sw1 "p1"; switch sw2 "p1 p2 p3"
+  addr pc1 eth0 10.20.10.21/24; addr pc2 eth0 10.20.10.22/24
+  addr pc3 eth0 10.20.10.23/24; addr pc4 eth0 10.20.10.24/24
+}
+
+# intervlan: one switch with two VLANs already configured, as lesson 19 left
+# them, and a router cabled to port p8, which is a trunk carrying both. The
+# router has no address yet: lesson 22 gives it one per VLAN, and later moves
+# the routing into the switch itself.
+#
+#   pc1 (VLAN 10, 10.20.10.21) --p1\
+#   srv (VLAN 10, 10.20.10.10) --p3-- sw1 --p8 (trunk: 10, 20)-- r1
+#   pc2 (VLAN 20, 10.20.20.22) --p2/
+scenario_intervlan() {
+  node pc1; node pc2; node srv; node sw1; node r1 router
+  link pc1 eth0 sw1 p1; link pc2 eth0 sw1 p2; link srv eth0 sw1 p3; link r1 eth0 sw1 p8
+  switch sw1 "p1 p2 p3 p8" vlan_filtering 1
+  local p
+  for p in p1 p3; do ip netns exec sw1 bridge vlan add dev $p vid 10 pvid untagged; ip netns exec sw1 bridge vlan del dev $p vid 1; done
+  ip netns exec sw1 bridge vlan add dev p2 vid 20 pvid untagged; ip netns exec sw1 bridge vlan del dev p2 vid 1
+  ip netns exec sw1 bridge vlan add dev p8 vid 10; ip netns exec sw1 bridge vlan add dev p8 vid 20
+  addr pc1 eth0 10.20.10.21/24; addr srv eth0 10.20.10.10/24; addr pc2 eth0 10.20.20.22/24
+  gw pc1 10.20.10.1; gw srv 10.20.10.1; gw pc2 10.20.20.1
+  web srv 10.20.10.10
+}
+
 case "${1:-}" in
   up) up "${2:?which scenario? try: lab.sh list}" ;;
   down) down ;;
