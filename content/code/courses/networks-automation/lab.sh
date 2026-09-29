@@ -82,7 +82,8 @@ grpcio==1.84.0 pynetbox==7.8.0 ansible-pylibssh==1.4.0 os-ken==4.2.2"
 need() {
   local missing=()
   for p in iproute2 iputils-ping traceroute frr frr-pythontools openssh-server ansible yamllint \
-           git curl jq postgresql redis-server openssl python3-venv libyang-tools openvswitch-switch; do
+           git curl jq postgresql redis-server openssl python3-venv libyang-tools openvswitch-switch \
+           libxml2-utils netcat-openbsd; do
     dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p")
   done
   [ ${#missing[@]} -eq 0 ] || { echo "install first: ${missing[*]}" >&2; exit 1; }
