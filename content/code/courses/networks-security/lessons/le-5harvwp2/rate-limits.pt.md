@@ -33,7 +33,7 @@ ana@remote:~$ for i in $(seq 30); do curl -s -o /dev/null -w "%{http_code}\n" ht
      15 429
 ```
 
-**Dezesseis foram atendidas e catorze recusadas**: o burst de dez, mais o que a taxa reabasteceu
+**Quinze foram atendidas e quinze recusadas**: o burst de dez, mais o que a taxa reabasteceu
 enquanto o laço rodava. Enquanto isso, o limite só dizia respeito a `remote`:
 
 ```

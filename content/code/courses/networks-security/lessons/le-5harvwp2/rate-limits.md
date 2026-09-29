@@ -31,7 +31,7 @@ ana@remote:~$ for i in $(seq 30); do curl -s -o /dev/null -w "%{http_code}\n" ht
      15 429
 ```
 
-**Sixteen were served and fourteen refused**: the burst of ten, plus what the rate refilled while the
+**Fifteen were served and fifteen refused**: the burst of ten, plus what the rate refilled while the
 loop ran. Meanwhile the limit was only ever about `remote`:
 
 ```
