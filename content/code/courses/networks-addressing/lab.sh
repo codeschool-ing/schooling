@@ -617,6 +617,29 @@ scenario_bgp() {
   echo "hostname edge" | FRR_EXTRA=bgpd frr edge
 }
 
+# vlans: two switches joined by one cable (port p24 on each), with VLAN
+# filtering switched on and no VLANs configured, so every port starts in the
+# default VLAN 1. Lesson 19 puts each port in its VLAN. pc5 is the odd one:
+# it will be put in VLAN 20 while its address says 10.20.10.0/24.
+#
+#   pc1 (10.20.10.21)  pc2 (10.20.20.22)       pc3 (10.20.10.23)  pc4 (10.20.20.24)
+#           p1 \      / p2                          p1 \      / p2   p3 -- pc5 (10.20.10.25)
+#               sw1 ---------- p24 ---- p24 ---------- sw2
+vlans_build() {
+  local n
+  for n in pc1 pc2 pc3 pc4 pc5 sw1 sw2; do node $n; done
+  link pc1 eth0 sw1 p1; link pc2 eth0 sw1 p2
+  link pc3 eth0 sw2 p1; link pc4 eth0 sw2 p2; link pc5 eth0 sw2 p3
+  link sw1 p24 sw2 p24
+  addr pc1 eth0 10.20.10.21/24; addr pc3 eth0 10.20.10.23/24; addr pc5 eth0 10.20.10.25/24
+  addr pc2 eth0 10.20.20.22/24; addr pc4 eth0 10.20.20.24/24
+}
+scenario_vlans() {
+  vlans_build
+  switch sw1 "p1 p2 p24" vlan_filtering 1
+  switch sw2 "p1 p2 p3 p24" vlan_filtering 1
+}
+
 case "${1:-}" in
   up) up "${2:?which scenario? try: lab.sh list}" ;;
   down) down ;;
