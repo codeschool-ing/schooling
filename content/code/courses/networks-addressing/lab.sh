@@ -77,6 +77,10 @@ node() {  # node NAME [router]
     # A router answers a traceroute from the interface the probe came in by,
     # as most routers do, rather than from whichever one the answer leaves by.
     ip netns exec "$n" sysctl -qw net.ipv4.icmp_errors_use_inbound_ifaddr=1
+    # Linux drops a packet whose source it has no route back to (loose
+    # reverse-path filtering). A router forwards it unless told otherwise, and
+    # lessons 14 and 15 are about exactly the packets that have no way back.
+    ip netns exec "$n" sysctl -qw net.ipv4.conf.all.rp_filter=0 net.ipv4.conf.default.rp_filter=0
   fi
 }
 
@@ -490,6 +494,69 @@ subnet 10.20.10.0 netmask 255.255.255.0 {
 }
 CONF
   dhcpd_on rogue eth0 "$LAB/rogue/dhcpd.conf"
+}
+
+# plan: one /24 cut into subnets of different sizes (lesson 13's plan), each
+# on its own interface of r1, and r2 upstream holding one route for all of
+# them.
+#
+#   sales1 --(10.20.32.0/25)---+
+#   eng1   --(10.20.32.128/26)-+- r1 --(10.20.32.224/30)-- r2 --(10.20.99.0/24)-- hq1
+#   ops1   --(10.20.32.192/27)-+
+scenario_plan() {
+  local n
+  for n in sales1 eng1 ops1 hq1; do node $n; done
+  node r1 router; node r2 router
+  link sales1 eth0 r1 eth1; addr sales1 eth0 10.20.32.10/25;  addr r1 eth1 10.20.32.1/25
+  link eng1 eth0 r1 eth2;   addr eng1 eth0 10.20.32.140/26;  addr r1 eth2 10.20.32.129/26
+  link ops1 eth0 r1 eth3;   addr ops1 eth0 10.20.32.200/27;  addr r1 eth3 10.20.32.193/27
+  gw sales1 10.20.32.1; gw eng1 10.20.32.129; gw ops1 10.20.32.193
+  link r1 eth0 r2 eth0; addr r1 eth0 10.20.32.225/30; addr r2 eth0 10.20.32.226/30
+  gw r1 10.20.32.226
+  link r2 eth1 hq1 eth0; addr r2 eth1 10.20.99.1/24; addr hq1 eth0 10.20.99.10/24; gw hq1 10.20.99.1
+  ip -n r2 route add 10.20.32.0/24 via 10.20.32.225
+}
+
+# paths: a router with two ways out. r1 is cabled to ra and to rb, and both
+# of those sit on the same far network, where far1 and far2 live. Nothing is
+# routed dynamically: lesson 14 writes every route by hand, and FRR runs on
+# r1 with an empty configuration so its route table can be read beside the
+# kernel's.
+#
+#                 +-- ra (10.20.1.0/30) --+
+#   pc1 --- r1 ---+                       +--- 10.30.0.0/16: far1 .5.10, far2 .7.10
+#   10.20.10.0/24 +-- rb (10.20.2.0/30) --+    (ra .0.1, rb .0.2)
+scenario_paths() {
+  local n
+  for n in pc1 sw9 far1 far2; do node $n; done
+  node r1 router; node ra router; node rb router
+  link pc1 eth0 r1 eth0; addr pc1 eth0 10.20.10.21/24; addr r1 eth0 10.20.10.1/24; gw pc1 10.20.10.1
+  link r1 eth1 ra eth0; addr r1 eth1 10.20.1.1/30; addr ra eth0 10.20.1.2/30
+  link r1 eth2 rb eth0; addr r1 eth2 10.20.2.1/30; addr rb eth0 10.20.2.2/30
+  link ra eth1 sw9 p1; link rb eth1 sw9 p2; link far1 eth0 sw9 p3; link far2 eth0 sw9 p4
+  switch sw9 "p1 p2 p3 p4"
+  addr ra eth1 10.30.0.1/16; addr rb eth1 10.30.0.2/16
+  addr far1 eth0 10.30.5.10/16; addr far2 eth0 10.30.7.10/16
+  gw far1 10.30.0.1; gw far2 10.30.0.1
+  ip -n ra route add 10.20.0.0/16 via 10.20.1.1
+  ip -n rb route add 10.20.0.0/16 via 10.20.2.1
+  echo "hostname r1" | frr r1
+}
+
+# chain: three routers in a line with a spare cable from r1 to r3, a PC at
+# each end, and no routes but the connected ones. Lesson 15 writes them.
+#
+#   pc1 --- r1 --(10.20.12.0/30)-- r2 --(10.20.23.0/30)-- r3 --- pc3
+#   10.20.1.0/24 \_________(10.20.13.0/30, the spare)_____/  10.20.3.0/24
+scenario_chain() {
+  local n
+  node pc1; node pc3
+  for n in r1 r2 r3; do node $n router; done
+  link pc1 eth0 r1 eth0; addr pc1 eth0 10.20.1.10/24; addr r1 eth0 10.20.1.1/24; gw pc1 10.20.1.1
+  link pc3 eth0 r3 eth0; addr pc3 eth0 10.20.3.10/24; addr r3 eth0 10.20.3.1/24; gw pc3 10.20.3.1
+  link r1 eth1 r2 eth1; addr r1 eth1 10.20.12.1/30; addr r2 eth1 10.20.12.2/30
+  link r2 eth2 r3 eth2; addr r2 eth2 10.20.23.1/30; addr r3 eth2 10.20.23.2/30
+  link r1 eth3 r3 eth3; addr r1 eth3 10.20.13.1/30; addr r3 eth3 10.20.13.2/30
 }
 
 case "${1:-}" in
