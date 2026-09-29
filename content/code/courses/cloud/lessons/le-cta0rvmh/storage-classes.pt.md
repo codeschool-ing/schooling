@@ -21,7 +21,7 @@ As quatro linhas do S3 na tabela são quatro classes, da captura da seção sobr
 Um terabyte guardado por um mês em São Paulo custa 1.000 × 0.04050 = 40.50 no Standard e
 1.000 × 0.00765 = 7.65 no Glacier Flexible Retrieval.
 
-## O custo está na saída
+## A pegadinha está na saída
 
 **As classes mais baratas cobram pela leitura, e por sair cedo.** Nenhuma das duas cobranças aparece
 na tabela, que só traz a linha de armazenamento, então esta seção as descreve sem dar valores.
@@ -35,7 +35,7 @@ Descendo a tabela, três coisas mudam:
   Instant Retrieval também cobram qualquer objeto menor que 128 KB como se tivesse 128 KB, o que os
   torna um lugar ruim para milhões de arquivos minúsculos.
 - Uma **espera**. Um objeto no Glacier Flexible Retrieval não pode ser lido com um `GET` antes de ser
-  restaurado, um pedido que leva de minutos a horas conforme a velocidade que você paga. O Instant
+  restaurado, um pedido que leva de minutos a horas conforme a velocidade pela qual você paga. O Instant
   Retrieval, como diz o nome, responde em milissegundos como o Standard.
 
 ## Regras de ciclo de vida movem objetos pela idade
@@ -47,7 +47,7 @@ para logs de aplicação gravados sob `logs/`, no formato JSON que a configuraç
 S3 recebe. Ela foi escrita para esta aula e não foi aplicada em lugar nenhum, porque não há conta:
 
 ```schooling-example
-{"language": "json", "file": "lifecycle.json", "parts": [{"code": "{\n  \"Rules\": [\n    {\n      \"ID\": \"logs-down-the-classes\",", "note": "Uma configuração guarda uma lista de regras, cada uma com um `ID` que você escolhe. O id é um rótulo para as pessoas que leem a configuração, e o repositório não faz nada com ele."}, {"code": "      \"Filter\": { \"Prefix\": \"logs/\" },", "note": "Quais objetos a regra alcança: toda chave que começa com `logs/`. De novo um prefixo, não uma pasta. Um filtro vazio aplicaria a regra ao bucket inteiro."}, {"code": "      \"Status\": \"Enabled\",", "note": "Uma regra pode ficar na configuração e ser desligada com `Disabled`."}, {"code": "      \"Transitions\": [\n        { \"Days\": 30,  \"StorageClass\": \"STANDARD_IA\" },\n        { \"Days\": 90,  \"StorageClass\": \"GLACIER_IR\" },\n        { \"Days\": 180, \"StorageClass\": \"GLACIER\" }\n      ],", "note": "Três mudanças, cada uma contada em dias desde a criação do objeto: para o Standard-IA aos 30, para o Glacier Instant Retrieval aos 90, para o Glacier Flexible Retrieval aos 180. A API chama essa última classe só de `GLACIER`."}, {"code": "      \"Expiration\": { \"Days\": 730 }\n    }\n  ]\n}", "note": "Depois de dois anos o objeto é apagado. Num bucket com versionamento ligado, a expiração torna a versão corrente não corrente, assunto a que a seção sobre versionamento volta."}]}
+{"language": "json", "file": "lifecycle.json", "parts": [{"code": "{\n  \"Rules\": [\n    {\n      \"ID\": \"logs-down-the-classes\",", "note": "Uma configuração guarda uma lista de regras, cada uma com um `ID` que você escolhe. O id é um rótulo para as pessoas que leem a configuração, e o repositório não faz nada com ele."}, {"code": "      \"Filter\": { \"Prefix\": \"logs/\" },", "note": "Quais objetos a regra alcança: toda chave que começa com `logs/`. De novo um prefixo, não uma pasta. Um filtro vazio aplicaria a regra ao bucket inteiro."}, {"code": "      \"Status\": \"Enabled\",", "note": "Uma regra pode ficar na configuração e ser desligada com `Disabled`."}, {"code": "      \"Transitions\": [\n        { \"Days\": 30,  \"StorageClass\": \"STANDARD_IA\" },\n        { \"Days\": 90,  \"StorageClass\": \"GLACIER_IR\" },\n        { \"Days\": 180, \"StorageClass\": \"GLACIER\" }\n      ],", "note": "Três mudanças, cada uma contada em dias desde a criação do objeto: para o Standard-IA aos 30, para o Glacier Instant Retrieval aos 90, para o Glacier Flexible Retrieval aos 180. A API chama essa última classe só de `GLACIER`."}, {"code": "      \"Expiration\": { \"Days\": 730 }\n    }\n  ]\n}", "note": "Depois de dois anos o objeto é apagado. Num bucket com versionamento ligado, a expiração torna a versão corrente não corrente, e a seção sobre versionamento volta a isso."}]}
 ```
 
 ```schooling-figure

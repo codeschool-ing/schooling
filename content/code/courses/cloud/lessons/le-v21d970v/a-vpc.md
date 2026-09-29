@@ -16,7 +16,7 @@ their VPCs, in the same region, on the same racks, and neither sees a packet of 
 reaches a machine in your VPC from outside unless you built a path for it, and the rest of this
 lesson is those paths: the route to an internet gateway, a NAT gateway, a load balancer, a peering.
 
-**A VPC lives in one region** on AWS and Azure, and spans that region's zones (lesson 9 is what a
+**A VPC lives in one region** on AWS and Azure, and spans that region's zones (lesson 9 says what a
 zone is, and why it matters). Google Cloud is the exception worth knowing: its VPC network is
 global, and only its subnets belong to a region.
 
@@ -48,10 +48,9 @@ many subnets, small enough that you can give each VPC a different one.
 
 ## Why the choice matters on the day you connect two networks
 
-**Two networks whose ranges overlap cannot be joined.** Not "joined badly": a peering between two
-VPCs, or a VPN from a VPC to the office (lesson 2's hybrid seam), is refused or unusable, because a
-router handed a packet for `10.0.5.9` has to decide which side that address is on, and with
-overlapping ranges it is on both.
+**Two networks whose ranges overlap cannot be joined.** A peering between two VPCs, or a VPN from a
+VPC to the office (lesson 2's hybrid seam), is refused or unusable. A router handed a packet for
+`10.0.5.9` has to decide which side that address is on, and with overlapping ranges it is on both.
 
 This happens for real. Every AWS region gives each account a **default VPC**, created for you,
 and its range is `172.31.0.0/16` in every account and every region. Two teams that each built on
@@ -63,4 +62,4 @@ have or will have, the network of any partner you might connect to. Give each a 
 for example `10.0.0.0/16` for production, `10.1.0.0/16` for staging and something well away from
 both for the office. **On AWS the range a VPC was created with cannot be changed** afterwards; you
 can add further ranges to it, and that is all. Getting it wrong costs nothing on day one, which is
-exactly why it is got wrong.
+exactly why people get it wrong.

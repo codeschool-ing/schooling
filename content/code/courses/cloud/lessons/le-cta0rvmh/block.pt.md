@@ -9,7 +9,7 @@ dados na própria frota de armazenamento e apresenta o volume à instância como
 isso um volume sobrevive à instância a que estava anexado, e pode ser desanexado de uma instância e
 anexado a outra.
 
-Três propriedades saem desse jeito de construir.
+Três propriedades decorrem dessa construção.
 
 **Um volume mora numa zona de disponibilidade.** Ele é replicado dentro da zona, então um disco que
 falha não o perde, mas uma instância em outra zona não consegue anexá-lo. Levar um volume a outra
@@ -39,7 +39,7 @@ EBS, USD per GB-month
 
 Um volume `gp3` de 200 GB em `sa-east-1` custa 200 × 0.1520 = 30.40 USD por mês desde o momento em
 que existe, anexado ou não. Um volume esquecido depois que a instância foi encerrada continua
-cobrando, e é uma das linhas mais comuns numa conta que ninguém sabe explicar; a aula 10 volta a
+gerando cobrança, e é uma das linhas mais comuns numa conta que ninguém sabe explicar; a aula 10 volta a
 ele.
 
 ## Tamanho, IOPS e vazão são botões separados
@@ -55,9 +55,9 @@ O `gp3`, o SSD de uso geral da tabela, separa as duas coisas. Ele vem com uma ba
 125 MiB/s qualquer que seja o tamanho, e mais de cada um se compra à parte, sem acrescentar
 gigabytes. O `st1` é um volume de disco rígido feito para o outro tipo de trabalho: mais barato por
 GB, 0.0860 contra 0.1520 em São Paulo, rápido em leituras sequenciais longas e lento nas
-espalhadas, e não pode ser volume de boot. Escolher entre os dois é uma pergunta sobre o padrão de
-acesso, não sobre o tamanho.
+espalhadas, e não pode ser volume de boot. Escolher entre os dois é uma questão de padrão de acesso,
+não de tamanho.
 
-O que o volume não dá é nada acima dos blocos. **Formatar, montar, aumentar o sistema de arquivos
+Acima dos blocos, o volume não oferece nada. **Formatar, montar, aumentar o sistema de arquivos
 depois que o volume cresce e verificá-lo depois de uma queda são trabalho do sistema operacional**,
 o que, nos termos da aula 1, faz deles trabalho seu.

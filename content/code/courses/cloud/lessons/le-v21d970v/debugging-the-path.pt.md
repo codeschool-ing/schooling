@@ -27,7 +27,7 @@ máquina: o serviço não está rodando, roda em outra porta, ou escuta só em `
 ## A lista
 
 Trabalhe da máquina para fora, porque as verificações de dentro são as mais baratas e as que mais
-estão erradas.
+vezes estão erradas.
 
 1. O serviço está escutando, e em qual endereço? Na instância, pela sessão de console do provedor ou
    por SSH de dentro da VPC, `ss -tln` lista os sockets TCP escutando. `0.0.0.0:8080` aceita conexões
@@ -38,7 +38,7 @@ estão erradas.
    inclui de onde a conexão vem? Da internet, é o endereço do cliente; através de um balanceador de
    carga, é o grupo do balanceador, não o cliente.
 3. A network ACL da sub-rede. As duas direções: a regra de entrada para a porta, e a regra de saída
-   para as respostas às portas efêmeras. Confira os números das regras, já que um negar com número
+   para as respostas às portas efêmeras. Confira os números das regras, já que uma negação com número
    menor vence.
 4. A tabela de rotas da sub-rede. A sub-rede de uma instância pública precisa de `0.0.0.0/0` para o
    internet gateway; uma instância privada que precisa sair precisa dela para um NAT gateway.
@@ -51,7 +51,7 @@ estão erradas.
 
 De onde você testa divide o caminho em dois. **De outra instância na mesma VPC**, uma conexão ao
 endereço privado, com `nc -zv -w 3 10.0.32.10 8080`, atravessa o security group e, se as duas estão em
-sub-redes diferentes, as ACLs, mas não o internet gateway nem o endereço público. Se isso funciona e de
+sub-redes diferentes, as ACLs. Não atravessa o internet gateway nem o endereço público. Se isso funciona e de
 fora não, o serviço está bem e o defeito está entre o lado de fora e a máquina: a origem de uma regra,
 a ACL, a rota, o endereço. Se falha também, recomece pelo passo 1.
 

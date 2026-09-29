@@ -25,14 +25,14 @@ And a large empty volume created "for later", which bills from the first day: 1,
 ## The bucket that was public
 
 Every few months a news story reports records found in a storage bucket anybody could read. **Buckets
-are private by default, and those were made public by somebody.** A policy that grants reading to
-everyone, or a setting changed to share one file quickly, and the store did exactly what it was told,
-for every object under it.
+are private by default, and somebody made those public.** Somebody wrote a policy that grants reading
+to everyone, or changed a setting to share one file quickly, and the store did exactly what it was
+told, for every object under it.
 
 On S3 the defaults have tightened over the years. Since April 2023 a new bucket has Block Public
 Access switched on and object ACLs disabled, so making one public now takes two deliberate changes
-rather than one careless one. That lowers the odds and does not remove them, because the setting can
-still be switched off by anybody with permission to change it.
+rather than one careless one. That lowers the odds and does not remove them, because anybody with
+permission to change the setting can still switch it off.
 
 Reading a policy and seeing who it grants what is lesson 7's subject. Finding every public bucket
 across an account, encrypting with keys you control and watching for drift is `cloud-security`'s,

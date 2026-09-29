@@ -62,7 +62,7 @@ ana@laptop:~/cloud$ python3 -c "print(round(730 * 0.0050, 2))"
 
 São 730 horas, um mês na aritmética da AWS, ao preço da tabela: 3,65 dólares por mês por endereço, em
 qualquer das duas regiões. Uma máquina que não precisa ser alcançada diretamente não deveria ter um,
-e esse é o argumento das duas próximas seções além de uma linha na conta da aula 10.
+e esse é o argumento das duas próximas seções, além de ser uma linha na conta da aula 10.
 
 O erro inverso é igualmente comum. Uma instância com endereço público numa sub-rede cuja tabela não
 tem rota para o internet gateway parece pública na página de detalhes e é inalcançável. As respostas
@@ -70,6 +70,6 @@ dela não têm por onde sair, e os pedidos dela também não. Quando uma máquin
 funciona", a tabela de rotas da sub-rede é um dos cinco lugares que a última seção desta aula manda
 olhar.
 
-Os preços aqui são a lista pública da AWS para `sa-east-1` (São Paulo) e `us-east-1` (N. Virginia),
+Os preços aqui são a lista pública da AWS para `sa-east-1` (São Paulo) e `us-east-1` (Virgínia do Norte),
 em dólares e sem impostos, nas versões de oferta que o `prices.py` imprime; este curso não tem conta,
 e nada aqui é uma fatura.

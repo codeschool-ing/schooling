@@ -6,7 +6,7 @@ version: 1
 O segundo filtro fica na borda da sub-rede, e não na máquina. Uma **network ACL**, lista de controle de
 acesso, é presa a uma sub-rede e vale para todo pacote que entra ou sai dela. Ela parece um security
 group com os números preenchidos de outro jeito, e as diferenças são exatamente as que pegam as
-pessoas.
+pessoas desprevenidas.
 
 **Ela não tem estado.** Uma network ACL não se lembra de nada. Uma resposta é só mais um pacote,
 julgado sozinho pelas regras, então se os pedidos podem entrar e as respostas não podem sair, a
@@ -41,8 +41,8 @@ As regras de uma sub-rede pública que serve HTTPS, com uma faixa recusada:
 | 100 | TCP | 1024–65535 | `0.0.0.0/0` | permitir |
 | `*` | todos | todas | `0.0.0.0/0` | negar |
 
-A regra 90 vem antes da 100, então um pedido de `198.51.100.7` para a porta 443 é negado antes de o
-permitir ser lido. Troque os números e o negar nunca seria alcançado. A regra de saída é o caminho de
+A regra 90 vem antes da 100, então um pedido de `198.51.100.7` para a porta 443 é negado antes que a
+regra de permissão seja lida. Troque os números e a negação nunca seria alcançada. A regra de saída é o caminho de
 volta: sem ela todo pedido entra e nenhuma resposta sai, e de fora isso parece exatamente um servidor
 morto. O mesmo vale no outro sentido: se as instâncias desta sub-rede fazem pedidos próprios, as
 respostas chegam nas portas efêmeras *delas* e precisam de uma regra de entrada para 1024 a 65535.
@@ -62,14 +62,14 @@ respostas chegam nas portas efêmeras *delas* e precisam de uma regra de entrada
 | origem | uma faixa de endereços ou outro security group | só uma faixa de endereços |
 | um novo na AWS | nada entra, tudo sai | a ACL padrão da VPC: tudo entra e sai |
 
-## Quando você usa uma
+## Quando recorrer a uma
 
 A network ACL padrão que a AWS dá a toda VPC permite tudo nas duas direções, e **a maioria dos desenhos
 deixa assim** e filtra com security groups. Os motivos estão todos na tabela: grupos acompanham a
 instância, lembram das conexões e podem nomear uns aos outros, enquanto uma ACL precisa da faixa
 efêmera escrita nas duas direções e só conhece endereços.
 
-Uma network ACL faz valer seu lugar em duas situações. A primeira é uma negação na sub-rede inteira:
+Uma network ACL justifica seu lugar em duas situações. A primeira é uma negação na sub-rede inteira:
 uma faixa de endereços que está atacando você, recusada para toda máquina da sub-rede com uma regra, o
 que nenhum conjunto de regras de permissão consegue expressar. A segunda é um guarda-corpo: a ACL das
 sub-redes de dados só admite as faixas das sub-redes de aplicação, então um security group aberto

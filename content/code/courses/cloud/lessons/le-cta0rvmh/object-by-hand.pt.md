@@ -67,9 +67,9 @@ DELETE /ana-uploads/reports/q3.txt
 Leia o log de cima para baixo. O primeiro `PUT` é o upload de antes. Depois vem a movimentação: um
 `HEAD` para ler os metadados do objeto de origem, um `PUT` para a chave nova e um `DELETE` da
 antiga. A requisição do meio é uma cópia: a CLI a manda como um `PUT` com um cabeçalho que nomeia o
-objeto de origem, então os bytes são copiados dentro do repositório, sem download e upload.
+objeto de origem, então os bytes são copiados dentro do repositório, sem ser baixados e enviados de novo.
 
-**Três requisições para renomear uma vez**, e entre a cópia e a remoção as duas chaves existem. Um
+**Três requisições para uma única renomeação**, e entre a cópia e a remoção as duas chaves existem. Um
 programa que renomeia dez mil objetos manda trinta mil requisições, paga por cada uma e pode ser
 interrompido no meio, deixando alguns objetos com os dois nomes. Por isso dados organizados para um
 repositório de objetos escolhem as chaves uma vez só. Uma chave que carrega algo que tende a mudar,

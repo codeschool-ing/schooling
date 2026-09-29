@@ -10,7 +10,7 @@ precisa aqui é reconhecê-los e saber para que serve cada um.
 ## Endpoints, para os serviços do próprio provedor
 
 Uma instância privada que grava no armazenamento de objetos do provedor (aula 5) sairia, por padrão,
-pelo NAT gateway até o endereço público do serviço de armazenamento, pagando a cobrança de
+pelo NAT gateway até o endereço público do serviço de armazenamento. Pagaria a cobrança de
 processamento da seção de NAT em cada gigabyte para alcançar um serviço na mesma região. **Um endpoint
 é um caminho privado da VPC até um serviço do provedor.** A AWS tem dois tipos. Um gateway endpoint é uma rota na
 tabela da sub-rede que aponta as faixas de endereço do serviço para o endpoint; existe para S3 e

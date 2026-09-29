@@ -54,6 +54,6 @@ and 125 MiB/s whatever its size, and more of either is bought on its own, withou
 in São Paulo, quick at long sequential reads and slow at scattered ones, and it cannot be a boot
 volume. Choosing between them is a question about the access pattern, not about the size.
 
-What the volume does not give you is anything above the blocks. **Formatting, mounting, growing the
+The volume gives you nothing above the blocks. **Formatting, mounting, growing the
 filesystem after the volume grows, and checking it after a crash are the operating system's job**,
 which in the terms of lesson 1 makes them yours.

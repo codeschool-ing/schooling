@@ -43,8 +43,8 @@ because a block volume is attached to one machine.
 
 ## What it costs
 
-**The price is the other half of the answer.** EFS Standard is 0.5700 USD per GB-month in
-`sa-east-1`, against 0.1520 for a `gp3` volume, and the next section puts the two lines side by side.
+The price is the other half of the answer. **EFS Standard is 0.5700 USD per GB-month in
+`sa-east-1`, against 0.1520 for a `gp3` volume**, and the next section puts the two lines side by side.
 Some of the difference is the replication across zones and some is the service running the
 filesystem for you. EFS has cheaper tiers for files nobody opens often, which the course's sheet
 does not carry; the vendor course does.

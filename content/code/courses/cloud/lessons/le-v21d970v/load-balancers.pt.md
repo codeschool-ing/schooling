@@ -9,8 +9,8 @@ esse endereço.** Os clientes se conectam a ele; ele passa cada conexão ou pedi
 atrás dele, que o provedor chama de **alvos** (targets), e para de mandar para qualquer alvo que não
 esteja saudável.
 
-Na AWS um balanceador de carga, o load balancer, é alcançado por um nome DNS que o provedor dá a ele, e
-os endereços por trás do nome o provedor muda quando quiser; você aponta o seu próprio nome para ele e
+Na AWS um balanceador de carga é alcançado por um nome DNS que o provedor lhe dá, e o provedor muda
+os endereços por trás desse nome quando quiser; você aponta o seu próprio nome para ele e
 nunca anota o endereço.
 
 ## Camada 4 ou camada 7
@@ -32,8 +32,8 @@ aplicação que registra o endereço de origem da conexão registra o do balance
 ## Health checks
 
 **Um balanceador de carga confere cada alvo no próprio ritmo**, abrindo uma conexão ou pedindo um
-caminho como `/health` a cada poucos segundos. Um alvo que falha em várias verificações seguidas é
-marcado como não saudável e não recebe mais tráfego; um que volta a passar é trazido de volta. É assim
+caminho como `/health` a cada poucos segundos. O balanceador marca como não saudável um alvo que falha
+em várias verificações seguidas e para de mandar tráfego a ele, e o traz de volta quando ele volta a passar. É assim
 que uma máquina que caiu às três da manhã para de receber clientes antes de alguém acordar. Um grupo
 de autoscaling da aula 4 pode ser configurado para usar a mesma verificação, de modo que ele substitua
 a instância além de desviar dela.

@@ -51,7 +51,7 @@ wrong.
 
 Where you test from splits the path in two. **From another instance in the same VPC**, a connection
 to the private address, with `nc -zv -w 3 10.0.32.10 8080`, crosses the security group and, if the
-two are in different subnets, the ACLs, but not the internet gateway or the public address. If that
+two are in different subnets, the ACLs. It does not cross the internet gateway or the public address. If that
 works and the outside does not, the service is fine and the fault lies between the outside and the
 machine: a rule's source, the ACL, the route, the address. If it fails too, start again at step 1.
 

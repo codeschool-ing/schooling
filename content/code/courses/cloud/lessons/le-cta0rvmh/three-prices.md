@@ -65,7 +65,7 @@ and a first byte that arrives more slowly than from a local volume. What you get
 capacity charged on what is stored, kept in several zones. Requests are billed on their own: the
 sheet prices `PUT, COPY, POST, LIST` at 0.00700 per 1,000 in São Paulo, so a million uploads cost
 7.00, and a million `GET`s at 0.00056 per 1,000 cost 0.56. For data served to the public, the line
-that dominates is neither of these but transfer out to the internet, which lesson 10 prices.
+that dominates is transfer out to the internet, which lesson 10 prices.
 
 The column on the right is the other lesson in the sheet. Each of the three lines costs between
 1.76 and 1.9 times as much in São Paulo as in N. Virginia: 0.04050 / 0.02300 is 1.76, and 0.1520 / 0.0800 and

@@ -32,8 +32,7 @@ one of the four numbers, and that is where people stop trusting their eyes.
 
 Take `/20`. Sixteen bits cover the first two numbers, and **four more bits are fixed inside the
 third**. Four fixed bits out of eight leave four free, so the third number moves in steps of 16,
-which is two to the power of four:
-one `/20` covers third numbers 0 to 15, the next 16 to 31, the next 32 to 47. Carving
+which is two to the power of four. One `/20` covers third numbers 0 to 15, the next 16 to 31, the next 32 to 47. Carving
 `10.0.0.0/16` into `/20` subnets:
 
 ```

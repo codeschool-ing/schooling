@@ -10,7 +10,7 @@ what you need here is to recognise them and know what each one is for.
 ## Endpoints, for the provider's own services
 
 A private instance that writes to the provider's object storage (lesson 5) would, by default, go
-out through the NAT gateway to the storage service's public address, paying the NAT section's
+out through the NAT gateway to the storage service's public address. It would pay the NAT section's
 processing charge on every gigabyte to reach a service in the same region. **An endpoint is a
 private path from the VPC to a provider service.** AWS has two kinds. A gateway endpoint is a route
 in the subnet's route table that points the service's address ranges at the endpoint; it exists for

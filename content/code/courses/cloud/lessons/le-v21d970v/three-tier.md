@@ -24,9 +24,9 @@ the public tier, `10.0.32.0/20` and `10.0.48.0/20` for the application, `10.0.64
 | application | the application servers | the NAT gateway in the same zone |
 | data | the database, primary and standby | nowhere: there is no such route |
 
-**The data tier has no route out at all.** A managed database is patched by its provider without
-downloading anything through your network, and a subnet with only the `local` route cannot send
-anything to the internet, even if something that tries is running in it. Each application subnet sends to the
+**The data tier has no route out at all.** The provider patches a managed database without
+downloading anything through your network. A subnet with only the `local` route cannot send
+anything to the internet, even if something running in it tries. Each application subnet sends to the
 NAT gateway in its own zone, so that the loss of zone a does not take zone b's way out with it.
 
 ## The security groups, and who may start what
@@ -46,7 +46,7 @@ replies, because they are stateful.
 
 A student's browser resolves the site's name to the load balancer and connects on 443. The load
 balancer's group allows it. The load balancer ends TLS, reads the request, and picks a healthy
-application server, say `10.0.48.12` in zone b, and connects to it on 8080, which the application's
+application server, say `10.0.48.12` in zone b. It connects to it on 8080, which the application's
 group allows because the connection comes from the load balancer's group. The application opens a
 connection to the database on 5432, which the database's group allows for the same reason. Every
 reply goes back along the connection it belongs to without a rule of its own.
@@ -67,5 +67,5 @@ ana@laptop:~/cloud$ python3 -c "print(round(2 * 730 * 0.0930, 2), round(2 * 730 
 
 Two NAT gateways for 730 hours in `sa-east-1` are 135.78 dollars, and with the load balancer's
 hours, 160.60 a month before any data is processed and before any machine runs. A team building a
-prototype often starts with one NAT gateway, and accepts that zone a's outage takes zone b's way
-out with it; that is a trade to make on purpose, with lesson 10's numbers in front of you.
+prototype often starts with one NAT gateway and accepts that an outage in zone a takes zone b's way
+out with it. That is a trade to make on purpose, with lesson 10's numbers in front of you.

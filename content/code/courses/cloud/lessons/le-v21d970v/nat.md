@@ -58,8 +58,8 @@ coming in from the internet is itself free on the sheet. And bytes that leave fo
 pay the data transfer line as well as the processing, 0.15 dollars a GB for the first 10 TB in
 `sa-east-1`.
 
-**This is one of the classic surprises of lesson 10.** It is a bill for plumbing, it grows with
-traffic nobody thinks of as traffic, and the worst case is a private fleet copying terabytes to the
+**This is one of the classic surprises of lesson 10.** It is a bill for plumbing, and it grows with
+traffic nobody thinks of as traffic. The worst case is a private fleet copying terabytes to the
 provider's own storage service through the NAT gateway when a free path existed. The private-paths
 section of this lesson is that path.
 

@@ -4,13 +4,13 @@ version: 1
 ---
 
 "Onze noves" é citado como se quisesse dizer que um repositório de objetos não pode falhar. É um
-número sobre uma de duas coisas, e as duas se confundem fácil.
+número sobre uma de duas coisas, e é fácil confundir as duas.
 
-**Durabilidade é se os bytes ainda existem.** O S3 Standard é projetado para 99,999999999% de
+**Durabilidade diz se os bytes ainda existem.** O S3 Standard é projetado para 99,999999999% de
 durabilidade em um ano. A AWS ilustra com dez milhões de objetos: 10.000.000 × 0,00000000001 =
 0,0001 objeto perdido por ano, o que dá um objeto a cada dez mil anos.
 
-**Disponibilidade é se você consegue lê-los agora.** O S3 Standard é projetado para 99,99% de
+**Disponibilidade diz se você consegue lê-los agora.** O S3 Standard é projetado para 99,99% de
 disponibilidade. Um ano tem 525.600 minutos, e 0,01% deles são uns 53 minutos em que as requisições
 podem falhar. Os dados não se perdem nesses minutos; ficam fora de alcance.
 

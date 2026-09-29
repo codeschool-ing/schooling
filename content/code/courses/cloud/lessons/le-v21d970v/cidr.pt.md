@@ -32,7 +32,7 @@ um dos quatro números, e é aí que as pessoas param de confiar nos próprios o
 
 Pegue `/20`. Dezesseis bits cobrem os dois primeiros números, e **mais quatro bits ficam fixos dentro
 do terceiro**. Quatro bits fixos de oito deixam quatro livres, então o terceiro número anda em passos
-de 16, que é dois elevado a quatro: um `/20` cobre os terceiros números de 0 a 15, o seguinte de 16 a
+de 16, que é dois elevado a quatro. Um `/20` cobre os terceiros números de 0 a 15, o seguinte de 16 a
 31, o seguinte de 32 a 47. Recortando `10.0.0.0/16` em sub-redes `/20`:
 
 ```
@@ -53,7 +53,7 @@ comando pergunta se `10.0.17.5` pertence a `10.0.16.0/20`, e pertence: 17 está 
 a pergunta que toda tabela de rotas desta aula faz sobre todo pacote.
 
 Um bloco começa num múltiplo do próprio tamanho. `10.0.16.0/20` é uma rede e `10.0.8.0/20` não é,
-porque 8 não é múltiplo de 16, e o `ipaddress` recusa em vez de adivinhar qual rede se quis dizer:
+porque 8 não é múltiplo de 16, e o `ipaddress` recusa em vez de adivinhar qual rede você quis dizer:
 
 ```
 ana@laptop:~/cloud$ python3 -c "import ipaddress; ipaddress.ip_network('10.0.8.0/20')" 2>&1 | tail -1
@@ -74,11 +74,11 @@ ana@laptop:~/cloud$ python3 -c "import ipaddress; [print(n, n[0], n[-1], n.num_a
 192.168.0.0/16 192.168.0.0 192.168.255.255 65536
 ```
 
-`172.16.0.0/12` é a que surpreende. Doze bits fixos entram quatro bits no segundo número, então ela
+`172.16.0.0/12` é a que surpreende. Doze bits fixos avançam quatro bits pelo segundo número, então ela
 vai de `172.16` a `172.31`, e `172.32.0.1` é um endereço público. O `172.31.0.0/16` da VPC padrão fica
 bem no topo dela.
 
-E a sobreposição de que a seção anterior avisou é uma chamada:
+E a sobreposição contra a qual a seção anterior alertou se verifica com uma chamada:
 
 ```
 ana@laptop:~/cloud$ python3 -c "import ipaddress; vpc = ipaddress.ip_network('10.0.0.0/16'); print(vpc.overlaps(ipaddress.ip_network('10.0.128.0/24')), vpc.overlaps(ipaddress.ip_network('10.1.0.0/16')))"

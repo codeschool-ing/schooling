@@ -21,12 +21,12 @@ and every instance launched into it runs there. So an application that should su
 a zone needs at least two subnets for each role, one in each zone, and that is why the layouts in
 this lesson come in pairs.
 
-The other two providers draw the line elsewhere, and it is worth being exact about it. **On Google
+The other two providers draw the line elsewhere. **On Google
 Cloud a subnet is regional**: it spans every zone of its region, and you choose the zone per
 instance. On Azure, too, a virtual network and its subnets span all the zones of their region, and
 the zone is chosen per resource. The design goal is the same everywhere, machines of each role in
 more than one zone; what changes is whether the subnet carries the zone or the instance does.
-Lesson 9 is what a zone is, physically, and what crossing between two costs in time.
+Lesson 9 says what a zone is, physically, and what crossing between two costs in time.
 
 ## The addresses the provider keeps
 

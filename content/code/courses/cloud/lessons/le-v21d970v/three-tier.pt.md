@@ -24,8 +24,8 @@ dados. O primeiro de cada par fica na zona a, o segundo na zona b.
 | aplicação | os servidores de aplicação | o NAT gateway da mesma zona |
 | dados | o banco, primário e em espera | lugar nenhum: essa rota não existe |
 
-**A camada de dados não tem rota de saída nenhuma.** Um banco gerenciado recebe as correções do
-provedor sem baixar nada pela sua rede, e uma sub-rede só com a rota `local` não consegue mandar nada
+**A camada de dados não tem rota de saída nenhuma.** O provedor aplica as correções de um banco gerenciado
+sem baixar nada pela sua rede. Uma sub-rede só com a rota `local` não consegue mandar nada
 para a internet, mesmo que algo rodando nela tente. Cada sub-rede de aplicação manda para o NAT gateway
 da própria zona, para que a perda da zona a não leve junto a saída da zona b.
 
@@ -46,7 +46,7 @@ para respostas, porque têm estado.
 
 O navegador de um aluno resolve o nome do site para o balanceador de carga e se conecta na 443. O grupo
 do balanceador permite. O balanceador encerra o TLS, lê o pedido, escolhe um servidor de aplicação
-saudável, digamos `10.0.48.12` na zona b, e se conecta a ele na 8080, o que o grupo da aplicação
+saudável, digamos `10.0.48.12` na zona b. Ele se conecta a esse servidor na 8080, o que o grupo da aplicação
 permite porque a conexão vem do grupo do balanceador. A aplicação abre uma conexão com o banco na 5432,
 que o grupo do banco permite pelo mesmo motivo. Cada resposta volta pela conexão a que pertence, sem
 regra própria.
@@ -67,5 +67,5 @@ ana@laptop:~/cloud$ python3 -c "print(round(2 * 730 * 0.0930, 2), round(2 * 730 
 
 Dois NAT gateways por 730 horas em `sa-east-1` dão 135,78 dólares, e com as horas do balanceador,
 160,60 por mês antes de qualquer dado processado e antes de qualquer máquina rodar. Um time montando
-um protótipo muitas vezes começa com um NAT gateway só, e aceita que uma queda da zona a leve junto a
-saída da zona b; é uma troca para fazer de propósito, com os números da aula 10 na frente.
+um protótipo muitas vezes começa com um NAT gateway só e aceita que uma queda da zona a leve junto a
+saída da zona b. É uma troca para fazer de propósito, com os números da aula 10 à frente.

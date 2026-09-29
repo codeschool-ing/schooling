@@ -26,7 +26,7 @@ entrega.
 
 Um pacote que chega ao NAT gateway sem uma conexão na tabela, alguém na internet tentando abrir uma
 conexão para dentro, não casa com nada e não vai a lugar nenhum. Essa é toda a propriedade de
-segurança, e é a mesma que o roteador da sua casa dá a todo celular da casa: a conversa tem de começar
+segurança, e é a mesma que o roteador da sua casa dá a cada celular ligado nele: a conversa tem de começar
 do lado de dentro. Ela é **de mão única por construção**, e não por causa de uma regra que alguém
 poderia errar.
 
@@ -53,12 +53,12 @@ mês é 32,85 mais 4,50, 37,35. Isso antes das próprias instâncias, e antes de
 gateway vive numa zona, então um layout em duas zonas costuma rodar um em cada.
 
 Dois detalhes mudam o tamanho do número. A cobrança de processamento vale para bytes que entram tanto
-quanto para os que saem, então uma frota que baixa muito paga em cada download, mesmo que dados
-entrando da internet sejam de graça na tabela. E bytes que saem para a internet pagam a linha de
+quanto para os que saem, então uma frota que baixa muito paga em cada download, mesmo que os dados
+que entram da internet sejam gratuitos na tabela. E bytes que saem para a internet pagam a linha de
 transferência de dados além do processamento, 0,15 dólar por GB nos primeiros 10 TB em `sa-east-1`.
 
-**Esta é uma das surpresas clássicas da aula 10.** É uma conta de encanamento, cresce com tráfego que
-ninguém pensa como tráfego, e o pior caso é uma frota privada copiando terabytes para o serviço de
+**Esta é uma das surpresas clássicas da aula 10.** É uma conta de encanamento, e cresce com tráfego que
+ninguém considera tráfego. O pior caso é uma frota privada copiando terabytes para o serviço de
 armazenamento do próprio provedor pelo NAT gateway quando existia um caminho gratuito. A seção de
 caminhos privados desta aula é esse caminho.
 

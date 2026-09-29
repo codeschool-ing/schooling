@@ -15,7 +15,7 @@ região, nos mesmos racks, e nenhum vê um pacote do outro. Nada chega a uma má
 fora a menos que você tenha construído um caminho para isso, e o resto desta aula são esses
 caminhos: a rota para um internet gateway, um NAT gateway, um balanceador de carga, um peering.
 
-**Uma VPC vive numa região** na AWS e no Azure, e abrange as zonas dessa região (a aula 9 é o que é
+**Uma VPC vive numa região** na AWS e no Azure, e abrange as zonas dessa região (a aula 9 explica o que é
 uma zona, e por que ela importa). O Google Cloud é a exceção que vale conhecer: a VPC network dele é
 global, e só as sub-redes pertencem a uma região.
 
@@ -47,9 +47,8 @@ dividir em muitas sub-redes, pequeno o bastante para dar uma faixa diferente a c
 
 ## Por que a escolha importa no dia em que você liga duas redes
 
-**Duas redes cujas faixas se sobrepõem não podem ser ligadas.** Não é "ligadas mal": um peering entre
-duas VPCs, ou uma VPN de uma VPC para o escritório (a costura híbrida da aula 2), é recusado ou fica
-inútil, porque um roteador que recebe um pacote para `10.0.5.9` tem de decidir de que lado está esse
+**Duas redes cujas faixas se sobrepõem não podem ser ligadas.** Um peering entre duas VPCs, ou uma
+VPN de uma VPC para o escritório (a costura híbrida da aula 2), é recusado ou fica inútil. Um roteador que recebe um pacote para `10.0.5.9` tem de decidir de que lado está esse
 endereço, e com faixas sobrepostas ele está dos dois.
 
 O caso é real. Toda região da AWS dá a cada conta uma **VPC padrão**, criada para você, e a faixa dela
@@ -58,8 +57,8 @@ duas redes com a mesma faixa, e no dia em que alguém pede que elas conversem, a
 migração.
 
 Então a escolha é feita uma vez, cedo, com uma lista na mão: a faixa do escritório, toda outra VPC que
-você tem ou vai ter, a rede de qualquer parceiro a que você possa se ligar. Dê a cada uma a sua, por
+você tem ou vai ter, a rede de qualquer parceiro a que você possa se ligar. Dê a cada uma uma faixa própria, por
 exemplo `10.0.0.0/16` para produção, `10.1.0.0/16` para homologação e algo bem longe das duas para o
 escritório. **Na AWS a faixa com que uma VPC foi criada não pode ser mudada** depois; dá para
-acrescentar outras faixas, e só. Errar não custa nada no primeiro dia, e é exatamente por isso que se
-erra.
+acrescentar outras faixas, e só. Errar não custa nada no primeiro dia, e é exatamente por isso que as
+pessoas erram.

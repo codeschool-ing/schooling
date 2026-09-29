@@ -32,8 +32,8 @@ source address of the connection logs the load balancer's.
 ## Health checks
 
 **A load balancer checks every target on its own schedule**, by opening a connection or requesting
-a path such as `/health` every few seconds. A target that fails several checks in a row is marked
-unhealthy and receives no more traffic; one that passes again is brought back. That is how a
+a path such as `/health` every few seconds. The load balancer marks a target that fails several checks in a row
+as unhealthy and sends it no more traffic, and brings it back once it passes again. That is how a
 machine that crashed at three in the morning stops receiving customers before anybody is awake. An
 autoscaling group from lesson 4 can be told to use the same check, so that it replaces the instance
 as well as avoiding it.

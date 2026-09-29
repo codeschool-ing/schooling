@@ -34,7 +34,7 @@ primeira cópia inteira mais 29 incrementos:
 
 ## Snapshot não é política de backup
 
-Uma agenda de snapshots é um bom começo, com duas lacunas.
+Um agendamento de snapshots é um bom começo, mas tem duas lacunas.
 
 **Os snapshots moram na mesma conta e na mesma região do volume.** Quem pode apagar o volume em geral
 pode apagar os snapshots também, seja o script de limpeza de um colega, um atacante com credenciais

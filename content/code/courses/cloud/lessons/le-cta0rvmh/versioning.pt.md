@@ -64,7 +64,7 @@ a mesma.
 
 **Cada versão é guardada e cobrada como um objeto corrente.** Uma exportação de 1 GB sobrescrita uma
 vez por dia deixa uns 30 GB no bucket depois de um mês com versionamento ligado, e continua somando
-um gigabyte por dia enquanto ninguém remove as antigas. Apagar também não ajuda, porque um delete só
+um gigabyte por dia enquanto ninguém remove as antigas. Apagar também não ajuda, porque uma remoção só
 acrescenta um marcador. Por isso o versionamento quase sempre vem junto de uma regra de ciclo de
 vida para as versões não correntes, que transforma "guardar tudo" em "guardar uma janela para
 recuperar":
@@ -88,7 +88,7 @@ ser corrente, então um erro tem um mês para ser notado. A última linha remove
 que ficaram sem nenhuma versão por trás, que de outro modo se acumulariam em toda listagem de
 versões.
 
-Dois limites valem saber antes de depender disso. **Depois que o versionamento foi ligado, o bucket
+Vale conhecer dois limites antes de depender disso. **Depois que o versionamento foi ligado, o bucket
 pode ser suspenso mas nunca volta a não versionado**; as versões já guardadas ficam até algo
 apagá-las. E o versionamento protege contra erros, não contra alguém autorizado a apagar versões:
 quem tem essa permissão pode remover cada versão, uma por uma. Quem pode fazer isso é uma pergunta

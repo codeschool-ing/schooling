@@ -32,7 +32,7 @@ qualquer upload.
 ## Gravado inteiro, lido inteiro
 
 **Um objeto é gravado inteiro e substituído inteiro.** Não existe acrescentar ao fim, gravar no meio
-nem truncar. Para somar uma linha a um log guardado como objeto, o programa baixa o objeto, soma a
+nem truncar. Para acrescentar uma linha a um log guardado como objeto, o programa baixa o objeto, acrescenta a
 linha e envia tudo de novo sob a mesma chave. Objetos grandes são enviados em partes que o
 repositório junta no fim, e isso continua sendo uma gravação de um objeto. Ler é mais flexível: um
 `GET` pode pedir um intervalo de bytes, então ler parte de um objeto é barato, enquanto gravar parte
@@ -41,7 +41,7 @@ de um não é possível.
 Também não existe renomear. A chave é o nome, e o nome não fica guardado em nenhum outro lugar,
 então renomear `reports/q3.txt` é copiar o objeto para uma chave nova e apagar a antiga. Para um
 milhão de objetos são dois milhões de requisições, e renomear uma "pasta" é renomear cada chave sob
-o prefixo. A próxima seção vê isso acontecer.
+o prefixo. A próxima seção mostra isso acontecendo.
 
 ## A interface é HTTP, e pequena
 
@@ -60,8 +60,8 @@ também é uma linha na conta: a tabela cobra `PUT, COPY, POST, LIST` a 0.00700 
 **O S3 tem consistência forte de leitura após gravação desde dezembro de 2020.** Depois que um `PUT`
 devolveu sucesso, todo `GET` e todo `LIST` seguinte vê o objeto novo, e uma sobrescrita aparece na
 hora. Antes dessa data uma sobrescrita ou uma remoção podia demorar a aparecer, e artigos e
-bibliotecas mais antigos ainda carregam contornos para isso. O que consistência não dá é trava: dois
-programas gravando a mesma chave no mesmo instante têm sucesso os dois, e fica a gravação que chegou
+bibliotecas mais antigos ainda carregam contornos para isso. O que a consistência não dá é uma trava:
+dois programas gravando a mesma chave no mesmo instante têm sucesso os dois, e fica a gravação que chegou
 por último.
 
 **O S3 Standard é projetado para 99,999999999% de durabilidade**, onze noves, guardando cada objeto
