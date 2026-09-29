@@ -1,0 +1,469 @@
+{
+  "ex-rhd70wbp": {
+    "prompt": "Num webhook, quem abre a conexão?",
+    "hint": "É o contrário do polling.",
+    "choices": [
+      {
+        "text": "O receptor, perguntando a cada poucos segundos",
+        "why": "Isso é polling."
+      },
+      {
+        "text": "Um broker no meio",
+        "why": "Não há broker num webhook."
+      },
+      {
+        "text": "A pessoa que abre o chamado",
+        "why": "A automação abre."
+      },
+      {
+        "text": "O sistema onde o evento aconteceu",
+        "why": "Isso: o roteador faz POST para o receptor."
+      }
+    ]
+  },
+  "ex-z70fsv7g": {
+    "prompt": "O que receber webhooks exige que o polling não exige?",
+    "hint": "Quem precisa alcançar quem?",
+    "choices": [
+      {
+        "text": "Que o remetente alcance o receptor",
+        "why": "Isso: uma regra de firewall e um serviço sempre no ar."
+      },
+      {
+        "text": "Um banco de séries temporais para guardar os eventos",
+        "why": "Nada exige um."
+      },
+      {
+        "text": "Uma assinatura gNMI",
+        "why": "Esse é o mecanismo da aula 4."
+      },
+      {
+        "text": "Credenciais do receptor no roteador",
+        "why": "O receptor não entra no roteador para receber."
+      }
+    ]
+  },
+  "ex-p4jr9wet": {
+    "prompt": "Ligue cada remetente a um evento que o faria mandar um webhook.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "Um roteador",
+        "right": "Um link cai"
+      },
+      {
+        "left": "O NetBox",
+        "right": "Um objeto é mudado"
+      },
+      {
+        "left": "Um servidor Git",
+        "right": "Alguém faz push"
+      },
+      {
+        "left": "Um sistema de monitoramento",
+        "right": "Um alerta dispara"
+      }
+    ],
+    "right_distractors": [
+      "Um chamado é impresso"
+    ]
+  },
+  "ex-6zs3pmxv": {
+    "prompt": "Por que um receptor deve responder ao remetente antes de fazer trabalho lento, como chamar um sistema de chamados?",
+    "hint": "O remetente está esperando.",
+    "choices": [
+      {
+        "text": "Porque o HTTP proíbe handlers longos",
+        "why": "Não proíbe."
+      },
+      {
+        "text": "O chamado seria aberto duas vezes, mesmo com ids de entrega",
+        "why": "Os ids de entrega evitam isso."
+      },
+      {
+        "text": "Para economizar memória",
+        "why": "Memória não é o motivo."
+      },
+      {
+        "text": "Uma resposta lenta parece falha, e o remetente tenta de novo",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6x5wzys9": {
+    "prompt": "Quando a assinatura foi criada, o que a resposta do roteador deixou de fora?",
+    "hint": "Algo que não pertence a nenhum log.",
+    "choices": [
+      {
+        "text": "A URL",
+        "why": "Ela ecoou a URL."
+      },
+      {
+        "text": "A lista de eventos",
+        "why": "Ela ecoou os eventos."
+      },
+      {
+        "text": "O segredo",
+        "why": "Isso."
+      },
+      {
+        "text": "O id da assinatura, que o roteador guarda até o primeiro evento",
+        "why": "Ela respondeu com o id."
+      }
+    ]
+  },
+  "ex-kks0b1j2": {
+    "prompt": "Quais cabeçalhos vieram com a entrega do roteador? Escolha todos os que se aplicam.",
+    "hint": "A primeira linha impressa pelo receptor.",
+    "choices": [
+      {
+        "text": "`X-Devapi-Retry-After`",
+        "why": "Esse cabeçalho não foi enviado."
+      },
+      {
+        "text": "`X-Devapi-Event`",
+        "why": "Sim."
+      },
+      {
+        "text": "`X-Devapi-Signature`",
+        "why": "Sim."
+      },
+      {
+        "text": "`X-Devapi-Delivery`",
+        "why": "Sim."
+      },
+      {
+        "text": "`X-Devapi-Secret`",
+        "why": "O segredo nunca viaja."
+      }
+    ]
+  },
+  "ex-h6wstv37": {
+    "prompt": "O receptor respondeu cada entrega aceita com o código de status ___ No Content.",
+    "hint": "Um 2xx sem corpo.",
+    "blanks": [
+      {
+        "accept": [
+          "204"
+        ]
+      }
+    ]
+  },
+  "ex-afnbwvca": {
+    "prompt": "Por que `signed()` calcula o HMAC sobre o corpo cru e não sobre `json.dumps(json.loads(body))`?",
+    "hint": "O que pode mudar numa ida e volta?",
+    "choices": [
+      {
+        "text": "Reserializar muda espaços ou ordem das chaves e quebra uma assinatura real",
+        "why": "Isso."
+      },
+      {
+        "text": "Ler o JSON é mais lento",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "json.loads recusa dados assinados",
+        "why": "Ele lê qualquer JSON válido."
+      },
+      {
+        "text": "HMAC só funciona com dicionários",
+        "why": "HMAC trabalha com bytes."
+      }
+    ]
+  },
+  "ex-df2et0jg": {
+    "prompt": "Por que `hmac.compare_digest(want, got)` e não `want == got`?",
+    "hint": "Pense em quanto tempo cada comparação leva.",
+    "choices": [
+      {
+        "text": "`==` não é definido para strings em hex",
+        "why": "É definido."
+      },
+      {
+        "text": "`compare_digest` também confere o id da entrega contra a lista dos já tratados",
+        "why": "Ele compara duas strings."
+      },
+      {
+        "text": "`==` ignora maiúsculas",
+        "why": "Não ignora."
+      },
+      {
+        "text": "O tempo dela não revela quanto de um palpite estava certo",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-fchawqf2": {
+    "prompt": "A requisição forjada recebeu `401`. O que o receptor fez com o corpo dela?",
+    "hint": "A ordem das verificações em `do_POST`.",
+    "choices": [
+      {
+        "text": "Nada: a assinatura é conferida primeiro",
+        "why": "Isso."
+      },
+      {
+        "text": "Leu e registrou o evento",
+        "why": "Ele recusou antes de ler."
+      },
+      {
+        "text": "Abriu um chamado marcado como suspeito, para uma pessoa revisar depois",
+        "why": "Nenhum chamado foi aberto."
+      },
+      {
+        "text": "Acrescentou o id em `SEEN`",
+        "why": "Só entregas tratadas são acrescentadas."
+      }
+    ]
+  },
+  "ex-h2fwhq9n": {
+    "prompt": "O roteador assina cada entrega com HMAC-SHA___ usando o segredo da assinatura.",
+    "hint": "O valor do cabeçalho começa com esse nome.",
+    "blanks": [
+      {
+        "accept": [
+          "256"
+        ]
+      }
+    ]
+  },
+  "ex-d0n4b38y": {
+    "prompt": "Ninguém estava escutando quando o evento `up` foi enviado. O que aconteceu com ele?",
+    "hint": "Conte as tentativas.",
+    "choices": [
+      {
+        "text": "Foi tentado quatro vezes e depois perdido",
+        "why": "Isso."
+      },
+      {
+        "text": "Ficou numa fila até o receptor voltar",
+        "why": "O roteador desistiu depois de quatro tentativas."
+      },
+      {
+        "text": "Foi entregue direto à central de chamados, como plano B",
+        "why": "O roteador só conhece a URL do receptor."
+      },
+      {
+        "text": "Foi juntado ao próximo evento",
+        "why": "Eventos não são juntados."
+      }
+    ]
+  },
+  "ex-t697ye5q": {
+    "prompt": "O roteador espera 1, 2 e 4 segundos entre as quatro tentativas. Quantos segundos passam entre a primeira e a última tentativa?",
+    "hint": "Some as esperas.",
+    "unit": "segundos"
+  },
+  "ex-ws208vch": {
+    "prompt": "Um receptor guarda o conjunto `SEEN` em memória e reinicia durante uma janela de novas tentativas. O que pode acontecer?",
+    "hint": "O que um reinício esquece?",
+    "choices": [
+      {
+        "text": "Uma entrega repetida é tratada uma segunda vez",
+        "why": "Isso: guarde os ids num banco de dados."
+      },
+      {
+        "text": "O roteador lembra por ele",
+        "why": "O roteador só tenta de novo."
+      },
+      {
+        "text": "O segredo se perde, e as entregas são recusadas até uma pessoa copiá-lo de volta",
+        "why": "O segredo está num arquivo."
+      },
+      {
+        "text": "O roteador para de mandar",
+        "why": "Ele não sabe que o receptor reiniciou."
+      }
+    ]
+  },
+  "ex-tp03zj2a": {
+    "prompt": "Ponha em ordem os eventos da demonstração com `--fail-once`.",
+    "hint": "A figura da seção.",
+    "items": [
+      "O edge1 posta interface.up",
+      "O receptor resolve o INC-1001",
+      "O receptor responde 500",
+      "O edge1 manda a mesma entrega de novo",
+      "O receptor a ignora e responde 204"
+    ]
+  },
+  "ex-ha03p1tz": {
+    "prompt": "Um receptor para o qual a mesma entrega duas vezes tem o efeito de uma é chamado de ___.",
+    "hint": "A palavra da aula 1.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotente"
+        ]
+      }
+    ]
+  },
+  "ex-mzrh2ne6": {
+    "prompt": "Um link cai três vezes em dez minutos. Quantos chamados o `desk.handle` abre?",
+    "hint": "Ele procura um chamado aberto antes.",
+    "choices": [
+      {
+        "text": "Três",
+        "why": "O segundo e o terceiro acrescentam comentários."
+      },
+      {
+        "text": "Zero, já que um link oscilando não é incidente",
+        "why": "A primeira queda abre um."
+      },
+      {
+        "text": "Seis: um para cada evento, seja up ou down",
+        "why": "Eventos up resolvem, não abrem."
+      },
+      {
+        "text": "Um, com comentários para os seguintes",
+        "why": "Isso, enquanto ele estiver aberto."
+      }
+    ]
+  },
+  "ex-477x4bj0": {
+    "prompt": "Qual campo deixa quem ler o INC-1001 depois ver que a automação o abriu?",
+    "hint": "Quem pediu?",
+    "choices": [
+      {
+        "text": "`priority`: `high`",
+        "why": "Isso diz a urgência, não quem."
+      },
+      {
+        "text": "`requester`: `edge-monitor`",
+        "why": "Isso."
+      },
+      {
+        "text": "`status`",
+        "why": "Isso diz em que pé está."
+      },
+      {
+        "text": "`number`",
+        "why": "A central numera todo chamado."
+      }
+    ]
+  },
+  "ex-sc67zw9x": {
+    "prompt": "Um colega quer que o receptor também levante sozinho um link que caiu. O que a aula diz sobre isso?",
+    "hint": "O que é seguro automatizar primeiro?",
+    "choices": [
+      {
+        "text": "Decidir a causa ou mudar a rede fica com uma pessoa até testes conquistarem essa confiança",
+        "why": "Isso."
+      },
+      {
+        "text": "É o próximo passo óbvio e não custa nada",
+        "why": "Mudar a rede em resposta é trabalho de uma pessoa até a confiança ser conquistada."
+      },
+      {
+        "text": "Webhooks não podem carregar comandos",
+        "why": "O receptor poderia chamar a API do roteador; a questão é se deveria."
+      },
+      {
+        "text": "A central de chamados proíbe",
+        "why": "A central não tem voz nisso."
+      }
+    ]
+  },
+  "ex-cmk6bhez": {
+    "prompt": "Um receptor atrás de um balanceador responde devagar, e o remetente repete toda entrega. Que parte desta aula evita chamados duplicados?",
+    "hint": "Está no receptor, não no remetente.",
+    "choices": [
+      {
+        "text": "A assinatura HMAC",
+        "why": "Uma nova tentativa é assinada de verdade."
+      },
+      {
+        "text": "Conferir o id da entrega contra os já tratados",
+        "why": "Isso."
+      },
+      {
+        "text": "Responder 500 uma vez de propósito, como a demonstração fez",
+        "why": "Isso causou a nova tentativa."
+      },
+      {
+        "text": "O intervalo crescente do roteador entre tentativas",
+        "why": "Ele espaça as tentativas; não as remove."
+      }
+    ]
+  },
+  "ex-ydwc4g9b": {
+    "prompt": "Chega uma entrega com assinatura válida e um id de entrega que já está em `SEEN`. O que o `receiver.py` responde?",
+    "hint": "É uma duplicata, não uma falsificação.",
+    "choices": [
+      {
+        "text": "`401`, como para uma falsificação",
+        "why": "A assinatura era válida."
+      },
+      {
+        "text": "`500`, para o roteador tentar de novo depois",
+        "why": "Isso o faria repetir uma entrega já tratada."
+      },
+      {
+        "text": "`409 Conflict`, citando o chamado que a entrega anterior já abriu ou resolveu",
+        "why": "Um erro faria o remetente tentar de novo."
+      },
+      {
+        "text": "`204`, e não faz nada",
+        "why": "Isso: sucesso, para o remetente parar."
+      }
+    ]
+  },
+  "ex-yypt65y5": {
+    "prompt": "Ligue cada verificação do receptor ao ataque ou acidente que ela impede.",
+    "hint": "Três verificações, três problemas.",
+    "pairs": [
+      {
+        "left": "A assinatura HMAC",
+        "right": "Um evento forjado por qualquer um na rede"
+      },
+      {
+        "left": "O id da entrega em `SEEN`",
+        "right": "Uma nova tentativa tratada duas vezes"
+      },
+      {
+        "left": "Procurar um chamado aberto antes",
+        "right": "Dez chamados para um link oscilando"
+      }
+    ],
+    "right_distractors": [
+      "Um sistema de chamados lento"
+    ]
+  },
+  "ex-hwrzdtt2": {
+    "prompt": "Quantas tentativas, ao todo, o roteador fez para o evento `up` que ninguém escutava?",
+    "hint": "Conte as linhas com esse id de entrega.",
+    "unit": "tentativas"
+  },
+  "ex-h9e1azf0": {
+    "prompt": "No `ctl`, o receptor escuta na porta TCP ___.",
+    "hint": "Está na URL da assinatura.",
+    "blanks": [
+      {
+        "accept": [
+          "8080"
+        ]
+      }
+    ]
+  },
+  "ex-5vwg5vf8": {
+    "prompt": "O receptor ficou fora por um minuto e o roteador desistiu de um evento `up`. O que preenche o buraco no que o receptor sabe?",
+    "hint": "Algo que pergunta, ou a quem o estado é contado de novo.",
+    "choices": [
+      {
+        "text": "Uma verificação periódica do estado, ou uma assinatura dele",
+        "why": "Isso, como na aula 4."
+      },
+      {
+        "text": "Esperar o próximo evento `down` desse link",
+        "why": "Isso pode nunca vir, e o chamado fica aberto."
+      },
+      {
+        "text": "Um webhook é entregue exatamente uma vez, aconteça o que acontecer com o receptor",
+        "why": "A captura mostrou um evento perdido."
+      },
+      {
+        "text": "Um segredo mais longo",
+        "why": "O segredo é sobre quem mandou."
+      }
+    ]
+  }
+}

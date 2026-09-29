@@ -1,0 +1,696 @@
+[
+  {
+    "id": "ex-rhd70wbp",
+    "version": 1,
+    "section": "push-not-poll",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a webhook, who opens the connection?",
+    "hint": "It is the opposite of polling.",
+    "choices": [
+      {
+        "text": "The receiver, asking every few seconds",
+        "correct": false,
+        "why": "That is polling."
+      },
+      {
+        "text": "A broker in between",
+        "correct": false,
+        "why": "There is none in a webhook."
+      },
+      {
+        "text": "The person who opens the ticket",
+        "correct": false,
+        "why": "The automation opens it."
+      },
+      {
+        "text": "The system where the event happened",
+        "correct": true,
+        "why": "Right: the router POSTs to the receiver."
+      }
+    ]
+  },
+  {
+    "id": "ex-z70fsv7g",
+    "version": 1,
+    "section": "push-not-poll",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does receiving webhooks require that polling does not?",
+    "hint": "Who has to reach whom?",
+    "choices": [
+      {
+        "text": "That the sender reaches the receiver",
+        "correct": true,
+        "why": "Right: a firewall rule and a service always up."
+      },
+      {
+        "text": "A time-series database for storing the events",
+        "correct": false,
+        "why": "Nothing requires one."
+      },
+      {
+        "text": "A gNMI subscription",
+        "correct": false,
+        "why": "That is lesson 4's mechanism."
+      },
+      {
+        "text": "Credentials for the receiver on the router",
+        "correct": false,
+        "why": "The receiver does not log in to the router to receive."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4jr9wet",
+    "version": 1,
+    "section": "push-not-poll",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each sender to an event that would make it send a webhook.",
+    "hint": "The table of the section.",
+    "pairs": [
+      {
+        "left": "A router",
+        "right": "A link goes down"
+      },
+      {
+        "left": "NetBox",
+        "right": "An object is changed"
+      },
+      {
+        "left": "A Git server",
+        "right": "Somebody pushes"
+      },
+      {
+        "left": "A monitoring system",
+        "right": "An alert fires"
+      }
+    ],
+    "right_distractors": [
+      "A ticket is printed"
+    ]
+  },
+  {
+    "id": "ex-6zs3pmxv",
+    "version": 1,
+    "section": "a-receiver",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should a receiver answer the sender before doing slow work such as calling a ticketing system?",
+    "hint": "The sender is waiting.",
+    "choices": [
+      {
+        "text": "Because HTTP forbids long handlers",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "The ticket would be opened twice otherwise, even with delivery ids",
+        "correct": false,
+        "why": "Delivery ids prevent that."
+      },
+      {
+        "text": "To save memory",
+        "correct": false,
+        "why": "Memory is not the reason."
+      },
+      {
+        "text": "Delay looks like failure, and triggers a retry",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6x5wzys9",
+    "version": 1,
+    "section": "a-receiver",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When the subscription was created, what did the router's answer leave out?",
+    "hint": "Something that belongs in no log.",
+    "choices": [
+      {
+        "text": "The URL",
+        "correct": false,
+        "why": "It echoed the URL."
+      },
+      {
+        "text": "The list of events",
+        "correct": false,
+        "why": "It echoed the events."
+      },
+      {
+        "text": "The secret",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The id of the subscription, which the router keeps to itself until the first event",
+        "correct": false,
+        "why": "It answered with the id."
+      }
+    ]
+  },
+  {
+    "id": "ex-kks0b1j2",
+    "version": 1,
+    "section": "a-receiver",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which headers came with the router's delivery? Choose all that apply.",
+    "hint": "The first line printed by the receiver.",
+    "choices": [
+      {
+        "text": "`X-Devapi-Retry-After`",
+        "correct": false,
+        "why": "No such header was sent."
+      },
+      {
+        "text": "`X-Devapi-Event`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`X-Devapi-Signature`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`X-Devapi-Delivery`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`X-Devapi-Secret`",
+        "correct": false,
+        "why": "The secret never travels."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6wstv37",
+    "version": 1,
+    "section": "a-receiver",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The receiver answered each accepted delivery with the status code ___ No Content.",
+    "hint": "A 2xx with no body.",
+    "blanks": [
+      {
+        "accept": [
+          "204"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-afnbwvca",
+    "version": 1,
+    "section": "signatures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `signed()` compute the HMAC over the raw body instead of over `json.dumps(json.loads(body))`?",
+    "hint": "What might change in a round trip?",
+    "choices": [
+      {
+        "text": "Re-serialising changes spacing or key order, breaking a real signature",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Parsing is slower",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "json.loads refuses signed data",
+        "correct": false,
+        "why": "It parses any valid JSON."
+      },
+      {
+        "text": "HMAC works on dictionaries only",
+        "correct": false,
+        "why": "HMAC works on bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-df2et0jg",
+    "version": 1,
+    "section": "signatures",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why `hmac.compare_digest(want, got)` and not `want == got`?",
+    "hint": "Think about how long each comparison takes.",
+    "choices": [
+      {
+        "text": "`==` is not defined on strings of hex",
+        "correct": false,
+        "why": "It is."
+      },
+      {
+        "text": "`compare_digest` also checks the delivery id against the list of those already handled",
+        "correct": false,
+        "why": "It compares two strings."
+      },
+      {
+        "text": "`==` ignores case",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Its time does not reveal how much of a guess was right",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-fchawqf2",
+    "version": 1,
+    "section": "signatures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The forged request got `401`. What did the receiver do with its body?",
+    "hint": "The order of the checks in `do_POST`.",
+    "choices": [
+      {
+        "text": "Nothing: the signature is checked first",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Parsed it and logged the event",
+        "correct": false,
+        "why": "It refused before parsing."
+      },
+      {
+        "text": "Opened a ticket marked as suspicious, for a person to review later",
+        "correct": false,
+        "why": "No ticket was opened."
+      },
+      {
+        "text": "Added its id to `SEEN`",
+        "correct": false,
+        "why": "Only handled deliveries are added."
+      }
+    ]
+  },
+  {
+    "id": "ex-h2fwhq9n",
+    "version": 1,
+    "section": "signatures",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The router signs each delivery with HMAC-SHA___ using the subscription's secret.",
+    "hint": "The header value starts with this name.",
+    "blanks": [
+      {
+        "accept": [
+          "256"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d0n4b38y",
+    "version": 1,
+    "section": "retries-and-duplicates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nobody was listening when the `up` event was sent. What happened to it?",
+    "hint": "Count the attempts.",
+    "choices": [
+      {
+        "text": "It was tried four times and then lost",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It was queued until the receiver came back",
+        "correct": false,
+        "why": "The router gave up after four attempts."
+      },
+      {
+        "text": "It was delivered to the service desk directly, as a fallback",
+        "correct": false,
+        "why": "The router knows only the receiver's URL."
+      },
+      {
+        "text": "It was merged into the next event",
+        "correct": false,
+        "why": "Events are not merged."
+      }
+    ]
+  },
+  {
+    "id": "ex-t697ye5q",
+    "version": 1,
+    "section": "retries-and-duplicates",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The router waits 1, 2 and 4 seconds between its four attempts. How many seconds pass between the first and the last attempt?",
+    "hint": "Add the waits.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-ws208vch",
+    "version": 1,
+    "section": "retries-and-duplicates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A receiver keeps its `SEEN` set in memory and restarts during a retry window. What can happen?",
+    "hint": "What does a restart forget?",
+    "choices": [
+      {
+        "text": "A retried delivery is acted on a second time",
+        "correct": true,
+        "why": "Right: keep the ids in a database."
+      },
+      {
+        "text": "The router remembers for it",
+        "correct": false,
+        "why": "The router only retries."
+      },
+      {
+        "text": "The secret is lost, and deliveries are refused until a person copies it back",
+        "correct": false,
+        "why": "The secret is in a file."
+      },
+      {
+        "text": "The router stops sending",
+        "correct": false,
+        "why": "It does not know the receiver restarted."
+      }
+    ]
+  },
+  {
+    "id": "ex-tp03zj2a",
+    "version": 1,
+    "section": "retries-and-duplicates",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of the `--fail-once` demonstration in order.",
+    "hint": "The figure of the section.",
+    "items": [
+      "edge1 posts interface.up",
+      "The receiver resolves INC-1001",
+      "The receiver answers 500",
+      "edge1 sends the same delivery again",
+      "The receiver ignores it and answers 204"
+    ]
+  },
+  {
+    "id": "ex-ha03p1tz",
+    "version": 1,
+    "section": "retries-and-duplicates",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A receiver for which the same delivery twice has the effect of once is called ___.",
+    "hint": "Lesson 1's word.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mzrh2ne6",
+    "version": 1,
+    "section": "opening-a-ticket",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A link goes down three times in ten minutes. How many tickets does `desk.handle` open?",
+    "hint": "It looks for an open ticket first.",
+    "choices": [
+      {
+        "text": "Three",
+        "correct": false,
+        "why": "The second and third add comments."
+      },
+      {
+        "text": "Zero, as a flapping link is not an incident",
+        "correct": false,
+        "why": "The first down opens one."
+      },
+      {
+        "text": "Six: one for each event, whether up or down",
+        "correct": false,
+        "why": "Up events resolve, they do not open."
+      },
+      {
+        "text": "One, with comments for the later ones",
+        "correct": true,
+        "why": "Right, as long as it is still open."
+      }
+    ]
+  },
+  {
+    "id": "ex-477x4bj0",
+    "version": 1,
+    "section": "opening-a-ticket",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which field lets a person reading INC-1001 later see that the automation opened it?",
+    "hint": "Who asked for it?",
+    "choices": [
+      {
+        "text": "`priority`: `high`",
+        "correct": false,
+        "why": "That says how urgent, not who."
+      },
+      {
+        "text": "`requester`: `edge-monitor`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`status`",
+        "correct": false,
+        "why": "That says where it is."
+      },
+      {
+        "text": "`number`",
+        "correct": false,
+        "why": "The desk assigns numbers to every ticket."
+      }
+    ]
+  },
+  {
+    "id": "ex-sc67zw9x",
+    "version": 1,
+    "section": "opening-a-ticket",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants the receiver to also bring a downed link back up by itself. What does the lesson say about that?",
+    "hint": "What is safe to automate first?",
+    "choices": [
+      {
+        "text": "Deciding the cause or changing the network stays with a person until tests earn that trust",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is the obvious next step and costs nothing",
+        "correct": false,
+        "why": "Changing the network in response is a person's job until trust is earned."
+      },
+      {
+        "text": "Webhooks cannot carry commands",
+        "correct": false,
+        "why": "The receiver could call the router's API; the question is whether it should."
+      },
+      {
+        "text": "The service desk forbids it",
+        "correct": false,
+        "why": "The desk has no say in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmk6bhez",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A receiver behind a load balancer answers slowly, and the sender retries every delivery. Which part of this lesson prevents duplicate tickets?",
+    "hint": "It is in the receiver, not the sender.",
+    "choices": [
+      {
+        "text": "The HMAC signature",
+        "correct": false,
+        "why": "A retry is genuinely signed."
+      },
+      {
+        "text": "Checking the delivery id against the ones already handled",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Answering 500 once on purpose, as the demonstration did",
+        "correct": false,
+        "why": "That caused the retry."
+      },
+      {
+        "text": "The router's backoff between retries",
+        "correct": false,
+        "why": "It spaces retries; it does not remove them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydwc4g9b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A delivery arrives with a valid signature and a delivery id already in `SEEN`. What does `receiver.py` answer?",
+    "hint": "It is a duplicate, not a forgery.",
+    "choices": [
+      {
+        "text": "`401`, as for a forgery",
+        "correct": false,
+        "why": "The signature was valid."
+      },
+      {
+        "text": "`500`, so the router tries again later",
+        "correct": false,
+        "why": "That would make it retry a delivery already handled."
+      },
+      {
+        "text": "`409 Conflict`, naming the ticket that the earlier delivery already opened or resolved",
+        "correct": false,
+        "why": "An error would make the sender retry."
+      },
+      {
+        "text": "`204`, and does nothing",
+        "correct": true,
+        "why": "Right: success, so the sender stops."
+      }
+    ]
+  },
+  {
+    "id": "ex-yypt65y5",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each receiver check to the attack or accident it stops.",
+    "hint": "Three checks, three problems.",
+    "pairs": [
+      {
+        "left": "The HMAC signature",
+        "right": "A forged event from anyone on the network"
+      },
+      {
+        "left": "The delivery id in `SEEN`",
+        "right": "A retry acted on twice"
+      },
+      {
+        "left": "Looking for an open ticket first",
+        "right": "Ten tickets for one flapping link"
+      }
+    ],
+    "right_distractors": [
+      "A slow ticketing system"
+    ]
+  },
+  {
+    "id": "ex-hwrzdtt2",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many attempts, in total, did the router make for the `up` event nobody was listening to?",
+    "hint": "Count the lines with that delivery id.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "attempts"
+  },
+  {
+    "id": "ex-h9e1azf0",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On `ctl`, the receiver listens on TCP port ___.",
+    "hint": "It is in the subscription's URL.",
+    "blanks": [
+      {
+        "accept": [
+          "8080"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5vwg5vf8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The receiver was down for a minute and the router gave up on an `up` event. What fills the hole in what the receiver knows?",
+    "hint": "Something that asks, or that is told the state again.",
+    "choices": [
+      {
+        "text": "A periodic check of the state, or a subscription to it",
+        "correct": true,
+        "why": "Right, as in lesson 4."
+      },
+      {
+        "text": "Waiting for the next `down` event on that link",
+        "correct": false,
+        "why": "That may never come, and the ticket stays open."
+      },
+      {
+        "text": "A webhook is delivered exactly once, whatever happens to the receiver",
+        "correct": false,
+        "why": "The capture showed an event lost."
+      },
+      {
+        "text": "A longer secret",
+        "correct": false,
+        "why": "The secret is about who sent it."
+      }
+    ]
+  }
+]

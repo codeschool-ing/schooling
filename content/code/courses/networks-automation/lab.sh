@@ -365,10 +365,10 @@ C
   printf '%s\n' "$NETOPS_PASSWORD" > "$LAB/ctl/home/ana/.netops-password"
   printf '%s\n' "$DEVAPI_READONLY_PASSWORD" > "$LAB/ctl/home/ana/.audit-password"
   chown ana:ana "$LAB/ctl/home/ana/".*-password; chmod 600 "$LAB/ctl/home/ana/".*-password
-  # and a .netrc, which is where curl -n finds credentials for HTTP Basic
-  for h in $ROUTERS nc1; do
-    printf 'machine %s.example.net login netops password %s\n' "$h" "$NETOPS_PASSWORD"
-  done > "$LAB/ctl/home/ana/.netrc"
+  # and a .netrc for nc1, whose RESTCONF takes HTTP Basic: curl -n reads it, and
+  # so does requests. Only nc1: requests lets a .netrc entry replace the Bearer
+  # token a session sends, so an entry for a router would break lesson 2.
+  printf 'machine nc1.example.net login netops password %s\n' "$NETOPS_PASSWORD" > "$LAB/ctl/home/ana/.netrc"
   chown ana:ana "$LAB/ctl/home/ana/.netrc"; chmod 600 "$LAB/ctl/home/ana/.netrc"
 }
 
