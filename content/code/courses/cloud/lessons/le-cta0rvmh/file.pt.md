@@ -45,8 +45,8 @@ de um serviço de arquivos por trás, porque um volume de bloco fica anexado a u
 
 ## Quanto custa
 
-O preço é a outra metade da resposta. **O EFS Standard custa 0.5700 USD por GB-mês em
-`sa-east-1`, contra 0.1520 de um volume `gp3`**, e a próxima seção põe as duas linhas lado a lado.
+O preço é a outra metade da resposta. **O EFS Standard custa 0,5700 USD por GB-mês em
+`sa-east-1`, contra 0,1520 de um volume `gp3`**, e a próxima seção põe as duas linhas lado a lado.
 Parte da diferença é a replicação entre zonas e parte é o serviço operando o sistema de arquivos
 por você. O EFS tem faixas mais baratas para arquivos que quase ninguém abre, que a tabela do curso
 não traz; o curso de fornecedor traz.

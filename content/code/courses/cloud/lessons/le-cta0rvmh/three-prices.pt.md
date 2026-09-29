@@ -33,7 +33,7 @@ EFS, USD per GB-month
   Standard                                 0.5700       0.3000
 ```
 
-O preço de bloco é a linha `gp3` da captura da seção sobre blocos, 0.1520 e 0.0800. A linha do S3 é
+O preço de bloco é a linha `gp3` da captura da seção sobre blocos, 0,1520 e 0.0800. A linha do S3 é
 a primeira faixa, que cobre os primeiros 50 TB guardados num mês. Guardar **500 GB por um mês** em
 São Paulo em cada um dos três:
 
@@ -57,18 +57,18 @@ são seus, com 3.000 IOPS, usados ou não, numa zona. Ocupe 40 GB e você contin
 
 **O preço do arquivo compra um sistema de arquivos que outra pessoa opera em várias zonas, cobrado
 pelo que ele guarda.** Isso muda a comparação mais do que o gráfico de barras sugere. Os mesmos 40 GB
-no EFS custam 40 × 0.5700 = 22.80, menos que o volume quase vazio. O serviço de arquivos é caro por
+no EFS custam 40 × 0,5700 = 22,80, menos que o volume quase vazio. O serviço de arquivos é caro por
 gigabyte guardado e barato para pouca coisa, e o volume é o contrário.
 
 **O preço do objeto compra o mínimo e cobra o resto à parte.** Sem sistema de arquivos, sem
-montagem, e com um primeiro byte que chega mais devagar que de um volume local. O que 0.04050 compra
+montagem, e com um primeiro byte que chega mais devagar que de um volume local. O que 0,04050 compra
 é capacidade cobrada pelo que está guardado, mantida em várias zonas. As requisições são cobradas
-separadamente: a tabela cobra `PUT, COPY, POST, LIST` a 0.00700 por 1.000 em São Paulo, então um
-milhão de uploads custa 7.00, e um milhão de `GET` a 0.00056 por 1.000 custa 0.56. Para dados
+separadamente: a tabela cobra `PUT, COPY, POST, LIST` a 0,00700 por 1.000 em São Paulo, então um
+milhão de uploads custa 7,00, e um milhão de `GET` a 0,00056 por 1.000 custa 0.56. Para dados
 servidos ao público, a linha que mais pesa é a transferência para a internet, que a aula 10 põe
 na conta.
 
-A coluna da direita é a outra lição da tabela. Cada uma das três linhas custa entre 1.76 e 1.9 vezes
-mais em São Paulo do que na Virgínia do Norte: 0.04050 / 0.02300 dá 1.76, e 0.1520 / 0.0800 e
-0.5700 / 0.3000 dão 1.9. Onde os dados podem morar é uma pergunta com preço, e a aula 9 pesa esse
+A coluna da direita é a outra lição da tabela. Cada uma das três linhas custa entre 1,76 e 1,9 vezes
+mais em São Paulo do que na Virgínia do Norte: 0,04050 / 0,02300 dá 1,76, e 0,1520 / 0,0800 e
+0,5700 / 0,3000 dão 1.9. Onde os dados podem morar é uma pergunta com preço, e a aula 9 pesa esse
 preço contra a distância até quem os lê.

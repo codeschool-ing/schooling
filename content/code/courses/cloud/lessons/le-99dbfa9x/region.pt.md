@@ -61,9 +61,9 @@ EC2, Linux, on demand, USD per hour
   m7i.xlarge  4 vCPU  16 GiB              0.32130      0.20160
 ```
 
-Leia duas linhas. Uma `t3.micro` custa 0.01680 por hora em São Paulo e 0.01040 na Virgínia, e
+Leia duas linhas. Uma `t3.micro` custa 0,01680 por hora em São Paulo e 0,01040 na Virgínia, e
 0,01680 / 0,01040 = 1,615: a mesma máquina custa uns 62% a mais na `sa-east-1`. Uma `m7i.large` custa
-0.16065 contra 0.10080, e 0,16065 / 0,10080 = 1,594, uns 59% a mais. **A razão não é um número
+0,16065 contra 0,10080, e 0,16065 / 0,10080 = 1,594, uns 59% a mais. **A razão não é um número
 fixo**, mas toda linha sob demanda desse bloco fica entre 1,54 (a `c7i.large`) e 1,62.
 
 Num mês de 30 dias, 720 horas, uma `m7i.large` sai por 0,16065 × 720 = 115,67 dólares em São Paulo e

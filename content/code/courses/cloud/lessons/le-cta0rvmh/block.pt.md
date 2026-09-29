@@ -37,7 +37,7 @@ EBS, USD per GB-month
   snapshot                                 0.0680       0.0500
 ```
 
-Um volume `gp3` de 200 GB em `sa-east-1` custa 200 × 0.1520 = 30.40 USD por mês desde o momento em
+Um volume `gp3` de 200 GB em `sa-east-1` custa 200 × 0,1520 = 30,40 USD por mês desde o momento em
 que existe, anexado ou não. Um volume esquecido depois que a instância foi encerrada continua
 gerando cobrança, e é uma das linhas mais comuns numa conta que ninguém sabe explicar; a aula 10 volta a
 ele.
@@ -54,7 +54,7 @@ disco maior para ter um disco mais rápido.
 O `gp3`, o SSD de uso geral da tabela, separa as duas coisas. Ele vem com uma base de 3.000 IOPS e
 125 MiB/s qualquer que seja o tamanho, e mais de cada um se compra à parte, sem acrescentar
 gigabytes. O `st1` é um volume de disco rígido feito para o outro tipo de trabalho: mais barato por
-GB, 0.0860 contra 0.1520 em São Paulo, rápido em leituras sequenciais longas e lento nas
+GB, 0,0860 contra 0,1520 em São Paulo, rápido em leituras sequenciais longas e lento nas
 espalhadas, e não pode ser volume de boot. Escolher entre os dois é uma questão de padrão de acesso,
 não de tamanho.
 

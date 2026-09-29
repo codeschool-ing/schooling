@@ -22,7 +22,7 @@ próprio banco esbarram nas do sistema de arquivos. Um repositório de objetos m
 fosse um sistema de arquivos, com uma das ferramentas que fazem isso: ler funciona, e renomear um
 diretório ou acrescentar a um arquivo vira as cópias e regravações que a seção sobre objetos
 descreveu. E um volume grande e vazio criado "para depois", que cobra desde o primeiro dia: 1.000 GB
-de `gp3` em `sa-east-1` são 1.000 × 0.1520 = 152.00 USD por mês por espaço em que ninguém gravou.
+de `gp3` em `sa-east-1` são 1.000 × 0,1520 = 152,00 USD por mês por espaço em que ninguém gravou.
 
 ## O bucket que era público
 

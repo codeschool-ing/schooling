@@ -54,8 +54,8 @@ o prefixo. A próxima seção mostra isso acontecendo.
 | `GET /bucket?list-type=2&prefix=…` | lista chaves, opcionalmente cortadas num delimitador |
 
 Toda requisição é assinada com as credenciais de quem chama, e a aula 7 diz de quem. Toda requisição
-também é uma linha na conta: a tabela cobra `PUT, COPY, POST, LIST` a 0.00700 por 1.000 em
-`sa-east-1` e `GET` a 0.00056 por 1.000.
+também é uma linha na conta: a tabela cobra `PUT, COPY, POST, LIST` a 0,00700 por 1.000 em
+`sa-east-1` e `GET` a 0,00056 por 1.000.
 
 **O S3 tem consistência forte de leitura após gravação desde dezembro de 2020.** Depois que um `PUT`
 devolveu sucesso, todo `GET` e todo `LIST` seguinte vê o objeto novo, e uma sobrescrita aparece na

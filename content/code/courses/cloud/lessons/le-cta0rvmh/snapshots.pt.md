@@ -25,12 +25,12 @@ na zona que escolher, e o anexa a uma instância. O volume antigo fica intacto, 
 que se quer quando a pergunta é como um arquivo estava na terça-feira.
 
 O armazenamento de snapshots é cobrado por GB-mês sobre o que os snapshots guardam, não sobre o
-tamanho do volume. A linha `snapshot` da captura da seção anterior é 0.0680 em `sa-east-1`. Um mês de
+tamanho do volume. A linha `snapshot` da captura da seção anterior é 0,0680 em `sa-east-1`. Um mês de
 snapshots diários daquele volume de 200 GB, com 60 GB de dados e 2 GB mudando por dia, guarda a
 primeira cópia inteira mais 29 incrementos:
 
 - 60 + 29 × 2 = 118 GB de dados em snapshot
-- 118 × 0.0680 = 8.02 USD no mês, ao lado dos 30.40 do próprio volume
+- 118 × 0,0680 = 8,02 USD no mês, ao lado dos 30,40 do próprio volume
 
 ## Snapshot não é política de backup
 

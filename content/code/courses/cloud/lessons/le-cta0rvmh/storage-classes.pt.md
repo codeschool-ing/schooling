@@ -18,8 +18,8 @@ As quatro linhas do S3 na tabela são quatro classes, da captura da seção sobr
 | Glacier Instant Retrieval | `GLACIER_IR` | 0.00830 | 0.00400 |
 | Glacier Flexible Retrieval | `GLACIER` | 0.00765 | 0.00360 |
 
-Um terabyte guardado por um mês em São Paulo custa 1.000 × 0.04050 = 40.50 no Standard e
-1.000 × 0.00765 = 7.65 no Glacier Flexible Retrieval.
+Um terabyte guardado por um mês em São Paulo custa 1.000 × 0,04050 = 40,50 no Standard e
+1.000 × 0,00765 = 7,65 no Glacier Flexible Retrieval.
 
 ## A pegadinha está na saída
 
