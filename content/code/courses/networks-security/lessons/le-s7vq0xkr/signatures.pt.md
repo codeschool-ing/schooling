@@ -53,5 +53,5 @@ o arquivo, e é por isso que as duas metades desta aula andam juntas.
 
 **Tudo depende de a chave pública ser a certa.** Um usuário que buscou o `release.pub` no mesmo
 servidor comprometido que o arquivo conferiria uma versão forjada contra uma chave forjada, e veria
-`Verified`. Como saber de quem é a chave pública que você tem, na escala da internet inteira, é a
+`Signature Verified Successfully`. Como saber de quem é a chave pública que você tem, na escala da internet inteira, é a
 aula 12.

@@ -42,7 +42,7 @@ segment as its own bridge, which behaves the same way. What matters is the prope
 VLAN only protects anything if the traffic between VLANs is forced through a firewall, and a switch
 that routes between them by itself has undone the segmentation.
 
-For reference, the matrix as `fw` holds it, one comment per cell:
+For reference, the matrix as `fw` holds it, one comment per rule:
 
 ```
 root@fw:~# nft list chain ip filter forward | grep -E "comment|policy"

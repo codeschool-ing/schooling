@@ -22,7 +22,7 @@ because that was the subject of their message. The request was legitimate and th
 about what it saw. That combination is a **false positive**, and every WAF produces them.
 
 The wrong fixes are the tempting ones: switch the engine back to detection-only, or remove rule
-942100 everywhere. Either turns the protection off for the whole site to rescue one form. The right
+942100 everywhere. Either weakens the whole site to rescue one form. The right
 fix is **as narrow as the problem**: this rule, this field, this location.
 
 ```

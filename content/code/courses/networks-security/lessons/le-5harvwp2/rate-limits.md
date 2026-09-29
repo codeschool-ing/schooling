@@ -8,7 +8,7 @@ second from one address. Guessing passwords, scraping a catalogue and an overeag
 like that. **A rate limit caps how fast one client may ask**, and the proxy is the natural place for
 it because it sees every request before the application spends anything on it.
 
-nginx does it in two lines, one at the top of the file and one in the location:
+nginx does it in three lines, two at the top of the file and one in the location:
 
 ```
 root@www:~# grep -n "limit_req" /etc/nginx/sites-enabled/shop
@@ -44,7 +44,7 @@ root@www:~# grep -c "limiting requests" /var/log/nginx/error.log; grep -m1 "limi
 [error] 32145#32145: *41 limiting requests, excess: 10.715 by zone "perip", client: 203.0.113.50, server: www.example.com, request: "GET / HTTP/1.1", host: "www.example.com"
 ```
 
-`laptop` was served during the burst because its address has a counter of its own, and three
+`laptop` was served straight after the burst because its address has a counter of its own, and three
 seconds later `remote` was served again. Every refusal is in the error log with the client's
 address, which is what somebody reads afterwards to decide whether it was a script or a mistake.
 

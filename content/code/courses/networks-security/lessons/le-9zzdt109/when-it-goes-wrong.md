@@ -15,7 +15,7 @@ root@ips:~# jq -c "select(.event_type==\"alert\") | [.alert.action, .alert.signa
 
 **Blocked**: `/admin-guide.html` starts with `/admin`, which is all the rule asked. On the sensor this
 would have been one more alert to dismiss; inline, every customer who clicks the help link waits three
-seconds and gets nothing. The fix is a narrower rule, `/admin/` with the slash, and the lesson is the
+seconds and gets nothing. The fix is a narrower rule, `/admin/` with the slash. The lesson is the
 general one: **a rule goes inline only after it has been watched against real traffic**, long enough
 to know what else it matches.
 

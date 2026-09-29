@@ -28,6 +28,6 @@ zones of different trust (lesson 4). It is the wrong tool deep inside a data cen
 volume is highest and most flows are between machines that already trust each other; lesson 21
 handles that with rules on the machines themselves.
 
-**The layers stack rather than compete**: the stateless filter of lesson 1 at the border throws away
+**The layers stack**: the stateless filter of lesson 1 at the border throws away
 what can never be legitimate, the stateful firewall decides which conversations may exist, and the
 inspection engine reads the few that the policy cares about.

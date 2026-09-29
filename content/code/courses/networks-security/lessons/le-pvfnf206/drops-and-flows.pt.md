@@ -72,8 +72,8 @@ root@fw:~# jq -c '[.timestamp, .src_ip, .dest_ip, .dest_port, ."oob.in", ."oob.o
 ```
 
 A primeira é o laptop tentando o banco de dados, o que a política nunca permitiu; as outras três são
-`remote`, com um segundo de intervalo, em três portas e dois segmentos. **Um segundo de intervalo em
-três portas é uma varredura (scan)**, por menor que seja.
+`remote`, com um segundo de intervalo, contra três máquinas em dois segmentos. **Um segundo de
+intervalo entre três máquinas é uma varredura (scan)**, por menor que seja.
 
 Os registros de fluxo (flow records) são escritos depois, e essa é a primeira coisa a saber sobre eles.
 O registro de uma conexão é escrito quando o firewall a **esquece**, não quando ela fecha: uma conexão
@@ -90,9 +90,10 @@ root@fw:~# jq -c 'select(.src_ip == "203.0.113.50") | {start: ."flow.start.sec",
 
 Duas conversas de `remote` para a loja, ambas na porta 80, ambas permitidas. `start` e `end` estão em
 segundos desde 1970: 1790632351 é 18:52:31 em São Paulo, e `end` é exatamente 120 segundos depois nas
-duas, que são os dois minutos de memória e não a duração da conversa. As requisições em si levaram
-milissegundos. `sent` e `received` são bytes em cada sentido; o segundo fluxo recebeu 734 bytes contra
-os 437 do primeiro, porque uma página 404 é mais longa que a página inicial do laboratório.
+duas. São os dois minutos de memória, não a duração da conversa; as requisições em si levaram
+milissegundos. `sent` e `received` são bytes em cada sentido. O fluxo mais recente, que começou em
+1790632352, recebeu 734 bytes contra os 437 do mais antigo, porque uma página 404 é mais longa que a
+página inicial do laboratório.
 
 **As tentativas recusadas não estão aqui.** Uma conexão que o firewall descarta nunca entra na tabela
 como entrada confirmada, então nunca produz um registro de fluxo. Os fluxos dizem o que aconteceu; o

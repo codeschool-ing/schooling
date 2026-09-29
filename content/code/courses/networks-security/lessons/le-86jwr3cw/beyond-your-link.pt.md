@@ -5,7 +5,7 @@ version: 1
 
 Tudo até aqui acontece no equipamento do próprio defensor. Contra um ataque volumétrico maior do que
 o link, nada disso roda, porque os pacotes são descartados antes de chegar ao equipamento. O que
-resta se decide antes, do lado do provedor, e tem de ser combinado **antes** do ataque:
+resta se decide do lado do provedor, e alguém tem de combinar isso **antes** do ataque:
 
 | medida | como funciona |
 |---|---|
@@ -22,7 +22,7 @@ ar.
 ## Olhando a tabela encher
 
 No equipamento que é do defensor, o primeiro sinal de um ataque de protocolo é a tabela de conexões.
-Dois números e dois contadores para saber onde encontrar:
+Dois números para acompanhar, e dois contadores que vale saber onde encontrar:
 
 ```
 root@fw:~# conntrack -C; sysctl -n net.netfilter.nf_conntrack_max

@@ -27,7 +27,7 @@ root@www:~# ss -Hltn | awk "{print \$4}" | sort | diff listening.baseline -; ss 
 **A new listener, on every address, port 8081**, and the process holding it: `socat`, which has no
 business on a production proxy. On `0.0.0.0` it answers on every interface the machine has, so the
 firewall of lesson 4 is now all that stands between it and the DMZ. The network sensor saw nothing,
-because nobody has connected to it yet; the host check saw it the moment it opened.
+because nobody has connected to it yet; the host check saw it without anybody connecting.
 
 Useful host checks share that shape, and a HIDS agent runs many of them on a schedule:
 

@@ -15,7 +15,7 @@ ip access-list extended BRANCH-IN
 
 `established` matches any TCP packet with the **ACK or RST flag set**. The first packet of a new
 connection, a `SYN`, carries neither, so it fails the test; every later packet of a connection carries
-ACK. The `wan_in` chain in the previous section's file does the same on `branch`'s internet side: it
+ACK. The `wan_in` chain in `acl-extended.nft`, back in section 04, does the same on `branch`'s internet side: it
 drops TCP towards the branch whose ACK and RST flags are both clear.
 
 A server on `branchpc` is listening on 8080. `remote` tries to open a connection to it, and the branch's
@@ -34,9 +34,9 @@ The inbound `SYN` is **blocked**, and the counter shows the one packet dropped. 
 works, because every packet coming back to `branchpc` carries ACK.
 
 **What it cannot do is lesson 1's point, restated for routers.** `established` checks a flag the sender
-sets. A packet crafted with ACK already set passes the line whether or not any connection exists; the
-receiving host will answer it with a reset rather than accept it, so it does not open a connection, but
-the ACL did let it through, and scans that use such packets to map a network rely on exactly that. And
+sets. A packet crafted with ACK already set passes the line whether or not any connection exists. The
+receiving host answers it with a reset, so no connection opens, but the ACL did let it through, and
+scans that map a network with such packets rely on exactly that. And
 the keyword exists only for TCP: UDP replies, DNS answers included, need a line of their own that
 permits a source port, which is the hole lesson 1 walked through.
 

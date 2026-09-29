@@ -21,10 +21,10 @@ exit 0
 ```
 
 **The first attempt was dropped, and the second was answered.** `nc -p 8080` only asks the system
-to use 8080 as the source port. Nothing was bypassed and no rule was broken. The rule set said what
-it says.
+to use 8080 as the source port. Nothing was bypassed and no rule was broken. The rule set did exactly
+what it says.
 
-This is not an exotic weakness. The same shape has bitten real networks in two familiar forms:
+The same shape turns up in two familiar return rules:
 
 | return rule | what it also lets in |
 |---|---|

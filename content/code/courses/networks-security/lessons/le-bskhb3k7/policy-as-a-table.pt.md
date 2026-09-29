@@ -15,11 +15,11 @@ admin    192.168.99.10  admin   -           -         -
 *        -              -       ssh         22        admin
 ```
 
-Cada linha de servidor diz o **papel** que a máquina cumpre, o que ela **aceita**, em qual **porta** e
-de quais **papéis**. A última linha vale para todo host: SSH a partir do papel `admin`. Nada cita um
-endereço na coluna *de*. Um papel é convertido em endereços quando as regras são geradas, então um novo
-servidor de aplicação acrescentado à tabela com o papel `app` recebe a permissão do banco de dados na
-próxima vez que as regras forem geradas, sem que ninguém edite as regras do banco de dados.
+Cada linha de servidor diz o papel que a máquina cumpre, o que ela aceita, em qual porta e de quais
+papéis. A última linha vale para todo host: SSH a partir do papel `admin`. Nada cita um endereço na
+coluna *de*. **Um papel só vira endereços quando as regras são geradas.** Um novo servidor de aplicação
+acrescentado à tabela com o papel `app` recebe, portanto, a permissão do banco de dados na próxima
+geração, e ninguém edita as regras do banco de dados.
 
 O gerador é um programa curto em Python:
 

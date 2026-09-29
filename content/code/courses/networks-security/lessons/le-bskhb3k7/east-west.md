@@ -17,7 +17,7 @@ app:22                 blocked
 ```
 
 `app` reaches the database and not `db`'s SSH; `db` reaches nothing on `app`. **Neither of these
-connections crosses `fw`**, both machines sit on the servers segment, and before this lesson both were
+connections crosses `fw`**: both machines sit on the servers segment, and before this lesson both were
 open. Then the other roles:
 
 ```

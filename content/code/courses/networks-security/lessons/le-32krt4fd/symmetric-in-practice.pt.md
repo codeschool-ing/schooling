@@ -21,8 +21,9 @@ Payroll for September: 42 people, BRL 318,450.00
 O arquivo da chave tem 65 bytes: 64 dígitos hexadecimais e uma quebra de linha. O arquivo cifrado tem
 **80 bytes para uma mensagem de 49 bytes**: o `openssl` escreve o marcador `Salted__` e um salt de 8
 bytes no início, e o CBC completa a mensagem até um número inteiro de blocos de 16 bytes. O
-`-pbkdf2 -iter 600000` transforma o arquivo da chave na chave de fato por 600.000 rodadas de hash, o que
-importa quando a "chave" é uma senha que alguém digitou e aqui não custa nada. Com a mesma chave, a
+`-pbkdf2 -iter 600000` transforma o arquivo da chave na chave de fato por 600.000 rodadas de hash. Isso
+importa quando a "chave" é uma senha que alguém digitou, e não faz diferença aqui, onde a chave são
+32 bytes aleatórios. Com a mesma chave, a
 mensagem volta.
 
 **Isso funciona e tem uma falha que vale conhecer pelo nome**: o CBC mantém a mensagem secreta e não diz

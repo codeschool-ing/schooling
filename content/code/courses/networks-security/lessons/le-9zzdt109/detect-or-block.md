@@ -19,7 +19,7 @@ same program, Suricata here, and the difference is where it sits and what it is 
 The rows point at one trade. **An IDS can afford to be noisy and an IPS cannot.** An IDS rule that
 fires on a hundred harmless requests a day is an irritation; the same rule in an IPS blocks those
 hundred customers. So rules are usually born in detection, watched against real traffic, and promoted
-to blocking only once their false positives are known to be rare, the same path lesson 3's WAF took
+to blocking only once their false positives are known to be rare. Lesson 3's WAF took the same path,
 from detection-only to blocking.
 
 ```schooling-figure

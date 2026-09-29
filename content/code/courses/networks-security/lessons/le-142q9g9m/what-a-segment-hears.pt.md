@@ -61,6 +61,6 @@ nenhuma forma que alguém lendo o segmento possa usar. Os nomes e os tamanhos ai
 os metadados da aula 2; o que foi dito, não.
 
 **A defesa contra o sniffing não é impedi-lo, coisa que ninguém pode prometer em todo segmento. É
-garantir que não haja nada que valha a pena ler.** Todo protocolo da empresa que ainda leva uma
-senha, um cookie ou um documento em claro é uma lista que vale escrever, porque as próximas seções
-desta aula tratam de como um atacante entra num segmento que não era para ele ouvir.
+garantir que não haja nada que valha a pena ler.** Anote todo protocolo da empresa que ainda leva uma
+senha, um cookie ou um documento em claro. As próximas seções desta aula tratam de como um atacante
+entra num segmento que não era para ele ouvir.

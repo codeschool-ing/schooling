@@ -35,5 +35,5 @@ Suricata offers three ways to make a rule count, and they answer different quest
 | `threshold: type limit` | at most N times per period | "tell me it started; I do not need the rest" |
 
 Counting belongs in the rule when the pattern *is* the count, as here. When the rule is fine and the
-problem is how often it fires, the count belongs in the engine's threshold file instead, which is the
-last section of this lesson.
+problem is how often it fires, the count belongs in the engine's threshold file instead, the subject of
+this lesson's last section.

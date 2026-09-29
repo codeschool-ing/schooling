@@ -20,7 +20,7 @@ None of them holds the content of the conversation. That is deliberate: full pac
 for minutes or hours on a busy link, and these three are kept for months.
 
 Flow records are the one this course has not built yet. On routers they travel as **NetFlow** or
-**IPFIX**, a binary format sent to a collector. On a Linux firewall, the same fields already exist in
+IPFIX, a binary format sent to a collector. On a Linux firewall, the same fields already exist in
 **conntrack**, the table lessons 1 and 21 read: every connection the firewall tracks has its addresses
 and ports, and with accounting turned on, its packet and byte counts too. The lab writes both the log
 and the flows with **ulogd**, as one JSON object per line:
@@ -56,7 +56,7 @@ db:5432                blocked
 ```
 
 And a stranger on the internet, `remote`, who loads the shop's front page, asks for a file that
-should never be public, and then tries three ports:
+should never be public, and then tries three machines:
 
 ```
 ana@remote:~$ curl -s -o /dev/null -w "%{http_code}\n" http://www.example.com/

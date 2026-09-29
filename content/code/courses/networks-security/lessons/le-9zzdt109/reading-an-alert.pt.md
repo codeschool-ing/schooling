@@ -38,7 +38,7 @@ Leia na ordem em que um analista leria:
 | `http.url`, `http.status` | `/admin/`, **200** | o que foi pedido, e **se funcionou** |
 
 A última linha transforma um alerta num achado. Um `404` significaria que alguém chutou um caminho que
-não existe; um `403`, que um controle o recusou; **um `200` significa que o console de administração
+não existe; um `403`, que um controle o recusou. **Um `200` significa que o console de administração
 foi servido para a internet**, e a pergunta deixa de ser sobre quem pediu e passa a ser sobre por que
 o proxy permitiu.
 

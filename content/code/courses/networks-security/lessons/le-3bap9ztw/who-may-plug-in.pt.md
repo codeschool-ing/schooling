@@ -11,7 +11,7 @@ baixo: **quem decidiu que esta máquina podia entrar na rede?**
 Na maioria das redes de escritório, ninguém decidiu. Uma tomada de rede na sala de reunião é uma porta
 ativa de um switch, e um laptop ligado nela recebe um endereço, uma rota e a LAN inteira, seja de quem
 for. **Controle de acesso à rede (NAC, *network access control*)** é o nome de transformar isso em uma
-decisão, e o **IEEE 802.1X** é a forma padrão de tomá-la numa porta de switch ou numa rede Wi-Fi.
+decisão. O **IEEE 802.1X** é a forma padrão de tomá-la numa porta de switch ou numa rede Wi-Fi.
 
 O 802.1X nomeia três participantes:
 
@@ -22,7 +22,7 @@ O 802.1X nomeia três participantes:
 | **servidor de autenticação** | o próprio servidor EAP do hostapd, dentro do `sw` | confere as credenciais e diz sim ou não; numa rede real, é um servidor **RADIUS** |
 
 O autenticador nunca julga as credenciais por conta própria. Ele leva mensagens **EAP** entre os outros
-dois, embrulhadas em quadros **EAPOL** (EAP over LAN) no cabo e em RADIUS no caminho até o servidor. É
+dois, embrulhadas em quadros EAPOL (EAP over LAN) no cabo e em RADIUS no caminho até o servidor. É
 essa divisão que permite a um único servidor de políticas decidir por centenas de switches e pontos de
 acesso.
 

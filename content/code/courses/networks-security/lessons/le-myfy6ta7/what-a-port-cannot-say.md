@@ -50,6 +50,6 @@ the rule "allow 443" really means "allow any program that agrees to use 443":
 | a program sending files to a storage service nobody approved | yes |
 | malware reaching the server that gives it orders | yes |
 
-None of these is exotic. The last one is why the problem matters: remote-control software
-deliberately uses 443, because it is the one port every network leaves open. A defender needs a way
+None of these is exotic, and the last one is deliberate: remote-control software
+uses 443 because it is the one port every network leaves open. A defender needs a way
 to ask **what is actually being said**, and that means reading past the headers.

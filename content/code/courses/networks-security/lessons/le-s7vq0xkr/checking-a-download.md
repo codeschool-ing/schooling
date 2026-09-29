@@ -18,8 +18,8 @@ ana@laptop:~$ sha256sum -c SHA256SUMS
 agent-2.4.1.tar.gz: OK
 ```
 
-`OK`: the file on `laptop` is the file the list describes. Then one byte appended, the way a transfer
-that went wrong, or a file somebody altered, would differ:
+`OK`: the file on `laptop` is the file the list describes. Then one byte is appended, which is how a
+file might differ after a transfer that went wrong, or after somebody altered it:
 
 ```
 ana@laptop:~$ printf "x" >> agent-2.4.1.tar.gz; sha256sum -c SHA256SUMS; echo "exit $?"

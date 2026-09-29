@@ -21,7 +21,7 @@ Nenhum deles guarda o conteúdo da conversa. Isso é proposital: a captura compl
 por minutos ou horas em um link movimentado, e estes três são guardados por meses.
 
 Os registros de fluxo (flow records) são os que este curso ainda não construiu. Em roteadores eles
-trafegam como **NetFlow** ou **IPFIX**, um formato binário enviado a um coletor. Em um firewall Linux,
+trafegam como **NetFlow** ou IPFIX, um formato binário enviado a um coletor. Em um firewall Linux,
 os mesmos campos já existem no **conntrack**, a tabela que as aulas 1 e 21 leram: toda conexão que o
 firewall rastreia tem seus endereços e portas e, com a contabilização ligada, também suas contagens de
 pacotes e bytes. O laboratório escreve tanto o log quanto os fluxos com o **ulogd**, um objeto JSON por
@@ -58,7 +58,7 @@ db:5432                blocked
 ```
 
 E um estranho na internet, `remote`, que carrega a página inicial da loja, pede um arquivo que nunca
-deveria ser público, e então tenta três portas:
+deveria ser público, e então tenta três máquinas:
 
 ```
 ana@remote:~$ curl -s -o /dev/null -w "%{http_code}\n" http://www.example.com/

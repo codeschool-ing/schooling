@@ -56,6 +56,6 @@ proxy, provada com uma chave que a rede não tem como fornecer.
 
 **Identidades de máquina têm um problema difícil, que é a distribuição.** Todo serviço precisa de uma
 chave e de um certificado, renovados antes de expirar e revogados quando o serviço é desativado. Fazer
-isso à mão para dois serviços foi o que este laboratório fez; fazer para duzentos é para o que existem
+isso à mão para dois serviços foi o que este laboratório fez; fazer para duzentos é a razão de existirem
 as malhas de serviço (*service meshes*) e a automação de certificados, com validades medidas em horas,
 para que a revogação (aula 12) importe menos.

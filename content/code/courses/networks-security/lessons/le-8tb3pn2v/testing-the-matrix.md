@@ -30,7 +30,7 @@ ana@laptop:~$ dig +short @192.0.2.53 db.corp.example.com
 192.168.20.30
 ```
 
-From the staff LAN, the other two zones:
+Then from the staff LAN and the management segment:
 
 ```
 ana@laptop:~$ probe www:443 app:8080 db:5432 app:22 remote:443
@@ -52,7 +52,7 @@ reaches SSH on both servers and cannot use the application or the database, beca
 machine and using its service are different cells. `www:22` says `refused` from `admin`: the rule let
 the connection through, and `www` simply runs no SSH server.
 
-**Every cell of the matrix has now been tested from the zone it starts in**, the allowed ones and a
-sample of the denied ones. Keep that test. After any change to the rules, run it again: a rule added
+**The internet, staff and management rows have now been tested from the zones they start in**, the
+allowed cells and a sample of the denied ones; the next section tests the DMZ's row from `www`. Keep that test. After any change to the rules, run it again: a rule added
 in a hurry to fix one thing is the usual way another cell opens by accident, and lesson 18 collects
 the classic ways it happens.

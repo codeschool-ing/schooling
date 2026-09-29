@@ -15,8 +15,8 @@ root@ips:~# jq -c "select(.event_type==\"alert\") | [.alert.action, .alert.signa
 
 **Bloqueado**: `/admin-guide.html` começa com `/admin`, e foi só isso que a regra perguntou. No sensor
 isso teria sido mais um alerta para descartar; em linha, todo cliente que clica no link de ajuda
-espera três segundos e não recebe nada. A correção é uma regra mais estreita, `/admin/` com a barra, e
-a lição é a geral: **uma regra só entra em linha depois de ter sido observada contra o tráfego real**,
+espera três segundos e não recebe nada. A correção é uma regra mais estreita, `/admin/` com a barra. A
+lição é a geral: **uma regra só entra em linha depois de ter sido observada contra o tráfego real**,
 por tempo suficiente para saber o que mais ela casa.
 
 ## Falhar fechado, ou falhar aberto

@@ -4,7 +4,7 @@ version: 1
 ---
 
 O sensor de rede na DMZ vigia o caminho de administração pedido de fora, como na aula 14. Um
-desconhecido o pede duas vezes: uma por HTTP puro, uma por HTTPS:
+desconhecido o pede duas vezes, uma por HTTP puro e outra por HTTPS:
 
 ```
 ana@remote:~$ curl -s http://www.example.com/admin/; curl -s https://www.example.com/admin/
@@ -40,5 +40,5 @@ root@www:~# grep "/admin/" /var/log/nginx/access.log | cut -d" " -f1,4,6-9
 do sensor; o TLS está fazendo o seu trabalho. Significa que a detecção de qualquer coisa dentro do
 HTTPS tem de acontecer onde o TLS termina: nos logs do proxy, num WAF ali (aula 3), ou num agente
 naquele host mandando esses logs para onde alguém os leia. A maior parte do tráfego da web é cifrada,
-então a maior parte da detecção na web foi para os hosts, e o trabalho do sensor de rede se deslocou
+então a maior parte da detecção na web foi para os hosts. O trabalho do sensor de rede se deslocou
 para o que ele ainda vê bem: quem falou com quem, quando, quanto e em qual protocolo.

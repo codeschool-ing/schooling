@@ -15,9 +15,9 @@ last_eap_type_sta=13 (TLS)
 ```
 
 `dot1xAuthSessionUserName` is the identity that authenticated. `dot1xAuthReAuthPeriod=3600` means the
-switch asks again every hour. If the server also checks revocation, which hostapd does with its
-`check_crl` option and this lab's configuration does not, a certificate revoked at nine stops working by
-ten at the latest, without anybody touching the switch. It is lesson 21's continuous verification, done
+switch asks again every hour. hostapd can also check revocation, with its `check_crl` option, which
+this lab's configuration does not set. With it, a certificate revoked at nine stops working by ten at
+the latest, and nobody touches the switch. It is lesson 21's continuous verification, done
 by the port.
 
 The control script wrote the same fact into a log:
@@ -64,5 +64,5 @@ Two cautions go with this log:
   what is worth keeping and for how long.
 - **An identity is not a health check.** 802.1X proves the machine holds a valid certificate. It does
   not prove the machine is patched or free of malware. **Posture assessment**, where the NAC system
-  also checks the device's state before choosing the VLAN, is the layer that adds that. It is named here
-  so the difference is clear, not built.
+  also checks the device's state before choosing the VLAN, is the layer that adds that. This lesson
+  names it so the difference is clear, and does not build it.

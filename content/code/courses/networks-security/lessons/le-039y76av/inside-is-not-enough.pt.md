@@ -40,8 +40,8 @@ certificado válido obrigatório: sem certificado, sem conexão. E o `if` dentro
 da autorização: um certificado válido não basta, ele precisa ser **`CN=www-client`**. O log de acesso
 registra, para cada requisição, o sujeito do certificado e se a verificação teve sucesso.
 
-O firewall muda para acompanhar. A porta nova é liberada a partir do lado dos servidores, e as duas
-regras antigas para a 8080 são removidas, de modo que a aplicação não pode mais ser alcançada sem
+O firewall muda para acompanhar. A porta nova é liberada em direção aos servidores a partir de qualquer zona, e as
+duas regras antigas para a 8080 são removidas, de modo que a aplicação não pode mais ser alcançada sem
 passar pela verificação de identidade:
 
 ```

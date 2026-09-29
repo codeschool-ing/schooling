@@ -20,8 +20,8 @@ namespace tem suas próprias interfaces, rotas e firewall, e por isso se comport
 parte. Os endereços vêm das faixas reservadas para documentação, e nada no laboratório alcança a
 internet de verdade.
 
-**Quando o laboratório sobe, o `fw` roteia tudo e não filtra nada.** É o estado de mais redes do
-que alguém admite, e vale a pena vê-lo uma vez. `remote` é um desconhecido no segmento da internet;
+**Quando o laboratório sobe, o `fw` roteia tudo e não filtra nada.** Muita rede funciona
+assim, e vale a pena ver isso uma vez. `remote` é um desconhecido no segmento da internet;
 `db` guarda o banco de dados da empresa e `app`, a aplicação interna:
 
 ```

@@ -45,8 +45,8 @@ Uma política inicial razoável, a ajustar por empresa:
 
 **A lei define tanto pisos quanto tetos.** No Brasil, o **Marco Civil da Internet** obriga uma empresa
 que oferece uma aplicação na internet, como a loja do laboratório, a guardar os seus registros de
-acesso por seis meses (artigo 15), e um provedor de conexão a guardar os registros de conexão por um
-ano (artigo 13). A **LGPD** puxa para o outro lado: os seus princípios incluem finalidade, necessidade
+acesso por seis meses (artigo 15). Um provedor de conexão precisa guardar os registros de conexão por
+um ano (artigo 13). A **LGPD** puxa para o outro lado: os seus princípios incluem finalidade, necessidade
 e segurança (artigo 6), então registros que identificam pessoas são guardados por um motivo declarado,
 não por mais tempo do que ele exige, e protegidos enquanto existem. A aula 2 levantou a mesma questão
 sobre o que um firewall decifra; aqui ela se aplica a cada linha da coleção.
@@ -61,7 +61,7 @@ Três últimas regras fecham o fio do curso sobre registros:
 
 - **O acesso à coleção também é registrado.** É o repositório mais sensível da rede, porque diz quem fez
   o quê, e quando.
-- **A exclusão é agendada, não lembrada.** Um período de retenção que ninguém impõe é um período de
-  para sempre.
+- **A exclusão é agendada, não lembrada.** Um período de retenção que ninguém impõe dura para
+  sempre.
 - **Um registro que ninguém lê não protege nada.** Os alertas vão para onde uma pessoa olha, a busca
   pelo feed roda em um agendamento, e uma origem que fica em silêncio dispara o seu próprio alarme.

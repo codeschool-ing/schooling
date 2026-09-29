@@ -8,7 +8,7 @@ verification) faz a pergunta mais difícil: e uma conexão, ou uma sessão, que 
 e não deveria ser agora?
 
 O acesso muda enquanto as sessões estão abertas. Um funcionário sai, um dispositivo reprova na
-verificação de integridade, um servidor é descoberto comprometido, um chamado é encerrado. Uma decisão
+verificação de integridade, descobre-se que um servidor foi comprometido, um chamado é encerrado. Uma decisão
 tomada no início de uma sessão e nunca revista continua concedendo um acesso que suas razões já não
 sustentam.
 
@@ -37,9 +37,8 @@ first
 second
 ```
 
-**As duas linhas.** A segunda passou depois que a regra já tinha sumido, porque a primeira regra do
-firewall do host aceita tráfego `established`, a regra da aula 1, e a sessão foi estabelecida antes da
-mudança. A nova política só vale para conexões **novas**.
+**As duas linhas.** A segunda passou depois que a regra já tinha sumido. A primeira regra do firewall
+do host, a da aula 1, aceita tráfego `established`, e a sessão foi estabelecida antes da mudança. A nova política só vale para conexões **novas**.
 
 É a mesma propriedade que torna os firewalls com estado eficientes; aqui ela é a lacuna que a
 verificação contínua precisa fechar. A próxima seção a fecha.

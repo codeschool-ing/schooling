@@ -3,7 +3,7 @@ title: Entrar em linha, e bloquear
 version: 1
 ---
 
-O `lab.sh inline` desliga o cabo da DMZ do `fw` do switch da DMZ, liga-o no `ips` e conecta a outra
+O `lab.sh inline` tira do switch da DMZ o cabo da DMZ do `fw`, liga-o no `ips` e conecta a outra
 interface do `ips` ao switch. O `ips` tem duas interfaces e nenhum endereço, como um pedaço de cabo
 com um cérebro no meio:
 
@@ -53,5 +53,5 @@ root@ips:~# jq -c "select(.event_type==\"alert\") | [.alert.action, .alert.signa
 ["blocked",1000101,"203.0.113.50","/admin/"]
 ```
 
-`blocked`. A mesma regra, o mesmo tráfego, e desta vez o pedido nunca chegou ao `www`. Essa é toda a
-diferença entre os dois sistemas, e ela é decidida por uma palavra na regra e um cabo na ligação.
+`blocked`. A mesma regra, o mesmo tráfego, e desta vez o pedido nunca chegou ao `www`. Uma palavra na
+regra e um cabo na ligação fazem toda a diferença entre os dois sistemas.

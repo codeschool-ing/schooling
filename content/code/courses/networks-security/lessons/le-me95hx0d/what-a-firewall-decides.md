@@ -19,8 +19,8 @@ namespace has its own interfaces, routes and firewall, so each behaves as a mach
 addresses come from the ranges reserved for documentation, and nothing in the lab reaches the real
 internet.
 
-**When the lab comes up, `fw` routes everything and filters nothing.** That is the state of more
-networks than anybody admits, and it is worth seeing once. `remote` is a stranger on the internet
+**When the lab comes up, `fw` routes everything and filters nothing.** Plenty of networks
+run like that, and it is worth seeing once. `remote` is a stranger on the internet
 segment; `db` holds the company's database and `app` its internal application:
 
 ```

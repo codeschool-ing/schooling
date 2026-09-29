@@ -54,6 +54,5 @@ root@ips:~# jq -c "select(.event_type==\"alert\") | [.alert.action, .alert.signa
 ["blocked",1000101,"203.0.113.50","/admin/"]
 ```
 
-`blocked`. The same rule, the same traffic, and this time the request never reached `www`. That is the
-whole difference between the two systems, and it is decided by one word in the rule and one cable in
-the wiring.
+`blocked`. The same rule, the same traffic, and this time the request never reached `www`. One word in
+the rule and one cable in the wiring make the whole difference between the two systems.

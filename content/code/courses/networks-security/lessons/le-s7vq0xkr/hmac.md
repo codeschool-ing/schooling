@@ -30,10 +30,10 @@ request needs no password and the address is not a secret.
 
 Two details decide whether an HMAC check is sound:
 
-- **compare in constant time.** A comparison that stops at the first differing byte answers faster
+- **Compare in constant time.** A comparison that stops at the first differing byte answers faster
   for a guess that shares a longer prefix, and that timing leaks the value byte by byte. Libraries
   offer a comparison that always takes the same time, such as `hmac.compare_digest` in Python.
-- **include what must not be replayed.** An HMAC over the body alone lets somebody resend yesterday's
+- **Include what must not be replayed.** An HMAC over the body alone lets somebody resend yesterday's
   genuine request. Providers add a timestamp to what is signed and reject old ones.
 
 HMAC has the limitation of every shared secret: **both sides can create valid codes**, so it proves the

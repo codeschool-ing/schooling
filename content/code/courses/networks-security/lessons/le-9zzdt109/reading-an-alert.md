@@ -38,7 +38,7 @@ Read it in the order an analyst would:
 | `http.url`, `http.status` | `/admin/`, **200** | what was asked for, and **whether it worked** |
 
 The last row turns an alert into a finding. A `404` would mean somebody guessed a path that does not
-exist; a `403` that a control refused it; **a `200` means the admin console was served to the
+exist; a `403`, that a control refused it. **A `200` means the admin console was served to the
 internet**, and the question is no longer about the requester but about why the proxy allowed it.
 
 `action: allowed` is the honest word for what an IDS does on every match. It is also the field that

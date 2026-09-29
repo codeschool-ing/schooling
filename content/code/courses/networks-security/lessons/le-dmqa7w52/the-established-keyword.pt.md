@@ -15,7 +15,7 @@ ip access-list extended BRANCH-IN
 
 O `established` casa com qualquer pacote TCP com a **flag ACK ou RST ligada**. O primeiro pacote de uma
 conexão nova, um `SYN`, não traz nenhuma das duas, então falha no teste; todo pacote seguinte de uma
-conexão traz ACK. A chain `wan_in` no arquivo da seção anterior faz o mesmo no lado da internet de
+conexão traz ACK. A chain `wan_in` do `acl-extended.nft`, lá na seção 04, faz o mesmo no lado da internet de
 `branch`: ela descarta o TCP em direção à filial que tenha as flags ACK e RST ambas desligadas.
 
 Um servidor em `branchpc` escuta na 8080. O `remote` tenta abrir uma conexão com ele, e o próprio
@@ -35,9 +35,8 @@ funciona, porque todo pacote que volta para o `branchpc` traz ACK.
 
 **O que ela não consegue fazer é o ponto da aula 1, repetido para roteadores.** O `established` confere
 uma flag que o remetente liga. Um pacote forjado já com ACK ligado passa pela linha exista ou não
-alguma conexão; o host que o recebe vai responder com um reset em vez de aceitá-lo, então ele não abre
-uma conexão, mas a ACL o deixou passar, e as varreduras que usam pacotes assim para mapear uma rede
-dependem exatamente disso. E a palavra-chave só existe para TCP: respostas UDP, incluindo as respostas
+alguma conexão. O host que o recebe responde com um reset, então nenhuma conexão se abre, mas a ACL o
+deixou passar, e as varreduras que mapeiam uma rede com pacotes assim dependem exatamente disso. E a palavra-chave só existe para TCP: respostas UDP, incluindo as respostas
 de DNS, precisam de uma linha própria que permita uma porta de origem, que é o buraco que a aula 1
 percorreu.
 

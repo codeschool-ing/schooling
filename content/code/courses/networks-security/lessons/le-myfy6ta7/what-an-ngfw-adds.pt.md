@@ -28,6 +28,6 @@ internet, e entre zonas de confiança diferente (aula 4). Ele é a ferramenta er
 data center, onde o volume é maior e a maioria dos fluxos é entre máquinas que já confiam umas nas
 outras; a aula 21 cuida disso com regras nas próprias máquinas.
 
-**As camadas se somam em vez de competir**: o filtro sem estado da aula 1 na borda joga fora o que
+**As camadas se somam**: o filtro sem estado da aula 1 na borda joga fora o que
 nunca pode ser legítimo, o firewall com estado decide quais conversas podem existir, e o motor de
 inspeção lê as poucas que interessam à política.

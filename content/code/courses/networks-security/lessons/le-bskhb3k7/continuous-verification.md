@@ -35,8 +35,8 @@ first
 second
 ```
 
-**Both lines.** The second went through after the rule was gone, because the host firewall's first rule
-accepts `established` traffic, lesson 1's rule, and the session was established before the change.
+**Both lines.** The second went through after the rule was gone. The host firewall's first rule, the
+one from lesson 1, accepts `established` traffic, and the session was established before the change.
 The new policy applies to **new** connections only.
 
 The same property is what makes stateful firewalls efficient; here it is the gap continuous verification

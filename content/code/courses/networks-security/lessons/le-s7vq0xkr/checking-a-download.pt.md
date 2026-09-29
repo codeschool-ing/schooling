@@ -18,8 +18,9 @@ ana@laptop:~$ sha256sum -c SHA256SUMS
 agent-2.4.1.tar.gz: OK
 ```
 
-`OK`: o arquivo no `laptop` é o arquivo que a lista descreve. Então um byte é acrescentado, do jeito
-que uma transferência que deu errado, ou um arquivo que alguém alterou, seria diferente:
+`OK`: o arquivo no `laptop` é o arquivo que a lista descreve. Então um byte é acrescentado, que é
+como um arquivo pode ficar diferente depois de uma transferência que deu errado, ou depois de alguém
+alterá-lo:
 
 ```
 ana@laptop:~$ printf "x" >> agent-2.4.1.tar.gz; sha256sum -c SHA256SUMS; echo "exit $?"

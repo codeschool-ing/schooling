@@ -30,7 +30,7 @@ ana@laptop:~$ dig +short @192.0.2.53 db.corp.example.com
 192.168.20.30
 ```
 
-A partir da LAN da equipe, as outras duas zonas:
+Depois, a partir da LAN da equipe e do segmento de gestão:
 
 ```
 ana@laptop:~$ probe www:443 app:8080 db:5432 app:22 remote:443
@@ -52,7 +52,8 @@ alcança o SSH nos dois servidores e não consegue usar a aplicação nem o banc
 administrar uma máquina e usar o serviço dela são células diferentes. `www:22` diz `refused` a partir
 de `admin`: a regra deixou a conexão passar, e `www` simplesmente não roda servidor SSH.
 
-**Toda célula da matriz foi testada agora a partir da zona onde ela começa**, as permitidas e uma
-amostra das negadas. Guarde esse teste. Depois de qualquer mudança nas regras, rode-o de novo: uma
+**As linhas da internet, da equipe e da gestão foram testadas agora a partir das zonas onde
+começam**, as células permitidas e uma amostra das negadas; a próxima seção testa a linha da DMZ a
+partir do `www`. Guarde esse teste. Depois de qualquer mudança nas regras, rode-o de novo: uma
 regra adicionada às pressas para consertar uma coisa é o jeito comum de outra célula se abrir por
 acidente, e a aula 18 reúne as formas clássicas de isso acontecer.

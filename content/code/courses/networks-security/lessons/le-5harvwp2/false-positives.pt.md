@@ -22,7 +22,7 @@ SQL, porque esse era o assunto da mensagem. A requisição era legítima e o WAF
 que viu. Essa combinação é um **falso positivo** (*false positive*), e todo WAF os produz.
 
 As correções erradas são as tentadoras: voltar o motor para o modo somente detecção, ou remover a
-regra 942100 de todo lugar. Qualquer uma desliga a proteção do site inteiro para salvar um
+regra 942100 de todo lugar. Qualquer uma enfraquece o site inteiro para salvar um
 formulário. A correção certa é **tão estreita quanto o problema**: esta regra, este campo, este
 location.
 

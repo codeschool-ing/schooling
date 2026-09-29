@@ -15,8 +15,8 @@ duas famílias de algoritmos porque esses são problemas diferentes.
 | algoritmos vistos neste curso | AES, ChaCha20 | X25519, RSA, ECDSA, Ed25519 |
 
 **A imagem errada mais comum é que a criptografia assimétrica é o tipo "mais forte"** e usado para tudo
-o que importa. Ela quase não é usada para volume. Todo protocolo que este curso toca, TLS, SSH,
-WireGuard, usa criptografia assimétrica por alguns milissegundos no começo, para combinar uma chave
+o que importa. Ela quase não é usada para volume. Todo protocolo que este curso toca — TLS, SSH,
+WireGuard — usa criptografia assimétrica por alguns milissegundos no começo, para combinar uma chave
 simétrica, e criptografia simétrica para cada byte depois disso. O resto desta aula mostra cada metade
 no laboratório, e depois as duas juntas num túnel entre a matriz e a filial.
 

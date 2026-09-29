@@ -38,7 +38,7 @@ makes on the spot for the requested name, signed by the company's own authority,
 TLS connection to the real server. In between, it reads everything.
 
 That only works because every managed computer has been told to trust the company's authority, and
-the trade-offs are real:
+it costs three things:
 
 - **The firewall now holds every employee's traffic in clear**, banking and health included, and
   becomes the most valuable machine to compromise. Most policies exempt those categories.

@@ -59,7 +59,7 @@ nome do software, dos dois lados. O TLS começa com um *ClientHello*, um registr
 primeiros bytes são fixados pelo padrão. O HTTP começa com um método, um caminho e `HTTP/1.1`. Um
 motor mantém um analisador para cada um e testa todos nos primeiros bytes de cada fluxo novo.
 
-Isso tem uma consequência que vale conhecer: **o veredito chega alguns pacotes atrasado**. O
+**Por isso o veredito chega alguns pacotes atrasado.** O
 *handshake* precisa acontecer antes de haver algo para ler, então um NGFW deixa os primeiros pacotes
 passarem pela regra de porta e decide sobre a aplicação quando já viu o suficiente. Um produto que
 "bloqueia SSH" bloqueia depois da saudação do SSH, não antes da conexão.

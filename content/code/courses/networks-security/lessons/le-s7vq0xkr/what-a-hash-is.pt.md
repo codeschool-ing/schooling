@@ -15,8 +15,8 @@ c4f9711cc5c2cf98b63f8d91d382be4ea460e81fa1618e555448b2e4980e869e  -
 ```
 
 Um dígito mudou na mensagem e **nada reconhecível sobrevive no digest**. Isso não é coincidência
-dessas duas entradas; é o projeto. E o tamanho não depende da entrada: um milhão de bytes zero e
-nada nenhum dão, ambos, 64 dígitos:
+dessas duas entradas; é assim por projeto. E o tamanho não depende da entrada: um milhão de bytes
+zero e uma entrada vazia dão, ambos, 64 dígitos:
 
 ```
 ana@laptop:~$ head -c 1000000 /dev/zero | sha256sum; printf "" | sha256sum

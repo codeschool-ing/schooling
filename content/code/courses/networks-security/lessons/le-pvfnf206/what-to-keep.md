@@ -45,7 +45,7 @@ A reasonable starting policy, to be adjusted per company:
 
 **The law sets both floors and ceilings.** In Brazil, the **Marco Civil da Internet** obliges a
 company that offers an application on the internet, such as the lab's shop, to keep its access
-records for six months (article 15), and a connection provider to keep connection records for a year
+records for six months (article 15). A connection provider must keep connection records for a year
 (article 13). The **LGPD** pulls the other way: its principles include purpose, necessity and security
 (article 6), so records that identify people are kept for a stated reason, no longer than it needs,
 and protected while they exist. Lesson 2 raised the same question about what a firewall decrypts;

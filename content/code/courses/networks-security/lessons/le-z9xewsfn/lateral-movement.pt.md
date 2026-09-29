@@ -3,7 +3,7 @@ title: Estações de trabalho não têm o que tratar entre si
 version: 1
 ---
 
-Assim que um software roda num laptop, ele procura a próxima máquina. Numa LAN da equipe plana, ele
+Assim que um software roda num laptop, ele procura a próxima máquina. Numa LAN plana da equipe, ele
 encontra todos os outros computadores respondendo nas portas que o Windows usa para compartilhar
 arquivos, a **445**, e para oferecer área de trabalho remota, a **3389**. Em `desk`, as duas
 respondem a qualquer um do segmento:
@@ -56,9 +56,9 @@ ana@desk:~$ curl -s https://www.example.com/
 orders service: ok
 ```
 
-**Este é o controle de rede mais eficaz contra a propagação de ransomware**, e não custa nada além da
-disciplina de fazê-lo em toda estação de trabalho, que é para isso que serve a gestão centralizada de
-firewalls de host. O equivalente no Windows é o firewall embutido dele, configurado por política de
+**De todos os controles de rede, este é o que mais faz para impedir a propagação de ransomware.** Não
+custa nada além da disciplina de fazê-lo em toda estação de trabalho, e a gestão centralizada de
+firewalls de host existe para garantir essa disciplina. O equivalente no Windows é o firewall embutido dele, configurado por política de
 grupo (*group policy*) para recusar compartilhamento de arquivos e área de trabalho remota vindos da
 LAN. A aula 21 generaliza a ideia para todo servidor.
 

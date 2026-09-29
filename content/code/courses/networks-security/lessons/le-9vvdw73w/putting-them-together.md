@@ -18,8 +18,8 @@ and its AIDE reports could be edited to hide all four rows; the network sensor's
 and of the TLS connection could not, because the intruder never touched `sensor`. That is the argument
 for running both and for sending the host's records off the host.
 
-**Correlation** is the name for putting the rows together, and it is where most detection value comes
-from: one weak signal on the network plus one weak signal on the host, at the same time, about the same
+**Correlation** is the name for putting the rows together, and most detection value comes from it.
+One weak signal on the network plus one weak signal on the host, at the same time, about the same
 machine, is a strong one. Doing it by hand, as this table does, works for an afternoon. Doing it for a
 company is what a central log platform, a **SIEM**, exists for, and lesson 23 decides what to feed it.
 

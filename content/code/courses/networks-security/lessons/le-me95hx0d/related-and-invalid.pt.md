@@ -36,8 +36,8 @@ ana@laptop:~$ dig +tries=1 @192.168.20.10 www.example.com
 ;; no servers could be reached
 ```
 
-`app` respondeu à pergunta com um ICMP *port unreachable*, e a regra `related` o deixou passar, um
-pacote de 112 bytes. **O `dig` relatou a recusa na hora, em vez de esperar o próprio tempo
+`app` respondeu à pergunta com um ICMP *port unreachable*, e a regra `related` o deixou passar.
+**O `dig` relatou a recusa na hora, em vez de esperar o próprio tempo
 esgotar.** Tire o `related` e todo erro desses some no firewall, e os programas esperam e tentam de
 novo onde poderiam ter falhado de imediato. Pior: a mensagem ICMP que avisa quem envia que seus
 pacotes são grandes demais também é `related`, e perdê-la quebra conexões de jeitos que parecem
@@ -74,5 +74,5 @@ todas as regras: os dois pacotes de `remote`, a primeira tentativa e uma retrans
 de a política descartá-los. A regra de `new` casou com **três pacotes**, um por pedido, porque uma
 conversa começa uma vez só. Todo o resto, 34 pacotes, foi tráfego `established`.
 
-**Essa proporção é normal e vale guardar.** Num firewall movimentado, quase todo pacote bate na
+**Essa proporção é normal.** Num firewall movimentado, quase todo pacote bate na
 primeira regra, e é por isso que ela é a primeira. A aula 18 volta ao que custa a ordem das regras.

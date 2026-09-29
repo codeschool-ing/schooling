@@ -35,8 +35,8 @@ ana@remote:~$ dig @192.0.2.53 example.org | grep -E "status|MSG SIZE"
 ```
 
 For `www.example.com` it answers, 60 bytes for a 56-byte question, a factor close to 1. For
-`example.org` it says `REFUSED`, in 46 bytes: **it is not an open resolver**, and it cannot be used to
-send the answers to anybody else's questions to a victim. The configuration that does this is
+`example.org` it says `REFUSED`, in 46 bytes: **it is not an open resolver**, so nobody can use it to
+aim the answers to their questions at a victim. The setting behind this is
 `no-resolv` in its `dnsmasq` configuration: it forwards nothing and knows only what it was told.
 
 A resolver that *is* meant to answer recursive questions, the one the staff use, belongs where only

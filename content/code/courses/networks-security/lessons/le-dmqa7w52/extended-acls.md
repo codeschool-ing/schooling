@@ -54,8 +54,8 @@ remote:80              open
 ```
 
 The web passes for both computers now, because the ACL speaks about the subnet rather than one
-host; `remote:22` is **blocked**, where before any ACL it was `refused`, which means the packet no
-longer reaches `remote` at all. The counters say where each packet went:
+host. `remote:22` is **blocked**, where before any ACL it was `refused`: the packet no longer reaches
+`remote` at all. The counters say where each packet went:
 
 ```
 root@branch:~# nft list table netdev acl | grep counter

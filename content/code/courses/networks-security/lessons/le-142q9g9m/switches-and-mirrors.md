@@ -13,9 +13,9 @@ SPAN on Cisco equipment, receives a copy of every frame crossing chosen ports or
 option is a **network tap**, a small device inline on a cable that copies both directions to a
 monitoring port and cannot be reconfigured from the network.
 
-The lab has neither, so it cheats in a way worth saying out loud: the bridge that plays the DMZ's
-switch is told to forget where every address is, and floods every frame to every port, like the hubs
-switches replaced. That is why the sensor can hear. **On a real network, a machine hearing traffic
+The lab has neither, so it cheats, and the cheat is worth saying out loud. The bridge that plays the
+DMZ's switch is told to forget where every address is, so it floods every frame to every port, like
+the hubs switches replaced. That is why the sensor can hear. **On a real network, a machine hearing traffic
 that is not addressed to it means one of three things**:
 
 | cause | who arranged it |

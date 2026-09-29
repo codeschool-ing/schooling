@@ -3,8 +3,8 @@ title: Segments of one
 version: 1
 ---
 
-Lesson 4 drew zones and put a firewall between them; lesson 4 also found the flaw, that machines in the
-same zone reach each other freely. **Microsegmentation** takes the idea to its end: every workload is
+Lesson 4 drew zones and put a firewall between them, and found the flaw in them: machines in the same
+zone reach each other freely. **Microsegmentation** takes the idea to its end: every workload is
 its own segment, and every connection between two workloads, even on the same switch, is allowed by a
 rule or refused.
 

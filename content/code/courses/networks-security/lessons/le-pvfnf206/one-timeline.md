@@ -31,8 +31,8 @@ Read top to bottom. At 18:52:31 `remote` loaded the front page. One second later
 a file that commonly holds passwords and keys, and the sensor raised its alert on that request. Over
 the next two seconds it tried SSH on the shop, then SSH on the name server, then the database, which is
 not on the DMZ at all. The flows say the two web requests were answered, 835 and 1136 bytes in total; the
-drops say every other door stayed shut. At 18:55:35 it came back for port 23, and after the feed was
-loaded, three requests to the shop were refused by the intel rule.
+drops say every other door stayed shut. At 18:55:35 it came back for port 23. After the feed was
+loaded, the intel rule refused its next request to the shop, three packets one second apart.
 
 That is the answer an alert alone could not give: **did anything else succeed?** Here, no. The one
 alert was a 404, and the only conversations that completed were two page loads. The work that remains

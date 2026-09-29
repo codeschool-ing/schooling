@@ -18,8 +18,9 @@ rule written for one is, most of the time, a rule for the other.
 | also records | alerts | alerts, and application data with add-ons | alerts, flows, and HTTP, DNS, TLS and more, by default |
 
 **The last row is the practical difference** for a defender with one engine to choose. Suricata writes
-a record of every HTTP request, DNS query and TLS handshake it sees whether or not a rule matched, which
-lesson 2 used to name protocols and this lesson uses to find something no rule was written for.
+a record of every HTTP request, DNS query and TLS handshake it sees, whether or not a rule matched.
+Lesson 2 used those records to name protocols, and this lesson uses them to find something no rule was
+written for.
 
 This course runs Suricata, the version Ubuntu 24.04 packages. Snort is not installed in the lab and no
 command in this lesson was run on it; where Snort's syntax differs, the prose says so.

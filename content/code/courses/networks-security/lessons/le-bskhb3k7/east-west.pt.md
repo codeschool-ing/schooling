@@ -18,7 +18,7 @@ app:22                 blocked
 ```
 
 O `app` alcança o banco de dados e não o SSH de `db`; `db` não alcança nada em `app`. **Nenhuma dessas
-conexões atravessa o `fw`**, as duas máquinas ficam no segmento de servidores, e antes desta aula as
+conexões atravessa o `fw`**: as duas máquinas ficam no segmento de servidores, e antes desta aula as
 duas estavam abertas. Depois, os outros papéis:
 
 ```

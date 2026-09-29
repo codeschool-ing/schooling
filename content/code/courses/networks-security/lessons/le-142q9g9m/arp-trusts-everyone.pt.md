@@ -27,7 +27,7 @@ anunciar uma resposta que ninguém pediu, e as outras em geral acreditam e atual
 é tudo o que existe no **ARP spoofing**, também chamado de envenenamento de ARP (ARP poisoning): uma
 máquina do segmento diz às outras que o endereço do gateway está no MAC *dela*. A partir daí, o
 tráfego delas para o mundo de fora passa primeiro por ela. Se ela repassar o tráfego, nada quebra de
-forma visível, e ela lê tudo o que a seção anterior mostrou ser legível.
+forma visível, e ela lê tudo o que a primeira seção desta aula mostrou ser legível.
 
 Três consequências para quem defende:
 

@@ -56,7 +56,7 @@ software's name, from both sides. TLS begins with a *ClientHello*, a binary reco
 are fixed by the standard. HTTP begins with a method, a path and `HTTP/1.1`. An engine keeps a
 parser for each and tries them on the first bytes of every new flow.
 
-That has a consequence worth knowing: **the verdict arrives a few packets late**. The handshake has
+**So the verdict arrives a few packets late.** The handshake has
 to happen before there is anything to read, so an NGFW lets the first packets through on the port
 rule and decides on the application once it has seen enough. A product that "blocks SSH" blocks it
 after the SSH greeting, not before the connection.

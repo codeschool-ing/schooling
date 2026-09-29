@@ -22,9 +22,9 @@ exit 0
 
 **A primeira tentativa foi descartada, e a segunda foi atendida.** O `nc -p 8080` só pede ao
 sistema que use 8080 como porta de origem. Nada foi contornado e nenhuma regra foi quebrada. O
-conjunto de regras disse o que diz.
+conjunto de regras fez exatamente o que diz.
 
-Isto não é uma fraqueza exótica. O mesmo formato já mordeu redes reais em duas formas conhecidas:
+O mesmo formato aparece em duas regras de retorno conhecidas:
 
 | regra de retorno | o que ela também deixa entrar |
 |---|---|

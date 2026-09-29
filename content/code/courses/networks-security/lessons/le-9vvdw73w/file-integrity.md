@@ -54,8 +54,8 @@ d = ... mc        : /etc/nginx/sites-enabled
 f > ... mc  H     : /etc/nginx/sites-enabled/shop
 ```
 
-**Exit code 4**, which means *changed entries*, and two of them: the directory, whose modification time
-moved, and the file itself, whose size, times and hash changed. The detail says by how much:
+**Exit code 4**, which means *changed entries*, and two of them: the directory, whose modification and change
+times moved, and the file itself, whose size, times and hash changed. The detail says by how much:
 
 ```
 root@www:~# sed -n "/^File: /,/^$/p" aide.txt | grep -E "^File|Size|Mtime|SHA256"

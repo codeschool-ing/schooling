@@ -28,7 +28,7 @@ de nenhum jeito de que o nftables pudesse reclamar; ela é simplesmente impossí
 Regras impossíveis são fáceis de escrever porque uma regra tem duas pontas e cada uma é descrita duas
 vezes, uma pela interface e outra pelo endereço. Também são fáceis de encontrar: **uma regra cujo
 contador continua em zero depois que o tráfego para o qual ela foi escrita foi testado** está sombreada,
-é impossível, ou descreve um tráfego que não existe. Vale a pena saber de qualquer um dos três.
+é impossível, ou descreve um tráfego que não existe.
 
 | sintoma | causa comum |
 |---|---|

@@ -68,6 +68,6 @@ root@fw:~# nft -f known-good.nft; nft list ruleset | grep -c accept
 11
 ```
 
-Com `flush ruleset` na primeira linha, o arquivo salvo devolve exatamente o que foi salvo: 11. É o
-tipo de detalhe que um plano de rollback contém e que ninguém testa até a noite em que ele é
-necessário, e esse é o argumento para testá-lo numa tarde em que nada depende dele.
+Com `flush ruleset` na primeira linha, o arquivo salvo devolve exatamente o que foi salvo: 11. Um plano
+de rollback contém detalhes assim, e ninguém os testa até a noite em que são necessários. Teste o seu
+numa tarde em que nada depende dele.

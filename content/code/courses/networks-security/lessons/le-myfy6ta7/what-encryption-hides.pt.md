@@ -39,7 +39,7 @@ certificado que ele gera na hora para o nome pedido, assinado pela autoridade da
 abre uma segunda conexão TLS com o servidor real. No meio, ele lê tudo.
 
 Isso só funciona porque todo computador gerenciado foi instruído a confiar na autoridade da empresa,
-e os custos são reais:
+e isso custa três coisas:
 
 - **O firewall passa a guardar em claro o tráfego de todos os funcionários**, bancos e saúde
   incluídos, e vira a máquina mais valiosa de se comprometer. A maioria das políticas isenta essas

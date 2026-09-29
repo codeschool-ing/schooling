@@ -52,4 +52,4 @@ the file, which is why both halves of this lesson travel together.
 
 **Everything rests on the public key being the right one.** A user who fetched `release.pub` from the
 same compromised server as the file would check a forged release against a forged key, and see
-`Verified`. How to know whose public key you hold, at the scale of the whole internet, is lesson 12.
+`Signature Verified Successfully`. How to know whose public key you hold, at the scale of the whole internet, is lesson 12.

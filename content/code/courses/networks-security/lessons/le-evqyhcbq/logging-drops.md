@@ -33,10 +33,10 @@ root@fw:~# cat drops.txt
 ```
 
 Three dropped connection attempts, each a TCP `SYN` with its source, destination and port. **This is
-what the drop log is for**: `203.0.113.50` trying the database and SSH is the internet doing what it
-does all day, and `192.168.10.20` trying port 6379 is a machine on the staff LAN reaching for a
-service it was never given. The second kind is far rarer and far more interesting, and a drop log
-is often how a misconfigured program, or a compromised laptop, is first noticed.
+what the drop log is for.** `203.0.113.50` trying the database and SSH is the internet doing what it
+does all day. `192.168.10.20` trying port 6379 is a machine on the staff LAN reaching for a service
+it was never given. The second kind is far rarer and far more interesting, and a drop log
+is often where somebody first notices a misconfigured program, or a compromised laptop.
 
 Two cautions. A busy firewall's drop log is mostly the internet's background noise, so it is read by
 filtering, not by eye; lesson 23 decides what is worth keeping. And a log rule anywhere but last

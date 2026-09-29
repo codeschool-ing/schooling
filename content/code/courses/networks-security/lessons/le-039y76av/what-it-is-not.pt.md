@@ -10,8 +10,8 @@ identidade ou um gateway de acesso remoto, e cada um pode fazer parte de um proj
 deles é um. O projeto é a decisão de autenticar e autorizar toda requisição pela identidade, aplicada
 serviço por serviço, e pode ser construído, como esta aula fez, com TLS e uma autoridade certificadora.
 
-**Não é o fim dos controles de rede.** O laboratório manteve o firewall. A porta da aplicação está
-aberta só a partir do lado dos servidores, a DMZ continua alcançando só o que precisa, e a LAN da
+**Não é o fim dos controles de rede.** O laboratório manteve o firewall. A única porta que ele deixa
+passar até a aplicação é a do TLS, a DMZ continua alcançando só o que precisa, e a LAN da
 equipe continua sem poder tocar o banco de dados. Se uma verificação de identidade tiver uma falha, a
 rede limita quem consegue sequer tentá-la. As duas camadas respondem a perguntas diferentes, *este
 pacote pode chegar aqui* e *este sujeito pode fazer isto*, e um projeto que abandona a primeira fica
@@ -23,7 +23,7 @@ mudança de firewall desta aula que apagou as duas regras para a 8080 é o passo
 verificação; enquanto a porta antiga fica aberta, a verificação de identidade é uma porta da frente ao
 lado de uma janela aberta.
 
-Uma ordem de trabalho prática, que a maioria das organizações segue de alguma forma:
+Uma ordem de trabalho prática:
 
 | passo | o que cobre |
 |---|---|

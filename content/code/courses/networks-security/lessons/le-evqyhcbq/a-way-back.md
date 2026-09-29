@@ -67,6 +67,6 @@ root@fw:~# nft -f known-good.nft; nft list ruleset | grep -c accept
 11
 ```
 
-With `flush ruleset` as its first line, the saved file puts back exactly what was saved: 11. This is
-the kind of detail that a rollback plan contains and nobody tests until the night it is needed, which
-is the argument for testing it on an afternoon when nothing depends on it.
+With `flush ruleset` as its first line, the saved file puts back exactly what was saved: 11. A rollback
+plan contains details like this one, and nobody tests them until the night they are needed. Test it
+on an afternoon when nothing depends on it.

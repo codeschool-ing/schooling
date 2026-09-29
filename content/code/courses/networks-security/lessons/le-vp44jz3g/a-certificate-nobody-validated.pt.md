@@ -9,8 +9,8 @@ continua acontecendo, perfeitamente, com quem quer que tenha respondido.
 
 Em `remote`, uma máquina que não é a loja roda um servidor TLS com um certificado que fez para si
 mesma, alegando ser `www.example.com`. O `laptop` se conecta a ela como se fosse a loja, do jeito que
-o tráfego chega à máquina errada por uma resposta de DNS falsa (a aula 8) ou por uma mentira no ARP
-(a aula 7):
+o tráfego chega à máquina errada por uma resposta de DNS falsa (aula 8) ou por uma mentira no ARP
+(aula 7):
 
 ```
 ana@laptop:~$ curl -sS -o /dev/null --connect-to www.example.com:443:203.0.113.50:8443 https://www.example.com/; echo "exit $?"
@@ -42,7 +42,7 @@ ana@laptop:~$ curl -sk -o /dev/null -w "%{http_code} from %{remote_ip}\n" --conn
 ```
 
 **`200` vindo de `203.0.113.50`.** A conexão foi criptografada, e foi criptografada até a máquina
-errada. Tudo o que for enviado por ela, uma senha, um cookie de sessão, um pedido, foi para quem
+errada. Tudo o que foi enviado por ela, uma senha, um cookie de sessão, um pedido, foi para quem
 controla `remote`. Nada na tela a distinguia da loja de verdade.
 
 Esse é todo o perigo de desligar a verificação, e o motivo de ela ser desligada com tanta frequência:

@@ -10,8 +10,8 @@ neighbours, and lesson 21 walled the servers off from each other. Neither asks t
 
 On most office networks, nobody did. A wall socket in a meeting room is a live port on a switch, and a
 laptop plugged into it gets an address, a route and the whole LAN, whoever owns it. **Network access
-control (NAC)** is the name for making that a decision, and **IEEE 802.1X** is the standard way to
-make it on a switch port or a Wi-Fi network.
+control (NAC)** is the name for making that a decision. **IEEE 802.1X** is the standard way to make it
+on a switch port or a Wi-Fi network.
 
 802.1X names three parties:
 
@@ -22,7 +22,7 @@ make it on a switch port or a Wi-Fi network.
 | **authentication server** | hostapd's own EAP server, inside `sw` | checks the credentials and says yes or no; in a real network this is a **RADIUS** server |
 
 The authenticator never judges the credentials itself. It carries **EAP** messages between the other
-two, wrapped in **EAPOL** frames (EAP over LAN) on the cable and in RADIUS towards the server. That split
+two, wrapped in EAPOL frames (EAP over LAN) on the cable and in RADIUS towards the server. That split
 is what lets one policy server decide for hundreds of switches and access points.
 
 ```schooling-figure

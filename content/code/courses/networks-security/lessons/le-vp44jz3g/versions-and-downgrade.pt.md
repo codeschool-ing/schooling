@@ -4,7 +4,7 @@ version: 1
 ---
 
 O TLS teve quatro versões, e o SSL duas antes dele. **SSL 2 e 3, TLS 1.0 e TLS 1.1 estão todos
-obsoletos**, os dois últimos formalmente desde 2021; cada um tem fraquezas conhecidas, e um servidor
+obsoletos**, os dois últimos formalmente desde 2021. Cada um tem fraquezas conhecidas, e um servidor
 que ainda os aceita deixa um cliente, ou alguém fingindo ser um, escolhê-los. O proxy da loja
 permite dois:
 
@@ -43,15 +43,15 @@ SSL alert number 70
 ```
 
 O servidor respondeu com **alert 70, `protocol version`**: recusou. As duas pontas agora recusam
-versões antigas de forma independente, e é esse o ponto; qualquer uma delas sozinha protege toda
-conexão de que participa.
+versões antigas de forma independente, e qualquer uma delas sozinha protege toda conexão de que
+participa.
 
 ## Proteção contra downgrade
 
 Um ataque de downgrade não precisa que o servidor *prefira* uma versão antiga, só que *aceite* uma.
 Um atacante no caminho interfere no primeiro handshake para que o cliente tente de novo com uma versão
 mais antiga, e a conexão se acomoda na coisa mais fraca que os dois lados toleram. Dois mecanismos
-fecham isso: servidores TLS 1.3 escrevem um marcador fixo no seu valor aleatório quando negociam uma
+fecham isso. Servidores TLS 1.3 escrevem um marcador fixo no seu valor aleatório quando negociam uma
 versão mais antiga com um cliente que poderia fazer melhor, e assim um cliente TLS 1.3 detecta o
-truque; e remover as versões antigas das duas pontas não deixa nada para onde rebaixar. **O segundo é
+truque. E remover as versões antigas das duas pontas não deixa nada para onde rebaixar. **O segundo é
 o que um administrador controla**, com uma linha.

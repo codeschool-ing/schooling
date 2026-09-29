@@ -22,7 +22,7 @@ O que se esgota decide o tipo de ataque, e o tipo decide onde ele pode ser conti
 
 **A linha mais importante é a primeira**, porque é a que um defensor não consegue resolver em casa.
 Se o link que entra no prédio carrega 1 Gbit/s e chegam 20 Gbit/s, o firewall nunca chega a decidir
-nada: os pacotes se perdem do lado do provedor no cabo, os bons junto. Nenhuma regra no `fw` muda
+nada: os pacotes se perdem do lado do cabo que é do provedor, e os bons vão junto. Nenhuma regra no `fw` muda
 isso. As três seções seguintes tratam do que o equipamento do próprio defensor consegue absorver, e a
 última, do que ele não consegue.
 

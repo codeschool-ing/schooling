@@ -4,7 +4,7 @@ version: 1
 ---
 
 The network sensor on the DMZ watches for the admin path requested from outside, as in lesson 14. A
-stranger asks for it twice: once over plain HTTP, once over HTTPS:
+stranger asks for it twice, once over plain HTTP and once over HTTPS:
 
 ```
 ana@remote:~$ curl -s http://www.example.com/admin/; curl -s https://www.example.com/admin/
@@ -39,6 +39,6 @@ root@www:~# grep "/admin/" /var/log/nginx/access.log | cut -d" " -f1,4,6-9
 **Both requests, both for `/admin/`, both answered `200`.** Nothing about this is a flaw in the sensor;
 TLS is doing its job. It means that detection for anything inside HTTPS has to happen where TLS ends:
 in the proxy's logs, in a WAF there (lesson 3), or in an agent on that host shipping those logs to where
-somebody reads them. Most of the web's traffic is encrypted, so most web detection has moved to hosts,
-and the network sensor's job has shifted towards what it still sees well: who talked to whom, when, how
+somebody reads them. Most of the web's traffic is encrypted, so most web detection has moved to hosts.
+The network sensor's job has shifted towards what it still sees well: who talked to whom, when, how
 much, and in which protocol.

@@ -24,7 +24,7 @@ regra mais estreita precisa nomear.
 
 **Toda remoção é testada antes de se tornar permanente.** A sequência mais segura é a que a aula 5
 montou para qualquer mudança: remova a regra com um caminho de volta agendado, rode o teste da matriz
-da aula 18 e fique atento à reclamação. Um acesso cuja perda ninguém reclama dentro do período não era
+da aula 18 e fique atento à reclamação. Um acesso de cuja perda ninguém reclama dentro do período não era
 necessário.
 
 A revisão em si é uma tarefa recorrente, não um projeto. Regras são baratas de adicionar com pressa e

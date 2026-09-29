@@ -15,11 +15,11 @@ admin    192.168.99.10  admin   -           -         -
 *        -              -       ssh         22        admin
 ```
 
-Each server row names the **role** the machine plays, what it **accepts**, on which **port**, and from
-which **roles**. The last row applies to every host: SSH from the `admin` role. Nothing names an address
-in the *from* column. A role is resolved to addresses when the rules are generated, so a new
-application server added to the table with the role `app` gets the database's permission the next time
-the rules are generated, without anybody editing the database's rules.
+Each server row names the role the machine plays, what it accepts, on which port, and from which
+roles. The last row applies to every host: SSH from the `admin` role. Nothing names an address in the
+*from* column. **A role becomes addresses only when the rules are generated.** A new application server
+added to the table with the role `app` therefore gets the database's permission at the next generation,
+and nobody edits the database's rules.
 
 The generator is a short Python program:
 

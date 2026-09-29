@@ -68,11 +68,11 @@ A porta 22 dá timeout, porque o conjunto de regras de `admin` a descarta. Um in
 portanto, **acrescentar** ruído à coleção, e não pode **alterar** o que já está lá. Três detalhes a
 tornam mais robusta em produção:
 
-- **TLS no caminho.** O rsyslog pode envolver a porta 514 em TLS e verificar os dois certificados, como
+- TLS no caminho: o rsyslog pode envolver a porta 514 em TLS e verificar os dois certificados, como
   as aulas 12 e 20 fizeram para outros serviços. O laboratório conta com a rede de gerência ser um
   segmento próprio.
-- **Uma fila para quando o coletor está fora.** `queue.saveOnShutdown` e `action.resumeRetryCount="-1"`
+- Uma fila para quando o coletor está fora: `queue.saveOnShutdown` e `action.resumeRetryCount="-1"`
   mantêm as linhas em disco e tentam de novo para sempre, então um reinício em `admin` não perde nada.
-- **Um alarme para o silêncio.** Uma origem que para de enviar ou foi desligada, ou foi desligada por
+- Um alarme para o silêncio: uma origem que para de enviar ou foi desligada, ou foi desligada por
   alguém. Um coletor deveria perceber quando uma origem fica calada por mais tempo do que jamais fica,
   como uma verificação à parte.

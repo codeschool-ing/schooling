@@ -15,8 +15,8 @@ families of algorithm exist because those are different problems.
 | algorithms met in this course | AES, ChaCha20 | X25519, RSA, ECDSA, Ed25519 |
 
 **The common wrong picture is that asymmetric encryption is the "stronger" kind** and used for
-everything important. It is used for almost nothing in bulk. Every protocol this course touches, TLS,
-SSH, WireGuard, uses asymmetric cryptography for a few milliseconds at the start, to agree on a
+everything important. It is used for almost nothing in bulk. Every protocol this course touches — TLS,
+SSH, WireGuard — uses asymmetric cryptography for a few milliseconds at the start, to agree on a
 symmetric key, and symmetric cryptography for every byte after that. The rest of this lesson shows
 each half on the lab, then the two together in a tunnel between the head office and the branch.
 

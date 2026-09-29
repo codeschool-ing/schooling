@@ -24,16 +24,22 @@ backup do lado de dentro.
 
 Duas práticas que a rede não fornece e que continuam sendo do defensor:
 
-- **testes de restauração**, com agendamento, porque um backup do qual ninguém restaurou nada é uma
+- testes de restauração, com agendamento, porque um backup do qual ninguém restaurou nada é uma
   esperança, não um backup;
-- **credenciais que o domínio não conhece**: se a conta de administrador do sistema de backup é a
+- credenciais que o domínio não conhece: se a conta de administrador do sistema de backup é a
   mesma que o resto da empresa usa, o atacante que tomou o resto da empresa toma essa também.
 
 ## O que a rede contribui, numa lista só
 
 Somados, os controles de rede desta aula transformam cada etapa do padrão num lugar onde o ataque
-pode parar: DNS protetivo no primeiro clique, sandboxing e o gateway de e-mail na entrega (os
-recursos de NGFW da aula 2), firewalls de host contra a propagação, uma regra de quarentena ao
-primeiro sinal e, no fim, backups que nenhuma máquina infectada alcança. Nenhum deles substitui a
+pode parar:
+
+- na entrega, o gateway de e-mail e o sandboxing, os recursos de NGFW da aula 2;
+- no primeiro clique, o DNS protetivo;
+- contra a propagação, os firewalls de host;
+- ao primeiro sinal, uma regra de quarentena;
+- no fim, backups que nenhuma máquina infectada alcança.
+
+Nenhum deles substitui a
 pessoa que denuncia cedo uma mensagem suspeita; cada um compra tempo para que essa pessoa faça
 diferença.

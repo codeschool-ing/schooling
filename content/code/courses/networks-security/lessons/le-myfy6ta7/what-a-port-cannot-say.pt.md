@@ -50,6 +50,6 @@ cliente escolhe o que pedir, e **nada na rede confere se a porta 443 carrega HTT
 | um programa mandando arquivos para um serviço de armazenamento que ninguém aprovou | sim |
 | um malware alcançando o servidor que lhe dá ordens | sim |
 
-Nenhum desses é exótico. O último é o motivo de o problema importar: software de controle remoto usa
-a 443 de propósito, porque é a única porta que toda rede deixa aberta. Quem defende precisa de um
+Nenhum desses é exótico, e o último é proposital: software de controle remoto usa
+a 443 porque é a única porta que toda rede deixa aberta. Quem defende precisa de um
 jeito de perguntar **o que está sendo dito de fato**, e isso significa ler além dos cabeçalhos.

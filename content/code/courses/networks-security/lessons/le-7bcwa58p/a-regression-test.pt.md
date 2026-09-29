@@ -33,7 +33,7 @@ cujo resultado difere:
 ```
 
 Ele roda no próprio host do laboratório, a única máquina que consegue iniciar uma conexão a partir de
-todas as zonas. Contra o conjunto de regras que ainda carrega o erro do `/16` da segunda seção desta aula:
+todas as zonas. Contra o conjunto de regras que ainda carrega o erro do `/16` da seção 03:
 
 ```
 $ bash matrix-test.sh; echo "exit $?"

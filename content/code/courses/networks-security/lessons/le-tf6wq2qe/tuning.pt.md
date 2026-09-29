@@ -17,7 +17,7 @@ suppress gen_id 1, sig_id 1000201, track by_src, ip 203.0.113.70
 ```
 
 `suppress` para a assinatura 1000201, quando a origem é `203.0.113.70`. Todas as outras origens continuam
-contando. As regras são recarregadas sem parar o motor, mandando um sinal a ele:
+contando. Um sinal recarrega as regras sem parar o motor:
 
 ```
 root@sensor:~# kill -USR2 $(cat /var/log/suricata/suricata.pid); sleep 6; grep -c "rule reload complete" /var/log/suricata/suricata.log

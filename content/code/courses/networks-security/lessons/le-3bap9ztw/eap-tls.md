@@ -3,7 +3,7 @@ title: EAP-TLS, a certificate at the door
 version: 1
 ---
 
-EAP is a frame for many methods. The ones met most often are **PEAP** and **EAP-TTLS**, which open a
+EAP is a frame for many methods. The ones met most often are PEAP and EAP-TTLS, which open a
 TLS tunnel and send a password inside it, and **EAP-TLS**, where both sides present a certificate and
 no password exists at all. EAP-TLS is the strongest of them, because there is nothing a user can type
 into a fake login page, and nothing to guess. Its cost is that every device needs a certificate, and
@@ -73,5 +73,5 @@ rtt min/avg/max/mdev = 0.090/0.158/0.226/0.068 ms
 **Authentication is mutual here, and that is the point of `ca_cert`.** A supplicant set up to accept
 any server certificate would hand its exchange to whatever answered on the cable. With EAP-TLS that
 leaks no password, but with PEAP it hands over a challenge and response that can be attacked offline to
-recover the password. Checking
-the server is not optional in any method, and lesson 13 made the same argument about TLS in a browser.
+recover the password. Checking the server is not optional in any method, and lesson 13 made the same
+argument about TLS in a browser.

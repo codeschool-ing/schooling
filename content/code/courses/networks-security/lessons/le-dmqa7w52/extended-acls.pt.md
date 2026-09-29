@@ -53,9 +53,8 @@ ana@guest:~$ probe remote:80
 remote:80              open
 ```
 
-A web passa para os dois computadores agora, porque a ACL fala da sub-rede e não de um host; `remote:22`
-está **bloqueado**, onde antes de qualquer ACL era `refused`, o que quer dizer que o pacote nem chega
-mais a `remote`. Os contadores dizem para onde foi cada pacote:
+A web passa para os dois computadores agora, porque a ACL fala da sub-rede e não de um host. `remote:22`
+está **bloqueado**, onde antes de qualquer ACL era `refused`: o pacote nem chega mais a `remote`. Os contadores dizem para onde foi cada pacote:
 
 ```
 root@branch:~# nft list table netdev acl | grep counter

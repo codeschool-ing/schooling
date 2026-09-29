@@ -3,7 +3,7 @@ title: EAP-TLS, um certificado na porta
 version: 1
 ---
 
-O EAP é uma moldura para muitos métodos. Os mais comuns são o **PEAP** e o **EAP-TTLS**, que abrem um
+O EAP é uma estrutura que comporta muitos métodos. Os mais comuns são o PEAP e o EAP-TTLS, que abrem um
 túnel TLS e mandam uma senha dentro dele, e o **EAP-TLS**, em que os dois lados apresentam um certificado
 e não existe senha nenhuma. O EAP-TLS é o mais forte deles, porque não há nada que um usuário possa
 digitar numa página de login falsa, e nada para adivinhar. O custo é que todo dispositivo precisa de um
@@ -73,5 +73,5 @@ rtt min/avg/max/mdev = 0.090/0.158/0.226/0.068 ms
 **A autenticação aqui é mútua, e é para isso que serve o `ca_cert`.** Um suplicante configurado para
 aceitar qualquer certificado de servidor entregaria a sua troca a quem quer que respondesse no cabo. Com
 EAP-TLS isso não vaza senha nenhuma, mas com PEAP entrega um desafio e uma resposta que podem ser atacados
-offline para recuperar a senha. Conferir o servidor não é opcional em método nenhum, e a aula 13 fez o
-mesmo argumento sobre TLS no navegador.
+offline para recuperar a senha. Conferir o servidor não é opcional em método nenhum, e a aula 13 defendeu
+o mesmo ponto sobre TLS no navegador.

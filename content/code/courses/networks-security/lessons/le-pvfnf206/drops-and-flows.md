@@ -72,8 +72,8 @@ root@fw:~# jq -c '[.timestamp, .src_ip, .dest_ip, .dest_port, ."oob.in", ."oob.o
 ```
 
 The first is the laptop trying the database, which the policy has never allowed; the other three are
-`remote`, one second apart, on three ports and two segments. **One second apart on three ports is a
-scan**, small as it is.
+`remote`, one second apart, against three machines on two segments. **One second apart across three
+machines is a scan**, small as it is.
 
 The flow records are written later, and that is the first thing to know about them. A connection's
 record is written when the firewall **forgets** it, not when it closes: a closed TCP connection stays in
@@ -90,9 +90,10 @@ root@fw:~# jq -c 'select(.src_ip == "203.0.113.50") | {start: ."flow.start.sec",
 
 Two conversations from `remote` to the shop, both on port 80, both allowed. `start` and `end` are in
 seconds since 1970: 1790632351 is 18:52:31 in São Paulo, and `end` is exactly 120 seconds later for
-both, which is the two minutes of remembering rather than the length of the conversation. The requests
-themselves took milliseconds. `sent` and `received` are bytes each way; the second flow received 734
-bytes against the first one's 437, because a 404 page is longer than the lab's front page.
+both. That is the two minutes of remembering, not the length of the conversation; the requests
+themselves took milliseconds. `sent` and `received` are bytes each way. The later flow, which started
+at 1790632352, received 734 bytes against the earlier one's 437, because a 404 page is longer than the
+lab's front page.
 
 **The refused attempts are not here.** A connection the firewall drops never enters the table as a
 confirmed entry, so it never produces a flow record. Flows say what happened; the drop log says what

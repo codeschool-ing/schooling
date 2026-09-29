@@ -34,11 +34,11 @@ root@fw:~# cat drops.txt
 ```
 
 Três tentativas de conexão descartadas, cada uma um `SYN` TCP com sua origem, destino e porta. **É
-para isto que serve o log de descartes**: `203.0.113.50` tentando o banco de dados e o SSH é a
-internet fazendo o que faz o dia inteiro, e `192.168.10.20` tentando a porta 6379 é uma máquina na
-LAN da equipe buscando um serviço que nunca lhe foi dado. O segundo tipo é bem mais raro e bem mais
-interessante, e um log de descartes muitas vezes é como um programa mal configurado, ou um laptop
-comprometido, é notado pela primeira vez.
+para isto que serve o log de descartes.** `203.0.113.50` tentando o banco de dados e o SSH é a
+internet fazendo o que faz o dia inteiro. `192.168.10.20` tentando a porta 6379 é uma máquina da
+LAN da equipe buscando um serviço que nunca recebeu. O segundo tipo é bem mais raro e bem mais
+interessante, e muitas vezes é no log de descartes que alguém nota pela primeira vez um programa mal
+configurado, ou um laptop comprometido.
 
 Dois cuidados. O log de descartes de um firewall movimentado é quase todo ruído de fundo da internet,
 então é lido filtrando, não a olho; a aula 23 decide o que vale a pena guardar. E uma regra de log em

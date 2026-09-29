@@ -61,6 +61,6 @@ form a reader of the segment can use. The names and the sizes still show, which 
 metadata; what was said does not.
 
 **The defence against sniffing is not preventing it, which nobody can promise on every segment. It is
-making sure there is nothing worth reading.** Every protocol in the company that still carries a
-password, a cookie or a document in clear is a list worth writing down, because this lesson's next
-sections are about how an attacker gets onto a segment they were not meant to hear.
+making sure there is nothing worth reading.** Write down every protocol in the company that still
+carries a password, a cookie or a document in clear. This lesson's next sections are about how an
+attacker gets onto a segment they were not meant to hear.

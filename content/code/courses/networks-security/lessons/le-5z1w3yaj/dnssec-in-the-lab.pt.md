@@ -8,9 +8,9 @@ de registros recebe uma assinatura, publicada como um registro `RRSIG` ao lado d
 também é publicada, como um `DNSKEY`. Um **resolvedor que valida** (*validating resolver*) confere a
 assinatura contra uma chave em que confia antes de acreditar em uma resposta.
 
-De onde vem a chave confiável é a parte que faz isso funcionar pela internet: cada zona pai publica
-uma impressão digital das chaves das zonas filhas, e assim a confiança desce a partir da raiz, cuja
-chave todo resolvedor que valida já vem configurado para conhecer. O laboratório não tem raiz, então o
+É a origem da chave confiável que faz isso funcionar pela internet. Cada zona pai publica uma
+impressão digital das chaves das zonas filhas, e assim a confiança desce a partir da raiz, cuja chave
+todo resolvedor que valida já vem configurado para conhecer. O laboratório não tem raiz, então o
 resolvedor é instruído a confiar diretamente na chave da zona da empresa, que é o mesmo mecanismo com
 a cadeia encurtada.
 
@@ -47,5 +47,5 @@ isso.
 ```
 
 Um cliente que confia no `ad` está confiando na palavra do seu resolvedor, então o trecho entre os
-dois também precisa ser confiável: aqui é o loopback, na mesma máquina. Através de uma rede, esse
-último salto é protegido ele mesmo por criptografia, com DNS sobre TLS ou sobre HTTPS.
+dois também precisa ser confiável: aqui é o loopback, na mesma máquina. Numa rede, esse último
+salto também precisa de proteção, e ela vem da criptografia: DNS sobre TLS ou sobre HTTPS.

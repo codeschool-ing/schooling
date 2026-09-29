@@ -21,8 +21,8 @@ Payroll for September: 42 people, BRL 318,450.00
 The key file is 65 bytes: 64 hex digits and a newline. The encrypted file is **80 bytes for a 49-byte
 message**: `openssl` writes the marker `Salted__` and an 8-byte salt at the start, and CBC pads the
 message to a whole number of 16-byte blocks. `-pbkdf2 -iter 600000` turns the key file into the
-actual key through 600,000 rounds of hashing, which matters when the "key" is a password somebody
-typed and costs nothing here. With the same key, the message comes back.
+actual key through 600,000 rounds of hashing. That matters when the "key" is a password somebody
+typed, and makes no difference here, where the key is 32 random bytes. With the same key, the message comes back.
 
 **This works and has a flaw worth knowing by name**: CBC keeps the message secret and says nothing
 about whether it was changed. Flip bits in the encrypted file and decryption produces a different

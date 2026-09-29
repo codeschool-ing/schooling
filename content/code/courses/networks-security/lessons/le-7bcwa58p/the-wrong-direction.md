@@ -27,7 +27,7 @@ could complain about; it is merely impossible. The intended rule is `iifname eth
 Impossible rules are easy to write because a rule has two ends and each is described twice, once by
 interface and once by address. They are also easy to find: **a rule whose counter stays at zero after
 the traffic it was written for has been tried** is shadowed, impossible, or describing traffic that does
-not exist. All three are worth knowing about.
+not exist.
 
 | symptom | usual cause |
 |---|---|

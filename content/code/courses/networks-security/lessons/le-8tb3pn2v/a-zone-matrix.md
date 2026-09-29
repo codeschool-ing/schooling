@@ -47,7 +47,7 @@ table ip filter {
 root@fw:~# nft -f baseline.nft
 ```
 
-Each `accept` line is one cell of the matrix, and **each carries a comment saying which**. The input
+Each `accept` line carries out part of the matrix, and **each carries a comment saying what it allows**. The input
 chain protects `fw` itself: it may be administered only from the management segment. Policy `drop`
 on both chains is every empty cell at once.
 

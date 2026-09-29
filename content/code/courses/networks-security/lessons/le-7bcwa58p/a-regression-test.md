@@ -33,7 +33,7 @@ whose result differs:
 ```
 
 It runs on the lab's own host, the one machine that can start a connection from every zone. Against
-the rule set that still carries the `/16` mistake of this lesson's second section:
+the rule set that still carries the `/16` mistake from section 03:
 
 ```
 $ bash matrix-test.sh; echo "exit $?"

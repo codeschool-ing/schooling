@@ -71,8 +71,8 @@ root@www:~# grep -o "\[id \"[0-9]*\"\]\|\[msg \"[^\"]*\"\]" /var/log/nginx/modse
 [msg "Inbound Anomaly Score Exceeded (Total Score: 15)"]
 ```
 
-The test string is refused with `403`, the ordinary search is served. The same four lines in the log
-now describe a request that never reached `app`.
+The test string is refused with `403`, the ordinary search is served. The same four rule entries in the
+log now describe a request that never reached `app`.
 
 ## How the Core Rule Set decides
 
@@ -82,7 +82,7 @@ critical match is enough; several weak ones add up. The **paranoia level** decid
 run at all: level 1 is the default and aims at few false positives, and higher levels catch more at
 the cost of blocking more legitimate traffic.
 
-A WAF has two limits worth stating plainly:
+A WAF has two limits:
 
 - **It knows patterns, not the application.** A flaw in the application's own logic, such as letting
   one customer read another's order by changing a number, looks like an ordinary request.

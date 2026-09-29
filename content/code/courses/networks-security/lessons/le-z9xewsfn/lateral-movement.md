@@ -54,9 +54,9 @@ ana@desk:~$ curl -s https://www.example.com/
 orders service: ok
 ```
 
-**This is the single most effective network control against ransomware spreading**, and it costs
-nothing but the discipline of doing it on every workstation, which is what central management of
-host firewalls is for. The Windows equivalent is its built-in firewall, set by group policy to refuse
+**Of all the network controls, this is the one that does most to stop ransomware spreading.** It costs
+nothing but the discipline of doing it on every workstation, and central management of host firewalls
+exists to supply that discipline. The Windows equivalent is its built-in firewall, set by group policy to refuse
 inbound file sharing and remote desktop from the LAN. Lesson 21 generalises the idea to every server.
 
 ```schooling-figure

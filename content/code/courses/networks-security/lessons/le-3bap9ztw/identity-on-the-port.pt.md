@@ -15,9 +15,9 @@ last_eap_type_sta=13 (TLS)
 ```
 
 `dot1xAuthSessionUserName` é a identidade que se autenticou. `dot1xAuthReAuthPeriod=3600` quer dizer que
-o switch pergunta de novo a cada hora. Se o servidor também verificar revogação, o que o hostapd faz com a
-opção `check_crl` e a configuração deste laboratório não faz, um certificado revogado às nove para de
-funcionar até as dez no máximo, sem ninguém mexer no switch. É a verificação contínua da aula 21, feita
+o switch pergunta de novo a cada hora. O hostapd também pode verificar revogação, com a opção
+`check_crl`, que a configuração deste laboratório não liga. Com ela, um certificado revogado às nove para
+de funcionar até as dez no máximo, e ninguém mexe no switch. É a verificação contínua da aula 21, feita
 pela porta.
 
 O script de controle gravou o mesmo fato em um log:
@@ -67,5 +67,5 @@ Dois cuidados acompanham esse log:
 - **Uma identidade não é uma verificação de saúde.** O 802.1X prova que a máquina tem um certificado
   válido. Não prova que a máquina está atualizada ou livre de malware. A **avaliação de postura**
   (*posture assessment*), em que o sistema de NAC também confere o estado do dispositivo antes de escolher
-  a VLAN, é a camada que acrescenta isso. Ela é citada aqui para que a diferença fique clara, não
-  construída.
+  a VLAN, é a camada que acrescenta isso. Esta aula a cita para que a diferença fique clara, e
+  não a constrói.

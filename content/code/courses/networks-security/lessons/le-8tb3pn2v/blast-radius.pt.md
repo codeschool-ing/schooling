@@ -23,9 +23,8 @@ remote:443             blocked
 
 **Uma porta, a que o proxy precisa, e nada mais.** Nem o banco de dados, nem o SSH do servidor de
 aplicação, nem a equipe, nem a máquina de gestão, nem a internet: `remote:80` e `remote:443` estão
-bloqueados porque a matriz não dá à DMZ nenhuma linha rumo à internet. Esse último importa mais do
-que parece. Software que toma um servidor costuma chamar de volta para fora, para receber instruções
-ou enviar o que encontrou; uma DMZ que não pode iniciar conexões de saída torna isso muito mais
+bloqueados porque a matriz não dá à DMZ nenhuma linha rumo à internet. Software que toma um
+servidor costuma chamar de volta para fora, para receber instruções ou enviar o que encontrou. Uma DMZ que não pode iniciar conexões de saída torna isso muito mais
 difícil, e torna qualquer tentativa visível nos contadores do firewall.
 
 ```

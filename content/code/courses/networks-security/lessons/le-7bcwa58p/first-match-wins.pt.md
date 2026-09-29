@@ -15,7 +15,7 @@ configuração de base:
 root@fw:~# nft add rule ip filter forward ip saddr 192.168.10.20 counter drop comment '"laptop quarantined, ticket 5120"'
 ```
 
-O `nft add` acrescenta ao fim: a regra vai para **o final** da cadeia. Então o `laptop` tenta os serviços
+O `nft add` anexa: a regra vai para **o final** da cadeia. Então o `laptop` tenta os serviços
 de sempre:
 
 ```
@@ -70,5 +70,5 @@ Qual das duas se quer é uma decisão; **`add` quase nunca é o que uma quarente
 
 A ordem também custa tempo. Todo pacote percorre a cadeia até algo casar, então as regras que casam com
 a maior parte do tráfego ficam perto do topo, e é por isso que a aula 1 pôs `established,related`
-primeiro; e listas longas de endereços ficam em um set, que o nftables consulta em um único passo em vez
+primeiro. Listas longas de endereços ficam em um set, que o nftables consulta em um único passo em vez
 de regra por regra.

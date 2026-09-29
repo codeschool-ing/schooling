@@ -53,7 +53,7 @@ www.example.com shop.example.com mail.example.com vpn.example.com ftp.example.co
 
 A list of likely host names, tried one after another, is somebody **mapping the company's names** to
 find what exists. Each question was harmless and legitimate; no signature would fire on any of them.
-The pattern shows only when the records are counted, and a baseline says whether ten is a lot: for a
+The pattern shows only when the records are counted, and a baseline says whether ten is a lot. For a
 resolver serving an office, ten names from one source might be a Tuesday; for the public name server,
 ten names from one stranger is a survey. Lesson 23 comes back to keeping these records long enough to
 build a baseline from.

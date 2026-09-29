@@ -75,8 +75,8 @@ root@www:~# grep -o "\[id \"[0-9]*\"\]\|\[msg \"[^\"]*\"\]" /var/log/nginx/modse
 [msg "Inbound Anomaly Score Exceeded (Total Score: 15)"]
 ```
 
-A string de teste é recusada com `403`, a busca comum é atendida. As mesmas quatro linhas no log
-agora descrevem uma requisição que nunca chegou a `app`.
+A string de teste é recusada com `403`, a busca comum é atendida. As mesmas quatro entradas de regra
+no log agora descrevem uma requisição que nunca chegou a `app`.
 
 ## Como o Core Rule Set decide
 
@@ -86,7 +86,7 @@ basta; vários fracos se somam. O **nível de paranoia** (*paranoia level*) deci
 rodam: o nível 1 é o padrão e mira em poucos falsos positivos, e os níveis mais altos pegam mais ao
 custo de bloquear mais tráfego legítimo.
 
-Um WAF tem dois limites que vale dizer com todas as letras:
+Um WAF tem dois limites:
 
 - **Ele conhece padrões, não a aplicação.** Uma falha na lógica da própria aplicação, como deixar um
   cliente ler o pedido de outro trocando um número, parece uma requisição comum.

@@ -36,8 +36,8 @@ ana@laptop:~$ dig +tries=1 @192.168.20.10 www.example.com
 ;; no servers could be reached
 ```
 
-`app` answered the question with an ICMP *port unreachable*, and the `related` rule let it through,
-one packet of 112 bytes. **`dig` reported the refusal at once instead of waiting out its timeout.**
+`app` answered the question with an ICMP *port unreachable*, and the `related` rule let it through.
+**`dig` reported the refusal at once instead of waiting out its timeout.**
 Drop `related` and every such error vanishes on the firewall, so programs wait and retry where they
 could have failed straight away. Worse, the ICMP message that tells a sender its packets are too
 big is `related` too, and losing it breaks connections in ways that look like anything but a
@@ -73,6 +73,6 @@ rule: `remote`'s two packets, the first try and one retransmission, just before 
 them. The `new` rule matched **three packets**, one per request, because a conversation starts once.
 Everything else, 34 packets in all, was `established` traffic.
 
-**That ratio is normal and worth remembering.** On a busy firewall, nearly all packets hit the
+**That ratio is normal.** On a busy firewall, nearly all packets hit the
 first rule, which is why it is the first rule. Lesson 18 comes back to what the order of rules
 costs.

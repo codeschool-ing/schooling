@@ -28,7 +28,7 @@ root@www:~# ss -Hltn | awk "{print \$4}" | sort | diff listening.baseline -; ss 
 **Um novo listener, em todos os endereços, porta 8081**, e o processo que o segura: `socat`, que não
 tem o que fazer num proxy de produção. Em `0.0.0.0` ele responde em toda interface que a máquina tem,
 então o firewall da aula 4 é agora tudo o que fica entre ele e a DMZ. O sensor de rede não viu nada,
-porque ninguém se conectou a ele ainda; a verificação de host o viu no momento em que abriu.
+porque ninguém se conectou a ele ainda; a verificação de host o viu sem que ninguém se conectasse.
 
 Verificações de host úteis têm esse mesmo formato, e um agente de HIDS roda muitas delas com agenda:
 

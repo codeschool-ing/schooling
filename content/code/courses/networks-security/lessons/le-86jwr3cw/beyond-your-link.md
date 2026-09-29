@@ -5,7 +5,7 @@ version: 1
 
 Everything so far happens on the defender's own equipment. Against a volumetric attack larger than
 the link, none of it runs, because the packets are dropped before they reach the equipment. What
-remains is decided upstream, and it has to be arranged **before** the attack:
+remains is decided upstream, and somebody has to arrange it **before** the attack:
 
 | measure | how it works |
 |---|---|
@@ -21,7 +21,7 @@ an incident, and the number that decides it is what an hour of the service being
 ## Watching the table fill
 
 On the equipment that is the defender's, the first sign of a protocol attack is the connection table.
-Two numbers and two counters to know where to find:
+Two numbers to watch, and two counters worth knowing where to find:
 
 ```
 root@fw:~# conntrack -C; sysctl -n net.netfilter.nf_conntrack_max

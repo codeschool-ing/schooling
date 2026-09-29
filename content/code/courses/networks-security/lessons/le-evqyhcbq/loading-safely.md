@@ -36,9 +36,9 @@ root@fw:~# nft list ruleset | grep -c accept
 ```
 
 Still 11. **Nothing half-applied.** That matters most with a file that begins `flush ruleset`, as
-these do: without atomic loading, a mistake on line 7 would leave the firewall flushed and empty, with
-lines 1 to 6 loaded, which for a policy of `drop` means almost nothing passes and for a policy of
-`accept` means almost everything does.
+these do. Without atomic loading, a mistake on line 7 would leave the firewall flushed, with only
+lines 1 to 6 loaded. Under a policy of `drop` almost nothing would pass; under `accept`, almost
+everything would.
 
 `iptables` loads one rule per command, so a script of fifty `iptables` lines that fails at line 20
 leaves nineteen applied. `iptables-restore` exists for exactly this reason, and does for a whole

@@ -69,10 +69,10 @@ Port 22 times out, because `admin`'s rule set drops it. An intruder on `fw` can 
 to the collection, and cannot **change** what is already there. Three details make it sturdier in
 production:
 
-- **TLS on the way.** rsyslog can wrap port 514 in TLS and check both certificates, as lessons 12 and 20
+- TLS on the way: rsyslog can wrap port 514 in TLS and check both certificates, as lessons 12 and 20
   did for other services. The lab relies on the management network being a segment of its own.
-- **A queue for when the collector is away.** `queue.saveOnShutdown` and `action.resumeRetryCount="-1"`
+- A queue for when the collector is away: `queue.saveOnShutdown` and `action.resumeRetryCount="-1"`
   hold lines on disk and retry for ever, so a restart on `admin` loses nothing.
-- **An alarm on silence.** A source that stops sending is either switched off or switched off by
+- An alarm on silence: a source that stops sending is either switched off or switched off by
   somebody. A collector should notice when a source goes quiet for longer than it ever does, as a
   check of its own.

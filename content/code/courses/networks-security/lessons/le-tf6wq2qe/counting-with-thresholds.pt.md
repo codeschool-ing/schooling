@@ -35,5 +35,5 @@ O Suricata oferece três jeitos de fazer uma regra contar, e eles respondem a pe
 | `threshold: type limit` | no máximo N vezes por período | "me avise que começou; o resto eu dispenso" |
 
 A contagem pertence à regra quando o padrão *é* a contagem, como aqui. Quando a regra está certa e o
-problema é a frequência com que ela dispara, a contagem pertence ao arquivo de limiares do motor, que é a
+problema é a frequência com que ela dispara, a contagem pertence ao arquivo de limiares do motor, assunto da
 última seção desta aula.

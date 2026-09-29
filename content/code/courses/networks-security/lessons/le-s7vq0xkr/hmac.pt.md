@@ -30,11 +30,11 @@ porque a requisição não precisa de senha e o endereço não é segredo.
 
 Dois detalhes decidem se uma conferência de HMAC é sólida:
 
-- **comparar em tempo constante.** Uma comparação que para no primeiro byte diferente responde mais
+- **Comparar em tempo constante.** Uma comparação que para no primeiro byte diferente responde mais
   rápido para um palpite que compartilha um prefixo mais longo, e esse tempo vaza o valor byte a byte.
   As bibliotecas oferecem uma comparação que sempre leva o mesmo tempo, como a `hmac.compare_digest`
   em Python.
-- **incluir o que não pode ser reenviado.** Um HMAC só sobre o corpo deixa alguém reenviar a
+- **Incluir o que não pode ser reenviado.** Um HMAC só sobre o corpo deixa alguém reenviar a
   requisição legítima de ontem. Os provedores acrescentam um carimbo de tempo (*timestamp*) ao que é
   assinado e rejeitam os antigos.
 

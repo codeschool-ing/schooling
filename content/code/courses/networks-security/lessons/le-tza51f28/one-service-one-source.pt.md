@@ -53,8 +53,8 @@ www:443                blocked
 ```
 
 Nada. Um banco de dados não tem motivo para abrir uma conexão com a aplicação, com a web ou com
-qualquer outro lugar, e um que tente foi mandado fazer isso por alguém que não deveria estar mandando
-nada nele. **A filtragem de saída (*egress filtering*) é o menos usado e o mais revelador desses
+qualquer outro lugar, e um que tente está obedecendo a alguém que não deveria lhe dar ordem
+nenhuma. **A filtragem de saída (*egress filtering*) é o menos usado e o mais revelador desses
 controles**: quando ela descarta algo, os contadores dizem que um servidor tentou fazer algo de que
 nenhum servidor do seu tipo jamais precisa.
 

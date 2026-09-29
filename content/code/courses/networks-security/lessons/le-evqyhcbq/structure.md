@@ -15,7 +15,7 @@ table ip filter
 
 On a network with IPv6, a `table ip` leaves every IPv6 packet unfiltered, which is a second,
 invisible policy of `accept`. The `inet` family handles both with one set of rules. The baseline,
-changed on its first line only, checks cleanly:
+with only its `table` line changed, checks cleanly:
 
 ```
 root@fw:~# nft -c -f baseline-inet.nft && echo "inet rule set: ok"

@@ -41,8 +41,8 @@ ana@db: Permission denied (publickey).
 exit 255
 ```
 
-**`Permission denied (publickey)`**: the key was right and the place was wrong. A copied key, the
-single most common way administrative access leaks, is useless anywhere but the jump host.
+**`Permission denied (publickey)`**: the key was right and the place was wrong. Copied keys are a common way for
+administrative access to leak, and this one is useless anywhere but the jump host.
 
 The jump host itself then becomes the thing to protect best: multi-factor authentication for the
 people who log in to it, its own logs shipped elsewhere as lesson 16 asked, nothing else installed on

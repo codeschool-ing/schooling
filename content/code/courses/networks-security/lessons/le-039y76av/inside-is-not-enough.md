@@ -40,8 +40,8 @@ certificate mandatory: no certificate, no connection. And the `if` inside the lo
 authorisation half: a valid certificate is not enough, it has to be **`CN=www-client`**. The access
 log records, for every request, the certificate's subject and whether verification succeeded.
 
-The firewall changes to match. The new port is allowed from the servers side, and the two old rules to
-8080 are removed, so the application can no longer be reached without passing the identity check:
+The firewall changes to match. The new port is allowed towards the servers from any zone, and the two old
+rules to 8080 are removed, so the application can no longer be reached without passing the identity check:
 
 ```
 root@fw:~# nft insert rule ip filter forward index 2 oifname eth3 ip daddr 192.168.20.10 tcp dport 8443 ct state new accept comment '"the application over TLS: identity decides, not the network"'

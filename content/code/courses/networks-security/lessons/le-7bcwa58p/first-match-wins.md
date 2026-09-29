@@ -68,5 +68,5 @@ were already open. Which of the two is wanted is a decision; **`add` is almost n
 wants.**
 
 Order also costs time. Every packet walks the chain until something matches, so rules that match most
-traffic belong near the top, which is why lesson 1 put `established,related` first; and long lists of
+traffic belong near the top, which is why lesson 1 put `established,related` first. Long lists of
 addresses belong in a set, which nftables looks up in one step rather than rule by rule.

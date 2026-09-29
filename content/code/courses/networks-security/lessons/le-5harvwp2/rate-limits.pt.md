@@ -9,7 +9,7 @@ afoito têm essa cara. **Um limite de taxa** (*rate limit*) **restringe a veloci
 cliente pode pedir**, e o proxy é o lugar natural para ele, porque vê cada requisição antes que a
 aplicação gaste qualquer coisa com ela.
 
-O nginx faz isso em duas linhas, uma no topo do arquivo e uma no location:
+O nginx faz isso em três linhas, duas no topo do arquivo e uma no location:
 
 ```
 root@www:~# grep -n "limit_req" /etc/nginx/sites-enabled/shop
@@ -46,7 +46,7 @@ root@www:~# grep -c "limiting requests" /var/log/nginx/error.log; grep -m1 "limi
 [error] 32145#32145: *41 limiting requests, excess: 10.715 by zone "perip", client: 203.0.113.50, server: www.example.com, request: "GET / HTTP/1.1", host: "www.example.com"
 ```
 
-O `laptop` foi atendido durante o burst porque seu endereço tem um contador próprio, e três segundos
+O `laptop` foi atendido logo depois do burst porque seu endereço tem um contador próprio, e três segundos
 depois `remote` voltou a ser atendido. Cada recusa está no log de erros com o endereço do cliente,
 que é o que alguém lê depois para decidir se foi um script ou um engano.
 

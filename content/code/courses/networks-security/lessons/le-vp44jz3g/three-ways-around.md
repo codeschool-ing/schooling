@@ -15,6 +15,6 @@ application owner controls.
 | **no validation** | presents any certificate at all, and the client accepts it | code or a tool with certificate checking turned off | never turning it off; searching code for where it was |
 
 The attacker in every row is somebody **on the path**: the café's Wi-Fi, a compromised router, the
-machine on the LAN that lesson 7 showed lying in ARP. The three sections that follow check each defence
+machine on the LAN that lesson 7 showed lying in ARP. The sections that follow check each defence
 on the lab. None of them needs an attacker to be demonstrated, because each is a property of the
 server or the client that can be tested directly.

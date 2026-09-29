@@ -14,9 +14,9 @@ as portas ou VLANs escolhidas. A outra opção é um **tap de rede** (network ta
 dispositivo em linha num cabo que copia os dois sentidos para uma porta de monitoramento e não pode
 ser reconfigurado pela rede.
 
-O laboratório não tem nenhum dos dois, então trapaceia de um jeito que vale dizer em voz alta: a
-ponte que faz o papel do switch da DMZ é instruída a esquecer onde está cada endereço, e inunda cada
-quadro para todas as portas, como os hubs que os switches substituíram. É por isso que o sensor
+O laboratório não tem nenhum dos dois, então trapaceia, e a trapaça vale ser dita em voz alta. A
+ponte que faz o papel do switch da DMZ é instruída a esquecer onde está cada endereço, e por isso
+inunda cada quadro para todas as portas, como os hubs que os switches substituíram. É por isso que o sensor
 consegue ouvir. **Numa rede real, uma máquina ouvindo tráfego que não é endereçado a ela significa
 uma de três coisas**:
 

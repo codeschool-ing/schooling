@@ -25,8 +25,8 @@ stored.
 answer nobody asked for, and the others will generally believe it and update their tables. That is
 the whole of **ARP spoofing**, also called ARP poisoning: a machine on the segment tells the others
 that the gateway's address is at *its* MAC. From then on, their traffic for the outside world goes to
-it first. If it passes the traffic on, nothing visibly breaks, and it reads everything the previous
-section showed is readable.
+it first. If it passes the traffic on, nothing visibly breaks, and it reads everything this lesson's
+first section showed is readable.
 
 Three consequences for a defender:
 

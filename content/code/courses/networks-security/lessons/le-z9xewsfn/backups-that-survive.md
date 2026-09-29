@@ -24,15 +24,21 @@ backup from the inside.
 
 Two practices the network cannot supply and a defender still owns:
 
-- **restore tests**, on a schedule, because a backup nobody has restored from is a hope rather than a
+- restore tests, on a schedule, because a backup nobody has restored from is a hope rather than a
   backup;
-- **credentials the domain does not know**: if the backup system's administrator account is the same
+- credentials the domain does not know: if the backup system's administrator account is the same
   one the rest of the company uses, the attacker who took the rest of the company takes that too.
 
 ## What the network contributes, in one list
 
 Put together, this lesson's network controls turn each stage of the pattern into a place where the
-attack can stop: protective DNS at the first click, sandboxing and the mail gateway at delivery (the
-NGFW features of lesson 2), host firewalls against spreading, a quarantine rule at the first sign, and
-backups that no infected machine can reach at the end. None of them replaces the person who reports a
+attack can stop:
+
+- at delivery, the mail gateway and sandboxing, the NGFW features of lesson 2;
+- at the first click, protective DNS;
+- against spreading, host firewalls;
+- at the first sign, a quarantine rule;
+- at the end, backups that no infected machine can reach.
+
+None of them replaces the person who reports a
 suspicious message early; each of them buys time for that person to matter.

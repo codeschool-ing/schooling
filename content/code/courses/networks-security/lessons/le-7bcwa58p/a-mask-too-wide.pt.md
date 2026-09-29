@@ -33,7 +33,7 @@ errada à primeira vista; a célula da matriz que diz *LAN da equipe para servid
 simplesmente deixou de ser verdade.
 
 **Leia cada regra de volta depois de carregá-la.** O conjunto de regras no kernel é a verdade, e nem
-sempre é o texto que foi digitado: o nftables reescreveu este endereço para a rede que ele descreve, e
-uma olhada rápida na listagem pega exatamente essa classe de erro, aquela em que o texto digitado e o
-significado guardado divergem. As ACLs de roteador têm a mesma armadilha com máscaras curinga (wildcard
-masks), as da aula 17, em que um byte errado alarga uma linha por um fator de 256.
+sempre é o texto que foi digitado: o nftables reescreveu este endereço para a rede que ele descreve. Uma
+olhada rápida na listagem pega exatamente essa classe de erro, em que o texto digitado e o significado
+guardado divergem. As ACLs de roteador armam a mesma armadilha com as máscaras curinga (wildcard masks)
+da aula 17, em que um byte errado alarga uma linha por um fator de 256.

@@ -55,8 +55,8 @@ d = ... mc        : /etc/nginx/sites-enabled
 f > ... mc  H     : /etc/nginx/sites-enabled/shop
 ```
 
-**Código de saída 4**, que significa *entradas alteradas*, e são duas: o diretório, cujo horário de
-modificação andou, e o próprio arquivo, cujo tamanho, horários e hash mudaram. O detalhe diz quanto:
+**Código de saída 4**, que significa *entradas alteradas*, e são duas: o diretório, cujos horários de
+modificação e de alteração andaram, e o próprio arquivo, cujo tamanho, horários e hash mudaram. O detalhe diz quanto:
 
 ```
 root@www:~# sed -n "/^File: /,/^$/p" aide.txt | grep -E "^File|Size|Mtime|SHA256"

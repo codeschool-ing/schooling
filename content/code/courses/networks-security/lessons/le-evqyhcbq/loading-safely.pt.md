@@ -38,9 +38,8 @@ root@fw:~# nft list ruleset | grep -c accept
 ```
 
 Continua 11. **Nada aplicado pela metade.** Isso importa mais com um arquivo que começa com `flush
-ruleset`, como estes: sem carregamento atômico, um erro na linha 7 deixaria o firewall limpo e vazio,
-com as linhas 1 a 6 carregadas, o que, para uma política `drop`, significa que quase nada passa e,
-para uma política `accept`, que quase tudo passa.
+ruleset`, como estes. Sem carregamento atômico, um erro na linha 7 deixaria o firewall limpo, só com
+as linhas 1 a 6 carregadas. Com uma política `drop`, quase nada passaria; com `accept`, quase tudo.
 
 O `iptables` carrega uma regra por comando, então um script de cinquenta linhas de `iptables` que
 falha na linha 20 deixa dezenove aplicadas. O `iptables-restore` existe exatamente por esse motivo, e

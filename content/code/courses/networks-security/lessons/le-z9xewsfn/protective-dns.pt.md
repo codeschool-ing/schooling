@@ -20,7 +20,7 @@ address=/example-support.test/
 address=/example.com.login-verify.test/
 ```
 
-Então duas máquinas da equipe perguntam, uma pela loja e uma por cada imitador:
+Então duas máquinas da equipe perguntam: `laptop` pela loja e por um imitador, `desk` pelo outro:
 
 ```
 ana@laptop:~$ dig +short www.example.com; dig www.example-support.test | grep status
@@ -48,7 +48,7 @@ lista de pessoas com quem conversar**: elas receberam a mensagem e clicaram, e u
 digitado uma senha na página antes de o nome ser bloqueado.
 
 Dois limites, ditos com clareza. Uma lista de bloqueio só conhece os nomes que alguém já denunciou, e
-imitadores são baratos de registrar, então ela pega a campanha conhecida e deixa passar a nova; feeds
+imitadores são baratos de registrar, então ela pega a campanha conhecida e deixa passar a nova. Feeds
 comerciais de nomes recém-registrados e denunciados fecham parte dessa lacuna, e o mesmo fazem os
 filtros por categoria dos NGFW (aula 2), que bloqueiam classes inteiras de sites. E uma máquina que
 usa outro resolvedor ignora a política por completo, e é por isso que a matriz da aula 4 só deixa a

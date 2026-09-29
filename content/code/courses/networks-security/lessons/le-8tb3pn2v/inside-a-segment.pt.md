@@ -43,7 +43,7 @@ cada segmento como uma bridge própria, que se comporta do mesmo jeito. O que im
 que os dois têm em comum: uma VLAN só protege alguma coisa se o tráfego entre VLANs for forçado a
 passar por um firewall, e um switch que roteia entre elas por conta própria desfez a segmentação.
 
-Para referência, a matriz como o `fw` a guarda, um comentário por célula:
+Para referência, a matriz como o `fw` a guarda, um comentário por regra:
 
 ```
 root@fw:~# nft list chain ip filter forward | grep -E "comment|policy"

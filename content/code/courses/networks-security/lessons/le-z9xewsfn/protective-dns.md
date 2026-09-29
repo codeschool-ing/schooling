@@ -20,7 +20,7 @@ address=/example-support.test/
 address=/example.com.login-verify.test/
 ```
 
-Then two staff machines ask, one for the shop and one for each lookalike:
+Then two staff machines ask: `laptop` for the shop and one lookalike, `desk` for the other:
 
 ```
 ana@laptop:~$ dig +short www.example.com; dig www.example-support.test | grep status
@@ -48,7 +48,7 @@ the first list of people to talk to**: they received the message and clicked, an
 have typed a password into the page before the name was blocked.
 
 Two limits, stated plainly. A blocklist only knows names somebody has already reported, and lookalikes
-are cheap to register, so it catches the known campaign and misses the new one; commercial feeds of
+are cheap to register, so it catches the known campaign and misses the new one. Commercial feeds of
 newly registered and reported names close part of that gap, and so do NGFW category filters (lesson 2)
 that block whole classes of site. And a machine that uses a different resolver ignores the policy
 entirely, which is why the matrix of lesson 4 lets the staff reach DNS only at the company's own

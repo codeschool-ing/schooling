@@ -46,7 +46,7 @@ root@fw:~# nft list ruleset | grep -E "branch"
 		iifname "eth0" udp dport 51820 accept comment "the branch tunnel"
 ```
 
-Então um computador na filial pede a página de saúde da aplicação, e o `fw` mostra o túnel:
+Então um computador na filial pede a página de status (`/health`) da aplicação, e o `fw` mostra o túnel:
 
 ```
 ana@branchpc:~$ curl -s -m5 http://192.168.20.10:8080/health
@@ -62,7 +62,7 @@ peer: RzVWXllEFMVGdig288pqtFqTXs//oftHmzj6v9yYtlU=
   transfer: 1.10 KiB received, 860 B sent
 ```
 
-**Um handshake dois segundos atrás**, e tráfego nos dois sentidos. O que o segmento da internet
+**Um handshake há dois segundos**, e tráfego nos dois sentidos. O que o segmento da internet
 carregou enquanto isso, gravado na interface externa do `fw`:
 
 ```

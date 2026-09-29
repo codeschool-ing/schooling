@@ -15,6 +15,6 @@ defesa que o dono de uma rede ou de uma aplicação controla.
 | **sem validação** | apresenta um certificado qualquer, e o cliente o aceita | código ou ferramenta com a verificação de certificado desligada | nunca desligá-la; procurar no código onde ela foi desligada |
 
 O atacante em toda linha é alguém **no caminho**: o Wi-Fi do café, um roteador comprometido, a máquina
-na LAN que a aula 7 mostrou mentindo no ARP. As três seções a seguir verificam cada defesa no
+na LAN que a aula 7 mostrou mentindo no ARP. As seções a seguir verificam cada defesa no
 laboratório. Nenhuma delas precisa de um atacante para ser demonstrada, porque cada uma é uma
 propriedade do servidor ou do cliente que pode ser testada diretamente.

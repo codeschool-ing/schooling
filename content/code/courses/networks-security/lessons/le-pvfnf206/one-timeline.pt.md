@@ -34,8 +34,8 @@ Leia de cima para baixo. Às 18:52:31 `remote` carregou a página inicial. Um se
 requisição. Nos dois segundos seguintes tentou SSH na loja, depois SSH no servidor de nomes, depois o
 banco de dados, que nem está na DMZ. Os fluxos dizem que as duas requisições web foram respondidas, 835
 e 1.136 bytes no total; os descartes dizem que todas as outras portas continuaram fechadas. Às 18:55:35
-voltou para a porta 23 e, depois que o feed foi carregado, três requisições à loja foram recusadas pela
-regra de inteligência.
+voltou para a porta 23. Depois que o feed foi carregado, a regra de inteligência recusou a requisição
+seguinte à loja, três pacotes com um segundo de intervalo.
 
 Essa é a resposta que um alerta sozinho não podia dar: **algo mais teve sucesso?** Aqui, não. O único
 alerta foi um 404, e as únicas conversas que se completaram foram dois carregamentos de página. O

@@ -36,8 +36,8 @@ ana@remote:~$ dig @192.0.2.53 example.org | grep -E "status|MSG SIZE"
 
 Para `www.example.com` ele responde, 60 bytes para uma pergunta de 56 bytes, um fator perto de 1.
 Para `example.org` ele diz `REFUSED`, em 46 bytes: **ele não é um resolvedor aberto** (open
-resolver), e não pode ser usado para mandar a uma vítima as respostas às perguntas de outra pessoa. A
-configuração que faz isso é `no-resolv` na configuração do `dnsmasq` dele: ele não encaminha nada e só
+resolver), então ninguém pode usá-lo para apontar a uma vítima as respostas às próprias perguntas. A
+opção por trás disso é `no-resolv` na configuração do `dnsmasq` dele: ele não encaminha nada e só
 sabe o que lhe disseram.
 
 Um resolvedor que *deve* responder a perguntas recursivas, o que a equipe usa, fica onde só a equipe

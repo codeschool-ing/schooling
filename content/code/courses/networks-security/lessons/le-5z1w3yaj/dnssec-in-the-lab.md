@@ -7,7 +7,7 @@ version: 1
 signature, published as an `RRSIG` record beside it; the public key is published too, as a `DNSKEY`.
 A **validating resolver** checks the signature against a key it trusts before believing an answer.
 
-Where the trusted key comes from is the part that makes it work across the internet: each parent zone
+Where the trusted key comes from is what makes this work across the internet. Each parent zone
 publishes a fingerprint of its children's keys, so trust flows down from the root, whose key every
 validating resolver is configured with. The lab has no root, so the resolver is told to trust the
 company's zone key directly, which is the same mechanism with the chain cut short.
@@ -43,5 +43,5 @@ there is **`ad`, authenticated data**: the resolver checked the signature and sa
 ```
 
 A client that trusts `ad` is trusting its resolver's word, so the link between the two has to be
-trustworthy too: here it is the loopback, on the same machine. Across a network, that last hop is
-itself protected by encrypting it, with DNS over TLS or over HTTPS.
+trustworthy too: here it is the loopback, on the same machine. Across a network, that last hop needs
+protecting too, by encrypting it with DNS over TLS or over HTTPS.

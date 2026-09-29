@@ -45,6 +45,6 @@ decision does not need memory:
 | in front of a stateful firewall under attack | throwing away a flood before it reaches a table it could fill |
 | a switch or router ACL | the hardware matches headers at line rate and keeps no table (lesson 17) |
 
-**The two are layers, not rivals.** A cheap stateless filter at the edge removes what is obviously
+**The two are layers.** A cheap stateless filter at the edge removes what is obviously
 wrong; the stateful firewall behind it decides which conversations may exist. Lesson 2 adds a third
 layer that reads what is inside the conversation.

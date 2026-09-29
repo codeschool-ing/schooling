@@ -55,7 +55,7 @@ www.example.com shop.example.com mail.example.com vpn.example.com ftp.example.co
 Uma lista de nomes de host prováveis, tentados um depois do outro, é alguém **mapeando os nomes da
 empresa** para descobrir o que existe. Cada pergunta era inofensiva e legítima; nenhuma assinatura
 dispararia com qualquer uma delas. O padrão só aparece quando os registros são contados, e uma linha de
-base diz se dez é muito: para um resolvedor que atende um escritório, dez nomes de uma origem podem ser
+base diz se dez é muito. Para um resolvedor que atende um escritório, dez nomes de uma origem podem ser
 uma terça-feira qualquer; para o servidor de nomes público, dez nomes de um desconhecido são um
 levantamento. A aula 23 volta a guardar esses registros por tempo suficiente para construir uma linha de
 base com eles.

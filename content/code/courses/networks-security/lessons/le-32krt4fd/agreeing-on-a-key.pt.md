@@ -50,4 +50,4 @@ Duas propriedades dessa troca decidem como ela é usada:
   de quem é a chave pública que você tem é o assunto inteiro das aulas 11 e 12.
 - **Pares novos dão sigilo futuro** (*forward secrecy*). Quando os dois lados geram pares de chaves novos
   para cada sessão e os jogam fora depois, roubar uma chave de longo prazo mais tarde não abre gravações
-  de sessões antigas. O TLS 1.3 e o WireGuard fazem os dois isso.
+  de sessões antigas. O TLS 1.3 e o WireGuard fazem isso.

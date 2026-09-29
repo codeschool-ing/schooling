@@ -31,7 +31,7 @@ SSH on both servers is open to `laptop`. Nothing failed to load and no rule look
 cell of the matrix that says *staff LAN to servers: application only* is simply no longer true.
 
 **Read every rule back after loading it.** The rule set in the kernel is the truth, and it is not
-always the text that was typed: nftables rewrote this address to the network it describes, and a quick
-look at the listing catches exactly this class of mistake, the one where the typed text and the stored
-meaning differ. Router ACLs have the same trap with wildcard masks,
-lesson 17's, where one wrong byte widens a line by a factor of 256.
+always the text that was typed: nftables rewrote this address to the network it describes. A quick
+look at the listing catches exactly this class of mistake, where the typed text and the stored meaning
+differ. Router ACLs set the same trap with lesson 17's wildcard masks, where one wrong byte widens a
+line by a factor of 256.

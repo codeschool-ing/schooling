@@ -23,7 +23,7 @@ root@db:~# cut -c1-96 /home/ana/.ssh/authorized_keys
 from="192.168.99.10",no-agent-forwarding,no-port-forwarding,no-X11-forwarding ssh-ed25519 AAAAC3
 ```
 
-`from="192.168.99.10"`: esta chave só é aceita a partir do jump host. As outras opções removem o que
+`from="192.168.99.10"`: esta chave só é aceita a partir do jump host. As outras opções removem aquilo de que
 um login administrativo raramente precisa: encaminhar o agente SSH, encaminhar portas, encaminhar o
 X11. Cada uma é um jeito de transformar um login num caminho adiante. A partir do jump host:
 
@@ -42,8 +42,8 @@ ana@db: Permission denied (publickey).
 exit 255
 ```
 
-**`Permission denied (publickey)`**: a chave estava certa e o lugar estava errado. Uma chave copiada,
-o jeito mais comum de o acesso administrativo vazar, não serve para nada fora do jump host.
+**`Permission denied (publickey)`**: a chave estava certa e o lugar estava errado. Chaves copiadas são
+um jeito comum de o acesso administrativo vazar, e esta não serve para nada fora do jump host.
 
 O próprio jump host passa então a ser o que mais precisa de proteção: autenticação multifator para as
 pessoas que fazem login nele, seus próprios logs enviados para outro lugar como a aula 16 pediu, nada

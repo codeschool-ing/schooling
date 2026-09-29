@@ -45,6 +45,6 @@ precisa de memória:
 | na frente de um firewall com estado sob ataque | jogar fora uma enxurrada antes que ela chegue a uma tabela que poderia encher |
 | uma ACL de switch ou roteador | o hardware compara cabeçalhos na velocidade da linha e não guarda tabela (aula 17) |
 
-**Os dois são camadas, não rivais.** Um filtro sem estado barato na borda remove o que está
+**Os dois são camadas.** Um filtro sem estado barato na borda remove o que está
 obviamente errado; o firewall com estado atrás dele decide quais conversas podem existir. A aula 2
 acrescenta uma terceira camada, que lê o que vai dentro da conversa.

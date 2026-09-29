@@ -17,7 +17,7 @@ suppress gen_id 1, sig_id 1000201, track by_src, ip 203.0.113.70
 ```
 
 `suppress` for signature 1000201, when the source is `203.0.113.70`. Every other source still counts.
-The rules are reloaded without stopping the engine, by sending it a signal:
+A signal reloads the rules without stopping the engine:
 
 ```
 root@sensor:~# kill -USR2 $(cat /var/log/suricata/suricata.pid); sleep 6; grep -c "rule reload complete" /var/log/suricata/suricata.log

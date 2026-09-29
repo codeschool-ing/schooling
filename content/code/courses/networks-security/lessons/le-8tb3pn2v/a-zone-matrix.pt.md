@@ -49,7 +49,7 @@ table ip filter {
 root@fw:~# nft -f baseline.nft
 ```
 
-Cada linha `accept` é uma célula da matriz, e **cada uma traz um comentário dizendo qual**. A chain
+Cada linha `accept` cumpre uma parte da matriz, e **cada uma traz um comentário dizendo o que permite**. A chain
 de entrada protege o próprio `fw`: ele só pode ser administrado a partir do segmento de gestão. A
 política `drop` nas duas chains é toda célula vazia de uma vez.
 
