@@ -12,7 +12,7 @@
         "why": "Um AS origina blocos; ele é a rede, não os endereços."
       },
       {
-        "text": "Uma rede sob uma administração com uma política de roteamento",
+        "text": "A rede e a política de uma administração",
         "why": "Isso. A empresa, ispa e ispb são um cada."
       },
       {
@@ -77,7 +77,7 @@
         "why": "Nenhuma política no laboratório bloqueia tráfego; ispa simplesmente não tem rota."
       },
       {
-        "text": "Ninguém tinha anunciado 203.0.113.0/24, então ispa não tinha rota para ele",
+        "text": "Ninguém tinha anunciado o bloco da empresa",
         "why": "Isso. 198.51.100.1 é ispa, e sua tabela tinha dois prefixos, nenhum deles o da empresa."
       },
       {
@@ -100,7 +100,7 @@
         "why": "Up/Down conta o tempo estabelecido, e havia mensagens circulando."
       },
       {
-        "text": "As sessões estavam no ar, e o FRR não trocava rotas em sessões eBGP sem política",
+        "text": "No ar, mas sem transportar nada ainda",
         "why": "Isso. Uma recusa proposital, até uma política dizer o que pode atravessar."
       },
       {
@@ -217,7 +217,7 @@
         "why": "O peso é local e não viaja; a rota é recusada antes de qualquer comparação."
       },
       {
-        "text": "O caminho contém 64500, o AS do próprio edge, então é descartada como loop",
+        "text": "O AS dele, 64500, está no caminho",
         "why": "Isso. Um roteador BGP recusa qualquer caminho que já liste o próprio AS."
       },
       {
@@ -263,11 +263,11 @@
     "hint": "Qual passo da lista vem primeiro?",
     "choices": [
       {
-        "text": "Nada: a local preference é verificada antes do tamanho do caminho",
+        "text": "Nada: a local preference vem antes do tamanho do caminho",
         "why": "Isso. X continua preferindo a rota do cliente, com ou sem prepend."
       },
       {
-        "text": "X agora prefere o caminho pelo par",
+        "text": "X agora passa a preferir o caminho pelo par, que ficou mais curto",
         "why": "Só se a local preference fosse igual. Aqui é 200 contra 100."
       },
       {
@@ -289,7 +289,7 @@
         "why": "O IP não tem memória do caminho do pedido. Cada sentido é roteado por si."
       },
       {
-        "text": "ispa, já que a própria tabela de edge ainda prefere o caminho 64501",
+        "text": "ispa, pela própria tabela de edge",
         "why": "Isso. O prepend mudou o que ispa escolhe, não o que edge escolhe."
       },
       {
@@ -307,7 +307,7 @@
     "hint": "O que ispb faria com uma rota para os clientes de ispa através de edge?",
     "choices": [
       {
-        "text": "Oferece transportar tráfego entre os dois provedores pelo enlace da empresa",
+        "text": "Oferece trânsito entre ispa e ispb",
         "why": "Isso. A empresa viraria trânsito entre ispa e ispb."
       },
       {
@@ -337,7 +337,7 @@
         "why": "Nada a fechou; o filtro descartou as rotas em silêncio."
       },
       {
-        "text": "ispb tinha 1 caminho para 198.51.100.0/25, vindo de 192.0.2.9",
+        "text": "ispb tinha um caminho só, de ispa",
         "why": "Isso. Um caminho, de ispa; nada de edge."
       },
       {
@@ -351,7 +351,7 @@
     "hint": "Ele protege o lado que recebe.",
     "choices": [
       {
-        "text": "Limita edge a anunciar 1000 prefixos",
+        "text": "Limita edge a anunciar no máximo 1000 prefixos para ispa",
         "why": "Ele conta o que edge recebe, não o que manda."
       },
       {
@@ -377,7 +377,7 @@
         "why": "O MED vem depois do tamanho do caminho, e MED maior perde."
       },
       {
-        "text": "O provedor prefere rotas de clientes por local preference, verificada antes do tamanho do caminho",
+        "text": "Local preference vem primeiro",
         "why": "Isso. É a preferência comercial que transforma um vazamento num incidente."
       },
       {
@@ -424,7 +424,7 @@
         "why": "A ROA do /24 cobre o /25, então o estado não é \"não encontrada\"."
       },
       {
-        "text": "Inválida, porque /25 é mais longo que o máximo de /24",
+        "text": "Inválida: /25 passa do máximo",
         "why": "Isso. Coberta por uma ROA, origem certa, tamanho errado."
       },
       {
@@ -450,7 +450,7 @@
         "why": "Ela descarta caminhos que contêm o AS de quem recebe, o que um caminho forjado não precisa conter."
       },
       {
-        "text": "Não a validação de origem: ela confere o último AS, então restam filtros e vigilância",
+        "text": "Filtros e vigilância, não a validação de origem",
         "why": "Isso. Validar o resto do caminho é trabalho em andamento."
       }
     ]
