@@ -1,0 +1,747 @@
+{
+  "ex-217940k2": {
+    "prompt": "Um programa manda `GET /ana-uploads/photos/2026/cat.jpg` por HTTPS e recebe o arquivo inteiro de volta. Com que tipo de armazenamento ele está falando?",
+    "hint": "Repare em como o dado é endereçado.",
+    "choices": [
+      {
+        "text": "Um compartilhamento montado por NFS",
+        "why": "Um compartilhamento NFS é alcançado montando e abrindo um caminho, não por uma requisição HTTP."
+      },
+      {
+        "text": "Um volume de bloco anexado à instância",
+        "why": "Um volume responde a leituras de bloco do sistema operacional; nada nele fala HTTP."
+      },
+      {
+        "text": "Um repositório de objetos via HTTP",
+        "why": "Certo. Uma chave num bucket, pedida inteira por HTTP, é o que um repositório de objetos é."
+      },
+      {
+        "text": "Um disco local formatado com ext4",
+        "why": "Um sistema de arquivos local é lido por chamadas de sistema num caminho, nunca por `GET`."
+      }
+    ]
+  },
+  "ex-0va5x5c5": {
+    "prompt": "Ligue cada tipo de armazenamento àquilo pelo qual um dado nele é endereçado.",
+    "hint": "Um tipo de endereço por tipo de armazenamento.",
+    "pairs": [
+      {
+        "left": "Bloco",
+        "right": "Um número de bloco num volume"
+      },
+      {
+        "left": "Arquivo",
+        "right": "Um caminho num sistema de arquivos compartilhado"
+      },
+      {
+        "left": "Objeto",
+        "right": "Uma chave num bucket"
+      }
+    ],
+    "right_distractors": [
+      "Um endereço IP e uma porta"
+    ]
+  },
+  "ex-wgrccxha": {
+    "prompt": "Num volume de bloco, o que decide que os blocos 2048 a 2055 guardam parte de `/var/log/syslog`?",
+    "hint": "Quem formatou o volume?",
+    "choices": [
+      {
+        "text": "O serviço de armazenamento, que rastreia cada arquivo de cada volume",
+        "why": "O serviço só conhece blocos numerados; ele não faz ideia a que arquivo pertencem."
+      },
+      {
+        "text": "O sistema de arquivos do sistema operacional da instância",
+        "why": "Certo. O sistema operacional formatou o volume e mantém o mapa de arquivos para blocos."
+      },
+      {
+        "text": "O hipervisor",
+        "why": "O hipervisor repassa blocos à instância e não lê sistema de arquivos nenhum."
+      },
+      {
+        "text": "Nada: um volume guarda arquivos inteiros",
+        "why": "Isso descreve mais um repositório de objetos do que um volume, e mesmo lá uma chave não é um caminho num disco."
+      }
+    ]
+  },
+  "ex-5kptvpjp": {
+    "prompt": "Um log de 2 GB precisa crescer uma linha por vez, por um único processo, sem regravar o que já está lá. Onde esse processo consegue fazer isso? Marque todas as que se aplicam.",
+    "hint": "Quais interfaces deixam um programa gravar dentro de um arquivo existente?",
+    "choices": [
+      {
+        "text": "Num volume de bloco que a instância montou",
+        "why": "Sim. O sistema de arquivos no volume permite acrescentar, como qualquer disco local."
+      },
+      {
+        "text": "Como objeto no S3 Standard",
+        "why": "Não. Um objeto é substituído inteiro; um log mais longo é um objeto novo, gravado do começo."
+      },
+      {
+        "text": "Num compartilhamento gerenciado montado por NFS",
+        "why": "Sim. Um sistema de arquivos em rede permite acrescentar, pagando uma ida e volta por gravação."
+      },
+      {
+        "text": "Como objeto no Glacier Instant Retrieval",
+        "why": "Não. A classe muda o preço, não a interface: continua sendo gravado inteiro."
+      }
+    ]
+  },
+  "ex-wexeg3qa": {
+    "prompt": "Quanto custa um volume `gp3` de 200 GB por um mês em `sa-east-1`, ao preço da tabela de 0.1520 USD por GB-mês?",
+    "hint": "Tamanho vezes preço; o quanto está cheio não entra.",
+    "unit": "USD"
+  },
+  "ex-t8abxag1": {
+    "prompt": "Uma instância roda na zona A. O volume de que ela precisa foi criado na zona B da mesma região. O que precisa acontecer?",
+    "hint": "Onde mora um volume?",
+    "choices": [
+      {
+        "text": "Anexar mesmo assim; o tráfego cruza zonas e fica mais lento",
+        "why": "Um volume não pode ser anexado entre zonas de jeito nenhum; não é questão de velocidade."
+      },
+      {
+        "text": "Anexar só para leitura, o que é permitido entre zonas",
+        "why": "Não existe exceção só leitura; a zona é onde o volume existe."
+      },
+      {
+        "text": "Tirar um snapshot e criar um volume novo a partir dele na zona A",
+        "why": "Certo. Um volume mora numa zona, e o snapshot é como os dados dele vão para outra."
+      },
+      {
+        "text": "Desanexar; um volume desanexado vai para onde for preciso",
+        "why": "Desanexar muda qual instância o segura, nunca a zona em que está."
+      }
+    ]
+  },
+  "ex-h087489q": {
+    "prompt": "Um volume `gp3` de 500 GB guarda 40 GB de arquivos. Sobre o que é calculada a conta mensal dele?",
+    "hint": "Quando o tamanho é escolhido?",
+    "choices": [
+      {
+        "text": "Os 40 GB efetivamente gravados",
+        "why": "É assim que o EFS e o S3 cobram. Um volume cobra o que foi provisionado."
+      },
+      {
+        "text": "Os 500 GB provisionados na criação",
+        "why": "Certo. O taxímetro corre sobre o tamanho escolhido na criação, cheio ou vazio."
+      },
+      {
+        "text": "As horas em que a instância que o usa ficou ligada",
+        "why": "Um volume cobra enquanto existe, anexado ou não; uma instância parada não o para."
+      },
+      {
+        "text": "O número de leituras e gravações",
+        "why": "As IOPS de base vêm com o volume `gp3`; a linha da conta é o tamanho."
+      }
+    ]
+  },
+  "ex-ew2bma2a": {
+    "prompt": "Um banco de dados num volume `gp3` de 500 GB está lento, e o volume faz o dia todo as 3.000 IOPS de base em leituras pequenas e espalhadas. Qual é a mudança mais barata que ataca a causa?",
+    "hint": "Qual botão está no limite?",
+    "choices": [
+      {
+        "text": "Comprar mais IOPS no mesmo volume, sem acrescentar gigabytes",
+        "why": "Certo. O `gp3` vende IOPS separado do tamanho, e IOPS é o que está acabando."
+      },
+      {
+        "text": "Mover os dados para `st1`, que é mais barato por GB",
+        "why": "O `st1` é feito para leituras sequenciais longas e é lento nas espalhadas: pioraria isto."
+      },
+      {
+        "text": "Aumentar o volume para 2 TB para ele ficar mais rápido",
+        "why": "Esse era o hábito nos tipos antigos. No `gp3` tamanho e IOPS são separados, então o espaço não compra nada aqui."
+      },
+      {
+        "text": "Anexar o volume a uma segunda instância para dividir a carga",
+        "why": "Um volume fica anexado a uma instância por vez, e um segundo leitor não aumentaria as IOPS."
+      }
+    ]
+  },
+  "ex-ae0dd1b5": {
+    "prompt": "O número de leituras ou gravações pequenas e separadas que um volume faz a cada segundo é medido em ___.",
+    "hint": "Quatro letras, o botão que o `gp3` vende à parte do tamanho.",
+    "blanks": [
+      {
+        "accept": [
+          "IOPS"
+        ]
+      }
+    ]
+  },
+  "ex-68fzeq9c": {
+    "prompt": "Você restaura o snapshot de terça passada de um volume. O que você recebe?",
+    "hint": "Acontece alguma coisa com o volume existente?",
+    "choices": [
+      {
+        "text": "O volume existente, rebobinado para terça",
+        "why": "Restaurar nunca mexe no volume existente."
+      },
+      {
+        "text": "Os arquivos de terça copiados para o sistema de arquivos em uso",
+        "why": "Um snapshot guarda blocos, não arquivos, e não é mesclado em nada."
+      },
+      {
+        "text": "Um volume novo com o conteúdo de terça",
+        "why": "Certo. Você cria um volume a partir do snapshot, na zona que escolher, e o anexa."
+      },
+      {
+        "text": "Um download dos blocos de terça de um bucket seu",
+        "why": "Os snapshots ficam no armazenamento de objetos do provedor, não num bucket que você abre."
+      }
+    ]
+  },
+  "ex-2rwpqysg": {
+    "prompt": "Um volume guarda 60 GB de dados e 2 GB mudam por dia. Depois de um mês de snapshots diários, o primeiro inteiro e 29 incrementais, quanto custam os snapshots naquele mês em `sa-east-1`, a 0.0680 USD por GB-mês?",
+    "hint": "Some o que os snapshots guardam, depois multiplique.",
+    "unit": "USD"
+  },
+  "ex-z3vbgdje": {
+    "prompt": "Um atacante com as chaves de um administrador da única conta de uma empresa apaga os volumes e todos os snapshots deles, tudo em `sa-east-1`. Qual arranjo teria deixado uma cópia para restaurar?",
+    "hint": "O que aquelas credenciais não alcançariam?",
+    "choices": [
+      {
+        "text": "Snapshots de hora em hora em vez de diários",
+        "why": "Mais snapshots na mesma conta são apagados pelas mesmas credenciais."
+      },
+      {
+        "text": "Cópias guardadas numa segunda conta",
+        "why": "Certo. Uma política de backup guarda uma cópia fora do alcance da conta de produção."
+      },
+      {
+        "text": "Snapshots guardados numa segunda zona da região",
+        "why": "Snapshots já sobrevivem a uma zona; o problema é quem pode apagá-los, não onde estão."
+      },
+      {
+        "text": "Nada: onze noves de durabilidade cobrem isso",
+        "why": "Durabilidade é sobre hardware falhando. Um pedido de remoção é cumprido fielmente."
+      }
+    ]
+  },
+  "ex-g59cqb69": {
+    "prompt": "Três servidores web precisam gravar arquivos enviados no mesmo diretório `uploads`, e a aplicação não pode mudar. O que serve?",
+    "hint": "A aplicação quer um caminho, em várias máquinas ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "Um compartilhamento gerenciado montado nos três",
+        "why": "Certo. Um sistema de arquivos compartilhado é justamente um caminho que várias máquinas gravam ao mesmo tempo."
+      },
+      {
+        "text": "Um volume `gp3` anexado aos três servidores",
+        "why": "Um volume se anexa a uma instância, e três kernels gravando um ext4 o corromperiam."
+      },
+      {
+        "text": "Um bucket, com cada servidor usando a própria chave",
+        "why": "Um bucket sairia mais barato, mas exige a mudança de código que a pergunta proíbe."
+      },
+      {
+        "text": "Um volume por servidor, sincronizado por snapshots",
+        "why": "Snapshots criam volumes novos; nunca mantêm três volumes em uso sincronizados."
+      }
+    ]
+  },
+  "ex-az6my217": {
+    "prompt": "Um build que roda `npm install` leva 40 segundos num volume local e vários minutos quando o projeto fica num compartilhamento NFS. O que explica a maior parte disso?",
+    "hint": "Conte os arquivos, depois conte o que cada um custa.",
+    "choices": [
+      {
+        "text": "O compartilhamento limita gerenciadores de pacotes",
+        "why": "Nada num compartilhamento sabe qual programa está pedindo."
+      },
+      {
+        "text": "Milhares de arquivos pequenos, cada operação uma ida e volta pela rede",
+        "why": "Certo. Por arquivo, um sistema de arquivos em rede paga uma ida e volta que um disco local não paga."
+      },
+      {
+        "text": "O compartilhamento precisa crescer antes de cada arquivo novo",
+        "why": "Ele cresce com o que está guardado, em segundo plano; ninguém espera por isso."
+      },
+      {
+        "text": "O NFS sempre guarda dados em discos rígidos",
+        "why": "NFS é um protocolo e não diz nada sobre a mídia por trás."
+      }
+    ]
+  },
+  "ex-ghcjw2m2": {
+    "prompt": "Quanto custa guardar 500 GB no S3 Standard por um mês em `sa-east-1`, a 0.04050 USD por GB-mês?",
+    "hint": "Gigabytes vezes preço.",
+    "unit": "USD"
+  },
+  "ex-q93nt30y": {
+    "prompt": "Um sistema de arquivos EFS Standard em `sa-east-1` guarda 40 GB por um mês. A 0.5700 USD por GB-mês, quanto custa?",
+    "hint": "O EFS cobra o que está guardado.",
+    "unit": "USD"
+  },
+  "ex-gtg9dkes": {
+    "prompt": "Ponha estas linhas da tabela em ordem de preço por GB-mês em `sa-east-1`, da mais barata para a mais cara.",
+    "hint": "Objeto, depois bloco, depois arquivo; a classe fria fica abaixo de todos.",
+    "items": [
+      "S3 Glacier Flexible Retrieval",
+      "S3 Standard",
+      "EBS st1",
+      "EBS gp3",
+      "EFS Standard"
+    ],
+    "trap": "Pôr o EFS abaixo de um volume é o erro comum: por gigabyte guardado, o sistema de arquivos compartilhado é a linha mais cara da tabela."
+  },
+  "ex-f1b6k84f": {
+    "prompt": "Uma aplicação envia um milhão de objetos ao S3 em `sa-east-1` num mês. A 0.00700 USD por 1.000 requisições `PUT`, quanto custam só as requisições?",
+    "hint": "Quantos milhares há num milhão?",
+    "unit": "USD"
+  },
+  "ex-6vddk314": {
+    "prompt": "Um time compara 500 GB de EFS (285.00 por mês) com um volume `gp3` de 500 GB (76.00) e conclui que o compartilhamento custa quase quatro vezes mais. Os dados vão ter 60 GB. O que a comparação deixa de ver?",
+    "hint": "Qual dos dois cobra o que está guardado?",
+    "choices": [
+      {
+        "text": "O EFS cobra a mais por cada instância que monta o sistema de arquivos",
+        "why": "Montagens não são uma linha da tabela; a linha de armazenamento é o que importa aqui."
+      },
+      {
+        "text": "O volume também cobraria cada leitura",
+        "why": "O `gp3` inclui as IOPS de base; leituras não são cobradas uma a uma."
+      },
+      {
+        "text": "Nada; a proporção vale em qualquer tamanho",
+        "why": "Só vale quando os dois estão cheios. Um cobra dados guardados, o outro o tamanho provisionado."
+      },
+      {
+        "text": "O EFS cobra os 60 GB guardados, 34.20, menos que o volume",
+        "why": "Certo. 60 × 0.5700 = 34.20, enquanto o volume cobra os 500 GB, guarde o que guardar."
+      }
+    ]
+  },
+  "ex-vfa9gg33": {
+    "prompt": "Na chave `photos/2026/cat.jpg`, o começo `photos/` não é uma pasta, e sim um ___ pelo qual uma listagem pode agrupar chaves.",
+    "hint": "A palavra que o console esconde atrás de um ícone de pasta.",
+    "blanks": [
+      {
+        "accept": [
+          "prefixo",
+          "prefix"
+        ]
+      }
+    ]
+  },
+  "ex-c2zgth68": {
+    "prompt": "Num repositório de objetos, o que renomear `reports/q3.txt` para `reports/2026-q3.txt` realmente exige?",
+    "hint": "Onde o nome fica guardado?",
+    "choices": [
+      {
+        "text": "Uma requisição de renomear que muda o nome no lugar",
+        "why": "Não existe requisição de renomear: a chave é o único nome do objeto."
+      },
+      {
+        "text": "Uma cópia para a chave nova e uma remoção da antiga",
+        "why": "Certo. Pelo menos duas requisições, e por um instante as duas chaves existem."
+      },
+      {
+        "text": "Mover o objeto para a pasta `2026-q3`",
+        "why": "Não há pastas para onde mover, só chaves com o mesmo começo."
+      },
+      {
+        "text": "Nada, já que chaves são só rótulos no console",
+        "why": "A chave é como toda requisição acha o objeto; mudá-la é o trabalho inteiro."
+      }
+    ]
+  },
+  "ex-va204d0y": {
+    "prompt": "Um programa guarda seu log como um objeto num bucket e precisa acrescentar uma linha. O que ele faz?",
+    "hint": "Dá para gravar parte de um objeto?",
+    "choices": [
+      {
+        "text": "Manda um `PUT` com uma opção de acrescentar",
+        "why": "Não há acrescentar na interface; um `PUT` sempre grava o objeto inteiro."
+      },
+      {
+        "text": "Abre o objeto em modo de acréscimo pelo SDK",
+        "why": "Um SDK embrulha as mesmas requisições HTTP, e nenhuma delas abre um objeto."
+      },
+      {
+        "text": "Grava um intervalo de bytes no fim com um `PUT` de intervalo",
+        "why": "Intervalos servem para ler com `GET`; gravar parte de um objeto não é possível."
+      },
+      {
+        "text": "Regrava o objeto inteiro com a linha",
+        "why": "Certo. Um objeto é substituído inteiro; o novo só tem uma linha a mais."
+      }
+    ]
+  },
+  "ex-7bbsjv6s": {
+    "prompt": "O `PUT` de um programa numa chave do S3 acabou de devolver sucesso. Um segundo programa manda em seguida um `GET` da mesma chave. O que ele recebe?",
+    "hint": "O que mudou em dezembro de 2020?",
+    "choices": [
+      {
+        "text": "Talvez a versão antiga, por alguns segundos",
+        "why": "Esse era o comportamento das sobrescritas antes de dezembro de 2020."
+      },
+      {
+        "text": "Um 404 até o objeto chegar a todas as zonas",
+        "why": "O sucesso é devolvido depois que o objeto está guardado; uma leitura então o encontra."
+      },
+      {
+        "text": "O objeto novo, sempre",
+        "why": "Certo. O S3 tem consistência forte de leitura após gravação."
+      },
+      {
+        "text": "O que um `LIST` tiver mostrado até agora",
+        "why": "Um `GET` pela chave não passa por listagem, e a listagem também é consistente."
+      }
+    ]
+  },
+  "ex-3v3eqtmn": {
+    "prompt": "Ligue cada requisição ao que ela faz com `/bucket/key`.",
+    "hint": "Cinco verbos do HTTP, quatro em uso.",
+    "pairs": [
+      {
+        "left": "PUT",
+        "right": "Guarda um objeto inteiro, substituindo o que já houver"
+      },
+      {
+        "left": "GET",
+        "right": "Devolve o objeto, ou um intervalo de bytes dele"
+      },
+      {
+        "left": "HEAD",
+        "right": "Devolve os metadados sem os bytes"
+      },
+      {
+        "left": "DELETE",
+        "right": "Remove o objeto"
+      }
+    ],
+    "right_distractors": [
+      "Acrescenta bytes ao fim do objeto"
+    ]
+  },
+  "ex-7pt7f849": {
+    "prompt": "Esta aula rodou a AWS CLI contra o `moto_server` num notebook. O que essa sessão consegue mostrar sobre o S3?",
+    "hint": "moto é uma imitação de quê?",
+    "choices": [
+      {
+        "text": "Quanto tempo um `GET` leva a partir de São Paulo",
+        "why": "O moto responde da memória do notebook, então o tempo dele não diz nada sobre o do S3."
+      },
+      {
+        "text": "As requisições e respostas da interface",
+        "why": "Certo. Ele imita a interface HTTP, e é só disso que ele fala."
+      },
+      {
+        "text": "Quantas cópias de cada objeto o S3 guarda",
+        "why": "O moto guarda uma cópia na memória; a replicação do S3 não é algo que ele imita."
+      },
+      {
+        "text": "Quanto as requisições teriam custado",
+        "why": "Preços vêm da tabela de preços; o moto não cobra nada e não conhece preços."
+      }
+    ]
+  },
+  "ex-hsb1d3yc": {
+    "prompt": "`aws s3 ls s3://ana-uploads` imprimiu duas linhas `PRE` e nenhum objeto, embora o bucket tivesse dois objetos. Por quê?",
+    "hint": "Onde a listagem cortou cada chave?",
+    "choices": [
+      {
+        "text": "Cada chave tem uma `/`, e a listagem cortou ali",
+        "why": "Certo. Cortadas na primeira barra, as duas chaves viraram prefixos e nenhuma ficou sozinha."
+      },
+      {
+        "text": "Os dois uploads não tinham terminado quando a listagem rodou",
+        "why": "Os dois uploads tinham terminado, e uma leitura depois de uma gravação vê o objeto."
+      },
+      {
+        "text": "Só uma listagem com `--recursive` mostra os objetos em si",
+        "why": "Uma chave sem barra também apareceria na listagem simples, como `index.html` na figura."
+      },
+      {
+        "text": "As pastas `photos/` e `reports/` nunca foram criadas",
+        "why": "Nada precisa existir num prefixo; os uploads funcionaram sem pasta nenhuma."
+      }
+    ]
+  },
+  "ex-gvk4yd16": {
+    "prompt": "Ponha em ordem as requisições que o moto registrou quando o `aws s3 mv` renomeou `reports/q3.txt`.",
+    "hint": "Olhe antes de copiar, e copie antes de apagar.",
+    "items": [
+      "HEAD da chave antiga",
+      "PUT na chave nova, como cópia",
+      "DELETE da chave antiga"
+    ],
+    "trap": "Apagar primeiro deixaria um momento sem cópia nenhuma; a CLI copia antes, então por um momento existem as duas."
+  },
+  "ex-y8zxrrbd": {
+    "prompt": "Ponha as quatro classes do S3 da tabela em ordem de preço de armazenamento em `sa-east-1`, da mais cara primeiro.",
+    "hint": "Quanto maior a espera ou a taxa para ler, mais barato guardar.",
+    "items": [
+      "Standard",
+      "Standard-Infrequent Access",
+      "Glacier Instant Retrieval",
+      "Glacier Flexible Retrieval"
+    ],
+    "trap": "As duas linhas Glacier são próximas, 0.00830 e 0.00765; o Instant Retrieval custa um pouco mais para guardar porque pode ser lido na hora."
+  },
+  "ex-6hpe1j0a": {
+    "prompt": "Quanto custa guardar 1.000 GB no Glacier Flexible Retrieval por um mês em `sa-east-1`, a 0.00765 USD por GB-mês?",
+    "hint": "Gigabytes vezes preço.",
+    "unit": "USD"
+  },
+  "ex-184e6zgw": {
+    "prompt": "Um objeto é movido para o Standard-IA e apagado dez dias depois. Quantos dias de armazenamento são cobrados por ele no Standard-IA?",
+    "hint": "A classe tem um mínimo.",
+    "choices": [
+      {
+        "text": "Dez, os dias em que de fato ficou lá",
+        "why": "É assim que o Standard cobra. O Standard-IA tem permanência mínima."
+      },
+      {
+        "text": "Trinta, a duração mínima dessa classe",
+        "why": "Certo. Apagado antes, é cobrado como se tivesse ficado 30 dias."
+      },
+      {
+        "text": "Noventa, como cada classe abaixo do Standard",
+        "why": "Noventa é o mínimo das duas classes Glacier; o do Standard-IA é 30."
+      },
+      {
+        "text": "Nenhum: objeto apagado nunca é cobrado",
+        "why": "O mínimo existe justamente para objetos que saem cedo."
+      }
+    ]
+  },
+  "ex-cwhdc3fd": {
+    "prompt": "Uma regra de ciclo de vida num bucket inteiro move todo objeto para o Glacier Flexible Retrieval depois de 30 dias. O bucket também guarda as imagens que o site da empresa mostra. O que acontece com um visitante no dia 31?",
+    "hint": "Um `GET` consegue ler essa classe direto?",
+    "choices": [
+      {
+        "text": "As imagens carregam em milissegundos, só que mais barato",
+        "why": "Isso descreve o Instant Retrieval. O Flexible Retrieval precisa de restauração antes."
+      },
+      {
+        "text": "As imagens carregam depois de alguns segundos de espera",
+        "why": "Um `GET` não espera por uma restauração; ele é recusado até uma ter sido feita."
+      },
+      {
+        "text": "As imagens são apagadas pela regra",
+        "why": "A regra só as move; nada nela expira objetos."
+      },
+      {
+        "text": "As imagens deixam de carregar até cada uma ser restaurada",
+        "why": "Certo. Um `GET` no Flexible Retrieval é recusado até uma restauração, que leva de minutos a horas."
+      }
+    ]
+  },
+  "ex-xkrkv819": {
+    "prompt": "A configuração de bucket que move objetos para classes mais baratas conforme a idade, e os apaga depois de um número de dias, se chama regra de ___.",
+    "hint": "Ela acompanha o objeto da criação à remoção.",
+    "blanks": [
+      {
+        "accept": [
+          "ciclo de vida",
+          "ciclo-de-vida",
+          "lifecycle"
+        ]
+      }
+    ]
+  },
+  "ex-bppgyzd0": {
+    "prompt": "Ligue cada proteção ao que ela garante.",
+    "hint": "Duas são promessas sobre hardware, duas sobre requisições.",
+    "pairs": [
+      {
+        "left": "Durabilidade",
+        "right": "Os bytes ainda existem daqui a um ano"
+      },
+      {
+        "left": "Disponibilidade",
+        "right": "Uma requisição por eles funciona agora"
+      },
+      {
+        "left": "Versionamento",
+        "right": "Um objeto sobrescrito pode ser lido como era"
+      },
+      {
+        "left": "Replicação para outra conta",
+        "right": "Uma cópia sobrevive às credenciais da primeira conta"
+      }
+    ],
+    "right_distractors": [
+      "O objeto é servido mais rápido a leitores distantes"
+    ]
+  },
+  "ex-2vvbnmqz": {
+    "prompt": "O S3 Standard é projetado para 99,99% de disponibilidade. Um ano tem 525.600 minutos. Quantos minutos por ano esse projeto admite de requisições falhando?",
+    "hint": "Quanto é 0,01% do ano?",
+    "unit": "minutos"
+  },
+  "ex-p0nqt1a0": {
+    "prompt": "Um script de limpeza apaga toda chave sob `invoices/` num bucket S3 Standard com versionamento desligado. O que onze noves de durabilidade fazem por essas notas?",
+    "hint": "Contra o que a durabilidade é medida?",
+    "choices": [
+      {
+        "text": "Nada; o repositório fez o que foi pedido",
+        "why": "Certo. Durabilidade protege o que você pediu para guardar, contra hardware; a remoção foi o que você pediu."
+      },
+      {
+        "text": "Dá para recuperá-las de uma das três zonas",
+        "why": "A remoção tira o objeto de todas as zonas; as réplicas não são backups."
+      },
+      {
+        "text": "Ficam guardadas 30 dias antes de serem removidas",
+        "why": "Isso é o que faz uma regra de ciclo de vida para versões não correntes, com versionamento ligado."
+      },
+      {
+        "text": "A AWS as restaura, já que promete onze noves",
+        "why": "Onze noves é um número de projeto contra hardware perdido, não um serviço que desfaz requisições."
+      }
+    ]
+  },
+  "ex-0653k9tq": {
+    "prompt": "Num bucket com versionamento ligado, um `DELETE` nomeia uma chave e nenhuma versão. O que o bucket faz?",
+    "hint": "Algo é destruído?",
+    "choices": [
+      {
+        "text": "Remove todas as versões da chave",
+        "why": "Só apagar cada versão pelo id a remove."
+      },
+      {
+        "text": "Remove só a versão corrente",
+        "why": "Nada é removido; a versão corrente vira não corrente."
+      },
+      {
+        "text": "Acrescenta um marcador de exclusão na frente das versões",
+        "why": "Certo. O marcador vira o corrente e a chave parece ausente, enquanto todas as versões ficam."
+      },
+      {
+        "text": "Recusa a requisição, já que chaves versionadas são protegidas",
+        "why": "A requisição funciona, e é por isso que o objeto parece sumido."
+      }
+    ]
+  },
+  "ex-0cva26bm": {
+    "prompt": "Alguém apagou `notes.txt` num bucket versionado, e uma listagem não o mostra mais. Como ele volta?",
+    "hint": "O que está na frente das versões?",
+    "choices": [
+      {
+        "text": "Enviar o arquivo de novo a partir do notebook de alguém",
+        "why": "Isso grava uma versão nova, se alguém tiver cópia; a antiga nunca se perdeu."
+      },
+      {
+        "text": "Desligar o versionamento para a versão antiga aparecer",
+        "why": "O versionamento só pode ser suspenso, e isso não muda nada do que já está guardado."
+      },
+      {
+        "text": "Restaurá-lo do Glacier",
+        "why": "Nada o levou ao Glacier; restauração é de uma classe de armazenamento, não de remoções."
+      },
+      {
+        "text": "Apagar o marcador de exclusão pelo id de versão dele",
+        "why": "Certo. Sem o marcador, a última versão volta a ser a corrente."
+      }
+    ]
+  },
+  "ex-bvve4x45": {
+    "prompt": "Uma exportação de 1 GB é sobrescrita uma vez por dia num bucket com versionamento ligado e sem regra de ciclo de vida. Depois de 30 dias de gravações, quantos GB o bucket guarda para essa chave?",
+    "hint": "Toda versão é guardada e cobrada.",
+    "unit": "GB"
+  },
+  "ex-30pczmtw": {
+    "prompt": "Ligue cada tipo de dado ao lugar dele.",
+    "hint": "Como o programa chega aos dados?",
+    "pairs": [
+      {
+        "left": "O diretório de dados do PostgreSQL numa instância",
+        "right": "Um volume de bloco"
+      },
+      {
+        "left": "Imagens que vários servidores e navegadores buscam pelo nome",
+        "right": "Objetos no S3 Standard"
+      },
+      {
+        "left": "Uma aplicação legada que consulta um diretório compartilhado",
+        "right": "Um compartilhamento gerenciado"
+      },
+      {
+        "left": "Logs guardados dois anos e quase nunca lidos",
+        "right": "Objetos com regra de ciclo de vida"
+      }
+    ],
+    "right_distractors": [
+      "Snapshots de um volume"
+    ]
+  },
+  "ex-hx89rr3h": {
+    "prompt": "Uma notícia conta de registros de clientes achados num bucket do S3 que qualquer um podia ler. Qual é a causa mais provável?",
+    "hint": "Em que estado um bucket novo começa?",
+    "choices": [
+      {
+        "text": "Alguém liberou a leitura para todo mundo",
+        "why": "Certo. O repositório fez o que mandaram, e alguém mandou que todos pudessem ler."
+      },
+      {
+        "text": "Buckets eram públicos por padrão até 2023",
+        "why": "Buckets sempre foram privados por padrão; 2023 acrescentou mais travas contra abri-los."
+      },
+      {
+        "text": "O versionamento expôs as cópias antigas",
+        "why": "As versões seguem as regras de acesso do bucket; não abrem nada sozinhas."
+      },
+      {
+        "text": "Uma zona falhou e os dados foram servidos sem proteção",
+        "why": "Uma zona que falha deixa dados indisponíveis, não públicos."
+      }
+    ]
+  },
+  "ex-3kqxk7rv": {
+    "prompt": "Um site de compartilhar fotos roda em quatro servidores web. Usuários enviam fotos, as páginas as mostram, e o time pode mudar o código. Onde as fotos devem ficar?",
+    "hint": "O código pode mudar, então vence a forma mais barata que serve.",
+    "choices": [
+      {
+        "text": "Um volume `gp3` em cada servidor, mantidos em sincronia",
+        "why": "Quatro cópias, quatro contas, e um problema de sincronização que ninguém precisa."
+      },
+      {
+        "text": "Um compartilhamento EFS montado pelos quatro",
+        "why": "Funciona, e é o que se escolhe quando o código não pode mudar; aqui pode, e objetos custam bem menos."
+      },
+      {
+        "text": "Objetos num bucket, gravados e lidos pela chave",
+        "why": "Certo. Gravadas uma vez, lidas muitas vezes pelo nome, por qualquer servidor ou direto do navegador."
+      },
+      {
+        "text": "Glacier Flexible Retrieval, a linha mais barata",
+        "why": "Cada visualização precisaria de restauração antes; fotos numa página são lidas o tempo todo."
+      }
+    ]
+  },
+  "ex-zqm6971b": {
+    "prompt": "Num bucket versionado, a versão vazia que um `DELETE` acrescenta, e que faz a chave parecer ausente, é um ___ de exclusão.",
+    "hint": "Remova e o objeto volta.",
+    "blanks": [
+      {
+        "accept": [
+          "marcador",
+          "marker"
+        ]
+      }
+    ]
+  },
+  "ex-j2ykjrtb": {
+    "prompt": "Quais destas o S3 cobra mesmo que os bytes guardados nunca mudem? Marque todas as que se aplicam.",
+    "hint": "Armazenamento, requisições e histórico têm cada um sua linha.",
+    "choices": [
+      {
+        "text": "Os gigabytes guardados, por mês",
+        "why": "Sim. A linha de armazenamento cobra todo mês em que os bytes estão lá."
+      },
+      {
+        "text": "Cada requisição `LIST`",
+        "why": "Sim. `LIST` tem o preço do `PUT`, 0.00700 por 1.000 em `sa-east-1`."
+      },
+      {
+        "text": "Versões antigas guardadas pelo versionamento",
+        "why": "Sim. Cada versão é guardada e cobrada como um objeto corrente."
+      },
+      {
+        "text": "Um bucket vazio, por existir",
+        "why": "Não. A conta é pelo que está guardado e pelo que é pedido; um bucket vazio não tem nenhum dos dois."
+      }
+    ]
+  }
+}

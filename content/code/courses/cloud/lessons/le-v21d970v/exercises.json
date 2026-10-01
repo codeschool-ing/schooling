@@ -1,0 +1,1211 @@
+[
+  {
+    "id": "ex-s59kqcs8",
+    "version": 1,
+    "section": "a-vpc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two customers of the same provider both give their VPCs the range 10.0.0.0/16, in the same region. What happens?",
+    "hint": "Think about what a VPC is carved out of, and how.",
+    "choices": [
+      {
+        "text": "Both work, and neither sees a packet of the other's",
+        "correct": true,
+        "why": "Right. Each VPC is carved out of the provider's network in software, and the same private addresses can exist in both."
+      },
+      {
+        "text": "The second VPC is refused: that range is already taken in the region",
+        "correct": false,
+        "why": "A private range is not a resource anybody owns. It only matters when two networks are joined."
+      },
+      {
+        "text": "The provider renumbers one of them into a free range",
+        "correct": false,
+        "why": "The range is yours to choose, and nothing renumbers it for you."
+      },
+      {
+        "text": "Both work, but they share broadcast traffic",
+        "correct": false,
+        "why": "Nothing crosses between two VPCs unless somebody builds a path, such as a peering."
+      }
+    ]
+  },
+  {
+    "id": "ex-dc2ta5wg",
+    "version": 1,
+    "section": "a-vpc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The office network uses 10.0.0.0/16, and the company's VPC was created with 10.0.0.0/16 too. They now want a VPN between them. What is the problem?",
+    "hint": "A router is handed a packet for 10.0.5.9.",
+    "choices": [
+      {
+        "text": "None, as long as the tunnel is encrypted",
+        "correct": false,
+        "why": "Encryption protects the bytes on the way. It does not tell a router which side an address is on."
+      },
+      {
+        "text": "Only the office's DNS names need to change",
+        "correct": false,
+        "why": "Names resolve to addresses, and the addresses are still ambiguous afterwards."
+      },
+      {
+        "text": "10.0.5.9 would exist on both sides",
+        "correct": true,
+        "why": "Right. Overlapping ranges cannot be joined, which is why the range is chosen with the office's in hand."
+      },
+      {
+        "text": "The VPC must first move to a public range",
+        "correct": false,
+        "why": "A public range belongs to somebody else. The fix is a different private range on one side."
+      }
+    ]
+  },
+  {
+    "id": "ex-nt2pcxh2",
+    "version": 1,
+    "section": "a-vpc",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are private ranges from RFC 1918, suitable for a VPC? Choose all that apply.",
+    "hint": "The middle range runs from 172.16 to 172.31.",
+    "choices": [
+      {
+        "text": "10.20.0.0/16",
+        "correct": true,
+        "why": "Inside 10.0.0.0/8."
+      },
+      {
+        "text": "172.31.0.0/16",
+        "correct": true,
+        "why": "Inside 172.16.0.0/12, at its very top: it is the range of AWS's default VPC."
+      },
+      {
+        "text": "172.40.0.0/16",
+        "correct": false,
+        "why": "Past 172.31, so outside 172.16.0.0/12: these are public addresses."
+      },
+      {
+        "text": "192.168.10.0/24",
+        "correct": true,
+        "why": "Inside 192.168.0.0/16."
+      }
+    ]
+  },
+  {
+    "id": "ex-camnnm2b",
+    "version": 1,
+    "section": "cidr",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many addresses does a /22 block hold?",
+    "hint": "2 to the power of (32 − 22).",
+    "value": 1024,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-jfg2647p",
+    "version": 1,
+    "section": "cidr",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many /24 subnets fit in 10.0.0.0/16?",
+    "hint": "2 to the power of (24 − 16).",
+    "value": 256,
+    "tolerance": 0,
+    "unit": "subnets"
+  },
+  {
+    "id": "ex-6w2mcqmc",
+    "version": 1,
+    "section": "cidr",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order these blocks from the largest to the smallest.",
+    "hint": "Fewer fixed bits, more addresses.",
+    "items": [
+      "10.0.0.0/8",
+      "172.16.0.0/12",
+      "10.0.0.0/16",
+      "10.0.0.0/20",
+      "10.0.1.0/24"
+    ],
+    "trap": "A slash with a bigger number is a smaller block: /24 is 256 addresses and /8 is over sixteen million."
+  },
+  {
+    "id": "ex-xvffbtcf",
+    "version": 1,
+    "section": "cidr",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Does 10.0.33.7 belong to 10.0.16.0/20?",
+    "hint": "A /20 moves the third number in steps of 16.",
+    "choices": [
+      {
+        "text": "Yes: it starts with 10.0",
+        "correct": false,
+        "why": "That is the reading of a /16. A /20 fixes four more bits, inside the third number."
+      },
+      {
+        "text": "Yes, because 33 is above 16",
+        "correct": false,
+        "why": "The block has an end as well as a start: 16 to 31."
+      },
+      {
+        "text": "No, because a /20 only covers the third numbers 16 to 20",
+        "correct": false,
+        "why": "The 20 is the count of fixed bits, not a number in the address."
+      },
+      {
+        "text": "No: that /20 runs from 10.0.16.0 to 10.0.31.255",
+        "correct": true,
+        "why": "Right. 33 falls in the next /20, 10.0.32.0/20."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7qw2h5p",
+    "version": 1,
+    "section": "cidr",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Python refuses 10.0.8.0/20 as a network because one of its ___ bits is already set.",
+    "hint": "They are the bits left free to vary.",
+    "blanks": [
+      {
+        "accept": [
+          "host"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kp913vzj",
+    "version": 1,
+    "section": "cidr",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need subnets of at least 1,000 usable addresses each on AWS. What is the smallest block that works?",
+    "hint": "Remember the five addresses AWS keeps.",
+    "choices": [
+      {
+        "text": "A /23",
+        "correct": false,
+        "why": "512 addresses: half of what is needed."
+      },
+      {
+        "text": "A /21",
+        "correct": false,
+        "why": "2,048 addresses works, but it is twice the smallest that does."
+      },
+      {
+        "text": "A /22",
+        "correct": true,
+        "why": "Right. 1,024 minus the five reserved leaves 1,019."
+      },
+      {
+        "text": "A /24",
+        "correct": false,
+        "why": "256 addresses, 251 usable: nowhere near."
+      }
+    ]
+  },
+  {
+    "id": "ex-whrydhgn",
+    "version": 1,
+    "section": "subnets",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many addresses in a /24 subnet can you give to machines on AWS?",
+    "hint": "Five are kept.",
+    "value": 251,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-fzdjjx3v",
+    "version": 1,
+    "section": "subnets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, an application must survive the loss of one availability zone. What is the least its application servers need?",
+    "hint": "On AWS, where does a subnet live?",
+    "choices": [
+      {
+        "text": "One subnet stretched across two zones",
+        "correct": false,
+        "why": "That is how Google Cloud and Azure draw it. On AWS a subnet is in exactly one zone."
+      },
+      {
+        "text": "One subnet with a larger range",
+        "correct": false,
+        "why": "Size does not move a subnet out of its zone."
+      },
+      {
+        "text": "Two VPCs, one per zone",
+        "correct": false,
+        "why": "A VPC already spans the region's zones; a second one adds a join to maintain and nothing else."
+      },
+      {
+        "text": "Two subnets, each in a different zone",
+        "correct": true,
+        "why": "Right. That is why the layouts in this lesson come in pairs."
+      }
+    ]
+  },
+  {
+    "id": "ex-5088yf0r",
+    "version": 1,
+    "section": "subnets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the AWS subnet 10.0.1.0/24, which address is the VPC router, the one every instance sends to?",
+    "hint": "It is one of the first four.",
+    "choices": [
+      {
+        "text": "10.0.1.0",
+        "correct": false,
+        "why": "That is the network address."
+      },
+      {
+        "text": "10.0.1.1",
+        "correct": true,
+        "why": "Right. The second address of every subnet is the router."
+      },
+      {
+        "text": "10.0.1.2",
+        "correct": false,
+        "why": "That one is kept for the provider's DNS."
+      },
+      {
+        "text": "10.0.1.255",
+        "correct": false,
+        "why": "The last address: broadcast, reserved though the VPC carries none."
+      }
+    ]
+  },
+  {
+    "id": "ex-4nspye5y",
+    "version": 1,
+    "section": "subnets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You rebuild on Google Cloud the two-zone design you drew for AWS. What changes about the subnets?",
+    "hint": "On Google Cloud, what does a subnet belong to?",
+    "choices": [
+      {
+        "text": "One subnet per role, spanning the zones",
+        "correct": true,
+        "why": "Right. A Google Cloud subnet spans every zone of its region, so the zone moves from the subnet to the instance."
+      },
+      {
+        "text": "Nothing: you still need one subnet per zone",
+        "correct": false,
+        "why": "That is AWS's rule, not Google Cloud's."
+      },
+      {
+        "text": "Subnets are global there, so zones stop mattering",
+        "correct": false,
+        "why": "The VPC network is global; its subnets belong to a region, and zones still fail."
+      },
+      {
+        "text": "Each zone needs a VPC network of its own",
+        "correct": false,
+        "why": "One VPC network holds subnets in many regions, and each subnet spans its region's zones."
+      }
+    ]
+  },
+  {
+    "id": "ex-pfgm7bdj",
+    "version": 1,
+    "section": "route-tables",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A subnet is public when its route table sends 0.0.0.0/0 to the ___ gateway.",
+    "hint": "The VPC's door to the outside, one per VPC.",
+    "blanks": [
+      {
+        "accept": [
+          "internet"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c7dj0x3e",
+    "version": 1,
+    "section": "route-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A route table holds 10.0.0.0/16 → local and 0.0.0.0/0 → the internet gateway. Where does a packet for 10.0.40.7 go?",
+    "hint": "When two routes match, one of them is more specific.",
+    "choices": [
+      {
+        "text": "To the internet gateway, since 0.0.0.0/0 matches every address",
+        "correct": false,
+        "why": "It does match, and so does 10.0.0.0/16, which fixes sixteen bits against none."
+      },
+      {
+        "text": "Nowhere: two matching routes are a conflict",
+        "correct": false,
+        "why": "Overlapping routes are normal; the most specific one wins."
+      },
+      {
+        "text": "It stays inside the VPC, because the local route is more specific",
+        "correct": true,
+        "why": "Right. Sixteen fixed bits beat none, exactly as on a Linux machine."
+      },
+      {
+        "text": "Whichever route was added to the table first",
+        "correct": false,
+        "why": "Order in the table does not decide; specificity does."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxvax0m7",
+    "version": 1,
+    "section": "route-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An instance has a public IPv4 address, but its subnet's route table holds only the local route. What happens when you try to reach it from the internet?",
+    "hint": "The address and the route are two separate conditions.",
+    "choices": [
+      {
+        "text": "Nothing gets through: there is no route out",
+        "correct": true,
+        "why": "Right. It looks public on its details page and is unreachable."
+      },
+      {
+        "text": "It works, because the public address makes it public",
+        "correct": false,
+        "why": "The address is only half; with no route to the internet gateway, nothing gets out."
+      },
+      {
+        "text": "The provider adds the missing route by itself",
+        "correct": false,
+        "why": "Routes are yours to write; nothing adds 0.0.0.0/0 for you."
+      },
+      {
+        "text": "SSH works, and every other port is blocked",
+        "correct": false,
+        "why": "Routes know nothing of ports. Without a route, every port fails the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-dw4v9dp8",
+    "version": 1,
+    "section": "route-tables",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A public IPv4 address costs 0.0050 dollars an hour on the sheet. What do three addresses cost for a 730-hour month?",
+    "hint": "One address is 3.65 a month.",
+    "value": 10.95,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-q7h46kpr",
+    "version": 1,
+    "section": "nat",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In us-east-1, one NAT gateway exists for 730 hours and processes 200 GB. What do the two charges add up to?",
+    "hint": "0.0450 an hour and 0.0450 a GB.",
+    "value": 41.85,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-0kw90ndp",
+    "version": 1,
+    "section": "nat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody on the internet sends a packet to the NAT gateway's public address, trying to open a connection to a private instance. What happens?",
+    "hint": "What does the gateway look the packet up in?",
+    "choices": [
+      {
+        "text": "It reaches the instance if the instance's security group allows it",
+        "correct": false,
+        "why": "The group would only matter if the packet had a way in, and it has none."
+      },
+      {
+        "text": "It is passed to the first instance in the private subnet",
+        "correct": false,
+        "why": "There is no 'first instance'; the gateway only forwards what matches a connection."
+      },
+      {
+        "text": "It matches no connection in the gateway's table and goes nowhere",
+        "correct": true,
+        "why": "Right. The conversation has to start inside; that is the whole security property."
+      },
+      {
+        "text": "It is forwarded only for ports above 1024",
+        "correct": false,
+        "why": "Ports do not open a way in. Only an existing connection does."
+      }
+    ]
+  },
+  {
+    "id": "ex-59wfd6ma",
+    "version": 1,
+    "section": "nat",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A private fleet in sa-east-1 downloads 5 TB of container images a month from the internet, through a NAT gateway. Which charge grows with those downloads?",
+    "hint": "Look at the two lines of the NAT gateway, and at data coming in.",
+    "choices": [
+      {
+        "text": "None of them, since data in from the internet is free",
+        "correct": false,
+        "why": "Transfer in is free on the sheet; processing through the gateway is not, in either direction."
+      },
+      {
+        "text": "Processing, billed per gigabyte through it",
+        "correct": true,
+        "why": "Right. Every gigabyte through the gateway is processed, and 5 TB at 0.0930 is a line of its own."
+      },
+      {
+        "text": "Only the data-transfer-out line",
+        "correct": false,
+        "why": "The images come in. Transfer out is for bytes leaving to the internet."
+      },
+      {
+        "text": "The hourly charge, which scales with traffic",
+        "correct": false,
+        "why": "The hourly charge is fixed per gateway, whatever passes through it."
+      }
+    ]
+  },
+  {
+    "id": "ex-r2evgg3d",
+    "version": 1,
+    "section": "nat",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a NAT gateway itself sit?",
+    "hint": "It has to reach the internet gateway.",
+    "choices": [
+      {
+        "text": "In the private subnet it serves",
+        "correct": false,
+        "why": "Then it would have no route to the internet gateway either."
+      },
+      {
+        "text": "Outside the VPC, like the internet gateway",
+        "correct": false,
+        "why": "The internet gateway is attached to the VPC; a NAT gateway lives in a subnet."
+      },
+      {
+        "text": "In every subnet of the VPC at once",
+        "correct": false,
+        "why": "It lives in one subnet, in one zone."
+      },
+      {
+        "text": "In a public subnet",
+        "correct": true,
+        "why": "Right. Private subnets send 0.0.0.0/0 to it, and it sends on to the internet gateway."
+      }
+    ]
+  },
+  {
+    "id": "ex-dn93pefw",
+    "version": 1,
+    "section": "security-groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A security group allows TCP 443 in. What rule do the replies to those requests need?",
+    "hint": "The provider tracks connections.",
+    "choices": [
+      {
+        "text": "An outbound rule for port 443",
+        "correct": false,
+        "why": "Replies go to the client's port, and a security group lets them out anyway."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right. The group is stateful: it remembers the request and lets its reply out."
+      },
+      {
+        "text": "An outbound rule for ports 1024 to 65535",
+        "correct": false,
+        "why": "That is what a network ACL needs, because it is stateless."
+      },
+      {
+        "text": "An inbound rule for the ephemeral ports",
+        "correct": false,
+        "why": "The replies go out, not in, and the group remembers them."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbj2ydwh",
+    "version": 1,
+    "section": "security-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the database's security group name the application's group as its source, instead of the application servers' addresses?",
+    "hint": "What does autoscaling do to addresses?",
+    "choices": [
+      {
+        "text": "Address ranges are not allowed as a source",
+        "correct": false,
+        "why": "They are: the SSH rule in the section uses one."
+      },
+      {
+        "text": "A group rule also lets the application reach the internet",
+        "correct": false,
+        "why": "Inbound rules on the database say nothing about the application's way out."
+      },
+      {
+        "text": "Group rules are checked before address rules",
+        "correct": false,
+        "why": "Every rule is considered together; there is no order in a security group."
+      },
+      {
+        "text": "Autoscaling swaps machines, and membership stays",
+        "correct": true,
+        "why": "Right. The rule matches membership, so today's servers and tomorrow's are all admitted."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkvrphr8",
+    "version": 1,
+    "section": "security-groups",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the JSON that --ip-permissions takes, a rule whose source is another security group lists it under the key ___.",
+    "hint": "The CLI's skeleton printed it last.",
+    "blanks": [
+      {
+        "accept": [
+          "UserIdGroupPairs"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q5z8jc3e",
+    "version": 1,
+    "section": "security-groups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your web servers' group allows 443 from 0.0.0.0/0, and one address range is abusing it. What can a security group do about that range?",
+    "hint": "What kinds of rule does a security group have?",
+    "choices": [
+      {
+        "text": "Add a deny rule for that range above the allow",
+        "correct": false,
+        "why": "A security group has no deny rules at all."
+      },
+      {
+        "text": "Attach a second group that excludes the range",
+        "correct": false,
+        "why": "Groups add up: a packet any group allows is let in."
+      },
+      {
+        "text": "Nothing: a security group cannot deny",
+        "correct": true,
+        "why": "Right. A security group only allows. A deny rule in the subnet's ACL refuses the range for every machine there."
+      },
+      {
+        "text": "Remove 0.0.0.0/0, and the range goes with it",
+        "correct": false,
+        "why": "So does every other client: that closes the site."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmbt1c7t",
+    "version": 1,
+    "section": "network-acls",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to its answer for the two filters.",
+    "hint": "One is stateful and one is not.",
+    "pairs": [
+      {
+        "left": "Security group: attached to",
+        "right": "an instance's network interface"
+      },
+      {
+        "left": "Network ACL: attached to",
+        "right": "a subnet"
+      },
+      {
+        "left": "Security group: the replies",
+        "right": "are let through automatically"
+      },
+      {
+        "left": "Network ACL: the replies",
+        "right": "need a rule of their own"
+      }
+    ],
+    "right_distractors": [
+      "the internet gateway"
+    ]
+  },
+  {
+    "id": "ex-fc48434d",
+    "version": 1,
+    "section": "network-acls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inbound rules: 100 allows TCP 443 from 0.0.0.0/0; 110 denies everything from 198.51.100.0/24. A request arrives from 198.51.100.7 to port 443. What happens?",
+    "hint": "Lowest number first, and the first match decides.",
+    "choices": [
+      {
+        "text": "Allowed: rule 100 matches first, so the deny is never read",
+        "correct": true,
+        "why": "Right. To refuse the range, the deny needs a number below 100."
+      },
+      {
+        "text": "It is denied, because a deny always beats an allow",
+        "correct": false,
+        "why": "In a network ACL the order decides, not the action."
+      },
+      {
+        "text": "It is denied, because the more specific range wins",
+        "correct": false,
+        "why": "Most specific wins in a route table. An ACL reads its rules by number."
+      },
+      {
+        "text": "It depends on the security group's own deny rules",
+        "correct": false,
+        "why": "Security groups have no deny rules to consult."
+      }
+    ]
+  },
+  {
+    "id": "ex-34a18g93",
+    "version": 1,
+    "section": "network-acls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new network ACL on a web subnet allows TCP 443 in from 0.0.0.0/0, and its outbound list holds only the final * deny. Clients time out. Why?",
+    "hint": "Where does the reply go?",
+    "choices": [
+      {
+        "text": "Port 443 must be allowed out as well",
+        "correct": false,
+        "why": "The reply is addressed to the client's port, not to 443, so a rule for 443 does not match it."
+      },
+      {
+        "text": "Replies to ephemeral ports cannot get out",
+        "correct": true,
+        "why": "Right. The ACL remembers nothing, so the replies need an outbound rule for 1024 to 65535."
+      },
+      {
+        "text": "The security group must be made stateless too",
+        "correct": false,
+        "why": "A security group is always stateful, and that is not the part failing here."
+      },
+      {
+        "text": "Allow rules only work with numbers below 100",
+        "correct": false,
+        "why": "Any number works; only the order between rules matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6fk3ehz",
+    "version": 1,
+    "section": "network-acls",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The reply to a request on 443 goes back to the temporary port the client picked, called an ___ port.",
+    "hint": "The usual range is 1024 to 65535.",
+    "blanks": [
+      {
+        "accept": [
+          "ephemeral"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xb8s0ykc",
+    "version": 1,
+    "section": "load-balancers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each term to what it means.",
+    "hint": "All four come from the section.",
+    "pairs": [
+      {
+        "left": "Health check",
+        "right": "takes a failing target out of rotation"
+      },
+      {
+        "left": "TLS termination",
+        "right": "the load balancer holds the certificate"
+      },
+      {
+        "left": "X-Forwarded-For",
+        "right": "carries the client's address to the target"
+      },
+      {
+        "left": "Target",
+        "right": "a machine behind the load balancer"
+      }
+    ],
+    "right_distractors": [
+      "gives each target a public address"
+    ]
+  },
+  {
+    "id": "ex-5y2vre85",
+    "version": 1,
+    "section": "load-balancers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An application behind an application load balancer logs the source address of every TCP connection it accepts. Whose address ends up in the log?",
+    "hint": "Who opens the connection to the target?",
+    "choices": [
+      {
+        "text": "The client's",
+        "correct": false,
+        "why": "The client's address arrives in X-Forwarded-For, not as the connection's source."
+      },
+      {
+        "text": "The internet gateway's",
+        "correct": false,
+        "why": "The gateway translates addresses; it does not open connections to targets."
+      },
+      {
+        "text": "The load balancer's",
+        "correct": true,
+        "why": "Right. It ended the client's connection and opened its own to the target."
+      },
+      {
+        "text": "The NAT gateway's",
+        "correct": false,
+        "why": "The NAT gateway carries connections going out, not requests coming in."
+      }
+    ]
+  },
+  {
+    "id": "ex-s1qzv86s",
+    "version": 1,
+    "section": "load-balancers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which kind of load balancer sends requests for /images/ to one group of targets and everything else to another?",
+    "hint": "The path is inside the HTTP request.",
+    "choices": [
+      {
+        "text": "An application load balancer, at layer 7",
+        "correct": true,
+        "why": "Right. It reads the request, so it can route on the path."
+      },
+      {
+        "text": "A network load balancer, since it sees ports",
+        "correct": false,
+        "why": "Ports are layer 4. The path is in the HTTP request it does not read."
+      },
+      {
+        "text": "Either kind; it is a DNS setting",
+        "correct": false,
+        "why": "DNS resolves names to addresses; it never sees a path."
+      },
+      {
+        "text": "Neither: that takes two load balancers",
+        "correct": false,
+        "why": "One application load balancer routes by path to as many target groups as it needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmdgpsqd",
+    "version": 1,
+    "section": "load-balancers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two application load balancers run in sa-east-1 for 730 hours each. What are their hourly charges together?",
+    "hint": "One is 24.82 a month.",
+    "value": 49.64,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-397jkwa5",
+    "version": 1,
+    "section": "three-tier",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what a student's request crosses on its way from the browser to the data.",
+    "hint": "Public tier first.",
+    "items": [
+      "The internet gateway",
+      "The load balancer, on 443",
+      "An application server, on 8080",
+      "The database, on 5432"
+    ],
+    "trap": "The load balancer comes before any application server: the application's group only admits connections from the load balancer's group."
+  },
+  {
+    "id": "ex-v4jm5hg8",
+    "version": 1,
+    "section": "three-tier",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the three-tier layout, which subnets have no route for 0.0.0.0/0 at all?",
+    "hint": "Which tier has nothing to download?",
+    "choices": [
+      {
+        "text": "The application subnets",
+        "correct": false,
+        "why": "They send 0.0.0.0/0 to the NAT gateway in their zone."
+      },
+      {
+        "text": "The public subnets",
+        "correct": false,
+        "why": "Theirs goes to the internet gateway; that is what makes them public."
+      },
+      {
+        "text": "None: every subnet needs a way out",
+        "correct": false,
+        "why": "The data tier is safer with none, and a managed database needs none."
+      },
+      {
+        "text": "The data subnets",
+        "correct": true,
+        "why": "Right. Only the local route: nothing there can reach the internet."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2tx1jcg",
+    "version": 1,
+    "section": "three-tier",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save money, the team runs a single NAT gateway, in zone a, for both zones. Zone a goes down. What happens in zone b?",
+    "hint": "Follow zone b's route for 0.0.0.0/0.",
+    "choices": [
+      {
+        "text": "Nothing: a NAT gateway is regional and moves to zone b",
+        "correct": false,
+        "why": "A NAT gateway lives in one subnet, in one zone."
+      },
+      {
+        "text": "They still serve requests, but nothing in them reaches out",
+        "correct": true,
+        "why": "Right. The load balancer still reaches them; their route to the NAT gateway leads into a zone that is gone."
+      },
+      {
+        "text": "The load balancer stops sending to zone b",
+        "correct": false,
+        "why": "The load balancer has its own node in zone b's public subnet."
+      },
+      {
+        "text": "Zone b's servers become reachable from the internet",
+        "correct": false,
+        "why": "Losing a way out never opens a way in."
+      }
+    ]
+  },
+  {
+    "id": "ex-5gnd2617",
+    "version": 1,
+    "section": "private-paths",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each need to the private path that answers it.",
+    "hint": "One paragraph each in the section.",
+    "pairs": [
+      {
+        "left": "Private instances write to S3 without the NAT gateway",
+        "right": "a gateway endpoint"
+      },
+      {
+        "left": "Two VPCs reach each other by private address",
+        "right": "VPC peering"
+      },
+      {
+        "left": "An encrypted tunnel to the office over the internet",
+        "right": "a site-to-site VPN"
+      },
+      {
+        "left": "A private circuit into the provider's network",
+        "right": "a dedicated link"
+      }
+    ],
+    "right_distractors": [
+      "a second internet gateway"
+    ]
+  },
+  {
+    "id": "ex-kw7zm83y",
+    "version": 1,
+    "section": "private-paths",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, VPC A is peered with B, and B with C. Can an instance in A reach C through B?",
+    "hint": "Is a peering transitive?",
+    "choices": [
+      {
+        "text": "No: A needs its own peering with C",
+        "correct": true,
+        "why": "Right. Peering is not transitive; past a handful of VPCs, a hub is simpler."
+      },
+      {
+        "text": "Yes, as long as none of the three ranges overlap",
+        "correct": false,
+        "why": "Non-overlapping ranges are needed for each peering; they do not make peering transitive."
+      },
+      {
+        "text": "Yes: B forwards the traffic on",
+        "correct": false,
+        "why": "A peering carries traffic between its two ends and nowhere further."
+      },
+      {
+        "text": "Only for traffic bound for the internet",
+        "correct": false,
+        "why": "A peering never becomes a way to the internet for the other side."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6nqj6zm",
+    "version": 1,
+    "section": "debugging-the-path",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the checklist for an unreachable instance in order, from the machine outwards.",
+    "hint": "The cheapest checks are closest to the machine.",
+    "items": [
+      "Is the service listening, and on which address?",
+      "The instance's security groups",
+      "The subnet's network ACL",
+      "The subnet's route table",
+      "The public address, or the load balancer's health check"
+    ],
+    "trap": "Checking the route table before the service wastes time on the network when the answer was on the machine: a service listening only on 127.0.0.1 looks like a network fault from outside."
+  },
+  {
+    "id": "ex-c66rk397",
+    "version": 1,
+    "section": "debugging-the-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "curl to an instance's public address prints \"Connection refused\" at once. Where do you look first?",
+    "hint": "Who sends a refusal, and who stays silent?",
+    "choices": [
+      {
+        "text": "The security group, which rejected the connection",
+        "correct": false,
+        "why": "A security group drops without a word. A refusal means the packet got past it."
+      },
+      {
+        "text": "The route table of the instance's subnet",
+        "correct": false,
+        "why": "Without a route there is no reply at all, so the client would time out."
+      },
+      {
+        "text": "The network ACL",
+        "correct": false,
+        "why": "It drops in silence too, like the group."
+      },
+      {
+        "text": "The service on the machine",
+        "correct": true,
+        "why": "Right. The machine answered, so nothing listens on that port or that address."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gg9fxw3",
+    "version": 1,
+    "section": "debugging-the-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new web server times out from the internet. From another instance in the same VPC, nc to its private address on port 80 succeeds. What have you learnt?",
+    "hint": "Which parts of the path did the inside test cross?",
+    "choices": [
+      {
+        "text": "That every security group rule is correct",
+        "correct": false,
+        "why": "The rule for that inside source is; the rule for internet clients was never tested."
+      },
+      {
+        "text": "The service works; the fault is further out",
+        "correct": true,
+        "why": "Right. Look at the rule's source for outside clients, the ACL, the route and the public address."
+      },
+      {
+        "text": "That the route table needs no checking",
+        "correct": false,
+        "why": "The inside test used the local route, not the route to the internet gateway."
+      },
+      {
+        "text": "Nothing: tests from different places are not comparable",
+        "correct": false,
+        "why": "Comparing them is the point: each one crosses a different part of the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-htrqvgpg",
+    "version": 1,
+    "section": "debugging-the-path",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "ss -tln on an instance shows 127.0.0.1:8080, and the load balancer marks the instance unhealthy. Why?",
+    "hint": "Who is allowed to connect to 127.0.0.1?",
+    "choices": [
+      {
+        "text": "The security group blocks traffic to 127.0.0.1",
+        "correct": false,
+        "why": "Nothing from outside is ever addressed to 127.0.0.1; the group is not involved."
+      },
+      {
+        "text": "The route table needs a local route for 127.0.0.1",
+        "correct": false,
+        "why": "127.0.0.1 never leaves the machine, so no VPC route applies to it."
+      },
+      {
+        "text": "It only accepts connections from itself",
+        "correct": true,
+        "why": "Right. The health check arrives on the private address and is refused. Listening on 0.0.0.0 fixes it."
+      },
+      {
+        "text": "Health checks only work on port 80",
+        "correct": false,
+        "why": "The check uses whatever port and path it is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-py7mjrz5",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A private instance cannot download updates. Which of these could cause it? Choose all that apply.",
+    "hint": "Follow the request out and the reply back.",
+    "choices": [
+      {
+        "text": "Its subnet has no route for 0.0.0.0/0 to a NAT gateway",
+        "correct": true,
+        "why": "Without it, the request has no way out."
+      },
+      {
+        "text": "Its security group has no inbound rule for 443",
+        "correct": false,
+        "why": "The replies to its own requests come back in by themselves: the group is stateful."
+      },
+      {
+        "text": "The subnet's network ACL does not let in replies to ephemeral ports",
+        "correct": true,
+        "why": "The ACL is stateless, so the replies need an inbound rule."
+      },
+      {
+        "text": "It has no public IPv4 address",
+        "correct": false,
+        "why": "A private instance goes out through the NAT gateway's address; it needs none of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-6jnrmr0v",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In sa-east-1, the three-tier layout runs two NAT gateways and one application load balancer for 730 hours, and the NAT gateways process 300 GB between them. What do the hourly and processing charges add up to?",
+    "hint": "The empty layout was 160.60; add the gigabytes at 0.0930.",
+    "value": 188.5,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-bd4jxnpr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To keep things simple, every VPC in a company is created as 10.0.0.0/16. What does that cost later?",
+    "hint": "Isolated today, joined tomorrow.",
+    "choices": [
+      {
+        "text": "Nothing: VPCs are isolated, so their ranges never meet",
+        "correct": false,
+        "why": "They are isolated until the day somebody peers two of them, or connects one to the office."
+      },
+      {
+        "text": "Each of them is limited to a single zone",
+        "correct": false,
+        "why": "Zones have nothing to do with the range; a VPC spans its region's zones."
+      },
+      {
+        "text": "Every subnet in them must be a /24",
+        "correct": false,
+        "why": "Subnet size is a separate choice and does not follow from the VPC's range."
+      },
+      {
+        "text": "No two of them are ever joinable by peering",
+        "correct": true,
+        "why": "Right. Overlapping ranges cannot be joined, and on AWS the first range cannot be changed."
+      }
+    ]
+  }
+]

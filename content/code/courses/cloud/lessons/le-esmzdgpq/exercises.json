@@ -1,0 +1,1258 @@
+[
+  {
+    "id": "ex-1nh82byj",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A startup needs three virtual machines, a PostgreSQL database and a bucket for images. A colleague says DigitalOcean is a toy and only AWS is serious. What is wrong with the argument?",
+    "hint": "List what the design needs and check it against the short list.",
+    "choices": [
+      {
+        "text": "Everything this design needs is in the core both kinds sell",
+        "correct": true,
+        "why": "Right. The difference would be the bill's shape and what the team runs itself, not seriousness."
+      },
+      {
+        "text": "Nothing: small providers lack PostgreSQL",
+        "correct": false,
+        "why": "PostgreSQL runs on any virtual machine, and DigitalOcean also sells it managed."
+      },
+      {
+        "text": "AWS is more expensive, so for a team this small it is always the wrong choice",
+        "correct": false,
+        "why": "That swaps one ladder for another. Price is one question of several, and not the first."
+      },
+      {
+        "text": "Object storage exists only at the hyperscalers",
+        "correct": false,
+        "why": "DigitalOcean sells Spaces, an S3-compatible object store. Object storage is part of the core."
+      }
+    ]
+  },
+  {
+    "id": "ex-cg7z3apx",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Your design needs a message queue, and you pick a provider that sells only the short list. What does that choice leave you?",
+    "hint": "Who patches the queue and who wakes up at night?",
+    "choices": [
+      {
+        "text": "A worse queue, since the provider's machines are slower",
+        "correct": false,
+        "why": "A virtual machine is a virtual machine. The queue software is the same program wherever it runs."
+      },
+      {
+        "text": "A redesign: without a managed queue the application has to drop it",
+        "correct": false,
+        "why": "Nothing forces that. You run the queue yourself, on a machine you rent."
+      },
+      {
+        "text": "Installing and operating the queue yourself on a virtual machine",
+        "correct": true,
+        "why": "Right. Patching, replication and the night call become yours, which is what the lower bill pays for."
+      },
+      {
+        "text": "Nothing extra: every provider sells a managed queue now",
+        "correct": false,
+        "why": "Managed queues are among the services that stay at the hyperscalers."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdac1dj2",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these are part of the core that both hyperscalers and smaller providers sell? Choose all that apply.",
+    "hint": "The short list, not the long one.",
+    "choices": [
+      {
+        "text": "Virtual machines",
+        "correct": true,
+        "why": "The first item on every provider's list."
+      },
+      {
+        "text": "A managed data warehouse",
+        "correct": false,
+        "why": "BigQuery and Redshift are hyperscaler products; the short list has nothing like them."
+      },
+      {
+        "text": "Load balancers",
+        "correct": true,
+        "why": "DigitalOcean, Hetzner and Akamai all sell one; Akamai calls it a NodeBalancer."
+      },
+      {
+        "text": "Object storage",
+        "correct": true,
+        "why": "Spaces, Hetzner Object Storage and Akamai Object Storage, all S3-compatible."
+      },
+      {
+        "text": "A managed machine-learning platform",
+        "correct": false,
+        "why": "One of the hundreds of services around the core, sold by the three."
+      }
+    ]
+  },
+  {
+    "id": "ex-6z5dtvj0",
+    "version": 1,
+    "section": "aws",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why do DigitalOcean Spaces and Cloudflare R2 describe themselves as S3-compatible?",
+    "hint": "Think of a program written against S3.",
+    "choices": [
+      {
+        "text": "They run on Amazon's hardware, under a licence that Amazon grants them",
+        "correct": false,
+        "why": "They run in their own data centres. Compatibility is about the API, not the machines."
+      },
+      {
+        "text": "They answer the API that S3 defined",
+        "correct": true,
+        "why": "Right. A program written for S3 talks to them by changing an address and a key."
+      },
+      {
+        "text": "It is a legal requirement for anything sold as object storage",
+        "correct": false,
+        "why": "No law asks for it. It is a commercial choice that makes switching easy."
+      },
+      {
+        "text": "They store files in exactly the same price tiers that S3 uses",
+        "correct": false,
+        "why": "Prices differ; R2, for one, charges nothing for data leaving it."
+      }
+    ]
+  },
+  {
+    "id": "ex-e06qv9yy",
+    "version": 1,
+    "section": "aws",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague created an EC2 machine yesterday. Today, signed in to the same account, she sees no machines at all in the console. What is the likeliest explanation?",
+    "hint": "The console shows one of something at a time.",
+    "choices": [
+      {
+        "text": "The machine was deleted overnight by AWS",
+        "correct": false,
+        "why": "Nothing is deleted by the provider for sitting idle. Check where you are looking first."
+      },
+      {
+        "text": "Her permissions were removed",
+        "correct": false,
+        "why": "Then she would see an access error rather than an empty list."
+      },
+      {
+        "text": "A different account is billing the machine",
+        "correct": false,
+        "why": "The account is the same by the question's own terms; the machine lives in it."
+      },
+      {
+        "text": "The console is showing another region",
+        "correct": true,
+        "why": "Right. A machine exists only in its region, and the console shows one region at a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-1mk61jyc",
+    "version": 1,
+    "section": "aws",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your whole system runs in sa-east-1, and you put CloudFront in front of it with your own TLS certificate. In which region do you request the certificate?",
+    "hint": "The oldest region has a special role.",
+    "choices": [
+      {
+        "text": "sa-east-1, beside the rest of the system",
+        "correct": false,
+        "why": "That is the natural guess, and it is exactly the surprise: CloudFront reads it from elsewhere."
+      },
+      {
+        "text": "us-east-1, always, whatever region the rest is in",
+        "correct": true,
+        "why": "Right. Some global services are managed from us-east-1, and CloudFront certificates are one."
+      },
+      {
+        "text": "Any region, since certificates are global",
+        "correct": false,
+        "why": "A certificate in AWS is a regional resource; CloudFront looks in one region only."
+      },
+      {
+        "text": "None: CloudFront refuses your own certificates",
+        "correct": false,
+        "why": "It accepts them; the rule is only about where they are requested."
+      }
+    ]
+  },
+  {
+    "id": "ex-96r5pkvz",
+    "version": 1,
+    "section": "azure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company's staff already sign in to e-mail and documents through Microsoft 365. What is Azure's strongest argument to this company?",
+    "hint": "Who is signing in, and where does that list live?",
+    "choices": [
+      {
+        "text": "Azure runs only Windows, which the staff already know how to use",
+        "correct": false,
+        "why": "Azure sells Linux machines as a matter of course. The argument is elsewhere."
+      },
+      {
+        "text": "Its access control uses the directory they already sign in with",
+        "correct": true,
+        "why": "Right. One account for e-mail and cloud, and disabling a leaver closes both."
+      },
+      {
+        "text": "Microsoft 365 customers pay no separate bill for their Azure machines",
+        "correct": false,
+        "why": "The two are billed separately. What is shared is the directory."
+      },
+      {
+        "text": "Azure is the only cloud with a region in Brazil",
+        "correct": false,
+        "why": "AWS and Google Cloud have São Paulo regions too."
+      }
+    ]
+  },
+  {
+    "id": "ex-h4ggfcjf",
+    "version": 1,
+    "section": "azure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An engineer cleans up by deleting the resource group test-shop. Weeks earlier somebody had put the production database in that group. What happens to the database?",
+    "hint": "What does a resource group hold, and what does deleting it do?",
+    "choices": [
+      {
+        "text": "Azure refuses, because the group holds a database",
+        "correct": false,
+        "why": "No such rule exists by default; the group is deleted with its contents."
+      },
+      {
+        "text": "It moves to the subscription's default group",
+        "correct": false,
+        "why": "There is no default group to catch it. Every resource belongs to exactly one group."
+      },
+      {
+        "text": "It is deleted with every other resource in the group",
+        "correct": true,
+        "why": "Right. That is what the group is for, and why putting a resource in the wrong one is dangerous."
+      },
+      {
+        "text": "Nothing: resource groups are only labels for billing",
+        "correct": false,
+        "why": "Billing attaches to the subscription. A resource group is a container whose deletion deletes."
+      }
+    ]
+  },
+  {
+    "id": "ex-5cpe9j21",
+    "version": 1,
+    "section": "azure",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put Azure's boxes in order, from the widest to the narrowest.",
+    "hint": "The directory holds everything; a single VM holds nothing.",
+    "items": [
+      "Tenant (the Entra ID directory)",
+      "Subscription",
+      "Resource group",
+      "Resource, such as a VM"
+    ],
+    "trap": "Subscription and resource group swapped is the usual slip: the bill attaches to the subscription, and resource groups sit inside it."
+  },
+  {
+    "id": "ex-1h1xqx3v",
+    "version": 1,
+    "section": "azure",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Microsoft's directory of people and groups, called Azure Active Directory until 2023, is now called ___ ID.",
+    "hint": "A word that starts with E.",
+    "blanks": [
+      {
+        "accept": [
+          "Entra",
+          "Microsoft Entra"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f1ex0dbv",
+    "version": 1,
+    "section": "google-cloud",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At Google Cloud, what does every resource have to belong to?",
+    "hint": "It has an id you choose once.",
+    "choices": [
+      {
+        "text": "A project",
+        "correct": true,
+        "why": "Right. A project is linked to a billing account, and its id cannot be changed."
+      },
+      {
+        "text": "A resource group",
+        "correct": false,
+        "why": "That is Azure's box."
+      },
+      {
+        "text": "A folder under the organisation",
+        "correct": false,
+        "why": "Folders are optional and group projects; resources sit in projects."
+      },
+      {
+        "text": "A region's own account",
+        "correct": false,
+        "why": "No provider in this lesson makes you open an account per region."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6p3ke6k",
+    "version": 1,
+    "section": "google-cloud",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One VM runs in southamerica-east1 and another in europe-west1, both in the same Google Cloud VPC network. What is true?",
+    "hint": "Where does a Google VPC network belong, and where do its subnets?",
+    "choices": [
+      {
+        "text": "They cannot share a network, because each network belongs to one region only",
+        "correct": false,
+        "why": "That is true of AWS VPCs and Azure virtual networks, not of Google's."
+      },
+      {
+        "text": "One private network, through regional subnets; firewall rules still apply",
+        "correct": true,
+        "why": "Right. The network is global, the subnets regional, and no joining of two networks is needed."
+      },
+      {
+        "text": "The global network makes the round trip as short as within one region",
+        "correct": false,
+        "why": "The packet still crosses an ocean. What disappears is plumbing, not distance."
+      },
+      {
+        "text": "They talk only over the internet, by public address",
+        "correct": false,
+        "why": "They reach each other by private address inside the one network."
+      }
+    ]
+  },
+  {
+    "id": "ex-f77zxhq1",
+    "version": 1,
+    "section": "google-cloud",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the sentence \"Kubernetes came out of Google\" mean?",
+    "hint": "Think of Borg and of 2014.",
+    "choices": [
+      {
+        "text": "Kubernetes runs only on Google Cloud, and the others license a copy",
+        "correct": false,
+        "why": "All three hyperscalers, DigitalOcean and Akamai sell managed Kubernetes."
+      },
+      {
+        "text": "Google still owns it and charges the other providers to run it",
+        "correct": false,
+        "why": "It was released as open source; nobody pays Google to run it."
+      },
+      {
+        "text": "Google designed it, after Borg, and released it as open source",
+        "correct": true,
+        "why": "Right. GKE, Google's managed version, came early, and the project itself belongs to no provider."
+      },
+      {
+        "text": "It is Google's own name for the service that rents virtual machines",
+        "correct": false,
+        "why": "That is Compute Engine. Kubernetes places containers on machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-q03zqe15",
+    "version": 1,
+    "section": "google-cloud",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the box that answers it.",
+    "hint": "Two answers belong to Azure.",
+    "pairs": [
+      {
+        "left": "Where must every AWS resource sit?",
+        "right": "An account"
+      },
+      {
+        "left": "Where must every Azure resource sit?",
+        "right": "A resource group"
+      },
+      {
+        "left": "Where does Azure attach the bill?",
+        "right": "A subscription"
+      },
+      {
+        "left": "Where must every Google Cloud resource sit?",
+        "right": "A project"
+      }
+    ],
+    "right_distractors": [
+      "A folder"
+    ]
+  },
+  {
+    "id": "ex-wcyc01eg",
+    "version": 1,
+    "section": "digitalocean",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does DigitalOcean charge for a Droplet?",
+    "hint": "One price per size, and a ceiling.",
+    "choices": [
+      {
+        "text": "A monthly price per size; the time it exists is charged up to that price",
+        "correct": true,
+        "why": "Right, with a pooled allowance of outbound transfer included."
+      },
+      {
+        "text": "Per request, like functions",
+        "correct": false,
+        "why": "That is the serverless model of lesson 8, not a virtual machine's."
+      },
+      {
+        "text": "By the second, with the disk, the address and the transfer each metered apart on lines of their own",
+        "correct": false,
+        "why": "That is the hyperscaler shape. A Droplet's size includes disk and address."
+      },
+      {
+        "text": "A yearly contract paid in advance",
+        "correct": false,
+        "why": "No contract is needed; a Droplet is charged for the time it exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0xe4ehb",
+    "version": 1,
+    "section": "digitalocean",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A small project's AWS bill has four lines for one machine: instance hours, an EBS volume, a public IPv4 address and data out. Moved to a Droplet, which of them become part of the Droplet's price?",
+    "hint": "Look at the comparison table in the section.",
+    "choices": [
+      {
+        "text": "Only the instance hours; everything else stays a separate line",
+        "correct": false,
+        "why": "The Droplet's size also carries its disk and its address."
+      },
+      {
+        "text": "All four, with no limit at all on how much data goes out",
+        "correct": false,
+        "why": "Transfer is included up to an allowance; beyond it, it is charged per GB."
+      },
+      {
+        "text": "The hours and the disk, never the address",
+        "correct": false,
+        "why": "A Droplet reaches the internet with a public address included in its price."
+      },
+      {
+        "text": "All four, with data out included up to an allowance",
+        "correct": true,
+        "why": "Right. Machine, disk and address are in the size; transfer is in, up to the pooled allowance."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cjj4cb3",
+    "version": 1,
+    "section": "digitalocean",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sheet prices a public IPv4 address at 0.0050 USD an hour in both regions. What does one address cost for a 730-hour month?",
+    "hint": "Hourly price times hours.",
+    "value": 3.65,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-e72nqsg9",
+    "version": 1,
+    "section": "hetzner",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What separates a Hetzner dedicated server from a Hetzner Cloud server?",
+    "hint": "One of them is a physical machine.",
+    "choices": [
+      {
+        "text": "The dedicated server is a whole physical machine, rented by the month and not created by an API call",
+        "correct": true,
+        "why": "Right. Minutes to hours to arrive, and bought for a load you already know."
+      },
+      {
+        "text": "The cloud server is faster because it is newer",
+        "correct": false,
+        "why": "Speed depends on the hardware, not on the product line."
+      },
+      {
+        "text": "Only the dedicated server runs Linux",
+        "correct": false,
+        "why": "Both run Linux; the difference is physical versus virtual."
+      },
+      {
+        "text": "The cloud server includes a managed database",
+        "correct": false,
+        "why": "Hetzner's catalogue is the IaaS layer: the database is yours to run either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrfqzm21",
+    "version": 1,
+    "section": "hetzner",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Hetzner's list prices sit well below the hyperscalers' for the same processors and memory. What does that tell you about the machine?",
+    "hint": "Where does the difference come from?",
+    "choices": [
+      {
+        "text": "It is oversold, so it is slower",
+        "correct": false,
+        "why": "Nothing in the lesson supports that; the difference comes from what surrounds the machine."
+      },
+      {
+        "text": "Nothing: it comes with less around it, not a weaker machine",
+        "correct": true,
+        "why": "Right. A short catalogue and its own data centres explain the price."
+      },
+      {
+        "text": "It lacks a public address",
+        "correct": false,
+        "why": "Cloud servers reach the internet like any other."
+      },
+      {
+        "text": "It is a trial that expires",
+        "correct": false,
+        "why": "It is an ordinary product, billed by the hour up to a monthly cap."
+      }
+    ]
+  },
+  {
+    "id": "ex-y076066w",
+    "version": 1,
+    "section": "hetzner",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A physical machine rented by the month, with nobody else running on it, is called a ___ server.",
+    "hint": "It is yours alone, down to the hardware.",
+    "blanks": [
+      {
+        "accept": [
+          "dedicated",
+          "bare metal",
+          "bare-metal"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-748evtc3",
+    "version": 1,
+    "section": "linode-akamai",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who owns Linode today?",
+    "hint": "A content delivery network.",
+    "choices": [
+      {
+        "text": "DigitalOcean, since a merger of the two companies",
+        "correct": false,
+        "why": "The two were competitors and still are."
+      },
+      {
+        "text": "Cloudflare, which runs it at the edge",
+        "correct": false,
+        "why": "Cloudflare does not rent virtual machines at all."
+      },
+      {
+        "text": "Akamai, which bought it in 2022",
+        "correct": true,
+        "why": "Right. The name Linode survives in the API, the CLI and the documentation."
+      },
+      {
+        "text": "Nobody: it closed down in 2022",
+        "correct": false,
+        "why": "It was bought and is still sold, now under Akamai's name."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1808ag3",
+    "version": 1,
+    "section": "linode-akamai",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the argument for Akamai's cloud that DigitalOcean and Hetzner cannot make?",
+    "hint": "What did Akamai already own before 2022?",
+    "choices": [
+      {
+        "text": "VMs next to a delivery network that reaches past its regions",
+        "correct": true,
+        "why": "Right. Build in a region, deliver through the edge, one company and one bill."
+      },
+      {
+        "text": "The lowest prices in the market, well below DigitalOcean and Hetzner",
+        "correct": false,
+        "why": "The course captured no Akamai prices, and price is not its distinctive claim."
+      },
+      {
+        "text": "Hundreds of managed services, as many as the hyperscalers sell",
+        "correct": false,
+        "why": "Its list is the short one, with names of its own."
+      },
+      {
+        "text": "It is the oldest cloud, older than any of the hyperscalers",
+        "correct": false,
+        "why": "Linode is older than EC2, but that is not what Akamai sells it on."
+      }
+    ]
+  },
+  {
+    "id": "ex-5syc60hx",
+    "version": 1,
+    "section": "the-rest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A team wants to rent a virtual machine from Cloudflare for its database. What should they know?",
+    "hint": "Cloudflare sits in front of servers.",
+    "choices": [
+      {
+        "text": "Cloudflare's virtual machines come with no disk attached",
+        "correct": false,
+        "why": "There are no Cloudflare VMs to have one."
+      },
+      {
+        "text": "It rents none; it runs code and storage on its edge network",
+        "correct": true,
+        "why": "Right. Workers, R2 and small databases, and lesson 8 is where they are covered."
+      },
+      {
+        "text": "They have to buy them through Akamai instead",
+        "correct": false,
+        "why": "Akamai is a different company with its own cloud."
+      },
+      {
+        "text": "Only in the São Paulo region, where Cloudflare keeps its machines",
+        "correct": false,
+        "why": "Cloudflare has no regions of virtual machines at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-xh5vgj92",
+    "version": 1,
+    "section": "the-rest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is OVHcloud's main argument to European buyers?",
+    "hint": "Whose law applies?",
+    "choices": [
+      {
+        "text": "It is the only provider with data centres in Europe",
+        "correct": false,
+        "why": "All three hyperscalers and Hetzner have them. The argument is who owns the company."
+      },
+      {
+        "text": "It sells more managed services than AWS does",
+        "correct": false,
+        "why": "Its list is growing, but breadth is AWS's argument, not OVHcloud's."
+      },
+      {
+        "text": "Jurisdiction: European law, not American",
+        "correct": true,
+        "why": "Right. The hyperscalers are American companies, subject to American law wherever their buildings are."
+      },
+      {
+        "text": "It bills in reais, which avoids the exchange rate",
+        "correct": false,
+        "why": "That is the argument of a Brazilian provider such as Magalu Cloud."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t7k2c7b",
+    "version": 1,
+    "section": "the-rest",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each provider to the reason a customer meets it.",
+    "hint": "Ask what each one exists for.",
+    "pairs": [
+      {
+        "left": "Oracle Cloud",
+        "right": "The company already runs Oracle Database"
+      },
+      {
+        "left": "IBM Cloud",
+        "right": "OpenShift, from Red Hat, in the office and in the cloud"
+      },
+      {
+        "left": "Alibaba Cloud",
+        "right": "Customers inside mainland China"
+      },
+      {
+        "left": "Magalu Cloud",
+        "right": "A Brazilian company, billing in reais"
+      }
+    ],
+    "right_distractors": [
+      "Renting virtual machines at the edge"
+    ]
+  },
+  {
+    "id": "ex-0s8e0bkd",
+    "version": 1,
+    "section": "same-thing-many-names",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each idea to its AWS name.",
+    "hint": "Use the first column of the translation table.",
+    "pairs": [
+      {
+        "left": "A virtual machine",
+        "right": "EC2"
+      },
+      {
+        "left": "A block disk",
+        "right": "EBS"
+      },
+      {
+        "left": "Object storage",
+        "right": "S3"
+      },
+      {
+        "left": "A private network",
+        "right": "VPC"
+      },
+      {
+        "left": "Functions",
+        "right": "Lambda"
+      }
+    ],
+    "right_distractors": [
+      "RDS"
+    ]
+  },
+  {
+    "id": "ex-jppm2w9r",
+    "version": 1,
+    "section": "same-thing-many-names",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each product to the provider that sells it.",
+    "hint": "Two of them come from the smaller providers.",
+    "pairs": [
+      {
+        "left": "Droplet",
+        "right": "DigitalOcean"
+      },
+      {
+        "left": "NodeBalancer",
+        "right": "Akamai"
+      },
+      {
+        "left": "Blob Storage",
+        "right": "Azure"
+      },
+      {
+        "left": "Compute Engine",
+        "right": "Google Cloud"
+      },
+      {
+        "left": "EBS",
+        "right": "AWS"
+      }
+    ],
+    "right_distractors": [
+      "Hetzner"
+    ]
+  },
+  {
+    "id": "ex-g0pft7a6",
+    "version": 1,
+    "section": "same-thing-many-names",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves an application from RDS for PostgreSQL to Azure. Reading a translation table, they provision Azure SQL Database. What went wrong?",
+    "hint": "Which engine does each product run?",
+    "choices": [
+      {
+        "text": "Nothing: the two are the same product under two names",
+        "correct": false,
+        "why": "The row is the same idea; the engines differ."
+      },
+      {
+        "text": "Azure has no managed PostgreSQL service at all",
+        "correct": false,
+        "why": "It has one, under its own name: Azure Database for PostgreSQL."
+      },
+      {
+        "text": "That product is SQL Server; the engine changed",
+        "correct": true,
+        "why": "Right. The table cell holds only if the engine is SQL Server, which is where migrations hurt."
+      },
+      {
+        "text": "RDS data is not allowed to leave AWS for another provider",
+        "correct": false,
+        "why": "Data leaves at a price per GB; nothing forbids it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7qx4yeb",
+    "version": 1,
+    "section": "same-thing-many-names",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is identity one product at AWS and two at Azure?",
+    "hint": "Who you are, and what you may do.",
+    "choices": [
+      {
+        "text": "Entra ID holds the identities; Azure RBAC grants the roles",
+        "correct": true,
+        "why": "Right. AWS IAM says both things for AWS resources; Azure splits them."
+      },
+      {
+        "text": "Azure has no access control of its own, only a directory",
+        "correct": false,
+        "why": "Azure RBAC is exactly its access control."
+      },
+      {
+        "text": "AWS has no users at all, only roles that people take on",
+        "correct": false,
+        "why": "AWS IAM holds users, groups and roles; lesson 7 covers them."
+      },
+      {
+        "text": "They are the same product; the table names it twice by mistake",
+        "correct": false,
+        "why": "The table names two products in Azure's cell because they do two jobs."
+      }
+    ]
+  },
+  {
+    "id": "ex-bf0d5xh9",
+    "version": 1,
+    "section": "same-thing-many-names",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Google's functions product, called Cloud Functions until 2024, is now Cloud ___ functions.",
+    "hint": "It is part of the service for running containers.",
+    "blanks": [
+      {
+        "accept": [
+          "Run"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-swjjeves",
+    "version": 1,
+    "section": "reading-a-price-list",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sheet prices m7i.large at 0.16065 USD an hour in sa-east-1 and 0.10080 in us-east-1. How many times the Virginia price is the São Paulo price? Two decimal places.",
+    "hint": "Divide São Paulo by Virginia.",
+    "value": 1.59,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-edc6fqm1",
+    "version": 1,
+    "section": "reading-a-price-list",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the same capture, t3.medium is 0.06720 USD an hour in sa-east-1 and 0.04160 in us-east-1. What is the São Paulo price as a multiple of Virginia's? Two decimal places.",
+    "hint": "Same method as m7i.large, another line.",
+    "value": 1.62,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-v2nsayhw",
+    "version": 1,
+    "section": "reading-a-price-list",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the files in the order you follow them from AWS's price index to a price.",
+    "hint": "Service, then version, then region.",
+    "items": [
+      "index.json, one entry per service",
+      "The offer, such as AWSLambda",
+      "One published version of the offer",
+      "One region's file, with products and terms"
+    ],
+    "trap": "Region before version is the usual slip: each version is split by region, not the other way round."
+  },
+  {
+    "id": "ex-7067y6kv",
+    "version": 1,
+    "section": "reading-a-price-list",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the course's prices.py read a pinned offer version rather than the current one?",
+    "hint": "What happens to current when AWS publishes?",
+    "choices": [
+      {
+        "text": "The current version needs an account to download",
+        "correct": false,
+        "why": "Every version is public; none needs an account."
+      },
+      {
+        "text": "Pinned versions carry cheaper prices than current ones",
+        "correct": false,
+        "why": "A version records prices; reading an old one changes nothing you pay."
+      },
+      {
+        "text": "Current moves; a price must name its version",
+        "correct": true,
+        "why": "Right. A pinned sheet prints the same numbers next year and says where they came from."
+      },
+      {
+        "text": "The current file is too large to download every time",
+        "correct": false,
+        "why": "Size is the same either way; the EC2 file is large at every version."
+      }
+    ]
+  },
+  {
+    "id": "ex-qh0cg9gv",
+    "version": 1,
+    "section": "reading-a-price-list",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You multiply an EC2 machine's hourly price by 730 and the month's bill still comes out higher. Nobody negotiated anything. Where is the difference?",
+    "hint": "A machine arrives with more than itself.",
+    "choices": [
+      {
+        "text": "A price list is wrong by design",
+        "correct": false,
+        "why": "The line was right; it is one line of several."
+      },
+      {
+        "text": "The hourly price rises during the month",
+        "correct": false,
+        "why": "A version's prices hold still; the list does not move under a running machine."
+      },
+      {
+        "text": "Tax, and nothing else",
+        "correct": false,
+        "why": "Tax is excluded from the sheet, but the machine's own lines come first."
+      },
+      {
+        "text": "The disk, the public address and data out are lines of their own",
+        "correct": true,
+        "why": "Right. The machine line is the largest and never the only one; lesson 10 reads the whole bill."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtbp4r7y",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Brazilian team wants the short list and a monthly price per machine, and its lawyer says the data has to stay in Brazil. Which provider from this lesson fits?",
+    "hint": "Regions come before price.",
+    "choices": [
+      {
+        "text": "Hetzner, for its prices",
+        "correct": false,
+        "why": "Price is not the first question; Hetzner has no region in South America."
+      },
+      {
+        "text": "DigitalOcean, for the simple bill",
+        "correct": false,
+        "why": "The bill fits, but DigitalOcean has no data centre in South America."
+      },
+      {
+        "text": "None: only a hyperscaler has a São Paulo region",
+        "correct": false,
+        "why": "Akamai's cloud has one, with the short list and monthly plans."
+      },
+      {
+        "text": "Akamai's cloud, which has a São Paulo region",
+        "correct": true,
+        "why": "Right. Of the three smaller providers, it is the one in the country."
+      }
+    ]
+  },
+  {
+    "id": "ex-523145wf",
+    "version": 1,
+    "section": "choosing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the sheet's 0.1500 USD per GB for data out of sa-east-1 to the internet, what does moving 2,000 GB out in one month cost at list price?",
+    "hint": "GB times the price per GB.",
+    "value": 300,
+    "tolerance": 0.5,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-a9d86zgh",
+    "version": 1,
+    "section": "choosing",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the checklist's questions in the order this lesson asks them.",
+    "hint": "The questions that remove the most candidates come first.",
+    "items": [
+      "Which managed services does the design need?",
+      "Where are the users, and where may the data live?",
+      "What does the team already know?",
+      "What would leaving cost?",
+      "What shape will the bill take?"
+    ],
+    "trap": "Putting the bill first is the habit this checklist exists to break: a provider that lacks the service or the region is out whatever it costs."
+  },
+  {
+    "id": "ex-0xtm78xg",
+    "version": 1,
+    "section": "choosing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these move between providers with modest effort? Choose all that apply.",
+    "hint": "Does every provider sell an equivalent?",
+    "choices": [
+      {
+        "text": "A PostgreSQL database",
+        "correct": true,
+        "why": "Every provider in this lesson runs PostgreSQL, managed or on a machine."
+      },
+      {
+        "text": "A DynamoDB table design",
+        "correct": false,
+        "why": "DynamoDB exists only at AWS; leaving means rewriting."
+      },
+      {
+        "text": "Code that talks to the S3 API",
+        "correct": true,
+        "why": "S3-compatible storage is sold almost everywhere; change the address and key."
+      },
+      {
+        "text": "Queries written for BigQuery",
+        "correct": false,
+        "why": "BigQuery is Google's alone; the warehouse and its bills move only by being rebuilt."
+      },
+      {
+        "text": "A virtual machine running Linux",
+        "correct": true,
+        "why": "The most portable thing on the list: every provider sells one."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zfw65cm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A data team wants to run SQL over very large tables and pay for what each query reads, with no servers to size. Which provider's signature product is that?",
+    "hint": "A data warehouse, serverless.",
+    "choices": [
+      {
+        "text": "Google Cloud, with BigQuery",
+        "correct": true,
+        "why": "Right. It is the product Google's reputation for data rests on."
+      },
+      {
+        "text": "Hetzner, with a dedicated server",
+        "correct": false,
+        "why": "A dedicated server is the opposite: a machine you size and run."
+      },
+      {
+        "text": "DigitalOcean, with App Platform",
+        "correct": false,
+        "why": "App Platform runs applications from a repository; it is not a warehouse."
+      },
+      {
+        "text": "Cloudflare, with R2",
+        "correct": false,
+        "why": "R2 stores objects; it runs no SQL over them."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4w72xyw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A student compares a Droplet's monthly price with an EC2 machine's hourly price times 730 and declares DigitalOcean the cheaper by that difference. What is the mistake?",
+    "hint": "Step 4 of the method.",
+    "choices": [
+      {
+        "text": "730 is the wrong number of hours",
+        "correct": false,
+        "why": "24 × 365 / 12 is 730; the arithmetic is fine."
+      },
+      {
+        "text": "None: the machine line is the whole comparison",
+        "correct": false,
+        "why": "The machine line is one of several at a hyperscaler."
+      },
+      {
+        "text": "Prices in dollars cannot be compared",
+        "correct": false,
+        "why": "Both are in dollars; the units match."
+      },
+      {
+        "text": "The Droplet's price includes disk, address and transfer that EC2 bills apart",
+        "correct": true,
+        "why": "Right. Compare the total for what the application needs; the gap is larger than the machine line."
+      }
+    ]
+  },
+  {
+    "id": "ex-52f3rkb9",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each fact to the provider it belongs to.",
+    "hint": "One fact per provider; one provider is left over.",
+    "pairs": [
+      {
+        "left": "A VPC network that is global",
+        "right": "Google Cloud"
+      },
+      {
+        "left": "Resource groups that delete what they hold",
+        "right": "Azure"
+      },
+      {
+        "left": "S3 and EC2 opened in 2006",
+        "right": "AWS"
+      },
+      {
+        "left": "An auction of used dedicated servers",
+        "right": "Hetzner"
+      },
+      {
+        "left": "Load balancers called NodeBalancers",
+        "right": "Akamai"
+      }
+    ],
+    "right_distractors": [
+      "DigitalOcean"
+    ]
+  },
+  {
+    "id": "ex-jty071r9",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At every hyperscaler, data coming in from the internet is free and data going ___ is charged per GB.",
+    "hint": "The opposite of in.",
+    "blanks": [
+      {
+        "accept": [
+          "out"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cz4k5mk0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An AWS bill in dollars is identical two months running, yet a Brazilian company paid a different amount in reais each month. Why?",
+    "hint": "What converts one into the other?",
+    "choices": [
+      {
+        "text": "AWS raised its prices in between",
+        "correct": false,
+        "why": "The bill in dollars was identical, so the list did not move."
+      },
+      {
+        "text": "The exchange rate moved between the two months",
+        "correct": true,
+        "why": "Right. It is the argument for a provider that bills in reais."
+      },
+      {
+        "text": "Data coming in was charged",
+        "correct": false,
+        "why": "Data in is 0.0000 on the sheet, and the dollar bill did not change anyway."
+      },
+      {
+        "text": "sa-east-1 bills in reais",
+        "correct": false,
+        "why": "The sheet prices sa-east-1 in US dollars, like every region."
+      }
+    ]
+  }
+]

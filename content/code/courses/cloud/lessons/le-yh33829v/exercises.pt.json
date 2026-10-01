@@ -1,0 +1,851 @@
+{
+  "ex-saa8za7w": {
+    "prompt": "Um colega diz que uma função serverless \"roda sem servidores\". O que acontece de fato?",
+    "hint": "A palavra descreve quem cuida das máquinas.",
+    "choices": [
+      {
+        "text": "Roda nos servidores do provedor, que você nunca vê nem administra",
+        "why": "Isso. Os servidores existem; escolher, atualizar e contar as máquinas é trabalho do provedor."
+      },
+      {
+        "text": "Roda no navegador do visitante, então nenhum servidor participa",
+        "why": "Isso é código de front-end. Uma função roda nas máquinas do provedor, numa região ou na borda."
+      },
+      {
+        "text": "Roda num servidor que o provedor reserva para a sua conta",
+        "why": "Nada fica reservado: as cópias são criadas conforme as requisições chegam, nas máquinas que o provedor escolher."
+      },
+      {
+        "text": "Roda numa máquina que você aluga, atualizada pelo provedor",
+        "why": "Isso está mais perto de uma máquina virtual gerenciada. Com uma função você não aluga máquina nenhuma; paga por chamada."
+      }
+    ]
+  },
+  "ex-jgzdewmp": {
+    "prompt": "Um grupo de autoscaling de máquinas virtuais e uma função Lambda acompanham o tráfego. O que a função faz que o grupo, como a aula 4 o montou, não faz?",
+    "hint": "Pense numa noite parada.",
+    "choices": [
+      {
+        "text": "Aumentar a capacidade quando o tráfego sobe",
+        "why": "Os dois fazem isso; crescer com o tráfego é para o que o autoscaling existe."
+      },
+      {
+        "text": "Rodar programas escritos em Python",
+        "why": "Uma máquina virtual roda qualquer linguagem instalada nela, então essa não é a diferença."
+      },
+      {
+        "text": "Descer até zero cópias",
+        "why": "Isso. O grupo mantém um mínimo ligado para a primeira requisição; a função não tem mínimo, e a primeira requisição cria uma cópia."
+      },
+      {
+        "text": "Responder requisições HTTP atrás de um balanceador",
+        "why": "O grupo também faz isso; a aula 6 põe um balanceador na frente justamente de um grupo assim."
+      }
+    ]
+  },
+  "ex-atsk5yrz": {
+    "prompt": "Uma equipe leva a API da PaaS para funções e anuncia \"acabou o trabalho de operação\". Uma biblioteca que as funções importam ganha uma vulnerabilidade publicada. Quem atualiza?",
+    "hint": "De que lado da linha da aula 1 fica o código?",
+    "choices": [
+      {
+        "text": "O provedor, porque agora ele roda o runtime",
+        "why": "O provedor atualiza o runtime e o sistema operacional, não as bibliotecas dentro do seu pacote."
+      },
+      {
+        "text": "Ninguém: cada cópia vive pouco, então a falha nunca é explorável",
+        "why": "Uma requisição é tudo de que um ataque precisa, e uma cópia de vida curta a atende com o código vulnerável."
+      },
+      {
+        "text": "O provedor, contanto que a equipe pague um plano de suporte",
+        "why": "Um plano de suporte compra ajuda, não transfere a responsabilidade: o que está no seu pacote continua sendo seu."
+      },
+      {
+        "text": "A equipe: o código e o que ele importa ficam do lado dela",
+        "why": "Isso. O provedor roda o runtime e as máquinas; o pacote que você envia, com as bibliotecas, é seu."
+      }
+    ]
+  },
+  "ex-syq3z0n5": {
+    "prompt": "No Lambda, o único tamanho que você ainda escolhe para uma função é a ___, e a fatia de processador acompanha na mesma proporção.",
+    "hint": "É medida em MB.",
+    "blanks": [
+      {
+        "accept": [
+          "memória",
+          "memoria",
+          "ram",
+          "memory"
+        ]
+      }
+    ]
+  },
+  "ex-chnk1d5s": {
+    "prompt": "Num arquivo de handler do Lambda, onde o código roda uma vez por ambiente de execução, e não a cada chamada?",
+    "hint": "Olhe o que fica acima de `def handler`.",
+    "choices": [
+      {
+        "text": "Dentro do handler, antes do return",
+        "why": "Tudo o que está dentro do handler roda em toda chamada."
+      },
+      {
+        "text": "No nível do módulo, fora do handler",
+        "why": "Isso. O arquivo é carregado uma vez quando o ambiente sobe; só o handler roda a cada chamada."
+      },
+      {
+        "text": "No objeto `context`",
+        "why": "O `context` são dados sobre a chamada que a plataforma passa, não código que você escreve."
+      },
+      {
+        "text": "Numa função auxiliar que o handler chama",
+        "why": "Uma auxiliar chamada pelo handler roda sempre que o handler roda, ou seja, em toda chamada."
+      }
+    ]
+  },
+  "ex-e7b4dtp0": {
+    "prompt": "Atrás de um API gateway, um handler devolve `{\"statusCode\": 200, \"body\": {\"message\": \"hi\"}}`. O que está errado?",
+    "hint": "Olhe o tipo de cada valor.",
+    "choices": [
+      {
+        "text": "O código de status precisa ser a string \"200\"",
+        "why": "Nesse formato ele é um número, como no handler da aula."
+      },
+      {
+        "text": "Toda resposta deve ter a chave `headers`",
+        "why": "Os cabeçalhos são opcionais; o handler da aula define um só para dizer que o corpo é JSON."
+      },
+      {
+        "text": "Um handler imprime a resposta em vez de devolvê-la",
+        "why": "Imprimir escreve no log da função; o gateway lê o valor devolvido."
+      },
+      {
+        "text": "O corpo precisa ser uma string",
+        "why": "Isso. O gateway copia o corpo para a resposta HTTP como texto; o handler da aula passa o dict por `json.dumps` por esse motivo."
+      }
+    ]
+  },
+  "ex-eft1hydf": {
+    "prompt": "Um handler incrementa um contador no nível do módulo e o devolve. Duas requisições da mesma pessoa, com um segundo de diferença, recebem 1 as duas. O que aconteceu?",
+    "hint": "Cada cópia tem o seu próprio módulo.",
+    "choices": [
+      {
+        "text": "Dois ambientes de execução diferentes as atenderam",
+        "why": "Isso. Cada ambiente tem o seu contador, e nada manda a mesma pessoa duas vezes para a mesma cópia."
+      },
+      {
+        "text": "O contador é zerado no começo de cada chamada",
+        "why": "O código do módulo roda uma vez por ambiente, não por chamada; num ambiente quente o contador continua subindo."
+      },
+      {
+        "text": "A segunda requisição foi uma nova tentativa da primeira",
+        "why": "Uma nova tentativa é uma chamada nova; no mesmo ambiente ela ainda teria lido 2."
+      },
+      {
+        "text": "O Python não consegue alterar uma variável do módulo de dentro de uma função",
+        "why": "Com `global` consegue, e é o que o handler da aula faz."
+      }
+    ]
+  },
+  "ex-4pft68q0": {
+    "prompt": "Uma chamada que ainda está rodando quando acaba o ___ configurado é interrompida pela plataforma, e quem chamou vê uma falha.",
+    "hint": "No Lambda o padrão é de 3 segundos.",
+    "blanks": [
+      {
+        "accept": [
+          "timeout",
+          "tempo limite",
+          "limite de tempo",
+          "time-out"
+        ]
+      }
+    ]
+  },
+  "ex-gy9twae3": {
+    "prompt": "Chamar o handler como função Python num notebook, com um evento escrito à mão, testa o quê?",
+    "hint": "O Lambda não participa.",
+    "choices": [
+      {
+        "text": "Quanto tempo leva um cold start quando roda no Lambda",
+        "why": "O cold start só existe na plataforma; o notebook não tem ambiente de execução para criar."
+      },
+      {
+        "text": "Se a role do IAM dá à função permissão suficiente",
+        "why": "As permissões são conferidas pelo provedor quando a função chama um serviço, o que nunca acontece aqui."
+      },
+      {
+        "text": "O contrato: o que entra e o que sai da função",
+        "why": "Isso. Confere a lógica contra o evento que você escreveu, e nada sobre a plataforma."
+      },
+      {
+        "text": "Se o gateway está configurado para mandar requisições a este handler",
+        "why": "A configuração do gateway fica na plataforma; a chamada local pula o gateway por completo."
+      }
+    ]
+  },
+  "ex-zavw40qm": {
+    "prompt": "No notebook, a segunda chamada imprimiu `\"served_by_this_copy\": 2`. O que isso diz sobre o Lambda?",
+    "hint": "Quantos processos Python rodaram as duas chamadas?",
+    "choices": [
+      {
+        "text": "Que o Lambda guarda estado entre chamadas, então dá para confiar no contador",
+        "why": "O Lambda não promete guardar nada; o processo único do notebook não é como a plataforma se comporta."
+      },
+      {
+        "text": "Nada, porque as duas chamadas dividiram um processo",
+        "why": "Isso, e o Lambda não promete isso. O notebook mostra o caso mais otimista, uma cópia atendendo tudo."
+      },
+      {
+        "text": "Que o Lambda também responderia 2, já que o código é idêntico",
+        "why": "O mesmo código num ambiente diferente começa o seu próprio contador em 1."
+      },
+      {
+        "text": "Que a segunda chamada foi um cold start",
+        "why": "Um cold start carrega o módulo do zero, e o contador teria lido 1."
+      }
+    ]
+  },
+  "ex-k9f9vn73": {
+    "prompt": "Um handler lê `event[\"queryStringParameters\"][\"name\"]`. Os testes locais sempre passam um evento com query string, e todos passam. Em produção algumas requisições falham. Qual a causa mais provável?",
+    "hint": "Que caso a segunda chamada local da aula testou?",
+    "choices": [
+      {
+        "text": "A plataforma tira a query string antes de chamar o handler",
+        "why": "Aí todas as requisições falhariam, não algumas."
+      },
+      {
+        "text": "A produção roda uma versão do Python que lê dicts de outro jeito",
+        "why": "Buscar numa chave funciona igual entre as versões do Python 3; o que muda é o evento."
+      },
+      {
+        "text": "O gateway manda a query string sem interpretar, como uma string só",
+        "why": "Nessa integração ela chega já como dict; se não chegasse, nenhuma requisição funcionaria."
+      },
+      {
+        "text": "Alguns eventos chegam sem essa chave, ou com null nela",
+        "why": "Isso: requisições sem query string. Os testes nunca escreveram esse evento, então não tinham como achá-lo; `.get` com `or {}` resolve."
+      }
+    ]
+  },
+  "ex-2q998zck": {
+    "prompt": "Ligue cada gatilho ao que o evento entregue à função traz.",
+    "hint": "O evento diz o que aconteceu, nem sempre traz o dado em si.",
+    "pairs": [
+      {
+        "left": "Uma requisição HTTP por um gateway",
+        "right": "Um caminho, cabeçalhos e uma query string"
+      },
+      {
+        "left": "Mensagens numa fila",
+        "right": "Um lote de registros"
+      },
+      {
+        "left": "Um arquivo que chega num bucket",
+        "right": "O nome do bucket e a chave do objeto"
+      },
+      {
+        "left": "Um agendamento",
+        "right": "Um aviso de que a regra disparou, e quando"
+      }
+    ],
+    "right_distractors": [
+      "O conteúdo do arquivo enviado"
+    ]
+  },
+  "ex-scj9xas8": {
+    "prompt": "Uma função que manda um e-mail de boas-vindas lê mensagens de uma fila padrão do SQS. Algumas pessoas recebem o e-mail duas vezes, embora a função nunca tenha falhado. O que resolve?",
+    "hint": "A entrega é pelo menos uma vez.",
+    "choices": [
+      {
+        "text": "Registrar o id de cada mensagem e pular os já tratados",
+        "why": "Isso. A duplicata faz parte do contrato, então o handler precisa ser idempotente."
+      },
+      {
+        "text": "Aumentar o timeout para nenhuma chamada ser cortada",
+        "why": "Nenhuma chamada falhou; as duplicatas chegam mesmo quando todas dão certo."
+      },
+      {
+        "text": "Dar mais memória à função para cada chamada acabar antes",
+        "why": "A velocidade não muda a entrega; a mesma mensagem continua chegando duas vezes."
+      },
+      {
+        "text": "Trocar a fila por um agendamento que roda de hora em hora",
+        "why": "Troca as duplicatas por uma hora de atraso e ainda não deixa o handler seguro para rodar duas vezes."
+      }
+    ]
+  },
+  "ex-t0tp1px3": {
+    "prompt": "Em quais destas chamadas ninguém espera o valor devolvido pela função? Marque todas as que se aplicam.",
+    "hint": "Só um tipo de gatilho tem alguém esperando do outro lado.",
+    "choices": [
+      {
+        "text": "Uma foto que chega num bucket",
+        "why": "Isso. O resultado é a miniatura que ela grava, e ninguém espera a chamada."
+      },
+      {
+        "text": "Um navegador chamando uma function URL",
+        "why": "O navegador espera a resposta, e o valor devolvido vira a resposta."
+      },
+      {
+        "text": "Uma regra que dispara toda noite",
+        "why": "Isso. Um agendamento não tem quem chamou; o resultado é o que a função alterou."
+      },
+      {
+        "text": "Um lote tirado de uma fila",
+        "why": "Isso. Quem pôs as mensagens lá já seguiu em frente; uma falha volta para a fila, não para uma pessoa."
+      }
+    ]
+  },
+  "ex-9bvdh8xv": {
+    "prompt": "Uma função disparada por arquivos num bucket falhou em todos os eventos durante uma semana, e ninguém percebeu. O que teria tornado a falha visível?",
+    "hint": "Não há usuário para reclamar.",
+    "choices": [
+      {
+        "text": "Um timeout maior, para todo evento ter tempo de terminar",
+        "why": "Nada indica que os eventos estouraram o tempo, e um timeout maior não avisa ninguém."
+      },
+      {
+        "text": "Um gatilho HTTP na frente do bucket",
+        "why": "Acrescenta alguém que chama, mas os uploads continuam chegando como eventos de bucket que ninguém acompanha."
+      },
+      {
+        "text": "Uma dead-letter queue com um alarme nela",
+        "why": "Isso. Os eventos que falharam ficam guardados, e o alarme avisa uma pessoa de que estão se acumulando."
+      },
+      {
+        "text": "Mais memória, para a função parar de falhar",
+        "why": "É um palpite sobre uma causa que ninguém viu, e uma falha de qualquer outro tipo continua tão silenciosa quanto antes."
+      }
+    ]
+  },
+  "ex-gvrs2y9p": {
+    "prompt": "Ponha em ordem as fases de um cold start no Lambda.",
+    "hint": "O seu código não roda antes de haver onde rodar.",
+    "items": [
+      "Chega uma requisição e nenhum ambiente de execução está livre",
+      "A plataforma cria um ambiente e põe o seu código nele",
+      "O runtime sobe e roda o código do nível do módulo",
+      "O handler é chamado com o evento",
+      "O ambiente é congelado e guardado para a próxima requisição"
+    ],
+    "trap": "Código do módulo antes do ambiente é o deslize comum: o init roda dentro de um ambiente que já existe."
+  },
+  "ex-5bzefrqv": {
+    "prompt": "Por que a primeira requisição depois de uma hora parada é mais lenta que as seguintes?",
+    "hint": "O que precisava existir antes de o handler rodar?",
+    "choices": [
+      {
+        "text": "O provedor deixa mais lentas as funções pouco chamadas",
+        "why": "Nada na plataforma pune uma função calma; ela só não tem cópia pronta."
+      },
+      {
+        "text": "Não sobrou cópia quente, então uma teve de ser criada",
+        "why": "Isso. Um ambiente novo foi criado e inicializado antes: o cold start. As requisições seguintes o reaproveitam."
+      },
+      {
+        "text": "O código da função é compilado de novo a cada hora",
+        "why": "Nada é recompilado por relógio; o atraso vem de criar um ambiente."
+      },
+      {
+        "text": "O cache do API gateway tinha sido esvaziado",
+        "why": "Cache de gateway não é a causa; o atraso está na função subindo."
+      }
+    ]
+  },
+  "ex-c4y16r8x": {
+    "prompt": "Um handler cria o cliente do banco de dados dentro do handler. O que muda quando essa linha vai para o nível do módulo?",
+    "hint": "O nível do módulo roda uma vez por ambiente.",
+    "choices": [
+      {
+        "text": "Os cold starts ficam mais curtos",
+        "why": "No máximo eles crescem: o cliente agora é criado no init, enquanto as chamadas quentes ficam mais baratas."
+      },
+      {
+        "text": "Todos os ambientes da função passam a dividir um cliente",
+        "why": "Cada ambiente tem o seu módulo, então cada um cria o seu cliente."
+      },
+      {
+        "text": "As chamadas quentes reaproveitam o cliente",
+        "why": "Isso. Ele é pago uma vez por ambiente e reaproveitado por toda chamada quente depois."
+      },
+      {
+        "text": "Nada, porque o Lambda roda o arquivo inteiro a cada chamada",
+        "why": "Só o handler roda a cada chamada; o arquivo é carregado uma vez por ambiente."
+      }
+    ]
+  },
+  "ex-fye2f2n0": {
+    "prompt": "Uma vez por hora, 50 requisições chegam a uma função no mesmo segundo, e não sobrou nenhum ambiente quente da hora anterior. O que elas encontram?",
+    "hint": "Um ambiente atende uma requisição por vez.",
+    "choices": [
+      {
+        "text": "Só a primeira paga; as outras 49 esperam na fila do ambiente dela",
+        "why": "Um ambiente atende uma requisição por vez, e a plataforma cria outros em vez de enfileirar 49 atrás dele."
+      },
+      {
+        "text": "Nenhum, porque o Lambda sempre mantém um ambiente quente",
+        "why": "Sem provisioned concurrency nada fica quente de propósito; uma hora parada pode não deixar nenhum."
+      },
+      {
+        "text": "As 50 são recusadas até um ambiente ficar pronto",
+        "why": "A plataforma cria ambientes para elas; não recusa o pico."
+      },
+      {
+        "text": "Um cold start para cada uma, já que todas precisam de ambiente novo",
+        "why": "Isso. Um pico é onde os cold starts se acumulam: cinquenta requisições, cinquenta ambientes criados de uma vez."
+      }
+    ]
+  },
+  "ex-9a37784d": {
+    "prompt": "No Lambda, manter um número de ambientes inicializados de antemão, cobrados sendo usados ou não, se chama provisioned ___.",
+    "hint": "Quantas cópias rodam ao mesmo tempo.",
+    "blanks": [
+      {
+        "accept": [
+          "concurrency",
+          "concorrência",
+          "concorrencia"
+        ]
+      }
+    ]
+  },
+  "ex-q4mrp1x1": {
+    "prompt": "Uma função configurada com 1.024 MB roda por 250 ms. Quantos GB-segundos gasta uma chamada?",
+    "hint": "Memória em GB vezes duração em segundos.",
+    "unit": "GB-segundos"
+  },
+  "ex-dak67rsj": {
+    "prompt": "Uma função atende 2 milhões de chamadas por mês com 256 MB e 200 ms cada. Quantos GB-segundos dá no mês?",
+    "hint": "256 MB são um quarto de GB.",
+    "unit": "GB-segundos"
+  },
+  "ex-h8hfay2n": {
+    "prompt": "Com os preços de x86 da tabela e sem nível gratuito, quanto custam em um mês 10 milhões de requisições com 512 MB e 120 ms, em USD?",
+    "hint": "Dois medidores: requisições, depois GB-segundos.",
+    "unit": "USD"
+  },
+  "ex-r60s39p6": {
+    "prompt": "A API da aula dobra o tráfego para 6 milhões de requisições por mês, ainda com 512 MB e 120 ms. Descontado o nível gratuito, quanto custa o mês, em USD?",
+    "hint": "Compare os GB-segundos com a franquia de 400.000 antes de pôr preço neles.",
+    "unit": "USD"
+  },
+  "ex-xkkdf6d9": {
+    "prompt": "Uma função passa 100 ms dos seus 120 ms esperando um banco de dados responder. Como a espera é cobrada no Lambda?",
+    "hint": "O que um GB-segundo mede?",
+    "choices": [
+      {
+        "text": "Como trabalho: os GB-segundos contam o tempo ocupado",
+        "why": "Isso. O medidor corre do começo da chamada até o retorno, ocupada ou esperando."
+      },
+      {
+        "text": "Não é cobrada: o Lambda cobra só tempo de processador",
+        "why": "Essa é a escolha da Cloudflare para o Workers; os GB-segundos do Lambda contam a duração inteira."
+      },
+      {
+        "text": "Pelo preço de Arm, que é menor",
+        "why": "O preço depende da arquitetura escolhida, não do que o código está fazendo."
+      },
+      {
+        "text": "Como requisições extras, uma para cada consulta ao banco",
+        "why": "O medidor de requisições conta chamadas à função, não o que a função chama."
+      }
+    ]
+  },
+  "ex-qb00ds4t": {
+    "prompt": "A tabela dá uma m7g.large em us-east-1, sob demanda, a 0,08160 USD por hora. Com um mês de 730 horas e a função a 1,20 USD por milhão de requisições, onde fica o cruzamento, em milhões de requisições por mês?",
+    "hint": "O mês da máquina dividido pelo preço da função por milhão.",
+    "unit": "milhões de requisições"
+  },
+  "ex-sdnawzhc": {
+    "prompt": "Por que a aula também compara a função com duas t3.medium e um balanceador, e não só com uma máquina?",
+    "hint": "O que uma função dá que uma máquina sozinha não dá?",
+    "choices": [
+      {
+        "text": "Porque a função também precisa de balanceador, então um anula o outro",
+        "why": "A função recebe a capacidade da plataforma; nada se anula, e é por isso que o par custa mais."
+      },
+      {
+        "text": "Porque uma máquina só não é o mesmo serviço",
+        "why": "Isso: ela não tem segunda cópia quando falha. Uma comparação justa põe preço nas máquinas necessárias para oferecer o que a função oferece."
+      },
+      {
+        "text": "Porque a AWS vende instâncias t3.medium em pares",
+        "why": "As instâncias são vendidas uma a uma; o par é uma escolha de projeto da aula 4."
+      },
+      {
+        "text": "Porque uma t3.medium é pequena demais para rodar Python",
+        "why": "O Python roda em máquinas bem menores; tamanho não é o argumento aqui."
+      }
+    ]
+  },
+  "ex-84pb5vwq": {
+    "prompt": "Duas cargas atendem 20 milhões de requisições por mês cada, com o mesmo tamanho. A é constante o dia todo; B chega numa correria de duas horas toda noite. Qual afirmação vale?",
+    "hint": "Uma máquina é dimensionada para a hora mais cheia.",
+    "choices": [
+      {
+        "text": "As duas custam o mesmo em qualquer um, já que os totais do mês são iguais",
+        "why": "O total da função acompanha o total do mês, mas a máquina é paga pela capacidade do pico."
+      },
+      {
+        "text": "A máquina sai mais barata para B, já que fica ociosa vinte e duas horas por dia",
+        "why": "Hora ociosa é hora paga; a máquina de B é a maior, e fica ociosa pelo preço cheio."
+      },
+      {
+        "text": "A função custa o mesmo para as duas; a máquina de B precisa ser dimensionada para a correria",
+        "why": "Isso. Mesmas requisições, mesma conta da função; a correria encarece a máquina de B e empurra B para a função."
+      },
+      {
+        "text": "A função custa mais para B, porque picos são cobrados a um preço maior",
+        "why": "Os preços por requisição e por GB-segundo são os mesmos a qualquer hora; o total acompanha as requisições."
+      }
+    ]
+  },
+  "ex-g649tedg": {
+    "prompt": "O preço reservado baixa o preço por hora da máquina. O que acontece com o cruzamento com a função?",
+    "hint": "A linha reta desce.",
+    "choices": [
+      {
+        "text": "Vai para a direita, então a função ganha em mais volumes",
+        "why": "Uma máquina mais barata perde para a função num trecho menor, não maior."
+      },
+      {
+        "text": "Fica onde está, porque reservar só muda quando você paga",
+        "why": "Reservar muda o próprio preço por hora, e o cruzamento é esse preço dividido pelo da função."
+      },
+      {
+        "text": "Desaparece: uma máquina reservada é mais barata em qualquer volume",
+        "why": "Abaixo do cruzamento a função ainda custa menos; com zero requisições ela não custa nada."
+      },
+      {
+        "text": "Vai para a esquerda: a máquina passa a ganhar num volume menor",
+        "why": "Isso. A t3.medium de 1 ano da tabela leva o primeiro cruzamento de 25,3 para 15,9 milhões."
+      }
+    ]
+  },
+  "ex-qctex6y3": {
+    "prompt": "Em que um Cloudflare Worker roda, onde o Lambda dá a cada ambiente uma pequena máquina virtual?",
+    "hint": "Vem do motor de JavaScript do Chrome.",
+    "choices": [
+      {
+        "text": "Um isolate do V8, num processo dividido com outros scripts",
+        "why": "Isso. Isolates são muito mais baratos de criar que máquinas virtuais, e por isso um Worker começa quase na hora."
+      },
+      {
+        "text": "Um contêiner criado para cada requisição que chega",
+        "why": "Nenhum contêiner sobe por requisição; esse custo de partida é justamente o que os isolates evitam."
+      },
+      {
+        "text": "Uma máquina virtual dedicada numa região que você mesmo escolhe",
+        "why": "Por padrão não há região para escolher, nem máquina só sua."
+      },
+      {
+        "text": "O próprio navegador do visitante, como service worker",
+        "why": "Um service worker roda no navegador; um Cloudflare Worker roda nos pontos de borda da Cloudflare."
+      }
+    ]
+  },
+  "ex-mgbzpqx8": {
+    "prompt": "Um Worker que atende usuários em São Paulo faz três consultas por requisição a um banco em us-east-1. O que rodar o código na borda comprou?",
+    "hint": "Onde estão os dados?",
+    "choices": [
+      {
+        "text": "Uma resposta mais rápida, já que o Worker pula o cold start",
+        "why": "A partida é rápida, mas três idas à Virgínia por requisição continuam sendo pagas em toda chamada."
+      },
+      {
+        "text": "Pouco: cada requisição ainda atravessa o oceano três vezes",
+        "why": "Isso. O código foi até o usuário e os dados ficaram do outro lado do oceano."
+      },
+      {
+        "text": "Menos carga no banco, já que a borda guarda em cache todas as consultas",
+        "why": "Um Worker não guarda nada em cache a menos que o código dele faça isso; o banco vê toda consulta."
+      },
+      {
+        "text": "Nada, porque Workers não alcançam bancos de dados",
+        "why": "Eles alcançam um pela rede; o problema é a distância."
+      }
+    ]
+  },
+  "ex-td5pv0p2": {
+    "prompt": "Uma biblioteca precisa da API completa de arquivos do Node e de um módulo compilado para código nativo. Onde ela roda com menos mudança?",
+    "hint": "Qual runtime é um Node.js completo?",
+    "choices": [
+      {
+        "text": "Num Cloudflare Worker, já que Workers rodam JavaScript",
+        "why": "Workers rodam JavaScript, mas não o Node inteiro, e módulos nativos ficam fora de alcance."
+      },
+      {
+        "text": "No próprio JavaScript da página, no navegador",
+        "why": "Um navegador não tem a API de arquivos do Node nem carrega módulos nativos."
+      },
+      {
+        "text": "Numa função Lambda com runtime Node.js",
+        "why": "Isso. É um Node.js completo com disco em `/tmp`; o módulo nativo precisa ser compilado para a plataforma do Lambda."
+      },
+      {
+        "text": "No código de borda da Vercel, que roda antes do cache",
+        "why": "O código de borda roda num runtime restrito da mesma família do Workers, com os mesmos limites."
+      }
+    ]
+  },
+  "ex-n6yz4ee4": {
+    "prompt": "A Cloudflare cobra um Worker por requisições e por tempo de ___, não pelo tempo que ele passa esperando outro serviço.",
+    "hint": "O processador.",
+    "blanks": [
+      {
+        "accept": [
+          "cpu",
+          "processador"
+        ]
+      }
+    ]
+  },
+  "ex-zzhnn63y": {
+    "prompt": "Ponha em ordem uma mudança na Vercel ou na Netlify, do código ao site no ar.",
+    "hint": "O preview vem antes do merge.",
+    "items": [
+      "Mandar um branch e abrir um pull request",
+      "A plataforma faz o build do branch",
+      "Quem revisa abre a URL de preview",
+      "O pull request entra no main",
+      "O build do main vira o site no ar"
+    ],
+    "trap": "A URL de preview não vem antes do build: ela é o build, num endereço próprio."
+  },
+  "ex-art07x4v": {
+    "prompt": "Qual projeto se encaixa pior na Vercel ou na Netlify?",
+    "hint": "Onde está o peso do produto?",
+    "choices": [
+      {
+        "text": "Um site de documentação gerado por um gerador de sites estáticos a partir de Markdown",
+        "why": "Encaixa: cada push o reconstrói, e ele é servido por uma CDN."
+      },
+      {
+        "text": "Um site institucional cuja única API é um formulário de contato",
+        "why": "Encaixa: o formulário é uma função em `api/` ao lado das páginas."
+      },
+      {
+        "text": "O front-end de um app cuja API roda em outro lugar",
+        "why": "Encaixa: a plataforma constrói e serve o front-end, que chama a API por HTTP."
+      },
+      {
+        "text": "Um serviço de vídeo cujo back-end transcodifica cada upload por uma hora",
+        "why": "Isso. O back-end é a maior parte do produto e passa muito dos limites de uma função."
+      }
+    ]
+  },
+  "ex-85tp25nw": {
+    "prompt": "Por que as equipes adotam a Vercel ou a Netlify, segundo a aula?",
+    "hint": "Um passo do fluxo de trabalho.",
+    "choices": [
+      {
+        "text": "Uma URL de preview para cada pull request",
+        "why": "Isso. Uma mudança é revisada como página, por quem precisa vê-la."
+      },
+      {
+        "text": "As funções com a maior duração de qualquer plataforma",
+        "why": "As funções delas têm o mesmo tipo de limite das do Lambda; duração não é o atrativo."
+      },
+      {
+        "text": "Uma máquina virtual para cada site, com acesso SSH",
+        "why": "Não há máquina para entrar; esse é o ponto do modelo."
+      },
+      {
+        "text": "Hospedar um banco de dados relacional ao lado do site",
+        "why": "Trabalho pesado de banco é uma das coisas que a aula põe em outro lugar."
+      }
+    ]
+  },
+  "ex-ep9pnvzt": {
+    "prompt": "Quais destas cabem numa única chamada de Lambda? Marque todas as que se aplicam.",
+    "hint": "15 minutos, e 6 MB em cada sentido numa chamada síncrona.",
+    "choices": [
+      {
+        "text": "Um lote de 25 minutos",
+        "why": "Passa do máximo de 15 minutos; precisa ser cortado em etapas ou rodar em outro lugar."
+      },
+      {
+        "text": "Um relatório que leva 10 minutos para ficar pronto",
+        "why": "Isso. Abaixo de 15 minutos, contanto que o timeout seja aumentado a partir do padrão."
+      },
+      {
+        "text": "Uma resposta JSON de 4 MB a uma requisição síncrona",
+        "why": "Isso. Abaixo do teto de 6 MB de uma resposta síncrona."
+      },
+      {
+        "text": "Um arquivo de 50 MB devolvido no corpo da resposta",
+        "why": "Passa do teto de 6 MB; a função põe o arquivo no armazenamento de objetos e devolve um link."
+      }
+    ]
+  },
+  "ex-zz5djb9e": {
+    "prompt": "Um pico cria 800 ambientes de uma função, e o banco PostgreSQL dela começa a recusar conexões. Qual mudança NÃO ajudaria?",
+    "hint": "O problema é quantas conexões ficam abertas ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "Um proxy de conexões como o RDS Proxy",
+        "why": "Ajuda: um pool pequeno de conexões de verdade é emprestado a todos os ambientes."
+      },
+      {
+        "text": "Dar mais memória à função",
+        "why": "Isso, não ajuda. Cada cópia fica mais rápida, mas a mesma quantidade de cópias abre uma conexão cada."
+      },
+      {
+        "text": "Um limite de concorrência reservada na função",
+        "why": "Ajuda: menos cópias ao mesmo tempo quer dizer menos conexões, ao preço de recusar algumas requisições."
+      },
+      {
+        "text": "Levar os dados para um banco acessado por HTTP",
+        "why": "Ajuda: sem conexões longas não há pool para esgotar."
+      }
+    ]
+  },
+  "ex-1mn1p6vk": {
+    "prompt": "Ligue cada parede de uma função Lambda ao que um projeto faz a respeito.",
+    "hint": "Cada resposta leva o trabalho ou os dados para outro lugar.",
+    "pairs": [
+      {
+        "left": "Um máximo de 15 minutos por chamada",
+        "right": "Cortar a tarefa em etapas"
+      },
+      {
+        "left": "Uma resposta síncrona de 6 MB",
+        "right": "Devolver um link para o armazenamento de objetos"
+      },
+      {
+        "left": "Nenhum estado entre chamadas",
+        "right": "Guardar a sessão num banco de dados"
+      },
+      {
+        "left": "Uma conexão por ambiente",
+        "right": "Pôr um proxy de conexões na frente do banco"
+      }
+    ],
+    "right_distractors": [
+      "Subir a memória para 10.240 MB"
+    ]
+  },
+  "ex-e20c93f2": {
+    "prompt": "Qual destes trabalhos se encaixa pior numa função?",
+    "hint": "Picos, rápido, não lembra de nada.",
+    "choices": [
+      {
+        "text": "Redimensionar uma foto quando ela é enviada",
+        "why": "Encaixa bem: um evento, uma tarefa curta, ninguém esperando."
+      },
+      {
+        "text": "Uma API interna chamada algumas centenas de vezes por dia",
+        "why": "Encaixa bem: calma na maior parte do dia, então quase não custa nada entre as chamadas."
+      },
+      {
+        "text": "Um servidor de jogo com o estado de uma sala por horas",
+        "why": "Isso. O valor dele é o que o processo lembra, e uma função foi feita para esquecer."
+      },
+      {
+        "text": "Mandar um relatório toda segunda de manhã",
+        "why": "Encaixa bem: um gatilho de agendamento, e a tarefa acaba em minutos no máximo."
+      }
+    ]
+  },
+  "ex-ke9axybr": {
+    "prompt": "Uma equipe pensa em levar as funções Lambda para o Cloudflare Workers um dia. O que ela consegue manter portável agora?",
+    "hint": "A aula separa a lógica da fiação.",
+    "choices": [
+      {
+        "text": "A assinatura do handler, `(event, context)`",
+        "why": "O `(event, context)` do Lambda e o `fetch(request)` do Workers são diferentes; a assinatura é fiação."
+      },
+      {
+        "text": "Os formatos de evento que as funções leem dos gatilhos",
+        "why": "Os formatos de evento pertencem aos gatilhos do fornecedor, e mudam com a plataforma."
+      },
+      {
+        "text": "As roles do IAM com que as funções rodam",
+        "why": "O IAM é da AWS; as permissões são reescritas em qualquer outra plataforma."
+      },
+      {
+        "text": "A lógica de negócio, mantida separada do handler",
+        "why": "Isso. Uma lógica que recebe valores simples e devolve valores simples muda de lugar; só as bordas são reescritas."
+      }
+    ]
+  },
+  "ex-79prk4a2": {
+    "prompt": "Ligue cada plataforma ao jeito como ela roda o seu código.",
+    "hint": "Região, borda, git ou hora.",
+    "pairs": [
+      {
+        "left": "AWS Lambda",
+        "right": "Uma pequena máquina virtual por ambiente, numa região que você escolhe"
+      },
+      {
+        "left": "Cloudflare Workers",
+        "right": "Isolates do V8 em pontos de borda perto do usuário"
+      },
+      {
+        "left": "Vercel ou Netlify",
+        "right": "Um site construído a cada git push, com funções junto"
+      },
+      {
+        "left": "Uma EC2 t3.medium",
+        "right": "Uma máquina que você roda, paga por hora"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia do código no navegador de cada visitante"
+    ]
+  },
+  "ex-5p30s5jd": {
+    "prompt": "Ordene do que deixa mais com você ao que deixa menos, na linha da aula 1.",
+    "hint": "As funções ficam entre a PaaS e o SaaS.",
+    "items": [
+      "Servidores próprios",
+      "IaaS",
+      "PaaS",
+      "Funções serverless",
+      "SaaS"
+    ],
+    "trap": "PaaS depois das funções é o deslize comum: na PaaS você ainda decide quantas instâncias rodam."
+  },
+  "ex-sgd9bv11": {
+    "prompt": "Um site de fotos: algumas centenas de uploads por dia precisam de miniatura, e a galeria pública atende 60 requisições por segundo, o dia inteiro. Que divisão combina com esta aula?",
+    "hint": "Trate as duas cargas separadamente.",
+    "choices": [
+      {
+        "text": "Miniaturas em funções, a galeria em máquinas",
+        "why": "Isso. Os uploads são eventos em picos; a galeria é carga constante muito além do cruzamento."
+      },
+      {
+        "text": "Funções para as duas, já que as duas são tráfego web",
+        "why": "Os 60 por segundo da galeria, o dia inteiro, são carga constante, onde a linha da máquina fica mais baixa."
+      },
+      {
+        "text": "Máquinas para as duas, para se livrar dos cold starts",
+        "why": "Algumas centenas de miniaturas por dia deixariam uma máquina ociosa quase o tempo todo."
+      },
+      {
+        "text": "Máquinas para as miniaturas, funções para a galeria",
+        "why": "É o formato ao contrário: o trabalho em picos fica com a máquina e o constante com a função."
+      }
+    ]
+  },
+  "ex-at9f2s6v": {
+    "prompt": "Uma função Lambda fica calma a noite toda e recebe um pico toda manhã às nove. Os usuários reclamam que os primeiros minutos são lentos. Que mudança ataca exatamente isso?",
+    "hint": "A lentidão é a criação dos ambientes.",
+    "choices": [
+      {
+        "text": "Levar o cliente do banco para dentro do handler",
+        "why": "Isso deixa toda chamada mais lenta, quente ou fria."
+      },
+      {
+        "text": "Provisioned concurrency antes das nove",
+        "why": "Isso. Os ambientes ficam prontos antes de o pico chegar; um init mais leve ajuda os que ainda precisarem ser criados."
+      },
+      {
+        "text": "Um timeout maior na função",
+        "why": "As chamadas estão lentas, não cortadas; o timeout não mexe na partida."
+      },
+      {
+        "text": "Uma dead-letter queue para as requisições que falharam",
+        "why": "Nada falhou, e chamadas HTTP têm alguém esperando, não uma fila."
+      }
+    ]
+  }
+}
