@@ -1,0 +1,689 @@
+[
+  {
+    "id": "ex-5h6zdrez",
+    "version": 1,
+    "section": "pipelines",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does continuous integration take away from the person making a change?",
+    "hint": "Who guarantees the checks ran?",
+    "choices": [
+      {
+        "text": "The review",
+        "correct": false,
+        "why": "Review stays with people."
+      },
+      {
+        "text": "Access to the repository",
+        "correct": false,
+        "why": "People still push."
+      },
+      {
+        "text": "Being the one who guarantees the checks ran",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Writing the tests",
+        "correct": false,
+        "why": "People still write them."
+      }
+    ]
+  },
+  {
+    "id": "ex-q17pcbyz",
+    "version": 1,
+    "section": "pipelines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the tests go in `pre-receive` and the deployment in `post-receive`?",
+    "hint": "Which one can refuse?",
+    "choices": [
+      {
+        "text": "Only `pre-receive` runs before the push is accepted",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`post-receive` runs faster",
+        "correct": false,
+        "why": "Speed is not it."
+      },
+      {
+        "text": "`pre-receive` cannot reach the routers from the server, so deploying there is not possible",
+        "correct": false,
+        "why": "Both run on the same server."
+      },
+      {
+        "text": "Git runs `post-receive` only on main",
+        "correct": false,
+        "why": "The hook's own `if` does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-rs8yyawj",
+    "version": 1,
+    "section": "pipelines",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the lab's pipeline to its job.",
+    "hint": "Two hooks, two scripts.",
+    "pairs": [
+      {
+        "left": "`pre-receive`",
+        "right": "Refuses a push whose tests fail"
+      },
+      {
+        "left": "`post-receive`",
+        "right": "Deploys what reached main"
+      },
+      {
+        "left": "`ci/test.sh`",
+        "right": "Runs the offline checks in order"
+      },
+      {
+        "left": "`ci/deploy.sh`",
+        "right": "Renders, applies and post-checks"
+      }
+    ],
+    "right_distractors": [
+      "Reviews the diff"
+    ]
+  },
+  {
+    "id": "ex-vjq8vnmw",
+    "version": 1,
+    "section": "the-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do `test.sh` and `deploy.sh` live in the project's `ci/` rather than in the hooks?",
+    "hint": "What is a change to the pipeline?",
+    "choices": [
+      {
+        "text": "Hooks cannot run shell scripts",
+        "correct": false,
+        "why": "They are shell scripts."
+      },
+      {
+        "text": "Git deletes hooks on every push, so anything kept in them has to be installed again",
+        "correct": false,
+        "why": "Hooks stay where they are installed."
+      },
+      {
+        "text": "A change to the pipeline is then a tested commit",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The routers read `ci/`",
+        "correct": false,
+        "why": "They never see the project."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3981t00",
+    "version": 1,
+    "section": "the-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`pre-receive` extracts the pushed commit with `git archive` into a new directory. What does that rule out?",
+    "hint": "Whose working copy is tested?",
+    "choices": [
+      {
+        "text": "A push to the wrong server",
+        "correct": false,
+        "why": "That is not what it checks."
+      },
+      {
+        "text": "A pass that depends on uncommitted files",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Tests that take too long",
+        "correct": false,
+        "why": "Time is unaffected."
+      },
+      {
+        "text": "A branch named `main`",
+        "correct": false,
+        "why": "main is tested too."
+      }
+    ]
+  },
+  {
+    "id": "ex-brntn53p",
+    "version": 1,
+    "section": "the-server",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At most how many seconds does `deploy.sh` give the network to pass its post-check, counting the waits between attempts?",
+    "hint": "Six attempts, ten seconds apart.",
+    "value": 60,
+    "tolerance": 10,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-n4eafhjy",
+    "version": 1,
+    "section": "the-server",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`set ___` makes `test.sh` stop at the first command that fails.",
+    "hint": "A shell option.",
+    "blanks": [
+      {
+        "accept": [
+          "-e"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2vrsakp1",
+    "version": 1,
+    "section": "the-gate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How are the hooks' messages shown to the person pushing?",
+    "hint": "Look at the start of each line.",
+    "choices": [
+      {
+        "text": "In a log on the server",
+        "correct": false,
+        "why": "Git sends them back."
+      },
+      {
+        "text": "By e-mail",
+        "correct": false,
+        "why": "Nothing was mailed."
+      },
+      {
+        "text": "In their own terminal, each line marked `remote:`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Not at all",
+        "correct": false,
+        "why": "They were printed."
+      }
+    ]
+  },
+  {
+    "id": "ex-pch6ed62",
+    "version": 1,
+    "section": "the-gate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the refused push, which branches did the server have?",
+    "hint": "`git ls-remote --heads`.",
+    "choices": [
+      {
+        "text": "All three, the refused one marked as failing",
+        "correct": false,
+        "why": "A refused branch does not exist there."
+      },
+      {
+        "text": "`main` only",
+        "correct": false,
+        "why": "The accepted proposal was there too."
+      },
+      {
+        "text": "`main` and `edge2-lan-description`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`edge2-uplink-passive`, waiting for review",
+        "correct": false,
+        "why": "It was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0wmsh5b",
+    "version": 1,
+    "section": "the-gate",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many offline tests passed in the refused push?",
+    "hint": "Read the summary line.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "tests"
+  },
+  {
+    "id": "ex-tvenhyfr",
+    "version": 1,
+    "section": "the-gate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first push to main deployed nothing to any router. Why?",
+    "hint": "Read the apply stage.",
+    "choices": [
+      {
+        "text": "Every router already matched the rendered configuration",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`post-receive` does not run on a repository's first push",
+        "correct": false,
+        "why": "It ran: deploying main."
+      },
+      {
+        "text": "The tests failed",
+        "correct": false,
+        "why": "All passed."
+      },
+      {
+        "text": "main is never deployed until somebody approves it by hand in the web interface",
+        "correct": false,
+        "why": "There is no approval step in the lab."
+      }
+    ]
+  },
+  {
+    "id": "ex-ga6z67d8",
+    "version": 1,
+    "section": "a-proposal",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`edge2-lan-description` passed its tests. Why was edge2 not changed?",
+    "hint": "Which branch is deployed?",
+    "choices": [
+      {
+        "text": "Only main is deployed",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The push was refused",
+        "correct": false,
+        "why": "It was accepted."
+      },
+      {
+        "text": "NAPALM found no difference between the branch's configuration and what edge2 runs",
+        "correct": false,
+        "why": "NAPALM did not run."
+      },
+      {
+        "text": "The description is not tested",
+        "correct": false,
+        "why": "Tests have nothing to do with deploying."
+      }
+    ]
+  },
+  {
+    "id": "ex-328mdh8f",
+    "version": 1,
+    "section": "a-proposal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which question can a reviewer answer that the tests cannot?",
+    "hint": "Tests know form, not facts.",
+    "choices": [
+      {
+        "text": "Whether edge2's LAN is really on the first floor",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Whether the YAML is valid, as yamllint would read it",
+        "correct": false,
+        "why": "yamllint answers that."
+      },
+      {
+        "text": "Whether both ends of each link agree",
+        "correct": false,
+        "why": "A test answers that."
+      },
+      {
+        "text": "Whether the address of edge2's LAN parses as an IPv4 interface with a prefix length",
+        "correct": false,
+        "why": "The model answers that."
+      }
+    ]
+  },
+  {
+    "id": "ex-bfms7das",
+    "version": 1,
+    "section": "deploy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the merge, how many routers received a change?",
+    "hint": "Read the apply stage.",
+    "choices": [
+      {
+        "text": "One, edge2",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Three, since main was deployed in full",
+        "correct": false,
+        "why": "Two matched."
+      },
+      {
+        "text": "None, since the branch had already deployed it when it was pushed",
+        "correct": false,
+        "why": "Branches are not deployed."
+      },
+      {
+        "text": "Two, edge2 and its neighbour core1",
+        "correct": false,
+        "why": "core1's configuration did not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-h7kztw9y",
+    "version": 1,
+    "section": "deploy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `post-receive` report a failed post-check instead of reverting automatically?",
+    "hint": "What else can break a network during a deploy?",
+    "choices": [
+      {
+        "text": "Git forbids reverting a commit on main",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "NAPALM cannot roll back a configuration that was replaced as a whole",
+        "correct": false,
+        "why": "Lesson 8 rolled back."
+      },
+      {
+        "text": "`post-receive` has no access to the previous commit, which the push already replaced",
+        "correct": false,
+        "why": "It receives the old commit on its input."
+      },
+      {
+        "text": "A revert is wrong when the network broke on its own",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4mgea1b",
+    "version": 1,
+    "section": "deploy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is simpler in the lab than it should be in production?",
+    "hint": "Whose key do the hooks use?",
+    "choices": [
+      {
+        "text": "The tests, which are a cut-down version of the real ones",
+        "correct": false,
+        "why": "They are the real ones."
+      },
+      {
+        "text": "The use of NAPALM to apply the rendered configuration to the routers",
+        "correct": false,
+        "why": "That is how it would be done."
+      },
+      {
+        "text": "The hooks deploy as `ana`, with her own key",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Git itself, which in production would be a hosted service",
+        "correct": false,
+        "why": "Git is Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-2a28qe9v",
+    "version": 1,
+    "section": "ci-services",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the GitHub Actions workflow, why does the deploy job run on a self-hosted runner?",
+    "hint": "Where are the routers?",
+    "choices": [
+      {
+        "text": "Self-hosted runners are faster, since they keep the libraries installed between runs",
+        "correct": false,
+        "why": "Speed is not it."
+      },
+      {
+        "text": "Hosted runners cannot run Python 3.12, which the lab's libraries need",
+        "correct": false,
+        "why": "The test job does."
+      },
+      {
+        "text": "GitHub requires it for any job that reads secrets from an environment",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "A runner on the internet cannot reach the management network",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-77m2h5xb",
+    "version": 1,
+    "section": "ci-services",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Was the GitHub Actions workflow run in the lab?",
+    "hint": "The section says.",
+    "choices": [
+      {
+        "text": "Yes, on ctl, as the two hooks did",
+        "correct": false,
+        "why": "It was not run."
+      },
+      {
+        "text": "No: the lab has no CI service",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Yes, on GitHub, with a runner inside the lab's management network",
+        "correct": false,
+        "why": "It was not run."
+      },
+      {
+        "text": "Only the test job, since deploying needs the routers",
+        "correct": false,
+        "why": "Neither job ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-fhv2673v",
+    "version": 1,
+    "section": "ci-services",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the workflow, `___: test` makes the deploy job wait for the test job to pass.",
+    "hint": "A GitHub Actions key.",
+    "blanks": [
+      {
+        "accept": [
+          "needs"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xrsm181t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants to fix an urgent problem by logging in to edge1 directly, skipping the pipeline. What happens on the next deploy of main?",
+    "hint": "The data is the truth.",
+    "choices": [
+      {
+        "text": "The fix is kept, since the pipeline only adds lines",
+        "correct": false,
+        "why": "It replaces the whole configuration."
+      },
+      {
+        "text": "The pipeline refuses to deploy",
+        "correct": false,
+        "why": "It deploys what main says."
+      },
+      {
+        "text": "The fix is removed, unless it was also put in the data",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The fix is copied into main",
+        "correct": false,
+        "why": "Nothing reads routers into main."
+      }
+    ]
+  },
+  {
+    "id": "ex-5b3bxqng",
+    "version": 1,
+    "section": "a-proposal",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the life of the edge2 description change in this lesson.",
+    "hint": "Proposal first, network last.",
+    "items": [
+      "Commit on a branch of its own",
+      "Push: tested and accepted, not deployed",
+      "Merge into main and push",
+      "Tested again, deployed, post-checked"
+    ]
+  },
+  {
+    "id": "ex-y4nv8px4",
+    "version": 1,
+    "section": "the-server",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which checks does `ci/test.sh` run?",
+    "hint": "Lesson 13's offline checks.",
+    "choices": [
+      {
+        "text": "yamllint",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The offline tests",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`validate.py`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The online tests",
+        "correct": false,
+        "why": "Those are the post-check, in `deploy.sh`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t7bpetg9",
+    "version": 1,
+    "section": "deploy",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On which attempt did the post-check pass after the merge?",
+    "hint": "Read the last line.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-qcfskbyj",
+    "version": 1,
+    "section": "the-gate",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`git ls-remote --___ origin` lists the branches the server has.",
+    "hint": "Where a branch's last commit is.",
+    "blanks": [
+      {
+        "accept": [
+          "heads"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hee2nd3c",
+    "version": 1,
+    "section": "pipelines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the repository's history become, once every change goes through the pipeline?",
+    "hint": "Each entry has a test result.",
+    "choices": [
+      {
+        "text": "A backup of the routers' running configurations, taken every time a branch is pushed",
+        "correct": false,
+        "why": "Lesson 11's backups do that."
+      },
+      {
+        "text": "The network's change log",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A list of failed tests",
+        "correct": false,
+        "why": "Refused pushes leave nothing."
+      },
+      {
+        "text": "Nothing different",
+        "correct": false,
+        "why": "It records every change to the network."
+      }
+    ]
+  }
+]

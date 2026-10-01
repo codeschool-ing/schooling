@@ -1,0 +1,572 @@
+{
+  "ex-1ge9ss90": {
+    "prompt": "Você digita `ip prefix-list MGMT seq 10 permit 192.0.2.0/24`, depois `end`, e fecha a sessão. O que acontece no próximo reboot do roteador?",
+    "hint": "De onde o roteador lê a configuração quando liga?",
+    "choices": [
+      {
+        "text": "Continua lá, porque o `end` salvou ao sair do modo de configuração",
+        "why": "`end` só sai do modo de configuração. Salvar é outro comando."
+      },
+      {
+        "text": "Volta do último backup",
+        "why": "Nada no roteador restaura de um backup sozinho; a aula 11 constrói os backups."
+      },
+      {
+        "text": "A prefix list some",
+        "why": "Isso. Sem `write memory` a mudança viveu só na configuração em execução, e o reboot carrega o arquivo salvo."
+      },
+      {
+        "text": "O roteador se recusa a ligar até alguém confirmar a mudança",
+        "why": "Roteadores ligam com o que foi salvo, confirmado ou não."
+      }
+    ]
+  },
+  "ex-1s6hb56z": {
+    "prompt": "No `edge1`, `ip prefix-list MGMT seq 10 permit 192.0.12.0/24` foi aceito sem erro. Por quê?",
+    "hint": "O que um CLI consegue verificar num valor?",
+    "choices": [
+      {
+        "text": "O roteador não verificou a linha, porque o modo de configuração pula as verificações",
+        "why": "Ele verifica a sintaxe: um prefixo malformado é recusado. Este estava bem formado."
+      },
+      {
+        "text": "É uma rede válida; o roteador não tem como saber que devia ser 192.0.2.0/24",
+        "why": "Isso. A sintaxe estava certa e a intenção não era algo que o roteador pudesse saber."
+      },
+      {
+        "text": "O FRR aceita qualquer coisa e informa erros no log",
+        "why": "O FRR recusa linhas malformadas no prompt, com uma linha começando por %."
+      },
+      {
+        "text": "Prefix lists não são validadas no FRR 8.4",
+        "why": "Elas são analisadas como qualquer outro comando; `192.0.12.0/24` simplesmente passa na análise."
+      }
+    ]
+  },
+  "ex-3n3c405k": {
+    "prompt": "No FRR, o comando que copia a configuração em execução para o arquivo com que o roteador liga é `write ___`.",
+    "hint": "É digitado no prompt `core1#`.",
+    "blanks": [
+      {
+        "accept": [
+          "memory",
+          "mem"
+        ]
+      }
+    ]
+  },
+  "ex-wsxqhm28": {
+    "prompt": "O laço do shell perguntou a cada roteador `show running-config | grep MGMT`. O que ele achou que três sessões separadas teriam escondido?",
+    "hint": "Olhe as três respostas lado a lado.",
+    "choices": [
+      {
+        "text": "Que o SSH estava lento",
+        "why": "Nada no laço mediu tempo."
+      },
+      {
+        "text": "Que o `edge2` tinha rejeitado o comando",
+        "why": "O `edge2` nunca recebeu o comando; foi esquecido."
+      },
+      {
+        "text": "Que cada roteador precisava do próprio número de sequência",
+        "why": "O mesmo `seq 10` está correto nos três."
+      },
+      {
+        "text": "Que os roteadores discordavam: um certo, um errado, um faltando",
+        "why": "Isso. Cada um parecia bem sozinho; com a mesma pergunta, eles divergiam."
+      }
+    ]
+  },
+  "ex-r5byv10t": {
+    "prompt": "Ligue cada coisa que aconteceu no laboratório ao tipo de falha manual que ela é.",
+    "hint": "Três falhas, três nomes.",
+    "pairs": [
+      {
+        "left": "O `edge1` recebeu 192.0.12.0/24",
+        "right": "Um valor errado que é válido"
+      },
+      {
+        "left": "O `edge2` nunca foi tocado",
+        "right": "Uma omissão"
+      },
+      {
+        "left": "Mudanças seguintes partem de três roteadores diferentes",
+        "right": "Deriva"
+      }
+    ],
+    "right_distractors": [
+      "Um erro de sintaxe"
+    ]
+  },
+  "ex-z0s5w6jq": {
+    "prompt": "Por que \"tomar mais cuidado\" não basta para resolver mudanças manuais numa rede grande?",
+    "hint": "Pense numa taxa multiplicada por alguma coisa.",
+    "choices": [
+      {
+        "text": "Ele reduz a taxa sem chegar a zero, e a taxa se multiplica por equipamentos e alterações",
+        "why": "Isso. Uma taxa pequena vezes uma contagem grande ainda dá um fluxo constante de erros."
+      },
+      {
+        "text": "Pessoas cuidadosas erram mais, porque trabalhar devagar as cansa",
+        "why": "Nada na aula diz isso; o cuidado baixa a taxa."
+      },
+      {
+        "text": "Roteadores rejeitam mudanças digitadas devagar",
+        "why": "O CLI não tem opinião sobre a velocidade de digitação."
+      },
+      {
+        "text": "Checklists são proibidas em gestão de mudanças",
+        "why": "Elas são comuns e úteis; só não chegam a zero."
+      }
+    ]
+  },
+  "ex-2srdb6tq": {
+    "prompt": "Um script carrega um erro de digitação na linha que envia. Comparado ao mesmo erro feito à mão em um roteador, o que há de melhor nisso?",
+    "hint": "Onde está o erro, e quantos lugares precisam ser corrigidos?",
+    "choices": [
+      {
+        "text": "Vantagem zero: um erro repetido em cada roteador é estritamente pior que um erro em um roteador",
+        "why": "É pior no alcance, melhor em como é achado e corrigido."
+      },
+      {
+        "text": "O roteador conserta erros vindos de scripts",
+        "why": "O roteador não distingue um script de uma pessoa."
+      },
+      {
+        "text": "Ele vive em um arquivo, aparece na saída do primeiro roteador e é corrigido uma vez",
+        "why": "Isso. O erro está em toda parte, e também num único lugar que se pode revisar."
+      },
+      {
+        "text": "O Netmiko recusa linhas com erros de digitação",
+        "why": "O Netmiko envia o que recebe."
+      }
+    ]
+  },
+  "ex-pytb2snk": {
+    "prompt": "Quando roteadores que deviam ter a mesma configuração ficam diferentes aos poucos, uma mudança manual por vez, diz-se que a rede sofre ___.",
+    "hint": "A palavra que a aula usa para a terceira falha.",
+    "blanks": [
+      {
+        "accept": [
+          "deriva",
+          "drift"
+        ]
+      }
+    ]
+  },
+  "ex-0ny7mzt6": {
+    "prompt": "Em `mgmt.py`, o que `save_config()` faz nos roteadores do laboratório?",
+    "hint": "Ela substitui um comando que você digitou à mão.",
+    "choices": [
+      {
+        "text": "Fecha a sessão SSH",
+        "why": "Isso é o `disconnect()`."
+      },
+      {
+        "text": "Baixa uma cópia da configuração para o `ctl`",
+        "why": "Isso seria um backup, aula 11."
+      },
+      {
+        "text": "Envia `write memory`",
+        "why": "Isso. É o passo de salvar deste driver."
+      },
+      {
+        "text": "Verifica se a prefix list está correta antes de enviá-la",
+        "why": "Nada no `mgmt.py` verifica o valor."
+      }
+    ]
+  },
+  "ex-pet3jdtk": {
+    "prompt": "Depois do `mgmt.py`, o `edge1` tinha uma entrada `MGMT`, e não o erro mais a correta. Por quê?",
+    "hint": "Veja o que as duas linhas tinham em comum.",
+    "choices": [
+      {
+        "text": "O script apagou a prefix list primeiro",
+        "why": "Ele enviou só uma linha."
+      },
+      {
+        "text": "As duas usavam `seq 10`, e no FRR o número de sequência identifica a entrada",
+        "why": "Isso. O novo `seq 10` substituiu o antigo."
+      },
+      {
+        "text": "O FRR guarda a linha mais recente de um comando e descarta as outras, seja qual for o número de sequência",
+        "why": "Um número de sequência diferente teria sido acrescentado ao lado."
+      },
+      {
+        "text": "O `save_config()` remove duplicatas",
+        "why": "Salvar copia o que está rodando; não edita."
+      }
+    ]
+  },
+  "ex-zqef95kj": {
+    "prompt": "Quais destas coisas foram escritas em um lugar só no `mgmt.py`, em vez de uma vez por roteador? Escolha todas as que se aplicam.",
+    "hint": "Olhe o começo do arquivo.",
+    "choices": [
+      {
+        "text": "A senha do netops",
+        "why": "Não há senha no arquivo: ele entra com a chave da ana."
+      },
+      {
+        "text": "A linha de configuração",
+        "why": "Sim, `LINE`."
+      },
+      {
+        "text": "Um número de sequência diferente para cada roteador",
+        "why": "É `seq 10` em todos."
+      },
+      {
+        "text": "A lista de roteadores",
+        "why": "Sim, `ROUTERS`."
+      }
+    ]
+  },
+  "ex-amsky5fm": {
+    "prompt": "O método do Netmiko que entra no modo de configuração, envia uma lista de linhas e sai de novo se chama ___.",
+    "hint": "É a linha do `mgmt.py` que leva `LINE`.",
+    "blanks": [
+      {
+        "accept": [
+          "send_config_set",
+          "send_config_set()"
+        ]
+      }
+    ]
+  },
+  "ex-tb0m5n6s": {
+    "prompt": "Com os dois minutos por roteador que a aula supõe, quantas horas leva uma mudança à mão em 300 roteadores?",
+    "hint": "Minutos primeiro, depois divida por 60.",
+    "unit": "horas"
+  },
+  "ex-ek1jpn6s": {
+    "prompt": "`time python mgmt.py` imprimiu `real 0m3.539s` para três roteadores. O que `real` mede?",
+    "hint": "Não é o que o processador fez.",
+    "choices": [
+      {
+        "text": "Tempo de relógio do início até o prompt",
+        "why": "Isso, e a maior parte foi espera por logins e prompts."
+      },
+      {
+        "text": "Tempo de processador gasto dentro do Python",
+        "why": "Isso está mais perto de `user`."
+      },
+      {
+        "text": "O tempo que os roteadores levaram para salvar",
+        "why": "Salvar é só uma parte."
+      },
+      {
+        "text": "A ida e volta até o `core1`",
+        "why": "Isso é o que o `ping` mede."
+      }
+    ]
+  },
+  "ex-era72368": {
+    "prompt": "Além do tempo, o que mais cresce com o número de roteadores quando uma mudança é feita à mão?",
+    "hint": "Pense na primeira seção da aula.",
+    "choices": [
+      {
+        "text": "O tamanho da linha de configuração",
+        "why": "A linha é a mesma em todo lugar."
+      },
+      {
+        "text": "O número de chances de cometer um dos três erros",
+        "why": "Isso. Cada sessão é mais uma oportunidade de digitar errado ou esquecer."
+      },
+      {
+        "text": "O custo das licenças dos roteadores",
+        "why": "Não tem relação com como a mudança é feita."
+      },
+      {
+        "text": "O tempo de cada login SSH",
+        "why": "Cada login leva mais ou menos o mesmo tempo."
+      }
+    ]
+  },
+  "ex-8z0wb70r": {
+    "prompt": "O `mgmt_check.py` roda duas vezes seguidas numa rede em que nada mudou no meio. O que a segunda execução imprime?",
+    "hint": "Veja a última captura da seção.",
+    "choices": [
+      {
+        "text": "`changed` para o roteador que ele corrigiu",
+        "why": "Esse roteador foi corrigido pela primeira execução."
+      },
+      {
+        "text": "Um erro, pois a linha existe",
+        "why": "O script verifica antes e não envia."
+      },
+      {
+        "text": "Nada",
+        "why": "Ele informa cada roteador de qualquer jeito."
+      },
+      {
+        "text": "`already as intended` para todos os roteadores",
+        "why": "Isso. Nada a fazer é a resposta esperada."
+      }
+    ]
+  },
+  "ex-mcev81bp": {
+    "prompt": "Uma operação que deixa a rede igual quer seja aplicada uma ou duas vezes é chamada de ___.",
+    "hint": "O Ansible é construído em torno dessa propriedade.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotente",
+          "idempotência",
+          "idempotencia"
+        ]
+      }
+    ]
+  },
+  "ex-hsebbf8k": {
+    "prompt": "Por que vale verificar antes de enviar, se reenviar a mesma linha de prefix list não faz mal?",
+    "hint": "Nem todo comando é tão inofensivo.",
+    "choices": [
+      {
+        "text": "Outros comandos derrubam sessões ou criam duplicatas",
+        "why": "Isso, e um script que pergunta antes informa o que mudou."
+      },
+      {
+        "text": "Porque o FRR conta quantas vezes uma linha foi enviada",
+        "why": "Não conta."
+      },
+      {
+        "text": "Enviar custa dinheiro por comando",
+        "why": "Não em nenhum roteador do laboratório."
+      },
+      {
+        "text": "Deixa o script mais rápido em todo roteador, já que ler uma configuração custa menos que escrever uma",
+        "why": "Ele lê a configuração antes, o que é mais lento quando há mudança."
+      }
+    ]
+  },
+  "ex-ysznt3xx": {
+    "prompt": "Alguém removeu `MGMT` do `edge2` à mão. O que é a primeira execução do `mgmt_check.py` depois disso, na linguagem desta aula?",
+    "hint": "Ela achou uma diferença e a removeu.",
+    "choices": [
+      {
+        "text": "Uma omissão",
+        "why": "A omissão foi da pessoa; o script a achou."
+      },
+      {
+        "text": "Um rollback da configuração inteira",
+        "why": "Ele mudou uma linha em um roteador."
+      },
+      {
+        "text": "A correção de uma deriva",
+        "why": "Isso. A rede tinha se afastado do estado desejado e foi trazida de volta."
+      },
+      {
+        "text": "Uma execução que falhou, a repetir depois",
+        "why": "Imprimiu `changed` e teve sucesso."
+      }
+    ]
+  },
+  "ex-6a3ve3qv": {
+    "prompt": "Ponha os quatro passos de uma mudança na ordem que este curso segue.",
+    "hint": "O dado vem primeiro; ler de volta vem por último.",
+    "items": [
+      "Descrever",
+      "Validar",
+      "Aplicar",
+      "Verificar"
+    ],
+    "trap": "Validar depois de aplicar é o deslize comum: a essa altura o roteador já viu o valor ruim."
+  },
+  "ex-v8t58fgz": {
+    "prompt": "O `apply.py` recusou `192.0.12.0/24`. Qual roteador viu esse valor?",
+    "hint": "Onde a verificação roda?",
+    "choices": [
+      {
+        "text": "Só o `core1`",
+        "why": "O script parou antes do laço."
+      },
+      {
+        "text": "Os três, e cada um rejeitou",
+        "why": "Os roteadores teriam aceitado, como o `edge1` aceitou."
+      },
+      {
+        "text": "O primeiro da lista, e então o script parou",
+        "why": "Nenhuma conexão foi aberta."
+      },
+      {
+        "text": "Nenhum",
+        "why": "Isso. A verificação roda no `ctl`, antes de qualquer conexão."
+      }
+    ]
+  },
+  "ex-rn3j8zz5": {
+    "prompt": "A descrição é editada para `192.0.2.0/25`. O que o `apply.py` faz?",
+    "hint": "Leia as duas verificações exatamente como estão escritas.",
+    "choices": [
+      {
+        "text": "Recusa, como recusou `192.0.12.0/24`",
+        "why": "É uma rede válida dentro da faixa de gerência, então as duas verificações passam."
+      },
+      {
+        "text": "Quebra, porque /25 não é permitido numa prefix list",
+        "why": "Qualquer tamanho de prefixo é permitido."
+      },
+      {
+        "text": "Aplica no primeiro roteador e para",
+        "why": "Nada no script para no meio quando dá certo."
+      },
+      {
+        "text": "Aplica aos três roteadores",
+        "why": "Isso. A validação só pega o que alguém pensou em verificar."
+      }
+    ]
+  },
+  "ex-2z2g0e6s": {
+    "prompt": "Por que o `apply.py` termina com status de saída diferente de zero quando recusa?",
+    "hint": "Quem lê um status de saída?",
+    "choices": [
+      {
+        "text": "Para o próximo programa de um pipeline saber que ele falhou",
+        "why": "Isso. O pipeline da aula 14 para exatamente nisso."
+      },
+      {
+        "text": "Para desfazer o que tinha aplicado",
+        "why": "Ele não tinha aplicado nada."
+      },
+      {
+        "text": "Porque `sys.exit` é como o Python imprime texto",
+        "why": "Ele imprime a mensagem, mas o status é o que importa."
+      },
+      {
+        "text": "Para fazer os roteadores recarregarem a configuração salva",
+        "why": "Status de saída ficam no `ctl`."
+      }
+    ]
+  },
+  "ex-4vcwbd8r": {
+    "prompt": "Ligue cada máquina do laboratório ao que ela é.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "`ctl`",
+        "right": "O host de automação"
+      },
+      {
+        "left": "`edge1`",
+        "right": "Um roteador FRR"
+      },
+      {
+        "left": "`nc1`",
+        "right": "Um equipamento gerido pelo modelo"
+      },
+      {
+        "left": "`netbox`",
+        "right": "A fonte da verdade"
+      }
+    ],
+    "right_distractors": [
+      "Um firewall"
+    ]
+  },
+  "ex-s364vk3e": {
+    "prompt": "Quais partes do laboratório foram escritas para este curso em vez de serem software livre que já existia? Escolha todas as que se aplicam.",
+    "hint": "Três exceções são nomeadas.",
+    "choices": [
+      {
+        "text": "A API REST e a porta gNMI dos roteadores",
+        "why": "Sim, porque o FRR não tem nenhum dos dois."
+      },
+      {
+        "text": "O roteamento e o CLI do FRR",
+        "why": "O FRR é real."
+      },
+      {
+        "text": "O NetBox",
+        "why": "O NetBox é real."
+      },
+      {
+        "text": "O driver NAPALM para FRR",
+        "why": "Sim, porque o NAPALM não traz um."
+      },
+      {
+        "text": "A central de chamados",
+        "why": "Sim."
+      }
+    ]
+  },
+  "ex-f250knqm": {
+    "prompt": "Um script não alcança o `edge1`. Ponha as verificações na ordem que a aula dá.",
+    "hint": "Na ordem em que os pacotes viajam.",
+    "items": [
+      "`ping edge1`",
+      "`nc -vz edge1 22`",
+      "`ssh netops@edge1` à mão",
+      "Ler o script"
+    ]
+  },
+  "ex-5jvzyckp": {
+    "prompt": "O script de um colega envia uma mudança para 200 roteadores em sequência e não imprime nada. O que é mais útil acrescentar primeiro?",
+    "hint": "O que você ia querer saber depois que ele rodou?",
+    "choices": [
+      {
+        "text": "Uma linha por roteador dizendo o que mudou, lida de volta do roteador",
+        "why": "Isso: verificar e informar. Sem isso a execução não é evidência de nada."
+      },
+      {
+        "text": "Cores no terminal",
+        "why": "Bonito, mas não diz nada sobre a rede."
+      },
+      {
+        "text": "Uma pausa entre roteadores",
+        "why": "Deixa a execução mais lenta e nada mais informativa."
+      },
+      {
+        "text": "Uma segunda cópia do script como backup",
+        "why": "Isso protege o arquivo, não a rede."
+      }
+    ]
+  },
+  "ex-s1rprby7": {
+    "prompt": "Qual das três falhas manuais o `mgmt_check.py` detecta sozinho, sem ninguém lhe dizer o que aconteceu?",
+    "hint": "Ele compara cada roteador com uma linha desejada.",
+    "choices": [
+      {
+        "text": "O erro de digitação do edge1, e não uma linha faltando",
+        "why": "Ele também acha uma linha que falta."
+      },
+      {
+        "text": "A linha que falta no edge2, e não um valor errado",
+        "why": "Um valor errado também falha na comparação."
+      },
+      {
+        "text": "Qualquer roteador que difira, seja qual for a causa",
+        "why": "Isso. Ele não precisa saber por que um roteador difere."
+      },
+      {
+        "text": "Ele envia sem olhar",
+        "why": "Esse era o `mgmt.py`."
+      }
+    ]
+  },
+  "ex-e13hgqyv": {
+    "prompt": "Na tabela da seção de escala, quantos minutos leva ao todo uma mudança à mão em 100 roteadores?",
+    "hint": "Dois minutos cada.",
+    "unit": "minutos"
+  },
+  "ex-q6e2av04": {
+    "prompt": "Uma mudança é descrita num arquivo, validada no `ctl` e aplicada, mas ninguém lê os roteadores de volta. Que falha ainda pode passar despercebida?",
+    "hint": "A última caixa do ciclo.",
+    "choices": [
+      {
+        "text": "Um erro de digitação na descrição",
+        "why": "A validação é onde isso é pego, quando uma regra cobre."
+      },
+      {
+        "text": "Um roteador que recusou ou perdeu a mudança",
+        "why": "Isso. Só ler de volta mostra o que o roteador de fato tem."
+      },
+      {
+        "text": "Uma lista errada de roteadores na descrição, e a mudança vai para os equipamentos errados",
+        "why": "Isso é um erro de descrição, revisado antes de aplicar."
+      },
+      {
+        "text": "Um login que demorou mais do que os outros",
+        "why": "Lentidão não é falha da mudança."
+      }
+    ]
+  }
+}

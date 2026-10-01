@@ -1,0 +1,843 @@
+[
+  {
+    "id": "ex-1ge9ss90",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You type `ip prefix-list MGMT seq 10 permit 192.0.2.0/24`, then `end`, and close the session. What happens at the router's next reboot?",
+    "hint": "Where does the router read its configuration from when it boots?",
+    "choices": [
+      {
+        "text": "It is still there, because `end` saved it on the way out of configuration mode",
+        "correct": false,
+        "why": "`end` only leaves configuration mode. Saving is a separate command."
+      },
+      {
+        "text": "It is restored from the last backup",
+        "correct": false,
+        "why": "Nothing in the router restores from a backup by itself; lesson 11 builds the backups."
+      },
+      {
+        "text": "The prefix list is gone",
+        "correct": true,
+        "why": "Right. Without `write memory` the change lived only in the running configuration, and a reboot loads the saved file."
+      },
+      {
+        "text": "The router refuses to boot until someone confirms the change",
+        "correct": false,
+        "why": "Routers boot from what was saved, confirmed or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-1s6hb56z",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On `edge1`, `ip prefix-list MGMT seq 10 permit 192.0.12.0/24` was accepted without an error. Why?",
+    "hint": "What can a CLI check about a value?",
+    "choices": [
+      {
+        "text": "The router did not check the line, because configuration mode skips the checks",
+        "correct": false,
+        "why": "It does check syntax: a malformed prefix is refused. This one was well formed."
+      },
+      {
+        "text": "It is a valid network; the router cannot know it was meant to be 192.0.2.0/24",
+        "correct": true,
+        "why": "Right. The syntax was fine and the intent was not the router's to know."
+      },
+      {
+        "text": "FRR accepts anything and reports errors in its log",
+        "correct": false,
+        "why": "FRR refuses malformed lines at the prompt, with a line starting with %."
+      },
+      {
+        "text": "Prefix lists are not validated in FRR 8.4",
+        "correct": false,
+        "why": "They are parsed like any other command; `192.0.12.0/24` simply parses."
+      }
+    ]
+  },
+  {
+    "id": "ex-3n3c405k",
+    "version": 1,
+    "section": "by-hand",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In FRR, the command that copies the running configuration to the file the router boots from is `write ___`.",
+    "hint": "It is typed at the `core1#` prompt.",
+    "blanks": [
+      {
+        "accept": [
+          "memory",
+          "mem"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wsxqhm28",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shell loop asked every router `show running-config | grep MGMT`. What did it find that three separate terminal sessions would have hidden?",
+    "hint": "Look at the three answers side by side.",
+    "choices": [
+      {
+        "text": "That SSH was slow",
+        "correct": false,
+        "why": "Nothing in the loop measured time."
+      },
+      {
+        "text": "That `edge2` had rejected the command",
+        "correct": false,
+        "why": "`edge2` was never sent the command; it was forgotten."
+      },
+      {
+        "text": "That each router needed its own sequence number",
+        "correct": false,
+        "why": "The same `seq 10` is correct on all three."
+      },
+      {
+        "text": "That the routers disagreed: one right, one wrong, one missing",
+        "correct": true,
+        "why": "Right. Each looked fine alone; asked the same question, they differed."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5byv10t",
+    "version": 1,
+    "section": "what-goes-wrong",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each thing that happened in the lab to the kind of manual failure it is.",
+    "hint": "Three failures, three names.",
+    "pairs": [
+      {
+        "left": "`edge1` got 192.0.12.0/24",
+        "right": "A wrong value that is valid"
+      },
+      {
+        "left": "`edge2` was never touched",
+        "right": "An omission"
+      },
+      {
+        "left": "Later changes start from three different routers",
+        "right": "Drift"
+      }
+    ],
+    "right_distractors": [
+      "A syntax error"
+    ]
+  },
+  {
+    "id": "ex-z0s5w6jq",
+    "version": 1,
+    "section": "what-goes-wrong",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is \"be more careful\" not enough to fix manual changes on a large network?",
+    "hint": "Think of a rate multiplied by something.",
+    "choices": [
+      {
+        "text": "It lowers the rate without reaching zero, and the rate is multiplied by devices and changes",
+        "correct": true,
+        "why": "Right. A small rate times a large count is still a steady supply of mistakes."
+      },
+      {
+        "text": "Careful people make more mistakes, because working slowly tires them out",
+        "correct": false,
+        "why": "Nothing in the lesson says that; care lowers the rate."
+      },
+      {
+        "text": "Routers reject changes typed slowly",
+        "correct": false,
+        "why": "The CLI has no opinion about typing speed."
+      },
+      {
+        "text": "Checklists are forbidden in change management",
+        "correct": false,
+        "why": "They are common and useful; they just do not reach zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-2srdb6tq",
+    "version": 1,
+    "section": "what-goes-wrong",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A script carries a typo in the line it sends. Compared with the same typo made by hand on one router, what is better about it?",
+    "hint": "Where is the mistake, and how many places must be fixed?",
+    "choices": [
+      {
+        "text": "No advantage: a typo repeated on each router is strictly worse than a typo on one router",
+        "correct": false,
+        "why": "It is worse in reach, better in how it is found and fixed."
+      },
+      {
+        "text": "The router corrects typos that arrive from scripts",
+        "correct": false,
+        "why": "The router cannot tell a script from a person."
+      },
+      {
+        "text": "It lives in one file, is seen in the first router's output, and is fixed once",
+        "correct": true,
+        "why": "Right. The mistake is everywhere, and it is also in one reviewable place."
+      },
+      {
+        "text": "Netmiko refuses lines with typos",
+        "correct": false,
+        "why": "Netmiko sends what it is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-pytb2snk",
+    "version": 1,
+    "section": "what-goes-wrong",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When routers that were meant to be configured alike slowly become different, one manual change at a time, the network is said to ___.",
+    "hint": "The word the lesson uses for the third failure.",
+    "blanks": [
+      {
+        "accept": [
+          "drift"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0ny7mzt6",
+    "version": 1,
+    "section": "a-first-script",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `mgmt.py`, what does `save_config()` do on the lab's routers?",
+    "hint": "It replaces a command you typed by hand.",
+    "choices": [
+      {
+        "text": "Closes the SSH session",
+        "correct": false,
+        "why": "That is `disconnect()`."
+      },
+      {
+        "text": "Downloads a copy of the configuration to `ctl`",
+        "correct": false,
+        "why": "That would be a backup, lesson 11."
+      },
+      {
+        "text": "Sends `write memory`",
+        "correct": true,
+        "why": "Right. It is the save step for this driver."
+      },
+      {
+        "text": "Checks that the prefix list is correct before sending it",
+        "correct": false,
+        "why": "Nothing in `mgmt.py` checks the value."
+      }
+    ]
+  },
+  {
+    "id": "ex-pet3jdtk",
+    "version": 1,
+    "section": "a-first-script",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `mgmt.py` ran, `edge1` held one `MGMT` entry, not the typo plus the correct one. Why?",
+    "hint": "Look at what the two lines had in common.",
+    "choices": [
+      {
+        "text": "The script deleted the prefix list first",
+        "correct": false,
+        "why": "It sent only one line."
+      },
+      {
+        "text": "Both used `seq 10`, and in FRR the sequence number identifies the entry",
+        "correct": true,
+        "why": "Right. The new `seq 10` replaced the old one."
+      },
+      {
+        "text": "FRR keeps the most recent line of a command and drops the rest, whatever the sequence number",
+        "correct": false,
+        "why": "A different sequence number would have been added beside it."
+      },
+      {
+        "text": "`save_config()` removes duplicates",
+        "correct": false,
+        "why": "Saving copies what is running; it does not edit it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqef95kj",
+    "version": 1,
+    "section": "a-first-script",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these were typed in one place in `mgmt.py`, instead of once per router? Choose all that apply.",
+    "hint": "Look at the top of the file.",
+    "choices": [
+      {
+        "text": "The netops password",
+        "correct": false,
+        "why": "There is no password in the file: it logs in with ana's key."
+      },
+      {
+        "text": "The configuration line",
+        "correct": true,
+        "why": "Yes, `LINE`."
+      },
+      {
+        "text": "A different sequence number for each router",
+        "correct": false,
+        "why": "It is `seq 10` everywhere."
+      },
+      {
+        "text": "The list of routers",
+        "correct": true,
+        "why": "Yes, `ROUTERS`."
+      }
+    ]
+  },
+  {
+    "id": "ex-amsky5fm",
+    "version": 1,
+    "section": "a-first-script",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Netmiko method that enters configuration mode, sends a list of lines and leaves again is called ___.",
+    "hint": "It is the line in `mgmt.py` that carries `LINE`.",
+    "blanks": [
+      {
+        "accept": [
+          "send_config_set",
+          "send_config_set()"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tb0m5n6s",
+    "version": 1,
+    "section": "scale",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At the lesson's assumed two minutes per router, how many hours does a change by hand on 300 routers take?",
+    "hint": "Minutes first, then divide by 60.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-ek1jpn6s",
+    "version": 1,
+    "section": "scale",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`time python mgmt.py` printed `real 0m3.539s` for three routers. What does `real` measure?",
+    "hint": "It is not what the processor did.",
+    "choices": [
+      {
+        "text": "Wall-clock time from start to prompt",
+        "correct": true,
+        "why": "Right, and most of it was waiting for logins and prompts."
+      },
+      {
+        "text": "Processor time spent inside Python",
+        "correct": false,
+        "why": "That is closer to `user`."
+      },
+      {
+        "text": "The time the routers took to save",
+        "correct": false,
+        "why": "Saving is only part of it."
+      },
+      {
+        "text": "The round trip to `core1`",
+        "correct": false,
+        "why": "That is what `ping` measures."
+      }
+    ]
+  },
+  {
+    "id": "ex-era72368",
+    "version": 1,
+    "section": "scale",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Besides time, what else grows with the number of routers when a change is made by hand?",
+    "hint": "Think about the first section of the lesson.",
+    "choices": [
+      {
+        "text": "The length of the configuration line",
+        "correct": false,
+        "why": "The line is the same everywhere."
+      },
+      {
+        "text": "The number of chances to make one of the three mistakes",
+        "correct": true,
+        "why": "Right. Every session is another opportunity to mistype or forget."
+      },
+      {
+        "text": "The cost of the router licences",
+        "correct": false,
+        "why": "Unrelated to how the change is made."
+      },
+      {
+        "text": "The time each SSH login takes",
+        "correct": false,
+        "why": "Each login takes about the same time."
+      }
+    ]
+  },
+  {
+    "id": "ex-8z0wb70r",
+    "version": 1,
+    "section": "repeatability",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`mgmt_check.py` runs twice in a row on a network where nothing changed in between. What does the second run print?",
+    "hint": "Look at the last capture of the section.",
+    "choices": [
+      {
+        "text": "`changed` for the router it fixed",
+        "correct": false,
+        "why": "That router was fixed by the first run."
+      },
+      {
+        "text": "An error, as the line exists",
+        "correct": false,
+        "why": "The script checks first and does not send it."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "It reports every router either way."
+      },
+      {
+        "text": "`already as intended` for every router",
+        "correct": true,
+        "why": "Right. Nothing to do is the expected answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-mcev81bp",
+    "version": 1,
+    "section": "repeatability",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An operation that leaves the network the same whether it is applied once or twice is called ___.",
+    "hint": "Ansible is built around this property.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent",
+          "idempotence"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hsebbf8k",
+    "version": 1,
+    "section": "repeatability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is it worth checking before sending, when resending the same prefix-list line does no harm?",
+    "hint": "Not every command is this harmless.",
+    "choices": [
+      {
+        "text": "Other commands reset sessions or add duplicates",
+        "correct": true,
+        "why": "Right, and a script that asks first reports what it changed."
+      },
+      {
+        "text": "Because FRR counts how many times a line was sent",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Sending costs money per command",
+        "correct": false,
+        "why": "Not on any router in the lab."
+      },
+      {
+        "text": "It makes the script faster on every router, since reading a configuration costs less than writing one",
+        "correct": false,
+        "why": "It reads the configuration first, which is slower when a change is needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ysznt3xx",
+    "version": 1,
+    "section": "repeatability",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody removed `MGMT` from `edge2` by hand. What is the first run of `mgmt_check.py` after that, in the language of this lesson?",
+    "hint": "It found one difference and removed it.",
+    "choices": [
+      {
+        "text": "An omission",
+        "correct": false,
+        "why": "The omission was the person's; the script found it."
+      },
+      {
+        "text": "A rollback of the whole configuration",
+        "correct": false,
+        "why": "It changed one line on one router."
+      },
+      {
+        "text": "A correction of drift",
+        "correct": true,
+        "why": "Right. The network had moved away from the intended state and was put back."
+      },
+      {
+        "text": "A failed run, to be repeated later",
+        "correct": false,
+        "why": "It printed `changed` and succeeded."
+      }
+    ]
+  },
+  {
+    "id": "ex-6a3ve3qv",
+    "version": 1,
+    "section": "describe-validate-apply",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the four steps of a change in the order this course follows.",
+    "hint": "The data comes first; reading back comes last.",
+    "items": [
+      "Describe",
+      "Validate",
+      "Apply",
+      "Verify"
+    ],
+    "trap": "Validating after applying is the usual slip: by then the router has already seen the bad value."
+  },
+  {
+    "id": "ex-v8t58fgz",
+    "version": 1,
+    "section": "describe-validate-apply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`apply.py` refused `192.0.12.0/24`. Which router saw that value?",
+    "hint": "Where does the check run?",
+    "choices": [
+      {
+        "text": "`core1` only",
+        "correct": false,
+        "why": "The script stopped before the loop."
+      },
+      {
+        "text": "All three, and each rejected it",
+        "correct": false,
+        "why": "The routers would have accepted it, as `edge1` did."
+      },
+      {
+        "text": "The first one in the list, then the script stopped",
+        "correct": false,
+        "why": "No connection was opened."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right. The check runs on `ctl`, before any connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-rn3j8zz5",
+    "version": 1,
+    "section": "describe-validate-apply",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The description is edited to `192.0.2.0/25`. What does `apply.py` do?",
+    "hint": "Read the two checks exactly as written.",
+    "choices": [
+      {
+        "text": "Refuses it, as it refused `192.0.12.0/24`",
+        "correct": false,
+        "why": "It is a valid network inside the management range, so both checks pass."
+      },
+      {
+        "text": "Crashes, because /25 is not allowed in a prefix list",
+        "correct": false,
+        "why": "Any prefix length is allowed."
+      },
+      {
+        "text": "Applies it to the first router and then stops",
+        "correct": false,
+        "why": "Nothing in the script stops midway on success."
+      },
+      {
+        "text": "Applies it to all three routers",
+        "correct": true,
+        "why": "Right. Validation catches only what somebody thought to check."
+      }
+    ]
+  },
+  {
+    "id": "ex-2z2g0e6s",
+    "version": 1,
+    "section": "describe-validate-apply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `apply.py` end with a non-zero exit status when it refuses?",
+    "hint": "Who reads an exit status?",
+    "choices": [
+      {
+        "text": "So the next program in a pipeline knows it failed",
+        "correct": true,
+        "why": "Right. Lesson 14's pipeline stops on exactly that."
+      },
+      {
+        "text": "To undo what it had applied",
+        "correct": false,
+        "why": "It had applied nothing."
+      },
+      {
+        "text": "Because `sys.exit` is how Python prints text",
+        "correct": false,
+        "why": "It does print the message, but the status is the point."
+      },
+      {
+        "text": "To make the routers reload their saved configuration",
+        "correct": false,
+        "why": "Exit statuses stay on `ctl`."
+      }
+    ]
+  },
+  {
+    "id": "ex-4vcwbd8r",
+    "version": 1,
+    "section": "the-lab",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each lab machine to what it is.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "`ctl`",
+        "right": "The automation host"
+      },
+      {
+        "left": "`edge1`",
+        "right": "An FRR router"
+      },
+      {
+        "left": "`nc1`",
+        "right": "A device managed through its model"
+      },
+      {
+        "left": "`netbox`",
+        "right": "The source of truth"
+      }
+    ],
+    "right_distractors": [
+      "A firewall"
+    ]
+  },
+  {
+    "id": "ex-s364vk3e",
+    "version": 1,
+    "section": "the-lab",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which parts of the lab were written for this course rather than being existing open-source software? Choose all that apply.",
+    "hint": "Three exceptions are named.",
+    "choices": [
+      {
+        "text": "The routers' REST API and gNMI port",
+        "correct": true,
+        "why": "Yes, because FRR has neither."
+      },
+      {
+        "text": "FRR's routing and CLI",
+        "correct": false,
+        "why": "FRR is real."
+      },
+      {
+        "text": "NetBox",
+        "correct": false,
+        "why": "NetBox is real."
+      },
+      {
+        "text": "The NAPALM driver for FRR",
+        "correct": true,
+        "why": "Yes, because NAPALM ships none."
+      },
+      {
+        "text": "The service desk",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-f250knqm",
+    "version": 1,
+    "section": "the-lab",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script cannot reach `edge1`. Put the checks in the order the lesson gives.",
+    "hint": "In the order the packets travel.",
+    "items": [
+      "`ping edge1`",
+      "`nc -vz edge1 22`",
+      "`ssh netops@edge1` by hand",
+      "Read the script"
+    ]
+  },
+  {
+    "id": "ex-5jvzyckp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's script sends a change to 200 routers in sequence and prints nothing. What is the most useful thing to add first?",
+    "hint": "What would you want to know after it ran?",
+    "choices": [
+      {
+        "text": "A line per router saying what it changed, read back from the router",
+        "correct": true,
+        "why": "Right: verify, and report. Without it the run is not evidence of anything."
+      },
+      {
+        "text": "Colours in the terminal",
+        "correct": false,
+        "why": "Nice, but it says nothing about the network."
+      },
+      {
+        "text": "A pause between routers",
+        "correct": false,
+        "why": "It makes the run slower and no more informative."
+      },
+      {
+        "text": "A second copy of the script for backup",
+        "correct": false,
+        "why": "That protects the file, not the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-s1rprby7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of the three manual failures does `mgmt_check.py` detect on its own, without anyone telling it what happened?",
+    "hint": "It compares each router with one wanted line.",
+    "choices": [
+      {
+        "text": "The typo on edge1, and not a missing line",
+        "correct": false,
+        "why": "It also finds a missing line."
+      },
+      {
+        "text": "The missing line on edge2, and not a wrong value",
+        "correct": false,
+        "why": "A wrong value also fails the comparison."
+      },
+      {
+        "text": "Any router that differs, whatever the cause",
+        "correct": true,
+        "why": "Right. It does not need to know why a router differs."
+      },
+      {
+        "text": "It sends without looking",
+        "correct": false,
+        "why": "That was `mgmt.py`."
+      }
+    ]
+  },
+  {
+    "id": "ex-e13hgqyv",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the table of the scale section, how many minutes does a change by hand on 100 routers take in total?",
+    "hint": "Two minutes each.",
+    "value": 200,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-q6e2av04",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A change is described in a file, validated on `ctl` and applied, but nobody reads the routers back. Which failure can still ship unnoticed?",
+    "hint": "The last box of the cycle.",
+    "choices": [
+      {
+        "text": "A typo in the description",
+        "correct": false,
+        "why": "Validation is where that is caught, when a rule covers it."
+      },
+      {
+        "text": "A router that refused or lost the change",
+        "correct": true,
+        "why": "Right. Only reading back shows what the router really holds."
+      },
+      {
+        "text": "A wrong list of routers in the description, so the change goes to the wrong devices",
+        "correct": false,
+        "why": "That is a description error, reviewed before applying."
+      },
+      {
+        "text": "A login that took longer than the others did",
+        "correct": false,
+        "why": "Slowness is not a failure of the change."
+      }
+    ]
+  }
+]

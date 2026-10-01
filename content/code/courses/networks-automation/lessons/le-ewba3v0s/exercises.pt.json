@@ -1,0 +1,458 @@
+{
+  "ex-5h6zdrez": {
+    "prompt": "O que a integração contínua tira da pessoa que faz uma mudança?",
+    "hint": "Quem garante que as verificações rodaram?",
+    "choices": [
+      {
+        "text": "A revisão",
+        "why": "A revisão fica com as pessoas."
+      },
+      {
+        "text": "O acesso ao repositório",
+        "why": "Pessoas ainda fazem push."
+      },
+      {
+        "text": "Ser quem garante que as verificações rodaram",
+        "why": "Isso."
+      },
+      {
+        "text": "Escrever os testes",
+        "why": "Pessoas ainda os escrevem."
+      }
+    ]
+  },
+  "ex-q17pcbyz": {
+    "prompt": "Por que os testes vão no `pre-receive` e o deploy no `post-receive`?",
+    "hint": "Qual dos dois pode recusar?",
+    "choices": [
+      {
+        "text": "Só o `pre-receive` roda antes de o push ser aceito",
+        "why": "Isso."
+      },
+      {
+        "text": "O `post-receive` roda mais rápido",
+        "why": "Não é velocidade."
+      },
+      {
+        "text": "O `pre-receive` não alcança os roteadores do servidor, então não dá para fazer deploy ali",
+        "why": "Os dois rodam no mesmo servidor."
+      },
+      {
+        "text": "O Git roda o `post-receive` só na main",
+        "why": "O `if` do próprio hook faz isso."
+      }
+    ]
+  },
+  "ex-rs8yyawj": {
+    "prompt": "Ligue cada peça do pipeline do laboratório à sua função.",
+    "hint": "Dois hooks, dois scripts.",
+    "pairs": [
+      {
+        "left": "`pre-receive`",
+        "right": "Recusa um push cujos testes falham"
+      },
+      {
+        "left": "`post-receive`",
+        "right": "Faz o deploy do que chegou à main"
+      },
+      {
+        "left": "`ci/test.sh`",
+        "right": "Roda as verificações offline em ordem"
+      },
+      {
+        "left": "`ci/deploy.sh`",
+        "right": "Renderiza, aplica e faz o pós-check"
+      }
+    ],
+    "right_distractors": [
+      "Revisa o diff"
+    ]
+  },
+  "ex-vjq8vnmw": {
+    "prompt": "Por que `test.sh` e `deploy.sh` ficam no `ci/` do projeto e não nos hooks?",
+    "hint": "O que é uma mudança no pipeline?",
+    "choices": [
+      {
+        "text": "Hooks não rodam scripts shell",
+        "why": "Eles são scripts shell."
+      },
+      {
+        "text": "O Git apaga os hooks a cada push, então o que fica neles tem que ser reinstalado",
+        "why": "Hooks ficam onde foram instalados."
+      },
+      {
+        "text": "Uma mudança no pipeline vira um commit testado",
+        "why": "Isso."
+      },
+      {
+        "text": "Os roteadores leem o `ci/`",
+        "why": "Eles nunca veem o projeto."
+      }
+    ]
+  },
+  "ex-w3981t00": {
+    "prompt": "O `pre-receive` extrai o commit enviado com `git archive` num diretório novo. O que isso descarta?",
+    "hint": "A cópia de trabalho de quem é testada?",
+    "choices": [
+      {
+        "text": "Um push para o servidor errado",
+        "why": "Não é isso que ele confere."
+      },
+      {
+        "text": "Um sucesso que depende de arquivos sem commit",
+        "why": "Isso."
+      },
+      {
+        "text": "Testes que demoram demais",
+        "why": "O tempo não muda."
+      },
+      {
+        "text": "Um branch chamado `main`",
+        "why": "A main também é testada."
+      }
+    ]
+  },
+  "ex-brntn53p": {
+    "prompt": "No máximo quantos segundos o `deploy.sh` dá à rede para passar no pós-check, contando as esperas entre tentativas?",
+    "hint": "Seis tentativas, com dez segundos entre elas.",
+    "unit": "segundos"
+  },
+  "ex-n4eafhjy": {
+    "prompt": "`set ___` faz o `test.sh` parar no primeiro comando que falha.",
+    "hint": "Uma opção do shell.",
+    "blanks": [
+      {
+        "accept": [
+          "-e"
+        ]
+      }
+    ]
+  },
+  "ex-2vrsakp1": {
+    "prompt": "Como as mensagens dos hooks aparecem para quem faz o push?",
+    "hint": "Olhe o começo de cada linha.",
+    "choices": [
+      {
+        "text": "Num log no servidor",
+        "why": "O Git as manda de volta."
+      },
+      {
+        "text": "Por e-mail",
+        "why": "Nada foi enviado por e-mail."
+      },
+      {
+        "text": "No próprio terminal, cada linha marcada `remote:`",
+        "why": "Isso."
+      },
+      {
+        "text": "De jeito nenhum",
+        "why": "Foram impressas."
+      }
+    ]
+  },
+  "ex-pch6ed62": {
+    "prompt": "Depois do push recusado, que branches o servidor tinha?",
+    "hint": "`git ls-remote --heads`.",
+    "choices": [
+      {
+        "text": "Os três, com o recusado marcado como falho",
+        "why": "Um branch recusado não existe lá."
+      },
+      {
+        "text": "Só a `main`",
+        "why": "A proposta aceita também estava."
+      },
+      {
+        "text": "`main` e `edge2-lan-description`",
+        "why": "Isso."
+      },
+      {
+        "text": "`edge2-uplink-passive`, esperando revisão",
+        "why": "Foi recusado."
+      }
+    ]
+  },
+  "ex-g0wmsh5b": {
+    "prompt": "Quantos testes offline passaram no push recusado?",
+    "hint": "Leia a linha de resumo.",
+    "unit": "testes"
+  },
+  "ex-tvenhyfr": {
+    "prompt": "O primeiro push na main não implantou nada em nenhum roteador. Por quê?",
+    "hint": "Leia a etapa de aplicar.",
+    "choices": [
+      {
+        "text": "Todo roteador já batia com a configuração renderizada",
+        "why": "Isso."
+      },
+      {
+        "text": "O `post-receive` não roda no primeiro push de um repositório",
+        "why": "Rodou: deploying main."
+      },
+      {
+        "text": "Os testes falharam",
+        "why": "Todos passaram."
+      },
+      {
+        "text": "A main nunca é implantada até alguém aprovar à mão na interface web",
+        "why": "Não há aprovação no laboratório."
+      }
+    ]
+  },
+  "ex-ga6z67d8": {
+    "prompt": "O `edge2-lan-description` passou nos testes. Por que o edge2 não mudou?",
+    "hint": "Que branch é implantado?",
+    "choices": [
+      {
+        "text": "Só a main é implantada",
+        "why": "Isso."
+      },
+      {
+        "text": "O push foi recusado",
+        "why": "Foi aceito."
+      },
+      {
+        "text": "O NAPALM não achou diferença entre a configuração do branch e o que o edge2 roda",
+        "why": "O NAPALM não rodou."
+      },
+      {
+        "text": "A descrição não é testada",
+        "why": "Testes não têm nada a ver com deploy."
+      }
+    ]
+  },
+  "ex-328mdh8f": {
+    "prompt": "Que pergunta um revisor responde e os testes não?",
+    "hint": "Testes conhecem forma, não fatos.",
+    "choices": [
+      {
+        "text": "Se a LAN do edge2 está mesmo no primeiro andar",
+        "why": "Isso."
+      },
+      {
+        "text": "Se o YAML é válido, como o yamllint o leria",
+        "why": "O yamllint responde isso."
+      },
+      {
+        "text": "Se as duas pontas de cada enlace concordam",
+        "why": "Um teste responde isso."
+      },
+      {
+        "text": "Se o endereço da LAN do edge2 é lido como interface IPv4 com prefixo",
+        "why": "O modelo responde isso."
+      }
+    ]
+  },
+  "ex-bfms7das": {
+    "prompt": "Depois do merge, quantos roteadores receberam mudança?",
+    "hint": "Leia a etapa de aplicar.",
+    "choices": [
+      {
+        "text": "Um, o edge2",
+        "why": "Isso."
+      },
+      {
+        "text": "Três, já que a main foi implantada inteira",
+        "why": "Dois bateram."
+      },
+      {
+        "text": "Nenhum, já que o branch já tinha implantado no push",
+        "why": "Branches não são implantados."
+      },
+      {
+        "text": "Dois, o edge2 e o vizinho core1",
+        "why": "A configuração do core1 não mudou."
+      }
+    ]
+  },
+  "ex-h7kztw9y": {
+    "prompt": "Por que o `post-receive` informa um pós-check que falhou em vez de reverter automaticamente?",
+    "hint": "O que mais pode quebrar uma rede durante um deploy?",
+    "choices": [
+      {
+        "text": "O Git proíbe reverter commit na main",
+        "why": "Não proíbe."
+      },
+      {
+        "text": "O NAPALM não desfaz uma configuração que foi substituída inteira",
+        "why": "A aula 8 fez rollback."
+      },
+      {
+        "text": "O `post-receive` não tem acesso ao commit anterior, que o push já substituiu",
+        "why": "Ele recebe o commit antigo na entrada."
+      },
+      {
+        "text": "Um revert é errado quando a rede quebrou sozinha",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-d4mgea1b": {
+    "prompt": "O que é mais simples no laboratório do que deveria ser em produção?",
+    "hint": "De quem é a chave que os hooks usam?",
+    "choices": [
+      {
+        "text": "Os testes, que são uma versão reduzida dos de verdade",
+        "why": "São os de verdade."
+      },
+      {
+        "text": "O uso do NAPALM para aplicar a configuração renderizada aos roteadores",
+        "why": "É assim que seria feito."
+      },
+      {
+        "text": "Os hooks fazem deploy como `ana`, com a chave dela",
+        "why": "Isso."
+      },
+      {
+        "text": "O próprio Git, que em produção seria um serviço hospedado",
+        "why": "Git é Git."
+      }
+    ]
+  },
+  "ex-2a28qe9v": {
+    "prompt": "No workflow do GitHub Actions, por que o job de deploy roda num runner self-hosted?",
+    "hint": "Onde estão os roteadores?",
+    "choices": [
+      {
+        "text": "Runners self-hosted são mais rápidos, já que mantêm as bibliotecas instaladas entre execuções",
+        "why": "Não é velocidade."
+      },
+      {
+        "text": "Runners hospedados não rodam Python 3.12, que as bibliotecas do laboratório exigem",
+        "why": "O job de teste roda."
+      },
+      {
+        "text": "O GitHub exige isso para qualquer job que leia segredos de um environment",
+        "why": "Não exige."
+      },
+      {
+        "text": "Um runner na internet não alcança a rede de gerência",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-77m2h5xb": {
+    "prompt": "O workflow do GitHub Actions rodou no laboratório?",
+    "hint": "A seção diz.",
+    "choices": [
+      {
+        "text": "Sim, no ctl, como os dois hooks",
+        "why": "Não rodou."
+      },
+      {
+        "text": "Não: o laboratório não tem serviço de CI",
+        "why": "Isso."
+      },
+      {
+        "text": "Sim, no GitHub, com um runner na rede de gerência do laboratório",
+        "why": "Não rodou."
+      },
+      {
+        "text": "Só o job de teste, já que o deploy precisa dos roteadores",
+        "why": "Nenhum job rodou."
+      }
+    ]
+  },
+  "ex-fhv2673v": {
+    "prompt": "No workflow, `___: test` faz o job de deploy esperar o job de teste passar.",
+    "hint": "Uma chave do GitHub Actions.",
+    "blanks": [
+      {
+        "accept": [
+          "needs"
+        ]
+      }
+    ]
+  },
+  "ex-xrsm181t": {
+    "prompt": "Um colega quer resolver um problema urgente entrando direto no edge1, pulando o pipeline. O que acontece no próximo deploy da main?",
+    "hint": "Os dados são a verdade.",
+    "choices": [
+      {
+        "text": "A correção fica, já que o pipeline só acrescenta linhas",
+        "why": "Ele substitui a configuração inteira."
+      },
+      {
+        "text": "O pipeline se recusa a fazer deploy",
+        "why": "Ele implanta o que a main diz."
+      },
+      {
+        "text": "A correção é removida, a não ser que tenha ido também para os dados",
+        "why": "Isso."
+      },
+      {
+        "text": "A correção é copiada para a main",
+        "why": "Nada lê roteadores para a main."
+      }
+    ]
+  },
+  "ex-5b3bxqng": {
+    "prompt": "Ordene a vida da mudança de descrição do edge2 nesta aula.",
+    "hint": "Proposta primeiro, rede por último.",
+    "items": [
+      "Commit num branch próprio",
+      "Push: testado e aceito, sem deploy",
+      "Merge na main e push",
+      "Testado de novo, implantado, pós-checado"
+    ]
+  },
+  "ex-y4nv8px4": {
+    "prompt": "Que verificações o `ci/test.sh` roda?",
+    "hint": "As verificações offline da aula 13.",
+    "choices": [
+      {
+        "text": "yamllint",
+        "why": "Isso."
+      },
+      {
+        "text": "Os testes offline",
+        "why": "Isso."
+      },
+      {
+        "text": "`validate.py`",
+        "why": "Isso."
+      },
+      {
+        "text": "Os testes online",
+        "why": "Esses são o pós-check, no `deploy.sh`."
+      }
+    ]
+  },
+  "ex-t7bpetg9": {
+    "prompt": "Em que tentativa o pós-check passou depois do merge?",
+    "hint": "Leia a última linha."
+  },
+  "ex-qcfskbyj": {
+    "prompt": "`git ls-remote --___ origin` lista os branches que o servidor tem.",
+    "hint": "Onde fica o último commit de um branch.",
+    "blanks": [
+      {
+        "accept": [
+          "heads"
+        ]
+      }
+    ]
+  },
+  "ex-hee2nd3c": {
+    "prompt": "O que o histórico do repositório vira, quando toda mudança passa pelo pipeline?",
+    "hint": "Cada entrada tem um resultado de teste.",
+    "choices": [
+      {
+        "text": "Um backup das configurações em execução dos roteadores, tirado a cada push de branch",
+        "why": "Os backups da aula 11 fazem isso."
+      },
+      {
+        "text": "O change log da rede",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma lista de testes que falharam",
+        "why": "Pushes recusados não deixam nada."
+      },
+      {
+        "text": "Nada diferente",
+        "why": "Registra toda mudança da rede."
+      }
+    ]
+  }
+}

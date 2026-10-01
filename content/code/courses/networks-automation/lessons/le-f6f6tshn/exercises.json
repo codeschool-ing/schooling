@@ -1,0 +1,740 @@
+[
+  {
+    "id": "ex-21891c5a",
+    "version": 1,
+    "section": "why-backup",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which question can a history of backups answer that a single copy cannot?",
+    "hint": "It is about change.",
+    "choices": [
+      {
+        "text": "What edge1 is running right now, line by line",
+        "correct": false,
+        "why": "One copy, or the router, says that."
+      },
+      {
+        "text": "What changed on edge1 since Tuesday",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Which address edge1's LAN uses, as configured on the router today",
+        "correct": false,
+        "why": "The current file says that."
+      },
+      {
+        "text": "Whether edge1 is up",
+        "correct": false,
+        "why": "That is monitoring."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztceh4k4",
+    "version": 1,
+    "section": "why-backup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Who should be able to read the backup repository?",
+    "hint": "What does a configuration hold?",
+    "choices": [
+      {
+        "text": "Anybody in the company, since a backup changes nothing on the network",
+        "correct": false,
+        "why": "It holds passwords, keys and the network's shape."
+      },
+      {
+        "text": "Nobody: it is written by a job",
+        "correct": false,
+        "why": "It is read to answer questions."
+      },
+      {
+        "text": "The auditors alone",
+        "correct": false,
+        "why": "Engineers read it to fix things."
+      },
+      {
+        "text": "The people allowed to read the routers' configurations",
+        "correct": true,
+        "why": "Right: same sensitivity, same list."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4f2395m",
+    "version": 1,
+    "section": "why-backup",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each script to what it does.",
+    "hint": "Four scripts around three places.",
+    "pairs": [
+      {
+        "left": "`backup.py`",
+        "right": "Reads the routers into the Git repository"
+      },
+      {
+        "left": "`render.py`",
+        "right": "Turns data and template into `configs/`"
+      },
+      {
+        "left": "`compare.py`",
+        "right": "Says what is missing and what is extra"
+      },
+      {
+        "left": "`restore.py`",
+        "right": "Puts a stored configuration back on a router"
+      }
+    ],
+    "right_distractors": [
+      "Opens a change ticket"
+    ]
+  },
+  {
+    "id": "ex-9frtcfcg",
+    "version": 1,
+    "section": "pulling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `backup.py` write the configuration exactly as the router sent it, header lines included?",
+    "hint": "Where does cleaning up belong?",
+    "choices": [
+      {
+        "text": "Git refuses to store a file that was edited after it was read from the router",
+        "correct": false,
+        "why": "Git stores any file."
+      },
+      {
+        "text": "Cleaning up is the comparison's job; a backup keeps everything",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "NAPALM forbids changing it",
+        "correct": false,
+        "why": "It is a string in Python."
+      },
+      {
+        "text": "The header is part of the configuration, and FRR needs it to load the file back",
+        "correct": false,
+        "why": "It is not; it is kept anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-dtxarzt7",
+    "version": 1,
+    "section": "pulling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a platform with a separate startup configuration, what does a difference between `running` and `startup` mean?",
+    "hint": "What happens at the next reload?",
+    "choices": [
+      {
+        "text": "The router is about to crash",
+        "correct": false,
+        "why": "It says nothing about stability."
+      },
+      {
+        "text": "The backup failed halfway, after reading running and before startup",
+        "correct": false,
+        "why": "Both were read."
+      },
+      {
+        "text": "Nothing: they always differ on a router that has been up for a while",
+        "correct": false,
+        "why": "They match once changes are saved."
+      },
+      {
+        "text": "A change was not saved and will be lost on reload",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ye77eh8",
+    "version": 1,
+    "section": "pulling",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `backup.py`, Nornir runs the task `___` with the `config` getter.",
+    "hint": "From nornir_napalm.",
+    "blanks": [
+      {
+        "accept": [
+          "napalm_get"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m6q2wz3s",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the second run of `backup.py` leave in the repository?",
+    "hint": "Nothing had changed.",
+    "choices": [
+      {
+        "text": "A commit with the same files",
+        "correct": false,
+        "why": "No change, no commit."
+      },
+      {
+        "text": "Three new files with today's date in their names",
+        "correct": false,
+        "why": "Files are named after the router only."
+      },
+      {
+        "text": "An empty commit to mark the night as checked by the job",
+        "correct": false,
+        "why": "It prints a line and commits nothing."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtvyjjeg",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why keep the backups in Git rather than as a dated copy per night?",
+    "hint": "Think of a year of copies.",
+    "choices": [
+      {
+        "text": "Each change becomes a commit, and quiet nights leave nothing",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Git compresses better than any other way of storing text files",
+        "correct": false,
+        "why": "Space is not the point."
+      },
+      {
+        "text": "Routers can push to Git",
+        "correct": false,
+        "why": "The script does the writing."
+      },
+      {
+        "text": "Dated copies cannot be compared with each other by any of the usual tools",
+        "correct": false,
+        "why": "They can, pairwise, slowly."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgx4fegv",
+    "version": 1,
+    "section": "history",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`git ___ HEAD~1:edge1.conf` prints edge1's file as it was one commit ago.",
+    "hint": "The same command that showed the drift commit.",
+    "blanks": [
+      {
+        "accept": [
+          "show"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rr65awkt",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the commit message `backup: edge1` tell somebody reading `git log --oneline`?",
+    "hint": "It is built from the changed files.",
+    "choices": [
+      {
+        "text": "That only edge1 was backed up",
+        "correct": false,
+        "why": "All three were read; one changed."
+      },
+      {
+        "text": "That edge1 failed",
+        "correct": false,
+        "why": "A failure is printed, not committed."
+      },
+      {
+        "text": "That only edge1's configuration changed that night",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Who changed edge1",
+        "correct": false,
+        "why": "The author is the job."
+      }
+    ]
+  },
+  {
+    "id": "ex-41ah8k4j",
+    "version": 1,
+    "section": "failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "edge2 did not answer, and `backup.py` also printed `no change since the last backup`. Why is that line the dangerous one?",
+    "hint": "What does the repository look like?",
+    "choices": [
+      {
+        "text": "It is false, since edge2 changed while its SSH server was stopped",
+        "correct": false,
+        "why": "Nothing changed on edge2."
+      },
+      {
+        "text": "It is true, and on its own it looks like a quiet night",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It deletes edge2's file",
+        "correct": false,
+        "why": "The file is kept."
+      },
+      {
+        "text": "It is printed before the failure",
+        "correct": false,
+        "why": "The failure line comes first."
+      }
+    ]
+  },
+  {
+    "id": "ex-arkapqnv",
+    "version": 1,
+    "section": "failure",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What exit status did `backup.py` return when edge2 did not answer?",
+    "hint": "It was echoed after the run.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-9zzgpajp",
+    "version": 1,
+    "section": "failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the exit status matter if the failure is already printed?",
+    "hint": "Who reads the output at three in the morning?",
+    "choices": [
+      {
+        "text": "A scheduler or a pipeline acts on it without reading the output",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Git refuses to commit after a failed run",
+        "correct": false,
+        "why": "The commit happens before exiting."
+      },
+      {
+        "text": "Nornir needs it to retry",
+        "correct": false,
+        "why": "Nornir has finished by then."
+      },
+      {
+        "text": "It restarts edge2's SSH server",
+        "correct": false,
+        "why": "It only reports."
+      }
+    ]
+  },
+  {
+    "id": "ex-ymbtbmhd",
+    "version": 1,
+    "section": "failure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When edge2 failed, what happened to core1 and edge1?",
+    "hint": "Nornir runs every host.",
+    "choices": [
+      {
+        "text": "They were skipped, since a run stops at its first failed host",
+        "correct": false,
+        "why": "One host failing does not stop the others."
+      },
+      {
+        "text": "They were backed up as usual",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Their files were deleted",
+        "correct": false,
+        "why": "Nothing is deleted."
+      },
+      {
+        "text": "They were committed again",
+        "correct": false,
+        "why": "Unchanged, they were not."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zs9xn50",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The drift on edge1 was typed at 14:00 and the backup ran at 03:00 the next night. What date does the history give the change?",
+    "hint": "The commit is made when the job runs.",
+    "choices": [
+      {
+        "text": "14:00, read from the router",
+        "correct": false,
+        "why": "The configuration carries no time."
+      },
+      {
+        "text": "The time of the previous backup",
+        "correct": false,
+        "why": "That one did not see it."
+      },
+      {
+        "text": "None: drift is not committed",
+        "correct": false,
+        "why": "It was committed."
+      },
+      {
+        "text": "The time of the backup that found it",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-62epyqdb",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The history shows when edge1 changed. Where would you look to find who typed the change?",
+    "hint": "The backup's author is the job.",
+    "choices": [
+      {
+        "text": "The router's logs or the AAA server's accounting",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The commit's author field, which Git fills from the SSH session that made the change",
+        "correct": false,
+        "why": "The author is whoever ran the job."
+      },
+      {
+        "text": "`git blame` on the backup file, which names the person behind each line",
+        "correct": false,
+        "why": "It names the job too."
+      },
+      {
+        "text": "The data files",
+        "correct": false,
+        "why": "They never had the change."
+      }
+    ]
+  },
+  {
+    "id": "ex-d46f8576",
+    "version": 1,
+    "section": "drift",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order what happened to edge1 in this lesson.",
+    "hint": "Look at the three commits.",
+    "items": [
+      "The first backup of all three routers",
+      "A description and a route changed by hand",
+      "A backup committed the drift",
+      "The earlier configuration restored and backed up"
+    ]
+  },
+  {
+    "id": "ex-xgft4463",
+    "version": 1,
+    "section": "compare",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plain `diff` of `configs/edge1.conf` and the backup began with a blank line and a `!`. What were they?",
+    "hint": "The backup keeps everything.",
+    "choices": [
+      {
+        "text": "Drift on edge1",
+        "correct": false,
+        "why": "Not configuration at all."
+      },
+      {
+        "text": "A bug in the template",
+        "correct": false,
+        "why": "The template matched the router in lesson 10."
+      },
+      {
+        "text": "What FRR prints before the configuration, kept by the backup",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Git's own markers for a file that was changed since the last commit",
+        "correct": false,
+        "why": "Plain diff read two files."
+      }
+    ]
+  },
+  {
+    "id": "ex-azzdw8cr",
+    "version": 1,
+    "section": "compare",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `diff_network_config(intended, actual, \"cisco_ios\")` return in `compare.py`?",
+    "hint": "The first argument is compared against the second.",
+    "choices": [
+      {
+        "text": "The lines the router has that nobody intended",
+        "correct": false,
+        "why": "That is the other call, with the arguments swapped."
+      },
+      {
+        "text": "The lines intended that the router lacks, under their sections",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A unified diff",
+        "correct": false,
+        "why": "It returns lines by section."
+      },
+      {
+        "text": "True or False",
+        "correct": false,
+        "why": "It returns text."
+      }
+    ]
+  },
+  {
+    "id": "ex-fsjpvrkx",
+    "version": 1,
+    "section": "compare",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why name the `cisco_ios` parser for an FRR configuration?",
+    "hint": "What does the parser care about?",
+    "choices": [
+      {
+        "text": "netutils treats every platform the same",
+        "correct": false,
+        "why": "The right parser has to be named."
+      },
+      {
+        "text": "FRR is Cisco software",
+        "correct": false,
+        "why": "It is not."
+      },
+      {
+        "text": "It was the default",
+        "correct": false,
+        "why": "There is no default."
+      },
+      {
+        "text": "FRR's configuration has the same shape: sections opened by a line, indented beneath",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dfwqp7n",
+    "version": 1,
+    "section": "compare",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `compare.py` report as on edge1 and not intended?",
+    "hint": "Two things were typed by hand.",
+    "choices": [
+      {
+        "text": "`ip route 192.0.2.128/25 198.51.100.1`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A blank line and `!`",
+        "correct": false,
+        "why": "Not configuration, so not reported."
+      },
+      {
+        "text": "`description branch LAN`",
+        "correct": false,
+        "why": "That was missing from the router."
+      },
+      {
+        "text": "`description guest wifi` under `interface eth2`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptfr817e",
+    "version": 1,
+    "section": "restore",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `HEAD~1` name in `git show HEAD~1:edge1.conf`?",
+    "hint": "Count back from the last commit.",
+    "choices": [
+      {
+        "text": "The first commit in the repository, made by the first run of the job",
+        "correct": false,
+        "why": "Here that happens to be the same commit; `HEAD~1` counts back one."
+      },
+      {
+        "text": "The file as it is on the router right now",
+        "correct": false,
+        "why": "Git does not read routers."
+      },
+      {
+        "text": "Yesterday's configuration, whatever commit it is in",
+        "correct": false,
+        "why": "It counts commits, not days."
+      },
+      {
+        "text": "The commit before the last one",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhccfpeg",
+    "version": 1,
+    "section": "restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the restore, does the drift disappear from the history?",
+    "hint": "Nothing was rewritten.",
+    "choices": [
+      {
+        "text": "Yes: the restore rewrites the last commit",
+        "correct": false,
+        "why": "A new commit was added."
+      },
+      {
+        "text": "Yes, after the next backup",
+        "correct": false,
+        "why": "Backups only add commits."
+      },
+      {
+        "text": "Only if `--commit` was passed",
+        "correct": false,
+        "why": "History is never rewritten here."
+      },
+      {
+        "text": "No: it stays, between the commit that found it and the one that undid it",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-dx64qt71",
+    "version": 1,
+    "section": "restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What proves that a backup can be restored?",
+    "hint": "The lesson did it.",
+    "choices": [
+      {
+        "text": "A commit in Git that holds the file",
+        "correct": false,
+        "why": "That proves it was stored."
+      },
+      {
+        "text": "A file of the right size",
+        "correct": false,
+        "why": "Size says little."
+      },
+      {
+        "text": "An exit status of 0 from the backup job on the night the file was written",
+        "correct": false,
+        "why": "That proves the read worked."
+      },
+      {
+        "text": "Restoring it, then comparing",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wen91qv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A backup repository shows no commit for edge2 in forty days. Which is the first thing to check?",
+    "hint": "A quiet router and an unreachable one look the same in the history.",
+    "choices": [
+      {
+        "text": "Nothing: forty quiet days are normal for a branch router",
+        "correct": false,
+        "why": "Maybe, and the failures say which."
+      },
+      {
+        "text": "Whether the job's runs have been failing for edge2",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Restore edge2 from the last commit",
+        "correct": false,
+        "why": "Nothing says it is wrong."
+      },
+      {
+        "text": "Delete `edge2.conf` so that the next run writes a fresh one",
+        "correct": false,
+        "why": "That hides the history."
+      }
+    ]
+  }
+]
