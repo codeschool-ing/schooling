@@ -1,0 +1,471 @@
+{
+  "ex-mwvjzkfn": {
+    "prompt": "Em `10.20.1.0/30 dev eth1 proto kernel scope link src 10.20.1.1`, o que `proto kernel` diz?",
+    "hint": "Ele nomeia quem pôs a linha ali.",
+    "choices": [
+      {
+        "text": "A rota leva até o próprio kernel da máquina",
+        "why": "Ela sai pela eth1; `proto` fala da origem, não do destino."
+      },
+      {
+        "text": "Alguém a digitou com o comando ip route",
+        "why": "Uma rota digitada não mostra `proto kernel`; a padrão digitada depois não tem."
+      },
+      {
+        "text": "O kernel a criou ao configurar o endereço",
+        "why": "Isso. Configurar 10.20.1.1/30 na eth1 criou a rota para 10.20.1.0/30."
+      },
+      {
+        "text": "A rota fica reservada ao kernel",
+        "why": "Todo pacote que o r1 encaminha a usa."
+      }
+    ]
+  },
+  "ex-s5m089qc": {
+    "prompt": "O ping do pc1 imprimiu `From 10.20.10.1 icmp_seq=1 Destination Net Unreachable`. Qual máquina desistiu do pacote?",
+    "hint": "O endereço no começo da linha.",
+    "choices": [
+      {
+        "text": "O far1, que recusou o ping que recebeu",
+        "why": "O far1 nunca o viu: o pacote parou a um salto do pc1."
+      },
+      {
+        "text": "O próprio pc1, antes de mandar o pacote",
+        "why": "Um host sem rota imprime Network is unreachable e não cita ninguém."
+      },
+      {
+        "text": "O ra, que não tinha uma rota de volta",
+        "why": "O pacote nunca chegou ao ra; o r1 não tinha para onde mandá-lo."
+      },
+      {
+        "text": "O r1, que não tinha rota para ele",
+        "why": "Isso. 10.20.10.1 é o r1, e ele disse isso em ICMP."
+      }
+    ]
+  },
+  "ex-5269fr4t": {
+    "prompt": "Uma rota sem `via`, como `10.20.1.0/30 dev eth1`, existe porque o r1 tem um endereço naquele cabo. Ela se chama rota ___.",
+    "hint": "O roteador está ligado direto naquela rede.",
+    "blanks": [
+      {
+        "accept": [
+          "conectada",
+          "diretamente conectada",
+          "connected"
+        ]
+      }
+    ]
+  },
+  "ex-f0dxrd7x": {
+    "prompt": "Ligue cada parte de `10.20.1.0/30 dev eth1 proto kernel scope link src 10.20.1.1` ao que ela diz.",
+    "hint": "Leia a tabela da seção.",
+    "pairs": [
+      {
+        "left": "dev eth1",
+        "right": "A interface pela qual um pacote que bate sai"
+      },
+      {
+        "left": "proto kernel",
+        "right": "Quem pôs a rota ali"
+      },
+      {
+        "left": "scope link",
+        "right": "O destino está no próprio cabo"
+      },
+      {
+        "left": "src 10.20.1.1",
+        "right": "O endereço de origem dos pacotes que o r1 manda para lá"
+      }
+    ],
+    "right_distractors": [
+      "O endereço de hardware da porta do r1"
+    ]
+  },
+  "ex-kn6t3cgx": {
+    "prompt": "O que `default` quer dizer em `default via 10.20.1.2 dev eth1`?",
+    "hint": "Quantos bits ela compara?",
+    "choices": [
+      {
+        "text": "0.0.0.0/0, com que todo endereço bate",
+        "why": "Isso. Zero bits a comparar, então contém tudo."
+      },
+      {
+        "text": "A primeira rota que o r1 recebeu",
+        "why": "A ordem não tem nada a ver; as conectadas vieram antes."
+      },
+      {
+        "text": "A rota para a sub-rede do próprio r1",
+        "why": "Essa é 10.20.10.0/24, uma rota conectada."
+      },
+      {
+        "text": "Uma rota que o kernel inventa quando a tabela está vazia",
+        "why": "Antes de ser digitada, o r1 não tinha padrão e disse Net Unreachable."
+      }
+    ]
+  },
+  "ex-me98phtk": {
+    "prompt": "Só `via 10.20.1.2` foi digitado, e mesmo assim a rota diz `dev eth1`. Como o r1 escolheu a eth1?",
+    "hint": "Qual rota conectada contém 10.20.1.2?",
+    "choices": [
+      {
+        "text": "O ra disse ao r1 qual das portas usar",
+        "why": "Nada foi trocado; o r1 deduziu pela própria tabela."
+      },
+      {
+        "text": "A eth1 era a primeira interface da lista",
+        "why": "A eth0 vem primeiro, e a posição não decide nada."
+      },
+      {
+        "text": "A sub-rede da eth1 contém 10.20.1.2",
+        "why": "Isso. Um próximo salto precisa estar numa rede diretamente conectada."
+      },
+      {
+        "text": "O ARP achou o ra em cada porta do r1",
+        "why": "O ARP só pergunta na porta que a tabela escolheu."
+      }
+    ]
+  },
+  "ex-4yv80vzw": {
+    "prompt": "Quantos bits de um endereço de destino a rota padrão, 0.0.0.0/0, compara?",
+    "hint": "O número depois da barra.",
+    "unit": "bits"
+  },
+  "ex-jm0vvay6": {
+    "prompt": "Depois de o r1 ganhar a padrão, o traceroute do pc1 até 10.30.5.10 completou. O que mais precisava ser verdade para as respostas chegarem ao pc1?",
+    "hint": "Uma rota funciona num sentido só.",
+    "choices": [
+      {
+        "text": "O ra tinha rota de volta à rede do pc1",
+        "why": "Isso. O laboratório a montou; sem ela, as respostas do far1 parariam no ra."
+      },
+      {
+        "text": "O pc1 tinha a sua própria rota para 10.30.0.0/16",
+        "why": "O pc1 manda tudo ao r1 pela padrão; não precisa de mais nada."
+      },
+      {
+        "text": "O far1 ficou sabendo o caminho que o pedido fez",
+        "why": "O IP não guarda registro do caminho por onde um pacote veio."
+      },
+      {
+        "text": "O rb encaminhou as respostas no lugar do ra",
+        "why": "O rb não participa deste traceroute."
+      }
+    ]
+  },
+  "ex-6v0xem1w": {
+    "prompt": "O r1 tem `10.30.0.0/16 via 10.20.1.2` e `10.30.5.0/24 via 10.20.2.2`. Por onde sai um pacote para 10.30.5.99?",
+    "hint": "As duas rotas o contêm.",
+    "choices": [
+      {
+        "text": "Via ra, porque o /16 aparece primeiro",
+        "why": "A ordem da lista não decide nada."
+      },
+      {
+        "text": "Via rb, pelo /24",
+        "why": "Isso: 24 bits que batem vencem 16."
+      },
+      {
+        "text": "Via ra, porque o /16 cobre mais endereços",
+        "why": "Cobrir mais é exatamente o que o faz perder."
+      },
+      {
+        "text": "Dividido entre os dois, pacote a pacote",
+        "why": "Uma rota vence; nada aqui divide a carga."
+      }
+    ]
+  },
+  "ex-qthn65a4": {
+    "prompt": "Depois de o /16 e o /24 serem acrescentados, quantas rotas da tabela do r1 contêm o endereço 10.30.5.10?",
+    "hint": "Não esqueça a que contém tudo.",
+    "unit": "rotas"
+  },
+  "ex-njaggwy2": {
+    "prompt": "Com a tabela desta seção, quais destinos o r1 manda via rb, 10.20.2.2? Escolha todas as que se aplicam.",
+    "hint": "Só o /24 aponta para o rb.",
+    "choices": [
+      {
+        "text": "10.30.5.1",
+        "why": "Isso: dentro de 10.30.5.0/24."
+      },
+      {
+        "text": "10.30.5.200",
+        "why": "Isso: também dentro do /24."
+      },
+      {
+        "text": "10.30.7.10",
+        "why": "Só o /16 o contém, e ele é via ra."
+      },
+      {
+        "text": "10.30.6.5",
+        "why": "O terceiro número é 6: o /16 de novo, via ra."
+      },
+      {
+        "text": "192.0.2.1",
+        "why": "Só a padrão o contém, via ra."
+      }
+    ]
+  },
+  "ex-6v5kvm90": {
+    "prompt": "Suponha que o /24 via rb tivesse sido digitado antes do /16 via ra. Por onde sairia o 10.30.5.10?",
+    "hint": "A ordem de digitação entra na regra?",
+    "choices": [
+      {
+        "text": "Via ra, já que o /16 foi digitado por último",
+        "why": "A última rota digitada não tem vantagem."
+      },
+      {
+        "text": "Via ra, já que o /16 substituiria o /24",
+        "why": "Dois prefixos diferentes convivem lado a lado."
+      },
+      {
+        "text": "Pela padrão, já que os dois entrariam em conflito",
+        "why": "Não há conflito; um contém o outro."
+      },
+      {
+        "text": "Via rb, pelo /24, exatamente como antes",
+        "why": "Isso. Decide o tamanho, não a ordem."
+      }
+    ]
+  },
+  "ex-6ey995g4": {
+    "prompt": "Um roteador tem 10.0.0.0/8, 10.30.0.0/16, 10.30.4.0/22 e uma padrão. Quantos bits a rota vencedora para 10.30.6.1 compara?",
+    "hint": "Um /22 cobre quatro valores do terceiro número.",
+    "unit": "bits"
+  },
+  "ex-9t5th6d4": {
+    "prompt": "O r1 tem duas padrões: via ra com métrica 100 e via rb com métrica 200. Com as duas no ar, qual é usada?",
+    "hint": "Uma métrica é um custo.",
+    "choices": [
+      {
+        "text": "A via rb, porque 200 é maior",
+        "why": "Maior é mais caro; vence o caminho mais barato."
+      },
+      {
+        "text": "A via ra, métrica 100",
+        "why": "Isso, como o `ip route get 198.51.100.7` respondeu."
+      },
+      {
+        "text": "As duas, um pacote cada",
+        "why": "Métricas diferentes querem dizer uma rota preferida, não uma divisão."
+      },
+      {
+        "text": "A digitada primeiro",
+        "why": "A ordem de digitação não entra."
+      }
+    ]
+  },
+  "ex-1canq3f3": {
+    "prompt": "Depois de o cabo até o ra ser puxado, `ip route get 198.51.100.7` respondeu via rb. O que fez a diferença?",
+    "hint": "Leia a padrão via ra em `ip route show default`.",
+    "choices": [
+      {
+        "text": "O ra mandou ao r1 uma mensagem dizendo que tinha caído",
+        "why": "Nenhum protocolo roda aqui, e o ra não mandaria nada por um cabo morto."
+      },
+      {
+        "text": "A métrica da rota via ra subiu para 300",
+        "why": "A métrica continuou 100; a rota saiu da escolha."
+      },
+      {
+        "text": "A rota via ra foi marcada `dead linkdown`",
+        "why": "Isso. Sem a eth1, só a rota de métrica 200 sobrou para escolher."
+      },
+      {
+        "text": "Alguém apagou a rota via ra",
+        "why": "Ela continua listada, com `dead linkdown` ao lado."
+      }
+    ]
+  },
+  "ex-xmty1g1t": {
+    "prompt": "O ra trava, mas a porta dele voltada para o r1 continua acesa. O que o kernel do r1 faz com um pacote para 198.51.100.7?",
+    "hint": "A que o failover desta seção reagiu?",
+    "choices": [
+      {
+        "text": "Manda para o ra, já que o enlace continua no ar",
+        "why": "Isso. Nada que o r1 enxerga mudou, então a rota de métrica 100 continua escolhida."
+      },
+      {
+        "text": "Manda para o rb, porque o ra parou de responder a ele",
+        "why": "O kernel não confere se o ra responde; ele vigiava o sinal."
+      },
+      {
+        "text": "Descarta o pacote e responde Destination Net Unreachable",
+        "why": "O r1 ainda tem duas padrões, e uma delas parece boa."
+      },
+      {
+        "text": "Manda pelos dois caminhos ao mesmo tempo",
+        "why": "Uma rota é escolhida."
+      }
+    ]
+  },
+  "ex-t4dp6ghv": {
+    "prompt": "Na linha do FRR `K>* 0.0.0.0/0 [0/100] via 10.20.1.2, eth1`, o que é o 0 dentro dos colchetes?",
+    "hint": "Os colchetes têm dois números, numa ordem fixa.",
+    "choices": [
+      {
+        "text": "A métrica",
+        "why": "A métrica é o segundo número, 100."
+      },
+      {
+        "text": "A distância administrativa",
+        "why": "Isso: `[distância/métrica]`, e uma rota do kernel tem distância 0 no FRR."
+      },
+      {
+        "text": "A idade da rota em segundos",
+        "why": "A idade fica no fim da linha, 00:00:10."
+      },
+      {
+        "text": "O número de saltos até 10.20.1.2",
+        "why": "Nada aqui conta saltos."
+      }
+    ]
+  },
+  "ex-j6ne3esk": {
+    "prompt": "Ligue cada origem de rotas à sua distância administrativa padrão.",
+    "hint": "Menor é mais confiável.",
+    "pairs": [
+      {
+        "left": "Conectada",
+        "right": "0"
+      },
+      {
+        "left": "Estática",
+        "right": "1"
+      },
+      {
+        "left": "eBGP",
+        "right": "20"
+      },
+      {
+        "left": "OSPF",
+        "right": "110"
+      },
+      {
+        "left": "RIP",
+        "right": "120"
+      }
+    ],
+    "right_distractors": [
+      "100"
+    ]
+  },
+  "ex-6vvwg9p8": {
+    "prompt": "O FRR tem duas rotas estáticas para 10.40.0.0/16: via ra com distância 1 e via rb com distância 200. O que o `ip route show 10.40.0.0/16` imprimiu?",
+    "hint": "A suíte de roteamento guarda candidatas; o kernel recebe vencedoras.",
+    "choices": [
+      {
+        "text": "As duas rotas, com as distâncias",
+        "why": "O kernel mostrou uma linha; a outra ficou no FRR."
+      },
+      {
+        "text": "A rota via rb, que foi digitada por último",
+        "why": "A ordem de digitação não entra; a distância, sim."
+      },
+      {
+        "text": "Uma rota, via 10.20.1.2",
+        "why": "Isso: a de distância 1, `proto static`."
+      },
+      {
+        "text": "Nada, porque o FRR guarda as rotas estáticas para si",
+        "why": "O FRR instala as vencedoras no kernel."
+      }
+    ]
+  },
+  "ex-6h4fajgw": {
+    "prompt": "Um roteador aprende 10.50.1.0/24 pelo RIP (distância 120) e tem uma rota estática para 10.50.0.0/16 (distância 1). Qual rota leva um pacote para 10.50.1.7?",
+    "hint": "Qual das três regras é aplicada primeiro?",
+    "choices": [
+      {
+        "text": "O /24 do RIP: o tamanho do prefixo vem antes",
+        "why": "Isso. O /24 vence pelo tamanho antes de a confiança entrar."
+      },
+      {
+        "text": "A estática /16, já que a distância 1 vence a 120",
+        "why": "A distância só compara rotas para o mesmo prefixo."
+      },
+      {
+        "text": "A que tiver a menor métrica",
+        "why": "Métricas de duas origens não se comparam, e o tamanho vem antes."
+      },
+      {
+        "text": "Nenhuma: as duas conflitam e o pacote é descartado",
+        "why": "Rotas aninhadas não conflitam."
+      }
+    ]
+  },
+  "ex-eqdwjph2": {
+    "prompt": "Uma rota estática com distância alta, para esperar atrás de uma rota melhor e só ser instalada quando aquela some, se chama rota estática ___.",
+    "hint": "Ela fica atrás da outra, como sobre a água.",
+    "blanks": [
+      {
+        "accept": [
+          "flutuante",
+          "floating"
+        ]
+      }
+    ]
+  },
+  "ex-7wtg4phc": {
+    "prompt": "Ponha as perguntas que um roteador faz para escolher uma rota na ordem em que ele as faz.",
+    "hint": "Tamanho, confiança, custo.",
+    "items": [
+      "Quais rotas contêm o destino?",
+      "Qual delas tem o prefixo mais longo?",
+      "Entre as empatadas, qual origem tem a menor distância?",
+      "Entre essas, qual rota tem a menor métrica?"
+    ],
+    "trap": "Distância antes do tamanho é o deslize comum: um /24 aprendido pelo RIP ainda vence uma estática /16 para os endereços dentro dele."
+  },
+  "ex-wg5s9cmy": {
+    "prompt": "Uma tabela tem 0.0.0.0/0, 172.16.0.0/12, 172.16.0.0/16 e 172.16.32.0/20. Qual é o tamanho do prefixo da rota escolhida para 172.16.40.9?",
+    "hint": "Um /20 cobre dezesseis valores do terceiro número.",
+    "unit": "bits"
+  },
+  "ex-re5tp3be": {
+    "prompt": "No começo da aula, o pc1 recebeu `Destination Net Unreachable` de 10.20.10.1 para 10.30.5.10. Qual comando no r1, digitado nesta aula, fez o ping funcionar?",
+    "hint": "O r1 precisava de um lugar para mandá-lo.",
+    "choices": [
+      {
+        "text": "ip link set eth1 up",
+        "why": "A eth1 já estava no ar; o problema era a tabela."
+      },
+      {
+        "text": "ip route add default via 10.20.1.2",
+        "why": "Isso. Com uma padrão via ra, o pacote tinha para onde ir."
+      },
+      {
+        "text": "ip addr add 10.30.5.1/16 dev eth1",
+        "why": "Isso reivindicaria a rede do far1 no cabo errado."
+      },
+      {
+        "text": "ip neigh flush dev eth1",
+        "why": "A tabela de vizinhos não era o problema; a de rotas era."
+      }
+    ]
+  },
+  "ex-9st9y599": {
+    "prompt": "Ligue cada coisa impressa nesta aula ao que ela quer dizer.",
+    "hint": "Cada uma veio de uma seção diferente.",
+    "pairs": [
+      {
+        "left": "dead linkdown",
+        "right": "A interface da rota perdeu o sinal"
+      },
+      {
+        "left": "Destination Net Unreachable",
+        "right": "Um roteador não tinha rota para o destino"
+      },
+      {
+        "left": "K>*",
+        "right": "Selecionada pelo FRR e instalada no kernel"
+      },
+      {
+        "left": "[0/200]",
+        "right": "Distância 0, métrica 200"
+      }
+    ],
+    "right_distractors": [
+      "A rota foi digitada duas vezes"
+    ]
+  }
+}
