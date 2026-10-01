@@ -59,8 +59,8 @@ seção desta aula, `fe80::9e:43ff:fe3e:caae`: os mesmos dígitos com `ff:fe` no
 `00`.
 
 Ainda há um jeito de alcançar todas as máquinas de um enlace, e ele também é um grupo multicast:
-**`ff02::1`, todos os nós** (*all nodes*). Toda interface IPv6 entra nele. Pingue-o com uma zona, já que
-endereços `ff02::` valem só no enlace, como os `fe80::`:
+**`ff02::1`, todos os nós** (*all nodes*). Toda interface IPv6 entra nele. Endereços `ff02::` valem só no
+enlace, como os `fe80::`, então o ping precisa de uma zona:
 
 ```
 ana@pc1:~$ ping -w 2 ff02::1%eth0

@@ -58,8 +58,8 @@ section of this lesson, `fe80::9e:43ff:fe3e:caae`: the same digits with `ff:fe` 
 `02` turned into `00`.
 
 There is still a way to reach every machine on a link, and it is a multicast group too:
-**`ff02::1`, all nodes**. Every IPv6 interface joins it. Ping it, with a zone, since `ff02::` addresses
-are link-scoped like `fe80::`:
+**`ff02::1`, all nodes**. Every IPv6 interface joins it. `ff02::` addresses are link-scoped, as `fe80::`
+addresses are, so the ping needs a zone:
 
 ```
 ana@pc1:~$ ping -w 2 ff02::1%eth0
