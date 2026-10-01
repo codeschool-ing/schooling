@@ -13,7 +13,7 @@ O que manteve o IPv4 funcionando é o NAT, assunto da aula 11: um escritório in
 atrás de um endereço público. Quando nem isso bastou, os provedores puseram os clientes atrás de um
 segundo NAT, deles, o NAT de operadora, com os endereços `100.64.0.0/10` que a aula 8 mostrou. Funciona,
 e o custo é mais fácil de ver da outra ponta. Os dois pedidos abaixo foram do pc1 para o mesmo servidor
-web, um por cada protocolo; enquanto isso, o `tcpdump` no servidor web imprimia o primeiro pacote de
+web, um por cada protocolo. Enquanto isso, o `tcpdump` no servidor web imprimia o primeiro pacote de
 cada conexão e a sua resposta, e a saída dele saiu depois que os dois `curl` terminaram:
 
 ```

@@ -46,16 +46,16 @@ válida, então **o tamanho máximo de uma ROA deve bater com o que é de fato a
 
 ## Protegendo a sessão e vigiando o resultado
 
-- **A própria sessão** se protege com autenticação TCP entre os dois roteadores, e com uma verificação de
+- *A própria sessão* se protege com autenticação TCP entre os dois roteadores, e com uma verificação de
   TTL que recusa pacotes BGP que não vieram de um vizinho diretamente conectado.
-- **`maximum-prefix`**, como na seção anterior, limita o estrago de um vizinho que de repente manda muito
+- `maximum-prefix`, como na seção anterior, limita o estrago de um vizinho que de repente manda muito
   mais que o normal.
-- **Vigilância de fora**: coletores de rotas públicos e *looking glasses* mostram como outras redes veem
+- *Vigilância de fora*: coletores de rotas públicos e *looking glasses* mostram como outras redes veem
   seus prefixos, e serviços de alerta avisam quando seu bloco aparece com uma origem que não é a sua. Uma
   rede que nunca olha de fora fica sabendo de um problema pelos clientes.
 
 O **MANRS** (*Mutually Agreed Norms for Routing Security*) reúne isso numa lista curta com que as redes se
-comprometem: filtrar o que anunciam e aceitam, impedir endereços de origem falsificados, manter os contatos
+comprometem. Ela pede quatro coisas: filtrar o que anunciam e aceitam, impedir endereços de origem falsificados, manter os contatos
 em dia para que outros as encontrem durante um incidente, e publicar suas intenções de roteamento num IRR e
 no RPKI para que outros possam filtrá-las. Para a empresa deste laboratório, isso quer dizer três
 verificações: uma ROA para 203.0.113.0/24 com origem 64500 e tamanho máximo /24, um filtro de saída como o

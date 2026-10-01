@@ -67,8 +67,8 @@ com `ff:fe` no meio, montado a partir do MAC do pc2 exatamente como o endereço 
 Os dois prazos vêm das linhas do prefixo no anúncio. `Valid time: 86400` segundos é um dia,
 `Pref. time: 14400` segundos são quatro horas, e o pc2 mostra os dois em contagem regressiva:
 `valid_lft 86396sec preferred_lft 14396sec`, quatro segundos depois de ouvi-los. **Enquanto dura o
-prazo preferido, o endereço é usado para conexões novas; depois dele, o endereço fica obsoleto
-(*deprecated*) e só serve às conexões já abertas; quando acaba o prazo de validade, o endereço some.**
+prazo preferido, o endereço é usado para conexões novas.** Depois dele, o endereço fica obsoleto
+(*deprecated*) e só serve às conexões já abertas, e quando acaba o prazo de validade ele some.
 Cada anúncio novo reinicia os dois relógios, então numa rede saudável nenhum dos dois chega a zero. Um
 roteador que para de anunciar é uma rede cujos endereços vão sumindo ao longo de um dia.
 

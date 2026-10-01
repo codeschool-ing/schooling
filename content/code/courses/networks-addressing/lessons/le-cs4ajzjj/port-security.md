@@ -7,7 +7,7 @@ A switch, as the previous sections built it, trusts every frame. It learns any s
 arrives, on any port, and forwards for anybody. That is what makes it work without configuration,
 and it is also two problems. **Anybody who finds a free socket is on the network**, the moment a
 cable goes in. And **the table can be filled on purpose**: a device that sends frames from a great
-many made-up source addresses fills the switch's finite table, the real machines' entries age out
+many made-up source addresses fills the switch's finite table. The real machines' entries age out
 or never get in, and the switch floods their traffic to every port, including the one the device
 is on. A switch that has lost its table behaves like the hub of lesson 1, with every conversation
 on every cable.

@@ -75,8 +75,8 @@ expensive one, and RIP has no way to be told.
 **Its range is fifteen.** A metric of 16 means unreachable, so a network more than fifteen routers
 away cannot be reached with RIP at all. That limit is deliberate, and it exists because of RIP's worst
 habit: when a network disappears, neighbours can keep offering each other old versions of the route, each
-adding one, **counting to infinity** until the number reaches 16. **Split horizon**, never advertising a
-route back out of the interface it was learned on, and **poisoned reverse**, advertising it back as 16,
+adding one, **counting to infinity** until the number reaches 16. *Split horizon*, never advertising a
+route back out of the interface it was learned on, and *poisoned reverse*, advertising it back as 16,
 shorten that, and the 180-second timer still makes RIP slow to forget.
 
 RIP is rarely chosen for a new network. It survives in small equipment, in old installations, and in

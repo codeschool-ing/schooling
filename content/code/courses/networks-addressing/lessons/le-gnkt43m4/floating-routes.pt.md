@@ -87,10 +87,10 @@ acabou de ver.
 
 Três saídas, e só a primeira é assunto deste curso:
 
-- **Um protocolo de roteamento.** Os roteadores contam uns aos outros o que alcançam, então r2 teria
+- *Um protocolo de roteamento.* Os roteadores contam uns aos outros o que alcançam, então r2 teria
   avisado r3 que perdeu a rede de pc1. A aula 16 é isso.
-- **BFD** (*Bidirectional Forwarding Detection*), um protocolo pequeno que troca hellos rápidos entre dois
+- *BFD* (*Bidirectional Forwarding Detection*), um protocolo pequeno que troca hellos rápidos entre dois
   roteadores e pode retirar uma rota estática quando o vizinho para de responder, mesmo com o sinal no
   cabo. Ele é citado aqui e não foi executado neste laboratório.
-- **Menos caminhos.** Uma rede com uma saída só não tem como errar desse jeito, e esse é o assunto da
+- *Menos caminhos.* Uma rede com uma saída só não tem como errar desse jeito, e esse é o assunto da
   próxima seção.

@@ -69,10 +69,10 @@ that should reach it from the other networks needs its way back too.
 
 Two habits follow:
 
-- **Write both directions in the same change.** A change request that adds a route towards a network
+- *Write both directions in the same change.* A change request that adds a route towards a network
   and not the return is half a change, and the half that is missing fails silently, as the previous
   section showed.
-- **Test from both ends.** A ping from pc1 tests both directions at once and tells you nothing about
+- *Test from both ends.* A ping from pc1 tests both directions at once and tells you nothing about
   which one broke. A `traceroute` from each side, or a capture at the far end, does.
 
 The forward and return paths do not have to be the same. On this chain they are, because there is only

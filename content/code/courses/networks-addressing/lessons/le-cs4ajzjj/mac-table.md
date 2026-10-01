@@ -29,8 +29,8 @@ root@sw1:~# bridge fdb show br br0 dynamic
 switch wrote that address against p1. The server's reply arrived on p4 with source
 `02:9e:43:3e:ca:ae`, so that went against p4. The request's destination taught the switch nothing,
 even though it named the server; only the reply, coming *from* the server, did. (Before either,
-the ARP exchange of lesson 2 had already carried both sources through the switch, which is why both
-entries exist by the time the ping prints.)
+pc1's ARP question and the server's ARP answer had already carried both sources through the switch,
+which is why both entries exist by the time the ping prints.)
 
 The table is called by several names, and they all mean this list: the **MAC address table**, the
 **CAM table** on many vendors' switches, after the memory it is kept in, and the **forwarding

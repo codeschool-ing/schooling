@@ -44,16 +44,16 @@ maximum length longer than the holder really announces leaves room for a valid-l
 
 ## Securing the session and watching the result
 
-- **The session itself** can be protected with TCP authentication between the two routers, and with a TTL
+- *The session itself* can be protected with TCP authentication between the two routers, and with a TTL
   check that refuses BGP packets that did not come from a directly connected neighbour.
-- **`maximum-prefix`**, as in the previous section, limits the damage of a neighbour that suddenly sends
+- `maximum-prefix`, as in the previous section, limits the damage of a neighbour that suddenly sends
   far more than usual.
-- **Monitoring from outside**: public route collectors and looking glasses show how other networks see
+- *Monitoring from outside*: public route collectors and looking glasses show how other networks see
   your prefixes, and alerting services warn when your block appears with an origin that is not yours. A
   network that never looks from outside learns about a problem from its customers.
 
-**MANRS** (*Mutually Agreed Norms for Routing Security*) gathers these into a short list networks commit to:
-filter what you announce and accept, prevent spoofed source addresses, keep contact details current so
+**MANRS** (*Mutually Agreed Norms for Routing Security*) gathers these into a short list networks commit to.
+It asks four things: filter what you announce and accept, prevent spoofed source addresses, keep contact details current so
 others can reach you during an incident, and publish your routing intentions in an IRR and in RPKI so that
 others can filter you. For the company in this lab, that means three checks: a ROA for 203.0.113.0/24 with
 origin 64500 and maximum length /24, an outbound filter like `TO-PROVIDER`, and providers that filter what

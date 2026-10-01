@@ -17,13 +17,13 @@ cable are all static, and all of them are right.
 
 ## What you get for typing it
 
-- **Predictability.** The table holds what the engineer wrote and nothing else. When a packet goes the
+- *Predictability.* The table holds what the engineer wrote and nothing else. When a packet goes the
   wrong way, the reason is a line you can read, not the outcome of a protocol's calculation.
-- **Nothing to attack and nothing to misconfigure on the wire.** A routing protocol listens to its
+- *Nothing to attack and nothing to misconfigure on the wire.* A routing protocol listens to its
   neighbours, so a neighbour that lies, or a mistake on another router, can rewrite this router's
   table. A static route listens to nobody.
-- **No cost.** No messages, no timers, no memory for a neighbour's database.
-- **It wins.** Lesson 14 put the administrative distance of a static route at 1, below every routing
+- *No cost.* No messages, no timers, no memory for a neighbour's database.
+- *It wins.* Lesson 14 put the administrative distance of a static route at 1, below every routing
   protocol, so a typed route beats a learned one for the same prefix. That is useful when you mean it
   and a trap when you forgot it was there.
 

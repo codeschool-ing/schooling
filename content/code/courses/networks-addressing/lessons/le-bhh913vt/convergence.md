@@ -24,7 +24,7 @@ Neighbor ID     Pri State           Up Time         Dead Time Address         In
 
 ```
 
-r4, `10.20.0.13`, is still **`Full`**, with **`8.651s`** left on its dead timer: hellos stopped arriving
+r4, `10.20.0.13`, is still `Full`, with **`8.651s`** left on its dead timer: hellos stopped arriving
 when the frames did, and the countdown that started at 40 seconds is nearly done. `RXmtL 2` is r1's
 retransmission list, two updates it has sent r4 and is still waiting to hear acknowledged. Until the timer
 runs out, r1's table still sends pc1's traffic to r4, and every packet is lost.

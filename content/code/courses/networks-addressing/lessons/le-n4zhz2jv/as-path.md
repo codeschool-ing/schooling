@@ -14,9 +14,9 @@ root@edge:~# vtysh -c "configure terminal" -c "ip prefix-list OURS seq 5 permit 
 Read it as policy rather than syntax:
 
 - `OURS` is the company's block, `203.0.113.0/24`, and nothing else.
-- **`TO-PROVIDER`**, applied *out* to both providers, permits what matches `OURS`. Everything else falls
+- `TO-PROVIDER`, applied *out* to both providers, permits what matches `OURS`. Everything else falls
   off the end and is denied: **edge announces its own block and nothing more**.
-- **`FROM-PROVIDER`**, applied *in*, first denies `OURS`, so no provider can tell edge how to reach the
+- `FROM-PROVIDER`, applied *in*, first denies `OURS`, so no provider can tell edge how to reach the
   company's own network, then permits everything else.
 
 The summary changes from `(Policy)` to numbers:
@@ -77,9 +77,9 @@ best through ispb, `64502`. The company's own block has next hop `0.0.0.0` and w
 here.
 
 BGP's choice goes through a fixed list of tie-breakers, in order, and stops at the first that differs.
-The first few, on FRR and Cisco: the highest **weight** (local to one router), the highest **local
-preference** (shared inside one AS), a route this router originated, **the shortest AS path**, the origin
-code, the lowest **MED**, and then eBGP over iBGP. Everything this lesson does with real traffic happens at
+The first few, on FRR and Cisco: the highest weight (local to one router), the highest local
+preference (shared inside one AS), a route this router originated, **the shortest AS path**, the origin
+code, the lowest MED, and then eBGP over iBGP. Everything this lesson does with real traffic happens at
 the AS path step, because nothing before it was set.
 
 The best paths go into the kernel:

@@ -11,9 +11,9 @@ hub of lesson 1.
 
 The capture below shows both cases side by side. The table was emptied, then pc1 pinged the server
 once so that both were learnt. pc3 then started tcpdump, filtered to ICMP, and left it running for
-eight seconds while pc1 did two things: pinged the server twice more, a destination the switch
-knows; and pinged 10.20.10.99, after being told by hand (`ip neigh add`) that this address lives at
-`02:00:00:00:00:99`, a MAC address no card in the lab has. tcpdump printed when it stopped, so its
+eight seconds while pc1 did two things. It pinged the server twice more, a destination the switch
+knows. Then it pinged 10.20.10.99, after being told by hand (`ip neigh add`) that this address lives
+at `02:00:00:00:00:99`, a MAC address no card in the lab has. tcpdump printed when it stopped, so its
 output follows the pings:
 
 ```

@@ -58,7 +58,7 @@ Paths: (2 available, best #1, table default)
       Last update: Tue Sep 29 08:50:18 2026
 ```
 
-The direct path now reads **`64500 64500 64500`**, three numbers, against **`64502 64500`**, two, and the
+The direct path now reads `64500 64500 64500`, three numbers, against `64502 64500`, two, and the
 path through ispb is `best (AS Path)`. a1's traffic follows:
 
 ```
@@ -88,11 +88,11 @@ it only changes the choice of networks further away.
 
 Three other levers exist, each named and none run in this lab:
 
-- **MED** (*multi-exit discriminator*), a hint to one neighbour about which of several links to that same
+- *MED* (*multi-exit discriminator*), a hint to one neighbour about which of several links to that same
   neighbour you prefer.
-- **Communities**, tags attached to a route that the provider has published a meaning for, such as *lower
+- *Communities*, tags attached to a route that the provider has published a meaning for, such as *lower
   my local preference* or *do not announce this to that peer*.
-- **A more specific prefix** through one provider: two `/25`s through one link and the `/24` through both.
+- *A more specific prefix* through one provider: two `/25`s through one link and the `/24` through both.
   Longest prefix wins, as lesson 14 showed, so the `/25`s draw the traffic; it also adds routes to every
   router on the internet, and many networks discard prefixes longer than a `/24`.
 

@@ -44,7 +44,7 @@ pc2 duas vezes, e a tabela ganha duas linhas:
 
 A primeira ida e volta levou 6.62 ms e a segunda 1.61 ms. Parte da diferença é que o primeiro ping
 também precisou achar o MAC do pc2 com ARP, porque o laboratório esvaziou todas as tabelas antes
-deste bloco; o resto é o laboratório, que roda todas as máquinas num só computador virtual e não
+deste bloco. O resto é o laboratório, que roda todas as máquinas num só computador virtual e não
 diz nada sobre a velocidade de um cabo de verdade.
 
 É a tabela que mantém uma conversa restrita às duas portas que a usam. Para ver isso, o pc3 roda

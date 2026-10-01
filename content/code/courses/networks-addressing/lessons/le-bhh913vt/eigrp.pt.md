@@ -33,8 +33,8 @@ H   Address           Interface            Hold   Uptime   SRTT   RTO   Q     Se
 0   10.20.0.13        eth4                 12     0        0      2    0      3
 ```
 
-Os dois vizinhos, r2 e r4. `Hold` é o temporizador de morte do EIGRP, que conta para trás a partir de **15
-segundos** por padrão e é reiniciado por um hello a cada **5 segundos**, e é por isso que mostra 14 e 12
+Os dois vizinhos, r2 e r4. `Hold` é o temporizador de morte do EIGRP, que conta para trás a partir de 15
+segundos por padrão e é reiniciado por um hello a cada 5 segundos, e é por isso que mostra 14 e 12
 aqui.
 
 ## A tabela de topologia
@@ -68,13 +68,13 @@ procurando rota. `1 successors` é o número de melhores caminhos, e o **sucesso
 `10.20.0.2`, r2, em `eth1`. `FD is 30720` é a **distância viável** (*feasible distance*), a métrica do
 melhor caminho a partir de r1.
 
-O par depois do vizinho é **`(30720/28160)`**: a distância de r1 através daquele vizinho, e a **distância
+O par depois do vizinho é `(30720/28160)`: a distância de r1 através daquele vizinho, e a **distância
 anunciada** (*reported distance*), a distância do próprio vizinho até a rede, que r2 contou a r1. r2 está
 conectado à rede de pc2, então anuncia 28160, o mesmo número que r1 mostra para as próprias redes
 conectadas. A diferença, 2560, é o que um enlace a mais acrescenta.
 
-Com os ajustes padrão, a métrica é calculada a partir da menor largura de banda do caminho e do atraso total das interfaces, e
-não a partir do custo do OSPF, e é por isso que o EIGRP escolheu o cabo direto que o OSPF evitou: o
+Com os ajustes padrão, a métrica é calculada a partir da menor largura de banda do caminho e do atraso total das interfaces. O
+custo do OSPF não entra, e é por isso que o EIGRP escolheu o cabo direto que o OSPF evitou: o
 `cost 100` era uma configuração do OSPF, e o EIGRP vê duas interfaces iguais.
 
 ## Sucessores viáveis, e por que não há nenhum aqui
@@ -87,7 +87,7 @@ cria loop.
 
 Para `10.20.2.0/24`, o outro vizinho é r4, e r4 está mais longe da rede de pc2 do que r1. O que ele anuncia
 é maior que 30720, então ele falha na condição, e a tabela lista um sucessor e nenhuma reserva. Se r2
-falhasse, r1 teria de pedir aos vizinhos um novo caminho, o que o EIGRP chama de ficar **ativo** (`A` nos
+falhasse, r1 teria de pedir aos vizinhos um novo caminho, o que o EIGRP chama de ficar *ativo* (`A` nos
 códigos) e que seu algoritmo, o **DUAL** (*Diffusing Update Algorithm*), administra.
 
 **Um anel não dá ao EIGRP nada para guardar de reserva para a rede ao lado**, porque o outro lado do anel é

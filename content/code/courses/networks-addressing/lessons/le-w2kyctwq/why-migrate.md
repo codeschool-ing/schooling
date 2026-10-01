@@ -14,7 +14,7 @@ What kept IPv4 working is NAT, the subject of lesson 11: a whole office or a who
 public address. When even that was not enough, providers put their customers behind a second NAT of
 their own, carrier-grade NAT, with the `100.64.0.0/10` addresses lesson 8 met. It works, and what it
 costs is easiest to see from the far end. Both requests below went from pc1 to the same web server,
-one over each protocol; meanwhile `tcpdump` on the web server printed the first packet of each
+one over each protocol. Meanwhile `tcpdump` on the web server printed the first packet of each
 connection and its reply, and its output came out after the two `curl` commands had finished:
 
 ```

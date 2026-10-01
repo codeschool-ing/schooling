@@ -40,10 +40,10 @@ again.
 Routing protocols inside one organisation are called **interior gateway protocols**, IGPs. They come in
 two families, and the difference is what a router tells its neighbours:
 
-- **Distance vector.** Each router tells its neighbours its own table: *these networks, at these
+- *Distance vector.* Each router tells its neighbours its own table: *these networks, at these
   distances*. A neighbour adds the cost of the link between them and keeps the best offer. Nobody sees
   the whole network; each router trusts what the next one says. **RIP** works this way.
-- **Link state.** Each router tells *every* router in the area about its own links: *I am r1, I have a
+- *Link state.* Each router tells *every* router in the area about its own links: *I am r1, I have a
   cable to r2 and one to r4, and this LAN*. Every router collects the same set of descriptions, draws
   the same map, and calculates its own shortest paths over it. **OSPF** works this way, and so does
   IS-IS, which large providers use and this course does not cover.
@@ -55,8 +55,8 @@ neighbour offered, so it can switch to a backup without asking anybody.
 
 Each protocol finds its **neighbours** first, by sending small hello messages out of the interfaces it
 was told to use, and only exchanges routes with routers that answer. Each one puts its best routes in the
-same kernel table lesson 14 read, marked with its name, `proto rip` or `proto ospf`, and with the
-**administrative distance** lesson 14 listed, so that a router running two of them knows whose route to
+same kernel table lesson 14 read, marked with its name, `proto rip` or `proto ospf`. Each also carries
+the **administrative distance** lesson 14 listed, so that a router running two of them knows whose route to
 believe: 120 for RIP, 110 for OSPF, and 90 for EIGRP's internal routes on Cisco equipment.
 
 The other thing they share is that they are **interior**. They assume every router is run by the same

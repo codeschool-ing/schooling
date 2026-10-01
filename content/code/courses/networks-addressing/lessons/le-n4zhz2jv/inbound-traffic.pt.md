@@ -59,7 +59,7 @@ Paths: (2 available, best #1, table default)
       Last update: Tue Sep 29 08:50:18 2026
 ```
 
-O caminho direto agora é **`64500 64500 64500`**, três números, contra **`64502 64500`**, dois, e o caminho
+O caminho direto agora é `64500 64500 64500`, três números, contra `64502 64500`, dois, e o caminho
 por ispb é o `best (AS Path)`. O tráfego de a1 vai atrás:
 
 ```
@@ -88,11 +88,11 @@ foi dirigido; só muda a escolha de redes mais distantes.
 
 Existem outras três alavancas, cada uma citada e nenhuma executada neste laboratório:
 
-- **MED** (*multi-exit discriminator*), uma dica a um vizinho sobre qual de vários enlaces até esse mesmo
+- *MED* (*multi-exit discriminator*), uma dica a um vizinho sobre qual de vários enlaces até esse mesmo
   vizinho você prefere.
-- **Communities**, etiquetas presas a uma rota às quais o provedor publicou um significado, como *baixe
+- *Communities*, etiquetas presas a uma rota às quais o provedor publicou um significado, como *baixe
   minha local preference* ou *não anuncie isto àquele par*.
-- **Um prefixo mais específico** por um provedor: dois `/25` por um enlace e o `/24` pelos dois. O prefixo
+- *Um prefixo mais específico* por um provedor: dois `/25` por um enlace e o `/24` pelos dois. O prefixo
   mais longo vence, como a aula 14 mostrou, então os `/25` atraem o tráfego; isso também acrescenta rotas a
   todo roteador da internet, e muitas redes descartam prefixos mais longos que `/24`.
 

@@ -45,12 +45,12 @@ sentidos.
 
 ## Onde esse formato aparece
 
-- **Uma filial** com um enlace até a matriz: uma rota padrão em direção à matriz, e a matriz guarda uma
+- *Uma filial* com um enlace até a matriz: uma rota padrão em direção à matriz, e a matriz guarda uma
   rota para o bloco da filial apontando de volta por esse enlace.
-- **Uma casa ou um escritório pequeno** atrás de um provedor: uma rota padrão em direção ao provedor, que
+- *Uma casa ou um escritório pequeno* atrás de um provedor: uma rota padrão em direção ao provedor, que
   é o que o DHCP da aula 10 entrega a cada PC como gateway e o que o próprio roteador doméstico guarda em
   direção ao provedor.
-- **O cliente de um provedor**: o provedor mantém uma rota estática para o bloco do cliente apontando
+- *O cliente de um provedor*: o provedor mantém uma rota estática para o bloco do cliente apontando
   para o enlace do cliente, e o cliente mantém uma rota padrão apontando de volta. Nenhum dos lados roda
   protocolo.
 
@@ -64,9 +64,9 @@ dos lados reduzido a `0.0.0.0/0`.
 padrão que apontam um para o outro, e um pacote para um destino que nenhum dos dois conhece fica
 quicando entre eles até o TTL acabar. Cada um entrega o pacote ao outro, certo de que o outro sabe.
 
-É também por isso que a rota padrão de r3 foi pelo cabo reserva até r1, e não até r2: com o cabo de r1 a
-r2 ainda puxado, r2 não tem rota para a rede de pc1, e uma rota padrão em direção a r2 teria entregado
-as respostas de r3 a um roteador que só conseguiria responder `!N`. **Escolher para onde a rota padrão
+É também por isso que a rota padrão de r3 foi pelo cabo reserva até r1, e não até r2. Com o cabo de r1 a
+r2 ainda puxado, r2 não tem rota para a rede de pc1, então uma rota padrão em direção a r2 entregaria as
+respostas de r3 a um roteador que só conseguiria responder `!N`. **Escolher para onde a rota padrão
 aponta é a única decisão de roteamento que uma rede stub toma**, e ela tem de ser tomada sabendo o que
 há atrás do próximo salto.
 

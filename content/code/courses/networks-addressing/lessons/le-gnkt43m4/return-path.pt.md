@@ -72,10 +72,10 @@ de volta.
 
 Dois hábitos decorrem disso:
 
-- **Escreva os dois sentidos na mesma mudança.** Um pedido de mudança que acrescenta a rota de ida para
+- *Escreva os dois sentidos na mesma mudança.* Um pedido de mudança que acrescenta a rota de ida para
   uma rede e não a de volta é meia mudança, e a metade que falta falha em silêncio, como a seção anterior
   mostrou.
-- **Teste das duas pontas.** Um ping de pc1 testa os dois sentidos de uma vez e não diz qual deles
+- *Teste das duas pontas.* Um ping de pc1 testa os dois sentidos de uma vez e não diz qual deles
   quebrou. Um `traceroute` de cada lado, ou uma captura na outra ponta, diz.
 
 Os caminhos de ida e de volta não precisam ser iguais. Nesta cadeia são, porque só existe um caminho

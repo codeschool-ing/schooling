@@ -43,9 +43,9 @@ faixas privadas e blocos reservados para documentação, então nada aqui chega 
 ```
 
 **Um prompt que diz `ana@pc1` rodou no pc1, como usuária comum; `root@r1` rodou no roteador, num
-prompt de root**, porque configurar um equipamento exige isso. O pc1 está em verde porque a maioria
-das sessões começa nele. O balanceador de carga está em âmbar porque é o único equipamento do
-desenho que responde em nome de outros: o endereço 192.0.2.80 é dele, e as páginas atrás dele não
+prompt de root**, porque configurar um equipamento exige isso. O pc1 tem contorno de outra cor porque a
+maioria das sessões começa nele. O balanceador de carga também tem uma cor própria, porque é o
+único equipamento do desenho que responde em nome de outros: o endereço 192.0.2.80 é dele, e as páginas atrás dele não
 são.
 
 Dois equipamentos da tabela não aparecem no desenho. O laboratório não tem rádio nem linha

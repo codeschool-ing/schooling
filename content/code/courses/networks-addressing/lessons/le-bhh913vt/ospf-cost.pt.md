@@ -92,8 +92,8 @@ N    10.20.2.0/24          [40] area: 0.0.0.0
 
 ```
 
-Cada rede com o custo total entre colchetes, e o roteador a quem entregá-la. A **tabela de roteadores**
-(*router routing table*) e a **tabela externa** (*external routing table*) estão vazias porque nada neste
+Cada rede com o custo total entre colchetes, e o roteador a quem entregá-la. A tabela de roteadores
+(*router routing table*) e a tabela externa (*external routing table*) estão vazias porque nada neste
 anel é borda de área nem traz rotas de fora do OSPF.
 
 ## Usando o custo de propósito

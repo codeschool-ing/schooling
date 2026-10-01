@@ -85,10 +85,10 @@ and it turns every other failure into the silent half-working state you just wat
 
 Three ways out of it, and only the first is this course's subject:
 
-- **A routing protocol.** Routers tell each other what they can reach, so r2 would have told r3 it had
+- *A routing protocol.* Routers tell each other what they can reach, so r2 would have told r3 it had
   lost pc1's network. Lesson 16 is this.
-- **BFD** (*Bidirectional Forwarding Detection*), a small protocol that sends rapid hellos between two
+- *BFD* (*Bidirectional Forwarding Detection*), a small protocol that sends rapid hellos between two
   routers and can withdraw a static route when the neighbour stops answering, even with the signal up.
   It is named here and was not run in this lab.
-- **Fewer paths.** A network with one way out has nothing to get wrong this way, which is the next
+- *Fewer paths.* A network with one way out has nothing to get wrong this way, which is the next
   section.

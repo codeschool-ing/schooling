@@ -93,8 +93,8 @@ N    10.20.2.0/24          [40] area: 0.0.0.0
 
 ```
 
-Each network with its total cost in brackets, and the router to hand it to. The **router routing table**
-and **external routing table** are empty because nothing in this ring is an area border or brings in
+Each network with its total cost in brackets, and the router to hand it to. The router routing table
+and external routing table are empty because nothing in this ring is an area border or brings in
 routes from outside OSPF.
 
 ## Using cost on purpose

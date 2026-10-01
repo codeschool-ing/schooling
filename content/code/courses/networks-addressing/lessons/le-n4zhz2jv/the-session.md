@@ -15,7 +15,7 @@ root@edge:~# vtysh -c "configure terminal" -c "router bgp 64500" -c "bgp router-
 ```
 
 `neighbor 192.0.2.2 remote-as 64501` says *the router at that address is in AS 64501*. A neighbour in a
-different AS is an **eBGP** session (*external*); in the same AS it would be **iBGP**, which large networks
+different AS is an **eBGP** session (*external*); in the same AS it would be iBGP, which large networks
 use to carry BGP routes between their own border routers and which this lesson does not need.
 `network 203.0.113.0/24` is the company's block, the prefix edge will originate.
 
@@ -51,12 +51,12 @@ that policy.
 
 The state column is the first thing to read:
 
-- **`Active` or `Connect`** for a long time: the TCP connection is not completing. Check that the
+- `Active` or `Connect` for a long time: the TCP connection is not completing. Check that the
   neighbour's address is reachable, that the other side has a matching `neighbor` line pointing back, and
   that nothing filters TCP port 179.
-- **A session that comes up and drops**: the two sides disagree about something in the opening exchange,
+- *A session that comes up and drops*: the two sides disagree about something in the opening exchange,
   most often the AS number. A `remote-as` that does not match what the neighbour says it is closes the
   session.
-- **`(Policy)`**: it works, and is waiting for you to say what may cross it.
+- `(Policy)`: it works, and is waiting for you to say what may cross it.
 
 None of those failures were staged in this lab; the session here came up at the first attempt.

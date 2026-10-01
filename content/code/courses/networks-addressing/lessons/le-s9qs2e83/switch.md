@@ -44,7 +44,7 @@ twice, and the table has two lines:
 
 The first round trip took 6.62 ms and the second 1.61 ms. Part of the difference is that the first
 ping also had to find pc2's MAC address with ARP, because the lab emptied every table before this
-block; the rest is this lab, which runs every machine on one virtual computer and is no guide to
+block. The rest is this lab, which runs every machine on one virtual computer and is no guide to
 how fast a real cable is.
 
 The table is what keeps a conversation private to the two ports in it. To see that, pc3 runs

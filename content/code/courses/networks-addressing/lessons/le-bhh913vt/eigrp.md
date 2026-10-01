@@ -32,8 +32,8 @@ H   Address           Interface            Hold   Uptime   SRTT   RTO   Q     Se
 0   10.20.0.13        eth4                 12     0        0      2    0      3
 ```
 
-The two neighbours, r2 and r4. `Hold` is EIGRP's dead timer, counting down from **15 seconds** by default
-and reset by a hello every **5 seconds**, which is why it reads 14 and 12 here.
+The two neighbours, r2 and r4. `Hold` is EIGRP's dead timer, counting down from 15 seconds by default
+and reset by a hello every 5 seconds, which is why it reads 14 and 12 here.
 
 ## The topology table
 
@@ -65,13 +65,13 @@ Take pc2's network, `10.20.2.0/24`. `P` means **passive**, the healthy state: EI
 route. `1 successors` is the number of best paths, and the **successor** is the neighbour in use, here
 `10.20.0.2`, r2, on `eth1`. `FD is 30720` is the **feasible distance**, the metric of the best path from r1.
 
-The pair after the neighbour is **`(30720/28160)`**: r1's distance through that neighbour, and the
+The pair after the neighbour is `(30720/28160)`: r1's distance through that neighbour, and the
 **reported distance**, the neighbour's own distance to the network, which r2 told r1. r2 is connected to
 pc2's network, so it reports 28160, the same number r1 shows for its own connected networks. The
 difference, 2560, is what one more link adds.
 
-With the default settings, the metric is calculated from the slowest bandwidth on the path and the total delay of its interfaces,
-not from OSPF's cost, which is why EIGRP chose the direct cable that OSPF avoided: the `cost 100` was an
+With the default settings, the metric is calculated from the slowest bandwidth on the path and the total delay of its interfaces.
+OSPF's cost plays no part, which is why EIGRP chose the direct cable that OSPF avoided: the `cost 100` was an
 OSPF setting, and EIGRP sees two equal interfaces.
 
 ## Feasible successors, and why there is none here
@@ -85,7 +85,7 @@ loop.
 For `10.20.2.0/24`, the other neighbour is r4, and r4 is further from pc2's network than r1 is. Whatever
 it reports is larger than 30720, so it fails the condition, and the table lists one successor and no
 backup. If r2 failed, r1 would have to ask its neighbours for a new path, which EIGRP calls going
-**active** (`A` in the codes) and its algorithm, **DUAL** (*Diffusing Update Algorithm*), manages.
+*active* (`A` in the codes) and its algorithm, **DUAL** (*Diffusing Update Algorithm*), manages.
 
 **A ring gives EIGRP nothing to keep in reserve for the network next door**, because the other way round
 is always the longer way. A design where a second neighbour is itself next to the network, such as two

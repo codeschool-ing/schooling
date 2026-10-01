@@ -64,9 +64,9 @@ an address that came from an advertisement and will expire unless it is renewed.
 
 The two lifetimes come from the prefix lines of the advertisement. `Valid time: 86400` seconds is
 one day, `Pref. time: 14400` seconds is four hours, and pc2 shows them counting down:
-`valid_lft 86396sec preferred_lft 14396sec`, four seconds after it heard them. **While the preferred
-lifetime lasts, the address is used for new connections; after it, the address is deprecated and
-kept only for connections already open; when the valid lifetime ends, the address goes.** Each new
+`valid_lft 86396sec preferred_lft 14396sec`, four seconds after it heard them. **While the
+preferred lifetime lasts, the address is used for new connections.** After it, the address is
+deprecated and kept only for connections already open, and when the valid lifetime ends it goes. Each new
 advertisement starts both clocks again, so on a healthy network neither ever reaches zero. A
 router that stops advertising is a network whose addresses fade out over a day.
 

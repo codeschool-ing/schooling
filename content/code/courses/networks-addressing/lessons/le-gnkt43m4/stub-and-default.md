@@ -43,11 +43,11 @@ hands them straight to r1 over the spare cable, and r2 is no longer on the path 
 
 ## Where this shape appears
 
-- **A branch office** with one link to head office: a default towards head office, and head office
+- *A branch office* with one link to head office: a default towards head office, and head office
   holds one route for the branch's block pointing back down that link.
-- **A home or small office** behind a provider: a default towards the provider, which is what lesson
+- *A home or small office* behind a provider: a default towards the provider, which is what lesson
   10's DHCP hands every PC as its gateway and what the home router itself holds towards the provider.
-- **A provider's customer**: the provider keeps a static route for the customer's block pointing at the
+- *A provider's customer*: the provider keeps a static route for the customer's block pointing at the
   customer's link, and the customer keeps a default pointing back. Neither side runs a protocol.
 
 **A stub needs only a default; the network around it needs the specific route back.** Both halves are
@@ -60,9 +60,9 @@ static, and they are the same pair this lesson typed for pc1 and pc3, with one s
 point at each other, and a packet for a destination neither of them knows bounces between them until its
 TTL runs out. Each one hands the packet to the other, sure that the other knows.
 
-That is also why r3's default went over the spare cable to r1 rather than to r2: with the cable from r1
-to r2 still pulled, r2 has no route to pc1's network, and a default towards r2 would have handed r3's
-replies to a router that could only answer `!N`. **Choosing where the default points is the one routing
+That is also why r3's default went over the spare cable to r1 rather than to r2. With the cable from r1
+to r2 still pulled, r2 has no route to pc1's network, so a default towards r2 would hand r3's replies to
+a router that could only answer `!N`. **Choosing where the default points is the one routing
 decision a stub makes**, and it has to be made knowing what lies behind the next hop.
 
 The pattern this lesson ends with is the one that survives in practice: a stub at the edges with a

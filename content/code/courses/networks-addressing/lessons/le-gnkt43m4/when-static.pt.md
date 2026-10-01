@@ -17,15 +17,15 @@ são todos estáticos, e todos estão certos.
 
 ## O que você ganha ao digitá-la
 
-- **Previsibilidade.** A tabela guarda o que o engenheiro escreveu e mais nada. Quando um pacote vai
+- *Previsibilidade.* A tabela guarda o que o engenheiro escreveu e mais nada. Quando um pacote vai
   pelo caminho errado, o motivo é uma linha que você consegue ler, e não o resultado de um cálculo de
   protocolo.
-- **Nada para atacar e nada para configurar errado na rede.** Um protocolo de roteamento escuta os
+- *Nada para atacar e nada para configurar errado na rede.* Um protocolo de roteamento escuta os
   vizinhos, então um vizinho que mente, ou um erro em outro roteador, pode reescrever a tabela deste. Uma
   rota estática não escuta ninguém.
-- **Custo zero.** Nenhuma mensagem, nenhum temporizador, nenhuma memória para o banco de dados de um
+- *Custo zero.* Nenhuma mensagem, nenhum temporizador, nenhuma memória para o banco de dados de um
   vizinho.
-- **Ela vence.** A aula 14 pôs a distância administrativa de uma rota estática em 1, abaixo de todo
+- *Ela vence.* A aula 14 pôs a distância administrativa de uma rota estática em 1, abaixo de todo
   protocolo de roteamento, então uma rota digitada vence uma aprendida para o mesmo prefixo. Isso é útil
   quando é intencional e uma armadilha quando você esqueceu que ela estava lá.
 

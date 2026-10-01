@@ -45,9 +45,9 @@ real internet.
 ```
 
 **A prompt that says `ana@pc1` ran on pc1, as an ordinary user; `root@r1` ran on the router, at a
-root prompt**, because configuring a device needs it. pc1 is drawn in green because most sessions
-start there. The load balancer is in amber because it is the one device in the drawing that answers
-in somebody else's name: the address 192.0.2.80 is its own, and the pages behind it are not.
+root prompt**, because configuring a device needs it. pc1 is outlined in its own colour because most
+sessions start there. The load balancer has a colour of its own too, because it is the one device
+in the drawing that answers in somebody else's name: the address 192.0.2.80 is its own, and the pages behind it are not.
 
 Two devices in the table are missing from the drawing. The lab has no radio and no telephone line,
 so the access point and the modem were not run; their section says what they do and shows no

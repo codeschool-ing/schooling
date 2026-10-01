@@ -87,9 +87,9 @@ por horas.
 
 **Então há dois filtros, um de cada lado de todo enlace de cliente**, e nenhum basta sozinho:
 
-- **o filtro de saída do cliente**: anuncie seus próprios prefixos, e os dos seus clientes se tiver, e nada
+- *o filtro de saída do cliente*: anuncie seus próprios prefixos, e os dos seus clientes se tiver, e nada
   aprendido de um provedor ou de um par;
-- **o filtro de entrada do provedor**: aceite de um cliente só os prefixos que esse cliente tem direito de
+- *o filtro de entrada do provedor*: aceite de um cliente só os prefixos que esse cliente tem direito de
   anunciar.
 
 ## Pondo de volta, com uma rede de segurança

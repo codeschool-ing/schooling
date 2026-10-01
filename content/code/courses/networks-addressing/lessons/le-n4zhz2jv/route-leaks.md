@@ -86,9 +86,9 @@ services that millions of people use becoming slow or unreachable for hours.
 
 **So there are two filters, one on each side of every customer link**, and neither is enough alone:
 
-- **the customer's outbound filter**: announce your own prefixes, and your customers' if you have any, and
+- *the customer's outbound filter*: announce your own prefixes, and your customers' if you have any, and
   nothing learned from a provider or a peer;
-- **the provider's inbound filter**: accept from a customer only the prefixes that customer is entitled to
+- *the provider's inbound filter*: accept from a customer only the prefixes that customer is entitled to
   announce.
 
 ## Putting it back, with a safety net

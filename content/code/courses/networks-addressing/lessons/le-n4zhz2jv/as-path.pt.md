@@ -15,9 +15,9 @@ root@edge:~# vtysh -c "configure terminal" -c "ip prefix-list OURS seq 5 permit 
 Leia como política, e não como sintaxe:
 
 - `OURS` é o bloco da empresa, `203.0.113.0/24`, e mais nada.
-- **`TO-PROVIDER`**, aplicado na *saída* para os dois provedores, permite o que casa com `OURS`. Todo o
+- `TO-PROVIDER`, aplicado na *saída* para os dois provedores, permite o que casa com `OURS`. Todo o
   resto cai no fim e é negado: **edge anuncia o próprio bloco e mais nada**.
-- **`FROM-PROVIDER`**, aplicado na *entrada*, primeiro nega `OURS`, para que nenhum provedor diga a edge
+- `FROM-PROVIDER`, aplicado na *entrada*, primeiro nega `OURS`, para que nenhum provedor diga a edge
   como chegar à própria rede da empresa, e depois permite todo o resto.
 
 O resumo troca `(Policy)` por números:
@@ -78,9 +78,9 @@ Cinco caminhos para três redes. Para `198.51.100.0/25`, os clientes de ispa, ed
 salto `0.0.0.0` e peso 32768, originado aqui.
 
 A escolha do BGP passa por uma lista fixa de critérios de desempate, em ordem, e para no primeiro que
-difere. Os primeiros, no FRR e na Cisco: o maior **weight** (local a um roteador), a maior **local
-preference** (compartilhada dentro de um AS), uma rota que este roteador originou, **o AS path mais curto**,
-o código de origem, o menor **MED**, e depois eBGP antes de iBGP. Tudo o que esta aula faz com tráfego real
+difere. Os primeiros, no FRR e na Cisco: o maior weight (local a um roteador), a maior local
+preference (compartilhada dentro de um AS), uma rota que este roteador originou, **o AS path mais curto**,
+o código de origem, o menor MED, e depois eBGP antes de iBGP. Tudo o que esta aula faz com tráfego real
 acontece no passo do AS path, porque nada antes dele foi ajustado.
 
 Os melhores caminhos vão para o kernel:

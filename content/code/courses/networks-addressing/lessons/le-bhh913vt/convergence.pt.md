@@ -24,7 +24,7 @@ Neighbor ID     Pri State           Up Time         Dead Time Address         In
 
 ```
 
-r4, `10.20.0.13`, continua em **`Full`**, com **`8.651s`** restando no temporizador de morte: os hellos
+r4, `10.20.0.13`, continua em `Full`, com **`8.651s`** restando no temporizador de morte: os hellos
 pararam de chegar quando os quadros pararam, e a contagem que começou em 40 segundos está quase no fim.
 `RXmtL 2` é a lista de retransmissão de r1, duas atualizações que ele mandou a r4 e cuja confirmação ainda
 espera. Até o temporizador acabar, a tabela de r1 continua mandando o tráfego de pc1 para r4, e todo pacote

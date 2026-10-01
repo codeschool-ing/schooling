@@ -74,8 +74,8 @@ RIP não tem como ser avisado.
 **Seu alcance é quinze.** Uma métrica 16 quer dizer inalcançável, então uma rede a mais de quinze
 roteadores de distância não é alcançável com RIP. Esse limite é proposital, e existe por causa do pior
 hábito do RIP: quando uma rede some, os vizinhos continuam oferecendo uns aos outros versões antigas da
-rota, cada um somando um, **contando até o infinito** até o número chegar a 16. O **split horizon**, não
-anunciar uma rota de volta pela interface por onde ela foi aprendida, e o **poisoned reverse**,
+rota, cada um somando um, **contando até o infinito** até o número chegar a 16. O *split horizon*, não
+anunciar uma rota de volta pela interface por onde ela foi aprendida, e o *poisoned reverse*,
 anunciá-la de volta como 16, encurtam isso, e o temporizador de 180 segundos ainda deixa o RIP lento para
 esquecer.
 

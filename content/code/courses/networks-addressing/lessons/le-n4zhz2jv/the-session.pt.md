@@ -16,7 +16,7 @@ root@edge:~# vtysh -c "configure terminal" -c "router bgp 64500" -c "bgp router-
 ```
 
 `neighbor 192.0.2.2 remote-as 64501` diz *o roteador naquele endereço está no AS 64501*. Um vizinho num AS
-diferente é uma sessão **eBGP** (*external*); no mesmo AS seria **iBGP**, que redes grandes usam para levar
+diferente é uma sessão **eBGP** (*external*); no mesmo AS seria iBGP, que redes grandes usam para levar
 rotas BGP entre seus próprios roteadores de borda e de que esta aula não precisa. `network 203.0.113.0/24`
 é o bloco da empresa, o prefixo que edge vai originar.
 
@@ -51,11 +51,11 @@ quiseram anunciar porque o padrão de um roteador era *mandar tudo*. A próxima 
 
 A coluna de estado é a primeira coisa a ler:
 
-- **`Active` ou `Connect`** por muito tempo: a conexão TCP não está se completando. Verifique se o endereço
+- `Active` ou `Connect` por muito tempo: a conexão TCP não está se completando. Verifique se o endereço
   do vizinho é alcançável, se o outro lado tem uma linha `neighbor` correspondente apontando de volta, e se
   nada filtra a porta TCP 179.
-- **Uma sessão que sobe e cai**: os dois lados discordam de algo na troca inicial, na maioria das vezes o
+- *Uma sessão que sobe e cai*: os dois lados discordam de algo na troca inicial, na maioria das vezes o
   número de AS. Um `remote-as` que não bate com o que o vizinho diz ser fecha a sessão.
-- **`(Policy)`**: funciona, e está esperando você dizer o que pode atravessá-la.
+- `(Policy)`: funciona, e está esperando você dizer o que pode atravessá-la.
 
 Nenhuma dessas falhas foi encenada neste laboratório; a sessão aqui subiu na primeira tentativa.

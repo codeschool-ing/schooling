@@ -42,10 +42,10 @@ Os protocolos de roteamento dentro de uma organização se chamam **protocolos d
 (*interior gateway protocols*). Eles vêm em duas famílias, e a diferença é o que um roteador conta aos
 vizinhos:
 
-- **Vetor de distância.** Cada roteador conta aos vizinhos a própria tabela: *estas redes, a estas
+- *Vetor de distância.* Cada roteador conta aos vizinhos a própria tabela: *estas redes, a estas
   distâncias*. Um vizinho soma o custo do enlace entre os dois e fica com a melhor oferta. Ninguém vê a
   rede inteira; cada roteador confia no que o próximo diz. O **RIP** funciona assim.
-- **Estado de enlace.** Cada roteador conta a *todos* os roteadores da área sobre os próprios enlaces:
+- *Estado de enlace.* Cada roteador conta a *todos* os roteadores da área sobre os próprios enlaces:
   *sou r1, tenho um cabo até r2 e um até r4, e esta LAN*. Todo roteador junta o mesmo conjunto de
   descrições, desenha o mesmo mapa, e calcula os próprios caminhos mais curtos sobre ele. O **OSPF**
   funciona assim, e o IS-IS também, que grandes provedores usam e este curso não cobre.
@@ -57,8 +57,8 @@ vizinho ofereceu, e assim troca para uma reserva sem perguntar a ninguém.
 
 Cada protocolo primeiro encontra seus **vizinhos**, mandando pequenas mensagens de hello pelas interfaces
 que mandaram usar, e só troca rotas com roteadores que respondem. Cada um põe suas melhores rotas na mesma
-tabela do kernel que a aula 14 leu, marcadas com seu nome, `proto rip` ou `proto ospf`, e com a
-**distância administrativa** que a aula 14 listou, para que um roteador rodando dois deles saiba em qual
+tabela do kernel que a aula 14 leu, marcadas com seu nome, `proto rip` ou `proto ospf`. Cada uma leva
+também a **distância administrativa** que a aula 14 listou, para que um roteador rodando dois deles saiba em qual
 rota acreditar: 120 para o RIP, 110 para o OSPF, e 90 para as rotas internas do EIGRP em equipamento Cisco.
 
 A outra coisa que eles têm em comum é que são **interiores**. Eles supõem que todo roteador é operado
