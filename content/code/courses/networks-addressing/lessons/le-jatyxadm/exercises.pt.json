@@ -1,0 +1,509 @@
+{
+  "ex-gp677bdc": {
+    "prompt": "Ponha as três camadas em ordem, de onde as máquinas se ligam até o meio da rede.",
+    "hint": "O pc1 está embaixo na figura.",
+    "items": [
+      "Acesso",
+      "Distribuição",
+      "Núcleo"
+    ],
+    "trap": "A distribuição fica entre as duas: ela é o gateway das LANs de acesso e é ligada para cima até o núcleo."
+  },
+  "ex-9f1g7d9h": {
+    "prompt": "Qual camada é o gateway de cada LAN de acesso e o lugar onde se aplicam as regras sobre quem pode conversar?",
+    "hint": "No laboratório, são o d1 e o d2.",
+    "choices": [
+      {
+        "text": "Acesso",
+        "why": "Switches de acesso conectam máquinas e mais nada; o a1 não roda roteamento."
+      },
+      {
+        "text": "Distribuição",
+        "why": "Isso. O d1 é o gateway do pc1, 10.20.11.1, e o lugar natural para regras."
+      },
+      {
+        "text": "Núcleo",
+        "why": "O núcleo carrega o tráfego de todo mundo e por isso fica livre de filtros."
+      },
+      {
+        "text": "Os próprios hosts",
+        "why": "Hosts podem filtrar o próprio tráfego, e não são uma camada do projeto da rede."
+      }
+    ]
+  },
+  "ex-r4158473": {
+    "prompt": "Quantos vizinhos OSPF o roteador de núcleo c1 listou?",
+    "hint": "Uma linha por vizinho.",
+    "unit": "vizinhos"
+  },
+  "ex-79z7s0yj": {
+    "prompt": "O traceroute do pc1 até o pc2 imprimiu 10.20.11.1, 10.20.0.13, 10.20.0.18 e 10.20.12.22. Por que o switch de acesso a1 não aparece?",
+    "hint": "O que o traceroute conta?",
+    "choices": [
+      {
+        "text": "O a1 tinha sido desligado",
+        "why": "Aí o pc1 não alcançaria nada; o cabo dele até o d1 passa pelo a1."
+      },
+      {
+        "text": "O a1 tem o endereço 10.20.11.1",
+        "why": "10.20.11.1 é o d1, o gateway do pc1, na primeira linha."
+      },
+      {
+        "text": "Um switch não é um salto",
+        "why": "Isso. O traceroute conta roteadores, que diminuem o TTL; um switch não faz nenhum dos dois."
+      },
+      {
+        "text": "O a1 filtra as sondas que o traceroute manda para ele",
+        "why": "Nada no campus filtra; o a1 simplesmente nunca diminui um TTL."
+      }
+    ]
+  },
+  "ex-gnstaf3n": {
+    "prompt": "Alguém propõe que os roteadores de núcleo também filtrem o tráfego entre departamentos, para economizar uma caixa. O que a hierarquia diz sobre isso?",
+    "hint": "O tráfego de quem o núcleo carrega?",
+    "choices": [
+      {
+        "text": "Manter na distribuição: o que deixa o núcleo lento deixa todo mundo lento",
+        "why": "Isso. O núcleo carrega o tráfego de todos os blocos, então trabalho que pode deixá-lo lento ou quebrá-lo fica uma camada abaixo."
+      },
+      {
+        "text": "Tudo bem, já que o núcleo vê todo pacote e pode julgá-lo",
+        "why": "Ver todo pacote é exatamente o motivo de um erro ali atingir todos os departamentos de uma vez."
+      },
+      {
+        "text": "Mover para os switches de acesso, mais perto das pessoas",
+        "why": "Switches de acesso conectam máquinas; regras sobre LANs conversando ficam onde as LANs se encontram, na distribuição."
+      },
+      {
+        "text": "Tudo bem, se um terceiro roteador de núcleo for acrescentado para isso",
+        "why": "Um terceiro núcleo ainda carrega o tráfego de todos; a objeção é sobre a camada, não a quantidade."
+      }
+    ]
+  },
+  "ex-mha45btq": {
+    "prompt": "A rota do d1 para 10.20.12.0/24 lista `nexthop via 10.20.0.5 dev eth1 weight 1` e `nexthop via 10.20.0.13 dev eth2 weight 1`. O que isso quer dizer?",
+    "hint": "Duas linhas, o mesmo peso.",
+    "choices": [
+      {
+        "text": "Dois caminhos de custo igual, pelo c1 e pelo c2, os dois em uso",
+        "why": "Isso. O OSPF instalou os dois, e o d1 espalha o tráfego pelos dois núcleos."
+      },
+      {
+        "text": "O segundo é um reserva, usado depois que o primeiro falha",
+        "why": "Pesos iguais querem dizer que os dois são usados agora; um reserva não seria instalado ao lado do primeiro."
+      },
+      {
+        "text": "O d1 manda todo pacote duas vezes, uma para cada núcleo",
+        "why": "Cada pacote pega um dos dois; nada é duplicado."
+      },
+      {
+        "text": "O OSPF ainda não terminou de escolher entre eles",
+        "why": "O laboratório já tinha convergido; dois caminhos iguais é a resposta que o OSPF escolheu, não uma pausa."
+      }
+    ]
+  },
+  "ex-x2320epz": {
+    "prompt": "O pc1 mandou 20 pings enquanto o cabo do d1 até o c2 era cortado. Quantos se perderam?",
+    "hint": "Leia a linha de resumo.",
+    "unit": "pings"
+  },
+  "ex-jt8e32j8": {
+    "prompt": "O anel da aula 3 perdeu 19 de 30 pings com um corte; o d1 não perdeu nenhum de 20. Os dois laboratórios usam os mesmos temporizadores rápidos de OSPF. O que fez a diferença?",
+    "hint": "O segundo caminho era conhecido antes do corte?",
+    "choices": [
+      {
+        "text": "Os cabos do campus levam dados mais rápido",
+        "why": "Os cabos virtuais do laboratório não têm atraso em nenhum dos cenários."
+      },
+      {
+        "text": "O d1 já tinha o outro caminho",
+        "why": "Isso. O multicaminho de custo igual tinha os dois próximos saltos instalados, então o d1 só largou um; o anel teve de calcular um caminho novo."
+      },
+      {
+        "text": "Vinte pings são poucos demais para algum se perder",
+        "why": "Uma perda apareceria em vinte tão bem quanto em trinta; o anel perdeu a maioria dos primeiros vinte."
+      },
+      {
+        "text": "O campus roda outro protocolo de roteamento",
+        "why": "Os dois rodam OSPF, com os mesmos temporizadores, como diz o lab.sh."
+      }
+    ]
+  },
+  "ex-63sk6v7s": {
+    "prompt": "Quais destes são redundantes no papel e não numa falha? Marque todas as que se aplicam.",
+    "hint": "Destino compartilhado, caminho sem uso, capacidade.",
+    "choices": [
+      {
+        "text": "Duas subidas passadas no mesmo duto",
+        "why": "Certo: uma escavadeira corta as duas."
+      },
+      {
+        "text": "Dois caminhos de custo igual por núcleos separados, os dois carregando tráfego",
+        "why": "Esse é o campus, e o corte mostrou que funciona."
+      },
+      {
+        "text": "Um link de backup que não carrega tráfego há um ano",
+        "why": "Certo: nada diz se ele ainda funciona até o dia em que precisar."
+      },
+      {
+        "text": "Dois núcleos, cada um rodando a 70% da capacidade",
+        "why": "Certo: quando um falha, pedem 140% ao outro."
+      },
+      {
+        "text": "Dois roteadores em alimentação separada, testados todo mês",
+        "why": "Independentes e exercitados: isso é redundância na falha também."
+      }
+    ]
+  },
+  "ex-rma0p0px": {
+    "prompt": "Quando o OSPF instala dois caminhos de mesmo custo para um destino, o nome em inglês é equal-cost ___.",
+    "hint": "Uma palavra, vários caminhos.",
+    "blanks": [
+      {
+        "accept": [
+          "multipath",
+          "multi-path"
+        ]
+      }
+    ]
+  },
+  "ex-enxckwzn": {
+    "prompt": "Com o d1 fora, o pc1 não alcança nem 10.20.11.1, enquanto c1, c2 e d2 estão saudáveis. Por que o núcleo duplicado não ajuda?",
+    "hint": "Suba a partir do pc1.",
+    "choices": [
+      {
+        "text": "O núcleo leva um minuto para perceber que o d1 sumiu",
+        "why": "Esperar não mudaria nada: os pacotes do pc1 nunca passam do gateway morto."
+      },
+      {
+        "text": "O pc2 caiu junto com o d1",
+        "why": "O pc2 está embaixo do d2, que está saudável."
+      },
+      {
+        "text": "O OSPF do pc1 perdeu os vizinhos",
+        "why": "O pc1 não roda OSPF; ele tem uma rota padrão para o gateway."
+      },
+      {
+        "text": "A única saída do pc1 é o d1, abaixo do núcleo",
+        "why": "Isso. A redundância começa uma camada acima demais para o pc1: o gateway dele não tem gêmeo."
+      }
+    ]
+  },
+  "ex-nm9metjj": {
+    "prompt": "Ligue cada peça do campus ao que a falha dela derruba.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "O cabo do pc1 até o a1",
+        "right": "Só o pc1"
+      },
+      {
+        "left": "O switch de acesso a1",
+        "right": "Todo mundo ligado no a1"
+      },
+      {
+        "left": "O d1, o gateway",
+        "right": "Todo mundo no a1, e a saída deles"
+      },
+      {
+        "left": "Um dos dois cabos do d1 até o núcleo",
+        "right": "Nada: o outro cabo dá conta"
+      }
+    ],
+    "right_distractors": [
+      "O campus inteiro"
+    ]
+  },
+  "ex-sw4v26et": {
+    "prompt": "O protocolo padrão que deixa dois roteadores dividirem um endereço de gateway, um ativo e outro de reserva, é o ___.",
+    "hint": "Quatro letras; o equivalente da Cisco é o HSRP.",
+    "blanks": [
+      {
+        "accept": [
+          "VRRP"
+        ]
+      }
+    ]
+  },
+  "ex-zctpptrx": {
+    "prompt": "Qual ponto único de falha a maioria das redes aceita em vez de duplicar?",
+    "hint": "Quantas pessoas percebem, e quão rápido é o conserto?",
+    "choices": [
+      {
+        "text": "O gateway da LAN de um andar",
+        "why": "A falha dele atinge todo mundo daquela LAN; é para isso que o VRRP existe."
+      },
+      {
+        "text": "O cabo de um PC de mesa",
+        "why": "Isso. Ele atinge uma pessoa, e um cabo novo resolve em minutos."
+      },
+      {
+        "text": "O par de roteadores de núcleo",
+        "why": "O núcleo atinge todo mundo; ele é duplicado em quase toda rede maior que um escritório."
+      },
+      {
+        "text": "A conexão de rede de um servidor compartilhado",
+        "why": "Um servidor atinge todos que o usam, então a conexão dele é candidata a duas placas e LACP."
+      }
+    ]
+  },
+  "ex-3t5h1gec": {
+    "prompt": "Como o laboratório mostrou o VRRP mantendo vivo o gateway do pc1?",
+    "hint": "Leia o aviso da seção.",
+    "choices": [
+      {
+        "text": "Não foi rodado no laboratório",
+        "why": "Isso. O VRRP foi descrito e desenhado, não rodado; o cenário mantém um gateway para que a falha pudesse ser mostrada."
+      },
+      {
+        "text": "O d2 assumiu 10.20.11.1 quando o d1 falhou",
+        "why": "O d2 não tem cabo até a LAN do pc1, e os pings do pc1 para 10.20.11.1 se perderam todos."
+      },
+      {
+        "text": "O pc1 trocou o gateway para 10.20.12.1",
+        "why": "Esse é o gateway do pc2, noutra LAN que o pc1 não alcança diretamente."
+      },
+      {
+        "text": "O c1 respondeu por 10.20.11.1 até o d1 voltar",
+        "why": "O c1 está duas camadas acima e não tem cabo até a LAN do pc1."
+      }
+    ]
+  },
+  "ex-q14gemr1": {
+    "prompt": "O `ip route` do c1 imprimiu 11 linhas. Quantas rotas a tabela tem?",
+    "hint": "Linhas que começam com tabulação continuam a rota de cima.",
+    "unit": "rotas"
+  },
+  "ex-e57h26gd": {
+    "prompt": "Quantos links /30 cabem em 10.20.0.0/24?",
+    "hint": "256 endereços, quatro por link.",
+    "unit": "links"
+  },
+  "ex-hvdbx40t": {
+    "prompt": "Toda LAN do campus é uma /24 dentro de 10.20.0.0/16. O que isso compra?",
+    "hint": "Pense nos outros roteadores da empresa.",
+    "choices": [
+      {
+        "text": "Cada PC ganha mais endereços próprios",
+        "why": "Um PC tem um endereço de qualquer jeito; o plano é sobre como as rotas se somam."
+      },
+      {
+        "text": "Uma rede /24 encaminha mais rápido que outros tamanhos",
+        "why": "O tamanho de um prefixo não muda a velocidade de encaminhamento."
+      },
+      {
+        "text": "O campus inteiro vira uma rota para o resto",
+        "why": "Isso. Blocos alinhados deixam 10.20.0.0/16 valer por todas as LANs dentro dele."
+      },
+      {
+        "text": "O OSPF recusa redes de outros tamanhos",
+        "why": "O OSPF leva os links /30 do campus assim como as LANs /24."
+      }
+    ]
+  },
+  "ex-583hfex0": {
+    "prompt": "Um prédio novo entra no campus com o próprio par de distribuição e switches de acesso, ligados ao núcleo. Num projeto que escala, o que é reconfigurado no d1 e no d2?",
+    "hint": "Crescer acrescentando peças, não mudando as que existem.",
+    "choices": [
+      {
+        "text": "Um cabo de cada um até o novo par de distribuição",
+        "why": "Roteadores de distribuição se ligam para cima ao núcleo, não para o lado aos blocos uns dos outros."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. O bloco novo liga no núcleo e o OSPF avisa todo mundo; os blocos existentes não são tocados."
+      },
+      {
+        "text": "As LANs deles são renumeradas para abrir espaço",
+        "why": "Um plano que se resume deixa espaço antes; renumerar é o que um plano ruim obriga."
+      },
+      {
+        "text": "As regras de firewall deles são reescritas para cada andar novo",
+        "why": "Esse é o projeto ruim que a seção descreve, em que toda mudança toca todo mundo."
+      }
+    ]
+  },
+  "ex-53v8jvyw": {
+    "prompt": "Na tabela do c1, `proto ___` marca uma rota que o roteador tem porque possui um endereço naquele cabo.",
+    "hint": "O outro valor na tabela é ospf.",
+    "blanks": [
+      {
+        "accept": [
+          "kernel"
+        ]
+      }
+    ]
+  },
+  "ex-zxmxm24g": {
+    "prompt": "No d1, o LLDP lista `Interface: eth2`, `SysName: c2`, `PortDescr: eth2`. O que entra na tabela de cabos?",
+    "hint": "Interface é o lado do d1; o resto descreve a outra ponta.",
+    "choices": [
+      {
+        "text": "d1 eth2 para c1 eth2",
+        "why": "O c1 está na eth1 do d1, no bloco de cima."
+      },
+      {
+        "text": "d1 eth2 para c2 eth2",
+        "why": "Isso. A interface é do d1, e SysName e PortDescr nomeiam o aparelho e a porta na outra ponta."
+      },
+      {
+        "text": "c2 eth0 para a1 p24",
+        "why": "A p24 do a1 vai até a eth0 do d1, não até o c2."
+      },
+      {
+        "text": "d1 eth0 para c2 eth2",
+        "why": "A eth0 do d1 desce até o a1."
+      }
+    ]
+  },
+  "ex-zh6m9yg0": {
+    "prompt": "O que `TTL: 120` quer dizer numa entrada de vizinho do LLDP?",
+    "hint": "Um vizinho que fica quieto sai da lista.",
+    "choices": [
+      {
+        "text": "Saltos que o anúncio pode atravessar",
+        "why": "Anúncios LLDP ficam num cabo; nunca são encaminhados."
+      },
+      {
+        "text": "Dias desde que o cabo daquela porta foi instalado",
+        "why": "O LLDP não sabe nada sobre datas de instalação."
+      },
+      {
+        "text": "Quanto tempo o d1 guarda a entrada, em segundos",
+        "why": "Isso. Se o d1 não ouve nada por 120 segundos, o vizinho sai."
+      },
+      {
+        "text": "O custo OSPF do vizinho",
+        "why": "LLDP e OSPF são separados; o custo não está nesta saída."
+      }
+    ]
+  },
+  "ex-h0p4q0am": {
+    "prompt": "Ligue cada pergunta ao comando desta aula que a responde.",
+    "hint": "Cada seção usou um.",
+    "pairs": [
+      {
+        "left": "Quem está na outra ponta da eth2?",
+        "right": "lldpcli show neighbors summary"
+      },
+      {
+        "left": "Qual endereço está na eth0?",
+        "right": "ip -br addr"
+      },
+      {
+        "left": "Com quais roteadores o c1 troca rotas?",
+        "right": "vtysh -c \"show ip ospf neighbor\""
+      },
+      {
+        "left": "Quantas linhas a tabela de rotas do c1 imprime?",
+        "right": "ip route | wc -l"
+      }
+    ],
+    "right_distractors": [
+      "traceroute -n 10.20.12.22"
+    ]
+  },
+  "ex-f0265dxc": {
+    "prompt": "O diagrama na parede mostra a eth2 do d1 ligada ao d2. O LLDP no d1 diz que a eth2 vai até o c2, e o `ip` diz que a eth2 tem 10.20.0.14/30. O que você conclui?",
+    "hint": "Duas fontes lidas da rede concordam entre si.",
+    "choices": [
+      {
+        "text": "O diagrama está certo, já que foi desenhado com cuidado",
+        "why": "Cuidado no dia do desenho não diz nada sobre cada mudança desde então."
+      },
+      {
+        "text": "O LLDP se confunde com os cabos virtuais do laboratório",
+        "why": "O LLDP e o endereço concordam: 10.20.0.14 é a ponta do d1 no link d1–c2."
+      },
+      {
+        "text": "O diagrama está desatualizado",
+        "why": "Isso. Duas leituras independentes da rede concordam, e o desenho não."
+      },
+      {
+        "text": "O d1 tem dois cabos na eth2",
+        "why": "Uma interface tem um cabo; o LLDP listaria um segundo vizinho se houvesse."
+      }
+    ]
+  },
+  "ex-abc4aq1y": {
+    "prompt": "Por que muitas redes desligam o LLDP nas portas voltadas para usuários e visitantes?",
+    "hint": "O que ele anuncia, e para quem?",
+    "choices": [
+      {
+        "text": "Ele conta a qualquer um ligado na porta o que o aparelho é e como se chama",
+        "why": "Isso. Entre aparelhos de rede isso é documentação; para o laptop de um desconhecido é uma descrição da rede."
+      },
+      {
+        "text": "Ele deixa a porta lenta",
+        "why": "Um anúncio de vez em quando não custa nada que um usuário perceba."
+      },
+      {
+        "text": "Ele impede o DHCP de funcionar",
+        "why": "LLDP e DHCP não interferem um no outro."
+      },
+      {
+        "text": "Os PCs dos usuários não conseguem lê-lo",
+        "why": "Se um PC lê ou não, não é a questão; o que o switch conta a ele é."
+      }
+    ]
+  },
+  "ex-nkbjy1ps": {
+    "prompt": "Suba a partir do pc1 e ponha em ordem aquilo de que ele depende para alcançar o pc2, do mais perto ao mais longe.",
+    "hint": "O traceroute, mais o switch que ele não vê.",
+    "items": [
+      "O cabo do pc1",
+      "O switch de acesso a1",
+      "O gateway d1",
+      "Um roteador de núcleo, c1 ou c2"
+    ],
+    "trap": "O a1 vem antes do d1 mesmo o traceroute nunca mostrando: os quadros do pc1 chegam ao d1 através dele."
+  },
+  "ex-n7bvxwmj": {
+    "prompt": "Um andar de um campus perde a rede. No roteador de distribuição desse andar, o LLDP não lista mais o switch de acesso do andar, e as subidas até o núcleo estão bem. Onde está o defeito?",
+    "hint": "Qual vizinho sumiu?",
+    "choices": [
+      {
+        "text": "Nos roteadores de núcleo",
+        "why": "As subidas estão bem, e um defeito no núcleo atingiria todos os andares."
+      },
+      {
+        "text": "Abaixo do roteador, no link do andar",
+        "why": "Isso. O switch de acesso ficou em silêncio naquele cabo: o switch, a energia dele ou o próprio cabo."
+      },
+      {
+        "text": "No cabo de cada PC daquele andar até o switch",
+        "why": "Um andar inteiro de uma vez, e um vizinho sumido acima, apontam para o que eles compartilham."
+      },
+      {
+        "text": "No plano de endereços",
+        "why": "Endereços não interrompem um anúncio LLDP; um link morto interrompe."
+      }
+    ]
+  },
+  "ex-2y9ghxd2": {
+    "prompt": "Quais mudanças tiram um ponto único de falha do caminho de saída do pc1? Marque todas as que se aplicam.",
+    "hint": "Abaixo do núcleo, onde o caminho do pc1 é único.",
+    "choices": [
+      {
+        "text": "Um segundo roteador dividindo 10.20.11.1 com o d1 por VRRP",
+        "why": "Certo: o gateway ganha um gêmeo."
+      },
+      {
+        "text": "Um terceiro roteador de núcleo",
+        "why": "O núcleo já é duplicado; os pontos únicos do pc1 estão abaixo dele."
+      },
+      {
+        "text": "Um switch de acesso reserva na prateleira",
+        "why": "Um reserva encurta a queda; ele não impede que a falha do a1 isole o pc1."
+      },
+      {
+        "text": "Uma segunda placa de rede no pc1, ligada a um segundo switch de acesso",
+        "why": "Certo: o cabo do pc1 e o a1 deixam de ser o único caminho até o gateway."
+      },
+      {
+        "text": "Um segundo cabo entre o c1 e o c2",
+        "why": "Isso duplica um link do qual o pc1 não depende."
+      }
+    ]
+  }
+}

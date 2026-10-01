@@ -3,7 +3,7 @@ title: A wrong mask, and what it breaks
 version: 1
 ---
 
-A mask is not only arithmetic on paper. **Every time a machine sends a packet, it uses its own mask to
+**Every time a machine sends a packet, it uses its own mask to
 decide one thing.** Is the destination on my link, so I ask for its MAC address and send it directly?
 Or is it somewhere else, so I hand the packet to the gateway? A wrong mask makes that decision wrong
 for some destinations and right for others, which is why the failure it causes is so confusing.

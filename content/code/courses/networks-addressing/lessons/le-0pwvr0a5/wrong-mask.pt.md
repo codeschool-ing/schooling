@@ -3,7 +3,7 @@ title: Uma máscara errada, e o que ela quebra
 version: 1
 ---
 
-Uma máscara não é só aritmética no papel. **Toda vez que uma máquina manda um pacote, ela usa a própria
+**Toda vez que uma máquina manda um pacote, ela usa a própria
 máscara para decidir uma coisa.** O destino está no meu enlace, então peço o MAC dele e mando direto? Ou
 está em outro lugar, então entrego o pacote ao gateway? Uma máscara errada erra essa decisão para
 alguns destinos e acerta para outros, e é por isso que a falha que ela causa confunde tanto.

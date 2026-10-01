@@ -45,8 +45,8 @@ com o endereço para todo lado: nas configurações, nas tabelas de rotas, nos a
 fazem uns aos outros. A classe que ainda aparece no fim desta saída, `Class A`, descreve `10.x` pelas
 regras antigas e não diz nada sobre este `/27`.
 
-O prefixo não é só uma propriedade de um endereço numa interface; **uma rota também tem um**, e foi
-ali que o CIDR mais fez diferença. Neste laboratório o r1 guarda as três LANs como três rotas
+**Uma rota também tem prefixo**, como o endereço de uma interface, e foi ali que o CIDR mais fez
+diferença. Neste laboratório o r1 guarda as três LANs como três rotas
 separadas, `10.20.32.0/25`, `10.20.32.128/26` e `10.20.32.192/27`, enquanto o r2, acima dele, guarda uma
 rota só, `10.20.32.0/24`, que cobre as três. Um prefixo mais curto no lugar de vários mais longos se
 chama sumarização, e a aula 13 a monta e mostra quanto ela custa.

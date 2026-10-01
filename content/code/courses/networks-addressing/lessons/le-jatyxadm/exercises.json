@@ -1,0 +1,761 @@
+[
+  {
+    "id": "ex-gp677bdc",
+    "version": 1,
+    "section": "hierarchy",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the three tiers from where the machines plug in to the middle of the network.",
+    "hint": "pc1 is at the bottom of the figure.",
+    "items": [
+      "Access",
+      "Distribution",
+      "Core"
+    ],
+    "trap": "Distribution sits between the two: it is the gateway of the access LANs and is cabled up to the core."
+  },
+  {
+    "id": "ex-9f1g7d9h",
+    "version": 1,
+    "section": "hierarchy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which tier is the gateway of each access LAN and the place where rules about who may talk are applied?",
+    "hint": "In the lab it is d1 and d2.",
+    "choices": [
+      {
+        "text": "Access",
+        "correct": false,
+        "why": "Access switches connect machines and nothing else; a1 runs no routing."
+      },
+      {
+        "text": "Distribution",
+        "correct": true,
+        "why": "Right. d1 is pc1's gateway, 10.20.11.1, and the natural place for rules."
+      },
+      {
+        "text": "Core",
+        "correct": false,
+        "why": "The core carries everybody's traffic and is kept free of filtering for that reason."
+      },
+      {
+        "text": "The hosts themselves",
+        "correct": false,
+        "why": "Hosts can filter their own traffic, and they are not a tier of the network design."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4158473",
+    "version": 1,
+    "section": "hierarchy",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many OSPF neighbours did the core router c1 list?",
+    "hint": "One line per neighbour.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "neighbours"
+  },
+  {
+    "id": "ex-79z7s0yj",
+    "version": 1,
+    "section": "hierarchy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc1's traceroute to pc2 printed 10.20.11.1, 10.20.0.13, 10.20.0.18 and 10.20.12.22. Why does the access switch a1 not appear?",
+    "hint": "What does traceroute count?",
+    "choices": [
+      {
+        "text": "a1 had been switched off",
+        "correct": false,
+        "why": "Then pc1 would have reached nothing; its cable to d1 runs through a1."
+      },
+      {
+        "text": "a1 has the address 10.20.11.1",
+        "correct": false,
+        "why": "10.20.11.1 is d1, pc1's gateway, in the first line."
+      },
+      {
+        "text": "A switch is not a hop",
+        "correct": true,
+        "why": "Right. traceroute counts routers, which decrement the TTL; a switch does neither."
+      },
+      {
+        "text": "a1 filters the probes traceroute sends to it",
+        "correct": false,
+        "why": "Nothing in the campus filters; a1 simply never decrements a TTL."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnstaf3n",
+    "version": 1,
+    "section": "hierarchy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody proposes letting the core routers also filter traffic between departments, to save a box. What does the hierarchy say about it?",
+    "hint": "Whose traffic does the core carry?",
+    "choices": [
+      {
+        "text": "Keep it in distribution: whatever slows the core slows everyone",
+        "correct": true,
+        "why": "Right. The core carries every block's traffic, so work that could slow or break it belongs a tier lower."
+      },
+      {
+        "text": "Fine, since the core sees every packet and can judge it",
+        "correct": false,
+        "why": "Seeing every packet is exactly why a mistake there reaches every department at once."
+      },
+      {
+        "text": "Move it to the access switches, closer to people",
+        "correct": false,
+        "why": "Access switches connect machines; rules about LANs talking belong where the LANs meet, in distribution."
+      },
+      {
+        "text": "Fine, if a third core router is added for it",
+        "correct": false,
+        "why": "A third core still carries everybody's traffic; the objection is about the tier, not the count."
+      }
+    ]
+  },
+  {
+    "id": "ex-mha45btq",
+    "version": 1,
+    "section": "redundancy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "d1's route to 10.20.12.0/24 lists `nexthop via 10.20.0.5 dev eth1 weight 1` and `nexthop via 10.20.0.13 dev eth2 weight 1`. What does that mean?",
+    "hint": "Two lines, the same weight.",
+    "choices": [
+      {
+        "text": "Two paths of equal cost, through c1 and c2, both in use",
+        "correct": true,
+        "why": "Right. OSPF installed both, and d1 spreads its traffic across the two cores."
+      },
+      {
+        "text": "The second is a backup, used after the first fails",
+        "correct": false,
+        "why": "Equal weights mean both are used now; a backup would not be installed beside the first."
+      },
+      {
+        "text": "d1 sends every packet twice, once to each core",
+        "correct": false,
+        "why": "Each packet takes one of the two; nothing is duplicated."
+      },
+      {
+        "text": "OSPF has not finished choosing between them",
+        "correct": false,
+        "why": "The lab had converged; two equal paths is the answer OSPF chose, not a pause."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2320epz",
+    "version": 1,
+    "section": "redundancy",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pc1 sent 20 pings while d1's cable to c2 was cut. How many were lost?",
+    "hint": "Read the summary line.",
+    "value": 0,
+    "tolerance": 0,
+    "unit": "pings"
+  },
+  {
+    "id": "ex-jt8e32j8",
+    "version": 1,
+    "section": "redundancy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Lesson 3's ring lost 19 of 30 pings to a cut; d1 lost none of 20. Both labs use the same fast OSPF timers. What made the difference?",
+    "hint": "Was the second path known before the cut?",
+    "choices": [
+      {
+        "text": "The campus cables carry data faster",
+        "correct": false,
+        "why": "The lab's virtual cables carry no delay in either scenario."
+      },
+      {
+        "text": "d1 already had the other path",
+        "correct": true,
+        "why": "Right. Equal-cost multipath had both next hops installed, so d1 only dropped one; the ring had to compute a new path."
+      },
+      {
+        "text": "Twenty pings are too few for any to be lost",
+        "correct": false,
+        "why": "A loss would show in twenty as easily as in thirty; the ring lost most of its first twenty."
+      },
+      {
+        "text": "The campus runs a different routing protocol",
+        "correct": false,
+        "why": "Both run OSPF, with the same timers, as lab.sh says."
+      }
+    ]
+  },
+  {
+    "id": "ex-63sk6v7s",
+    "version": 1,
+    "section": "redundancy",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are redundant on paper and not in a failure? Choose all that apply.",
+    "hint": "Shared fate, an unused path, capacity.",
+    "choices": [
+      {
+        "text": "Two uplinks laid in the same duct",
+        "correct": true,
+        "why": "Right: one digger cuts both."
+      },
+      {
+        "text": "Two equal-cost paths through separate cores, both carrying traffic",
+        "correct": false,
+        "why": "That is the campus, and the cut showed it working."
+      },
+      {
+        "text": "A backup link that has carried no traffic for a year",
+        "correct": true,
+        "why": "Right: nothing says whether it still works until the day it has to."
+      },
+      {
+        "text": "Two cores, each running at 70% of its capacity",
+        "correct": true,
+        "why": "Right: when one fails, the other is asked for 140%."
+      },
+      {
+        "text": "Two routers on separate power, tested each month",
+        "correct": false,
+        "why": "Independent and exercised: that is redundancy in the failure as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-rma0p0px",
+    "version": 1,
+    "section": "redundancy",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When OSPF installs two paths of the same cost to one destination, the name in English is equal-cost ___.",
+    "hint": "One word, several paths.",
+    "blanks": [
+      {
+        "accept": [
+          "multipath",
+          "multi-path"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-enxckwzn",
+    "version": 1,
+    "section": "single-points-of-failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With d1 down, pc1 cannot reach even 10.20.11.1, while c1, c2 and d2 are healthy. Why does the doubled core not help?",
+    "hint": "Walk up from pc1.",
+    "choices": [
+      {
+        "text": "The core takes a minute to notice d1 is gone",
+        "correct": false,
+        "why": "Waiting would change nothing: pc1's packets never get past its dead gateway."
+      },
+      {
+        "text": "pc2 went down with d1",
+        "correct": false,
+        "why": "pc2 is under d2, which is healthy."
+      },
+      {
+        "text": "OSPF on pc1 lost its neighbours",
+        "correct": false,
+        "why": "pc1 runs no OSPF; it has a default route to its gateway."
+      },
+      {
+        "text": "pc1's one way out is d1, below the core",
+        "correct": true,
+        "why": "Right. The redundancy starts a tier too high for pc1: its gateway has no twin."
+      }
+    ]
+  },
+  {
+    "id": "ex-nm9metjj",
+    "version": 1,
+    "section": "single-points-of-failure",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the campus to what its failure takes down.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "pc1's cable to a1",
+        "right": "pc1 alone"
+      },
+      {
+        "left": "The access switch a1",
+        "right": "Everyone plugged into a1"
+      },
+      {
+        "left": "d1, the gateway",
+        "right": "Everyone on a1, and their way out"
+      },
+      {
+        "left": "One of d1's two cables to the core",
+        "right": "Nothing: the other cable carries it"
+      }
+    ],
+    "right_distractors": [
+      "The whole campus"
+    ]
+  },
+  {
+    "id": "ex-sw4v26et",
+    "version": 1,
+    "section": "single-points-of-failure",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The standard protocol that lets two routers share one gateway address, with one active and one on standby, is ___.",
+    "hint": "Four letters; Cisco's equivalent is HSRP.",
+    "blanks": [
+      {
+        "accept": [
+          "VRRP"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zctpptrx",
+    "version": 1,
+    "section": "single-points-of-failure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which single point of failure do most networks accept rather than double?",
+    "hint": "How many people notice, and how fast is the fix?",
+    "choices": [
+      {
+        "text": "The gateway of a floor's LAN",
+        "correct": false,
+        "why": "Its failure reaches everyone on that LAN; it is what VRRP exists for."
+      },
+      {
+        "text": "A desk PC's cable",
+        "correct": true,
+        "why": "Right. It reaches one person, and a new patch cable fixes it in minutes."
+      },
+      {
+        "text": "The pair of core routers",
+        "correct": false,
+        "why": "The core reaches everyone; it is doubled in almost every network bigger than an office."
+      },
+      {
+        "text": "The network connection of a shared server",
+        "correct": false,
+        "why": "A server reaches everybody who uses it, so its connection is a candidate for two cards and LACP."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t5h1gec",
+    "version": 1,
+    "section": "single-points-of-failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did the lab show VRRP keeping pc1's gateway alive?",
+    "hint": "Read the section's warning.",
+    "choices": [
+      {
+        "text": "It was not run in the lab",
+        "correct": true,
+        "why": "Right. VRRP was described and drawn, not run; the scenario keeps one gateway so the failure could be shown."
+      },
+      {
+        "text": "d2 took over 10.20.11.1 when d1 failed",
+        "correct": false,
+        "why": "d2 has no cable to pc1's LAN, and pc1's pings to 10.20.11.1 were all lost."
+      },
+      {
+        "text": "pc1 switched its gateway to 10.20.12.1",
+        "correct": false,
+        "why": "That is pc2's gateway, on another LAN that pc1 cannot reach directly."
+      },
+      {
+        "text": "c1 answered for 10.20.11.1 until d1 came back",
+        "correct": false,
+        "why": "c1 is two tiers up and has no cable to pc1's LAN."
+      }
+    ]
+  },
+  {
+    "id": "ex-q14gemr1",
+    "version": 1,
+    "section": "scalability",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "c1's `ip route` printed 11 lines. How many routes does the table hold?",
+    "hint": "Lines starting with a tab continue the route above them.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "routes"
+  },
+  {
+    "id": "ex-e57h26gd",
+    "version": 1,
+    "section": "scalability",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many /30 links fit in 10.20.0.0/24?",
+    "hint": "256 addresses, four per link.",
+    "value": 64,
+    "tolerance": 0,
+    "unit": "links"
+  },
+  {
+    "id": "ex-hvdbx40t",
+    "version": 1,
+    "section": "scalability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every LAN in the campus is a /24 inside 10.20.0.0/16. What does that buy?",
+    "hint": "Think about the rest of the company's routers.",
+    "choices": [
+      {
+        "text": "Each PC gets more addresses of its own",
+        "correct": false,
+        "why": "A PC has one address either way; the plan is about how routes add up."
+      },
+      {
+        "text": "A /24 network forwards faster than other sizes",
+        "correct": false,
+        "why": "The size of a prefix does not change how fast a router forwards."
+      },
+      {
+        "text": "The whole campus is one route to the rest",
+        "correct": true,
+        "why": "Right. Blocks that line up let 10.20.0.0/16 stand for every LAN in it."
+      },
+      {
+        "text": "OSPF refuses networks of other sizes",
+        "correct": false,
+        "why": "OSPF carries the campus's /30 links as well as its /24 LANs."
+      }
+    ]
+  },
+  {
+    "id": "ex-583hfex0",
+    "version": 1,
+    "section": "scalability",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new building joins the campus with its own distribution pair and access switches, cabled to the core. In a design that scales, what is reconfigured on d1 and d2?",
+    "hint": "Growth by adding pieces, not by changing them.",
+    "choices": [
+      {
+        "text": "A cable from each to the new distribution pair",
+        "correct": false,
+        "why": "Distribution routers connect up to the core, not sideways to each other's blocks."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The new block plugs into the core and OSPF tells everyone; the existing blocks are not touched."
+      },
+      {
+        "text": "Their LANs are renumbered to make room",
+        "correct": false,
+        "why": "A plan that summarises leaves room in advance; renumbering is what a poor plan forces."
+      },
+      {
+        "text": "Their firewall rules are rewritten for each new floor",
+        "correct": false,
+        "why": "That is the poor design the section describes, where every change touches everyone."
+      }
+    ]
+  },
+  {
+    "id": "ex-53v8jvyw",
+    "version": 1,
+    "section": "scalability",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In c1's table, `proto ___` marks a route the router has because it holds an address on that cable.",
+    "hint": "The other value in the table is ospf.",
+    "blanks": [
+      {
+        "accept": [
+          "kernel"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zxmxm24g",
+    "version": 1,
+    "section": "documentation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On d1, LLDP lists `Interface: eth2`, `SysName: c2`, `PortDescr: eth2`. What goes into the cable table?",
+    "hint": "Interface is d1's side; the rest describes the far end.",
+    "choices": [
+      {
+        "text": "d1 eth2 to c1 eth2",
+        "correct": false,
+        "why": "c1 is on d1's eth1, the block above."
+      },
+      {
+        "text": "d1 eth2 to c2 eth2",
+        "correct": true,
+        "why": "Right. The interface is d1's, and SysName and PortDescr name the device and port at the far end."
+      },
+      {
+        "text": "c2 eth0 to a1 p24",
+        "correct": false,
+        "why": "a1's p24 goes to d1's eth0, not to c2."
+      },
+      {
+        "text": "d1 eth0 to c2 eth2",
+        "correct": false,
+        "why": "d1's eth0 goes down to a1."
+      }
+    ]
+  },
+  {
+    "id": "ex-zh6m9yg0",
+    "version": 1,
+    "section": "documentation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `TTL: 120` mean in an LLDP neighbour entry?",
+    "hint": "A neighbour that goes quiet drops off the list.",
+    "choices": [
+      {
+        "text": "Hops the announcement may cross",
+        "correct": false,
+        "why": "LLDP announcements stay on one cable; they are never forwarded."
+      },
+      {
+        "text": "Days since the cable on that port was installed",
+        "correct": false,
+        "why": "LLDP knows nothing about installation dates."
+      },
+      {
+        "text": "How long d1 keeps the entry, in seconds",
+        "correct": true,
+        "why": "Right. If d1 hears nothing for 120 seconds, the neighbour is dropped."
+      },
+      {
+        "text": "The neighbour's OSPF cost",
+        "correct": false,
+        "why": "LLDP and OSPF are separate; the cost is not in this output."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0p4q0am",
+    "version": 1,
+    "section": "documentation",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the command in this lesson that answers it.",
+    "hint": "Each section used one.",
+    "pairs": [
+      {
+        "left": "Who is at the other end of eth2?",
+        "right": "lldpcli show neighbors summary"
+      },
+      {
+        "left": "Which address is on eth0?",
+        "right": "ip -br addr"
+      },
+      {
+        "left": "Which routers does c1 exchange routes with?",
+        "right": "vtysh -c \"show ip ospf neighbor\""
+      },
+      {
+        "left": "How many lines does c1's routing table print?",
+        "right": "ip route | wc -l"
+      }
+    ],
+    "right_distractors": [
+      "traceroute -n 10.20.12.22"
+    ]
+  },
+  {
+    "id": "ex-f0265dxc",
+    "version": 1,
+    "section": "documentation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The diagram on the wall shows d1's eth2 cabled to d2. LLDP on d1 says eth2 goes to c2, and `ip` says eth2 holds 10.20.0.14/30. What do you conclude?",
+    "hint": "Two sources read from the network agree with each other.",
+    "choices": [
+      {
+        "text": "The diagram is right, since it was drawn with care",
+        "correct": false,
+        "why": "Care on the day it was drawn says nothing about every change since."
+      },
+      {
+        "text": "LLDP is confused by the lab's virtual cables",
+        "correct": false,
+        "why": "LLDP and the address agree: 10.20.0.14 is d1's end of the d1–c2 link."
+      },
+      {
+        "text": "The diagram is out of date",
+        "correct": true,
+        "why": "Right. Two independent readings off the network agree, and the drawing does not."
+      },
+      {
+        "text": "d1 has two cables on eth2",
+        "correct": false,
+        "why": "An interface has one cable; LLDP would list a second neighbour if there were one."
+      }
+    ]
+  },
+  {
+    "id": "ex-abc4aq1y",
+    "version": 1,
+    "section": "documentation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do many networks switch LLDP off on ports that face users and visitors?",
+    "hint": "What does it announce, and to whom?",
+    "choices": [
+      {
+        "text": "It tells anyone plugged in what the device is and what it is called",
+        "correct": true,
+        "why": "Right. Between network devices that is documentation; towards a stranger's laptop it is a description of the network."
+      },
+      {
+        "text": "It slows the port down",
+        "correct": false,
+        "why": "An announcement every so often costs nothing a user would notice."
+      },
+      {
+        "text": "It stops DHCP from working",
+        "correct": false,
+        "why": "LLDP and DHCP do not interfere with each other."
+      },
+      {
+        "text": "Users' PCs cannot read it",
+        "correct": false,
+        "why": "Whether a PC reads it is not the concern; what the switch tells it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkbjy1ps",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Walk up from pc1 and order what it depends on to reach pc2, nearest first.",
+    "hint": "The traceroute, plus the switch it cannot see.",
+    "items": [
+      "pc1's cable",
+      "The access switch a1",
+      "The gateway d1",
+      "A core router, c1 or c2"
+    ],
+    "trap": "a1 comes before d1 even though traceroute never shows it: pc1's frames reach d1 through it."
+  },
+  {
+    "id": "ex-n7bvxwmj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One floor of a campus loses the network. On that floor's distribution router, LLDP no longer lists the floor's access switch, and the uplinks to the core are fine. Where is the fault?",
+    "hint": "Which neighbour disappeared?",
+    "choices": [
+      {
+        "text": "In the core routers",
+        "correct": false,
+        "why": "The uplinks are fine, and a core fault would reach every floor."
+      },
+      {
+        "text": "Below the router, on the floor's uplink",
+        "correct": true,
+        "why": "Right. The access switch went quiet on that cable: the switch, its power or the cable itself."
+      },
+      {
+        "text": "In the cable from each PC on that floor to the switch",
+        "correct": false,
+        "why": "A whole floor at once, and a neighbour missing upstream, point at what they share."
+      },
+      {
+        "text": "In the address plan",
+        "correct": false,
+        "why": "Addresses do not stop an LLDP announcement; a dead link does."
+      }
+    ]
+  },
+  {
+    "id": "ex-2y9ghxd2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which changes remove a single point of failure on pc1's way out? Choose all that apply.",
+    "hint": "Below the core, where pc1's path is single.",
+    "choices": [
+      {
+        "text": "A second router sharing 10.20.11.1 with d1 through VRRP",
+        "correct": true,
+        "why": "Right: the gateway gets a twin."
+      },
+      {
+        "text": "A third core router",
+        "correct": false,
+        "why": "The core is already doubled; pc1's single points are below it."
+      },
+      {
+        "text": "A spare access switch on the shelf",
+        "correct": false,
+        "why": "A spare shortens the outage; it does not stop a1's failure from cutting pc1 off."
+      },
+      {
+        "text": "A second network card in pc1, cabled to a second access switch",
+        "correct": true,
+        "why": "Right: pc1's cable and a1 stop being its only way to the gateway."
+      },
+      {
+        "text": "A second cable between c1 and c2",
+        "correct": false,
+        "why": "That doubles a link pc1 does not depend on."
+      }
+    ]
+  }
+]

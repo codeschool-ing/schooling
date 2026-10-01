@@ -45,8 +45,8 @@ address everywhere: in configurations, in routing tables, in the announcements r
 other. The class still printed at the end of this output, `Class A`, describes `10.x` under the old
 rules and says nothing about this `/27`.
 
-The prefix is not only a property of an address on an interface; **a route carries one too**, and
-that is where CIDR mattered most. In this lab r1 holds the three LANs as three separate routes,
+**A route carries a prefix too**, the same as an address on an interface does, and that is where
+CIDR mattered most. In this lab r1 holds the three LANs as three separate routes,
 `10.20.32.0/25`, `10.20.32.128/26` and `10.20.32.192/27`, while r2 upstream holds a single route,
 `10.20.32.0/24`, that covers all three. One shorter prefix standing for several longer ones is
 called summarisation, and lesson 13 builds it and shows what it costs.
