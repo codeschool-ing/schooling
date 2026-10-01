@@ -60,8 +60,8 @@ a51dbcea83dedecf940e4cfadbd7cb3f2c791c2c	refs/heads/edge2-lan-description
 f8272acab6a5a56e90568dd82aca292aec38bca8	refs/heads/main
 ```
 
-**The server refused the branch.** It does not exist on `origin`, as the list of branches shows;
-nobody can merge it, build on it or deploy it by mistake, and the failure that refused it is in the
+**The server refused the branch.** It does not exist on `origin`, as the list of branches shows.
+Nobody can merge it, build on it or deploy it by mistake, and the failure that refused it is in the
 terminal of the person who pushed, with the link and both values named. The pipeline did in a
 tenth of a second what took lesson 13 a broken adjacency and a revert.
 

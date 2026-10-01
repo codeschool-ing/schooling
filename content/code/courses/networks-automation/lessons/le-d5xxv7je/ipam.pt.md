@@ -38,7 +38,7 @@ Endereços para duas impressoras, para uma impressora só. **`create` não é id
 fez exatamente o que pediram, duas vezes, e nada na requisição dizia "a impressora já tem um". É a
 pergunta de idempotência da aula 9 de novo, feita a uma API em vez de a um playbook. Um script que
 aloca tem de procurar primeiro, por um endereço com aquela descrição ou nome DNS, e criar só
-quando não houver nenhum; ou o endereço tem de estar ligado a algo único, como uma interface, para
+quando não houver nenhum. Ou o endereço tem de estar ligado a algo único, como uma interface, para
 que uma segunda tentativa falhe em vez de dar certo duas vezes.
 
 `203.0.113.10`, o endereço do pc1, não foi entregue, e só porque ele não está no NetBox. Os hosts

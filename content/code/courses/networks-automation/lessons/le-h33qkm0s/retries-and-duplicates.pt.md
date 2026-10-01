@@ -40,7 +40,7 @@ O `deliveries.py` lê o próprio log do roteador com o que ele tentou:
 A primeira entrega, o evento `down`, foi respondida com `204`. A segunda, o evento `up`, foi
 tentada quatro vezes em intervalos crescentes e nunca respondida, `None`, e aí **o roteador
 desistiu**. Esse evento se perdeu: nada vai avisar o receptor de que o link voltou. Um remetente
-que tentasse para sempre encheria a memória; um que desiste significa que **um receptor que ficou
+que tentasse para sempre encheria a memória. Um que desiste significa que **um receptor que ficou
 fora do ar por um minuto tem um buraco no que sabe**, e outra coisa, uma verificação periódica ou
 uma assinatura de estado como na aula 4, tem que preenchê-lo.
 
@@ -80,5 +80,5 @@ vezes.
 
 **Um receptor precisa ser idempotente: a mesma entrega duas vezes tem o efeito de uma.** O id da
 entrega é o que torna isso possível, e um receptor que guarda o conjunto `SEEN` na memória, como
-este, o perde ao reiniciar; um receptor de produção o guarda num banco de dados com a data, e
+este, o perde ao reiniciar. Um receptor de produção o guarda num banco de dados com a data, e
 esquece os ids depois que a janela de novas tentativas de quem envia já passou.

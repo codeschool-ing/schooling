@@ -23,7 +23,7 @@ nc1:
 
 As setas vão num sentido só. **A intenção é escrita no NetBox, e as configurações são lidas dele.**
 Os roteadores nunca escrevem de volta. Se um roteador e o NetBox discordam, isso é drift, e a
-comparação da aula 11 o encontra; a correção é uma decisão sobre qual dos dois está errado, nunca
+comparação da aula 11 o encontra. A correção é uma decisão sobre qual dos dois está errado, nunca
 um sync que copia o roteador para o NetBox, o que transformaria o que quer que alguém tenha
 digitado à mão na verdade.
 

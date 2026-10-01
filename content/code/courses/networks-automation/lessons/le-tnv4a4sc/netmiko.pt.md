@@ -53,7 +53,7 @@ entrar, e é por isso que nada parou ao encher a tela.
 **O laboratório usa o driver `cisco_ios`**, e essa é uma escolha sobre a qual vale ser honesto. O
 Netmiko não tem driver para FRR. O CLI do FRR é modelado no da Cisco, com os mesmos prompts,
 `configure terminal`, `end` e `write memory`, então o driver da Cisco o conduz corretamente em tudo o
-que este curso faz; o único comando que ele envia ao entrar, `terminal width 511`, é um que o FRR
+que este curso faz. O único comando que ele envia ao entrar, `terminal width 511`, é um que o FRR
 não tem, e a recusa do FRR é ignorada. Num roteador Cisco de verdade o driver seria o mesmo, e em
 Junos, EOS ou RouterOS o nome mudaria e o resto do script não.
 

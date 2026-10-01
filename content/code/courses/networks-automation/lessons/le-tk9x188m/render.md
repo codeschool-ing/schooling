@@ -32,7 +32,7 @@ interfaces:
 
 The template is FRR's running configuration with holes in it. Two parts are worth reading closely.
 The `{% if %}` inside the interface loop turns one value, `ospf`, into the right command for each
-kind of link; and the `router ospf` block loops over the same interfaces a second time, so a
+kind of link. And the `router ospf` block loops over the same interfaces a second time, so a
 network statement is written for every interface that has OSPF, and an interface added to the data
 appears in both places at once:
 

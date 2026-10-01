@@ -32,7 +32,7 @@ interfaces:
 
 O template é a configuração em execução do FRR com buracos. Duas partes merecem uma leitura atenta.
 O `{% if %}` dentro do loop de interfaces transforma um valor, `ospf`, no comando certo para cada
-tipo de link; e o bloco `router ospf` percorre as mesmas interfaces uma segunda vez, então uma
+tipo de link. E o bloco `router ospf` percorre as mesmas interfaces uma segunda vez, então uma
 declaração network é escrita para toda interface que tem OSPF, e uma interface acrescentada aos
 dados aparece nos dois lugares de uma vez:
 

@@ -22,7 +22,7 @@ API. The lab runs NetBox v4.6.10 on the `netbox` host, seeded with the lab's rou
 
 The arrows go one way. **The intent is written into NetBox, and configurations are read out of it.**
 The routers never write back. If a router and NetBox disagree, that is drift, and lesson 11's
-comparison finds it; the fix is a decision about which of the two is wrong, never a sync that
+comparison finds it. The fix is a decision about which of the two is wrong, never a sync that
 copies the router into NetBox, which would turn whatever somebody typed by hand into the truth.
 
 What NetBox does not do is configure anything. It holds data. Everything in this lesson that

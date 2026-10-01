@@ -52,7 +52,7 @@ logged in, which is why nothing stopped at a screenful.
 
 **The lab uses the `cisco_ios` driver**, and that is a choice worth being honest about. Netmiko has
 no FRR driver. FRR's CLI is modelled on Cisco's, with the same prompts, `configure terminal`, `end`
-and `write memory`, so the Cisco driver drives it correctly for everything this course does; the
+and `write memory`, so the Cisco driver drives it correctly for everything this course does. The
 one command it sends when it logs in, `terminal width 511`, is one FRR does not have, and FRR's
 refusal of it is ignored. On a real Cisco router the driver would be the same, and on Junos, EOS or
 RouterOS the name would change and the rest of the script would not.

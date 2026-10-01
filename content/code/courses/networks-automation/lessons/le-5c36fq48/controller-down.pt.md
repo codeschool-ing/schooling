@@ -46,6 +46,6 @@ sua política e não encaminha mais nada.
 Essa é a troca que o SDN faz, numa captura só. Uma rede de roteadores rodando OSPF continua
 funcionando quando qualquer um deles falha, porque cada um decide. Uma rede comandada por um
 controlador **depende do controlador**, por isso controladores em produção rodam em clusters de
-três ou mais, com os switches conectados a vários ao mesmo tempo; e a escolha entre `secure`, que
+três ou mais, com os switches conectados a vários ao mesmo tempo. E a escolha entre `secure`, que
 mantém as regras do controlador e não faz mais nada, e `standalone`, que volta a se comportar como
 um switch comum, é uma decisão sobre qual falha é pior.

@@ -40,7 +40,7 @@ edge1-1790682864-2 attempt 4 at 08:54:53 -> None
 The first delivery, the `down` event, was answered `204`. The second, the `up` event, was tried
 four times at growing intervals and never answered, `None`, and then **the router gave up**. That
 event is lost: nothing will ever tell the receiver the link came back. A sender that retries
-forever would fill its memory; one that gives up means **a receiver that was down for a minute has
+forever would fill its memory. One that gives up means **a receiver that was down for a minute has
 a hole in what it knows**, and something else, a periodic check or a subscription to state as in
 lesson 4, has to fill it.
 
@@ -78,5 +78,5 @@ that check the ticket would have been resolved twice, or, for a `down` event, op
 
 **A receiver must be idempotent: the same delivery twice has the effect of once.** The delivery id
 is what makes it possible, and a receiver that keeps its `SEEN` set in memory, as this one does,
-loses it on restart; a production receiver keeps it in a database with the date, and forgets ids
+loses it on restart. A production receiver keeps it in a database with the date, and forgets ids
 after the sender's retry window has passed.

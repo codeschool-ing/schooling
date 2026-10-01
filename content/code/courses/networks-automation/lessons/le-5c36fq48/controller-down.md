@@ -46,6 +46,6 @@ its policy and forwarding nothing else.
 That is the trade SDN makes, in one capture. A network of routers running OSPF keeps working when
 any one of them fails, because every one of them decides. A network run by a controller **depends on
 the controller**, so production controllers run as clusters of three or more, with the switches
-connected to several at once; and the choice between `secure`, which keeps the controller's rules and
+connected to several at once. And the choice between `secure`, which keeps the controller's rules and
 does nothing else, and `standalone`, which falls back to behaving like an ordinary switch, is a
 decision about which failure is worse.

@@ -37,7 +37,7 @@ ana@ctl:~$ cd sot && python allocate.py "printer, branch 1"
 Two printers' worth of addresses for one printer. **`create` is not idempotent**: NetBox did exactly
 what it was asked twice, and nothing in the request said "the printer already has one". It is
 lesson 9's idempotency question again, asked of an API instead of a playbook. A script that allocates has to look first, for an address with that description or DNS name,
-and create only when there is none; or the address has to be tied to something unique, such as
+and create only when there is none. Or the address has to be tied to something unique, such as
 an interface, so that a second attempt fails instead of succeeding twice.
 
 `203.0.113.10`, pc1's address, was not handed out, and only because it is not in NetBox. The pc

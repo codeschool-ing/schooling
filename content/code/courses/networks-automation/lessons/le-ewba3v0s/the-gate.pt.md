@@ -60,8 +60,8 @@ a51dbcea83dedecf940e4cfadbd7cb3f2c791c2c	refs/heads/edge2-lan-description
 f8272acab6a5a56e90568dd82aca292aec38bca8	refs/heads/main
 ```
 
-**O servidor recusou a branch.** Ela não existe no `origin`, como mostra a lista de branches;
-ninguém pode fazer merge dela, construir em cima dela ou implantá-la por engano, e a falha que a
+**O servidor recusou a branch.** Ela não existe no `origin`, como mostra a lista de branches.
+Ninguém pode fazer merge dela, construir em cima dela ou implantá-la por engano, e a falha que a
 recusou está no terminal de quem fez o push, com o enlace e os dois valores nomeados. O pipeline fez
 num décimo de segundo o que custou à aula 13 uma adjacência quebrada e um revert.
 
