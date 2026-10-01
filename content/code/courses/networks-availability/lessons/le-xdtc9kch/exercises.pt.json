@@ -1,0 +1,425 @@
+{
+  "ex-4ttgjq6q": {
+    "prompt": "Um prédio tem uma rede de funcionários servida por 12 pontos de acesso. Como um celular distingue esses 12 rádios?",
+    "hint": "Um nome, muitos rádios.",
+    "choices": [
+      {
+        "text": "Pelo SSID, que cada AP numera de um jeito",
+        "why": "O SSID é o nome da rede e é idêntico nos 12."
+      },
+      {
+        "text": "Pelo BSSID, o endereço MAC de cada rádio",
+        "why": "Isso. Um SSID, e um BSSID por rádio por rede."
+      },
+      {
+        "text": "Pelo canal, já que dois APs não dividem um",
+        "why": "Canais são reaproveitados no prédio; a aula 7 planeja exatamente isso."
+      },
+      {
+        "text": "Pelo endereço IP que cada AP distribui",
+        "why": "Endereços vêm do DHCP da VLAN, depois da associação, e não dizem nada sobre o rádio."
+      }
+    ]
+  },
+  "ex-26gxnawf": {
+    "prompt": "Um escritório oculta o SSID \"por segurança\". O que isso muda para um notebook configurado para entrar nele?",
+    "hint": "Um cliente precisa dizer o nome de uma rede que não ouve.",
+    "choices": [
+      {
+        "text": "Nada, já que o nome está nas configurações dele",
+        "why": "Como não ouve o nome, ele precisa perguntar por ele, pelo nome, em todo lugar."
+      },
+      {
+        "text": "Ele passa a cifrar os probe requests",
+        "why": "Probe requests são enviados antes de existir chave e nunca são cifrados."
+      },
+      {
+        "text": "Ele anuncia o nome da rede aonde quer que vá",
+        "why": "Isso. O nome oculto vaza de todo aparelho que o conhece, em público."
+      },
+      {
+        "text": "Ele para de fazer roaming entre pontos de acesso",
+        "why": "Ele continua fazendo roaming; alguns aparelhos só o fazem com menos jeito."
+      }
+    ]
+  },
+  "ex-ftacy5qk": {
+    "prompt": "Uma empresa roda 3 SSIDs em 10 pontos de acesso de banda dupla, todo SSID nas duas bandas. Quantos BSSIDs ela tem?",
+    "hint": "Um por rede, por rádio, por AP.",
+    "unit": "BSSIDs"
+  },
+  "ex-pnrv7pdv": {
+    "prompt": "No WPA2-Personal, o que entra no PBKDF2 junto com a passphrase para gerar a PMK?",
+    "hint": "A segunda linha da saída do psk.py muda uma coisa.",
+    "choices": [
+      {
+        "text": "O endereço MAC do AP",
+        "why": "Endereços MAC entram na PTK, no handshake, não na PMK."
+      },
+      {
+        "text": "Um número aleatório sorteado pelo AP",
+        "why": "Aí a PMK mudaria a cada vez; no WPA2 ela é fixa para uma passphrase e uma rede."
+      },
+      {
+        "text": "O SSID, como sal",
+        "why": "Isso. IEEE e IEEE-2 deram chaves sem relação a partir da mesma passphrase."
+      },
+      {
+        "text": "A data em que a rede foi criada",
+        "why": "Nada que dependa do tempo entra; o vetor de teste é o mesmo em qualquer ano."
+      }
+    ]
+  },
+  "ex-v1yshdcv": {
+    "prompt": "No four-way handshake, como o cliente mostra ao AP que tem a PMK certa?",
+    "hint": "Algo calculado a partir da chave, não a chave.",
+    "choices": [
+      {
+        "text": "Manda a PMK na mensagem 2, cifrada com o ANonce",
+        "why": "A PMK nunca atravessa o ar, cifrada ou não."
+      },
+      {
+        "text": "A mensagem 2 dele leva um MIC feito com uma chave derivada da PMK",
+        "why": "Isso. Uma PMK errada dá um MIC errado, e o AP o rejeita."
+      },
+      {
+        "text": "Devolve ao AP o hash da passphrase",
+        "why": "Esse hash é a própria PMK, exatamente o que nunca é enviado."
+      },
+      {
+        "text": "O AP confere o MAC do cliente numa lista",
+        "why": "Uma lista de MACs não prova nada; endereços vão em claro e são aleatórios."
+      }
+    ]
+  },
+  "ex-dwm90ptk": {
+    "prompt": "Ponha em ordem as mensagens do four-way handshake.",
+    "hint": "O AP fala primeiro, e a chave de grupo vem do AP.",
+    "items": [
+      "AP para o cliente: ANonce",
+      "Cliente para o AP: SNonce e um MIC",
+      "AP para o cliente: a GTK, cifrada, e um MIC",
+      "Cliente para o AP: confirmação e um MIC"
+    ],
+    "trap": "O cliente só calcula a PTK depois de ter o ANonce, então o nonce do AP vem primeiro."
+  },
+  "ex-kzk2e9jh": {
+    "prompt": "A passphrase WPA2-Personal de um café está impressa em todas as mesas. Um cliente que a conhece grava outro cliente entrando. O que a gravação dá a ele?",
+    "hint": "Todo o resto que entra na PTK é público.",
+    "choices": [
+      {
+        "text": "Uma PTK inútil, já que a de cada cliente é única",
+        "why": "A PTK é única, mas é calculada da PMK compartilhada mais valores enviados em claro."
+      },
+      {
+        "text": "O tráfego daquele cliente, decifrado",
+        "why": "Isso. Com a PMK, os dois nonces e os dois endereços, a PTK sai. O WPA2-Personal barra estranhos, não quem conhece a passphrase."
+      },
+      {
+        "text": "A passphrase, que ele já tinha",
+        "why": "Verdade, mas fora de questão: o risco é para o tráfego do outro cliente."
+      },
+      {
+        "text": "O cookie de sessão do outro cliente, mas só sobre HTTP",
+        "why": "Decifrar a camada Wi-Fi expõe o que roda por cima; HTTPS por dentro continua protegido, e isso é outra afirmação."
+      }
+    ]
+  },
+  "ex-vhftwc09": {
+    "prompt": "Por que a gravação de uma entrada WPA3-Personal (SAE) não permite a ninguém testar palpites da passphrase offline?",
+    "hint": "O que mais, além da senha, entra nos valores que vão pelo ar?",
+    "choices": [
+      {
+        "text": "Os quadros vão cifrados com a passphrase",
+        "why": "Cifrar com a passphrase daria ao adivinhador justamente algo para conferir."
+      },
+      {
+        "text": "O SAE usa um PBKDF2 mais longo",
+        "why": "O SAE nem passa a passphrase por hash para gerar a PMK."
+      },
+      {
+        "text": "Os valores dependem de segredos que cada lado sorteou e guardou",
+        "why": "Isso. Sem esses segredos a gravação não tem contra o que conferir um palpite, então cada palpite exige uma troca ao vivo."
+      },
+      {
+        "text": "O WPA3 esconde o SSID da gravação",
+        "why": "O SSID continua nos beacons, e escondê-lo não ajudaria de todo jeito."
+      }
+    ]
+  },
+  "ex-117gyhw7": {
+    "prompt": "Quais destes o WPA3-Personal oferece e o WPA2-Personal não? Marque todos que se aplicam.",
+    "hint": "Compare as linhas da tabela.",
+    "choices": [
+      {
+        "text": "Sigilo futuro",
+        "why": "Isso. Uma senha descoberta depois não abre gravações anteriores."
+      },
+      {
+        "text": "Quadros de gerência protegidos obrigatórios",
+        "why": "Isso. Opcionais no WPA2, obrigatórios no WPA3."
+      },
+      {
+        "text": "Remover uma pessoa sem trocar a senha de todos",
+        "why": "A senha continua compartilhada; isso exige 802.1X."
+      },
+      {
+        "text": "Resistência a palpites offline a partir de uma entrada gravada",
+        "why": "Isso. Cada palpite exige uma troca SAE ao vivo."
+      },
+      {
+        "text": "Uma cifra diferente para os quadros de dados",
+        "why": "O WPA3-Personal continua cifrando os dados com AES-CCMP depois do mesmo four-way handshake."
+      }
+    ]
+  },
+  "ex-k5xbdxv3": {
+    "prompt": "Uma rede roda o modo de transição do WPA3 para que três leitores de código de barras antigos continuem funcionando. A que a passphrase fica exposta?",
+    "hint": "Uma passphrase, duas portas de entrada.",
+    "choices": [
+      {
+        "text": "Palpites offline a partir de qualquer entrada WPA2 gravada",
+        "why": "Isso. A metade WPA2 mantém a fraqueza do WPA2, não importa o que os clientes WPA3 façam; um SSID separado para os leitores a elimina."
+      },
+      {
+        "text": "Nada a mais, já que o SAE a protege",
+        "why": "O SAE protege as entradas que usam SAE; as dos leitores são WPA2."
+      },
+      {
+        "text": "As sessões dos leitores, não a passphrase",
+        "why": "Gravar um leitor entrando basta para testar palpites contra a passphrase compartilhada."
+      },
+      {
+        "text": "Divulgação nos beacons da banda de 6 GHz",
+        "why": "Beacons nunca levam a passphrase, e o 6 GHz nem permite o modo de transição."
+      }
+    ]
+  },
+  "ex-2cybrk0z": {
+    "prompt": "A emenda que acrescentou quadros de gerência protegidos ao 802.11, para que uma desconexão forjada seja ignorada, é a 802.11___.",
+    "hint": "Uma letra.",
+    "blanks": [
+      {
+        "accept": [
+          "w"
+        ]
+      }
+    ]
+  },
+  "ex-r8m61qt5": {
+    "prompt": "Ligue cada papel do 802.1X ao aparelho que o faz.",
+    "hint": "Quem pede, quem repassa, quem decide.",
+    "pairs": [
+      {
+        "left": "Suplicante",
+        "right": "O sistema operacional do notebook"
+      },
+      {
+        "left": "Autenticador",
+        "right": "O ponto de acesso"
+      },
+      {
+        "left": "Servidor de autenticação",
+        "right": "O servidor RADIUS"
+      }
+    ],
+    "right_distractors": [
+      "O servidor DHCP"
+    ]
+  },
+  "ex-m0cf5fmg": {
+    "prompt": "Antes de o servidor RADIUS responder, que tráfego o AP deixa passar de um cliente recém-associado?",
+    "hint": "A porta está fechada para tudo menos uma coisa.",
+    "choices": [
+      {
+        "text": "DHCP e DNS, para o cliente achar o servidor",
+        "why": "O cliente nunca fala direto com o servidor; o AP repassa o EAP por ele."
+      },
+      {
+        "text": "Tudo, com limite de taxa até o veredito",
+        "why": "Uma porta que deixasse passar tráfego antes do veredito tornaria o veredito decorativo."
+      },
+      {
+        "text": "HTTP, para a página de login",
+        "why": "Isso descreve um portal cativo, que não é 802.1X."
+      },
+      {
+        "text": "EAP, e mais nada",
+        "why": "Isso. Nada de DHCP, de DNS, de dados até o servidor dizer sim."
+      }
+    ]
+  },
+  "ex-1megynec": {
+    "prompt": "Uma empresa usa PEAP. Os notebooks estão configurados para aceitar qualquer certificado que o servidor RADIUS apresente. Qual é o risco?",
+    "hint": "Para onde leva o túnel TLS?",
+    "choices": [
+      {
+        "text": "Nenhum, porque a senha viaja dentro do TLS",
+        "why": "TLS até uma parte não conferida protege a senha no caminho até essa parte."
+      },
+      {
+        "text": "Uma rede com o mesmo SSID recebe a troca de login",
+        "why": "Isso. Conferir o certificado do servidor é o que faz o túnel levar ao seu servidor; envie essa configuração a todo aparelho gerenciado."
+      },
+      {
+        "text": "Os notebooks deixam de entrar quando o certificado é renovado",
+        "why": "Um cliente que aceita tudo continua entrando depois da renovação; esse é o problema."
+      },
+      {
+        "text": "O AP fica sabendo a senha de cada usuário",
+        "why": "O AP repassa o EAP e nunca vê a senha, com ou sem conferência."
+      }
+    ]
+  },
+  "ex-d1mpg88h": {
+    "prompt": "Um funcionário sai de uma empresa que usa WPA3-Enterprise. O que precisa mudar para o notebook dele não entrar?",
+    "hint": "Cada pessoa tem as próprias credenciais.",
+    "choices": [
+      {
+        "text": "A passphrase compartilhada nos notebooks",
+        "why": "Não existe passphrase compartilhada no 802.1X; esse é o objetivo dele."
+      },
+      {
+        "text": "O SSID, para o perfil antigo não bater mais",
+        "why": "Renomear a rede quebra o perfil de todos e não barra quem tem credenciais válidas."
+      },
+      {
+        "text": "A conta dele, desativada no diretório que o RADIUS consulta",
+        "why": "Isso. Uma mudança, e a próxima autenticação falha."
+      },
+      {
+        "text": "O segredo compartilhado do RADIUS em cada AP",
+        "why": "Esse segredo é entre os APs e o servidor; o funcionário nunca o conheceu."
+      }
+    ]
+  },
+  "ex-8mpdsvcg": {
+    "prompt": "Um SSID de visitantes novo, com passphrase própria, foi ligado à mesma VLAN dos funcionários. O que um visitante nele alcança?",
+    "hint": "A passphrase decide quem entra; a VLAN decide onde a pessoa cai.",
+    "choices": [
+      {
+        "text": "A internet, já que a passphrase é outra",
+        "why": "Outra passphrase muda quem entra, não onde a pessoa cai."
+      },
+      {
+        "text": "A LAN do escritório, como um notebook de funcionário",
+        "why": "Isso. Mesma VLAN, mesma sub-rede, mesmo alcance: separar exige VLAN própria e um firewall."
+      },
+      {
+        "text": "Primeiro um portal cativo, depois a internet",
+        "why": "Não há portal neste projeto, e um portal não separa nada de todo jeito."
+      },
+      {
+        "text": "Outros visitantes, mas nenhuma máquina de funcionário",
+        "why": "Visitantes e funcionários dividem um domínio de broadcast aqui."
+      }
+    ]
+  },
+  "ex-097d89k4": {
+    "prompt": "Ligue cada medida da rede de visitantes ao que ela impede.",
+    "hint": "Uma ferramenta por camada.",
+    "pairs": [
+      {
+        "left": "Uma VLAN própria",
+        "right": "Dividir um domínio de broadcast com os funcionários"
+      },
+      {
+        "left": "Isolamento de clientes",
+        "right": "Um visitante alcançar outro"
+      },
+      {
+        "left": "Um firewall que recusa faixas privadas",
+        "right": "Visitantes alcançarem servidores internos"
+      },
+      {
+        "left": "Um limite de taxa por cliente",
+        "right": "Um download tomar o tempo de ar de todos"
+      }
+    ],
+    "right_distractors": [
+      "Alguém escutando e lendo o tráfego"
+    ]
+  },
+  "ex-j2kxpem3": {
+    "prompt": "Um hotel quer que o Wi-Fi de hóspedes não exija senha e ainda impeça um hóspede de ler pelo ar o tráfego de outro. Que opção serve?",
+    "hint": "Criptografia sem segredo compartilhado.",
+    "choices": [
+      {
+        "text": "Uma rede aberta com portal cativo",
+        "why": "O portal não cifra nada; todo quadro é legível ao alcance."
+      },
+      {
+        "text": "WPA2-Personal com a passphrase no cartão do quarto",
+        "why": "Isso é uma senha, e todo hóspede que a conhece e grava uma entrada lê o tráfego daquele hóspede."
+      },
+      {
+        "text": "Enhanced Open (OWE)",
+        "why": "Isso. Cada cliente ganha a própria chave numa troca não autenticada, sem senha para digitar."
+      },
+      {
+        "text": "Um SSID oculto com isolamento de clientes",
+        "why": "O isolamento impede encaminhar entre hóspedes; não impede ninguém de escutar o ar."
+      }
+    ]
+  },
+  "ex-gt1w0qk7": {
+    "prompt": "Uma clínica tem 40 funcionários em WPA2-Personal e uma recepcionista acabou de sair sabendo a passphrase. A gerente quer que isso nunca mais exija mexer em 40 aparelhos. O que resolve?",
+    "hint": "O problema é o segredo ser compartilhado.",
+    "choices": [
+      {
+        "text": "Migrar para WPA3-Personal",
+        "why": "O SAE resolve palpites offline e sigilo futuro; a senha continua compartilhada pelos 40."
+      },
+      {
+        "text": "Uma passphrase mais longa, trocada todo mês",
+        "why": "Isso é a mudança nos 40 aparelhos, todo mês."
+      },
+      {
+        "text": "802.1X com uma conta por pessoa",
+        "why": "Isso. Desativar uma conta remove uma pessoa."
+      },
+      {
+        "text": "Ocultar o SSID e filtrar por MAC",
+        "why": "Nenhum dos dois controla acesso: o nome e os endereços vão pelo ar em claro."
+      }
+    ]
+  },
+  "ex-fck3hsrs": {
+    "prompt": "O psk.py deu 37,6 bits para 8 letras minúsculas aleatórias. Quantos bits dão 16 letras minúsculas aleatórias? Uma casa decimal.",
+    "hint": "Os bits somam quando o comprimento dobra.",
+    "unit": "bits"
+  },
+  "ex-e7ya5yt7": {
+    "prompt": "Um cliente com quadros de gerência protegidos recebe um quadro de desautenticação com o endereço do AP, mas sem assinatura válida. O que ele faz?",
+    "hint": "Esse quadro é o que o 802.11w assina.",
+    "choices": [
+      {
+        "text": "Desconecta, e reconecta com um handshake novo",
+        "why": "É o que faz um cliente sem PMF, e o motivo de o PMF existir."
+      },
+      {
+        "text": "Ignora e continua associado",
+        "why": "Isso. Um quadro que ele não verifica não é obedecido."
+      },
+      {
+        "text": "Passa a rede para o modo de transição",
+        "why": "Clientes não mudam o modo de segurança da rede; a configuração do AP muda."
+      },
+      {
+        "text": "Informa o servidor RADIUS",
+        "why": "O PMF funciona igual em redes Personal sem servidor RADIUS nenhum."
+      }
+    ]
+  },
+  "ex-pcmd3pk9": {
+    "prompt": "No exemplo de hostapd.conf, a linha que impede dois visitantes no mesmo AP de se alcançarem é `___=1`.",
+    "hint": "Duas palavras unidas por sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "ap_isolate"
+        ]
+      }
+    ]
+  }
+}

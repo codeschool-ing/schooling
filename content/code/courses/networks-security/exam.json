@@ -1,0 +1,2559 @@
+[
+  {
+    "id": "ex-pmtq3t1m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A stateless branch router lets replies from web servers into the LAN with tcp sport 443 accept. An auditor tests it from outside with a connection from source port 443 to port 3389 on a LAN machine. What does the router do?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Drops it, since no LAN machine asked for that connection first",
+        "correct": false,
+        "why": "A stateless filter keeps no record of who asked."
+      },
+      {
+        "text": "Drops it, since 3389 is not a port the rule names",
+        "correct": false,
+        "why": "The rule names no destination port at all."
+      },
+      {
+        "text": "Lets it through: the rule tests a number the sender chose",
+        "correct": true,
+        "why": "Right. The source port is written by the sender, and the rule cannot tell a reply from anything else carrying it."
+      },
+      {
+        "text": "Lets the first packet through, then drops the rest of it",
+        "correct": false,
+        "why": "It learns nothing; each packet is judged alone, and each carries source port 443."
+      }
+    ]
+  },
+  {
+    "id": "ex-ywp0rxvz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "fw is replaced by a stricter firewall that marks a packet met in mid-stream as invalid. It restarts while laptop has a connection open to app on 8080. What happens to that connection?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "It continues, because a rule would have let it start",
+        "correct": false,
+        "why": "That is Linux's default, the 1 in nf_conntrack_tcp_loose; this firewall is the stricter kind."
+      },
+      {
+        "text": "It continues, because an established entry is kept for five days",
+        "correct": false,
+        "why": "The five days are in memory, and a restart forgets everything in it."
+      },
+      {
+        "text": "It breaks: its next packet matches no entry",
+        "correct": true,
+        "why": "Right. The table was lost in the restart, so the packet is invalid and dropped."
+      },
+      {
+        "text": "It continues once app resends its last reply, which recreates the entry",
+        "correct": false,
+        "why": "An entry is created when a rule accepts a new packet, and replies from the servers start nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-e416xtnh",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Under the lesson's counted stateful rule set, laptop fetches app's health page five times, each over a new TCP connection. How many packets does the ct state new rule count?",
+    "hint": "Lesson 1.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "packets"
+  },
+  {
+    "id": "ex-sd98bk67",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A provider's border router carries millions of flows in front of a company's stateful firewall. Which rule belongs on the router?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Drop internet packets with a private source",
+        "correct": true,
+        "why": "Right. That can never be legitimate and needs no memory to decide."
+      },
+      {
+        "text": "Accept packets that belong to connections the staff opened",
+        "correct": false,
+        "why": "That needs a table of connections, which a stateless router does not keep."
+      },
+      {
+        "text": "Drop SSH travelling on port 443",
+        "correct": false,
+        "why": "Telling SSH from TLS means reading the payload, which is lesson 2's layer."
+      },
+      {
+        "text": "Accept replies by matching their source port",
+        "correct": false,
+        "why": "That is the return-rule hole this lesson walked through."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5w34n3f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A stateful rule set lets the LAN ask dns on UDP 53, with established,related accepted first. laptop asks one question, and the answer arrives 45 seconds later. What happens to the answer?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "It passes as established, since the entry lasts five days",
+        "correct": false,
+        "why": "Five days is an established TCP connection; a single UDP exchange is forgotten after 30 seconds."
+      },
+      {
+        "text": "It passes as related, being an answer to a known question",
+        "correct": false,
+        "why": "related is a new flow tied to an entry that exists, such as an ICMP error; this entry is gone."
+      },
+      {
+        "text": "It passes, since a UDP flow is kept for 120 seconds",
+        "correct": false,
+        "why": "120 applies once the flow has become a stream, with packets going back and forth more than once."
+      },
+      {
+        "text": "Dropped: after 30 quiet seconds the flow is forgotten",
+        "correct": true,
+        "why": "Right. The answer then starts a new conversation from the DMZ, and no rule lets one start there."
+      }
+    ]
+  },
+  {
+    "id": "ex-an2zqe9v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Suricata's flow record for a connection from desk to 203.0.113.77 shows dest_port 443 and app_proto ssh. What does that record establish?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "The TLS handshake failed, so Suricata fell back to guessing",
+        "correct": false,
+        "why": "It named the protocol from the SSH greeting it read, not from a guess."
+      },
+      {
+        "text": "The port rule refused the connection",
+        "correct": false,
+        "why": "A flow with an application named means the conversation took place."
+      },
+      {
+        "text": "An SSH conversation used the port kept open for HTTPS",
+        "correct": true,
+        "why": "Right. Suricata recognised SSH by its first bytes, whatever the port."
+      },
+      {
+        "text": "What desk typed after logging in, read from the session",
+        "correct": false,
+        "why": "After the key exchange SSH is encrypted; the greeting lines are what is readable."
+      }
+    ]
+  },
+  {
+    "id": "ex-cvhwefm1",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "The rule alert tls $HOME_NET any -> any !443 (msg:\"TLS on a port other than 443\"; flow:to_server,established; tls.sni; content:\".\"; sid:1000002; rev:1;) is loaded. Which of these connections from laptop raise an alert? Choose all that apply.",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "TLS to a server on port 8443, naming shop.example.net",
+        "correct": true,
+        "why": "Right. TLS, a port other than 443, and a name with a dot."
+      },
+      {
+        "text": "TLS to www on port 443, naming www.example.com",
+        "correct": false,
+        "why": "!443 excludes exactly this one."
+      },
+      {
+        "text": "SSH to remote on port 443",
+        "correct": false,
+        "why": "It is SSH, not TLS, and it goes to 443; lesson 2's other rule is the one that fires."
+      },
+      {
+        "text": "TLS to a mail server on port 993, naming mail.example.com",
+        "correct": true,
+        "why": "Right. Any TLS off 443 with a server name matches."
+      },
+      {
+        "text": "Plain HTTP to app on port 8080",
+        "correct": false,
+        "why": "HTTP is not TLS, so there is no SNI to match."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7ec14qb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A company turns on TLS inspection, and its firewall accepts server certificates a browser would reject. What changes for a member of staff visiting a site with a bad certificate?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "The browser warns as before, since it checks the real certificate",
+        "correct": false,
+        "why": "The browser sees the certificate the firewall made, not the real one."
+      },
+      {
+        "text": "No warning: the firewall re-signs the site",
+        "correct": true,
+        "why": "Right. The firewall now decides validity, and the company's authority vouches for whatever it accepted."
+      },
+      {
+        "text": "The site fails to load, because the firewall lacks the server's private key",
+        "correct": false,
+        "why": "The firewall makes its own certificate for the name and needs no server key; the key problem is the client certificate's."
+      },
+      {
+        "text": "The certificate crosses in clear, and the firewall logs a warning",
+        "correct": false,
+        "why": "In TLS 1.3 the certificate is encrypted, and a log line warns nobody at the keyboard."
+      }
+    ]
+  },
+  {
+    "id": "ex-rn119any",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Against TLS 1.3 an inspector still reads the name the client puts in its first message, the field abbreviated ___.",
+    "hint": "Lesson 2.",
+    "blanks": [
+      {
+        "accept": [
+          "SNI"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7e1d6mcy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team switches a new WAF straight to blocking on a Monday. By noon the support form and the checkout return 403 to ordinary customers. What did the lesson's rollout do that this skipped?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Raised the paranoia level so more is caught before blocking",
+        "correct": false,
+        "why": "Higher levels block more legitimate traffic, not less."
+      },
+      {
+        "text": "Ran it detection-only first, reading what it would block",
+        "correct": true,
+        "why": "Right. Seeing its verdicts on real traffic comes before letting it refuse anything."
+      },
+      {
+        "text": "Removed the rules that matched those two forms across the site",
+        "correct": false,
+        "why": "That turns protection off everywhere; the lesson's fix was one rule, one field, one location."
+      },
+      {
+        "text": "Put the WAF behind the application",
+        "correct": false,
+        "why": "It sits on the proxy, where TLS ends and before the application."
+      }
+    ]
+  },
+  {
+    "id": "ex-htc5thyk",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "prompt": "Match each response to the support-form false positive with what it switches off.",
+    "hint": "Lesson 3.",
+    "pairs": [
+      {
+        "left": "SecRuleEngine DetectionOnly",
+        "right": "blocking by every rule, on the whole site"
+      },
+      {
+        "left": "deleting rule 942100",
+        "right": "SQL detection in every field of every page"
+      },
+      {
+        "left": "SecRuleUpdateTargetById 942100 \"!ARGS:comment\" under /support",
+        "right": "one rule, for one field, at one location"
+      }
+    ],
+    "right_distractors": [
+      "the XSS rules for the comment field"
+    ]
+  },
+  {
+    "id": "ex-n3vw384c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A WAF appliance is placed in front of www and passes the encrypted connections through untouched, so TLS still ends on www. What can its rules inspect in the requests?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "The paths but not the bodies, since headers travel in clear",
+        "correct": false,
+        "why": "In HTTPS the path and the headers are encrypted as well."
+      },
+      {
+        "text": "The whole request, since it sits in front of the proxy",
+        "correct": false,
+        "why": "Being in front is not enough; a WAF has to be where TLS ends."
+      },
+      {
+        "text": "The whole request, once it has read www's certificate",
+        "correct": false,
+        "why": "A certificate is public; reading it decrypts nothing."
+      },
+      {
+        "text": "Nothing of them: they are still encrypted as they cross it",
+        "correct": true,
+        "why": "Right. That is why the lesson's WAF runs on the proxy that terminates TLS."
+      }
+    ]
+  },
+  {
+    "id": "ex-cckgm1js",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The shop's proxy has client_max_body_size 16k, which the lesson reads as 16 KiB. What is the largest request body it accepts, in bytes?",
+    "hint": "Lesson 3.",
+    "value": 16384,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-jrw68f5k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The application on app has to call a payment provider at 198.51.100.7 on port 443, and the servers row of the matrix is empty. Which change keeps the matrix's discipline?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Let the servers segment reach the internet on 443",
+        "correct": false,
+        "why": "That lets every server reach every site; a server that calls out gets one destination."
+      },
+      {
+        "text": "Move app into the DMZ, which faces the internet",
+        "correct": false,
+        "why": "The DMZ has no row towards the internet either, and app would lose the zone that protects it."
+      },
+      {
+        "text": "A new cell: app to 198.51.100.7 on 443, with a comment",
+        "correct": true,
+        "why": "Right. One source, one destination, one port, and a comment naming the decision."
+      },
+      {
+        "text": "Route the calls through www, which already reaches app",
+        "correct": false,
+        "why": "That rule lets www start conversations with app, not the other way round."
+      }
+    ]
+  },
+  {
+    "id": "ex-9fkfj58z",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each network design to what it means for segmentation.",
+    "hint": "Lesson 4.",
+    "pairs": [
+      {
+        "left": "one firewall with three legs",
+        "right": "a wrong rule can open every zone at once"
+      },
+      {
+        "left": "a DMZ between two firewalls",
+        "right": "a flaw opens one layer and the other still stands"
+      },
+      {
+        "left": "VLANs routed by the core switch",
+        "right": "traffic between zones meets no rule"
+      },
+      {
+        "left": "VLANs routed through the firewall",
+        "right": "each conversation between zones needs a rule"
+      }
+    ],
+    "right_distractors": [
+      "machines inside one VLAN are filtered from each other"
+    ]
+  },
+  {
+    "id": "ex-60j736e3",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Which of these additions to fw's rules make the blast radius of a compromised www larger? Choose all that apply.",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "www to the internet on 443, so it can fetch updates",
+        "correct": true,
+        "why": "Right. A new rule starting in the DMZ, and the one a callback needs."
+      },
+      {
+        "text": "admin to www on SSH",
+        "correct": false,
+        "why": "It starts in the management zone, not in the DMZ."
+      },
+      {
+        "text": "www to db on 5432, for a cache of prices",
+        "correct": true,
+        "why": "Right. A second door from the DMZ, straight to the database."
+      },
+      {
+        "text": "the internet to www on port 8443",
+        "correct": false,
+        "why": "It starts on the internet; it changes what reaches www, not what www reaches."
+      }
+    ]
+  },
+  {
+    "id": "ex-h20mc0ef",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A mail relay, mail, is added to the DMZ and runs an SSH server. No rule is changed. From admin, what does probe mail:22 print?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "blocked, because each rule names its destination address",
+        "correct": false,
+        "why": "The administration rule names oifname { \"eth1\", \"eth3\" } and no address."
+      },
+      {
+        "text": "refused, because no rule mentions mail yet",
+        "correct": false,
+        "why": "refused means nothing listens; mail runs SSH and the rule lets the packet through."
+      },
+      {
+        "text": "blocked until the zone matrix gets an entry for mail",
+        "correct": false,
+        "why": "The matrix is the document; the rule loaded on fw is what decides."
+      },
+      {
+        "text": "open: the rule names the DMZ's interface",
+        "correct": true,
+        "why": "Right. Any machine that joins the DMZ inherits the management cell's SSH."
+      }
+    ]
+  },
+  {
+    "id": "ex-10ap0czx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A resolver on the internet asks dns about www.example.com, gets an answer too large for UDP, and retries over TCP. Under baseline.nft, what happens to the retry?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Blocked: the internet's DNS cell allows UDP",
+        "correct": true,
+        "why": "Right. The staff's cell names both transports; the internet's names UDP alone."
+      },
+      {
+        "text": "Answered, since DNS falls back to TCP for large answers",
+        "correct": false,
+        "why": "DNS does, but the firewall decides by the cell, and this cell is UDP."
+      },
+      {
+        "text": "Answered, since the UDP question left a conntrack entry behind",
+        "correct": false,
+        "why": "The TCP connection is a new conversation with an entry of its own."
+      },
+      {
+        "text": "Refused by dns itself",
+        "correct": false,
+        "why": "The packet does not reach dns; fw drops it, which probe reports as blocked."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hartpwc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A company replaces its blocklist with a deny-by-default rule set built from its zone matrix. What should it expect in the first week?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "A quiet week, as whatever worked before still works",
+        "correct": false,
+        "why": "Deny by default refuses what is not named, and some legitimate traffic was forgotten."
+      },
+      {
+        "text": "New services exposed until somebody lists them",
+        "correct": false,
+        "why": "That was the blocklist's failure; now an unlisted service is blocked."
+      },
+      {
+        "text": "Complaints about legitimate traffic that nobody listed",
+        "correct": true,
+        "why": "Right. The allowlist's failure is loud and fixed within the day."
+      },
+      {
+        "text": "Drop logs of attacks it used to miss, and no complaints",
+        "correct": false,
+        "why": "The loud failure is the legitimate traffic refused, and people say so."
+      }
+    ]
+  },
+  {
+    "id": "ex-4a6a2pxs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Monitoring on admin, 192.168.99.10, has to read metrics that fw itself serves on TCP port 9100. Where does the rule go?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "forward: from eth4 to fw's address, tcp dport 9100, accept",
+        "correct": false,
+        "why": "forward sees traffic crossing fw; traffic addressed to fw meets input."
+      },
+      {
+        "text": "input: iifname eth4, ip saddr 192.168.99.10, tcp dport 9100, new, accept",
+        "correct": true,
+        "why": "Right. The management interface and the one source, like the SSH rule beside it."
+      },
+      {
+        "text": "input: tcp dport 9100 accept, with no interface or source",
+        "correct": false,
+        "why": "That lets every zone read fw's metrics."
+      },
+      {
+        "text": "output: fw sends the metrics, so its own chain allows them",
+        "correct": false,
+        "why": "admin starts the conversation; fw's replies pass as established."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqz6bheq",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order the rules of a deny-by-default forward chain from top to bottom, as this lesson arranges them.",
+    "hint": "Lesson 5.",
+    "items": [
+      "ct state established,related accept",
+      "ct state invalid drop",
+      "the commented accept rules for new conversations",
+      "the rate-limited log rule"
+    ],
+    "trap": "A log rule anywhere but last records traffic that later rules would have accepted."
+  },
+  {
+    "id": "ex-crackd0a",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "To filter IPv4 and IPv6 with one set of rules, an nftables table is declared in the family ___.",
+    "hint": "Lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "inet"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yrq0p0hw",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A flood of 3,000 unfinished handshakes a second crosses fw, and each entry has seen the SYN-ACK. With nf_conntrack_tcp_timeout_syn_recv set to 20 as in the lesson, how many such entries does the table hold once it is steady?",
+    "hint": "Lesson 6.",
+    "value": 60000,
+    "tolerance": 0,
+    "unit": "entries"
+  },
+  {
+    "id": "ex-m6b27e53",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "With tcp_syncookies = 1 and the queue of half-open connections full, order what happens when a real client connects to www.",
+    "hint": "Lesson 6.",
+    "items": [
+      "the client's SYN arrives",
+      "www encodes what it would remember into its SYN-ACK's sequence number",
+      "www forgets the connection",
+      "the client's ACK brings the number back and www checks it",
+      "www builds the connection"
+    ],
+    "trap": "The server keeps nothing between its SYN-ACK and the ACK; the number carries it."
+  },
+  {
+    "id": "ex-30jt42c1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop slows down. The link is at 30%, conntrack -C is far below the maximum, and the proxy logs thousands of well-formed searches a second, each source asking a few times. Where is this absorbed?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Upstream, at the provider or a scrubbing service",
+        "correct": false,
+        "why": "The link is not full, so this is not volumetric."
+      },
+      {
+        "text": "The firewall's per-source connection limit",
+        "correct": false,
+        "why": "Each source asks a few times, which a per-source limit sees as normal."
+      },
+      {
+        "text": "The proxy, the application and a cache",
+        "correct": true,
+        "why": "Right. It is exhausting the application's work, which is the application kind."
+      },
+      {
+        "text": "SYN cookies on www, with shorter timeouts on fw",
+        "correct": false,
+        "why": "The handshakes complete, and neither the queue nor the table is filling."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2hdpccq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A shop's link carries 1 Gbit/s, and attacks of 40 Gbit/s have hit others in its sector. Which measure answers that kind of attack?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "A firewall with a 40 Gbit/s interface in the building",
+        "correct": false,
+        "why": "The flood is lost on the provider's side of the 1 Gbit/s link before it reaches the building."
+      },
+      {
+        "text": "Shorter syn_recv timeouts and SYN cookies",
+        "correct": false,
+        "why": "Those protect tables; a full link drops packets before they reach one."
+      },
+      {
+        "text": "A per-source limit of four connections",
+        "correct": false,
+        "why": "Each of thousands of sources stays under it, and the link fills anyway."
+      },
+      {
+        "text": "A scrubbing service or a CDN, contracted before any attack",
+        "correct": true,
+        "why": "Right. Capacity somebody else has, arranged in a meeting rather than during the incident."
+      }
+    ]
+  },
+  {
+    "id": "ex-8k9056zt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Dynamic ARP inspection is on in every access switch. The gateway, 192.168.10.1, has its address set by hand rather than by DHCP. What else does the switch need, so that a machine on another port claiming the gateway's address is dropped?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Port security limiting that port to one MAC address",
+        "correct": false,
+        "why": "Port security counts MAC addresses; a machine lying in ARP presents one, its own."
+      },
+      {
+        "text": "A static binding of the gateway's address",
+        "correct": true,
+        "why": "Right. The snooping table learns from DHCP, and the gateway never asked DHCP for anything."
+      },
+      {
+        "text": "The gateway's MAC learnt in the forwarding table, which the inspection reads",
+        "correct": false,
+        "why": "The inspection checks answers against the DHCP snooping table, not the table of which MAC sits behind which port."
+      },
+      {
+        "text": "arpwatch on the segment, reporting the pairing",
+        "correct": false,
+        "why": "arpwatch reports a change after it happened; it drops no packet."
+      }
+    ]
+  },
+  {
+    "id": "ex-66zdkt6h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A compromised laptop poisons ARP on the staff LAN and relays its colleagues' traffic on to the gateway. They use the shop over HTTPS, and their browsers check the certificate. What does the laptop obtain from that traffic?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Their session cookies, which pass through its interface",
+        "correct": false,
+        "why": "They pass through encrypted: the HTTPS capture held no Cookie line at all."
+      },
+      {
+        "text": "The paths of the pages requested, since TLS hides the body and not the request line",
+        "correct": false,
+        "why": "The request line is inside TLS too: the sensor counted zero GET lines."
+      },
+      {
+        "text": "Names, timing and sizes",
+        "correct": true,
+        "why": "Right. Metadata survives; what was said does not."
+      },
+      {
+        "text": "The passwords typed at sign-in, before TLS starts",
+        "correct": false,
+        "why": "TLS is set up before any request is sent, the sign-in included."
+      }
+    ]
+  },
+  {
+    "id": "ex-jnc904t5",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Customers sign in to the shop from cafés and hotels. Which measures still protect their session cookie on those networks? Choose all that apply.",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "The Secure attribute, with the whole site on HTTPS and HSTS",
+        "correct": true,
+        "why": "Right. The cookie never travels in clear, whatever the network."
+      },
+      {
+        "text": "Dynamic ARP inspection on the company's office switches",
+        "correct": false,
+        "why": "It protects the office's segments; a café's Wi-Fi is not one of them."
+      },
+      {
+        "text": "A short lifetime, with a new value issued at sign-in",
+        "correct": true,
+        "why": "Right. A copied cookie stops working soon."
+      },
+      {
+        "text": "An arpwatch sensor on the staff LAN",
+        "correct": false,
+        "why": "It watches the company's segment, not the customer's."
+      },
+      {
+        "text": "Invalidating the session on the server at sign-out",
+        "correct": true,
+        "why": "Right. The value dies with the session."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rcn7ked",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A machine on a switched network hears traffic addressed to others. Match each finding to the cause the lesson gives.",
+    "hint": "Lesson 7.",
+    "pairs": [
+      {
+        "left": "the administrators set up a SPAN port for the IDS sensor",
+        "right": "a mirror port, arranged on purpose"
+      },
+      {
+        "left": "the desk port has presented hundreds of MAC addresses",
+        "right": "an overflowed address table, flooding like a hub"
+      },
+      {
+        "left": "colleagues' neighbour tables list the gateway at that machine's MAC",
+        "right": "ARP spoofing by that machine"
+      }
+    ],
+    "right_distractors": [
+      "a resolver answering for names it does not serve"
+    ]
+  },
+  {
+    "id": "ex-77g9swpr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "With the fib rule loaded on fw, its counter starts climbing every night. A capture on the LAN shows the dropped packets all come from one workstation's MAC, each carrying a different source address from outside the company. What does this point to?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "The filter is dropping honest traffic and is better loosened to rp_filter 2",
+        "correct": false,
+        "why": "Honest LAN traffic carries a LAN source, and fw has a route back to it through that interface."
+      },
+      {
+        "text": "Somebody on the internet is forging the company's addresses",
+        "correct": false,
+        "why": "These packets arrive on the LAN interface, on their way out."
+      },
+      {
+        "text": "The workstation's own NAT is rewriting its source",
+        "correct": false,
+        "why": "NAT is done at fw, and it writes one public address, not a different one each time."
+      },
+      {
+        "text": "That workstation has been taken over and is joining somebody's flood with forged sources",
+        "correct": true,
+        "why": "Right. Random forged sources are how a flood hides, and the egress filter made it visible."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmpc2eab",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop's zone is signed and the company's resolver validates. Somebody on the path between the resolver and the zone's name server replaces the address in an answer with their own. What does a client of the resolver receive?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "The forged address, handed over without the ad flag",
+        "correct": false,
+        "why": "A validating resolver hands over nothing when the signature fails; that output is what +cd shows."
+      },
+      {
+        "text": "The real address, rebuilt from the RRSIG",
+        "correct": false,
+        "why": "A signature proves an answer; it does not carry the address to restore."
+      },
+      {
+        "text": "SERVFAIL, and no address handed to the client",
+        "correct": true,
+        "why": "Right. The signature does not match, so the resolver refuses."
+      },
+      {
+        "text": "The forged address, because on the path the attacker's answer arrives first",
+        "correct": false,
+        "why": "Winning the race is exactly what DNSSEC makes useless."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fxy8jcq",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A resolver draws a random 16-bit transaction ID for each question and a random source port out of 1,000. By the lesson's arithmetic, one forged answer has one chance in how many of matching both?",
+    "hint": "Lesson 8.",
+    "value": 65536000,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-y3t07xd8",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "On fw each network lives behind exactly one interface, so the kernel's reverse path check fits it as net.ipv4.conf.eth0.rp_filter = ___ .",
+    "hint": "Lesson 8.",
+    "blanks": [
+      {
+        "accept": [
+          "1",
+          "strict"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g9djyyv2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "desk is quarantined at fw with the inserted rule, yet shares on a workstation beside it, on the same staff LAN, keep being encrypted from desk. Why, and what closes that path?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "The rule missed desk's open connections; flushing conntrack at fw",
+        "correct": false,
+        "why": "The rule matches on the source address in any state, and fw sees none of this traffic anyway."
+      },
+      {
+        "text": "fw never sees it; host firewalls, or shutting desk's switch port",
+        "correct": true,
+        "why": "Right. Two machines on one segment talk past the firewall."
+      },
+      {
+        "text": "It sits in the wrong chain; moving it to input",
+        "correct": false,
+        "why": "input is for traffic to fw itself; neither chain sees this traffic."
+      },
+      {
+        "text": "desk took a new address; quarantining that one too",
+        "correct": false,
+        "why": "Whatever the address, a rule at fw does not see traffic inside the segment."
+      }
+    ]
+  },
+  {
+    "id": "ex-m6yxqxam",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Each night the file server copies its data into a shared folder on the backup server, with an account allowed to write there. Ransomware takes over the file server. What happens to the backups, and which design would have prevented it?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Safe: the backup server runs another operating system",
+        "correct": false,
+        "why": "The software writes through the share; the system on the other side does not matter."
+      },
+      {
+        "text": "Safe for as long as the scheduled restore tests keep passing",
+        "correct": false,
+        "why": "A restore test says the backup worked last time; it does not stop tonight's encryption."
+      },
+      {
+        "text": "Overwritten too; copies pulled by another machine, with no write access from the source",
+        "correct": true,
+        "why": "Right. Whatever a client can write, the software on it can overwrite."
+      },
+      {
+        "text": "Overwritten too; a longer retention in the same shared folder",
+        "correct": false,
+        "why": "Older copies in a folder the client can write are within its reach as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-7dz0m40p",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A host firewall is being written for every staff workstation, on the lesson's reasoning. Which rules belong in it? Choose all that apply.",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "An input policy of drop",
+        "correct": true,
+        "why": "Right. Allow what is used, drop the rest."
+      },
+      {
+        "text": "File sharing on 445 accepted from the staff LAN, for colleagues' folders",
+        "correct": false,
+        "why": "A workstation should not serve files; files live on servers."
+      },
+      {
+        "text": "Accept for connections in state established or related",
+        "correct": true,
+        "why": "Right. That is how the workstation's own connections come back."
+      },
+      {
+        "text": "Remote desktop on 3389 accepted from the staff LAN, for support calls",
+        "correct": false,
+        "why": "Support works from the management segment, and the staff LAN is where spreading happens."
+      },
+      {
+        "text": "Remote desktop accepted from the management segment",
+        "correct": true,
+        "why": "Right. That is where support works."
+      }
+    ]
+  },
+  {
+    "id": "ex-afmkr35f",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order these controls by the stage of the attack where each one stands in the way, from earliest to latest.",
+    "hint": "Lesson 9.",
+    "items": [
+      "the mail gateway's verdict on the message",
+      "protective DNS refusing the phishing page's name",
+      "host firewalls refusing workstation-to-workstation connections",
+      "backups that no infected machine can reach"
+    ],
+    "trap": "Host firewalls act against spreading, which comes after the click and the foothold."
+  },
+  {
+    "id": "ex-eqsxb4fw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two sites agree a key with X25519, exchanging their public keys by e-mail, and nobody compares them through any other channel. What does the resulting encryption protect against?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Both, since the private keys stayed at home",
+        "correct": false,
+        "why": "A swapped public key makes you share a secret with the swapper, perfectly encrypted."
+      },
+      {
+        "text": "Neither, because the public keys crossed the network in clear",
+        "correct": false,
+        "why": "Public keys are meant to be seen; seeing them does not give the secret."
+      },
+      {
+        "text": "A recorder of the traffic, but not somebody who swapped a key on the way",
+        "correct": true,
+        "why": "Right. Key agreement proves nothing about whose key you hold."
+      },
+      {
+        "text": "A swapper, since the two derived secrets would differ and the link would fail",
+        "correct": false,
+        "why": "Each side shares a matching secret with the swapper, and nothing fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqxp66qb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A web server's processor saturates when thousands of new visitors arrive at once, but not while a few clients download large files. By the lesson's measurements, which operation is the first suspect?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "AES-256-GCM encrypting the pages sent",
+        "correct": false,
+        "why": "It ran at about 12.5 GB a second on one core, and large downloads would load it first."
+      },
+      {
+        "text": "The RSA-2048 signature in each new handshake",
+        "correct": true,
+        "why": "Right. 3,313 a second, once per connection: many new connections feel it first."
+      },
+      {
+        "text": "RSA verification, which the server runs for each visitor",
+        "correct": false,
+        "why": "Verification is the cheap side, 57,718 a second, and it is the client that verifies the server."
+      },
+      {
+        "text": "600,000 PBKDF2 rounds for each connection's key",
+        "correct": false,
+        "why": "Those rounds were openssl enc turning a key file into a key, not part of TLS."
+      }
+    ]
+  },
+  {
+    "id": "ex-tydnmmh6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In the lesson's openssl enc command the key file holds 32 random bytes. A colleague proposes raising -iter from 600,000 to 6,000,000 to make the file safer. What does the lesson say?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "It makes the file ten times harder to open for whoever steals the key file",
+        "correct": false,
+        "why": "With the key file in hand, decryption costs a little more time and then works."
+      },
+      {
+        "text": "It gives CBC the tamper detection it lacks",
+        "correct": false,
+        "why": "Key derivation says nothing about a changed ciphertext; an AEAD tag does."
+      },
+      {
+        "text": "Rounds slow the guessing of a typed password; 32 random bytes are not guessed",
+        "correct": true,
+        "why": "Right. The lesson says the rounds cost nothing here, and they buy nothing either."
+      },
+      {
+        "text": "It raises the key to 2,560 bits",
+        "correct": false,
+        "why": "Rounds change the cost of deriving the key, not its length."
+      }
+    ]
+  },
+  {
+    "id": "ex-2f62jbv3",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "seal.py's AES-GCM adds a fixed-size tag to whatever it seals. Sealed the same way, how many bytes does a 100-byte payment instruction become?",
+    "hint": "Lesson 10.",
+    "value": 116,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-bx82gzfa",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each UDP packet recorded on fw's outside interface, between branch and fw, to what it carries.",
+    "hint": "Lesson 10.",
+    "pairs": [
+      {
+        "left": "148 bytes, from the branch, first",
+        "right": "the handshake's opening message"
+      },
+      {
+        "left": "92 bytes, from fw",
+        "right": "the handshake's reply"
+      },
+      {
+        "left": "32 bytes",
+        "right": "an empty keepalive"
+      },
+      {
+        "left": "96 bytes, several",
+        "right": "the branch's request and its answer, under ChaCha20-Poly1305"
+      }
+    ],
+    "right_distractors": [
+      "the branch's private key, sent once"
+    ]
+  },
+  {
+    "id": "ex-df79ftb1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A vendor publishes MD5 digests of its firmware on a separate page that nobody else can edit. By the lesson, what do those digests still protect against?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Accidental corruption",
+        "correct": true,
+        "why": "Right. Collisions have been shown for MD5, so it no longer holds where somebody tries to fool the check."
+      },
+      {
+        "text": "Tampering by anybody, because the page is separate from the file",
+        "correct": false,
+        "why": "The separate page settles where the digest comes from; MD5 itself has demonstrated collisions."
+      },
+      {
+        "text": "Little, since an MD5 digest can be reversed back into the firmware",
+        "correct": false,
+        "why": "Collisions were shown, not reversal; and it still catches corruption."
+      },
+      {
+        "text": "Tampering, because MD5 uses a key the vendor holds",
+        "correct": false,
+        "why": "A hash has no key; anybody can compute one."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gjhhezw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Staff laptops got release.pub from the internal wiki when the agent was installed. Months later the download server is taken over, and agent-2.4.2.tar.gz and its .sig are replaced with a file and a signature made with the attacker's own key. What do the laptops see when they verify?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Signature Verified Successfully, since the signature matches the file it came with",
+        "correct": false,
+        "why": "It matches the attacker's key, not the one on the laptops."
+      },
+      {
+        "text": "Success, unless SHA256SUMS was changed too",
+        "correct": false,
+        "why": "The signature check does not read the digest list."
+      },
+      {
+        "text": "A question asking whether to trust the new key, as SSH asks",
+        "correct": false,
+        "why": "openssl pkeyutl checks against the key it is given and asks nothing."
+      },
+      {
+        "text": "Signature Verification Failure",
+        "correct": true,
+        "why": "Right. The key on the laptops never left admin's control."
+      }
+    ]
+  },
+  {
+    "id": "ex-00k2w54s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A developer stores each password as SHA-256 over a random per-user salt followed by the password, with the salt kept beside the value. What does the lesson say is still wrong?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The salt should be one value shared by the users, so logins can be checked",
+        "correct": false,
+        "why": "A shared salt lets one computation be compared against every account at once."
+      },
+      {
+        "text": "SHA-256 is fast, so each guess at a stolen value is cheap",
+        "correct": true,
+        "why": "Right. It needs a slow function: Argon2id, scrypt, bcrypt, or PBKDF2 with many rounds."
+      },
+      {
+        "text": "With the salt known, SHA-256 reverses",
+        "correct": false,
+        "why": "Preimage resistance holds; the attack is guessing, fast."
+      },
+      {
+        "text": "A salt stored beside the value reveals the password to a thief",
+        "correct": false,
+        "why": "The salt is not secret; its job is to make each account its own computation."
+      }
+    ]
+  },
+  {
+    "id": "ex-xxyhw9j2",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "When a third party has to check who produced a message, an HMAC falls short, because both sides hold the key; what fits is a digital ___.",
+    "hint": "Lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "signature"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wbjcfev3",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order how the company makes its agent releases checkable against a person, from first to last.",
+    "hint": "Lesson 11.",
+    "items": [
+      "make the Ed25519 key pair, once, on admin",
+      "publish release.pub somewhere users already trust",
+      "sign each release with the private key",
+      "on laptop, verify the download against the key obtained earlier"
+    ],
+    "trap": "The public key reaches users before the releases it checks, and not from the download server beside them."
+  },
+  {
+    "id": "ex-ep6p42at",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The certificate for app.corp.example.com runs from 28 September to 28 December 2026, both at midnight. How many days is it valid for?",
+    "hint": "Lesson 12.",
+    "value": 91,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-j7k9cejt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A company CA with no name constraints is installed on every staff laptop, and its issuing CA's key is stolen. What can the thief do against those laptops?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Impersonate the company's internal names, such as app.corp.example.com",
+        "correct": false,
+        "why": "Without name constraints the key vouches for any name, public ones included."
+      },
+      {
+        "text": "Present a trusted certificate for any name, public sites included",
+        "correct": true,
+        "why": "Right. That is the risk a name constraint removes."
+      },
+      {
+        "text": "Decrypt recordings of past sessions to company servers",
+        "correct": false,
+        "why": "A CA's key signs certificates; it holds no session keys."
+      },
+      {
+        "text": "Revoke the root, taking the laptops' trust away",
+        "correct": false,
+        "why": "The issuing CA cannot revoke its parent, and the root's key is offline."
+      }
+    ]
+  },
+  {
+    "id": "ex-0n66gvmm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An internal client checks the issuing CA's CRL. Its cached copy passed its Next Update yesterday, and the CA's server cannot be reached. What does the lesson say a company should make that client do?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Refuse the connection until a fresh list is fetched",
+        "correct": true,
+        "why": "Right. Inside the company the CA controls both ends, so clients can check and refuse when they cannot."
+      },
+      {
+        "text": "Carry on with the cached list, since the CA signed it",
+        "correct": false,
+        "why": "Carrying on when a fresh list cannot be fetched is what somebody with a stolen key would arrange."
+      },
+      {
+        "text": "Skip the check and rely on the expiry date",
+        "correct": false,
+        "why": "That is the public web's weakness, which a company CA can avoid."
+      },
+      {
+        "text": "Ask over OCSP, and accept on no answer",
+        "correct": false,
+        "why": "Accepting on silence is the same soft failure by another route."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxz5z7mm",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A client believes a root because it sits in its trust store; an intermediate sent by the server is not believed on its own, it is ___ on the way up the chain.",
+    "hint": "Lesson 12.",
+    "blanks": [
+      {
+        "accept": [
+          "verified",
+          "checked"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2gcgf47z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An audit of a TLS 1.2 server lists the four suites it offers. Which one fails the lesson's requirement of ephemeral key agreement?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "DHE-RSA-AES256-GCM-SHA384",
+        "correct": false,
+        "why": "DHE is ephemeral Diffie-Hellman; the lesson names it beside ECDHE."
+      },
+      {
+        "text": "ECDHE-RSA-CHACHA20-POLY1305",
+        "correct": false,
+        "why": "ECDHE is ephemeral, and CHACHA20-POLY1305 is authenticated encryption."
+      },
+      {
+        "text": "AES256-GCM-SHA384",
+        "correct": true,
+        "why": "Right. No ECDHE or DHE in the name: the key is exchanged with RSA, so there is no forward secrecy."
+      },
+      {
+        "text": "ECDHE-ECDSA-AES256-GCM-SHA384",
+        "correct": false,
+        "why": "That is the shop's own TLS 1.2 suite, and its first piece is ECDHE."
+      }
+    ]
+  },
+  {
+    "id": "ex-759mzvwe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A user on hostile café Wi-Fi returns to four sites visited last week. Which site leaves this returning visitor exposed to stripping?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "One that redirects to HTTPS and sends a year of Strict-Transport-Security",
+        "correct": false,
+        "why": "The browser remembers the header and sends no plain request to answer."
+      },
+      {
+        "text": "One whose plain-HTTP server answers with a 301 to HTTPS and nothing more",
+        "correct": true,
+        "why": "Right. The first request and the redirect still travel in clear, and somebody on the path can answer them."
+      },
+      {
+        "text": "One whose domain is on the HSTS preload list",
+        "correct": false,
+        "why": "Preloaded, not even a first request goes out in clear."
+      },
+      {
+        "text": "One sending HSTS without includeSubDomains, reached at its www name",
+        "correct": false,
+        "why": "includeSubDomains extends the promise to other names; www itself is covered."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3ktktkn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Python client builds ssl.create_default_context() and then sets check_hostname = False, leaving verify_mode at CERT_REQUIRED. Which certificate would it now accept for www.example.com that the default refused?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "A self-signed one claiming CN = www.example.com",
+        "correct": false,
+        "why": "CERT_REQUIRED still checks the chain, and nothing trusted signed it."
+      },
+      {
+        "text": "One a trusted authority signed for another name",
+        "correct": true,
+        "why": "Right. The chain half still holds; the name half is gone."
+      },
+      {
+        "text": "The same ones as before, since the chain check also compares the name",
+        "correct": false,
+        "why": "The name is the second half of the check, the one switched off."
+      },
+      {
+        "text": "One offered over TLS 1.1",
+        "correct": false,
+        "why": "The version is negotiated separately from certificate checking."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ch0aze8",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The shop's header says max-age=31536000. For how many days does a browser that saw it keep refusing plain HTTP for the site? Answer in days.",
+    "hint": "Lesson 13.",
+    "value": 365,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-0f0tqk7h",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A search of a Node.js service for switched-off verification should look for the environment setting NODE_TLS_REJECT_UNAUTHORIZED=___.",
+    "hint": "Lesson 13.",
+    "blanks": [
+      {
+        "accept": [
+          "0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vyvj3twt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The Suricata sensor on the DMZ's mirror port crashes at 02:00 and nobody notices until 09:00. What happened to the shop's traffic in between?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "It stopped, because the sensor failed closed",
+        "correct": false,
+        "why": "Failing closed is an inline element's behaviour; a mirror only receives a copy."
+      },
+      {
+        "text": "It flowed as usual, unwatched",
+        "correct": true,
+        "why": "Right. Traffic never depended on an IDS; only the alerts stopped."
+      },
+      {
+        "text": "It crossed a hardware bypass joining the sensor's two ports",
+        "correct": false,
+        "why": "A bypass belongs to an inline device with two ports in the path."
+      },
+      {
+        "text": "It waited on the switch",
+        "correct": false,
+        "why": "The switch forwards the real frames whatever happens to the copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-10d2ktwy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After the false positive, the drop rule on ips is narrowed to content:\"/admin/\"; startswith. Which request from outside does it still drop?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "/administrator",
+        "correct": false,
+        "why": "Without the slash after admin it does not start with /admin/."
+      },
+      {
+        "text": "/help/admin/",
+        "correct": false,
+        "why": "startswith anchors the match at the beginning of the path."
+      },
+      {
+        "text": "/admin-guide.html",
+        "correct": false,
+        "why": "That was the false positive the slash was added to end."
+      },
+      {
+        "text": "/admin/users?page=2",
+        "correct": true,
+        "why": "Right. The path begins with /admin/, so it matches and is dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-bms9c2h9",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order the life of a new rule, from its first line to blocking in front of the shop.",
+    "hint": "Lesson 14.",
+    "items": [
+      "write it with alert and load it on the sensor",
+      "watch its alerts against real traffic",
+      "narrow it where it matched harmless requests",
+      "change alert to drop and raise rev",
+      "load it on the inline ips"
+    ],
+    "trap": "Blocking first means learning the false positives from customers who were refused."
+  },
+  {
+    "id": "ex-m7h7b0w9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An IPS goes inline in front of the shop. It raises no alerts all morning, yet every page is a little slower. Why?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "Each packet now waits in the IPS while it is inspected",
+        "correct": true,
+        "why": "Right. Inline, it adds its latency to every packet, match or no match."
+      },
+      {
+        "text": "The mirror port doubles the traffic on the DMZ switch",
+        "correct": false,
+        "why": "A mirror is how an IDS is fed, and it adds no latency."
+      },
+      {
+        "text": "Its drop rules make matching requests time out",
+        "correct": false,
+        "why": "With no alerts, nothing matched and nothing was dropped."
+      },
+      {
+        "text": "Writing eve.json holds each request until the line is on disk",
+        "correct": false,
+        "why": "With no match there is no alert line to write."
+      }
+    ]
+  },
+  {
+    "id": "ex-03d1e4cd",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Rule 1000201 is loaded as in the lesson, with detection_filter:track by_src, count 10, seconds 60. One address posts the login form 25 times within a minute. How many alerts does it produce?",
+    "hint": "Lesson 15.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-em6ezwcs",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "prompt": "Match each situation on a sensor to the tuning tool the lesson reaches for.",
+    "hint": "Lesson 15.",
+    "pairs": [
+      {
+        "left": "a known backup server trips a good login rule every night",
+        "right": "suppress, with track and that address"
+      },
+      {
+        "left": "a correct scan rule writes thousands of alerts an hour",
+        "right": "a threshold in the threshold file"
+      },
+      {
+        "left": "a rule for /admin also matches /admin-guide.html",
+        "right": "editing the rule"
+      },
+      {
+        "left": "a rule for a protocol this network does not run fires on something else",
+        "right": "disabling it, with the reason written down"
+      }
+    ],
+    "right_distractors": [
+      "raising rev and reloading"
+    ]
+  },
+  {
+    "id": "ex-02v230mz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A tool nobody has seen before sends HTTP requests with a broken request line. No published or local rule describes it. What in the lesson's sensor can still raise an alert?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "The Emerging Threats Open set, updated daily",
+        "correct": false,
+        "why": "It holds signatures for what somebody already described."
+      },
+      {
+        "text": "Rule 1000201's detection_filter",
+        "correct": false,
+        "why": "That counts login posts; it knows nothing of malformed requests."
+      },
+      {
+        "text": "The parser, through http-events.rules",
+        "correct": true,
+        "why": "Right. It knows what a valid request looks like and flags a departure."
+      },
+      {
+        "text": "A suppress line for the tool's source address",
+        "correct": false,
+        "why": "Suppress silences alerts; it does not create them."
+      }
+    ]
+  },
+  {
+    "id": "ex-6pfkkw7g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop's web server moves from port 80 to 8080. One rule says alert http $EXTERNAL_NET any -> $HOME_NET any in Suricata; its Snort 2 twin says tcp and port 80. Which keeps firing on the moved site?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Both, since the header's any covers the new port",
+        "correct": false,
+        "why": "The Snort 2 twin names port 80 instead of any."
+      },
+      {
+        "text": "The Snort 2 twin, whose port matches",
+        "correct": false,
+        "why": "It matches port 80, where the site no longer is."
+      },
+      {
+        "text": "Neither, until both are rewritten for 8080",
+        "correct": false,
+        "why": "The Suricata rule never named a port."
+      },
+      {
+        "text": "The Suricata one: http is the protocol as recognised, on any port",
+        "correct": true,
+        "why": "Right. Suricata identifies HTTP by what it sees, not by the port number."
+      }
+    ]
+  },
+  {
+    "id": "ex-tdrkka9v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On app, the application talks to a cache on the same machine over 127.0.0.1. Which sensor could see that conversation?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "A NIDS on the segment app is plugged into",
+        "correct": false,
+        "why": "Traffic between two processes on one host never crosses the segment."
+      },
+      {
+        "text": "An agent on app itself",
+        "correct": true,
+        "why": "Right. Only a host sensor sees what stays inside the machine."
+      },
+      {
+        "text": "The DMZ sensor, from its TLS records",
+        "correct": false,
+        "why": "Those are of connections crossing the DMZ, not inside a host."
+      },
+      {
+        "text": "A NIDS placed between app and the firewall",
+        "correct": false,
+        "why": "That link carries what leaves app, and this traffic stays on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gw0q5r4b",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these would a host check on www find while the DMZ's network sensor records nothing of them? Choose all that apply.",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "A new listener on 0.0.0.0:8081 that nobody has connected to",
+        "correct": true,
+        "why": "Right. The host saw it open; the wire carries nothing until somebody connects."
+      },
+      {
+        "text": "A new line in root's authorized_keys",
+        "correct": true,
+        "why": "Right. A file change on the host, invisible on the segment."
+      },
+      {
+        "text": "A TLS connection from a stranger to www.example.com",
+        "correct": false,
+        "why": "The network sensor records that, with its SNI."
+      },
+      {
+        "text": "Ten name lookups from one outside address to the public name server",
+        "correct": false,
+        "why": "Those are DNS records the network sensor writes."
+      },
+      {
+        "text": "An edit to sshd_config with no change request",
+        "correct": true,
+        "why": "Right. File integrity sees it; the network does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvbmh14e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An intruder swaps a file under /etc/nginx for one of exactly the same size, then sets its modification time back. Which attribute recorded by AIDE's Watch rule gives the swap away?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "s, the size",
+        "correct": false,
+        "why": "The sizes are identical by design."
+      },
+      {
+        "text": "m, the modification time",
+        "correct": false,
+        "why": "It was set back to the old value."
+      },
+      {
+        "text": "sha256, the hash of the contents",
+        "correct": true,
+        "why": "Right. Different contents give an unrelated hash, whatever the size and times say."
+      },
+      {
+        "text": "u and g, the owner and group",
+        "correct": false,
+        "why": "A swap that keeps root as owner leaves both as they were."
+      }
+    ]
+  },
+  {
+    "id": "ex-90vpj9kn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The DMZ sensor holds alert 1000101 for /admin/ from 203.0.113.50, answered 200. www's access log for the same minute has no /admin/ line at all. What is the reading?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "A false positive on the sensor, since www is where the request was handled",
+        "correct": false,
+        "why": "The sensor saw the request and the 200 in clear, over HTTP."
+      },
+      {
+        "text": "The request went over HTTPS, so www could not read it",
+        "correct": false,
+        "why": "It is the other way round: www ends TLS, and the sensor read the path."
+      },
+      {
+        "text": "www's log is suspect, and the sensor's record is the one to trust",
+        "correct": true,
+        "why": "Right. An intruder on www can edit its log; the sensor runs elsewhere."
+      },
+      {
+        "text": "The alert came from a different rule revision",
+        "correct": false,
+        "why": "The revision says which rule text fired, not whether www logged."
+      }
+    ]
+  },
+  {
+    "id": "ex-evv029yy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "guest (192.168.30.30) must stop reaching SSH on one head-office server, 10.0.5.10, and keep everything else. Which ACL, and where?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "A standard ACL denying 192.168.30.30, inbound on branch's LAN interface",
+        "correct": false,
+        "why": "That cuts guest off from the whole internet, as the lab showed."
+      },
+      {
+        "text": "An extended ACL denying tcp from that host to 10.0.5.10 eq 22, inbound on branch's LAN side",
+        "correct": true,
+        "why": "Right. It names the destination and port, so it goes near the source."
+      },
+      {
+        "text": "An extended ACL on the server's own switch port, outbound",
+        "correct": false,
+        "why": "Extended lists go near the source, dropping the packet before it crosses the network."
+      },
+      {
+        "text": "A standard ACL near 10.0.5.10",
+        "correct": false,
+        "why": "It knows no port, so guest loses the server's other services."
+      }
+    ]
+  },
+  {
+    "id": "ex-gkf0emhs",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "How many addresses does the ACL line permit ip 10.20.16.0 0.0.3.255 any accept as sources? Answer in addresses.",
+    "hint": "Lesson 17.",
+    "value": 1024,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-6fcvfyc4",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "On the router's internet side, the line permit tcp any 192.168.30.0 0.0.0.255 ___ admits only TCP packets carrying the ACK or RST flag.",
+    "hint": "Lesson 17.",
+    "blanks": [
+      {
+        "accept": [
+          "established"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tgwwv5pv",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each address and wildcard to what it matches.",
+    "hint": "Lesson 17.",
+    "pairs": [
+      {
+        "left": "10.1.1.7 0.0.0.0",
+        "right": "exactly one address, like host"
+      },
+      {
+        "left": "0.0.0.0 255.255.255.255",
+        "right": "every address, like any"
+      },
+      {
+        "left": "172.16.0.0 0.0.255.255",
+        "right": "a /16, 65,536 addresses"
+      },
+      {
+        "left": "10.1.2.0 0.0.1.255",
+        "right": "a /23, 512 addresses"
+      }
+    ],
+    "right_distractors": [
+      "a /25, 128 addresses"
+    ]
+  },
+  {
+    "id": "ex-crkqqxnd",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "branch's internet side filters with the established keyword and nothing else for TCP. Which of these are true of that line? Choose all that apply.",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "A SYN from remote to branchpc:8080 is dropped",
+        "correct": true,
+        "why": "Right. A SYN carries neither ACK nor RST."
+      },
+      {
+        "text": "A crafted packet with ACK set crosses it, with no connection behind it",
+        "correct": true,
+        "why": "Right. It checks a flag the sender sets."
+      },
+      {
+        "text": "DNS answers to the branch come back through it",
+        "correct": false,
+        "why": "DNS answers are UDP, and the keyword is for TCP; they need a line of their own."
+      },
+      {
+        "text": "It remembers which connections branchpc opened",
+        "correct": false,
+        "why": "An ACL has no memory; that is a stateful firewall's job."
+      },
+      {
+        "text": "Replies to branchpc's own web requests pass",
+        "correct": true,
+        "why": "Right. Every packet of the reply carries ACK."
+      }
+    ]
+  },
+  {
+    "id": "ex-3p2fn59d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A rule written to let the branch LAN, 192.168.30.0, reach app:8080 shows its counter climbing on connections from laptop, 192.168.10.20. What does the lesson's symptom table point to?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Shadowed by an accept above it",
+        "correct": false,
+        "why": "A shadowed rule counts 0; this one counts."
+      },
+      {
+        "text": "Interfaces the wrong way round",
+        "correct": false,
+        "why": "An impossible rule matches nothing, so it counts 0."
+      },
+      {
+        "text": "A mask wider than the one intended",
+        "correct": true,
+        "why": "Right. Counting the wrong traffic is the mark of a prefix like /16 where /24 was meant."
+      },
+      {
+        "text": "Sitting after the final drop",
+        "correct": false,
+        "why": "Below a catch-all, a rule is unreachable and counts 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-4rrrwyy3",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A quarantine drop sits shadowed at the end of the chain. Order the steps of the lesson's repair.",
+    "hint": "Lesson 18.",
+    "items": [
+      "list the chain with nft -a to see the handles",
+      "delete the misplaced drop by its handle",
+      "insert it at the position just after established traffic",
+      "probe from the quarantined machine again",
+      "check that the drop's counter has climbed"
+    ],
+    "trap": "Inserting before deleting leaves two copies, and the probe before the move proves nothing new."
+  },
+  {
+    "id": "ex-wjzacgzg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A chain ends with a bare counter, no verdict, and relies on policy drop. Weeks later a new accept is appended with nft add. What happens to it?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "It is reached and works",
+        "correct": true,
+        "why": "Right. A rule that only counts decides nothing, so it hides nothing below it."
+      },
+      {
+        "text": "It is unreachable, since it sits after the last rule",
+        "correct": false,
+        "why": "Unreachable follows an unconditional verdict, and a counter has none."
+      },
+      {
+        "text": "It is shadowed by the policy, which is read first",
+        "correct": false,
+        "why": "The policy applies after the rules, to packets nothing decided."
+      },
+      {
+        "text": "nft refuses to add a rule below a counter",
+        "correct": false,
+        "why": "nft appends anywhere without complaint, which is how these mistakes happen."
+      }
+    ]
+  },
+  {
+    "id": "ex-jn3r61ag",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An automated change is followed by matrix-test.sh, which prints remote db:5432 expected blocked got open and exits 1. What should the pipeline do?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Edit matrix.expected so the cell reads open",
+        "correct": false,
+        "why": "That hides the hole the change opened instead of closing it."
+      },
+      {
+        "text": "Carry on: exit 1 is how the script signals that one cell was checked",
+        "correct": false,
+        "why": "1 means a difference; silence and 0 mean the matrix holds."
+      },
+      {
+        "text": "Run it again until it passes",
+        "correct": false,
+        "why": "The result comes from the rule set, and repeating does not change the rule set."
+      },
+      {
+        "text": "Roll the change back and restore the last good rule set",
+        "correct": true,
+        "why": "Right. The failing exit code is there to gate the change before anybody is paged."
+      }
+    ]
+  },
+  {
+    "id": "ex-kr9h6dce",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A contractor's laptop on the management segment is given a copy of ana's private key, and db's host firewall is opened to the laptop's address for a test. ana's line in authorized_keys is unchanged. What does ssh db answer from the laptop?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "A shell, because the host firewall now admits the laptop",
+        "correct": false,
+        "why": "The firewall is one layer; the key's from= option refuses it in the next."
+      },
+      {
+        "text": "A timeout, since db drops SSH from anywhere but admin",
+        "correct": false,
+        "why": "The host firewall was opened for this test, so the packets arrive."
+      },
+      {
+        "text": "Permission denied (publickey)",
+        "correct": true,
+        "why": "Right. The key is right and the place is wrong: from= ties it to the jump host's address, as admin2 showed."
+      },
+      {
+        "text": "A shell without port forwarding, as the options remove extras",
+        "correct": false,
+        "why": "Those options trim a login that is allowed; from= decides whether it is allowed."
+      }
+    ]
+  },
+  {
+    "id": "ex-4p3chd16",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "db's list of outbound needs names the update mirror, the time server, the log collector and DNS, and its output chain drops the rest. Every night at 02:00 the drop counter climbs, towards an unknown address on the internet, port 443. What is the first reading?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Replies to app's nightly queries are being dropped by the output chain",
+        "correct": false,
+        "why": "Replies are accepted by ct state established,related before the policy."
+      },
+      {
+        "text": "Something on db is starting what no database needs; investigate",
+        "correct": true,
+        "why": "Right. Output filtering is revealing here: the counter says a server tried what no server of its kind needs."
+      },
+      {
+        "text": "The time service needs a wider outbound rule",
+        "correct": false,
+        "why": "Time is on the list with its own destination; this address is not it."
+      },
+      {
+        "text": "A harmless failure: the connection was dropped, so it is closed",
+        "correct": false,
+        "why": "The attempt itself is the signal, whatever became of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-va857jtt",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A rule has counted zero for a quarter. Order the steps for removing it safely, from first to last.",
+    "hint": "Lesson 19.",
+    "items": [
+      "find the rule's owner",
+      "remove it, with a scheduled way back",
+      "run the matrix test",
+      "watch for a complaint through the period",
+      "make the removal permanent"
+    ],
+    "trap": "A removal is tested before it is permanent, and nobody complaining is the evidence."
+  },
+  {
+    "id": "ex-bprsp4qx",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A supplier's address is added to fw's vendor set with timeout 2h, and nobody touches it. Forty minutes later, nft list set shows the element. How many minutes does its expires field show?",
+    "hint": "Lesson 19.",
+    "value": 80,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-d3nz4v05",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A second proxy, www2, is built on another address in the DMZ and given a copy of www-client's certificate and key. It connects to app on 8443. What does app's front door do?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Refuses it, because it is not the address 192.0.2.80",
+        "correct": false,
+        "why": "The nginx configuration names a subject, CN=www-client, and no address."
+      },
+      {
+        "text": "Admits it: what counts is the name it presents, not its IP",
+        "correct": true,
+        "why": "Right. Identity decides, and whoever holds the key is that identity, which is why the private key never leaves the machine it belongs to."
+      },
+      {
+        "text": "Refuses it with 400, as a certificate is bound to one machine",
+        "correct": false,
+        "why": "Nothing in the certificate names a machine; the secrecy of the key is the binding."
+      },
+      {
+        "text": "Admits it once fw's 8443 rule is changed to name www2",
+        "correct": false,
+        "why": "That rule names the destination, not the proxy's address."
+      }
+    ]
+  },
+  {
+    "id": "ex-3d9srqj3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The proxy's current certificate has notAfter Dec 28 2026 and nobody renews it. What happens to the proxy's requests to app on 29 December?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "They go on until somebody revokes the certificate",
+        "correct": false,
+        "why": "Expiry needs no revocation; the certificate carries its own end date."
+      },
+      {
+        "text": "They go on, as the check ran when the proxy's configuration was loaded",
+        "correct": false,
+        "why": "The check is made on every handshake, by what is true now."
+      },
+      {
+        "text": "app refuses them, logging FAILED:certificate has expired",
+        "correct": true,
+        "why": "Right. The same refusal the old certificate got, and the shop stops working until the renewal."
+      },
+      {
+        "text": "app answers 403, as the subject no longer matches",
+        "correct": false,
+        "why": "The subject is unchanged; verification fails first, with 400."
+      }
+    ]
+  },
+  {
+    "id": "ex-gcg5rya4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "The company moves its finance application behind an identity check like app's. Which of these belong to doing it the Zero Trust way? Choose all that apply.",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Removing the old port that reached finance without the check",
+        "correct": true,
+        "why": "Right. While it stays open, the check is a front door beside an open window."
+      },
+      {
+        "text": "Logging each decision with the certificate subject that made it",
+        "correct": true,
+        "why": "Right. The next incident starts with who."
+      },
+      {
+        "text": "Keeping firewall rules that limit which segments reach the finance port",
+        "correct": true,
+        "why": "Right. The network layer stays, and limits who can even try."
+      },
+      {
+        "text": "Letting the office LAN skip the check, since it is inside",
+        "correct": false,
+        "why": "Inside stops being a reason; that is the assumption removed."
+      },
+      {
+        "text": "Admitting www-client there too, since it is already verified",
+        "correct": false,
+        "why": "Authorisation is per resource: a valid identity for one service does not open another."
+      }
+    ]
+  },
+  {
+    "id": "ex-fbbm0pm5",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "prompt": "Match each line of app's access log to what happened.",
+    "hint": "Lesson 20.",
+    "pairs": [
+      {
+        "left": "192.168.10.20 - NONE /admin/ 400",
+        "right": "no certificate was presented"
+      },
+      {
+        "left": "192.0.2.80 CN=www-client SUCCESS /health 200",
+        "right": "a valid certificate with the admitted name"
+      },
+      {
+        "left": "192.168.10.20 CN=laptop SUCCESS /admin/ 403",
+        "right": "a valid certificate with a name the location refuses"
+      },
+      {
+        "left": "192.0.2.80 CN=www-client-old FAILED:certificate has expired /health 400",
+        "right": "a credential past its end date"
+      }
+    ],
+    "right_distractors": [
+      "the firewall dropped the connection"
+    ]
+  },
+  {
+    "id": "ex-fc7gcrpf",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "The proxy verifies app's certificate and presents its own in return, so both ends prove who they are. That arrangement is called ___ TLS.",
+    "hint": "Lesson 20.",
+    "blanks": [
+      {
+        "accept": [
+          "mutual"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yjfkg8wj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "At 10:00 a reporting tool's permission to db is removed by regenerating db's rules and loading them, while the tool holds a database session open. At 10:05 it sends another query. With nothing else done, what happens?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "Refused, since no rule for port 5432 remains on db",
+        "correct": false,
+        "why": "The established rule comes first and still matches the open session."
+      },
+      {
+        "text": "Answered, then the session is cut by the regenerated rules",
+        "correct": false,
+        "why": "Rules do not cut sessions; removing the conntrack entries does."
+      },
+      {
+        "text": "Answered, as the session is still in db's connection table",
+        "correct": true,
+        "why": "Right. The new policy applies to new connections, as the second line showed."
+      },
+      {
+        "text": "Refused at the next TLS handshake inside the session",
+        "correct": false,
+        "why": "An open TCP session makes no new handshake, and this one had no TLS."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1062ypx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "policy.txt gains the row report 192.168.20.40 report - - -, and the db row's from column changes from app to app,report. What do db's regenerated rules accept on port 5432?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "Both 192.168.20.10 and 192.168.20.40, in one set",
+        "correct": true,
+        "why": "Right. Each role in the column is resolved to its addresses when the rules are generated."
+      },
+      {
+        "text": "192.168.20.10, until report's own rules are generated",
+        "correct": false,
+        "why": "report's rules say what report accepts; db's say who reaches db."
+      },
+      {
+        "text": "The word report, resolved when a packet arrives",
+        "correct": false,
+        "why": "Names become addresses at generation, in one place of the program."
+      },
+      {
+        "text": "The whole servers segment, as report and app share it",
+        "correct": false,
+        "why": "The rule lists addresses, one per machine in the role."
+      }
+    ]
+  },
+  {
+    "id": "ex-381hnt1p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team enforces microsegmentation in the hypervisor's virtual switch instead of host firewalls. By the lesson, what stays the same?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "The enforcement point, still the central firewall",
+        "correct": false,
+        "why": "East-west traffic never crosses it; that is why enforcement moved."
+      },
+      {
+        "text": "The unit, which stays a segment of many machines",
+        "correct": false,
+        "why": "The unit is one workload in either mechanism."
+      },
+      {
+        "text": "Traffic inside a zone, which the hypervisor leaves open",
+        "correct": false,
+        "why": "Closed unless a rule allows it, wherever it is enforced."
+      },
+      {
+        "text": "The policy's shape: one table of roles and who reaches whom",
+        "correct": true,
+        "why": "Right. The mechanism differs; the policy is the same shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-h2yqkxwr",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A second jump host, admin2 at 192.168.99.11, is added to policy.txt with the role admin. After db's rules are regenerated, how many addresses does the set in its SSH accept rule hold?",
+    "hint": "Lesson 21.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-yb8xdqhf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An employee's laptop authenticates on a meeting-room port. The employee then puts a small unmanaged switch between the laptop and the wall, and a second machine behind it uses the laptop's MAC. What closes this gap?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "Keying the authorised set on port and MAC together",
+        "correct": false,
+        "why": "The second machine is on the same port with the same MAC, so the pair matches."
+      },
+      {
+        "text": "MACsec, 802.1AE",
+        "correct": true,
+        "why": "Right. It authenticates every frame on the link, not only the start of it."
+      },
+      {
+        "text": "A shorter dot1xAuthReAuthPeriod on the port",
+        "correct": false,
+        "why": "The laptop answers each re-authentication and the second machine rides on it."
+      },
+      {
+        "text": "A guest VLAN assigned by the RADIUS server",
+        "correct": false,
+        "why": "That is where refused devices go, and here nothing was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-e7jg9nsa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An administrator simplifies the switch: the authorised set becomes type ether_addr, and port-control.sh adds only the MAC. What does that change?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "EAPOL frames stop being accepted before authentication",
+        "correct": false,
+        "why": "The 0x888e accept is a rule of its own, untouched by the set."
+      },
+      {
+        "text": "Security is unchanged, as one MAC belongs to one machine",
+        "correct": false,
+        "why": "A MAC is set with one ip link command, as visitor showed."
+      },
+      {
+        "text": "Other ports open for any device once one laptop authenticates",
+        "correct": false,
+        "why": "The set still holds a MAC; a device with another MAC stays out."
+      },
+      {
+        "text": "visitor on p2, borrowing newpc's MAC, would get through",
+        "correct": true,
+        "why": "Right. The pair port and address is what kept it out; a filter keyed by the MAC alone lets it through."
+      }
+    ]
+  },
+  {
+    "id": "ex-s84mxc8f",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each part of the lab to what does that job on a commercial network.",
+    "hint": "Lesson 22.",
+    "pairs": [
+      {
+        "left": "hostapd's own EAP server, eap_server=1",
+        "right": "a RADIUS server"
+      },
+      {
+        "left": "the Linux bridge sw running hostapd",
+        "right": "the access switch, as authenticator"
+      },
+      {
+        "left": "port-control.sh adding the pair to the set",
+        "right": "the switch's port logic, done internally"
+      },
+      {
+        "left": "wpa_supplicant on newpc",
+        "right": "the software on the laptop that proves who it is"
+      }
+    ],
+    "right_distractors": [
+      "the DHCP server's leases"
+    ]
+  },
+  {
+    "id": "ex-12yvr6wp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A printer with no supplicant, let into the LAN by its MAC address alone, is using MAC authentication ___.",
+    "hint": "Lesson 22.",
+    "blanks": [
+      {
+        "accept": [
+          "bypass"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xd6eqh10",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An analyst lists every flow record from 203.0.113.50 to see everything it tried against the lab. Which of its attempts are missing from that list?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "Its probes to ports 22 and 5432",
+        "correct": true,
+        "why": "Right. A dropped connection never becomes a confirmed entry, so it leaves no flow; the drop log has it."
+      },
+      {
+        "text": "Its request for /.env, which got a 404",
+        "correct": false,
+        "why": "That conversation completed; it is the flow with 734 bytes received."
+      },
+      {
+        "text": "Its front-page request, too short to be recorded as a flow",
+        "correct": false,
+        "why": "It took milliseconds and is there, with 437 bytes received."
+      },
+      {
+        "text": "The request that raised the IDS alert, which the sensor keeps",
+        "correct": false,
+        "why": "That is the /.env request, and the firewall wrote its flow as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-32cxsnke",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A web request from remote took 40 milliseconds. In its flow record, flow.end is 120 seconds after flow.start. Why?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "The end is when the firewall forgot the closed connection",
+        "correct": true,
+        "why": "Right. A closed TCP connection stays in the table for two minutes, and the record is written when it leaves."
+      },
+      {
+        "text": "remote kept the TCP connection open for two minutes",
+        "correct": false,
+        "why": "The requests took milliseconds; the client closed it."
+      },
+      {
+        "text": "ulogd rounds each flow to two-minute buckets",
+        "correct": false,
+        "why": "The record carries the times conntrack gave it, to the second."
+      },
+      {
+        "text": "It is the delay before the kernel noticed the expiry",
+        "correct": false,
+        "why": "That delay moves when the record is written, up to a minute more."
+      }
+    ]
+  },
+  {
+    "id": "ex-mkg5xvb5",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "fw ships drops.json and flows.json to admin with rsyslog. Which of these keep an intruder with root on fw from changing what admin already holds? Choose all that apply.",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "admin's host firewall accepts port 514 from fw and drops the rest",
+        "correct": true,
+        "why": "Right. fw can deliver lines and cannot log in to edit them."
+      },
+      {
+        "text": "Each line leaves fw as soon as it is written",
+        "correct": true,
+        "why": "Right. By the time an intruder arrives, the earlier lines are already elsewhere."
+      },
+      {
+        "text": "reopenOnTruncate, which starts again when a file is emptied",
+        "correct": false,
+        "why": "It keeps new lines flowing after a wipe; it protects nothing already collected."
+      },
+      {
+        "text": "queue.saveOnShutdown in fw's configuration",
+        "correct": false,
+        "why": "It keeps lines on disk while the collector is away, on the machine the intruder holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-jx1ysxrb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "At about 860 bytes per drop record, how many gigabytes of drops a day does a firewall refusing 100 packets a second write?",
+    "hint": "Lesson 23.",
+    "value": 7.4,
+    "tolerance": 0.1,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-drgyrp25",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order what the correlated timeline shows remote doing, from first to last.",
+    "hint": "Lesson 23.",
+    "items": [
+      "loads the shop's front page",
+      "asks for /.env, and the sensor raises an alert",
+      "tries SSH on the name server",
+      "tries the database's port",
+      "tries port 23 on the shop",
+      "is refused by the intel-drop rule"
+    ],
+    "trap": "The feed's refusals come last: the intel rule did not exist until the feed was loaded."
+  }
+]

@@ -1,0 +1,658 @@
+[
+  {
+    "id": "ex-f5m0cc15",
+    "version": 1,
+    "section": "what-it-means-here",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before db had a host firewall, what could app reach on db that its job does not need?",
+    "hint": "Look at the first probe.",
+    "choices": [
+      {
+        "text": "The database port, 5432",
+        "correct": false,
+        "why": "The application needs the database."
+      },
+      {
+        "text": "SSH",
+        "correct": true,
+        "why": "Right. app has no reason to log in to db's machine."
+      },
+      {
+        "text": "No extra port, because the zone matrix already blocked it",
+        "correct": false,
+        "why": "The probe from app showed both ports open."
+      },
+      {
+        "text": "The staff LAN, through db",
+        "correct": false,
+        "why": "db was not routing traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-w2dc932c",
+    "version": 1,
+    "section": "what-it-means-here",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the firewall's zone matrix not stop app from opening SSH to db?",
+    "hint": "Where do the two machines sit?",
+    "choices": [
+      {
+        "text": "The matrix allows SSH between any two servers",
+        "correct": false,
+        "why": "The matrix sends SSH to the servers from management."
+      },
+      {
+        "text": "app connects over IPv6, which the matrix ignores",
+        "correct": false,
+        "why": "The address family is not the reason."
+      },
+      {
+        "text": "They share a segment, so the traffic never crosses the firewall",
+        "correct": true,
+        "why": "Right. Lesson 4 said so."
+      },
+      {
+        "text": "SSH is established traffic and is accepted early",
+        "correct": false,
+        "why": "A new SSH session is not established."
+      }
+    ]
+  },
+  {
+    "id": "ex-4476j0pm",
+    "version": 1,
+    "section": "what-it-means-here",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each form of least privilege to the question it answers.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "one service, one source",
+        "right": "who may open this port"
+      },
+      {
+        "left": "one way in for administration",
+        "right": "where administrators connect from"
+      },
+      {
+        "left": "no outbound by default",
+        "right": "what may this machine start"
+      },
+      {
+        "left": "access that expires",
+        "right": "for how long"
+      }
+    ],
+    "right_distractors": [
+      "how fast may this link carry traffic"
+    ]
+  },
+  {
+    "id": "ex-6mkcjk7q",
+    "version": 1,
+    "section": "what-it-means-here",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team lead asks for SSH to every server from the whole staff LAN, in case somebody needs it one day. What does least privilege answer?",
+    "hint": "What is the answer to a need that has not arrived yet?",
+    "choices": [
+      {
+        "text": "Grant it, with a counter so the use is visible",
+        "correct": false,
+        "why": "A counter records the excess; it does not remove it."
+      },
+      {
+        "text": "A change request and a new cell when the need is real",
+        "correct": true,
+        "why": "Right. No wider rule written in advance."
+      },
+      {
+        "text": "Grant it to the team lead's own laptop instead",
+        "correct": false,
+        "why": "Still a privilege no current job needs."
+      },
+      {
+        "text": "Refuse, since staff are denied the servers for ever",
+        "correct": false,
+        "why": "A real need gets a change request and a cell."
+      }
+    ]
+  },
+  {
+    "id": "ex-qg3dyqxf",
+    "version": 1,
+    "section": "one-service-one-source",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "db's input chain accepts one port from app's address, 192.168.20.10. Which port?",
+    "hint": "The database's port.",
+    "value": 5432,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-xw0mhvwa",
+    "version": 1,
+    "section": "one-service-one-source",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From db, the probe to app:8080 and www:443 said blocked. Which part of db's host firewall did that?",
+    "hint": "Which chain sees what the machine itself starts?",
+    "choices": [
+      {
+        "text": "The input chain's policy of drop",
+        "correct": false,
+        "why": "Input sees what arrives, not what db starts."
+      },
+      {
+        "text": "The central firewall's forward chain",
+        "correct": false,
+        "why": "app is on db's segment; fw does not see it."
+      },
+      {
+        "text": "The rule for 5432 from app, read backwards",
+        "correct": false,
+        "why": "A rule matches in one direction."
+      },
+      {
+        "text": "The output chain's policy of drop",
+        "correct": true,
+        "why": "Right. Only replies and loopback leave."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqke1m17",
+    "version": 1,
+    "section": "one-service-one-source",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A month later, db's output chain is dropping connections to an address on the internet. What does that suggest?",
+    "hint": "What reason does a database have to start a connection?",
+    "choices": [
+      {
+        "text": "Something on db is being told to act by somebody who should not",
+        "correct": true,
+        "why": "Right. Investigate the machine."
+      },
+      {
+        "text": "The rule is too narrow and should allow the internet",
+        "correct": false,
+        "why": "Nobody listed that destination as a need."
+      },
+      {
+        "text": "A client's reply is being lost",
+        "correct": false,
+        "why": "Replies match established and leave."
+      },
+      {
+        "text": "The loopback rule is missing",
+        "correct": false,
+        "why": "Loopback is local, not the internet."
+      }
+    ]
+  },
+  {
+    "id": "ex-3a3s2dwj",
+    "version": 1,
+    "section": "one-service-one-source",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before turning on output filtering for a server, which of these belong on its list of connections it starts? Choose all that apply.",
+    "hint": "Each is a line with a destination.",
+    "choices": [
+      {
+        "text": "Fetching updates",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Answering app's queries on 5432",
+        "correct": false,
+        "why": "Those are replies, already allowed as established."
+      },
+      {
+        "text": "Shipping logs to a collector",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Name resolution and time",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The administrator's SSH session from admin",
+        "correct": false,
+        "why": "That arrives; the input chain decides it."
+      }
+    ]
+  },
+  {
+    "id": "ex-14a23wcp",
+    "version": 1,
+    "section": "a-single-way-in",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does from=\"192.168.99.10\" do at the start of a line in db's authorized_keys?",
+    "hint": "Whose address is it?",
+    "choices": [
+      {
+        "text": "Makes db connect to the jump host",
+        "correct": false,
+        "why": "It restricts logins; it starts nothing."
+      },
+      {
+        "text": "Blocks the jump host from using the key",
+        "correct": false,
+        "why": "It is the one place the key works."
+      },
+      {
+        "text": "Accepts the key from the jump host alone",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Opens port 22 to that address in the firewall",
+        "correct": false,
+        "why": "sshd does not write firewall rules."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbpp5a24",
+    "version": 1,
+    "section": "a-single-way-in",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the key copied to admin2, what exit status did ssh db hostname return?",
+    "hint": "The echo after it.",
+    "value": 255,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-24zbp8xz",
+    "version": 1,
+    "section": "a-single-way-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "admin2 was allowed through db's host firewall and held the right private key. Why was it refused?",
+    "hint": "Right key, wrong ...?",
+    "choices": [
+      {
+        "text": "The copy of the key was corrupted in transit to admin2",
+        "correct": false,
+        "why": "The same key worked from admin."
+      },
+      {
+        "text": "admin2 is outside the management segment",
+        "correct": false,
+        "why": "It is on the management segment."
+      },
+      {
+        "text": "sshd refuses a key used twice",
+        "correct": false,
+        "why": "Keys are reused login after login."
+      },
+      {
+        "text": "The key is tied to the jump host's address",
+        "correct": true,
+        "why": "Right. The place was wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-vswh5rzs",
+    "version": 1,
+    "section": "a-single-way-in",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the key also carry no-agent-forwarding and no-port-forwarding?",
+    "hint": "What would each let a login become?",
+    "choices": [
+      {
+        "text": "They make the session faster",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "Each turns one login into a path onward",
+        "correct": true,
+        "why": "Right. Administration rarely needs them."
+      },
+      {
+        "text": "ssh-ed25519 keys refuse to work with forwarding on",
+        "correct": false,
+        "why": "The key type allows forwarding."
+      },
+      {
+        "text": "They replace the from= restriction when the address changes",
+        "correct": false,
+        "why": "They add to it; the two are separate."
+      }
+    ]
+  },
+  {
+    "id": "ex-s55datbz",
+    "version": 1,
+    "section": "a-single-way-in",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The jump host is also called a ___: one hardened machine where every administrative session starts.",
+    "hint": "The other name in the section.",
+    "blanks": [
+      {
+        "accept": [
+          "bastion",
+          "bastion host"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fssve1ym",
+    "version": 1,
+    "section": "access-that-expires",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "According to the lesson, what is the most common excess privilege?",
+    "hint": "It is not a rule written too wide.",
+    "choices": [
+      {
+        "text": "A rule written for a whole subnet instead of one address",
+        "correct": false,
+        "why": "The section says the common one is different."
+      },
+      {
+        "text": "A default policy of accept",
+        "correct": false,
+        "why": "That is a baseline error, not the common excess."
+      },
+      {
+        "text": "A rule whose reason ended",
+        "correct": true,
+        "why": "Right. Nothing breaks, so it stays."
+      },
+      {
+        "text": "A key without a from= restriction",
+        "correct": false,
+        "why": "That is a different leak."
+      }
+    ]
+  },
+  {
+    "id": "ex-07hd6n9d",
+    "version": 1,
+    "section": "access-that-expires",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For how many seconds was the supplier's address 203.0.113.70 added to the vendor set?",
+    "hint": "The element's timeout.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-qh6m7x59",
+    "version": 1,
+    "section": "access-that-expires",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The supplier needs SSH to app again next month. What changes on fw?",
+    "hint": "Which part never changes?",
+    "choices": [
+      {
+        "text": "A new accept rule with the supplier's address",
+        "correct": false,
+        "why": "The rule reading @vendor is still there."
+      },
+      {
+        "text": "An element added to the set, with a timeout",
+        "correct": true,
+        "why": "Right. The rule stays as it is."
+      },
+      {
+        "text": "The set's timeout flag is switched back on",
+        "correct": false,
+        "why": "The flag stays on the set."
+      },
+      {
+        "text": "The rule's comment is updated with the new date",
+        "correct": false,
+        "why": "A comment grants no access."
+      }
+    ]
+  },
+  {
+    "id": "ex-4cxpt798",
+    "version": 1,
+    "section": "access-that-expires",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of just-in-time access.",
+    "hint": "From the request to the end.",
+    "items": [
+      "requested for a task",
+      "approved",
+      "granted for a window, and recorded",
+      "withdrawn automatically"
+    ],
+    "trap": "Withdrawal comes from the clock, after the window, not from somebody remembering."
+  },
+  {
+    "id": "ex-ck87agfv",
+    "version": 1,
+    "section": "auditing-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a quarter, a rule allowing 3389 from the whole staff LAN has a low counter, all from two addresses. What does the table suggest?",
+    "hint": "Which row is it?",
+    "choices": [
+      {
+        "text": "Remove it: the access is not used",
+        "correct": false,
+        "why": "That is the row for zero."
+      },
+      {
+        "text": "Keep it and check its comment",
+        "correct": false,
+        "why": "That is the row for a high count."
+      },
+      {
+        "text": "Narrow it to those two sources",
+        "correct": true,
+        "why": "Right. The rule is wider than its use."
+      },
+      {
+        "text": "Widen the review period to a year before touching it",
+        "correct": false,
+        "why": "A quarter already covers quarter-end reports."
+      }
+    ]
+  },
+  {
+    "id": "ex-qc286czn",
+    "version": 1,
+    "section": "auditing-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a week of counters mislead a review of the rule set?",
+    "hint": "What runs at the end of a quarter?",
+    "choices": [
+      {
+        "text": "Counters reset every Sunday",
+        "correct": false,
+        "why": "They count until somebody resets them."
+      },
+      {
+        "text": "Quarter-end reports fall outside it",
+        "correct": true,
+        "why": "Right. The period must include every legitimate use."
+      },
+      {
+        "text": "A week of traffic overflows the counter",
+        "correct": false,
+        "why": "The counters hold far more."
+      },
+      {
+        "text": "Shadowed rules count double in a short period",
+        "correct": false,
+        "why": "A shadowed rule counts zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-tdkfmjp4",
+    "version": 1,
+    "section": "auditing-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What do flow records add to a rule's counter when narrowing it?",
+    "hint": "A counter says how many.",
+    "choices": [
+      {
+        "text": "The bytes each packet carried",
+        "correct": false,
+        "why": "A counter already has bytes."
+      },
+      {
+        "text": "Whether the rule is shadowed",
+        "correct": false,
+        "why": "That is the matrix test of lesson 18."
+      },
+      {
+        "text": "The user logged in on each machine",
+        "correct": false,
+        "why": "Flows know addresses, not users."
+      },
+      {
+        "text": "Which machine pairs used it",
+        "correct": true,
+        "why": "Right. That is what the narrower rule names."
+      }
+    ]
+  },
+  {
+    "id": "ex-248v6zm3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An auditor needs to reach the file server from outside for three days next week. Which form of least privilege fits best?",
+    "hint": "What should end it?",
+    "choices": [
+      {
+        "text": "A permanent rule for the auditor's address, removed at the next review",
+        "correct": false,
+        "why": "That relies on somebody remembering."
+      },
+      {
+        "text": "Their address in a set with a three-day timeout",
+        "correct": true,
+        "why": "Right. The clock ends it."
+      },
+      {
+        "text": "A key with from= set to the auditor's address",
+        "correct": false,
+        "why": "That ties a key to a place, not to a time."
+      },
+      {
+        "text": "Output filtering on the file server",
+        "correct": false,
+        "why": "That limits what the server starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-08em58bx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A second database, db2, is added to the servers segment beside app. Which control does the central firewall leave to db2 itself?",
+    "hint": "Which traffic does fw never see?",
+    "choices": [
+      {
+        "text": "Blocking the staff LAN from db2",
+        "correct": false,
+        "why": "That crosses fw, so the matrix does it."
+      },
+      {
+        "text": "Allowing SSH from management",
+        "correct": false,
+        "why": "The matrix already sends that."
+      },
+      {
+        "text": "Limiting which ports app opens on db2",
+        "correct": true,
+        "why": "Right. Same segment, so a host firewall."
+      },
+      {
+        "text": "Rate-limiting traffic from the internet",
+        "correct": false,
+        "why": "That arrives through fw."
+      }
+    ]
+  },
+  {
+    "id": "ex-g20r6rva",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A rule to an old reporting server has counted zero for a quarter and its owner has left. What is the safe next step?",
+    "hint": "Lesson 5's way of making a change.",
+    "choices": [
+      {
+        "text": "Delete it at once, since zero proves it is unused",
+        "correct": false,
+        "why": "Zero can also mean shadowed; test first."
+      },
+      {
+        "text": "Leave it until a new owner approves its removal",
+        "correct": false,
+        "why": "That is how temporary rules become permanent."
+      },
+      {
+        "text": "Widen it first, so the counter starts showing whether anybody uses it",
+        "correct": false,
+        "why": "That adds privilege to measure privilege."
+      },
+      {
+        "text": "Remove it with a scheduled way back and run the matrix test",
+        "correct": true,
+        "why": "Right. Then watch for a complaint."
+      }
+    ]
+  }
+]

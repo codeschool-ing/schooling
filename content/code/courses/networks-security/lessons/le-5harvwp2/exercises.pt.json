@@ -1,0 +1,434 @@
+{
+  "ex-p2ydp8hn": {
+    "prompt": "Depois que remote abriu a loja, que endereço de cliente apareceu no log de app?",
+    "hint": "Quem abriu a conexão com app?",
+    "choices": [
+      {
+        "text": "203.0.113.50, o de remote",
+        "why": "Esse está no log do www; app nunca viu remote."
+      },
+      {
+        "text": "192.0.2.80, o endereço do proxy",
+        "why": "Isso. O proxy fez o próprio pedido."
+      },
+      {
+        "text": "203.0.113.2, o endereço externo do firewall",
+        "why": "O fw roteia; aqui ele não reescreve endereços."
+      },
+      {
+        "text": "Nenhum; o HTTP não carrega endereço",
+        "why": "A linha do log começa com o endereço do cliente."
+      }
+    ]
+  },
+  "ex-hc3c2539": {
+    "prompt": "Por que app pode confiar no X-Forwarded-For neste laboratório, quando uma aplicação alcançável pela internet não deveria?",
+    "hint": "Quem consegue escrever esse cabeçalho num pedido que chega a app?",
+    "choices": [
+      {
+        "text": "O cabeçalho é assinado pelo nginx",
+        "why": "É texto puro; nada o assina."
+      },
+      {
+        "text": "O HTTPS protege todo cabeçalho contra alteração",
+        "why": "O TLS protege no trânsito; o cliente escreve o que quiser."
+      },
+      {
+        "text": "O firewall só deixa o www alcançar app, e o www escreve o cabeçalho ele mesmo",
+        "why": "Isso. Alcançável direto, um cliente poderia mandar qualquer valor."
+      },
+      {
+        "text": "O X-Forwarded-For carrega o endereço do cabeçalho IP",
+        "why": "É um cabeçalho HTTP que qualquer um pode enviar."
+      }
+    ]
+  },
+  "ex-bactafdh": {
+    "prompt": "O que significa o proxy terminar o TLS?",
+    "hint": "Onde a conexão cifrada acaba?",
+    "choices": [
+      {
+        "text": "A cifra termina no www, que guarda a chave",
+        "why": "Isso, e o salto seguinte é uma conexão nova."
+      },
+      {
+        "text": "Ele repassa os bytes cifrados até app sem mudar",
+        "why": "Isso seria repasse TCP, não terminação."
+      },
+      {
+        "text": "Ele recusa clientes que oferecem TLS 1.1",
+        "why": "Isso é o ssl_protocols, outra configuração."
+      },
+      {
+        "text": "Ele fecha as sessões TLS depois de um pedido",
+        "why": "Terminar aqui quer dizer onde a cifra acaba."
+      }
+    ]
+  },
+  "ex-4kx0jmzh": {
+    "prompt": "O que se ganha pondo um proxy reverso na frente da aplicação? Escolha todas as que se aplicam.",
+    "hint": "A tabela do fim da seção.",
+    "choices": [
+      {
+        "text": "Um lugar só que guarda o certificado",
+        "why": "O TLS termina ali."
+      },
+      {
+        "text": "Um lugar para recusar pedidos antes de a aplicação vê-los",
+        "why": "O resto da aula usa isso."
+      },
+      {
+        "text": "A máquina da aplicação fica inalcançável da internet",
+        "why": "A tentativa direta de remote esgotou o tempo."
+      },
+      {
+        "text": "Os bugs da própria aplicação deixam de importar",
+        "why": "Um proxy repassa pedidos de aparência válida, com bugs e tudo."
+      }
+    ]
+  },
+  "ex-4yp1wk77": {
+    "prompt": "Ligue cada pedido de remote à resposta que o proxy deu.",
+    "hint": "As capturas da seção.",
+    "pairs": [
+      {
+        "left": "GET /admin/",
+        "right": "403"
+      },
+      {
+        "left": "20000 bytes de corpo de POST",
+        "right": "413"
+      },
+      {
+        "left": "HTTP puro na porta 80",
+        "right": "301"
+      },
+      {
+        "left": "GET /",
+        "right": "200"
+      }
+    ],
+    "right_distractors": [
+      "429"
+    ]
+  },
+  "ex-p4bga2a1": {
+    "prompt": "Por que a aula desliga o server_tokens?",
+    "hint": "É uma defesa, e o que ele deixa de oferecer?",
+    "choices": [
+      {
+        "text": "Ele corrige vulnerabilidades conhecidas do nginx",
+        "why": "Só muda um cabeçalho."
+      },
+      {
+        "text": "Ele torna o servidor invisível para scanners",
+        "why": "Ele continua respondendo, e diz nginx."
+      },
+      {
+        "text": "Uma versão diz a um estranho o que tentar primeiro",
+        "why": "Isso. Não é defesa, só não se oferece nada."
+      },
+      {
+        "text": "O HTTP/2 exige o cabeçalho vazio",
+        "why": "Não existe tal exigência."
+      }
+    ]
+  },
+  "ex-81p3kgt0": {
+    "prompt": "Toda recusa desta seção foi escrita sem saber como é um ataque. Foi escrita a partir de quê, então?",
+    "hint": "Compare com o policy drop do firewall.",
+    "choices": [
+      {
+        "text": "Uma lista de assinaturas de ataque mantida pelo fornecedor",
+        "why": "Essa é a abordagem do WAF, das próximas seções."
+      },
+      {
+        "text": "O log de acesso de incidentes passados",
+        "why": "Nada aqui veio de incidentes passados."
+      },
+      {
+        "text": "O que a loja de fato recebe de forma legítima",
+        "why": "Isso. Permitir o que se usa, recusar o resto."
+      },
+      {
+        "text": "Os padrões do OWASP Core Rule Set, como vêm de fábrica",
+        "why": "O CRS ainda não está carregado nesta seção."
+      }
+    ]
+  },
+  "ex-btf1mzaf": {
+    "prompt": "A diretiva do nginx que recusa um corpo de pedido acima de um tamanho é client_max_body___.",
+    "hint": "Leia a quarta parte do exemplo.",
+    "blanks": [
+      {
+        "accept": [
+          "_size"
+        ]
+      }
+    ]
+  },
+  "ex-aahkpa7r": {
+    "prompt": "Dos 30 pedidos rápidos de remote, quantos foram recusados com 429?",
+    "hint": "O uniq -c os contou."
+  },
+  "ex-spk9sc7q": {
+    "prompt": "Logo depois da rajada de remote, o pedido do laptop foi atendido. Por quê?",
+    "hint": "Qual é a chave do limite?",
+    "choices": [
+      {
+        "text": "A LAN fica isenta de limites de taxa por padrão",
+        "why": "Nada a isenta; ela tem contador próprio."
+      },
+      {
+        "text": "Ele tem um contador próprio",
+        "why": "Isso: $binary_remote_addr, um contador por endereço."
+      },
+      {
+        "text": "A rajada já tinha se recarregado toda",
+        "why": "remote ainda estava acima do limite."
+      },
+      {
+        "text": "O laptop usou HTTPS e remote usou HTTP",
+        "why": "Os dois usaram HTTPS."
+      }
+    ]
+  },
+  "ex-fw2cnk3m": {
+    "prompt": "Por que definir limit_req_status 429 em vez de manter o padrão do nginx?",
+    "hint": "O que o padrão diz ao cliente?",
+    "choices": [
+      {
+        "text": "O 429 deixa o limite mais estrito",
+        "why": "O código de status não muda a taxa."
+      },
+      {
+        "text": "O padrão fecha a conexão sem devolver resposta alguma ao cliente",
+        "why": "O padrão responde 503."
+      },
+      {
+        "text": "Os navegadores repetem um 503 para sempre",
+        "why": "Não é por isso."
+      },
+      {
+        "text": "O 503 afirma que o servidor quebrou; o 429 diz pedidos demais",
+        "why": "Isso. O status deve dizer o que aconteceu."
+      }
+    ]
+  },
+  "ex-6hmz520r": {
+    "prompt": "Onde um limite de taxa por endereço erra? Escolha todas as que se aplicam.",
+    "hint": "Supõe-se que um endereço é um cliente.",
+    "choices": [
+      {
+        "text": "Um escritório inteiro atrás de um endereço de NAT",
+        "why": "Dividem um contador e o atingem juntos."
+      },
+      {
+        "text": "Tráfego espalhado por milhares de endereços",
+        "why": "Cada um fica abaixo do limite."
+      },
+      {
+        "text": "Um script martelando de um endereço",
+        "why": "Esse é exatamente o caso que ele trata."
+      },
+      {
+        "text": "Um cliente pedindo uma vez por minuto",
+        "why": "Longe do limite, atendido corretamente."
+      }
+    ]
+  },
+  "ex-g0tx53g2": {
+    "prompt": "No modo só detecção, a string de teste voltou 200. O que o WAF fez?",
+    "hint": "Veja o log de auditoria.",
+    "choices": [
+      {
+        "text": "Nada; as regras não estavam carregadas",
+        "why": "921 regras carregadas."
+      },
+      {
+        "text": "Pontuou e registrou que teria bloqueado",
+        "why": "Isso: três casamentos, pontuação 15, regra 949110."
+      },
+      {
+        "text": "Tirou a tag script e passou o resto",
+        "why": "O ModSecurity aqui não reescreve pedidos."
+      },
+      {
+        "text": "Bloqueou, mas o cache do proxy respondeu",
+        "why": "Não há cache nesta configuração."
+      }
+    ]
+  },
+  "ex-d55t3x1t": {
+    "prompt": "Que pontuação total de anomalia a string de teste atingiu?",
+    "hint": "A mensagem da regra 949110."
+  },
+  "ex-9rrvast3": {
+    "prompt": "Com o limite padrão de 5 do CRS, qual o menor conjunto de casamentos que bloqueia um pedido?",
+    "hint": "Um casamento crítico vale 5.",
+    "choices": [
+      {
+        "text": "Três casamentos de qualquer severidade",
+        "why": "Os pontos somam por severidade, não por contagem."
+      },
+      {
+        "text": "Um casamento crítico",
+        "why": "Isso. O falso positivo da próxima seção fez exatamente 5."
+      },
+      {
+        "text": "Todas as regras de uma categoria casando",
+        "why": "Muito mais do que o necessário."
+      },
+      {
+        "text": "Qualquer casamento no nível de paranoia 2 ou acima",
+        "why": "A paranoia decide quais regras rodam, não o limite."
+      }
+    ]
+  },
+  "ex-zkbyc2ye": {
+    "prompt": "Um cliente lê o pedido de outro trocando o número em /orders/17 por /orders/18. Por que o WAF não impede?",
+    "hint": "Sobre o que um WAF sabe?",
+    "choices": [
+      {
+        "text": "O pedido estava cifrado",
+        "why": "O TLS terminou no proxy, onde o WAF lê."
+      },
+      {
+        "text": "O nível de paranoia estava baixo demais",
+        "why": "Nenhum nível vê de quem é um pedido."
+      },
+      {
+        "text": "O WAF inspeciona corpos de POST e deixa pedidos GET passarem sem inspeção",
+        "why": "A string de teste foi um GET."
+      },
+      {
+        "text": "Conhece padrões de ataque, não de quem é o quê",
+        "why": "Isso. É uma falha na lógica da aplicação."
+      }
+    ]
+  },
+  "ex-8bzv1ws0": {
+    "prompt": "A mensagem de suporte com SQL foi recusada. Que tipo de resultado é esse?",
+    "hint": "O pedido era legítimo? O WAF acertou sobre o que viu?",
+    "choices": [
+      {
+        "text": "Um falso positivo",
+        "why": "Isso: legítimo, e a regra viu SQL corretamente."
+      },
+      {
+        "text": "Um falso negativo",
+        "why": "Isso seria um ataque que passou."
+      },
+      {
+        "text": "Um verdadeiro positivo",
+        "why": "O pedido não era um ataque."
+      },
+      {
+        "text": "Um erro de análise do WAF",
+        "why": "A regra 942100 casou como previsto."
+      }
+    ]
+  },
+  "ex-ref7cn6p": {
+    "prompt": "Ordene estas correções do falso positivo da mais ampla à mais estreita.",
+    "hint": "A mais estreita é a que a aula usou.",
+    "items": [
+      "passar o WAF inteiro para só detecção",
+      "tirar a regra 942100 do site inteiro",
+      "tirar a regra 942100 em /support",
+      "impedir a regra 942100 de ler ARGS:comment em /support"
+    ],
+    "trap": "Cada passo mantém mais proteção funcionando; o último mantém tudo, menos um campo para uma regra."
+  },
+  "ex-2x1hj35w": {
+    "prompt": "Depois da exclusão, quais destes pedidos a /support ainda são recusados? Escolha todas as que se aplicam.",
+    "hint": "A exclusão nomeia uma regra e um campo.",
+    "choices": [
+      {
+        "text": "comment=<script>alert(1)</script>",
+        "why": "As regras de XSS nunca foram mexidas."
+      },
+      {
+        "text": "name=select id from orders where total > 100",
+        "why": "Só comment foi excluído."
+      },
+      {
+        "text": "comment=select id from orders where total > 100",
+        "why": "É o que a exclusão deixa passar."
+      },
+      {
+        "text": "comment=my order has not arrived",
+        "why": "Nada nele casa com regra alguma."
+      }
+    ]
+  },
+  "ex-0pq3jmbw": {
+    "prompt": "A loja cria uma página para clientes enviarem fotos de mercadoria danificada, e os envios falham com 413. Qual é a mudança certa?",
+    "hint": "Estreita, como a exclusão.",
+    "choices": [
+      {
+        "text": "Aumentar o client_max_body_size do site inteiro",
+        "why": "Todo formulário passaria a aceitar corpos grandes."
+      },
+      {
+        "text": "Passar o WAF para só detecção",
+        "why": "O 413 vem do limite de tamanho do nginx, não do WAF."
+      },
+      {
+        "text": "Um limite maior só na página de envio",
+        "why": "Isso, como dizia a nota do exemplo."
+      },
+      {
+        "text": "Tirar o limite e confiar no limite de taxa",
+        "why": "Um limite de taxa conta pedidos, não o tamanho deles."
+      }
+    ]
+  },
+  "ex-dntqysct": {
+    "prompt": "Ligue cada problema ao controle desta aula que o trata.",
+    "hint": "Quatro controles, quatro problemas.",
+    "pairs": [
+      {
+        "left": "um script pedindo a página de login 200 vezes por segundo",
+        "right": "limit_req"
+      },
+      {
+        "left": "um pedido com tags de script num parâmetro",
+        "right": "o Core Rule Set"
+      },
+      {
+        "left": "um pedido DELETE que a loja nunca usa",
+        "right": "limit_except"
+      },
+      {
+        "left": "as páginas de admin vistas da internet",
+        "right": "allow e deny"
+      }
+    ],
+    "right_distractors": [
+      "ssl_protocols"
+    ]
+  },
+  "ex-a66zegvn": {
+    "prompt": "Um pedido chega ao www. Qual verificação acontece por último?",
+    "hint": "app é o último salto.",
+    "choices": [
+      {
+        "text": "o fw aceitar TCP para a porta 443",
+        "why": "Isso é antes de o www ver qualquer coisa."
+      },
+      {
+        "text": "o TLS ser terminado",
+        "why": "Precisa acontecer antes de o pedido ser lido."
+      },
+      {
+        "text": "o WAF pontuar o pedido",
+        "why": "Acontece antes de o proxy repassá-lo."
+      },
+      {
+        "text": "app tratá-lo",
+        "why": "Isso. Só chega se toda verificação anterior passou."
+      }
+    ]
+  }
+}

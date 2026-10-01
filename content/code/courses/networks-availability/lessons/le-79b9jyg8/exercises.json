@@ -1,0 +1,613 @@
+[
+  {
+    "id": "ex-1zcjkkf3",
+    "version": 1,
+    "section": "tcp-handshake",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The laptop's request was 73 bytes, starting at relative sequence number 1. What acknowledgement number does the server send back?",
+    "hint": "The next byte it expects.",
+    "value": 74,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-z8yheywg",
+    "version": 1,
+    "section": "tcp-handshake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The laptop's FIN was at sequence 74 and carried no data, yet the server acknowledged 75. Why?",
+    "hint": "The SYN did the same at the start.",
+    "choices": [
+      {
+        "text": "The server counted the TCP header as a byte",
+        "correct": false,
+        "why": "Headers are never counted in sequence numbers."
+      },
+      {
+        "text": "A FIN uses up one sequence number, like a SYN",
+        "correct": true,
+        "why": "Right. Both are acknowledged as if they were one byte."
+      },
+      {
+        "text": "One byte of the page was lost and resent",
+        "correct": false,
+        "why": "Nothing was retransmitted in that capture."
+      },
+      {
+        "text": "The server acknowledges one byte ahead as a safety margin",
+        "correct": false,
+        "why": "An acknowledgement is exact: the next byte wanted."
+      }
+    ]
+  },
+  {
+    "id": "ex-a1126aaw",
+    "version": 1,
+    "section": "tcp-handshake",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With raw numbers, the laptop's SYN carried `3237057867`. What raw acknowledgement number did the SYN-ACK carry?",
+    "hint": "Relative 1 is the start plus one.",
+    "value": 3237057868,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-bc89p567",
+    "version": 1,
+    "section": "tcp-handshake",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each side picks a random starting sequence number. What would go wrong if every connection started at 0?",
+    "hint": "Think of somebody who cannot see the packets.",
+    "choices": [
+      {
+        "text": "Two connections on the same ports could not be told apart",
+        "correct": false,
+        "why": "Ports and addresses tell connections apart, not sequence numbers."
+      },
+      {
+        "text": "Wireshark could no longer show relative numbers",
+        "correct": false,
+        "why": "It would show them trivially; relative would equal raw."
+      },
+      {
+        "text": "A blind attacker could inject packets",
+        "correct": true,
+        "why": "Right. A random start leaves one chance in about four billion."
+      },
+      {
+        "text": "The data would travel unencrypted",
+        "correct": false,
+        "why": "TCP encrypts nothing whatever its numbers are."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfx8d8yj",
+    "version": 1,
+    "section": "refused-or-filtered",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A capture shows `[SYN]` to port 81, then `[RST, ACK]` from `192.0.2.21` 72 microseconds later. What does that prove?",
+    "hint": "Somebody answered.",
+    "choices": [
+      {
+        "text": "Host up, port closed",
+        "correct": true,
+        "why": "Right. The host's own kernel answered for the closed port."
+      },
+      {
+        "text": "A firewall on the path dropped the SYN",
+        "correct": false,
+        "why": "A drop is silence; this was an answer."
+      },
+      {
+        "text": "The server accepted and then crashed",
+        "correct": false,
+        "why": "It never accepted: there is no SYN-ACK."
+      },
+      {
+        "text": "The network lost the SYN on the way",
+        "correct": false,
+        "why": "The reset proves the SYN arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhcskqr4",
+    "version": 1,
+    "section": "refused-or-filtered",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To port 8080 the capture shows a SYN at 0 s, then `[TCP Retransmission]` at 1.02 s and 2.05 s, and nothing from the server. What can you conclude from the client's side?",
+    "hint": "Silence has several causes.",
+    "choices": [
+      {
+        "text": "The server is up and the port is closed",
+        "correct": false,
+        "why": "A closed port on a live host answers with a reset."
+      },
+      {
+        "text": "The service accepted the connection and hung",
+        "correct": false,
+        "why": "Accepting would have produced a SYN-ACK."
+      },
+      {
+        "text": "The name did not resolve",
+        "correct": false,
+        "why": "The SYN went to an address, so resolution was already done."
+      },
+      {
+        "text": "Nothing came back; the cause is open",
+        "correct": true,
+        "why": "Right. A drop on the server, on the path, or a lost reply all look like this."
+      }
+    ]
+  },
+  {
+    "id": "ex-041kggah",
+    "version": 1,
+    "section": "refused-or-filtered",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The client's capture shows only retransmitted SYNs. What single step tells you whether the SYN reached the server?",
+    "hint": "Lesson 12 captured somewhere else.",
+    "choices": [
+      {
+        "text": "Capture again on the client with `-n`",
+        "correct": false,
+        "why": "The client already showed everything it can see."
+      },
+      {
+        "text": "Capture on the server at the same time",
+        "correct": true,
+        "why": "Right. If the SYN is there, the loss is on the server or on the way back."
+      },
+      {
+        "text": "Raise curl's `--max-time` to a minute",
+        "correct": false,
+        "why": "Waiting longer adds retransmissions, not information."
+      },
+      {
+        "text": "Ping the server's address",
+        "correct": false,
+        "why": "ICMP can pass where TCP 8080 is dropped, and the reverse."
+      }
+    ]
+  },
+  {
+    "id": "ex-bk19b7j9",
+    "version": 1,
+    "section": "refused-or-filtered",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what you see with what it means.",
+    "hint": "An answer, a repeat, a limit.",
+    "pairs": [
+      {
+        "left": "`[RST, ACK]` straight after the SYN",
+        "right": "A live host with the port closed"
+      },
+      {
+        "left": "`[TCP Retransmission]` of the SYN",
+        "right": "No answer arrived, so the client tries again"
+      },
+      {
+        "left": "`Connection timed out after 5002 milliseconds`",
+        "right": "The client's own limit ran out"
+      }
+    ],
+    "right_distractors": [
+      "The service answered, only slowly"
+    ]
+  },
+  {
+    "id": "ex-gdycpbth",
+    "version": 1,
+    "section": "dns-query",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A capture printed this line for a DNS response: `0x26af\tTrue\t3\tnosuch.example.com`. What does the 3 say?",
+    "hint": "The third field is the reply code.",
+    "choices": [
+      {
+        "text": "Three answers came back",
+        "correct": false,
+        "why": "The address column is empty; there was no answer at all."
+      },
+      {
+        "text": "The server failed and could not answer",
+        "correct": false,
+        "why": "That is a different code; this server answered with certainty."
+      },
+      {
+        "text": "The name does not exist: NXDOMAIN",
+        "correct": true,
+        "why": "Right. Reply code 3, No such name."
+      },
+      {
+        "text": "It is the third query with this id",
+        "correct": false,
+        "why": "Each query has its own id; the 3 is the reply code."
+      }
+    ]
+  },
+  {
+    "id": "ex-75a41nc7",
+    "version": 1,
+    "section": "dns-query",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "DNS runs over UDP, with no connection. How does the laptop know which response answers which query?",
+    "hint": "Look at the first column of the capture.",
+    "choices": [
+      {
+        "text": "By the order the responses arrive in",
+        "correct": false,
+        "why": "Responses may arrive in any order; order proves nothing."
+      },
+      {
+        "text": "By the transaction id, the same in both",
+        "correct": true,
+        "why": "Right. 0x301b asked and 0x301b answered."
+      },
+      {
+        "text": "By the TCP connection each one used",
+        "correct": false,
+        "why": "These lookups were UDP, port 53, with no connection."
+      },
+      {
+        "text": "By the name, which only one query can ask",
+        "correct": false,
+        "why": "The same name was asked twice in this lesson, with two ids."
+      }
+    ]
+  },
+  {
+    "id": "ex-gen4tghm",
+    "version": 1,
+    "section": "dns-query",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The DNS response came from IP `192.0.2.53`, but its Ethernet source was `52:54:00:a8:0a:01`, the office router's MAC. Why do the two disagree?",
+    "hint": "Which header survives a router?",
+    "choices": [
+      {
+        "text": "The router answered the query itself from its cache",
+        "correct": false,
+        "why": "The response was authoritative, from ns; the router only forwarded it."
+      },
+      {
+        "text": "NAT rewrote the MAC to hide the server",
+        "correct": false,
+        "why": "MACs are rewritten at every hop with or without NAT."
+      },
+      {
+        "text": "A MAC names the last hop; the IP names the sender",
+        "correct": true,
+        "why": "Right. Each router writes a new Ethernet header and keeps the IP one."
+      },
+      {
+        "text": "The capture was taken on a mirror port",
+        "correct": false,
+        "why": "It was taken on the laptop; a mirror port changes nothing in a frame anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-ms240kht",
+    "version": 1,
+    "section": "dns-query",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Reply code 3 in a DNS response is called ___: the name asked about does not exist.",
+    "hint": "Non-existent domain, in one word.",
+    "blanks": [
+      {
+        "accept": [
+          "NXDOMAIN"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xskv5ks3",
+    "version": 1,
+    "section": "tls-handshake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the working TLS 1.3 session, which of these could somebody on the path read?",
+    "hint": "Frame 4.",
+    "choices": [
+      {
+        "text": "The server's certificate",
+        "correct": false,
+        "why": "In TLS 1.3 it is inside the encrypted records of frame 6."
+      },
+      {
+        "text": "The path of the page requested",
+        "correct": false,
+        "why": "The request is Application Data, encrypted."
+      },
+      {
+        "text": "The site's name",
+        "correct": true,
+        "why": "Right. The SNI, www.example.com, is in the Client Hello in clear."
+      },
+      {
+        "text": "The page that came back",
+        "correct": false,
+        "why": "Encrypted like everything after the Server Hello."
+      }
+    ]
+  },
+  {
+    "id": "ex-656gnsed",
+    "version": 1,
+    "section": "tls-handshake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The capture of port 8443 ended with `8 0.026663340 192.168.10.20 → 192.0.2.21   TLSv1.3 73 Alert (Level: Fatal, Description: Certificate Expired)`. Who sent it, and why could tshark read it?",
+    "hint": "Read the direction of the arrow.",
+    "choices": [
+      {
+        "text": "The server, warning that its own certificate had expired",
+        "correct": false,
+        "why": "It comes from 192.168.10.20, the laptop."
+      },
+      {
+        "text": "The laptop, and tshark decrypted it with the session keys",
+        "correct": false,
+        "why": "tshark was given no keys; there was nothing to decrypt."
+      },
+      {
+        "text": "The laptop, before it encrypted its own side",
+        "correct": true,
+        "why": "Right. 7 bytes of plain TLS: a record header and a two-byte alert."
+      },
+      {
+        "text": "A firewall on the path, blocking the old certificate",
+        "correct": false,
+        "why": "The source is the laptop's address, and nothing on the path could read the certificate."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5r97zbh",
+    "version": 1,
+    "section": "tls-handshake",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The alert frame is 73 bytes, and an empty TCP segment on this link is 66. How many bytes of TLS does the alert carry?",
+    "hint": "A record header of 5 plus the alert itself.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-epxq4hkf",
+    "version": 1,
+    "section": "tls-handshake",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For the wrong-name certificate, frame 8 was `Change Cipher Spec, Application Data`, 146 bytes, exactly like the success. A colleague concludes TLS was fine and the fault is elsewhere. What is wrong with that?",
+    "hint": "When was the name compared?",
+    "choices": [
+      {
+        "text": "curl refused the name later, inside the encryption",
+        "correct": true,
+        "why": "Right. It shows as Application Data, like a request; curl's error names the mismatch."
+      },
+      {
+        "text": "Nothing; a wrong name would have produced a readable alert",
+        "correct": false,
+        "why": "The capture shows it did not."
+      },
+      {
+        "text": "146 bytes is too short to be a real Finished",
+        "correct": false,
+        "why": "It is the same 146 as in the session that worked."
+      },
+      {
+        "text": "The server should have sent the alert, not the laptop",
+        "correct": false,
+        "why": "The server does not judge its own certificate; the client does."
+      }
+    ]
+  },
+  {
+    "id": "ex-sf3h3dhc",
+    "version": 1,
+    "section": "tls-handshake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every Client Hello in the lesson is labelled `TLSv1`, while the rest of the session is `TLSv1.3`. Why?",
+    "hint": "Old equipment on the path.",
+    "choices": [
+      {
+        "text": "The laptop only speaks TLS 1.0 until the server upgrades it",
+        "correct": false,
+        "why": "It offers 1.3 inside the Client Hello, and 1.3 is what was used."
+      },
+      {
+        "text": "The outer record says 1.0 for compatibility",
+        "correct": true,
+        "why": "Right. The real versions travel in an extension of the Client Hello."
+      },
+      {
+        "text": "Somebody on the path is forcing a downgrade",
+        "correct": false,
+        "why": "The Server Hello and everything after it are 1.3."
+      },
+      {
+        "text": "tshark cannot decode a 1.3 Client Hello",
+        "correct": false,
+        "why": "It decoded the SNI from it without trouble."
+      }
+    ]
+  },
+  {
+    "id": "ex-8efmg56f",
+    "version": 1,
+    "section": "reading-the-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`openssl s_client` to port 9443 printed `subject=CN = shop.example.net` and `Verify return code: 0 (ok)`, although it asked for `www.example.com`. What does code 0 establish?",
+    "hint": "-servername only sends the SNI.",
+    "choices": [
+      {
+        "text": "That the certificate is right for www.example.com",
+        "correct": false,
+        "why": "The subject says shop.example.net; the name was not checked."
+      },
+      {
+        "text": "That the server accepted the SNI and switched names",
+        "correct": false,
+        "why": "The server sent the one certificate it has on that port."
+      },
+      {
+        "text": "A trusted, in-date chain, and nothing about the name",
+        "correct": true,
+        "why": "Right. -verify_hostname would have checked it; it was not run."
+      },
+      {
+        "text": "That the connection was encrypted with no problems at all",
+        "correct": false,
+        "why": "Encrypted, yes, and to the wrong name, which is a problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3djg2qe",
+    "version": 1,
+    "section": "reading-the-file",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message with its cause.",
+    "hint": "Two came from openssl, one from curl.",
+    "pairs": [
+      {
+        "left": "`Verify return code: 10`",
+        "right": "The certificate is past its NotAfter date"
+      },
+      {
+        "left": "`Verify return code: 21`",
+        "right": "No chain from it to anything trusted"
+      },
+      {
+        "left": "`no alternative certificate subject name matches`",
+        "right": "The certificate is for another name"
+      }
+    ],
+    "right_distractors": [
+      "The server is not listening on that port"
+    ]
+  },
+  {
+    "id": "ex-dvrbdkye",
+    "version": 1,
+    "section": "reading-the-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `failing.pcap`, frame 9 is `web1`'s `[FIN, ACK]` and frame 10 the laptop's `[RST, ACK]`. Why a reset rather than a FIN?",
+    "hint": "What did curl do after its alert?",
+    "choices": [
+      {
+        "text": "A firewall reset the connection on the laptop's behalf",
+        "correct": false,
+        "why": "Nothing on this path filters port 8443."
+      },
+      {
+        "text": "The laptop had already closed its end",
+        "correct": true,
+        "why": "Right. A packet for a connection that no longer exists gets a reset."
+      },
+      {
+        "text": "The server's FIN arrived damaged",
+        "correct": false,
+        "why": "Its numbers, Seq=1444 Ack=525, fit exactly."
+      },
+      {
+        "text": "A reset is how TLS 1.3 always closes",
+        "correct": false,
+        "why": "TLS closes above TCP; this is TCP answering for a closed socket."
+      }
+    ]
+  },
+  {
+    "id": "ex-65edrsrd",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put these packets of `failing.pcap` in the order they crossed the wire.",
+    "hint": "TCP first, TLS inside it, TCP again at the end.",
+    "items": [
+      "[SYN] from the laptop",
+      "Client Hello with the SNI",
+      "Server Hello and the encrypted certificate",
+      "Alert: Certificate Expired",
+      "[FIN, ACK] from web1",
+      "[RST, ACK] from the laptop"
+    ],
+    "trap": "The alert is the laptop's verdict on a certificate it has to receive first, and web1 only closes after hearing it."
+  },
+  {
+    "id": "ex-718qjmxd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a server change, users say the site will not load. A capture shows the Client Hello, the Server Hello, then `Alert (Level: Fatal, Description: Unknown CA)` from each client. What is the likeliest cause?",
+    "hint": "The clients said why.",
+    "choices": [
+      {
+        "text": "The new certificate has already expired",
+        "correct": false,
+        "why": "The alert would say Certificate Expired."
+      },
+      {
+        "text": "A firewall now blocks port 443",
+        "correct": false,
+        "why": "Then there would be no Server Hello, only retransmitted SYNs."
+      },
+      {
+        "text": "The certificate names another site",
+        "correct": false,
+        "why": "That one is checked after the handshake and would not show in clear."
+      },
+      {
+        "text": "Clients do not trust the issuer",
+        "correct": true,
+        "why": "Right. A certificate from the wrong authority, or a chain the clients cannot complete."
+      }
+    ]
+  }
+]

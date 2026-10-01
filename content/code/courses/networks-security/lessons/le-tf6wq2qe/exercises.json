@@ -1,0 +1,654 @@
+[
+  {
+    "id": "ex-aszswk6w",
+    "version": 1,
+    "section": "snort-and-suricata",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a rule written for Snort, most of the time, also a rule for Suricata?",
+    "hint": "What did Suricata choose to read in 2010?",
+    "choices": [
+      {
+        "text": "Both engines are built from the same source code",
+        "correct": false,
+        "why": "They are separate programs; they share the rule language."
+      },
+      {
+        "text": "Suricata was deliberately built to read Snort's rules",
+        "correct": true,
+        "why": "Right. The shared language is the useful fact."
+      },
+      {
+        "text": "Suricata converts Snort rules to YAML when it loads them",
+        "correct": false,
+        "why": "YAML is its configuration, not its rule format."
+      },
+      {
+        "text": "Rules describe ports, and ports are the same everywhere",
+        "correct": false,
+        "why": "The reason is the language; rules describe far more than ports."
+      }
+    ]
+  },
+  {
+    "id": "ex-gyy4577m",
+    "version": 1,
+    "section": "snort-and-suricata",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each engine to how it is configured.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "Snort 2",
+        "right": "snort.conf"
+      },
+      {
+        "left": "Snort 3",
+        "right": "Lua"
+      },
+      {
+        "left": "Suricata",
+        "right": "YAML"
+      }
+    ],
+    "right_distractors": [
+      "XML"
+    ]
+  },
+  {
+    "id": "ex-a3ndfpkw",
+    "version": 1,
+    "section": "snort-and-suricata",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A defender has to choose one engine and wants to find things no rule was written for. What difference in the table matters most?",
+    "hint": "The last row.",
+    "choices": [
+      {
+        "text": "Suricata is multi-threaded, and Snort 2 runs one thread per process",
+        "correct": false,
+        "why": "That is speed, not what gets recorded."
+      },
+      {
+        "text": "Suricata's rules are longer",
+        "correct": false,
+        "why": "The rule language is essentially shared."
+      },
+      {
+        "text": "Suricata records HTTP, DNS and TLS whether or not a rule matched",
+        "correct": true,
+        "why": "Right. Those records are what anomalies are found in."
+      },
+      {
+        "text": "Snort 3 is configured in Lua",
+        "correct": false,
+        "why": "The configuration language finds nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nghfbe3c",
+    "version": 1,
+    "section": "snort-and-suricata",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong in local rules rather than in a published rule set? Choose all that apply.",
+    "hint": "What does only this network know?",
+    "choices": [
+      {
+        "text": "Which paths on the company's site are private",
+        "correct": true,
+        "why": "Right. Nobody outside knows them."
+      },
+      {
+        "text": "A signature for a malware family seen worldwide",
+        "correct": false,
+        "why": "Published sets are maintained for that, and updated daily."
+      },
+      {
+        "text": "Which protocols have no business on which segment",
+        "correct": true,
+        "why": "Right. That is this network's own layout."
+      },
+      {
+        "text": "Which login form is sensitive",
+        "correct": true,
+        "why": "Right, like the rule in this lesson."
+      },
+      {
+        "text": "An exploit against a widely used web server",
+        "correct": false,
+        "why": "Known exploits are what published sets carry."
+      }
+    ]
+  },
+  {
+    "id": "ex-0z3pvejn",
+    "version": 1,
+    "section": "anatomy-of-a-rule",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The rule puts http.uri before content:\"/login\". A request to /shop sends a cookie containing /login. Does it match?",
+    "hint": "Where does a content search after a sticky buffer?",
+    "choices": [
+      {
+        "text": "Yes, because /login appears in the request",
+        "correct": false,
+        "why": "That is what a content with no buffer would do."
+      },
+      {
+        "text": "Yes, because cookies are part of the URI",
+        "correct": false,
+        "why": "A cookie is a header, outside the path."
+      },
+      {
+        "text": "No: the content is searched in the path",
+        "correct": true,
+        "why": "Right. And the path is /shop."
+      },
+      {
+        "text": "No, because the method was not checked first",
+        "correct": false,
+        "why": "The method check is separate from where /login is searched."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7bp9gge",
+    "version": 1,
+    "section": "anatomy-of-a-rule",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The team changes the count in rule 1000201 from 10 to 20. What should happen to rev, and why?",
+    "hint": "What does an alert carry?",
+    "choices": [
+      {
+        "text": "Nothing: rev counts how often the rule fired",
+        "correct": false,
+        "why": "rev is written by the author, not counted by the engine."
+      },
+      {
+        "text": "sid is raised instead, since it is a new rule",
+        "correct": false,
+        "why": "It is the same rule in a new version."
+      },
+      {
+        "text": "rev is set to 20, to match the count",
+        "correct": false,
+        "why": "rev is a revision number, unrelated to the count."
+      },
+      {
+        "text": "It becomes 2, so an alert names the version that produced it",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6w0x0xe",
+    "version": 1,
+    "section": "anatomy-of-a-rule",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps the lesson took on sensor, from first to last.",
+    "hint": "A rule file is tested before anything runs.",
+    "items": [
+      "write the rule in local.rules",
+      "list the file under rule-files in suricata.yaml",
+      "test the configuration with suricata -T",
+      "start the engine on the DMZ interface"
+    ],
+    "trap": "Starting first means a mistake in a rule is found by the engine in production."
+  },
+  {
+    "id": "ex-c48p1yfw",
+    "version": 1,
+    "section": "counting-with-thresholds",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "remote posted the login form fifteen times, under detection_filter with count 10. How many alerts did fast.log hold for sid 1000201?",
+    "hint": "Which requests exceed the count?",
+    "value": 5,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-a3pj02wk",
+    "version": 1,
+    "section": "counting-with-thresholds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each counting keyword to when it fires.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "detection_filter",
+        "right": "on each match after the count is exceeded"
+      },
+      {
+        "left": "threshold: type threshold",
+        "right": "once per N matches"
+      },
+      {
+        "left": "threshold: type limit",
+        "right": "at most N times per period"
+      }
+    ],
+    "right_distractors": [
+      "for one source, never"
+    ]
+  },
+  {
+    "id": "ex-na64c9g1",
+    "version": 1,
+    "section": "counting-with-thresholds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A rule is right, but during a scan it fires hundreds of times. The analyst wants to know the scan started and not the rest. Which keyword answers that?",
+    "hint": "\"Tell me it started.\"",
+    "choices": [
+      {
+        "text": "threshold: type limit",
+        "correct": true,
+        "why": "Right. At most N alerts per period."
+      },
+      {
+        "text": "detection_filter",
+        "correct": false,
+        "why": "It keeps alerting on each match past the count."
+      },
+      {
+        "text": "threshold: type threshold, to see the volume",
+        "correct": false,
+        "why": "One per N shows the volume, which the analyst said they do not need."
+      },
+      {
+        "text": "Deleting the rule until the scan ends",
+        "correct": false,
+        "why": "That loses the start as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6shwk65",
+    "version": 1,
+    "section": "counting-with-thresholds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The first two alerts from remote carry the same second, 18:03:37. What does that suggest?",
+    "hint": "Could a person type that fast?",
+    "choices": [
+      {
+        "text": "The sensor's clock is wrong",
+        "correct": false,
+        "why": "A wrong clock would shift both, not make them equal."
+      },
+      {
+        "text": "The alert was written twice for one request",
+        "correct": false,
+        "why": "Fifteen requests, five alerts: one each for 11 to 15."
+      },
+      {
+        "text": "A script",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The proxy retried a failed request",
+        "correct": false,
+        "why": "Every request got 200."
+      }
+    ]
+  },
+  {
+    "id": "ex-vmm6dtyh",
+    "version": 1,
+    "section": "anomaly-detection",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Rule 2221014 fired on remote's request with no Host header. Who described that request?",
+    "hint": "What does the parser know?",
+    "choices": [
+      {
+        "text": "The lesson's author, in local.rules",
+        "correct": false,
+        "why": "local.rules holds 1000201 alone."
+      },
+      {
+        "text": "The proxy, which reported it to the sensor with its 400",
+        "correct": false,
+        "why": "The sensor watches traffic; the proxy tells it nothing."
+      },
+      {
+        "text": "Nobody: the parser knows what a valid request is",
+        "correct": true,
+        "why": "Right. http-events.rules turns its events into alerts."
+      },
+      {
+        "text": "Emerging Threats Open",
+        "correct": false,
+        "why": "It ships with Suricata, not with that set."
+      }
+    ]
+  },
+  {
+    "id": "ex-2zbgd2av",
+    "version": 1,
+    "section": "anomaly-detection",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many DNS questions did the sensor record from 203.0.113.50?",
+    "hint": "uniq -c counted them.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-c2wfzkdr",
+    "version": 1,
+    "section": "anomaly-detection",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Finding what departs from a machine's normal behaviour, rather than what somebody described in a signature, is ___ detection.",
+    "hint": "The section's title.",
+    "blanks": [
+      {
+        "accept": [
+          "anomaly",
+          "anomalies",
+          "anomaly-based"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-15nqdtsm",
+    "version": 1,
+    "section": "anomaly-detection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is malformed HTTP a useful signal even when nothing in it is harmful?",
+    "hint": "Who produces it?",
+    "choices": [
+      {
+        "text": "It crashes the proxy",
+        "correct": false,
+        "why": "The proxy answered 400 and carried on."
+      },
+      {
+        "text": "Ordinary clients do not send it; scanners and hand-made tools do",
+        "correct": true,
+        "why": "Right. Its source is the signal."
+      },
+      {
+        "text": "Malformed requests carry malware",
+        "correct": false,
+        "why": "This one carried a missing header and no payload."
+      },
+      {
+        "text": "It proves the sender is inside the company",
+        "correct": false,
+        "why": "It came from 203.0.113.50, outside."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdchxc03",
+    "version": 1,
+    "section": "anomaly-detection",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "203.0.113.50 asked the public name server for www, shop, mail, vpn and six more names. Why would no signature fire on it?",
+    "hint": "Look at one question on its own.",
+    "choices": [
+      {
+        "text": "DNS travels over UDP, which rules do not inspect",
+        "correct": false,
+        "why": "Suricata parsed and recorded every question."
+      },
+      {
+        "text": "The questions were encrypted",
+        "correct": false,
+        "why": "The sensor read every name in them."
+      },
+      {
+        "text": "Ten questions stay under detection_filter's count",
+        "correct": false,
+        "why": "That count belongs to the login rule, not to DNS."
+      },
+      {
+        "text": "Each was a legitimate question; the pattern is in the count",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6taqddw",
+    "version": 1,
+    "section": "anomaly-detection",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The office resolver sees ten names from one laptop in a minute. The public name server sees ten from a stranger. Why can the same number mean different things?",
+    "hint": "What says whether ten is a lot?",
+    "choices": [
+      {
+        "text": "Each has its own baseline",
+        "correct": true,
+        "why": "Right. An office on a Tuesday against a survey."
+      },
+      {
+        "text": "The laptop is inside, and inside traffic is trusted by the sensor",
+        "correct": false,
+        "why": "The sensor records both the same way."
+      },
+      {
+        "text": "A resolver ignores repeated names",
+        "correct": false,
+        "why": "These were ten different names."
+      },
+      {
+        "text": "The public server logs more detail than the resolver does",
+        "correct": false,
+        "why": "The records are the sensor's, in eve.json."
+      }
+    ]
+  },
+  {
+    "id": "ex-1adarqqq",
+    "version": 1,
+    "section": "tuning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the suppress line was loaded, branch posted the form fifteen times. What did eve.json show for sid 1000201?",
+    "hint": "uniq -c by source.",
+    "choices": [
+      {
+        "text": "Five alerts from 203.0.113.70 and five from 203.0.113.50",
+        "correct": false,
+        "why": "The branch's five were suppressed."
+      },
+      {
+        "text": "remote's five alerts, and none from the branch",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No alerts, because the rule was reloaded",
+        "correct": false,
+        "why": "Reloading kept remote's earlier alerts and the rule."
+      },
+      {
+        "text": "One alert from the branch, as a reminder",
+        "correct": false,
+        "why": "suppress writes none for that source."
+      }
+    ]
+  },
+  {
+    "id": "ex-wd28t0pz",
+    "version": 1,
+    "section": "tuning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How did the lesson load the new threshold file without stopping Suricata?",
+    "hint": "What was sent to the process?",
+    "choices": [
+      {
+        "text": "suricata -T, which loads what it tests",
+        "correct": false,
+        "why": "-T tests and exits."
+      },
+      {
+        "text": "By restarting the sensor machine",
+        "correct": false,
+        "why": "That stops the engine."
+      },
+      {
+        "text": "The signal USR2",
+        "correct": true,
+        "why": "Right. The log says rule reload complete."
+      },
+      {
+        "text": "By editing rule 1000201 and raising rev",
+        "correct": false,
+        "why": "The rule was left untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-rmp9s733",
+    "version": 1,
+    "section": "tuning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a suppression carry who made it, why, and a review date?",
+    "hint": "What happens to the address later?",
+    "choices": [
+      {
+        "text": "Suricata refuses a suppress line with no comment",
+        "correct": false,
+        "why": "The engine reads the line, not the comment."
+      },
+      {
+        "text": "So the rule's rev can be raised to match",
+        "correct": false,
+        "why": "The rule is untouched by a suppression."
+      },
+      {
+        "text": "Its reason expires and the address becomes a gap",
+        "correct": true,
+        "why": "Right. Whoever uses it later is unseen."
+      },
+      {
+        "text": "For an auditor to count the alerts that were silenced",
+        "correct": false,
+        "why": "The point is knowing when to remove it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdnvvx6s",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the tuning tools from narrowest to broadest.",
+    "hint": "Which one hides least?",
+    "items": [
+      "suppress for one address",
+      "a threshold in the threshold file",
+      "editing the rule",
+      "disabling the rule"
+    ],
+    "trap": "Disabling first silences the signal with the noise."
+  },
+  {
+    "id": "ex-t9qq3gjs",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A local rule has content:\"passwd\" with no buffer, and it fires all day on a product page describing a password manager. What is the fix?",
+    "hint": "Is one source to blame, or the rule?",
+    "choices": [
+      {
+        "text": "Suppress it for the web server's address",
+        "correct": false,
+        "why": "That hides a real match on that server as well."
+      },
+      {
+        "text": "A threshold of one alert per hundred",
+        "correct": false,
+        "why": "The rule is too broad, not too frequent."
+      },
+      {
+        "text": "Edit it to search inside http.uri",
+        "correct": true,
+        "why": "Right. Editing a rule that is too broad."
+      },
+      {
+        "text": "Disable it and rely on Emerging Threats",
+        "correct": false,
+        "why": "A published set knows no local paths."
+      }
+    ]
+  },
+  {
+    "id": "ex-f993m334",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A workstation that asks the resolver for about forty names a day asks for three thousand different ones one night. Which part of this lesson catches it?",
+    "hint": "Is there a signature for it?",
+    "choices": [
+      {
+        "text": "A published rule set, updated daily",
+        "correct": false,
+        "why": "Each name is an ordinary question; there is no signature."
+      },
+      {
+        "text": "A protocol anomaly from http-events.rules",
+        "correct": false,
+        "why": "The questions are valid DNS, and that file is about HTTP."
+      },
+      {
+        "text": "detection_filter on rule 1000201",
+        "correct": false,
+        "why": "That rule counts login posts."
+      },
+      {
+        "text": "Counting DNS records against its baseline",
+        "correct": true,
+        "why": "Right. Forty a day is the baseline."
+      }
+    ]
+  }
+]

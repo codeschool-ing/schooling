@@ -1,0 +1,400 @@
+{
+  "ex-74wknx0m": {
+    "prompt": "Antes do upload, um ping pelo novo enlace de 5 Mbit/s levou 0,106 ms. Por que limitar o enlace não mudou nada?",
+    "hint": "O que havia na fila?",
+    "choices": [
+      {
+        "text": "Pings são pequenos demais para o tc limitar",
+        "why": "O tamanho não tem nada a ver: o mesmo ping levou 221 ms um minuto depois."
+      },
+      {
+        "text": "A fila estava vazia, então nada esperou",
+        "why": "Isso. Um enlace lento só atrasa pacotes que chegam enquanto outros esperam para sair."
+      },
+      {
+        "text": "Regras do tc só valem depois de reiniciar",
+        "why": "Valem na hora; o tc qdisc show listou a fila logo em seguida."
+      },
+      {
+        "text": "O ICMP passa por fora da disciplina de fila",
+        "why": "Todo pacote que sai pela eth1 passa pela qdisc dela, pings inclusive."
+      }
+    ]
+  },
+  "ex-qx16yszn": {
+    "prompt": "Uma fila cheia tem 100 pacotes de 1514 bytes. Quantos milissegundos ela leva para escoar a 5 Mbit/s?",
+    "hint": "Bytes para bits, depois divida por 5.000.000.",
+    "unit": "ms"
+  },
+  "ex-nb6t5hkn": {
+    "prompt": "Por que um único upload mantém cheia a fila na frente do enlace lento, e não só de vez em quando?",
+    "hint": "Como o TCP descobre a velocidade.",
+    "choices": [
+      {
+        "text": "O iperf3 envia a uma taxa fixa acima de 5 Mbit/s",
+        "why": "Um teste TCP não tem taxa fixa; vai tão rápido quanto o caminho deixa."
+      },
+      {
+        "text": "Os pacotes do upload vão marcados com prioridade maior",
+        "why": "Iam sem marcação, e com uma fila só a marcação não mudaria nada."
+      },
+      {
+        "text": "O TCP acelera até perder um pacote, e volta a subir",
+        "why": "Isso. Ele acha o limite enchendo a fila até transbordar: 163 retransmissões em cinco segundos."
+      },
+      {
+        "text": "O enlace fica mais lento quando está ocupado",
+        "why": "O enlace envia a 5 Mbit/s, ocupado ou não; o que cresce é a fila na frente dele."
+      }
+    ]
+  },
+  "ex-pa10ap65": {
+    "prompt": "As ligações de um escritório picotam só enquanto alguém envia um arquivo grande. Qual é o problema real das ligações?",
+    "hint": "Onde um pacote de voz passa o tempo?",
+    "choices": [
+      {
+        "text": "Esperam atrás do arquivo na fila do uplink",
+        "why": "Isso. Uma ligação precisa de pouca banda e de pouca espera, e o arquivo tira a espera curta."
+      },
+      {
+        "text": "A linha ficou sem capacidade para voz",
+        "why": "Uma ligação é uma fração pequena de 5 Mbit/s; falta vez, não banda."
+      },
+      {
+        "text": "Os pacotes do arquivo danificam os pacotes de voz",
+        "why": "Pacotes numa fila não mexem uns nos outros; só esperam."
+      },
+      {
+        "text": "O processador do roteador fica sobrecarregado pela transferência",
+        "why": "Cinco megabits não são nada para a CPU de um roteador; a fila explica todos os números medidos."
+      }
+    ]
+  },
+  "ex-a14e5529": {
+    "prompt": "EF é o DSCP 46. Qual é o byte ToS inteiro, em decimal, que o tcpdump imprime como 0xb8?",
+    "hint": "Seis bits deslocados duas casas para a esquerda.",
+    "unit": ""
+  },
+  "ex-ar625rxs": {
+    "prompt": "Uma captura mostra tos 0x88. Qual DSCP o pacote leva?",
+    "hint": "0x88 é 136.",
+    "choices": [
+      {
+        "text": "136, o próprio byte",
+        "why": "136 é o byte inteiro, bits de ECN incluídos; o DSCP são os seis bits de cima."
+      },
+      {
+        "text": "34, que é AF41",
+        "why": "Isso. 136 dividido por 4 dá 34, a classe de vídeo interativo."
+      },
+      {
+        "text": "88, lido direto da captura",
+        "why": "0x88 está em hexadecimal; em decimal é 136, e o DSCP é um quarto disso."
+      },
+      {
+        "text": "46, já que todo pacote marcado é EF",
+        "why": "EF é 0xb8. Outras classes têm outros códigos."
+      }
+    ]
+  },
+  "ex-nzwxktmt": {
+    "prompt": "Com uma fila só, o ping marcado como EF teve média de 20 ms e o sem marcação, 65 ms. O que isso mostra sobre a marcação?",
+    "hint": "Olhe a resposta mais lenta do ping sem marcação.",
+    "choices": [
+      {
+        "text": "Ela cortou o atraso em dois terços",
+        "why": "Tire a única resposta de 221 ms e as outras quatro ficam em 26 ms de média, o mesmo que as do ping marcado."
+      },
+      {
+        "text": "Nada: uma resposta lenta puxou a média sem marcação",
+        "why": "Isso. Os dois esperaram na mesma fila; só o momento de uma resposta foi diferente."
+      },
+      {
+        "text": "Ajudou nos roteadores que respeitam EF",
+        "why": "Nenhum roteador do caminho tinha classe para EF naquele momento."
+      },
+      {
+        "text": "Pacotes EF são menores, então escoam mais rápido",
+        "why": "A marcação muda o valor de um byte, não o tamanho do pacote: os dois pings tinham 84 bytes."
+      }
+    ]
+  },
+  "ex-w9bz5j5c": {
+    "prompt": "Um roteador com uma fila só envia os pacotes na ordem em que ___, diga o DSCP o que disser.",
+    "hint": "Primeiro a entrar, primeiro a sair.",
+    "blanks": [
+      {
+        "accept": [
+          "chegaram",
+          "chegam",
+          "entraram"
+        ]
+      }
+    ]
+  },
+  "ex-xfmp8mm8": {
+    "prompt": "Ligue cada peça da configuração do tc ao trabalho que ela faz.",
+    "hint": "Classificar, enfileirar, escalonar.",
+    "pairs": [
+      {
+        "left": "u32 match ip dsfield 0xb8 0xfc",
+        "right": "Decide em que classe o pacote está"
+      },
+      {
+        "left": "pfifo limit 100",
+        "right": "Guarda os pacotes em espera de uma classe"
+      },
+      {
+        "left": "rate, ceil e prio do htb",
+        "right": "Decide qual classe envia a seguir"
+      }
+    ],
+    "right_distractors": [
+      "Escreve EF no pacote"
+    ]
+  },
+  "ex-pkk0dzek": {
+    "prompt": "O tc -s mostrou a classe 1:10 com 5 pacotes e 490 bytes. O que eram?",
+    "hint": "98 = 84 + 14.",
+    "choices": [
+      {
+        "text": "Cinco pacotes do upload que por acaso estavam marcados como EF no caminho",
+        "why": "Um pacote do upload tem uns 1500 bytes; cinco dariam uns 7.500."
+      },
+      {
+        "text": "Mensagens de controle do próprio HTB",
+        "why": "O HTB não envia nada próprio; só ordena o que os outros enviam."
+      },
+      {
+        "text": "Cinco pacotes que a classe descartou",
+        "why": "O contador diz dropped 0; estes foram enviados."
+      },
+      {
+        "text": "Os cinco pings marcados, 98 bytes cada com o Ethernet",
+        "why": "Isso. 84 bytes de IP e 14 de cabeçalho Ethernet, cinco vezes."
+      }
+    ]
+  },
+  "ex-fg1q53q4": {
+    "prompt": "Todo mundo no escritório passa a marcar todo o tráfego como EF. Com o HTB desta aula, com quanto a classe 1:20 ainda pode contar?",
+    "hint": "rate é garantia; prio decide quem fica com a sobra.",
+    "choices": [
+      {
+        "text": "Nada, já que EF é atendido primeiro",
+        "why": "Isso seria prioridade estrita. O HTB dá a rate de cada classe antes de a prio decidir qualquer coisa."
+      },
+      {
+        "text": "4 Mbit/s, a rate garantida",
+        "why": "Isso. A enxurrada fica com o 1 Mbit/s dela e com o que 1:20 não usar, e só."
+      },
+      {
+        "text": "1 Mbit/s, o que sobra depois da voz",
+        "why": "Isso troca as duas rates: a voz tem 1 garantido, o resto tem 4."
+      },
+      {
+        "text": "Os 5 Mbit/s inteiros, porque EF para em 1 Mbit/s",
+        "why": "O ceil de EF é 5mbit: ele pode pegar emprestado o que 1:20 não estiver usando."
+      }
+    ]
+  },
+  "ex-7nyv2mvc": {
+    "prompt": "O que faz a máscara 0xfc em `match ip dsfield 0xb8 0xfc`?",
+    "hint": "0xfc é 11111100 em binário.",
+    "choices": [
+      {
+        "text": "Reescreve o byte como 0xfc",
+        "why": "Um filtro lê; não escreve nada no pacote."
+      },
+      {
+        "text": "Casa qualquer DSCP igual ou acima de EF",
+        "why": "Uma máscara escolhe bits para comparar; não é uma faixa."
+      },
+      {
+        "text": "Compara os seis bits de DSCP e ignora o ECN",
+        "why": "Isso. Um pacote marcado como EF casa, digam o que disserem os dois bits de ECN."
+      },
+      {
+        "text": "Define quantos pacotes a classe pode enfileirar",
+        "why": "Isso é o pfifo limit 100."
+      }
+    ]
+  },
+  "ex-bfvpt3za": {
+    "prompt": "Depois das duas regras de nftables, o ping do laptop marcado como EF voltou a ter média de 26 ms. Por quê?",
+    "hint": "Leia a primeira regra.",
+    "choices": [
+      {
+        "text": "hq reescreveu a marcação como cs0 na chegada",
+        "why": "Isso. O laptop continua marcando EF; hq é que não acredita mais."
+      },
+      {
+        "text": "O laptop parou de marcar quando a regra passou a existir",
+        "why": "Nada avisou o laptop; o mesmo ping -Q 0xb8 rodou."
+      },
+      {
+        "text": "A classe de voz estava cheia com o tráfego de files",
+        "why": "files enviou um único datagrama de seis bytes, e depois."
+      },
+      {
+        "text": "O provedor zerou o byte no caminho",
+        "why": "O atraso é somado na fila de hq, antes de o provedor ver qualquer coisa."
+      }
+    ]
+  },
+  "ex-93hmk1kb": {
+    "prompt": "Onde fica uma fronteira de confiança?",
+    "hint": "Em quais marcações dá para acreditar?",
+    "choices": [
+      {
+        "text": "No roteador do provedor",
+        "why": "Aí os pacotes já atravessaram a sua rede inteira com marcações que ninguém conferiu."
+      },
+      {
+        "text": "Nas configurações de rede de cada laptop",
+        "why": "O laptop é justamente quem não é confiável para se marcar."
+      },
+      {
+        "text": "No primeiro equipamento que o dono da rede controla",
+        "why": "Isso. Em geral o switch de acesso, ou hq neste laboratório."
+      },
+      {
+        "text": "No servidor que recebe o tráfego",
+        "why": "As filas que importam ficam para trás antes de o servidor ver qualquer coisa."
+      }
+    ]
+  },
+  "ex-zyx9j5h2": {
+    "prompt": "As duas regras de nftables são trocadas: primeiro a que marca como EF o UDP 5004 de files, depois `ip dscp set cs0` para tudo o que vem da eth0. Com o que o datagrama de files sai?",
+    "hint": "Alterar um campo não é um veredito.",
+    "choices": [
+      {
+        "text": "EF, porque a primeira regra que casa vence",
+        "why": "Isso vale para accept e drop. Um set altera o pacote e a avaliação continua."
+      },
+      {
+        "text": "cs0, porque a regra seguinte sobrescreve o EF",
+        "why": "Isso. As duas regras rodam; a última a escrever o byte decide."
+      },
+      {
+        "text": "Nada, porque é descartado",
+        "why": "Nenhuma das regras descarta nada; a política da chain é accept."
+      },
+      {
+        "text": "O que files tiver escrito nele",
+        "why": "As duas regras sobrescrevem o byte, então a marcação de files some de qualquer jeito."
+      }
+    ]
+  },
+  "ex-g8x5fyn0": {
+    "prompt": "O roteador do provedor imprimiu tos 0xb8 em todo pacote marcado. O que ele fez com a marcação?",
+    "hint": "Um comportamento por salto.",
+    "choices": [
+      {
+        "text": "Pôs os pacotes na fila de prioridade dele",
+        "why": "Ele não tem classes configuradas, então essa fila não existe."
+      },
+      {
+        "text": "Zerou a marcação na borda",
+        "why": "As capturas mostram 0xb8 intacto do lado do provedor."
+      },
+      {
+        "text": "Nada, encaminhou-os como qualquer outro",
+        "why": "Isso. Uma marcação significa o que cada roteador está configurado para fazer dela."
+      },
+      {
+        "text": "Descartou os pacotes sem marcação",
+        "why": "O tráfego sem marcação, o upload inclusive, passou."
+      }
+    ]
+  },
+  "ex-eg1bbha1": {
+    "prompt": "Downloads grandes no escritório também fazem as ligações picotarem. Por que as classes de hq na eth1 não resolvem isso sozinhas?",
+    "hint": "Para que lado a fila da eth1 aponta?",
+    "choices": [
+      {
+        "text": "Os downloads vêm marcados como cs0 pelo provedor",
+        "why": "A marcação de um download não importa aqui; as classes de hq moldam o que sai, não o que chega."
+      },
+      {
+        "text": "A fila que enche fica na ponta do provedor",
+        "why": "Isso. O download espera antes de chegar a hq, numa fila que hq não configura."
+      },
+      {
+        "text": "Classes HTB só funcionam com UDP",
+        "why": "O upload desta aula era TCP e foi classificado como qualquer outro."
+      },
+      {
+        "text": "O tc não consegue contar pacotes que estão chegando",
+        "why": "Contar não é o problema; a espera acontece antes de eles chegarem."
+      }
+    ]
+  },
+  "ex-rf0yrbbg": {
+    "prompt": "Ponha em ordem o que acontece em hq com o datagrama de voz de files, da LAN até o provedor.",
+    "hint": "O prerouting vem primeiro.",
+    "items": [
+      "Ele chega pela eth0",
+      "A chain do nftables põe o DSCP dele em EF",
+      "O roteamento o manda para a eth1",
+      "O filtro u32 o põe na classe 1:10",
+      "O HTB o envia antes da fila da classe 1:20"
+    ],
+    "trap": "A marcação é escrita no prerouting, antes do roteamento, e lida pelo classificador na saída da eth1."
+  },
+  "ex-ya6et963": {
+    "prompt": "Quais destes encurtariam a espera de uma ligação no uplink de hq durante um upload? Marque todos que se aplicam.",
+    "hint": "Tire a voz da fila longa, ou deixe a fila curta.",
+    "choices": [
+      {
+        "text": "Uma classe de voz, escolhida pelo DSCP e enviada primeiro",
+        "why": "Isso: 0,065 ms nesta aula."
+      },
+      {
+        "text": "Marcar as ligações como EF com uma fila só",
+        "why": "Medido: o ping marcado esperou 26 ms como todo o resto."
+      },
+      {
+        "text": "Um gerenciador de fila como o fq_codel, que mantém a fila curta",
+        "why": "Isso: uma fila menor é uma espera menor para todos, ligações inclusive."
+      },
+      {
+        "text": "Uma fila maior, de 1000 pacotes",
+        "why": "Uma fila maior que fica cheia é uma espera maior: isso é bufferbloat."
+      }
+    ]
+  },
+  "ex-kj4e5gfa": {
+    "prompt": "O laptop de um gerente recebe EF em todo o tráfego, para ficar mais rápido. O que acontece com as ligações do escritório enquanto ele faz upload?",
+    "hint": "Com qual fila o upload agora divide espaço?",
+    "choices": [
+      {
+        "text": "Nada muda; o laptop só fica mais rápido",
+        "why": "O upload agora está na classe de voz, e as ligações também."
+      },
+      {
+        "text": "Esperam atrás do upload na classe de voz",
+        "why": "Isso. A prioridade só ajuda uma classe que continua pequena; esta deixou de ser."
+      },
+      {
+        "text": "O upload do laptop é descartado por estar fora do perfil",
+        "why": "Nada nesta configuração descarta por ser EF; a 1:10 pode pegar emprestado até 5 Mbit/s."
+      },
+      {
+        "text": "As ligações passam para a classe 1:20",
+        "why": "O filtro continua mandando EF para a 1:10; as ligações estão exatamente onde estavam."
+      }
+    ]
+  },
+  "ex-n7swjg9t": {
+    "prompt": "Uma fila que fica cheia e soma atraso a todo pacote que vem atrás tem o nome de ___.",
+    "hint": "Uma palavra inventada sobre buffers.",
+    "blanks": [
+      {
+        "accept": [
+          "bufferbloat",
+          "buffer bloat"
+        ]
+      }
+    ]
+  }
+}

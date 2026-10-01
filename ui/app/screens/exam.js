@@ -66,8 +66,13 @@ function build(exam, progress) {
 
     '<section class="block exam-rules">' +
       '<ul class="prose-list">' +
-        '<li>' + exam.items.length + ' ' + txt('questions, drawn from the bank of the') + ' ' +
-          txt(exam.scope === 'track' ? 'the track\'s set of courses.' : 'course.') + '</li>' +
+        /* A TRACK'S FINAL HAS A POOL OF ITS OWN, `tracks/<slug>-exam.json`, and
+           this line used to say it was drawn from the track's courses — built by
+           gluing "of the" to "the track's…", which printed "the the" in English
+           and "do o" in Portuguese. It is a whole sentence per scope now. */
+        '<li>' + exam.items.length + ' ' + (exam.scope === 'track'
+          ? txt('questions, drawn from the track\'s own bank.')
+          : txt('questions, drawn from the bank of the') + ' ' + txt('course.')) + '</li>' +
         '<li>' + txt('Each question\'s result appears only at the end — here the exam measures, it does not teach.') + '</li>' +
         /* THE PAPER'S OWN MARK. It used to be a constant this file imported,
            which is the number the server marks by written down a second time —

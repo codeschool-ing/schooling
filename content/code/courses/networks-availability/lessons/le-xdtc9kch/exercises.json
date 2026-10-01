@@ -1,0 +1,626 @@
+[
+  {
+    "id": "ex-4ttgjq6q",
+    "version": 1,
+    "section": "names-on-the-air",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A building has one staff network served by 12 access points. How does a phone tell those 12 radios apart?",
+    "hint": "One name, many radios.",
+    "choices": [
+      {
+        "text": "By the SSID, which each AP numbers differently",
+        "correct": false,
+        "why": "The SSID is the network's name and is identical on all 12."
+      },
+      {
+        "text": "By the BSSID, the MAC address of each radio",
+        "correct": true,
+        "why": "Right. One SSID, and one BSSID per radio per network."
+      },
+      {
+        "text": "By the channel, since no two APs share one",
+        "correct": false,
+        "why": "Channels are reused across a building; lesson 7 plans exactly that."
+      },
+      {
+        "text": "By the IP address each AP hands out",
+        "correct": false,
+        "why": "Addresses come from DHCP on the VLAN, after association, and say nothing about the radio."
+      }
+    ]
+  },
+  {
+    "id": "ex-26gxnawf",
+    "version": 1,
+    "section": "names-on-the-air",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An office hides its SSID \"for security\". What does that change for a laptop configured to join it?",
+    "hint": "A client has to name a network it cannot hear.",
+    "choices": [
+      {
+        "text": "Nothing, since the name is in its settings",
+        "correct": false,
+        "why": "Because it cannot hear the name, it has to ask for it, by name, everywhere."
+      },
+      {
+        "text": "It encrypts its probe requests",
+        "correct": false,
+        "why": "Probe requests are sent before any key exists and are never encrypted."
+      },
+      {
+        "text": "It calls the network's name out wherever it goes",
+        "correct": true,
+        "why": "Right. The hidden name leaks from every device that knows it, in public."
+      },
+      {
+        "text": "It stops roaming between access points",
+        "correct": false,
+        "why": "It still roams; some devices just do it less gracefully."
+      }
+    ]
+  },
+  {
+    "id": "ex-ftacy5qk",
+    "version": 1,
+    "section": "names-on-the-air",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company runs 3 SSIDs on 10 dual-band access points, every SSID on both bands. How many BSSIDs does it have?",
+    "hint": "One per network, per radio, per AP.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "BSSIDs"
+  },
+  {
+    "id": "ex-pnrv7pdv",
+    "version": 1,
+    "section": "wpa2-personal",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In WPA2-Personal, what is fed into PBKDF2 alongside the passphrase to make the PMK?",
+    "hint": "The second line of psk.py's output changes one thing.",
+    "choices": [
+      {
+        "text": "The AP's MAC address",
+        "correct": false,
+        "why": "MAC addresses go into the PTK, in the handshake, not into the PMK."
+      },
+      {
+        "text": "A random number picked by the AP",
+        "correct": false,
+        "why": "Then the PMK would differ every time; in WPA2 it is fixed for a given passphrase and network."
+      },
+      {
+        "text": "The SSID, as the salt",
+        "correct": true,
+        "why": "Right. IEEE and IEEE-2 gave unrelated keys from the same passphrase."
+      },
+      {
+        "text": "The date the network was created",
+        "correct": false,
+        "why": "Nothing time-dependent goes in; the test vector is the same in every year."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1yshdcv",
+    "version": 1,
+    "section": "wpa2-personal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the four-way handshake, how does the client show the AP that it holds the right PMK?",
+    "hint": "Something computed from the key, not the key.",
+    "choices": [
+      {
+        "text": "It sends the PMK in message 2, encrypted with the ANonce",
+        "correct": false,
+        "why": "The PMK never crosses the air, encrypted or not."
+      },
+      {
+        "text": "Its message 2 carries a MIC made with a key derived from the PMK",
+        "correct": true,
+        "why": "Right. A wrong PMK gives a wrong MIC, and the AP rejects it."
+      },
+      {
+        "text": "It repeats the passphrase's hash back to the AP",
+        "correct": false,
+        "why": "That hash is the PMK itself, which is exactly what is never sent."
+      },
+      {
+        "text": "The AP checks the client's MAC against a list",
+        "correct": false,
+        "why": "A MAC list proves nothing; addresses are sent in clear and randomised."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwm90ptk",
+    "version": 1,
+    "section": "wpa2-personal",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the messages of the four-way handshake in order.",
+    "hint": "The AP speaks first, and the group key comes from the AP.",
+    "items": [
+      "AP to client: ANonce",
+      "Client to AP: SNonce and a MIC",
+      "AP to client: the GTK, encrypted, and a MIC",
+      "Client to AP: acknowledgement and a MIC"
+    ],
+    "trap": "The client can only compute the PTK after it has the ANonce, so the AP's nonce comes first."
+  },
+  {
+    "id": "ex-kzk2e9jh",
+    "version": 1,
+    "section": "wpa2-personal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A café's WPA2-Personal passphrase is printed on every table. A customer who knows it records another customer joining. What does the recording give them?",
+    "hint": "Everything else that goes into the PTK is public.",
+    "choices": [
+      {
+        "text": "A PTK of no use, since each client's is unique",
+        "correct": false,
+        "why": "The PTK is unique, but it is computed from the shared PMK plus values sent in clear."
+      },
+      {
+        "text": "That customer's traffic, decrypted",
+        "correct": true,
+        "why": "Right. With the PMK, both nonces and both addresses, the PTK follows. WPA2-Personal keeps out strangers, not people who know the passphrase."
+      },
+      {
+        "text": "The passphrase, which they already had",
+        "correct": false,
+        "why": "True but beside the point: the risk is to the other customer's traffic."
+      },
+      {
+        "text": "The other customer's session cookie, but only over HTTP",
+        "correct": false,
+        "why": "Decrypting the Wi-Fi layer exposes whatever runs over it; HTTPS inside stays protected, which is a different claim."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhftwc09",
+    "version": 1,
+    "section": "wpa3-and-pmf",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a recording of a WPA3-Personal (SAE) join not let anybody test passphrase guesses offline?",
+    "hint": "What else, besides the password, goes into the values on the air?",
+    "choices": [
+      {
+        "text": "The frames are encrypted with the passphrase",
+        "correct": false,
+        "why": "Encrypting with the passphrase would give a guesser exactly something to test against."
+      },
+      {
+        "text": "SAE uses a longer PBKDF2",
+        "correct": false,
+        "why": "SAE does not hash the passphrase into the PMK at all."
+      },
+      {
+        "text": "The values depend on secrets each side picked and kept",
+        "correct": true,
+        "why": "Right. Without those secrets a recording has nothing to check a guess against, so every guess needs a live exchange."
+      },
+      {
+        "text": "WPA3 hides the SSID from the recording",
+        "correct": false,
+        "why": "The SSID is still in the beacons, and hiding it would not help anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-117gyhw7",
+    "version": 1,
+    "section": "wpa3-and-pmf",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does WPA3-Personal give that WPA2-Personal does not? Choose all that apply.",
+    "hint": "Compare the rows of the table.",
+    "choices": [
+      {
+        "text": "Forward secrecy",
+        "correct": true,
+        "why": "Right. A password learnt later does not open earlier recordings."
+      },
+      {
+        "text": "Required protected management frames",
+        "correct": true,
+        "why": "Right. Optional in WPA2, required in WPA3."
+      },
+      {
+        "text": "Removing one person without changing the password for everybody",
+        "correct": false,
+        "why": "The password is still shared; that takes 802.1X."
+      },
+      {
+        "text": "Resistance to offline guessing from a recorded join",
+        "correct": true,
+        "why": "Right. Each guess needs a live SAE exchange."
+      },
+      {
+        "text": "A different cipher for the data frames",
+        "correct": false,
+        "why": "WPA3-Personal still encrypts data with AES-CCMP after the same four-way handshake."
+      }
+    ]
+  },
+  {
+    "id": "ex-k5xbdxv3",
+    "version": 1,
+    "section": "wpa3-and-pmf",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A network runs WPA3 transition mode so that three old barcode scanners keep working. What is the passphrase exposed to?",
+    "hint": "One passphrase, two ways in.",
+    "choices": [
+      {
+        "text": "Offline guessing from any recorded WPA2 join",
+        "correct": true,
+        "why": "Right. The WPA2 half keeps WPA2's weakness, whatever the WPA3 clients do; a separate SSID for the scanners removes it."
+      },
+      {
+        "text": "Nothing extra, since SAE protects it",
+        "correct": false,
+        "why": "SAE protects the joins that use SAE; the scanners' joins are WPA2."
+      },
+      {
+        "text": "The scanners' own sessions, not the passphrase",
+        "correct": false,
+        "why": "A recording of a scanner joining is enough to test guesses against the shared passphrase."
+      },
+      {
+        "text": "Disclosure in the beacons of the 6 GHz band",
+        "correct": false,
+        "why": "Beacons never carry the passphrase, and 6 GHz does not allow transition mode at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cybrk0z",
+    "version": 1,
+    "section": "wpa3-and-pmf",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The amendment that added protected management frames to 802.11, so that a forged disconnection is ignored, is 802.11___.",
+    "hint": "One letter.",
+    "blanks": [
+      {
+        "accept": [
+          "w"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r8m61qt5",
+    "version": 1,
+    "section": "enterprise",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each 802.1X role to the device that plays it.",
+    "hint": "Who asks, who relays, who decides.",
+    "pairs": [
+      {
+        "left": "Supplicant",
+        "right": "The laptop's operating system"
+      },
+      {
+        "left": "Authenticator",
+        "right": "The access point"
+      },
+      {
+        "left": "Authentication server",
+        "right": "The RADIUS server"
+      }
+    ],
+    "right_distractors": [
+      "The DHCP server"
+    ]
+  },
+  {
+    "id": "ex-m0cf5fmg",
+    "version": 1,
+    "section": "enterprise",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before the RADIUS server has answered, what traffic does the AP let through from a newly associated client?",
+    "hint": "The port is closed to all but one thing.",
+    "choices": [
+      {
+        "text": "DHCP and DNS, so the client can find the server",
+        "correct": false,
+        "why": "The client never talks to the server directly; the AP relays EAP for it."
+      },
+      {
+        "text": "Everything, rate-limited until the verdict",
+        "correct": false,
+        "why": "A port that passed traffic before the verdict would make the verdict decorative."
+      },
+      {
+        "text": "HTTP, for the sign-in page",
+        "correct": false,
+        "why": "That describes a captive portal, which is not 802.1X."
+      },
+      {
+        "text": "EAP, and nothing else",
+        "correct": true,
+        "why": "Right. No DHCP, no DNS, no data until the server says yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-1megynec",
+    "version": 1,
+    "section": "enterprise",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company uses PEAP. Its laptops are set to accept whatever certificate the RADIUS server presents. What is the risk?",
+    "hint": "Where does the TLS tunnel lead?",
+    "choices": [
+      {
+        "text": "None, because the password travels inside TLS",
+        "correct": false,
+        "why": "TLS to an unchecked party protects the password on its way to that party."
+      },
+      {
+        "text": "A network with the same SSID receives the login exchange",
+        "correct": true,
+        "why": "Right. Checking the server certificate is what makes the tunnel lead to your own server; push that setting to every managed device."
+      },
+      {
+        "text": "The laptops fail to join after the certificate is renewed",
+        "correct": false,
+        "why": "A client that accepts everything keeps joining after a renewal; that is the trouble."
+      },
+      {
+        "text": "The AP learns each user's password",
+        "correct": false,
+        "why": "The AP relays EAP and never sees the password, checked or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-d1mpg88h",
+    "version": 1,
+    "section": "enterprise",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An employee leaves a company that uses WPA3-Enterprise. What has to change so that their laptop cannot join?",
+    "hint": "Each person has their own credentials.",
+    "choices": [
+      {
+        "text": "The shared passphrase on the laptops",
+        "correct": false,
+        "why": "There is no shared passphrase in 802.1X; that is the point of it."
+      },
+      {
+        "text": "The SSID, so the old profile no longer matches",
+        "correct": false,
+        "why": "Renaming the network breaks everybody's profile and stops nobody with valid credentials."
+      },
+      {
+        "text": "Their account, disabled on the directory RADIUS checks",
+        "correct": true,
+        "why": "Right. One change, and the next authentication fails."
+      },
+      {
+        "text": "The RADIUS shared secret on each AP",
+        "correct": false,
+        "why": "That secret is between the APs and the server; the employee never knew it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mpdsvcg",
+    "version": 1,
+    "section": "guest-networks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new guest SSID with its own passphrase is bridged to the same VLAN as the staff. What can a visitor on it reach?",
+    "hint": "The passphrase decides who gets on; the VLAN decides where they land.",
+    "choices": [
+      {
+        "text": "The internet, since the passphrase is different",
+        "correct": false,
+        "why": "A different passphrase changes who gets on, not where they land."
+      },
+      {
+        "text": "The office LAN, like any staff laptop",
+        "correct": true,
+        "why": "Right. Same VLAN, same subnet, same reach: separation needs its own VLAN and a firewall."
+      },
+      {
+        "text": "A captive portal first, then the internet",
+        "correct": false,
+        "why": "There is no portal in this design, and a portal separates nothing anyway."
+      },
+      {
+        "text": "Other visitors, but no staff machines",
+        "correct": false,
+        "why": "Visitors and staff share one broadcast domain here."
+      }
+    ]
+  },
+  {
+    "id": "ex-097d89k4",
+    "version": 1,
+    "section": "guest-networks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each guest-network measure to what it prevents.",
+    "hint": "One tool per layer.",
+    "pairs": [
+      {
+        "left": "Its own VLAN",
+        "right": "Sharing a broadcast domain with the staff"
+      },
+      {
+        "left": "Client isolation",
+        "right": "One guest reaching another"
+      },
+      {
+        "left": "A firewall refusing private ranges",
+        "right": "Guests reaching internal servers"
+      },
+      {
+        "left": "A per-client rate limit",
+        "right": "One download taking everybody's airtime"
+      }
+    ],
+    "right_distractors": [
+      "A listener reading the traffic"
+    ]
+  },
+  {
+    "id": "ex-j2kxpem3",
+    "version": 1,
+    "section": "guest-networks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A hotel wants its guest Wi-Fi to need no password and still keep one guest from reading another's traffic over the air. Which option fits?",
+    "hint": "Encryption without a shared secret.",
+    "choices": [
+      {
+        "text": "An open network with a captive portal",
+        "correct": false,
+        "why": "The portal encrypts nothing; every frame is readable in range."
+      },
+      {
+        "text": "WPA2-Personal with the passphrase on the key card",
+        "correct": false,
+        "why": "That is a password, and every guest who knows it and records a join reads that guest's traffic."
+      },
+      {
+        "text": "Enhanced Open (OWE)",
+        "correct": true,
+        "why": "Right. Each client gets its own key from an unauthenticated exchange, with no password to type."
+      },
+      {
+        "text": "A hidden SSID with client isolation",
+        "correct": false,
+        "why": "Isolation stops forwarding between guests; it does not stop anybody listening to the air."
+      }
+    ]
+  },
+  {
+    "id": "ex-gt1w0qk7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A clinic has 40 staff on WPA2-Personal and a receptionist has just left with the passphrase. The manager wants this never to need a change on 40 devices again. What fixes it?",
+    "hint": "The problem is that the secret is shared.",
+    "choices": [
+      {
+        "text": "Moving to WPA3-Personal",
+        "correct": false,
+        "why": "SAE fixes offline guessing and forward secrecy; the password is still shared by all 40."
+      },
+      {
+        "text": "A longer passphrase, changed every month",
+        "correct": false,
+        "why": "That is the 40-device change, monthly."
+      },
+      {
+        "text": "802.1X with one account per person",
+        "correct": true,
+        "why": "Right. Disabling one account removes one person."
+      },
+      {
+        "text": "Hiding the SSID and filtering by MAC address",
+        "correct": false,
+        "why": "Neither controls access: the name and the addresses are both on the air in clear."
+      }
+    ]
+  },
+  {
+    "id": "ex-fck3hsrs",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "psk.py put 8 random lowercase letters at 37.6 bits. How many bits do 16 random lowercase letters give? One decimal place.",
+    "hint": "Bits add when length doubles.",
+    "value": 75.2,
+    "tolerance": 0.1,
+    "unit": "bits"
+  },
+  {
+    "id": "ex-e7ya5yt7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client with protected management frames receives a deauthentication frame carrying its AP's address but no valid signature. What does it do?",
+    "hint": "That frame is what 802.11w signs.",
+    "choices": [
+      {
+        "text": "Disconnects, then reconnects with a fresh handshake",
+        "correct": false,
+        "why": "That is what a client without PMF does, and why PMF exists."
+      },
+      {
+        "text": "Ignores it and stays associated",
+        "correct": true,
+        "why": "Right. A frame it cannot verify is not obeyed."
+      },
+      {
+        "text": "Switches the network to transition mode",
+        "correct": false,
+        "why": "Clients do not change a network's security mode; the AP's configuration does."
+      },
+      {
+        "text": "Reports it to the RADIUS server",
+        "correct": false,
+        "why": "PMF works the same on Personal networks with no RADIUS server at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-pcmd3pk9",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the hostapd.conf example, the line that stops two guests on the same AP from reaching each other is `___=1`.",
+    "hint": "Two words joined by an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "ap_isolate"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

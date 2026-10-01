@@ -1,0 +1,428 @@
+{
+  "ex-hbacn8nj": {
+    "prompt": "Por que o `hq.key` saiu como `-rw-------`?",
+    "hint": "Veja o que rodou antes do `wg genkey`.",
+    "choices": [
+      {
+        "text": "O wg genkey grava todo arquivo de chave assim",
+        "why": "Ele escreve na saída padrão; o modo do arquivo veio do shell que o criou."
+      },
+      {
+        "text": "O sudo torna privados os arquivos que cria",
+        "why": "O `hq.pub` também foi gravado via sudo, com `tee`, e é `-rw-r--r--`."
+      },
+      {
+        "text": "O umask 077 definido logo antes",
+        "why": "Isso. Ele tira toda permissão de grupo e de outros dos arquivos criados naquele shell."
+      },
+      {
+        "text": "/etc/wireguard impõe esse modo ao que tem dentro",
+        "why": "Um diretório não define o modo dos arquivos; o `hq.pub` está ao lado, legível por todos."
+      }
+    ]
+  },
+  "ex-zhwgn5rs": {
+    "prompt": "O que no `wg0.conf` de `hq` identifica a filial?",
+    "hint": "O que um estranho teria de roubar para se passar por `branch`?",
+    "choices": [
+      {
+        "text": "O comentário `# the branch office`",
+        "why": "Comentário é para pessoas; o `wg` nunca o lê nem o imprime."
+      },
+      {
+        "text": "A chave pública no bloco do par",
+        "why": "Isso. Quem tiver a chave privada correspondente é `branch`, para `hq`."
+      },
+      {
+        "text": "O Endpoint dele, 198.51.100.2:51820",
+        "why": "O endpoint diz para onde mandar. Um pacote desse endereço com a chave errada não é aceito."
+      },
+      {
+        "text": "Um nome de usuário e uma senha enviados no handshake",
+        "why": "O WireGuard não tem usuários nem senhas, só chaves."
+      }
+    ]
+  },
+  "ex-8nzkcx5g": {
+    "prompt": "O par `# Ana, at home` não tem linha `Endpoint` no arquivo de `hq`. O que decorre disso?",
+    "hint": "De onde `hq` poderia aprender o endereço dela?",
+    "choices": [
+      {
+        "text": "O wg-quick se recusa a subir o wg0 até alguém acrescentar um",
+        "why": "O wg0 subiu com esse par exatamente como estava."
+      },
+      {
+        "text": "hq manda os pacotes dela para 10.20.0.3 pela internet",
+        "why": "10.20.0.3 é o endereço de túnel dela, que nenhum roteador da internet alcança."
+      },
+      {
+        "text": "hq só a alcança depois que ela mandar um pacote",
+        "why": "Isso. O endpoint é aprendido com o primeiro pacote autenticado dela."
+      },
+      {
+        "text": "O tráfego dela tem de passar por branch, que tem um",
+        "why": "Os pares falam direto entre si; nada a encaminha pela filial."
+      }
+    ]
+  },
+  "ex-j9531wh9": {
+    "prompt": "O aviso disse que o wireguard-go não é necessário porque este kernel tem suporte de primeira classe ao WireGuard. O que vale para o kernel deste laboratório?",
+    "hint": "Leia a linha logo acima do aviso.",
+    "choices": [
+      {
+        "text": "Ele tem o módulo, e o wireguard-go rodou mesmo assim",
+        "why": "`ip link add wg0 type wireguard` falhou com `Unknown device type`."
+      },
+      {
+        "text": "Ele não tem o módulo, então o aviso está errado aqui",
+        "why": "Isso. O kernel tinha recusado o dispositivo uma linha antes; o aviso foi escrito para o kernel comum desde a 5.6."
+      },
+      {
+        "text": "Ele é anterior à 5.6, quando o WireGuard entrou no Linux",
+        "why": "O laboratório roda num kernel compilado sem o módulo, não num kernel velho."
+      },
+      {
+        "text": "Ele roda o WireGuard no kernel e no wireguard-go ao mesmo tempo",
+        "why": "Uma implementação atende o wg0, e aqui é o wireguard-go."
+      }
+    ]
+  },
+  "ex-6748qwxd": {
+    "prompt": "Na captura, quantos pacotes o handshake do WireGuard entre `hq` e `branch` levou antes de os dados passarem?",
+    "hint": "Conte os que não são Transport Data.",
+    "unit": "pacotes"
+  },
+  "ex-63z4m13x": {
+    "prompt": "A primeira resposta pelo túnel novo levou 2,85 ms e a segunda 0,944 ms. Por que a diferença?",
+    "hint": "O WireGuard não manda nada até ter o que mandar.",
+    "choices": [
+      {
+        "text": "O primeiro pedido se perdeu e foi reenviado",
+        "why": "Nada se perdeu: o `icmp_seq=1` foi respondido."
+      },
+      {
+        "text": "O enlace do provedor é mais lento para um primeiro pacote",
+        "why": "Nenhum enlace do laboratório tem atraso nenhum."
+      },
+      {
+        "text": "O caixa responde mais devagar ao primeiro ping",
+        "why": "Nada no caixa muda entre os dois; o que muda é o túnel."
+      },
+      {
+        "text": "Ele esperou o handshake",
+        "why": "Isso. O WireGuard segurou o pacote até as chaves de sessão existirem, e não o descartou."
+      }
+    ]
+  },
+  "ex-ra49byk0": {
+    "prompt": "O `wg show` em `hq` informou 404 B enviados à filial. Que pacotes formam esse número?",
+    "hint": "O `wg` conta a carga UDP, não o que passa no fio.",
+    "choices": [
+      {
+        "text": "A iniciação e a resposta no fio, 190 + 134, mais preenchimento",
+        "why": "A resposta foi recebida, não enviada, e esses tamanhos incluem Ethernet, IP e UDP."
+      },
+      {
+        "text": "148 + 128 + 128: a iniciação e dois pacotes de dados",
+        "why": "Isso. 190 − 42 e 170 − 42, sem os cabeçalhos Ethernet, IP e UDP."
+      },
+      {
+        "text": "Dois pacotes de dados de 170 e um keepalive de 64 bytes",
+        "why": "hq não manda keepalive, e 170 é o tamanho com todos os cabeçalhos externos."
+      },
+      {
+        "text": "Quatro pacotes iguais de 101 bytes",
+        "why": "Nenhum pacote da captura tinha 101 bytes, e eles não tinham todos o mesmo tamanho."
+      }
+    ]
+  },
+  "ex-msjfq25e": {
+    "prompt": "Todo pacote de dados do WireGuard leva um ___ que sobe um por pacote, então um pacote gravado não pode ser reenviado depois.",
+    "hint": "O `tshark` o mostrou como 0 no primeiro.",
+    "blanks": [
+      {
+        "accept": [
+          "contador",
+          "counter",
+          "nonce"
+        ]
+      }
+    ]
+  },
+  "ex-x4a9zw15": {
+    "prompt": "Em `branch`, o AllowedIPs de `hq` foi reduzido a `10.20.0.1/32` e o ping do laptop falhou. Onde ele foi descartado?",
+    "hint": "A rota e as chaves ficaram intactas.",
+    "choices": [
+      {
+        "text": "Em hq, que tinha perdido a rota para o wg0",
+        "why": "`192.168.20.0/24 dev wg0` continuava em hq."
+      },
+      {
+        "text": "Em branch, depois de decifrado",
+        "why": "Isso. A origem, 192.168.10.20, não estava mais na lista da chave de hq."
+      },
+      {
+        "text": "No provedor, que filtra UDP 51820",
+        "why": "A mesma porta levou o handshake e todo o resto durante a aula."
+      },
+      {
+        "text": "No caixa, que rejeitou o endereço do laptop",
+        "why": "O caixa nunca recebeu o pacote."
+      }
+    ]
+  },
+  "ex-23b1dk2n": {
+    "prompt": "O firewall de `hq` deixa `192.168.20.0/24` alcançar `files`. Por que essa é uma regra sobre a filial, e não sobre qualquer um que escreva esse endereço de origem num pacote?",
+    "hint": "O que precisou acontecer com um pacote antes de ele sair do wg0?",
+    "choices": [
+      {
+        "text": "Faixas privadas não podem ser forjadas na internet",
+        "why": "Uma origem privada é tão fácil de escrever quanto qualquer outra."
+      },
+      {
+        "text": "O provedor filtra pacotes com origem forjada",
+        "why": "O provedor nem vê os endereços internos."
+      },
+      {
+        "text": "Dessa faixa, só a chave de branch é aceita",
+        "why": "Isso. Um pacote que sai do wg0 com essa origem foi decifrado com a chave de branch e conferido contra a linha dela."
+      },
+      {
+        "text": "O túnel esconde de hq o endereço de origem",
+        "why": "hq lê a origem depois de decifrar; a regra depende dela."
+      }
+    ]
+  },
+  "ex-w7dk2bnb": {
+    "prompt": "O que o AllowedIPs de um par decide em `hq`? Marque todos que se aplicam.",
+    "hint": "Ele é lido na saída e na entrada, e o wg-quick também o lê.",
+    "choices": [
+      {
+        "text": "Para qual par um pacote de saída é criptografado",
+        "why": "Isso: o destino escolhe a linha, e a linha escolhe a chave."
+      },
+      {
+        "text": "Quais endereços de origem são aceitos daquele par",
+        "why": "Isso: branch descartou o ping do laptop exatamente por isso."
+      },
+      {
+        "text": "Quais endereços o par tem permissão de alcançar",
+        "why": "Essa é a leitura que o nome sugere, e não o que ele faz."
+      },
+      {
+        "text": "Quais rotas o wg-quick acrescenta para o wg0",
+        "why": "Isso: `192.168.20.0/24 dev wg0` veio dele."
+      },
+      {
+        "text": "A porta UDP em que o par escuta",
+        "why": "Isso é o ListenPort, ou a porta do Endpoint."
+      }
+    ]
+  },
+  "ex-143j9x2x": {
+    "prompt": "O arquivo de `hq` não tem Endpoint para a Ana, e mesmo assim o `wg show` lista `198.51.100.77:40817`. De onde isso veio?",
+    "hint": "Ninguém digitou isso.",
+    "choices": [
+      {
+        "text": "Da resolução de vpn.example.com",
+        "why": "Esse nome é como ela encontra hq, não como hq a encontra."
+      },
+      {
+        "text": "Da tabela de NAT de homegw, lida por hq pelo túnel",
+        "why": "hq não tem como ler as tabelas de outro roteador."
+      },
+      {
+        "text": "Do primeiro pacote dela que se autenticou",
+        "why": "Isso. O endereço e a porta de onde ele veio viraram o endpoint dela, NAT do roteador de casa incluído."
+      },
+      {
+        "text": "Do AllowedIPs dela, 10.20.0.3/32",
+        "why": "Esse é o endereço de túnel dela, que o arquivo de hq já tem."
+      }
+    ]
+  },
+  "ex-x5deynj1": {
+    "prompt": "Qual máquina precisava de `PersistentKeepalive = 25`, e por quê?",
+    "hint": "Qual delas está atrás de um roteador que esquece?",
+    "choices": [
+      {
+        "text": "hq, para a filial saber que o escritório está vivo",
+        "why": "O WireGuard não manda mensagens de vida entre endereços fixos, e não precisa."
+      },
+      {
+        "text": "O laptop, para o homegw manter o mapeamento de NAT",
+        "why": "Isso. Ocioso, o roteador de casa esquece a porta, e hq não a alcançaria mais."
+      },
+      {
+        "text": "As duas pontas, senão o handshake expira",
+        "why": "O handshake é renovado pelo tráfego, não por keepalives."
+      },
+      {
+        "text": "branch, porque a linha Endpoint dela é fixa",
+        "why": "Um endereço público fixo é o caso que dispensa keepalive."
+      }
+    ]
+  },
+  "ex-c7enwncd": {
+    "prompt": "Com a chave errada, o provedor viu iniciações em 0 e em 5,277388 segundos. Mais ou menos a cada quantos segundos uma iniciação sem resposta é reenviada?",
+    "hint": "Arredonde para o segundo inteiro mais próximo.",
+    "unit": "segundos"
+  },
+  "ex-b7y7ebqg": {
+    "prompt": "Com a chave errada do lado da Ana, por que `hq` não mandou nada de volta, nem um erro?",
+    "hint": "Do que `hq` precisaria para responder?",
+    "choices": [
+      {
+        "text": "Não consegue autenticar a iniciação, e fica calado",
+        "why": "Isso. Uma ponta WireGuard não responde a um pacote que não consegue autenticar, o que também a esconde de scanners."
+      },
+      {
+        "text": "O provedor bloqueia o tráfego para a porta 51820",
+        "why": "As duas iniciações atravessaram o provedor; a captura dele as mostra."
+      },
+      {
+        "text": "O wg0 de hq estava desligado durante o teste",
+        "why": "Ele tinha sido reiniciado e estava de pé; a chave certa teria resposta."
+      },
+      {
+        "text": "O WireGuard informa erros por TCP, que estava bloqueado",
+        "why": "O WireGuard usa só UDP e não tem mensagem de erro para mandar."
+      }
+    ]
+  },
+  "ex-4aeq8b0w": {
+    "prompt": "O laptop da Ana sai de casa para um hotel com o túnel de pé. Ponha em ordem o que acontece.",
+    "hint": "hq só acredita num endereço novo depois de uma coisa.",
+    "items": [
+      "O laptop manda o próximo pacote pelo endereço do hotel",
+      "hq o autentica com a chave da Ana",
+      "hq move o endpoint dela para o endereço novo",
+      "As respostas de hq vão para o hotel"
+    ],
+    "trap": "O endpoint só se move depois que o pacote se autentica; um endereço sozinho não prova nada."
+  },
+  "ex-m7fdd144": {
+    "prompt": "Com o `tls-crypt` ligado, o que o `tshark` no provedor ainda conseguia reconhecer?",
+    "hint": "Leia as duas primeiras linhas da captura.",
+    "choices": [
+      {
+        "text": "O Client Hello e o certificado do servidor",
+        "why": "Foi isso que sumiu: depois de dois pacotes ele só viu Continuation Data."
+      },
+      {
+        "text": "Nada: ele viu UDP puro",
+        "why": "Ele chamou os dois primeiros pacotes de OpenVPN, pelo tipo de mensagem."
+      },
+      {
+        "text": "O nome de usuário ana, do certificado dela",
+        "why": "O nome só apareceu no arquivo de status e no log do próprio servidor."
+      },
+      {
+        "text": "Que era OpenVPN, pelos dois pacotes HARD_RESET",
+        "why": "Isso. O tipo de mensagem continua legível; o TLS dentro, não."
+      }
+    ]
+  },
+  "ex-r9yhjfcq": {
+    "prompt": "Alguém sai da empresa. Neste servidor OpenVPN, o que corta o acesso dela e de mais ninguém?",
+    "hint": "Qual destes é só dela?",
+    "choices": [
+      {
+        "text": "Um tc.key novo no servidor",
+        "why": "Todo cliente compartilha essa chave: uma nova tranca todo mundo para fora até ser redistribuída."
+      },
+      {
+        "text": "Tirar a linha dela do server.conf e reiniciar o serviço",
+        "why": "O server.conf não tem linha por usuário; qualquer certificado que a autoridade assinou conecta."
+      },
+      {
+        "text": "Revogar o certificado dela, conferido com crl-verify",
+        "why": "Isso. O certificado é a identidade dela, e o de mais ninguém muda."
+      },
+      {
+        "text": "Tirar o pool de 10.8.0.0/24",
+        "why": "O pool dá endereços a quem se autentica; não decide nada sobre quem."
+      }
+    ]
+  },
+  "ex-q3s0y4q2": {
+    "prompt": "Ligue cada valor da captura do OpenVPN ao que ele é.",
+    "hint": "Arquivo de status, pool e chave.",
+    "pairs": [
+      {
+        "left": "ana",
+        "right": "O Common Name do certificado dela"
+      },
+      {
+        "left": "198.51.100.77:35979",
+        "right": "O endereço de homegw e uma porta que o NAT dele escolheu"
+      },
+      {
+        "left": "10.8.0.2",
+        "right": "O endereço dela, do pool do servidor"
+      },
+      {
+        "left": "tc.key",
+        "right": "Uma chave de que todo cliente tem cópia"
+      }
+    ],
+    "right_distractors": [
+      "Uma chave que só a Ana tem"
+    ]
+  },
+  "ex-j77d5mv3": {
+    "prompt": "No arquivo de status, `ana` é o Common ___ do certificado com que ela conectou.",
+    "hint": "O título da primeira coluna.",
+    "blanks": [
+      {
+        "accept": [
+          "Name"
+        ]
+      }
+    ]
+  },
+  "ex-f443ve4r": {
+    "prompt": "Uma filial nova entra por WireGuard. O `wg show` em `hq` mostra o handshake dela há 20 segundos, mas os PCs da filial não alcançam o `files`. Qual é a correção mais provável?",
+    "hint": "Um handshake recente descarta uma família inteira de causas.",
+    "choices": [
+      {
+        "text": "Pares de chaves novos nos dois roteadores",
+        "why": "O handshake só se completa quando as chaves estão certas."
+      },
+      {
+        "text": "PersistentKeepalive em hq",
+        "why": "Keepalives mantêm mapeamentos de NAT abertos; esse handshake já funciona."
+      },
+      {
+        "text": "A LAN da filial acrescentada ao AllowedIPs desse par em hq",
+        "why": "Isso. Sem ela, hq descarta os pacotes dos PCs na chegada, como branch fez nesta aula."
+      },
+      {
+        "text": "Um MTU menor no wg0",
+        "why": "Um defeito de MTU deixa pacotes pequenos passarem; aqui nada passa."
+      }
+    ]
+  },
+  "ex-1cpz5xh9": {
+    "prompt": "A equipe de rede liga dois roteadores que ela mesma administra. O que serve melhor, e por quê?",
+    "hint": "Quem está em cada ponta?",
+    "choices": [
+      {
+        "text": "OpenVPN, porque o WireGuard não leva uma LAN inteira",
+        "why": "Ele levou 192.168.20.0/24 a aula inteira."
+      },
+      {
+        "text": "WireGuard, já que uma chave por roteador é toda a identidade necessária",
+        "why": "Isso. Não há pessoas a nomear ou revogar, e o arquivo é curto o bastante para conferir a olho."
+      },
+      {
+        "text": "OpenVPN sobre TCP, já que UDP não é confiável para um túnel",
+        "why": "UDP é o transporte normal de um túnel; TCP dentro de TCP é o problema que a aula 3 descreve."
+      },
+      {
+        "text": "Nenhum: um enlace entre roteadores exige IPsec",
+        "why": "IPsec é uma opção, a da aula 2, não uma exigência."
+      }
+    ]
+  }
+}

@@ -1,0 +1,620 @@
+[
+  {
+    "id": "ex-bk5e2pn7",
+    "version": 1,
+    "section": "what-a-port-cannot-say",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With tcp dport { 80, 443 } allowed, laptop reached an SSH server on remote. Why did the rule let it through?",
+    "hint": "What did the rule ask about?",
+    "choices": [
+      {
+        "text": "SSH is encrypted, so the firewall could not see the port",
+        "correct": false,
+        "why": "The port is in the TCP header, which is never encrypted by SSH."
+      },
+      {
+        "text": "It listened on 443",
+        "correct": true,
+        "why": "Right. The rule asked about the port and nothing else."
+      },
+      {
+        "text": "Port 22 was open as well, and SSH fell back to it",
+        "correct": false,
+        "why": "Port 22 was closed; nc to it failed with exit 1."
+      },
+      {
+        "text": "ct state established matched the first packet",
+        "correct": false,
+        "why": "The first packet is new; the 443 rule accepted it."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7k6sxhg",
+    "version": 1,
+    "section": "what-a-port-cannot-say",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does tcp dport 443 accept? Choose all that apply.",
+    "hint": "The rule reads one number.",
+    "choices": [
+      {
+        "text": "A browser fetching a page over HTTPS",
+        "correct": true,
+        "why": "That is what it was written for."
+      },
+      {
+        "text": "An SSH session to a server listening on 443",
+        "correct": true,
+        "why": "The lesson ran exactly this."
+      },
+      {
+        "text": "Remote-control software calling home on 443",
+        "correct": true,
+        "why": "It picks 443 because every network leaves it open."
+      },
+      {
+        "text": "A DNS query to port 53",
+        "correct": false,
+        "why": "Different port, and UDP."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6p5cfbs",
+    "version": 1,
+    "section": "what-a-port-cannot-say",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Who decides which protocol travels on port 443?",
+    "hint": "Think about who picks each end.",
+    "choices": [
+      {
+        "text": "IANA, which assigns the port numbers and enforces them",
+        "correct": false,
+        "why": "IANA lists conventions; nothing enforces them on the wire."
+      },
+      {
+        "text": "The firewall, which checks the protocol of every port",
+        "correct": false,
+        "why": "A header rule checks no protocol at all."
+      },
+      {
+        "text": "The two programs, by agreeing on it",
+        "correct": true,
+        "why": "Right. The server listens there and the client asks there."
+      },
+      {
+        "text": "The operating system, which binds 443 to TLS",
+        "correct": false,
+        "why": "Any program may listen on 443 given the privilege."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbw2twce",
+    "version": 1,
+    "section": "reading-the-payload",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each protocol to how its conversation opens.",
+    "hint": "The parsers look at the first bytes.",
+    "pairs": [
+      {
+        "left": "SSH",
+        "right": "a text line beginning SSH-2.0-"
+      },
+      {
+        "left": "TLS",
+        "right": "a binary ClientHello record"
+      },
+      {
+        "left": "HTTP",
+        "right": "a method, a path and HTTP/1.1"
+      }
+    ],
+    "right_distractors": [
+      "a port number in the TCP header"
+    ]
+  },
+  {
+    "id": "ex-tgwzyqha",
+    "version": 1,
+    "section": "reading-the-payload",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Suricata named the flow to app on port 8080 http. What did it base that on?",
+    "hint": "8080 is not HTTP's registered port.",
+    "choices": [
+      {
+        "text": "The port, since 8080 is a well-known alternative for HTTP",
+        "correct": false,
+        "why": "It would have named it http on any port."
+      },
+      {
+        "text": "The first bytes of the conversation",
+        "correct": true,
+        "why": "Right: GET / HTTP/1.1."
+      },
+      {
+        "text": "A DNS lookup of app's name",
+        "correct": false,
+        "why": "The request used an address."
+      },
+      {
+        "text": "The rule file, which listed 8080 as HTTP",
+        "correct": false,
+        "why": "The rule file was empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-nf6tapms",
+    "version": 1,
+    "section": "reading-the-payload",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A vendor says its NGFW blocks SSH on any port. When does the block take effect on a new SSH connection to port 443?",
+    "hint": "There has to be something to read.",
+    "choices": [
+      {
+        "text": "Before the TCP handshake, from the SYN",
+        "correct": false,
+        "why": "A SYN carries no payload to identify."
+      },
+      {
+        "text": "Only when the session ends, from the flow record",
+        "correct": false,
+        "why": "Inline inspection acts during the flow."
+      },
+      {
+        "text": "After the first bytes, once the greeting is seen",
+        "correct": true,
+        "why": "Right. The first packets pass on the port rule."
+      },
+      {
+        "text": "Never, because SSH is encrypted end to end",
+        "correct": false,
+        "why": "The greeting is plain text and identifies SSH."
+      }
+    ]
+  },
+  {
+    "id": "ex-f43xfkz1",
+    "version": 1,
+    "section": "reading-the-payload",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Reading the payload as well as the headers is called deep packet ___.",
+    "hint": "The lesson's title says it.",
+    "blanks": [
+      {
+        "accept": [
+          "inspection"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hsdr1nyy",
+    "version": 1,
+    "section": "application-rules",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the Suricata rule to what it says.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "alert",
+        "right": "what to do on a match"
+      },
+      {
+        "left": "ssh",
+        "right": "the protocol as recognised, on any port"
+      },
+      {
+        "left": "flow:to_server,established",
+        "right": "the client's side of a completed handshake"
+      },
+      {
+        "left": "sid:1000001",
+        "right": "the rule's number"
+      }
+    ],
+    "right_distractors": [
+      "the port SSH must use"
+    ]
+  },
+  {
+    "id": "ex-h0w8x3hk",
+    "version": 1,
+    "section": "application-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The rule for TLS on a port other than 443 produced no alert. What does that tell you?",
+    "hint": "Where did this capture's TLS go?",
+    "choices": [
+      {
+        "text": "The rule failed to load",
+        "correct": false,
+        "why": "suricata -T loaded the configuration successfully."
+      },
+      {
+        "text": "No TLS in the capture went anywhere but 443",
+        "correct": true,
+        "why": "Right. A good policy rule is silent most of the time."
+      },
+      {
+        "text": "Suricata cannot recognise TLS outside port 443",
+        "correct": false,
+        "why": "It named HTTP on 8080; it recognises TLS the same way."
+      },
+      {
+        "text": "The SNI was encrypted, so the content check had nothing",
+        "correct": false,
+        "why": "The SNI was read: www.example.com."
+      }
+    ]
+  },
+  {
+    "id": "ex-2tr92vwe",
+    "version": 1,
+    "section": "application-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An NGFW has an application rule denying SSH. Why does it still need port rules underneath?",
+    "hint": "Which is cheaper, and which comes first?",
+    "choices": [
+      {
+        "text": "They decide what opens at all, before the slower inspection",
+        "correct": true,
+        "why": "Right. An application rule narrows a port rule; it does not replace it."
+      },
+      {
+        "text": "Application rules only work on standard ports",
+        "correct": false,
+        "why": "The lesson recognised SSH on 443 and HTTP on 8080."
+      },
+      {
+        "text": "Port rules log more detail than application rules",
+        "correct": false,
+        "why": "They see less, not more."
+      },
+      {
+        "text": "The law requires a port-based rule set on every edge",
+        "correct": false,
+        "why": "No such law; it is a matter of cost and order."
+      }
+    ]
+  },
+  {
+    "id": "ex-t47fxr3h",
+    "version": 1,
+    "section": "application-rules",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Local rules in this lesson take sid numbers from what value upwards?",
+    "hint": "A million.",
+    "value": 1000000,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-xkffpc74",
+    "version": 1,
+    "section": "what-encryption-hides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From the TLS 1.3 connection to www, what did Suricata read?",
+    "hint": "Look at which fields were not null.",
+    "choices": [
+      {
+        "text": "The path and the response code",
+        "correct": false,
+        "why": "Those are inside the encryption."
+      },
+      {
+        "text": "The certificate's subject and issuer",
+        "correct": false,
+        "why": "Both null: TLS 1.3 encrypts the certificate."
+      },
+      {
+        "text": "The user agent of the client",
+        "correct": false,
+        "why": "That is an HTTP header, encrypted here."
+      },
+      {
+        "text": "The server name and the version",
+        "correct": true,
+        "why": "Right: the SNI and TLS 1.3."
+      }
+    ]
+  },
+  {
+    "id": "ex-bt8cxa3p",
+    "version": 1,
+    "section": "what-encryption-hides",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Against TLS it cannot decrypt, what can an inspector still decide on? Choose all that apply.",
+    "hint": "Metadata.",
+    "choices": [
+      {
+        "text": "The server name in the SNI",
+        "correct": true,
+        "why": "Sent in clear in the first message."
+      },
+      {
+        "text": "Which protocol the flow carries",
+        "correct": true,
+        "why": "Recognised from the handshake."
+      },
+      {
+        "text": "How much traffic and how often",
+        "correct": true,
+        "why": "Counted from the packets."
+      },
+      {
+        "text": "The words of a message sent through it",
+        "correct": false,
+        "why": "That is exactly what encryption hides."
+      }
+    ]
+  },
+  {
+    "id": "ex-mm3e96ae",
+    "version": 1,
+    "section": "what-encryption-hides",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company turns on TLS inspection. Which new risk is the firewall itself now carrying?",
+    "hint": "What does it hold in clear?",
+    "choices": [
+      {
+        "text": "Its throughput doubles and overloads the switches",
+        "correct": false,
+        "why": "Inspection lowers throughput."
+      },
+      {
+        "text": "It holds everyone's traffic in clear, so it is the prize",
+        "correct": true,
+        "why": "Right. Compromise it and you read everything."
+      },
+      {
+        "text": "Browsers stop trusting the public authorities",
+        "correct": false,
+        "why": "They trust one more authority; the others stay."
+      },
+      {
+        "text": "It can no longer see the SNI",
+        "correct": false,
+        "why": "It sees more than before, not less."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cy4jgzk",
+    "version": 1,
+    "section": "what-encryption-hides",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does TLS inspection break a program that checks a client certificate?",
+    "hint": "Two connections, and whose keys are on each.",
+    "choices": [
+      {
+        "text": "Client certificates are not supported by TLS 1.3",
+        "correct": false,
+        "why": "They are part of TLS 1.3."
+      },
+      {
+        "text": "The firewall strips every certificate from the handshake",
+        "correct": false,
+        "why": "It replaces the server's, it does not strip."
+      },
+      {
+        "text": "The firewall cannot present the client's private key",
+        "correct": true,
+        "why": "Right. The key never leaves the client."
+      },
+      {
+        "text": "The server sees the firewall's address",
+        "correct": false,
+        "why": "Addresses are not what a client certificate proves."
+      }
+    ]
+  },
+  {
+    "id": "ex-30dz23g0",
+    "version": 1,
+    "section": "what-an-ngfw-adds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each NGFW feature to what it does.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "user identity",
+        "right": "ties an address to a signed-in person"
+      },
+      {
+        "left": "intrusion prevention",
+        "right": "drops traffic matching a known signature"
+      },
+      {
+        "left": "URL filtering",
+        "right": "allows or blocks by the site's category"
+      },
+      {
+        "left": "sandboxing",
+        "right": "runs downloads somewhere safe to watch them"
+      }
+    ],
+    "right_distractors": [
+      "assigns addresses to new machines"
+    ]
+  },
+  {
+    "id": "ex-mbhvww19",
+    "version": 1,
+    "section": "what-an-ngfw-adds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A firewall is sized by its headline throughput, then every inspection feature is turned on. What happens?",
+    "hint": "Vendors quote two numbers.",
+    "choices": [
+      {
+        "text": "Nothing: inspection is done in the same hardware at no cost",
+        "correct": false,
+        "why": "Payload reading is software work per packet."
+      },
+      {
+        "text": "It forwards far less than the headline figure",
+        "correct": true,
+        "why": "Right. The inspection figure is the one that applies."
+      },
+      {
+        "text": "The firewall disables stateful tracking to compensate",
+        "correct": false,
+        "why": "Nothing is traded away automatically."
+      },
+      {
+        "text": "Encrypted traffic is dropped",
+        "correct": false,
+        "why": "Nothing in the lesson drops it."
+      }
+    ]
+  },
+  {
+    "id": "ex-krpbaen1",
+    "version": 1,
+    "section": "what-an-ngfw-adds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where is an NGFW the wrong tool?",
+    "hint": "Volume, and trust between the machines.",
+    "choices": [
+      {
+        "text": "At the internet edge",
+        "correct": false,
+        "why": "That is its natural place."
+      },
+      {
+        "text": "Between the staff LAN and the servers",
+        "correct": false,
+        "why": "A boundary between zones of different trust suits it."
+      },
+      {
+        "text": "Deep in a data centre, between machines that trust each other and move the most traffic",
+        "correct": true,
+        "why": "Right. Lesson 21 uses rules on the machines there."
+      },
+      {
+        "text": "In front of the DMZ",
+        "correct": false,
+        "why": "Another boundary, and a good place."
+      }
+    ]
+  },
+  {
+    "id": "ex-93g8tbdv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A policy says staff may not upload files to storage services the company has not approved. Which layer can enforce it for HTTPS traffic without decrypting?",
+    "hint": "What is visible in a TLS 1.3 ClientHello?",
+    "choices": [
+      {
+        "text": "A port rule allowing only 443",
+        "correct": false,
+        "why": "Every such service uses 443."
+      },
+      {
+        "text": "A rule on the SNI's server name",
+        "correct": true,
+        "why": "Right. The name is in clear; the file contents are not."
+      },
+      {
+        "text": "A rule matching the uploaded file's contents",
+        "correct": false,
+        "why": "The contents are encrypted."
+      },
+      {
+        "text": "A stateful rule on established traffic",
+        "correct": false,
+        "why": "That allows every conversation already started."
+      }
+    ]
+  },
+  {
+    "id": "ex-anywpq3b",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the layers a packet from the internet meets, from cheapest to most expensive.",
+    "hint": "Lesson 1 and this lesson.",
+    "items": [
+      "a stateless filter at the border",
+      "the stateful firewall's connection table",
+      "application identification from the payload",
+      "TLS inspection, decrypting the content"
+    ],
+    "trap": "Each layer reads more and so costs more; the cheap ones throw away what the expensive ones never need to see."
+  },
+  {
+    "id": "ex-33y5tw65",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Only the port rule set is loaded on fw. Which question can it answer?",
+    "hint": "Headers only.",
+    "choices": [
+      {
+        "text": "Is this flow on 443 really HTTPS?",
+        "correct": false,
+        "why": "That needs the payload."
+      },
+      {
+        "text": "Which employee opened this connection?",
+        "correct": false,
+        "why": "That needs user identity."
+      },
+      {
+        "text": "What page was requested over TLS?",
+        "correct": false,
+        "why": "That needs decryption."
+      },
+      {
+        "text": "Did this start on the LAN?",
+        "correct": true,
+        "why": "Right: the interface and the state are header facts."
+      }
+    ]
+  }
+]

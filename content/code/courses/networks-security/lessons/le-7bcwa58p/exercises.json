@@ -1,0 +1,602 @@
+[
+  {
+    "id": "ex-cmvxtb1y",
+    "version": 1,
+    "section": "first-match-wins",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The quarantine for laptop was added with `nft add`, and laptop still reached app:8080 and www:443. Why?",
+    "hint": "Where does `add` put a rule?",
+    "choices": [
+      {
+        "text": "`nft add` stages the rule until the rule set is reloaded",
+        "correct": false,
+        "why": "The rule was live at once; it was listed with a handle."
+      },
+      {
+        "text": "It went to the end, below accepts that matched first",
+        "correct": true,
+        "why": "Right. Handle 10 accepted the connection before handle 20 was read."
+      },
+      {
+        "text": "A drop needs a higher priority than an accept to win",
+        "correct": false,
+        "why": "Rules in a chain have no priority of their own; position decides."
+      },
+      {
+        "text": "The address in the rule was mistyped, so it matched no packet",
+        "correct": false,
+        "why": "It was laptop's address: moved up, the same rule counted 2 packets."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddbx242d",
+    "version": 1,
+    "section": "first-match-wins",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the quarantine was moved to position 4 and laptop tried again, how many packets had its counter recorded?",
+    "hint": "counter packets ...",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-yrzke1j0",
+    "version": 1,
+    "section": "first-match-wins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 9's quarantine used `insert` with no position. What does that do that `insert … position 4` avoids?",
+    "hint": "Which rule is at the very top of the chain?",
+    "choices": [
+      {
+        "text": "It puts the rule at the end of the chain, the same as `add`",
+        "correct": false,
+        "why": "insert with no position puts it at the top."
+      },
+      {
+        "text": "It replaces the rule that had handle 4",
+        "correct": false,
+        "why": "position 4 puts the rule before handle 4; nothing is deleted."
+      },
+      {
+        "text": "It lands above the established rule, cutting open connections",
+        "correct": true,
+        "why": "Right. position 4 leaves open connections alone and stops every new one."
+      },
+      {
+        "text": "It is refused, as a position is required in a chain that has rules",
+        "correct": false,
+        "why": "nft accepts it; lesson 9 used it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2sz4mexd",
+    "version": 1,
+    "section": "first-match-wins",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these statements about the order of rules does the section support? Choose all that apply.",
+    "hint": "First match, and what each packet costs.",
+    "choices": [
+      {
+        "text": "A rule below an accept that matches the same packet is not consulted for it",
+        "correct": true,
+        "why": "Right. The first match decides."
+      },
+      {
+        "text": "nft prints a warning when a new rule is shadowed",
+        "correct": false,
+        "why": "It loads silently; the counter is what shows it."
+      },
+      {
+        "text": "Rules matching most traffic belong near the top",
+        "correct": true,
+        "why": "Right. Every packet walks the chain until something matches."
+      },
+      {
+        "text": "A drop rule is read before any accept, wherever it sits",
+        "correct": false,
+        "why": "Action does not reorder rules; the quarantine proved it."
+      },
+      {
+        "text": "Long lists of addresses belong in a set",
+        "correct": true,
+        "why": "Right. A set is looked up in one step."
+      }
+    ]
+  },
+  {
+    "id": "ex-ej4k3nq5",
+    "version": 1,
+    "section": "a-mask-too-wide",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The SSH rule was typed with `ip saddr 192.168.99.0/16`. What did the listing show nftables had stored?",
+    "hint": "A /16 keeps two bytes.",
+    "choices": [
+      {
+        "text": "`192.168.99.0/24`, the segment that was meant",
+        "correct": false,
+        "why": "nftables does not guess intent; it keeps the /16."
+      },
+      {
+        "text": "`192.168.99.0/16`, exactly as it was typed",
+        "correct": false,
+        "why": "It was rewritten to the network the mask describes."
+      },
+      {
+        "text": "`192.168.0.0/16`",
+        "correct": true,
+        "why": "Right. Normalised to the network it describes."
+      },
+      {
+        "text": "No rule: nft refused an address with host bits set",
+        "correct": false,
+        "why": "It loaded without a complaint."
+      }
+    ]
+  },
+  {
+    "id": "ex-yd9450bh",
+    "version": 1,
+    "section": "a-mask-too-wide",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which cell of the matrix did the /16 rule break?",
+    "hint": "laptop is on the staff LAN, 192.168.10.20.",
+    "choices": [
+      {
+        "text": "Internet to servers: SSH now open to remote",
+        "correct": false,
+        "why": "remote's address is not in 192.168.0.0/16."
+      },
+      {
+        "text": "Staff LAN to servers: any port now open",
+        "correct": false,
+        "why": "The rule names tcp dport 22 and no other port."
+      },
+      {
+        "text": "Management to servers: SSH now blocked",
+        "correct": false,
+        "why": "The admins' segment is inside the /16, so it still matches."
+      },
+      {
+        "text": "Staff LAN to servers: SSH now open",
+        "correct": true,
+        "why": "Right. laptop reached app:22 and db:22."
+      }
+    ]
+  },
+  {
+    "id": "ex-qt4w994w",
+    "version": 1,
+    "section": "a-mask-too-wide",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A /16 prefix keeps the first ___ bytes of the address.",
+    "hint": "16 bits.",
+    "blanks": [
+      {
+        "accept": [
+          "two",
+          "2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rg2njxfq",
+    "version": 1,
+    "section": "the-wrong-direction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can no packet match `iifname eth0 oifname eth1 ip saddr 192.0.2.53 tcp dport 443`?",
+    "hint": "Which zone does each part describe?",
+    "choices": [
+      {
+        "text": "It arrives from the internet, yet comes from dns in the DMZ",
+        "correct": true,
+        "why": "Right. The interfaces and the address describe opposite ends."
+      },
+      {
+        "text": "Port 443 is not allowed in a forward chain",
+        "correct": false,
+        "why": "Ports are matched in forward all the time."
+      },
+      {
+        "text": "An accept rule may not name both interfaces",
+        "correct": false,
+        "why": "The staff rule, handle 10, names both."
+      },
+      {
+        "text": "The `counter` keyword has to come before the interfaces",
+        "correct": false,
+        "why": "The counter worked; it read 0 because nothing matched."
+      }
+    ]
+  },
+  {
+    "id": "ex-3n36ma2f",
+    "version": 1,
+    "section": "the-wrong-direction",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the rule that was meant for dns's updates?",
+    "hint": "Swap the two interfaces.",
+    "choices": [
+      {
+        "text": "`iifname eth0 oifname eth1 ip daddr 192.0.2.53 tcp dport 443`",
+        "correct": false,
+        "why": "That lets the internet reach dns on 443, a different flow."
+      },
+      {
+        "text": "`iifname eth1 oifname eth1 ip saddr 192.0.2.53 tcp dport 443`",
+        "correct": false,
+        "why": "The updates leave through eth0, towards the internet."
+      },
+      {
+        "text": "`iifname eth0 oifname eth1 ip saddr 192.0.2.53 tcp sport 443`",
+        "correct": false,
+        "why": "The interfaces are still backwards; the port was right."
+      },
+      {
+        "text": "`iifname eth1 oifname eth0 ip saddr 192.0.2.53 tcp dport 443`",
+        "correct": true,
+        "why": "Right. In from the DMZ, out to the internet."
+      }
+    ]
+  },
+  {
+    "id": "ex-sak9za6a",
+    "version": 1,
+    "section": "the-wrong-direction",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom to its usual cause.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "counter at 0, the traffic still passes",
+        "right": "an accept above it matches first"
+      },
+      {
+        "left": "counter at 0, the traffic is still dropped",
+        "right": "wrong direction, interface or address"
+      },
+      {
+        "left": "counter climbing, but on the wrong traffic",
+        "right": "a mask or port range wider than meant"
+      }
+    ],
+    "right_distractors": [
+      "the kernel rejected the rule at load time"
+    ]
+  },
+  {
+    "id": "ex-e5chv7et",
+    "version": 1,
+    "section": "rules-after-the-end",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes had the catch-all `drop everything else` counted after the database attempt?",
+    "hint": "counter packets 1 bytes ...",
+    "value": 60,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-7x9cy1ca",
+    "version": 1,
+    "section": "rules-after-the-end",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did the finance rule count 0 packets while db:5432 stayed blocked?",
+    "hint": "Look at what sits above it.",
+    "choices": [
+      {
+        "text": "5432 is not the database's port",
+        "correct": false,
+        "why": "It is; the rule never got the chance to match."
+      },
+      {
+        "text": "It sits below a drop that has no conditions",
+        "correct": true,
+        "why": "Right. That drop decides for every packet it sees."
+      },
+      {
+        "text": "eth2 is the wrong interface for the staff LAN",
+        "correct": false,
+        "why": "The staff rule uses eth2 and works."
+      },
+      {
+        "text": "It lacks `ct state new`, so the first packet of a connection skips it",
+        "correct": false,
+        "why": "Without it the rule matches any packet of the flow, the first included."
+      }
+    ]
+  },
+  {
+    "id": "ex-q5vwfcvv",
+    "version": 1,
+    "section": "rules-after-the-end",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these protect a rule set against rules added after a catch-all? Choose all that apply.",
+    "hint": "The section names two cheap ones.",
+    "choices": [
+      {
+        "text": "Swap the final drop for a reject, so blocked attempts are seen",
+        "correct": false,
+        "why": "A reject is still an unconditional verdict and hides what is below it."
+      },
+      {
+        "text": "Keep the rule set in a file and write new rules above its last line",
+        "correct": true,
+        "why": "Right. The catch-all is visibly last there."
+      },
+      {
+        "text": "Add rules with `nft add`, so the newest is easy to find at the end",
+        "correct": false,
+        "why": "Appending is exactly how the finance rule got lost."
+      },
+      {
+        "text": "Let the policy give the final verdict, and end with a rule that counts and decides nothing",
+        "correct": true,
+        "why": "Right. A counting rule hides no rule below it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcn683tq",
+    "version": 1,
+    "section": "a-regression-test",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does matrix-test.sh print a cell only when its result differs from the expected one?",
+    "hint": "Picture a matrix of two hundred cells.",
+    "choices": [
+      {
+        "text": "probe reports blocked cells and no open ones",
+        "correct": false,
+        "why": "probe reports both; matrix.expected has both."
+      },
+      {
+        "text": "Printing each cell would take longer than probing it",
+        "correct": false,
+        "why": "Ten cells take a few seconds either way."
+      },
+      {
+        "text": "Passing cells would bury the failing one",
+        "correct": true,
+        "why": "Right. Silence means the matrix holds."
+      },
+      {
+        "text": "The exit code is set from the length of the output",
+        "correct": false,
+        "why": "It is set by the fail variable."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkcrrpx4",
+    "version": 1,
+    "section": "a-regression-test",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many cells does the lesson's matrix.expected list?",
+    "hint": "One line per cell.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-f5eqt3mx",
+    "version": 1,
+    "section": "a-regression-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Run against the rule set with the /16 mistake, which line did the test print?",
+    "hint": "Which cells in matrix.expected involve port 22?",
+    "choices": [
+      {
+        "text": "`admin app:22 expected open got blocked`",
+        "correct": false,
+        "why": "admin is inside the /16, so its SSH stayed open."
+      },
+      {
+        "text": "`laptop app:22 expected blocked got open`",
+        "correct": true,
+        "why": "Right. The one cell the wide mask opened."
+      },
+      {
+        "text": "`laptop db:22 expected blocked got open`",
+        "correct": false,
+        "why": "db:22 did open, but matrix.expected has no such cell to try."
+      },
+      {
+        "text": "`laptop db:5432 expected blocked got open`",
+        "correct": false,
+        "why": "The rule names port 22, not the database's port."
+      }
+    ]
+  },
+  {
+    "id": "ex-yd73cta5",
+    "version": 1,
+    "section": "a-regression-test",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a rule change guarded by the matrix test in order.",
+    "hint": "The test checks what is loaded.",
+    "items": [
+      "write the change into the rule-set file",
+      "load the file",
+      "run matrix-test.sh",
+      "roll back if it exits 1"
+    ],
+    "trap": "Running the test before loading tests the old rule set, and passes whatever the change does."
+  },
+  {
+    "id": "ex-bfdhe3jw",
+    "version": 1,
+    "section": "a-regression-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each line of the test start its probe on the machine named in the first column?",
+    "hint": "What do the rules match on?",
+    "choices": [
+      {
+        "text": "The firewall logs connections from the lab host alone",
+        "correct": false,
+        "why": "Logging is not what is being tested."
+      },
+      {
+        "text": "probe needs the target's name resolved in that zone's DNS",
+        "correct": false,
+        "why": "Names are not the point; the path through the firewall is."
+      },
+      {
+        "text": "It keeps the test quicker than trying each cell from one place",
+        "correct": false,
+        "why": "Speed is not the reason; from one place, most cells would test the wrong path."
+      },
+      {
+        "text": "Rules match interfaces and sources of the zone it starts in",
+        "correct": true,
+        "why": "Right. Otherwise the test tries a different path from the one in the cell."
+      }
+    ]
+  },
+  {
+    "id": "ex-50tyn12a",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A rule is added so that www stops reaching a mail relay on port 25. After www tries, the rule's counter reads 0 and the mail still goes through. What is the likeliest cause?",
+    "hint": "Zero, and the traffic passes.",
+    "choices": [
+      {
+        "text": "The rule is written the wrong way round",
+        "correct": false,
+        "why": "Then nothing would accept it either; the traffic would still be dropped by the policy."
+      },
+      {
+        "text": "An accept above it matches first",
+        "correct": true,
+        "why": "Right. Counter at 0 and traffic passing is a shadowed rule."
+      },
+      {
+        "text": "Its mask is wider than intended",
+        "correct": false,
+        "why": "A wide mask makes a counter climb, on too much traffic."
+      },
+      {
+        "text": "It was appended below a final catch-all drop",
+        "correct": false,
+        "why": "The catch-all would have dropped the mail, and it passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-evene22c",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each change to the mistake it makes.",
+    "hint": "Which of the four is each?",
+    "pairs": [
+      {
+        "left": "an allow added a month after a final `counter drop`",
+        "right": "an unreachable rule"
+      },
+      {
+        "left": "`10.0.0.0/8` typed for one /24 of servers",
+        "right": "a mask too wide"
+      },
+      {
+        "left": "`iifname` of the DMZ with a source on the staff LAN",
+        "right": "an impossible rule"
+      },
+      {
+        "left": "a block appended beneath a broader accept",
+        "right": "a shadowed rule"
+      }
+    ],
+    "right_distractors": [
+      "a rule nft refuses to load"
+    ]
+  },
+  {
+    "id": "ex-0nz1gd4q",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A router ACL meant for 10.1.5.0/24 was typed with the wildcard 0.0.255.255. How many /24 networks does the line now match?",
+    "hint": "One wrong byte.",
+    "value": 256,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-9ppe8dh2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the baseline, laptop is quarantined with the rule at position 4, and matrix.expected is left as it was. What does matrix-test.sh print?",
+    "hint": "Which cells start on laptop, and what do they expect?",
+    "choices": [
+      {
+        "text": "Silence, and exit 0, as the quarantine is intended",
+        "correct": false,
+        "why": "The file still expects laptop app:8080 open; the test knows no intent."
+      },
+      {
+        "text": "`laptop app:22 expected blocked got open`",
+        "correct": false,
+        "why": "That was the /16 mistake; the baseline has none."
+      },
+      {
+        "text": "Three lines, one per laptop cell",
+        "correct": false,
+        "why": "app:22 and db:5432 were expected blocked and are blocked; they match."
+      },
+      {
+        "text": "`laptop app:8080 expected open got blocked`, and exit 1",
+        "correct": true,
+        "why": "Right. A deliberate change needs matrix.expected changed with it."
+      }
+    ]
+  }
+]

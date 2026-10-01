@@ -1,0 +1,437 @@
+{
+  "ex-wdck48p2": {
+    "prompt": "Ligue cada tipo de registro à pergunta que ele responde.",
+    "hint": "A tabela no início da seção.",
+    "pairs": [
+      {
+        "left": "log do firewall",
+        "right": "o que foi tentado e barrado"
+      },
+      {
+        "left": "registro de fluxo",
+        "right": "quais pares conversaram, e quanto"
+      },
+      {
+        "left": "alerta do IDS",
+        "right": "o que pareceu errado, e por quê"
+      }
+    ],
+    "right_distractors": [
+      "o que a conversa disse"
+    ]
+  },
+  "ex-8tdgcs2z": {
+    "prompt": "Nenhum dos três registros guarda o conteúdo da conversa. Por que isso é proposital?",
+    "hint": "Compare por quanto tempo cada um é guardado.",
+    "choices": [
+      {
+        "text": "O conteúdo é cifrado, então não há nada legível para guardar",
+        "why": "O tráfego web do laboratório era HTTP puro; o motivo é volume."
+      },
+      {
+        "text": "Captura completa dura horas; estes duram meses",
+        "why": "Isso. Sem o conteúdo, são pequenos o bastante para guardar."
+      },
+      {
+        "text": "O firewall não enxerga além do cabeçalho TCP",
+        "why": "O sensor lê detalhes de HTTP, DNS e TLS, e os registra."
+      },
+      {
+        "text": "A lei proíbe guardá-lo",
+        "why": "O motivo da aula é tamanho e tempo, não uma proibição."
+      }
+    ]
+  },
+  "ex-j9zpsr2y": {
+    "prompt": "Por que o administrador põe a regra de log no fim da cadeia forward?",
+    "hint": "Quais pacotes chegam à última regra?",
+    "choices": [
+      {
+        "text": "Para registrar cada pacote que o firewall encaminha",
+        "why": "Pacotes aceitos param na regra que os aceitou."
+      },
+      {
+        "text": "Porque o nft acrescenta no fim e não sabe inserir",
+        "why": "A regra do feed é inserida no topo mais adiante."
+      },
+      {
+        "text": "Ela vê apenas o que todas as regras acima recusaram",
+        "why": "Isso. O log dela é a lista de recusas."
+      },
+      {
+        "text": "Para o ulogd subir antes de a regra casar",
+        "why": "A posição na cadeia não tem relação com o ulogd."
+      }
+    ]
+  },
+  "ex-p20zqcrp": {
+    "prompt": "Quantos segundos há entre start e end em cada registro de fluxo de remote?",
+    "hint": "Subtraia os dois números."
+  },
+  "ex-v8sxtt95": {
+    "prompt": "Um pedido levou milissegundos, mas o end do seu registro de fluxo está dois minutos depois do start. O que esse end marca?",
+    "hint": "Quando o registro é escrito?",
+    "choices": [
+      {
+        "text": "Quando o firewall a esqueceu",
+        "why": "Isso. Uma conexão TCP fechada fica dois minutos na tabela."
+      },
+      {
+        "text": "Quando a loja mandou o último byte",
+        "why": "Isso foi milissegundos depois do start."
+      },
+      {
+        "text": "O momento em que o administrador reiniciou o ulogd",
+        "why": "Os dois fluxos terminam 120 segundos depois do próprio start."
+      },
+      {
+        "text": "Um relógio dois minutos errado",
+        "why": "Os mesmos 120 segundos aparecem nos dois, do mesmo relógio."
+      }
+    ]
+  },
+  "ex-yn1h7t92": {
+    "prompt": "As três sondagens de porta de remote aparecem no log de descartes. Por que faltam nos registros de fluxo?",
+    "hint": "De onde vêm os registros de fluxo?",
+    "choices": [
+      {
+        "text": "Os fluxos ainda não tinham sido escritos quando a captura rodou",
+        "why": "O script esperou três minutos, o bastante para toda entrada."
+      },
+      {
+        "text": "Uma conexão descartada nunca vira entrada confirmada",
+        "why": "Isso. Sem entrada, sem registro de fluxo."
+      },
+      {
+        "text": "O ulogd filtra fluxos em portas que não conhece",
+        "why": "Não há filtro assim na pilha."
+      },
+      {
+        "text": "Fluxos registram UDP e as sondagens eram TCP",
+        "why": "Os fluxos mostrados são TCP na porta 80."
+      }
+    ]
+  },
+  "ex-kah0wmds": {
+    "prompt": "Somando os dois sentidos, quantos bytes levou o fluxo que recebeu a página 404?",
+    "hint": "O 404 é a resposta mais longa."
+  },
+  "ex-pv6eezmf": {
+    "prompt": "Alguém com root no fw esvazia o drops.json. Quantas linhas a cópia do admin tem logo depois?",
+    "hint": "As linhas foram enviadas à medida que eram escritas.",
+    "choices": [
+      {
+        "text": "Nenhuma, já que o rsyslog espelha o esvaziamento",
+        "why": "O reopenOnTruncate só volta a ler do topo o arquivo do fw."
+      },
+      {
+        "text": "Quatro",
+        "why": "Isso. O esvaziamento no fw não muda nada no admin."
+      },
+      {
+        "text": "Zero até reiniciar o rsyslog do admin, depois quatro",
+        "why": "O admin nunca as perdeu."
+      },
+      {
+        "text": "Oito, porque cada linha é reenviada",
+        "why": "O rsyslog lembra até onde leu."
+      }
+    ]
+  },
+  "ex-wwbzz7yz": {
+    "prompt": "Do fw, a porta 514 do admin conecta e a 22 estoura o tempo. O que esse arranjo dá ao defensor?",
+    "hint": "Entregar linhas, e nada além.",
+    "choices": [
+      {
+        "text": "Entrega mais rápida, já que o SSH não compete com os logs",
+        "why": "Banda não é o motivo da regra."
+      },
+      {
+        "text": "Cifragem das linhas a caminho do coletor",
+        "why": "Isso exige TLS, que o laboratório não usa."
+      },
+      {
+        "text": "Um intruso no fw acrescenta ruído, mas não altera as linhas antigas",
+        "why": "Isso. A origem não alcança o coletor de volta."
+      },
+      {
+        "text": "Prova de que nenhuma linha se perdeu no caminho",
+        "why": "A fila em disco ajuda nisso, não a regra de porta."
+      }
+    ]
+  },
+  "ex-81cd9bjb": {
+    "prompt": "Quais destes tornam o envio de logs mais robusto em produção, como a seção descreve? Escolha todas as que se aplicam.",
+    "hint": "Três detalhes.",
+    "choices": [
+      {
+        "text": "TLS na porta 514 com os dois certificados verificados",
+        "why": "Isso. Protege as linhas no caminho."
+      },
+      {
+        "text": "Uma fila em disco que tenta de novo enquanto o coletor está fora",
+        "why": "Isso. Um reinício no admin não perde nada."
+      },
+      {
+        "text": "SSH do fw para o admin, para consertar a coleção",
+        "why": "Esse é o acesso de volta que o desenho proíbe."
+      },
+      {
+        "text": "Um alarme quando uma origem se cala",
+        "why": "Isso. O silêncio é um sintoma por si."
+      },
+      {
+        "text": "Apagar cada linha no fw depois de enviada",
+        "why": "A seção mantém as duas cópias; apagar é decisão de retenção."
+      }
+    ]
+  },
+  "ex-tnx2zqaw": {
+    "prompt": "Um coletor deve disparar um alarme próprio quando uma origem fica ___ por mais tempo do que já ficou.",
+    "hint": "Ou foi desligada, ou alguém a desligou.",
+    "blanks": [
+      {
+        "accept": [
+          "calada",
+          "quieta",
+          "silenciosa",
+          "muda"
+        ]
+      }
+    ]
+  },
+  "ex-t3fdp9b7": {
+    "prompt": "Olhando para trás na coleção, quantos registros vieram de 203.0.113.50?",
+    "hint": "Fluxos mais descartes."
+  },
+  "ex-ymmm9ky4": {
+    "prompt": "Chega um feed com três endereços. O que a seção faz com ele primeiro?",
+    "hint": "Antes de bloquear qualquer coisa.",
+    "choices": [
+      {
+        "text": "Bloquear os três no topo da cadeia forward",
+        "why": "Esse é o segundo uso."
+      },
+      {
+        "text": "Mandar os endereços ao sensor como assinaturas",
+        "why": "O sensor não entra nessa."
+      },
+      {
+        "text": "Procurar por eles nos fluxos e descartes guardados",
+        "why": "Isso. Se já conversaram conosco."
+      },
+      {
+        "text": "Verificar se o certificado do publicador é válido",
+        "why": "A seção julga um feed pela data e pelo motivo."
+      }
+    ]
+  },
+  "ex-s4s7h3s6": {
+    "prompt": "Por que o conjunto intel tem timeout 1d?",
+    "hint": "Quem terá esse endereço no mês que vem?",
+    "choices": [
+      {
+        "text": "Conjuntos do nft precisam de timeout para aceitar elementos",
+        "why": "O flag é uma escolha."
+      },
+      {
+        "text": "Mantém o conjunto pequeno o bastante para o kernel",
+        "why": "Tamanho não é o motivo dado."
+      },
+      {
+        "text": "Para bloquear atacantes por um dia e depois perdoar",
+        "why": "Uma entrada renovada fica enquanto o feed a lista."
+      },
+      {
+        "text": "Endereços são reatribuídos, então o bloqueio expira com o motivo",
+        "why": "Isso. Sai quando o feed deixa de listá-lo."
+      }
+    ]
+  },
+  "ex-pzrm6q22": {
+    "prompt": "Ordene as ações de remote como a linha do tempo correlacionada mostra, da primeira à última.",
+    "hint": "Leia a saída do correlate.py.",
+    "items": [
+      "carregou a página inicial da loja",
+      "pediu /.env e disparou o alerta",
+      "tentou o banco de dados na porta 5432",
+      "tentou a porta 23 da loja"
+    ],
+    "trap": "A tentativa na porta 23 veio três minutos depois do resto."
+  },
+  "ex-mwzh0a3f": {
+    "prompt": "O único alerta do sensor foi para /.env. Que pergunta a linha do tempo responde que o alerta sozinho não respondia?",
+    "hint": "Veja o que os fluxos e descartes acrescentam.",
+    "choices": [
+      {
+        "text": "Qual assinatura casou",
+        "why": "O próprio alerta diz isso."
+      },
+      {
+        "text": "Mais alguma coisa deu certo?",
+        "why": "Isso. Aqui só dois carregamentos de página se completaram."
+      },
+      {
+        "text": "O que o arquivo /.env contém no servidor",
+        "why": "Nenhum registro guarda conteúdo."
+      },
+      {
+        "text": "A que país o endereço pertence",
+        "why": "Nada nas três fontes diz isso."
+      }
+    ]
+  },
+  "ex-607b80tn": {
+    "prompt": "O relógio do sensor está três minutos atrasado e todo o resto está certo. O que acontece com a linha do tempo mesclada?",
+    "hint": "Ordenar pelo tempo é a junção inteira.",
+    "choices": [
+      {
+        "text": "O script se recusa a ordenar fontes misturadas",
+        "why": "Ele ordena o que receber."
+      },
+      {
+        "text": "Nada, já que o alerta casa pelo endereço",
+        "why": "O endereço escolhe os registros; o tempo os ordena."
+      },
+      {
+        "text": "O alerta cai antes do carregamento que o causou",
+        "why": "Isso. A correlação exige relógios de acordo, daí o NTP."
+      },
+      {
+        "text": "Os fluxos se deslocam três minutos, já que usam segundos desde 1970",
+        "why": "Os fluxos vêm do fw, cujo relógio está certo."
+      }
+    ]
+  },
+  "ex-4y5qmx55": {
+    "prompt": "O eve.json tem 43 registros, 24 deles stats. Qual é a primeira economia que a seção aponta?",
+    "hint": "Antes de encurtar qualquer coisa.",
+    "choices": [
+      {
+        "text": "Escolher quais tipos de registro valem a pena guardar",
+        "why": "Isso. Os registros stats são a maior parte do arquivo."
+      },
+      {
+        "text": "Guardar alertas por menos tempo",
+        "why": "Alertas são poucos e pequenos; ficam mais tempo."
+      },
+      {
+        "text": "Desligar a compressão para poupar processador",
+        "why": "A compressão é o que poupa espaço."
+      },
+      {
+        "text": "Levar o arquivo do sensor para o fw",
+        "why": "Isso desfaria o envio para fora do host."
+      }
+    ]
+  },
+  "ex-n50vmcj8": {
+    "prompt": "Pelo Marco Civil da Internet, por quanto tempo a loja do laboratório, uma aplicação na internet, precisa guardar os registros de acesso?",
+    "hint": "Artigo 15.",
+    "choices": [
+      {
+        "text": "Um ano, como um provedor de conexão",
+        "why": "Esse é o artigo 13, para provedores de conexão."
+      },
+      {
+        "text": "Noventa dias, como o logrotate está configurado",
+        "why": "Essa é a escolha do laboratório, não a lei."
+      },
+      {
+        "text": "Pelo tempo que a LGPD permitir",
+        "why": "A LGPD limita; o Marco Civil fixa um piso."
+      },
+      {
+        "text": "Seis meses",
+        "why": "Isso. Artigo 15."
+      }
+    ]
+  },
+  "ex-9nweynbr": {
+    "prompt": "Ligue cada registro à retenção inicial que a seção propõe.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "alertas do IDS",
+        "right": "um ano ou mais"
+      },
+      {
+        "left": "descartes do firewall",
+        "right": "30 a 90 dias, depois só contagens"
+      },
+      {
+        "left": "detalhes de HTTP e DNS",
+        "right": "dias a semanas"
+      }
+    ],
+    "right_distractors": [
+      "para sempre, sem compressão"
+    ]
+  },
+  "ex-36gfqs7z": {
+    "prompt": "Um feed publicado hoje cita um endereço que, segundo um relatório, age há quatro meses. Os fluxos são guardados por 30 dias. O que a busca retroativa consegue mostrar?",
+    "hint": "A retenção decide até onde uma pergunta alcança.",
+    "choices": [
+      {
+        "text": "Os quatro meses, pelas contagens de descartes",
+        "why": "Contagens por dia não levam endereços."
+      },
+      {
+        "text": "Os últimos 30 dias, e nada de quando começou",
+        "why": "Isso. Por isso os fluxos ficam de 90 dias a um ano."
+      },
+      {
+        "text": "Tudo, se os alertas do IDS ficarem um ano",
+        "why": "Alertas só cobrem o que casou com assinatura."
+      },
+      {
+        "text": "Quatro meses, já que o feed traz o próprio histórico",
+        "why": "Um feed traz endereços e um motivo, não o seu tráfego."
+      }
+    ]
+  },
+  "ex-ke7s35zg": {
+    "prompt": "O sensor alerta num pedido de um endereço para /wp-admin. Qual registro diz se alguma outra conexão dele se completou?",
+    "hint": "Qual registro diz o que aconteceu?",
+    "choices": [
+      {
+        "text": "O log de descartes",
+        "why": "Ele lista o que foi barrado, não o que passou."
+      },
+      {
+        "text": "Os registros stats do sensor",
+        "why": "Eles descrevem o próprio sensor."
+      },
+      {
+        "text": "Os registros de fluxo",
+        "why": "Isso. Cada conversa permitida tem um."
+      },
+      {
+        "text": "O feed de ameaças",
+        "why": "Ele lista observações de outra pessoa."
+      }
+    ]
+  },
+  "ex-h8xagkqj": {
+    "prompt": "Às 03:00 o coletor para de receber qualquer coisa do fw, cujos logs nunca tinham parado por mais de um minuto. Como a aula trata isso?",
+    "hint": "Uma origem que para de enviar.",
+    "choices": [
+      {
+        "text": "Uma noite calma, já que nada foi recusado",
+        "why": "Fluxos continuam chegando sempre que algo é permitido."
+      },
+      {
+        "text": "Um evento de retenção, já que o logrotate roda à noite",
+        "why": "A rotação renomeia arquivos no admin; não para o fw."
+      },
+      {
+        "text": "Inofensivo, porque a fila em disco entrega depois",
+        "why": "A fila cobre a ausência do coletor, não a da origem."
+      },
+      {
+        "text": "Um alarme: fw desligou, ou alguém o desligou",
+        "why": "Isso. O silêncio é verificado à parte."
+      }
+    ]
+  }
+}

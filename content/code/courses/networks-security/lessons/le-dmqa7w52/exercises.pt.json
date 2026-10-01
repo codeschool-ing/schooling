@@ -1,0 +1,434 @@
+{
+  "ex-0q999z1x": {
+    "prompt": "Um pacote atravessa uma interface e não casa com nenhuma linha da ACL. O que acontece com ele?",
+    "hint": "Veja a penúltima linha da tabela.",
+    "choices": [
+      {
+        "text": "Passa, já que nenhuma linha o recusou",
+        "why": "Uma ACL termina num deny que não se vê."
+      },
+      {
+        "text": "É encaminhado e contado como sem correspondência",
+        "why": "Pacotes sem correspondência não são encaminhados."
+      },
+      {
+        "text": "O deny implícito o descarta",
+        "why": "Isso. Ele fica no fim, invisível na configuração."
+      },
+      {
+        "text": "Vai para a ACL do outro sentido",
+        "why": "A lista de cada sentido decide sozinha."
+      }
+    ]
+  },
+  "ex-19887mmr": {
+    "prompt": "Uma ACL tem a linha 10 `permit tcp any any eq 80` e a linha 20 `deny ip host 10.0.0.5 any`. 10.0.0.5 manda um pacote para a porta 80. O que acontece?",
+    "hint": "As linhas são comparadas a partir do topo.",
+    "choices": [
+      {
+        "text": "Negado, porque uma linha deny tem prioridade sobre uma permit",
+        "why": "Não há prioridade por ação; quem decide é a ordem."
+      },
+      {
+        "text": "Negado, porque a linha que cita o host é mais específica",
+        "why": "É assim que uma tabela de rotas escolhe, não uma ACL."
+      },
+      {
+        "text": "Permitido, e registrado como conflito entre linhas",
+        "why": "Nada detecta conflito; a linha 20 simplesmente não é alcançada."
+      },
+      {
+        "text": "Permitido pela linha 10",
+        "why": "Isso. A primeira linha que casa decide."
+      }
+    ]
+  },
+  "ex-zzmy4dn9": {
+    "prompt": "Ligue cada propriedade ao jeito que uma ACL a tem.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "memória",
+        "right": "nenhuma: cada pacote é julgado sozinho"
+      },
+      {
+        "left": "onde se aplica",
+        "right": "uma interface, num sentido"
+      },
+      {
+        "left": "quando nada casa",
+        "right": "um deny que não está escrito"
+      },
+      {
+        "left": "onde roda",
+        "right": "no hardware de comutação, na velocidade da porta"
+      }
+    ],
+    "right_distractors": [
+      "rastreamento de conexões"
+    ]
+  },
+  "ex-1dgkh22w": {
+    "prompt": "O que uma ACL padrão testa num pacote?",
+    "hint": "Ela diz quem, e não para onde.",
+    "choices": [
+      {
+        "text": "Os endereços de origem e de destino",
+        "why": "O destino é campo da ACL estendida."
+      },
+      {
+        "text": "O endereço de origem",
+        "why": "Isso. Mais nada."
+      },
+      {
+        "text": "O endereço de origem e a porta",
+        "why": "Portas exigem uma ACL estendida."
+      },
+      {
+        "text": "O destino para onde ele vai",
+        "why": "É o campo oposto."
+      }
+    ]
+  },
+  "ex-npxa28h6": {
+    "prompt": "Com a ACL padrão carregada no branch, o que o probe do guest relatou para remote:80 e remote:443?",
+    "hint": "O endereço do guest não é 192.168.30.20.",
+    "choices": [
+      {
+        "text": "80 open e 443 blocked",
+        "why": "Uma ACL padrão não distingue portas."
+      },
+      {
+        "text": "As duas refused, respondidas pelo roteador",
+        "why": "Ninguém respondeu; os pacotes foram descartados."
+      },
+      {
+        "text": "As duas open, porque guest divide o segmento com branchpc",
+        "why": "A ACL testa o endereço, não o segmento."
+      },
+      {
+        "text": "As duas blocked",
+        "why": "Isso. Todo destino e toda porta, porque só a origem é testada."
+      }
+    ]
+  },
+  "ex-a2fajd91": {
+    "prompt": "Por que a versão em nftables tem uma linha que aceita ARP, que a ACL do IOS dispensa?",
+    "hint": "Quão cedo o gancho netdev vê o tráfego?",
+    "choices": [
+      {
+        "text": "O gancho ingress vê todo quadro, e descartar ARP impediria as máquinas de achar o roteador",
+        "why": "Isso. A ACL IP de um roteador não vê ARP."
+      },
+      {
+        "text": "O ARP leva o endereço de origem que a ACL testa",
+        "why": "A linha aceita ARP seja qual for o conteúdo."
+      },
+      {
+        "text": "O nft recusa uma cadeia só com regras IP",
+        "why": "A cadeia carregaria; o segmento quebraria."
+      },
+      {
+        "text": "Ela substitui o deny implícito",
+        "why": "O policy drop é o deny implícito."
+      }
+    ]
+  },
+  "ex-s3w9dv9h": {
+    "prompt": "Antes de qualquer ACL, remote:22 dava refused. Com a ACL estendida, dá blocked. O que essa mudança mostra?",
+    "hint": "Quem respondeu em cada caso?",
+    "choices": [
+      {
+        "text": "remote parou o servidor SSH",
+        "why": "Ele não tinha; por isso recusava."
+      },
+      {
+        "text": "O SYN não chega mais a remote",
+        "why": "Isso. Refused era o reset de remote; blocked é silêncio."
+      },
+      {
+        "text": "O roteador agora responde com um reset em nome de remote",
+        "why": "Um reset ainda apareceria como refused."
+      },
+      {
+        "text": "O firewall de remote passou a descartar a porta 22",
+        "why": "O contador no branch o pegou."
+      }
+    ]
+  },
+  "ex-6jpq0th5": {
+    "prompt": "Quantos pacotes a linha web (tcp dport 80, 443) tinha contado depois do teste?",
+    "hint": "counter packets ..."
+  },
+  "ex-tre3511e": {
+    "prompt": "Quais destes uma ACL estendida testa e uma ACL padrão não? Escolha todas as que se aplicam.",
+    "hint": "Compare com as regras da aula 1.",
+    "choices": [
+      {
+        "text": "O endereço de destino",
+        "why": "Isso."
+      },
+      {
+        "text": "O endereço de origem",
+        "why": "As duas testam; é o único campo da padrão."
+      },
+      {
+        "text": "O protocolo, como tcp ou udp",
+        "why": "Isso."
+      },
+      {
+        "text": "Se o pacote pertence a uma conexão já aberta",
+        "why": "Uma ACL não guarda estado, de nenhum tipo."
+      },
+      {
+        "text": "A porta TCP ou UDP",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-a8dm0j30": {
+    "prompt": "Qual é o terceiro byte da máscara curinga de um /20?",
+    "hint": "255 menos o terceiro byte da máscara de rede."
+  },
+  "ex-71mv35v2": {
+    "prompt": "A abreviação do IOS para o curinga 255.255.255.255 é ___.",
+    "hint": "Casa com todo endereço.",
+    "blanks": [
+      {
+        "accept": [
+          "any"
+        ]
+      }
+    ]
+  },
+  "ex-dvkxhahr": {
+    "prompt": "Qual máscara curinga casa com a rede 10.8.4.0/22?",
+    "hint": "A máscara de rede de um /22 é 255.255.252.0.",
+    "choices": [
+      {
+        "text": "255.255.252.0",
+        "why": "Essa é a máscara de rede, sem inverter."
+      },
+      {
+        "text": "0.0.4.255",
+        "why": "255 - 252 é 3, não 4."
+      },
+      {
+        "text": "0.0.3.255",
+        "why": "Isso. 255 - 252 = 3."
+      },
+      {
+        "text": "0.0.0.255",
+        "why": "Isso é um /24."
+      }
+    ]
+  },
+  "ex-gaw0y4gr": {
+    "prompt": "Quais endereços `192.168.0.1 0.0.254.0` casa?",
+    "hint": "Escreva 254 em binário: qual bit tem de casar?",
+    "choices": [
+      {
+        "text": "Todo endereço de 192.168.0.1 a 192.168.254.1",
+        "why": "O bit mais baixo do terceiro byte tem de ser 0, então valores ímpares ficam de fora."
+      },
+      {
+        "text": "192.168.0.1 e 192.168.254.1, e nenhum outro",
+        "why": "Cada bit 1 de 254 é livre, então muitos valores casam."
+      },
+      {
+        "text": "Toda a 192.168.0.0/16",
+        "why": "O último byte tem de ser 1."
+      },
+      {
+        "text": "O host .1 em todo terceiro byte par",
+        "why": "Isso: 192.168.0.1, 192.168.2.1 e assim por diante."
+      }
+    ]
+  },
+  "ex-vbmzct7b": {
+    "prompt": "Onde fica uma ACL padrão, e por quê?",
+    "hint": "O que ela enxerga?",
+    "choices": [
+      {
+        "text": "Perto da origem, para descartar o tráfego indesejado o mais cedo possível",
+        "why": "Essa é a regra da ACL estendida."
+      },
+      {
+        "text": "Perto do destino, já que ela conhece a origem e mais nada",
+        "why": "Isso. Perto da origem cortaria aquela origem de tudo."
+      },
+      {
+        "text": "No lado de internet do roteador, na saída",
+        "why": "O tipo de ACL decide o lugar, não a internet."
+      },
+      {
+        "text": "Em qualquer lugar, já que testa um campo só",
+        "why": "Esse campo único é justamente por que o lugar importa."
+      }
+    ]
+  },
+  "ex-2g7sx8d2": {
+    "prompt": "Por que uma ACL de entrada costuma ser preferida à de saída?",
+    "hint": "Quando o roteador roteia?",
+    "choices": [
+      {
+        "text": "ACLs de saída não testam endereço de origem",
+        "why": "Os dois sentidos testam os mesmos campos."
+      },
+      {
+        "text": "ACLs de entrada guardam estado de conexão",
+        "why": "Nenhum sentido guarda estado."
+      },
+      {
+        "text": "Descarta antes de rotear, e protege o roteador",
+        "why": "Isso. A de saída não protege o próprio roteador."
+      },
+      {
+        "text": "ACLs de saída rodam em software e as de entrada em hardware",
+        "why": "A seção não as divide assim."
+      }
+    ]
+  },
+  "ex-hw1cykgr": {
+    "prompt": "Você vai mudar a ACL da interface por onde passa sua sessão com um roteador remoto. Ponha os passos em ordem.",
+    "hint": "A volta vem primeiro.",
+    "items": [
+      "agendar `reload in 5`",
+      "aplicar a ACL à interface",
+      "testar que ainda alcança o roteador",
+      "executar `reload cancel`"
+    ],
+    "trap": "Cancelar o reload antes do teste deixa você sem volta se a ACL o tiver cortado."
+  },
+  "ex-7psprh0y": {
+    "prompt": "Quais pacotes a palavra-chave `established` do IOS casa?",
+    "hint": "Ela lê uma flag, não uma tabela.",
+    "choices": [
+      {
+        "text": "Pacotes de conexões que o roteador viu abrir",
+        "why": "Uma ACL não guarda tabela de conexões."
+      },
+      {
+        "text": "O primeiro SYN de uma conexão",
+        "why": "É esse que ela reprova."
+      },
+      {
+        "text": "Qualquer resposta, TCP ou UDP",
+        "why": "Ela existe só para TCP."
+      },
+      {
+        "text": "Pacotes TCP com ACK ou RST ligado",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-a04xaxsm": {
+    "prompt": "Um pacote TCP com ACK ligado, sem conexão nenhuma, chega a uma linha com `established`. O que acontece?",
+    "hint": "A linha confere uma flag que o remetente põe.",
+    "choices": [
+      {
+        "text": "Passa, e o host responde com um reset",
+        "why": "Isso. Nenhuma conexão abre, mas a ACL o deixou passar."
+      },
+      {
+        "text": "A linha o descarta, já que não existe conexão",
+        "why": "A linha não faz ideia se existe."
+      },
+      {
+        "text": "Passa e o host abre uma conexão",
+        "why": "O host o reseta; nada é aberto."
+      },
+      {
+        "text": "O roteador responde com um reset",
+        "why": "A ACL passa ou descarta; quem responde é o host."
+      }
+    ]
+  },
+  "ex-zkgtptrr": {
+    "prompt": "Uma ACL de entrada usa `established` para as respostas web. Como as respostas DNS da filial entram?",
+    "hint": "Respostas DNS viajam por UDP.",
+    "choices": [
+      {
+        "text": "Pela mesma linha, já que a resposta DNS tem ACK",
+        "why": "UDP não tem flag ACK."
+      },
+      {
+        "text": "Por uma linha própria que permite porta de origem 53",
+        "why": "Isso. E essa linha é o furo da aula 1."
+      },
+      {
+        "text": "Não entram; o deny implícito as descarta",
+        "why": "Dá para escrever uma linha para elas."
+      },
+      {
+        "text": "Por um `established` numa linha udp",
+        "why": "A palavra-chave é de TCP."
+      }
+    ]
+  },
+  "ex-z9bjcayj": {
+    "prompt": "Ligue cada necessidade ao filtro que serve.",
+    "hint": "O que cada uma precisa saber?",
+    "pairs": [
+      {
+        "left": "manter guest longe de um servidor da matriz",
+        "right": "uma ACL estendida perto da origem"
+      },
+      {
+        "left": "descartar entre VLANs o que jamais é legítimo, na velocidade da porta",
+        "right": "uma ACL simples no switch de núcleo"
+      },
+      {
+        "left": "deixar entrar respostas a conexões de fato abertas, e mais nada",
+        "right": "um firewall com estado"
+      }
+    ],
+    "right_distractors": [
+      "uma ACL padrão no lado LAN do branch"
+    ]
+  },
+  "ex-m64enfhc": {
+    "prompt": "Com a ACL estendida no branch, as máquinas da filial param de sincronizar hora por NTP (UDP 123), e o contador do deny implícito sobe. Por quê?",
+    "hint": "Leia as linhas que permitem.",
+    "choices": [
+      {
+        "text": "O established bloqueia respostas UDP",
+        "why": "O pedido NTP nem saiu da LAN."
+      },
+      {
+        "text": "O curinga 0.0.0.255 nas linhas permit deixa os servidores NTP de fora",
+        "why": "O destino é any; o curinga está na origem."
+      },
+      {
+        "text": "Nenhuma linha permite udp 123, então o deny implícito o pega",
+        "why": "Isso. O contador é onde aparece."
+      },
+      {
+        "text": "A linha arp pega o NTP antes da linha UDP",
+        "why": "NTP é IP, não ARP."
+      }
+    ]
+  },
+  "ex-10gs5qgn": {
+    "prompt": "Uma ACL padrão diz `access-list 20 permit 172.16.8.0 0.0.7.255`. Que origem ela permite?",
+    "hint": "O terceiro byte pode ser 8 mais qualquer coisa até 7.",
+    "choices": [
+      {
+        "text": "172.16.16.1",
+        "why": "16 passa de 8 + 7."
+      },
+      {
+        "text": "172.16.7.255",
+        "why": "7 fica abaixo do 8 da rede."
+      },
+      {
+        "text": "172.16.24.9",
+        "why": "24 fica fora de 8 a 15."
+      },
+      {
+        "text": "172.16.15.200",
+        "why": "Isso. De 8 a 15 no terceiro byte."
+      }
+    ]
+  }
+}

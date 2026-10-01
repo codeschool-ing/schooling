@@ -1,0 +1,2083 @@
+{
+  "ex-0ce2q957": {
+    "prompt": "Dois escritórios usam 192.168.10.0/24 e 192.168.20.0/24 e só estão ligados pela internet. Por que um ping de um para o outro falha antes de existir um túnel?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Endereços privados são bloqueados por todo firewall",
+        "why": "Nenhum firewall entrou na história: o provedor só não tinha rota."
+      },
+      {
+        "text": "O provedor não tem rota para uma rede privada",
+        "why": "Isso."
+      },
+      {
+        "text": "ICMP não atravessa NAT",
+        "why": "Pings para endereços públicos atravessam todo dia."
+      },
+      {
+        "text": "As duas máscaras não combinam",
+        "why": "As duas são /24, e máscaras são locais de qualquer forma."
+      }
+    ]
+  },
+  "ex-zk2mqrhs": {
+    "prompt": "Num enlace com MTU de 1500 bytes, qual é o MTU de um túnel IP-in-IP, em bytes?",
+    "hint": "Aula 1.",
+    "unit": "bytes"
+  },
+  "ex-106hgs1z": {
+    "prompt": "O GRE vai direto sobre IP, como o protocolo IP número ___.",
+    "hint": "Aula 1.",
+    "blanks": [
+      {
+        "accept": [
+          "47"
+        ]
+      }
+    ]
+  },
+  "ex-2rh4jawy": {
+    "prompt": "Dois túneis GRE rodam entre o mesmo par de roteadores. O que separa os pacotes de um e de outro?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "A porta de origem",
+        "why": "O GRE não tem portas; não é UDP nem TCP."
+      },
+      {
+        "text": "O TTL do pacote interno",
+        "why": "O TTL não diz nada sobre qual túnel."
+      },
+      {
+        "text": "A chave no cabeçalho GRE",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma etiqueta criptografada posta por cada roteador",
+        "why": "O GRE não criptografa nada."
+      }
+    ]
+  },
+  "ex-t94xqm19": {
+    "prompt": "Alguém captura um túnel GRE entre dois escritórios no roteador do provedor. O que essa pessoa consegue ler?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Só os endereços externos e a chave",
+        "why": "O pacote interno também vai em texto claro."
+      },
+      {
+        "text": "A conversa inteira de dentro",
+        "why": "Isso: um túnel simples não criptografa nada."
+      },
+      {
+        "text": "Nada sem a chave do GRE",
+        "why": "A chave vai impressa no cabeçalho e não protege nada."
+      },
+      {
+        "text": "Os endereços internos, mas não a carga",
+        "why": "O tcpdump -A imprimiu a requisição e a página."
+      }
+    ]
+  },
+  "ex-gnpzp5mh": {
+    "prompt": "No laboratório, o primeiro ping do laptop para o caixa se perdeu e os dois seguintes responderam. Por quê?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Ele disparou a negociação IKE",
+        "why": "Isso: start_action = trap inicia o IKE no primeiro pacote que corresponde."
+      },
+      {
+        "text": "O firewall do caixa descarta o primeiro ping de uma rajada",
+        "why": "Nada no caixa estava filtrando."
+      },
+      {
+        "text": "O ESP precisa de um pacote para aprender o MTU",
+        "why": "O MTU não teve nada a ver."
+      },
+      {
+        "text": "O ARP ainda não tinha resolvido o caixa",
+        "why": "O ARP resolve em bem menos de um segundo numa LAN, e não perderia o pacote."
+      }
+    ]
+  },
+  "ex-v168anh0": {
+    "prompt": "Ponha em ordem as quatro mensagens IKEv2 da captura do laboratório.",
+    "hint": "Aula 2.",
+    "items": [
+      "IKE_SA_INIT, pedido",
+      "IKE_SA_INIT, resposta",
+      "IKE_AUTH, pedido",
+      "IKE_AUTH, resposta"
+    ],
+    "trap": "As chaves são combinadas antes de as identidades serem provadas, para que a autenticação viaje criptografada."
+  },
+  "ex-162nvb29": {
+    "prompt": "`swanctl --initiate` terminou com `received AUTHENTICATION_FAILED notify error`. Qual é a primeira coisa a comparar dos dois lados?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "O algoritmo de criptografia do ESP",
+        "why": "Uma divergência de propostas falha antes, com NO_PROPOSAL_CHOSEN."
+      },
+      {
+        "text": "Os seletores de tráfego",
+        "why": "Esses dão TS_UNACCEPTABLE, depois da autenticação."
+      },
+      {
+        "text": "A chave e as identidades",
+        "why": "Isso."
+      },
+      {
+        "text": "O MTU do enlace WAN",
+        "why": "As mensagens IKE chegaram; foram rejeitadas."
+      }
+    ]
+  },
+  "ex-q7jv04wt": {
+    "prompt": "Um usuário em casa, atrás de um roteador com NAT, conecta ao escritório com IPsec. Por que a captura mostra UDP 4500 em vez de ESP?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "O ESP é lento demais para enlaces domésticos",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O roteador de casa criptografa de novo",
+        "why": "O roteador de casa só traduz endereços e portas."
+      },
+      {
+        "text": "O IKEv2 usa UDP 4500 em toda conexão",
+        "why": "Entre os dois escritórios, sem NAT, o ESP foi puro e o IKE ficou na 500."
+      },
+      {
+        "text": "ESP não tem portas para o NAT",
+        "why": "Isso: detectado no IKE_SA_INIT, e aí tudo passa para UDP 4500."
+      }
+    ]
+  },
+  "ex-nwj0mesy": {
+    "prompt": "Em `ESP(spi=0x2f80bb89,seq=0x3)`, o número que diz a qual associação de segurança o pacote pertence é o ___.",
+    "hint": "Aula 2.",
+    "blanks": [
+      {
+        "accept": [
+          "spi",
+          "security parameter index",
+          "índice de parâmetros de segurança"
+        ]
+      }
+    ]
+  },
+  "ex-nae8vr9j": {
+    "prompt": "O que faz do OpenVPN uma VPN TLS?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Ele só roda sobre TCP na porta 443",
+        "why": "O laboratório o rodou primeiro sobre UDP 1194."
+      },
+      {
+        "text": "O canal de controle é TLS",
+        "why": "Isso: o tshark decodificou Client Hello e Server Hello dentro dele."
+      },
+      {
+        "text": "Ele é usado de dentro de um navegador",
+        "why": "Esse é o portal sem cliente, outro produto."
+      },
+      {
+        "text": "Ele criptografa HTTP e mais nada",
+        "why": "Ele leva pacotes IP inteiros pelo tun0."
+      }
+    ]
+  },
+  "ex-5ew79gc5": {
+    "prompt": "A rede de um hotel só deixa sair TCP 443. Por que um servidor OpenVPN em TCP 443 passa onde UDP 1194 não passou?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Usa o que o firewall permite",
+        "why": "Isso."
+      },
+      {
+        "text": "TCP é criptografado e UDP não",
+        "why": "Nenhum dos dois é criptografado por si; o OpenVPN criptografa os dois."
+      },
+      {
+        "text": "A porta 443 passa por fora do NAT",
+        "why": "Ela passa pelo NAT como qualquer conexão."
+      },
+      {
+        "text": "O hotel descriptografa e criptografa de novo",
+        "why": "Ninguém no caminho tem as chaves."
+      }
+    ]
+  },
+  "ex-8vvqv9q7": {
+    "prompt": "Por que levar TCP dentro de um túnel TCP é mais lento sob perda do que dentro de um túnel UDP?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Cabeçalhos TCP são maiores que os de UDP",
+        "why": "Doze bytes não explicam um colapso."
+      },
+      {
+        "text": "Túneis TCP não usam criptografia",
+        "why": "Eles criptografam do mesmo jeito."
+      },
+      {
+        "text": "As duas camadas retransmitem a mesma perda",
+        "why": "Isso: o TCP de dentro estoura o tempo enquanto o de fora ainda se recupera."
+      },
+      {
+        "text": "Túneis UDP pulam o handshake TLS",
+        "why": "O túnel UDP do laboratório fez o handshake completo."
+      }
+    ]
+  },
+  "ex-41vvdeqy": {
+    "prompt": "Um túnel VXLAN sobre um enlace de 1500 bytes ficou com MTU 1450. Quantos bytes de custo o VXLAN acrescenta?",
+    "hint": "Aula 3.",
+    "unit": "bytes"
+  },
+  "ex-mbfjf1ys": {
+    "prompt": "Pelo túnel VXLAN, um pedido ARP de hq chegou a branch. O que isso mostra sobre uma VPN de camada 2?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Que o ARP atravessa qualquer roteador",
+        "why": "Ele passou porque o túnel leva quadros, não porque roteadores encaminham ARP."
+      },
+      {
+        "text": "Os dois locais dividem um domínio de broadcast",
+        "why": "Isso, e todo broadcast agora atravessa a WAN."
+      },
+      {
+        "text": "O túnel criptografa os broadcasts",
+        "why": "O VXLAN não criptografa nada."
+      },
+      {
+        "text": "A filial agora tem sua própria sub-rede",
+        "why": "O contrário: as duas pontas estão em 172.16.0.0/24."
+      }
+    ]
+  },
+  "ex-bg1segrs": {
+    "prompt": "No WireGuard, o que o AllowedIPs de um peer decide?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Só quais endereços podem entrar",
+        "why": "Ele também é a rota, no outro sentido."
+      },
+      {
+        "text": "O endereço que a interface recebe",
+        "why": "Isso é o Address, em [Interface]."
+      },
+      {
+        "text": "Rota e filtro, juntos",
+        "why": "Isso: roteamento por chave."
+      },
+      {
+        "text": "De quanto em quanto tempo as chaves mudam",
+        "why": "A troca de chaves é automática e não se configura ali."
+      }
+    ]
+  },
+  "ex-bq444hsy": {
+    "prompt": "`wg show` lista um peer sem a linha `latest handshake`, e uma captura mostra uma iniciação a cada cinco segundos sem resposta. O que mais provavelmente está errado?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Uma chave pública não corresponde ao peer",
+        "why": "Isso: o outro lado ignora em silêncio o que não consegue autenticar."
+      },
+      {
+        "text": "Falta o endereço do túnel no AllowedIPs",
+        "why": "Isso ainda completaria o handshake."
+      },
+      {
+        "text": "O MTU está grande demais",
+        "why": "Um handshake é pequeno e cabe em qualquer MTU."
+      },
+      {
+        "text": "O PersistentKeepalive está desligado",
+        "why": "Keepalives não fazem um handshake dar certo."
+      }
+    ]
+  },
+  "ex-z1bx5sdy": {
+    "prompt": "Um peer WireGuard atrás de NAT manda um pacote a cada 25 segundos para o NAT manter o mapeamento; a opção é Persistent___.",
+    "hint": "Aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "Keepalive"
+        ]
+      }
+    ]
+  },
+  "ex-2psgzxsq": {
+    "prompt": "Com `tls-crypt`, o tshark deixou de mostrar um Client Hello no handshake do OpenVPN. O que essa opção mudou?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Trocou o TLS por uma chave estática",
+        "why": "O TLS continua rodando; ele é embrulhado."
+      },
+      {
+        "text": "Criptografa o canal de controle",
+        "why": "Isso: sem a chave, o handshake fica opaco e não recebe resposta."
+      },
+      {
+        "text": "Passou o túnel para TCP",
+        "why": "A captura ainda era UDP 1194."
+      },
+      {
+        "text": "Desligou a verificação de certificados",
+        "why": "Os certificados continuam verificados lá dentro."
+      }
+    ]
+  },
+  "ex-15qr1aqg": {
+    "prompt": "Ligue cada propriedade ao WireGuard ou ao OpenVPN.",
+    "hint": "Aula 4.",
+    "pairs": [
+      {
+        "left": "Negocia a cifra com TLS",
+        "right": "OpenVPN"
+      },
+      {
+        "left": "Um conjunto fixo de algoritmos, sem negociação",
+        "right": "WireGuard"
+      },
+      {
+        "left": "Roda sobre TCP 443",
+        "right": "OpenVPN, que tem modo TCP"
+      },
+      {
+        "left": "Um peer é a sua chave pública",
+        "right": "WireGuard, que não tem certificados"
+      }
+    ],
+    "right_distractors": [
+      "Os dois, já que ambos usam IPsec"
+    ]
+  },
+  "ex-rzvj6wky": {
+    "prompt": "Numa VPN site a site, o que um usuário da filial configura para chegar à matriz?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Nada: os roteadores levam o tráfego",
+        "why": "Isso: o traceroute do caixa mostrou o túnel como um salto."
+      },
+      {
+        "text": "Um cliente VPN com a própria chave",
+        "why": "Isso é acesso remoto."
+      },
+      {
+        "text": "Uma rota para 10.20.0.1",
+        "why": "A tabela do caixa só tinha a rota padrão."
+      },
+      {
+        "text": "Um proxy no navegador",
+        "why": "Nada no navegador sabe do túnel."
+      }
+    ]
+  },
+  "ex-w4e0w85t": {
+    "prompt": "Com túnel completo, o log de web1 registrou o trabalhador remoto como 203.0.113.2. Por quê?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "O roteador de casa mudou de endereço público",
+        "why": "Ele manteve 198.51.100.77."
+      },
+      {
+        "text": "web1 registra o endereço do servidor VPN para todo mundo",
+        "why": "Com túnel dividido o log mostrou 198.51.100.77."
+      },
+      {
+        "text": "hq era a saída, com o NAT dele",
+        "why": "Isso: túnel completo quer dizer que o escritório é a saída."
+      },
+      {
+        "text": "O WireGuard esconde o endereço do cliente",
+        "why": "Quem decide é a rota, não o WireGuard."
+      }
+    ]
+  },
+  "ex-japfb61w": {
+    "prompt": "`wg-quick up` falhou com `RTNETLINK answers: File exists` quando o AllowedIPs incluía 192.168.1.0/24. Qual era o conflito?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Dois peers tinham a mesma chave pública",
+        "why": "As chaves estavam certas."
+      },
+      {
+        "text": "A rede de casa já usava essa faixa",
+        "why": "Isso: a mesma rota já existia na eth0."
+      },
+      {
+        "text": "O MTU do túnel era pequeno demais para ela",
+        "why": "MTU não tem nada a ver com rota em conflito."
+      },
+      {
+        "text": "O escritório já tinha cedido essa faixa",
+        "why": "O conflito foi no laptop, com a própria LAN."
+      }
+    ]
+  },
+  "ex-x4h31drx": {
+    "prompt": "Quais são motivos para preferir um túnel dividido? Marque todos que se aplicam.",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "O enlace do escritório não leva as videochamadas de todo mundo",
+        "why": "Isso."
+      },
+      {
+        "text": "O tráfego de internet faz um caminho mais curto",
+        "why": "Isso: do laptop direto para o provedor."
+      },
+      {
+        "text": "A filtragem de segurança do escritório vê todo o tráfego",
+        "why": "Esse é o argumento do túnel completo."
+      },
+      {
+        "text": "Redes de casa sobrepostas deixam de importar",
+        "why": "O túnel dividido é justamente onde elas colidem."
+      }
+    ]
+  },
+  "ex-m9jn253a": {
+    "prompt": "Uma empresa quer que cada funcionário chegue a uma aplicação interna, não à rede inteira do escritório. Que abordagem serve?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Um túnel site a site para cada casa",
+        "why": "Isso liga redes inteiras."
+      },
+      {
+        "text": "Uma VPN de acesso remoto com túnel completo",
+        "why": "Isso põe o laptop na rede inteira."
+      },
+      {
+        "text": "Uma VPN de camada 2",
+        "why": "Isso compartilha um domínio de broadcast, o acesso mais amplo de todos."
+      },
+      {
+        "text": "Acesso por aplicação",
+        "why": "Isso: o formato zero trust."
+      }
+    ]
+  },
+  "ex-w4h93rvx": {
+    "prompt": "Ligue cada padrão IEEE ao nome da geração Wi-Fi.",
+    "hint": "Aula 6.",
+    "pairs": [
+      {
+        "left": "802.11n",
+        "right": "Wi-Fi 4"
+      },
+      {
+        "left": "802.11ac",
+        "right": "Wi-Fi 5"
+      },
+      {
+        "left": "802.11ax",
+        "right": "Wi-Fi 6 e 6E"
+      },
+      {
+        "left": "802.11be",
+        "right": "Wi-Fi 7"
+      }
+    ],
+    "right_distractors": [
+      "Wi-Fi 3"
+    ]
+  },
+  "ex-hc6sjgad": {
+    "prompt": "Por que 2,4 GHz vai mais longe dentro de um prédio que 5 GHz com a mesma potência?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Ele leva mais dados por segundo",
+        "why": "Leva menos; alcance e taxa são coisas diferentes."
+      },
+      {
+        "text": "Frequências menores perdem menos",
+        "why": "Isso."
+      },
+      {
+        "text": "Por lei, os pontos de acesso transmitem mais alto em 2,4 GHz",
+        "why": "A comparação é com a mesma potência."
+      },
+      {
+        "text": "Os canais de 2,4 GHz são mais largos",
+        "why": "São mais estreitos, 20 MHz na prática."
+      }
+    ]
+  },
+  "ex-4pbwbczp": {
+    "prompt": "Um ponto de acesso anuncia 1200 Mbit/s e um laptop ao lado mede mais ou menos metade disso. Qual é o motivo principal?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "O ponto de acesso está com defeito",
+        "why": "É assim que todo enlace de rádio mede."
+      },
+      {
+        "text": "A criptografia corta a taxa pela metade",
+        "why": "A criptografia custa bem menos que isso."
+      },
+      {
+        "text": "Ar compartilhado e half duplex",
+        "why": "Isso: o número anunciado é uma taxa bruta de sinalização."
+      },
+      {
+        "text": "O 5 GHz é limitado a 600 Mbit/s",
+        "why": "Nenhuma faixa tem esse limite."
+      }
+    ]
+  },
+  "ex-4jye6rwm": {
+    "prompt": "Um escritório novo só tem laptops Wi-Fi 6E e Wi-Fi 7. O que a faixa de 6 GHz dá a eles que a de 5 GHz não dá?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Muitos canais largos livres de aparelhos antigos",
+        "why": "Isso: só 6E em diante consegue usá-la."
+      },
+      {
+        "text": "Alcance maior através de paredes",
+        "why": "Frequência maior alcança menos."
+      },
+      {
+        "text": "Compatibilidade com clientes 802.11g",
+        "why": "O 802.11g nunca usou 6 GHz."
+      },
+      {
+        "text": "Dispensa de criptografia",
+        "why": "O 6 GHz exige WPA3 ou enhanced open."
+      }
+    ]
+  },
+  "ex-ns51qx3z": {
+    "prompt": "Quantos canais de 20 MHz um canal de 80 MHz ocupa?",
+    "hint": "Aula 6.",
+    "unit": "canais"
+  },
+  "ex-p1ha7yrn": {
+    "prompt": "Qual conjunto de canais de 2,4 GHz não se sobrepõe com canais de 20 MHz?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "1, 2 e 3",
+        "why": "Canais vizinhos se sobrepõem quase por inteiro."
+      },
+      {
+        "text": "1, 6 e 11",
+        "why": "Isso."
+      },
+      {
+        "text": "1, 7 e 13 em qualquer lugar",
+        "why": "O 13 não é permitido em todo país, e o plano é 1/6/11."
+      },
+      {
+        "text": "Quaisquer três com números pares",
+        "why": "Paridade não tem nada a ver com espaçamento."
+      }
+    ]
+  },
+  "ex-477n7yk1": {
+    "prompt": "Um transmissor está em 20 dBm. Qual é a potência dele em miliwatts?",
+    "hint": "Aula 7.",
+    "unit": "mW"
+  },
+  "ex-1zj4evq2": {
+    "prompt": "Um ponto de acesso passa de 17 dBm para 14 dBm. Por qual fator a potência dele é dividida?",
+    "hint": "Aula 7.",
+    "unit": ""
+  },
+  "ex-3jbh2036": {
+    "prompt": "Dois pontos de acesso na mesma sala dividem o canal 6. O que acontece com os clientes deles?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Os sinais se corrompem o tempo todo",
+        "why": "Isso é interferência de canal adjacente; no mesmo canal eles se ouvem e esperam."
+      },
+      {
+        "text": "Eles se revezam no ar",
+        "why": "Isso: contenção de mesmo canal."
+      },
+      {
+        "text": "Cada um fica com metade do canal",
+        "why": "Um canal não é dividido por frequência entre células."
+      },
+      {
+        "text": "Nada, se os dois usarem WPA3",
+        "why": "Segurança não tem nada a ver com tempo de ar."
+      }
+    ]
+  },
+  "ex-yncda5jd": {
+    "prompt": "Por que baixar a potência de um ponto de acesso pode melhorar uma rede de escritório movimentada?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Potência menor aumenta a taxa de dados",
+        "why": "A taxa de cada cliente não sobe com menos potência."
+      },
+      {
+        "text": "Os celulares passam a transmitir mais alto",
+        "why": "A potência deles não depende da do AP."
+      },
+      {
+        "text": "Células menores ouvem menos vizinhos",
+        "why": "Isso, e o enlace fica menos desequilibrado."
+      },
+      {
+        "text": "Poupa o rádio do ponto de acesso",
+        "why": "Desgaste não é o motivo."
+      }
+    ]
+  },
+  "ex-qnzxnrt0": {
+    "prompt": "Esconder o SSID protege uma rede sem fio?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Não: os clientes o revelam ao se conectar",
+        "why": "Isso."
+      },
+      {
+        "text": "Sim, criptografa o nome da rede",
+        "why": "Nada é criptografado ao escondê-lo."
+      },
+      {
+        "text": "Sim, contra todo mundo sem a senha",
+        "why": "A senha protege; o nome escondido não."
+      },
+      {
+        "text": "Só em 5 GHz",
+        "why": "A faixa não muda isso."
+      }
+    ]
+  },
+  "ex-4aeh5kj4": {
+    "prompt": "Por que o WPA2-Personal precisa de uma frase-senha longa e aleatória?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O ponto de acesso limita mal as tentativas de login",
+        "why": "Os palpites nem passam pelo ponto de acesso."
+      },
+      {
+        "text": "Um handshake gravado permite testar palpites fora da rede",
+        "why": "Isso: comprimento e aleatoriedade são a defesa."
+      },
+      {
+        "text": "Frases curtas são enviadas em texto claro",
+        "why": "Nenhuma frase-senha vai em texto claro."
+      },
+      {
+        "text": "O padrão rejeita qualquer coisa com menos de 20 caracteres",
+        "why": "O mínimo é 8."
+      }
+    ]
+  },
+  "ex-336v2pvg": {
+    "prompt": "O que o SAE, do WPA3-Personal, muda numa senha compartilhada?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Torna a senha desnecessária",
+        "why": "Ainda existe uma senha."
+      },
+      {
+        "text": "Dá a cada usuário a sua própria senha",
+        "why": "Isso é 802.1X, o modo corporativo."
+      },
+      {
+        "text": "Nada para testar palpites fora da rede",
+        "why": "Isso, e cada sessão recebe chaves novas."
+      },
+      {
+        "text": "Esconde o SSID",
+        "why": "O SAE não diz nada sobre o SSID."
+      }
+    ]
+  },
+  "ex-w5asfxhs": {
+    "prompt": "Um funcionário sai de uma empresa cujo Wi-Fi usa WPA2-Enterprise com 802.1X. O que precisa mudar?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Desativar a conta dessa pessoa no diretório",
+        "why": "Isso: as credenciais são por pessoa."
+      },
+      {
+        "text": "Trocar a frase-senha em todo ponto de acesso",
+        "why": "Isso é o que uma chave compartilhada obriga, e por que o Enterprise existe."
+      },
+      {
+        "text": "Renomear o SSID",
+        "why": "O nome não concede nada."
+      },
+      {
+        "text": "Nada, o servidor RADIUS esquece as pessoas depois de um mês",
+        "why": "Nada expira sozinho."
+      }
+    ]
+  },
+  "ex-fd3vx6ve": {
+    "prompt": "Quais fazem parte do projeto de uma rede de visitantes? Marque todos que se aplicam.",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Uma VLAN própria, sem rota para as redes internas",
+        "why": "Isso."
+      },
+      {
+        "text": "Isolamento entre os clientes visitantes",
+        "why": "Isso."
+      },
+      {
+        "text": "O mesmo SSID dos funcionários, com outra senha",
+        "why": "Um SSID corresponde a uma rede e uma configuração de segurança."
+      },
+      {
+        "text": "Um limite de banda por cliente",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-hbvehwps": {
+    "prompt": "No Wi-Fi, quem decide quando um cliente passa para outro ponto de acesso?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "O ponto de acesso que ele está deixando",
+        "why": "Ele pode sugerir, não decidir."
+      },
+      {
+        "text": "A controladora",
+        "why": "Ela pode direcionar; o cliente ainda escolhe."
+      },
+      {
+        "text": "O cliente",
+        "why": "Isso, e é por isso que existem clientes grudentos."
+      },
+      {
+        "text": "O servidor RADIUS",
+        "why": "Ele autentica; não move ninguém."
+      }
+    ]
+  },
+  "ex-28kkkg0h": {
+    "prompt": "Ligue cada emenda ao que ela faz pelo roaming.",
+    "hint": "Aula 9.",
+    "pairs": [
+      {
+        "left": "802.11k",
+        "right": "Diz ao cliente quais vizinhos existem"
+      },
+      {
+        "left": "802.11v",
+        "right": "Deixa a rede sugerir um ponto de acesso melhor"
+      },
+      {
+        "left": "802.11r",
+        "right": "Encurta a troca de chaves na mudança"
+      }
+    ],
+    "right_distractors": [
+      "Criptografa os quadros de gerenciamento"
+    ]
+  },
+  "ex-ca7y45c5": {
+    "prompt": "Um celular continua falando com um ponto de acesso distante numa taxa baixa enquanto um mais perto está livre. Como isso se chama?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Um cliente grudento",
+        "why": "Isso."
+      },
+      {
+        "text": "Band steering",
+        "why": "Isso move clientes entre faixas do mesmo ponto de acesso."
+      },
+      {
+        "text": "Interferência de mesmo canal",
+        "why": "Isso são duas células no mesmo canal."
+      },
+      {
+        "text": "Um ponto de acesso intruso",
+        "why": "Os dois pontos de acesso são da empresa."
+      }
+    ]
+  },
+  "ex-x7rp3zv9": {
+    "prompt": "Um switch PoE tem orçamento de 370 W e reserva 30 W para cada aparelho 802.3at, por classe. Quantos pontos de acesso 802.3at ele alimenta ao mesmo tempo?",
+    "hint": "Aula 9.",
+    "unit": "pontos de acesso"
+  },
+  "ex-harymfwt": {
+    "prompt": "Num projeto com controladora, a controladora cai e os pontos de acesso mantinham túneis até ela. O que para de funcionar primeiro?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Os rádios desligam",
+        "why": "Os rádios estão nos pontos de acesso."
+      },
+      {
+        "text": "O tráfego tunelado",
+        "why": "Isso: por isso controladoras são instaladas em pares."
+      },
+      {
+        "text": "Só o acesso de visitantes",
+        "why": "Tudo que passava por ela para."
+      },
+      {
+        "text": "Nada, os pontos de acesso guardam tudo",
+        "why": "Alguns projetos têm alternativa local; o tráfego tunelado não."
+      }
+    ]
+  },
+  "ex-77rrf7x7": {
+    "prompt": "Ligue cada tipo de levantamento ao jeito como é feito.",
+    "hint": "Aula 10.",
+    "pairs": [
+      {
+        "left": "Preditivo",
+        "right": "Um software modela a planta e as paredes"
+      },
+      {
+        "left": "Passivo",
+        "right": "Ouvindo os beacons enquanto percorre o local"
+      },
+      {
+        "left": "Ativo",
+        "right": "Conectado, medindo vazão e perda"
+      }
+    ],
+    "right_distractors": [
+      "Perguntando aos usuários como sentem o sinal"
+    ]
+  },
+  "ex-6vtg7pcz": {
+    "prompt": "Usando FSPL(dB) = 20·log10(d em m) + 20·log10(f em MHz) − 27,55, qual é a perda no espaço livre a 10 m em 2400 MHz, arredondada ao dB?",
+    "hint": "Aula 10.",
+    "unit": "dB"
+  },
+  "ex-2pk6k09c": {
+    "prompt": "Um projeto de voz sobre Wi-Fi pede pelo menos −67 dBm em todo lugar. Um ponto mede −72 dBm. É suficiente?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Não: −72 é 5 dB mais fraco que −67",
+        "why": "Isso."
+      },
+      {
+        "text": "Sim: 72 é um número maior que 67",
+        "why": "Em dBm negativos, maior quer dizer mais fraco."
+      },
+      {
+        "text": "Sim, se o piso de ruído for −95 dBm",
+        "why": "O limite do próprio projeto não é atingido."
+      },
+      {
+        "text": "Depende do SSID",
+        "why": "O nome não muda nada."
+      }
+    ]
+  },
+  "ex-mg0c4kjm": {
+    "prompt": "O sinal é −65 dBm e o piso de ruído −92 dBm. Qual é a relação sinal-ruído, em dB?",
+    "hint": "Aula 10.",
+    "unit": "dB"
+  },
+  "ex-4zkbj22f": {
+    "prompt": "Por que o levantamento é repetido depois que os pontos de acesso são instalados?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "O primeiro levantamento é só uma estimativa de orçamento",
+        "why": "Ele é um projeto; o segundo o confere."
+      },
+      {
+        "text": "Para verificar se o prédio real corresponde ao projeto",
+        "why": "Isso: móveis, pessoas e materiais diferem de qualquer modelo."
+      },
+      {
+        "text": "Pontos de acesso mudam de canal todo dia",
+        "why": "Não é por isso que se repete."
+      },
+      {
+        "text": "A lei exige dois levantamentos",
+        "why": "Nenhuma lei diz isso."
+      }
+    ]
+  },
+  "ex-dzetymze": {
+    "prompt": "Numa rede com switch, o laptop capturou o tráfego entre files e o roteador. O que ele viu?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "A conversa inteira",
+        "why": "Um switch só manda unicast para a porta do destino."
+      },
+      {
+        "text": "Só um broadcast, um pedido ARP",
+        "why": "Isso."
+      },
+      {
+        "text": "A conversa, criptografada",
+        "why": "Era HTTP puro, e nunca chegou ao laptop."
+      },
+      {
+        "text": "Um erro do switch",
+        "why": "Switches não avisam isso."
+      }
+    ]
+  },
+  "ex-120by43s": {
+    "prompt": "Ligue cada filtro à linguagem em que está escrito.",
+    "hint": "Aula 11.",
+    "pairs": [
+      {
+        "left": "tcp port 80",
+        "right": "Um filtro de captura (BPF)"
+      },
+      {
+        "left": "http.request",
+        "right": "Um filtro de exibição"
+      },
+      {
+        "left": "host 192.0.2.21",
+        "right": "Um filtro de captura, por endereço"
+      },
+      {
+        "left": "ip.addr == 192.0.2.21",
+        "right": "Um filtro de exibição, por campo"
+      }
+    ],
+    "right_distractors": [
+      "Uma regra de firewall"
+    ]
+  },
+  "ex-zkhmbq0k": {
+    "prompt": "`tshark -Y \"port 80\"` recusou com `\"80\" was unexpected in this context`. O que deu errado?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "A porta 80 não estava no arquivo",
+        "why": "Um resultado vazio não seria erro de sintaxe."
+      },
+      {
+        "text": "O tshark precisa de root para ler um arquivo",
+        "why": "Ler um arquivo não exige privilégio."
+      },
+      {
+        "text": "Filtro de captura usado como de exibição",
+        "why": "Isso: tcp.port == 80 é o filtro de exibição."
+      },
+      {
+        "text": "Aspas não são permitidas em volta de filtros",
+        "why": "As aspas estavam certas."
+      }
+    ]
+  },
+  "ex-65g6k46f": {
+    "prompt": "Um switch não tem porta espelho e o servidor não pode rodar captura. Onde mais dá para ver o tráfego sem mexer no servidor?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Um tap de rede em linha no cabo dele",
+        "why": "Isso: ele copia os dois sentidos em hardware."
+      },
+      {
+        "text": "Qualquer laptop ligado no mesmo switch",
+        "why": "O switch não mandará o unicast do servidor para ele."
+      },
+      {
+        "text": "Os logs do servidor DNS",
+        "why": "Eles mostram nomes pedidos, não o tráfego."
+      },
+      {
+        "text": "A tabela de rotas do servidor",
+        "why": "Uma tabela não é tráfego."
+      }
+    ]
+  },
+  "ex-xnjt3qxx": {
+    "prompt": "Em vez de rodar como root, ana capturou com o tshark porque pertencia ao grupo ___.",
+    "hint": "Aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "wireshark"
+        ]
+      }
+    ]
+  },
+  "ex-gmgdfhb1": {
+    "prompt": "Ponha em ordem as flags TCP que o tcpdump imprimiu no começo de uma conexão.",
+    "hint": "Aula 12.",
+    "items": [
+      "[S]",
+      "[S.]",
+      "[.]",
+      "[P.]"
+    ],
+    "trap": "SYN, SYN-ACK, ACK, e aí os primeiros dados com PUSH."
+  },
+  "ex-d6msyq79": {
+    "prompt": "Por que a captura foi gravada com `-Z ana`?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Para capturar só o tráfego de ana",
+        "why": "-Z não diz nada sobre qual tráfego."
+      },
+      {
+        "text": "Para o arquivo ser de ana",
+        "why": "Isso."
+      },
+      {
+        "text": "Para comprimir o arquivo",
+        "why": "Compressão é outra opção."
+      },
+      {
+        "text": "Para limitar o arquivo a um megabyte",
+        "why": "Isso é -C."
+      }
+    ]
+  },
+  "ex-n6mp2pa0": {
+    "prompt": "Uma captura feita com `-s 96` mostra `GET / HTTP/1.1 [|http]`. O que quer dizer `[|http]`?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "A requisição estava malformada",
+        "why": "Era uma requisição normal."
+      },
+      {
+        "text": "O servidor a rejeitou",
+        "why": "A captura não diz nada sobre a resposta aqui."
+      },
+      {
+        "text": "O pacote foi cortado",
+        "why": "Isso: só 96 bytes de cada pacote foram guardados."
+      },
+      {
+        "text": "O HTTP estava rodando dentro de TLS",
+        "why": "Era HTTP puro."
+      }
+    ]
+  },
+  "ex-394f66nx": {
+    "prompt": "`tcpdump -C 1 -W 3` roda arquivos de cerca de 1 MB. Depois de um download de 20 MB, quantos arquivos de captura sobram no disco?",
+    "hint": "Aula 12.",
+    "unit": "arquivos"
+  },
+  "ex-hp66d56y": {
+    "prompt": "Um colega quer deixar uma captura completa rodando no servidor de pagamentos por uma semana, só por garantia. Qual é a objeção mais forte?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "O tcpdump para sozinho depois de um dia",
+        "why": "Ele roda até ser parado."
+      },
+      {
+        "text": "Capturas deixam o servidor pela metade da velocidade",
+        "why": "O custo é bem menor que isso."
+      },
+      {
+        "text": "Arquivos pcap não passam de 1 GB",
+        "why": "Não existe esse limite."
+      },
+      {
+        "text": "Ela guarda todo dado sensível que passou pelo fio",
+        "why": "Isso: capture o mínimo, pelo menor tempo, e apague."
+      }
+    ]
+  },
+  "ex-afe9nxc1": {
+    "prompt": "Uma conexão à porta 81 falhou em 0 ms e a captura mostra `[RST, ACK]` do servidor. O que isso quer dizer?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "O host está no ar e nada escuta nessa porta",
+        "why": "Isso."
+      },
+      {
+        "text": "Um firewall descartou o SYN em silêncio",
+        "why": "Um descarte silencioso dá retransmissões, não reset."
+      },
+      {
+        "text": "O servidor está fora do ar",
+        "why": "Um host fora do ar não manda nada."
+      },
+      {
+        "text": "O certificado TLS está errado",
+        "why": "Não havia TLS na porta 81."
+      }
+    ]
+  },
+  "ex-th7skq9q": {
+    "prompt": "Uma captura mostra o mesmo SYN em 0, 1,02 e 2,05 segundos sem resposta. Qual é a causa mais provável?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "A porta está fechada",
+        "why": "Uma porta fechada responde com RST."
+      },
+      {
+        "text": "Um firewall descarta o SYN sem responder",
+        "why": "Isso."
+      },
+      {
+        "text": "O relógio do cliente está errado",
+        "why": "Relógios não impedem um handshake."
+      },
+      {
+        "text": "O DNS devolveu o endereço errado",
+        "why": "A captura já era para o endereço certo."
+      }
+    ]
+  },
+  "ex-9cc37bt8": {
+    "prompt": "Na captura de `nosuch.example.com`, qual foi o código de resposta DNS (rcode) de NXDOMAIN?",
+    "hint": "Aula 13.",
+    "unit": ""
+  },
+  "ex-t4x3vdgd": {
+    "prompt": "Ligue cada falha ao que o cliente mandou depois do Server Hello.",
+    "hint": "Aula 13.",
+    "pairs": [
+      {
+        "left": "Um certificado vencido",
+        "right": "Alert: Certificate Expired"
+      },
+      {
+        "left": "Um certificado de uma autoridade não confiável",
+        "right": "Alert: Unknown CA"
+      },
+      {
+        "left": "Um certificado para outro nome",
+        "right": "Um alerta dentro de Application Data"
+      }
+    ],
+    "right_distractors": [
+      "Um novo Client Hello"
+    ]
+  },
+  "ex-yk3b0784": {
+    "prompt": "No TLS 1.3, por que a captura conseguiu ler o nome do servidor mas não o certificado?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "O certificado vai por UDP",
+        "why": "Foi tudo TCP 443."
+      },
+      {
+        "text": "O tshark não decodifica certificados",
+        "why": "Ele decodifica certificados do TLS 1.2 sem problema."
+      },
+      {
+        "text": "O certificado vai criptografado",
+        "why": "Isso."
+      },
+      {
+        "text": "O certificado estava vencido",
+        "why": "O bom ficou escondido do mesmo jeito."
+      }
+    ]
+  },
+  "ex-4syqwj6m": {
+    "prompt": "Um serviço promete 99,9% de disponibilidade num ano de 365 dias. Quantas horas fora do ar isso permite, com uma casa decimal?",
+    "hint": "Aula 14.",
+    "unit": "horas"
+  },
+  "ex-2mp7b10c": {
+    "prompt": "Uma página precisa do balanceador (99,9%) E do banco de dados (99,9%). Qual é a disponibilidade do par, em série?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "99,9%, a mesma de cada um",
+        "why": "Duas chances de falhar são piores que uma."
+      },
+      {
+        "text": "Cerca de 99,8%",
+        "why": "Isso: 0,999 × 0,999."
+      },
+      {
+        "text": "99,9999%",
+        "why": "Isso são dois em paralelo."
+      },
+      {
+        "text": "Não dá para calcular sem números de tráfego",
+        "why": "É conta com as duas disponibilidades."
+      }
+    ]
+  },
+  "ex-g9ph4rt6": {
+    "prompt": "Um datacenter tem dois balanceadores e três servidores web, mas um enlace de provedor e um servidor DNS. Onde está o ponto único de falha?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Nos servidores web, porque são três",
+        "why": "Três podem perder um e seguir."
+      },
+      {
+        "text": "Nos balanceadores, porque só um fica ativo",
+        "why": "O reserva assume; é para isso que ele existe."
+      },
+      {
+        "text": "Nas duas coisas que só existem uma vez",
+        "why": "Isso: cada um está sozinho."
+      },
+      {
+        "text": "Não há nenhum, já que os servidores são redundantes",
+        "why": "Servidores redundantes atrás de um enlace ainda apagam juntos."
+      }
+    ]
+  },
+  "ex-fs1ew6yz": {
+    "prompt": "Dois nós de um cluster perdem contato entre si e os dois decidem ficar ativos. O que evita esse split brain?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Um quórum",
+        "why": "Isso, muitas vezes com um terceiro votante."
+      },
+      {
+        "text": "Heartbeats mais rápidos",
+        "why": "Detectam a perda mais cedo, e os dois ainda decidem."
+      },
+      {
+        "text": "Dar a mesma prioridade aos dois nós",
+        "why": "Isso piora o empate."
+      },
+      {
+        "text": "Um temporizador de failover mais longo",
+        "why": "Atrasa a divisão; não a evita."
+      }
+    ]
+  },
+  "ex-d2dsavke": {
+    "prompt": "Um componente cuja perda sozinha para o serviço inteiro é chamado de ponto único de ___.",
+    "hint": "Aula 14.",
+    "blanks": [
+      {
+        "accept": [
+          "falha"
+        ]
+      }
+    ]
+  },
+  "ex-xx9fgzht": {
+    "prompt": "Por que uma LAN precisa de um protocolo como o VRRP para ter um gateway redundante?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Hosts não sabem rotear",
+        "why": "Eles roteiam, para um gateway."
+      },
+      {
+        "text": "Hosts conhecem um endereço de gateway",
+        "why": "Isso: o VRRP mantém esse endereço vivo no roteador que estiver de pé."
+      },
+      {
+        "text": "Dois roteadores numa LAN causam laço",
+        "why": "Não causam; os hosts só usam um deles."
+      },
+      {
+        "text": "O DHCP não consegue entregar dois gateways",
+        "why": "A maioria dos hosts só usaria o primeiro de qualquer forma."
+      }
+    ]
+  },
+  "ex-8pthbzzh": {
+    "prompt": "Os anúncios VRRP vão para o endereço multicast 224.0.0.___.",
+    "hint": "Aula 15.",
+    "blanks": [
+      {
+        "accept": [
+          "18"
+        ]
+      }
+    ]
+  },
+  "ex-wje6tj8p": {
+    "prompt": "No failover do laboratório, os pings saíam a cada 0,2 s e 15 ficaram sem resposta. Mais ou menos quantos segundos o gateway sumiu?",
+    "hint": "Aula 15.",
+    "unit": "segundos"
+  },
+  "ex-ar6bxrz7": {
+    "prompt": "Depois do failover, a entrada ARP do laptop para 192.168.10.1 mostrou um MAC novo. O que a fez mudar tão rápido?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "O laptop limpou o cache ARP por conta própria",
+        "why": "Ele não fez nada; foi avisado."
+      },
+      {
+        "text": "O novo master mandou ARPs gratuitos",
+        "why": "Isso."
+      },
+      {
+        "text": "O DHCP renovou o gateway",
+        "why": "O laboratório usa endereços estáticos."
+      },
+      {
+        "text": "O switch reescreveu o MAC",
+        "why": "Switches não reescrevem ARP."
+      }
+    ]
+  },
+  "ex-2959tv7p": {
+    "prompt": "O enlace WAN de hq caiu enquanto o lado LAN continuou de pé. Sem rastrear a interface, o que o escritório teria visto?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Sem internet, e sem failover",
+        "why": "Isso: o VRRP só enxerga a LAN."
+      },
+      {
+        "text": "Um failover imediato para hq2",
+        "why": "Nada teria avisado o VRRP."
+      },
+      {
+        "text": "Os dois roteadores respondendo pelo endereço",
+        "why": "Os anúncios continuaram, então hq2 ficou como reserva."
+      },
+      {
+        "text": "Internet mais lenta, pelo reserva",
+        "why": "O tráfego nem teria mudado de caminho."
+      }
+    ]
+  },
+  "ex-ktcersbz": {
+    "prompt": "No par ativo-passivo do laboratório, o que moveu o endereço virtual quando o HAProxy de lb1 foi morto?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "O HAProxy de lb2 o pegou",
+        "why": "O HAProxy não gerencia endereços."
+      },
+      {
+        "text": "A verificação de saúde do keepalived",
+        "why": "Isso: FAULT em lb1, MASTER em lb2."
+      },
+      {
+        "text": "O DNS mudou www para o endereço de lb2",
+        "why": "www continuou 192.0.2.80."
+      },
+      {
+        "text": "Os servidores web redirecionaram os clientes",
+        "why": "Eles nem ficaram sabendo."
+      }
+    ]
+  },
+  "ex-fad933fk": {
+    "prompt": "O HAProxy registrou `Server web/web2 is DOWN, reason: Layer4 connection problem`. O que acontece com as novas requisições?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Uma em cada três requisições falha",
+        "why": "Um servidor marcado como fora não recebe nenhuma."
+      },
+      {
+        "text": "Esperam até web2 voltar",
+        "why": "Vão para outro lugar na hora."
+      },
+      {
+        "text": "Vão só para web1 e web3",
+        "why": "Isso."
+      },
+      {
+        "text": "O HAProxy responde com uma página em cache",
+        "why": "Ele não estava configurado para cache."
+      }
+    ]
+  },
+  "ex-nm0sm0gb": {
+    "prompt": "Dois balanceadores rodam ativo-ativo, cada um a 70% da capacidade. Um falha. O que acontece?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "O sobrevivente recebe 140% da capacidade e sofre",
+        "why": "Isso: cada um precisa ficar abaixo de 50% para aguentar a perda do outro."
+      },
+      {
+        "text": "Nada: é para isso que existe ativo-ativo",
+        "why": "Só se o sobrevivente aguentar as duas cargas."
+      },
+      {
+        "text": "O DNS corta o tráfego igualmente",
+        "why": "O DNS não sabe de capacidade."
+      },
+      {
+        "text": "Os clientes do que falhou são recusados",
+        "why": "O endereço dele passa para o sobrevivente."
+      }
+    ]
+  },
+  "ex-dfapne8k": {
+    "prompt": "Num par ativo-___, um nó atende e o outro espera para assumir.",
+    "hint": "Aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "passivo"
+        ]
+      }
+    ]
+  },
+  "ex-90r7gm3j": {
+    "prompt": "Por que `net.ipv4.ip_nonlocal_bind` foi ligado nos dois balanceadores?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Para o keepalived mandar anúncios",
+        "why": "Anúncios não precisam de ajuste especial."
+      },
+      {
+        "text": "Para escutar num endereço que ainda não tem",
+        "why": "Isso: o reserva fica pronto no instante em que o endereço chega."
+      },
+      {
+        "text": "Para dois nós dividirem um MAC",
+        "why": "MACs não entram nisso."
+      },
+      {
+        "text": "Para acelerar as verificações de saúde",
+        "why": "Não tem nada a ver com verificações."
+      }
+    ]
+  },
+  "ex-95kthw8r": {
+    "prompt": "Ligue cada termo ao que ele é.",
+    "hint": "Aula 17.",
+    "pairs": [
+      {
+        "left": "SLI",
+        "right": "O que se mede, como a fração de requisições bem-sucedidas"
+      },
+      {
+        "left": "SLO",
+        "right": "A meta interna para essa medida"
+      },
+      {
+        "left": "SLA",
+        "right": "A promessa ao cliente, com consequências"
+      }
+    ],
+    "right_distractors": [
+      "O ponto de recuperação dos backups"
+    ]
+  },
+  "ex-2jpkwc1j": {
+    "prompt": "O que o RPO mede?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Quanto tempo o serviço pode ficar fora",
+        "why": "Isso é RTO."
+      },
+      {
+        "text": "Quantos dados recentes podem ser perdidos",
+        "why": "Isso: medido para trás a partir da falha."
+      },
+      {
+        "text": "Com que frequência os backups são testados",
+        "why": "Importante, mas não é RPO."
+      },
+      {
+        "text": "A porcentagem de disponibilidade prometida",
+        "why": "Isso é a disponibilidade do SLA."
+      }
+    ]
+  },
+  "ex-x0c4nf0s": {
+    "prompt": "Um mês de 30 dias tem 43.200 minutos. Com um SLO de 99,9%, quantos minutos fora do ar cabem no orçamento de erro?",
+    "hint": "Aula 17.",
+    "unit": "minutos"
+  },
+  "ex-6bttm4k3": {
+    "prompt": "Um banco de dados replica de forma assíncrona para um segundo site, alguns segundos atrás. O site principal pega fogo. Qual é o RPO na prática?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Zero, porque existe réplica",
+        "why": "Uma réplica assíncrona fica atrás por projeto."
+      },
+      {
+        "text": "As gravações ainda não copiadas",
+        "why": "Isso: essas gravações se perderam."
+      },
+      {
+        "text": "O tempo até a réplica ser promovida",
+        "why": "Isso faz parte do RTO."
+      },
+      {
+        "text": "Um dia, o intervalo de backup",
+        "why": "A réplica está bem mais perto que o backup."
+      }
+    ]
+  },
+  "ex-yjnpsgyh": {
+    "prompt": "Um contrato promete 99,99% para um serviço cujo failover do balanceador sozinho leva uns três segundos a cada vez. O que se confere primeiro?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Se o balanceador pode ser trocado por DNS",
+        "why": "Mudanças de DNS são mais lentas, não mais rápidas."
+      },
+      {
+        "text": "Se três segundos contam como indisponibilidade",
+        "why": "A janela de medição decide, e ela precisa ser lida de qualquer jeito."
+      },
+      {
+        "text": "Quantos failovers por ano cabem no orçamento de 52 minutos",
+        "why": "Isso: prometa o que a arquitetura consegue entregar."
+      },
+      {
+        "text": "Se os servidores web são rápidos o bastante",
+        "why": "Velocidade não é disponibilidade."
+      }
+    ]
+  },
+  "ex-rzende08": {
+    "prompt": "Quando a QoS muda alguma coisa num enlace?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Sempre, já que acelera o tráfego marcado",
+        "why": "Nada vai mais rápido que o enlace."
+      },
+      {
+        "text": "Só com congestionamento",
+        "why": "Isso: ocioso, o ping ficou abaixo de um milissegundo de qualquer jeito."
+      },
+      {
+        "text": "Só em enlaces sem fio",
+        "why": "O enlace do laboratório era um cabo."
+      },
+      {
+        "text": "Só no tráfego que atravessa a internet",
+        "why": "Ela age onde se formar uma fila."
+      }
+    ]
+  },
+  "ex-tdz2jwfx": {
+    "prompt": "O tcpdump imprimiu `tos 0xb8` para um pacote EF. Qual é o valor DSCP, em decimal?",
+    "hint": "Aula 18.",
+    "unit": ""
+  },
+  "ex-y6ct173y": {
+    "prompt": "Numa fila única, um ping marcado EF ainda esperou atrás de um upload. Por quê?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "O roteador apagou a marca",
+        "why": "O tcpdump viu tos 0xb8 do outro lado."
+      },
+      {
+        "text": "Uma marca sozinha não muda fila",
+        "why": "Isso: classes e prioridade fizeram isso."
+      },
+      {
+        "text": "EF só funciona em UDP",
+        "why": "O DSCP fica no cabeçalho IP, seja o que for que vai dentro."
+      },
+      {
+        "text": "O upload também estava marcado EF",
+        "why": "Ele não estava marcado."
+      }
+    ]
+  },
+  "ex-mwe8d9kf": {
+    "prompt": "Por que o escritório remarcou tudo que chegava da LAN para CS0 antes de marcar o próprio tráfego de voz?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Qualquer host se marca EF se quiser, então quem decide é a borda",
+        "why": "Isso: a fronteira de confiança."
+      },
+      {
+        "text": "CS0 é mais rápido que marca nenhuma",
+        "why": "CS0 é o mesmo que marca nenhuma."
+      },
+      {
+        "text": "O provedor rejeita pacotes com DSCP",
+        "why": "Ele os encaminha; só ignora a marca."
+      },
+      {
+        "text": "O nftables exige isso antes de qualquer regra",
+        "why": "É escolha de projeto, não regra de sintaxe."
+      }
+    ]
+  },
+  "ex-251ydsvm": {
+    "prompt": "Ponha em ordem os passos para dar prioridade à voz num enlace de saída.",
+    "hint": "Aula 18.",
+    "items": [
+      "Decidir qual tráfego é voz",
+      "Marcá-lo na borda com DSCP EF",
+      "Classificar EF numa fila própria",
+      "Atender essa fila primeiro, até a taxa dela"
+    ],
+    "trap": "Marcar antes de decidir marca as coisas erradas; uma fila antes da classificação fica vazia."
+  },
+  "ex-yf423z2b": {
+    "prompt": "O round robin mandou seis requisições para web1, web2, web3, web1, web2, web3. Para o que ele não olha?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "O quanto cada servidor está ocupado",
+        "why": "Isso: uma requisição lenta ainda ganhou companhia."
+      },
+      {
+        "text": "A ordem dos servidores",
+        "why": "É só para isso que ele olha."
+      },
+      {
+        "text": "Se um servidor está marcado como fora",
+        "why": "Com verificação de saúde, servidores fora são pulados."
+      },
+      {
+        "text": "Os pesos da configuração",
+        "why": "O round robin com pesos os lê."
+      }
+    ]
+  },
+  "ex-98xwtv79": {
+    "prompt": "Com pesos 2, 1 e 1, quantas de 8 requisições foram para o servidor de peso 2?",
+    "hint": "Aula 19.",
+    "unit": "requisições"
+  },
+  "ex-ztj2e7ge": {
+    "prompt": "Enquanto web1 servia um download lento, o least connections mandou quatro requisições rápidas para outros. O que ele estava contando?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Requisições servidas até então",
+        "why": "Isso é um total, não o que está aberto agora."
+      },
+      {
+        "text": "A carga de CPU de cada servidor",
+        "why": "O HAProxy não enxerga a CPU dos servidores."
+      },
+      {
+        "text": "As conexões abertas agora em cada servidor",
+        "why": "Isso."
+      },
+      {
+        "text": "O tempo de resposta da última requisição",
+        "why": "Esse é outro algoritmo."
+      }
+    ]
+  },
+  "ex-tzmenh8x": {
+    "prompt": "Com `balance source`, quatro de cinco clientes caíram em web1. Por que o hash distribuiu tão mal?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "O hash estava mal configurado",
+        "why": "Ele fez o que um hash faz."
+      },
+      {
+        "text": "Poucas origens distintas",
+        "why": "Isso: um hash só se equilibra com muitos clientes."
+      },
+      {
+        "text": "web1 tinha o maior peso",
+        "why": "Nenhum peso foi definido."
+      },
+      {
+        "text": "O hash de origem sempre prefere o primeiro servidor",
+        "why": "ns caiu em web2."
+      }
+    ]
+  },
+  "ex-7r8gkcfz": {
+    "prompt": "Um cliente preso por cookie a web3 recebeu 503 quando web3 parou. O que resolveu?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Apagar o cookie no navegador",
+        "why": "Isso resolve para um usuário, não para o serviço."
+      },
+      {
+        "text": "Trocar para hash de origem",
+        "why": "Qualquer persistência encontra o mesmo servidor morto."
+      },
+      {
+        "text": "Verificação de saúde com redispatch",
+        "why": "Isso: o cliente foi movido e ganhou um cookie novo."
+      },
+      {
+        "text": "Um timeout de servidor maior",
+        "why": "Esperar mais por um servidor morto não ganha nada."
+      }
+    ]
+  },
+  "ex-zthtg0ak": {
+    "prompt": "O que um shaper faz com um pacote que passa da taxa?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Segura o pacote numa fila até a vez dele",
+        "why": "Isso: atraso em vez de perda."
+      },
+      {
+        "text": "Descarta na hora",
+        "why": "Isso é um policer."
+      },
+      {
+        "text": "Marca e manda assim mesmo",
+        "why": "Alguns policers fazem isso; um shaper enfileira."
+      },
+      {
+        "text": "Comprime o pacote",
+        "why": "Nada é comprimido."
+      }
+    ]
+  },
+  "ex-01kgzqv4": {
+    "prompt": "Quantos kilobytes por segundo são 5 Mbit/s, considerando 1 kB como 1000 bytes?",
+    "hint": "Aula 20.",
+    "unit": "kB/s"
+  },
+  "ex-9wnrmsac": {
+    "prompt": "Com policing, o iperf3 mostrou muitas retransmissões e o ping ficou abaixo de um milissegundo. Com shaping, o ping subiu para uns 22 ms. O que explica a diferença?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "O policer era um hardware mais rápido",
+        "why": "Os dois rodaram no mesmo tipo de roteador."
+      },
+      {
+        "text": "Fila contra descarte",
+        "why": "Isso."
+      },
+      {
+        "text": "Pings são isentos de policing",
+        "why": "Eles só não passavam da taxa."
+      },
+      {
+        "text": "O shaper tinha uma taxa menor",
+        "why": "Os dois eram 5 Mbit/s."
+      }
+    ]
+  },
+  "ex-m76360r5": {
+    "prompt": "Um provedor faz policing numa linha a 5 Mbit/s. O que o roteador do cliente deve fazer?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Fazer policing a 5 Mbit/s também",
+        "why": "Isso só aproxima os descartes."
+      },
+      {
+        "text": "Mandar o mais rápido possível e deixar o TCP se adaptar",
+        "why": "Foi assim que o laboratório teve 1337 retransmissões."
+      },
+      {
+        "text": "Fazer shaping exatamente a 5 Mbit/s",
+        "why": "Rajadas e cabeçalhos ainda disparam o policer."
+      },
+      {
+        "text": "Fazer shaping um pouco abaixo de 5 Mbit/s",
+        "why": "Isso: o shaper de 4500 kbit do laboratório não teve descarte."
+      }
+    ]
+  },
+  "ex-52dvq537": {
+    "prompt": "Num token bucket, a taxa é a velocidade em que as fichas chegam, e o ___ é quantas podem se acumular para um pico curto.",
+    "hint": "Aula 20.",
+    "blanks": [
+      {
+        "accept": [
+          "burst",
+          "tamanho do balde",
+          "rajada"
+        ]
+      }
+    ]
+  },
+  "ex-mpafqwgx": {
+    "prompt": "Ponha em ordem um diagnóstico de baixo para cima.",
+    "hint": "Aula 21.",
+    "items": [
+      "Existe enlace?",
+      "Existe endereço e gateway?",
+      "O nome resolve?",
+      "A porta responde?",
+      "A aplicação responde certo?"
+    ],
+    "trap": "Cada pergunta supõe que a de baixo funciona."
+  },
+  "ex-92cpecpp": {
+    "prompt": "`curl` falha com `Could not resolve host`, mas `ping 192.0.2.53` funciona. Onde está a falha?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "No cabo",
+        "why": "Um ping passou por ele."
+      },
+      {
+        "text": "No servidor web",
+        "why": "Ele nem foi alcançado."
+      },
+      {
+        "text": "No resolvedor configurado",
+        "why": "Isso: o resolv.conf apontava um servidor que não responde."
+      },
+      {
+        "text": "No gateway",
+        "why": "O ping para 192.0.2.53 passou por ele."
+      }
+    ]
+  },
+  "ex-gt5gyn84": {
+    "prompt": "`curl` recebe `Connection refused` em 0 ms e o `ping` para o mesmo host funciona. E agora?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Procurar quem escuta",
+        "why": "Isso: o ss -tln não mostrou :80."
+      },
+      {
+        "text": "Verificar o cabo",
+        "why": "O host respondeu."
+      },
+      {
+        "text": "Verificar o DNS",
+        "why": "O curl recebeu um endereço."
+      },
+      {
+        "text": "Diminuir o MTU",
+        "why": "Nada grande foi enviado."
+      }
+    ]
+  },
+  "ex-h0g0rs5d": {
+    "prompt": "Pelo túnel, uma página pequena carrega mas um arquivo grande nunca começa; segmentos de 1448 bytes saem do servidor e nunca são confirmados. O que resolveu no laboratório?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Subir o MTU do túnel para 1500",
+        "why": "O túnel não leva 1500 dentro de 1500."
+      },
+      {
+        "text": "Limitar o MSS do TCP a 1380 no roteador",
+        "why": "Isso: o SYN passou a levar mss 1380."
+      },
+      {
+        "text": "Reiniciar o servidor web",
+        "why": "O servidor estava bem."
+      },
+      {
+        "text": "Passar o túnel para TCP",
+        "why": "Isso não muda nada no tamanho dos pacotes."
+      }
+    ]
+  },
+  "ex-sb84sh4s": {
+    "prompt": "Um túnel WireGuard tem MTU 1420. Com 20 bytes de cabeçalho IP e 20 de TCP, qual é o maior MSS que cabe?",
+    "hint": "Aula 21.",
+    "unit": "bytes"
+  },
+  "ex-ncwe3627": {
+    "prompt": "O mtr mostra 80% de perda nos saltos 1 e 2 e 0% no destino. O que é isso?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Perda real que o destino recupera",
+        "why": "Pacotes perdidos não são recuperados pelo salto seguinte."
+      },
+      {
+        "text": "Roteadores limitando a taxa das respostas ICMP",
+        "why": "Isso: icmp_ratelimit, e o tráfego em si passou."
+      },
+      {
+        "text": "Um primeiro roteador quebrado",
+        "why": "Tudo depois dele passou."
+      },
+      {
+        "text": "Uma resposta DNS errada",
+        "why": "O mtr -n nem usa DNS."
+      }
+    ]
+  },
+  "ex-h2pmg04t": {
+    "prompt": "Um host Linux envia com TTL 64 e a resposta chega com ttl=62. Quantos roteadores há no meio?",
+    "hint": "Aula 22.",
+    "unit": "roteadores"
+  },
+  "ex-373b00re": {
+    "prompt": "O iperf3 mediu uns 20 Mbit/s de upload e mais de 3 Gbit/s com `-R`. O que o `-R` muda?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Usa UDP em vez de TCP",
+        "why": "Isso é -u."
+      },
+      {
+        "text": "O servidor envia e o cliente recebe",
+        "why": "Isso: o outro sentido, sem shaping no laboratório."
+      },
+      {
+        "text": "Abre vários fluxos",
+        "why": "Isso é -P."
+      },
+      {
+        "text": "Repete o teste",
+        "why": "Roda uma vez, invertido."
+      }
+    ]
+  },
+  "ex-pjcd4wn6": {
+    "prompt": "Um teste UDP a 30 Mbit/s num caminho de 20 Mbit/s acusou 34% de perda. O caminho está quebrado?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Sim: qualquer perda é defeito",
+        "why": "Ele recebeu mais do que consegue levar."
+      },
+      {
+        "text": "Sim: UDP nunca deveria perder pacotes",
+        "why": "UDP não retransmite; o excesso é descartado."
+      },
+      {
+        "text": "Não: um terço de 30 não cabia em 20",
+        "why": "Isso: o teste a 10 Mbit/s não perdeu nada."
+      },
+      {
+        "text": "Não dá para saber sem traceroute",
+        "why": "A conta já diz."
+      }
+    ]
+  },
+  "ex-h7txztcb": {
+    "prompt": "O traceroute imprimiu `2  *` e depois o destino respondeu no salto 3. O que quer dizer o asterisco?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "O salto 2 não respondeu, mas encaminhou",
+        "why": "Isso: um salto silencioso não é um salto quebrado."
+      },
+      {
+        "text": "Pacotes se perdem no salto 2",
+        "why": "O destino respondeu passando por ele."
+      },
+      {
+        "text": "O salto 2 é o destino",
+        "why": "O destino é o salto 3."
+      },
+      {
+        "text": "O caminho é longo demais",
+        "why": "São três saltos."
+      }
+    ]
+  },
+  "ex-9awbvghh": {
+    "prompt": "Ponha em ordem as partes de um registro de incidente, na ordem em que o trabalho acontece.",
+    "hint": "Aula 23.",
+    "items": [
+      "Sintoma",
+      "Hipótese",
+      "Teste",
+      "Resultado",
+      "Correção"
+    ],
+    "trap": "Uma correção antes de uma hipótese testada é um chute que por acaso deu certo, ou não."
+  },
+  "ex-4nynmp61": {
+    "prompt": "Por que as linhas do tempo de incidente dão os horários com o fuso, ou em UTC?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "Relógios em UTC são mais precisos",
+        "why": "A precisão é a mesma."
+      },
+      {
+        "text": "Logs de vários fusos se alinham",
+        "why": "Isso."
+      },
+      {
+        "text": "A lei exige UTC",
+        "why": "Nenhuma lei é o motivo."
+      },
+      {
+        "text": "Hora local não mostra segundos",
+        "why": "Mostra."
+      }
+    ]
+  },
+  "ex-kzw9660t": {
+    "prompt": "O que torna um post-mortem sem culpados?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "As ações de ninguém são mencionadas",
+        "why": "As ações são descritas; as pessoas não são culpadas por elas."
+      },
+      {
+        "text": "Procura as causas no sistema",
+        "why": "Isso: para as pessoas contarem o que de fato aconteceu."
+      },
+      {
+        "text": "É escrito por alguém de fora da equipe",
+        "why": "Quem escreve não é a questão."
+      },
+      {
+        "text": "Não tem itens de ação",
+        "why": "Ele deve terminar com eles."
+      }
+    ]
+  },
+  "ex-x3d9smf2": {
+    "prompt": "O item de ação de um registro de incidente diz \"ter mais cuidado com firewalls\". O que está errado?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "Culpa o fabricante do firewall",
+        "why": "Não culpa ninguém; não faz nada."
+      },
+      {
+        "text": "É específico demais",
+        "why": "É o contrário."
+      },
+      {
+        "text": "Firewalls não deveriam aparecer em registros de incidente",
+        "why": "Eles muitas vezes pertencem ali."
+      },
+      {
+        "text": "Não dá para conferir",
+        "why": "Isso: \"liberar ICMP tipo 3 em hq, até sexta, Ana\" dá para conferir."
+      }
+    ]
+  },
+  "ex-ys18nhfa": {
+    "prompt": "Uma ideia sobre a causa que um teste pode provar errada é uma ___.",
+    "hint": "Aula 23.",
+    "blanks": [
+      {
+        "accept": [
+          "hipótese"
+        ]
+      }
+    ]
+  }
+}

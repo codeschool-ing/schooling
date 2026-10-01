@@ -1,0 +1,649 @@
+[
+  {
+    "id": "ex-wdck48p2",
+    "version": 1,
+    "section": "three-records",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each kind of record to the question it answers.",
+    "hint": "The table at the top of the section.",
+    "pairs": [
+      {
+        "left": "firewall log",
+        "right": "what was tried and stopped"
+      },
+      {
+        "left": "flow record",
+        "right": "which pairs talked, and how much"
+      },
+      {
+        "left": "IDS alert",
+        "right": "what looked wrong, and why"
+      }
+    ],
+    "right_distractors": [
+      "what the conversation said"
+    ]
+  },
+  {
+    "id": "ex-8tdgcs2z",
+    "version": 1,
+    "section": "three-records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "None of the three records holds the content of the conversation. Why is that deliberate?",
+    "hint": "Compare how long each is kept.",
+    "choices": [
+      {
+        "text": "Content is encrypted, so there is nothing readable to store",
+        "correct": false,
+        "why": "The lab's web traffic was plain HTTP; the reason is volume."
+      },
+      {
+        "text": "Full capture lasts hours; these last months",
+        "correct": true,
+        "why": "Right. Without the content they are small enough to keep."
+      },
+      {
+        "text": "The firewall cannot see beyond the TCP header",
+        "correct": false,
+        "why": "The sensor reads HTTP, DNS and TLS details, and records them."
+      },
+      {
+        "text": "The law forbids keeping it",
+        "correct": false,
+        "why": "The lesson's reason is size and time, not a prohibition."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9zpsr2y",
+    "version": 1,
+    "section": "three-records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the administrator add the log rule at the end of the forward chain?",
+    "hint": "Which packets reach the last rule?",
+    "choices": [
+      {
+        "text": "So that it logs every packet the firewall forwards",
+        "correct": false,
+        "why": "Accepted packets stop at the rule that accepted them."
+      },
+      {
+        "text": "Because nft appends to the end and cannot insert",
+        "correct": false,
+        "why": "The feed rule is inserted at the top later on."
+      },
+      {
+        "text": "It sees only what every rule above refused",
+        "correct": true,
+        "why": "Right. Its log is the list of refusals."
+      },
+      {
+        "text": "So that ulogd starts before the rule matches",
+        "correct": false,
+        "why": "Position in the chain has nothing to do with ulogd."
+      }
+    ]
+  },
+  {
+    "id": "ex-p20zqcrp",
+    "version": 1,
+    "section": "drops-and-flows",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many seconds lie between start and end in each of remote's flow records?",
+    "hint": "Subtract the two numbers.",
+    "value": 120,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-v8sxtt95",
+    "version": 1,
+    "section": "drops-and-flows",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A request took milliseconds, yet its flow record's end is two minutes after its start. What does that end mark?",
+    "hint": "When is the record written?",
+    "choices": [
+      {
+        "text": "When the firewall forgot the connection",
+        "correct": true,
+        "why": "Right. A closed TCP connection stays in the table for two minutes."
+      },
+      {
+        "text": "When the shop sent its last byte",
+        "correct": false,
+        "why": "That was milliseconds after the start."
+      },
+      {
+        "text": "The moment ulogd was restarted by the administrator",
+        "correct": false,
+        "why": "Both flows end 120 seconds after their own start."
+      },
+      {
+        "text": "A clock that is two minutes wrong",
+        "correct": false,
+        "why": "The same 120 seconds appears in both, from the same clock."
+      }
+    ]
+  },
+  {
+    "id": "ex-yn1h7t92",
+    "version": 1,
+    "section": "drops-and-flows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "remote's three port probes appear in the drop log. Why are they missing from the flow records?",
+    "hint": "Where do flow records come from?",
+    "choices": [
+      {
+        "text": "The flows were not yet written when the capture ran",
+        "correct": false,
+        "why": "The script waited three minutes, enough for every entry."
+      },
+      {
+        "text": "A dropped connection is never a confirmed table entry",
+        "correct": true,
+        "why": "Right. No entry, no flow record."
+      },
+      {
+        "text": "ulogd filters out flows on ports it does not know",
+        "correct": false,
+        "why": "There is no such filter in the stack."
+      },
+      {
+        "text": "Flows record UDP and the probes were TCP",
+        "correct": false,
+        "why": "The flows shown are TCP to port 80."
+      }
+    ]
+  },
+  {
+    "id": "ex-kah0wmds",
+    "version": 1,
+    "section": "drops-and-flows",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Adding both directions, how many bytes did the flow that received the 404 page carry?",
+    "hint": "The 404 is the longer answer.",
+    "value": 1136,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-pv6eezmf",
+    "version": 1,
+    "section": "off-the-host",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Somebody with root on fw empties drops.json. How many lines does admin's copy of drops.json hold right after?",
+    "hint": "Lines were shipped as they were written.",
+    "choices": [
+      {
+        "text": "None, since rsyslog mirrors the truncation",
+        "correct": false,
+        "why": "reopenOnTruncate only restarts reading from the top of fw's file."
+      },
+      {
+        "text": "Four",
+        "correct": true,
+        "why": "Right. The wipe on fw changes nothing on admin."
+      },
+      {
+        "text": "Zero until rsyslog on admin is restarted, then four",
+        "correct": false,
+        "why": "admin never lost them."
+      },
+      {
+        "text": "Eight, because every line is sent again",
+        "correct": false,
+        "why": "rsyslog remembers how far it has read."
+      }
+    ]
+  },
+  {
+    "id": "ex-wwbzz7yz",
+    "version": 1,
+    "section": "off-the-host",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From fw, port 514 on admin succeeds and port 22 times out. What does that arrangement give the defender?",
+    "hint": "Deliver lines, and nothing else.",
+    "choices": [
+      {
+        "text": "Faster delivery, since SSH no longer competes with the logs",
+        "correct": false,
+        "why": "Bandwidth is not the point of the rule."
+      },
+      {
+        "text": "Encryption of the lines on their way to the collector",
+        "correct": false,
+        "why": "That needs TLS, which the lab does not use."
+      },
+      {
+        "text": "An intruder on fw adds noise but leaves old lines as they were",
+        "correct": true,
+        "why": "Right. The source cannot reach back into the collector."
+      },
+      {
+        "text": "Proof that no line was lost in transit",
+        "correct": false,
+        "why": "The disk queue helps with that, not the port rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-81cd9bjb",
+    "version": 1,
+    "section": "off-the-host",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make log shipping sturdier in production, as the section describes? Choose all that apply.",
+    "hint": "Three details.",
+    "choices": [
+      {
+        "text": "TLS on port 514 with both certificates checked",
+        "correct": true,
+        "why": "Right. It protects the lines in transit."
+      },
+      {
+        "text": "A disk queue that retries while the collector is away",
+        "correct": true,
+        "why": "Right. A restart on admin loses nothing."
+      },
+      {
+        "text": "SSH from fw to admin, to repair the collection",
+        "correct": false,
+        "why": "That is the reach back the design forbids."
+      },
+      {
+        "text": "An alarm when a source goes quiet",
+        "correct": true,
+        "why": "Right. Silence is a symptom of its own."
+      },
+      {
+        "text": "Deleting each line on fw once it has been shipped",
+        "correct": false,
+        "why": "The section keeps both copies; deletion is a retention decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-tnx2zqaw",
+    "version": 1,
+    "section": "off-the-host",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A collector should raise its own alarm when a source goes ___ for longer than it ever has.",
+    "hint": "It is either switched off or switched off by somebody.",
+    "blanks": [
+      {
+        "accept": [
+          "quiet",
+          "silent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t3fdp9b7",
+    "version": 1,
+    "section": "threat-feeds",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Looking back through the collection, how many records came from 203.0.113.50?",
+    "hint": "Flows plus drops.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-ymmm9ky4",
+    "version": 1,
+    "section": "threat-feeds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A feed arrives naming three addresses. What does the section do with it first?",
+    "hint": "Before blocking anything.",
+    "choices": [
+      {
+        "text": "Block the three at the top of the forward chain",
+        "correct": false,
+        "why": "That is the second use."
+      },
+      {
+        "text": "Send the addresses to the sensor as signatures",
+        "correct": false,
+        "why": "The sensor is not involved."
+      },
+      {
+        "text": "Search the stored flows and drops for them",
+        "correct": true,
+        "why": "Right. Whether they already talked to us."
+      },
+      {
+        "text": "Check that the publisher's certificate is valid",
+        "correct": false,
+        "why": "The section judges a feed by its date and reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4s7h3s6",
+    "version": 1,
+    "section": "threat-feeds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the intel set carry timeout 1d?",
+    "hint": "Who holds that address next month?",
+    "choices": [
+      {
+        "text": "nft sets need a timeout to accept elements",
+        "correct": false,
+        "why": "The flag is a choice."
+      },
+      {
+        "text": "It keeps the set small enough for the kernel",
+        "correct": false,
+        "why": "Size is not the reason given."
+      },
+      {
+        "text": "So attackers are blocked for a day and then forgiven",
+        "correct": false,
+        "why": "A refreshed entry stays while the feed lists it."
+      },
+      {
+        "text": "Addresses get reassigned, so a block expires with its reason",
+        "correct": true,
+        "why": "Right. It falls out when the feed stops listing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzrm6q22",
+    "version": 1,
+    "section": "one-timeline",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order remote's actions as the correlated timeline shows them, from first to last.",
+    "hint": "Read the output of correlate.py.",
+    "items": [
+      "loaded the shop's front page",
+      "asked for /.env and raised the alert",
+      "tried the database on port 5432",
+      "tried port 23 on the shop"
+    ],
+    "trap": "The port 23 attempt came three minutes after the rest."
+  },
+  {
+    "id": "ex-mwzh0a3f",
+    "version": 1,
+    "section": "one-timeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sensor's one alert was for /.env. What question does the timeline answer that the alert alone could not?",
+    "hint": "Look at what the flows and drops add.",
+    "choices": [
+      {
+        "text": "Which signature matched",
+        "correct": false,
+        "why": "The alert says that itself."
+      },
+      {
+        "text": "Did anything else succeed?",
+        "correct": true,
+        "why": "Right. Here only two page loads completed."
+      },
+      {
+        "text": "What the /.env file contains on the server",
+        "correct": false,
+        "why": "No record holds content."
+      },
+      {
+        "text": "Which country the address belongs to",
+        "correct": false,
+        "why": "Nothing in the three sources says that."
+      }
+    ]
+  },
+  {
+    "id": "ex-607b80tn",
+    "version": 1,
+    "section": "one-timeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The sensor's clock runs three minutes slow and everything else is right. What happens to the merged timeline?",
+    "hint": "Sorting by time is the whole join.",
+    "choices": [
+      {
+        "text": "The script refuses to sort mixed sources",
+        "correct": false,
+        "why": "It sorts whatever it is given."
+      },
+      {
+        "text": "Nothing, since the alert matches by address",
+        "correct": false,
+        "why": "The address picks the records; time orders them."
+      },
+      {
+        "text": "The alert lands before the page load it was about",
+        "correct": true,
+        "why": "Right. Correlation needs every clock to agree, hence NTP."
+      },
+      {
+        "text": "Flows shift three minutes, since they use seconds since 1970",
+        "correct": false,
+        "why": "The flows come from fw, whose clock is right."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y5qmx55",
+    "version": 1,
+    "section": "what-to-keep",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "eve.json holds 43 records, 24 of them stats. What is the first saving the section names?",
+    "hint": "Before shortening anything.",
+    "choices": [
+      {
+        "text": "Choosing which types of record are worth keeping",
+        "correct": true,
+        "why": "Right. The stats records are most of the file."
+      },
+      {
+        "text": "Keeping alerts for a shorter time",
+        "correct": false,
+        "why": "Alerts are few and small; they are kept longest."
+      },
+      {
+        "text": "Turning off compression to save processor time",
+        "correct": false,
+        "why": "Compression is how space is saved."
+      },
+      {
+        "text": "Moving the sensor's file onto fw",
+        "correct": false,
+        "why": "That would undo shipping off the host."
+      }
+    ]
+  },
+  {
+    "id": "ex-n50vmcj8",
+    "version": 1,
+    "section": "what-to-keep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under the Marco Civil da Internet, how long must the lab's shop, an application on the internet, keep its access records?",
+    "hint": "Article 15.",
+    "choices": [
+      {
+        "text": "One year, like a connection provider",
+        "correct": false,
+        "why": "That is article 13, for connection providers."
+      },
+      {
+        "text": "Ninety days, as logrotate is set",
+        "correct": false,
+        "why": "That is the lab's choice, not the law."
+      },
+      {
+        "text": "For as long as the LGPD allows",
+        "correct": false,
+        "why": "The LGPD limits; the Marco Civil sets a floor."
+      },
+      {
+        "text": "Six months",
+        "correct": true,
+        "why": "Right. Article 15."
+      }
+    ]
+  },
+  {
+    "id": "ex-9nweynbr",
+    "version": 1,
+    "section": "what-to-keep",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each record to the starting retention the section proposes.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "IDS alerts",
+        "right": "a year or more"
+      },
+      {
+        "left": "firewall drops",
+        "right": "30 to 90 days, then counts"
+      },
+      {
+        "left": "HTTP and DNS details",
+        "right": "days to weeks"
+      }
+    ],
+    "right_distractors": [
+      "for ever, uncompressed"
+    ]
+  },
+  {
+    "id": "ex-36gfqs7z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A feed published today names an address that, a report says, has been active since four months ago. Flows are kept 30 days. What can the look-back show?",
+    "hint": "Retention decides how far back a question reaches.",
+    "choices": [
+      {
+        "text": "The whole four months, through the drop counts",
+        "correct": false,
+        "why": "Counts per day carry no addresses."
+      },
+      {
+        "text": "The last 30 days, and nothing of when it began",
+        "correct": true,
+        "why": "Right. Why flows are kept 90 days to a year."
+      },
+      {
+        "text": "Everything, if the IDS alerts are kept a year",
+        "correct": false,
+        "why": "Alerts cover only what matched a signature."
+      },
+      {
+        "text": "Four months, since the feed brings its own history",
+        "correct": false,
+        "why": "A feed brings addresses and a reason, not your traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-ke7s35zg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The sensor alerts on one request from an address to /wp-admin. Which record tells you whether any other connection from it completed?",
+    "hint": "Which record says what happened?",
+    "choices": [
+      {
+        "text": "The drop log",
+        "correct": false,
+        "why": "It lists what was stopped, not what got through."
+      },
+      {
+        "text": "The sensor's stats records",
+        "correct": false,
+        "why": "Those describe the sensor itself."
+      },
+      {
+        "text": "The flow records",
+        "correct": true,
+        "why": "Right. Every allowed conversation has one."
+      },
+      {
+        "text": "The threat feed",
+        "correct": false,
+        "why": "It lists somebody else's observations."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8xagkqj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 03:00 the collector stops receiving anything from fw, whose logs had never paused for more than a minute. What does the lesson treat this as?",
+    "hint": "A source that stops sending.",
+    "choices": [
+      {
+        "text": "A quiet night, since nothing was refused",
+        "correct": false,
+        "why": "Flows keep coming whenever anything is allowed."
+      },
+      {
+        "text": "A retention event, since logrotate runs at night",
+        "correct": false,
+        "why": "Rotation renames files on admin; it does not stop fw."
+      },
+      {
+        "text": "Harmless, because the disk queue will deliver it later",
+        "correct": false,
+        "why": "The queue covers the collector's absence, not the source's."
+      },
+      {
+        "text": "An alarm: fw is off, or somebody turned it off",
+        "correct": true,
+        "why": "Right. Silence is checked for on its own."
+      }
+    ]
+  }
+]

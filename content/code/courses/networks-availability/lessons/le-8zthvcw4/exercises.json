@@ -1,0 +1,607 @@
+[
+  {
+    "id": "ex-tszx49px",
+    "version": 1,
+    "section": "on-the-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`tcpdump -i eth0`, run by `ana` on `web1`, answered `You don't have permission to perform this capture`. Why?",
+    "hint": "What does opening the interface let a program read?",
+    "choices": [
+      {
+        "text": "web1 has no interface called eth0",
+        "correct": false,
+        "why": "It has; the same command with sudo captured on it."
+      },
+      {
+        "text": "Capturing needs root, or a granted capability",
+        "correct": true,
+        "why": "Right. web1 has no wireshark group, so it is sudo."
+      },
+      {
+        "text": "A capture filter is compulsory for ordinary users",
+        "correct": false,
+        "why": "No filter makes an unprivileged capture possible."
+      },
+      {
+        "text": "tcpdump refuses to print to a terminal without -n",
+        "correct": false,
+        "why": "The first capture with sudo had no -n and worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-3qc91x2a",
+    "version": 1,
+    "section": "on-the-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without `-n`, `tcpdump` printed port 80 as `http`. Why is `-n` the better habit on a server?",
+    "hint": "What does turning a number into a name cost?",
+    "choices": [
+      {
+        "text": "With `-n` tcpdump captures more of the packets",
+        "correct": false,
+        "why": "What is captured does not change; only how it is printed."
+      },
+      {
+        "text": "Without `-n` the addresses are hidden from view",
+        "correct": false,
+        "why": "They were printed in full in both runs."
+      },
+      {
+        "text": "`-w` refuses to write a file unless it is given",
+        "correct": false,
+        "why": "A file stores packets, not printed names; -w works either way."
+      },
+      {
+        "text": "Names cost lookups and hide the real number",
+        "correct": true,
+        "why": "Right. A reverse lookup per address, and a port named http hides whether it is 80."
+      }
+    ]
+  },
+  {
+    "id": "ex-k44kr0rn",
+    "version": 1,
+    "section": "on-the-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `Flags [S.]` say about a packet?",
+    "hint": "The dot is a flag too.",
+    "choices": [
+      {
+        "text": "SYN and ACK: the server accepting a connection",
+        "correct": true,
+        "why": "Right. The second packet of every handshake."
+      },
+      {
+        "text": "SYN alone, with the dot closing the list",
+        "correct": false,
+        "why": "A lone SYN prints as [S]; the dot is ACK."
+      },
+      {
+        "text": "A SYN that the client had to send a second time",
+        "correct": false,
+        "why": "A retransmission looks identical to the original in tcpdump."
+      },
+      {
+        "text": "SYN and PUSH: data already in the very first packet",
+        "correct": false,
+        "why": "Push prints as P; this one has length 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-xzpa64a6",
+    "version": 1,
+    "section": "on-the-server",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An ACK shows `win 63`, and the SYN of the same connection carried `wscale 10`. What is the real window, in bytes?",
+    "hint": "The scale is a power of two: 2 to the 10th.",
+    "value": 64512,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-ae9e1642",
+    "version": 1,
+    "section": "on-the-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To stop the laptop reaching `web1`, somebody adds a rule on `web1` dropping `192.168.10.20`. What happens?",
+    "hint": "Which source address did web1's capture show?",
+    "choices": [
+      {
+        "text": "The laptop is cut off, and the rest of the office is not",
+        "correct": false,
+        "why": "web1 never sees 192.168.10.20; the rule matches nothing."
+      },
+      {
+        "text": "Nothing: the laptop arrives as 203.0.113.2",
+        "correct": true,
+        "why": "Right. hq translates the office's addresses, so the rule would need hq's public one, and that is the whole office."
+      },
+      {
+        "text": "Every connection from hq is dropped",
+        "correct": false,
+        "why": "That would take a rule on 203.0.113.2, not on the private address."
+      },
+      {
+        "text": "The laptop gets a reset instead of a page",
+        "correct": false,
+        "why": "A drop sends nothing back, and this one never matches anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-1a5mddy2",
+    "version": 1,
+    "section": "on-the-server",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the flags of a connection opening and its first request in the order tcpdump prints them.",
+    "hint": "The client speaks first and last.",
+    "items": [
+      "[S] from the client",
+      "[S.] from the server",
+      "[.] from the client",
+      "[P.] from the client, length 73"
+    ],
+    "trap": "The request cannot go before the handshake's last ACK, and the server answers the SYN before anything else."
+  },
+  {
+    "id": "ex-7gtt2qvn",
+    "version": 1,
+    "section": "writing-the-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `-Z ana` do in `sudo tcpdump -n -i eth0 -c 40 -Z ana -w web1.pcap tcp port 80`?",
+    "hint": "Look at who owns the file.",
+    "choices": [
+      {
+        "text": "Makes the file readable by ana and nobody else",
+        "correct": false,
+        "why": "The file came out -rw-r--r--, readable by everyone; -Z decides the owner, not the mode."
+      },
+      {
+        "text": "Drops root after opening the interface",
+        "correct": true,
+        "why": "Right. It becomes ana before writing, so the parsing runs unprivileged and the file is hers."
+      },
+      {
+        "text": "Compresses the file as it is written",
+        "correct": false,
+        "why": "capinfos found an ordinary pcap file."
+      },
+      {
+        "text": "Captures only ana's own traffic",
+        "correct": false,
+        "why": "Packets carry addresses, not user names; the filter decides what is kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-pc0pww4c",
+    "version": 1,
+    "section": "writing-the-file",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`capinfos` reported a file size of 4690 bytes and a data size of 4026 bytes for 40 packets. The pcap file header is 24 bytes. How many bytes does the format add in front of each packet?",
+    "hint": "Take away the file header, then share what is left.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-964ydrs5",
+    "version": 1,
+    "section": "writing-the-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why compare the `SHA256` line of `capinfos` on the server and on the analyst's copy?",
+    "hint": "A hash changes if a single byte does.",
+    "choices": [
+      {
+        "text": "To decrypt the packets inside",
+        "correct": false,
+        "why": "A hash decrypts nothing; it identifies bytes."
+      },
+      {
+        "text": "To prove who took the capture",
+        "correct": false,
+        "why": "Anybody computing it gets the same line; it says nothing about the author."
+      },
+      {
+        "text": "Same line, same bytes",
+        "correct": true,
+        "why": "Right. Nothing lost, nothing edited on the way."
+      },
+      {
+        "text": "To check the capture filter was right",
+        "correct": false,
+        "why": "The hash is of the file as written, right filter or wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-m04xgsck",
+    "version": 1,
+    "section": "writing-the-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`web1.pcap` came out `-rw-r--r--`. On a server other people log into, what does that mean?",
+    "hint": "r-- for the others.",
+    "choices": [
+      {
+        "text": "Any account can read the traffic in it",
+        "correct": true,
+        "why": "Right. chmod 600 after, or umask 077 before."
+      },
+      {
+        "text": "Only root can open it, because root captured it",
+        "correct": false,
+        "why": "The file belongs to ana, and the last r lets everyone else read it."
+      },
+      {
+        "text": "Nobody but ana can read it",
+        "correct": false,
+        "why": "That would be -rw-------, the mode tshark used."
+      },
+      {
+        "text": "Other users can add packets to it",
+        "correct": false,
+        "why": "Only the owner has w."
+      }
+    ]
+  },
+  {
+    "id": "ex-j255qhcx",
+    "version": 1,
+    "section": "reading-it-back",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `tcpdump -n -r web1.pcap` need no `sudo`?",
+    "hint": "It opens a file, not an interface.",
+    "choices": [
+      {
+        "text": "Because the capture used `-n`",
+        "correct": false,
+        "why": "-n is about names, not permission."
+      },
+      {
+        "text": "Because tcpdump keeps root from the capture",
+        "correct": false,
+        "why": "Nothing is kept; each run starts as whoever typed it."
+      },
+      {
+        "text": "Reading a file ana owns needs no privilege",
+        "correct": true,
+        "why": "Right. Only opening an interface does."
+      },
+      {
+        "text": "A pcap file carries its own permission to be read",
+        "correct": false,
+        "why": "The file system decides, like for any file."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ssm6t0q",
+    "version": 1,
+    "section": "reading-it-back",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`tcp[tcpflags] & tcp-syn != 0` printed eight lines from `web1.pcap`: a SYN and a SYN-ACK each time. How many connections were opened?",
+    "hint": "Two lines per connection.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "connections"
+  },
+  {
+    "id": "ex-hr4vpyh8",
+    "version": 1,
+    "section": "reading-it-back",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Read with a filter that hid the handshake, a server's answer acknowledged `73`; the full read had shown `74`. A colleague says a byte was lost. What happened?",
+    "hint": "Relative to what?",
+    "choices": [
+      {
+        "text": "One byte was lost on the way and retransmitted later",
+        "correct": false,
+        "why": "The file has no retransmission; the packets are the same ones."
+      },
+      {
+        "text": "The server acknowledged one byte too few by mistake",
+        "correct": false,
+        "why": "The server sent the same packet both times; only the printing differs."
+      },
+      {
+        "text": "tcpdump counted from the request, not the SYN",
+        "correct": true,
+        "why": "Right. Without the SYN the base moves by one; -S prints raw numbers and ends the confusion."
+      },
+      {
+        "text": "-A shifts the numbering by one to fit the text",
+        "correct": false,
+        "why": "-A changes how the payload is printed, not the header's numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-ecr0q4t4",
+    "version": 1,
+    "section": "reading-it-back",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To make `tcpdump` print raw sequence numbers on every packet, add the flag ___ to the command.",
+    "hint": "Capital letter; the small one is the snap length.",
+    "blanks": [
+      {
+        "accept": [
+          "-S"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gppp0wdn",
+    "version": 1,
+    "section": "snaplen-and-rotation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Reading `short.pcap`, a line ended in `[|http]`. What does it mean?",
+    "hint": "The file was captured with -s 96.",
+    "choices": [
+      {
+        "text": "The server answered with an HTTP error",
+        "correct": false,
+        "why": "This was the request, and nothing in it is an error."
+      },
+      {
+        "text": "The packet was damaged on the wire",
+        "correct": false,
+        "why": "It arrived whole; the capture kept only its start."
+      },
+      {
+        "text": "The stored copy stops inside the HTTP",
+        "correct": true,
+        "why": "Right. The snap length cut it after 96 bytes."
+      },
+      {
+        "text": "The output was piped into another program",
+        "correct": false,
+        "why": "The pipe to head only limits lines; the mark is tcpdump's."
+      }
+    ]
+  },
+  {
+    "id": "ex-ynysqmss",
+    "version": 1,
+    "section": "snaplen-and-rotation",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `-s 96`, Ethernet, IP and TCP took 14, 20 and 32 bytes. How many bytes of the HTTP request were kept?",
+    "hint": "96 minus the headers.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-8rhrwr3t",
+    "version": 1,
+    "section": "snaplen-and-rotation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `-C 1 -W 3` the ring held `ring.pcap0` of 237648 bytes and two files of about a million. Which holds the newest packets?",
+    "hint": "Which one was not full?",
+    "choices": [
+      {
+        "text": "ring.pcap2, the highest number",
+        "correct": false,
+        "why": "The numbers are the order of creation, and the ring wrapped round."
+      },
+      {
+        "text": "ring.pcap0, the one not full",
+        "correct": true,
+        "why": "Right. It was being overwritten when the capture stopped."
+      },
+      {
+        "text": "ring.pcap1, in the middle",
+        "correct": false,
+        "why": "That one holds the oldest packets still kept."
+      },
+      {
+        "text": "All three, with packets mixed across them",
+        "correct": false,
+        "why": "Each file is written in turn, never two at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-46dv9s2v",
+    "version": 1,
+    "section": "snaplen-and-rotation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A ring of `-C 100 -W 5` runs overnight. The fault happened at 02:00 and you stop the capture at 09:00. When will the 02:00 packets be missing?",
+    "hint": "How much can the ring hold?",
+    "choices": [
+      {
+        "text": "Never: a ring keeps the whole night",
+        "correct": false,
+        "why": "It keeps five files of 100 million bytes, whatever the night was."
+      },
+      {
+        "text": "Only if the capture filter was wrong",
+        "correct": false,
+        "why": "A right filter still fills files; the ring still wraps."
+      },
+      {
+        "text": "If over about 500 MB came after 02:00",
+        "correct": true,
+        "why": "Right. Stop it close to the fault, or size the ring to the traffic."
+      },
+      {
+        "text": "If the capture ran longer than five hours",
+        "correct": false,
+        "why": "The ring counts bytes, not hours."
+      }
+    ]
+  },
+  {
+    "id": "ex-a09wzqph",
+    "version": 1,
+    "section": "snaplen-and-rotation",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these reduce what a capture file exposes about other people? Choose all that apply.",
+    "hint": "Less in the file, or less time with the file.",
+    "choices": [
+      {
+        "text": "A short snap length",
+        "correct": true,
+        "why": "Right: headers without contents."
+      },
+      {
+        "text": "The `-n` flag",
+        "correct": false,
+        "why": "It changes the printing, and the file keeps the same packets."
+      },
+      {
+        "text": "A capture filter for one host and port",
+        "correct": true,
+        "why": "Right: other people's traffic is never recorded."
+      },
+      {
+        "text": "Deleting the file once the question is answered",
+        "correct": true,
+        "why": "Right: a file that is gone exposes nothing."
+      },
+      {
+        "text": "Reading it with `-A`",
+        "correct": false,
+        "why": "That prints the contents, which is the opposite."
+      }
+    ]
+  },
+  {
+    "id": "ex-5fe6tnsc",
+    "version": 1,
+    "section": "handing-it-over",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`tshark -z http,tree` counted 8 HTTP packets in `web1.pcap`, which holds 40. What are the other 32?",
+    "hint": "Four connections, each opened and closed.",
+    "choices": [
+      {
+        "text": "Packets the kernel dropped",
+        "correct": false,
+        "why": "tcpdump reported 0 dropped by kernel."
+      },
+      {
+        "text": "HTTP packets cut short by the snap length",
+        "correct": false,
+        "why": "web1.pcap was captured whole, with the default length."
+      },
+      {
+        "text": "Encrypted HTTPS that tshark cannot count",
+        "correct": false,
+        "why": "The capture filter was tcp port 80; nothing on 443 was kept."
+      },
+      {
+        "text": "TCP packets that open, acknowledge and close",
+        "correct": true,
+        "why": "Right. Eight carry HTTP; the rest are TCP doing its own work."
+      }
+    ]
+  },
+  {
+    "id": "ex-70kyhx5p",
+    "version": 1,
+    "section": "handing-it-over",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The analysis is finished and the ticket is closed. What should happen to the capture files?",
+    "hint": "They are copies of other people's data.",
+    "choices": [
+      {
+        "text": "Keep them for six months in case the fault returns",
+        "correct": false,
+        "why": "A new fault gets a new capture; the old one only keeps exposing people."
+      },
+      {
+        "text": "Move them to /tmp, where the system clears them",
+        "correct": false,
+        "why": "/tmp is readable by others and cleared on nobody's schedule you control."
+      },
+      {
+        "text": "Delete every copy",
+        "correct": true,
+        "why": "Right. On the server and everywhere else, and say so in the ticket."
+      },
+      {
+        "text": "Compress them so they take less space",
+        "correct": false,
+        "why": "A compressed capture holds exactly the same data."
+      }
+    ]
+  },
+  {
+    "id": "ex-psexjw0x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A production web server returns an occasional HTTP 500 and you are asked to capture it. Which command is proportionate?",
+    "hint": "Bounded in size, one port, not root, to a file.",
+    "choices": [
+      {
+        "text": "`sudo tcpdump -i any -w all.pcap`",
+        "correct": false,
+        "why": "Every interface, every protocol, and no end: the opposite of proportionate."
+      },
+      {
+        "text": "`sudo tcpdump -n -i eth0 -C 10 -W 4 -Z ana -w web.pcap tcp port 80`",
+        "correct": true,
+        "why": "Right. One port, a ring of 40 MB, and root dropped before writing."
+      },
+      {
+        "text": "`sudo tcpdump -n -A -i eth0 tcp port 80`, watching the screen",
+        "correct": false,
+        "why": "It prints every form to a terminal and keeps nothing to analyse."
+      },
+      {
+        "text": "`tcpdump -n -i eth0 -w web.pcap tcp port 80`",
+        "correct": false,
+        "why": "Without sudo it is refused before it captures anything."
+      }
+    ]
+  }
+]

@@ -1,0 +1,1853 @@
+{
+  "ex-pmtq3t1m": {
+    "prompt": "Um roteador sem estado de uma filial deixa respostas de servidores web entrarem na LAN com tcp sport 443 accept. Um auditor o testa de fora com uma conexão da porta de origem 443 para a porta 3389 de uma máquina da LAN. O que o roteador faz?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Descarta, porque a máquina da LAN não pediu essa conexão antes",
+        "why": "Um filtro sem estado não guarda registro de quem pediu."
+      },
+      {
+        "text": "Descarta, porque 3389 não é uma porta que a regra cita",
+        "why": "A regra não cita porta de destino alguma."
+      },
+      {
+        "text": "Deixa passar: a regra testa um número que o remetente escolheu",
+        "why": "Isso. A porta de origem é escrita por quem envia, e a regra não distingue uma resposta de outra coisa com o mesmo número."
+      },
+      {
+        "text": "Deixa passar o primeiro pacote e descarta o resto",
+        "why": "Ele não aprende nada; cada pacote é julgado sozinho, e todos levam a porta de origem 443."
+      }
+    ]
+  },
+  "ex-ywp0rxvz": {
+    "prompt": "O fw é trocado por um firewall mais rígido, que marca como invalid um pacote encontrado no meio de uma conversa. Ele reinicia enquanto o laptop tem uma conexão aberta com app na 8080. O que acontece com essa conexão?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Continua, porque uma regra a teria deixado começar",
+        "why": "Esse é o padrão do Linux, o 1 em nf_conntrack_tcp_loose; este firewall é do tipo mais rígido."
+      },
+      {
+        "text": "Continua, porque uma entrada established é mantida por cinco dias",
+        "why": "Os cinco dias ficam na memória, e um reinício esquece o que houver nela."
+      },
+      {
+        "text": "Cai: o próximo pacote não casa com entrada",
+        "why": "Isso. A tabela se perdeu no reinício, então o pacote é invalid e descartado."
+      },
+      {
+        "text": "Continua quando app reenvia a última resposta, o que recria a entrada",
+        "why": "Uma entrada nasce quando uma regra aceita um pacote new, e respostas dos servidores não iniciam conversa."
+      }
+    ]
+  },
+  "ex-e416xtnh": {
+    "prompt": "Sob o conjunto de regras com estado e contadores da aula, o laptop busca a página de saúde de app cinco vezes, cada uma por uma conexão TCP nova. Quantos pacotes a regra ct state new conta?",
+    "hint": "Aula 1."
+  },
+  "ex-sd98bk67": {
+    "prompt": "O roteador de borda de um provedor leva milhões de fluxos na frente do firewall com estado de uma empresa. Qual regra pertence ao roteador?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Descartar pacotes da internet com origem privada",
+        "why": "Isso. Isso nunca é legítimo, e decidir não exige memória."
+      },
+      {
+        "text": "Aceitar pacotes que pertencem a conexões abertas pela equipe",
+        "why": "Isso exige uma tabela de conexões, que um roteador sem estado não mantém."
+      },
+      {
+        "text": "Descartar SSH viajando na porta 443",
+        "why": "Distinguir SSH de TLS exige ler a carga, que é a camada da aula 2."
+      },
+      {
+        "text": "Aceitar respostas casando a porta de origem",
+        "why": "Esse é o buraco da regra de retorno que a aula percorreu."
+      }
+    ]
+  },
+  "ex-f5w34n3f": {
+    "prompt": "Um conjunto de regras com estado deixa a LAN perguntar ao dns em UDP 53, com established,related aceito primeiro. O laptop faz uma pergunta, e a resposta chega 45 segundos depois. O que acontece com a resposta?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Passa como established, porque a entrada dura cinco dias",
+        "why": "Cinco dias é uma conexão TCP estabelecida; uma troca UDP simples é esquecida após 30 segundos."
+      },
+      {
+        "text": "Passa como related, por ser resposta a uma pergunta conhecida",
+        "why": "related é um fluxo novo ligado a uma entrada que existe, como um erro ICMP; esta entrada sumiu."
+      },
+      {
+        "text": "Passa, porque um fluxo UDP é mantido por 120 segundos",
+        "why": "Os 120 valem quando o fluxo virou stream, com pacotes indo e voltando mais de uma vez."
+      },
+      {
+        "text": "Descartada: após 30 segundos parado, o fluxo foi esquecido",
+        "why": "Isso. A resposta então inicia uma conversa nova vinda da DMZ, e regra alguma deixa uma começar ali."
+      }
+    ]
+  },
+  "ex-an2zqe9v": {
+    "prompt": "O registro de fluxo do Suricata para uma conexão de desk até 203.0.113.77 mostra dest_port 443 e app_proto ssh. O que esse registro estabelece?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "O handshake TLS falhou, e o Suricata passou a adivinhar",
+        "why": "Ele nomeou o protocolo pela saudação SSH que leu, não por palpite."
+      },
+      {
+        "text": "A regra de porta recusou a conexão",
+        "why": "Um fluxo com aplicação nomeada quer dizer que a conversa aconteceu."
+      },
+      {
+        "text": "Uma conversa SSH usou a porta deixada aberta ao HTTPS",
+        "why": "Isso. O Suricata reconheceu o SSH pelos primeiros bytes, qualquer que fosse a porta."
+      },
+      {
+        "text": "O que desk digitou depois de entrar, lido da sessão",
+        "why": "Depois da troca de chaves o SSH é cifrado; o legível são as linhas de saudação."
+      }
+    ]
+  },
+  "ex-cvhwefm1": {
+    "prompt": "A regra alert tls $HOME_NET any -> any !443 (msg:\"TLS on a port other than 443\"; flow:to_server,established; tls.sni; content:\".\"; sid:1000002; rev:1;) está carregada. Quais destas conexões do laptop geram alerta? Marque todas as que se aplicam.",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "TLS para um servidor na porta 8443, pedindo shop.example.net",
+        "why": "Isso. TLS, porta diferente de 443 e um nome com ponto."
+      },
+      {
+        "text": "TLS para www na porta 443, pedindo www.example.com",
+        "why": "O !443 exclui justamente esta."
+      },
+      {
+        "text": "SSH para remote na porta 443",
+        "why": "É SSH, não TLS, e vai para a 443; quem dispara é a outra regra da aula."
+      },
+      {
+        "text": "TLS para um servidor de e-mail na porta 993, pedindo mail.example.com",
+        "why": "Isso. Qualquer TLS fora da 443 com nome de servidor casa."
+      },
+      {
+        "text": "HTTP simples para app na porta 8080",
+        "why": "HTTP não é TLS, então não há SNI para casar."
+      }
+    ]
+  },
+  "ex-d7ec14qb": {
+    "prompt": "Uma empresa liga a inspeção de TLS, e o firewall aceita certificados de servidor que um navegador rejeitaria. O que muda para alguém da equipe que visita um site com certificado ruim?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "O navegador avisa como antes, porque confere o certificado real",
+        "why": "O navegador vê o certificado que o firewall fez, não o real."
+      },
+      {
+        "text": "Nenhum aviso: o firewall assina o site de novo",
+        "why": "Isso. Agora quem decide a validade é o firewall, e a autoridade da empresa garante o que ele aceitou."
+      },
+      {
+        "text": "O site não carrega, porque falta ao firewall a chave privada do servidor",
+        "why": "O firewall faz o próprio certificado para o nome e dispensa a chave do servidor; o problema de chave é o do certificado de cliente."
+      },
+      {
+        "text": "O certificado passa em claro, e o firewall registra um aviso",
+        "why": "No TLS 1.3 o certificado é cifrado, e uma linha de log não avisa quem está no teclado."
+      }
+    ]
+  },
+  "ex-rn119any": {
+    "prompt": "Diante do TLS 1.3 um inspetor ainda lê o nome que o cliente põe na primeira mensagem, o campo abreviado como ___.",
+    "hint": "Aula 2.",
+    "blanks": [
+      {
+        "accept": [
+          "SNI"
+        ]
+      }
+    ]
+  },
+  "ex-7e1d6mcy": {
+    "prompt": "Uma equipe liga um WAF novo direto em bloqueio numa segunda-feira. Ao meio-dia o formulário de suporte e o checkout devolvem 403 a clientes comuns. O que a implantação da aula fez que esta pulou?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Subiu o nível de paranoia para pegar mais antes de bloquear",
+        "why": "Níveis mais altos bloqueiam mais tráfego legítimo, não menos."
+      },
+      {
+        "text": "Rodou só em detecção antes, lendo o que bloquearia",
+        "why": "Isso. Ver os vereditos no tráfego real vem antes de deixá-lo recusar algo."
+      },
+      {
+        "text": "Tirou do site inteiro as regras que casaram com os dois formulários",
+        "why": "Isso desliga a proteção em toda parte; a correção da aula foi uma regra, um campo, um local."
+      },
+      {
+        "text": "Pôs o WAF atrás da aplicação",
+        "why": "Ele fica no proxy, onde o TLS termina e antes da aplicação."
+      }
+    ]
+  },
+  "ex-htc5thyk": {
+    "prompt": "Ligue cada resposta ao falso positivo do formulário de suporte ao que ela desliga.",
+    "hint": "Aula 3.",
+    "pairs": [
+      {
+        "left": "SecRuleEngine DetectionOnly",
+        "right": "o bloqueio de todas as regras, no site inteiro"
+      },
+      {
+        "left": "apagar a regra 942100",
+        "right": "a detecção de SQL em todo campo de toda página"
+      },
+      {
+        "left": "SecRuleUpdateTargetById 942100 \"!ARGS:comment\" em /support",
+        "right": "uma regra, para um campo, em um local"
+      }
+    ],
+    "right_distractors": [
+      "as regras de XSS do campo comment"
+    ]
+  },
+  "ex-n3vw384c": {
+    "prompt": "Um appliance de WAF é posto na frente do www e deixa as conexões cifradas passarem intactas, então o TLS continua terminando no www. O que as regras dele conseguem inspecionar nos pedidos?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Os caminhos mas não os corpos, porque os cabeçalhos viajam em claro",
+        "why": "No HTTPS o caminho e os cabeçalhos também são cifrados."
+      },
+      {
+        "text": "O pedido inteiro, porque ele fica na frente do proxy",
+        "why": "Estar na frente não basta; o WAF tem de ficar onde o TLS termina."
+      },
+      {
+        "text": "O pedido inteiro, depois de ler o certificado do www",
+        "why": "Um certificado é público; lê-lo não decifra coisa alguma."
+      },
+      {
+        "text": "Nada deles: ainda estão cifrados quando o atravessam",
+        "why": "Isso. Por isso o WAF da aula roda no proxy que termina o TLS."
+      }
+    ]
+  },
+  "ex-cckgm1js": {
+    "prompt": "O proxy da loja tem client_max_body_size 16k, que a aula lê como 16 KiB. Qual é o maior corpo de pedido que ele aceita, em bytes?",
+    "hint": "Aula 3."
+  },
+  "ex-jrw68f5k": {
+    "prompt": "A aplicação em app precisa chamar um provedor de pagamentos em 198.51.100.7 na porta 443, e a linha dos servidores na matriz está vazia. Qual mudança mantém a disciplina da matriz?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Deixar o segmento de servidores alcançar a internet na 443",
+        "why": "Isso deixa cada servidor alcançar qualquer site; um servidor que chama para fora ganha um destino."
+      },
+      {
+        "text": "Mover app para a DMZ, que fica de frente para a internet",
+        "why": "A DMZ também não tem linha para a internet, e app perderia a zona que o protege."
+      },
+      {
+        "text": "Célula nova: app para 198.51.100.7 na 443, com comentário",
+        "why": "Isso. Uma origem, um destino, uma porta, e um comentário citando a decisão."
+      },
+      {
+        "text": "Passar as chamadas pelo www, que já alcança app",
+        "why": "Essa regra deixa o www iniciar conversas com app, não o contrário."
+      }
+    ]
+  },
+  "ex-9fkfj58z": {
+    "prompt": "Ligue cada desenho de rede ao que ele significa para a segmentação.",
+    "hint": "Aula 4.",
+    "pairs": [
+      {
+        "left": "um firewall com três pernas",
+        "right": "uma regra errada pode abrir todas as zonas de uma vez"
+      },
+      {
+        "left": "uma DMZ entre dois firewalls",
+        "right": "uma falha abre uma camada e a outra segue de pé"
+      },
+      {
+        "left": "VLANs roteadas pelo switch central",
+        "right": "o tráfego entre zonas não encontra regra"
+      },
+      {
+        "left": "VLANs roteadas pelo firewall",
+        "right": "cada conversa entre zonas precisa de uma regra"
+      }
+    ],
+    "right_distractors": [
+      "máquinas dentro de uma VLAN são filtradas entre si"
+    ]
+  },
+  "ex-60j736e3": {
+    "prompt": "Quais destes acréscimos às regras do fw aumentam o raio de explosão de um www comprometido? Marque todas as que se aplicam.",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "www para a internet na 443, para buscar atualizações",
+        "why": "Isso. Uma regra nova que começa na DMZ, e a que um retorno de chamada precisa."
+      },
+      {
+        "text": "admin para www por SSH",
+        "why": "Começa na zona de gestão, não na DMZ."
+      },
+      {
+        "text": "www para db na 5432, para um cache de preços",
+        "why": "Isso. Uma segunda porta a partir da DMZ, direto no banco."
+      },
+      {
+        "text": "a internet para www na porta 8443",
+        "why": "Começa na internet; muda o que alcança o www, não o que o www alcança."
+      }
+    ]
+  },
+  "ex-h20mc0ef": {
+    "prompt": "Um relay de e-mail, mail, entra na DMZ e roda um servidor SSH. Nenhuma regra muda. A partir do admin, o que probe mail:22 imprime?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "blocked, porque cada regra cita o endereço de destino",
+        "why": "A regra de administração cita oifname { \"eth1\", \"eth3\" } e nenhum endereço."
+      },
+      {
+        "text": "refused, porque regra alguma cita mail ainda",
+        "why": "refused quer dizer que nada escuta; mail roda SSH e a regra deixa o pacote passar."
+      },
+      {
+        "text": "blocked até a matriz de zonas ganhar uma entrada para mail",
+        "why": "A matriz é o documento; quem decide é a regra carregada no fw."
+      },
+      {
+        "text": "open: a regra cita a interface da DMZ",
+        "why": "Isso. Qualquer máquina que entra na DMZ herda o SSH da célula de gestão."
+      }
+    ]
+  },
+  "ex-10ap0czx": {
+    "prompt": "Um resolvedor na internet pergunta ao dns sobre www.example.com, recebe uma resposta grande demais para UDP e tenta de novo por TCP. Sob o baseline.nft, o que acontece com a nova tentativa?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Bloqueada: a célula de DNS da internet permite UDP",
+        "why": "Isso. A célula da equipe cita os dois transportes; a da internet cita UDP apenas."
+      },
+      {
+        "text": "Respondida, porque o DNS recorre ao TCP para respostas grandes",
+        "why": "O DNS recorre, mas o firewall decide pela célula, e esta é UDP."
+      },
+      {
+        "text": "Respondida, porque a pergunta UDP deixou uma entrada no conntrack",
+        "why": "A conexão TCP é uma conversa nova, com entrada própria."
+      },
+      {
+        "text": "Recusada pelo próprio dns",
+        "why": "O pacote não chega ao dns; o fw o descarta, o que o probe mostra como blocked."
+      }
+    ]
+  },
+  "ex-0hartpwc": {
+    "prompt": "Uma empresa troca a lista de bloqueio por um conjunto de regras que nega por padrão, construído a partir da matriz de zonas. O que ela deve esperar na primeira semana?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Uma semana tranquila, já que o que funcionava continua funcionando",
+        "why": "Negar por padrão recusa o que não foi nomeado, e algum tráfego legítimo ficou esquecido."
+      },
+      {
+        "text": "Serviços novos expostos até alguém listá-los",
+        "why": "Essa era a falha da lista de bloqueio; agora um serviço fora da lista fica bloqueado."
+      },
+      {
+        "text": "Reclamações de tráfego legítimo que ninguém listou",
+        "why": "Isso. A falha da lista de permissão é barulhenta e se resolve no mesmo dia."
+      },
+      {
+        "text": "Logs de descarte de ataques que antes passavam, e sem reclamações",
+        "why": "A falha barulhenta é o tráfego legítimo recusado, e as pessoas avisam."
+      }
+    ]
+  },
+  "ex-4a6a2pxs": {
+    "prompt": "O monitoramento no admin, 192.168.99.10, precisa ler métricas que o próprio fw serve na porta TCP 9100. Onde fica a regra?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "forward: de eth4 para o endereço do fw, tcp dport 9100, accept",
+        "why": "O forward vê o tráfego que atravessa o fw; o endereçado ao fw passa pelo input."
+      },
+      {
+        "text": "input: iifname eth4, ip saddr 192.168.99.10, tcp dport 9100, new, accept",
+        "why": "Isso. A interface de gestão e a origem única, como a regra de SSH ao lado."
+      },
+      {
+        "text": "input: tcp dport 9100 accept, sem interface nem origem",
+        "why": "Isso deixa qualquer zona ler as métricas do fw."
+      },
+      {
+        "text": "output: o fw envia as métricas, então a chain dele as permite",
+        "why": "Quem inicia a conversa é o admin; as respostas do fw passam como established."
+      }
+    ]
+  },
+  "ex-xqz6bheq": {
+    "prompt": "Ordene as regras de uma chain forward que nega por padrão, de cima para baixo, como esta aula as organiza.",
+    "hint": "Aula 5.",
+    "items": [
+      "ct state established,related accept",
+      "ct state invalid drop",
+      "as regras de accept comentadas para conversas novas",
+      "a regra de log com limite de taxa"
+    ],
+    "trap": "Uma regra de log fora do fim registra tráfego que regras posteriores teriam aceitado."
+  },
+  "ex-crackd0a": {
+    "prompt": "Para filtrar IPv4 e IPv6 com um só conjunto de regras, uma tabela do nftables é declarada na família ___.",
+    "hint": "Aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "inet"
+        ]
+      }
+    ]
+  },
+  "ex-yrq0p0hw": {
+    "prompt": "Uma enxurrada de 3.000 handshakes inacabados por segundo atravessa o fw, e cada entrada já viu o SYN-ACK. Com nf_conntrack_tcp_timeout_syn_recv em 20, como na aula, quantas entradas dessas a tabela mantém quando estabiliza?",
+    "hint": "Aula 6."
+  },
+  "ex-m6b27e53": {
+    "prompt": "Com tcp_syncookies = 1 e a fila de conexões semiabertas cheia, ordene o que acontece quando um cliente de verdade se conecta ao www.",
+    "hint": "Aula 6.",
+    "items": [
+      "o SYN do cliente chega",
+      "o www codifica o que lembraria no número de sequência do SYN-ACK",
+      "o www esquece a conexão",
+      "o ACK do cliente traz o número de volta e o www o confere",
+      "o www monta a conexão"
+    ],
+    "trap": "O servidor não guarda nada entre o SYN-ACK e o ACK; o número carrega tudo."
+  },
+  "ex-30jt42c1": {
+    "prompt": "A loja fica lenta. O link está em 30%, o conntrack -C está bem abaixo do máximo, e o proxy registra milhares de buscas bem formadas por segundo, cada origem perguntando poucas vezes. Onde isso é absorvido?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Antes do link, no provedor ou num serviço de limpeza",
+        "why": "O link não está cheio, então não é volumétrico."
+      },
+      {
+        "text": "O limite de conexões por origem do firewall",
+        "why": "Cada origem pergunta poucas vezes, o que um limite por origem vê como normal."
+      },
+      {
+        "text": "O proxy, a aplicação e um cache",
+        "why": "Isso. Ela esgota o trabalho da aplicação, que é o tipo de aplicação."
+      },
+      {
+        "text": "SYN cookies no www, com tempos menores no fw",
+        "why": "Os handshakes se completam, e nem a fila nem a tabela estão enchendo."
+      }
+    ]
+  },
+  "ex-v2hdpccq": {
+    "prompt": "O link de uma loja leva 1 Gbit/s, e ataques de 40 Gbit/s atingiram outras do mesmo setor. Qual medida responde a esse tipo de ataque?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Um firewall com interface de 40 Gbit/s no prédio",
+        "why": "A enxurrada se perde do lado do provedor do link de 1 Gbit/s, antes de chegar ao prédio."
+      },
+      {
+        "text": "Tempos de syn_recv menores e SYN cookies",
+        "why": "Isso protege tabelas; um link cheio descarta pacotes antes de chegarem a uma."
+      },
+      {
+        "text": "Um limite de quatro conexões por origem",
+        "why": "Cada uma de milhares de origens fica abaixo dele, e o link enche do mesmo jeito."
+      },
+      {
+        "text": "Um serviço de limpeza ou uma CDN, contratados antes de qualquer ataque",
+        "why": "Isso. Capacidade que outra pessoa tem, combinada numa reunião e não durante o incidente."
+      }
+    ]
+  },
+  "ex-8k9056zt": {
+    "prompt": "A inspeção dinâmica de ARP está ligada em todos os switches de acesso. O gateway, 192.168.10.1, tem o endereço configurado à mão, e não por DHCP. Do que mais o switch precisa para que uma máquina em outra porta, alegando o endereço do gateway, seja descartada?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Port security limitando aquela porta a um único endereço MAC",
+        "why": "O port security conta endereços MAC; uma máquina que mente no ARP apresenta um só, o dela."
+      },
+      {
+        "text": "Uma associação estática do endereço do gateway à porta dele",
+        "why": "Isso. A tabela de snooping aprende pelo DHCP, e o gateway nunca pediu nada ao DHCP."
+      },
+      {
+        "text": "O MAC do gateway aprendido na tabela de encaminhamento, que a inspeção lê",
+        "why": "A inspeção confere as respostas com a tabela do DHCP snooping, e não com a tabela de qual MAC está atrás de qual porta."
+      },
+      {
+        "text": "O arpwatch no segmento, relatando o par",
+        "why": "O arpwatch relata uma mudança depois que ela aconteceu; não descarta pacote algum."
+      }
+    ]
+  },
+  "ex-66zdkt6h": {
+    "prompt": "Um laptop comprometido envenena o ARP na LAN da equipe e repassa o tráfego dos colegas ao gateway. Eles usam a loja por HTTPS, e os navegadores conferem o certificado. O que o laptop obtém desse tráfego?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Os cookies de sessão, que passam pela interface dele",
+        "why": "Passam cifrados: a captura HTTPS não tinha linha Cookie alguma."
+      },
+      {
+        "text": "Os caminhos das páginas pedidas, já que o TLS esconde o corpo e não a linha do pedido",
+        "why": "A linha do pedido também está dentro do TLS: o sensor contou zero linhas GET."
+      },
+      {
+        "text": "Nomes, horários e tamanhos",
+        "why": "Isso. Os metadados sobrevivem; o que foi dito, não."
+      },
+      {
+        "text": "As senhas digitadas no login, antes de o TLS começar",
+        "why": "O TLS é estabelecido antes de qualquer pedido, inclusive o de login."
+      }
+    ]
+  },
+  "ex-jnc904t5": {
+    "prompt": "Clientes entram na loja a partir de cafés e hotéis. Quais medidas ainda protegem o cookie de sessão deles nessas redes? Marque todas as que se aplicam.",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "O atributo Secure, com o site inteiro em HTTPS e HSTS",
+        "why": "Isso. O cookie nunca viaja em claro, seja qual for a rede."
+      },
+      {
+        "text": "Inspeção dinâmica de ARP nos switches do escritório",
+        "why": "Protege os segmentos do escritório; o Wi-Fi do café não é um deles."
+      },
+      {
+        "text": "Uma validade curta, com um valor novo emitido no login",
+        "why": "Isso. Um cookie copiado logo deixa de funcionar."
+      },
+      {
+        "text": "Um sensor arpwatch na LAN da equipe",
+        "why": "Ele vigia o segmento da empresa, não o do cliente."
+      },
+      {
+        "text": "Invalidar a sessão no servidor ao sair",
+        "why": "Isso. O valor morre com a sessão."
+      }
+    ]
+  },
+  "ex-0rcn7ked": {
+    "prompt": "Uma máquina numa rede com switches ouve tráfego endereçado a outras. Ligue cada constatação à causa que a aula dá.",
+    "hint": "Aula 7.",
+    "pairs": [
+      {
+        "left": "os administradores configuraram uma porta SPAN para o sensor de IDS",
+        "right": "uma porta espelho, arranjada de propósito"
+      },
+      {
+        "left": "a porta da mesa apresentou centenas de endereços MAC",
+        "right": "uma tabela de endereços estourada, inundando como um hub"
+      },
+      {
+        "left": "as tabelas de vizinhos dos colegas põem o gateway no MAC dessa máquina",
+        "right": "ARP spoofing feito por essa máquina"
+      }
+    ],
+    "right_distractors": [
+      "um resolvedor respondendo por nomes que não serve"
+    ]
+  },
+  "ex-77g9swpr": {
+    "prompt": "Com a regra fib carregada no fw, o contador dela começa a subir toda noite. Uma captura na LAN mostra que os pacotes descartados vêm todos do MAC de uma estação, cada um com um endereço de origem diferente, de fora da empresa. Para o que isso aponta?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O filtro está descartando tráfego honesto e convém afrouxá-lo para rp_filter 2",
+        "why": "Tráfego honesto da LAN leva uma origem da LAN, e o fw tem rota de volta para ela por aquela interface."
+      },
+      {
+        "text": "Alguém na internet está forjando os endereços da empresa",
+        "why": "Esses pacotes chegam pela interface da LAN, a caminho de fora."
+      },
+      {
+        "text": "O NAT da própria estação está reescrevendo a origem dela",
+        "why": "O NAT é feito no fw, e escreve um endereço público, não um diferente a cada vez."
+      },
+      {
+        "text": "Essa estação foi tomada e está entrando na enxurrada de alguém com origens forjadas",
+        "why": "Isso. Origens forjadas aleatórias são como uma enxurrada se esconde, e o filtro de saída a tornou visível."
+      }
+    ]
+  },
+  "ex-zmpc2eab": {
+    "prompt": "A zona da loja é assinada e o resolvedor da empresa valida. Alguém no caminho entre o resolvedor e o servidor de nomes da zona troca o endereço de uma resposta pelo seu. O que um cliente do resolvedor recebe?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O endereço forjado, entregue sem a flag ad",
+        "why": "Um resolvedor que valida não entrega nada quando a assinatura falha; essa saída é a do +cd."
+      },
+      {
+        "text": "O endereço verdadeiro, reconstruído a partir do RRSIG",
+        "why": "Uma assinatura prova uma resposta; ela não carrega o endereço a restaurar."
+      },
+      {
+        "text": "SERVFAIL, sem endereço nenhum entregue ao cliente",
+        "why": "Isso. A assinatura não confere, então o resolvedor recusa."
+      },
+      {
+        "text": "O endereço forjado, porque no caminho a resposta do atacante chega primeiro",
+        "why": "Vencer a corrida é justamente o que o DNSSEC torna inútil."
+      }
+    ]
+  },
+  "ex-0fxy8jcq": {
+    "prompt": "Um resolvedor sorteia um ID de transação aleatório de 16 bits para cada pergunta e uma porta de origem aleatória entre 1.000. Pela aritmética da aula, uma resposta forjada tem uma chance em quantas de acertar os dois?",
+    "hint": "Aula 8."
+  },
+  "ex-y3t07xd8": {
+    "prompt": "No fw cada rede fica atrás de exatamente uma interface, então a checagem de caminho reverso do kernel cabe nele como net.ipv4.conf.eth0.rp_filter = ___ .",
+    "hint": "Aula 8.",
+    "blanks": [
+      {
+        "accept": [
+          "1",
+          "estrito",
+          "strict"
+        ]
+      }
+    ]
+  },
+  "ex-g9djyyv2": {
+    "prompt": "desk está em quarentena no fw com a regra inserida, mas os compartilhamentos de uma estação ao lado, na mesma LAN da equipe, continuam sendo cifrados a partir de desk. Por quê, e o que fecha esse caminho?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "A regra não pegou as conexões já abertas de desk; limpar o conntrack no fw",
+        "why": "A regra casa pelo endereço de origem em qualquer estado, e o fw nem vê esse tráfego."
+      },
+      {
+        "text": "O fw nem o vê; firewalls nos hosts, ou desligar a porta de desk no switch",
+        "why": "Isso. Duas máquinas no mesmo segmento conversam sem passar pelo firewall."
+      },
+      {
+        "text": "Ela está na chain errada; passá-la para input",
+        "why": "input é para tráfego ao próprio fw; nenhuma das chains vê esse tráfego."
+      },
+      {
+        "text": "desk pegou outro endereço; pôr esse também em quarentena",
+        "why": "Seja qual for o endereço, uma regra no fw não vê tráfego dentro do segmento."
+      }
+    ]
+  },
+  "ex-m6yxqxam": {
+    "prompt": "Toda noite o servidor de arquivos copia seus dados para uma pasta compartilhada no servidor de backup, com uma conta que pode escrever lá. Um ransomware toma o servidor de arquivos. O que acontece com os backups, e que desenho teria evitado isso?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Ficam a salvo: o servidor de backup roda outro sistema operacional",
+        "why": "O software escreve pelo compartilhamento; o sistema do outro lado não importa."
+      },
+      {
+        "text": "Ficam a salvo enquanto os testes de restauração agendados passarem",
+        "why": "Um teste de restauração diz que o backup funcionou da última vez; não impede a cifragem desta noite."
+      },
+      {
+        "text": "Sobrescritos também; cópias puxadas por outra máquina, sem acesso de escrita da origem",
+        "why": "Isso. O que o cliente pode escrever, o software nele pode sobrescrever."
+      },
+      {
+        "text": "Sobrescritos também; uma retenção mais longa na mesma pasta compartilhada",
+        "why": "Cópias antigas numa pasta em que o cliente escreve também estão ao alcance dele."
+      }
+    ]
+  },
+  "ex-7dz0m40p": {
+    "prompt": "Um firewall de host está sendo escrito para cada estação da equipe, pelo raciocínio da aula. Quais regras fazem parte dele? Marque todas as que se aplicam.",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Uma política de entrada drop",
+        "why": "Isso. Permita o que é usado, descarte o resto."
+      },
+      {
+        "text": "Compartilhamento na 445 aceito da LAN da equipe, para as pastas dos colegas",
+        "why": "Uma estação não deveria servir arquivos; arquivos ficam em servidores."
+      },
+      {
+        "text": "Aceitar conexões no estado established ou related",
+        "why": "Isso. É assim que as conexões da própria estação voltam."
+      },
+      {
+        "text": "Área de trabalho remota na 3389 aceita da LAN da equipe, para o suporte",
+        "why": "O suporte trabalha do segmento de gerência, e a LAN da equipe é onde a propagação acontece."
+      },
+      {
+        "text": "Área de trabalho remota aceita do segmento de gerência",
+        "why": "Isso. É de lá que o suporte trabalha."
+      }
+    ]
+  },
+  "ex-afmkr35f": {
+    "prompt": "Ordene estes controles pela etapa do ataque em que cada um se põe no caminho, da mais cedo à mais tarde.",
+    "hint": "Aula 9.",
+    "items": [
+      "o veredito do gateway de e-mail sobre a mensagem",
+      "o DNS protetor recusando o nome da página de phishing",
+      "firewalls nos hosts recusando conexões entre estações",
+      "backups que nenhuma máquina infectada alcança"
+    ],
+    "trap": "Os firewalls nos hosts agem contra a propagação, que vem depois do clique e da instalação."
+  },
+  "ex-eqsxb4fw": {
+    "prompt": "Dois locais combinam uma chave com X25519, trocando as chaves públicas por e-mail, e ninguém as compara por outro canal. Contra o que a cifragem resultante protege?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Contra os dois, já que as chaves privadas ficaram em casa",
+        "why": "Uma chave pública trocada faz você compartilhar um segredo com quem trocou, perfeitamente cifrado."
+      },
+      {
+        "text": "Não protege, porque as chaves públicas cruzaram a rede em claro",
+        "why": "Chaves públicas são feitas para ser vistas; vê-las não dá o segredo."
+      },
+      {
+        "text": "Quem grava o tráfego, mas não quem trocou uma chave no caminho",
+        "why": "Isso. O acordo de chaves não prova de quem é a chave que você tem."
+      },
+      {
+        "text": "Quem troca, já que os dois segredos derivados difeririam e o link falharia",
+        "why": "Cada lado compartilha um segredo coincidente com quem trocou, e nada falha."
+      }
+    ]
+  },
+  "ex-zqxp66qb": {
+    "prompt": "O processador de um servidor web satura quando milhares de visitantes novos chegam ao mesmo tempo, mas não quando poucos clientes baixam arquivos grandes. Pelas medições da aula, qual operação é a primeira suspeita?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "O AES-256-GCM cifrando as páginas enviadas",
+        "why": "Ele rodou a cerca de 12,5 GB por segundo num núcleo, e downloads grandes o carregariam primeiro."
+      },
+      {
+        "text": "A assinatura RSA-2048 de cada handshake novo",
+        "why": "Isso. 3.313 por segundo, uma por conexão: muitas conexões novas sentem isso primeiro."
+      },
+      {
+        "text": "A verificação RSA, que o servidor roda para cada visitante",
+        "why": "A verificação é o lado barato, 57.718 por segundo, e é o cliente que verifica o servidor."
+      },
+      {
+        "text": "600.000 rodadas de PBKDF2 para a chave de cada conexão",
+        "why": "Essas rodadas eram o openssl enc transformando um arquivo de chave em chave, não parte do TLS."
+      }
+    ]
+  },
+  "ex-tydnmmh6": {
+    "prompt": "No comando openssl enc da aula, o arquivo de chave tem 32 bytes aleatórios. Um colega propõe subir o -iter de 600.000 para 6.000.000 para deixar o arquivo mais seguro. O que a aula diz?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Deixa o arquivo dez vezes mais difícil de abrir para quem roubar o arquivo de chave",
+        "why": "Com o arquivo de chave em mãos, decifrar custa um pouco mais de tempo e funciona."
+      },
+      {
+        "text": "Dá ao CBC a detecção de alteração que lhe falta",
+        "why": "A derivação da chave não diz nada sobre um texto cifrado alterado; a tag de um AEAD diz."
+      },
+      {
+        "text": "Rodadas atrasam o chute de uma senha digitada; 32 bytes aleatórios não se chutam",
+        "why": "Isso. A aula diz que as rodadas não custam nada aqui, e também não compram nada."
+      },
+      {
+        "text": "Eleva a chave a 2.560 bits",
+        "why": "Rodadas mudam o custo de derivar a chave, não o tamanho dela."
+      }
+    ]
+  },
+  "ex-2f62jbv3": {
+    "prompt": "O AES-GCM do seal.py acrescenta uma tag de tamanho fixo a tudo o que sela. Selada do mesmo jeito, quantos bytes uma instrução de pagamento de 100 bytes passa a ter?",
+    "hint": "Aula 10."
+  },
+  "ex-bx82gzfa": {
+    "prompt": "Ligue cada pacote UDP gravado na interface externa do fw, entre branch e fw, ao que ele carrega.",
+    "hint": "Aula 10.",
+    "pairs": [
+      {
+        "left": "148 bytes, da filial, o primeiro",
+        "right": "a mensagem que abre o handshake"
+      },
+      {
+        "left": "92 bytes, do fw",
+        "right": "a resposta do handshake"
+      },
+      {
+        "left": "32 bytes",
+        "right": "um keepalive vazio"
+      },
+      {
+        "left": "96 bytes, vários",
+        "right": "o pedido da filial e a resposta, sob ChaCha20-Poly1305"
+      }
+    ],
+    "right_distractors": [
+      "a chave privada da filial, enviada uma vez"
+    ]
+  },
+  "ex-df79ftb1": {
+    "prompt": "Um fabricante publica resumos MD5 do seu firmware numa página separada que ninguém mais consegue editar. Pela aula, contra o que esses resumos ainda protegem?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Corrupção acidental",
+        "why": "Isso. Já se demonstraram colisões no MD5, então ele não serve mais onde alguém tenta enganar a checagem."
+      },
+      {
+        "text": "Adulteração por qualquer um, porque a página é separada do arquivo",
+        "why": "A página separada resolve de onde vem o resumo; o próprio MD5 tem colisões demonstradas."
+      },
+      {
+        "text": "Pouco, já que um resumo MD5 pode ser revertido no firmware",
+        "why": "Foram demonstradas colisões, não reversão; e ele ainda pega corrupção."
+      },
+      {
+        "text": "Adulteração, porque o MD5 usa uma chave que o fabricante guarda",
+        "why": "Um hash não tem chave; qualquer um calcula um."
+      }
+    ]
+  },
+  "ex-9gjhhezw": {
+    "prompt": "Os laptops da equipe receberam o release.pub da wiki interna quando o agente foi instalado. Meses depois o servidor de download é tomado, e o agent-2.4.2.tar.gz e o .sig são trocados por um arquivo e uma assinatura feitos com a chave do próprio atacante. O que os laptops veem ao verificar?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Signature Verified Successfully, já que a assinatura confere com o arquivo que veio junto",
+        "why": "Confere com a chave do atacante, não com a que está nos laptops."
+      },
+      {
+        "text": "Sucesso, a menos que o SHA256SUMS também tenha mudado",
+        "why": "A checagem da assinatura não lê a lista de resumos."
+      },
+      {
+        "text": "Uma pergunta se devem confiar na chave nova, como o SSH pergunta",
+        "why": "O openssl pkeyutl confere com a chave que recebe e não pergunta nada."
+      },
+      {
+        "text": "Signature Verification Failure",
+        "why": "Isso. A chave nos laptops nunca saiu do controle de admin."
+      }
+    ]
+  },
+  "ex-00k2w54s": {
+    "prompt": "Um desenvolvedor guarda cada senha como SHA-256 de um salt aleatório por usuário seguido da senha, com o salt guardado ao lado do valor. O que a aula diz que ainda está errado?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "O salt deveria ser o mesmo para todos, para os logins poderem ser conferidos",
+        "why": "Um salt compartilhado deixa um cálculo ser comparado com todas as contas de uma vez."
+      },
+      {
+        "text": "O SHA-256 é rápido, então cada chute contra um valor roubado sai barato",
+        "why": "Isso. Precisa de uma função lenta: Argon2id, scrypt, bcrypt ou PBKDF2 com muitas rodadas."
+      },
+      {
+        "text": "Com o salt conhecido, o SHA-256 se inverte",
+        "why": "A resistência à pré-imagem se mantém; o ataque é chutar, rápido."
+      },
+      {
+        "text": "Um salt guardado ao lado do valor revela a senha a quem o rouba",
+        "why": "O salt não é segredo; o papel dele é fazer de cada conta um cálculo próprio."
+      }
+    ]
+  },
+  "ex-xxyhw9j2": {
+    "prompt": "Quando um terceiro precisa conferir quem produziu uma mensagem, o HMAC não basta, porque os dois lados têm a chave; o que serve é uma ___ digital.",
+    "hint": "Aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "assinatura"
+        ]
+      }
+    ]
+  },
+  "ex-wbjcfev3": {
+    "prompt": "Ordene como a empresa torna os lançamentos do agente verificáveis contra uma pessoa, do primeiro ao último passo.",
+    "hint": "Aula 11.",
+    "items": [
+      "gerar o par de chaves Ed25519, uma vez, em admin",
+      "publicar o release.pub num lugar em que os usuários já confiam",
+      "assinar cada lançamento com a chave privada",
+      "no laptop, verificar o download com a chave obtida antes"
+    ],
+    "trap": "A chave pública chega aos usuários antes dos lançamentos que confere, e não do servidor de download ao lado deles."
+  },
+  "ex-ep6p42at": {
+    "prompt": "O certificado de app.corp.example.com vai de 28 de setembro a 28 de dezembro de 2026, ambos à meia-noite. Por quantos dias ele é válido?",
+    "hint": "Aula 12."
+  },
+  "ex-j7k9cejt": {
+    "prompt": "Uma CA da empresa sem restrição de nomes está instalada em todos os laptops da equipe, e a chave da CA emissora é roubada. O que o ladrão consegue fazer contra esses laptops?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Se passar pelos nomes internos da empresa, como app.corp.example.com",
+        "why": "Sem restrição de nomes a chave atesta qualquer nome, os públicos inclusive."
+      },
+      {
+        "text": "Apresentar um certificado confiável para qualquer nome, sites públicos inclusive",
+        "why": "Isso. É o risco que a restrição de nomes elimina."
+      },
+      {
+        "text": "Decifrar gravações de sessões passadas com os servidores da empresa",
+        "why": "A chave de uma CA assina certificados; ela não guarda chaves de sessão."
+      },
+      {
+        "text": "Revogar a raiz, tirando a confiança dos laptops",
+        "why": "A CA emissora não revoga a própria mãe, e a chave da raiz está offline."
+      }
+    ]
+  },
+  "ex-0n66gvmm": {
+    "prompt": "Um cliente interno confere a CRL da CA emissora. A cópia em cache passou do Next Update ontem, e o servidor da CA está inalcançável. O que a aula diz que a empresa deveria fazer esse cliente fazer?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Recusar a conexão até conseguir obter uma lista nova",
+        "why": "Isso. Dentro da empresa a CA controla as duas pontas, então os clientes podem conferir e recusar quando não conseguem."
+      },
+      {
+        "text": "Seguir com a lista em cache, já que a CA a assinou",
+        "why": "Seguir quando a lista nova não pode ser obtida é o que alguém com uma chave roubada arranjaria."
+      },
+      {
+        "text": "Pular a checagem e confiar na data de validade",
+        "why": "Essa é a fraqueza da web pública, que uma CA da empresa consegue evitar."
+      },
+      {
+        "text": "Perguntar por OCSP e aceitar se não houver resposta",
+        "why": "Aceitar no silêncio é a mesma falha branda por outro caminho."
+      }
+    ]
+  },
+  "ex-nxz5z7mm": {
+    "prompt": "Um cliente acredita numa raiz porque ela está no seu repositório de confiança; um intermediário enviado pelo servidor não é aceito por si só: ele é ___ no caminho até a raiz.",
+    "hint": "Aula 12.",
+    "blanks": [
+      {
+        "accept": [
+          "verificado",
+          "conferido",
+          "checado"
+        ]
+      }
+    ]
+  },
+  "ex-2gcgf47z": {
+    "prompt": "Uma auditoria de um servidor TLS 1.2 lista as quatro suítes que ele oferece. Qual delas falha a exigência da aula de acordo de chaves efêmero?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "DHE-RSA-AES256-GCM-SHA384",
+        "why": "DHE é Diffie-Hellman efêmero; a aula o cita ao lado do ECDHE."
+      },
+      {
+        "text": "ECDHE-RSA-CHACHA20-POLY1305",
+        "why": "ECDHE é efêmero, e CHACHA20-POLY1305 é cifra autenticada."
+      },
+      {
+        "text": "AES256-GCM-SHA384",
+        "why": "Isso. Não há ECDHE nem DHE no nome: a chave é trocada por RSA, sem sigilo futuro."
+      },
+      {
+        "text": "ECDHE-ECDSA-AES256-GCM-SHA384",
+        "why": "Essa é a suíte TLS 1.2 da própria loja, e a primeira peça é ECDHE."
+      }
+    ]
+  },
+  "ex-759mzvwe": {
+    "prompt": "Um usuário num Wi-Fi hostil de café volta a quatro sites visitados na semana passada. Qual site deixa esse visitante exposto a stripping?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Um que redireciona para HTTPS e manda um ano de Strict-Transport-Security",
+        "why": "O navegador lembra do cabeçalho e não manda pedido em claro para ser respondido."
+      },
+      {
+        "text": "Um cujo servidor HTTP puro responde com um 301 para HTTPS e mais nada",
+        "why": "Isso. O primeiro pedido e o redirecionamento ainda viajam em claro, e alguém no caminho pode respondê-los."
+      },
+      {
+        "text": "Um cujo domínio está na lista de preload do HSTS",
+        "why": "Com preload, nem o primeiro pedido sai em claro."
+      },
+      {
+        "text": "Um que manda HSTS sem includeSubDomains, acessado pelo nome www",
+        "why": "includeSubDomains estende a promessa a outros nomes; o próprio www está coberto."
+      }
+    ]
+  },
+  "ex-g3ktktkn": {
+    "prompt": "Um cliente Python cria ssl.create_default_context() e depois põe check_hostname = False, mantendo verify_mode em CERT_REQUIRED. Que certificado ele passaria a aceitar para www.example.com que o padrão recusava?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Um autoassinado que diz CN = www.example.com",
+        "why": "CERT_REQUIRED ainda verifica a cadeia, e nada confiável o assinou."
+      },
+      {
+        "text": "Um que uma autoridade confiável assinou para outro nome",
+        "why": "Isso. A metade da cadeia continua; a metade do nome se foi."
+      },
+      {
+        "text": "Os mesmos de antes, já que a verificação da cadeia também compara o nome",
+        "why": "O nome é a segunda metade da verificação, a que foi desligada."
+      },
+      {
+        "text": "Um oferecido por TLS 1.1",
+        "why": "A versão é negociada à parte da verificação do certificado."
+      }
+    ]
+  },
+  "ex-0ch0aze8": {
+    "prompt": "O cabeçalho da loja diz max-age=31536000. Por quantos dias um navegador que o viu continua recusando HTTP puro para o site? Responda em dias.",
+    "hint": "Aula 13."
+  },
+  "ex-0f0tqk7h": {
+    "prompt": "Uma busca num serviço Node.js por verificação desligada deve procurar a configuração de ambiente NODE_TLS_REJECT_UNAUTHORIZED=___.",
+    "hint": "Aula 13.",
+    "blanks": [
+      {
+        "accept": [
+          "0"
+        ]
+      }
+    ]
+  },
+  "ex-vyvj3twt": {
+    "prompt": "O sensor Suricata na porta espelhada da DMZ cai às 02:00 e ninguém percebe até as 09:00. O que aconteceu com o tráfego da loja nesse intervalo?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Parou, porque o sensor falhou fechado",
+        "why": "Falhar fechado é comportamento de um elemento em linha; o espelho só recebe uma cópia."
+      },
+      {
+        "text": "Fluiu como sempre, sem vigilância",
+        "why": "Isso. O tráfego não dependia do IDS; só os alertas pararam."
+      },
+      {
+        "text": "Passou por um bypass de hardware que juntou as duas portas do sensor",
+        "why": "Um bypass pertence a um aparelho em linha com duas portas no caminho."
+      },
+      {
+        "text": "Esperou no switch",
+        "why": "O switch encaminha os quadros reais, aconteça o que acontecer com a cópia."
+      }
+    ]
+  },
+  "ex-10d2ktwy": {
+    "prompt": "Depois do falso positivo, a regra de drop no ips é estreitada para content:\"/admin/\"; startswith. Que pedido vindo de fora ela ainda descarta?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "/administrator",
+        "why": "Sem a barra depois de admin, não começa com /admin/."
+      },
+      {
+        "text": "/help/admin/",
+        "why": "startswith ancora a comparação no início do caminho."
+      },
+      {
+        "text": "/admin-guide.html",
+        "why": "Esse foi o falso positivo que a barra veio encerrar."
+      },
+      {
+        "text": "/admin/users?page=2",
+        "why": "Isso. O caminho começa com /admin/, então casa e é descartado."
+      }
+    ]
+  },
+  "ex-bms9c2h9": {
+    "prompt": "Ordene a vida de uma regra nova, da primeira linha até bloquear na frente da loja.",
+    "hint": "Aula 14.",
+    "items": [
+      "escrevê-la com alert e carregá-la no sensor",
+      "observar os alertas contra o tráfego real",
+      "estreitá-la onde casou com pedidos inofensivos",
+      "trocar alert por drop e subir o rev",
+      "carregá-la no ips em linha"
+    ],
+    "trap": "Bloquear primeiro é descobrir os falsos positivos pelos clientes recusados."
+  },
+  "ex-m7h7b0w9": {
+    "prompt": "Um IPS entra em linha na frente da loja. Não gera alerta nenhum a manhã inteira, e mesmo assim cada página fica um pouco mais lenta. Por quê?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Cada pacote agora espera no IPS enquanto é inspecionado",
+        "why": "Isso. Em linha, ele soma sua latência a cada pacote, com ou sem casamento."
+      },
+      {
+        "text": "A porta espelhada dobra o tráfego no switch da DMZ",
+        "why": "Espelho é como um IDS é alimentado, e não soma latência."
+      },
+      {
+        "text": "As regras de drop fazem pedidos que casam expirar",
+        "why": "Sem alertas, nada casou e nada foi descartado."
+      },
+      {
+        "text": "Gravar o eve.json segura cada pedido até a linha estar no disco",
+        "why": "Sem casamento não há linha de alerta a gravar."
+      }
+    ]
+  },
+  "ex-03d1e4cd": {
+    "prompt": "A regra 1000201 está carregada como na aula, com detection_filter:track by_src, count 10, seconds 60. Um endereço envia o formulário de login 25 vezes em um minuto. Quantos alertas ele produz?",
+    "hint": "Aula 15."
+  },
+  "ex-em6ezwcs": {
+    "prompt": "Ligue cada situação num sensor à ferramenta de ajuste que a aula usa.",
+    "hint": "Aula 15.",
+    "pairs": [
+      {
+        "left": "um servidor de backup conhecido dispara uma boa regra de login toda noite",
+        "right": "suppress, com track e aquele endereço"
+      },
+      {
+        "left": "uma regra correta de varredura grava milhares de alertas por hora",
+        "right": "um threshold no arquivo de threshold"
+      },
+      {
+        "left": "uma regra para /admin também casa com /admin-guide.html",
+        "right": "editar a regra"
+      },
+      {
+        "left": "uma regra de um protocolo que esta rede não usa dispara em outra coisa",
+        "right": "desativá-la, com o motivo por escrito"
+      }
+    ],
+    "right_distractors": [
+      "subir o rev e recarregar"
+    ]
+  },
+  "ex-02v230mz": {
+    "prompt": "Uma ferramenta que ninguém viu antes manda pedidos HTTP com a linha de pedido quebrada. Nenhuma regra publicada ou local a descreve. O que no sensor da aula ainda pode gerar um alerta?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "O conjunto Emerging Threats Open, atualizado diariamente",
+        "why": "Ele guarda assinaturas do que alguém já descreveu."
+      },
+      {
+        "text": "O detection_filter da regra 1000201",
+        "why": "Isso conta envios de login; não sabe nada de pedidos malformados."
+      },
+      {
+        "text": "O analisador, por meio do http-events.rules",
+        "why": "Isso. Ele sabe como é um pedido válido e aponta o desvio."
+      },
+      {
+        "text": "Uma linha suppress para o endereço de origem da ferramenta",
+        "why": "Suppress cala alertas; não os cria."
+      }
+    ]
+  },
+  "ex-6pfkkw7g": {
+    "prompt": "O servidor web da loja muda da porta 80 para 8080. Uma regra diz alert http $EXTERNAL_NET any -> $HOME_NET any no Suricata; a gêmea em Snort 2 diz tcp e porta 80. Qual continua disparando no site movido?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "As duas, já que o any do cabeçalho cobre a porta nova",
+        "why": "A gêmea em Snort 2 nomeia a porta 80 em vez de any."
+      },
+      {
+        "text": "A gêmea em Snort 2, cuja porta confere",
+        "why": "Ela casa a porta 80, onde o site não está mais."
+      },
+      {
+        "text": "Ambas param, até serem reescritas para 8080",
+        "why": "A regra do Suricata não nomeou porta."
+      },
+      {
+        "text": "A do Suricata: http é o protocolo reconhecido, em qualquer porta",
+        "why": "Isso. O Suricata identifica HTTP pelo que vê, não pelo número da porta."
+      }
+    ]
+  },
+  "ex-tdrkka9v": {
+    "prompt": "No app, a aplicação fala com um cache na mesma máquina por 127.0.0.1. Que sensor poderia ver essa conversa?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Um NIDS no segmento em que o app está ligado",
+        "why": "Tráfego entre dois processos no mesmo host não cruza o segmento."
+      },
+      {
+        "text": "Um agente no próprio app",
+        "why": "Isso. Só um sensor de host vê o que fica dentro da máquina."
+      },
+      {
+        "text": "O sensor da DMZ, pelos registros de TLS",
+        "why": "Esses são de conexões que cruzam a DMZ, não de dentro de um host."
+      },
+      {
+        "text": "Um NIDS posto entre o app e o firewall",
+        "why": "Esse link leva o que sai do app, e esse tráfego fica nele."
+      }
+    ]
+  },
+  "ex-gw0q5r4b": {
+    "prompt": "Quais destes uma verificação de host no www encontraria enquanto o sensor de rede da DMZ não registra nada deles? Marque todas as que se aplicam.",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Um novo listener em 0.0.0.0:8081 com quem ninguém se conectou",
+        "why": "Isso. O host o viu abrir; o fio não leva nada até alguém conectar."
+      },
+      {
+        "text": "Uma linha nova no authorized_keys do root",
+        "why": "Isso. Uma mudança de arquivo no host, invisível no segmento."
+      },
+      {
+        "text": "Uma conexão TLS de um estranho para www.example.com",
+        "why": "O sensor de rede registra isso, com o SNI."
+      },
+      {
+        "text": "Dez consultas de nome de um endereço externo ao servidor de nomes público",
+        "why": "Esses são registros de DNS que o sensor de rede grava."
+      },
+      {
+        "text": "Uma edição no sshd_config sem pedido de mudança",
+        "why": "Isso. A integridade de arquivos vê; a rede não."
+      }
+    ]
+  },
+  "ex-nvbmh14e": {
+    "prompt": "Um intruso troca um arquivo em /etc/nginx por outro de exatamente o mesmo tamanho e depois volta o horário de modificação. Que atributo registrado pela regra Watch do AIDE denuncia a troca?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "s, o tamanho",
+        "why": "Os tamanhos são idênticos de propósito."
+      },
+      {
+        "text": "m, o horário de modificação",
+        "why": "Foi voltado ao valor antigo."
+      },
+      {
+        "text": "sha256, o hash do conteúdo do arquivo",
+        "why": "Isso. Conteúdo diferente dá um hash sem relação, digam o que disserem tamanho e horários."
+      },
+      {
+        "text": "u e g, dono e grupo",
+        "why": "Uma troca que mantém root como dono deixa os dois como estavam."
+      }
+    ]
+  },
+  "ex-90vpj9kn": {
+    "prompt": "O sensor da DMZ tem o alerta 1000101 para /admin/ vindo de 203.0.113.50, respondido com 200. O log de acesso do www no mesmo minuto não tem linha /admin/ nenhuma. Qual é a leitura?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Um falso positivo do sensor, já que o www é onde o pedido foi tratado",
+        "why": "O sensor viu o pedido e o 200 em claro, por HTTP."
+      },
+      {
+        "text": "O pedido foi por HTTPS, então o www não conseguiu lê-lo",
+        "why": "É o contrário: o www termina o TLS, e o sensor leu o caminho."
+      },
+      {
+        "text": "O log do www é suspeito, e o registro do sensor é o confiável",
+        "why": "Isso. Um intruso no www pode editar o log; o sensor roda em outro lugar."
+      },
+      {
+        "text": "O alerta veio de outra revisão da regra",
+        "why": "A revisão diz que texto de regra disparou, não se o www registrou."
+      }
+    ]
+  },
+  "ex-evv029yy": {
+    "prompt": "O guest (192.168.30.30) tem de deixar de alcançar o SSH de um servidor da matriz, 10.0.5.10, e manter todo o resto. Que ACL, e onde?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Uma ACL padrão negando 192.168.30.30, na entrada da interface de LAN do branch",
+        "why": "Isso isola o guest da internet inteira, como o laboratório mostrou."
+      },
+      {
+        "text": "Uma ACL estendida negando tcp desse host para 10.0.5.10 eq 22, na entrada do lado LAN do branch",
+        "why": "Isso. Ela nomeia destino e porta, então fica perto da origem."
+      },
+      {
+        "text": "Uma ACL estendida na porta de switch do servidor, na saída",
+        "why": "Listas estendidas ficam perto da origem, descartando o pacote antes de cruzar a rede."
+      },
+      {
+        "text": "Uma ACL padrão perto de 10.0.5.10",
+        "why": "Ela não conhece porta, então o guest perde os outros serviços do servidor."
+      }
+    ]
+  },
+  "ex-gkf0emhs": {
+    "prompt": "Quantos endereços a linha de ACL permit ip 10.20.16.0 0.0.3.255 any aceita como origem? Responda em endereços.",
+    "hint": "Aula 17."
+  },
+  "ex-6fcvfyc4": {
+    "prompt": "No lado de internet do roteador, a linha permit tcp any 192.168.30.0 0.0.0.255 ___ só admite pacotes TCP com a flag ACK ou RST.",
+    "hint": "Aula 17.",
+    "blanks": [
+      {
+        "accept": [
+          "established"
+        ]
+      }
+    ]
+  },
+  "ex-tgwwv5pv": {
+    "prompt": "Ligue cada endereço e wildcard ao que ele casa.",
+    "hint": "Aula 17.",
+    "pairs": [
+      {
+        "left": "10.1.1.7 0.0.0.0",
+        "right": "exatamente um endereço, como host"
+      },
+      {
+        "left": "0.0.0.0 255.255.255.255",
+        "right": "qualquer endereço, como any"
+      },
+      {
+        "left": "172.16.0.0 0.0.255.255",
+        "right": "um /16, 65.536 endereços"
+      },
+      {
+        "left": "10.1.2.0 0.0.1.255",
+        "right": "um /23, 512 endereços"
+      }
+    ],
+    "right_distractors": [
+      "um /25, 128 endereços"
+    ]
+  },
+  "ex-crkqqxnd": {
+    "prompt": "O lado de internet do branch filtra com a palavra established e mais nada para TCP. Quais destas são verdadeiras sobre essa linha? Marque todas as que se aplicam.",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Um SYN de remote para branchpc:8080 é descartado",
+        "why": "Isso. Um SYN não leva ACK nem RST."
+      },
+      {
+        "text": "Um pacote forjado com ACK passa por ela, sem conexão por trás",
+        "why": "Isso. Ela confere uma flag que o remetente define."
+      },
+      {
+        "text": "Respostas de DNS para o branch voltam por ela",
+        "why": "Respostas de DNS são UDP, e a palavra é para TCP; precisam de uma linha própria."
+      },
+      {
+        "text": "Ela lembra quais conexões o branchpc abriu",
+        "why": "Uma ACL não tem memória; isso é trabalho de firewall com estado."
+      },
+      {
+        "text": "Respostas aos pedidos web do próprio branchpc passam",
+        "why": "Isso. Todo pacote da resposta leva ACK."
+      }
+    ]
+  },
+  "ex-3p2fn59d": {
+    "prompt": "Uma regra escrita para deixar a LAN do branch, 192.168.30.0, alcançar app:8080 mostra o contador subindo com conexões do laptop, 192.168.10.20. Para onde aponta a tabela de sintomas da aula?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Sombreada por um accept acima dela",
+        "why": "Uma regra sombreada conta 0; esta conta."
+      },
+      {
+        "text": "Interfaces trocadas",
+        "why": "Uma regra impossível não casa nada, então conta 0."
+      },
+      {
+        "text": "Uma máscara mais larga que o pretendido",
+        "why": "Isso. Contar o tráfego errado é a marca de um prefixo como /16 onde se queria /24."
+      },
+      {
+        "text": "Estar depois do drop geral",
+        "why": "Abaixo de um drop geral, a regra fica inalcançável e conta 0."
+      }
+    ]
+  },
+  "ex-4rrrwyy3": {
+    "prompt": "Um drop de quarentena está sombreado no fim da cadeia. Ordene os passos do conserto da aula.",
+    "hint": "Aula 18.",
+    "items": [
+      "listar a cadeia com nft -a para ver os handles",
+      "apagar o drop mal posicionado pelo handle",
+      "inseri-lo na posição logo depois do tráfego estabelecido",
+      "testar de novo a partir da máquina em quarentena",
+      "conferir que o contador do drop subiu"
+    ],
+    "trap": "Inserir antes de apagar deixa duas cópias, e testar antes de mover não prova nada novo."
+  },
+  "ex-wjzacgzg": {
+    "prompt": "Uma cadeia termina com um counter sem veredito e confia no policy drop. Semanas depois um accept novo é acrescentado com nft add. O que acontece com ele?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Ele é alcançado e funciona",
+        "why": "Isso. Uma regra que só conta não decide nada, então não esconde nada abaixo dela."
+      },
+      {
+        "text": "Fica inalcançável, porque está depois da última regra",
+        "why": "Inalcançável vem depois de um veredito incondicional, e um counter não tem."
+      },
+      {
+        "text": "Fica sombreado pela policy, que é lida primeiro",
+        "why": "A policy vale depois das regras, para pacotes que nada decidiu."
+      },
+      {
+        "text": "O nft se recusa a acrescentar uma regra abaixo de um counter",
+        "why": "O nft acrescenta em qualquer lugar sem reclamar, e é assim que esses erros acontecem."
+      }
+    ]
+  },
+  "ex-jn3r61ag": {
+    "prompt": "Uma mudança automática é seguida do matrix-test.sh, que imprime remote db:5432 expected blocked got open e sai com 1. O que o pipeline deve fazer?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Editar o matrix.expected para a célula dizer open",
+        "why": "Isso esconde o buraco que a mudança abriu em vez de fechá-lo."
+      },
+      {
+        "text": "Seguir em frente: sair com 1 é como o script avisa que uma célula foi verificada",
+        "why": "1 significa diferença; silêncio e 0 significam que a matriz vale."
+      },
+      {
+        "text": "Rodá-lo de novo até passar",
+        "why": "O resultado vem do conjunto de regras, e repetir não o muda."
+      },
+      {
+        "text": "Desfazer a mudança e restaurar o último conjunto bom",
+        "why": "Isso. O código de saída de falha existe para barrar a mudança antes de alguém ser acionado."
+      }
+    ]
+  },
+  "ex-kr9h6dce": {
+    "prompt": "O laptop de um terceirizado no segmento de gerência recebe uma cópia da chave privada da ana, e o firewall de host do db é aberto para o endereço do laptop, para um teste. A linha da ana no authorized_keys não mudou. O que ssh db responde a partir do laptop?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Um shell, porque o firewall de host agora admite o laptop",
+        "why": "O firewall é uma camada; a opção from= da chave recusa na seguinte."
+      },
+      {
+        "text": "Um timeout, já que o db descarta SSH vindo de fora do admin",
+        "why": "O firewall de host foi aberto para este teste, então os pacotes chegam."
+      },
+      {
+        "text": "Permission denied (publickey)",
+        "why": "Isso. A chave está certa e o lugar está errado: o from= a prende ao endereço do jump host, como o admin2 mostrou."
+      },
+      {
+        "text": "Um shell sem encaminhamento de portas, pois as opções tiram os extras",
+        "why": "Essas opções aparam um login permitido; o from= decide se ele é permitido."
+      }
+    ]
+  },
+  "ex-4p3chd16": {
+    "prompt": "A lista de saídas do db nomeia o espelho de atualizações, o servidor de hora, o coletor de logs e o DNS, e a chain de saída descarta o resto. Toda noite, às 02:00, o contador de descarte sobe, rumo a um endereço desconhecido na internet, porta 443. Qual é a primeira leitura?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Respostas às consultas noturnas do app estão sendo descartadas pela chain de saída",
+        "why": "Respostas são aceitas pelo ct state established,related antes da política."
+      },
+      {
+        "text": "Algo no db está iniciando o que banco nenhum precisa; investigar",
+        "why": "Isso. O filtro de saída revela justamente isso: o contador diz que um servidor tentou o que nenhum servidor do tipo precisa."
+      },
+      {
+        "text": "O serviço de hora precisa de uma regra de saída mais larga",
+        "why": "A hora está na lista com seu destino; este endereço não é ele."
+      },
+      {
+        "text": "Uma falha inofensiva: a conexão foi descartada, então está encerrada",
+        "why": "A tentativa em si é o sinal, seja qual for o destino dela."
+      }
+    ]
+  },
+  "ex-va857jtt": {
+    "prompt": "Uma regra contou zero por um trimestre. Ordene os passos para removê-la com segurança, do primeiro ao último.",
+    "hint": "Aula 19.",
+    "items": [
+      "encontrar o dono da regra",
+      "removê-la, com uma volta agendada",
+      "rodar o teste da matriz",
+      "esperar por uma reclamação durante o período",
+      "tornar a remoção permanente"
+    ],
+    "trap": "Uma remoção é testada antes de ficar permanente, e a falta de reclamação é a evidência."
+  },
+  "ex-bprsp4qx": {
+    "prompt": "O endereço de um fornecedor entra no conjunto vendor do fw com timeout 2h, e ninguém mexe nele. Quarenta minutos depois, o nft list set mostra o elemento. Quantos minutos o campo expires mostra?",
+    "hint": "Aula 19."
+  },
+  "ex-d3nz4v05": {
+    "prompt": "Um segundo proxy, www2, é montado em outro endereço da DMZ e recebe uma cópia do certificado e da chave de www-client. Ele conecta no app na 8443. O que a porta da frente do app faz?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Recusa, porque ele não é o endereço 192.0.2.80",
+        "why": "A configuração do nginx nomeia um sujeito, CN=www-client, e nenhum endereço."
+      },
+      {
+        "text": "Admite: o que conta é o nome que apresenta, não o IP",
+        "why": "Isso. A identidade decide, e quem tem a chave é essa identidade; por isso a chave privada não sai da máquina dona dela."
+      },
+      {
+        "text": "Recusa com 400, pois um certificado fica preso a uma máquina",
+        "why": "Nada no certificado nomeia uma máquina; o sigilo da chave é o vínculo."
+      },
+      {
+        "text": "Admite depois que a regra da 8443 no fw for mudada para nomear o www2",
+        "why": "Essa regra nomeia o destino, não o endereço do proxy."
+      }
+    ]
+  },
+  "ex-3d9srqj3": {
+    "prompt": "O certificado atual do proxy tem notAfter Dec 28 2026 e ninguém o renova. O que acontece com as requisições do proxy ao app em 29 de dezembro?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Continuam até alguém revogar o certificado",
+        "why": "A expiração dispensa revogação; o certificado traz a própria data de fim."
+      },
+      {
+        "text": "Continuam, pois a checagem rodou quando a configuração do proxy foi carregada",
+        "why": "A checagem acontece a cada handshake, pelo que é verdade agora."
+      },
+      {
+        "text": "O app as recusa e registra FAILED:certificate has expired",
+        "why": "Isso. A mesma recusa do certificado antigo, e a loja para até a renovação."
+      },
+      {
+        "text": "O app responde 403, porque o sujeito não confere mais",
+        "why": "O sujeito não mudou; a verificação falha antes, com 400."
+      }
+    ]
+  },
+  "ex-gcg5rya4": {
+    "prompt": "A empresa põe a aplicação financeira atrás de uma checagem de identidade como a do app. Quais destes fazem parte de fazer isso do jeito Zero Trust? Marque todas as que se aplicam.",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Remover a porta antiga que chegava ao financeiro sem a checagem",
+        "why": "Isso. Enquanto ela fica aberta, a checagem é uma porta ao lado de uma janela aberta."
+      },
+      {
+        "text": "Registrar cada decisão com o sujeito do certificado que a fez",
+        "why": "Isso. O próximo incidente começa pelo quem."
+      },
+      {
+        "text": "Manter regras de firewall que limitam quais segmentos chegam à porta do financeiro",
+        "why": "Isso. A camada de rede fica, e limita quem chega a tentar."
+      },
+      {
+        "text": "Deixar a LAN do escritório pular a checagem, já que está dentro",
+        "why": "Estar dentro deixa de ser motivo; essa é a suposição removida."
+      },
+      {
+        "text": "Admitir o www-client lá também, já que ele já foi verificado",
+        "why": "A autorização é por recurso: uma identidade válida para um serviço não abre outro."
+      }
+    ]
+  },
+  "ex-fbbm0pm5": {
+    "prompt": "Ligue cada linha do log de acesso do app ao que aconteceu.",
+    "hint": "Aula 20.",
+    "pairs": [
+      {
+        "left": "192.168.10.20 - NONE /admin/ 400",
+        "right": "nenhum certificado foi apresentado"
+      },
+      {
+        "left": "192.0.2.80 CN=www-client SUCCESS /health 200",
+        "right": "um certificado válido com o nome admitido"
+      },
+      {
+        "left": "192.168.10.20 CN=laptop SUCCESS /admin/ 403",
+        "right": "um certificado válido com um nome que o location recusa"
+      },
+      {
+        "left": "192.0.2.80 CN=www-client-old FAILED:certificate has expired /health 400",
+        "right": "uma credencial depois da data de fim"
+      }
+    ],
+    "right_distractors": [
+      "o firewall descartou a conexão"
+    ]
+  },
+  "ex-fc7gcrpf": {
+    "prompt": "O proxy verifica o certificado do app e apresenta o seu em troca, então as duas pontas provam quem são. Esse arranjo se chama TLS ___.",
+    "hint": "Aula 20.",
+    "blanks": [
+      {
+        "accept": [
+          "mútuo",
+          "mutuo",
+          "mútua",
+          "mutua",
+          "mutual"
+        ]
+      }
+    ]
+  },
+  "ex-yjfkg8wj": {
+    "prompt": "Às 10:00 a permissão de uma ferramenta de relatórios ao db é removida, regenerando e carregando as regras do db, enquanto a ferramenta mantém uma sessão aberta com o banco. Às 10:05 ela envia outra consulta. Sem mais nada feito, o que acontece?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Recusada, já que não sobra regra para a porta 5432 no db",
+        "why": "A regra de established vem antes e ainda casa com a sessão aberta."
+      },
+      {
+        "text": "Respondida, e depois a sessão é cortada pelas regras regeneradas",
+        "why": "Regras não cortam sessões; apagar as entradas do conntrack corta."
+      },
+      {
+        "text": "Respondida, pois a sessão ainda está na tabela de conexões do db",
+        "why": "Isso. A política nova vale para conexões novas, como a segunda linha mostrou."
+      },
+      {
+        "text": "Recusada no próximo handshake TLS dentro da sessão",
+        "why": "Uma sessão TCP aberta não faz handshake novo, e esta nem tinha TLS."
+      }
+    ]
+  },
+  "ex-q1062ypx": {
+    "prompt": "O policy.txt ganha a linha report 192.168.20.40 report - - -, e a coluna from da linha do db muda de app para app,report. O que as regras regeneradas do db aceitam na porta 5432?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Os dois, 192.168.20.10 e 192.168.20.40, num conjunto",
+        "why": "Isso. Cada papel da coluna vira seus endereços quando as regras são geradas."
+      },
+      {
+        "text": "192.168.20.10, até as regras do próprio report serem geradas",
+        "why": "As regras do report dizem o que o report aceita; as do db, quem chega ao db."
+      },
+      {
+        "text": "A palavra report, resolvida quando um pacote chega",
+        "why": "Nomes viram endereços na geração, num único ponto do programa."
+      },
+      {
+        "text": "O segmento de servidores inteiro, já que report e app o dividem",
+        "why": "A regra lista endereços, um por máquina do papel."
+      }
+    ]
+  },
+  "ex-381hnt1p": {
+    "prompt": "Uma equipe aplica microssegmentação no switch virtual do hipervisor em vez de firewalls de host. Pela aula, o que continua igual?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "O ponto de aplicação, ainda o firewall central",
+        "why": "O tráfego leste-oeste nem passa por ele; por isso a aplicação mudou de lugar."
+      },
+      {
+        "text": "A unidade, que continua um segmento de muitas máquinas",
+        "why": "A unidade é uma carga de trabalho nos dois mecanismos."
+      },
+      {
+        "text": "O tráfego dentro da zona, que o hipervisor deixa aberto",
+        "why": "Fechado a menos que uma regra permita, onde quer que se aplique."
+      },
+      {
+        "text": "A forma da política: uma tabela de papéis e de quem chega a quem",
+        "why": "Isso. O mecanismo muda; a política tem a mesma forma."
+      }
+    ]
+  },
+  "ex-h2yqkxwr": {
+    "prompt": "Um segundo jump host, admin2 em 192.168.99.11, entra no policy.txt com o papel admin. Depois de regeneradas as regras do db, quantos endereços o conjunto da regra de SSH contém?",
+    "hint": "Aula 21."
+  },
+  "ex-yb8xdqhf": {
+    "prompt": "O laptop de um funcionário se autentica numa porta da sala de reunião. Depois o funcionário põe um switch pequeno não gerenciado entre o laptop e a parede, e uma segunda máquina atrás dele usa o MAC do laptop. O que fecha essa brecha?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Chavear o conjunto authorised por porta e MAC juntos",
+        "why": "A segunda máquina está na mesma porta com o mesmo MAC, então o par casa."
+      },
+      {
+        "text": "MACsec, 802.1AE",
+        "why": "Isso. Ele autentica cada quadro do enlace, não só o início."
+      },
+      {
+        "text": "Um dot1xAuthReAuthPeriod menor na porta",
+        "why": "O laptop responde a cada reautenticação e a segunda máquina pega carona."
+      },
+      {
+        "text": "Uma VLAN de visitantes atribuída pelo servidor RADIUS",
+        "why": "É para lá que vão os recusados, e aqui ninguém foi recusado."
+      }
+    ]
+  },
+  "ex-e7jg9nsa": {
+    "prompt": "Um administrador simplifica o switch: o conjunto authorised vira type ether_addr, e o port-control.sh adiciona só o MAC. O que isso muda?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Quadros EAPOL deixam de ser aceitos antes da autenticação",
+        "why": "O accept de 0x888e é uma regra à parte, que o conjunto não afeta."
+      },
+      {
+        "text": "A segurança não muda, pois um MAC pertence a uma máquina",
+        "why": "Um MAC se troca com um comando ip link, como o visitor mostrou."
+      },
+      {
+        "text": "As outras portas abrem para qualquer dispositivo quando um laptop se autentica",
+        "why": "O conjunto ainda guarda um MAC; um dispositivo com outro MAC fica de fora."
+      },
+      {
+        "text": "O visitor na p2, com o MAC do newpc emprestado, conseguiria entrar",
+        "why": "Isso. O par porta e endereço é o que o barrou; um filtro só por MAC o deixaria passar."
+      }
+    ]
+  },
+  "ex-s84mxc8f": {
+    "prompt": "Ligue cada parte do laboratório ao que faz esse papel numa rede comercial.",
+    "hint": "Aula 22.",
+    "pairs": [
+      {
+        "left": "o servidor EAP do próprio hostapd, eap_server=1",
+        "right": "um servidor RADIUS"
+      },
+      {
+        "left": "a bridge Linux sw rodando o hostapd",
+        "right": "o switch de acesso, como autenticador"
+      },
+      {
+        "left": "o port-control.sh pondo o par no conjunto",
+        "right": "a lógica de portas do switch, feita internamente"
+      },
+      {
+        "left": "o wpa_supplicant no newpc",
+        "right": "o software no laptop que prova quem ele é"
+      }
+    ],
+    "right_distractors": [
+      "as concessões do servidor DHCP"
+    ]
+  },
+  "ex-12yvr6wp": {
+    "prompt": "Uma impressora sem suplicante, admitida na LAN só pelo endereço MAC, está usando o chamado MAC authentication ___.",
+    "hint": "Aula 22.",
+    "blanks": [
+      {
+        "accept": [
+          "bypass"
+        ]
+      }
+    ]
+  },
+  "ex-xd6eqh10": {
+    "prompt": "Um analista lista todos os registros de fluxo de 203.0.113.50 para ver tudo o que ele tentou contra o laboratório. Quais tentativas dele faltam nessa lista?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "As sondagens às portas 22 e 5432",
+        "why": "Isso. Uma conexão descartada não vira entrada confirmada, então não deixa fluxo; o log de descartes a tem."
+      },
+      {
+        "text": "O pedido de /.env, que recebeu 404",
+        "why": "Essa conversa se completou; é o fluxo com 734 bytes recebidos."
+      },
+      {
+        "text": "O pedido da página inicial, curto demais para virar fluxo",
+        "why": "Levou milissegundos e está lá, com 437 bytes recebidos."
+      },
+      {
+        "text": "O pedido que gerou o alerta do IDS, que o sensor guarda",
+        "why": "É o pedido de /.env, e o firewall também escreveu o fluxo dele."
+      }
+    ]
+  },
+  "ex-32cxsnke": {
+    "prompt": "Uma requisição web do remote levou 40 milissegundos. No registro de fluxo dela, flow.end fica 120 segundos depois de flow.start. Por quê?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "O fim é quando o firewall esqueceu a conexão fechada",
+        "why": "Isso. Uma conexão TCP fechada fica na tabela por dois minutos, e o registro é escrito quando ela sai."
+      },
+      {
+        "text": "O remote manteve a conexão TCP aberta por dois minutos",
+        "why": "As requisições levaram milissegundos; o cliente fechou a conexão."
+      },
+      {
+        "text": "O ulogd arredonda cada fluxo para blocos de dois minutos",
+        "why": "O registro traz os horários que o conntrack deu, ao segundo."
+      },
+      {
+        "text": "É o atraso até o kernel notar a expiração",
+        "why": "Esse atraso muda quando o registro é escrito, até um minuto a mais."
+      }
+    ]
+  },
+  "ex-mkg5xvb5": {
+    "prompt": "O fw envia drops.json e flows.json ao admin com rsyslog. Quais destes impedem um intruso com root no fw de mudar o que o admin já guarda? Marque todas as que se aplicam.",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "O firewall de host do admin aceita a porta 514 do fw e descarta o resto",
+        "why": "Isso. O fw consegue entregar linhas e não consegue entrar para editá-las."
+      },
+      {
+        "text": "Cada linha sai do fw assim que é escrita",
+        "why": "Isso. Quando o intruso chega, as linhas anteriores já estão em outro lugar."
+      },
+      {
+        "text": "O reopenOnTruncate, que recomeça quando um arquivo é esvaziado",
+        "why": "Ele mantém as linhas novas fluindo depois de uma limpeza; não protege o que já foi coletado."
+      },
+      {
+        "text": "O queue.saveOnShutdown na configuração do fw",
+        "why": "Ele guarda linhas em disco enquanto o coletor está fora, na máquina que o intruso domina."
+      }
+    ]
+  },
+  "ex-jx1ysxrb": {
+    "prompt": "A cerca de 860 bytes por registro de descarte, quantos gigabytes de descartes por dia escreve um firewall que recusa 100 pacotes por segundo?",
+    "hint": "Aula 23."
+  },
+  "ex-drgyrp25": {
+    "prompt": "Ordene o que a linha do tempo correlacionada mostra o remote fazendo, do primeiro ao último.",
+    "hint": "Aula 23.",
+    "items": [
+      "carrega a página inicial da loja",
+      "pede o /.env, e o sensor gera um alerta",
+      "tenta SSH no servidor de nomes",
+      "tenta a porta do banco de dados",
+      "tenta a porta 23 na loja",
+      "é recusado pela regra intel-drop"
+    ],
+    "trap": "As recusas do feed vêm por último: a regra intel não existia até o feed ser carregado."
+  }
+}

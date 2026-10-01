@@ -1,0 +1,612 @@
+[
+  {
+    "id": "ex-jcytw29h",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of denial of service to where it is absorbed.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "volumetric",
+        "right": "upstream, before the link"
+      },
+      {
+        "left": "protocol",
+        "right": "the firewall and the TCP stack"
+      },
+      {
+        "left": "application",
+        "right": "the proxy, the application, a cache"
+      }
+    ],
+    "right_distractors": [
+      "the staff's laptops"
+    ]
+  },
+  {
+    "id": "ex-dcyvh6r4",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The office link carries 1 Gbit/s and 20 Gbit/s of flood arrive. What can fw's rules do about it?",
+    "hint": "Where are the packets lost?",
+    "choices": [
+      {
+        "text": "Drop the flood and keep the good traffic",
+        "correct": false,
+        "why": "The link is full before fw sees anything."
+      },
+      {
+        "text": "Rate-limit the flood to 1 Gbit/s",
+        "correct": false,
+        "why": "Rate-limiting happens after the link, too late."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. It is lost on the provider's side of the cable."
+      },
+      {
+        "text": "Send a reset to every source",
+        "correct": false,
+        "why": "That would add traffic, not remove it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sef3bvvt",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A link carries 1 Gbit/s and a flood of 20 Gbit/s arrives. How many times the link's capacity is the flood?",
+    "hint": "Divide.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-mq11qpgr",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A sale e-mailed to a million customers makes the shop unavailable. What does this lesson call that?",
+    "hint": "Is an attacker needed?",
+    "choices": [
+      {
+        "text": "Not a denial of service, because it is legitimate traffic",
+        "correct": false,
+        "why": "The effect is the same exhaustion."
+      },
+      {
+        "text": "A denial of service by accident",
+        "correct": true,
+        "why": "Right. The same exhaustion without an attacker."
+      },
+      {
+        "text": "A distributed denial of service",
+        "correct": false,
+        "why": "Distributed means many attacking machines."
+      },
+      {
+        "text": "A reflection attack",
+        "correct": false,
+        "why": "Nothing was reflected."
+      }
+    ]
+  },
+  {
+    "id": "ex-9m8294ec",
+    "version": 1,
+    "section": "half-open-connections",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does a server hold a half-open connection?",
+    "hint": "Between which two packets?",
+    "choices": [
+      {
+        "text": "After the client's ACK, before any data",
+        "correct": false,
+        "why": "After the ACK the connection is open."
+      },
+      {
+        "text": "Between its SYN-ACK and the client's ACK",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "While the connection is closing",
+        "correct": false,
+        "why": "That is TIME_WAIT and friends."
+      },
+      {
+        "text": "Before the client's SYN arrives",
+        "correct": false,
+        "why": "There is nothing to hold before the SYN."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ma8srgs",
+    "version": 1,
+    "section": "half-open-connections",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With SYN cookies active and the queue full, what does the server remember about a new SYN?",
+    "hint": "Where does the information go?",
+    "choices": [
+      {
+        "text": "Nothing: it is encoded in the SYN-ACK's sequence number",
+        "correct": true,
+        "why": "Right. The client's ACK brings it back."
+      },
+      {
+        "text": "The client's address, in a smaller table",
+        "correct": false,
+        "why": "No table at all."
+      },
+      {
+        "text": "A cookie file in its memory",
+        "correct": false,
+        "why": "The name is a metaphor."
+      },
+      {
+        "text": "The full SYN, until the ACK arrives",
+        "correct": false,
+        "why": "That is what happens without cookies."
+      }
+    ]
+  },
+  {
+    "id": "ex-n68ss3e5",
+    "version": 1,
+    "section": "half-open-connections",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many seconds did fw keep a connection that had seen the SYN-ACK, before the lesson shortened it?",
+    "hint": "nf_conntrack_tcp_timeout_syn_recv.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-aevmdfy7",
+    "version": 1,
+    "section": "half-open-connections",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does shortening the syn_recv timeout cost legitimate clients nothing?",
+    "hint": "How long does a real handshake take?",
+    "choices": [
+      {
+        "text": "Legitimate clients do not use TCP",
+        "correct": false,
+        "why": "They do."
+      },
+      {
+        "text": "Their entries are marked ASSURED and skip the timeout",
+        "correct": false,
+        "why": "ASSURED needs traffic both ways, after the handshake."
+      },
+      {
+        "text": "They finish the handshake in milliseconds",
+        "correct": true,
+        "why": "Right. Only unfinished handshakes wait that long."
+      },
+      {
+        "text": "sysctl -w applies only to new attackers",
+        "correct": false,
+        "why": "It applies to every entry in that state."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ryaq79d",
+    "version": 1,
+    "section": "limiting-per-source",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "remote opened six connections under the limit of four. How many were refused?",
+    "hint": "The counter says it too.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-fb8m8p2c",
+    "version": 1,
+    "section": "limiting-per-source",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While remote was at its limit, branch opened a connection to the shop. What happened?",
+    "hint": "What is the set keyed on?",
+    "choices": [
+      {
+        "text": "Refused, because the shop was full",
+        "correct": false,
+        "why": "The limit is per source, not per shop."
+      },
+      {
+        "text": "Opened: branch has a count of its own",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Refused, because branch is on the same segment as remote",
+        "correct": false,
+        "why": "Counts are per address, not per segment."
+      },
+      {
+        "text": "Delayed until remote closed one",
+        "correct": false,
+        "why": "Nothing queues; it is accepted or rejected."
+      }
+    ]
+  },
+  {
+    "id": "ex-57ykyrw6",
+    "version": 1,
+    "section": "limiting-per-source",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the limit answer with reject with tcp reset instead of drop?",
+    "hint": "What does the client see in each case?",
+    "choices": [
+      {
+        "text": "A reset uses less bandwidth than a drop",
+        "correct": false,
+        "why": "A drop sends nothing, which is less."
+      },
+      {
+        "text": "drop is not allowed inside a dynamic set rule",
+        "correct": false,
+        "why": "It is allowed."
+      },
+      {
+        "text": "A reset removes the client from the set",
+        "correct": false,
+        "why": "Closing connections does that."
+      },
+      {
+        "text": "The client learns at once instead of waiting",
+        "correct": true,
+        "why": "Right: Connection refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-7490qxc8",
+    "version": 1,
+    "section": "limiting-per-source",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a per-source connection limit do nothing against a distributed attack?",
+    "hint": "How many connections does each source open?",
+    "choices": [
+      {
+        "text": "Distributed attacks use UDP",
+        "correct": false,
+        "why": "Some do; the reason is the count."
+      },
+      {
+        "text": "Each of many sources stays under it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The dynamic set fills after 65535 sources",
+        "correct": false,
+        "why": "Even far fewer sources defeat it."
+      },
+      {
+        "text": "The firewall cannot count connections from the internet",
+        "correct": false,
+        "why": "It counted remote's."
+      }
+    ]
+  },
+  {
+    "id": "ex-9zc9rnwt",
+    "version": 1,
+    "section": "limiting-per-source",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A browser opens up to ___ connections to one host, so a per-source limit of four would refuse ordinary visitors.",
+    "hint": "The number in the section.",
+    "blanks": [
+      {
+        "accept": [
+          "six",
+          "6"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-29kjr369",
+    "version": 1,
+    "section": "reflection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 60-byte question produces a 3,000-byte answer. What is the amplification factor?",
+    "hint": "Answer divided by question.",
+    "choices": [
+      {
+        "text": "5",
+        "correct": false,
+        "why": "Off by a factor of ten."
+      },
+      {
+        "text": "50",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "3,000",
+        "correct": false,
+        "why": "That is the answer's size."
+      },
+      {
+        "text": "2,940",
+        "correct": false,
+        "why": "That is the difference, not the ratio."
+      }
+    ]
+  },
+  {
+    "id": "ex-eq152dhy",
+    "version": 1,
+    "section": "reflection",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which measures keep your network from being part of a reflection attack? Choose all that apply.",
+    "hint": "Two bullets in the section.",
+    "choices": [
+      {
+        "text": "A public DNS server that refuses names it is not responsible for",
+        "correct": true,
+        "why": "It cannot be used as a reflector."
+      },
+      {
+        "text": "Refusing to send packets whose source address is not yours",
+        "correct": true,
+        "why": "The forged questions never leave."
+      },
+      {
+        "text": "SYN cookies on the web server",
+        "correct": false,
+        "why": "That protects the server from a SYN flood."
+      },
+      {
+        "text": "A per-source connection limit on the shop",
+        "correct": false,
+        "why": "That limits clients of the shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-86nky184",
+    "version": 1,
+    "section": "reflection",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The lab's DNS server answered REFUSED for example.org. What does that show?",
+    "hint": "Whose names does it answer for?",
+    "choices": [
+      {
+        "text": "It is down",
+        "correct": false,
+        "why": "It answered, and for www it said NOERROR."
+      },
+      {
+        "text": "example.org does not exist in DNS",
+        "correct": false,
+        "why": "That would be NXDOMAIN from a resolver."
+      },
+      {
+        "text": "It is not an open resolver",
+        "correct": true,
+        "why": "Right: no-resolv."
+      },
+      {
+        "text": "The firewall blocked the question",
+        "correct": false,
+        "why": "The server itself answered."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ejxtegf",
+    "version": 1,
+    "section": "beyond-your-link",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each upstream measure to how it works.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "scrubbing service",
+        "right": "traffic routed through a provider that absorbs floods"
+      },
+      {
+        "left": "CDN",
+        "right": "the public address spread over many locations"
+      },
+      {
+        "left": "anycast",
+        "right": "one address announced from many places"
+      }
+    ],
+    "right_distractors": [
+      "a larger conntrack table"
+    ]
+  },
+  {
+    "id": "ex-a37828g2",
+    "version": 1,
+    "section": "beyond-your-link",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "conntrack -S shows drop and early_drop climbing. What is happening?",
+    "hint": "Those two count what the table could not keep.",
+    "choices": [
+      {
+        "text": "The table is full and connections are refused or evicted",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The firewall's rules are dropping more packets",
+        "correct": false,
+        "why": "Rule drops are not these counters."
+      },
+      {
+        "text": "Connections are closing normally",
+        "correct": false,
+        "why": "Normal closes do not count here."
+      },
+      {
+        "text": "The ICMP rate limit is being reached",
+        "correct": false,
+        "why": "Unrelated counter."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkrppcsy",
+    "version": 1,
+    "section": "beyond-your-link",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When is the decision to buy a scrubbing service made well?",
+    "hint": "It has to be arranged before.",
+    "choices": [
+      {
+        "text": "During the first attack, when its cost is clear",
+        "correct": false,
+        "why": "Too late to route traffic through it."
+      },
+      {
+        "text": "Beforehand, from what an hour down costs",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "After the firewall has been upgraded",
+        "correct": false,
+        "why": "A bigger firewall does not widen the link."
+      },
+      {
+        "text": "Never, since SYN cookies make it unnecessary",
+        "correct": false,
+        "why": "Cookies do nothing for a full link."
+      }
+    ]
+  },
+  {
+    "id": "ex-9x6b8pwv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order where a flood meets defences on its way in, from first to last.",
+    "hint": "The figure of three-kinds.",
+    "items": [
+      "the provider or scrubbing service",
+      "the firewall's per-source limits and connection table",
+      "the proxy's rate limit",
+      "the application and its cache"
+    ],
+    "trap": "Each layer sees what the one before it let through."
+  },
+  {
+    "id": "ex-x0tyha7q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop slows to a crawl. conntrack -C on fw is near its maximum and the link is half used. Which kind of attack does this point to?",
+    "hint": "Which resource is exhausted?",
+    "choices": [
+      {
+        "text": "Volumetric",
+        "correct": false,
+        "why": "The link is only half used."
+      },
+      {
+        "text": "Protocol",
+        "correct": true,
+        "why": "Right: a table is filling."
+      },
+      {
+        "text": "Application",
+        "correct": false,
+        "why": "That would show in the proxy and the application first."
+      },
+      {
+        "text": "Reflection from the company's DNS",
+        "correct": false,
+        "why": "It refuses foreign names."
+      }
+    ]
+  },
+  {
+    "id": "ex-756hzzp9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An office of 200 people reaches the shop through one NAT address. What should the per-source limit be based on?",
+    "hint": "Measure first.",
+    "choices": [
+      {
+        "text": "Four, as in the lesson",
+        "correct": false,
+        "why": "Four was a demonstration."
+      },
+      {
+        "text": "One connection per person",
+        "correct": false,
+        "why": "Browsers open several."
+      },
+      {
+        "text": "The busiest legitimate source measured, with margin",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No limit, since NAT makes limits useless",
+        "correct": false,
+        "why": "It changes the number, not the usefulness."
+      }
+    ]
+  }
+]

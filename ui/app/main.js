@@ -160,6 +160,13 @@ const named = (find, screen) => (params) => {
   return screen({ ...params, id: found ? found.id : params.id });
 };
 
+/* THE TRACK'S FINAL BEFORE THE TRACK, because the router takes the first
+   pattern that matches and `/track/:id` matches `/track/exam` — with `exam` as
+   the id. It then enrolled the student in a track called `exam`, which does not
+   exist, so the final answered "you have not chosen a track yet" and the real
+   enrolment was gone. The card linking here was drawn the whole time; no track
+   had a final, so nobody pressed it. `tools/exam-offer-test` presses it now. */
+route('/track/exam', trackExamScreen);
 route('/track/:id', named(trackBySlug, async (params) => {
   if (params.id && (!now().enrollment || now().enrollment.trackId !== params.id)) {
     await api.enrol(params.id);
@@ -171,7 +178,6 @@ route('/course/:id', named(courseBySlug, course));
    one. That is what keeps an old link (or the course button) working after the
    lesson turned into several sections. */
 route('/course/:id/exam', named(courseBySlug, courseExamScreen));
-route('/track/exam', trackExamScreen);
 route('/course/:id/lesson/:ix', named(courseBySlug, lesson));
 route('/course/:id/lesson/:ix/:sec', named(courseBySlug, lesson));
 route('/catalog', catalogue);

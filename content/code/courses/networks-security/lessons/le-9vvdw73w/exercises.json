@@ -1,0 +1,584 @@
+[
+  {
+    "id": "ex-sz6rzkzr",
+    "version": 1,
+    "section": "two-vantage-points",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a host intrusion detection system watch?",
+    "hint": "The H is for host.",
+    "choices": [
+      {
+        "text": "Every conversation crossing the segment it is plugged into",
+        "correct": false,
+        "why": "That is the NIDS's view."
+      },
+      {
+        "text": "One machine's files, processes, users and logs",
+        "correct": true,
+        "why": "Right. It runs on the machine it watches."
+      },
+      {
+        "text": "The firewall's rule counters",
+        "correct": false,
+        "why": "Those belong to the firewall."
+      },
+      {
+        "text": "Traffic between two other hosts on its segment",
+        "correct": false,
+        "why": "It sees nothing on another machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-m42hd07x",
+    "version": 1,
+    "section": "two-vantage-points",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to the kind of sensor it is.",
+    "hint": "The last row of the table.",
+    "pairs": [
+      {
+        "left": "Suricata",
+        "right": "a network sensor watching a segment"
+      },
+      {
+        "left": "AIDE",
+        "right": "a host sensor checking files"
+      },
+      {
+        "left": "auditd",
+        "right": "a host sensor recording what processes do"
+      }
+    ],
+    "right_distractors": [
+      "a firewall that drops packets"
+    ]
+  },
+  {
+    "id": "ex-k15mm5fy",
+    "version": 1,
+    "section": "two-vantage-points",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An intruder gains root on www. Which sensor's record of www's traffic can they not edit?",
+    "hint": "Where does each one run?",
+    "choices": [
+      {
+        "text": "The HIDS on www, because it is protected by its own agent",
+        "correct": false,
+        "why": "Root on the host can tamper with the agent."
+      },
+      {
+        "text": "Both, since each keeps a log",
+        "correct": false,
+        "why": "A log on www is within reach of root on www."
+      },
+      {
+        "text": "The NIDS on sensor",
+        "correct": true,
+        "why": "Right. It runs on another machine."
+      },
+      {
+        "text": "The access log of the proxy on www",
+        "correct": false,
+        "why": "That file lives on the compromised host."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fgh481a",
+    "version": 1,
+    "section": "what-the-wire-cannot-see",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The stranger asked for /admin/ once over HTTP and once over HTTPS. How many alerts did the network sensor raise?",
+    "hint": "Count the alert lines.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-spec9bwj",
+    "version": 1,
+    "section": "what-the-wire-cannot-see",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the HTTPS request, what could the network sensor read?",
+    "hint": "The tls event.",
+    "choices": [
+      {
+        "text": "The path /admin/, but not the answer",
+        "correct": false,
+        "why": "The path was encrypted."
+      },
+      {
+        "text": "The client's address, port 443 and the name www.example.com",
+        "correct": true,
+        "why": "Right. The name, and nothing about what was asked."
+      },
+      {
+        "text": "The status code 200",
+        "correct": false,
+        "why": "Only the proxy's log shows it."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "It recorded the TLS connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-30bhx0bk",
+    "version": 1,
+    "section": "what-the-wire-cannot-see",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The rule for the admin path stays silent on HTTPS. Where does this lesson put detection of requests inside TLS?",
+    "hint": "Who reads the request in the clear?",
+    "choices": [
+      {
+        "text": "In a second network sensor closer to www",
+        "correct": false,
+        "why": "It sees the same ciphertext."
+      },
+      {
+        "text": "In a stricter Suricata rule on the SNI",
+        "correct": false,
+        "why": "The SNI names the site, not the path."
+      },
+      {
+        "text": "In the firewall, by blocking port 443",
+        "correct": false,
+        "why": "That would close the shop."
+      },
+      {
+        "text": "Where TLS ends: the proxy's logs, a WAF there, or an agent on that host",
+        "correct": true,
+        "why": "Right. That machine has the plaintext."
+      }
+    ]
+  },
+  {
+    "id": "ex-v75zs94s",
+    "version": 1,
+    "section": "what-the-wire-cannot-see",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With most web traffic encrypted, what does a network sensor still see well? Choose all that apply.",
+    "hint": "The last sentence of the section.",
+    "choices": [
+      {
+        "text": "Who talked to whom, and when",
+        "correct": true,
+        "why": "Right. Addresses and times are outside the encryption."
+      },
+      {
+        "text": "How much was sent, and in which protocol",
+        "correct": true,
+        "why": "Right. Volumes and protocols stay visible."
+      },
+      {
+        "text": "The paths requested inside HTTPS",
+        "correct": false,
+        "why": "Encrypted, as the missing alert showed."
+      },
+      {
+        "text": "The status code each HTTPS request got",
+        "correct": false,
+        "why": "That came from the proxy's log."
+      }
+    ]
+  },
+  {
+    "id": "ex-10epmh81",
+    "version": 1,
+    "section": "file-integrity",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With what exit code did aide --check end after the proxy's configuration was changed?",
+    "hint": "It means changed entries.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-81d27ev9",
+    "version": 1,
+    "section": "file-integrity",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many bytes larger did sites-enabled/shop become?",
+    "hint": "Subtract the two sizes AIDE printed.",
+    "value": 142,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-9yxdzr4m",
+    "version": 1,
+    "section": "file-integrity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did AIDE report two changed entries for one edited file?",
+    "hint": "Look at the d line.",
+    "choices": [
+      {
+        "text": "It hashes each file twice, with two algorithms",
+        "correct": false,
+        "why": "Watch names one hash, SHA-256."
+      },
+      {
+        "text": "The directory's times moved too",
+        "correct": true,
+        "why": "Right. The d line shows m and c changed."
+      },
+      {
+        "text": "A TLS key under /etc/ssl/private changed at the same time",
+        "correct": false,
+        "why": "Both entries are under /etc/nginx."
+      },
+      {
+        "text": "The report counts the old and the new version",
+        "correct": false,
+        "why": "It counts entries, and the directory is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-cketa1e2",
+    "version": 1,
+    "section": "file-integrity",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "AIDE's first run records how things are now, and that record, kept where an intruder cannot rewrite it, becomes the ___ for every later check.",
+    "hint": "The word the section uses for it.",
+    "blanks": [
+      {
+        "accept": [
+          "reference",
+          "baseline"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rys17bah",
+    "version": 1,
+    "section": "file-integrity",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An intruder with root on www runs aide --init after editing the proxy's configuration. What does the next check report, and what would have prevented it?",
+    "hint": "Which file does --check compare against?",
+    "choices": [
+      {
+        "text": "Exit code 4, because AIDE remembers the first database",
+        "correct": false,
+        "why": "It compares against the file it is told to read."
+      },
+      {
+        "text": "An error, since --init refuses a second run",
+        "correct": false,
+        "why": "It builds a new database happily."
+      },
+      {
+        "text": "No differences; a reference copied off the host",
+        "correct": true,
+        "why": "Right. The rewritten database matches the edit."
+      },
+      {
+        "text": "No differences; running the check more often",
+        "correct": false,
+        "why": "More checks against a rewritten reference still agree."
+      }
+    ]
+  },
+  {
+    "id": "ex-95x6jbvw",
+    "version": 1,
+    "section": "watching-the-host",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Comparing www's listening sockets with the baseline showed what?",
+    "hint": "The line starting with >.",
+    "choices": [
+      {
+        "text": "Port 443 had stopped listening",
+        "correct": false,
+        "why": "A removed line would start with <."
+      },
+      {
+        "text": "A second nginx on port 80",
+        "correct": false,
+        "why": "Port 80 was already in the baseline."
+      },
+      {
+        "text": "socat listening on 0.0.0.0:8081",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "sshd listening on a new address, 192.0.2.80:22",
+        "correct": false,
+        "why": "No port 22 appeared in either list."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2c2v9ct",
+    "version": 1,
+    "section": "watching-the-host",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the network sensor see nothing of the new listener on 8081?",
+    "hint": "What crosses the wire when a port opens?",
+    "choices": [
+      {
+        "text": "socat encrypts its traffic",
+        "correct": false,
+        "why": "There was no traffic yet to encrypt."
+      },
+      {
+        "text": "Suricata ignores ports above 1024",
+        "correct": false,
+        "why": "It watches any port."
+      },
+      {
+        "text": "The firewall of lesson 4 hid it from the DMZ",
+        "correct": false,
+        "why": "The firewall is the only thing left in front of it, not a disguise."
+      },
+      {
+        "text": "Nobody had connected to it yet",
+        "correct": true,
+        "why": "Right. Opening a port puts nothing on the wire."
+      }
+    ]
+  },
+  {
+    "id": "ex-3kyfs17z",
+    "version": 1,
+    "section": "watching-the-host",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each host check to what a finding looks like.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "users and keys",
+        "right": "a key in authorized_keys nobody issued"
+      },
+      {
+        "left": "processes",
+        "right": "a shell spawned by the web server"
+      },
+      {
+        "left": "authentication log",
+        "right": "a login at 3 a.m. from a new address"
+      },
+      {
+        "left": "listening ports",
+        "right": "a port nobody documented"
+      }
+    ],
+    "right_distractors": [
+      "a TLS connection whose SNI is the shop"
+    ]
+  },
+  {
+    "id": "ex-we099tvh",
+    "version": 1,
+    "section": "putting-them-together",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does this lesson call putting the network's rows and the host's rows together?",
+    "hint": "A SIEM does it for a company.",
+    "choices": [
+      {
+        "text": "Correlation",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "File integrity monitoring",
+        "correct": false,
+        "why": "That is one of the host's checks."
+      },
+      {
+        "text": "Deep packet inspection of both sensors' logs",
+        "correct": false,
+        "why": "Packet inspection reads traffic, not logs."
+      },
+      {
+        "text": "Baselining",
+        "correct": false,
+        "why": "A baseline is what one check compares against."
+      }
+    ]
+  },
+  {
+    "id": "ex-6rd83n82",
+    "version": 1,
+    "section": "putting-them-together",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a camera on the office network, which sensor is the witness?",
+    "hint": "Can it run an agent?",
+    "choices": [
+      {
+        "text": "A HIDS agent installed on the camera",
+        "correct": false,
+        "why": "Cameras run no agent at all."
+      },
+      {
+        "text": "The NIDS watching its segment",
+        "correct": true,
+        "why": "Right. It sees what the camera sends."
+      },
+      {
+        "text": "AIDE on the file server where the recordings land",
+        "correct": false,
+        "why": "That watches the server's files, not the camera."
+      },
+      {
+        "text": "The camera's own log, copied off daily",
+        "correct": false,
+        "why": "An intruder in the camera controls that log."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5yfd37b",
+    "version": 1,
+    "section": "putting-them-together",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "www is compromised and the intruder edits its logs and AIDE reports. Which rows of the lesson's side-by-side table survive? Choose all that apply.",
+    "hint": "Which records live on sensor?",
+    "choices": [
+      {
+        "text": "Alert 1000101 for /admin/ over HTTP",
+        "correct": true,
+        "why": "Right. It is on sensor."
+      },
+      {
+        "text": "The TLS connection to www.example.com",
+        "correct": true,
+        "why": "Right. Also recorded on sensor."
+      },
+      {
+        "text": "AIDE's report of 602 bytes becoming 744",
+        "correct": false,
+        "why": "It sits on www, unless it was shipped off."
+      },
+      {
+        "text": "The access log lines for both requests",
+        "correct": false,
+        "why": "That log is on www."
+      }
+    ]
+  },
+  {
+    "id": "ex-fbxzf3kn",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of setting up file integrity monitoring on a new server.",
+    "hint": "A reference comes before any comparison.",
+    "items": [
+      "name the directories that matter in the configuration",
+      "build the reference with aide --init",
+      "copy the reference where the server cannot rewrite it",
+      "run aide --check on a schedule and send the report"
+    ],
+    "trap": "A check run before the reference exists has nothing to compare against."
+  },
+  {
+    "id": "ex-4hract95",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly AIDE report shows /etc/ssh/sshd_config changed. No change request mentions it, and the listening ports match the baseline. What is the reading?",
+    "hint": "Two checks answer two different questions.",
+    "choices": [
+      {
+        "text": "Nothing to investigate, since no new port opened",
+        "correct": false,
+        "why": "A changed SSH setting opens no port."
+      },
+      {
+        "text": "A false positive, because the ports check is newer",
+        "correct": false,
+        "why": "The two checks do not overrule each other."
+      },
+      {
+        "text": "It is the report to read first",
+        "correct": true,
+        "why": "Right. A change with no change request."
+      },
+      {
+        "text": "Proof of intrusion, so the server is rebuilt at once",
+        "correct": false,
+        "why": "AIDE says it changed, not who changed it or why."
+      }
+    ]
+  },
+  {
+    "id": "ex-8y6vwx4g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The NIDS logs a new outbound connection from the database server at 02:10, and the database server's HIDS reports a new process at 02:10. Why is this worth more than either alone?",
+    "hint": "Same time, same machine.",
+    "choices": [
+      {
+        "text": "The NIDS confirms the HIDS agent is running",
+        "correct": false,
+        "why": "It saw traffic, not the agent."
+      },
+      {
+        "text": "Two alerts double the severity score",
+        "correct": false,
+        "why": "The point is agreement, not a sum."
+      },
+      {
+        "text": "The HIDS can now read the encrypted connection",
+        "correct": false,
+        "why": "Correlation does not decrypt anything."
+      },
+      {
+        "text": "Two weak signals, same time and machine, make a strong one from independent sources",
+        "correct": true,
+        "why": "Right. That is correlation."
+      }
+    ]
+  }
+]
