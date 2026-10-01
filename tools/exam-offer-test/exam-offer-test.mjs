@@ -181,6 +181,61 @@ try {
     }
   }
 
+  /* THE TRACK'S FINAL, PRESSED RATHER THAN READ.
+
+     The card at the foot of a track links to `#/track/exam`, and for as long as
+     tracks have had a screen that link led to "you have not chosen a track
+     yet": the router takes the first pattern that matches, `/track/:id` was
+     registered first, and it read `exam` as a track and enrolled the student in
+     it — losing the real enrolment on the way. No track had a final, so the
+     card said "in preparation" and nobody pressed the link. Reading the card
+     would have passed; only arriving answers it. */
+  const { tracks } = await asked(page, '/api/v1/tracks');
+  const finals = tracks.filter((t) => t.examPool > 0);
+  if (!finals.length) {
+    console.error('no track in this school has a final. The fixture seeds one — this is a '
+      + 'fixture that did not load, not a school that is fine.');
+    process.exit(1);
+  }
+  for (const t of finals) {
+    await page.goto(`${BASE}/#/track/${encodeURIComponent(t.slug)}`, { waitUntil: 'networkidle' });
+    await page.waitForSelector('.exam-card', { timeout: 10000 }).catch(() => {});
+    const seen = await card(page);
+    if (!seen || !seen.href) {
+      say(`${t.slug} has ${t.examPool} final question(s) and its track screen offers no link to `
+        + `sit them${seen ? ` ("${seen.text}")` : ''}.`);
+      continue;
+    }
+    /* FOLLOWED BY ITS HREF, which is what pressing it does. A click races the
+       track screen, which repaints the card after the graph has measured itself
+       and leaves the element that was clicked detached.
+
+       WHAT IS ASKED IS WHETHER THE SCREEN ASKED FOR THIS TRACK'S PAPER, not
+       whether a paper was drawn: this student is anonymous, the server answers
+       401, and whether a paper follows is the paywall's business and the Go
+       tests'. The route's is that the request goes out for the right track —
+       the broken order never sent one at all. */
+    const asks = [];
+    const listen = (r) => { if (r.method() === 'POST' && /\/api\/v1\/exams\/track\//.test(r.url())) asks.push(new URL(r.url()).pathname); };
+    page.on('request', listen);
+    await page.goto(`${BASE}/${seen.href}`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(500);
+    page.off('request', listen);
+
+    const wanted = `/api/v1/exams/track/${t.id}/start`;
+    if (!asks.includes(wanted)) {
+      const text = (await page.locator('main').innerText()).replace(/\s+/g, ' ').slice(0, 120);
+      say(`${t.slug}'s exam card links to ${seen.href}, and following it never asked the server `
+        + `for that track's paper (${asks.length ? asks.join(', ') : 'no exam request at all'}); `
+        + `the screen says "${text}".`);
+    }
+    const kept = await page.evaluate(async () => (await import('/app/state.js')).now().enrollment?.trackId);
+    if (kept !== t.id) {
+      say(`following ${t.slug}'s exam card left the student enrolled in ${JSON.stringify(kept)}, `
+        + `not ${t.id}: opening a track's exam must not change which track somebody is on.`);
+    }
+  }
+
   if (problems.length) {
     console.error('\nthe course screen and the catalogue disagree about the exam:\n');
     for (const p of problems) console.error(' - ' + p);
@@ -190,7 +245,8 @@ try {
   }
 
   console.log(`${withExam.length} course(s) with an exam offer it, ${Math.min(without.length, 3)} `
-    + 'without one say so, and every card names the length of the paper it leads to');
+    + 'without one say so, every card names the length of the paper it leads to, and '
+    + `${finals.length} track final(s) are asked for by their own card`);
 } finally {
   await browser.close();
 }

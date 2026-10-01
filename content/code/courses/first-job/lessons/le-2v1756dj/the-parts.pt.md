@@ -1,0 +1,27 @@
+---
+title: As partes de uma proposta
+version: 1
+---
+
+Quando a proposta chega, a primeira resposta certa é **agradecer e pedir por escrito**: *que ótima notícia,
+obrigada. Vocês poderiam me mandar os detalhes para eu ler com calma?* Nenhuma empresa em que valha a pena
+entrar retira uma proposta porque você pediu para lê-la.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Uma proposta dividida em seis partes. Contrato: CLT ou PJ, data de início e experiência. Salário: o bruto mensal e quando é revisto. Benefícios: plano de saúde, refeição, transporte e outros. Trabalho: o cargo, horário, escala, e se é presencial ou remoto. Letras miúdas: não concorrência, propriedade intelectual e aviso. Participação: opções, vesting e cliff, se houver.\"><defs><marker id=\"of18-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"20\" y=\"22\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">uma proposta, dividida em partes</text><rect x=\"20\" y=\"36\" width=\"335\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"58\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">contrato</text><text x=\"32\" y=\"78\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">CLT ou PJ; início; experiência</text><rect x=\"365\" y=\"36\" width=\"335\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"377\" y=\"58\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">salário</text><text x=\"377\" y=\"78\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">bruto mensal; quando é revisto</text><rect x=\"20\" y=\"106\" width=\"335\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"128\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">benefícios</text><text x=\"32\" y=\"148\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">plano de saúde, refeição, transporte, outros</text><rect x=\"365\" y=\"106\" width=\"335\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"377\" y=\"128\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">trabalho</text><text x=\"377\" y=\"148\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">cargo, horário, escala, presencial ou remoto</text><rect x=\"20\" y=\"176\" width=\"335\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"198\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">letras miúdas</text><text x=\"32\" y=\"218\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">não concorrência, PI, aviso</text><rect x=\"365\" y=\"176\" width=\"335\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"377\" y=\"198\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">participação</text><text x=\"377\" y=\"218\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">opções, vesting, cliff; se houver</text></svg>", "caption": "Uma proposta são seis coisas, e o número mensal é uma linha de uma delas. Peça as seis por escrito antes de decidir."}
+```
+
+Leia cada parte, e anote o que falta:
+
+- Contrato. *CLT* ou *PJ*; a data de início; se há período de experiência e de quanto tempo (aula 21).
+- Salário. O bruto mensal, e **quando é revisto**: uma promessa de aumento depois da experiência vale a
+  pena ter por escrito.
+- Benefícios. A aula 17 comparou CLT e PJ só pelo salário; a próxima seção trata do que os benefícios
+  acrescentam.
+- Trabalho. O cargo, o horário, **a escala** em vagas de suporte, e se é presencial, híbrido ou remoto, com
+  quantos dias.
+- Letras miúdas. As cláusulas da terceira seção.
+- Participação. Opções de ações ou ações, se houver; raro em propostas júnior, e explicado no fim.
+
+Uma proposta que existe só como ligação ou mensagem de chat ainda não é uma proposta. **Peça os detalhes por
+escrito** antes de pedir demissão de qualquer lugar ou recusar outro processo.

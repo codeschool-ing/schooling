@@ -1,0 +1,762 @@
+[
+  {
+    "id": "ex-17xz5wdk",
+    "version": 1,
+    "section": "notation",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Written out in full, 2001:db8::1 is 2001:0db8:0000:0000:0000:0000:0000:___",
+    "hint": "Every group has four hex digits.",
+    "blanks": [
+      {
+        "accept": [
+          "0001"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3ygyrs8b",
+    "version": 1,
+    "section": "notation",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the address 2001:db8::1, how many groups of zeros does the :: stand for?",
+    "hint": "Count the groups that are written, then subtract from eight.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "groups"
+  },
+  {
+    "id": "ex-k3293a5p",
+    "version": 1,
+    "section": "notation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three of these are correct ways to write 2001:0db8:0000:0000:0001:0000:0000:0001. Which one is not?",
+    "hint": "How many times may :: appear?",
+    "choices": [
+      {
+        "text": "2001:db8::1:0:0:1",
+        "correct": false,
+        "why": "Valid: :: replaces the first run of two zero groups."
+      },
+      {
+        "text": "2001:db8:0:0:1::1",
+        "correct": false,
+        "why": "Valid: :: replaces the second run instead. RFC 5952 prefers the first, but both mean the same address."
+      },
+      {
+        "text": "2001:db8::1::1",
+        "correct": true,
+        "why": "Right. Two :: are ambiguous: nobody knows how many zeros each hides."
+      },
+      {
+        "text": "2001:0db8:0:0:1:0:0:1",
+        "correct": false,
+        "why": "Valid: leading zeros may stay, and zero groups may be written as 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-05k56t2z",
+    "version": 1,
+    "section": "notation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague searches a log for 2001:0db8:0020:0010 and finds nothing, though srv appears in it many times. Why?",
+    "hint": "How does Linux print srv's address?",
+    "choices": [
+      {
+        "text": "The log stores addresses in binary",
+        "correct": false,
+        "why": "Logs are text; the problem is which text."
+      },
+      {
+        "text": "Programs write it in the short form, 2001:db8:20:10::10",
+        "correct": true,
+        "why": "Right. srv is logged as 2001:db8:20:10::10: same 128 bits, different text."
+      },
+      {
+        "text": "The prefix changed when srv rebooted",
+        "correct": false,
+        "why": "srv's address was given by hand and does not change."
+      },
+      {
+        "text": "Leading zeros make it a different address",
+        "correct": false,
+        "why": "They do not: dropping leading zeros keeps the value."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yer58n4",
+    "version": 1,
+    "section": "notation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In 2001:db8:20:10::10/64, the first 64 bits name the network and the last 64 bits are the interface ___",
+    "hint": "The figure labels the right-hand half.",
+    "blanks": [
+      {
+        "accept": [
+          "identifier",
+          "id",
+          "ID"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wyh6fzea",
+    "version": 1,
+    "section": "link-local",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A PC's MAC address is 02:5a:11:3c:d4:e7. By modified EUI-64, its link-local address is fe80::___",
+    "hint": "Split, insert ff:fe, flip the bit, drop leading zeros.",
+    "blanks": [
+      {
+        "accept": [
+          "5a:11ff:fe3c:d4e7",
+          "005a:11ff:fe3c:d4e7"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6qbhmwd7",
+    "version": 1,
+    "section": "link-local",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of building pc1's link-local address from its MAC in order.",
+    "hint": "The figure in this section.",
+    "items": [
+      "Split 02:25:70:bc:29:c6 into two halves",
+      "Insert ff:fe between the halves",
+      "Flip the seventh bit of the first byte",
+      "Put the 64 bits after fe80::"
+    ],
+    "trap": "Flipping the bit last of all is harmless only by luck: the bit belongs to the first byte, which moves nowhere, but writing the address before flipping gives 02 where 00 belongs."
+  },
+  {
+    "id": "ex-gyfxpknj",
+    "version": 1,
+    "section": "link-local",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ping -c 1 fe80::1f:23ff:fee7:e9d5 printed a warning and lost its packet; with %eth0 added, r1 answered. Why was %eth0 needed?",
+    "hint": "How many interfaces have a fe80::/64?",
+    "choices": [
+      {
+        "text": "fe80::/64 is on every link, so it names none",
+        "correct": true,
+        "why": "Right. %eth0 is the zone: which link to send it on."
+      },
+      {
+        "text": "r1 ignores pings that do not name its interface",
+        "correct": false,
+        "why": "r1 never sees the name; %eth0 is read by pc1 alone."
+      },
+      {
+        "text": "It switches ping from IPv4 to IPv6",
+        "correct": false,
+        "why": "Both pings were IPv6; the address says so."
+      },
+      {
+        "text": "It tells ping which MAC address to use",
+        "correct": false,
+        "why": "The MAC is found by Neighbour Discovery, not by the zone."
+      }
+    ]
+  },
+  {
+    "id": "ex-j12zstbq",
+    "version": 1,
+    "section": "link-local",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server's log shows a client whose interface identifier is 021a:2bff:fe3c:4d5e. What can you say about the client's network card?",
+    "hint": "Undo the three steps.",
+    "choices": [
+      {
+        "text": "Its MAC is 02:1a:2b:3c:4d:5e",
+        "correct": false,
+        "why": "That forgets to flip the bit back: 02 becomes 00."
+      },
+      {
+        "text": "Its MAC is 00:1a:2b:3c:4d:5e",
+        "correct": true,
+        "why": "Right. Drop ff:fe, flip the seventh bit back: 02 becomes 00, a manufacturer's MAC."
+      },
+      {
+        "text": "Its MAC is 1a:2b:ff:fe:3c:4d",
+        "correct": false,
+        "why": "ff:fe was inserted by EUI-64 and is not part of the MAC."
+      },
+      {
+        "text": "Nothing: the identifier is random",
+        "correct": false,
+        "why": "The ff:fe in the middle is the mark of an identifier built from a MAC."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dyqx853",
+    "version": 1,
+    "section": "link-local",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does an fe80:: address on a Linux PC come from?",
+    "hint": "No server is involved.",
+    "choices": [
+      {
+        "text": "A DHCPv6 server hands it out",
+        "correct": false,
+        "why": "Link-local addresses need no server."
+      },
+      {
+        "text": "The router gives it in its advertisement",
+        "correct": false,
+        "why": "The advertisement carries a global prefix; fe80:: is built before any router speaks."
+      },
+      {
+        "text": "The interface builds it for itself when it comes up",
+        "correct": true,
+        "why": "Right. Every IPv6 interface has one, with no configuration."
+      },
+      {
+        "text": "An administrator types it into the network settings",
+        "correct": false,
+        "why": "It is built automatically; nobody typed pc1's."
+      }
+    ]
+  },
+  {
+    "id": "ex-zg4jemsp",
+    "version": 1,
+    "section": "slaac",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "r1's advertisement gave the prefix a valid time of 86400 seconds. How many hours is that?",
+    "hint": "3600 seconds to the hour.",
+    "value": 24,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-7admrw1k",
+    "version": 1,
+    "section": "slaac",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc2's default route is via fe80::1f:23ff:fee7:e9d5 dev eth0. Whose address is that?",
+    "hint": "Look at the last line of rdisc6.",
+    "choices": [
+      {
+        "text": "The switch's",
+        "correct": false,
+        "why": "sw1's bridge address is fe80::6a:dcff:fe93:3b8a."
+      },
+      {
+        "text": "pc2's own link-local address",
+        "correct": false,
+        "why": "pc2's is fe80::fd:f2ff:fed2:63ba."
+      },
+      {
+        "text": "r1's link-local address",
+        "correct": true,
+        "why": "Right. The advertisement came from it, and IPv6 gateways are link-local."
+      },
+      {
+        "text": "The provider's router, isp",
+        "correct": false,
+        "why": "isp is on the other side of r1, on another link."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5pbnq75",
+    "version": 1,
+    "section": "slaac",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "radvd on r1 stops and sends no more advertisements. What happens on pc2?",
+    "hint": "Three lifetimes were advertised: 300, 14400 and 86400 seconds.",
+    "choices": [
+      {
+        "text": "Its global address disappears from eth0 at once",
+        "correct": false,
+        "why": "Nothing removes it until its lifetimes run out."
+      },
+      {
+        "text": "pc2 falls back to asking a DHCPv6 server for a new address",
+        "correct": false,
+        "why": "The advertisement said there is no stateful configuration here."
+      },
+      {
+        "text": "The route goes first, the address later",
+        "correct": true,
+        "why": "Right. Router lifetime 300 s, preferred 4 hours, valid 24 hours."
+      },
+      {
+        "text": "Nothing changes, because SLAAC addresses are permanent",
+        "correct": false,
+        "why": "Both the address and the route carry lifetimes that count down."
+      }
+    ]
+  },
+  {
+    "id": "ex-kcbs3kj3",
+    "version": 1,
+    "section": "slaac",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The prefix line Autonomous address conf.: Yes tells each machine on the link to ___ its own address from the prefix.",
+    "hint": "SLAAC: nobody hands it out.",
+    "blanks": [
+      {
+        "accept": [
+          "build",
+          "make",
+          "create",
+          "form",
+          "generate",
+          "construct"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2rqz3wde",
+    "version": 1,
+    "section": "slaac",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did pc2 learn from r1's advertisement? Choose all that apply.",
+    "hint": "Read the rdisc6 output line by line.",
+    "choices": [
+      {
+        "text": "The prefix 2001:db8:20:10::/64",
+        "correct": true,
+        "why": "The Prefix line."
+      },
+      {
+        "text": "That r1 is a default router for 300 seconds",
+        "correct": true,
+        "why": "Router lifetime: 300."
+      },
+      {
+        "text": "The address 2001:db8:20:10:fd:f2ff:fed2:63ba",
+        "correct": false,
+        "why": "pc2 built that itself from the prefix and its MAC."
+      },
+      {
+        "text": "That no DHCPv6 server hands out addresses",
+        "correct": true,
+        "why": "Stateful address conf.: No."
+      },
+      {
+        "text": "The address of a DNS server",
+        "correct": false,
+        "why": "rdisc6 printed no DNS server in this advertisement."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1nbwdr8",
+    "version": 1,
+    "section": "neighbour-discovery",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The solicited-node multicast address for 2001:db8:20:10::1 is ff02::1:___",
+    "hint": "ff followed by the last 24 bits.",
+    "blanks": [
+      {
+        "accept": [
+          "ff00:1",
+          "ff00:0001"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f1eps433",
+    "version": 1,
+    "section": "neighbour-discovery",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ping -w 2 ff02::1%eth0 sent 2 requests and reported 2 received, +8 duplicates. How many interfaces answered each request?",
+    "hint": "Ten replies in all.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "interfaces"
+  },
+  {
+    "id": "ex-en3qnv87",
+    "version": 1,
+    "section": "neighbour-discovery",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One of the answers to pc1's ping to ff02::1 came from fe80::25:70ff:febc:29c6, in 0.716 ms. Who was that?",
+    "hint": "Compare it with pc1's MAC, 02:25:70:bc:29:c6.",
+    "choices": [
+      {
+        "text": "r1, the router",
+        "correct": false,
+        "why": "r1 is fe80::1f:23ff:fee7:e9d5."
+      },
+      {
+        "text": "pc1 itself",
+        "correct": true,
+        "why": "Right. pc1 is a member of all-nodes too, and its reply never left the machine."
+      },
+      {
+        "text": "The switch sw1",
+        "correct": false,
+        "why": "The bridge answered from fe80::6a:dcff:fe93:3b8a."
+      },
+      {
+        "text": "srv, the server",
+        "correct": false,
+        "why": "srv is fe80::9e:43ff:fe3e:caae."
+      }
+    ]
+  },
+  {
+    "id": "ex-z20t1src",
+    "version": 1,
+    "section": "neighbour-discovery",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each address to what it reaches on this office's link.",
+    "hint": "Groups start with ff02.",
+    "pairs": [
+      {
+        "left": "ff02::1",
+        "right": "Every node on the link"
+      },
+      {
+        "left": "ff02::2",
+        "right": "Every router on the link"
+      },
+      {
+        "left": "ff02::1:ff00:10",
+        "right": "Whoever has an address ending in 00:00:10"
+      },
+      {
+        "left": "fe80::1f:23ff:fee7:e9d5",
+        "right": "r1, and nobody else"
+      }
+    ],
+    "right_distractors": [
+      "Every machine on the internet"
+    ]
+  },
+  {
+    "id": "ex-31j15pvp",
+    "version": 1,
+    "section": "dual-stack",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "getent ahosts web listed 2001:db8:99::80 before 192.0.2.80. What does a program that tries the addresses in order do first?",
+    "hint": "The list is the order.",
+    "choices": [
+      {
+        "text": "Connects to 192.0.2.80, since IPv4 is older",
+        "correct": false,
+        "why": "The order is the system's preference, and here IPv6 is first."
+      },
+      {
+        "text": "Tries 2001:db8:99::80",
+        "correct": true,
+        "why": "Right. IPv6 first, IPv4 if that fails."
+      },
+      {
+        "text": "Opens both and uses whichever is faster, every time",
+        "correct": false,
+        "why": "That is what browsers do (Happy Eyeballs); a plain program goes in order."
+      },
+      {
+        "text": "Asks the router which protocol to use",
+        "correct": false,
+        "why": "The router is not asked; the choice is made on pc1."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxhggwtt",
+    "version": 1,
+    "section": "dual-stack",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A user says a site hangs from their PC. curl -4 to the site works at once; curl -6 hangs. Where do you look next?",
+    "hint": "Two stacks, two paths.",
+    "choices": [
+      {
+        "text": "At the site's web server",
+        "correct": false,
+        "why": "It answered over IPv4 at once, so it is up."
+      },
+      {
+        "text": "At the PC's DNS resolver",
+        "correct": false,
+        "why": "The name resolved for both; curl got as far as connecting."
+      },
+      {
+        "text": "At the IPv6 path: routes, gateway, firewall",
+        "correct": true,
+        "why": "Right. IPv4 working says nothing about IPv6."
+      },
+      {
+        "text": "At the PC's network card, its cable and the switch port",
+        "correct": false,
+        "why": "The card carried the IPv4 request fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccsa1v6f",
+    "version": 1,
+    "section": "dual-stack",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In DNS, a name's IPv4 address is in its A record and its IPv6 address is in its ___ record.",
+    "hint": "Four times the letter.",
+    "blanks": [
+      {
+        "accept": [
+          "AAAA",
+          "quad A",
+          "quad-A"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5fwzy196",
+    "version": 1,
+    "section": "dual-stack",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In this lab, r1's only nftables rules are an IPv4 NAT table, of family ip. What happens to IPv6 traffic through r1?",
+    "hint": "A table of family ip sees IPv4 alone.",
+    "choices": [
+      {
+        "text": "It is translated to 203.0.113.2 as well",
+        "correct": false,
+        "why": "NAT rules in an ip table touch IPv4 packets alone."
+      },
+      {
+        "text": "It is dropped until somebody writes IPv6 rules",
+        "correct": false,
+        "why": "There is no rule to drop it; the curl -6 tests worked."
+      },
+      {
+        "text": "It is filtered by the same rules",
+        "correct": false,
+        "why": "The rules are of family ip; IPv6 is a different family."
+      },
+      {
+        "text": "It is forwarded unfiltered, both ways",
+        "correct": true,
+        "why": "Right. Fine in a lab, and a hole anywhere else."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2xakme2",
+    "version": 1,
+    "section": "why-migrate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the web server's capture, which source address did pc1's IPv4 connection arrive from?",
+    "hint": "What does r1 do on the way out?",
+    "choices": [
+      {
+        "text": "10.20.10.21",
+        "correct": false,
+        "why": "pc1's address was rewritten by r1's NAT."
+      },
+      {
+        "text": "10.20.10.1",
+        "correct": false,
+        "why": "That is r1's inside address."
+      },
+      {
+        "text": "192.0.2.80",
+        "correct": false,
+        "why": "That is the web server's own address."
+      },
+      {
+        "text": "203.0.113.2",
+        "correct": true,
+        "why": "Right. r1's outside address, the source of everything the office sends out."
+      }
+    ]
+  },
+  {
+    "id": "ex-1em313cm",
+    "version": 1,
+    "section": "why-migrate",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The IPv4 handshake offered mss 1460 and the IPv6 one mss 1440, on the same 1500-byte links. How many bytes longer is the IPv6 header?",
+    "hint": "The TCP header is the same in both.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-66qphx7p",
+    "version": 1,
+    "section": "why-migrate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An office turns on IPv6: every PC gets a global address by SLAAC, and nobody writes IPv6 firewall rules. What has changed for the PCs?",
+    "hint": "What did NAT do as a side effect?",
+    "choices": [
+      {
+        "text": "Outside machines are able to start connections to them",
+        "correct": true,
+        "why": "Right. NAT hid them by accident; now the firewall has to decide."
+      },
+      {
+        "text": "Nothing, since SLAAC addresses are private",
+        "correct": false,
+        "why": "Global addresses from SLAAC are routed on the internet."
+      },
+      {
+        "text": "Their IPv4 traffic now leaves without NAT",
+        "correct": false,
+        "why": "IPv4 still goes through r1's NAT; the two stacks are separate."
+      },
+      {
+        "text": "They lose their IPv4 addresses",
+        "correct": false,
+        "why": "Dual stack keeps both."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6j4ramr",
+    "version": 1,
+    "section": "why-migrate",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "IANA handed its last IPv4 blocks to the regional registries on 3 February ___",
+    "hint": "APNIC ran out two months later.",
+    "blanks": [
+      {
+        "accept": [
+          "2011"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bgw672pm",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Written out in full, with no group shortened, how many hexadecimal digits does an IPv6 address have?",
+    "hint": "Eight groups.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": "digits"
+  },
+  {
+    "id": "ex-vwancv2z",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "pc2 has just come up with only its link-local address, and it is about to ping srv by its global address. Put what happens in order.",
+    "hint": "Address first, then the neighbour, then the ping.",
+    "items": [
+      "pc2 sends a Router Solicitation to ff02::2",
+      "r1 answers with a Router Advertisement",
+      "pc2 builds a global address from the prefix",
+      "pc2 asks ff02::1:ff00:10 who has srv's address",
+      "pc2 sends the echo request to srv's MAC"
+    ],
+    "trap": "The neighbour solicitation cannot come first: pc2 has no global address to ask from until the advertisement arrives."
+  },
+  {
+    "id": "ex-fhe8hsr0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these IPv6 addresses is link-local?",
+    "hint": "Link-local starts with fe80.",
+    "choices": [
+      {
+        "text": "2001:db8:20:10:fd:f2ff:fed2:63ba",
+        "correct": false,
+        "why": "A global address, pc2's."
+      },
+      {
+        "text": "ff02::1",
+        "correct": false,
+        "why": "A multicast group, all nodes."
+      },
+      {
+        "text": "::1",
+        "correct": false,
+        "why": "The loopback address."
+      },
+      {
+        "text": "fe80::9e:43ff:fe3e:caae",
+        "correct": true,
+        "why": "Right. srv's link-local address."
+      }
+    ]
+  }
+]

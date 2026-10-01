@@ -1,0 +1,737 @@
+[
+  {
+    "id": "ex-1k41rfkw",
+    "version": 1,
+    "section": "why-vlans",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before any VLAN was configured, pc2 captured pc1's ARP request for 10.20.10.23, a machine in another department. Why did the request reach pc2?",
+    "hint": "Look at the PVID column of the first listing.",
+    "choices": [
+      {
+        "text": "pc2's address was in pc1's subnet",
+        "correct": false,
+        "why": "pc2 is 10.20.20.22. A switch delivers a broadcast by VLAN, and it never reads the IP address."
+      },
+      {
+        "text": "Every port was in VLAN 1",
+        "correct": true,
+        "why": "Right. One VLAN is one broadcast domain, and an ARP request goes to the whole of it."
+      },
+      {
+        "text": "sw1 had not yet learnt where pc3's MAC was",
+        "correct": false,
+        "why": "That floods an unknown unicast. This frame went to ff:ff:ff:ff:ff:ff, which reaches the whole domain in any case."
+      },
+      {
+        "text": "tcpdump lets a card hear other VLANs",
+        "correct": false,
+        "why": "A capture shows what reaches the card. It cannot pull in frames the switch did not send to that port."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqkksk3t",
+    "version": 1,
+    "section": "why-vlans",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which are reasons to split one switched network into VLANs? Choose all that apply.",
+    "hint": "Size, control, organisation.",
+    "choices": [
+      {
+        "text": "Keeping each broadcast inside a smaller group of machines",
+        "correct": true,
+        "why": "Broadcast traffic grows with the number of machines in the domain."
+      },
+      {
+        "text": "Encrypting the frames between two ports",
+        "correct": false,
+        "why": "A VLAN encrypts nothing. The tag is a number in clear."
+      },
+      {
+        "text": "Making traffic between departments pass a router, where a rule can apply",
+        "correct": true,
+        "why": "Lesson 22 filters at exactly that point."
+      },
+      {
+        "text": "Stopping a stranger plugging a laptop into a free port",
+        "correct": false,
+        "why": "That is port security or 802.1X, from lesson 18. A free port is still in some VLAN."
+      },
+      {
+        "text": "Grouping machines by function across several switches",
+        "correct": true,
+        "why": "The finance VLAN can exist on every floor without a cable of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-c98s2xhg",
+    "version": 1,
+    "section": "why-vlans",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Each VLAN is a separate ___ domain, so an ARP request sent in VLAN 10 never reaches a port in VLAN 20.",
+    "hint": "What lesson 18 says a router ends.",
+    "blanks": [
+      {
+        "accept": [
+          "broadcast"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t7fsrt8s",
+    "version": 1,
+    "section": "why-vlans",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A school puts staff and students on one switch, each group in its own VLAN, with no router between the VLANs. A student gives a laptop a static address copied from the staff subnet and plugs it into a student port. Which machines can it reach?",
+    "hint": "The port decides the VLAN; the address decides whom the laptop asks for.",
+    "choices": [
+      {
+        "text": "The staff machines, since its address is in their subnet",
+        "correct": false,
+        "why": "The address decides whom it asks for. Its ARP requests stay in the student VLAN, where no staff machine is."
+      },
+      {
+        "text": "Both groups, because they share one switch",
+        "correct": false,
+        "why": "Sharing the hardware is exactly what a VLAN makes irrelevant."
+      },
+      {
+        "text": "The student machines, which share its VLAN",
+        "correct": false,
+        "why": "They share its broadcast domain, but they are in another subnet, and with no router the laptop has no way to reach another subnet."
+      },
+      {
+        "text": "None of them",
+        "correct": true,
+        "why": "Right. Its VLAN holds no machine in its subnet, and the subnet it claims is in a VLAN it cannot reach. The pc5 experiment in this lesson is the same situation."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtt5mykb",
+    "version": 1,
+    "section": "access-ports",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After sw1's p1 and sw2's p1 were both put in VLAN 10, pc1 lost every ping to pc3. What was missing?",
+    "hint": "Read p24's line in sw1's listing.",
+    "choices": [
+      {
+        "text": "A router between pc1 and pc3",
+        "correct": false,
+        "why": "They are in the same VLAN and the same subnet, so no router is involved."
+      },
+      {
+        "text": "A VLAN setting on pc1's own network card",
+        "correct": false,
+        "why": "An access port's VLAN belongs to the port. Nothing on pc1 changed in this lesson."
+      },
+      {
+        "text": "VLAN 10 on p24",
+        "correct": true,
+        "why": "Right. p24 was still in VLAN 1 alone, so sw1 had no port in VLAN 10 to send the frame out of."
+      },
+      {
+        "text": "A gateway address configured on pc3",
+        "correct": false,
+        "why": "pc3 answers a machine in its own subnet directly, without a gateway."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0kbj613",
+    "version": 1,
+    "section": "access-ports",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `bridge vlan add dev p1 vid 10 pvid untagged`, what does `pvid` say?",
+    "hint": "It is about frames coming in.",
+    "choices": [
+      {
+        "text": "Frames of VLAN 10 leave p1 with no tag",
+        "correct": false,
+        "why": "That is `untagged`, which is about frames going out."
+      },
+      {
+        "text": "p1 is in VLAN 10 and no other VLAN from now on",
+        "correct": false,
+        "why": "`vid 10` adds a membership and removes none. VLAN 1 needed its own `del`."
+      },
+      {
+        "text": "p1 is the VLAN's way to the router",
+        "correct": false,
+        "why": "Nothing in this command concerns a router."
+      },
+      {
+        "text": "Untagged frames arriving on p1 join VLAN 10",
+        "correct": true,
+        "why": "Right. PVID is the port VLAN ID: where a frame with no tag is put."
+      }
+    ]
+  },
+  {
+    "id": "ex-zh5zm50c",
+    "version": 1,
+    "section": "access-ports",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the access port configuration to what it does.",
+    "hint": "Member, in, out, and the leftover default.",
+    "pairs": [
+      {
+        "left": "vid 10",
+        "right": "makes the port a member of VLAN 10"
+      },
+      {
+        "left": "pvid",
+        "right": "puts untagged arrivals in that VLAN"
+      },
+      {
+        "left": "untagged",
+        "right": "sends that VLAN's frames out with no tag"
+      },
+      {
+        "left": "bridge vlan del dev p1 vid 1",
+        "right": "takes the port out of the default VLAN"
+      }
+    ],
+    "right_distractors": [
+      "gives the port an IP address in the VLAN"
+    ]
+  },
+  {
+    "id": "ex-0sq9vvcv",
+    "version": 1,
+    "section": "access-ports",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague moves pc1's cable from sw1's p1, in VLAN 10, to p2, in VLAN 20, and changes nothing else. What happens to pc1's ping to pc3?",
+    "hint": "The VLAN belongs to the port, not to the PC.",
+    "choices": [
+      {
+        "text": "It fails, because pc1 is now in VLAN 20",
+        "correct": true,
+        "why": "Right. The VLAN came with the port. pc1's address did not change, and it no longer matches the VLAN pc1 is in."
+      },
+      {
+        "text": "It works, because pc1's address still says 10.20.10.0/24",
+        "correct": false,
+        "why": "The address does not choose the VLAN. The port does."
+      },
+      {
+        "text": "It works as soon as sw1 learns pc1's MAC on p2",
+        "correct": false,
+        "why": "sw1 learns it, in VLAN 20's table. pc3's VLAN 10 still never sees pc1's frames."
+      },
+      {
+        "text": "It fails, because p2 is a trunk",
+        "correct": false,
+        "why": "p2 is an access port in VLAN 20; the trunk is p24."
+      }
+    ]
+  },
+  {
+    "id": "ex-3792vkcg",
+    "version": 1,
+    "section": "trunks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `bridge vlan add dev p24 vid 10` and `vid 20` on both switches, what is p24?",
+    "hint": "Count the VLANs in its listing.",
+    "choices": [
+      {
+        "text": "An access port in VLAN 20, the last one added",
+        "correct": false,
+        "why": "Adding a VLAN replaces nothing. The listing shows 1, 10 and 20."
+      },
+      {
+        "text": "A trunk, carrying VLANs 10 and 20 tagged and VLAN 1 untagged",
+        "correct": true,
+        "why": "Right. One port in several VLANs, with the VLAN written on each frame except the untagged one."
+      },
+      {
+        "text": "Two logical ports, one per VLAN, on one cable",
+        "correct": false,
+        "why": "It is one port with one configuration. Several VLANs on one port is what a trunk is."
+      },
+      {
+        "text": "A port in VLAN 1 alone, which is still its PVID",
+        "correct": false,
+        "why": "The PVID only says where untagged frames go. 10 and 20 cross tagged."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwzakd1b",
+    "version": 1,
+    "section": "trunks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A VLAN 30 is created for printers: sw1's p5 and sw2's p6 become access ports in VLAN 30, and the two printers still cannot see each other. With the lab's trunk as the lesson left it, what is the fix?",
+    "hint": "A trunk carries the VLANs it is a member of, at each end.",
+    "choices": [
+      {
+        "text": "Add VLAN 30 to p24 on sw1 only, where the frames start",
+        "correct": false,
+        "why": "Replies travel the other way, and sw2 refuses a VLAN its p24 is not a member of."
+      },
+      {
+        "text": "Make VLAN 30 the PVID of p24 on sw1",
+        "correct": false,
+        "why": "Then printer frames cross untagged and land in sw2's untagged VLAN, which is 1: the mismatch of the last section."
+      },
+      {
+        "text": "Give each printer a gateway in VLAN 30",
+        "correct": false,
+        "why": "Two printers in one VLAN and one subnet talk directly. The trunk is what is missing."
+      },
+      {
+        "text": "Add VLAN 30 to p24 on both switches",
+        "correct": true,
+        "why": "Right. A VLAN exists only on its member ports, and the trunk is a port at each end."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9h7w3k6",
+    "version": 1,
+    "section": "trunks",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two switches have to carry 12 VLANs between them. Without trunks, using one cable per VLAN, how many switch ports do those cables take up, counting both switches?",
+    "hint": "A cable has two ends.",
+    "value": 24,
+    "tolerance": 0,
+    "unit": "ports"
+  },
+  {
+    "id": "ex-89qsbxt2",
+    "version": 1,
+    "section": "trunks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server runs two virtual machines, one in VLAN 10 and one in VLAN 20, through a single network card. How should the switch port it plugs into be configured?",
+    "hint": "One cable, two VLANs.",
+    "choices": [
+      {
+        "text": "As an access port in VLAN 10, the server's own VLAN",
+        "correct": false,
+        "why": "Then the VLAN 20 machine's frames land in VLAN 10."
+      },
+      {
+        "text": "As an access port in VLAN 1, which reaches every VLAN",
+        "correct": false,
+        "why": "VLAN 1 is a VLAN like any other and reaches nothing outside itself."
+      },
+      {
+        "text": "As a trunk carrying VLANs 10 and 20, tagged",
+        "correct": true,
+        "why": "Right. The server's own software takes the tags off and hands each frame to the right machine."
+      },
+      {
+        "text": "As two access ports sharing the cable",
+        "correct": false,
+        "why": "A port has one configuration. Carrying two VLANs on it is what a trunk is."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkrcxdwp",
+    "version": 1,
+    "section": "the-tag",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On p24 the ping frame was 102 bytes long; on pc3's access port the same frame was 98. How many bytes long is the 802.1Q tag?",
+    "hint": "Subtract.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-vnzvaazn",
+    "version": 1,
+    "section": "the-tag",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The VID field has 12 bits, and two of its values are reserved. How many VLAN numbers can be used?",
+    "hint": "2 to the 12th, minus 0 and 4095.",
+    "value": 4094,
+    "tolerance": 0,
+    "unit": "VLANs"
+  },
+  {
+    "id": "ex-q9dpv1qp",
+    "version": 1,
+    "section": "the-tag",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the fields of a tagged frame on p24 in the order they travel, from the first byte.",
+    "hint": "The tag sits after both addresses.",
+    "items": [
+      "Destination MAC",
+      "Source MAC",
+      "TPID, 0x8100",
+      "TCI: PCP, DEI and VID",
+      "EtherType, 0x0800",
+      "The IP packet"
+    ],
+    "trap": "The tag goes after both MAC addresses, where the EtherType used to be, and the original EtherType moves after it."
+  },
+  {
+    "id": "ex-kzr39krq",
+    "version": 1,
+    "section": "the-tag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc3's tcpdump showed pc1's echo request as `ethertype IPv4`, 98 bytes long, with no 802.1Q. Why was there no tag?",
+    "hint": "Where is a tag added, and where is it removed?",
+    "choices": [
+      {
+        "text": "pc3's network card removed it on arrival",
+        "correct": false,
+        "why": "pc3 never received a tag. An access port sends VLAN 10's frames out untagged."
+      },
+      {
+        "text": "pc1 tags a frame only when it sends to another switch",
+        "correct": false,
+        "why": "pc1 tags nothing. sw1 added the tag at p24."
+      },
+      {
+        "text": "tcpdump hides the tag unless run with -v",
+        "correct": false,
+        "why": "On p24, the same tcpdump options printed the tag."
+      },
+      {
+        "text": "sw2 removed it as the frame left by an access port",
+        "correct": true,
+        "why": "Right. The tag exists only on the trunk: added going onto p24, removed coming off it."
+      }
+    ]
+  },
+  {
+    "id": "ex-spnswpdr",
+    "version": 1,
+    "section": "the-tag",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In tcpdump's `vlan 10, p 0`, the 10 is read from the 12-bit ___ field and the 0 from the 3-bit ___ field.",
+    "hint": "Two of the three parts of the TCI.",
+    "blanks": [
+      {
+        "accept": [
+          "VID",
+          "VLAN ID",
+          "VLAN identifier"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      },
+      {
+        "accept": [
+          "PCP",
+          "priority"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9wz91tq8",
+    "version": 1,
+    "section": "native-vlan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc5 is 10.20.10.25/24 on a port in VLAN 20. pc1's ping to it fails, pc1's neighbour table says INCOMPLETE, and pc5 captures 0 ARP packets. What happened?",
+    "hint": "Where did pc1's broadcast go?",
+    "choices": [
+      {
+        "text": "The ARP request stayed in VLAN 10 and never reached pc5's port",
+        "correct": true,
+        "why": "Right. It crossed the trunk tagged 10 and reached pc3's port, the only VLAN 10 port on sw2."
+      },
+      {
+        "text": "pc5 received the request and did not answer",
+        "correct": false,
+        "why": "pc5's capture holds 0 packets. Nothing arrived."
+      },
+      {
+        "text": "The trunk dropped the request for being untagged",
+        "correct": false,
+        "why": "It crossed tagged as VLAN 10 and reached pc3's port."
+      },
+      {
+        "text": "pc1 needed a gateway to reach its own subnet",
+        "correct": false,
+        "why": "A machine in the same subnet is reached directly. The VLAN is what separates them."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1c87hfj",
+    "version": 1,
+    "section": "native-vlan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "sw1's p24 has VLAN 10 as its untagged VLAN and sw2's p24 has VLAN 20. Which machine does pc1, in VLAN 10, reach?",
+    "hint": "Follow an untagged frame into sw2.",
+    "choices": [
+      {
+        "text": "pc3, in VLAN 10 on sw2",
+        "correct": false,
+        "why": "pc1's frames arrive at sw2 untagged and go into VLAN 20. pc3 is in 10."
+      },
+      {
+        "text": "pc2, in VLAN 20 on sw1",
+        "correct": false,
+        "why": "On sw1 nothing changed: VLANs 10 and 20 are still separate there."
+      },
+      {
+        "text": "pc5, in VLAN 20 on sw2",
+        "correct": true,
+        "why": "Right. Untagged at sw1, into VLAN 20 at sw2, where pc5 sits with an address in pc1's subnet."
+      },
+      {
+        "text": "No machine across the trunk, because the two VLAN numbers differ",
+        "correct": false,
+        "why": "The trunk carried pc1's frames untagged, and sw2 accepted them into its own untagged VLAN."
+      }
+    ]
+  },
+  {
+    "id": "ex-x4h729qe",
+    "version": 1,
+    "section": "native-vlan",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which settings protect a trunk's native VLAN? Choose all that apply.",
+    "hint": "The lab's fix, plus what goes around it.",
+    "choices": [
+      {
+        "text": "The same unused VLAN number at both ends",
+        "correct": true,
+        "why": "That is the lab's fix: 999 on both switches."
+      },
+      {
+        "text": "Users kept in VLAN 1, the one every switch knows",
+        "correct": false,
+        "why": "VLAN 1 is where every mistake falls back to. Keep users out of it."
+      },
+      {
+        "text": "No user port in the native VLAN",
+        "correct": true,
+        "why": "Then an untagged frame on the trunk lands where nobody listens."
+      },
+      {
+        "text": "A different native VLAN at each end, so neither can be guessed",
+        "correct": false,
+        "why": "That is the mismatch the lab showed: two VLANs welded together."
+      },
+      {
+        "text": "User ports fixed as access, with trunk negotiation off",
+        "correct": true,
+        "why": "A port that agrees to become a trunk when asked is a door to every VLAN."
+      }
+    ]
+  },
+  {
+    "id": "ex-d83nwjfk",
+    "version": 1,
+    "section": "native-vlan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a trunk's native VLAN?",
+    "hint": "Every other VLAN on the trunk carries a tag.",
+    "choices": [
+      {
+        "text": "The VLAN with the lowest number on the switch",
+        "correct": false,
+        "why": "It is a setting, chosen per trunk. The lab used 999."
+      },
+      {
+        "text": "The VLAN the switch's own address lives in",
+        "correct": false,
+        "why": "That is a management VLAN, a separate idea."
+      },
+      {
+        "text": "The VLAN that the trunk carries with priority 0",
+        "correct": false,
+        "why": "Priority is the PCP field, inside every tag. The native VLAN has no tag at all."
+      },
+      {
+        "text": "The VLAN whose frames cross the trunk without a tag",
+        "correct": true,
+        "why": "Right. Cisco's word; the standard calls it the port's PVID."
+      }
+    ]
+  },
+  {
+    "id": "ex-edm4kq9h",
+    "version": 1,
+    "section": "native-vlan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the fix, the native VLAN at both ends of p24 is 999, and no port is an access port in VLAN 999. What happens to an untagged frame arriving on p24?",
+    "hint": "The PVID decides.",
+    "choices": [
+      {
+        "text": "It goes into VLAN 1, the default",
+        "correct": false,
+        "why": "VLAN 1 is no longer p24's PVID. 999 is."
+      },
+      {
+        "text": "It goes into VLAN 999, where no access port delivers it",
+        "correct": true,
+        "why": "Right. It lands in a VLAN where nobody is listening."
+      },
+      {
+        "text": "It is given VLAN 10's tag and delivered to pc3",
+        "correct": false,
+        "why": "A switch puts an untagged frame in the PVID, and the PVID is 999."
+      },
+      {
+        "text": "It reaches every VLAN, having no tag to limit it",
+        "correct": false,
+        "why": "No tag means the PVID decides, and the PVID is one VLAN."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxtshgcx",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the journey of pc1's echo request to pc3 in order.",
+    "hint": "The tag lives only on the trunk.",
+    "items": [
+      "pc1 sends an ordinary frame with no tag",
+      "sw1 puts it in VLAN 10, p1's PVID",
+      "sw1 adds a tag with VID 10 as it leaves by p24",
+      "sw2 reads VID 10 from the tag on its p24",
+      "sw2 removes the tag as the frame leaves by p1",
+      "pc3 receives an untagged frame of 98 bytes"
+    ],
+    "trap": "The tag is added on the way onto the trunk and removed on the way off it; neither PC ever sees it."
+  },
+  {
+    "id": "ex-1pv7600t",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each symptom to its most direct cause.",
+    "hint": "Each one was staged in this lesson.",
+    "pairs": [
+      {
+        "left": "Two PCs in one VLAN, on different switches, lose every ping",
+        "right": "The VLAN is missing from the trunk"
+      },
+      {
+        "left": "A PC reaches a machine in another VLAN and loses one in its own",
+        "right": "The ends of the trunk disagree on the native VLAN"
+      },
+      {
+        "left": "A PC with a correct address hears no ARP from its subnet",
+        "right": "Its port is in the wrong VLAN"
+      },
+      {
+        "left": "Another department's ARP requests show up in a capture",
+        "right": "Every port is still in VLAN 1"
+      }
+    ],
+    "right_distractors": [
+      "The tag is longer than four bytes"
+    ]
+  },
+  {
+    "id": "ex-g6t0fm6k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A frame tagged with VLAN 30 arrives on sw2's p24, a member of VLANs 1, 10 and 20. What does sw2 do with it?",
+    "hint": "The PVID is for frames with no tag.",
+    "choices": [
+      {
+        "text": "Puts it in VLAN 1, p24's PVID",
+        "correct": false,
+        "why": "The PVID is for untagged frames, and this one carries a tag."
+      },
+      {
+        "text": "Floods it out of every port, as an unknown VLAN",
+        "correct": false,
+        "why": "Flooding happens inside a VLAN. A VLAN the port is not a member of is refused at the door."
+      },
+      {
+        "text": "Drops it the moment it arrives",
+        "correct": true,
+        "why": "Right. With VLAN filtering on, p24 accepts only the VLANs it is a member of."
+      },
+      {
+        "text": "Removes the tag and delivers it to its access ports",
+        "correct": false,
+        "why": "No access port on sw2 is in VLAN 30, so there is nowhere to deliver it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwrk1av1",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The ping frames carried an 84-byte IP packet and were 98 bytes on an access port and 102 on the trunk. What length would tcpdump print on p24 for a frame carrying a 1500-byte IP packet?",
+    "hint": "The header plus the tag is 102 − 84.",
+    "value": 1518,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-ngr8s7c3",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The PCP field of the tag has 3 bits. How many different priority values can it carry?",
+    "hint": "tcpdump printed one of them as `p 0`.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "values"
+  }
+]

@@ -1,0 +1,413 @@
+{
+  "ex-ydgagwr5": {
+    "prompt": "O que um policer faz com um pacote que chega quando a taxa já foi usada?",
+    "hint": "Ele não tem fila.",
+    "choices": [
+      {
+        "text": "Segura o pacote numa fila até haver espaço",
+        "why": "Isso é um shaper, e custa atraso."
+      },
+      {
+        "text": "Descarta o pacote, ou o remarca",
+        "why": "Isso. Nada espera; o excesso some ou é rebaixado."
+      },
+      {
+        "text": "Envia assim mesmo e cobra do cliente",
+        "why": "Um policer impõe a taxa; não mede uso extra para cobrar."
+      },
+      {
+        "text": "Divide o pacote em fragmentos pequenos o bastante para caber",
+        "why": "Fragmentar muda o tamanho, não a taxa: os mesmos bytes continuariam acima."
+      }
+    ]
+  },
+  "ex-b93d8v1b": {
+    "prompt": "Qual sintoma um shaper causa e um policer não?",
+    "hint": "Para onde vai o excesso?",
+    "choices": [
+      {
+        "text": "Perda constante que o TCP precisa retransmitir",
+        "why": "Esse é o sintoma do policer: 1337 retransmissões nesta aula."
+      },
+      {
+        "text": "Atraso a mais, enquanto os pacotes esperam a vez",
+        "why": "Isso. 22 ms para um ping pelo shaper, 0,070 ms pelo policer."
+      },
+      {
+        "text": "Rajadas cortadas na taxa, sem nada atrasado",
+        "why": "Cortar sem atrasar é exatamente o que um policer faz."
+      },
+      {
+        "text": "Um DSCP novo nos pacotes acima da taxa",
+        "why": "Remarcar é uma das opções de um policer, não de um shaper."
+      }
+    ]
+  },
+  "ex-9g96j8fz": {
+    "prompt": "Ligue cada termo ao que ele faz.",
+    "hint": "Dois limites e o mecanismo que eles dividem.",
+    "pairs": [
+      {
+        "left": "shaper",
+        "right": "Guarda o excesso e o envia depois"
+      },
+      {
+        "left": "policer",
+        "right": "Descarta o excesso na hora"
+      },
+      {
+        "left": "token bucket",
+        "right": "Decide se sobra taxa para um pacote"
+      }
+    ],
+    "right_distractors": [
+      "Ordena os pacotes pelo DSCP"
+    ]
+  },
+  "ex-cxgc0atn": {
+    "prompt": "Quantos bytes por segundo um token bucket de 5 Mbit/s ganha?",
+    "hint": "Um byte tem 8 bits.",
+    "unit": "bytes por segundo"
+  },
+  "ex-se9vwkyg": {
+    "prompt": "Um balde vazio de 16.384 bytes enche a 625.000 bytes por segundo. Em quantos milissegundos ele fica cheio?",
+    "hint": "Tamanho sobre taxa.",
+    "unit": "ms"
+  },
+  "ex-t1xvxsvg": {
+    "prompt": "O que o tamanho do balde, o burst, decide?",
+    "hint": "Fichas juntadas enquanto o enlace estava quieto.",
+    "choices": [
+      {
+        "text": "A taxa média ao longo de um minuto",
+        "why": "Quem decide isso é a taxa; o tamanho só deixa passar dela por pouco tempo."
+      },
+      {
+        "text": "Quanto pode sair de uma vez depois de um período quieto",
+        "why": "Isso. 16 KB são uns dez quadros de tamanho máximo seguidos."
+      },
+      {
+        "text": "Quanto tempo um pacote pode esperar antes de ser descartado",
+        "why": "Isso é o limite da fila do shaper, latency 50ms aqui."
+      },
+      {
+        "text": "Quantas filas o enlace tem",
+        "why": "Um token bucket não tem fila nenhuma; as classes é que têm."
+      }
+    ]
+  },
+  "ex-n48j2rvv": {
+    "prompt": "Um policer é configurado com um balde de 1000 bytes. O que acontece com quadros de 1514 bytes?",
+    "hint": "Quantas fichas o balde consegue ter, no máximo?",
+    "choices": [
+      {
+        "text": "Passam, numa taxa menor",
+        "why": "Um quadro precisa de 1514 fichas de uma vez, e o balde nunca tem tantas."
+      },
+      {
+        "text": "Passa um a cada vez que o balde enche",
+        "why": "Um balde cheio são 1000 fichas, ainda menos que 1514."
+      },
+      {
+        "text": "Nenhum deles passa, nunca",
+        "why": "Isso. O balde precisa ter pelo menos o tamanho de um quadro."
+      },
+      {
+        "text": "O policer os fragmenta para caber",
+        "why": "Um policer deixa passar ou descarta; nunca reescreve o tamanho de um pacote."
+      }
+    ]
+  },
+  "ex-ydwa14qy": {
+    "prompt": "Com a mesma rajada de 40 quadros, o shaper do modelo enviou os 40, e o policer enviou 18 e ___ 22.",
+    "hint": "Ele não esperou fichas.",
+    "blanks": [
+      {
+        "accept": [
+          "descartou",
+          "perdeu",
+          "jogou fora"
+        ]
+      }
+    ]
+  },
+  "ex-z2zyx6me": {
+    "prompt": "Pelo shaper, o upload perdeu 248 pacotes no primeiro segundo e nenhum depois. Por que nenhum depois?",
+    "hint": "O que um shaper faz com um pacote adiantado?",
+    "choices": [
+      {
+        "text": "O TCP desliga a retransmissão depois de uma perda",
+        "why": "O TCP nunca a desliga; só não havia nada a reenviar."
+      },
+      {
+        "text": "O shaper segurou cada pacote até as fichas dele chegarem",
+        "why": "Isso. Depois que o TCP se acomodou na taxa, a fila absorveu o resto."
+      },
+      {
+        "text": "O provedor passou a guardar os pacotes extras",
+        "why": "O provedor não tinha limite configurado nesta rodada."
+      },
+      {
+        "text": "O balde cresceu para caber o upload",
+        "why": "O tc -s continua mostrando burst 16Kb."
+      }
+    ]
+  },
+  "ex-x5bnzksd": {
+    "prompt": "A linha do emissor do upload com shaping diz 6,42 Mbits/sec e a do receptor, 4,70. Qual descreve o enlace?",
+    "hint": "Uma delas conta bytes ainda na fila.",
+    "choices": [
+      {
+        "text": "Os 6,42 do emissor, já que ele os enviou",
+        "why": "Ele conta o que entrou no socket, incluindo o acúmulo do primeiro segundo."
+      },
+      {
+        "text": "A média das duas, uns 5,56",
+        "why": "Tirar a média de um número errado com um certo dá um errado."
+      },
+      {
+        "text": "Os 4,70 do receptor: o que chegou",
+        "why": "Isso. E 5 × 1448 ÷ 1514 limita o arquivo a uns 4,78."
+      },
+      {
+        "text": "Os 5,24 por segundo, o número mais estável",
+        "why": "Essa coluna também é contada no emissor, nos blocos do iperf3."
+      }
+    ]
+  },
+  "ex-r2ytedhw": {
+    "prompt": "Um ping durante o upload com shaping levou uns 22 ms. Pelo que ele esperava?",
+    "hint": "O Cwnd dizia 14,1 KBytes.",
+    "choices": [
+      {
+        "text": "O shaper segura o ICMP de propósito",
+        "why": "O tbf não sabe o que é um ping; tem uma fila só para tudo."
+      },
+      {
+        "text": "Um balde cheio de 16 KB antes de cada ping",
+        "why": "Um ping precisa de 98 fichas, não de um balde cheio."
+      },
+      {
+        "text": "Uns 14 KB do upload na frente dele na fila",
+        "why": "Isso. 14,1 KB a 5 Mbit/s dá uns 23 ms."
+      },
+      {
+        "text": "O roteador do provedor, que fica lento sob carga",
+        "why": "Com o policer, e o mesmo upload, o ping levou 0,070 ms."
+      }
+    ]
+  },
+  "ex-fzmqw31f": {
+    "prompt": "Um shaper a 4,5 Mbit/s conta quadros de 1514 bytes, cada um levando 1448 bytes do arquivo. Qual é o máximo que o arquivo alcança, em Mbit/s?",
+    "hint": "Taxa × dados ÷ quadro.",
+    "unit": "Mbit/s"
+  },
+  "ex-p99x9yv6": {
+    "prompt": "Com o policer, um ping levou 0,070 ms enquanto o upload rodava. Por que tão rápido?",
+    "hint": "Onde ele teria esperado?",
+    "choices": [
+      {
+        "text": "Um policer não tem fila onde esperar",
+        "why": "Isso. Um pacote cabe no balde e sai, ou não cabe e é descartado."
+      },
+      {
+        "text": "O policer dá prioridade ao ICMP",
+        "why": "A regra casa todo pacote vindo de 203.0.113.2, pings inclusive."
+      },
+      {
+        "text": "O upload já tinha terminado",
+        "why": "Ele começou dois segundos depois do início de um upload de oito."
+      },
+      {
+        "text": "O roteador do provedor é mais rápido que hq",
+        "why": "Os dois são namespaces no mesmo computador."
+      }
+    ]
+  },
+  "ex-aqtvrjnw": {
+    "prompt": "O policer contou 1335 pacotes e 2.002.500 bytes. O que a divisão de um pelo outro diz?",
+    "hint": "2.002.500 ÷ 1335.",
+    "choices": [
+      {
+        "text": "Que a maioria dos pacotes descartados eram pings",
+        "why": "Um ping tem 84 bytes; estes dão exatamente 1500 de média."
+      },
+      {
+        "text": "Que todo pacote descartado tinha 1500 bytes, o máximo",
+        "why": "Isso. Os descartes caíram nos segmentos de tamanho máximo do upload."
+      },
+      {
+        "text": "Que os descartes se espalharam por todos os tamanhos",
+        "why": "Uma média exata de 1500 em 1335 pacotes não deixa espaço para os pequenos."
+      },
+      {
+        "text": "Que o policer descarta cabeçalhos e guarda os dados",
+        "why": "Um policer descarta pacotes inteiros ou nenhum."
+      }
+    ]
+  },
+  "ex-fznbtbra": {
+    "prompt": "Uma ligação de voz divide o enlace com policing com um upload grande. O que a ligação sofre?",
+    "hint": "Sem fila, então sem espera.",
+    "choices": [
+      {
+        "text": "Atraso, com os pacotes na fila atrás do upload",
+        "why": "Não há fila onde ficar; isso era o shaper."
+      },
+      {
+        "text": "Buracos, quando os pacotes encontram o balde vazio",
+        "why": "Isso. São descartados, não atrasados, e a voz não tem tempo de reenviar."
+      },
+      {
+        "text": "Nada, já que um policer só descarta TCP",
+        "why": "A regra casa pelo endereço, seja qual for o protocolo."
+      },
+      {
+        "text": "Eco, de pacotes de voz enviados duas vezes",
+        "why": "Voz sobre UDP não retransmite; um pacote perdido fica perdido."
+      }
+    ]
+  },
+  "ex-marzr698": {
+    "prompt": "Com o policer, a coluna Cwnd oscilou entre 5,66 e 129 KBytes. Por quê?",
+    "hint": "A reação do TCP à perda.",
+    "choices": [
+      {
+        "text": "O policer redimensiona a janela do TCP diretamente",
+        "why": "Um policer só descarta; quem muda a janela é o emissor."
+      },
+      {
+        "text": "O iperf3 muda o tamanho do bloco a cada segundo",
+        "why": "Os blocos continuam iguais; a coluna por segundo marca 640 KBytes o tempo todo."
+      },
+      {
+        "text": "O TCP cresce até perder uma sequência, e então recua",
+        "why": "Isso. Sem fila para absorver uma rajada, toda subida termina numa perda."
+      },
+      {
+        "text": "O buffer do receptor vive enchendo e esvaziando",
+        "why": "Cwnd é a janela de congestionamento do emissor, não o buffer do receptor."
+      }
+    ]
+  },
+  "ex-dkrx6d8v": {
+    "prompt": "Com hq fazendo shaping a 4500 kbit, o contador do policer ficou em 0 pacotes. Onde se perderam os 208 pacotes retransmitidos?",
+    "hint": "O único outro limite no caminho.",
+    "choices": [
+      {
+        "text": "No policer do provedor, que só conta parte dos descartes",
+        "why": "O contador conta todo pacote que a regra descarta."
+      },
+      {
+        "text": "Em web1, que não deu conta",
+        "why": "web1 recebeu 2,91 Gbit/s no começo da aula."
+      },
+      {
+        "text": "No próprio shaper de hq",
+        "why": "Isso. Dentro do roteador do cliente, numa fila que o cliente controla."
+      },
+      {
+        "text": "Em lugar nenhum: o iperf3 conta duplicatas como retransmissões",
+        "why": "Uma retransmissão é um segmento enviado de novo porque o primeiro se perdeu."
+      }
+    ]
+  },
+  "ex-wzx12ta7": {
+    "prompt": "Por que o shaper do cliente fica um pouco abaixo da taxa contratada e não exatamente nela?",
+    "hint": "Duas máquinas medindo separadamente.",
+    "choices": [
+      {
+        "text": "Os provedores cobram uma tarifa extra exatamente na taxa contratada",
+        "why": "A taxa é o que foi comprado; não se cobra a mais por usá-la."
+      },
+      {
+        "text": "Eles contam bytes de jeitos diferentes e precisam de folga",
+        "why": "Isso. Quadro ou pacote, balde e relógio próprios: a margem absorve a diferença."
+      },
+      {
+        "text": "Um shaper na taxa descartaria todos os pacotes",
+        "why": "O shaper de 5 Mbit/s entregou 4,70 Mbit/s sem perdas depois do primeiro segundo."
+      },
+      {
+        "text": "O policer não deixa passar nada acima de 90% da taxa",
+        "why": "Ele deixou passar 5,37 Mbit/s sozinho; não há regra de 90% nele."
+      }
+    ]
+  },
+  "ex-sxa2h4kp": {
+    "prompt": "O que o cliente ganha fazendo shaping logo abaixo do contrato? Marque todos que se aplicam.",
+    "hint": "Compare 4,31 com 5,37, e os contadores.",
+    "choices": [
+      {
+        "text": "As perdas acontecem no roteador dele",
+        "why": "Isso: o policer contou 0."
+      },
+      {
+        "text": "Mais vazão do que o policer sozinho permitia",
+        "why": "Recebeu menos: 4,31 Mbit/s contra 5,37."
+      },
+      {
+        "text": "Uma fila que as classes de QoS dele podem arrumar",
+        "why": "Isso: o gargalo agora está no roteador dele, onde as classes da aula 18 agem."
+      },
+      {
+        "text": "Nenhum atraso de fila",
+        "why": "Um shaper é uma fila; o atraso vem para o seu roteador, não some."
+      }
+    ]
+  },
+  "ex-s35evdvh": {
+    "prompt": "Ponha em ordem o que um shaper faz com um quadro de tamanho máximo quando falta ficha no balde.",
+    "hint": "Ele nunca descarta um quadro que cabe na fila.",
+    "items": [
+      "O quadro chega e entra na fila",
+      "O balde é completado pelo tempo desde a última verificação",
+      "O quadro espera até o balde ter 1514 fichas",
+      "O quadro sai, e as 1514 fichas dele são retiradas"
+    ],
+    "trap": "Um policer pararia no terceiro passo e descartaria o quadro em vez de esperar."
+  },
+  "ex-hjz9fsr9": {
+    "prompt": "As ligações de um escritório pequeno picotam durante uploads. A linha de 20 Mbit/s é policiada pelo provedor. O que o escritório deve configurar?",
+    "hint": "Seja dono do gargalo, depois arrume-o.",
+    "choices": [
+      {
+        "text": "Um policer a 20 Mbit/s no próprio roteador",
+        "why": "Um segundo policer soma perda e não dá às ligações uma fila onde ir na frente."
+      },
+      {
+        "text": "Um shaper logo abaixo de 20 Mbit/s, com classe de voz",
+        "why": "Isso. A fila se forma no roteador do escritório, e a classe de voz a pula."
+      },
+      {
+        "text": "Nada, já que o policer do provedor já limita a taxa",
+        "why": "Ele limita descartando, ligações inclusive, sem como preferi-las."
+      },
+      {
+        "text": "Um shaper acima de 20 Mbit/s, para usar cada bit comprado",
+        "why": "Acima do contrato, o policer do provedor descarta o excesso e o shaper nunca forma fila."
+      }
+    ]
+  },
+  "ex-w6a68x49": {
+    "prompt": "Ligue cada contador desta aula ao lugar onde foi contado.",
+    "hint": "tc, nft e iperf3.",
+    "pairs": [
+      {
+        "left": "dropped 248, overlimits 10246",
+        "right": "O shaper na eth1 de hq"
+      },
+      {
+        "left": "packets 1335 bytes 2002500",
+        "right": "O policer no roteador do provedor"
+      },
+      {
+        "left": "Retr 1337",
+        "right": "O laptop, retransmitindo"
+      }
+    ],
+    "right_distractors": [
+      "O log do nginx de web1"
+    ]
+  }
+}

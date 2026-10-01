@@ -1,0 +1,676 @@
+[
+  {
+    "id": "ex-0kqpr1x4",
+    "version": 1,
+    "section": "the-perimeter-assumption",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What assumption did every firewall rule in the course rest on before this lesson?",
+    "hint": "Think of why the staff LAN may use the application.",
+    "choices": [
+      {
+        "text": "That encrypted traffic is safe to let through",
+        "correct": false,
+        "why": "Encryption was never the reason a rule allowed something."
+      },
+      {
+        "text": "That where a packet comes from says whether to trust it",
+        "correct": true,
+        "why": "Right. Zones and addresses were the credential."
+      },
+      {
+        "text": "That every user has signed in first",
+        "correct": false,
+        "why": "No rule asked who the user was."
+      },
+      {
+        "text": "That a server's port is closed unless it listens",
+        "correct": false,
+        "why": "True of sockets, but not what the rules trusted."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gej9nx3",
+    "version": 1,
+    "section": "the-perimeter-assumption",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In which ways does trusting the location of a packet break down? Choose all that apply.",
+    "hint": "The section names three, each from an earlier lesson.",
+    "choices": [
+      {
+        "text": "A machine inside the zone is compromised",
+        "correct": true,
+        "why": "Right. Everything the zone reaches is then exposed."
+      },
+      {
+        "text": "The firewall's connection table fills up",
+        "correct": false,
+        "why": "That is a denial of service, not a failure of trust."
+      },
+      {
+        "text": "An address is borrowed or forged",
+        "correct": true,
+        "why": "Right. The address then vouches for the wrong machine."
+      },
+      {
+        "text": "Laptops at home and services in other data centres leave no inside to trust",
+        "correct": true,
+        "why": "Right. The network stops having an inside at all."
+      },
+      {
+        "text": "TLS hides the port from the firewall",
+        "correct": false,
+        "why": "TLS encrypts the payload; the port stays visible."
+      }
+    ]
+  },
+  {
+    "id": "ex-hnzezykm",
+    "version": 1,
+    "section": "the-perimeter-assumption",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "laptop fetched the admin console on port 8080 and got the page. What did that answer depend on?",
+    "hint": "What did anything ask?",
+    "choices": [
+      {
+        "text": "Ana's password for the admin page",
+        "correct": false,
+        "why": "No password was asked for."
+      },
+      {
+        "text": "The certificate laptop presented",
+        "correct": false,
+        "why": "It presented none; port 8080 is plain HTTP."
+      },
+      {
+        "text": "Where the request came from, the staff LAN",
+        "correct": true,
+        "why": "Right. Only the staff LAN's address mattered."
+      },
+      {
+        "text": "The application checking laptop's hostname against a list",
+        "correct": false,
+        "why": "Nothing checked a name; the firewall allowed the LAN."
+      }
+    ]
+  },
+  {
+    "id": "ex-sscfghch",
+    "version": 1,
+    "section": "the-parts",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of a Zero Trust decision to what plays it in this lesson's lab.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "subject",
+        "right": "the proxy, www"
+      },
+      {
+        "left": "resource",
+        "right": "the application on app"
+      },
+      {
+        "left": "identity",
+        "right": "a client certificate from the company's CA"
+      },
+      {
+        "left": "policy enforcement point",
+        "right": "the TLS listener in front of the application"
+      }
+    ],
+    "right_distractors": [
+      "the staff LAN's address range"
+    ]
+  },
+  {
+    "id": "ex-cmbc0ktc",
+    "version": 1,
+    "section": "the-parts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, where is the policy decision point?",
+    "hint": "Where are the rules evaluated: which CA, which name?",
+    "choices": [
+      {
+        "text": "The TLS configuration on app: which CA, which name",
+        "correct": true,
+        "why": "Right. It says which CA and which name are accepted."
+      },
+      {
+        "text": "The firewall's forward chain on fw",
+        "correct": false,
+        "why": "The firewall decides where packets go, not who is asking."
+      },
+      {
+        "text": "The company's issuing CA, which signs the certificates",
+        "correct": false,
+        "why": "It issues identities; it does not evaluate requests."
+      },
+      {
+        "text": "The proxy on www, which presents the certificate",
+        "correct": false,
+        "why": "That is the subject making the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzhtzp41",
+    "version": 1,
+    "section": "the-parts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A second internal service trusts the same CA but admits only CN=billing-client. The proxy presents its valid www-client certificate there. What should happen?",
+    "hint": "Authentication and authorisation are two steps.",
+    "choices": [
+      {
+        "text": "Admitted, since the certificate is valid and from the same CA",
+        "correct": false,
+        "why": "Valid proves who it is, not what it may reach."
+      },
+      {
+        "text": "Refused at the TLS handshake, since the CA is unknown",
+        "correct": false,
+        "why": "The CA is the same one the service trusts."
+      },
+      {
+        "text": "Refused: authorisation is per resource",
+        "correct": true,
+        "why": "Right. One service's identity does not open another."
+      },
+      {
+        "text": "Admitted, if the firewall allows www to reach it",
+        "correct": false,
+        "why": "Passing the firewall is necessary and no longer sufficient."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9zv1sxc",
+    "version": 1,
+    "section": "inside-is-not-enough",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "laptop, allowed through the firewall to 8443, got 400 No required SSL certificate was sent. Why?",
+    "hint": "What does ssl_verify_client on demand?",
+    "choices": [
+      {
+        "text": "The firewall dropped the connection halfway",
+        "correct": false,
+        "why": "The firewall let it through; nginx answered."
+      },
+      {
+        "text": "laptop's certificate had expired",
+        "correct": false,
+        "why": "That would say certificate error, and laptop sent none."
+      },
+      {
+        "text": "laptop's CN was not www-client",
+        "correct": false,
+        "why": "A wrong CN gets 403 from the if, after verification."
+      },
+      {
+        "text": "laptop presented no client certificate",
+        "correct": true,
+        "why": "Right. No certificate, no connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkztwff3",
+    "version": 1,
+    "section": "inside-is-not-enough",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In app's nginx configuration, the line ssl_verify_client ___ makes a valid client certificate mandatory.",
+    "hint": "The value in the server block.",
+    "blanks": [
+      {
+        "accept": [
+          "on"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bjjtjc5p",
+    "version": 1,
+    "section": "inside-is-not-enough",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A laptop holds a valid certificate from the same issuing CA, with CN=laptop. What does app answer on 8443?",
+    "hint": "Verification passes; then the if runs.",
+    "choices": [
+      {
+        "text": "The admin page, because the certificate is valid",
+        "correct": false,
+        "why": "Valid is not enough; the name must be www-client."
+      },
+      {
+        "text": "403, returned by the if that checks the subject",
+        "correct": true,
+        "why": "Right. That is the authorisation half."
+      },
+      {
+        "text": "400 No required SSL certificate was sent",
+        "correct": false,
+        "why": "It did send one."
+      },
+      {
+        "text": "Nothing: the firewall blocks laptop from 8443",
+        "correct": false,
+        "why": "laptop reached 8443 through the firewall in the lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-vgcsgmty",
+    "version": 1,
+    "section": "inside-is-not-enough",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many firewall rules to port 8080 were deleted from fw's forward chain?",
+    "hint": "Count the handles.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-t4mrz4p2",
+    "version": 1,
+    "section": "identity-for-machines",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "www-client's certificate carries the extended key usage TLS Web Client Authentication. What does that allow?",
+    "hint": "Which side of a TLS connection?",
+    "choices": [
+      {
+        "text": "Signing other certificates for the company",
+        "correct": false,
+        "why": "That is a CA's job."
+      },
+      {
+        "text": "Running a TLS server as www",
+        "correct": false,
+        "why": "Client authentication cannot be used to run a server."
+      },
+      {
+        "text": "Proving its identity to a server",
+        "correct": true,
+        "why": "Right. And nothing on the server side."
+      },
+      {
+        "text": "Encrypting e-mail sent from www to staff members",
+        "correct": false,
+        "why": "That would be a different usage."
+      }
+    ]
+  },
+  {
+    "id": "ex-z344by3a",
+    "version": 1,
+    "section": "identity-for-machines",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "From notBefore to notAfter, how many months is www-client's certificate valid?",
+    "hint": "Sep 28 to Dec 28.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-0ccxwyh0",
+    "version": 1,
+    "section": "identity-for-machines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line in the proxy's location block makes it check that it is really talking to app.corp.example.com?",
+    "hint": "One end presents; the other end verifies.",
+    "choices": [
+      {
+        "text": "proxy_ssl_certificate /root/tls/www-client.crt",
+        "correct": false,
+        "why": "That presents the proxy's own identity."
+      },
+      {
+        "text": "proxy_ssl_verify on",
+        "correct": true,
+        "why": "Right. With proxy_ssl_name giving the expected name."
+      },
+      {
+        "text": "ssl_verify_client on",
+        "correct": false,
+        "why": "That is on app, checking the client."
+      },
+      {
+        "text": "proxy_set_header Host $host",
+        "correct": false,
+        "why": "It passes a header along; it checks nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-t47dx3gs",
+    "version": 1,
+    "section": "every-request-checked",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which request wrote the line 192.168.10.20 - NONE /admin/ 400?",
+    "hint": "NONE is the verification result.",
+    "choices": [
+      {
+        "text": "laptop's attempt with no certificate",
+        "correct": true,
+        "why": "Right. Nothing to verify, refused with 400."
+      },
+      {
+        "text": "The customer's request through the proxy",
+        "correct": false,
+        "why": "That one arrived as CN=www-client, 200."
+      },
+      {
+        "text": "The proxy presenting its expired certificate",
+        "correct": false,
+        "why": "That line says FAILED and names www-client-old."
+      },
+      {
+        "text": "A health check from fw that nginx could not match to a certificate rule",
+        "correct": false,
+        "why": "fw sent no request; the address is laptop's."
+      }
+    ]
+  },
+  {
+    "id": "ex-0cgm8f2b",
+    "version": 1,
+    "section": "every-request-checked",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The old certificate was refused with certificate has expired. What had to happen for that?",
+    "hint": "Where is the end date written?",
+    "choices": [
+      {
+        "text": "Someone revoked it on the CA",
+        "correct": false,
+        "why": "Nobody revoked anything."
+      },
+      {
+        "text": "The firewall was told to block www-client-old",
+        "correct": false,
+        "why": "The firewall does not see certificates."
+      },
+      {
+        "text": "app's configuration was edited to name it",
+        "correct": false,
+        "why": "The configuration was not touched."
+      },
+      {
+        "text": "Nothing: its notAfter, 31 August 2026, had passed and the check read it on that request",
+        "correct": true,
+        "why": "Right. The credential carries its own end date."
+      }
+    ]
+  },
+  {
+    "id": "ex-9mbbfjfh",
+    "version": 1,
+    "section": "every-request-checked",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the subject in every access log line, where does an investigation start?",
+    "hint": "Compare with a log of addresses alone.",
+    "choices": [
+      {
+        "text": "From which address, and who held it at the time",
+        "correct": false,
+        "why": "That is what an address-only log forces."
+      },
+      {
+        "text": "From who made the request",
+        "correct": true,
+        "why": "Right. Each decision carries its identity."
+      },
+      {
+        "text": "From the firewall's counters for port 8443",
+        "correct": false,
+        "why": "Counters say how many, not who."
+      },
+      {
+        "text": "From the CA's list of certificates it has issued",
+        "correct": false,
+        "why": "That lists identities, not what they did."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pjfcc4e",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the practical order of work for bringing services under Zero Trust in order, first to last.",
+    "hint": "The table at the end of the section.",
+    "items": [
+      "inventory every service and how it authenticates",
+      "issue identities for people and machines",
+      "bring the most valuable services under the check first",
+      "remove the network-only path"
+    ],
+    "trap": "Removing the old path before the clients hold identities would lock everyone out."
+  },
+  {
+    "id": "ex-hxws5mfv",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A vendor offers a remote access gateway labelled Zero Trust. Buying it gives you what?",
+    "hint": "Is Zero Trust a product or a design?",
+    "choices": [
+      {
+        "text": "A Zero Trust network",
+        "correct": false,
+        "why": "It is not a product; no box is the design."
+      },
+      {
+        "text": "One part that a Zero Trust design could use",
+        "correct": true,
+        "why": "Right. The design is the decision to check every request."
+      },
+      {
+        "text": "A replacement for the firewall",
+        "correct": false,
+        "why": "The lab kept its firewall on purpose."
+      },
+      {
+        "text": "Identities for every service, issued automatically",
+        "correct": false,
+        "why": "A gateway does not issue your services' certificates."
+      }
+    ]
+  },
+  {
+    "id": "ex-6d73qah8",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The identity check on 8443 is in place, but the two rules to 8080 were left in the firewall. What is the check worth?",
+    "hint": "A front door beside...",
+    "choices": [
+      {
+        "text": "Full value, since clients prefer TLS",
+        "correct": false,
+        "why": "Anyone avoiding the check uses 8080."
+      },
+      {
+        "text": "Most of its value, since 8080 only serves the admin page",
+        "correct": false,
+        "why": "The admin page is exactly what was reachable."
+      },
+      {
+        "text": "Little, while the old path stays open",
+        "correct": true,
+        "why": "Right. Deleting the old rules made the check mean anything."
+      },
+      {
+        "text": "Nothing at all, because nginx turns off 8080 when 8443 is added",
+        "correct": false,
+        "why": "8080 kept running behind 8443 as proxy_pass."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1ry1740",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lab keep its firewall once the application checks identity?",
+    "hint": "Two layers, two questions.",
+    "choices": [
+      {
+        "text": "The identity check cannot see the source address",
+        "correct": false,
+        "why": "The log records it on every line."
+      },
+      {
+        "text": "If the identity check is flawed, the network limits who gets to try it",
+        "correct": true,
+        "why": "Right. Two controls instead of one."
+      },
+      {
+        "text": "Removing it would be a separate migration nobody has planned",
+        "correct": false,
+        "why": "The reason is defence, not scheduling."
+      },
+      {
+        "text": "TLS needs the firewall to open the port",
+        "correct": false,
+        "why": "nginx listens whether or not a rule exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-3n1xsbnk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Staff connect to a VPN, and once connected they reach every internal application with no further check. How does this fit Zero Trust?",
+    "hint": "What does the application decide on once the tunnel is up?",
+    "choices": [
+      {
+        "text": "It is Zero Trust, since the VPN asked for a password",
+        "correct": false,
+        "why": "One check at the edge, then the address decides again."
+      },
+      {
+        "text": "It is not: the tunnel makes location the credential again",
+        "correct": true,
+        "why": "Right. Each application has to check each request."
+      },
+      {
+        "text": "It is Zero Trust if the VPN uses certificates",
+        "correct": false,
+        "why": "How the tunnel authenticates does not change what the apps trust."
+      },
+      {
+        "text": "It is not, because VPN traffic is not encrypted end to end",
+        "correct": false,
+        "why": "Encryption is not the missing part; per-request identity is."
+      }
+    ]
+  },
+  {
+    "id": "ex-eker5ndt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "app's log shows CN=www-client SUCCESS from 192.168.10.20, which is not the proxy's address. What does that point to?",
+    "hint": "What does SUCCESS prove about the key?",
+    "choices": [
+      {
+        "text": "A logging error, since the certificate check passed",
+        "correct": false,
+        "why": "The log records exactly what was verified."
+      },
+      {
+        "text": "The firewall is forwarding the proxy's traffic through the LAN",
+        "correct": false,
+        "why": "The proxy's requests arrive from 192.0.2.80."
+      },
+      {
+        "text": "www-client's private key is in use away from www",
+        "correct": true,
+        "why": "Right. Revoke it and issue a new one."
+      },
+      {
+        "text": "Someone guessed the CN and typed it into a request",
+        "correct": false,
+        "why": "A CN is proved with the key, not typed."
+      }
+    ]
+  },
+  {
+    "id": "ex-nstv26cv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The lab issued two machine identities by hand. The company has two hundred services. What keeps that manageable?",
+    "hint": "The hard problem is distribution.",
+    "choices": [
+      {
+        "text": "Certificates valid for ten years, so renewal is rare",
+        "correct": false,
+        "why": "Long lifetimes make revocation matter more."
+      },
+      {
+        "text": "One shared certificate that all two hundred services present",
+        "correct": false,
+        "why": "Then no service could be told apart in the log or the policy."
+      },
+      {
+        "text": "Going back to address rules for the smaller services",
+        "correct": false,
+        "why": "That reopens the network-only path."
+      },
+      {
+        "text": "Certificate automation or a service mesh, with lifetimes of hours",
+        "correct": true,
+        "why": "Right. Short lifetimes make revocation matter less."
+      }
+    ]
+  }
+]

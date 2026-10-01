@@ -1,0 +1,435 @@
+{
+  "ex-vfyn2cyq": {
+    "prompt": "`laptop` capturou tudo de ou para `files` durante cinco segundos enquanto `files` buscava uma página em `web1`. Os dois estão no mesmo switch. O que a captura continha?",
+    "hint": "Para onde um switch manda um quadro unicast?",
+    "choices": [
+      {
+        "text": "A troca HTTP inteira, requisição e página",
+        "why": "Um switch manda um quadro unicast por uma porta só; a página nunca chegou à do laptop."
+      },
+      {
+        "text": "Só o SYN que abriu a conexão",
+        "why": "O SYN também é unicast, de files para o gateway, e não passou perto do laptop."
+      },
+      {
+        "text": "Um pedido ARP, que é um broadcast",
+        "why": "Isso. Um broadcast sai por todas as portas, então foi a única coisa que o laptop podia ver."
+      },
+      {
+        "text": "Nada, porque o laptop não estava numa porta espelho",
+        "why": "Ele capturou um pacote: uma porta que não é espelho ainda recebe broadcasts."
+      }
+    ]
+  },
+  "ex-66pmgy5k": {
+    "prompt": "`mon` capturou a conversa inteira na porta espelho sem endereço IP. Por que ele não precisa de um?",
+    "hint": "mon participa da conversa?",
+    "choices": [
+      {
+        "text": "O switch empresta a ele o endereço da porta espelhada",
+        "why": "Um switch não empresta endereços; ele copia quadros."
+      },
+      {
+        "text": "Não manda nada e nada é mandado a ele; ele lê cópias",
+        "why": "Isso. Um endereço serve para participar, e mon só escuta."
+      },
+      {
+        "text": "O tshark dá à interface um endereço temporário durante a captura",
+        "why": "O tshark não atribui nada; a interface ficou sem endereço."
+      },
+      {
+        "text": "Membros do grupo wireshark podem capturar sem um",
+        "why": "O grupo trata da permissão de capturar, não de endereçamento."
+      }
+    ]
+  },
+  "ex-dd56fsy5": {
+    "prompt": "Um uplink ocupado de 10 Gbit/s é espelhado para um analisador numa porta de 1 Gbit/s. A captura mostra buracos, onde confirmações se referem a dados que não estão no arquivo. Qual é a primeira explicação a descartar?",
+    "hint": "Onde uma cópia pode se perder?",
+    "choices": [
+      {
+        "text": "A rede está perdendo pacotes entre os dois hosts",
+        "why": "As confirmações dizem que os dados chegaram; o que falta é a cópia."
+      },
+      {
+        "text": "Um filtro de exibição está escondendo parte do tráfego",
+        "why": "Limpar um filtro de exibição traz tudo de volta, e isso se confere em um segundo."
+      },
+      {
+        "text": "O switch descartou cópias para as quais não tinha espaço na porta espelho",
+        "why": "Isso. Dez gigabits não cabem em um, e a perda acontece no caminho até o analisador."
+      },
+      {
+        "text": "O analisador não está no grupo wireshark",
+        "why": "Sem permissão ele não capturaria nada, e não a maior parte do tráfego."
+      }
+    ]
+  },
+  "ex-5nfys5pg": {
+    "prompt": "Ligue cada lugar de captura ao que ele oferece.",
+    "hint": "Um deles depende da configuração do switch.",
+    "pairs": [
+      {
+        "left": "Uma porta espelho",
+        "right": "Cópias de uma porta ou VLAN, configuradas no switch"
+      },
+      {
+        "left": "Um tap",
+        "right": "Os dois sentidos de um cabo, faça o switch o que fizer"
+      },
+      {
+        "left": "O próprio servidor",
+        "right": "Tudo o que aquela máquina manda e recebe"
+      }
+    ],
+    "right_distractors": [
+      "Todo quadro unicast da LAN, de qualquer porta comum"
+    ]
+  },
+  "ex-rch9c6d5": {
+    "prompt": "Por que `ana` pôde rodar `tshark -i eth0` em `mon` sem `sudo`?",
+    "hint": "Veja o id -nG.",
+    "choices": [
+      {
+        "text": "O tshark não precisa de privilégio para capturar",
+        "why": "Capturar precisa, sim; a aula 12 mostra o tcpdump recusado sem ele."
+      },
+      {
+        "text": "mon não tem endereço, então nada nele é protegido",
+        "why": "As permissões numa máquina não dependem dos endereços dela."
+      },
+      {
+        "text": "Ela está no grupo wireshark",
+        "why": "Isso. O pacote deixa esse grupo rodar o auxiliar que abre a interface."
+      },
+      {
+        "text": "O tshark só lê arquivos",
+        "why": "Ele capturou ao vivo da eth0 na mesma aula."
+      }
+    ]
+  },
+  "ex-d2nqjxrp": {
+    "prompt": "O que se ganha capturando como membro de um grupo em vez de rodar o analisador inteiro como root?",
+    "hint": "Qual código lê o que estranhos mandam?",
+    "choices": [
+      {
+        "text": "Os dissectors que interpretam pacotes não confiáveis rodam sem privilégio",
+        "why": "Isso. Só o pequeno auxiliar que abre a interface tem privilégio."
+      },
+      {
+        "text": "A captura de um membro do grupo perde menos pacotes",
+        "why": "Quem roda não muda nada em quantos pacotes chegam."
+      },
+      {
+        "text": "O root não consegue gravar arquivos pcap num diretório pessoal",
+        "why": "O root grava em qualquer lugar; esse é o problema, não o benefício."
+      },
+      {
+        "text": "Os filtros de exibição só funcionam para usuários comuns",
+        "why": "Filtros de exibição funcionam igual para qualquer um."
+      }
+    ]
+  },
+  "ex-13jmm5bs": {
+    "prompt": "Quantos pacotes a captura de oito segundos gravou em `files.pcap`?",
+    "hint": "O tshark imprimiu a contagem quando parou.",
+    "unit": "pacotes"
+  },
+  "ex-h8ekprh2": {
+    "prompt": "`files.pcap` foi criado com modo `-rw-------`. Por que esse é o padrão certo para um arquivo de captura?",
+    "hint": "O que o arquivo continha?",
+    "choices": [
+      {
+        "text": "O tshark não lê um arquivo que outros usuários podem ler",
+        "why": "O tshark lê qualquer arquivo que tem permissão de ler; o modo protege o conteúdo."
+      },
+      {
+        "text": "Impede que uma segunda captura grave nele",
+        "why": "Uma segunda captura rodada por ana ainda poderia gravar; a questão é quem lê."
+      },
+      {
+        "text": "Ele guarda o que passou pelo fio, páginas em texto claro incluídas",
+        "why": "Isso. Tudo o que é legível no fio é legível no arquivo."
+      },
+      {
+        "text": "Um arquivo privado ocupa menos espaço em disco",
+        "why": "Permissões não mudam o tamanho de um arquivo."
+      }
+    ]
+  },
+  "ex-k124p2z7": {
+    "prompt": "Um filtro de captura rejeita um pacote. O que dá para fazer quanto a isso depois?",
+    "hint": "Ele age antes de gravar.",
+    "choices": [
+      {
+        "text": "Limpar o filtro e o pacote reaparece",
+        "why": "Esse é o filtro de exibição, que só esconde."
+      },
+      {
+        "text": "Achá-lo num arquivo separado de pacotes rejeitados",
+        "why": "Nenhum arquivo assim é guardado."
+      },
+      {
+        "text": "Lê-lo com `tshark -r` e sem `-Y`",
+        "why": "Ler o arquivo mostra só o que foi gravado."
+      },
+      {
+        "text": "Nada: ele nunca foi gravado",
+        "why": "Isso. O único remédio é uma segunda captura."
+      }
+    ]
+  },
+  "ex-ev4hp0pj": {
+    "prompt": "Ligue cada expressão ao lugar onde ela funciona.",
+    "hint": "Nomes de campo têm pontos.",
+    "pairs": [
+      {
+        "left": "`host 192.0.2.21`",
+        "right": "Um filtro de captura, ou o tcpdump: é BPF"
+      },
+      {
+        "left": "`ip.addr == 192.0.2.21`",
+        "right": "Um filtro de exibição que nomeia um campo"
+      },
+      {
+        "left": "`http.response.code >= 400`",
+        "right": "Só filtro de exibição: o BPF não enxerga dentro do HTTP"
+      }
+    ],
+    "right_distractors": [
+      "Qualquer das barras, digitada exatamente igual"
+    ]
+  },
+  "ex-xhzsjpcp": {
+    "prompt": "Um servidor web devolve um erro mais ou menos uma vez por hora, e você quer ver essas respostas. Qual plano guarda a evidência?",
+    "hint": "Qual filtro pode perder um pacote de vez?",
+    "choices": [
+      {
+        "text": "Um filtro de captura `http.response.code >= 500`, para o arquivo ter só as falhas",
+        "why": "Essa é a linguagem do filtro de exibição; como filtro de captura ela é recusada."
+      },
+      {
+        "text": "Capturar `tcp port 80` num arquivo, depois exibir `http.response.code >= 500`",
+        "why": "Isso. Largo o bastante para pegar, e estreitado depois quantas vezes for preciso."
+      },
+      {
+        "text": "Capturar cinco minutos com `-a duration:300` e filtrar esses",
+        "why": "Um erro por hora dificilmente cai dentro de cinco minutos."
+      },
+      {
+        "text": "Capturar `tcp port 443`, que é para onde vão os erros web",
+        "why": "Os erros voltam pela porta que a requisição usou, e a 443 ainda por cima é criptografada."
+      }
+    ]
+  },
+  "ex-vbrhdwf9": {
+    "prompt": "O Client Hello levou o nome do site, `www.example.com`, em ___ embora tudo depois dele fosse criptografado.",
+    "hint": "O contrário de criptografado.",
+    "blanks": [
+      {
+        "accept": [
+          "texto claro",
+          "claro",
+          "texto puro",
+          "aberto"
+        ]
+      }
+    ]
+  },
+  "ex-kqejpn81": {
+    "prompt": "`tcp.flags.syn == 1 && tcp.flags.ack == 0` achou três quadros em `files.pcap`. O que você estava contando?",
+    "hint": "Um SYN/ACK é a resposta do servidor.",
+    "choices": [
+      {
+        "text": "Conexões que não conseguiram abrir",
+        "why": "Um SYN sozinho não diz se a resposta veio; nas três ela veio."
+      },
+      {
+        "text": "Conexões que o cliente abriu",
+        "why": "Isso. O primeiro pacote de cada uma: web1 na 80 e na 443, web3 na 80."
+      },
+      {
+        "text": "As respostas dos servidores ao cliente",
+        "why": "Essas levam ACK também, então o filtro as exclui."
+      },
+      {
+        "text": "Pacotes que foram enviados duas vezes",
+        "why": "Uma retransmissão seria marcada como tal; estes são três portas e servidores diferentes."
+      }
+    ]
+  },
+  "ex-j74mzeh7": {
+    "prompt": "O filtro de exibição `port 80` foi recusado. O que deveria ter sido digitado?",
+    "hint": "Um filtro de exibição nomeia um campo.",
+    "choices": [
+      {
+        "text": "`port == 80`",
+        "why": "Não existe campo chamado port sozinho; ele pertence a um protocolo."
+      },
+      {
+        "text": "`tcp port == 80`",
+        "why": "Metade BPF e metade campo: nenhuma das linguagens lê isso."
+      },
+      {
+        "text": "`tcp.port == 80`",
+        "why": "Isso. O protocolo, um ponto, o campo e uma comparação."
+      },
+      {
+        "text": "`\"port 80\"`, entre aspas",
+        "why": "As aspas já estavam lá para o shell; o problema são as palavras."
+      }
+    ]
+  },
+  "ex-y6c7p738": {
+    "prompt": "Na versão gravada aqui, `ip.addr != 192.0.2.21` mostrou 18 pacotes. Quais eram?",
+    "hint": "Deu a mesma contagem que !(ip.addr == 192.0.2.21).",
+    "choices": [
+      {
+        "text": "Os que têm pelo menos um endereço diferente de 192.0.2.21",
+        "why": "Essa é a leitura antiga, e ela pega quase todo pacote, não 18."
+      },
+      {
+        "text": "Os que não tinham 192.0.2.21 como origem",
+        "why": "Isso incluiria toda requisição mandada a web1."
+      },
+      {
+        "text": "Os mandados por 192.0.2.21 e por mais ninguém",
+        "why": "Isso seria ip.src == 192.0.2.21, a pergunta oposta."
+      },
+      {
+        "text": "Os em que nenhum dos endereços era 192.0.2.21",
+        "why": "Isso. 45 pacotes no arquivo, 27 de ou para web1, sobram 18."
+      }
+    ]
+  },
+  "ex-r9afkrvr": {
+    "prompt": "Um arquivo tem 45 pacotes, e as estatísticas de conversa contam 27 de ou para `192.0.2.21`. Quantos `!(ip.addr == 192.0.2.21)` mostra?",
+    "hint": "Todo pacote está ou não está na conversa.",
+    "unit": "pacotes"
+  },
+  "ex-37r62gvj": {
+    "prompt": "Um colega captura na porta da própria mesa com um filtro correto para o tráfego de um servidor, não grava nada, e escreve no chamado que o servidor não mandou nada. Qual é a falha?",
+    "hint": "Um filtro correto no lugar errado.",
+    "choices": [
+      {
+        "text": "Ele deveria ter capturado sem `sudo`",
+        "why": "O privilégio decide se a captura roda, e a dele rodou."
+      },
+      {
+        "text": "A porta dele nunca poderia ter visto, então um arquivo vazio não prova nada",
+        "why": "Isso. Num switch, só uma porta espelho, um tap ou o próprio servidor veem esse tráfego."
+      },
+      {
+        "text": "Um filtro de exibição estava escondendo os pacotes",
+        "why": "O próprio arquivo estava vazio; um filtro de exibição não esvazia um arquivo."
+      },
+      {
+        "text": "O tráfego do servidor era criptografado",
+        "why": "Pacotes criptografados são capturados do mesmo jeito; só não dá para lê-los."
+      }
+    ]
+  },
+  "ex-6zsgjqd5": {
+    "prompt": "Seguir o stream TCP 0 imprimiu a requisição e a página, terminando em `served by web1`. O que isso mostra sobre o HTTP simples?",
+    "hint": "Quem mais poderia ter rodado esse comando?",
+    "choices": [
+      {
+        "text": "Quem copia os pacotes lê tudo",
+        "why": "Isso. Cabeçalhos e corpo atravessam o fio em texto claro."
+      },
+      {
+        "text": "Só os cabeçalhos são legíveis; o corpo vai comprimido",
+        "why": "O corpo, served by web1, foi impresso como foi enviado."
+      },
+      {
+        "text": "Só é legível a partir de uma porta espelho",
+        "why": "Qualquer ponto por onde os pacotes passam, um tap ou o próprio servidor, lê os mesmos bytes."
+      },
+      {
+        "text": "O tshark decifrou com a chave do servidor",
+        "why": "Não havia nada para decifrar."
+      }
+    ]
+  },
+  "ex-becyvrry": {
+    "prompt": "Entre `files` e `web1` a tabela de conversas mostra 15 quadros, 1800 bytes num sentido, e 12 quadros, 3265 bytes no outro. O que explica a diferença?",
+    "hint": "Qual lado mandou as páginas?",
+    "choices": [
+      {
+        "text": "Três quadros do cliente se perderam no caminho",
+        "why": "Nada se perdeu; as contagens vêm do que os dois lados mandaram."
+      },
+      {
+        "text": "A porta espelho descartou as cópias do servidor",
+        "why": "O sentido do servidor é o que tem mais bytes, não menos."
+      },
+      {
+        "text": "As respostas do servidor levaram os dados; o cliente mandou quase só requisições e confirmações",
+        "why": "Isso. Mais quadros do cliente, mais bytes do servidor: o formato de quem navega."
+      },
+      {
+        "text": "web1 retransmitiu as respostas",
+        "why": "Uma retransmissão acrescentaria quadros do lado de web1, e ele tem menos."
+      }
+    ]
+  },
+  "ex-mmar2e1r": {
+    "prompt": "Quais destes a hierarquia de protocolos consegue dizer? Marque todos que se aplicam.",
+    "hint": "Ela conta quadros por protocolo, e mais nada.",
+    "choices": [
+      {
+        "text": "Que há na rede um protocolo que ninguém esperava",
+        "why": "Isso: é uma linha na árvore."
+      },
+      {
+        "text": "Qual página um cliente pediu",
+        "why": "Isso é um stream a seguir, não uma contagem."
+      },
+      {
+        "text": "Quantos quadros levaram DNS",
+        "why": "Isso: 4 em files.pcap."
+      },
+      {
+        "text": "O tempo de ida e volta de cada conexão",
+        "why": "Ela não tem tempo nenhum."
+      },
+      {
+        "text": "Que parte do TCP levou HTTP ou TLS",
+        "why": "Isso: 4 e 8 de 37 quadros."
+      }
+    ]
+  },
+  "ex-4g2kyref": {
+    "prompt": "Ponha em ordem os passos de uma investigação com o Wireshark.",
+    "hint": "As únicas escolhas irreversíveis vêm primeiro.",
+    "items": [
+      "Escolher um lugar que enxergue o tráfego",
+      "Capturar num arquivo com um filtro de captura largo",
+      "Estreitar a visão com filtros de exibição",
+      "Seguir a conversa que importa"
+    ],
+    "trap": "Um filtro de exibição age sobre o que foi gravado, então a captura vem antes; e nada é gravado de uma porta que não enxerga o tráfego."
+  },
+  "ex-kmyat4px": {
+    "prompt": "Você precisa ver o tráfego entre dois servidores num switch, e só tem um laptop numa porta comum. O que lhe dá os pacotes?",
+    "hint": "O que decide para onde um quadro vai?",
+    "choices": [
+      {
+        "text": "Pôr a interface do laptop em modo promíscuo",
+        "why": "O modo promíscuo aceita todo quadro que chega, e o switch continua não mandando nenhum dos deles para aquela porta."
+      },
+      {
+        "text": "Rodar o Wireshark como root no laptop",
+        "why": "Privilégio no laptop não muda nada no que chega à porta dele."
+      },
+      {
+        "text": "Um filtro de exibição com os endereços dos dois servidores",
+        "why": "Ele só mostra o que foi capturado, e nada disso foi."
+      },
+      {
+        "text": "Um espelho da porta de um servidor para a do laptop",
+        "why": "Isso. Ou capturar num dos próprios servidores, do jeito da aula 12."
+      }
+    ]
+  }
+}

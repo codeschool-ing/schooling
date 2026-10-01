@@ -1,0 +1,460 @@
+{
+  "ex-z1mvnk9f": {
+    "prompt": "O tcpdump no roteador do provedor imprimiu os pacotes do túnel como `proto ESP (…)`. Qual é o número de protocolo IP do ESP?",
+    "hint": "O AH é o número seguinte.",
+    "unit": "número de protocolo"
+  },
+  "ex-wbctbf7a": {
+    "prompt": "Um parceiro insiste no AH porque ele também protege o cabeçalho IP. O escritório dele fica atrás de um roteador com NAT. O que acontece?",
+    "hint": "O que o NAT muda, e o que o AH cobre?",
+    "choices": [
+      {
+        "text": "Funciona, porque o AH pula o que o NAT muda",
+        "why": "O AH cobre os endereços de propósito; é justamente isso que o quebra."
+      },
+      {
+        "text": "O roteador com NAT se recusa a encaminhar o protocolo 51",
+        "why": "Ele encaminha; a falha aparece na outra ponta, na verificação."
+      },
+      {
+        "text": "Todo pacote falha na verificação da outra ponta",
+        "why": "Isso. O NAT reescreveu um endereço que o valor de verificação cobria."
+      },
+      {
+        "text": "Funciona desde que os dois lados usem modo túnel",
+        "why": "No modo túnel, o cabeçalho externo é o que o NAT reescreve, e o AH o cobre."
+      }
+    ]
+  },
+  "ex-07pg4twm": {
+    "prompt": "Com ESP em modo túnel, que endereço de origem o roteador do provedor lê num pacote que vai do laptop para o caixa?",
+    "hint": "Qual cabeçalho fica fora da cifragem?",
+    "choices": [
+      {
+        "text": "192.168.10.20",
+        "why": "O endereço do laptop está no cabeçalho interno, que vai cifrado."
+      },
+      {
+        "text": "203.0.113.2",
+        "why": "Isso. O cabeçalho externo novo leva o endereço público de hq."
+      },
+      {
+        "text": "198.51.100.2",
+        "why": "Esse é branch, o destino do pacote externo."
+      },
+      {
+        "text": "192.168.10.1",
+        "why": "O endereço de LAN de hq nunca aparece do lado do provedor."
+      }
+    ]
+  },
+  "ex-995h7vmz": {
+    "prompt": "Ligue cada garantia do ESP à parte do ESP que a oferece.",
+    "hint": "Uma das partes só escolhe a chave.",
+    "pairs": [
+      {
+        "left": "Ninguém no caminho lê a carga",
+        "right": "a cifragem"
+      },
+      {
+        "left": "Um byte alterado é percebido",
+        "right": "o ICV"
+      },
+      {
+        "left": "Um pacote gravado e reenviado é recusado",
+        "right": "o número de sequência"
+      }
+    ],
+    "right_distractors": [
+      "o SPI"
+    ]
+  },
+  "ex-ectp4t0m": {
+    "prompt": "Dois servidores Linux num mesmo data center precisam cifrar o tráfego de banco de dados entre eles, e nada mais. Qual modo serve, e por quê?",
+    "hint": "Quem são as pontas do tráfego?",
+    "choices": [
+      {
+        "text": "Modo túnel, porque só ele cifra a carga",
+        "why": "Os dois modos cifram o que vem depois do cabeçalho que mantêm."
+      },
+      {
+        "text": "Modo transporte, porque esconde os endereços deles do switch",
+        "why": "O modo transporte deixa os endereços legíveis."
+      },
+      {
+        "text": "Modo túnel, já que o transporte não passa por switch",
+        "why": "Um switch encaminha quadros, seja qual for o modo dentro deles."
+      },
+      {
+        "text": "Transporte: os servidores são as pontas",
+        "why": "Isso. Não há gateway no meio, então nenhum segundo cabeçalho IP é necessário."
+      }
+    ]
+  },
+  "ex-r2ae71dg": {
+    "prompt": "O que a chave pré-compartilhada do swanctl.conf faz?",
+    "hint": "As chaves do tráfego vêm de outro lugar.",
+    "choices": [
+      {
+        "text": "Cifra o tráfego entre as duas redes",
+        "why": "As chaves do tráfego vêm da troca Diffie-Hellman, novas a cada vez."
+      },
+      {
+        "text": "Prova a cada roteador quem o outro é",
+        "why": "Isso. Ela serve para a prova no IKE_AUTH e para nada mais."
+      },
+      {
+        "text": "Decide quais algoritmos os dois lados usam",
+        "why": "Isso é o que `proposals` e `esp_proposals` fazem."
+      },
+      {
+        "text": "Cifra as mensagens IKE, mas não o tráfego",
+        "why": "O IKE_AUTH também vai cifrado com chaves da troca Diffie-Hellman."
+      }
+    ]
+  },
+  "ex-3fnh1pcc": {
+    "prompt": "Com `start_action = trap`, o primeiro ping do laptop para o caixa se perdeu e os dois seguintes voltaram. Por quê?",
+    "hint": "Aconteceu de novo depois de a conexão ser derrubada.",
+    "choices": [
+      {
+        "text": "O roteador do caixa ainda aprendia o MAC do laptop",
+        "why": "A resolução de endereços não perde ping; a perda acompanhou o túnel subindo, nas duas vezes."
+      },
+      {
+        "text": "Ele disparou a negociação e foi descartado durante ela",
+        "why": "Isso. Ainda não havia chaves para protegê-lo."
+      },
+      {
+        "text": "O primeiro pacote ESP de uma SA sempre falha no ICV",
+        "why": "Ele nem chegou a virar ESP; ainda não havia SA."
+      },
+      {
+        "text": "A captura no roteador do provedor o segurou",
+        "why": "Uma captura copia pacotes; nunca segura um."
+      }
+    ]
+  },
+  "ex-rt644rqz": {
+    "prompt": "Qual destes o provedor consegue ler na troca IKE entre hq e branch?",
+    "hint": "Qual troca vai em claro?",
+    "choices": [
+      {
+        "text": "Os nomes hq.example.com e branch.example.com",
+        "why": "As identidades viajam no IKE_AUTH, que vai cifrado."
+      },
+      {
+        "text": "Um hash da chave pré-compartilhada",
+        "why": "A chave nunca atravessa, e a prova feita com ela vai na troca cifrada."
+      },
+      {
+        "text": "Os algoritmos que cada lado ofereceu",
+        "why": "Isso. O IKE_SA_INIT vai em claro, ofertas e tudo."
+      },
+      {
+        "text": "As duas redes que o túnel vai unir",
+        "why": "Os seletores de tráfego estão no IKE_AUTH, cifrado."
+      }
+    ]
+  },
+  "ex-nagh0g2t": {
+    "prompt": "Ponha em ordem o começo do túnel, a partir do primeiro ping do laptop.",
+    "hint": "Nada pode ser cifrado antes de existir um segredo.",
+    "items": [
+      "O ping do laptop cai na armadilha",
+      "O IKE_SA_INIT vai e volta, em claro",
+      "Os dois roteadores calculam o mesmo segredo",
+      "O IKE_AUTH vai e volta, cifrado",
+      "O ESP leva o ping seguinte"
+    ],
+    "trap": "O segredo vem dos valores públicos da primeira troca, então o IKE_AUTH não pode ser cifrado antes dele."
+  },
+  "ex-21f74qx6": {
+    "prompt": "Sem NAT no caminho e com o MOBIKE desligado, as quatro mensagens IKE entre os escritórios usaram a porta UDP ___.",
+    "hint": "A primeira porta do filtro do tcpdump.",
+    "blanks": [
+      {
+        "accept": [
+          "500"
+        ]
+      }
+    ]
+  },
+  "ex-skvk1j83": {
+    "prompt": "O ping do laptop tinha 84 bytes dentro do túnel e 140 no fio. Quantos bytes o IPsec acrescentou?",
+    "hint": "O cabeçalho IP novo faz parte.",
+    "unit": "bytes"
+  },
+  "ex-hf2zh9dc": {
+    "prompt": "A listagem de hq mostra `out 41b696e1`. Quais pacotes levam `spi=0x41b696e1` no fio?",
+    "hint": "Uma SA é um sentido só.",
+    "choices": [
+      {
+        "text": "Os que branch manda para hq",
+        "why": "Esses levam 7fdf3ac6, a `in` de hq."
+      },
+      {
+        "text": "As mensagens IKE, nos dois sentidos",
+        "why": "A IKE SA tem SPIs próprios de 64 bits."
+      },
+      {
+        "text": "Todo pacote ESP do túnel, nos dois sentidos",
+        "why": "Cada sentido tem a própria SA e o próprio SPI."
+      },
+      {
+        "text": "Só os que hq manda para branch",
+        "why": "Isso. A resposta na captura levava 0x7fdf3ac6."
+      }
+    ]
+  },
+  "ex-bcc7fp19": {
+    "prompt": "Os dois contadores da CHILD SA diziam 168 bytes em 2 pacotes, enquanto o provedor via pacotes ESP de 140 bytes. Por que os dois não batem?",
+    "hint": "Divida 168 por 2.",
+    "choices": [
+      {
+        "text": "A SA conta os pacotes antes da cifragem",
+        "why": "Isso. 168 / 2 = 84, o ping do laptop como ele o mandou."
+      },
+      {
+        "text": "O tcpdump no provedor contou também o cabeçalho Ethernet",
+        "why": "140 é o tamanho IP, e 2 × 140 dariam 280 de qualquer jeito."
+      },
+      {
+        "text": "Um dos dois pings se perdeu entre os roteadores",
+        "why": "Dois pacotes foram contados, 84 bytes cada."
+      },
+      {
+        "text": "O AES-GCM comprime a carga antes de mandá-la",
+        "why": "A cifragem não comprime nada; o pacote do fio é o maior."
+      }
+    ]
+  },
+  "ex-f2c68wdg": {
+    "prompt": "Com ESP em modo túnel entre os escritórios, o que o provedor ainda consegue saber?",
+    "hint": "O que fica fora da cifragem?",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "O cabeçalho externo, o SPI e os tamanhos são legíveis."
+      },
+      {
+        "text": "Quais máquinas dentro dos escritórios conversam",
+        "why": "Os endereços internos vão cifrados."
+      },
+      {
+        "text": "Que os escritórios conversam, quando e quanto",
+        "why": "Isso. A cifragem esconde o conteúdo, não o fato da conversa."
+      },
+      {
+        "text": "As URLs pedidas, mas não as páginas",
+        "why": "O grep não achou GET em nenhum dos dez pacotes."
+      }
+    ]
+  },
+  "ex-hkacysp4": {
+    "prompt": "A CHILD SA dizia `rekeying in 3288s, expires in 3957s`. O que acontece na renegociação?",
+    "hint": "Ela vem antes da expiração por um motivo.",
+    "choices": [
+      {
+        "text": "O túnel cai até o IKE rodar de novo",
+        "why": "Renegociar antes da expiração existe justamente para isso não acontecer."
+      },
+      {
+        "text": "A chave pré-compartilhada é trocada por uma nova",
+        "why": "A chave pré-compartilhada é configurada; só as chaves do tráfego mudam."
+      },
+      {
+        "text": "Chaves novas são feitas enquanto as antigas funcionam",
+        "why": "Isso. O tráfego nunca espera por uma negociação depois da primeira."
+      },
+      {
+        "text": "O número de sequência volta a zero, e mais nada",
+        "why": "Uma SA nova vem com chaves novas e SPIs novos, não só uma contagem nova."
+      }
+    ]
+  },
+  "ex-4e85v79v": {
+    "prompt": "Um log mostra `selected proposal: IKE:…` e depois termina com `received AUTHENTICATION_FAILED notify error`. O que isso descarta?",
+    "hint": "Qual passo deu certo?",
+    "choices": [
+      {
+        "text": "Uma chave pré-compartilhada errada de um lado",
+        "why": "Essa é uma das causas justamente desta mensagem."
+      },
+      {
+        "text": "Que os dois lados não tenham algoritmo em comum",
+        "why": "Isso. Uma proposta foi escolhida no IKE_SA_INIT, então eles concordaram nos algoritmos."
+      },
+      {
+        "text": "Um id errado configurado para o par",
+        "why": "Um id errado termina na mesma notificação."
+      },
+      {
+        "text": "Nada; todo engano termina assim",
+        "why": "Redes diferentes terminam em TS_UNACCEPTABLE, e nenhum algoritmo em comum em NO_PROPOSAL_CHOSEN."
+      }
+    ]
+  },
+  "ex-361g1kmr": {
+    "prompt": "O roteador de um parceiro tem o seu lado como 10.50.0.0/16, enquanto o seu oferece 10.50.1.0/24 e 172.20.0.0/24. A IKE SA sobe, e a CHILD SA falha com TS_UNACCEPTABLE. O que você muda primeiro?",
+    "hint": "Qual passo falhou, e o que se decide nele?",
+    "choices": [
+      {
+        "text": "A chave pré-compartilhada, nos dois roteadores",
+        "why": "A autenticação deu certo; a IKE SA está de pé."
+      },
+      {
+        "text": "Os dois roteadores para AH, que não tem seletores",
+        "why": "O AH tem seletores como o ESP, e ainda se dá mal com NAT."
+      },
+      {
+        "text": "Fazer os seletores dos dois lados se espelharem",
+        "why": "Isso. 172.20.0.0/24 não está em nenhuma rede que o parceiro permite, e nada o estreita para caber numa."
+      },
+      {
+        "text": "Abrir a UDP 4500 no firewall do parceiro",
+        "why": "O IKE passou normalmente; o problema é quais redes o túnel une."
+      }
+    ]
+  },
+  "ex-9yxyndms": {
+    "prompt": "Ligue cada linha do log de quem iniciou à causa mais provável.",
+    "hint": "Cada uma é recusada num passo diferente.",
+    "pairs": [
+      {
+        "left": "`N(AUTH_FAILED)` na resposta ao IKE_AUTH",
+        "right": "Os segredos ou os ids diferem"
+      },
+      {
+        "left": "`TS_UNACCEPTABLE`, mantendo a IKE SA",
+        "right": "As redes diferem"
+      },
+      {
+        "left": "`NO_PROPOSAL_CHOSEN`",
+        "right": "Nenhum algoritmo em comum"
+      }
+    ],
+    "right_distractors": [
+      "Um NAT reescreveu os endereços"
+    ]
+  },
+  "ex-rtgk9sr0": {
+    "prompt": "O tshark mostrou o primeiro IKE_SA_INIT como um quadro de 506 bytes, e o strongSwan registrou a mesma mensagem com 464 bytes. Quantos bytes de cabeçalhos embrulham cada mensagem IKE nesse enlace?",
+    "hint": "Ethernet, IP e UDP.",
+    "unit": "bytes"
+  },
+  "ex-y98z16ts": {
+    "prompt": "Por que o túnel do laptop passou para a porta UDP 4500?",
+    "hint": "Do que o roteador doméstico precisa para dividir um endereço?",
+    "choices": [
+      {
+        "text": "A porta 500 é reservada para túneis site a site",
+        "why": "A porta 500 é do IKE, para qualquer túnel; o laptop começou nela."
+      },
+      {
+        "text": "O ESP precisa de um número de porta para ser cifrado",
+        "why": "A cifragem não tem nada a ver com portas; o ESP dos escritórios não tinha nenhuma."
+      },
+      {
+        "text": "O ESP não tem portas para o NAT separá-lo",
+        "why": "Isso. Dentro do UDP ele tem portas como qualquer outra conversa."
+      },
+      {
+        "text": "O firewall do escritório bloqueia o protocolo 50",
+        "why": "O próprio túnel dos escritórios usou o protocolo 50 pelo mesmo roteador."
+      }
+    ]
+  },
+  "ex-tv7axwg4": {
+    "prompt": "Por que hq dá ao laptop de casa o endereço 10.30.0.1 em vez de deixá-lo usar 192.168.1.50 dentro do túnel?",
+    "hint": "Quantas casas usam 192.168.1.0/24?",
+    "choices": [
+      {
+        "text": "Endereços privados não são permitidos dentro do ESP",
+        "why": "O próprio túnel dos escritórios levava endereços 192.168."
+      },
+      {
+        "text": "O endereço virtual esconde o laptop do provedor",
+        "why": "O provedor vê 198.51.100.77 de qualquer forma, e o lado de dentro vai cifrado mesmo assim."
+      },
+      {
+        "text": "O roteador doméstico reescreveria 192.168.1.50 dentro do túnel",
+        "why": "Um NAT não enxerga nada dentro do ESP."
+      },
+      {
+        "text": "Milhares de casas o usam; o escritório não teria como roteá-lo de volta",
+        "why": "Isso. Um endereço que o escritório distribui é um que ele sabe alcançar."
+      }
+    ]
+  },
+  "ex-7mgrhqsk": {
+    "prompt": "Qual destes a captura no roteador do provedor mostrou para o laptop de casa? Marque todos que se aplicam.",
+    "hint": "O provedor fica do outro lado do roteador doméstico.",
+    "choices": [
+      {
+        "text": "IKE_SA_INIT na porta 500",
+        "why": "Isso: `198.51.100.77.500 > 203.0.113.2.500`."
+      },
+      {
+        "text": "IKE_AUTH na porta 4500, marcado NONESP-encap",
+        "why": "Isso: a segunda troca já tinha mudado de porta."
+      },
+      {
+        "text": "O endereço de casa do laptop, 192.168.1.50",
+        "why": "O roteador doméstico o reescreveu; só o log do próprio remote o mostra."
+      },
+      {
+        "text": "ESP dentro do UDP, com o SPI legível",
+        "why": "Isso: `UDP-encap: ESP(spi=0x0d6d6c89,seq=0x1)`."
+      },
+      {
+        "text": "ESP como protocolo 50 puro, sem UDP",
+        "why": "Esse era o túnel dos escritórios; atrás de um NAT todo pacote era UDP."
+      }
+    ]
+  },
+  "ex-46c9bg92": {
+    "prompt": "Cinquenta funcionários se conectam de casa com uma única chave pré-compartilhada. Um deles sai brigado. Qual mudança resolve o problema, e não só o sintoma de hoje?",
+    "hint": "A próxima pessoa também vai sair.",
+    "choices": [
+      {
+        "text": "Trocar a chave e mandá-la aos outros quarenta e nove",
+        "why": "Resolve hoje e repete o problema na próxima saída."
+      },
+      {
+        "text": "Um certificado ou login por pessoa, cada um revogável sozinho",
+        "why": "Isso. Tirar uma pessoa então não mexe com mais ninguém."
+      },
+      {
+        "text": "Passar as conexões da porta 500 para a 4500",
+        "why": "A porta não tem nada a ver com quem tem a chave."
+      },
+      {
+        "text": "Trocar a proposta ESP por uma chave mais longa",
+        "why": "As chaves do tráfego nunca foram o vazamento; o segredo compartilhado é."
+      }
+    ]
+  },
+  "ex-6th8bxes": {
+    "prompt": "Uma filial nova fica atrás do NAT da operadora. O IKE_SA_INIT dela recebe resposta, depois o IKE_AUTH é retransmitido até esgotar o tempo. Os túneis entre escritórios sem NAT funcionam. O que explica melhor?",
+    "hint": "Por onde o IKE_AUTH viaja quando um NAT é detectado?",
+    "choices": [
+      {
+        "text": "A chave pré-compartilhada difere entre os dois lados",
+        "why": "Uma chave errada recebe resposta, AUTH_FAILED, e não silêncio."
+      },
+      {
+        "text": "Os seletores de tráfego não se espelham",
+        "why": "Isso falha depois de um IKE_AUTH bem-sucedido, com TS_UNACCEPTABLE."
+      },
+      {
+        "text": "Algo no caminho descarta a UDP 4500",
+        "why": "Isso. A 500 funcionou; depois de o NAT ser detectado o IKE foi para a 4500, e nada voltou de lá."
+      },
+      {
+        "text": "Os dois lados não têm algoritmo em comum",
+        "why": "O IKE_SA_INIT teve resposta, então uma proposta foi escolhida."
+      }
+    ]
+  }
+}

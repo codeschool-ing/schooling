@@ -1,0 +1,1123 @@
+[
+  {
+    "id": "ex-217940k2",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A program sends `GET /ana-uploads/photos/2026/cat.jpg` over HTTPS and gets the whole file back. What kind of storage is it talking to?",
+    "hint": "Look at how the data is addressed.",
+    "choices": [
+      {
+        "text": "A file share mounted over NFS",
+        "correct": false,
+        "why": "An NFS share is reached by mounting it and opening a path, not by an HTTP request."
+      },
+      {
+        "text": "A block volume attached to the instance",
+        "correct": false,
+        "why": "A volume answers block reads from the operating system; nothing on it speaks HTTP."
+      },
+      {
+        "text": "An object store reached over HTTP",
+        "correct": true,
+        "why": "Right. A key in a bucket, requested whole over HTTP, is what an object store is."
+      },
+      {
+        "text": "A local disk formatted with ext4",
+        "correct": false,
+        "why": "A local filesystem is read through system calls on a path, never through `GET`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0va5x5c5",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each kind of storage to what a piece of data in it is addressed by.",
+    "hint": "One kind of address per kind of storage.",
+    "pairs": [
+      {
+        "left": "Block",
+        "right": "A block number on one volume"
+      },
+      {
+        "left": "File",
+        "right": "A path in a shared filesystem"
+      },
+      {
+        "left": "Object",
+        "right": "A key in a bucket"
+      }
+    ],
+    "right_distractors": [
+      "An IP address and a port"
+    ]
+  },
+  {
+    "id": "ex-wgrccxha",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a block volume, what decides that blocks 2048 to 2055 hold part of `/var/log/syslog`?",
+    "hint": "Who formatted the volume?",
+    "choices": [
+      {
+        "text": "The storage service, which tracks every file on each volume",
+        "correct": false,
+        "why": "The service only knows numbered blocks; it has no idea what file they belong to."
+      },
+      {
+        "text": "The filesystem of the instance's operating system",
+        "correct": true,
+        "why": "Right. The operating system formatted the volume and keeps the map from files to blocks."
+      },
+      {
+        "text": "The hypervisor",
+        "correct": false,
+        "why": "The hypervisor passes blocks through to the instance and reads no filesystem."
+      },
+      {
+        "text": "Nothing: a volume keeps whole files",
+        "correct": false,
+        "why": "That describes an object store more than a volume, and even there a key is not a path on a disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-5kptvpjp",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 2 GB log must be extended one line at a time by a single process, without rewriting what is already there. Where can that process do it? Choose all that apply.",
+    "hint": "Which interfaces let a program write into an existing file?",
+    "choices": [
+      {
+        "text": "On a block volume the instance has mounted",
+        "correct": true,
+        "why": "Yes. The filesystem on the volume supports appending, like any local disk."
+      },
+      {
+        "text": "As an object in S3 Standard",
+        "correct": false,
+        "why": "No. An object is replaced whole; a longer log is a new object, written from the start."
+      },
+      {
+        "text": "On a managed file share mounted over NFS",
+        "correct": true,
+        "why": "Yes. A network filesystem allows appending, at the cost of a round trip per write."
+      },
+      {
+        "text": "As an object in Glacier Instant Retrieval",
+        "correct": false,
+        "why": "No. The class changes the price, not the interface: it is still written whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-wexeg3qa",
+    "version": 1,
+    "section": "block",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a 200 GB `gp3` volume cost for one month in `sa-east-1`, at the sheet's price of 0.1520 USD per GB-month?",
+    "hint": "Size times price; the fill level does not enter.",
+    "value": 30.4,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-t8abxag1",
+    "version": 1,
+    "section": "block",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An instance runs in zone A. The volume it needs was created in zone B of the same region. What has to happen?",
+    "hint": "Where does a volume live?",
+    "choices": [
+      {
+        "text": "Attach it anyway; the traffic crosses zones and is slower",
+        "correct": false,
+        "why": "A volume cannot be attached across zones at all; it is not a matter of speed."
+      },
+      {
+        "text": "Attach it read-only, which is allowed between zones",
+        "correct": false,
+        "why": "There is no read-only exception; the zone is where the volume exists."
+      },
+      {
+        "text": "Snapshot it and create a new volume from the snapshot in zone A",
+        "correct": true,
+        "why": "Right. A volume lives in one zone, and a snapshot is how its data moves to another."
+      },
+      {
+        "text": "Detach it; a detached volume moves to wherever it is needed",
+        "correct": false,
+        "why": "Detaching changes which instance holds it, never which zone it is in."
+      }
+    ]
+  },
+  {
+    "id": "ex-h087489q",
+    "version": 1,
+    "section": "block",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 500 GB `gp3` volume holds 40 GB of files. What is the monthly bill for it based on?",
+    "hint": "When is the size chosen?",
+    "choices": [
+      {
+        "text": "The 40 GB actually written",
+        "correct": false,
+        "why": "That is how EFS and S3 bill. A volume bills what was provisioned."
+      },
+      {
+        "text": "The 500 GB provisioned when it was created",
+        "correct": true,
+        "why": "Right. The meter runs on the size chosen at creation, full or empty."
+      },
+      {
+        "text": "The hours the instance using it was running",
+        "correct": false,
+        "why": "A volume bills while it exists, attached or not; a stopped instance does not stop it."
+      },
+      {
+        "text": "The number of reads and writes",
+        "correct": false,
+        "why": "Baseline IOPS come with a `gp3` volume; the bill line is its size."
+      }
+    ]
+  },
+  {
+    "id": "ex-ew2bma2a",
+    "version": 1,
+    "section": "block",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A database on a 500 GB `gp3` volume is slow, and the volume is doing its full baseline of 3,000 IOPS of small scattered reads all day. What is the cheapest change that addresses the cause?",
+    "hint": "Which dial is at its limit?",
+    "choices": [
+      {
+        "text": "Buy more IOPS on the same volume, without adding gigabytes",
+        "correct": true,
+        "why": "Right. `gp3` sells IOPS separately from size, and IOPS are what run out."
+      },
+      {
+        "text": "Move the data to `st1`, which is cheaper per GB",
+        "correct": false,
+        "why": "`st1` is built for long sequential reads and is slow at scattered ones: it would make this worse."
+      },
+      {
+        "text": "Grow the volume to 2 TB so that it gets faster",
+        "correct": false,
+        "why": "That was the habit on older types. On `gp3` size and IOPS are separate, so the space buys nothing here."
+      },
+      {
+        "text": "Attach the volume to a second instance to share the load",
+        "correct": false,
+        "why": "A volume is attached to one instance at a time, and a second reader would not raise its IOPS."
+      }
+    ]
+  },
+  {
+    "id": "ex-ae0dd1b5",
+    "version": 1,
+    "section": "block",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The number of separate small reads or writes a volume performs each second is measured in ___.",
+    "hint": "Four letters, the dial `gp3` sells apart from size.",
+    "blanks": [
+      {
+        "accept": [
+          "IOPS"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-68fzeq9c",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You restore last Tuesday's snapshot of a volume. What do you get?",
+    "hint": "Does anything happen to the existing volume?",
+    "choices": [
+      {
+        "text": "The existing volume, rewound to Tuesday",
+        "correct": false,
+        "why": "Restoring never touches the existing volume."
+      },
+      {
+        "text": "Tuesday's files copied into the running filesystem",
+        "correct": false,
+        "why": "A snapshot holds blocks, not files, and it is not merged into anything."
+      },
+      {
+        "text": "A new volume with Tuesday's contents",
+        "correct": true,
+        "why": "Right. You create a volume from the snapshot, in the zone you choose, and attach it."
+      },
+      {
+        "text": "A download of Tuesday's blocks from a bucket of yours",
+        "correct": false,
+        "why": "Snapshots sit in the provider's object storage, not in any bucket you can open."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rwpqysg",
+    "version": 1,
+    "section": "snapshots",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A volume holds 60 GB of data and 2 GB change each day. After a month of daily snapshots, the first full and 29 incremental, what do the snapshots cost for that month in `sa-east-1`, at 0.0680 USD per GB-month?",
+    "hint": "Add up what the snapshots hold, then multiply.",
+    "value": 8.02,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-z3vbgdje",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An attacker holding an administrator's keys to a company's only account deletes its volumes and all their snapshots, everything in `sa-east-1`. Which arrangement would have left a copy to restore?",
+    "hint": "What could those credentials not reach?",
+    "choices": [
+      {
+        "text": "Snapshots every hour instead of every day",
+        "correct": false,
+        "why": "More snapshots in the same account are deleted by the same credentials."
+      },
+      {
+        "text": "Copies kept in a second account",
+        "correct": true,
+        "why": "Right. A backup policy keeps one copy beyond the reach of the production account."
+      },
+      {
+        "text": "Snapshots stored in a second zone of the region",
+        "correct": false,
+        "why": "Snapshots already outlive a zone; the problem is who can delete them, not where they are."
+      },
+      {
+        "text": "Nothing: eleven nines of durability covers it",
+        "correct": false,
+        "why": "Durability is about hardware failing. A delete request is carried out faithfully."
+      }
+    ]
+  },
+  {
+    "id": "ex-g59cqb69",
+    "version": 1,
+    "section": "file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three web servers must write uploaded files into the same `uploads` directory, and the application cannot be changed. What fits?",
+    "hint": "The application wants a path, on several machines at once.",
+    "choices": [
+      {
+        "text": "A managed file share mounted on all three",
+        "correct": true,
+        "why": "Right. A shared filesystem is exactly a path several machines write at once."
+      },
+      {
+        "text": "One `gp3` volume attached to all three servers",
+        "correct": false,
+        "why": "A volume attaches to one instance, and three kernels writing one ext4 would corrupt it."
+      },
+      {
+        "text": "A bucket, with each server using its own key",
+        "correct": false,
+        "why": "A bucket would be cheaper, but it needs the code change the question rules out."
+      },
+      {
+        "text": "A volume per server, synchronised by snapshots",
+        "correct": false,
+        "why": "Snapshots make new volumes; they never keep three running ones in step."
+      }
+    ]
+  },
+  {
+    "id": "ex-az6my217",
+    "version": 1,
+    "section": "file",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A build that runs `npm install` takes 40 seconds on a local volume and several minutes when the project sits on an NFS file share. What explains most of it?",
+    "hint": "Count the files, then count what each one costs.",
+    "choices": [
+      {
+        "text": "The share throttles package managers",
+        "correct": false,
+        "why": "Nothing on a file share knows which program is asking."
+      },
+      {
+        "text": "Thousands of small files, each operation a network round trip",
+        "correct": true,
+        "why": "Right. Per file, a network filesystem pays a round trip that a local disk does not."
+      },
+      {
+        "text": "The share has to grow before each new file is written",
+        "correct": false,
+        "why": "It grows with what is stored, in the background; nobody waits for it."
+      },
+      {
+        "text": "NFS always stores data on hard disks",
+        "correct": false,
+        "why": "NFS is a protocol and says nothing about the media behind it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghcjw2m2",
+    "version": 1,
+    "section": "three-prices",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does keeping 500 GB in S3 Standard for one month cost in `sa-east-1`, at 0.04050 USD per GB-month?",
+    "hint": "Gigabytes times price.",
+    "value": 20.25,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-q93nt30y",
+    "version": 1,
+    "section": "three-prices",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An EFS Standard filesystem in `sa-east-1` holds 40 GB for a month. At 0.5700 USD per GB-month, what does it cost?",
+    "hint": "EFS bills what is stored.",
+    "value": 22.8,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-gtg9dkes",
+    "version": 1,
+    "section": "three-prices",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these sheet lines in order of price per GB-month in `sa-east-1`, cheapest first.",
+    "hint": "Object, then block, then file; the cold class sits below them all.",
+    "items": [
+      "S3 Glacier Flexible Retrieval",
+      "S3 Standard",
+      "EBS st1",
+      "EBS gp3",
+      "EFS Standard"
+    ],
+    "trap": "EFS below a volume is the usual slip: per gigabyte stored, the shared filesystem is the dearest line on the sheet."
+  },
+  {
+    "id": "ex-f1b6k84f",
+    "version": 1,
+    "section": "three-prices",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An application uploads one million objects to S3 in `sa-east-1` in a month. At 0.00700 USD per 1,000 `PUT` requests, what do the requests alone cost?",
+    "hint": "How many thousands are in a million?",
+    "value": 7.0,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-6vddk314",
+    "version": 1,
+    "section": "three-prices",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team compares 500 GB of EFS (285.00 a month) with a 500 GB `gp3` volume (76.00) and concludes the file share costs nearly four times as much. The data will be 60 GB. What does the comparison miss?",
+    "hint": "Which of the two bills what is stored?",
+    "choices": [
+      {
+        "text": "EFS adds a charge per instance that mounts the filesystem",
+        "correct": false,
+        "why": "Mounts are not a line on the sheet; the storage line is what matters here."
+      },
+      {
+        "text": "The volume would also bill each read",
+        "correct": false,
+        "why": "`gp3` includes its baseline IOPS; reads are not billed one by one."
+      },
+      {
+        "text": "Nothing; the ratio holds at any size",
+        "correct": false,
+        "why": "It holds only when both are full. One bills stored data, the other provisioned size."
+      },
+      {
+        "text": "EFS bills the 60 GB stored, 34.20, less than the volume",
+        "correct": true,
+        "why": "Right. 60 × 0.5700 = 34.20, while the volume bills its 500 GB whatever it holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-vfa9gg33",
+    "version": 1,
+    "section": "object",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the key `photos/2026/cat.jpg`, the beginning `photos/` is not a folder but a ___ that a listing can group keys by.",
+    "hint": "The word the console hides behind a folder icon.",
+    "blanks": [
+      {
+        "accept": [
+          "prefix"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c2zgth68",
+    "version": 1,
+    "section": "object",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In an object store, what does renaming `reports/q3.txt` to `reports/2026-q3.txt` actually take?",
+    "hint": "Where is the name kept?",
+    "choices": [
+      {
+        "text": "One rename request that changes the name in place",
+        "correct": false,
+        "why": "There is no rename request: the key is the object's only name."
+      },
+      {
+        "text": "A copy to the new key and a delete of the old one",
+        "correct": true,
+        "why": "Right. Two requests at least, and for a moment both keys exist."
+      },
+      {
+        "text": "Moving the object into the `2026-q3` folder",
+        "correct": false,
+        "why": "There are no folders to move into, only keys that share a beginning."
+      },
+      {
+        "text": "Nothing, since keys are only labels in the console",
+        "correct": false,
+        "why": "The key is how every request finds the object; changing it is the whole job."
+      }
+    ]
+  },
+  {
+    "id": "ex-va204d0y",
+    "version": 1,
+    "section": "object",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program keeps its log as one object in a bucket and has to add one line to it. What does it do?",
+    "hint": "Can part of an object be written?",
+    "choices": [
+      {
+        "text": "Sends a `PUT` with an append flag",
+        "correct": false,
+        "why": "There is no append in the interface; a `PUT` always writes the whole object."
+      },
+      {
+        "text": "Opens the object in append mode through the SDK",
+        "correct": false,
+        "why": "An SDK wraps the same HTTP requests, and none of them opens an object."
+      },
+      {
+        "text": "Writes a byte range at the end with a ranged `PUT`",
+        "correct": false,
+        "why": "Ranges work for reading with `GET`; writing part of an object is not possible."
+      },
+      {
+        "text": "Rewrites the whole object with the line added",
+        "correct": true,
+        "why": "Right. An object is replaced whole; the new one simply has one more line."
+      }
+    ]
+  },
+  {
+    "id": "ex-7bbsjv6s",
+    "version": 1,
+    "section": "object",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One program's `PUT` to a key in S3 has just returned success. A second program immediately sends a `GET` for the same key. What does it receive?",
+    "hint": "What changed in December 2020?",
+    "choices": [
+      {
+        "text": "Possibly the old version, for a few seconds",
+        "correct": false,
+        "why": "That was the behaviour of overwrites before December 2020."
+      },
+      {
+        "text": "A 404 until the object reaches every zone",
+        "correct": false,
+        "why": "The success is returned after the object is stored; a read then finds it."
+      },
+      {
+        "text": "The new object, every time",
+        "correct": true,
+        "why": "Right. S3 is strongly consistent for reads after writes."
+      },
+      {
+        "text": "Whatever a `LIST` has shown so far",
+        "correct": false,
+        "why": "A `GET` by key does not go through a listing, and a listing is consistent too."
+      }
+    ]
+  },
+  {
+    "id": "ex-3v3eqtmn",
+    "version": 1,
+    "section": "object",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each request to what it does to `/bucket/key`.",
+    "hint": "Five verbs of HTTP, four in use.",
+    "pairs": [
+      {
+        "left": "PUT",
+        "right": "Stores a whole object, replacing any already there"
+      },
+      {
+        "left": "GET",
+        "right": "Returns the object, or a byte range of it"
+      },
+      {
+        "left": "HEAD",
+        "right": "Returns the metadata without the bytes"
+      },
+      {
+        "left": "DELETE",
+        "right": "Removes the object"
+      }
+    ],
+    "right_distractors": [
+      "Appends bytes to the end of the object"
+    ]
+  },
+  {
+    "id": "ex-7pt7f849",
+    "version": 1,
+    "section": "object-by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "This lesson ran the AWS CLI against `moto_server` on a laptop. What can that session show about S3?",
+    "hint": "What is moto an imitation of?",
+    "choices": [
+      {
+        "text": "How long a `GET` takes from São Paulo",
+        "correct": false,
+        "why": "moto answers from the laptop's memory, so its timing says nothing about S3's."
+      },
+      {
+        "text": "The requests and answers of the interface",
+        "correct": true,
+        "why": "Right. It imitates the HTTP interface, and that is all it speaks for."
+      },
+      {
+        "text": "How many copies of each object S3 keeps",
+        "correct": false,
+        "why": "moto keeps one copy in memory; S3's replication is not something it imitates."
+      },
+      {
+        "text": "What the requests would have cost",
+        "correct": false,
+        "why": "Prices come from the price sheet; moto bills nothing and knows no prices."
+      }
+    ]
+  },
+  {
+    "id": "ex-hsb1d3yc",
+    "version": 1,
+    "section": "object-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`aws s3 ls s3://ana-uploads` printed two `PRE` lines and no objects, though the bucket held two objects. Why?",
+    "hint": "Where did the listing cut each key?",
+    "choices": [
+      {
+        "text": "Each key has a `/`, and the listing cut it there",
+        "correct": true,
+        "why": "Right. Cut at the first slash, both keys became prefixes and none stood alone."
+      },
+      {
+        "text": "The two uploads had not finished when the listing ran",
+        "correct": false,
+        "why": "Both uploads had finished, and a read after a write sees the object."
+      },
+      {
+        "text": "Only a `--recursive` listing ever shows the objects themselves",
+        "correct": false,
+        "why": "A key with no slash would appear in the plain listing too, as `index.html` does in the figure."
+      },
+      {
+        "text": "The folders `photos/` and `reports/` were never created",
+        "correct": false,
+        "why": "Nothing has to exist at a prefix; the uploads worked without any folder."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvk4yd16",
+    "version": 1,
+    "section": "object-by-hand",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the requests moto logged when `aws s3 mv` renamed `reports/q3.txt`.",
+    "hint": "Look before copying, and copy before deleting.",
+    "items": [
+      "HEAD of the old key",
+      "PUT to the new key, as a copy",
+      "DELETE of the old key"
+    ],
+    "trap": "Deleting first would leave a moment with no copy at all; the CLI copies first, so for a moment both exist."
+  },
+  {
+    "id": "ex-y8zxrrbd",
+    "version": 1,
+    "section": "storage-classes",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the four S3 classes of the sheet in order of storage price in `sa-east-1`, dearest first.",
+    "hint": "The longer the wait or the fee to read, the cheaper to keep.",
+    "items": [
+      "Standard",
+      "Standard-Infrequent Access",
+      "Glacier Instant Retrieval",
+      "Glacier Flexible Retrieval"
+    ],
+    "trap": "The two Glacier lines are close, 0.00830 and 0.00765; Instant Retrieval costs a little more to keep because it can be read at once."
+  },
+  {
+    "id": "ex-6hpe1j0a",
+    "version": 1,
+    "section": "storage-classes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does keeping 1,000 GB in Glacier Flexible Retrieval for one month cost in `sa-east-1`, at 0.00765 USD per GB-month?",
+    "hint": "Gigabytes times price.",
+    "value": 7.65,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-184e6zgw",
+    "version": 1,
+    "section": "storage-classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An object is moved to Standard-IA and deleted ten days later. How many days of storage are billed for it in Standard-IA?",
+    "hint": "The class has a minimum.",
+    "choices": [
+      {
+        "text": "Ten, the days it was actually there",
+        "correct": false,
+        "why": "That is how Standard bills. Standard-IA has a minimum stay."
+      },
+      {
+        "text": "Thirty, the class's minimum duration",
+        "correct": true,
+        "why": "Right. Deleted early, it is billed as though it had stayed 30 days."
+      },
+      {
+        "text": "Ninety, like each class below Standard",
+        "correct": false,
+        "why": "Ninety is the minimum of the two Glacier classes; Standard-IA's is 30."
+      },
+      {
+        "text": "None: a deleted object is never billed",
+        "correct": false,
+        "why": "The minimum exists exactly for objects that leave early."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwhdc3fd",
+    "version": 1,
+    "section": "storage-classes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A lifecycle rule on a whole bucket moves every object to Glacier Flexible Retrieval after 30 days. The bucket also holds the images the company's website shows. What happens to a visitor on day 31?",
+    "hint": "Can a `GET` read that class directly?",
+    "choices": [
+      {
+        "text": "The images load in milliseconds, only cheaper",
+        "correct": false,
+        "why": "That describes Instant Retrieval. Flexible Retrieval needs a restore first."
+      },
+      {
+        "text": "The images load after a few seconds' delay",
+        "correct": false,
+        "why": "A `GET` does not wait for a restore; it is refused until one has been done."
+      },
+      {
+        "text": "The images are deleted by the rule",
+        "correct": false,
+        "why": "The rule only moves them; nothing in it expires objects."
+      },
+      {
+        "text": "The images fail to load until each one is restored",
+        "correct": true,
+        "why": "Right. A `GET` on Flexible Retrieval is refused until a restore, which takes minutes to hours."
+      }
+    ]
+  },
+  {
+    "id": "ex-xkrkv819",
+    "version": 1,
+    "section": "storage-classes",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bucket configuration that moves objects to cheaper classes by age, and deletes them after a set number of days, is called a ___ rule.",
+    "hint": "It follows an object from creation to deletion.",
+    "blanks": [
+      {
+        "accept": [
+          "lifecycle",
+          "life cycle",
+          "life-cycle"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bppgyzd0",
+    "version": 1,
+    "section": "durability-and-availability",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each protection to what it guarantees.",
+    "hint": "Two are promises about hardware, two are about requests.",
+    "pairs": [
+      {
+        "left": "Durability",
+        "right": "The bytes still exist a year from now"
+      },
+      {
+        "left": "Availability",
+        "right": "A request for them succeeds right now"
+      },
+      {
+        "left": "Versioning",
+        "right": "An overwritten object can be read as it was"
+      },
+      {
+        "left": "Replication to another account",
+        "right": "A copy survives the first account's credentials"
+      }
+    ],
+    "right_distractors": [
+      "The object is served faster to distant readers"
+    ]
+  },
+  {
+    "id": "ex-2vvbnmqz",
+    "version": 1,
+    "section": "durability-and-availability",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "S3 Standard is designed for 99.99% availability. A year has 525,600 minutes. How many minutes a year does that design allow requests to fail?",
+    "hint": "What is 0.01% of the year?",
+    "value": 52.56,
+    "tolerance": 0.1,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-p0nqt1a0",
+    "version": 1,
+    "section": "durability-and-availability",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cleanup script deletes every key under `invoices/` in an S3 Standard bucket with versioning off. What does eleven nines of durability do for those invoices?",
+    "hint": "What is durability measured against?",
+    "choices": [
+      {
+        "text": "Nothing; the store did what it was asked",
+        "correct": true,
+        "why": "Right. Durability protects what you asked the store to keep, against hardware; a delete is what you asked."
+      },
+      {
+        "text": "They can be recovered from one of the three zones",
+        "correct": false,
+        "why": "The delete removes the object in every zone; the replicas are not backups."
+      },
+      {
+        "text": "They are kept for 30 days before being removed",
+        "correct": false,
+        "why": "That is what a lifecycle rule for noncurrent versions does, with versioning on."
+      },
+      {
+        "text": "AWS restores them, since it promises eleven nines",
+        "correct": false,
+        "why": "Eleven nines is a design figure against lost hardware, not a service that undoes requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-0653k9tq",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a bucket with versioning on, a `DELETE` names a key and no version. What does the bucket do?",
+    "hint": "Is anything destroyed?",
+    "choices": [
+      {
+        "text": "Removes every version of the key",
+        "correct": false,
+        "why": "Only deleting each version by its id removes it."
+      },
+      {
+        "text": "Removes the current version only",
+        "correct": false,
+        "why": "Nothing is removed; the current version becomes noncurrent."
+      },
+      {
+        "text": "Adds a delete marker in front of the versions",
+        "correct": true,
+        "why": "Right. The marker becomes current and the key looks absent, while every version stays."
+      },
+      {
+        "text": "Refuses the request, since versioned keys are protected",
+        "correct": false,
+        "why": "The request succeeds, which is why the object seems gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-0cva26bm",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Someone deleted `notes.txt` in a versioned bucket, and a listing no longer shows it. How is it brought back?",
+    "hint": "What is standing in front of the versions?",
+    "choices": [
+      {
+        "text": "Upload the file again from someone's laptop",
+        "correct": false,
+        "why": "That writes a new version, if anybody has a copy; the old one was never lost."
+      },
+      {
+        "text": "Turn versioning off so the old version shows",
+        "correct": false,
+        "why": "Versioning can only be suspended, and that changes nothing already stored."
+      },
+      {
+        "text": "Restore it from Glacier",
+        "correct": false,
+        "why": "Nothing moved it to Glacier; restore belongs to a storage class, not to deletes."
+      },
+      {
+        "text": "Delete the delete marker by its version id",
+        "correct": true,
+        "why": "Right. With the marker gone, the last version is current again."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvve4x45",
+    "version": 1,
+    "section": "versioning",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 1 GB export is overwritten once a day in a bucket with versioning on and no lifecycle rule. After 30 days of writes, how many GB does the bucket hold for that key?",
+    "hint": "Every version is kept and billed.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-30pczmtw",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of data to where it belongs.",
+    "hint": "How does the program reach the data?",
+    "pairs": [
+      {
+        "left": "PostgreSQL's data directory on one instance",
+        "right": "A block volume"
+      },
+      {
+        "left": "Images many servers and browsers fetch by name",
+        "right": "Objects in S3 Standard"
+      },
+      {
+        "left": "A legacy application that polls a shared directory",
+        "right": "A managed file share"
+      },
+      {
+        "left": "Logs kept two years and almost never read",
+        "right": "Objects with a lifecycle rule"
+      }
+    ],
+    "right_distractors": [
+      "Snapshots of a volume"
+    ]
+  },
+  {
+    "id": "ex-hx89rr3h",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A news story reports customer records found in an S3 bucket anybody could read. What is the most likely cause?",
+    "hint": "What state does a new bucket start in?",
+    "choices": [
+      {
+        "text": "Someone granted read access to everyone",
+        "correct": true,
+        "why": "Right. The store did what it was told, and somebody told it that everyone could read."
+      },
+      {
+        "text": "Buckets were public by default until 2023",
+        "correct": false,
+        "why": "Buckets have always been private by default; 2023 added more guards against opening them."
+      },
+      {
+        "text": "Versioning exposed the older copies",
+        "correct": false,
+        "why": "Versions follow the bucket's access rules; they open nothing by themselves."
+      },
+      {
+        "text": "A zone failed and the data was served unprotected",
+        "correct": false,
+        "why": "A failed zone makes data unavailable, not public."
+      }
+    ]
+  },
+  {
+    "id": "ex-3kqxk7rv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A photo-sharing site runs on four web servers. Users upload pictures, the pages show them, and the team can change the code. Where should the pictures go?",
+    "hint": "The code can change, so the cheapest shape that fits wins.",
+    "choices": [
+      {
+        "text": "A `gp3` volume on each server, kept in sync",
+        "correct": false,
+        "why": "Four copies, four bills, and a synchronisation problem nobody needs."
+      },
+      {
+        "text": "An EFS file share mounted by all four",
+        "correct": false,
+        "why": "It works, and it is what you choose when the code cannot change; here it can, and objects cost far less."
+      },
+      {
+        "text": "Objects in a bucket, written and read by key",
+        "correct": true,
+        "why": "Right. Written once, read many times by name, by any server or straight from a browser."
+      },
+      {
+        "text": "Glacier Flexible Retrieval, the cheapest line",
+        "correct": false,
+        "why": "Every page view would need a restore first; pictures on a page are read constantly."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqm6971b",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a versioned bucket, the empty version that a `DELETE` adds, which makes the key look absent, is a delete ___.",
+    "hint": "Remove it and the object is back.",
+    "blanks": [
+      {
+        "accept": [
+          "marker"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j2ykjrtb",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does S3 bill even if the bytes stored never change? Choose all that apply.",
+    "hint": "Storage, requests and history each have a line.",
+    "choices": [
+      {
+        "text": "The gigabytes stored, per month",
+        "correct": true,
+        "why": "Yes. The storage line bills every month the bytes are there."
+      },
+      {
+        "text": "Every `LIST` request",
+        "correct": true,
+        "why": "Yes. `LIST` is priced with `PUT` at 0.00700 per 1,000 in `sa-east-1`."
+      },
+      {
+        "text": "Old versions kept by versioning",
+        "correct": true,
+        "why": "Yes. Each version is stored and billed like a current object."
+      },
+      {
+        "text": "An empty bucket, for existing",
+        "correct": false,
+        "why": "No. The bill is for what is stored and what is asked; an empty bucket has neither."
+      }
+    ]
+  }
+]

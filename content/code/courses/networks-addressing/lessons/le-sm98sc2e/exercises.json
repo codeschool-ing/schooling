@@ -1,0 +1,736 @@
+[
+  {
+    "id": "ex-pd7e5jqx",
+    "version": 1,
+    "section": "why-aggregate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two switches are joined by two cables, spanning tree is on, and there is no link aggregation. What does the second cable do?",
+    "hint": "Lesson 20's triangle had a spare too.",
+    "choices": [
+      {
+        "text": "Carries half the traffic",
+        "correct": false,
+        "why": "That is what aggregation adds. Spanning tree sees two paths and keeps one."
+      },
+      {
+        "text": "Starts a broadcast storm",
+        "correct": false,
+        "why": "A storm needs spanning tree off. Here it is on."
+      },
+      {
+        "text": "Sits blocked until the first one fails",
+        "correct": true,
+        "why": "Right, and then it takes listening and learning before it forwards."
+      },
+      {
+        "text": "Carries broadcasts while the first carries the rest",
+        "correct": false,
+        "why": "Spanning tree blocks a port for broadcasts as well as the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-pdr9b31x",
+    "version": 1,
+    "section": "why-aggregate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the start of the lab, sw1's e1 and e2 are UP with LOWER_UP, yet pc1's ping to pc2 loses 1 of 1. Why?",
+    "hint": "A signal is not the same as a path through the switch.",
+    "choices": [
+      {
+        "text": "The cables are crossed, e1 on one end meeting e2 on the other",
+        "correct": false,
+        "why": "The lab cables e1 to e1 and e2 to e2, and a crossed pair would still carry frames."
+      },
+      {
+        "text": "Neither cable is part of a bridge yet",
+        "correct": true,
+        "why": "Right. sw1 forwards nothing onto them until the bond joins br0."
+      },
+      {
+        "text": "Spanning tree is blocking one of them and the other is listening",
+        "correct": false,
+        "why": "Spanning tree is not part of this lab, and a listening port would recover by itself."
+      },
+      {
+        "text": "pc2 has no address yet",
+        "correct": false,
+        "why": "pc2 is 10.20.10.22 from the start, and the same ping works once the bond is up."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3ypwq7y",
+    "version": 1,
+    "section": "why-aggregate",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each system to what it calls link aggregation.",
+    "hint": "One idea, four names.",
+    "pairs": [
+      {
+        "left": "Cisco switches",
+        "right": "EtherChannel"
+      },
+      {
+        "left": "Linux",
+        "right": "A bond"
+      },
+      {
+        "left": "Windows servers",
+        "right": "NIC teaming"
+      },
+      {
+        "left": "The IEEE standard",
+        "right": "A LAG"
+      }
+    ],
+    "right_distractors": [
+      "A trunk port"
+    ]
+  },
+  {
+    "id": "ex-zqr2xdfy",
+    "version": 1,
+    "section": "lacp",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Linux names the LACP mode 802.3ad. Which IEEE standard holds LACP today?",
+    "hint": "It moved out of 802.3 into the 802.1 family.",
+    "choices": [
+      {
+        "text": "802.1D",
+        "correct": false,
+        "why": "That is spanning tree, lesson 20."
+      },
+      {
+        "text": "802.1AX",
+        "correct": true,
+        "why": "Right. 802.3ad was where it was first published."
+      },
+      {
+        "text": "802.1Q",
+        "correct": false,
+        "why": "That is VLAN tagging, lesson 19."
+      },
+      {
+        "text": "802.3af",
+        "correct": false,
+        "why": "That is the first PoE standard."
+      }
+    ]
+  },
+  {
+    "id": "ex-9sewnqth",
+    "version": 1,
+    "section": "lacp",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In /proc/net/bonding/bond0 on sw1, both members list the partner system MAC 02:fc:ce:91:32:14. What does that confirm?",
+    "hint": "Whose MAC is it, and why does it matter that it is the same twice?",
+    "choices": [
+      {
+        "text": "Both cables carry the same frames, one copy each",
+        "correct": false,
+        "why": "A LAG puts each frame on one member. The MAC identifies the far switch, not the traffic."
+      },
+      {
+        "text": "sw1 is the partner of itself",
+        "correct": false,
+        "why": "sw1's own system MAC is 02:1d:22:fd:7e:72, listed as the actor."
+      },
+      {
+        "text": "Both cables were given the same MAC by the administrator",
+        "correct": false,
+        "why": "The bond copies e1's MAC onto its members; the partner MAC comes from sw2's LACPDUs."
+      },
+      {
+        "text": "Both cables lead to one switch, sw2",
+        "correct": true,
+        "why": "Right. That is the check a static LAG never makes."
+      }
+    ]
+  },
+  {
+    "id": "ex-dyb6wqhx",
+    "version": 1,
+    "section": "lacp",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each member of the bond reports port state: 63, a byte in which each flag is one bit. How many flags are set?",
+    "hint": "Write 63 in binary.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "flags"
+  },
+  {
+    "id": "ex-6hewwnq7",
+    "version": 1,
+    "section": "lacp",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One cable of a two-cable LAG is plugged by mistake into a different switch. What does LACP do that a static LAG does not?",
+    "hint": "Each LACPDU says who sent it.",
+    "choices": [
+      {
+        "text": "Sends half the traffic to the wrong switch",
+        "correct": false,
+        "why": "That is the static LAG's behaviour, which trusts its own configuration."
+      },
+      {
+        "text": "Sees a different partner on that cable and leaves it out of the bundle",
+        "correct": true,
+        "why": "Right. A port joins only when its partner agrees to the same group."
+      },
+      {
+        "text": "Blocks the cable with spanning tree",
+        "correct": false,
+        "why": "Spanning tree sees one logical port. Keeping members in or out is LACP's job."
+      },
+      {
+        "text": "Shuts both cables until the mistake is fixed",
+        "correct": false,
+        "why": "The correctly plugged cable keeps working on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-tb74jjny",
+    "version": 1,
+    "section": "lacp",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In /proc/net/bonding/bond0 the end you are reading on is the actor, and the far end of each cable is the ___.",
+    "hint": "Its MAC, its key, its port state.",
+    "blanks": [
+      {
+        "accept": [
+          "partner"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dpqzg75d",
+    "version": 1,
+    "section": "hashing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before the pings, sw1's e1 had sent 25 packets; after them, 158. How many frames did e1 send during the test?",
+    "hint": "After minus before.",
+    "value": 133,
+    "tolerance": 0,
+    "unit": "frames"
+  },
+  {
+    "id": "ex-twyf5wdd",
+    "version": 1,
+    "section": "hashing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a LAG not simply send frames down its cables in turn, one each?",
+    "hint": "Think of two frames of the same TCP connection.",
+    "choices": [
+      {
+        "text": "Frames of one conversation would arrive out of order",
+        "correct": true,
+        "why": "Right. Hashing keeps a conversation on one member, so its frames stay in sequence."
+      },
+      {
+        "text": "The switch at the other end would see the same MAC address on two ports and flap",
+        "correct": false,
+        "why": "Both members belong to one logical port, so the far switch learns the MAC on bond0, not on a member."
+      },
+      {
+        "text": "LACP forbids it by design to save processing time",
+        "correct": false,
+        "why": "Spreading by turns is cheaper to compute. The objection is ordering, not cost."
+      },
+      {
+        "text": "Round-robin would make spanning tree block a member",
+        "correct": false,
+        "why": "Spanning tree sees bond0 as one port whatever happens inside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0t1ca76",
+    "version": 1,
+    "section": "hashing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two servers are joined through a LAG of two 10 Gb/s members with xmit_hash_policy layer3+4. A backup copies one file over one TCP connection. What is the most it can reach?",
+    "hint": "layer3+4 spreads connections. How many are there?",
+    "choices": [
+      {
+        "text": "20 Gb/s, since layer3+4 uses the ports as well as the addresses",
+        "correct": false,
+        "why": "The ports spread different connections. This one keeps its ports and so keeps its member."
+      },
+      {
+        "text": "5 Gb/s, since each member is shared",
+        "correct": false,
+        "why": "No other traffic crosses the LAG here, so the member is not shared."
+      },
+      {
+        "text": "20 Gb/s once LACP rebalances it",
+        "correct": false,
+        "why": "LACP decides membership; it does not split one conversation across members."
+      },
+      {
+        "text": "10 Gb/s, the speed of one cable",
+        "correct": true,
+        "why": "Right. One conversation stays on one member."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2sdx3xq",
+    "version": 1,
+    "section": "hashing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Linux transmit hash policy to what it hashes.",
+    "hint": "The number says which layers go in.",
+    "pairs": [
+      {
+        "left": "layer2",
+        "right": "Source and destination MAC"
+      },
+      {
+        "left": "layer2+3",
+        "right": "MACs and IP addresses"
+      },
+      {
+        "left": "layer3+4",
+        "right": "IP addresses and ports"
+      }
+    ],
+    "right_distractors": [
+      "The VLAN ID"
+    ]
+  },
+  {
+    "id": "ex-j49159z9",
+    "version": 1,
+    "section": "hashing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "sw1's two members together sent 220 more frames during a test of 150 pings from pc1. Which of these are counted in that 220? Choose all that apply.",
+    "hint": "These are sw1's transmit counters.",
+    "choices": [
+      {
+        "text": "The 150 echo requests on their way to sw2",
+        "correct": true,
+        "why": "Yes, they leave sw1 over the bond."
+      },
+      {
+        "text": "LACPDUs, one a second on each member",
+        "correct": true,
+        "why": "Yes. The fast rate keeps them coming during the 30 seconds."
+      },
+      {
+        "text": "The 150 echo replies on their way back to pc1",
+        "correct": false,
+        "why": "Replies arrive at sw1. They are on sw2's transmit counters."
+      },
+      {
+        "text": "The frames pc1 sent to sw1 on port p1",
+        "correct": false,
+        "why": "That is sw1's p1, receiving. The counters read are e1 and e2."
+      }
+    ]
+  },
+  {
+    "id": "ex-nq3tsaw7",
+    "version": 1,
+    "section": "member-failure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "pc1 pinged pc3 20 times while e1 was pulled, and 20 replies came back. Why does that not prove the bond moved traffic from e1 to e2?",
+    "hint": "Which cable were those pings on?",
+    "choices": [
+      {
+        "text": "The ping ran on sw2, which has no bond",
+        "correct": false,
+        "why": "The ping ran on pc1, and sw2 had the same bond configured."
+      },
+      {
+        "text": "Twenty pings are too few to measure anything",
+        "correct": false,
+        "why": "Twenty is enough to see a 30-second outage like lesson 20's. The question is which cable they used."
+      },
+      {
+        "text": "MII Status for e1 still said up",
+        "correct": false,
+        "why": "It said down. That part of the failover is in the capture."
+      },
+      {
+        "text": "The hash could have put them on e2 from the start",
+        "correct": true,
+        "why": "Right. Then pulling e1 did not touch them. What the capture does show is bond0 staying up."
+      }
+    ]
+  },
+  {
+    "id": "ex-ka45yp82",
+    "version": 1,
+    "section": "member-failure",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With lacp_rate fast, a member is taken out after missing three LACPDUs in a row. About how many seconds is that?",
+    "hint": "Fast means one a second.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-4mdtr262",
+    "version": 1,
+    "section": "member-failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A media converter in the middle of a LAG member fails. The switch port's link light stays on. What notices?",
+    "hint": "The signal is still there; something else stops.",
+    "choices": [
+      {
+        "text": "miimon, within 100 ms",
+        "correct": false,
+        "why": "miimon watches the carrier, and the carrier is still there."
+      },
+      {
+        "text": "Spanning tree, after max age",
+        "correct": false,
+        "why": "Spanning tree sees bond0, not the members inside it."
+      },
+      {
+        "text": "LACP, when the partner's LACPDUs stop arriving",
+        "correct": true,
+        "why": "Right, about three seconds at the fast rate."
+      },
+      {
+        "text": "The PCs, as soon as their pings start timing out",
+        "correct": false,
+        "why": "Pings might show a loss, but the bond keeps using a dead member unless LACP removes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tyyqqdxy",
+    "version": 1,
+    "section": "member-failure",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To make a bond report itself down when fewer than two members are up, its ___ setting goes from 0 to 2.",
+    "hint": "The previous section's output listed it at 0.",
+    "blanks": [
+      {
+        "accept": [
+          "min_links",
+          "min links",
+          "Min links"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rygpyavv",
+    "version": 1,
+    "section": "poe",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each PoE standard or type to the power it guarantees at the switch port.",
+    "hint": "15.4, 30, 60, 90.",
+    "pairs": [
+      {
+        "left": "802.3af (Type 1)",
+        "right": "15.4 W"
+      },
+      {
+        "left": "802.3at (Type 2)",
+        "right": "30 W"
+      },
+      {
+        "left": "802.3bt Type 3",
+        "right": "60 W"
+      },
+      {
+        "left": "802.3bt Type 4",
+        "right": "90 W"
+      }
+    ],
+    "right_distractors": [
+      "120 W"
+    ]
+  },
+  {
+    "id": "ex-pfpmz0xx",
+    "version": 1,
+    "section": "poe",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "802.3af supplies 15.4 W at the switch port and promises 12.95 W at the device. How many watts does the standard allow the cable to lose?",
+    "hint": "Port minus device.",
+    "value": 2.45,
+    "tolerance": 0.01,
+    "unit": "W"
+  },
+  {
+    "id": "ex-shz2jjm5",
+    "version": 1,
+    "section": "poe",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A laptop is plugged into a port of an 802.3af switch. Why does it not receive power?",
+    "hint": "The switch checks before it powers anything.",
+    "choices": [
+      {
+        "text": "It does not present the 25 kΩ signature, so the switch applies no power",
+        "correct": true,
+        "why": "Right. Detection comes before power."
+      },
+      {
+        "text": "PoE power flows on pairs a laptop does not use",
+        "correct": false,
+        "why": "A gigabit laptop uses the four pairs; the protection is detection, not wiring."
+      },
+      {
+        "text": "Laptops ask for class 0, which means no power",
+        "correct": false,
+        "why": "Class 0 is a PD that announces no class, and it gets the Type 1 maximum."
+      },
+      {
+        "text": "Its network card blocks the voltage with a fuse",
+        "correct": false,
+        "why": "No fuse is involved; the switch decides not to power the port."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzgr9jvg",
+    "version": 1,
+    "section": "poe",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does this lesson show no terminal output for PoE?",
+    "hint": "Think about what the lab is made of.",
+    "choices": [
+      {
+        "text": "Linux has no PoE commands",
+        "correct": false,
+        "why": "Linux reads PoE status on hardware that supports it. The lab has no such hardware."
+      },
+      {
+        "text": "PoE is a Cisco feature",
+        "correct": false,
+        "why": "PoE is an IEEE standard used by many vendors."
+      },
+      {
+        "text": "A virtual cable carries frames and no electricity",
+        "correct": true,
+        "why": "Right. The lab is namespaces on one computer."
+      },
+      {
+        "text": "The PoE budget of the lab's switches was set to 0 W",
+        "correct": false,
+        "why": "There is no budget to set; the lab's switches are Linux bridges with no power hardware."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdb2dnts",
+    "version": 1,
+    "section": "poe",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In PoE, the switch or injector that supplies the power is called the ___ (power sourcing equipment).",
+    "hint": "Three letters; the device at the far end is the PD.",
+    "blanks": [
+      {
+        "accept": [
+          "PSE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h2m9weme",
+    "version": 1,
+    "section": "poe",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps a standard PoE port goes through in order, from cable plugged in to power removed.",
+    "hint": "Nothing is powered before it has been found.",
+    "items": [
+      "Detection of the 25 kΩ signature",
+      "Classification",
+      "Power applied",
+      "Power removed when the device is unplugged"
+    ],
+    "trap": "Classification before detection is the usual slip: the switch first has to know a PD is there at all."
+  },
+  {
+    "id": "ex-mbzvm339",
+    "version": 1,
+    "section": "power-budget",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many watts would 24 ports need to give each one the 802.3af maximum of 15.4 W at the port?",
+    "hint": "24 × 15.4.",
+    "value": 369.6,
+    "tolerance": 0.05,
+    "unit": "W"
+  },
+  {
+    "id": "ex-frhdtzty",
+    "version": 1,
+    "section": "power-budget",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A switch has a 370 W PoE budget and reserves power by class. How many 802.3at devices at 30 W each can it power at once?",
+    "hint": "Divide and round down: a device gets its whole reservation or none.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "devices"
+  },
+  {
+    "id": "ex-2m2v62gh",
+    "version": 1,
+    "section": "power-budget",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The plan was 10 phones at class 2 (7 W), 6 access points at 30 W and 2 cameras at 60 W: 370 W. If the phones announced class 0 instead, how many watts would the plan reserve?",
+    "hint": "Class 0 gets the Type 1 maximum.",
+    "value": 454,
+    "tolerance": 0,
+    "unit": "W"
+  },
+  {
+    "id": "ex-swqztjgq",
+    "version": 1,
+    "section": "power-budget",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A PoE switch with port priorities set runs short of budget when one more device is plugged in. What happens?",
+    "hint": "The budget is a total; something has to give.",
+    "choices": [
+      {
+        "text": "The switch reboots to recalculate the budget",
+        "correct": false,
+        "why": "Running short is not a crash. The switch keeps forwarding."
+      },
+      {
+        "text": "Each port's power drops a little so the total fits",
+        "correct": false,
+        "why": "Ports get their whole reservation or are left unpowered; the switch does not ration them."
+      },
+      {
+        "text": "The newest device wins, as the most recent request",
+        "correct": false,
+        "why": "Arrival order is not the rule here. The priorities that were set decide."
+      },
+      {
+        "text": "The lowest-priority ports lose power",
+        "correct": true,
+        "why": "Right. Deciding those priorities in advance is the plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j2qn1mp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You need both cables between two switches to carry traffic at the same time. Which arrangement does that?",
+    "hint": "Lesson 20 or lesson 21?",
+    "choices": [
+      {
+        "text": "A LAG with LACP",
+        "correct": true,
+        "why": "Right. Spanning tree sees one port, and the hash spreads conversations over both."
+      },
+      {
+        "text": "Two plain cables with spanning tree on",
+        "correct": false,
+        "why": "Spanning tree keeps one of them blocked as a spare."
+      },
+      {
+        "text": "Two plain cables with spanning tree off",
+        "correct": false,
+        "why": "That is a loop, and the storm from lesson 20."
+      },
+      {
+        "text": "Two plain cables with RSTP instead of STP",
+        "correct": false,
+        "why": "RSTP converges faster, but it still blocks the redundant cable."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0q74rys",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps that built the bond on sw1 in order.",
+    "hint": "The bond exists before anything joins it.",
+    "items": [
+      "Create bond0 in 802.3ad mode",
+      "Take e1 and e2 down",
+      "Make e1 and e2 members of bond0",
+      "Put bond0 in br0 and bring it up"
+    ],
+    "trap": "Putting the cables in br0 directly, instead of bond0, gives two plain cables between two switches: the loop of lesson 20."
+  },
+  {
+    "id": "ex-5mt1dw5d",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 48-port switch has a 740 W PoE budget. How many ports can it give the full 802.3at 30 W at once?",
+    "hint": "Divide, then round down.",
+    "value": 24,
+    "tolerance": 0,
+    "unit": "ports"
+  }
+]

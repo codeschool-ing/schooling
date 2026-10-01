@@ -1,0 +1,868 @@
+{
+  "ex-p15z5gv3": {
+    "prompt": "O pedido da Ana ao S3 está assinado corretamente, e o S3 o recusa com o código AccessDenied. Qual portão recusou?",
+    "hint": "Um portão pergunta quem; o outro pergunta se pode.",
+    "choices": [
+      {
+        "text": "Autenticação: AccessDenied quer dizer que a chave dela não foi reconhecida",
+        "why": "Uma chave que o S3 não consegue verificar para no primeiro portão, com um código próprio, como SignatureDoesNotMatch."
+      },
+      {
+        "text": "Autenticação, porque a sessão dela foi aberta sem MFA",
+        "why": "Ter usado MFA ou não é uma circunstância, e circunstâncias são testadas por condições de política no segundo portão. A identidade dela era conhecida."
+      },
+      {
+        "text": "Autorização: o S3 sabia quem ela era, e nada permitia o pedido",
+        "why": "Certo. A assinatura passou pelo primeiro portão; AccessDenied é a resposta do segundo, depois de ler todas as políticas que se aplicam."
+      },
+      {
+        "text": "Nenhum: um security group descartou o pedido a caminho do S3",
+        "why": "Um security group filtra pacotes para as suas próprias máquinas. O S3 respondeu com um código, então o pedido chegou à API dele."
+      }
+    ]
+  },
+  "ex-y8jfbh9r": {
+    "prompt": "Ligue cada parte de um pedido ao valor dela no exemplo da aula.",
+    "hint": "Quem, o quê, com qual coisa, em que circunstâncias.",
+    "pairs": [
+      {
+        "left": "Principal",
+        "right": "o usuário ana"
+      },
+      {
+        "left": "Ação",
+        "right": "s3:GetObject"
+      },
+      {
+        "left": "Recurso",
+        "right": "arn:aws:s3:::example-reports/2026/q3.csv"
+      },
+      {
+        "left": "Condição",
+        "right": "a sessão foi aberta com MFA"
+      }
+    ],
+    "right_distractors": [
+      "o status HTTP 403"
+    ]
+  },
+  "ex-hsmpkna7": {
+    "prompt": "Uma máquina virtual está atrás de um security group que não permite tráfego de entrada nenhum. Uma chave de acesso vazada permite ec2:TerminateInstances nela. Quem tem a chave consegue excluir a máquina?",
+    "hint": "Para onde vai esse pedido?",
+    "choices": [
+      {
+        "text": "Sim: a chamada vai para a API do provedor, que o security group nunca vê",
+        "why": "Certo. Um security group julga pacotes para a máquina; excluí-la é uma chamada à API do provedor, julgada por políticas."
+      },
+      {
+        "text": "Não: sem tráfego de entrada permitido, nada chega até ela",
+        "why": "Isso vale para pacotes destinados à máquina. O pedido de exclusão nem é enviado à máquina."
+      },
+      {
+        "text": "Só de dentro da própria rede da máquina",
+        "why": "A API do provedor é alcançada pela internet, de qualquer lugar onde a chave estiver."
+      },
+      {
+        "text": "Só se a chave também permitir ssh na máquina",
+        "why": "ssh é uma entrada no sistema operacional. Encerrar a máquina é feito de fora, pelo provedor."
+      }
+    ]
+  },
+  "ex-jzge9d9m": {
+    "prompt": "Qual afirmação sobre o usuário root da AWS é verdadeira?",
+    "hint": "Políticas são os freios.",
+    "choices": [
+      {
+        "text": "Ele obedece às mesmas políticas de grupo que qualquer administrador",
+        "why": "O root não pertence a grupo nenhum e não é limitado pelas políticas da conta."
+      },
+      {
+        "text": "Ele é criado pelo primeiro administrador que o dono configura",
+        "why": "É o contrário: o root existe primeiro, desde o cadastro, e cria todo o resto."
+      },
+      {
+        "text": "Ele para de funcionar quando existe outro administrador",
+        "why": "O root continua funcionando para sempre; por isso precisa ser guardado, e não esquecido."
+      },
+      {
+        "text": "Nenhuma política de permissões dentro da própria conta consegue limitá-lo",
+        "why": "Certo. Políticas são a forma de a conta limitar suas identidades, e o root é a única a que elas não se aplicam."
+      }
+    ]
+  },
+  "ex-nmsm7sdn": {
+    "prompt": "A Rita tem uma empresa de uma pessoa só e entra como root todo dia, com MFA. Qual é o motivo mais forte para ela parar?",
+    "hint": "Pense na pior sessão, não na de sempre.",
+    "choices": [
+      {
+        "text": "O root não consegue usar a linha de comando de jeito nenhum, então todo script que ela escrever precisa de outra identidade",
+        "why": "O root pode ter chaves de acesso; o conselho é que não tenha."
+      },
+      {
+        "text": "Um erro ou uma sessão roubada como root não têm limite, e o root também é o caminho de volta dela",
+        "why": "Certo. Toda sessão de root pode fazer qualquer coisa, e é a identidade que recupera a conta; perdê-la perde as duas coisas."
+      },
+      {
+        "text": "O provedor cobra mais por chamadas feitas como root",
+        "why": "Nada na aula liga o root à conta a pagar. O argumento é sobre estrago e recuperação."
+      },
+      {
+        "text": "O MFA do root pode expirar e trancá-la fora da conta",
+        "why": "Um segundo fator não expira sozinho. O que tranca as pessoas fora é perdê-lo, e por isso o do root é guardado com cuidado."
+      }
+    ]
+  },
+  "ex-w0amx5pg": {
+    "prompt": "Oito pessoas têm as mesmas três políticas anexadas cada uma ao próprio usuário. O time deixa de precisar de uma das três. Quantas remoções são necessárias para tirá-la?",
+    "hint": "Uma por pessoa que a carrega.",
+    "unit": "remoções"
+  },
+  "ex-wzm8g828": {
+    "prompt": "No último dia do Paulo, o login dele no console é desativado. Na segunda, um script no laptop dele ainda envia arquivos para a conta. Por quê?",
+    "hint": "Quantas credenciais um usuário pode ter?",
+    "choices": [
+      {
+        "text": "Sessões do console continuam funcionando por uma semana depois de a senha ser desativada",
+        "why": "O script nem usa sessão de console; ele assina com uma chave de acesso."
+      },
+      {
+        "text": "O script roda como o grupo dele, do qual ele ainda faz parte",
+        "why": "Um grupo não tem credenciais e não faz chamadas; só identidades fazem."
+      },
+      {
+        "text": "A chave de acesso dele é separada, e desativar a senha a deixou ativa",
+        "why": "Certo. Senha e chaves de acesso são independentes; a mudança completa desativa as chaves ou apaga o usuário."
+      },
+      {
+        "text": "Desativar um usuário só vale a partir da próxima revisão de acesso da conta",
+        "why": "Mudanças em credenciais valem quando são feitas. A revisão é como se acha o que escapou."
+      }
+    ]
+  },
+  "ex-sjfrp6xn": {
+    "prompt": "Uma permissão precisa dizer que os analistas podem ler um bucket. Onde ela fica na AWS?",
+    "hint": "O que um grupo pode ser, e o que não pode?",
+    "choices": [
+      {
+        "text": "Numa política anexada ao grupo dos analistas",
+        "why": "Certo. Um grupo é a forma de entregar permissões a um conjunto de pessoas; um analista novo recebe ao entrar."
+      },
+      {
+        "text": "Numa política de bucket que nomeia o grupo como Principal",
+        "why": "Na AWS uma política não pode nomear um grupo como principal. Chega-se ao grupo anexando a política a ele."
+      },
+      {
+        "text": "No usuário de cada analista, já que um grupo não guarda políticas",
+        "why": "Guardar políticas é justamente para que serve um grupo; anexar uma por pessoa é o hábito que dá errado."
+      },
+      {
+        "text": "Num grupo menor aninhado dentro do grupo dos analistas",
+        "why": "Grupos do IAM não podem conter outros grupos."
+      }
+    ]
+  },
+  "ex-cvfm0h29": {
+    "prompt": "O que quem chama recebe quando assume uma role?",
+    "hint": "Ninguém faz login numa role.",
+    "choices": [
+      {
+        "text": "A senha da role, para entrar no console",
+        "why": "Uma role não tem senha; é isso que a diferencia de um usuário."
+      },
+      {
+        "text": "Credenciais temporárias que agem como a role até expirarem",
+        "why": "Certo. Um key id, um segredo, um token de sessão e uma expiração, vindos do STS."
+      },
+      {
+        "text": "Uma cópia permanente das permissões da role no usuário de quem chama",
+        "why": "Nada é copiado para quem chama. Ele age como a role, por um tempo, e depois para."
+      },
+      {
+        "text": "Uma chave de acesso de longa duração cujo id começa com AKIA",
+        "why": "AKIA é o prefixo da chave de longa duração de um usuário. As credenciais temporárias de uma role começam com ASIA."
+      }
+    ]
+  },
+  "ex-bjkxrjjs": {
+    "prompt": "Por padrão, quantos minutos dura uma sessão obtida com sts:AssumeRole?",
+    "hint": "O passo 3 da figura diz em horas.",
+    "unit": "minutos"
+  },
+  "ex-g9dktp2e": {
+    "prompt": "A política de uma role que diz quais principais podem assumi-la é a política de ___.",
+    "hint": "A outra diz o que a role pode fazer.",
+    "blanks": [
+      {
+        "accept": [
+          "confiança",
+          "confianca",
+          "trust"
+        ]
+      }
+    ]
+  },
+  "ex-2sj2ackc": {
+    "prompt": "Uma máquina virtual usa uma role para ler um bucket. Ponha os passos em ordem.",
+    "hint": "A figura desta seção, de cima para baixo.",
+    "items": [
+      "A máquina assina um pedido sts:AssumeRole como ela mesma",
+      "O STS confere a política de confiança da role",
+      "O STS devolve um key id, um segredo, um token de sessão e uma expiração",
+      "A máquina assina a chamada ao S3 com essas credenciais",
+      "O S3 confere a chamada contra a política de permissões da role"
+    ],
+    "trap": "A política de permissões não é lida quando a role é assumida. Quem a lê é o S3, em cada chamada feita com as credenciais."
+  },
+  "ex-1ehgr3rv": {
+    "prompt": "A política de permissões de uma role permite s3:* em todo bucket, e a política de confiança dela nomeia só ec2.amazonaws.com. Uma desenvolvedora quer assumi-la do laptop. O que acontece?",
+    "hint": "Os dois documentos precisam dizer sim.",
+    "choices": [
+      {
+        "text": "Ela consegue, porque a política de permissões permite tudo no S3",
+        "why": "A política de permissões decide o que a role faz depois de assumida. Quem pode assumi-la é a pergunta do outro documento."
+      },
+      {
+        "text": "Ela consegue, mas a sessão dela fica limitada a quinze minutos",
+        "why": "Quinze minutos é a sessão mais curta que se pode pedir, não uma punição. Ela não recebe sessão nenhuma."
+      },
+      {
+        "text": "Ela consegue se tiver entrado com MFA antes",
+        "why": "Um segundo fator prova quem ela é. Não a acrescenta a uma política de confiança que nomeia só um serviço."
+      },
+      {
+        "text": "Ela não consegue: a política de confiança não a nomeia",
+        "why": "Certo. Por mais que a role possa fazer, só os principais que a política de confiança nomeia conseguem se tornar ela."
+      }
+    ]
+  },
+  "ex-mjrgevx1": {
+    "prompt": "Numa declaração de política, a chave cujo valor é Allow ou Deny se chama ___.",
+    "hint": "É a segunda linha de cada declaração do exemplo.",
+    "blanks": [
+      {
+        "accept": [
+          "Effect"
+        ]
+      }
+    ]
+  },
+  "ex-zg63pq58": {
+    "prompt": "Uma declaração lista três ações e dois recursos. Quantos pares de ação e recurso ela cobre?",
+    "hint": "As listas se multiplicam.",
+    "unit": "pares"
+  },
+  "ex-kqsg8x5s": {
+    "prompt": "Ligue cada elemento de uma política ao que ele guarda.",
+    "hint": "Seis elementos; quatro deles aqui.",
+    "pairs": [
+      {
+        "left": "Version",
+        "right": "a versão da linguagem de políticas"
+      },
+      {
+        "left": "Action",
+        "right": "operações, escritas serviço:Operação"
+      },
+      {
+        "left": "Resource",
+        "right": "as coisas cobertas, escritas como ARNs"
+      },
+      {
+        "left": "Condition",
+        "right": "as circunstâncias em que ela vale"
+      }
+    ],
+    "right_distractors": [
+      "a data da última edição da política"
+    ]
+  },
+  "ex-ph257s5d": {
+    "prompt": "Uma declaração permite s3:ListBucket em arn:aws:s3:::example-reports/* e a listagem do usuário é recusada. Por quê?",
+    "hint": "Sobre que tipo de recurso uma listagem age?",
+    "choices": [
+      {
+        "text": "ListBucket age sobre o bucket, e esse ARN nomeia só objetos dentro dele",
+        "why": "Certo. O recurso de uma listagem é o ARN do próprio bucket, sem /* depois."
+      },
+      {
+        "text": "Toda listagem precisa de uma condição s3:prefix, e esta declaração não tem",
+        "why": "A condição estreita o que pode ser listado. Sem ela, a listagem cobre o bucket inteiro, e é permitida."
+      },
+      {
+        "text": "Falta a linha Version, então a declaração é ignorada",
+        "why": "Sem Version a política é lida na linguagem antiga, não ignorada, e a pergunta nem disse que ela falta."
+      },
+      {
+        "text": "Listar também exige s3:GetObject no mesmo ARN",
+        "why": "Ler objetos e listá-los são ações separadas; nenhuma precisa da outra."
+      }
+    ]
+  },
+  "ex-kv8ye92m": {
+    "prompt": "Uma política anexada à role report-reader não tem o elemento Principal. O que isso quer dizer?",
+    "hint": "Que tipos de política precisam nomear alguém?",
+    "choices": [
+      {
+        "text": "Ela vale para todo principal da conta",
+        "why": "Uma política sem Principal não é para todo mundo; ela está anexada a uma identidade e fala por ela."
+      },
+      {
+        "text": "Ela é inválida até alguém acrescentar um Principal",
+        "why": "Acrescentar seria o erro: políticas de identidade não levam esse elemento."
+      },
+      {
+        "text": "Nada: a própria role é o principal",
+        "why": "Certo. Uma política de identidade fala da identidade a que está anexada. As de confiança e as de recurso é que nomeiam principais."
+      },
+      {
+        "text": "Ela vale só para o usuário root da conta",
+        "why": "O root não é limitado por política nenhuma, então nenhuma é escrita para ele."
+      }
+    ]
+  },
+  "ex-1mk9yhx9": {
+    "prompt": "O grupo da Ana permite s3:DeleteObject num bucket. Uma política no próprio usuário da Ana nega s3:DeleteObject ali. Ela tenta apagar um objeto. O que acontece?",
+    "hint": "Regra 3.",
+    "choices": [
+      {
+        "text": "Permitido: a política do grupo foi anexada primeiro",
+        "why": "A ordem de anexação, como a ordem de escrita, não muda nada."
+      },
+      {
+        "text": "Recusado: um Deny explícito que casa vence todo Allow",
+        "why": "Certo. Onde cada política está anexada não faz diferença; o Deny encerra a questão."
+      },
+      {
+        "text": "Permitido: quando duas políticas discordam, vale a mais generosa",
+        "why": "É o contrário. Um desacordo entre um Allow e um Deny sempre termina no Deny."
+      },
+      {
+        "text": "Permitido: uma política de grupo está acima da política de um usuário",
+        "why": "Não há hierarquia entre onde as políticas ficam; as declarações são reunidas."
+      }
+    ]
+  },
+  "ex-anjw1f9d": {
+    "prompt": "Nenhuma política que se aplica à Ana menciona s3:PutObject. Ela tenta enviar um arquivo. O que acontece?",
+    "hint": "Onde todo pedido começa?",
+    "choices": [
+      {
+        "text": "Permitido, porque nada o proíbe",
+        "why": "O padrão é o contrário: um pedido precisa de algo que o permita."
+      },
+      {
+        "text": "Recusado, e um Deny explícito é acrescentado à política dela",
+        "why": "Nada é escrito na política dela. Uma negação implícita é a falta de um Allow, não uma declaração."
+      },
+      {
+        "text": "Permitido se o grupo dela puder ler o mesmo bucket",
+        "why": "Ler e enviar são ações separadas; um Allow para uma não diz nada sobre a outra."
+      },
+      {
+        "text": "Recusado, pela negação implícita",
+        "why": "Certo. Nada o permitiu, então ele fica onde todo pedido começa."
+      }
+    ]
+  },
+  "ex-xn7ywhbj": {
+    "prompt": "Ponha em ordem os passos para decidir um pedido.",
+    "hint": "A figura desta seção, de cima para baixo.",
+    "items": [
+      "O pedido é autenticado",
+      "Ele começa como negado",
+      "Um Deny explícito que case, se houver, o recusa",
+      "Senão, um Allow que case o concede",
+      "Senão, ele continua negado por padrão"
+    ],
+    "trap": "Procurar um Allow antes do Deny dá a resposta errada sempre que os dois casam: o Deny precisa poder vencer."
+  },
+  "ex-xqv4qvy8": {
+    "prompt": "O grupo da Ana permite s3:* no bucket example-reports. A política dela nega s3:DeleteObject ali. Quais pedidos dela dão certo? Escolha todas as que se aplicam.",
+    "hint": "O Deny remove só o que nomeia; o Allow cobre só o que nomeia.",
+    "choices": [
+      {
+        "text": "s3:GetObject num objeto de example-reports",
+        "why": "Permitido: s3:* cobre, e o Deny não o nomeia."
+      },
+      {
+        "text": "s3:DeleteObject num objeto de example-reports",
+        "why": "Recusado: o Deny explícito casa, e nada o desfaz."
+      },
+      {
+        "text": "s3:PutObject num objeto de example-reports",
+        "why": "Permitido: s3:* inclui enviar, e só a exclusão foi negada."
+      },
+      {
+        "text": "s3:GetObject num objeto de outro bucket",
+        "why": "Recusado, implicitamente: o Allow do grupo nomeia só example-reports."
+      }
+    ]
+  },
+  "ex-xcph3762": {
+    "prompt": "Uma declaração nega s3:DeleteObject com a condição Bool aws:MultiFactorAuthPresent false. Um script que assina com uma chave de acesso de longa duração apaga um objeto, e funciona. Por quê?",
+    "hint": "O que um pedido assinado com chave de longa duração carrega sobre MFA?",
+    "choices": [
+      {
+        "text": "Declarações Deny valem para sessões de console e nunca para chaves de acesso",
+        "why": "Um Deny vale para todo pedido com que casa, seja como for assinado. Este não casou."
+      },
+      {
+        "text": "O Allow do próprio script era mais específico que o Deny",
+        "why": "Especificidade não decide nada. Um Deny que casasse venceria qualquer Allow."
+      },
+      {
+        "text": "O pedido não carregava chave de MFA nenhuma, então o Bool não tinha o que comparar e o Deny não se aplicou",
+        "why": "Certo. É por isso que a seção escreve BoolIfExists: aí uma chave ausente conta como correspondência."
+      },
+      {
+        "text": "Um pedido assinado sempre conta como MFA presente",
+        "why": "Uma assinatura prova a chave, não um segundo fator; a chave de contexto simplesmente não vem nesses pedidos."
+      }
+    ]
+  },
+  "ex-51v39rt4": {
+    "prompt": "A política de um job de backup inclui iam:* em *. O job nunca mexe no IAM. Por que essa é a pior linha da política?",
+    "hint": "O que uma identidade faz se pode mudar identidades?",
+    "choices": [
+      {
+        "text": "Ela deixa o job ler o conteúdo de todo bucket sem nenhuma permissão de S3",
+        "why": "Ações de IAM mudam identidades e políticas; ler objetos é uma ação de S3. O perigo é que ele pode conceder isso a si mesmo também."
+      },
+      {
+        "text": "Chamadas de IAM são cobradas por pedido, e um curinga pode encarecer a conta",
+        "why": "O problema é o que a linha permite, não o que ela custa."
+      },
+      {
+        "text": "Ela impede que qualquer outra política seja anexada à role do job",
+        "why": "Nada no IAM funciona assim; ela deixaria o job anexar o que quisesse."
+      },
+      {
+        "text": "Ela pode dar a si mesma qualquer permissão, então equivale a acesso de administrador",
+        "why": "Certo. Anexar uma política de administrador à própria role, ou criar um usuário com chaves, está a uma chamada de distância."
+      }
+    ]
+  },
+  "ex-kx6fjg9x": {
+    "prompt": "Por que \"Action\": \"s3:Get*\" é mais arriscado do que parece?",
+    "hint": "Leia o nome como um padrão, e pense no ano que vem.",
+    "choices": [
+      {
+        "text": "Ele casa com toda ação do S3, porque uma estrela encerra o nome",
+        "why": "O padrão mantém o prefixo: só as ações cujo nome começa com Get casam."
+      },
+      {
+        "text": "Ele casa com toda ação Get, inclusive as criadas depois",
+        "why": "Certo. GetBucketPolicy está nele hoje, e o que o S3 acrescentar amanhã também estará."
+      },
+      {
+        "text": "Ele é inválido, porque curingas só são permitidos em recursos",
+        "why": "Curingas são permitidos em ações, e é justamente por isso que esta linha precisa ser lida."
+      },
+      {
+        "text": "Ele casa só com s3:GetObject, então a listagem quebra",
+        "why": "Ele casa com muito mais que GetObject; listar é ListBucket, que ele não cobre."
+      }
+    ]
+  },
+  "ex-39qqg98g": {
+    "prompt": "Revisando a política de um job que só envia arquivos para um bucket, em quais linhas você deveria parar? Escolha todas as que se aplicam.",
+    "hint": "A lista da seção de linhas em que parar.",
+    "choices": [
+      {
+        "text": "\"Resource\": \"*\"",
+        "why": "Todo recurso da conta, onde o job precisa de um bucket."
+      },
+      {
+        "text": "\"Action\": \"s3:PutObject\"",
+        "why": "Essa é a única ação de que o job precisa."
+      },
+      {
+        "text": "\"Action\": \"iam:CreateUser\"",
+        "why": "Um job que envia arquivos não tem motivo para criar identidades, e um usuário novo com chaves é uma porta de entrada."
+      },
+      {
+        "text": "\"Resource\": \"arn:aws:s3:::example-backups/nightly/*\"",
+        "why": "Um prefixo de um bucket: o recurso estreito que o job deveria ter."
+      },
+      {
+        "text": "\"Action\": \"s3:*\"",
+        "why": "Toda operação do S3, inclusive apagar buckets e reescrever as políticas deles, para um job que só envia."
+      }
+    ]
+  },
+  "ex-k6jh8080": {
+    "prompt": "Uma permissão ampla acrescentada à role de plantão durante um incidente, dezoito meses atrás, continua lá. Ninguém reclamou dela. O que a revisão deveria fazer?",
+    "hint": "O que um acesso sem uso produz, até o dia em que é usado?",
+    "choices": [
+      {
+        "text": "Removê-la: acesso sem uso só aparece quando é abusado",
+        "why": "Certo. Se ela se mostrar necessária, a recusa diz qual ação e ela volta como uma linha."
+      },
+      {
+        "text": "Mantê-la: dezoito meses sem reclamação mostram que é inofensiva",
+        "why": "Uma política que permite demais nunca gera reclamação. O silêncio é o sintoma, não a prova."
+      },
+      {
+        "text": "Mantê-la até o provedor marcá-la como expirada",
+        "why": "Permissões não expiram a menos que alguém as faça expirar; só sessões de role expiram."
+      },
+      {
+        "text": "Acrescentar um Deny ao lado, para a permissão poder ser restaurada rápido",
+        "why": "Duas declarações que se anulam são mais difíceis de ler que nenhuma. Remover é a mudança."
+      }
+    ]
+  },
+  "ex-nspqk25z": {
+    "prompt": "Na captura da aula, em quantas fontes a CLI procurou credenciais antes de desistir?",
+    "hint": "Conte as linhas da saída do --debug.",
+    "unit": "fontes"
+  },
+  "ex-9akrhdy3": {
+    "prompt": "Ponha estas fontes de credenciais na ordem em que a AWS CLI as procurou na captura.",
+    "hint": "O ambiente primeiro; as da própria máquina por último.",
+    "items": [
+      "Variáveis de ambiente",
+      "O arquivo de credenciais compartilhado em ~/.aws",
+      "O endpoint de credenciais de um contêiner",
+      "O serviço de metadados da instância"
+    ],
+    "trap": "O serviço de metadados vem por último, e é por isso que uma chave esquecida no ambiente vence a role da máquina."
+  },
+  "ex-k6px44da": {
+    "prompt": "Uma máquina virtual tem uma role de escopo estreito. Meses atrás alguém definiu AWS_ACCESS_KEY_ID e AWS_SECRET_ACCESS_KEY no ambiente dela para um teste. Com quais credenciais a CLI assina ali?",
+    "hint": "Em que ponta da cadeia fica o ambiente?",
+    "choices": [
+      {
+        "text": "A role, porque as credenciais da própria máquina sempre têm prioridade",
+        "why": "As fontes da máquina são as duas últimas de doze. Tudo acima delas vence."
+      },
+      {
+        "text": "As duas, com as permissões combinadas",
+        "why": "Um pedido é assinado com um conjunto de credenciais; nada junta duas identidades."
+      },
+      {
+        "text": "A chave do ambiente, que a cadeia lê antes do serviço de metadados",
+        "why": "Certo. A primeira fonte que responde é a usada, e o ambiente vem primeiro; a role nem é consultada."
+      },
+      {
+        "text": "Nenhuma: duas fontes conflitam, então a CLI recusa",
+        "why": "A cadeia não procura conflitos. Ela para na primeira fonte que responde."
+      }
+    ]
+  },
+  "ex-y5b4fn4k": {
+    "prompt": "Na captura, o que o aws sts get-caller-identity fez sem credenciais disponíveis?",
+    "hint": "Leia o nome do erro.",
+    "choices": [
+      {
+        "text": "Perguntou à AWS pela rede, que respondeu que quem chamava era desconhecido",
+        "why": "Um chamador desconhecido seria o primeiro portão recusando na AWS. Esta recusa nunca saiu do laptop."
+      },
+      {
+        "text": "Recusou no laptop antes de assinar, então nada foi enviado à AWS",
+        "why": "Certo. NoCredentials é a recusa da própria CLI: sem nada com que assinar, não havia pedido a enviar."
+      },
+      {
+        "text": "Enviou o pedido sem assinatura, como um chamador anônimo",
+        "why": "A CLI não envia uma chamada sem assinatura aqui; ela para e diz por quê."
+      },
+      {
+        "text": "Usou a chave de exemplo da documentação",
+        "why": "Essa chave só aparece no último bloco, escrita num arquivo de propósito, e nenhuma chamada foi feita com ela."
+      }
+    ]
+  },
+  "ex-k7e2ptf5": {
+    "prompt": "Um access key id começa com ASIA. Que tipo de credencial é?",
+    "hint": "Compare com o id do arquivo de credenciais.",
+    "choices": [
+      {
+        "text": "Uma chave de longa duração que pertence a um usuário",
+        "why": "Esse é o AKIA, o prefixo da chave no arquivo de credenciais da aula."
+      },
+      {
+        "text": "Uma chave que só funciona nas regiões da Ásia-Pacífico",
+        "why": "O prefixo diz que tipo de credencial ela é, não onde pode ser usada."
+      },
+      {
+        "text": "Uma chave que pertence ao usuário root da conta",
+        "why": "O root não deveria ter chave nenhuma, e o prefixo não nomeia uma identidade."
+      },
+      {
+        "text": "Uma temporária, como as que uma role entrega",
+        "why": "Certo. ASIA marca credenciais temporárias; a chave de longa duração de um usuário começa com AKIA."
+      }
+    ]
+  },
+  "ex-kr398c1c": {
+    "prompt": "Ponha em ordem os passos de um login federado.",
+    "hint": "A lista numerada desta seção.",
+    "items": [
+      "A Ana entra no provedor de identidade da organização, com segundo fator",
+      "O provedor de identidade envia uma declaração assinada de quem ela é e dos grupos dela",
+      "O provedor de nuvem confere a assinatura e mapeia os grupos dela para roles",
+      "A Ana recebe credenciais temporárias de uma dessas roles"
+    ],
+    "trap": "O provedor de nuvem nunca vê a senha dela: a única coisa que ele confere é a assinatura do provedor de identidade."
+  },
+  "ex-nqtv1y06": {
+    "prompt": "A Ana é desativada no provedor de identidade às 10:00. Às 09:30 ela tinha assumido uma role por uma sessão de uma hora. O que ela ainda consegue fazer?",
+    "hint": "A seção cita uma lacuna honesta.",
+    "choices": [
+      {
+        "text": "Nada: desativá-la revoga todas as credenciais na hora",
+        "why": "Desativar impede novos logins. Uma sessão já emitida não é recolhida por isso."
+      },
+      {
+        "text": "Entrar de novo, já que a nuvem guarda uma cópia própria da senha dela",
+        "why": "Com federação a nuvem não guarda senha dela; o provedor de identidade é a única porta."
+      },
+      {
+        "text": "Usar essas credenciais da role até expirarem às 10:30",
+        "why": "Certo. Credenciais já entregues funcionam até expirar, e esse é o argumento para sessões curtas."
+      },
+      {
+        "text": "Continuar usando as credenciais por um ano, como uma chave de acesso",
+        "why": "Credenciais de role carregam uma expiração; as dela acabaram às 10:30."
+      }
+    ]
+  },
+  "ex-ff9a3dgx": {
+    "prompt": "A Ana digita a senha numa página de login falsa e convincente. Qual segundo fator ainda manteria o atacante do lado de fora?",
+    "hint": "Qual fator confere o site com que está falando?",
+    "choices": [
+      {
+        "text": "Uma chave de segurança física, que só responde ao site em que foi registrada",
+        "why": "Certo. A página falsa é outro site, então a chave não lhe dá nada para reutilizar."
+      },
+      {
+        "text": "Um app autenticador, já que o código muda a cada trinta segundos",
+        "why": "A página falsa pode pedir o código de hoje também e usá-lo na hora, dentro desses trinta segundos."
+      },
+      {
+        "text": "Um código enviado ao celular dela por SMS",
+        "why": "Ele pode ser digitado na página falsa como qualquer outro código, e o próprio número pode ser transferido."
+      },
+      {
+        "text": "Uma senha mais longa, trocada todo mês",
+        "why": "Uma senha de qualquer tamanho é digitada na página falsa do mesmo jeito, e não é um segundo fator."
+      }
+    ]
+  },
+  "ex-0q57v32z": {
+    "prompt": "Um pipeline de build faz deploy numa conta com uma chave de acesso guardada nas configurações. Que mudança elimina a chave de vez?",
+    "hint": "A terceira linha da cadeia de credenciais.",
+    "choices": [
+      {
+        "text": "Criptografar a chave nas configurações do pipeline",
+        "why": "Uma chave criptografada continua sendo uma chave que o pipeline lê e que quem tomar o pipeline pode usar."
+      },
+      {
+        "text": "Uma role assumida com um token por execução",
+        "why": "Certo. A conta confia na plataforma pela política de confiança de uma role, e não sobra chave guardada para vazar."
+      },
+      {
+        "text": "Fazer rotação da chave a cada noventa dias, com agenda",
+        "why": "A rotação encurta quanto tempo uma chave vazada funciona. A chave continua lá."
+      },
+      {
+        "text": "Passar a chave para uma variável de ambiente no lugar",
+        "why": "O ambiente é o primeiro lugar em que a cadeia olha, e a chave continua guardada ali."
+      }
+    ]
+  },
+  "ex-af2sbcs1": {
+    "prompt": "Ligue cada ideia do Google Cloud ou do Azure ao nome dela ali.",
+    "hint": "A tabela desta seção.",
+    "pairs": [
+      {
+        "left": "A identidade de um programa no Google Cloud",
+        "right": "uma conta de serviço"
+      },
+      {
+        "left": "A identidade de um programa no Azure",
+        "right": "uma identidade gerenciada"
+      },
+      {
+        "left": "O pacote de permissões do Google Cloud",
+        "right": "um papel, como roles/storage.objectViewer"
+      },
+      {
+        "left": "A concessão de um papel num escopo, no Azure",
+        "right": "uma atribuição de função"
+      }
+    ],
+    "right_distractors": [
+      "uma política de confiança"
+    ]
+  },
+  "ex-hw49j3p7": {
+    "prompt": "No Google Cloud, um programa como uma máquina virtual roda como uma conta de ___.",
+    "hint": "A última linha da tabela.",
+    "blanks": [
+      {
+        "accept": [
+          "serviço",
+          "servico",
+          "service"
+        ]
+      }
+    ]
+  },
+  "ex-mq0cg9pb": {
+    "prompt": "No Azure, a identidade criada para uma máquina virtual ou uma função, com credenciais que a plataforma troca sozinha, é uma identidade ___.",
+    "hint": "A última linha da tabela.",
+    "blanks": [
+      {
+        "accept": [
+          "gerenciada",
+          "managed"
+        ]
+      }
+    ]
+  },
+  "ex-s8b39d84": {
+    "prompt": "No Google Cloud, o Bruno recebe o papel básico Editor numa pasta que contém doze projetos. O que ele pode mudar?",
+    "hint": "Para que lado os vínculos viajam?",
+    "choices": [
+      {
+        "text": "Só as configurações da própria pasta, não os projetos dentro dela",
+        "why": "Seria verdade se os vínculos não descessem. Eles descem."
+      },
+      {
+        "text": "Nada até ele assumir o papel Editor, como na AWS",
+        "why": "No Google Cloud um papel é algo que ele recebe, não uma identidade em que ele se transforma."
+      },
+      {
+        "text": "Só os projetos criados na pasta depois da concessão",
+        "why": "A herança cobre o que está abaixo da pasta agora e também o que for acrescentado depois."
+      },
+      {
+        "text": "Quase tudo nos doze projetos, porque o vínculo é herdado",
+        "why": "Certo. Um vínculo vale para tudo abaixo de onde foi feito, e Editor é amplo."
+      }
+    ]
+  },
+  "ex-4e664vs6": {
+    "prompt": "Na AWS, o serviço que registra as chamadas feitas à API é o ___.",
+    "hint": "O equivalente no Google Cloud é o Cloud Audit Logs.",
+    "blanks": [
+      {
+        "accept": [
+          "CloudTrail",
+          "Cloud Trail"
+        ]
+      }
+    ]
+  },
+  "ex-6q2qkd5a": {
+    "prompt": "Por que mandar o log de auditoria para um armazenamento numa conta separada?",
+    "hint": "Quem poderia removê-lo, de outro modo?",
+    "choices": [
+      {
+        "text": "Porque o provedor se recusa a guardar os logs dentro da própria conta auditada",
+        "why": "Ele os guarda ali por padrão. Mover é uma decisão sobre quem pode apagá-los."
+      },
+      {
+        "text": "Para que os administradores auditados não apaguem os próprios rastros",
+        "why": "Certo. Um log que os auditados podem apagar registra só o que eles decidiram deixar."
+      },
+      {
+        "text": "Para que as leituras de dados sejam registradas, o que não acontece por padrão",
+        "why": "Registrar leituras é uma configuração separada; onde o log fica não a liga."
+      },
+      {
+        "text": "Porque as entradas guardadas na mesma conta expiram em um dia",
+        "why": "Os padrões guardam noventa dias de mudanças na AWS e no Azure. O motivo é quem pode apagá-las."
+      }
+    ]
+  },
+  "ex-vgf8rbpt": {
+    "prompt": "Objetos de um bucket foram lidos por alguém que não deveria. A conta tem o CloudTrail nas configurações padrão. O que o log vai mostrar sobre as leituras?",
+    "hint": "Que tipo de chamada é registrado sem ninguém pedir?",
+    "choices": [
+      {
+        "text": "Toda chamada GetObject dos últimos noventa dias",
+        "why": "Noventa dias é o padrão para chamadas que mudam coisas. Leituras de objetos não estão entre elas."
+      },
+      {
+        "text": "As leituras, mas sem dizer quem as fez",
+        "why": "Quando uma chamada é registrada, o principal é a primeira coisa da entrada. Estas nem foram registradas."
+      },
+      {
+        "text": "Nenhum registro delas, já que ninguém configurou o registro de leituras de dados",
+        "why": "Certo. GetObject é um evento de dados, e a AWS só os registra quando alguém configura."
+      },
+      {
+        "text": "Só as leituras que foram recusadas com AccessDenied",
+        "why": "Recusas são registradas para as chamadas que entram no log. Leituras de dados não entram por padrão, permitidas ou recusadas."
+      }
+    ]
+  },
+  "ex-45sdmx0c": {
+    "prompt": "Uma função precisa ler os objetos abaixo de um prefixo de um bucket. Qual desenho segue esta aula?",
+    "hint": "Que tipo de identidade, e quanto ela deveria permitir?",
+    "choices": [
+      {
+        "text": "Uma chave de acesso numa variável de ambiente, restrita a esse prefixo",
+        "why": "O escopo está certo e a credencial não: uma chave de longa duração guardada é o que uma role existe para substituir."
+      },
+      {
+        "text": "Uma role de execução cuja política permite s3:GetObject nesse prefixo",
+        "why": "Certo. Uma role dá credenciais temporárias sem chave para guardar, e a política permite a única ação no único prefixo."
+      },
+      {
+        "text": "As credenciais da desenvolvedora que a escreveu, já que ela já tem acesso",
+        "why": "A função agiria como ela, com tudo o que ela pode fazer, e o log a culparia pelas chamadas."
+      },
+      {
+        "text": "Uma role de execução com s3:* em todo recurso, a ser apertada depois",
+        "why": "O depois raramente chega; comece do nada e acrescente a única ação."
+      }
+    ]
+  },
+  "ex-5z633c8d": {
+    "prompt": "Um programa numa máquina virtual lê um bucket pela role da máquina. Quais dois documentos precisam dizer sim?",
+    "hint": "Um deixa entrar, o outro deixa agir.",
+    "choices": [
+      {
+        "text": "O security group da máquina e a política do bucket",
+        "why": "Um security group filtra pacotes para a máquina; não tem voz sobre chamadas à API de armazenamento."
+      },
+      {
+        "text": "A aprovação do usuário root e a política do grupo",
+        "why": "O root não aprova nada no dia a dia, e uma máquina não pertence a grupo nenhum."
+      },
+      {
+        "text": "A política de confiança e a senha de console do dono",
+        "why": "Uma role não tem senha, e a senha de ninguém entra quando uma máquina assume uma."
+      },
+      {
+        "text": "As políticas de confiança e de permissões dela",
+        "why": "Certo. A política de confiança deixa a máquina assumir a role; a de permissões deixa a role ler."
+      }
+    ]
+  },
+  "ex-hhgmk4a6": {
+    "prompt": "Dentro de uma conta só, o usuário do Bruno não tem política anexada. A política do bucket example-reports permite s3:GetObject ao usuário dele. Ele consegue ler um objeto ali?",
+    "hint": "De onde pode vir um Allow dentro de uma conta só?",
+    "choices": [
+      {
+        "text": "Sim, o Allow do lado do recurso basta",
+        "why": "Certo. Entre contas os dois lados teriam de permitir; numa conta só, qualquer um dos lados basta."
+      },
+      {
+        "text": "Não: um usuário sem políticas é recusado em tudo",
+        "why": "As políticas dele não são o único lugar de onde pode vir um Allow; a política do bucket também conta."
+      },
+      {
+        "text": "Não: uma política de bucket pode negar, mas nunca permitir",
+        "why": "Políticas de recurso podem as duas coisas; esta nomeia o usuário dele e permite a ação."
+      },
+      {
+        "text": "Só depois de assumir uma role em que o bucket confia",
+        "why": "Nada aqui envolve role; a política do bucket nomeia o usuário dele diretamente."
+      }
+    ]
+  }
+}

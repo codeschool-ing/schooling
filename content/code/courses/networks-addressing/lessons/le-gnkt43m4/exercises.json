@@ -1,0 +1,775 @@
+[
+  {
+    "id": "ex-98rwzxge",
+    "version": 1,
+    "section": "when-static",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A PC is configured with a default gateway and runs no routing protocol. What kind of routing is that PC doing?",
+    "hint": "Who wrote the line, and does it ever change by itself?",
+    "choices": [
+      {
+        "text": "Dynamic, because DHCP delivered the gateway",
+        "correct": false,
+        "why": "DHCP hands over a value once. Nothing recalculates the route afterwards, which is what dynamic routing means."
+      },
+      {
+        "text": "Static",
+        "correct": true,
+        "why": "Right. A default gateway is a static route: one typed or delivered line that no protocol maintains."
+      },
+      {
+        "text": "None at all, since a PC is not a router",
+        "correct": false,
+        "why": "Every host consults a routing table before it sends a packet, PCs included."
+      },
+      {
+        "text": "Policy routing, decided by the firewall",
+        "correct": false,
+        "why": "Policy routing chooses by source or port. A plain default gateway is one destination-based line."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssgtyeqa",
+    "version": 1,
+    "section": "when-static",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these networks are a good fit for static routes? Choose all that apply.",
+    "hint": "Count the ways out.",
+    "choices": [
+      {
+        "text": "A branch office with a single link to head office",
+        "correct": true,
+        "why": "One way out: a default towards head office is the whole table."
+      },
+      {
+        "text": "A home router with one link to its provider",
+        "correct": true,
+        "why": "The same shape as the branch: a default towards the provider."
+      },
+      {
+        "text": "A campus of twenty routers with redundant paths between buildings",
+        "correct": false,
+        "why": "Many paths and failures to route around: this is what a routing protocol is for."
+      },
+      {
+        "text": "A provider pointing one customer's block down that customer's cable",
+        "correct": true,
+        "why": "The provider's half of the stub pair is a static route too."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdsq0q4d",
+    "version": 1,
+    "section": "when-static",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An engineer adds a static route for 10.40.0.0/16 to test something, and forgets it. Later OSPF learns a route for the same 10.40.0.0/16. Which one does the router use?",
+    "hint": "Lesson 14: distance decides between sources.",
+    "choices": [
+      {
+        "text": "The OSPF route, since it is newer",
+        "correct": false,
+        "why": "Age is not a criterion between sources. Administrative distance is."
+      },
+      {
+        "text": "The OSPF route, since a protocol knows the network better",
+        "correct": false,
+        "why": "The router does not judge who knows better; it compares distances, and the static one is lower."
+      },
+      {
+        "text": "Both, sharing the traffic between them",
+        "correct": false,
+        "why": "Sharing happens between equal routes from one source, not between a static and an OSPF route."
+      },
+      {
+        "text": "The forgotten static one",
+        "correct": true,
+        "why": "Right. Distance 1 beats OSPF's 110, which is the trap the section warns about."
+      }
+    ]
+  },
+  {
+    "id": "ex-edasg926",
+    "version": 1,
+    "section": "when-static",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A network has four routers in a ring, and the manager wants traffic to move to the other side of the ring whenever any cable fails, anywhere. Why do static routes not meet that requirement, even with floating routes on every router?",
+    "hint": "Which failures does a static route notice?",
+    "choices": [
+      {
+        "text": "A ring is a topology that static routes do not support",
+        "correct": false,
+        "why": "Static routes work on any topology. The problem is what they notice, not the shape."
+      },
+      {
+        "text": "Each router notices failures of its own cables and not of cables further away",
+        "correct": true,
+        "why": "Right. A cable failing two routers away changes nothing on this router, as r3 showed in the lab."
+      },
+      {
+        "text": "Floating routes are a Cisco feature and the ring runs Linux",
+        "correct": false,
+        "why": "The lab built one on Linux with a metric. The name comes from Cisco; the idea does not depend on it."
+      },
+      {
+        "text": "Four routers exceed the number of static routes a router holds",
+        "correct": false,
+        "why": "A router holds thousands of static lines. The count of routers is a matter of work, not of capacity."
+      }
+    ]
+  },
+  {
+    "id": "ex-hf0hr1ct",
+    "version": 1,
+    "section": "configuring",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `ip route add 10.20.3.0/24 via 10.20.12.2` typed on r1, what is 10.20.12.2?",
+    "hint": "It sits on a cable r1 is plugged into.",
+    "choices": [
+      {
+        "text": "pc3's address",
+        "correct": false,
+        "why": "pc3 is 10.20.3.10, inside the destination network."
+      },
+      {
+        "text": "r1's own address on the cable to r2",
+        "correct": false,
+        "why": "r1 is 10.20.12.1 on that cable. The next hop is the far end."
+      },
+      {
+        "text": "The next hop: r2's end of their shared /30",
+        "correct": true,
+        "why": "Right. r1 hands the packet to that neighbour, found with ARP on that cable."
+      },
+      {
+        "text": "r3, the router in front of pc3, two cables further on",
+        "correct": false,
+        "why": "r3 is not on any cable r1 shares with it in this path; r1 reaches it only through r2."
+      }
+    ]
+  },
+  {
+    "id": "ex-54jeqa9z",
+    "version": 1,
+    "section": "configuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the two routes towards pc3 were added, pc1's ping lost its packet with no error at all. Where did the only error message of that exchange go?",
+    "hint": "Read pc3's capture: who sent what to whom?",
+    "choices": [
+      {
+        "text": "To pc3, from r3",
+        "correct": true,
+        "why": "Right. r3 could not forward pc3's reply and told the reply's sender, which was pc3."
+      },
+      {
+        "text": "To pc1, from r1, then dropped by pc1",
+        "correct": false,
+        "why": "r1 forwarded the request fine. pc1 received nothing at all."
+      },
+      {
+        "text": "To r2, which kept it in its log",
+        "correct": false,
+        "why": "r2 forwarded the request and never saw the reply."
+      },
+      {
+        "text": "Nowhere: the reply was dropped silently by r3",
+        "correct": false,
+        "why": "r3 dropped it and said so, in the third line of pc3's capture."
+      }
+    ]
+  },
+  {
+    "id": "ex-phc480pn",
+    "version": 1,
+    "section": "configuring",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the packets of that failed ping in the order pc3's tcpdump printed them.",
+    "hint": "The reply has to exist before it can fail.",
+    "items": [
+      "Echo request from 10.20.1.10 arrives",
+      "pc3 sends its echo reply to 10.20.1.10",
+      "r3 tells pc3 that net 10.20.1.10 is unreachable"
+    ],
+    "trap": "Putting the error first assumes the request failed. It arrived, and the failure was on the way back."
+  },
+  {
+    "id": "ex-9j3dap54",
+    "version": 1,
+    "section": "configuring",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On r1 somebody types `ip route add 10.20.3.0/24 via 10.20.23.2`, r3's address on the cable between r2 and r3. Why does the kernel refuse it?",
+    "hint": "How does r1 put a frame on the wire towards its next hop?",
+    "choices": [
+      {
+        "text": "10.20.23.2 belongs to r3, and a route through r3 has to be typed on r3",
+        "correct": false,
+        "why": "Routes through r3 are typed on the routers that use them. The problem is reaching the address."
+      },
+      {
+        "text": "A /24 route needs a next hop inside a /24",
+        "correct": false,
+        "why": "The size of the destination says nothing about the next hop's network."
+      },
+      {
+        "text": "No network on r1 contains 10.20.23.2, so ARP has no cable to use",
+        "correct": true,
+        "why": "Right. A next hop must be on a connected network, because the frame goes to its MAC address."
+      },
+      {
+        "text": "The route duplicates the one already typed on r2",
+        "correct": false,
+        "why": "Two routers holding routes to the same network is normal; each holds its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-2afftrxj",
+    "version": 1,
+    "section": "configuring",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On Linux, a route typed with `ip route add` is lost when the machine ___, which is why routers keep routes in saved configuration.",
+    "hint": "Turning it off and on again.",
+    "blanks": [
+      {
+        "accept": [
+          "restarts",
+          "reboots",
+          "restarted",
+          "rebooted",
+          "restart",
+          "reboot"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-86aywcc7",
+    "version": 1,
+    "section": "return-path",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pc3 sent its replies with a TTL of 64 and pc1 printed ttl=61. How many routers did each reply cross?",
+    "hint": "Each router takes one off.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "routers"
+  },
+  {
+    "id": "ex-m3937tpt",
+    "version": 1,
+    "section": "return-path",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the chain r1, r2, r3, joining pc1's network and pc3's network in both directions took how many static routes in total?",
+    "hint": "Two routers each way.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "routes"
+  },
+  {
+    "id": "ex-bmxnsn65",
+    "version": 1,
+    "section": "return-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "r2's table shows `10.20.1.0/24 via 10.20.12.1 dev eth1` with no `proto kernel`, and `10.20.12.0/30 ... proto kernel scope link`. What does the difference tell you?",
+    "hint": "Where does each line come from?",
+    "choices": [
+      {
+        "text": "The first is broken and the kernel will remove it",
+        "correct": false,
+        "why": "It works: the ping used it. The missing word is about origin, not health."
+      },
+      {
+        "text": "One was typed, the other derived from eth1",
+        "correct": true,
+        "why": "Right. A connected route is derived from the interface's address; a static one was added by somebody."
+      },
+      {
+        "text": "The first is preferred because it carries no protocol",
+        "correct": false,
+        "why": "They are for different prefixes, so they never compete."
+      },
+      {
+        "text": "The second was learned from r1 through OSPF",
+        "correct": false,
+        "why": "No protocol runs in this lab. OSPF lines would say proto ospf."
+      }
+    ]
+  },
+  {
+    "id": "ex-g6yj4qgf",
+    "version": 1,
+    "section": "return-path",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "r1 has no route to 10.20.23.0/30, yet pc1's traceroute printed 10.20.23.2 at hop 3. How did that answer reach pc1?",
+    "hint": "What was the destination of r3's answer?",
+    "choices": [
+      {
+        "text": "r1 learned 10.20.23.0/30 from the traceroute packet itself",
+        "correct": false,
+        "why": "Routers do not learn routes from the packets they forward."
+      },
+      {
+        "text": "r3 answered from 10.20.3.1, and traceroute printed the address of the interface instead",
+        "correct": false,
+        "why": "traceroute prints the source it received. r3 answered from the interface the probe arrived on."
+      },
+      {
+        "text": "The answer was addressed to 10.20.1.10, and every router back has a route for that",
+        "correct": true,
+        "why": "Right. Routes are looked up for the destination; 10.20.23.2 was only the source."
+      },
+      {
+        "text": "r1 used its default route for it",
+        "correct": false,
+        "why": "r1 has no default route in this lab; its table is connected routes and typed ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-jn4sbqgn",
+    "version": 1,
+    "section": "return-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A ping from pc1 to pc3 fails. Which test tells you whether the forward or the return direction is broken?",
+    "hint": "A ping tests both directions at once.",
+    "choices": [
+      {
+        "text": "A longer ping from pc1, with more packets",
+        "correct": false,
+        "why": "More packets through the same two directions answer the same question again."
+      },
+      {
+        "text": "A capture on pc3 while pc1 pings",
+        "correct": true,
+        "why": "Right. If the request shows up at pc3, the forward path works and the problem is on the way back."
+      },
+      {
+        "text": "Reading r1's table",
+        "correct": false,
+        "why": "r1's table covers only r1's part of the forward path."
+      },
+      {
+        "text": "A ping from pc1 to its own gateway",
+        "correct": false,
+        "why": "That tests pc1's cable to r1, which was already working."
+      }
+    ]
+  },
+  {
+    "id": "ex-2peja076",
+    "version": 1,
+    "section": "floating-routes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "r1 holds `10.20.3.0/24 via 10.20.12.2 dev eth1` and `10.20.3.0/24 via 10.20.13.2 dev eth3 metric 200`. Which one does it use while both cables work?",
+    "hint": "Lower metric wins.",
+    "choices": [
+      {
+        "text": "The one via 10.20.13.2, being the most recent",
+        "correct": false,
+        "why": "Order of entry does not decide; the metric does."
+      },
+      {
+        "text": "Both, alternating packet by packet",
+        "correct": false,
+        "why": "Alternating needs equal metrics. 0 and 200 are not equal."
+      },
+      {
+        "text": "The one via 10.20.12.2",
+        "correct": true,
+        "why": "Right. With no metric shown its metric is 0, which beats 200."
+      },
+      {
+        "text": "Neither until one is marked as backup with a flag",
+        "correct": false,
+        "why": "There is no backup flag. A worse metric is what makes it the backup."
+      }
+    ]
+  },
+  {
+    "id": "ex-6jnwr5ga",
+    "version": 1,
+    "section": "floating-routes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the cable from r1 to r2 was pulled, r1's primary route showed `dead linkdown`. What does that mean?",
+    "hint": "Look at the interface it leaves by.",
+    "choices": [
+      {
+        "text": "The route was deleted, and the line is shown only as a record of it",
+        "correct": false,
+        "why": "It is still in the table, which is why it returns to use when the signal does."
+      },
+      {
+        "text": "Its interface has lost its carrier, so the route is not used",
+        "correct": true,
+        "why": "Right. eth1 has no signal, and the kernel stops using routes that leave by it."
+      },
+      {
+        "text": "r2 told r1 that pc3 had gone",
+        "correct": false,
+        "why": "Static routing has no messages between routers. r1 saw its own interface go down."
+      },
+      {
+        "text": "pc3 stopped answering pings",
+        "correct": false,
+        "why": "pc3 was fine. The state is about r1's cable, not about the destination."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpy8rmvt",
+    "version": 1,
+    "section": "floating-routes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the cable from r1 to r2 pulled, `ip route get 10.20.1.10` on r3 still answered `via 10.20.23.1 dev eth2`. Why did r3 not switch to its backup?",
+    "hint": "Which of r3's cables lost its signal?",
+    "choices": [
+      {
+        "text": "r3's backup had a typo in its next hop",
+        "correct": false,
+        "why": "10.20.13.1 is r1's correct address on the spare cable."
+      },
+      {
+        "text": "The kernel waits a few minutes before switching",
+        "correct": false,
+        "why": "r1 switched straight away. r3 had nothing to switch for."
+      },
+      {
+        "text": "Backups on Linux apply in one direction",
+        "correct": false,
+        "why": "r1's backup worked in its direction; r3's would have too, given a reason."
+      },
+      {
+        "text": "None of r3's own cables failed",
+        "correct": true,
+        "why": "Right. The broken cable is beyond r2, out of r3's sight."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rpr3vk4",
+    "version": 1,
+    "section": "floating-routes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc3's traceroute to pc1 ended with `10.20.23.1  0.273 ms !N`. Which router answered, and what did it mean?",
+    "hint": "10.20.23.1 is on the cable between r2 and r3.",
+    "choices": [
+      {
+        "text": "r2: it has no usable route to pc1's network",
+        "correct": true,
+        "why": "Right. r2's only route to 10.20.1.0/24 left by the pulled cable."
+      },
+      {
+        "text": "r3: its backup route is down",
+        "correct": false,
+        "why": "r3 is hop 1, 10.20.3.1. Its backup was never used."
+      },
+      {
+        "text": "r1: pc1 refused the traceroute",
+        "correct": false,
+        "why": "The probes never got as far as r1."
+      },
+      {
+        "text": "r2: pc1's address does not exist on that network any more",
+        "correct": false,
+        "why": "!N is about the network being unreachable, not the host being absent."
+      }
+    ]
+  },
+  {
+    "id": "ex-cs02115h",
+    "version": 1,
+    "section": "floating-routes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A second static route to the same network, with a worse metric, that takes over only when the first one goes away is called a ___ route.",
+    "hint": "It stays above the primary, unused, until needed.",
+    "blanks": [
+      {
+        "accept": [
+          "floating"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3ed9pspg",
+    "version": 1,
+    "section": "stub-and-default",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which prefix is a default route?",
+    "hint": "It matches every address.",
+    "choices": [
+      {
+        "text": "255.255.255.255/32",
+        "correct": false,
+        "why": "That is one address, the broadcast one, and the longest prefix possible."
+      },
+      {
+        "text": "127.0.0.0/8",
+        "correct": false,
+        "why": "That is the loopback block, which never leaves the machine."
+      },
+      {
+        "text": "0.0.0.0/0",
+        "correct": true,
+        "why": "Right. A prefix of length 0 matches everything, and loses to any longer match."
+      },
+      {
+        "text": "10.0.0.0/8",
+        "correct": false,
+        "why": "That covers one private block and nothing outside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3wdqt08",
+    "version": 1,
+    "section": "stub-and-default",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After r3 switched to a default via 10.20.13.1, pc1's ping printed ttl=62. How many routers did each reply cross?",
+    "hint": "64 minus what you see.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "routers"
+  },
+  {
+    "id": "ex-64302zgp",
+    "version": 1,
+    "section": "stub-and-default",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two routers, A and B, are each given a default route pointing at the other. A packet arrives for an address neither has a specific route for. What happens to it?",
+    "hint": "Follow it for a few hops.",
+    "choices": [
+      {
+        "text": "The first router drops it with Destination Net Unreachable",
+        "correct": false,
+        "why": "A default matches everything, so neither router lacks a route; neither refuses."
+      },
+      {
+        "text": "It bounces between A and B until its TTL runs out",
+        "correct": true,
+        "why": "Right. Each forwards it to the other, and the TTL is what ends the loop."
+      },
+      {
+        "text": "B notices the loop and sends it back to its source",
+        "correct": false,
+        "why": "IP routers keep no memory of the packets they forwarded, so there is nothing to notice with."
+      },
+      {
+        "text": "A and B agree on a better path between them",
+        "correct": false,
+        "why": "Static routes involve no agreement; that is what a routing protocol adds."
+      }
+    ]
+  },
+  {
+    "id": "ex-814gt4ww",
+    "version": 1,
+    "section": "stub-and-default",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A branch router has one link to head office and holds a default route towards it. What does head office need so that replies reach the branch?",
+    "hint": "A stub needs a default; the network around it needs something else.",
+    "choices": [
+      {
+        "text": "Its own default route towards the branch",
+        "correct": false,
+        "why": "Head office has other destinations too; a default towards the branch would send everything there."
+      },
+      {
+        "text": "A route for the branch's block pointing down that link",
+        "correct": true,
+        "why": "Right. The specific route back is the other half of the stub pair."
+      },
+      {
+        "text": "Nothing, since the branch already has a default route of its own",
+        "correct": false,
+        "why": "The branch's default covers traffic leaving the branch. Replies coming back need a route at head office."
+      },
+      {
+        "text": "A floating route to the branch with metric 200",
+        "correct": false,
+        "why": "A floating route is a backup behind a primary; here there is no primary yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qdfsp6e",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of this lesson's lab in the order that makes pc1 and pc3 talk, from nothing.",
+    "hint": "Out, back, backup, simplify.",
+    "items": [
+      "Routes towards 10.20.3.0/24 on r1 and r2",
+      "Routes towards 10.20.1.0/24 on r3 and r2",
+      "Backup routes with metric 200 over the spare cable",
+      "A single default on r3 in place of its specific routes"
+    ],
+    "trap": "The return routes come second because the ping failed without them, even with the forward routes in place."
+  },
+  {
+    "id": "ex-eqbndbb8",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each output from this lesson to what it showed.",
+    "hint": "One per stage of the lab.",
+    "pairs": [
+      {
+        "left": "Destination Net Unreachable from 10.20.1.1",
+        "right": "r1 had no route to pc3's network"
+      },
+      {
+        "left": "ICMP net 10.20.1.10 unreachable, seen on pc3",
+        "right": "r3 had no way back to pc1"
+      },
+      {
+        "left": "dead linkdown",
+        "right": "r1's own cable lost its signal"
+      },
+      {
+        "left": "!N from 10.20.23.1",
+        "right": "r2 could not reach pc1 after the cable was pulled"
+      }
+    ],
+    "right_distractors": [
+      "r3 refused the traceroute probes"
+    ]
+  },
+  {
+    "id": "ex-p3sq5717",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company has a main link and a backup link to its provider, on two different routers. A floating static route on each router covers the loss of its own link. Which failure leaves the company half working, like r3 in the lab?",
+    "hint": "Which failures change nothing on the router that has to react?",
+    "choices": [
+      {
+        "text": "The main router's cable to the provider losing its signal",
+        "correct": false,
+        "why": "That is the router's own cable: the floating route takes over at once, as r1's did."
+      },
+      {
+        "text": "The backup router losing power",
+        "correct": false,
+        "why": "Nothing was flowing through it, so the main path carries on."
+      },
+      {
+        "text": "A failure inside the provider, beyond the main link, with the link's signal still up",
+        "correct": true,
+        "why": "Right. Nothing changes on any of the company's cables, so nothing switches."
+      },
+      {
+        "text": "Someone unplugging a PC inside the company",
+        "correct": false,
+        "why": "That affects one PC, and no route depends on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ja78bd0",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A network with one way in and one way out, which no traffic crosses on its way elsewhere, is called a ___ network.",
+    "hint": "The same English word is used in Portuguese.",
+    "blanks": [
+      {
+        "accept": [
+          "stub"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1mhmn82c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about static routes matches what the lab showed?",
+    "hint": "Think of r1 and r3 after the cable was pulled.",
+    "choices": [
+      {
+        "text": "They react to a failure of the router's own interface",
+        "correct": true,
+        "why": "Right. r1 moved to its backup when eth1 lost its carrier."
+      },
+      {
+        "text": "They react to any failure on the path, after a timer",
+        "correct": false,
+        "why": "r3 never reacted. There is no timer and no message in static routing."
+      },
+      {
+        "text": "They ignore interface state entirely",
+        "correct": false,
+        "why": "The kernel marked r1's primary dead linkdown and stopped using it."
+      },
+      {
+        "text": "They are removed from the table when a cable is pulled",
+        "correct": false,
+        "why": "The route stayed listed, marked dead, ready for the cable to come back."
+      }
+    ]
+  }
+]

@@ -1,0 +1,27 @@
+---
+title: Para que um júnior é contratado
+version: 1
+---
+
+Uma empresa que contrata um júnior não está comprando conhecimento. Está comprando **alguém que termina
+partes pequenas e definidas de trabalho, e que pergunta antes que um problema pequeno vire um grande**. Todo
+o resto ela espera ensinar.
+
+Isso muda como são as primeiras semanas. Um júnior recebe uma tarefa que outra pessoa já recortou no tamanho
+certo: corrigir este bug, acrescentar este campo, redefinir estas contas, documentar este procedimento.
+Alguém mais sênior decidiu que valia a pena e, mais ou menos, como. O trabalho do júnior é fazer direito,
+dizer quando terminou e dizer cedo quando não vai terminar.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Quatro degraus de uma escada, de baixo para cima. Intern, estágio no Brasil: aprender é o trabalho, com supervisão o tempo todo. Junior, júnior: entrega tarefas pequenas e definidas e pergunta muito. Mid-level, pleno: entrega uma parte inteira e pergunta quando importa. Senior, sênior: decide como, e destrava outras pessoas.\"><defs><marker id=\"lad01-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"40\" y=\"26\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">em inglês</text><text x=\"170\" y=\"26\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">no Brasil</text><text x=\"290\" y=\"26\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">o que se espera</text><rect x=\"30\" y=\"40\" width=\"660\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"40\" y=\"65\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">senior</text><text x=\"170\" y=\"65\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">sênior</text><text x=\"290\" y=\"65\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">decide como; destrava outras pessoas</text><rect x=\"30\" y=\"90\" width=\"660\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"40\" y=\"115\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">mid-level</text><text x=\"170\" y=\"115\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">pleno</text><text x=\"290\" y=\"115\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">entrega uma parte inteira; pergunta quando importa</text><rect x=\"30\" y=\"140\" width=\"660\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"40\" y=\"165\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">junior</text><text x=\"170\" y=\"165\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">júnior</text><text x=\"290\" y=\"165\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">entrega tarefas pequenas e definidas; pergunta muito</text><rect x=\"30\" y=\"190\" width=\"660\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"40\" y=\"215\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">intern</text><text x=\"170\" y=\"215\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">estágio</text><text x=\"290\" y=\"215\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">aprender é o trabalho; supervisão o tempo todo</text></svg>", "caption": "O que muda ao subir não é o quanto você sabe, e sim o quanto de uma tarefa pode ser entregue a você sem alguém conferir. Um júnior recebe uma parte pequena, e espera-se que pergunte."}
+```
+
+A escada é a mesma ideia, um degrau por vez. Subir nela é **receber uma parte maior com menos conferência**,
+e não saber mais comandos. Uma pessoa plena recebe uma funcionalidade inteira, ou a rede de um escritório
+inteiro, e pergunta quando uma decisão importa. Um sênior decide como o trabalho deve ser feito e passa parte
+do dia destravando todo mundo.
+
+Duas consequências seguem para o resto do curso. A primeira é que **perguntar faz parte da descrição do
+cargo**, e não é uma fraqueza a esconder na entrevista. A segunda é que o que você mostra a uma empresa, no
+currículo e na entrevista, é evidência de que você termina as coisas. O projeto de portfólio foi feito
+exatamente para isso.

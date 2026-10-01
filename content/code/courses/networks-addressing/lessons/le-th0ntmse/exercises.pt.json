@@ -1,0 +1,495 @@
+{
+  "ex-1k41rfkw": {
+    "prompt": "Antes de qualquer VLAN ser configurada, o pc2 capturou o pedido ARP do pc1 por 10.20.10.23, uma máquina de outro departamento. Por que o pedido chegou ao pc2?",
+    "hint": "Olhe a coluna PVID da primeira listagem.",
+    "choices": [
+      {
+        "text": "O endereço do pc2 estava na sub-rede do pc1",
+        "why": "O pc2 é 10.20.20.22. Um switch entrega um broadcast pela VLAN, e não lê o endereço IP."
+      },
+      {
+        "text": "Toda porta estava na VLAN 1: um domínio de broadcast",
+        "why": "Isso. Uma VLAN é um domínio de broadcast, e um pedido ARP vai para ele inteiro."
+      },
+      {
+        "text": "O sw1 ainda não tinha aprendido onde estava o MAC do pc3",
+        "why": "Isso inunda um unicast desconhecido. Este quadro foi para ff:ff:ff:ff:ff:ff, que chega ao domínio inteiro de qualquer jeito."
+      },
+      {
+        "text": "O tcpdump faz a placa ouvir outras VLANs",
+        "why": "Uma captura mostra o que chega à placa. Ela não puxa quadros que o switch não mandou para aquela porta."
+      }
+    ]
+  },
+  "ex-vqkksk3t": {
+    "prompt": "Quais são motivos para dividir uma rede comutada em VLANs? Marque todas que se aplicam.",
+    "hint": "Tamanho, controle, organização.",
+    "choices": [
+      {
+        "text": "Manter cada broadcast dentro de um grupo menor de máquinas",
+        "why": "O tráfego de broadcast cresce com o número de máquinas no domínio."
+      },
+      {
+        "text": "Criptografar os quadros entre duas portas",
+        "why": "Uma VLAN não criptografa nada. O tag é um número às claras."
+      },
+      {
+        "text": "Fazer o tráfego entre departamentos passar por um roteador, onde uma regra se aplica",
+        "why": "A aula 22 filtra exatamente nesse ponto."
+      },
+      {
+        "text": "Impedir que um estranho ligue um laptop numa porta livre",
+        "why": "Isso é segurança de porta ou 802.1X, da aula 18. Uma porta livre continua em alguma VLAN."
+      },
+      {
+        "text": "Agrupar máquinas por função em vários switches",
+        "why": "A VLAN do financeiro existe em todo andar sem um cabo próprio."
+      }
+    ]
+  },
+  "ex-c98s2xhg": {
+    "prompt": "Cada VLAN é um domínio de ___ separado, então um pedido ARP enviado na VLAN 10 nunca chega a uma porta da VLAN 20.",
+    "hint": "O que a aula 18 diz que um roteador encerra.",
+    "blanks": [
+      {
+        "accept": [
+          "broadcast",
+          "difusão"
+        ]
+      }
+    ]
+  },
+  "ex-t7fsrt8s": {
+    "prompt": "Uma escola põe funcionários e alunos num switch, cada grupo na sua VLAN, sem roteador entre as VLANs. Um aluno dá ao laptop um endereço fixo copiado da sub-rede dos funcionários e o liga numa porta de aluno. Quais máquinas ele alcança?",
+    "hint": "A porta decide a VLAN; o endereço decide por quem o laptop pergunta.",
+    "choices": [
+      {
+        "text": "As dos funcionários, já que o endereço está na sub-rede deles",
+        "why": "O endereço decide por quem ele pergunta. Os pedidos ARP ficam na VLAN dos alunos, onde não há máquina de funcionário."
+      },
+      {
+        "text": "Os dois grupos, porque dividem um switch",
+        "why": "Dividir o equipamento é justamente o que a VLAN torna irrelevante."
+      },
+      {
+        "text": "As dos alunos, que estão na mesma VLAN",
+        "why": "Estão no mesmo domínio de broadcast, mas em outra sub-rede, e sem roteador o laptop não tem como alcançar outra sub-rede."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "Isso. A VLAN dele não tem máquina na sua sub-rede, e a sub-rede que ele alega está numa VLAN que ele não alcança. O experimento do pc5 nesta aula é a mesma situação."
+      }
+    ]
+  },
+  "ex-qtt5mykb": {
+    "prompt": "Depois que a p1 do sw1 e a p1 do sw2 foram para a VLAN 10, o pc1 perdeu todo ping para o pc3. O que faltava?",
+    "hint": "Leia a linha da p24 na listagem do sw1.",
+    "choices": [
+      {
+        "text": "Um roteador entre o pc1 e o pc3",
+        "why": "Estão na mesma VLAN e na mesma sub-rede, então nenhum roteador entra."
+      },
+      {
+        "text": "Uma configuração de VLAN na placa de rede do próprio pc1",
+        "why": "A VLAN de uma porta de acesso pertence à porta. Nada mudou no pc1 nesta aula."
+      },
+      {
+        "text": "A VLAN 10 na p24",
+        "why": "Isso. A p24 continuava só na VLAN 1, então o sw1 não tinha porta na VLAN 10 para mandar o quadro."
+      },
+      {
+        "text": "Um endereço de gateway configurado no pc3",
+        "why": "O pc3 responde direto a uma máquina da própria sub-rede, sem gateway."
+      }
+    ]
+  },
+  "ex-s0kbj613": {
+    "prompt": "Em `bridge vlan add dev p1 vid 10 pvid untagged`, o que `pvid` diz?",
+    "hint": "É sobre quadros entrando.",
+    "choices": [
+      {
+        "text": "Quadros da VLAN 10 saem da p1 sem tag",
+        "why": "Isso é o `untagged`, que trata dos quadros saindo."
+      },
+      {
+        "text": "A p1 fica na VLAN 10 e em nenhuma outra VLAN a partir de agora",
+        "why": "`vid 10` acrescenta uma participação e não remove nenhuma. A VLAN 1 precisou do seu próprio `del`."
+      },
+      {
+        "text": "A p1 é o caminho da VLAN até o roteador",
+        "why": "Nada neste comando envolve um roteador."
+      },
+      {
+        "text": "Quadros sem tag que chegam na p1 entram na VLAN 10",
+        "why": "Isso. PVID é o port VLAN ID: onde um quadro sem tag é colocado."
+      }
+    ]
+  },
+  "ex-zh5zm50c": {
+    "prompt": "Ligue cada parte da configuração da porta de acesso ao que ela faz.",
+    "hint": "Participação, entrada, saída e o padrão que sobrou.",
+    "pairs": [
+      {
+        "left": "vid 10",
+        "right": "torna a porta membro da VLAN 10"
+      },
+      {
+        "left": "pvid",
+        "right": "põe na VLAN os quadros sem tag que chegam"
+      },
+      {
+        "left": "untagged",
+        "right": "manda os quadros da VLAN para fora sem tag"
+      },
+      {
+        "left": "bridge vlan del dev p1 vid 1",
+        "right": "tira a porta da VLAN padrão"
+      }
+    ],
+    "right_distractors": [
+      "dá à porta um endereço IP na VLAN"
+    ]
+  },
+  "ex-0sq9vvcv": {
+    "prompt": "Um colega muda o cabo do pc1 da p1 do sw1, na VLAN 10, para a p2, na VLAN 20, e não muda mais nada. O que acontece com o ping do pc1 para o pc3?",
+    "hint": "A VLAN pertence à porta, não ao PC.",
+    "choices": [
+      {
+        "text": "Falha, porque o pc1 agora está na VLAN 20",
+        "why": "Isso. A VLAN veio com a porta. O endereço do pc1 não mudou, e não combina mais com a VLAN em que ele está."
+      },
+      {
+        "text": "Funciona, porque o endereço do pc1 ainda diz 10.20.10.0/24",
+        "why": "O endereço não escolhe a VLAN. A porta escolhe."
+      },
+      {
+        "text": "Funciona assim que o sw1 aprende o MAC do pc1 na p2",
+        "why": "O sw1 aprende, na tabela da VLAN 20. A VLAN 10 do pc3 continua sem ver os quadros do pc1."
+      },
+      {
+        "text": "Falha, porque a p2 é um tronco",
+        "why": "A p2 é uma porta de acesso na VLAN 20; o tronco é a p24."
+      }
+    ]
+  },
+  "ex-3792vkcg": {
+    "prompt": "Depois de `bridge vlan add dev p24 vid 10` e `vid 20` nos dois switches, o que é a p24?",
+    "hint": "Conte as VLANs na listagem dela.",
+    "choices": [
+      {
+        "text": "Uma porta de acesso na VLAN 20, a última adicionada",
+        "why": "Adicionar uma VLAN não substitui nada. A listagem mostra 1, 10 e 20."
+      },
+      {
+        "text": "Um tronco, levando as VLANs 10 e 20 com tag e a VLAN 1 sem tag",
+        "why": "Isso. Uma porta em várias VLANs, com a VLAN escrita em cada quadro, menos no da VLAN sem tag."
+      },
+      {
+        "text": "Duas portas lógicas, uma por VLAN, num cabo",
+        "why": "É uma porta com uma configuração. Várias VLANs numa porta é o que um tronco é."
+      },
+      {
+        "text": "Uma porta só na VLAN 1, que ainda é o PVID dela",
+        "why": "O PVID diz só para onde vão os quadros sem tag. A 10 e a 20 passam com tag."
+      }
+    ]
+  },
+  "ex-nwzakd1b": {
+    "prompt": "Uma VLAN 30 é criada para impressoras: a p5 do sw1 e a p6 do sw2 viram portas de acesso na VLAN 30, e as duas impressoras ainda não se enxergam. Com o tronco do laboratório como a aula o deixou, qual é a correção?",
+    "hint": "Um tronco leva as VLANs de que é membro, em cada ponta.",
+    "choices": [
+      {
+        "text": "Adicionar a VLAN 30 à p24 só no sw1, onde os quadros começam",
+        "why": "As respostas fazem o caminho contrário, e o sw2 recusa uma VLAN de que a p24 dele não é membro."
+      },
+      {
+        "text": "Fazer da VLAN 30 o PVID da p24 no sw1",
+        "why": "Aí os quadros das impressoras passam sem tag e caem na VLAN sem tag do sw2, que é a 1: o descompasso da última seção."
+      },
+      {
+        "text": "Dar a cada impressora um gateway na VLAN 30",
+        "why": "Duas impressoras numa VLAN e numa sub-rede falam direto. O que falta é o tronco."
+      },
+      {
+        "text": "Adicionar a VLAN 30 à p24 nos dois switches",
+        "why": "Isso. Uma VLAN só existe nas portas que são membros dela, e o tronco é uma porta em cada ponta."
+      }
+    ]
+  },
+  "ex-z9h7w3k6": {
+    "prompt": "Dois switches precisam levar 12 VLANs entre eles. Sem troncos, com um cabo por VLAN, quantas portas de switch esses cabos ocupam, contando os dois switches?",
+    "hint": "Um cabo tem duas pontas.",
+    "unit": "portas"
+  },
+  "ex-89qsbxt2": {
+    "prompt": "Um servidor roda duas máquinas virtuais, uma na VLAN 10 e outra na VLAN 20, por uma única placa de rede. Como a porta do switch em que ele se liga deve ser configurada?",
+    "hint": "Um cabo, duas VLANs.",
+    "choices": [
+      {
+        "text": "Como porta de acesso na VLAN 10, a VLAN do próprio servidor",
+        "why": "Aí os quadros da máquina da VLAN 20 caem na VLAN 10."
+      },
+      {
+        "text": "Como porta de acesso na VLAN 1, que alcança todas as VLANs",
+        "why": "A VLAN 1 é uma VLAN como as outras e não alcança nada fora dela."
+      },
+      {
+        "text": "Como tronco levando as VLANs 10 e 20, com tag",
+        "why": "Isso. O próprio software do servidor tira os tags e entrega cada quadro à máquina certa."
+      },
+      {
+        "text": "Como duas portas de acesso dividindo o cabo",
+        "why": "Uma porta tem uma configuração. Levar duas VLANs nela é o que um tronco é."
+      }
+    ]
+  },
+  "ex-hkrcxdwp": {
+    "prompt": "Na p24 o quadro do ping tinha 102 bytes; na porta de acesso do pc3, o mesmo quadro tinha 98. Quantos bytes tem o tag 802.1Q?",
+    "hint": "Subtraia.",
+    "unit": "bytes"
+  },
+  "ex-vnzvaazn": {
+    "prompt": "O campo VID tem 12 bits, e dois dos seus valores são reservados. Quantos números de VLAN podem ser usados?",
+    "hint": "2 elevado a 12, menos o 0 e o 4095.",
+    "unit": "VLANs"
+  },
+  "ex-q9dpv1qp": {
+    "prompt": "Ponha os campos de um quadro com tag na p24 na ordem em que viajam, a partir do primeiro byte.",
+    "hint": "O tag fica depois dos dois endereços.",
+    "items": [
+      "MAC de destino",
+      "MAC de origem",
+      "TPID, 0x8100",
+      "TCI: PCP, DEI e VID",
+      "EtherType, 0x0800",
+      "O pacote IP"
+    ],
+    "trap": "O tag entra depois dos dois endereços MAC, onde ficava o EtherType, e o EtherType original vai para depois dele."
+  },
+  "ex-kzr39krq": {
+    "prompt": "O tcpdump do pc3 mostrou o echo request do pc1 como `ethertype IPv4`, com 98 bytes, sem 802.1Q. Por que não havia tag?",
+    "hint": "Onde um tag é posto, e onde é tirado?",
+    "choices": [
+      {
+        "text": "A placa de rede do pc3 o tirou na chegada",
+        "why": "O pc3 nunca recebeu um tag. Uma porta de acesso manda os quadros da VLAN 10 sem tag."
+      },
+      {
+        "text": "O pc1 só põe tag quando manda para outro switch",
+        "why": "O pc1 não põe tag em nada. Quem pôs o tag na p24 foi o sw1."
+      },
+      {
+        "text": "O tcpdump esconde o tag sem a opção -v",
+        "why": "Na p24, as mesmas opções do tcpdump mostraram o tag."
+      },
+      {
+        "text": "O sw2 o tirou quando o quadro saiu por uma porta de acesso",
+        "why": "Isso. O tag só existe no tronco: posto na entrada da p24, tirado na saída."
+      }
+    ]
+  },
+  "ex-spnswpdr": {
+    "prompt": "Em `vlan 10, p 0` do tcpdump, o 10 vem do campo ___ de 12 bits e o 0 do campo ___ de 3 bits.",
+    "hint": "Duas das três partes do TCI.",
+    "blanks": [
+      {
+        "accept": [
+          "VID",
+          "VLAN ID",
+          "identificador de VLAN"
+        ]
+      },
+      {
+        "accept": [
+          "PCP",
+          "prioridade",
+          "priority"
+        ]
+      }
+    ]
+  },
+  "ex-9wz91tq8": {
+    "prompt": "O pc5 é 10.20.10.25/24 numa porta da VLAN 20. O ping do pc1 para ele falha, a tabela de vizinhos do pc1 diz INCOMPLETE e o pc5 captura 0 pacotes ARP. O que aconteceu?",
+    "hint": "Para onde foi o broadcast do pc1?",
+    "choices": [
+      {
+        "text": "O pedido ARP ficou na VLAN 10 e nunca chegou à porta do pc5",
+        "why": "Isso. Ele cruzou o tronco com tag 10 e chegou à porta do pc3, a única porta da VLAN 10 no sw2."
+      },
+      {
+        "text": "O pc5 recebeu o pedido e não respondeu",
+        "why": "A captura do pc5 tem 0 pacotes. Nada chegou."
+      },
+      {
+        "text": "O tronco descartou o pedido por estar sem tag",
+        "why": "Ele passou com tag da VLAN 10 e chegou à porta do pc3."
+      },
+      {
+        "text": "O pc1 precisava de gateway para alcançar a própria sub-rede",
+        "why": "Uma máquina da mesma sub-rede é alcançada direto. O que os separa é a VLAN."
+      }
+    ]
+  },
+  "ex-h1c87hfj": {
+    "prompt": "A p24 do sw1 tem a VLAN 10 como VLAN sem tag, e a p24 do sw2 tem a VLAN 20. Qual máquina o pc1, na VLAN 10, alcança?",
+    "hint": "Siga um quadro sem tag para dentro do sw2.",
+    "choices": [
+      {
+        "text": "O pc3, na VLAN 10 do sw2",
+        "why": "Os quadros do pc1 chegam ao sw2 sem tag e vão para a VLAN 20. O pc3 está na 10."
+      },
+      {
+        "text": "O pc2, na VLAN 20 do sw1",
+        "why": "No sw1 nada mudou: as VLANs 10 e 20 continuam separadas ali."
+      },
+      {
+        "text": "O pc5, na VLAN 20 do sw2",
+        "why": "Isso. Sem tag no sw1, para a VLAN 20 no sw2, onde está o pc5 com um endereço na sub-rede do pc1."
+      },
+      {
+        "text": "Nenhuma máquina do outro lado do tronco, porque os números das VLANs diferem",
+        "why": "O tronco levou os quadros do pc1 sem tag, e o sw2 os aceitou na sua própria VLAN sem tag."
+      }
+    ]
+  },
+  "ex-x4h729qe": {
+    "prompt": "Quais configurações protegem a VLAN nativa de um tronco? Marque todas que se aplicam.",
+    "hint": "A correção do laboratório, mais o que vai em volta dela.",
+    "choices": [
+      {
+        "text": "O mesmo número de VLAN sem uso nas duas pontas",
+        "why": "É a correção do laboratório: 999 nos dois switches."
+      },
+      {
+        "text": "Usuários mantidos na VLAN 1, a que todo switch conhece",
+        "why": "A VLAN 1 é para onde todo erro volta. Mantenha usuários fora dela."
+      },
+      {
+        "text": "Nenhuma porta de usuário na VLAN nativa",
+        "why": "Assim um quadro sem tag no tronco cai onde ninguém escuta."
+      },
+      {
+        "text": "Uma VLAN nativa diferente em cada ponta, para ninguém adivinhar",
+        "why": "É o descompasso que o laboratório mostrou: duas VLANs soldadas."
+      },
+      {
+        "text": "Portas de usuário fixas como acesso, com negociação de tronco desligada",
+        "why": "Uma porta que aceita virar tronco quando pedem é uma porta para todas as VLANs."
+      }
+    ]
+  },
+  "ex-d83nwjfk": {
+    "prompt": "O que é a VLAN nativa de um tronco?",
+    "hint": "Toda outra VLAN no tronco leva tag.",
+    "choices": [
+      {
+        "text": "A VLAN de número mais baixo no switch",
+        "why": "É uma configuração, escolhida por tronco. O laboratório usou 999."
+      },
+      {
+        "text": "A VLAN em que fica o endereço do próprio switch",
+        "why": "Isso é uma VLAN de gerência, outra ideia."
+      },
+      {
+        "text": "A VLAN que o tronco leva com prioridade 0",
+        "why": "Prioridade é o campo PCP, dentro de cada tag. A VLAN nativa não tem tag nenhum."
+      },
+      {
+        "text": "A VLAN que cruza o tronco sem tag",
+        "why": "Isso. É o termo da Cisco; o padrão chama de PVID da porta."
+      }
+    ]
+  },
+  "ex-edm4kq9h": {
+    "prompt": "Depois da correção, a VLAN nativa nas duas pontas da p24 é a 999, e nenhuma porta é de acesso na VLAN 999. O que acontece com um quadro sem tag que chega na p24?",
+    "hint": "O PVID decide.",
+    "choices": [
+      {
+        "text": "Vai para a VLAN 1, a padrão",
+        "why": "A VLAN 1 não é mais o PVID da p24. A 999 é."
+      },
+      {
+        "text": "Entra na VLAN 999, onde não há porta de usuário para recebê-lo",
+        "why": "Isso. Cai numa VLAN onde ninguém escuta."
+      },
+      {
+        "text": "Recebe o tag da VLAN 10 e é entregue ao pc3",
+        "why": "Um switch põe um quadro sem tag no PVID, e o PVID é 999."
+      },
+      {
+        "text": "Chega a todas as VLANs, por não ter tag que o limite",
+        "why": "Sem tag, quem decide é o PVID, e o PVID é uma VLAN."
+      }
+    ]
+  },
+  "ex-jxtshgcx": {
+    "prompt": "Ponha em ordem a viagem do echo request do pc1 até o pc3.",
+    "hint": "O tag só vive no tronco.",
+    "items": [
+      "o pc1 manda um quadro comum, sem tag",
+      "o sw1 o põe na VLAN 10, o PVID da p1",
+      "o sw1 põe um tag com VID 10 quando ele sai pela p24",
+      "o sw2 lê o VID 10 do tag na sua p24",
+      "o sw2 tira o tag quando o quadro sai pela p1",
+      "o pc3 recebe um quadro sem tag de 98 bytes"
+    ],
+    "trap": "O tag é posto na entrada do tronco e tirado na saída; nenhum dos PCs o vê."
+  },
+  "ex-1pv7600t": {
+    "prompt": "Ligue cada sintoma à sua causa mais direta.",
+    "hint": "Cada um foi encenado nesta aula.",
+    "pairs": [
+      {
+        "left": "Dois PCs da mesma VLAN, em switches diferentes, perdem todo ping",
+        "right": "A VLAN falta no tronco"
+      },
+      {
+        "left": "Um PC alcança uma máquina de outra VLAN e perde uma da sua",
+        "right": "As pontas do tronco discordam da VLAN nativa"
+      },
+      {
+        "left": "Um PC com endereço correto não ouve ARP da sua sub-rede",
+        "right": "A porta dele está na VLAN errada"
+      },
+      {
+        "left": "Pedidos ARP de outro departamento aparecem numa captura",
+        "right": "Toda porta ainda está na VLAN 1"
+      }
+    ],
+    "right_distractors": [
+      "O tag tem mais de quatro bytes"
+    ]
+  },
+  "ex-g6t0fm6k": {
+    "prompt": "Um quadro com tag da VLAN 30 chega na p24 do sw2, membro das VLANs 1, 10 e 20. O que o sw2 faz com ele?",
+    "hint": "O PVID é para quadros sem tag.",
+    "choices": [
+      {
+        "text": "Põe na VLAN 1, o PVID da p24",
+        "why": "O PVID é para quadros sem tag, e este leva um."
+      },
+      {
+        "text": "Inunda por todas as portas, como VLAN desconhecida",
+        "why": "A inundação acontece dentro de uma VLAN. Uma VLAN de que a porta não é membro é recusada na entrada."
+      },
+      {
+        "text": "Descarta no instante em que chega",
+        "why": "Isso. Com filtragem de VLAN ligada, a p24 só aceita as VLANs de que é membro."
+      },
+      {
+        "text": "Tira o tag e entrega às portas de acesso",
+        "why": "Nenhuma porta de acesso do sw2 está na VLAN 30, então não há onde entregar."
+      }
+    ]
+  },
+  "ex-vwrk1av1": {
+    "prompt": "Os quadros do ping levavam um pacote IP de 84 bytes e tinham 98 bytes numa porta de acesso e 102 no tronco. Que tamanho o tcpdump mostraria na p24 para um quadro com um pacote IP de 1500 bytes?",
+    "hint": "Cabeçalho mais tag dá 102 − 84.",
+    "unit": "bytes"
+  },
+  "ex-ngr8s7c3": {
+    "prompt": "O campo PCP do tag tem 3 bits. Quantos valores de prioridade diferentes ele pode levar?",
+    "hint": "O tcpdump mostrou um deles como `p 0`.",
+    "unit": "valores"
+  }
+}

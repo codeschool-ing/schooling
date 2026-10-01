@@ -1,0 +1,423 @@
+{
+  "ex-vbhjy5cz": {
+    "prompt": "Com a lista de bloqueio, o novo cache em db na porta 6379 ficou aberto para remote. Por quê?",
+    "hint": "O que uma lista de bloqueio permite?",
+    "choices": [
+      {
+        "text": "6379 é uma porta que firewalls deixam aberta",
+        "why": "Nenhuma porta é especial; a política era accept."
+      },
+      {
+        "text": "Tudo o que não é citado passa, e ninguém o citou",
+        "why": "Isso."
+      },
+      {
+        "text": "O próprio cache abriu o firewall",
+        "why": "Nada mexeu no firewall."
+      },
+      {
+        "text": "A regra do banco na 5432 cobriu também o cache, por engano",
+        "why": "Essa regra citava só a 5432."
+      }
+    ]
+  },
+  "ex-xr853rtx": {
+    "prompt": "Qual é o custo de uma lista de permissão, e por que é a falha melhor?",
+    "hint": "Barulhenta ou silenciosa?",
+    "choices": [
+      {
+        "text": "Algo legítimo é recusado e alguém reclama no mesmo dia",
+        "why": "Isso. A falha da lista de bloqueio é silenciosa."
+      },
+      {
+        "text": "É mais lenta: todo pacote é comparado a toda regra",
+        "why": "Velocidade não é a troca."
+      },
+      {
+        "text": "Não consegue expressar uma regra para a internet",
+        "why": "O baseline tem regras para a internet."
+      },
+      {
+        "text": "Nenhum; ela não tem custo",
+        "why": "Ela recusa o que ninguém listou, legítimo ou não."
+      }
+    ]
+  },
+  "ex-acqmkr4g": {
+    "prompt": "Com a lista de bloqueio, quais destes estavam abertos para a internet? Escolha todas as que se aplicam.",
+    "hint": "O probe de remote.",
+    "choices": [
+      {
+        "text": "app:22",
+        "why": "Ninguém listou o SSH."
+      },
+      {
+        "text": "app:8080",
+        "why": "Ninguém listou a aplicação."
+      },
+      {
+        "text": "db:6379",
+        "why": "Iniciado depois que a lista foi escrita."
+      },
+      {
+        "text": "db:5432",
+        "why": "Esse estava na lista e bloqueado."
+      }
+    ]
+  },
+  "ex-dfsncw57": {
+    "prompt": "O que faz o nft -c -f?",
+    "hint": "c de check.",
+    "choices": [
+      {
+        "text": "Carrega o arquivo e imprime uma cópia",
+        "why": "Não carrega nada."
+      },
+      {
+        "text": "Confere o arquivo sem mudar nada",
+        "why": "Isso."
+      },
+      {
+        "text": "Zera os contadores e depois carrega",
+        "why": "Não é o que o -c significa."
+      },
+      {
+        "text": "Compila o arquivo numa forma mais rápida",
+        "why": "Nada é compilado para depois."
+      }
+    ]
+  },
+  "ex-hetwxhas": {
+    "prompt": "Depois que o nft -f falhou no arquivo com erro de digitação, quantas linhas accept tinha o conjunto de regras em execução?",
+    "hint": "O mesmo de antes."
+  },
+  "ex-6b38rk4q": {
+    "prompt": "Um arquivo começa com flush ruleset e tem um erro na linha 7. Sem carga atômica, com o que o firewall ficaria?",
+    "hint": "Quais linhas teriam rodado?",
+    "choices": [
+      {
+        "text": "O conjunto antigo, intacto",
+        "why": "Isso é o que a carga atômica dá, não o que a falta dela faz."
+      },
+      {
+        "text": "O arquivo novo inteiro, menos a linha 7",
+        "why": "A carga para no erro."
+      },
+      {
+        "text": "Um firewall zerado com as linhas 1 a 6 carregadas",
+        "why": "Isso. Nem a política antiga nem a nova."
+      },
+      {
+        "text": "Nenhuma regra e política drop em toda chain, sem exceção",
+        "why": "As definições de chain vêm de linhas que talvez não tenham rodado."
+      }
+    ]
+  },
+  "ex-1a291w9v": {
+    "prompt": "Um script de cinquenta comandos iptables falha no vigésimo. Em que estado fica o firewall?",
+    "hint": "O iptables aplica uma regra por comando.",
+    "choices": [
+      {
+        "text": "Inalterado, como no nft -f",
+        "why": "Cada comando se aplicou sozinho."
+      },
+      {
+        "text": "Dezenove regras novas aplicadas, o resto faltando",
+        "why": "Isso. O iptables-restore existe para isso."
+      },
+      {
+        "text": "Toda regra aplicada, menos a vigésima, que foi a que falhou",
+        "why": "O script para na falha, a menos que mandem continuar."
+      },
+      {
+        "text": "Revertido automaticamente às regras salvas no boot",
+        "why": "Nada as salvou."
+      }
+    ]
+  },
+  "ex-53bgsw2k": {
+    "prompt": "Ponha em ordem o jeito seguro de mudar um firewall remoto.",
+    "hint": "A volta é agendada antes da mudança.",
+    "items": [
+      "salvar o conjunto que funciona, começando por flush ruleset",
+      "agendar uma tarefa que o recarregue em poucos minutos",
+      "carregar o novo conjunto",
+      "testar de onde você está e então cancelar a tarefa"
+    ],
+    "trap": "Agendar depois da mudança é tarde demais se a mudança tranca você do lado de fora."
+  },
+  "ex-qgx8pcd3": {
+    "prompt": "A volta restaurou a saída salva do nft list ruleset, e a contagem de linhas accept voltou 13 em vez de 11. Por quê?",
+    "hint": "Com o que a listagem não começa?",
+    "choices": [
+      {
+        "text": "Os contadores foram salvos como regras a mais",
+        "why": "Contadores fazem parte das regras, não são novas."
+      },
+      {
+        "text": "A tarefa em segundo plano rodou duas vezes",
+        "why": "Rodou uma vez; o rollback.log tem uma linha."
+      },
+      {
+        "text": "A listagem não tem flush ruleset, então se juntou às regras carregadas",
+        "why": "Isso. As duas regras da chain mais estrita apareceram duas vezes."
+      },
+      {
+        "text": "O nft -f duplica regras carregadas de uma listagem",
+        "why": "Ele acrescenta o que o arquivo diz; o arquivo disse pouco."
+      }
+    ]
+  },
+  "ex-vqxwwsw0": {
+    "prompt": "Um conjunto de regras salvo só substitui o que está rodando se a primeira linha for ___ ruleset.",
+    "hint": "Duas palavras; a primeira é um verbo.",
+    "blanks": [
+      {
+        "accept": [
+          "flush"
+        ]
+      }
+    ]
+  },
+  "ex-k5483s9b": {
+    "prompt": "Qual chain protege o próprio fw, e não as zonas atrás dele?",
+    "hint": "Os hooks da aula 1.",
+    "choices": [
+      {
+        "text": "input",
+        "why": "Isso. Pacotes endereçados ao fw."
+      },
+      {
+        "text": "forward",
+        "why": "Esse é o tráfego que atravessa o fw."
+      },
+      {
+        "text": "output",
+        "why": "Esse é o tráfego que o fw cria."
+      },
+      {
+        "text": "postrouting",
+        "why": "Ali acontece o NAT."
+      }
+    ]
+  },
+  "ex-ss0cahjq": {
+    "prompt": "Ligue cada mensagem ICMP ao que quebra sem ela.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "fragmentation needed",
+        "right": "a descoberta de MTU do caminho, e transferências grandes travam"
+      },
+      {
+        "left": "time exceeded",
+        "right": "o traceroute depois deste salto"
+      },
+      {
+        "left": "echo request",
+        "right": "o ping"
+      }
+    ],
+    "right_distractors": [
+      "as consultas DNS"
+    ]
+  },
+  "ex-er2zq3p9": {
+    "prompt": "De admin, probe fw:22 disse refused. O que o refused mostra aqui?",
+    "hint": "Quem respondeu?",
+    "choices": [
+      {
+        "text": "A chain input o rejeitou",
+        "why": "A chain descarta; não devolve nada."
+      },
+      {
+        "text": "admin não está na faixa de gestão que a input permite",
+        "why": "192.168.99.10 está em 192.168.99.0/24."
+      },
+      {
+        "text": "A regra o deixou entrar, e o fw não roda servidor SSH",
+        "why": "Isso."
+      },
+      {
+        "text": "O SSH está bloqueado na loopback",
+        "why": "admin chega pela eth4, não pela lo."
+      }
+    ]
+  },
+  "ex-rgf0db7n": {
+    "prompt": "Por que a regra de log tem limit rate 5/second?",
+    "hint": "Quem controla quantos pacotes são descartados?",
+    "choices": [
+      {
+        "text": "O nflog aceita no máximo cinco pacotes por segundo do kernel",
+        "why": "O limite é uma escolha, não do nflog."
+      },
+      {
+        "text": "Senão qualquer um enche o disco com pacotes descartados",
+        "why": "Isso. O log viraria o ataque."
+      },
+      {
+        "text": "Freia o próprio atacante a no máximo cinco pacotes por segundo",
+        "why": "Limita o registro, não o tráfego."
+      },
+      {
+        "text": "O tcpdump não lê mais rápido que isso",
+        "why": "Ele lê muito mais rápido."
+      }
+    ]
+  },
+  "ex-gcve9gek": {
+    "prompt": "Dos três descartes registrados, qual merece primeiro a atenção de alguém?",
+    "hint": "Qual é o ruído de fundo da internet?",
+    "choices": [
+      {
+        "text": "203.0.113.50 para o banco de dados",
+        "why": "A internet tenta portas o dia inteiro."
+      },
+      {
+        "text": "203.0.113.50 para o SSH de app",
+        "why": "Também é ruído de fundo da internet."
+      },
+      {
+        "text": "192.168.10.20 para a porta 6379",
+        "why": "Isso. Uma máquina da LAN buscando um serviço que nunca recebeu."
+      },
+      {
+        "text": "Nenhum; descartes querem dizer que o firewall funcionou",
+        "why": "Funcionou, e um deles ainda diz algo."
+      }
+    ]
+  },
+  "ex-2htpg3zf": {
+    "prompt": "Por que a regra de log é a última da chain?",
+    "hint": "O que ela registraria em outro lugar?",
+    "choices": [
+      {
+        "text": "Antes disso, registra tráfego que as regras seguintes permitem",
+        "why": "Isso. Último quer dizer prestes a ser descartado."
+      },
+      {
+        "text": "O nftables recusa regra de log em qualquer outro lugar da chain",
+        "why": "Aceita em qualquer lugar."
+      },
+      {
+        "text": "A política lê a última regra como seu próprio destino de log",
+        "why": "A política não tem destino de log."
+      },
+      {
+        "text": "Para o limite dela valer para toda regra",
+        "why": "O limite de uma regra vale para ela."
+      }
+    ]
+  },
+  "ex-hng0nb5y": {
+    "prompt": "Numa rede com IPv6, o que um firewall com só uma table ip faz com pacotes IPv6?",
+    "hint": "Uma table ip trata uma família.",
+    "choices": [
+      {
+        "text": "Descarta, já que nenhuma regra os aceita",
+        "why": "Não existe chain dessa família para descartá-los."
+      },
+      {
+        "text": "Nada: passam sem filtro",
+        "why": "Isso. Uma política accept invisível."
+      },
+      {
+        "text": "Traduz para IPv4 antes",
+        "why": "Nada os traduz."
+      },
+      {
+        "text": "Aplica as mesmas regras automaticamente",
+        "why": "Isso é o que a família inet faz, não a ip."
+      }
+    ]
+  },
+  "ex-179bbrw2": {
+    "prompt": "Depois que 192.168.99.11 entrou no conjunto admins, o que mudou nas regras?",
+    "hint": "Onde o endereço fica?",
+    "choices": [
+      {
+        "text": "Uma regra nova foi acrescentada para o novo endereço",
+        "why": "Nenhuma regra foi acrescentada."
+      },
+      {
+        "text": "Toda regra foi recarregada do arquivo",
+        "why": "Só o conjunto mudou."
+      },
+      {
+        "text": "Nenhuma regra mudou; toda regra que cita o conjunto passa a incluí-lo",
+        "why": "Isso."
+      },
+      {
+        "text": "O comentário do conjunto foi atualizado",
+        "why": "O comentário ficou igual."
+      }
+    ]
+  },
+  "ex-pfh2rpey": {
+    "prompt": "Na sexta à noite um administrador precisa apertar a chain input do fw por SSH a partir de admin. Qual plano é seguro?",
+    "hint": "Conferir, salvar, agendar, carregar, testar, confirmar.",
+    "choices": [
+      {
+        "text": "Carregar o arquivo novo e depois salvar uma cópia",
+        "why": "Se a carga tranca você fora, a cópia não adianta."
+      },
+      {
+        "text": "Editar as regras em execução uma a uma com nft add",
+        "why": "Cada passo se aplica sozinho, e o arquivo se desencontra."
+      },
+      {
+        "text": "Conferir com nft -c, salvar com flush ruleset, agendar a volta, carregar, testar, cancelar",
+        "why": "Isso."
+      },
+      {
+        "text": "Pôr a política input em accept durante o trabalho",
+        "why": "Isso abre o fw para toda zona."
+      }
+    ]
+  },
+  "ex-9a0svpxs": {
+    "prompt": "Quais hábitos tornam um conjunto de regras mais seguro para a próxima pessoa? Escolha todas as que se aplicam.",
+    "hint": "A seção sobre estrutura.",
+    "choices": [
+      {
+        "text": "Um comentário em todo accept citando a decisão",
+        "why": "A regra não consegue dizer o porquê."
+      },
+      {
+        "text": "O arquivo em controle de versão, mudado por commits",
+        "why": "Um histórico com motivos."
+      },
+      {
+        "text": "Conjuntos nomeados para grupos usados em várias regras",
+        "why": "Uma mudança, aplicada em todo lugar."
+      },
+      {
+        "text": "Editar as regras em execução direto e depois exportar",
+        "why": "O arquivo deve ser a fonte, não uma cópia."
+      }
+    ]
+  },
+  "ex-k3b2e384": {
+    "prompt": "Um escritório liga o IPv6 na LAN da equipe e mantém o conjunto de regras table ip. O que ele abriu?",
+    "hint": "O conjunto de regras filtra uma família.",
+    "choices": [
+      {
+        "text": "Nada, já que a política é drop",
+        "why": "Essa política pertence às chains da família ip."
+      },
+      {
+        "text": "Toda zona, por IPv6, a tudo o que for roteado",
+        "why": "Isso. Passe as tabelas para inet."
+      },
+      {
+        "text": "Só o ICMPv6, que o conjunto nunca cita",
+        "why": "Todo pacote IPv6, não só ICMPv6."
+      },
+      {
+        "text": "Nada novo, porque o IPv6 tem firewall embutido",
+        "why": "O IPv6 não tem firewall embutido."
+      }
+    ]
+  }
+}

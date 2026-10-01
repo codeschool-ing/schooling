@@ -1,0 +1,643 @@
+[
+  {
+    "id": "ex-r5h7vy6f",
+    "version": 1,
+    "section": "one-hypothesis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A ping from the laptop to web1's address comes back. What has that one test ruled out?",
+    "hint": "A reply needs every layer under IP, both ways.",
+    "choices": [
+      {
+        "text": "A stopped web server",
+        "correct": false,
+        "why": "Ping never touches port 80: in this lesson web1 answered a ping with nginx stopped."
+      },
+      {
+        "text": "A broken link or route on the path",
+        "correct": true,
+        "why": "Right. The echo went and came back, so every link and route between the two works."
+      },
+      {
+        "text": "A wrong DNS server in /etc/resolv.conf",
+        "correct": false,
+        "why": "A ping to an address never asks DNS, so it says nothing about the resolver."
+      },
+      {
+        "text": "A firewall dropping TCP to port 80",
+        "correct": false,
+        "why": "ICMP and TCP are filtered separately; one passing proves nothing about the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ya5z8za",
+    "version": 1,
+    "section": "one-hypothesis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nobody knows yet where the fault is. Why is a ping to the far end's address the usual first test?",
+    "hint": "Divide and conquer.",
+    "choices": [
+      {
+        "text": "It is the one test that needs no root",
+        "correct": false,
+        "why": "curl, dig and ip route need no root either; that is not why it comes first."
+      },
+      {
+        "text": "Firewalls let ICMP through, so it always gets an answer",
+        "correct": false,
+        "why": "Firewalls drop ICMP all the time, and this lesson's worked case is one that did."
+      },
+      {
+        "text": "Its answer tells you whether the fault is above IP or at IP and below",
+        "correct": true,
+        "why": "Right. One command halves the search, and the next test halves what is left."
+      },
+      {
+        "text": "It measures the bandwidth of the path as well",
+        "correct": false,
+        "why": "Ping measures a round trip, not throughput; lesson 22 uses iperf3 for that."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnac6c92",
+    "version": 1,
+    "section": "one-hypothesis",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A technician reboots the router, changes the laptop's DNS server and updates a driver, all at once, and the fault disappears. What has been lost?",
+    "hint": "One change at a time.",
+    "choices": [
+      {
+        "text": "Nothing: the fault is gone, and that was the goal",
+        "correct": false,
+        "why": "It is gone without an explanation, so when it returns it costs the same again."
+      },
+      {
+        "text": "Which of the three changes fixed it",
+        "correct": true,
+        "why": "Right. Three changes together credit none of them, and the other two may have added faults of their own."
+      },
+      {
+        "text": "The router's configuration, which a reboot erases",
+        "correct": false,
+        "why": "A reboot loads the saved configuration; what it erases is the state that might have explained the fault."
+      },
+      {
+        "text": "Only the router's logs; the laptop changes were safe together",
+        "correct": false,
+        "why": "Any two changes made together hide which one mattered, on the laptop as much as on the router."
+      }
+    ]
+  },
+  {
+    "id": "ex-vt3ebr25",
+    "version": 1,
+    "section": "cable-and-gateway",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ip -br link` shows `DOWN` and `<NO-CARRIER,BROADCAST,MULTICAST,UP>`. What does the `UP` in the brackets mean?",
+    "hint": "Software versus signal.",
+    "choices": [
+      {
+        "text": "The interface is enabled in software",
+        "correct": true,
+        "why": "Right. It is switched on; what is missing is the carrier, which LOWER_UP would report."
+      },
+      {
+        "text": "The cable is plugged in at both ends",
+        "correct": false,
+        "why": "NO-CARRIER says the card hears nothing from the other end."
+      },
+      {
+        "text": "The gateway answered the last ping",
+        "correct": false,
+        "why": "Link flags say nothing about the gateway, and the ping got no reply."
+      },
+      {
+        "text": "The link came back after the ping",
+        "correct": false,
+        "why": "The state column still says DOWN."
+      }
+    ]
+  },
+  {
+    "id": "ex-xpjjhy05",
+    "version": 1,
+    "section": "cable-and-gateway",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ip neigh show 192.168.10.99` printed `INCOMPLETE`. What had happened?",
+    "hint": "The laptop needs a hardware address before it can send.",
+    "choices": [
+      {
+        "text": "Two machines were answering for that address",
+        "correct": false,
+        "why": "A conflict would show a hardware address, perhaps a changing one, not none at all."
+      },
+      {
+        "text": "The routing table had no route to it",
+        "correct": false,
+        "why": "It had one: the default route pointed straight at it."
+      },
+      {
+        "text": "ARP asked who has it, and nobody replied",
+        "correct": true,
+        "why": "Right. No machine owns 192.168.10.99, so the question stayed open."
+      },
+      {
+        "text": "The gateway replied with a malformed address",
+        "correct": false,
+        "why": "There was no reply to be malformed; INCOMPLETE is the absence of one."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhnbvw6b",
+    "version": 1,
+    "section": "cable-and-gateway",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A laptop pings a printer on its own subnet, but every connection beyond it fails after about three seconds. Which check comes first?",
+    "hint": "What do all the failing destinations have in common?",
+    "choices": [
+      {
+        "text": "ethtool, to see whether the link is detected",
+        "correct": false,
+        "why": "The printer answering already proves the link and the card."
+      },
+      {
+        "text": "dig against a second DNS server",
+        "correct": false,
+        "why": "Connections by address fail too, and a name failure is instant, not three seconds."
+      },
+      {
+        "text": "ip route, then ip neigh",
+        "correct": true,
+        "why": "Right. The one thing every off-subnet destination shares is the gateway, and three seconds is ARP giving up."
+      },
+      {
+        "text": "ss -tln on each of the servers",
+        "correct": false,
+        "why": "Every server failing at once points at the path out, not at each server's ports."
+      }
+    ]
+  },
+  {
+    "id": "ex-emqej2hn",
+    "version": 1,
+    "section": "cable-and-gateway",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When the network card hears nothing from the other end, `ip -br link` shows the flag ___ where LOWER_UP would be.",
+    "hint": "No signal on the wire.",
+    "blanks": [
+      {
+        "accept": [
+          "NO-CARRIER",
+          "NO CARRIER",
+          "NOCARRIER"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-02v251nt",
+    "version": 1,
+    "section": "name-and-port",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "curl printed `Could not resolve host: www.example.com`. What did it try to connect to?",
+    "hint": "A connection needs an address.",
+    "choices": [
+      {
+        "text": "The DNS server, on port 80",
+        "correct": false,
+        "why": "curl asks the resolver for an address; it never connects to DNS on 80."
+      },
+      {
+        "text": "The web server, which refused",
+        "correct": false,
+        "why": "A refusal is error 7, Couldn't connect; this is error 6."
+      },
+      {
+        "text": "Nothing: no address yet",
+        "correct": true,
+        "why": "Right. Name resolution failed before any connection was attempted."
+      },
+      {
+        "text": "The gateway, which did not answer ARP",
+        "correct": false,
+        "why": "That was the previous fault, and it failed by address after three seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-xs2ka0gz",
+    "version": 1,
+    "section": "name-and-port",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A plain `dig` printed `communications error to 192.0.2.54#53: timed out`, and `dig @192.0.2.53` answered `192.0.2.80`. Where is the fault?",
+    "hint": "Which server did each command ask?",
+    "choices": [
+      {
+        "text": "In ns, which is too busy to answer",
+        "correct": false,
+        "why": "ns answered the @ query at once."
+      },
+      {
+        "text": "In the route from the office to the data centre",
+        "correct": false,
+        "why": "A ping to 192.0.2.53 came back, and the @ query crossed the same route."
+      },
+      {
+        "text": "In the example.com zone, which lost a record",
+        "correct": false,
+        "why": "The zone gave the right answer as soon as it was asked."
+      },
+      {
+        "text": "In the laptop's resolver setting",
+        "correct": true,
+        "why": "Right. resolv.conf named 192.0.2.54, where nothing listens."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg7vdk2b",
+    "version": 1,
+    "section": "name-and-port",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two curls both print `Couldn't connect to server`, one after 3057 ms and one after 0 ms. What does the 0 ms one tell you?",
+    "hint": "An instant answer is still an answer.",
+    "choices": [
+      {
+        "text": "A machine answered the SYN with a reset",
+        "correct": true,
+        "why": "Right. Something received it and refused it: a closed port, or a firewall set to reject."
+      },
+      {
+        "text": "The packet never left the laptop",
+        "correct": false,
+        "why": "That is closer to the 3057 ms case, where ARP for the gateway failed."
+      },
+      {
+        "text": "The name lookup failed first",
+        "correct": false,
+        "why": "A failed lookup is a different error with different words: Could not resolve host."
+      },
+      {
+        "text": "The server is overloaded and dropped the request",
+        "correct": false,
+        "why": "A drop makes the client wait; nothing that drops answers in 0 ms."
+      }
+    ]
+  },
+  {
+    "id": "ex-7t7agpwc",
+    "version": 1,
+    "section": "name-and-port",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what the client saw to the layer this lesson found it at.",
+    "hint": "The time a failure takes is part of the reading.",
+    "pairs": [
+      {
+        "left": "No reply, no error, NO-CARRIER on the interface",
+        "right": "Layers 1 and 2"
+      },
+      {
+        "left": "Couldn't connect, after 3057 ms",
+        "right": "Layer 3"
+      },
+      {
+        "left": "Couldn't connect, after 0 ms",
+        "right": "Layer 4"
+      },
+      {
+        "left": "A 404 for /reports/",
+        "right": "Layer 7"
+      }
+    ],
+    "right_distractors": [
+      "Name resolution"
+    ]
+  },
+  {
+    "id": "ex-31frh9eg",
+    "version": 1,
+    "section": "name-and-port",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A user reports that `/reports/` on web1 answers 404. What should the network team hand to the application's owners?",
+    "hint": "Which layers did the 404 prove?",
+    "choices": [
+      {
+        "text": "A new DNS record for the reports page",
+        "correct": false,
+        "why": "The name already resolved, or no request would have arrived."
+      },
+      {
+        "text": "The evidence that the network delivered the request",
+        "correct": true,
+        "why": "Right. A name resolved, a port accepted and a program answered; the rest is theirs, with the log open."
+      },
+      {
+        "text": "A firewall rule opening port 80 to the office",
+        "correct": false,
+        "why": "Port 80 accepted the connection, or there would be no status code."
+      },
+      {
+        "text": "A restart of nginx on web1",
+        "correct": false,
+        "why": "nginx is running: it is the program that answered 404."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ryghwkr",
+    "version": 1,
+    "section": "black-hole",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did the 16-byte page load from files while big.bin did not?",
+    "hint": "Size.",
+    "choices": [
+      {
+        "text": "The page was cached at the branch",
+        "correct": false,
+        "why": "Nothing caches in the lab: the request crossed the tunnel each time."
+      },
+      {
+        "text": "The hardening rule blocks large HTTP responses",
+        "correct": false,
+        "why": "The rule drops ICMP that hq itself sends, not HTTP."
+      },
+      {
+        "text": "It fits in one small packet; the file needs full-size ones",
+        "correct": true,
+        "why": "Right. Only packets over 1420 bytes are dropped at wg0."
+      },
+      {
+        "text": "WireGuard caps every connection at a few kilobytes",
+        "correct": false,
+        "why": "After the fix, 20000000 bytes crossed the same tunnel."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvsnrjmh",
+    "version": 1,
+    "section": "black-hole",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the failing capture each segment carries 1448 bytes of data, with a 32-byte TCP header and a 20-byte IP header. How big is each IP packet?",
+    "hint": "Add them up and compare with wg0.",
+    "value": 1500,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-jkrb8qhj",
+    "version": 1,
+    "section": "black-hole",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "From files, `ping -M do -s 1400` to the till got 100% loss and no `+1 errors`. In lesson 1 the same test through IP-in-IP printed `Frag needed`. What does the difference point at?",
+    "hint": "Who would have sent the error?",
+    "choices": [
+      {
+        "text": "hq's ICMP message not reaching files",
+        "correct": true,
+        "why": "Right. hq dropped the packet as it should, and its explanation was dropped on the way out."
+      },
+      {
+        "text": "The till being switched off at that moment",
+        "correct": false,
+        "why": "The 1392-byte ping reached it just before."
+      },
+      {
+        "text": "WireGuard having no MTU of its own",
+        "correct": false,
+        "why": "ip link printed mtu 1420 for wg0."
+      },
+      {
+        "text": "files ignoring the -M do flag",
+        "correct": false,
+        "why": "The bit was obeyed: 1392 passed and 1400 did not, exactly at the MTU."
+      }
+    ]
+  },
+  {
+    "id": "ex-261waazb",
+    "version": 1,
+    "section": "black-hole",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "wg0's MTU is 1420 and ping adds 8 bytes of ICMP and 20 of IP. What is the largest `-s` that crosses with Don't Fragment set?",
+    "hint": "1420 − 28.",
+    "value": 1392,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-17g00ara",
+    "version": 1,
+    "section": "black-hole",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the black hole in order, from the first full-size segment to the second.",
+    "hint": "The message is born and dies on the same router.",
+    "items": [
+      "files sends a 1500-byte packet towards the till",
+      "hq finds it too big for wg0 and drops it",
+      "hq writes a 'fragmentation needed' message to files",
+      "The hardening rule drops that message on hq's output",
+      "files sends the next full-size segment, none the wiser"
+    ],
+    "trap": "The message is written before it is dropped, and both happen on hq; files never sees a thing."
+  },
+  {
+    "id": "ex-dtj7gb1x",
+    "version": 1,
+    "section": "mss-clamping",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "wg0's MTU is 1420. What MSS keeps every TCP segment inside it, with 20 bytes of IP header and 20 of TCP?",
+    "hint": "The MTU less both headers.",
+    "value": 1380,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-h3wknkfw",
+    "version": 1,
+    "section": "mss-clamping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the fix checked by downloading big.bin rather than by pinging the till?",
+    "hint": "What worked before the fix?",
+    "choices": [
+      {
+        "text": "A ping cannot cross a WireGuard tunnel",
+        "correct": false,
+        "why": "Pings crossed it all along, up to 1392 bytes of data."
+      },
+      {
+        "text": "Small pings worked all along and prove nothing",
+        "correct": true,
+        "why": "Right. The fix is checked with the test that found the fault, and that was the download."
+      },
+      {
+        "text": "Clamping blocks ICMP, so a ping would fail anyway",
+        "correct": false,
+        "why": "The clamping rules touch only TCP SYNs; pings pass them untouched."
+      },
+      {
+        "text": "curl reports the MSS each side negotiated",
+        "correct": false,
+        "why": "curl reported bytes and a status; the MSS came from the tcpdump beside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wpznr9gm",
+    "version": 1,
+    "section": "mss-clamping",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The clamping rules are in, and the hardening rule is still on hq. Which of these still fail? Choose all that apply.",
+    "hint": "Clamping rewrites a TCP option; the rule drops ICMP.",
+    "choices": [
+      {
+        "text": "A UDP program sending 1500-byte packets with Don't Fragment set",
+        "correct": true,
+        "why": "Right: UDP has no MSS to clamp, and the message it needs is still dropped."
+      },
+      {
+        "text": "A TCP download of big.bin from files to the till",
+        "correct": false,
+        "why": "That is what clamping fixed: 20000000 bytes arrived."
+      },
+      {
+        "text": "hq telling a client that a host cannot be reached",
+        "correct": true,
+        "why": "Right: that is a destination unreachable too, and the rule drops every one of them."
+      },
+      {
+        "text": "The 16-byte page from files",
+        "correct": false,
+        "why": "It worked before and after; it fits in one small packet."
+      }
+    ]
+  },
+  {
+    "id": "ex-s18saaxs",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "People working from home over the VPN can open the intranet's login page, but after they log in the dashboard never loads, with no error. Pings to the server work. Which hypothesis do you test first?",
+    "hint": "Small things work and large things hang.",
+    "choices": [
+      {
+        "text": "The dashboard's name does not resolve",
+        "correct": false,
+        "why": "A name failure is immediate and says so; this hangs in silence."
+      },
+      {
+        "text": "The web server's port 443 is closed",
+        "correct": false,
+        "why": "The login page came from that port a moment earlier."
+      },
+      {
+        "text": "The path MTU through the tunnel, with ping -M do at growing sizes",
+        "correct": true,
+        "why": "Right. Small works, large hangs, no error: the black hole's signature."
+      },
+      {
+        "text": "A loose cable on the users' laptops",
+        "correct": false,
+        "why": "A dead link would stop the login page and the pings too."
+      }
+    ]
+  },
+  {
+    "id": "ex-d89wfgn8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a hypothesis in the sense this lesson uses?",
+    "hint": "A hypothesis names a test that could prove it wrong.",
+    "choices": [
+      {
+        "text": "Something is wrong with the network",
+        "correct": false,
+        "why": "No test could ever prove that false, so it guides nothing."
+      },
+      {
+        "text": "The laptop asks the wrong DNS server, so dig @ns will answer",
+        "correct": true,
+        "why": "Right. It names the cause and the test that would refute it."
+      },
+      {
+        "text": "Reboot the router and see what happens",
+        "correct": false,
+        "why": "That is an action, and it destroys the state that might explain the fault."
+      },
+      {
+        "text": "It worked yesterday",
+        "correct": false,
+        "why": "An observation worth writing down, but it predicts nothing to test."
+      }
+    ]
+  },
+  {
+    "id": "ex-588bgsn0",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A black hole of this kind is found with Don't Fragment pings of growing size: the size where they start to vanish without an error sits just past the tunnel's ___.",
+    "hint": "1420 for wg0.",
+    "blanks": [
+      {
+        "accept": [
+          "MTU",
+          "maximum transmission unit"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

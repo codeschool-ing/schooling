@@ -1,0 +1,692 @@
+[
+  {
+    "id": "ex-mwvjzkfn",
+    "version": 1,
+    "section": "reading-the-table",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `10.20.1.0/30 dev eth1 proto kernel scope link src 10.20.1.1`, what does `proto kernel` tell you?",
+    "hint": "It names who put the line there.",
+    "choices": [
+      {
+        "text": "The route leads to the kernel of the machine itself",
+        "correct": false,
+        "why": "It leads out of eth1; `proto` is about origin, not destination."
+      },
+      {
+        "text": "Somebody typed it with ip route",
+        "correct": false,
+        "why": "A typed route shows no `proto kernel`; the default typed later has none."
+      },
+      {
+        "text": "The kernel added it when the address was set",
+        "correct": true,
+        "why": "Right. Setting 10.20.1.1/30 on eth1 created the route to 10.20.1.0/30."
+      },
+      {
+        "text": "The route is reserved for the kernel",
+        "correct": false,
+        "why": "Every packet r1 forwards uses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5m089qc",
+    "version": 1,
+    "section": "reading-the-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc1's ping printed `From 10.20.10.1 icmp_seq=1 Destination Net Unreachable`. Which machine gave up on the packet?",
+    "hint": "The address at the start of the line.",
+    "choices": [
+      {
+        "text": "far1, which refused the ping it received",
+        "correct": false,
+        "why": "far1 never saw it: the packet stopped one hop from pc1."
+      },
+      {
+        "text": "pc1 itself, before the packet was sent",
+        "correct": false,
+        "why": "A host with no route prints Network is unreachable and names nobody."
+      },
+      {
+        "text": "ra, which had no route back",
+        "correct": false,
+        "why": "The packet never reached ra; r1 had nowhere to send it."
+      },
+      {
+        "text": "r1, which had no route for it",
+        "correct": true,
+        "why": "Right. 10.20.10.1 is r1, and it said so in ICMP."
+      }
+    ]
+  },
+  {
+    "id": "ex-5269fr4t",
+    "version": 1,
+    "section": "reading-the-table",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A route with no `via`, such as `10.20.1.0/30 dev eth1`, exists because r1 has an address on that cable. It is called a ___ route.",
+    "hint": "The router is plugged straight into that network.",
+    "blanks": [
+      {
+        "accept": [
+          "connected",
+          "directly connected"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f0dxrd7x",
+    "version": 1,
+    "section": "reading-the-table",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of `10.20.1.0/30 dev eth1 proto kernel scope link src 10.20.1.1` to what it says.",
+    "hint": "Read the table in the section.",
+    "pairs": [
+      {
+        "left": "dev eth1",
+        "right": "The interface a matching packet leaves by"
+      },
+      {
+        "left": "proto kernel",
+        "right": "Who put the route there"
+      },
+      {
+        "left": "scope link",
+        "right": "The destination is on that cable itself"
+      },
+      {
+        "left": "src 10.20.1.1",
+        "right": "The source address for packets r1 sends there itself"
+      }
+    ],
+    "right_distractors": [
+      "The hardware address of r1's port"
+    ]
+  },
+  {
+    "id": "ex-kn6t3cgx",
+    "version": 1,
+    "section": "default-gateway",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `default` stand for in `default via 10.20.1.2 dev eth1`?",
+    "hint": "How many bits does it compare?",
+    "choices": [
+      {
+        "text": "0.0.0.0/0, which every address matches",
+        "correct": true,
+        "why": "Right. Zero bits to compare, so it contains everything."
+      },
+      {
+        "text": "The first route r1 was given",
+        "correct": false,
+        "why": "Order has nothing to do with it; the connected routes came first."
+      },
+      {
+        "text": "The route to r1's own subnet",
+        "correct": false,
+        "why": "That is 10.20.10.0/24, a connected route."
+      },
+      {
+        "text": "A route the kernel invents when the table is empty",
+        "correct": false,
+        "why": "Before it was typed, r1 had no default and said Net Unreachable."
+      }
+    ]
+  },
+  {
+    "id": "ex-me98phtk",
+    "version": 1,
+    "section": "default-gateway",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Only `via 10.20.1.2` was typed, yet the route reads `dev eth1`. How did r1 pick eth1?",
+    "hint": "Which connected route contains 10.20.1.2?",
+    "choices": [
+      {
+        "text": "ra told r1 which of its ports to use",
+        "correct": false,
+        "why": "Nothing was exchanged; r1 worked it out from its own table."
+      },
+      {
+        "text": "eth1 was the first interface on the list",
+        "correct": false,
+        "why": "eth0 comes first, and position decides nothing."
+      },
+      {
+        "text": "eth1's subnet contains 10.20.1.2",
+        "correct": true,
+        "why": "Right. A next hop has to be on a directly connected network."
+      },
+      {
+        "text": "ARP found ra on each of r1's ports",
+        "correct": false,
+        "why": "ARP only asks on the port the table picked."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yv80vzw",
+    "version": 1,
+    "section": "default-gateway",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bits of a destination address does the default route, 0.0.0.0/0, compare?",
+    "hint": "The number after the slash.",
+    "value": 0,
+    "tolerance": 0,
+    "unit": "bits"
+  },
+  {
+    "id": "ex-jm0vvay6",
+    "version": 1,
+    "section": "default-gateway",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After r1 got its default, the traceroute from pc1 to 10.30.5.10 completed. What else had to be true for the replies to reach pc1?",
+    "hint": "A route works in one direction.",
+    "choices": [
+      {
+        "text": "ra had a route back to pc1's network",
+        "correct": true,
+        "why": "Right. The lab set it up; without it, far1's answers would stop at ra."
+      },
+      {
+        "text": "pc1 had its own route to 10.30.0.0/16",
+        "correct": false,
+        "why": "pc1 sends everything to r1 by its default; it needs nothing more."
+      },
+      {
+        "text": "far1 was told the path the request took",
+        "correct": false,
+        "why": "IP keeps no record of the way a packet came."
+      },
+      {
+        "text": "rb forwarded the replies on ra's behalf",
+        "correct": false,
+        "why": "rb plays no part in this traceroute."
+      }
+    ]
+  },
+  {
+    "id": "ex-6v0xem1w",
+    "version": 1,
+    "section": "longest-prefix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "r1 holds `10.30.0.0/16 via 10.20.1.2` and `10.30.5.0/24 via 10.20.2.2`. Which way does a packet for 10.30.5.99 leave?",
+    "hint": "Both routes contain it.",
+    "choices": [
+      {
+        "text": "Via ra, because the /16 is listed first",
+        "correct": false,
+        "why": "The order of the list decides nothing."
+      },
+      {
+        "text": "Via rb, 10.20.2.2, by the /24",
+        "correct": true,
+        "why": "Right: 24 matching bits beat 16."
+      },
+      {
+        "text": "Via ra, because the /16 covers more addresses",
+        "correct": false,
+        "why": "Covering more is exactly what makes it lose."
+      },
+      {
+        "text": "Split between both",
+        "correct": false,
+        "why": "One route wins; nothing here shares the load."
+      }
+    ]
+  },
+  {
+    "id": "ex-qthn65a4",
+    "version": 1,
+    "section": "longest-prefix",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the /16 and the /24 were added, how many routes in r1's table contain the address 10.30.5.10?",
+    "hint": "Do not forget the one that contains everything.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "routes"
+  },
+  {
+    "id": "ex-njaggwy2",
+    "version": 1,
+    "section": "longest-prefix",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the table of this section, which destinations does r1 send via rb, 10.20.2.2? Choose all that apply.",
+    "hint": "Only the /24 points at rb.",
+    "choices": [
+      {
+        "text": "10.30.5.1",
+        "correct": true,
+        "why": "Right: inside 10.30.5.0/24."
+      },
+      {
+        "text": "10.30.5.200",
+        "correct": true,
+        "why": "Right: also inside the /24."
+      },
+      {
+        "text": "10.30.7.10",
+        "correct": false,
+        "why": "Only the /16 contains it, and that is via ra."
+      },
+      {
+        "text": "10.30.6.5",
+        "correct": false,
+        "why": "The third number is 6: the /16 again, via ra."
+      },
+      {
+        "text": "192.0.2.1",
+        "correct": false,
+        "why": "Only the default contains it, via ra."
+      }
+    ]
+  },
+  {
+    "id": "ex-6v5kvm90",
+    "version": 1,
+    "section": "longest-prefix",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose the /24 via rb had been typed before the /16 via ra. Which way would 10.30.5.10 leave?",
+    "hint": "Does the order of typing enter the rule?",
+    "choices": [
+      {
+        "text": "Via ra, since the /16 was typed last",
+        "correct": false,
+        "why": "The last route typed has no advantage."
+      },
+      {
+        "text": "Via ra, since the /16 would replace the /24",
+        "correct": false,
+        "why": "Two different prefixes live side by side."
+      },
+      {
+        "text": "Via the default, since the two would conflict",
+        "correct": false,
+        "why": "They do not conflict; one contains the other."
+      },
+      {
+        "text": "Via rb, by the /24, exactly as before",
+        "correct": true,
+        "why": "Right. The length decides, not the order."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ey995g4",
+    "version": 1,
+    "section": "longest-prefix",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A router holds 10.0.0.0/8, 10.30.0.0/16, 10.30.4.0/22 and a default. How many bits does the winning route for 10.30.6.1 match?",
+    "hint": "A /22 covers four values of the third number.",
+    "value": 22,
+    "tolerance": 0,
+    "unit": "bits"
+  },
+  {
+    "id": "ex-9t5th6d4",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "r1 has two defaults: via ra with metric 100 and via rb with metric 200. While both are up, which is used?",
+    "hint": "A metric is a cost.",
+    "choices": [
+      {
+        "text": "Via rb, as 200 is higher",
+        "correct": false,
+        "why": "Higher is more expensive; the cheaper road wins."
+      },
+      {
+        "text": "The one via ra, metric 100",
+        "correct": true,
+        "why": "Right, as `ip route get 198.51.100.7` answered."
+      },
+      {
+        "text": "Both, one packet each",
+        "correct": false,
+        "why": "Different metrics mean one preferred route, not a share."
+      },
+      {
+        "text": "The one typed first",
+        "correct": false,
+        "why": "The order of typing plays no part."
+      }
+    ]
+  },
+  {
+    "id": "ex-1canq3f3",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the cable to ra was pulled, `ip route get 198.51.100.7` answered via rb. What made the difference?",
+    "hint": "Read the default via ra in `ip route show default`.",
+    "choices": [
+      {
+        "text": "ra sent r1 a message saying that it was down",
+        "correct": false,
+        "why": "No protocol runs here, and ra could not send over a dead cable."
+      },
+      {
+        "text": "The metric of the route via ra rose to 300",
+        "correct": false,
+        "why": "The metric stayed 100; the route was taken out of the choice."
+      },
+      {
+        "text": "The route via ra was marked `dead linkdown`",
+        "correct": true,
+        "why": "Right. With eth1 lost, only the metric 200 route was left to choose."
+      },
+      {
+        "text": "Somebody deleted the route via ra",
+        "correct": false,
+        "why": "It is still listed, with `dead linkdown` beside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmty1g1t",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "ra crashes, but its port towards r1 stays lit. What does r1's kernel do with a packet for 198.51.100.7?",
+    "hint": "What did the failover in this section react to?",
+    "choices": [
+      {
+        "text": "Sends it to ra, since the link is still up",
+        "correct": true,
+        "why": "Right. Nothing r1 can see has changed, so the metric 100 route stays chosen."
+      },
+      {
+        "text": "Sends it to rb, since ra stopped answering it",
+        "correct": false,
+        "why": "The kernel does not check whether ra answers; it watched the carrier."
+      },
+      {
+        "text": "Drops it and answers Destination Net Unreachable",
+        "correct": false,
+        "why": "r1 still has two defaults, and one of them looks fine."
+      },
+      {
+        "text": "Sends it both ways at once",
+        "correct": false,
+        "why": "One route is chosen."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4dp6ghv",
+    "version": 1,
+    "section": "administrative-distance",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In FRR's line `K>* 0.0.0.0/0 [0/100] via 10.20.1.2, eth1`, what is the 0 inside the brackets?",
+    "hint": "The brackets hold two numbers, in a fixed order.",
+    "choices": [
+      {
+        "text": "The metric",
+        "correct": false,
+        "why": "The metric is the second number, 100."
+      },
+      {
+        "text": "The administrative distance",
+        "correct": true,
+        "why": "Right: `[distance/metric]`, and a kernel route has distance 0 in FRR."
+      },
+      {
+        "text": "The route's age in seconds",
+        "correct": false,
+        "why": "The age is at the end of the line, 00:00:10."
+      },
+      {
+        "text": "The number of hops to 10.20.1.2",
+        "correct": false,
+        "why": "Nothing here counts hops."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6ne3esk",
+    "version": 1,
+    "section": "administrative-distance",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each source of routes to its default administrative distance.",
+    "hint": "Lower is more trusted.",
+    "pairs": [
+      {
+        "left": "Connected",
+        "right": "0"
+      },
+      {
+        "left": "Static",
+        "right": "1"
+      },
+      {
+        "left": "eBGP",
+        "right": "20"
+      },
+      {
+        "left": "OSPF",
+        "right": "110"
+      },
+      {
+        "left": "RIP",
+        "right": "120"
+      }
+    ],
+    "right_distractors": [
+      "100"
+    ]
+  },
+  {
+    "id": "ex-6vvwg9p8",
+    "version": 1,
+    "section": "administrative-distance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "FRR holds two static routes to 10.40.0.0/16: via ra at distance 1 and via rb at distance 200. What did `ip route show 10.40.0.0/16` print?",
+    "hint": "The routing suite keeps candidates; the kernel gets winners.",
+    "choices": [
+      {
+        "text": "Both routes, with their distances",
+        "correct": false,
+        "why": "The kernel showed one line; the other stayed in FRR."
+      },
+      {
+        "text": "The route via rb, which was typed last",
+        "correct": false,
+        "why": "Typing order plays no part; distance does."
+      },
+      {
+        "text": "One route, via 10.20.1.2",
+        "correct": true,
+        "why": "Right: the distance 1 route, `proto static`."
+      },
+      {
+        "text": "Nothing, because FRR keeps static routes to itself",
+        "correct": false,
+        "why": "FRR installs its winners in the kernel."
+      }
+    ]
+  },
+  {
+    "id": "ex-6h4fajgw",
+    "version": 1,
+    "section": "administrative-distance",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A router learns 10.50.1.0/24 from RIP (distance 120) and has a static route for 10.50.0.0/16 (distance 1). Which route carries a packet for 10.50.1.7?",
+    "hint": "Which of the three rules is applied first?",
+    "choices": [
+      {
+        "text": "The RIP /24: prefix length is decided first",
+        "correct": true,
+        "why": "Right. The /24 wins on length before trust is asked about."
+      },
+      {
+        "text": "The static /16, since distance 1 beats 120",
+        "correct": false,
+        "why": "Distance only compares routes to the same prefix."
+      },
+      {
+        "text": "Whichever has the lower metric",
+        "correct": false,
+        "why": "Metrics from two sources are not compared, and length comes first anyway."
+      },
+      {
+        "text": "Neither: the two conflict and the packet is dropped",
+        "correct": false,
+        "why": "Nested routes do not conflict."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqdwjph2",
+    "version": 1,
+    "section": "administrative-distance",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A static route given a high distance, so that it waits behind a better route and is installed only when that one goes, is called a ___ static route.",
+    "hint": "It sits behind the other one, as on water.",
+    "blanks": [
+      {
+        "accept": [
+          "floating"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7wtg4phc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the questions a router asks in choosing a route in the order it asks them.",
+    "hint": "Length, trust, cost.",
+    "items": [
+      "Which routes contain the destination?",
+      "Which of those has the longest prefix?",
+      "Among equals, which source has the lowest distance?",
+      "Among those, which route has the lowest metric?"
+    ],
+    "trap": "Distance before length is the usual slip: a /24 learned from RIP still beats a static /16 for the addresses inside it."
+  },
+  {
+    "id": "ex-wg5s9cmy",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table holds 0.0.0.0/0, 172.16.0.0/12, 172.16.0.0/16 and 172.16.32.0/20. What is the prefix length of the route chosen for 172.16.40.9?",
+    "hint": "A /20 covers sixteen values of the third number.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "bits"
+  },
+  {
+    "id": "ex-re5tp3be",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Back at the start of the lesson, pc1 got `Destination Net Unreachable` from 10.20.10.1 for 10.30.5.10. Which one command on r1, typed in this lesson, made the ping work?",
+    "hint": "r1 needed somewhere to send it.",
+    "choices": [
+      {
+        "text": "ip link set eth1 up",
+        "correct": false,
+        "why": "eth1 was already up; the table was the problem."
+      },
+      {
+        "text": "ip route add default via 10.20.1.2",
+        "correct": true,
+        "why": "Right. With a default via ra, the packet had somewhere to go."
+      },
+      {
+        "text": "ip addr add 10.30.5.1/16 dev eth1",
+        "correct": false,
+        "why": "That would claim far1's network on the wrong cable."
+      },
+      {
+        "text": "ip neigh flush dev eth1",
+        "correct": false,
+        "why": "The neighbour table was not the problem; the routing table was."
+      }
+    ]
+  },
+  {
+    "id": "ex-9st9y599",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each thing printed in this lesson to what it means.",
+    "hint": "Each came from a different section.",
+    "pairs": [
+      {
+        "left": "dead linkdown",
+        "right": "The interface under the route lost its signal"
+      },
+      {
+        "left": "Destination Net Unreachable",
+        "right": "A router had no route for the destination"
+      },
+      {
+        "left": "K>*",
+        "right": "Selected by FRR and installed in the kernel"
+      },
+      {
+        "left": "[0/200]",
+        "right": "Distance 0, metric 200"
+      }
+    ],
+    "right_distractors": [
+      "The route was typed twice"
+    ]
+  }
+]

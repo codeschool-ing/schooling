@@ -1,0 +1,665 @@
+[
+  {
+    "id": "ex-52yz1cpv",
+    "version": 1,
+    "section": "site-to-site",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the till's traceroute to `files`, what is hop 2, `10.20.0.1`?",
+    "hint": "It is an address from the tunnel's own network.",
+    "choices": [
+      {
+        "text": "The ISP's router, answering from a private address",
+        "correct": false,
+        "why": "The ISP carried encrypted UDP and never saw the traceroute's packets inside it."
+      },
+      {
+        "text": "hq's address inside the tunnel",
+        "correct": true,
+        "why": "Right. The whole crossing of the internet shows as that one hop."
+      },
+      {
+        "text": "The branch router's public side",
+        "correct": false,
+        "why": "branch is hop 1, answering from 192.168.20.1."
+      },
+      {
+        "text": "The file server's second address",
+        "correct": false,
+        "why": "files is hop 3, at 192.168.10.10."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9bsbz76",
+    "version": 1,
+    "section": "site-to-site",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the ISP's router not appear at all in the till's traceroute?",
+    "hint": "Whose TTL does the ISP decrement?",
+    "choices": [
+      {
+        "text": "It is set up never to answer a traceroute",
+        "correct": false,
+        "why": "It never received an expired probe to answer; the probes were inside encrypted packets."
+      },
+      {
+        "text": "ICMP rate limiting hid its hop",
+        "correct": false,
+        "why": "Rate limiting leaves a star in the list; here there is no line for it at all."
+      },
+      {
+        "text": "The probes crossed it inside encrypted packets",
+        "correct": true,
+        "why": "Right. It decremented the outer header's TTL, never the probes'."
+      },
+      {
+        "text": "The till has a route that goes straight to hq",
+        "correct": false,
+        "why": "The till has a default route to branch and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cf5mwve",
+    "version": 1,
+    "section": "site-to-site",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What in the till's own configuration tells it about the VPN?",
+    "hint": "Its `ip route` had two lines.",
+    "choices": [
+      {
+        "text": "A route to 192.168.10.0/24 through wg0",
+        "correct": false,
+        "why": "That route is on the routers; the till has no wg0."
+      },
+      {
+        "text": "A WireGuard key pair of its own",
+        "correct": false,
+        "why": "The keys are on branch, the router, not on the devices behind it."
+      },
+      {
+        "text": "Nothing: a default route and its own LAN",
+        "correct": true,
+        "why": "Right. It would look the same over a leased line."
+      },
+      {
+        "text": "An address from the tunnel's 10.20.0.0/24",
+        "correct": false,
+        "why": "Only the routers and remote have tunnel addresses."
+      }
+    ]
+  },
+  {
+    "id": "ex-xx5j3tmq",
+    "version": 1,
+    "section": "site-to-site",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A visitor plugs a laptop into the branch LAN. With the lab set up as it is, what can it reach at the head office?",
+    "hint": "What does this tunnel authenticate?",
+    "choices": [
+      {
+        "text": "The same as any machine on that network",
+        "correct": true,
+        "why": "Right. The tunnel authenticates a site, and the visitor is now part of it; firewall rules and a guest VLAN are the answer."
+      },
+      {
+        "text": "Nothing, since it holds no WireGuard key",
+        "correct": false,
+        "why": "The key is the branch router's, and it carries the visitor's packets like anyone else's."
+      },
+      {
+        "text": "Only hq's tunnel address, 10.20.0.1",
+        "correct": false,
+        "why": "hq's AllowedIPs for branch includes the whole branch LAN."
+      },
+      {
+        "text": "The head office, after a login with MFA",
+        "correct": false,
+        "why": "A site-to-site tunnel has no login at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-tb718z1w",
+    "version": 1,
+    "section": "remote-access",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a remote-access connection authenticate that a site-to-site tunnel does not?",
+    "hint": "Lesson 4's status file wrote one word beside the address.",
+    "choices": [
+      {
+        "text": "The public address the laptop connects from",
+        "correct": false,
+        "why": "It changes between home and a hotel, and proves nothing about who is there."
+      },
+      {
+        "text": "A person, and ideally the device",
+        "correct": true,
+        "why": "Right. `ana` in the status file is a person's certificate."
+      },
+      {
+        "text": "The home router doing the NAT",
+        "correct": false,
+        "why": "Nobody authenticates homegw; it only forwards her packets."
+      },
+      {
+        "text": "The branch office's router",
+        "correct": false,
+        "why": "That is what a site-to-site tunnel authenticates."
+      }
+    ]
+  },
+  {
+    "id": "ex-qnt50fk0",
+    "version": 1,
+    "section": "remote-access",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do companies ask for MFA on a remote-access VPN, on top of a password?",
+    "hint": "What does one successful login give away?",
+    "choices": [
+      {
+        "text": "WireGuard refuses connections without a second factor",
+        "correct": false,
+        "why": "WireGuard knows nothing of MFA; the lab used keys alone."
+      },
+      {
+        "text": "A second factor makes the tunnel's encryption stronger",
+        "correct": false,
+        "why": "The encryption is the same either way; MFA is about who logs in."
+      },
+      {
+        "text": "One stolen password would put an attacker inside the network",
+        "correct": true,
+        "why": "Right. The gateway faces the internet, and behind it is everything the pool reaches."
+      },
+      {
+        "text": "The law requires it of every VPN",
+        "correct": false,
+        "why": "The reason is the risk of a door facing the internet, not a universal rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-425aceh0",
+    "version": 1,
+    "section": "remote-access",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ten people share one WireGuard key and one peer entry on the concentrator. One of them leaves the company. What is the problem?",
+    "hint": "What would the concentrator have to stop accepting?",
+    "choices": [
+      {
+        "text": "Her AllowedIPs can be removed and the rest stay",
+        "correct": false,
+        "why": "There is one peer entry and one AllowedIPs for all ten."
+      },
+      {
+        "text": "hq has to delete the key from her laptop remotely",
+        "correct": false,
+        "why": "The office cannot reach into her laptop; it can only stop accepting the key."
+      },
+      {
+        "text": "Cutting her off means a new key for all ten",
+        "correct": true,
+        "why": "Right. And no log ever said which of the ten was connected, since they were one peer."
+      },
+      {
+        "text": "The pool runs out of addresses",
+        "correct": false,
+        "why": "Ten people is nothing to a /24, and they share one address anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3knpnj0",
+    "version": 1,
+    "section": "remote-access",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each description to the end of a VPN it belongs to.",
+    "hint": "Two are site to site, two are remote access.",
+    "pairs": [
+      {
+        "left": "Up at three in the morning with nobody logged in",
+        "right": "A tunnel between two office routers"
+      },
+      {
+        "left": "Its far end moves between home and a hotel",
+        "right": "A client on a laptop, behind somebody's NAT"
+      },
+      {
+        "left": "Carries the tills, which could never run a client",
+        "right": "The branch router, on their behalf"
+      },
+      {
+        "left": "Writes one name per connection in its status file",
+        "right": "A concentrator with a certificate per person"
+      }
+    ],
+    "right_distractors": [
+      "The ISP's router, which reads inside the tunnel"
+    ]
+  },
+  {
+    "id": "ex-s6474808",
+    "version": 1,
+    "section": "split-and-full",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the split tunnel, which way did Ana's request to `web1` go?",
+    "hint": "`ip route get 192.0.2.21` answered before the traceroute did.",
+    "choices": [
+      {
+        "text": "Through wg0 to hq, and out from there",
+        "correct": false,
+        "why": "That is the full tunnel; split, web1 is not in AllowedIPs."
+      },
+      {
+        "text": "Out of eth0, through her home router",
+        "correct": true,
+        "why": "Right. via 192.168.1.1 dev eth0, and the traceroute went homegw, ISP, web1."
+      },
+      {
+        "text": "Through wg0 to branch",
+        "correct": false,
+        "why": "branch is not one of Ana's peers."
+      },
+      {
+        "text": "Nowhere, because web1 could not be reached",
+        "correct": false,
+        "why": "curl printed served by web1."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jspqd9d",
+    "version": 1,
+    "section": "split-and-full",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`web1`'s log shows `198.51.100.77` for Ana's split request and `203.0.113.2` for her full one. Why the second address?",
+    "hint": "Whose address is 203.0.113.2?",
+    "choices": [
+      {
+        "text": "Her home router got a new public address",
+        "correct": false,
+        "why": "homegw is still 198.51.100.77; 203.0.113.2 is hq's."
+      },
+      {
+        "text": "web1 logs the tunnel's address instead of the client's",
+        "correct": false,
+        "why": "Her tunnel address is 10.20.0.3, which web1 never saw."
+      },
+      {
+        "text": "hq sent it out and translated it to its own address",
+        "correct": true,
+        "why": "Right. The full tunnel ends at hq, and hq's NAT makes her traffic look like the office's."
+      },
+      {
+        "text": "The ISP rewrote the source on the way",
+        "correct": false,
+        "why": "The ISP routes; the rewriting happened at hq."
+      }
+    ]
+  },
+  {
+    "id": "ex-sacw63y9",
+    "version": 1,
+    "section": "split-and-full",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `AllowedIPs = 0.0.0.0/0`, why does `wg-quick` mark WireGuard's own packets with `fwmark 51820`?",
+    "hint": "Where would the encrypted UDP to hq go under a default route through wg0?",
+    "choices": [
+      {
+        "text": "To give the tunnel's traffic priority on the uplink",
+        "correct": false,
+        "why": "A mark here chooses a routing table, not a queue."
+      },
+      {
+        "text": "So that hq can tell which peer is sending",
+        "correct": false,
+        "why": "A mark never leaves the machine; hq tells peers apart by key."
+      },
+      {
+        "text": "So that the firewall can count the tunnel's bytes",
+        "correct": false,
+        "why": "wg show counts them already; the mark exists for routing."
+      },
+      {
+        "text": "So the encrypted packets avoid table 51820",
+        "correct": true,
+        "why": "Right. Otherwise the tunnel's own packets would be routed back into the tunnel."
+      }
+    ]
+  },
+  {
+    "id": "ex-v6egvv5g",
+    "version": 1,
+    "section": "split-and-full",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ip route get` asks the kernel which way a packet would go, without ___ one.",
+    "hint": "It is a question, not a test.",
+    "blanks": [
+      {
+        "accept": [
+          "sending",
+          "transmitting"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ctxmgbwj",
+    "version": 1,
+    "section": "split-and-full",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are reasons to choose a full tunnel? Choose all that apply.",
+    "hint": "Think of what hq sees, and what hq carries.",
+    "choices": [
+      {
+        "text": "The company's filtering and logs apply to all her traffic",
+        "correct": true,
+        "why": "Right: everything leaves through hq."
+      },
+      {
+        "text": "Her video calls get faster",
+        "correct": false,
+        "why": "They take a detour, crossing the head office's link twice."
+      },
+      {
+        "text": "Services that accept only the office's address work from home",
+        "correct": true,
+        "why": "Right: web1 saw 203.0.113.2."
+      },
+      {
+        "text": "The head office's uplink carries less",
+        "correct": false,
+        "why": "It carries more: all of her traffic, in and out."
+      },
+      {
+        "text": "On a café's Wi-Fi her traffic crosses the local network encrypted",
+        "correct": true,
+        "why": "Right, as long as her DNS goes the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-35vsenhh",
+    "version": 1,
+    "section": "split-and-full",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the full tunnel, how many times does Ana's request to `web1` pass through the ISP's router?",
+    "hint": "Once on the way to hq, encrypted.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-emhe663t",
+    "version": 1,
+    "section": "dns-and-overlap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Split tunnel, no DNS setting: Ana looks up a name that only the company's DNS server knows. What happens?",
+    "hint": "Which resolver does her laptop ask?",
+    "choices": [
+      {
+        "text": "The query goes through wg0 because the name is internal",
+        "correct": false,
+        "why": "Routes decide by address, and the resolver she asks is on the home LAN."
+      },
+      {
+        "text": "WireGuard answers it from hq's configuration",
+        "correct": false,
+        "why": "WireGuard knows nothing about names."
+      },
+      {
+        "text": "The home router's resolver has never heard of it",
+        "correct": true,
+        "why": "Right. It fails, which is what split DNS fixes."
+      },
+      {
+        "text": "It resolves, since DNS always travels in the tunnel",
+        "correct": false,
+        "why": "Nothing sends DNS through the tunnel unless a resolver on the company side is set."
+      }
+    ]
+  },
+  {
+    "id": "ex-vheaj6xe",
+    "version": 1,
+    "section": "dns-and-overlap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's full tunnel is up, and her resolver is still the home router, `192.168.1.1`. Where do her DNS queries go?",
+    "hint": "Which rule keeps the home LAN reachable?",
+    "choices": [
+      {
+        "text": "Through wg0 to hq, like everything else",
+        "correct": false,
+        "why": "suppress_prefixlength 0 lets the main table's route for the home LAN win."
+      },
+      {
+        "text": "Across her home LAN in clear, bypassing wg0",
+        "correct": true,
+        "why": "Right. A DNS leak: the names she looks up cross the home network in clear."
+      },
+      {
+        "text": "Nowhere, because the full tunnel blocks the LAN",
+        "correct": false,
+        "why": "The LAN stays reachable on purpose."
+      },
+      {
+        "text": "To the ISP's resolver, by way of hq",
+        "correct": false,
+        "why": "hq only sees what enters wg0, and these queries never do."
+      }
+    ]
+  },
+  {
+    "id": "ex-vabd0cj6",
+    "version": 1,
+    "section": "dns-and-overlap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `RTNETLINK answers: File exists`, what state was Ana's tunnel left in?",
+    "hint": "Read the last line wg-quick printed.",
+    "choices": [
+      {
+        "text": "Up, without the one colliding route",
+        "correct": false,
+        "why": "wg-quick treats the failure as fatal."
+      },
+      {
+        "text": "Up, with the home LAN now through wg0",
+        "correct": false,
+        "why": "The kernel refused the route; eth0 kept the home LAN."
+      },
+      {
+        "text": "Gone: wg-quick deleted wg0",
+        "correct": true,
+        "why": "Right. ip link delete dev wg0 undid everything, the route to 192.168.10.0/24 included."
+      },
+      {
+        "text": "Up, but only for the tunnel's own 10.20.0.0/24",
+        "correct": false,
+        "why": "No wg0 was left to carry anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwy8w9pa",
+    "version": 1,
+    "section": "dns-and-overlap",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what `wg-quick` did when the home range was added to `AllowedIPs`.",
+    "hint": "The address comes before the routes.",
+    "items": [
+      "Started wireguard-go for wg0",
+      "Put 10.20.0.3/24 on wg0",
+      "Added the route to 192.168.10.0/24",
+      "Failed to add 192.168.1.0/24",
+      "Deleted wg0"
+    ],
+    "trap": "The failure came after the office route was already in, and the deletion took that route away too."
+  },
+  {
+    "id": "ex-zh54h992",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A contractor needs one web application and nothing else on the network. What fits best?",
+    "hint": "How much of the network does each option expose?",
+    "choices": [
+      {
+        "text": "A remote-access VPN account with a full tunnel",
+        "correct": false,
+        "why": "It reaches every address the pool allows, far more than one application."
+      },
+      {
+        "text": "Per-application access through a broker",
+        "correct": true,
+        "why": "Right. The session reaches that application and nothing else."
+      },
+      {
+        "text": "A site-to-site tunnel to the contractor's office",
+        "correct": false,
+        "why": "That joins their whole office to your network."
+      },
+      {
+        "text": "The application's port opened to the internet",
+        "correct": false,
+        "why": "That exposes it to everybody, not to one contractor."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfek4rjs",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can per-application access not replace the tunnel between `hq` and `branch`?",
+    "hint": "Who, or what, would the broker check?",
+    "choices": [
+      {
+        "text": "It does not work across the internet",
+        "correct": false,
+        "why": "Working across the internet is its whole design."
+      },
+      {
+        "text": "The branch has no public address for it",
+        "correct": false,
+        "why": "branch has 198.51.100.2."
+      },
+      {
+        "text": "The tills there have no person to check",
+        "correct": true,
+        "why": "Right. It checks a person and a device per application; a till is neither a person nor able to run the client."
+      },
+      {
+        "text": "It cannot encrypt what it carries",
+        "correct": false,
+        "why": "The broker's connections are encrypted too."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ykpcbgr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A head office LAN is `192.168.0.0/24`, and half the staff have home routers on the same range. Which fix causes the fewest surprises later?",
+    "hint": "Which side does the company control?",
+    "choices": [
+      {
+        "text": "Ask the staff to renumber their home routers",
+        "correct": false,
+        "why": "Dozens of networks you do not run, and every new hire starts again."
+      },
+      {
+        "text": "Add 192.168.0.0/24 to every laptop's AllowedIPs anyway",
+        "correct": false,
+        "why": "wg-quick stops with File exists, as the capture showed."
+      },
+      {
+        "text": "Use a full tunnel so that the office range wins",
+        "correct": false,
+        "why": "suppress_prefixlength 0 keeps the home LAN's route in charge."
+      },
+      {
+        "text": "Renumber the company side to a rare block",
+        "correct": true,
+        "why": "Right. One renumbering the company controls, instead of a collision in every home."
+      }
+    ]
+  },
+  {
+    "id": "ex-99qmdw0b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A clinic's reception PCs at two sites use the same patient system at the head office all day. What do you build?",
+    "hint": "Is the traffic a person's or a site's?",
+    "choices": [
+      {
+        "text": "A tunnel between each site's router and the head office",
+        "correct": true,
+        "why": "Right. Always up, invisible to the PCs, and one configuration per site."
+      },
+      {
+        "text": "A remote-access client on every reception PC",
+        "correct": false,
+        "why": "It works, at the cost of a client and a login per PC for traffic that is really the site's."
+      },
+      {
+        "text": "A split tunnel on the receptionists' phones",
+        "correct": false,
+        "why": "The phones are not what needs the system."
+      },
+      {
+        "text": "The patient system published on the internet",
+        "correct": false,
+        "why": "That exposes patient records to anybody who finds it."
+      }
+    ]
+  }
+]

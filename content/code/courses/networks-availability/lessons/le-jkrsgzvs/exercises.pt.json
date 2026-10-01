@@ -1,0 +1,457 @@
+{
+  "ex-52yz1cpv": {
+    "prompt": "No traceroute do caixa até o `files`, o que é o salto 2, `10.20.0.1`?",
+    "hint": "É um endereço da própria rede do túnel.",
+    "choices": [
+      {
+        "text": "O roteador do provedor, respondendo de um endereço privado",
+        "why": "O provedor levou UDP criptografado e nunca viu os pacotes do traceroute lá dentro."
+      },
+      {
+        "text": "O endereço de hq dentro do túnel",
+        "why": "Isso. Toda a travessia da internet aparece como esse único salto."
+      },
+      {
+        "text": "O lado público do roteador da filial",
+        "why": "branch é o salto 1, respondendo de 192.168.20.1."
+      },
+      {
+        "text": "O segundo endereço do servidor de arquivos",
+        "why": "files é o salto 3, em 192.168.10.10."
+      }
+    ]
+  },
+  "ex-c9bsbz76": {
+    "prompt": "Por que o roteador do provedor não aparece no traceroute do caixa?",
+    "hint": "O TTL de quem o provedor decrementa?",
+    "choices": [
+      {
+        "text": "Ele está configurado para nunca responder a traceroute",
+        "why": "Ele nunca recebeu uma sonda expirada para responder; as sondas iam dentro de pacotes criptografados."
+      },
+      {
+        "text": "O limite de taxa de ICMP escondeu o salto dele",
+        "why": "O limite de taxa deixa uma estrela na lista; aqui nem existe linha para ele."
+      },
+      {
+        "text": "As sondas passaram por ele dentro de pacotes criptografados",
+        "why": "Isso. Ele decrementou o TTL do cabeçalho externo, nunca o das sondas."
+      },
+      {
+        "text": "O caixa tem uma rota que vai direto para hq",
+        "why": "O caixa tem uma rota padrão para branch e mais nada."
+      }
+    ]
+  },
+  "ex-7cf5mwve": {
+    "prompt": "O que na configuração do próprio caixa fala da VPN?",
+    "hint": "O `ip route` dele tinha duas linhas.",
+    "choices": [
+      {
+        "text": "Uma rota para 192.168.10.0/24 pelo wg0",
+        "why": "Essa rota está nos roteadores; o caixa não tem wg0."
+      },
+      {
+        "text": "Um par de chaves WireGuard próprio",
+        "why": "As chaves estão em branch, o roteador, não nos dispositivos atrás dele."
+      },
+      {
+        "text": "Nada: uma rota padrão e a própria LAN",
+        "why": "Isso. Ela seria igual numa linha dedicada."
+      },
+      {
+        "text": "Um endereço do 10.20.0.0/24 do túnel",
+        "why": "Só os roteadores e remote têm endereços de túnel."
+      }
+    ]
+  },
+  "ex-xx5j3tmq": {
+    "prompt": "Um visitante liga um laptop na LAN da filial. Com o laboratório como está, o que ele alcança na matriz?",
+    "hint": "O que este túnel autentica?",
+    "choices": [
+      {
+        "text": "O mesmo que qualquer máquina daquela rede",
+        "why": "Isso. O túnel autentica um local, e o visitante agora faz parte dele; regras de firewall e uma VLAN de visitantes são a resposta."
+      },
+      {
+        "text": "Nada, já que ele não tem chave WireGuard",
+        "why": "A chave é do roteador da filial, e ele leva os pacotes do visitante como os de qualquer um."
+      },
+      {
+        "text": "Só o endereço de túnel de hq, 10.20.0.1",
+        "why": "O AllowedIPs de hq para branch inclui toda a LAN da filial."
+      },
+      {
+        "text": "A matriz, depois de um login com MFA",
+        "why": "Um túnel site a site não tem login nenhum."
+      }
+    ]
+  },
+  "ex-tb718z1w": {
+    "prompt": "O que uma conexão de acesso remoto autentica que um túnel site a site não autentica?",
+    "hint": "O arquivo de status da aula 4 escreveu uma palavra ao lado do endereço.",
+    "choices": [
+      {
+        "text": "O endereço público de onde o laptop conecta",
+        "why": "Ele muda entre a casa e um hotel, e não prova nada sobre quem está lá."
+      },
+      {
+        "text": "Uma pessoa, e de preferência o dispositivo",
+        "why": "Isso. `ana` no arquivo de status é o certificado de uma pessoa."
+      },
+      {
+        "text": "O roteador de casa que faz o NAT",
+        "why": "Ninguém autentica o homegw; ele só encaminha os pacotes dela."
+      },
+      {
+        "text": "O roteador da filial",
+        "why": "Isso é o que um túnel site a site autentica."
+      }
+    ]
+  },
+  "ex-qnt50fk0": {
+    "prompt": "Por que as empresas pedem MFA numa VPN de acesso remoto, além da senha?",
+    "hint": "O que um único login bem-sucedido entrega?",
+    "choices": [
+      {
+        "text": "O WireGuard recusa conexões sem segundo fator",
+        "why": "O WireGuard não sabe nada de MFA; o laboratório usou só chaves."
+      },
+      {
+        "text": "Um segundo fator deixa a criptografia do túnel mais forte",
+        "why": "A criptografia é a mesma nos dois casos; MFA trata de quem faz login."
+      },
+      {
+        "text": "Uma senha roubada poria um atacante dentro da rede",
+        "why": "Isso. O gateway fica virado para a internet, e atrás dele está tudo o que o pool alcança."
+      },
+      {
+        "text": "A lei exige isso de toda VPN",
+        "why": "O motivo é o risco de uma porta virada para a internet, não uma regra universal."
+      }
+    ]
+  },
+  "ex-425aceh0": {
+    "prompt": "Dez pessoas compartilham uma chave WireGuard e uma entrada de par no concentrador. Uma delas sai da empresa. Qual é o problema?",
+    "hint": "O que o concentrador teria de parar de aceitar?",
+    "choices": [
+      {
+        "text": "O AllowedIPs dela pode ser removido e os outros ficam",
+        "why": "Há uma única entrada de par e um único AllowedIPs para os dez."
+      },
+      {
+        "text": "hq tem de apagar a chave do laptop dela à distância",
+        "why": "O escritório não entra no laptop dela; só pode parar de aceitar a chave."
+      },
+      {
+        "text": "Cortar o acesso dela exige uma chave nova para os dez",
+        "why": "Isso. E nenhum log jamais disse qual dos dez estava conectado, já que eram um par só."
+      },
+      {
+        "text": "O pool fica sem endereços",
+        "why": "Dez pessoas não são nada para um /24, e elas dividem um endereço de qualquer jeito."
+      }
+    ]
+  },
+  "ex-h3knpnj0": {
+    "prompt": "Ligue cada descrição à ponta de VPN a que ela pertence.",
+    "hint": "Duas são site a site, duas são acesso remoto.",
+    "pairs": [
+      {
+        "left": "De pé às três da manhã sem ninguém logado",
+        "right": "Um túnel entre dois roteadores de escritório"
+      },
+      {
+        "left": "A outra ponta muda entre a casa e um hotel",
+        "right": "Um cliente num laptop, atrás do NAT de alguém"
+      },
+      {
+        "left": "Leva os caixas, que nunca rodariam um cliente",
+        "right": "O roteador da filial, em nome deles"
+      },
+      {
+        "left": "Escreve um nome por conexão no arquivo de status",
+        "right": "Um concentrador com um certificado por pessoa"
+      }
+    ],
+    "right_distractors": [
+      "O roteador do provedor, que lê dentro do túnel"
+    ]
+  },
+  "ex-s6474808": {
+    "prompt": "Com o túnel dividido, por onde o pedido da Ana ao `web1` foi?",
+    "hint": "O `ip route get 192.0.2.21` respondeu antes do traceroute.",
+    "choices": [
+      {
+        "text": "Pelo wg0 até hq, e de lá para fora",
+        "why": "Isso é o túnel completo; dividido, o web1 não está no AllowedIPs."
+      },
+      {
+        "text": "Pela eth0, pelo roteador de casa",
+        "why": "Isso. via 192.168.1.1 dev eth0, e o traceroute foi homegw, provedor, web1."
+      },
+      {
+        "text": "Pelo wg0 até branch",
+        "why": "branch não é um dos pares da Ana."
+      },
+      {
+        "text": "A lugar nenhum, porque o web1 estava inalcançável",
+        "why": "O curl imprimiu served by web1."
+      }
+    ]
+  },
+  "ex-9jspqd9d": {
+    "prompt": "O log do `web1` mostra `198.51.100.77` no pedido dividido da Ana e `203.0.113.2` no completo. Por que o segundo endereço?",
+    "hint": "De quem é o endereço 203.0.113.2?",
+    "choices": [
+      {
+        "text": "O roteador de casa dela ganhou um endereço público novo",
+        "why": "O homegw continua 198.51.100.77; 203.0.113.2 é o de hq."
+      },
+      {
+        "text": "O web1 registra o endereço do túnel em vez do cliente",
+        "why": "O endereço de túnel dela é 10.20.0.3, que o web1 nunca viu."
+      },
+      {
+        "text": "hq o mandou para fora com o próprio endereço",
+        "why": "Isso. O túnel completo termina em hq, e o NAT de hq faz o tráfego dela parecer o do escritório."
+      },
+      {
+        "text": "O provedor reescreveu a origem no caminho",
+        "why": "O provedor roteia; a reescrita aconteceu em hq."
+      }
+    ]
+  },
+  "ex-sacw63y9": {
+    "prompt": "Com `AllowedIPs = 0.0.0.0/0`, por que o `wg-quick` marca os próprios pacotes do WireGuard com `fwmark 51820`?",
+    "hint": "Para onde iria o UDP criptografado para hq com uma rota padrão pelo wg0?",
+    "choices": [
+      {
+        "text": "Para dar prioridade ao tráfego do túnel no uplink",
+        "why": "Aqui a marca escolhe uma tabela de rotas, não uma fila."
+      },
+      {
+        "text": "Para que hq saiba qual par está mandando",
+        "why": "A marca nunca sai da máquina; hq distingue os pares pela chave."
+      },
+      {
+        "text": "Para o firewall contar os bytes do túnel",
+        "why": "O wg show já os conta; a marca existe para o roteamento."
+      },
+      {
+        "text": "Para os pacotes cifrados evitarem a tabela 51820",
+        "why": "Isso. Senão os próprios pacotes do túnel seriam roteados de volta para o túnel."
+      }
+    ]
+  },
+  "ex-v6egvv5g": {
+    "prompt": "O `ip route get` pergunta ao kernel por onde um pacote iria, sem ___ nenhum.",
+    "hint": "É uma pergunta, não um teste.",
+    "blanks": [
+      {
+        "accept": [
+          "mandar",
+          "enviar",
+          "transmitir"
+        ]
+      }
+    ]
+  },
+  "ex-ctxmgbwj": {
+    "prompt": "Quais destes são motivos para escolher um túnel completo? Marque todos que se aplicam.",
+    "hint": "Pense no que hq vê, e no que hq carrega.",
+    "choices": [
+      {
+        "text": "Os filtros e logs da empresa valem para todo o tráfego dela",
+        "why": "Isso: tudo sai por hq."
+      },
+      {
+        "text": "As chamadas de vídeo dela ficam mais rápidas",
+        "why": "Elas fazem um desvio, atravessando duas vezes o link da matriz."
+      },
+      {
+        "text": "Serviços que só aceitam o endereço do escritório funcionam de casa",
+        "why": "Isso: o web1 viu 203.0.113.2."
+      },
+      {
+        "text": "O uplink da matriz carrega menos",
+        "why": "Carrega mais: todo o tráfego dela, entrando e saindo."
+      },
+      {
+        "text": "No Wi-Fi de um café o tráfego dela atravessa a rede local criptografado",
+        "why": "Isso, desde que o DNS dela vá pelo mesmo caminho."
+      }
+    ]
+  },
+  "ex-35vsenhh": {
+    "prompt": "No túnel completo, quantas vezes o pedido da Ana ao `web1` passa pelo roteador do provedor?",
+    "hint": "Uma vez a caminho de hq, criptografado.",
+    "unit": "vezes"
+  },
+  "ex-emhe663t": {
+    "prompt": "Túnel dividido, sem configuração de DNS: a Ana procura um nome que só o DNS da empresa conhece. O que acontece?",
+    "hint": "A qual resolvedor o laptop dela pergunta?",
+    "choices": [
+      {
+        "text": "A consulta vai pelo wg0 porque o nome é interno",
+        "why": "Rotas decidem pelo endereço, e o resolvedor a quem ela pergunta está na LAN de casa."
+      },
+      {
+        "text": "O WireGuard responde com a configuração de hq",
+        "why": "O WireGuard não sabe nada de nomes."
+      },
+      {
+        "text": "O resolvedor do roteador de casa nunca ouviu falar dele",
+        "why": "Isso. Ela falha, e é isso que o split DNS resolve."
+      },
+      {
+        "text": "Resolve, já que DNS sempre viaja no túnel",
+        "why": "Nada manda DNS pelo túnel a menos que se defina um resolvedor do lado da empresa."
+      }
+    ]
+  },
+  "ex-vheaj6xe": {
+    "prompt": "O túnel completo da Ana está de pé, e o resolvedor dela continua sendo o roteador de casa, `192.168.1.1`. Para onde vão as consultas DNS dela?",
+    "hint": "Qual regra mantém a LAN de casa alcançável?",
+    "choices": [
+      {
+        "text": "Pelo wg0 até hq, como todo o resto",
+        "why": "O suppress_prefixlength 0 deixa vencer a rota da tabela principal para a LAN de casa."
+      },
+      {
+        "text": "Pela LAN de casa, em claro, sem passar pelo wg0",
+        "why": "Isso. Um vazamento de DNS: os nomes que ela procura passam pela rede de casa em claro."
+      },
+      {
+        "text": "A lugar nenhum, porque o túnel completo bloqueia a LAN",
+        "why": "A LAN continua alcançável de propósito."
+      },
+      {
+        "text": "Para o resolvedor do provedor, passando por hq",
+        "why": "hq só vê o que entra no wg0, e essas consultas nunca entram."
+      }
+    ]
+  },
+  "ex-vabd0cj6": {
+    "prompt": "Depois de `RTNETLINK answers: File exists`, em que estado ficou o túnel da Ana?",
+    "hint": "Leia a última linha que o wg-quick imprimiu.",
+    "choices": [
+      {
+        "text": "De pé, sem a rota que colidiu",
+        "why": "O wg-quick trata a falha como fatal."
+      },
+      {
+        "text": "De pé, com a LAN de casa agora pelo wg0",
+        "why": "O kernel recusou a rota; a eth0 manteve a LAN de casa."
+      },
+      {
+        "text": "Sumiu: o wg-quick apagou o wg0",
+        "why": "Isso. ip link delete dev wg0 desfez tudo, a rota para 192.168.10.0/24 incluída."
+      },
+      {
+        "text": "De pé, mas só para o 10.20.0.0/24 do próprio túnel",
+        "why": "Não sobrou wg0 para levar nada."
+      }
+    ]
+  },
+  "ex-fwy8w9pa": {
+    "prompt": "Ponha em ordem o que o `wg-quick` fez quando a faixa de casa foi acrescentada ao `AllowedIPs`.",
+    "hint": "O endereço vem antes das rotas.",
+    "items": [
+      "Iniciou o wireguard-go para o wg0",
+      "Pôs 10.20.0.3/24 no wg0",
+      "Acrescentou a rota para 192.168.10.0/24",
+      "Falhou ao acrescentar 192.168.1.0/24",
+      "Apagou o wg0"
+    ],
+    "trap": "A falha veio depois que a rota do escritório já estava posta, e a remoção levou essa rota junto."
+  },
+  "ex-zh54h992": {
+    "prompt": "Um prestador precisa de uma aplicação web e de mais nada na rede. O que serve melhor?",
+    "hint": "Quanto da rede cada opção expõe?",
+    "choices": [
+      {
+        "text": "Uma conta de VPN de acesso remoto com túnel completo",
+        "why": "Ela alcança todo endereço que o pool permite, muito mais que uma aplicação."
+      },
+      {
+        "text": "Acesso por aplicação por meio de um broker",
+        "why": "Isso. A sessão alcança aquela aplicação e mais nada."
+      },
+      {
+        "text": "Um túnel site a site até o escritório do prestador",
+        "why": "Isso liga o escritório inteiro dele à sua rede."
+      },
+      {
+        "text": "A porta da aplicação aberta para a internet",
+        "why": "Isso a expõe a todo mundo, não a um prestador."
+      }
+    ]
+  },
+  "ex-nfek4rjs": {
+    "prompt": "Por que o acesso por aplicação não substitui o túnel entre `hq` e `branch`?",
+    "hint": "Quem, ou o quê, o broker conferiria?",
+    "choices": [
+      {
+        "text": "Ele não funciona pela internet",
+        "why": "Funcionar pela internet é todo o projeto dele."
+      },
+      {
+        "text": "A filial não tem endereço público para ele",
+        "why": "branch tem 198.51.100.2."
+      },
+      {
+        "text": "Os caixas de lá não têm pessoa para conferir",
+        "why": "Isso. Ele confere uma pessoa e um dispositivo por aplicação; um caixa não é pessoa nem roda o cliente."
+      },
+      {
+        "text": "Ele não consegue criptografar o que leva",
+        "why": "As conexões do broker também são criptografadas."
+      }
+    ]
+  },
+  "ex-3ykpcbgr": {
+    "prompt": "A LAN de uma matriz é `192.168.0.0/24`, e metade dos funcionários tem roteador doméstico na mesma faixa. Qual correção causa menos surpresas depois?",
+    "hint": "Qual lado a empresa controla?",
+    "choices": [
+      {
+        "text": "Pedir aos funcionários que renumerem os roteadores de casa",
+        "why": "Dezenas de redes que você não administra, e cada contratado novo recomeça."
+      },
+      {
+        "text": "Pôr 192.168.0.0/24 no AllowedIPs de todo laptop mesmo assim",
+        "why": "O wg-quick para com File exists, como a captura mostrou."
+      },
+      {
+        "text": "Usar túnel completo para a faixa do escritório vencer",
+        "why": "O suppress_prefixlength 0 mantém a rota da LAN de casa no comando."
+      },
+      {
+        "text": "Renumerar o lado da empresa para um bloco incomum",
+        "why": "Isso. Uma renumeração que a empresa controla, em vez de uma colisão em cada casa."
+      }
+    ]
+  },
+  "ex-99qmdw0b": {
+    "prompt": "Os PCs da recepção de uma clínica em dois locais usam o mesmo sistema de pacientes da matriz o dia todo. O que você monta?",
+    "hint": "O tráfego é de uma pessoa ou de um local?",
+    "choices": [
+      {
+        "text": "Um túnel entre o roteador de cada local e a matriz",
+        "why": "Isso. Sempre de pé, invisível para os PCs, e uma configuração por local."
+      },
+      {
+        "text": "Um cliente de acesso remoto em cada PC da recepção",
+        "why": "Funciona, ao custo de um cliente e um login por PC para um tráfego que é do local."
+      },
+      {
+        "text": "Um túnel dividido nos celulares das recepcionistas",
+        "why": "Não são os celulares que precisam do sistema."
+      },
+      {
+        "text": "O sistema de pacientes publicado na internet",
+        "why": "Isso expõe prontuários a qualquer um que o encontre."
+      }
+    ]
+  }
+}

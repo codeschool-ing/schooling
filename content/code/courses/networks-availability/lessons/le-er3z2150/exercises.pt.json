@@ -1,0 +1,451 @@
+{
+  "ex-22t3dca2": {
+    "prompt": "Do laptop, `hq` respondeu com `ttl=64` e o web1 com `ttl=62`. Quantos roteadores a resposta do web1 atravessou?",
+    "hint": "O Linux começa em 64 e cada roteador tira um.",
+    "unit": "roteadores"
+  },
+  "ex-x339fxpn": {
+    "prompt": "Cinquenta pings para o web2 perderam 12%, e a regra no provedor descarta 20% ao acaso. O que a diferença diz?",
+    "hint": "Faça a conta do exemplo.",
+    "choices": [
+      {
+        "text": "A regra está descartando menos do que foi configurada",
+        "why": "Com 20% de verdade, cinquenta pings informam 12% ou menos em mais ou menos uma rodada a cada dez; a regra está certa."
+      },
+      {
+        "text": "Nada: cinquenta pings são poucos para cravar a taxa",
+        "why": "Isso. Cinquenta pings informam de 10% a 32% em noventa e cinco rodadas de cada cem."
+      },
+      {
+        "text": "O ping conta perda a menos quando o intervalo é curto",
+        "why": "Cada eco voltou ou não voltou; o ping conta os dois exatamente."
+      },
+      {
+        "text": "O ping reenviou os ecos perdidos e alguns passaram",
+        "why": "O ping nunca reenvia: cada número de sequência é enviado uma vez."
+      }
+    ]
+  },
+  "ex-27zfypbg": {
+    "prompt": "`ping -s 1400` imprimiu `1400(1428) bytes of data`. O que são os outros 28 bytes?",
+    "hint": "Um eco é ICMP dentro de IP.",
+    "choices": [
+      {
+        "text": "O cabeçalho Ethernet e o checksum dele",
+        "why": "O Ethernet fica abaixo do pacote e não entra em nenhum dos números."
+      },
+      {
+        "text": "Um cabeçalho TCP e um IP",
+        "why": "O ping manda ICMP; não há TCP num eco."
+      },
+      {
+        "text": "8 de cabeçalho ICMP e 20 de IP",
+        "why": "Isso. Os dados mais os dois cabeçalhos são o pacote no fio."
+      },
+      {
+        "text": "Enchimento que o ping põe para arredondar o tamanho",
+        "why": "Nada é preenchido; os 28 são cabeçalhos."
+      }
+    ]
+  },
+  "ex-ejwnf9hx": {
+    "prompt": "As respostas de ping de um servidor chegam com `ttl=125`. O que se pode dizer sobre o caminho?",
+    "hint": "De onde a contagem partiu?",
+    "choices": [
+      {
+        "text": "Ele está a 125 roteadores de distância",
+        "why": "O TTL conta para baixo a partir de um valor inicial; nada começa em zero."
+      },
+      {
+        "text": "Três saltos, se começou em 128",
+        "why": "Isso. O Windows começa em 128, então uma resposta com 125 atravessou três roteadores; o TTL só é distância quando você sabe o início."
+      },
+      {
+        "text": "O caminho está congestionado e os pacotes estão envelhecendo",
+        "why": "O TTL cai uma vez por roteador, não com o tempo passado numa fila."
+      },
+      {
+        "text": "Ele está a 125 milissegundos",
+        "why": "O TTL aqui é contagem de saltos, não tempo; o tempo é o campo time=."
+      }
+    ]
+  },
+  "ex-8rredww1": {
+    "prompt": "Com `traceroute -n -q 1`, o salto 2 mostra `*` e o salto 3, o servidor, responde. O que você conclui?",
+    "hint": "Toda sonda que chegou ao salto 3 passou pelo salto 2.",
+    "choices": [
+      {
+        "text": "O salto 2 encaminha e fica calado",
+        "why": "Isso. O encaminhamento funciona; só falta o time exceeded do próprio roteador."
+      },
+      {
+        "text": "O salto 2 caiu e o tráfego deu a volta",
+        "why": "Não há volta neste caminho, e o servidor respondeu através dele."
+      },
+      {
+        "text": "O servidor fica atrás de um firewall",
+        "why": "O servidor respondeu; o silêncio está no salto 2."
+      },
+      {
+        "text": "O caminho perde pacotes no salto 2",
+        "why": "Um salto com perda perderia sondas para o salto 3 também, e nenhuma se perdeu."
+      }
+    ]
+  },
+  "ex-fy47t5hg": {
+    "prompt": "Como o traceroute padrão do Linux sabe que chegou ao destino?",
+    "hint": "As sondas dele são UDP para portas altas.",
+    "choices": [
+      {
+        "text": "O destino responde time exceeded",
+        "why": "O time exceeded vem dos roteadores antes dele, onde o TTL acaba."
+      },
+      {
+        "text": "Ele para depois de três saltos",
+        "why": "O limite é de 30 saltos, como diz a primeira linha; três é o número de sondas por salto."
+      },
+      {
+        "text": "O destino responde port unreachable",
+        "why": "Isso. Nada escuta nessas portas, então o destino avisa, e essa resposta encerra o trace."
+      },
+      {
+        "text": "A resposta do destino tem TTL zero",
+        "why": "O TTL de uma resposta começa alto, em 64 no Linux."
+      }
+    ]
+  },
+  "ex-sxrn6jr1": {
+    "prompt": "Por que o `traceroute -n -T -p 80` rodou com `sudo`?",
+    "hint": "Como as sondas são feitas?",
+    "choices": [
+      {
+        "text": "A porta 80 fica abaixo de 1024, que só o root pode usar",
+        "why": "Essa regra vale para escutar numa porta, não para mandar a ela; qualquer usuário conecta na porta 80."
+      },
+      {
+        "text": "Ele monta os pacotes TCP num socket raw",
+        "why": "Isso. Definir o TTL de um SYN montado à mão pede um socket raw, e isso pede root."
+      },
+      {
+        "text": "Um firewall impede usuários comuns de mandar sondas TCP",
+        "why": "Nenhum firewall sabe qual usuário do laptop mandou um pacote."
+      },
+      {
+        "text": "O sudo dá prioridade maior às sondas",
+        "why": "O sudo muda quem roda o programa, não como a rede trata os pacotes."
+      }
+    ]
+  },
+  "ex-269zkg9k": {
+    "prompt": "Ligue cada traceroute ao que são as sondas dele.",
+    "hint": "O padrão não é ICMP.",
+    "pairs": [
+      {
+        "left": "traceroute -n",
+        "right": "UDP para portas altas, encerrado por port unreachable"
+      },
+      {
+        "left": "traceroute -n -I",
+        "right": "Ecos ICMP, como o ping"
+      },
+      {
+        "left": "traceroute -n -T -p 80",
+        "right": "SYN de TCP para uma porta que o firewall deixa passar"
+      }
+    ],
+    "right_distractors": [
+      "Pacotes GRE por um túnel"
+    ]
+  },
+  "ex-mrs3t7k5": {
+    "prompt": "Um relatório do mtr mostra 80.0% de perda nos saltos 1 e 2, e 0.0% no destino. O que está perdendo pacotes?",
+    "hint": "Leia a última linha primeiro.",
+    "choices": [
+      {
+        "text": "hq, que descarta quatro pacotes em cinco",
+        "why": "Aí nada depois de hq teria mais que um em cinco, e o destino recebeu os 50."
+      },
+      {
+        "text": "O roteador do provedor, onde a perda continua",
+        "why": "Ela não continua: o destino não perdeu nada."
+      },
+      {
+        "text": "Nada no caminho",
+        "why": "Isso. Os roteadores limitam as próprias respostas time exceeded; o echo reply do destino não é limitado, e os 50 voltaram."
+      },
+      {
+        "text": "O destino, que esconde a própria perda",
+        "why": "Um destino não responde a uma sonda que nunca recebeu."
+      }
+    ]
+  },
+  "ex-qbkpb7dv": {
+    "prompt": "Um relatório do mtr mostra 0% nos saltos 1 a 4, depois 15% no salto 5, e 15% nos saltos 6 e 7, o destino. Onde você procura?",
+    "hint": "Onde a perda começa e fica?",
+    "choices": [
+      {
+        "text": "No salto 7, o destino",
+        "why": "A perda começou dois saltos antes e foi levada adiante."
+      },
+      {
+        "text": "No salto 5, ou no enlace que chega a ele",
+        "why": "Isso. Perda que começa num salto e fica até o fim é real, e começa ali."
+      },
+      {
+        "text": "Em lugar nenhum: é limitação de ICMP",
+        "why": "A limitação nunca chega ao destino; esta chega."
+      },
+      {
+        "text": "No salto 1, porque a perda se soma pelo caminho",
+        "why": "O salto 1 não perdeu nada; a perda aparece onde acontece."
+      }
+    ]
+  },
+  "ex-ygz92gcv": {
+    "prompt": "`icmp_ratemask = 6168` é 4096 + 2048 + 16 + 8. Qual bit, o tipo ICMP com que todo salto intermediário responde ao traceroute, dá o 2048?",
+    "hint": "2048 é 2 elevado a quê?",
+    "unit": "bit"
+  },
+  "ex-94b7baef": {
+    "prompt": "O primeiro mtr, a uma sonda por segundo, mostrou 0.0% nos saltos 1 e 2; o segundo, a dez por segundo, mostrou 80.0%. Por que a diferença?",
+    "hint": "icmp_ratelimit = 1000.",
+    "choices": [
+      {
+        "text": "Uma por segundo ficou dentro do limite de ICMP; dez não",
+        "why": "Isso. Depois de uma pequena rajada cada roteador responde uma sonda por segundo."
+      },
+      {
+        "text": "Remover a regra de descarte criou perda nos saltos",
+        "why": "Tirar um descarte não cria perda, e aquela regra só tocava o tráfego para o web2."
+      },
+      {
+        "text": "A perda cresce conforme se mandam mais sondas",
+        "why": "Uma porcentagem não cresce com a contagem; 20 e 50 sondas medem a mesma taxa."
+      },
+      {
+        "text": "A segunda rodada foi ao web1 por outro caminho",
+        "why": "As duas passaram por hq e pelo provedor, os mesmos dois saltos."
+      }
+    ]
+  },
+  "ex-wm1e5mj5": {
+    "prompt": "O nslookup imprimiu `** server can't find nosuch.example.com: NXDOMAIN`. O que aconteceu?",
+    "hint": "NXDOMAIN é um rcode numa resposta.",
+    "choices": [
+      {
+        "text": "O servidor não pôde ser alcançado",
+        "why": "Isso imprime timeouts e no servers could be reached, sem linha de servidor."
+      },
+      {
+        "text": "O servidor respondeu que o nome não existe",
+        "why": "Isso. Um servidor foi alcançado, procurou e disse isso."
+      },
+      {
+        "text": "O nome existe mas não tem registro de endereço",
+        "why": "Essa é outra resposta, sem código de erro; NXDOMAIN diz que o próprio nome não existe."
+      },
+      {
+        "text": "A configuração de resolvedor do laptop está errada",
+        "why": "O servidor configurado, 192.0.2.53, respondeu, então a configuração funcionou."
+      }
+    ]
+  },
+  "ex-vb5m2bxp": {
+    "prompt": "Que parte da saída do nslookup responde à pergunta 'eu estava perguntando ao servidor certo?'",
+    "hint": "O cabeçalho vem antes da resposta.",
+    "choices": [
+      {
+        "text": "`Name:`",
+        "why": "Isso repete o nome consultado."
+      },
+      {
+        "text": "A linha `Server:` no topo",
+        "why": "Isso. Ela nomeia o servidor que respondeu, antes de qualquer resposta."
+      },
+      {
+        "text": "`Address: 192.0.2.80`",
+        "why": "Essa é a resposta, o endereço do nome, e não quem a deu."
+      },
+      {
+        "text": "A última linha, vazia",
+        "why": "Ela encerra a saída e não diz nada."
+      }
+    ]
+  },
+  "ex-rbe28r2n": {
+    "prompt": "O NXDOMAIN vem de um servidor que procurou o nome; três timeouts querem dizer que nenhuma ___ voltou.",
+    "hint": "O oposto do NXDOMAIN, não a mesma falha.",
+    "blanks": [
+      {
+        "accept": [
+          "resposta"
+        ]
+      }
+    ]
+  },
+  "ex-ykmdz2b2": {
+    "prompt": "Qual das duas linhas de resumo do iperf3 é a vazão a citar?",
+    "hint": "O que chegou, não o que foi empurrado.",
+    "choices": [
+      {
+        "text": "A do receptor",
+        "why": "Isso. 19.1 Mbit/s é o que chegou ao web1."
+      },
+      {
+        "text": "A do emissor, a mais alta",
+        "why": "20.1 é o que foi empurrado, inclusive o que teve de ser reenviado."
+      },
+      {
+        "text": "O primeiro segundo, o pico",
+        "why": "26.2 foi o TCP passando do ponto antes dos descartes; não é a taxa do caminho."
+      },
+      {
+        "text": "A média entre emissor e receptor",
+        "why": "A média de duas coisas diferentes não é nenhuma delas."
+      }
+    ]
+  },
+  "ex-h40cj6tj": {
+    "prompt": "O upload mediu 19.1 Mbit/s recebidos e o `-R` mediu 3.31 Gbit/s. Por que a diferença?",
+    "hint": "Onde estava o shaper?",
+    "choices": [
+      {
+        "text": "O -R usa UDP, que o shaper ignora",
+        "why": "O -R continua TCP; só troca quem envia."
+      },
+      {
+        "text": "Só o upload de hq foi moldado",
+        "why": "Isso. O shaper ficava no que sai de hq para o provedor; o sentido do download não tinha nenhum."
+      },
+      {
+        "text": "O web1 envia mais rápido que o laptop",
+        "why": "Os dois são namespaces num computador só; o teto de 20 Mbit/s é um shaper, não uma máquina."
+      },
+      {
+        "text": "O teste reverso abre quatro fluxos",
+        "why": "Isso é o -P 4, e quatro fluxos deram 20.8 Mbit/s, não gigabits."
+      }
+    ]
+  },
+  "ex-7081x9av": {
+    "prompt": "O `-P 4` deu 20.8 Mbit/s contra 20.1 de um fluxo só. Em que situação fluxos paralelos teriam aumentado o número?",
+    "hint": "O que limita o total aqui, e o que limita uma conexão em outro lugar?",
+    "choices": [
+      {
+        "text": "Em qualquer enlace, já que quatro fluxos pegam quatro fatias",
+        "why": "Contra este shaper quatro fluxos deram os mesmos 20; o total era o limite."
+      },
+      {
+        "text": "Num enlace moldado, para contornar o shaper",
+        "why": "Um shaper limita o total, então fluxos extras só o dividem."
+      },
+      {
+        "text": "Num enlace que perde UDP",
+        "why": "O -P 4 aqui é TCP, e perda desacelera fluxos TCP, seja qual for o número."
+      },
+      {
+        "text": "Num caminho longo em que a janela de um fluxo é o limite",
+        "why": "Isso. Cada fluxo tem a própria janela, então quatro enchem um caminho que um só não enche."
+      }
+    ]
+  },
+  "ex-38jw5m0s": {
+    "prompt": "Com `-u -b 30M` o receptor recebeu 19.5 Mbit/s e 34% de perda. O que o UDP fez que o TCP não fez?",
+    "hint": "O TCP recua; o UDP não tem mecanismo para isso.",
+    "choices": [
+      {
+        "text": "Reenviou os datagramas perdidos",
+        "why": "O UDP não reenvia nada; os 4432 perdidos continuaram perdidos."
+      },
+      {
+        "text": "Continuou mandando na taxa pedida",
+        "why": "Isso. Ele manteve 30 Mbit/s e nada mandou desacelerar, então o shaper descartou o que não cabia."
+      },
+      {
+        "text": "Desacelerou quando o jitter subiu",
+        "why": "O emissor manteve 30.0 Mbit/s o tempo todo."
+      },
+      {
+        "text": "Comprimiu os dados para caber no enlace",
+        "why": "Nada comprime aqui; 19.5 é o que sobreviveu."
+      }
+    ]
+  },
+  "ex-kq0ddspq": {
+    "prompt": "Um teste de velocidade no navegador dá bem abaixo da taxa do plano. Quais destes podem explicar? Marque todos que se aplicam.",
+    "hint": "O teste conta dados, pelo caminho inteiro.",
+    "choices": [
+      {
+        "text": "O Wi-Fi entre o laptop e o roteador",
+        "why": "Isso: ele faz parte do caminho que o teste mede."
+      },
+      {
+        "text": "Cabeçalhos que o plano conta e o teste não",
+        "why": "Isso: a linha os leva, o teste só informa dados."
+      },
+      {
+        "text": "Limitação de ICMP nos roteadores do provedor",
+        "why": "Um teste de velocidade move dados por TCP; limites de ICMP nunca o tocam."
+      },
+      {
+        "text": "O servidor de teste ficar perto do provedor",
+        "why": "Um servidor perto favorece o número; não explica um baixo."
+      }
+    ]
+  },
+  "ex-y01m2f5c": {
+    "prompt": "Um usuário diz que um site 'não existe'. O `nslookup` imprime três linhas `communications error ... timed out` e `no servers could be reached`. Onde você procura?",
+    "hint": "Sem linha de servidor, sem resposta.",
+    "choices": [
+      {
+        "text": "No registro DNS do site, que sumiu do servidor",
+        "why": "Um registro que falta volta como NXDOMAIN, de um servidor que respondeu."
+      },
+      {
+        "text": "No caminho até o DNS ou no resolvedor",
+        "why": "Isso. Nada respondeu, então ainda não se sabe nada sobre o nome."
+      },
+      {
+        "text": "No servidor web, que caiu",
+        "why": "O servidor web nem foi alcançado: não há endereço para alcançá-lo."
+      },
+      {
+        "text": "No cache do navegador",
+        "why": "O nslookup não usa o navegador; a falha é dele mesmo."
+      }
+    ]
+  },
+  "ex-3yk3gra8": {
+    "prompt": "Ponha estes na ordem em que respondem 'o laptop consegue buscar www.example.com rápido?'",
+    "hint": "Um nome antes de um endereço; alcançar antes de carregar.",
+    "items": [
+      "nslookup www.example.com: o nome resolve?",
+      "ping 192.0.2.80: o endereço responde?",
+      "mtr 192.0.2.80: algo se perde no caminho, e onde?",
+      "iperf3 até uma máquina na outra ponta: quanto o caminho leva?"
+    ],
+    "trap": "Sem nome não há endereço para pingar, e um teste de vazão num caminho que perde pacotes mede a perda."
+  },
+  "ex-q8gppeys": {
+    "prompt": "Que ferramenta responde 'algo está se perdendo entre aqui e o web2, e em que salto?'",
+    "hint": "Se sim, e onde, ao longo de muitas rodadas.",
+    "choices": [
+      {
+        "text": "ping",
+        "why": "O ping diz se e quanto, mas não em que salto."
+      },
+      {
+        "text": "traceroute, rodado uma vez",
+        "why": "Três sondas por salto, uma vez, não medem uma taxa de perda."
+      },
+      {
+        "text": "mtr",
+        "why": "Isso. Ele sonda todo salto rodada após rodada e conta as perdas por salto."
+      },
+      {
+        "text": "iperf3 em modo UDP",
+        "why": "Ele mede perda de ponta a ponta, sem saltos."
+      }
+    ]
+  }
+}

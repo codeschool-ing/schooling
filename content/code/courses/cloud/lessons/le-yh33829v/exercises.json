@@ -1,0 +1,1254 @@
+[
+  {
+    "id": "ex-saa8za7w",
+    "version": 1,
+    "section": "what-it-means",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A colleague says a serverless function \"runs without servers\". What is actually the case?",
+    "hint": "The word describes who manages the machines.",
+    "choices": [
+      {
+        "text": "It runs on the provider's servers, which you never see or manage",
+        "correct": true,
+        "why": "Right. The servers exist; choosing, patching and counting them is the provider's job."
+      },
+      {
+        "text": "It runs in the visitor's browser, so no server is involved",
+        "correct": false,
+        "why": "That is front-end code. A function runs on the provider's machines, in a region or at the edge."
+      },
+      {
+        "text": "It runs on one server the provider reserves for your account",
+        "correct": false,
+        "why": "Nothing is reserved: copies are created as requests arrive and live on whatever machines the provider picks."
+      },
+      {
+        "text": "It runs on a machine you rent, patched by the provider",
+        "correct": false,
+        "why": "That is closer to a managed virtual machine. With a function you rent no machine at all; you pay per call."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgzdewmp",
+    "version": 1,
+    "section": "what-it-means",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An autoscaling group of virtual machines and a Lambda function both follow traffic. What does the function do that the group, as lesson 4 set it up, does not?",
+    "hint": "Think about a quiet night.",
+    "choices": [
+      {
+        "text": "Add capacity as traffic rises",
+        "correct": false,
+        "why": "Both do that; growing with traffic is what autoscaling is for."
+      },
+      {
+        "text": "Run programs written in Python",
+        "correct": false,
+        "why": "A virtual machine runs any language installed on it, so this is not the difference."
+      },
+      {
+        "text": "Scale down to zero copies",
+        "correct": true,
+        "why": "Right. The group keeps a minimum running for the first request; a function has no minimum, and the first request creates a copy."
+      },
+      {
+        "text": "Answer HTTP requests behind a load balancer",
+        "correct": false,
+        "why": "The group does that too; lesson 6 puts a load balancer in front of exactly such a group."
+      }
+    ]
+  },
+  {
+    "id": "ex-atsk5yrz",
+    "version": 1,
+    "section": "what-it-means",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves its API from PaaS to functions and announces \"no more operations work\". A library the functions import gets a published vulnerability. Who updates it?",
+    "hint": "Which side of lesson 1's line is the code on?",
+    "choices": [
+      {
+        "text": "The provider, because it now runs the runtime",
+        "correct": false,
+        "why": "The provider updates the runtime and the operating system, not the libraries inside your package."
+      },
+      {
+        "text": "Nobody: each copy lives briefly, so the flaw is never exploitable",
+        "correct": false,
+        "why": "A request is all an exploit needs, and a short-lived copy still handles it with the vulnerable code."
+      },
+      {
+        "text": "The provider, provided the team pays for a support plan",
+        "correct": false,
+        "why": "A support plan buys help, not ownership: what is inside your package stays yours either way."
+      },
+      {
+        "text": "The team: the code and its imports stay on its side",
+        "correct": true,
+        "why": "Right. The provider runs the runtime and the machines; the package you upload, libraries included, is yours."
+      }
+    ]
+  },
+  {
+    "id": "ex-syq3z0n5",
+    "version": 1,
+    "section": "what-it-means",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Lambda, the one size you still choose for a function is its ___, and the share of processor follows it in proportion.",
+    "hint": "It is measured in MB.",
+    "blanks": [
+      {
+        "accept": [
+          "memory",
+          "ram"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-chnk1d5s",
+    "version": 1,
+    "section": "a-function",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a Lambda handler file, where does code run once per execution environment rather than on every call?",
+    "hint": "Look at what sits above `def handler`.",
+    "choices": [
+      {
+        "text": "Inside the handler, before its return",
+        "correct": false,
+        "why": "Everything inside the handler runs on every call."
+      },
+      {
+        "text": "At module level, outside the handler",
+        "correct": true,
+        "why": "Right. The file is loaded once when the environment starts; only the handler runs per call."
+      },
+      {
+        "text": "In the `context` object",
+        "correct": false,
+        "why": "`context` is data about the call that the platform passes in, not code you write."
+      },
+      {
+        "text": "In a helper function the handler calls",
+        "correct": false,
+        "why": "A helper called from the handler runs whenever the handler does, so on every call."
+      }
+    ]
+  },
+  {
+    "id": "ex-e7b4dtp0",
+    "version": 1,
+    "section": "a-function",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Behind an API gateway, a handler returns `{\"statusCode\": 200, \"body\": {\"message\": \"hi\"}}`. What is wrong with it?",
+    "hint": "Look at the type of each value.",
+    "choices": [
+      {
+        "text": "The status code has to be the string \"200\"",
+        "correct": false,
+        "why": "It is a number in this format, as in the lesson's handler."
+      },
+      {
+        "text": "Every response must carry a `headers` key",
+        "correct": false,
+        "why": "Headers are optional; the lesson's handler sets one only to say the body is JSON."
+      },
+      {
+        "text": "A handler prints its response instead of returning it",
+        "correct": false,
+        "why": "Printing writes to the function's log; the gateway reads the return value."
+      },
+      {
+        "text": "The body has to be a string",
+        "correct": true,
+        "why": "Right. The gateway copies the body into the HTTP response as text; the lesson's handler passes its dict through `json.dumps` for that reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-eft1hydf",
+    "version": 1,
+    "section": "a-function",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A handler increments a module-level counter and returns it. Two requests from the same person, a second apart, both get 1. What happened?",
+    "hint": "Each copy has its own module.",
+    "choices": [
+      {
+        "text": "Two different execution environments served them",
+        "correct": true,
+        "why": "Right. Each environment has its own counter, and nothing sends one person to the same copy twice."
+      },
+      {
+        "text": "The counter is reset at the start of every call",
+        "correct": false,
+        "why": "Module-level code runs once per environment, not per call; in one warm environment the counter keeps growing."
+      },
+      {
+        "text": "The second request was a retry of the first one",
+        "correct": false,
+        "why": "A retry is a new call; in the same environment it would still have read 2."
+      },
+      {
+        "text": "Python cannot change a module variable from inside a function",
+        "correct": false,
+        "why": "With `global` it can, and that is what the lesson's handler does."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pft68q0",
+    "version": 1,
+    "section": "a-function",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A call still running when its configured ___ runs out is stopped by the platform, and the caller sees a failure.",
+    "hint": "On Lambda it defaults to 3 seconds.",
+    "blanks": [
+      {
+        "accept": [
+          "timeout",
+          "time limit",
+          "time-out"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gy9twae3",
+    "version": 1,
+    "section": "calling-it-locally",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Calling the handler as a Python function on a laptop, with a hand-written event, tests what?",
+    "hint": "Lambda is not involved.",
+    "choices": [
+      {
+        "text": "How long a cold start takes once it runs on Lambda",
+        "correct": false,
+        "why": "A cold start only exists on the platform; the laptop has no execution environment to create."
+      },
+      {
+        "text": "Whether the IAM role grants the function enough permission",
+        "correct": false,
+        "why": "Permissions are checked by the provider when the function calls a service, which never happens here."
+      },
+      {
+        "text": "The contract: what goes in and what comes out",
+        "correct": true,
+        "why": "Right. It checks the logic against the event you wrote, and nothing about the platform."
+      },
+      {
+        "text": "Whether the gateway is set up to send requests to this handler",
+        "correct": false,
+        "why": "The gateway's configuration lives on the platform; the local call skips the gateway entirely."
+      }
+    ]
+  },
+  {
+    "id": "ex-zavw40qm",
+    "version": 1,
+    "section": "calling-it-locally",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the laptop, the second call printed `\"served_by_this_copy\": 2`. What does that tell you about Lambda?",
+    "hint": "How many Python processes ran the two calls?",
+    "choices": [
+      {
+        "text": "That Lambda keeps state between calls, so the counter is safe to use",
+        "correct": false,
+        "why": "Lambda keeps nothing it promises; the laptop's single process is not how the platform behaves."
+      },
+      {
+        "text": "Nothing, since both calls shared one process",
+        "correct": true,
+        "why": "Right, and Lambda does not promise that. The laptop shows the most optimistic case, one copy serving everything."
+      },
+      {
+        "text": "That Lambda would answer 2 as well, since the code is identical",
+        "correct": false,
+        "why": "Identical code in a different environment starts its own counter at 1."
+      },
+      {
+        "text": "That the second call was a cold start",
+        "correct": false,
+        "why": "A cold start loads the module afresh, and the counter would have read 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9f9vn73",
+    "version": 1,
+    "section": "calling-it-locally",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler reads `event[\"queryStringParameters\"][\"name\"]`. Its local tests always pass an event with a query string, and all pass. In production some requests fail. What is the likeliest cause?",
+    "hint": "Which case did the lesson's second local call test?",
+    "choices": [
+      {
+        "text": "The platform strips query strings before calling the handler",
+        "correct": false,
+        "why": "Then every request would fail, not some of them."
+      },
+      {
+        "text": "Production runs a Python version that reads dicts differently",
+        "correct": false,
+        "why": "Dictionary lookups behave the same across Python 3 versions; the event is what differs."
+      },
+      {
+        "text": "The gateway sends the query string unparsed, as one string",
+        "correct": false,
+        "why": "For this integration it arrives parsed into a dict; if it did not, no request would work."
+      },
+      {
+        "text": "Some events come without that key, or with null in it",
+        "correct": true,
+        "why": "Right: requests with no query string. The tests never wrote that event, so they could not find it; `.get` with `or {}` handles it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2q998zck",
+    "version": 1,
+    "section": "triggers",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each trigger to what the event it hands the function carries.",
+    "hint": "The event says what happened, not always the data itself.",
+    "pairs": [
+      {
+        "left": "An HTTP request through a gateway",
+        "right": "A path, headers and a query string"
+      },
+      {
+        "left": "Messages on a queue",
+        "right": "A batch of records"
+      },
+      {
+        "left": "A file landing in a bucket",
+        "right": "The bucket's name and the object's key"
+      },
+      {
+        "left": "A schedule",
+        "right": "A notice that the rule fired, and when"
+      }
+    ],
+    "right_distractors": [
+      "The contents of the uploaded file"
+    ]
+  },
+  {
+    "id": "ex-scj9xas8",
+    "version": 1,
+    "section": "triggers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function that sends a welcome e-mail reads messages from an SQS standard queue. Some people get the e-mail twice, though the function never failed. What fixes it?",
+    "hint": "Delivery is at least once.",
+    "choices": [
+      {
+        "text": "Record each message's id and skip ids already handled",
+        "correct": true,
+        "why": "Right. A duplicate is part of the contract, so the handler has to be idempotent."
+      },
+      {
+        "text": "Raise the timeout so that no call is ever cut off",
+        "correct": false,
+        "why": "No call failed; duplicates arrive even when every call succeeds."
+      },
+      {
+        "text": "Give the function more memory so each call ends sooner",
+        "correct": false,
+        "why": "Speed does not change delivery; the same message is still delivered twice."
+      },
+      {
+        "text": "Replace the queue with a schedule that runs hourly",
+        "correct": false,
+        "why": "It trades the duplicates for an hour of delay and still does not make the handler safe to run twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0tp1px3",
+    "version": 1,
+    "section": "triggers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these calls have nobody waiting for the function's return value? Choose all that apply.",
+    "hint": "Only one kind of trigger has a caller at the other end.",
+    "choices": [
+      {
+        "text": "A photo landing in a bucket",
+        "correct": true,
+        "why": "Right. The result is the thumbnail it writes, and nobody is waiting on the call."
+      },
+      {
+        "text": "A browser calling a function URL",
+        "correct": false,
+        "why": "A browser waits for the response, and the return value becomes it."
+      },
+      {
+        "text": "A rule that fires every night",
+        "correct": true,
+        "why": "Right. A schedule has no caller; the result is whatever the function changed."
+      },
+      {
+        "text": "A batch taken off a queue",
+        "correct": true,
+        "why": "Right. Whoever put the messages there has moved on; a failure goes back on the queue rather than to a person."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bvdh8xv",
+    "version": 1,
+    "section": "triggers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function triggered by files in a bucket has failed on every event for a week, and nobody noticed. What would have made the failure visible?",
+    "hint": "There is no user to complain.",
+    "choices": [
+      {
+        "text": "A longer timeout, so every event has time to finish",
+        "correct": false,
+        "why": "Nothing says the events timed out, and a longer timeout reports nothing to anybody."
+      },
+      {
+        "text": "An HTTP trigger in front of the bucket",
+        "correct": false,
+        "why": "It adds a caller, but the uploads still arrive as bucket events that nobody watches."
+      },
+      {
+        "text": "A dead-letter queue with an alarm on it",
+        "correct": true,
+        "why": "Right. Failed events are kept aside, and the alarm tells a person they are piling up."
+      },
+      {
+        "text": "More memory, so that the function stops failing",
+        "correct": false,
+        "why": "It guesses at a cause nobody has seen, and a failure of any other kind stays just as silent."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvrs2y9p",
+    "version": 1,
+    "section": "cold-starts",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the phases of a cold start on Lambda in order.",
+    "hint": "Your code cannot run before there is somewhere to run it.",
+    "items": [
+      "A request arrives and no execution environment is free",
+      "The platform creates an environment and puts your code in it",
+      "The runtime starts and runs your module-level code",
+      "The handler is called with the event",
+      "The environment is frozen and kept for the next request"
+    ],
+    "trap": "Module-level code before the environment is the usual slip: the init runs inside an environment that already exists."
+  },
+  {
+    "id": "ex-5bzefrqv",
+    "version": 1,
+    "section": "cold-starts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the first request after a quiet hour slower than the ones right after it?",
+    "hint": "What had to exist before the handler could run?",
+    "choices": [
+      {
+        "text": "The provider slows down functions that are rarely called",
+        "correct": false,
+        "why": "Nothing in the platform penalises a quiet function; it simply has no copy ready."
+      },
+      {
+        "text": "No warm copy was left, so one had to be built",
+        "correct": true,
+        "why": "Right. A new environment was created and initialised first: the cold start. The requests after it reuse it."
+      },
+      {
+        "text": "The function's code is compiled again every hour",
+        "correct": false,
+        "why": "Nothing is recompiled on a timer; the delay comes from creating an environment."
+      },
+      {
+        "text": "The API gateway's cache had been emptied",
+        "correct": false,
+        "why": "A gateway cache is not the cause; the delay is in the function starting."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4y16r8x",
+    "version": 1,
+    "section": "cold-starts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A handler creates its database client inside the handler. What changes when that line moves to module level?",
+    "hint": "Module level runs once per environment.",
+    "choices": [
+      {
+        "text": "Cold starts become shorter",
+        "correct": false,
+        "why": "If anything they grow: the client is now created during the init, while the warm calls get cheaper."
+      },
+      {
+        "text": "Every environment of the function shares one client",
+        "correct": false,
+        "why": "Each environment has its own module, so each builds its own client."
+      },
+      {
+        "text": "Warm calls reuse the client",
+        "correct": true,
+        "why": "Right. It is paid once per environment and reused by every warm call after that."
+      },
+      {
+        "text": "Nothing, because Lambda runs the whole file on each call",
+        "correct": false,
+        "why": "Only the handler runs per call; the file is loaded once per environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-fye2f2n0",
+    "version": 1,
+    "section": "cold-starts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Once an hour, 50 requests reach a function in the same second, and no warm environment is left from the hour before. What do they meet?",
+    "hint": "One environment serves one request at a time.",
+    "choices": [
+      {
+        "text": "Only the first pays; the other 49 queue for its environment",
+        "correct": false,
+        "why": "An environment serves one request at a time, and the platform creates more rather than queue 49 behind it."
+      },
+      {
+        "text": "None, because Lambda always keeps one environment warm",
+        "correct": false,
+        "why": "Without provisioned concurrency nothing is kept warm on purpose; a quiet hour can leave none."
+      },
+      {
+        "text": "All 50 are refused until one environment is ready",
+        "correct": false,
+        "why": "The platform creates environments for them; it does not refuse the burst."
+      },
+      {
+        "text": "A cold start each, since every one needs a new environment",
+        "correct": true,
+        "why": "Right. A burst is where cold starts cluster: fifty requests, fifty environments created at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-9a37784d",
+    "version": 1,
+    "section": "cold-starts",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Lambda, keeping a number of environments initialised in advance, charged for whether they are used or not, is called provisioned ___.",
+    "hint": "How many copies run at once.",
+    "blanks": [
+      {
+        "accept": [
+          "concurrency"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q4mrp1x1",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function configured with 1,024 MB runs for 250 ms. How many GB-seconds does one call use?",
+    "hint": "Memory in GB times duration in seconds.",
+    "value": 0.25,
+    "tolerance": 0,
+    "unit": "GB-seconds"
+  },
+  {
+    "id": "ex-dak67rsj",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function answers 2 million calls a month at 256 MB and 200 ms each. How many GB-seconds is that in the month?",
+    "hint": "256 MB is a quarter of a GB.",
+    "value": 100000,
+    "tolerance": 0,
+    "unit": "GB-seconds"
+  },
+  {
+    "id": "ex-h8hfay2n",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the sheet's x86 prices and no free tier, what do 10 million requests at 512 MB and 120 ms cost in a month, in USD?",
+    "hint": "Two meters: requests, then GB-seconds.",
+    "value": 12.0,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-r60s39p6",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The lesson's API doubles its traffic to 6 million requests a month, still at 512 MB and 120 ms. With the free tier subtracted, what does the month cost, in USD?",
+    "hint": "Check the GB-seconds against the 400,000 allowance before pricing them.",
+    "value": 1.0,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-xkkdf6d9",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function spends 100 ms of its 120 ms waiting for a database to answer. How is the waiting billed on Lambda?",
+    "hint": "What does a GB-second measure?",
+    "choices": [
+      {
+        "text": "Like work: GB-seconds count the held time",
+        "correct": true,
+        "why": "Right. The meter runs from the call's start to its return, busy or waiting."
+      },
+      {
+        "text": "Not at all: Lambda bills processor time alone",
+        "correct": false,
+        "why": "That is the choice Cloudflare makes for Workers; Lambda's GB-seconds count the whole duration."
+      },
+      {
+        "text": "At the Arm rate, which is lower",
+        "correct": false,
+        "why": "The rate depends on the architecture you chose, not on what the code is doing."
+      },
+      {
+        "text": "As extra requests, one for every database query",
+        "correct": false,
+        "why": "The request meter counts calls to the function, not what the function calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-qb00ds4t",
+    "version": 1,
+    "section": "function-or-machine",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sheet gives an m7g.large in us-east-1, on demand, at 0.08160 USD an hour. With a 730-hour month and the function at 1.20 USD per million requests, where is the crossover, in millions of requests a month?",
+    "hint": "The machine's month divided by the function's price per million.",
+    "value": 49.6,
+    "tolerance": 0.2,
+    "unit": "million requests"
+  },
+  {
+    "id": "ex-sdnawzhc",
+    "version": 1,
+    "section": "function-or-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson also compare the function with two t3.medium and a load balancer, and not only with one machine?",
+    "hint": "What does a function give you that one machine does not?",
+    "choices": [
+      {
+        "text": "Because the function needs a load balancer too, so the two cancel out",
+        "correct": false,
+        "why": "A function gets its capacity from the platform; nothing cancels, and that is why the pair costs more."
+      },
+      {
+        "text": "Because one machine alone is not the same service",
+        "correct": true,
+        "why": "Right: it has no second copy when it fails. A fair comparison prices the machines it takes to offer what the function offers."
+      },
+      {
+        "text": "Because AWS sells t3.medium instances in pairs",
+        "correct": false,
+        "why": "Instances are sold one at a time; the pair is a design choice from lesson 4."
+      },
+      {
+        "text": "Because a t3.medium is too small to run Python",
+        "correct": false,
+        "why": "Python runs on far smaller machines; size is not the argument here."
+      }
+    ]
+  },
+  {
+    "id": "ex-84pb5vwq",
+    "version": 1,
+    "section": "function-or-machine",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two workloads each serve 20 million requests a month at the same size. A is steady all day; B arrives in a two-hour rush every evening. Which statement holds?",
+    "hint": "A machine is sized for the busiest hour.",
+    "choices": [
+      {
+        "text": "Both cost the same on either, since the monthly totals are equal",
+        "correct": false,
+        "why": "The function's total follows the total, but a machine is paid for the capacity of the peak."
+      },
+      {
+        "text": "The machine costs less for B, since it idles twenty-two hours a day",
+        "correct": false,
+        "why": "Idle hours are paid hours; the machine for B is the bigger one, and it idles at full price."
+      },
+      {
+        "text": "The function costs the same for both; the machine for B has to be sized for the rush",
+        "correct": true,
+        "why": "Right. Same requests, same function bill; the rush pushes B's machine up and B towards the function."
+      },
+      {
+        "text": "The function costs more for B, because bursts are billed at a higher rate",
+        "correct": false,
+        "why": "The rates per request and per GB-second are the same at any hour; the total follows the requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-g649tedg",
+    "version": 1,
+    "section": "function-or-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reserved pricing lowers the machine's hourly price. What happens to the crossover with the function?",
+    "hint": "The flat line moves down.",
+    "choices": [
+      {
+        "text": "It moves right, so the function wins at more volumes",
+        "correct": false,
+        "why": "A cheaper machine is beaten by the function over a shorter stretch, not a longer one."
+      },
+      {
+        "text": "It stays put, because reserving changes only when you pay",
+        "correct": false,
+        "why": "Reserving changes the hourly price itself, and the crossover is that price divided by the function's."
+      },
+      {
+        "text": "It disappears: a reserved machine is cheaper at every volume",
+        "correct": false,
+        "why": "Below the crossover the function still costs less; at zero requests it costs nothing at all."
+      },
+      {
+        "text": "It moves left: the machine starts winning at a lower volume",
+        "correct": true,
+        "why": "Right. The sheet's 1-year t3.medium moves the first crossing from 25.3 to 15.9 million."
+      }
+    ]
+  },
+  {
+    "id": "ex-qctex6y3",
+    "version": 1,
+    "section": "cloudflare-workers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a Cloudflare Worker run in, where Lambda gives each environment a small virtual machine?",
+    "hint": "It comes from the JavaScript engine in Chrome.",
+    "choices": [
+      {
+        "text": "A V8 isolate, in a process shared with other scripts",
+        "correct": true,
+        "why": "Right. Isolates are far cheaper to create than virtual machines, which is why Workers start almost at once."
+      },
+      {
+        "text": "A container started for each request that arrives",
+        "correct": false,
+        "why": "No container is started per request; that start-up cost is exactly what isolates avoid."
+      },
+      {
+        "text": "A dedicated virtual machine in a region you pick yourself",
+        "correct": false,
+        "why": "There is no region to pick by default, and no machine of your own."
+      },
+      {
+        "text": "The visitor's own browser, as a service worker",
+        "correct": false,
+        "why": "A service worker runs in the browser; a Cloudflare Worker runs in Cloudflare's edge locations."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgbzpqx8",
+    "version": 1,
+    "section": "cloudflare-workers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Worker answering users in São Paulo makes three queries per request to a database in us-east-1. What did running the code at the edge buy?",
+    "hint": "Where is the data?",
+    "choices": [
+      {
+        "text": "A faster response, since the Worker skips the cold start",
+        "correct": false,
+        "why": "The start is quick, but three trips to Virginia per request are still paid on every call."
+      },
+      {
+        "text": "Little: each request still crosses an ocean three times",
+        "correct": true,
+        "why": "Right. The code moved to the user and the data stayed an ocean away."
+      },
+      {
+        "text": "Lower load on the database, as the edge caches all queries",
+        "correct": false,
+        "why": "A Worker caches nothing unless its code does; the database sees every query."
+      },
+      {
+        "text": "Nothing, because Workers cannot reach databases",
+        "correct": false,
+        "why": "They can reach one over the network; the problem is how far away it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-td5pv0p2",
+    "version": 1,
+    "section": "cloudflare-workers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A library needs Node's full file system API and a module compiled to native code. Where does it run with the least change?",
+    "hint": "Which runtime is a full Node.js?",
+    "choices": [
+      {
+        "text": "In a Cloudflare Worker, since Workers run JavaScript",
+        "correct": false,
+        "why": "Workers run JavaScript, but not all of Node, and native modules are out of reach."
+      },
+      {
+        "text": "In the page's own JavaScript, in the browser",
+        "correct": false,
+        "why": "A browser has no Node file system API and loads no native modules."
+      },
+      {
+        "text": "In a Lambda function on a Node.js runtime",
+        "correct": true,
+        "why": "Right. It is a full Node.js with a disk at `/tmp`; the native module has to be built for Lambda's platform."
+      },
+      {
+        "text": "In edge code on Vercel, which runs before the cache",
+        "correct": false,
+        "why": "Edge code runs in a restricted runtime of the same family as Workers, with the same limits."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6yz4ee4",
+    "version": 1,
+    "section": "cloudflare-workers",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Cloudflare bills a Worker for requests and for ___ time, not for the time it spends waiting on another service.",
+    "hint": "The processor.",
+    "blanks": [
+      {
+        "accept": [
+          "cpu",
+          "processor"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zzhnn63y",
+    "version": 1,
+    "section": "vercel-and-netlify",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put a change on Vercel or Netlify in order, from code to live site.",
+    "hint": "The preview comes before the merge.",
+    "items": [
+      "Push a branch and open a pull request",
+      "The platform builds the branch",
+      "A reviewer opens the preview URL",
+      "The pull request is merged into main",
+      "The build of main becomes the live site"
+    ],
+    "trap": "The preview URL cannot come before the build: it is the build, at an address of its own."
+  },
+  {
+    "id": "ex-art07x4v",
+    "version": 1,
+    "section": "vercel-and-netlify",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which project fits Vercel or Netlify worst?",
+    "hint": "Where does the product's weight sit?",
+    "choices": [
+      {
+        "text": "A documentation site built by a static site generator from Markdown",
+        "correct": false,
+        "why": "A fit: every push rebuilds it, and it is served from a CDN."
+      },
+      {
+        "text": "A marketing site whose only API is a contact form",
+        "correct": false,
+        "why": "A fit: the form is one function in `api/` beside the pages."
+      },
+      {
+        "text": "The front end of an app whose API runs elsewhere",
+        "correct": false,
+        "why": "A fit: the platform builds and serves the front end, which calls the API over HTTP."
+      },
+      {
+        "text": "A video service whose back end transcodes each upload for an hour",
+        "correct": true,
+        "why": "Right. The back end is most of the product and runs far past a function's limits."
+      }
+    ]
+  },
+  {
+    "id": "ex-85tp25nw",
+    "version": 1,
+    "section": "vercel-and-netlify",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do teams adopt Vercel or Netlify, according to the lesson?",
+    "hint": "One step of the workflow.",
+    "choices": [
+      {
+        "text": "A preview URL for every pull request",
+        "correct": true,
+        "why": "Right. A change is reviewed as a page, by whoever needs to see it."
+      },
+      {
+        "text": "The longest function durations of any platform",
+        "correct": false,
+        "why": "Their functions carry the same kind of limits as Lambda's; duration is not the draw."
+      },
+      {
+        "text": "A virtual machine for each site, with SSH access",
+        "correct": false,
+        "why": "There is no machine to log in to; that is the point of the model."
+      },
+      {
+        "text": "Hosting a relational database beside the site",
+        "correct": false,
+        "why": "Heavy database work is one of the things the lesson places elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-ep9pnvzt",
+    "version": 1,
+    "section": "limits-and-state",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these fit inside a single Lambda call? Choose all that apply.",
+    "hint": "15 minutes, and 6 MB each way for a synchronous call.",
+    "choices": [
+      {
+        "text": "A 25-minute batch job",
+        "correct": false,
+        "why": "Past the 15-minute maximum; it has to be cut into steps or run elsewhere."
+      },
+      {
+        "text": "A report that takes 10 minutes to build",
+        "correct": true,
+        "why": "Right. Under 15 minutes, provided the timeout is raised from its default."
+      },
+      {
+        "text": "A 4 MB JSON response to a synchronous request",
+        "correct": true,
+        "why": "Right. Under the 6 MB cap on a synchronous response."
+      },
+      {
+        "text": "A 50 MB file returned in the response body",
+        "correct": false,
+        "why": "Past the 6 MB cap; the function puts the file in object storage and returns a link."
+      }
+    ]
+  },
+  {
+    "id": "ex-zz5djb9e",
+    "version": 1,
+    "section": "limits-and-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A burst creates 800 environments of a function, and its PostgreSQL database starts refusing connections. Which change would NOT help?",
+    "hint": "The problem is how many connections are open at once.",
+    "choices": [
+      {
+        "text": "A connection proxy such as RDS Proxy",
+        "correct": false,
+        "why": "It helps: a small pool of real connections is lent to all the environments."
+      },
+      {
+        "text": "Giving the function more memory",
+        "correct": true,
+        "why": "Right, it does not help. Each copy gets faster, but just as many copies each open a connection."
+      },
+      {
+        "text": "A reserved concurrency limit on the function",
+        "correct": false,
+        "why": "It helps: fewer copies at once means fewer connections, at the price of turning some requests away."
+      },
+      {
+        "text": "Moving the data to a database reached over HTTP",
+        "correct": false,
+        "why": "It helps: with no long-lived connections there is no pool to run out of."
+      }
+    ]
+  },
+  {
+    "id": "ex-1mn1p6vk",
+    "version": 1,
+    "section": "limits-and-state",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each wall of a Lambda function to what a design does about it.",
+    "hint": "Each answer moves the work or the data somewhere else.",
+    "pairs": [
+      {
+        "left": "A 15-minute maximum per call",
+        "right": "Cut the job into steps"
+      },
+      {
+        "left": "A 6 MB synchronous response",
+        "right": "Return a link to object storage"
+      },
+      {
+        "left": "No state between calls",
+        "right": "Keep the session in a database"
+      },
+      {
+        "left": "One connection per environment",
+        "right": "Put a connection proxy in front of the database"
+      }
+    ],
+    "right_distractors": [
+      "Raise the memory to 10,240 MB"
+    ]
+  },
+  {
+    "id": "ex-e20c93f2",
+    "version": 1,
+    "section": "when-not-to",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these jobs is the worst fit for a function?",
+    "hint": "Bursts, quick, remembers nothing.",
+    "choices": [
+      {
+        "text": "Resizing a photo when it is uploaded",
+        "correct": false,
+        "why": "A good fit: an event, a short job, nobody waiting."
+      },
+      {
+        "text": "An internal API called a few hundred times a day",
+        "correct": false,
+        "why": "A good fit: quiet most of the day, so it costs almost nothing between calls."
+      },
+      {
+        "text": "A game server holding a room's state for hours",
+        "correct": true,
+        "why": "Right. Its value is what the process remembers, and a function is built to forget."
+      },
+      {
+        "text": "Sending a report every Monday morning",
+        "correct": false,
+        "why": "A good fit: a schedule trigger, and the job ends in minutes at most."
+      }
+    ]
+  },
+  {
+    "id": "ex-ke9axybr",
+    "version": 1,
+    "section": "when-not-to",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team plans to move its Lambda functions to Cloudflare Workers one day. What can they keep portable now?",
+    "hint": "The lesson separates the logic from the wiring.",
+    "choices": [
+      {
+        "text": "The handler's signature, `(event, context)`",
+        "correct": false,
+        "why": "Lambda's `(event, context)` and Workers' `fetch(request)` differ; the signature is wiring."
+      },
+      {
+        "text": "The event shapes the functions read from triggers",
+        "correct": false,
+        "why": "Event shapes belong to the vendor's triggers, and they change with the platform."
+      },
+      {
+        "text": "The IAM roles the functions run with",
+        "correct": false,
+        "why": "IAM is AWS's; permissions are rewritten on any other platform."
+      },
+      {
+        "text": "The business logic, kept apart from the handler",
+        "correct": true,
+        "why": "Right. Logic that takes plain values and returns plain values moves; only the edges are rewritten."
+      }
+    ]
+  },
+  {
+    "id": "ex-79prk4a2",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each platform to how it runs your code.",
+    "hint": "Region, edge, git or hour.",
+    "pairs": [
+      {
+        "left": "AWS Lambda",
+        "right": "A small virtual machine per environment, in a region you choose"
+      },
+      {
+        "left": "Cloudflare Workers",
+        "right": "V8 isolates in edge locations close to the user"
+      },
+      {
+        "left": "Vercel or Netlify",
+        "right": "A site built from every git push, with functions alongside"
+      },
+      {
+        "left": "An EC2 t3.medium",
+        "right": "One machine you run, paid for by the hour"
+      }
+    ],
+    "right_distractors": [
+      "A copy of the code in every visitor's browser"
+    ]
+  },
+  {
+    "id": "ex-5p30s5jd",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order these from the most left to you to the least, on lesson 1's line.",
+    "hint": "Functions sit between PaaS and SaaS.",
+    "items": [
+      "Your own servers",
+      "IaaS",
+      "PaaS",
+      "Serverless functions",
+      "SaaS"
+    ],
+    "trap": "PaaS after functions is the usual slip: with PaaS you still decide how many instances run."
+  },
+  {
+    "id": "ex-sgd9bv11",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A photo site: a few hundred uploads a day each need a thumbnail, and the public gallery page serves 60 requests a second, all day. Which split fits this lesson?",
+    "hint": "Treat the two workloads separately.",
+    "choices": [
+      {
+        "text": "Thumbnails on functions, the gallery on machines",
+        "correct": true,
+        "why": "Right. The uploads are spiky events; the gallery is steady load far past the crossover."
+      },
+      {
+        "text": "Functions for both, since both are web traffic",
+        "correct": false,
+        "why": "The gallery's 60 a second, all day, is steady load, where the machine line is lower."
+      },
+      {
+        "text": "Machines for both, to be rid of cold starts",
+        "correct": false,
+        "why": "A few hundred thumbnails a day would keep a machine idle almost all the time."
+      },
+      {
+        "text": "Machines for the thumbnails, functions for the gallery",
+        "correct": false,
+        "why": "The reverse of the shape: the bursty work gets the machine and the steady work the function."
+      }
+    ]
+  },
+  {
+    "id": "ex-at9f2s6v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Lambda function is quiet all night and gets a burst every morning at nine. Users complain that the first minutes are slow. Which change targets exactly that?",
+    "hint": "The slowness is the environments being created.",
+    "choices": [
+      {
+        "text": "Moving the database client inside the handler",
+        "correct": false,
+        "why": "That makes every call slower, warm or cold."
+      },
+      {
+        "text": "Provisioned concurrency before nine",
+        "correct": true,
+        "why": "Right. Environments are ready before the burst arrives; a lighter init helps any that still have to be created."
+      },
+      {
+        "text": "A longer timeout on the function",
+        "correct": false,
+        "why": "The calls are slow, not cut off; the timeout does not touch start-up."
+      },
+      {
+        "text": "A dead-letter queue for the failed requests",
+        "correct": false,
+        "why": "Nothing failed, and HTTP calls have a caller waiting, not a queue."
+      }
+    ]
+  }
+]

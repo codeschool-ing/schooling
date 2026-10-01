@@ -1,0 +1,651 @@
+[
+  {
+    "id": "ex-kthta6r8",
+    "version": 1,
+    "section": "tls-vpn",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In OpenVPN, what is TLS used for?",
+    "hint": "Two channels, one of them TLS.",
+    "choices": [
+      {
+        "text": "Encrypting every tunnel packet as a TLS record",
+        "correct": false,
+        "why": "The traffic goes in OpenVPN's own data packets, not in TLS records."
+      },
+      {
+        "text": "Checking certificates and agreeing on keys",
+        "correct": true,
+        "why": "Right. That is the control channel; the data channel uses the keys it produced."
+      },
+      {
+        "text": "Replacing IKE on UDP port 500",
+        "correct": false,
+        "why": "OpenVPN runs on its own port, 1194 here, and has nothing to do with IKE."
+      },
+      {
+        "text": "Carrying only the web pages the laptop opens",
+        "correct": false,
+        "why": "Anything routed into tun0 goes through the tunnel, web or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-xg19pzxq",
+    "version": 1,
+    "section": "tls-vpn",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A rogue machine presents a certificate the lab's authority really did sign, for a server named files.example.com. Which line of client.conf makes the laptop refuse it?",
+    "hint": "It is a genuine server certificate, with the wrong name.",
+    "choices": [
+      {
+        "text": "`remote-cert-tls server`",
+        "correct": false,
+        "why": "That demands a server certificate, and this one is a server certificate, so it passes."
+      },
+      {
+        "text": "`ca ca.crt`",
+        "correct": false,
+        "why": "The same authority signed it, so the chain checks out."
+      },
+      {
+        "text": "`verify-x509-name vpn.example.com name`",
+        "correct": true,
+        "why": "Right. The name is files.example.com, not vpn.example.com."
+      },
+      {
+        "text": "`dev tun`",
+        "correct": false,
+        "why": "That chooses the kind of interface, and checks nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-529yf8qg",
+    "version": 1,
+    "section": "tls-vpn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `push \"route 192.168.10.0 255.255.255.0\"` in the server's file do?",
+    "hint": "Push, as in send to somebody.",
+    "choices": [
+      {
+        "text": "Adds a route on the server towards the clients",
+        "correct": false,
+        "why": "The server knows 10.8.0.0/24 from its `server` line."
+      },
+      {
+        "text": "Gives clients a route to 192.168.10.0/24",
+        "correct": true,
+        "why": "Right. The laptop's route via 10.8.0.1 arrived that way."
+      },
+      {
+        "text": "Announces the office network to the ISP",
+        "correct": false,
+        "why": "The ISP never learns a private network; the route lives on the clients."
+      },
+      {
+        "text": "Lets the clients reach one another",
+        "correct": false,
+        "why": "That is a different option; this route leads to 192.168.10.0/24."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkvywxvg",
+    "version": 1,
+    "section": "tls-vpn",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab's first configuration, the OpenVPN server listened on UDP port ___.",
+    "hint": "The line after `proto udp`.",
+    "blanks": [
+      {
+        "accept": [
+          "1194"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9qqpjgk8",
+    "version": 1,
+    "section": "handshake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "tshark labelled the laptop's Client Hello `TLSv1`, and everything after the Server Hello `TLSv1.3`. What happened?",
+    "hint": "Look at what the log said was agreed.",
+    "choices": [
+      {
+        "text": "The client offered TLS 1.0 and the server upgraded it",
+        "correct": false,
+        "why": "A server cannot raise a version the client never offered; the client asked for 1.3 inside."
+      },
+      {
+        "text": "tshark could not decode the first packet",
+        "correct": false,
+        "why": "It decoded it well enough to name it a Client Hello."
+      },
+      {
+        "text": "An old version, written on purpose",
+        "correct": true,
+        "why": "Right. The record header says an old version so old middleboxes pass it; the real one is named inside, and the Server Hello settles it."
+      },
+      {
+        "text": "OpenVPN's reset forced TLS 1.0 for one packet",
+        "correct": false,
+        "why": "The resets open OpenVPN's session and choose no TLS version."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7x85fq4",
+    "version": 1,
+    "section": "handshake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could tshark not show the server's certificate in the capture?",
+    "hint": "What did tshark call the packet after Server Hello?",
+    "choices": [
+      {
+        "text": "OpenVPN compresses it before sending",
+        "correct": false,
+        "why": "Nothing was compressed; it was encrypted."
+      },
+      {
+        "text": "It travels on the data channel",
+        "correct": false,
+        "why": "The data channel carries tun0's packets, after the handshake."
+      },
+      {
+        "text": "tshark keeps only the first 1264 bytes of a packet",
+        "correct": false,
+        "why": "1264 is the packet's size, not a limit of the capture."
+      },
+      {
+        "text": "TLS 1.3 encrypts it",
+        "correct": true,
+        "why": "Right. After the Server Hello it is inside what tshark could only call Application Data."
+      }
+    ]
+  },
+  {
+    "id": "ex-v6g1nt7r",
+    "version": 1,
+    "section": "handshake",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message tshark decoded to what it was.",
+    "hint": "Two of them are OpenVPN's own, two are TLS.",
+    "pairs": [
+      {
+        "left": "`P_CONTROL_HARD_RESET_CLIENT_V2`",
+        "right": "OpenVPN opening a session"
+      },
+      {
+        "left": "`P_ACK_V1`",
+        "right": "OpenVPN confirming a control packet"
+      },
+      {
+        "left": "`Client Hello`",
+        "right": "TLS starting inside the control channel"
+      },
+      {
+        "left": "`Continuation Data`",
+        "right": "The rest of a TLS record, in another packet"
+      }
+    ],
+    "right_distractors": [
+      "A packet from tun0"
+    ]
+  },
+  {
+    "id": "ex-6j62eraa",
+    "version": 1,
+    "section": "handshake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did the laptop's route `192.168.10.0/24 via 10.8.0.1 dev tun0` come from?",
+    "hint": "It is not in client.conf.",
+    "choices": [
+      {
+        "text": "The `remote` line of client.conf",
+        "correct": false,
+        "why": "That names the server to connect to, not a network behind it."
+      },
+      {
+        "text": "The home router's DHCP",
+        "correct": false,
+        "why": "The home router knows nothing of the office network."
+      },
+      {
+        "text": "The server pushed it",
+        "correct": true,
+        "why": "Right. The `push` line of server.conf, over the control channel."
+      },
+      {
+        "text": "It was typed on the laptop by hand",
+        "correct": false,
+        "why": "Nobody configured a route on the laptop."
+      }
+    ]
+  },
+  {
+    "id": "ex-jn380ya6",
+    "version": 1,
+    "section": "handshake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the server's certificate, packets 9 to 11 went from the laptop to hq, about 2.7 kilobytes. What were they?",
+    "hint": "The server checks somebody too.",
+    "choices": [
+      {
+        "text": "The laptop's certificate and proof, encrypted",
+        "correct": true,
+        "why": "Right. The server checks the client as the client checked the server."
+      },
+      {
+        "text": "The first packets of the tunnel's traffic",
+        "correct": false,
+        "why": "Tunnel traffic goes on the data channel once the handshake is over."
+      },
+      {
+        "text": "A retransmitted Client Hello",
+        "correct": false,
+        "why": "Nothing was lost, and tshark named them differently."
+      },
+      {
+        "text": "OpenVPN's acknowledgements of the server's packets",
+        "correct": false,
+        "why": "Those are the small P_ACK_V1 packets, 68 and 72 bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8n95ev8",
+    "version": 1,
+    "section": "port-443",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Behind the restrictive home router, the UDP client printed only `link remote` for eight seconds, and no error. Why no error?",
+    "hint": "What does a drop policy send back?",
+    "choices": [
+      {
+        "text": "OpenVPN hides errors below log level 4",
+        "correct": false,
+        "why": "Level 3 prints errors; there was nothing to print."
+      },
+      {
+        "text": "The server rejected the certificate without saying so",
+        "correct": false,
+        "why": "Nothing reached the server to reject."
+      },
+      {
+        "text": "vpn.example.com did not resolve",
+        "correct": false,
+        "why": "The line shows 203.0.113.2, so the name resolved; DNS was allowed out."
+      },
+      {
+        "text": "The router dropped the packets and answered nothing",
+        "correct": true,
+        "why": "Right. Silence, and the client kept waiting."
+      }
+    ]
+  },
+  {
+    "id": "ex-9k703cjk",
+    "version": 1,
+    "section": "port-443",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which rule in the home router's chain let the TCP 443 tunnel start?",
+    "hint": "The first packet of a connection is not a reply.",
+    "choices": [
+      {
+        "text": "`ct state established,related accept`",
+        "correct": false,
+        "why": "That passes what follows; the first packet of the connection needs another rule."
+      },
+      {
+        "text": "`iifname \"eth0\" tcp dport 443 accept`",
+        "correct": true,
+        "why": "Right. The laptop's side is eth0, and the tunnel went to TCP 443."
+      },
+      {
+        "text": "`iifname \"eth0\" udp dport 53 accept`",
+        "correct": false,
+        "why": "That lets DNS out, which resolved the name but carried no tunnel."
+      },
+      {
+        "text": "`policy drop`",
+        "correct": false,
+        "why": "The policy is what blocked UDP 1194."
+      }
+    ]
+  },
+  {
+    "id": "ex-8gv45s5e",
+    "version": 1,
+    "section": "port-443",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a lossy mobile link, the same tunnel is far slower over TCP 443 than over UDP. What explains it?",
+    "hint": "How many layers retransmit?",
+    "choices": [
+      {
+        "text": "TLS is slower over TCP than over UDP",
+        "correct": false,
+        "why": "The cipher is the same; what differs is what happens on loss."
+      },
+      {
+        "text": "Two layers of TCP both recovering from the same loss",
+        "correct": true,
+        "why": "Right. The tunnel stalls everything behind a lost packet, and the TCP inside retransmits on top."
+      },
+      {
+        "text": "Carriers slow port 443 down on purpose",
+        "correct": false,
+        "why": "Web traffic is the last thing a carrier slows; the loss is the cause."
+      },
+      {
+        "text": "TCP's header is larger than UDP's",
+        "correct": false,
+        "why": "Twelve more bytes a packet cannot make a tunnel far slower."
+      }
+    ]
+  },
+  {
+    "id": "ex-r17yfx25",
+    "version": 1,
+    "section": "port-443",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a clientless SSL VPN portal give the person who signs in?",
+    "hint": "There is no tunnel.",
+    "choices": [
+      {
+        "text": "A route to the whole office network",
+        "correct": false,
+        "why": "No route is installed; the browser only talks to the portal."
+      },
+      {
+        "text": "An address from the VPN's pool",
+        "correct": false,
+        "why": "Addresses go to tunnel clients; the portal has none to give."
+      },
+      {
+        "text": "Internal web applications, relayed by the gateway",
+        "correct": true,
+        "why": "Right. A reverse proxy with a login in front."
+      },
+      {
+        "text": "Layer 2 access to the office LAN",
+        "correct": false,
+        "why": "That would be a tap device or VXLAN, and a portal is neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8dr620t",
+    "version": 1,
+    "section": "vxlan",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "vx0's MTU is 1450 over a 1500-byte link. How many bytes does VXLAN put in front of the inner IP packet?",
+    "hint": "The inner Ethernet header is among them.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-xa0s2kst",
+    "version": 1,
+    "section": "vxlan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Outer IP, UDP and VXLAN headers add up to 36 bytes. Why does vx0 lose 50 from its MTU and not 36?",
+    "hint": "What does vx0 hand to the tunnel: a packet or a frame?",
+    "choices": [
+      {
+        "text": "The outer Ethernet header counts against the MTU",
+        "correct": false,
+        "why": "An MTU counts the IP packet; the link's own header is never part of it."
+      },
+      {
+        "text": "The inner Ethernet header travels inside too",
+        "correct": true,
+        "why": "Right. 20 + 8 + 8 + 14 = 50."
+      },
+      {
+        "text": "VXLAN pads every frame by 14 bytes",
+        "correct": false,
+        "why": "Nothing is padded; the 14 bytes are a header with addresses in it."
+      },
+      {
+        "text": "The UDP checksum takes another 14 bytes of its own",
+        "correct": false,
+        "why": "The checksum is inside UDP's 8 bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-4enbes26",
+    "version": 1,
+    "section": "vxlan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The ping from hq to 172.16.0.2 through vx0 came back with `ttl=64`. What does that say?",
+    "hint": "Earlier tunnels gave 62 or 63.",
+    "choices": [
+      {
+        "text": "No router stood between them",
+        "correct": true,
+        "why": "Right. To the inner packet, the two ends share one segment."
+      },
+      {
+        "text": "The ISP forwarded the inner packet",
+        "correct": false,
+        "why": "The ISP forwarded only the outer one, and would have cost a TTL otherwise."
+      },
+      {
+        "text": "The packet was never encapsulated",
+        "correct": false,
+        "why": "The capture shows it inside UDP 4789."
+      },
+      {
+        "text": "hq answered its own ping",
+        "correct": false,
+        "why": "The reply came from 172.16.0.2, branch's end."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqzh6wk9",
+    "version": 1,
+    "section": "vxlan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the entry `00:00:00:00:00:00 dst 198.51.100.2` in vx0's forwarding table for?",
+    "hint": "The ARP request was sent to everybody.",
+    "choices": [
+      {
+        "text": "It is the MAC address of branch's real interface",
+        "correct": false,
+        "why": "That would be a real address; this one is all zeros."
+      },
+      {
+        "text": "A leftover that nothing uses",
+        "correct": false,
+        "why": "The very first ARP broadcast went through it."
+      },
+      {
+        "text": "Broadcasts and unknown destinations",
+        "correct": true,
+        "why": "Right. It is the flood list: where a frame goes when no learnt entry matches."
+      },
+      {
+        "text": "The default route of the network underneath",
+        "correct": false,
+        "why": "Routes live in the routing table, not in a bridge's MAC table."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qeyjnwt",
+    "version": 1,
+    "section": "vxlan",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "VXLAN carries whole Ethernet frames inside UDP, sent to port ___.",
+    "hint": "The tcpdump filter in the capture.",
+    "blanks": [
+      {
+        "accept": [
+          "4789"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7ry2xfsn",
+    "version": 1,
+    "section": "stretching-a-lan",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two offices share one stretched segment. Which of these cross the WAN? Choose all that apply.",
+    "hint": "One broadcast domain.",
+    "choices": [
+      {
+        "text": "An ARP request at either office",
+        "correct": true,
+        "why": "Right: it is a broadcast, and the capture showed one crossing."
+      },
+      {
+        "text": "A DHCP discover from a new laptop",
+        "correct": true,
+        "why": "Right: also a broadcast."
+      },
+      {
+        "text": "The flood from a loop at one office",
+        "correct": true,
+        "why": "Right: a loop's flood reaches every part of the segment."
+      },
+      {
+        "text": "Traffic between two machines on the same switch at one office",
+        "correct": false,
+        "why": "Their frames are learnt as local and stay on that switch."
+      },
+      {
+        "text": "The ISP's own routing updates",
+        "correct": false,
+        "why": "The ISP's network is underneath the tunnel, not inside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrxe1yts",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the start of the OpenVPN connection in order, as tshark and the log showed it.",
+    "hint": "OpenVPN opens before TLS does.",
+    "items": [
+      "The two HARD_RESET messages",
+      "The laptop's Client Hello",
+      "Server Hello, with the server's certificate encrypted",
+      "The laptop's certificate, encrypted",
+      "Traffic on the data channel, AES-256-GCM"
+    ],
+    "trap": "The data channel's keys come out of the handshake, so no traffic can flow before both certificates are checked."
+  },
+  {
+    "id": "ex-4bjk6mh0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A customer's firewall reads the first bytes of every connection to port 443 and lets only HTTPS through. Will the lab's tunnel on TCP 443 pass?",
+    "hint": "What is the first message of the connection?",
+    "choices": [
+      {
+        "text": "Yes, since anything on port 443 is HTTPS to a firewall",
+        "correct": false,
+        "why": "This firewall looks at contents, not only the port."
+      },
+      {
+        "text": "Yes, because the handshake is real TLS 1.3",
+        "correct": false,
+        "why": "The TLS is wrapped in OpenVPN's own packets, after OpenVPN's reset."
+      },
+      {
+        "text": "No: it opens with OpenVPN's reset, not a Client Hello",
+        "correct": true,
+        "why": "Right. Port 443 only beats a firewall that filters by port."
+      },
+      {
+        "text": "No, because port 443 is reserved for browsers",
+        "correct": false,
+        "why": "Nothing reserves a port for a kind of program; the contents gave it away."
+      }
+    ]
+  },
+  {
+    "id": "ex-tp5r4m2w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A manager wants the two offices on one subnet, \"so it is simpler\". Nothing needs the same subnet in both places. What do you recommend?",
+    "hint": "What does a stretched segment share?",
+    "choices": [
+      {
+        "text": "VXLAN, since the kernel already has it",
+        "correct": false,
+        "why": "Being available is not a reason; the broadcasts and loops come with it."
+      },
+      {
+        "text": "OpenVPN with `dev tap`, because it is encrypted",
+        "correct": false,
+        "why": "Encryption does not shrink the broadcast domain."
+      },
+      {
+        "text": "Two subnets, routed through the tunnel",
+        "correct": true,
+        "why": "Right. A failure or a storm at one office then stays there."
+      },
+      {
+        "text": "Stretch it, with spanning tree running across the WAN",
+        "correct": false,
+        "why": "That joins both offices into one tree, and one topology change reaches both."
+      }
+    ]
+  }
+]

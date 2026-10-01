@@ -1,0 +1,520 @@
+{
+  "ex-57hrkp5k": {
+    "prompt": "Com o spanning tree desligado, um broadcast deu voltas no triângulo do laboratório até o cabo ser puxado. Por que ele não morreu sozinho?",
+    "hint": "Compare um quadro Ethernet com um pacote IP.",
+    "choices": [
+      {
+        "text": "Os switches baixavam o TTL dele, mas 255 voltas demoram",
+        "why": "Switches não mexem em TTL. Esse campo fica no cabeçalho IP, e quem o baixa são os roteadores."
+      },
+      {
+        "text": "Um quadro Ethernet não tem contador de saltos",
+        "why": "Certo. O switch encaminha o quadro sem mudá-lo, então uma cópia que dá a volta continua tão nova quanto no começo."
+      },
+      {
+        "text": "Cada PC reenviava o broadcast porque as respostas não voltavam",
+        "why": "Os três segundos passaram sem um comando digitado. As cópias vieram dos switches inundando."
+      },
+      {
+        "text": "Cada switch o mandava de volta pela porta por onde chegou",
+        "why": "A inundação exclui a porta de chegada. O laço vem do terceiro switch, não de um quadro rebatido."
+      }
+    ]
+  },
+  "ex-ddb6tgpg": {
+    "prompt": "Antes do laço, a p2 do sw1 tinha recebido 21 pacotes. Três segundos de laço depois, o mesmo contador marcava 201975. Quantos quadros chegaram por essa porta no meio-tempo?",
+    "hint": "Subtraia o antes do depois.",
+    "unit": "quadros"
+  },
+  "ex-0pxfk3bh": {
+    "prompt": "Dois switches estão ligados por dois cabos e o spanning tree está desligado. Quais destas coisas acontecem? Escolha todas as que se aplicam.",
+    "hint": "Dois cabos entre dois switches são um laço de tamanho dois.",
+    "choices": [
+      {
+        "text": "Broadcasts circulam entre os dois switches e se multiplicam",
+        "why": "Sim. Cada switch inunda pelo outro cabo o que recebe por um."
+      },
+      {
+        "text": "O MAC de um PC fica indo e voltando entre portas nas tabelas MAC",
+        "why": "Sim. Cópias dos quadros dele chegam pelos dois cabos, então a tabela fica mudando de ideia."
+      },
+      {
+        "text": "O enlace entre eles dobra de capacidade",
+        "why": "Dobrar exige agregação de enlaces, lição 21. Sem ela, dois cabos são um laço."
+      },
+      {
+        "text": "O segundo cabo fica parado como reserva até o primeiro falhar",
+        "why": "É isso que o spanning tree arranja. Com ele desligado, os dois cabos encaminham."
+      }
+    ]
+  },
+  "ex-b73bbsgh": {
+    "prompt": "Durante uma tempestade de broadcast, quadros para o pc2 às vezes saem do sw1 pela porta errada. O que causa isso?",
+    "hint": "Pense em como um switch aprende atrás de qual porta está um MAC.",
+    "choices": [
+      {
+        "text": "A tempestade corrompe o MAC de destino dos quadros",
+        "why": "Os quadros são copiados intactos. O destino está certo; o que está errado é a tabela."
+      },
+      {
+        "text": "O sw1 fica sem espaço na tabela MAC e esquece o pc2",
+        "why": "Um endereço esquecido seria inundado, não mandado por uma porta errada."
+      },
+      {
+        "text": "O pc2 responde ao ARP com dois endereços MAC diferentes",
+        "why": "O pc2 tem uma placa de rede e um MAC. A duplicação está nos switches."
+      },
+      {
+        "text": "Cópias dos quadros do pc2 chegam pela p2 e pela p3, então o sw1 fica mudando a entrada do pc2",
+        "why": "Certo. Isso é oscilação de MAC: a entrada aponta para a porta por onde chegou a última cópia."
+      }
+    ]
+  },
+  "ex-y2yync3e": {
+    "prompt": "Os três switches informam estes IDs de ponte. Qual vira a raiz?",
+    "hint": "O menor ganha, prioridade primeiro.",
+    "choices": [
+      {
+        "text": "8000.02e0779de790",
+        "why": "Esse é o maior dos três MACs, e as prioridades empatam."
+      },
+      {
+        "text": "8000.02a59d312a8c",
+        "why": "Menor que o do sw2, mas 02:6a vem antes de 02:a5."
+      },
+      {
+        "text": "8000.026adc933b8a",
+        "why": "Certo. Prioridades iguais, então o menor MAC, o do sw1, ganha."
+      },
+      {
+        "text": "Ainda sem raiz: três prioridades iguais esperam um administrador escolher",
+        "why": "Um empate na prioridade é desfeito pelo endereço MAC, sem intervenção humana."
+      }
+    ]
+  },
+  "ex-gx9wffgn": {
+    "prompt": "Um ID de ponte começa com 8000, a prioridade padrão escrita em hexadecimal. Quanto é isso em decimal?",
+    "hint": "8 × 16³.",
+    "unit": ""
+  },
+  "ex-ehc86j4k": {
+    "prompt": "Switches com STP trocam quadros pequenos chamados ___, por padrão um a cada 2 segundos.",
+    "hint": "Bridge protocol data units.",
+    "blanks": [
+      {
+        "accept": [
+          "BPDUs",
+          "BPDU",
+          "bridge protocol data units"
+        ]
+      }
+    ]
+  },
+  "ex-m5q3w2qq": {
+    "prompt": "O sw2 informa root_port:1 e root_path_cost:2. Toda porta do laboratório custa 2. O que o 2 diz?",
+    "hint": "O custo é somado por porta ao longo do caminho.",
+    "choices": [
+      {
+        "text": "O sw2 está a dois cabos da raiz",
+        "why": "Dois cabos somariam dois custos de porta, o que dá 4 aqui."
+      },
+      {
+        "text": "O sw2 está a um cabo da raiz",
+        "why": "Certo. Uma porta de custo 2 fica entre o sw2 e a raiz."
+      },
+      {
+        "text": "O sw2 tem duas portas em estado forwarding",
+        "why": "O custo do caminho mede a distância até a raiz, não quantas portas encaminham."
+      },
+      {
+        "text": "O sw2 foi o segundo switch a ser eleito",
+        "why": "Há uma eleição, a da raiz. Os outros não são classificados."
+      }
+    ]
+  },
+  "ex-n6jcrtf7": {
+    "prompt": "Ponha os estados do 802.1D na ordem em que uma porta passa por eles até entrar em uso.",
+    "hint": "Duas esperas de 15 segundos ficam no meio.",
+    "items": [
+      "blocking (bloqueando)",
+      "listening (escutando)",
+      "learning (aprendendo)",
+      "forwarding (encaminhando)"
+    ],
+    "trap": "Learning antes de listening é o deslize comum: a porta primeiro espera a eleição se acomodar, e só depois enche a tabela MAC."
+  },
+  "ex-5622xjcf": {
+    "prompt": "Ligue cada papel de porta ao que ele faz.",
+    "hint": "Pense no triângulo depois da eleição.",
+    "pairs": [
+      {
+        "left": "Porta raiz",
+        "right": "O caminho mais barato de um switch até a raiz"
+      },
+      {
+        "left": "Porta designada",
+        "right": "A ponta de um cabo que encaminha para ele"
+      },
+      {
+        "left": "Porta bloqueada",
+        "right": "Ouve BPDUs e não encaminha dados"
+      }
+    ],
+    "right_distractors": [
+      "Carrega o MAC da raiz no seu ID de ponte"
+    ]
+  },
+  "ex-dbfqfetv": {
+    "prompt": "No cabo sw2–sw3 as duas pontas estão a um cabo da raiz sw1, com custo 2. Por que bloqueia a ponta do sw2 e não a do sw3?",
+    "hint": "Quando os custos empatam, outra coisa é comparada.",
+    "choices": [
+      {
+        "text": "O ID de ponte do sw3 é menor, então a ponta do sw3 é a designada",
+        "why": "Certo. 02a59d312a8c é menor que 02e0779de790, e o desempate vai para o menor ID."
+      },
+      {
+        "text": "O sw3 tem um PC na p10 e o sw2 não",
+        "why": "Os dois têm um PC na p10, e PCs não participam da eleição."
+      },
+      {
+        "text": "A p3 do sw2 foi conectada por último, então espera",
+        "why": "O cabo conectado por último foi o do sw3 ao sw1, e a ordem de conexão não decide papéis."
+      },
+      {
+        "text": "A porta 3 perde para a porta 2 porque o número de porta menor é preferido",
+        "why": "Números de porta desempatam portas de um mesmo switch, não dois switches."
+      }
+    ]
+  },
+  "ex-vfzj638c": {
+    "prompt": "Uma porta acabou de passar de listening para learning. O que ela faz nos próximos 15 segundos?",
+    "hint": "O nome diz o que ela faz; a tabela diz o que não faz.",
+    "choices": [
+      {
+        "text": "Encaminhando dados enquanto procura laços",
+        "why": "Encaminhar vem depois do learning. Procurar laços enquanto encaminha é o que o STP clássico evita."
+      },
+      {
+        "text": "Enchendo a tabela MAC com os quadros que chegam, sem encaminhar dados",
+        "why": "Certo. Quando começar a encaminhar, já saberá onde estão os endereços."
+      },
+      {
+        "text": "Esperando em silêncio, sem mandar BPDUs",
+        "why": "Uma porta em learning manda e recebe BPDUs."
+      },
+      {
+        "text": "Refazendo a eleição da raiz",
+        "why": "A eleição segue nos BPDUs em qualquer estado; learning trata de endereços MAC."
+      }
+    ]
+  },
+  "ex-xyqy5h3v": {
+    "prompt": "No sw3, ip -d link show p1 imprime designated_bridge 8000.2:6a:dc:93:3b:8a. O que isso faz da p1?",
+    "hint": "De quem é esse ID de ponte, com os zeros de volta?",
+    "choices": [
+      {
+        "text": "A porta raiz do sw3, porque a ponta designada do cabo é a raiz, o sw1",
+        "why": "Certo. 8000.026adc933b8a é o sw1, então a p1 é o caminho para a raiz."
+      },
+      {
+        "text": "Uma porta designada, porque o campo a nomeia",
+        "why": "O campo nomeia a ponta designada do cabo, que está em outro switch."
+      },
+      {
+        "text": "Uma porta bloqueada, já que outra ponte é designada no cabo dela",
+        "why": "A outra ponta ser designada não faz esta ponta bloquear: aqui esta ponta leva à raiz."
+      },
+      {
+        "text": "Uma porta desabilitada, porque o MAC aparece sem zeros",
+        "why": "Tirar os zeros à esquerda é o jeito como o ip imprime. O estado da porta era forwarding."
+      }
+    ]
+  },
+  "ex-nkcwt2sa": {
+    "prompt": "No STP clássico, quantos segundos uma porta bloqueada passa em listening e learning juntos antes de encaminhar, com os temporizadores padrão?",
+    "hint": "Dois forward delays.",
+    "unit": "segundos"
+  },
+  "ex-pj8aq0dw": {
+    "prompt": "O pc2 pingou o pc1 uma vez por segundo durante 60 segundos enquanto o cabo sw1–sw2 foi puxado. O resumo disse 60 transmitted, 30 received. Quantos pedidos ficaram sem resposta?",
+    "hint": "Transmitidos menos recebidos.",
+    "unit": "pacotes"
+  },
+  "ex-8zb9prxg": {
+    "prompt": "A prioridade do sw3 vai para 4096, então o sw3 vira a raiz. Qual porta do triângulo bloqueia agora?",
+    "hint": "Ache o cabo mais longe da nova raiz e depois desempate.",
+    "choices": [
+      {
+        "text": "A p3 do sw2, como antes",
+        "why": "Esse cabo agora toca a raiz, então a ponta do sw3 é designada e a p3 do sw2 é a porta raiz do sw2."
+      },
+      {
+        "text": "A p1 do sw2",
+        "why": "Certo. No cabo sw1–sw2 os custos empatam, o ID menor do sw1 faz a ponta dele designada, e a ponta do sw2 bloqueia."
+      },
+      {
+        "text": "A p2 do sw1, porque o sw1 perdeu a eleição",
+        "why": "Perder a eleição da raiz não bloqueia uma porta por si mesmo. O sw1 ainda tem o ID menor dos dois naquele cabo."
+      },
+      {
+        "text": "A p1 do sw3, o cabo para a raiz antiga",
+        "why": "Portas da raiz são designadas, então o sw3 não tem porta para bloquear."
+      }
+    ]
+  },
+  "ex-rvhx03d0": {
+    "prompt": "Ligue cada temporizador do 802.1D ao seu padrão.",
+    "hint": "2, 15, 20.",
+    "pairs": [
+      {
+        "left": "hello time",
+        "right": "2 s"
+      },
+      {
+        "left": "forward delay",
+        "right": "15 s"
+      },
+      {
+        "left": "max age",
+        "right": "20 s"
+      }
+    ],
+    "right_distractors": [
+      "30 s"
+    ]
+  },
+  "ex-5vq7v5gk": {
+    "prompt": "Um cabo falha a dois switches de distância, então um switch só percebe porque os BPDUs param de chegar. Com os temporizadores padrão, uns quantos segundos passam até a porta bloqueada dele encaminhar?",
+    "hint": "Max age primeiro, depois os dois forward delays.",
+    "unit": "segundos"
+  },
+  "ex-tphtvbtk": {
+    "prompt": "Qual padrão IEEE introduziu o Rapid Spanning Tree?",
+    "hint": "Uma letra depois de 802.1, publicado em 2001.",
+    "choices": [
+      {
+        "text": "802.1Q",
+        "why": "Esse é o de tags de VLAN, lição 19, e hoje também a casa do MSTP."
+      },
+      {
+        "text": "802.3ad",
+        "why": "Esse é o de agregação de enlaces, lição 21."
+      },
+      {
+        "text": "802.1s",
+        "why": "Esse é o MSTP, uma árvore por grupo de VLANs."
+      },
+      {
+        "text": "802.1w",
+        "why": "Certo, depois incorporado ao 802.1D."
+      }
+    ]
+  },
+  "ex-8hnffy9n": {
+    "prompt": "Num cabo ponto a ponto, o que permite ao RSTP pôr uma porta em forwarding em cerca de um segundo em vez de 30?",
+    "hint": "Ele troca a espera por uma conversa.",
+    "choices": [
+      {
+        "text": "Temporizadores padrão mais curtos",
+        "why": "O RSTP mantém temporizadores como recurso; a velocidade vem de não esperar por eles."
+      },
+      {
+        "text": "Um hello time mais rápido, de um décimo de segundo",
+        "why": "Mandar BPDUs mais rápido não diria a um switch que a outra ponta é segura."
+      },
+      {
+        "text": "Proposta de um switch, concordância do outro",
+        "why": "Certo. A outra ponta garante que não forma laço, responde, e a porta encaminha."
+      },
+      {
+        "text": "Pular a eleição da raiz nos enlaces entre switches",
+        "why": "A eleição é a mesma do 802.1D; o RSTP muda como as portas chegam a forwarding."
+      }
+    ]
+  },
+  "ex-qyebaz1c": {
+    "prompt": "Você quer que o switch de núcleo seja a raiz sejam quais forem os MACs dos outros. O que você muda nele?",
+    "hint": "O menor ID de ponte ganha, e uma parte dele é sua para definir.",
+    "choices": [
+      {
+        "text": "Subir a prioridade dele para 61440",
+        "why": "Maior perde. O menor ID de ponte ganha."
+      },
+      {
+        "text": "Deixar em 32768 e trocá-lo por um switch de MAC menor",
+        "why": "Isso funciona até chegar um switch com MAC menor. Uma prioridade decide de propósito."
+      },
+      {
+        "text": "Baixar o custo das portas dele para 1",
+        "why": "O custo de porta molda os caminhos até a raiz; ele não escolhe qual switch é a raiz."
+      },
+      {
+        "text": "Baixar a prioridade dele, para 4096 por exemplo",
+        "why": "Certo. A prioridade é comparada antes do MAC, então o valor menor ganha direto."
+      }
+    ]
+  },
+  "ex-hgp8bvbx": {
+    "prompt": "Uma porta que dá para um computador, e vai direto para forwarding quando um cabo é conectado, é configurada como porta de ___.",
+    "hint": "A Cisco chama de PortFast.",
+    "blanks": [
+      {
+        "accept": [
+          "borda",
+          "edge"
+        ]
+      }
+    ]
+  },
+  "ex-dznmnvpc": {
+    "prompt": "O BPDU guard estava ligado na p10 do sw1 quando o pc1 começou a mandar BPDUs. O que o bridge link show imprimiu para a p10 seis segundos depois?",
+    "hint": "O cabo continuava conectado.",
+    "choices": [
+      {
+        "text": "state blocking",
+        "why": "Blocking ainda participaria da eleição. Uma porta protegida sai dela."
+      },
+      {
+        "text": "state disabled",
+        "why": "Certo, ainda com LOWER_UP: o enlace está bom, a porta está fechada."
+      },
+      {
+        "text": "NO-CARRIER",
+        "why": "O sinal estava lá. Desabilitar uma porta não é desconectá-la."
+      },
+      {
+        "text": "state forwarding, com o pc1 como nova raiz",
+        "why": "Isso aconteceria sem a proteção, se o ID do pc1 fosse menor."
+      }
+    ]
+  },
+  "ex-twpw7yvn": {
+    "prompt": "Uma porta de mesa tem BPDU filter em vez de BPDU guard. Alguém liga um switch pequeno nela e cabeia esse switch a uma segunda porta de mesa, também filtrada. O que acontece?",
+    "hint": "O que uma porta consegue saber de BPDUs que ignora?",
+    "choices": [
+      {
+        "text": "As duas portas desligam quando chegam os BPDUs do switch",
+        "why": "Isso é o BPDU guard. Um filtro ignora os BPDUs em vez de reagir a eles."
+      },
+      {
+        "text": "O spanning tree bloqueia uma das duas portas de mesa",
+        "why": "Para bloquear, o switch teria de ver os próprios BPDUs voltarem, e o filtro os descarta."
+      },
+      {
+        "text": "Forma-se um laço que o spanning tree não vê, e começa uma tempestade",
+        "why": "Certo. Portas filtradas escondem o laço do protocolo feito para pegá-lo."
+      },
+      {
+        "text": "O switch pequeno vira raiz do prédio",
+        "why": "Os BPDUs dele são filtrados nas portas de mesa, então não chegam à eleição."
+      }
+    ]
+  },
+  "ex-b1c1ax0c": {
+    "prompt": "Ligue cada configuração ao que ela faz.",
+    "hint": "Quatro ferramentas, quatro trabalhos diferentes.",
+    "pairs": [
+      {
+        "left": "BPDU guard",
+        "right": "Desliga a porta quando chega um BPDU"
+      },
+      {
+        "left": "Root guard",
+        "right": "Para de encaminhar enquanto uma raiz melhor é anunciada"
+      },
+      {
+        "left": "BPDU filter",
+        "right": "Não manda nem processa BPDUs"
+      },
+      {
+        "left": "Storm control",
+        "right": "Limita o tráfego de broadcast que uma porta aceita"
+      }
+    ],
+    "right_distractors": [
+      "Define a prioridade da ponte como 4096"
+    ]
+  },
+  "ex-4ppjk8mn": {
+    "prompt": "Um switch doméstico com prioridade de ponte 0 é ligado numa porta de mesa sem proteção. Qual é o resultado provável?",
+    "hint": "0 é a menor prioridade que existe.",
+    "choices": [
+      {
+        "text": "Ele ganha a eleição e a árvore gira em torno de uma mesa",
+        "why": "Certo. O tráfego entre switches distantes passa a atravessá-lo."
+      },
+      {
+        "text": "A árvore fica como estava, já que uma porta de mesa não faz parte dela",
+        "why": "Sem BPDU guard nem root guard, uma porta de mesa participa como outra qualquer."
+      },
+      {
+        "text": "A porta de mesa vai para state disabled",
+        "why": "Isso exige BPDU guard na porta, e esta não tem."
+      },
+      {
+        "text": "O switch de núcleo o rejeita porque 0 não é uma prioridade válida",
+        "why": "0 é válido, e é o valor que vence qualquer padrão."
+      }
+    ]
+  },
+  "ex-gtq27gv0": {
+    "prompt": "Qual destes é um estado de porta no RSTP mas não no 802.1D original?",
+    "hint": "O RSTP juntou dois estados que não encaminham nada.",
+    "choices": [
+      {
+        "text": "discarding",
+        "why": "Certo: blocking e listening juntos num só."
+      },
+      {
+        "text": "listening",
+        "why": "Listening é um estado do 802.1D, e o RSTP o absorveu."
+      },
+      {
+        "text": "learning",
+        "why": "Learning existe nos dois."
+      },
+      {
+        "text": "blocking",
+        "why": "Blocking é do 802.1D; o RSTP chama de discarding."
+      }
+    ]
+  },
+  "ex-gj358q8q": {
+    "prompt": "Ponha os resultados da eleição do spanning tree na ordem em que são decididos.",
+    "hint": "Cada passo seguinte é medido a partir do primeiro.",
+    "items": [
+      "A ponte raiz",
+      "Uma porta raiz em cada um dos outros switches",
+      "Uma porta designada em cada cabo",
+      "Cada porta restante bloqueia"
+    ],
+    "trap": "Uma porta raiz antes de uma raiz é impossível: \"caminho mais barato até a raiz\" precisa de uma raiz para medir."
+  },
+  "ex-3qptey4r": {
+    "prompt": "Depois da mudança de prioridade, o bridge_id do sw3 ficou 1000.02a59d312a8c. Qual é a prioridade em decimal?",
+    "hint": "1000 está em hexadecimal.",
+    "unit": ""
+  },
+  "ex-gt4vambw": {
+    "prompt": "Uma rede roda STP clássico com prioridades padrão. Os usuários perdem ligações por meio minuto sempre que um uplink falha. Qual mudança ataca a causa?",
+    "hint": "De onde vêm os 30 segundos?",
+    "choices": [
+      {
+        "text": "Pôr o forward delay em 2 segundos em cada switch da rede",
+        "why": "Isso encurta a espera de segurança e arrisca uma porta encaminhar antes de a árvore se acomodar, o que é um laço."
+      },
+      {
+        "text": "Ligar o BPDU guard nos uplinks",
+        "why": "Uplinks dão para switches; a proteção ali os desligaria no primeiro BPDU."
+      },
+      {
+        "text": "Rodar RSTP, para a porta alternativa assumir na hora",
+        "why": "Certo. Os 30 segundos são listening e learning, que o RSTP substitui."
+      },
+      {
+        "text": "Baixar a prioridade da raiz para 4096",
+        "why": "Isso escolhe a raiz de propósito, o que é boa prática, mas a espera depois de uma falha é a mesma."
+      }
+    ]
+  }
+}

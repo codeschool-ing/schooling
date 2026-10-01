@@ -1,0 +1,730 @@
+[
+  {
+    "id": "ex-g5m3k0wh",
+    "version": 1,
+    "section": "client-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the office lab, what makes srv the server, when it is the same kind of namespace as pc1?",
+    "hint": "The role is about who waits.",
+    "choices": [
+      {
+        "text": "It has more processors and memory than the PCs",
+        "correct": false,
+        "why": "Every device in the lab is a namespace on one computer; srv has no more power than pc1."
+      },
+      {
+        "text": "A program on it listens on port 80",
+        "correct": true,
+        "why": "That is the whole difference: one program waiting for connections on a known port."
+      },
+      {
+        "text": "Its address ends in .10",
+        "correct": false,
+        "why": "The number is a convention of this address plan. The kernel gives it no meaning."
+      },
+      {
+        "text": "It is the machine plugged into the router",
+        "correct": false,
+        "why": "r1 is on the switch like everyone else; pc1 reaches it exactly the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjm96w7y",
+    "version": 1,
+    "section": "client-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "srv's ss -tln line shows its peer as 0.0.0.0:*. What does that say?",
+    "hint": "Which column is it in?",
+    "choices": [
+      {
+        "text": "The server listens on every address it has",
+        "correct": false,
+        "why": "That would be 0.0.0.0 in the Local column. Here the local side is one address, 10.20.10.10."
+      },
+      {
+        "text": "The connection was reset and has no peer left",
+        "correct": false,
+        "why": "A reset connection disappears from the list; this socket never had a peer."
+      },
+      {
+        "text": "Nobody is connected yet, and the other end will be whoever connects",
+        "correct": true,
+        "why": "A listening socket has no far end; the wildcard says who may connect, which is anybody."
+      },
+      {
+        "text": "The server cannot be reached until it has a gateway",
+        "correct": false,
+        "why": "srv has a gateway, and pc1 reached it in the next command."
+      }
+    ]
+  },
+  {
+    "id": "ex-rt2zy6f2",
+    "version": 1,
+    "section": "client-server",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "srv listed three established connections from pc1, pc2 and pc3. How many different local ports appear across those three lines?",
+    "hint": "Look at the Local Address:Port column only.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-5yh4e93z",
+    "version": 1,
+    "section": "client-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A fourth PC connects to srv port 80 while the other three are still connected. What does ss -tln on srv list then?",
+    "hint": "ss -tln shows listeners, not conversations.",
+    "choices": [
+      {
+        "text": "Four LISTEN lines, one for each client",
+        "correct": false,
+        "why": "A listener is created once by the program. Accepted connections are separate sockets and appear in ss -tn."
+      },
+      {
+        "text": "Still the one LISTEN line on 10.20.10.10:80",
+        "correct": true,
+        "why": "The listener does not change. The fourth connection shows up in ss -tn as a fourth ESTAB line."
+      },
+      {
+        "text": "A LISTEN line on port 81 for the newcomer",
+        "correct": false,
+        "why": "A server does not move clients to new ports; all of them share port 80."
+      },
+      {
+        "text": "No LISTEN line, since port 80 is taken",
+        "correct": false,
+        "why": "A port is not taken by a connection. The listener keeps waiting for more."
+      }
+    ]
+  },
+  {
+    "id": "ex-yxdthmt7",
+    "version": 1,
+    "section": "client-server",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A socket waiting for clients is shown by ss in the state ___",
+    "hint": "Read the server's line.",
+    "blanks": [
+      {
+        "accept": [
+          "LISTEN"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rd7m0wqf",
+    "version": 1,
+    "section": "sockets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which four numbers, with the protocol, identify a TCP connection?",
+    "hint": "Two belong to each end.",
+    "choices": [
+      {
+        "text": "Both addresses and both ports",
+        "correct": true,
+        "why": "Client address and port, server address and port: change one and it is another connection."
+      },
+      {
+        "text": "Both MAC addresses and both IP addresses",
+        "correct": false,
+        "why": "MAC addresses change at every router and never reach the far end; TCP does not use them."
+      },
+      {
+        "text": "The server's address and port, the start time and a counter",
+        "correct": false,
+        "why": "Time plays no part in finding which program a segment belongs to."
+      },
+      {
+        "text": "The two ports, the TTL and the packet length",
+        "correct": false,
+        "why": "TTL and length change from packet to packet; they identify nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-frat73y7",
+    "version": 1,
+    "section": "sockets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc1 opens two browser tabs on srv at the same moment. On srv, what tells the two connections apart?",
+    "hint": "Which of the four numbers can differ?",
+    "choices": [
+      {
+        "text": "The client address",
+        "correct": false,
+        "why": "Both tabs run on pc1, so both connections come from 10.20.10.21."
+      },
+      {
+        "text": "The server port, because srv answers the second tab on another port",
+        "correct": false,
+        "why": "srv answers both on port 80; the listener does not hand out new ports."
+      },
+      {
+        "text": "Nothing; the second tab waits for the first to close",
+        "correct": false,
+        "why": "Both run at once; the four numbers are different, so the kernel keeps them apart."
+      },
+      {
+        "text": "The client port, since each connection got its own ephemeral port",
+        "correct": true,
+        "why": "Same addresses, same server port; pc1's kernel gave each connection a different port."
+      }
+    ]
+  },
+  {
+    "id": "ex-a3sy6a51",
+    "version": 1,
+    "section": "sockets",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Linux picks ephemeral ports from 32768 to 60999 by default, both ends included. How many ports is that?",
+    "hint": "Subtract, then remember both ends count.",
+    "value": 28232,
+    "tolerance": 0,
+    "unit": "ports"
+  },
+  {
+    "id": "ex-r1wk6dce",
+    "version": 1,
+    "section": "sockets",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of an ss line to what it tells you.",
+    "hint": "srv's listings in this lesson.",
+    "pairs": [
+      {
+        "left": "Local Address:Port",
+        "right": "This machine's side of the connection"
+      },
+      {
+        "left": "Peer Address:Port",
+        "right": "The other machine's side"
+      },
+      {
+        "left": "State",
+        "right": "Where TCP is in the conversation"
+      },
+      {
+        "left": "Send-Q on a LISTEN line",
+        "right": "How many connections may queue to be accepted"
+      }
+    ],
+    "right_distractors": [
+      "How many clients have been served so far"
+    ]
+  },
+  {
+    "id": "ex-6n5yv8xa",
+    "version": 1,
+    "section": "sockets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these pairs of connections can NOT exist on srv at the same time?",
+    "hint": "Compare all four numbers of each pair.",
+    "choices": [
+      {
+        "text": "One from 10.20.10.21:60504 to port 80 and one from 10.20.10.22:60504 to port 80",
+        "correct": false,
+        "why": "The client addresses differ, so the two are distinct connections."
+      },
+      {
+        "text": "Two from 10.20.10.21:60504 to 10.20.10.10:80",
+        "correct": true,
+        "why": "All four numbers equal: the kernel could not tell which socket a segment belongs to."
+      },
+      {
+        "text": "One from 10.20.10.21:60504 to port 80 and one from the same address and port to 22",
+        "correct": false,
+        "why": "The server ports differ; a client port may be reused towards a different service."
+      },
+      {
+        "text": "One from 10.20.10.21:60504 and one from 10.20.10.21:60505, both to port 80",
+        "correct": false,
+        "why": "The client ports differ, which is exactly how two tabs on one PC coexist."
+      }
+    ]
+  },
+  {
+    "id": "ex-tz9m02m7",
+    "version": 1,
+    "section": "peer-to-peer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc1's ss shows the line 10.20.10.21:35592 with peer 10.20.10.22:8000. In that connection, what is pc1?",
+    "hint": "Which side is on the listening port?",
+    "choices": [
+      {
+        "text": "The server, because pc1 also listens on 8000",
+        "correct": false,
+        "why": "pc1 does listen on 8000, but this connection is not on that port. Roles are per connection."
+      },
+      {
+        "text": "The client, since it connected out from an ephemeral port",
+        "correct": true,
+        "why": "pc1's side is 35592, a port its kernel picked; the far side is pc2's listener."
+      },
+      {
+        "text": "Neither: in peer to peer there are no roles",
+        "correct": false,
+        "why": "Every connection still has one side that waited and one that asked; P2P only gives each machine both."
+      },
+      {
+        "text": "The server, because it is in the Local column",
+        "correct": false,
+        "why": "Local means this machine's side, whatever its role. On srv the local side was the server; here it is the client."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wgjjcyh",
+    "version": 1,
+    "section": "peer-to-peer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "pc1 lists 10.20.10.21:8000 with peer 10.20.10.22:40206. Which line of pc2's listing is the same connection?",
+    "hint": "Swap the two sides.",
+    "choices": [
+      {
+        "text": "10.20.10.22:8000 with peer 10.20.10.21:35592",
+        "correct": false,
+        "why": "That is the other connection, the one pc1 started towards pc2's listener."
+      },
+      {
+        "text": "10.20.10.22:8000 with peer 10.20.10.21:40206",
+        "correct": false,
+        "why": "40206 is pc2's port, not pc1's; no connection has these numbers."
+      },
+      {
+        "text": "10.20.10.22:40206 with peer 10.20.10.21:8000",
+        "correct": true,
+        "why": "pc2's side is its ephemeral port 40206 and the far side is pc1's listener: the same four numbers, swapped."
+      },
+      {
+        "text": "There is none; each lists only what it started",
+        "correct": false,
+        "why": "ss lists every connection on the machine, started there or accepted there."
+      }
+    ]
+  },
+  {
+    "id": "ex-9xfjd25h",
+    "version": 1,
+    "section": "peer-to-peer",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How do real peer-to-peer systems find their peers? Choose all that apply.",
+    "hint": "The lab cheated with /etc/hosts.",
+    "choices": [
+      {
+        "text": "A tracker server that keeps a list of who has what",
+        "correct": true,
+        "why": "BitTorrent's trackers are exactly this: a client-server lookup."
+      },
+      {
+        "text": "A distributed hash table kept by the peers themselves",
+        "correct": true,
+        "why": "Each peer knows a few others and asks them in turn."
+      },
+      {
+        "text": "A broadcast to every machine on the internet",
+        "correct": false,
+        "why": "Broadcasts stop at the router; there is no internet-wide broadcast."
+      },
+      {
+        "text": "Reading the other peers' MAC addresses",
+        "correct": false,
+        "why": "A MAC address means nothing past the first router."
+      }
+    ]
+  },
+  {
+    "id": "ex-xa2n0h0b",
+    "version": 1,
+    "section": "peer-to-peer",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In peer to peer, learning the addresses of the other machines that run the program is the problem of ___",
+    "hint": "The lab solved it with a hosts file.",
+    "blanks": [
+      {
+        "accept": [
+          "discovery",
+          "peer discovery"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n0vyxrt4",
+    "version": 1,
+    "section": "p2p-and-nat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "isp tried port 8000 on 203.0.113.2 and got Connection refused. Which machine sent the refusal?",
+    "hint": "Whose address is 203.0.113.2?",
+    "choices": [
+      {
+        "text": "pc1, whose listener had already closed",
+        "correct": false,
+        "why": "The attempt never reached pc1: nothing told r1 to send it inside."
+      },
+      {
+        "text": "isp itself, for lack of a route",
+        "correct": false,
+        "why": "isp reaches 203.0.113.2 directly; a missing route would say unreachable, not refused."
+      },
+      {
+        "text": "web1, the last server pc1 talked to",
+        "correct": false,
+        "why": "web1 is on the other side of isp and was not involved."
+      },
+      {
+        "text": "r1: the address is its own and port 8000 has nothing",
+        "correct": true,
+        "why": "r1 owns 203.0.113.2. With no program and no forwarding rule for 8000, its kernel refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3m17fhw",
+    "version": 1,
+    "section": "p2p-and-nat",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did web1's reply to pc1 get through r1, when isp's attempt on port 8000 did not?",
+    "hint": "Read r1's conntrack line.",
+    "choices": [
+      {
+        "text": "Replies from port 80 are let in whatever started them",
+        "correct": false,
+        "why": "r1 lets a packet in because it matches a connection in its table, not because of its source port."
+      },
+      {
+        "text": "pc1 has a public address, so web1 answered it directly",
+        "correct": false,
+        "why": "pc1 is 10.20.10.21, a private address; web1 answered 203.0.113.2."
+      },
+      {
+        "text": "It matched an entry r1 made when pc1's request went out",
+        "correct": true,
+        "why": "The second half of the conntrack line is the reply r1 expected; a match is translated and delivered."
+      },
+      {
+        "text": "isp is not allowed to talk to the office at all",
+        "correct": false,
+        "why": "isp carried pc1's request and web1's reply both ways; only new inbound connections fail."
+      }
+    ]
+  },
+  {
+    "id": "ex-w15jn727",
+    "version": 1,
+    "section": "p2p-and-nat",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In r1's conntrack line, to which port on 203.0.113.2 did r1 expect web1's reply?",
+    "hint": "The second dport.",
+    "value": 59190,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-nsg9gt2f",
+    "version": 1,
+    "section": "p2p-and-nat",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put pc1's web request and its answer in the order r1 handles them.",
+    "hint": "Out first, then back.",
+    "items": [
+      "pc1 sends from 10.20.10.21 port 59190 to 192.0.2.80 port 80",
+      "r1 records the connection and sends it out from 203.0.113.2",
+      "The reply arrives from 192.0.2.80 for 203.0.113.2 port 59190",
+      "r1 finds the entry and delivers the reply to pc1"
+    ],
+    "trap": "The reply cannot be delivered before the entry exists: a packet that matches nothing in the table has nowhere inside to go."
+  },
+  {
+    "id": "ex-3xzx0416",
+    "version": 1,
+    "section": "p2p-and-nat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two peers are each behind a NAT router, and neither can receive a connection. Which technique works whenever both can reach the internet, at the price of extra traffic through a third machine?",
+    "hint": "TURN is its standard.",
+    "choices": [
+      {
+        "text": "A relay server that both connect out to",
+        "correct": true,
+        "why": "Both connections are outbound, so both routers allow them; the relay passes the data."
+      },
+      {
+        "text": "Asking each router for a public address with DHCP",
+        "correct": false,
+        "why": "DHCP hands out addresses inside the office; it does not open a way in."
+      },
+      {
+        "text": "Connecting to the other peer's private address",
+        "correct": false,
+        "why": "A private address like 10.20.10.21 is not routed on the internet."
+      },
+      {
+        "text": "Swapping MAC addresses through a tracker",
+        "correct": false,
+        "why": "A MAC address is only meaningful on one link."
+      }
+    ]
+  },
+  {
+    "id": "ex-mktpygcz",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each service to the way it is built.",
+    "hint": "Which part has to be in one place?",
+    "pairs": [
+      {
+        "left": "Loading a web site",
+        "right": "Browsers ask; the site's servers answer"
+      },
+      {
+        "left": "Downloading with BitTorrent",
+        "right": "Peers share pieces, found through a tracker or a DHT"
+      },
+      {
+        "left": "A video call between two homes",
+        "right": "A server sets it up; media goes direct when routers allow"
+      },
+      {
+        "left": "An online match",
+        "right": "A server keeps the state that decides who won"
+      }
+    ],
+    "right_distractors": [
+      "Every machine on the link receives every frame"
+    ]
+  },
+  {
+    "id": "ex-fehsq6zc",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "srv stops, and all three PCs lose their connections. Which row of the trade-off table is that?",
+    "hint": "One machine under all of them.",
+    "choices": [
+      {
+        "text": "Finding the other side",
+        "correct": false,
+        "why": "The clients knew where srv was; the problem is that it stopped."
+      },
+      {
+        "text": "When one machine fails",
+        "correct": true,
+        "why": "The server down is the service down: a single point of failure."
+      },
+      {
+        "text": "Cost as users grow",
+        "correct": false,
+        "why": "Cost is about how much load and bandwidth the server pays for, not about it stopping."
+      },
+      {
+        "text": "Through NAT and firewalls",
+        "correct": false,
+        "why": "Nothing crossed a NAT; all four machines are on one switch."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzsmf8pf",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An office firewall lets machines connect out to ports 80 and 443 and allows nothing new inbound. Which of these breaks?",
+    "hint": "Who has to receive a connection?",
+    "choices": [
+      {
+        "text": "A browser opening an HTTPS site",
+        "correct": false,
+        "why": "The browser connects out to 443, which is allowed, and the replies match the connection."
+      },
+      {
+        "text": "A file-sharing program that serves pieces to other peers",
+        "correct": true,
+        "why": "Serving means accepting connections from outside, and nothing new is allowed in."
+      },
+      {
+        "text": "A call whose media is relayed through a server on port 443",
+        "correct": false,
+        "why": "Relayed media is two outbound connections to the relay, both allowed."
+      },
+      {
+        "text": "An update download from the vendor's server",
+        "correct": false,
+        "why": "Another outbound connection to a web port."
+      }
+    ]
+  },
+  {
+    "id": "ex-5nhmxvcw",
+    "version": 1,
+    "section": "choosing",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Even in a mostly peer-to-peer system, which of these belong on a server? Choose all that apply.",
+    "hint": "What must be trusted or kept consistent?",
+    "choices": [
+      {
+        "text": "Deciding who won an online match",
+        "correct": true,
+        "why": "A player's machine could lie about it; the state that decides has to be in one trusted place."
+      },
+      {
+        "text": "Keeping the list of accounts and their passwords",
+        "correct": true,
+        "why": "Accounts must be consistent and protected, which is a server's job."
+      },
+      {
+        "text": "Sending one large file to thousands of people",
+        "correct": false,
+        "why": "That is the bulk that peers share best: each copy can be passed on."
+      },
+      {
+        "text": "Carrying voice between two players who can reach each other",
+        "correct": false,
+        "why": "Direct media between peers saves the server bandwidth when the routers allow it."
+      }
+    ]
+  },
+  {
+    "id": "ex-cnaaervc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A small office wants one shared folder that everybody edits, with nightly backups and a log of who changed what. Which design fits?",
+    "hint": "Backups and a log of who did what need one place.",
+    "choices": [
+      {
+        "text": "Each PC shares its own copy with the others, peer to peer",
+        "correct": false,
+        "why": "Copies on every PC drift apart, and there is no one place to back up or to log."
+      },
+      {
+        "text": "A tracker that lists which PC has which file",
+        "correct": false,
+        "why": "A tracker finds peers; it does not keep one consistent copy or a log."
+      },
+      {
+        "text": "A file server that every PC connects to",
+        "correct": true,
+        "why": "Client-server: one copy, one place to back up, one log of changes."
+      },
+      {
+        "text": "Broadcasting each change to the whole LAN",
+        "correct": false,
+        "why": "A machine that is off when the broadcast goes out never gets the change."
+      }
+    ]
+  },
+  {
+    "id": "ex-ch2z46yx",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When a client connects without asking for a port, its kernel picks an ___ port for that one connection.",
+    "hint": "The opposite of well-known.",
+    "blanks": [
+      {
+        "accept": [
+          "ephemeral"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tk1tq4hw",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line from this lesson's listings to what it shows.",
+    "hint": "Look at which side is on the listening port.",
+    "pairs": [
+      {
+        "left": "LISTEN … 10.20.10.10:80  0.0.0.0:*",
+        "right": "srv waiting for clients"
+      },
+      {
+        "left": "ESTAB … 10.20.10.10:80  10.20.10.21:60504",
+        "right": "srv serving pc1"
+      },
+      {
+        "left": "ESTAB … 10.20.10.21:35592  10.20.10.22:8000",
+        "right": "pc1 using pc2's service"
+      }
+    ],
+    "right_distractors": [
+      "pc2 using srv's service"
+    ]
+  },
+  {
+    "id": "ex-w69z2yrj",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "srv has the three connections from pc1, pc2 and pc3. pc1 then opens two more tabs on it, one connection each. How many ESTAB lines on port 80 does srv list now?",
+    "hint": "Every connection is its own line.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": ""
+  }
+]

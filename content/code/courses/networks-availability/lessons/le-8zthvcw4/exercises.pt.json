@@ -1,0 +1,400 @@
+{
+  "ex-tszx49px": {
+    "prompt": "`tcpdump -i eth0`, rodado por `ana` em `web1`, respondeu `You don't have permission to perform this capture`. Por quê?",
+    "hint": "O que abrir a interface deixa um programa ler?",
+    "choices": [
+      {
+        "text": "web1 não tem interface chamada eth0",
+        "why": "Tem; o mesmo comando com sudo capturou nela."
+      },
+      {
+        "text": "Capturar exige root, ou uma capability concedida",
+        "why": "Isso. web1 não tem grupo wireshark, então é sudo."
+      },
+      {
+        "text": "Um filtro de captura é obrigatório para usuários comuns",
+        "why": "Nenhum filtro torna possível uma captura sem privilégio."
+      },
+      {
+        "text": "O tcpdump se recusa a imprimir num terminal sem -n",
+        "why": "A primeira captura com sudo não tinha -n e funcionou."
+      }
+    ]
+  },
+  "ex-3qc91x2a": {
+    "prompt": "Sem `-n`, o `tcpdump` imprimiu a porta 80 como `http`. Por que `-n` é o melhor hábito num servidor?",
+    "hint": "Quanto custa transformar um número num nome?",
+    "choices": [
+      {
+        "text": "Com `-n` o tcpdump captura uma parte maior dos pacotes",
+        "why": "O que é capturado não muda; só como é impresso."
+      },
+      {
+        "text": "Sem `-n` os endereços ficam escondidos da tela",
+        "why": "Eles foram impressos inteiros nas duas rodadas."
+      },
+      {
+        "text": "O `-w` se recusa a gravar um arquivo se ele faltar",
+        "why": "Um arquivo guarda pacotes, não nomes impressos; o -w funciona dos dois jeitos."
+      },
+      {
+        "text": "Nomes custam consultas e escondem o número",
+        "why": "Isso. Uma consulta reversa por endereço, e uma porta chamada http esconde se ela é a 80."
+      }
+    ]
+  },
+  "ex-k44kr0rn": {
+    "prompt": "O que `Flags [S.]` diz sobre um pacote?",
+    "hint": "O ponto também é uma flag.",
+    "choices": [
+      {
+        "text": "SYN e ACK: o servidor aceitando uma conexão",
+        "why": "Isso. O segundo pacote de todo handshake."
+      },
+      {
+        "text": "SYN sozinho, com o ponto fechando a lista",
+        "why": "Um SYN sozinho sai como [S]; o ponto é o ACK."
+      },
+      {
+        "text": "Um SYN que o cliente precisou mandar de novo",
+        "why": "No tcpdump uma retransmissão é idêntica ao original."
+      },
+      {
+        "text": "SYN e PUSH: dados indo já no primeiro pacote",
+        "why": "O push sai como P; este tem length 0."
+      }
+    ]
+  },
+  "ex-xzpa64a6": {
+    "prompt": "Um ACK mostra `win 63`, e o SYN da mesma conexão levou `wscale 10`. Qual é a janela real, em bytes?",
+    "hint": "A escala é uma potência de dois: 2 elevado a 10.",
+    "unit": "bytes"
+  },
+  "ex-ae9e1642": {
+    "prompt": "Para impedir o laptop de chegar a `web1`, alguém põe uma regra em `web1` descartando `192.168.10.20`. O que acontece?",
+    "hint": "Qual endereço de origem a captura de web1 mostrou?",
+    "choices": [
+      {
+        "text": "O laptop é cortado, e o resto do escritório não",
+        "why": "web1 nunca vê 192.168.10.20; a regra não pega nada."
+      },
+      {
+        "text": "Nada: o laptop chega como 203.0.113.2",
+        "why": "Isso. hq traduz os endereços do escritório, então a regra precisaria do público de hq, e isso é o escritório inteiro."
+      },
+      {
+        "text": "Toda conexão vinda de hq é descartada",
+        "why": "Isso exigiria uma regra para 203.0.113.2, não para o endereço privado."
+      },
+      {
+        "text": "O laptop recebe um reset em vez de uma página",
+        "why": "Um descarte não devolve nada, e este nem chega a casar."
+      }
+    ]
+  },
+  "ex-1a5mddy2": {
+    "prompt": "Ponha na ordem em que o tcpdump imprime as flags de uma conexão abrindo e da primeira requisição.",
+    "hint": "O cliente fala primeiro e por último.",
+    "items": [
+      "[S] do cliente",
+      "[S.] do servidor",
+      "[.] do cliente",
+      "[P.] do cliente, length 73"
+    ],
+    "trap": "A requisição não vem antes do último ACK do handshake, e o servidor responde ao SYN antes de qualquer outra coisa."
+  },
+  "ex-7gtt2qvn": {
+    "prompt": "O que `-Z ana` faz em `sudo tcpdump -n -i eth0 -c 40 -Z ana -w web1.pcap tcp port 80`?",
+    "hint": "Veja quem é o dono do arquivo.",
+    "choices": [
+      {
+        "text": "Deixa o arquivo legível por ana e por mais ninguém",
+        "why": "O arquivo saiu -rw-r--r--, legível por todos; o -Z decide o dono, não o modo."
+      },
+      {
+        "text": "Larga o root depois de abrir a interface",
+        "why": "Isso. Ele vira ana antes de gravar, então a interpretação roda sem privilégio e o arquivo é dela."
+      },
+      {
+        "text": "Comprime o arquivo enquanto grava",
+        "why": "O capinfos encontrou um arquivo pcap comum."
+      },
+      {
+        "text": "Captura só o tráfego da própria ana",
+        "why": "Pacotes levam endereços, não nomes de usuário; o filtro decide o que é guardado."
+      }
+    ]
+  },
+  "ex-pc0pww4c": {
+    "prompt": "O `capinfos` informou 4690 bytes de tamanho de arquivo e 4026 bytes de dados para 40 pacotes. O cabeçalho do arquivo pcap tem 24 bytes. Quantos bytes o formato acrescenta na frente de cada pacote?",
+    "hint": "Tire o cabeçalho do arquivo, depois divida o que sobra.",
+    "unit": "bytes"
+  },
+  "ex-964ydrs5": {
+    "prompt": "Por que comparar a linha `SHA256` do `capinfos` no servidor e na cópia do analista?",
+    "hint": "Um hash muda se um único byte mudar.",
+    "choices": [
+      {
+        "text": "Para decifrar os pacotes lá dentro",
+        "why": "Um hash não decifra nada; ele identifica bytes."
+      },
+      {
+        "text": "Para provar quem tirou a captura",
+        "why": "Qualquer um que o calcule obtém a mesma linha; ele não diz nada sobre o autor."
+      },
+      {
+        "text": "Mesma linha, mesmos bytes",
+        "why": "Isso. Nada perdido, nada editado no caminho."
+      },
+      {
+        "text": "Para conferir se o filtro de captura estava certo",
+        "why": "O hash é do arquivo como foi gravado, com o filtro certo ou errado."
+      }
+    ]
+  },
+  "ex-m04xgsck": {
+    "prompt": "`web1.pcap` saiu `-rw-r--r--`. Num servidor em que outras pessoas entram, o que isso quer dizer?",
+    "hint": "r-- para os outros.",
+    "choices": [
+      {
+        "text": "Qualquer conta consegue ler o tráfego que ele guarda",
+        "why": "Isso. chmod 600 depois, ou umask 077 antes."
+      },
+      {
+        "text": "Só o root consegue abri-lo, porque o root capturou",
+        "why": "O arquivo é de ana, e o último r deixa todo mundo ler."
+      },
+      {
+        "text": "Ninguém além de ana consegue lê-lo",
+        "why": "Isso seria -rw-------, o modo que o tshark usou."
+      },
+      {
+        "text": "Outros usuários podem acrescentar pacotes a ele",
+        "why": "Só o dono tem w."
+      }
+    ]
+  },
+  "ex-j255qhcx": {
+    "prompt": "Por que `tcpdump -n -r web1.pcap` não precisou de `sudo`?",
+    "hint": "Ele abre um arquivo, não uma interface.",
+    "choices": [
+      {
+        "text": "Porque a captura usou `-n`",
+        "why": "-n trata de nomes, não de permissão."
+      },
+      {
+        "text": "Porque o tcpdump guarda o root da captura",
+        "why": "Nada é guardado; cada execução começa como quem digitou."
+      },
+      {
+        "text": "Ler um arquivo que é de ana não exige privilégio",
+        "why": "Isso. Só abrir uma interface exige."
+      },
+      {
+        "text": "Um arquivo pcap leva a própria permissão de leitura",
+        "why": "Quem decide é o sistema de arquivos, como para qualquer arquivo."
+      }
+    ]
+  },
+  "ex-4ssm6t0q": {
+    "prompt": "`tcp[tcpflags] & tcp-syn != 0` imprimiu oito linhas de `web1.pcap`: um SYN e um SYN-ACK de cada vez. Quantas conexões foram abertas?",
+    "hint": "Duas linhas por conexão.",
+    "unit": "conexões"
+  },
+  "ex-hr4vpyh8": {
+    "prompt": "Lida com um filtro que escondeu o handshake, a resposta de um servidor confirmou `73`; a leitura completa tinha mostrado `74`. Um colega diz que um byte se perdeu. O que aconteceu?",
+    "hint": "Relativo a quê?",
+    "choices": [
+      {
+        "text": "Um byte se perdeu no caminho e foi retransmitido depois",
+        "why": "O arquivo não tem retransmissão; os pacotes são os mesmos."
+      },
+      {
+        "text": "O servidor confirmou um byte a menos por engano",
+        "why": "O servidor mandou o mesmo pacote das duas vezes; só a impressão muda."
+      },
+      {
+        "text": "O tcpdump contou a partir da requisição, não do SYN",
+        "why": "Isso. Sem o SYN a base anda uma posição; o -S imprime números brutos e acaba com a confusão."
+      },
+      {
+        "text": "O -A desloca a numeração em um para caber o texto",
+        "why": "O -A muda como a carga é impressa, não os números do cabeçalho."
+      }
+    ]
+  },
+  "ex-ecr0q4t4": {
+    "prompt": "Para o `tcpdump` imprimir números de sequência brutos em todo pacote, acrescente a flag ___ ao comando.",
+    "hint": "Letra maiúscula; a minúscula é o snap length.",
+    "blanks": [
+      {
+        "accept": [
+          "-S"
+        ]
+      }
+    ]
+  },
+  "ex-gppp0wdn": {
+    "prompt": "Lendo `short.pcap`, uma linha terminou em `[|http]`. O que isso quer dizer?",
+    "hint": "O arquivo foi capturado com -s 96.",
+    "choices": [
+      {
+        "text": "O servidor respondeu com um erro HTTP",
+        "why": "Era a requisição, e nada nela é erro."
+      },
+      {
+        "text": "O pacote foi danificado no fio",
+        "why": "Ele chegou inteiro; a captura guardou só o início."
+      },
+      {
+        "text": "A cópia guardada para no meio do HTTP",
+        "why": "Isso. O snap length a cortou depois de 96 bytes."
+      },
+      {
+        "text": "A saída foi passada por pipe a outro programa",
+        "why": "O pipe para o head só limita linhas; a marca é do tcpdump."
+      }
+    ]
+  },
+  "ex-ynysqmss": {
+    "prompt": "Com `-s 96`, Ethernet, IP e TCP ocuparam 14, 20 e 32 bytes. Quantos bytes da requisição HTTP foram guardados?",
+    "hint": "96 menos os cabeçalhos.",
+    "unit": "bytes"
+  },
+  "ex-8rhrwr3t": {
+    "prompt": "Depois de `-C 1 -W 3` o anel tinha `ring.pcap0` com 237648 bytes e dois arquivos de cerca de um milhão. Qual guarda os pacotes mais novos?",
+    "hint": "Qual não estava cheio?",
+    "choices": [
+      {
+        "text": "ring.pcap2, o número mais alto",
+        "why": "Os números são a ordem de criação, e o anel deu a volta."
+      },
+      {
+        "text": "ring.pcap0, o que não encheu",
+        "why": "Isso. Ele estava sendo sobrescrito quando a captura parou."
+      },
+      {
+        "text": "ring.pcap1, o do meio",
+        "why": "Esse guarda os pacotes mais antigos que ainda restam."
+      },
+      {
+        "text": "Os três, com pacotes misturados entre eles",
+        "why": "Cada arquivo é gravado na sua vez, nunca dois ao mesmo tempo."
+      }
+    ]
+  },
+  "ex-46dv9s2v": {
+    "prompt": "Um anel `-C 100 -W 5` roda a noite inteira. A falha aconteceu às 02:00 e você para a captura às 09:00. Quando os pacotes das 02:00 estarão faltando?",
+    "hint": "Quanto o anel consegue guardar?",
+    "choices": [
+      {
+        "text": "Nunca: um anel guarda a noite inteira",
+        "why": "Ele guarda cinco arquivos de 100 milhões de bytes, seja como for a noite."
+      },
+      {
+        "text": "Só se o filtro de captura estivesse errado",
+        "why": "Um filtro certo também enche arquivos; o anel dá a volta do mesmo jeito."
+      },
+      {
+        "text": "Se vieram uns 500 MB depois das 02:00",
+        "why": "Isso. Pare perto da falha, ou dimensione o anel pelo tráfego."
+      },
+      {
+        "text": "Se a captura rodou mais de cinco horas",
+        "why": "O anel conta bytes, não horas."
+      }
+    ]
+  },
+  "ex-a09wzqph": {
+    "prompt": "Quais destes reduzem o que um arquivo de captura expõe sobre outras pessoas? Marque todos que se aplicam.",
+    "hint": "Menos no arquivo, ou menos tempo com o arquivo.",
+    "choices": [
+      {
+        "text": "Um snap length curto",
+        "why": "Isso: cabeçalhos sem conteúdo."
+      },
+      {
+        "text": "A flag `-n`",
+        "why": "Ela muda a impressão, e o arquivo guarda os mesmos pacotes."
+      },
+      {
+        "text": "Um filtro de captura para um host e uma porta",
+        "why": "Isso: o tráfego dos outros nunca é gravado."
+      },
+      {
+        "text": "Apagar o arquivo quando a pergunta tiver resposta",
+        "why": "Isso: um arquivo que não existe mais não expõe nada."
+      },
+      {
+        "text": "Lê-lo com `-A`",
+        "why": "Isso imprime o conteúdo, que é o contrário."
+      }
+    ]
+  },
+  "ex-5fe6tnsc": {
+    "prompt": "`tshark -z http,tree` contou 8 pacotes HTTP em `web1.pcap`, que tem 40. O que são os outros 32?",
+    "hint": "Quatro conexões, cada uma aberta e fechada.",
+    "choices": [
+      {
+        "text": "Pacotes que o kernel descartou",
+        "why": "O tcpdump informou 0 descartados pelo kernel."
+      },
+      {
+        "text": "Pacotes HTTP cortados pelo snap length",
+        "why": "web1.pcap foi capturado inteiro, com o tamanho padrão."
+      },
+      {
+        "text": "HTTPS criptografado que o tshark não consegue contar",
+        "why": "O filtro de captura era tcp port 80; nada da 443 foi guardado."
+      },
+      {
+        "text": "Pacotes TCP que abrem, confirmam e fecham",
+        "why": "Isso. Oito levam HTTP; o resto é o TCP fazendo o próprio trabalho."
+      }
+    ]
+  },
+  "ex-70kyhx5p": {
+    "prompt": "A análise acabou e o chamado foi fechado. O que deve acontecer com os arquivos de captura?",
+    "hint": "São cópias de dados de outras pessoas.",
+    "choices": [
+      {
+        "text": "Guardá-los por seis meses para o caso de a falha voltar",
+        "why": "Uma falha nova ganha uma captura nova; a antiga só continua expondo pessoas."
+      },
+      {
+        "text": "Movê-los para /tmp, onde o sistema os limpa",
+        "why": "O /tmp é legível por outros e limpo num prazo que você não controla."
+      },
+      {
+        "text": "Apagar toda cópia",
+        "why": "Isso. No servidor e em todo outro lugar, e registrar no chamado."
+      },
+      {
+        "text": "Comprimi-los para ocuparem menos espaço",
+        "why": "Uma captura comprimida guarda exatamente os mesmos dados."
+      }
+    ]
+  },
+  "ex-psexjw0x": {
+    "prompt": "Um servidor web de produção devolve um HTTP 500 de vez em quando e pedem que você o capture. Qual comando é proporcional?",
+    "hint": "Limitado em tamanho, uma porta, sem root, num arquivo.",
+    "choices": [
+      {
+        "text": "`sudo tcpdump -i any -w all.pcap`",
+        "why": "Toda interface, todo protocolo e sem fim: o contrário de proporcional."
+      },
+      {
+        "text": "`sudo tcpdump -n -i eth0 -C 10 -W 4 -Z ana -w web.pcap tcp port 80`",
+        "why": "Isso. Uma porta, um anel de 40 MB, e o root largado antes de gravar."
+      },
+      {
+        "text": "`sudo tcpdump -n -A -i eth0 tcp port 80`, olhando a tela",
+        "why": "Imprime todo formulário num terminal e não guarda nada para analisar."
+      },
+      {
+        "text": "`tcpdump -n -i eth0 -w web.pcap tcp port 80`",
+        "why": "Sem sudo ele é recusado antes de capturar qualquer coisa."
+      }
+    ]
+  }
+}

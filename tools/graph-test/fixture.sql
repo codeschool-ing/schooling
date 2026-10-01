@@ -410,6 +410,29 @@ FROM tenants t, (VALUES
 WHERE t.slug = :'slug'
 ON CONFLICT DO NOTHING;
 
+/* ---------- and the track's final ----------
+
+   Four questions, the smallest paper the pass mark can measure, so the track
+   screen offers its exam and `exam-offer-test` can press the link. The link was
+   drawn for as long as tracks have had a screen and led nowhere: `/track/:id`
+   was registered first and read `exam` as a track. No track had a final, so the
+   fixture had none, and nothing pressed it. */
+
+INSERT INTO catalog_exercises (tenant_id, id, course_id, track_id, exam, version, type, prompt, payload)
+SELECT t.id, q.eid, '', :'trk', true, 1, 'quiz', q.prompt, q.payload::jsonb
+FROM tenants t, (VALUES
+  ('fx-track-1', 'Which one runs in the browser?',
+   '{"id":"fx-track-1","version":1,"type":"quiz","prompt":"Which one runs in the browser?","choices":[{"text":"The client","correct":true},{"text":"The database"},{"text":"The load balancer"}]}'),
+  ('fx-track-2', 'What does a 404 say?',
+   '{"id":"fx-track-2","version":1,"type":"quiz","prompt":"What does a 404 say?","choices":[{"text":"No such thing here","correct":true},{"text":"The server broke"},{"text":"Ask somewhere else"}]}'),
+  ('fx-track-3', 'Where does a stylesheet take effect?',
+   '{"id":"fx-track-3","version":1,"type":"quiz","prompt":"Where does a stylesheet take effect?","choices":[{"text":"In the page that loads it","correct":true},{"text":"On the server"},{"text":"In the database"}]}'),
+  ('fx-track-4', 'What turns a name into an address?',
+   '{"id":"fx-track-4","version":1,"type":"quiz","prompt":"What turns a name into an address?","choices":[{"text":"DNS","correct":true},{"text":"TLS"},{"text":"HTML"}]}')
+) AS q(eid, prompt, payload)
+WHERE t.slug = :'slug'
+ON CONFLICT DO NOTHING;
+
 /* ---------- a picture to label ----------
 
    The exam paper is the only screen that renders a question, so this is what

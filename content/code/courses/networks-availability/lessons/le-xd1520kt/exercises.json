@@ -1,0 +1,632 @@
+[
+  {
+    "id": "ex-hbacn8nj",
+    "version": 1,
+    "section": "keys-and-config",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `hq.key` come out as `-rw-------`?",
+    "hint": "Look at what ran in front of `wg genkey`.",
+    "choices": [
+      {
+        "text": "wg genkey writes every key file that way",
+        "correct": false,
+        "why": "It writes to standard output; the file's mode came from the shell that created it."
+      },
+      {
+        "text": "sudo makes the files it creates private",
+        "correct": false,
+        "why": "`hq.pub` was also written through sudo, with `tee`, and it is `-rw-r--r--`."
+      },
+      {
+        "text": "The umask 077 set just before it",
+        "correct": true,
+        "why": "Right. It removes every permission for group and others from files created in that shell."
+      },
+      {
+        "text": "/etc/wireguard imposes that mode on its contents",
+        "correct": false,
+        "why": "A directory does not set its files' mode; `hq.pub` sits beside it readable by all."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhwgn5rs",
+    "version": 1,
+    "section": "keys-and-config",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What in `hq`'s `wg0.conf` identifies the branch office?",
+    "hint": "What would a stranger have to steal to pass as `branch`?",
+    "choices": [
+      {
+        "text": "The comment `# the branch office`",
+        "correct": false,
+        "why": "A comment is for people; `wg` never reads or prints it."
+      },
+      {
+        "text": "The public key in its peer block",
+        "correct": true,
+        "why": "Right. Whoever holds the matching private key is `branch`, as far as `hq` is concerned."
+      },
+      {
+        "text": "Its Endpoint, 198.51.100.2:51820",
+        "correct": false,
+        "why": "The endpoint says where to send. A packet from that address under the wrong key is not accepted."
+      },
+      {
+        "text": "A user name and password sent in the handshake",
+        "correct": false,
+        "why": "WireGuard has no users and no passwords, only keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-8nzkcx5g",
+    "version": 1,
+    "section": "keys-and-config",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The peer `# Ana, at home` has no `Endpoint` line in `hq`'s file. What follows from that?",
+    "hint": "Where could `hq` possibly learn her address?",
+    "choices": [
+      {
+        "text": "wg-quick refuses to bring wg0 up until one is added",
+        "correct": false,
+        "why": "wg0 came up with that peer exactly as it was."
+      },
+      {
+        "text": "hq sends her packets to 10.20.0.3 across the internet",
+        "correct": false,
+        "why": "10.20.0.3 is her tunnel address, which no internet router can reach."
+      },
+      {
+        "text": "hq reaches her only after she has sent it a packet",
+        "correct": true,
+        "why": "Right. The endpoint is learnt from her first authenticated packet."
+      },
+      {
+        "text": "Her traffic has to go through branch, which has one",
+        "correct": false,
+        "why": "Peers talk to each other directly; nothing relays her through the branch."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9531wh9",
+    "version": 1,
+    "section": "up-and-handshake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The banner said wireguard-go is not required because this kernel has first-class support for WireGuard. What is true of this lab's kernel?",
+    "hint": "Read the line just above the banner.",
+    "choices": [
+      {
+        "text": "It has the module, and wireguard-go ran anyway",
+        "correct": false,
+        "why": "`ip link add wg0 type wireguard` failed with `Unknown device type`."
+      },
+      {
+        "text": "It lacks the module, so the banner is wrong here",
+        "correct": true,
+        "why": "Right. The kernel had refused the device one line earlier; the banner is written for the ordinary kernel since 5.6."
+      },
+      {
+        "text": "It predates 5.6, when WireGuard joined Linux",
+        "correct": false,
+        "why": "The lab was built on a kernel compiled without the module, not on an old one."
+      },
+      {
+        "text": "It runs WireGuard in the kernel and in wireguard-go at once",
+        "correct": false,
+        "why": "One implementation serves wg0, and here it is wireguard-go."
+      }
+    ]
+  },
+  {
+    "id": "ex-6748qwxd",
+    "version": 1,
+    "section": "up-and-handshake",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the capture, how many packets did the WireGuard handshake between `hq` and `branch` take before data flowed?",
+    "hint": "Count the ones that are not Transport Data.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "packets"
+  },
+  {
+    "id": "ex-63z4m13x",
+    "version": 1,
+    "section": "up-and-handshake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first reply through the new tunnel took 2.85 ms and the second 0.944 ms. Why the difference?",
+    "hint": "WireGuard sends nothing until there is something to send.",
+    "choices": [
+      {
+        "text": "The first request was lost and sent again",
+        "correct": false,
+        "why": "Nothing was lost: `icmp_seq=1` was answered."
+      },
+      {
+        "text": "The ISP's link is slower for a first packet",
+        "correct": false,
+        "why": "No link in the lab has any delay at all."
+      },
+      {
+        "text": "The till answers its first ping more slowly",
+        "correct": false,
+        "why": "Nothing on the till differs between the two; what differs is the tunnel."
+      },
+      {
+        "text": "It waited for the handshake",
+        "correct": true,
+        "why": "Right. WireGuard held the packet until the session keys existed, and did not drop it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ra49byk0",
+    "version": 1,
+    "section": "up-and-handshake",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`wg show` on `hq` reported 404 B sent to the branch. Which packets make up that number?",
+    "hint": "`wg` counts UDP payload, not what the wire carries.",
+    "choices": [
+      {
+        "text": "The initiation and the response on the wire, 190 + 134, plus padding",
+        "correct": false,
+        "why": "The response was received, not sent, and those sizes include Ethernet, IP and UDP."
+      },
+      {
+        "text": "148 + 128 + 128: the initiation and two data packets",
+        "correct": true,
+        "why": "Right. 190 − 42 and 170 − 42, with Ethernet, IP and UDP headers taken off."
+      },
+      {
+        "text": "Two data packets of 170 and a 64-byte keepalive",
+        "correct": false,
+        "why": "hq sends no keepalive, and 170 is the size with every outer header counted."
+      },
+      {
+        "text": "Four equal packets of 101 bytes",
+        "correct": false,
+        "why": "No packet in the capture was 101 bytes, and they were not all the same size."
+      }
+    ]
+  },
+  {
+    "id": "ex-msjfq25e",
+    "version": 1,
+    "section": "up-and-handshake",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every WireGuard data packet carries a ___ that goes up by one per packet, so a recorded packet cannot be played back later.",
+    "hint": "`tshark` printed it as 0 on the first one.",
+    "blanks": [
+      {
+        "accept": [
+          "counter",
+          "nonce"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-x4a9zw15",
+    "version": 1,
+    "section": "cryptokey-routing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On `branch`, `hq`'s AllowedIPs was cut to `10.20.0.1/32` and the laptop's ping failed. Where was it dropped?",
+    "hint": "The route and the keys were untouched.",
+    "choices": [
+      {
+        "text": "At hq, which had lost its route into wg0",
+        "correct": false,
+        "why": "`192.168.20.0/24 dev wg0` was still on hq."
+      },
+      {
+        "text": "At branch, once it was decrypted",
+        "correct": true,
+        "why": "Right. Its source, 192.168.10.20, was no longer in the list for hq's key."
+      },
+      {
+        "text": "At the ISP, which filters UDP 51820",
+        "correct": false,
+        "why": "The same port carried the handshake and everything else all lesson."
+      },
+      {
+        "text": "At the till, which rejected the laptop's address",
+        "correct": false,
+        "why": "The till never received the packet."
+      }
+    ]
+  },
+  {
+    "id": "ex-23b1dk2n",
+    "version": 1,
+    "section": "cryptokey-routing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`hq`'s firewall lets `192.168.20.0/24` reach `files`. Why is that a rule about the branch, and not about anybody who writes that source address into a packet?",
+    "hint": "What had to happen to a packet before it came out of wg0?",
+    "choices": [
+      {
+        "text": "Private ranges cannot be forged on the internet",
+        "correct": false,
+        "why": "A private source is as easy to write as any other."
+      },
+      {
+        "text": "The ISP filters packets with spoofed sources",
+        "correct": false,
+        "why": "The ISP never sees the inner addresses at all."
+      },
+      {
+        "text": "From that range, only branch's key is accepted",
+        "correct": true,
+        "why": "Right. A packet out of wg0 with that source was decrypted with branch's key and checked against its row."
+      },
+      {
+        "text": "The tunnel hides the source address from hq",
+        "correct": false,
+        "why": "hq reads the source after decryption; the rule depends on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7dk2bnb",
+    "version": 1,
+    "section": "cryptokey-routing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a peer's AllowedIPs decide on `hq`? Choose all that apply.",
+    "hint": "It is read going out and coming in, and wg-quick reads it too.",
+    "choices": [
+      {
+        "text": "Which peer an outgoing packet is encrypted for",
+        "correct": true,
+        "why": "Right: the destination picks the row, and the row picks the key."
+      },
+      {
+        "text": "Which source addresses are accepted from that peer",
+        "correct": true,
+        "why": "Right: branch dropped the laptop's ping on exactly this."
+      },
+      {
+        "text": "Which addresses the peer is permitted to reach",
+        "correct": false,
+        "why": "That is the reading the name invites, and not what it does."
+      },
+      {
+        "text": "Which routes wg-quick adds for wg0",
+        "correct": true,
+        "why": "Right: `192.168.20.0/24 dev wg0` came from it."
+      },
+      {
+        "text": "The UDP port the peer listens on",
+        "correct": false,
+        "why": "That is ListenPort, or the port in Endpoint."
+      }
+    ]
+  },
+  {
+    "id": "ex-143j9x2x",
+    "version": 1,
+    "section": "roaming-and-silence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hq`'s file has no Endpoint for Ana, yet `wg show` lists `198.51.100.77:40817`. Where did that come from?",
+    "hint": "Nobody typed it.",
+    "choices": [
+      {
+        "text": "From resolving vpn.example.com",
+        "correct": false,
+        "why": "That name is how she finds hq, not how hq finds her."
+      },
+      {
+        "text": "From homegw's NAT table, read over the tunnel by hq",
+        "correct": false,
+        "why": "hq has no way to read another router's tables."
+      },
+      {
+        "text": "From her first packet that authenticated",
+        "correct": true,
+        "why": "Right. The address and port it came from became her endpoint, the home router's NAT included."
+      },
+      {
+        "text": "From her AllowedIPs, 10.20.0.3/32",
+        "correct": false,
+        "why": "That is her tunnel address, and hq's own file already has it."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5deynj1",
+    "version": 1,
+    "section": "roaming-and-silence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which machine needed `PersistentKeepalive = 25`, and why?",
+    "hint": "Which of them sits behind a router that forgets?",
+    "choices": [
+      {
+        "text": "hq, so branch knows the office is alive",
+        "correct": false,
+        "why": "WireGuard sends no liveness messages between fixed addresses, and needs none."
+      },
+      {
+        "text": "The laptop, so homegw keeps its NAT mapping",
+        "correct": true,
+        "why": "Right. Idle, the home router forgets the port, and hq could no longer reach her."
+      },
+      {
+        "text": "Both ends, or the handshake expires",
+        "correct": false,
+        "why": "A handshake is renewed by traffic, not by keepalives."
+      },
+      {
+        "text": "branch, because its Endpoint line is fixed",
+        "correct": false,
+        "why": "A fixed public address is the case that needs no keepalive."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7enwncd",
+    "version": 1,
+    "section": "roaming-and-silence",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the wrong key, the ISP saw initiations at 0 and at 5.277388 seconds. Roughly every how many seconds is an unanswered initiation sent again?",
+    "hint": "Round to the nearest whole second.",
+    "value": 5,
+    "tolerance": 1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-b7y7ebqg",
+    "version": 1,
+    "section": "roaming-and-silence",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the wrong key on Ana's side, why did `hq` send nothing back, not even an error?",
+    "hint": "What would `hq` need in order to answer?",
+    "choices": [
+      {
+        "text": "It cannot authenticate the initiation, and stays silent",
+        "correct": true,
+        "why": "Right. A WireGuard endpoint does not answer a packet it cannot authenticate, which also hides it from scanners."
+      },
+      {
+        "text": "The ISP blocks traffic towards port 51820",
+        "correct": false,
+        "why": "The two initiations crossed the ISP; its own capture shows them."
+      },
+      {
+        "text": "hq's wg0 was down during the test",
+        "correct": false,
+        "why": "It had been restarted and was up; the right key would have been answered."
+      },
+      {
+        "text": "WireGuard reports errors over TCP, which was blocked",
+        "correct": false,
+        "why": "WireGuard uses UDP alone and has no error message to send."
+      }
+    ]
+  },
+  {
+    "id": "ex-4aeq8b0w",
+    "version": 1,
+    "section": "roaming-and-silence",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's laptop moves from home to a hotel with the tunnel up. Put what happens in order.",
+    "hint": "hq believes a new address only after one thing.",
+    "items": [
+      "The laptop sends its next packet from the hotel's address",
+      "hq authenticates it under Ana's key",
+      "hq moves her endpoint to the new address",
+      "hq's replies go to the hotel"
+    ],
+    "trap": "The endpoint moves only after the packet authenticates; an address alone proves nothing."
+  },
+  {
+    "id": "ex-m7fdd144",
+    "version": 1,
+    "section": "openvpn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `tls-crypt` on, what could `tshark` at the ISP still recognise?",
+    "hint": "Read the first two lines of the capture.",
+    "choices": [
+      {
+        "text": "The Client Hello and the server's certificate",
+        "correct": false,
+        "why": "Those are what disappeared: after two packets it saw only Continuation Data."
+      },
+      {
+        "text": "Nothing at all: it saw plain UDP",
+        "correct": false,
+        "why": "It named the first two packets OpenVPN, by their message type."
+      },
+      {
+        "text": "The user name ana, from her certificate",
+        "correct": false,
+        "why": "The name appeared only in the server's own status file and log."
+      },
+      {
+        "text": "That it was OpenVPN, from the two HARD_RESET packets",
+        "correct": true,
+        "why": "Right. The message type stays readable; the TLS inside does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-r9yhjfcq",
+    "version": 1,
+    "section": "openvpn",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody leaves the company. On this OpenVPN server, what cuts off her access and nobody else's?",
+    "hint": "Which of these belongs to her alone?",
+    "choices": [
+      {
+        "text": "A new tc.key on the server",
+        "correct": false,
+        "why": "Every client shares that key: a new one locks everybody out until it is handed round again."
+      },
+      {
+        "text": "Removing her line from server.conf and restarting it",
+        "correct": false,
+        "why": "server.conf has no line per user; any certificate the authority signed connects."
+      },
+      {
+        "text": "Revoking her certificate, checked with crl-verify",
+        "correct": true,
+        "why": "Right. Her certificate is her identity, and nobody else's changes."
+      },
+      {
+        "text": "Moving the pool off 10.8.0.0/24",
+        "correct": false,
+        "why": "The pool hands addresses to whoever authenticates; it decides nothing about who."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3s0y4q2",
+    "version": 1,
+    "section": "openvpn",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value from the OpenVPN capture to what it is.",
+    "hint": "Status file, pool and key.",
+    "pairs": [
+      {
+        "left": "ana",
+        "right": "The Common Name in her certificate"
+      },
+      {
+        "left": "198.51.100.77:35979",
+        "right": "homegw's address and a port its NAT chose"
+      },
+      {
+        "left": "10.8.0.2",
+        "right": "Her address from the server's pool"
+      },
+      {
+        "left": "tc.key",
+        "right": "A key every client holds a copy of"
+      }
+    ],
+    "right_distractors": [
+      "A key that only Ana holds"
+    ]
+  },
+  {
+    "id": "ex-j77d5mv3",
+    "version": 1,
+    "section": "openvpn",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the status file, `ana` is the Common ___ of the certificate she connected with.",
+    "hint": "The first column's heading.",
+    "blanks": [
+      {
+        "accept": [
+          "Name"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f443ve4r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new branch joins over WireGuard. `wg show` on `hq` shows its handshake 20 seconds ago, but the branch's PCs cannot reach `files`. What is the likeliest fix?",
+    "hint": "A recent handshake rules out one whole family of causes.",
+    "choices": [
+      {
+        "text": "New key pairs on both routers",
+        "correct": false,
+        "why": "A handshake only completes when the keys are right."
+      },
+      {
+        "text": "PersistentKeepalive on hq",
+        "correct": false,
+        "why": "Keepalives hold NAT mappings open; this handshake already works."
+      },
+      {
+        "text": "The branch LAN added to that peer's AllowedIPs on hq",
+        "correct": true,
+        "why": "Right. Without it, hq drops the PCs' packets on arrival, as branch did in this lesson."
+      },
+      {
+        "text": "A lower MTU on wg0",
+        "correct": false,
+        "why": "An MTU fault lets small packets through; here nothing gets through."
+      }
+    ]
+  },
+  {
+    "id": "ex-1cpz5xh9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The network team links two routers it manages itself. Which fits better, and why?",
+    "hint": "Who is at each end?",
+    "choices": [
+      {
+        "text": "OpenVPN, because WireGuard cannot carry a whole LAN",
+        "correct": false,
+        "why": "It carried 192.168.20.0/24 through this whole lesson."
+      },
+      {
+        "text": "WireGuard, since one key per router is all the identity needed",
+        "correct": true,
+        "why": "Right. There are no people to name or revoke, and the file is short enough to check by eye."
+      },
+      {
+        "text": "OpenVPN over TCP, as UDP is too unreliable for a tunnel",
+        "correct": false,
+        "why": "UDP is the normal carrier for a tunnel; TCP inside TCP is the trouble lesson 3 describes."
+      },
+      {
+        "text": "Neither: a link between routers needs IPsec",
+        "correct": false,
+        "why": "IPsec is one option, lesson 2's, not a requirement."
+      }
+    ]
+  }
+]

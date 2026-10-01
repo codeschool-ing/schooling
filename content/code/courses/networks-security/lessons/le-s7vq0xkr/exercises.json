@@ -1,0 +1,667 @@
+[
+  {
+    "id": "ex-0p00699d",
+    "version": 1,
+    "section": "what-a-hash-is",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many hexadecimal digits does sha256sum print for the digest of a million zero bytes?",
+    "hint": "256 bits, four bits per digit.",
+    "value": 64,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-bch6qfw8",
+    "version": 1,
+    "section": "what-a-hash-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each property of a hash to what it rules out.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "preimage resistance",
+        "right": "recovering a message from its fingerprint"
+      },
+      {
+        "left": "second-preimage resistance",
+        "right": "swapping a given file for a different one that checks out"
+      },
+      {
+        "left": "collision resistance",
+        "right": "preparing two documents in advance, one to show and one to use"
+      }
+    ],
+    "right_distractors": [
+      "reading the file without the key"
+    ]
+  },
+  {
+    "id": "ex-2hxz65qk",
+    "version": 1,
+    "section": "what-a-hash-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A log shows a file's SHA-256 as e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855. What does that tell you?",
+    "hint": "The last line of the second capture.",
+    "choices": [
+      {
+        "text": "The file was a million zero bytes",
+        "correct": false,
+        "why": "That digest starts d29751f2."
+      },
+      {
+        "text": "The file was empty",
+        "correct": true,
+        "why": "Right. It is the digest of no input at all."
+      },
+      {
+        "text": "The hash failed and printed a placeholder",
+        "correct": false,
+        "why": "sha256sum printed a real digest."
+      },
+      {
+        "text": "The file was corrupted in transit, so it matches no list",
+        "correct": false,
+        "why": "A digest alone says nothing about a list."
+      }
+    ]
+  },
+  {
+    "id": "ex-a19mccwb",
+    "version": 1,
+    "section": "checking-a-download",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "sha256sum -c printed agent-2.4.1.tar.gz: OK. Both files came from www.example.com. What has been shown?",
+    "hint": "Where did the list come from?",
+    "choices": [
+      {
+        "text": "The file matches the list published beside it",
+        "correct": true,
+        "why": "Right. Whoever controls the server controls both."
+      },
+      {
+        "text": "The file is the one the vendor's developers built",
+        "correct": false,
+        "why": "An attacker on the server could have replaced both."
+      },
+      {
+        "text": "The file is signed",
+        "correct": false,
+        "why": "No signature was involved."
+      },
+      {
+        "text": "The server's certificate is valid",
+        "correct": false,
+        "why": "sha256sum knows nothing about certificates."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkt5z06c",
+    "version": 1,
+    "section": "checking-a-download",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A digest fetched from the same server as the file catches which of these? Choose all that apply.",
+    "hint": "Accident or person?",
+    "choices": [
+      {
+        "text": "A download cut short by a dropped connection",
+        "correct": true,
+        "why": "Right. The truncated file hashes differently."
+      },
+      {
+        "text": "A file damaged by a failing disk",
+        "correct": true,
+        "why": "Right. Corruption changes the digest."
+      },
+      {
+        "text": "An intruder who replaced the file and the list on that server",
+        "correct": false,
+        "why": "The replaced list describes the replaced file, so the check says OK."
+      },
+      {
+        "text": "A mirror operator who edited both files together",
+        "correct": false,
+        "why": "Same case: both came from the one place."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1nktaxh",
+    "version": 1,
+    "section": "checking-a-download",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You must detect a person tampering with a download, and have only a SHA-256 digest. Where must the digest come from?",
+    "hint": "Who cannot change it?",
+    "choices": [
+      {
+        "text": "From the same server, over HTTPS",
+        "correct": false,
+        "why": "HTTPS protects the transfer, not a server whose files were replaced."
+      },
+      {
+        "text": "From a second download of the same list",
+        "correct": false,
+        "why": "Same source, same answer."
+      },
+      {
+        "text": "From a stronger hash such as SHA-512 on that server",
+        "correct": false,
+        "why": "The algorithm is not the weakness; the source is."
+      },
+      {
+        "text": "A place the tamperer cannot also change",
+        "correct": true,
+        "why": "Right. Otherwise both are replaced together."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9xwd73r",
+    "version": 1,
+    "section": "hmac",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's webhook accepts order=17&status=paid without checking any HMAC. Who can mark order 17 as paid?",
+    "hint": "Is the address a secret?",
+    "choices": [
+      {
+        "text": "Only the payment provider, since the address is private",
+        "correct": false,
+        "why": "The address is not a secret."
+      },
+      {
+        "text": "Anybody who finds the webhook's address",
+        "correct": true,
+        "why": "Right. The request needs no password."
+      },
+      {
+        "text": "Nobody, because the body is hashed by TLS",
+        "correct": false,
+        "why": "TLS protects the connection, not who sent it."
+      },
+      {
+        "text": "Customers logged into the shop",
+        "correct": false,
+        "why": "No login is involved in the webhook."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvckg1c0",
+    "version": 1,
+    "section": "hmac",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why should the shop compare the received HMAC with hmac.compare_digest rather than ==?",
+    "hint": "What does an early stop reveal?",
+    "choices": [
+      {
+        "text": "== ignores the case of hex digits",
+        "correct": false,
+        "why": "It compares exactly."
+      },
+      {
+        "text": "compare_digest also checks the timestamp",
+        "correct": false,
+        "why": "It compares two values, nothing more."
+      },
+      {
+        "text": "Timing would leak how many leading bytes matched",
+        "correct": true,
+        "why": "Right. Constant time hides that."
+      },
+      {
+        "text": "== is slower on long hex strings and lets requests time out",
+        "correct": false,
+        "why": "The speed difference is the leak, not a timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4h17z99",
+    "version": 1,
+    "section": "hmac",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To stop yesterday's genuine request being resent, providers put a ___ inside what the HMAC covers and reject old ones.",
+    "hint": "When was it sent?",
+    "blanks": [
+      {
+        "accept": [
+          "timestamp",
+          "time stamp"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fpkndpt8",
+    "version": 1,
+    "section": "hmac",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dispute: the provider says it never sent a webhook the shop received with a valid HMAC. What can the HMAC settle?",
+    "hint": "Who holds the secret?",
+    "choices": [
+      {
+        "text": "That the provider sent it",
+        "correct": false,
+        "why": "The shop could have computed the same code."
+      },
+      {
+        "text": "Only that one of the two secret holders made it",
+        "correct": true,
+        "why": "Right. Both sides can create valid codes."
+      },
+      {
+        "text": "That the shop forged it",
+        "correct": false,
+        "why": "The provider could equally have made it."
+      },
+      {
+        "text": "When the request was sent, from the timestamp inside",
+        "correct": false,
+        "why": "That does not say which side computed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5kcf9cja",
+    "version": 1,
+    "section": "signatures",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes is the Ed25519 signature of agent-2.4.1.tar.gz?",
+    "hint": "wc -c.",
+    "value": 64,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-91kz7ypr",
+    "version": 1,
+    "section": "signatures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After admin signed agent-2.4.1.tar.gz, who can read the file's contents?",
+    "hint": "Signing is not encrypting.",
+    "choices": [
+      {
+        "text": "Only holders of release.key",
+        "correct": false,
+        "why": "The private key signs; it does not lock the file."
+      },
+      {
+        "text": "Only holders of release.pub",
+        "correct": false,
+        "why": "The public key checks the signature."
+      },
+      {
+        "text": "Anybody who downloads it",
+        "correct": true,
+        "why": "Right. The file stayed readable."
+      },
+      {
+        "text": "Nobody until the signature is verified",
+        "correct": false,
+        "why": "Verification decides whether to trust it, not whether it can be read."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mtrm02y",
+    "version": 1,
+    "section": "signatures",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An attacker replaced agent-2.4.1.tar.gz, its .sig and release.pub on the download server. A user fetches all three there and verifies. What do they see?",
+    "hint": "Whose key checks whose signature?",
+    "choices": [
+      {
+        "text": "Signature Verified Successfully",
+        "correct": true,
+        "why": "Right. A forged release checked against a forged key."
+      },
+      {
+        "text": "Signature Verification Failure, since the key never left admin",
+        "correct": false,
+        "why": "The attacker used a key of their own."
+      },
+      {
+        "text": "An error, because a public key cannot be replaced",
+        "correct": false,
+        "why": "It is a file like any other."
+      },
+      {
+        "text": "Failure, because Ed25519 ties the key to the server",
+        "correct": false,
+        "why": "Nothing in the key names a server."
+      }
+    ]
+  },
+  {
+    "id": "ex-111j6mve",
+    "version": 1,
+    "section": "fingerprints-in-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ssh-keygen -lf on app and ssh-keyscan from admin both print SHA256:D69NpujcgW9pCTbA68lgiwW9k9fCvqO2C3xgQ55NwQk. What does that establish?",
+    "hint": "One was read locally, one over the network.",
+    "choices": [
+      {
+        "text": "That the host key is strong enough",
+        "correct": false,
+        "why": "Matching says nothing about strength."
+      },
+      {
+        "text": "That app's password is correct",
+        "correct": false,
+        "why": "No password was involved."
+      },
+      {
+        "text": "That both machines share one host key",
+        "correct": false,
+        "why": "Both lines describe app's key."
+      },
+      {
+        "text": "The key arriving over the network is app's own",
+        "correct": true,
+        "why": "Right. That is the comparison SSH asks for."
+      }
+    ]
+  },
+  {
+    "id": "ex-sh4hztc9",
+    "version": 1,
+    "section": "fingerprints-in-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A backup script on a new machine stops with Host key verification failed. What is the fix the lesson gives?",
+    "hint": "Keep the check.",
+    "choices": [
+      {
+        "text": "Disable StrictHostKeyChecking in the script",
+        "correct": false,
+        "why": "That turns the check off."
+      },
+      {
+        "text": "Distribute the servers' host keys to it in advance",
+        "correct": true,
+        "why": "Right. The refusal was correct."
+      },
+      {
+        "text": "Remove BatchMode so it waits for a yes",
+        "correct": false,
+        "why": "Nobody is there to answer it."
+      },
+      {
+        "text": "Regenerate the host key on the server",
+        "correct": false,
+        "why": "The client still would not know it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qwh072x",
+    "version": 1,
+    "section": "fingerprints-in-practice",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what apt does to trust a package, first to last.",
+    "hint": "The list comes first.",
+    "items": [
+      "download the list of package digests",
+      "check the list's signature against the distribution's keys",
+      "download the package",
+      "check the package against its digest in the list"
+    ],
+    "trap": "A digest is trusted only after the list carrying it is."
+  },
+  {
+    "id": "ex-rvbam5zk",
+    "version": 1,
+    "section": "fingerprints-in-practice",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each system to what is signed there.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "SSH",
+        "right": "each connection, with the server's host key"
+      },
+      {
+        "left": "DNSSEC",
+        "right": "the zone's records"
+      },
+      {
+        "left": "package managers",
+        "right": "the list of packages and their digests"
+      },
+      {
+        "left": "WireGuard",
+        "right": "the handshake, with each peer's static key"
+      }
+    ],
+    "right_distractors": [
+      "the user's password"
+    ]
+  },
+  {
+    "id": "ex-nna6f830",
+    "version": 1,
+    "section": "passwords-are-different",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is plain SHA-256 the wrong way to store passwords?",
+    "hint": "What does the thief of the stored values want?",
+    "choices": [
+      {
+        "text": "It has collisions",
+        "correct": false,
+        "why": "That is MD5 and SHA-1."
+      },
+      {
+        "text": "Its digest can be reversed to the password",
+        "correct": false,
+        "why": "Preimage resistance rules that out."
+      },
+      {
+        "text": "It is fast, so guesses are cheap",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is too long for a password column",
+        "correct": false,
+        "why": "64 hex digits fit easily."
+      }
+    ]
+  },
+  {
+    "id": "ex-xa0636qg",
+    "version": 1,
+    "section": "passwords-are-different",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two accounts have the password summer2026. With a random salt per password, what is stored?",
+    "hint": "What is the salt for?",
+    "choices": [
+      {
+        "text": "The same value twice, since the password is the same",
+        "correct": false,
+        "why": "That is what the salt prevents."
+      },
+      {
+        "text": "Two different values",
+        "correct": true,
+        "why": "Right. One guess cannot be compared against both at once."
+      },
+      {
+        "text": "The password encrypted with the salt as its key",
+        "correct": false,
+        "why": "Nothing reversible is stored."
+      },
+      {
+        "text": "The salt alone, since it replaces the password",
+        "correct": false,
+        "why": "The salt is stored beside a value computed from both."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hwscqy2",
+    "version": 1,
+    "section": "passwords-are-different",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A router's configuration backup uses an old, reversible password encoding. How should the backup be treated?",
+    "hint": "What does it contain?",
+    "choices": [
+      {
+        "text": "As ordinary documentation",
+        "correct": false,
+        "why": "It holds the passwords in reversible form."
+      },
+      {
+        "text": "As safe, since the passwords are encoded",
+        "correct": false,
+        "why": "Encoded reversibly is readable."
+      },
+      {
+        "text": "As public once the device is replaced",
+        "correct": false,
+        "why": "People reuse passwords."
+      },
+      {
+        "text": "As a secret, and switch to the strongest format",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bhfc4a3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Thousands of customers must check that firmware really comes from the manufacturer, without being able to produce a valid check themselves. Which tool fits?",
+    "hint": "Who may create, who may check?",
+    "choices": [
+      {
+        "text": "A SHA-256 digest on the download page",
+        "correct": false,
+        "why": "Anybody can compute a digest."
+      },
+      {
+        "text": "An HMAC with a secret shared with every customer",
+        "correct": false,
+        "why": "Every customer could then forge one."
+      },
+      {
+        "text": "A signature, with the public key given to customers",
+        "correct": true,
+        "why": "Right. One key makes it, anybody checks."
+      },
+      {
+        "text": "Argon2id over the firmware",
+        "correct": false,
+        "why": "That slows guessing; it proves no origin."
+      }
+    ]
+  },
+  {
+    "id": "ex-1dzpnee7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two services of the same company, and nobody else, exchange messages and share a secret configured on both. Which check fits?",
+    "hint": "No third party needs to check.",
+    "choices": [
+      {
+        "text": "An HMAC over each message",
+        "correct": true,
+        "why": "Right. Only the two parties need to verify."
+      },
+      {
+        "text": "A SHA-256 digest sent with each message",
+        "correct": false,
+        "why": "Whoever changes the message recomputes the digest."
+      },
+      {
+        "text": "A bcrypt value of each message",
+        "correct": false,
+        "why": "A slow password hash is for stored passwords."
+      },
+      {
+        "text": "An MD5 digest, since the network is internal",
+        "correct": false,
+        "why": "An unkeyed hash stops no person, internal or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-3vdg06j4",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One byte was appended to agent-2.4.1.tar.gz. Which checks in this lesson detected it? Choose all that apply.",
+    "hint": "Two captures show it.",
+    "choices": [
+      {
+        "text": "sha256sum -c against SHA256SUMS",
+        "correct": true,
+        "why": "Right: FAILED, exit 1."
+      },
+      {
+        "text": "openssl pkeyutl -verify with release.pub",
+        "correct": true,
+        "why": "Right: Signature Verification Failure."
+      },
+      {
+        "text": "ssh-keygen -lf on the file",
+        "correct": false,
+        "why": "That prints a host key's fingerprint."
+      },
+      {
+        "text": "The HMAC of the webhook body",
+        "correct": false,
+        "why": "That covered a different message."
+      }
+    ]
+  }
+]

@@ -1,0 +1,399 @@
+{
+  "ex-cmvxtb1y": {
+    "prompt": "A quarentena do laptop foi adicionada com `nft add`, e o laptop continuou alcançando app:8080 e www:443. Por quê?",
+    "hint": "Onde o `add` coloca uma regra?",
+    "choices": [
+      {
+        "text": "O `nft add` deixa a regra pendente até o conjunto ser recarregado",
+        "why": "A regra entrou na hora; foi listada com um handle."
+      },
+      {
+        "text": "Ela foi para o fim, abaixo de accepts que casaram antes",
+        "why": "Isso. O handle 10 aceitou a conexão antes de o handle 20 ser lido."
+      },
+      {
+        "text": "Um drop precisa de prioridade maior que um accept para vencer",
+        "why": "Regras numa cadeia não têm prioridade própria; a posição decide."
+      },
+      {
+        "text": "O endereço na regra estava errado, então não casou com pacote nenhum",
+        "why": "Era o endereço do laptop: movida para cima, a mesma regra contou 2 pacotes."
+      }
+    ]
+  },
+  "ex-ddbx242d": {
+    "prompt": "Depois que a quarentena foi movida para a posição 4 e o laptop tentou de novo, quantos pacotes o contador dela registrou?",
+    "hint": "counter packets ..."
+  },
+  "ex-yrzke1j0": {
+    "prompt": "A quarentena da aula 9 usou `insert` sem posição. O que isso faz que o `insert … position 4` evita?",
+    "hint": "Qual regra fica bem no topo da cadeia?",
+    "choices": [
+      {
+        "text": "Põe a regra no fim da cadeia, igual ao `add`",
+        "why": "insert sem posição põe no topo."
+      },
+      {
+        "text": "Substitui a regra que tinha o handle 4",
+        "why": "position 4 põe a regra antes do handle 4; nada é apagado."
+      },
+      {
+        "text": "Fica acima do established e corta conexões abertas",
+        "why": "Isso. position 4 deixa em paz as conexões abertas e barra toda nova."
+      },
+      {
+        "text": "É recusado, pois uma cadeia com regras exige uma posição",
+        "why": "O nft aceita; a aula 9 usou."
+      }
+    ]
+  },
+  "ex-2sz4mexd": {
+    "prompt": "Quais destas afirmações sobre a ordem das regras a seção sustenta? Escolha todas as que se aplicam.",
+    "hint": "Primeira correspondência, e o que cada pacote custa.",
+    "choices": [
+      {
+        "text": "Uma regra abaixo de um accept que casa com o mesmo pacote não é consultada para ele",
+        "why": "Isso. A primeira correspondência decide."
+      },
+      {
+        "text": "O nft mostra um aviso quando uma regra nova fica sombreada",
+        "why": "Carrega em silêncio; é o contador que mostra."
+      },
+      {
+        "text": "Regras que casam com a maior parte do tráfego ficam perto do topo",
+        "why": "Isso. Cada pacote percorre a cadeia até algo casar."
+      },
+      {
+        "text": "Uma regra drop é lida antes de qualquer accept, esteja onde estiver",
+        "why": "A ação não reordena regras; a quarentena provou."
+      },
+      {
+        "text": "Listas longas de endereços ficam num set",
+        "why": "Isso. Um set é consultado num passo só."
+      }
+    ]
+  },
+  "ex-ej4k3nq5": {
+    "prompt": "A regra de SSH foi digitada com `ip saddr 192.168.99.0/16`. O que a listagem mostrou que o nftables guardou?",
+    "hint": "Um /16 mantém dois bytes.",
+    "choices": [
+      {
+        "text": "`192.168.99.0/24`, o segmento pretendido",
+        "why": "O nftables não adivinha intenção; mantém o /16."
+      },
+      {
+        "text": "`192.168.99.0/16`, exatamente como foi digitado",
+        "why": "Foi reescrito para a rede que a máscara descreve."
+      },
+      {
+        "text": "`192.168.0.0/16`",
+        "why": "Isso. Normalizado para a rede que descreve."
+      },
+      {
+        "text": "Nenhuma regra: o nft recusou um endereço com bits de host ligados",
+        "why": "Carregou sem reclamar."
+      }
+    ]
+  },
+  "ex-yd9450bh": {
+    "prompt": "Qual célula da matriz a regra /16 quebrou?",
+    "hint": "O laptop está na LAN da equipe, 192.168.10.20.",
+    "choices": [
+      {
+        "text": "Internet para servidores: SSH agora aberto para remote",
+        "why": "O endereço de remote não está em 192.168.0.0/16."
+      },
+      {
+        "text": "LAN da equipe para servidores: qualquer porta agora aberta",
+        "why": "A regra cita tcp dport 22 e nenhuma outra porta."
+      },
+      {
+        "text": "Gestão para servidores: SSH agora bloqueado",
+        "why": "O segmento dos admins está dentro do /16, então ainda casa."
+      },
+      {
+        "text": "LAN da equipe para servidores: SSH agora aberto",
+        "why": "Isso. O laptop alcançou app:22 e db:22."
+      }
+    ]
+  },
+  "ex-qt4w994w": {
+    "prompt": "Um prefixo /16 mantém os primeiros ___ bytes do endereço.",
+    "hint": "16 bits.",
+    "blanks": [
+      {
+        "accept": [
+          "dois",
+          "2"
+        ]
+      }
+    ]
+  },
+  "ex-rg2njxfq": {
+    "prompt": "Por que nenhum pacote casa com `iifname eth0 oifname eth1 ip saddr 192.0.2.53 tcp dport 443`?",
+    "hint": "Que zona cada parte descreve?",
+    "choices": [
+      {
+        "text": "Chega da internet, mas vem do dns, que está na DMZ",
+        "why": "Isso. As interfaces e o endereço descrevem pontas opostas."
+      },
+      {
+        "text": "A porta 443 não é permitida numa cadeia forward",
+        "why": "Portas casam na forward o tempo todo."
+      },
+      {
+        "text": "Uma regra accept não aceita as duas interfaces",
+        "why": "A regra da equipe, handle 10, cita as duas."
+      },
+      {
+        "text": "A palavra `counter` tem de vir antes das interfaces",
+        "why": "O contador funcionou; marcou 0 porque nada casou."
+      }
+    ]
+  },
+  "ex-3n36ma2f": {
+    "prompt": "Qual é a regra que se queria para as atualizações do dns?",
+    "hint": "Troque as duas interfaces.",
+    "choices": [
+      {
+        "text": "`iifname eth0 oifname eth1 ip daddr 192.0.2.53 tcp dport 443`",
+        "why": "Isso deixa a internet alcançar o dns na 443, outro fluxo."
+      },
+      {
+        "text": "`iifname eth1 oifname eth1 ip saddr 192.0.2.53 tcp dport 443`",
+        "why": "As atualizações saem pela eth0, rumo à internet."
+      },
+      {
+        "text": "`iifname eth0 oifname eth1 ip saddr 192.0.2.53 tcp sport 443`",
+        "why": "As interfaces seguem invertidas; a porta estava certa."
+      },
+      {
+        "text": "`iifname eth1 oifname eth0 ip saddr 192.0.2.53 tcp dport 443`",
+        "why": "Isso. Entra pela DMZ, sai para a internet."
+      }
+    ]
+  },
+  "ex-sak9za6a": {
+    "prompt": "Ligue cada sintoma à causa mais comum.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "contador em 0, o tráfego ainda passa",
+        "right": "um accept acima dela casa antes"
+      },
+      {
+        "left": "contador em 0, o tráfego ainda é descartado",
+        "right": "direção, interface ou endereço errados"
+      },
+      {
+        "left": "contador subindo, mas com o tráfego errado",
+        "right": "uma máscara ou faixa de portas mais larga que o pretendido"
+      }
+    ],
+    "right_distractors": [
+      "o kernel rejeitou a regra ao carregar"
+    ]
+  },
+  "ex-e5chv7et": {
+    "prompt": "Quantos bytes o `drop everything else` final contou depois da tentativa ao banco?",
+    "hint": "counter packets 1 bytes ..."
+  },
+  "ex-7x9cy1ca": {
+    "prompt": "Por que a regra de finanças contou 0 pacotes enquanto db:5432 seguia bloqueado?",
+    "hint": "Veja o que está acima dela.",
+    "choices": [
+      {
+        "text": "5432 não é a porta do banco",
+        "why": "É; a regra nem teve chance de casar."
+      },
+      {
+        "text": "Ela está abaixo de um drop sem condições",
+        "why": "Isso. Esse drop decide por todo pacote que vê."
+      },
+      {
+        "text": "eth2 é a interface errada para a LAN da equipe",
+        "why": "A regra da equipe usa eth2 e funciona."
+      },
+      {
+        "text": "Falta `ct state new`, então o primeiro pacote de uma conexão a ignora",
+        "why": "Sem isso a regra casa com qualquer pacote do fluxo, o primeiro incluído."
+      }
+    ]
+  },
+  "ex-q5vwfcvv": {
+    "prompt": "Quais destas protegem um conjunto de regras contra regras acrescentadas depois de um bloqueio final? Escolha todas as que se aplicam.",
+    "hint": "A seção cita duas baratas.",
+    "choices": [
+      {
+        "text": "Trocar o drop final por reject, para as tentativas bloqueadas aparecerem",
+        "why": "Um reject ainda é um veredito incondicional e esconde o que vem abaixo."
+      },
+      {
+        "text": "Manter o conjunto num arquivo e escrever regras novas acima da última linha",
+        "why": "Isso. Ali o bloqueio final é visivelmente o último."
+      },
+      {
+        "text": "Acrescentar regras com `nft add`, para a mais nova ficar fácil de achar no fim",
+        "why": "Anexar é justamente como a regra de finanças se perdeu."
+      },
+      {
+        "text": "Deixar a política dar o veredito final e terminar com uma regra que conta e não decide",
+        "why": "Isso. Uma regra que só conta não esconde regra abaixo dela."
+      }
+    ]
+  },
+  "ex-jcn683tq": {
+    "prompt": "Por que o matrix-test.sh imprime uma célula apenas quando o resultado difere do esperado?",
+    "hint": "Imagine uma matriz de duzentas células.",
+    "choices": [
+      {
+        "text": "O probe relata células bloqueadas e não as abertas",
+        "why": "O probe relata as duas; o matrix.expected tem as duas."
+      },
+      {
+        "text": "Imprimir cada célula levaria mais tempo que testá-la",
+        "why": "Dez células levam poucos segundos de qualquer jeito."
+      },
+      {
+        "text": "Uma lista de células que passam enterra a que falhou",
+        "why": "Isso. Silêncio quer dizer que a matriz se mantém."
+      },
+      {
+        "text": "O código de saída vem do tamanho da saída",
+        "why": "Vem da variável fail."
+      }
+    ]
+  },
+  "ex-bkcrrpx4": {
+    "prompt": "Quantas células o matrix.expected da aula lista?",
+    "hint": "Uma linha por célula."
+  },
+  "ex-f5eqt3mx": {
+    "prompt": "Rodado contra o conjunto com o erro do /16, que linha o teste imprimiu?",
+    "hint": "Quais células do matrix.expected envolvem a porta 22?",
+    "choices": [
+      {
+        "text": "`admin app:22 expected open got blocked`",
+        "why": "O admin está dentro do /16, então o SSH dele seguiu aberto."
+      },
+      {
+        "text": "`laptop app:22 expected blocked got open`",
+        "why": "Isso. A única célula que a máscara larga abriu."
+      },
+      {
+        "text": "`laptop db:22 expected blocked got open`",
+        "why": "db:22 abriu, mas o matrix.expected não tem essa célula para testar."
+      },
+      {
+        "text": "`laptop db:5432 expected blocked got open`",
+        "why": "A regra cita a porta 22, não a do banco."
+      }
+    ]
+  },
+  "ex-yd73cta5": {
+    "prompt": "Ponha em ordem os passos de uma mudança de regra protegida pelo teste da matriz.",
+    "hint": "O teste confere o que está carregado.",
+    "items": [
+      "escrever a mudança no arquivo do conjunto de regras",
+      "carregar o arquivo",
+      "rodar o matrix-test.sh",
+      "reverter se ele sair com 1"
+    ],
+    "trap": "Rodar o teste antes de carregar testa o conjunto antigo, e passa seja qual for a mudança."
+  },
+  "ex-bfdhe3jw": {
+    "prompt": "Por que cada linha do teste dispara o probe na máquina da primeira coluna?",
+    "hint": "Com o que as regras casam?",
+    "choices": [
+      {
+        "text": "O firewall registra conexões apenas do host do laboratório",
+        "why": "Registro não é o que se testa."
+      },
+      {
+        "text": "O probe precisa do nome do alvo resolvido no DNS daquela zona",
+        "why": "Nomes não são o ponto; o caminho pelo firewall é."
+      },
+      {
+        "text": "Deixa o teste mais rápido que tentar cada célula de um lugar só",
+        "why": "Velocidade não é o motivo; de um lugar só, a maioria das células testaria o caminho errado."
+      },
+      {
+        "text": "As regras casam com interfaces e origens da zona onde ela começa",
+        "why": "Isso. Senão o teste tenta um caminho diferente do da célula."
+      }
+    ]
+  },
+  "ex-50tyn12a": {
+    "prompt": "Uma regra é acrescentada para o www parar de alcançar um relay de e-mail na porta 25. Depois de o www tentar, o contador marca 0 e o e-mail ainda passa. Qual a causa mais provável?",
+    "hint": "Zero, e o tráfego passa.",
+    "choices": [
+      {
+        "text": "A regra está escrita ao contrário",
+        "why": "Então nada o aceitaria também; o tráfego seguiria descartado pela política."
+      },
+      {
+        "text": "Um accept acima dela casa antes",
+        "why": "Isso. Contador em 0 e tráfego passando é regra sombreada."
+      },
+      {
+        "text": "A máscara dela é mais larga que o pretendido",
+        "why": "Uma máscara larga faz o contador subir, com tráfego demais."
+      },
+      {
+        "text": "Foi anexada abaixo de um drop final",
+        "why": "O drop final teria descartado o e-mail, e ele passou."
+      }
+    ]
+  },
+  "ex-evene22c": {
+    "prompt": "Ligue cada mudança ao erro que ela comete.",
+    "hint": "Qual dos quatro é cada uma?",
+    "pairs": [
+      {
+        "left": "uma liberação acrescentada um mês depois de um `counter drop` final",
+        "right": "uma regra inalcançável"
+      },
+      {
+        "left": "`10.0.0.0/8` digitado para um /24 de servidores",
+        "right": "uma máscara larga demais"
+      },
+      {
+        "left": "`iifname` da DMZ com uma origem na LAN da equipe",
+        "right": "uma regra impossível"
+      },
+      {
+        "left": "um bloqueio anexado abaixo de um accept mais amplo",
+        "right": "uma regra sombreada"
+      }
+    ],
+    "right_distractors": [
+      "uma regra que o nft se recusa a carregar"
+    ]
+  },
+  "ex-0nz1gd4q": {
+    "prompt": "Uma ACL de roteador pensada para 10.1.5.0/24 foi digitada com o curinga 0.0.255.255. Com quantas redes /24 a linha casa agora?",
+    "hint": "Um byte errado."
+  },
+  "ex-9ppe8dh2": {
+    "prompt": "Sobre a base, o laptop é posto em quarentena com a regra na posição 4, e o matrix.expected fica como estava. O que o matrix-test.sh imprime?",
+    "hint": "Quais células começam no laptop, e o que esperam?",
+    "choices": [
+      {
+        "text": "Silêncio, e sai com 0, já que a quarentena é intencional",
+        "why": "O arquivo ainda espera laptop app:8080 open; o teste não conhece intenção."
+      },
+      {
+        "text": "`laptop app:22 expected blocked got open`",
+        "why": "Esse era o erro do /16; a base não o tem."
+      },
+      {
+        "text": "Três linhas, uma por célula do laptop",
+        "why": "app:22 e db:5432 eram esperadas blocked e estão blocked; conferem."
+      },
+      {
+        "text": "`laptop app:8080 expected open got blocked`, e sai com 1",
+        "why": "Isso. Uma mudança deliberada exige mudar o matrix.expected junto."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1278 @@
+[
+  {
+    "id": "ex-p15z5gv3",
+    "version": 1,
+    "section": "the-question",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's request to S3 is signed correctly, and S3 refuses it with the code AccessDenied. Which gate refused it?",
+    "hint": "One gate asks who; the other asks whether.",
+    "choices": [
+      {
+        "text": "Authentication: AccessDenied means her key was not recognised",
+        "correct": false,
+        "why": "A key S3 cannot verify stops at the first gate with a code of its own, such as SignatureDoesNotMatch."
+      },
+      {
+        "text": "Authentication, because her session was opened without MFA",
+        "correct": false,
+        "why": "Whether MFA was used is a circumstance, and circumstances are tested by policy conditions at the second gate. Her identity was known."
+      },
+      {
+        "text": "Authorisation: S3 knew who she was, and nothing allowed the request",
+        "correct": true,
+        "why": "Right. The signature passed the first gate; AccessDenied is the answer of the second, after reading every policy that applies."
+      },
+      {
+        "text": "Neither: a security group dropped it on the way to S3",
+        "correct": false,
+        "why": "A security group filters packets to your own machines. S3 answered with a code, so the request reached its API."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8jfbh9r",
+    "version": 1,
+    "section": "the-question",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of a request to its value in the lesson's example.",
+    "hint": "Who, what, which thing, under what circumstances.",
+    "pairs": [
+      {
+        "left": "Principal",
+        "right": "the user ana"
+      },
+      {
+        "left": "Action",
+        "right": "s3:GetObject"
+      },
+      {
+        "left": "Resource",
+        "right": "arn:aws:s3:::example-reports/2026/q3.csv"
+      },
+      {
+        "left": "Condition",
+        "right": "the session was opened with MFA"
+      }
+    ],
+    "right_distractors": [
+      "the HTTP status 403"
+    ]
+  },
+  {
+    "id": "ex-hsmpkna7",
+    "version": 1,
+    "section": "the-question",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A virtual machine sits behind a security group that allows no inbound traffic at all. A leaked access key allows ec2:TerminateInstances on it. Can the key's holder delete the machine?",
+    "hint": "Where does that request go?",
+    "choices": [
+      {
+        "text": "Yes: the call goes to the provider's API, which the security group never sees",
+        "correct": true,
+        "why": "Right. A security group judges packets to the machine; deleting it is an API call to the provider, judged by policies."
+      },
+      {
+        "text": "No: with no inbound traffic allowed, nothing can reach it",
+        "correct": false,
+        "why": "That is true of packets to the machine. The delete request is never sent to the machine at all."
+      },
+      {
+        "text": "Only from inside the machine's own network",
+        "correct": false,
+        "why": "The provider's API is reached over the internet, from anywhere the key is."
+      },
+      {
+        "text": "Only if the key also allows ssh to the machine",
+        "correct": false,
+        "why": "ssh is a way into the operating system. Terminating is done to the machine from outside, by the provider."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzge9d9m",
+    "version": 1,
+    "section": "root",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which statement about the AWS root user is true?",
+    "hint": "Policies are the brakes.",
+    "choices": [
+      {
+        "text": "It obeys the same group policies as any administrator",
+        "correct": false,
+        "why": "Root belongs to no group and is not limited by the account's policies."
+      },
+      {
+        "text": "It is created by the first administrator the owner sets up",
+        "correct": false,
+        "why": "It is the other way round: root exists first, from the sign-up, and creates everything else."
+      },
+      {
+        "text": "It stops working once another administrator exists",
+        "correct": false,
+        "why": "Root keeps working for good; that is why it has to be locked away rather than forgotten."
+      },
+      {
+        "text": "No permission policy inside its own account limits it",
+        "correct": true,
+        "why": "Right. Policies are how an account limits its identities, and the root user is the one they do not apply to."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmsm7sdn",
+    "version": 1,
+    "section": "root",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rita runs a one-person company and signs in as root every day, with MFA. What is the strongest reason for her to stop?",
+    "hint": "Think about the worst session, not the usual one.",
+    "choices": [
+      {
+        "text": "Root cannot use the command line at all, so every script she writes needs another identity",
+        "correct": false,
+        "why": "Root can have access keys; the advice is that it should not."
+      },
+      {
+        "text": "A mistake or a stolen session as root has no limit, and root is also her way back in",
+        "correct": true,
+        "why": "Right. Every root session can do anything, and it is the identity that recovers the account; losing it loses both."
+      },
+      {
+        "text": "The provider charges more for calls made as root",
+        "correct": false,
+        "why": "Nothing in the lesson ties root to the bill. The argument is about damage and recovery."
+      },
+      {
+        "text": "MFA on root can expire and lock her out of the account",
+        "correct": false,
+        "why": "A second factor does not expire on its own. What locks people out is losing it, which is why root's is kept safe."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0amx5pg",
+    "version": 1,
+    "section": "users-and-groups",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Eight people each have the same three policies attached to their own users. The team stops needing one of the three. How many detachments does removing it take?",
+    "hint": "One per person who carries it.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "detachments"
+  },
+  {
+    "id": "ex-wzm8g828",
+    "version": 1,
+    "section": "users-and-groups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On Paulo's last day his console sign-in is disabled. On Monday a script on his laptop still uploads files to the account. Why?",
+    "hint": "How many credentials can a user have?",
+    "choices": [
+      {
+        "text": "Console sessions keep working for a week after a password is disabled",
+        "correct": false,
+        "why": "The script is not using a console session at all; it signs with an access key."
+      },
+      {
+        "text": "The script runs as his group, which he still belongs to",
+        "correct": false,
+        "why": "A group has no credentials and cannot make a call; only identities can."
+      },
+      {
+        "text": "His access key is separate, and disabling the password left it active",
+        "correct": true,
+        "why": "Right. Password and access keys are independent; the complete change deactivates the keys or deletes the user."
+      },
+      {
+        "text": "Disabling a user only takes effect at the next access review of the account",
+        "correct": false,
+        "why": "Changes to credentials take effect when made. The review is how people find what was missed."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjfrp6xn",
+    "version": 1,
+    "section": "users-and-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A permission has to say that the analysts may read one bucket. Where does it go at AWS?",
+    "hint": "What can a group be, and what can it not be?",
+    "choices": [
+      {
+        "text": "In a policy attached to the analysts' group",
+        "correct": true,
+        "why": "Right. A group is how permissions are handed to a set of people; a new analyst gets it by joining."
+      },
+      {
+        "text": "In a bucket policy that names the group as the Principal",
+        "correct": false,
+        "why": "A policy cannot name a group as its principal at AWS. The group is reached by attaching the policy to it."
+      },
+      {
+        "text": "On every analyst's own user, since a group cannot hold policies",
+        "correct": false,
+        "why": "Holding policies is exactly what a group is for; attaching one per person is the habit that goes wrong."
+      },
+      {
+        "text": "In a smaller group nested inside the analysts' group",
+        "correct": false,
+        "why": "IAM groups cannot contain other groups."
+      }
+    ]
+  },
+  {
+    "id": "ex-cvfm0h29",
+    "version": 1,
+    "section": "roles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a caller receive when it assumes a role?",
+    "hint": "Nobody logs in to a role.",
+    "choices": [
+      {
+        "text": "The role's password, to sign in to the console with",
+        "correct": false,
+        "why": "A role has no password; that is what makes it different from a user."
+      },
+      {
+        "text": "Temporary credentials that act as the role until they expire",
+        "correct": true,
+        "why": "Right. A key id, a secret, a session token and an expiry, from STS."
+      },
+      {
+        "text": "A permanent copy of the role's permissions on the caller's own user",
+        "correct": false,
+        "why": "Nothing is copied onto the caller. It acts as the role, for a while, and then stops."
+      },
+      {
+        "text": "A long-lived access key whose id begins with AKIA",
+        "correct": false,
+        "why": "AKIA is the prefix of a user's long-lived key. A role's temporary credentials begin with ASIA."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjkxrjjs",
+    "version": 1,
+    "section": "roles",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By default, how many minutes does a session from sts:AssumeRole last?",
+    "hint": "The figure's step 3 says it in hours.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-g9dktp2e",
+    "version": 1,
+    "section": "roles",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The policy on a role that says which principals may assume it is its ___ policy.",
+    "hint": "The other one says what the role may do.",
+    "blanks": [
+      {
+        "accept": [
+          "trust"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2sj2ackc",
+    "version": 1,
+    "section": "roles",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A virtual machine uses a role to read a bucket. Put the steps in order.",
+    "hint": "The figure in this section, top to bottom.",
+    "items": [
+      "The machine signs an sts:AssumeRole request as itself",
+      "STS checks the role's trust policy",
+      "STS returns a key id, a secret, a session token and an expiry",
+      "The machine signs its S3 call with those credentials",
+      "S3 checks the call against the role's permission policy"
+    ],
+    "trap": "The permission policy is not read when the role is assumed. It is read by S3, on every call made with the credentials."
+  },
+  {
+    "id": "ex-1ehgr3rv",
+    "version": 1,
+    "section": "roles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A role's permission policy allows s3:* on every bucket, and its trust policy names only ec2.amazonaws.com. A developer wants to assume it from her laptop. What happens?",
+    "hint": "Both documents have to say yes.",
+    "choices": [
+      {
+        "text": "She can, because the permission policy allows everything in S3",
+        "correct": false,
+        "why": "The permission policy decides what the role does once assumed. Who may assume it is the other document's question."
+      },
+      {
+        "text": "She can, but her session is capped at fifteen minutes",
+        "correct": false,
+        "why": "Fifteen minutes is the shortest session anyone may ask for, not a penalty. She gets none."
+      },
+      {
+        "text": "She can if she signed in with MFA first",
+        "correct": false,
+        "why": "A second factor proves who she is. It does not add her to a trust policy that names only a service."
+      },
+      {
+        "text": "She cannot: the trust policy does not name her",
+        "correct": true,
+        "why": "Right. However much the role may do, only the principals its trust policy names can become it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjrgevx1",
+    "version": 1,
+    "section": "policies",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a policy statement, the key whose value is Allow or Deny is called ___.",
+    "hint": "It is the second line of each statement in the example.",
+    "blanks": [
+      {
+        "accept": [
+          "Effect"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zg63pq58",
+    "version": 1,
+    "section": "policies",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One statement lists three actions and two resources. How many action-and-resource pairs does it cover?",
+    "hint": "The lists multiply.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "pairs"
+  },
+  {
+    "id": "ex-kqsg8x5s",
+    "version": 1,
+    "section": "policies",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each element of a policy to what it holds.",
+    "hint": "Six elements; four of them here.",
+    "pairs": [
+      {
+        "left": "Version",
+        "right": "the version of the policy language"
+      },
+      {
+        "left": "Action",
+        "right": "operations, written service:Operation"
+      },
+      {
+        "left": "Resource",
+        "right": "the things covered, written as ARNs"
+      },
+      {
+        "left": "Condition",
+        "right": "the circumstances in which it applies"
+      }
+    ],
+    "right_distractors": [
+      "the date the policy was last edited"
+    ]
+  },
+  {
+    "id": "ex-ph257s5d",
+    "version": 1,
+    "section": "policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A statement allows s3:ListBucket on arn:aws:s3:::example-reports/* and the user's listing is refused. Why?",
+    "hint": "What kind of resource does a listing act on?",
+    "choices": [
+      {
+        "text": "ListBucket acts on the bucket, and that ARN names only objects inside it",
+        "correct": true,
+        "why": "Right. The resource for a listing is the bucket's own ARN, with no /* after it."
+      },
+      {
+        "text": "Every listing needs an s3:prefix condition to work, and this statement has none",
+        "correct": false,
+        "why": "The condition narrows what may be listed. Without one the listing covers the whole bucket, and is allowed."
+      },
+      {
+        "text": "The Version line is missing, so the statement is ignored",
+        "correct": false,
+        "why": "Without Version the policy is read in the older language, not ignored, and the question never said it was missing."
+      },
+      {
+        "text": "Listing also needs s3:GetObject on the same ARN",
+        "correct": false,
+        "why": "Reading objects and listing them are separate actions; neither needs the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-kv8ye92m",
+    "version": 1,
+    "section": "policies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A policy attached to the role report-reader has no Principal element. What does that mean?",
+    "hint": "Which kinds of policy need to name somebody?",
+    "choices": [
+      {
+        "text": "It applies to every principal in the account",
+        "correct": false,
+        "why": "A policy with no Principal is not a policy for everybody; it is attached to one identity and speaks for it."
+      },
+      {
+        "text": "It is invalid until a Principal element is added",
+        "correct": false,
+        "why": "Adding one would be the mistake: identity policies do not carry that element."
+      },
+      {
+        "text": "Nothing: the role itself is the principal",
+        "correct": true,
+        "why": "Right. An identity policy is about the identity it is attached to. Trust and resource policies are the ones that name principals."
+      },
+      {
+        "text": "It applies only to the root user of the account",
+        "correct": false,
+        "why": "Root is not limited by policies at all, so no policy is written for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1mk9yhx9",
+    "version": 1,
+    "section": "evaluation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana's group allows s3:DeleteObject on a bucket. A policy on Ana's own user denies s3:DeleteObject there. She tries to delete an object. What happens?",
+    "hint": "Rule 3.",
+    "choices": [
+      {
+        "text": "Allowed: the group's policy was attached first",
+        "correct": false,
+        "why": "Order of attachment, like order of writing, changes nothing."
+      },
+      {
+        "text": "Refused: a matching explicit Deny wins over every Allow",
+        "correct": true,
+        "why": "Right. Where each policy is attached makes no difference; the Deny ends the question."
+      },
+      {
+        "text": "Allowed: when two policies disagree, the more generous one applies",
+        "correct": false,
+        "why": "It is the reverse. A disagreement between an Allow and a Deny always ends in the Deny."
+      },
+      {
+        "text": "Allowed: a group policy outranks a policy on one user",
+        "correct": false,
+        "why": "There is no ranking between where policies sit; their statements are pooled."
+      }
+    ]
+  },
+  {
+    "id": "ex-anjw1f9d",
+    "version": 1,
+    "section": "evaluation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "No policy that applies to Ana mentions s3:PutObject. She tries to upload a file. What happens?",
+    "hint": "Where does every request start?",
+    "choices": [
+      {
+        "text": "Allowed, because nothing forbids it",
+        "correct": false,
+        "why": "The default runs the other way: a request needs something to allow it."
+      },
+      {
+        "text": "Refused, and an explicit Deny is added to her policy",
+        "correct": false,
+        "why": "Nothing is written into her policy. An implicit deny is the absence of an Allow, not a statement."
+      },
+      {
+        "text": "Allowed if her group can read the same bucket",
+        "correct": false,
+        "why": "Reading and uploading are separate actions; an Allow for one says nothing about the other."
+      },
+      {
+        "text": "Refused, by the implicit deny",
+        "correct": true,
+        "why": "Right. Nothing allowed it, so it stays where every request starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-xn7ywhbj",
+    "version": 1,
+    "section": "evaluation",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps of deciding a request in order.",
+    "hint": "The figure in this section, from the top.",
+    "items": [
+      "The request is authenticated",
+      "It starts as denied",
+      "A matching explicit Deny, if any, refuses it",
+      "Otherwise, a matching Allow grants it",
+      "Otherwise, it stays denied by default"
+    ],
+    "trap": "Looking for an Allow before the Deny gets the answer wrong whenever both match: the Deny has to be able to win."
+  },
+  {
+    "id": "ex-xqv4qvy8",
+    "version": 1,
+    "section": "evaluation",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's group allows s3:* on the bucket example-reports. Her own policy denies s3:DeleteObject there. Which of her requests succeed? Choose all that apply.",
+    "hint": "The Deny removes only what it names; the Allow covers only what it names.",
+    "choices": [
+      {
+        "text": "s3:GetObject on an object in example-reports",
+        "correct": true,
+        "why": "Allowed: s3:* covers it and the Deny does not name it."
+      },
+      {
+        "text": "s3:DeleteObject on an object in example-reports",
+        "correct": false,
+        "why": "Refused: the explicit Deny matches, and nothing undoes it."
+      },
+      {
+        "text": "s3:PutObject on an object in example-reports",
+        "correct": true,
+        "why": "Allowed: s3:* includes uploading, and only deletion was denied."
+      },
+      {
+        "text": "s3:GetObject on an object in another bucket",
+        "correct": false,
+        "why": "Refused, implicitly: the group's Allow names only example-reports."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcph3762",
+    "version": 1,
+    "section": "evaluation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A statement denies s3:DeleteObject with the condition Bool aws:MultiFactorAuthPresent false. A script signing with a long-lived access key deletes an object, and it works. Why?",
+    "hint": "What does a request signed with a long-lived key carry about MFA?",
+    "choices": [
+      {
+        "text": "Deny statements apply to console sessions and never to access keys",
+        "correct": false,
+        "why": "A Deny applies to every request it matches, however it was signed. This one did not match."
+      },
+      {
+        "text": "The script's own Allow was more specific than the Deny",
+        "correct": false,
+        "why": "Specificity decides nothing. A matching Deny would have won over any Allow."
+      },
+      {
+        "text": "The request carried no MFA key at all, so Bool had nothing to compare and the Deny did not apply",
+        "correct": true,
+        "why": "Right. That is why the section writes BoolIfExists: a missing key then counts as a match."
+      },
+      {
+        "text": "A signed request always counts as MFA present",
+        "correct": false,
+        "why": "A signature proves the key, not a second factor; the key is simply absent from such requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-51v39rt4",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A backup job's policy includes iam:* on *. The job never touches IAM. Why is that line the worst one in the policy?",
+    "hint": "What can an identity do if it can change identities?",
+    "choices": [
+      {
+        "text": "It lets the job read every bucket's contents without any S3 permission",
+        "correct": false,
+        "why": "IAM actions change identities and policies; reading objects is an S3 action. The danger is that it can grant itself that too."
+      },
+      {
+        "text": "IAM calls are billed per request, and a wildcard can run up the bill",
+        "correct": false,
+        "why": "The problem is what the line allows, not what it costs."
+      },
+      {
+        "text": "It stops any other policy from being attached to the job's role",
+        "correct": false,
+        "why": "Nothing in IAM works that way; it would rather let the job attach anything it likes."
+      },
+      {
+        "text": "It can give itself any permission, so it amounts to administrator access",
+        "correct": true,
+        "why": "Right. Attaching an administrator policy to its own role, or creating a user with keys, is one call away."
+      }
+    ]
+  },
+  {
+    "id": "ex-kx6fjg9x",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is \"Action\": \"s3:Get*\" riskier than it looks?",
+    "hint": "Read the name as a pattern, and think about next year.",
+    "choices": [
+      {
+        "text": "It matches every S3 action, because a star ends the name",
+        "correct": false,
+        "why": "The pattern keeps its prefix: only actions whose names begin with Get match."
+      },
+      {
+        "text": "It matches every Get action, even ones added later",
+        "correct": true,
+        "why": "Right. GetBucketPolicy is in it today, and whatever S3 adds tomorrow will be too."
+      },
+      {
+        "text": "It is invalid, since wildcards are allowed only in resources",
+        "correct": false,
+        "why": "Wildcards are allowed in actions, which is exactly why this line needs reading."
+      },
+      {
+        "text": "It matches only s3:GetObject, so listing breaks",
+        "correct": false,
+        "why": "It matches far more than GetObject; listing is ListBucket, which it does not cover."
+      }
+    ]
+  },
+  {
+    "id": "ex-39qqg98g",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reviewing the policy of a job that only uploads files to one bucket, which lines should stop you? Choose all that apply.",
+    "hint": "The section's list of lines to stop at.",
+    "choices": [
+      {
+        "text": "\"Resource\": \"*\"",
+        "correct": true,
+        "why": "Every resource in the account, where the job needs one bucket."
+      },
+      {
+        "text": "\"Action\": \"s3:PutObject\"",
+        "correct": false,
+        "why": "That is the one action the job needs."
+      },
+      {
+        "text": "\"Action\": \"iam:CreateUser\"",
+        "correct": true,
+        "why": "An uploading job has no reason to create identities, and a new user with keys is a way in."
+      },
+      {
+        "text": "\"Resource\": \"arn:aws:s3:::example-backups/nightly/*\"",
+        "correct": false,
+        "why": "One prefix of one bucket: the narrow resource the job should have."
+      },
+      {
+        "text": "\"Action\": \"s3:*\"",
+        "correct": true,
+        "why": "Every S3 operation, deleting buckets and rewriting their policies included, for a job that uploads."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6jh8080",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A broad grant added to the on-call role during an incident eighteen months ago is still there. Nobody has complained about it. What should the review do?",
+    "hint": "What does unused access produce, until the day it is used?",
+    "choices": [
+      {
+        "text": "Remove it: unused access only surfaces when abused",
+        "correct": true,
+        "why": "Right. If it turns out to be needed, the refusal names the action and it comes back as one line."
+      },
+      {
+        "text": "Keep it: eighteen months without a complaint shows it is harmless",
+        "correct": false,
+        "why": "A policy that allows too much never produces a complaint. Silence is the symptom, not the proof."
+      },
+      {
+        "text": "Keep it until the provider marks it as expired",
+        "correct": false,
+        "why": "Grants do not expire unless somebody makes them; only role sessions do."
+      },
+      {
+        "text": "Add a Deny beside it, so the grant can be restored quickly",
+        "correct": false,
+        "why": "Two statements that cancel out are harder to read than none. Removing it is the change."
+      }
+    ]
+  },
+  {
+    "id": "ex-nspqk25z",
+    "version": 1,
+    "section": "credentials-on-machines",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's capture, how many sources did the CLI search for credentials before it gave up?",
+    "hint": "Count the lines of the --debug output.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "sources"
+  },
+  {
+    "id": "ex-9akrhdy3",
+    "version": 1,
+    "section": "credentials-on-machines",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these credential sources in the order the AWS CLI searched them in the capture.",
+    "hint": "The environment first; the machine's own last.",
+    "items": [
+      "Environment variables",
+      "The shared credentials file in ~/.aws",
+      "A container's credential endpoint",
+      "The instance metadata service"
+    ],
+    "trap": "The metadata service is last, which is why a forgotten key in the environment wins over a machine's role."
+  },
+  {
+    "id": "ex-k6px44da",
+    "version": 1,
+    "section": "credentials-on-machines",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A virtual machine has a narrowly scoped role. Months ago somebody set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in its environment for a test. Which credentials does the CLI on it sign with?",
+    "hint": "Which end of the chain is the environment on?",
+    "choices": [
+      {
+        "text": "The role, because a machine's own credentials always take priority",
+        "correct": false,
+        "why": "The machine's sources are the last two of twelve. Everything above them wins."
+      },
+      {
+        "text": "Both, with their permissions combined",
+        "correct": false,
+        "why": "One request is signed with one set of credentials; nothing merges two identities."
+      },
+      {
+        "text": "The key in the environment, which the chain reads before the metadata service",
+        "correct": true,
+        "why": "Right. The first source that answers is used, and the environment comes first; the role is never asked."
+      },
+      {
+        "text": "Neither: two sources conflict, so the CLI refuses",
+        "correct": false,
+        "why": "The chain does not look for conflicts. It stops at the first source that answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5b4fn4k",
+    "version": 1,
+    "section": "credentials-on-machines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the capture, what did aws sts get-caller-identity do with no credentials available?",
+    "hint": "Read the error's name.",
+    "choices": [
+      {
+        "text": "It asked AWS over the network, which answered that the caller was unknown",
+        "correct": false,
+        "why": "An unknown caller would be the first gate refusing at AWS. This refusal never left the laptop."
+      },
+      {
+        "text": "It refused on the laptop before signing, so nothing was sent to AWS",
+        "correct": true,
+        "why": "Right. NoCredentials is the CLI's own refusal: with nothing to sign with, there was no request to send."
+      },
+      {
+        "text": "It sent the request unsigned, as an anonymous caller",
+        "correct": false,
+        "why": "The CLI does not send an unsigned call here; it stops and says why."
+      },
+      {
+        "text": "It used the example key from the documentation",
+        "correct": false,
+        "why": "That key appears only in the last block, written into a file on purpose, and no call was made with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7e2ptf5",
+    "version": 1,
+    "section": "credentials-on-machines",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An access key id begins with ASIA. What kind of credential is it?",
+    "hint": "Compare it with the id in the credentials file.",
+    "choices": [
+      {
+        "text": "A long-lived key that belongs to a user",
+        "correct": false,
+        "why": "That is AKIA, the prefix of the key in the lesson's credentials file."
+      },
+      {
+        "text": "A key that only works in the Asia Pacific regions",
+        "correct": false,
+        "why": "The prefix says what kind of credential it is, not where it may be used."
+      },
+      {
+        "text": "A key that belongs to the root user of the account",
+        "correct": false,
+        "why": "Root should have no key at all, and the prefix does not name an identity."
+      },
+      {
+        "text": "A temporary one, such as a role hands out",
+        "correct": true,
+        "why": "Right. ASIA marks temporary credentials; a user's long-lived key begins with AKIA."
+      }
+    ]
+  },
+  {
+    "id": "ex-kr398c1c",
+    "version": 1,
+    "section": "mfa-and-federation",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a federated sign-in in order.",
+    "hint": "The numbered list in this section.",
+    "items": [
+      "Ana signs in at the organisation's identity provider, with a second factor",
+      "The identity provider sends a signed statement of who she is and her groups",
+      "The cloud provider checks the signature and maps her groups to roles",
+      "Ana receives temporary credentials for one of those roles"
+    ],
+    "trap": "The cloud provider never sees her password: the only thing it checks is the identity provider's signature."
+  },
+  {
+    "id": "ex-nqtv1y06",
+    "version": 1,
+    "section": "mfa-and-federation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana is disabled at the identity provider at 10:00. At 09:30 she had assumed a role for a one-hour session. What can she still do?",
+    "hint": "The section names one honest gap.",
+    "choices": [
+      {
+        "text": "Nothing: disabling her revokes every credential at once",
+        "correct": false,
+        "why": "Disabling stops new sign-ins. A session already issued is not recalled by it."
+      },
+      {
+        "text": "Sign in again, since the cloud keeps its own copy of her password",
+        "correct": false,
+        "why": "With federation the cloud keeps no password for her; the identity provider is the only door."
+      },
+      {
+        "text": "Use those role credentials until they expire at 10:30",
+        "correct": true,
+        "why": "Right. Credentials already handed out work until they expire, which is the argument for short sessions."
+      },
+      {
+        "text": "Keep using the credentials for a year, like an access key",
+        "correct": false,
+        "why": "Role credentials carry an expiry; hers ran out at 10:30."
+      }
+    ]
+  },
+  {
+    "id": "ex-ff9a3dgx",
+    "version": 1,
+    "section": "mfa-and-federation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana types her password into a convincing fake sign-in page. Which second factor would still keep the attacker out?",
+    "hint": "Which factor checks the site it is talking to?",
+    "choices": [
+      {
+        "text": "A hardware security key, which answers only to the site it was registered with",
+        "correct": true,
+        "why": "Right. The fake page is a different site, so the key gives it nothing to replay."
+      },
+      {
+        "text": "An authenticator app, since its code changes every thirty seconds",
+        "correct": false,
+        "why": "The fake page can ask for today's code too and use it at once, within those thirty seconds."
+      },
+      {
+        "text": "A code sent to her phone by text message",
+        "correct": false,
+        "why": "It can be typed into the fake page like any other code, and the number itself can be moved."
+      },
+      {
+        "text": "A longer password, changed every month",
+        "correct": false,
+        "why": "A password of any length is typed into the fake page just the same, and it is not a second factor."
+      }
+    ]
+  },
+  {
+    "id": "ex-0q57v32z",
+    "version": 1,
+    "section": "mfa-and-federation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A build pipeline deploys to an account with an access key stored in its settings. What change removes the key altogether?",
+    "hint": "The third line of the credential chain.",
+    "choices": [
+      {
+        "text": "Encrypting the key in the pipeline's settings",
+        "correct": false,
+        "why": "An encrypted key is still a key the pipeline can read and anyone who takes over the pipeline can use."
+      },
+      {
+        "text": "A role, assumed with a token issued per run",
+        "correct": true,
+        "why": "Right. The account trusts the platform in a role's trust policy, and there is no stored key left to leak."
+      },
+      {
+        "text": "Rotating the key every ninety days, on a schedule",
+        "correct": false,
+        "why": "Rotation shortens how long a leaked key works. The key is still there."
+      },
+      {
+        "text": "Moving the key into an environment variable instead",
+        "correct": false,
+        "why": "The environment is the first place the chain looks, and the key is just as stored there."
+      }
+    ]
+  },
+  {
+    "id": "ex-af2sbcs1",
+    "version": 1,
+    "section": "other-providers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Google Cloud or Azure idea to its name there.",
+    "hint": "The table in this section.",
+    "pairs": [
+      {
+        "left": "Google Cloud's identity for a program",
+        "right": "a service account"
+      },
+      {
+        "left": "Azure's identity for a program",
+        "right": "a managed identity"
+      },
+      {
+        "left": "Google Cloud's bundle of permissions",
+        "right": "a role, such as roles/storage.objectViewer"
+      },
+      {
+        "left": "Azure's grant of a role at a scope",
+        "right": "a role assignment"
+      }
+    ],
+    "right_distractors": [
+      "a trust policy"
+    ]
+  },
+  {
+    "id": "ex-hw49j3p7",
+    "version": 1,
+    "section": "other-providers",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At Google Cloud, a program such as a virtual machine runs as a ___ account.",
+    "hint": "The table's last row.",
+    "blanks": [
+      {
+        "accept": [
+          "service"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mq0cg9pb",
+    "version": 1,
+    "section": "other-providers",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At Azure, the identity created for a virtual machine or a function, with credentials the platform rotates, is a ___ identity.",
+    "hint": "The table's last row.",
+    "blanks": [
+      {
+        "accept": [
+          "managed"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s8b39d84",
+    "version": 1,
+    "section": "other-providers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At Google Cloud, Bruno is granted the basic role Editor on a folder that holds twelve projects. What can he change?",
+    "hint": "Which way do bindings travel?",
+    "choices": [
+      {
+        "text": "Only the folder's own settings, not the projects inside it",
+        "correct": false,
+        "why": "That would be true if bindings did not travel down. They do."
+      },
+      {
+        "text": "Nothing at all until he first assumes the Editor role, the way it works at AWS",
+        "correct": false,
+        "why": "At Google Cloud a role is something he is given, not an identity he becomes."
+      },
+      {
+        "text": "Only projects created in the folder after the grant",
+        "correct": false,
+        "why": "Inheritance covers what is below the folder now as well as what is added later."
+      },
+      {
+        "text": "Nearly everything in all twelve projects, because the binding is inherited",
+        "correct": true,
+        "why": "Right. A binding applies to everything below where it was made, and Editor is broad."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e664vs6",
+    "version": 1,
+    "section": "auditing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At AWS, the service that records the calls made to the API is ___.",
+    "hint": "Its Google Cloud counterpart is Cloud Audit Logs.",
+    "blanks": [
+      {
+        "accept": [
+          "CloudTrail",
+          "Cloud Trail"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6q2qkd5a",
+    "version": 1,
+    "section": "auditing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why send the audit log to storage in a separate account?",
+    "hint": "Who could otherwise remove it?",
+    "choices": [
+      {
+        "text": "Because the provider refuses to keep logs in the audited account",
+        "correct": false,
+        "why": "It keeps them there by default. Moving them is a decision about who can delete them."
+      },
+      {
+        "text": "So the administrators it audits cannot erase their own tracks",
+        "correct": true,
+        "why": "Right. A log its subjects can erase records only what they chose to leave."
+      },
+      {
+        "text": "So that reads of data get recorded, which they are not by default",
+        "correct": false,
+        "why": "Recording reads is a separate setting; where the log is stored does not turn it on."
+      },
+      {
+        "text": "Because entries kept in the same account expire after a day",
+        "correct": false,
+        "why": "The defaults keep ninety days of changes at AWS and Azure. The reason is who can delete them."
+      }
+    ]
+  },
+  {
+    "id": "ex-vgf8rbpt",
+    "version": 1,
+    "section": "auditing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Objects in a bucket were read by somebody who should not have read them. The account has CloudTrail on its default settings. What will its log show about the reads?",
+    "hint": "Which kind of call is recorded without anybody asking?",
+    "choices": [
+      {
+        "text": "Every GetObject call of the last ninety days",
+        "correct": false,
+        "why": "Ninety days is the default for calls that change things. Reads of objects are not among them."
+      },
+      {
+        "text": "The reads, but without saying who made them",
+        "correct": false,
+        "why": "When a call is recorded, the principal is the first thing in the entry. These were not recorded at all."
+      },
+      {
+        "text": "No record of them, since reads of data were never configured to be logged",
+        "correct": true,
+        "why": "Right. GetObject is a data event, and AWS records those only when somebody sets it up."
+      },
+      {
+        "text": "Only the reads that were refused with AccessDenied",
+        "correct": false,
+        "why": "Refusals are recorded for the calls that are logged. Reads of data are not logged by default, allowed or refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-45sdmx0c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function has to read the objects under one prefix of one bucket. Which design follows this lesson?",
+    "hint": "What kind of identity, and how much should it allow?",
+    "choices": [
+      {
+        "text": "An access key in an environment variable, scoped to that prefix",
+        "correct": false,
+        "why": "The scope is right and the credential is not: a stored long-lived key is what a role exists to replace."
+      },
+      {
+        "text": "An execution role whose policy allows s3:GetObject on that prefix",
+        "correct": true,
+        "why": "Right. A role gives temporary credentials with no key to store, and the policy allows the one action on the one prefix."
+      },
+      {
+        "text": "The credentials of the developer who wrote it, since she already has access",
+        "correct": false,
+        "why": "The function would act as her, with everything she may do, and the log would blame her for its calls."
+      },
+      {
+        "text": "An execution role with s3:* on every resource, to be narrowed later",
+        "correct": false,
+        "why": "Later rarely comes; start from nothing and add the one action."
+      }
+    ]
+  },
+  {
+    "id": "ex-5z633c8d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program on a virtual machine reads a bucket through the machine's role. Which two documents both have to say yes?",
+    "hint": "One lets it in, the other lets it act.",
+    "choices": [
+      {
+        "text": "The machine's security group and the bucket's policy",
+        "correct": false,
+        "why": "A security group filters packets to the machine; it has no say over calls to the storage API."
+      },
+      {
+        "text": "The root user's approval and the group's policy",
+        "correct": false,
+        "why": "Root approves nothing day to day, and a machine belongs to no group."
+      },
+      {
+        "text": "The trust policy and the owner's console password",
+        "correct": false,
+        "why": "A role has no password, and nobody's password is involved when a machine assumes one."
+      },
+      {
+        "text": "Its trust policy and its permission policy",
+        "correct": true,
+        "why": "Right. The trust policy lets the machine assume the role; the permission policy lets the role read."
+      }
+    ]
+  },
+  {
+    "id": "ex-hhgmk4a6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Inside one account, Bruno's user has no policies attached. The bucket policy of example-reports allows his user s3:GetObject. Can he read an object there?",
+    "hint": "Where can an Allow come from inside one account?",
+    "choices": [
+      {
+        "text": "Yes, the Allow on the resource suffices",
+        "correct": true,
+        "why": "Right. Across accounts both sides would have to allow it; in one account either side can."
+      },
+      {
+        "text": "No: a user with no policies is refused everything",
+        "correct": false,
+        "why": "His own policies are not the only place an Allow can come from; the bucket's policy counts too."
+      },
+      {
+        "text": "No: a bucket policy can deny but never allow",
+        "correct": false,
+        "why": "Resource policies can do both; this one names his user and allows the action."
+      },
+      {
+        "text": "Only after he assumes a role that the bucket trusts",
+        "correct": false,
+        "why": "Nothing here involves a role; the bucket policy names his user directly."
+      }
+    ]
+  }
+]

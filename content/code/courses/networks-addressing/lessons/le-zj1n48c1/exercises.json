@@ -1,0 +1,811 @@
+[
+  {
+    "id": "ex-f4hb27sc",
+    "version": 1,
+    "section": "why-nat",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is a private address under RFC 1918?",
+    "hint": "Three ranges: 10/8, 172.16/12, 192.168/16.",
+    "choices": [
+      {
+        "text": "203.0.113.2",
+        "correct": false,
+        "why": "A block reserved for documentation; the lab uses it to stand for a public address."
+      },
+      {
+        "text": "172.32.0.1",
+        "correct": false,
+        "why": "172.16.0.0/12 ends at 172.31.255.255; 172.32 is just outside it."
+      },
+      {
+        "text": "10.20.10.21",
+        "correct": true,
+        "why": "Inside 10.0.0.0/8: pc1's address, routed nowhere on the internet."
+      },
+      {
+        "text": "192.0.2.80",
+        "correct": false,
+        "why": "Another documentation block, not a private range; it plays a server outside the office."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8c777jc",
+    "version": 1,
+    "section": "why-nat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In r1's rule oifname \"eth1\" masquerade, what does masquerade do to a packet leaving by eth1?",
+    "hint": "The word for a disguise.",
+    "choices": [
+      {
+        "text": "Replaces its source address with eth1's current address",
+        "correct": true,
+        "why": "Masquerade is source NAT to whatever address the outgoing interface has at that moment."
+      },
+      {
+        "text": "Encrypts it so the provider cannot read it",
+        "correct": false,
+        "why": "NAT rewrites addresses; nothing is encrypted."
+      },
+      {
+        "text": "Replaces its destination with an inside server",
+        "correct": false,
+        "why": "That is destination NAT, which runs in prerouting, as packets arrive."
+      },
+      {
+        "text": "Drops it unless it belongs to a known connection",
+        "correct": false,
+        "why": "Dropping is the filter table's job; masquerade never drops."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpxddvk0",
+    "version": 1,
+    "section": "why-nat",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these blocks are private ranges of RFC 1918? Choose all that apply.",
+    "hint": "Three blocks, of three sizes.",
+    "choices": [
+      {
+        "text": "10.0.0.0/8",
+        "correct": true,
+        "why": "The largest private block, and the office lab's."
+      },
+      {
+        "text": "172.16.0.0/12",
+        "correct": true,
+        "why": "From 172.16.0.0 to 172.31.255.255."
+      },
+      {
+        "text": "192.168.0.0/16",
+        "correct": true,
+        "why": "The block most home routers use."
+      },
+      {
+        "text": "203.0.113.0/24",
+        "correct": false,
+        "why": "Reserved for documentation, not for private networks."
+      },
+      {
+        "text": "100.64.0.0/10",
+        "correct": false,
+        "why": "Shared address space for carrier-grade NAT, which is a different reservation."
+      }
+    ]
+  },
+  {
+    "id": "ex-gw9abp7v",
+    "version": 1,
+    "section": "why-nat",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says srv is safe from the internet because r1 does NAT. Which change would expose srv while r1 still does NAT?",
+    "hint": "What does NAT do with a connection that arrives, given a rule for it?",
+    "choices": [
+      {
+        "text": "Giving pc1 a second private address in the same office range",
+        "correct": false,
+        "why": "Another inside address changes nothing about what arrives from outside."
+      },
+      {
+        "text": "A forward of a public port to srv, accepted by the firewall",
+        "correct": true,
+        "why": "NAT then delivers what arrives on that port; only a firewall rule would stop it, and this one lets it through."
+      },
+      {
+        "text": "Changing masquerade to snat to 203.0.113.2",
+        "correct": false,
+        "why": "Both are source NAT for traffic leaving; neither lets anything in."
+      },
+      {
+        "text": "Moving the whole office from 10.20.10.0/24 to 192.168.10.0/24",
+        "correct": false,
+        "why": "Another private range is just as unroutable from outside."
+      }
+    ]
+  },
+  {
+    "id": "ex-4gjx67gy",
+    "version": 1,
+    "section": "why-nat",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "r1's source NAT chain is attached to the hook that runs just before a packet leaves, called ___",
+    "hint": "Read the type line of the chain.",
+    "blanks": [
+      {
+        "accept": [
+          "postrouting"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jyq9pyc4",
+    "version": 1,
+    "section": "source-nat",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four packets r1's tcpdump printed in order.",
+    "hint": "In from the office, out to the provider, and back.",
+    "items": [
+      "eth0 In: 10.20.10.21 > 192.0.2.80, echo request",
+      "eth1 Out: 203.0.113.2 > 192.0.2.80, echo request",
+      "eth1 In: 192.0.2.80 > 203.0.113.2, echo reply",
+      "eth0 Out: 192.0.2.80 > 10.20.10.21, echo reply"
+    ],
+    "trap": "The request leaves eth1 already translated: there is no moment on the wire where 10.20.10.21 is seen outside."
+  },
+  {
+    "id": "ex-9xd6dwaa",
+    "version": 1,
+    "section": "source-nat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Between the first and the second line of r1's capture, what changed in the echo request?",
+    "hint": "Compare the two lines field by field.",
+    "choices": [
+      {
+        "text": "The destination address",
+        "correct": false,
+        "why": "Both lines go to 192.0.2.80."
+      },
+      {
+        "text": "The ICMP id",
+        "correct": false,
+        "why": "id 14 on both; r1 had no reason to change it, since nothing else used it."
+      },
+      {
+        "text": "The source address",
+        "correct": true,
+        "why": "10.20.10.21 became 203.0.113.2: source NAT."
+      },
+      {
+        "text": "The sequence number and the length",
+        "correct": false,
+        "why": "seq 1 and length 64 on both."
+      }
+    ]
+  },
+  {
+    "id": "ex-5p06rpqc",
+    "version": 1,
+    "section": "source-nat",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The reply reached pc1 with ttl=62, having started at 64. How many routers forwarded it?",
+    "hint": "Each forwarding router takes one off, translating or not.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "routers"
+  },
+  {
+    "id": "ex-re76h2y8",
+    "version": 1,
+    "section": "source-nat",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "ICMP has no ports, so r1's table keeps pings apart by the echo ___, which was 14 here.",
+    "hint": "tcpdump printed it beside seq.",
+    "blanks": [
+      {
+        "accept": [
+          "id",
+          "identifier"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rvb65bpv",
+    "version": 1,
+    "section": "source-nat",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A capture taken on isp during pc1's ping shows the echo request coming from which address?",
+    "hint": "What leaves r1 by eth1?",
+    "choices": [
+      {
+        "text": "10.20.10.21, pc1's address",
+        "correct": false,
+        "why": "That address exists only inside the office; r1 replaced it before the packet left."
+      },
+      {
+        "text": "203.0.113.2",
+        "correct": true,
+        "why": "Outside r1 the office is one address, and that is the one every packet carries."
+      },
+      {
+        "text": "10.20.10.1, r1's inside address",
+        "correct": false,
+        "why": "That is pc1's gateway on the office side; packets leaving by eth1 carry eth1's address."
+      },
+      {
+        "text": "203.0.113.1, isp's own address",
+        "correct": false,
+        "why": "That is isp's end of the link; the packet came from the other end."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtfvhnyx",
+    "version": 1,
+    "section": "pat",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pc1 connected from port 40000. To which source port did r1 rewrite it?",
+    "hint": "The last dport on pc1's conntrack line.",
+    "value": 46745,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-ay5wv24s",
+    "version": 1,
+    "section": "pat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "r1 rewrote pc1's port 40000 but left pc2's port 40000 alone. Why?",
+    "hint": "Two connections may not share all four numbers.",
+    "choices": [
+      {
+        "text": "pc1 sent its packets after pc2 and loses on order",
+        "correct": false,
+        "why": "Order decided who got 40000, but the reason for the rewrite is the clash it would cause."
+      },
+      {
+        "text": "Kept, pc1's connection would look identical to pc2's from outside",
+        "correct": true,
+        "why": "Both would be 203.0.113.2:40000 to 192.0.2.80:80, so r1 gave pc1 another port."
+      },
+      {
+        "text": "pc1's address is lower, and lower addresses get rewritten",
+        "correct": false,
+        "why": "Addresses play no part in which port is kept."
+      },
+      {
+        "text": "Ports below 50000 are rewritten when they leave",
+        "correct": false,
+        "why": "pc2 kept 40000; nothing about the number itself forced a change."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcbr8r7s",
+    "version": 1,
+    "section": "pat",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose pc1 had used port 40000 towards a different server, 198.51.100.7 port 80, while pc2 used 40000 towards 192.0.2.80. Would r1 need to rewrite pc1's port?",
+    "hint": "Compare the two connections as seen from outside.",
+    "choices": [
+      {
+        "text": "Yes, since 40000 is already in use on 203.0.113.2",
+        "correct": false,
+        "why": "A port is not used up by one connection; what matters is whether all four numbers repeat."
+      },
+      {
+        "text": "No, because the destinations differ",
+        "correct": true,
+        "why": "203.0.113.2:40000 to 198.51.100.7:80 and to 192.0.2.80:80 are two different connections."
+      },
+      {
+        "text": "Yes, because PAT rewrites every source port",
+        "correct": false,
+        "why": "pc2 and pc3 kept theirs; PAT rewrites only to avoid a clash."
+      },
+      {
+        "text": "No, because ports are not translated by masquerade",
+        "correct": false,
+        "why": "They are, when needed: pc1's 40000 became 46745 in the capture."
+      }
+    ]
+  },
+  {
+    "id": "ex-29q8x8pz",
+    "version": 1,
+    "section": "pat",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An established TCP entry starts with 432000 seconds to live. How many days is that?",
+    "hint": "86400 seconds in a day.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-zczggn57",
+    "version": 1,
+    "section": "pat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Looking only at the three SYN packets isp captured, can you tell which office PC sent each one?",
+    "hint": "What do the three lines have in common?",
+    "choices": [
+      {
+        "text": "Yes, from the source ports, which are the PCs' own",
+        "correct": false,
+        "why": "Ports can be rewritten, as pc1's was; nothing outside says which were kept."
+      },
+      {
+        "text": "Yes, the lowest port is always pc1",
+        "correct": false,
+        "why": "Ports are picked by each PC's kernel and by r1, in no order tied to the PC."
+      },
+      {
+        "text": "No: only r1's table maps them back to machines",
+        "correct": true,
+        "why": "All three come from 203.0.113.2; which PC is which exists only in r1's connection table."
+      },
+      {
+        "text": "Yes, the TCP options carry each PC's address",
+        "correct": false,
+        "why": "The options are window and timestamp settings; no address is carried in them."
+      }
+    ]
+  },
+  {
+    "id": "ex-2b9hkb09",
+    "version": 1,
+    "section": "pat",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Cisco's name for PAT, many inside addresses sharing one outside address, is NAT ___",
+    "hint": "The word for loading too much on one thing.",
+    "blanks": [
+      {
+        "accept": [
+          "overload"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rg2ec51v",
+    "version": 1,
+    "section": "port-forwarding",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each result from isp's attempts to what it means.",
+    "hint": "Exit statuses are curl's own codes.",
+    "pairs": [
+      {
+        "left": "exit status 28",
+        "right": "Timed out: something dropped the packets silently"
+      },
+      {
+        "left": "exit status 7",
+        "right": "Refused: the address answered, nothing listened"
+      },
+      {
+        "left": "served by srv",
+        "right": "The forward delivered the request inside"
+      }
+    ],
+    "right_distractors": [
+      "The name could not be resolved"
+    ]
+  },
+  {
+    "id": "ex-hvzzfzhf",
+    "version": 1,
+    "section": "port-forwarding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the dnat rule placed in a prerouting chain rather than in postrouting?",
+    "hint": "When does r1 decide where a packet goes?",
+    "choices": [
+      {
+        "text": "Because prerouting runs faster than postrouting",
+        "correct": false,
+        "why": "Speed is not the reason; the order of the hooks is."
+      },
+      {
+        "text": "Because postrouting is reserved for IPv6",
+        "correct": false,
+        "why": "r1's masquerade rule runs in postrouting, for IPv4."
+      },
+      {
+        "text": "The destination must change before r1 chooses the route",
+        "correct": true,
+        "why": "Prerouting runs on arrival; rewritten there, the packet is routed to 10.20.10.10 instead of to r1 itself."
+      },
+      {
+        "text": "Because prerouting rules also open the firewall",
+        "correct": false,
+        "why": "They do not: the third command, ct status dnat accept, was needed for that."
+      }
+    ]
+  },
+  {
+    "id": "ex-e09tgt6f",
+    "version": 1,
+    "section": "port-forwarding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With a route to 10.20.10.0/24 through r1, isp's request to 10.20.10.10 still timed out. What stopped it?",
+    "hint": "Read r1's forward chain.",
+    "choices": [
+      {
+        "text": "The private address cannot be routed by isp",
+        "correct": false,
+        "why": "The route was added on purpose; the packet did reach r1."
+      },
+      {
+        "text": "srv was not listening on port 80",
+        "correct": false,
+        "why": "srv served the same page through the forward moments later."
+      },
+      {
+        "text": "r1 refused it with a reset",
+        "correct": false,
+        "why": "A refusal is exit 7 and arrives at once; 28 means nothing answered."
+      },
+      {
+        "text": "r1's forward chain, policy drop, with no rule for eth1 into eth0",
+        "correct": true,
+        "why": "Silently dropped, so curl waited until -m 4 ran out."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4fwk1rc",
+    "version": 1,
+    "section": "port-forwarding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When isp fetched the page through 203.0.113.2:8080, which client address did srv see?",
+    "hint": "Which address did the forward rewrite?",
+    "choices": [
+      {
+        "text": "203.0.113.1, isp's own",
+        "correct": true,
+        "why": "The forward rewrote the destination only; the source stayed isp's."
+      },
+      {
+        "text": "203.0.113.2, r1's public address",
+        "correct": false,
+        "why": "That would need a source rewrite as well, which this rule does not do."
+      },
+      {
+        "text": "10.20.10.1, r1's inside address",
+        "correct": false,
+        "why": "Same reason: r1 did not rewrite the source of the arriving connection."
+      },
+      {
+        "text": "127.0.0.1, because r1 relays the request",
+        "correct": false,
+        "why": "r1 forwards packets; it does not open a new connection of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-8khv3whn",
+    "version": 1,
+    "section": "port-forwarding",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a port forward safer? Choose all that apply.",
+    "hint": "A forward opens a service to everybody.",
+    "choices": [
+      {
+        "text": "Forwarding just the ports the service needs",
+        "correct": true,
+        "why": "Each forwarded port is a service exposed to the whole internet."
+      },
+      {
+        "text": "Limiting the rule to known client addresses where possible",
+        "correct": true,
+        "why": "A source match narrows who can reach it."
+      },
+      {
+        "text": "Keeping the inside server patched",
+        "correct": true,
+        "why": "Anyone can now reach it, so its flaws are reachable too."
+      },
+      {
+        "text": "Using port 8080 instead of 80 so nobody finds it",
+        "correct": false,
+        "why": "Scanners try every port; an unusual number hides nothing."
+      },
+      {
+        "text": "Turning on UPnP so devices manage their own forwards",
+        "correct": false,
+        "why": "That lets devices open ports without anybody deciding."
+      }
+    ]
+  },
+  {
+    "id": "ex-wphb4tkm",
+    "version": 1,
+    "section": "port-forwarding",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of setting up r1's forward in the order the lesson ran them.",
+    "hint": "A chain before its rule, a rule before the test.",
+    "items": [
+      "Create the prerouting chain in the nat table",
+      "Add the rule: eth1, TCP 8080, dnat to 10.20.10.10:80",
+      "Insert ct status dnat accept at the top of the forward chain",
+      "Fetch http://203.0.113.2:8080/ from isp"
+    ],
+    "trap": "A rule cannot be added to a chain that does not exist yet, and testing before the firewall rule would time out like the earlier attempt."
+  },
+  {
+    "id": "ex-7q8p6gcg",
+    "version": 1,
+    "section": "nat-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc2, inside the office, got exit status 7 from http://203.0.113.2:8080/ while isp got the page. Why?",
+    "hint": "Read the forward rule's first word.",
+    "choices": [
+      {
+        "text": "pc2's request arrived on eth0, and the rule matches eth1",
+        "correct": true,
+        "why": "Not forwarded, the request was for r1 itself, which has nothing on 8080: refused."
+      },
+      {
+        "text": "srv refuses connections that come from its own office network",
+        "correct": false,
+        "why": "srv served pc1 directly in lesson 5; it refuses nobody."
+      },
+      {
+        "text": "pc2 has no route to 203.0.113.2",
+        "correct": false,
+        "why": "pc2's default route through r1 covers it, and the refusal came back from r1."
+      },
+      {
+        "text": "The forward allows one client at a time",
+        "correct": false,
+        "why": "A forward is a rule, not a session; isp had finished long before."
+      }
+    ]
+  },
+  {
+    "id": "ex-7w5pnb5z",
+    "version": 1,
+    "section": "nat-costs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A server published through NAT that cannot be reached at its public address from the inside network shows the ___ problem.",
+    "hint": "The shape of a packet that goes to the router and has to turn back.",
+    "blanks": [
+      {
+        "accept": [
+          "hairpin",
+          "hairpinning",
+          "NAT loopback"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cnsvgyka",
+    "version": 1,
+    "section": "nat-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The office gets a complaint: 203.0.113.2 attacked a server at 08:24 yesterday. What is needed to find the machine?",
+    "hint": "What do the outside logs see for every PC?",
+    "choices": [
+      {
+        "text": "The address alone, which already identifies the PC that sent it",
+        "correct": false,
+        "why": "Every PC leaves as 203.0.113.2; the address names the whole office."
+      },
+      {
+        "text": "Its source port and exact time, checked against r1's records",
+        "correct": true,
+        "why": "Only r1 mapped ports to machines, and only records it kept can say which PC held that port then."
+      },
+      {
+        "text": "A capture on isp from yesterday",
+        "correct": false,
+        "why": "Outside r1 every packet shows 203.0.113.2; a capture there cannot name the PC."
+      },
+      {
+        "text": "The MAC address in the complaint",
+        "correct": false,
+        "why": "A MAC never leaves the office link; the complaint cannot contain one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ervthxhc",
+    "version": 1,
+    "section": "nat-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A customer's home router shows 100.64.12.9 as its outside address. What does that tell you?",
+    "hint": "Which block is 100.64.0.0/10?",
+    "choices": [
+      {
+        "text": "The router is broken and lost its public address",
+        "correct": false,
+        "why": "It is working; the address comes from the provider on purpose."
+      },
+      {
+        "text": "The address is public and reachable from anywhere",
+        "correct": false,
+        "why": "100.64.0.0/10 is not routed on the internet."
+      },
+      {
+        "text": "The router is using IPv6",
+        "correct": false,
+        "why": "It is an IPv4 address."
+      },
+      {
+        "text": "The provider runs CGNAT and translates again",
+        "correct": true,
+        "why": "Shared address space: a port forward on this router forwards from an address the internet cannot reach."
+      }
+    ]
+  },
+  {
+    "id": "ex-mt7jfrbp",
+    "version": 1,
+    "section": "nat-costs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An office moves to IPv6 with a public address on every machine. What still decides which connections from outside get in?",
+    "hint": "NAT was being mistaken for it.",
+    "choices": [
+      {
+        "text": "NAT, which IPv6 still requires",
+        "correct": false,
+        "why": "With 128-bit addresses there is no shortage for NAT to solve."
+      },
+      {
+        "text": "The firewall's rules",
+        "correct": true,
+        "why": "Translation was never the protection; the filter was, and it stays."
+      },
+      {
+        "text": "Nothing, so every machine is open",
+        "correct": false,
+        "why": "An IPv6 router still drops connections nobody asked for, by rule."
+      },
+      {
+        "text": "The switch's MAC table",
+        "correct": false,
+        "why": "The switch delivers frames on the LAN; it does not decide what enters from the internet."
+      }
+    ]
+  },
+  {
+    "id": "ex-za2c373s",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each term to what it rewrites.",
+    "hint": "Source or destination, address or port.",
+    "pairs": [
+      {
+        "left": "Source NAT",
+        "right": "The source address of what leaves"
+      },
+      {
+        "left": "PAT",
+        "right": "The source port too, when two connections would clash"
+      },
+      {
+        "left": "Port forwarding",
+        "right": "The destination of what arrives on a public port"
+      },
+      {
+        "left": "Masquerade",
+        "right": "The source, to whatever address the outgoing interface has"
+      }
+    ],
+    "right_distractors": [
+      "The MAC address of every frame"
+    ]
+  },
+  {
+    "id": "ex-gh3jw15h",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pc1, pc2, pc3 and srv all browse the web at the same time through r1. How many public IPv4 addresses does the office need?",
+    "hint": "PAT tells them apart by port.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-k0pxy4pr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After r1 restarts, every download in the office breaks at once, though the cables and routes are fine. Why?",
+    "hint": "Where did r1 keep the translations?",
+    "choices": [
+      {
+        "text": "The restart changed the office's private addresses",
+        "correct": false,
+        "why": "The addresses are configured on the PCs and did not change."
+      },
+      {
+        "text": "The masquerade rule only works on the first boot",
+        "correct": false,
+        "why": "The rule is loaded again; new connections work after the restart."
+      },
+      {
+        "text": "Replies match no entry in r1's emptied table",
+        "correct": true,
+        "why": "The translations lived in r1's memory; without them, replies for 203.0.113.2 have nowhere inside to go."
+      },
+      {
+        "text": "The provider blocks addresses that restart",
+        "correct": false,
+        "why": "The provider sees no restart, only packets from 203.0.113.2."
+      }
+    ]
+  }
+]
