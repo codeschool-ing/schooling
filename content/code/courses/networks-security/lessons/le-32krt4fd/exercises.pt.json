@@ -1,0 +1,412 @@
+{
+  "ex-rmy79ssr": {
+    "prompt": "No TLS, no SSH e no WireGuard, que tipo de criptografia cifra os bytes da conversa em si?",
+    "hint": "O que cada família faz bem?",
+    "choices": [
+      {
+        "text": "Assimétrica, porque os dados são o que mais importa",
+        "why": "A assimétrica roda por alguns milissegundos no início e não carrega dados em volume."
+      },
+      {
+        "text": "Simétrica",
+        "why": "Isso. A metade assimétrica só combina a chave simétrica."
+      },
+      {
+        "text": "As duas alternadas, um pacote cada",
+        "why": "Nada alterna: o acordo uma vez, depois simétrica para cada byte."
+      },
+      {
+        "text": "A que o cliente propuser primeiro",
+        "why": "A divisão de trabalho é fixada pelo que cada metade faz bem."
+      }
+    ]
+  },
+  "ex-gkz82b5r": {
+    "prompt": "Um relatório diz que uma chave RSA de 2048 bits é oito vezes mais forte que uma chave AES de 256 bits. O que está errado na comparação?",
+    "hint": "Onde comprimentos de chave se comparam?",
+    "choices": [
+      {
+        "text": "Nada: mais bits é mais força entre famílias",
+        "why": "Bits significam coisas diferentes em famílias diferentes."
+      },
+      {
+        "text": "Chaves RSA se medem em bytes, então são sessenta e quatro vezes",
+        "why": "As duas estão em bits; o que difere são as famílias."
+      },
+      {
+        "text": "Comprimentos só se comparam dentro da família",
+        "why": "Isso. RSA-2048 equivale a uma chave simétrica de uns 112 bits."
+      },
+      {
+        "text": "O AES-256 está quebrado, então qualquer RSA ganha",
+        "why": "O AES com chave de 256 bits é considerado forte."
+      }
+    ]
+  },
+  "ex-dm95meh0": {
+    "prompt": "Um colega quer cifrar o arquivo da folha com RSA em vez de AES \"porque a assimétrica é a mais forte\". O que a aula responde?",
+    "hint": "Para que serve cada família?",
+    "choices": [
+      {
+        "text": "Ele tem razão; o AES fica para dados sem importância",
+        "why": "O AES carrega cada byte de TLS, SSH e WireGuard."
+      },
+      {
+        "text": "Cada família tem seu trabalho; dados em volume são da simétrica",
+        "why": "Isso. A assimétrica combina chaves e assina."
+      },
+      {
+        "text": "RSA serviria se a chave tivesse 4096 bits",
+        "why": "O tamanho não é a questão; RSA é a ferramenta errada para volume."
+      },
+      {
+        "text": "Usar as duas em cada byte, para o dobro da força",
+        "why": "Empilhar cifras não é o desenho de nenhum desses protocolos."
+      }
+    ]
+  },
+  "ex-r673hh2v": {
+    "prompt": "O seal.py cifrou uma instrução de 30 bytes e imprimiu quantos bytes selou. Quantos desses bytes são a tag?",
+    "hint": "Subtraia a mensagem do que foi impresso."
+  },
+  "ex-v5n9bnmd": {
+    "prompt": "Alguém inverte bits no payroll.enc, o arquivo em AES-256-CBC. O que acontece ao decifrá-lo com a chave certa?",
+    "hint": "O que o CBC diz sobre alterações?",
+    "choices": [
+      {
+        "text": "O openssl avisa que o arquivo foi alterado",
+        "why": "O CBC não tem tag para verificar, então não há com o que avisar."
+      },
+      {
+        "text": "A mensagem original volta, já que a chave está certa",
+        "why": "Os bits alterados mudam a saída."
+      },
+      {
+        "text": "Sai outra mensagem, e nada avisa",
+        "why": "Isso. Secreto, mas sem proteção contra alteração."
+      },
+      {
+        "text": "A decifragem recusa com InvalidTag",
+        "why": "Isso é o AES-GCM, que o CBC não é."
+      }
+    ]
+  },
+  "ex-8ttgs62t": {
+    "prompt": "Depois de um bit da mensagem selada ser invertido, o que o box.decrypt devolveu?",
+    "hint": "Leia a última linha da saída.",
+    "choices": [
+      {
+        "text": "A mensagem com um caractere trocado",
+        "why": "É assim que uma cifra sem autenticação se comporta."
+      },
+      {
+        "text": "A mensagem, com um aviso na saída",
+        "why": "Nada da mensagem voltou."
+      },
+      {
+        "text": "Bytes embaralhados do bloco invertido em diante",
+        "why": "O GCM verifica a tag antes de devolver qualquer coisa."
+      },
+      {
+        "text": "Nada: lançou InvalidTag",
+        "why": "Isso. A mensagem é recusada inteira."
+      }
+    ]
+  },
+  "ex-44dvpfjx": {
+    "prompt": "A regra rígida do GCM: duas mensagens nunca são cifradas com a mesma chave e o mesmo ___.",
+    "hint": "Um número usado uma vez.",
+    "blanks": [
+      {
+        "accept": [
+          "nonce"
+        ]
+      }
+    ]
+  },
+  "ex-xxnjc2rj": {
+    "prompt": "Na troca X25519 entre laptop e app, o que atravessou a rede?",
+    "hint": "Quais arquivos foram copiados?",
+    "choices": [
+      {
+        "text": "As duas chaves públicas",
+        "why": "Isso. As chaves privadas e o segredo ficaram onde foram feitos."
+      },
+      {
+        "text": "O segredo compartilhado, cifrado com app.pub",
+        "why": "O segredo foi calculado em cada lado e nunca enviado."
+      },
+      {
+        "text": "ana.key, para o app calcular o mesmo segredo",
+        "why": "Uma chave privada que viaja deixa de ser privada."
+      },
+      {
+        "text": "O sha256sum do segredo, para comparar",
+        "why": "O hash foi impresso para o leitor, não trocado."
+      }
+    ]
+  },
+  "ex-56byhr4t": {
+    "prompt": "As duas máquinas imprimiram 72338c44…c5a2 depois do pkeyutl -derive. Quais afirmações são verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "O que entrou em cada derivação?",
+    "choices": [
+      {
+        "text": "Cada lado combinou a própria chave privada com a pública do outro",
+        "why": "Isso."
+      },
+      {
+        "text": "O valor impresso é um hash do segredo, não o segredo",
+        "why": "Isso. Por isso era seguro mostrá-lo."
+      },
+      {
+        "text": "Quem gravasse as duas chaves públicas calcularia o mesmo valor",
+        "why": "Sem uma chave privada o segredo fica fora de alcance."
+      },
+      {
+        "text": "Prova que o app.pub veio mesmo do app",
+        "why": "O acordo não prova nada sobre identidade."
+      }
+    ]
+  },
+  "ex-2sqgyp97": {
+    "prompt": "No caminho até o laptop, o app.pub foi trocado pela chave pública de outra máquina. O laptop deriva um segredo como antes. Com o que fica?",
+    "hint": "A chave privada de quem corresponde à pública que o laptop usou?",
+    "choices": [
+      {
+        "text": "Um erro, porque a chave não pertence ao app",
+        "why": "Nada no X25519 sabe a que máquina uma chave pertence."
+      },
+      {
+        "text": "Um segredo compartilhado com o app, já que a privada do app não mudou",
+        "why": "O laptop usou a outra chave pública, então o app calcula outra coisa."
+      },
+      {
+        "text": "Um segredo com quem tiver a chave privada correspondente",
+        "why": "Isso. Cifrado perfeitamente, para a parte errada: identidade é das aulas 11 e 12."
+      },
+      {
+        "text": "Nenhum segredo utilizável, porque os hashes não batem mais",
+        "why": "Ninguém compara hashes num protocolo real; o segredo funciona bem com o impostor."
+      }
+    ]
+  },
+  "ex-jqmfh3da": {
+    "prompt": "A chave de longo prazo de um servidor é roubada um ano depois de uma sessão ser gravada. A sessão usou pares novos, descartados depois. O que o ladrão obtém da gravação?",
+    "hint": "Quais chaves fizeram o segredo da sessão?",
+    "choices": [
+      {
+        "text": "A sessão inteira, já que a chave de longo prazo a abre",
+        "why": "Esse é o caso que o sigilo futuro elimina."
+      },
+      {
+        "text": "O primeiro pacote, que a chave de longo prazo assinou",
+        "why": "Assinar não cifra nada."
+      },
+      {
+        "text": "Metade da sessão: o sentido que o servidor enviou",
+        "why": "Os dois sentidos usaram as chaves descartadas."
+      },
+      {
+        "text": "Nada do conteúdo",
+        "why": "Isso. É o sigilo futuro, como no TLS 1.3 e no WireGuard."
+      }
+    ]
+  },
+  "ex-vj2nh9b8": {
+    "prompt": "Quantas assinaturas RSA-2048 por segundo o openssl speed mediu no laptop?",
+    "hint": "A coluna sign/s."
+  },
+  "ex-4xydss7r": {
+    "prompt": "Ligue cada operação a quantas vezes uma conexão a executa.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "AES-256-GCM",
+        "right": "em cada byte da conexão"
+      },
+      {
+        "left": "acordo de chave X25519",
+        "right": "uma vez, para combinar a chave"
+      },
+      {
+        "left": "assinatura RSA-2048",
+        "right": "uma vez, pelo servidor, para provar a identidade"
+      }
+    ],
+    "right_distractors": [
+      "uma vez por pacote, para conferir a tag"
+    ]
+  },
+  "ex-m921rggj": {
+    "prompt": "Você roda o openssl speed numa placa ARM pequena e todos os números são menores que os do laptop. O que ainda deve valer?",
+    "hint": "A seção diz o que viaja.",
+    "choices": [
+      {
+        "text": "As 3.313 assinaturas por segundo, já que RSA-2048 é trabalho fixo",
+        "why": "Os números absolutos são de uma máquina numa tarde."
+      },
+      {
+        "text": "A simétrica muito à frente do acordo e da assinatura",
+        "why": "Isso. As razões é que viajam."
+      },
+      {
+        "text": "O X25519 vence o AES-GCM ali, sem as instruções AES",
+        "why": "Nada na aula sustenta a ordem se inverter."
+      },
+      {
+        "text": "Nada; cada máquina é uma nova questão de desenho",
+        "why": "O desenho se apoia em razões que valem entre máquinas."
+      }
+    ]
+  },
+  "ex-ytysqavq": {
+    "prompt": "No wire.txt, quantos bytes os dois pacotes do handshake carregaram juntos?",
+    "hint": "Os dois primeiros comprimentos."
+  },
+  "ex-84208j8x": {
+    "prompt": "Um pacote chega ao fw pelo wg0, vindo do par da filial, com origem 192.168.40.5. O que acontece com ele?",
+    "hint": "Leia o AllowedIPs do par.",
+    "choices": [
+      {
+        "text": "É encaminhado, já que veio pelo túnel cifrado",
+        "why": "O túnel confere a origem também."
+      },
+      {
+        "text": "Descartado: essa origem está fora do AllowedIPs",
+        "why": "Isso. O AllowedIPs é filtro além de rota."
+      },
+      {
+        "text": "É respondido com um novo handshake",
+        "why": "Um handshake não amplia o que o par pode enviar."
+      },
+      {
+        "text": "É roteado de volta ao segmento da internet pelo eth0",
+        "why": "Não chega tão longe."
+      }
+    ]
+  },
+  "ex-7sq25mgh": {
+    "prompt": "O que aprende quem grava o segmento da internet entre os dois roteadores?",
+    "hint": "Veja o wire.txt.",
+    "choices": [
+      {
+        "text": "A URL que a filial pediu",
+        "why": "O pedido viajou dentro do ChaCha20-Poly1305."
+      },
+      {
+        "text": "Absolutamente nada",
+        "why": "Os endereços, a porta, os horários e os tamanhos estão às claras."
+      },
+      {
+        "text": "A chave de sessão, pelo pacote de 148 bytes",
+        "why": "O handshake combina a chave sem enviá-la."
+      },
+      {
+        "text": "Que os escritórios conversam, quando e quanto",
+        "why": "Isso. Não o que foi dito."
+      }
+    ]
+  },
+  "ex-mpjrrc6a": {
+    "prompt": "De um computador da filial, alguém tenta SSH na porta 22 do 192.168.20.10 pelo túnel. O que decide o resultado, e qual é ele?",
+    "hint": "O que um pacote saindo do wg0 ainda atravessa?",
+    "choices": [
+      {
+        "text": "O WireGuard: o par é confiável, então conecta",
+        "why": "A VPN decide quem entra, não o que alcança."
+      },
+      {
+        "text": "O AllowedIPs, que lista portas; a 22 não está",
+        "why": "O AllowedIPs lista endereços, não portas."
+      },
+      {
+        "text": "A cadeia forward do fw, cuja regra dá à filial só a 8080",
+        "why": "Isso. A matriz da aula 4 continua valendo."
+      },
+      {
+        "text": "O handshake, que recusa tráfego que não seja HTTP",
+        "why": "O handshake não sabe nada do que será carregado."
+      }
+    ]
+  },
+  "ex-ehvvamzy": {
+    "prompt": "Ordene o que acontece entre fw e branch, do primeiro ao último.",
+    "hint": "Chaves, configuração, handshake, dados.",
+    "items": [
+      "cada roteador gera um par de chaves Curve25519",
+      "cada configuração nomeia a chave pública do outro lado",
+      "o handshake transforma os pares em chaves simétricas novas",
+      "o ChaCha20-Poly1305 leva o pedido e a resposta"
+    ],
+    "trap": "Um handshake precisa da chave pública do par já na configuração."
+  },
+  "ex-jyvgdpn2": {
+    "prompt": "Ligue cada requisito ao mecanismo desta aula que o atende.",
+    "hint": "Um de cada seção.",
+    "pairs": [
+      {
+        "left": "um bit alterado tem de ser recusado",
+        "right": "uma tag de AEAD"
+      },
+      {
+        "left": "duas pontas que nunca se viram precisam de chave comum",
+        "right": "acordo de chave X25519"
+      },
+      {
+        "left": "uma chave roubada no ano que vem não pode abrir a gravação de hoje",
+        "right": "pares de chaves novos por sessão"
+      },
+      {
+        "left": "o túnel aceita só os endereços da filial",
+        "right": "AllowedIPs"
+      }
+    ],
+    "right_distractors": [
+      "600.000 rodadas de PBKDF2"
+    ]
+  },
+  "ex-azy1k5hn": {
+    "prompt": "Uma equipe planeja cifrar 40 GB de backups noturnos para um site remoto passando cada bloco por RSA com a chave pública do site. Que desenho a aula indica no lugar?",
+    "hint": "Qual operação é rápida, e qual roda uma vez?",
+    "choices": [
+      {
+        "text": "Manter o RSA, com chaves de 4096 bits para backups",
+        "why": "Uma chave maior deixa cada operação ainda mais lenta."
+      },
+      {
+        "text": "AEAD simétrico nos dados, com a metade assimétrica usada uma vez para a chave",
+        "why": "Isso. Lento uma vez, rápido para cada byte."
+      },
+      {
+        "text": "AES-CBC com senha, passada por 600.000 rodadas de PBKDF2",
+        "why": "Rápido, mas um backup alterado decifraria sem reclamar."
+      },
+      {
+        "text": "X25519 em cada bloco no lugar do RSA",
+        "why": "O X25519 combina chaves; não cifra dados."
+      }
+    ]
+  },
+  "ex-t6tf1pec": {
+    "prompt": "Uma ferramenta interna guarda instruções de pagamento cifradas com AES-256-CBC. Ninguém mais tem a chave. O que uma auditoria deve relatar?",
+    "hint": "Sigilo é uma propriedade. Qual é a outra?",
+    "choices": [
+      {
+        "text": "Uma instrução alterada decifraria sem erro; usar AES-GCM",
+        "why": "Isso. A cifragem autenticada a recusa."
+      },
+      {
+        "text": "Nada, já que só a ferramenta tem a chave",
+        "why": "Manter a chave secreta não detecta alteração."
+      },
+      {
+        "text": "AES-256 é fraco demais; passar as instruções para RSA-2048",
+        "why": "RSA-2048 equivale a uns 112 bits, abaixo do AES-256."
+      },
+      {
+        "text": "Aumentar o -iter acima de 600.000",
+        "why": "Iterações endurecem uma senha digitada, não a mensagem."
+      }
+    ]
+  }
+}

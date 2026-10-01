@@ -1,0 +1,429 @@
+{
+  "ex-bk5e2pn7": {
+    "prompt": "Com tcp dport { 80, 443 } permitido, o laptop alcançou um servidor SSH em remote. Por que a regra deixou passar?",
+    "hint": "Sobre o que a regra perguntava?",
+    "choices": [
+      {
+        "text": "O SSH é cifrado, então o firewall não viu a porta",
+        "why": "A porta está no cabeçalho TCP, que o SSH nunca cifra."
+      },
+      {
+        "text": "Ele escutava na 443",
+        "why": "Isso. A regra perguntava pela porta e por nada mais."
+      },
+      {
+        "text": "A porta 22 também estava aberta, e o SSH recorreu a ela",
+        "why": "A porta 22 estava fechada; o nc para ela falhou com exit 1."
+      },
+      {
+        "text": "ct state established casou com o primeiro pacote",
+        "why": "O primeiro pacote é new; a regra da 443 o aceitou."
+      }
+    ]
+  },
+  "ex-v7k6sxhg": {
+    "prompt": "Quais destes o tcp dport 443 aceita? Escolha todas as que se aplicam.",
+    "hint": "A regra lê um número.",
+    "choices": [
+      {
+        "text": "Um navegador buscando uma página por HTTPS",
+        "why": "É para isso que foi escrita."
+      },
+      {
+        "text": "Uma sessão SSH para um servidor escutando na 443",
+        "why": "A aula rodou exatamente isso."
+      },
+      {
+        "text": "Software de controle remoto ligando para casa na 443",
+        "why": "Ele escolhe a 443 porque toda rede a deixa aberta."
+      },
+      {
+        "text": "Uma consulta DNS para a porta 53",
+        "why": "Outra porta, e UDP."
+      }
+    ]
+  },
+  "ex-n6p5cfbs": {
+    "prompt": "Quem decide qual protocolo trafega na porta 443?",
+    "hint": "Pense em quem escolhe cada ponta.",
+    "choices": [
+      {
+        "text": "A IANA, que atribui os números de porta e os impõe",
+        "why": "A IANA lista convenções; nada as impõe no fio."
+      },
+      {
+        "text": "O firewall, que confere o protocolo de cada porta",
+        "why": "Uma regra de cabeçalho não confere protocolo nenhum."
+      },
+      {
+        "text": "Os dois programas, ao combinarem",
+        "why": "Isso. O servidor escuta ali e o cliente pergunta ali."
+      },
+      {
+        "text": "O sistema operacional, que amarra a 443 ao TLS",
+        "why": "Qualquer programa pode escutar na 443, tendo o privilégio."
+      }
+    ]
+  },
+  "ex-dbw2twce": {
+    "prompt": "Ligue cada protocolo ao modo como sua conversa começa.",
+    "hint": "Os analisadores olham os primeiros bytes.",
+    "pairs": [
+      {
+        "left": "SSH",
+        "right": "uma linha de texto que começa com SSH-2.0-"
+      },
+      {
+        "left": "TLS",
+        "right": "um registro binário ClientHello"
+      },
+      {
+        "left": "HTTP",
+        "right": "um método, um caminho e HTTP/1.1"
+      }
+    ],
+    "right_distractors": [
+      "um número de porta no cabeçalho TCP"
+    ]
+  },
+  "ex-tgwzyqha": {
+    "prompt": "O Suricata chamou de http o fluxo para app na porta 8080. Em que ele se baseou?",
+    "hint": "8080 não é a porta registrada do HTTP.",
+    "choices": [
+      {
+        "text": "A porta, já que 8080 é uma alternativa conhecida do HTTP",
+        "why": "Ele o chamaria de http em qualquer porta."
+      },
+      {
+        "text": "Os primeiros bytes que a própria conversa trouxe",
+        "why": "Isso: GET / HTTP/1.1."
+      },
+      {
+        "text": "Uma consulta DNS do nome de app",
+        "why": "O pedido usou um endereço."
+      },
+      {
+        "text": "O arquivo de regras, que listava 8080 como HTTP",
+        "why": "O arquivo de regras estava vazio."
+      }
+    ]
+  },
+  "ex-nf6tapms": {
+    "prompt": "Um fornecedor diz que seu NGFW bloqueia SSH em qualquer porta. Quando o bloqueio age numa nova conexão SSH para a porta 443?",
+    "hint": "Precisa haver algo para ler.",
+    "choices": [
+      {
+        "text": "Antes do handshake TCP, a partir do SYN",
+        "why": "Um SYN não carrega carga para identificar."
+      },
+      {
+        "text": "Só quando a sessão termina, pelo registro de fluxo",
+        "why": "A inspeção em linha age durante o fluxo."
+      },
+      {
+        "text": "Depois dos primeiros bytes, visto o cumprimento",
+        "why": "Isso. Os primeiros pacotes passam pela regra de porta."
+      },
+      {
+        "text": "Nunca, porque o SSH é cifrado de ponta a ponta",
+        "why": "O cumprimento é texto puro e identifica o SSH."
+      }
+    ]
+  },
+  "ex-f43xfkz1": {
+    "prompt": "Ler a carga além dos cabeçalhos se chama deep packet ___.",
+    "hint": "O título da aula diz.",
+    "blanks": [
+      {
+        "accept": [
+          "inspection"
+        ]
+      }
+    ]
+  },
+  "ex-hsdr1nyy": {
+    "prompt": "Ligue cada parte da regra do Suricata ao que ela diz.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "alert",
+        "right": "o que fazer quando casa"
+      },
+      {
+        "left": "ssh",
+        "right": "o protocolo reconhecido, em qualquer porta"
+      },
+      {
+        "left": "flow:to_server,established",
+        "right": "o lado do cliente de um handshake concluído"
+      },
+      {
+        "left": "sid:1000001",
+        "right": "o número da regra"
+      }
+    ],
+    "right_distractors": [
+      "a porta que o SSH deve usar"
+    ]
+  },
+  "ex-h0w8x3hk": {
+    "prompt": "A regra para TLS numa porta diferente de 443 não gerou alerta. O que isso diz?",
+    "hint": "Para onde foi o TLS desta captura?",
+    "choices": [
+      {
+        "text": "A regra não carregou",
+        "why": "O suricata -T carregou a configuração com sucesso."
+      },
+      {
+        "text": "Nenhum TLS da captura foi a outro lugar que não a 443",
+        "why": "Isso. Uma boa regra de política fica em silêncio quase sempre."
+      },
+      {
+        "text": "O Suricata não reconhece TLS fora da porta 443",
+        "why": "Ele reconheceu HTTP na 8080; reconhece TLS do mesmo jeito."
+      },
+      {
+        "text": "O SNI estava cifrado, então o teste de conteúdo não tinha nada",
+        "why": "O SNI foi lido: www.example.com."
+      }
+    ]
+  },
+  "ex-2tr92vwe": {
+    "prompt": "Um NGFW tem uma regra de aplicação negando SSH. Por que ele ainda precisa de regras de porta por baixo?",
+    "hint": "Qual é mais barato, e qual vem primeiro?",
+    "choices": [
+      {
+        "text": "Elas decidem o que abre, antes da inspeção mais lenta",
+        "why": "Isso. Uma regra de aplicação estreita uma regra de porta; não a substitui."
+      },
+      {
+        "text": "Regras de aplicação só funcionam em portas padrão",
+        "why": "A aula reconheceu SSH na 443 e HTTP na 8080."
+      },
+      {
+        "text": "Regras de porta registram mais detalhes que as de aplicação",
+        "why": "Elas veem menos, não mais."
+      },
+      {
+        "text": "A lei exige regras por porta em toda borda",
+        "why": "Não há tal lei; é questão de custo e de ordem."
+      }
+    ]
+  },
+  "ex-t47fxr3h": {
+    "prompt": "As regras locais desta aula recebem números de sid a partir de qual valor?",
+    "hint": "Um milhão."
+  },
+  "ex-xkffpc74": {
+    "prompt": "Da conexão TLS 1.3 com o www, o que o Suricata leu?",
+    "hint": "Veja quais campos não eram null.",
+    "choices": [
+      {
+        "text": "O caminho e o código de resposta",
+        "why": "Esses estão dentro da cifra."
+      },
+      {
+        "text": "O subject e o issuer do certificado",
+        "why": "Ambos null: o TLS 1.3 cifra o certificado."
+      },
+      {
+        "text": "O user agent do cliente",
+        "why": "Isso é um cabeçalho HTTP, cifrado aqui."
+      },
+      {
+        "text": "O nome do servidor e a versão",
+        "why": "Isso: o SNI e o TLS 1.3."
+      }
+    ]
+  },
+  "ex-bt8cxa3p": {
+    "prompt": "Diante de TLS que não consegue decifrar, sobre o que um inspetor ainda pode decidir? Escolha todas as que se aplicam.",
+    "hint": "Metadados.",
+    "choices": [
+      {
+        "text": "O nome do servidor no SNI",
+        "why": "Enviado em claro na primeira mensagem."
+      },
+      {
+        "text": "Qual protocolo o fluxo carrega",
+        "why": "Reconhecido pelo handshake."
+      },
+      {
+        "text": "Quanto tráfego e com que frequência",
+        "why": "Contado a partir dos pacotes."
+      },
+      {
+        "text": "As palavras de uma mensagem enviada por ele",
+        "why": "É exatamente o que a cifra esconde."
+      }
+    ]
+  },
+  "ex-mm3e96ae": {
+    "prompt": "Uma empresa liga a inspeção de TLS. Que risco novo o próprio firewall passa a carregar?",
+    "hint": "O que ele guarda em claro?",
+    "choices": [
+      {
+        "text": "Sua vazão dobra e sobrecarrega os switches",
+        "why": "A inspeção reduz a vazão."
+      },
+      {
+        "text": "Guarda o tráfego de todos em claro, então é o alvo",
+        "why": "Isso. Comprometa-o e se lê tudo."
+      },
+      {
+        "text": "Os navegadores deixam de confiar nas autoridades públicas",
+        "why": "Confiam em uma autoridade a mais; as outras continuam."
+      },
+      {
+        "text": "Ele deixa de ver o SNI",
+        "why": "Ele vê mais do que antes, não menos."
+      }
+    ]
+  },
+  "ex-9cy4jgzk": {
+    "prompt": "Por que a inspeção de TLS quebra um programa que confere um certificado de cliente?",
+    "hint": "Duas conexões, e as chaves de quem em cada uma.",
+    "choices": [
+      {
+        "text": "Certificados de cliente não existem no TLS 1.3",
+        "why": "Fazem parte do TLS 1.3."
+      },
+      {
+        "text": "O firewall tira todo certificado do handshake",
+        "why": "Ele substitui o do servidor, não o remove."
+      },
+      {
+        "text": "O firewall não pode apresentar a chave privada do cliente",
+        "why": "Isso. A chave nunca sai do cliente."
+      },
+      {
+        "text": "O servidor vê o endereço do firewall",
+        "why": "Endereços não são o que um certificado de cliente prova."
+      }
+    ]
+  },
+  "ex-30dz23g0": {
+    "prompt": "Ligue cada recurso de NGFW ao que ele faz.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "identidade do usuário",
+        "right": "liga um endereço a uma pessoa autenticada"
+      },
+      {
+        "left": "prevenção de intrusão",
+        "right": "descarta tráfego que casa com uma assinatura conhecida"
+      },
+      {
+        "left": "filtragem de URL",
+        "right": "permite ou bloqueia pela categoria do site"
+      },
+      {
+        "left": "sandbox",
+        "right": "executa downloads num lugar seguro para observá-los"
+      }
+    ],
+    "right_distractors": [
+      "atribui endereços a máquinas novas"
+    ]
+  },
+  "ex-mbhvww19": {
+    "prompt": "Um firewall é dimensionado pela vazão anunciada, e então todos os recursos de inspeção são ligados. O que acontece?",
+    "hint": "Os fornecedores anunciam dois números.",
+    "choices": [
+      {
+        "text": "Nada: a inspeção é feita no mesmo hardware sem custo",
+        "why": "Ler a carga é trabalho de software por pacote."
+      },
+      {
+        "text": "Encaminha bem menos que o número anunciado",
+        "why": "Isso. O número com inspeção é o que vale."
+      },
+      {
+        "text": "O firewall desliga o rastreamento de estado para compensar",
+        "why": "Nada é sacrificado automaticamente."
+      },
+      {
+        "text": "O tráfego cifrado é descartado",
+        "why": "Nada na aula o descarta."
+      }
+    ]
+  },
+  "ex-krpbaen1": {
+    "prompt": "Onde um NGFW é a ferramenta errada?",
+    "hint": "Volume, e confiança entre as máquinas.",
+    "choices": [
+      {
+        "text": "Na borda da internet",
+        "why": "Esse é o lugar natural dele."
+      },
+      {
+        "text": "Entre a LAN da equipe e os servidores",
+        "why": "Uma fronteira entre zonas de confiança diferente combina com ele."
+      },
+      {
+        "text": "No fundo de um data center, entre máquinas que confiam umas nas outras e movem mais tráfego",
+        "why": "Isso. A aula 21 usa regras nas próprias máquinas ali."
+      },
+      {
+        "text": "Na frente da DMZ",
+        "why": "Outra fronteira, e um bom lugar."
+      }
+    ]
+  },
+  "ex-93g8tbdv": {
+    "prompt": "Uma política diz que a equipe não pode enviar arquivos para serviços de armazenamento que a empresa não aprovou. Que camada consegue impô-la no tráfego HTTPS sem decifrar?",
+    "hint": "O que é visível num ClientHello do TLS 1.3?",
+    "choices": [
+      {
+        "text": "Uma regra de porta que só permite a 443",
+        "why": "Todo serviço desses usa a 443."
+      },
+      {
+        "text": "Uma regra sobre o nome do servidor que o cliente põe no SNI, em claro",
+        "why": "Isso. O nome vai em claro; o conteúdo do arquivo não."
+      },
+      {
+        "text": "Uma regra que casa com o conteúdo do arquivo enviado",
+        "why": "O conteúdo está cifrado."
+      },
+      {
+        "text": "Uma regra com estado sobre tráfego established",
+        "why": "Isso permite toda conversa já começada."
+      }
+    ]
+  },
+  "ex-anywpq3b": {
+    "prompt": "Ordene as camadas que um pacote vindo da internet encontra, da mais barata à mais cara.",
+    "hint": "A aula 1 e esta aula.",
+    "items": [
+      "um filtro sem estado na borda",
+      "a tabela de conexões do firewall com estado",
+      "a identificação da aplicação pela carga",
+      "a inspeção de TLS, decifrando o conteúdo"
+    ],
+    "trap": "Cada camada lê mais e por isso custa mais; as baratas jogam fora o que as caras nunca precisam ver."
+  },
+  "ex-33y5tw65": {
+    "prompt": "Só o conjunto de regras de porta está carregado no fw. Que pergunta ele consegue responder?",
+    "hint": "Só cabeçalhos.",
+    "choices": [
+      {
+        "text": "Este fluxo na 443 é mesmo HTTPS?",
+        "why": "Isso exige a carga."
+      },
+      {
+        "text": "Qual funcionário abriu esta conexão?",
+        "why": "Isso exige identidade do usuário."
+      },
+      {
+        "text": "Que página foi pedida pelo TLS?",
+        "why": "Isso exige decifrar."
+      },
+      {
+        "text": "Isto começou na LAN?",
+        "why": "Isso: a interface e o estado são fatos de cabeçalho."
+      }
+    ]
+  }
+}

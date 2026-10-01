@@ -1,0 +1,707 @@
+[
+  {
+    "id": "ex-h083y39w",
+    "version": 1,
+    "section": "what-a-firewall-decides",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When the lab comes up, remote reaches the database on db. Why?",
+    "hint": "Look at what fw was doing before any rule was typed.",
+    "choices": [
+      {
+        "text": "The database had a weak password",
+        "correct": false,
+        "why": "No password was involved: the connection opened before any login."
+      },
+      {
+        "text": "fw routed the packets and asked nothing about them",
+        "correct": true,
+        "why": "Right. Routing delivers; filtering is the separate question nobody had asked yet."
+      },
+      {
+        "text": "remote exploited a flaw in the router firmware to slip past it",
+        "correct": false,
+        "why": "Nothing was broken. The router did exactly what a router does."
+      },
+      {
+        "text": "db was in the DMZ",
+        "correct": false,
+        "why": "db is on the servers segment, 192.168.20.0/24."
+      }
+    ]
+  },
+  {
+    "id": "ex-nd9vyn90",
+    "version": 1,
+    "section": "what-a-firewall-decides",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each packet to the nftables hook on fw that sees it.",
+    "hint": "Is fw the destination, the source, or neither?",
+    "pairs": [
+      {
+        "left": "laptop reaching app through fw",
+        "right": "forward"
+      },
+      {
+        "left": "admin opening SSH to fw itself",
+        "right": "input"
+      },
+      {
+        "left": "fw asking the DNS server for a name",
+        "right": "output"
+      }
+    ],
+    "right_distractors": [
+      "prerouting"
+    ]
+  },
+  {
+    "id": "ex-rnay19zr",
+    "version": 1,
+    "section": "what-a-firewall-decides",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a rule on fw test the interface a packet arrived on, and not only its source address?",
+    "hint": "Who writes each of the two?",
+    "choices": [
+      {
+        "text": "Interfaces are faster to match than addresses, which matters under load",
+        "correct": false,
+        "why": "Speed is not the reason; both are cheap."
+      },
+      {
+        "text": "An address cannot be written in an nftables rule",
+        "correct": false,
+        "why": "ip saddr and ip daddr are in the rules of this very lesson."
+      },
+      {
+        "text": "The sender fills in the source field; the wiring decides the other",
+        "correct": true,
+        "why": "Right. A source address is a claim; the interface is a fact about the path."
+      },
+      {
+        "text": "Addresses change every time the lab is reset",
+        "correct": false,
+        "why": "The lab's addresses are fixed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ev6b0y2q",
+    "version": 1,
+    "section": "what-a-firewall-decides",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Source and destination address, protocol, and source and destination port together are called the ___-tuple.",
+    "hint": "Count them.",
+    "blanks": [
+      {
+        "accept": [
+          "five",
+          "5"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-02stka6y",
+    "version": 1,
+    "section": "stateless-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With only the rule for dport 8080 loaded, curl from laptop ended with exit 28. What happened?",
+    "hint": "Two packets travel for every request: which one had a rule?",
+    "choices": [
+      {
+        "text": "The request was dropped by fw on its way over to app",
+        "correct": false,
+        "why": "The request matched the rule and reached app."
+      },
+      {
+        "text": "The reply had no rule",
+        "correct": true,
+        "why": "Right. A stateless filter treats the reply as just another packet."
+      },
+      {
+        "text": "app refused the connection because nothing listened there",
+        "correct": false,
+        "why": "A refusal comes back at once; exit 28 is a timeout."
+      },
+      {
+        "text": "curl could not resolve the server's name into an address",
+        "correct": false,
+        "why": "The request used an address, not a name."
+      }
+    ]
+  },
+  {
+    "id": "ex-a07d798m",
+    "version": 1,
+    "section": "stateless-rules",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A stateless rule set must allow the LAN to reach three different services on the servers segment, and nothing else. How many accept rules does it need?",
+    "hint": "One per direction, per service.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-3jvf6j6n",
+    "version": 1,
+    "section": "stateless-rules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does policy drop on the forward chain decide?",
+    "hint": "It is the chain's last word.",
+    "choices": [
+      {
+        "text": "That every packet is dropped, whatever the rules say",
+        "correct": false,
+        "why": "A rule that accepts ends the matter before the policy."
+      },
+      {
+        "text": "That packets addressed to fw itself are dropped",
+        "correct": false,
+        "why": "Those are input, not forward."
+      },
+      {
+        "text": "The verdict for what no rule accepted",
+        "correct": true,
+        "why": "Right. It is what happens after the last rule."
+      },
+      {
+        "text": "That dropped packets are logged",
+        "correct": false,
+        "why": "Logging needs a rule of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-bcahz2qe",
+    "version": 1,
+    "section": "return-rule-hole",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From db, nc -p 8080 reached laptop's port 9999 through the stateless rules. What made that possible?",
+    "hint": "Who chooses a source port?",
+    "choices": [
+      {
+        "text": "A flaw in nc that forges the packet's headers",
+        "correct": false,
+        "why": "nc only asked the system for a source port, which any program may do."
+      },
+      {
+        "text": "The return rule matches any sport 8080",
+        "correct": true,
+        "why": "Right. It was written for replies and cannot tell a reply from anything else."
+      },
+      {
+        "text": "db is on the LAN side, so no rule applied to it",
+        "correct": false,
+        "why": "db is on the servers segment and crossed fw."
+      },
+      {
+        "text": "The chain's policy was accept rather than drop",
+        "correct": false,
+        "why": "The first attempt, without -p 8080, was dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-bd6qt42f",
+    "version": 1,
+    "section": "return-rule-hole",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which stateless return rules let in more than replies? Choose all that apply.",
+    "hint": "A port number is written by the sender.",
+    "choices": [
+      {
+        "text": "tcp sport 80 accept",
+        "correct": true,
+        "why": "Any connection from port 80 to any port inside."
+      },
+      {
+        "text": "udp sport 53 accept",
+        "correct": true,
+        "why": "Any datagram claiming a DNS server's port."
+      },
+      {
+        "text": "tcp sport 8080 accept",
+        "correct": true,
+        "why": "The rule this lesson watched db walk through."
+      },
+      {
+        "text": "ct state established accept",
+        "correct": false,
+        "why": "That one is stateful: it matches only conversations already allowed."
+      }
+    ]
+  },
+  {
+    "id": "ex-cy6q774w",
+    "version": 1,
+    "section": "return-rule-hole",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A stateless ACL adds a check that the TCP flags look like a reply. What does that still fail to establish?",
+    "hint": "What would it have to remember?",
+    "choices": [
+      {
+        "text": "Whether the packet is TCP at all, rather than UDP or ICMP",
+        "correct": false,
+        "why": "Testing flags already implies TCP."
+      },
+      {
+        "text": "Which interface the packet arrived on and which it will leave by",
+        "correct": false,
+        "why": "Interfaces can be tested without state."
+      },
+      {
+        "text": "Whether the destination port is open",
+        "correct": false,
+        "why": "No firewall rule knows that."
+      },
+      {
+        "text": "That the packet belongs to a conversation it allowed",
+        "correct": true,
+        "why": "Right. Flags describe one packet; belonging needs a memory of conversations."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwckf98v",
+    "version": 1,
+    "section": "connection-tracking",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each conntrack state to the packet it describes.",
+    "hint": "Four states, and one description belongs to none.",
+    "pairs": [
+      {
+        "left": "new",
+        "right": "the first packet of a conversation not yet in the table"
+      },
+      {
+        "left": "established",
+        "right": "a packet of a conversation already in the table"
+      },
+      {
+        "left": "related",
+        "right": "an ICMP error about a known conversation"
+      },
+      {
+        "left": "invalid",
+        "right": "an acknowledgement for a connection never seen"
+      }
+    ],
+    "right_distractors": [
+      "a packet the firewall has decided to log"
+    ]
+  },
+  {
+    "id": "ex-87vexdb7",
+    "version": 1,
+    "section": "connection-tracking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the stateful rule set, which rule replaces every return rule?",
+    "hint": "It is the first one.",
+    "choices": [
+      {
+        "text": "ct state established,related accept",
+        "correct": true,
+        "why": "Right. Replies of every allowed conversation, in both directions."
+      },
+      {
+        "text": "ct state invalid drop",
+        "correct": false,
+        "why": "That throws away what belongs to nothing."
+      },
+      {
+        "text": "policy drop",
+        "correct": false,
+        "why": "That is what happens to everything left."
+      },
+      {
+        "text": "ct state new accept",
+        "correct": false,
+        "why": "That decides which conversations may start."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9c291pj",
+    "version": 1,
+    "section": "connection-tracking",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The open connection's conntrack entry showed 431999 seconds left. About how many days is the full timeout of 432000 seconds?",
+    "hint": "Divide by 86,400.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-16v4f6h2",
+    "version": 1,
+    "section": "connection-tracking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a conntrack entry store the reply direction as well as the original one?",
+    "hint": "What is a packet from app compared against?",
+    "choices": [
+      {
+        "text": "To keep a separate log line for each direction of the traffic",
+        "correct": false,
+        "why": "Logging is not what the table is for."
+      },
+      {
+        "text": "So a returning packet is matched to the conversation",
+        "correct": true,
+        "why": "Right. The second tuple is exactly what a reply must look like."
+      },
+      {
+        "text": "Because TCP needs two connections, one per direction",
+        "correct": false,
+        "why": "One TCP connection carries both directions."
+      },
+      {
+        "text": "To count bytes in each direction for billing",
+        "correct": false,
+        "why": "Counting is possible, but it is not why the tuple is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-903wehr4",
+    "version": 1,
+    "section": "connection-tracking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A conversation's first packet is dropped by the policy. What does conntrack remember of it afterwards?",
+    "hint": "An entry is made when a rule accepts.",
+    "choices": [
+      {
+        "text": "An entry marked invalid",
+        "correct": false,
+        "why": "invalid is a verdict about a packet, not an entry."
+      },
+      {
+        "text": "An entry that expires after 30 seconds",
+        "correct": false,
+        "why": "No entry was made to expire."
+      },
+      {
+        "text": "Nothing: no entry was created",
+        "correct": true,
+        "why": "Right. So its replies have nothing to match."
+      },
+      {
+        "text": "An entry held until the connection times out",
+        "correct": false,
+        "why": "A dropped packet leaves nothing in the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rx0cpcv",
+    "version": 1,
+    "section": "related-and-invalid",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "dig asked app, which runs no DNS, and printed connection refused at once. Which rule let the answer through?",
+    "hint": "The answer was an ICMP message about the query.",
+    "choices": [
+      {
+        "text": "ct state established accept",
+        "correct": false,
+        "why": "That rule carried the reply from the real DNS server, not this."
+      },
+      {
+        "text": "ct state related accept",
+        "correct": true,
+        "why": "Right. An ICMP port unreachable about a known flow is related."
+      },
+      {
+        "text": "The rule allowing udp dport 53 to app",
+        "correct": false,
+        "why": "That rule matches only new packets towards app."
+      },
+      {
+        "text": "The policy",
+        "correct": false,
+        "why": "The policy is drop."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4438twf",
+    "version": 1,
+    "section": "related-and-invalid",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What goes wrong if related is not accepted? Choose all that apply.",
+    "hint": "Think of the ICMP messages that report a problem.",
+    "choices": [
+      {
+        "text": "Programs wait for a timeout instead of failing at once",
+        "correct": true,
+        "why": "The refusal never arrives."
+      },
+      {
+        "text": "A sender never learns its packets are too big",
+        "correct": true,
+        "why": "That message is related too, and connections stall."
+      },
+      {
+        "text": "Established connections are dropped",
+        "correct": false,
+        "why": "established is a separate state with its own rule."
+      },
+      {
+        "text": "New connections from the LAN are refused",
+        "correct": false,
+        "why": "new is decided by its own rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-y530rgjz",
+    "version": 1,
+    "section": "related-and-invalid",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After loading the counted rule set, remote tried the database once. How many packets did the last counter record?",
+    "hint": "The first try and one retransmission.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-z0etpctw",
+    "version": 1,
+    "section": "related-and-invalid",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is ct state established,related the first rule of the chain?",
+    "hint": "Look at the counters after three requests.",
+    "choices": [
+      {
+        "text": "Nearly every packet matches it, so the others are rarely tested",
+        "correct": true,
+        "why": "Right. 34 packets there against 3 on the new rule."
+      },
+      {
+        "text": "nftables refuses a chain whose first rule is something else",
+        "correct": false,
+        "why": "Any order loads; the order changes cost and meaning."
+      },
+      {
+        "text": "It must come before the policy is read",
+        "correct": false,
+        "why": "The policy applies after the last rule, wherever this one sits."
+      },
+      {
+        "text": "Rules below it are skipped for new packets",
+        "correct": false,
+        "why": "A new packet falls past it to the rules below."
+      }
+    ]
+  },
+  {
+    "id": "ex-9jmb5naq",
+    "version": 1,
+    "section": "what-state-costs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A single DNS question and its answer pass through fw. How long does conntrack keep the flow if nothing else arrives?",
+    "hint": "It is the shorter UDP value.",
+    "choices": [
+      {
+        "text": "Five days",
+        "correct": false,
+        "why": "That is for an established TCP connection."
+      },
+      {
+        "text": "120 seconds",
+        "correct": false,
+        "why": "That is for a UDP stream, with traffic back and forth."
+      },
+      {
+        "text": "30 seconds",
+        "correct": true,
+        "why": "Right. nf_conntrack_udp_timeout = 30."
+      },
+      {
+        "text": "Until the table is full",
+        "correct": false,
+        "why": "Every entry has a timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-884zcm6s",
+    "version": 1,
+    "section": "what-state-costs",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each place to the kind of filter it fits.",
+    "hint": "Memory costs; which places cannot afford it or do not need it?",
+    "pairs": [
+      {
+        "left": "a border router with millions of flows",
+        "right": "stateless, dropping what can never be legitimate"
+      },
+      {
+        "left": "the firewall deciding which conversations may start",
+        "right": "stateful, with connection tracking"
+      },
+      {
+        "left": "a switch matching headers in hardware",
+        "right": "an ACL that keeps no table"
+      }
+    ],
+    "right_distractors": [
+      "a WAF reading the HTTP request"
+    ]
+  },
+  {
+    "id": "ex-0f81kyev",
+    "version": 1,
+    "section": "what-state-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Linux firewall restarts in the middle of the day. What happens to a TCP connection that was open through it, with the default settings shown in the lesson?",
+    "hint": "nf_conntrack_tcp_loose = 1.",
+    "choices": [
+      {
+        "text": "It is dropped as invalid on its next packet",
+        "correct": false,
+        "why": "That is what a stricter firewall does, with loose off."
+      },
+      {
+        "text": "It is picked up as new and a fresh entry made",
+        "correct": true,
+        "why": "Right, if a rule allows it as new: Linux adopts mid-stream TCP by default."
+      },
+      {
+        "text": "The entry survives the restart, saved to disk beforehand",
+        "correct": false,
+        "why": "The table lives in memory."
+      },
+      {
+        "text": "The client is told to reconnect by fw",
+        "correct": false,
+        "why": "fw sends nothing of the kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7zbakqk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An audit finds a router ACL with the rule permit tcp any eq 443 any, meant for replies from web servers. Which change closes what it opens without breaking the replies?",
+    "hint": "The lesson's fix for the same shape.",
+    "choices": [
+      {
+        "text": "Change 443 to a port above 1024",
+        "correct": false,
+        "why": "Any number the sender may choose has the same problem."
+      },
+      {
+        "text": "Log the rule and review the log weekly",
+        "correct": false,
+        "why": "Logging watches the hole; it does not close it."
+      },
+      {
+        "text": "Move the filtering to a stateful firewall that accepts established traffic and allows only the outgoing connections",
+        "correct": true,
+        "why": "Right. Replies then pass because they belong to a conversation, not because of a number."
+      },
+      {
+        "text": "Add a second rule for port 80",
+        "correct": false,
+        "why": "That doubles the hole."
+      }
+    ]
+  },
+  {
+    "id": "ex-11a7rmqf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the stateful rule set of this lesson, admin tries to open SSH to app. What happens?",
+    "hint": "Which rule lets a conversation start?",
+    "choices": [
+      {
+        "text": "It is dropped",
+        "correct": true,
+        "why": "Right. Only the LAN, to app on 8080, may start a conversation; admin is on the management segment."
+      },
+      {
+        "text": "It passes, because SSH is encrypted and fw cannot read it",
+        "correct": false,
+        "why": "The rules read headers, and encryption does not hide the port."
+      },
+      {
+        "text": "It passes as established after the first packet",
+        "correct": false,
+        "why": "The first packet is new and nothing accepts it, so there is no entry."
+      },
+      {
+        "text": "fw answers with connection refused",
+        "correct": false,
+        "why": "A drop sends nothing back; the client times out."
+      }
+    ]
+  },
+  {
+    "id": "ex-1aax4jn2",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to laptop's first packet to app on 8080 under the stateful rule set.",
+    "hint": "Conntrack looks before the rules do.",
+    "items": [
+      "conntrack finds no entry and marks the packet new",
+      "the established,related rule does not match",
+      "the new rule for the LAN to app on 8080 accepts it",
+      "an entry is created for its replies to match"
+    ],
+    "trap": "The entry exists only once a rule has accepted the new packet."
+  }
+]
