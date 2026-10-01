@@ -1,0 +1,525 @@
+{
+  "ex-2ymzgnjn": {
+    "prompt": "Antes de o r1 ter qualquer endereço, a tabela de vizinhos do pc1 tinha `10.20.10.1 dev eth0 INCOMPLETE`. O que essa entrada diz?",
+    "hint": "10.20.10.1 é o gateway do pc1.",
+    "choices": [
+      {
+        "text": "O gateway respondeu com um endereço MAC incompleto",
+        "why": "Um MAC é tudo ou nada. INCOMPLETE quer dizer que nenhuma resposta chegou."
+      },
+      {
+        "text": "Ninguém respondeu ao ARP do pc1 pelo gateway",
+        "why": "Isso. Nada na VLAN 10 tinha 10.20.10.1 ainda."
+      },
+      {
+        "text": "O pc1 não tem gateway configurado",
+        "why": "Tem, 10.20.10.1, e é por isso que perguntou por esse endereço."
+      },
+      {
+        "text": "O switch bloqueou o ARP entre o pc1 e o pc2",
+        "why": "O pc1 nunca pediu o MAC do pc2. O pc2 está em outra sub-rede, então o pc1 pediu o do gateway."
+      }
+    ]
+  },
+  "ex-r49c3jwp": {
+    "prompt": "Ainda sem roteador, o pc1 alcançou o srv mas não o pc2. O que fez a diferença?",
+    "hint": "Compare as VLANs e as sub-redes deles.",
+    "choices": [
+      {
+        "text": "O srv roda um servidor web e o pc2 não",
+        "why": "Um ping não liga para os serviços que uma máquina roda."
+      },
+      {
+        "text": "O pc2 ainda não estava ligado",
+        "why": "O pc2 estava na p2 e responde assim que existe um roteador."
+      },
+      {
+        "text": "A porta do srv é um tronco",
+        "why": "A porta do srv, a p3, é de acesso na VLAN 10. O tronco é a p8."
+      },
+      {
+        "text": "O srv está na VLAN do pc1, e o pc2 não está",
+        "why": "Isso. Dentro de uma VLAN o switch entrega; entre VLANs quem entrega é um roteador."
+      }
+    ]
+  },
+  "ex-rymxgf9v": {
+    "prompt": "Quais destes roteiam entre duas VLANs? Marque todas que se aplicam.",
+    "hint": "Três foram citados nesta aula.",
+    "choices": [
+      {
+        "text": "Um roteador com uma porta e um cabo por VLAN",
+        "why": "Funciona, ao custo de uma porta por VLAN de cada lado."
+      },
+      {
+        "text": "Pôr as duas VLANs em toda porta de acesso",
+        "why": "Uma porta em duas VLANs não é de acesso, e os hosts continuariam mandando para um gateway que ninguém tem."
+      },
+      {
+        "text": "Um roteador em um braço, com uma porta num tronco",
+        "why": "Um endereço por VLAN numa só porta física."
+      },
+      {
+        "text": "Pôr os hosts das duas VLANs numa sub-rede",
+        "why": "Aí os hosts mandam ARP numa VLAN que não tem a outra metade, e nada é roteado."
+      },
+      {
+        "text": "Um switch de camada 3 com uma interface em cada VLAN",
+        "why": "O roteamento vai para dentro do switch."
+      }
+    ]
+  },
+  "ex-62jvjjrc": {
+    "prompt": "10.20.20.22 está fora da sub-rede do pc1, então o pc1 entrega o pacote ao seu ___ padrão.",
+    "hint": "10.20.10.1, para toda máquina da VLAN 10.",
+    "blanks": [
+      {
+        "accept": [
+          "gateway",
+          "roteador"
+        ]
+      }
+    ]
+  },
+  "ex-0sz7vqe7": {
+    "prompt": "O que faz o `eth0.10` do r1?",
+    "hint": "É uma interface de VLAN sobre o eth0.",
+    "choices": [
+      {
+        "text": "Interface da VLAN 10: tira o tag na entrada, põe na saída",
+        "why": "Isso. Cada VLAN ganha uma interface própria na única porta física."
+      },
+      {
+        "text": "É uma segunda porta física, reservada ao tráfego da VLAN 10",
+        "why": "O r1 tem uma porta, o eth0. O `@eth0` na listagem diz sobre o que o eth0.10 roda."
+      },
+      {
+        "text": "Copia para a VLAN 10 todo quadro que chega no eth0",
+        "why": "Só os quadros com tag 10 chegam a ele. Os com tag 20 vão para o eth0.20."
+      },
+      {
+        "text": "Tira do tronco os quadros da VLAN 10",
+        "why": "Não filtra nada; é onde a VLAN 10 encontra o roteador."
+      }
+    ]
+  },
+  "ex-8kdpa4k4": {
+    "prompt": "A tabela de rotas do r1 tem duas rotas, e ninguém digitou nenhuma. Por que nada mais foi preciso?",
+    "hint": "Leia `proto kernel scope link`.",
+    "choices": [
+      {
+        "text": "O switch mandou ao r1 a lista das suas VLANs e sub-redes",
+        "why": "Um switch não conta nada sobre rotas a um roteador; o r1 as tirou dos próprios endereços."
+      },
+      {
+        "text": "Uma rota padrão já cobre as duas sub-redes",
+        "why": "O r1 não tem rota padrão. Cada linha cita uma sub-rede."
+      },
+      {
+        "text": "O r1 está diretamente ligado às duas sub-redes",
+        "why": "Isso. Um endereço com máscara traz a rota conectada junto."
+      },
+      {
+        "text": "O OSPF as aprendeu do sw1",
+        "why": "Nenhum protocolo de roteamento roda neste laboratório, e o sw1 ainda nem roteava."
+      }
+    ]
+  },
+  "ex-kb1tqkzm": {
+    "prompt": "O pc1 rodou `traceroute -n 10.20.20.22` passando pelo r1. Quantos saltos ele mostrou?",
+    "hint": "O roteador, depois o destino.",
+    "unit": "saltos"
+  },
+  "ex-pnjr6cjr": {
+    "prompt": "Uma VLAN 30 com 10.20.30.0/24 é adicionada ao switch, a uma porta de acesso e ao tronco p8, e os hosts dela usam 10.20.30.1 como gateway. O que precisa ser adicionado no r1?",
+    "hint": "Uma interface por VLAN, um endereço por interface.",
+    "choices": [
+      {
+        "text": "Um segundo cabo do r1 ao switch",
+        "why": "O tronco já leva a VLAN 30. É essa a graça do braço."
+      },
+      {
+        "text": "Uma rota para 10.20.30.0/24 via 10.20.10.1",
+        "why": "10.20.10.1 é o próprio r1. A rota aparece sozinha quando o r1 tem um endereço naquela sub-rede."
+      },
+      {
+        "text": "Uma interface eth0.30 com 10.20.30.1/24",
+        "why": "Isso. O gateway da VLAN 30, na mesma porta que os outros dois."
+      },
+      {
+        "text": "Nada, o eth0 já vê os quadros da VLAN 30",
+        "why": "Vê, com tag 30, e sem interface para a VLAN 30 eles não têm para onde ir."
+      }
+    ]
+  },
+  "ex-sxawqpr1": {
+    "prompt": "Ligue cada peça do roteador em um braço ao seu papel.",
+    "hint": "Um cabo, uma porta, dois gateways.",
+    "pairs": [
+      {
+        "left": "eth0",
+        "right": "a única porta física do r1, no tronco"
+      },
+      {
+        "left": "eth0.10",
+        "right": "o gateway da VLAN 10"
+      },
+      {
+        "left": "eth0.20",
+        "right": "o gateway da VLAN 20"
+      },
+      {
+        "left": "p8",
+        "right": "a porta do switch que leva as duas VLANs com tag"
+      }
+    ],
+    "right_distractors": [
+      "a porta de acesso do srv"
+    ]
+  },
+  "ex-z60b30fq": {
+    "prompt": "Quantos quadros ICMP o tcpdump capturou na p8 para um ping do pc1 ao pc2?",
+    "hint": "Pedido e resposta, cada um subindo e descendo.",
+    "unit": "quadros"
+  },
+  "ex-ekyzgxts": {
+    "prompt": "O pc1 manda 50 pings ao pc2 pelo r1, e os 50 são respondidos. Quantos quadros ICMP cruzam a p8?",
+    "hint": "Quatro por ping.",
+    "unit": "quadros"
+  },
+  "ex-wjayxks9": {
+    "prompt": "Compare o primeiro quadro na p8 com o segundo. O que o r1 mudou?",
+    "hint": "Leia os MACs, o campo vlan e os endereços IP.",
+    "choices": [
+      {
+        "text": "O IP de destino, que passou a ser o do pc2",
+        "why": "Era 10.20.20.22 nos dois quadros: o pc1 endereçou o pc2 desde o começo."
+      },
+      {
+        "text": "Os dois endereços MAC e também o tag de VLAN",
+        "why": "Isso. Um quadro novo para um salto novo: do r1 ao pc2, na VLAN 20. Os IPs ficaram."
+      },
+      {
+        "text": "Só o tag de VLAN, de 10 para 20",
+        "why": "Os MACs também mudaram: a origem virou o r1 e o destino o pc2."
+      },
+      {
+        "text": "Nada, quem mudou foi o sw1",
+        "why": "O sw1 encaminha dentro de uma VLAN. A troca da 10 para a 20 é roteamento, e quem fez foi o r1."
+      }
+    ]
+  },
+  "ex-70b29hsz": {
+    "prompt": "O braço entre o sw1 e o r1 é um enlace de 1 Gb/s full duplex. Qual afirmação sobre o tráfego entre VLANs está certa?",
+    "hint": "Todo pacote roteado sobe e desce.",
+    "choices": [
+      {
+        "text": "Cada VLAN ganha 1 Gb/s próprio no braço",
+        "why": "As VLANs dividem um cabo; um tag não acrescenta capacidade."
+      },
+      {
+        "text": "O tráfego entre o pc1 e o srv também cruza o braço",
+        "why": "Estão na mesma VLAN, então o sw1 entrega sem o roteador."
+      },
+      {
+        "text": "O tráfego roteado divide 1 Gb/s em cada sentido",
+        "why": "Isso. Toda conversa entre qualquer par de VLANs usa os mesmos dois sentidos de um cabo."
+      },
+      {
+        "text": "Um switch rápido sobe o limite acima de 1 Gb/s",
+        "why": "A velocidade interna do switch não muda o cabo até o roteador."
+      }
+    ]
+  },
+  "ex-kxnk669s": {
+    "prompt": "Ponha as quatro travessias da p8 para um ping do pc1 ao pc2 na ordem em que o tcpdump as viu.",
+    "hint": "O pedido termina a viagem antes de a resposta começar.",
+    "items": [
+      "Echo request, do pc1 ao r1, VLAN 10",
+      "Echo request, do r1 ao pc2, VLAN 20",
+      "Echo reply, do pc2 ao r1, VLAN 20",
+      "Echo reply, do r1 ao pc1, VLAN 10"
+    ],
+    "trap": "Cada pacote sobe na VLAN de quem manda e desce na VLAN de quem recebe."
+  },
+  "ex-wt68mvbv": {
+    "prompt": "O sw1 já tinha a vlan10 em 10.20.10.1 e o encaminhamento ligado, e o primeiro ping do pc1 ao pc2 ainda falhou. Por quê?",
+    "hint": "Compare o MAC na tabela do pc1 com o da vlan10.",
+    "choices": [
+      {
+        "text": "O switch precisava reiniciar para começar a rotear",
+        "why": "Não houve reinício. Um ARP gratuito bastou."
+      },
+      {
+        "text": "O cache do pc1 ainda tinha o MAC do r1",
+        "why": "Isso. A tabela ainda tinha 02:1f:23:e7:e9:d5 para 10.20.10.1, e o r1 estava desligado."
+      },
+      {
+        "text": "Duas máquinas tinham 10.20.10.1",
+        "why": "O r1 foi desligado antes de o switch assumir o endereço."
+      },
+      {
+        "text": "O pc2 não tinha rota de volta para a VLAN 10",
+        "why": "O gateway do pc2 é 10.20.20.1, que o switch agora também tem."
+      }
+    ]
+  },
+  "ex-p13c8krh": {
+    "prompt": "O que é uma SVI num switch de camada 3?",
+    "hint": "A Cisco escreve `interface Vlan10`.",
+    "choices": [
+      {
+        "text": "Uma porta física separada para o tráfego roteado",
+        "why": "É virtual: sem porta e sem cabo."
+      },
+      {
+        "text": "Um tronco entre o switch e um roteador externo",
+        "why": "Isso é roteador em um braço. Uma SVI não precisa de tronco."
+      },
+      {
+        "text": "Uma VLAN sem portas de acesso",
+        "why": "Isso descreve a VLAN nativa 999 do laboratório, da aula 19."
+      },
+      {
+        "text": "O endereço do próprio switch numa VLAN",
+        "why": "Isso. A vlan10 e a vlan20 do laboratório são SVIs: uma interface cada, com o endereço do gateway."
+      }
+    ]
+  },
+  "ex-hy6310x7": {
+    "prompt": "Por que o sw1 precisou de `bridge vlan add dev br0 vid 10 self` e o mesmo para a VLAN 20?",
+    "hint": "Leia a linha do br0 nas listagens da aula 19.",
+    "choices": [
+      {
+        "text": "Para as interfaces do switch ouvirem as VLANs",
+        "why": "Isso. O br0 estava só na VLAN 1, e a vlan10 e a vlan20 ficam sobre o br0."
+      },
+      {
+        "text": "Para fazer da p8 um tronco das duas VLANs",
+        "why": "A p8 já era um tronco, e este comando cita o br0, não a p8."
+      },
+      {
+        "text": "Para ligar o encaminhamento entre as VLANs",
+        "why": "Isso é o `sysctl -w net.ipv4.ip_forward=1`."
+      },
+      {
+        "text": "Para dar ao br0 o endereço de gateway 10.20.10.1",
+        "why": "O endereço foi para a vlan10, em outro comando."
+      }
+    ]
+  },
+  "ex-hh2a75gh": {
+    "prompt": "Uma mensagem ARP que uma máquina manda sobre o próprio endereço, sem ninguém pedir, para que todo cache da VLAN se atualize, se chama ARP ___.",
+    "hint": "`arping -U` manda um.",
+    "blanks": [
+      {
+        "accept": [
+          "gratuito",
+          "gratuitous"
+        ]
+      }
+    ]
+  },
+  "ex-tf14p890": {
+    "prompt": "`arping -U -c 1 -I vlan10 10.20.10.1` mostrou `Received 0 response(s)`. O que isso quer dizer?",
+    "hint": "Ninguém foi perguntado de nada.",
+    "choices": [
+      {
+        "text": "O anúncio se perdeu no caminho",
+        "why": "A tabela do pc1 mudou para o MAC do switch logo depois, então chegou."
+      },
+      {
+        "text": "O pc1 recusou o MAC novo",
+        "why": "O pc1 aceitou, e a tabela mostra 02:6a:dc:93:3b:8a."
+      },
+      {
+        "text": "Nada está errado",
+        "why": "Isso. Um anúncio não espera resposta; zero respostas é o esperado."
+      },
+      {
+        "text": "Outra máquina já tem 10.20.10.1",
+        "why": "Aí essa máquina teria respondido, e a contagem seria um."
+      }
+    ]
+  },
+  "ex-w9yxg006": {
+    "prompt": "O ping do pc2 ao pc1 foi descartado, e o ping do pc1 ao pc2 funcionou. Qual regra deixou passar as respostas do pc2 ao pc1?",
+    "hint": "As respostas vão da vlan20 à vlan10, como o ping descartado.",
+    "choices": [
+      {
+        "text": "A policy accept da própria chain",
+        "why": "A regra de descarte casa vlan20 para vlan10 antes de a policy ser alcançada."
+      },
+      {
+        "text": "A regra que permite tcp dport 80",
+        "why": "Uma resposta de ping é ICMP, não TCP."
+      },
+      {
+        "text": "Nenhuma, resposta não é filtrada",
+        "why": "Passariam, pela terceira regra, se a primeira não as aceitasse."
+      },
+      {
+        "text": "ct state established,related accept",
+        "why": "Isso. As respostas pertencem a uma conversa que o pc1 começou, e essa regra vem primeiro."
+      }
+    ]
+  },
+  "ex-ta4g45ns": {
+    "prompt": "O contador da regra de descarte mostrou `packets 2 bytes 168`. Quantos bytes tinha cada pacote descartado?",
+    "hint": "O mesmo tamanho que todo ping destas aulas anunciou.",
+    "unit": "bytes"
+  },
+  "ex-4d35bbm3": {
+    "prompt": "Se a primeira regra, `ct state established,related accept`, fosse apagada e as outras mantidas, qual dos três testes mudaria?",
+    "hint": "Siga as respostas de cada teste pelas regras que sobram.",
+    "choices": [
+      {
+        "text": "O ping do pc1 ao pc2 passaria a falhar",
+        "why": "Isso. As respostas do pc2 vão da vlan20 à vlan10 e cairiam na regra de descarte."
+      },
+      {
+        "text": "O curl do pc2 ao srv passaria a falhar",
+        "why": "Os pedidos casam a regra da porta 80, e as respostas do srv vão da vlan10 à vlan20, que nenhuma regra restringe."
+      },
+      {
+        "text": "O ping do pc2 ao pc1 passaria a funcionar",
+        "why": "Os pedidos continuam caindo na regra de descarte."
+      },
+      {
+        "text": "Nenhum, já que a policy da chain é accept",
+        "why": "A policy só vale para o que nenhuma regra casou, e a regra de descarte casa as respostas do pc2."
+      }
+    ]
+  },
+  "ex-dynvhf0n": {
+    "prompt": "As regras foram presas ao hook `forward`. O que esse hook vê?",
+    "hint": "Através do switch, ou para ele?",
+    "choices": [
+      {
+        "text": "Todo quadro comutado dentro de uma VLAN",
+        "why": "Quadros dentro de uma VLAN são comutados, e o hook de pacotes roteados não os vê."
+      },
+      {
+        "text": "Pacotes endereçados ao próprio switch",
+        "why": "Esses vão para o hook `input`."
+      },
+      {
+        "text": "Pacotes roteados entre as suas interfaces",
+        "why": "Isso. Tráfego de uma VLAN para outra, que é do que trata a política."
+      },
+      {
+        "text": "Pacotes que o switch manda por conta própria",
+        "why": "Esses vão para o hook `output`."
+      }
+    ]
+  },
+  "ex-v3k4hysa": {
+    "prompt": "Com a VLAN 20 tirada da p8, os pings do pc2 a 10.20.20.1 falharam todos enquanto `ip neigh` mostrava `10.20.20.1 … REACHABLE`. O que a entrada REACHABLE prova?",
+    "hint": "Um cache registra o passado.",
+    "choices": [
+      {
+        "text": "Que o gateway está respondendo ARP agora",
+        "why": "Se estivesse, os pings também seriam respondidos."
+      },
+      {
+        "text": "Uma resposta de antes da falha",
+        "why": "Isso. A tabela é história e o ping é o teste."
+      },
+      {
+        "text": "Que a falha está no firewall do pc2",
+        "why": "Nada aponta para o pc2. A listagem do tronco achou a falha."
+      },
+      {
+        "text": "Que o r1 mudou de VLAN",
+        "why": "O r1 não mudou. O tronco parou de levar a VLAN 20."
+      }
+    ]
+  },
+  "ex-qc7hyyda": {
+    "prompt": "Ponha as verificações na ordem em que o pacote viaja, do host em direção ao outro lado.",
+    "hint": "Comece pela máquina que reclama.",
+    "items": [
+      "O endereço e o gateway do host",
+      "A VLAN da porta do switch do host",
+      "A VLAN no tronco, nas duas pontas",
+      "A interface do roteador naquela VLAN",
+      "O encaminhamento no roteador",
+      "Os filtros entre as VLANs"
+    ],
+    "trap": "Os filtros vêm por último porque o pacote só os encontra depois de roteado; olhá-los primeiro pula tudo o que pode pará-lo antes."
+  },
+  "ex-zyqv56a2": {
+    "prompt": "Ligue cada leitura à falha que ela aponta.",
+    "hint": "Cada uma foi vista nesta aula ou na aula 19.",
+    "pairs": [
+      {
+        "left": "O contador de uma regra de descarte sobe a cada tentativa",
+        "right": "Um filtro recusa o tráfego"
+      },
+      {
+        "left": "A listagem da porta do tronco não tem linha da VLAN 20",
+        "right": "A VLAN 20 falta no tronco"
+      },
+      {
+        "left": "A entrada do gateway ainda tem o MAC do roteador antigo",
+        "right": "Um cache velho depois que o gateway mudou"
+      },
+      {
+        "left": "O ARP do gateway fica INCOMPLETE num PC só",
+        "right": "A porta desse PC está na VLAN errada"
+      }
+    ],
+    "right_distractors": [
+      "O tag 802.1Q tem quatro bytes"
+    ]
+  },
+  "ex-kcrge5pt": {
+    "prompt": "Um campus tem muito tráfego entre as VLANs, boa parte transferências grandes de arquivos. Qual projeto serve melhor, e por quê?",
+    "hint": "Onde cada projeto põe o tráfego roteado?",
+    "choices": [
+      {
+        "text": "Roteador em um braço: um cabo é mais simples",
+        "why": "Mais simples, e todo pacote roteado cruzaria esse cabo duas vezes."
+      },
+      {
+        "text": "Um switch de camada 3, que roteia dentro de si",
+        "why": "Isso. Sem tronco até um roteador, sem cabo dividido por todo pacote roteado."
+      },
+      {
+        "text": "Nenhum: pôr todo departamento numa VLAN",
+        "why": "Isso desfaz os motivos das VLANs e faz um domínio de broadcast enorme."
+      },
+      {
+        "text": "Roteador em um braço com a VLAN 1 sem tag",
+        "why": "A VLAN nativa não muda nada na capacidade."
+      }
+    ]
+  },
+  "ex-3fs2zxwh": {
+    "prompt": "Com o r1 como roteador em um braço, o pc1 manda 10 pings ao pc2 e 10 pings ao srv, e todo ping é respondido. Quantos quadros ICMP cruzam a p8?",
+    "hint": "O srv está na VLAN do pc1.",
+    "unit": "quadros"
+  },
+  "ex-a0shwd2a": {
+    "prompt": "Antes e depois da mudança do r1 para o sw1, o traceroute mostrou `10.20.10.1` como primeiro salto. Por que nada no pc1 precisou mudar?",
+    "hint": "O que mudou de lugar?",
+    "choices": [
+      {
+        "text": "O pc1 aprendeu o roteador novo por um protocolo de roteamento",
+        "why": "O pc1 não roda protocolo de roteamento. Tem um gateway, configurado uma vez."
+      },
+      {
+        "text": "O switch copiou o MAC do r1",
+        "why": "Manteve o seu, 02:6a:dc:93:3b:8a, e é por isso que o cache do pc1 ficou velho."
+      },
+      {
+        "text": "O endereço do gateway não mudou",
+        "why": "Isso. Só o MAC por trás de 10.20.10.1 mudou, e um ARP gratuito avisou o pc1."
+      },
+      {
+        "text": "O pc1 recebeu um gateway novo por DHCP",
+        "why": "O gateway do pc1 é fixo neste laboratório, e continua 10.20.10.1."
+      }
+    ]
+  }
+}

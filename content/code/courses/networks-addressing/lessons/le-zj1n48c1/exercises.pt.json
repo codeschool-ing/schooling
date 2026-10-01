@@ -1,0 +1,541 @@
+{
+  "ex-f4hb27sc": {
+    "prompt": "Qual destes é um endereço privado pela RFC 1918?",
+    "hint": "Três faixas: 10/8, 172.16/12, 192.168/16.",
+    "choices": [
+      {
+        "text": "203.0.113.2",
+        "why": "Um bloco reservado para documentação; o laboratório o usa como se fosse público."
+      },
+      {
+        "text": "172.32.0.1",
+        "why": "A 172.16.0.0/12 termina em 172.31.255.255; 172.32 fica logo fora."
+      },
+      {
+        "text": "10.20.10.21",
+        "why": "Dentro de 10.0.0.0/8: o endereço do pc1, não roteado em lugar nenhum da internet."
+      },
+      {
+        "text": "192.0.2.80",
+        "why": "Outro bloco de documentação, não uma faixa privada; faz o papel de um servidor fora do escritório."
+      }
+    ]
+  },
+  "ex-s8c777jc": {
+    "prompt": "Na regra do r1 oifname \"eth1\" masquerade, o que o masquerade faz com um pacote que sai pela eth1?",
+    "hint": "A palavra quer dizer disfarce.",
+    "choices": [
+      {
+        "text": "Troca o endereço de origem pelo endereço atual da eth1",
+        "why": "Masquerade é NAT de origem para o endereço que a interface de saída tiver naquele momento."
+      },
+      {
+        "text": "Criptografa o pacote para o provedor não ler",
+        "why": "NAT reescreve endereços; nada é criptografado."
+      },
+      {
+        "text": "Troca o destino por um servidor de dentro",
+        "why": "Isso é NAT de destino, que roda no prerouting, quando os pacotes chegam."
+      },
+      {
+        "text": "Descarta o pacote se ele não for de uma conexão conhecida",
+        "why": "Descartar é trabalho da tabela de filtro; o masquerade nunca descarta."
+      }
+    ]
+  },
+  "ex-cpxddvk0": {
+    "prompt": "Quais destes blocos são faixas privadas da RFC 1918? Escolha todas as que se aplicam.",
+    "hint": "Três blocos, de três tamanhos.",
+    "choices": [
+      {
+        "text": "10.0.0.0/8",
+        "why": "O maior bloco privado, e o do laboratório do escritório."
+      },
+      {
+        "text": "172.16.0.0/12",
+        "why": "De 172.16.0.0 a 172.31.255.255."
+      },
+      {
+        "text": "192.168.0.0/16",
+        "why": "O bloco que a maioria dos roteadores domésticos usa."
+      },
+      {
+        "text": "203.0.113.0/24",
+        "why": "Reservado para documentação, não para redes privadas."
+      },
+      {
+        "text": "100.64.0.0/10",
+        "why": "Espaço compartilhado para NAT de operadora, que é outra reserva."
+      }
+    ]
+  },
+  "ex-gw9abp7v": {
+    "prompt": "Um colega diz que o srv está protegido da internet porque o r1 faz NAT. Que mudança exporia o srv com o r1 ainda fazendo NAT?",
+    "hint": "O que o NAT faz com uma conexão que chega, se houver regra para ela?",
+    "choices": [
+      {
+        "text": "Dar ao pc1 um segundo endereço privado",
+        "why": "Mais um endereço de dentro não muda nada no que chega de fora."
+      },
+      {
+        "text": "Uma regra de NAT de destino para uma porta pública, mais uma regra de encaminhamento que a aceite",
+        "why": "O NAT então entrega o que chega naquela porta; só uma regra de firewall impediria, e esta deixa passar."
+      },
+      {
+        "text": "Trocar masquerade por snat to 203.0.113.2",
+        "why": "Os dois são NAT de origem para o tráfego que sai; nenhum deixa nada entrar."
+      },
+      {
+        "text": "Mudar o escritório para 192.168.10.0/24",
+        "why": "Outra faixa privada é igualmente não roteável de fora."
+      }
+    ]
+  },
+  "ex-4gjx67gy": {
+    "prompt": "A chain de NAT de origem do r1 fica no hook que roda logo antes de um pacote sair, chamado ___",
+    "hint": "Leia a linha type da chain.",
+    "blanks": [
+      {
+        "accept": [
+          "postrouting"
+        ]
+      }
+    ]
+  },
+  "ex-jyq9pyc4": {
+    "prompt": "Ponha em ordem os quatro pacotes que o tcpdump do r1 imprimiu.",
+    "hint": "Entra do escritório, sai para o provedor, e volta.",
+    "trap": "O pedido sai da eth1 já traduzido: não há momento no fio em que 10.20.10.21 apareça lá fora.",
+    "items": [
+      "eth0 In: 10.20.10.21 > 192.0.2.80, echo request",
+      "eth1 Out: 203.0.113.2 > 192.0.2.80, echo request",
+      "eth1 In: 192.0.2.80 > 203.0.113.2, echo reply",
+      "eth0 Out: 192.0.2.80 > 10.20.10.21, echo reply"
+    ]
+  },
+  "ex-9xd6dwaa": {
+    "prompt": "Entre a primeira e a segunda linha da captura do r1, o que mudou no echo request?",
+    "hint": "Compare as duas linhas campo a campo.",
+    "choices": [
+      {
+        "text": "O endereço de destino",
+        "why": "As duas linhas vão para 192.0.2.80."
+      },
+      {
+        "text": "O id do ICMP",
+        "why": "id 14 nas duas; o r1 não tinha motivo para mudar, já que ninguém mais o usava."
+      },
+      {
+        "text": "O endereço de origem",
+        "why": "10.20.10.21 virou 203.0.113.2: NAT de origem."
+      },
+      {
+        "text": "O número de sequência e o tamanho",
+        "why": "seq 1 e length 64 nas duas."
+      }
+    ]
+  },
+  "ex-5p06rpqc": {
+    "prompt": "A resposta chegou ao pc1 com ttl=62, tendo saído com 64. Quantos roteadores a encaminharam?",
+    "hint": "Cada roteador que encaminha tira um, traduzindo ou não.",
+    "unit": "roteadores"
+  },
+  "ex-re76h2y8": {
+    "prompt": "O ICMP não tem portas, então a tabela do r1 separa os pings pelo ___ do echo, que aqui era 14.",
+    "hint": "O tcpdump o imprimiu ao lado do seq.",
+    "blanks": [
+      {
+        "accept": [
+          "id",
+          "identificador",
+          "identifier"
+        ]
+      }
+    ]
+  },
+  "ex-rvb65bpv": {
+    "prompt": "Uma captura no isp durante o ping do pc1 mostra o echo request vindo de que endereço?",
+    "hint": "O que sai do r1 pela eth1?",
+    "choices": [
+      {
+        "text": "10.20.10.21, o endereço do pc1",
+        "why": "Esse endereço só existe dentro do escritório; o r1 o trocou antes de o pacote sair."
+      },
+      {
+        "text": "203.0.113.2",
+        "why": "Fora do r1 o escritório é um endereço só, e é esse que todo pacote leva."
+      },
+      {
+        "text": "10.20.10.1, o endereço de dentro do r1",
+        "why": "Esse é o gateway do pc1, do lado do escritório; o que sai pela eth1 leva o endereço da eth1."
+      },
+      {
+        "text": "203.0.113.1, o próprio endereço do isp",
+        "why": "Essa é a ponta do isp no enlace; o pacote veio da outra ponta."
+      }
+    ]
+  },
+  "ex-qtfvhnyx": {
+    "prompt": "O pc1 conectou a partir da porta 40000. Para que porta de origem o r1 a reescreveu?",
+    "hint": "O último dport na linha do conntrack do pc1."
+  },
+  "ex-ay5wv24s": {
+    "prompt": "O r1 reescreveu a porta 40000 do pc1, mas deixou a 40000 do pc2 como estava. Por quê?",
+    "hint": "Duas conexões não podem ter os quatro números iguais.",
+    "choices": [
+      {
+        "text": "O pc1 mandou depois do pc2 e perde pela ordem",
+        "why": "A ordem decidiu quem ficou com a 40000, mas o motivo da reescrita é o choque que ela causaria."
+      },
+      {
+        "text": "Mantida, a conexão do pc1 pareceria idêntica à do pc2 vista de fora",
+        "why": "As duas seriam 203.0.113.2:40000 para 192.0.2.80:80, então o r1 deu outra porta ao pc1."
+      },
+      {
+        "text": "O endereço do pc1 é menor, e endereços menores são reescritos",
+        "why": "Endereços não influem em qual porta é mantida."
+      },
+      {
+        "text": "Portas abaixo de 50000 são reescritas na saída",
+        "why": "O pc2 manteve a 40000; nada no número em si forçava mudança."
+      }
+    ]
+  },
+  "ex-fcbr8r7s": {
+    "prompt": "Imagine que o pc1 tivesse usado a porta 40000 para outro servidor, 198.51.100.7 porta 80, enquanto o pc2 usava a 40000 para 192.0.2.80. O r1 precisaria reescrever a porta do pc1?",
+    "hint": "Compare as duas conexões vistas de fora.",
+    "choices": [
+      {
+        "text": "Sim, já que a 40000 já está em uso em 203.0.113.2",
+        "why": "Uma porta não se esgota com uma conexão; o que importa é se os quatro números se repetem."
+      },
+      {
+        "text": "Não, porque os destinos são diferentes",
+        "why": "203.0.113.2:40000 para 198.51.100.7:80 e para 192.0.2.80:80 são duas conexões diferentes."
+      },
+      {
+        "text": "Sim, porque o PAT reescreve toda porta de origem",
+        "why": "O pc2 e o pc3 mantiveram as suas; o PAT só reescreve para evitar choque."
+      },
+      {
+        "text": "Não, porque o masquerade não traduz portas",
+        "why": "Traduz, quando precisa: a 40000 do pc1 virou 46745 na captura."
+      }
+    ]
+  },
+  "ex-29q8x8pz": {
+    "prompt": "Uma entrada TCP estabelecida começa com 432000 segundos de vida. Quantos dias são?",
+    "hint": "Um dia tem 86400 segundos.",
+    "unit": "dias"
+  },
+  "ex-zczggn57": {
+    "prompt": "Olhando só os três pacotes SYN que o isp capturou, dá para saber que PC do escritório mandou cada um?",
+    "hint": "O que as três linhas têm em comum?",
+    "choices": [
+      {
+        "text": "Sim, pelas portas de origem, que são as dos próprios PCs",
+        "why": "Portas podem ser reescritas, como a do pc1 foi; nada lá fora diz quais foram mantidas."
+      },
+      {
+        "text": "Sim, a porta mais baixa é sempre a do pc1",
+        "why": "As portas são escolhidas pelo kernel de cada PC e pelo r1, sem ordem ligada ao PC."
+      },
+      {
+        "text": "Não: só a tabela do r1 as liga de volta às máquinas",
+        "why": "As três vêm de 203.0.113.2; qual PC é qual só existe na tabela de conexões do r1."
+      },
+      {
+        "text": "Sim, as opções do TCP levam o endereço de cada PC",
+        "why": "As opções são de janela e de timestamp; não levam endereço nenhum."
+      }
+    ]
+  },
+  "ex-2b9hkb09": {
+    "prompt": "O nome que a Cisco dá ao PAT, muitos endereços de dentro dividindo um de fora, é NAT ___",
+    "hint": "A palavra inglesa para sobrecarga.",
+    "blanks": [
+      {
+        "accept": [
+          "overload"
+        ]
+      }
+    ]
+  },
+  "ex-rg2ec51v": {
+    "prompt": "Ligue cada resultado das tentativas do isp ao que ele significa.",
+    "hint": "Os exit status são códigos do próprio curl.",
+    "right_distractors": [
+      "O nome não pôde ser resolvido"
+    ],
+    "pairs": [
+      {
+        "left": "exit status 28",
+        "right": "Timeout: algo descartou os pacotes em silêncio"
+      },
+      {
+        "left": "exit status 7",
+        "right": "Recusado: o endereço respondeu, ninguém escutava"
+      },
+      {
+        "left": "served by srv",
+        "right": "O redirecionamento entregou o pedido lá dentro"
+      }
+    ]
+  },
+  "ex-hvzzfzhf": {
+    "prompt": "Por que a regra de dnat fica numa chain prerouting e não na postrouting?",
+    "hint": "Quando o r1 decide para onde um pacote vai?",
+    "choices": [
+      {
+        "text": "Porque o prerouting roda mais rápido que o postrouting",
+        "why": "Velocidade não é o motivo; a ordem dos hooks é."
+      },
+      {
+        "text": "Porque o postrouting é reservado para IPv6",
+        "why": "A regra de masquerade do r1 roda no postrouting, para IPv4."
+      },
+      {
+        "text": "O destino precisa mudar antes de o r1 escolher a rota",
+        "why": "O prerouting roda na chegada; reescrito ali, o pacote é roteado para 10.20.10.10 em vez de para o próprio r1."
+      },
+      {
+        "text": "Porque regras de prerouting também abrem o firewall",
+        "why": "Não abrem: o terceiro comando, ct status dnat accept, foi preciso para isso."
+      }
+    ]
+  },
+  "ex-e09tgt6f": {
+    "prompt": "Com uma rota para 10.20.10.0/24 pelo r1, o pedido do isp para 10.20.10.10 ainda deu timeout. O que o barrou?",
+    "hint": "Leia a chain de encaminhamento do r1.",
+    "choices": [
+      {
+        "text": "O endereço privado não pode ser roteado pelo isp",
+        "why": "A rota foi posta de propósito; o pacote chegou ao r1."
+      },
+      {
+        "text": "O srv não escutava na porta 80",
+        "why": "O srv serviu a mesma página pelo redirecionamento instantes depois."
+      },
+      {
+        "text": "O r1 o recusou com um reset",
+        "why": "Uma recusa é o exit 7 e chega na hora; o 28 quer dizer que ninguém respondeu."
+      },
+      {
+        "text": "A chain de encaminhamento do r1, com política drop e sem regra da eth1 para a eth0",
+        "why": "Descartado em silêncio, então o curl esperou até o -m 4 acabar."
+      }
+    ]
+  },
+  "ex-j4fwk1rc": {
+    "prompt": "Quando o isp buscou a página por 203.0.113.2:8080, que endereço de cliente o srv viu?",
+    "hint": "Que endereço o redirecionamento reescreveu?",
+    "choices": [
+      {
+        "text": "203.0.113.1, o do próprio isp",
+        "why": "O redirecionamento só reescreveu o destino; a origem continuou sendo a do isp."
+      },
+      {
+        "text": "203.0.113.2, o endereço público do r1",
+        "why": "Isso exigiria reescrever a origem também, o que esta regra não faz."
+      },
+      {
+        "text": "10.20.10.1, o endereço de dentro do r1",
+        "why": "Mesmo motivo: o r1 não reescreveu a origem da conexão que chegou."
+      },
+      {
+        "text": "127.0.0.1, porque o r1 retransmite o pedido",
+        "why": "O r1 encaminha pacotes; não abre uma conexão nova por conta própria."
+      }
+    ]
+  },
+  "ex-8khv3whn": {
+    "prompt": "Quais destas medidas tornam um redirecionamento de porta mais seguro? Escolha todas as que se aplicam.",
+    "hint": "Um redirecionamento abre um serviço para todo mundo.",
+    "choices": [
+      {
+        "text": "Redirecionar só as portas de que o serviço precisa",
+        "why": "Cada porta redirecionada é um serviço exposto à internet inteira."
+      },
+      {
+        "text": "Limitar a regra a endereços de clientes conhecidos, quando der",
+        "why": "Casar a origem estreita quem pode alcançar o serviço."
+      },
+      {
+        "text": "Manter atualizado o servidor de dentro",
+        "why": "Qualquer um agora o alcança, então as falhas dele também ficam alcançáveis."
+      },
+      {
+        "text": "Usar a porta 8080 em vez da 80 para ninguém achar",
+        "why": "Scanners tentam todas as portas; um número incomum não esconde nada."
+      },
+      {
+        "text": "Ligar o UPnP para os dispositivos gerirem os próprios redirecionamentos",
+        "why": "Isso deixa dispositivos abrirem portas sem ninguém decidir."
+      }
+    ]
+  },
+  "ex-wphb4tkm": {
+    "prompt": "Ponha os passos da montagem do redirecionamento no r1 na ordem em que a aula os executou.",
+    "hint": "A chain antes da regra, a regra antes do teste.",
+    "trap": "Não dá para pôr uma regra numa chain que ainda não existe, e testar antes da regra de firewall daria timeout como a tentativa anterior.",
+    "items": [
+      "Criar a chain prerouting na tabela nat",
+      "Acrescentar a regra: eth1, TCP 8080, dnat para 10.20.10.10:80",
+      "Inserir ct status dnat accept no topo da chain de encaminhamento",
+      "Buscar http://203.0.113.2:8080/ a partir do isp"
+    ]
+  },
+  "ex-7q8p6gcg": {
+    "prompt": "O pc2, dentro do escritório, recebeu exit status 7 de http://203.0.113.2:8080/ enquanto o isp recebeu a página. Por quê?",
+    "hint": "Leia a primeira palavra da regra de redirecionamento.",
+    "choices": [
+      {
+        "text": "O pedido do pc2 chegou pela eth0, e a regra casa com a eth1",
+        "why": "Sem redirecionamento, o pedido era para o próprio r1, que não tem nada na 8080: recusado."
+      },
+      {
+        "text": "O srv recusa conexões da própria rede",
+        "why": "O srv atendeu o pc1 diretamente na aula 5; ele não recusa ninguém."
+      },
+      {
+        "text": "O pc2 não tem rota para 203.0.113.2",
+        "why": "A rota padrão do pc2 pelo r1 cobre esse endereço, e a recusa voltou do r1."
+      },
+      {
+        "text": "O redirecionamento aceita um cliente por vez",
+        "why": "Um redirecionamento é uma regra, não uma sessão; o isp já tinha terminado."
+      }
+    ]
+  },
+  "ex-7w5pnb5z": {
+    "prompt": "Um servidor publicado através de NAT que não é alcançável pelo endereço público a partir da rede de dentro mostra o problema do ___.",
+    "hint": "A forma de um pacote que vai até o roteador e precisa voltar.",
+    "blanks": [
+      {
+        "accept": [
+          "hairpin",
+          "hairpinning",
+          "NAT loopback"
+        ]
+      }
+    ]
+  },
+  "ex-cnsvgyka": {
+    "prompt": "O escritório recebe uma reclamação: 203.0.113.2 atacou um servidor ontem às 08:24. O que é preciso para achar a máquina?",
+    "hint": "O que os logs de fora veem para cada PC?",
+    "choices": [
+      {
+        "text": "O endereço basta, ele identifica o PC",
+        "why": "Todo PC sai como 203.0.113.2; o endereço nomeia o escritório inteiro."
+      },
+      {
+        "text": "A porta de origem e a hora exata, cruzadas com registros guardados no r1",
+        "why": "Só o r1 ligava portas a máquinas, e só registros que ele guardou dizem que PC tinha aquela porta naquela hora."
+      },
+      {
+        "text": "Uma captura no isp de ontem",
+        "why": "Fora do r1 todo pacote mostra 203.0.113.2; uma captura ali não nomeia o PC."
+      },
+      {
+        "text": "O endereço MAC que está na reclamação",
+        "why": "Um MAC nunca sai do enlace do escritório; a reclamação não tem como conter um."
+      }
+    ]
+  },
+  "ex-ervthxhc": {
+    "prompt": "O roteador doméstico de um cliente mostra 100.64.12.9 como endereço externo. O que isso diz?",
+    "hint": "Que bloco é 100.64.0.0/10?",
+    "choices": [
+      {
+        "text": "O roteador está com defeito e perdeu o endereço público",
+        "why": "Ele funciona; o endereço vem do provedor de propósito."
+      },
+      {
+        "text": "O endereço é público e alcançável de qualquer lugar",
+        "why": "A 100.64.0.0/10 não é roteada na internet."
+      },
+      {
+        "text": "O roteador está usando IPv6",
+        "why": "É um endereço IPv4."
+      },
+      {
+        "text": "O provedor usa CGNAT e traduz de novo",
+        "why": "Espaço compartilhado: um redirecionamento neste roteador redireciona a partir de um endereço que a internet não alcança."
+      }
+    ]
+  },
+  "ex-mt7jfrbp": {
+    "prompt": "Um escritório passa para IPv6 com um endereço público em cada máquina. O que continua decidindo que conexões de fora entram?",
+    "hint": "O NAT era confundido com isso.",
+    "choices": [
+      {
+        "text": "O NAT, que o IPv6 ainda exige",
+        "why": "Com endereços de 128 bits não há falta para o NAT resolver."
+      },
+      {
+        "text": "As regras do firewall",
+        "why": "A tradução nunca foi a proteção; o filtro era, e ele continua."
+      },
+      {
+        "text": "Nada, então toda máquina fica aberta",
+        "why": "Um roteador IPv6 continua descartando, por regra, as conexões que ninguém pediu."
+      },
+      {
+        "text": "A tabela MAC do switch",
+        "why": "O switch entrega quadros na LAN; não decide o que entra da internet."
+      }
+    ]
+  },
+  "ex-za2c373s": {
+    "prompt": "Ligue cada termo ao que ele reescreve.",
+    "hint": "Origem ou destino, endereço ou porta.",
+    "right_distractors": [
+      "O endereço MAC de todo quadro"
+    ],
+    "pairs": [
+      {
+        "left": "NAT de origem",
+        "right": "O endereço de origem do que sai"
+      },
+      {
+        "left": "PAT",
+        "right": "Também a porta de origem, quando duas conexões chocariam"
+      },
+      {
+        "left": "Redirecionamento de portas",
+        "right": "O destino do que chega numa porta pública"
+      },
+      {
+        "left": "Masquerade",
+        "right": "A origem, para o endereço que a interface de saída tiver"
+      }
+    ]
+  },
+  "ex-gh3jw15h": {
+    "prompt": "O pc1, o pc2, o pc3 e o srv navegam na web ao mesmo tempo pelo r1. De quantos endereços IPv4 públicos o escritório precisa?",
+    "hint": "O PAT os separa pela porta.",
+    "unit": "endereços"
+  },
+  "ex-k0pxy4pr": {
+    "prompt": "Depois que o r1 reinicia, todo download do escritório cai ao mesmo tempo, embora cabos e rotas estejam bem. Por quê?",
+    "hint": "Onde o r1 guardava as traduções?",
+    "choices": [
+      {
+        "text": "O reinício mudou os endereços privados do escritório",
+        "why": "Os endereços estão configurados nos PCs e não mudaram."
+      },
+      {
+        "text": "A regra de masquerade só funciona no primeiro boot",
+        "why": "A regra é carregada de novo; conexões novas funcionam depois do reinício."
+      },
+      {
+        "text": "As respostas não batem com nada na tabela esvaziada do r1",
+        "why": "As traduções viviam na memória do r1; sem elas, respostas para 203.0.113.2 não têm para onde ir lá dentro."
+      },
+      {
+        "text": "O provedor bloqueia endereços que reiniciam",
+        "why": "O provedor não vê reinício nenhum, só pacotes de 203.0.113.2."
+      }
+    ]
+  }
+}

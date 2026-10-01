@@ -1,0 +1,520 @@
+{
+  "ex-98rwzxge": {
+    "prompt": "Um PC tem um gateway padrão configurado e não roda nenhum protocolo de roteamento. Que tipo de roteamento esse PC faz?",
+    "hint": "Quem escreveu a linha, e ela muda sozinha?",
+    "choices": [
+      {
+        "text": "Dinâmico, porque o DHCP entregou o gateway",
+        "why": "O DHCP entrega um valor uma vez. Nada recalcula a rota depois, e é isso que roteamento dinâmico quer dizer."
+      },
+      {
+        "text": "Estático",
+        "why": "Isso. Um gateway padrão é uma rota estática: uma linha digitada ou entregue que nenhum protocolo mantém."
+      },
+      {
+        "text": "Nenhum, já que um PC não é roteador",
+        "why": "Todo host consulta uma tabela de rotas antes de enviar um pacote, inclusive PCs."
+      },
+      {
+        "text": "Roteamento por política, decidido pelo firewall",
+        "why": "Roteamento por política escolhe por origem ou porta. Um gateway padrão simples é uma linha baseada no destino."
+      }
+    ]
+  },
+  "ex-ssgtyeqa": {
+    "prompt": "Quais destas redes combinam bem com rotas estáticas? Marque todas que se aplicam.",
+    "hint": "Conte as saídas.",
+    "choices": [
+      {
+        "text": "Uma filial com um único enlace até a matriz",
+        "why": "Uma saída: uma rota padrão em direção à matriz é a tabela inteira."
+      },
+      {
+        "text": "Um roteador doméstico com um enlace até o provedor",
+        "why": "O mesmo formato da filial: uma rota padrão em direção ao provedor."
+      },
+      {
+        "text": "Um campus de vinte roteadores com caminhos redundantes entre prédios",
+        "why": "Muitos caminhos e falhas a contornar: é para isso que serve um protocolo de roteamento."
+      },
+      {
+        "text": "Um provedor apontando o bloco de um cliente para o cabo desse cliente",
+        "why": "A metade do provedor no par stub também é uma rota estática."
+      }
+    ]
+  },
+  "ex-vdsq0q4d": {
+    "prompt": "Um engenheiro adiciona uma rota estática para 10.40.0.0/16 para testar algo, e esquece. Depois o OSPF aprende uma rota para o mesmo 10.40.0.0/16. Qual delas o roteador usa?",
+    "hint": "Aula 14: a distância decide entre fontes.",
+    "choices": [
+      {
+        "text": "A rota OSPF, já que é mais recente",
+        "why": "Idade não é critério entre fontes. Distância administrativa é."
+      },
+      {
+        "text": "A rota OSPF, já que um protocolo conhece melhor a rede",
+        "why": "O roteador não julga quem sabe mais; ele compara distâncias, e a da estática é menor."
+      },
+      {
+        "text": "As duas, dividindo o tráfego entre elas",
+        "why": "Divisão acontece entre rotas iguais de uma mesma fonte, não entre uma estática e uma OSPF."
+      },
+      {
+        "text": "A estática esquecida",
+        "why": "Isso. Distância 1 vence os 110 do OSPF, que é a armadilha de que a seção avisa."
+      }
+    ]
+  },
+  "ex-edasg926": {
+    "prompt": "Uma rede tem quatro roteadores em anel, e o gerente quer que o tráfego passe para o outro lado do anel sempre que qualquer cabo falhar, em qualquer lugar. Por que rotas estáticas não atendem a isso, mesmo com rotas flutuantes em todos os roteadores?",
+    "hint": "Que falhas uma rota estática percebe?",
+    "choices": [
+      {
+        "text": "Anel é uma topologia que rotas estáticas não suportam",
+        "why": "Rotas estáticas funcionam em qualquer topologia. O problema é o que elas percebem, não o formato."
+      },
+      {
+        "text": "Cada roteador percebe falhas dos próprios cabos e não de cabos mais distantes",
+        "why": "Isso. Um cabo falhando dois roteadores adiante não muda nada neste roteador, como r3 mostrou no laboratório."
+      },
+      {
+        "text": "Rotas flutuantes são um recurso Cisco e o anel roda Linux",
+        "why": "O laboratório fez uma no Linux com métrica. O nome vem da Cisco; a ideia não depende dela."
+      },
+      {
+        "text": "Quatro roteadores excedem o número de rotas estáticas que um roteador guarda",
+        "why": "Um roteador guarda milhares de linhas estáticas. O número de roteadores é questão de trabalho, não de capacidade."
+      }
+    ]
+  },
+  "ex-hf0hr1ct": {
+    "prompt": "Em `ip route add 10.20.3.0/24 via 10.20.12.2` digitado em r1, o que é 10.20.12.2?",
+    "hint": "Ele fica num cabo em que r1 está ligado.",
+    "choices": [
+      {
+        "text": "O endereço de pc3",
+        "why": "pc3 é 10.20.3.10, dentro da rede de destino."
+      },
+      {
+        "text": "O endereço do próprio r1 no cabo até r2",
+        "why": "r1 é 10.20.12.1 nesse cabo. O próximo salto é a outra ponta."
+      },
+      {
+        "text": "O próximo salto: a ponta de r2 no /30 que os dois compartilham",
+        "why": "Isso. r1 entrega o pacote a esse vizinho, encontrado com ARP nesse cabo."
+      },
+      {
+        "text": "r3, o roteador na frente de pc3, dois cabos adiante, já perto do destino",
+        "why": "r3 não está em nenhum cabo que r1 compartilhe com ele neste caminho; r1 só o alcança através de r2."
+      }
+    ]
+  },
+  "ex-54jeqa9z": {
+    "prompt": "Depois que as duas rotas em direção a pc3 foram adicionadas, o ping de pc1 perdeu o pacote sem erro nenhum. Para onde foi a única mensagem de erro daquela troca?",
+    "hint": "Leia a captura de pc3: quem mandou o quê para quem?",
+    "choices": [
+      {
+        "text": "Para pc3, vindo de r3",
+        "why": "Isso. r3 não conseguiu encaminhar a resposta de pc3 e avisou quem a enviou, que era pc3."
+      },
+      {
+        "text": "Para pc1, vindo de r1, e descartada por pc1",
+        "why": "r1 encaminhou o pedido sem problema. pc1 não recebeu nada."
+      },
+      {
+        "text": "Para r2, que a guardou no log",
+        "why": "r2 encaminhou o pedido e nunca viu a resposta."
+      },
+      {
+        "text": "Para lugar nenhum: r3 descartou a resposta em silêncio",
+        "why": "r3 a descartou e avisou, na terceira linha da captura de pc3."
+      }
+    ]
+  },
+  "ex-phc480pn": {
+    "prompt": "Ponha os pacotes daquele ping que falhou na ordem em que o tcpdump de pc3 os imprimiu.",
+    "hint": "A resposta tem de existir antes de falhar.",
+    "items": [
+      "Chega o echo request de 10.20.1.10",
+      "pc3 envia o echo reply para 10.20.1.10",
+      "r3 avisa pc3 que a rede de 10.20.1.10 é inalcançável"
+    ],
+    "trap": "Pôr o erro primeiro supõe que o pedido falhou. Ele chegou, e a falha foi na volta."
+  },
+  "ex-9j3dap54": {
+    "prompt": "Em r1 alguém digita `ip route add 10.20.3.0/24 via 10.20.23.2`, o endereço de r3 no cabo entre r2 e r3. Por que o kernel recusa?",
+    "hint": "Como r1 põe um quadro no fio em direção ao próximo salto?",
+    "choices": [
+      {
+        "text": "10.20.23.2 pertence a r3, e uma rota por r3 tem de ser digitada em r3",
+        "why": "Rotas por r3 são digitadas nos roteadores que as usam. O problema é alcançar o endereço."
+      },
+      {
+        "text": "Uma rota /24 precisa de um próximo salto dentro de um /24",
+        "why": "O tamanho do destino não diz nada sobre a rede do próximo salto."
+      },
+      {
+        "text": "Nenhuma rede de r1 contém 10.20.23.2, então o ARP não tem cabo para usar",
+        "why": "Isso. O próximo salto tem de estar numa rede conectada, porque o quadro vai para o MAC dele."
+      },
+      {
+        "text": "A rota duplica a que já foi digitada em r2",
+        "why": "Dois roteadores com rotas para a mesma rede é normal; cada um tem a sua."
+      }
+    ]
+  },
+  "ex-2afftrxj": {
+    "prompt": "No Linux, uma rota digitada com `ip route add` se perde quando a máquina ___, e é por isso que roteadores guardam rotas na configuração salva.",
+    "hint": "Desligar e ligar de novo.",
+    "blanks": [
+      {
+        "accept": [
+          "reinicia",
+          "reiniciar",
+          "é reiniciada",
+          "reboota",
+          "restarts",
+          "reboots"
+        ]
+      }
+    ]
+  },
+  "ex-86aywcc7": {
+    "prompt": "pc3 mandou as respostas com TTL 64 e pc1 imprimiu ttl=61. Quantos roteadores cada resposta atravessou?",
+    "hint": "Cada roteador tira um.",
+    "unit": "roteadores"
+  },
+  "ex-m3937tpt": {
+    "prompt": "Na cadeia r1, r2, r3, ligar a rede de pc1 e a rede de pc3 nos dois sentidos exigiu quantas rotas estáticas no total?",
+    "hint": "Dois roteadores em cada sentido.",
+    "unit": "rotas"
+  },
+  "ex-bmxnsn65": {
+    "prompt": "A tabela de r2 mostra `10.20.1.0/24 via 10.20.12.1 dev eth1` sem `proto kernel`, e `10.20.12.0/30 ... proto kernel scope link`. O que a diferença diz?",
+    "hint": "De onde vem cada linha?",
+    "choices": [
+      {
+        "text": "A primeira está quebrada e o kernel vai removê-la",
+        "why": "Ela funciona: o ping a usou. A palavra que falta é sobre origem, não sobre saúde."
+      },
+      {
+        "text": "Uma foi digitada, a outra deriva de eth1",
+        "why": "Isso. Uma rota conectada deriva do endereço da interface; uma estática foi adicionada por alguém."
+      },
+      {
+        "text": "A primeira é preferida por não ter protocolo",
+        "why": "São para prefixos diferentes, então nunca competem."
+      },
+      {
+        "text": "A segunda foi aprendida de r1 via OSPF",
+        "why": "Nenhum protocolo roda neste laboratório. Linhas OSPF diriam proto ospf."
+      }
+    ]
+  },
+  "ex-g6yj4qgf": {
+    "prompt": "r1 não tem rota para 10.20.23.0/30, e mesmo assim o traceroute de pc1 imprimiu 10.20.23.2 no salto 3. Como essa resposta chegou a pc1?",
+    "hint": "Qual era o destino da resposta de r3?",
+    "choices": [
+      {
+        "text": "r1 aprendeu 10.20.23.0/30 com o próprio pacote do traceroute",
+        "why": "Roteadores não aprendem rotas com os pacotes que encaminham."
+      },
+      {
+        "text": "r3 respondeu de 10.20.3.1, e o traceroute imprimiu no lugar o endereço da interface de chegada",
+        "why": "O traceroute imprime a origem que recebeu. r3 respondeu da interface por onde a sonda chegou."
+      },
+      {
+        "text": "A resposta foi endereçada a 10.20.1.10, e todo roteador na volta tem rota para isso",
+        "why": "Isso. Rotas são buscadas pelo destino; 10.20.23.2 era só a origem."
+      },
+      {
+        "text": "r1 usou a rota padrão para isso",
+        "why": "r1 não tem rota padrão neste laboratório; sua tabela são rotas conectadas e digitadas."
+      }
+    ]
+  },
+  "ex-jn4sbqgn": {
+    "prompt": "Um ping de pc1 para pc3 falha. Que teste diz se o problema é na ida ou na volta?",
+    "hint": "Um ping testa os dois sentidos de uma vez.",
+    "choices": [
+      {
+        "text": "Um ping mais longo a partir de pc1, com mais pacotes",
+        "why": "Mais pacotes pelos mesmos dois sentidos respondem a mesma pergunta de novo."
+      },
+      {
+        "text": "Uma captura em pc3 enquanto pc1 pinga",
+        "why": "Isso. Se o pedido aparece em pc3, a ida funciona e o problema é na volta."
+      },
+      {
+        "text": "Ler a tabela de r1",
+        "why": "A tabela de r1 cobre só a parte de r1 no caminho de ida."
+      },
+      {
+        "text": "Um ping de pc1 para o próprio gateway",
+        "why": "Isso testa o cabo de pc1 até r1, que já funcionava."
+      }
+    ]
+  },
+  "ex-2peja076": {
+    "prompt": "r1 tem `10.20.3.0/24 via 10.20.12.2 dev eth1` e `10.20.3.0/24 via 10.20.13.2 dev eth3 metric 200`. Qual ele usa enquanto os dois cabos funcionam?",
+    "hint": "Menor métrica vence.",
+    "choices": [
+      {
+        "text": "A via 10.20.13.2, por ser a mais recente",
+        "why": "A ordem de entrada não decide; a métrica decide."
+      },
+      {
+        "text": "As duas, alternando pacote a pacote",
+        "why": "Alternar exige métricas iguais. 0 e 200 não são iguais."
+      },
+      {
+        "text": "A via 10.20.12.2",
+        "why": "Isso. Sem métrica mostrada, a métrica é 0, que vence 200."
+      },
+      {
+        "text": "Nenhuma até uma ser marcada como reserva com uma flag",
+        "why": "Não há flag de reserva. Uma métrica pior é o que a torna reserva."
+      }
+    ]
+  },
+  "ex-6jnwr5ga": {
+    "prompt": "Depois que o cabo de r1 a r2 foi puxado, a rota principal de r1 mostrou `dead linkdown`. O que isso quer dizer?",
+    "hint": "Olhe a interface por onde ela sai.",
+    "choices": [
+      {
+        "text": "A rota foi apagada, e a linha aparece apenas como registro do que existiu",
+        "why": "Ela continua na tabela, e é por isso que volta a ser usada quando o sinal volta."
+      },
+      {
+        "text": "A interface dela perdeu a portadora, então a rota não é usada",
+        "why": "Isso. eth1 não tem sinal, e o kernel para de usar as rotas que saem por ela."
+      },
+      {
+        "text": "r2 avisou r1 que pc3 tinha sumido",
+        "why": "Roteamento estático não tem mensagens entre roteadores. r1 viu a própria interface cair."
+      },
+      {
+        "text": "pc3 parou de responder pings",
+        "why": "pc3 estava bem. O estado é sobre o cabo de r1, não sobre o destino."
+      }
+    ]
+  },
+  "ex-fpy8rmvt": {
+    "prompt": "Com o cabo de r1 a r2 puxado, `ip route get 10.20.1.10` em r3 ainda respondeu `via 10.20.23.1 dev eth2`. Por que r3 não passou para a reserva?",
+    "hint": "Qual cabo de r3 perdeu o sinal?",
+    "choices": [
+      {
+        "text": "A reserva de r3 tinha um erro de digitação no próximo salto",
+        "why": "10.20.13.1 é o endereço correto de r1 no cabo reserva."
+      },
+      {
+        "text": "O kernel espera alguns minutos antes de trocar",
+        "why": "r1 trocou na hora. r3 não tinha motivo para trocar."
+      },
+      {
+        "text": "Reservas no Linux valem num sentido só",
+        "why": "A reserva de r1 funcionou no sentido dela; a de r3 também funcionaria, se houvesse motivo."
+      },
+      {
+        "text": "Nenhum cabo do próprio r3 falhou",
+        "why": "Isso. O cabo quebrado fica depois de r2, fora da vista de r3."
+      }
+    ]
+  },
+  "ex-3rpr3vk4": {
+    "prompt": "O traceroute de pc3 para pc1 terminou com `10.20.23.1  0.273 ms !N`. Que roteador respondeu, e o que quis dizer?",
+    "hint": "10.20.23.1 fica no cabo entre r2 e r3.",
+    "choices": [
+      {
+        "text": "r2: ele não tem rota utilizável para a rede de pc1",
+        "why": "Isso. A única rota de r2 para 10.20.1.0/24 saía pelo cabo puxado."
+      },
+      {
+        "text": "r3: sua rota reserva caiu",
+        "why": "r3 é o salto 1, 10.20.3.1. A reserva dele nunca foi usada."
+      },
+      {
+        "text": "r1: pc1 recusou o traceroute",
+        "why": "As sondas nunca chegaram até r1."
+      },
+      {
+        "text": "r2: o endereço de pc1 não existe mais naquela rede",
+        "why": "!N é sobre a rede estar inalcançável, não sobre o host não existir."
+      }
+    ]
+  },
+  "ex-cs02115h": {
+    "prompt": "Uma segunda rota estática para a mesma rede, com métrica pior, que assume só quando a primeira some, se chama rota ___.",
+    "hint": "Ela fica acima da principal, sem uso, até ser necessária.",
+    "blanks": [
+      {
+        "accept": [
+          "flutuante",
+          "floating"
+        ]
+      }
+    ]
+  },
+  "ex-3ed9pspg": {
+    "prompt": "Que prefixo é uma rota padrão?",
+    "hint": "Ele casa com todo endereço.",
+    "choices": [
+      {
+        "text": "255.255.255.255/32",
+        "why": "Isso é um endereço só, o de broadcast, e o prefixo mais longo possível."
+      },
+      {
+        "text": "127.0.0.0/8",
+        "why": "Esse é o bloco de loopback, que nunca sai da máquina."
+      },
+      {
+        "text": "0.0.0.0/0",
+        "why": "Isso. Um prefixo de tamanho 0 casa com tudo, e perde para qualquer casamento mais longo."
+      },
+      {
+        "text": "10.0.0.0/8",
+        "why": "Isso cobre um bloco privado e nada fora dele."
+      }
+    ]
+  },
+  "ex-j3wdqt08": {
+    "prompt": "Depois que r3 passou a ter uma rota padrão via 10.20.13.1, o ping de pc1 imprimiu ttl=62. Quantos roteadores cada resposta atravessou?",
+    "hint": "64 menos o que você vê.",
+    "unit": "roteadores"
+  },
+  "ex-64302zgp": {
+    "prompt": "Dois roteadores, A e B, recebem cada um uma rota padrão apontando para o outro. Chega um pacote para um endereço para o qual nenhum dos dois tem rota específica. O que acontece com ele?",
+    "hint": "Siga-o por alguns saltos.",
+    "choices": [
+      {
+        "text": "O primeiro roteador o descarta com Destination Net Unreachable",
+        "why": "Uma rota padrão casa com tudo, então nenhum dos dois fica sem rota; nenhum recusa."
+      },
+      {
+        "text": "Ele quica entre A e B até o TTL acabar",
+        "why": "Isso. Cada um o encaminha ao outro, e o TTL é o que termina o loop."
+      },
+      {
+        "text": "B percebe o loop e o devolve à origem",
+        "why": "Roteadores IP não guardam memória dos pacotes que encaminharam, então não há com o que perceber."
+      },
+      {
+        "text": "A e B combinam um caminho melhor entre si",
+        "why": "Rotas estáticas não envolvem acordo; é isso que um protocolo de roteamento acrescenta."
+      }
+    ]
+  },
+  "ex-814gt4ww": {
+    "prompt": "O roteador de uma filial tem um enlace até a matriz e guarda uma rota padrão em direção a ela. Do que a matriz precisa para que as respostas cheguem à filial?",
+    "hint": "A rede stub precisa de uma rota padrão; a rede em volta precisa de outra coisa.",
+    "choices": [
+      {
+        "text": "Uma rota padrão própria em direção à filial",
+        "why": "A matriz tem outros destinos também; uma rota padrão para a filial mandaria tudo para lá."
+      },
+      {
+        "text": "Uma rota para o bloco da filial apontando para esse enlace",
+        "why": "Isso. A rota específica de volta é a outra metade do par stub."
+      },
+      {
+        "text": "Nada, já que a filial já tem uma rota padrão própria em direção à matriz",
+        "why": "A rota padrão da filial cobre o tráfego que sai dela. As respostas voltando precisam de uma rota na matriz."
+      },
+      {
+        "text": "Uma rota flutuante para a filial com métrica 200",
+        "why": "Uma rota flutuante é reserva atrás de uma principal; aqui ainda não há principal."
+      }
+    ]
+  },
+  "ex-5qdfsp6e": {
+    "prompt": "Ponha os passos do laboratório desta aula na ordem que faz pc1 e pc3 conversarem, partindo do zero.",
+    "hint": "Ida, volta, reserva, simplificação.",
+    "items": [
+      "Rotas para 10.20.3.0/24 em r1 e r2",
+      "Rotas para 10.20.1.0/24 em r3 e r2",
+      "Rotas reserva com métrica 200 pelo cabo reserva",
+      "Uma única rota padrão em r3 no lugar das rotas específicas"
+    ],
+    "trap": "As rotas de volta vêm em segundo porque o ping falhou sem elas, mesmo com as rotas de ida no lugar."
+  },
+  "ex-eqbndbb8": {
+    "prompt": "Ligue cada saída desta aula ao que ela mostrou.",
+    "hint": "Uma por etapa do laboratório.",
+    "pairs": [
+      {
+        "left": "Destination Net Unreachable de 10.20.1.1",
+        "right": "r1 não tinha rota para a rede de pc3"
+      },
+      {
+        "left": "ICMP net 10.20.1.10 unreachable, visto em pc3",
+        "right": "r3 não tinha caminho de volta para pc1"
+      },
+      {
+        "left": "dead linkdown",
+        "right": "o próprio cabo de r1 perdeu o sinal"
+      },
+      {
+        "left": "!N de 10.20.23.1",
+        "right": "r2 não alcançava pc1 depois que o cabo foi puxado"
+      }
+    ],
+    "right_distractors": [
+      "r3 recusou as sondas do traceroute"
+    ]
+  },
+  "ex-p3sq5717": {
+    "prompt": "Uma empresa tem um enlace principal e um reserva até o provedor, em dois roteadores diferentes. Uma rota estática flutuante em cada roteador cobre a perda do próprio enlace. Que falha deixa a empresa meio funcionando, como r3 no laboratório?",
+    "hint": "Que falhas não mudam nada no roteador que precisa reagir?",
+    "choices": [
+      {
+        "text": "O cabo do roteador principal até o provedor perdendo o sinal",
+        "why": "Esse é o cabo do próprio roteador: a rota flutuante assume na hora, como a de r1."
+      },
+      {
+        "text": "O roteador reserva perdendo energia",
+        "why": "Nada passava por ele, então o caminho principal continua."
+      },
+      {
+        "text": "Uma falha dentro do provedor, depois do enlace principal, com o sinal do enlace ainda no ar",
+        "why": "Isso. Nada muda em nenhum cabo da empresa, então nada troca."
+      },
+      {
+        "text": "Alguém desligando um PC dentro da empresa",
+        "why": "Isso afeta um PC, e nenhuma rota depende dele."
+      }
+    ]
+  },
+  "ex-2ja78bd0": {
+    "prompt": "Uma rede com uma entrada e uma saída, que nenhum tráfego atravessa a caminho de outro lugar, se chama rede ___.",
+    "hint": "A palavra em inglês é a mesma usada em português.",
+    "blanks": [
+      {
+        "accept": [
+          "stub"
+        ]
+      }
+    ]
+  },
+  "ex-1mhmn82c": {
+    "prompt": "Qual afirmação sobre rotas estáticas confere com o que o laboratório mostrou?",
+    "hint": "Pense em r1 e r3 depois que o cabo foi puxado.",
+    "choices": [
+      {
+        "text": "Elas reagem a uma falha na interface do próprio roteador",
+        "why": "Isso. r1 passou para a reserva quando eth1 perdeu a portadora."
+      },
+      {
+        "text": "Elas reagem a qualquer falha no caminho, depois de um temporizador",
+        "why": "r3 nunca reagiu. Não há temporizador nem mensagem em roteamento estático."
+      },
+      {
+        "text": "Elas ignoram por completo o estado das interfaces",
+        "why": "O kernel marcou a principal de r1 como dead linkdown e parou de usá-la."
+      },
+      {
+        "text": "Elas são removidas da tabela quando um cabo é puxado",
+        "why": "A rota continuou listada, marcada como morta, pronta para o cabo voltar."
+      }
+    ]
+  }
+}
