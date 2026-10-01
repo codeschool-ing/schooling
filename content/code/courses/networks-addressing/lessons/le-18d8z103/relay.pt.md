@@ -72,7 +72,8 @@ porta 67, com o endereço MAC do pc4 ainda dentro: `Request from 02:25:46:c1:26:
 
 **As respostas vão para 10.20.20.1, não para o endereço de onde os pedidos vieram.** Antes de
 encaminhar, o relay escreveu o seu próprio endereço na sub-rede do cliente num campo do pedido
-chamado **giaddr** (*gateway IP address*), e o servidor usou esse campo duas vezes: para saber para
+chamado **giaddr** (*gateway IP address*).
+O servidor usou esse campo duas vezes: para saber para
 onde mandar a resposta e para escolher o escopo. O 10.20.20.1 cai dentro de `subnet 10.20.20.0`, então
 o pc4 recebeu a oferta de 10.20.20.100, do pool daquele escopo. Este `tcpdump` não decodifica o
 campo, o que exige `-v`, mas o destino das respostas é o próprio campo, lido de volta.

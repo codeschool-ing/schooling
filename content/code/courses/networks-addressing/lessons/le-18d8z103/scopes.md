@@ -33,8 +33,8 @@ host prn {
 ```
 
 Read it from the top. `authoritative` declares this server the official one for its subnets, so
-it answers with a refusal, a DHCPNAK, when a client asks to keep an address that does not belong
-here: a laptop arriving from another network with its old lease still in mind. `default-lease-time
+it answers with a refusal, a DHCPNAK, when a client asks to keep an address that does not belong here. That is a laptop arriving from another network with its old lease still
+in mind. `default-lease-time
 600` lends addresses for 600 seconds, ten minutes, when the client does not ask for a length, and
 `max-lease-time 7200` caps what a client may ask for at two hours. `option domain-name-servers` sits
 outside every block, so every scope sends it, and that is how pc1 got its name server.

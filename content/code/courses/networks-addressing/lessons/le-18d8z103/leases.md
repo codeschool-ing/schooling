@@ -80,8 +80,7 @@ The last three lines are the client's timetable, measured from the lease's start
 ACK starts the clock again. That moment is the `renewal in 291 seconds` that `dhclient` printed when
 it bound the address. If that server has not answered by **rebind**, the client broadcasts its
 request to any server that will listen. If nobody has answered by **expire**, the client stops using
-the address. Half and seven eighths are the protocol's defaults, from RFC 2131; this client brings
-the first one forward by a random amount, which is why every `renewal in` in this lesson is a
+the address. Half and seven eighths are the protocol's defaults, from RFC 2131. This client brings the first one forward by a random amount, which is why every `renewal in` in this lesson is a
 different number below 300 — 291 for pc1, 283 for the printer.
 
 A client that is finished with an address can give it back early:

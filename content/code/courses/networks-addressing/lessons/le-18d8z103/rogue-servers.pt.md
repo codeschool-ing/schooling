@@ -5,9 +5,9 @@ version: 1
 
 O DHCP não tem noção de servidor oficial. **Um cliente aceita a primeira oferta que chega, de quem
 quer que a tenha mandado**, e qualquer máquina da sub-rede pode responder a um broadcast. Um segundo
-servidor DHCP numa LAN é quase sempre um acidente — um roteador doméstico ligado por uma das portas
-LAN para ganhar mais algumas tomadas — e de vez em quando um ataque, porque quem responde decide o
-gateway e o servidor de nomes do cliente. De um jeito ou de outro, os clientes que o escutam ficam
+servidor DHCP numa LAN é quase sempre um acidente: um roteador doméstico ligado por uma das portas LAN para ganhar mais
+algumas tomadas. De vez em quando é um ataque, porque quem responde decide o gateway e o servidor de
+nomes do cliente. De um jeito ou de outro, os clientes que o escutam ficam
 isolados ou são mandados para outro lugar.
 
 No laboratório, o PC chamado rogue virou um segundo servidor, que empresta do 10.20.10.200 para cima

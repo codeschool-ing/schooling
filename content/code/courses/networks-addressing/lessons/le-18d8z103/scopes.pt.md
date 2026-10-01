@@ -33,8 +33,8 @@ host prn {
 ```
 
 Leia de cima para baixo. `authoritative` declara este servidor o oficial das suas sub-redes, e por
-isso ele responde com uma recusa, um DHCPNAK, quando um cliente pede para manter um endereço que não
-pertence a esta rede: um laptop que chega de outra rede ainda com o empréstimo antigo na memória.
+isso ele responde com uma recusa, um DHCPNAK, quando um cliente pede para manter um endereço que não pertence a esta rede. É o caso de um laptop que chega de outra rede ainda com o empréstimo
+antigo na memória.
 `default-lease-time 600` empresta endereços por 600 segundos, dez minutos, quando o cliente não pede
 um prazo, e `max-lease-time 7200` limita o que um cliente pode pedir a duas horas. `option
 domain-name-servers` fica fora de qualquer bloco, então todo escopo a envia, e foi assim que o pc1

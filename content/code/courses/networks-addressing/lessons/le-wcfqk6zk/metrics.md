@@ -49,8 +49,8 @@ choice, and the backup behind it takes over.** When the cable came back, the met
 chosen again, which the next section's capture, taken afterwards, shows as selected.
 
 That failover has a blind spot, and it is the one that matters in practice. It only fires when r1's
-own port loses its signal. If ra crashed but its port stayed lit, or if ra and r1 were joined
-through a switch, or if ra lost its own way out further along, r1's link would stay up, the metric
+own port loses its signal. Suppose ra crashed but its port stayed lit, or ra and r1 were joined through a switch, or ra lost its
+own way out further along. r1's link would stay up, the metric
 100 route would stay alive, and r1 would keep sending everything to a router that drops it. **A
 static backup protects against a cable, not against a router.** Knowing whether the next router can
 still deliver takes something that asks it: the hello messages of a routing protocol, which lesson

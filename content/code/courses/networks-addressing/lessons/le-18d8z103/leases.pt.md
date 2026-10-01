@@ -80,8 +80,7 @@ As linhas `option` são o que o ACK trouxe; `dhcp-message-type 5` é o número d
 reinicia o relógio. Esse momento é o `renewal in 291 seconds` que o `dhclient` imprimiu quando
 assumiu o endereço. Se aquele servidor não respondeu até o **rebind**, o cliente manda o pedido por
 broadcast a qualquer servidor que escute. Se ninguém respondeu até o **expire**, o cliente para de
-usar o endereço. Metade e sete oitavos são os padrões do protocolo, da RFC 2131; este cliente
-antecipa o primeiro por um valor aleatório, e é por isso que cada `renewal in` desta aula é um número
+usar o endereço. Metade e sete oitavos são os padrões do protocolo, da RFC 2131. Este cliente antecipa o primeiro por um valor aleatório, e é por isso que cada `renewal in` desta aula é um número
 diferente abaixo de 300 — 291 para o pc1, 283 para a impressora.
 
 Um cliente que terminou de usar um endereço pode devolvê-lo antes:

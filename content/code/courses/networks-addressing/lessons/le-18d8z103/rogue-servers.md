@@ -5,8 +5,8 @@ version: 1
 
 DHCP has no notion of an official server. **A client takes the first offer that arrives, from
 whoever sent it**, and any machine on the subnet can answer a broadcast. A second DHCP server on a
-LAN is most often an accident — a home router plugged in by one of its LAN ports to get a few more
-sockets — and now and then an attack, because whoever answers decides the client's gateway and name
+LAN is most often an accident: a home router plugged in by one of its LAN ports to get a few more
+sockets. Now and then it is an attack, because whoever answers decides the client's gateway and name
 server. Either way, the clients that listen to it are cut off or sent somewhere else.
 
 In the lab, the PC called rogue was turned into a second server that lends 10.20.10.200 upwards and

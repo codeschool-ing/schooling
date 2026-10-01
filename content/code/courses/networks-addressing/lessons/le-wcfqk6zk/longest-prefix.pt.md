@@ -68,14 +68,13 @@ mesmo switch.
 
 O desenho é a regra. As rotas se aninham, porque um prefixo CIDR ou contém o outro ou não encosta
 nele, e um destino cai pelas caixas até a mais interna que o contém. A padrão é a caixa em volta de
-tudo, e por isso só vence quando nada dentro dela vence. **Uma rota mais específica é uma exceção
-recortada de uma mais ampla**, e é assim que elas são usadas: um resumo para um local inteiro com uma
-sub-rede mandada por outro caminho, uma padrão para o mundo com o espaço da própria empresa tratado
-dentro, ou o /24 daqui, desviando uma parte de uma rede por outro roteador.
+tudo, e por isso só vence quando nada dentro dela vence. **Uma rota mais específica é uma exceção recortada de uma mais ampla**, e é assim que elas são
+usadas. Um resumo para um local inteiro pode ter uma sub-rede mandada por outro caminho; uma padrão
+para o mundo pode deixar o espaço da própria empresa para rotas mais específicas; e o /24 daqui
+desvia uma parte de uma rede por outro roteador.
 
 Duas coisas que a regra deixa em aberto. Duas rotas para exatamente o mesmo prefixo têm o mesmo
-tamanho, então o tamanho não escolhe entre elas; as próximas duas seções tratam do que escolhe. E
-roteadores de verdade fazem essa busca para milhões de pacotes por segundo, em tabelas que chegam a
-centenas de milhares de entradas num roteador que carrega as rotas da internet, então guardam a
-tabela em estruturas feitas para achar depressa o prefixo mais longo, em hardware nos maiores. A
+tamanho, então o tamanho não escolhe entre elas; as próximas duas seções tratam do que escolhe. E roteadores de verdade fazem essa busca para milhões de pacotes por segundo. Num roteador que
+carrega as rotas da internet a tabela chega a centenas de milhares de entradas, então ela é guardada
+em estruturas feitas para achar depressa o prefixo mais longo, em hardware nos roteadores maiores. A
 resposta a que chegam é a que foi calculada à mão aqui.

@@ -68,15 +68,13 @@ same switch.
 
 The drawing is the rule. Routes nest, because a CIDR prefix either contains another or does not
 touch it, and a destination falls through the boxes to the innermost one that contains it. The
-default is the box around everything, which is why it only wins when nothing inside it does. **A
-more specific route is an exception carved out of a broader one**, and that is how they are used: a
-summary for a whole site with one subnet sent another way, a default for the world with the
-company's own space handled inside, or the /24 here, steering one part of a network through a
-different router.
+default is the box around everything, which is why it only wins when nothing inside it does. **A more specific route is an exception carved out of a broader one**, and that is how they are
+used. A summary for a whole site can have one subnet sent another way; a default for the world can
+leave the company's own space to more specific routes; and the /24 here steers one part of a network
+through a different router.
 
 Two things the rule leaves open. Two routes for exactly the same prefix are the same length, so
-length cannot choose between them; the next two sections are about what does. And real routers do
-this lookup for millions of packets a second, over tables that run to hundreds of thousands of
-entries on a router carrying the internet's routes, so they keep
-the table in structures built to find the longest match fast, in hardware on the larger ones. The
+length cannot choose between them; the next two sections are about what does. And real routers do this lookup for millions of packets a second. On a router carrying the
+internet's routes the table runs to hundreds of thousands of entries, so it is kept in structures
+built to find the longest match fast, in hardware on the larger routers. The
 answer they reach is the one worked out by hand here.

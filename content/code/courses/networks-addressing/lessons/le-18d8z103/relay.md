@@ -71,8 +71,8 @@ srv shows the other half. The requests arrive as `10.20.10.1.67 > 10.20.10.10.67
 to port 67, with pc4's MAC address still inside: `Request from 02:25:46:c1:26:7d`.
 
 **The replies go to 10.20.20.1, not to the address the requests came from.** Before forwarding, the
-relay wrote its own address on the client's subnet into a field of the request called **giaddr**
-(*gateway IP address*), and the server used that field twice: to know where to send the reply, and
+relay wrote its own address on the client's subnet into a field of the request called **giaddr** (*gateway IP address*).
+The server used that field twice: to know where to send the reply, and
 to choose the scope. 10.20.20.1 falls inside `subnet 10.20.20.0`, so pc4 was offered 10.20.20.100,
 from that scope's pool. This `tcpdump` does not decode the field, which takes `-v`, but the
 destination of the replies is the field, read back.

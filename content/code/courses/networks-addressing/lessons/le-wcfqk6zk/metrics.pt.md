@@ -49,9 +49,8 @@ dela assume.** Quando o cabo voltou, a rota de métrica 100 voltou a ser escolhi
 próxima seção, feita depois, mostra como selecionada.
 
 Esse failover tem um ponto cego, e é o que importa na prática. Ele só dispara quando a porta do
-próprio r1 perde o sinal. Se o ra travasse mas a porta continuasse acesa, ou se o ra e o r1 estivessem
-ligados por um switch, ou se o ra perdesse a sua própria saída mais adiante, o enlace do r1
-continuaria no ar, a rota de métrica 100 continuaria viva, e o r1 continuaria mandando tudo para um
+próprio r1 perde o sinal. Suponha que o ra travasse mas a porta continuasse acesa, ou que o ra e o r1 estivessem ligados por um
+switch, ou que o ra perdesse a sua própria saída mais adiante. O enlace do r1 continuaria no ar, a rota de métrica 100 continuaria viva, e o r1 continuaria mandando tudo para um
 roteador que descarta. **Uma reserva estática protege contra um cabo, não contra um roteador.** Saber
 se o próximo roteador ainda consegue entregar exige algo que pergunte a ele: as mensagens de hello de
 um protocolo de roteamento, que a aula 16 cobre, ou um teste do próprio caminho, que alguns roteadores
