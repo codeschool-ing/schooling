@@ -1,0 +1,620 @@
+[
+  {
+    "id": "ex-505rka5j",
+    "version": 1,
+    "section": "where-it-sits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a layer 4 balancer read before it chooses a server?",
+    "hint": "It never looks inside the stream.",
+    "choices": [
+      {
+        "text": "The request's path and its Host header",
+        "correct": false,
+        "why": "Reading the request is what a layer 7 proxy does."
+      },
+      {
+        "text": "Addresses and ports",
+        "correct": true,
+        "why": "Right. The connection is all it has to go on."
+      },
+      {
+        "text": "The load on each server's processor",
+        "correct": false,
+        "why": "Nothing in a packet says how busy a server is."
+      },
+      {
+        "text": "The client's cookies",
+        "correct": false,
+        "why": "Cookies are inside the HTTP request, which a layer 4 balancer does not read."
+      }
+    ]
+  },
+  {
+    "id": "ex-8te1pnzh",
+    "version": 1,
+    "section": "where-it-sits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a layer 4 balancer carry HTTPS without holding the site's certificate?",
+    "hint": "What would it need the certificate for?",
+    "choices": [
+      {
+        "text": "Balancing HTTPS needs no certificate at any layer",
+        "correct": false,
+        "why": "A layer 7 balancer that reads HTTPS has to hold it and decrypt."
+      },
+      {
+        "text": "It decrypts with the server's public key",
+        "correct": false,
+        "why": "A public key decrypts nothing of the session; and it decrypts nothing at all."
+      },
+      {
+        "text": "It never reads inside the TCP stream",
+        "correct": true,
+        "why": "Right. It forwards encrypted bytes it has no reason to understand."
+      },
+      {
+        "text": "Port 443 is excluded from inspection by the standard",
+        "correct": false,
+        "why": "No standard exempts a port; it simply does not look."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1kmf6cy",
+    "version": 1,
+    "section": "where-it-sits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One site must send requests for /api/ to one group of servers and everything else to another, over HTTPS. What does the balancer need?",
+    "hint": "Where is the path written?",
+    "choices": [
+      {
+        "text": "Layer 7, with the certificate, to read the path",
+        "correct": true,
+        "why": "Right. The path is inside the encrypted request, so it has to be decrypted to be read."
+      },
+      {
+        "text": "Layer 4 with a rule for port 443",
+        "correct": false,
+        "why": "Both groups are on port 443; the port cannot tell them apart."
+      },
+      {
+        "text": "A source hash on the client's address",
+        "correct": false,
+        "why": "The same client asks for /api/ and for pages; its address says nothing about which."
+      },
+      {
+        "text": "Least connections across the two groups",
+        "correct": false,
+        "why": "That chooses by load, not by what was asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-9smrds93",
+    "version": 1,
+    "section": "round-robin",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Six requests under round robin went to web1, web2, web3, web1, web2, web3. What decided that order?",
+    "hint": "Look at the backend.",
+    "choices": [
+      {
+        "text": "Which server had answered fastest",
+        "correct": false,
+        "why": "Round robin measures nothing about the servers."
+      },
+      {
+        "text": "The order the servers are listed in",
+        "correct": true,
+        "why": "Right. It takes the next name in the list, and starts again after the last."
+      },
+      {
+        "text": "Each server's open connections",
+        "correct": false,
+        "why": "That is least connections."
+      },
+      {
+        "text": "A hash of the laptop's address",
+        "correct": false,
+        "why": "A hash would have sent all six to one server."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0gsj5z5",
+    "version": 1,
+    "section": "round-robin",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A round-robin backend has three servers with weights 3, 1 and 1. Out of 100 requests, how many go to the server with weight 3?",
+    "hint": "Its weight over the total.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-e08nbk7m",
+    "version": 1,
+    "section": "round-robin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is plain round robin a poor fit?",
+    "hint": "What does it count?",
+    "choices": [
+      {
+        "text": "When the servers are identical machines",
+        "correct": false,
+        "why": "That is exactly its case: equal servers, equal shares."
+      },
+      {
+        "text": "When there are more than two servers",
+        "correct": false,
+        "why": "The number of servers changes nothing; it just takes longer to go round."
+      },
+      {
+        "text": "When some requests cost far more than others",
+        "correct": true,
+        "why": "Right. It counts requests, not work, so a busy server keeps getting its turn."
+      },
+      {
+        "text": "When the clients are behind NAT",
+        "correct": false,
+        "why": "NAT hurts a source hash; round robin never looks at the client's address."
+      }
+    ]
+  },
+  {
+    "id": "ex-qpz0z87w",
+    "version": 1,
+    "section": "least-connections",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With balance leastconn, web1 received none of the four ordinary requests. Why?",
+    "hint": "What was started 0.3 seconds earlier?",
+    "choices": [
+      {
+        "text": "It was still sending slow.txt",
+        "correct": true,
+        "why": "Right. One open connection against none on the other two."
+      },
+      {
+        "text": "web1 had stopped answering",
+        "correct": false,
+        "why": "It was answering; it was busy with the download."
+      },
+      {
+        "text": "web1's weight was lower than the others'",
+        "correct": false,
+        "why": "The leastconn backend sets no weights at all."
+      },
+      {
+        "text": "Least connections skips the first server in the list",
+        "correct": false,
+        "why": "The list order does not matter to it; the counts do."
+      }
+    ]
+  },
+  {
+    "id": "ex-dn6qw391",
+    "version": 1,
+    "section": "least-connections",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`show stat`, cut to three fields, printed `web,web2,1`. What is the 1?",
+    "hint": "The fifth field is scur.",
+    "choices": [
+      {
+        "text": "Requests web2 has served since HAProxy started",
+        "correct": false,
+        "why": "That total is another field; this one is a count of now."
+      },
+      {
+        "text": "web2's weight in the backend",
+        "correct": false,
+        "why": "The backend sets no weights, and the others print 0."
+      },
+      {
+        "text": "Health checks web2 has failed",
+        "correct": false,
+        "why": "This backend has no checks at all."
+      },
+      {
+        "text": "Connections open to web2 at that moment",
+        "correct": true,
+        "why": "Right. The slow download, which is why the next request goes elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3wz8jsr",
+    "version": 1,
+    "section": "least-connections",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A site serves only small pages, and every connection closes within a millisecond. What changes if it moves from round robin to least connections?",
+    "hint": "What are the counts between requests?",
+    "choices": [
+      {
+        "text": "The fastest server starts getting most of the traffic",
+        "correct": false,
+        "why": "It counts connections, not speed, and with every count at zero there is nothing to prefer."
+      },
+      {
+        "text": "Almost nothing, since the counts sit at zero",
+        "correct": true,
+        "why": "Right. Least connections only differs when some connections outlast others."
+      },
+      {
+        "text": "Every request goes to the first server, since all are tied",
+        "correct": false,
+        "why": "Ties are shared out in turn, which is round robin again."
+      },
+      {
+        "text": "It slows down, because counting costs time",
+        "correct": false,
+        "why": "Keeping a counter per server is negligible next to a request."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wrwd4yd",
+    "version": 1,
+    "section": "least-connections",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Least connections sends a new request to the server with the fewest ___ connections at that moment.",
+    "hint": "scur counts them.",
+    "blanks": [
+      {
+        "accept": [
+          "open",
+          "active",
+          "current"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8rffps0n",
+    "version": 1,
+    "section": "source-hash",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under balance source, four of the five clients landed on web1 and none on web3. Why?",
+    "hint": "Think of a coin thrown five times.",
+    "choices": [
+      {
+        "text": "web1 had the highest weight",
+        "correct": false,
+        "why": "That backend sets no weights."
+      },
+      {
+        "text": "The hash favours lower addresses",
+        "correct": false,
+        "why": "A hash has no favourites; that is the point of it."
+      },
+      {
+        "text": "Five addresses are too few for a hash to spread evenly",
+        "correct": true,
+        "why": "Right. Evenness appears over many addresses, not five."
+      },
+      {
+        "text": "web3 was down during the test",
+        "correct": false,
+        "why": "Nothing was stopped in that run; web3 answered in the next one."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzyy75sz",
+    "version": 1,
+    "section": "source-hash",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two hundred people at head office use a site behind a source-hash balancer. How are they spread over its servers?",
+    "hint": "Which address does the balancer see?",
+    "choices": [
+      {
+        "text": "Evenly, since two hundred is plenty of clients",
+        "correct": false,
+        "why": "Two hundred people, but one address after NAT."
+      },
+      {
+        "text": "All on one server, since they share 203.0.113.2",
+        "correct": true,
+        "why": "Right. The whole office is one client to the hash."
+      },
+      {
+        "text": "By their own addresses, 192.168.10.x",
+        "correct": false,
+        "why": "Those never reach the balancer; hq's NAT rewrites them."
+      },
+      {
+        "text": "At random, a new server for each request",
+        "correct": false,
+        "why": "A hash is the opposite of random: the same input, the same server."
+      }
+    ]
+  },
+  {
+    "id": "ex-4661e9t5",
+    "version": 1,
+    "section": "source-hash",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A fourth server is added to a `balance source` backend. What happens to the clients already using it?",
+    "hint": "The hash is divided by the total weight.",
+    "choices": [
+      {
+        "text": "Most of them move to a different server",
+        "correct": true,
+        "why": "Right. A new divisor gives most addresses a new remainder. hash-type consistent limits that."
+      },
+      {
+        "text": "None move; only new clients reach the fourth",
+        "correct": false,
+        "why": "The balancer keeps no memory of who went where; it recomputes every time."
+      },
+      {
+        "text": "They all move to the new server",
+        "correct": false,
+        "why": "The new server gets its share, a quarter, not everybody."
+      },
+      {
+        "text": "Only web1's clients move",
+        "correct": false,
+        "why": "The remainder changes for addresses on every server."
+      }
+    ]
+  },
+  {
+    "id": "ex-9zttn5d8",
+    "version": 1,
+    "section": "source-hash",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each client to the address lb1 hashes for it.",
+    "hint": "Each office and home has one public address.",
+    "pairs": [
+      {
+        "left": "laptop, at head office",
+        "right": "203.0.113.2"
+      },
+      {
+        "left": "remote, at home",
+        "right": "198.51.100.77"
+      },
+      {
+        "left": "till, at the branch",
+        "right": "198.51.100.2"
+      }
+    ],
+    "right_distractors": [
+      "192.168.10.20"
+    ]
+  },
+  {
+    "id": "ex-6q0d0q3j",
+    "version": 1,
+    "section": "persistence",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did HAProxy add to its first reply to a client with no cookie?",
+    "hint": "grep -i set-cookie.",
+    "choices": [
+      {
+        "text": "The chosen server's IP address, in a header",
+        "correct": false,
+        "why": "The cookie's value is a label, w1, and tells nothing about the network."
+      },
+      {
+        "text": "A cookie saying SERVERID=w1",
+        "correct": true,
+        "why": "Right. The label of the server round robin had just picked."
+      },
+      {
+        "text": "A login session id from the application",
+        "correct": false,
+        "why": "The application knows nothing about it; insert means HAProxy writes it."
+      },
+      {
+        "text": "Nothing until the client asked for a cookie",
+        "correct": false,
+        "why": "A client never asks; the balancer sets it on the first reply."
+      }
+    ]
+  },
+  {
+    "id": "ex-62h0mpr4",
+    "version": 1,
+    "section": "persistence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After web3's nginx stopped, the client with SERVERID=w3 got a 503 while web1 and web2 were running. Why?",
+    "hint": "What could HAProxy know?",
+    "choices": [
+      {
+        "text": "web1 and web2 were full",
+        "correct": false,
+        "why": "They were idle; the request was never offered to them."
+      },
+      {
+        "text": "The cookie had expired",
+        "correct": false,
+        "why": "It was sent by hand with -b and was obeyed exactly."
+      },
+      {
+        "text": "No health check had told HAProxy web3 was gone",
+        "correct": true,
+        "why": "Right. It sent the request where the cookie said and had nowhere else it was allowed to go."
+      },
+      {
+        "text": "A 503 is what redispatch returns",
+        "correct": false,
+        "why": "Redispatch was not configured yet; once it was, the client got web1."
+      }
+    ]
+  },
+  {
+    "id": "ex-5yn4xkqs",
+    "version": 1,
+    "section": "persistence",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With checks and redispatch, the pinned client was moved to web1. What became of the basket the application kept in web3's memory?",
+    "hint": "What does the cookie carry?",
+    "choices": [
+      {
+        "text": "HAProxy copied it across to web1",
+        "correct": false,
+        "why": "A balancer moves requests, never a server's memory."
+      },
+      {
+        "text": "It travels inside the SERVERID cookie",
+        "correct": false,
+        "why": "The cookie holds two characters, w1, and nothing else."
+      },
+      {
+        "text": "It comes back once web3 is started again",
+        "correct": false,
+        "why": "A restarted process starts with empty memory, and the client now carries w1 anyway."
+      },
+      {
+        "text": "It was lost with web3",
+        "correct": true,
+        "why": "Right. That is why state belongs in a store every server shares."
+      }
+    ]
+  },
+  {
+    "id": "ex-ks4gq64f",
+    "version": 1,
+    "section": "persistence",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which lines of the fixed backend were needed to move the pinned client instead of failing it? Choose all that apply.",
+    "hint": "Two lines were new.",
+    "choices": [
+      {
+        "text": "option redispatch",
+        "correct": true,
+        "why": "Right: it allows another server when the named one is down."
+      },
+      {
+        "text": "balance roundrobin",
+        "correct": false,
+        "why": "It was there before the 503 as well."
+      },
+      {
+        "text": "check inter 1s, on each server",
+        "correct": true,
+        "why": "Right: without checks HAProxy cannot know web3 is down."
+      },
+      {
+        "text": "cookie SERVERID insert indirect nocache",
+        "correct": false,
+        "why": "That line is what pins the client; it was there before the 503 too."
+      }
+    ]
+  },
+  {
+    "id": "ex-bmjdnsqs",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With checks and redispatch in place, put in order what happens when the pinned server dies.",
+    "hint": "The balancer has to find out first.",
+    "items": [
+      "web3's nginx stops",
+      "A health check fails and web3 is marked down",
+      "A request arrives carrying SERVERID=w3",
+      "HAProxy redispatches it to web1",
+      "The reply sets SERVERID=w1"
+    ],
+    "trap": "The check has to fail before the request comes, or the request meets the dead server as the 503 did."
+  },
+  {
+    "id": "ex-8gc43gcs",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each balance setting to what it decides by.",
+    "hint": "Three rules, three pieces of information.",
+    "pairs": [
+      {
+        "left": "roundrobin",
+        "right": "The next name in the list"
+      },
+      {
+        "left": "leastconn",
+        "right": "The fewest connections open now"
+      },
+      {
+        "left": "source",
+        "right": "A hash of the client's address"
+      }
+    ],
+    "right_distractors": [
+      "Each server's response time"
+    ]
+  },
+  {
+    "id": "ex-7aajnc8p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A video service streams sessions of very different lengths from three equal servers, to viewers all over the internet. Which balance setting fits best?",
+    "hint": "Long and uneven.",
+    "choices": [
+      {
+        "text": "roundrobin, since the servers are equal",
+        "correct": false,
+        "why": "Equal servers, unequal work: turns would pile long streams on whoever draws them."
+      },
+      {
+        "text": "leastconn",
+        "correct": true,
+        "why": "Right. It sends each new session to the server with the fewest still running."
+      },
+      {
+        "text": "source, to keep each viewer on one server",
+        "correct": false,
+        "why": "Viewers behind carrier NAT share addresses, and whole groups would land together."
+      },
+      {
+        "text": "roundrobin with weight 2 on the first server",
+        "correct": false,
+        "why": "The servers are equal, so a weight would only unbalance them."
+      }
+    ]
+  }
+]

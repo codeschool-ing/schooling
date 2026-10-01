@@ -1,0 +1,458 @@
+{
+  "ex-nnw6bp7q": {
+    "prompt": "Um escritório acrescenta um segundo roteador, hq2, na mesma LAN de hq e não muda mais nada. Por que isso não protege o escritório quando hq morre?",
+    "hint": "Leia a tabela de rotas do laptop.",
+    "choices": [
+      {
+        "text": "hq2 precisa reiniciar para perceber",
+        "why": "hq2 não tem o que perceber: ninguém manda nada para ele."
+      },
+      {
+        "text": "Os hosts só usam o gateway deles",
+        "why": "Isso. default via 192.168.10.1, e hq2 não é 192.168.10.1."
+      },
+      {
+        "text": "Dois roteadores numa LAN causam um loop",
+        "why": "Roteadores numa LAN são comuns; loops são um problema de switching, aula 20 de networks-addressing."
+      },
+      {
+        "text": "O provedor só aceita tráfego de hq",
+        "why": "hq2 tem o próprio enlace e endereço no provedor, 203.0.113.3."
+      }
+    ]
+  },
+  "ex-cjnq7ty5": {
+    "prompt": "Vários grupos VRRP podem dividir uma LAN porque cada um tem o próprio número, o ___, que é 10 neste laboratório.",
+    "hint": "virtual_router_id na configuração.",
+    "blanks": [
+      {
+        "accept": [
+          "VRID",
+          "virtual router id",
+          "virtual_router_id"
+        ]
+      }
+    ]
+  },
+  "ex-q5a155h5": {
+    "prompt": "Ligue cada linha do keepalived.conf de hq ao que ela faz.",
+    "hint": "Uma delas é sobre o outro enlace.",
+    "pairs": [
+      {
+        "left": "virtual_router_id 10",
+        "right": "Dá nome ao grupo nesta LAN"
+      },
+      {
+        "left": "priority 150",
+        "right": "Decide quem ganha a eleição"
+      },
+      {
+        "left": "advert_int 1",
+        "right": "Um anúncio por segundo"
+      },
+      {
+        "left": "track_interface eth1",
+        "right": "Abre mão do endereço se o enlace do provedor cair"
+      }
+    ],
+    "right_distractors": [
+      "Criptografa os anúncios"
+    ]
+  },
+  "ex-ygcgdqm0": {
+    "prompt": "O log de hq2 diz que ele virou MASTER às 18:10:58 e BACKUP de novo às 18:10:59. Por que ele foi master naquele segundo?",
+    "hint": "Os dois esperaram; quem começou primeiro?",
+    "choices": [
+      {
+        "text": "Começou primeiro, então a espera dele acabou primeiro",
+        "why": "Isso. Um segundo depois a espera de hq também acabou, e 150 ganhou de 100."
+      },
+      {
+        "text": "hq estava mal configurado naquele segundo",
+        "why": "Nada no arquivo de hq mudou; só o tempo passou."
+      },
+      {
+        "text": "Uma prioridade menor ganha a primeira eleição",
+        "why": "A prioridade favorece o número maior; hq2 ganhou porque ninguém mais estava falando ainda."
+      },
+      {
+        "text": "O laptop escolheu hq2 mandando para ele primeiro",
+        "why": "Hosts não participam da eleição."
+      }
+    ]
+  },
+  "ex-9anwj8rs": {
+    "prompt": "Um backup com prioridade 100 e intervalo de anúncio de 1 s espera três intervalos mais (256 − prioridade)/256 s. Quantos segundos são, com duas casas decimais?",
+    "hint": "3 + 156/256.",
+    "unit": "s"
+  },
+  "ex-dxhmztcm": {
+    "prompt": "Para onde vão os anúncios VRRP do master?",
+    "hint": "O tcpdump no laptop os viu.",
+    "choices": [
+      {
+        "text": "Para o endereço de hq2, 192.168.10.3",
+        "why": "Não são endereçados a um roteador; qualquer número de backups pode estar ouvindo."
+      },
+      {
+        "text": "Para o roteador do provedor",
+        "why": "Ficam na LAN que protegem."
+      },
+      {
+        "text": "Um grupo multicast, 224.0.0.18",
+        "why": "Isso. É por isso que o laptop também conseguiu capturá-los."
+      },
+      {
+        "text": "192.168.10.1, o endereço virtual",
+        "why": "O master tem esse endereço; mandar para ele seria falar sozinho."
+      }
+    ]
+  },
+  "ex-hgg89gjv": {
+    "prompt": "Os anúncios dizem authtype none, então um host na LAN poderia tomar o gateway com prioridade maior. Qual é a defesa que esta aula recomenda?",
+    "hint": "O VRRPv3 tirou a autenticação de vez.",
+    "choices": [
+      {
+        "text": "Configurar uma senha de VRRP",
+        "why": "Ela viaja em texto claro na mesma LAN, e é por isso que a versão 3 a tirou."
+      },
+      {
+        "text": "Dar a hq a prioridade máxima, 255",
+        "why": "Um intruso também pode mandar 255, e um empate se resolve pelo endereço, não pela confiança."
+      },
+      {
+        "text": "Anunciar mais rápido que qualquer intruso",
+        "why": "O intervalo não diz nada sobre quem mandou um anúncio."
+      },
+      {
+        "text": "Manter hosts estranhos fora do segmento",
+        "why": "Isso. Uma VLAN própria, ou filtros no switch que só aceitam VRRP das portas dos roteadores."
+      }
+    ]
+  },
+  "ex-nhjvzma5": {
+    "prompt": "A entrada ARP do laptop para 192.168.10.1 mostra 52:54:00:a8:0a:02. Que endereço é esse?",
+    "hint": "Compare com o MAC que o padrão do VRRP pede.",
+    "choices": [
+      {
+        "text": "O endereço de hardware do próprio hq, o MAC real",
+        "why": "Isso. O modo padrão do keepalived responde com o MAC real; use_vmac não está ligado."
+      },
+      {
+        "text": "O MAC virtual do VRRP para o grupo 10",
+        "why": "Esse seria 00:00:5e:00:01:0a."
+      },
+      {
+        "text": "O MAC do próprio laptop",
+        "why": "O do laptop termina em :14."
+      },
+      {
+        "text": "Um MAC dividido por hq e hq2",
+        "why": "hq2 tem o dele, :03, e a entrada muda para ele depois do failover."
+      }
+    ]
+  },
+  "ex-npbwsnvc": {
+    "prompt": "Uma LAN tem três backups com prioridades 200, 150 e 100, todos ouvindo o mesmo master. O master morre. Qual assume, e por que esse?",
+    "hint": "(256 − prioridade) / 256.",
+    "choices": [
+      {
+        "text": "O de 100: o mais baixo age primeiro",
+        "why": "O skew dele é o mais longo, 156/256 de segundo, então ele fala por último."
+      },
+      {
+        "text": "O que ligou primeiro",
+        "why": "A ordem de início importou na inicialização, quando não havia master; aqui os três estavam esperando."
+      },
+      {
+        "text": "O de 200, que tem o skew mais curto dos três",
+        "why": "Isso. Ele fala primeiro, e os outros dois ouvem uma prioridade maior e continuam backups."
+      },
+      {
+        "text": "Os três, até uma votação",
+        "why": "O VRRP não tem votação; os timers fazem um deles ser o primeiro."
+      }
+    ]
+  },
+  "ex-96e4k44k": {
+    "prompt": "A resposta 13 chegou em 1790629866.652789 e a 29 em 1790629869.916964. Quanto durou o buraco, em segundos, com três casas decimais?",
+    "hint": "Subtraia.",
+    "unit": "s"
+  },
+  "ex-mb02q84s": {
+    "prompt": "O master down interval de hq2 é de cerca de 3,61 s, mas o ping mediu um buraco de 3,264 s. Por que o buraco é menor?",
+    "hint": "Quando hq2 começa a contar?",
+    "choices": [
+      {
+        "text": "O keepalived arredonda o intervalo para segundos inteiros",
+        "why": "O log imprime segundos inteiros; o timer não roda neles."
+      },
+      {
+        "text": "hq2 contava desde o último anúncio de hq",
+        "why": "Isso. Esse anúncio saiu até um segundo antes de o cabo sair."
+      },
+      {
+        "text": "O ping do laptop ficou mais rápido durante a falha",
+        "why": "Os pings saíram a cada 0,2 s o tempo todo; só as respostas pararam."
+      },
+      {
+        "text": "hq avisou hq2 de que estava saindo",
+        "why": "O cabo da LAN dele estava fora: nada que hq mandasse chegaria a hq2."
+      }
+    ]
+  },
+  "ex-akk4dzcp": {
+    "prompt": "Como sabemos que nada dos 3,264 segundos foi atraso da rede?",
+    "hint": "Olhe a linha rtt.",
+    "choices": [
+      {
+        "text": "O ping não imprimiu erros",
+        "why": "Imprimiu quinze linhas sem resposta; essa não é a evidência."
+      },
+      {
+        "text": "Tempos de failover são iguais em toda rede",
+        "why": "Dependem dos timers e de quando o master morreu."
+      },
+      {
+        "text": "Cada resposta levou menos de 0,5 ms",
+        "why": "Isso. De 0,078 a 0,493 ms: um computador falando com ele mesmo. O buraco é o VRRP esperando."
+      },
+      {
+        "text": "O laptop e web1 dividem um switch",
+        "why": "Não dividem; web1 está no data center, a dois roteadores de distância."
+      }
+    ]
+  },
+  "ex-qc7ms99g": {
+    "prompt": "Depois do failover, o que tinha mudado no laptop?",
+    "hint": "ip neigh show 192.168.10.1.",
+    "choices": [
+      {
+        "text": "O gateway padrão virou 192.168.10.3",
+        "why": "O endereço do gateway continua .1; essa é a ideia toda."
+      },
+      {
+        "text": "O MAC do .1, agora o de hq2",
+        "why": "Isso. :02 virou :03, e o laptop não fez nada para isso."
+      },
+      {
+        "text": "O próprio endereço IP",
+        "why": "O laptop continua 192.168.10.20."
+      },
+      {
+        "text": "Nada: o VRRP é invisível aos hosts",
+        "why": "O endereço é o mesmo, mas no modo padrão do keepalived o MAC por trás dele não."
+      }
+    ]
+  },
+  "ex-m4692xsz": {
+    "prompt": "hq mandou em broadcast `Request who-has 192.168.10.1 tell 192.168.10.1` duas vezes ao assumir. Para que serve esse pacote?",
+    "hint": "Ninguém deve responder a ele.",
+    "choices": [
+      {
+        "text": "Conferir que ninguém mais usa o .1",
+        "why": "hq2 tinha o .1 momentos antes, e o pacote não espera a resposta dele."
+      },
+      {
+        "text": "Pedir o MAC ao laptop",
+        "why": "Ele pergunta sobre 192.168.10.1, não sobre o laptop."
+      },
+      {
+        "text": "Apontar o ARP dos hosts para hq",
+        "why": "Isso. Um ARP gratuito: os hosts atualizam a entrada para o endereço de hardware de quem mandou."
+      },
+      {
+        "text": "Um anúncio VRRP em forma de ARP",
+        "why": "Os anúncios vão para 224.0.0.18 como VRRP; isto é ARP puro."
+      }
+    ]
+  },
+  "ex-33baa71g": {
+    "prompt": "Ponha em ordem as linhas do log de hq desta aula.",
+    "hint": "A tarde dele: no comando, cabo fora, cabo de volta, no comando.",
+    "items": [
+      "Entering BACKUP STATE (init)",
+      "Entering MASTER STATE, às 18:10:59",
+      "Entering FAULT STATE, quando o cabo da LAN sai",
+      "Entering BACKUP STATE, quando o cabo volta",
+      "Entering MASTER STATE, quatro segundos depois"
+    ],
+    "trap": "Um roteador que volta vem primeiro como backup; só assume depois de escutar."
+  },
+  "ex-22r2x3db": {
+    "prompt": "Suponha que o track_interface tivesse ficado de fora e o enlace de hq com o provedor caísse com o cabo da LAN bom. O que o escritório vê?",
+    "hint": "hq continua ganhando a eleição.",
+    "choices": [
+      {
+        "text": "Fica sem internet",
+        "why": "Isso. hq continua anunciando 150 no eth0 e fica com um endereço com o qual não pode fazer nada, enquanto hq2 espera com um enlace funcionando."
+      },
+      {
+        "text": "Um failover normal para hq2 depois de uns 3,6 s",
+        "why": "hq2 só assume com silêncio, e hq continua anunciando."
+      },
+      {
+        "text": "Tráfego dividido entre os dois roteadores",
+        "why": "Só o master encaminha pelo endereço virtual."
+      },
+      {
+        "text": "Internet mais lenta pela LAN",
+        "why": "Não há caminho mais lento por hq; ele não tem saída nenhuma."
+      }
+    ]
+  },
+  "ex-7knndc3z": {
+    "prompt": "O que a preempção custa ao escritório quando o roteador que falhou volta?",
+    "hint": "Conte as trocas.",
+    "choices": [
+      {
+        "text": "Nada, porque a volta é instantânea",
+        "why": "É curta, não é de graça; este laboratório não a mediu."
+      },
+      {
+        "text": "Uma segunda troca, mais curta",
+        "why": "Isso. Vale a pena se o roteador que volta é melhor, e não se os dois forem iguais."
+      },
+      {
+        "text": "O escritório perde o gateway até alguém intervir",
+        "why": "A preempção é automática; ninguém precisa intervir."
+      },
+      {
+        "text": "hq2 entra em FAULT e precisa ser reiniciado",
+        "why": "hq2 simplesmente volta a BACKUP quando ouve uma prioridade maior."
+      }
+    ]
+  },
+  "ex-c71tbd5n": {
+    "prompt": "Nesta aula, quais eventos fizeram hq abrir mão de 192.168.10.1? Marque todos que se aplicam.",
+    "hint": "Procure FAULT no log dele.",
+    "choices": [
+      {
+        "text": "O cabo da LAN dele foi puxado",
+        "why": "Isso. FAULT às 18:11:06."
+      },
+      {
+        "text": "O enlace com o provedor, eth1, caiu",
+        "why": "Isso. Netlink reports eth1 down, depois FAULT, às 18:11:16."
+      },
+      {
+        "text": "hq2 mandou uma prioridade maior",
+        "why": "A prioridade de hq2 é 100, abaixo dos 150 de hq."
+      },
+      {
+        "text": "A entrada ARP do laptop ficou STALE",
+        "why": "O cache de um host não tem voz na eleição."
+      }
+    ]
+  },
+  "ex-rfam30cm": {
+    "prompt": "Quais são os timers padrão do HSRP?",
+    "hint": "São mais lentos que os do VRRP.",
+    "choices": [
+      {
+        "text": "Anúncio a cada 1 s, morto depois de uns 3,6 s",
+        "why": "Esses são os do VRRP, como esta aula mediu."
+      },
+      {
+        "text": "Hello a cada 3 s, morto depois de 10 s",
+        "why": "Isso. Um buraco em torno de dez segundos quando ninguém os ajustou."
+      },
+      {
+        "text": "Hello a cada 10 s, morto depois de 30 s",
+        "why": "Três vezes mais lento que os padrões do HSRP."
+      },
+      {
+        "text": "Nenhum: ele reage ao estado do enlace",
+        "why": "Um roteador morto num enlace que funciona não muda estado de enlace; hellos são necessários."
+      }
+    ]
+  },
+  "ex-e3myvwy7": {
+    "prompt": "A tabela ARP de um host mostra 0000.0c07.ac0a para o gateway padrão. O que isso diz?",
+    "hint": "Os dois últimos dígitos hexadecimais são um grupo.",
+    "choices": [
+      {
+        "text": "Grupo VRRP 10, no modo padrão do keepalived",
+        "why": "O modo padrão do keepalived mostra o MAC real do roteador, e o virtual do VRRP começa com 00-00-5E."
+      },
+      {
+        "text": "O gateway é um encaminhador GLBP",
+        "why": "O GLBP distribui MACs num formato próprio, um por encaminhador."
+      },
+      {
+        "text": "O gateway é o grupo HSRP 10",
+        "why": "Isso. 0000.0c07.ac seguido do grupo em hexadecimal; 0a é 10."
+      },
+      {
+        "text": "O cabo do gateway está com defeito",
+        "why": "Um MAC diz quem é dono de um endereço, não se um cabo está bom."
+      }
+    ]
+  },
+  "ex-939nq4ph": {
+    "prompt": "O que o GLBP faz que um grupo VRRP não consegue?",
+    "hint": "Um endereço, vários roteadores encaminhando.",
+    "choices": [
+      {
+        "text": "Faz failover mais rápido, com hellos abaixo de um segundo por padrão",
+        "why": "Os padrões dele são os do HSRP, 3 s e 10 s, mais lentos que os do VRRP."
+      },
+      {
+        "text": "Autenticar os roteadores entre si",
+        "why": "O que o distingue é a divisão de carga, não a autenticação."
+      },
+      {
+        "text": "Dar a cada host um endereço de gateway diferente",
+        "why": "Esse é o truque dos dois grupos; o GLBP mantém um endereço para todos."
+      },
+      {
+        "text": "Espalhar os hosts entre roteadores com um só endereço",
+        "why": "Isso. A resposta ARP muda por host, um MAC virtual diferente a cada vez."
+      }
+    ]
+  },
+  "ex-m6p3rs4j": {
+    "prompt": "Os telefones de uma central de atendimento derrubam a chamada depois de dois segundos de silêncio. O par de gateways roda keepalived com a configuração desta aula. As chamadas sobrevivem a uma falha de gateway?",
+    "hint": "Compare o buraco medido com dois segundos.",
+    "choices": [
+      {
+        "text": "Sim, o VRRP foi feito para voz",
+        "why": "Foi feito para gateways; os timers decidem o que sobrevive."
+      },
+      {
+        "text": "Não: esta aula mediu 3,264 s",
+        "why": "Isso. E o buraco vai até uns 3,6 s; eles precisam de timers abaixo de um segundo."
+      },
+      {
+        "text": "Sim, se os telefones usarem TCP",
+        "why": "A voz vai em UDP, e retransmitir fala três segundos atrasada não ajuda uma conversa."
+      },
+      {
+        "text": "Só se a preempção estiver desligada",
+        "why": "A preempção rege a volta, não a falha em si."
+      }
+    ]
+  },
+  "ex-5drt98gv": {
+    "prompt": "hq é master. O lado da LAN está bom, o enlace do provedor está morto, e o escritório está sem internet embora hq2 esteja saudável. Qual mudança faz o escritório se recuperar sozinho da próxima vez?",
+    "hint": "hq precisa parar de ganhar.",
+    "choices": [
+      {
+        "text": "Um advert_int mais curto",
+        "why": "hq só anunciaria a própria inutilidade com mais frequência."
+      },
+      {
+        "text": "use_vmac nos dois roteadores, para os hosts terem um MAC só",
+        "why": "Isso muda o MAC que os hosts aprendem, não quem é master."
+      },
+      {
+        "text": "Rastrear a interface do provedor em hq",
+        "why": "Isso. track_interface eth1 põe hq em FAULT, e hq2 pega o endereço, como esta aula mostrou."
+      },
+      {
+        "text": "nopreempt em hq2",
+        "why": "Não é hq2 quem precisa mudar de ideia."
+      }
+    ]
+  }
+}

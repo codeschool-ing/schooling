@@ -1,0 +1,426 @@
+{
+  "ex-505rka5j": {
+    "prompt": "O que um balanceador de camada 4 lê antes de escolher um servidor?",
+    "hint": "Ele nunca olha dentro do fluxo.",
+    "choices": [
+      {
+        "text": "O caminho da requisição e o cabeçalho Host",
+        "why": "Ler a requisição é o que um proxy de camada 7 faz."
+      },
+      {
+        "text": "Endereços e portas",
+        "why": "Isso. A conexão é tudo o que ele tem para decidir."
+      },
+      {
+        "text": "A carga do processador de cada servidor",
+        "why": "Nada num pacote diz o quanto um servidor está ocupado."
+      },
+      {
+        "text": "Os cookies do cliente",
+        "why": "Os cookies ficam dentro da requisição HTTP, que um balanceador de camada 4 não lê."
+      }
+    ]
+  },
+  "ex-8te1pnzh": {
+    "prompt": "Por que um balanceador de camada 4 consegue levar HTTPS sem ter o certificado do site?",
+    "hint": "Para que ele precisaria do certificado?",
+    "choices": [
+      {
+        "text": "Balancear HTTPS não precisa de certificado em camada nenhuma",
+        "why": "Um balanceador de camada 7 que lê HTTPS precisa tê-lo e decifrar."
+      },
+      {
+        "text": "Ele decifra com a chave pública do servidor",
+        "why": "Uma chave pública não decifra nada da sessão; e ele não decifra nada."
+      },
+      {
+        "text": "Ele nunca lê dentro do fluxo TCP",
+        "why": "Isso. Ele encaminha bytes cifrados que não tem motivo para entender."
+      },
+      {
+        "text": "A porta 443 é excluída da inspeção pelo padrão",
+        "why": "Nenhum padrão isenta uma porta; ele só não olha."
+      }
+    ]
+  },
+  "ex-c1kmf6cy": {
+    "prompt": "Um site precisa mandar as requisições de /api/ para um grupo de servidores e todo o resto para outro, por HTTPS. Do que o balanceador precisa?",
+    "hint": "Onde o caminho está escrito?",
+    "choices": [
+      {
+        "text": "Camada 7, com o certificado, para ler o caminho",
+        "why": "Isso. O caminho está dentro da requisição cifrada, então precisa ser decifrado para ser lido."
+      },
+      {
+        "text": "Camada 4 com uma regra para a porta 443",
+        "why": "Os dois grupos estão na porta 443; a porta não os distingue."
+      },
+      {
+        "text": "Um hash de origem no endereço do cliente",
+        "why": "O mesmo cliente pede /api/ e páginas; o endereço dele não diz qual."
+      },
+      {
+        "text": "Least connections entre os dois grupos",
+        "why": "Isso escolhe pela carga, não pelo que foi pedido."
+      }
+    ]
+  },
+  "ex-9smrds93": {
+    "prompt": "Seis requisições em round robin foram para web1, web2, web3, web1, web2, web3. O que decidiu essa ordem?",
+    "hint": "Olhe o backend.",
+    "choices": [
+      {
+        "text": "Qual servidor tinha respondido mais rápido",
+        "why": "O round robin não mede nada dos servidores."
+      },
+      {
+        "text": "A ordem em que os servidores estão listados",
+        "why": "Isso. Pega o próximo nome da lista e recomeça depois do último."
+      },
+      {
+        "text": "As conexões abertas de cada servidor",
+        "why": "Isso é least connections."
+      },
+      {
+        "text": "Um hash do endereço do laptop",
+        "why": "Um hash teria mandado as seis para um servidor só."
+      }
+    ]
+  },
+  "ex-w0gsj5z5": {
+    "prompt": "Um backend em round robin tem três servidores com pesos 3, 1 e 1. De 100 requisições, quantas vão para o servidor de peso 3?",
+    "hint": "O peso dele sobre o total.",
+    "unit": "requisições"
+  },
+  "ex-e08nbk7m": {
+    "prompt": "Quando o round robin simples é uma escolha ruim?",
+    "hint": "O que ele conta?",
+    "choices": [
+      {
+        "text": "Quando os servidores são máquinas idênticas",
+        "why": "Esse é justamente o caso dele: servidores iguais, partes iguais."
+      },
+      {
+        "text": "Quando há mais de dois servidores",
+        "why": "O número de servidores não muda nada; a volta só fica mais longa."
+      },
+      {
+        "text": "Quando algumas requisições custam muito mais que outras",
+        "why": "Isso. Ele conta requisições, não trabalho, então um servidor ocupado continua recebendo a vez."
+      },
+      {
+        "text": "Quando os clientes estão atrás de NAT",
+        "why": "O NAT atrapalha um hash de origem; o round robin nunca olha o endereço do cliente."
+      }
+    ]
+  },
+  "ex-qpz0z87w": {
+    "prompt": "Com balance leastconn, web1 não recebeu nenhuma das quatro requisições comuns. Por quê?",
+    "hint": "O que começou 0,3 segundo antes?",
+    "choices": [
+      {
+        "text": "Ainda estava enviando o slow.txt",
+        "why": "Isso. Uma conexão aberta contra nenhuma nos outros dois."
+      },
+      {
+        "text": "web1 tinha parado de responder",
+        "why": "Estava respondendo; estava ocupado com o download."
+      },
+      {
+        "text": "O peso de web1 era menor que o dos outros",
+        "why": "O backend com leastconn não define peso nenhum."
+      },
+      {
+        "text": "O least connections pula o primeiro servidor da lista",
+        "why": "A ordem da lista não importa para ele; as contas é que importam."
+      }
+    ]
+  },
+  "ex-dn6qw391": {
+    "prompt": "O `show stat`, cortado em três campos, imprimiu `web,web2,1`. O que é o 1?",
+    "hint": "O quinto campo é o scur.",
+    "choices": [
+      {
+        "text": "Requisições que web2 atendeu desde que o HAProxy subiu",
+        "why": "Esse total é outro campo; este é uma contagem de agora."
+      },
+      {
+        "text": "O peso de web2 no backend",
+        "why": "O backend não define pesos, e os outros imprimem 0."
+      },
+      {
+        "text": "Health checks em que web2 falhou",
+        "why": "Este backend não tem verificação nenhuma."
+      },
+      {
+        "text": "Conexões abertas com web2 naquele momento",
+        "why": "Isso. O download lento, e é por isso que a próxima requisição vai para outro lugar."
+      }
+    ]
+  },
+  "ex-v3wz8jsr": {
+    "prompt": "Um site serve só páginas pequenas, e toda conexão fecha em um milissegundo. O que muda se ele trocar round robin por least connections?",
+    "hint": "Quanto valem as contas entre uma requisição e outra?",
+    "choices": [
+      {
+        "text": "O servidor mais rápido passa a receber a maior parte do tráfego",
+        "why": "Ele conta conexões, não velocidade, e com todas as contas em zero não há o que preferir."
+      },
+      {
+        "text": "Quase nada, já que as contas ficam em zero",
+        "why": "Isso. O least connections só faz diferença quando algumas conexões duram mais que outras."
+      },
+      {
+        "text": "Toda requisição vai para o primeiro servidor, já que todos empatam",
+        "why": "Os empates são repartidos em rodízio, o que é round robin de novo."
+      },
+      {
+        "text": "Fica mais lento, porque contar custa tempo",
+        "why": "Manter um contador por servidor é desprezível perto de uma requisição."
+      }
+    ]
+  },
+  "ex-1wrwd4yd": {
+    "prompt": "O least connections manda uma requisição nova para o servidor com menos conexões ___ naquele momento.",
+    "hint": "O scur as conta.",
+    "blanks": [
+      {
+        "accept": [
+          "abertas",
+          "ativas",
+          "atuais"
+        ]
+      }
+    ]
+  },
+  "ex-8rffps0n": {
+    "prompt": "Com balance source, quatro dos cinco clientes caíram em web1 e nenhum em web3. Por quê?",
+    "hint": "Pense numa moeda lançada cinco vezes.",
+    "choices": [
+      {
+        "text": "web1 tinha o maior peso",
+        "why": "Esse backend não define pesos."
+      },
+      {
+        "text": "O hash favorece endereços menores",
+        "why": "Um hash não tem favoritos; é para isso que ele serve."
+      },
+      {
+        "text": "Cinco endereços são poucos para um hash espalhar por igual",
+        "why": "Isso. O equilíbrio aparece com muitos endereços, não com cinco."
+      },
+      {
+        "text": "web3 estava fora do ar durante o teste",
+        "why": "Nada foi parado nessa rodada; web3 respondeu na seguinte."
+      }
+    ]
+  },
+  "ex-yzyy75sz": {
+    "prompt": "Duzentas pessoas na matriz usam um site atrás de um balanceador com hash de origem. Como elas se distribuem entre os servidores?",
+    "hint": "Qual endereço o balanceador vê?",
+    "choices": [
+      {
+        "text": "Por igual, já que duzentos são clientes de sobra",
+        "why": "Duzentas pessoas, mas um endereço só depois do NAT."
+      },
+      {
+        "text": "Todas num servidor, já que dividem 203.0.113.2",
+        "why": "Isso. O escritório inteiro é um cliente só para o hash."
+      },
+      {
+        "text": "Pelos próprios endereços, 192.168.10.x",
+        "why": "Esses nunca chegam ao balanceador; o NAT de hq os reescreve."
+      },
+      {
+        "text": "Ao acaso, um servidor novo a cada requisição",
+        "why": "Um hash é o contrário de aleatório: a mesma entrada, o mesmo servidor."
+      }
+    ]
+  },
+  "ex-4661e9t5": {
+    "prompt": "Um quarto servidor entra num backend com `balance source`. O que acontece com os clientes que já o usam?",
+    "hint": "O hash é dividido pelo peso total.",
+    "choices": [
+      {
+        "text": "A maioria muda de servidor",
+        "why": "Isso. Um divisor novo dá um resto novo à maioria dos endereços. O hash-type consistent limita isso."
+      },
+      {
+        "text": "Nenhum muda; só clientes novos chegam ao quarto",
+        "why": "O balanceador não guarda quem foi para onde; recalcula toda vez."
+      },
+      {
+        "text": "Todos passam para o servidor novo",
+        "why": "O servidor novo fica com a parte dele, um quarto, não com todo mundo."
+      },
+      {
+        "text": "Só os clientes de web1 mudam",
+        "why": "O resto muda para endereços de todos os servidores."
+      }
+    ]
+  },
+  "ex-9zttn5d8": {
+    "prompt": "Ligue cada cliente ao endereço que lb1 usa no hash dele.",
+    "hint": "Cada escritório e cada casa tem um endereço público.",
+    "pairs": [
+      {
+        "left": "laptop, na matriz",
+        "right": "203.0.113.2"
+      },
+      {
+        "left": "remote, em casa",
+        "right": "198.51.100.77"
+      },
+      {
+        "left": "till, na filial",
+        "right": "198.51.100.2"
+      }
+    ],
+    "right_distractors": [
+      "192.168.10.20"
+    ]
+  },
+  "ex-6q0d0q3j": {
+    "prompt": "O que o HAProxy acrescentou à primeira resposta para um cliente sem cookie?",
+    "hint": "grep -i set-cookie.",
+    "choices": [
+      {
+        "text": "O endereço IP do servidor escolhido, num cabeçalho",
+        "why": "O valor do cookie é um rótulo, w1, e não conta nada sobre a rede."
+      },
+      {
+        "text": "Um cookie dizendo SERVERID=w1",
+        "why": "Isso. O rótulo do servidor que o round robin tinha acabado de escolher."
+      },
+      {
+        "text": "Um id de sessão de login da aplicação",
+        "why": "A aplicação não sabe nada dele; insert quer dizer que o HAProxy o escreve."
+      },
+      {
+        "text": "Nada, até o cliente pedir um cookie",
+        "why": "Um cliente nunca pede; o balanceador o define na primeira resposta."
+      }
+    ]
+  },
+  "ex-62h0mpr4": {
+    "prompt": "Depois que o nginx de web3 parou, o cliente com SERVERID=w3 recebeu um 503 enquanto web1 e web2 estavam de pé. Por quê?",
+    "hint": "O que o HAProxy podia saber?",
+    "choices": [
+      {
+        "text": "web1 e web2 estavam lotados",
+        "why": "Estavam ociosos; a requisição nunca lhes foi oferecida."
+      },
+      {
+        "text": "O cookie tinha expirado",
+        "why": "Foi mandado à mão com -b e foi obedecido à risca."
+      },
+      {
+        "text": "Nenhum health check tinha avisado o HAProxy de que web3 caiu",
+        "why": "Isso. Mandou a requisição para onde o cookie dizia e não tinha outro lugar permitido."
+      },
+      {
+        "text": "Um 503 é o que o redispatch devolve",
+        "why": "O redispatch ainda não estava configurado; quando foi, o cliente recebeu web1."
+      }
+    ]
+  },
+  "ex-5yn4xkqs": {
+    "prompt": "Com checks e redispatch, o cliente fixado foi para web1. O que aconteceu com o carrinho que a aplicação guardava na memória de web3?",
+    "hint": "O que o cookie leva?",
+    "choices": [
+      {
+        "text": "O HAProxy o copiou para web1",
+        "why": "Um balanceador move requisições, nunca a memória de um servidor."
+      },
+      {
+        "text": "Ele viaja dentro do cookie SERVERID",
+        "why": "O cookie guarda dois caracteres, w1, e mais nada."
+      },
+      {
+        "text": "Ele volta quando web3 for iniciado de novo",
+        "why": "Um processo reiniciado começa com a memória vazia, e o cliente agora leva w1 de qualquer jeito."
+      },
+      {
+        "text": "Perdeu-se com web3",
+        "why": "Isso. É por isso que o estado deve ficar num armazenamento que todo servidor compartilha."
+      }
+    ]
+  },
+  "ex-ks4gq64f": {
+    "prompt": "Quais linhas do backend corrigido foram necessárias para mudar o cliente fixado em vez de falhar? Marque todas que se aplicam.",
+    "hint": "Duas linhas eram novas.",
+    "choices": [
+      {
+        "text": "option redispatch",
+        "why": "Isso: permite outro servidor quando o indicado está fora do ar."
+      },
+      {
+        "text": "balance roundrobin",
+        "why": "Ela já estava lá antes do 503."
+      },
+      {
+        "text": "check inter 1s, em cada servidor",
+        "why": "Isso: sem checks o HAProxy não tem como saber que web3 caiu."
+      },
+      {
+        "text": "cookie SERVERID insert indirect nocache",
+        "why": "Essa linha é a que prende o cliente; também já estava lá antes do 503."
+      }
+    ]
+  },
+  "ex-bmjdnsqs": {
+    "prompt": "Com checks e redispatch configurados, ponha em ordem o que acontece quando o servidor fixado morre.",
+    "hint": "Primeiro o balanceador precisa descobrir.",
+    "items": [
+      "O nginx de web3 para",
+      "Um health check falha e web3 é marcado como fora do ar",
+      "Chega uma requisição com SERVERID=w3",
+      "O HAProxy a redireciona para web1",
+      "A resposta define SERVERID=w1"
+    ],
+    "trap": "O check precisa falhar antes de a requisição chegar, ou ela encontra o servidor morto, como no 503."
+  },
+  "ex-8gc43gcs": {
+    "prompt": "Ligue cada configuração de balance ao critério com que ela decide.",
+    "hint": "Três regras, três informações.",
+    "pairs": [
+      {
+        "left": "roundrobin",
+        "right": "O próximo nome da lista"
+      },
+      {
+        "left": "leastconn",
+        "right": "O menor número de conexões abertas agora"
+      },
+      {
+        "left": "source",
+        "right": "Um hash do endereço do cliente"
+      }
+    ],
+    "right_distractors": [
+      "O tempo de resposta de cada servidor"
+    ]
+  },
+  "ex-7aajnc8p": {
+    "prompt": "Um serviço de vídeo transmite sessões de durações muito diferentes a partir de três servidores iguais, para espectadores de toda a internet. Qual configuração de balance serve melhor?",
+    "hint": "Longas e desiguais.",
+    "choices": [
+      {
+        "text": "roundrobin, já que os servidores são iguais",
+        "why": "Servidores iguais, trabalho desigual: as vezes empilhariam transmissões longas em quem as pegasse."
+      },
+      {
+        "text": "leastconn",
+        "why": "Isso. Manda cada sessão nova para o servidor com menos sessões ainda em curso."
+      },
+      {
+        "text": "source, para manter cada espectador num servidor",
+        "why": "Espectadores atrás de NAT de operadora dividem endereços, e grupos inteiros cairiam juntos."
+      },
+      {
+        "text": "roundrobin com peso 2 no primeiro servidor",
+        "why": "Os servidores são iguais, então um peso só os desequilibraria."
+      }
+    ]
+  }
+}

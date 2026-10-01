@@ -1,0 +1,674 @@
+[
+  {
+    "id": "ex-nnw6bp7q",
+    "version": 1,
+    "section": "one-gateway",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An office adds a second router, hq2, on the same LAN as hq and changes nothing else. Why does that not protect the office when hq dies?",
+    "hint": "Read the laptop's routing table.",
+    "choices": [
+      {
+        "text": "hq2 needs a reboot to notice",
+        "correct": false,
+        "why": "hq2 has nothing to notice: nobody sends it anything."
+      },
+      {
+        "text": "Hosts only use their one gateway",
+        "correct": true,
+        "why": "Right. default via 192.168.10.1, and hq2 is not 192.168.10.1."
+      },
+      {
+        "text": "Two routers on one LAN cause a loop",
+        "correct": false,
+        "why": "Routers on one LAN are ordinary; loops are a switching problem, lesson 20 of networks-addressing."
+      },
+      {
+        "text": "The ISP only accepts traffic from hq",
+        "correct": false,
+        "why": "hq2 has its own link and address at the ISP, 203.0.113.3."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjnq7ty5",
+    "version": 1,
+    "section": "one-gateway",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Several VRRP groups can share one LAN because each has its own number, the ___, which is 10 in this lab.",
+    "hint": "virtual_router_id in the configuration.",
+    "blanks": [
+      {
+        "accept": [
+          "VRID",
+          "virtual router id",
+          "virtual_router_id"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q5a155h5",
+    "version": 1,
+    "section": "one-gateway",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line of hq's keepalived.conf to what it does.",
+    "hint": "One of them is about the other link.",
+    "pairs": [
+      {
+        "left": "virtual_router_id 10",
+        "right": "Names the group on this LAN"
+      },
+      {
+        "left": "priority 150",
+        "right": "Decides who wins the election"
+      },
+      {
+        "left": "advert_int 1",
+        "right": "One advertisement a second"
+      },
+      {
+        "left": "track_interface eth1",
+        "right": "Gives up the address if the ISP link fails"
+      }
+    ],
+    "right_distractors": [
+      "Encrypts the advertisements"
+    ]
+  },
+  {
+    "id": "ex-ygcgdqm0",
+    "version": 1,
+    "section": "election",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "hq2's log says it became MASTER at 18:10:58 and BACKUP again at 18:10:59. Why was it master for that second?",
+    "hint": "Both waited; who started first?",
+    "choices": [
+      {
+        "text": "It started first, so its wait ran out first",
+        "correct": true,
+        "why": "Right. A second later hq's wait ran out too, and 150 beat 100."
+      },
+      {
+        "text": "hq was misconfigured for that second",
+        "correct": false,
+        "why": "Nothing in hq's file changed; only time passed."
+      },
+      {
+        "text": "A lower priority wins the first election",
+        "correct": false,
+        "why": "Priority always favours the higher number; hq2 won because nobody else was talking yet."
+      },
+      {
+        "text": "The laptop chose hq2 by sending to it first",
+        "correct": false,
+        "why": "Hosts take no part in the election."
+      }
+    ]
+  },
+  {
+    "id": "ex-9anwj8rs",
+    "version": 1,
+    "section": "election",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A backup with priority 100 and an advertisement interval of 1 s waits three intervals plus (256 − priority)/256 s. How many seconds is that, to two decimals?",
+    "hint": "3 + 156/256.",
+    "value": 3.61,
+    "tolerance": 0.01,
+    "unit": "s"
+  },
+  {
+    "id": "ex-dxhmztcm",
+    "version": 1,
+    "section": "election",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where do the master's VRRP advertisements go?",
+    "hint": "tcpdump on the laptop saw them.",
+    "choices": [
+      {
+        "text": "To hq2's own address, 192.168.10.3",
+        "correct": false,
+        "why": "They are not addressed to one router; any number of backups may be listening."
+      },
+      {
+        "text": "To the ISP router",
+        "correct": false,
+        "why": "They stay on the LAN they protect."
+      },
+      {
+        "text": "A multicast group, 224.0.0.18",
+        "correct": true,
+        "why": "Right. Which is why the laptop could capture them too."
+      },
+      {
+        "text": "192.168.10.1, the virtual address",
+        "correct": false,
+        "why": "The master holds that address; sending to it would be talking to itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgg89gjv",
+    "version": 1,
+    "section": "election",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The advertisements say authtype none, so a host on the LAN could claim the gateway with a higher priority. What is the defence this lesson recommends?",
+    "hint": "VRRPv3 dropped authentication altogether.",
+    "choices": [
+      {
+        "text": "Set a VRRP password in the configuration",
+        "correct": false,
+        "why": "It travels in clear on the same LAN, which is why version 3 dropped it."
+      },
+      {
+        "text": "Give hq the highest priority, 255",
+        "correct": false,
+        "why": "An intruder can send 255 too, and a tie is settled by address, not by trust."
+      },
+      {
+        "text": "Advertise faster than any intruder",
+        "correct": false,
+        "why": "The interval says nothing about who sent an advertisement."
+      },
+      {
+        "text": "Keep untrusted hosts off that segment",
+        "correct": true,
+        "why": "Right. A VLAN of their own, or switch filters that accept VRRP only from the routers' ports."
+      }
+    ]
+  },
+  {
+    "id": "ex-nhjvzma5",
+    "version": 1,
+    "section": "election",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The laptop's ARP entry for 192.168.10.1 shows 52:54:00:a8:0a:02. What is that address?",
+    "hint": "Compare it with the MAC VRRP's standard asks for.",
+    "choices": [
+      {
+        "text": "hq's own hardware address, its real MAC",
+        "correct": true,
+        "why": "Right. keepalived's default mode answers with the real MAC; use_vmac is not set."
+      },
+      {
+        "text": "VRRP's virtual MAC for group 10",
+        "correct": false,
+        "why": "That would be 00:00:5e:00:01:0a."
+      },
+      {
+        "text": "The laptop's own MAC",
+        "correct": false,
+        "why": "The laptop's ends in :14."
+      },
+      {
+        "text": "A MAC shared by hq and hq2",
+        "correct": false,
+        "why": "hq2 has its own, :03, and the entry changes to it after the failover."
+      }
+    ]
+  },
+  {
+    "id": "ex-npbwsnvc",
+    "version": 1,
+    "section": "election",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A LAN has three backups with priorities 200, 150 and 100, all hearing the same master. The master dies. Which one takes over, and why that one?",
+    "hint": "(256 − priority) / 256.",
+    "choices": [
+      {
+        "text": "The 100: lowest priority acts first",
+        "correct": false,
+        "why": "Its skew is the longest, 156/256 of a second, so it speaks last."
+      },
+      {
+        "text": "Whichever booted first",
+        "correct": false,
+        "why": "Start order mattered at start-up, when nobody was master; here all three were waiting."
+      },
+      {
+        "text": "The 200, whose skew is the shortest of the three",
+        "correct": true,
+        "why": "Right. It speaks first, and the other two hear a higher priority and stay backups."
+      },
+      {
+        "text": "All three, until a vote is taken",
+        "correct": false,
+        "why": "VRRP has no vote; the timers make one of them first."
+      }
+    ]
+  },
+  {
+    "id": "ex-96e4k44k",
+    "version": 1,
+    "section": "failover",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reply 13 arrived at 1790629866.652789 and reply 29 at 1790629869.916964. How long was the gap, in seconds, to three decimals?",
+    "hint": "Subtract.",
+    "value": 3.264,
+    "tolerance": 0.001,
+    "unit": "s"
+  },
+  {
+    "id": "ex-mb02q84s",
+    "version": 1,
+    "section": "failover",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "hq2's master down interval is about 3.61 s, yet the ping measured a gap of 3.264 s. Why is the gap shorter?",
+    "hint": "When does hq2 start counting?",
+    "choices": [
+      {
+        "text": "keepalived rounds the interval down to whole seconds",
+        "correct": false,
+        "why": "The log prints whole seconds; the timer does not run in them."
+      },
+      {
+        "text": "hq2 had been counting since hq's last advertisement",
+        "correct": true,
+        "why": "Right. That advertisement left up to a second before the cable came out."
+      },
+      {
+        "text": "The laptop's ping ran faster during the failure",
+        "correct": false,
+        "why": "The pings went out every 0.2 s throughout; only the replies stopped."
+      },
+      {
+        "text": "hq told hq2 it was leaving",
+        "correct": false,
+        "why": "Its LAN cable was out: nothing hq sent could reach hq2."
+      }
+    ]
+  },
+  {
+    "id": "ex-akk4dzcp",
+    "version": 1,
+    "section": "failover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How can we tell that none of the 3.264 seconds was delay in the network?",
+    "hint": "Look at the rtt line.",
+    "choices": [
+      {
+        "text": "The ping printed no errors",
+        "correct": false,
+        "why": "It printed fifteen lines of no answer; that is not the evidence."
+      },
+      {
+        "text": "Failover times are the same on every network",
+        "correct": false,
+        "why": "They depend on the timers and on when the master died."
+      },
+      {
+        "text": "Every reply took under half a millisecond",
+        "correct": true,
+        "why": "Right. 0.078 to 0.493 ms: one computer talking to itself. The gap is VRRP waiting."
+      },
+      {
+        "text": "The laptop and web1 share a switch",
+        "correct": false,
+        "why": "They do not; web1 is in the data centre, two routers away."
+      }
+    ]
+  },
+  {
+    "id": "ex-qc7ms99g",
+    "version": 1,
+    "section": "failover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the failover, what had changed on the laptop?",
+    "hint": "ip neigh show 192.168.10.1.",
+    "choices": [
+      {
+        "text": "Its default gateway became 192.168.10.3",
+        "correct": false,
+        "why": "The gateway address stays .1; that is the whole idea."
+      },
+      {
+        "text": "The MAC it holds for .1, now hq2's",
+        "correct": true,
+        "why": "Right. :02 became :03, and the laptop did nothing to cause it."
+      },
+      {
+        "text": "Its own IP address",
+        "correct": false,
+        "why": "The laptop is still 192.168.10.20."
+      },
+      {
+        "text": "Nothing: VRRP is invisible to hosts",
+        "correct": false,
+        "why": "The address is the same, but in keepalived's default mode the MAC behind it is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4692xsz",
+    "version": 1,
+    "section": "preemption-and-tracking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "hq broadcast `Request who-has 192.168.10.1 tell 192.168.10.1` twice when it took over. What is that packet for?",
+    "hint": "Nobody is meant to answer it.",
+    "choices": [
+      {
+        "text": "Checking that nobody else uses .1",
+        "correct": false,
+        "why": "hq2 did hold .1 moments before, and the packet is not waiting for its reply."
+      },
+      {
+        "text": "Asking the laptop for its MAC",
+        "correct": false,
+        "why": "It asks about 192.168.10.1, not about the laptop."
+      },
+      {
+        "text": "Repointing hosts' ARP entries",
+        "correct": true,
+        "why": "Right. A gratuitous ARP: hosts update the entry to the sender's hardware address."
+      },
+      {
+        "text": "A VRRP advertisement in ARP form",
+        "correct": false,
+        "why": "Advertisements go to 224.0.0.18 as VRRP; this is plain ARP."
+      }
+    ]
+  },
+  {
+    "id": "ex-33baa71g",
+    "version": 1,
+    "section": "preemption-and-tracking",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put hq's log lines from this lesson in order.",
+    "hint": "Its afternoon: in charge, cable out, cable back, in charge.",
+    "items": [
+      "Entering BACKUP STATE (init)",
+      "Entering MASTER STATE, at 18:10:59",
+      "Entering FAULT STATE, when its LAN cable comes out",
+      "Entering BACKUP STATE, when the cable is back",
+      "Entering MASTER STATE, four seconds later"
+    ],
+    "trap": "A returning router comes back as a backup first; it takes over only after listening."
+  },
+  {
+    "id": "ex-22r2x3db",
+    "version": 1,
+    "section": "preemption-and-tracking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose track_interface had been left out and hq's ISP link fails while its LAN cable is fine. What does the office see?",
+    "hint": "hq still wins the election.",
+    "choices": [
+      {
+        "text": "No internet at all",
+        "correct": true,
+        "why": "Right. hq keeps advertising 150 on eth0 and keeps an address it can do nothing with, while hq2 waits with a working link."
+      },
+      {
+        "text": "A normal failover to hq2 after about 3.6 s",
+        "correct": false,
+        "why": "hq2 takes over only on silence, and hq is still advertising."
+      },
+      {
+        "text": "Traffic shared between both routers",
+        "correct": false,
+        "why": "Only the master forwards for the virtual address."
+      },
+      {
+        "text": "Slower internet through the LAN",
+        "correct": false,
+        "why": "There is no slower path through hq; it has no way out at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-7knndc3z",
+    "version": 1,
+    "section": "preemption-and-tracking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does preemption cost the office when the failed router comes back?",
+    "hint": "Count the switch-overs.",
+    "choices": [
+      {
+        "text": "Nothing, because the return is instant",
+        "correct": false,
+        "why": "It is short, not free; this lab did not measure it."
+      },
+      {
+        "text": "A second, shorter switch-over",
+        "correct": true,
+        "why": "Right. Worth it if the returning router is better, and not if the two are equal."
+      },
+      {
+        "text": "The office loses its gateway until someone intervenes",
+        "correct": false,
+        "why": "Preemption is automatic; nobody needs to intervene."
+      },
+      {
+        "text": "hq2 goes into FAULT and must be restarted",
+        "correct": false,
+        "why": "hq2 simply returns to BACKUP when it hears a higher priority."
+      }
+    ]
+  },
+  {
+    "id": "ex-c71tbd5n",
+    "version": 1,
+    "section": "preemption-and-tracking",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In this lesson, which events made hq give up 192.168.10.1? Choose all that apply.",
+    "hint": "Look for FAULT in its log.",
+    "choices": [
+      {
+        "text": "Its LAN cable was pulled",
+        "correct": true,
+        "why": "Right. FAULT at 18:11:06."
+      },
+      {
+        "text": "Its ISP link, eth1, went down",
+        "correct": true,
+        "why": "Right. Netlink reports eth1 down, then FAULT, at 18:11:16."
+      },
+      {
+        "text": "hq2 sent a higher priority",
+        "correct": false,
+        "why": "hq2's priority is 100, below hq's 150."
+      },
+      {
+        "text": "The laptop's ARP entry went STALE",
+        "correct": false,
+        "why": "A host's cache has no say in the election."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfam30cm",
+    "version": 1,
+    "section": "hsrp-and-glbp",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What are HSRP's default timers?",
+    "hint": "They are slower than VRRP's.",
+    "choices": [
+      {
+        "text": "Advertisement every 1 s, dead after about 3.6 s",
+        "correct": false,
+        "why": "Those are VRRP's, as this lesson measured."
+      },
+      {
+        "text": "Hello every 3 s, dead after 10 s",
+        "correct": true,
+        "why": "Right. A gap of around ten seconds when nobody has tuned them."
+      },
+      {
+        "text": "Hello every 10 s, dead after 30 s",
+        "correct": false,
+        "why": "Slower than HSRP's defaults by a factor of three."
+      },
+      {
+        "text": "None: it reacts to link state",
+        "correct": false,
+        "why": "A dead router on a working link changes no link state; hellos are needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3myvwy7",
+    "version": 1,
+    "section": "hsrp-and-glbp",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A host's ARP table shows 0000.0c07.ac0a for its default gateway. What does that tell you?",
+    "hint": "The last two hex digits are a group.",
+    "choices": [
+      {
+        "text": "VRRP group 10, in keepalived's default mode",
+        "correct": false,
+        "why": "keepalived's default mode shows the router's real MAC, and VRRP's virtual one starts 00-00-5E."
+      },
+      {
+        "text": "The gateway is a GLBP forwarder",
+        "correct": false,
+        "why": "GLBP hands out MACs of its own form, one per forwarder."
+      },
+      {
+        "text": "The gateway is HSRP group 10",
+        "correct": true,
+        "why": "Right. 0000.0c07.ac followed by the group in hex; 0a is 10."
+      },
+      {
+        "text": "The gateway's cable is faulty",
+        "correct": false,
+        "why": "A MAC says who owns an address, not how healthy a cable is."
+      }
+    ]
+  },
+  {
+    "id": "ex-939nq4ph",
+    "version": 1,
+    "section": "hsrp-and-glbp",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does GLBP do that one VRRP group cannot?",
+    "hint": "One address, several routers forwarding.",
+    "choices": [
+      {
+        "text": "Fail over faster, with sub-second hellos by default",
+        "correct": false,
+        "why": "Its defaults are HSRP's, 3 s and 10 s, slower than VRRP's."
+      },
+      {
+        "text": "Authenticate the routers to each other",
+        "correct": false,
+        "why": "Load sharing is what sets it apart, not authentication."
+      },
+      {
+        "text": "Give each host a different gateway address",
+        "correct": false,
+        "why": "That is the two-group trick; GLBP keeps one address for everyone."
+      },
+      {
+        "text": "Spread hosts across routers under one address",
+        "correct": true,
+        "why": "Right. The ARP answer differs per host, a different virtual MAC each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-m6p3rs4j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A call centre's phones drop a call after two seconds of silence. The gateway pair runs keepalived with the settings of this lesson. Will calls survive a gateway failure?",
+    "hint": "Compare the measured gap with two seconds.",
+    "choices": [
+      {
+        "text": "Yes, VRRP is designed for voice",
+        "correct": false,
+        "why": "It was designed for gateways; the timers decide what survives."
+      },
+      {
+        "text": "No: this lesson measured 3.264 s",
+        "correct": true,
+        "why": "Right. And the gap ranges up to about 3.6 s; they need sub-second timers."
+      },
+      {
+        "text": "Yes, if the phones use TCP",
+        "correct": false,
+        "why": "Voice is carried on UDP, and retransmitting speech three seconds late does not help a conversation."
+      },
+      {
+        "text": "Only if preemption is switched off",
+        "correct": false,
+        "why": "Preemption governs the return, not the failure itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-5drt98gv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "hq is master. Its LAN side is fine, its ISP link is dead, and the office has no internet although hq2 is healthy. Which single change makes the office recover on its own next time?",
+    "hint": "hq has to stop winning.",
+    "choices": [
+      {
+        "text": "A shorter advert_int",
+        "correct": false,
+        "why": "hq would only advertise its uselessness more often."
+      },
+      {
+        "text": "use_vmac on both routers, so hosts keep one MAC",
+        "correct": false,
+        "why": "That changes the MAC hosts learn, not who is master."
+      },
+      {
+        "text": "Tracking the ISP interface on hq",
+        "correct": true,
+        "why": "Right. track_interface eth1 puts hq in FAULT, and hq2 takes the address, as this lesson showed."
+      },
+      {
+        "text": "nopreempt on hq2",
+        "correct": false,
+        "why": "hq2 is not the one that needs to change its mind."
+      }
+    ]
+  }
+]

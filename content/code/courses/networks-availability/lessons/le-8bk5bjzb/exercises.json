@@ -1,0 +1,627 @@
+[
+  {
+    "id": "ex-twm29tsa",
+    "version": 1,
+    "section": "packet-in-a-packet",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a tunnel do to the packet it carries?",
+    "hint": "The inner addresses arrive unchanged.",
+    "choices": [
+      {
+        "text": "Encrypts it",
+        "correct": false,
+        "why": "Plain tunnels encrypt nothing; that is what lessons 2 to 4 add."
+      },
+      {
+        "text": "Wraps it inside a new packet",
+        "correct": true,
+        "why": "Right. Headers and all go inside, and a new IP header goes in front."
+      },
+      {
+        "text": "Rewrites its private addresses to public ones",
+        "correct": false,
+        "why": "That is NAT. The inner packet keeps 192.168.10.20 and 192.168.20.30."
+      },
+      {
+        "text": "Lays a private cable between the two ends",
+        "correct": false,
+        "why": "There is no cable: each packet crosses the same routers as everybody else's."
+      }
+    ]
+  },
+  {
+    "id": "ex-rm2m2rq4",
+    "version": 1,
+    "section": "packet-in-a-packet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which routers read the inner packet's addresses on the way from laptop to till?",
+    "hint": "Where does the outer header go on and come off?",
+    "choices": [
+      {
+        "text": "Every router on the path",
+        "correct": false,
+        "why": "The ISP's router only ever reads the outer header."
+      },
+      {
+        "text": "Only the ISP's",
+        "correct": false,
+        "why": "The ISP sees 203.0.113.2 and 198.51.100.2 and nothing else it acts on."
+      },
+      {
+        "text": "hq and branch, the two ends",
+        "correct": true,
+        "why": "Right. Each routes the inner packet into or out of the tunnel."
+      },
+      {
+        "text": "None, the addresses are hidden",
+        "correct": false,
+        "why": "They are not hidden at all; tcpdump printed them. The ends just route by them."
+      }
+    ]
+  },
+  {
+    "id": "ex-g77rk6cj",
+    "version": 1,
+    "section": "packet-in-a-packet",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes does an outer IPv4 header add to a tunnelled packet?",
+    "hint": "104 − 84.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-8gkxz7wy",
+    "version": 1,
+    "section": "private-addresses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the ISP drop the laptop's ping to 192.168.20.30?",
+    "hint": "Read its routing table.",
+    "choices": [
+      {
+        "text": "No route of its own matches a private address",
+        "correct": true,
+        "why": "Right. It knows three public networks and no 192.168 one."
+      },
+      {
+        "text": "A firewall at the branch blocks ICMP echo requests",
+        "correct": false,
+        "why": "The packet never reached the branch: it died at the second hop."
+      },
+      {
+        "text": "NAT at hq had been switched off for the test",
+        "correct": false,
+        "why": "NAT would only have changed the source; the destination is still private."
+      },
+      {
+        "text": "The till was powered off",
+        "correct": false,
+        "why": "Nothing reached the till to find out."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8a6b287",
+    "version": 1,
+    "section": "private-addresses",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two companies both use 192.168.20.0/24 inside. Why could no internet router ever carry a packet for 192.168.20.30?",
+    "hint": "RFC 1918.",
+    "choices": [
+      {
+        "text": "Private packets are encrypted",
+        "correct": false,
+        "why": "Nothing about a private address is encrypted."
+      },
+      {
+        "text": "The address is too long to route",
+        "correct": false,
+        "why": "It is an ordinary 32-bit address."
+      },
+      {
+        "text": "It could not know which one was meant",
+        "correct": true,
+        "why": "Right. The ranges are private because everybody reuses them."
+      },
+      {
+        "text": "ISPs charge extra for them",
+        "correct": false,
+        "why": "There is no price at which a route to a reused address makes sense."
+      }
+    ]
+  },
+  {
+    "id": "ex-xag30m2n",
+    "version": 1,
+    "section": "private-addresses",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The ISP's routing table listed three public networks and not one ___ network, so the ping to the till died there.",
+    "hint": "RFC 1918 ranges.",
+    "blanks": [
+      {
+        "accept": [
+          "private"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-58bpy22t",
+    "version": 1,
+    "section": "ip-in-ip",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The till's reply arrived with ttl=62 after starting at 64. Which routers took one each?",
+    "hint": "The ISP never saw the inner packet.",
+    "choices": [
+      {
+        "text": "branch and the ISP",
+        "correct": false,
+        "why": "The ISP decremented the outer header's TTL, not the inner one's."
+      },
+      {
+        "text": "branch and hq",
+        "correct": true,
+        "why": "Right. The two ends route the inner packet; the ISP only forwards the outer one."
+      },
+      {
+        "text": "hq and the ISP",
+        "correct": false,
+        "why": "Same mistake: the ISP touches only the outer TTL."
+      },
+      {
+        "text": "The till and the laptop",
+        "correct": false,
+        "why": "Hosts do not decrement the TTL of their own packets."
+      }
+    ]
+  },
+  {
+    "id": "ex-17bdp18x",
+    "version": 1,
+    "section": "ip-in-ip",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the route `192.168.20.0/24 via 10.0.0.2` on hq achieve?",
+    "hint": "10.0.0.2 is the far end of tun0.",
+    "choices": [
+      {
+        "text": "It gives the laptop a new address",
+        "correct": false,
+        "why": "The laptop's address does not change."
+      },
+      {
+        "text": "It tells the ISP where the branch is",
+        "correct": false,
+        "why": "The ISP never learns about 192.168.20.0/24."
+      },
+      {
+        "text": "Branch traffic goes into tun0",
+        "correct": true,
+        "why": "Right. Without it the interface exists and nothing goes into it."
+      },
+      {
+        "text": "It opens the tunnel's port on the firewall",
+        "correct": false,
+        "why": "IP-in-IP has no port at all; it is IP protocol 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzhfqw4s",
+    "version": 1,
+    "section": "ip-in-ip",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "tun0 shows POINTOPOINT and NOARP. Why does NOARP make sense for a tunnel?",
+    "hint": "What would ARP ask for?",
+    "choices": [
+      {
+        "text": "No hardware address exists to ask for",
+        "correct": true,
+        "why": "Right. ARP maps an IP to a MAC, and a tunnel has neither cable nor MAC."
+      },
+      {
+        "text": "ARP would leak the private addresses to the ISP",
+        "correct": false,
+        "why": "ARP never leaves a local segment, tunnel or not."
+      },
+      {
+        "text": "ARP is too slow for tunnels",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "The far end's MAC is written in the outer header",
+        "correct": false,
+        "why": "An IP header carries no MAC at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-9nhdn6h2",
+    "version": 1,
+    "section": "gre",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the GRE capture, the outer packet is 112 bytes and the ping inside it 84. Where do the other 28 come from?",
+    "hint": "Three layers.",
+    "choices": [
+      {
+        "text": "28 bytes of outer IP header, with its options",
+        "correct": false,
+        "why": "An IPv4 header without options is 20."
+      },
+      {
+        "text": "20 of GRE header and 8 of padding after it",
+        "correct": false,
+        "why": "GRE is the smaller of the two, and nothing is padded."
+      },
+      {
+        "text": "A UDP header plus a checksum trailer",
+        "correct": false,
+        "why": "GRE runs directly on IP, protocol 47, with no UDP."
+      },
+      {
+        "text": "20 of outer IP, 4 of GRE and 4 of key",
+        "correct": true,
+        "why": "Right. tcpdump showed GRE's own length as 92, 84 plus 8."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0wz6wbs",
+    "version": 1,
+    "section": "gre",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes using the GRE key as a shared secret, so no stranger can inject packets. What is wrong with that?",
+    "hint": "Look at the capture again.",
+    "choices": [
+      {
+        "text": "Keys longer than 32 bits are not supported",
+        "correct": false,
+        "why": "The size is not the problem; its visibility is."
+      },
+      {
+        "text": "It is sent in clear text",
+        "correct": true,
+        "why": "Right. tcpdump printed key=0x2a on every line, for anyone on the path to copy."
+      },
+      {
+        "text": "A wrong key makes the router reply with an error",
+        "correct": false,
+        "why": "It replies with nothing; the packet is dropped silently."
+      },
+      {
+        "text": "The key changes every time the tunnel restarts",
+        "correct": false,
+        "why": "It is configured and stays the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkt4df59",
+    "version": 1,
+    "section": "gre",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tunnel fact to IP-in-IP or GRE.",
+    "hint": "Protocol numbers first.",
+    "pairs": [
+      {
+        "left": "IP protocol 4",
+        "right": "IP-in-IP"
+      },
+      {
+        "left": "IP protocol 47",
+        "right": "GRE"
+      },
+      {
+        "left": "Adds exactly 20 bytes",
+        "right": "IP-in-IP, which has no header of its own"
+      },
+      {
+        "left": "Can carry IPv6 and multicast",
+        "right": "GRE, whose header names the payload"
+      }
+    ],
+    "right_distractors": [
+      "Both, because both encrypt"
+    ]
+  },
+  {
+    "id": "ex-f47v7sax",
+    "version": 1,
+    "section": "gre",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the keys set to 42 at hq and 43 at branch, what did the laptop see?",
+    "hint": "The branch router drops what it does not expect.",
+    "choices": [
+      {
+        "text": "An error saying the keys differ",
+        "correct": false,
+        "why": "Nothing tells anybody; that is the trouble with it."
+      },
+      {
+        "text": "Silence: 100% packet loss",
+        "correct": true,
+        "why": "Right. The packets reach branch and are dropped there, without a word."
+      },
+      {
+        "text": "Replies from the ISP instead of the till",
+        "correct": false,
+        "why": "The ISP answers nothing inside the tunnel."
+      },
+      {
+        "text": "Only every second ping answered",
+        "correct": false,
+        "why": "Every packet carries the same wrong key, so every one is dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwqmahgs",
+    "version": 1,
+    "section": "mtu-and-overhead",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An Ethernet link has an MTU of 1500. What is the largest inner packet a GRE tunnel with a key can carry over it, in bytes?",
+    "hint": "Subtract the whole tunnel overhead.",
+    "value": 1472,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-4qakd8re",
+    "version": 1,
+    "section": "mtu-and-overhead",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ping -M do -s 1472` through the IP-in-IP tunnel got `Frag needed and DF set (mtu = 1480)`. Who sent that message?",
+    "hint": "The line starts with From.",
+    "choices": [
+      {
+        "text": "The till, which could not accept 1500 bytes",
+        "correct": false,
+        "why": "The till never saw it; the packet stopped before the tunnel."
+      },
+      {
+        "text": "The ISP, whose link is too small",
+        "correct": false,
+        "why": "The ISP's links carry 1500; the refusal came from the tunnel's entrance."
+      },
+      {
+        "text": "hq, whose tunnel carries only 1480",
+        "correct": true,
+        "why": "Right. It could not forward the packet into tun0 without fragmenting it, and DF forbade that."
+      },
+      {
+        "text": "The laptop's own kernel",
+        "correct": false,
+        "why": "The laptop's link is 1500, so it sent the packet."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxgfc6mt",
+    "version": 1,
+    "section": "mtu-and-overhead",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A branch can open the intranet's login page but every large download hangs with no error. What fits that best?",
+    "hint": "Small works, large hangs.",
+    "choices": [
+      {
+        "text": "The web server is overloaded",
+        "correct": false,
+        "why": "An overloaded server is slow for small pages too."
+      },
+      {
+        "text": "DNS returns a different address for large files",
+        "correct": false,
+        "why": "DNS does not know how large a file is."
+      },
+      {
+        "text": "The tunnel's GRE key does not match at the branch",
+        "correct": false,
+        "why": "A wrong key would stop the login page too."
+      },
+      {
+        "text": "Big packets die in the tunnel, unannounced",
+        "correct": true,
+        "why": "Right. A PMTU black hole; lesson 21 finds one."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0dznpke",
+    "version": 1,
+    "section": "mtu-and-overhead",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the refusal, `ip route get` showed the laptop remembering the smaller size: `cache expires 599sec mtu ___`.",
+    "hint": "The IP-in-IP tunnel's MTU.",
+    "blanks": [
+      {
+        "accept": [
+          "1480"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kxn2gxac",
+    "version": 1,
+    "section": "nothing-is-hidden",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Capturing GRE on the ISP's router with `tcpdump -A`, what could be read?",
+    "hint": "Look for GET.",
+    "choices": [
+      {
+        "text": "Only the outer addresses of the two routers",
+        "correct": false,
+        "why": "The inner addresses and the payload were printed too."
+      },
+      {
+        "text": "The addresses, but not the page that came back",
+        "correct": false,
+        "why": "`served by files` is the page."
+      },
+      {
+        "text": "Everything: addresses, request and page",
+        "correct": true,
+        "why": "Right. A plain tunnel encrypts nothing."
+      },
+      {
+        "text": "Nothing, GRE hides the payload",
+        "correct": false,
+        "why": "GRE hides nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-em2byh56",
+    "version": 1,
+    "section": "nothing-is-hidden",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a plain GRE tunnel NOT provide? Choose all that apply.",
+    "hint": "Three questions, one answered.",
+    "choices": [
+      {
+        "text": "Confidentiality of the payload",
+        "correct": true,
+        "why": "Right: tcpdump read the page."
+      },
+      {
+        "text": "Proof that a packet came from the other office",
+        "correct": true,
+        "why": "Right: anybody with the outer addresses and the printed key would be accepted."
+      },
+      {
+        "text": "Delivery of private addresses between the offices",
+        "correct": false,
+        "why": "That it does provide; it is the one thing it is for."
+      },
+      {
+        "text": "Detection of a packet changed on the way",
+        "correct": true,
+        "why": "Right: nothing checks integrity."
+      }
+    ]
+  },
+  {
+    "id": "ex-ta1av62c",
+    "version": 1,
+    "section": "nothing-is-hidden",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a packet from laptop to till through the tunnel in order.",
+    "hint": "Wrapped, carried, unwrapped.",
+    "items": [
+      "The laptop sends to 192.168.20.30 via its gateway",
+      "hq's route sends it into tun0",
+      "hq puts an outer header from 203.0.113.2 to 198.51.100.2",
+      "The ISP forwards it by the outer header",
+      "branch takes the outer header off and delivers it"
+    ],
+    "trap": "The ISP only ever acts on the outer header, which hq adds before it leaves."
+  },
+  {
+    "id": "ex-7vxzxwrf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A GRE tunnel between two offices works, and the security team asks for it to be made safe to cross the internet. What is the smallest change that does it?",
+    "hint": "Lesson 2's subject.",
+    "choices": [
+      {
+        "text": "Change the key to a long random number",
+        "correct": false,
+        "why": "The key is still printed in clear text on every packet."
+      },
+      {
+        "text": "Move the tunnel to IP-in-IP",
+        "correct": false,
+        "why": "IP-in-IP encrypts no more than GRE does."
+      },
+      {
+        "text": "Protect the GRE traffic with IPsec",
+        "correct": true,
+        "why": "Right. Encryption and authentication around the tunnel."
+      },
+      {
+        "text": "Lower the tunnel's MTU",
+        "correct": false,
+        "why": "That changes the size, not who can read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wg5s6x7b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A voice call sends 160-byte packets through a GRE tunnel with a key. Why does the tunnel's overhead matter more here than for a file transfer?",
+    "hint": "The same 28 bytes, on a smaller packet.",
+    "choices": [
+      {
+        "text": "The same 28 bytes are a much larger share of a small packet",
+        "correct": true,
+        "why": "Right. Under 2% on 1500 bytes, far more on 160."
+      },
+      {
+        "text": "Voice packets must be fragmented inside a tunnel",
+        "correct": false,
+        "why": "They are far below any MTU."
+      },
+      {
+        "text": "GRE adds more header to UDP than it does to TCP",
+        "correct": false,
+        "why": "GRE adds the same whatever is inside."
+      },
+      {
+        "text": "A tunnel reorders small packets",
+        "correct": false,
+        "why": "Nothing in GRE reorders anything."
+      }
+    ]
+  }
+]

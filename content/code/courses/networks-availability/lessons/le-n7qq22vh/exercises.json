@@ -1,0 +1,595 @@
+[
+  {
+    "id": "ex-74wknx0m",
+    "version": 1,
+    "section": "congestion",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before the upload, a ping through the new 5 Mbit/s link took 0.106 ms. Why did shaping the link change nothing?",
+    "hint": "What was in the queue?",
+    "choices": [
+      {
+        "text": "Pings are too small for tc to shape",
+        "correct": false,
+        "why": "Size has nothing to do with it: the same ping took 221 ms a minute later."
+      },
+      {
+        "text": "The queue was empty, so nothing waited",
+        "correct": true,
+        "why": "Right. A slow link only delays packets that arrive while others are waiting to leave."
+      },
+      {
+        "text": "tc rules take effect only after a restart",
+        "correct": false,
+        "why": "They apply at once; tc qdisc show listed the queue straight away."
+      },
+      {
+        "text": "ICMP goes around the queueing discipline",
+        "correct": false,
+        "why": "Every packet leaving eth1 goes through its qdisc, pings included."
+      }
+    ]
+  },
+  {
+    "id": "ex-qx16yszn",
+    "version": 1,
+    "section": "congestion",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A full queue holds 100 packets of 1514 bytes. How many milliseconds does it take to drain at 5 Mbit/s?",
+    "hint": "Bytes to bits, then divide by 5,000,000.",
+    "value": 242,
+    "tolerance": 2,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-nb6t5hkn",
+    "version": 1,
+    "section": "congestion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does one upload keep the queue in front of the slow link full, rather than full now and then?",
+    "hint": "How TCP finds its speed.",
+    "choices": [
+      {
+        "text": "iperf3 sends at a fixed rate above 5 Mbit/s",
+        "correct": false,
+        "why": "A TCP test has no fixed rate; it goes as fast as the path allows."
+      },
+      {
+        "text": "The upload's packets are marked with a higher priority",
+        "correct": false,
+        "why": "They were unmarked, and with one queue a mark would change nothing."
+      },
+      {
+        "text": "TCP speeds up until a packet is lost, then climbs again",
+        "correct": true,
+        "why": "Right. It finds the limit by filling the queue until it overflows: 163 retransmissions in five seconds."
+      },
+      {
+        "text": "The link slows down when it gets busy",
+        "correct": false,
+        "why": "The link sends at 5 Mbit/s, busy or not; what grows is the line in front of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pa10ap65",
+    "version": 1,
+    "section": "congestion",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An office's calls break up only while somebody sends a large file. What is the calls' actual problem?",
+    "hint": "Where does a voice packet spend its time?",
+    "choices": [
+      {
+        "text": "They wait behind the file in the uplink's queue",
+        "correct": true,
+        "why": "Right. A call needs little bandwidth and a short wait, and the file takes the wait away."
+      },
+      {
+        "text": "The line has run out of capacity for voice",
+        "correct": false,
+        "why": "A call is a small fraction of 5 Mbit/s; it is short of turns, not of bandwidth."
+      },
+      {
+        "text": "The file's packets damage the voice packets",
+        "correct": false,
+        "why": "Packets in a queue do not touch each other; they only wait."
+      },
+      {
+        "text": "The router's processor is overloaded by the transfer",
+        "correct": false,
+        "why": "Five megabits is nothing for a router's CPU; the queue explains every number measured."
+      }
+    ]
+  },
+  {
+    "id": "ex-a14e5529",
+    "version": 1,
+    "section": "marking",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "EF is DSCP 46. What is the whole ToS byte, in decimal, that tcpdump prints as 0xb8?",
+    "hint": "Six bits moved two places to the left.",
+    "value": 184,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-ar625rxs",
+    "version": 1,
+    "section": "marking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A capture shows tos 0x88. Which DSCP does the packet carry?",
+    "hint": "0x88 is 136.",
+    "choices": [
+      {
+        "text": "136, the byte itself",
+        "correct": false,
+        "why": "136 is the whole byte, ECN bits included; the DSCP is its top six bits."
+      },
+      {
+        "text": "34, which is AF41",
+        "correct": true,
+        "why": "Right. 136 divided by 4 is 34, the class for interactive video."
+      },
+      {
+        "text": "88, read straight off the capture",
+        "correct": false,
+        "why": "0x88 is hexadecimal; as decimal it is 136, and the DSCP is a quarter of that."
+      },
+      {
+        "text": "46, since every marked packet is EF",
+        "correct": false,
+        "why": "EF is 0xb8. Other classes have other codes."
+      }
+    ]
+  },
+  {
+    "id": "ex-nzwxktmt",
+    "version": 1,
+    "section": "marking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With one queue, the EF-marked ping averaged 20 ms and the unmarked one 65 ms. What does that show about the mark?",
+    "hint": "Look at the unmarked run's slowest reply.",
+    "choices": [
+      {
+        "text": "It cut the delay by two thirds",
+        "correct": false,
+        "why": "Take out the one 221 ms reply and the other four averaged 26 ms, the same as the marked run's."
+      },
+      {
+        "text": "Nothing: one slow reply lifted the average",
+        "correct": true,
+        "why": "Right. Both runs waited in the same queue; only the timing of one reply differed."
+      },
+      {
+        "text": "It helped on the routers that honour EF",
+        "correct": false,
+        "why": "No router on this path had a class for EF at that point."
+      },
+      {
+        "text": "EF packets are smaller, so they drain faster",
+        "correct": false,
+        "why": "The mark changes one byte's value, not the packet's size: both pings were 84 bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9bz5j5c",
+    "version": 1,
+    "section": "marking",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A router with a single queue sends packets in the order they ___, whatever their DSCP says.",
+    "hint": "First in, first out.",
+    "blanks": [
+      {
+        "accept": [
+          "arrived",
+          "arrive",
+          "came",
+          "came in"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xfmp8mm8",
+    "version": 1,
+    "section": "classes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the tc setup to the job it does.",
+    "hint": "Classify, queue, schedule.",
+    "pairs": [
+      {
+        "left": "u32 match ip dsfield 0xb8 0xfc",
+        "right": "Decides which class a packet is in"
+      },
+      {
+        "left": "pfifo limit 100",
+        "right": "Holds one class's waiting packets"
+      },
+      {
+        "left": "htb rate, ceil and prio",
+        "right": "Decides which class sends next"
+      }
+    ],
+    "right_distractors": [
+      "Writes EF into the packet"
+    ]
+  },
+  {
+    "id": "ex-pkk0dzek",
+    "version": 1,
+    "section": "classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "tc -s showed class 1:10 with 5 packets and 490 bytes. What were they?",
+    "hint": "98 = 84 + 14.",
+    "choices": [
+      {
+        "text": "Five upload packets that happened to be marked EF on the way",
+        "correct": false,
+        "why": "An upload packet is about 1500 bytes; five of them would be about 7,500."
+      },
+      {
+        "text": "HTB's own control messages",
+        "correct": false,
+        "why": "HTB sends nothing of its own; it only orders what others send."
+      },
+      {
+        "text": "Five packets the class dropped",
+        "correct": false,
+        "why": "Its counter says dropped 0; these were sent."
+      },
+      {
+        "text": "The five marked pings, 98 bytes each with Ethernet",
+        "correct": true,
+        "why": "Right. 84 bytes of IP and 14 of Ethernet header, five times."
+      }
+    ]
+  },
+  {
+    "id": "ex-fg1q53q4",
+    "version": 1,
+    "section": "classes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Everybody in the office starts marking all their traffic EF. With this lesson's HTB, how much can class 1:20 still count on?",
+    "hint": "rate is a guarantee; prio decides who gets what is spare.",
+    "choices": [
+      {
+        "text": "Nothing, since EF is served first",
+        "correct": false,
+        "why": "That would be strict priority. HTB gives every class its rate before prio decides anything."
+      },
+      {
+        "text": "4 Mbit/s, its guaranteed rate",
+        "correct": true,
+        "why": "Right. The flood gets its 1 Mbit/s and whatever 1:20 leaves unused, no more."
+      },
+      {
+        "text": "1 Mbit/s, what is left after voice",
+        "correct": false,
+        "why": "That swaps the two rates: voice is guaranteed 1, the rest 4."
+      },
+      {
+        "text": "The whole 5 Mbit/s, because EF stops at 1 Mbit/s",
+        "correct": false,
+        "why": "EF's ceil is 5mbit: it may borrow whatever 1:20 is not using."
+      }
+    ]
+  },
+  {
+    "id": "ex-7nyv2mvc",
+    "version": 1,
+    "section": "classes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the mask 0xfc in `match ip dsfield 0xb8 0xfc` do?",
+    "hint": "0xfc is 11111100 in binary.",
+    "choices": [
+      {
+        "text": "Rewrites the byte to 0xfc",
+        "correct": false,
+        "why": "A filter reads; it writes nothing into the packet."
+      },
+      {
+        "text": "Matches any DSCP at or above EF",
+        "correct": false,
+        "why": "A mask selects bits to compare; it is not a range."
+      },
+      {
+        "text": "Compares the six DSCP bits and ignores ECN",
+        "correct": true,
+        "why": "Right. A packet marked EF matches whatever its two ECN bits say."
+      },
+      {
+        "text": "Sets how many packets the class may queue",
+        "correct": false,
+        "why": "That is pfifo limit 100."
+      }
+    ]
+  },
+  {
+    "id": "ex-bfvpt3za",
+    "version": 1,
+    "section": "trust-boundary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the two nftables rules, the laptop's EF-marked ping averaged 26 ms again. Why?",
+    "hint": "Read the first rule.",
+    "choices": [
+      {
+        "text": "hq rewrote its mark to cs0 as it arrived",
+        "correct": true,
+        "why": "Right. The laptop still marks EF; hq no longer believes it."
+      },
+      {
+        "text": "The laptop stopped marking once the rule existed",
+        "correct": false,
+        "why": "Nothing told the laptop; the same ping -Q 0xb8 ran."
+      },
+      {
+        "text": "The voice class was full of files' traffic",
+        "correct": false,
+        "why": "files sent a single six-byte datagram, and later."
+      },
+      {
+        "text": "The ISP reset the byte on the way",
+        "correct": false,
+        "why": "The delay is added at hq's queue, before the ISP sees anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-93hmk1kb",
+    "version": 1,
+    "section": "trust-boundary",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a trust boundary belong?",
+    "hint": "Whose marks can be believed?",
+    "choices": [
+      {
+        "text": "On the ISP's router",
+        "correct": false,
+        "why": "By then the packets have crossed your whole network on marks nobody checked."
+      },
+      {
+        "text": "In each laptop's network settings",
+        "correct": false,
+        "why": "The laptop is the party that cannot be trusted to mark itself."
+      },
+      {
+        "text": "On the first device the network's owner controls",
+        "correct": true,
+        "why": "Right. Usually the access switch, or hq in this lab."
+      },
+      {
+        "text": "On the server that receives the traffic",
+        "correct": false,
+        "why": "The queues that matter are passed before the server sees anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-zyx9j5h2",
+    "version": 1,
+    "section": "trust-boundary",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The two nftables rules are swapped: first the one marking files' UDP 5004 as EF, then `ip dscp set cs0` for everything from eth0. What does files' datagram leave with?",
+    "hint": "Setting a field is not a verdict.",
+    "choices": [
+      {
+        "text": "EF, because the first matching rule wins",
+        "correct": false,
+        "why": "That is true of accept and drop. A set statement changes the packet and evaluation carries on."
+      },
+      {
+        "text": "cs0, because the later rule overwrites the EF",
+        "correct": true,
+        "why": "Right. Both rules run; the last one to write the byte decides it."
+      },
+      {
+        "text": "Nothing, because it is dropped",
+        "correct": false,
+        "why": "Neither rule drops anything; the chain's policy is accept."
+      },
+      {
+        "text": "Whatever files wrote into it",
+        "correct": false,
+        "why": "Both rules overwrite the byte, so files' own mark is gone either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8x5fyn0",
+    "version": 1,
+    "section": "beyond-your-link",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The ISP's router printed tos 0xb8 on every marked packet. What did it do with the mark?",
+    "hint": "A per-hop behaviour.",
+    "choices": [
+      {
+        "text": "Put the packets in its priority queue",
+        "correct": false,
+        "why": "It has no classes configured, so there is no such queue."
+      },
+      {
+        "text": "Reset it to zero at the edge of its network",
+        "correct": false,
+        "why": "The captures show 0xb8 intact on the ISP's side."
+      },
+      {
+        "text": "Nothing, it forwarded them like any other",
+        "correct": true,
+        "why": "Right. A mark means what each router is configured to make of it."
+      },
+      {
+        "text": "Dropped the packets that had no mark",
+        "correct": false,
+        "why": "Unmarked traffic, the upload included, went through."
+      }
+    ]
+  },
+  {
+    "id": "ex-eg1bbha1",
+    "version": 1,
+    "section": "beyond-your-link",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Large downloads at the office make calls break up as well. Why can hq's classes on eth1 not fix that on their own?",
+    "hint": "Which way does eth1's queue face?",
+    "choices": [
+      {
+        "text": "Downloads are marked cs0 by the provider",
+        "correct": false,
+        "why": "The mark on a download does not matter here; hq's classes shape what leaves, not what arrives."
+      },
+      {
+        "text": "The queue that fills is at the provider's end",
+        "correct": true,
+        "why": "Right. The download waits before it reaches hq, in a queue hq cannot configure."
+      },
+      {
+        "text": "HTB classes work on UDP only",
+        "correct": false,
+        "why": "The upload in this lesson was TCP and was classified like anything else."
+      },
+      {
+        "text": "tc cannot count packets that are coming in",
+        "correct": false,
+        "why": "Counting is not the problem; the waiting happens before they arrive."
+      }
+    ]
+  },
+  {
+    "id": "ex-rf0yrbbg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens at hq to files' voice datagram, from the LAN to the ISP.",
+    "hint": "prerouting comes first.",
+    "items": [
+      "It arrives on eth0",
+      "The nftables chain sets its DSCP to EF",
+      "Routing sends it towards eth1",
+      "The u32 filter puts it in class 1:10",
+      "HTB sends it before class 1:20's queue"
+    ],
+    "trap": "The mark is written at prerouting, before routing, and read by the classifier on the way out of eth1."
+  },
+  {
+    "id": "ex-ya6et963",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these would shorten the wait of a call on hq's uplink during an upload? Choose all that apply.",
+    "hint": "Keep the voice out of the long line, or make the line short.",
+    "choices": [
+      {
+        "text": "A voice class, selected by DSCP and sent first",
+        "correct": true,
+        "why": "Right: 0.065 ms in this lesson."
+      },
+      {
+        "text": "Marking the calls EF with a single queue",
+        "correct": false,
+        "why": "Measured: the marked ping waited 26 ms like everything else."
+      },
+      {
+        "text": "A queue manager such as fq_codel that keeps the queue short",
+        "correct": true,
+        "why": "Right: a shorter line is a shorter wait for everybody, calls included."
+      },
+      {
+        "text": "A longer queue of 1000 packets",
+        "correct": false,
+        "why": "A longer queue that stays full is a longer wait: that is bufferbloat."
+      }
+    ]
+  },
+  {
+    "id": "ex-kj4e5gfa",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A manager's laptop is given EF on all its traffic, to make it faster. What happens to the office's calls while it uploads?",
+    "hint": "Which queue does the upload now share?",
+    "choices": [
+      {
+        "text": "Nothing changes; the laptop just gets faster",
+        "correct": false,
+        "why": "The upload now sits in the voice class, and so do the calls."
+      },
+      {
+        "text": "They wait behind the upload in the voice class",
+        "correct": true,
+        "why": "Right. Priority only helps a class that stays small; this one no longer does."
+      },
+      {
+        "text": "The laptop's upload is dropped as out of profile",
+        "correct": false,
+        "why": "Nothing in this setup drops for being EF; 1:10 may borrow up to 5 Mbit/s."
+      },
+      {
+        "text": "The calls are moved to class 1:20",
+        "correct": false,
+        "why": "The filter still sends EF to 1:10; the calls are exactly where they were."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7swjg9t",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A queue that stays full and adds delay to every packet behind it is called ___.",
+    "hint": "A made-up word about buffers.",
+    "blanks": [
+      {
+        "accept": [
+          "bufferbloat",
+          "buffer bloat"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
