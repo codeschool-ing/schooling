@@ -1,0 +1,792 @@
+[
+  {
+    "id": "ex-gjpvg3mm",
+    "version": 1,
+    "section": "autonomous-systems",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is an autonomous system?",
+    "hint": "Think of who runs it.",
+    "choices": [
+      {
+        "text": "A router that runs BGP",
+        "correct": false,
+        "why": "One AS holds many routers, and plenty of them never speak BGP."
+      },
+      {
+        "text": "A block of addresses such as 203.0.113.0/24",
+        "correct": false,
+        "why": "An AS originates blocks; it is the network, not the addresses."
+      },
+      {
+        "text": "A network under one administration with one routing policy",
+        "correct": true,
+        "why": "Right. The company, ispa and ispb are one each."
+      },
+      {
+        "text": "An OSPF area joined to area 0",
+        "correct": false,
+        "why": "Areas divide one IGP inside one organisation; an AS is the organisation's whole network."
+      }
+    ]
+  },
+  {
+    "id": "ex-nc0xr3gk",
+    "version": 1,
+    "section": "autonomous-systems",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each AS number to what it is.",
+    "hint": "Two ranges are reserved, and one of them is for books.",
+    "pairs": [
+      {
+        "left": "64500",
+        "right": "Reserved for documentation, as in this lab"
+      },
+      {
+        "left": "65000",
+        "right": "Private use inside one organisation"
+      },
+      {
+        "left": "4200000001",
+        "right": "Private use, 32-bit"
+      }
+    ],
+    "right_distractors": [
+      "Reserved for loopback routing"
+    ]
+  },
+  {
+    "id": "ex-br0phk9s",
+    "version": 1,
+    "section": "autonomous-systems",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In ispa's table, `198.51.100.0/25` has next hop `0.0.0.0` and weight 32768. What does that say?",
+    "hint": "Who put this route into BGP?",
+    "choices": [
+      {
+        "text": "The route is invalid and will not be used",
+        "correct": false,
+        "why": "It is marked *>, valid and best."
+      },
+      {
+        "text": "ispa originates it itself",
+        "correct": true,
+        "why": "Right. 0.0.0.0 means this router, and 32768 is FRR's weight for a route it originates."
+      },
+      {
+        "text": "ispa learned it from a default route",
+        "correct": false,
+        "why": "A default route is 0.0.0.0/0 as a destination, not 0.0.0.0 as a next hop."
+      },
+      {
+        "text": "It came from ispb with a weight set by ispb",
+        "correct": false,
+        "why": "Weight never leaves the router that sets it, and the path is empty, so no AS passed it on."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdpjc5ch",
+    "version": 1,
+    "section": "autonomous-systems",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before edge was configured, a1's ping to 203.0.113.10 got `Destination Net Unreachable` from 198.51.100.1. Why?",
+    "hint": "Look at what ispa's table holds.",
+    "choices": [
+      {
+        "text": "www was switched off",
+        "correct": false,
+        "why": "A host that is off produces silence or a host error, not a net error from the provider."
+      },
+      {
+        "text": "ispa blocks traffic to customers that pay nothing",
+        "correct": false,
+        "why": "No policy in the lab blocks traffic; ispa simply has no route."
+      },
+      {
+        "text": "Nobody had announced 203.0.113.0/24, so ispa had no route to it",
+        "correct": true,
+        "why": "Right. 198.51.100.1 is ispa, and its table held two prefixes, neither of them the company's."
+      },
+      {
+        "text": "a1's default gateway was wrong",
+        "correct": false,
+        "why": "The error came from 198.51.100.1, a1's gateway, so the gateway was working."
+      }
+    ]
+  },
+  {
+    "id": "ex-cbmvznr4",
+    "version": 1,
+    "section": "the-session",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On which TCP port does BGP run?",
+    "hint": "Three digits.",
+    "value": 179,
+    "tolerance": 0,
+    "unit": "port"
+  },
+  {
+    "id": "ex-8cgb20k4",
+    "version": 1,
+    "section": "the-session",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "edge's summary showed both sessions up for 00:00:05 with `(Policy)` in the state and prefix columns. What was happening?",
+    "hint": "RFC 8212.",
+    "choices": [
+      {
+        "text": "The sessions were still being negotiated",
+        "correct": false,
+        "why": "Up/Down counts time established, and messages were flowing."
+      },
+      {
+        "text": "The sessions were up, and FRR exchanged no routes on eBGP sessions that had no policy",
+        "correct": true,
+        "why": "Right. A deliberate refusal, until a policy says what may cross."
+      },
+      {
+        "text": "The providers rejected edge's AS number",
+        "correct": false,
+        "why": "A wrong AS closes the session; these were up."
+      },
+      {
+        "text": "A policy on the providers was blocking edge",
+        "correct": false,
+        "why": "The word is about edge's own missing policy, in both directions."
+      }
+    ]
+  },
+  {
+    "id": "ex-wsrxwe4s",
+    "version": 1,
+    "section": "the-session",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new BGP neighbour stays in `Active` for ten minutes. Which is the most useful first check?",
+    "hint": "Active means the connection is not completing.",
+    "choices": [
+      {
+        "text": "Whether the prefix lists are permitting the right prefixes",
+        "correct": false,
+        "why": "Prefix lists act on routes once a session exists. This one has not opened."
+      },
+      {
+        "text": "Whether the AS path of the routes is too long",
+        "correct": false,
+        "why": "No route has been exchanged yet, so there is no path to look at."
+      },
+      {
+        "text": "Whether maximum-prefix has been exceeded",
+        "correct": false,
+        "why": "That closes a session that already exchanged routes."
+      },
+      {
+        "text": "Whether the neighbour is reachable and TCP port 179 gets through",
+        "correct": true,
+        "why": "Right. BGP is a TCP connection first; until it completes, nothing else matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3wksh8n",
+    "version": 1,
+    "section": "the-session",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A BGP session between routers in two different autonomous systems is called ___, and one inside a single AS is called iBGP.",
+    "hint": "The opposite of internal.",
+    "blanks": [
+      {
+        "accept": [
+          "eBGP",
+          "external BGP",
+          "exterior BGP"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wptm97h6",
+    "version": 1,
+    "section": "as-path",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For 198.51.100.0/25, edge holds the paths `64502 64501` and `64501`. Which does it choose, and on what grounds?",
+    "hint": "Nothing before the AS path step was set.",
+    "choices": [
+      {
+        "text": "`64502 64501`, since it was received first",
+        "correct": false,
+        "why": "Age is a late tie-breaker. Path length decides first here."
+      },
+      {
+        "text": "`64501`, the shorter AS path",
+        "correct": true,
+        "why": "Right. It is marked > in edge's table."
+      },
+      {
+        "text": "`64502 64501`, since it crosses more networks and is more reliable",
+        "correct": false,
+        "why": "BGP does not reward length; it prefers the shorter path."
+      },
+      {
+        "text": "Both, splitting traffic between ispa and ispb",
+        "correct": false,
+        "why": "Without multipath configured BGP installs one best path, and the kernel shows one route."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1b89nr0",
+    "version": 1,
+    "section": "as-path",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these BGP best-path criteria in the order FRR and Cisco check them.",
+    "hint": "Local decisions first, then the path, then hints from neighbours.",
+    "items": [
+      "Highest weight",
+      "Highest local preference",
+      "Shortest AS path",
+      "Lowest MED",
+      "eBGP over iBGP"
+    ],
+    "trap": "Local preference comes before the AS path: it is how a network overrides path length, which is why prepending does not always work."
+  },
+  {
+    "id": "ex-9x4eqpmw",
+    "version": 1,
+    "section": "as-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "edge's route map `TO-PROVIDER` has one entry: permit routes matching `OURS`. What happens to a route for 198.51.100.0/25 on its way out to ispb?",
+    "hint": "What happens at the end of a route map?",
+    "choices": [
+      {
+        "text": "It is denied, because it matches no entry",
+        "correct": true,
+        "why": "Right. A route that falls off the end of a route map is denied."
+      },
+      {
+        "text": "It is permitted, because nothing denies it",
+        "correct": false,
+        "why": "The end of a route map is an implicit deny, which is what makes TO-PROVIDER safe."
+      },
+      {
+        "text": "It is sent with the prefix changed to 203.0.113.0/24",
+        "correct": false,
+        "why": "A route map can change attributes, never rewrite a route into another prefix."
+      },
+      {
+        "text": "It is sent with 64500 prepended",
+        "correct": false,
+        "why": "Prepending needs a set clause, which TO-PROVIDER does not have."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0qmhr3f",
+    "version": 1,
+    "section": "as-path",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "ispb sends edge a route for 203.0.113.0/24 with the AS path `64502 64500`. Even with `FROM-PROVIDER` removed, why does edge not use it?",
+    "hint": "Look for edge's own number.",
+    "choices": [
+      {
+        "text": "The prefix is longer than edge's own",
+        "correct": false,
+        "why": "It is the same /24."
+      },
+      {
+        "text": "ispb's weight is lower than edge's",
+        "correct": false,
+        "why": "Weight is local and does not travel; the route is refused before any comparison."
+      },
+      {
+        "text": "The path contains 64500, edge's own AS, so it is dropped as a loop",
+        "correct": true,
+        "why": "Right. A BGP router refuses any path that already lists its own AS."
+      },
+      {
+        "text": "eBGP routes are not accepted for connected networks",
+        "correct": false,
+        "why": "They would be accepted and lose on distance; here they never get that far."
+      }
+    ]
+  },
+  {
+    "id": "ex-b99452rc",
+    "version": 1,
+    "section": "as-path",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the policy was applied, how many prefixes did edge receive from each provider?",
+    "hint": "Read State/PfxRcd.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "prefixes"
+  },
+  {
+    "id": "ex-h0sxfgbj",
+    "version": 1,
+    "section": "inbound-traffic",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `set as-path prepend 64500 64500`, how many AS numbers long is the path ispa sees directly from edge?",
+    "hint": "The original number plus the two added.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "AS numbers"
+  },
+  {
+    "id": "ex-npqmyvpg",
+    "version": 1,
+    "section": "inbound-traffic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the prepend, a1's traceroute to the web server shows four hops instead of three. Which address is new?",
+    "hint": "Which provider does a1's traffic cross now?",
+    "choices": [
+      {
+        "text": "198.51.100.1",
+        "correct": false,
+        "why": "That is ispa, a1's gateway, present before and after."
+      },
+      {
+        "text": "192.0.2.1",
+        "correct": false,
+        "why": "That was edge's ispa-side interface, where traffic arrived before. It is gone from the path."
+      },
+      {
+        "text": "203.0.113.1",
+        "correct": false,
+        "why": "That is edge's interface on the server's LAN; traceroute does not print it here."
+      },
+      {
+        "text": "192.0.2.10",
+        "correct": true,
+        "why": "Right. That is ispb, which a1's traffic now crosses on its way in."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3pwznw5",
+    "version": 1,
+    "section": "inbound-traffic",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company prepends its AS three times towards provider X. Provider X gives every route from its customers a local preference of 200 and routes from peers 100. The company is X's customer. What changes at X?",
+    "hint": "Which step of the list comes first?",
+    "choices": [
+      {
+        "text": "Nothing: local preference is checked before path length",
+        "correct": true,
+        "why": "Right. X still prefers its customer's route, prepend or not."
+      },
+      {
+        "text": "X now prefers the path through its peer",
+        "correct": false,
+        "why": "Only if local preference were equal. Here it is 200 against 100."
+      },
+      {
+        "text": "X drops the route for having a repeated AS",
+        "correct": false,
+        "why": "Repetition of the sender's own AS is legal; X drops a path containing X's number, not a repeated one."
+      },
+      {
+        "text": "X splits traffic between the two paths",
+        "correct": false,
+        "why": "The routes differ at the local preference step, so one wins outright."
+      }
+    ]
+  },
+  {
+    "id": "ex-c76nd3a6",
+    "version": 1,
+    "section": "inbound-traffic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the prepend, a1's requests reach the company through ispb. Through which provider do the server's replies to a1 leave?",
+    "hint": "Whose table decides outbound traffic?",
+    "choices": [
+      {
+        "text": "ispb, since replies follow the request's path back",
+        "correct": false,
+        "why": "IP has no memory of the way a request came. Each direction is routed on its own."
+      },
+      {
+        "text": "ispa, since edge's own table still prefers the path 64501",
+        "correct": true,
+        "why": "Right. The prepend changed what ispa chooses, not what edge chooses."
+      },
+      {
+        "text": "Both alternately",
+        "correct": false,
+        "why": "edge installed one best path for 198.51.100.0/25."
+      },
+      {
+        "text": "Neither, the prepend blocks them",
+        "correct": false,
+        "why": "A prepend lengthens an announcement; it blocks nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhye0655",
+    "version": 1,
+    "section": "route-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `EVERYTHING` applied towards ispb, edge advertised three prefixes. Why is that a leak?",
+    "hint": "What would ispb do with a route to ispa's customers through edge?",
+    "choices": [
+      {
+        "text": "It offers to carry traffic between the two providers through the company's link",
+        "correct": true,
+        "why": "Right. The company would become transit between ispa and ispb."
+      },
+      {
+        "text": "It reveals the company's private addresses",
+        "correct": false,
+        "why": "The two extra prefixes belong to the providers, not to the company."
+      },
+      {
+        "text": "Three is above the maximum-prefix limit",
+        "correct": false,
+        "why": "The limit set later is 1000, and it applies to what edge receives."
+      },
+      {
+        "text": "It withdraws 203.0.113.0/24 from ispb",
+        "correct": false,
+        "why": "The company's block is still among the three."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfgcn2bc",
+    "version": 1,
+    "section": "route-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which observation showed that ispb did not accept edge's leaked routes?",
+    "hint": "Look at ispb's view of ispa's customers.",
+    "choices": [
+      {
+        "text": "edge's advertised-routes listed 3 prefixes",
+        "correct": false,
+        "why": "That is what edge sent, not what ispb kept."
+      },
+      {
+        "text": "The session to ispb was closed",
+        "correct": false,
+        "why": "Nothing closed it; the filter dropped the routes quietly."
+      },
+      {
+        "text": "ispb had 1 path for 198.51.100.0/25, from 192.0.2.9",
+        "correct": true,
+        "why": "Right. One path, from ispa; nothing from edge."
+      },
+      {
+        "text": "a1 could no longer reach the web server",
+        "correct": false,
+        "why": "Reachability was not tested in that block, and the leak would not have broken it."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxp7k3ne",
+    "version": 1,
+    "section": "route-leaks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `neighbor 192.0.2.2 maximum-prefix 1000` do on edge?",
+    "hint": "It guards the receiving side.",
+    "choices": [
+      {
+        "text": "Limits edge to announcing 1000 prefixes",
+        "correct": false,
+        "why": "It counts what edge receives, not what it sends."
+      },
+      {
+        "text": "Closes the session if ispa sends more than 1000 prefixes",
+        "correct": true,
+        "why": "Right. A safety net against a provider leaking something huge."
+      },
+      {
+        "text": "Keeps the 1000 best routes and drops the rest",
+        "correct": false,
+        "why": "It does not pick; it closes the session."
+      },
+      {
+        "text": "Sets the session's timeout to 1000 seconds",
+        "correct": false,
+        "why": "It is a count of prefixes, not a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-yntddg14",
+    "version": 1,
+    "section": "route-leaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A customer leaks a peer's routes to its provider. The leaked path is longer than the one the provider has from that peer. Why can the leaked route still win at the provider?",
+    "hint": "What do providers set for routes from customers?",
+    "choices": [
+      {
+        "text": "Leaked routes carry a higher MED",
+        "correct": false,
+        "why": "MED comes after path length, and a higher MED loses."
+      },
+      {
+        "text": "The provider prefers customer routes by local preference, checked before path length",
+        "correct": true,
+        "why": "Right. That is the commercial preference that turns a leak into an incident."
+      },
+      {
+        "text": "BGP prefers the newest route",
+        "correct": false,
+        "why": "Age is among the last tie-breakers, and favours the older route."
+      },
+      {
+        "text": "The leaked prefix is more specific",
+        "correct": false,
+        "why": "The scenario leaks the same prefixes; a more specific one would be a different problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8zz0955",
+    "version": 1,
+    "section": "securing-bgp",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A ROA says AS 64500 may originate 203.0.113.0/24 with maximum length /24. Match each announcement to its validation state.",
+    "hint": "Check the origin and then the length.",
+    "pairs": [
+      {
+        "left": "203.0.113.0/24 from AS 64500",
+        "right": "Valid"
+      },
+      {
+        "left": "203.0.113.0/24 from AS 64511",
+        "right": "Invalid"
+      },
+      {
+        "left": "198.51.100.0/24 from AS 64500, with no ROA covering it",
+        "right": "Not found"
+      }
+    ],
+    "right_distractors": [
+      "Expired"
+    ]
+  },
+  {
+    "id": "ex-vfh55974",
+    "version": 1,
+    "section": "securing-bgp",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under the same ROA, AS 64500 itself announces 203.0.113.0/25. What is the state, and why?",
+    "hint": "The ROA has a maximum length.",
+    "choices": [
+      {
+        "text": "Valid, because the origin AS matches",
+        "correct": false,
+        "why": "The origin is half of the check; the length is the other half."
+      },
+      {
+        "text": "Not found, because no ROA names a /25",
+        "correct": false,
+        "why": "The /24 ROA covers the /25, so the state is not \"not found\"."
+      },
+      {
+        "text": "Invalid, because /25 is longer than the maximum of /24",
+        "correct": true,
+        "why": "Right. Covered by a ROA, right origin, wrong length."
+      },
+      {
+        "text": "Valid, because a more specific prefix is preferred",
+        "correct": false,
+        "why": "Preference is routing; validation is a separate check against the ROA."
+      }
+    ]
+  },
+  {
+    "id": "ex-tq7r2nxw",
+    "version": 1,
+    "section": "securing-bgp",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Route origin validation is deployed everywhere, and somebody announces 203.0.113.0/24 with a path that ends in 64500, forged. What stops it?",
+    "hint": "Which AS does origin validation look at?",
+    "choices": [
+      {
+        "text": "Origin validation, which rejects it as invalid",
+        "correct": false,
+        "why": "The origin is the right one, so it validates; the forgery is earlier in the path."
+      },
+      {
+        "text": "The ROA's signature, which covers the whole path",
+        "correct": false,
+        "why": "A ROA signs a prefix and an origin AS, nothing about the path."
+      },
+      {
+        "text": "Loop detection on every router",
+        "correct": false,
+        "why": "That drops paths containing the receiver's own AS, which a forged path need not."
+      },
+      {
+        "text": "Not origin validation: it checks the last AS, so filters and monitoring are left",
+        "correct": true,
+        "why": "Right. Validating the rest of the path is work in progress."
+      }
+    ]
+  },
+  {
+    "id": "ex-qe4vqg77",
+    "version": 1,
+    "section": "securing-bgp",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The signed record in RPKI that says which AS may originate a prefix, and up to what length, is a ___.",
+    "hint": "The holder of the block signs it.",
+    "blanks": [
+      {
+        "accept": [
+          "ROA"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ee8racgr",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are part of the company's side of safe BGP in this lesson? Choose all that apply.",
+    "hint": "Think of what edge sends, receives and publishes.",
+    "choices": [
+      {
+        "text": "An outbound filter that announces only 203.0.113.0/24",
+        "correct": true,
+        "why": "TO-PROVIDER, which kept the leak from happening by default."
+      },
+      {
+        "text": "A ROA for 203.0.113.0/24 with origin 64500 and maximum length /24",
+        "correct": true,
+        "why": "It lets everybody else reject a false origin."
+      },
+      {
+        "text": "maximum-prefix on both provider sessions",
+        "correct": true,
+        "why": "The guard on what edge receives."
+      },
+      {
+        "text": "Accepting 203.0.113.0/24 from the providers as a backup",
+        "correct": false,
+        "why": "FROM-PROVIDER denies it on purpose: nobody else tells edge how to reach its own network."
+      }
+    ]
+  },
+  {
+    "id": "ex-3tv3tad5",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of this lesson's lab in the order they were done on edge.",
+    "hint": "Session, policy, steering, mistake, repair.",
+    "items": [
+      "Open sessions to both providers",
+      "Apply TO-PROVIDER and FROM-PROVIDER",
+      "Prepend 64500 twice towards ispa",
+      "Apply EVERYTHING towards ispb",
+      "Restore TO-PROVIDER and add maximum-prefix"
+    ],
+    "trap": "The policy has to come before anything is exchanged at all: without it the sessions showed (Policy) and carried nothing."
+  },
+  {
+    "id": "ex-8rdhgap3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A small company with one provider asks whether it needs BGP for its /24. What does this lesson suggest?",
+    "hint": "Lesson 15 had an answer for one way out.",
+    "choices": [
+      {
+        "text": "Yes, because every public block has to be announced by its holder with BGP",
+        "correct": false,
+        "why": "The provider can announce a customer's block and route it down a static route."
+      },
+      {
+        "text": "Yes, because BGP converges faster than a static route",
+        "correct": false,
+        "why": "With one link there is nothing to converge to."
+      },
+      {
+        "text": "No: with one way out, a default towards the provider is enough",
+        "correct": true,
+        "why": "Right. BGP earns its place with a second provider, as in this lab."
+      },
+      {
+        "text": "No, because private ASNs cannot carry a /24",
+        "correct": false,
+        "why": "ASN ranges have nothing to do with prefix size."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmvk9zje",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before the prepend, a1's traceroute to 203.0.113.10 showed how many hops?",
+    "hint": "Provider, edge, server.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "hops"
+  }
+]

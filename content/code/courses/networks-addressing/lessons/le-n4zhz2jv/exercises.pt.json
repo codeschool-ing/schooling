@@ -1,0 +1,530 @@
+{
+  "ex-gjpvg3mm": {
+    "prompt": "O que é um sistema autônomo?",
+    "hint": "Pense em quem o opera.",
+    "choices": [
+      {
+        "text": "Um roteador que roda BGP",
+        "why": "Um AS tem muitos roteadores, e muitos deles nunca falam BGP."
+      },
+      {
+        "text": "Um bloco de endereços como 203.0.113.0/24",
+        "why": "Um AS origina blocos; ele é a rede, não os endereços."
+      },
+      {
+        "text": "Uma rede sob uma administração com uma política de roteamento",
+        "why": "Isso. A empresa, ispa e ispb são um cada."
+      },
+      {
+        "text": "Uma área OSPF ligada à área 0",
+        "why": "Áreas dividem um IGP dentro de uma organização; um AS é a rede inteira da organização."
+      }
+    ]
+  },
+  "ex-nc0xr3gk": {
+    "prompt": "Ligue cada número de AS ao que ele é.",
+    "hint": "Duas faixas são reservadas, e uma delas é para livros.",
+    "pairs": [
+      {
+        "left": "64500",
+        "right": "Reservado para documentação, como neste laboratório"
+      },
+      {
+        "left": "65000",
+        "right": "Uso privado dentro de uma organização"
+      },
+      {
+        "left": "4200000001",
+        "right": "Uso privado, 32 bits"
+      }
+    ],
+    "right_distractors": [
+      "Reservado para roteamento de loopback"
+    ]
+  },
+  "ex-br0phk9s": {
+    "prompt": "Na tabela de ispa, `198.51.100.0/25` tem próximo salto `0.0.0.0` e peso 32768. O que isso diz?",
+    "hint": "Quem pôs esta rota no BGP?",
+    "choices": [
+      {
+        "text": "A rota é inválida e não será usada",
+        "why": "Ela está marcada *>, válida e melhor."
+      },
+      {
+        "text": "O próprio ispa a origina",
+        "why": "Isso. 0.0.0.0 quer dizer este roteador, e 32768 é o peso do FRR para uma rota que ele origina."
+      },
+      {
+        "text": "ispa a aprendeu de uma rota padrão",
+        "why": "Uma rota padrão é 0.0.0.0/0 como destino, não 0.0.0.0 como próximo salto."
+      },
+      {
+        "text": "Ela veio de ispb com peso definido por ispb",
+        "why": "O peso nunca sai do roteador que o define, e o caminho está vazio, então nenhum AS a repassou."
+      }
+    ]
+  },
+  "ex-sdpjc5ch": {
+    "prompt": "Antes de edge ser configurado, o ping de a1 para 203.0.113.10 recebeu `Destination Net Unreachable` de 198.51.100.1. Por quê?",
+    "hint": "Veja o que a tabela de ispa contém.",
+    "choices": [
+      {
+        "text": "www estava desligado",
+        "why": "Um host desligado produz silêncio ou erro de host, não erro de rede vindo do provedor."
+      },
+      {
+        "text": "ispa bloqueia tráfego para clientes que não pagam",
+        "why": "Nenhuma política no laboratório bloqueia tráfego; ispa simplesmente não tem rota."
+      },
+      {
+        "text": "Ninguém tinha anunciado 203.0.113.0/24, então ispa não tinha rota para ele",
+        "why": "Isso. 198.51.100.1 é ispa, e sua tabela tinha dois prefixos, nenhum deles o da empresa."
+      },
+      {
+        "text": "O gateway padrão de a1 estava errado",
+        "why": "O erro veio de 198.51.100.1, o gateway de a1, então o gateway funcionava."
+      }
+    ]
+  },
+  "ex-cbmvznr4": {
+    "prompt": "Em que porta TCP o BGP roda?",
+    "hint": "Três dígitos.",
+    "unit": "porta"
+  },
+  "ex-8cgb20k4": {
+    "prompt": "O resumo de edge mostrou as duas sessões no ar havia 00:00:05 com `(Policy)` nas colunas de estado e de prefixos. O que estava acontecendo?",
+    "hint": "RFC 8212.",
+    "choices": [
+      {
+        "text": "As sessões ainda estavam sendo negociadas",
+        "why": "Up/Down conta o tempo estabelecido, e havia mensagens circulando."
+      },
+      {
+        "text": "As sessões estavam no ar, e o FRR não trocava rotas em sessões eBGP sem política",
+        "why": "Isso. Uma recusa proposital, até uma política dizer o que pode atravessar."
+      },
+      {
+        "text": "Os provedores rejeitaram o número de AS de edge",
+        "why": "Um AS errado fecha a sessão; estas estavam no ar."
+      },
+      {
+        "text": "Uma política nos provedores bloqueava edge",
+        "why": "A palavra é sobre a política que faltava no próprio edge, nos dois sentidos."
+      }
+    ]
+  },
+  "ex-wsrxwe4s": {
+    "prompt": "Um novo vizinho BGP fica em `Active` por dez minutos. Qual é a primeira verificação mais útil?",
+    "hint": "Active quer dizer que a conexão não se completa.",
+    "choices": [
+      {
+        "text": "Se as prefix lists estão permitindo os prefixos certos",
+        "why": "Prefix lists agem sobre rotas quando a sessão existe. Esta não abriu."
+      },
+      {
+        "text": "Se o AS path das rotas está longo demais",
+        "why": "Nenhuma rota foi trocada ainda, então não há caminho para olhar."
+      },
+      {
+        "text": "Se o maximum-prefix foi excedido",
+        "why": "Isso fecha uma sessão que já trocou rotas."
+      },
+      {
+        "text": "Se o vizinho é alcançável e a porta TCP 179 passa",
+        "why": "Isso. O BGP é antes de tudo uma conexão TCP; até ela se completar, nada mais importa."
+      }
+    ]
+  },
+  "ex-q3wksh8n": {
+    "prompt": "Uma sessão BGP entre roteadores de dois sistemas autônomos diferentes se chama ___, e uma dentro de um único AS se chama iBGP.",
+    "hint": "O contrário de interno.",
+    "blanks": [
+      {
+        "accept": [
+          "eBGP",
+          "BGP externo",
+          "external BGP"
+        ]
+      }
+    ]
+  },
+  "ex-wptm97h6": {
+    "prompt": "Para 198.51.100.0/25, edge tem os caminhos `64502 64501` e `64501`. Qual escolhe, e por quê?",
+    "hint": "Nada antes do passo do AS path foi ajustado.",
+    "choices": [
+      {
+        "text": "`64502 64501`, já que foi recebido primeiro",
+        "why": "Idade é um desempate tardio. O tamanho do caminho decide antes aqui."
+      },
+      {
+        "text": "`64501`, o AS path mais curto",
+        "why": "Isso. Ele está marcado com > na tabela de edge."
+      },
+      {
+        "text": "`64502 64501`, já que cruza mais redes e é mais confiável",
+        "why": "O BGP não premia o tamanho; ele prefere o caminho mais curto."
+      },
+      {
+        "text": "Os dois, dividindo o tráfego entre ispa e ispb",
+        "why": "Sem multipath configurado o BGP instala um melhor caminho, e o kernel mostra uma rota."
+      }
+    ]
+  },
+  "ex-v1b89nr0": {
+    "prompt": "Ponha estes critérios de melhor caminho do BGP na ordem em que o FRR e a Cisco os verificam.",
+    "hint": "Decisões locais primeiro, depois o caminho, depois dicas dos vizinhos.",
+    "items": [
+      "Maior weight",
+      "Maior local preference",
+      "AS path mais curto",
+      "Menor MED",
+      "eBGP antes de iBGP"
+    ],
+    "trap": "A local preference vem antes do AS path: é como uma rede passa por cima do tamanho do caminho, e é por isso que o prepending nem sempre funciona."
+  },
+  "ex-9x4eqpmw": {
+    "prompt": "O route map `TO-PROVIDER` de edge tem uma entrada: permitir rotas que casam com `OURS`. O que acontece com uma rota para 198.51.100.0/25 a caminho de ispb?",
+    "hint": "O que acontece no fim de um route map?",
+    "choices": [
+      {
+        "text": "É negada, por não casar com nenhuma entrada",
+        "why": "Isso. Uma rota que cai no fim de um route map é negada."
+      },
+      {
+        "text": "É permitida, porque nada a nega",
+        "why": "O fim de um route map é um deny implícito, e é isso que torna o TO-PROVIDER seguro."
+      },
+      {
+        "text": "É enviada com o prefixo trocado para 203.0.113.0/24",
+        "why": "Um route map muda atributos, nunca reescreve uma rota como outro prefixo."
+      },
+      {
+        "text": "É enviada com 64500 repetido na frente",
+        "why": "Repetir exige uma cláusula set, que o TO-PROVIDER não tem."
+      }
+    ]
+  },
+  "ex-j0qmhr3f": {
+    "prompt": "ispb manda a edge uma rota para 203.0.113.0/24 com o AS path `64502 64500`. Mesmo sem o `FROM-PROVIDER`, por que edge não a usa?",
+    "hint": "Procure o número do próprio edge.",
+    "choices": [
+      {
+        "text": "O prefixo é mais longo que o do próprio edge",
+        "why": "É o mesmo /24."
+      },
+      {
+        "text": "O peso de ispb é menor que o de edge",
+        "why": "O peso é local e não viaja; a rota é recusada antes de qualquer comparação."
+      },
+      {
+        "text": "O caminho contém 64500, o AS do próprio edge, então é descartada como loop",
+        "why": "Isso. Um roteador BGP recusa qualquer caminho que já liste o próprio AS."
+      },
+      {
+        "text": "Rotas eBGP não são aceitas para redes conectadas",
+        "why": "Elas seriam aceitas e perderiam pela distância; aqui nem chegam lá."
+      }
+    ]
+  },
+  "ex-b99452rc": {
+    "prompt": "Depois que a política foi aplicada, quantos prefixos edge recebeu de cada provedor?",
+    "hint": "Leia State/PfxRcd.",
+    "unit": "prefixos"
+  },
+  "ex-h0sxfgbj": {
+    "prompt": "Depois de `set as-path prepend 64500 64500`, quantos números de AS tem o caminho que ispa vê vindo direto de edge?",
+    "hint": "O número original mais os dois acrescentados.",
+    "unit": "números de AS"
+  },
+  "ex-npqmyvpg": {
+    "prompt": "Depois do prepend, o traceroute de a1 até o servidor web mostra quatro saltos em vez de três. Que endereço é novo?",
+    "hint": "Que provedor o tráfego de a1 atravessa agora?",
+    "choices": [
+      {
+        "text": "198.51.100.1",
+        "why": "Esse é ispa, o gateway de a1, presente antes e depois."
+      },
+      {
+        "text": "192.0.2.1",
+        "why": "Essa era a interface de edge do lado de ispa, por onde o tráfego chegava antes. Ela saiu do caminho."
+      },
+      {
+        "text": "203.0.113.1",
+        "why": "Essa é a interface de edge na LAN do servidor; o traceroute não a imprime aqui."
+      },
+      {
+        "text": "192.0.2.10",
+        "why": "Isso. Esse é ispb, que o tráfego de a1 agora atravessa na entrada."
+      }
+    ]
+  },
+  "ex-v3pwznw5": {
+    "prompt": "Uma empresa repete seu AS três vezes em direção ao provedor X. O provedor X dá a toda rota dos clientes local preference 200 e às rotas dos pares 100. A empresa é cliente de X. O que muda em X?",
+    "hint": "Qual passo da lista vem primeiro?",
+    "choices": [
+      {
+        "text": "Nada: a local preference é verificada antes do tamanho do caminho",
+        "why": "Isso. X continua preferindo a rota do cliente, com ou sem prepend."
+      },
+      {
+        "text": "X agora prefere o caminho pelo par",
+        "why": "Só se a local preference fosse igual. Aqui é 200 contra 100."
+      },
+      {
+        "text": "X descarta a rota por ter AS repetido",
+        "why": "Repetir o próprio AS do remetente é legal; X descarta um caminho com o número de X, não um repetido."
+      },
+      {
+        "text": "X divide o tráfego entre os dois caminhos",
+        "why": "As rotas diferem no passo da local preference, então uma vence de vez."
+      }
+    ]
+  },
+  "ex-c76nd3a6": {
+    "prompt": "Depois do prepend, os pedidos de a1 chegam à empresa por ispb. Por qual provedor saem as respostas do servidor para a1?",
+    "hint": "A tabela de quem decide o tráfego de saída?",
+    "choices": [
+      {
+        "text": "ispb, já que as respostas seguem de volta o caminho do pedido",
+        "why": "O IP não tem memória do caminho do pedido. Cada sentido é roteado por si."
+      },
+      {
+        "text": "ispa, já que a própria tabela de edge ainda prefere o caminho 64501",
+        "why": "Isso. O prepend mudou o que ispa escolhe, não o que edge escolhe."
+      },
+      {
+        "text": "Os dois, alternando",
+        "why": "edge instalou um melhor caminho para 198.51.100.0/25."
+      },
+      {
+        "text": "Nenhum, o prepend as bloqueia",
+        "why": "Um prepend alonga um anúncio; não bloqueia nada."
+      }
+    ]
+  },
+  "ex-zhye0655": {
+    "prompt": "Com `EVERYTHING` aplicado em direção a ispb, edge anunciou três prefixos. Por que isso é um vazamento?",
+    "hint": "O que ispb faria com uma rota para os clientes de ispa através de edge?",
+    "choices": [
+      {
+        "text": "Oferece transportar tráfego entre os dois provedores pelo enlace da empresa",
+        "why": "Isso. A empresa viraria trânsito entre ispa e ispb."
+      },
+      {
+        "text": "Revela os endereços privados da empresa",
+        "why": "Os dois prefixos a mais pertencem aos provedores, não à empresa."
+      },
+      {
+        "text": "Três está acima do limite de maximum-prefix",
+        "why": "O limite posto depois é 1000, e vale para o que edge recebe."
+      },
+      {
+        "text": "Retira 203.0.113.0/24 de ispb",
+        "why": "O bloco da empresa continua entre os três."
+      }
+    ]
+  },
+  "ex-qfgcn2bc": {
+    "prompt": "Que observação mostrou que ispb não aceitou as rotas vazadas por edge?",
+    "hint": "Veja a visão de ispb dos clientes de ispa.",
+    "choices": [
+      {
+        "text": "O advertised-routes de edge listou 3 prefixos",
+        "why": "Isso é o que edge mandou, não o que ispb guardou."
+      },
+      {
+        "text": "A sessão com ispb foi fechada",
+        "why": "Nada a fechou; o filtro descartou as rotas em silêncio."
+      },
+      {
+        "text": "ispb tinha 1 caminho para 198.51.100.0/25, vindo de 192.0.2.9",
+        "why": "Isso. Um caminho, de ispa; nada de edge."
+      },
+      {
+        "text": "a1 não alcançava mais o servidor web",
+        "why": "A alcançabilidade não foi testada nesse bloco, e o vazamento não a teria quebrado."
+      }
+    ]
+  },
+  "ex-dxp7k3ne": {
+    "prompt": "O que `neighbor 192.0.2.2 maximum-prefix 1000` faz em edge?",
+    "hint": "Ele protege o lado que recebe.",
+    "choices": [
+      {
+        "text": "Limita edge a anunciar 1000 prefixos",
+        "why": "Ele conta o que edge recebe, não o que manda."
+      },
+      {
+        "text": "Fecha a sessão se ispa mandar mais de 1000 prefixos",
+        "why": "Isso. Uma rede de segurança contra um provedor vazando algo enorme."
+      },
+      {
+        "text": "Guarda as 1000 melhores rotas e descarta o resto",
+        "why": "Ele não escolhe; ele fecha a sessão."
+      },
+      {
+        "text": "Define o tempo limite da sessão em 1000 segundos",
+        "why": "É uma contagem de prefixos, não um tempo."
+      }
+    ]
+  },
+  "ex-yntddg14": {
+    "prompt": "Um cliente vaza para o provedor as rotas de um par. O caminho vazado é mais longo que o que o provedor tem desse par. Por que a rota vazada ainda vence no provedor?",
+    "hint": "O que provedores ajustam para rotas vindas de clientes?",
+    "choices": [
+      {
+        "text": "Rotas vazadas levam um MED maior",
+        "why": "O MED vem depois do tamanho do caminho, e MED maior perde."
+      },
+      {
+        "text": "O provedor prefere rotas de clientes por local preference, verificada antes do tamanho do caminho",
+        "why": "Isso. É a preferência comercial que transforma um vazamento num incidente."
+      },
+      {
+        "text": "O BGP prefere a rota mais nova",
+        "why": "A idade está entre os últimos desempates, e favorece a rota mais velha."
+      },
+      {
+        "text": "O prefixo vazado é mais específico",
+        "why": "O cenário vaza os mesmos prefixos; um mais específico seria outro problema."
+      }
+    ]
+  },
+  "ex-w8zz0955": {
+    "prompt": "Uma ROA diz que o AS 64500 pode originar 203.0.113.0/24 com tamanho máximo /24. Ligue cada anúncio ao seu estado de validação.",
+    "hint": "Confira a origem e depois o tamanho.",
+    "pairs": [
+      {
+        "left": "203.0.113.0/24 vindo do AS 64500",
+        "right": "Válida"
+      },
+      {
+        "left": "203.0.113.0/24 vindo do AS 64511",
+        "right": "Inválida"
+      },
+      {
+        "left": "198.51.100.0/24 vindo do AS 64500, sem ROA que o cubra",
+        "right": "Não encontrada"
+      }
+    ],
+    "right_distractors": [
+      "Expirada"
+    ]
+  },
+  "ex-vfh55974": {
+    "prompt": "Com a mesma ROA, o próprio AS 64500 anuncia 203.0.113.0/25. Qual é o estado, e por quê?",
+    "hint": "A ROA tem um tamanho máximo.",
+    "choices": [
+      {
+        "text": "Válida, porque o AS de origem bate",
+        "why": "A origem é metade da verificação; o tamanho é a outra metade."
+      },
+      {
+        "text": "Não encontrada, porque nenhuma ROA nomeia um /25",
+        "why": "A ROA do /24 cobre o /25, então o estado não é \"não encontrada\"."
+      },
+      {
+        "text": "Inválida, porque /25 é mais longo que o máximo de /24",
+        "why": "Isso. Coberta por uma ROA, origem certa, tamanho errado."
+      },
+      {
+        "text": "Válida, porque um prefixo mais específico é preferido",
+        "why": "Preferência é roteamento; validação é uma verificação separada contra a ROA."
+      }
+    ]
+  },
+  "ex-tq7r2nxw": {
+    "prompt": "A validação de origem está implantada em toda parte, e alguém anuncia 203.0.113.0/24 com um caminho que termina em 64500, forjado. O que o detém?",
+    "hint": "Que AS a validação de origem examina?",
+    "choices": [
+      {
+        "text": "A validação de origem, que a rejeita como inválida",
+        "why": "A origem é a certa, então ela é validada; a falsificação está antes no caminho."
+      },
+      {
+        "text": "A assinatura da ROA, que cobre o caminho inteiro",
+        "why": "Uma ROA assina um prefixo e um AS de origem, nada sobre o caminho."
+      },
+      {
+        "text": "A detecção de loop em cada roteador",
+        "why": "Ela descarta caminhos que contêm o AS de quem recebe, o que um caminho forjado não precisa conter."
+      },
+      {
+        "text": "Não a validação de origem: ela confere o último AS, então restam filtros e vigilância",
+        "why": "Isso. Validar o resto do caminho é trabalho em andamento."
+      }
+    ]
+  },
+  "ex-qe4vqg77": {
+    "prompt": "O registro assinado no RPKI que diz que AS pode originar um prefixo, e até que tamanho, é uma ___.",
+    "hint": "O titular do bloco a assina.",
+    "blanks": [
+      {
+        "accept": [
+          "ROA"
+        ]
+      }
+    ]
+  },
+  "ex-ee8racgr": {
+    "prompt": "Quais destes fazem parte do lado da empresa num BGP seguro nesta aula? Marque todos que se aplicam.",
+    "hint": "Pense no que edge manda, recebe e publica.",
+    "choices": [
+      {
+        "text": "Um filtro de saída que anuncia só 203.0.113.0/24",
+        "why": "O TO-PROVIDER, que impediu o vazamento no estado normal."
+      },
+      {
+        "text": "Uma ROA para 203.0.113.0/24 com origem 64500 e tamanho máximo /24",
+        "why": "Ela permite que todos os outros rejeitem uma origem falsa."
+      },
+      {
+        "text": "maximum-prefix nas duas sessões com provedores",
+        "why": "A guarda do que edge recebe."
+      },
+      {
+        "text": "Aceitar 203.0.113.0/24 dos provedores como reserva",
+        "why": "O FROM-PROVIDER o nega de propósito: ninguém diz a edge como chegar à própria rede."
+      }
+    ]
+  },
+  "ex-3tv3tad5": {
+    "prompt": "Ponha os passos do laboratório desta aula na ordem em que foram feitos em edge.",
+    "hint": "Sessão, política, direcionamento, erro, reparo.",
+    "items": [
+      "Abrir sessões com os dois provedores",
+      "Aplicar TO-PROVIDER e FROM-PROVIDER",
+      "Repetir 64500 duas vezes em direção a ispa",
+      "Aplicar EVERYTHING em direção a ispb",
+      "Restaurar TO-PROVIDER e acrescentar maximum-prefix"
+    ],
+    "trap": "A política tem de vir antes de qualquer troca: sem ela as sessões mostravam (Policy) e não transportavam nada."
+  },
+  "ex-8rdhgap3": {
+    "prompt": "Uma empresa pequena com um provedor pergunta se precisa de BGP para seu /24. O que esta aula sugere?",
+    "hint": "A aula 15 tinha uma resposta para uma saída só.",
+    "choices": [
+      {
+        "text": "Sim, porque todo bloco público tem de ser anunciado pelo titular com BGP",
+        "why": "O provedor anuncia o bloco do cliente e o encaminha por uma rota estática."
+      },
+      {
+        "text": "Sim, porque o BGP converge mais rápido que uma rota estática",
+        "why": "Com um enlace não há para onde convergir."
+      },
+      {
+        "text": "Não: com uma saída só, uma rota padrão para o provedor basta",
+        "why": "Isso. O BGP justifica seu lugar com um segundo provedor, como neste laboratório."
+      },
+      {
+        "text": "Não, porque ASNs privados não transportam um /24",
+        "why": "Faixas de ASN não têm nada a ver com o tamanho do prefixo."
+      }
+    ]
+  },
+  "ex-zmvk9zje": {
+    "prompt": "Antes do prepend, o traceroute de a1 para 203.0.113.10 mostrou quantos saltos?",
+    "hint": "Provedor, edge, servidor.",
+    "unit": "saltos"
+  }
+}

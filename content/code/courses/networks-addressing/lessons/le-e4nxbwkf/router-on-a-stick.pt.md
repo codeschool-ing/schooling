@@ -42,7 +42,7 @@ root@r1:~# ip route
 
 Duas interfaces, `eth0.10@eth0` e `eth0.20@eth0`, cada uma com sua sub-rede, as duas montadas sobre
 o eth0. O endereço IPv6 link-local é o mesmo nas três, `fe80::1f:23ff:fee7:e9d5`, porque é construído
-a partir do endereço MAC (aula 9) e as três interfaces dividem um MAC. A tabela de rotas não precisou
+a partir do endereço MAC e as três interfaces dividem um MAC. A tabela de rotas não precisou
 de rota digitada: **o r1 está diretamente ligado às duas sub-redes**, então as duas linhas `proto
 kernel` que surgiram com os endereços são tudo. O laboratório montou o r1 como roteador, o que quer
 dizer que o encaminhamento entre interfaces já estava ligado.

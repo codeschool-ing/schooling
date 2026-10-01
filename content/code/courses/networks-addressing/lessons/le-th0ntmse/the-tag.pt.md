@@ -67,9 +67,9 @@ mudar em nenhum dos dois PCs.
 
 Os quatro bytes são dois campos de dois bytes cada. O primeiro é o **TPID** (*tag protocol
 identifier*, identificador do protocolo do tag), sempre `0x8100`, e ele fica exatamente onde um
-quadro sem tag guarda o EtherType. Essa posição é proposital: um equipamento que não sabe nada de
-VLANs lê `0x8100` como um protocolo que ele não transporta e descarta o quadro, em vez de ler o tag
-como se fosse o começo de um pacote IP.
+quadro sem tag guarda o EtherType. Essa posição é proposital: um host que não sabe nada de VLANs
+lê `0x8100` como um protocolo que ele não trata e ignora o quadro, em vez de ler o tag como se fosse
+o começo de um pacote IP.
 
 O segundo é o **TCI** (*tag control information*, informação de controle do tag), dezesseis bits
 divididos em três:

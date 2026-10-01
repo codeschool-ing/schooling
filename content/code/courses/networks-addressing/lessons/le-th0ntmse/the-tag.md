@@ -68,8 +68,8 @@ change.
 
 The four bytes are two fields of two bytes each. The first is the **TPID** (*tag protocol
 identifier*), always `0x8100`, and it sits exactly where an untagged frame keeps its EtherType.
-That placement is deliberate: a device that knows nothing about VLANs reads `0x8100` as a protocol
-it does not carry and drops the frame, instead of misreading the tag as the start of an IP packet.
+That placement is deliberate: a host that knows nothing about VLANs reads `0x8100` as a protocol it
+does not handle and ignores the frame, instead of misreading the tag as the start of an IP packet.
 
 The second is the **TCI** (*tag control information*), sixteen bits divided three ways:
 

@@ -42,7 +42,7 @@ root@r1:~# ip route
 
 Two interfaces, `eth0.10@eth0` and `eth0.20@eth0`, each with its own subnet, both riding on eth0.
 The link-local IPv6 address is the same on all three, `fe80::1f:23ff:fee7:e9d5`, because it is built
-from the MAC address (lesson 9) and the three interfaces share one MAC. The routing table needed no
+from the MAC address and the three interfaces share one MAC. The routing table needed no
 route typed by hand: **r1 is directly connected to both subnets**, so the two `proto kernel` lines
 that appeared with the addresses are the whole of it. The lab built r1 as a router, which means
 forwarding between interfaces was already switched on.
