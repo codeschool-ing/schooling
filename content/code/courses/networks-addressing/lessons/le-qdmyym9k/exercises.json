@@ -1,0 +1,752 @@
+[
+  {
+    "id": "ex-c8s1qdrc",
+    "version": 1,
+    "section": "lan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What separates a LAN from a WAN, in this lesson's sense?",
+    "hint": "Think about who sends the bill.",
+    "choices": [
+      {
+        "text": "How many machines are connected",
+        "correct": false,
+        "why": "A LAN can hold a few machines or thousands. The count is not what decides."
+      },
+      {
+        "text": "Who owns the links",
+        "correct": true,
+        "why": "Right. A LAN is built from equipment the company owns; a WAN's links belong to a provider."
+      },
+      {
+        "text": "Whether the machines use Wi-Fi or cables",
+        "correct": false,
+        "why": "The company's own Wi-Fi is part of its LAN, bridged to the same Ethernet."
+      },
+      {
+        "text": "The speed printed on the switch ports",
+        "correct": false,
+        "why": "Speed follows from ownership, and a WAN link can be fast; it does not define the category."
+      }
+    ]
+  },
+  {
+    "id": "ex-tztj5r8g",
+    "version": 1,
+    "section": "lan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc1's table holds `10.20.10.0/24 dev eth0 ... scope link` and `default via 10.20.10.1`. Where does pc1 send a packet for 10.20.10.200?",
+    "hint": "Which of the two lines covers .200?",
+    "choices": [
+      {
+        "text": "To rhq at 10.20.10.1, which forwards it",
+        "correct": false,
+        "why": "The default route is for addresses no other line covers, and 10.20.10.0/24 covers this one."
+      },
+      {
+        "text": "To the provider, through rhq",
+        "correct": false,
+        "why": "Nothing in pc1's table names the provider; even the default route stops at rhq."
+      },
+      {
+        "text": "Nowhere, since nobody has that address",
+        "correct": false,
+        "why": "pc1 cannot know that in advance. It asks with ARP, and a silence is the answer it may get."
+      },
+      {
+        "text": "Onto its own cable, via ARP",
+        "correct": true,
+        "why": "Right. 10.20.10.200 is inside 10.20.10.0/24, pc1's LAN, which is reached directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-f34vnqex",
+    "version": 1,
+    "section": "lan",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In pc1's routing table, the line that hands everything outside its LAN to rhq begins with the word ___.",
+    "hint": "The capture of `ip route`.",
+    "blanks": [
+      {
+        "accept": [
+          "default"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rcfvc0mh",
+    "version": 1,
+    "section": "lan",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are LANs in this lesson's sense? Choose all that apply.",
+    "hint": "Ownership, not distance.",
+    "choices": [
+      {
+        "text": "The head office's 10.20.10.0/24",
+        "correct": true,
+        "why": "Right: the company's own switch and cables, reached directly."
+      },
+      {
+        "text": "A line to the building across the street, rented from a provider",
+        "correct": false,
+        "why": "Short, but the link belongs to the provider: a WAN link."
+      },
+      {
+        "text": "Three buildings of one campus joined by fibre the company owns",
+        "correct": true,
+        "why": "Right: a distance does not turn the company's own network into a WAN."
+      },
+      {
+        "text": "203.0.113.0/30, between rhq and isp",
+        "correct": false,
+        "why": "That is the link the provider sold to the head office."
+      },
+      {
+        "text": "The branch's Wi-Fi, from access points the company installed",
+        "correct": true,
+        "why": "Right: the access points bridge the radio onto the same LAN."
+      }
+    ]
+  },
+  {
+    "id": "ex-8kdcjyc3",
+    "version": 1,
+    "section": "wan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "isp's routing table holds only 198.51.100.0/30 and 203.0.113.0/30. Why is there no route to 10.30.10.0/24?",
+    "hint": "Who else uses addresses that start with 10?",
+    "choices": [
+      {
+        "text": "Providers do not route private addresses",
+        "correct": true,
+        "why": "Right. Thousands of companies use the same private ranges, so no provider could know which one is meant."
+      },
+      {
+        "text": "The branch router has not been switched on yet",
+        "correct": false,
+        "why": "rbr answered the traceroute at 198.51.100.2, so it is on."
+      },
+      {
+        "text": "The lab forgot to start OSPF on isp",
+        "correct": false,
+        "why": "The sites scenario runs no routing protocol at all, and a provider would refuse these routes anyway."
+      },
+      {
+        "text": "The route expired after the traceroute finished",
+        "correct": false,
+        "why": "A traceroute adds and removes no route; isp never had one."
+      }
+    ]
+  },
+  {
+    "id": "ex-2scsfehn",
+    "version": 1,
+    "section": "wan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc1's traceroute to 198.51.100.2 worked although isp has no route to 10.20.10.0/24. How did the replies get back?",
+    "hint": "What does the head office look like from the WAN?",
+    "choices": [
+      {
+        "text": "isp learnt the route while the traceroute ran",
+        "correct": false,
+        "why": "isp's table, read after the traceroute, still has only its two links."
+      },
+      {
+        "text": "rhq swapped pc1's address for its public one, 203.0.113.2",
+        "correct": true,
+        "why": "Right. The replies were addressed to 203.0.113.2, which isp reaches directly, and rhq handed them to pc1. That is NAT, lesson 11."
+      },
+      {
+        "text": "Replies are broadcast to every network",
+        "correct": false,
+        "why": "Routers do not forward broadcasts, and a reply has one destination."
+      },
+      {
+        "text": "The branch router sent them through the tunnel",
+        "correct": false,
+        "why": "The tunnel did not exist yet; the VPN section builds it later in the lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p13stxk",
+    "version": 1,
+    "section": "wan",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each kind of WAN link to what the company is buying.",
+    "hint": "Three kinds, from dedicated to shared.",
+    "pairs": [
+      {
+        "left": "Leased line",
+        "right": "A dedicated circuit, the same capacity day and night"
+      },
+      {
+        "left": "MPLS",
+        "right": "A provider's network that keeps several customers' traffic apart"
+      },
+      {
+        "left": "Internet with a VPN",
+        "right": "An ordinary connection at each site, joined by a tunnel"
+      }
+    ],
+    "right_distractors": [
+      "A switch port in the company's cupboard"
+    ]
+  },
+  {
+    "id": "ex-7wpg6mqy",
+    "version": 1,
+    "section": "wan",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many addresses does a /30 link such as 203.0.113.0/30 hold, counting both ends and the two that are not used by a device?",
+    "hint": "The section says it of each WAN link.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-00kw99ka",
+    "version": 1,
+    "section": "man",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company rents metro Ethernet between two of its buildings in the same city. Seen from the company, what is that link?",
+    "hint": "Whose fibre is it?",
+    "choices": [
+      {
+        "text": "A LAN, because it carries Ethernet",
+        "correct": false,
+        "why": "The frames are Ethernet, and the link is still rented. Ownership decides."
+      },
+      {
+        "text": "A VLAN of the provider's switch",
+        "correct": false,
+        "why": "A VLAN divides a switch; it says nothing about who owns the fibre."
+      },
+      {
+        "text": "A short WAN link",
+        "correct": true,
+        "why": "Right. The provider owns it and bills for it; the short distance does not change that."
+      },
+      {
+        "text": "A VPN between the buildings",
+        "correct": false,
+        "why": "A VPN is a tunnel inside packets. Metro Ethernet delivers frames directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ezm28nh",
+    "version": 1,
+    "section": "man",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In what shape do providers lay fibre round a city, and what does it buy them?",
+    "hint": "Lesson 3 cut one.",
+    "choices": [
+      {
+        "text": "A bus, which needs the least fibre",
+        "correct": false,
+        "why": "A bus fails as a whole at one break, the opposite of what a city's customers pay for."
+      },
+      {
+        "text": "A full mesh between every pair of buildings",
+        "correct": false,
+        "why": "With hundreds of buildings, n × (n − 1) / 2 runs of fibre is out of reach."
+      },
+      {
+        "text": "A star around the provider's own building",
+        "correct": false,
+        "why": "Then each customer would depend on one run of fibre with no second way."
+      },
+      {
+        "text": "A ring, so a cut still leaves a way out",
+        "correct": true,
+        "why": "Right. Every building on a ring has two ways out, at one run of fibre per building."
+      }
+    ]
+  },
+  {
+    "id": "ex-crfpbqpg",
+    "version": 1,
+    "section": "man",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The standards body behind Ethernet and Wi-Fi is the IEEE 802 LAN/___ Standards Committee.",
+    "hint": "The city-sized word.",
+    "blanks": [
+      {
+        "accept": [
+          "MAN"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pzqcje2t",
+    "version": 1,
+    "section": "vlan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc1 is in VLAN 10 and pc2 in VLAN 20, on adjacent ports of one switch. What does pc1 need to reach pc2?",
+    "hint": "Two VLANs are two LANs.",
+    "choices": [
+      {
+        "text": "Nothing, since they share a switch",
+        "correct": false,
+        "why": "Sharing the hardware is the point of a VLAN, and the switch still keeps them apart."
+      },
+      {
+        "text": "A cable straight from pc1 to pc2, outside the switch",
+        "correct": false,
+        "why": "That builds a third network beside the switch; it does not join the two VLANs."
+      },
+      {
+        "text": "A router between the two VLANs",
+        "correct": true,
+        "why": "Right. The switch forwards frames only inside a VLAN, so crossing between them is a router's job (lesson 22)."
+      },
+      {
+        "text": "A VPN between the two ports",
+        "correct": false,
+        "why": "A VPN joins networks across somebody else's network. Two ports of one switch need a router."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6xmhmb5",
+    "version": 1,
+    "section": "vlan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A PC in VLAN 10 sends an ARP request to the broadcast address. Which ports of the switch deliver it?",
+    "hint": "A VLAN is a broadcast boundary.",
+    "choices": [
+      {
+        "text": "Every port of the switch, since it is a broadcast",
+        "correct": false,
+        "why": "A broadcast fills its own VLAN and stops at the edge of it."
+      },
+      {
+        "text": "The router's port alone",
+        "correct": false,
+        "why": "ARP asks every machine on the LAN; the router is one of them, not the only one."
+      },
+      {
+        "text": "None, because VLANs drop ARP",
+        "correct": false,
+        "why": "Without ARP no machine in the VLAN could reach another. VLANs limit broadcasts; they do not drop them."
+      },
+      {
+        "text": "The other ports in VLAN 10",
+        "correct": true,
+        "why": "Right. Broadcasts stay inside their VLAN, which is half of why VLANs exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-am9a4pez",
+    "version": 1,
+    "section": "vlan",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes long is the 802.1Q tag that marks a frame's VLAN on a trunk?",
+    "hint": "The section names it; lesson 19 opens it.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-z75en99b",
+    "version": 1,
+    "section": "vpn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before the tunnel, pc1's ping to 10.30.10.22 printed `From 203.0.113.1 icmp_seq=1 Destination Net Unreachable`. Which device sent that message?",
+    "hint": "Whose address is 203.0.113.1?",
+    "choices": [
+      {
+        "text": "rbr, the branch router",
+        "correct": false,
+        "why": "The packet never reached rbr; it died one router earlier."
+      },
+      {
+        "text": "pc1 itself, before sending anything",
+        "correct": false,
+        "why": "When pc1 refuses on its own it prints Network is unreachable, without a From."
+      },
+      {
+        "text": "isp, the provider's router",
+        "correct": true,
+        "why": "Right. 203.0.113.1 is the provider's end of the head office's link, and it has no route to the branch's LAN."
+      },
+      {
+        "text": "pc2, which refused the ping",
+        "correct": false,
+        "why": "pc2 is never reached, and its address is 10.30.10.22."
+      }
+    ]
+  },
+  {
+    "id": "ex-ee8sgetb",
+    "version": 1,
+    "section": "vpn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Through the tunnel, the reply from pc2 arrives with `ttl=62`. Which routers each took one from the inner packet's TTL?",
+    "hint": "pc2 starts at 64.",
+    "choices": [
+      {
+        "text": "rbr and rhq",
+        "correct": true,
+        "why": "Right. 64 minus the two routers that forwarded the inner packet is 62."
+      },
+      {
+        "text": "rbr, isp and rhq",
+        "correct": false,
+        "why": "That would leave 61. isp forwards the outer packet and never sees the inner TTL."
+      },
+      {
+        "text": "isp alone, twice",
+        "correct": false,
+        "why": "isp forwards the encrypted outer packet and cannot read the inner one at all."
+      },
+      {
+        "text": "No router; pc2 sends 62",
+        "correct": false,
+        "why": "A Linux machine starts at 64, as the ring and the office captures show."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqqpfwgg",
+    "version": 1,
+    "section": "vpn",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On rhq, `wg set wg0 ... peer +JFz… endpoint 198.51.100.2:51820 allowed-ips 10.30.10.0/24,10.255.255.2/32`. What does allowed-ips decide?",
+    "hint": "Inner addresses or outer ones?",
+    "choices": [
+      {
+        "text": "Which public addresses may open a connection to port 51820",
+        "correct": false,
+        "why": "The outer side is the endpoint. allowed-ips is about the packets inside the tunnel."
+      },
+      {
+        "text": "Which head office PCs may use the tunnel",
+        "correct": false,
+        "why": "It names the branch's addresses, not the head office's."
+      },
+      {
+        "text": "Which addresses the provider is allowed to route",
+        "correct": false,
+        "why": "The provider is never told about the tunnel's inner addresses."
+      },
+      {
+        "text": "Which inner source addresses this peer may send from",
+        "correct": true,
+        "why": "Right. Packets arriving from the branch must come from 10.30.10.0/24 or 10.255.255.2, and nothing else is accepted."
+      }
+    ]
+  },
+  {
+    "id": "ex-0yrf6xsz",
+    "version": 1,
+    "section": "vpn",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the head office router's configuration in the order it was typed.",
+    "hint": "Three prompt lines on rhq.",
+    "items": [
+      "Create the wg0 interface",
+      "Give it a port, a private key and the branch as its peer",
+      "Give wg0 its address and bring it up",
+      "Route the branch's LAN into wg0"
+    ],
+    "trap": "The interface has to exist before `wg set` can configure it, and the route goes last because it points at wg0."
+  },
+  {
+    "id": "ex-0xc4vhc3",
+    "version": 1,
+    "section": "vpn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The two private keys of the lab's tunnel are written in lab.sh. What follows for a real tunnel?",
+    "hint": "Who else can read lab.sh?",
+    "choices": [
+      {
+        "text": "They are safe, since wg show prints them as hidden",
+        "correct": false,
+        "why": "wg show hides the key on the screen; the file still has it for anybody to read."
+      },
+      {
+        "text": "Make new ones with wg genkey: a printed key protects nothing",
+        "correct": true,
+        "why": "Right. A private key that anybody can read is not private, and those keys are in a public file on purpose."
+      },
+      {
+        "text": "They work as long as the endpoints change",
+        "correct": false,
+        "why": "The endpoint is an address; it does not make a leaked key secret again."
+      },
+      {
+        "text": "Replace the public keys and keep the private ones",
+        "correct": false,
+        "why": "The public keys are meant to be shared. It is the private ones that leaked."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0gapbxt",
+    "version": 1,
+    "section": "vpn-on-the-wire",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While pc1 pinged pc2 through the tunnel, what could the provider read on isp's cable? Choose all that apply.",
+    "hint": "Read the first tcpdump line by line.",
+    "choices": [
+      {
+        "text": "The two routers' public addresses",
+        "correct": true,
+        "why": "Right: 203.0.113.2 and 198.51.100.2 are in every line."
+      },
+      {
+        "text": "pc1's address, 10.20.10.21",
+        "correct": false,
+        "why": "Inner addresses are encrypted; they appear only on wg0."
+      },
+      {
+        "text": "The UDP port, 51820",
+        "correct": true,
+        "why": "Right: the port is in the outer header, in clear."
+      },
+      {
+        "text": "That the packets were ICMP echo requests",
+        "correct": false,
+        "why": "The word ICMP is only in the capture inside the tunnel."
+      },
+      {
+        "text": "The size of each datagram, 128",
+        "correct": true,
+        "why": "Right: length 128 is printed for all four, and a bigger packet would show a bigger number."
+      }
+    ]
+  },
+  {
+    "id": "ex-nna79c1x",
+    "version": 1,
+    "section": "vpn-on-the-wire",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A ping packet of 84 bytes is padded to 96 and encrypted, and WireGuard adds a 16-byte header and a 16-byte tag. What UDP length does tcpdump print?",
+    "hint": "Add what UDP carries.",
+    "value": 128,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-ryxwjwne",
+    "version": 1,
+    "section": "vpn-on-the-wire",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Who can read the pings between pc1 and pc2 in clear?",
+    "hint": "The tunnel protects the path.",
+    "choices": [
+      {
+        "text": "Anybody listening on the provider's cable",
+        "correct": false,
+        "why": "That is the first capture: two public addresses, a port and a size."
+      },
+      {
+        "text": "pc1 alone",
+        "correct": false,
+        "why": "pc2 reads them too, and so does anybody on either router."
+      },
+      {
+        "text": "Whoever controls rhq, rbr, pc1 or pc2",
+        "correct": true,
+        "why": "Right. Encryption covers the path between the routers; at either end the traffic is in clear, as wg0 showed."
+      },
+      {
+        "text": "Nobody, not even pc2",
+        "correct": false,
+        "why": "pc2 has to read the ping to answer it."
+      }
+    ]
+  },
+  {
+    "id": "ex-nj192ehj",
+    "version": 1,
+    "section": "vpn-on-the-wire",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does tcpdump on rhq's wg0 print `link-type RAW (Raw IP)`?",
+    "hint": "What would an Ethernet header hold?",
+    "choices": [
+      {
+        "text": "tcpdump could not decrypt the packets",
+        "correct": false,
+        "why": "On wg0 the packets are already decrypted; the ICMP is readable."
+      },
+      {
+        "text": "A tunnel carries bare IP, with no MAC addresses",
+        "correct": true,
+        "why": "Right. There is no link with hardware addresses inside a tunnel, so there is nothing for an Ethernet header to say."
+      },
+      {
+        "text": "The capture was taken on the provider's side",
+        "correct": false,
+        "why": "That capture was on isp's eth0 and printed link-type EN10MB (Ethernet)."
+      },
+      {
+        "text": "WireGuard removes the Ethernet header to save space",
+        "correct": false,
+        "why": "There was never an Ethernet header on wg0 to remove."
+      }
+    ]
+  },
+  {
+    "id": "ex-d15w1qs4",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each word to where it appears in this lesson's lab.",
+    "hint": "The figure in the LAN section.",
+    "pairs": [
+      {
+        "left": "LAN",
+        "right": "10.20.10.0/24, pc1 and rhq"
+      },
+      {
+        "left": "WAN",
+        "right": "203.0.113.0/30 and 198.51.100.0/30, sold by isp"
+      },
+      {
+        "left": "VPN",
+        "right": "wg0, from 10.255.255.1 to 10.255.255.2"
+      }
+    ],
+    "right_distractors": [
+      "802.1Q tags on a trunk"
+    ]
+  },
+  {
+    "id": "ex-6p9zqesa",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A branch says its tunnel is up. A capture on the branch router's internet side shows ICMP from 10.30.10.22 to 10.20.10.21. What does that tell you?",
+    "hint": "What did the capture on isp show when the tunnel worked?",
+    "choices": [
+      {
+        "text": "It bypasses the tunnel, in clear",
+        "correct": true,
+        "why": "Right. Through the tunnel the outside shows only UDP between public addresses; private ICMP there means a path that skips it."
+      },
+      {
+        "text": "The tunnel is working as intended",
+        "correct": false,
+        "why": "A working tunnel shows UDP 51820 on the outside, as on isp."
+      },
+      {
+        "text": "The provider has decrypted the traffic",
+        "correct": false,
+        "why": "A provider has no key. The capture is on the branch's own router."
+      },
+      {
+        "text": "The capture was taken on wg0 by mistake",
+        "correct": false,
+        "why": "The question says the internet side; wg0 is the inside of the tunnel."
+      }
+    ]
+  },
+  {
+    "id": "ex-v8mf9fnw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the hops of pc1's traceroute to pc2 through the tunnel.",
+    "hint": "Three lines.",
+    "items": [
+      "10.20.10.1",
+      "10.255.255.2",
+      "10.30.10.22"
+    ],
+    "trap": "203.0.113.1 is not a hop at all: inside the tunnel the provider never appears."
+  },
+  {
+    "id": "ex-279b86sr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company with internet at both its sites wants the two LANs, on private addresses, to reach each other. What is the cheapest way?",
+    "hint": "Use what is already paid for.",
+    "choices": [
+      {
+        "text": "A leased line between the two offices",
+        "correct": false,
+        "why": "It works, and it is the expensive option the VPN section was avoiding."
+      },
+      {
+        "text": "A site-to-site VPN between the routers",
+        "correct": true,
+        "why": "Right. It rides on the connections both sites already have."
+      },
+      {
+        "text": "Ask the provider to route 10.30.10.0/24",
+        "correct": false,
+        "why": "No provider routes private ranges that thousands of companies reuse."
+      },
+      {
+        "text": "One VLAN stretched across the two cities",
+        "correct": false,
+        "why": "A VLAN divides switches; between cities something still has to carry the frames."
+      }
+    ]
+  }
+]

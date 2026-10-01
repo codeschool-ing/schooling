@@ -1,0 +1,753 @@
+[
+  {
+    "id": "ex-g8abxy3y",
+    "version": 1,
+    "section": "mac-table",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A switch learns nothing from a frame's ___ address; it learns from where the frame came from.",
+    "hint": "The opposite of the source.",
+    "blanks": [
+      {
+        "accept": [
+          "destination"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-69p6s7xe",
+    "version": 1,
+    "section": "mac-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "sw1's table was empty. After one ping from pc1 to the server it held 02:9e:43:3e:ca:ae on p4. Which frame taught it that?",
+    "hint": "Whose address is it, and in which field?",
+    "choices": [
+      {
+        "text": "pc1's echo request, which was addressed to the server",
+        "correct": false,
+        "why": "A destination teaches a switch nothing."
+      },
+      {
+        "text": "A frame with that MAC as its source",
+        "correct": true,
+        "why": "Right. The server sent it, and it arrived on p4."
+      },
+      {
+        "text": "An announcement from the router on p8",
+        "correct": false,
+        "why": "r1 sent nothing during this ping."
+      },
+      {
+        "text": "A static entry the lab typed",
+        "correct": false,
+        "why": "The command listed dynamic entries, learnt ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-dc9a9b8y",
+    "version": 1,
+    "section": "mac-table",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "sw1 reports ageing_time 30000, in hundredths of a second. After how many minutes without a frame from it is an entry forgotten?",
+    "hint": "300 seconds.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-es0hamr8",
+    "version": 1,
+    "section": "mac-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A laptop learnt on p1 is unplugged and plugged into p3. When does sw1's table show it on p3?",
+    "hint": "What refreshes an entry?",
+    "choices": [
+      {
+        "text": "After 300 seconds, when the old entry ages out",
+        "correct": false,
+        "why": "The old one is replaced sooner than that."
+      },
+      {
+        "text": "As soon as it sends a frame from p3",
+        "correct": true,
+        "why": "Right. Its source arrives on p3 and rewrites the entry."
+      },
+      {
+        "text": "When an administrator clears the table",
+        "correct": false,
+        "why": "Learning needs no administrator."
+      },
+      {
+        "text": "When another machine sends a frame to it",
+        "correct": false,
+        "why": "A destination teaches nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-gc05cyc5",
+    "version": 1,
+    "section": "mac-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "pc3's MAC, 02:d9:6b:02:17:20, is not in sw1's table, though pc3 is cabled and up. A frame for that address arrives on p1. What does sw1 do with it?",
+    "hint": "It cannot drop it and cannot pick a port.",
+    "choices": [
+      {
+        "text": "Drops it, since the address is unknown",
+        "correct": false,
+        "why": "Dropping would lose frames for a machine that is there and has not spoken yet."
+      },
+      {
+        "text": "Asks for the MAC with ARP",
+        "correct": false,
+        "why": "ARP asks for a MAC given an IP; a switch does neither."
+      },
+      {
+        "text": "Sends it out of every port except p1",
+        "correct": true,
+        "why": "Right. It floods, and pc3 receives it with everybody else."
+      },
+      {
+        "text": "Sends it to p3, the port with no entry",
+        "correct": false,
+        "why": "Several ports have no entry; the switch has no way to choose."
+      }
+    ]
+  },
+  {
+    "id": "ex-gw5d4w2z",
+    "version": 1,
+    "section": "flooding",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "While pc1 pinged the server twice and then 10.20.10.99 twice, how many frames did pc3's tcpdump catch?",
+    "hint": "Only the unknown destination reached pc3.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "frames"
+  },
+  {
+    "id": "ex-a6et7ejw",
+    "version": 1,
+    "section": "flooding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc3 caught the pings to 02:00:00:00:00:99 and none of the pings to the server. Why the difference?",
+    "hint": "Which of the two destinations was in the table?",
+    "choices": [
+      {
+        "text": "The server's port was in the table",
+        "correct": true,
+        "why": "Right. 02:00:00:00:00:99 was not, and an unknown destination goes everywhere."
+      },
+      {
+        "text": "Pings to a missing host are broadcasts",
+        "correct": false,
+        "why": "They were unicast frames to one made-up MAC."
+      },
+      {
+        "text": "tcpdump on pc3 only started after the server pings",
+        "correct": false,
+        "why": "It ran for eight seconds, covering both pairs."
+      },
+      {
+        "text": "The server's replies were too small to capture",
+        "correct": false,
+        "why": "Size has nothing to do with it; the frames never reached pc3's port."
+      }
+    ]
+  },
+  {
+    "id": "ex-1s4b3r7y",
+    "version": 1,
+    "section": "flooding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the pings to 02:00:00:00:00:99, sw1's table still had 2 entries and none for that address. Why was it never learnt?",
+    "hint": "Learning reads one field.",
+    "choices": [
+      {
+        "text": "The table was full",
+        "correct": false,
+        "why": "It held two entries."
+      },
+      {
+        "text": "Made-up addresses are filtered",
+        "correct": false,
+        "why": "The switch flooded the frames, so it did not filter them."
+      },
+      {
+        "text": "No frame ever came from it",
+        "correct": true,
+        "why": "Right. It appeared only as a destination."
+      },
+      {
+        "text": "Its entry aged out at once",
+        "correct": false,
+        "why": "Ageing removes an entry after 300 seconds, and there was none to remove."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpy4z77k",
+    "version": 1,
+    "section": "flooding",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these frames does a switch send out of every port but the incoming one? Choose all that apply.",
+    "hint": "Two are flooded, and one is not even forwarded.",
+    "choices": [
+      {
+        "text": "A frame to ff:ff:ff:ff:ff:ff",
+        "correct": true,
+        "why": "Right. A broadcast is for everybody."
+      },
+      {
+        "text": "A frame to a MAC learnt on another port",
+        "correct": false,
+        "why": "It goes to that one port."
+      },
+      {
+        "text": "A frame to a MAC that is not in its table",
+        "correct": true,
+        "why": "Right. Unknown destinations are flooded."
+      },
+      {
+        "text": "A frame to a MAC learnt on the port it came in by",
+        "correct": false,
+        "why": "The destination is behind the same port, so the switch drops it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4fj6sj0c",
+    "version": 1,
+    "section": "flooding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A monitoring server receives a steady stream of reports and sends nothing for ten minutes at a stretch. Other machines on its switch start seeing those reports. Why?",
+    "hint": "Compare ten minutes with the ageing time.",
+    "choices": [
+      {
+        "text": "The reports are broadcasts",
+        "correct": false,
+        "why": "They are addressed to one server, and they reach others only while it is silent."
+      },
+      {
+        "text": "The switch's table is full",
+        "correct": false,
+        "why": "A full table is one cause of flooding, but nothing here filled it."
+      },
+      {
+        "text": "Its cable is damaged",
+        "correct": false,
+        "why": "A cable fault loses frames; it does not copy them elsewhere."
+      },
+      {
+        "text": "Its entry ages out after five silent minutes",
+        "correct": true,
+        "why": "Right. Then frames to it are flooded until it speaks."
+      }
+    ]
+  },
+  {
+    "id": "ex-pget8c6n",
+    "version": 1,
+    "section": "collision-domains",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of CSMA/CD on a shared Ethernet in order.",
+    "hint": "Listen first.",
+    "items": [
+      "Wait until the medium is quiet",
+      "Send, still listening",
+      "Notice a signal that is not your own",
+      "Send a short jam signal",
+      "Wait a random time and try again"
+    ],
+    "trap": "The wait is random so that the two senders do not collide again on the next attempt."
+  },
+  {
+    "id": "ex-acb3t806",
+    "version": 1,
+    "section": "collision-domains",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A switch has 24 ports with one device on each. How many collision domains is that?",
+    "hint": "One per port.",
+    "value": 24,
+    "tolerance": 0,
+    "unit": "domains"
+  },
+  {
+    "id": "ex-3kx5qfdb",
+    "version": 1,
+    "section": "collision-domains",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc1's card reports Duplex: Full, and its collsns counter is 0. Why are there no collisions?",
+    "hint": "What is shared on a full-duplex link?",
+    "choices": [
+      {
+        "text": "The link is fast enough to avoid them",
+        "correct": false,
+        "why": "Speed does not prevent collisions; sharing causes them."
+      },
+      {
+        "text": "Each direction has its own path",
+        "correct": true,
+        "why": "Right. With nothing shared, nothing collides."
+      },
+      {
+        "text": "The switch retries collided frames itself",
+        "correct": false,
+        "why": "The counter would still record collisions."
+      },
+      {
+        "text": "Too little traffic was sent",
+        "correct": false,
+        "why": "Hundreds of frames would not collide either."
+      }
+    ]
+  },
+  {
+    "id": "ex-22kx1nqr",
+    "version": 1,
+    "section": "collision-domains",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One end of a switched link is set by hand to full duplex; the other is left to negotiate and falls back to half. What does the link look like?",
+    "hint": "Each end believes something different about the cable.",
+    "choices": [
+      {
+        "text": "Down, with no light on either port",
+        "correct": false,
+        "why": "Both ends agree there is a link; they disagree about using it."
+      },
+      {
+        "text": "Normal, because the switch corrects it",
+        "correct": false,
+        "why": "Nothing corrects a setting typed by hand."
+      },
+      {
+        "text": "Up, slow, and counting collisions",
+        "correct": true,
+        "why": "Right. The half end counts collisions, and the full end counts damaged frames."
+      },
+      {
+        "text": "Flooding, because the table empties",
+        "correct": false,
+        "why": "Duplex has nothing to do with the MAC table."
+      }
+    ]
+  },
+  {
+    "id": "ex-6mydgkxh",
+    "version": 1,
+    "section": "collision-domains",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A link on which a device sends or receives, but not both at the same moment, is ___ duplex.",
+    "hint": "The opposite of full.",
+    "blanks": [
+      {
+        "accept": [
+          "half"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xmedvbhe",
+    "version": 1,
+    "section": "broadcast-domains",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pc3 captured 'Request who-has 10.20.10.22 tell 10.20.10.21', sent by pc1 to ff:ff:ff:ff:ff:ff. Why did it reach pc3?",
+    "hint": "Look at the destination MAC.",
+    "choices": [
+      {
+        "text": "pc3 has the address 10.20.10.22",
+        "correct": false,
+        "why": "pc3 is 10.20.10.23, and it did not answer."
+      },
+      {
+        "text": "A broadcast goes out of every port",
+        "correct": true,
+        "why": "Right. The switch floods it to everybody in the domain."
+      },
+      {
+        "text": "The switch's table was full",
+        "correct": false,
+        "why": "It was a broadcast; a full table is not needed to explain it."
+      },
+      {
+        "text": "pc3's port was locked",
+        "correct": false,
+        "why": "A lock limits what pc3 sends, not what it receives."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn3qrepp",
+    "version": 1,
+    "section": "broadcast-domains",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While pc1 broadcast the same ARP question again, isp, on r1's other interface, captured 0 packets. Why?",
+    "hint": "What does a router forward?",
+    "choices": [
+      {
+        "text": "tcpdump on isp filtered out ARP",
+        "correct": false,
+        "why": "Its filter was arp, so it was listening for exactly that."
+      },
+      {
+        "text": "r1's firewall dropped it",
+        "correct": false,
+        "why": "The firewall judges forwarded packets; a broadcast is never forwarded."
+      },
+      {
+        "text": "A router ends the broadcast domain",
+        "correct": true,
+        "why": "Right. r1 received the question and passed it to no other network."
+      },
+      {
+        "text": "The switch kept it away from p8",
+        "correct": false,
+        "why": "Every port of sw1, p8 included, received the broadcast."
+      }
+    ]
+  },
+  {
+    "id": "ex-03g4ww4b",
+    "version": 1,
+    "section": "broadcast-domains",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each device to how it divides a network.",
+    "hint": "Collision domains, then broadcast domains.",
+    "pairs": [
+      {
+        "left": "Hub",
+        "right": "One collision domain and one broadcast domain"
+      },
+      {
+        "left": "Switch",
+        "right": "One collision domain per port, one broadcast domain"
+      },
+      {
+        "left": "Router",
+        "right": "One of each per interface"
+      }
+    ],
+    "right_distractors": [
+      "One broadcast domain per port, one collision domain"
+    ]
+  },
+  {
+    "id": "ex-36xy4148",
+    "version": 1,
+    "section": "broadcast-domains",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two switches, each with six PCs, are cabled to two different interfaces of one router. How many broadcast domains is that?",
+    "hint": "The router is the edge.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "domains"
+  },
+  {
+    "id": "ex-py02myy0",
+    "version": 1,
+    "section": "broadcast-domains",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three thousand machines share one flat switched network, and every one of them is busy answering broadcasts it does not need. Which change reduces that load?",
+    "hint": "Which device ends a broadcast domain?",
+    "choices": [
+      {
+        "text": "Faster switches with more ports",
+        "correct": false,
+        "why": "A faster switch still floods every broadcast to every port."
+      },
+      {
+        "text": "A longer ageing time on every switch in the building",
+        "correct": false,
+        "why": "Ageing affects learnt entries; broadcasts are flooded whatever the table says."
+      },
+      {
+        "text": "Smaller networks, with routers between",
+        "correct": true,
+        "why": "Right. Each router interface ends a broadcast domain; lesson 19 does it with VLANs."
+      },
+      {
+        "text": "Full duplex on every link",
+        "correct": false,
+        "why": "That removes collisions; broadcasts still reach everybody."
+      }
+    ]
+  },
+  {
+    "id": "ex-8e35pwmf",
+    "version": 1,
+    "section": "port-security",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "p3 was locked with learning off, and the table had nothing for it. pc3's ping got 0 replies. Why?",
+    "hint": "What does a locked port check?",
+    "choices": [
+      {
+        "text": "pc3's IP address was wrong for this network",
+        "correct": false,
+        "why": "It is 10.20.10.23/24, and it worked a moment later unchanged."
+      },
+      {
+        "text": "Its source MAC was not entered for p3",
+        "correct": true,
+        "why": "Right. Once the static entry was added, the same ping worked."
+      },
+      {
+        "text": "Locking a port takes its link down",
+        "correct": false,
+        "why": "The port stayed up; only unknown sources were refused."
+      },
+      {
+        "text": "The server refused pc3",
+        "correct": false,
+        "why": "Nothing from pc3 got past p3 to reach the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwqkbdmv",
+    "version": 1,
+    "section": "port-security",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After pc3 changed its own MAC to 02:00:00:00:00:66, the locked port refused it again. What does that run show about locking by address?",
+    "hint": "Who sets a card's MAC?",
+    "choices": [
+      {
+        "text": "It proves which person is plugged in to the port",
+        "correct": false,
+        "why": "The address is set by the machine's own software."
+      },
+      {
+        "text": "It ages out after five minutes",
+        "correct": false,
+        "why": "Static entries do not age."
+      },
+      {
+        "text": "It checks an address the machine itself chooses",
+        "correct": true,
+        "why": "Right. It stops the unregistered, and refuses honest changes too."
+      },
+      {
+        "text": "It works on IP addresses as well",
+        "correct": false,
+        "why": "It read the source MAC; the IP did not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-c92y531x",
+    "version": 1,
+    "section": "port-security",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A device on one port sends frames from thousands of made-up source addresses, and the switch has no port security. What happens to the other machines' traffic?",
+    "hint": "The table is finite.",
+    "choices": [
+      {
+        "text": "It is flooded to every port",
+        "correct": true,
+        "why": "Right. Their entries cannot stay in a full table, so their frames go everywhere."
+      },
+      {
+        "text": "The switch shuts down until it is restarted",
+        "correct": false,
+        "why": "A full table makes a switch flood, not stop."
+      },
+      {
+        "text": "It is routed through the router instead",
+        "correct": false,
+        "why": "The router is not involved in traffic inside one network."
+      },
+      {
+        "text": "Nothing; real entries are kept first",
+        "correct": false,
+        "why": "Nothing marks an entry as real; the table takes what arrives."
+      }
+    ]
+  },
+  {
+    "id": "ex-z94hk8g2",
+    "version": 1,
+    "section": "port-security",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these protect a switched network from strangers plugging in? Choose all that apply.",
+    "hint": "Three are defences; two change something else.",
+    "choices": [
+      {
+        "text": "Disabling ports with nothing behind them",
+        "correct": true,
+        "why": "Right. A free socket stops being an open one."
+      },
+      {
+        "text": "A longer ageing time",
+        "correct": false,
+        "why": "It changes how long entries live, not who adds them."
+      },
+      {
+        "text": "A limit on addresses per port",
+        "correct": true,
+        "why": "Right. It also stops a flood of made-up addresses."
+      },
+      {
+        "text": "IEEE 802.1X",
+        "correct": true,
+        "why": "Right. The port opens only after the device proves who it is."
+      },
+      {
+        "text": "Full duplex on every port",
+        "correct": false,
+        "why": "That removes collisions; a stranger still plugs in."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkq4g8em",
+    "version": 1,
+    "section": "port-security",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The IEEE standard in which a port carries nothing but the authentication exchange until the device proves who it is, is IEEE 802.___.",
+    "hint": "A digit and a letter.",
+    "blanks": [
+      {
+        "accept": [
+          "1X"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9dxcb5vd",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "sw1's table is empty and pc1 pings the server for the first time. Put what sw1 does in order.",
+    "hint": "ARP goes first.",
+    "items": [
+      "Learn pc1's MAC on p1 from its ARP request",
+      "Flood that broadcast out of every other port",
+      "Learn the server's MAC on p4 from its reply",
+      "Send the reply out of p1 only"
+    ],
+    "trap": "Learning comes before forwarding for every frame: pc1 is in the table before its broadcast leaves, which is why the reply needs no flood."
+  },
+  {
+    "id": "ex-21whjrpd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A switch port accepts one address at most. A user plugs a small unmanaged switch into it and connects two laptops. What happens?",
+    "hint": "The port counts source addresses, not cables.",
+    "choices": [
+      {
+        "text": "Both work, since the small switch has one MAC",
+        "correct": false,
+        "why": "An unmanaged switch forwards the laptops' frames with their own sources."
+      },
+      {
+        "text": "The first laptop heard is accepted, the second refused",
+        "correct": true,
+        "why": "Right. Two sources arrive on a port allowed one."
+      },
+      {
+        "text": "Neither works, as a switch behind a port is refused",
+        "correct": false,
+        "why": "The port judges addresses; it cannot see a switch."
+      },
+      {
+        "text": "Both work, but at half duplex",
+        "correct": false,
+        "why": "Duplex is a setting of the link, not of the address limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-xbgpfsn0",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each observation to its cause.",
+    "hint": "One cause per line.",
+    "pairs": [
+      {
+        "left": "Frames for one machine reach every port",
+        "right": "Its address is not in the table"
+      },
+      {
+        "left": "A PC is refused after changing its MAC",
+        "right": "Its port is locked to an address"
+      },
+      {
+        "left": "An ARP question never appears beyond the router",
+        "right": "The router ends the broadcast domain"
+      },
+      {
+        "left": "Collisions rise on a switched link",
+        "right": "The two ends disagree on duplex"
+      }
+    ],
+    "right_distractors": [
+      "The ageing time is too long"
+    ]
+  }
+]

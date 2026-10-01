@@ -1,0 +1,739 @@
+[
+  {
+    "id": "ex-psnpgvr9",
+    "version": 1,
+    "section": "static-or-dynamic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before asking anybody, pc1's `ip route` printed nothing at all. What does that tell you?",
+    "hint": "An empty table has no line for anything.",
+    "choices": [
+      {
+        "text": "It has no IPv4 route, not even to its own subnet",
+        "correct": true,
+        "why": "Right. Without an address there is no subnet route either, and no gateway."
+      },
+      {
+        "text": "It has a default route that `ip route` hides",
+        "correct": false,
+        "why": "When pc1 has one, `ip route` prints it on the first line, as it does after the DHCP exchange."
+      },
+      {
+        "text": "Its fe80 address gives it a route to r1",
+        "correct": false,
+        "why": "fe80:: is IPv6 link-local; this is the IPv4 table, and it is empty."
+      },
+      {
+        "text": "The cable is unplugged",
+        "correct": false,
+        "why": "`ip -br addr` showed eth0 UP. The link is there; the address is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-187n02gm",
+    "version": 1,
+    "section": "static-or-dynamic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which machine in the lab has to keep a static address?",
+    "hint": "Think about who would answer if it asked for one.",
+    "choices": [
+      {
+        "text": "prn, the printer everybody prints to",
+        "correct": false,
+        "why": "It has a reservation instead: the same address, still asked for by DHCP."
+      },
+      {
+        "text": "srv, the DHCP server",
+        "correct": true,
+        "why": "Right. It cannot lease an address to itself before it is running."
+      },
+      {
+        "text": "pc4, because it is on another subnet",
+        "correct": false,
+        "why": "pc4 gets its address by DHCP, through the relay on r1."
+      },
+      {
+        "text": "pc1, because it asked first",
+        "correct": false,
+        "why": "Asking first only decides which pool address it gets: .100."
+      }
+    ]
+  },
+  {
+    "id": "ex-07k1cy1q",
+    "version": 1,
+    "section": "static-or-dynamic",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After its DHCP exchange, what had pc1 been given by the server? Choose all that apply.",
+    "hint": "Read `ip -br addr`, `ip route` and `/etc/resolv.conf` after the ACK.",
+    "choices": [
+      {
+        "text": "An address with its mask, 10.20.10.100/24",
+        "correct": true,
+        "why": "Right, and the mask gave it the route to its subnet."
+      },
+      {
+        "text": "A default gateway, 10.20.10.1",
+        "correct": true,
+        "why": "Right: `default via 10.20.10.1`, from `option routers`."
+      },
+      {
+        "text": "A name server, 10.20.10.10",
+        "correct": true,
+        "why": "Right: written into /etc/resolv.conf."
+      },
+      {
+        "text": "Its MAC address, 02:25:70:bc:29:c6",
+        "correct": false,
+        "why": "The MAC belongs to the network card, and the client sent it in the request."
+      },
+      {
+        "text": "The switch port it is plugged into",
+        "correct": false,
+        "why": "DHCP knows nothing about ports; the switch does."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgg0at7e",
+    "version": 1,
+    "section": "dora",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the four messages of pc1 getting its address in the order they were sent.",
+    "hint": "Its initials spell a word.",
+    "items": [
+      "DHCPDISCOVER, to 255.255.255.255",
+      "DHCPOFFER of 10.20.10.100",
+      "DHCPREQUEST for 10.20.10.100",
+      "DHCPACK, and pc1 binds the address"
+    ],
+    "trap": "A REQUEST before the OFFER is the usual slip: the client cannot ask for an address nobody has offered yet."
+  },
+  {
+    "id": "ex-d3nkceaa",
+    "version": 1,
+    "section": "dora",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In srv's tcpdump, pc1's two messages leave from 0.0.0.0 port 68. Why 0.0.0.0?",
+    "hint": "What did `ip -br addr` show before the exchange?",
+    "choices": [
+      {
+        "text": "It is the DHCP server's listening address",
+        "correct": false,
+        "why": "srv is 10.20.10.10, and the messages are going TO it, not from it."
+      },
+      {
+        "text": "dhclient hides the real address",
+        "correct": false,
+        "why": "There is no real address to hide: pc1 has no IPv4 address yet."
+      },
+      {
+        "text": "pc1 has no IPv4 address yet",
+        "correct": true,
+        "why": "Right. All zeros is \"no address\", the only honest source it has."
+      },
+      {
+        "text": "It is the broadcast address of 10.20.10.0/24",
+        "correct": false,
+        "why": "That would be 10.20.10.255; the messages go to 255.255.255.255."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ax72sjv",
+    "version": 1,
+    "section": "dora",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "pc1 already knows from the offer which server answered. Why does it still broadcast its DHCPREQUEST?",
+    "hint": "Imagine two servers on the subnet.",
+    "choices": [
+      {
+        "text": "So that every server that offered learns which offer was taken",
+        "correct": true,
+        "why": "Right. The others take their addresses back."
+      },
+      {
+        "text": "Because a server listens on 255.255.255.255 and nowhere else",
+        "correct": false,
+        "why": "srv receives unicast too: the release in the leases section went straight to 10.20.10.10."
+      },
+      {
+        "text": "Because it does not know the server's MAC",
+        "correct": false,
+        "why": "The offer arrived in a frame from the server's MAC, so it knows it."
+      },
+      {
+        "text": "So the router learns the new address",
+        "correct": false,
+        "why": "r1 is not part of the exchange on the office LAN."
+      }
+    ]
+  },
+  {
+    "id": "ex-dv3bemp0",
+    "version": 1,
+    "section": "dora",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "DHCP runs over UDP. The server listens on port 67, and the client on port ___.",
+    "hint": "One more than the server.",
+    "blanks": [
+      {
+        "accept": [
+          "68"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kmdfz5eg",
+    "version": 1,
+    "section": "scopes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "srv's scope for the office says `range 10.20.10.100 10.20.10.199`. How many addresses can it lend?",
+    "hint": "Both ends are included.",
+    "value": 100,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-z738z6aj",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A technician gives a new access point the static address 10.20.10.150 on this lab's office LAN. What is wrong?",
+    "hint": "Compare .150 with the configuration.",
+    "choices": [
+      {
+        "text": ".150 is in the pool, so srv could lend it to a PC as well",
+        "correct": true,
+        "why": "Right. Two machines would then claim one address."
+      },
+      {
+        "text": ".150 is outside 10.20.10.0/24",
+        "correct": false,
+        "why": "The /24 runs from .0 to .255; .150 is inside it."
+      },
+      {
+        "text": "An access point needs a reservation to work",
+        "correct": false,
+        "why": "A static address works; this one is just in the wrong place."
+      },
+      {
+        "text": "r1 drops traffic from addresses above .99",
+        "correct": false,
+        "why": "r1 routes the whole /24; the .99 line is only a habit of this lab."
+      }
+    ]
+  },
+  {
+    "id": "ex-k443zsgm",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `option routers 10.20.10.1;` inside the first subnet block give each client?",
+    "hint": "Look at pc1's `ip route` after the exchange.",
+    "choices": [
+      {
+        "text": "The address of the DHCP server",
+        "correct": false,
+        "why": "That is srv, 10.20.10.10, sent as the server identifier."
+      },
+      {
+        "text": "Its default gateway",
+        "correct": true,
+        "why": "Right: `default via 10.20.10.1`."
+      },
+      {
+        "text": "The first address of the pool",
+        "correct": false,
+        "why": "The pool is the `range` line and starts at .100."
+      },
+      {
+        "text": "A router to ask for a second opinion",
+        "correct": false,
+        "why": "DHCP has no such thing; routers is the gateway option."
+      }
+    ]
+  },
+  {
+    "id": "ex-qn71vmbm",
+    "version": 1,
+    "section": "reservations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does srv know that the machine asking is the printer, and owed 10.20.10.50?",
+    "hint": "Read the `host prn` block.",
+    "choices": [
+      {
+        "text": "Its hostname, prn",
+        "correct": false,
+        "why": "The block is named prn for people; the match is on the hardware line."
+      },
+      {
+        "text": "The switch port, p3",
+        "correct": false,
+        "why": "srv never learns the port."
+      },
+      {
+        "text": "Its MAC address, 02:32:ed:ce:04:12",
+        "correct": true,
+        "why": "Right: `hardware ethernet` is what is matched."
+      },
+      {
+        "text": "The order in which the machines ask",
+        "correct": false,
+        "why": "Order decides the pool addresses, not a reservation."
+      }
+    ]
+  },
+  {
+    "id": "ex-2b0qvm15",
+    "version": 1,
+    "section": "reservations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The printer's network card is replaced, and nobody edits srv's file. What does the printer get next time it asks?",
+    "hint": "What is the reservation tied to?",
+    "choices": [
+      {
+        "text": "10.20.10.50, because srv knows it by its name",
+        "correct": false,
+        "why": "The match is on the MAC address, and that changed."
+      },
+      {
+        "text": "An ordinary address from the pool",
+        "correct": true,
+        "why": "Right. The new MAC matches no host block, so it is a client like any other."
+      },
+      {
+        "text": "No address at all",
+        "correct": false,
+        "why": "An unknown MAC is simply a new client, and the pool has room."
+      },
+      {
+        "text": "10.20.10.50, kept on the printer itself",
+        "correct": false,
+        "why": "With a reservation, the address lives in srv's file."
+      }
+    ]
+  },
+  {
+    "id": "ex-15ah9y8q",
+    "version": 1,
+    "section": "reservations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the reserved address, 10.20.10.50, outside the pool of .100 to .199?",
+    "hint": "What would happen if it were .150 and a PC asked first?",
+    "choices": [
+      {
+        "text": "Because dhcpd refuses reservations above .99",
+        "correct": false,
+        "why": "Nothing in the file sets such a limit; keeping it out of the pool is a choice."
+      },
+      {
+        "text": "So that it shows people the device is a printer",
+        "correct": false,
+        "why": "An address says nothing about the device."
+      },
+      {
+        "text": "Because addresses below .100 are faster",
+        "correct": false,
+        "why": "Every address in the subnet is reached the same way."
+      },
+      {
+        "text": "So that no PC is lent it before the printer asks",
+        "correct": true,
+        "why": "Right. Outside the pool, it is never in the server's list of addresses to lend."
+      }
+    ]
+  },
+  {
+    "id": "ex-523vtypa",
+    "version": 1,
+    "section": "leases",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "srv's lease file says pc1's lease starts at 11:20:32 and ends at 11:30:32. How many seconds is the lease?",
+    "hint": "The configuration says it too.",
+    "value": 600,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-qbcw30yf",
+    "version": 1,
+    "section": "leases",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A lease lasts 3600 seconds. By the protocol's default of seven eighths, how many seconds after the start does the client rebind?",
+    "hint": "Seven eighths of the lease.",
+    "value": 3150,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-4nyg1mzn",
+    "version": 1,
+    "section": "leases",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each moment in the life of a lease to what the client does.",
+    "hint": "Two of them ask; one gives up; one gives back.",
+    "pairs": [
+      {
+        "left": "renew",
+        "right": "Asks the server that lent it, by unicast"
+      },
+      {
+        "left": "rebind",
+        "right": "Asks any server, by broadcast"
+      },
+      {
+        "left": "expire",
+        "right": "Stops using the address"
+      },
+      {
+        "left": "release",
+        "right": "Gives the address back early"
+      }
+    ],
+    "right_distractors": [
+      "Asks the router for a new mask"
+    ]
+  },
+  {
+    "id": "ex-eqz1wt5a",
+    "version": 1,
+    "section": "leases",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A laptop with a one-day lease is unplugged without releasing it. When is its address free for somebody else?",
+    "hint": "What does an unplugged laptop send?",
+    "choices": [
+      {
+        "text": "At once, as soon as it stops answering",
+        "correct": false,
+        "why": "The server does not watch for silence; it waits for the lease."
+      },
+      {
+        "text": "When the day is over and the lease expires",
+        "correct": true,
+        "why": "Right. Nothing was released, so the loan runs its course."
+      },
+      {
+        "text": "At half a day, at the time it would have renewed",
+        "correct": false,
+        "why": "Missing a renewal changes nothing on the server."
+      },
+      {
+        "text": "When the server is restarted",
+        "correct": false,
+        "why": "The leases are in a file, and a restart reads them back."
+      }
+    ]
+  },
+  {
+    "id": "ex-23j6h646",
+    "version": 1,
+    "section": "relay",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before dhcrelay ran on r1, pc4's three DISCOVERs got no answer. Why?",
+    "hint": "Where does a broadcast stop?",
+    "choices": [
+      {
+        "text": "srv's file had no scope for pc4's subnet, 10.20.20.0",
+        "correct": false,
+        "why": "It did: the second subnet block."
+      },
+      {
+        "text": "r1 does not forward pc4's broadcasts to the office",
+        "correct": true,
+        "why": "Right. A router ends a broadcast domain."
+      },
+      {
+        "text": "pc4's cable was unplugged",
+        "correct": false,
+        "why": "The same cable carried the exchange a minute later."
+      },
+      {
+        "text": "pc4 was using the wrong port",
+        "correct": false,
+        "why": "Port 67, as every DISCOVER line says."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nt2ee76",
+    "version": 1,
+    "section": "relay",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The relay writes its own address on the client's subnet into a field of the request, and the server uses it to choose the scope. That field is called ___.",
+    "hint": "Its name stands for the gateway's IP address.",
+    "blanks": [
+      {
+        "accept": [
+          "giaddr"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wg75yvhd",
+    "version": 1,
+    "section": "relay",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "srv's tcpdump shows the relayed requests arriving from 10.20.10.1, and the replies going to 10.20.20.1. Why not reply to 10.20.10.1?",
+    "hint": "Which of r1's addresses tells srv where the client is?",
+    "choices": [
+      {
+        "text": "srv replies to the giaddr the relay wrote",
+        "correct": true,
+        "why": "Right. 10.20.20.1 is r1's address on pc4's side, and it also picked the scope."
+      },
+      {
+        "text": "srv takes the reply address from `option routers`",
+        "correct": false,
+        "why": "Here the two happen to be the same address; the reply follows the giaddr."
+      },
+      {
+        "text": "10.20.10.1 does not accept UDP",
+        "correct": false,
+        "why": "It does: the relay sends from 10.20.10.1 port 67."
+      },
+      {
+        "text": "pc4 asked for the replies to go there",
+        "correct": false,
+        "why": "pc4 has no address yet, and no say in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-aews93fr",
+    "version": 1,
+    "section": "rogue-servers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With srv paused, pc2 took 10.20.10.200 from 10.20.10.66. Why could it then not ping 10.20.20.1?",
+    "hint": "Read pc2's `ip route` before the ping.",
+    "choices": [
+      {
+        "text": "10.20.10.200 is outside the office subnet",
+        "correct": false,
+        "why": "It is inside 10.20.10.0/24, with the right mask."
+      },
+      {
+        "text": "srv was paused, so the network stopped",
+        "correct": false,
+        "why": "srv is not on the path from pc2 to r1."
+      },
+      {
+        "text": "Its default route pointed at rogue, which does not route",
+        "correct": true,
+        "why": "Right: `default via 10.20.10.66`, and nothing there forwards packets."
+      },
+      {
+        "text": "The rogue gave it the wrong mask",
+        "correct": false,
+        "why": "The connected route is 10.20.10.0/24, as before."
+      }
+    ]
+  },
+  {
+    "id": "ex-n62gr59j",
+    "version": 1,
+    "section": "rogue-servers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab's snooping rule, why is p4 the port whose server messages are let through?",
+    "hint": "Look at the drawing of the lab.",
+    "choices": [
+      {
+        "text": "p4 is the uplink to the router r1",
+        "correct": false,
+        "why": "r1 is on p8."
+      },
+      {
+        "text": "rogue is on p4",
+        "correct": false,
+        "why": "rogue is on p5, and its offers are the ones dropped."
+      },
+      {
+        "text": "srv is plugged into p4",
+        "correct": true,
+        "why": "Right. It is the one port where a real server lives."
+      },
+      {
+        "text": "nftables lets the lowest port through",
+        "correct": false,
+        "why": "The rule names p4 itself: `iifname != \"p4\"`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jetk0z5h",
+    "version": 1,
+    "section": "rogue-servers",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does DHCP snooping on a switch do? Choose all that apply.",
+    "hint": "It works on ports and on who may send what.",
+    "choices": [
+      {
+        "text": "Drops offers and ACKs that arrive on an untrusted port",
+        "correct": true,
+        "why": "Right: server messages from the wrong place."
+      },
+      {
+        "text": "Trusts the port towards the real server",
+        "correct": true,
+        "why": "Right, and in the lab that is p4."
+      },
+      {
+        "text": "Checks that the real server's configuration is correct",
+        "correct": false,
+        "why": "The switch sees messages, not the server's file."
+      },
+      {
+        "text": "Encrypts DHCP so other PCs cannot read it",
+        "correct": false,
+        "why": "DHCP stays in clear; snooping only filters it."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7nh4s08",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each DHCP message to how it travels in this lesson's captures.",
+    "hint": "Who sends it, and to whom?",
+    "pairs": [
+      {
+        "left": "DHCPDISCOVER",
+        "right": "Client to everybody, from 0.0.0.0"
+      },
+      {
+        "left": "DHCPOFFER",
+        "right": "Server to client, proposing an address"
+      },
+      {
+        "left": "DHCPACK",
+        "right": "Server to client, confirming the address"
+      },
+      {
+        "left": "DHCPRELEASE",
+        "right": "Client straight to the server, giving it back"
+      }
+    ],
+    "right_distractors": [
+      "Router to client, naming the gateway"
+    ]
+  },
+  {
+    "id": "ex-meq2gf4p",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc1's lease started at 11:20:32, and its own lease file says `renew 2 2026/09/29 11:25:24`. How many seconds after the start is the renewal?",
+    "hint": "Subtract the times.",
+    "value": 292,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-7aqqphgt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An office pool holds 100 addresses, lent for one day. On Monday morning 105 PCs ask, one after another. What do the last five get?",
+    "hint": "Every address in the pool is already lent.",
+    "choices": [
+      {
+        "text": "An address outside the range, chosen by the server",
+        "correct": false,
+        "why": "The server lends from the range and nowhere else; the rest is kept for static use."
+      },
+      {
+        "text": "No offer at all",
+        "correct": true,
+        "why": "Right. Their DISCOVERs go unanswered, and many systems then fall back to 169.254.x.x."
+      },
+      {
+        "text": "An address shared with another PC",
+        "correct": false,
+        "why": "The server never lends one address twice at once."
+      },
+      {
+        "text": "The same pool, with a shorter lease",
+        "correct": false,
+        "why": "The lease length does not create addresses."
+      }
+    ]
+  },
+  {
+    "id": "ex-512m1ft4",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On r1, the ISC program that carries pc4's DHCP broadcasts across to srv is ___.",
+    "hint": "Its name says DHCP and what it does.",
+    "blanks": [
+      {
+        "accept": [
+          "dhcrelay"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

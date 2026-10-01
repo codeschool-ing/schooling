@@ -1,0 +1,497 @@
+{
+  "ex-17xz5wdk": {
+    "prompt": "Escrito por extenso, 2001:db8::1 é 2001:0db8:0000:0000:0000:0000:0000:___",
+    "hint": "Todo grupo tem quatro dígitos hexadecimais.",
+    "blanks": [
+      {
+        "accept": [
+          "0001"
+        ]
+      }
+    ]
+  },
+  "ex-3ygyrs8b": {
+    "prompt": "No endereço 2001:db8::1, quantos grupos de zeros o :: representa?",
+    "hint": "Conte os grupos escritos e subtraia de oito.",
+    "unit": "grupos"
+  },
+  "ex-k3293a5p": {
+    "prompt": "Três destes são jeitos corretos de escrever 2001:0db8:0000:0000:0001:0000:0000:0001. Qual não é?",
+    "hint": "Quantas vezes o :: pode aparecer?",
+    "choices": [
+      {
+        "text": "2001:db8::1:0:0:1",
+        "why": "Válido: o :: substitui a primeira sequência de dois grupos de zeros."
+      },
+      {
+        "text": "2001:db8:0:0:1::1",
+        "why": "Válido: o :: substitui a segunda sequência. A RFC 5952 prefere a primeira, mas as duas são o mesmo endereço."
+      },
+      {
+        "text": "2001:db8::1::1",
+        "why": "Isso. Dois :: são ambíguos: ninguém sabe quantos zeros cada um esconde."
+      },
+      {
+        "text": "2001:0db8:0:0:1:0:0:1",
+        "why": "Válido: zeros à esquerda podem ficar, e grupos de zeros podem ser escritos como 0."
+      }
+    ]
+  },
+  "ex-05k56t2z": {
+    "prompt": "Um colega busca 2001:0db8:0020:0010 num log e não acha nada, embora o srv apareça nele muitas vezes. Por quê?",
+    "hint": "Como o Linux imprime o endereço do srv?",
+    "choices": [
+      {
+        "text": "O log guarda os endereços em binário",
+        "why": "Logs são texto; o problema é qual texto."
+      },
+      {
+        "text": "Os programas escrevem a forma curta, 2001:db8:20:10::10",
+        "why": "Isso. O srv aparece como 2001:db8:20:10::10: os mesmos 128 bits, outro texto."
+      },
+      {
+        "text": "O prefixo mudou quando o srv reiniciou",
+        "why": "O endereço do srv foi dado à mão e não muda."
+      },
+      {
+        "text": "Os zeros à esquerda fazem dele outro endereço",
+        "why": "Não fazem: tirar zeros à esquerda mantém o valor."
+      }
+    ]
+  },
+  "ex-2yer58n4": {
+    "prompt": "Em 2001:db8:20:10::10/64, os primeiros 64 bits identificam a rede e os últimos 64 bits são o ___ de interface",
+    "hint": "A figura dá nome à metade da direita.",
+    "blanks": [
+      {
+        "accept": [
+          "identificador",
+          "id",
+          "identifier"
+        ]
+      }
+    ]
+  },
+  "ex-wyh6fzea": {
+    "prompt": "O MAC de um PC é 02:5a:11:3c:d4:e7. Pelo EUI-64 modificado, o seu endereço link-local é fe80::___",
+    "hint": "Divida, insira ff:fe, inverta o bit, tire os zeros à esquerda.",
+    "blanks": [
+      {
+        "accept": [
+          "5a:11ff:fe3c:d4e7",
+          "005a:11ff:fe3c:d4e7"
+        ]
+      }
+    ]
+  },
+  "ex-6qbhmwd7": {
+    "prompt": "Ponha em ordem os passos para montar o endereço link-local do pc1 a partir do MAC.",
+    "hint": "A figura desta seção.",
+    "items": [
+      "Dividir 02:25:70:bc:29:c6 em duas metades",
+      "Inserir ff:fe entre as metades",
+      "Inverter o sétimo bit do primeiro byte",
+      "Pôr os 64 bits depois de fe80::"
+    ],
+    "trap": "Inverter o bit por último só dá certo por sorte: ele é do primeiro byte, que não sai do lugar, mas escrever o endereço antes de inverter dá 02 onde deveria estar 00."
+  },
+  "ex-gyfxpknj": {
+    "prompt": "O ping -c 1 fe80::1f:23ff:fee7:e9d5 imprimiu um aviso e perdeu o pacote; com %eth0, o r1 respondeu. Por que o %eth0 foi necessário?",
+    "hint": "Quantas interfaces têm um fe80::/64?",
+    "choices": [
+      {
+        "text": "fe80::/64 existe em todo enlace e não indica nenhum",
+        "why": "Isso. O %eth0 é a zona: por qual enlace mandar."
+      },
+      {
+        "text": "O r1 ignora pings que não dizem qual é a interface dele",
+        "why": "O r1 nem vê o nome; o %eth0 é lido só pelo pc1."
+      },
+      {
+        "text": "Ele troca o ping de IPv4 para IPv6",
+        "why": "Os dois pings eram IPv6; o endereço já diz isso."
+      },
+      {
+        "text": "Ele diz ao ping qual MAC usar",
+        "why": "O MAC é achado pelo Neighbour Discovery, não pela zona."
+      }
+    ]
+  },
+  "ex-j12zstbq": {
+    "prompt": "O log de um servidor mostra um cliente cujo identificador de interface é 021a:2bff:fe3c:4d5e. O que dá para dizer da placa de rede do cliente?",
+    "hint": "Desfaça os três passos.",
+    "choices": [
+      {
+        "text": "O MAC dela é 02:1a:2b:3c:4d:5e",
+        "why": "Isso esquece de desinverter o bit: 02 vira 00."
+      },
+      {
+        "text": "O MAC dela é 00:1a:2b:3c:4d:5e",
+        "why": "Isso. Tire o ff:fe, desinverta o sétimo bit: 02 vira 00, um MAC de fabricante."
+      },
+      {
+        "text": "O MAC dela é 1a:2b:ff:fe:3c:4d",
+        "why": "O ff:fe foi inserido pelo EUI-64 e não faz parte do MAC."
+      },
+      {
+        "text": "Nada: o identificador é aleatório",
+        "why": "O ff:fe no meio é a marca de um identificador montado a partir de um MAC."
+      }
+    ]
+  },
+  "ex-2dyqx853": {
+    "prompt": "De onde vem um endereço fe80:: num PC Linux?",
+    "hint": "Nenhum servidor participa.",
+    "choices": [
+      {
+        "text": "Um servidor DHCPv6 o distribui",
+        "why": "Endereços link-local não precisam de servidor."
+      },
+      {
+        "text": "O roteador o entrega no anúncio",
+        "why": "O anúncio leva um prefixo global; o fe80:: é montado antes de qualquer roteador falar."
+      },
+      {
+        "text": "A interface o monta sozinha quando sobe",
+        "why": "Isso. Toda interface IPv6 tem um, sem configuração."
+      },
+      {
+        "text": "Um administrador o digita nas configurações de rede",
+        "why": "Ele é montado automaticamente; ninguém digitou o do pc1."
+      }
+    ]
+  },
+  "ex-zg4jemsp": {
+    "prompt": "O anúncio do r1 deu ao prefixo um prazo de validade de 86400 segundos. Quantas horas são?",
+    "hint": "3600 segundos por hora.",
+    "unit": "horas"
+  },
+  "ex-7admrw1k": {
+    "prompt": "A rota padrão do pc2 é via fe80::1f:23ff:fee7:e9d5 dev eth0. De quem é esse endereço?",
+    "hint": "Olhe a última linha do rdisc6.",
+    "choices": [
+      {
+        "text": "Do switch",
+        "why": "O endereço da bridge do sw1 é fe80::6a:dcff:fe93:3b8a."
+      },
+      {
+        "text": "O link-local do próprio pc2",
+        "why": "O do pc2 é fe80::fd:f2ff:fed2:63ba."
+      },
+      {
+        "text": "O link-local do r1",
+        "why": "Isso. O anúncio veio dele, e gateways IPv6 são link-local."
+      },
+      {
+        "text": "O roteador do provedor, isp",
+        "why": "O isp fica do outro lado do r1, em outro enlace."
+      }
+    ]
+  },
+  "ex-g5pbnq75": {
+    "prompt": "O radvd do r1 para e não manda mais anúncios. O que acontece no pc2?",
+    "hint": "Foram anunciados três prazos: 300, 14400 e 86400 segundos.",
+    "choices": [
+      {
+        "text": "O endereço global some da eth0 na hora",
+        "why": "Nada o remove até os prazos acabarem."
+      },
+      {
+        "text": "O pc2 passa a pedir um endereço novo a um servidor DHCPv6",
+        "why": "O anúncio disse que não há configuração com estado aqui."
+      },
+      {
+        "text": "A rota cai antes, o endereço depois",
+        "why": "Isso. Prazo do roteador 300 s, preferido 4 horas, validade 24 horas."
+      },
+      {
+        "text": "Nada muda, porque endereços SLAAC são permanentes",
+        "why": "O endereço e a rota têm prazos em contagem regressiva."
+      }
+    ]
+  },
+  "ex-kcbs3kj3": {
+    "prompt": "A linha do prefixo Autonomous address conf.: Yes diz a cada máquina do enlace para ___ o próprio endereço a partir do prefixo.",
+    "hint": "SLAAC: ninguém o entrega.",
+    "blanks": [
+      {
+        "accept": [
+          "montar",
+          "criar",
+          "gerar",
+          "formar",
+          "construir",
+          "build"
+        ]
+      }
+    ]
+  },
+  "ex-2rqz3wde": {
+    "prompt": "Quais destas coisas o pc2 aprendeu com o anúncio do r1? Marque todas as que se aplicam.",
+    "hint": "Leia a saída do rdisc6 linha a linha.",
+    "choices": [
+      {
+        "text": "O prefixo 2001:db8:20:10::/64",
+        "why": "A linha Prefix."
+      },
+      {
+        "text": "Que o r1 é roteador padrão por 300 segundos",
+        "why": "Router lifetime: 300."
+      },
+      {
+        "text": "O endereço 2001:db8:20:10:fd:f2ff:fed2:63ba",
+        "why": "O pc2 montou esse sozinho, com o prefixo e o MAC."
+      },
+      {
+        "text": "Que nenhum servidor DHCPv6 distribui endereços",
+        "why": "Stateful address conf.: No."
+      },
+      {
+        "text": "O endereço de um servidor DNS",
+        "why": "O rdisc6 não imprimiu servidor DNS neste anúncio."
+      }
+    ]
+  },
+  "ex-j1nbwdr8": {
+    "prompt": "O endereço multicast de nó solicitado para 2001:db8:20:10::1 é ff02::1:___",
+    "hint": "ff seguido dos últimos 24 bits.",
+    "blanks": [
+      {
+        "accept": [
+          "ff00:1",
+          "ff00:0001"
+        ]
+      }
+    ]
+  },
+  "ex-f1eps433": {
+    "prompt": "O ping -w 2 ff02::1%eth0 mandou 2 pedidos e mostrou 2 received, +8 duplicates. Quantas interfaces responderam a cada pedido?",
+    "hint": "Dez respostas ao todo.",
+    "unit": "interfaces"
+  },
+  "ex-en3qnv87": {
+    "prompt": "Uma das respostas ao ping do pc1 para ff02::1 veio de fe80::25:70ff:febc:29c6, em 0.716 ms. Quem era?",
+    "hint": "Compare com o MAC do pc1, 02:25:70:bc:29:c6.",
+    "choices": [
+      {
+        "text": "O r1, o roteador",
+        "why": "O r1 é fe80::1f:23ff:fee7:e9d5."
+      },
+      {
+        "text": "O próprio pc1",
+        "why": "Isso. O pc1 também é membro de todos os nós, e a resposta nem saiu da máquina."
+      },
+      {
+        "text": "O switch sw1",
+        "why": "A bridge respondeu de fe80::6a:dcff:fe93:3b8a."
+      },
+      {
+        "text": "O srv, o servidor",
+        "why": "O srv é fe80::9e:43ff:fe3e:caae."
+      }
+    ]
+  },
+  "ex-z20t1src": {
+    "prompt": "Ligue cada endereço ao que ele alcança no enlace deste escritório.",
+    "hint": "Grupos começam com ff02.",
+    "pairs": [
+      {
+        "left": "ff02::1",
+        "right": "Todos os nós do enlace"
+      },
+      {
+        "left": "ff02::2",
+        "right": "Todos os roteadores do enlace"
+      },
+      {
+        "left": "ff02::1:ff00:10",
+        "right": "Quem tem endereço terminado em 00:00:10"
+      },
+      {
+        "left": "fe80::1f:23ff:fee7:e9d5",
+        "right": "O r1, e mais ninguém"
+      }
+    ],
+    "right_distractors": [
+      "Todas as máquinas da internet"
+    ]
+  },
+  "ex-31j15pvp": {
+    "prompt": "O getent ahosts web listou 2001:db8:99::80 antes de 192.0.2.80. O que faz primeiro um programa que tenta os endereços na ordem?",
+    "hint": "A lista é a ordem.",
+    "choices": [
+      {
+        "text": "Conecta em 192.0.2.80, porque o IPv4 é mais antigo",
+        "why": "A ordem é a preferência do sistema, e aqui o IPv6 vem primeiro."
+      },
+      {
+        "text": "Tenta 2001:db8:99::80",
+        "why": "Isso. IPv6 primeiro, IPv4 se falhar."
+      },
+      {
+        "text": "Abre os dois e usa o mais rápido, toda vez",
+        "why": "Isso é o que os navegadores fazem (Happy Eyeballs); um programa comum vai na ordem."
+      },
+      {
+        "text": "Pergunta ao roteador qual protocolo usar",
+        "why": "O roteador não é consultado; a escolha é feita no pc1."
+      }
+    ]
+  },
+  "ex-hxhggwtt": {
+    "prompt": "Um usuário diz que um site trava no PC dele. O curl -4 para o site funciona na hora; o curl -6 trava. Onde você olha em seguida?",
+    "hint": "Duas pilhas, dois caminhos.",
+    "choices": [
+      {
+        "text": "No servidor web do site",
+        "why": "Ele respondeu em IPv4 na hora, então está no ar."
+      },
+      {
+        "text": "No resolvedor DNS do PC",
+        "why": "O nome resolveu para os dois; o curl chegou a tentar conectar."
+      },
+      {
+        "text": "No caminho IPv6: rotas, gateway, firewall",
+        "why": "Isso. O IPv4 funcionando não diz nada do IPv6."
+      },
+      {
+        "text": "Na placa de rede do PC, no cabo e na porta do switch",
+        "why": "A placa levou o pedido IPv4 sem problema."
+      }
+    ]
+  },
+  "ex-ccsa1v6f": {
+    "prompt": "No DNS, o endereço IPv4 de um nome fica no registro A e o endereço IPv6 fica no registro ___.",
+    "hint": "Quatro vezes a letra.",
+    "blanks": [
+      {
+        "accept": [
+          "AAAA",
+          "quad A",
+          "quad-A"
+        ]
+      }
+    ]
+  },
+  "ex-5fwzy196": {
+    "prompt": "Neste laboratório, as únicas regras nftables do r1 são uma tabela de NAT IPv4, da família ip. O que acontece com o tráfego IPv6 que passa pelo r1?",
+    "hint": "Uma tabela da família ip só enxerga IPv4.",
+    "choices": [
+      {
+        "text": "Também é traduzido para 203.0.113.2",
+        "why": "Regras de NAT numa tabela ip mexem só em pacotes IPv4."
+      },
+      {
+        "text": "É descartado até alguém escrever regras IPv6",
+        "why": "Não há regra para descartá-lo; os testes com curl -6 funcionaram."
+      },
+      {
+        "text": "É filtrado pelas mesmas regras",
+        "why": "As regras são da família ip; o IPv6 é outra família."
+      },
+      {
+        "text": "É encaminhado sem filtro nenhum, nos dois sentidos",
+        "why": "Isso. Tudo bem num laboratório, e um buraco em qualquer outro lugar."
+      }
+    ]
+  },
+  "ex-b2xakme2": {
+    "prompt": "Na captura do servidor web, de que endereço de origem chegou a conexão IPv4 do pc1?",
+    "hint": "O que o r1 faz na saída?",
+    "choices": [
+      {
+        "text": "10.20.10.21",
+        "why": "O endereço do pc1 foi trocado pelo NAT do r1."
+      },
+      {
+        "text": "10.20.10.1",
+        "why": "Esse é o endereço de dentro do r1."
+      },
+      {
+        "text": "192.0.2.80",
+        "why": "Esse é o endereço do próprio servidor web."
+      },
+      {
+        "text": "203.0.113.2",
+        "why": "Isso. O endereço de fora do r1, origem de tudo o que o escritório manda para fora."
+      }
+    ]
+  },
+  "ex-1em313cm": {
+    "prompt": "O handshake IPv4 ofereceu mss 1460 e o IPv6 mss 1440, nos mesmos enlaces de 1500 bytes. Quantos bytes a mais tem o cabeçalho IPv6?",
+    "hint": "O cabeçalho TCP é o mesmo nos dois.",
+    "unit": "bytes"
+  },
+  "ex-66qphx7p": {
+    "prompt": "Um escritório liga o IPv6: todo PC recebe um endereço global por SLAAC, e ninguém escreve regras de firewall IPv6. O que mudou para os PCs?",
+    "hint": "O que o NAT fazia como efeito colateral?",
+    "choices": [
+      {
+        "text": "Máquinas de fora conseguem iniciar conexões com eles",
+        "why": "Isso. O NAT os escondia por acidente; agora o firewall tem de decidir."
+      },
+      {
+        "text": "Nada, já que endereços SLAAC são privados",
+        "why": "Endereços globais via SLAAC são roteados na internet."
+      },
+      {
+        "text": "O tráfego IPv4 deles agora sai sem NAT",
+        "why": "O IPv4 continua passando pelo NAT do r1; as pilhas são separadas."
+      },
+      {
+        "text": "Eles perdem os endereços IPv4",
+        "why": "A pilha dupla mantém os dois."
+      }
+    ]
+  },
+  "ex-h6j4ramr": {
+    "prompt": "A IANA entregou os últimos blocos IPv4 aos registros regionais em 3 de fevereiro de ___",
+    "hint": "A APNIC se esgotou dois meses depois.",
+    "blanks": [
+      {
+        "accept": [
+          "2011"
+        ]
+      }
+    ]
+  },
+  "ex-bgw672pm": {
+    "prompt": "Escrito por extenso, sem encurtar grupo nenhum, quantos dígitos hexadecimais tem um endereço IPv6?",
+    "hint": "Oito grupos.",
+    "unit": "dígitos"
+  },
+  "ex-vwancv2z": {
+    "prompt": "O pc2 acabou de subir só com o endereço link-local e vai pingar o srv pelo endereço global. Ponha em ordem o que acontece.",
+    "hint": "Primeiro o endereço, depois o vizinho, depois o ping.",
+    "items": [
+      "O pc2 manda um Router Solicitation para ff02::2",
+      "O r1 responde com um Router Advertisement",
+      "O pc2 monta um endereço global a partir do prefixo",
+      "O pc2 pergunta a ff02::1:ff00:10 quem tem o endereço do srv",
+      "O pc2 manda o echo request para o MAC do srv"
+    ],
+    "trap": "O pedido de vizinho não vem primeiro: o pc2 não tem endereço global para perguntar até o anúncio chegar."
+  },
+  "ex-fhe8hsr0": {
+    "prompt": "Qual destes endereços IPv6 é link-local?",
+    "hint": "Link-local começa com fe80.",
+    "choices": [
+      {
+        "text": "2001:db8:20:10:fd:f2ff:fed2:63ba",
+        "why": "Um endereço global, o do pc2."
+      },
+      {
+        "text": "ff02::1",
+        "why": "Um grupo multicast, todos os nós."
+      },
+      {
+        "text": "::1",
+        "why": "O endereço de loopback."
+      },
+      {
+        "text": "fe80::9e:43ff:fe3e:caae",
+        "why": "Isso. O endereço link-local do srv."
+      }
+    ]
+  }
+}

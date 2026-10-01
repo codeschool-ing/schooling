@@ -1,0 +1,506 @@
+{
+  "ex-c8s1qdrc": {
+    "prompt": "O que separa uma LAN de uma WAN, no sentido desta aula?",
+    "hint": "Pense em quem manda a conta.",
+    "choices": [
+      {
+        "text": "Quantas máquinas estão conectadas",
+        "why": "Uma LAN pode ter poucas máquinas ou milhares. A contagem não é o que decide."
+      },
+      {
+        "text": "De quem são os links",
+        "why": "Isso. Uma LAN é feita de equipamento da empresa; os links de uma WAN pertencem a uma operadora."
+      },
+      {
+        "text": "Se as máquinas usam Wi-Fi ou cabo",
+        "why": "O Wi-Fi da própria empresa faz parte da LAN dela, em ponte com a mesma Ethernet."
+      },
+      {
+        "text": "A velocidade impressa nas portas do switch",
+        "why": "A velocidade decorre da posse, e um link de WAN pode ser rápido; ela não define a categoria."
+      }
+    ]
+  },
+  "ex-tztj5r8g": {
+    "prompt": "A tabela do pc1 tem `10.20.10.0/24 dev eth0 ... scope link` e `default via 10.20.10.1`. Para onde o pc1 manda um pacote para 10.20.10.200?",
+    "hint": "Qual das duas linhas cobre o .200?",
+    "choices": [
+      {
+        "text": "Para o rhq em 10.20.10.1, que o encaminha",
+        "why": "A rota padrão é para endereços que nenhuma outra linha cobre, e 10.20.10.0/24 cobre este."
+      },
+      {
+        "text": "Para a operadora, pelo rhq",
+        "why": "Nada na tabela do pc1 cita a operadora; até a rota padrão para no rhq."
+      },
+      {
+        "text": "Para lugar nenhum, já que ninguém tem esse endereço",
+        "why": "O pc1 não tem como saber isso antes. Ele pergunta com ARP, e o silêncio é a resposta que talvez receba."
+      },
+      {
+        "text": "No próprio cabo, via ARP",
+        "why": "Isso. 10.20.10.200 está dentro de 10.20.10.0/24, a LAN do pc1, que é alcançada diretamente."
+      }
+    ]
+  },
+  "ex-f34vnqex": {
+    "prompt": "Na tabela de rotas do pc1, a linha que entrega ao rhq tudo o que está fora da LAN começa com a palavra ___.",
+    "hint": "A captura do `ip route`.",
+    "blanks": [
+      {
+        "accept": [
+          "default"
+        ]
+      }
+    ]
+  },
+  "ex-rcfvc0mh": {
+    "prompt": "Quais destas são LANs no sentido desta aula? Marque todas as que se aplicam.",
+    "hint": "Posse, não distância.",
+    "choices": [
+      {
+        "text": "A 10.20.10.0/24 da matriz",
+        "why": "Certo: o switch e os cabos da própria empresa, alcançados diretamente."
+      },
+      {
+        "text": "Uma linha até o prédio do outro lado da rua, alugada de uma operadora",
+        "why": "Curta, mas o link pertence à operadora: um link de WAN."
+      },
+      {
+        "text": "Três prédios de um campus ligados por fibra da própria empresa",
+        "why": "Certo: uma distância não transforma a rede da própria empresa numa WAN."
+      },
+      {
+        "text": "A 203.0.113.0/30, entre o rhq e a isp",
+        "why": "Esse é o link que a operadora vendeu à matriz."
+      },
+      {
+        "text": "O Wi-Fi da filial, de pontos de acesso que a empresa instalou",
+        "why": "Certo: os pontos de acesso fazem a ponte do rádio para a mesma LAN."
+      }
+    ]
+  },
+  "ex-8kdcjyc3": {
+    "prompt": "A tabela de rotas da isp tem só 198.51.100.0/30 e 203.0.113.0/30. Por que não há rota para 10.30.10.0/24?",
+    "hint": "Quem mais usa endereços que começam com 10?",
+    "choices": [
+      {
+        "text": "As operadoras não roteiam endereços privados",
+        "why": "Isso. Milhares de empresas usam as mesmas faixas privadas, então nenhuma operadora saberia qual é a certa."
+      },
+      {
+        "text": "O roteador da filial ainda não foi ligado",
+        "why": "O rbr respondeu ao traceroute em 198.51.100.2, então está ligado."
+      },
+      {
+        "text": "O laboratório esqueceu de iniciar o OSPF na isp",
+        "why": "O cenário sites não roda protocolo de roteamento nenhum, e uma operadora recusaria essas rotas de qualquer jeito."
+      },
+      {
+        "text": "A rota expirou depois que o traceroute terminou",
+        "why": "Um traceroute não põe nem tira rota; a isp nunca teve uma."
+      }
+    ]
+  },
+  "ex-2scsfehn": {
+    "prompt": "O traceroute do pc1 até 198.51.100.2 funcionou, embora a isp não tenha rota para 10.20.10.0/24. Como as respostas voltaram?",
+    "hint": "Como a matriz aparece vista da WAN?",
+    "choices": [
+      {
+        "text": "A isp aprendeu a rota enquanto o traceroute rodava",
+        "why": "A tabela da isp, lida depois do traceroute, continua só com os dois links."
+      },
+      {
+        "text": "O rhq trocou o endereço do pc1 pelo público dele, 203.0.113.2",
+        "why": "Isso. As respostas foram endereçadas a 203.0.113.2, que a isp alcança diretamente, e o rhq as entregou ao pc1. Isso é NAT, aula 11."
+      },
+      {
+        "text": "Respostas são enviadas em broadcast para todas as redes",
+        "why": "Roteadores não encaminham broadcasts, e uma resposta tem um destino só."
+      },
+      {
+        "text": "O roteador da filial as mandou pelo túnel",
+        "why": "O túnel ainda não existia; a seção de VPN o monta mais adiante na aula."
+      }
+    ]
+  },
+  "ex-1p13stxk": {
+    "prompt": "Ligue cada tipo de link de WAN ao que a empresa está comprando.",
+    "hint": "Três tipos, do exclusivo ao compartilhado.",
+    "pairs": [
+      {
+        "left": "Linha dedicada",
+        "right": "Um circuito exclusivo, com a mesma capacidade de dia e de noite"
+      },
+      {
+        "left": "MPLS",
+        "right": "Uma rede da operadora que mantém separado o tráfego de vários clientes"
+      },
+      {
+        "left": "Internet com VPN",
+        "right": "Uma conexão comum em cada sede, ligadas por um túnel"
+      }
+    ],
+    "right_distractors": [
+      "Uma porta de switch no armário da empresa"
+    ]
+  },
+  "ex-7wpg6mqy": {
+    "prompt": "Quantos endereços tem um link /30 como 203.0.113.0/30, contando as duas pontas e os dois que nenhum aparelho usa?",
+    "hint": "A seção diz isso de cada link de WAN.",
+    "unit": "endereços"
+  },
+  "ex-00kw99ka": {
+    "prompt": "Uma empresa aluga metro Ethernet entre dois de seus prédios na mesma cidade. Visto pela empresa, o que é esse link?",
+    "hint": "De quem é a fibra?",
+    "choices": [
+      {
+        "text": "Uma LAN, porque leva Ethernet",
+        "why": "Os quadros são Ethernet, e o link continua alugado. A posse decide."
+      },
+      {
+        "text": "Uma VLAN do switch da operadora",
+        "why": "Uma VLAN divide um switch; ela não diz nada sobre de quem é a fibra."
+      },
+      {
+        "text": "Um link de WAN curto",
+        "why": "Isso. A operadora é dona dele e cobra por ele; a distância curta não muda isso."
+      },
+      {
+        "text": "Uma VPN entre os prédios",
+        "why": "Uma VPN é um túnel dentro de pacotes. Metro Ethernet entrega quadros diretamente."
+      }
+    ]
+  },
+  "ex-2ezm28nh": {
+    "prompt": "Em que forma as operadoras passam fibra em volta de uma cidade, e o que ganham com isso?",
+    "hint": "A aula 3 cortou um.",
+    "choices": [
+      {
+        "text": "Um barramento, que precisa de menos fibra",
+        "why": "Um barramento falha inteiro numa quebra, o contrário do que os clientes de uma cidade pagam."
+      },
+      {
+        "text": "Uma malha completa entre cada par de prédios",
+        "why": "Com centenas de prédios, n × (n − 1) / 2 lances de fibra estão fora de alcance."
+      },
+      {
+        "text": "Uma estrela em torno do prédio da própria operadora",
+        "why": "Aí cada cliente dependeria de um lance de fibra sem segundo caminho."
+      },
+      {
+        "text": "Um anel, para que um corte ainda deixe uma saída",
+        "why": "Isso. Cada prédio num anel tem duas saídas, a um lance de fibra por prédio."
+      }
+    ]
+  },
+  "ex-crfpbqpg": {
+    "prompt": "O órgão de padronização por trás da Ethernet e do Wi-Fi é o IEEE 802 LAN/___ Standards Committee.",
+    "hint": "A palavra do tamanho de uma cidade.",
+    "blanks": [
+      {
+        "accept": [
+          "MAN"
+        ]
+      }
+    ]
+  },
+  "ex-pzqcje2t": {
+    "prompt": "O pc1 está na VLAN 10 e o pc2 na VLAN 20, em portas vizinhas de um switch. Do que o pc1 precisa para alcançar o pc2?",
+    "hint": "Duas VLANs são duas LANs.",
+    "choices": [
+      {
+        "text": "Nada, já que dividem um switch",
+        "why": "Dividir o equipamento é o ponto da VLAN, e o switch continua separando as duas."
+      },
+      {
+        "text": "Um cabo direto do pc1 até o pc2, por fora do switch",
+        "why": "Isso monta uma terceira rede ao lado do switch; não junta as duas VLANs."
+      },
+      {
+        "text": "Um roteador entre as duas VLANs",
+        "why": "Isso. O switch só encaminha quadros dentro de uma VLAN, então atravessar entre elas é trabalho de roteador (aula 22)."
+      },
+      {
+        "text": "Uma VPN entre as duas portas",
+        "why": "Uma VPN junta redes através da rede de outra pessoa. Duas portas de um switch precisam de um roteador."
+      }
+    ]
+  },
+  "ex-b6xmhmb5": {
+    "prompt": "Um PC na VLAN 10 manda um pedido ARP para o endereço de broadcast. Quais portas do switch o entregam?",
+    "hint": "Uma VLAN é uma fronteira de broadcast.",
+    "choices": [
+      {
+        "text": "Todas as portas do switch, já que é broadcast",
+        "why": "Um broadcast enche a própria VLAN e para na borda dela."
+      },
+      {
+        "text": "Só a porta do roteador",
+        "why": "O ARP pergunta a todas as máquinas da LAN; o roteador é uma delas, não a única."
+      },
+      {
+        "text": "Nenhuma, porque VLANs descartam ARP",
+        "why": "Sem ARP nenhuma máquina da VLAN alcançaria outra. VLANs limitam broadcasts; não os descartam."
+      },
+      {
+        "text": "As outras portas da VLAN 10",
+        "why": "Isso. Broadcasts ficam dentro da sua VLAN, e essa é metade da razão de as VLANs existirem."
+      }
+    ]
+  },
+  "ex-am9a4pez": {
+    "prompt": "Quantos bytes tem a tag 802.1Q que marca a VLAN de um quadro num tronco?",
+    "hint": "A seção cita; a aula 19 abre.",
+    "unit": "bytes"
+  },
+  "ex-z75en99b": {
+    "prompt": "Antes do túnel, o ping do pc1 para 10.30.10.22 imprimiu `From 203.0.113.1 icmp_seq=1 Destination Net Unreachable`. Que aparelho mandou essa mensagem?",
+    "hint": "De quem é o endereço 203.0.113.1?",
+    "choices": [
+      {
+        "text": "O rbr, roteador da filial",
+        "why": "O pacote nunca chegou ao rbr; ele morreu um roteador antes."
+      },
+      {
+        "text": "O próprio pc1, antes de enviar qualquer coisa",
+        "why": "Quando o pc1 recusa sozinho, ele imprime Network is unreachable, sem From."
+      },
+      {
+        "text": "A isp, roteador da operadora",
+        "why": "Isso. 203.0.113.1 é a ponta da operadora no link da matriz, e ela não tem rota para a LAN da filial."
+      },
+      {
+        "text": "O pc2, que recusou o ping",
+        "why": "O pc2 nunca é alcançado, e o endereço dele é 10.30.10.22."
+      }
+    ]
+  },
+  "ex-ee8sgetb": {
+    "prompt": "Pelo túnel, a resposta do pc2 chega com `ttl=62`. Quais roteadores tiraram um cada do TTL do pacote de dentro?",
+    "hint": "O pc2 começa em 64.",
+    "choices": [
+      {
+        "text": "rbr e rhq",
+        "why": "Isso. 64 menos os dois roteadores que encaminharam o pacote de dentro dá 62."
+      },
+      {
+        "text": "rbr, isp e rhq",
+        "why": "Isso deixaria 61. A isp encaminha o pacote de fora e nunca vê o TTL de dentro."
+      },
+      {
+        "text": "Só a isp, duas vezes",
+        "why": "A isp encaminha o pacote de fora cifrado e não consegue ler o de dentro."
+      },
+      {
+        "text": "Nenhum; o pc2 manda 62",
+        "why": "Uma máquina Linux começa em 64, como mostram as capturas do anel e do escritório."
+      }
+    ]
+  },
+  "ex-zqqpfwgg": {
+    "prompt": "No rhq, `wg set wg0 ... peer +JFz… endpoint 198.51.100.2:51820 allowed-ips 10.30.10.0/24,10.255.255.2/32`. O que o allowed-ips decide?",
+    "hint": "Endereços de dentro ou de fora?",
+    "choices": [
+      {
+        "text": "Quais endereços públicos podem abrir uma conexão com a porta 51820",
+        "why": "O lado de fora é o endpoint. O allowed-ips trata dos pacotes dentro do túnel."
+      },
+      {
+        "text": "Quais PCs da matriz podem usar o túnel",
+        "why": "Ele cita os endereços da filial, não os da matriz."
+      },
+      {
+        "text": "Quais endereços a operadora tem permissão de rotear",
+        "why": "A operadora nunca fica sabendo dos endereços de dentro do túnel."
+      },
+      {
+        "text": "De quais endereços de origem internos este par pode mandar",
+        "why": "Isso. Pacotes vindos da filial têm de vir de 10.30.10.0/24 ou de 10.255.255.2, e nada mais é aceito."
+      }
+    ]
+  },
+  "ex-0yrf6xsz": {
+    "prompt": "Ponha a configuração do roteador da matriz na ordem em que foi digitada.",
+    "hint": "Três linhas de prompt no rhq.",
+    "items": [
+      "Criar a interface wg0",
+      "Dar a ela uma porta, uma chave privada e a filial como par",
+      "Dar à wg0 seu endereço e subi-la",
+      "Rotear a LAN da filial para a wg0"
+    ],
+    "trap": "A interface tem de existir antes que o `wg set` possa configurá-la, e a rota vem por último porque aponta para a wg0."
+  },
+  "ex-0xc4vhc3": {
+    "prompt": "As duas chaves privadas do túnel do laboratório estão escritas no lab.sh. O que isso quer dizer para um túnel de verdade?",
+    "hint": "Quem mais pode ler o lab.sh?",
+    "choices": [
+      {
+        "text": "Elas são seguras, já que o wg show as mostra como ocultas",
+        "why": "O wg show esconde a chave na tela; o arquivo continua com ela para quem quiser ler."
+      },
+      {
+        "text": "Gere novas com wg genkey: uma chave impressa não protege nada",
+        "why": "Isso. Uma chave privada que qualquer um pode ler não é privada, e essas chaves estão num arquivo público de propósito."
+      },
+      {
+        "text": "Elas servem desde que os endpoints mudem",
+        "why": "O endpoint é um endereço; ele não torna secreta de novo uma chave vazada."
+      },
+      {
+        "text": "Troque as chaves públicas e mantenha as privadas",
+        "why": "As chaves públicas existem para serem compartilhadas. Foram as privadas que vazaram."
+      }
+    ]
+  },
+  "ex-t0gapbxt": {
+    "prompt": "Enquanto o pc1 pingava o pc2 pelo túnel, o que a operadora conseguia ler no cabo da isp? Marque todas as que se aplicam.",
+    "hint": "Leia o primeiro tcpdump linha por linha.",
+    "choices": [
+      {
+        "text": "Os endereços públicos dos dois roteadores",
+        "why": "Certo: 203.0.113.2 e 198.51.100.2 estão em toda linha."
+      },
+      {
+        "text": "O endereço do pc1, 10.20.10.21",
+        "why": "Os endereços de dentro são cifrados; eles só aparecem na wg0."
+      },
+      {
+        "text": "A porta UDP, 51820",
+        "why": "Certo: a porta está no cabeçalho de fora, às claras."
+      },
+      {
+        "text": "Que os pacotes eram ICMP echo requests",
+        "why": "A palavra ICMP só está na captura de dentro do túnel."
+      },
+      {
+        "text": "O tamanho de cada datagrama, 128",
+        "why": "Certo: length 128 aparece nos quatro, e um pacote maior mostraria um número maior."
+      }
+    ]
+  },
+  "ex-nna79c1x": {
+    "prompt": "Um pacote de ping de 84 bytes é completado até 96 e cifrado, e o WireGuard acrescenta um cabeçalho de 16 bytes e uma tag de 16 bytes. Que tamanho UDP o tcpdump imprime?",
+    "hint": "Some o que o UDP carrega.",
+    "unit": "bytes"
+  },
+  "ex-ryxwjwne": {
+    "prompt": "Quem consegue ler às claras os pings entre o pc1 e o pc2?",
+    "hint": "O túnel protege o caminho.",
+    "choices": [
+      {
+        "text": "Qualquer um escutando no cabo da operadora",
+        "why": "Essa é a primeira captura: dois endereços públicos, uma porta e um tamanho."
+      },
+      {
+        "text": "O pc1, sozinho",
+        "why": "O pc2 também lê, e qualquer um em qualquer dos dois roteadores."
+      },
+      {
+        "text": "Quem controla rhq, rbr, pc1 ou pc2",
+        "why": "Isso. A cifra cobre o caminho entre os roteadores; nas pontas o tráfego está às claras, como a wg0 mostrou."
+      },
+      {
+        "text": "Ninguém, nem o pc2",
+        "why": "O pc2 tem de ler o ping para responder."
+      }
+    ]
+  },
+  "ex-nj192ehj": {
+    "prompt": "Por que o tcpdump na wg0 do rhq imprime `link-type RAW (Raw IP)`?",
+    "hint": "O que um cabeçalho Ethernet teria?",
+    "choices": [
+      {
+        "text": "O tcpdump não conseguiu decifrar os pacotes",
+        "why": "Na wg0 os pacotes já estão decifrados; o ICMP é legível."
+      },
+      {
+        "text": "Um túnel leva pacotes IP puros, sem endereços MAC",
+        "why": "Isso. Não há enlace com endereços de hardware dentro de um túnel, então um cabeçalho Ethernet não teria o que dizer."
+      },
+      {
+        "text": "A captura foi feita do lado da operadora",
+        "why": "Essa captura foi na eth0 da isp e imprimiu link-type EN10MB (Ethernet)."
+      },
+      {
+        "text": "O WireGuard tira o cabeçalho Ethernet para economizar espaço",
+        "why": "Nunca houve cabeçalho Ethernet na wg0 para tirar."
+      }
+    ]
+  },
+  "ex-d15w1qs4": {
+    "prompt": "Ligue cada palavra ao lugar onde ela aparece no laboratório desta aula.",
+    "hint": "A figura da seção de LAN.",
+    "pairs": [
+      {
+        "left": "LAN",
+        "right": "10.20.10.0/24, pc1 e rhq"
+      },
+      {
+        "left": "WAN",
+        "right": "203.0.113.0/30 e 198.51.100.0/30, vendidos pela isp"
+      },
+      {
+        "left": "VPN",
+        "right": "wg0, de 10.255.255.1 a 10.255.255.2"
+      }
+    ],
+    "right_distractors": [
+      "Tags 802.1Q num tronco"
+    ]
+  },
+  "ex-6p9zqesa": {
+    "prompt": "Uma filial diz que o túnel está de pé. Uma captura no lado de internet do roteador da filial mostra ICMP de 10.30.10.22 para 10.20.10.21. O que isso diz?",
+    "hint": "O que a captura na isp mostrou quando o túnel funcionava?",
+    "choices": [
+      {
+        "text": "Ele contorna o túnel, às claras",
+        "why": "Isso. Pelo túnel, o lado de fora mostra só UDP entre endereços públicos; ICMP privado ali quer dizer um caminho que o pula."
+      },
+      {
+        "text": "O túnel está funcionando como deveria",
+        "why": "Um túnel funcionando mostra UDP 51820 do lado de fora, como na isp."
+      },
+      {
+        "text": "A operadora decifrou o tráfego",
+        "why": "Uma operadora não tem chave. A captura é no próprio roteador da filial."
+      },
+      {
+        "text": "A captura foi feita na wg0 por engano",
+        "why": "A pergunta diz o lado de internet; a wg0 é o lado de dentro do túnel."
+      }
+    ]
+  },
+  "ex-v8mf9fnw": {
+    "prompt": "Ponha em ordem os saltos do traceroute do pc1 até o pc2 pelo túnel.",
+    "hint": "Três linhas.",
+    "items": [
+      "10.20.10.1",
+      "10.255.255.2",
+      "10.30.10.22"
+    ],
+    "trap": "203.0.113.1 nem é um salto: dentro do túnel a operadora não aparece."
+  },
+  "ex-279b86sr": {
+    "prompt": "Uma empresa com internet nas duas sedes quer que as duas LANs, em endereços privados, se alcancem. Qual é o jeito mais barato?",
+    "hint": "Use o que já está pago.",
+    "choices": [
+      {
+        "text": "Uma linha dedicada entre os dois escritórios",
+        "why": "Funciona, e é a opção cara que a seção de VPN estava evitando."
+      },
+      {
+        "text": "Uma VPN site-to-site entre os roteadores",
+        "why": "Isso. Ela anda sobre as conexões que as duas sedes já têm."
+      },
+      {
+        "text": "Pedir à operadora para rotear 10.30.10.0/24",
+        "why": "Nenhuma operadora roteia faixas privadas que milhares de empresas reutilizam."
+      },
+      {
+        "text": "Uma VLAN esticada entre as duas cidades",
+        "why": "Uma VLAN divide switches; entre cidades, alguma coisa ainda tem de levar os quadros."
+      }
+    ]
+  }
+}

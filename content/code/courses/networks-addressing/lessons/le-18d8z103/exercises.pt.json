@@ -1,0 +1,494 @@
+{
+  "ex-psnpgvr9": {
+    "prompt": "Antes de pedir qualquer coisa, o `ip route` do pc1 não imprimiu nada. O que isso diz?",
+    "hint": "Uma tabela vazia não tem linha para nada.",
+    "choices": [
+      {
+        "text": "Não tem rota IPv4, nem para a própria sub-rede",
+        "why": "Isso. Sem endereço não há rota da sub-rede, nem gateway."
+      },
+      {
+        "text": "Tem uma rota padrão que o `ip route` esconde",
+        "why": "Quando o pc1 tem uma, o `ip route` a imprime na primeira linha, como faz depois da troca DHCP."
+      },
+      {
+        "text": "O endereço fe80 lhe dá uma rota até o r1",
+        "why": "fe80:: é IPv6 link-local; esta é a tabela IPv4, e está vazia."
+      },
+      {
+        "text": "O cabo está desconectado",
+        "why": "O `ip -br addr` mostrou a eth0 UP. O enlace existe; o endereço é que não."
+      }
+    ]
+  },
+  "ex-187n02gm": {
+    "prompt": "Qual máquina do laboratório precisa manter um endereço estático?",
+    "hint": "Pense em quem responderia se ela pedisse um.",
+    "choices": [
+      {
+        "text": "prn, a impressora que todos usam",
+        "why": "Ela tem uma reserva: o mesmo endereço, ainda pedido por DHCP."
+      },
+      {
+        "text": "srv, o servidor DHCP",
+        "why": "Isso. Ele não consegue emprestar um endereço a si mesmo antes de estar rodando."
+      },
+      {
+        "text": "pc4, porque está em outra sub-rede",
+        "why": "O pc4 recebe o endereço por DHCP, através do relay no r1."
+      },
+      {
+        "text": "pc1, porque pediu primeiro",
+        "why": "Pedir primeiro só decide qual endereço do pool ele recebe: o .100."
+      }
+    ]
+  },
+  "ex-07k1cy1q": {
+    "prompt": "Depois da troca DHCP, o que o servidor deu ao pc1? Escolha todas as que se aplicam.",
+    "hint": "Leia `ip -br addr`, `ip route` e `/etc/resolv.conf` depois do ACK.",
+    "choices": [
+      {
+        "text": "Um endereço com máscara, 10.20.10.100/24",
+        "why": "Isso, e a máscara lhe deu a rota para a sub-rede."
+      },
+      {
+        "text": "Um gateway padrão, 10.20.10.1",
+        "why": "Isso: `default via 10.20.10.1`, de `option routers`."
+      },
+      {
+        "text": "Um servidor de nomes, 10.20.10.10",
+        "why": "Isso: escrito em /etc/resolv.conf."
+      },
+      {
+        "text": "O endereço MAC dele, 02:25:70:bc:29:c6",
+        "why": "O MAC pertence à placa de rede, e foi o cliente que o mandou no pedido."
+      },
+      {
+        "text": "A porta do switch em que está ligado",
+        "why": "O DHCP não sabe nada de portas; o switch sabe."
+      }
+    ]
+  },
+  "ex-sgg0at7e": {
+    "prompt": "Ponha as quatro mensagens do pc1 recebendo o endereço na ordem em que foram enviadas.",
+    "hint": "As iniciais formam uma palavra.",
+    "items": [
+      "DHCPDISCOVER, para 255.255.255.255",
+      "DHCPOFFER de 10.20.10.100",
+      "DHCPREQUEST de 10.20.10.100",
+      "DHCPACK, e o pc1 assume o endereço"
+    ],
+    "trap": "Um REQUEST antes do OFFER é o deslize comum: o cliente não tem como pedir um endereço que ninguém ofereceu ainda."
+  },
+  "ex-d3nkceaa": {
+    "prompt": "No tcpdump do srv, as duas mensagens do pc1 saem de 0.0.0.0 porta 68. Por que 0.0.0.0?",
+    "hint": "O que o `ip -br addr` mostrava antes da troca?",
+    "choices": [
+      {
+        "text": "É o endereço em que o servidor DHCP escuta",
+        "why": "O srv é 10.20.10.10, e as mensagens vão PARA ele, não vêm dele."
+      },
+      {
+        "text": "O dhclient esconde o endereço real",
+        "why": "Não há endereço real a esconder: o pc1 ainda não tem IPv4."
+      },
+      {
+        "text": "O pc1 ainda não tem endereço IPv4",
+        "why": "Isso. Tudo zero quer dizer \"sem endereço\", a única origem honesta que ele tem."
+      },
+      {
+        "text": "É o endereço de broadcast de 10.20.10.0/24",
+        "why": "Esse seria 10.20.10.255; as mensagens vão para 255.255.255.255."
+      }
+    ]
+  },
+  "ex-6ax72sjv": {
+    "prompt": "O pc1 já sabe, pela resposta, quem atendeu. Por que ainda manda o DHCPREQUEST por broadcast?",
+    "hint": "Imagine dois servidores na sub-rede.",
+    "choices": [
+      {
+        "text": "Para que todo servidor que ofereceu saiba qual oferta foi aceita",
+        "why": "Isso. Os outros recolhem os endereços que ofereceram."
+      },
+      {
+        "text": "Porque o servidor só escuta em 255.255.255.255",
+        "why": "O srv recebe unicast também: a devolução na seção sobre empréstimos foi direto para 10.20.10.10."
+      },
+      {
+        "text": "Porque não sabe o MAC do servidor",
+        "why": "A oferta chegou num quadro vindo do MAC do servidor, então ele sabe."
+      },
+      {
+        "text": "Para o roteador aprender o novo endereço",
+        "why": "O r1 não participa da troca na LAN do escritório."
+      }
+    ]
+  },
+  "ex-dv3bemp0": {
+    "prompt": "O DHCP corre sobre UDP. O servidor escuta na porta 67, e o cliente na porta ___.",
+    "hint": "Uma a mais que o servidor.",
+    "blanks": [
+      {
+        "accept": [
+          "68"
+        ]
+      }
+    ]
+  },
+  "ex-kmdfz5eg": {
+    "prompt": "O escopo do srv para o escritório diz `range 10.20.10.100 10.20.10.199`. Quantos endereços ele empresta?",
+    "hint": "As duas pontas entram na conta.",
+    "unit": "endereços"
+  },
+  "ex-z738z6aj": {
+    "prompt": "Um técnico dá a um ponto de acesso novo o endereço estático 10.20.10.150 na LAN do escritório deste laboratório. O que está errado?",
+    "hint": "Compare o .150 com a configuração.",
+    "choices": [
+      {
+        "text": "O .150 está no pool, e o srv o empresta a um PC também",
+        "why": "Isso. Duas máquinas reivindicariam o mesmo endereço."
+      },
+      {
+        "text": "O .150 está fora de 10.20.10.0/24",
+        "why": "O /24 vai do .0 ao .255; o .150 está dentro."
+      },
+      {
+        "text": "Um ponto de acesso precisa de uma reserva para funcionar",
+        "why": "Um endereço estático funciona; este só está no lugar errado."
+      },
+      {
+        "text": "O r1 descarta o tráfego de endereços acima do .99",
+        "why": "O r1 roteia o /24 inteiro; o .99 é só um costume deste laboratório."
+      }
+    ]
+  },
+  "ex-k443zsgm": {
+    "prompt": "O que `option routers 10.20.10.1;` dentro do primeiro bloco subnet dá a cada cliente?",
+    "hint": "Olhe o `ip route` do pc1 depois da troca.",
+    "choices": [
+      {
+        "text": "O endereço do servidor DHCP",
+        "why": "Esse é o srv, 10.20.10.10, enviado como identificador do servidor."
+      },
+      {
+        "text": "O gateway padrão",
+        "why": "Isso: `default via 10.20.10.1`."
+      },
+      {
+        "text": "O primeiro endereço do pool",
+        "why": "O pool é a linha `range` e começa no .100."
+      },
+      {
+        "text": "Um roteador para pedir uma segunda opinião",
+        "why": "O DHCP não tem isso; routers é a opção do gateway."
+      }
+    ]
+  },
+  "ex-qn71vmbm": {
+    "prompt": "Como o srv sabe que a máquina pedindo é a impressora, a quem cabe o 10.20.10.50?",
+    "hint": "Leia o bloco `host prn`.",
+    "choices": [
+      {
+        "text": "Pelo nome dela, prn",
+        "why": "O bloco se chama prn para as pessoas; a comparação é na linha hardware."
+      },
+      {
+        "text": "Pela porta do switch, p3",
+        "why": "O srv nunca fica sabendo a porta."
+      },
+      {
+        "text": "Pelo endereço MAC dela, 02:32:ed:ce:04:12",
+        "why": "Isso: `hardware ethernet` é o que se compara."
+      },
+      {
+        "text": "Pela ordem em que as máquinas pedem",
+        "why": "A ordem decide os endereços do pool, não uma reserva."
+      }
+    ]
+  },
+  "ex-2b0qvm15": {
+    "prompt": "A placa de rede da impressora é trocada, e ninguém edita o arquivo do srv. O que a impressora recebe ao pedir de novo?",
+    "hint": "A reserva está amarrada a quê?",
+    "choices": [
+      {
+        "text": "O 10.20.10.50, porque o srv a conhece pelo nome",
+        "why": "A comparação é pelo endereço MAC, e ele mudou."
+      },
+      {
+        "text": "Um endereço comum do pool",
+        "why": "Isso. O MAC novo não bate com nenhum bloco host, então é um cliente qualquer."
+      },
+      {
+        "text": "Endereço nenhum",
+        "why": "Um MAC desconhecido é só um cliente novo, e o pool tem espaço."
+      },
+      {
+        "text": "O 10.20.10.50, guardado na própria impressora",
+        "why": "Com reserva, o endereço mora no arquivo do srv."
+      }
+    ]
+  },
+  "ex-15ah9y8q": {
+    "prompt": "Por que o endereço reservado, 10.20.10.50, fica fora do pool de .100 a .199?",
+    "hint": "O que aconteceria se fosse o .150 e um PC pedisse primeiro?",
+    "choices": [
+      {
+        "text": "Porque o dhcpd recusa reservas acima do .99",
+        "why": "Nada no arquivo impõe esse limite; deixá-lo fora do pool é uma escolha."
+      },
+      {
+        "text": "Para mostrar às pessoas que o dispositivo é uma impressora",
+        "why": "Um endereço não diz nada sobre o dispositivo."
+      },
+      {
+        "text": "Porque endereços abaixo de .100 são mais rápidos",
+        "why": "Todo endereço da sub-rede é alcançado do mesmo jeito."
+      },
+      {
+        "text": "Para nenhum PC recebê-lo antes de a impressora pedir",
+        "why": "Isso. Fora do pool, ele nunca está na lista de endereços a emprestar."
+      }
+    ]
+  },
+  "ex-523vtypa": {
+    "prompt": "O arquivo de empréstimos do srv diz que o do pc1 começa às 11:20:32 e termina às 11:30:32. Quantos segundos dura?",
+    "hint": "A configuração também diz.",
+    "unit": "segundos"
+  },
+  "ex-qbcw30yf": {
+    "prompt": "Um empréstimo dura 3600 segundos. Pelo padrão do protocolo, de sete oitavos, quantos segundos depois do início o cliente faz o rebind?",
+    "hint": "Sete oitavos do empréstimo.",
+    "unit": "segundos"
+  },
+  "ex-4nyg1mzn": {
+    "prompt": "Ligue cada momento da vida de um empréstimo ao que o cliente faz.",
+    "hint": "Dois perguntam; um desiste; um devolve.",
+    "pairs": [
+      {
+        "left": "renew",
+        "right": "Pede ao servidor que emprestou, por unicast"
+      },
+      {
+        "left": "rebind",
+        "right": "Pede a qualquer servidor, por broadcast"
+      },
+      {
+        "left": "expire",
+        "right": "Para de usar o endereço"
+      },
+      {
+        "left": "release",
+        "right": "Devolve o endereço antes da hora"
+      }
+    ],
+    "right_distractors": [
+      "Pede uma máscara nova ao roteador"
+    ]
+  },
+  "ex-eqz1wt5a": {
+    "prompt": "Um laptop com um empréstimo de um dia é desconectado sem devolvê-lo. Quando o endereço fica livre para outro?",
+    "hint": "O que um laptop desconectado manda?",
+    "choices": [
+      {
+        "text": "Na hora, assim que ele para de responder",
+        "why": "O servidor não vigia o silêncio; ele espera o empréstimo."
+      },
+      {
+        "text": "Ao fim do dia, quando o prazo vence",
+        "why": "Isso. Nada foi devolvido, então o empréstimo vai até o fim."
+      },
+      {
+        "text": "Em meio dia, quando ele teria renovado",
+        "why": "Perder uma renovação não muda nada no servidor."
+      },
+      {
+        "text": "Quando o servidor é reiniciado",
+        "why": "Os empréstimos estão num arquivo, e um reinício os lê de volta."
+      }
+    ]
+  },
+  "ex-23j6h646": {
+    "prompt": "Antes de o dhcrelay rodar no r1, os três DISCOVERs do pc4 ficaram sem resposta. Por quê?",
+    "hint": "Onde um broadcast para?",
+    "choices": [
+      {
+        "text": "O arquivo do srv não tinha escopo para a sub-rede do pc4, 10.20.20.0",
+        "why": "Tinha: o segundo bloco subnet."
+      },
+      {
+        "text": "O r1 não encaminha os broadcasts do pc4 para o escritório",
+        "why": "Isso. Um roteador encerra um domínio de broadcast."
+      },
+      {
+        "text": "O cabo do pc4 estava desconectado",
+        "why": "O mesmo cabo levou a troca um minuto depois."
+      },
+      {
+        "text": "O pc4 usava a porta errada",
+        "why": "A porta 67, como diz cada linha DISCOVER."
+      }
+    ]
+  },
+  "ex-3nt2ee76": {
+    "prompt": "O relay escreve o próprio endereço na sub-rede do cliente num campo do pedido, e o servidor o usa para escolher o escopo. Esse campo se chama ___.",
+    "hint": "O nome vem do endereço IP do gateway, em inglês.",
+    "blanks": [
+      {
+        "accept": [
+          "giaddr"
+        ]
+      }
+    ]
+  },
+  "ex-wg75yvhd": {
+    "prompt": "O tcpdump do srv mostra os pedidos encaminhados chegando de 10.20.10.1, e as respostas indo para 10.20.20.1. Por que não responder a 10.20.10.1?",
+    "hint": "Qual endereço do r1 diz ao srv onde o cliente está?",
+    "choices": [
+      {
+        "text": "O srv responde ao giaddr que o relay escreveu",
+        "why": "Isso. 10.20.20.1 é o endereço do r1 do lado do pc4, e ele também escolheu o escopo."
+      },
+      {
+        "text": "O srv tira o endereço de resposta de `option routers`",
+        "why": "Aqui os dois calham de ser o mesmo endereço; a resposta segue o giaddr."
+      },
+      {
+        "text": "O 10.20.10.1 não aceita UDP",
+        "why": "Aceita: o relay manda de 10.20.10.1 porta 67."
+      },
+      {
+        "text": "O pc4 pediu que as respostas fossem para lá",
+        "why": "O pc4 ainda não tem endereço, nem voz nisso."
+      }
+    ]
+  },
+  "ex-aews93fr": {
+    "prompt": "Com o srv pausado, o pc2 aceitou 10.20.10.200 de 10.20.10.66. Por que depois não conseguiu pingar 10.20.20.1?",
+    "hint": "Leia o `ip route` do pc2 antes do ping.",
+    "choices": [
+      {
+        "text": "O 10.20.10.200 está fora da sub-rede do escritório",
+        "why": "Está dentro de 10.20.10.0/24, com a máscara certa."
+      },
+      {
+        "text": "O srv estava pausado, então a rede parou",
+        "why": "O srv não está no caminho do pc2 até o r1."
+      },
+      {
+        "text": "A rota padrão apontava para o rogue, que não roteia",
+        "why": "Isso: `default via 10.20.10.66`, e nada ali encaminha pacotes."
+      },
+      {
+        "text": "O intruso lhe deu a máscara errada",
+        "why": "A rota conectada é 10.20.10.0/24, como antes."
+      }
+    ]
+  },
+  "ex-n62gr59j": {
+    "prompt": "Na regra de snooping do laboratório, por que a p4 é a porta cujas mensagens de servidor passam?",
+    "hint": "Olhe o desenho do laboratório.",
+    "choices": [
+      {
+        "text": "A p4 é a ligação com o roteador r1",
+        "why": "O r1 está na p8."
+      },
+      {
+        "text": "O rogue está na p4",
+        "why": "O rogue está na p5, e as ofertas dele são as descartadas."
+      },
+      {
+        "text": "O srv está ligado na p4",
+        "why": "Isso. É a única porta onde mora um servidor de verdade."
+      },
+      {
+        "text": "O nftables deixa passar a porta mais baixa",
+        "why": "A regra cita a própria p4: `iifname != \"p4\"`."
+      }
+    ]
+  },
+  "ex-jetk0z5h": {
+    "prompt": "O que o DHCP snooping num switch faz? Escolha todas as que se aplicam.",
+    "hint": "Ele trabalha com portas e com quem pode mandar o quê.",
+    "choices": [
+      {
+        "text": "Descarta ofertas e ACKs que chegam por uma porta não confiável",
+        "why": "Isso: mensagens de servidor vindas do lugar errado."
+      },
+      {
+        "text": "Confia na porta voltada para o servidor verdadeiro",
+        "why": "Isso, e no laboratório essa é a p4."
+      },
+      {
+        "text": "Confere se a configuração do servidor verdadeiro está certa",
+        "why": "O switch vê mensagens, não o arquivo do servidor."
+      },
+      {
+        "text": "Criptografa o DHCP para outros PCs não lerem",
+        "why": "O DHCP continua às claras; o snooping só filtra."
+      }
+    ]
+  },
+  "ex-v7nh4s08": {
+    "prompt": "Ligue cada mensagem DHCP ao modo como ela viaja nas capturas desta aula.",
+    "hint": "Quem manda, e para quem?",
+    "pairs": [
+      {
+        "left": "DHCPDISCOVER",
+        "right": "Cliente para todos, de 0.0.0.0"
+      },
+      {
+        "left": "DHCPOFFER",
+        "right": "Servidor para cliente, propondo um endereço"
+      },
+      {
+        "left": "DHCPACK",
+        "right": "Servidor para cliente, confirmando o endereço"
+      },
+      {
+        "left": "DHCPRELEASE",
+        "right": "Cliente direto para o servidor, devolvendo"
+      }
+    ],
+    "right_distractors": [
+      "Roteador para cliente, indicando o gateway"
+    ]
+  },
+  "ex-meq2gf4p": {
+    "prompt": "O empréstimo do pc1 começou às 11:20:32, e o arquivo dele diz `renew 2 2026/09/29 11:25:24`. Quantos segundos depois do início vem a renovação?",
+    "hint": "Subtraia os horários.",
+    "unit": "segundos"
+  },
+  "ex-7aqqphgt": {
+    "prompt": "O pool de um escritório tem 100 endereços, emprestados por um dia. Na segunda de manhã, 105 PCs pedem, um depois do outro. O que os cinco últimos recebem?",
+    "hint": "Todo endereço do pool já está emprestado.",
+    "choices": [
+      {
+        "text": "Um endereço fora da faixa, escolhido pelo servidor",
+        "why": "O servidor empresta da faixa e de nenhum outro lugar; o resto fica para uso estático."
+      },
+      {
+        "text": "Nenhuma oferta",
+        "why": "Isso. Os DISCOVERs ficam sem resposta, e muitos sistemas caem para 169.254.x.x."
+      },
+      {
+        "text": "Um endereço dividido com outro PC",
+        "why": "O servidor nunca empresta o mesmo endereço duas vezes ao mesmo tempo."
+      },
+      {
+        "text": "O mesmo pool, com empréstimo mais curto",
+        "why": "A duração do empréstimo não cria endereços."
+      }
+    ]
+  },
+  "ex-512m1ft4": {
+    "prompt": "No r1, o programa da ISC que leva os broadcasts DHCP do pc4 até o srv é o ___.",
+    "hint": "O nome diz DHCP e o que ele faz.",
+    "blanks": [
+      {
+        "accept": [
+          "dhcrelay"
+        ]
+      }
+    ]
+  }
+}

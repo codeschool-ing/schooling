@@ -1,0 +1,783 @@
+[
+  {
+    "id": "ex-57hrkp5k",
+    "version": 1,
+    "section": "the-loop",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With spanning tree off, a broadcast went round the lab's triangle until the cable was pulled. Why did it not die out by itself?",
+    "hint": "Compare an Ethernet frame with an IP packet.",
+    "choices": [
+      {
+        "text": "The switches lowered its TTL, but 255 laps take a while",
+        "correct": false,
+        "why": "Switches do not touch a TTL. That field is in the IP header, and routers lower it."
+      },
+      {
+        "text": "An Ethernet frame has no hop count to run out",
+        "correct": true,
+        "why": "Right. A switch forwards the frame unchanged, so a copy that goes round is as fresh as when it started."
+      },
+      {
+        "text": "Each PC kept sending the broadcast again because no reply came back",
+        "correct": false,
+        "why": "Nobody typed anything during those three seconds. The copies came from the switches flooding."
+      },
+      {
+        "text": "Each switch sent it back out of the port it arrived on",
+        "correct": false,
+        "why": "Flooding leaves out the arrival port. The loop comes from the third switch, not from a frame bounced back."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddb6tgpg",
+    "version": 1,
+    "section": "the-loop",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before the loop, sw1's p2 had received 21 packets. Three seconds of loop later the same counter read 201975. How many frames arrived on that port in between?",
+    "hint": "Subtract the before from the after.",
+    "value": 201954,
+    "tolerance": 0,
+    "unit": "frames"
+  },
+  {
+    "id": "ex-0pxfk3bh",
+    "version": 1,
+    "section": "the-loop",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two switches are joined by two cables and spanning tree is off. Which of these follow? Choose all that apply.",
+    "hint": "Two cables between two switches are a loop of length two.",
+    "choices": [
+      {
+        "text": "Broadcasts circulate between the two switches and multiply",
+        "correct": true,
+        "why": "Yes. Each switch floods what it receives on one cable out of the other."
+      },
+      {
+        "text": "A PC's MAC address moves back and forth between ports in the MAC tables",
+        "correct": true,
+        "why": "Yes. Copies of its frames arrive on both cables, so the table keeps changing its mind."
+      },
+      {
+        "text": "The link between them doubles its capacity",
+        "correct": false,
+        "why": "Doubling needs link aggregation, lesson 21. Without it, two cables are a loop."
+      },
+      {
+        "text": "The second cable stays idle as a spare until the first one fails",
+        "correct": false,
+        "why": "That is what spanning tree arranges. With it switched off, both cables forward."
+      }
+    ]
+  },
+  {
+    "id": "ex-b73bbsgh",
+    "version": 1,
+    "section": "the-loop",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During a broadcast storm, frames for pc2 sometimes leave sw1 by the wrong port. What causes that?",
+    "hint": "Think about how a switch learns which port a MAC is behind.",
+    "choices": [
+      {
+        "text": "The storm corrupts the destination MAC in the frames",
+        "correct": false,
+        "why": "The frames are copied intact. The destination is right; the table is what is wrong."
+      },
+      {
+        "text": "sw1 runs out of space in its MAC table and forgets pc2",
+        "correct": false,
+        "why": "A forgotten address would be flooded, not sent out of one wrong port."
+      },
+      {
+        "text": "pc2 answers ARP from two different MAC addresses",
+        "correct": false,
+        "why": "pc2 has one network card and one MAC. The duplication is in the switches."
+      },
+      {
+        "text": "Copies of pc2's frames arrive on both p2 and p3, so sw1 keeps moving pc2's entry",
+        "correct": true,
+        "why": "Right. That is MAC flapping: the entry points at whichever port the last copy came in on."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2yync3e",
+    "version": 1,
+    "section": "root-election",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The three switches report these bridge IDs. Which one becomes the root?",
+    "hint": "Lowest wins, priority first.",
+    "choices": [
+      {
+        "text": "8000.02e0779de790",
+        "correct": false,
+        "why": "That is the highest of the three MACs, and the priorities tie."
+      },
+      {
+        "text": "8000.02a59d312a8c",
+        "correct": false,
+        "why": "Lower than sw2's, but 02:6a comes before 02:a5."
+      },
+      {
+        "text": "8000.026adc933b8a",
+        "correct": true,
+        "why": "Right. Equal priorities, so the lowest MAC, sw1's, wins."
+      },
+      {
+        "text": "Neither yet: three equal priorities wait for an administrator to pick one",
+        "correct": false,
+        "why": "A tie on priority is broken by the MAC address, with no human involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-gx9wffgn",
+    "version": 1,
+    "section": "root-election",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A bridge ID starts with 8000, the default priority written in hexadecimal. What is it in decimal?",
+    "hint": "8 × 16³.",
+    "value": 32768,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-ehc86j4k",
+    "version": 1,
+    "section": "root-election",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Switches running STP exchange small frames called ___, by default one every 2 seconds.",
+    "hint": "Bridge protocol data units.",
+    "blanks": [
+      {
+        "accept": [
+          "BPDUs",
+          "BPDU",
+          "bridge protocol data units"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m5q3w2qq",
+    "version": 1,
+    "section": "root-election",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "sw2 reports root_port:1 and root_path_cost:2. Every port in the lab costs 2. What does the 2 tell you?",
+    "hint": "Cost is added per port along the path.",
+    "choices": [
+      {
+        "text": "sw2 is two cables away from the root",
+        "correct": false,
+        "why": "Two cables would add two port costs, which is 4 here."
+      },
+      {
+        "text": "sw2 is one cable away from the root",
+        "correct": true,
+        "why": "Right. One port at cost 2 lies between sw2 and the root."
+      },
+      {
+        "text": "sw2 has two ports in forwarding state",
+        "correct": false,
+        "why": "Path cost measures distance to the root, not how many ports forward."
+      },
+      {
+        "text": "sw2 was the second switch to be elected",
+        "correct": false,
+        "why": "There is one election, for the root. The others are not ranked."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6jcrtf7",
+    "version": 1,
+    "section": "port-states",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the 802.1D states in the order a port passes through them on its way into use.",
+    "hint": "Two waits of 15 seconds sit in the middle.",
+    "items": [
+      "blocking",
+      "listening",
+      "learning",
+      "forwarding"
+    ],
+    "trap": "Learning before listening is the usual slip: the port first waits for the election to settle, and fills its MAC table after that."
+  },
+  {
+    "id": "ex-5622xjcf",
+    "version": 1,
+    "section": "port-states",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each port role to what it does.",
+    "hint": "Think of the triangle after the election.",
+    "pairs": [
+      {
+        "left": "Root port",
+        "right": "A non-root switch's cheapest way to the root"
+      },
+      {
+        "left": "Designated port",
+        "right": "The end of a cable that forwards onto it"
+      },
+      {
+        "left": "Blocked port",
+        "right": "Listens to BPDUs and forwards no data"
+      }
+    ],
+    "right_distractors": [
+      "Carries the root's MAC address in its bridge ID"
+    ]
+  },
+  {
+    "id": "ex-dbfqfetv",
+    "version": 1,
+    "section": "port-states",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the sw2–sw3 cable both ends are one cable from the root sw1, at cost 2. Why does sw2's end block rather than sw3's?",
+    "hint": "When costs tie, something else is compared.",
+    "choices": [
+      {
+        "text": "sw3's bridge ID is lower, so sw3's end is designated",
+        "correct": true,
+        "why": "Right. 02a59d312a8c is lower than 02e0779de790, and the tie goes to the lower ID."
+      },
+      {
+        "text": "sw3 has a PC on p10 and sw2 does not",
+        "correct": false,
+        "why": "Both have a PC on p10, and PCs play no part in the election."
+      },
+      {
+        "text": "sw2's p3 was plugged in last, so it waits",
+        "correct": false,
+        "why": "The cable plugged in last was sw3 to sw1, and order of plugging does not decide roles."
+      },
+      {
+        "text": "Port 3 loses to port 2 because the lower port number is preferred",
+        "correct": false,
+        "why": "Port numbers break ties between ports of one switch, not between two switches."
+      }
+    ]
+  },
+  {
+    "id": "ex-vfzj638c",
+    "version": 1,
+    "section": "port-states",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A port has just moved from listening to learning. What is it doing for the next 15 seconds?",
+    "hint": "The name says what it does; the table says what it does not.",
+    "choices": [
+      {
+        "text": "Forwarding data while it checks for loops",
+        "correct": false,
+        "why": "Forwarding comes after learning. Checking for loops while forwarding is what classic STP avoids."
+      },
+      {
+        "text": "Filling its MAC table from arriving frames, forwarding no data",
+        "correct": true,
+        "why": "Right. When it starts forwarding it already knows where addresses are."
+      },
+      {
+        "text": "Waiting in silence, sending no BPDUs",
+        "correct": false,
+        "why": "A learning port does send and receive BPDUs."
+      },
+      {
+        "text": "Re-running the root election",
+        "correct": false,
+        "why": "The election goes on in BPDUs whatever the state; learning is about MAC addresses."
+      }
+    ]
+  },
+  {
+    "id": "ex-xyqy5h3v",
+    "version": 1,
+    "section": "port-states",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On sw3, ip -d link show p1 prints designated_bridge 8000.2:6a:dc:93:3b:8a. What does that make p1?",
+    "hint": "Whose bridge ID is that, with the zeros put back?",
+    "choices": [
+      {
+        "text": "sw3's root port: the designated end is the root, sw1",
+        "correct": true,
+        "why": "Right. 8000.026adc933b8a is sw1, so p1 is the way to the root."
+      },
+      {
+        "text": "A designated port, because the field names it",
+        "correct": false,
+        "why": "The field names the designated end of the cable, which is on another switch."
+      },
+      {
+        "text": "A blocked port, since another bridge is designated on its cable",
+        "correct": false,
+        "why": "The other end being designated does not make this end blocked: here this end leads to the root."
+      },
+      {
+        "text": "A disabled port, because the MAC is printed without zeros",
+        "correct": false,
+        "why": "Dropping leading zeros is just how ip prints it. The port's state was forwarding."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkcwt2sa",
+    "version": 1,
+    "section": "failover",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under classic STP, how many seconds does a blocked port spend in listening and learning together before it forwards, with default timers?",
+    "hint": "Two forward delays.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-pj8aq0dw",
+    "version": 1,
+    "section": "failover",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc2 pinged pc1 once a second for 60 seconds while the sw1–sw2 cable was pulled. The summary said 60 transmitted, 30 received. How many echo requests went unanswered?",
+    "hint": "Transmitted minus received.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "packets"
+  },
+  {
+    "id": "ex-8zb9prxg",
+    "version": 1,
+    "section": "failover",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "sw3's priority is set to 4096, so sw3 becomes the root. Which port in the triangle blocks now?",
+    "hint": "Find the cable furthest from the new root, then break the tie.",
+    "choices": [
+      {
+        "text": "sw2's p3, as before",
+        "correct": false,
+        "why": "That cable now touches the root, so sw3's end of it is designated and sw2's p3 is sw2's root port."
+      },
+      {
+        "text": "sw2's p1",
+        "correct": true,
+        "why": "Right. On the sw1–sw2 cable the costs tie, sw1's lower ID makes its end designated, and sw2's end blocks."
+      },
+      {
+        "text": "sw1's p2, because sw1 lost the election",
+        "correct": false,
+        "why": "Losing the root election does not block a port by itself. sw1 still has the lower ID of the two on that cable."
+      },
+      {
+        "text": "sw3's p1, the cable to the old root",
+        "correct": false,
+        "why": "Ports on the root are designated, so sw3 has no port to block."
+      }
+    ]
+  },
+  {
+    "id": "ex-rvhx03d0",
+    "version": 1,
+    "section": "failover",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each 802.1D timer to its default.",
+    "hint": "2, 15, 20.",
+    "pairs": [
+      {
+        "left": "hello time",
+        "right": "2 s"
+      },
+      {
+        "left": "forward delay",
+        "right": "15 s"
+      },
+      {
+        "left": "max age",
+        "right": "20 s"
+      }
+    ],
+    "right_distractors": [
+      "30 s"
+    ]
+  },
+  {
+    "id": "ex-5vq7v5gk",
+    "version": 1,
+    "section": "failover",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cable fails two switches away, so a switch notices only because BPDUs stop arriving. With default timers, about how many seconds pass before its blocked port forwards?",
+    "hint": "Max age first, then the two forward delays.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-tphtvbtk",
+    "version": 1,
+    "section": "rstp-and-tuning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which IEEE standard introduced Rapid Spanning Tree?",
+    "hint": "A letter after 802.1, published in 2001.",
+    "choices": [
+      {
+        "text": "802.1Q",
+        "correct": false,
+        "why": "That is VLAN tagging, lesson 19, and today also MSTP's home."
+      },
+      {
+        "text": "802.3ad",
+        "correct": false,
+        "why": "That is link aggregation, lesson 21."
+      },
+      {
+        "text": "802.1s",
+        "correct": false,
+        "why": "That is MSTP, one tree per group of VLANs."
+      },
+      {
+        "text": "802.1w",
+        "correct": true,
+        "why": "Right, later folded into 802.1D."
+      }
+    ]
+  },
+  {
+    "id": "ex-8hnffy9n",
+    "version": 1,
+    "section": "rstp-and-tuning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a point-to-point cable, what lets RSTP put a port into forwarding in about a second instead of 30?",
+    "hint": "It replaces the wait with a conversation.",
+    "choices": [
+      {
+        "text": "Shorter default timers",
+        "correct": false,
+        "why": "RSTP keeps timers as a fallback; the speed comes from not waiting for them."
+      },
+      {
+        "text": "A faster hello time of a tenth of a second",
+        "correct": false,
+        "why": "Sending BPDUs faster would not tell a switch the far end is safe."
+      },
+      {
+        "text": "A proposal and an agreement between the two",
+        "correct": true,
+        "why": "Right. The far end makes sure it cannot loop, answers, and the port forwards."
+      },
+      {
+        "text": "Skipping the root election on links between switches",
+        "correct": false,
+        "why": "The election is the same as in 802.1D; RSTP changes how ports reach forwarding."
+      }
+    ]
+  },
+  {
+    "id": "ex-qyebaz1c",
+    "version": 1,
+    "section": "rstp-and-tuning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You want the core switch to be the root whatever MAC addresses the others have. What do you change on it?",
+    "hint": "Lowest bridge ID wins, and one part of it is yours to set.",
+    "choices": [
+      {
+        "text": "Raise its priority to 61440",
+        "correct": false,
+        "why": "Higher loses. The lowest bridge ID wins."
+      },
+      {
+        "text": "Leave it at 32768 and replace it with a switch whose MAC is lower",
+        "correct": false,
+        "why": "That works until a switch with a lower MAC arrives. A priority decides it on purpose."
+      },
+      {
+        "text": "Lower the cost of its ports to 1",
+        "correct": false,
+        "why": "Port cost shapes paths to the root; it does not choose which switch is the root."
+      },
+      {
+        "text": "Lower its priority, to 4096 for instance",
+        "correct": true,
+        "why": "Right. Priority is compared before the MAC, so the lower value wins outright."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgp8bvbx",
+    "version": 1,
+    "section": "rstp-and-tuning",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A port that faces a computer, and goes straight to forwarding when a cable is plugged in, is configured as an ___ port.",
+    "hint": "Cisco calls it PortFast.",
+    "blanks": [
+      {
+        "accept": [
+          "edge"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dznmnvpc",
+    "version": 1,
+    "section": "protecting-the-tree",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "BPDU guard was on for sw1's p10 when pc1 began sending BPDUs. What did bridge link show print for p10 six seconds later?",
+    "hint": "The cable was still in.",
+    "choices": [
+      {
+        "text": "state blocking",
+        "correct": false,
+        "why": "Blocking would still take part in the election. A guarded port leaves it."
+      },
+      {
+        "text": "state disabled",
+        "correct": true,
+        "why": "Right, with LOWER_UP still there: the link is fine, the port is shut."
+      },
+      {
+        "text": "NO-CARRIER",
+        "correct": false,
+        "why": "The signal was there. Disabling a port is not unplugging it."
+      },
+      {
+        "text": "state forwarding, with pc1 as the new root",
+        "correct": false,
+        "why": "That is what would happen without the guard, if pc1's ID were lower."
+      }
+    ]
+  },
+  {
+    "id": "ex-twpw7yvn",
+    "version": 1,
+    "section": "protecting-the-tree",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A desk port has BPDU filter on instead of BPDU guard. Somebody plugs a small switch into it and cables that switch to a second desk port, also filtered. What happens?",
+    "hint": "What can a port learn from BPDUs it ignores?",
+    "choices": [
+      {
+        "text": "Both ports shut down when the switch's BPDUs arrive",
+        "correct": false,
+        "why": "That is BPDU guard. A filter ignores the BPDUs rather than reacting to them."
+      },
+      {
+        "text": "Spanning tree blocks one of the two desk ports",
+        "correct": false,
+        "why": "To block, the switch would have to see its own BPDUs come back, and the filter discards them."
+      },
+      {
+        "text": "A loop forms that spanning tree does not see, and a storm starts",
+        "correct": true,
+        "why": "Right. Filtered ports hide the loop from the protocol meant to catch it."
+      },
+      {
+        "text": "The small switch becomes root of the building",
+        "correct": false,
+        "why": "Its BPDUs are filtered at the desk ports, so they do not reach the election."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1c1ax0c",
+    "version": 1,
+    "section": "protecting-the-tree",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting to what it does.",
+    "hint": "Four tools, four different jobs.",
+    "pairs": [
+      {
+        "left": "BPDU guard",
+        "right": "Shuts the port when a BPDU arrives"
+      },
+      {
+        "left": "Root guard",
+        "right": "Stops forwarding while a better root is announced"
+      },
+      {
+        "left": "BPDU filter",
+        "right": "Neither sends nor processes BPDUs"
+      },
+      {
+        "left": "Storm control",
+        "right": "Caps the broadcast traffic a port accepts"
+      }
+    ],
+    "right_distractors": [
+      "Sets the bridge priority to 4096"
+    ]
+  },
+  {
+    "id": "ex-4ppjk8mn",
+    "version": 1,
+    "section": "protecting-the-tree",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A home switch with bridge priority 0 is plugged into an unprotected desk port. What is the likely result?",
+    "hint": "0 is the lowest priority there is.",
+    "choices": [
+      {
+        "text": "It wins the election and the tree reshapes around a desk",
+        "correct": true,
+        "why": "Right. Traffic between distant switches then crosses it."
+      },
+      {
+        "text": "The tree stays as it was, since a desk port is not part of it",
+        "correct": false,
+        "why": "Without BPDU guard or root guard, a desk port takes part like any other."
+      },
+      {
+        "text": "The desk port goes to state disabled",
+        "correct": false,
+        "why": "That needs BPDU guard on the port, and this port is not set up with it."
+      },
+      {
+        "text": "The core switch rejects it because 0 is not a valid priority",
+        "correct": false,
+        "why": "0 is valid, and it is the value that beats any default."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtq27gv0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a port state in RSTP but not in the original 802.1D?",
+    "hint": "RSTP merged two states that forward nothing.",
+    "choices": [
+      {
+        "text": "discarding",
+        "correct": true,
+        "why": "Right: blocking and listening merged into one."
+      },
+      {
+        "text": "listening",
+        "correct": false,
+        "why": "Listening is an 802.1D state, and RSTP folded it away."
+      },
+      {
+        "text": "learning",
+        "correct": false,
+        "why": "Learning exists in both."
+      },
+      {
+        "text": "blocking",
+        "correct": false,
+        "why": "Blocking is 802.1D's; RSTP calls it discarding."
+      }
+    ]
+  },
+  {
+    "id": "ex-gj358q8q",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the outcomes of the spanning-tree election in the order they are decided.",
+    "hint": "Every later step is measured from the first.",
+    "items": [
+      "The root bridge",
+      "A root port on each other switch",
+      "A designated port on each cable",
+      "Every remaining port blocks"
+    ],
+    "trap": "A root port before a root is impossible: \"cheapest way to the root\" needs a root to measure from."
+  },
+  {
+    "id": "ex-3qptey4r",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the priority change, sw3's bridge_id read 1000.02a59d312a8c. What is its priority in decimal?",
+    "hint": "1000 is hexadecimal.",
+    "value": 4096,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-gt4vambw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A network runs classic STP with default priorities. Users lose calls for half a minute whenever an uplink fails. Which change addresses the cause?",
+    "hint": "Where do the 30 seconds come from?",
+    "choices": [
+      {
+        "text": "Set forward delay to 2 seconds on each switch in the network",
+        "correct": false,
+        "why": "That shortens the safety wait and risks a port forwarding before the tree settles, which is a loop."
+      },
+      {
+        "text": "Turn on BPDU guard on the uplinks",
+        "correct": false,
+        "why": "Uplinks face switches; guard there would shut them on the first BPDU."
+      },
+      {
+        "text": "Run RSTP, so the alternate port takes over at once",
+        "correct": true,
+        "why": "Right. The 30 seconds are listening and learning, which RSTP replaces."
+      },
+      {
+        "text": "Lower the root's priority to 4096",
+        "correct": false,
+        "why": "That chooses the root on purpose, which is good practice, but the wait after a failure is the same."
+      }
+    ]
+  }
+]

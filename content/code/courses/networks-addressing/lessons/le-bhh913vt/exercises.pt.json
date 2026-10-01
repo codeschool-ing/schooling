@@ -1,0 +1,496 @@
+{
+  "ex-gksrp532": {
+    "prompt": "O anel tem seis redes. Só com rotas estáticas, quantas rotas os quatro roteadores precisariam no total para que todo roteador alcance toda rede?",
+    "hint": "Cada roteador precisa de uma rota por rede à qual não está conectado.",
+    "unit": "rotas"
+  },
+  "ex-n7hfqmmw": {
+    "prompt": "O que um roteador de estado de enlace envia que um roteador de vetor de distância não envia?",
+    "hint": "Um manda opiniões, o outro manda fatos.",
+    "choices": [
+      {
+        "text": "Sua tabela de rotas inteira, mandada a cada vizinho a cada 30 segundos",
+        "why": "Isso é o que o RIP, um protocolo de vetor de distância, manda."
+      },
+      {
+        "text": "Pacotes hello para achar vizinhos",
+        "why": "As duas famílias usam hellos; o RIP é a exceção que depende só das atualizações."
+      },
+      {
+        "text": "Sua distância até cada destino",
+        "why": "Distâncias são o que o vetor de distância compartilha. Estado de enlace compartilha enlaces e deixa cada roteador calcular as distâncias."
+      },
+      {
+        "text": "Uma descrição dos próprios enlaces, para todo roteador da área",
+        "why": "Isso. Todo roteador recebe as mesmas descrições e monta o mesmo mapa."
+      }
+    ]
+  },
+  "ex-mjj85ckq": {
+    "prompt": "Ligue cada protocolo à sua distância administrativa, como a aula 14 listou.",
+    "hint": "Menor é mais acreditado.",
+    "pairs": [
+      {
+        "left": "Rota estática",
+        "right": "1"
+      },
+      {
+        "left": "EIGRP interno, em Cisco",
+        "right": "90"
+      },
+      {
+        "left": "OSPF",
+        "right": "110"
+      },
+      {
+        "left": "RIP",
+        "right": "120"
+      }
+    ],
+    "right_distractors": [
+      "20"
+    ]
+  },
+  "ex-3gf56sz4": {
+    "prompt": "Por que RIP, OSPF e EIGRP não são usados entre duas empresas diferentes na internet?",
+    "hint": "O que os protocolos interiores supõem sobre cada roteador?",
+    "choices": [
+      {
+        "text": "Eles não transportam endereços IPv4 públicos",
+        "why": "Eles transportam qualquer prefixo. Endereços não são o obstáculo."
+      },
+      {
+        "text": "Confiam que todo roteador diz a verdade",
+        "why": "Isso. Entre organizações essa confiança falta, e é por isso que o BGP existe."
+      },
+      {
+        "text": "Eles passam de quinze saltos entre empresas",
+        "why": "Quinze é o limite do RIP sozinho, e não o motivo da fronteira."
+      },
+      {
+        "text": "Eles precisam de um cabo entre cada par de roteadores",
+        "why": "O anel desta aula não tem esses cabos, e todo protocolo nele funcionou."
+      }
+    ]
+  },
+  "ex-4vfp3bw7": {
+    "prompt": "No `show ip rip` de r1, 10.20.2.0/24 aparece com métrica 2 vindo de 10.20.0.2. Por que 2?",
+    "hint": "O que r2 disse, e o que r1 somou?",
+    "choices": [
+      {
+        "text": "r2 anunciou 1 para a própria rede e r1 somou 1",
+        "why": "Isso. Uma rede conectada conta 1, e cada roteador soma um."
+      },
+      {
+        "text": "Há dois cabos entre r1 e a rede de pc2",
+        "why": "O RIP conta roteadores, não cabos, embora aqui os números coincidam por outro motivo."
+      },
+      {
+        "text": "A rota foi aprendida duas vezes, uma de cada vizinho",
+        "why": "A métrica é uma distância, não uma contagem de ofertas."
+      },
+      {
+        "text": "É a métrica do kernel dividida por dez",
+        "why": "O 20 do kernel é um número que o FRR escreve em toda rota, sem relação com o RIP."
+      }
+    ]
+  },
+  "ex-q7ysgpqk": {
+    "prompt": "No RIP, que métrica quer dizer que uma rede é inalcançável?",
+    "hint": "Um a mais que a maior distância utilizável.",
+    "unit": "saltos"
+  },
+  "ex-nve5f3pn": {
+    "prompt": "O `show ip rip` de r1 mostra `02:55` na coluna Time para uma rota aprendida de r2. O que acontece se r2 parar de mandar atualizações e a contagem chegar a zero?",
+    "hint": "Atualizações a cada 30 segundos a renovam.",
+    "choices": [
+      {
+        "text": "r1 pede a r2 que reenvie a rota",
+        "why": "O RIP não pede. Ele espera a próxima atualização e desiste quando nenhuma vem."
+      },
+      {
+        "text": "Nada, porque uma rota de vizinho é mantida até o vizinho retirá-la",
+        "why": "Um vizinho morto não retira nada. O temporizador é como o RIP percebe que ele morreu."
+      },
+      {
+        "text": "A métrica sobe um a cada minuto de silêncio",
+        "why": "O silêncio não soma saltos. A rota ou é renovada ou fica inválida."
+      },
+      {
+        "text": "A rota é declarada inválida, 180 segundos depois de ouvida pela última vez",
+        "why": "Isso. O temporizador é o único jeito de o RIP perceber um vizinho que se calou."
+      }
+    ]
+  },
+  "ex-1pxnrpgf": {
+    "prompt": "Imagine que o cabo de r1 a r2 é uma linha lenta de 2 Mbit/s e os outros três cabos são de 10 Gbit/s. Que caminho o RIP escolhe de pc1 a pc2, e por quê?",
+    "hint": "Do que é feita a métrica do RIP?",
+    "choices": [
+      {
+        "text": "Pela volta do anel, porque mede a velocidade de cada enlace",
+        "why": "O RIP não mede nada dos enlaces. É para isso que servem o custo do OSPF e a largura de banda do EIGRP."
+      },
+      {
+        "text": "A linha direta lenta, porque fica a menos roteadores",
+        "why": "Isso. Um salto vence três, seja do que forem feitos os saltos."
+      },
+      {
+        "text": "Os dois, dividindo o tráfego pela velocidade",
+        "why": "O RIP só dividiria entre caminhos com o mesmo número de saltos, e estes não são iguais."
+      },
+      {
+        "text": "Nenhum, porque a linha lenta torna o anel inconsistente",
+        "why": "Diferenças de velocidade são normais e o RIP nem as vê."
+      }
+    ]
+  },
+  "ex-zj8jg0ww": {
+    "prompt": "r1 lista os dois vizinhos OSPF como `Full/-`. O que quer dizer `Full`?",
+    "hint": "É o último estado da lista.",
+    "choices": [
+      {
+        "text": "O enlace até esse vizinho está na capacidade máxima",
+        "why": "Os estados do OSPF descrevem a conversa entre roteadores, não o tráfego no cabo."
+      },
+      {
+        "text": "Os dois roteadores guardam bancos de dados idênticos",
+        "why": "Isso. Full é alcançado depois dos estados de troca e carga."
+      },
+      {
+        "text": "Esse vizinho foi eleito roteador designado",
+        "why": "O papel é a parte depois da barra, e está vazio: os enlaces são ponto a ponto."
+      },
+      {
+        "text": "O vizinho chegou ao número máximo de rotas",
+        "why": "O OSPF não tem esse limite nos estados de vizinho."
+      }
+    ]
+  },
+  "ex-ypmp6t3x": {
+    "prompt": "Ponha estes estados de vizinho OSPF na ordem em que um novo vizinho passa por eles.",
+    "hint": "Ouvir, concordar, trocar resumos, buscar o resto, pronto.",
+    "items": [
+      "Init",
+      "2-Way",
+      "ExStart",
+      "Exchange",
+      "Loading",
+      "Full"
+    ],
+    "trap": "ExStart vem antes de Exchange: os dois roteadores primeiro combinam quem conduz a troca, depois trocam."
+  },
+  "ex-ddgzj0vn": {
+    "prompt": "r3 tem dois cabos OSPF ponto a ponto e nenhuma LAN. Quantos enlaces seu LSA de roteador lista?",
+    "hint": "Cada cabo ponto a ponto é descrito como duas coisas.",
+    "unit": "enlaces"
+  },
+  "ex-czasznyh": {
+    "prompt": "Um roteador novo é posto no anel com intervalo de hello de 1 segundo e de morte de 4, enquanto o vizinho mantém 10 e 40. O que você vê no vizinho?",
+    "hint": "O que tem de bater antes de dois roteadores virarem vizinhos?",
+    "choices": [
+      {
+        "text": "Uma adjacência que sobe e combina os temporizadores mais rápidos",
+        "why": "O OSPF não negocia temporizadores. Uma diferença impede a adjacência de se formar."
+      },
+      {
+        "text": "Uma mensagem de erro com os temporizadores diferentes no console de r1",
+        "why": "O ponto da seção é que o sintoma é uma ausência, não uma mensagem."
+      },
+      {
+        "text": "Os dois nunca formam adjacência",
+        "why": "Isso. Intervalos de hello ou de morte diferentes fazem os roteadores nunca virarem vizinhos."
+      },
+      {
+        "text": "Um vizinho que oscila entre Full e Down a cada 4 segundos",
+        "why": "Ele nem chega a Full."
+      }
+    ]
+  },
+  "ex-ye91f5b1": {
+    "prompt": "De r1 até 10.20.2.0/24 pelo cabo direto, com custo 100 nesse cabo e 10 na interface de r2 na rede de pc2, qual é o custo OSPF total?",
+    "hint": "Some as interfaces por onde o pacote sai.",
+    "unit": "custo"
+  },
+  "ex-cyqkvy2f": {
+    "prompt": "Suponha que o custo do cabo r1–r2 baixasse de 100 para 25, com toda outra interface ainda em 10. Qual passaria a ser o custo OSPF de r1 até 10.20.2.0/24?",
+    "hint": "Calcule os dois caminhos e fique com o menor.",
+    "unit": "custo"
+  },
+  "ex-yk3vkq9y": {
+    "prompt": "Em `O>* 10.20.2.0/24 [110/40] via 10.20.0.13`, o que são 110 e 40?",
+    "hint": "Um é igual em toda linha OSPF.",
+    "choices": [
+      {
+        "text": "Contagem de saltos e tempo em segundos",
+        "why": "O OSPF não conta saltos nem segundos nesse colchete."
+      },
+      {
+        "text": "O custo por r4 e o custo por r2",
+        "why": "O caminho direto custa 110 por coincidência de números, mas o colchete guarda valores de uma rota só."
+      },
+      {
+        "text": "Distância administrativa e custo do caminho",
+        "why": "Isso. 110 é a distância do OSPF, igual em toda linha; 40 é o custo deste caminho."
+      },
+      {
+        "text": "O número da área e a prioridade do roteador",
+        "why": "A área é 0 e as prioridades estão na tabela de vizinhos."
+      }
+    ]
+  },
+  "ex-2ennte93": {
+    "prompt": "Partindo deste laboratório, o custo do cabo r3–r4 sobe de 10 para 80 nas duas pontas. O que r1 faz com o tráfego para 10.20.2.0/24?",
+    "hint": "Some os dois caminhos de novo. E se derem igual?",
+    "choices": [
+      {
+        "text": "Mantém o caminho por r4, que foi escolhido primeiro",
+        "why": "O OSPF recalcula a cada mudança; ter sido o primeiro não dá nada a um caminho."
+      },
+      {
+        "text": "Passa tudo para o cabo direto",
+        "why": "O caminho direto é 110, e o longo agora é 10 + 80 + 10 + 10 = 110 também, então nenhum é menor."
+      },
+      {
+        "text": "Descarta o tráfego até um engenheiro escolher um caminho",
+        "why": "Caminhos iguais não são conflito para o OSPF."
+      },
+      {
+        "text": "Os dois caminhos agora custam 110, então usa os dois",
+        "why": "Isso. Totais iguais fazem o OSPF instalar os dois e dividir o tráfego."
+      }
+    ]
+  },
+  "ex-h5kh7kad": {
+    "prompt": "No `show ip route ospf`, a linha `O   10.20.0.0/30 [110/100] is directly connected, eth1` não tem `>` nem `*`. Por que ela não é usada?",
+    "hint": "O que mais r1 sabe sobre o próprio cabo?",
+    "choices": [
+      {
+        "text": "A rota conectada desse cabo tem distância 0 e vence",
+        "why": "Isso. O OSPF a conhece, mas a fonte conectada é acreditada primeiro."
+      },
+      {
+        "text": "Seu custo de 100 é alto demais para ser instalado",
+        "why": "Não há teto de custo; isto é sobre fontes concorrentes."
+      },
+      {
+        "text": "O vizinho em eth1 caiu",
+        "why": "r2 estava Full em eth1 quando isto foi impresso."
+      },
+      {
+        "text": "O OSPF só instala uma rota depois de ela ficar estável por um minuto",
+        "why": "Outras linhas OSPF com a mesma idade trazem `>*`."
+      }
+    ]
+  },
+  "ex-553w3am9": {
+    "prompt": "O ping de pc1 mandou 70 pacotes, um por segundo, e recebeu 40 respostas. Por cerca de quantos segundos não houve caminho entre pc1 e pc2?",
+    "hint": "Cada pacote perdido é um segundo.",
+    "unit": "segundos"
+  },
+  "ex-dt5j7ag1": {
+    "prompt": "Vinte segundos depois do corte, r1 ainda listava r4 como Full com 8.651s de tempo de morte restante. Por que r1 não tinha percebido a falha?",
+    "hint": "O que avisa o OSPF de que um vizinho sumiu, quando a interface continua no ar?",
+    "choices": [
+      {
+        "text": "r4 continuou mandando hellos pelo dispositivo que falhou",
+        "why": "Nada atravessou o enlace com falha em nenhum sentido."
+      },
+      {
+        "text": "O OSPF verifica os vizinhos uma vez por minuto",
+        "why": "Não há verificação periódica; há um temporizador de morte reiniciado por cada hello."
+      },
+      {
+        "text": "A interface continuava com sinal, então só o temporizador de morte de 40 segundos podia revelá-la",
+        "why": "Isso. Com o sinal no ar, o OSPF espera o intervalo de morte."
+      },
+      {
+        "text": "A lista de retransmissão estava cheia",
+        "why": "RXmtL 2 mostra duas atualizações pendentes; é sintoma, não causa."
+      }
+    ]
+  },
+  "ex-fy09gbtb": {
+    "prompt": "Um engenheiro quer que o anel se recupere de uma falha silenciosa em menos de um segundo. Que mudança a aula indica?",
+    "hint": "Os temporizadores da aula 3 são mais rápidos que o padrão, mas não tanto.",
+    "choices": [
+      {
+        "text": "Aumentar o custo OSPF de todos os cabos",
+        "why": "O custo escolhe caminhos; não tem nada a ver com perceber uma falha."
+      },
+      {
+        "text": "Rodar BFD junto com o OSPF",
+        "why": "Isso. O BFD troca hellos várias vezes por segundo, e o OSPF reage a ele."
+      },
+      {
+        "text": "Trocar o OSPF pelo RIP",
+        "why": "O RIP espera 180 segundos, muito mais lento."
+      },
+      {
+        "text": "Pôr hello de 1 segundo e intervalo de morte de 4",
+        "why": "Esse é o ajuste da aula 3, e ele detecta uma falha silenciosa em quatro segundos."
+      }
+    ]
+  },
+  "ex-xfq4j6gg": {
+    "prompt": "O tempo entre uma mudança na rede e todos os roteadores concordarem com os novos caminhos se chama ___.",
+    "hint": "Os roteadores chegam juntos a uma resposta.",
+    "blanks": [
+      {
+        "accept": [
+          "convergência",
+          "convergencia",
+          "convergence",
+          "tempo de convergência"
+        ]
+      }
+    ]
+  },
+  "ex-exax093a": {
+    "prompt": "A topologia EIGRP de r1 mostra `via 10.20.0.2 (30720/28160), eth1`. O que é 28160?",
+    "hint": "De quem é essa distância?",
+    "choices": [
+      {
+        "text": "A distância do próprio r2 até a rede, como r2 anunciou",
+        "why": "Isso. É a distância anunciada, e r2 está conectado a essa rede."
+      },
+      {
+        "text": "A distância de r1 através de r2",
+        "why": "Esse é o primeiro número, 30720."
+      },
+      {
+        "text": "O tempo de hold em milissegundos",
+        "why": "O hold está na tabela de vizinhos, em segundos."
+      },
+      {
+        "text": "A largura de banda da interface eth1, em kilobits por segundo",
+        "why": "É uma métrica composta, não uma largura de banda."
+      }
+    ]
+  },
+  "ex-nkb10x43": {
+    "prompt": "Na tabela EIGRP de r1, redes conectadas mostram FD 28160 e redes um enlace adiante mostram 30720. Quanto esse enlace acrescenta?",
+    "hint": "Subtraia.",
+    "unit": ""
+  },
+  "ex-vddxwbxt": {
+    "prompt": "Por que r1 não tem sucessor viável para 10.20.2.0/24 através de r4?",
+    "hint": "Compare a distância anunciada por r4 com a distância viável de r1.",
+    "choices": [
+      {
+        "text": "O EIGRP guarda um caminho por rede por projeto",
+        "why": "Ele guarda toda oferta; o objetivo da tabela de topologia é a reserva."
+      },
+      {
+        "text": "r4 anuncia mais que 30720",
+        "why": "Isso. Um sucessor viável tem de anunciar menos que a distância viável de r1."
+      },
+      {
+        "text": "r4 não é vizinho EIGRP de r1",
+        "why": "r4, 10.20.0.13, está na tabela de vizinhos de r1 em eth4."
+      },
+      {
+        "text": "O custo OSPF de 100 o proíbe",
+        "why": "O EIGRP ignora por completo o custo do OSPF."
+      }
+    ]
+  },
+  "ex-x3tnmwk5": {
+    "prompt": "O OSPF mandou o tráfego de pc1 pela volta do anel, e o EIGRP escolheu o cabo direto até r2. Por que a diferença?",
+    "hint": "Onde o 100 foi configurado?",
+    "choices": [
+      {
+        "text": "O EIGRP conta saltos, como o RIP",
+        "why": "O EIGRP usa largura de banda e atraso. Aqui as interfaces são iguais, então menos enlaces vence, mas não por contar saltos."
+      },
+      {
+        "text": "O EIGRP prefere interfaces com número menor",
+        "why": "Nomes de interface não entram na métrica."
+      },
+      {
+        "text": "O custo de 100 era uma configuração do OSPF, que o EIGRP não lê",
+        "why": "Isso. Para o EIGRP as duas interfaces parecem iguais, e o caminho direto é mais curto."
+      },
+      {
+        "text": "O EIGRP não tinha terminado de convergir quando a tabela foi lida",
+        "why": "Toda rota estava P, passiva: convergida."
+      }
+    ]
+  },
+  "ex-x84j99z4": {
+    "prompt": "Ligue cada protocolo àquilo de que sua métrica é feita.",
+    "hint": "Um conta, um soma, um calcula.",
+    "pairs": [
+      {
+        "left": "RIP",
+        "right": "O número de roteadores no caminho"
+      },
+      {
+        "left": "OSPF",
+        "right": "A soma de um custo em cada interface de saída"
+      },
+      {
+        "left": "EIGRP",
+        "right": "Menor largura de banda e atraso total"
+      }
+    ],
+    "right_distractors": [
+      "O tamanho do AS path"
+    ]
+  },
+  "ex-meqf0k3b": {
+    "prompt": "Quais destas afirmações valem para o OSPF no anel desta aula? Marque todas que se aplicam.",
+    "hint": "Pense no banco de dados, nos temporizadores e no caminho.",
+    "choices": [
+      {
+        "text": "Todo roteador guardava os mesmos quatro LSAs de roteador",
+        "why": "Isso é estado de enlace: um mapa compartilhado."
+      },
+      {
+        "text": "O tráfego de pc1 para pc2 atravessou r4 e r3",
+        "why": "O custo 100 no cabo direto o mandou pela volta."
+      },
+      {
+        "text": "Uma falha silenciosa foi percebida em quatro segundos",
+        "why": "Isso eram os temporizadores da aula 3. Aqui o intervalo de morte era de 40 segundos."
+      },
+      {
+        "text": "Um roteador designado foi eleito em cada cabo",
+        "why": "Os cabos eram ponto a ponto, o que dispensa a eleição."
+      }
+    ]
+  },
+  "ex-pfqkeejh": {
+    "prompt": "Uma empresa roda OSPF com temporizadores padrão entre dois prédios ligados por um conversor de mídia. O conversor morre mas mantém as portas alimentadas. O que os usuários veem?",
+    "hint": "É o bloco de convergência do laboratório, num prédio.",
+    "choices": [
+      {
+        "text": "Nenhuma interrupção, já que o OSPF tinha um caminho reserva pronto",
+        "why": "O OSPF não guarda reserva pronta; ele recalcula depois de perceber, e perceber é a parte lenta."
+      },
+      {
+        "text": "Até cerca de 40 segundos de tráfego perdido, depois serviço pelo outro caminho",
+        "why": "Isso. O intervalo de morte é esperado antes de o OSPF desviar."
+      },
+      {
+        "text": "Uma queda permanente até alguém trocar o conversor",
+        "why": "O OSPF desvia, sim, quando o temporizador de morte expira."
+      },
+      {
+        "text": "Alguns milissegundos de perda enquanto o SPF roda",
+        "why": "Esse é o custo quando o sinal cai. Com o sinal no ar, o intervalo de morte vem antes."
+      }
+    ]
+  },
+  "ex-rf7t1z1p": {
+    "prompt": "No EIGRP, o vizinho usado no momento para uma rede é o ___, e uma reserva pronta que cumpre a condição de viabilidade é um viável.",
+    "hint": "Ele vem depois de você no caminho.",
+    "blanks": [
+      {
+        "accept": [
+          "sucessor",
+          "successor"
+        ]
+      }
+    ]
+  }
+}

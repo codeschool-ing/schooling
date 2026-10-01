@@ -1,0 +1,786 @@
+[
+  {
+    "id": "ex-2ymzgnjn",
+    "version": 1,
+    "section": "the-problem",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before r1 had any address, pc1's neighbour table held `10.20.10.1 dev eth0 INCOMPLETE`. What does that entry say?",
+    "hint": "10.20.10.1 is pc1's gateway.",
+    "choices": [
+      {
+        "text": "The gateway answered with an incomplete MAC address",
+        "correct": false,
+        "why": "A MAC is all or nothing. INCOMPLETE means no answer came at all."
+      },
+      {
+        "text": "Nobody answered pc1's ARP for its gateway",
+        "correct": true,
+        "why": "Right. Nothing in VLAN 10 owned 10.20.10.1 yet."
+      },
+      {
+        "text": "pc1 has no gateway configured",
+        "correct": false,
+        "why": "It has one, 10.20.10.1, which is why it asked for that address."
+      },
+      {
+        "text": "The switch blocked ARP between pc1 and pc2",
+        "correct": false,
+        "why": "pc1 never asked for pc2's MAC. pc2 is in another subnet, so pc1 asked for its gateway's."
+      }
+    ]
+  },
+  {
+    "id": "ex-r49c3jwp",
+    "version": 1,
+    "section": "the-problem",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With no router yet, pc1 reached srv but not pc2. What made the difference?",
+    "hint": "Compare their VLANs and their subnets.",
+    "choices": [
+      {
+        "text": "srv runs a web server and pc2 does not",
+        "correct": false,
+        "why": "A ping does not care what services a machine runs."
+      },
+      {
+        "text": "pc2 was not plugged in yet",
+        "correct": false,
+        "why": "pc2 was plugged into p2 and answers as soon as a router exists."
+      },
+      {
+        "text": "srv's port is a trunk",
+        "correct": false,
+        "why": "srv's port, p3, is an access port in VLAN 10. The trunk is p8."
+      },
+      {
+        "text": "srv is in pc1's VLAN; pc2 is not",
+        "correct": true,
+        "why": "Right. Within a VLAN and its subnet the switch delivers; between VLANs a router has to."
+      }
+    ]
+  },
+  {
+    "id": "ex-rymxgf9v",
+    "version": 1,
+    "section": "the-problem",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these route between two VLANs? Choose all that apply.",
+    "hint": "Three were named in this lesson.",
+    "choices": [
+      {
+        "text": "A router with one port and one cable per VLAN",
+        "correct": true,
+        "why": "It works, at the cost of a port per VLAN on each side."
+      },
+      {
+        "text": "Adding both VLANs to every access port",
+        "correct": false,
+        "why": "A port in two VLANs is not an access port, and the hosts would still send to a gateway nobody owns."
+      },
+      {
+        "text": "A router on a stick, with one port on a trunk",
+        "correct": true,
+        "why": "One address per VLAN on one physical port."
+      },
+      {
+        "text": "Putting both VLANs' hosts in one subnet",
+        "correct": false,
+        "why": "Then the hosts send ARP into a VLAN that does not hold the other half, and nothing is routed at all."
+      },
+      {
+        "text": "A layer 3 switch with an interface in each VLAN",
+        "correct": true,
+        "why": "The routing moves inside the switch."
+      }
+    ]
+  },
+  {
+    "id": "ex-62jvjjrc",
+    "version": 1,
+    "section": "the-problem",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "10.20.20.22 is outside pc1's own subnet, so pc1 hands the packet to its default ___.",
+    "hint": "10.20.10.1, for every machine in VLAN 10.",
+    "blanks": [
+      {
+        "accept": [
+          "gateway",
+          "router",
+          "route"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0sz7vqe7",
+    "version": 1,
+    "section": "router-on-a-stick",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does r1's `eth0.10` do?",
+    "hint": "It is a VLAN interface on top of eth0.",
+    "choices": [
+      {
+        "text": "It is VLAN 10's interface: tags off coming in, on going out",
+        "correct": true,
+        "why": "Right. Each VLAN gets an interface of its own on the one physical port."
+      },
+      {
+        "text": "It is a second physical port, reserved for VLAN 10's traffic",
+        "correct": false,
+        "why": "r1 has one port, eth0. The `@eth0` in the listing says what eth0.10 rides on."
+      },
+      {
+        "text": "It copies every frame arriving on eth0 into VLAN 10",
+        "correct": false,
+        "why": "Only frames tagged 10 reach it. Frames tagged 20 go to eth0.20."
+      },
+      {
+        "text": "It filters VLAN 10's frames out of the trunk",
+        "correct": false,
+        "why": "It filters nothing; it is where VLAN 10 meets the router."
+      }
+    ]
+  },
+  {
+    "id": "ex-8kdpa4k4",
+    "version": 1,
+    "section": "router-on-a-stick",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "r1's routing table holds two routes, and nobody typed either. Why was nothing more needed?",
+    "hint": "Read `proto kernel scope link`.",
+    "choices": [
+      {
+        "text": "The switch sent r1 the list of its VLANs and subnets",
+        "correct": false,
+        "why": "A switch tells a router nothing about routes; r1 learnt them from its own addresses."
+      },
+      {
+        "text": "A default route already covers both subnets",
+        "correct": false,
+        "why": "r1 has no default route. Both lines name one subnet each."
+      },
+      {
+        "text": "r1 is directly connected to both subnets",
+        "correct": true,
+        "why": "Right. An address with a mask brings its connected route with it."
+      },
+      {
+        "text": "OSPF learnt them from sw1",
+        "correct": false,
+        "why": "No routing protocol runs in this lab, and sw1 was not routing yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-kb1tqkzm",
+    "version": 1,
+    "section": "router-on-a-stick",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pc1 ran `traceroute -n 10.20.20.22` through r1. How many hops did it print?",
+    "hint": "The router, then the destination.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "hops"
+  },
+  {
+    "id": "ex-pnjr6cjr",
+    "version": 1,
+    "section": "router-on-a-stick",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A VLAN 30 with 10.20.30.0/24 is added to the switch, to an access port and to the trunk p8, and its hosts use 10.20.30.1 as their gateway. What has to be added on r1?",
+    "hint": "One interface per VLAN, one address per interface.",
+    "choices": [
+      {
+        "text": "A second cable from r1 to the switch",
+        "correct": false,
+        "why": "The trunk already carries VLAN 30. That is the point of the stick."
+      },
+      {
+        "text": "A route to 10.20.30.0/24 via 10.20.10.1",
+        "correct": false,
+        "why": "10.20.10.1 is r1 itself. The route appears on its own once r1 has an address in that subnet."
+      },
+      {
+        "text": "An eth0.30 interface holding 10.20.30.1/24",
+        "correct": true,
+        "why": "Right. VLAN 30's gateway, on the same port as the other two."
+      },
+      {
+        "text": "Nothing: eth0 already sees VLAN 30",
+        "correct": false,
+        "why": "It sees them tagged 30, and with no interface for VLAN 30 they have nowhere to go."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxawqpr1",
+    "version": 1,
+    "section": "router-on-a-stick",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the router on a stick to its role.",
+    "hint": "One cable, one port, two gateways.",
+    "pairs": [
+      {
+        "left": "eth0",
+        "right": "r1's one physical port, on the trunk"
+      },
+      {
+        "left": "eth0.10",
+        "right": "the gateway of VLAN 10"
+      },
+      {
+        "left": "eth0.20",
+        "right": "the gateway of VLAN 20"
+      },
+      {
+        "left": "p8",
+        "right": "the switch port carrying both VLANs tagged"
+      }
+    ],
+    "right_distractors": [
+      "srv's access port"
+    ]
+  },
+  {
+    "id": "ex-z60b30fq",
+    "version": 1,
+    "section": "the-trunk-twice",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many ICMP frames did tcpdump capture on p8 for one ping from pc1 to pc2?",
+    "hint": "Request and reply, each up and down.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "frames"
+  },
+  {
+    "id": "ex-ekyzgxts",
+    "version": 1,
+    "section": "the-trunk-twice",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc1 sends 50 pings to pc2 through r1, and all 50 are answered. How many ICMP frames cross p8?",
+    "hint": "Four per ping.",
+    "value": 200,
+    "tolerance": 0,
+    "unit": "frames"
+  },
+  {
+    "id": "ex-wjayxks9",
+    "version": 1,
+    "section": "the-trunk-twice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Compare the first frame on p8 with the second. What did r1 change?",
+    "hint": "Read the MACs, the vlan field and the IP addresses.",
+    "choices": [
+      {
+        "text": "The destination IP address, to pc2's",
+        "correct": false,
+        "why": "It was 10.20.20.22 in both frames: pc1 addressed pc2 from the start."
+      },
+      {
+        "text": "The MAC addresses and the VLAN tag",
+        "correct": true,
+        "why": "Right. A new frame for a new hop: from r1 to pc2, in VLAN 20. The IP addresses stayed."
+      },
+      {
+        "text": "Only the VLAN tag, from 10 to 20",
+        "correct": false,
+        "why": "The MACs changed too: the source became r1 and the destination pc2."
+      },
+      {
+        "text": "Nothing, sw1 changed it",
+        "correct": false,
+        "why": "sw1 forwards within a VLAN. The move from 10 to 20 is routing, and r1 did it."
+      }
+    ]
+  },
+  {
+    "id": "ex-70b29hsz",
+    "version": 1,
+    "section": "the-trunk-twice",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The stick between sw1 and r1 is a 1 Gb/s full-duplex link. Which statement about the traffic between VLANs is right?",
+    "hint": "Every routed packet goes up and comes down.",
+    "choices": [
+      {
+        "text": "Each VLAN gets its own 1 Gb/s on the stick",
+        "correct": false,
+        "why": "The VLANs share one cable; a tag does not add capacity."
+      },
+      {
+        "text": "Traffic between pc1 and srv also crosses the stick",
+        "correct": false,
+        "why": "They are in the same VLAN, so sw1 delivers it without the router."
+      },
+      {
+        "text": "Routed traffic shares 1 Gb/s each way",
+        "correct": true,
+        "why": "Right. Every conversation between every pair of VLANs uses the same two directions of one cable."
+      },
+      {
+        "text": "A fast switch raises the limit above 1 Gb/s",
+        "correct": false,
+        "why": "The switch's speed inside does not change the cable to the router."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxnk669s",
+    "version": 1,
+    "section": "the-trunk-twice",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four crossings of p8 for one ping from pc1 to pc2 in the order tcpdump saw them.",
+    "hint": "The request finishes its trip before the reply starts.",
+    "items": [
+      "Echo request, pc1 to r1, VLAN 10",
+      "Echo request, r1 to pc2, VLAN 20",
+      "Echo reply, pc2 to r1, VLAN 20",
+      "Echo reply, r1 to pc1, VLAN 10"
+    ],
+    "trap": "Each packet goes up in its sender's VLAN and comes down in its receiver's."
+  },
+  {
+    "id": "ex-wt68mvbv",
+    "version": 1,
+    "section": "layer-3-switch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "sw1 had vlan10 at 10.20.10.1 and forwarding on, and pc1's first ping to pc2 still failed. Why?",
+    "hint": "Compare the MAC in pc1's table with vlan10's.",
+    "choices": [
+      {
+        "text": "The switch needed a reboot to start routing",
+        "correct": false,
+        "why": "No reboot happened. A gratuitous ARP was enough."
+      },
+      {
+        "text": "pc1's cache still held r1's MAC",
+        "correct": true,
+        "why": "Right. Its table still held 02:1f:23:e7:e9:d5 for 10.20.10.1, and r1 was unplugged."
+      },
+      {
+        "text": "Two machines held 10.20.10.1",
+        "correct": false,
+        "why": "r1 had been unplugged before the switch took the address."
+      },
+      {
+        "text": "pc2 had no route back to VLAN 10",
+        "correct": false,
+        "why": "pc2's gateway is 10.20.20.1, which the switch now holds as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-p13c8krh",
+    "version": 1,
+    "section": "layer-3-switch",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is an SVI on a layer 3 switch?",
+    "hint": "Cisco writes it `interface Vlan10`.",
+    "choices": [
+      {
+        "text": "A physical port set aside for the routed traffic",
+        "correct": false,
+        "why": "It is virtual: no port and no cable."
+      },
+      {
+        "text": "A trunk between the switch and an external router",
+        "correct": false,
+        "why": "That is router on a stick. An SVI needs no trunk."
+      },
+      {
+        "text": "A VLAN with no access ports in it",
+        "correct": false,
+        "why": "That describes the lab's native VLAN 999, from lesson 19."
+      },
+      {
+        "text": "The switch's own address in a VLAN",
+        "correct": true,
+        "why": "Right. vlan10 and vlan20 in the lab are SVIs: an interface each, holding the gateway's address."
+      }
+    ]
+  },
+  {
+    "id": "ex-hy6310x7",
+    "version": 1,
+    "section": "layer-3-switch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did sw1 need `bridge vlan add dev br0 vid 10 self` and the same for VLAN 20?",
+    "hint": "Read br0's line in lesson 19's listings.",
+    "choices": [
+      {
+        "text": "So the switch's own interfaces hear them",
+        "correct": true,
+        "why": "Right. br0 was only in VLAN 1, and vlan10 and vlan20 sit on top of br0."
+      },
+      {
+        "text": "To turn p8 into a trunk for both VLANs",
+        "correct": false,
+        "why": "p8 was already a trunk, and this command names br0, not p8."
+      },
+      {
+        "text": "To switch on forwarding between the VLANs",
+        "correct": false,
+        "why": "That is `sysctl -w net.ipv4.ip_forward=1`."
+      },
+      {
+        "text": "To give br0 the gateway address 10.20.10.1",
+        "correct": false,
+        "why": "The address went on vlan10, in another command."
+      }
+    ]
+  },
+  {
+    "id": "ex-hh2a75gh",
+    "version": 1,
+    "section": "layer-3-switch",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An ARP message a machine sends about its own address, unasked, so that every cache in the VLAN updates, is called a ___ ARP.",
+    "hint": "`arping -U` sends one.",
+    "blanks": [
+      {
+        "accept": [
+          "gratuitous"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tf14p890",
+    "version": 1,
+    "section": "layer-3-switch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`arping -U -c 1 -I vlan10 10.20.10.1` printed `Received 0 response(s)`. What does that mean?",
+    "hint": "Nobody was asked anything.",
+    "choices": [
+      {
+        "text": "The announcement was lost on the way",
+        "correct": false,
+        "why": "pc1's table changed to the switch's MAC right after, so it arrived."
+      },
+      {
+        "text": "pc1 refused the new MAC",
+        "correct": false,
+        "why": "pc1 accepted it, and its table shows 02:6a:dc:93:3b:8a."
+      },
+      {
+        "text": "Nothing is wrong",
+        "correct": true,
+        "why": "Right. An announcement expects no reply; the count of responses is zero by design."
+      },
+      {
+        "text": "Another machine already holds 10.20.10.1",
+        "correct": false,
+        "why": "Then that machine would have answered, and the count would be one."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9yxg006",
+    "version": 1,
+    "section": "filtering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pc2's ping to pc1 was dropped, and pc1's ping to pc2 worked. Which rule let pc2's replies to pc1 through?",
+    "hint": "The replies travel from vlan20 to vlan10, like the dropped ping.",
+    "choices": [
+      {
+        "text": "The chain's policy, accept",
+        "correct": false,
+        "why": "The drop rule matches vlan20 to vlan10 before the policy is reached."
+      },
+      {
+        "text": "The rule that allows tcp dport 80",
+        "correct": false,
+        "why": "A ping reply is ICMP, not TCP."
+      },
+      {
+        "text": "None: replies are never filtered",
+        "correct": false,
+        "why": "They would be, by the third rule, if the first did not accept them."
+      },
+      {
+        "text": "ct state established,related accept",
+        "correct": true,
+        "why": "Right. The replies belong to a conversation pc1 started, and that rule comes first."
+      }
+    ]
+  },
+  {
+    "id": "ex-ta4g45ns",
+    "version": 1,
+    "section": "filtering",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The drop rule's counter read `packets 2 bytes 168`. How many bytes long was each dropped packet?",
+    "hint": "The same size every ping in these lessons announced.",
+    "value": 84,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-4d35bbm3",
+    "version": 1,
+    "section": "filtering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "If the first rule, `ct state established,related accept`, were deleted and the others kept, which of the three tests would change?",
+    "hint": "Follow each test's replies through the remaining rules.",
+    "choices": [
+      {
+        "text": "pc1's ping to pc2 would start failing",
+        "correct": true,
+        "why": "Right. pc2's replies go from vlan20 to vlan10 and would meet the drop rule."
+      },
+      {
+        "text": "pc2's curl to srv would start failing",
+        "correct": false,
+        "why": "The requests match the port 80 rule, and srv's replies go from vlan10 to vlan20, which no rule restricts."
+      },
+      {
+        "text": "pc2's ping to pc1 would start working",
+        "correct": false,
+        "why": "Its requests still meet the drop rule."
+      },
+      {
+        "text": "None, since the chain's policy is accept",
+        "correct": false,
+        "why": "The policy applies only to what no rule matched, and the drop rule matches pc2's replies."
+      }
+    ]
+  },
+  {
+    "id": "ex-dynvhf0n",
+    "version": 1,
+    "section": "filtering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The rules were attached to the `forward` hook. What does that hook see?",
+    "hint": "Through the switch, or to it?",
+    "choices": [
+      {
+        "text": "Every frame switched within a VLAN",
+        "correct": false,
+        "why": "Frames inside one VLAN are bridged, and the routed-packet hook never sees them."
+      },
+      {
+        "text": "Packets addressed to the switch itself",
+        "correct": false,
+        "why": "Those go to the `input` hook."
+      },
+      {
+        "text": "Packets routed between its interfaces",
+        "correct": true,
+        "why": "Right. Traffic from one VLAN to another, which is what the policy is about."
+      },
+      {
+        "text": "Packets the switch sends on its own behalf",
+        "correct": false,
+        "why": "Those go to the `output` hook."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3k4hysa",
+    "version": 1,
+    "section": "troubleshooting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With VLAN 20 removed from p8, pc2's pings to 10.20.20.1 all failed while `ip neigh` showed `10.20.20.1 … REACHABLE`. What does the REACHABLE entry prove?",
+    "hint": "A cache records the past.",
+    "choices": [
+      {
+        "text": "That the gateway is answering ARP right now",
+        "correct": false,
+        "why": "If it were, the pings would be answered too."
+      },
+      {
+        "text": "An answer from before the fault",
+        "correct": true,
+        "why": "Right. The table is history and the ping is the test."
+      },
+      {
+        "text": "That the fault must be in pc2's firewall",
+        "correct": false,
+        "why": "Nothing points at pc2. The trunk listing found the fault."
+      },
+      {
+        "text": "That r1 has moved to another VLAN",
+        "correct": false,
+        "why": "r1 did not move. The trunk stopped carrying VLAN 20."
+      }
+    ]
+  },
+  {
+    "id": "ex-qc7hyyda",
+    "version": 1,
+    "section": "troubleshooting",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the checks in the order the packet travels, from the host towards the far side.",
+    "hint": "Start at the machine that complains.",
+    "items": [
+      "The host's address and gateway",
+      "The VLAN of the host's switch port",
+      "The VLAN on the trunk, at both ends",
+      "The router's interface in that VLAN",
+      "Forwarding on the router",
+      "The filters between the VLANs"
+    ],
+    "trap": "Filters come last because a packet only meets them once it has been routed; checking them first skips everything that could stop it earlier."
+  },
+  {
+    "id": "ex-zyqv56a2",
+    "version": 1,
+    "section": "troubleshooting",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each reading to the fault it points at.",
+    "hint": "Each was seen in this lesson or in lesson 19.",
+    "pairs": [
+      {
+        "left": "A drop rule's counter rises with each attempt",
+        "right": "A filter refuses the traffic"
+      },
+      {
+        "left": "The trunk port's listing has no line for VLAN 20",
+        "right": "VLAN 20 is missing from the trunk"
+      },
+      {
+        "left": "The gateway's entry still holds the old router's MAC",
+        "right": "A stale cache after the gateway moved"
+      },
+      {
+        "left": "ARP for the gateway stays INCOMPLETE on one PC alone",
+        "right": "That PC's port is in the wrong VLAN"
+      }
+    ],
+    "right_distractors": [
+      "The 802.1Q tag is four bytes long"
+    ]
+  },
+  {
+    "id": "ex-kcrge5pt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A campus has heavy traffic between its VLANs, much of it large file transfers. Which design suits it better, and why?",
+    "hint": "Where does each design put the routed traffic?",
+    "choices": [
+      {
+        "text": "Router on a stick: one cable is simpler",
+        "correct": false,
+        "why": "Simpler, and every routed packet would cross that one cable twice."
+      },
+      {
+        "text": "A layer 3 switch, which routes inside itself",
+        "correct": true,
+        "why": "Right. No trunk to a router, so no shared cable for every routed packet."
+      },
+      {
+        "text": "Neither: put every department in one VLAN",
+        "correct": false,
+        "why": "That undoes the reasons for the VLANs and makes one large broadcast domain."
+      },
+      {
+        "text": "Router on a stick with VLAN 1 untagged",
+        "correct": false,
+        "why": "The native VLAN changes nothing about capacity."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fs2zxwh",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With r1 as a router on a stick, pc1 sends 10 pings to pc2 and 10 pings to srv, and every ping is answered. How many ICMP frames cross p8?",
+    "hint": "srv is in pc1's VLAN.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "frames"
+  },
+  {
+    "id": "ex-a0shwd2a",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before and after the move from r1 to sw1, traceroute printed `10.20.10.1` as the first hop. Why did nothing on pc1 have to change?",
+    "hint": "What did move?",
+    "choices": [
+      {
+        "text": "pc1 learnt the new router from a routing protocol",
+        "correct": false,
+        "why": "pc1 runs no routing protocol. It has one gateway, typed once."
+      },
+      {
+        "text": "The switch copied r1's MAC address",
+        "correct": false,
+        "why": "It kept its own, 02:6a:dc:93:3b:8a, which is why pc1's cache went stale."
+      },
+      {
+        "text": "Its gateway's address never moved",
+        "correct": true,
+        "why": "Right. Only the MAC behind 10.20.10.1 moved, and a gratuitous ARP told pc1."
+      },
+      {
+        "text": "pc1 was given a new gateway by DHCP",
+        "correct": false,
+        "why": "pc1's gateway is static in this lab, and it is still 10.20.10.1."
+      }
+    ]
+  }
+]
