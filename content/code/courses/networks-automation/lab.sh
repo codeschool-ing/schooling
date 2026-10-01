@@ -16,6 +16,8 @@
 #   netbox    NetBox, the source of truth of lesson 12
 #   tickets   the service desk the webhooks of lesson 7 open tickets in
 #   pc1, pc2  one computer on each branch's LAN, to test the network from
+#   sw1       an OpenFlow switch, Open vSwitch, for lesson 15
+#   h1-h3     three computers plugged into sw1
 #
 # WHAT IS REAL AND WHAT WAS WRITTEN FOR THE COURSE. No vendor image runs here:
 # the network operating systems people automate at work are licensed, and the
@@ -24,7 +26,8 @@
 # that do not exist in open source were written for the lab, below, where
 # anybody can read them:
 #
-#   real       FRR 8.4 (routing, the CLI, frr-reload), OpenSSH, Clixon
+#   real       FRR 8.4 (routing, the CLI, frr-reload), OpenSSH, Open vSwitch
+#              3.3 with OS-Ken as its OpenFlow controller, Clixon
 #              (NETCONF, RESTCONF and a CLI generated from YANG), NetBox,
 #              Ansible and its frr.frr collection, and every Python library
 #              ana imports: Netmiko, NAPALM, Nornir, ncclient, pygnmi, Jinja2.
@@ -62,6 +65,7 @@ mgmt     edge2    eth0 192.0.2.13/24
 mgmt     nc1      eth0 192.0.2.21/24
 mgmt     netbox   eth0 192.0.2.30/24
 mgmt     tickets  eth0 192.0.2.40/24
+mgmt     sw1      eth0 192.0.2.50/24
 link1    core1    eth1 198.51.100.1/30
 link1    edge1    eth1 198.51.100.2/30
 link2    core1    eth2 198.51.100.5/30
@@ -72,7 +76,10 @@ lan2     edge2    eth2 203.0.113.65/26
 lan2     pc2      eth0 203.0.113.74/26
 "
 ROUTERS="core1 edge1 edge2"
-HOSTS=$(echo "$LINKS" | awk 'NF{print $2}' | sort -u)
+# sw1's other ports are not on a bridge of ours: they are cabled straight to h1-h3
+# and switched by Open vSwitch, in build_sdn.
+SDN_HOSTS="h1 h2 h3"
+HOSTS=$( (echo "$LINKS" | awk 'NF{print $2}'; printf '%s\n' $SDN_HOSTS) | sort -u)
 
 PYLIBS="netmiko==4.8.0 napalm==5.2.0 nornir==3.6.0 nornir-netmiko==1.0.1 nornir-napalm==0.6.0
 nornir-utils==0.3.0 nornir-netbox==0.3.0 ncclient==0.7.0 pygnmi==0.8.15 paramiko==5.0.0
@@ -185,7 +192,8 @@ build_net() {
 # ip netns exec already mounts /etc/netns/HOST/* over /etc/*. The rest of what
 # tells one machine from another lives under /lab/HOST and is mounted over the
 # real path when something runs "on" that host.
-OVERLAY="home etc/frr run/frr var/log/frr etc/ssh etc/devapi etc/clixon var/clixon etc/deskd var/lib/deskd"
+OVERLAY="home etc/frr run/frr var/log/frr etc/ssh etc/devapi etc/clixon var/clixon etc/deskd var/lib/deskd
+         etc/openvswitch run/openvswitch var/log/openvswitch"
 overlay() {
   local h=$1 p
   for p in $OVERLAY; do
@@ -213,6 +221,7 @@ NAMES="
 192.0.2.21 nc1
 192.0.2.30 netbox
 192.0.2.40 tickets
+192.0.2.50 sw1
 "
 hostfiles() {
   for h in $HOSTS; do
@@ -1864,6 +1873,38 @@ wait_ready() {
   done
 }
 
+# ------------------------------------------------------------- the SDN corner
+# Lesson 15's switch. Open vSwitch runs inside sw1 with the userspace datapath
+# (datapath_type=netdev), because the kernel module is not something a lab
+# should load into somebody's machine; it forwards the same OpenFlow, slower.
+# br0 starts with fail_mode=secure and no controller, so it forwards nothing
+# until the lesson gives it flows: that empty table is the first thing shown.
+build_sdn() {
+  local i d=$LAB/sw1
+  for i in 1 2 3; do
+    ip link add "p$i" type veth peer name "lab-sdn$i"
+    ip link set "p$i" netns sw1
+    ip link set "lab-sdn$i" netns "h$i"
+    ip -n "h$i" link set "lab-sdn$i" name eth0
+    ip -n "h$i" link set eth0 address "$(mac "203.0.113.$((128 + i))")"
+    ip -n "h$i" addr add "203.0.113.$((128 + i))/27" dev eth0
+    ip -n "h$i" link set eth0 up
+    ip -n sw1 link set "p$i" up
+  done
+  mkdir -p "$d/etc/openvswitch" "$d/run/openvswitch" "$d/var/log/openvswitch"
+  ovsdb-tool create "$d/etc/openvswitch/conf.db" /usr/share/openvswitch/vswitch.ovsschema
+  exec_on sw1 root 'ovsdb-server /etc/openvswitch/conf.db --remote=punix:/run/openvswitch/db.sock -vconsole:off \
+      --pidfile --detach --log-file=/var/log/openvswitch/ovsdb-server.log
+    ovs-vsctl --no-wait init
+    ovs-vswitchd --pidfile --detach -vconsole:off --log-file=/var/log/openvswitch/ovs-vswitchd.log
+    ovs-vsctl add-br br0 -- set bridge br0 datapath_type=netdev fail_mode=secure \
+      protocols=OpenFlow13 other-config:datapath-id=0000000000000001
+    for i in 1 2 3; do ovs-vsctl add-port br0 p$i -- set interface p$i ofport_request=$i; done'
+  # ana works the switch as an operator would, without root: the sockets are
+  # her group's. A real switch would give her a role; this is the lab's.
+  exec_on sw1 root 'chgrp -R ana /run/openvswitch && chmod -R g+rwX /run/openvswitch'
+}
+
 # ------------------------------------------------------------------- the verbs
 down() {
   for h in $HOSTS; do
@@ -1889,6 +1930,7 @@ up() {
   build_nc1
   build_netbox
   build_desk
+  build_sdn
   wait_ready
 }
 
