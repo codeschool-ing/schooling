@@ -40,8 +40,9 @@ export default async function track() {
       count: examPaper(t.examPool) || exam.items.length, progress: trackProgress(t).pct,
       /* The school's answer, for the reason written out in `course.js`: the
          draw above happens in the browser against a bank that is empty here.
-         No track has a final yet, so this card has been right by accident —
-         which is precisely how the course one survived to become wrong. */
+         For as long as no track had a final this card was right by accident,
+         and the link it draws went to the wrong screen for exactly that long:
+         see the route for `/track/exam` in `main.js`. */
       ready: trackExamOffered(t, activeOption),
     });
   };

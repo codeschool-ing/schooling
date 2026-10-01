@@ -1,0 +1,31 @@
+---
+title: O que cortar
+version: 1
+---
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" aria-label=\"Dois currículos lado a lado. Antes, duas páginas: foto, idade e estado civil; CPF, RG e endereço completo; um objetivo sobre crescer numa empresa dinâmica; 23 linhas de cursos; habilidades como Office, Windows, trabalho em equipe e proatividade; e os projetos na página 3. Depois, uma página: nome e cidade; e-mail, telefone, GitHub e LinkedIn; uma linha dizendo o que a pessoa faz; o projeto, com o resultado; experiência e formação; e seis linhas de habilidades tiradas do anúncio.\"><defs><marker id=\"ba03-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"30\" y=\"24\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">antes: duas páginas</text><rect x=\"30\" y=\"34\" width=\"310\" height=\"250\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"44\" y=\"62\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">foto · idade · estado civil</text><text x=\"44\" y=\"90\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">CPF · RG · endereço completo</text><text x=\"44\" y=\"118\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">OBJETIVO: crescer numa</text><text x=\"44\" y=\"146\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">empresa dinâmica…</text><text x=\"44\" y=\"174\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">CURSOS: 23 linhas</text><text x=\"44\" y=\"202\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">HABILIDADES: Office, Windows,</text><text x=\"44\" y=\"230\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">trabalho em equipe, proativa…</text><text x=\"44\" y=\"258\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">PROJETOS: (página 3)</text><text x=\"380\" y=\"24\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">depois: uma página</text><rect x=\"380\" y=\"34\" width=\"310\" height=\"250\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"394\" y=\"62\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Ana Lima · São Paulo, SP</text><text x=\"394\" y=\"90\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">e-mail · telefone · GitHub · LinkedIn</text><text x=\"394\" y=\"118\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Suporte de TI, júnior. Runbooks</text><text x=\"394\" y=\"146\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">e laboratórios de escritório.</text><text x=\"394\" y=\"174\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">PROJETO loanbook: serviço</text><text x=\"394\" y=\"202\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">implantado; restauração testada</text><text x=\"394\" y=\"230\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">EXPERIÊNCIA · FORMAÇÃO</text><text x=\"394\" y=\"258\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">HABILIDADES: 6 linhas, as do anúncio</text></svg>", "caption": "A mesma pessoa, duas vezes. Tudo que saiu da esquerda era privado, ilegível em dez segundos, ou afirmado por todo outro currículo. O que subiu à direita é a evidência.", "same": ["Ana Lima · São Paulo, SP"]}
+```
+
+Corte, nesta ordem:
+
+**O que é privado.** Foto, idade, data de nascimento, estado civil, filhos, *CPF*, *RG* e endereço completo.
+Nada disso diz se você consegue fazer o trabalho, tudo isso convida a um julgamento que não tem nada a ver
+com o trabalho, e um número de documento num arquivo que vai ser encaminhado por aí é um número de
+documento que você não controla mais. **Cidade e estado bastam.** Currículos brasileiros tradicionalmente
+trazem quase tudo isso, e muitos ainda trazem; deixar de fora já não é incomum, e ninguém vai pedir antes de
+uma proposta.
+
+**O que todo currículo afirma.** *Proativo, trabalho em equipe, boa comunicação, aprende rápido, Office.*
+São as palavras que todo mundo escreve, então não carregam informação. Se você comunica bem, a evidência é
+um runbook que outra pessoa seguiu; coloque isso no lugar.
+
+**O que não se lê em dez segundos.** Vinte e três cursos online numa lista. Mantenha os dois ou três que
+importam para o anúncio e agrupe o resto numa linha (*também: cursos de redes, Linux e Python*).
+
+**O parágrafo de objetivo.** *Crescer profissionalmente numa empresa dinâmica.* Troque pela linha da seção
+anterior que diz o que você faz.
+
+Duas coisas ficam, e primeiros currículos costumam tirar: **um e-mail e um telefone que funcionam, e os
+links**: GitHub, LinkedIn e, se o projeto está publicado, o endereço dele. Quem quer ligar para você não deve
+ter de procurar.
