@@ -6,7 +6,7 @@ version: 1
 Um switch junta máquinas de uma rede. **Um roteador junta redes: ele tem um endereço em cada uma,
 lê o endereço IP de destino de cada pacote, e manda o pacote adiante na direção da rede a que esse
 endereço pertence.** O quadro em volta do pacote é jogado fora no roteador, e um novo é montado
-para o próximo enlace, o que a aula 2 mostra byte a byte.
+para o próximo enlace, o que a aula 2 mostra numa captura.
 
 O roteador do laboratório é o r1. Ele tem duas interfaces, uma no escritório e outra na direção do
 provedor:

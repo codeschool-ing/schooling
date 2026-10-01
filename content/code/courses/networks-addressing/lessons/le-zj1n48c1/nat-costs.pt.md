@@ -19,10 +19,7 @@ antes. A regra explica: `iifname "eth1" tcp dport 8080 dnat to 10.20.10.10:80`. 
 r1 pela **eth0**, então o redirecionamento não casou, e o pacote era simplesmente para o r1, que não tem
 nada na porta 8080. Esse é o problema do **hairpin**: um serviço publicado através de NAT não é
 alcançável pelo endereço público a partir da rede em que ele mora, a não ser que o roteador esteja
-preparado para isso. Há duas correções comuns: dar ao lado de dentro a sua própria resposta para o nome
-(DNS dividido, o split DNS, para que o escritório resolva o nome do servidor para `10.20.10.10`), ou
-acrescentar hairpin NAT no roteador, que casa também com a interface de dentro e reescreve a origem para
-que a resposta volte pelo r1 e não direto do srv.
+preparado para isso. Há duas correções comuns. Uma dá ao lado de dentro a sua própria resposta para o nome: DNS dividido, o split DNS, para que o escritório resolva o nome do servidor para `10.20.10.10`. A outra acrescenta hairpin NAT no roteador, que casa também com a interface de dentro e reescreve a origem, para que a resposta volte pelo r1 e não direto do srv.
 
 O resto dos custos vem do que o NAT faz com a ideia de que qualquer máquina alcança qualquer outra:
 

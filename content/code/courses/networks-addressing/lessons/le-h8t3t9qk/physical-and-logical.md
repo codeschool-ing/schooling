@@ -33,8 +33,7 @@ Two examples make the difference concrete.
   and back to the first. The next section says why that arrangement was chosen.
 
 The same split appears one layer up. Four routers can be cabled in a perfect ring and still send
-most of their traffic along one side of it, because the routing protocol picked the shortest way;
-cut a cable and the logical path changes while the physical drawing has merely lost a line. The
+most of their traffic along one side of it, because the routing protocol picked the shortest way. Cut a cable and the logical path changes, while the physical drawing has merely lost a line. The
 ring and the mesh in this lesson show exactly that.
 
 ## Why a support person cares

@@ -18,10 +18,7 @@ Connection refused, from inside, while the same address and port worked from isp
 rule explains it: `iifname "eth1" tcp dport 8080 dnat to 10.20.10.10:80`. pc2's request reached r1 on
 **eth0**, so the forward did not match, and the packet was simply for r1, which has nothing on port
 8080. This is the **hairpin** problem: a service published through NAT cannot be reached at its public
-address from the network it lives in, unless the router is set up for it. There are two usual fixes:
-give the inside its own answer for the name (split DNS, so the office resolves the server's name to
-`10.20.10.10`), or add hairpin NAT on the router, which also matches the inside interface and rewrites
-the source so that the reply comes back through r1 rather than straight from srv.
+address from the network it lives in, unless the router is set up for it. There are two usual fixes. One gives the inside its own answer for the name: split DNS, so the office resolves the server's name to `10.20.10.10`. The other adds hairpin NAT on the router, which also matches the inside interface and rewrites the source, so that the reply comes back through r1 rather than straight from srv.
 
 The rest of the costs come from what NAT does to the idea that any machine can reach any other:
 

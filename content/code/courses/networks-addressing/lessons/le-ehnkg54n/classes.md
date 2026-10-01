@@ -73,7 +73,7 @@ Hosts/Net: 254                   Class D, Multicast
 meaningful: a multicast address is a group, with no hosts inside it, and the calculator applied the
 arithmetic of a `/24` anyway because it was asked to. **A tool computes what it is asked; it does not
 know whether the question makes sense.** 224.0.0.5 itself is the group OSPF routers use to talk to
-each other, which lesson 16 shows on the wire.
+each other, and lesson 16 is about OSPF.
 
 Class E, from 240 upwards, was reserved for future use and never given out. What survives of the
 classes in daily work is mostly vocabulary, and the first-octet ranges of the private blocks in the

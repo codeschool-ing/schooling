@@ -34,8 +34,7 @@ Dois exemplos deixam a diferença concreta.
 
 A mesma divisão aparece uma camada acima. Quatro roteadores podem estar cabeados num anel perfeito
 e ainda assim mandar a maior parte do tráfego por um lado só, porque o protocolo de roteamento
-escolheu o caminho mais curto; corte um cabo e o caminho lógico muda, enquanto o desenho físico
-apenas perdeu uma linha. O anel e a malha desta aula mostram exatamente isso.
+escolheu o caminho mais curto. Corte um cabo e o caminho lógico muda, enquanto o desenho físico apenas perdeu uma linha. O anel e a malha desta aula mostram exatamente isso.
 
 ## Por que isso importa para o suporte
 

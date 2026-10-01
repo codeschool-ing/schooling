@@ -34,7 +34,7 @@ anywhere else.
 
 Nothing in this course's lab is a MAN. A city's worth of fibre has no useful imitation on one
 computer, and none was attempted. What the lab can show is the one property that makes metropolitan
-fibre worth building as a ring — two ways out of every building — and lesson 3 measured it: the ring
+fibre worth building as a ring — two ways out of every building. Lesson 3 measured it: the ring
 lost 19 of 30 pings when a cable was cut, and then carried on round the other side.
 
 When a support ticket says "the link to the other building is down", the useful first question is

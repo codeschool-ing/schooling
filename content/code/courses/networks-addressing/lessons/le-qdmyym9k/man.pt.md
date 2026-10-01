@@ -34,7 +34,7 @@ qualquer outro lugar.
 
 Nada no laboratório deste curso é uma MAN. Uma cidade inteira de fibra não tem imitação útil num só
 computador, e nenhuma foi tentada. O que o laboratório consegue mostrar é a propriedade que faz a fibra
-metropolitana valer a pena como anel — duas saídas de cada prédio — e a aula 3 mediu isso: o anel perdeu
+metropolitana valer a pena como anel — duas saídas de cada prédio. A aula 3 mediu isso: o anel perdeu
 19 de 30 pings quando um cabo foi cortado, e depois seguiu pelo outro lado.
 
 Quando um chamado diz "o link para o outro prédio caiu", a primeira pergunta útil é a que esta aula

@@ -7,9 +7,7 @@ Toda conexão até aqui começou dentro do escritório. A outra direção é a q
 **uma conexão que começa lá fora só tem o endereço público como alvo, e nada na tabela do r1 diz que
 máquina de dentro deve recebê-la.**
 
-Tente pelo lado do provedor. Primeiro o isp ganha uma rota para a rede privada do escritório pelo r1 —
-coisa que um provedor real nunca teria, feita aqui para mostrar que o endereço não é o único obstáculo
-— e depois pede a página web do srv, diretamente e pelo endereço público:
+Tente pelo lado do provedor. Primeiro o isp ganha uma rota para a rede privada do escritório pelo r1. Um provedor real nunca teria essa rota; ela está aqui para mostrar que o endereço não é o único obstáculo. Depois o isp pede a página web do srv, diretamente e pelo endereço público:
 
 ```
 root@isp:~# ip route add 10.20.10.0/24 via 203.0.113.2

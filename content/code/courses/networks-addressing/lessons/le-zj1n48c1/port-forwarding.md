@@ -8,8 +8,8 @@ by itself: **a connection that starts outside has only the public address to aim
 r1's table says which machine inside should get it.**
 
 Try it from the provider's side. isp is first given a route to the office's private network through
-r1 — which a real provider would never have, done here to show that the address is not the only
-obstacle — and then asks for srv's web page, directly and through the public address:
+r1. A real provider would never have one; it is here to show that the address is not the only
+obstacle. Then isp asks for srv's web page, directly and through the public address:
 
 ```
 root@isp:~# ip route add 10.20.10.0/24 via 203.0.113.2

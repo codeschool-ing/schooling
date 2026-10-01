@@ -6,7 +6,7 @@ version: 1
 A switch joins machines of one network. **A router joins networks: it has an address on each of
 them, reads the destination IP address of every packet, and sends the packet on towards the
 network that address belongs to.** The frame around the packet is thrown away at the router and a
-new one is built for the next link, which lesson 2 shows byte by byte.
+new one is built for the next link, which lesson 2 shows in a capture.
 
 The lab's router is r1. It has two interfaces, one in the office and one towards the provider:
 

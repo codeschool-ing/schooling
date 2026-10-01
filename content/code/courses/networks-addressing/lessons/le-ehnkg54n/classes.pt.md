@@ -74,7 +74,7 @@ Hosts/Net: 254                   Class D, Multicast
 sentido: um endereço multicast é um grupo, sem hosts dentro, e a calculadora aplicou a aritmética de
 um `/24` mesmo assim, porque foi o que lhe pediram. **Uma ferramenta calcula o que lhe pedem; ela não
 sabe se a pergunta faz sentido.** O próprio 224.0.0.5 é o grupo que os roteadores OSPF usam para
-conversar entre si, e a aula 16 mostra isso no fio.
+conversar entre si, e a aula 16 é sobre o OSPF.
 
 A classe E, de 240 para cima, ficou reservada para uso futuro e nunca foi distribuída. O que sobrevive
 das classes no dia a dia é sobretudo vocabulário, e as faixas de primeiro octeto dos blocos privados
