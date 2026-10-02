@@ -51,7 +51,7 @@ documento.** Um prompt escrito como uma lista seca tende a receber uma lista sec
 prompt que abre um objeto JSON tende a receber o resto dele (lição 18). Cada parte do texto é uma
 instrução, inclusive as partes que você não pretendia que fossem.
 
-## Um chat é um documento com vezes
+## Um chat é um documento em que cada um fala na sua vez
 
 Uma janela de chat parece ser algo diferente de continuar um texto. A lição 1 mostrou que é a mesma
 coisa com as vezes marcadas. Na época em que este curso foi escrito (2026), as APIs por trás dos
@@ -85,4 +85,4 @@ Vale distinguir os três papéis desde o começo, porque o resto do curso volta 
 A última linha tem uma consequência que surpreende. **O modelo não tem memória entre uma requisição
 e outra**; a conversa parece contínua porque a aplicação envia tudo de novo a cada vez. E como as
 vezes anteriores do assistente são só texto na lista, um programa pode escrever uma delas por conta
-própria. A lição 21 usa isso de propósito.
+própria, e o modelo não tem como saber que não foi ele.

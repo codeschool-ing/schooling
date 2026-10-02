@@ -84,4 +84,4 @@ coming back to them:
 The last row has a consequence that surprises people. **The model has no memory between
 requests**; the conversation looks continuous because the application sends the whole of it again
 each time. And since the earlier assistant turns are only text in the list, a program can write one
-itself. Lesson 21 uses that on purpose.
+itself, and the model has no way to tell that it did not.
