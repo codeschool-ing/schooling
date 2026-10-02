@@ -1,0 +1,493 @@
+{
+  "ex-4tmt2e1m": {
+    "prompt": "Qual pergunta é de observabilidade e não de monitoramento?",
+    "hint": "Uma delas ninguém previu.",
+    "choices": [
+      {
+        "text": "A taxa de erro passou de dois por cento?",
+        "why": "Um limite que alguém já sabia vigiar: monitoramento."
+      },
+      {
+        "text": "O disco do servidor de banco passou de 90%?",
+        "why": "Uma condição conhecida, verificada continuamente: monitoramento."
+      },
+      {
+        "text": "Por que os checkouts de uma bandeira de cartão estão mais lentos desde terça?",
+        "why": "Isso. Ninguém escreveu uma verificação para isso antes; ela é feita depois do fato, a sinais ricos o bastante para responder."
+      },
+      {
+        "text": "A vitrine está respondendo ao health check?",
+        "why": "No ar ou fora é a pergunta clássica de monitoramento."
+      }
+    ]
+  },
+  "ex-qtj1fe7f": {
+    "prompt": "Ligue cada sinal ao que é um deles.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "métrica",
+        "right": "Um número amostrado ao longo do tempo, com poucos labels"
+      },
+      {
+        "left": "log",
+        "right": "Um evento, escrito quando aconteceu, com campos"
+      },
+      {
+        "left": "rastro",
+        "right": "O caminho de uma requisição por todos os serviços que tocou"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia do banco tirada toda noite"
+    ]
+  },
+  "ex-seqp6979": {
+    "prompt": "No laboratório, que parte foi escrita para o curso em vez de instalada?",
+    "hint": "Olhe as imagens.",
+    "choices": [
+      {
+        "text": "O Prometheus e o Alertmanager",
+        "why": "Ambos rodam das imagens oficiais, sem modificação."
+      },
+      {
+        "text": "A loja: todo contêiner cuja imagem é `shop:1.4.0`",
+        "why": "Isso. A loja é o que está sendo observado; tudo o que a vigia é software real."
+      },
+      {
+        "text": "O OpenTelemetry Collector, reescrito para manter o laboratório pequeno",
+        "why": "É a distribuição contrib, sem modificação."
+      },
+      {
+        "text": "Os painéis do Grafana e suas fontes de dados",
+        "why": "O Grafana é a imagem oficial; a aula 7 constrói os painéis."
+      }
+    ]
+  },
+  "ex-0ss5trsv": {
+    "prompt": "Ponha os serviços da loja na ordem em que um checkout pago chega a eles.",
+    "hint": "O cliente, o pedido, o dinheiro, o e-mail.",
+    "items": [
+      "storefront",
+      "orders",
+      "payments",
+      "mailer, pela fila"
+    ]
+  },
+  "ex-2sbqdtn8": {
+    "prompt": "Que formas de um sistema de produção a loja do laboratório tem? Escolha todas as que se aplicam.",
+    "hint": "Quatro estão na seção.",
+    "choices": [
+      {
+        "text": "Chamadas HTTP entre serviços",
+        "why": "Sim: storefront para orders para payments."
+      },
+      {
+        "text": "Um banco de dados",
+        "why": "Sim, o PostgreSQL atrás do orders."
+      },
+      {
+        "text": "Uma fila",
+        "why": "Sim, o RabbitMQ entre orders e mailer."
+      },
+      {
+        "text": "Uma tarefa agendada",
+        "why": "Sim, o relatório noturno."
+      },
+      {
+        "text": "Uma rede de distribuição de conteúdo na frente da vitrine",
+        "why": "Não há; a vitrine é publicada em 127.0.0.1."
+      }
+    ]
+  },
+  "ex-tyw1prck": {
+    "prompt": "Você abre `localhost:9090` de outro computador na mesma rede do laboratório e nada responde. Por quê?",
+    "hint": "Onde as portas são publicadas?",
+    "choices": [
+      {
+        "text": "O Prometheus só escuta enquanto a captura de uma aula roda",
+        "why": "Ele roda enquanto o laboratório estiver no ar."
+      },
+      {
+        "text": "Toda porta é publicada em 127.0.0.1, então só a própria máquina do laboratório chega nela",
+        "why": "Isso, e `localhost` no outro computador é aquele computador, de qualquer forma."
+      },
+      {
+        "text": "A porta 9090 é do Grafana, que pede senha",
+        "why": "O Grafana está na 3000; a 9090 é o Prometheus."
+      },
+      {
+        "text": "O Docker recusa conexões até `lab.sh reset` rodar de novo",
+        "why": "Um reset reconstrói o laboratório; não tem nada a ver com quem pode conectar."
+      }
+    ]
+  },
+  "ex-02p71qr1": {
+    "prompt": "Com o payments lento, o checkout respondeu `201 in 1.536103 s`. O que relataria uma verificação que só pergunta \"respondeu com um código de sucesso?\"?",
+    "hint": "Qual é o código de status?",
+    "choices": [
+      {
+        "text": "Que está tudo bem",
+        "why": "Isso. O pedido foi guardado e cobrado; só o tempo está errado, e esta verificação não olha o tempo."
+      },
+      {
+        "text": "Que o checkout falhou, por causa do tempo",
+        "why": "A verificação nunca lê o tempo."
+      },
+      {
+        "text": "Que o payments está lento",
+        "why": "De fora, os serviços atrás da vitrine são invisíveis."
+      },
+      {
+        "text": "Nada até chegar a segunda requisição",
+        "why": "Ela julga cada requisição isoladamente."
+      }
+    ]
+  },
+  "ex-y2dazznt": {
+    "prompt": "Saudável, o checkout levou 0,036398 s. Arredondado ao milissegundo inteiro, quantos milissegundos são?",
+    "hint": "Um segundo tem mil.",
+    "unit": "milissegundos"
+  },
+  "ex-bq4zefvd": {
+    "prompt": "Por que nenhum estudo do `201` lento consegue dizer qual serviço gastou o tempo?",
+    "hint": "O que a resposta contém?",
+    "choices": [
+      {
+        "text": "Porque o `curl` arredonda o tempo para o milissegundo",
+        "why": "Ele imprime microssegundos; o problema não é precisão."
+      },
+      {
+        "text": "Porque a vitrine esconde os serviços que chama por segurança",
+        "why": "Nada é escondido de propósito; a resposta só não tem campo para isso."
+      },
+      {
+        "text": "A resposta leva um status e um total, e a divisão entre serviços nunca foi posta nela",
+        "why": "Isso. Quatro serviços, um banco e uma fila viram um número só na borda."
+      },
+      {
+        "text": "Porque a parte lenta foi a rede entre o `curl` e a vitrine",
+        "why": "O rastro mostra que foi o payments; a rede aqui é uma máquina só."
+      }
+    ]
+  },
+  "ex-a6jkr5nh": {
+    "prompt": "O `_sum` do histograma era 167,50 segundos para um `_count` de 111 checkouts. Qual foi o tempo médio de checkout, em segundos, com duas casas decimais?",
+    "hint": "Divida.",
+    "unit": "segundos"
+  },
+  "ex-hnjnk5cf": {
+    "prompt": "O bucket `le=\"1.0\"` marca 2 e o `le=\"2.5\"` marca 111. Quantos checkouts levaram mais de um segundo e no máximo dois e meio?",
+    "hint": "Os buckets são cumulativos.",
+    "choices": [
+      {
+        "text": "111, porque é o valor do bucket 2,5",
+        "why": "Cada bucket conta tudo até o seu limite, incluindo os 2 rápidos."
+      },
+      {
+        "text": "109",
+        "why": "Isso: 111 até 2,5, menos 2 até 1."
+      },
+      {
+        "text": "2",
+        "why": "Esses são os que ficaram até um segundo."
+      },
+      {
+        "text": "Não dá para saber pelos buckets",
+        "why": "A diferença entre dois buckets adjacentes é exatamente essa contagem."
+      }
+    ]
+  },
+  "ex-p44qxa7c": {
+    "prompt": "O Prometheus informou um percentil 99 de 2,485 s, enquanto todo checkout lento esperou o mesmo 1,5 s no payments. O que produziu a diferença?",
+    "hint": "O que um histograma sabe sobre uma requisição?",
+    "choices": [
+      {
+        "text": "Algumas requisições se perderam entre a coleta e a consulta",
+        "why": "Perder requisições baixaria as contagens, não poria a estimativa acima de todo valor real."
+      },
+      {
+        "text": "O percentil 99 inclui o tempo que o Prometheus levou para coletar",
+        "why": "A coleta não soma às durações medidas."
+      },
+      {
+        "text": "O histograma só sabe o bucket, então o Prometheus supôs que as 109 requisições entre 1 e 2,5 s se espalhavam por igual",
+        "why": "Isso. A estimativa é lida dessa suposição, e os valores reais estavam todos perto do fundo do bucket."
+      },
+      {
+        "text": "`rate()` multiplica o resultado pelo tamanho da janela, então uma janela de dois minutos dobra todo percentil que a consulta devolve",
+        "why": "`rate()` é uma média por segundo na janela; nada é dobrado."
+      }
+    ]
+  },
+  "ex-a5zbk7wh": {
+    "prompt": "Por que o histograma de checkout custa o mesmo com mil checkouts e com um milhão?",
+    "hint": "O que cresce: as linhas ou os números nelas?",
+    "choices": [
+      {
+        "text": "Só os números crescem",
+        "why": "Isso. Uma métrica agrega; o tráfego muda valores, não o número de séries."
+      },
+      {
+        "text": "O Prometheus descarta toda requisição depois das mil primeiras",
+        "why": "Nada é descartado; toda requisição é contada."
+      },
+      {
+        "text": "Ele é comprimido mais à medida que cresce",
+        "why": "A compressão não é o motivo; a quantidade de linhas é fixa."
+      },
+      {
+        "text": "Ele só é lido uma vez por dia",
+        "why": "Ele é coletado a cada quinze segundos."
+      }
+    ]
+  },
+  "ex-73exypvk": {
+    "prompt": "Na linha `..._bucket{le=\"0.5\",...} 2.0`, o label `le` quer dizer menor ou ___ (em inglês, less than or ___).",
+    "hint": "Os buckets incluem o limite superior.",
+    "blanks": [
+      {
+        "accept": [
+          "equal",
+          "equal to",
+          "igual",
+          "igual a"
+        ]
+      }
+    ]
+  },
+  "ex-h8dp706z": {
+    "prompt": "O que a linha de log da vitrine consegue dizer que o histograma de checkout não consegue?",
+    "hint": "Olhe os campos.",
+    "choices": [
+      {
+        "text": "Quantos checkouts houve nos últimos dois minutos",
+        "why": "Contar ao longo do tempo é trabalho da métrica, e ela faz isso barato."
+      },
+      {
+        "text": "Qual pedido era, qual produto, e como terminou",
+        "why": "Isso: pedido 111, uma chaleira, pago. Uma linha de log é um evento com seus próprios valores."
+      },
+      {
+        "text": "Onde o segundo e meio foi gasto",
+        "why": "Nenhuma linha menciona a espera; ninguém escreveu uma."
+      },
+      {
+        "text": "O percentil 99 do tempo de checkout",
+        "why": "Um percentil é calculado sobre muitas requisições, a partir de uma métrica."
+      }
+    ]
+  },
+  "ex-9mcdr8j8": {
+    "prompt": "Por que o `grep` pelo id do rastro achou o mesmo checkout nos logs do `payments` e do `orders`?",
+    "hint": "Quem escreveu esse campo?",
+    "choices": [
+      {
+        "text": "Porque os serviços dividem um arquivo de log",
+        "why": "Cada contêiner escreve a sua própria saída."
+      },
+      {
+        "text": "Porque o id do rastro é o número do pedido escrito em hexadecimal, então é o mesmo onde quer que o pedido vá",
+        "why": "É um id aleatório de 128 bits, sem relação com o pedido."
+      },
+      {
+        "text": "Cada serviço registra o id da requisição que atende, e o id viajou com ela",
+        "why": "Isso. A aula 4 é como ele viaja."
+      },
+      {
+        "text": "Porque o Loki copia o campo nas linhas de todo serviço",
+        "why": "O Loki guarda linhas; não acrescenta campos a elas."
+      }
+    ]
+  },
+  "ex-8kyxq8jw": {
+    "prompt": "O laboratório roda numa máquina só, então o `docker compose logs` achou todas as linhas. Por que ele também as manda ao Loki?",
+    "hint": "Pense na produção.",
+    "choices": [
+      {
+        "text": "A produção roda em muitas máquinas, e um lugar que guarda todas as linhas é o que deixa a mesma busca alcançar todas",
+        "why": "Isso. A aula 9 é log centralizado."
+      },
+      {
+        "text": "O `docker compose logs` descarta linhas com mais de um minuto",
+        "why": "Ele as guarda; o problema é alcance, não idade."
+      },
+      {
+        "text": "O Loki faz grep mais rápido que o grep",
+        "why": "Velocidade numa máquina não é o motivo."
+      },
+      {
+        "text": "O JSON só é válido depois que o Loki o analisa",
+        "why": "As linhas já são JSON como foram escritas."
+      }
+    ]
+  },
+  "ex-v96jww62": {
+    "prompt": "Lendo os logs do checkout lento, onde você acha a espera de 1,5 segundo?",
+    "hint": "Quem teria de escrevê-la?",
+    "choices": [
+      {
+        "text": "No campo `level` da linha do payments",
+        "why": "Diz INFO; o nível não é uma duração."
+      },
+      {
+        "text": "Na linha do orders, como `status`",
+        "why": "Esse campo não está lá, e status é o resultado."
+      },
+      {
+        "text": "Em nenhum; ninguém a registrou",
+        "why": "Isso. Um log diz só o que um programa escolheu dizer."
+      },
+      {
+        "text": "Na linha da vitrine, como `outcome`",
+        "why": "`outcome` é `paid`."
+      }
+    ]
+  },
+  "ex-ymhprq0h": {
+    "prompt": "No rastro, o `payments` gastou quase todo o tempo num span filho. O que esse span filho diz que o `POST /charge` sozinho não dizia?",
+    "hint": "Olhe o nome dele.",
+    "choices": [
+      {
+        "text": "Qual passo dentro do payments levou o tempo",
+        "why": "Isso: esperar a rede de cartões, nomeado pelo código que esperou."
+      },
+      {
+        "text": "Que a cobrança falhou",
+        "why": "Foi aprovada; o rastro não traz erro."
+      },
+      {
+        "text": "Que o orders chamou o payments duas vezes",
+        "why": "Há uma chamada."
+      },
+      {
+        "text": "Quantos checkouts foram lentos",
+        "why": "Um rastro é uma requisição; contar é trabalho da métrica."
+      }
+    ]
+  },
+  "ex-agv9cdkn": {
+    "prompt": "Que spans no rastro do checkout lento vêm de um serviço sem código OpenTelemetry próprio? Escolha todas as que se aplicam.",
+    "hint": "Qual serviço roda sob `opentelemetry-instrument`?",
+    "choices": [
+      {
+        "text": "`INSERT`",
+        "why": "Sim, do driver de banco do orders, instrumentado automaticamente."
+      },
+      {
+        "text": "`UPDATE`",
+        "why": "Sim, o mesmo."
+      },
+      {
+        "text": "`POST /orders`",
+        "why": "Sim, do Flask, instrumentado automaticamente."
+      },
+      {
+        "text": "`wait for the card network`",
+        "why": "Esse o próprio código do payments abriu à mão."
+      },
+      {
+        "text": "`orders.placed process`",
+        "why": "O próprio código do mailer o abriu."
+      }
+    ]
+  },
+  "ex-7jet50mc": {
+    "prompt": "O span da vitrine levou mais ou menos o mesmo que tudo abaixo dele. Se a espera no payments fosse removida, que spans encurtariam?",
+    "hint": "Um pai dura pelo menos o tanto dos filhos que ele espera.",
+    "choices": [
+      {
+        "text": "Só o `wait for the card network`",
+        "why": "Todo span que espera por ele também encolheria."
+      },
+      {
+        "text": "Só os spans do mailer, que rodam por último",
+        "why": "O mailer trabalha depois da fila e não espera o payments."
+      },
+      {
+        "text": "A espera e todo span que esperava por ela, até o `POST /checkout`",
+        "why": "Isso. Essa cadeia é o caminho crítico, e a aula 11 o lê."
+      },
+      {
+        "text": "Nenhum, porque um span mede o código que roda e não o tempo gasto esperando",
+        "why": "Um span mede o tempo de relógio do início ao fim, esperas incluídas."
+      }
+    ]
+  },
+  "ex-xejnre5c": {
+    "prompt": "Ligue cada pergunta ao sinal que a responde primeiro.",
+    "hint": "Que, onde, por quê.",
+    "pairs": [
+      {
+        "left": "Os checkouts estão mais lentos que o normal agora?",
+        "right": "métrica"
+      },
+      {
+        "left": "Que serviço gastou o tempo neste checkout?",
+        "right": "rastro"
+      },
+      {
+        "left": "O que exatamente o payments decidiu para o pedido 111?",
+        "right": "log"
+      }
+    ],
+    "right_distractors": [
+      "um backup"
+    ]
+  },
+  "ex-cfks5tjg": {
+    "prompt": "O que permite ir do rastro lento às linhas de log da mesma requisição?",
+    "hint": "É um campo que os dois carregam.",
+    "choices": [
+      {
+        "text": "O timestamp, casado ao segundo",
+        "why": "Muitas requisições dividem um segundo; o tempo estreita a busca mas não junta."
+      },
+      {
+        "text": "O id dele, que a loja escreve em cada linha",
+        "why": "Isso. Ele é a junção entre os dois sinais."
+      },
+      {
+        "text": "O nome do serviço, que os dois sinais carregam",
+        "why": "Toda requisição do serviço o compartilha."
+      },
+      {
+        "text": "O id do pedido, que rastros sempre registram",
+        "why": "Só onde o código o pôs, e ele não existe para requisições que não são pedidos."
+      }
+    ]
+  },
+  "ex-b0j30zqr": {
+    "prompt": "Um alerta dispara no percentil de checkout às 3 da manhã. Que ordem de olhar desperdiça menos tempo?",
+    "hint": "Do muitos para o um.",
+    "choices": [
+      {
+        "text": "Logs primeiro, lendo cada linha escrita desde a meia-noite até algo chamar a atenção",
+        "why": "Sem um serviço ou requisição a procurar, isto é ler o palheiro."
+      },
+      {
+        "text": "Rastros primeiro, abrindo ao acaso",
+        "why": "Rastros ao acaso são na maioria a maioria saudável."
+      },
+      {
+        "text": "A métrica para o quando, um rastro lento de então para o onde, os logs dele para o porquê",
+        "why": "Isso. Cada passo estreita o seguinte."
+      },
+      {
+        "text": "Reiniciar todo serviço e depois ler a métrica",
+        "why": "Reiniciar primeiro destrói a evidência e pode não ajudar."
+      }
+    ]
+  },
+  "ex-0gwddjzq": {
+    "prompt": "Métricas dizem que algo está errado, rastros dizem ___ está errado, e logs dizem por quê.",
+    "hint": "Um lugar.",
+    "blanks": [
+      {
+        "accept": [
+          "onde"
+        ]
+      }
+    ]
+  }
+}
