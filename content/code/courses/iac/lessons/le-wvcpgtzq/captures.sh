@@ -125,7 +125,6 @@ resource "aws_security_group" "web" {
   }
 }
 CODE
-quiet "sed -i 's/^  subnet_id     = aws_subnet.a.id/&\n  vpc_security_group_ids = [aws_security_group.web.id]/' main.tf"
 quiet 'terraform fmt'
 quiet 'terraform apply -auto-approve'
 commit 'the web security group'
@@ -138,12 +137,9 @@ run 'terraform apply -auto-approve'
 block sg-prefix
 quiet "sed -i 's/^  name        = \"web\"/  name_prefix = \"web-\"/' main.tf"
 run 'git diff'
-run 'terraform apply -auto-approve | grep -E "Destr|Creat|Modif"'
+run 'terraform apply -auto-approve | grep -E "Destr|Creat"'
 run 'aws ec2 describe-security-groups --filters "Name=group-name,Values=web*" --query "SecurityGroups[].GroupName" --output text'
 commit 'web: name_prefix'
-block debug-sg
-quiet 'terraform apply -auto-approve'
-run 'terraform plan -detailed-exitcode | grep -E "~|Plan:|No changes"'
 
 # ---- ignore-changes
 block tagged-by-hand
@@ -175,7 +171,7 @@ variable "release" {
   default = "2026.10.1"
 }
 CODE
-quiet "sed -i 's/^  tags                   = { Name = \"web\" }/  user_data              = \"#!\/bin\/sh\\\\n\/opt\/shop\/install \${var.release}\\\\n\"\n&/' main.tf"
+quiet "sed -i 's/^  tags          = { Name = \"web\" }/  user_data     = \"#!\/bin\/sh\\\\n\/opt\/shop\/install \${var.release}\\\\n\"\n&/' main.tf"
 quiet 'terraform fmt'
 quiet 'terraform apply -auto-approve'
 commit 'web installs a release at boot'
