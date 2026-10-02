@@ -202,8 +202,7 @@ module "assets" {
   name     = each.key
 }
 CODE
-quiet 'terraform init'
-run 'terraform plan'
+run 'terraform init'
 block provider-orphan
 cat > main.tf <<'CODE'
 module "assets" {
@@ -254,9 +253,10 @@ cd ~/src/terraform-aws-network
 quiet 'git checkout -q -b rename'
 sed -i 's/resource "aws_subnet" "this"/resource "aws_subnet" "private"/; ' main.tf
 sed -i 's/aws_subnet.this :/aws_subnet.private :/' outputs.tf
-run 'git diff --stat'
+run 'git diff'
 quiet 'git commit -qam "call the subnets private"'
 quiet 'git push -q origin rename'
+block rename-plan
 cd ~/shop
 sed -i 's|?ref=v1.0.0|?ref=rename|' main.tf analytics.tf
 quiet 'terraform init'
@@ -279,10 +279,14 @@ sed -i 's|?ref=rename|?ref=v1.1.0|' main.tf analytics.tf
 quiet 'terraform init'
 block moved-plan
 run 'terraform plan'
-run 'terraform apply -auto-approve | tail -n 1'
+block moved-summary
+run 'terraform plan -no-color | grep -E "^  #|^Plan"'
+block moved-apply
+run 'terraform apply -auto-approve | grep "Apply complete"'
+quiet 'git commit -qam "network module v1.1.0"'
 block breaking
 cd ~/src/terraform-aws-network
-sed -i 's/^variable "cidr" {/variable "cidr_block" {/; s/var.cidr,/var.cidr_block,/' variables.tf
+sed -i 's/^variable "cidr" {/variable "cidr_block" {/; s/var.cidr,/var.cidr_block,/; s/"The cidr must/"cidr_block must/' variables.tf
 sed -i 's/= var.cidr$/= var.cidr_block/' main.tf
 run 'git diff'
 put CHANGELOG.md <<'CODE'
@@ -307,9 +311,14 @@ run 'git tag v2.0.0'
 run 'git push -q origin main v2.0.0'
 cd ~/shop
 sed -i 's|?ref=v1.1.0|?ref=v2.0.0|' main.tf analytics.tf
-quiet 'terraform init'
-block breaking-plan
-run 'terraform plan'
+block breaking-init
+run 'terraform init'
+block breaking-fix
+sed -i 's/^  cidr = /  cidr_block = /' main.tf analytics.tf
+run 'git diff -U0 | grep "^[-+] "'
+run 'terraform init | grep Downloading'
+run 'terraform plan | grep "No changes"'
+quiet 'git commit -qam "network module v2.0.0"'
 
 # ---------------------------------------------------------------- registry
 block registry
@@ -326,14 +335,15 @@ CODE
 run 'terraform init'
 block audit
 cd ~/shop
-run 'grep -rnE "provisioner|local-exec|\"external\"|\"http\"" .terraform/modules/ || echo "nothing found"'
+run 'grep -rhE "^(resource|data|module|provider)" --include="*.tf" .terraform/modules/shop'
+run 'grep -rnE "provisioner|\"external\"|\"http\"" --include="*.tf" .terraform/modules/shop || echo "none"'
 
 # ---------------------------------------------------------------- layout
 block layout
 cd ~/src/terraform-aws-network
 put versions.tf <<'CODE'
 terraform {
-  required_version = ">= 1.5"
+  required_version = ">= 1.1"
 
   required_providers {
     aws = {
@@ -367,20 +377,18 @@ put README.md <<'CODE'
 
 A VPC and a map of subnets in it, each tagged `<name>-<key>`.
 
-```hcl
-module "network" {
-  source = "git::https://git.example.com/shop/terraform-aws-network.git?ref=v2.0.0"
+    module "network" {
+      source = "git::https://git.example.com/shop/terraform-aws-network.git?ref=v2.0.0"
 
-  name       = "shop"
-  cidr_block = "10.20.0.0/16"
-  subnets = {
-    a = { az = "sa-east-1a", cidr = "10.20.1.0/24" }
-  }
-}
-```
+      name       = "shop"
+      cidr_block = "10.20.0.0/16"
+      subnets = {
+        a = { az = "sa-east-1a", cidr = "10.20.1.0/24" }
+      }
+    }
 
 Inputs: `name`, `cidr_block`, `subnets`. Outputs: `vpc_id`, `subnet_ids`.
-See CHANGELOG.md before upgrading across a major version.
+Read CHANGELOG.md before upgrading across a major version.
 CODE
 run 'tree --noreport'
 block example-validate
