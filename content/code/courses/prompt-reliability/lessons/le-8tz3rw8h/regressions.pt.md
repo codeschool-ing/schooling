@@ -43,7 +43,7 @@ Uma barreira montada sobre isso tem três partes, e nenhuma é engenhosa:
 ## Uma regressão sem diff
 
 A barreira compara execuções, e uma execução é mais que o arquivo. Aqui está a execução com
-temperatura 0.8 de antes, contra a execução do mesmo arquivo no padrão:
+temperatura 0,8 de antes, contra a execução do mesmo arquivo no padrão:
 
 ```
 ana@lab:~/triage$ pl compare runs/now.jsonl runs/hot.jsonl
@@ -54,7 +54,7 @@ broken: t06 t08 t18 t20 t23 t25 t33 t38
 sign test on the 8 that changed: p = 0.008
 ```
 
-Oito mensagens quebradas, e um teste do sinal de 0.008 diz que é improvável que seja acaso. **O id do
+Oito mensagens quebradas, e um teste do sinal de 0,008 diz que é improvável que seja acaso. **O id do
 prompt é o mesmo nas duas execuções, e o `git diff` não mostraria nada**, porque a mudança nunca
 esteve no arquivo. Uma barreira que só roda quando o arquivo do prompt muda nunca veria isso. É o
 argumento prático para a regra da seção anterior: quando todo parâmetro mora no arquivo, toda mudança
