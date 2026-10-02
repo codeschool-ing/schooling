@@ -144,7 +144,7 @@ output "web_image" {
 
 O filtro agora cita uma imagem só. `most_recent` saiu porque um resultado único não precisa de
 desempate, e se o nome um dia batesse com duas imagens o plan pararia com um erro em vez de escolher
-(a última seção mostra esse erro). O build novo continua lá; a Ana só não está pedindo por ele:
+(a última seção mostra esse erro). O build novo continua lá; a Ana é que não está pedindo por ele:
 
 ```
 

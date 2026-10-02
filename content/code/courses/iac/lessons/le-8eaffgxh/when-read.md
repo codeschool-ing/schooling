@@ -84,8 +84,7 @@ Changes to Outputs:
 ```
 
 `<=` is the symbol for a read, and `will be read during apply` says when. The zone's `name` is
-already known (it is written in the subnet's block), and the read is deferred anyway, for the reason
-on the second comment line: **it refers to a resource with changes pending**, and Terraform will not
+already known (it is written in the subnet's block), and the read is deferred anyway. The reason is on the second comment line: **it refers to a resource with changes pending**, and Terraform will not
 read anything that depends on a resource before that resource is in its final state. So the zone id
 is `(known after apply)`, like an attribute of something not yet created. The other reason you will
 see on that line is `config refers to values not yet known`, which the next section produces.

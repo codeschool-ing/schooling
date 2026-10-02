@@ -64,8 +64,8 @@ E o plano:
 Plan: 0 to add, 2 to change, 0 to destroy.
 ```
 
-Dois `~`, zero destruições, e a trava o deixaria passar. Na prática, o plano abre o SSH do `web` para todo
-endereço da internet, onde antes estava aberto para a faixa de um escritório. E deixa a role da
+Dois `~`, zero destruições, e a trava o deixaria passar. Na prática, o plano abre o SSH do `web`
+para todo endereço da internet, onde antes estava aberto para a faixa de um escritório. E deixa a role da
 instância fazer qualquer coisa com os objetos do bucket, inclusive apagá-los, onde antes ela só
 podia lê-los. Nada nos símbolos coloca isso acima de uma troca de tag. **Um alargamento é um update
 in-place**, e só uma pessoa que lê os valores o enxerga.
@@ -157,7 +157,7 @@ Nada disso precisa de ferramenta. Precisa do hábito de ler o plano na mesma ord
 | contagens que não batem com a mudança que você queria | a linha `Plan:` | a mudança mexeu em mais coisa do que o diff sugere |
 
 A última linha é por onde começar. **Antes de ler um plano, diga o que você espera que ele diga**:
-"um update, mais nada". Aí o plano vira uma conferência do seu entendimento em vez de um texto que
+"um update, mais nada". Aí o plano vira uma conferência do seu entendimento em vez de um texto em que
 você passa os olhos, e um `2 to destroy` que você não previu é uma pergunta com resposta em algum
 lugar do corpo.
 

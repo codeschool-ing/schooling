@@ -85,8 +85,7 @@ Changes to Outputs:
 ```
 
 `<=` é o símbolo de leitura, e `will be read during apply` diz quando. O `name` da zona já é
-conhecido (está escrito no bloco da sub-rede), e a leitura é adiada mesmo assim, pelo motivo da
-segunda linha de comentário: **ela se refere a um recurso com mudanças pendentes**, e o Terraform não
+conhecido (está escrito no bloco da sub-rede), e a leitura é adiada mesmo assim. O motivo está na segunda linha de comentário: **ela se refere a um recurso com mudanças pendentes**, e o Terraform não
 lê nada que dependa de um recurso antes de esse recurso estar no estado final. Então o zone id fica
 `(known after apply)`, como um atributo de algo que ainda não foi criado. O outro motivo que você vai
 ver nessa linha é `config refers to values not yet known`, que a próxima seção produz.

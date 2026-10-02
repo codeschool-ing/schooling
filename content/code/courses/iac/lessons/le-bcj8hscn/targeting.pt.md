@@ -3,7 +3,7 @@ title: Mirar num recurso só, e por que isso não é hábito
 version: 1
 ---
 
-O `-target` limita um plano a um endereço e ao que ele depende. Parece precisão, um jeito de aplicar
+O `-target` limita um plano a um endereço e àquilo de que ele depende. Parece precisão, um jeito de aplicar
 só a parte de que você tem certeza. **O próprio aviso do Terraform o chama de ferramenta para
 situações excepcionais**, e o motivo aparece na primeira vez que você o usa.
 

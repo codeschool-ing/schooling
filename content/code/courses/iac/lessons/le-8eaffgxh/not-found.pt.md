@@ -162,7 +162,7 @@ Planning failed. Terraform encountered an error while generating this plan.
 
 A busca estava certa no dia em que ela a escreveu. **A consulta de uma data source é um contrato com
 quem é dono daquilo que ela procura**, e esse contrato nunca foi escrito: "existe uma VPC com a tag
-`shop`" era verdade por acaso. A correção é pedir o que ela realmente quer dizer, a rede de produção:
+`shop`" era verdade por acaso. A correção é pedir o que ela quer dizer, a rede de produção:
 
 ```hcl
 data "aws_vpc" "shop" {

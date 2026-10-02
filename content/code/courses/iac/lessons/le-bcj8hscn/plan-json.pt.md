@@ -88,9 +88,9 @@ exit 0
 
 **Uma trava não decide; ela faz uma pessoa decidir.** A Ana e o revisor já tinham concordado em
 perder a sub-rede `b` e reconstruir o `web`, e o plano foi aplicado na seção anterior. O que a trava
-muda é que uma exclusão não passa mais porque ninguém a notou. Num pipeline, aula 15, uma recusa
-como esta pode segurar o job até alguém aprovar a exclusão explicitamente; num laptop, é um hábito que você roda antes do
-`apply tfplan`.
+muda é que uma exclusão não passa mais porque ninguém a notou. Num pipeline (aula 15), uma recusa
+como esta pode segurar o job até alguém aprovar a exclusão explicitamente; num laptop, é um hábito
+que você roda antes do `apply tfplan`.
 
 ## O código de saída de um plano
 

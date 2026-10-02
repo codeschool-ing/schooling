@@ -64,10 +64,10 @@ And the plan:
 Plan: 0 to add, 2 to change, 0 to destroy.
 ```
 
-Two `~`, zero destroys, and the guard would pass it. In practice the plan opens SSH on `web` to every address
-on the internet, where it was open to one office range. It also lets the instance's role do
-anything to the bucket's objects, delete them included, where it could only read them. Nothing in the
-symbols ranks those above a tag change. **A widening is an update in place**, and only a person
+Two `~`, zero destroys, and the guard would pass it. In practice the plan opens SSH on `web` to
+every address on the internet, where it was open to one office range. It also lets the instance's
+role do anything to the bucket's objects, delete them included, where it could only read them.
+Nothing in the symbols ranks those above a tag change. **A widening is an update in place**, and only a person
 who reads the values sees it.
 
 Notice how much help the plan gives here. `cidr_ipv4` shows the old value and the new one side by

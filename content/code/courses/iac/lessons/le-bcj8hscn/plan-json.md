@@ -86,9 +86,9 @@ exit 0
 
 **A guard does not decide; it makes a person decide.** Ana and her reviewer had already agreed to
 lose subnet `b` and rebuild `web`, and the plan was applied in the last section. What the guard
-changes is that a delete can no longer go through because nobody noticed it. In a pipeline,
-lesson 15, a refusal like this one can hold the job until somebody approves the deletion by name; on a laptop,
-it is a habit you run before `apply tfplan`.
+changes is that a delete can no longer go through because nobody noticed it. In a pipeline
+(lesson 15), a refusal like this one can hold the job until somebody approves the deletion by
+name; on a laptop, it is a habit you run before `apply tfplan`.
 
 ## A plan's exit code
 

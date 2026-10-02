@@ -142,8 +142,8 @@ O data source tem outro verbo:
 Um data source normalmente é lido durante o plano, e você nem o vê no corpo. Este cita o ARN do
 bucket, que só existe quando o bucket existir, então a leitura fica para o apply e **o `(known
 after apply)` se espalha para tudo que é construído a partir dele**: o texto da política e a role
-policy que a usa. Esse marcador indica um valor que ninguém conhece até o apply; a aula 2 o encontrou nos ids.
-A aula 5 explica quando uma leitura é adiada.
+policy que a usa. Esse marcador indica um valor que ninguém conhece até o apply; a aula 2 o
+encontrou nos ids. A aula 5 explica quando uma leitura é adiada.
 
 Outro marcador esconde um valor que existe, sim:
 

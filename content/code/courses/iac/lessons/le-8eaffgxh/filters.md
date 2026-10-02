@@ -143,7 +143,7 @@ output "web_image" {
 
 The filter now names one image. `most_recent` is gone because one match needs no tie-break, and if
 the name ever matched two images the plan would stop with an error rather than choose (the last
-section shows that error). The new build is still there; Ana simply is not asking for it:
+section shows that error). The new build is still there; Ana is not asking for it:
 
 ```
 

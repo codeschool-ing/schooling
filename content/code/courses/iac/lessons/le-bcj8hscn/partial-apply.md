@@ -145,5 +145,5 @@ ana@laptop:~/shop$ terraform apply tfplan; echo "exit $?"
 exit 1
 ```
 
-The way forward is always a new plan, which is also the honest one: it describes the world as it
-is after the failure.
+The way forward is always a new plan, because only a new plan describes the world as it is after
+the failure.

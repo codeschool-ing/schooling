@@ -160,7 +160,7 @@ Planning failed. Terraform encountered an error while generating this plan.
 
 Her lookup was correct on the day she wrote it. **A data source's query is a contract with whoever
 owns the thing it looks up**, and the contract was never written down: "there is one VPC tagged
-`shop`" was true by accident. The fix is to ask for what she actually means, the production network:
+`shop`" was true by accident. The fix is to ask for what she means, the production network:
 
 ```hcl
 data "aws_vpc" "shop" {

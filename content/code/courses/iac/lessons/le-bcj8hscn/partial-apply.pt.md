@@ -130,8 +130,8 @@ dele. A aula 6 mostrou o `create_before_destroy` exatamente para isso.
 configura a instância nova não tem o que configurar. Confira o código de saída: o `terraform apply`
 saiu com 1 lá em cima, e nada depois dele deveria rodar.
 
-**Um plano salvo se esgota.** O apply que falhou gravou o estado, então o `tfplan` agora está stale
-como qualquer outro plano calculado antes de uma gravação:
+**Um plano salvo se esgota.** O apply que falhou gravou o estado, então o `tfplan` agora está
+desatualizado como qualquer outro plano calculado antes de uma gravação:
 
 ```
 ana@laptop:~/shop$ terraform apply tfplan; echo "exit $?"
@@ -144,5 +144,5 @@ ana@laptop:~/shop$ terraform apply tfplan; echo "exit $?"
 exit 1
 ```
 
-O caminho é sempre um plano novo, que também é o honesto: ele descreve o mundo como ficou depois da
+O caminho é sempre um plano novo, porque só um plano novo descreve o mundo como ficou depois da
 falha.

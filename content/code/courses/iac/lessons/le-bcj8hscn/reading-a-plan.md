@@ -141,8 +141,8 @@ The data source has a different verb:
 A data source is normally read while planning, and you never see it in the body. This one names
 the bucket's ARN, which does not exist until the bucket does, so the read is put off to the apply
 and **`(known after apply)` spreads to everything built from it**: the policy text, and the role
-policy that uses it. That marker means a value nobody can know until the apply; lesson 2 met it on ids.
-Lesson 5 explains when a read is deferred.
+policy that uses it. That marker means a value nobody can know until the apply; lesson 2 met it
+on ids. Lesson 5 explains when a read is deferred.
 
 A different marker hides a value that does exist:
 
