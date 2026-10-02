@@ -443,6 +443,113 @@ service:
       exporters: [otlp_http/loki, elasticsearch, otlp_grpc/graylog]
 LABFILE
   mkdir -p "$SHOP/otel"
+  cat > "$SHOP/otel/collector-sampling.yaml" <<'LABFILE'
+# The Collector of collector.yaml, deciding which traces to keep (lesson 12).
+# Every span still feeds the span metrics; only the traces worth reading go
+# on to Jaeger and Zipkin.
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  fluent_forward:
+    endpoint: 0.0.0.0:24224
+
+connectors:
+  # Rate, errors and duration per service and span name, computed from every
+  # span before any of them is dropped.
+  spanmetrics:
+    metrics_flush_interval: 15s
+    histogram:
+      explicit:
+        buckets: [10ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s, 5s]
+
+processors:
+  # Wait until a trace has had time to finish, then keep it if any policy says so.
+  tail_sampling:
+    decision_wait: 10s
+    num_traces: 20000
+    policies:
+      - name: errors
+        type: status_code
+        status_code: {status_codes: [ERROR]}
+      - name: slow
+        type: latency
+        latency: {threshold_ms: 1000}
+      - name: a-few-of-the-rest
+        type: probabilistic
+        probabilistic: {sampling_percentage: 5}
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 400
+  batch: {}
+  # A batch from Docker mixes every container's lines under one resource, so
+  # the lines are regrouped by their own "service" field, one resource each,
+  # before that field becomes the resource's service.name.
+  groupbyattrs/service:
+    keys: [service]
+  transform/service:
+    error_mode: ignore
+    log_statements:
+      - context: resource
+        statements:
+          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
+  transform/logs:
+    error_mode: ignore
+    log_statements:
+      - context: log
+        conditions:
+          - IsMatch(body, "^\\{")
+        statements:
+          - merge_maps(attributes, ParseJSON(body), "upsert")
+          - set(severity_text, attributes["level"])
+          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
+          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
+
+exporters:
+  debug:
+    verbosity: basic
+  otlp_grpc/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+  zipkin:
+    endpoint: http://zipkin:9411/api/v2/spans
+  otlp_http/loki:
+    endpoint: http://loki:3100/otlp
+  otlp_http/prometheus:
+    endpoint: http://prometheus:9090/api/v1/otlp
+
+service:
+  telemetry:
+    metrics:
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888
+  pipelines:
+    traces/all:
+      receivers: [otlp]
+      processors: [memory_limiter]
+      exporters: [spanmetrics]
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, tail_sampling, batch]
+      exporters: [otlp_grpc/jaeger, zipkin]
+    metrics/spans:
+      receivers: [spanmetrics]
+      processors: [batch]
+      exporters: [otlp_http/prometheus]
+    logs:
+      receivers: [fluent_forward]
+      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
+      exporters: [otlp_http/loki]
+LABFILE
+  mkdir -p "$SHOP/otel"
   cat > "$SHOP/otel/collector.yaml" <<'LABFILE'
 # The OpenTelemetry Collector: every trace and every log line of the shop
 # passes through here on its way to where it is stored.
@@ -960,6 +1067,8 @@ LABFILE
 It can be told to misbehave: /faults/payments.json is read on every request.
   {"latency_ms": 800}   every charge waits that long before answering
   {"fail_every": 20}    every twentieth charge answers 503
+  {"slow_every": 25, "slow_ms": 1500}
+                        every twenty-fifth charge waits that much longer
 """
 import itertools
 import json
@@ -1008,9 +1117,12 @@ def charge():
         span.set_attribute("shop.order_id", body["order_id"])
         span.set_attribute("shop.amount_cents", body["amount_cents"])
         fault = faults()
-        if fault.get("latency_ms"):
+        wait_ms = fault.get("latency_ms", 0)
+        if fault.get("slow_every") and n % fault["slow_every"] == 0:
+            wait_ms += fault.get("slow_ms", 0)
+        if wait_ms:
             with tracer.start_as_current_span("wait for the card network"):
-                time.sleep(fault["latency_ms"] / 1000)
+                time.sleep(wait_ms / 1000)
         if fault.get("fail_every") and n % fault["fail_every"] == 0:
             span.set_status(Status(StatusCode.ERROR, "card network unavailable"))
             span.set_attribute("http.response.status_code", 503)
