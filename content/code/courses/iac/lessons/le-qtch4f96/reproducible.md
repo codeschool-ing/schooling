@@ -62,9 +62,9 @@ index 554e9e1..5ea1fd9 100644
 
 ```
 ana@laptop:~/shop/image$ packer build -var version=1.2.0 -var commit=$(git rev-parse --short HEAD) . 2>&1 | grep -E "Run command|Image ID|finished"
-==> docker.web: Run command: docker run -v /tmp/tmp564079577:/packer-files -d -i -t --entrypoint=/bin/sh -- ubuntu@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3
-==> docker.web: Image ID: sha256:5bf5dd66bfe52e5688e85696de7134dd1678c816c9fabe3b7456ae246aa6824c
-Build 'docker.web' finished after 15 seconds 730 milliseconds.
+==> docker.web: Run command: docker run -v /tmp/tmp412904059:/packer-files -d -i -t --entrypoint=/bin/sh -- ubuntu@sha256:008173c23f95b170204355c12626cb5a965d779a7e1283b09e9cffbb1bf33ca3
+==> docker.web: Image ID: sha256:4aa04aae31eefc80964c792c998433512330cdd26599c9c421c147d75a763816
+Build 'docker.web' finished after 13 seconds 353 milliseconds.
 ==> Builds finished. The artifacts of successful builds are:
 ana@laptop:~/shop/image$ docker run --rm shop-web:1.2.0 dpkg-query -W nginx
 nginx	1.24.0-2ubuntu7.18
@@ -98,7 +98,7 @@ means on a running container. Somebody fixes the page by hand, inside it:
 
 ```
 ana@laptop:~/shop/image$ docker run -d --name shop-web-live -p 127.0.0.1:18080:80 shop-web:1.2.0
-4b606ab40d89b7e598275ad4372c34ab0b416ed81f1920ca4a02d7e8858d83e8
+74568e70502cfe6c0900ffdccf1961f411db91473a90fbaf6d02e97d476765a4
 ana@laptop:~/shop/image$ docker exec shop-web-live sh -c "echo 'fixed by hand' > /var/www/html/index.html"
 ana@laptop:~/shop/image$ curl -s localhost:18080
 fixed by hand
@@ -116,7 +116,7 @@ stay until somebody noticed. Here the next replacement removes it:
 ana@laptop:~/shop/image$ docker rm -f shop-web-live
 shop-web-live
 ana@laptop:~/shop/image$ docker run -d --name shop-web-live -p 127.0.0.1:18080:80 shop-web:1.2.0
-e60654d2ded5b68af1f6d60f81eb1f01bfc6728962e8495f6240f1b01defcd49
+8e3d4c7f7d8d03d440c960e6e96f367ddefb79dd57e7d1095abd368e21c54693
 ana@laptop:~/shop/image$ curl -s localhost:18080
 shop web 1.2.0
 ana@laptop:~/shop/image$ docker diff shop-web-live | grep www

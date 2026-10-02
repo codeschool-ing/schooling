@@ -102,10 +102,10 @@ O build recebe os dois valores de fora, o commit vindo do próprio git:
 
 ```
 ana@laptop:~/shop/image$ packer build -var version=1.1.0 -var commit=$(git rev-parse --short HEAD) . 2>&1 | grep -E "Image ID|Repository|manifest|finished after"
-==> docker.web: Image ID: sha256:66c75f9f452ad4603eb62f125b1e170888e6424e383fd9b6c05b6c8776669b4a
+==> docker.web: Image ID: sha256:b1052078e89d77debf8ea50e4ff70e4cad58f8b9d5c4d761feb50498aa4b3085
 ==> docker.web (docker-tag): Repository: shop-web:1.1.0
 ==> docker.web: Running post-processor:  (type manifest)
-Build 'docker.web' finished after 15 seconds 604 milliseconds.
+Build 'docker.web' finished after 11 seconds 984 milliseconds.
 ```
 
 ```
@@ -115,27 +115,27 @@ ana@laptop:~/shop/image$ jq . manifest.json
     {
       "name": "web",
       "builder_type": "docker",
-      "build_time": 1790955038,
+      "build_time": 1790955737,
       "files": null,
-      "artifact_id": "sha256:66c75f9f452ad4603eb62f125b1e170888e6424e383fd9b6c05b6c8776669b4a",
-      "packer_run_uuid": "e5aaf2b3-230a-b64d-49c2-248bff336809",
+      "artifact_id": "sha256:b1052078e89d77debf8ea50e4ff70e4cad58f8b9d5c4d761feb50498aa4b3085",
+      "packer_run_uuid": "b1db7ff2-73a6-ad12-edb4-5d10ad6e4384",
       "custom_data": {
-        "commit": "95a92c5",
+        "commit": "00583ac",
         "version": "1.1.0"
       }
     }
   ],
-  "last_run_uuid": "e5aaf2b3-230a-b64d-49c2-248bff336809"
+  "last_run_uuid": "b1db7ff2-73a6-ad12-edb4-5d10ad6e4384"
 }
 ```
 
 ```
 ana@laptop:~/shop/image$ docker image inspect shop-web:1.1.0 --format '{{json .Config.Labels}}'
-{"org.opencontainers.image.revision":"95a92c5","org.opencontainers.image.version":"1.1.0"}
+{"org.opencontainers.image.revision":"00583ac","org.opencontainers.image.version":"1.1.0"}
 ana@laptop:~/shop/image$ docker run --rm shop-web:1.1.0 cat /var/www/html/index.html
 shop web 1.1.0
 ana@laptop:~/shop/image$ git log --oneline -1
-95a92c5 version and commit come from outside
+00583ac version and commit come from outside
 ```
 
 O commit no label e no manifest é o que o `git log` imprime, então a imagem pode ser rastreada até o
@@ -145,9 +145,9 @@ própria:
 ```
 ana@laptop:~/shop/image$ docker images shop-web
 IMAGE            ID             DISK USAGE   CONTENT SIZE   EXTRA
-shop-web:1.0.0   62e9c4686c66        219MB         70.3MB        
-shop-web:1.0.1   2aaf4859b5ed        219MB         70.3MB        
-shop-web:1.1.0   66c75f9f452a        219MB         70.3MB        
+shop-web:1.0.0   1dca2ddf1bf5        219MB         70.3MB        
+shop-web:1.0.1   7b52839d5bd1        219MB         70.3MB        
+shop-web:1.1.0   b1052078e89d        219MB         70.3MB        
 ```
 
 ## Por que não `latest`

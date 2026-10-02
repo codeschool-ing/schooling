@@ -24,22 +24,22 @@ docker.web: output will be in this color.
 
 ==> docker.web: Creating a temporary directory for sharing data...
 ==> docker.web: Starting docker container...
-==> docker.web: Run command: docker run -v /tmp/tmp2323089762:/packer-files -d -i -t --entrypoint=/bin/sh -- ubuntu:24.04
-==> docker.web: Container ID: 4d07b26f46f96b7f27b91fd55dae33d244021c2e9c73e3b9742b5562463ab978
-==> docker.web: Provisioning with shell script: /tmp/packer-shell915544868
+==> docker.web: Run command: docker run -v /tmp/tmp2993832517:/packer-files -d -i -t --entrypoint=/bin/sh -- ubuntu:24.04
+==> docker.web: Container ID: 578de701b6e5494c851c397a1b3a4f5d8f6f047221ac46804b5412f963d718c0
+==> docker.web: Provisioning with shell script: /tmp/packer-shell102923801
 ==> docker.web: debconf: delaying package configuration, since apt-utils is not installed
 ==> docker.web: Committing the container
-==> docker.web: Image ID: sha256:62e9c4686c66329965b7e533d2162c07b0e77cca1a3e37ffd7b09aa314cdbc58
-==> docker.web: Killing the container: 4d07b26f46f96b7f27b91fd55dae33d244021c2e9c73e3b9742b5562463ab978
+==> docker.web: Image ID: sha256:1dca2ddf1bf5e8ed820321c1937a8719e4260e700f8f71c2d83653129ae21840
+==> docker.web: Killing the container: 578de701b6e5494c851c397a1b3a4f5d8f6f047221ac46804b5412f963d718c0
 ==> docker.web: Running post-processor:  (type docker-tag)
-==> docker.web (docker-tag): Tagging image: sha256:62e9c4686c66329965b7e533d2162c07b0e77cca1a3e37ffd7b09aa314cdbc58
+==> docker.web (docker-tag): Tagging image: sha256:1dca2ddf1bf5e8ed820321c1937a8719e4260e700f8f71c2d83653129ae21840
 ==> docker.web (docker-tag): Repository: shop-web:1.0.0
-Build 'docker.web' finished after 17 seconds 998 milliseconds.
+Build 'docker.web' finished after 13 seconds 926 milliseconds.
 
-==> Wait completed after 17 seconds 998 milliseconds
+==> Wait completed after 13 seconds 926 milliseconds
 
 ==> Builds finished. The artifacts of successful builds are:
---> docker.web: Imported Docker image: sha256:62e9c4686c66329965b7e533d2162c07b0e77cca1a3e37ffd7b09aa314cdbc58
+--> docker.web: Imported Docker image: sha256:1dca2ddf1bf5e8ed820321c1937a8719e4260e700f8f71c2d83653129ae21840
 --> docker.web: Imported Docker image: shop-web:1.0.0 with tags shop-web:1.0.0
 ```
 
@@ -52,7 +52,7 @@ exists:
 ```
 ana@laptop:~/shop/image$ docker images shop-web
 IMAGE            ID             DISK USAGE   CONTENT SIZE   EXTRA
-shop-web:1.0.0   62e9c4686c66        219MB         70.3MB        
+shop-web:1.0.0   1dca2ddf1bf5        219MB         70.3MB        
 ```
 
 ## A successful build is not a working image
@@ -117,9 +117,9 @@ index 90e9556..87b3f2a 100644
 
 ```
 ana@laptop:~/shop/image$ packer build . 2>&1 | grep -E "Image ID|Repository|finished"
-==> docker.web: Image ID: sha256:2aaf4859b5ed8c589de37aa9784d5c3255b5787efd06da56dd39cfd15923dc02
+==> docker.web: Image ID: sha256:7b52839d5bd11fd4704b7215dbc2382f3b0d385df5b0e6c469c1176a40baabbb
 ==> docker.web (docker-tag): Repository: shop-web:1.0.1
-Build 'docker.web' finished after 12 seconds 930 milliseconds.
+Build 'docker.web' finished after 11 seconds 557 milliseconds.
 ==> Builds finished. The artifacts of successful builds are:
 ```
 
@@ -129,7 +129,7 @@ Now the container stays up, and answers:
 
 ```
 ana@laptop:~/shop/image$ docker run -d --name shop-web-check -p 127.0.0.1:18080:80 shop-web:1.0.1
-dbb954be4eb30f1e8adeedda449c922f76b6725aacbabce213e1709a6bfaa80d
+9f75174578be84bf4aea21568dcf57ba1d73759d0d31bc88f8fc9a74122e58d1
 ana@laptop:~/shop/image$ curl -s localhost:18080
 shop web 1.0.1
 ana@laptop:~/shop/image$ docker rm -f shop-web-check

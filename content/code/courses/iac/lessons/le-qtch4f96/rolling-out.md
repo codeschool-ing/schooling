@@ -13,14 +13,14 @@ there is a newer one. On AWS that is Terraform, and the handover between the two
 
 The lab's moto cannot run the Packer build that would make an AMI, so the two AMIs below were
 **staged**: made in moto from a throwaway instance, the way lesson 5 made its images, and named the
-way the `amazon-ebs` source of this lesson's second section would name them. There is nothing
+way the `amazon-ebs` source in the section on the template would name them. There is nothing
 inside either; moto keeps a record with an id. What Terraform does with them is exactly what it
 would do on a real account.
 
 ```
 ana@laptop:~/shop/app$ aws ec2 describe-images --owners self --query "sort_by(Images,&Name)[].[Name,ImageId]" --output text
-shop-web-1.0.1	ami-409f88dbec200029c
-shop-web-1.1.0	ami-d36e7040af35132aa
+shop-web-1.0.1	ami-662fd5acc85ae4f53
+shop-web-1.1.0	ami-d9628db9f20e7ed8f
 ```
 
 Ana's configuration in `~/shop/app` looks the image up by its version, with the `data "aws_ami"`
@@ -76,7 +76,7 @@ image will replace it.
 
 ```
 ana@laptop:~/shop/app$ terraform apply -auto-approve | tail -n 3
-aws_instance.web: Creation complete after 10s [id=i-e9122de6e69b853df]
+aws_instance.web: Creation complete after 10s [id=i-6d3c2c40eb92536d7]
 
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 ```
@@ -99,8 +99,8 @@ index e62cda6..98a2273 100644
 ```
 ana@laptop:~/shop/app$ terraform plan -no-color
 data.aws_ami.web: Reading...
-data.aws_ami.web: Read complete after 0s [id=ami-d36e7040af35132aa]
-aws_instance.web: Refreshing state... [id=i-e9122de6e69b853df]
+data.aws_ami.web: Read complete after 0s [id=ami-d9628db9f20e7ed8f]
+aws_instance.web: Refreshing state... [id=i-6d3c2c40eb92536d7]
 
 Terraform used the selected providers to generate the following execution
 plan. Resource actions are indicated with the following symbols:
@@ -110,7 +110,7 @@ Terraform will perform the following actions:
 
   # aws_instance.web must be replaced
 +/- resource "aws_instance" "web" {
-      ~ ami                                  = "ami-409f88dbec200029c" -> "ami-d36e7040af35132aa" # forces replacement
+      ~ ami                                  = "ami-662fd5acc85ae4f53" -> "ami-d9628db9f20e7ed8f" # forces replacement
 ```
 
 The lookup now finds the other AMI, and `ami` carries `# forces replacement`: the AWS provider
@@ -133,8 +133,8 @@ Plan: 1 to add, 0 to change, 1 to destroy.
 ```
 ana@laptop:~/shop/app$ terraform apply -auto-approve | grep -E "Destr|Creat|Apply"
 aws_instance.web: Creating...
-aws_instance.web: Creation complete after 11s [id=i-38095b318c36aa38c]
-aws_instance.web (deposed object b9e6f4cd): Destroying... [id=i-e9122de6e69b853df]
+aws_instance.web: Creation complete after 10s [id=i-ddebb4ffa0104d0d6]
+aws_instance.web (deposed object d55ce95b): Destroying... [id=i-6d3c2c40eb92536d7]
 aws_instance.web: Destruction complete after 10s
 Apply complete! Resources: 1 added, 0 changed, 1 destroyed.
 ```
@@ -150,12 +150,12 @@ version, by the same path:
 
 ```
 ana@laptop:~/shop/app$ git revert --no-edit HEAD | head -n 1
-[main 9ba0426] Revert "web runs shop-web 1.1.0"
+[main 915135f] Revert "web runs shop-web 1.1.0"
 ana@laptop:~/shop/app$ terraform plan -no-color | grep -E "must be|ami|Version|Plan:"
 data.aws_ami.web: Reading...
-data.aws_ami.web: Read complete after 0s [id=ami-409f88dbec200029c]
+data.aws_ami.web: Read complete after 0s [id=ami-662fd5acc85ae4f53]
   # aws_instance.web must be replaced
-      ~ ami                                  = "ami-d36e7040af35132aa" -> "ami-409f88dbec200029c" # forces replacement
+      ~ ami                                  = "ami-d9628db9f20e7ed8f" -> "ami-662fd5acc85ae4f53" # forces replacement
           ~ "Version" = "1.1.0" -> "1.0.1"
           ~ "Version" = "1.1.0" -> "1.0.1"
 Plan: 1 to add, 0 to change, 1 to destroy.

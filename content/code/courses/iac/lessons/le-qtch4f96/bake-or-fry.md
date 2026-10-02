@@ -34,18 +34,18 @@ ana@laptop:~/shop/image$ time docker run --rm ubuntu:24.04 sh -c 'apt-get update
 debconf: delaying package configuration, since apt-utils is not installed
 nginx version: nginx/1.24.0 (Ubuntu)
 
-real	0m7.242s
-user	0m0.013s
-sys	0m0.021s
+real	0m9.069s
+user	0m0.012s
+sys	0m0.022s
 ```
 
 ```
 ana@laptop:~/shop/image$ time docker run --rm shop-web:1.0.1 nginx -v
 nginx version: nginx/1.24.0 (Ubuntu)
 
-real	0m0.333s
-user	0m0.015s
-sys	0m0.022s
+real	0m0.358s
+user	0m0.014s
+sys	0m0.023s
 ```
 
 A container is not a virtual machine, and a real boot adds its own time to both. What the two
