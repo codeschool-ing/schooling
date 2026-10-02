@@ -1,0 +1,566 @@
+{
+  "ex-v6ajehq2": {
+    "prompt": "Das verificações da escada da aula, qual é a única que custa dinheiro numa conta real?",
+    "hint": "Qual delas cria alguma coisa?",
+    "choices": [
+      {
+        "text": "`terraform validate`",
+        "why": "Ele lê arquivos e os schemas dos providers; nunca chama uma API."
+      },
+      {
+        "text": "Um run de teste com `command = plan`",
+        "why": "Um plan faz perguntas à AWS e não cria nada."
+      },
+      {
+        "text": "`terraform fmt -check`",
+        "why": "Ele olha a formatação dos arquivos e não precisa de nada."
+      },
+      {
+        "text": "Um run de teste com `command = apply`",
+        "why": "Isso. Ele constrói os recursos, e numa conta real eles são cobrados enquanto existem."
+      }
+    ]
+  },
+  "ex-7848vr8m": {
+    "prompt": "Do que o `terraform validate` precisa antes de conferir uma configuração?",
+    "hint": "O schema contra o qual ele confere mora em algum lugar.",
+    "choices": [
+      {
+        "text": "Credenciais que a conta aceite",
+        "why": "Ele não faz chamada de API, então não precisa delas."
+      },
+      {
+        "text": "Os providers instalados",
+        "why": "Certo. Os schemas estão dentro dos providers, e por isso um checkout novo precisa de `terraform init` antes."
+      },
+      {
+        "text": "Um valor para cada variável sem default",
+        "why": "Ele imprimiu `Success!` para um módulo com três variáveis assim e nenhum valor."
+      },
+      {
+        "text": "Um arquivo de state de um apply anterior",
+        "why": "Ele nunca lê o state; o módulo da aula nunca tinha sido aplicado."
+      }
+    ]
+  },
+  "ex-v5ntfekx": {
+    "prompt": "Ligue cada verificação ao que ela consegue achar.",
+    "hint": "Cada degrau acha o que o de cima não acha.",
+    "pairs": [
+      {
+        "left": "`terraform fmt -check`",
+        "right": "Quatro espaços onde cabem dois"
+      },
+      {
+        "left": "`terraform validate`",
+        "right": "Um argumento que o provider não tem"
+      },
+      {
+        "left": "Um run com `command = plan`",
+        "right": "Uma sub-rede com nome diferente do que o teste espera"
+      },
+      {
+        "left": "Um run com `command = apply`",
+        "right": "Uma faixa que a AWS se recusa a criar"
+      }
+    ],
+    "right_distractors": [
+      "Uma mudança que alguém fez à mão semana passada"
+    ]
+  },
+  "ex-8reb39m1": {
+    "prompt": "Ponha as verificações na ordem da escada da aula, a mais barata primeiro.",
+    "hint": "Da formatação a um apply de verdade.",
+    "items": [
+      "`terraform fmt -check`",
+      "`terraform validate`",
+      "Um run de teste com `command = plan`",
+      "Um run de teste com `command = apply`"
+    ],
+    "trap": "O `validate` vem depois do `fmt` porque precisa dos providers instalados, e o `fmt` não precisa de nada."
+  },
+  "ex-0a8342wk": {
+    "prompt": "Que código de saída o `terraform fmt -check -diff` devolveu quando o `outputs.tf` estava fora do layout?",
+    "hint": "A captura o imprimiu depois do diff."
+  },
+  "ex-nbey2kbe": {
+    "prompt": "O módulo tem três variáveis e nenhuma tem default. Por que o `terraform validate` imprimiu `Success!` sem pedir valor nenhum?",
+    "hint": "O que ele confere, e para o que ele nunca olha?",
+    "choices": [
+      {
+        "text": "Ele preencheu cada uma com uma string vazia",
+        "why": "Ele não inventa valores; nem chega a avaliar as variáveis."
+      },
+      {
+        "text": "Ele as leu do `terraform.tfvars`",
+        "why": "Não existe esse arquivo no módulo, e o `validate` nem o leria."
+      },
+      {
+        "text": "Ele confere a configuração, não os valores",
+        "why": "Isso. É a força e o limite dele: sem valor, nenhuma pergunta sobre valor."
+      },
+      {
+        "text": "As variáveis de um módulo só são conferidas pelo módulo raiz que o chama",
+        "why": "O módulo foi validado sozinho, e mesmo assim as variáveis nunca foram pedidas."
+      }
+    ]
+  },
+  "ex-j1wyq84b": {
+    "prompt": "Num checkout novo, o `terraform validate` para com `Missing required provider`. Qual comando um pipeline deve rodar antes, sem tocar no state?",
+    "hint": "Ele instala o que a configuração precisa.",
+    "choices": [
+      {
+        "text": "`terraform providers lock`",
+        "why": "Isso registra checksums no lock file; não instala nada no diretório de trabalho."
+      },
+      {
+        "text": "`terraform plan -refresh=false`",
+        "why": "Um plan também precisa dos providers, e precisaria ainda do backend e de valores."
+      },
+      {
+        "text": "`terraform init -backend=false`",
+        "why": "Certo: providers e módulos são instalados e o state fica intocado."
+      },
+      {
+        "text": "`terraform fmt -recursive`",
+        "why": "Isso reescreve formatação e não instala nada."
+      }
+    ]
+  },
+  "ex-kantjz8g": {
+    "prompt": "Rodado como `terraform fmt ___`, o comando não reescreve nada e sai com código diferente de zero quando um arquivo está fora do layout.",
+    "hint": "Uma flag de uma palavra.",
+    "blanks": [
+      {
+        "accept": [
+          "-check",
+          "--check"
+        ]
+      }
+    ]
+  },
+  "ex-yebm0eyf": {
+    "prompt": "Quais arquivos o `terraform test` lê?",
+    "hint": "Escritos em HCL, em `tests/` por padrão.",
+    "choices": [
+      {
+        "text": "`*_test.tf`",
+        "why": "Um arquivo `.tf` faria parte da própria configuração."
+      },
+      {
+        "text": "`*.tfvars`",
+        "why": "Esses guardam valores, não testes."
+      },
+      {
+        "text": "`*.tftest.hcl`",
+        "why": "Isso, no diretório do módulo e em `tests/`."
+      },
+      {
+        "text": "`*_test.go`",
+        "why": "Isso é um teste em Go, que é como o Terratest é escrito, não o `terraform test`."
+      }
+    ]
+  },
+  "ex-ztf8958s": {
+    "prompt": "O módulo não tem bloco `provider`, mas o `plan.tftest.hcl` tem. Por quê?",
+    "hint": "Quem configura os providers de um módulo?",
+    "choices": [
+      {
+        "text": "Num teste, o arquivo é quem chama o módulo",
+        "why": "Certo. Um módulo deixa a configuração de providers para quem o chama, e aqui é o arquivo de teste."
+      },
+      {
+        "text": "O `terraform test` sobrescreve o bloco provider do módulo com o do arquivo de teste",
+        "why": "O módulo não tem bloco provider para ser sobrescrito."
+      },
+      {
+        "text": "Para desligar a conferência de credenciais",
+        "why": "O bloco só define a região; as credenciais ainda foram conferidas, como mostrou o run com o endpoint morto."
+      },
+      {
+        "text": "Sem ele, o plan rodaria contra a AWS real em vez do moto",
+        "why": "O `AWS_ENDPOINT_URL` manda as chamadas para o moto de qualquer jeito."
+      }
+    ]
+  },
+  "ex-ykdppcrg": {
+    "prompt": "Com `command = plan`, a afirmação `aws_subnet.this[\"a\"].vpc_id == aws_vpc.this.id` falhou com `Unknown condition value`. Por quê?",
+    "hint": "Quem inventa o id de uma VPC, e quando?",
+    "choices": [
+      {
+        "text": "`vpc_id` não é um atributo que uma afirmação possa ler",
+        "why": "É, sim; o run ponta a ponta fez uma afirmação sobre ele depois de um apply."
+      },
+      {
+        "text": "Os dois ids só existem depois que a AWS cria os recursos",
+        "why": "Isso. Durante um plan eles são desconhecidos, e o Terraform se recusa a chamar uma condição desconhecida de aprovada."
+      },
+      {
+        "text": "A sub-rede tinha sido posta na VPC padrão",
+        "why": "Nada foi posto em lugar nenhum; um plan não cria nada."
+      },
+      {
+        "text": "O moto tinha parado de responder",
+        "why": "O run chegou à afirmação, então o provider tinha sido configurado."
+      }
+    ]
+  },
+  "ex-5d8mtekj": {
+    "prompt": "Dentro de um bloco `run`, `command = ___` faz o run não criar nada, e as afirmações dele são conferidas contra o que o Terraform faria.",
+    "hint": "O outro valor é `apply`.",
+    "blanks": [
+      {
+        "accept": [
+          "plan"
+        ]
+      }
+    ]
+  },
+  "ex-17ctn90v": {
+    "prompt": "Com o `AWS_ENDPOINT_URL` apontando para uma porta onde nada escuta, os dois runs do `plan.tftest.hcl` informaram `skip` em vez de `fail`. Por quê?",
+    "hint": "Leia o erro abaixo dos dois runs.",
+    "choices": [
+      {
+        "text": "Um run de plan nunca pode falhar",
+        "why": "O mesmo arquivo falhou antes, quando os nomes das sub-redes mudaram."
+      },
+      {
+        "text": "O Terraform pula runs de plan quando o state está vazio",
+        "why": "O state estava vazio em todas as execuções da aula, e elas rodaram."
+      },
+      {
+        "text": "O provider não pôde ser configurado, então nenhum run foi tentado",
+        "why": "Certo: a conferência de credenciais no STS não encontrou nada escutando."
+      },
+      {
+        "text": "As afirmações deles não tinham valores para comparar",
+        "why": "As variáveis estavam definidas; os runs nem chegaram às afirmações."
+      }
+    ]
+  },
+  "ex-fwrdwm30": {
+    "prompt": "Só com `mock_provider \"aws\" {}`, a precondition informou que `sa-east-1a` não é uma zona que a região oferece. Por quê?",
+    "hint": "O que o erro disse que era a lista de nomes?",
+    "choices": [
+      {
+        "text": "O mock responde em `us-east-1` se ninguém disser outra coisa",
+        "why": "O mock inventa strings; ele não tem região própria de onde responder."
+      },
+      {
+        "text": "O mock devolveu uma lista vazia de zonas",
+        "why": "Isso. Um mock responde uma lista com uma lista vazia, então nenhuma zona existiu até o override fornecer algumas."
+      },
+      {
+        "text": "Preconditions não são avaliadas sob um mock, então a zona nunca foi conferida",
+        "why": "Ela foi avaliada, e por isso falhou."
+      },
+      {
+        "text": "O moto não tem zona chamada `sa-east-1a`",
+        "why": "O moto nem foi consultado; o endpoint apontava para o nada."
+      }
+    ]
+  },
+  "ex-4aw8zq93": {
+    "prompt": "Quais destas coisas o mock provider do `unit.tftest.hcl` fez? Escolha todas as que se aplicam.",
+    "hint": "Olhe a saída do `-verbose` e o que nunca foi perguntado.",
+    "choices": [
+      {
+        "text": "Inventou um valor para o `arn` da sub-rede",
+        "why": "Sim, oito caracteres aleatórios."
+      },
+      {
+        "text": "Chamou a API da AWS para ler as zonas",
+        "why": "Ele nunca chama uma API; as zonas vieram do override da Ana."
+      },
+      {
+        "text": "Manteve o id de VPC que a Ana definiu com `override_resource`",
+        "why": "Sim; o `vpc_id` da sub-rede saiu com esse valor."
+      },
+      {
+        "text": "Recusou uma faixa de sub-rede fora da VPC",
+        "why": "Nada num mock conhece essa regra; foi a AWS que a aplicou no run ponta a ponta."
+      },
+      {
+        "text": "Deixou o run fazer apply sem criar nada",
+        "why": "Sim; o run não tinha `command = plan`, então fez apply, no mock."
+      }
+    ]
+  },
+  "ex-a1a134vm": {
+    "prompt": "Qual bloco deu a `data.aws_availability_zones.here` a lista de zonas de São Paulo no teste unitário?",
+    "hint": "Ele mira um data source pelo endereço.",
+    "choices": [
+      {
+        "text": "`override_resource`",
+        "why": "Esse fixou o id da VPC; ele mira um recurso."
+      },
+      {
+        "text": "`expect_failures`",
+        "why": "Esse lista objetos que precisam falhar; não fornece valores."
+      },
+      {
+        "text": "`variables`",
+        "why": "As zonas não são uma entrada do módulo."
+      },
+      {
+        "text": "`override_data`",
+        "why": "Certo, com `target = data.aws_availability_zones.here`."
+      }
+    ]
+  },
+  "ex-862jw1k0": {
+    "prompt": "No `rules.tftest.hcl`, o run `cidr_without_a_mask` define `cidr = \"10.20.0.0\"` e `expect_failures = [var.cidr]`. Quando ele passa?",
+    "hint": "A lista nomeia um objeto, não só um resultado.",
+    "choices": [
+      {
+        "text": "Quando o plan termina sem erro nenhum",
+        "why": "Aí a regra deixou passar um valor ruim, e o run falha."
+      },
+      {
+        "text": "Quando a regra da própria variável recusa o valor",
+        "why": "Isso. Uma recusa vinda de outro lugar não conta, como mostrou a regra afrouxada."
+      },
+      {
+        "text": "Quando o provider recusa a faixa",
+        "why": "Isso aconteceu com a regra afrouxada, e o run falhou com `Missing expected failure`."
+      },
+      {
+        "text": "Quando o apply contra a AWS falha",
+        "why": "O run só faz plan, contra um mock; nada chega à AWS."
+      }
+    ]
+  },
+  "ex-1a2qcemm": {
+    "prompt": "Com a regra afrouxada para `can(regex(\"^[0-9./]+$\", var.cidr))`, o valor `10.20.0.0` continuou sendo recusado. Por que o run falhou mesmo assim?",
+    "hint": "Quem recusou?",
+    "choices": [
+      {
+        "text": "`expect_failures` não pode ser usado junto com um mock provider",
+        "why": "O mesmo arquivo passou com o mock antes de a regra ser afrouxada."
+      },
+      {
+        "text": "A própria expressão regular era inválida",
+        "why": "Era válida, e casou com `10.20.0.0`; esse era o problema."
+      },
+      {
+        "text": "O provider recusou, e `var.cidr` não",
+        "why": "Certo. A falha veio da verificação do provider da AWS sobre `cidr_block`, não do objeto que o teste nomeou."
+      },
+      {
+        "text": "O run de zona que vinha depois também falhou",
+        "why": "Aquele run foi pulado, não falhou."
+      }
+    ]
+  },
+  "ex-kbm0pf5r": {
+    "prompt": "Depois que `cidr_without_a_mask` falhou, `zone_from_another_region` informou `skip`. O que isso diz sobre a regra da zona?",
+    "hint": "Um run pulado não foi tentado.",
+    "choices": [
+      {
+        "text": "Ela também está quebrada",
+        "why": "Uma regra quebrada teria produzido uma falha, não um skip."
+      },
+      {
+        "text": "Ela passou, já que um skip conta como aprovado",
+        "why": "O resumo conta os skips à parte: `0 passed, 1 failed, 1 skipped`."
+      },
+      {
+        "text": "Esta execução não diz nada sobre ela",
+        "why": "Isso. O Terraform não seguiu depois do run que falhou, então a regra da zona nem foi testada."
+      },
+      {
+        "text": "A precondition dela foi removida pela falha",
+        "why": "Um teste não muda arquivo nenhum; a precondition continua no `main.tf`."
+      }
+    ]
+  },
+  "ex-sr3rrzzr": {
+    "prompt": "Quando o objeto nomeado em `expect_failures` deixa passar um valor ruim, o Terraform informa o erro `Missing expected ___`.",
+    "hint": "O erro é em inglês nas duas línguas.",
+    "blanks": [
+      {
+        "accept": [
+          "failure"
+        ]
+      }
+    ]
+  },
+  "ex-r034rect": {
+    "prompt": "No `range.tftest.hcl`, `plan_accepts_it` passou e `apply_refuses_it` falhou para uma sub-rede `10.30.1.0/24` numa VPC `10.20.0.0/16`. O que recusou a sub-rede?",
+    "hint": "Leia o código de erro.",
+    "choices": [
+      {
+        "text": "A precondition de zona no `main.tf`",
+        "why": "A zona era `sa-east-1a`, que a região oferece."
+      },
+      {
+        "text": "O `terraform validate`, rodado pelo teste antes do apply",
+        "why": "O teste não roda `validate`, e ele não teria valores para olhar."
+      },
+      {
+        "text": "A API, com `InvalidSubnet.Range`",
+        "why": "Isso. Só o apply pediu à AWS para criá-la, e a AWS disse não."
+      },
+      {
+        "text": "A regra de validação de `subnets`",
+        "why": "Essa regra ainda não existia; a Ana a acrescentou depois desta execução."
+      }
+    ]
+  },
+  "ex-n9b2arqq": {
+    "prompt": "Como o run `aws_agrees` recebe o id da VPC que o `build` criou?",
+    "hint": "Os outputs de um run anterior têm endereço.",
+    "choices": [
+      {
+        "text": "`module.build.vpc_id`",
+        "why": "`build` é um run, não uma chamada de módulo."
+      },
+      {
+        "text": "`run.build.vpc_id`",
+        "why": "Certo: o output `vpc_id` do run chamado `build`."
+      },
+      {
+        "text": "`data.aws_vpc.built.id`",
+        "why": "Esse data source precisa do id antes; é ele que lê a VPC de volta."
+      },
+      {
+        "text": "`output.vpc_id`",
+        "why": "Dentro do `aws_agrees` o módulo testado é o auxiliar, que não tem esse output."
+      }
+    ]
+  },
+  "ex-a4yqxsnk": {
+    "prompt": "Depois que o arquivo ponta a ponta rodou, o `describe-vpcs` listou exatamente uma VPC. Qual?",
+    "hint": "A faixa dela era `172.31.0.0/16`.",
+    "choices": [
+      {
+        "text": "A que o `build` criou, guardada para a próxima execução",
+        "why": "A limpeza a destruiu."
+      },
+      {
+        "text": "A VPC padrão que o moto cria",
+        "why": "Isso, como a AWS faz em toda região; a VPC do próprio teste tinha sumido."
+      },
+      {
+        "text": "Uma VPC criada pelo módulo auxiliar",
+        "why": "O auxiliar só tem data sources; não cria nada."
+      },
+      {
+        "text": "Uma cópia deixada por uma limpeza que falhou",
+        "why": "A limpeza deu certo, e a VPC listada está marcada como padrão."
+      }
+    ]
+  },
+  "ex-bwtge0gd": {
+    "prompt": "Quais destes são motivos que a aula dá para rodar testes ponta a ponta com menos frequência que o resto? Escolha todos os que se aplicam.",
+    "hint": "Custo, velocidade e o que pode ficar para trás.",
+    "choices": [
+      {
+        "text": "Numa conta real eles criam recursos que são cobrados",
+        "why": "Sim; o laboratório usou o moto, então nada foi cobrado aqui."
+      },
+      {
+        "text": "Eles não rodam contra o moto",
+        "why": "A aula os rodou contra o moto."
+      },
+      {
+        "text": "Eles são o degrau mais lento da escada",
+        "why": "Sim, eles constroem e destroem recursos reais."
+      },
+      {
+        "text": "Uma limpeza que falhou deixa recursos para trás",
+        "why": "Sim, que é o que o texto de ajuda manda acompanhar."
+      },
+      {
+        "text": "Afirmações não são permitidas num run que faz apply",
+        "why": "O `build` fez afirmações sobre as sub-redes depois do apply."
+      }
+    ]
+  },
+  "ex-8tqtsakx": {
+    "prompt": "Quantos runs passaram no `terraform test` final da suíte inteira?",
+    "hint": "Quatro arquivos: dois, dois, três e um.",
+    "unit": "runs"
+  },
+  "ex-85j3x9te": {
+    "prompt": "Ponha em ordem o que a Ana fez com a sub-rede fora da faixa, da descoberta a um teste barato.",
+    "hint": "A falha ponta a ponta veio primeiro.",
+    "items": [
+      "Um apply num teste falha com `InvalidSubnet.Range`",
+      "Uma regra de validação em `subnets` compara cada faixa com a da VPC",
+      "Um run esperando que `var.subnets` falhe entra no `rules.tftest.hcl`",
+      "As regras com mock passam sem AWS alcançável"
+    ],
+    "trap": "O teste da regra vem depois da regra: antes dela, `expect_failures = [var.subnets]` informaria uma falha ausente."
+  },
+  "ex-wn7kh2dp": {
+    "prompt": "A variável `instance_type` de um módulo tem uma validação que só aceita tipos `t3.`. Qual teste confere essa regra sem acesso nenhum à nuvem?",
+    "hint": "Sem AWS, e uma recusa que precisa vir da variável.",
+    "choices": [
+      {
+        "text": "Um run de apply contra o moto que afirma o tipo da instância que criou",
+        "why": "O moto é uma API; a pergunta pediu nenhuma nuvem, e isso testa o caso aceito, não a recusa."
+      },
+      {
+        "text": "`terraform validate` com `-var instance_type=m5.large`",
+        "why": "O `validate` nunca avalia valores, então a regra não rodaria."
+      },
+      {
+        "text": "Um plan com mock, `m5.large` e `expect_failures = [var.instance_type]`",
+        "why": "Isso: o mock tira a AWS, e o `expect_failures` exige a recusa daquela variável."
+      },
+      {
+        "text": "Um run de plan contra a AWS com um `assert` de que o tipo começa com `t3.`",
+        "why": "Precisa da AWS, e confere um valor bom em vez da recusa da regra."
+      }
+    ]
+  },
+  "ex-vkd14bpx": {
+    "prompt": "Um run com `command = plan` afirma que `aws_instance.web.private_ip` começa com `10.20.`. Nenhum override define esse endereço. O que acontece?",
+    "hint": "Quem escolhe o endereço, e quando?",
+    "choices": [
+      {
+        "text": "Falha com `Unknown condition value`",
+        "why": "Isso. A AWS atribui o endereço na criação, então durante um plan ele é desconhecido, como o `vpc_id` da sub-rede era."
+      },
+      {
+        "text": "Passa, porque a faixa da sub-rede começa com `10.20.`",
+        "why": "O Terraform não deduz um endereço a partir de uma faixa; o valor é desconhecido."
+      },
+      {
+        "text": "É pulado até um apply fornecer o valor",
+        "why": "Pulos acontecem quando um run não é tentado; este é tentado e dá erro."
+      },
+      {
+        "text": "Passa, e a conferência fica para o apply",
+        "why": "O Terraform se recusa a chamar uma condição desconhecida de aprovada."
+      }
+    ]
+  },
+  "ex-r1a0pmqv": {
+    "prompt": "Um colega propõe apagar o arquivo ponta a ponta, porque os testes unitários passam com mock. Quais destes ficariam sem verificação? Escolha todos os que se aplicam.",
+    "hint": "Quais perguntas só a AWS sabe responder?",
+    "choices": [
+      {
+        "text": "Um erro de digitação no nome de um argumento",
+        "why": "O `validate` pega isso, sem AWS."
+      },
+      {
+        "text": "Se a AWS informa a rede como o módulo a descreveu",
+        "why": "Sim; só o `aws_agrees` a leu de volta da AWS."
+      },
+      {
+        "text": "Uma faixa que a AWS recusa por um motivo que nenhuma regra conhece ainda",
+        "why": "Sim; foi assim que a sub-rede fora da faixa foi encontrada."
+      },
+      {
+        "text": "Uma regra que aceita o quase certo",
+        "why": "Os runs com mock e `expect_failures` pegam isso."
+      },
+      {
+        "text": "Um arquivo fora do layout canônico",
+        "why": "O `fmt -check` pega isso."
+      }
+    ]
+  }
+}

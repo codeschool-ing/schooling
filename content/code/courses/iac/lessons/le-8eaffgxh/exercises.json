@@ -1,0 +1,811 @@
+[
+  {
+    "id": "ex-gq9yderj",
+    "version": 1,
+    "section": "reading",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana's first configuration holds only `data.aws_caller_identity.current` and `data.aws_region.current`, plus two outputs. What does `terraform apply` change in the account?",
+    "hint": "Read the summary line of the apply.",
+    "choices": [
+      {
+        "text": "It creates two read-only records that describe the caller",
+        "correct": false,
+        "why": "A data source creates nothing in the account; its answer is recorded in the state, not in AWS."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: `0 added, 0 changed, 0 destroyed`. Data sources only ask; the apply saved the outputs and moved nothing."
+      },
+      {
+        "text": "It tags the account with the region it was read from",
+        "correct": false,
+        "why": "Reading the region writes nothing; it is a fact about the connection."
+      },
+      {
+        "text": "It creates an IAM user for Terraform to work as",
+        "correct": false,
+        "why": "The identity already exists: it is whoever the credentials belong to, moto's placeholder user in the lab."
+      }
+    ]
+  },
+  {
+    "id": "ex-dtdryybn",
+    "version": 1,
+    "section": "reading",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What address does a configuration use to read the account number from `data \"aws_caller_identity\" \"current\" {}`?",
+    "hint": "Data sources live under their own prefix.",
+    "choices": [
+      {
+        "text": "`aws_caller_identity.current.account_id`",
+        "correct": false,
+        "why": "Without the `data.` prefix that is the address of a resource, and no such resource exists."
+      },
+      {
+        "text": "`var.aws_caller_identity.account_id`",
+        "correct": false,
+        "why": "`var.` is for input variables, which the caller sets; a data source is answered by the provider."
+      },
+      {
+        "text": "`data.aws_caller_identity.current.account_id`",
+        "correct": true,
+        "why": "Yes: `data.TYPE.NAME.attribute`."
+      },
+      {
+        "text": "`data.current.account_id`",
+        "correct": false,
+        "why": "The type is part of the address; two data sources of different types may share a name."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgycdtmx",
+    "version": 1,
+    "section": "reading",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A block that asks the provider a question and keeps the answer, creating nothing, starts with the keyword ___.",
+    "hint": "The other block keyword is `resource`.",
+    "blanks": [
+      {
+        "accept": [
+          "data"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mvcw7p3j",
+    "version": 1,
+    "section": "reading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform state list` shows `data.aws_region.current` beside the resources. What does that entry mean?",
+    "hint": "Is it read again on the next plan?",
+    "choices": [
+      {
+        "text": "Terraform now owns the region and will destroy it with the rest",
+        "correct": false,
+        "why": "A destroy never touches a data source; nothing was created."
+      },
+      {
+        "text": "A cached answer from the last read, which the next plan replaces by asking again",
+        "correct": true,
+        "why": "Right. The state keeps the last answer, and each plan asks again because the thing may have changed."
+      },
+      {
+        "text": "The region is locked so that other configurations cannot read it",
+        "correct": false,
+        "why": "Reading locks nothing; any number of configurations can read the same thing."
+      },
+      {
+        "text": "An import of the region into this configuration",
+        "correct": false,
+        "why": "Importing brings a resource under management (lesson 8); a data source is only looked at."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vcsg9ps",
+    "version": 1,
+    "section": "shared-network",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The network team's VPC already exists. Why is writing a `resource \"aws_vpc\"` block with the same range the wrong way for Ana to use it?",
+    "hint": "What does a resource block mean?",
+    "choices": [
+      {
+        "text": "Terraform would reject a range that another VPC already uses in the account",
+        "correct": false,
+        "why": "AWS accepts two VPCs with the same range; lesson 1 created exactly that by running a script twice."
+      },
+      {
+        "text": "It would create a second VPC with the same range, beside theirs",
+        "correct": true,
+        "why": "Yes. A resource block means \"make this exist\", not \"find this\"."
+      },
+      {
+        "text": "It would take the network team's VPC over and rename it",
+        "correct": false,
+        "why": "Terraform does not adopt existing resources from a block; that takes an import, lesson 8."
+      },
+      {
+        "text": "A resource block has no `tags` argument",
+        "correct": false,
+        "why": "Resources carry tags all the time; the problem is what the block asks for."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0f9gc7p",
+    "version": 1,
+    "section": "shared-network",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Ana's plan, the security group's `vpc_id` shows a real `vpc-…` id rather than `(known after apply)`. Why?",
+    "hint": "When was `data.aws_vpc.shop` read?",
+    "choices": [
+      {
+        "text": "She typed the id into the configuration after looking it up",
+        "correct": false,
+        "why": "Nothing in `network.tf` names an id; that is the point of the lookup."
+      },
+      {
+        "text": "The security group was created during an earlier apply",
+        "correct": false,
+        "why": "The plan says it will be created; the id comes from the VPC, not from the group."
+      },
+      {
+        "text": "The VPC lookup was answered during the plan, before anything was created",
+        "correct": true,
+        "why": "Right. Its query was fully known, so it was answered first, and its id is a plain value in the plan."
+      },
+      {
+        "text": "moto returns ids in advance for any VPC",
+        "correct": false,
+        "why": "The same happens against real AWS; it is how Terraform orders reads, not a quirk of the lab."
+      }
+    ]
+  },
+  {
+    "id": "ex-qpt7rw39",
+    "version": 1,
+    "section": "shared-network",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana's configuration reads the VPC and two subnets and creates one security group. How many things does `terraform plan -destroy` say it would destroy?",
+    "hint": "Only what the configuration created.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "to destroy"
+  },
+  {
+    "id": "ex-vz9hk5ta",
+    "version": 1,
+    "section": "shared-network",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Ana's configuration depend on now that it finds the network by tag? Choose all that apply.",
+    "hint": "Think about what the network team could change.",
+    "choices": [
+      {
+        "text": "The VPC keeping the tag `Name = shop`",
+        "correct": true,
+        "why": "Yes; the tag is the query."
+      },
+      {
+        "text": "No other VPC carrying the same tags",
+        "correct": true,
+        "why": "Yes; a singular lookup refuses two matches, as the last section shows."
+      },
+      {
+        "text": "The VPC keeping the id it had when she wrote the file",
+        "correct": false,
+        "why": "No; that is what the lookup frees her from. A rebuilt VPC with the same tags is found again."
+      },
+      {
+        "text": "The network team running Terraform",
+        "correct": false,
+        "why": "No; they used the AWS CLI, and the lookup worked."
+      },
+      {
+        "text": "The public subnets keeping `Tier = public`",
+        "correct": true,
+        "why": "Yes; `aws_subnets` filters on that tag."
+      }
+    ]
+  },
+  {
+    "id": "ex-f0bfpmtb",
+    "version": 1,
+    "section": "filters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With several `shop-web-*` images, what does `most_recent = true` make `data \"aws_ami\"` do?",
+    "hint": "It is a tie-break.",
+    "choices": [
+      {
+        "text": "Pick the newest of the images it matched, by creation date",
+        "correct": true,
+        "why": "Yes, among the images the filters matched."
+      },
+      {
+        "text": "Download the newest image into the configuration directory",
+        "correct": false,
+        "why": "An AMI is never downloaded; the data source returns its id and attributes."
+      },
+      {
+        "text": "Keep its first choice even after a newer image appears",
+        "correct": false,
+        "why": "The opposite: it is asked again on every plan, which is the danger the section shows."
+      },
+      {
+        "text": "Ask the image team for a new build before each plan",
+        "correct": false,
+        "why": "A data source only reads what exists; it triggers nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-gt0wqd1p",
+    "version": 1,
+    "section": "filters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana changed nothing in her files, yet the plan shows `aws_instance.web must be replaced`. What changed?",
+    "hint": "Look at the line marked `# forces replacement`.",
+    "choices": [
+      {
+        "text": "The provider was upgraded and now handles instances differently",
+        "correct": false,
+        "why": "The provider version is pinned by the lock file; the plan names `ami` as the cause."
+      },
+      {
+        "text": "Someone stopped the instance by hand in the console",
+        "correct": false,
+        "why": "A stopped instance is not a reason to replace it; the diff is in `ami`."
+      },
+      {
+        "text": "The data source's answer",
+        "correct": true,
+        "why": "Right. A newer image matched `shop-web-*`, `most_recent` picked it, and `ami` cannot change on a running machine."
+      },
+      {
+        "text": "The subnet ran out of addresses",
+        "correct": false,
+        "why": "Nothing in the plan points at the subnet; it names the image."
+      }
+    ]
+  },
+  {
+    "id": "ex-g75tcjxt",
+    "version": 1,
+    "section": "filters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For production, which change makes an image upgrade a reviewed decision instead of a side effect of the next plan?",
+    "hint": "The section rewrote `image.tf`.",
+    "choices": [
+      {
+        "text": "Run `terraform plan` less often",
+        "correct": false,
+        "why": "The next plan, whenever it comes, still picks up the newest image."
+      },
+      {
+        "text": "Filter on the exact image name, held in a variable",
+        "correct": true,
+        "why": "Yes. Moving it is now a one-line diff somebody reviews."
+      },
+      {
+        "text": "Add a second `filter` block on the architecture so that fewer images match",
+        "correct": false,
+        "why": "Every new build has the same architecture, so the newest still wins."
+      },
+      {
+        "text": "Set `owners` to the image team's account instead of `self`",
+        "correct": false,
+        "why": "That narrows whose images are searched, not which build is chosen."
+      }
+    ]
+  },
+  {
+    "id": "ex-vk1hkpkg",
+    "version": 1,
+    "section": "filters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A scratch environment runs `most_recent = true` on purpose. Production pins the name. The image team publishes a new build. What does each environment's next plan show?",
+    "hint": "One follows the newest, one asks for one name.",
+    "choices": [
+      {
+        "text": "Both show a replacement, because the image list changed",
+        "correct": false,
+        "why": "The pinned filter still matches only the old name, so its answer did not change."
+      },
+      {
+        "text": "Neither changes until somebody edits a file",
+        "correct": false,
+        "why": "The scratch one changes with no edit: that is what `most_recent` was chosen for."
+      },
+      {
+        "text": "The first is replaced; the second has nothing to do",
+        "correct": true,
+        "why": "Right; the same image list gives two answers to two different questions."
+      },
+      {
+        "text": "Production fails because two images now match `shop-web-*`",
+        "correct": false,
+        "why": "Production no longer filters on the wildcard; it names one build."
+      }
+    ]
+  },
+  {
+    "id": "ex-98894m20",
+    "version": 1,
+    "section": "when-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`data \"aws_availability_zone\" \"app\"` takes `name = aws_subnet.app.availability_zone`, and the plan shows the name `sa-east-1a` already. Why is it still read during apply?",
+    "hint": "Read the comment under its heading in the plan.",
+    "choices": [
+      {
+        "text": "Zone lookups are slow, so Terraform runs them last",
+        "correct": false,
+        "why": "Speed has nothing to do with it; the plan gives the reason in a comment."
+      },
+      {
+        "text": "It refers to the subnet, a resource with changes still pending",
+        "correct": true,
+        "why": "Yes: \"depends on a resource or a module with changes pending\". The subnet is created first."
+      },
+      {
+        "text": "The zone name is unknown until AWS assigns one to the subnet",
+        "correct": false,
+        "why": "The name is written in the subnet block and shown in the plan; it is known."
+      },
+      {
+        "text": "moto cannot answer zone lookups during a plan",
+        "correct": false,
+        "why": "The same lookup was answered during the next plan, once the subnet existed."
+      }
+    ]
+  },
+  {
+    "id": "ex-fzyjpxh8",
+    "version": 1,
+    "section": "when-read",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the apply that created the `app` subnet, the output `app_subnets` was `tolist([])`. What explains the empty list?",
+    "hint": "When was the tag lookup read, compared with when the subnet was created?",
+    "choices": [
+      {
+        "text": "It was read during the plan, before the subnet it looks for existed",
+        "correct": true,
+        "why": "Right. Nothing referred to the subnet, so nothing made it wait, and an apply carries out the plan it was given."
+      },
+      {
+        "text": "moto indexes tags a few seconds after creation",
+        "correct": false,
+        "why": "The next plan found the subnet straight away; timing inside moto is not the cause."
+      },
+      {
+        "text": "The subnet got its tags after it was created",
+        "correct": false,
+        "why": "The plan shows the tags as part of the creation."
+      },
+      {
+        "text": "`aws_subnets` ignores subnets that Terraform itself manages",
+        "correct": false,
+        "why": "The next plan listed exactly that subnet; the lookup just ran too early."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygxcnmj8",
+    "version": 1,
+    "section": "when-read",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana adds `depends_on = [aws_subnet.app]` to the tag lookup, then adds an `Owner` tag to the subnet. What does the plan show for `app_subnets`?",
+    "hint": "The subnet now has a change pending.",
+    "choices": [
+      {
+        "text": "The same list as before, because the subnet keeps its id",
+        "correct": false,
+        "why": "The value would be the same after the apply, but the plan cannot know it yet."
+      },
+      {
+        "text": "An empty list again",
+        "correct": false,
+        "why": "The read is not made early any more; it waits until the apply."
+      },
+      {
+        "text": "`(known after apply)`",
+        "correct": true,
+        "why": "Yes. Any pending change to a dependency defers the read, and everything built from it becomes unknown."
+      },
+      {
+        "text": "An error, because `depends_on` is refused on data sources",
+        "correct": false,
+        "why": "It is accepted; the cost is the deferral, not an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfehqft6",
+    "version": 1,
+    "section": "when-read",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a plan, the symbol that marks a data source to be read is ___.",
+    "hint": "Two characters, an arrow pointing left.",
+    "blanks": [
+      {
+        "accept": [
+          "<="
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vqzwh91c",
+    "version": 1,
+    "section": "policy-documents",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `data \"aws_iam_policy_document\"` produce?",
+    "hint": "Look at the attribute the bucket policy uses.",
+    "choices": [
+      {
+        "text": "An IAM role that the bucket assumes when it serves objects",
+        "correct": false,
+        "why": "It creates nothing in IAM; it only writes a document."
+      },
+      {
+        "text": "A JSON policy",
+        "correct": true,
+        "why": "Yes, in `.json`, computed by the provider from the HCL blocks."
+      },
+      {
+        "text": "A copy of the policy already attached to the bucket in AWS",
+        "correct": false,
+        "why": "It reads nothing from AWS; it builds a new document from what you write."
+      },
+      {
+        "text": "A report of who accessed the bucket",
+        "correct": false,
+        "why": "Access logs are a different service; this is a policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-7gv4fes6",
+    "version": 1,
+    "section": "policy-documents",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the apply that created the shop's bucket policy in the order they happened.",
+    "hint": "The document needs the bucket's ARN.",
+    "items": [
+      "`data.local_file.office` is read (during the plan)",
+      "`aws_s3_bucket.assets` is created",
+      "`data.aws_iam_policy_document.assets` is read",
+      "`aws_s3_bucket_policy.assets` is created"
+    ],
+    "trap": "Reading the policy document before the bucket is the usual slip: its `resources` need the bucket's ARN, which only exists once AWS has made it."
+  },
+  {
+    "id": "ex-hk1mhdxf",
+    "version": 1,
+    "section": "policy-documents",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`data.local_file.office` was read at the start of the plan, while the policy document waited for the apply. What made the difference?",
+    "hint": "Compare what each one is given.",
+    "choices": [
+      {
+        "text": "Local files are read before anything in AWS, as a rule of the local provider",
+        "correct": false,
+        "why": "Providers have no such priority; the timing comes from what is known."
+      },
+      {
+        "text": "The policy document is slower to compute than reading a file",
+        "correct": false,
+        "why": "Speed is not a reason Terraform gives; the plan said \"config refers to values not yet known\"."
+      },
+      {
+        "text": "The file's `filename` was known; the bucket's ARN was not",
+        "correct": true,
+        "why": "Right. A read waits exactly as long as something it is given is unknown."
+      },
+      {
+        "text": "The policy document has `depends_on` set on the bucket",
+        "correct": false,
+        "why": "It has none; the reference to `aws_s3_bucket.assets.arn` is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-t92w33ba",
+    "version": 1,
+    "section": "not-found",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each lookup to what the plan did.",
+    "hint": "Singular data sources want exactly one.",
+    "pairs": [
+      {
+        "left": "`aws_vpc` tagged `shop-prod`, which no VPC has",
+        "right": "Error: no matching EC2 VPC found"
+      },
+      {
+        "left": "`aws_ami` on `shop-web-*` without `most_recent`, two images",
+        "right": "Error: more than one result"
+      },
+      {
+        "left": "`aws_subnets` tagged `Tier = private`, which no subnet has",
+        "right": "An empty list, and no error"
+      }
+    ],
+    "right_distractors": [
+      "The newest of the matches"
+    ]
+  },
+  {
+    "id": "ex-p040yh2f",
+    "version": 1,
+    "section": "not-found",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's untouched configuration suddenly fails with `multiple EC2 VPCs matched`. What happened?",
+    "hint": "Her files did not change.",
+    "choices": [
+      {
+        "text": "Her state file was corrupted and lists the VPC twice",
+        "correct": false,
+        "why": "The error comes from the lookup's answer, not from the state."
+      },
+      {
+        "text": "Somebody else created another VPC carrying the same tags",
+        "correct": true,
+        "why": "Yes: the staging copy carried `Name = shop` too."
+      },
+      {
+        "text": "The network team deleted the production VPC, and the error lists what remains",
+        "correct": false,
+        "why": "Both VPCs were there; `describe-vpcs` showed prod and staging."
+      },
+      {
+        "text": "moto duplicated the VPC on restart",
+        "correct": false,
+        "why": "The second VPC has another range and another Environment tag; somebody made it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3z8f2wx5",
+    "version": 1,
+    "section": "not-found",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the empty list from `aws_subnets` more dangerous than the error from `aws_vpc`?",
+    "hint": "Which of the two stops anything?",
+    "choices": [
+      {
+        "text": "Because the empty list stays in the state and is not refreshed",
+        "correct": false,
+        "why": "It is read again on every plan like any data source."
+      },
+      {
+        "text": "Because an empty list makes Terraform delete the subnets it cannot see",
+        "correct": false,
+        "why": "A data source never deletes anything; the danger is what is built on the empty answer."
+      },
+      {
+        "text": "It applies quietly",
+        "correct": true,
+        "why": "Right. No error and no warning: something built on zero subnets goes through, where the error stopped the plan."
+      },
+      {
+        "text": "Because plural data sources are read once and kept",
+        "correct": false,
+        "why": "Plural or singular, a data source is read on every plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnaqpfz4",
+    "version": 1,
+    "section": "not-found",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which fix did Ana apply when the staging copy broke her VPC lookup?",
+    "hint": "She asked for what she meant.",
+    "choices": [
+      {
+        "text": "Added `most_recent = true` to `data \"aws_vpc\"` so that the newest VPC wins",
+        "correct": false,
+        "why": "`aws_vpc` has no such argument, and the newest VPC was the staging one anyway."
+      },
+      {
+        "text": "Added `Environment = \"prod\"` to the tags it filters on",
+        "correct": true,
+        "why": "Yes; the next plan found one VPC and reported no changes."
+      },
+      {
+        "text": "Copied the production VPC's id into the configuration",
+        "correct": false,
+        "why": "That works until the network is rebuilt, the problem the lookup was meant to solve."
+      },
+      {
+        "text": "Asked the network team to delete the staging VPC",
+        "correct": false,
+        "why": "The staging network is legitimate; the query was too loose."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmn9pn0p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says: \"Our app reads the network with `data \"aws_vpc\"`, so if we destroy the app, the VPC goes with it.\" What is wrong?",
+    "hint": "Who created the VPC?",
+    "choices": [
+      {
+        "text": "Nothing; a destroy removes data sources after the resources",
+        "correct": false,
+        "why": "The plan -destroy listed one thing: the security group. Data sources are never destroyed."
+      },
+      {
+        "text": "A destroy removes what its own configuration created; reading gives no ownership",
+        "correct": true,
+        "why": "Right; reading the VPC gave no ownership of it."
+      },
+      {
+        "text": "The VPC is destroyed, but only after asking the network team for approval",
+        "correct": false,
+        "why": "Terraform has no notion of asking another team; it does not destroy what it only read."
+      },
+      {
+        "text": "The VPC is kept, but its subnets are removed with the app",
+        "correct": false,
+        "why": "The subnets were read too, through `aws_subnets`; they are equally out of reach."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrfzfjr2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these make a data source's read wait until the apply? Choose all that apply.",
+    "hint": "Two reasons appear in the plans of this lesson.",
+    "choices": [
+      {
+        "text": "An argument that refers to a value not yet known",
+        "correct": true,
+        "why": "Yes: the policy document waiting for the bucket's ARN."
+      },
+      {
+        "text": "A reference to a resource with changes pending",
+        "correct": true,
+        "why": "Yes: the zone lookup referring to the new subnet."
+      },
+      {
+        "text": "A `depends_on` on a resource with changes pending",
+        "correct": true,
+        "why": "Yes: the tag lookup after the `Owner` tag was added."
+      },
+      {
+        "text": "A data source that reads a file on the laptop",
+        "correct": false,
+        "why": "`local_file` was read at the start of the plan; its filename was known."
+      },
+      {
+        "text": "A filter with a wildcard such as `shop-web-*`",
+        "correct": false,
+        "why": "The image lookup was read during the plan; a wildcard is a known value."
+      }
+    ]
+  },
+  {
+    "id": "ex-ysdav7jp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's application needs the database team's security group id. That team manages it with its own Terraform configuration. What does the lesson point to as the stronger contract than a tag lookup?",
+    "hint": "Something the other configuration publishes on purpose.",
+    "choices": [
+      {
+        "text": "A `data \"aws_security_group\"` filtered on its name",
+        "correct": false,
+        "why": "That is still a guess about something nobody promised to keep unique."
+      },
+      {
+        "text": "Its outputs, read with `terraform_remote_state`",
+        "correct": true,
+        "why": "Yes; outputs are an interface the other team chose, and lesson 8 uses them."
+      },
+      {
+        "text": "A copy of their `.tf` files inside Ana's configuration",
+        "correct": false,
+        "why": "Copied resource blocks would create a second security group."
+      },
+      {
+        "text": "An `import` of their security group into Ana's state",
+        "correct": false,
+        "why": "Then two configurations would manage one resource and fight over it."
+      }
+    ]
+  },
+  {
+    "id": "ex-nqpmkk1t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which data source used in this lesson made no request to AWS at all?",
+    "hint": "It builds its answer from the blocks you write.",
+    "choices": [
+      {
+        "text": "`aws_subnets`",
+        "correct": false,
+        "why": "It asks EC2 which subnets match."
+      },
+      {
+        "text": "`aws_caller_identity`",
+        "correct": false,
+        "why": "It asks STS who the credentials belong to."
+      },
+      {
+        "text": "`aws_ami`",
+        "correct": false,
+        "why": "It searches EC2's image catalogue."
+      },
+      {
+        "text": "`aws_iam_policy_document`",
+        "correct": true,
+        "why": "Yes; the provider writes the JSON locally. (`local_file` also stays off AWS, reading the laptop's disk.)"
+      }
+    ]
+  }
+]

@@ -1,0 +1,536 @@
+{
+  "ex-9eshd9dt": {
+    "prompt": "Por que o `price.py` consegue pôr preço nos dois servidores web antes de qualquer um deles existir?",
+    "hint": "Veja o que o `terraform show -json tfplan` imprimiu para cada instância.",
+    "choices": [
+      {
+        "text": "O plano já traz o tipo de cada instância, e o tipo define o preço por hora",
+        "why": "Isso. `instance_type` é um valor comum no JSON do plano, e é dele que depende o preço por hora."
+      },
+      {
+        "text": "O Terraform pede um orçamento à AWS enquanto planeja",
+        "why": "Nenhum plano pede preços; eles vieram da planilha do curso de nuvem, copiados para o script."
+      },
+      {
+        "text": "O moto informa quanto cada instância custaria na conta real",
+        "why": "O moto não sabe nada de preços; ele imita a API, não a fatura."
+      },
+      {
+        "text": "O script lê o arquivo de state escrito depois do apply",
+        "why": "Ele lê o plano salvo, antes de qualquer apply, que é a questão."
+      }
+    ]
+  },
+  "ex-tftna00z": {
+    "prompt": "No plano com preço da loja, qual recurso sozinho custa mais por mês?",
+    "hint": "Leia a última coluna da saída do `price.py`.",
+    "choices": [
+      {
+        "text": "Um dos servidores web, com o disco de 20 GB",
+        "why": "Cada um custa 52.10 por mês; outra coisa custa mais."
+      },
+      {
+        "text": "A VPC, porque ela contém todo o resto",
+        "why": "A VPC não tem linha na planilha: a AWS não cobra por ela por hora."
+      },
+      {
+        "text": "O endereço público que o gateway segura",
+        "why": "São 3.65 por mês, a menor linha com preço."
+      },
+      {
+        "text": "O NAT gateway, um bloco do `network.tf`",
+        "why": "Isso: 67.89 por mês, mais que qualquer servidor, por um bloco no `network.tf`."
+      }
+    ]
+  },
+  "ex-pggm9zn5": {
+    "prompt": "Que total mensal, em USD, o `price.py` imprimiu para o primeiro plano da loja?",
+    "hint": "A linha que começa com `change per month`.",
+    "unit": "USD por mês"
+  },
+  "ex-g9teqz8x": {
+    "prompt": "Quais destes custos nenhum plano consegue precificar, por melhor que seja a planilha? Escolha todos os que se aplicam.",
+    "hint": "Um plano sabe o que vai existir, não quanto vai ser usado.",
+    "choices": [
+      {
+        "text": "Os gigabytes que o NAT gateway processa",
+        "why": "Sim: preço por GB, e o plano não tem ideia de quantos."
+      },
+      {
+        "text": "As horas de uma instância `t3.medium`",
+        "why": "Isso o plano fixa: o tipo e que ela roda o mês inteiro."
+      },
+      {
+        "text": "Os dados enviados dos servidores web para a internet",
+        "why": "Sim: uso, não configuração."
+      },
+      {
+        "text": "Um desconto que a empresa negociou com a AWS",
+        "why": "Sim: pertence à conta, não à configuração."
+      },
+      {
+        "text": "O tamanho de um disco raiz declarado",
+        "why": "`volume_size = 20` está no plano; o script o precificou."
+      }
+    ]
+  },
+  "ex-wzbmexm0": {
+    "prompt": "Por que a aula não mostra nenhuma saída do Infracost?",
+    "hint": "O que o Infracost pede que o laboratório não consegue dar?",
+    "choices": [
+      {
+        "text": "O Infracost só lê planos do Terraform Cloud",
+        "why": "Ele lê um diretório local ou o JSON de um plano; o problema está em outro lugar."
+      },
+      {
+        "text": "O serviço de preços dele está fora de alcance",
+        "why": "Certo. Ele precisa de uma chave de API e do próprio serviço de preços, e o laboratório não tem rede; um detalhamento inventado é o que o curso se recusa a imprimir."
+      },
+      {
+        "text": "Ele se recusa a precificar recursos que o moto criou",
+        "why": "Ele precifica código, não recursos numa conta; o moto nunca foi o obstáculo."
+      },
+      {
+        "text": "Um plano com `-out` não pode ser precificado por nada",
+        "why": "O `price.py` precificou exatamente um plano assim na seção anterior."
+      }
+    ]
+  },
+  "ex-rzyttm22": {
+    "prompt": "Trocar `t3.medium` por `m7i.large` produziu um plano com dois updates no lugar. O que a versão com preço acrescentou que o plano não mostrava?",
+    "hint": "Compare as duas saídas do bloco com preço.",
+    "choices": [
+      {
+        "text": "Que as duas instâncias seriam substituídas",
+        "why": "O plano disse update no lugar, nada substituído; o preço não muda a ação."
+      },
+      {
+        "text": "Que a mudança custava 136.44 USD a mais por mês",
+        "why": "Isso: uma palavra no diff, e um número que ninguém adivinharia a partir dela."
+      },
+      {
+        "text": "Que `m7i.large` não é vendida em `sa-east-1`",
+        "why": "A planilha tem um preço em `sa-east-1` para ela, 0.16065 por hora."
+      },
+      {
+        "text": "Que os discos cresceriam junto com a instância",
+        "why": "O disco continua com 20 GB; só o preço por hora mudou."
+      }
+    ]
+  },
+  "ex-z3sv516m": {
+    "prompt": "Ponha em ordem os passos de uma diferença de custo num pull request.",
+    "hint": "A base tem de existir antes de algo ser comparado com ela.",
+    "items": [
+      "Precificar a branch principal em `infracost-base.json`",
+      "Rodar `infracost diff` na branch do pull request",
+      "Publicar a diferença como comentário no pull request",
+      "Quem revisa aprova ou questiona a mudança"
+    ],
+    "trap": "O comentário vem do diff, e o diff precisa da base antes."
+  },
+  "ex-pqsgrhex": {
+    "prompt": "Um pull request acrescenta um NAT gateway. O Infracost põe preço nas horas, mas mostra a linha por GB sem valor mensal. O que daria um número a essa linha?",
+    "hint": "O Infracost lê mais um arquivo para o que o plano não sabe.",
+    "choices": [
+      {
+        "text": "Uma versão mais nova do provider da AWS",
+        "why": "O provider descreve recursos; não diz nada sobre tráfego."
+      },
+      {
+        "text": "Aplicar o plano primeiro, para o gateway existir",
+        "why": "O Infracost precifica código; um gateway existente ainda não processou o tráfego do mês que vem."
+      },
+      {
+        "text": "Um arquivo de uso com uma estimativa",
+        "why": "Isso: o uso é você quem informa, como um palpite anotado."
+      },
+      {
+        "text": "Um `limit_amount` maior no orçamento",
+        "why": "O orçamento avisa depois do gasto; não alimenta estimativa nenhuma."
+      }
+    ]
+  },
+  "ex-r3rjd8dg": {
+    "prompt": "Depois que o `default_tags` foi acrescentado, o plano do `aws_nat_gateway.shop` mostrou `tags = {}` e quatro entradas novas em outro lugar. Onde?",
+    "hint": "Um atributo é o que o bloco diz, o outro o que a AWS vai guardar.",
+    "choices": [
+      {
+        "text": "Em `tags_all`, a mescla das tags do próprio recurso por cima das padrão",
+        "why": "Isso: as tags do próprio recurso mescladas por cima das padrão."
+      },
+      {
+        "text": "Num recurso novo `aws_default_tags` que o plano criaria",
+        "why": "O plano não criou nada: 0 to add."
+      },
+      {
+        "text": "No `terraform.tfvars`, que o plano reescreve",
+        "why": "Um plano nunca escreve seus arquivos; o tfvars é onde a Ana pôs os valores."
+      },
+      {
+        "text": "No lock file do provider",
+        "why": "O lock file registra versões e hashes de providers, não tags."
+      }
+    ]
+  },
+  "ex-83qqzby2": {
+    "prompt": "O bloco dentro de `provider \"aws\"` que mescla um conjunto de tags em todo recurso que o provider cria se chama ___.",
+    "hint": "Duas palavras unidas por um sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "default_tags"
+        ]
+      }
+    ]
+  },
+  "ex-d1n36v5f": {
+    "prompt": "A Ana roda um plano com `tags` sem `CostCenter`. O que acontece?",
+    "hint": "Onde a regra de validação roda?",
+    "choices": [
+      {
+        "text": "O plano segue e a AWS rejeita os recursos sem tag no apply",
+        "why": "A AWS os aceitaria; a recusa é do Terraform, e vem antes."
+      },
+      {
+        "text": "O Terraform preenche `CostCenter` com uma string vazia e avisa",
+        "why": "Nada preenche uma chave que falta; a regra falha."
+      },
+      {
+        "text": "O plano falha com a mensagem de erro da regra, que nomeia as quatro chaves",
+        "why": "Isso: `Invalid value for variable`, antes de o Terraform perguntar qualquer coisa à AWS."
+      },
+      {
+        "text": "Os recursos são planejados com três tags",
+        "why": "Nada foi planejado."
+      }
+    ]
+  },
+  "ex-g9qj6pw6": {
+    "prompt": "Quais destes ficam sem as quatro tags padrão da loja? Escolha todos os que se aplicam.",
+    "hint": "As padrão alcançam o que este provider cria ou atualiza por esta configuração.",
+    "choices": [
+      {
+        "text": "Um volume que um colega criou com o AWS CLI",
+        "why": "Sim: feito à mão, então nada lhe pôs tag."
+      },
+      {
+        "text": "Os discos raiz dos servidores web, criados antes das padrão",
+        "why": "Sim: o update pôs tag nas instâncias e deixou os discos como estavam."
+      },
+      {
+        "text": "O NAT gateway do `network.tf`",
+        "why": "Ele estava no plano de oito updates e ganhou as quatro."
+      },
+      {
+        "text": "Uma sub-rede que esta configuração criar no mês que vem",
+        "why": "Criada por este provider, então ganha as padrão na criação."
+      }
+    ]
+  },
+  "ex-j6rr1pmk": {
+    "prompt": "A tagging API respondeu `[]` ao pedido de volumes, embora três existissem. Por quê?",
+    "hint": "A partir de que a tagging API responde?",
+    "choices": [
+      {
+        "text": "O moto não emula volumes",
+        "why": "O `describe-volumes` listou os três logo depois."
+      },
+      {
+        "text": "Nenhum deles jamais tinha recebido tag",
+        "why": "Certo: ela devolve o que tem ou teve tag, então os sem tag ficam fora do mundo dela."
+      },
+      {
+        "text": "Volumes pertencem ao S3, que ela não cobre",
+        "why": "Volumes EBS são recursos do EC2; o filtro `ec2:volume` os nomeou corretamente."
+      },
+      {
+        "text": "O filtro precisava da região",
+        "why": "A região vem do ambiente, como em todo comando da aula."
+      }
+    ]
+  },
+  "ex-ca181n28": {
+    "prompt": "O `describe-volumes` listou três volumes sem tag. Por que só um deles é órfão?",
+    "hint": "Veja a coluna de estado.",
+    "choices": [
+      {
+        "text": "Só um estava em `sa-east-1`",
+        "why": "Os três estavam na mesma região; a diferença é a que estão presos."
+      },
+      {
+        "text": "Os outros dois têm menos de 100 GB, então não custam nada",
+        "why": "Custam 3.04 por mês cada; tamanho não decide posse."
+      },
+      {
+        "text": "Os `in-use` são de instâncias do Terraform",
+        "why": "Isso: são os discos dos servidores web. O `available` não está preso a nada e não está em state nenhum."
+      },
+      {
+        "text": "Os outros dois foram criados pelo Bruno",
+        "why": "O Bruno fez um volume, o de 100 GB."
+      }
+    ]
+  },
+  "ex-9w6bedvg": {
+    "prompt": "Associe cada jeito de um recurso perder o dono a um exemplo do curso.",
+    "hint": "As aulas 6 e 7 forneceram um cada.",
+    "pairs": [
+      {
+        "left": "Feito à mão",
+        "right": "O volume de exportação de 100 GB do Bruno"
+      },
+      {
+        "left": "Solto pelo Terraform",
+        "right": "Um bloco `removed` com `destroy = false`"
+      },
+      {
+        "left": "State perdido",
+        "right": "Um `terraform.tfstate` apagado"
+      },
+      {
+        "left": "Nunca destruído",
+        "right": "Um ambiente de preview depois do merge"
+      }
+    ],
+    "right_distractors": [
+      "Um recurso com `prevent_destroy`"
+    ]
+  },
+  "ex-h5tdct52": {
+    "prompt": "A Ana acha um volume `available` de 500 GB sem tags e sem dono de que alguém se lembre. O que deve vir antes de apagá-lo?",
+    "hint": "Quem pode dizer se os dados importam?",
+    "choices": [
+      {
+        "text": "Importá-lo na configuração da loja e rodar `terraform destroy`",
+        "why": "Isso o apaga com passos a mais, e ainda destrói a configuração inteira."
+      },
+      {
+        "text": "Achar quem o criou, e depois tirar um snapshot",
+        "why": "Isso: o CloudTrail mostra a chamada `CreateVolume` e quem a fez; um snapshot cobre o caso em que ninguém responde."
+      },
+      {
+        "text": "Pôr a tag `Owner = ana` para o orçamento contá-lo",
+        "why": "Isso faz da Ana dona de algo de que ela não sabe nada; a pergunta continua aberta."
+      },
+      {
+        "text": "Prendê-lo a um servidor web para ver o que tem nele",
+        "why": "Isso transforma uma máquina de produção num lugar para inspecionar dados desconhecidos; pergunte antes."
+      }
+    ]
+  },
+  "ex-cep1x087": {
+    "prompt": "Por que o pipeline passa o `expires`, em vez de a configuração calculá-lo com `timestamp()`?",
+    "hint": "O que o `timestamp()` devolve na próxima execução?",
+    "choices": [
+      {
+        "text": "O `timestamp()` não é permitido dentro do `default_tags`",
+        "why": "É permitido; o problema é o que ele faz em todo plano seguinte."
+      },
+      {
+        "text": "A data mudaria a cada execução, e todas as tags junto",
+        "why": "Certo: todo plano ia querer trocar todas as tags, e a validade continuaria andando para a frente."
+      },
+      {
+        "text": "O `timestamp()` devolve a hora em UTC, e tags precisam ser locais",
+        "why": "Tags aceitam qualquer string; o fuso não é o problema."
+      },
+      {
+        "text": "O nome do workspace já contém a data",
+        "why": "Ele é `pr-21`, o número do pull request."
+      }
+    ]
+  },
+  "ex-zghx12qm": {
+    "prompt": "Depois do `terraform destroy` no pr-17, o `expired.sh` ainda listava a instância do pr-17. O que o comando seguinte mostrou?",
+    "hint": "Ele perguntou ao próprio EC2.",
+    "choices": [
+      {
+        "text": "Que o destroy tinha falhado e a instância estava rodando",
+        "why": "O destroy disse `2 destroyed`, e a conferência de estado concordou."
+      },
+      {
+        "text": "Que a instância estava terminated, só visível",
+        "why": "Isso: ainda visível por um tempo, sem custar nada; a tagging API não informa estado."
+      },
+      {
+        "text": "Que a instância tinha ido para o workspace default",
+        "why": "Workspaces guardam states, não instâncias; nada se mexeu."
+      },
+      {
+        "text": "Que a tag Expires tinha sido removida pelo destroy",
+        "why": "A tag continuava lá; é por isso que a busca a listou."
+      }
+    ]
+  },
+  "ex-3y3adtz8": {
+    "prompt": "Um ambiente de preview custa 55.75 USD por mês. Quanto, em USD, custam quatro deles esquecidos por dois meses?",
+    "hint": "Ambientes vezes meses vezes o preço mensal.",
+    "unit": "USD"
+  },
+  "ex-r7jmbj6r": {
+    "prompt": "Onde um ambiente de preview dá errado, segundo a aula?",
+    "hint": "Criá-lo é a parte que as pessoas testam.",
+    "choices": [
+      {
+        "text": "O job de criação o monta na região errada",
+        "why": "A falha da aula está na outra ponta da vida dele."
+      },
+      {
+        "text": "O destroy que nunca roda depois do merge",
+        "why": "Isso: um job que falhou, um pull request fechado, uma branch renomeada, e ele continua rodando."
+      },
+      {
+        "text": "Quem revisa clica nele e muda o banco de produção",
+        "why": "Um preview é uma cópia; o problema da aula é custo, não acesso."
+      },
+      {
+        "text": "Dois pull requests dividem um workspace",
+        "why": "Cada um tem o seu, com o nome do pull request."
+      }
+    ]
+  },
+  "ex-t4gm7bme": {
+    "prompt": "Chega o alerta de 80% do `shop-monthly`. O que o orçamento fez com os recursos em execução?",
+    "hint": "Um orçamento avisa.",
+    "choices": [
+      {
+        "text": "Parou a instância mais cara",
+        "why": "Nada no `budget.tf` para coisa alguma; agir exige uma pessoa, ou uma ação montada de propósito."
+      },
+      {
+        "text": "Bloqueou recursos novos até o mês que vem",
+        "why": "Um orçamento não é um teto."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo: ele mandou uma mensagem, horas depois do gasto que relata."
+      },
+      {
+        "text": "Passou a loja para tipos de instância mais baratos",
+        "why": "Só uma mudança na configuração faz isso."
+      }
+    ]
+  },
+  "ex-bdbrtcyz": {
+    "prompt": "Por que a aula mostra só um plano para o `aws_budgets_budget`?",
+    "hint": "Algo no laboratório, não na configuração.",
+    "choices": [
+      {
+        "text": "Orçamentos só podem ser criados em `us-east-1`",
+        "why": "O motivo da aula é o moto, não a região."
+      },
+      {
+        "text": "O moto falha numa leitura que o provider faz depois de criá-lo, então o apply nunca termina",
+        "why": "Isso: ele responde à leitura dos assinantes do alerta com um erro interno, que o provider tenta de novo."
+      },
+      {
+        "text": "Um orçamento custaria dinheiro mesmo no laboratório",
+        "why": "Nada no laboratório é cobrado; o moto é um emulador."
+      },
+      {
+        "text": "A regra de validação recusa as tags do orçamento",
+        "why": "O plano mostra o orçamento com as quatro tags em `tags_all`."
+      }
+    ]
+  },
+  "ex-wgerwtr2": {
+    "prompt": "Uma notificação cujo `notification_type` é ___ dispara pela projeção do mês, antes de o gasto real chegar ao limite.",
+    "hint": "O outro valor no `budget.tf` é `ACTUAL`.",
+    "blanks": [
+      {
+        "accept": [
+          "FORECASTED"
+        ]
+      }
+    ]
+  },
+  "ex-byb95mnk": {
+    "prompt": "Um pull request acrescenta um segundo NAT gateway, em `sa-east-1c`, para cada zona ter a sua saída. O comentário do Infracost mostra as horas do gateway novo. O que quem revisa com cuidado ainda pergunta?",
+    "hint": "Pelo que mais um NAT gateway cobra?",
+    "choices": [
+      {
+        "text": "Quanto tráfego ele vai processar por mês, que nenhum plano contém",
+        "why": "Isso: a linha por GB não tem valor até alguém estimar o tráfego."
+      },
+      {
+        "text": "Se o bloco CIDR da sub-rede tem preço mensal",
+        "why": "Sub-redes não têm preço por hora; a planilha não tem linha para elas."
+      },
+      {
+        "text": "Se o Infracost rodou antes ou depois do `terraform apply`",
+        "why": "Ele precifica o código do pull request; roda antes de qualquer apply por projeto."
+      },
+      {
+        "text": "Se o gateway novo tem a tag `Name`",
+        "why": "Com `default_tags` as tags de custo estão lá de qualquer jeito; `Name` não é o que agrupa a fatura."
+      }
+    ]
+  },
+  "ex-0kgsmk50": {
+    "prompt": "Um time usa `default_tags` em tudo e a regra de validação da aula. O relatório mensal ainda mostra 40 USD sem `Project`. Qual explicação combina melhor com a aula?",
+    "hint": "O que as padrão nunca alcançam?",
+    "choices": [
+      {
+        "text": "A regra de validação confere valores, então um valor com erro de digitação passou",
+        "why": "Ela confere só as chaves, e um valor com erro ainda teria a chave `Project`."
+      },
+      {
+        "text": "Recursos feitos fora do Terraform",
+        "why": "Isso: nada feito à mão ganha tag padrão. É por aí que uma busca por órfãos começa."
+      },
+      {
+        "text": "O `default_tags` para de funcionar depois do primeiro apply",
+        "why": "As tags da aula alcançaram oito recursos existentes num apply posterior."
+      },
+      {
+        "text": "A AWS remove tags de recursos com mais de um mês",
+        "why": "Tags ficam até alguém mudá-las."
+      }
+    ]
+  },
+  "ex-29djmgxa": {
+    "prompt": "O job de destroy de um ambiente de preview falhou, e o arquivo de state dele estava num runner que foi apagado. Os recursos têm `Environment = pr-30` e uma data em `Expires` que já passou. Como limpá-los?",
+    "hint": "O `terraform destroy` precisa de algo que sumiu.",
+    "choices": [
+      {
+        "text": "Rodar `terraform destroy` num workspace novo chamado `pr-30`",
+        "why": "Um workspace novo tem state vazio, então o destroy não acha nada para destruir."
+      },
+      {
+        "text": "Esperar: a AWS apaga recursos cuja tag `Expires` já passou",
+        "why": "`Expires` é uma convenção deste time; a AWS não dá significado nenhum a ela."
+      },
+      {
+        "text": "Baixar o orçamento para o alerta pará-los",
+        "why": "Um orçamento avisa e não para nada."
+      },
+      {
+        "text": "Achá-los pela tag e apagá-los serviço por serviço",
+        "why": "Isso: as tags ainda funcionam sem o state; confira o estado real de cada um, e lembre dos endereços que a tagging API do laboratório deixa de fora."
+      }
+    ]
+  },
+  "ex-b313t2q8": {
+    "prompt": "Quais destes os métodos da aula deixariam a Ana pegar antes de o dinheiro ser gasto? Escolha todos os que se aplicam.",
+    "hint": "Antes da fatura quer dizer antes do apply, ou ao menos antes do mês.",
+    "choices": [
+      {
+        "text": "Um pull request que dobra o tamanho das instâncias dos servidores web",
+        "why": "Sim: um plano com preço mostra a diferença na revisão."
+      },
+      {
+        "text": "Uma configuração que deixa de fora o `CostCenter`",
+        "why": "Sim: a regra de validação faz o plano falhar."
+      },
+      {
+        "text": "Um pico súbito de tráfego pelo NAT gateway",
+        "why": "Uso não está em plano nenhum; um alerta de previsão o vê, depois que começou."
+      },
+      {
+        "text": "Um volume que um colega cria à mão amanhã",
+        "why": "Ele nunca passa por revisão; a busca por órfãos o acha depois."
+      }
+    ]
+  }
+}

@@ -1,0 +1,574 @@
+{
+  "ex-v2vky0hr": {
+    "prompt": "O `network.sh` rodou uma vez e criou uma VPC, uma sub-rede e um security group. Qual pergunta o próprio script consegue responder um mês depois?",
+    "hint": "Um script registra o que foi feito no dia em que rodou.",
+    "choices": [
+      {
+        "text": "O que existe na conta hoje",
+        "why": "Só a AWS sabe isso; o script nunca olha."
+      },
+      {
+        "text": "Quais comandos foram enviados no dia em que rodou",
+        "why": "Isso. É tudo o que uma lista de passos registra: o que foi pedido, uma vez."
+      },
+      {
+        "text": "O que um colega mudou à mão desde então",
+        "why": "Uma mudança feita em outro lugar não deixa rastro no arquivo."
+      },
+      {
+        "text": "O que uma segunda execução dele faria",
+        "why": "Nada nele diz; a aula teve de rodar para descobrir, e ganhou uma segunda VPC."
+      }
+    ]
+  },
+  "ex-a9epjjtx": {
+    "prompt": "Por que o `network.sh` guarda a saída do `create-vpc` em `VPC` em vez de só imprimi-la?",
+    "hint": "Veja o que os dois comandos seguintes precisam.",
+    "choices": [
+      {
+        "text": "Para imprimi-la no fim, para registro",
+        "why": "Ela é impressa no fim, mas não é por isso que é guardada: os próximos comandos precisam dela."
+      },
+      {
+        "text": "Porque a AWS recusa uma segunda VPC se o primeiro id não for devolvido",
+        "why": "A AWS não exige nada disso; a segunda execução da aula criou outra VPC sem ele."
+      },
+      {
+        "text": "Os comandos seguintes precisam desse id",
+        "why": "Certo. A sub-rede e o security group precisam nomear a VPC, e só a AWS sabe o id dela."
+      },
+      {
+        "text": "Para tornar o script idempotente",
+        "why": "Guardar um id não impede o script de criar tudo de novo na próxima execução."
+      }
+    ]
+  },
+  "ex-0js6hebs": {
+    "prompt": "Um servidor ou rede que só existe como resultado de uma sequência de passos manuais, um pouco diferente de todos os outros e impossível de reconstruir com exatidão, é chamado de ___.",
+    "hint": "Uma coisa da qual não há duas iguais.",
+    "blanks": [
+      {
+        "accept": [
+          "snowflake",
+          "floco de neve",
+          "servidor floco de neve"
+        ]
+      }
+    ]
+  },
+  "ex-wef94z4z": {
+    "prompt": "Um colega abriu a porta 22 no security group `web` de outra máquina. Como se chama a diferença entre esse grupo e o `network.sh`?",
+    "hint": "É o nome da segunda seção da aula.",
+    "choices": [
+      {
+        "text": "Um conflito",
+        "why": "Nada entrou em conflito: a AWS aceitou a mudança e o arquivo nunca soube."
+      },
+      {
+        "text": "Drift",
+        "why": "Isso: o que existe se afastou do que foi descrito."
+      },
+      {
+        "text": "Um rollback",
+        "why": "Um rollback desfaz uma mudança; aqui uma mudança foi acrescentada."
+      },
+      {
+        "text": "Uma substituição do security group",
+        "why": "O grupo manteve o id; uma regra foi acrescentada nele, no lugar."
+      }
+    ]
+  },
+  "ex-dd746wv2": {
+    "prompt": "O time combina que quem mudar a rede à mão também vai atualizar o `network.sh` depois. O que a aula diz desse arranjo?",
+    "hint": "Quem produziu o drift, para começo de conversa?",
+    "choices": [
+      {
+        "text": "É o mesmo arranjo que produziu o drift",
+        "why": "Certo. Depende de todo mundo lembrar sempre, que é o que falhou. A cura é fazer do arquivo o único caminho de uma mudança."
+      },
+      {
+        "text": "Ele cura o drift desde que a atualização aconteça no mesmo dia",
+        "why": "O dia não importa; a mudança ainda aconteceu antes que alguém pudesse revisá-la, e nada confere se o arquivo foi atualizado."
+      },
+      {
+        "text": "Funciona se o script ficar no controle de versão",
+        "why": "O controle de versão registra edições no arquivo; não enxerga uma mudança feita na nuvem."
+      },
+      {
+        "text": "Torna a mudança revisável antes de acontecer",
+        "why": "A edição no arquivo vem depois da mudança, então ninguém revisa nada a tempo."
+      }
+    ]
+  },
+  "ex-7kf3qqn8": {
+    "prompt": "Quais destes são motivos que a aula dá para o drift ser pior do que uma anotação que faltou? Escolha todos os que se aplicam.",
+    "hint": "Três motivos, cada um em negrito.",
+    "choices": [
+      {
+        "text": "Fica invisível até alguém comparar",
+        "why": "Sim; a rede funciona, então nada leva alguém a olhar."
+      },
+      {
+        "text": "Deixa a nuvem mais lenta",
+        "why": "Drift é uma diferença de configuração, não de desempenho."
+      },
+      {
+        "text": "Mudanças seguintes são construídas em cima dele",
+        "why": "Sim; ele se acumula."
+      },
+      {
+        "text": "Ninguém pôde revisar a mudança antes de ela acontecer",
+        "why": "Sim; foi digitada direto na nuvem."
+      },
+      {
+        "text": "A AWS apaga recursos que derivam",
+        "why": "A AWS guarda o que lhe mandam; não tem ideia do que se pretendia."
+      }
+    ]
+  },
+  "ex-4kbabp74": {
+    "prompt": "Qual destes é gerência de configuração, e não provisionamento?",
+    "hint": "A API da nuvem consegue ver isso?",
+    "choices": [
+      {
+        "text": "Criar uma sub-rede em `sa-east-1a`",
+        "why": "Uma sub-rede é um recurso que o provedor vende: provisionamento."
+      },
+      {
+        "text": "Abrir a porta 443 num security group",
+        "why": "Uma regra de security group é criada pela API da nuvem: provisionamento."
+      },
+      {
+        "text": "Escrever o `/etc/nginx/nginx.conf` numa máquina em execução",
+        "why": "Isso. Um arquivo dentro do sistema operacional é invisível para a API da nuvem."
+      },
+      {
+        "text": "Criar um bucket para as imagens da loja",
+        "why": "Um bucket é um recurso do provedor: provisionamento."
+      }
+    ]
+  },
+  "ex-3j0txe1m": {
+    "prompt": "Associe cada ferramenta ao trabalho que a aula dá a ela.",
+    "hint": "Três trabalhos, um deles sobre imagens.",
+    "pairs": [
+      {
+        "left": "Terraform",
+        "right": "Provisionamento"
+      },
+      {
+        "left": "Ansible",
+        "right": "Gerência de configuração"
+      },
+      {
+        "left": "Packer",
+        "right": "Imagens de máquina"
+      }
+    ],
+    "right_distractors": [
+      "Varredura de recursos expostos"
+    ]
+  },
+  "ex-a5jvggyn": {
+    "prompt": "A Ana poderia criar a VPC da loja com os módulos de nuvem do Ansible. Por que a aula chama isso de segunda melhor ferramenta para o trabalho?",
+    "hint": "Pense no que acontece quando uma linha é apagada.",
+    "choices": [
+      {
+        "text": "O Ansible não consegue falar com a API da AWS",
+        "why": "Consegue; a aula diz que funciona. O problema é o que ele lembra."
+      },
+      {
+        "text": "Não guarda registro do que criou",
+        "why": "Certo. Sem registro, apagar uma linha não remove nada: ele não sabe quais recursos são dele."
+      },
+      {
+        "text": "O Ansible precisa de um agente instalado na VPC",
+        "why": "Uma VPC não tem sistema operacional onde instalar nada, e o Ansible empurra por SSH de qualquer jeito."
+      },
+      {
+        "text": "YAML não consegue descrever uma faixa de rede",
+        "why": "Uma faixa é uma string; qualquer formato a carrega."
+      }
+    ]
+  },
+  "ex-kg6fx1qc": {
+    "prompt": "O Terraform liga uma máquina e roda nela, uma vez, na criação, um script que instala o nginx. Seis meses depois alguém edita à mão o arquivo do nginx nessa máquina. O que o próximo `terraform apply` faz a respeito?",
+    "hint": "Em qual camada está o arquivo editado?",
+    "choices": [
+      {
+        "text": "Roda o script de criação de novo e restaura o arquivo",
+        "why": "Um script rodado na criação nunca mais roda; é esse o ponto da aula sobre ele."
+      },
+      {
+        "text": "Substitui a máquina, porque a configuração dela mudou",
+        "why": "O Terraform não enxerga um arquivo dentro da máquina, então não vê mudança nenhuma."
+      },
+      {
+        "text": "Nada: o arquivo está dentro do SO, onde a API da nuvem não olha",
+        "why": "Certo. Os atributos da máquina batem, então o Terraform não aponta mudanças, e a edição segue derivando."
+      },
+      {
+        "text": "Aponta o arquivo editado como drift",
+        "why": "Isso exigiria ler o disco, que é trabalho da gerência de configuração."
+      }
+    ]
+  },
+  "ex-2ve40v6b": {
+    "prompt": "O que rodar o `network.sh` uma segunda vez produziu?",
+    "hint": "Veja o `describe-vpcs` que veio depois.",
+    "choices": [
+      {
+        "text": "Um erro, porque já existia uma VPC chamada `shop`",
+        "why": "A AWS não trata a tag Name como única; aceitou a segunda."
+      },
+      {
+        "text": "Nada, porque a VPC já estava lá",
+        "why": "Isso foi o que o `terraform apply` fez; o script nunca confere."
+      },
+      {
+        "text": "Uma segunda VPC com o mesmo nome e a mesma faixa",
+        "why": "Isso: duas VPCs chamadas `shop`, as duas `10.20.0.0/16`."
+      },
+      {
+        "text": "Uma sub-rede nova dentro da VPC que já existia",
+        "why": "O script cria uma VPC nova primeiro e põe a sub-rede nela."
+      }
+    ]
+  },
+  "ex-amzr2957": {
+    "prompt": "Uma operação que deixa o mundo igual quer rode uma vez ou duas é chamada ___.",
+    "hint": "A propriedade que o `terraform apply` tem e o `network.sh` não.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotente"
+        ]
+      }
+    ]
+  },
+  "ex-e5fh7kjt": {
+    "prompt": "O segundo `terraform apply` imprimiu `No changes.` O que o Terraform fez antes de decidir isso?",
+    "hint": "Leia a primeira linha dessa saída.",
+    "choices": [
+      {
+        "text": "Leu de volta da AWS a VPC existente e a comparou com o arquivo",
+        "why": "Isso: `Refreshing state...` é a leitura, e a comparação não achou nada a fazer."
+      },
+      {
+        "text": "Conferiu a data de modificação do arquivo",
+        "why": "O Terraform compara o conteúdo com o recurso real, não datas."
+      },
+      {
+        "text": "Criou a VPC de novo e apagou a duplicata",
+        "why": "Ele não criou nada: `0 added`."
+      },
+      {
+        "text": "Perguntou à AWS se alguma VPC chamada `shop-tf` estava em uso",
+        "why": "Ele buscou a própria VPC pelo id que lembrava, não pelo nome."
+      }
+    ]
+  },
+  "ex-nkt2sdbe": {
+    "prompt": "Para comparar, o Terraform precisa saber qual VPC real pertence a qual linha do arquivo. Onde mora esse conhecimento?",
+    "hint": "As aulas 7 e 8 são sobre isso.",
+    "choices": [
+      {
+        "text": "Na tag Name",
+        "why": "Tags podem ser mudadas por qualquer um, e duas VPCs dividiram uma nesta mesma aula."
+      },
+      {
+        "text": "No estado, o registro do Terraform sobre o que ele fez",
+        "why": "Isso; o script não precisava de um porque nunca perguntava nada."
+      },
+      {
+        "text": "Na AWS, que lembra qual ferramenta criou cada recurso",
+        "why": "A AWS não guarda esse vínculo; a segunda VPC do script é igualzinha à primeira."
+      },
+      {
+        "text": "No `main.tf`, depois que o primeiro apply escreve o id nele",
+        "why": "O Terraform nunca edita sua configuração; o arquivo mostrado é o que a Ana escreveu."
+      }
+    ]
+  },
+  "ex-kmzrkf2f": {
+    "prompt": "Depois de o `network.sh` rodar duas vezes e o `terraform apply` rodar duas vezes, quantas VPCs existiam no total na conta do laboratório?",
+    "hint": "Duas de um, uma do outro.",
+    "unit": "VPCs"
+  },
+  "ex-hc0zmffx": {
+    "prompt": "Na infraestrutura imutável, como uma versão nova do servidor web chega à produção?",
+    "hint": "Nada em execução é editado.",
+    "choices": [
+      {
+        "text": "Uma ferramenta entra em cada máquina e atualiza o pacote",
+        "why": "Isso é a coluna mutável: editar o que roda."
+      },
+      {
+        "text": "Máquinas novas substituem as antigas",
+        "why": "Isso: máquinas novas são construídas com ela, entram em serviço, e as antigas são destruídas."
+      },
+      {
+        "text": "As máquinas são reiniciadas para pegarem a versão nova",
+        "why": "Um reboot roda o que já está no disco; algo ainda precisa colocar a versão nova lá."
+      },
+      {
+        "text": "Ela é copiada no lugar e o serviço reiniciado",
+        "why": "Copiar para uma máquina em execução é mudança no lugar."
+      }
+    ]
+  },
+  "ex-mdqy8c26": {
+    "prompt": "Por que a aula mantém o banco de dados do lado mutável mesmo numa loja que substitui todo o resto?",
+    "hint": "O que seria jogado fora junto?",
+    "choices": [
+      {
+        "text": "Bancos de dados não podem ser criados pelo Terraform",
+        "why": "Podem; a questão é se jogar um fora a cada mudança."
+      },
+      {
+        "text": "O valor dele são os dados que se acumularam ali",
+        "why": "Certo. Substituí-lo substituiria os dados, então o estado fica em poucos lugares cuidados."
+      },
+      {
+        "text": "Servidores de banco são pets por lei",
+        "why": "Nenhuma lei diz isso; é uma decisão de desenho."
+      },
+      {
+        "text": "Máquinas imutáveis demoram mais para ligar",
+        "why": "Tempo de partida não é o motivo dado; os dados são."
+      }
+    ]
+  },
+  "ex-22n52g01": {
+    "prompt": "Associe cada situação ao que a tabela da aula diz que acontece.",
+    "hint": "Duas colunas, duas linhas da tabela.",
+    "pairs": [
+      {
+        "left": "Uma mudança, na infraestrutura mutável",
+        "right": "Uma edição no que está rodando"
+      },
+      {
+        "left": "Uma mudança, na infraestrutura imutável",
+        "right": "Uma cópia nova, e depois a troca"
+      },
+      {
+        "left": "Voltar atrás, na infraestrutura mutável",
+        "right": "Desfazer a edição, se alguém souber qual foi"
+      },
+      {
+        "left": "Voltar atrás, na infraestrutura imutável",
+        "right": "Ligar de novo a cópia anterior"
+      }
+    ]
+  },
+  "ex-95e4m93n": {
+    "prompt": "Qual ferramenta da tabela da aula provisiona só AWS, a partir de templates em YAML ou JSON?",
+    "hint": "É da própria AWS.",
+    "choices": [
+      {
+        "text": "Pulumi",
+        "why": "O Pulumi funciona com qualquer provedor, em linguagens de uso geral."
+      },
+      {
+        "text": "OpenTofu",
+        "why": "O OpenTofu é o fork do Terraform, escrito em HCL para qualquer provedor."
+      },
+      {
+        "text": "CloudFormation",
+        "why": "Isso; o AWS CDK gera os templates dele a partir de código."
+      },
+      {
+        "text": "Salt",
+        "why": "O Salt é gerência de configuração."
+      }
+    ]
+  },
+  "ex-neexpf13": {
+    "prompt": "No Terraform, o que é um provider?",
+    "hint": "O Terraform em si não sabe nada de AWS.",
+    "choices": [
+      {
+        "text": "A empresa de nuvem que cobra a conta",
+        "why": "Na fala do dia a dia, sim; no Terraform a palavra nomeia um programa."
+      },
+      {
+        "text": "Um programa que conhece uma API",
+        "why": "Isso. Transforma blocos de resource nas chamadas daquela API e lê o resultado de volta; há um por API."
+      },
+      {
+        "text": "A configuração de região do bloco `provider`",
+        "why": "O bloco configura o provider; a região é um dos argumentos dele."
+      },
+      {
+        "text": "Um módulo publicado no registry público",
+        "why": "Módulos são a aula 10 e são escritos em HCL; providers são programas compilados."
+      }
+    ]
+  },
+  "ex-mhz3mt2p": {
+    "prompt": "Um time quer uma ferramenta que crie a rede na nuvem e também mantenha certos os arquivos do nginx em trinta máquinas em execução. O que a aula recomenda em vez disso?",
+    "hint": "A tabela não tem linha para isso.",
+    "choices": [
+      {
+        "text": "Terraform para os dois, com um script de criação para o nginx",
+        "why": "Um script de criação roda uma vez e depois deriva."
+      },
+      {
+        "text": "Ansible para os dois, já que ele tem módulos de nuvem",
+        "why": "Ele não guarda registro do que criou."
+      },
+      {
+        "text": "Duas ferramentas, com uma fronteira clara",
+        "why": "Isso: uma de provisionamento, uma de configuração ou o Packer. A aula 18 traça essa fronteira entre Terraform e Ansible."
+      },
+      {
+        "text": "CloudFormation, que cobre tudo na AWS",
+        "why": "É uma ferramenta de provisionamento; também não cuida de arquivos dentro das máquinas."
+      }
+    ]
+  },
+  "ex-q8qr9maq": {
+    "prompt": "No laboratório, o que faz o AWS CLI e o Terraform falarem com o moto em vez da Amazon?",
+    "hint": "Uma das quatro variáveis.",
+    "choices": [
+      {
+        "text": "`AWS_DEFAULT_REGION=sa-east-1`",
+        "why": "Isso escolhe a região, onde quer que esteja o endpoint."
+      },
+      {
+        "text": "`AWS_ACCESS_KEY_ID=test`",
+        "why": "Uma chave diz quem pergunta, não para onde vai o pedido."
+      },
+      {
+        "text": "`AWS_ENDPOINT_URL=http://localhost:4566`",
+        "why": "Isso: toda chamada vai para esse endereço."
+      },
+      {
+        "text": "`provider \"aws\" { region = \"sa-east-1\" }`",
+        "why": "O bloco do provider é igual ao de uma conta real; é justamente essa a ideia."
+      }
+    ]
+  },
+  "ex-qsmnvdkh": {
+    "prompt": "O moto aceitou um `aws_instance` e devolveu um id. O que essa instância de fato faz no laboratório?",
+    "hint": "O moto imita a API, não as máquinas por trás dela.",
+    "choices": [
+      {
+        "text": "Roda no notebook como uma pequena máquina virtual",
+        "why": "O moto não roda nada; as aulas 18 a 20 usam contêineres quando precisam de uma máquina rodando."
+      },
+      {
+        "text": "Responde na porta 443 como um servidor de verdade",
+        "why": "Nenhum pacote chega a ela; não há o que responder."
+      },
+      {
+        "text": "Nada: é um registro com um id e um estado",
+        "why": "Certo, e é exatamente isso que o Terraform lê de volta."
+      },
+      {
+        "text": "Ela é criada numa conta real da AWS por trás",
+        "why": "Nenhuma conta real está envolvida, e nada é cobrado."
+      }
+    ]
+  },
+  "ex-pgfyw1df": {
+    "prompt": "Em casa, `aws sts get-caller-identity` responde `Could not connect to the endpoint URL`. O que a aula manda conferir primeiro?",
+    "hint": "Nada respondeu no endereço.",
+    "choices": [
+      {
+        "text": "Se o `moto_server` está rodando e se a porta bate com `AWS_ENDPOINT_URL`",
+        "why": "Isso; a mensagem quer dizer que nada está escutando ali."
+      },
+      {
+        "text": "Se o par de chaves é `test`",
+        "why": "Uma chave errada dá erro de credenciais, depois de conectar."
+      },
+      {
+        "text": "Se o bloco do provider tem a região certa",
+        "why": "A chamada do CLI não envolve bloco de provider, e a região não impede uma conexão."
+      },
+      {
+        "text": "Se o Terraform está na versão 1.16",
+        "why": "O Terraform não participa de uma chamada do AWS CLI."
+      }
+    ]
+  },
+  "ex-26t7d4rc": {
+    "prompt": "Ponha em ordem os passos para acompanhar estas aulas no seu computador.",
+    "hint": "O moto precisa estar rodando antes que algo lhe pergunte qualquer coisa.",
+    "items": [
+      "Instalar o Terraform",
+      "Instalar o moto e o AWS CLI com pip",
+      "Ligar o `moto_server -p 4566` num terminal só dele",
+      "Exportar as quatro variáveis `AWS_` no terminal de trabalho",
+      "Rodar `aws sts get-caller-identity` para conferir"
+    ],
+    "trap": "Exportar as variáveis no terminal do próprio moto é o deslize comum: quem precisa delas é o terminal em que você digita os comandos."
+  },
+  "ex-gm01t9pb": {
+    "prompt": "Um colega reconstrói a rede da loja numa região nova rodando o `network.sh`. O SSH funciona na região antiga e não na nova. Por quê?",
+    "hint": "Qual regra está no arquivo, e qual só no grupo antigo?",
+    "choices": [
+      {
+        "text": "A porta 22 foi aberta à mão e nunca foi anotada",
+        "why": "Certo: a reconstrução produziu exatamente o que estava escrito, que é a rede sem o drift."
+      },
+      {
+        "text": "Security groups não podem ser copiados de uma região da AWS para outra",
+        "why": "Nada foi copiado; o script criou um grupo novo a partir das próprias linhas."
+      },
+      {
+        "text": "A VPC nova tem outra faixa",
+        "why": "O script usa o mesmo `10.20.0.0/16` em todo lugar."
+      },
+      {
+        "text": "O SSH é bloqueado em algumas regiões da AWS",
+        "why": "Nenhuma região bloqueia; o grupo simplesmente não tem regra para ele."
+      }
+    ]
+  },
+  "ex-djqfhxh8": {
+    "prompt": "Qual destes é idempotente?",
+    "hint": "Rodar duas vezes deixa o mundo como rodar uma.",
+    "choices": [
+      {
+        "text": "`aws ec2 create-vpc --cidr-block 10.20.0.0/16`",
+        "why": "Cada execução cria outra VPC."
+      },
+      {
+        "text": "`terraform apply` com o `main.tf` sem mudança",
+        "why": "Isso: a segunda execução não encontrou mudanças."
+      },
+      {
+        "text": "`aws ec2 authorize-security-group-ingress` para uma regra nova",
+        "why": "A segunda chamada falha ou adiciona de novo; de todo jeito não é a descrição de um estado final."
+      },
+      {
+        "text": "`sh network.sh`",
+        "why": "A segunda execução dele fez uma segunda rede."
+      }
+    ]
+  },
+  "ex-ek1qr1vg": {
+    "prompt": "Quais afirmações sobre o laboratório são verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "O moto, os providers e a conta.",
+    "choices": [
+      {
+        "text": "Os providers são os que a HashiCorp publica",
+        "why": "Sim; só muda de onde foram baixados."
+      },
+      {
+        "text": "O moto guarda o que lhe disseram depois de parar",
+        "why": "Ele guarda tudo na memória e esquece quando para."
+      },
+      {
+        "text": "Uma configuração destas aulas funciona numa conta real depois de desfazer `AWS_ENDPOINT_URL`",
+        "why": "Sim, com credenciais reais, e com uma conta real a pagar."
+      },
+      {
+        "text": "O Terraform imprime planos diferentes contra o moto e contra a AWS para o mesmo arquivo",
+        "why": "O plano é calculado a partir do arquivo e do estado; o moto só responde às chamadas de API."
+      }
+    ]
+  }
+}

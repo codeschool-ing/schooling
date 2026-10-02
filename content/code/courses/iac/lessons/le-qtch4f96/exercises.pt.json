@@ -1,0 +1,570 @@
+{
+  "ex-av7jpg5s": {
+    "prompt": "O que quer dizer assar a imagem do servidor web da loja?",
+    "hint": "Quando acontece a instalação?",
+    "choices": [
+      {
+        "text": "Instalar o nginx em cada máquina enquanto ela liga, a partir de um script no user data",
+        "why": "Isso é configurar no boot: o trabalho é refeito em cada máquina, toda vez."
+      },
+      {
+        "text": "Fazer a instalação uma vez, numa imagem, antes de qualquer máquina existir",
+        "why": "Isso. Toda máquina então liga como cópia e não tem mais nada a instalar."
+      },
+      {
+        "text": "Rodar o Ansible contra cada máquina um minuto depois que ela liga",
+        "why": "Ainda é configuração de uma máquina em execução, que é o que assar elimina."
+      },
+      {
+        "text": "Guardar em cache os pacotes do repositório no notebook",
+        "why": "Um cache acelera um download; a máquina ainda instalaria no boot."
+      }
+    ]
+  },
+  "ex-61agaann": {
+    "prompt": "Três servidores web se configuram no boot com `apt-get install nginx`. Foram ligados no dia 1, no dia 9 e no dia 20. O que se pode dizer do nginx que eles rodam?",
+    "hint": "A versão de quem cada um recebe?",
+    "choices": [
+      {
+        "text": "A mesma versão, porque o comando é o mesmo",
+        "why": "O comando é o mesmo; o repositório que ele lê não, então cada um recebe a versão do seu dia."
+      },
+      {
+        "text": "O que o repositório oferecia no dia de cada boot",
+        "why": "Certo, e nenhum arquivo registra qual, que é a diferença que assar elimina."
+      },
+      {
+        "text": "A versão que estava em vigor quando a imagem limpa foi construída",
+        "why": "A imagem limpa não tem nginx nenhum; ele é instalado depois, no boot."
+      },
+      {
+        "text": "A mais nova, já que o apt atualiza o nginx a cada reboot",
+        "why": "Nada o atualiza depois da instalação; cada um fica com o que o seu boot recebeu."
+      }
+    ]
+  },
+  "ex-6f3p3sw3": {
+    "prompt": "Qual destes pertence à imagem assada, e não deve ser fornecido no boot?",
+    "hint": "Ele é igual em toda cópia?",
+    "choices": [
+      {
+        "text": "A senha do banco de dados",
+        "why": "Um segredo na imagem é um segredo em toda cópia; ele é lido no boot de um cofre de segredos."
+      },
+      {
+        "text": "O endereço do banco de dados de produção",
+        "why": "Ele muda por ambiente, então é dado no boot."
+      },
+      {
+        "text": "A qual ambiente a máquina pertence",
+        "why": "Isso muda por cópia, que é exatamente o que fica fora da imagem."
+      },
+      {
+        "text": "O nginx e a versão dele",
+        "why": "Isso: pacotes são iguais em toda cópia, então são instalados uma vez, no build."
+      }
+    ]
+  },
+  "ex-zxtacnxb": {
+    "prompt": "Num dia de promoção a loja liga vinte servidores web extras de uma vez, enquanto o espelho de pacotes do Ubuntu está sobrecarregado. Quais servidores sobem devagar ou não sobem?",
+    "hint": "Qual tipo precisa do espelho no momento em que liga?",
+    "choices": [
+      {
+        "text": "Os ligados a partir de uma imagem assada",
+        "why": "Uma imagem assada já contém os pacotes; o espelho foi necessário no build, dias antes."
+      },
+      {
+        "text": "Os que instalam os pacotes no boot",
+        "why": "Certo: a partida deles depende de o espelho responder naquele momento, o mais movimentado."
+      },
+      {
+        "text": "Os dois tipos igualmente, porque toda máquina liga a partir de uma imagem",
+        "why": "Os dois ligam de uma imagem, mas só um depois baixa alguma coisa."
+      },
+      {
+        "text": "Nenhum, porque a AWS guarda uma cópia do espelho em cada região",
+        "why": "O ponto da aula vale seja quem for o dono do espelho: uma partida frita precisa que ele responda."
+      }
+    ]
+  },
+  "ex-3j842tfd": {
+    "prompt": "Associe cada bloco do `web.pkr.hcl` ao trabalho dele.",
+    "hint": "Três blocos de topo e dois tipos de bloco dentro do `build`.",
+    "pairs": [
+      {
+        "left": "`packer`",
+        "right": "De quais plugins o template precisa"
+      },
+      {
+        "left": "`source \"docker\" \"web\"`",
+        "right": "De onde vem a máquina temporária"
+      },
+      {
+        "left": "`provisioner \"shell\"`",
+        "right": "Um passo rodado dentro da máquina temporária"
+      },
+      {
+        "left": "`post-processor \"docker-tag\"`",
+        "right": "Algo feito com a imagem depois de salva"
+      }
+    ],
+    "right_distractors": [
+      "Quais instâncias o Terraform substitui"
+    ]
+  },
+  "ex-w1d36j14": {
+    "prompt": "Sem `commit = true` no bloco `source`, o que o build do Docker deixaria para trás?",
+    "hint": "O que transforma o contêiner temporário em algo guardado?",
+    "choices": [
+      {
+        "text": "Uma imagem com a tag `shop-web:1.0.0` mesmo assim",
+        "why": "Não haveria imagem para pôr tag; o commit é o que cria uma."
+      },
+      {
+        "text": "Imagem nenhuma, só um contêiner que é jogado fora",
+        "why": "Certo. Os provisioners rodariam num contêiner que depois é jogado fora, o que é uma execução e não um build."
+      },
+      {
+        "text": "Um contêiner rodando, com o nginx servindo a página",
+        "why": "O Packer mata o contêiner temporário no fim de qualquer jeito."
+      },
+      {
+        "text": "Uma AMI no moto",
+        "why": "O builder docker nunca fala com a AWS; AMIs vêm do `amazon-ebs`."
+      }
+    ]
+  },
+  "ex-ypj4h7mw": {
+    "prompt": "Por que o template desta aula diz `pull = false`?",
+    "hint": "O que aconteceu quando o Packer perguntou ao Docker Hub?",
+    "choices": [
+      {
+        "text": "O Docker Hub recusou pulls com `429 Too Many Requests`",
+        "why": "Isso, então o build usa a cópia que já está no notebook. Deixar de fora é o normal."
+      },
+      {
+        "text": "Fazer o pull é o que torna o build reprodutível",
+        "why": "O contrário: um pull de uma tag pode trazer outra imagem. Fixar por digest é o que o torna reprodutível."
+      },
+      {
+        "text": "O builder docker não consegue fazer pull de imagens, então a configuração é obrigatória",
+        "why": "Ele faz pull por padrão; a primeira tentativa da aula foi recusada pelo registry, não pelo Packer."
+      },
+      {
+        "text": "Impede que a imagem seja enviada ao Docker Hub depois do build",
+        "why": "Enviar é outro post-processor; `pull` é sobre a imagem base chegando."
+      }
+    ]
+  },
+  "ex-1h43rab4": {
+    "prompt": "Para construir a imagem da loja como uma AMI na AWS em vez de uma imagem Docker, que parte do template muda mais?",
+    "hint": "De onde vem a máquina temporária?",
+    "choices": [
+      {
+        "text": "O provisioner, que precisa ser reescrito para EC2",
+        "why": "Os mesmos passos de shell rodam numa instância EC2 como num contêiner."
+      },
+      {
+        "text": "O bloco `build`, que a AWS não suporta",
+        "why": "O bloco build é o mesmo; só aponta um source diferente."
+      },
+      {
+        "text": "O bloco `source`, que nomeia o builder e as configurações dele",
+        "why": "Isso: `source \"amazon-ebs\"` com uma região, um tipo de instância e um `ami_name`."
+      },
+      {
+        "text": "Nada; o Packer detecta o destino pelas credenciais",
+        "why": "O builder é nomeado explicitamente no primeiro rótulo do bloco source."
+      }
+    ]
+  },
+  "ex-bp87g77t": {
+    "prompt": "Ponha em ordem o que o `packer build` fez para a imagem Docker.",
+    "hint": "A tag vem de um post-processor.",
+    "items": [
+      "Ligar um contêiner a partir do `ubuntu:24.04`",
+      "Rodar dentro dele o script do provisioner",
+      "Fazer o commit do contêiner como imagem",
+      "Matar o contêiner",
+      "Pôr a tag `shop-web:1.0.0` na imagem"
+    ],
+    "trap": "Pôr a tag antes do commit é o deslize comum: não há imagem para marcar até o contêiner ser salvo."
+  },
+  "ex-bgnfgv0w": {
+    "prompt": "O `packer build` terminou com sucesso, e mesmo assim `docker run shop-web:1.0.0` parou na hora. Por que o Packer não percebeu?",
+    "hint": "O que o Packer confere depois de cada passo?",
+    "choices": [
+      {
+        "text": "O Packer ignora erros dentro dos provisioners",
+        "why": "Um passo de provisioner que falha interrompe o build; nenhum falhou aqui."
+      },
+      {
+        "text": "Ele só confere o status de saída de cada passo",
+        "why": "Certo. Instalar o nginx deu certo; ligá-lo numa máquina sem IPv6 é outra pergunta, respondida só ao rodar a imagem."
+      },
+      {
+        "text": "O commit perdeu a configuração do nginx escrita pelo apt",
+        "why": "A configuração estava lá; o `grep` achou as linhas `listen` na imagem."
+      },
+      {
+        "text": "O `packer validate` já tinha aprovado o template",
+        "why": "O validate confere a sintaxe do template; ele nunca roda nada."
+      }
+    ]
+  },
+  "ex-mpmwd14f": {
+    "prompt": "Depois de corrigir o template, por que a Ana construiu a `1.0.1` em vez de construir a `1.0.0` de novo?",
+    "hint": "O que uma versão deveria nomear?",
+    "choices": [
+      {
+        "text": "O Docker se recusa a reutilizar uma tag",
+        "why": "O Docker moveria a tag sem reclamar; esse é o perigo."
+      },
+      {
+        "text": "`1.0.0` já nomeia uma imagem, e essa imagem não muda",
+        "why": "Isso. Uma versão com defeito é seguida por uma mais nova, nunca reconstruída sob o número antigo."
+      },
+      {
+        "text": "O Packer incrementa o número de patch a cada build que segue uma falha",
+        "why": "O Packer não inventa número; o template, e depois uma variável, o fornece."
+      },
+      {
+        "text": "Imagens antigas precisam ser apagadas antes de reusar uma tag",
+        "why": "Nada precisa ser apagado; a ideia é não reutilizar o número."
+      }
+    ]
+  },
+  "ex-d4hrprp8": {
+    "prompt": "Antes do build, `packer ___ .` confere o template e não constrói nada; ele imprimiu `The configuration is valid.`",
+    "hint": "O Terraform tem um comando de mesmo nome.",
+    "blanks": [
+      {
+        "accept": [
+          "validate"
+        ]
+      }
+    ]
+  },
+  "ex-b8h6ce8z": {
+    "prompt": "O que o `packer build .` fez quando `version` e `commit` viraram variáveis sem default?",
+    "hint": "Nenhuma das duas foi dada na linha de comando.",
+    "choices": [
+      {
+        "text": "Construiu `shop-web:latest`",
+        "why": "O Packer não inventa versão; ele se recusou a começar."
+      },
+      {
+        "text": "Recusou, com `Unset variable`",
+        "why": "Isso, uma vez para cada uma das duas, e nada foi construído."
+      },
+      {
+        "text": "Pediu os valores de forma interativa, como o Terraform faz",
+        "why": "Ele imprimiu um erro e parou; não houve pergunta."
+      },
+      {
+        "text": "Reutilizou `1.0.1`, a última versão do template",
+        "why": "O número saiu do template naquele mesmo diff."
+      }
+    ]
+  },
+  "ex-w7p4rae2": {
+    "prompt": "Onde alguém encontra qual commit do git construiu a `shop-web:1.1.0`? Escolha todas as que se aplicam.",
+    "hint": "Dois lugares foram escritos pelo build.",
+    "choices": [
+      {
+        "text": "No label `org.opencontainers.image.revision` da imagem",
+        "why": "Sim; ele viaja dentro da imagem, então dá para perguntar a uma máquina que a roda."
+      },
+      {
+        "text": "No `manifest.json`, em `custom_data`",
+        "why": "Sim; é o que a etapa seguinte de um pipeline lê."
+      },
+      {
+        "text": "Na tag da imagem",
+        "why": "A tag carrega só a versão, `1.1.0`."
+      },
+      {
+        "text": "No `required_plugins` do bloco `packer`",
+        "why": "Esse bloco nomeia plugins e versões deles, não o commit do template."
+      },
+      {
+        "text": "No id de imagem que o Docker imprimiu",
+        "why": "O id é um hash da imagem; não diz nada sobre o git."
+      }
+    ]
+  },
+  "ex-zpb0xsyt": {
+    "prompt": "Dois servidores web foram ligados a partir de `shop-web:latest`, um na segunda e outro na sexta, e ninguém editou arquivo nenhum nesse meio-tempo. Eles rodam a mesma imagem?",
+    "hint": "O que um build no meio do caminho faz com a `latest`?",
+    "choices": [
+      {
+        "text": "Sim, porque os arquivos que os descrevem não mudaram",
+        "why": "Os arquivos dizem `latest`, e a `latest` pode apontar para outra imagem na sexta."
+      },
+      {
+        "text": "Não necessariamente",
+        "why": "Certo: qualquer build na semana move a tag, e nada nos arquivos registra que ela se moveu."
+      },
+      {
+        "text": "Sim, porque o Docker se recusa a ligar uma imagem cuja tag se moveu",
+        "why": "O Docker liga o que a tag aponta, sem comentário."
+      },
+      {
+        "text": "Não, nunca, porque a `latest` muda a cada hora",
+        "why": "Ela muda quando alguém faz build, e esse é o problema: não dá para saber pelo nome."
+      }
+    ]
+  },
+  "ex-927q5c9b": {
+    "prompt": "Depois do build da `1.1.0`, quantas imagens o `docker images shop-web` listou?",
+    "hint": "Conte a quebrada também.",
+    "unit": "imagens"
+  },
+  "ex-b7fq8n76": {
+    "prompt": "A Ana muda `web_version` de `1.0.1` para `1.1.0` no `terraform.tfvars`. Por que o plan substitui a instância em vez de atualizá-la?",
+    "hint": "Procure o comentário no fim da linha `ami`.",
+    "choices": [
+      {
+        "text": "Porque a tag `Version` mudou",
+        "why": "Uma tag sozinha é atualização no lugar; a tag muda aqui só porque a instância é substituída de qualquer jeito."
+      },
+      {
+        "text": "Porque o `create_before_destroy` força toda mudança a ser uma substituição",
+        "why": "Ele só define a ordem de uma substituição; não causa uma."
+      },
+      {
+        "text": "`ami` força substituição",
+        "why": "Isso: uma imagem diferente significa uma instância diferente, então o plan diz `# forces replacement`."
+      },
+      {
+        "text": "Porque o moto não consegue atualizar instâncias",
+        "why": "O plan é calculado pelo provider, igual contra o moto e contra a AWS."
+      }
+    ]
+  },
+  "ex-z4t159zr": {
+    "prompt": "O apply imprimiu `Creating...` para a instância nova antes de `Destroying...` para a antiga. O que definiu essa ordem?",
+    "hint": "Um argumento de lifecycle da aula 6.",
+    "choices": [
+      {
+        "text": "`create_before_destroy = true` no bloco `lifecycle` da instância",
+        "why": "Isso: `+/-`, cria a substituta e depois destrói, com a antiga guardada como deposed object enquanto isso."
+      },
+      {
+        "text": "O Terraform sempre cria primeiro quando a imagem muda",
+        "why": "A ordem padrão é destruir primeiro; a aula 6 mostrou a lacuna que isso deixa."
+      },
+      {
+        "text": "A busca `data \"aws_ami\"` rodou antes da instância",
+        "why": "A busca decide qual imagem, não a ordem da substituição."
+      },
+      {
+        "text": "A variável `web_version` não tem default",
+        "why": "Isso obriga a dar um valor; não diz nada sobre ordem."
+      }
+    ]
+  },
+  "ex-070w63vf": {
+    "prompt": "A `1.1.0` se mostra com defeito. O que a aula faz para voltar atrás?",
+    "hint": "O mesmo caminho de um rollout.",
+    "choices": [
+      {
+        "text": "Entra na instância e reinstala o nginx antigo",
+        "why": "Isso edita uma máquina em execução, o que este modelo nunca faz."
+      },
+      {
+        "text": "Roda `terraform destroy` e aplica de novo do zero",
+        "why": "Muito mais do que o necessário; a mudança é um valor."
+      },
+      {
+        "text": "Reconstrói a `1.1.0` com o template antigo",
+        "why": "Isso daria duas imagens a um número; a versão mais antiga já existe."
+      },
+      {
+        "text": "`git revert`, e depois um plan que substitui a instância de novo",
+        "why": "Isso: `1.0.1` volta ao `terraform.tfvars`, e a instância é substituída em direção à imagem mais antiga."
+      }
+    ]
+  },
+  "ex-gxhvz6tw": {
+    "prompt": "No plan, a linha da imagem termina em `# forces ___`, e é por isso que a instância não é atualizada no lugar.",
+    "hint": "A palavra que o plan também usa em `must be replaced`.",
+    "blanks": [
+      {
+        "accept": [
+          "replacement"
+        ]
+      }
+    ]
+  },
+  "ex-jdnky6v3": {
+    "prompt": "O que `ubuntu@sha256:…` garante e `ubuntu:24.04` não?",
+    "hint": "O nome pode ser movido para outro conteúdo?",
+    "choices": [
+      {
+        "text": "Que a imagem foi construída há pouco, com as atualizações deste mês",
+        "why": "Ele garante o contrário: o mesmo conteúdo, por mais antigo que seja."
+      },
+      {
+        "text": "Que ele nomeia o mesmo conteúdo toda vez que é usado",
+        "why": "Isso: o digest é um hash do conteúdo, então outro conteúdo teria outro nome."
+      },
+      {
+        "text": "Que a Canonical assinou a imagem",
+        "why": "Um digest identifica conteúdo; não diz nada sobre quem o publicou."
+      },
+      {
+        "text": "Que o pull será mais rápido porque o Docker pula o registry",
+        "why": "Velocidade não é a questão; o template mantém `pull = false` por outro motivo."
+      }
+    ]
+  },
+  "ex-yrkex15f": {
+    "prompt": "O template fixa o nginx na atualização exata que o repositório oferecia no dia do build. Um mês depois o repositório substituiu essa atualização por uma mais nova. O que acontece no próximo build?",
+    "hint": "A tabela de versões listava a versão do lançamento e a atualização mais nova.",
+    "choices": [
+      {
+        "text": "Ele falha no `apt-get install`, antes de existir qualquer imagem",
+        "why": "Isso, de forma barulhenta e no dia do build, em vez de produzir outra coisa em silêncio. Mover a fixação vira um commit revisado."
+      },
+      {
+        "text": "O apt instala a versão mais nova sem avisar",
+        "why": "Isso é o que uma instalação sem fixação faz; uma fixação pede uma versão exata."
+      },
+      {
+        "text": "O Packer reaproveita o nginx da imagem anterior",
+        "why": "Cada build parte da imagem base; nada é herdado de builds anteriores."
+      },
+      {
+        "text": "O build dá certo, porque o digest também fixa os pacotes",
+        "why": "O digest fixa a imagem base; o nginx é instalado depois, do repositório."
+      }
+    ]
+  },
+  "ex-t59bgz3n": {
+    "prompt": "Um colega diz que fixar o digest da base e todos os pacotes significa que a loja nunca recebe correções de segurança. O que a aula responde?",
+    "hint": "Fixações tornam as atualizações deliberadas.",
+    "choices": [
+      {
+        "text": "Imagens fixadas são corrigidas automaticamente pelo registry",
+        "why": "Nada corrige uma imagem depois de construída; isso a tornaria mutável."
+      },
+      {
+        "text": "As correções de segurança entram no boot, pelo apt, por cima da imagem assada",
+        "why": "Isso traz de volta a configuração no boot, e com ela o drift e o custo no boot."
+      },
+      {
+        "text": "Um rebuild agendado sobe as fixações num commit e entrega uma versão nova",
+        "why": "Certo: as atualizações chegam num calendário como diffs revisados, e uma correção urgente segue o mesmo caminho no mesmo dia."
+      },
+      {
+        "text": "Ele tem razão, e é por isso que a aula fixa só a imagem base",
+        "why": "A aula fixa as duas coisas, e faz rebuild para movê-las."
+      }
+    ]
+  },
+  "ex-t8fdda9n": {
+    "prompt": "Alguém editou o `index.html` dentro do contêiner em execução `shop-web-live`. O que o `docker diff` mostrou depois que o contêiner foi substituído a partir de `shop-web:1.2.0`?",
+    "hint": "O contêiner novo é a imagem de novo.",
+    "choices": [
+      {
+        "text": "O arquivo editado, marcado com `C`",
+        "why": "Isso foi antes da substituição; a edição viveu só no contêiner antigo."
+      },
+      {
+        "text": "Um erro, porque o contêiner tinha sido substituído",
+        "why": "O contêiner novo tem o mesmo nome e se compara sem problema com a imagem."
+      },
+      {
+        "text": "Nada no diretório web",
+        "why": "Isso: a correção manual se perdeu, por desenho, e o `curl` voltou a servir a página da própria imagem."
+      },
+      {
+        "text": "A edição, copiada para a imagem pelo Docker",
+        "why": "O Docker nunca grava as mudanças de um contêiner de volta na imagem a menos que alguém faça commit."
+      }
+    ]
+  },
+  "ex-chj5dd3m": {
+    "prompt": "Quais entradas a Ana fixou para tornar o build reprodutível? Escolha todas as que se aplicam.",
+    "hint": "Dois nomes que se moviam, mais o que já estava no git.",
+    "choices": [
+      {
+        "text": "A imagem base, por digest",
+        "why": "Sim, para que o ponto de partida seja o mesmo conteúdo toda vez."
+      },
+      {
+        "text": "O nginx, pela versão exata do pacote",
+        "why": "Sim, lida do `apt-cache policy` nessa mesma base."
+      },
+      {
+        "text": "O próprio template, pelo commit do git",
+        "why": "Sim; o commit fica registrado no label e no manifest."
+      },
+      {
+        "text": "O id da imagem, escrevendo-o no template",
+        "why": "O id é saída do build, não entrada; não dá para saber antes."
+      },
+      {
+        "text": "A hora do build, para as datas baterem",
+        "why": "As datas continuam diferentes; reprodutível aqui quer dizer o mesmo software, não os mesmos bytes."
+      }
+    ]
+  },
+  "ex-ce8pfm69": {
+    "prompt": "Sai uma atualização de segurança do nginx. Ponha em ordem os passos que a levam à produção.",
+    "hint": "A imagem é construída e conferida antes de o Terraform saber dela.",
+    "items": [
+      "Fazer commit da nova fixação do nginx no template",
+      "Construir a próxima versão com `packer build -var version=…`",
+      "Ligar a imagem e conferir que ela responde",
+      "Mudar `web_version` no `terraform.tfvars` e revisar o plan",
+      "Aplicar, o que cria a instância nova antes de destruir a antiga"
+    ],
+    "trap": "Mudar o `terraform.tfvars` antes de a imagem existir é o deslize comum: a busca pelo nome não acha imagem e o plan falha."
+  },
+  "ex-dsjew863": {
+    "prompt": "Às 2 da manhã um engenheiro conserta uma página quebrada editando-a dentro do servidor web em execução, e o site volta. O que acontece com a correção?",
+    "hint": "De onde vem a próxima máquina?",
+    "choices": [
+      {
+        "text": "Ela fica até alguém rodar `terraform apply` sem mudanças",
+        "why": "Um apply sem mudanças não substitui nada; a correção dura exatamente o tempo dessa máquina."
+      },
+      {
+        "text": "Ela se perde na próxima substituição, a não ser que entre no template",
+        "why": "Certo: uma correção manual é drift, e neste modelo a próxima máquina é a imagem de novo. Ela precisa sair como versão nova."
+      },
+      {
+        "text": "O Packer percebe o drift e o inclui no próximo build",
+        "why": "O Packer constrói a partir do template e de uma imagem base; ele nunca olha máquinas em execução."
+      },
+      {
+        "text": "O Terraform o aponta como drift no próximo plan",
+        "why": "Um arquivo dentro da máquina é invisível para a API da nuvem, como a aula 1 mostrou."
+      }
+    ]
+  },
+  "ex-fdt13c2j": {
+    "prompt": "Um time assa imagens mas deixa toda instância rodar `apt-get upgrade` no boot \"para ficar atualizada\". Qual propriedade da abordagem da aula eles abriram mão?",
+    "hint": "A máquina ainda é exatamente a imagem dela?",
+    "choices": [
+      {
+        "text": "Poder pôr uma versão na tag das imagens",
+        "why": "Eles ainda podem pôr tag; a tag só deixa de descrever o que roda."
+      },
+      {
+        "text": "Usar o Terraform para substituir instâncias",
+        "why": "O Terraform ainda pode substituí-las; cada substituição só roda algo diferente."
+      },
+      {
+        "text": "Rodar o nginx num contêiner",
+        "why": "Com contêiner ou não, a questão é o que muda depois de ligar."
+      },
+      {
+        "text": "Máquinas que são exatamente a sua imagem",
+        "why": "Certo: cada boot agora instala o que aquele dia oferece, então a versão não diz mais o que roda. Correções pertencem a um rebuild."
+      }
+    ]
+  }
+}

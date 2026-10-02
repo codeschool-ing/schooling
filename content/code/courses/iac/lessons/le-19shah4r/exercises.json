@@ -1,0 +1,949 @@
+[
+  {
+    "id": "ex-yx5446mt",
+    "version": 1,
+    "section": "what-a-module-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana runs `terraform plan` in `~/shop`, whose `main.tf` calls `./modules/network`. In the lesson's vocabulary, what is `~/shop`?",
+    "hint": "Which directory is the command run in?",
+    "choices": [
+      {
+        "text": "A workspace that holds two modules",
+        "correct": false,
+        "why": "Workspaces are lesson 11's subject; a directory of `.tf` files is a module whatever else it is."
+      },
+      {
+        "text": "The root module",
+        "correct": true,
+        "why": "Yes. The directory Terraform runs in is the root module, and `modules/network` is the child it calls."
+      },
+      {
+        "text": "A child module of `modules/network`",
+        "correct": false,
+        "why": "The other way round: `~/shop` calls `modules/network`, so `modules/network` is the child."
+      },
+      {
+        "text": "Not a module until somebody publishes it to a registry",
+        "correct": false,
+        "why": "Publishing is optional. Any directory of `.tf` files is a module."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccg6ka63",
+    "version": 1,
+    "section": "what-a-module-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana writes a `module \"shop\"` block with `source = \"./modules/network\"` and runs `terraform plan` before anything else. What happens?",
+    "hint": "A local directory still has to be recorded somewhere.",
+    "choices": [
+      {
+        "text": "It plans three resources from the directory",
+        "correct": false,
+        "why": "It reads it directly only after `init` has recorded where it is, in `modules.json`."
+      },
+      {
+        "text": "It downloads the module from the registry",
+        "correct": false,
+        "why": "A source starting with `./` is a path; the registry is never asked."
+      },
+      {
+        "text": "It plans nothing: the module lacks a provider",
+        "correct": false,
+        "why": "A child module is meant to have no provider block; it uses the root's."
+      },
+      {
+        "text": "It refuses with `Module not installed` until `init` has run",
+        "correct": true,
+        "why": "Right. `terraform init` installs modules as well as providers, even a local one."
+      }
+    ]
+  },
+  {
+    "id": "ex-snrd3sne",
+    "version": 1,
+    "section": "what-a-module-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a `module` block, the one argument that tells Terraform where the child's files are is called ___.",
+    "hint": "A path, a Git URL or a registry address goes in it.",
+    "blanks": [
+      {
+        "accept": [
+          "source"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z9ts9w3q",
+    "version": 1,
+    "section": "writing-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which address does the state give subnet `c` of the call `module \"shop\"`, which uses `./modules/network`?",
+    "hint": "The call's label comes first, then the resource's address inside the module.",
+    "choices": [
+      {
+        "text": "`aws_subnet.this[\"c\"]`",
+        "correct": false,
+        "why": "That is the address inside the module; from the root it carries the call's prefix."
+      },
+      {
+        "text": "`module.network.aws_subnet.this[\"c\"]`",
+        "correct": false,
+        "why": "The directory's name is not in the address; the block's label `shop` is."
+      },
+      {
+        "text": "`module.shop.aws_subnet.this[\"c\"]`",
+        "correct": true,
+        "why": "Yes: `module.`, the call's label, then the resource with its `for_each` key."
+      },
+      {
+        "text": "`modules/network/aws_subnet.c`",
+        "correct": false,
+        "why": "Addresses are built from labels, not paths, and a `for_each` key goes in brackets."
+      }
+    ]
+  },
+  {
+    "id": "ex-2r8a8sef",
+    "version": 1,
+    "section": "writing-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the security group in `web.tf` say `vpc_id = module.shop.vpc_id`?",
+    "hint": "How does a value leave a module?",
+    "choices": [
+      {
+        "text": "So that the security group is created inside the module",
+        "correct": false,
+        "why": "It is declared in the root, so it is created in the root; the reference only reads a value."
+      },
+      {
+        "text": "The output is how the VPC's id reaches the root",
+        "correct": true,
+        "why": "Right. The module publishes `vpc_id`, and the reference also tells Terraform to create the VPC first."
+      },
+      {
+        "text": "Because `aws_vpc.shop.id` looks the VPC up by its Name tag",
+        "correct": false,
+        "why": "No resource called `aws_vpc.shop` exists in the root, and references never search by tag."
+      },
+      {
+        "text": "To make Terraform create the group before the VPC",
+        "correct": false,
+        "why": "The dependency runs the other way: the VPC is created first, because the group needs its id."
+      }
+    ]
+  },
+  {
+    "id": "ex-bgd3g6hv",
+    "version": 1,
+    "section": "writing-one",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each expression from the shop's configuration to what it is.",
+    "hint": "Two are read in the root, two inside the module.",
+    "pairs": [
+      {
+        "left": "`module.shop`",
+        "right": "A call, seen from outside as an object of outputs"
+      },
+      {
+        "left": "`module.shop.vpc_id`",
+        "right": "One output of one call"
+      },
+      {
+        "left": "`var.subnets`",
+        "right": "An input, read inside the module"
+      },
+      {
+        "left": "`each.key`",
+        "right": "The key of the subnet being created"
+      }
+    ],
+    "right_distractors": [
+      "A provider configuration passed in by the caller"
+    ]
+  },
+  {
+    "id": "ex-945ehwq6",
+    "version": 1,
+    "section": "interface",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The root adds an output with `value = module.shop.aws_vpc.this.cidr_block`. What does `terraform plan` answer?",
+    "hint": "From outside, what attributes does a call have?",
+    "choices": [
+      {
+        "text": "It prints the range `10.20.0.0/16`, read from the state",
+        "correct": false,
+        "why": "The resource is in the state, and the root still may not name it."
+      },
+      {
+        "text": "It asks for `terraform init` before going further",
+        "correct": false,
+        "why": "Nothing about the installation changed; the error is about the reference."
+      },
+      {
+        "text": "Unsupported attribute: no attribute named `aws_vpc`",
+        "correct": true,
+        "why": "Yes. A call is an object of its outputs, `vpc_id` and `subnet_ids`, and nothing else."
+      },
+      {
+        "text": "A warning that reading a module's resources is deprecated",
+        "correct": false,
+        "why": "It is an error, not a warning, and it never worked: the boundary is deliberate."
+      }
+    ]
+  },
+  {
+    "id": "ex-kwyx5cvb",
+    "version": 1,
+    "section": "interface",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The analytics call passes `cidr = \"10.30.0.0/33\"`, and the module's variable has a validation rule. Where does the error point?",
+    "hint": "Who made the mistake?",
+    "choices": [
+      {
+        "text": "At line 5 of the caller's file, naming the rule that caught it",
+        "correct": true,
+        "why": "Right: the caller's line, where the fix goes, plus the rule that caught it."
+      },
+      {
+        "text": "At the rule in `modules/network/variables.tf`, and not the caller",
+        "correct": false,
+        "why": "The rule is named, but the error is reported on the caller's line."
+      },
+      {
+        "text": "At the AWS API, which rejects the range during apply",
+        "correct": false,
+        "why": "That is what would happen without the rule; with it, the plan stops first."
+      },
+      {
+        "text": "At the `provider \"aws\"` block of the root",
+        "correct": false,
+        "why": "The provider has nothing to do with a variable's value."
+      }
+    ]
+  },
+  {
+    "id": "ex-31ac31as",
+    "version": 1,
+    "section": "interface",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the lesson show or give as a reason against a `provider` block inside a module? Choose all that apply.",
+    "hint": "Two transcripts and one sentence about regions.",
+    "choices": [
+      {
+        "text": "A call to it refuses `for_each`, `count` and `depends_on`",
+        "correct": true,
+        "why": "Yes: `Module is incompatible with count, for_each, and depends_on`."
+      },
+      {
+        "text": "Deleting its call strands its resources in the state",
+        "correct": true,
+        "why": "Yes: `Provider configuration not present`, because the configuration left with the block."
+      },
+      {
+        "text": "It ties the module to the region written inside it",
+        "correct": true,
+        "why": "Yes; a module that takes its caller's provider works in any region."
+      },
+      {
+        "text": "Terraform refuses to apply such a module at all",
+        "correct": false,
+        "why": "The single call applied and created its bucket; the trouble came later."
+      },
+      {
+        "text": "Its outputs stop reaching the root",
+        "correct": false,
+        "why": "Outputs work the same either way; the provider block changes nothing about them."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ycpezdy",
+    "version": 1,
+    "section": "interface",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes a module `bucket` that wraps one `aws_s3_bucket` and turns each of its arguments into a variable. What does the lesson hold against it?",
+    "hint": "What does the caller get that the resource did not already give?",
+    "choices": [
+      {
+        "text": "S3 buckets need a provider block of their own inside the module",
+        "correct": false,
+        "why": "No resource needs that, and the lesson argues against provider blocks in modules."
+      },
+      {
+        "text": "The state would record the bucket twice, once per name",
+        "correct": false,
+        "why": "The state records one object at one address, `module.….aws_s3_bucket.this`."
+      },
+      {
+        "text": "Terraform refuses modules with fewer than two resources",
+        "correct": false,
+        "why": "Terraform accepts it; the objection is about design, not syntax."
+      },
+      {
+        "text": "It is a second name for one resource, which falls further behind as the provider adds arguments",
+        "correct": true,
+        "why": "Right. It adds indirection and decides nothing, and each new provider argument is missing until a variable is added."
+      }
+    ]
+  },
+  {
+    "id": "ex-sb5bcg51",
+    "version": 1,
+    "section": "sources",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which `source` makes Terraform clone a Git repository and check out the tag `v1.0.0`?",
+    "hint": "Git sources carry the version in the URL.",
+    "choices": [
+      {
+        "text": "`./terraform-aws-network?ref=v1.0.0`",
+        "correct": false,
+        "why": "A leading `./` makes it a local path; Terraform clones nothing."
+      },
+      {
+        "text": "`shop/network/aws`, with `version = \"1.0.0\"`",
+        "correct": false,
+        "why": "That is a registry address; it would ask a registry, not Git."
+      },
+      {
+        "text": "`git::https://git.example.com/shop/terraform-aws-network.git?ref=v1.0.0`",
+        "correct": true,
+        "why": "Yes: `git::` picks Git, and `?ref=` is what Git checks out."
+      },
+      {
+        "text": "`git.example.com/shop/terraform-aws-network.git@v1.0.0`",
+        "correct": false,
+        "why": "`@` is not how Terraform reads a version; the ref goes in `?ref=`."
+      }
+    ]
+  },
+  {
+    "id": "ex-g7kssjcq",
+    "version": 1,
+    "section": "sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana changes both calls from `./modules/network` to the Git repository at `v1.0.0`, which holds the same files, and runs `init`. What does the next plan show?",
+    "hint": "Is where the files came from part of an address?",
+    "choices": [
+      {
+        "text": "Every resource replaced, since the source is part of each address",
+        "correct": false,
+        "why": "Addresses are built from the calls' labels, which did not change."
+      },
+      {
+        "text": "No changes",
+        "correct": true,
+        "why": "Right: `module.shop.…` and `module.analytics.…` are the same addresses as before."
+      },
+      {
+        "text": "Six resources moved to addresses under `.terraform/modules`",
+        "correct": false,
+        "why": "`.terraform/modules` is where the files are cached, not part of any address."
+      },
+      {
+        "text": "Three subnets destroyed and created again",
+        "correct": false,
+        "why": "That was the rename in \"versioning\", not a change of source."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4hhz3f9",
+    "version": 1,
+    "section": "sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana keeps the Git source and adds `version = \"1.0.0\"` to the call. What does `terraform init` do?",
+    "hint": "Which kind of source takes a `version` argument?",
+    "choices": [
+      {
+        "text": "It checks out the tag `v1.0.0`",
+        "correct": false,
+        "why": "The ref does that; `version` makes Terraform expect a registry address."
+      },
+      {
+        "text": "It fails, reading the source as a registry address",
+        "correct": true,
+        "why": "Yes: `Invalid registry module source address`, because `version` applies only to registry modules."
+      },
+      {
+        "text": "It ignores the argument and clones the default branch",
+        "correct": false,
+        "why": "Nothing is cloned; the error comes before any download."
+      },
+      {
+        "text": "It prints a warning and uses `?ref=` instead",
+        "correct": false,
+        "why": "It is an error, and init stops there."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2c4qmkw",
+    "version": 1,
+    "section": "sources",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps in order, from a module in `~/shop/modules/network` to a root that uses it from Git with no changes planned.",
+    "hint": "The plan comes last, and init cannot fetch a tag nobody pushed.",
+    "items": [
+      "Commit the module's files in a repository of their own",
+      "Tag the commit `v1.0.0`",
+      "Push the branch and the tag",
+      "Point both `source` lines at `git::…?ref=v1.0.0`",
+      "Run `terraform init`",
+      "Run `terraform plan` and read `No changes`"
+    ],
+    "trap": "Changing the source before the tag is pushed makes `init` fail to find the ref."
+  },
+  {
+    "id": "ex-50tvbwtf",
+    "version": 1,
+    "section": "sources",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which `?ref=` gives a caller the firmest pin on a Git module, one that a push to the repository cannot change?",
+    "hint": "Which of these names a thing that cannot be pointed somewhere else?",
+    "choices": [
+      {
+        "text": "A tag such as `v1.0.0`",
+        "correct": false,
+        "why": "Tags are meant to stay put, but whoever can push can move one."
+      },
+      {
+        "text": "`main`",
+        "correct": false,
+        "why": "A branch moves on every push: a different module on a different day."
+      },
+      {
+        "text": "A branch named after the release, such as `release-1.0`",
+        "correct": false,
+        "why": "Its name says 1.0, and it still moves when somebody pushes to it."
+      },
+      {
+        "text": "A full commit hash",
+        "correct": true,
+        "why": "Yes. A commit's hash is its content; the cost is a source line nobody reads at a glance."
+      }
+    ]
+  },
+  {
+    "id": "ex-8aj0vzc9",
+    "version": 1,
+    "section": "versioning",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the `rename` branch, with no `moved` block, how many resources did the caller's plan destroy?",
+    "hint": "Count the subnets in both networks.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-hkxbzjsk",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The module renames `aws_subnet.this` to `aws_subnet.private` and ships a `moved` block with it. Which part of the version number should go up?",
+    "hint": "What does a caller's plan show after upgrading?",
+    "choices": [
+      {
+        "text": "MAJOR, because a resource address changed",
+        "correct": false,
+        "why": "An address change is breaking when nothing carries the objects across; the `moved` block does."
+      },
+      {
+        "text": "PATCH, because no variable or output changed",
+        "correct": false,
+        "why": "A patch fixes something; this restructures the module, which is more than a fix."
+      },
+      {
+        "text": "MINOR",
+        "correct": true,
+        "why": "Right: the plan was 0 to add, 0 to destroy, and the module gained a new arrangement callers may ignore."
+      },
+      {
+        "text": "No release at all; a `moved` block lives in the caller's root",
+        "correct": false,
+        "why": "It lives in the module, written once by the author, which is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-264bbtct",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could Ana not ship a `moved` block to soften the rename of the variable `cidr` to `cidr_block`?",
+    "hint": "Where is the old name written?",
+    "choices": [
+      {
+        "text": "Callers write the argument's name in their own files, which no state mapping reaches",
+        "correct": true,
+        "why": "Yes. `moved` maps addresses in the state; a variable's name is in the callers' code."
+      },
+      {
+        "text": "`moved` blocks belong in root modules",
+        "correct": false,
+        "why": "The `v1.1.0` block was in the child module and worked."
+      },
+      {
+        "text": "`init` renames callers' arguments itself",
+        "correct": false,
+        "why": "It does not; init stopped with `Unsupported argument`."
+      },
+      {
+        "text": "A variable rename is a patch change",
+        "correct": false,
+        "why": "It broke both calls, which is the definition of a major change."
+      }
+    ]
+  },
+  {
+    "id": "ex-hffxsbqn",
+    "version": 1,
+    "section": "versioning",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these changes to a published module call for a new MAJOR version? Choose all that apply.",
+    "hint": "Would some caller have to edit code, or get a plan they did not ask for?",
+    "choices": [
+      {
+        "text": "Renaming an output",
+        "correct": true,
+        "why": "Yes; every reference to the old name fails."
+      },
+      {
+        "text": "Adding a variable with no default",
+        "correct": true,
+        "why": "Yes; every existing call is missing a required argument."
+      },
+      {
+        "text": "Renaming a resource without a `moved` block",
+        "correct": true,
+        "why": "Yes; callers' plans destroy and recreate it."
+      },
+      {
+        "text": "Adding an optional variable whose default changes nothing",
+        "correct": false,
+        "why": "Callers may ignore it: a minor version."
+      },
+      {
+        "text": "Fixing a typo in a variable's description",
+        "correct": false,
+        "why": "Nothing a caller sees changes: a patch."
+      }
+    ]
+  },
+  {
+    "id": "ex-eywe9f1p",
+    "version": 1,
+    "section": "versioning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After Ana tagged `v2.0.0`, what did a caller still passing `cidr` see?",
+    "hint": "It came before any plan.",
+    "choices": [
+      {
+        "text": "A plan that replaced both VPCs",
+        "correct": false,
+        "why": "There was no plan: the configuration did not get past `init`."
+      },
+      {
+        "text": "A deprecation warning, with `cidr` still accepted for now",
+        "correct": false,
+        "why": "The module kept no alias for the old name, so nothing accepted it."
+      },
+      {
+        "text": "Nothing until the apply, which AWS rejected",
+        "correct": false,
+        "why": "The error was local and early; AWS was never asked."
+      },
+      {
+        "text": "`Unsupported argument` at `terraform init`",
+        "correct": true,
+        "why": "Right: loud, early, and pointing at the line to edit."
+      }
+    ]
+  },
+  {
+    "id": "ex-4dpjat3a",
+    "version": 1,
+    "section": "the-registry",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `source = \"terraform-aws-modules/vpc/aws\"`, what is `aws`?",
+    "hint": "NAMESPACE/NAME/PROVIDER.",
+    "choices": [
+      {
+        "text": "The publisher's namespace on the registry",
+        "correct": false,
+        "why": "That is the first part, `terraform-aws-modules`."
+      },
+      {
+        "text": "The provider it is written for",
+        "correct": true,
+        "why": "Yes: the third part names the provider."
+      },
+      {
+        "text": "The module's own name",
+        "correct": false,
+        "why": "That is the second part, `vpc`."
+      },
+      {
+        "text": "The host of a private registry",
+        "correct": false,
+        "why": "A host goes in front, as a fourth part, as in `app.terraform.io/…`."
+      }
+    ]
+  },
+  {
+    "id": "ex-9kkwqwzy",
+    "version": 1,
+    "section": "the-registry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `terraform init` fail for the registry module in this lesson?",
+    "hint": "Read the last line of the error.",
+    "choices": [
+      {
+        "text": "`~> 6.0` matched no version the registry lists",
+        "correct": false,
+        "why": "The versions were never listed: the first request did not get out."
+      },
+      {
+        "text": "Registry modules need a `git::` prefix in the source",
+        "correct": false,
+        "why": "`git::` is for Git sources; a registry address has none."
+      },
+      {
+        "text": "The lab has no network, so the registry's name did not resolve",
+        "correct": true,
+        "why": "Right: the discovery request for `/.well-known/terraform.json` never left the laptop."
+      },
+      {
+        "text": "The module needs a provider block of its own",
+        "correct": false,
+        "why": "Nothing about the module was read; it was never downloaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-29ycvteh",
+    "version": 1,
+    "section": "the-registry",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team calls a public module with `version = \"~> 5.0\"` and commits `.terraform.lock.hcl`. Why can two pipelines still run two versions of the module?",
+    "hint": "What does the lock file record?",
+    "choices": [
+      {
+        "text": "The lock file records providers and not modules",
+        "correct": true,
+        "why": "Yes. Each fresh `init` resolves the range again and takes the newest version inside it."
+      },
+      {
+        "text": "Pipelines ignore the lock file unless `-upgrade` is passed",
+        "correct": false,
+        "why": "`-upgrade` is what makes init move past the lock file, not what makes it read it."
+      },
+      {
+        "text": "`~>` picks a random version inside the range",
+        "correct": false,
+        "why": "It picks the newest; the newest is what moves when a release comes out."
+      },
+      {
+        "text": "The registry serves a different version to each region",
+        "correct": false,
+        "why": "Regions are an AWS idea; the registry lists the same versions to everyone."
+      }
+    ]
+  },
+  {
+    "id": "ex-2y140s9y",
+    "version": 1,
+    "section": "the-registry",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A registry address with a host name in front, such as `app.terraform.io/shop/network/aws`, points at a ___ registry, like the one HCP Terraform gives an organisation.",
+    "hint": "The public one is at `registry.terraform.io`; this is the other kind.",
+    "blanks": [
+      {
+        "accept": [
+          "private"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cxa4w5p5",
+    "version": 1,
+    "section": "the-registry",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before a third-party module goes into a configuration, which steps does the lesson recommend? Choose all that apply.",
+    "hint": "It runs as you.",
+    "choices": [
+      {
+        "text": "List the resources and data sources it declares",
+        "correct": true,
+        "why": "Yes; that is what it will create or read with your credentials."
+      },
+      {
+        "text": "Look for provisioners and `external` or `http` data sources",
+        "correct": true,
+        "why": "Yes; those let a module run programs or fetch URLs."
+      },
+      {
+        "text": "Pin an exact version and upgrade by changing the line",
+        "correct": true,
+        "why": "Yes; the plan after the change is the review."
+      },
+      {
+        "text": "Trust it once its download count is high",
+        "correct": false,
+        "why": "Popularity says nothing about what the next version does."
+      },
+      {
+        "text": "Add a provider block inside it, to keep it to one region",
+        "correct": false,
+        "why": "That is the shape \"interface\" warns against."
+      }
+    ]
+  },
+  {
+    "id": "ex-1713n0qs",
+    "version": 1,
+    "section": "layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the module's `versions.tf` ask for the AWS provider `>= 6.0` rather than `= 6.67.0`?",
+    "hint": "Terraform chooses one provider version for the whole configuration.",
+    "choices": [
+      {
+        "text": "Because `>=` makes init download the newest provider on each run",
+        "correct": false,
+        "why": "The root's lock file keeps the version until somebody upgrades it."
+      },
+      {
+        "text": "An exact pin would clash with any other module in the configuration that pins a different version",
+        "correct": true,
+        "why": "Right. The module states its floor and the root, with its lock file, picks the version."
+      },
+      {
+        "text": "Because the registry rejects modules with exact provider versions",
+        "correct": false,
+        "why": "The objection is about callers combining modules, not about the registry."
+      },
+      {
+        "text": "Because `required_providers` is ignored inside a child module",
+        "correct": false,
+        "why": "It is read and intersected with every other constraint."
+      }
+    ]
+  },
+  {
+    "id": "ex-v572vbzh",
+    "version": 1,
+    "section": "layout",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `examples/basic` in the module's repository?",
+    "hint": "Look at its `source`.",
+    "choices": [
+      {
+        "text": "A child module that `main.tf` calls",
+        "correct": false,
+        "why": "Nothing in the module calls it; it calls the module."
+      },
+      {
+        "text": "Documentation the registry generates from `variables.tf`",
+        "correct": false,
+        "why": "It is written by hand, and it runs."
+      },
+      {
+        "text": "A root module calling `../..`",
+        "correct": true,
+        "why": "Yes: documentation that runs, with its own provider block, and that `validate` can check."
+      },
+      {
+        "text": "The state the module's tests start from",
+        "correct": false,
+        "why": "There is no state in it, only a configuration."
+      }
+    ]
+  },
+  {
+    "id": "ex-50jwfvkj",
+    "version": 1,
+    "section": "layout",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each file of the module's repository to its job.",
+    "hint": "One description fits no file of a module.",
+    "pairs": [
+      {
+        "left": "`README.md`",
+        "right": "How to call it"
+      },
+      {
+        "left": "`versions.tf`",
+        "right": "The lowest Terraform and provider versions it works with"
+      },
+      {
+        "left": "`moved.tf`",
+        "right": "Addresses carried across a rename"
+      },
+      {
+        "left": "`CHANGELOG.md`",
+        "right": "What changed in each tag, and what to do about it"
+      }
+    ],
+    "right_distractors": [
+      "The provider configuration for the region"
+    ]
+  },
+  {
+    "id": "ex-fz99m4ze",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The analytics team is on `v1.0.0` and skips `v1.1.0`, going straight to `v2.0.0` and renaming `cidr` in their call. What does their plan do to the subnets?",
+    "hint": "Which file did `v2.0.0` inherit from `v1.1.0`?",
+    "choices": [
+      {
+        "text": "They move to `aws_subnet.private`, with nothing destroyed",
+        "correct": true,
+        "why": "Right. `moved.tf` is still in `v2.0.0`, which is why it stays until a later major version."
+      },
+      {
+        "text": "Destroyed and recreated, because the `moved` block belonged to `v1.1.0` alone",
+        "correct": false,
+        "why": "A tag is a snapshot of the whole repository, and `moved.tf` was not deleted."
+      },
+      {
+        "text": "`init` refuses until they upgrade to `v1.1.0` first",
+        "correct": false,
+        "why": "Terraform knows nothing of the order of tags; it installs the one asked for."
+      },
+      {
+        "text": "They keep the address `aws_subnet.this`",
+        "correct": false,
+        "why": "The module's code says `private` from `v1.1.0` on."
+      }
+    ]
+  },
+  {
+    "id": "ex-8va1e3yd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's network module is called by twenty configurations. She wants `aws_vpc.this` to become `aws_vpc.main`. Which release lets every caller upgrade without editing their own files and without a replacement?",
+    "hint": "Who writes the `moved` block, and where?",
+    "choices": [
+      {
+        "text": "A major version, after which each caller runs `terraform state mv`",
+        "correct": false,
+        "why": "That works, and it is twenty manual state edits that the module could have saved."
+      },
+      {
+        "text": "A patch, since callers never see resource addresses",
+        "correct": false,
+        "why": "Their states record those addresses; without help their plans replace the VPC."
+      },
+      {
+        "text": "A minor version, with a `moved` block in the module",
+        "correct": true,
+        "why": "Yes: written once by the author, it plans 0 to add and 0 to destroy for every caller."
+      },
+      {
+        "text": "A minor version, with a `moved` block added to each caller's root",
+        "correct": false,
+        "why": "That would work too, and it is twenty edits to the callers' own files."
+      }
+    ]
+  },
+  {
+    "id": "ex-ah9j3rja",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A caller's `terraform plan` stops with `Module source has changed`. What happened since their last `init`?",
+    "hint": "Compare the `source` line with `modules.json`.",
+    "choices": [
+      {
+        "text": "Somebody edited a `source` line, perhaps only its `?ref=`",
+        "correct": true,
+        "why": "Right: the installed copy no longer matches the source asked for, so `init` has to run again."
+      },
+      {
+        "text": "The module's author pushed a new commit to the tag's branch",
+        "correct": false,
+        "why": "Terraform does not look at the remote during a plan; it compares the line with its own record."
+      },
+      {
+        "text": "The module renamed a resource without a `moved` block",
+        "correct": false,
+        "why": "That shows up as destroy and create in a plan, once one can run."
+      },
+      {
+        "text": "The lock file lost the module's checksum",
+        "correct": false,
+        "why": "The lock file records providers, not modules."
+      }
+    ]
+  }
+]

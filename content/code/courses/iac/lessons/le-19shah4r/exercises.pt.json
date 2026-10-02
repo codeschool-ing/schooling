@@ -1,0 +1,654 @@
+{
+  "ex-yx5446mt": {
+    "prompt": "A Ana roda `terraform plan` em `~/shop`, cujo `main.tf` chama `./modules/network`. No vocabulário da aula, o que é `~/shop`?",
+    "hint": "Em qual diretório o comando roda?",
+    "choices": [
+      {
+        "text": "Um workspace que guarda dois módulos",
+        "why": "Workspaces são assunto da aula 11; um diretório de arquivos `.tf` é um módulo, seja lá o que mais for."
+      },
+      {
+        "text": "O root module",
+        "why": "Isso. O diretório em que o Terraform roda é o root module, e `modules/network` é o filho que ele chama."
+      },
+      {
+        "text": "Um child module de `modules/network`",
+        "why": "Ao contrário: `~/shop` chama `modules/network`, então o filho é `modules/network`."
+      },
+      {
+        "text": "Não é um módulo até alguém publicá-lo num registry",
+        "why": "Publicar é opcional. Qualquer diretório de arquivos `.tf` é um módulo."
+      }
+    ]
+  },
+  "ex-ccg6ka63": {
+    "prompt": "A Ana escreve um bloco `module \"shop\"` com `source = \"./modules/network\"` e roda `terraform plan` antes de qualquer outra coisa. O que acontece?",
+    "hint": "Um diretório local ainda precisa ser anotado em algum lugar.",
+    "choices": [
+      {
+        "text": "Planeja três recursos a partir do diretório",
+        "why": "Ele só lê direto depois que o `init` anotou onde o diretório está, no `modules.json`."
+      },
+      {
+        "text": "Baixa o módulo do registry público",
+        "why": "Um source que começa com `./` é um caminho; o registry nunca é consultado."
+      },
+      {
+        "text": "Não planeja nada: falta um provider no módulo",
+        "why": "Um child module não deve ter bloco provider mesmo; ele usa o do root."
+      },
+      {
+        "text": "Recusa com `Module not installed` até o `init` ter rodado",
+        "why": "Certo. O `terraform init` instala módulos além de providers, até um local."
+      }
+    ]
+  },
+  "ex-snrd3sne": {
+    "prompt": "Dentro de um bloco `module`, o argumento que diz ao Terraform onde estão os arquivos do filho se chama ___.",
+    "hint": "Nele vai um caminho, uma URL Git ou um endereço de registry.",
+    "blanks": [
+      {
+        "accept": [
+          "source"
+        ]
+      }
+    ]
+  },
+  "ex-z9ts9w3q": {
+    "prompt": "Que endereço o state dá à sub-rede `c` da chamada `module \"shop\"`, que usa `./modules/network`?",
+    "hint": "O rótulo da chamada vem primeiro, depois o endereço do recurso dentro do módulo.",
+    "choices": [
+      {
+        "text": "`aws_subnet.this[\"c\"]`",
+        "why": "Esse é o endereço dentro do módulo; visto do root ele leva o prefixo da chamada."
+      },
+      {
+        "text": "`module.network.aws_subnet.this[\"c\"]`",
+        "why": "O nome do diretório não entra no endereço; o rótulo `shop` do bloco entra."
+      },
+      {
+        "text": "`module.shop.aws_subnet.this[\"c\"]`",
+        "why": "Isso: `module.`, o rótulo da chamada, depois o recurso com a key do `for_each`."
+      },
+      {
+        "text": "`modules/network/aws_subnet.c`",
+        "why": "Endereços são feitos de rótulos, não de caminhos, e uma key de `for_each` vai entre colchetes."
+      }
+    ]
+  },
+  "ex-2r8a8sef": {
+    "prompt": "Por que o security group em `web.tf` diz `vpc_id = module.shop.vpc_id`?",
+    "hint": "Como um valor sai de um módulo?",
+    "choices": [
+      {
+        "text": "Para que o security group seja criado dentro do módulo",
+        "why": "Ele é declarado no root, então é criado no root; a referência só lê um valor."
+      },
+      {
+        "text": "O output é como o id da VPC chega ao root",
+        "why": "Certo. O módulo publica `vpc_id`, e a referência também diz ao Terraform para criar a VPC antes."
+      },
+      {
+        "text": "Porque `aws_vpc.shop.id` procura a VPC pela tag Name",
+        "why": "Não existe recurso `aws_vpc.shop` no root, e referências não buscam por tag."
+      },
+      {
+        "text": "Para o Terraform criar o grupo antes da VPC",
+        "why": "A dependência é ao contrário: a VPC vem primeiro, porque o grupo precisa do id dela."
+      }
+    ]
+  },
+  "ex-bgd3g6hv": {
+    "prompt": "Associe cada expressão da configuração da loja ao que ela é.",
+    "hint": "Duas são lidas no root, duas dentro do módulo.",
+    "pairs": [
+      {
+        "left": "`module.shop`",
+        "right": "Uma chamada, vista de fora como um objeto de outputs"
+      },
+      {
+        "left": "`module.shop.vpc_id`",
+        "right": "Um output de uma chamada"
+      },
+      {
+        "left": "`var.subnets`",
+        "right": "Uma entrada, lida dentro do módulo"
+      },
+      {
+        "left": "`each.key`",
+        "right": "A key da sub-rede sendo criada"
+      }
+    ],
+    "right_distractors": [
+      "Uma configuração de provider passada por quem chama"
+    ]
+  },
+  "ex-945ehwq6": {
+    "prompt": "O root acrescenta um output com `value = module.shop.aws_vpc.this.cidr_block`. O que o `terraform plan` responde?",
+    "hint": "Vista de fora, que atributos uma chamada tem?",
+    "choices": [
+      {
+        "text": "Imprime a faixa `10.20.0.0/16`, lida do state",
+        "why": "O recurso está no state, e mesmo assim o root não pode nomeá-lo."
+      },
+      {
+        "text": "Pede um `terraform init` antes de continuar",
+        "why": "Nada na instalação mudou; o erro é sobre a referência."
+      },
+      {
+        "text": "Unsupported attribute: não há `aws_vpc`",
+        "why": "Isso. Uma chamada é um objeto com os seus outputs, `vpc_id` e `subnet_ids`, e mais nada."
+      },
+      {
+        "text": "Um aviso de que ler recursos de um módulo é obsoleto",
+        "why": "É um erro, não um aviso, e isso nunca funcionou: a fronteira é proposital."
+      }
+    ]
+  },
+  "ex-kwyx5cvb": {
+    "prompt": "A chamada de analytics passa `cidr = \"10.30.0.0/33\"`, e a variável do módulo tem uma regra de validação. Para onde o erro aponta?",
+    "hint": "Quem errou?",
+    "choices": [
+      {
+        "text": "Para a linha 5 do arquivo de quem chama, nomeando a regra que o pegou",
+        "why": "Certo: a linha de quem chama, onde vai a correção, mais a regra que pegou."
+      },
+      {
+        "text": "Para a regra em `modules/network/variables.tf`, e não para quem chama",
+        "why": "A regra é nomeada, mas o erro aparece na linha de quem chama."
+      },
+      {
+        "text": "Para a API da AWS, que recusa a faixa no apply",
+        "why": "Isso é o que aconteceria sem a regra; com ela, o plan para antes."
+      },
+      {
+        "text": "Para o bloco `provider \"aws\"` do root",
+        "why": "O provider não tem nada a ver com o valor de uma variável."
+      }
+    ]
+  },
+  "ex-31ac31as": {
+    "prompt": "Quais destes a aula mostra ou dá como motivo contra um bloco `provider` dentro de um módulo? Escolha todos os que se aplicam.",
+    "hint": "Duas transcrições e uma frase sobre regiões.",
+    "choices": [
+      {
+        "text": "Uma chamada a ele recusa `for_each`, `count` e `depends_on`",
+        "why": "Sim: `Module is incompatible with count, for_each, and depends_on`."
+      },
+      {
+        "text": "Apagar a chamada deixa os recursos dele presos no state",
+        "why": "Sim: `Provider configuration not present`, porque a configuração foi embora com o bloco."
+      },
+      {
+        "text": "Prende o módulo à região escrita dentro dele",
+        "why": "Sim; um módulo que usa o provider de quem chama funciona em qualquer região."
+      },
+      {
+        "text": "O Terraform se recusa a aplicar um módulo assim",
+        "why": "A chamada única aplicou e criou o bucket; o problema veio depois."
+      },
+      {
+        "text": "Os outputs dele deixam de chegar ao root",
+        "why": "Outputs funcionam igual nos dois casos; o bloco provider não muda nada neles."
+      }
+    ]
+  },
+  "ex-8ycpezdy": {
+    "prompt": "Um colega propõe um módulo `bucket` que embrulha um único `aws_s3_bucket` e transforma cada argumento dele numa variável. O que a aula tem contra isso?",
+    "hint": "O que quem chama ganha que o recurso já não dava?",
+    "choices": [
+      {
+        "text": "Buckets S3 precisam de um bloco provider próprio dentro do módulo",
+        "why": "Nenhum recurso precisa disso, e a aula argumenta contra blocos provider em módulos."
+      },
+      {
+        "text": "O state registraria o bucket duas vezes, uma por nome",
+        "why": "O state registra um objeto num endereço, `module.….aws_s3_bucket.this`."
+      },
+      {
+        "text": "O Terraform recusa módulos com menos de dois recursos",
+        "why": "O Terraform aceita; a objeção é de projeto, não de sintaxe."
+      },
+      {
+        "text": "É um segundo nome para um recurso, que fica para trás conforme o provider ganha argumentos",
+        "why": "Certo. Acrescenta uma camada e não decide nada, e cada argumento novo do provider fica faltando até alguém criar uma variável."
+      }
+    ]
+  },
+  "ex-sb5bcg51": {
+    "prompt": "Qual `source` faz o Terraform clonar um repositório Git e fazer checkout da tag `v1.0.0`?",
+    "hint": "Sources Git levam a versão na URL.",
+    "choices": [
+      {
+        "text": "`./terraform-aws-network?ref=v1.0.0`",
+        "why": "Um `./` no começo faz dele um caminho local; o Terraform não clona nada."
+      },
+      {
+        "text": "`shop/network/aws`, com `version = \"1.0.0\"`",
+        "why": "Isso é um endereço de registry; ele perguntaria a um registry, não ao Git."
+      },
+      {
+        "text": "`git::https://git.example.com/shop/terraform-aws-network.git?ref=v1.0.0`",
+        "why": "Isso: `git::` escolhe o Git, e `?ref=` é o que o Git faz checkout."
+      },
+      {
+        "text": "`git.example.com/shop/terraform-aws-network.git@v1.0.0`",
+        "why": "`@` não é como o Terraform lê uma versão; o ref vai em `?ref=`."
+      }
+    ]
+  },
+  "ex-g7kssjcq": {
+    "prompt": "A Ana troca as duas chamadas de `./modules/network` para o repositório Git em `v1.0.0`, que tem os mesmos arquivos, e roda o `init`. O que o plan seguinte mostra?",
+    "hint": "De onde vieram os arquivos faz parte de um endereço?",
+    "choices": [
+      {
+        "text": "Todos os recursos substituídos, já que o source faz parte de cada endereço",
+        "why": "Endereços são feitos dos rótulos das chamadas, que não mudaram."
+      },
+      {
+        "text": "Nenhuma mudança",
+        "why": "Certo: `module.shop.…` e `module.analytics.…` são os mesmos endereços de antes."
+      },
+      {
+        "text": "Seis recursos movidos para endereços sob `.terraform/modules`",
+        "why": "`.terraform/modules` é onde os arquivos ficam em cache, não parte de endereço algum."
+      },
+      {
+        "text": "Três sub-redes destruídas e criadas de novo",
+        "why": "Isso foi a renomeação em \"versioning\", não uma troca de source."
+      }
+    ]
+  },
+  "ex-d4hhz3f9": {
+    "prompt": "A Ana mantém o source Git e acrescenta `version = \"1.0.0\"` à chamada. O que o `terraform init` faz?",
+    "hint": "Que tipo de source aceita um argumento `version`?",
+    "choices": [
+      {
+        "text": "Faz checkout da tag `v1.0.0`",
+        "why": "Isso é trabalho do ref; o `version` faz o Terraform esperar um endereço de registry."
+      },
+      {
+        "text": "Falha, lendo o source como endereço de registry",
+        "why": "Isso: `Invalid registry module source address`, porque `version` vale só para módulos de registry."
+      },
+      {
+        "text": "Ignora o argumento e clona o branch padrão do repositório",
+        "why": "Nada é clonado; o erro vem antes de qualquer download."
+      },
+      {
+        "text": "Imprime um aviso e usa o `?ref=` no lugar",
+        "why": "É um erro, e o init para ali."
+      }
+    ]
+  },
+  "ex-k2c4qmkw": {
+    "prompt": "Ponha os passos em ordem, de um módulo em `~/shop/modules/network` até um root que o usa do Git sem mudanças planejadas.",
+    "hint": "O plan vem por último, e o init não consegue buscar uma tag que ninguém enviou.",
+    "items": [
+      "Commitar os arquivos do módulo num repositório próprio",
+      "Marcar o commit com a tag `v1.0.0`",
+      "Fazer push do branch e da tag",
+      "Apontar as duas linhas `source` para `git::…?ref=v1.0.0`",
+      "Rodar `terraform init`",
+      "Rodar `terraform plan` e ler `No changes`"
+    ],
+    "trap": "Trocar o source antes de enviar a tag faz o `init` não encontrar o ref."
+  },
+  "ex-50tvbwtf": {
+    "prompt": "Qual `?ref=` dá a quem chama a fixação mais firme num módulo Git, uma que um push no repositório não consegue mudar?",
+    "hint": "Qual destes nomeia algo que não pode ser apontado para outro lugar?",
+    "choices": [
+      {
+        "text": "Uma tag como `v1.0.0`",
+        "why": "Tags foram feitas para ficar paradas, mas quem pode fazer push pode movê-las."
+      },
+      {
+        "text": "`main`",
+        "why": "Um branch anda a cada push: um módulo diferente em dias diferentes."
+      },
+      {
+        "text": "Um branch com o nome da versão, como `release-1.0`",
+        "why": "O nome diz 1.0, e mesmo assim ele anda quando alguém faz push."
+      },
+      {
+        "text": "Um hash de commit completo",
+        "why": "Isso. O hash de um commit é o conteúdo dele; o custo é uma linha source que ninguém lê de relance."
+      }
+    ]
+  },
+  "ex-8aj0vzc9": {
+    "prompt": "No branch `rename`, sem bloco `moved`, quantos recursos o plan de quem chama destruía?",
+    "hint": "Conte as sub-redes das duas redes.",
+    "unit": "recursos"
+  },
+  "ex-hkxbzjsk": {
+    "prompt": "O módulo renomeia `aws_subnet.this` para `aws_subnet.private` e entrega um bloco `moved` junto. Qual parte do número de versão deve subir?",
+    "hint": "O que o plan de quem chama mostra depois de atualizar?",
+    "choices": [
+      {
+        "text": "MAJOR, porque o endereço de um recurso mudou",
+        "why": "Uma mudança de endereço quebra quando nada leva os objetos junto; o bloco `moved` leva."
+      },
+      {
+        "text": "PATCH, porque nenhuma variável ou output mudou",
+        "why": "Um patch conserta algo; isto reorganiza o módulo, o que é mais que um conserto."
+      },
+      {
+        "text": "MINOR",
+        "why": "Certo: o plan deu 0 to add, 0 to destroy, e o módulo ganhou uma organização nova que quem chama pode ignorar."
+      },
+      {
+        "text": "Nenhuma versão; um bloco `moved` fica no root de quem chama",
+        "why": "Ele fica no módulo, escrito uma vez pelo autor, e é esse o ponto."
+      }
+    ]
+  },
+  "ex-264bbtct": {
+    "prompt": "Por que a Ana não podia entregar um bloco `moved` para suavizar a renomeação da variável `cidr` para `cidr_block`?",
+    "hint": "Onde o nome antigo está escrito?",
+    "choices": [
+      {
+        "text": "Quem chama escreve o nome do argumento nos próprios arquivos, onde nenhum mapeamento de state chega",
+        "why": "Isso. `moved` mapeia endereços no state; o nome de uma variável está no código de quem chama."
+      },
+      {
+        "text": "Blocos `moved` são coisa de root module",
+        "why": "O bloco da `v1.1.0` estava no child module e funcionou."
+      },
+      {
+        "text": "O `init` renomeia sozinho os argumentos",
+        "why": "Não renomeia; o init parou com `Unsupported argument`."
+      },
+      {
+        "text": "Renomear variável é mudança de patch",
+        "why": "Quebrou as duas chamadas, que é a definição de uma mudança major."
+      }
+    ]
+  },
+  "ex-hffxsbqn": {
+    "prompt": "Quais destas mudanças num módulo publicado pedem uma nova versão MAJOR? Escolha todas as que se aplicam.",
+    "hint": "Alguém que chama teria de editar código, ou receberia um plan que não pediu?",
+    "choices": [
+      {
+        "text": "Renomear um output",
+        "why": "Sim; toda referência ao nome antigo falha."
+      },
+      {
+        "text": "Acrescentar uma variável sem default",
+        "why": "Sim; toda chamada existente fica sem um argumento obrigatório."
+      },
+      {
+        "text": "Renomear um recurso sem bloco `moved`",
+        "why": "Sim; o plan de quem chama o destrói e recria."
+      },
+      {
+        "text": "Acrescentar uma variável opcional cujo default não muda nada",
+        "why": "Quem chama pode ignorá-la: uma versão minor."
+      },
+      {
+        "text": "Corrigir um erro de digitação na descrição de uma variável",
+        "why": "Nada que quem chama vê muda: um patch."
+      }
+    ]
+  },
+  "ex-eywe9f1p": {
+    "prompt": "Depois que a Ana marcou a `v2.0.0`, o que viu quem ainda passava `cidr`?",
+    "hint": "Veio antes de qualquer plan.",
+    "choices": [
+      {
+        "text": "Um plan que substituía as duas VPCs",
+        "why": "Não houve plan: a configuração não passou do `init`."
+      },
+      {
+        "text": "Um aviso de obsolescência, com `cidr` ainda aceito por enquanto",
+        "why": "O módulo não manteve um apelido para o nome antigo, então nada o aceitava."
+      },
+      {
+        "text": "Nada até o apply, que a AWS recusou",
+        "why": "O erro foi local e cedo; a AWS nem foi consultada."
+      },
+      {
+        "text": "`Unsupported argument` no `terraform init`",
+        "why": "Certo: barulhento, cedo, e apontando a linha a editar."
+      }
+    ]
+  },
+  "ex-4dpjat3a": {
+    "prompt": "Em `source = \"terraform-aws-modules/vpc/aws\"`, o que é `aws`?",
+    "hint": "NAMESPACE/NAME/PROVIDER.",
+    "choices": [
+      {
+        "text": "O namespace de quem publica no registry",
+        "why": "Essa é a primeira parte, `terraform-aws-modules`."
+      },
+      {
+        "text": "O provider para o qual ele foi escrito",
+        "why": "Isso: a terceira parte nomeia o provider."
+      },
+      {
+        "text": "O nome do próprio módulo",
+        "why": "Essa é a segunda parte, `vpc`."
+      },
+      {
+        "text": "O host de um registry privado",
+        "why": "Um host vai na frente, como quarta parte, como em `app.terraform.io/…`."
+      }
+    ]
+  },
+  "ex-9kkwqwzy": {
+    "prompt": "Por que o `terraform init` falhou para o módulo do registry nesta aula?",
+    "hint": "Leia a última linha do erro.",
+    "choices": [
+      {
+        "text": "`~> 6.0` não bateu com nenhuma versão listada no registry",
+        "why": "As versões nem chegaram a ser listadas: o primeiro pedido não saiu."
+      },
+      {
+        "text": "Módulos de registry precisam de um prefixo `git::` no source",
+        "why": "`git::` é para sources Git; um endereço de registry não tem."
+      },
+      {
+        "text": "O laboratório não tem rede, então o nome do registry não resolveu",
+        "why": "Certo: o pedido de descoberta do `/.well-known/terraform.json` nunca saiu do laptop."
+      },
+      {
+        "text": "O módulo precisa de um bloco provider próprio",
+        "why": "Nada do módulo foi lido; ele nem foi baixado."
+      }
+    ]
+  },
+  "ex-29ycvteh": {
+    "prompt": "Um time chama um módulo público com `version = \"~> 5.0\"` e commita o `.terraform.lock.hcl`. Por que dois pipelines ainda rodam duas versões do módulo?",
+    "hint": "O que o lock file registra?",
+    "choices": [
+      {
+        "text": "O lock file registra providers e não módulos",
+        "why": "Isso. Cada `init` do zero resolve a faixa de novo e pega a versão mais nova dentro dela."
+      },
+      {
+        "text": "Pipelines ignoram o lock file se `-upgrade` não for passado",
+        "why": "O `-upgrade` é o que faz o init passar por cima do lock file, não o que o faz lê-lo."
+      },
+      {
+        "text": "`~>` escolhe uma versão aleatória dentro da faixa",
+        "why": "Escolhe a mais nova; a mais nova é o que muda quando sai uma versão."
+      },
+      {
+        "text": "O registry entrega uma versão diferente para cada região",
+        "why": "Regiões são uma ideia da AWS; o registry lista as mesmas versões para todos."
+      }
+    ]
+  },
+  "ex-2y140s9y": {
+    "prompt": "Um endereço de registry com um nome de host na frente, como `app.terraform.io/shop/network/aws`, aponta para um registry ___, como o que o HCP Terraform dá a uma organização.",
+    "hint": "O público fica em `registry.terraform.io`; este é o outro tipo.",
+    "blanks": [
+      {
+        "accept": [
+          "privado"
+        ]
+      }
+    ]
+  },
+  "ex-cxa4w5p5": {
+    "prompt": "Antes de um módulo de terceiros entrar numa configuração, quais passos a aula recomenda? Escolha todos os que se aplicam.",
+    "hint": "Ele roda como você.",
+    "choices": [
+      {
+        "text": "Listar os recursos e data sources que ele declara",
+        "why": "Sim; é o que ele vai criar ou ler com as suas credenciais."
+      },
+      {
+        "text": "Procurar provisioners e data sources `external` ou `http`",
+        "why": "Sim; eles deixam um módulo rodar programas ou buscar URLs."
+      },
+      {
+        "text": "Fixar uma versão exata e atualizar mudando a linha",
+        "why": "Sim; o plan depois da mudança é a revisão."
+      },
+      {
+        "text": "Confiar nele quando o número de downloads for alto",
+        "why": "Popularidade não diz nada sobre o que a próxima versão faz."
+      },
+      {
+        "text": "Pôr um bloco provider dentro dele, para prendê-lo a uma região",
+        "why": "Esse é o formato contra o qual \"interface\" alerta."
+      }
+    ]
+  },
+  "ex-1713n0qs": {
+    "prompt": "Por que o `versions.tf` do módulo pede o provider AWS `>= 6.0` em vez de `= 6.67.0`?",
+    "hint": "O Terraform escolhe uma versão de provider para a configuração inteira.",
+    "choices": [
+      {
+        "text": "Porque `>=` faz o init baixar o provider mais novo a cada execução",
+        "why": "O lock file do root mantém a versão até alguém atualizá-la."
+      },
+      {
+        "text": "Uma fixação exata brigaria com qualquer outro módulo da configuração que fixasse uma versão diferente",
+        "why": "Certo. O módulo diz o mínimo e o root, com o lock file, escolhe a versão."
+      },
+      {
+        "text": "Porque o registry recusa módulos com versões exatas de provider",
+        "why": "A objeção é sobre quem chama combinar módulos, não sobre o registry."
+      },
+      {
+        "text": "Porque `required_providers` é ignorado dentro de um child module",
+        "why": "Ele é lido e cruzado com todas as outras restrições."
+      }
+    ]
+  },
+  "ex-v572vbzh": {
+    "prompt": "O que é `examples/basic` no repositório do módulo?",
+    "hint": "Veja o `source` dele.",
+    "choices": [
+      {
+        "text": "Um child module que o `main.tf` chama",
+        "why": "Nada no módulo o chama; é ele que chama o módulo."
+      },
+      {
+        "text": "Documentação que o registry gera a partir do `variables.tf`",
+        "why": "Ele é escrito à mão, e roda."
+      },
+      {
+        "text": "Um root module que chama `../..`",
+        "why": "Isso: documentação que roda, com bloco provider próprio, e que o `validate` consegue conferir."
+      },
+      {
+        "text": "O state de onde partem os testes do módulo",
+        "why": "Não há state nele, só uma configuração."
+      }
+    ]
+  },
+  "ex-50jwfvkj": {
+    "prompt": "Associe cada arquivo do repositório do módulo ao trabalho dele.",
+    "hint": "Uma das descrições não serve a nenhum arquivo de módulo.",
+    "pairs": [
+      {
+        "left": "`README.md`",
+        "right": "Como chamá-lo"
+      },
+      {
+        "left": "`versions.tf`",
+        "right": "As versões mínimas de Terraform e provider com que funciona"
+      },
+      {
+        "left": "`moved.tf`",
+        "right": "Endereços levados através de uma renomeação"
+      },
+      {
+        "left": "`CHANGELOG.md`",
+        "right": "O que mudou em cada tag, e o que fazer a respeito"
+      }
+    ],
+    "right_distractors": [
+      "A configuração de provider para a região"
+    ]
+  },
+  "ex-fz99m4ze": {
+    "prompt": "O time de analytics está na `v1.0.0` e pula a `v1.1.0`, indo direto para a `v2.0.0` e renomeando `cidr` na chamada. O que o plan deles faz com as sub-redes?",
+    "hint": "Que arquivo a `v2.0.0` herdou da `v1.1.0`?",
+    "choices": [
+      {
+        "text": "Elas vão para `aws_subnet.private`, sem nada destruído",
+        "why": "Certo. O `moved.tf` continua na `v2.0.0`, e é por isso que ele fica até uma versão major posterior."
+      },
+      {
+        "text": "Destruídas e recriadas, porque o bloco `moved` pertencia só à `v1.1.0`",
+        "why": "Uma tag é uma foto do repositório inteiro, e o `moved.tf` não foi apagado."
+      },
+      {
+        "text": "O `init` recusa até eles atualizarem para a `v1.1.0` antes",
+        "why": "O Terraform não sabe nada da ordem das tags; instala a que foi pedida."
+      },
+      {
+        "text": "Elas mantêm o endereço `aws_subnet.this`",
+        "why": "O código do módulo diz `private` da `v1.1.0` em diante."
+      }
+    ]
+  },
+  "ex-8va1e3yd": {
+    "prompt": "O módulo de rede da Ana é chamado por vinte configurações. Ela quer que `aws_vpc.this` vire `aws_vpc.main`. Que versão deixa todo chamador atualizar sem editar os próprios arquivos e sem substituição?",
+    "hint": "Quem escreve o bloco `moved`, e onde?",
+    "choices": [
+      {
+        "text": "Uma versão major, depois da qual cada chamador roda `terraform state mv`",
+        "why": "Funciona, e são vinte edições manuais de state que o módulo podia ter poupado."
+      },
+      {
+        "text": "Um patch, já que quem chama não vê endereços de recursos",
+        "why": "Os states deles registram esses endereços; sem ajuda, o plan deles substitui a VPC."
+      },
+      {
+        "text": "Uma versão minor, com um bloco `moved` no módulo",
+        "why": "Isso: escrito uma vez pelo autor, ele planeja 0 to add e 0 to destroy para todo chamador."
+      },
+      {
+        "text": "Uma versão minor, com um bloco `moved` acrescentado ao root de cada chamador",
+        "why": "Também funcionaria, e são vinte edições nos arquivos de quem chama."
+      }
+    ]
+  },
+  "ex-ah9j3rja": {
+    "prompt": "O `terraform plan` de quem chama para com `Module source has changed`. O que aconteceu desde o último `init`?",
+    "hint": "Compare a linha `source` com o `modules.json`.",
+    "choices": [
+      {
+        "text": "Alguém editou uma linha `source`, talvez só o `?ref=`",
+        "why": "Certo: a cópia instalada não bate mais com o source pedido, então o `init` precisa rodar de novo."
+      },
+      {
+        "text": "O autor do módulo fez push de um commit novo no branch da tag",
+        "why": "O Terraform não olha o remoto durante um plan; compara a linha com o próprio registro."
+      },
+      {
+        "text": "O módulo renomeou um recurso sem bloco `moved`",
+        "why": "Isso aparece como destroy e create num plan, quando um consegue rodar."
+      },
+      {
+        "text": "O lock file perdeu o checksum do módulo",
+        "why": "O lock file registra providers, não módulos."
+      }
+    ]
+  }
+}

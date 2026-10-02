@@ -1,0 +1,559 @@
+{
+  "ex-nq64166x": {
+    "prompt": "O que precisa estar no `web1` para o laptop da Ana configurá-lo com o Ansible?",
+    "hint": "Veja o que a aula diz que o Ubuntu já traz.",
+    "choices": [
+      {
+        "text": "Um agente do Ansible registrado num servidor central",
+        "why": "Essa é a imagem que a aula corrige: o Ansible empurra a partir do laptop e não tem agente."
+      },
+      {
+        "text": "Uma cópia do inventário e do playbook",
+        "why": "Os dois ficam no nó de controle; a máquina só recebe programas pequenos enquanto um comando roda."
+      },
+      {
+        "text": "Um servidor SSH que aceite a chave dela, e Python",
+        "why": "Isso. O Ansible entra por SSH e roda módulos escritos em Python; nada mais é instalado."
+      },
+      {
+        "text": "O próprio Ansible, na mesma versão do laptop",
+        "why": "O Ansible é instalado uma vez, no nó de controle, e nunca nas máquinas que ele gerencia."
+      }
+    ]
+  },
+  "ex-hqdxvh12": {
+    "prompt": "O `ansible db1 -m ping` volta como `UNREACHABLE!`. O que isso diz à Ana?",
+    "hint": "Compare com FAILED.",
+    "choices": [
+      {
+        "text": "O módulo rodou e devolveu um erro",
+        "why": "Isso seria FAILED: entrou, e a tarefa deu errado."
+      },
+      {
+        "text": "O Ansible nem chegou a entrar por SSH na máquina",
+        "why": "Certo. Na aula foi o SSH recusando o `root`, cuja chave não está autorizada; nenhum módulo chegou a rodar."
+      },
+      {
+        "text": "A máquina não responde a pedidos ICMP de eco vindos do laptop",
+        "why": "O `ping` do Ansible é um módulo rodado por SSH, não o ping de rede."
+      },
+      {
+        "text": "O `db1` está faltando no inventário",
+        "why": "Um host que o inventário não tem não casa com nada; o Ansible nem tentaria alcançá-lo."
+      }
+    ]
+  },
+  "ex-9tdbnyp8": {
+    "prompt": "Associe cada linha do `inventory.ini` da Ana ao que ela faz.",
+    "hint": "Um nome entre colchetes não é um host.",
+    "pairs": [
+      {
+        "left": "`[web]`",
+        "right": "Começa um grupo"
+      },
+      {
+        "left": "`web1`",
+        "right": "Nomeia um host"
+      },
+      {
+        "left": "`[all:vars]`",
+        "right": "Define variáveis para todos os hosts"
+      },
+      {
+        "left": "`ansible_user=deploy`",
+        "right": "Escolhe o login do SSH"
+      }
+    ],
+    "right_distractors": [
+      "Instala o Python no host"
+    ]
+  },
+  "ex-jmmq5pj2": {
+    "prompt": "A Ana roda `ansible web -m apt -a \"name=tree state=present\" --become` uma segunda vez, logo depois da primeira. O que cada host informa?",
+    "hint": "O módulo olha antes de agir.",
+    "choices": [
+      {
+        "text": "CHANGED, porque o apt-get install rodou de novo na máquina",
+        "why": "Isso é o que o `command` informaria. O `apt` confere antes e não instala nada quando o pacote está lá."
+      },
+      {
+        "text": "FAILED, porque o pacote já existe",
+        "why": "Um estado que já é verdadeiro é um sucesso, não um erro."
+      },
+      {
+        "text": "UNREACHABLE, até o cache ser atualizado",
+        "why": "UNREACHABLE é sobre entrar na máquina; o cache não tem nada a ver."
+      },
+      {
+        "text": "SUCCESS com `\"changed\": false`",
+        "why": "Isso. O pacote está presente, então o módulo não fez nada e diz isso."
+      }
+    ]
+  },
+  "ex-t7q3pqfy": {
+    "prompt": "`ansible web1 -m command -a \"dpkg -l | grep -c ^ii\"` falha, e o mesmo texto com `-m shell` imprime um número. Por quê?",
+    "hint": "Quem interpreta o `|`?",
+    "choices": [
+      {
+        "text": "O `command` roda o programa sem shell, então o pipe virou argumentos do `dpkg`",
+        "why": "Certo. O dpkg recebeu `|`, `grep`, `-c` e `^ii` como nomes de pacote."
+      },
+      {
+        "text": "O `command` precisa de `--become` para ler a lista de pacotes",
+        "why": "Listar pacotes não exige root; o `shell` também rodou sem `--become`."
+      },
+      {
+        "text": "O grep não está instalado no web1",
+        "why": "Está; a saída da falha até lista o pacote `grep`."
+      },
+      {
+        "text": "Comandos ad-hoc aceitam uma palavra",
+        "why": "O `tree --version` funcionou com o `command`; ele aceita vários argumentos."
+      }
+    ]
+  },
+  "ex-mtmef9mn": {
+    "prompt": "Por que `ansible web1 -m command -a \"tree --version\"` informa CHANGED, se só imprimiu uma versão?",
+    "hint": "O que o `command` consegue saber do programa que rodou?",
+    "choices": [
+      {
+        "text": "Imprimir uma versão atualiza o cache do apt",
+        "why": "Nada mudou na máquina; o relatório vem do que o módulo consegue saber."
+      },
+      {
+        "text": "O `command` não enxerga o que o programa fez",
+        "why": "Isso. O `command` roda um programa e não vê o que ele fez, então presume uma mudança toda vez."
+      },
+      {
+        "text": "A primeira execução de qualquer módulo num host é informada como mudança",
+        "why": "O `ping` informou `\"changed\": false` na primeira vez, e o `command` informa CHANGED em toda execução."
+      },
+      {
+        "text": "Comandos ad-hoc informam CHANGED, ao contrário de playbooks",
+        "why": "O segundo comando ad-hoc com `apt` informou SUCCESS; depende do módulo, não de como ele é rodado."
+      }
+    ]
+  },
+  "ex-x9z4gghs": {
+    "prompt": "A primeira execução do `site.yml` termina com `web1 : ok=5 changed=4`. Como a Ana deve ler os dois números?",
+    "hint": "Um deles contém o outro.",
+    "choices": [
+      {
+        "text": "Rodaram nove tarefas: cinco sem nada e quatro que mudaram",
+        "why": "As contagens se sobrepõem: o `ok` inclui toda tarefa bem-sucedida, tenha mudado ou não."
+      },
+      {
+        "text": "Cinco tarefas deram certo e quatro delas mudaram algo",
+        "why": "Certo. A quinta, a coleta de fatos, não mudou nada."
+      },
+      {
+        "text": "Quatro tarefas ainda precisam de uma segunda execução",
+        "why": "Uma mudança é algo feito, não pendente; a segunda execução informou changed=0."
+      },
+      {
+        "text": "Quatro avisos",
+        "why": "O `changed` conta tarefas que alteraram a máquina; avisos não entram no resumo."
+      }
+    ]
+  },
+  "ex-963k0bma": {
+    "prompt": "Ponha em ordem o que o `ansible-playbook site.yml` imprimiu na primeira execução.",
+    "hint": "Uma tarefa que ninguém escreveu vem primeiro.",
+    "items": [
+      "PLAY [Web servers]",
+      "TASK [Gathering Facts]",
+      "TASK [Install nginx]",
+      "TASK [Start nginx]",
+      "PLAY RECAP"
+    ],
+    "trap": "O Gathering Facts roda antes da primeira tarefa do arquivo, e o resumo vem sempre por último."
+  },
+  "ex-b6wh5dy2": {
+    "prompt": "Um playbook tem cinco tarefas. No `web2` a terceira falha; no `web1` tudo dá certo. Em que estado o `web2` fica depois?",
+    "hint": "O Ansible não guarda estado para onde voltar.",
+    "choices": [
+      {
+        "text": "Como antes da execução, porque a play desfaz o web2",
+        "why": "Nada é desfeito; o que as tarefas um e dois fizeram continua feito."
+      },
+      {
+        "text": "Totalmente configurado, porque o web1 terminou a play pelos dois",
+        "why": "Cada host é configurado por conta própria; o web1 dar certo não faz nada no web2."
+      },
+      {
+        "text": "Tarefas um e dois aplicadas, três a cinco não",
+        "why": "Certo. O host que falhou para onde falhou, e a próxima execução começa do topo e encontra as duas primeiras já verdadeiras."
+      },
+      {
+        "text": "Inalterado, porque um host que falha é pulado desde o início",
+        "why": "O Ansible não sabe que uma tarefa vai falhar antes de rodá-la; as anteriores rodaram."
+      }
+    ]
+  },
+  "ex-cc3d9gjd": {
+    "prompt": "Um colega editou o `index.html` no `web1` à mão. A Ana roda o `site.yml` sem nada novo nele. O que acontece?",
+    "hint": "Veja o resumo depois da edição.",
+    "choices": [
+      {
+        "text": "A página volta ao que era no web1 e o web2 fica em paz",
+        "why": "Isso: changed=1 no web1, changed=0 no web2."
+      },
+      {
+        "text": "Nada, porque o playbook não mudou",
+        "why": "O Ansible compara com a máquina, não com a última execução; a máquina mudou."
+      },
+      {
+        "text": "A página é reescrita nos dois servidores web",
+        "why": "A página do web2 já batia, então a tarefa dele informou ok."
+      },
+      {
+        "text": "A execução falha, apontando drift no web1",
+        "why": "Uma diferença não é um erro; a tarefa a corrige e informa changed."
+      }
+    ]
+  },
+  "ex-677w1n95": {
+    "prompt": "Uma tarefa roda `nginx -t` com `ansible.builtin.command`. Por que a aula acrescenta `changed_when: false`?",
+    "hint": "Quanto custa um resumo que nunca dá zero?",
+    "choices": [
+      {
+        "text": "Para impedir que a tarefa rode na segunda execução",
+        "why": "Ela continua rodando toda vez; só muda o que ela informa. Pular é o que o `creates` faz."
+      },
+      {
+        "text": "Para a execução não falhar quando a configuração estiver errada",
+        "why": "Isso seria o `failed_when`; uma configuração errada ainda deve fazer a verificação falhar."
+      },
+      {
+        "text": "Para o resumo contar só as mudanças que de fato aconteceram",
+        "why": "Certo. Uma tarefa que sempre diz changed esconde as mudanças que importam."
+      },
+      {
+        "text": "Porque o `nginx -t` modifica o arquivo de configuração",
+        "why": "Ele só lê e testa; é exatamente por isso que informar mudança está errado."
+      }
+    ]
+  },
+  "ex-yqqxs96t": {
+    "prompt": "Uma tarefa `command` que gera `/etc/ssl/certs/shop.crt` é pulada nas execuções seguintes quando esse arquivo já existe, porque a tarefa o nomeia com o argumento ___.",
+    "hint": "Um verbo em inglês, na terceira pessoa.",
+    "blanks": [
+      {
+        "accept": [
+          "creates",
+          "creates:"
+        ]
+      }
+    ]
+  },
+  "ex-jgghc7cc": {
+    "prompt": "A Ana apaga a tarefa `Write the index page` do `site.yml` e o roda. O que acontece com `/var/www/html/index.html` nos servidores web?",
+    "hint": "Existe registro do que o Ansible criou?",
+    "choices": [
+      {
+        "text": "É apagado, como o Terraform destruiria um recurso removido",
+        "why": "O Terraform consegue porque o estado dele lista o que criou; o Ansible não tem essa lista."
+      },
+      {
+        "text": "Fica como está",
+        "why": "Certo. O Ansible só confere o que o playbook menciona; para removê-lo você escreve uma tarefa com `state: absent`."
+      },
+      {
+        "text": "A execução falha porque o arquivo não é mais gerenciado",
+        "why": "Um arquivo não gerenciado é invisível para a execução, não um erro."
+      },
+      {
+        "text": "É esvaziado na próxima execução com `--check`",
+        "why": "O `--check` não muda nada, e nada mais menciona o arquivo."
+      }
+    ]
+  },
+  "ex-gsxxw81a": {
+    "prompt": "Quando o handler `Reload nginx` roda?",
+    "hint": "Compare as execuções antes e depois de a variável mudar.",
+    "choices": [
+      {
+        "text": "Logo depois de cada tarefa que o notifica",
+        "why": "Handlers esperam o fim da play e rodam uma vez, quantas tarefas os tenham notificado."
+      },
+      {
+        "text": "Em toda execução, depois da última tarefa",
+        "why": "A execução depois da primeira não teve handler nenhum: nada o notificou."
+      },
+      {
+        "text": "No fim da play, se uma tarefa que o notifica mudou",
+        "why": "Isso. A tarefa de configuração informou changed, e o reload veio depois de todas as tarefas."
+      },
+      {
+        "text": "Só quando o nginx não está rodando",
+        "why": "Iniciar um nginx parado é trabalho da tarefa `Start nginx`."
+      }
+    ]
+  },
+  "ex-ndnbt2ad": {
+    "prompt": "A Ana acrescenta `www.shop.example.com` ao `shop_server_name` em `group_vars/web.yml` e roda `site.yml --diff`. Quantas mudanças o resumo informa para o `web1`?",
+    "hint": "Conte o template e o que ele notificou.",
+    "unit": "mudanças"
+  },
+  "ex-fqve49sn": {
+    "prompt": "O template da página inicial contém `{{ inventory_hostname }}`, e ninguém declarou essa variável. De onde ela vem?",
+    "hint": "O web1 e o web2 serviram páginas diferentes.",
+    "choices": [
+      {
+        "text": "O Ansible a define: o nome do host como o inventário o escreve",
+        "why": "Certo, e é por isso que cada host renderizou a própria página a partir de um template."
+      },
+      {
+        "text": "Do `group_vars/web.yml`",
+        "why": "Esse arquivo define só `shop_server_name` e `shop_root`."
+      },
+      {
+        "text": "Do `/etc/hostname` da máquina, lido pelo Jinja2",
+        "why": "Templates são renderizados no nó de controle, e o valor é o nome do inventário, não o da máquina."
+      },
+      {
+        "text": "É uma variável de ambiente do laptop",
+        "why": "Nada no shell da Ana a define; o Ansible a fornece por host."
+      }
+    ]
+  },
+  "ex-1bfnx1ze": {
+    "prompt": "Cada lugar define `shop_server_name` com um valor diferente. Associe cada um à sua posição, sendo 1 a mais fraca.",
+    "hint": "A aula os lista do mais fraco ao mais forte.",
+    "pairs": [
+      {
+        "left": "o `defaults/main.yml` de um role",
+        "right": "1"
+      },
+      {
+        "left": "`group_vars/web.yml`",
+        "right": "2"
+      },
+      {
+        "left": "`host_vars/web1.yml`",
+        "right": "3"
+      },
+      {
+        "left": "`-e` na linha de comando",
+        "right": "4"
+      }
+    ]
+  },
+  "ex-mr4n728w": {
+    "prompt": "Num role, qual diretório guarda as variáveis que quem chama deve sobrescrever?",
+    "hint": "O lugar mais fraco de todos.",
+    "choices": [
+      {
+        "text": "`vars/`",
+        "why": "O `vars` vence o inventário e as variáveis de grupo, então quem chama não o sobrescreve com facilidade."
+      },
+      {
+        "text": "`meta/`",
+        "why": "O `meta` guarda autor, plataformas e dependências, não variáveis."
+      },
+      {
+        "text": "`files/`",
+        "why": "O `files` guarda arquivos copiados como estão."
+      },
+      {
+        "text": "`defaults/`",
+        "why": "Isso. Defaults perdem para quase tudo, e é isso que os torna sobrescrevíveis."
+      }
+    ]
+  },
+  "ex-f2ytyfqp": {
+    "prompt": "Depois de passar tudo para o role `web`, a Ana roda o `site.yml` e obtém `changed=0`. O que isso prova?",
+    "hint": "O que um erro na mudança teria feito nas máquinas?",
+    "choices": [
+      {
+        "text": "O role nunca foi usado",
+        "why": "As tarefas se chamam `web : Install nginx`, então vieram do role."
+      },
+      {
+        "text": "Que a mudança descreve as mesmas máquinas de antes",
+        "why": "Certo. Uma tarefa que agora renderizasse algo diferente teria informado changed."
+      },
+      {
+        "text": "Que os defaults do role venceram o `group_vars/web.yml`",
+        "why": "O contrário: o default não tem o `www`; se tivesse vencido, o arquivo teria mudado."
+      },
+      {
+        "text": "Que as máquinas foram trocadas por outras novas",
+        "why": "Máquinas novas precisariam do nginx instalado: muitas mudanças, não zero."
+      }
+    ]
+  },
+  "ex-f7veznqm": {
+    "prompt": "Quais destes o `ansible-galaxy role init --init-path roles web` cria? Escolha todos os que se aplicam.",
+    "hint": "Veja a árvore que ele imprimiu.",
+    "choices": [
+      {
+        "text": "`roles/web/tasks/main.yml`",
+        "why": "Sim, as tarefas do role."
+      },
+      {
+        "text": "`roles/web/inventory.ini`",
+        "why": "Um role não sabe em quais hosts roda; o inventário pertence ao projeto."
+      },
+      {
+        "text": "`roles/web/handlers/main.yml`",
+        "why": "Sim, os handlers do role."
+      },
+      {
+        "text": "`roles/web/defaults/main.yml`",
+        "why": "Sim, as variáveis padrão do role."
+      },
+      {
+        "text": "`roles/web/site.yml`",
+        "why": "O playbook fica fora e nomeia o role."
+      }
+    ]
+  },
+  "ex-m7bavh0f": {
+    "prompt": "Na passagem da aula, o que o Terraform e o Ansible compartilham?",
+    "hint": "Nenhuma das ferramentas sabe que a outra existe.",
+    "choices": [
+      {
+        "text": "O arquivo de estado, que o Ansible lê para achar os hosts",
+        "why": "O Ansible nunca lê o estado do Terraform na aula."
+      },
+      {
+        "text": "Um provisioner que roda o playbook na criação",
+        "why": "Essa alternativa é citada e deixada de lado: roda uma vez e nunca mais."
+      },
+      {
+        "text": "`hosts.ini`",
+        "why": "Isso. O Terraform o escreve com `local_file`, o Ansible o lê com `-i`."
+      },
+      {
+        "text": "Uma conexão SSH aberta pelo Terraform",
+        "why": "O Terraform não abre conexão com as máquinas aqui; o Ansible abre."
+      }
+    ]
+  },
+  "ex-t8t0jkrd": {
+    "prompt": "Por que o `~/shop/infra` recebe os endereços das máquinas como variável em vez de lê-los de recursos `aws_instance`?",
+    "hint": "O que o moto é, e o que não é?",
+    "choices": [
+      {
+        "text": "O `local_file` não consegue ler atributos de outros recursos",
+        "why": "Qualquer argumento pode referenciar outro recurso; o `templatefile` os receberia do mesmo jeito."
+      },
+      {
+        "text": "O moto registra as instâncias e não roda nenhuma delas",
+        "why": "Certo. Uma instância que o moto cria não tem endereço em que algo responda, então os endereços dos contêineres são passados no lugar."
+      },
+      {
+        "text": "Endereços privados não devem ser escritos num arquivo",
+        "why": "O inventário é exatamente um arquivo assim, e tudo bem."
+      },
+      {
+        "text": "O Ansible recusa endereços que o Terraform calculou",
+        "why": "O Ansible não sabe de onde veio uma linha do inventário."
+      }
+    ]
+  },
+  "ex-nft2vmy0": {
+    "prompt": "No `hosts.ini`, a linha é `web1 ansible_host=172.30.0.11`. Qual nome aparece no PLAY RECAP?",
+    "hint": "Um nome é para pessoas, o outro para o SSH.",
+    "choices": [
+      {
+        "text": "`172.30.0.11`",
+        "why": "O endereço é só para onde a conexão vai."
+      },
+      {
+        "text": "`web1`",
+        "why": "Isso. O host mantém o nome do inventário em todo o Ansible; o `ansible_host` muda só a conexão."
+      },
+      {
+        "text": "`deploy@172.30.0.11`",
+        "why": "O usuário e o endereço são detalhes da conexão, não o nome do host."
+      },
+      {
+        "text": "`local_file.inventory`",
+        "why": "Esse é o recurso do Terraform que escreveu o arquivo."
+      }
+    ]
+  },
+  "ex-0q2kp1kd": {
+    "prompt": "As máquinas são recriadas toda semana pelo Terraform com endereços novos, e a Ana mantém o `inventory.ini` atualizado à mão. O que dá errado primeiro?",
+    "hint": "Quem conhece os endereços novos?",
+    "choices": [
+      {
+        "text": "O Ansible se recusa a rodar contra hosts que já viu",
+        "why": "O Ansible não guarda memória de hosts entre execuções."
+      },
+      {
+        "text": "O Terraform planeja destruir o arquivo de inventário",
+        "why": "Um arquivo escrito à mão nem está no estado do Terraform."
+      },
+      {
+        "text": "O arquivo fica velho depois de uma recriação, em silêncio",
+        "why": "Certo. Só a ferramenta que criou as máquinas conhece os endereços; a aula faz ela escrever o arquivo."
+      },
+      {
+        "text": "As máquinas novas não têm Python, e toda tarefa falha",
+        "why": "O Ubuntu traz Python; o problema é alcançar a máquina certa."
+      }
+    ]
+  },
+  "ex-rdec8z9s": {
+    "prompt": "Uma tarefa de um role roda `systemctl reload nginx` com `command` em toda execução. O resumo nunca dá zero. Qual é a correção que a aula aponta?",
+    "hint": "Quando um reload deveria acontecer?",
+    "choices": [
+      {
+        "text": "Acrescentar `changed_when: false` à tarefa",
+        "why": "O resumo daria zero, mas o nginx continuaria sendo recarregado em toda execução: o relatório vira mentira em vez de o trabalho ficar certo."
+      },
+      {
+        "text": "Um handler, notificado pela tarefa de configuração",
+        "why": "Certo. O reload passa a acontecer só quando a configuração mudou, e o resumo diz a verdade."
+      },
+      {
+        "text": "Usar `shell` em vez de `command`",
+        "why": "O `shell` também não sabe o que o programa fez."
+      },
+      {
+        "text": "Mover a tarefa para `vars/main.yml`",
+        "why": "O `vars` guarda variáveis, não tarefas."
+      }
+    ]
+  },
+  "ex-q1sfmanx": {
+    "prompt": "Quais destes apareceriam numa execução do `site.yml` da Ana, como está no fim da aula? Escolha todos os que se aplicam.",
+    "hint": "O playbook confere só o que menciona.",
+    "choices": [
+      {
+        "text": "Alguém parou o nginx no web2",
+        "why": "Sim: o `Start nginx` informaria changed no web2."
+      },
+      {
+        "text": "Alguém instalou o `htop` à mão no web1",
+        "why": "Nenhuma tarefa menciona o htop, então nenhuma execução o aponta."
+      },
+      {
+        "text": "Alguém editou o site da loja no nginx do web1",
+        "why": "Sim: a tarefa de template o reescreveria e notificaria o reload."
+      },
+      {
+        "text": "Alguém acrescentou um cron no web2",
+        "why": "Nada no role menciona cron."
+      },
+      {
+        "text": "Alguém apagou o `/var/www/shop` no web1",
+        "why": "Sim: a tarefa do diretório o recriaria, e a da página inicial escreveria a página de novo."
+      }
+    ]
+  },
+  "ex-q4398h4e": {
+    "prompt": "Ponha em ordem a passagem da aula 1, como esta aula a rodou.",
+    "hint": "O arquivo vem antes de alguém lê-lo.",
+    "items": [
+      "`terraform apply` em `~/shop/infra`",
+      "`local_file` escreve o `hosts.ini`",
+      "`ssh-keyscan` confia nas chaves das máquinas pelo endereço",
+      "`ansible-playbook -i hosts.ini site.yml`"
+    ],
+    "trap": "As chaves de host precisam ser confiáveis antes de o Ansible se conectar pelo endereço."
+  }
+}

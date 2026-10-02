@@ -1,0 +1,899 @@
+[
+  {
+    "id": "ex-yv9tn51m",
+    "version": 1,
+    "section": "first-configuration",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana moves the `aws_vpc.shop` block out of `main.tf` into a new file, `network.tf`, in the same directory, and runs `terraform plan`. What does the plan propose?",
+    "hint": "How does Terraform read a directory?",
+    "choices": [
+      {
+        "text": "To replace the VPC, because the block now lives in a different file",
+        "correct": false,
+        "why": "The file a block sits in is not part of its identity; the address `aws_vpc.shop` is."
+      },
+      {
+        "text": "No changes: the address is what identifies the VPC",
+        "correct": true,
+        "why": "Right. Every `.tf` file in the directory is one document, and file names mean nothing to Terraform."
+      },
+      {
+        "text": "A second VPC, created from `network.tf`",
+        "correct": false,
+        "why": "There is still one block with that address; moving it does not copy it."
+      },
+      {
+        "text": "It ignores `network.tf` until `versions.tf` lists it",
+        "correct": false,
+        "why": "No file lists the others: every `.tf` file in the directory is read."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzbr3tvy",
+    "version": 1,
+    "section": "first-configuration",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `resource \"aws_vpc\" \"shop\"`, what is `shop`?",
+    "hint": "One of the two labels is defined by the provider, the other by you.",
+    "choices": [
+      {
+        "text": "The resource type, which the AWS provider defines",
+        "correct": false,
+        "why": "The type is the first label, `aws_vpc`."
+      },
+      {
+        "text": "The VPC's `Name` tag in AWS",
+        "correct": false,
+        "why": "The tag is an argument inside the block; it happens to say `shop` too, and could say anything."
+      },
+      {
+        "text": "The id AWS will give the VPC",
+        "correct": false,
+        "why": "AWS invents the id at creation; nobody writes it in a file."
+      },
+      {
+        "text": "A name chosen by Ana, used in the address `aws_vpc.shop`",
+        "correct": true,
+        "why": "Yes. Type plus name is the address the rest of the configuration uses."
+      }
+    ]
+  },
+  {
+    "id": "ex-ya6m0y4r",
+    "version": 1,
+    "section": "first-configuration",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each block to what it does in Ana's configuration.",
+    "hint": "Three blocks, three jobs, and one job no block does.",
+    "pairs": [
+      {
+        "left": "`terraform { required_providers { … } }`",
+        "right": "Names the plugins the configuration needs, and which versions"
+      },
+      {
+        "left": "`provider \"aws\" { … }`",
+        "right": "Configures the plugin, here with a region"
+      },
+      {
+        "left": "`resource \"aws_vpc\" \"shop\" { … }`",
+        "right": "Asks for one thing to exist"
+      }
+    ],
+    "right_distractors": [
+      "Holds the access key and secret for AWS"
+    ]
+  },
+  {
+    "id": "ex-cmepnvzg",
+    "version": 1,
+    "section": "init",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `terraform init` create in the AWS account?",
+    "hint": "It prepares a directory.",
+    "choices": [
+      {
+        "text": "The resources in the configuration, without asking",
+        "correct": false,
+        "why": "Creating resources is apply's job, and apply asks first."
+      },
+      {
+        "text": "No resource at all",
+        "correct": true,
+        "why": "Right. It installs providers into `.terraform/` and writes the lock file; AWS is not touched."
+      },
+      {
+        "text": "A test resource to check the credentials",
+        "correct": false,
+        "why": "init does not even need credentials; it never calls AWS."
+      },
+      {
+        "text": "An empty state file in a bucket",
+        "correct": false,
+        "why": "In this lesson the state is a local file, and the first apply writes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ec1456w5",
+    "version": 1,
+    "section": "init",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana is about to make her first commit. Which of these belong in the repository? Choose all that apply.",
+    "hint": "One of them is 789M and rebuilt by a command.",
+    "choices": [
+      {
+        "text": "`.terraform.lock.hcl`",
+        "correct": true,
+        "why": "Yes: it makes every init, anywhere, choose the same provider versions."
+      },
+      {
+        "text": "`.terraform/`",
+        "correct": false,
+        "why": "That is the provider program itself; `init` rebuilds it, so it is ignored."
+      },
+      {
+        "text": "`main.tf`",
+        "correct": true,
+        "why": "Yes, it is the description itself."
+      },
+      {
+        "text": "`versions.tf`",
+        "correct": true,
+        "why": "Yes; it says which providers and versions the configuration accepts."
+      },
+      {
+        "text": "`terraform.tfstate`",
+        "correct": false,
+        "why": "Ana's `.gitignore` excludes it; lesson 7 says where it belongs instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjc2ebcd",
+    "version": 1,
+    "section": "init",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana commits the lock file from the lab, which holds a single `h1:` hash for `linux_amd64`. A colleague on a Mac runs `terraform init`. What happens?",
+    "hint": "The warning init printed said which platforms the file covers.",
+    "choices": [
+      {
+        "text": "init recomputes the hash for macOS and continues quietly",
+        "correct": false,
+        "why": "A lock file exists to refuse a package it cannot match; it does not trust a new one silently."
+      },
+      {
+        "text": "init installs the Linux package, which runs on the Mac",
+        "correct": false,
+        "why": "A provider is a compiled program for one platform; the Linux build does not run on macOS."
+      },
+      {
+        "text": "init fails: no hash matches the Mac's package",
+        "correct": true,
+        "why": "Right. The warning said so, and `terraform providers lock` with internet access adds the other platforms."
+      },
+      {
+        "text": "init ignores the lock file and picks the newest 6.x",
+        "correct": false,
+        "why": "Only `init -upgrade` chooses again; a plain init honours the lock file."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1bks762",
+    "version": 1,
+    "section": "resources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Ana not need to tell Terraform that the subnet must be created after the VPC?",
+    "hint": "Look at what the subnet's `vpc_id` is set to.",
+    "choices": [
+      {
+        "text": "Because the VPC block comes first in `main.tf`",
+        "correct": false,
+        "why": "The order of blocks in the file is ignored."
+      },
+      {
+        "text": "Because Terraform creates resources in alphabetical order of type",
+        "correct": false,
+        "why": "The plan is printed in alphabetical order; creation follows the graph, and the security group came before the rule regardless of names."
+      },
+      {
+        "text": "The reference `aws_vpc.shop.id` is the dependency",
+        "correct": true,
+        "why": "Yes. A reference carries its dependency with its value, and the graph is built from references."
+      },
+      {
+        "text": "Because the AWS API refuses subnets until a VPC exists, and Terraform retries",
+        "correct": false,
+        "why": "There is no retry loop here: the subnet is not even started until the VPC's id exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-287t6wdg",
+    "version": 1,
+    "section": "resources",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `vpc_id = aws_vpc.shop.id`, the `id` is not a value Ana set; it is one the VPC has once it exists. Values of that kind are called ___.",
+    "hint": "The opposite of an argument.",
+    "blanks": [
+      {
+        "accept": [
+          "attributes",
+          "attribute"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dgnace5n",
+    "version": 1,
+    "section": "resources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana gives a subnet the range `10.30.1.0/24` inside the VPC `10.20.0.0/16`. `terraform validate` says the configuration is valid. What happens at apply?",
+    "hint": "Which program knows the rule about ranges?",
+    "choices": [
+      {
+        "text": "AWS rejects the subnet",
+        "correct": true,
+        "why": "Right. validate checks that the configuration is coherent; only the API knows a subnet must fit inside its VPC."
+      },
+      {
+        "text": "The subnet is created, since validate already passed",
+        "correct": false,
+        "why": "Valid means coherent, not accepted."
+      },
+      {
+        "text": "Terraform widens the VPC's range so the subnet fits",
+        "correct": false,
+        "why": "Terraform does not rewrite your arguments; it creates what you declared or fails."
+      },
+      {
+        "text": "The plan refuses it before apply asks the question",
+        "correct": false,
+        "why": "The plan does not call the API to create anything, so the range is only checked when the subnet is created."
+      }
+    ]
+  },
+  {
+    "id": "ex-x33f0ahd",
+    "version": 1,
+    "section": "first-apply",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the first plan, the security group's `vpc_id` shows `(known after apply)` although `main.tf` sets it. Why?",
+    "hint": "What is it set to?",
+    "choices": [
+      {
+        "text": "Ana forgot to set it",
+        "correct": false,
+        "why": "It is set, to `aws_vpc.shop.id`."
+      },
+      {
+        "text": "It is the VPC's id, and the VPC does not exist yet",
+        "correct": true,
+        "why": "Yes. A plan is computed before anything happens, so a value AWS invents is a blank in it."
+      },
+      {
+        "text": "The provider hides values that come from other resources",
+        "correct": false,
+        "why": "Nothing is hidden; the value simply does not exist at plan time."
+      },
+      {
+        "text": "moto does not report VPC ids during a plan",
+        "correct": false,
+        "why": "Against real AWS the plan shows the same thing: there is no VPC to report."
+      }
+    ]
+  },
+  {
+    "id": "ex-z45zek3h",
+    "version": 1,
+    "section": "first-apply",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana's second apply ran after the four resources existed, with `main.tf` unchanged. How many resources did it add?",
+    "hint": "Read its last line.",
+    "value": 0,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-ramjjbsd",
+    "version": 1,
+    "section": "first-apply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform apply` shows the plan and asks. Ana types `y` and presses Enter. What happens?",
+    "hint": "The question says what it accepts.",
+    "choices": [
+      {
+        "text": "The apply is cancelled",
+        "correct": true,
+        "why": "Right: only the exact word `yes` approves. Anything else cancels, as `no` did in the lesson."
+      },
+      {
+        "text": "The four resources are created, since `y` is short for yes",
+        "correct": false,
+        "why": "Terraform does not accept abbreviations here, on purpose."
+      },
+      {
+        "text": "Terraform asks the same question again",
+        "correct": false,
+        "why": "It does not repeat the question; the run ends with `Apply cancelled.`"
+      },
+      {
+        "text": "Only the VPC is created, as a partial approval",
+        "correct": false,
+        "why": "There is no partial approval: the plan is accepted whole or not at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-31fypeqd",
+    "version": 1,
+    "section": "first-apply",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these steps of the first apply in the order the log shows them finishing.",
+    "hint": "Follow the arrows of the graph.",
+    "items": [
+      "`aws_vpc.shop`: Creation complete",
+      "`aws_security_group.web`: Creation complete",
+      "`aws_vpc_security_group_ingress_rule.https`: Creating...",
+      "`Apply complete! Resources: 4 added`"
+    ],
+    "trap": "The plan lists the rule last too, but for another reason: the plan is alphabetical, the apply follows the graph."
+  },
+  {
+    "id": "ex-zeeex3ye",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform.tfvars` says `environment = \"dev\"`. Ana runs `TF_VAR_environment=prod terraform plan`. Which value does the plan use?",
+    "hint": "Where does the environment come in Terraform's order?",
+    "choices": [
+      {
+        "text": "`prod`, because an environment variable overrides a file",
+        "correct": false,
+        "why": "That is how many tools behave, and it is the reverse of Terraform's order."
+      },
+      {
+        "text": "Neither: two values for one variable are an error",
+        "correct": false,
+        "why": "No error and no warning: one source simply wins."
+      },
+      {
+        "text": "Terraform asks which one Ana meant",
+        "correct": false,
+        "why": "It asks only when there is no value at all."
+      },
+      {
+        "text": "`dev`, the value the file holds",
+        "correct": true,
+        "why": "Right. `TF_VAR_` is the weakest source; the lesson's console showed `prod` losing to the file, and only `-var` beat it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqtm6wkq",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`environment` has no default. A pipeline runs `terraform plan -input=false` without giving it a value. What happens?",
+    "hint": "What does `-input=false` turn the question into?",
+    "choices": [
+      {
+        "text": "It plans with an empty string",
+        "correct": false,
+        "why": "A required variable has no fallback; an empty string would be a value somebody chose."
+      },
+      {
+        "text": "The plan fails with `No value for required variable`",
+        "correct": true,
+        "why": "Yes, naming the variable and the line that declared it, which is what you want where nobody can answer."
+      },
+      {
+        "text": "It waits for somebody to type a value",
+        "correct": false,
+        "why": "That is what happens in a terminal without `-input=false`."
+      },
+      {
+        "text": "It skips the resources that use the variable",
+        "correct": false,
+        "why": "Terraform does not plan half a configuration; it stops."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2fy8mkh",
+    "version": 1,
+    "section": "variables",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To give the variable `environment` a value through the shell, Ana exports a variable named ___.",
+    "hint": "A fixed prefix, then the variable's name.",
+    "blanks": [
+      {
+        "accept": [
+          "TF_VAR_environment"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-07t99yax",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does adding `default = 443` to the `https_port` variable change?",
+    "hint": "Compare it with `environment`, which has none.",
+    "choices": [
+      {
+        "text": "It fixes the port at 443 so no file or flag can change it",
+        "correct": false,
+        "why": "A default is used only when no source gives a value; `-var https_port=8443` would still win."
+      },
+      {
+        "text": "It makes the variable optional",
+        "correct": true,
+        "why": "Yes: with a default, Terraform neither asks nor fails when no value is given."
+      },
+      {
+        "text": "It sets the variable's type to number",
+        "correct": false,
+        "why": "The type comes from `type = number`; a default must fit it, but does not set it."
+      },
+      {
+        "text": "It writes 443 into `terraform.tfvars`",
+        "correct": false,
+        "why": "Terraform never edits your files; the default lives in the variable block."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbk9cexw",
+    "version": 1,
+    "section": "outputs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A shell script needs the VPC's id as a bare string to pass to `aws ec2 describe-vpcs --vpc-ids`. Which command gives it?",
+    "hint": "No quotes, no newline.",
+    "choices": [
+      {
+        "text": "`terraform output vpc_id`",
+        "correct": false,
+        "why": "That prints the value in HCL syntax, with quotes the AWS CLI would receive as part of the id."
+      },
+      {
+        "text": "`terraform output -json`",
+        "correct": false,
+        "why": "That is for programs that parse JSON; a shell would get a whole document."
+      },
+      {
+        "text": "`terraform output -raw vpc_id`",
+        "correct": true,
+        "why": "Right: the bare string, which the lesson put inside `$( … )`."
+      },
+      {
+        "text": "`grep vpc- terraform.tfstate`",
+        "correct": false,
+        "why": "The state's layout is Terraform's business, and that grep matches more than one line."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzea0fe7",
+    "version": 1,
+    "section": "outputs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana adds an `output \"bucket_name\"` block to `outputs.tf` and immediately runs `terraform output bucket_name`, without applying. What does she get?",
+    "hint": "Where does `terraform output` read from?",
+    "choices": [
+      {
+        "text": "An error saying the output is not found, suggesting an apply",
+        "correct": true,
+        "why": "Yes. Outputs come from the state, and only an apply writes a new one there."
+      },
+      {
+        "text": "The bucket's name, computed from the files",
+        "correct": false,
+        "why": "`terraform output` does not evaluate the files; it reads what the last apply stored."
+      },
+      {
+        "text": "`(known after apply)`",
+        "correct": false,
+        "why": "That marker belongs to a plan, not to `terraform output`."
+      },
+      {
+        "text": "An empty line",
+        "correct": false,
+        "why": "It fails with a message rather than printing nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-21n9hjeb",
+    "version": 1,
+    "section": "outputs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to what it prints.",
+    "hint": "Three readers: a person, a shell, a program.",
+    "pairs": [
+      {
+        "left": "`terraform output`",
+        "right": "Every output, one `name = value` per line"
+      },
+      {
+        "left": "`terraform output vpc_id`",
+        "right": "One value in HCL syntax, quotes included"
+      },
+      {
+        "left": "`terraform output -raw vpc_id`",
+        "right": "The bare string, without even a newline"
+      },
+      {
+        "left": "`terraform output -json`",
+        "right": "Each output with its type and its sensitive flag"
+      }
+    ],
+    "right_distractors": [
+      "The ids read live from the AWS API"
+    ]
+  },
+  {
+    "id": "ex-v0bfdtrz",
+    "version": 1,
+    "section": "providers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The mirror holds random 3.8.1 and 3.9.1, and nothing is locked yet. `versions.tf` asks for `version = \"~> 3.8.0\"`. Which version does `terraform init` install?",
+    "hint": "With three numbers written, which one may grow?",
+    "choices": [
+      {
+        "text": "3.9.1, the newest available",
+        "correct": false,
+        "why": "`~> 3.8.0` stops below 3.9; that would be `~> 3.8`."
+      },
+      {
+        "text": "None: `~>` needs an exact version that exists",
+        "correct": false,
+        "why": "`~>` is a range, and 3.8.1 is inside it."
+      },
+      {
+        "text": "3.8.1, the newest the range allows",
+        "correct": true,
+        "why": "Right: only the patch may grow, so 3.8.1 is the newest version the range allows, as the lock file showed."
+      },
+      {
+        "text": "3.8.0, the version written in the constraint",
+        "correct": false,
+        "why": "The constraint is a lower bound, not a pin, and 3.8.0 is not in the mirror anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-memxd2ar",
+    "version": 1,
+    "section": "providers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana changes random's constraint from `~> 3.8.0` to `~> 3.9`, and `terraform plan` refuses with `Inconsistent dependency lock file`. What does she run?",
+    "hint": "The locked 3.8.1 is outside the new range.",
+    "choices": [
+      {
+        "text": "Delete `.terraform/` and plan again",
+        "correct": false,
+        "why": "The disagreement is with the lock file, which is still there and still says 3.8.1."
+      },
+      {
+        "text": "`terraform init -upgrade`",
+        "correct": true,
+        "why": "Yes. It chooses again inside every constraint and rewrites the lock file, which a reviewer then sees in the diff."
+      },
+      {
+        "text": "`terraform plan -upgrade`",
+        "correct": false,
+        "why": "plan does not install providers; choosing versions is init's job."
+      },
+      {
+        "text": "`terraform apply`, which installs what the plan needs",
+        "correct": false,
+        "why": "apply refuses for the same reason plan did."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2k6hgqr",
+    "version": 1,
+    "section": "providers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The bucket's name is `shop-assets-` followed by `random_id.bucket.hex`. Why does the name not change on every plan?",
+    "hint": "Where does random keep what it drew?",
+    "choices": [
+      {
+        "text": "The value is drawn once, at creation, and kept in the state",
+        "correct": true,
+        "why": "Right, and it stays until the resource is destroyed; that is the point of making it a resource."
+      },
+      {
+        "text": "random asks AWS which suffixes are free",
+        "correct": false,
+        "why": "The random provider calls nothing outside itself."
+      },
+      {
+        "text": "The suffix is derived from the VPC id",
+        "correct": false,
+        "why": "Nothing in `storage.tf` connects the two."
+      },
+      {
+        "text": "The lock file records the suffix",
+        "correct": false,
+        "why": "The lock file records provider versions and hashes, never resource values."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1ytj3nx",
+    "version": 1,
+    "section": "destroy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `terraform destroy` finished, what was in `terraform.tfstate`?",
+    "hint": "Ana asked `jq` for the length of `resources`.",
+    "choices": [
+      {
+        "text": "The file had been deleted along with the resources",
+        "correct": false,
+        "why": "`ls` still listed it; destroy does not delete the state."
+      },
+      {
+        "text": "The seven resources, marked as destroyed",
+        "correct": false,
+        "why": "Destroyed resources leave the state; nothing is kept as a tombstone."
+      },
+      {
+        "text": "The state, still there, recording zero resources",
+        "correct": true,
+        "why": "Yes: a record that this configuration manages nothing right now."
+      },
+      {
+        "text": "The previous state, renamed to `.backup`",
+        "correct": false,
+        "why": "The backup is a separate file beside it; `terraform.tfstate` itself remained, empty of resources."
+      }
+    ]
+  },
+  {
+    "id": "ex-hqs1xcwm",
+    "version": 1,
+    "section": "destroy",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did Ana's `terraform destroy` delete? Choose all that apply.",
+    "hint": "Seven resources, three providers.",
+    "choices": [
+      {
+        "text": "The VPC in moto",
+        "correct": true,
+        "why": "Yes, last, once nothing inside it was left."
+      },
+      {
+        "text": "`network.env` on the laptop",
+        "correct": true,
+        "why": "Yes: destroying a `local_file` deletes the file."
+      },
+      {
+        "text": "`main.tf`",
+        "correct": false,
+        "why": "The configuration is untouched; the next plan read it and proposed seven creations."
+      },
+      {
+        "text": "The `shop-assets-` bucket",
+        "correct": true,
+        "why": "Yes; `aws s3 ls` listed nothing afterwards."
+      },
+      {
+        "text": "`.terraform.lock.hcl`",
+        "correct": false,
+        "why": "The lock file and `.terraform/` stay, so nothing needs installing again."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2nv20p6",
+    "version": 1,
+    "section": "destroy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague created a VPC by hand in the same account, tagged `Name = shop`. What does Ana's `terraform destroy` do to it?",
+    "hint": "What does destroy read to decide what to remove?",
+    "choices": [
+      {
+        "text": "Deletes it, since its tag matches the configuration",
+        "correct": false,
+        "why": "Terraform does not match resources by tag; it knows them by the ids in its state."
+      },
+      {
+        "text": "Leaves it in place, since that VPC is not in Ana's state",
+        "correct": true,
+        "why": "Right. It is not in the state, so destroy does not know it exists."
+      },
+      {
+        "text": "Refuses to run until the extra VPC is imported",
+        "correct": false,
+        "why": "Destroy never looks for resources it does not track; importing is lesson 8's subject."
+      },
+      {
+        "text": "Adopts it into the state in place of the destroyed one",
+        "correct": false,
+        "why": "Nothing is adopted automatically; the state only holds what this configuration created or imported."
+      }
+    ]
+  },
+  {
+    "id": "ex-vgd6v80a",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of the shop's network in this lesson in order.",
+    "hint": "Nothing runs before the providers are installed.",
+    "items": [
+      "Write `versions.tf` and `main.tf`",
+      "`terraform init`",
+      "`terraform plan`",
+      "`terraform apply`, answering `yes`",
+      "`terraform output -raw vpc_id`",
+      "`terraform destroy`"
+    ],
+    "trap": "Asking for an output before the apply is the usual slip: outputs are read from the state, which only an apply writes."
+  },
+  {
+    "id": "ex-etrrfmer",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague clones Ana's repository, which has the `.tf` files and the lock file but, as intended, no `.terraform/`, and runs `terraform plan` straight away. What happens?",
+    "hint": "The lock file names versions; it does not contain programs.",
+    "choices": [
+      {
+        "text": "The plan runs, because the lock file pins every provider",
+        "correct": false,
+        "why": "Pinning a version is not installing it; the program is still missing."
+      },
+      {
+        "text": "Terraform downloads the locked versions as part of the plan",
+        "correct": false,
+        "why": "plan never installs anything; that is init's job alone."
+      },
+      {
+        "text": "It refuses until `terraform init` installs the providers",
+        "correct": true,
+        "why": "Right. A fresh checkout always needs init, which will then install exactly the locked versions."
+      },
+      {
+        "text": "It proposes creating the whole network a second time",
+        "correct": false,
+        "why": "It never gets as far as a plan; and that risk is about the state, lesson 7's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-27wgscb5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana wants to plan production from this directory, which keeps `terraform.tfvars` with `environment = \"dev\"`. She has `export TF_VAR_environment=prod` in her shell. What makes the plan use `prod`?",
+    "hint": "Command-line values are the strongest source.",
+    "choices": [
+      {
+        "text": "Nothing more: the export already does it",
+        "correct": false,
+        "why": "The export is the weakest source; the file wins, and the plan says `dev`."
+      },
+      {
+        "text": "Running `terraform init` again, so the export is read",
+        "correct": false,
+        "why": "init does not read variable values; the order of sources is the same after it."
+      },
+      {
+        "text": "`-var-file=prod.tfvars` on the command line",
+        "correct": true,
+        "why": "Yes. A file named on the command line beats `terraform.tfvars`, and the choice is visible in the command itself."
+      },
+      {
+        "text": "Renaming the variable to `TF_VAR_environment` in `variables.tf`",
+        "correct": false,
+        "why": "The prefix belongs to the shell variable, not to the declaration; the variable would no longer be `var.environment`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ks4n1ft2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these edits make `terraform plan` refuse until Ana runs `init` (with or without `-upgrade`)? Choose all that apply.",
+    "hint": "Ask whether the lock file still agrees with `required_providers`.",
+    "choices": [
+      {
+        "text": "A second `aws_subnet` resource",
+        "correct": false,
+        "why": "The aws provider is installed already; a new resource of a known type needs no init."
+      },
+      {
+        "text": "A `tls` provider added to `required_providers`",
+        "correct": true,
+        "why": "Yes: a provider with no version selected, as `random` and `local` were."
+      },
+      {
+        "text": "A new output",
+        "correct": false,
+        "why": "Outputs involve no provider; apply records them."
+      },
+      {
+        "text": "A constraint the locked version falls outside",
+        "correct": true,
+        "why": "Yes: `Inconsistent dependency lock file`, until `init -upgrade` chooses again."
+      },
+      {
+        "text": "A variable with a default",
+        "correct": false,
+        "why": "Variables are read at plan time; nothing needs installing."
+      }
+    ]
+  }
+]

@@ -1,0 +1,834 @@
+[
+  {
+    "id": "ex-av7jpg5s",
+    "version": 1,
+    "section": "bake-or-fry",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does it mean to bake the shop's web server image?",
+    "hint": "When does the installing happen?",
+    "choices": [
+      {
+        "text": "Installing nginx on each machine as it boots, from a script in its user data",
+        "correct": false,
+        "why": "That is configuring at boot: the work is redone on every machine, every time."
+      },
+      {
+        "text": "Doing the installation once, into an image, before any machine exists",
+        "correct": true,
+        "why": "Yes. Every machine then starts as a copy and has nothing left to install."
+      },
+      {
+        "text": "Running Ansible against every machine a minute after it starts",
+        "correct": false,
+        "why": "Still configuration of a running machine, which is what baking removes."
+      },
+      {
+        "text": "Caching the archive's packages on the laptop",
+        "correct": false,
+        "why": "A cache speeds a download; the machine would still install at boot."
+      }
+    ]
+  },
+  {
+    "id": "ex-61agaann",
+    "version": 1,
+    "section": "bake-or-fry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three web servers configure themselves at boot with `apt-get install nginx`. They were started on day 1, day 9 and day 20. What can be said about the nginx they run?",
+    "hint": "Whose version does each one get?",
+    "choices": [
+      {
+        "text": "The same version, because the command is the same",
+        "correct": false,
+        "why": "The command is the same; the archive it reads is not, so each gets its own day's version."
+      },
+      {
+        "text": "Whatever each boot day's archive offered",
+        "correct": true,
+        "why": "Right, and no file records which, which is the difference baking removes."
+      },
+      {
+        "text": "The version that was current when the plain image was built",
+        "correct": false,
+        "why": "The plain image has no nginx at all; it is installed later, at boot."
+      },
+      {
+        "text": "The newest one, since apt upgrades nginx on every reboot",
+        "correct": false,
+        "why": "Nothing upgrades it after the install; each keeps what its boot got."
+      }
+    ]
+  },
+  {
+    "id": "ex-6f3p3sw3",
+    "version": 1,
+    "section": "bake-or-fry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belongs in the baked image rather than being supplied at boot?",
+    "hint": "Is it the same on every copy?",
+    "choices": [
+      {
+        "text": "The database password",
+        "correct": false,
+        "why": "A secret in the image is a secret in every copy; it is read at boot from a secret store."
+      },
+      {
+        "text": "The address of the production database",
+        "correct": false,
+        "why": "It differs per environment, so it is given at boot."
+      },
+      {
+        "text": "Which environment the machine belongs to",
+        "correct": false,
+        "why": "That differs per copy, which is exactly what stays out of the image."
+      },
+      {
+        "text": "nginx and its version",
+        "correct": true,
+        "why": "Yes: packages are the same on every copy, so they are installed once, at build time."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxtacnxb",
+    "version": 1,
+    "section": "bake-or-fry",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a sale day the shop starts twenty extra web servers at once, while the Ubuntu package mirror is overloaded. Which servers come up slowly or not at all?",
+    "hint": "Which kind needs the mirror at the moment it starts?",
+    "choices": [
+      {
+        "text": "The ones started from a baked image",
+        "correct": false,
+        "why": "A baked image already holds the packages; the mirror was needed at build time, days before."
+      },
+      {
+        "text": "The ones that install their packages at boot",
+        "correct": true,
+        "why": "Right: their start depends on the mirror answering at that moment, the busiest one."
+      },
+      {
+        "text": "Both kinds equally, because every machine boots from an image",
+        "correct": false,
+        "why": "Both boot from an image, but only one then downloads anything."
+      },
+      {
+        "text": "Neither, because AWS keeps a copy of the mirror in each region",
+        "correct": false,
+        "why": "The lesson's point holds whoever runs the mirror: a fried start needs it to answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j842tfd",
+    "version": 1,
+    "section": "a-template",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each block of `web.pkr.hcl` to its job.",
+    "hint": "Three top-level blocks and two kinds of block inside `build`.",
+    "pairs": [
+      {
+        "left": "`packer`",
+        "right": "Which plugins the template needs"
+      },
+      {
+        "left": "`source \"docker\" \"web\"`",
+        "right": "Where the temporary machine comes from"
+      },
+      {
+        "left": "`provisioner \"shell\"`",
+        "right": "A step run inside the temporary machine"
+      },
+      {
+        "left": "`post-processor \"docker-tag\"`",
+        "right": "Something done to the image after it is saved"
+      }
+    ],
+    "right_distractors": [
+      "Which instances Terraform replaces"
+    ]
+  },
+  {
+    "id": "ex-w1d36j14",
+    "version": 1,
+    "section": "a-template",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without `commit = true` in the `source` block, what would the Docker build leave behind?",
+    "hint": "What turns the temporary container into something kept?",
+    "choices": [
+      {
+        "text": "An image tagged `shop-web:1.0.0` anyway",
+        "correct": false,
+        "why": "There would be no image to tag; the commit is what makes one."
+      },
+      {
+        "text": "No image at all, only a container that is thrown away",
+        "correct": true,
+        "why": "Right. The provisioners would run in a container that is then thrown away, which is a run and not a build."
+      },
+      {
+        "text": "A running container with nginx serving the page",
+        "correct": false,
+        "why": "Packer kills the temporary container at the end either way."
+      },
+      {
+        "text": "An AMI in moto",
+        "correct": false,
+        "why": "The docker builder never talks to AWS; AMIs come from `amazon-ebs`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypj4h7mw",
+    "version": 1,
+    "section": "a-template",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this lesson's template say `pull = false`?",
+    "hint": "What happened when Packer asked Docker Hub?",
+    "choices": [
+      {
+        "text": "Docker Hub refused pulls with `429 Too Many Requests`",
+        "correct": true,
+        "why": "Yes, so the build uses the copy already on the laptop. Leaving it out is the ordinary setting."
+      },
+      {
+        "text": "Pulling is what makes the build reproducible",
+        "correct": false,
+        "why": "The opposite: a pull of a tag can bring a different image. Pinning by digest is what makes it reproducible."
+      },
+      {
+        "text": "The docker builder cannot pull images at all, so the setting is required",
+        "correct": false,
+        "why": "It pulls by default; the lesson's first attempt was refused by the registry, not by Packer."
+      },
+      {
+        "text": "It stops the image being pushed to Docker Hub after the build",
+        "correct": false,
+        "why": "Pushing is a separate post-processor; `pull` is about the base image coming in."
+      }
+    ]
+  },
+  {
+    "id": "ex-1h43rab4",
+    "version": 1,
+    "section": "a-template",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To build the shop's image as an AMI on AWS instead of a Docker image, which part of the template changes most?",
+    "hint": "Where does the temporary machine come from?",
+    "choices": [
+      {
+        "text": "The provisioner, which has to be rewritten for EC2",
+        "correct": false,
+        "why": "The same shell steps run inside an EC2 instance as inside a container."
+      },
+      {
+        "text": "The `build` block, which AWS does not support",
+        "correct": false,
+        "why": "The build block is the same; it just names a different source."
+      },
+      {
+        "text": "The `source` block, which names the builder and its settings",
+        "correct": true,
+        "why": "Yes: `source \"amazon-ebs\"` with a region, an instance type and an `ami_name`."
+      },
+      {
+        "text": "Nothing; Packer detects the target from the credentials",
+        "correct": false,
+        "why": "The builder is named explicitly in the source block's first label."
+      }
+    ]
+  },
+  {
+    "id": "ex-bp87g77t",
+    "version": 1,
+    "section": "building",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `packer build` did for the Docker image in order.",
+    "hint": "The tag comes from a post-processor.",
+    "items": [
+      "Start a container from `ubuntu:24.04`",
+      "Run the provisioner's script inside it",
+      "Commit the container as an image",
+      "Kill the container",
+      "Tag the image `shop-web:1.0.0`"
+    ],
+    "trap": "Tagging before the commit is the usual slip: there is no image to tag until the container has been saved."
+  },
+  {
+    "id": "ex-bgnfgv0w",
+    "version": 1,
+    "section": "building",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`packer build` finished successfully, yet `docker run shop-web:1.0.0` stopped at once. Why did Packer not notice?",
+    "hint": "What does Packer check after each step?",
+    "choices": [
+      {
+        "text": "Packer ignores errors inside provisioners",
+        "correct": false,
+        "why": "A provisioner step that fails stops the build; none failed here."
+      },
+      {
+        "text": "It only checks each step's exit status",
+        "correct": true,
+        "why": "Right. Installing nginx succeeded; starting it on a machine without IPv6 is a different question, answered only by running the image."
+      },
+      {
+        "text": "The commit lost the nginx configuration written by apt",
+        "correct": false,
+        "why": "The configuration was there; `grep` found its `listen` lines in the image."
+      },
+      {
+        "text": "`packer validate` had already approved the template",
+        "correct": false,
+        "why": "Validate checks the template's syntax; it never runs anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-mpmwd14f",
+    "version": 1,
+    "section": "building",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After fixing the template, why did Ana build `1.0.1` instead of building `1.0.0` again?",
+    "hint": "What should a version name?",
+    "choices": [
+      {
+        "text": "Docker refuses to reuse a tag",
+        "correct": false,
+        "why": "Docker would move the tag without complaint; that is the danger."
+      },
+      {
+        "text": "`1.0.0` already names an image, and that image does not change",
+        "correct": true,
+        "why": "Yes. A faulty version is followed by a newer one, never rebuilt under the old number."
+      },
+      {
+        "text": "Packer increments the patch number on every build that follows a failure",
+        "correct": false,
+        "why": "Packer invents no number; the template, and later a variable, gives it."
+      },
+      {
+        "text": "Old images have to be deleted before a tag is used again",
+        "correct": false,
+        "why": "Nothing has to be deleted; the point is not to reuse the number at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4hrprp8",
+    "version": 1,
+    "section": "building",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before building, `packer ___ .` checks the template and builds nothing; it printed `The configuration is valid.`",
+    "hint": "Terraform has a command of the same name.",
+    "blanks": [
+      {
+        "accept": [
+          "validate"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b8h6ce8z",
+    "version": 1,
+    "section": "versioning-images",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `packer build .` do once `version` and `commit` were variables with no default?",
+    "hint": "Neither was given on the command line.",
+    "choices": [
+      {
+        "text": "Built `shop-web:latest`",
+        "correct": false,
+        "why": "Packer does not make a version up; it refused to start."
+      },
+      {
+        "text": "Refused, with `Unset variable`",
+        "correct": true,
+        "why": "Yes, once for each of the two, and nothing was built."
+      },
+      {
+        "text": "Asked for the values interactively, as Terraform does",
+        "correct": false,
+        "why": "It printed an error and stopped; there was no prompt."
+      },
+      {
+        "text": "Reused `1.0.1`, the last version in the template",
+        "correct": false,
+        "why": "The number was taken out of the template in that same diff."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7p4rae2",
+    "version": 1,
+    "section": "versioning-images",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where can someone find which git commit built `shop-web:1.1.0`? Choose all that apply.",
+    "hint": "Two places were written by the build.",
+    "choices": [
+      {
+        "text": "In the image's `org.opencontainers.image.revision` label",
+        "correct": true,
+        "why": "Yes; it travels inside the image, so a machine running it can be asked."
+      },
+      {
+        "text": "In `manifest.json`, under `custom_data`",
+        "correct": true,
+        "why": "Yes; that is what the next step of a pipeline reads."
+      },
+      {
+        "text": "In the image's tag",
+        "correct": false,
+        "why": "The tag carries the version only, `1.1.0`."
+      },
+      {
+        "text": "In the `packer` block's `required_plugins`",
+        "correct": false,
+        "why": "That block names plugins and their versions, not the template's commit."
+      },
+      {
+        "text": "In the image id Docker printed",
+        "correct": false,
+        "why": "The id is a hash of the image; it says nothing about git."
+      }
+    ]
+  },
+  {
+    "id": "ex-zpb0xsyt",
+    "version": 1,
+    "section": "versioning-images",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two web servers were started from `shop-web:latest`, one on Monday and one on Friday, and nobody edited any file in between. Are they running the same image?",
+    "hint": "What does a build in between do to `latest`?",
+    "choices": [
+      {
+        "text": "Yes, because the files that describe them did not change",
+        "correct": false,
+        "why": "The files say `latest`, and `latest` can point at a different image on Friday."
+      },
+      {
+        "text": "Not necessarily",
+        "correct": true,
+        "why": "Right: any build in the week moves the tag, and nothing in the files records that it moved."
+      },
+      {
+        "text": "Yes, because Docker refuses to start an image whose tag has moved",
+        "correct": false,
+        "why": "Docker starts whatever the tag points at, without comment."
+      },
+      {
+        "text": "No, never, because `latest` changes every hour",
+        "correct": false,
+        "why": "It changes when somebody builds, which is the problem: you cannot tell from the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-927q5c9b",
+    "version": 1,
+    "section": "versioning-images",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the `1.1.0` build, how many images did `docker images shop-web` list?",
+    "hint": "Count the broken one too.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "images"
+  },
+  {
+    "id": "ex-b7fq8n76",
+    "version": 1,
+    "section": "rolling-out",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana changes `web_version` from `1.0.1` to `1.1.0` in `terraform.tfvars`. Why does the plan replace the instance instead of updating it?",
+    "hint": "Look for the comment at the end of the `ami` line.",
+    "choices": [
+      {
+        "text": "Because the `Version` tag changed",
+        "correct": false,
+        "why": "A tag alone is an update in place; the tag changes here only because the instance is replaced anyway."
+      },
+      {
+        "text": "Because `create_before_destroy` forces every change to be a replacement",
+        "correct": false,
+        "why": "It only sets the order of a replacement; it does not cause one."
+      },
+      {
+        "text": "`ami` forces replacement",
+        "correct": true,
+        "why": "Yes: a different image means a different instance, so the plan says `# forces replacement`."
+      },
+      {
+        "text": "Because moto cannot update instances",
+        "correct": false,
+        "why": "The plan is computed by the provider, the same against moto as against AWS."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4t159zr",
+    "version": 1,
+    "section": "rolling-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The apply printed `Creating...` for the new instance before `Destroying...` for the old one. What made that the order?",
+    "hint": "A lifecycle argument from lesson 6.",
+    "choices": [
+      {
+        "text": "`create_before_destroy = true` in the instance's `lifecycle` block",
+        "correct": true,
+        "why": "Yes: `+/-`, create replacement and then destroy, with the old one kept as a deposed object meanwhile."
+      },
+      {
+        "text": "Terraform always creates first when the image changes",
+        "correct": false,
+        "why": "The default order is destroy first; lesson 6 showed the gap that leaves."
+      },
+      {
+        "text": "The `data \"aws_ami\"` lookup ran before the instance",
+        "correct": false,
+        "why": "The lookup decides which image, not the order of the replacement."
+      },
+      {
+        "text": "The variable `web_version` has no default",
+        "correct": false,
+        "why": "That forces a value to be given; it says nothing about ordering."
+      }
+    ]
+  },
+  {
+    "id": "ex-070w63vf",
+    "version": 1,
+    "section": "rolling-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`1.1.0` turns out to be faulty. What does the lesson do to roll back?",
+    "hint": "The same path as a rollout.",
+    "choices": [
+      {
+        "text": "Logs in to the instance and reinstalls the old nginx",
+        "correct": false,
+        "why": "That edits a running machine, which this model never does."
+      },
+      {
+        "text": "Runs `terraform destroy` and applies again from scratch",
+        "correct": false,
+        "why": "Far more than needed; the change is one value."
+      },
+      {
+        "text": "Rebuilds `1.1.0` with the old template",
+        "correct": false,
+        "why": "That would give one number two images; the older version already exists."
+      },
+      {
+        "text": "`git revert`, then a plan that replaces the instance again",
+        "correct": true,
+        "why": "Yes: `1.0.1` is back in `terraform.tfvars`, and the instance is replaced towards the older image."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxhvz6tw",
+    "version": 1,
+    "section": "rolling-out",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the plan, the line for the image ends with `# forces ___`, which is why the instance is not updated in place.",
+    "hint": "The word the plan also uses in `must be replaced`.",
+    "blanks": [
+      {
+        "accept": [
+          "replacement"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jdnky6v3",
+    "version": 1,
+    "section": "reproducible",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `ubuntu@sha256:…` guarantee that `ubuntu:24.04` does not?",
+    "hint": "Can the name be moved to other contents?",
+    "choices": [
+      {
+        "text": "That the image was built recently, with this month's updates",
+        "correct": false,
+        "why": "It guarantees the opposite kind of thing: the same contents, however old."
+      },
+      {
+        "text": "That it names the same contents every time it is used",
+        "correct": true,
+        "why": "Yes: the digest is a hash of the contents, so different contents would have a different name."
+      },
+      {
+        "text": "That Canonical signed the image",
+        "correct": false,
+        "why": "A digest identifies contents; it says nothing about who published them."
+      },
+      {
+        "text": "That the pull will be faster because Docker skips the registry",
+        "correct": false,
+        "why": "Speed is not the point; the template keeps `pull = false` for its own reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrkex15f",
+    "version": 1,
+    "section": "reproducible",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The template pins nginx to the exact update the archive offered on build day. A month later the archive has replaced that update with a newer one. What happens on the next build?",
+    "hint": "The version table listed the release's version and the newest update.",
+    "choices": [
+      {
+        "text": "It fails at `apt-get install`, before any image is made",
+        "correct": true,
+        "why": "Yes, loudly and on the day of the build, instead of quietly producing something different. Moving the pin is then a reviewed commit."
+      },
+      {
+        "text": "apt installs the newer version without saying so",
+        "correct": false,
+        "why": "That is what an unpinned install does; a pin asks for one exact version."
+      },
+      {
+        "text": "Packer reuses the nginx from the previous image",
+        "correct": false,
+        "why": "Each build starts from the base image; nothing is carried over from earlier builds."
+      },
+      {
+        "text": "The build succeeds, because the digest pins the packages too",
+        "correct": false,
+        "why": "The digest pins the base image; nginx is installed afterwards, from the archive."
+      }
+    ]
+  },
+  {
+    "id": "ex-t59bgz3n",
+    "version": 1,
+    "section": "reproducible",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate says pinning the base digest and every package means the shop never gets security fixes. What does the lesson answer?",
+    "hint": "Pins make updates deliberate.",
+    "choices": [
+      {
+        "text": "Pinned images are patched automatically by the registry",
+        "correct": false,
+        "why": "Nothing patches an image after it is built; that would make it mutable."
+      },
+      {
+        "text": "Security fixes go in at boot, through apt, on top of the baked image",
+        "correct": false,
+        "why": "That brings back configuring at boot, and the drift and boot-time cost with it."
+      },
+      {
+        "text": "A scheduled rebuild bumps the pins in a commit and ships a new version",
+        "correct": true,
+        "why": "Right: updates arrive on a schedule as reviewed diffs, and an urgent fix takes the same path the same day."
+      },
+      {
+        "text": "He is right, which is why the lesson pins only the base image",
+        "correct": false,
+        "why": "The lesson pins both, and rebuilds to move them."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8fdda9n",
+    "version": 1,
+    "section": "reproducible",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody edited `index.html` inside the running container `shop-web-live`. What did `docker diff` show after the container was replaced from `shop-web:1.2.0`?",
+    "hint": "The new container is the image again.",
+    "choices": [
+      {
+        "text": "The edited file, marked `C`",
+        "correct": false,
+        "why": "That was before the replacement; the edit lived only in the old container."
+      },
+      {
+        "text": "An error, because the container had been replaced",
+        "correct": false,
+        "why": "The new container has the same name and diffs cleanly against its image."
+      },
+      {
+        "text": "Nothing in the web directory",
+        "correct": true,
+        "why": "Yes: the hand fix was lost, by design, and `curl` served the image's own page again."
+      },
+      {
+        "text": "The edit, copied into the image by Docker",
+        "correct": false,
+        "why": "Docker never writes a container's changes back into its image unless somebody commits it."
+      }
+    ]
+  },
+  {
+    "id": "ex-chj5dd3m",
+    "version": 1,
+    "section": "reproducible",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which inputs did Ana pin to make the build reproducible? Choose all that apply.",
+    "hint": "Two names that moved, plus what was already in git.",
+    "choices": [
+      {
+        "text": "The base image, by digest",
+        "correct": true,
+        "why": "Yes, so the start is the same contents every time."
+      },
+      {
+        "text": "nginx, by exact package version",
+        "correct": true,
+        "why": "Yes, read from `apt-cache policy` on that same base."
+      },
+      {
+        "text": "The template itself, by its git commit",
+        "correct": true,
+        "why": "Yes; the commit is recorded in the label and the manifest."
+      },
+      {
+        "text": "The image id, by writing it into the template",
+        "correct": false,
+        "why": "The id is an output of the build, not an input; it cannot be known before."
+      },
+      {
+        "text": "The time of the build, so timestamps match",
+        "correct": false,
+        "why": "Timestamps still differ; reproducible here means the same software, not the same bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ce8pfm69",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A security update to nginx is published. Put the steps that get it into production in order.",
+    "hint": "The image is built and checked before Terraform hears of it.",
+    "items": [
+      "Commit the new nginx pin to the template",
+      "Build the next version with `packer build -var version=…`",
+      "Start the image and check that it answers",
+      "Change `web_version` in `terraform.tfvars` and review the plan",
+      "Apply, which creates the new instance before destroying the old"
+    ],
+    "trap": "Changing `terraform.tfvars` before the image exists is the usual slip: the lookup by name finds no image and the plan fails."
+  },
+  {
+    "id": "ex-dsjew863",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 2 a.m. an engineer fixes a broken page by editing it inside the running web server, and the site recovers. What happens to the fix?",
+    "hint": "Where does the next machine come from?",
+    "choices": [
+      {
+        "text": "It stays until somebody runs `terraform apply` with no changes",
+        "correct": false,
+        "why": "An apply with no changes replaces nothing; the fix lasts exactly as long as that machine."
+      },
+      {
+        "text": "It is lost at the next replacement, unless it goes into the template",
+        "correct": true,
+        "why": "Right: a hand fix is drift, and under this model the next machine is the image again. It has to ship as a new version."
+      },
+      {
+        "text": "Packer notices the drift and includes it in the next build",
+        "correct": false,
+        "why": "Packer builds from the template and a base image; it never looks at running machines."
+      },
+      {
+        "text": "Terraform reports it as drift on the next plan",
+        "correct": false,
+        "why": "A file inside the machine is invisible to the cloud's API, as lesson 1 showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdt13c2j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team bakes images but lets every instance run `apt-get upgrade` at boot \"to stay patched\". Which property of the lesson's approach have they given up?",
+    "hint": "Is the machine still exactly its image?",
+    "choices": [
+      {
+        "text": "Being able to tag images with a version",
+        "correct": false,
+        "why": "They can still tag; the tag just no longer describes what runs."
+      },
+      {
+        "text": "Using Terraform to replace instances",
+        "correct": false,
+        "why": "Terraform can still replace them; each replacement just runs something different."
+      },
+      {
+        "text": "Running nginx in a container",
+        "correct": false,
+        "why": "Containers or not, the issue is what changes after start."
+      },
+      {
+        "text": "Machines that are exactly their image",
+        "correct": true,
+        "why": "Right: each boot now installs whatever that day offers, so the version no longer says what runs. Patches belong in a rebuild."
+      }
+    ]
+  }
+]
