@@ -1,0 +1,862 @@
+[
+  {
+    "id": "ex-9p3h0b04",
+    "version": 1,
+    "section": "environments",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana applied `dev.tfvars` and then, in the same directory and the same state, asked for a plan with `prod.tfvars`. What did the plan propose?",
+    "hint": "The state held one VPC when the plan started.",
+    "choices": [
+      {
+        "text": "A second network for prod, created beside the dev one",
+        "correct": false,
+        "why": "That is what she expected. The state already held dev's VPC, so Terraform compared prod's values with it."
+      },
+      {
+        "text": "Replacing dev's network",
+        "correct": true,
+        "why": "Yes. One state, one VPC: the new range forces its replacement, and the subnet and security group inside it go too."
+      },
+      {
+        "text": "Nothing, because a `.tfvars` file cannot change a resource that already exists",
+        "correct": false,
+        "why": "Values feed the configuration like any other change; the plan proposed three replacements."
+      },
+      {
+        "text": "An error saying the environment had changed",
+        "correct": false,
+        "why": "Terraform has no idea what an environment is; it saw different values for the same resources."
+      }
+    ]
+  },
+  {
+    "id": "ex-07nmh8e8",
+    "version": 1,
+    "section": "environments",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In that same plan, with `prod.tfvars` against dev's state, how many resources would have been destroyed?",
+    "hint": "Read the summary line of the plan.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-zg8mqy1w",
+    "version": 1,
+    "section": "environments",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "As far as Terraform is concerned, what makes dev and prod two environments rather than one?",
+    "hint": "What did the failed attempt have only one of?",
+    "choices": [
+      {
+        "text": "A separate `.tfvars` file for each",
+        "correct": false,
+        "why": "Ana had two of those, and the second still rewrote the first environment."
+      },
+      {
+        "text": "An `Environment` tag on every resource",
+        "correct": false,
+        "why": "A tag is a value like any other; the plan just proposed changing it from dev to prod."
+      },
+      {
+        "text": "A state of its own for each",
+        "correct": true,
+        "why": "Right. A plan reads one state, and only a second state lets it see a second environment."
+      },
+      {
+        "text": "Different names for the variables in each environment",
+        "correct": false,
+        "why": "The variables are the same on purpose: same code, different values."
+      }
+    ]
+  },
+  {
+    "id": "ex-fw6tgmv6",
+    "version": 1,
+    "section": "environments",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does giving each environment its own state provide? Choose all that apply.",
+    "hint": "One of the options needs a layer below the state.",
+    "choices": [
+      {
+        "text": "A plan for prod that lists only prod's changes",
+        "correct": true,
+        "why": "Yes; it reads prod's state and nothing else."
+      },
+      {
+        "text": "Credentials for dev that cannot reach prod",
+        "correct": false,
+        "why": "Two states in one account, read with the same keys, are separated by bookkeeping alone; that needs separate credentials or accounts."
+      },
+      {
+        "text": "A lock per environment, so dev never blocks prod",
+        "correct": true,
+        "why": "Yes; each state has its own lock."
+      },
+      {
+        "text": "A dev mistake, applied, that damages dev alone",
+        "correct": true,
+        "why": "Yes; prod's resources are not in dev's state for a plan to change."
+      },
+      {
+        "text": "Smaller bills, since dev is built from cheaper values",
+        "correct": false,
+        "why": "Cheaper values are a choice of values, not of state."
+      }
+    ]
+  },
+  {
+    "id": "ex-425sjy5x",
+    "version": 1,
+    "section": "workspaces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a workspace created with `terraform workspace new dev` start with?",
+    "hint": "Read the message `new` printed.",
+    "choices": [
+      {
+        "text": "A copy of the `default` workspace's state",
+        "correct": false,
+        "why": "It starts with nothing, which is why prod's first plan created everything."
+      },
+      {
+        "text": "An empty state",
+        "correct": true,
+        "why": "Yes. The configuration is the same; the state behind it is new."
+      },
+      {
+        "text": "A new directory holding a copy of the configuration",
+        "correct": false,
+        "why": "The directory and its files stay as they are; only the state changes."
+      },
+      {
+        "text": "A bucket of its own for the state",
+        "correct": false,
+        "why": "Same bucket, same backend block; the S3 backend files it under another key."
+      }
+    ]
+  },
+  {
+    "id": "ex-rcvc4yc0",
+    "version": 1,
+    "section": "workspaces",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To name every resource after the state that owns it, Ana wrote `name = \"shop-${___}\"` in `main.tf`.",
+    "hint": "The expression that holds the selected workspace's name.",
+    "blanks": [
+      {
+        "accept": [
+          "terraform.workspace"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8170vrda",
+    "version": 1,
+    "section": "workspaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does Terraform record which workspace is selected?",
+    "hint": "Ana printed it with `cat`.",
+    "choices": [
+      {
+        "text": "In the state bucket, beside the states",
+        "correct": false,
+        "why": "The bucket holds one state per workspace and no record of which one you chose."
+      },
+      {
+        "text": "In `backend.tf`, which `select` rewrites",
+        "correct": false,
+        "why": "`select` touches no file Ana wrote; `git diff` would show it if it did."
+      },
+      {
+        "text": "In the shell's environment variables",
+        "correct": false,
+        "why": "`TF_WORKSPACE` can override it for one command, but the selection itself is stored elsewhere."
+      },
+      {
+        "text": "In `.terraform/environment`",
+        "correct": true,
+        "why": "Yes: one word in a file `init` created, which git ignores."
+      }
+    ]
+  },
+  {
+    "id": "ex-dg3wq5dd",
+    "version": 1,
+    "section": "workspaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After both workspaces were applied, why was `shop/terraform.tfstate` still in the bucket, without an `env:/` prefix?",
+    "hint": "Which workspace keeps the plain key?",
+    "choices": [
+      {
+        "text": "It is the `default` workspace's state, emptied by the earlier destroy",
+        "correct": true,
+        "why": "Right: 181 bytes of a state that holds nothing."
+      },
+      {
+        "text": "It is a backup the S3 backend keeps of prod",
+        "correct": false,
+        "why": "Backups of earlier writes are versions of the same key, not another key."
+      },
+      {
+        "text": "It is the lock",
+        "correct": false,
+        "why": "A lock is a `.tflock` object, and it disappears when the run ends."
+      },
+      {
+        "text": "It is dev's state, because dev was created first",
+        "correct": false,
+        "why": "Dev's state is under `env:/dev/`, like every workspace but `default`."
+      }
+    ]
+  },
+  {
+    "id": "ex-129pnvn0",
+    "version": 1,
+    "section": "workspaces",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague clones Ana's repository, runs `terraform init`, and plans with `prod.tfvars` without selecting anything. Which state does that plan read?",
+    "hint": "Is the selection in anything the clone copied?",
+    "choices": [
+      {
+        "text": "Prod's, because that is what Ana selected",
+        "correct": false,
+        "why": "Her selection is a file in her own `.terraform`, which git ignores; the clone never had it."
+      },
+      {
+        "text": "Dev's, because it was the first workspace created",
+        "correct": false,
+        "why": "Creation order decides nothing; a fresh checkout starts in `default`."
+      },
+      {
+        "text": "`default`'s",
+        "correct": true,
+        "why": "Yes, and with the destroyed state there it would plan to create a whole prod network beside the real one."
+      },
+      {
+        "text": "None: Terraform refuses to plan until a workspace is selected",
+        "correct": false,
+        "why": "There is always a selected workspace, and without a choice it is `default`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mche5cc",
+    "version": 1,
+    "section": "workspaces",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana wants the `prod` workspace gone, with its resources removed rather than forgotten. Put the commands in order.",
+    "hint": "Terraform refuses to delete a workspace that still tracks resources, or the one you are in.",
+    "items": [
+      "`terraform workspace select prod`",
+      "`terraform destroy -var-file=prod.tfvars`",
+      "`terraform workspace select default`",
+      "`terraform workspace delete prod`"
+    ],
+    "trap": "Deleting first is refused while the state tracks anything, and `-force` would leave the resources running with no record."
+  },
+  {
+    "id": "ex-gsyngw1t",
+    "version": 1,
+    "section": "wrong-workspace",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When Ana ran the plan with `dev.tfvars` while `prod` was selected, what on her screen said prod before the plan came back?",
+    "hint": "Look at the line she typed.",
+    "choices": [
+      {
+        "text": "The prompt, which names the workspace",
+        "correct": false,
+        "why": "It read `ana@laptop:~/shop$`, the same in every workspace."
+      },
+      {
+        "text": "The name of the directory",
+        "correct": false,
+        "why": "Workspaces keep one directory for every environment."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right, and that is the whole risk: the selection is a hidden file nobody reads."
+      },
+      {
+        "text": "A warning from Terraform that prod was selected",
+        "correct": false,
+        "why": "Terraform prints no such warning; it has no idea which workspace matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3nmpmg0",
+    "version": 1,
+    "section": "wrong-workspace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `validation` block compares `var.environment` with `terraform.workspace`. Which mistake does it NOT catch?",
+    "hint": "What does the comparison need to have in hand?",
+    "choices": [
+      {
+        "text": "`dev.tfvars` passed while `prod` is selected",
+        "correct": false,
+        "why": "That is the accident it was written for, and it refused it."
+      },
+      {
+        "text": "`prod.tfvars` passed while `dev` is selected",
+        "correct": false,
+        "why": "Same comparison the other way round; it refuses this too."
+      },
+      {
+        "text": "An edit to `main.tf` tried with prod selected",
+        "correct": true,
+        "why": "Right. With prod's own values the two sides agree, and the untested change goes to prod."
+      },
+      {
+        "text": "A values file whose `environment` line says `staging` while `dev` is selected",
+        "correct": false,
+        "why": "`staging` is not `dev`, so the validation fails it like any other mismatch."
+      }
+    ]
+  },
+  {
+    "id": "ex-etk4kwa0",
+    "version": 1,
+    "section": "wrong-workspace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `prod` selected, Ana ran `TF_WORKSPACE=dev terraform plan -var-file=dev.tfvars` and then `terraform workspace show`. What did `show` print?",
+    "hint": "Does an environment variable write anything to disk?",
+    "choices": [
+      {
+        "text": "`dev`, since the variable selected it",
+        "correct": false,
+        "why": "It selected dev for that one command and wrote nothing down."
+      },
+      {
+        "text": "`prod`",
+        "correct": true,
+        "why": "Yes. The stored selection is untouched, which is what makes the variable safe in a script."
+      },
+      {
+        "text": "`default`, because the variable resets it",
+        "correct": false,
+        "why": "Nothing resets it; the file still says prod."
+      },
+      {
+        "text": "An error, because the variable and the file disagree",
+        "correct": false,
+        "why": "They are allowed to disagree; the variable simply wins while it is set."
+      }
+    ]
+  },
+  {
+    "id": "ex-fem48ve6",
+    "version": 1,
+    "section": "wrong-workspace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pipeline holding only dev's credentials runs `terraform apply -auto-approve -var-file=prod.tfvars` with `prod` selected, by mistake. Prod lives in its own AWS account. What happens?",
+    "hint": "Values and workspace agree here. What is left to stop it?",
+    "choices": [
+      {
+        "text": "The validation block refuses it",
+        "correct": false,
+        "why": "`environment` is prod and the workspace is prod: the check passes."
+      },
+      {
+        "text": "Terraform asks for a confirmation anyway, because the workspace is called prod",
+        "correct": false,
+        "why": "Workspace names mean nothing to Terraform, and `-auto-approve` skips the question."
+      },
+      {
+        "text": "It applies to prod, since every check agrees",
+        "correct": false,
+        "why": "Every check in the configuration agrees, but the credentials cannot reach prod's account."
+      },
+      {
+        "text": "It fails for lack of access, and prod is untouched",
+        "correct": true,
+        "why": "Right. This is the layer below the state, and the one defence that does not depend on anybody choosing correctly."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9372kfh",
+    "version": 1,
+    "section": "directories",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the directory-per-environment layout, how does Ana choose which environment a plan is for?",
+    "hint": "Look at the prompt in the apply capture.",
+    "choices": [
+      {
+        "text": "With `-var-file`",
+        "correct": false,
+        "why": "There is no values file to pass: the values are written into each directory's module calls."
+      },
+      {
+        "text": "By running `terraform workspace select` first",
+        "correct": false,
+        "why": "Each directory uses its `default` workspace; the directory itself is the choice."
+      },
+      {
+        "text": "By the directory she runs it in, `envs/dev` or `envs/prod`",
+        "correct": true,
+        "why": "Yes, and the prompt shows it on every line."
+      },
+      {
+        "text": "With `TF_WORKSPACE`",
+        "correct": false,
+        "why": "That variable picks a workspace inside one directory; here there is nothing to pick."
+      }
+    ]
+  },
+  {
+    "id": "ex-trd0pb7q",
+    "version": 1,
+    "section": "directories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each environment's `backend.tf` spell out its key, instead of taking it from a variable shared by both?",
+    "hint": "Lesson 7 said when the backend block is read.",
+    "choices": [
+      {
+        "text": "S3 refuses object keys computed by Terraform",
+        "correct": false,
+        "why": "S3 never sees how the string was produced."
+      },
+      {
+        "text": "A backend block cannot use variables",
+        "correct": true,
+        "why": "Right: it is configured before anything else is evaluated, so it is literal, or passed with `-backend-config`."
+      },
+      {
+        "text": "So that `diff -r` shows the difference between the environments",
+        "correct": false,
+        "why": "The diff shows it, but that is a consequence, not the reason."
+      },
+      {
+        "text": "Terraform requires keys to be unique across all repositories",
+        "correct": false,
+        "why": "Terraform knows nothing about other repositories; uniqueness is your job."
+      }
+    ]
+  },
+  {
+    "id": "ex-fc7k34vb",
+    "version": 1,
+    "section": "directories",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana added an `Owner` tag to the shared network module and planned in `envs/prod`. How many resources did prod's plan want to change?",
+    "hint": "Prod has one VPC and one subnet per zone.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-6e5d2y9x",
+    "version": 1,
+    "section": "directories",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana wants dev to run a new version of the network module for a week while prod stays on the old one. Both directories use `source = \"../../modules/network\"`. What does she need?",
+    "hint": "Where does a module source say which version it means?",
+    "choices": [
+      {
+        "text": "Nothing: prod only changes when somebody applies there",
+        "correct": false,
+        "why": "Prod's next apply, for any reason at all, picks up whatever the path holds that day."
+      },
+      {
+        "text": "A workspace called `trial` inside `envs/dev`",
+        "correct": false,
+        "why": "A workspace gives another state, not another version of the code."
+      },
+      {
+        "text": "Each environment to take the module by version, such as a git `?ref=`, instead of by path",
+        "correct": true,
+        "why": "Right. Then dev moves to the new tag and prod stays where it is until somebody moves it."
+      },
+      {
+        "text": "A copy of the new code in `envs/dev/backend.tf`",
+        "correct": false,
+        "why": "The backend block says where the state lives, not what the module does."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gpx28ke",
+    "version": 1,
+    "section": "terragrunt",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Terragrunt do with the `remote_state` block in `root.hcl`?",
+    "hint": "Look at the file found inside `.terragrunt-cache`.",
+    "choices": [
+      {
+        "text": "It keeps every unit's state on a Terragrunt server",
+        "correct": false,
+        "why": "There is no such server; the states are in Ana's S3 bucket."
+      },
+      {
+        "text": "It writes a `backend.tf` into each unit, keyed by the unit's path",
+        "correct": true,
+        "why": "Yes: `live/dev/network/terraform.tfstate` for `dev/network`, one block written once."
+      },
+      {
+        "text": "It replaces the S3 backend with one of its own",
+        "correct": false,
+        "why": "The generated file is an ordinary S3 backend block that Terraform reads."
+      },
+      {
+        "text": "It merges all the units into one state",
+        "correct": false,
+        "why": "The opposite: every unit gets its own key, four of them here."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2zv7j3v",
+    "version": 1,
+    "section": "terragrunt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the first `terragrunt run --all plan` in `live/dev` fail for the web unit?",
+    "hint": "What does web need from network, and where does it come from?",
+    "choices": [
+      {
+        "text": "The network unit had no outputs yet, because nothing had been applied",
+        "correct": true,
+        "why": "Right. A plan cannot read an output from a state that does not exist; mock outputs or an apply in order get past it."
+      },
+      {
+        "text": "Terragrunt ran the two units in random order",
+        "correct": false,
+        "why": "It printed the order first, network then web."
+      },
+      {
+        "text": "The `dependency` block is spelt `dependencies`",
+        "correct": false,
+        "why": "`dependency` is right; the error is about its outputs, not its name."
+      },
+      {
+        "text": "moto cannot answer Terragrunt",
+        "correct": false,
+        "why": "The network unit planned fine against moto, and the later apply worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bzbd38f",
+    "version": 1,
+    "section": "terragrunt",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the Terragrunt files with what it does.",
+    "hint": "Two of them write files; one of them decides the order.",
+    "pairs": [
+      {
+        "left": "`include`",
+        "right": "brings `root.hcl`'s settings into the unit"
+      },
+      {
+        "left": "`dependency`",
+        "right": "reads another unit's outputs and runs that unit first"
+      },
+      {
+        "left": "`remote_state`",
+        "right": "generates `backend.tf` with a key from the unit's path"
+      },
+      {
+        "left": "`generate \"provider\"`",
+        "right": "writes the provider block into each unit"
+      },
+      {
+        "left": "`inputs`",
+        "right": "gives the module's variables their values"
+      }
+    ],
+    "right_distractors": [
+      "runs one Terraform command in every unit below"
+    ]
+  },
+  {
+    "id": "ex-bna2pzqp",
+    "version": 1,
+    "section": "terragrunt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `root.hcl` set `terraform_binary = \"terraform\"`?",
+    "hint": "Its own help names the default.",
+    "choices": [
+      {
+        "text": "To pin Terraform to the version in the lock file",
+        "correct": false,
+        "why": "It names a program, not a version."
+      },
+      {
+        "text": "Because the S3 backend only works with Terraform",
+        "correct": false,
+        "why": "OpenTofu has an S3 backend too; the setting is about which program runs."
+      },
+      {
+        "text": "Without it Terragrunt runs `tofu`",
+        "correct": true,
+        "why": "Yes: `--tf-path` says the default is tofu on the PATH."
+      },
+      {
+        "text": "So that Terragrunt can find modules in the registry",
+        "correct": false,
+        "why": "Module sources have nothing to do with which binary runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-0370fp7c",
+    "version": 1,
+    "section": "terragrunt",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `live/prod`, somebody runs `terragrunt run --all --non-interactive apply`. How many times is a person asked to confirm before the units are applied?",
+    "hint": "Two mechanisms skip a question each.",
+    "choices": [
+      {
+        "text": "Once per unit, as each Terraform apply asks",
+        "correct": false,
+        "why": "Under `run --all`, Terragrunt adds `-auto-approve` to each one, so they do not ask."
+      },
+      {
+        "text": "Once, for the whole queue",
+        "correct": false,
+        "why": "That is Terragrunt's own question, and `--non-interactive` answers it."
+      },
+      {
+        "text": "Not at all",
+        "correct": true,
+        "why": "Right: `--non-interactive` answers Terragrunt's question and `-auto-approve` skips Terraform's."
+      },
+      {
+        "text": "Twice: once for network, once for web",
+        "correct": false,
+        "why": "Neither unit's Terraform asks under `run --all`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp5m62vn",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team wants a short-lived copy of the stack for every pull request, identical to the others, in one account, destroyed on merge. Which layout fits best?",
+    "hint": "Creating one should be a single command.",
+    "choices": [
+      {
+        "text": "A directory per pull request",
+        "correct": false,
+        "why": "Every pull request would add copied root files to the repository and remove them again."
+      },
+      {
+        "text": "Terragrunt, with a unit tree per pull request",
+        "correct": false,
+        "why": "It works, but it is the most machinery for copies that are identical and throwaway."
+      },
+      {
+        "text": "Workspaces",
+        "correct": true,
+        "why": "Yes: `workspace new`, apply, destroy, `workspace delete`, and nothing precious in any of them."
+      },
+      {
+        "text": "One state shared by all the pull requests",
+        "correct": false,
+        "why": "That is the first section's mistake: each would rewrite the others."
+      }
+    ]
+  },
+  {
+    "id": "ex-5q9777yx",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Dev and prod, one state each; prod in its own AWS account and kept one module version behind dev. Which layout fits best?",
+    "hint": "Two environments, one state each: how much repetition is there to remove?",
+    "choices": [
+      {
+        "text": "Workspaces with a validation block",
+        "correct": false,
+        "why": "One configuration cannot hold two module versions, and one backend block makes separate credentials awkward."
+      },
+      {
+        "text": "A directory per environment",
+        "correct": true,
+        "why": "Right: each directory has its own credentials and its own `?ref=`, and two copies are cheap."
+      },
+      {
+        "text": "Terragrunt, because only it can pin modules per environment",
+        "correct": false,
+        "why": "Plain directories pin per environment too; Terragrunt pays off when copies multiply."
+      },
+      {
+        "text": "One directory and two `.tfvars` files",
+        "correct": false,
+        "why": "One state for both, which is the replacement plan from the first section."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhknj6vq",
+    "version": 1,
+    "section": "choosing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of all three layouts in this lesson? Choose all that apply.",
+    "hint": "Check each against workspaces, the odd one out.",
+    "choices": [
+      {
+        "text": "Each environment has its own state",
+        "correct": true,
+        "why": "Yes; that was the problem all three solve."
+      },
+      {
+        "text": "The environment shows in the path",
+        "correct": false,
+        "why": "Not with workspaces: one directory for all of them."
+      },
+      {
+        "text": "The modules' code can be shared between environments",
+        "correct": true,
+        "why": "Yes; even workspaces share the whole configuration."
+      },
+      {
+        "text": "Dev's credentials cannot reach prod",
+        "correct": false,
+        "why": "That takes separate credentials or accounts, which no layout provides by itself."
+      },
+      {
+        "text": "Terraform is the only tool to install",
+        "correct": false,
+        "why": "Terragrunt is a second one."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0vhgq67",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana moves prod from workspaces to `envs/prod`, whose backend key is `envs/prod/terraform.tfstate`. The running prod network's state is still at `env:/prod/shop/terraform.tfstate`. What does `terraform apply` in `envs/prod` do?",
+    "hint": "Which state does that directory read, and what is in it?",
+    "choices": [
+      {
+        "text": "It finds the old state through the `env:` prefix and plans no changes",
+        "correct": false,
+        "why": "The prefix belongs to workspaces of the old configuration; this backend reads its own key and nothing else."
+      },
+      {
+        "text": "It creates a second prod network beside the first",
+        "correct": true,
+        "why": "Right: an empty state means create everything, lesson 7's duplicate again. Move the state first, as lesson 8 does."
+      },
+      {
+        "text": "It refuses, because the VPC's range is already in use",
+        "correct": false,
+        "why": "AWS accepts two VPCs with the same range; lesson 1 created exactly that."
+      },
+      {
+        "text": "It adopts the running VPC because the tags match",
+        "correct": false,
+        "why": "Terraform never matches resources by tag; only the state pairs an address with an id."
+      }
+    ]
+  },
+  {
+    "id": "ex-35mw6tv4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "From nothing, somebody runs `terragrunt run --all apply` in `live/prod` and answers `y`. Put what happens in order.",
+    "hint": "The dependency decides the middle.",
+    "items": [
+      "Terragrunt lists the queue, network then web, and asks once",
+      "Terraform applies the network unit, with `-auto-approve`",
+      "Terragrunt reads the network state's output `vpc_id`",
+      "Terraform applies the web unit with that id as an input"
+    ],
+    "trap": "Web cannot go before network: its input is an output of a state that does not exist yet."
+  },
+  {
+    "id": "ex-1b4hbtjs",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague runs `terraform workspace delete -force prod` while prod still holds the running network. What is the situation afterwards?",
+    "hint": "`-force` disables the check that refused Ana. What did the refusal warn about?",
+    "choices": [
+      {
+        "text": "The network is destroyed along with the workspace",
+        "correct": false,
+        "why": "Deleting a workspace deletes the state, never the resources; that is why the check exists."
+      },
+      {
+        "text": "The network keeps running and no state records it",
+        "correct": true,
+        "why": "Right. Terraform has lost track of it, as the refusal said, and only an import can bring it back under management."
+      },
+      {
+        "text": "The `default` workspace takes over prod's resources",
+        "correct": false,
+        "why": "Each workspace has its own state; nothing is moved into `default`."
+      },
+      {
+        "text": "Nothing changes until prod is selected again",
+        "correct": false,
+        "why": "The state is gone at once; selecting `prod` again would start an empty workspace."
+      }
+    ]
+  }
+]
