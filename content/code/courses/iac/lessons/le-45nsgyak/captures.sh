@@ -232,17 +232,16 @@ resource "aws_s3_bucket" "logs" {
   bucket = "shop-logs-dev"
 }
 CODE
-run "sed -i 's|key          = \"shop/terraform.tfstate\"|key          = \"app/terraform.tfstate\"|' backend.tf"
+quiet "sed -i 's|shop/terraform.tfstate|app/terraform.tfstate|' backend.tf"
+block app-key
+run 'git diff backend.tf'
 cd ..
 block tree
 run 'tree --noreport -I .terraform'
 block pull
-cd app
-run 'terraform init -backend=false > /dev/null'
-cd ..
 run 'mkdir split && cd split'
 cd split
-run "aws s3 cp s3://$BUCKET/shop/terraform.tfstate shop.tfstate"
+run "aws s3 cp --no-progress s3://$BUCKET/shop/terraform.tfstate shop.tfstate"
 block state-mv
 run 'terraform state mv -state=shop.tfstate -state-out=network.tfstate aws_vpc.shop aws_vpc.shop'
 run 'terraform state mv -state=shop.tfstate -state-out=network.tfstate aws_subnet.public_a aws_subnet.public_a'
@@ -265,7 +264,184 @@ run "aws s3 ls --recursive s3://$BUCKET"
 run 'rm -r ../split'
 cd ..
 quiet 'git add . && git commit -qm "split the network from the app"'
+block old-checkout
+quiet 'git worktree add -q ~/shop-old HEAD~1'
+cd ~/shop-old
+tfinit
+run 'git log --oneline -1'
+run 'terraform plan -no-color | grep -E "^Plan"'
+cd ~/shop
+quiet 'git worktree remove --force ~/shop-old'
 
-echo "##### EXPLORE"
-cd app
+block reading
+cd network
+run 'terraform apply -auto-approve | tail -n 9'
+block outputs
+run 'terraform output'
+cd ../app
+put network.tf <<'CODE'
+data "terraform_remote_state" "network" {
+  backend = "s3"
+  config = {
+    bucket = "shop-tfstate-123456789012"
+    key    = "network/terraform.tfstate"
+    region = "sa-east-1"
+  }
+}
+CODE
+quiet "python3 -c 'import re,pathlib; p=pathlib.Path(\"main.tf\"); p.write_text(re.sub(r\"data \\\"aws_vpc\\\" \\\"shop\\\" \\{.*?\\n\\}\\n\\n\", \"\", p.read_text(), flags=re.S).replace(\"data.aws_vpc.shop.id\", \"data.terraform_remote_state.network.outputs.vpc_id\"))'"
+block remote-diff
+run 'git diff main.tf'
+block remote-plan
+run 'terraform plan'
+block console
+run 'terraform apply -auto-approve | tail -n 1'
+run 'echo "data.terraform_remote_state.network.outputs" | terraform console'
+quiet 'git add . && git commit -qm "read the network from its state"'
+block contract
+cd ../network
+quiet "sed -i 's/output \"vpc_id\"/output \"shop_vpc_id\"/' outputs.tf"
+run 'git diff outputs.tf'
+run 'terraform apply -auto-approve | grep -E "^Apply|vpc_id"'
+cd ../app
+run 'terraform plan'
+cd ../network
+quiet 'git checkout -q outputs.tf'
+quiet 'terraform apply -auto-approve'
+
+block moving
+cd ../app
+quiet "python3 -c 'import re,pathlib; p=pathlib.Path(\"main.tf\"); p.write_text(re.sub(r\"\\n\\nresource \\\"aws_s3_bucket\\\" \\\"logs\\\" \\{.*?\\n\\}\\n\", \"\\n\", p.read_text(), flags=re.S))'"
+put removed.tf <<'CODE'
+removed {
+  from = aws_s3_bucket.logs
+
+  lifecycle {
+    destroy = false
+  }
+}
+CODE
+run 'git diff main.tf'
+block let-go
+run 'terraform apply -auto-approve'
+quiet 'git add . && git commit -qm "the data team manages the logs bucket now"'
+block data-team
+mkdir -p ~/data && cd ~/data
+put main.tf <<'CODE'
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+
+  backend "s3" {
+    bucket       = "shop-tfstate-123456789012"
+    key          = "data/terraform.tfstate"
+    region       = "sa-east-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}
+
+provider "aws" {
+  region = "sa-east-1"
+}
+
+resource "aws_s3_bucket" "logs" {
+  bucket = "shop-logs-dev"
+}
+CODE
+put imports.tf <<'CODE'
+import {
+  to = aws_s3_bucket.logs
+  id = "shop-logs-dev"
+}
+CODE
+tfinit
+block import-plan
+run 'terraform plan'
+block import-apply
+run 'terraform apply -auto-approve | tail -n 4'
+run 'terraform plan | tail -n 3'
+run "aws s3 ls --recursive s3://$BUCKET"
+
+block import-command
+cd ~/shop/app
+# STAGED: what a colleague typed, from another machine, the week before.
+quiet 'aws s3api create-bucket --bucket shop-backups-dev --create-bucket-configuration LocationConstraint=sa-east-1'
+quiet 'aws s3api put-bucket-tagging --bucket shop-backups-dev --tagging "TagSet=[{Key=Owner,Value=bruno},{Key=Purpose,Value=backups}]"'
+run 'aws s3api get-bucket-tagging --bucket shop-backups-dev'
+block import-noblock
+run 'terraform import aws_s3_bucket.backups shop-backups-dev'
+block import-cli
+put backups.tf <<'CODE'
+resource "aws_s3_bucket" "backups" {
+  bucket = "shop-backups-dev"
+}
+CODE
+run 'terraform import aws_s3_bucket.backups shop-backups-dev'
+block import-cli-plan
+run 'terraform plan'
+cat > backups.tf <<'CODE'
+resource "aws_s3_bucket" "backups" {
+  bucket = "shop-backups-dev"
+  tags = {
+    Owner   = "bruno"
+    Purpose = "backups"
+  }
+}
+CODE
+block import-cli-fixed
+run 'cat backups.tf'
+run 'terraform plan | tail -n 3'
+quiet 'git add . && git commit -qm "manage the backups bucket"'
+
+block import-blocks
+# STAGED: the security group a colleague made by hand for the monitoring agent.
+VPC=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query 'Vpcs[0].VpcId' --output text)
+MSG=$(aws ec2 create-security-group --vpc-id "$VPC" --group-name monitoring --description "node exporter" --query GroupId --output text)
+quiet "aws ec2 authorize-security-group-ingress --group-id $MSG --protocol tcp --port 9100 --cidr 10.20.0.0/16"
+quiet "aws ec2 create-tags --resources $MSG --tags Key=Name,Value=monitoring"
+run 'aws ec2 describe-security-groups --filters Name=group-name,Values=monitoring --query "SecurityGroups[].[GroupId,GroupName]" --output text'
+put imports.tf <<CODE
+import {
+  to = aws_security_group.monitoring
+  id = "$MSG"
+}
+CODE
+block generate
+run 'terraform plan -generate-config-out=generated.tf'
+block generated
+run 'cat generated.tf'
+block cleaned
+run 'rm generated.tf'
+put monitoring.tf <<'CODE'
+resource "aws_security_group" "monitoring" {
+  name        = "monitoring"
+  description = "node exporter"
+  vpc_id      = data.terraform_remote_state.network.outputs.vpc_id
+  tags        = { Name = "monitoring" }
+
+  ingress {
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = [data.terraform_remote_state.network.outputs.vpc_cidr]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+CODE
+block cleaned-plan
+run 'terraform plan -no-color | grep -E "^  #|^Plan"'
+block cleaned-apply
+run 'terraform apply -auto-approve | tail -n 1'
+run 'terraform plan | tail -n 3'
 run 'terraform state list'

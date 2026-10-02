@@ -1,0 +1,552 @@
+{
+  "ex-w69cg3eg": {
+    "prompt": "A Ana acrescentou uma tag ao bucket de assets, e o plan consultou os seis recursos do estado. Por que os seis?",
+    "hint": "O que o Terraform não tem como saber sem perguntar?",
+    "choices": [
+      {
+        "text": "Porque a tag do bucket é copiada para todo recurso da configuração",
+        "why": "A tag foi escrita num bucket e nada a copia; o plan mudou um recurso."
+      },
+      {
+        "text": "Não há como saber quais deles alguém mudou à mão desde então",
+        "why": "Certo. O Terraform consulta tudo o que o estado guarda antes de comparar, então o custo do plan cresce com o estado."
+      },
+      {
+        "text": "Porque o backend S3 baixa cada recurso separadamente",
+        "why": "O backend baixa um objeto, o arquivo de estado; as consultas são chamadas às APIs da AWS."
+      },
+      {
+        "text": "Um plan recria o que consulta",
+        "why": "O plan disse 1 to change e 0 to add: consultar é ler, não recriar."
+      }
+    ]
+  },
+  "ex-1j3k7hp2": {
+    "prompt": "Na loja com um estado só, por que uma edição descuidada na parte da aplicação poderia destruir a VPC?",
+    "hint": "Um erro alcança aquilo contra o que o comando roda.",
+    "choices": [
+      {
+        "text": "A VPC depende do security group",
+        "why": "É o contrário: o grupo mora na VPC. O motivo é que os dois estão num estado só."
+      },
+      {
+        "text": "Todo apply naquela configuração age sobre os seis recursos do estado dela",
+        "why": "Isso. O estado é o raio de explosão: o que ele guarda, um erro de digitação, um merge ruim ou um `-replace` errado alcança."
+      },
+      {
+        "text": "O S3 apaga o estado inteiro quando um recurso falha",
+        "why": "Nada apaga o estado numa falha; o versionamento ainda guarda os antigos."
+      },
+      {
+        "text": "O lock deixa só o time de rede aplicar",
+        "why": "Um lock deixa uma execução por vez, de quem quer que seja; ele não sabe nada de times."
+      }
+    ]
+  },
+  "ex-mv8kk3gw": {
+    "prompt": "Qual pergunta a aula usa para decidir onde cortar um estado?",
+    "hint": "A VPC e o security group respondem diferente.",
+    "choices": [
+      {
+        "text": "Quais recursos usam o mesmo provider?",
+        "why": "As duas metades da loja usam o provider da AWS, e mesmo assim foram divididas."
+      },
+      {
+        "text": "Qual arquivo passou de algumas centenas de linhas?",
+        "why": "A aula diz que o corte nunca segue o tamanho de um arquivo."
+      },
+      {
+        "text": "Com que frequência muda, e quem muda?",
+        "why": "Isso: ciclo de vida e dono. A rede muda poucas vezes por ano; a aplicação, toda semana."
+      },
+      {
+        "text": "Quais recursos foram criados primeiro?",
+        "why": "A ordem de criação não diz nada sobre quem vai mudar um recurso semana que vem."
+      }
+    ]
+  },
+  "ex-jtmkcga8": {
+    "prompt": "Um pipeline publica a aplicação da loja todo dia usando a configuração de estado único. O que mais as credenciais dele conseguem fazer?",
+    "hint": "As permissões seguem o estado.",
+    "choices": [
+      {
+        "text": "Nada mais, já que ele só planeja os recursos da aplicação",
+        "why": "Num estado só não existe isso de só os recursos da aplicação: ele planeja e aplica os seis."
+      },
+      {
+        "text": "Destruir ou reconstruir a rede e o resto daquele estado",
+        "why": "Certo. Quem pode aplicar uma configuração pode mudar tudo no estado dela."
+      },
+      {
+        "text": "Ler os estados dos outros times no mesmo bucket",
+        "why": "Isso depende da política do bucket, não do que está neste estado."
+      },
+      {
+        "text": "Tirar o lock do bucket de estado",
+        "why": "O lock é pego e solto por cada execução; a questão é o que a execução pode mudar."
+      }
+    ]
+  },
+  "ex-kz483z7x": {
+    "prompt": "A Ana copia os blocos da rede para `network/` e roda `terraform apply` lá antes de mover qualquer estado. O que acontece?",
+    "hint": "O que a key nova guarda nesse momento?",
+    "choices": [
+      {
+        "text": "O Terraform encontra a VPC existente pela tag e a adota",
+        "why": "Blocos de resource nunca procuram; só data sources e imports trazem objetos existentes."
+      },
+      {
+        "text": "Uma segunda rede é criada ao lado da primeira",
+        "why": "Isso. O estado novo está vazio, então para ele nada existe: o acidente da aula 7 de novo."
+      },
+      {
+        "text": "O plan falha porque a VPC está em outro estado",
+        "why": "O Terraform não olha outros estados; nada o impede."
+      },
+      {
+        "text": "Nada, porque os endereços são idênticos",
+        "why": "O mesmo endereço em outro estado não quer dizer nada para este."
+      }
+    ]
+  },
+  "ex-b8v4a4w1": {
+    "prompt": "Ponha em ordem os passos da divisão da Ana.",
+    "hint": "O estado se move depois que os arquivos existem e antes que alguém aplique.",
+    "items": [
+      "Escrever as configurações da rede e da aplicação, cada uma com sua key",
+      "Baixar o estado antigo do bucket",
+      "Mover as entradas da rede para um arquivo novo com `state mv -state-out`",
+      "Empurrar cada metade para a key dela e rodar um plan em cada uma",
+      "Apagar a key antiga"
+    ],
+    "trap": "Apagar a key antiga antes de os dois plans saírem limpos deixa só as versões do bucket para voltar atrás."
+  },
+  "ex-bntp4pm2": {
+    "prompt": "Depois da divisão, um colega planeja a partir de um checkout feito antes dela. Quantos recursos o plan quer adicionar?",
+    "hint": "A key antiga sumiu, então a configuração antiga vê um estado vazio.",
+    "unit": "recursos"
+  },
+  "ex-1hjyfaaw": {
+    "prompt": "Depois de empurrar a metade da rede, o plan dela mostrou `Changes to Outputs` e nenhuma mudança de recurso. O que isso queria dizer?",
+    "hint": "O arquivo de outputs era novo.",
+    "choices": [
+      {
+        "text": "Os ids mudaram durante o movimento e os outputs acompanham",
+        "why": "Os ids nas linhas de refresh são os originais; o movimento manteve cada entrada como era."
+      },
+      {
+        "text": "O movimento falhou e precisa ser repetido",
+        "why": "Um movimento que falhou mostraria recursos a adicionar; este plan não mostrou nenhum."
+      },
+      {
+        "text": "Os recursos bateram, e os outputs ainda não estavam registrados",
+        "why": "Certo. O estado nunca tinha guardado aqueles outputs; a próxima seção os aplica."
+      },
+      {
+        "text": "O Terraform quer recriar a VPC para anexar os outputs",
+        "why": "Outputs são valores no estado; registrá-los não muda recurso real nenhum."
+      }
+    ]
+  },
+  "ex-20zz58tr": {
+    "prompt": "O que a configuração da aplicação consegue referenciar por `data.terraform_remote_state.network`?",
+    "hint": "O console mostrou um objeto.",
+    "choices": [
+      {
+        "text": "Todo recurso do estado da rede",
+        "why": "Recursos não são expostos; `aws_vpc.shop` não pode ser nomeado da aplicação."
+      },
+      {
+        "text": "Os outputs da rede",
+        "why": "Isso: `outputs.vpc_id`, `outputs.vpc_cidr` e `outputs.public_subnet_ids`, e mais nada."
+      },
+      {
+        "text": "As variáveis da rede e seus valores padrão",
+        "why": "Variáveis são entradas e não ficam no estado para outros lerem."
+      },
+      {
+        "text": "O `main.tf` da rede",
+        "why": "Ele lê um estado de um bucket; nunca vê os arquivos da outra configuração."
+      }
+    ]
+  },
+  "ex-3n0bcw9j": {
+    "prompt": "O time de rede renomeou o output `vpc_id` para `shop_vpc_id` e aplicou. Onde o erro apareceu?",
+    "hint": "O apply da própria rede não mudou recurso nenhum.",
+    "choices": [
+      {
+        "text": "No apply da rede, que se recusou a remover um output ainda em uso",
+        "why": "A rede não sabe quem lê os outputs dela; o apply dela deu certo."
+      },
+      {
+        "text": "No próximo plan da aplicação",
+        "why": "Certo: `Unsupported attribute`, para o time que não fez nada errado, quando ele planejar de novo."
+      },
+      {
+        "text": "Em lugar nenhum: a aplicação guardou o valor antigo em cache",
+        "why": "O data source é lido a cada plan; o output tinha sumido."
+      },
+      {
+        "text": "Na AWS, que desligou o security group da VPC",
+        "why": "Nada mudou na AWS; um output é só um valor num estado."
+      }
+    ]
+  },
+  "ex-7h577wm0": {
+    "prompt": "Quais afirmações sobre `terraform_remote_state` são verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "Pense no que precisa ser baixado para ler um output.",
+    "choices": [
+      {
+        "text": "Quem planeja a aplicação precisa de leitura no objeto inteiro do estado da rede",
+        "why": "Sim; a restrição aos outputs é do Terraform, não do S3."
+      },
+      {
+        "text": "Ele recebe as mesmas configurações de um bloco de backend",
+        "why": "Sim: bucket, key e região, porque lê um estado de onde ele está guardado."
+      },
+      {
+        "text": "É um data source do provider da AWS",
+        "why": "Ele vem embutido no Terraform e funciona com qualquer backend."
+      },
+      {
+        "text": "Ele deixa a aplicação mudar os recursos da rede",
+        "why": "Ele é só leitura, como todo data source."
+      },
+      {
+        "text": "Tags combinadas ou um parâmetro do SSM são jeitos de compartilhar valores sem ele",
+        "why": "Sim; os dois dão à aplicação uma porta mais estreita que o estado inteiro."
+      }
+    ]
+  },
+  "ex-yb5y40kw": {
+    "prompt": "Dentro da aplicação, o id da VPC é referenciado como `data.terraform_remote_state.network.___.vpc_id`.",
+    "hint": "O atributo que guarda o que o outro estado publica.",
+    "blanks": [
+      {
+        "accept": [
+          "outputs"
+        ]
+      }
+    ]
+  },
+  "ex-q6c98xz2": {
+    "prompt": "Por que um bloco `moved` não consegue levar o bucket de logs do estado da aplicação para o do time de dados?",
+    "hint": "A aula 4 o usou para renomear.",
+    "choices": [
+      {
+        "text": "Porque buckets não podem ser movidos entre contas da AWS",
+        "why": "Os dois estados descrevem a mesma conta; o bucket em si nunca se move."
+      },
+      {
+        "text": "Ele não tem como nomear outro estado",
+        "why": "Certo. Ele renomeia um endereço dentro de um estado; um movimento entre estados são duas operações."
+      },
+      {
+        "text": "Porque o `moved` só funciona com `count` e `for_each`",
+        "why": "Ele renomeia qualquer endereço; a aula 7 o pôs ao lado do `state mv`."
+      },
+      {
+        "text": "Ele destruiria o bucket primeiro",
+        "why": "Um bloco `moved` nunca destrói nada; ele só não tem como alcançar outro estado."
+      }
+    ]
+  },
+  "ex-m4kssa77": {
+    "prompt": "Por que a aplicação aplica o bloco `removed` antes de o time de dados aplicar o bloco `import`, e não o contrário?",
+    "hint": "Compare gerenciado por ninguém com gerenciado por dois.",
+    "choices": [
+      {
+        "text": "Dois estados gerenciando um bucket desfariam as mudanças um do outro",
+        "why": "Isso. Quem planeja por último põe de volta a sua ideia do bucket; uma hora em nenhum estado não faz mal."
+      },
+      {
+        "text": "O Terraform recusa um import enquanto outro estado guarda o endereço",
+        "why": "O Terraform nunca olha outros estados, então nada recusaria; é justamente esse o perigo."
+      },
+      {
+        "text": "O import precisa do lock que a aplicação segura",
+        "why": "Cada estado tem seu lock, sob sua key."
+      },
+      {
+        "text": "Um bloco `removed` recria o bucket com um id novo",
+        "why": "Com `destroy = false` ele só tira a entrada do estado; o bucket fica."
+      }
+    ]
+  },
+  "ex-s71djs2j": {
+    "prompt": "Associe cada bloco ou comando ao que ele faz.",
+    "hint": "Um deles só funciona entre arquivos locais.",
+    "pairs": [
+      {
+        "left": "`removed` com `destroy = false`",
+        "right": "Tira uma entrada deste estado e deixa o objeto"
+      },
+      {
+        "left": "`import`",
+        "right": "Traz um objeto existente para este estado"
+      },
+      {
+        "left": "`moved`",
+        "right": "Renomeia um endereço dentro de um estado"
+      },
+      {
+        "left": "`terraform state mv -state-out`",
+        "right": "Move uma entrada de um arquivo de estado para outro"
+      }
+    ],
+    "right_distractors": [
+      "Copia os objetos de um bucket para outro"
+    ]
+  },
+  "ex-0gf9a7yd": {
+    "prompt": "O plan de import do time de dados disse `1 to import, 0 to add, 0 to change, 0 to destroy`. O que ele teria mostrado se o bloco deles também tivesse `tags = { Team = \"data\" }`?",
+    "hint": "O bucket na AWS não tem tags.",
+    "choices": [
+      {
+        "text": "Um erro, já que um import não pode mudar nada",
+        "why": "Um import pode vir com mudanças; o plan mostra as duas coisas, e é por isso que é lido antes do apply."
+      },
+      {
+        "text": "O import e uma mudança, lado a lado",
+        "why": "Certo: `1 to import` e `1 to change`, visíveis antes de qualquer gravação."
+      },
+      {
+        "text": "Uma substituição do bucket",
+        "why": "Tags mudam no lugar, como o bucket do Bruno mostrou na seção seguinte."
+      },
+      {
+        "text": "O mesmo resumo, porque imports ignoram os argumentos do bloco",
+        "why": "O plan compara o bloco com o objeto que lê; uma diferença é uma mudança."
+      }
+    ]
+  },
+  "ex-8mek23fj": {
+    "prompt": "`terraform import aws_s3_bucket.backups shop-backups-dev` falhou na primeira vez. Por quê?",
+    "hint": "Leia a primeira linha do erro.",
+    "choices": [
+      {
+        "text": "O nome do bucket estava errado",
+        "why": "A segunda tentativa usou o mesmo nome e deu certo."
+      },
+      {
+        "text": "A configuração ainda não tinha bloco naquele endereço",
+        "why": "Isso. A entrada precisa pertencer a um bloco, e o comando não escreve configuração."
+      },
+      {
+        "text": "Um bucket feito à mão não pode ser importado",
+        "why": "Coisas feitas à mão são exatamente para o que o import serve."
+      },
+      {
+        "text": "O estado da aplicação estava travado por outra execução",
+        "why": "O erro apontou o endereço que faltava, não um lock."
+      }
+    ]
+  },
+  "ex-zneghgpj": {
+    "prompt": "Logo depois de `Import successful!`, o plan queria remover as duas tags do Bruno. O que estava errado?",
+    "hint": "O import leu o bucket corretamente.",
+    "choices": [
+      {
+        "text": "O import copiou as tags para o estado errado",
+        "why": "O estado era o da aplicação, como pretendido, e guardava as tags como eram."
+      },
+      {
+        "text": "O bloco não descrevia o bucket",
+        "why": "Certo. Um bloco que não diz nada sobre tags quer dizer sem tags, então o conserto é na configuração."
+      },
+      {
+        "text": "O moto não guarda tags em buckets",
+        "why": "O `get-bucket-tagging` imprimiu as duas, e o plan as viu."
+      },
+      {
+        "text": "O import precisa ser repetido com `-refresh-only`",
+        "why": "O estado estava certo; repetir algo ali não muda nada no bloco."
+      }
+    ]
+  },
+  "ex-774jm1yp": {
+    "prompt": "Quais destes são motivos que a aula dá para preferir um bloco `import` ao comando? Escolha todos os que se aplicam.",
+    "hint": "Três hábitos do comando.",
+    "choices": [
+      {
+        "text": "O comando grava o estado antes de alguém ver um plan",
+        "why": "Sim; um bloco passa antes por um plan."
+      },
+      {
+        "text": "O comando aceita um recurso por vez",
+        "why": "Sim; cinquenta blocos cabem num arquivo."
+      },
+      {
+        "text": "O comando não importa buckets do S3",
+        "why": "Ele importou o bucket do Bruno nesta seção."
+      },
+      {
+        "text": "O comando não deixa rastro no repositório",
+        "why": "Sim; um bloco faz parte do commit que acrescenta o recurso."
+      },
+      {
+        "text": "O comando foi removido no Terraform 1.5",
+        "why": "Ele ainda funciona; o 1.5 foi quando os blocos import chegaram."
+      }
+    ]
+  },
+  "ex-nas6vy76": {
+    "prompt": "O que `terraform plan -generate-config-out=generated.tf` escreve em `generated.tf`?",
+    "hint": "Só blocos import sem bloco de resource ganham um.",
+    "choices": [
+      {
+        "text": "Um bloco de resource para cada import que não tem um",
+        "why": "Isso, um primeiro rascunho lido do objeto real, com um comentário pedindo revisão."
+      },
+      {
+        "text": "O plan salvo, para aplicar depois com `terraform apply`",
+        "why": "Isso é o `-out`; esta flag escreve HCL."
+      },
+      {
+        "text": "Uma cópia do estado em HCL, com todos os recursos",
+        "why": "Ele escreve blocos só para os imports que não têm um."
+      },
+      {
+        "text": "Os blocos `import` de todo recurso da VPC",
+        "why": "Você escreve os blocos import; o Terraform escreve os blocos de resource para onde eles apontam."
+      }
+    ]
+  },
+  "ex-7qf6mbxt": {
+    "prompt": "A Ana limpou o bloco gerado do grupo de monitoramento. Quais destes ela mudou ou tirou? Escolha todos os que se aplicam.",
+    "hint": "Compare o `generated.tf` com o `monitoring.tf`.",
+    "choices": [
+      {
+        "text": "O `vpc_id` literal, agora lido do output da rede",
+        "why": "Sim; a VPC pertence a outro estado."
+      },
+      {
+        "text": "`tags_all`",
+        "why": "Sim; ele é calculado a partir de `tags`."
+      },
+      {
+        "text": "A regra da porta 9100",
+        "why": "Essa regra é a razão do grupo; ela ficou, como bloco `ingress`."
+      },
+      {
+        "text": "A regra de egress",
+        "why": "Ela ficou, reescrita como bloco; tirá-la é um dos erros que o plan mostraria."
+      },
+      {
+        "text": "Valores que são só padrão, como `self = false`",
+        "why": "Sim; eles não dizem nada de que o leitor precise."
+      }
+    ]
+  },
+  "ex-wayt6w8j": {
+    "prompt": "Depois do bloco limpo, o plan disse `Plan: 1 to import, 0 to add, 0 to change, 0 to destroy`. O que isso prova?",
+    "hint": "Um erro no bloco teria acrescentado algo a essa linha.",
+    "choices": [
+      {
+        "text": "Que o grupo foi criado pelo Terraform no fim das contas",
+        "why": "Ele foi feito à mão; o import é como o Terraform o adota."
+      },
+      {
+        "text": "Que o arquivo gerado foi aplicado sem mudança",
+        "why": "O arquivo gerado foi apagado; o plan comparou o limpo."
+      },
+      {
+        "text": "Nada ainda, até o apply rodar",
+        "why": "O plan já comparou o bloco com o grupo real; essa comparação é a prova."
+      },
+      {
+        "text": "Que os argumentos do bloco batem com o grupo real na AWS",
+        "why": "Certo. Qualquer atributo que o bloco declarasse diferente apareceria como mudança."
+      }
+    ]
+  },
+  "ex-7fj504e8": {
+    "prompt": "Um bloco `import` nomeia o endereço com `to` e o objeto real com ___.",
+    "hint": "Para um bucket, é o nome do bucket.",
+    "blanks": [
+      {
+        "accept": [
+          "id"
+        ]
+      }
+    ]
+  },
+  "ex-b5hf3hhn": {
+    "prompt": "Um banco de dados vai entrar na loja. Muda pouco, o time da aplicação não é dono dele, e perdê-lo seria o pior erro possível. Seguindo a aula, onde ele fica?",
+    "hint": "Ciclo de vida, dono, e o tamanho do estrago de um erro.",
+    "choices": [
+      {
+        "text": "No estado da aplicação, já que é a aplicação que o usa",
+        "why": "Usar não é ser dono, e os applies semanais da aplicação o deixariam ao alcance de todo erro."
+      },
+      {
+        "text": "No estado da rede, já que também muda pouco",
+        "why": "O ciclo de vida bate, o dono não, e o time de rede passaria a segurar um banco que ele não opera."
+      },
+      {
+        "text": "Num estado só dele",
+        "why": "Certo: outro dono, ciclo de vida próprio, e um raio de explosão que vale manter longe de tudo que pode ser reconstruído."
+      },
+      {
+        "text": "Fora do Terraform, feito à mão",
+        "why": "Foi assim que o bucket de backups e o grupo de monitoramento começaram, e os dois tiveram de ser importados."
+      }
+    ]
+  },
+  "ex-xw9mza0s": {
+    "prompt": "Um colega importou uma instância EC2 com um bloco `import`, e o plan mostra `1 to import` e `1 to change`, sendo a mudança o tipo da instância. O que deve acontecer agora?",
+    "hint": "Quem está certo sobre o tipo da instância: o arquivo ou a AWS?",
+    "choices": [
+      {
+        "text": "Aplicar: a mudança é como o import se completa",
+        "why": "Aplicar redimensionaria uma máquina em execução porque alguém digitou o tipo errado num arquivo."
+      },
+      {
+        "text": "Corrigir o tipo da instância no bloco e planejar de novo",
+        "why": "Certo: num import, o bloco é editado até bater com o mundo, e só se aceita um import sem mudanças."
+      },
+      {
+        "text": "Rodar `terraform import` pela linha de comando",
+        "why": "O comando gravaria a mesma entrada sem plan, e o próximo plan mostraria a mesma mudança."
+      },
+      {
+        "text": "Tirar o bloco import e acrescentar `ignore_changes`",
+        "why": "Sem o bloco import, o plan tentaria criar uma segunda instância."
+      }
+    ]
+  },
+  "ex-mjv4xpfc": {
+    "prompt": "Ponha em ordem os passos para adotar um recurso com um bloco import.",
+    "hint": "O plan é lido duas vezes.",
+    "items": [
+      "Escrever o bloco `import` com `to` e `id`",
+      "Rodar `terraform plan -generate-config-out=generated.tf`",
+      "Limpar o rascunho no estilo da própria configuração",
+      "Planejar até dizer só `1 to import`",
+      "Aplicar, e planejar mais uma vez até `No changes`"
+    ],
+    "trap": "Aplicar o rascunho gerado como está é o atalho comum: funciona, e deixa ids literais onde deviam estar referências."
+  },
+  "ex-em50dwyx": {
+    "prompt": "Depois de tudo nesta aula, quais afirmações são verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "Conte as keys no bucket, e o que se moveu na AWS.",
+    "choices": [
+      {
+        "text": "O bucket de estado guarda três keys: network, app e data",
+        "why": "Sim; a key antiga `shop/` foi apagada depois da divisão."
+      },
+      {
+        "text": "O bucket de logs foi recriado quando passou para o time de dados",
+        "why": "Foi o mesmo bucket o tempo todo; só entradas de estado se moveram."
+      },
+      {
+        "text": "A aplicação lê o id da VPC dos outputs da rede",
+        "why": "Sim, por meio do `terraform_remote_state`."
+      },
+      {
+        "text": "O estado da rede também guarda o grupo de monitoramento",
+        "why": "Ele foi importado no estado da aplicação."
+      }
+    ]
+  }
+}

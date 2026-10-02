@@ -1,0 +1,807 @@
+[
+  {
+    "id": "ex-w69cg3eg",
+    "version": 1,
+    "section": "one-big-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana added one tag to the assets bucket, and the plan refreshed all six resources in the state. Why all six?",
+    "hint": "What can Terraform not know without asking?",
+    "choices": [
+      {
+        "text": "Because the bucket's tag is copied onto every resource in the configuration",
+        "correct": false,
+        "why": "The tag was written on one bucket and nothing copies it; the plan changed one resource."
+      },
+      {
+        "text": "It has no way to know which of them somebody changed by hand",
+        "correct": true,
+        "why": "Right. Terraform refreshes everything the state holds before it compares, so the plan's cost grows with the state."
+      },
+      {
+        "text": "Because the S3 backend downloads every resource separately",
+        "correct": false,
+        "why": "The backend downloads one object, the state file; the refreshes are calls to the AWS APIs."
+      },
+      {
+        "text": "A plan always recreates what it refreshes",
+        "correct": false,
+        "why": "The plan said 1 to change and 0 to add: refreshing reads, it does not recreate."
+      }
+    ]
+  },
+  {
+    "id": "ex-1j3k7hp2",
+    "version": 1,
+    "section": "one-big-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the one-state shop, why could a careless edit to the app's part of the configuration destroy the VPC?",
+    "hint": "A mistake reaches whatever the command runs against.",
+    "choices": [
+      {
+        "text": "The VPC depends on the security group",
+        "correct": false,
+        "why": "It is the other way round: the group lives in the VPC. The reason is that both are in one state."
+      },
+      {
+        "text": "Every apply on that configuration acts on all six resources in its state",
+        "correct": true,
+        "why": "Yes. The state is the blast radius: whatever it holds, a typo, a bad merge or a wrong `-replace` can reach."
+      },
+      {
+        "text": "S3 deletes the whole state when one resource fails",
+        "correct": false,
+        "why": "Nothing deletes the state on a failure; versioning even keeps the old ones."
+      },
+      {
+        "text": "The lock lets only the network team apply",
+        "correct": false,
+        "why": "A lock lets one run at a time, whoever starts it; it knows nothing of teams."
+      }
+    ]
+  },
+  {
+    "id": "ex-mv8kk3gw",
+    "version": 1,
+    "section": "one-big-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which question does the lesson use to decide where to cut a state?",
+    "hint": "The VPC and the security group answer it differently.",
+    "choices": [
+      {
+        "text": "Which resources use the same provider?",
+        "correct": false,
+        "why": "Both halves of the shop use the AWS provider, and they were still split."
+      },
+      {
+        "text": "Which file has grown past a few hundred lines?",
+        "correct": false,
+        "why": "The lesson says the cut never follows the size of a file."
+      },
+      {
+        "text": "How fast does it change, and who changes it?",
+        "correct": true,
+        "why": "Yes: lifecycle and owner. The network changes a few times a year; the app every week."
+      },
+      {
+        "text": "Which resources were created first?",
+        "correct": false,
+        "why": "Creation order says nothing about who will change a resource next week."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtmkcga8",
+    "version": 1,
+    "section": "one-big-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pipeline deploys the shop's app every day using the one-state configuration. What else can its credentials do?",
+    "hint": "Permissions follow the state.",
+    "choices": [
+      {
+        "text": "Nothing else, since it only plans the app's resources",
+        "correct": false,
+        "why": "In one state there is no such thing as only the app's resources: it plans and applies all six."
+      },
+      {
+        "text": "Destroy or rebuild the network and the rest of that state",
+        "correct": true,
+        "why": "Right. Whoever may apply a configuration may change everything in its state."
+      },
+      {
+        "text": "Read the other teams' states in the same bucket",
+        "correct": false,
+        "why": "That depends on the bucket's policy, not on what is in this state."
+      },
+      {
+        "text": "Remove the lock from the state bucket",
+        "correct": false,
+        "why": "The lock is taken and released by each run; the question is what the run may change."
+      }
+    ]
+  },
+  {
+    "id": "ex-kz483z7x",
+    "version": 1,
+    "section": "splitting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana copies the network's blocks into `network/` and runs `terraform apply` there before moving any state. What happens?",
+    "hint": "What does the new key hold at that moment?",
+    "choices": [
+      {
+        "text": "Terraform finds the existing VPC by its tag and adopts it",
+        "correct": false,
+        "why": "Resource blocks never search; only data sources and imports bring existing objects in."
+      },
+      {
+        "text": "A second network is created beside the first",
+        "correct": true,
+        "why": "Yes. The new state is empty, so to it nothing exists: lesson 7's accident again."
+      },
+      {
+        "text": "The plan fails because the VPC is in another state",
+        "correct": false,
+        "why": "Terraform does not look in other states; nothing stops it."
+      },
+      {
+        "text": "Nothing, because the addresses are identical",
+        "correct": false,
+        "why": "The same address in another state means nothing to this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8v4a4w1",
+    "version": 1,
+    "section": "splitting",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of Ana's split in order.",
+    "hint": "The state moves after the files exist and before anybody applies.",
+    "items": [
+      "Write the network and app configurations, each with its own key",
+      "Download the old state from the bucket",
+      "Move the network's entries into a new file with `state mv -state-out`",
+      "Push each half to its key and run a plan in each",
+      "Delete the old key"
+    ],
+    "trap": "Deleting the old key before both plans are clean leaves nothing to go back to except the bucket's versions."
+  },
+  {
+    "id": "ex-bntp4pm2",
+    "version": 1,
+    "section": "splitting",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the split, a colleague plans from a checkout made before it. How many resources does the plan want to add?",
+    "hint": "The old key is gone, so the old configuration sees an empty state.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-1hjyfaaw",
+    "version": 1,
+    "section": "splitting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After pushing the network's half, its plan showed `Changes to Outputs` and no resource changes. What did that mean?",
+    "hint": "The outputs file was new.",
+    "choices": [
+      {
+        "text": "The ids changed during the move and the outputs follow them",
+        "correct": false,
+        "why": "The ids in the refresh lines are the original ones; the move kept every entry as it was."
+      },
+      {
+        "text": "The move failed and has to be repeated",
+        "correct": false,
+        "why": "A failed move would show resources to add; this plan showed none."
+      },
+      {
+        "text": "The resources matched, and the outputs were not yet recorded",
+        "correct": true,
+        "why": "Right. The state had never held those outputs; the next section applies them."
+      },
+      {
+        "text": "Terraform wants to recreate the VPC to attach the outputs",
+        "correct": false,
+        "why": "Outputs are values in the state; recording them changes no real resource."
+      }
+    ]
+  },
+  {
+    "id": "ex-20zz58tr",
+    "version": 1,
+    "section": "reading-another-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What can the app's configuration reference through `data.terraform_remote_state.network`?",
+    "hint": "The console showed one object.",
+    "choices": [
+      {
+        "text": "Every resource in the network state",
+        "correct": false,
+        "why": "Resources are not exposed; `aws_vpc.shop` cannot be named from the app."
+      },
+      {
+        "text": "The network's outputs",
+        "correct": true,
+        "why": "Yes: `outputs.vpc_id`, `outputs.vpc_cidr` and `outputs.public_subnet_ids`, and nothing else."
+      },
+      {
+        "text": "The network's variables and their defaults",
+        "correct": false,
+        "why": "Variables are inputs and are not kept in the state for others to read."
+      },
+      {
+        "text": "The network's `main.tf`",
+        "correct": false,
+        "why": "It reads a state from a bucket; it never sees the other configuration's files."
+      }
+    ]
+  },
+  {
+    "id": "ex-3n0bcw9j",
+    "version": 1,
+    "section": "reading-another-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The network team renamed the output `vpc_id` to `shop_vpc_id` and applied. Where did the error appear?",
+    "hint": "The network's own apply changed no resource.",
+    "choices": [
+      {
+        "text": "In the network's apply, which refused to remove an output still in use",
+        "correct": false,
+        "why": "The network does not know who reads its outputs; its apply succeeded."
+      },
+      {
+        "text": "In the app's next plan",
+        "correct": true,
+        "why": "Right: `Unsupported attribute`, for the team that did nothing wrong, whenever it next plans."
+      },
+      {
+        "text": "Nowhere: the app kept the old value cached",
+        "correct": false,
+        "why": "The data source is read on every plan; the output was gone."
+      },
+      {
+        "text": "In AWS, which detached the security group from the VPC",
+        "correct": false,
+        "why": "Nothing changed in AWS; an output is only a value in a state."
+      }
+    ]
+  },
+  {
+    "id": "ex-7h577wm0",
+    "version": 1,
+    "section": "reading-another-state",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements about `terraform_remote_state` are true? Choose all that apply.",
+    "hint": "Think about what has to be downloaded to read one output.",
+    "choices": [
+      {
+        "text": "Whoever plans the app needs read access to the whole network state object",
+        "correct": true,
+        "why": "Yes; the restriction to outputs is Terraform's, not S3's."
+      },
+      {
+        "text": "It takes the same settings as a backend block",
+        "correct": true,
+        "why": "Yes: bucket, key and region, because it reads a state where it is kept."
+      },
+      {
+        "text": "It is a data source of the AWS provider",
+        "correct": false,
+        "why": "It is built into Terraform and works with any backend."
+      },
+      {
+        "text": "It lets the app change the network's resources",
+        "correct": false,
+        "why": "It is read-only, like every data source."
+      },
+      {
+        "text": "Agreed tags or an SSM parameter are ways to share values without it",
+        "correct": true,
+        "why": "Yes; both give the app a narrower door than the whole state."
+      }
+    ]
+  },
+  {
+    "id": "ex-yb5y40kw",
+    "version": 1,
+    "section": "reading-another-state",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside the app, the VPC id is referenced as `data.terraform_remote_state.network.___.vpc_id`.",
+    "hint": "The attribute that holds what the other state publishes.",
+    "blanks": [
+      {
+        "accept": [
+          "outputs"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-q6c98xz2",
+    "version": 1,
+    "section": "moving-between",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a `moved` block not carry the logs bucket from the app's state to the data team's?",
+    "hint": "Lesson 4 used it for a rename.",
+    "choices": [
+      {
+        "text": "Because buckets cannot be moved between AWS accounts",
+        "correct": false,
+        "why": "Both states describe the same account; the bucket itself never moves."
+      },
+      {
+        "text": "It has no way to name another state",
+        "correct": true,
+        "why": "Right. It renames an address inside one state; a move between states is two operations."
+      },
+      {
+        "text": "Because `moved` only works with `count` and `for_each`",
+        "correct": false,
+        "why": "It renames any address; lesson 7 set it beside `state mv`."
+      },
+      {
+        "text": "It would destroy the bucket first",
+        "correct": false,
+        "why": "A `moved` block never destroys anything; it simply has no way to reach another state."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4kssa77",
+    "version": 1,
+    "section": "moving-between",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the app apply its `removed` block before the data team applies its `import` block, and not the other way round?",
+    "hint": "Compare managed by nobody with managed by two.",
+    "choices": [
+      {
+        "text": "Two states managing one bucket would undo each other's changes",
+        "correct": true,
+        "why": "Yes. Whoever plans last puts its own idea of the bucket back; an hour in no state is harmless."
+      },
+      {
+        "text": "Terraform refuses an import while another state holds the address",
+        "correct": false,
+        "why": "Terraform never looks at other states, so nothing would refuse it; that is exactly the danger."
+      },
+      {
+        "text": "The import needs the lock the app holds",
+        "correct": false,
+        "why": "Each state has its own lock under its own key."
+      },
+      {
+        "text": "A `removed` block recreates the bucket under a new id",
+        "correct": false,
+        "why": "With `destroy = false` it only drops the entry from the state; the bucket stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-s71djs2j",
+    "version": 1,
+    "section": "moving-between",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each block or command to what it does.",
+    "hint": "One of them works only between local files.",
+    "pairs": [
+      {
+        "left": "`removed` with `destroy = false`",
+        "right": "Takes an entry out of this state and leaves the object"
+      },
+      {
+        "left": "`import`",
+        "right": "Brings an existing object into this state"
+      },
+      {
+        "left": "`moved`",
+        "right": "Renames an address inside one state"
+      },
+      {
+        "left": "`terraform state mv -state-out`",
+        "right": "Moves an entry from one state file to another"
+      }
+    ],
+    "right_distractors": [
+      "Copies a bucket's objects into another bucket"
+    ]
+  },
+  {
+    "id": "ex-0gf9a7yd",
+    "version": 1,
+    "section": "moving-between",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The data team's import plan said `1 to import, 0 to add, 0 to change, 0 to destroy`. What would it have shown if their block had also set `tags = { Team = \"data\" }`?",
+    "hint": "The bucket in AWS has no tags.",
+    "choices": [
+      {
+        "text": "An error, since an import cannot change anything",
+        "correct": false,
+        "why": "An import can come with changes; the plan shows both, which is why it is read before the apply."
+      },
+      {
+        "text": "The import and a change, side by side",
+        "correct": true,
+        "why": "Right: `1 to import` and `1 to change`, visible before anything is written."
+      },
+      {
+        "text": "A replacement of the bucket",
+        "correct": false,
+        "why": "Tags change in place, as Bruno's bucket showed in the next section."
+      },
+      {
+        "text": "The same summary, because imports ignore the block's arguments",
+        "correct": false,
+        "why": "The plan compares the block with the object it reads; a difference is a change."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mek23fj",
+    "version": 1,
+    "section": "import-command",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`terraform import aws_s3_bucket.backups shop-backups-dev` failed the first time. Why?",
+    "hint": "Read the error's first line.",
+    "choices": [
+      {
+        "text": "The bucket name was wrong",
+        "correct": false,
+        "why": "The second attempt used the same name and succeeded."
+      },
+      {
+        "text": "The configuration had no block at that address yet",
+        "correct": true,
+        "why": "Yes. The entry has to belong to a block, and the command writes no configuration."
+      },
+      {
+        "text": "A bucket made by hand cannot be imported",
+        "correct": false,
+        "why": "Making things by hand is exactly what import is for."
+      },
+      {
+        "text": "The app's state was locked by another run",
+        "correct": false,
+        "why": "The error named the missing address, not a lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-zneghgpj",
+    "version": 1,
+    "section": "import-command",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after `Import successful!`, the plan wanted to remove Bruno's two tags. What was wrong?",
+    "hint": "The import read the bucket correctly.",
+    "choices": [
+      {
+        "text": "The import copied the tags into the wrong state",
+        "correct": false,
+        "why": "The state was the app's, as intended, and held the tags as they were."
+      },
+      {
+        "text": "The block did not describe the bucket",
+        "correct": true,
+        "why": "Right. A block that says nothing about tags means no tags, so the fix is in the configuration."
+      },
+      {
+        "text": "moto does not store tags on buckets",
+        "correct": false,
+        "why": "`get-bucket-tagging` printed both, and the plan saw them."
+      },
+      {
+        "text": "The import has to be repeated with `-refresh-only`",
+        "correct": false,
+        "why": "The state was right; repeating anything there changes nothing about the block."
+      }
+    ]
+  },
+  {
+    "id": "ex-774jm1yp",
+    "version": 1,
+    "section": "import-command",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are reasons the lesson gives for preferring an `import` block to the command? Choose all that apply.",
+    "hint": "Three habits of the command.",
+    "choices": [
+      {
+        "text": "The command writes the state before anybody sees a plan",
+        "correct": true,
+        "why": "Yes; a block goes through a plan first."
+      },
+      {
+        "text": "The command takes one resource at a time",
+        "correct": true,
+        "why": "Yes; fifty blocks can sit in one file."
+      },
+      {
+        "text": "The command cannot import S3 buckets",
+        "correct": false,
+        "why": "It imported Bruno's bucket in this section."
+      },
+      {
+        "text": "The command leaves no trace in the repository",
+        "correct": true,
+        "why": "Yes; a block is part of the commit that adds the resource."
+      },
+      {
+        "text": "The command was removed in Terraform 1.5",
+        "correct": false,
+        "why": "It still works; 1.5 is when import blocks arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-nas6vy76",
+    "version": 1,
+    "section": "import-blocks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `terraform plan -generate-config-out=generated.tf` write into `generated.tf`?",
+    "hint": "Only import blocks without a resource block get one.",
+    "choices": [
+      {
+        "text": "A resource block for each import that has none",
+        "correct": true,
+        "why": "Yes, a first draft read from the real object, with a comment saying to review it."
+      },
+      {
+        "text": "The saved plan, to apply later with `terraform apply`",
+        "correct": false,
+        "why": "That is `-out`; this flag writes HCL."
+      },
+      {
+        "text": "A copy of the state as HCL, every resource included",
+        "correct": false,
+        "why": "It writes blocks only for the imports that lack one."
+      },
+      {
+        "text": "The `import` blocks for every resource in the VPC",
+        "correct": false,
+        "why": "You write the import blocks; Terraform writes the resource blocks they point at."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qf6mbxt",
+    "version": 1,
+    "section": "import-blocks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana cleaned the generated block for the monitoring group. Which of these did she change or drop? Choose all that apply.",
+    "hint": "Compare `generated.tf` with `monitoring.tf`.",
+    "choices": [
+      {
+        "text": "The literal `vpc_id`, now read from the network's output",
+        "correct": true,
+        "why": "Yes; the VPC belongs to another state."
+      },
+      {
+        "text": "`tags_all`",
+        "correct": true,
+        "why": "Yes; it is computed from `tags`."
+      },
+      {
+        "text": "The port 9100 rule",
+        "correct": false,
+        "why": "That rule is the point of the group; it stayed, as an `ingress` block."
+      },
+      {
+        "text": "The egress rule",
+        "correct": false,
+        "why": "It stayed, rewritten as a block; dropping it is one of the mistakes the plan would show."
+      },
+      {
+        "text": "Values that are only defaults, such as `self = false`",
+        "correct": true,
+        "why": "Yes; they say nothing a reader needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-wayt6w8j",
+    "version": 1,
+    "section": "import-blocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the cleaned block, the plan said `Plan: 1 to import, 0 to add, 0 to change, 0 to destroy`. What does that prove?",
+    "hint": "A mistake in the block would have added a word to that line.",
+    "choices": [
+      {
+        "text": "That the group was created by Terraform after all",
+        "correct": false,
+        "why": "It was made by hand; import is how Terraform adopts it."
+      },
+      {
+        "text": "That the generated file was applied unchanged",
+        "correct": false,
+        "why": "The generated file was deleted; the plan compared the cleaned one."
+      },
+      {
+        "text": "Nothing yet, until the apply runs",
+        "correct": false,
+        "why": "The plan already compared the block with the real group; that comparison is the proof."
+      },
+      {
+        "text": "That the block's arguments agree with the real group in AWS",
+        "correct": true,
+        "why": "Right. Any attribute the block states differently would have shown as a change."
+      }
+    ]
+  },
+  {
+    "id": "ex-7fj504e8",
+    "version": 1,
+    "section": "import-blocks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An `import` block names the address with `to` and the real object with ___.",
+    "hint": "For a bucket it is the bucket's name.",
+    "blanks": [
+      {
+        "accept": [
+          "id"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-b5hf3hhn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A database will be added to the shop. It changes rarely, the app team does not own it, and losing it would be the worst mistake possible. Following the lesson, where does it go?",
+    "hint": "Lifecycle, owner, and how bad a mistake would be.",
+    "choices": [
+      {
+        "text": "In the app's state, since the app is what uses it",
+        "correct": false,
+        "why": "Using it is not owning it, and the app's weekly applies would put it within reach of every mistake."
+      },
+      {
+        "text": "In the network's state, since it also changes rarely",
+        "correct": false,
+        "why": "Lifecycle matches, owner does not, and the network team would then hold a database they do not run."
+      },
+      {
+        "text": "In a state of its own",
+        "correct": true,
+        "why": "Right: a different owner, its own lifecycle, and a blast radius worth keeping apart from everything that can be rebuilt."
+      },
+      {
+        "text": "Outside Terraform, made by hand",
+        "correct": false,
+        "why": "That is how the backups bucket and the monitoring group started, and both had to be imported."
+      }
+    ]
+  },
+  {
+    "id": "ex-xw9mza0s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague imported an EC2 instance with an `import` block, and the plan shows `1 to import` and `1 to change`, the change being the instance type. What should happen next?",
+    "hint": "Who is right about the instance type: the file or AWS?",
+    "choices": [
+      {
+        "text": "Apply: the change is how the import completes",
+        "correct": false,
+        "why": "Applying would resize a running machine because somebody typed the wrong type in a file."
+      },
+      {
+        "text": "Fix the instance type in the block and plan again",
+        "correct": true,
+        "why": "Right: with an import, the block is edited until it matches the world, and only an import with no changes is accepted."
+      },
+      {
+        "text": "Run `terraform import` from the command line instead",
+        "correct": false,
+        "why": "The command would write the same entry with no plan, and the next plan would show the same change."
+      },
+      {
+        "text": "Remove the import block and add `ignore_changes`",
+        "correct": false,
+        "why": "Without the import block the plan would try to create a second instance."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjv4xpfc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of adopting a resource with an import block in order.",
+    "hint": "The plan is read twice.",
+    "items": [
+      "Write the `import` block with `to` and `id`",
+      "Run `terraform plan -generate-config-out=generated.tf`",
+      "Clean the draft into the configuration's own style",
+      "Plan until it says only `1 to import`",
+      "Apply, then plan once more for `No changes`"
+    ],
+    "trap": "Applying the generated draft as it stands is the usual shortcut: it works, and it leaves literal ids where references belong."
+  },
+  {
+    "id": "ex-em50dwyx",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After everything in this lesson, which statements are true? Choose all that apply.",
+    "hint": "Count the keys in the bucket, and what moved in AWS.",
+    "choices": [
+      {
+        "text": "The state bucket holds three keys: network, app and data",
+        "correct": true,
+        "why": "Yes; the old `shop/` key was deleted after the split."
+      },
+      {
+        "text": "The logs bucket was recreated when it moved to the data team",
+        "correct": false,
+        "why": "It was the same bucket all along; only state entries moved."
+      },
+      {
+        "text": "The app reads the VPC id from the network's outputs",
+        "correct": true,
+        "why": "Yes, through `terraform_remote_state`."
+      },
+      {
+        "text": "The network's state also holds the monitoring group",
+        "correct": false,
+        "why": "It was imported into the app's state."
+      }
+    ]
+  }
+]
