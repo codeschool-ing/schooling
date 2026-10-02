@@ -53,8 +53,8 @@ the input is the price of one answer**, so it is worth paying where a wrong answ
 the principle is easy to miss, and not on every request.
 
 The two calls can be folded into one prompt: "first state the general rules that apply, then
-answer". That saves the round trip and keeps most of the effect, because the rules are still
-written before the answer. It also lets you see, in one reply, whether the rules were right.
+answer". That saves the round trip and keeps what mattered in the holiday case: the rules are
+still written before the answer. It also lets you see, in one reply, whether the rules were right.
 
 ## Next to chain of thought
 

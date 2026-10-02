@@ -49,11 +49,11 @@ A pergunta direta manda 116 tokens. A versão com recuo manda 122 e depois 226, 
 de entrada, três vezes mais, e além disso a resposta da primeira chamada é saída que você paga e
 espera antes que a segunda possa começar. **O dobro de idas e voltas e cerca do triplo de entrada é
 o preço de uma resposta**, então vale pagar onde uma resposta errada sai cara e o princípio é fácil
-de perder, e não em toda requisição.
+de perder, e não em todo pedido.
 
-As duas chamadas podem ser dobradas num prompt só: "primeiro diga as regras gerais que se aplicam,
-depois responda". Isso economiza a ida e volta e mantém boa parte do efeito, porque as regras
-continuam escritas antes da resposta. E deixa você ver, numa resposta só, se as regras estavam
+As duas chamadas podem ser juntadas num prompt só: "primeiro diga as regras gerais que se aplicam,
+depois responda". Isso economiza a ida e volta e mantém o que importou no caso do feriado: as
+regras continuam escritas antes da resposta. E deixa você ver, numa resposta só, se as regras estavam
 certas.
 
 ## Ao lado da cadeia de pensamento
