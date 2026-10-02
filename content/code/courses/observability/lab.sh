@@ -31,6 +31,11 @@
 #     mesh         Envoy 1.39.2 (lesson 19)
 #   and a Kubernetes cluster for lessons 14 and 19: kind 0.33.0, node v1.37.0
 #
+# Elasticsearch and OpenSearch run with their disk watermarks switched off:
+# they measure the host's whole disk, and on the machine this was recorded on
+# that disk is shared, so its free space said nothing about the lab's. On a
+# machine of your own, leave them on.
+#
 # Every port is published on 127.0.0.1 only. Nothing here reaches the internet
 # once the images and the Python wheels are downloaded.
 #
@@ -255,6 +260,41 @@ services:
   zipkin:
     image: openzipkin/zipkin:3.6.1
     ports: ["127.0.0.1:9411:9411"]
+
+  elasticsearch:
+    image: elasticsearch:9.5.3
+    profiles: [elastic]
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      cluster.routing.allocation.disk.threshold_enabled: "false"
+      ES_JAVA_OPTS: -Xms1g -Xmx1g
+    ports: ["127.0.0.1:9200:9200"]
+
+  mongo:
+    image: mongo:8.0
+    profiles: [graylog]
+
+  opensearch:
+    image: opensearchproject/opensearch:2.19.6
+    profiles: [graylog]
+    environment:
+      discovery.type: single-node
+      DISABLE_SECURITY_PLUGIN: "true"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      cluster.routing.allocation.disk.threshold_enabled: "false"
+      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+
+  graylog:
+    image: graylog/graylog:7.0.13
+    profiles: [graylog]
+    env_file: [.graylog.env]
+    environment:
+      GRAYLOG_HTTP_EXTERNAL_URI: http://127.0.0.1:9000/
+      GRAYLOG_ELASTICSEARCH_HOSTS: http://opensearch:9200
+      GRAYLOG_MONGODB_URI: mongodb://mongo:27017/graylog
+    depends_on: [mongo, opensearch]
+    ports: ["127.0.0.1:9000:9000"]
 LABFILE
   mkdir -p "$SHOP/grafana/provisioning/dashboards"
   cat > "$SHOP/grafana/provisioning/dashboards/shop.yaml" <<'LABFILE'
@@ -324,6 +364,85 @@ compactor:
   delete_request_store: filesystem
 LABFILE
   mkdir -p "$SHOP/otel"
+  cat > "$SHOP/otel/collector-logs.yaml" <<'LABFILE'
+# The same Collector, sending every log line to three stores at once:
+# Loki, Elasticsearch and Graylog. Lesson 9 switches to it.
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  fluent_forward:
+    endpoint: 0.0.0.0:24224
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 400
+  batch: {}
+  # A batch from Docker mixes every container's lines under one resource, so
+  # the lines are regrouped by their own "service" field, one resource each,
+  # before that field becomes the resource's service.name.
+  groupbyattrs/service:
+    keys: [service]
+  transform/service:
+    error_mode: ignore
+    log_statements:
+      - context: resource
+        statements:
+          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
+  transform/logs:
+    error_mode: ignore
+    log_statements:
+      - context: log
+        conditions:
+          - IsMatch(body, "^\\{")
+        statements:
+          - merge_maps(attributes, ParseJSON(body), "upsert")
+          - set(severity_text, attributes["level"])
+          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
+          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
+
+exporters:
+  debug:
+    verbosity: basic
+  otlp_grpc/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+  zipkin:
+    endpoint: http://zipkin:9411/api/v2/spans
+  otlp_http/loki:
+    endpoint: http://loki:3100/otlp
+  elasticsearch:
+    endpoints: [http://elasticsearch:9200]
+  otlp_grpc/graylog:
+    endpoint: graylog:4317
+    tls:
+      insecure: true
+
+service:
+  telemetry:
+    metrics:
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp_grpc/jaeger, zipkin]
+    logs:
+      receivers: [fluent_forward]
+      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
+      exporters: [otlp_http/loki, elasticsearch, otlp_grpc/graylog]
+LABFILE
+  mkdir -p "$SHOP/otel"
   cat > "$SHOP/otel/collector.yaml" <<'LABFILE'
 # The OpenTelemetry Collector: every trace and every log line of the shop
 # passes through here on its way to where it is stored.
@@ -342,6 +461,17 @@ processors:
     check_interval: 1s
     limit_mib: 400
   batch: {}
+  # A batch from Docker mixes every container's lines under one resource, so
+  # the lines are regrouped by their own "service" field, one resource each,
+  # before that field becomes the resource's service.name.
+  groupbyattrs/service:
+    keys: [service]
+  transform/service:
+    error_mode: ignore
+    log_statements:
+      - context: resource
+        statements:
+          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
   transform/logs:
     error_mode: ignore
     log_statements:
@@ -351,7 +481,8 @@ processors:
         statements:
           - merge_maps(attributes, ParseJSON(body), "upsert")
           - set(severity_text, attributes["level"])
-          - set(resource.attributes["service.name"], attributes["service"])
+          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
+          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
 
 exporters:
   debug:
@@ -381,7 +512,7 @@ service:
       exporters: [otlp_grpc/jaeger, zipkin]
     logs:
       receivers: [fluent_forward]
-      processors: [memory_limiter, transform/logs, batch]
+      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
       exporters: [otlp_http/loki]
 LABFILE
   mkdir -p "$SHOP/."
@@ -1041,6 +1172,11 @@ up() {
   write_files
   wheels
   [ -f "$SHOP/.grafana-password" ] || openssl rand -hex 12 > "$SHOP/.grafana-password"
+  if [ ! -f "$SHOP/.graylog.env" ]; then
+    openssl rand -hex 12 > "$SHOP/.graylog-password"
+    printf 'GRAYLOG_PASSWORD_SECRET=%s\nGRAYLOG_ROOT_PASSWORD_SHA2=%s\n' "$(openssl rand -hex 32)" \
+      "$(tr -d '\n' < "$SHOP/.graylog-password" | sha256sum | cut -d' ' -f1)" > "$SHOP/.graylog.env"
+  fi
   chown -R "$USER_LAB:$USER_LAB" "$SHOP"
   local profiles=""
   for p in "$@"; do profiles+=" --profile $p"; done
@@ -1051,6 +1187,8 @@ up() {
   wait_for jaeger http://127.0.0.1:16686/
   wait_for grafana http://127.0.0.1:3000/api/health
   wait_for zipkin http://127.0.0.1:9411/health
+  case " $* " in *" elastic "*) wait_for elasticsearch http://127.0.0.1:9200/ ;; esac
+  case " $* " in *" graylog "*) wait_for graylog http://127.0.0.1:9000/api/ ;; esac
   # the mailer connects when rabbitmq is ready, which is a few seconds later
   for i in $(seq 1 60); do
     as_ana "docker compose logs mailer" 2>/dev/null | grep -q 'waiting for orders' && break
