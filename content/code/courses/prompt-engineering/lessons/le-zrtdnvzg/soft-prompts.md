@@ -28,8 +28,8 @@ ana@lab:~/pe$ tok show "Answer in one word." -e cl100k_base
 5 tokens, 19 characters (cl100k_base)
 ```
 
-The pieces are the same and every id has changed, because each id is an address in its own
-model's table. Hold on to that: it decides what a learnt prompt can and cannot be moved to.
+The pieces are the same and four of the five ids have changed, because each id is an address in
+its own model's table; the full stop happens to sit at `13` in both. Hold on to that: it decides what a learnt prompt can and cannot be moved to.
 
 ## Skipping the words
 

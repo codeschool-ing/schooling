@@ -28,8 +28,8 @@ ana@lab:~/pe$ tok show "Answer in one word." -e cl100k_base
 5 tokens, 19 characters (cl100k_base)
 ```
 
-Os pedaços são os mesmos e todos os ids mudaram, porque cada id é um endereço na tabela do seu
-próprio modelo. Guarde isso: é o que decide para onde um prompt aprendido pode ou não ser levado.
+Os pedaços são os mesmos e quatro dos cinco ids mudaram, porque cada id é um endereço na tabela
+do seu próprio modelo; o ponto final calha de estar no `13` nos dois. Guarde isso: é o que decide para onde um prompt aprendido pode ou não ser levado.
 
 ## Pulando as palavras
 
