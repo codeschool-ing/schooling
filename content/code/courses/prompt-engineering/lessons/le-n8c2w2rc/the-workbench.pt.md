@@ -42,9 +42,9 @@ a bancada:
 | ferramenta | o que é | usada pela primeira vez em |
 |---|---|---|
 | `toylm` | o modelo de trigramas do `corpus.txt`, com os controles de amostragem de uma API de modelo | esta lição |
-| `tok` | um tokenizador **de verdade**, as codificações que a OpenAI publica para os seus modelos | lição 3 |
-| `validate`, `repair` | conferir uma resposta contra um JSON Schema, e recuperar uma que veio embrulhada | lição 19 |
-| `retrieve` | busca por palavras-chave no `handbook/`, o manual de equipe de um café | lição 11 |
+| `tok` | um tokenizador **de verdade**, as codificações que a OpenAI publica para os seus modelos | esta lição, logo abaixo; a lição 3 o explica |
+| `validate`, `repair` | conferir uma resposta contra um JSON Schema, e recuperar uma que veio embrulhada | lições 15 e 19 |
+| `retrieve` | busca por palavras-chave no `handbook/`, o manual de equipe de um café | lição 5 |
 | `agent` | o laço que roda ferramentas para um modelo, com os seus limites e recusas | lição 6 |
 | `vote`, `tot`, `ape` | autoconsistência, uma árvore de pensamentos, pontuação de prompts | lições 27, 28 e 31 |
 

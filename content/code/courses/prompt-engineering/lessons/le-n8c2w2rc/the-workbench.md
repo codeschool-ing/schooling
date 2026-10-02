@@ -42,9 +42,9 @@ workbench:
 | tool | what it is | first used in |
 |---|---|---|
 | `toylm` | the trigram model of `corpus.txt`, with the sampling controls a model API has | this lesson |
-| `tok` | a **real** tokenizer, the encodings OpenAI publishes for its models | lesson 3 |
-| `validate`, `repair` | checking a reply against a JSON Schema, and recovering a wrapped one | lesson 19 |
-| `retrieve` | keyword search over `handbook/`, the staff handbook of a café | lesson 11 |
+| `tok` | a **real** tokenizer, the encodings OpenAI publishes for its models | this lesson, below; lesson 3 explains it |
+| `validate`, `repair` | checking a reply against a JSON Schema, and recovering a wrapped one | lessons 15 and 19 |
+| `retrieve` | keyword search over `handbook/`, the staff handbook of a café | lesson 5 |
 | `agent` | the loop that runs tools for a model, with its limits and refusals | lesson 6 |
 | `vote`, `tot`, `ape` | self-consistency, a tree of thoughts, scoring prompts | lessons 27, 28 and 31 |
 
