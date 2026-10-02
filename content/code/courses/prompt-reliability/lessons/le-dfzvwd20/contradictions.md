@@ -63,8 +63,8 @@ output tokens: mean 42.7, max 54
 
 The mean reply grew from 39.9 tokens to 42.7, and the longest from 50 to 54. The median call took
 1,306 ms instead of 1,186. Those gaps are small because the test set's messages are short, one or
-two sentences each, so full detail adds a sentence at most. An inbox with paragraphs in it would
-widen them, and the lab's latencies are the course's numbers, computed rather than timed. The
+two sentences each, so full detail adds a sentence at most. An inbox with paragraphs in it would widen them. The lab's latencies are the course's numbers,
+computed rather than timed. The
 direction is the point: **a contradiction is not settled once, it is settled again on every call,
 and paid for each time.**
 

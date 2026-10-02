@@ -7,11 +7,11 @@ Cutting a prompt feels riskier than adding to it, because every line was put the
 for a reason. **Three rules make the cut safe**, and the third is the one that needs a
 measurement.
 
-- **One instruction per decision.** The summary's length is one decision, and lines 4 and 16 of
+- One instruction per decision. The summary's length is one decision, and lines 4 and 16 of
   `v2-long.txt` each make it. Decide what the summary is for and say that.
-- **Say it once.** A repeated line adds tokens and adds nothing else, and capitals rank a rule
+- Say it once. A repeated line adds tokens and adds nothing else, and capitals rank a rule
   above its neighbours whether or not anybody meant them to.
-- **Delete what the model does anyway**, and know it from a count rather than a hunch.
+- Delete what the model does anyway, and know it from a count rather than a hunch.
 
 Applied to `v2-long.txt`, the persona goes, since being helpful and friendly decides nothing about
 a JSON object. The summary becomes one sentence, because the team scans the queue. The repeated
@@ -62,8 +62,8 @@ ana@lab:~/triage$ pl compare runs/long.jsonl runs/v2.jsonl --answers
 40 cases, same answer 40, different answer 0
 ```
 
-The short prompt passes 24 of 40 against 19. **That is not a win, and the sign test says so**:
-nineteen messages changed, twelve one way and seven the other, and a fair coin splits nineteen
+The short prompt passes 24 of 40 against 19. **That is not a win, and the sign test says so.**
+Nineteen messages changed, twelve one way and seven the other. A fair coin splits nineteen
 tosses at least that unevenly about one time in three (p = 0.359). What `--answers` adds is the
 content. It compares the category each reply gave, read without the wrapping, and all forty are
 the same. The cut kept every answer and saved 98 tokens a call.

@@ -63,7 +63,7 @@ output tokens: mean 42.7, max 54
 A resposta média cresceu de 39,9 tokens para 42,7, e a mais longa de 50 para 54. A chamada mediana
 levou 1.306 ms em vez de 1.186. As diferenças são pequenas porque as mensagens do conjunto de teste
 são curtas, de uma ou duas frases cada, então o detalhe completo acrescenta no máximo uma frase. Uma
-caixa de entrada com parágrafos aumentaria a distância, e as latências do laboratório são números do
+caixa de entrada com parágrafos aumentaria a distância. As latências do laboratório são números do
 curso, calculados e não cronometrados. O que importa é o sentido: **uma contradição não se resolve
 uma vez, ela se resolve de novo em cada chamada, e é paga a cada vez.**
 

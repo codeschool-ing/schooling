@@ -46,7 +46,7 @@ ana@lab:~/triage$ printf 'Keep the summary to one line.\nLeave nothing out of th
 Those two lines disagree exactly as lines 4 and 16 do, and the linter finds nothing, because
 *one line* and *leave nothing out* are on none of its lists.
 
-And it reports things that are not what it says. Look again at the shouting finding: lines 11 and
+And some of what it reports is not what the finding's name says. Look again at the shouting finding: lines 11 and
 14 open with `IMPORTANT:`, and line 13 opens with *Never*, an ordinary capitalised word at the
 start of a sentence. The pattern ignores case, so it counted line 13 as shouting. **A finding is
 a line to look at, not a verdict on it.**

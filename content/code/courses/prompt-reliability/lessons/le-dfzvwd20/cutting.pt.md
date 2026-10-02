@@ -7,11 +7,11 @@ Cortar um prompt parece mais arriscado do que acrescentar, porque cada linha foi
 alguém, por algum motivo. **Três regras tornam o corte seguro**, e a terceira é a que precisa de
 uma medição.
 
-- **Uma instrução por decisão.** O tamanho do resumo é uma decisão, e as linhas 4 e 16 do
+- Uma instrução por decisão. O tamanho do resumo é uma decisão, e as linhas 4 e 16 do
   `v2-long.txt` a tomam cada uma por conta própria. Decida para que serve o resumo e diga isso.
-- **Diga uma vez só.** Uma linha repetida acrescenta tokens e mais nada, e as maiúsculas põem uma
+- Diga uma vez só. Uma linha repetida acrescenta tokens e mais nada, e as maiúsculas põem uma
   regra acima das vizinhas, quer alguém tenha querido isso ou não.
-- **Apague o que o modelo já faz sozinho**, e saiba disso por uma contagem, não por um palpite.
+- Apague o que o modelo já faz sozinho, e saiba disso por uma contagem, não por um palpite.
 
 Aplicado ao `v2-long.txt`, a persona sai, já que ser prestativo e simpático não decide nada num
 objeto JSON. O resumo vira uma frase, porque a equipe percorre a fila de olho. A regra repetida
@@ -63,8 +63,8 @@ ana@lab:~/triage$ pl compare runs/long.jsonl runs/v2.jsonl --answers
 40 cases, same answer 40, different answer 0
 ```
 
-O prompt curto passa em 24 de 40, contra 19. **Isso não é uma vitória, e o teste do sinal diz
-isso**: dezenove mensagens mudaram, doze para um lado e sete para o outro, e uma moeda honesta
+O prompt curto passa em 24 de 40, contra 19. **Isso não é uma vitória, e o teste do sinal mostra
+por quê.** Dezenove mensagens mudaram, doze para um lado e sete para o outro. Uma moeda honesta
 divide dezenove lançamentos de forma ao menos tão desigual cerca de uma vez em três (p = 0.359). O
 que o `--answers` acrescenta é o conteúdo. Ele compara a categoria que cada resposta deu, lida sem o
 embrulho, e as quarenta são iguais. O corte manteve todas as respostas e economizou 98 tokens por

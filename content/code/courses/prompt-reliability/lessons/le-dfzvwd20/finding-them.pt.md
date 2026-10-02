@@ -46,7 +46,7 @@ ana@lab:~/triage$ printf 'Keep the summary to one line.\nLeave nothing out of th
 Essas duas linhas discordam exatamente como as linhas 4 e 16, e o linter não encontra nada, porque
 *one line* e *leave nothing out* não estão em nenhuma das listas dele.
 
-E ele aponta coisas que não são o que ele diz. Volte ao achado de gritaria: as linhas 11 e 14
+E parte do que ele aponta não é o que o nome do achado diz. Volte ao achado de gritaria: as linhas 11 e 14
 começam com `IMPORTANT:`, e a linha 13 começa com *Never*, uma palavra comum com inicial maiúscula
 no começo da frase. O padrão ignora maiúsculas e minúsculas, então contou a linha 13 como grito.
 **Um achado é uma linha para olhar, não um veredito sobre ela.**
