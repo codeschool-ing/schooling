@@ -21,7 +21,7 @@ ana@lab:~/triage$ cat prices.json
 **Esses preços foram escritos pelo curso**, como o arquivo diz, e estão em centavos inteiros por
 milhão de tokens: 300 centavos por um milhão de tokens de entrada, 1500 por um milhão de tokens de
 saída. Os dois preços de `cache` são da aula 17. Tabelas de preço reais têm a mesma forma, um preço
-por milhão de tokens com a saída mais cara que a entrada, e mudam com tanta frequência que qualquer
+por milhão de tokens com a saída mais cara que a entrada. E mudam com tanta frequência que qualquer
 número copiado para uma aula estaria errado em menos de um ano.
 
 ## A aritmética
@@ -42,7 +42,7 @@ cost of a million calls like them: 127,680 cents
 
 As quarenta chamadas leram 9539 tokens e escreveram 1497. A 300 e 1500 centavos o milhão, isso dá
 9539 × 300 + 1497 × 1500 = 2.861.700 + 2.245.500 = 5.107.200 milionésimos de centavo, que são os
-5.1072 centavos da linha de baixo. Divida por quarenta para uma chamada, 0,12768 centavo, e
+5,1072 centavos da linha de baixo. Divida por quarenta para uma chamada, 0,12768 centavo, e
 multiplique por um milhão para a última linha. **A saída foi menos de 14% dos tokens e 44% do
 custo**, porque cada token de saída custa cinco vezes mais. É a mesma lição da seção anterior, em
 dinheiro.
@@ -62,8 +62,8 @@ ana@lab:~/triage$ grep -n -A1 "Prices are whole cents" promptlab/cli.py
 ```
 
 Tokens são inteiros, preços são centavos inteiros por milhão, então o produto é um número inteiro de
-milionésimos de centavo, exato. **Nada é arredondado até o final**, uma vez, para cima na metade, na
-última casa impressa. A alternativa parece inofensiva e não é:
+milionésimos de centavo, exato. **Nada é arredondado até o final**, e aí uma vez só, com a metade
+para cima, na última casa impressa. A alternativa parece inofensiva e não é:
 
 ```
 ana@lab:~/triage$ python3 -c 'print(0.1 + 0.2)'

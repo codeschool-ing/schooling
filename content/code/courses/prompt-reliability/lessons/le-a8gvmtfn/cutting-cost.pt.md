@@ -58,7 +58,7 @@ stop: max_tokens, tokens in 238, out 30
 
 O p95 caiu de 1341 ms para 1138, e a nota de 36 para 1. Toda resposta com mais de trinta tokens foi
 cortada onde estava, no meio de uma string, e o `stop: max_tokens` avisa. **Um limite é um teto para
-a resposta que dispara, posto acima da resposta boa mais longa**, que para este prompt tinha 46
+a resposta que não para de crescer, posto acima da resposta boa mais longa**, que para este prompt tinha 46
 tokens. Ele só economiza nas respostas que já estavam dando errado.
 
 ## Um modelo mais barato para os casos fáceis

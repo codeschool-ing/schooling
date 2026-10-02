@@ -21,7 +21,7 @@ ana@lab:~/triage$ grep -n "^LATENCY" promptlab/model.py
 Each call costs 300 ms however small it is, 0.4 ms for every input token, 20 ms for every output
 token, and up to 150 ms of jitter that depends on the prompt. **These are the course's numbers, not
 any provider's.** What they copy is a shape. A model reads its whole input in one pass that runs in
-parallel, and then writes its answer one token at a time, each token waiting for the one before it,
+parallel. Then it writes its answer one token at a time, each token waiting for the one before it,
 which is how the decoder in *Attention Is All You Need* (Vaswani and others, 2017) generates text.
 OpenAI's published guide to latency optimisation makes the practical point: it lists generating
 fewer tokens among its first principles, and says that cutting input tokens usually helps far

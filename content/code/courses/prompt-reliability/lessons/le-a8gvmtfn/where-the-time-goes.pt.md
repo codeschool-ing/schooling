@@ -22,7 +22,7 @@ ana@lab:~/triage$ grep -n "^LATENCY" promptlab/model.py
 Cada chamada custa 300 ms por menor que seja, 0,4 ms por token de entrada, 20 ms por token de saída,
 e até 150 ms de variação que depende do prompt. **Esses números são do curso, não de algum
 provedor.** O que eles copiam é uma forma. Um modelo lê toda a entrada numa passada que roda em
-paralelo, e depois escreve a resposta um token por vez, cada token esperando o anterior, que é como o
+paralelo. Depois escreve a resposta um token por vez, cada token esperando o anterior, que é como o
 decodificador de *Attention Is All You Need* (Vaswani e outros, 2017) gera texto. O guia de
 otimização de latência publicado pela OpenAI faz a observação prática: ele põe gerar menos tokens
 entre os primeiros princípios, e diz que cortar tokens de entrada costuma ajudar bem menos.

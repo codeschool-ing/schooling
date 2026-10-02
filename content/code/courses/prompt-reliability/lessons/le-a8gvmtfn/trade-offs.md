@@ -4,7 +4,7 @@ version: 1
 ---
 
 A saving that changes the prompt is a change like any other. It goes through the gate of lesson 14,
-and **the question is not only whether it is cheaper but what it cost in answers**. The examples
+and **a cheaper prompt has to say what it cost in answers as well as what it saves**. The examples
 that the last section took out are a good case, because the numbers do not settle it on their own.
 
 ## What the cheaper prompt broke

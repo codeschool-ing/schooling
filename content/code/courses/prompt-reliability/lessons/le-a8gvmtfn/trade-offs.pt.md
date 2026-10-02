@@ -4,7 +4,7 @@ version: 1
 ---
 
 Uma economia que muda o prompt é uma mudança como qualquer outra. Ela passa pela barreira da aula
-14, e **a pergunta não é só se ficou mais barato, mas quanto custou em respostas**. Os exemplos que a
+14, e **um prompt mais barato precisa dizer quanto custou em respostas, além de quanto economiza**. Os exemplos que a
 seção anterior tirou são um bom caso, porque os números sozinhos não decidem.
 
 ## O que o prompt mais barato quebrou
@@ -33,8 +33,8 @@ mensagens são poucas para distinguir esses dois prompts pela contagem.
 
 Então leia o que quebrou. `t08`, `t19` e `t22` não são JSON: sem exemplo, o substituto volta aos
 hábitos de uma frase na frente ou de um bloco de código em volta da resposta, que a aula 1 mostrou.
-Uma urgência errada ainda encaminha a mensagem, devagar; **uma resposta que não se analisa não
-encaminha nada**. Três em quarenta são 7,5%, e se essa taxa se mantivesse num milhão de chamadas
+Uma urgência errada ainda encaminha a mensagem, devagar; **uma resposta que o programa não consegue
+ler não encaminha nada**. Três em quarenta são 7,5%, e se essa taxa se mantivesse num milhão de chamadas
 seriam umas 75.000 mensagens que um programa não conseguiria ler, cada uma pedindo uma nova tentativa,
 que custa outra chamada, ou uma pessoa. A economia é real e a conta que vem com ela também, e só
 quem sabe quanto custa uma mensagem perdida consegue pôr uma contra a outra. O que a bancada pode
