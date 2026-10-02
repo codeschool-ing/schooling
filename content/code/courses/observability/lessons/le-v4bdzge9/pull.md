@@ -1,0 +1,51 @@
+---
+title: Pull, targets, and what a scrape reads
+version: 1
+---
+
+Lessons 2 to 4 had every service **send** its spans to the Collector. Prometheus works the other way
+round, and most of its design follows from it: **each target publishes its current numbers at an
+address, and Prometheus asks for them on a schedule.** The asking is called a scrape, every fifteen
+seconds in this lab, and the list of addresses comes from `prometheus.yml`. Prometheus says what it
+is scraping and how the last attempt went:
+
+```
+ana@obs:~/shop$ curl -s localhost:9090/api/v1/targets | jq -r '.data.activeTargets[] | [.labels.job, .labels.instance, .health, .lastScrapeDuration] | @tsv' | sort
+blackbox	http://storefront:8080/health	up	0.004616312
+mailer	mailer:9102	up	0.003282747
+node	node-exporter:9100	up	0.010842373
+orders	orders:8081	up	0.004217575
+otel-collector	otel-collector:8888	up	0.002619335
+payments	payments:8082	up	0.002253304
+postgres	postgres-exporter:9187	up	0.037808622
+pushgateway	pushgateway:9091	up	0.002478841
+rabbitmq	rabbitmq:15692	up	0.021289088
+storefront	storefront:8080	up	0.003966553
+```
+
+Ten targets, all `up`, each answered in a few milliseconds. Pull gives Prometheus two things for
+free. It knows when a target **stops answering**, and records that as a metric of its own, `up`,
+which is 1 or 0 for every target on every scrape; a service that pushes and then dies just goes
+quiet. And a target never needs to know where Prometheus is, so a second Prometheus, for testing a
+change, can scrape the same targets without anyone reconfiguring the services.
+
+What it reads is plain text. The first lines of the storefront's answer, for its request counter:
+
+```
+ana@obs:~/shop$ curl -s localhost:8080/metrics | grep -A3 '^# HELP http_server_requests_total'
+# HELP http_server_requests_total HTTP requests answered, by route, method and status code.
+# TYPE http_server_requests_total counter
+http_server_requests_total{code="200",method="GET",route="/health"} 7.0
+http_server_requests_total{code="200",method="GET",route="/products"} 38.0
+```
+
+Every metric comes with a `# HELP` line, saying what it counts, and a `# TYPE` line, here `counter`,
+then one line per **series**: the metric's name, a set of labels between braces, and a value. The
+labels are what make one name into many series, one per combination of `code`, `method` and
+`route` the storefront has seen. Prometheus adds two of its own on the way in, `job` and
+`instance`, from the scrape configuration, which is how the same metric from two services stays
+apart.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 320\" role=\"img\" aria-label=\"How Prometheus collects. Prometheus, in the middle, asks every target for /metrics every fifteen seconds: the shop's services, the Collector, and three exporters, node, postgres and blackbox, which translate a machine, a database and an outside probe into the same format. The nightly report cannot be asked, because it has finished before the next scrape, so it pushes to the Pushgateway, which Prometheus scrapes like any other target. Rules evaluated inside Prometheus send alerts to Alertmanager, which sends them to the pager.\"><defs><marker id=\"pull-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"290\" y=\"110\" width=\"140\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"360.0\" y=\"137.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">Prometheus</text><text x=\"360.0\" y=\"153.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">scrapes every 15 s</text><rect x=\"30\" y=\"30\" width=\"140\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"100.0\" y=\"47.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">storefront</text><path d=\"M288 145 L172 47\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#pull-ah)\"></path><rect x=\"30\" y=\"75\" width=\"140\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"100.0\" y=\"92.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">orders</text><path d=\"M288 145 L172 92\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#pull-ah)\"></path><rect x=\"30\" y=\"120\" width=\"140\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"100.0\" y=\"137.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">payments</text><path d=\"M288 145 L172 137\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#pull-ah)\"></path><rect x=\"30\" y=\"165\" width=\"140\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"100.0\" y=\"182.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">mailer</text><path d=\"M288 145 L172 182\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#pull-ah)\"></path><text x=\"100\" y=\"220\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">the shop: /metrics</text><rect x=\"550\" y=\"30\" width=\"150\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"625.0\" y=\"47.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">node-exporter</text><path d=\"M432 145 L548 47\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#pull-ah)\"></path><rect x=\"550\" y=\"80\" width=\"150\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"625.0\" y=\"97.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">postgres-exporter</text><path d=\"M432 145 L548 97\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#pull-ah)\"></path><rect x=\"550\" y=\"130\" width=\"150\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"625.0\" y=\"147.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">blackbox-exporter</text><path d=\"M432 145 L548 147\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#pull-ah)\"></path><text x=\"625\" y=\"185\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">exporters: translate</text><rect x=\"550\" y=\"220\" width=\"150\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"625.0\" y=\"240.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">Pushgateway</text><path d=\"M432 160 L548 240\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#pull-ah)\"></path><rect x=\"550\" y=\"280\" width=\"150\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"5 4\"></rect><text x=\"625.0\" y=\"295.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">report</text><path d=\"M625 280 L625 262\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#pull-ah)\"></path><text x=\"540\" y=\"296\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">pushes once</text><rect x=\"290\" y=\"230\" width=\"140\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"360.0\" y=\"250.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">Alertmanager</text><path d=\"M360 182 L360 228\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#pull-ah)\"></path><text x=\"372\" y=\"205\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">alerts</text><rect x=\"140\" y=\"255\" width=\"110\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"195.0\" y=\"272.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">pager</text><path d=\"M288 255 L252 268\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#pull-ah)\"></path><text x=\"360\" y=\"22\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">who asks whom</text></svg>", "caption": "Prometheus asks; the targets only answer. The one exception, a job that does not live long enough to be asked, goes through a gateway that does."}
+```

@@ -21,7 +21,8 @@
 #     postgres 16.15, rabbitmq 4.2
 #   what watches it
 #     OpenTelemetry Collector contrib 0.161.0, Prometheus 3.15.0,
-#     Alertmanager 0.34.1, node_exporter 1.12.1, postgres_exporter 0.20.1,
+#     Alertmanager 0.34.1, Pushgateway 1.11.3, node_exporter 1.12.1,
+#     postgres_exporter 0.20.1,
 #     blackbox_exporter 0.28.0, Grafana 13.0.10, Loki 3.7.8, Jaeger 2.21.0,
 #     Zipkin 3.6.1
 #   and, only in the lessons that need them (compose profiles)
@@ -211,6 +212,9 @@ services:
     command: [--config.file=/etc/alertmanager/alertmanager.yml]
     volumes: ["./alertmanager:/etc/alertmanager:ro"]
     ports: ["127.0.0.1:9093:9093"]
+
+  pushgateway:
+    image: prom/pushgateway:v1.11.3
 
   node-exporter:
     image: prom/node-exporter:v1.12.1
@@ -422,6 +426,10 @@ scrape_configs:
   - job_name: otel-collector
     static_configs:
       - targets: [otel-collector:8888]
+  - job_name: pushgateway
+    honor_labels: true
+    static_configs:
+      - targets: [pushgateway:9091]
   - job_name: node
     static_configs:
       - targets: [node-exporter:9100]
@@ -886,6 +894,9 @@ LABFILE
 
 It has no caller, so its trace starts here. Each order it counts was created by
 a request with a trace of its own, and the report links to those.
+
+It is gone before Prometheus could scrape it, so it pushes its metrics to the
+Pushgateway on the way out, and Prometheus scrapes them there.
 """
 import os
 import sys
@@ -893,6 +904,7 @@ import sys
 import requests
 from opentelemetry import trace
 from opentelemetry.trace import Link, SpanContext, TraceFlags
+from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 
 from common import logs, tracing
 
@@ -918,6 +930,11 @@ def main(since):
         log.info("report written", extra={"fields": {
             "orders": len(orders), "paid": len(paid),
             "revenue_cents": sum(o["total_cents"] for o in paid)}})
+    registry = CollectorRegistry()
+    Gauge("report_orders", "Orders the last report counted.", registry=registry).set(len(orders))
+    Gauge("report_last_success_timestamp_seconds", "When the report last finished.",
+          registry=registry).set_to_current_time()
+    push_to_gateway(os.environ.get("PUSHGATEWAY", "pushgateway:9091"), job="report", registry=registry)
     trace.get_tracer_provider().shutdown()
 
 
