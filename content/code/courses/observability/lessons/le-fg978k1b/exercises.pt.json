@@ -1,0 +1,429 @@
+{
+  "ex-hkahq55v": {
+    "prompt": "Ligue cada métrica ao seu tipo.",
+    "hint": "Ela só sobe?",
+    "pairs": [
+      {
+        "left": "`http_server_requests_total`",
+        "right": "counter"
+      },
+      {
+        "left": "`process_resident_memory_bytes`",
+        "right": "gauge"
+      },
+      {
+        "left": "`http_server_request_duration_seconds`",
+        "right": "histogram"
+      }
+    ],
+    "right_distractors": [
+      "trace"
+    ]
+  },
+  "ex-w255g0e4": {
+    "prompt": "Mensagens esperando numa fila agora: counter ou gauge?",
+    "hint": "Pode descer?",
+    "choices": [
+      {
+        "text": "Gauge",
+        "why": "Isso: quantas há agora, sobe e desce."
+      },
+      {
+        "text": "Counter, porque mensagens são contadas",
+        "why": "Contar não é o critério; descer é."
+      },
+      {
+        "text": "Histograma, porque mensagens esperam tempos diferentes",
+        "why": "O tempo de espera seria um histograma; o número esperando não."
+      },
+      {
+        "text": "Qualquer um, desde que termine em `_total`",
+        "why": "`_total` marca um counter, e a profundidade de uma fila não é um."
+      }
+    ]
+  },
+  "ex-h50g8d6d": {
+    "prompt": "O `rate(process_cpu_seconds_total[1m])` devolveu 0,0193. Que porcentagem de um núcleo de processador a vitrine está usando, arredondada ao inteiro?",
+    "hint": "Segundos de CPU por segundo.",
+    "unit": "por cento"
+  },
+  "ex-30r29jey": {
+    "prompt": "Uma equipe informa \"requisições até agora\" como gauge e faz o gráfico do `rate()` dele. O que dá errado no primeiro reinício?",
+    "hint": "O que o `rate()` supõe?",
+    "choices": [
+      {
+        "text": "Nada: gauge e counter são guardados do mesmo jeito",
+        "why": "O armazenamento é igual; o significado que o `rate()` supõe não."
+      },
+      {
+        "text": "O valor despenca, e a curva sai errada em volta disso",
+        "why": "Isso: declarado como gauge, a queda não é tratada como reinício, e a série também não pode ser somada entre instâncias."
+      },
+      {
+        "text": "O Prometheus se recusa a coletar um gauge que só cresce",
+        "why": "Ele coleta o que receber."
+      },
+      {
+        "text": "A linha `_created` falta, então a taxa é zero",
+        "why": "O `_created` não decide a taxa."
+      }
+    ]
+  },
+  "ex-k20yt9a3": {
+    "prompt": "Os buckets marcam `le=\"0.025\"` 16 e `le=\"0.05\"` 270. Quantos checkouts levaram entre 25 e 50 ms?",
+    "hint": "Cumulativos.",
+    "choices": [
+      {
+        "text": "270",
+        "why": "Esse bucket inclui os 16 de baixo."
+      },
+      {
+        "text": "286",
+        "why": "Buckets não se somam assim."
+      },
+      {
+        "text": "254",
+        "why": "Isso: 270 menos 16."
+      },
+      {
+        "text": "16",
+        "why": "Esses são os que ficaram até 25 ms."
+      }
+    ]
+  },
+  "ex-cqz48b8d": {
+    "prompt": "Com todo checkout levando cerca de 0,33 s, a mediana voltou como 0,375. De onde veio o 0,375?",
+    "hint": "Que bucket os guardava?",
+    "choices": [
+      {
+        "text": "Alguns checkouts lentos puxaram a mediana para cima",
+        "why": "Todos levaram quase o mesmo; uma mediana não é puxada por extremos."
+      },
+      {
+        "text": "A falha de 300 ms mais 75 ms de rede",
+        "why": "O número é do bucket, não uma soma de atrasos."
+      },
+      {
+        "text": "O meio do bucket de 0,25 a 0,5, que guardava todos",
+        "why": "Isso. Sem nada mais fino a ler, a interpolação cai no meio."
+      },
+      {
+        "text": "O `rate()` arredondou para o oitavo mais próximo",
+        "why": "Não existe esse arredondamento."
+      }
+    ]
+  },
+  "ex-9bzsmzfv": {
+    "prompt": "A meta é \"checkouts abaixo de 300 ms\". O que faz o histograma responder isso com exatidão?",
+    "hint": "Onde ficam os limites?",
+    "choices": [
+      {
+        "text": "Mais tráfego, para a interpolação se compensar",
+        "why": "Mais tráfego não move limites de bucket."
+      },
+      {
+        "text": "Um percentil mais alto, como o 99,9",
+        "why": "Um percentil mais alto ainda é interpolado."
+      },
+      {
+        "text": "Um limite de bucket em 0,3",
+        "why": "Isso: aí \"abaixo de 0,3\" é a contagem de um bucket."
+      },
+      {
+        "text": "Um summary em vez de um histograma",
+        "why": "O summary do cliente Python nem tem quantis."
+      }
+    ]
+  },
+  "ex-8h2hj6np": {
+    "prompt": "Um histograma responde com exatidão a fração de observações abaixo de um valor que é um ___ de bucket.",
+    "hint": "Onde um bucket termina.",
+    "blanks": [
+      {
+        "accept": [
+          "limite",
+          "limiar"
+        ]
+      }
+    ]
+  },
+  "ex-9kp0670t": {
+    "prompt": "O que o summary do cliente Python publicou depois de três observações?",
+    "hint": "Olhe a saída.",
+    "choices": [
+      {
+        "text": "Uma contagem, uma soma e uma hora de criação",
+        "why": "Isso: nenhum quantil."
+      },
+      {
+        "text": "As três observações, uma por linha",
+        "why": "Observações nunca são publicadas."
+      },
+      {
+        "text": "Os percentis 50, 90 e 99 das três",
+        "why": "Clientes de outras linguagens publicam; o de Python não."
+      },
+      {
+        "text": "Buckets, como um histograma",
+        "why": "Um summary não tem buckets."
+      }
+    ]
+  },
+  "ex-24xrbtvz": {
+    "prompt": "Três cópias de um serviço publicam cada uma um percentil 99 de um summary. Como obter o percentil 99 das três juntas?",
+    "hint": "Do que você precisaria?",
+    "choices": [
+      {
+        "text": "Tirar a média dos três números",
+        "why": "Uma média de percentis não é um percentil."
+      },
+      {
+        "text": "Pegar o maior dos três",
+        "why": "É, no máximo, um limite superior, e muitas vezes distante."
+      },
+      {
+        "text": "Não dá, com esses números",
+        "why": "Isso. Buckets de histograma se somam; percentis não."
+      },
+      {
+        "text": "Ponderar cada um pela contagem de requisições",
+        "why": "Ponderar não recupera a distribuição."
+      }
+    ]
+  },
+  "ex-n7ezb9mv": {
+    "prompt": "A vitrine conta requisições por rota, método e código de status. O que é uma série?",
+    "hint": "Combinações.",
+    "choices": [
+      {
+        "text": "Uma requisição",
+        "why": "Requisições incrementam séries; não são séries."
+      },
+      {
+        "text": "Um label",
+        "why": "Um label sozinho não é uma série."
+      },
+      {
+        "text": "Uma combinação de valores de labels",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma coleta",
+        "why": "Uma coleta lê todas as séries."
+      }
+    ]
+  },
+  "ex-zs4c635t": {
+    "prompt": "Uma métrica tem os labels route (3 valores), method (2) e code (4). No máximo quantas séries ela pode ter numa instância?",
+    "hint": "Multiplique.",
+    "unit": "séries"
+  },
+  "ex-ky2wjjgw": {
+    "prompt": "Contados por plano, os logins fizeram três séries, mas a memória ativa cresceu 22. De onde veio o resto?",
+    "hint": "O que um alvo novo traz?",
+    "choices": [
+      {
+        "text": "De outros usuários entrando ao mesmo tempo",
+        "why": "O experimento conta os seus 20000 fixos."
+      },
+      {
+        "text": "Dos gauges `_created` e das métricas do próprio alvo novo",
+        "why": "Isso: `up`, estatísticas de coleta e as métricas de processo vieram junto."
+      },
+      {
+        "text": "Do Prometheus guardando três cópias de cada série por segurança",
+        "why": "Ele guarda uma."
+      },
+      {
+        "text": "Dos logins do experimento anterior, ainda em memória",
+        "why": "Esse foi o primeiro."
+      }
+    ]
+  },
+  "ex-eff1mz12": {
+    "prompt": "O que é a cardinalidade de um label?",
+    "hint": "Valores distintos.",
+    "choices": [
+      {
+        "text": "O tamanho do nome dele",
+        "why": "Tamanho não importa."
+      },
+      {
+        "text": "Quantos valores distintos ele assume",
+        "why": "Isso."
+      },
+      {
+        "text": "Com que frequência ele é coletado",
+        "why": "Labels não são coletados sozinhos."
+      },
+      {
+        "text": "Quantas métricas o usam",
+        "why": "Essa é outra contagem."
+      }
+    ]
+  },
+  "ex-zb79pq5h": {
+    "prompt": "Com os logins contados por usuário, o Prometheus foi de 96 MB para 158 MB. Quantos megabytes custou aquele label?",
+    "hint": "Subtraia.",
+    "unit": "megabytes"
+  },
+  "ex-a58zjtc1": {
+    "prompt": "Quais destes são labels de métrica ruins? Escolha todas as que se aplicam.",
+    "hint": "Valores que crescem com o tráfego.",
+    "choices": [
+      {
+        "text": "`request_id`",
+        "why": "Sim: uma série por requisição."
+      },
+      {
+        "text": "`email`",
+        "why": "Sim: uma por cliente, e ainda dado pessoal."
+      },
+      {
+        "text": "`route`, com o modelo `/orders/{id}`",
+        "why": "Um modelo é um conjunto pequeno e conhecido."
+      },
+      {
+        "text": "`code`",
+        "why": "Um punhado de códigos de status."
+      },
+      {
+        "text": "`url`, com a query string inteira",
+        "why": "Sim: cada URL distinta é uma série."
+      }
+    ]
+  },
+  "ex-31hkww0k": {
+    "prompt": "Onde deve ir o id de usuário de um login lento, se não num label de métrica?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum: ids de usuário nunca devem ser registrados",
+        "why": "Um id opaco tudo bem num span; dado pessoal como e-mail não."
+      },
+      {
+        "text": "Numa métrica separada só para ids de usuário",
+        "why": "É a mesma cardinalidade com outro nome."
+      },
+      {
+        "text": "No span do login",
+        "why": "Isso: guardado uma vez, seja qual for o valor."
+      },
+      {
+        "text": "Na linha `# HELP` da métrica",
+        "why": "HELP descreve a métrica, não uma requisição."
+      }
+    ]
+  },
+  "ex-vah2fypb": {
+    "prompt": "A memória sobe e você não sabe qual métrica. Que requisição nomeia o culpado mais rápido?",
+    "hint": "O Prometheus mantém estatísticas do seu head.",
+    "choices": [
+      {
+        "text": "`up`, para ver qual alvo é novo",
+        "why": "O culpado pode ser um alvo antigo com um label novo."
+      },
+      {
+        "text": "A API de status do TSDB",
+        "why": "Isso: séries por métrica, valores por label."
+      },
+      {
+        "text": "`prometheus_tsdb_head_series` ao longo de uma semana",
+        "why": "Diz que cresceu, não o que cresceu."
+      },
+      {
+        "text": "Reiniciar o Prometheus e vê-lo encher de novo",
+        "why": "Lento, e perde a evidência."
+      }
+    ]
+  },
+  "ex-394yqsts": {
+    "prompt": "Por que olhar a página de status do TSDB quando nada está errado?",
+    "hint": "Para reconhecer um salto.",
+    "choices": [
+      {
+        "text": "Para conhecer os números normais, e um salto aparecer",
+        "why": "Isso."
+      },
+      {
+        "text": "Ela zera os contadores quando visitada",
+        "why": "Visitar não muda nada."
+      },
+      {
+        "text": "O Prometheus descarta séries que ninguém viu",
+        "why": "Ele guarda todas."
+      },
+      {
+        "text": "É o único lugar onde séries podem ser apagadas",
+        "why": "É uma visão só de leitura."
+      }
+    ]
+  },
+  "ex-1vvv34r7": {
+    "prompt": "Depois da regra de descarte, 20016 amostras por coleta sobreviveram em vez de cerca de 16. Por quê?",
+    "hint": "O que a regex nomeava?",
+    "choices": [
+      {
+        "text": "A regra só vale depois de o Prometheus reiniciar",
+        "why": "Foi recarregada, e o `_total` sumiu."
+      },
+      {
+        "text": "Ela descartou só `demo_logins_total`, e as séries `_created` passaram",
+        "why": "Isso. Uma regra é tão completa quanto a sua expressão regular."
+      },
+      {
+        "text": "Reetiquetar não descarta mais da metade de uma coleta",
+        "why": "Não existe esse limite."
+      },
+      {
+        "text": "O contêiner de logins mandou as séries duas vezes",
+        "why": "Cada série é mandada uma vez por coleta."
+      }
+    ]
+  },
+  "ex-8xe3tttt": {
+    "prompt": "Onde fica o conserto de verdade para um label de alta cardinalidade?",
+    "hint": "A regra de reetiquetagem é um remendo.",
+    "choices": [
+      {
+        "text": "No plano de preços do serviço gerenciado",
+        "why": "Um plano maior paga pelo problema."
+      },
+      {
+        "text": "Em mais memória para o Prometheus",
+        "why": "Isso adia."
+      },
+      {
+        "text": "Na instrumentação",
+        "why": "Isso: contar por plano, pôr o usuário no span."
+      },
+      {
+        "text": "Numa retenção menor",
+        "why": "Séries ativas custam memória seja qual for a retenção."
+      }
+    ]
+  },
+  "ex-wpt7j2gv": {
+    "prompt": "Ponha em ordem sensata a resposta a uma explosão de cardinalidade.",
+    "hint": "Achar, estancar, consertar, prevenir.",
+    "items": [
+      "Achar a métrica e o label no status do TSDB",
+      "Descartar a métrica na coleta com uma regra de reetiquetagem",
+      "Mudar a instrumentação para um conjunto pequeno de valores",
+      "Remover a regra quando a versão nova estiver em todo lugar"
+    ]
+  },
+  "ex-s8j7mtmq": {
+    "prompt": "Um valor de label que identifica uma requisição ou um usuário vai num ___ ou numa linha de log, nunca numa métrica.",
+    "hint": "O sinal da aula 2.",
+    "blanks": [
+      {
+        "accept": [
+          "rastro",
+          "span",
+          "trace"
+        ]
+      }
+    ]
+  }
+}
