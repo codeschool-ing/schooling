@@ -58,7 +58,7 @@ broken: h28
 sign test on the 3 that changed: p = 1.000
 ```
 
-Eleven against twelve, three messages changed, and a sign test of 1.000: no difference at all.
+Eleven against twelve, three messages changed, and a sign test of 1.000: no evidence of a difference.
 
 ## Why one point is the dangerous size
 

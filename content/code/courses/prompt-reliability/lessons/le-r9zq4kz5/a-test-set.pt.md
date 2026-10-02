@@ -12,19 +12,19 @@ ana@lab:~/triage$ head -n 1 cases/dev.jsonl
 ```
 
 `message` é o que o prompt recebe e `expect` é o julgamento de uma pessoa. Tudo o que o `pl check`
-faz depois disso é aritmética, e a aritmética só é tão boa quanto os quarenta julgamentos embaixo
+faz depois disso é aritmética, e a aritmética só é tão boa quanto os quarenta julgamentos por trás
 dela.
 
 ## De onde vêm os casos
 
 O instinto errado é sentar e escrevê-los. Mensagens inventadas são mais arrumadas que as reais, o
-que a aula 1 disse sobre exemplos, e em casos de teste isso pesa mais: **um conjunto de mensagens
+que a aula 1 disse sobre exemplos. Em casos de teste isso pesa mais: **um conjunto de mensagens
 arrumadas mede uma caixa de entrada que não existe.** Tire os casos do tráfego que o prompt vai de
 fato receber. Remova o que pertence a um cliente, nomes, endereços e números de pedido, e mantenha
 todo o resto: o erro de digitação, as duas perguntas numa mensagem só, as três linhas de desculpas
 antes do assunto.
 
-Tire-os de mais de uma tarde, também. Uma semana em que a transportadora teve uma segunda-feira
+E tire-os de mais de uma tarde. Uma semana em que a transportadora teve uma segunda-feira
 ruim é uma semana de mensagens de entrega, e um conjunto tirado dela vai dizer que o prompt é bom
 em delivery.
 
@@ -33,7 +33,7 @@ em delivery.
 **Escreva cada rótulo antes de rodar o prompt nele.** Quem lê primeiro a resposta do modelo deixou
 de decidir do que a mensagem trata; está decidindo se a resposta do modelo é aceitável, que é uma
 prova mais fácil de passar. `t37`, o pedido ainda aguardando despacho, é delivery para qualquer
-pessoa que o rotule a frio. Vendo a palavra *billing* ao lado primeiro, um leitor apressado pode
+pessoa que o rotule a frio. Se vir antes a palavra *billing* ao lado, um leitor apressado pode
 deixar passar.
 
 Quando duas pessoas rotulam a mesma mensagem de jeitos diferentes, isso é uma descoberta sobre as

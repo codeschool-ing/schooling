@@ -5,7 +5,7 @@ version: 1
 
 Um teste unitário chama uma função com uma entrada e afirma uma coisa sobre o que volta. **Cada
 verificação do `pl check` é um teste unitário sobre uma resposta**: dado este texto, ele é
-analisável, tem exatamente os campos, os valores vêm das listas, concorda com a pessoa?
+JSON válido, tem exatamente os campos, os valores vêm das listas, concorda com a pessoa?
 
 ```
 ana@lab:~/triage$ pl check runs/v2.jsonl --failures
@@ -47,7 +47,7 @@ existem onde existe um conjunto de teste.
 
 **Uma resposta que falha numa verificação não é avaliada nas seguintes.** Isso faz da lista de
 falhas uma lista de causas primeiras. `t03` falhou em `json`, e essa é a história inteira: não há
-categoria para discutir numa resposta que ninguém consegue ler. `t14` foi analisada, tinha os campos
+categoria para discutir numa resposta que ninguém consegue ler. `t14` era JSON válido, tinha os campos
 certos e rótulos permitidos, e discordou da pessoa sobre a urgência, que é outro problema com outra
 correção.
 
@@ -69,7 +69,7 @@ de classificação num prompt cujo problema era um bloco de código.
 ::: track ai
 As verificações são a `judge_row` em `promptlab/cli.py`, um `elif` cada, e acrescentar uma são poucas
 linhas. Uma verificação que reprova um resumo com mais de uma frase, por exemplo, fica depois de
-`labels` e antes de `category`, porque precisa de uma resposta analisada e de nenhum rótulo.
+`labels` e antes de `category`, porque precisa de uma resposta que já passou pelo parser e de nenhum rótulo.
 Escreva-a como escreveria qualquer teste: encontre uma resposta que deveria reprovar, e veja-a
 reprovar essa resposta antes de confiar que ela aprova as outras.
 :::

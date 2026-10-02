@@ -4,7 +4,7 @@ version: 1
 ---
 
 Com temperatura 0 o substituto escolhe o rótulo de maior pontuação, então o mesmo prompt dá as mesmas
-respostas em toda execução. Acima de 0 ele sorteia, como a aula 8 mostrou. Aqui está o mesmo prompt
+respostas em toda execução. Acima de 0 ele sorteia, como a aula 8 mostrou. Este é o mesmo prompt
 rodado duas vezes com temperatura 1, mudando só a semente:
 
 ```

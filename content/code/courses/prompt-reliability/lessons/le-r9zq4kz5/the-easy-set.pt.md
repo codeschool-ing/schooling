@@ -61,7 +61,7 @@ h30    category  billing, expected other
 ```
 
 O mesmo prompt passa em 36 de 40 no conjunto contra o qual foi escrito, 90%, e em 11 de 30 no outro,
-37%. Toda resposta continua analisável. O que falha é o julgamento: `h01` é um reembolso no cartão
+37%. Toda resposta continua sendo JSON válido. O que falha é o julgamento: `h01` é um reembolso no cartão
 errado, um problema de billing escrito com as palavras de uma devolução, e `h03`, uma cobrança por um
 pedido que ninguém fez, volta com urgência normal. **A nota de dev mediu como o prompt lida com
 mensagens parecidas com as que o autor imaginou**, e o autor imaginou as fáceis.
@@ -93,8 +93,8 @@ escolhida, e ninguém que escolhesse entre as duas pela nota de dev teria como s
 
 ## Mantenha um holdout, e olhe para ele raramente
 
-- **Construa-o separado do dev**: depois, a partir de outras mensagens, de preferência rotulado por
-  outra pessoa.
+- **Construa-o separado do dev.** Escreva-o depois do dev, a partir de outras mensagens, de
+  preferência rotulado por outra pessoa.
 - **Rode-o na hora de decidir, não enquanto edita.** Depois que uma versão é escolhida em dev, o
   holdout diz se a escolha se sustenta.
 - **Não corrija as falhas dele uma a uma.** No momento em que você lê a resposta de `h01` e muda o

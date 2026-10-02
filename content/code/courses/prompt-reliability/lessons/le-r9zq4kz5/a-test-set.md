@@ -17,7 +17,7 @@ does after that is arithmetic, and the arithmetic is only as good as the forty j
 ## Where cases come from
 
 The wrong instinct is to sit down and write them. Invented messages are tidier than real ones,
-which lesson 1 said about examples, and for test cases it matters more: **a set of tidy messages
+which lesson 1 said about examples. For test cases it matters more: **a set of tidy messages
 measures an inbox that does not exist.** Take cases from the traffic the prompt will actually see.
 Remove what belongs to a customer, the names, addresses and order numbers, and keep everything
 else: the typo, the two questions in one message, the three lines of apology before the point.

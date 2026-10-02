@@ -42,7 +42,7 @@ A nota foi de 36 para 37, e a única mensagem que mudou é `t37`, o terceiro exe
 casos não conseguem mais falhar**: o prompt contém as respostas deles. `t21` e `t23` já passavam,
 então copiá-los não rendeu nada visível, e os 37 agora incluem três casos que não medem nada.
 
-Tire-os e compare igual com igual. Nas 37 mensagens que não lhe foram mostradas, a `v11` falha em
+Tire-os e compare igual com igual. Nas 37 mensagens que não viu, a `v11` falha em
 `t14`, `t24` e `t28` e passa em 34. A `v3` falhava nas mesmas três e em `t37`, então nessas mesmas 37
 também passa em 34. **Em tudo o que o prompt contaminado não tinha visto, os dois prompts são
 iguais**, e o holdout concorda:
@@ -58,14 +58,14 @@ broken: h28
 sign test on the 3 that changed: p = 1.000
 ```
 
-Onze contra doze, três mensagens mudaram, e um teste do sinal de 1.000: diferença nenhuma.
+Onze contra doze, três mensagens mudaram, e um teste do sinal de 1.000: nenhuma evidência de diferença.
 
 ## Por que um ponto é o tamanho perigoso
 
 Neste laboratório o número se moveu um ponto, e esse é o resultado honesto. É pouco porque dois dos
 três casos copiados passavam de qualquer jeito, e só `t37` tinha algo a ganhar.
 
-Essa pequenez é o perigo. A contaminação não se anuncia com um salto; ela chega como uma nota que
+O perigo está justamente aí. A contaminação não se anuncia com um salto; ela chega como uma nota que
 subiu um ponto depois que alguém melhorou os exemplos, o que parece exatamente progresso. **O tamanho
 da inflação depende de quantos casos vazaram e de quantos deles estavam falhando**, e um conjunto em
 que dez de quarenta estão colados no prompt mede trinta enquanto informa quarenta.

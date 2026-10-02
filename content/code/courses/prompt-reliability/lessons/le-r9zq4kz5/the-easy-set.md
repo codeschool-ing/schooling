@@ -92,7 +92,8 @@ choosing between the two by the dev score could have known.
 
 ## Keep a holdout, and look at it rarely
 
-- **Build it apart from dev**: later, from other messages, ideally labelled by someone else.
+- **Build it apart from dev.** Write it after dev, from other messages, ideally labelled by
+  someone else.
 - **Run it when deciding, not while editing.** After a version is chosen on dev, the holdout says
   whether the choice holds up.
 - **Do not fix its failures one by one.** The moment you read `h01`'s reply and change the prompt
