@@ -1,0 +1,455 @@
+[
+  {
+    "id": "ex-qanepz3d",
+    "version": 1,
+    "section": "search-not-a-line",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does tree of thoughts do that chain of thought does not?",
+    "hint": "Think of one path against several.",
+    "choices": [
+      {
+        "text": "Judges several next steps and drops the weak ones",
+        "correct": true,
+        "why": "Right. Chain of thought follows one path and cannot leave it."
+      },
+      {
+        "text": "Writes its steps before the answer instead of after it, so that the answer can be predicted from them",
+        "correct": false,
+        "why": "Chain of thought already does that."
+      },
+      {
+        "text": "Samples whole chains and votes on the final answer",
+        "correct": false,
+        "why": "That is self-consistency, lesson 27."
+      },
+      {
+        "text": "Asks for the general rule before the question",
+        "correct": false,
+        "why": "That is step-back prompting, lesson 25."
+      }
+    ]
+  },
+  {
+    "id": "ex-h74a30ec",
+    "version": 1,
+    "section": "search-not-a-line",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At level 1 of `tot 4 9 10 13`, how many proposed first steps were judged impossible and dropped?",
+    "hint": "Read the first level line.",
+    "value": 29,
+    "tolerance": 0,
+    "unit": "steps"
+  },
+  {
+    "id": "ex-wccqtmg4",
+    "version": 1,
+    "section": "search-not-a-line",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `tot`, what is one \"thought\"?",
+    "hint": "What changes between one state and the next?",
+    "choices": [
+      {
+        "text": "A whole attempt at the puzzle from start to finish",
+        "correct": false,
+        "why": "That would be a chain. The tree branches at every step."
+      },
+      {
+        "text": "A sentence of reasoning written by a model",
+        "correct": false,
+        "why": "In `tot` a program writes the steps; a thought is one combination."
+      },
+      {
+        "text": "One step: two numbers combined into one",
+        "correct": true,
+        "why": "Yes. Four numbers become three, then two, then one."
+      },
+      {
+        "text": "One of the four starting numbers on its own, before it has been combined with any of the others",
+        "correct": false,
+        "why": "Numbers are what a step combines; the step is the thought."
+      }
+    ]
+  },
+  {
+    "id": "ex-7env0cma",
+    "version": 1,
+    "section": "search-not-a-line",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`--breadth 1` solved `4 9 10 13` with fewer proposals. Why would that be risky with a model as the judge?",
+    "hint": "What does `tot`'s judge do that a model's cannot?",
+    "choices": [
+      {
+        "text": "Breadth 1 is slower, so it times out",
+        "correct": false,
+        "why": "It made 60 proposals against 102. It is cheaper, not slower."
+      },
+      {
+        "text": "A model's wrong `sure` leaves no other branch",
+        "correct": true,
+        "why": "Right. `tot`'s judge searches to the end and cannot be wrong; a model only estimates."
+      },
+      {
+        "text": "Models refuse to search with breadth 1",
+        "correct": false,
+        "why": "A model is not told the breadth; the program around it decides."
+      },
+      {
+        "text": "It is not risky; fewer branches are always better",
+        "correct": false,
+        "why": "Fewer branches are cheaper and leave nothing to fall back on."
+      }
+    ]
+  },
+  {
+    "id": "ex-24sxp3c2",
+    "version": 1,
+    "section": "search-not-a-line",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--breadth 1`, how many steps were proposed in total across the three levels?",
+    "hint": "36, then 18, then 6.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "steps"
+  },
+  {
+    "id": "ex-tpjpwp14",
+    "version": 1,
+    "section": "search-not-a-line",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `tot 1 1 1 1` show about the search?",
+    "hint": "Compare with what a chain does when no answer exists.",
+    "choices": [
+      {
+        "text": "No branches left means no path",
+        "correct": true,
+        "why": "Right. It stopped at level 1 with no state left, instead of producing a fluent wrong answer."
+      },
+      {
+        "text": "The program crashed on repeated numbers",
+        "correct": false,
+        "why": "It ran normally and printed its reason for stopping."
+      },
+      {
+        "text": "It needed a larger breadth to find the answer",
+        "correct": false,
+        "why": "There is no answer: 0 states were sure."
+      },
+      {
+        "text": "Only 3 steps were proposed",
+        "correct": false,
+        "why": "36 were proposed; they reduced to 3 different states."
+      }
+    ]
+  },
+  {
+    "id": "ex-he0xw4w0",
+    "version": 1,
+    "section": "search-not-a-line",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does going back (backtracking) add to a tree search?",
+    "hint": "When every child of a kept state is judged impossible...",
+    "choices": [
+      {
+        "text": "The search starts again from the beginning with a higher temperature",
+        "correct": false,
+        "why": "Backing off returns to a recent branch point, not to the start."
+      },
+      {
+        "text": "It deletes the dead branch from the model's memory",
+        "correct": false,
+        "why": "The model keeps nothing between calls; the program keeps the list of states."
+      },
+      {
+        "text": "It makes the judge stricter at each level",
+        "correct": false,
+        "why": "The judge is the same; the search chooses where to continue."
+      },
+      {
+        "text": "The search returns to an earlier state and tries its next branch",
+        "correct": true,
+        "why": "Yes. A depth-first search does this; `tot` searches level by level and never needs to."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfd8z7mq",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In tree of thoughts as published, who proposes the steps and who judges them?",
+    "hint": "`tot` replaces both with arithmetic.",
+    "choices": [
+      {
+        "text": "A person proposes and a model judges",
+        "correct": false,
+        "why": "No person is in the loop."
+      },
+      {
+        "text": "A program proposes every step and a person judges them, which is how `tot` works in the lab",
+        "correct": false,
+        "why": "`tot` uses a program for both; no person judges."
+      },
+      {
+        "text": "A model does both; a program runs the search",
+        "correct": true,
+        "why": "Right. The program keeps the states, expands, counts levels and stops."
+      },
+      {
+        "text": "The model does everything in a single reply",
+        "correct": false,
+        "why": "That would be one long chain. The method makes many calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6a2s2g6",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The illustrated judge replied `sure` for `4 13 19`. Why is that an easy case?",
+    "hint": "What did its reply contain?",
+    "choices": [
+      {
+        "text": "Three numbers are easier to judge than four, whatever they are",
+        "correct": false,
+        "why": "Many three-number states are hard to call; this one happened to contain a solution."
+      },
+      {
+        "text": "Models are reliable judges of arithmetic",
+        "correct": false,
+        "why": "The section warns the opposite: the guess between likely and impossible is where the search goes wrong."
+      },
+      {
+        "text": "It found a solution",
+        "correct": true,
+        "why": "Yes, a full one, so `sure` is certain: 19 - 13 = 6, 4 x 6 = 24. Most states give no such proof, and the judge has to guess."
+      },
+      {
+        "text": "The prompt told it the answer",
+        "correct": false,
+        "why": "The prompt only gave the numbers and the goal."
+      }
+    ]
+  },
+  {
+    "id": "ex-wezr5kee",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "If a model judged every different state in the `tot 4 9 10 13` capture (36, then 47, then 7), how many judging calls would one answer take?",
+    "hint": "Add the different states per level.",
+    "value": 90,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-7jd3ceng",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How can an implementation make the judge's verdicts more reliable?",
+    "hint": "Lesson 27, applied to one step.",
+    "choices": [
+      {
+        "text": "Ask the judge several times per state and combine the verdicts",
+        "correct": true,
+        "why": "Right: a vote on each judgement, at the price of more calls."
+      },
+      {
+        "text": "Set the judge's temperature to 0 and ask it once",
+        "correct": false,
+        "why": "That gives one verdict, the same every time, right or wrong."
+      },
+      {
+        "text": "Ask the proposer to judge its own steps",
+        "correct": false,
+        "why": "Merging the roles does not make the guess better."
+      },
+      {
+        "text": "Set the breadth to 1",
+        "correct": false,
+        "why": "A breadth of 1 is the narrowest search; it keeps nothing in reserve."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdv6mm4h",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which problem suits tree of thoughts best?",
+    "hint": "Judgeable partial states, and dead ends.",
+    "choices": [
+      {
+        "text": "Summarising a customer's complaint",
+        "correct": false,
+        "why": "A first paragraph cannot be judged as reachable or not; there is nothing to prune by."
+      },
+      {
+        "text": "Answering \"what is the Wi-Fi network called?\" from the handbook",
+        "correct": false,
+        "why": "One line, one path, no dead ends."
+      },
+      {
+        "text": "Translating a menu into Portuguese, one dish at a time",
+        "correct": false,
+        "why": "Every path leads somewhere sensible; exploring alternatives buys little."
+      },
+      {
+        "text": "Scheduling six deliveries in time windows",
+        "correct": true,
+        "why": "Right. Each partial schedule is checkable against the windows, and a bad early choice leads to a dead end."
+      }
+    ]
+  },
+  {
+    "id": "ex-2q3pt7ff",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does tree of thoughts on a customer reply become \"self-consistency with extra steps\"?",
+    "hint": "What would the judge be asked about a half-written reply?",
+    "choices": [
+      {
+        "text": "Customer replies are too short to branch",
+        "correct": false,
+        "why": "Length is not the issue; judgeability is."
+      },
+      {
+        "text": "The model refuses to judge its own writing",
+        "correct": false,
+        "why": "It would answer; the answer would not mean much."
+      },
+      {
+        "text": "Replies need temperature 0, which removes branching",
+        "correct": false,
+        "why": "Branching does not depend on temperature in this sense."
+      },
+      {
+        "text": "A partial reply cannot be judged, so nothing gets pruned",
+        "correct": true,
+        "why": "Right. Without a judgement of partial states, the tree just grows several full answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-se7d6j0x",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each technique to when its paths are compared.",
+    "hint": "The comparison table.",
+    "pairs": [
+      {
+        "left": "chain of thought",
+        "right": "never: there is one path"
+      },
+      {
+        "left": "self-consistency",
+        "right": "at the end, by final answer"
+      },
+      {
+        "left": "tree of thoughts",
+        "right": "at every step, by a judgement"
+      }
+    ],
+    "right_distractors": [
+      "before the question, by a general rule"
+    ]
+  },
+  {
+    "id": "ex-627wyzy1",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one level of a tree-of-thoughts search in order.",
+    "hint": "From the states you kept to the states you keep.",
+    "items": [
+      "Take the states kept at the previous level",
+      "Propose every possible next step from each",
+      "Judge each new state",
+      "Keep the best few and drop the rest"
+    ]
+  },
+  {
+    "id": "ex-15hwbd2m",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements about tree of thoughts are true? Choose all that apply.",
+    "hint": "Cost, judge and fit.",
+    "choices": [
+      {
+        "text": "It takes many model calls for one answer",
+        "correct": true,
+        "why": "Yes: 90 judgements alone for the lesson's puzzle."
+      },
+      {
+        "text": "A wider breadth protects against a fallible judge",
+        "correct": true,
+        "why": "Yes: the extra branches are what is left when the favourite is wrong."
+      },
+      {
+        "text": "It is the best default for any question with steps",
+        "correct": false,
+        "why": "The default is a chain of thought; a tree is for searches with judgeable states and dead ends."
+      },
+      {
+        "text": "It can report that no solution exists",
+        "correct": true,
+        "why": "Yes: `tot 1 1 1 1` ran out of states."
+      }
+    ]
+  },
+  {
+    "id": "ex-246sphe4",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `tot`, `--___` sets how many states survive each level of the search.",
+    "hint": "The option's name, without the dashes.",
+    "blanks": [
+      {
+        "accept": [
+          "breadth"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

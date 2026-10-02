@@ -1,0 +1,493 @@
+[
+  {
+    "id": "ex-mc9zqz2v",
+    "version": 1,
+    "section": "soft-prompts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`tok show` printed `17045` for `\"Answer\"`. What does the model do with that number?",
+    "hint": "Is it a quantity or an address?",
+    "choices": [
+      {
+        "text": "Looks up the vector stored at that row of its table",
+        "correct": true,
+        "why": "Right. The id is an address; the model computes with the embedding it points to."
+      },
+      {
+        "text": "Multiplies it by its weights",
+        "correct": false,
+        "why": "The id is never used as a quantity. Twice the id would not mean twice anything."
+      },
+      {
+        "text": "Compares it with the ids of the answer it wants",
+        "correct": false,
+        "why": "Nothing is compared with ids. The model works on the vectors."
+      },
+      {
+        "text": "Turns it back into the word Answer and reads that",
+        "correct": false,
+        "why": "The model never goes back to the letters; text is only for the people at either end."
+      }
+    ]
+  },
+  {
+    "id": "ex-fxgvb68h",
+    "version": 1,
+    "section": "soft-prompts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same sentence got ids `17045 306 1001 2195 13` in o200k_base and `16533 304 832 3492 13` in cl100k_base. What does that show about a soft prompt?",
+    "hint": "An id is an address in whose table?",
+    "choices": [
+      {
+        "text": "Soft prompts have to be tokenized twice to work in both encodings",
+        "correct": false,
+        "why": "A soft prompt is never tokenized: it is vectors, not text."
+      },
+      {
+        "text": "The two tokenizers split the sentence into different pieces",
+        "correct": false,
+        "why": "The pieces are identical in both lines. Only the ids changed."
+      },
+      {
+        "text": "Ids are random and change every time you run the tokenizer",
+        "correct": false,
+        "why": "Run it again and you get the same ids. They differ between encodings, not between runs."
+      },
+      {
+        "text": "It belongs to one model; another reads the same numbers differently",
+        "correct": true,
+        "why": "Yes. A soft prompt is tuned against one model's frozen weights and table, and means nothing in particular to another."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnjv4h76",
+    "version": 1,
+    "section": "soft-prompts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In prompt tuning, which numbers change during training?",
+    "hint": "Look at where the dashed arrow in the figure ends.",
+    "choices": [
+      {
+        "text": "The model's weights, a little at a time",
+        "correct": false,
+        "why": "That is fine-tuning (lesson 9). Prompt tuning leaves every weight as it was."
+      },
+      {
+        "text": "The ids of the tokens in the input",
+        "correct": false,
+        "why": "Ids are addresses fixed by the tokenizer. Nothing in training changes them."
+      },
+      {
+        "text": "The soft prompt's",
+        "correct": true,
+        "why": "Right. The model's weights are frozen; only the few vectors in front of the input move."
+      },
+      {
+        "text": "Both the soft prompt and the weights of the model's last layer",
+        "correct": false,
+        "why": "Only the soft prompt. Training any part of the model would be a form of fine-tuning."
+      }
+    ]
+  },
+  {
+    "id": "ex-zjhc8856",
+    "version": 1,
+    "section": "soft-prompts",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A soft prompt is trained by gradient ___, the same procedure that trains the model's weights in the first place.",
+    "hint": "The section's numbered steps, step 3.",
+    "blanks": [
+      {
+        "accept": [
+          "descent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-17kn2h2q",
+    "version": 1,
+    "section": "soft-prompts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague wants to print the team's trained soft prompt to review it like a written one. What will they find?",
+    "hint": "Can the vectors be turned back into words?",
+    "choices": [
+      {
+        "text": "A short instruction in plain English, close to what the team would have written",
+        "correct": false,
+        "why": "Nothing in training pushes the vectors towards words. The point of the method is that it is free not to be words."
+      },
+      {
+        "text": "Vectors that are no word, so there is no sentence to review",
+        "correct": true,
+        "why": "Right. You can list the nearest tokens, but the vectors were never any of them, and what comes back does not read as an instruction."
+      },
+      {
+        "text": "The training examples, stored inside the vectors",
+        "correct": false,
+        "why": "A soft prompt is a few vectors, not a copy of the training set."
+      },
+      {
+        "text": "A list of token ids that can be decoded with `tok`",
+        "correct": false,
+        "why": "There are no ids: the vectors were never looked up from the table, so there is nothing to decode."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mmpsr6q",
+    "version": 1,
+    "section": "soft-prompts",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What do you need to do prompt tuning? Choose all that apply.",
+    "hint": "The section lists two requirements a written prompt does not have.",
+    "choices": [
+      {
+        "text": "The model's weights",
+        "correct": true,
+        "why": "Yes: to place vectors at the input and to compute the gradient through the model."
+      },
+      {
+        "text": "Labelled examples of the task",
+        "correct": true,
+        "why": "Yes: training needs answers to compare against, and some held back to check the result."
+      },
+      {
+        "text": "A provider's chat interface",
+        "correct": false,
+        "why": "A chat interface only accepts text; there is nowhere in it to put a vector."
+      },
+      {
+        "text": "Permission to change the model's weights",
+        "correct": false,
+        "why": "The weights are only read, never changed. Having them is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekd6zvpv",
+    "version": 1,
+    "section": "soft-prompts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What makes prefix tuning different from prompt tuning?",
+    "hint": "Where do the learnt vectors go?",
+    "choices": [
+      {
+        "text": "It trains the model's weights as well",
+        "correct": false,
+        "why": "No: like prompt tuning it leaves the model frozen."
+      },
+      {
+        "text": "Its prefix is written in words by a person",
+        "correct": false,
+        "why": "The prefix is learnt vectors too. A written prefix would just be a prompt."
+      },
+      {
+        "text": "It works through a hosted API, because the prefix is sent as text with every request to the model",
+        "correct": false,
+        "why": "It needs the weights, for the same reason prompt tuning does."
+      },
+      {
+        "text": "Its vectors go in at every layer, not just at the input",
+        "correct": true,
+        "why": "Right. The family is the same, frozen model and a few trained numbers; prefix tuning places them deeper."
+      }
+    ]
+  },
+  {
+    "id": "ex-18d4vfzv",
+    "version": 1,
+    "section": "compared",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the three can a person read and correct by hand?",
+    "hint": "The row of the table about reading.",
+    "choices": [
+      {
+        "text": "The soft prompt, if you print its vectors",
+        "correct": false,
+        "why": "Printing them gives numbers, and the nearest words do not form an instruction."
+      },
+      {
+        "text": "The fine-tuned weights, through the provider's dashboard",
+        "correct": false,
+        "why": "A dashboard can show training metrics. It cannot show you weights as anything a person reads."
+      },
+      {
+        "text": "The written prompt",
+        "correct": true,
+        "why": "Yes. Soft prompts are vectors and fine-tuned changes are weights; neither reads as text."
+      },
+      {
+        "text": "All three, given the right tools",
+        "correct": false,
+        "why": "Only one of the three is text."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5fhc5e0",
+    "version": 1,
+    "section": "compared",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You use a model through a hosted API and want it to follow your house style. Which of the three is open to you without asking the provider for anything?",
+    "hint": "What can you put in a request?",
+    "choices": [
+      {
+        "text": "Prompt tuning, by sending the vectors with each request",
+        "correct": false,
+        "why": "A text API has nowhere to put a vector, and you could not train one without the weights anyway."
+      },
+      {
+        "text": "Fine-tuning, by uploading examples to any model you can call",
+        "correct": false,
+        "why": "Only where the provider offers it as a service, on the models it chooses."
+      },
+      {
+        "text": "A written prompt",
+        "correct": true,
+        "why": "Right. A request carries text; there is no field for a vector, and you hold no weights."
+      },
+      {
+        "text": "None of them; a hosted model cannot be steered",
+        "correct": false,
+        "why": "A written prompt steers it; that is what this course is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-92fmqavb",
+    "version": 1,
+    "section": "compared",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company serves eight different tasks from one open-weights model on its own hardware. Why might it choose prompt tuning over fine-tuning?",
+    "hint": "What has to be stored per task in each case?",
+    "choices": [
+      {
+        "text": "Prompt tuning needs no training examples",
+        "correct": false,
+        "why": "It needs labelled examples, like fine-tuning does."
+      },
+      {
+        "text": "One frozen model, plus a small soft prompt per task",
+        "correct": true,
+        "why": "Yes. Fine-tuning would mean eight sets of weights to store and serve; eight soft prompts are a handful of vectors each."
+      },
+      {
+        "text": "Soft prompts can be read and approved by the compliance team",
+        "correct": false,
+        "why": "They cannot be read at all; that is one of their costs."
+      },
+      {
+        "text": "Prompt tuning gives better answers than fine-tuning on every task",
+        "correct": false,
+        "why": "No such guarantee exists. The advantage here is storage and serving, not quality."
+      }
+    ]
+  },
+  {
+    "id": "ex-23wnwd5q",
+    "version": 1,
+    "section": "compared",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A vendor says its assistant is \"tuned for legal work\". Which question does this lesson tell you to ask?",
+    "hint": "Three columns, three different things.",
+    "choices": [
+      {
+        "text": "Which of the three was changed",
+        "correct": true,
+        "why": "Right. A written instruction is read and checked by people; vectors and weights are not, and each costs something different to change."
+      },
+      {
+        "text": "How many parameters the model has",
+        "correct": false,
+        "why": "Size says nothing about what was done to adapt it."
+      },
+      {
+        "text": "Whether it uses ReAct",
+        "correct": false,
+        "why": "ReAct is a way of prompting with tools; it is not a kind of tuning."
+      },
+      {
+        "text": "Whether the training was done in 2026",
+        "correct": false,
+        "why": "A date tells you nothing about which of the three methods was used."
+      }
+    ]
+  },
+  {
+    "id": "ex-yays0dts",
+    "version": 1,
+    "section": "compared",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Your team moves from one model to another. What happens to a soft prompt trained for the first one?",
+    "hint": "The row about moving to another model.",
+    "choices": [
+      {
+        "text": "It carries over, since vectors are model-independent",
+        "correct": false,
+        "why": "Each model has its own table and weights; the vectors only mean something to the one they were tuned against."
+      },
+      {
+        "text": "It is converted with the new model's tokenizer",
+        "correct": false,
+        "why": "A soft prompt has no tokens to convert."
+      },
+      {
+        "text": "It keeps working at reduced quality",
+        "correct": false,
+        "why": "Nothing about it is shared with the new model. There is no reason to expect it to work at all."
+      },
+      {
+        "text": "It has to be trained again from the start",
+        "correct": true,
+        "why": "Right, as with fine-tuning. A written prompt is rewritten and tested again, which takes minutes."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbvtqheb",
+    "version": 1,
+    "section": "compared",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the comparison table, in how many of the three columns can a person read what was changed?",
+    "hint": "The row \"can a person read it\".",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "columns"
+  },
+  {
+    "id": "ex-41dgcjes",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one round of prompt tuning in order.",
+    "hint": "Steps 1 to 4 of the section.",
+    "items": [
+      "Start the soft prompt from random numbers or ordinary embeddings",
+      "Run a labelled example through the frozen model",
+      "Compare the output with the wanted answer",
+      "Adjust only the soft prompt's numbers by gradient descent"
+    ]
+  },
+  {
+    "id": "ex-zcd7xd4e",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each method to what it changes.",
+    "hint": "The first row of the table.",
+    "pairs": [
+      {
+        "left": "written prompt",
+        "right": "the text sent with each request"
+      },
+      {
+        "left": "prompt tuning",
+        "right": "a few vectors in front of the input"
+      },
+      {
+        "left": "fine-tuning",
+        "right": "the model's weights"
+      }
+    ],
+    "right_distractors": [
+      "the tokenizer's ids"
+    ]
+  },
+  {
+    "id": "ex-sgrpevyx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statement about the best soft prompt for a task is true?",
+    "hint": "What was it optimised for, and what was it free of?",
+    "choices": [
+      {
+        "text": "A person would never write it; it need not be words",
+        "correct": true,
+        "why": "Right. It was optimised for its effect on one model, free of any table row, and that is also why the written prompts that work best look odd in some cases (lesson 31)."
+      },
+      {
+        "text": "It is the best written prompt, found automatically",
+        "correct": false,
+        "why": "Searching written prompts is lesson 31's method. A soft prompt is not text at all."
+      },
+      {
+        "text": "It works equally well for every model of the same size",
+        "correct": false,
+        "why": "It is tied to the frozen weights it was tuned against."
+      },
+      {
+        "text": "It makes the model's weights unnecessary at inference time",
+        "correct": false,
+        "why": "The model still does all the work; the soft prompt only sits in front of the input."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6xw485z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this course spend almost all its lessons on the first column of the table?",
+    "hint": "Who can work in it?",
+    "choices": [
+      {
+        "text": "Anyone reads it and changes it, with no training set",
+        "correct": true,
+        "why": "Right. It is the only one of the three that needs no weights and no labelled data, and the only one a person reviews by reading."
+      },
+      {
+        "text": "It is the method that gives the best results on every task",
+        "correct": false,
+        "why": "The table compares access and cost, not a ranking of quality."
+      },
+      {
+        "text": "The other two will soon stop being used",
+        "correct": false,
+        "why": "Nothing in the lesson says so; both are used where their requirements are met."
+      },
+      {
+        "text": "It is the newest of the three methods",
+        "correct": false,
+        "why": "Age is not the argument; access is."
+      }
+    ]
+  }
+]

@@ -1,0 +1,577 @@
+[
+  {
+    "id": "ex-jyar3xd7",
+    "version": 1,
+    "section": "templates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pl render` do?",
+    "hint": "It calls no model.",
+    "choices": [
+      {
+        "text": "Calls the model once and prints its reply to the first case of the set",
+        "correct": false,
+        "why": "That would be a run; render makes no call."
+      },
+      {
+        "text": "Fills a template's holes and prints the result",
+        "correct": true,
+        "why": "Right: the prompt the model would be sent."
+      },
+      {
+        "text": "Checks the replies of a run",
+        "correct": false,
+        "why": "That is `pl check`."
+      },
+      {
+        "text": "Counts the tokens in a prompt file and prices each call",
+        "correct": false,
+        "why": "That is `pl tokens` and `pl cost`."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8j81k8c",
+    "version": 1,
+    "section": "templates",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`pl render` was given no value for `{{language}}`. With what exit status did it stop?",
+    "hint": "The capture echoes it.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0bgfbnbr",
+    "version": 1,
+    "section": "templates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why keep one reply template with `{{shop}}` and `{{language}}` rather than a copy of the prompt for each shop and language?",
+    "hint": "Think about the next fix.",
+    "choices": [
+      {
+        "text": "An instruction then lives in one file, so a fix is made once and is not forgotten in a copy",
+        "correct": true,
+        "why": "Right: one place to change."
+      },
+      {
+        "text": "Templates run faster",
+        "correct": false,
+        "why": "The model reads the filled prompt either way."
+      },
+      {
+        "text": "Copies cost more tokens",
+        "correct": false,
+        "why": "Each call sends one prompt either way."
+      },
+      {
+        "text": "Models refuse copied prompts",
+        "correct": false,
+        "why": "A model cannot tell."
+      }
+    ]
+  },
+  {
+    "id": "ex-r3mj5j18",
+    "version": 1,
+    "section": "templates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When `pl run` calls the model, what does the model read?",
+    "hint": "The holes are not sent as holes.",
+    "choices": [
+      {
+        "text": "The template, holes included, with the values sent separately beside it",
+        "correct": false,
+        "why": "The values are pasted in before the call."
+      },
+      {
+        "text": "The file in `prompts/` exactly as written",
+        "correct": false,
+        "why": "That still has its holes."
+      },
+      {
+        "text": "Only the values passed with `--var`",
+        "correct": false,
+        "why": "It reads the instructions too."
+      },
+      {
+        "text": "The filled template",
+        "correct": true,
+        "why": "Right: what render prints."
+      }
+    ]
+  },
+  {
+    "id": "ex-gr6p0yaw",
+    "version": 1,
+    "section": "missing-and-unused",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By default, what does Jinja2 render in place of an undefined variable?",
+    "hint": "The section names three engines.",
+    "choices": [
+      {
+        "text": "An error that stops the render",
+        "correct": false,
+        "why": "That is what `pl render` does; Jinja2's default does not."
+      },
+      {
+        "text": "The placeholder as written",
+        "correct": false,
+        "why": "That is `string.Template` with `safe_substitute`."
+      },
+      {
+        "text": "The word *undefined*",
+        "correct": false,
+        "why": "It writes nothing at all."
+      },
+      {
+        "text": "An empty string",
+        "correct": true,
+        "why": "Right, and the prompt goes out with a hole in its sentence."
+      }
+    ]
+  },
+  {
+    "id": "ex-51m0e37j",
+    "version": 1,
+    "section": "missing-and-unused",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must a missing value stop the run rather than render as empty?",
+    "hint": "Who could notice afterwards?",
+    "choices": [
+      {
+        "text": "Because the model then answers with an error message instead of a reply whenever a placeholder is blank",
+        "correct": false,
+        "why": "It answers something plausible, which is the problem."
+      },
+      {
+        "text": "Nothing after the render is able to tell an empty hole from a short sentence",
+        "correct": true,
+        "why": "Right: the defect would ship silently."
+      },
+      {
+        "text": "It saves tokens",
+        "correct": false,
+        "why": "A few tokens are not the issue."
+      },
+      {
+        "text": "The stand-in crashes",
+        "correct": false,
+        "why": "It would answer; that is the danger."
+      }
+    ]
+  },
+  {
+    "id": "ex-8m92082n",
+    "version": 1,
+    "section": "missing-and-unused",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody runs the reply template with `--var tone=warm`, and the template has no `{{tone}}`. What happened?",
+    "hint": "Where would the value have gone?",
+    "choices": [
+      {
+        "text": "The replies got warmer, as the person who read them noticed",
+        "correct": false,
+        "why": "The value had nowhere to go; the warmth is in the reading."
+      },
+      {
+        "text": "The harness added a tone line to the end of the prompt by itself",
+        "correct": false,
+        "why": "It pastes values into holes and nowhere else."
+      },
+      {
+        "text": "The value never reached the model",
+        "correct": true,
+        "why": "Right, and the warning is the only sign."
+      },
+      {
+        "text": "The run failed",
+        "correct": false,
+        "why": "The prompt rendered correctly."
+      }
+    ]
+  },
+  {
+    "id": "ex-h2avbb5g",
+    "version": 1,
+    "section": "missing-and-unused",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why render one case before running a template you have just changed?",
+    "hint": "Compare what `pl run` and `pl render` print.",
+    "choices": [
+      {
+        "text": "`pl run` does not repeat the warnings per case, so the render is where an unused value shows",
+        "correct": true,
+        "why": "Right, and it costs no call."
+      },
+      {
+        "text": "Rendering trains the model on the template",
+        "correct": false,
+        "why": "Nothing is trained."
+      },
+      {
+        "text": "A run refuses to start without one",
+        "correct": false,
+        "why": "It starts; it just stays quiet about unused values."
+      },
+      {
+        "text": "To warm up the cache",
+        "correct": false,
+        "why": "Render makes no call, so it touches no cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-dp0amv3n",
+    "version": 1,
+    "section": "missing-and-unused",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A template is edited and `{{tone}}` becomes `{{register}}`. A script that still passes `tone` now gets a warning that the value is ___.",
+    "hint": "`not used by the template`.",
+    "blanks": [
+      {
+        "accept": [
+          "unused",
+          "not used"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2hmym7zw",
+    "version": 1,
+    "section": "values-are-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did case `a08` break the structure of `v5-tagged.txt`?",
+    "hint": "Read the message.",
+    "choices": [
+      {
+        "text": "Its text contains `</message>`, which closes the tag the template opened, so the next line falls outside",
+        "correct": true,
+        "why": "Right: a value that ends its own hole."
+      },
+      {
+        "text": "It is too long",
+        "correct": false,
+        "why": "It is three short lines."
+      },
+      {
+        "text": "It is in another language",
+        "correct": false,
+        "why": "It is in English."
+      },
+      {
+        "text": "It has no category",
+        "correct": false,
+        "why": "Its expected category is delivery."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4zyh0m5",
+    "version": 1,
+    "section": "values-are-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the `|xml` filter change?",
+    "hint": "Look at `&lt;` in the rendered prompt.",
+    "choices": [
+      {
+        "text": "It wraps the entire template, instructions included, in XML so the model reads each line as data",
+        "correct": false,
+        "why": "It touches the value only; the instructions stay instructions."
+      },
+      {
+        "text": "It replaces `<`, `>` and `&` in the value with XML entities",
+        "correct": true,
+        "why": "Right: the customer's tag stops closing anything."
+      },
+      {
+        "text": "It deletes the tags",
+        "correct": false,
+        "why": "The customer's words are all still there."
+      },
+      {
+        "text": "It parses the reply",
+        "correct": false,
+        "why": "It acts on the prompt, before the call."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6jaxtn1",
+    "version": 1,
+    "section": "values-are-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the filter applied to the value and not to the whole template?",
+    "hint": "What would happen to `<message>` itself?",
+    "choices": [
+      {
+        "text": "Applying it to the whole template would make the prompt too long for the model to read",
+        "correct": false,
+        "why": "Length is not the issue; the template's tags would stop being tags."
+      },
+      {
+        "text": "The template is escaped already when it is saved under `prompts/`",
+        "correct": false,
+        "why": "Nothing escapes it; it holds real tags on purpose."
+      },
+      {
+        "text": "Filters work only on values read from a JSON file",
+        "correct": false,
+        "why": "A `--var` value is filtered the same way."
+      },
+      {
+        "text": "The template's own tags stay tags",
+        "correct": true,
+        "why": "Right: only text from outside is changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-qq8rw79p",
+    "version": 1,
+    "section": "values-are-data",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these values should be escaped before they are pasted between the template's tags? Choose all that apply.",
+    "hint": "Who wrote each one?",
+    "choices": [
+      {
+        "text": "A customer's message",
+        "correct": true,
+        "why": "Yes: a customer can type a closing tag."
+      },
+      {
+        "text": "Text copied from a web form",
+        "correct": true,
+        "why": "Yes: it came from outside."
+      },
+      {
+        "text": "A book review a customer wrote",
+        "correct": true,
+        "why": "Yes, for the same reason."
+      },
+      {
+        "text": "The shop name you chose for `{{shop}}`",
+        "correct": false,
+        "why": "You wrote it; it holds no tag unless you put one there."
+      }
+    ]
+  },
+  {
+    "id": "ex-2a89fc7h",
+    "version": 1,
+    "section": "one-prompt-many-uses",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a test set need one template rendered the same way for every case?",
+    "hint": "What is allowed to vary?",
+    "choices": [
+      {
+        "text": "Because the harness is unable to open more than one prompt file in the same directory at once",
+        "correct": false,
+        "why": "It opens whichever file you name."
+      },
+      {
+        "text": "So that each message gets the same answer from the model",
+        "correct": false,
+        "why": "The answers differ; the instructions do not."
+      },
+      {
+        "text": "So a difference between runs is the template's doing",
+        "correct": true,
+        "why": "Right: only the message changes from case to case."
+      },
+      {
+        "text": "To save disk space",
+        "correct": false,
+        "why": "Space has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8a44f76b",
+    "version": 1,
+    "section": "one-prompt-many-uses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the prompt id that `pl run` prints?",
+    "hint": "Compare it with `sha256sum`.",
+    "choices": [
+      {
+        "text": "A counter that goes up by one each time a prompt in the lab runs, kept in a hidden file",
+        "correct": false,
+        "why": "Two runs of one file printed the same id."
+      },
+      {
+        "text": "The first eight characters of the SHA-256 of the prompt file",
+        "correct": true,
+        "why": "Right: `b04095b1` both ways."
+      },
+      {
+        "text": "The date of the last edit",
+        "correct": false,
+        "why": "It is a hash of the content."
+      },
+      {
+        "text": "A random name for the run",
+        "correct": false,
+        "why": "It is the same every time the file is the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-cv7jk2j7",
+    "version": 1,
+    "section": "one-prompt-many-uses",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two runs of `v17-static-first.txt` both print `prompt b04095b1`, and one used `--set temperature=0.8`. Why is that a problem?",
+    "hint": "What does the id cover?",
+    "choices": [
+      {
+        "text": "The id covers the file and not the command line, so the run files make the two look like one prompt",
+        "correct": true,
+        "why": "Right: keep settings in the header, where the id sees them."
+      },
+      {
+        "text": "The second run overwrote the first",
+        "correct": false,
+        "why": "They were written to different files."
+      },
+      {
+        "text": "The hash is broken",
+        "correct": false,
+        "why": "It hashed the same file twice, correctly."
+      },
+      {
+        "text": "Temperature has no effect",
+        "correct": false,
+        "why": "It does; the id just does not record it."
+      }
+    ]
+  },
+  {
+    "id": "ex-cy022900",
+    "version": 1,
+    "section": "one-prompt-many-uses",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In this lab a prompt file carries its settings as `name: value` lines above a line of three ___.",
+    "hint": "`head -n 3` showed it.",
+    "blanks": [
+      {
+        "accept": [
+          "dashes",
+          "hyphens"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9rbgr5wg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of putting a changed template to use in order.",
+    "hint": "Run last.",
+    "items": [
+      "Write the template with named holes",
+      "Render one case and read the result",
+      "Fix what the render reports as missing or unused",
+      "Run it over the test set"
+    ]
+  },
+  {
+    "id": "ex-sbb67syx",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message from the harness to what it means.",
+    "hint": "One meaning each.",
+    "pairs": [
+      {
+        "left": "`no value for {{language}}`",
+        "right": "A hole nobody filled"
+      },
+      {
+        "left": "`not used by the template: tone`",
+        "right": "A value with no hole"
+      },
+      {
+        "left": "`contains </message>, which closes its delimiter`",
+        "right": "A value that ends its own hole"
+      }
+    ],
+    "right_distractors": [
+      "A reply that does not parse"
+    ]
+  },
+  {
+    "id": "ex-2w8kt3h7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Replies that should be in Portuguese started arriving in English yesterday. The template says `Write in {{language}}.`, and your engine renders a missing value as an empty string. What do you check first?",
+    "hint": "What would the model have read?",
+    "choices": [
+      {
+        "text": "Whether the model was retrained on English material since the day before yesterday",
+        "correct": false,
+        "why": "Look at what you sent before suspecting the model."
+      },
+      {
+        "text": "Whether the test set has enough Portuguese messages in it to measure",
+        "correct": false,
+        "why": "Useful later; the symptom points at the render."
+      },
+      {
+        "text": "Whether the language value is still passed",
+        "correct": true,
+        "why": "Right: an empty hole reads as *Write in .*"
+      },
+      {
+        "text": "The temperature",
+        "correct": false,
+        "why": "Temperature does not choose a language."
+      }
+    ]
+  }
+]

@@ -1,0 +1,344 @@
+{
+  "ex-314bp87n": {
+    "prompt": "O que um JSON Schema confere que um parser de JSON não confere?",
+    "hint": "Sintaxe contra forma.",
+    "choices": [
+      {
+        "text": "Nomes de campos, tipos, valores permitidos e campos obrigatórios",
+        "why": "Isso. O parser só diz que o texto é JSON; o schema diz que é o objeto que você aceita."
+      },
+      {
+        "text": "Se o texto é JSON",
+        "why": "Esse é o trabalho do parser, lição 18. O validador precisa de JSON já lido para começar."
+      },
+      {
+        "text": "Se os valores são verdadeiros",
+        "why": "Nenhum schema lê a reclamação. A verdade precisa da entrada, como mostra a última seção de leitura."
+      },
+      {
+        "text": "Se o modelo estava confiante",
+        "why": "Nada numa resposta mede confiança, e um schema não leria isso se medisse."
+      }
+    ]
+  },
+  "ex-ej52qp37": {
+    "prompt": "O `triage/bad-2.json` acrescentou um campo chamado `mood`. Qual linha do schema fez o validador apontá-lo?",
+    "hint": "Qual palavra-chave recusa um nome que o schema não listou?",
+    "choices": [
+      {
+        "text": "`\"required\": [\"category\", \"refund\", \"summary\"]`",
+        "why": "`required` lista campos que têm de estar presentes. Não diz nada sobre os que sobram, e pegou o `summary` que faltava."
+      },
+      {
+        "text": "`\"type\": \"object\"`",
+        "why": "A resposta é um objeto, então essa linha está satisfeita."
+      },
+      {
+        "text": "`\"category\": {\"enum\": [...]}`",
+        "why": "O enum restringe só o valor de `category`."
+      },
+      {
+        "text": "`\"additionalProperties\": false`",
+        "why": "Isso. Sem ela, `mood` passaria e seguiria viagem sem ninguém notar."
+      }
+    ]
+  },
+  "ex-ejehgea8": {
+    "prompt": "Por que o validador lista os três problemas do `bad-1.json`, quando o parser da lição 18 parou no primeiro?",
+    "hint": "Do que cada ferramenta precisa antes de olhar um campo?",
+    "choices": [
+      {
+        "text": "O validador é um programa mais novo e mais capaz que o parser do Python",
+        "why": "A idade não tem nada a ver. Os dois respondem perguntas diferentes."
+      },
+      {
+        "text": "Ele recebeu uma opção para isso",
+        "why": "O `validate` não recebeu opção nenhuma. Informar tudo é o jeito dele."
+      },
+      {
+        "text": "O objeto já foi lido, então cada campo é conferido",
+        "why": "Isso. A leitura para onde a sintaxe quebra; a validação percorre um objeto completo e informa cada regra quebrada."
+      },
+      {
+        "text": "Os três problemas estavam na mesma linha",
+        "why": "Estão em três campos. Linhas não importam depois que o texto foi lido."
+      }
+    ]
+  },
+  "ex-wcwnderw": {
+    "prompt": "Quantos problemas o `validate` informou para o `triage/bad-1.json`?",
+    "hint": "A linha antes do código de saída.",
+    "unit": "problemas"
+  },
+  "ex-21cgyghq": {
+    "prompt": "Num JSON Schema, a palavra-chave ___ lista os únicos valores que um campo pode ter, como as cinco categorias.",
+    "hint": "Quatro letras, abreviação de enumeração.",
+    "blanks": [
+      {
+        "accept": [
+          "enum"
+        ]
+      }
+    ]
+  },
+  "ex-nzrm0m12": {
+    "prompt": "O café cria uma sexta fila de reclamações, `hygiene`. O schema está no prompt e no programa. Qual a vantagem desse arranjo?",
+    "hint": "Onde a mudança teria de ser feita, de outro jeito?",
+    "choices": [
+      {
+        "text": "Uma edição atualiza os dois, então eles não divergem",
+        "why": "Isso. Se o prompt descrevesse as categorias em prosa e o programa tivesse a sua própria lista, um dos dois ficaria para trás."
+      },
+      {
+        "text": "O modelo aprende `hygiene` para sempre",
+        "why": "Um prompt não muda nada no modelo. Ele só molda a resposta àquele pedido."
+      },
+      {
+        "text": "Não é preciso validar depois que o prompt tem o schema",
+        "why": "O modelo ainda pode responder fora dele; a conferência no programa é o que pega isso."
+      },
+      {
+        "text": "O schema faz a classificação das reclamações de higiene pelo modelo ficar correta",
+        "why": "Ele faz do rótulo uma de seis palavras. Escolher a certa continua sendo trabalho do modelo, e continua conferível."
+      }
+    ]
+  },
+  "ex-0grtq60w": {
+    "prompt": "O `repair` no `replies/fenced.txt` imprimiu `step 2: parsed characters 47 to 166`. O que o passo 2 fez?",
+    "hint": "Onde ficam as chaves no arquivo?",
+    "choices": [
+      {
+        "text": "Pediu ao modelo que mandasse a resposta de novo sem o bloco",
+        "why": "Nenhum modelo é chamado. O passo 2 é um recorte, feito localmente."
+      },
+      {
+        "text": "Removeu todo caractere que não fazia parte de um valor JSON, em qualquer parte do arquivo",
+        "why": "Ele recorta uma vez, entre duas chaves. Não filtra caracteres."
+      },
+      {
+        "text": "Reescreveu o objeto para bater com o schema",
+        "why": "Ele nunca edita o objeto. O passo 3 o confere como está."
+      },
+      {
+        "text": "Pegou o texto do primeiro `{` ao último `}`",
+        "why": "Isso. Isso derruba a frase, o bloco de código e a despedida, e deixa o objeto."
+      }
+    ]
+  },
+  "ex-63dm19kp": {
+    "prompt": "Por que nenhum segundo pedido ao modelo foi preciso para o `fenced.txt`?",
+    "hint": "A resposta estava errada, ou o embrulho dela?",
+    "choices": [
+      {
+        "text": "Baixar a temperatura já tinha resolvido",
+        "why": "A temperatura nunca mudou. A correção foi um recorte."
+      },
+      {
+        "text": "Uma resposta dentro de um bloco de código é JSON válido",
+        "why": "Não é: o passo 1 falhou no primeiro caractere."
+      },
+      {
+        "text": "O objeto certo estava lá, só embrulhado",
+        "why": "Isso. Os passos 1 a 3 não custam nada e o recuperaram."
+      },
+      {
+        "text": "O validador pula respostas que contêm um bloco de código",
+        "why": "Ele conferiu o objeto recortado de dentro do bloco, e o achou válido."
+      }
+    ]
+  },
+  "ex-ta06mqb5": {
+    "prompt": "O que torna a mensagem de retorno do `repair` no `wrong-enum.txt` mais útil que \"isso estava errado, tente de novo\"?",
+    "hint": "Leia a linha do meio.",
+    "choices": [
+      {
+        "text": "Ela é mais curta",
+        "why": "Ela é mais longa. O que ajuda é a precisão."
+      },
+      {
+        "text": "Ela contém de novo a reclamação original",
+        "why": "Ela contém os erros do validador, não a reclamação."
+      },
+      {
+        "text": "Ela nomeia o campo e lista os valores permitidos",
+        "why": "Isso. O modelo fica sabendo de `category` e dos cinco valores, algo com que agir."
+      },
+      {
+        "text": "Ela diz ao modelo qual categoria é a correta",
+        "why": "Ela diz quais valores são permitidos, não qual se aplica."
+      }
+    ]
+  },
+  "ex-s9hjxpn4": {
+    "prompt": "Um programa tenta de novo até a resposta passar no schema, sem limite. Uma reclamação não cabe em nenhuma categoria, e o schema não tem `other`. O que acontece?",
+    "hint": "Existe saída para uma resposta que nunca é válida?",
+    "choices": [
+      {
+        "text": "O modelo inventa uma sexta categoria e o validador a aceita",
+        "why": "O enum recusa qualquer valor que não lista."
+      },
+      {
+        "text": "O laço não termina, e cada tentativa é cobrada",
+        "why": "Isso. Uma resposta que nunca é válida precisa de um limite, e depois de uma falha registrada."
+      },
+      {
+        "text": "O validador acaba desistindo e aceita a última resposta",
+        "why": "Validadores não desistem. O laço é código de quem chama."
+      },
+      {
+        "text": "O modelo é obrigado a escolher uma das categorias, então termina na hora",
+        "why": "Sem decodificação restrita nada o obriga, e com ela o laço termina mas o rótulo pode estar errado."
+      }
+    ]
+  },
+  "ex-dfexrpzx": {
+    "prompt": "O modo de saída estruturada de um provedor restringe a decodificação ao seu schema. Qual afirmação sobre ele é verdadeira?",
+    "hint": "Forma e sentido foram mantidos separados.",
+    "choices": [
+      {
+        "text": "A resposta cabe no schema, e isso não torna a categoria certa",
+        "why": "Isso. Ele elimina a maioria das falhas de forma e nenhuma das falhas de sentido."
+      },
+      {
+        "text": "A conferência de regras do `rules.py` fica desnecessária com o modo ligado",
+        "why": "O reembolso de 140 cabe no schema e ainda quebra a regra do café."
+      },
+      {
+        "text": "Todo provedor dá o mesmo nome aos parâmetros, então o código é portável",
+        "why": "Os nomes mudam; a lição manda tirá-los da documentação do provedor."
+      },
+      {
+        "text": "Ele deixa o modelo usar qualquer recurso de JSON Schema que você quiser",
+        "why": "Alguns modos aceitam só um subconjunto do JSON Schema. Confira a documentação."
+      }
+    ]
+  },
+  "ex-x3gmys84": {
+    "prompt": "Ponha os passos do `repair` na ordem em que ele os tenta.",
+    "hint": "Cada passo é tentado só quando o anterior falhou.",
+    "items": [
+      "Ler a resposta como está",
+      "Recortar do primeiro { ao último } e ler isso",
+      "Conferir o objeto contra o schema",
+      "Imprimir a mensagem de retorno com os erros"
+    ]
+  },
+  "ex-00j7fgxw": {
+    "prompt": "O `triage/7.json` passou no schema. O que estava errado em `refund_amount: 140`?",
+    "hint": "Leia a reclamação de novo.",
+    "choices": [
+      {
+        "text": "140 não é um número",
+        "why": "É um número, e isso é tudo o que o schema pediu."
+      },
+      {
+        "text": "Valores de reembolso têm de ser escritos como strings",
+        "why": "O schema diz `number`, e 140 é um."
+      },
+      {
+        "text": "Nada; bate com a reclamação",
+        "why": "Bate com um número da reclamação, o errado."
+      },
+      {
+        "text": "O cliente pagou R$ 70 duas vezes, então são R$ 70 devidos",
+        "why": "Isso. O modelo pôs a cobrança inteira no campo. Os dois números estão na reclamação, e nenhum schema sabe qual é o devido."
+      }
+    ]
+  },
+  "ex-7h94jtf5": {
+    "prompt": "Segundo o `handbook/refunds.md`, acima de quantos reais um reembolso precisa da aprovação do gerente de turno?",
+    "hint": "A linha do `grep`.",
+    "unit": "reais"
+  },
+  "ex-kkd3fs5r": {
+    "prompt": "Quais destas coisas o `rules.py` consegue pegar? Marque todas as que se aplicam.",
+    "hint": "Ele lê a triagem, nunca a reclamação.",
+    "choices": [
+      {
+        "text": "Um reembolso de R$ 140, acima do limite do gerente",
+        "why": "Sim. Essa é a terceira regra, e ela disparou na reclamação 7."
+      },
+      {
+        "text": "`refund: true` sem valor",
+        "why": "Sim. Uma resposta que se contradiz é pega pela primeira regra."
+      },
+      {
+        "text": "Um reembolso de R$ 140 quando eram devidos R$ 70",
+        "why": "Não sem a reclamação. Conferir contra a entrada pede outra conferência, ou uma pessoa."
+      },
+      {
+        "text": "Um resumo que descreve outra reclamação",
+        "why": "O `rules.py` nunca lê a reclamação, então não tem como comparar as duas."
+      }
+    ]
+  },
+  "ex-dsqym157": {
+    "prompt": "Em que ordem uma resposta destinada a um programa deve ser conferida?",
+    "hint": "A mais barata primeiro.",
+    "choices": [
+      {
+        "text": "Parse, depois schema, depois as regras do café",
+        "why": "Isso. Cada camada precisa da anterior: não há schema sem objeto lido, nem regra sem campos conhecidos."
+      },
+      {
+        "text": "Regras, depois schema, depois parse",
+        "why": "As regras leem campos, que não existem até a resposta ser lida e ter forma."
+      },
+      {
+        "text": "Só o schema, já que ele inclui o parse e as regras",
+        "why": "Um schema precisa de JSON já lido, e não expressa bem as regras do café."
+      },
+      {
+        "text": "Parse, depois devolver ao modelo para ele mesmo conferir",
+        "why": "A opinião de um modelo sobre a própria resposta não é prova, lição 5. As conferências aqui são programas."
+      }
+    ]
+  },
+  "ex-e26wd2hn": {
+    "prompt": "Ligue cada falha à conferência que a pega primeiro.",
+    "hint": "Uma conferência não pega nada desta lista.",
+    "pairs": [
+      {
+        "left": "uma frase antes do objeto",
+        "right": "o parse"
+      },
+      {
+        "left": "`\"refund\": \"no\"`",
+        "right": "o schema"
+      },
+      {
+        "left": "um reembolso acima de R$ 100",
+        "right": "as regras do café"
+      },
+      {
+        "left": "R$ 140 onde se deviam R$ 70",
+        "right": "ler a resposta contra a reclamação"
+      }
+    ],
+    "right_distractors": [
+      "uma temperatura mais alta"
+    ]
+  },
+  "ex-ffaajpxc": {
+    "prompt": "As tentativas acabaram e a última resposta ainda falha no schema. O que a lição diz que o programa faz?",
+    "hint": "A reclamação ainda precisa ir para algum lugar.",
+    "choices": [
+      {
+        "text": "Usa a última resposta assim mesmo, já que é a melhor disponível",
+        "why": "Uma resposta inválida usada assim mesmo é a falha silenciosa que o laço existe para evitar."
+      },
+      {
+        "text": "Aumenta o limite e continua tentando",
+        "why": "Um limite que você aumenta quando é atingido não é limite."
+      },
+      {
+        "text": "Descarta a reclamação sem deixar rastro",
+        "why": "Então ninguém fica sabendo que falhou, que é o pior resultado."
+      },
+      {
+        "text": "Registra a falha e manda a reclamação para uma pessoa",
+        "why": "Isso. Um caminho mais lento para uma reclamação, com a resposta e os erros anexados, em vez de um buraco silencioso."
+      }
+    ]
+  }
+}
