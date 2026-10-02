@@ -156,7 +156,7 @@ resource "random_password" "db" {
   length = 24
 }
 CODE
-run 'git diff --stat'
+run 'git diff'
 block plan
 run 'terraform plan'
 
@@ -177,11 +177,14 @@ run 'terraform apply -auto-approve | tail -n 3'
 commit 'tag the VPC with its owner'
 quiet 'git checkout -q change'
 block stale
-run 'git log --oneline -1'
+run 'git log --format=%s -1'
 run 'terraform apply tfplan'
+block serials
+run 'unzip -p tfplan tfstate | jq .serial'
+run 'jq .serial terraform.tfstate'
 block replan
 quiet 'git rebase -q hotfix'
-run 'git log --oneline -2'
+run 'git log --format=%s -2'
 run 'terraform plan -out=tfplan | tail -n 6'
 
 # ---- plan-json, on the fresh saved plan, before it is applied
@@ -264,10 +267,12 @@ run 'git diff'
 quiet 'terraform plan -out=tfplan'
 run './check-plan.sh tfplan; echo "exit $?"'
 block partial
-run 'terraform apply tfplan'
+run 'terraform apply tfplan; echo "exit $?"'
 block after-partial
 run 'terraform state list'
-run 'terraform plan | tail -n 3'
+run 'terraform plan -no-color | grep -E "^  #|Plan:"'
+block spent
+run 'terraform apply tfplan; echo "exit $?"'
 block fix
 quiet "sed -i 's|10.30.3.0/24|10.20.3.0/24|' main.tf"
 run 'git diff'
@@ -276,6 +281,12 @@ commit 'batch workers in subnet c'
 
 # ---- targeting
 block two-changes
+quiet "python3 - <<'PY'
+p = 'main.tf'; s = open(p).read()
+i = s.index('resource \"aws_instance\" \"batch\"')
+s = s[:i] + s[i:].replace('t3.micro', 't3.small', 1)
+open(p, 'w').write(s)
+PY"
 quiet "sed -i 's/{ Name = \"shop\", Owner = \"ana\" }/{ Name = \"shop\", Owner = \"ana\", Project = \"shop\" }/' main.tf"
 cat >> main.tf <<'CODE'
 
@@ -286,10 +297,11 @@ resource "aws_subnet" "d" {
   tags              = { Name = "shop-d" }
 }
 CODE
-run 'git diff --stat'
+run 'git diff'
 block target-plan
 run 'terraform plan -target=aws_subnet.d'
 block target-apply
 run 'terraform apply -target=aws_subnet.d -auto-approve'
 block after-target
-run 'terraform plan | grep -E "^  #|Plan:"'
+run 'terraform plan -no-color | grep -E "^  #|Plan:"'
+run 'terraform apply -auto-approve | tail -n 1'

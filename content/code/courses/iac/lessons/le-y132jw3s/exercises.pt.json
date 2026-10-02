@@ -1,0 +1,558 @@
+{
+  "ex-qvpvv5zx": {
+    "prompt": "A Ana roda `git rm --cached terraform.tfvars`, acrescenta `*.tfvars` ao `.gitignore` e commita. Quem ainda consegue ler a senha que ela tinha commitado semanas antes?",
+    "hint": "O `git show HEAD~1:terraform.tfvars` respondeu.",
+    "choices": [
+      {
+        "text": "Quem tiver um clone do repositório",
+        "why": "Isso. O commit novo para de versionar o arquivo; o antigo continua com ele, em todo clone, fork e backup."
+      },
+      {
+        "text": "Ninguém, já que o arquivo saiu do repositório",
+        "why": "Saiu do próximo commit. A captura o imprimiu a partir do anterior."
+      },
+      {
+        "text": "Quem fizer checkout do commit mais novo",
+        "why": "O commit mais novo é justamente o que não tem o arquivo."
+      },
+      {
+        "text": "Quem consegue ler o bucket de estado",
+        "why": "O estado é outra cópia, e ainda não havia apply. A pergunta é sobre o git."
+      }
+    ]
+  },
+  "ex-mkztc6z2": {
+    "prompt": "Uma senha foi commitada e enviada para o repositório da loja há um mês. Qual é o conserto que a aula diz que funciona?",
+    "hint": "Pense nos clones que você não controla.",
+    "choices": [
+      {
+        "text": "Reescrever o histórico e fazer force-push do resultado",
+        "why": "Isso limpa esta cópia do repositório e não alcança nenhum dos clones já feitos."
+      },
+      {
+        "text": "Marcar a variável com `sensitive = true`",
+        "why": "Isso muda o que o Terraform imprime, não o que o git guardou há um mês."
+      },
+      {
+        "text": "Trocá-la",
+        "why": "Isso. Mude a senha no banco e trate a antiga como pública, porque ela é."
+      },
+      {
+        "text": "Acrescentar `*.tfvars` ao `.gitignore` e commitar de novo",
+        "why": "Certo para o futuro, e não faz nada pelo commit que já carrega o arquivo."
+      }
+    ]
+  },
+  "ex-dx1djq2e": {
+    "prompt": "Antes de qualquer apply, onde a aula encontrou a senha que a Ana escreveu no `terraform.tfvars`? Escolha todas as que se aplicam.",
+    "hint": "Três cópias vêm antes de o estado existir.",
+    "choices": [
+      {
+        "text": "No histórico do git",
+        "why": "Sim, no commit que levou o arquivo."
+      },
+      {
+        "text": "No plan impresso na tela",
+        "why": "Sim, dentro do `user_data`, antes de ser marcada como sensitive."
+      },
+      {
+        "text": "No `.terraform.lock.hcl`",
+        "why": "O lock file registra versões e hashes de providers, nenhum valor."
+      },
+      {
+        "text": "Dentro do arquivo de plan salvo `tfplan`",
+        "why": "Sim: o `grep` a encontrou em duas linhas do arquivo descompactado."
+      },
+      {
+        "text": "Nos atributos do data source da AMI",
+        "why": "A busca da imagem não tem nada a ver com a senha."
+      }
+    ]
+  },
+  "ex-t65673n3": {
+    "prompt": "Depois que uma senha foi commitada e enviada, o conserto que funciona é ___ a senha: definir outra no banco e tratar o valor antigo como público.",
+    "hint": "A palavra para substituir um segredo de propósito.",
+    "blanks": [
+      {
+        "accept": [
+          "trocar",
+          "rotacionar",
+          "mudar"
+        ]
+      }
+    ]
+  },
+  "ex-hmv3sha7": {
+    "prompt": "O que `sensitive = true` numa variável muda?",
+    "hint": "A seção chama isso de promessa sobre uma coisa.",
+    "choices": [
+      {
+        "text": "O estado guarda esse valor cifrado",
+        "why": "A captura achou a senha no estado em texto puro depois da marcação."
+      },
+      {
+        "text": "O que o Terraform imprime",
+        "why": "Isso. Esconde o valor em plans e listagens, e não muda nada em disco."
+      },
+      {
+        "text": "O valor fica fora de um arquivo de plan salvo",
+        "why": "Um plan salvo carrega os valores com que foi feito, marcados ou não."
+      },
+      {
+        "text": "Os outputs se recusam a devolvê-lo, mesmo com `-raw`",
+        "why": "O `terraform output -raw db_password` o imprimiu."
+      }
+    ]
+  },
+  "ex-n6vqvjhz": {
+    "prompt": "Com a variável marcada como sensitive, por que o Terraform recusa `output \"db_password\" { value = var.db_password }`?",
+    "hint": "Leia a última linha do erro.",
+    "choices": [
+      {
+        "text": "Um módulo raiz não pode exportar senha de jeito nenhum",
+        "why": "Pode; a tentativa seguinte, com um argumento a mais, foi aplicada."
+      },
+      {
+        "text": "Outputs não podem se referir a variáveis de entrada",
+        "why": "Podem; o output corrigido continua dizendo `var.db_password`."
+      },
+      {
+        "text": "O output precisa ser marcado como sensitive ele mesmo",
+        "why": "Isso. Um valor montado a partir de um segredo precisa dizer isso onde sai da configuração."
+      },
+      {
+        "text": "A variável não tem default",
+        "why": "O valor veio do `terraform.tfvars`; um default não tem nada a ver."
+      }
+    ]
+  },
+  "ex-2nbtm8c3": {
+    "prompt": "O `terraform output` lista `db_password = <sensitive>`. Qual destes comandos imprime a própria senha?",
+    "hint": "Um output existe para ser lido por alguma coisa.",
+    "choices": [
+      {
+        "text": "`terraform plan`",
+        "why": "O plan mostra `(sensitive value)` no lugar."
+      },
+      {
+        "text": "`terraform output -json`",
+        "why": "Isso. Pedido pelo nome ou em JSON, um output sensitive entrega o valor."
+      },
+      {
+        "text": "`terraform show`",
+        "why": "O `show` exibe o estado como o plan exibe uma mudança, com os valores sensitive escondidos."
+      },
+      {
+        "text": "`terraform output` com `TF_LOG=debug` definido",
+        "why": "Um log de debug acrescenta mensagens do Terraform; a listagem continua dizendo `<sensitive>`."
+      }
+    ]
+  },
+  "ex-ne91f6qn": {
+    "prompt": "Depois que a variável e o output foram marcados como sensitive e aplicados, em quantas linhas do `terraform.tfstate` o `grep -c` encontrou a senha?",
+    "hint": "Uma para o output, uma para o script que grava o arquivo.",
+    "unit": "linhas"
+  },
+  "ex-y1016gdx": {
+    "prompt": "Ninguém digitou a senha que o `random_password` gerou. Onde ela está depois do apply?",
+    "hint": "O `jq` imprimiu duas.",
+    "choices": [
+      {
+        "text": "No estado, em texto puro",
+        "why": "Isso: como `result` e de novo como `secret_string`."
+      },
+      {
+        "text": "Em lugar nenhum, porque o Terraform descarta os valores que gera",
+        "why": "Ele guarda; é assim que a próxima execução sabe que a senha já existe."
+      },
+      {
+        "text": "No estado, como hash bcrypt e mais nada",
+        "why": "O hash também está lá, ao lado da própria senha."
+      },
+      {
+        "text": "No Secrets Manager, e não no disco da Ana",
+        "why": "O Secrets Manager tem, e o estado no disco dela também."
+      }
+    ]
+  },
+  "ex-kpaga9yg": {
+    "prompt": "Por que o `random_password` guarda o `result` no estado, afinal?",
+    "hint": "O que o próximo plan faria sem ele?",
+    "choices": [
+      {
+        "text": "Porque o provider esqueceu de marcá-lo como sensitive",
+        "why": "Está marcado: o `sensitive_attributes` listou `result`."
+      },
+      {
+        "text": "Para que o `terraform output` tenha algo a imprimir",
+        "why": "A configuração nem tinha output."
+      },
+      {
+        "text": "Porque o Secrets Manager lê a senha de volta do estado",
+        "why": "A AWS nunca lê o estado do Terraform; recebeu o valor pela API."
+      },
+      {
+        "text": "Para a próxima execução reaproveitá-la",
+        "why": "Isso. Sem o valor guardado, todo plan geraria uma senha nova."
+      }
+    ]
+  },
+  "ex-p3xba5fy": {
+    "prompt": "Outro time cria as senhas à mão no Secrets Manager e as lê para o Terraform com `data \"aws_secretsmanager_secret_version\"`. O que o estado deles guarda?",
+    "hint": "O `read.tf` da Ana só leu.",
+    "choices": [
+      {
+        "text": "O ARN de cada secret e nenhum valor",
+        "why": "Esse é o arranjo gerenciado de uma seção posterior, em que o Terraform nunca pede o valor."
+      },
+      {
+        "text": "Nada, já que um data source só lê",
+        "why": "Só leitura descreve a AWS, não o estado: o que é lido é registrado."
+      },
+      {
+        "text": "Cada senha que lê, em texto puro",
+        "why": "Isso. O `secret_string` do data source foi a terceira cópia da seção."
+      },
+      {
+        "text": "Cada senha como hash",
+        "why": "Nada transforma em hash um valor lido por um data source."
+      }
+    ]
+  },
+  "ex-g7kd3ad4": {
+    "prompt": "O estado lista `result` em `sensitive_attributes` para o `random_password`. Para que o Terraform usa essa lista?",
+    "hint": "Compare o que o plan mostrou com o que o `jq` achou.",
+    "choices": [
+      {
+        "text": "Para cifrar esses atributos antes de gravar",
+        "why": "O `jq` os leu em texto puro logo ao lado da lista."
+      },
+      {
+        "text": "Para manter esses valores fora da tela",
+        "why": "Isso. Ele sabe quais valores são secretos e os esconde ao imprimir, e os grava do mesmo jeito."
+      },
+      {
+        "text": "Para pulá-los na comparação de um plan",
+        "why": "São comparados como qualquer outro atributo; é por isso que são guardados."
+      },
+      {
+        "text": "Para deixá-los fora do `terraform state pull`",
+        "why": "Um pull devolve o estado exatamente como está guardado."
+      }
+    ]
+  },
+  "ex-arg7d7hz": {
+    "prompt": "`secret_string = ephemeral.random_password.db.result` falha com `Invalid use of ephemeral value`. Por quê?",
+    "hint": "O erro diz o que `secret_string` não é.",
+    "choices": [
+      {
+        "text": "O `random_password` só existe como recurso gerenciado",
+        "why": "O provider random tem a forma efêmera também; o erro é sobre para onde o valor vai."
+      },
+      {
+        "text": "O `secret_string` é persistido no estado",
+        "why": "Isso. Um valor efêmero só pode ir para onde nada é anotado, como um argumento write-only."
+      },
+      {
+        "text": "O provider da AWS do laboratório não aceita valores efêmeros",
+        "why": "Ele aceitou um em `secret_string_wo` na tentativa seguinte."
+      },
+      {
+        "text": "O Terraform 1.16 exige `ephemeral = true` no recurso",
+        "why": "Não existe esse argumento num recurso; `ephemeral = true` pertence a variáveis e outputs."
+      }
+    ]
+  },
+  "ex-dkbrjxp1": {
+    "prompt": "Um argumento que aceita um valor efêmero, repassa-o ao provider durante o apply e não guarda registro dele é um argumento ___, e o nome dele termina em `_wo`.",
+    "hint": "Duas palavras ligadas por hífen, como a aula escreve.",
+    "blanks": [
+      {
+        "accept": [
+          "write-only",
+          "write only",
+          "writeonly",
+          "somente escrita",
+          "somente-escrita"
+        ]
+      }
+    ]
+  },
+  "ex-ke8ta1cb": {
+    "prompt": "O recurso efêmero gerou uma senha nova na segunda execução, e o `terraform plan` disse `No changes`. Por quê?",
+    "hint": "O que há no estado para comparar?",
+    "choices": [
+      {
+        "text": "O recurso efêmero devolve a mesma senha toda vez",
+        "why": "Ele produz uma nova sempre que é aberto, o que aconteceu duas vezes num único apply."
+      },
+      {
+        "text": "A AWS recusou a segunda senha",
+        "why": "Nada foi enviado, então a AWS não tinha o que recusar."
+      },
+      {
+        "text": "O Terraform não tem valor guardado para comparar",
+        "why": "Isso. Ele só reenvia o valor quando `secret_string_wo_version` muda."
+      },
+      {
+        "text": "O plan pulou o recurso efêmero",
+        "why": "Plans também o abrem; a transcrição do apply mostrou isso no planejamento."
+      }
+    ]
+  },
+  "ex-at2vqsbp": {
+    "prompt": "Ponha em ordem o que aconteceu durante o `terraform apply` com o argumento write-only.",
+    "hint": "O recurso efêmero é aberto duas vezes.",
+    "items": [
+      "A senha efêmera é aberta e fechada para fazer o plan",
+      "O plan mostra `(write-only attribute)` para `secret_string_wo`",
+      "A senha efêmera é aberta de novo para o apply",
+      "A versão do secret é criada com o valor",
+      "A senha efêmera é fechada e o valor descartado"
+    ],
+    "trap": "Muita gente espera uma abertura só. O plan também precisa do valor, então o recurso é aberto uma vez para o plan e outra para o apply."
+  },
+  "ex-90s7hzmz": {
+    "prompt": "Com `manage_master_user_password = true`, o que o estado guarda sobre a senha do banco?",
+    "hint": "O `password` era null.",
+    "choices": [
+      {
+        "text": "A senha, marcada como sensitive",
+        "why": "O `password` era null no estado; o Terraform nunca a recebeu."
+      },
+      {
+        "text": "Um hash bcrypt dela",
+        "why": "Esse era o atributo extra do `random_password`, não do banco."
+      },
+      {
+        "text": "O ARN do secret que a guarda, com a chave KMS",
+        "why": "Isso: o `master_user_secret` diz onde a senha está, não qual é."
+      },
+      {
+        "text": "A senha, cifrada com KMS",
+        "why": "A chave KMS no estado é a que o Secrets Manager usa; a senha não está lá."
+      }
+    ]
+  },
+  "ex-xjr68k4h": {
+    "prompt": "No arranjo gerenciado, como a aplicação da loja obtém a senha do banco?",
+    "hint": "Não é mais trabalho do Terraform.",
+    "choices": [
+      {
+        "text": "De um output do Terraform lido no deploy",
+        "why": "O único output é o ARN, que diz onde a senha está."
+      },
+      {
+        "text": "Pede ao Secrets Manager, pelo ARN, quando sobe",
+        "why": "Isso, com uma política IAM que permite `GetSecretValue` nesse único secret."
+      },
+      {
+        "text": "De um arquivo que o `user_data` grava quando a máquina sobe",
+        "why": "Esse era o desenho que vazava, da primeira seção."
+      },
+      {
+        "text": "Do estado, por `terraform_remote_state`",
+        "why": "O estado não guarda a senha, então não há o que ler lá."
+      }
+    ]
+  },
+  "ex-vm0mrbd3": {
+    "prompt": "O que deixar o RDS gerenciar a senha compra, segundo a aula? Escolha todas as que se aplicam.",
+    "hint": "Volte às quatro cópias, e a quem faz a rotação.",
+    "choices": [
+      {
+        "text": "A senha não está em nenhuma das quatro cópias",
+        "why": "Sim: nem no git, nem num plan impresso, nem num arquivo de plan, nem no estado."
+      },
+      {
+        "text": "Uma rotação não precisa de apply",
+        "why": "Sim; o RDS e o Secrets Manager fazem a rotação entre si."
+      },
+      {
+        "text": "A aplicação não precisa de mudança no código",
+        "why": "O custo vai para lá: ela precisa buscar o segredo e buscá-lo de novo depois de uma rotação."
+      },
+      {
+        "text": "Cada leitura é uma chamada de API que uma conta real registra",
+        "why": "Sim, no CloudTrail; o moto não mantém esse log, então o laboratório não pôde mostrar."
+      },
+      {
+        "text": "O Terraform percebe quando a senha muda",
+        "why": "O Terraform nunca vê a senha, então não tem o que perceber."
+      }
+    ]
+  },
+  "ex-z13p1wxn": {
+    "prompt": "Contra quem o `encrypt = true` no backend S3 protege o estado?",
+    "hint": "Onde o objeto é cifrado, e quem o recebe decifrado?",
+    "choices": [
+      {
+        "text": "Um colega cuja política IAM o deixa ler o bucket",
+        "why": "O S3 decifra o objeto para todo leitor autorizado."
+      },
+      {
+        "text": "Alguém com uma cópia de `terraform state pull`",
+        "why": "Essa cópia saiu do bucket decifrada."
+      },
+      {
+        "text": "Alguém lendo os discos do S3",
+        "why": "Isso. O objeto é cifrado em repouso, e entregue em texto puro a quem o bucket deixa entrar."
+      },
+      {
+        "text": "Um log de pipeline que imprime o plan",
+        "why": "Um log nem é o bucket; para isso serve o `sensitive`."
+      }
+    ]
+  },
+  "ex-b3kwy26p": {
+    "prompt": "Na configuração do OpenTofu, para que serve o `fallback` com o método `unencrypted`?",
+    "hint": "Ele foi removido logo depois de um apply.",
+    "choices": [
+      {
+        "text": "Ler o estado que ainda estava puro",
+        "why": "Isso. Sem ele, o OpenTofu tentaria decifrar um arquivo que nunca foi cifrado."
+      },
+      {
+        "text": "Gravar uma cópia legível ao lado do estado cifrado",
+        "why": "Um fallback é sobre leitura; o `grep` não achou `result` em lugar nenhum do arquivo."
+      },
+      {
+        "text": "Deixar o Terraform ler o estado cifrado",
+        "why": "O Terraform falhou no arquivo: não conhece o formato."
+      },
+      {
+        "text": "Abrir o estado quando a frase-senha se perde",
+        "why": "Deixado no lugar, aceitaria um arquivo puro, não decifraria um cifrado."
+      }
+    ]
+  },
+  "ex-z2zz0c3s": {
+    "prompt": "Por que a frase-senha é uma variável, definida como `TF_VAR_state_passphrase`, e não escrita no `encryption.tf`?",
+    "hint": "Para onde o `encryption.tf` vai?",
+    "choices": [
+      {
+        "text": "O OpenTofu recusa uma frase-senha literal",
+        "why": "Um literal funcionaria; o problema é para onde o arquivo vai."
+      },
+      {
+        "text": "Porque o `encryption.tf` é commitado com o resto da configuração",
+        "why": "Isso. Uma frase-senha nele seria mais um segredo no histórico do git."
+      },
+      {
+        "text": "Uma variável deixa a chave mais longa",
+        "why": "O tamanho da chave vem do key provider (32 no `meta`), não de onde a frase-senha foi escrita."
+      },
+      {
+        "text": "Para manter a frase-senha fora do estado cifrado",
+        "why": "A frase-senha nunca é guardada no estado; o `meta` tem um salt e parâmetros."
+      }
+    ]
+  },
+  "ex-y6v7p2jz": {
+    "prompt": "Um ano depois da migração, a frase-senha se perde. O bucket tem versionamento. O que nele ainda pode ser lido?",
+    "hint": "Quais versões nunca foram cifradas?",
+    "choices": [
+      {
+        "text": "Toda versão, derivando a chave a partir do salt no `meta`",
+        "why": "O salt é metade da derivação; a frase-senha é a outra metade."
+      },
+      {
+        "text": "A versão mais recente, porque o S3 a decifra para um leitor autorizado",
+        "why": "O S3 tira a criptografia dele, não a do OpenTofu."
+      },
+      {
+        "text": "As versões de antes da migração",
+        "why": "Sim, em texto puro, e é por isso que a aula diz para apagá-las e trocar o que elas tinham."
+      },
+      {
+        "text": "Nada, já que o S3 apaga as versões que o OpenTofu não lê",
+        "why": "O S3 não sabe nada da criptografia do OpenTofu e não apaga nada sozinho."
+      }
+    ]
+  },
+  "ex-1hp38ngv": {
+    "prompt": "Associe cada medida à cópia da senha que ela remove.",
+    "hint": "Cinco medidas, cinco lugares, um lugar sobrando.",
+    "pairs": [
+      {
+        "left": "`*.tfvars` no `.gitignore` desde o primeiro commit",
+        "right": "O histórico do git"
+      },
+      {
+        "left": "`sensitive = true`",
+        "right": "O plan numa tela ou num log de CI"
+      },
+      {
+        "left": "Um argumento write-only alimentado por um valor efêmero",
+        "right": "O estado e o arquivo de plan salvo"
+      },
+      {
+        "left": "`manage_master_user_password = true`",
+        "right": "Toda cópia: o Terraform nunca a vê"
+      },
+      {
+        "left": "A criptografia de estado do OpenTofu",
+        "right": "O texto puro de um estado que saiu do programa"
+      }
+    ],
+    "right_distractors": [
+      "O valor dentro da aplicação em execução"
+    ]
+  },
+  "ex-g2a7wge6": {
+    "prompt": "A configuração de um colega lê a senha existente da loja com `data \"aws_secretsmanager_secret_version\"` e a passa para o `password` do `aws_db_instance`. Com o provider da AWS do laboratório, qual mudança mantém a senha fora do estado e ainda usa esse secret?",
+    "hint": "Duas metades: como ela é lida, e para onde vai.",
+    "choices": [
+      {
+        "text": "Marcar o data source e o argumento `password` como sensitive",
+        "why": "Isso esconde o valor na tela; as duas cópias continuam no estado."
+      },
+      {
+        "text": "Lê-la com o recurso efêmero e passá-la para `password_wo`",
+        "why": "Isso. Os dois existem no provider do laboratório: a forma efêmera da versão do secret, e o `aws_db_instance` na lista de write-only."
+      },
+      {
+        "text": "Mover o data source para um módulo filho",
+        "why": "Os recursos e data sources de um módulo filho vão para o mesmo estado."
+      },
+      {
+        "text": "Acrescentar `password` ao `lifecycle { ignore_changes }`",
+        "why": "O `ignore_changes` muda o que um plan compara, e o valor continua guardado."
+      }
+    ]
+  },
+  "ex-1j9spb47": {
+    "prompt": "O time da Ana quer cifrar o estado de uma configuração existente com o OpenTofu. Ponha os passos em ordem.",
+    "hint": "O fallback existe para exatamente uma execução.",
+    "items": [
+      "Guardar a frase-senha no cofre do pipeline como `TF_VAR_state_passphrase`",
+      "Acrescentar o bloco `encryption` com um fallback `unencrypted`",
+      "Rodar `tofu apply`, que grava o estado cifrado",
+      "Remover o fallback e o método `unencrypted`",
+      "Apagar as versões puras do bucket e trocar o que elas tinham"
+    ],
+    "trap": "Remover o fallback antes da primeira gravação cifrada deixa o OpenTofu sem conseguir ler o estado puro de onde parte."
+  },
+  "ex-yjn8t8cn": {
+    "prompt": "Um revisor lê um pull request: o `random_password` alimenta o `secret_string`, e toda variável e todo output está marcado como sensitive. A descrição diz que a senha agora está segura. O que o revisor responde?",
+    "hint": "Conte as cópias que o `jq` achou.",
+    "choices": [
+      {
+        "text": "Aprovar: nada que o Terraform gera é guardado",
+        "why": "O `random_password` guarda o resultado de propósito, para a próxima execução reaproveitar."
+      },
+      {
+        "text": "Aprovar, se o bucket de estado tiver `encrypt = true`",
+        "why": "Isso protege os discos do S3; todo leitor do bucket recebe o estado em texto puro."
+      },
+      {
+        "text": "O estado a guarda duas vezes; use uma senha efêmera e `secret_string_wo`",
+        "why": "Isso. O `sensitive` só a esconde na tela, e o par write-only a mantém fora do estado."
+      },
+      {
+        "text": "Pedir `ignore_changes = [secret_string]`",
+        "why": "Isso impede plans futuros de atualizá-la e continua guardando o valor."
+      }
+    ]
+  }
+}
