@@ -22,8 +22,8 @@ on, and what they fill it with depends on the engine. Jinja2, by default, render
 variable as an empty string. Mustache renders a missing key as an empty string too. Python's
 `string.Template`, with `safe_substitute`, leaves the placeholder in the text exactly as written.
 
-So the reply prompt with no language becomes either *"Write in ."* or *"Write in {{language}}."*,
-and the model gets a sentence that is broken in a way it has to guess around. Neither shows up as an
+So the reply prompt with no language becomes either *"Write in ."* or the same sentence with its
+placeholder still in it, and the model gets a sentence that is broken in a way it has to guess around. Neither shows up as an
 error. The reply comes back in some language, perhaps the right one, and the defect stays in place
 until a customer in another country receives English. **A missing value has to stop the run**,
 because nothing downstream of the render can tell an empty hole from a short sentence.

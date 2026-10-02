@@ -22,7 +22,8 @@ indefinida como texto vazio. O Mustache também renderiza uma chave ausente como
 `string.Template` do Python, com `safe_substitute`, deixa o marcador no texto exatamente como foi
 escrito.
 
-Então o prompt de resposta sem idioma vira *"Write in ."* ou *"Write in {{language}}."*, e o modelo
+Então o prompt de resposta sem idioma vira *"Write in ."* ou a mesma frase com o marcador ainda
+dentro dela, e o modelo
 recebe uma frase quebrada de um jeito que ele precisa contornar adivinhando. Nenhuma das duas aparece
 como erro. A resposta volta em algum idioma, talvez o certo, e o defeito fica lá até um cliente de
 outro país receber inglês. **Um valor faltando precisa interromper a execução**, porque nada depois
