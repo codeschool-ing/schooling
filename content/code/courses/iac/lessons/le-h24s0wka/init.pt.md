@@ -48,7 +48,7 @@ rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
 ```
 
-As quatro linhas que começam com hífen trazem a notícia: o Terraform procurou versões de
+As três linhas que começam com hífen trazem a notícia: o Terraform procurou versões de
 `hashicorp/aws` que atendessem a `~> 6.0`, escolheu a 6.67.0 e a instalou. **A palavra
 `(unauthenticated)` é o laboratório falando.** Num computador que alcança o Terraform Registry, o
 init confere a assinatura do provider e imprime `(signed by HashiCorp)` nesse lugar. O laboratório

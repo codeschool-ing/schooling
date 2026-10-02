@@ -77,8 +77,8 @@ web1 | SUCCESS => {
 
 **`ping` here is not the network ping.** It is a module: Ansible logged in as `deploy`, ran a tiny
 Python program on each machine and got `pong` back, which proves the SSH login and the interpreter
-both work. The hosts answered in the order they finished, which is why `db1` sits between the other
-two; a second run can print them in another order.
+both work. The hosts answered in the order they finished, which is why `db1` comes first and `web1`
+last; a second run can print them in another order.
 
 `ansible-inventory` shows how Ansible read the file, as a tree or as the YAML form an inventory can
 also be written in:

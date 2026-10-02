@@ -94,6 +94,6 @@ volta à gerência com `terraform import`, que a aula 8 mostra.
 Então deixar o estado fora do git não resolve o problema; só impede que o git seja o lugar onde o
 estado mora. **Cada pessoa e cada máquina que roda o Terraform nesta rede precisa ler o mesmo
 estado**, a única cópia, o serial mais recente. Um arquivo num laptop não pode ser isso, e
-"remote-backend" o leva para um lugar que pode. Antes disso, mais duas coisas para as quais o
+três seções adiante o estado vai para um lugar que pode. Antes disso, mais duas coisas para as quais o
 arquivo local serve: lê-lo e editá-lo com os comandos do próprio Terraform, e encontrar uma mudança
 que alguém fez pelas costas dele.

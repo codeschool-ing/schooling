@@ -93,7 +93,7 @@ Terraform that last wrote it. `serial` goes up by one on every write, so of two 
 the higher serial is the newer. `lineage` is a random id given to the state when it was created and
 kept through every serial after that: two files with different lineages are not two versions of one
 history, they are two histories, and Terraform refuses to write one over the other. You will see
-both of those numbers do their job in "protecting".
+both of those numbers do their job in the last section of this lesson.
 
 Below the header is the part that matters, one entry per resource:
 

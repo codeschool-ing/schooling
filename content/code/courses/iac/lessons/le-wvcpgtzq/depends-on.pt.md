@@ -67,8 +67,8 @@ aws_instance.web: Creation complete after 10s [id=i-bf711cb2e8c4a7945]
 ```
 
 **A instância começou antes de o bucket existir.** No laboratório nada dá boot, então nada quebra.
-Numa conta real o primeiro boot da máquina disputaria corrida com o upload, e no dia em que a
-instância ganhasse ela subiria sem a configuração, o tipo de falha que não acontece nos testes e
+Numa conta real o primeiro boot da máquina disputaria corrida com o upload. No dia em que a
+instância ganhasse, ela subiria sem a configuração: uma falha que não acontece nos testes e
 acontece em produção.
 
 ## `depends_on`

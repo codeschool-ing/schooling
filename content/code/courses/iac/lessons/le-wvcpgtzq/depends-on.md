@@ -67,9 +67,9 @@ aws_instance.web: Creation complete after 10s [id=i-bf711cb2e8c4a7945]
 ```
 
 **The instance started before the bucket existed.** In the lab nothing boots, so nothing breaks.
-On a real account the machine's first boot would race the upload, and on the day the instance won
-it would start without its configuration, which is the kind of failure that does not happen in
-testing and does happen in production.
+On a real account the machine's first boot would race the upload. On the day the instance won,
+it would start without its configuration: a failure that does not happen in testing and does
+happen in production.
 
 ## `depends_on`
 

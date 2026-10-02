@@ -72,7 +72,7 @@ Outputs:
 gateway = "igw-d64e0925c422c6e13"
 ```
 
-Um bloco, cinco recursos: a VPC, três sub-redes e o gateway. O state os guarda sob esses
+Três blocos, cinco recursos: a VPC, três sub-redes e o gateway. O state os guarda sob esses
 endereços, e o `terraform console`, que a aula 3 usa para expressões, consegue ler qualquer um
 deles de volta:
 
@@ -152,6 +152,6 @@ Changes to Outputs:
 ```
 
 **Dois limites para guardar.** O `count` precisa ser um número que o Terraform conheça enquanto
-planeja, antes de qualquer coisa ser criada; `choosing`, no fim desta aula, mostra o que acontece
+planeja, antes de qualquer coisa ser criada; a última seção desta aula mostra o que acontece
 quando não é. E o índice é a identidade da cópia: `aws_subnet.app[2]` é o que estiver em terceiro
 lugar na lista hoje. A próxima seção mostra quanto isso custa.

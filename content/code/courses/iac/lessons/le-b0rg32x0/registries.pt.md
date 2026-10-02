@@ -36,7 +36,7 @@ nunca pensa nisso.
 ## Por que o laboratório percebe
 
 O laboratório não tem acesso à internet. Como a aula 2 explicou, os providers dele vêm de um diretório
-no notebook, um **filesystem mirror**, e a configuração do CLI diz onde ele fica:
+no laptop, um **filesystem mirror**, e a configuração do CLI diz onde ele fica:
 
 ```
 ana@laptop:~/shop/tofu$ cat $TF_CLI_CONFIG_FILE

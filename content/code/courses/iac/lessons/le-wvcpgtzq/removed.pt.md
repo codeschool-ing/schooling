@@ -17,7 +17,7 @@ Plan: 0 to add, 0 to change, 1 to destroy.
 ```
 
 Para o Terraform, um recurso que está no state e falta no arquivo é um recurso que você quer que
-suma. É o mesmo mecanismo que passou por cima do `prevent_destroy` duas seções atrás, e aqui ele
+suma. É o mesmo mecanismo que passou por cima do `prevent_destroy` quatro seções atrás, e aqui ele
 apagaria um bucket do qual outro time está prestes a depender.
 
 ## O bloco `removed`
@@ -102,7 +102,7 @@ entrada tirada do state, e nada tocado na nuvem.
 ## Por que um bloco e não um comando
 
 `terraform state rm` faz o mesmo com o state, e a aula 7 o mostra. A diferença é a que separou
-`-replace` de `taint` na seção anterior, no sentido contrário: **`state rm` é um comando que alguém
+`-replace` de `taint` duas seções atrás, no sentido contrário: **`state rm` é um comando que alguém
 roda no state compartilhado, e ninguém o revisa.** Um bloco `removed` é uma mudança no arquivo. Passa
 por um pull request, aparece no plan exatamente como é, e funciona igual para todo colega e todo
 pipeline que aplicar a configuração depois.

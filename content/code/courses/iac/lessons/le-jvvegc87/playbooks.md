@@ -92,8 +92,8 @@ The **PLAY RECAP** is the line to read first:
 
 - `ok=5` is every task that succeeded on that host, the facts included, whether or not it changed
   anything;
-- `changed=4` is how many of those five changed something: three files and packages, and a service
-  that was not running and now is;
+- `changed=4` is how many of those five changed something: a package, two files, and a service that
+  was not running and now is;
 - `unreachable` and `failed` are the two failures from the inventory section, a host Ansible could
   not log into and a task that went wrong on one it could;
 - `skipped`, `rescued` and `ignored` count tasks a condition skipped and failures that the play was

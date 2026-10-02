@@ -13,7 +13,7 @@ cada uma.
 **Num pull request, nada é aplicado.** A mudança é conferida, varrida e planejada, e o plan é
 publicado onde quem revisa lê o diff. **Na `main`, depois do merge, o plan é feito de novo, salvo
 num arquivo, lido por uma pessoa, e esse arquivo é aplicado.** Os dois plans existem por motivos
-diferentes, e essa diferença é o assunto das três últimas seções desta aula.
+diferentes, e o fim desta seção diz quais são.
 
 ## Portões baratos primeiro, credenciais por último
 

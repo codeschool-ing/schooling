@@ -128,6 +128,6 @@ curingas em tudo o que você passa a ele.
 
 Comandos ad-hoc servem para perguntas e consertos pontuais: qual versão está instalada, quão cheio
 está o disco, reinicie este serviço agora. O que você quer guardar, e rodar de novo semana que vem
-em máquinas novas, vai para um arquivo, porque um comando digitado no prompt não deixa registro que
-um revisor possa ler, o mesmo motivo que a aula 1 deu contra o `network.sh`. Esse arquivo é um
+em máquinas novas, vai para um arquivo. Um comando digitado no prompt não deixa registro que um
+revisor possa ler, o mesmo motivo que a aula 1 deu contra o `network.sh`. Esse arquivo é um
 playbook.

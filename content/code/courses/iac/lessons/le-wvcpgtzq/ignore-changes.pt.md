@@ -52,7 +52,7 @@ guarantee to take exactly these actions if you run "terraform apply" now.
 O Terraform planeja apagar a tag `CostCenter`, porque o arquivo diz que as tags são `Name = "web"` e
 mais nada. Aplique isso e a ferramenta de custos a põe de volta à noite, e o plan seguinte a remove
 de novo. Dois sistemas automáticos discutindo um valor, todo dia, com todo plan carregando uma
-mudança que ninguém pediu. Esse ruído é o dano real: um revisor que vê uma mudança de tag em todo
+mudança que ninguém pediu. O ruído custa mais que a tag: um revisor que vê uma mudança de tag em todo
 plan para de ler mudanças de tag.
 
 ## Dizendo ao Terraform para olhar para o outro lado

@@ -84,8 +84,7 @@ Check: CKV_AWS_145: "Ensure that S3 buckets are encrypted with KMS by default"
 	File: /main.tf:42-44
 ```
 
-Thirteen of 35 checks failed, and only one of them is the SSH rule from the pull request. The other
-twelve were there before it, and say, among other things, that the bucket has no public access block, no versioning, no access
+Thirteen of 35 checks failed, and only one of them is the SSH rule from the pull request. The other twelve were there before it. Among other things, they say that the bucket has no public access block, no versioning, no access
 logging, no lifecycle rules and no copy in a second region; the volume is not encrypted; the VPC
 has no flow logs. Checkov runs its checks in parallel, so the order of the list is not stable from
 one run to the next. Sort or filter it before comparing two reports.

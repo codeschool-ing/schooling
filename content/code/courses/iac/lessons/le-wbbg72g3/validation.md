@@ -92,7 +92,7 @@ Planning failed. Terraform encountered an error while generating this plan.
 ```
 
 **Nothing was planned in either run.** The message is the sentence Ana wrote, under a line saying
-which value broke it, and that is the whole point: the person who typed `staging` learns what the
+which value broke it, so the person who typed `staging` learns what the
 shop accepts, in words, before anything is planned or changed. A `/26` is a valid range and
 passes the type, and it still has no room for `/24` subnets, so the rule says so. Since Terraform
 1.9 a condition may refer to other variables as well as its own.

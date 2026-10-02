@@ -105,8 +105,8 @@ Failures: 1 (UNKNOWN: 0, LOW: 0, MEDIUM: 0, HIGH: 1, CRITICAL: 0)
 
 ## An expiry turns "later" into a date
 
-*Revisit when the shop has a KMS key* is the kind of promise that is never kept, and the expiry is
-what keeps it. To see it work, Ana moves the date into the past for one run:
+*Revisit when the shop has a KMS key* is the kind of promise nobody keeps unprompted, and the expiry is what does the
+prompting. To see it work, Ana moves the date into the past for one run:
 
 ```
 ana@laptop:~/shop$ sed -i "s/exp:2027-03-31/exp:2026-03-31/" main.tf

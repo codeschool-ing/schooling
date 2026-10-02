@@ -4,7 +4,7 @@ version: 1
 ---
 
 De volta ao diretório da própria Ana, com o estado que conhece os três recursos. O JSON pode ser
-lido com o `jq`, como a primeira seção fez, e nunca deve ser editado num editor de texto: uma vírgula
+lido com o `jq`, como duas seções atrás, e nunca deve ser editado num editor de texto: uma vírgula
 fora do lugar e o Terraform não consegue carregá-lo, e um campo mudado à mão é uma mentira em que o
 próximo plan acredita. **`terraform state` é o conjunto de subcomandos para olhar o estado e
 mudá-lo com segurança.**
@@ -119,8 +119,8 @@ ana@laptop:~/shop$ aws ec2 describe-subnets --filters Name=tag:Name,Values=shop-
 subnet-1849baa846a6631fa	10.20.1.0/24
 ```
 
-A sub-rede continua na AWS; o Terraform a esqueceu, e o plan quer criar uma. É o acidente de
-"losing-it" de novo, para um recurso só. O bloco `removed` da aula 6 é o jeito revisável de parar
+A sub-rede continua na AWS; o Terraform a esqueceu, e o plan quer criar uma. É o acidente da
+seção anterior de novo, para um recurso só. O bloco `removed` da aula 6 é o jeito revisável de parar
 de gerenciar algo; o `state rm` é o imediato.
 
 ## Os backups
@@ -146,6 +146,6 @@ and found no differences, so no changes are needed.
 ```
 
 O `public_a` voltou, e o plan está limpo. **Isso funcionou porque o backup estava no mesmo
-diretório**, que é o mesmo motivo pelo qual ele sumiria junto com o laptop. "remote-backend" põe o
+diretório**, que é o mesmo motivo pelo qual ele sumiria junto com o laptop. Duas seções adiante, o backend põe o
 estado num lugar onde a história dele sobrevive, e a aula 8 mostra o `terraform import`, que traz um
 recurso real de volta à gerência sem backup nenhum.

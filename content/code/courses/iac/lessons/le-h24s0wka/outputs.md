@@ -81,7 +81,7 @@ Environment	dev
 ```
 
 That command asks AWS about whichever VPC this configuration created, today, without anybody
-copying an id. The tags it returns are the two the last section put there.
+copying an id. The tags it returns are `Name` and the `Environment` the last section added.
 
 For a program rather than a shell, `-json` gives every output with its type, and with a flag
 lesson 12 is about:
@@ -125,7 +125,7 @@ ana@laptop:~/shop$ terraform output bucket_name
 ╵
 ```
 
-Here the name is simply wrong, since Ana has no `bucket_name` output, but the message is the same
+Here the name is wrong, since Ana has no `bucket_name` output, but the message is the same
 one you get after writing a new output block and forgetting to apply it.
 
 Outputs matter beyond the terminal. They are the one part of a configuration that other

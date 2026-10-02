@@ -49,8 +49,8 @@ exports.vpcId = vpc.id;
 exports.subnetIds = subnets.map((s) => s.id);
 ```
 
-Os nomes dos argumentos vão parecer familiares, `cidrBlock` onde o HCL diz `cidr_block`. Não é
-coincidência: o `@pulumi/aws` é construído a partir do mesmo provider AWS do Terraform, por uma ponte
+Os nomes dos argumentos vão parecer familiares, `cidrBlock` onde o HCL diz `cidr_block`, porque
+o `@pulumi/aws` é construído a partir do mesmo provider AWS do Terraform, por uma ponte
 que o Pulumi mantém, então os tipos de recurso e seus argumentos batem com os da aula 2 quase um a um.
 
 **`new aws.ec2.Vpc(...)` não cria uma VPC.** Ele registra uma junto ao motor, e o programa segue em

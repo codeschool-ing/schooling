@@ -80,7 +80,7 @@ Planning failed. Terraform encountered an error while generating this plan.
 ╵
 ```
 
-**The plan is refused before anything is read from AWS, and the error names both sides**: the
+**Terraform refuses the plan before it reads anything from AWS, and the error names both sides**: the
 environment the values were written for and the workspace they were given to. That is exactly the
 sentence that was missing from the screen the first time. The right pairing still plans cleanly:
 

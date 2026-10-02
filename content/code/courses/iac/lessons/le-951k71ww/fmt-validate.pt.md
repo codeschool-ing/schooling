@@ -99,6 +99,6 @@ ela. Então ele não tem como saber que uma sub-rede foi pensada para uma zona d
 para uma faixa fora da VPC, e **toda verificação daqui para baixo na escada existe para perguntar
 sobre valores**.
 
-Esse é o resumo honesto dos dois degraus mais baratos. Eles garantem que os arquivos estão
+Os dois degraus mais baratos, então, garantem que os arquivos estão
 arrumados e coerentes entre si, sem conta e sem rede. Não provam nada sobre o que o módulo vai
 fazer com uma entrada específica, e uma suíte que para neles testou a ortografia.

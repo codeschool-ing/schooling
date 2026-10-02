@@ -3,7 +3,7 @@ title: Descrever o resultado em vez dos passos
 version: 1
 ---
 
-De volta à terceira pergunta de `by-hand`: o que acontece se a Ana rodar o `network.sh` de novo? Ela
+De volta à terceira pergunta da rede feita à mão: o que acontece se a Ana rodar o `network.sh` de novo? Ela
 descobre no dia em que alguém pede para ela "garantir que a rede está configurada", e faz o óbvio:
 
 ```
@@ -84,7 +84,7 @@ Essa propriedade tem um nome que você vai encontrar em todas as aulas deste cur
 vez deixou. O `network.sh` não é; o `terraform apply` é, porque nunca roda um passo às cegas. Ele lê,
 compara, e então faz só a diferença.
 
-**Declarativo não é mágica, e tem um preço.** O Terraform só consegue comparar o que sabe ler, então
+**Declarativo tem um preço.** O Terraform só consegue comparar o que sabe ler, então
 precisa lembrar qual VPC real pertence a qual linha do arquivo. Essa memória é o **estado**, e as
 aulas 7 e 8 tratam do que acontece quando ele se perde, é compartilhado ou está errado. O script não
 precisava de memória porque nunca perguntava nada.

@@ -81,7 +81,7 @@ and found no differences, so no changes are needed.
 ```
 
 `No changes`: o id de VPC que o output dá é o mesmo que a busca por tag encontrava, então o security
-group fica onde está. A primeira linha do plan é a leitura: antes de consultar qualquer coisa dela, a
+group fica onde está. As duas primeiras linhas do plan são a leitura: antes de consultar qualquer coisa dela, a
 aplicação buscou `network/terraform.tfstate` no bucket.
 
 Do outro estado, a aplicação enxerga os `outputs` e mais nada. Depois que um apply guarda o que o

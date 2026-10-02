@@ -26,7 +26,7 @@ opened where the lab had them:
 | **AWS CDK** | TypeScript, JavaScript, Python, Java, C#, Go | `cdk diff` | the stack, inside AWS | AWS | Apache 2.0, AWS |
 | **Pulumi** | the same languages, or YAML | `pulumi preview` | Pulumi Cloud, a bucket or a directory | any with a provider | Apache 2.0, Pulumi |
 
-The CDK's licence is the one entry in that column this lesson has not opened yet:
+The CDK's is the last licence in that column the lab has a file for:
 
 ```
 ana@laptop:~/shop/cdk$ head -n 2 $NODE_PATH/aws-cdk-lib/LICENSE
@@ -42,13 +42,12 @@ monitoring and its GitHub organisation. CloudFormation and the CDK reach AWS. Te
 Pulumi reach anything that has a provider, which is why one configuration can hold all of it.
 
 **Who should keep the state.** With CloudFormation and the CDK there is no state for you to store,
-lock, encrypt or lose, and most of lesson 7 has nothing to apply to. That is a real saving for a small team
-that lives in one AWS account.
+lock, encrypt or lose, and most of lesson 7 has nothing to apply to. That is a real saving for a
+small team that lives in one AWS account.
 
 **What language the team should write in.** HCL is limited on purpose: it has expressions and no
 statements, so a configuration can say what should exist and cannot do anything else on the way. A
-general-purpose language gives you
-classes, tests in the same language and a package manager, and also every way a program can stop
+general-purpose language gives you classes, tests in the same language and a package manager, and also every way a program can stop
 being a description. Neither is better; they fail differently.
 
 **The licence, for some.** For a company using Terraform on its own infrastructure, the BSL's grant

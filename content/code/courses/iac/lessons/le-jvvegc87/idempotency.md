@@ -85,8 +85,8 @@ ana@laptop:~/shop/ansible$ curl -s http://web1/
 
 **One change, on one host, in one task.** The playbook put back what it describes and left `web2`
 alone, because there was nothing to put back there. That is configuration management's answer to the
-drift of lesson 1: run the description often and the machines converge on it. It has a limit worth
-stating plainly. Ansible checks **only what the playbook mentions**. A file it was never told about,
+drift of lesson 1: run the description often and the machines converge on it. The limit is that
+Ansible checks **only what the playbook mentions**. A file it was never told about,
 a package somebody installed by hand, a cron job nobody wrote down: those stay, and no run reports
 them. There is no state file listing what Ansible made, so deleting a task removes nothing from the
 machines; to remove something you write a task that says it is `absent`.

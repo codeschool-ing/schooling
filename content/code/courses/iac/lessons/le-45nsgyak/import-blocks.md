@@ -107,8 +107,7 @@ provider read, and that is its problem. Read it as a reviewer would:
 
 What it does get right is everything that matters: the name, the description, the port, the
 range, the tag, and the egress rule that AWS adds to every new group, which moto, standing in for
-AWS here, added too. Ana keeps those, in the
-house style, with the two values that belong to the network read from its outputs:
+AWS here, added too. Ana keeps those, in the house style, with the two values that belong to the network read from its outputs:
 
 ```hcl
 resource "aws_security_group" "monitoring" {

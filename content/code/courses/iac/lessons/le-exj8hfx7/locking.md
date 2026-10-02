@@ -6,7 +6,7 @@ version: 1
 Two runs that read the same state and both write it back produce a classic lost update. Each read
 serial 5, each made its own change in AWS, each writes serial 6, and whichever writes second erases
 the other's record. The resources the first run created are then real, billed and unknown to the
-state, which is the losing-it accident arriving by a quieter road. **A lock makes the second run
+state, which is the accident of the second network arriving by a quieter road. **A lock makes the second run
 wait or fail before it reads anything.**
 
 With `use_lockfile = true`, the S3 backend locks by creating a second object beside the state, the
@@ -85,9 +85,8 @@ ana@laptop:~/shop$ aws s3 ls --recursive s3://shop-tfstate-123456789012
 2026-10-02 00:52:26       5907 shop/terraform.tfstate
 ```
 
-`Acquiring state lock` is the plan waiting, while the first terminal was answered `yes` and
-finished its apply. Then it
-took the lock and planned against the state the apply had just written: the tag is already there,
+`Acquiring state lock` is the plan waiting while, in the first terminal, Ana answered `yes` and
+the apply finished. Then the plan took the lock and planned against the state the apply had just written: the tag is already there,
 so there is nothing to do, and the lock object is gone from the listing. In a pipeline, a lock
 timeout of a few minutes turns two jobs that collided into two jobs that ran in turn.
 

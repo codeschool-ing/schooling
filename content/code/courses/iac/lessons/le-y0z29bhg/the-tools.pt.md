@@ -21,8 +21,7 @@ uma é usada:
 
 Duas coisas nessa tabela merecem uma frase cada antes de a aula 2 começar.
 
-**O Terraform fica com a maior parte do curso** porque o modelo dele é aquele contra o qual os outros
-são medidos: uma descrição, um provider para cada API, um plano que você lê antes de qualquer coisa
+**O Terraform fica com a maior parte do curso** porque o modelo dele é a régua dos outros: uma descrição, um provider para cada API, um plano que você lê antes de qualquer coisa
 acontecer, e um estado que lembra o que foi feito. CloudFormation, Pulumi e o CDK mudam cada um uma
 dessas quatro peças, e a aula 17 fica mais clara com as quatro já na mão. Tudo o que você aprende
 sobre planos, estado e módulos vale sem mudança para o OpenTofu, porque ele começou como o mesmo
@@ -34,6 +33,6 @@ resultado de volta. Há providers para toda nuvem grande, para serviços de DNS,
 sistemas de monitoramento, e para coisas que nem são serviços, como gerar um nome aleatório ou
 escrever um arquivo local. A aula 2 encontra quatro deles.
 
-A tabela não tem linha para "a ferramenta que faz bem os dois trabalhos", e isso não é esquecimento.
+A tabela não tem linha para "a ferramenta que faz bem os dois trabalhos", de propósito.
 Uma configuração que funciona usa uma ferramenta das linhas de provisionamento, uma das linhas de
-configuração ou o Packer, e uma fronteira clara entre elas, que era o assunto de `two-jobs`.
+configuração ou o Packer, e uma fronteira clara entre elas, que era o assunto da seção sobre os dois trabalhos.

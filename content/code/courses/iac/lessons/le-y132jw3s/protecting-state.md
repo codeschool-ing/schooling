@@ -12,8 +12,7 @@ blocked public access, versioning, and `encrypt = true`.
 That last setting is worth a precise look, because it sounds like more than it is. `encrypt = true`
 asks S3 to encrypt the object **on S3's disks**. Anybody the bucket lets read the object gets it
 decrypted, in plain text, because decrypting it for authorised readers is what S3 does. A KMS key
-of your own (`kms_key_id` in the backend) adds a second permission a reader needs, which helps; a
-reader with both still gets plain text, and so does every copy that leaves the bucket, such as a
+of your own (`kms_key_id` in the backend) adds a second permission a reader needs, which helps. A reader with both still gets plain text, and so does every copy that leaves the bucket, such as a
 `terraform state pull` on somebody's laptop.
 
 ```schooling-figure
@@ -210,7 +209,6 @@ since the migration included, because each one was encrypted with it. A team run
 earnest uses a key provider backed by a key service, such as `aws_kms`, so that the key is a
 permission IAM grants rather than a string somebody has to keep.
 
-Two loose ends. The versions the bucket kept from before the migration are still there and still
-plain text, so they are deleted, and any secret they held is rotated. And the same `encryption`
+Two loose ends. The versions the bucket kept from before the migration are still there and still plain text, so delete them, and rotate any secret they held. And the same `encryption`
 block takes a `plan` block beside `state`, which encrypts the saved plan file, copy three from
 "where-they-leak".

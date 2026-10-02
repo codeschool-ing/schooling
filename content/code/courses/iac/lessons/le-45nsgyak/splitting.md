@@ -245,7 +245,7 @@ ana@laptop:~/shop/app$ aws s3 ls --recursive s3://shop-tfstate-123456789012
 ana@laptop:~/shop/app$ rm -r ../split
 ```
 
-The `split` directory held two complete copies of state on Ana's disk, and goes with it.
+The `split` directory held two complete copies of the state on Ana's disk, so it goes too.
 
 ## The old checkout
 

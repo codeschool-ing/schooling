@@ -101,8 +101,8 @@ Note: You didn't use the -out option to save this plan, so Terraform can't
 guarantee to take exactly these actions if you run "terraform apply" now.
 ```
 
-The id on the second line of the resource is the same before and after, and the summary counts
-one change and nothing added or destroyed. This is the cheap kind of change.
+Only the tags move; the id is among the 20 unchanged attributes the plan hides, and the summary
+counts one change and nothing added or destroyed. This is the cheap kind of change.
 
 ## A change that forces a replacement
 
@@ -135,7 +135,7 @@ Plan: 1 to add, 0 to change, 1 to destroy.
 
 **`-/+` is a replacement, and `# forces replacement` names the argument responsible.** That
 comment is the most useful line in a long plan: it answers *why* before you have scrolled. The
-summary will read `1 to add, 0 to change, 1 to destroy`, which is how a replacement is counted.
+summary reads `1 to add, 0 to change, 1 to destroy`, which is how a replacement is counted.
 
 ## A replacement that spreads
 
@@ -170,7 +170,7 @@ One edited line, two replacements. The subnet's range cannot change in place, so
 replaced; its new id is `(known after apply)`, and an instance cannot move to another subnet
 either, so `subnet_id` forces the instance out too. **The comment on the instance points at
 `subnet_id`, not at anything Ana typed**, and that is the shape to watch for in review: a
-replacement whose cause is two resources away.
+replacement whose cause sits in another resource.
 
 What decides in-place or replace is the cloud API, as the provider models it. Tags, an instance's
 type and a security group's rules have update calls; an AMI, a subnet's range, a bucket's name

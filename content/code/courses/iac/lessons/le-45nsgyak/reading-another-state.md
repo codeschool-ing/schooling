@@ -81,7 +81,7 @@ and found no differences, so no changes are needed.
 ```
 
 `No changes`: the VPC id the output gives is the one the tag search found, so the security group
-stays where it is. The first line of the plan is the read: before refreshing anything of its own,
+stays where it is. The first two lines of the plan are the read: before refreshing anything of its own,
 the app fetched `network/terraform.tfstate` from the bucket.
 
 Of the other state, the app sees the `outputs` and nothing else. Once an apply has stored what the

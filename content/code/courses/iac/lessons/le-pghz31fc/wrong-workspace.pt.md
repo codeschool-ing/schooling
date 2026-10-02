@@ -80,7 +80,7 @@ Planning failed. Terraform encountered an error while generating this plan.
 ╵
 ```
 
-**O plan é recusado antes de qualquer leitura na AWS, e o erro nomeia os dois lados**: o ambiente
+**O Terraform recusa o plan antes de ler qualquer coisa na AWS, e o erro nomeia os dois lados**: o ambiente
 para o qual os valores foram escritos e o workspace a que foram entregues. É exatamente a frase que
 faltava na tela da primeira vez. O par certo continua planejando sem problema:
 
@@ -117,5 +117,4 @@ consegue substituir a VPC de prod, seja qual for o workspace selecionado. Essa �
 isolamento da primeira seção, e é nela que os workspaces são mais fracos: um diretório e um bloco de
 backend significam um conjunto de credenciais lendo o estado de todos os ambientes, num bucket só. A
 própria documentação do Terraform diz isso, que workspaces da CLI não servem para ambientes que
-precisam de credenciais e controles de acesso separados. O layout da próxima seção é a resposta
-de costume.
+precisam de credenciais e controles de acesso separados. O layout da próxima seção é a resposta usual.

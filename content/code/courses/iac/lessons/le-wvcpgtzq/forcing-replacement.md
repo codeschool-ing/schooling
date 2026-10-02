@@ -23,7 +23,7 @@ Plan: 1 to add, 0 to change, 1 to destroy.
 ```
 
 `will be replaced, as requested` is Terraform saying that the reason is you, not the file. The
-symbol is `+/-` because `web` carries `create_before_destroy` since the second section, and the
+symbol is `+/-` because `web` has carried `create_before_destroy` since Ana added it, three sections back, and the
 summary counts the one replacement. Nothing about the request is saved anywhere: the next plan,
 without the flag, is back to no changes.
 

@@ -92,7 +92,7 @@ a imagem do Trivy, que é como um job ganha uma ferramenta que a imagem padrão 
 `plan.txt`, e um job posterior que tenha ele em `needs` recebe os dois arquivos no diretório de
 trabalho antes de o script começar.
 
-O artefato não é só um plan. A aula 9 abriu um plan salvo e encontrou dentro dele uma cópia do
+A aula 9 abriu um plan salvo e encontrou dentro dele uma cópia do
 state, então **quem pode baixar os artefatos deste pipeline pode ler o que o state guarda**, e a
 aula 12 trata do que isso pode incluir. É também por isso que `expire_in: 3 days` é uma decisão e
 não faxina: um plan que esperou mais do que isso por aprovação é um plan que alguém deveria refazer

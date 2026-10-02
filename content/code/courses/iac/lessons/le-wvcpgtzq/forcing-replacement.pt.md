@@ -22,7 +22,7 @@ Plan: 1 to add, 0 to change, 1 to destroy.
 ```
 
 `will be replaced, as requested` é o Terraform dizendo que o motivo é você, não o arquivo. O símbolo
-é `+/-` porque a `web` tem `create_before_destroy` desde a segunda seção, e o resumo conta a única
+é `+/-` porque a `web` tem `create_before_destroy` desde que a Ana o acrescentou, três seções atrás, e o resumo conta a única
 substituição. Nada do pedido fica salvo em lugar nenhum: o plan seguinte, sem a flag, volta a não
 ter mudanças.
 

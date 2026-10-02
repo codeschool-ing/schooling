@@ -170,8 +170,7 @@ that one key cannot plan.
 
 Read-only matters for a reason beyond tidiness. **A plan runs code from the pull request.**
 Providers execute during a plan, and a data source such as `external` runs whatever program it
-names, so whoever can open
-a pull request can make `plan` do things with the plan role's credentials. That is why those
+names, so whoever can open a pull request can make `plan` do things with the plan role's credentials. That is why those
 credentials should be able to read and nothing more, and why GitHub does not give the secrets of a
 repository to a pull request coming from a fork.
 

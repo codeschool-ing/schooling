@@ -77,7 +77,7 @@ Plan: 0 to add, 0 to change, 0 to destroy.
 Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 ```
 
-O bucket está na AWS e em nenhum estado. Essa lacuna é proposital, e a ordem é o ponto da receita.
+O bucket está na AWS e em nenhum estado. Essa lacuna é proposital, e é a ordem que torna a receita segura.
 Feito ao contrário, importando primeiro, o bucket ficaria por um tempo em dois estados, e duas
 configurações gerenciando um objeto é como o apply de um time desfaz o de outro: quem planeja por
 último põe de volta a sua ideia do bucket. **Gerenciado por ninguém durante uma hora é seguro;

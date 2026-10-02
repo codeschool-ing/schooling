@@ -92,7 +92,7 @@ O **PLAY RECAP** é a linha para ler primeiro:
 
 - `ok=5` são todas as tarefas que deram certo naquele host, os fatos incluídos, tenham ou não mudado
   alguma coisa;
-- `changed=4` é quantas dessas cinco mudaram algo: três arquivos e pacotes, e um serviço que não
+- `changed=4` é quantas dessas cinco mudaram algo: um pacote, dois arquivos e um serviço que não
   estava rodando e agora está;
 - `unreachable` e `failed` são as duas falhas da seção do inventário, um host em que o Ansible não
   conseguiu entrar e uma tarefa que deu errado num host em que conseguiu;

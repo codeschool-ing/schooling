@@ -60,7 +60,7 @@ earliest warning there is.
 
 ## Planned, not applied
 
-**In this lab the budget is planned and never applied.** moto stores the budget and then answers the
+**In this lab the budget is planned and never applied.** Moto stores the budget and then answers the
 provider's read of the alert's subscribers with an internal error, which the provider retries, so the
 apply does not finish. Against a real account it would. The plan is the part this lab can show
 truthfully:

@@ -3,7 +3,7 @@ title: O estado guarda todo valor em texto puro
 version: 1
 ---
 
-Um próximo pensamento razoável é que o problema veio de uma pessoa digitando a senha. Se o Terraform
+Uma conclusão razoável a esta altura é que o problema veio de uma pessoa digitando a senha. Se o Terraform
 a gerar, ninguém digita, ninguém commita, e não há nada para vazar. A Ana tenta isso: um
 `random_password` cria a senha, e o AWS Secrets Manager a guarda, onde a aplicação pode buscá-la:
 
@@ -84,7 +84,7 @@ dela do mesmo jeito.
 ## Por que o estado precisa guardá-los
 
 O estado é como o Terraform compara (aula 7). Para decidir se um plan futuro tem algo a fazer, ele
-precisa do valor que gravou por último, e para o `random_password` esse é o propósito do recurso: a
+precisa do valor que gravou por último. Para o `random_password`, esse é o propósito do recurso: a
 senha fica guardada para que a próxima execução a reaproveite em vez de gerar uma nova a cada vez.
 O que um provider devolve para um recurso vai para o estado, e um provider devolve o que recebeu.
 
@@ -119,6 +119,6 @@ consegue ler a senha, junto com cada versão antiga que o versionamento guardou,
 do versionamento e agora também é o problema.
 
 Então a ordem das defesas importa. Proteger o estado vem por último, em "protecting-state", porque
-guarda o que quer que tenha entrado. Antes disso, o movimento melhor é impedir que o valor entre, e
+guarda o que quer que tenha entrado. Antes disso, o melhor caminho é impedir que o valor entre, e
 há dois jeitos: dar ao Terraform um valor que ele não tem permissão de guardar, ou não dar o valor a
 ele. As duas próximas seções tratam de cada um.

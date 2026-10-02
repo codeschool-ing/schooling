@@ -92,9 +92,9 @@ Planning failed. Terraform encountered an error while generating this plan.
 ```
 
 **Nada foi planejado em nenhuma das execuções.** A mensagem é a frase que a Ana escreveu, abaixo de
-uma linha dizendo que valor a quebrou, e é esse o ponto: quem digitou `staging` fica sabendo o que
+uma linha dizendo que valor a quebrou, e assim quem digitou `staging` fica sabendo o que
 a loja aceita, em palavras, antes que qualquer coisa seja planejada ou mudada. Um `/26` é uma faixa
-válida e passa pelo tipo, e mesmo assim não tem espaço para sub-redes `/24`, e a regra diz isso.
+válida e passa pelo tipo, e mesmo assim não tem espaço para sub-redes `/24`; a regra diz isso.
 Desde o Terraform 1.9 uma condição pode se referir a outras variáveis além da sua.
 
 ## Preconditions e postconditions, num recurso

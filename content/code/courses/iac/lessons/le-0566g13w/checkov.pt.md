@@ -86,7 +86,7 @@ Check: CKV_AWS_145: "Ensure that S3 buckets are encrypted with KMS by default"
 ```
 
 Treze de 35 checks falharam, e só um deles é a regra de SSH do pull request. Os outros doze já
-estavam lá antes, e dizem, entre outras coisas, que o bucket não tem bloqueio de acesso público, nem
+estavam lá antes. Entre outras coisas, eles dizem que o bucket não tem bloqueio de acesso público, nem
 versionamento, nem log de acesso, nem regras de ciclo de vida, nem cópia em outra região; que o volume
 não está criptografado; que a VPC não tem flow logs. O Checkov roda os checks em paralelo, então a
 ordem da lista não é estável de uma execução para outra. Ordene ou filtre antes de comparar dois

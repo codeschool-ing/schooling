@@ -65,8 +65,7 @@ ana@laptop:~/shop$ echo '{ for az in var.network.azs : substr(az, 0, 9) => az...
 ```
 
 `substr(az, 0, 9)` cut both zones down to the region, `sa-east-1`, so both items claimed the same
-key. **The error suggests the fix, and the fix is a different expression, not a different
-spelling**: an ellipsis after the value groups every item with that key into a list. Whether you
+key. **The error suggests the fix**: an ellipsis after the value groups every item with that key into a list. Whether you
 want the grouping or the error depends on whether two items sharing a key is a fact of the data
 or a mistake in it.
 

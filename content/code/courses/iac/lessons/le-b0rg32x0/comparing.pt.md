@@ -26,7 +26,7 @@ esta aula abriu onde o laboratório os tinha:
 | **AWS CDK** | TypeScript, JavaScript, Python, Java, C#, Go | `cdk diff` | a stack, dentro da AWS | AWS | Apache 2.0, AWS |
 | **Pulumi** | as mesmas linguagens, ou YAML | `pulumi preview` | Pulumi Cloud, um bucket ou um diretório | qualquer uma com provider | Apache 2.0, Pulumi |
 
-A licença do CDK é a única daquela coluna que esta aula ainda não tinha aberto:
+A do CDK é a última licença daquela coluna da qual o laboratório tem o arquivo:
 
 ```
 ana@laptop:~/shop/cdk$ head -n 2 $NODE_PATH/aws-cdk-lib/LICENSE

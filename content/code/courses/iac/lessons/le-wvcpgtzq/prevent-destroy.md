@@ -101,6 +101,6 @@ the bucket, and versioning on the bucket so a deleted object can be brought back
 versioning on for the state bucket for the same reason.
 
 And the error message itself names the escape hatch: remove the setting, or narrow the plan with
-`-target`. Both are deliberate edits somebody makes on purpose, which is the point. When the bucket
+`-target`. Neither can happen by accident: each is an edit somebody makes on purpose. When the bucket
 really has to go, the change that removes `prevent_destroy` is a commit of its own, reviewed on
 its own, before the commit that removes the bucket.

@@ -125,8 +125,7 @@ it with it: three resources destroyed, four created. Applied, this would not cre
 would turn dev into production, and the next apply with `dev.tfvars` would turn it back.
 
 The values were never the problem. **What makes two environments two is that each has its own
-state**, so that a plan for one cannot even see the other's resources. That is the isolation the
-rest of this lesson is about, and it is worth stating what it buys before looking at how:
+state**, so that a plan for one cannot even see the other's resources. The rest of this lesson is about that isolation, and it buys three things:
 
 - a mistake in dev, applied, damages dev and nothing else;
 - a plan for prod reads prod's state and lists only prod's changes;
@@ -136,7 +135,7 @@ There are three common ways to give each environment its state, and the next sec
 in turn: **workspaces**, which keep one directory and switch the state underneath it; **one
 directory per environment**, each with its own backend key; and **Terragrunt**, a tool that
 generates the second arrangement for you. They differ in where the choice of environment lives,
-and that turns out to be the question that matters.
+and that decides how easily a command reaches the wrong one.
 
 Isolation also has a layer below the state. Two states in the same AWS account, reached with the
 same credentials, are separated by Terraform's bookkeeping and nothing else; whoever can apply dev

@@ -52,7 +52,7 @@ guarantee to take exactly these actions if you run "terraform apply" now.
 Terraform plans to delete the `CostCenter` tag, because the file says the tags are `Name = "web"`
 and nothing else. Apply that and the cost tool puts it back tonight, and the next plan removes it
 again. Two automated systems arguing over one value, every day, with every plan carrying a change
-nobody asked for. That noise is the real damage: a reviewer who sees a tag change on every plan
+nobody asked for. The noise costs more than the tag: a reviewer who sees a tag change on every plan
 stops reading tag changes.
 
 ## Telling Terraform to look away

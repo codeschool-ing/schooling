@@ -141,6 +141,6 @@ O custo passa para a aplicação. Ela precisa buscar o segredo ao subir, lidar c
 e buscá-lo de novo depois de uma rotação em vez de guardar o primeiro valor para sempre. A AWS publica
 clientes com cache para várias linguagens que fazem exatamente isso. Onde um serviço não tem opção
 gerenciada, a mesma forma funciona à mão: um secret no Secrets Manager ou um `SecureString` no
-Parameter Store, gravado por um argumento write-only ou por quem for dono do valor, e lido pela
-aplicação em tempo de execução. **O trabalho do Terraform passa a ser dizer qual segredo existe e
+Parameter Store, gravado por um argumento write-only ou por quem for dono do valor. A aplicação o lê em tempo
+de execução. **O trabalho do Terraform passa a ser dizer qual segredo existe e
 quem pode lê-lo**, fatos que vale revisar num pull request, e não o segredo em si.

@@ -66,8 +66,7 @@ ana@laptop:~/shop$ echo '{ for az in var.network.azs : substr(az, 0, 9) => az...
 ```
 
 `substr(az, 0, 9)` cortou as duas zonas até a região, `sa-east-1`, então os dois itens reclamaram
-a mesma chave. **O erro sugere a correção, e a correção é outra expressão, não outra grafia**:
-reticências depois do valor agrupam numa lista todos os itens com aquela chave. Querer o
+a mesma chave. **O erro sugere a correção**: reticências depois do valor agrupam numa lista todos os itens com aquela chave. Querer o
 agrupamento ou o erro depende de dois itens com a mesma chave serem um fato dos dados ou um engano
 neles.
 

@@ -72,7 +72,7 @@ Outputs:
 gateway = "igw-d64e0925c422c6e13"
 ```
 
-One block, five resources: the VPC, three subnets and the gateway. The state keeps them under
+Three blocks, five resources: the VPC, three subnets and the gateway. The state keeps them under
 those addresses, and `terraform console`, which lesson 3 uses for expressions, can read any one
 of them back:
 
@@ -151,6 +151,6 @@ Changes to Outputs:
 ```
 
 **Two limits to keep in mind.** `count` has to be a number Terraform knows while it plans, before
-anything is created; `choosing`, at the end of this lesson, shows what happens when it is not. And
+anything is created; the last section of this lesson shows what happens when it is not. And
 the index is the copy's identity: `aws_subnet.app[2]` is whatever sits third in the list today.
 The next section shows what that costs.

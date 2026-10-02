@@ -48,7 +48,7 @@ object({
 subnets can read `var.network.public` without checking whether anybody set it. The zones came out
 as `tolist([...])`: the default was written as a tuple, and Terraform converted it to the list
 the type asks for. `type()` is a function only the console has, and it is the quickest way to
-see what a value really is.
+see what a value is.
 
 ## Conversion, and where it stops
 

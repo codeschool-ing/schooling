@@ -29,7 +29,7 @@ ana@laptop:~/shop$ aws s3api get-bucket-versioning --bucket shop-tfstate-1234567
 ```
 
 Dois desses comandos não são opcionais. O **versionamento** guarda todas as versões de todos os
-objetos, então cada gravação do estado deixa a anterior recuperável; "protecting" usa isso.
+objetos, então cada gravação do estado deixa a anterior recuperável, e a última seção desta aula usa isso.
 **Bloquear o acesso público** garante que nenhuma política ou ACL posterior publique o bucket por
 engano, e o que há no estado é o motivo de isso importar.
 
@@ -108,7 +108,7 @@ tamanho do objeto no bucket. O bucket guarda o estado sob a key que a Ana escolh
 Os backups antigos são cópias de um estado que agora mora em outro lugar, e mantê-los por perto só
 convida alguém a restaurar um deles, então eles vão embora.
 
-O experimento de "losing-it" de novo, agora que o `backend.tf` está commitado. Um clone novo, um
+O experimento de três seções atrás, de novo, agora que o `backend.tf` está commitado. Um clone novo, um
 `init`, um plan:
 
 ```

@@ -47,8 +47,7 @@ object({
 `public` está lá com o valor `false`, preenchido pela declaração `optional()`, então as sub-redes
 podem ler `var.network.public` sem conferir se alguém o definiu. As zonas saíram como
 `tolist([...])`: o default foi escrito como tuple, e o Terraform o converteu na lista que o tipo
-pede. `type()` é uma função que só o console tem, e é o jeito mais rápido de ver o que um valor
-realmente é.
+pede. `type()` é uma função que só o console tem, e é o jeito mais rápido de ver o que um valor é.
 
 ## Conversão, e onde ela para
 

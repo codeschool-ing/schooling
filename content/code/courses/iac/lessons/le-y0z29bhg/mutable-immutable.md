@@ -26,7 +26,7 @@ thrown away.
 | what it costs | nothing up front | a build step, and a design where losing one machine is fine |
 
 The second column is the reason Terraform's plans, from lesson 2 onwards, show some changes as an
-update and others as **replace**: for many attributes the cloud itself offers no edit, and the only
+update and others as **replace**. For many attributes the cloud itself offers no edit, and the only
 way to change them is a new resource. A machine's image is one. Lesson 6 is about controlling that
 choice, and lesson 20 about building the images that make replacement the normal way of working.
 

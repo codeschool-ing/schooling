@@ -124,8 +124,7 @@ recursos destruídos, quatro criados. Aplicado, isso não criaria produção. Tr
 produção, e o próximo apply com `dev.tfvars` o transformaria de volta.
 
 Os valores nunca foram o problema. **O que faz de dois ambientes dois é cada um ter o seu próprio
-estado**, de modo que um plan de um nem consiga enxergar os recursos do outro. É desse isolamento que
-trata o resto desta aula, e vale dizer o que ele compra antes de ver como:
+estado**, de modo que um plan de um nem consiga enxergar os recursos do outro. O resto desta aula trata desse isolamento, e ele compra três coisas:
 
 - um erro em dev, aplicado, estraga dev e mais nada;
 - um plan de prod lê o estado de prod e lista só as mudanças de prod;
@@ -135,8 +134,8 @@ trata o resto desta aula, e vale dizer o que ele compra antes de ver como:
 Há três jeitos comuns de dar a cada ambiente o seu estado, e as próximas seções os tratam um por vez:
 **workspaces**, que mantêm um diretório e trocam o estado por baixo dele; **um diretório por
 ambiente**, cada um com a sua key de backend; e o **Terragrunt**, uma ferramenta que gera o segundo
-arranjo para você. Eles diferem em onde mora a escolha do ambiente, e essa acaba sendo a pergunta que
-importa.
+arranjo para você. Eles diferem em onde mora a escolha do ambiente, e é isso que decide a facilidade com que um comando atinge o
+ambiente errado.
 
 O isolamento também tem uma camada abaixo do estado. Dois estados na mesma conta da AWS, acessados
 com as mesmas credenciais, estão separados pela contabilidade do Terraform e por mais nada; quem

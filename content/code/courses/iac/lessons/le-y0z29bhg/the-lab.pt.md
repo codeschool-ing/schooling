@@ -5,8 +5,7 @@ version: 1
 
 Todo comando deste curso foi executado, e toda linha de saída é o que o comando imprimiu. **Nenhuma
 conta de nuvem foi usada em nada disso**, e nada aqui foi cobrado de ninguém. A AWS com que o
-Terraform conversa nestas aulas é o **moto**, o mesmo emulador que o curso de nuvem usou para o S3:
-um programa em Python que responde às APIs da AWS numa porta do notebook, guarda na memória o que lhe
+Terraform conversa nestas aulas é o **moto**, o mesmo emulador que o curso de nuvem usou para o S3. É um programa em Python que responde às APIs da AWS numa porta do notebook, guarda na memória o que lhe
 dizem e esquece tudo quando para.
 
 ```
@@ -45,8 +44,7 @@ e dizem isso.
 
 **Todo o resto é o programa de verdade.** Terraform, OpenTofu, Terragrunt, Packer, Ansible e os
 scanners são as versões lançadas, e cada provider é o que a HashiCorp publica. O único arranjo que
-você não teria em casa é de onde vêm os providers: o notebook em que estas aulas foram gravadas não
-alcançava o Terraform Registry, então os providers foram baixados do site de releases da HashiCorp,
+você não teria em casa é de onde vêm os providers: o notebook em que estas aulas foram gravadas não alcançava o Terraform Registry. Os providers foram baixados do site de releases da HashiCorp,
 conferidos contra os checksums publicados e servidos de um diretório local. O `terraform init`
 imprime as mesmas linhas de um jeito ou de outro; a aula 2 mostra o único arquivo em que a diferença
 aparece.
@@ -75,8 +73,8 @@ Could not connect to the endpoint URL: "http://localhost:4567/"
 ```
 
 Confira se o `moto_server` continua rodando no terminal dele e se a porta em `AWS_ENDPOINT_URL` é a
-que ele imprimiu ao ligar. Um erro de credenciais, em vez disso, quer dizer que as variáveis não
-estão definidas no terminal em que você está digitando, e a chamada foi para outro lugar; com `test`
+que ele imprimiu ao ligar. Já um erro de credenciais quer dizer que as variáveis não estão definidas no terminal em que você
+está digitando, e a chamada foi para outro lugar. Com `test`
 como chave, um endpoint real da AWS a recusa, que é a segurança que você quer.
 
 **E quando você passar para uma conta real**, as configurações destas aulas funcionam sem mudança:

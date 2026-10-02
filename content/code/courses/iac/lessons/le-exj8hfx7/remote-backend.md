@@ -29,7 +29,7 @@ ana@laptop:~/shop$ aws s3api get-bucket-versioning --bucket shop-tfstate-1234567
 ```
 
 Two of those commands are not optional. **Versioning** keeps every version of every object, so
-each write of the state leaves the previous one recoverable; "protecting" uses it. **Blocking public
+each write of the state leaves the previous one recoverable, and the last section of this lesson uses it. **Blocking public
 access** makes sure no later policy or ACL can publish the bucket by mistake, and what is in the
 state is the reason that matters.
 
@@ -108,7 +108,7 @@ and `terraform state list` printed the three addresses having read them from S3:
 involved any more. The old backups are copies of a state that now lives elsewhere, and keeping them
 around only invites somebody to restore one, so they go.
 
-The experiment from "losing-it" again, now that `backend.tf` is committed. A fresh clone, an `init`,
+The experiment from three sections back, again, now that `backend.tf` is committed. A fresh clone, an `init`,
 a plan:
 
 ```

@@ -128,7 +128,7 @@ Plan: 0 to add, 0 to change, 0 to destroy.
 ```
 
 Cada linha agora diz **has moved to**, e o resumo é `0 to add, 0 to change, 0 to destroy`. Os ids
-são os que o apply em `count` imprimiu para as mesmas faixas: as mesmas sub-redes, arquivadas sob
+são os que o primeiro apply imprimiu para as mesmas faixas: as mesmas sub-redes, arquivadas sob
 nomes novos. Aplicar grava os endereços novos no state e não chama nada na AWS:
 
 ```

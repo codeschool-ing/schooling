@@ -142,6 +142,6 @@ The cost moves to the application. It has to fetch the secret at start, cope wit
 and fetch it again after a rotation instead of keeping the first value for ever. AWS publishes
 caching clients for several languages that do exactly this. Where a service has no managed option, the same
 shape still works by hand: a secret in Secrets Manager or a `SecureString` in Parameter Store,
-written by a write-only argument or by whoever owns the value, and read by the application at
+written by a write-only argument or by whoever owns the value. The application reads it at
 runtime. **Terraform's job becomes saying which secret exists and who may read it**, which are
 facts worth reviewing in a pull request, and not the secret itself.

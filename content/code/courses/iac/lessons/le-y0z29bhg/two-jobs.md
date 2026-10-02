@@ -29,9 +29,9 @@ machines, some of which may be switched off.
 
 **The overlap is real, and it is where most trouble starts.** Ansible has modules that create cloud
 resources, and Terraform can run a script on a machine after creating it. Both work. Both are the
-second-best tool for that half of the job: Ansible keeps no record of what it created, so it cannot
-tell what to remove when a line is deleted, and a script Terraform runs once at creation is never
-run again, so the configuration it made drifts like any other. Lesson 18 hands over between the two
+second-best tool for that half of the job. Ansible keeps no record of what it created, so it cannot
+tell what to remove when a line is deleted. A script Terraform runs once at creation is never run
+again, so the configuration it made drifts like any other. Lesson 18 hands over between the two
 on purpose: Terraform creates the machines and writes down their addresses, and Ansible reads them.
 
 There is a third answer, which avoids configuring a running machine at all: install everything into

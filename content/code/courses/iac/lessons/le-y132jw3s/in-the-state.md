@@ -85,7 +85,7 @@ beside it all the same.
 ## Why the state has to keep them
 
 The state is how Terraform compares (lesson 7). To decide whether a later plan has anything to do,
-it needs the value it last wrote, and for `random_password` that is the point of the resource: the
+it needs the value it last wrote. For `random_password` that is the point of the resource: the
 password is stored so that the next run reuses it instead of generating a new one every time.
 Whatever a provider returns for a resource goes into the state, and a provider returns what it was
 given.

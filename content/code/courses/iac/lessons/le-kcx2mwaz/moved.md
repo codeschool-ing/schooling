@@ -128,7 +128,7 @@ Plan: 0 to add, 0 to change, 0 to destroy.
 ```
 
 Every line now says **has moved to**, and the summary is `0 to add, 0 to change, 0 to destroy`.
-The ids are the ones the apply in `count` printed for the same ranges: the same subnets, filed
+The ids are the ones the first apply printed for the same ranges: the same subnets, filed
 under new names. Applying writes the new addresses into the state and calls nothing in AWS:
 
 ```

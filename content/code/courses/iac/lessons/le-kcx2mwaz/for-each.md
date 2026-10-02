@@ -103,7 +103,7 @@ job.
 
 ## A list is not enough
 
-`for_each` refuses a list, even a list of strings, and the reason is the whole point of it. A list
+`for_each` refuses a list, even a list of strings. A list
 is ordered and can hold the same value twice, so its elements have no name except their position,
 and position is what `for_each` exists to avoid. Here is a list written straight into the
 argument:

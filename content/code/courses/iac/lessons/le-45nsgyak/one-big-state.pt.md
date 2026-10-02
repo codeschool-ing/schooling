@@ -115,8 +115,7 @@ Plan: 0 to add, 1 to change, 0 to destroy.
 
 **Um recurso a mudar, e seis consultados para descobrir isso.** Antes de todo plan, o Terraform
 pergunta à AWS por cada recurso do estado, porque não tem como saber quais alguém mudou à mão. Seis
-chamadas não custam nada. Seiscentas são seiscentas chamadas antes que o plan consiga dizer qualquer
-coisa, e o plan de uma tag num bucket espera por cada sub-rede, rota e registro DNS que a empresa
+chamadas não custam nada. Com seiscentas, o plan de uma tag num bucket espera por cada sub-rede, rota e registro DNS que a empresa
 tem. O lock da aula 7 fica preso o tempo todo, então ninguém mais consegue planejar a rede enquanto
 a Ana mexe na tag do bucket dela.
 

@@ -17,7 +17,7 @@ Plan: 0 to add, 0 to change, 1 to destroy.
 ```
 
 To Terraform, a resource that is in the state and missing from the file is a resource you want
-gone. That is the same mechanism that bypassed `prevent_destroy` two sections ago, and here it
+gone. That is the same mechanism that bypassed `prevent_destroy` four sections ago, and here it
 would delete a bucket another team is about to depend on.
 
 ## The `removed` block
@@ -102,7 +102,7 @@ entry taken out of the state, and nothing touched in the cloud.
 ## Why a block and not a command
 
 `terraform state rm` does the same to the state, and lesson 7 shows it. The difference is the one
-that separated `-replace` from `taint` in the previous section, in the other direction: **`state
+that separated `-replace` from `taint` two sections ago, in the other direction: **`state
 rm` is a command somebody runs on the shared state, and nobody reviews it.** A `removed` block is a
 change to the file. It goes through a pull request, shows up in the plan as exactly what it is,
 and works the same for every colleague and every pipeline that applies the configuration

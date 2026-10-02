@@ -5,8 +5,8 @@ version: 1
 
 A preview environment is a copy of the application built for one pull request, so a reviewer can
 click through the change instead of imagining it. The pipeline from lesson 15 creates it when the pull
-request opens and destroys it when it merges. **The failure is not in the creating.** It is the
-destroy that never ran: the job failed on a Friday, the pull request was closed instead of merged,
+request opens and destroys it when it merges. **What goes wrong is the destroy
+that never ran**: the job failed on a Friday, the pull request was closed instead of merged,
 the branch was renamed. The environment keeps running, and from then on it is an orphan with good
 tags.
 
@@ -99,7 +99,7 @@ change per month, USD                       +55.75
 ```
 
 **55.75 USD a month for one machine and its address**, cheap enough that nobody worries about one.
-The arithmetic of forgetting is what makes it worth this section: ten preview environments left
+Forgetting them is what adds up: ten preview environments left
 running for a quarter is 10 × 3 × 55.75, or 1,672.50 USD, for review copies of pull requests that
 merged months before.
 

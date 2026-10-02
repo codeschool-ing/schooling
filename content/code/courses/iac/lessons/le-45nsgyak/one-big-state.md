@@ -115,9 +115,9 @@ Plan: 0 to add, 1 to change, 0 to destroy.
 
 **One resource to change, and six refreshed to find that out.** Before every plan, Terraform asks
 AWS about every resource in the state, because it cannot know which ones somebody changed by hand.
-Six calls cost nothing. Six hundred are six hundred calls before every plan can say anything, and
-the plan for a tag on a bucket waits on every subnet, route and DNS record the company owns. The lock from lesson 7 is held for
-all of it, so nobody else can plan the network while Ana tags her bucket.
+Six calls cost nothing. With six hundred, the plan for a tag on a bucket waits on every subnet,
+route and DNS record the company owns. The lock from lesson 7 is held for all of it, so nobody
+else can plan the network while Ana tags her bucket.
 
 ## The blast radius is the whole state
 

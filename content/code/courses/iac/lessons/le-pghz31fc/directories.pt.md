@@ -160,8 +160,8 @@ provider ou pelo pipeline que roda nele; um workspace não tem onde pendurar iss
 **Tudo o que os dois diretórios compartilham está escrito duas vezes**: o bloco do provider, o bloco
 de backend tirando a key, as chamadas de módulo tirando os valores. Com dois ambientes isso é
 tolerável. Cinco ambientes em três regiões, cada um com uma rede, um banco e uma aplicação em estados
-separados, dão quarenta e cinco blocos de backend que diferem numa string, e no dia em que alguém muda
-o nome do bucket, quarenta e cinco edições.
+separados, dão quarenta e cinco blocos de backend que diferem numa string. No dia em que alguém
+muda o nome do bucket, são quarenta e cinco edições.
 
 Os módulos compartilhados são a outra metade, e cortam para os dois lados. Uma mudança em
 `modules/network` chega a todos os ambientes de uma vez. A Ana acrescenta uma tag `Owner` às tags do
@@ -176,9 +176,8 @@ Plan: 0 to add, 3 to change, 0 to destroy.
 ```
 
 Dev mudaria dois recursos e prod três, a partir de uma edição. É o que você quer para uma correção, e
-não para uma mudança que você pretendia testar em dev por uma semana antes. O jeito de costume de
-segurar prod é entregar o módulo a ele por versão em vez de por caminho, `?ref=v1.2.0` numa origem
-git, e mover cada ambiente para a versão nova quando ele estiver pronto; a aula 10 trata de origens e
+não para uma mudança que você pretendia testar em dev por uma semana antes. O jeito usual de segurar prod é entregar o módulo a ele por versão em vez de por caminho, `?ref=v1.2.0` numa origem
+git, e mover cada ambiente para a versão nova quando ele estiver pronto. A aula 10 trata de origens e
 versões de módulos.
 
 **As cópias também podem divergir de propósito**, e às vezes esse é o ponto. O diretório de prod pode

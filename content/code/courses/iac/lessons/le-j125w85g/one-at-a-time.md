@@ -72,8 +72,8 @@ at most one pending run: when a third arrives, GitHub cancels the waiting one an
 On `main` that is acceptable, because the newest commit contains every change merged before it, so
 its plan covers them all.
 
-The price is that a run waiting for an approval holds up every run behind it. That is the trade:
-the queue is only as fast as the people approving it.
+The price is that a run waiting for an approval holds up every run behind it: the queue is only as
+fast as the people approving it.
 
 In GitLab, `resource_group: production` on the `apply` job means only one job of that group runs
 at a time, across every pipeline of the project. Only `apply` is in it in this file, so a plan can

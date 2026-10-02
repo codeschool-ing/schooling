@@ -202,6 +202,6 @@ The alternatives all exist and each moves the line. Terraform can run Ansible it
 `local-exec` provisioner when a machine is created, which runs it once, at creation, and never
 again, the weakness lesson 1 named for any script run at creation. Ansible can build its inventory
 by asking the cloud at run time, with the `aws_ec2` inventory plugin from the `amazon.aws` collection,
-which is the better choice once machines come and go faster than anybody runs `terraform apply`;
-that collection is not installed in this lab, so it is named here and not shown. And lesson 20 removes
+which is the better choice once machines come and go faster than anybody runs `terraform apply`.
+That collection is not installed in this lab, so it is named here and not shown. And lesson 20 removes
 most of the handover altogether, by configuring the image before any machine exists.

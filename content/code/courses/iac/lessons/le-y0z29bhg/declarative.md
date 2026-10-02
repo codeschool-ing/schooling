@@ -3,7 +3,7 @@ title: Describing the result instead of the steps
 version: 1
 ---
 
-Back to the third question from `by-hand`: what happens if Ana runs `network.sh` again? She finds
+Back to the third question from the network built by hand: what happens if Ana runs `network.sh` again? She finds
 out on the day somebody asks her to "make sure the network is set up", and does the obvious thing:
 
 ```
@@ -84,7 +84,7 @@ operation is idempotent when doing it twice leaves the world as doing it once di
 not; `terraform apply` is, because it never runs a step blindly. It reads, compares, and then makes
 only the difference.
 
-**Declarative is not magic, and it has a price.** Terraform can only compare what it knows how to
+**Declarative has a price.** Terraform can only compare what it knows how to
 read, so it needs to remember which real VPC belongs to which line of the file. That memory is the
 **state**, and lessons 7 and 8 are about what happens when it is lost, shared or wrong. The script
 needed no memory because it never asked anything.

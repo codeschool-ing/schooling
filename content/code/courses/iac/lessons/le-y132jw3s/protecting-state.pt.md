@@ -12,8 +12,7 @@ consegue ler, acesso público bloqueado, versionamento e `encrypt = true`.
 Essa última configuração merece um olhar preciso, porque soa como mais do que é. `encrypt = true`
 pede ao S3 que cifre o objeto **nos discos do S3**. Quem o bucket deixa ler o objeto o recebe
 decifrado, em texto puro, porque decifrar para leitores autorizados é o que o S3 faz. Uma chave KMS
-própria (`kms_key_id` no backend) acrescenta uma segunda permissão de que o leitor precisa, o que
-ajuda; um leitor com as duas continua recebendo texto puro, e o mesmo vale para toda cópia que sai do
+própria (`kms_key_id` no backend) acrescenta uma segunda permissão de que o leitor precisa, o que ajuda. Um leitor com as duas continua recebendo texto puro, e o mesmo vale para toda cópia que sai do
 bucket, como um `terraform state pull` no laptop de alguém.
 
 ```schooling-figure
@@ -210,7 +209,6 @@ cada uma foi cifrada com ela. Um time que usa isso a sério usa um key provider 
 chaves, como o `aws_kms`, para que a chave seja uma permissão concedida pelo IAM e não um texto que
 alguém precisa guardar.
 
-Duas pontas soltas. As versões que o bucket guardou de antes da migração continuam lá, ainda em texto
-puro, então são apagadas, e qualquer segredo que elas tinham é trocado. E o mesmo bloco `encryption`
+Duas pontas soltas. As versões que o bucket guardou de antes da migração continuam lá, ainda em texto puro: apague-as, e troque qualquer segredo que elas guardavam. E o mesmo bloco `encryption`
 aceita um bloco `plan` ao lado do `state`, que cifra o arquivo de plan salvo, a cópia três de
 "where-they-leak".

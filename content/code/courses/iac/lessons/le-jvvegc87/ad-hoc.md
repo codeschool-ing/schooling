@@ -128,5 +128,5 @@ also expands variables and wildcards in whatever you pass it.
 
 Ad-hoc commands are for questions and one-off fixes: which version is installed, how full the disk
 is, restart this one service now. What you want to keep, and run again next week on new machines,
-belongs in a file, because a command typed at a prompt leaves no record that a reviewer can read,
-which is the same reason lesson 1 gave against `network.sh`. The file is a playbook.
+belongs in a file. A command typed at a prompt leaves no record that a reviewer can read, the same
+reason lesson 1 gave against `network.sh`. The file is a playbook.

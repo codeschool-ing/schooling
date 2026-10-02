@@ -93,7 +93,7 @@ que o gravou por último. `serial` sobe de um em um a cada gravação, então, d
 serial maior é a mais nova. `lineage` é um id aleatório dado ao estado quando ele foi criado e
 mantido em todos os seriais seguintes: dois arquivos com lineages diferentes não são duas versões de
 uma história, são duas histórias, e o Terraform se recusa a gravar uma por cima da outra. Você vai
-ver esses dois números fazendo o seu trabalho em "protecting".
+ver esses dois números fazendo o seu trabalho na última seção desta aula.
 
 Abaixo do cabeçalho está a parte que importa, uma entrada por recurso:
 

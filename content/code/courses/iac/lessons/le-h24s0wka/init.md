@@ -49,7 +49,7 @@ rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
 ```
 
-The four lines starting with a dash carry the news: Terraform looked for releases of `hashicorp/aws`
+The three lines starting with a dash carry the news: Terraform looked for releases of `hashicorp/aws`
 matching `~> 6.0`, picked 6.67.0 and installed it. **The word `(unauthenticated)` is the lab
 talking.** On a computer that reaches the Terraform Registry, init checks the provider's signature
 and prints `(signed by HashiCorp)` in that place. The lab installs from a local directory of

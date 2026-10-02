@@ -3,8 +3,8 @@ title: Protecting the state
 version: 1
 ---
 
-The state is now one object in one bucket, which is what it should be, and it is also the single
-most valuable file this configuration produces. Three things can go wrong with it, and each has its
+The state is now one object in one bucket, which is what it should be, and it is also the most
+valuable file this configuration produces. Three things can go wrong with it, and each has its
 own defence: somebody reads it who should not, somebody writes a bad version of it, or it is lost.
 
 ## Who can read it
@@ -16,7 +16,7 @@ password, in plain text, whatever `sensitive = true` hides on the screen; lesson
 and the ways to keep it out.
 
 So the bucket's permissions are the state's permissions. The blocked public access from
-"remote-backend" is the floor. Above it, the people and pipelines that run Terraform on this
+two sections back is the floor. Above it, the people and pipelines that run Terraform on this
 configuration need to read and write that key, and nobody else needs anything; a policy that lets
 "all developers" list the bucket is a policy that hands them every secret in every state in it.
 `encrypt = true` protects the object on S3's disks, and does nothing against somebody the bucket
@@ -52,7 +52,7 @@ ana@laptop:~/shop$ terraform state pull | jq "{serial, lineage}"
 ```
 
 **Same lineage, different serial**: two points in one history, the old one two writes behind. This
-is what "lineage" and "serial" from the first section are for. Suppose Ana, or a script, tried to
+is what `lineage` and `serial`, from the start of this lesson, are for. Suppose Ana, or a script, tried to
 put the old one back as the current state:
 
 ```

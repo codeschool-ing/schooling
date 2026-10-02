@@ -81,7 +81,7 @@ web1 | SUCCESS => {
 **O `ping` aqui não é o ping de rede.** É um módulo: o Ansible entrou como `deploy`, rodou um
 programa Python minúsculo em cada máquina e recebeu `pong` de volta, o que prova que o login por SSH
 e o interpretador funcionam. Os hosts responderam na ordem em que terminaram, e é por isso que o
-`db1` aparece entre os outros dois; uma segunda execução pode imprimi-los em outra ordem.
+`db1` aparece primeiro e o `web1` por último; uma segunda execução pode imprimi-los em outra ordem.
 
 O `ansible-inventory` mostra como o Ansible leu o arquivo, como árvore ou na forma YAML em que um
 inventário também pode ser escrito:

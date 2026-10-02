@@ -107,8 +107,7 @@ leu, e é esse o problema. Leia como um revisor leria:
 
 O que ele acerta é tudo o que importa: o nome, a descrição, a porta, a faixa, a tag, e a regra de
 egress que a AWS acrescenta a todo grupo novo, e que o moto, no papel da AWS aqui, também
-acrescentou. A Ana fica com isso, no estilo da casa, com os
-dois valores que pertencem à rede lidos dos outputs dela:
+acrescentou. A Ana fica com isso, no estilo da casa, com os dois valores que pertencem à rede lidos dos outputs dela:
 
 ```hcl
 resource "aws_security_group" "monitoring" {

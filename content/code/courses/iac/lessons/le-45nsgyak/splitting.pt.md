@@ -3,7 +3,7 @@ title: Dividir a loja em rede e aplicação
 version: 1
 ---
 
-Uma divisão tem duas metades, e o pessoal costuma fazer só a primeira. **Os arquivos se movem fácil;
+Uma divisão tem duas metades, e o pessoal costuma fazer só a primeira. **Os arquivos se movem com facilidade;
 o estado é o que precisa ir junto com eles.** Copie os blocos da rede para um diretório novo, rode
 `apply` lá, e o Terraform vê três recursos de que nunca ouviu falar e cria mais três: uma segunda VPC
 ao lado da primeira, exatamente o acidente da aula 7. Então a ordem é: escrever as configurações
@@ -245,7 +245,7 @@ ana@laptop:~/shop/app$ aws s3 ls --recursive s3://shop-tfstate-123456789012
 ana@laptop:~/shop/app$ rm -r ../split
 ```
 
-O diretório `split` guardava duas cópias completas de estado no disco da Ana, e vai embora junto.
+O diretório `split` guardava duas cópias completas do estado no disco da Ana, então ele também vai embora.
 
 ## O checkout antigo
 

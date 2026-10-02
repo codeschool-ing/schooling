@@ -94,6 +94,6 @@ bringing them back under management with `terraform import`, which lesson 8 show
 So keeping the state out of git does not solve the problem; it only stops git from being the
 place the state lives. **Every person and every machine that runs Terraform on this network has to
 read the same state**, the one copy, the latest serial. A file on one laptop cannot be that, and
-"remote-backend" moves it somewhere that can. Before that, two more things the local file is
+three sections on, the state moves somewhere that can. Before that, two more things the local file is
 useful for: reading it and editing it with Terraform's own commands, and finding a change somebody
 made behind its back.

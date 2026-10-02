@@ -33,7 +33,7 @@ ana@laptop:~/shop$ aws resourcegroupstaggingapi get-resources --resource-type-fi
 []
 ```
 
-**Nada, e isso é o projeto dela.** A tagging API responde a partir das tags: a AWS documenta que ela
+**Nada, e é assim que ela foi feita.** A tagging API responde a partir das tags: a AWS documenta que ela
 devolve recursos que têm ou já tiveram tag, então um recurso que nunca teve tag não existe no mundo
 dela. Uma busca por tag acha tudo, menos a coisa que você está caçando. A pergunta tem de ir a cada
 serviço, pedindo o que não tem tags:

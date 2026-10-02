@@ -15,7 +15,7 @@ Para uma configuração que cria um banco de dados, é também a senha do banco,
 que `sensitive = true` a esconda na tela; a aula 12 a mostra lá e os jeitos de mantê-la fora.
 
 Então as permissões do bucket são as permissões do estado. O bloqueio de acesso público de
-"remote-backend" é o mínimo. Acima dele, as pessoas e os pipelines que rodam o Terraform nesta
+duas seções atrás é o mínimo. Acima dele, as pessoas e os pipelines que rodam o Terraform nesta
 configuração precisam ler e gravar aquela key, e mais ninguém precisa de nada; uma política que deixa
 "todos os desenvolvedores" listarem o bucket é uma política que entrega a eles todos os segredos de
 todos os estados que estão lá. O `encrypt = true` protege o objeto nos discos do S3, e não faz nada
@@ -51,7 +51,7 @@ ana@laptop:~/shop$ terraform state pull | jq "{serial, lineage}"
 ```
 
 **Mesmo lineage, serial diferente**: dois pontos de uma mesma história, o antigo duas gravações
-atrás. É para isso que servem o "lineage" e o "serial" da primeira seção. Suponha que a Ana, ou um
+atrás. É para isso que servem o `lineage` e o `serial` do começo desta aula. Suponha que a Ana, ou um
 script, tentasse pôr o antigo de volta como estado atual:
 
 ```

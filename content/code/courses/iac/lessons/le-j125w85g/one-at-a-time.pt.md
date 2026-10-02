@@ -73,8 +73,8 @@ máximo uma execução pendente: quando chega uma terceira, o GitHub cancela a q
 a mais nova. Na `main` isso é aceitável, porque o commit mais novo contém toda mudança que entrou
 antes dele, então o plan dele cobre todas.
 
-O preço é que uma execução esperando aprovação segura todas as que vêm atrás. Essa é a troca: a
-fila anda na velocidade de quem aprova.
+O preço é que uma execução esperando aprovação segura todas as que vêm atrás: a fila anda na
+velocidade de quem aprova.
 
 No GitLab, `resource_group: production` no job `apply` faz com que só um job desse grupo rode por
 vez, em todos os pipelines do projeto. Neste arquivo só o `apply` está nele, então um plan ainda

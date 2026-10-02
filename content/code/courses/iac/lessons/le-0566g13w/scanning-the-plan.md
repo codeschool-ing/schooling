@@ -119,8 +119,8 @@ ana@laptop:~/shop$ trivy config --skip-check-update -q tfplan.json | grep -c AWS
 0
 ```
 
-That is a measurement of one version on one plan, and the lesson draws only one conclusion from it:
-**test what your scanner does with a plan** before you rely on it, with a known-bad value like this
+That is a measurement of one version on one plan, and the lesson draws only one conclusion from it.
+**Test what your scanner does with a plan** before you rely on it, with a known-bad value like this
 one, the same way `legacy/main.tf` tested tfsec.
 
 ## What the plan costs

@@ -119,8 +119,8 @@ ana@laptop:~/shop$ trivy config --skip-check-update -q tfplan.json | grep -c AWS
 0
 ```
 
-Isso é a medida de uma versão sobre um plan, e a aula tira dela uma conclusão só: **teste o que o seu
-scanner faz com um plan** antes de depender disso, com um valor sabidamente ruim como este, do mesmo
+Isso é a medida de uma versão sobre um plan, e a aula tira dela uma conclusão só.
+**Teste o que o seu scanner faz com um plan** antes de depender disso, com um valor sabidamente ruim como este, do mesmo
 jeito que o `legacy/main.tf` testou o tfsec.
 
 ## O que o plan custa

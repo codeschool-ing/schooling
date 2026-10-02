@@ -5,8 +5,7 @@ version: 1
 
 Every command in this course was run, and every line of output is what the command printed. **No
 cloud account was used for any of it**, and nothing here was billed to anybody. The AWS that
-Terraform talks to in these lessons is **moto**, the same emulator the cloud course used for S3: a
-Python program that answers the AWS APIs on a port of the laptop, keeps what it is told in memory,
+Terraform talks to in these lessons is **moto**, the same emulator the cloud course used for S3. It is a Python program that answers the AWS APIs on a port of the laptop, keeps what it is told in memory,
 and forgets everything when it stops.
 
 ```
@@ -46,7 +45,7 @@ say so.
 **Everything else is the real program.** Terraform, OpenTofu, Terragrunt, Packer, Ansible and the
 scanners are the released versions, and each provider is the one HashiCorp publishes. The one
 arrangement you would not have at home is where the providers come from: the laptop these lessons
-were recorded on could not reach the Terraform Registry, so the providers were downloaded from
+were recorded on could not reach the Terraform Registry. The providers were downloaded from
 HashiCorp's release site, checked against their published checksums, and served from a local
 directory. `terraform init` prints the same lines either way; lesson 2 shows the one file where
 the difference is visible.
@@ -76,7 +75,7 @@ Could not connect to the endpoint URL: "http://localhost:4567/"
 
 Check that `moto_server` is still running in its terminal and that the port in `AWS_ENDPOINT_URL`
 is the one it printed when it started. A credentials error instead means the variables are not set
-in the terminal you are typing in, and the call went somewhere else; with `test` as the key, a real
+in the terminal you are typing in, and the call went somewhere else. With `test` as the key, a real
 AWS endpoint refuses it, which is the safety you want.
 
 **And when you move to a real account**, the configurations in these lessons work unchanged: unset

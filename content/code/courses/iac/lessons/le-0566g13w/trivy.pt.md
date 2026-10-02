@@ -74,7 +74,7 @@ AWS-0107 (HIGH): Security group rule allows unrestricted ingress from any IP add
 Ao contrário da execução offline do Checkov, todo achado do Trivy tem severidade, porque a severidade
 faz parte do check que vem no binário: `UNKNOWN`, `LOW`, `MEDIUM`, `HIGH` ou `CRITICAL`. A linha
 `Failures:` conta os achados por arquivo. São doze ao todo, e o formato bate com o relatório do
-Checkov sem ser a mesma lista: o Trivy relata a falta do bloqueio de acesso público cinco vezes, uma
+Checkov sem ser a mesma lista. O Trivy relata a falta do bloqueio de acesso público cinco vezes, uma
 pelo bloqueio e uma por cada uma das quatro configurações que ele teria, e não diz nada sobre
 replicação nem sobre ciclo de vida.
 

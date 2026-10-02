@@ -102,8 +102,7 @@ papel.
 
 ## Uma lista não basta
 
-O `for_each` recusa uma lista, mesmo uma lista de strings, e o motivo é a razão de ele existir. Uma
-lista é ordenada e pode ter o mesmo valor duas vezes, então seus elementos não têm nome além da
+O `for_each` recusa uma lista, mesmo uma lista de strings. Uma lista é ordenada e pode ter o mesmo valor duas vezes, então seus elementos não têm nome além da
 posição, e posição é exatamente o que o `for_each` existe para evitar. Aqui está uma lista escrita
 direto no argumento:
 

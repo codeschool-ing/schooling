@@ -25,8 +25,8 @@ dia em que é jogada fora.
 | o que exige | acesso às máquinas em execução | um jeito rápido de construí-las e trocá-las |
 | o que custa | nada de saída | uma etapa de build, e um desenho em que perder uma máquina não é problema |
 
-A segunda coluna é o motivo pelo qual os planos do Terraform, da aula 2 em diante, mostram algumas
-mudanças como atualização e outras como **substituição** (*replace*): para muitos atributos a
+Por causa da segunda coluna, os planos do Terraform, da aula 2 em diante, mostram algumas
+mudanças como atualização e outras como **substituição** (*replace*). Para muitos atributos a
 própria nuvem não oferece edição, e o único jeito de mudá-los é um recurso novo. A imagem de uma
 máquina é um deles. A aula 6 trata de controlar essa escolha, e a aula 20 de construir as imagens
 que fazem da substituição o jeito normal de trabalhar.

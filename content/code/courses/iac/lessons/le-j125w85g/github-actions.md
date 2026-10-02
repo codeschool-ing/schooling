@@ -3,8 +3,7 @@ title: GitHub Actions, and the one script it calls
 version: 1
 ---
 
-The first thing to say about this workflow is that **it was not run**. The lab has no GitHub, so
-the file below is written as it would be committed and checked only as far as the lab can check
+**This workflow was not run.** The lab has no GitHub, so the file below is written as it would be committed and checked only as far as the lab can check
 it. Every step in it calls `ci.sh`, and `ci.sh` is run for real further down.
 
 ```yaml
@@ -107,7 +106,7 @@ where the approval lives; the section on applying the plan comes back to it.
 **Every action is pinned to a commit, with the tag it came from beside it.** A tag such as `v7` is a
 name the action's owner can move to other code at any time, and that code then runs with your
 credentials. A commit cannot move. The six commits in this file are what those tags pointed to on
-2 October 2026, read from each repository with `git ls-remote`; the comment is what makes the pin
+2 October 2026, read from each repository with `git ls-remote`. The comment is what makes the pin
 readable to whoever later decides it is old. `terraform_version` pins Terraform itself to the
 version this course uses, and `terraform_wrapper: false` turns off a wrapper the action installs
 around the binary, which this pipeline does not need.

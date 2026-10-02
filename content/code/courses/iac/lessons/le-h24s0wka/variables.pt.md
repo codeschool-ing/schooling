@@ -4,8 +4,7 @@ version: 1
 ---
 
 Tudo no `main.tf` até aqui é literal. Isso serve para uma rede e dá errado no dia em que a loja
-precisa de uma segunda, para produção. **O movimento tentador é copiar o diretório e editar os
-números, e ele te dá duas configurações que se afastam uma da outra a cada edição esquecida.** A
+precisa de uma segunda, para produção. **A saída tentadora é copiar o diretório e editar os números, e o resultado são duas configurações que se afastam uma da outra a cada edição esquecida.** A
 alternativa é dar nome aos valores que mudam e deixá-los em aberto. Esses nomes são as **variáveis
 de entrada**, declaradas em blocos próprios:
 

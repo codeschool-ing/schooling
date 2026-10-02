@@ -91,8 +91,7 @@ instead, which is how a job gets a tool the default image lacks.
 `plan.txt`, and a later job that `needs` it receives both files in its working directory before
 its script starts.
 
-The artifact is not just a plan. Lesson 9 opened a saved plan and found a copy of the state inside
-it, so **anyone who may download this pipeline's artifacts may read whatever the state holds**, and
+Lesson 9 opened a saved plan and found a copy of the state inside it, so **anyone who may download this pipeline's artifacts may read whatever the state holds**, and
 lesson 12 is about what that can include. That is also why `expire_in: 3 days` is a decision rather
 than housekeeping: a plan that waited longer than that for approval is one somebody should make
 again rather than apply, and a file you no longer keep is one nobody can download.

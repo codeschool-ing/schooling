@@ -128,9 +128,8 @@ the job `terraform plan -refresh-only` did in lesson 7.
 
 ## What the lab cannot show
 
-moto emulates CloudFormation well enough to create and delete a stack, and no further. Asked to
+Moto emulates CloudFormation well enough to create and delete a stack, and no further. Asked to
 detect drift, it fails with an internal error of its own. Asked for a change set on an **existing**
 stack, it lists every resource as `Add`, which a real change set would never do for resources that
-already exist. So this section stops at creation and deletion. On a real
-account, the change set for an update marks each resource `Modify` or `Remove`, and says whether a
+already exist. So this section stops at creation and deletion. On a real account, the change set for an update marks each resource `Modify` or `Remove`, and says whether a
 modification needs a replacement, the same question `-/+` answers in a Terraform plan.

@@ -178,7 +178,7 @@ Plan: 0 to add, 3 to change, 0 to destroy.
 Dev would change two resources and prod three, from one edit. That is what you want for a fix, and
 not for a change you meant to try in dev for a week first. The usual way to hold prod back is to
 give it the module by version rather than by path, `?ref=v1.2.0` on a git source, and move each
-environment to the new version when it is ready; lesson 10 covers module sources and versions.
+environment to the new version when it is ready. Lesson 10 covers module sources and versions.
 
 **The copies can also drift on purpose**, and that is sometimes the point. Prod's directory can
 carry a resource dev does not have, a backup vault for instance, without a single `count` or

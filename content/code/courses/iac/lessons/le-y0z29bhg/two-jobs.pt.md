@@ -31,8 +31,8 @@ tabela de processos em cada uma de trinta máquinas, algumas das quais podem est
 
 **A sobreposição existe, e é onde começa a maior parte dos problemas.** O Ansible tem módulos que
 criam recursos de nuvem, e o Terraform consegue rodar um script numa máquina depois de criá-la. Os
-dois funcionam. Os dois são a segunda melhor ferramenta para aquela metade do trabalho: o Ansible
-não guarda registro do que criou, então não sabe o que remover quando uma linha é apagada, e um
+dois funcionam. Os dois são a segunda melhor ferramenta para aquela metade do trabalho. O Ansible
+não guarda registro do que criou, então não sabe o que remover quando uma linha é apagada. Um
 script que o Terraform roda uma vez na criação nunca mais roda, então a configuração que ele fez
 deriva como qualquer outra. A aula 18 faz a passagem entre os dois de propósito: o Terraform cria as
 máquinas e anota os endereços delas, e o Ansible os lê.

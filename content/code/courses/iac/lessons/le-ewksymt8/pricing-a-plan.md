@@ -94,8 +94,8 @@ ana@laptop:~/shop$ terraform show -json tfplan | jq -c '.resource_changes[] | se
 here. They are lines of the cloud course's price sheet, `prices.py`, copied from its `sa-east-1`
 column as that course prints them: AWS's public list prices in USD, before tax, at the offer versions
 it pins, `AmazonEC2` 20260925174521 and `AmazonVPC` 20260917190528. Lesson 10 of the cloud course
-explains how that sheet is read and why a pinned version prints the same numbers next year. What is
-done in this lab is the arithmetic.
+explains how that sheet is read and why a pinned version prints the same numbers next year. What this
+lab does is the arithmetic.
 
 `price.py` reads a plan on its standard input, prices the four kinds of resource it has a line for,
 and counts a month as 730 hours, the cloud course's convention:

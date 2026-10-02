@@ -12,7 +12,7 @@ A pipeline for Terraform has two lanes, and most of its design is deciding what 
 **On a pull request, nothing is applied.** The change is checked, scanned and planned, and the plan
 is posted where the reviewers read the diff. **On `main`, after the merge, the plan is made again,
 saved to a file, read by a person, and that file is applied.** The two plans are there for
-different reasons, and the difference is the subject of the last three sections of this lesson.
+different reasons, and the end of this section says what they are.
 
 ## Cheap gates first, credentials last
 

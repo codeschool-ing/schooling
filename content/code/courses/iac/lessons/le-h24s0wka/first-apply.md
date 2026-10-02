@@ -61,8 +61,7 @@ guarantee to take exactly these actions if you run "terraform apply" now.
 
 Four to add, nothing to change or destroy: exactly the four blocks in `main.tf`, which is the
 check to make every time. A plan that says `1 to destroy` where you expected none is the moment to
-stop. The note underneath is about saving a plan with `-out`, which lesson 9 covers; here the plan
-is simply thrown away.
+stop. The note underneath is about saving a plan with `-out`, which lesson 9 covers; here the plan is thrown away.
 
 `terraform apply` computes the same plan again, prints it, and stops at a question. **Anything
 other than the exact word `yes` cancels**, which is what happened when Ana answered `no`:

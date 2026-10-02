@@ -76,8 +76,8 @@ Plan: 0 to add, 0 to change, 0 to destroy.
 Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 ```
 
-The bucket is in AWS and in no state. That gap is deliberate, and the order is the point of the
-recipe. Done the other way round, import first, the bucket would sit in two states for a while,
+The bucket is in AWS and in no state. That gap is deliberate, and the
+order is what makes the recipe safe. Done the other way round, import first, the bucket would sit in two states for a while,
 and two configurations managing one object is how one team's apply undoes another's: whichever
 plans last puts its own idea of the bucket back. **Managed by nobody for an hour is safe; managed
 by two is not.**
@@ -115,7 +115,8 @@ resource "aws_s3_bucket" "logs" {
 ```
 
 Declaring the bucket alone would give a plan with `1 to add`: this state has never heard of the
-bucket, so Terraform would try to create it. One more block says the resource is already there, and which real object it is:
+bucket, so Terraform would try to create it. One more block says the resource is already there,
+and which real object it is:
 
 ```hcl
 import {

@@ -73,8 +73,7 @@ AWS-0107 (HIGH): Security group rule allows unrestricted ingress from any IP add
 
 Unlike Checkov's offline run, every Trivy finding has a severity, because the severity is part of
 the check that ships in the binary: `UNKNOWN`, `LOW`, `MEDIUM`, `HIGH` or `CRITICAL`. The
-`Failures:` line counts them per file. Twelve findings in all, and the shape matches Checkov's
-report, without being the same list: Trivy reports the missing public access block five times, once for
+`Failures:` line counts them per file. Twelve findings in all, and the shape matches Checkov's report without being the same list. Trivy reports the missing public access block five times, once for
 the block and once for each of the four settings it would hold, and says nothing about replication or lifecycle rules.
 
 ## One finding in full

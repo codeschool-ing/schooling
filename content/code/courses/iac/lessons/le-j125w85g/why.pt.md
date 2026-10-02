@@ -42,8 +42,8 @@ O laptop esconde mais três coisas:
 | credenciais que mudam produção, em cada laptop que aplica | credenciais de escrita num só lugar, para um só job |
 | nenhum registro do que foi aplicado, de qual commit, por quem | um log por execução, ligado a um commit e a uma aprovação |
 
-Então o arranjo que esta aula monta é simples de enunciar: **um só lugar aplica, e aplica só o que
-passou por merge e por revisão**. Pessoas continuam escrevendo a mudança e decidindo se ela é
+Então esta aula monta um arranjo só: **um só lugar aplica, e aplica só o que passou por merge e por
+revisão**. Pessoas continuam escrevendo a mudança e decidindo se ela é
 sensata; o pipeline faz a parte mecânica sempre do mesmo jeito, e deixa o plan onde quem revisa
 consegue lê-lo.
 

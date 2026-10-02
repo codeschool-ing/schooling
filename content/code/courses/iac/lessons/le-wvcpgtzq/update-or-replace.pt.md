@@ -101,8 +101,8 @@ Note: You didn't use the -out option to save this plan, so Terraform can't
 guarantee to take exactly these actions if you run "terraform apply" now.
 ```
 
-O id na segunda linha do recurso é o mesmo antes e depois, e o resumo conta uma mudança e nada
-adicionado ou destruído. Esse é o tipo barato de mudança.
+Só as tags mudam; o id está entre os 20 atributos inalterados que o plan esconde, e o resumo conta
+uma mudança e nada adicionado ou destruído. Esse é o tipo barato de mudança.
 
 ## Uma mudança que força uma substituição
 
@@ -170,7 +170,7 @@ Uma linha editada, duas substituições. A faixa da sub-rede não muda no lugar,
 substituída; o id novo dela é `(known after apply)`, e uma instância também não muda de sub-rede,
 então `subnet_id` força a instância a sair junto. **O comentário na instância aponta para
 `subnet_id`, não para nada que a Ana digitou**, e é esse o formato a vigiar numa revisão: uma
-substituição cuja causa está dois recursos adiante.
+substituição cuja causa está em outro recurso.
 
 Quem decide entre no lugar e substituição é a API da nuvem, do jeito que o provider a modela. Tags,
 o tipo de uma instância e as regras de um security group têm chamadas de atualização; uma AMI, a

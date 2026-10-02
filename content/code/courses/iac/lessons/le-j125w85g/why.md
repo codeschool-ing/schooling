@@ -43,8 +43,8 @@ A laptop hides three more things:
 | credentials that can change production, on every laptop that applies | write credentials in one place, for one job |
 | no record of what was applied, from which commit, by whom | a log per run, tied to a commit and an approval |
 
-So the arrangement this lesson builds is simple to state: **one place applies, and it applies only
-what was merged and reviewed**. People still write the change and still decide whether it is wise;
+So this lesson builds one arrangement: **one place applies, and it applies only what was merged
+and reviewed**. People still write the change and still decide whether it is wise;
 the pipeline does the mechanical part the same way every time, and keeps the plan where a reviewer
 can read it.
 

@@ -81,7 +81,7 @@ Environment	dev
 ```
 
 Esse comando pergunta à AWS pela VPC que esta configuração criou, seja ela qual for hoje, sem
-ninguém copiar um id. As tags que ele devolve são as duas que a seção anterior pôs lá.
+ninguém copiar um id. As tags que ele devolve são a `Name` e a `Environment` que a seção anterior acrescentou.
 
 Para um programa, e não um shell, o `-json` traz cada output com o seu tipo e com uma marcação que
 é assunto da aula 12:
@@ -125,7 +125,7 @@ ana@laptop:~/shop$ terraform output bucket_name
 ╵
 ```
 
-Aqui o nome simplesmente está errado, já que a Ana não tem um output `bucket_name`, mas a mensagem
+Aqui o nome está errado, já que a Ana não tem um output `bucket_name`, mas a mensagem
 é a mesma que você recebe depois de escrever um bloco de output novo e esquecer de aplicar.
 
 Os outputs importam além do terminal. São a única parte de uma configuração feita para outras

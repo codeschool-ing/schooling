@@ -17,7 +17,7 @@ aws_instance.web: Creation complete after 10s [id=i-2c8873777c5bd44a7]
 ```
 
 Entre `Destruction complete` e `Creation complete` não existe instância `web` nenhuma. No
-laboratório esse intervalo não custa nada, porque o moto não roda máquina; numa conta real ele dura
+laboratório esse intervalo não custa nada, porque o moto não roda máquina. Numa conta real ele dura
 o tempo que uma máquina leva para dar boot e começar a atender, e a loja fica sem servidor web esse
 tempo todo.
 

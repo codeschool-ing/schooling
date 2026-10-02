@@ -4,7 +4,7 @@ version: 1
 ---
 
 Back in Ana's own directory, with the state that knows the three resources. The JSON can be read
-with `jq`, as the first section did, and it should never be edited with a text editor: one stray
+with `jq`, as it was two sections back, and it should never be edited with a text editor: one stray
 comma and Terraform cannot load it, and a field changed by hand is a lie the next plan believes.
 **`terraform state` is the set of subcommands for looking at it and changing it safely.**
 
@@ -120,7 +120,7 @@ subnet-1849baa846a6631fa	10.20.1.0/24
 ```
 
 The subnet is still in AWS; Terraform has forgotten it, and the plan wants to create one. That is
-the losing-it accident again, for one resource. Lesson 6's `removed` block is the reviewable way
+the previous section's accident again, for one resource. Lesson 6's `removed` block is the reviewable way
 to stop managing something; `state rm` is the immediate one.
 
 ## The backups
@@ -146,6 +146,6 @@ and found no differences, so no changes are needed.
 ```
 
 `public_a` is back, and the plan is clean. **This worked because the backup sat in the same
-directory**, which is the same reason it would be gone with the laptop. "remote-backend" puts the
+directory**, which is the same reason it would be gone with the laptop. Two sections on, the backend puts the
 state where its history survives, and lesson 8 shows `terraform import`, which brings a real
 resource back under management with no backup at all.

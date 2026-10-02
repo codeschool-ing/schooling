@@ -84,8 +84,8 @@ ana@laptop:~/shop/ansible$ curl -s http://web1/
 
 **Uma mudança, num host, numa tarefa.** O playbook recolocou o que descreve e deixou o `web2` em paz,
 porque lá não havia nada a recolocar. Essa é a resposta da gerência de configuração ao drift da
-aula 1: rode a descrição com frequência e as máquinas convergem para ela. Ela tem um limite que vale
-dizer com todas as letras. O Ansible confere **só o que o playbook menciona**. Um arquivo de que
+aula 1: rode a descrição com frequência e as máquinas convergem para ela. O limite é que o Ansible
+confere **só o que o playbook menciona**. Um arquivo de que
 ele nunca soube, um pacote que alguém instalou à mão, um cron que ninguém anotou: isso fica, e
 nenhuma execução aponta. Não existe um arquivo de estado listando o que o Ansible criou, então
 apagar uma tarefa não remove nada das máquinas; para remover algo, você escreve uma tarefa que diz

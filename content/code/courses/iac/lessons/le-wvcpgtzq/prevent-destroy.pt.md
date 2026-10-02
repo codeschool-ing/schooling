@@ -101,6 +101,6 @@ versionamento no bucket para que um objeto apagado possa ser recuperado. A aula 
 versionamento no bucket de state pelo mesmo motivo.
 
 E a própria mensagem de erro aponta a saída de emergência: tirar a configuração, ou estreitar o plan
-com `-target`. As duas são edições deliberadas, feitas de propósito, e esse é o ponto. Quando o
+com `-target`. Nenhuma das duas acontece por acidente: cada uma é uma edição que alguém faz de propósito. Quando o
 bucket precisa mesmo sumir, a mudança que remove o `prevent_destroy` é um commit separado, revisado
 sozinho, antes do commit que remove o bucket.

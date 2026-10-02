@@ -95,7 +95,7 @@ foram lidos aqui. São linhas da planilha de preços do curso de nuvem, o `price
 coluna `sa-east-1` do jeito que aquele curso as imprime: os preços públicos de tabela da AWS, em USD,
 sem impostos, nas versões de oferta que ele fixa, `AmazonEC2` 20260925174521 e `AmazonVPC`
 20260917190528. A aula 10 do curso de nuvem explica como essa planilha é lida e por que uma versão
-fixada imprime os mesmos números no ano que vem. O que se faz neste laboratório é a conta.
+fixada imprime os mesmos números no ano que vem. O que este laboratório faz é a conta.
 
 O `price.py` lê um plano na entrada padrão, põe preço nos quatro tipos de recurso para os quais tem
 uma linha e conta um mês como 730 horas, a convenção do curso de nuvem:

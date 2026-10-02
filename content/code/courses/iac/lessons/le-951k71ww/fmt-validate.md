@@ -96,6 +96,6 @@ without any, because it checks the configuration and never the values that will 
 So it cannot know that a subnet is meant for a zone in another region, or for a range outside the
 VPC, and **every check from here down the ladder exists to ask about values**.
 
-That is the honest summary of the two cheapest rungs. They make sure the files are tidy and
+So the two cheapest rungs make sure the files are tidy and
 internally consistent, with no account and no network. They prove nothing about what the
 module will do with a particular input, and a suite that stops at them has tested the spelling.

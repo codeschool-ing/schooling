@@ -60,7 +60,7 @@ existem para quem chega de outras linguagens.
 não importa, nem a ordem dos blocos dentro deles: o `main.tf` usa `var.owner`, e a variável está
 declarada em outro arquivo. Os nomes `main.tf`, `variables.tf` e `outputs.tf` são uma convenção
 que as pessoas seguem para um colega saber onde procurar, e o Terraform não dá significado nenhum
-a eles. Um subdiretório nem é lido; a aula 10 transforma um deles em module.
+a eles. Um subdiretório nem é lido; a aula 10 transforma um deles em módulo.
 
 O segundo arquivo está em JSON. **Todo bloco pode ser escrito como `.tf.json`**, com o tipo do
 bloco e os rótulos virando chaves aninhadas:

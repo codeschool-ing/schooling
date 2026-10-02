@@ -104,8 +104,8 @@ Failures: 1 (UNKNOWN: 0, LOW: 0, MEDIUM: 0, HIGH: 1, CRITICAL: 0)
 
 ## Uma validade transforma "depois" numa data
 
-*Revisitar quando a loja tiver uma chave KMS* é o tipo de promessa que nunca se cumpre, e a validade é
-o que obriga a cumpri-la. Para ver funcionar, a Ana põe a data no passado por uma execução:
+*Revisitar quando a loja tiver uma chave KMS* é o tipo de promessa que ninguém cumpre sem ser lembrado, e a
+validade é o lembrete. Para ver funcionar, a Ana põe a data no passado por uma execução:
 
 ```
 ana@laptop:~/shop$ sed -i "s/exp:2027-03-31/exp:2026-03-31/" main.tf

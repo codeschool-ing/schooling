@@ -94,8 +94,7 @@ Initializing provider plugins...
 
 **The configuration did not change, and it failed.** Nothing is wrong with it: Terraform
 initialised these same two files in lesson 2. The difference is in how each program reads the
-`source` line, and that is the one thing about OpenTofu you have to understand before anything
-else, because it decides where every provider comes from. The next section is about that line.
+`source` line, which decides where every provider comes from. The next section is about that line.
 
 What does not differ is everything lessons 2 to 16 taught: plans, the symbols in them, state and its
 commands, backends and locking, modules, workspaces, `tofu test`, and the scanners, which read the

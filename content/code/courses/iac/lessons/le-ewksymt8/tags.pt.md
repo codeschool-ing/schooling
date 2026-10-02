@@ -136,7 +136,7 @@ Planning failed. Terraform encountered an error while generating this plan.
 ╵
 ```
 
-**Um custo que não pode ser atribuído é recusado no momento mais barato que existe**, num notebook,
+**Um custo que não pode ser atribuído é recusado no momento mais barato que existe**, num laptop,
 antes da revisão. A mesma regra pode ser conferida por um scanner no pipeline, que é como as
 ferramentas da aula 14 a impõem em configurações que não compartilham esta variável, e a própria conta
 pode conferir suas tags contra uma tag policy, que o curso de nuvem citou.

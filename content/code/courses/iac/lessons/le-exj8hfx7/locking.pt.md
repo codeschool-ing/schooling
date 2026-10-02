@@ -6,7 +6,7 @@ version: 1
 Duas execuções que leem o mesmo estado e o gravam de volta produzem a clássica atualização perdida.
 Cada uma leu o serial 5, cada uma fez a sua mudança na AWS, cada uma grava o serial 6, e a que gravar
 por último apaga o registro da outra. Os recursos que a primeira criou ficam então reais, cobrados e
-desconhecidos do estado, que é o acidente de "losing-it" chegando por um caminho mais silencioso.
+desconhecidos do estado, que é o acidente da segunda rede chegando por um caminho mais silencioso.
 **Uma trava faz a segunda execução esperar ou falhar antes de ler qualquer coisa.**
 
 Com `use_lockfile = true`, o backend S3 trava criando um segundo objeto ao lado do estado, a key do
@@ -86,8 +86,8 @@ ana@laptop:~/shop$ aws s3 ls --recursive s3://shop-tfstate-123456789012
 2026-10-02 00:52:26       5907 shop/terraform.tfstate
 ```
 
-`Acquiring state lock` é o plan esperando, enquanto o primeiro terminal recebia o `yes` e terminava o
-apply. Depois ele pegou a trava e planejou contra o estado que o apply acabara de gravar: a tag já
+`Acquiring state lock` é o plan esperando enquanto, no primeiro terminal, a Ana respondia `yes` e o
+apply terminava. Depois o plan pegou a trava e planejou contra o estado que o apply acabara de gravar: a tag já
 está lá, então não há nada a fazer, e o objeto de trava sumiu da listagem. Num pipeline, um lock
 timeout de alguns minutos transforma dois jobs que colidiram em dois jobs que rodaram em sequência.
 

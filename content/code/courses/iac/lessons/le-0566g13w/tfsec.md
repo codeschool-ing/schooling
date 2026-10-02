@@ -123,7 +123,7 @@ So the same nine characters, `0.0.0.0/0` on port 22, are `CRITICAL` in one spell
 the other. Nothing printed a warning. A scanner reports what its rules match, and a resource type no
 rule mentions produces silence, which looks exactly like a pass.
 
-**That is the real cost of a tool nobody is developing**, and it grows. The AWS provider keeps
+**That is the cost of a tool nobody is developing**, and it grows. The AWS provider keeps
 adding resources and arguments, and a frozen catalogue covers less of a configuration with
 each one. It is also a reason to keep a known-bad example like `legacy/main.tf` in a repository
 and scan it in the pipeline: if a scanner upgrade or a rewrite of your code makes the finding
@@ -158,5 +158,5 @@ reported, from the captures above:
 | custom rules | Python or YAML | Rego | (not shown here) |
 
 Checkov and Trivy are both maintained, and running both costs little: neither needs credentials,
-and both gave a full answer in a lab with no network. tfsec belongs in this lesson because you will meet it in
+and both reported every finding in a lab with no network. tfsec belongs in this lesson because you will meet it in
 existing pipelines, and now you know what to check before trusting its silence.

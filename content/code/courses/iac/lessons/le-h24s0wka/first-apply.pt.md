@@ -61,8 +61,7 @@ guarantee to take exactly these actions if you run "terraform apply" now.
 
 Quatro a criar, nada a mudar ou destruir: exatamente os quatro blocos do `main.tf`, que é a
 conferência a fazer toda vez. Um plano que diz `1 to destroy` quando você não esperava nenhum é a
-hora de parar. A nota embaixo fala de salvar um plano com `-out`, assunto da aula 9; aqui o plano
-simplesmente é descartado.
+hora de parar. A nota embaixo fala de salvar um plano com `-out`, assunto da aula 9; aqui o plano é descartado.
 
 O `terraform apply` calcula o mesmo plano de novo, imprime e para numa pergunta. **Qualquer coisa
 que não seja exatamente a palavra `yes` cancela**, que foi o que aconteceu quando a Ana respondeu

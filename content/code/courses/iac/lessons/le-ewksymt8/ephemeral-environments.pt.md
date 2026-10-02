@@ -5,7 +5,7 @@ version: 1
 
 Um ambiente de preview é uma cópia da aplicação montada para um pull request, para que quem revisa
 clique na mudança em vez de imaginá-la. O pipeline da aula 15 o cria quando o pull request abre e o
-destrói quando ele é mergeado. **A falha não está na criação.** Está no destroy que nunca rodou: o job
+destrói quando ele é mergeado. **O que dá errado é o destroy que nunca rodou**: o job
 falhou numa sexta-feira, o pull request foi fechado em vez de mergeado, a branch foi renomeada. O
 ambiente continua rodando e, dali em diante, é um órfão com boas tags.
 
@@ -98,7 +98,7 @@ change per month, USD                       +55.75
 ```
 
 **55.75 USD por mês por uma máquina e o endereço dela**, barato o bastante para ninguém se preocupar
-com um. A aritmética do esquecimento é o que faz esta seção valer: dez ambientes de preview deixados
+com um. Esquecê-los é o que pesa: dez ambientes de preview deixados
 rodando por um trimestre dão 10 × 3 × 55.75, ou 1,672.50 USD, por cópias de revisão de pull requests
 mergeados meses antes.
 

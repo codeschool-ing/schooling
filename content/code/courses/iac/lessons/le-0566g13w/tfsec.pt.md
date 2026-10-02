@@ -125,7 +125,7 @@ Então os mesmos nove caracteres, `0.0.0.0/0` na porta 22, são `CRITICAL` numa 
 outra. Nada imprimiu um aviso. Um scanner relata o que as regras dele casam, e um tipo de recurso que
 nenhuma regra menciona produz silêncio, que tem a mesma cara de um resultado aprovado.
 
-**Esse é o custo real de uma ferramenta que ninguém mais desenvolve**, e ele cresce. O provider da AWS
+**Esse é o custo de uma ferramenta que ninguém mais desenvolve**, e ele cresce. O provider da AWS
 continua ganhando recursos e argumentos, e um catálogo congelado cobre uma parte menor da configuração
 a cada um. É também um motivo para manter no repositório um exemplo sabidamente ruim, como o
 `legacy/main.tf`, e varrê-lo no pipeline: se uma atualização do scanner ou uma reescrita do seu código
@@ -160,5 +160,5 @@ cada um relatou, tirada das capturas acima:
 | regras próprias | Python ou YAML | Rego | (não mostrado aqui) |
 
 O Checkov e o Trivy são mantidos, e rodar os dois custa pouco: nenhum precisa de credenciais, e os dois
-deram uma resposta completa num laboratório sem rede. O tfsec está nesta aula porque você vai
+relataram todos os achados num laboratório sem rede. O tfsec está nesta aula porque você vai
 encontrá-lo em pipelines que já existem, e agora sabe o que conferir antes de confiar no silêncio dele.
