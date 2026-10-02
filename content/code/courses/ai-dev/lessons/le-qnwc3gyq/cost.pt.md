@@ -5,8 +5,8 @@ version: 1
 
 A aula 2 leu as tabelas de preço. Esta seção as usa para comparar provedores numa carga: **o
 assistente de suporte da loja, 2.000 perguntas por dia, cada uma com 1.500 tokens de prompt e 300 de
-resposta**. Os preços foram lidos com o `prices.py` em 2 de outubro de 2026: os da Anthropic na
-própria página de preços dela, os da OpenAI e do Google na cópia do LiteLLM num commit fixo, porque
+resposta**. Os preços foram lidos com o `prices.py` em 2 de outubro de 2026. Os da Anthropic vêm da
+própria página de preços dela; os da OpenAI e do Google, da cópia do LiteLLM num commit fixo, porque
 as páginas deles não puderam ser acessadas da máquina em que o curso foi gravado.
 
 ```python

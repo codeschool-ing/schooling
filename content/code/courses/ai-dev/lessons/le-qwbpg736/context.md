@@ -7,9 +7,9 @@ A chat window gives the impression that the model remembers the conversation. **
 The model reads only what one request puts in front of it, and when the reply has been written,
 nothing of that request is left inside the model for the next one. What looks like memory is the
 application sending the whole conversation again, every turn. Some APIs offer to keep the
-history on the provider's side and refer to it by an id (OpenAI's Responses API does); that moves
-where the list is stored, and the model still reads all of it, and you are still billed for it,
-on every turn.
+history on the provider's side and refer to it by an id (OpenAI's Responses API does). That moves
+where the list is stored. The model still reads all of it, and you are still billed for it, on
+every turn.
 
 That text, everything the model reads before it writes, is the **context**. Generation in lesson
 1 section 02 was a loop over the context; this section is about what goes into it.

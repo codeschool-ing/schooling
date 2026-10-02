@@ -51,8 +51,8 @@ google: LiteLLM at commit b9e71e990aed
 in this market have fallen and been restructured several times a year. What does not age is how
 to read the sheet:
 
-- **The unit is dollars per million tokens.** Claude Sonnet 5.5 at `$2` input and `$10` output
-  means a request with 2,000 tokens in and 500 out costs 2,000 × 2 / 1,000,000 plus 500 × 10 /
+- **The unit is dollars per million tokens.** Take Claude Sonnet 5.5 at `$2` input and `$10`
+  output. A request with 2,000 tokens in and 500 out costs 2,000 × 2 / 1,000,000 plus 500 × 10 /
   1,000,000: $0.004 plus $0.005, nine tenths of a cent.
 - **Output is five or six times input here**: 5× on all three Claude models, 6× on most of
   OpenAI's, 6× on Gemini's Pro. A feature that writes long answers costs a different order of

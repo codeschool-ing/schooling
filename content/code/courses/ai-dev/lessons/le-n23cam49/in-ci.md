@@ -33,10 +33,9 @@ useful, and dangerous in the same way an unchecked one would be.**
 
 Every pull request becomes one or more model calls, and a large diff with its surrounding files is
 a large input. Lesson 2's arithmetic applies: tokens in per review, times pull requests per day,
-times the price. Two settings keep it sane: **a size limit**, above which the bot says the change is
-too large to review usefully rather than reviewing a truncated version of it, and **a filter** that
-skips generated files, lock files and vendored code, which cost tokens and contain nothing to
-review.
+times the price. **Two settings keep it sane.** A size limit, above which the bot says the change is too large to
+review usefully rather than reviewing a truncated version of it. And a filter that skips generated
+files, lock files and vendored code, which cost tokens and contain nothing to review.
 
 The judgement this lesson keeps returning to applies here unchanged. **A review is a list of
 hypotheses**, and a hypothesis is worth exactly the test that checks it.

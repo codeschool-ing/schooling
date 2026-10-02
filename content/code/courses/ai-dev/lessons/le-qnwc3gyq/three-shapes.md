@@ -55,8 +55,8 @@ google     20 in  82 out  FinishReason.STOP  The cart stores prices as integer â
 
 Same text, same counts, three ways of saying the reply ended. **The counts match only because
 labllm counts every request with one tokenizer.** Real providers each count with their own, so the
-same prompt is a different number of tokens at each, and a price per million tokens is only
-comparable after you count your own text with each provider's counter.
+same prompt is a different number of tokens at each. A price per million tokens is only comparable
+after you count your own text with each provider's counter.
 
 ## Where the differences are
 

@@ -4,7 +4,7 @@ version: 1
 ---
 
 Um assistente no editor parece ler o seu projeto. **Ele lê o que o editor manda**, e o editor
-decide isso no instante antes de cada requisição: parte do arquivo em que você está, parte de
+decide isso no instante antes de cada requisição. Ele manda parte do arquivo em que você está, parte de
 outros arquivos que parecem relacionados, e o arquivo de instruções do projeto se houver um, tudo
 cortado para caber num orçamento. A aula 1 seção 06 disse que o modelo só sabe o que está na
 requisição; esta seção é sobre quem preenche a requisição, e como.

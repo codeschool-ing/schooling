@@ -46,9 +46,9 @@ The reply was 10 tokens in and 147 out. **Output is almost 99% of the cost** of 
 three prices, because the question was short and the answer was not. Most chat-style requests look
 like this, and the lever that matters there is how long you let the answer be.
 
-The monthly figure is the one to show whoever approves the feature: 3,000 requests a day of 1,800
+The monthly figure is the one to show whoever approves the feature. 3,000 requests a day of 1,800
 tokens in and 250 out comes to a little over a thousand dollars a month on the most expensive of
-the three and a quarter of that on the cheapest. **The inputs to that estimate are guesses until
+the three, and a quarter of that on the cheapest. **The inputs to that estimate are guesses until
 you measure them**, and the way to measure them is the `usage` you log on every call (lesson 2
 section 03). Revisit the estimate after a week of real traffic; the token counts are almost
 always higher than the guess, because real users paste things.

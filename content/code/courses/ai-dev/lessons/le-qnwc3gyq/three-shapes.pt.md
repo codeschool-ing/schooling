@@ -55,7 +55,7 @@ google     20 in  82 out  FinishReason.STOP  The cart stores prices as integer �
 
 Mesmo texto, mesmas contagens, três jeitos de dizer que a resposta terminou. **As contagens batem só
 porque o labllm conta toda requisição com um tokenizador só.** Os provedores de verdade contam cada
-um com o seu, então o mesmo prompt dá um número diferente de tokens em cada um, e um preço por
+um com o seu, então o mesmo prompt dá um número diferente de tokens em cada um. Um preço por
 milhão de tokens só se compara depois de você contar o seu próprio texto com o contador de cada
 provedor.
 

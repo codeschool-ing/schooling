@@ -7,8 +7,8 @@ Uma janela de chat dá a impressão de que o modelo se lembra da conversa. **Nã
 lê só o que uma requisição põe na frente dele, e quando a resposta foi escrita, nada daquela
 requisição fica dentro do modelo para a próxima. O que parece memória é a aplicação mandando a
 conversa inteira de novo, a cada turno. Algumas APIs oferecem guardar o histórico do lado do
-provedor e se referir a ele por um id (a Responses API da OpenAI faz isso); isso muda onde a lista
-fica guardada, e o modelo continua lendo tudo, e você continua pagando por tudo, a cada turno.
+provedor e se referir a ele por um id (a Responses API da OpenAI faz isso). Isso muda onde a lista
+fica guardada. O modelo continua lendo tudo, e você continua pagando por tudo, a cada turno.
 
 Esse texto, tudo o que o modelo lê antes de escrever, é o **contexto**. A geração da aula 1 seção
 02 era um laço sobre o contexto; esta seção é sobre o que entra nele.

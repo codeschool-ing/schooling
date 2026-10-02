@@ -51,8 +51,8 @@ google: LiteLLM at commit b9e71e990aed
 neste mercado caíram e foram reorganizados várias vezes por ano. O que não envelhece é como ler a
 tabela:
 
-- **A unidade é dólar por milhão de tokens.** O Claude Sonnet 5.5 a `$2` de entrada e `$10` de
-  saída quer dizer que uma requisição com 2.000 tokens de entrada e 500 de saída custa 2.000 × 2 /
+- **A unidade é dólar por milhão de tokens.** Tome o Claude Sonnet 5.5 a `$2` de entrada e `$10`
+  de saída. Uma requisição com 2.000 tokens de entrada e 500 de saída custa 2.000 × 2 /
   1.000.000 mais 500 × 10 / 1.000.000: US$ 0,004 mais US$ 0,005, nove décimos de centavo.
 - **A saída custa cinco ou seis vezes a entrada aqui**: 5× nos três modelos Claude, 6× na maioria
   dos da OpenAI, 6× no Pro do Gemini. Uma funcionalidade que escreve respostas longas custa outra

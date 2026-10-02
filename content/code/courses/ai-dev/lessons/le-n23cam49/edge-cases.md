@@ -96,7 +96,7 @@ not one**, which tells you the bug is in the arithmetic rather than in a special
 
 ## Where the list of edges comes from
 
-An assistant's list of edge cases is a list of what is common for that kind of function: for a
+An assistant's list of edge cases is a list of what is common for that kind of function. For a
 string, empty and whitespace and non-ASCII; for a number, zero, negative, very large; for a date,
 the end of the month, a leap day, a time zone. It is a checklist, and like a checklist it is good at
 the cases everybody misses and blind to the ones particular to your domain. Nothing generic would

@@ -95,8 +95,8 @@ errado, não um**, o que diz que o bug está na conta e não num caso especial.
 
 ## De onde vem a lista de bordas
 
-A lista de casos de borda de um assistente é uma lista do que é comum para aquele tipo de função:
-para uma string, vazia, espaços e caracteres fora do ASCII; para um número, zero, negativo, muito
+A lista de casos de borda de um assistente é uma lista do que é comum para aquele tipo de função.
+Para uma string, vazia, espaços e caracteres fora do ASCII; para um número, zero, negativo, muito
 grande; para uma data, o fim do mês, um dia bissexto, um fuso horário. É um checklist, e como todo
 checklist é bom nos casos que todo mundo esquece e cego aos que são próprios do seu domínio. Nada
 genérico teria sugerido "um cupom no último dia válido". **Acrescente as bordas que a sua

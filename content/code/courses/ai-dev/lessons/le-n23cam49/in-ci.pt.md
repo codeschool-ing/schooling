@@ -34,10 +34,10 @@ cuidadoso é útil, e perigoso do mesmo jeito que uma leitura não conferida ser
 
 Todo pull request vira uma ou mais chamadas de modelo, e um diff grande com os arquivos em volta é
 uma entrada grande. A conta da aula 2 se aplica: tokens de entrada por revisão, vezes pull requests
-por dia, vezes o preço. Dois ajustes o mantêm sensato: **um limite de tamanho**, acima do qual o robô
-diz que a mudança é grande demais para uma revisão útil em vez de revisar uma versão cortada dela, e
-**um filtro** que pula arquivos gerados, lock files e código de terceiros, que custam tokens e não
-têm nada a revisar.
+por dia, vezes o preço. **Dois ajustes o mantêm sensato.** Um limite de tamanho, acima do qual o robô
+diz que a mudança é grande demais para uma revisão útil em vez de revisar uma versão cortada dela. E
+um filtro que pula arquivos gerados, lock files e código de terceiros, que custam tokens e não têm
+nada a revisar.
 
 O juízo a que esta aula sempre volta vale aqui sem mudança. **Uma revisão é uma lista de
 hipóteses**, e uma hipótese vale exatamente o teste que a confere.

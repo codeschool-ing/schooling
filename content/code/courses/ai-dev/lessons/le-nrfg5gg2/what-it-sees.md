@@ -4,9 +4,9 @@ version: 1
 ---
 
 An assistant in the editor looks as though it reads your project. **It reads what the editor sends
-it**, and the editor decides that in the moment before each request: some of the file you are in,
-some of the other files that look related, and the project's instruction file if there is one, all
-cut down to fit a budget. Lesson 1 section 06 said the model knows only what is in the request;
+it**, and the editor decides that in the moment before each request. It sends some of the file you
+are in, some of the other files that look related, and the project's instruction file if there is
+one, all cut down to fit a budget. Lesson 1 section 06 said the model knows only what is in the request;
 this section is about who fills the request in, and how.
 
 Real assistants do not publish their exact rules, and they change them often. So the lab has one

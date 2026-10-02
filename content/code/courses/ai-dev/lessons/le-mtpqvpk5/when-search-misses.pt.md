@@ -68,7 +68,7 @@ vector: my parcel never arrived
     0.254  shipping.md#3        Shipping. The shop ships only to addresses in Brazil. It does …
 ```
 
-*Never arrived* não divide palavras raras com *no tracking update for ten working days*, então a busca
+*Never arrived* não divide palavras raras com *no tracking update for ten working days*. A busca
 por palavras põe o trecho certo em primeiro só porque *parcel* está nele, e completa o resto com
 trechos sobre o horário do suporte que por acaso têm palavras comuns. A busca vetorial põe o mesmo
 trecho em primeiro com folga, 0,568, porque lê o significado.

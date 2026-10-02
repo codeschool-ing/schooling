@@ -67,7 +67,7 @@ isso sem que se peça; a coluna `cache read` da tabela de preços é esse descon
 ## Fazendo o cache acertar
 
 - **Ponha primeiro o que nunca muda e por último o que sempre muda.** O cache casa a partir do
-  começo da requisição, então um horário ou o nome de um usuário no topo do prompt de sistema faz de
+  começo da requisição. Um horário ou o nome de um usuário no topo do prompt de sistema faz de
   cada requisição um prefixo novo, e de cada requisição uma escrita no cache.
 - **Ordene as partes estáveis pelo quanto são estáveis**: instruções, depois definições de
   ferramentas, depois documentos, depois a conversa, depois a pergunta nova.

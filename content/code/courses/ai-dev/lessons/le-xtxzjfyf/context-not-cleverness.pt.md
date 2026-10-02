@@ -66,7 +66,7 @@ index 9af0e26..3eb6322 100644
 ```
 
 **Um diff de uma linha**, em inteiros, mexendo só no `parse_price`. A resposta foi escrita pelo
-curso, mas a forma da melhora é a geral: com o erro e as regras no contexto sobra muito menos para
+curso, mas a forma da melhora é a geral. Com o erro e as regras no contexto sobra muito menos para
 adivinhar, e os chutes que restam são sobre o código que está na frente do modelo e não sobre um
 código que ele imagina.
 

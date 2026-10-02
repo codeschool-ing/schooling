@@ -66,9 +66,9 @@ index 9af0e26..3eb6322 100644
 ```
 
 **A diff of one line**, in integers, touching only `parse_price`. The reply was written by the course,
-but the shape of the improvement is the general one: with the error and the rules in the context
-there is much less left to guess, and the guesses that remain are about the code that is in front of
-the model rather than about code it imagines.
+but the shape of the improvement is the general one. With the error and the rules in the context
+there is much less left to guess, and the guesses that remain are about the code in front of the
+model rather than about code it imagines.
 
 ## What counts as evidence
 

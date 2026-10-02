@@ -5,7 +5,7 @@ version: 1
 
 The same request, asked two ways, gets two different kinds of answer. The difference is rarely
 cleverness of phrasing. **It is whether the prompt carries what a colleague would need to do the
-job without coming back to ask**: what to change, what it is for, what must not change, how you will
+job without coming back to ask.** What to change, what it is for, what must not change, how you will
 know it is done, and in what form you want the answer.
 
 ## The short version
