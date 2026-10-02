@@ -399,6 +399,168 @@
     ]
   },
   {
+    "id": "ex-fcxk4gra",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`agent runs/order.txt` calls `today` on step 1, the calculator on step 2 and answers on step 3. Run with `--max-steps 2`, how many tool calls happen before it stops?",
+    "hint": "Lesson 6.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-4yb6v3vn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A calculator tool is described to the model with the single word \"Arithmetic\", and the model keeps sending `sqrt(2)`, which the tool rejects. What does lesson 6 point to?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Give the model a larger window, so it remembers the earlier errors",
+        "correct": false,
+        "why": "The errors are already in front of it. What is missing is the sentence saying what the tool accepts."
+      },
+      {
+        "text": "Raise the step limit, so the model finds the right form by trying",
+        "correct": false,
+        "why": "Every extra turn costs tokens, and trial and error is what a clear description saves."
+      },
+      {
+        "text": "Nothing: the model chose the call, so the fault lies with the model",
+        "correct": false,
+        "why": "The model decides from that one sentence. A vague sentence is the developer's to fix."
+      },
+      {
+        "text": "Rewrite the description to say which operations the tool takes",
+        "correct": true,
+        "why": "Right. The description is a prompt too: \"numbers and + - * /\" tells the model what to send."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xnxw64x",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each kind of line in `agent`'s output to where it came from.",
+    "hint": "Lesson 6.",
+    "pairs": [
+      {
+        "left": "model>",
+        "right": "The turns written for the model"
+      },
+      {
+        "left": "tool>",
+        "right": "A real tool that ran"
+      },
+      {
+        "left": "stopped:",
+        "right": "The loop, when a limit or the turns ran out"
+      }
+    ],
+    "right_distractors": [
+      "The customer who asked the question"
+    ]
+  },
+  {
+    "id": "ex-jw5bymvn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An assistant drafts replies to the café's incoming e-mail, and a person sends each draft. Which set of tools follows lesson 7's least privilege?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Read, draft and send, with a prompt line saying never to send",
+        "correct": false,
+        "why": "A prompt line is not a control. If the task does not need sending, it does not get it."
+      },
+      {
+        "text": "Inbox access and a place for unsent text, with no sending tool",
+        "correct": true,
+        "why": "Right. The task drafts; sending is a person's job, so an injected e-mail has nothing to send with."
+      },
+      {
+        "text": "Every mail tool, so the assistant is never stuck mid-task",
+        "correct": false,
+        "why": "Every extra tool is something an injection can try to use."
+      },
+      {
+        "text": "No tools, with the e-mails pasted in by hand each time",
+        "correct": false,
+        "why": "That removes the job the assistant was built for. The aim is the tools the task needs, and no more."
+      }
+    ]
+  },
+  {
+    "id": "ex-qp6dwnja",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these still hold after the model has been fooled by an injection? Choose all that apply.",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "A call held until a person confirms it",
+        "correct": true,
+        "why": "Yes. The person looks at the action itself, which the injection cannot disguise."
+      },
+      {
+        "text": "A program that blocks e-mail to addresses outside the company",
+        "correct": true,
+        "why": "Yes. It inspects the call before it is used."
+      },
+      {
+        "text": "A system prompt line saying to ignore instructions in documents",
+        "correct": false,
+        "why": "It competes with the injected text inside the same window, and the model has just lost that contest."
+      },
+      {
+        "text": "A tool left off the task's allow-list",
+        "correct": true,
+        "why": "Yes. The program refuses it whatever the model was persuaded of."
+      }
+    ]
+  },
+  {
+    "id": "ex-26epw8ra",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An assistant has no tools at all: it reads web pages a user pastes in and replies. Which aims of an injection remain open to a page's author?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Misleading the reply, and leaking what is in the context into it",
+        "correct": true,
+        "why": "Right. Acting needs a tool, and there is none; the reply itself is still a way out for a lie or a leak."
+      },
+      {
+        "text": "None, since an assistant without tools cannot be injected",
+        "correct": false,
+        "why": "Injection needs only text the model reads. The reply can still be steered."
+      },
+      {
+        "text": "Acting, since the reply can send an e-mail on its own",
+        "correct": false,
+        "why": "A reply is text. Without a tool, nothing in the conversation sends anything."
+      },
+      {
+        "text": "Only leaking, since a reply cannot be made to say anything false",
+        "correct": false,
+        "why": "Changing what the reply says is the third aim, and it needs nothing but the reply."
+      }
+    ]
+  },
+  {
     "id": "ex-ps4jc6q3",
     "version": 1,
     "type": "numeric",
@@ -430,14 +592,14 @@
         "why": "That is 35 GB even at 4 bits: a workstation or a server."
       },
       {
-        "text": "A 7B model at full precision, 32 bits",
-        "correct": false,
-        "why": "At 4 bytes a weight that is 28 GB, almost twice what the laptop has."
-      },
-      {
         "text": "A 7B model at 4 bits",
         "correct": true,
         "why": "Right. 3.5 GB leaves plenty of room, including for the working memory a long context needs."
+      },
+      {
+        "text": "A 7B model at full precision, 32 bits",
+        "correct": false,
+        "why": "At 4 bytes a weight that is 28 GB, almost twice what the laptop has."
       }
     ]
   },
@@ -515,6 +677,11 @@
     "hint": "Lesson 9.",
     "choices": [
       {
+        "text": "Collecting and labelling hundreds of examples",
+        "correct": true,
+        "why": "Yes, and it is usually the largest: people's time, checking each answer."
+      },
+      {
         "text": "Training runs, since the first is rarely the last",
         "correct": true,
         "why": "Yes. Each run is billed, and the data is adjusted and trained again."
@@ -528,11 +695,6 @@
         "text": "The input tokens of each short request",
         "correct": false,
         "why": "Those are exactly what the per-token bill counts."
-      },
-      {
-        "text": "Collecting and labelling hundreds of examples",
-        "correct": true,
-        "why": "Yes, and it is usually the largest: people's time, checking each answer."
       }
     ]
   },
@@ -608,6 +770,11 @@
     "hint": "Lesson 10.",
     "choices": [
       {
+        "text": "A route planner following rules a programmer wrote",
+        "correct": false,
+        "why": "AI in the field's sense, not machine learning, since nothing was learnt from examples."
+      },
+      {
         "text": "A spam filter trained on messages people marked as spam",
         "correct": true,
         "why": "Yes: its behaviour was learnt from examples."
@@ -621,11 +788,6 @@
         "text": "A chess program whose rules and scoring were written by hand",
         "correct": false,
         "why": "It is AI, and it learnt nothing: every rule was written."
-      },
-      {
-        "text": "A route planner following rules a programmer wrote",
-        "correct": false,
-        "why": "AI in the field's sense, not machine learning, since nothing was learnt from examples."
       }
     ]
   },
@@ -639,14 +801,14 @@
     "hint": "Lesson 10.",
     "choices": [
       {
-        "text": "Could the questions have been in the training data?",
-        "correct": false,
-        "why": "That is contamination, a separate problem: memory instead of ability. Here the answers alone give the score away."
-      },
-      {
         "text": "What exactly was measured?",
         "correct": true,
         "why": "Right. A test whose answers are all `yes` measures whether the model says `yes`, which is something other than the skill it names."
+      },
+      {
+        "text": "Could the questions have been in the training data?",
+        "correct": false,
+        "why": "That is contamination, a separate problem: memory instead of ability. Here the answers alone give the score away."
       },
       {
         "text": "Is this one run, or many?",
@@ -723,14 +885,14 @@
         "why": "No model was trained on this handbook. What is not in the prompt is not known."
       },
       {
-        "text": "In asking for more passages, so the model sees all of it",
-        "correct": false,
-        "why": "The missing line shares no word with the question, so it scores zero however many passages are kept."
-      },
-      {
         "text": "In how the handbook is cut into passages",
         "correct": true,
         "why": "Right. A cut that separates a rule from the detail it points to is a chunking problem, and the fix is in how the documents are cut."
+      },
+      {
+        "text": "In asking for more passages, so the model sees all of it",
+        "correct": false,
+        "why": "The missing line shares no word with the question, so it scores zero however many passages are kept."
       }
     ]
   },
@@ -749,14 +911,14 @@
         "why": "That reads the scores as a scale shared by every question. They only order passages for one query."
       },
       {
-        "text": "The second passage is irrelevant, since it scored under 3",
-        "correct": false,
-        "why": "There is no score that means not relevant; 2.94 was the exact answer to the Sunday question."
-      },
-      {
         "text": "Nothing about which match is better: scores rank passages for one question",
         "correct": true,
         "why": "Right. The scores are not percentages and have no fixed top, so they mean nothing across questions."
+      },
+      {
+        "text": "The second passage is irrelevant, since it scored under 3",
+        "correct": false,
+        "why": "There is no score that means not relevant; 2.94 was the exact answer to the Sunday question."
       },
       {
         "text": "The first answer is 87.1% likely to be right",
@@ -775,6 +937,11 @@
     "hint": "Lesson 11.",
     "choices": [
       {
+        "text": "Three passages that each share one word, for the cold coffee",
+        "correct": true,
+        "why": "Yes. The top three are returned whatever they are."
+      },
+      {
         "text": "A grounded answer with one sentence that cites no source",
         "correct": false,
         "why": "That one is the model's: it went beyond the sources it was given."
@@ -788,11 +955,6 @@
         "text": "The holiday rule retrieved without the Sunday hours",
         "correct": true,
         "why": "Yes. The cut separated the rule from its detail before any model ran."
-      },
-      {
-        "text": "Three passages that each share one word, for the cold coffee",
-        "correct": true,
-        "why": "Yes. The top three are returned whatever they are."
       }
     ]
   },
@@ -911,14 +1073,14 @@
     "hint": "Lesson 13.",
     "choices": [
       {
-        "text": "Keep 0, since it gives the most likely and so the best name",
-        "correct": false,
-        "why": "The most likely name is not the best one for a task with many good answers. At 0 the others never appear."
-      },
-      {
         "text": "A higher temperature, since you want different candidates on each run",
         "correct": true,
         "why": "Right. Brainstorming has many good answers, and you will throw most candidates away."
+      },
+      {
+        "text": "Keep 0, since it gives the most likely and so the best name",
+        "correct": false,
+        "why": "The most likely name is not the best one for a task with many good answers. At 0 the others never appear."
       },
       {
         "text": "Keep 0 and change the seed between requests",
@@ -995,14 +1157,14 @@
         "why": "Only words the model scored can be kept, and it scored one."
       },
       {
-        "text": "Nothing, since top-k needs at least two candidates",
-        "correct": false,
-        "why": "Top-k keeps up to k words; fewer candidates simply means fewer kept."
-      },
-      {
         "text": "The full stop alone, since there is one candidate",
         "correct": true,
         "why": "Right. k is the most words kept, and here there is only one to keep."
+      },
+      {
+        "text": "Nothing, since top-k needs at least two candidates",
+        "correct": false,
+        "why": "Top-k keeps up to k words; fewer candidates simply means fewer kept."
       },
       {
         "text": "Two copies of the full stop, at 50% each",
@@ -1105,14 +1267,14 @@
         "why": "A short stop fires inside words: `hours` would survive, and `refunds` would come back as `r`."
       },
       {
-        "text": "No stop: list-of-messages chat APIs end the turn themselves",
-        "correct": false,
-        "why": "This is plain text with your own markers, which is exactly where stops matter most."
-      },
-      {
         "text": "`Message:`, the label that starts the next example",
         "correct": true,
         "why": "Right. It marks the end of the unit you want and does not occur inside a category."
+      },
+      {
+        "text": "No stop: list-of-messages chat APIs end the turn themselves",
+        "correct": false,
+        "why": "This is plain text with your own markers, which is exactly where stops matter most."
       }
     ]
   },
@@ -1131,14 +1293,14 @@
         "why": "The model never learns of the stop. The loop checks the text."
       },
       {
-        "text": "It keeps the marker in the output, so the program can find the end",
-        "correct": false,
-        "why": "The stop text is left out, so a program that needs the marker adds it back."
-      },
-      {
         "text": "It ends the reply at a piece of text that marks the end of the unit",
         "correct": true,
         "why": "Right. A limit cuts at a count, wherever it falls; a stop cuts where a chosen marker appears."
+      },
+      {
+        "text": "It keeps the marker in the output, so the program can find the end",
+        "correct": false,
+        "why": "The stop text is left out, so a program that needs the marker adds it back."
       },
       {
         "text": "It improves the answer, since the model stops before it can go wrong",
@@ -1200,11 +1362,6 @@
     "hint": "Lesson 17.",
     "choices": [
       {
-        "text": "The presence penalty",
-        "correct": true,
-        "why": "Right. A flat charge for any word already used pushes the text towards new words."
-      },
-      {
         "text": "The frequency penalty",
         "correct": false,
         "why": "That one leans harder the more a word repeats, which suits loops and lists that grind on."
@@ -1218,6 +1375,11 @@
         "text": "A top-p of 0.8",
         "correct": false,
         "why": "Top-p cuts the unlikely tail, which is the opposite of reaching for unused words."
+      },
+      {
+        "text": "The presence penalty",
+        "correct": true,
+        "why": "Right. A flat charge for any word already used pushes the text towards new words."
       }
     ]
   },
@@ -1241,14 +1403,14 @@
         "why": "Penalties look at this output only, never at the training file."
       },
       {
-        "text": "2, once for `the` and once for `cat`",
-        "correct": false,
-        "why": "A penalty applies to the word that was used, and nothing was written yet."
-      },
-      {
         "text": "Nothing: `toylm` counts the words it wrote, not the prompt",
         "correct": true,
         "why": "Right. The penalty is charged on words already in the output, and the output is still empty."
+      },
+      {
+        "text": "2, once for `the` and once for `cat`",
+        "correct": false,
+        "why": "A penalty applies to the word that was used, and nothing was written yet."
       }
     ]
   },
@@ -1305,6 +1467,11 @@
     "hint": "Lesson 18.",
     "choices": [
       {
+        "text": "Single quotes around the field names",
+        "correct": true,
+        "why": "Yes. JSON needs double quotes."
+      },
+      {
         "text": "A comma after the last field",
         "correct": true,
         "why": "Yes. JSON refuses the trailing comma."
@@ -1318,11 +1485,6 @@
         "text": "A sentence of introduction before the object",
         "correct": true,
         "why": "Yes. JSON has to start with a value, and a letter is not one."
-      },
-      {
-        "text": "Single quotes around the field names",
-        "correct": true,
-        "why": "Yes. JSON needs double quotes."
       }
     ]
   },
@@ -1335,11 +1497,6 @@
     "prompt": "A reply holds two JSON objects, one after the other, with a sentence between them. What does lesson 19 say `repair` does with it?",
     "hint": "Lesson 19.",
     "choices": [
-      {
-        "text": "Step 2 cuts out text that does not parse, and it says `still not JSON`",
-        "correct": true,
-        "why": "Right. First `{` to last `}` spans both objects and the sentence, and `repair` reports that rather than guessing further."
-      },
       {
         "text": "Step 2 keeps the first object and drops the second",
         "correct": false,
@@ -1354,6 +1511,11 @@
         "text": "It sends the follow-up message at once, without trying the cut",
         "correct": false,
         "why": "The cheap steps come first. The follow-up message is for a reply that parsed and failed the schema."
+      },
+      {
+        "text": "Step 2 cuts out text that does not parse, and it says `still not JSON`",
+        "correct": true,
+        "why": "Right. First `{` to last `}` spans both objects and the sentence, and `repair` reports that rather than guessing further."
       }
     ]
   },
@@ -1402,14 +1564,14 @@
         "why": "The path says where a problem is, not how much it matters."
       },
       {
-        "text": "The problem was found on the first line of the file",
-        "correct": false,
-        "why": "The validator reports paths into the object, not lines and columns; that was the parser in lesson 18."
-      },
-      {
         "text": "The problem is with the object itself, not with one field inside it",
         "correct": true,
         "why": "Right. A missing required field or an extra one is a fact about the whole object, so its path is the top level."
+      },
+      {
+        "text": "The problem was found on the first line of the file",
+        "correct": false,
+        "why": "The validator reports paths into the object, not lines and columns; that was the parser in lesson 18."
       },
       {
         "text": "The `summary` field is at the top of the reply but empty",
@@ -1496,14 +1658,14 @@
         "why": "The café needs four labels. Fewer labels hides the case instead of deciding it."
       },
       {
-        "text": "Raise the temperature, so the model reads the message more carefully",
-        "correct": false,
-        "why": "Temperature changes how a word is drawn. It does not tell the model where the café draws this line."
-      },
-      {
         "text": "Add it to the test set as `negative`, and name the case in the prompt",
         "correct": true,
         "why": "Right. Every disagreement is a sentence the prompt needs, and a real message labelled wrong goes into the test set with its right label."
+      },
+      {
+        "text": "Raise the temperature, so the model reads the message more carefully",
+        "correct": false,
+        "why": "Temperature changes how a word is drawn. It does not tell the model where the café draws this line."
       }
     ]
   },
@@ -1590,11 +1752,6 @@
     "hint": "Lesson 22.",
     "choices": [
       {
-        "text": "The model works with no standing instructions at all",
-        "correct": true,
-        "why": "Right. The model keeps nothing between requests, so a system message left out of a request does not exist for it."
-      },
-      {
         "text": "Nothing changes, since the model remembers the system message",
         "correct": false,
         "why": "There is no memory between requests. The system message holds only because it is sent every time."
@@ -1608,6 +1765,11 @@
         "text": "The model asks the application to send the rules again",
         "correct": false,
         "why": "It has no way to know rules existed. It continues whatever text it is given."
+      },
+      {
+        "text": "The model works with no standing instructions at all",
+        "correct": true,
+        "why": "Right. The model keeps nothing between requests, so a system message left out of a request does not exist for it."
       }
     ]
   },
@@ -1683,14 +1845,14 @@
     "hint": "Lesson 23.",
     "choices": [
       {
-        "text": "You are a patient teacher who explains things to people slowly",
-        "correct": false,
-        "why": "That casts the model, not the reader. Who the explanation is for is still open."
-      },
-      {
         "text": "Explain to a new barista, on their first day, why we ask about allergies",
         "correct": true,
         "why": "Right. It names who the reply is for, which sets the register, the vocabulary and the angle at once."
+      },
+      {
+        "text": "You are a patient teacher who explains things to people slowly",
+        "correct": false,
+        "why": "That casts the model, not the reader. Who the explanation is for is still open."
       },
       {
         "text": "You are the assistant at Café Aurora's counter: warm, brief, plain",
@@ -1714,11 +1876,6 @@
     "hint": "Lesson 23.",
     "choices": [
       {
-        "text": "One role line in the system message, giving the voice",
-        "correct": true,
-        "why": "Right. A role is one line that changes the register of every reply after it, which is the job here."
-      },
-      {
         "text": "Fine-tuning on a few hundred warm, brief replies",
         "correct": false,
         "why": "That is the dearest rung of lesson 9's ladder, for something one line of prompt does."
@@ -1732,6 +1889,11 @@
         "text": "Twenty examples of warm replies on every request",
         "correct": false,
         "why": "Examples are paid for on every request, and a role line does the same job for a few tokens."
+      },
+      {
+        "text": "One role line in the system message, giving the voice",
+        "correct": true,
+        "why": "Right. A role is one line that changes the register of every reply after it, which is the job here."
       }
     ]
   },
@@ -1793,14 +1955,14 @@
         "why": "The refunds page and the customer's message are the same material. The reader is what moved."
       },
       {
-        "text": "Nothing, since the facts of the refund are the same",
-        "correct": false,
-        "why": "The facts are, and the reader is not. Who the answer is for decides tone and shape."
-      },
-      {
         "text": "Who the answer is for",
         "correct": true,
         "why": "Right. A note for the shift manager differs in tone and shape from a reply to a customer about the same refund."
+      },
+      {
+        "text": "Nothing, since the facts of the refund are the same",
+        "correct": false,
+        "why": "The facts are, and the reader is not. Who the answer is for decides tone and shape."
       },
       {
         "text": "The model, since a manager's note is a different task",
@@ -1862,6 +2024,11 @@
     "hint": "Lesson 25.",
     "choices": [
       {
+        "text": "An exception hidden behind a more obvious rule",
+        "correct": true,
+        "why": "Yes, the holiday toastie's shape: the wording points at the wrong rule."
+      },
+      {
         "text": "A question from a field with laws, such as physics",
         "correct": true,
         "why": "Yes. Naming the law is most of the work, as with the gas question."
@@ -1875,11 +2042,6 @@
         "text": "The name of the guest Wi-Fi network",
         "correct": false,
         "why": "There is no principle behind it: the answer is one line of the handbook."
-      },
-      {
-        "text": "An exception hidden behind a more obvious rule",
-        "correct": true,
-        "why": "Yes, the holiday toastie's shape: the wording points at the wrong rule."
       }
     ]
   },
@@ -1910,14 +2072,14 @@
         "why": "Picking a number out of the text is the guess the fixed marker was there to avoid; the chain is full of numbers."
       },
       {
-        "text": "A second request asking the model to repeat only its answer",
-        "correct": false,
-        "why": "That doubles the calls and gives another reply to parse, with the same problem."
-      },
-      {
         "text": "A structured format, with the reasoning and the answer in separate fields",
         "correct": true,
         "why": "Right. Lesson 18's formats put the reasoning in one field and the answer in another, and a parser checks both."
+      },
+      {
+        "text": "A second request asking the model to repeat only its answer",
+        "correct": false,
+        "why": "That doubles the calls and gives another reply to parse, with the same problem."
       },
       {
         "text": "A higher output limit, so the answer line is never cut off",
@@ -1936,6 +2098,11 @@
     "hint": "Lesson 26.",
     "choices": [
       {
+        "text": "The price of one flat white, read off the menu",
+        "correct": false,
+        "why": "A one-step question has no intermediate result, and gains nothing."
+      },
+      {
         "text": "A bill over several items, with a discount rule",
         "correct": true,
         "why": "Yes: a rule applied before a sum needs an intermediate result."
@@ -1949,11 +2116,6 @@
         "text": "A sum of six prices with a total at the end",
         "correct": true,
         "why": "Yes. Arithmetic over several items has intermediate results to write."
-      },
-      {
-        "text": "The price of one flat white, read off the menu",
-        "correct": false,
-        "why": "A one-step question has no intermediate result, and gains nothing."
       }
     ]
   },
@@ -1979,11 +2141,6 @@
     "hint": "Lesson 27.",
     "choices": [
       {
-        "text": "Step back to the rules first, then vote among chains that start from them",
-        "correct": true,
-        "why": "Right. The wrong chains share one pull, the word Wednesday, and the fix is in the prompt, before the samples are drawn."
-      },
-      {
         "text": "Draw twenty samples instead of five, so the right answer can catch up",
         "correct": false,
         "why": "More samples of the same prompt repeat the same pull, and the wrong majority would most likely grow firmer."
@@ -1997,6 +2154,11 @@
         "text": "Keep the minority answer, since the chains behind it quote a rule",
         "correct": false,
         "why": "Choosing by how a chain reads is what a vote was meant to replace. The prompt is where the pull starts."
+      },
+      {
+        "text": "Step back to the rules first, then vote among chains that start from them",
+        "correct": true,
+        "why": "Right. The wrong chains share one pull, the word Wednesday, and the fix is in the prompt, before the samples are drawn."
       }
     ]
   },
@@ -2181,14 +2343,14 @@
     "hint": "Lesson 30.",
     "choices": [
       {
-        "text": "Prompt tuning changes the weights; APE leaves them as they are",
-        "correct": false,
-        "why": "Neither changes the weights. In prompt tuning they are frozen and only the soft prompt's numbers move."
-      },
-      {
         "text": "One learns vectors against the weights; the other scores written prompts",
         "correct": true,
         "why": "Right. Prompt tuning needs the weights and a gradient. APE needs only a way to send text and a set of labelled examples."
+      },
+      {
+        "text": "Prompt tuning changes the weights; APE leaves them as they are",
+        "correct": false,
+        "why": "Neither changes the weights. In prompt tuning they are frozen and only the soft prompt's numbers move."
       },
       {
         "text": "APE needs the weights, and prompt tuning works through any API",
@@ -2280,14 +2442,14 @@
         "why": "That splits the work between two steps. It says nothing about which examples may measure the result."
       },
       {
-        "text": "Exact match can score a correct reply as wrong",
-        "correct": false,
-        "why": "That is a fault in the metric, and it applies whatever examples are used."
-      },
-      {
         "text": "Examples used to choose cannot measure the choice honestly",
         "correct": true,
         "why": "Right. The winner's 4/4 used `tests.tsv` up, and a held-out set measures honestly once per decision."
+      },
+      {
+        "text": "Exact match can score a correct reply as wrong",
+        "correct": false,
+        "why": "That is a fault in the metric, and it applies whatever examples are used."
       },
       {
         "text": "A person approves what goes into production",
