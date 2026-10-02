@@ -29,15 +29,15 @@ Cada output tem um nome e um `value`, que é qualquer expressão, aqui três ref
 
 ```
 ana@laptop:~/shop$ terraform apply -auto-approve
-aws_vpc.shop: Refreshing state... [id=vpc-e011d9a0de19f8728]
-aws_subnet.web_a: Refreshing state... [id=subnet-d9c8587bd007db2d1]
-aws_security_group.web: Refreshing state... [id=sg-1a39a5aeed1e5da09]
-aws_vpc_security_group_ingress_rule.https: Refreshing state... [id=sgr-02c8bd3aa21d33d29]
+aws_vpc.shop: Refreshing state... [id=vpc-7327c901412b20229]
+aws_security_group.web: Refreshing state... [id=sg-3475d5edf795d5594]
+aws_subnet.web_a: Refreshing state... [id=subnet-246685d4ada451bad]
+aws_vpc_security_group_ingress_rule.https: Refreshing state... [id=sgr-dcc6bf0490cd0c301]
 
 Changes to Outputs:
-  + vpc_id                = "vpc-e011d9a0de19f8728"
-  + web_security_group_id = "sg-1a39a5aeed1e5da09"
-  + web_subnet_id         = "subnet-d9c8587bd007db2d1"
+  + vpc_id                = "vpc-7327c901412b20229"
+  + web_security_group_id = "sg-3475d5edf795d5594"
+  + web_subnet_id         = "subnet-246685d4ada451bad"
 
 You can apply this plan to save these new output values to the Terraform
 state, without changing any real infrastructure.
@@ -46,9 +46,9 @@ Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-vpc_id = "vpc-e011d9a0de19f8728"
-web_security_group_id = "sg-1a39a5aeed1e5da09"
-web_subnet_id = "subnet-d9c8587bd007db2d1"
+vpc_id = "vpc-7327c901412b20229"
+web_security_group_id = "sg-3475d5edf795d5594"
+web_subnet_id = "subnet-246685d4ada451bad"
 ```
 
 **Acrescentar um output não muda recurso nenhum, e mesmo assim precisa de um apply.** O plano acima
@@ -59,13 +59,13 @@ O `terraform output` os lê de volta, em três formatos para três tipos de leit
 
 ```
 ana@laptop:~/shop$ terraform output
-vpc_id = "vpc-e011d9a0de19f8728"
-web_security_group_id = "sg-1a39a5aeed1e5da09"
-web_subnet_id = "subnet-d9c8587bd007db2d1"
+vpc_id = "vpc-7327c901412b20229"
+web_security_group_id = "sg-3475d5edf795d5594"
+web_subnet_id = "subnet-246685d4ada451bad"
 ana@laptop:~/shop$ terraform output vpc_id
-"vpc-e011d9a0de19f8728"
+"vpc-7327c901412b20229"
 ana@laptop:~/shop$ terraform output -raw vpc_id; echo
-vpc-e011d9a0de19f8728
+vpc-7327c901412b20229
 ```
 
 Sem nome, ele lista tudo. Com um nome, imprime aquele valor na sintaxe do HCL, com as aspas que
@@ -92,17 +92,17 @@ ana@laptop:~/shop$ terraform output -json
   "vpc_id": {
     "sensitive": false,
     "type": "string",
-    "value": "vpc-e011d9a0de19f8728"
+    "value": "vpc-7327c901412b20229"
   },
   "web_security_group_id": {
     "sensitive": false,
     "type": "string",
-    "value": "sg-1a39a5aeed1e5da09"
+    "value": "sg-3475d5edf795d5594"
   },
   "web_subnet_id": {
     "sensitive": false,
     "type": "string",
-    "value": "subnet-d9c8587bd007db2d1"
+    "value": "subnet-246685d4ada451bad"
   }
 }
 ```

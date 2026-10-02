@@ -1,0 +1,553 @@
+{
+  "ex-gq9yderj": {
+    "prompt": "A primeira configuração da Ana tem só `data.aws_caller_identity.current` e `data.aws_region.current`, mais dois outputs. O que o `terraform apply` muda na conta?",
+    "hint": "Leia a linha de resumo do apply.",
+    "choices": [
+      {
+        "text": "Cria dois registros somente leitura que descrevem quem chama",
+        "why": "Uma data source não cria nada na conta; a resposta dela fica registrada no state, não na AWS."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo: `0 added, 0 changed, 0 destroyed`. Data sources só perguntam; o apply guardou os outputs e não mexeu em nada."
+      },
+      {
+        "text": "Marca a conta com uma tag da região de onde foi lida",
+        "why": "Ler a região não escreve nada; é um fato sobre a conexão."
+      },
+      {
+        "text": "Cria um usuário do IAM para o Terraform trabalhar",
+        "why": "A identidade já existe: é o dono das credenciais, o usuário de exemplo do moto no laboratório."
+      }
+    ]
+  },
+  "ex-dtdryybn": {
+    "prompt": "Que endereço uma configuração usa para ler o número da conta de `data \"aws_caller_identity\" \"current\" {}`?",
+    "hint": "Data sources moram sob um prefixo próprio.",
+    "choices": [
+      {
+        "text": "`aws_caller_identity.current.account_id`",
+        "why": "Sem o prefixo `data.` esse é o endereço de um recurso, e esse recurso não existe."
+      },
+      {
+        "text": "`var.aws_caller_identity.account_id`",
+        "why": "`var.` é para variáveis de entrada, que quem chama define; uma data source é respondida pelo provider."
+      },
+      {
+        "text": "`data.aws_caller_identity.current.account_id`",
+        "why": "Isso: `data.TIPO.NOME.atributo`."
+      },
+      {
+        "text": "`data.current.account_id`",
+        "why": "O tipo faz parte do endereço; duas data sources de tipos diferentes podem ter o mesmo nome."
+      }
+    ]
+  },
+  "ex-rgycdtmx": {
+    "prompt": "Um bloco que faz uma pergunta ao provider e guarda a resposta, sem criar nada, começa com a palavra-chave ___.",
+    "hint": "A outra palavra-chave de bloco é `resource`.",
+    "blanks": [
+      {
+        "accept": [
+          "data"
+        ]
+      }
+    ]
+  },
+  "ex-mvcw7p3j": {
+    "prompt": "O `terraform state list` mostra `data.aws_region.current` ao lado dos recursos. O que essa entrada quer dizer?",
+    "hint": "Ela é lida de novo no próximo plan?",
+    "choices": [
+      {
+        "text": "O Terraform agora é dono da região e vai destruí-la com o resto",
+        "why": "Um destroy nunca toca uma data source; nada foi criado."
+      },
+      {
+        "text": "Uma resposta guardada da última leitura, que o próximo plan substitui perguntando de novo",
+        "why": "Certo. O state guarda a última resposta, e cada plan pergunta de novo porque a coisa pode ter mudado."
+      },
+      {
+        "text": "A região fica travada para outras configurações não a lerem",
+        "why": "Ler não trava nada; qualquer número de configurações pode ler a mesma coisa."
+      },
+      {
+        "text": "Uma importação da região para esta configuração",
+        "why": "Importar coloca um recurso sob gestão (aula 8); uma data source só é consultada."
+      }
+    ]
+  },
+  "ex-9vcsg9ps": {
+    "prompt": "A VPC do time de rede já existe. Por que escrever um bloco `resource \"aws_vpc\"` com a mesma faixa é o jeito errado de a Ana usá-la?",
+    "hint": "O que um bloco de recurso quer dizer?",
+    "choices": [
+      {
+        "text": "O Terraform recusaria uma faixa que outra VPC da conta já usa",
+        "why": "A AWS aceita duas VPCs com a mesma faixa; a aula 1 criou exatamente isso rodando um script duas vezes."
+      },
+      {
+        "text": "Criaria uma segunda VPC com a mesma faixa, ao lado da deles",
+        "why": "Isso. Um bloco de recurso quer dizer \"faça isto existir\", não \"encontre isto\"."
+      },
+      {
+        "text": "Tomaria a VPC do time de rede e a renomearia",
+        "why": "O Terraform não adota recursos existentes a partir de um bloco; isso exige um import, aula 8."
+      },
+      {
+        "text": "Um bloco de recurso não tem argumento `tags`",
+        "why": "Recursos levam tags o tempo todo; o problema é o que o bloco pede."
+      }
+    ]
+  },
+  "ex-n0f9gc7p": {
+    "prompt": "No plano da Ana, o `vpc_id` do security group mostra um id `vpc-…` real em vez de `(known after apply)`. Por quê?",
+    "hint": "Quando `data.aws_vpc.shop` foi lido?",
+    "choices": [
+      {
+        "text": "Ela digitou o id na configuração depois de procurá-lo",
+        "why": "Nada no `network.tf` cita um id; esse é o objetivo da busca."
+      },
+      {
+        "text": "O security group foi criado num apply anterior",
+        "why": "O plano diz que ele será criado; o id vem da VPC, não do grupo."
+      },
+      {
+        "text": "A busca da VPC foi respondida durante o plan, antes de qualquer coisa ser criada",
+        "why": "Certo. A consulta era toda conhecida, então foi respondida primeiro, e o id é um valor comum no plano."
+      },
+      {
+        "text": "O moto devolve ids antecipados para qualquer VPC",
+        "why": "O mesmo acontece na AWS real; é como o Terraform ordena as leituras, não uma peculiaridade do laboratório."
+      }
+    ]
+  },
+  "ex-qpt7rw39": {
+    "prompt": "A configuração da Ana lê a VPC e duas sub-redes e cria um security group. Quantas coisas o `terraform plan -destroy` diz que destruiria?",
+    "hint": "Só o que a configuração criou.",
+    "unit": "a destruir"
+  },
+  "ex-vz9hk5ta": {
+    "prompt": "Do que a configuração da Ana passa a depender agora que encontra a rede pela tag? Escolha todas as que se aplicam.",
+    "hint": "Pense no que o time de rede poderia mudar.",
+    "choices": [
+      {
+        "text": "A VPC manter a tag `Name = shop`",
+        "why": "Sim; a tag é a consulta."
+      },
+      {
+        "text": "Nenhuma outra VPC ter as mesmas tags",
+        "why": "Sim; uma busca no singular recusa dois resultados, como a última seção mostra."
+      },
+      {
+        "text": "A VPC manter o id que tinha quando ela escreveu o arquivo",
+        "why": "Não; é disso que a busca a liberta. Uma VPC reconstruída com as mesmas tags é encontrada de novo."
+      },
+      {
+        "text": "O time de rede usar Terraform",
+        "why": "Não; eles usaram o AWS CLI, e a busca funcionou."
+      },
+      {
+        "text": "As sub-redes públicas manterem `Tier = public`",
+        "why": "Sim; o `aws_subnets` filtra por essa tag."
+      }
+    ]
+  },
+  "ex-f0bfpmtb": {
+    "prompt": "Com várias imagens `shop-web-*`, o que `most_recent = true` faz o `data \"aws_ami\"` fazer?",
+    "hint": "É um desempate.",
+    "choices": [
+      {
+        "text": "Escolher a mais nova das imagens encontradas, pela data de criação",
+        "why": "Isso, entre as imagens que os filtros encontraram."
+      },
+      {
+        "text": "Baixar a imagem mais nova para o diretório da configuração",
+        "why": "Uma AMI nunca é baixada; a data source devolve o id e os atributos dela."
+      },
+      {
+        "text": "Manter a primeira escolha mesmo depois de surgir uma mais nova",
+        "why": "O contrário: ela é perguntada de novo a cada plan, que é o perigo que a seção mostra."
+      },
+      {
+        "text": "Pedir ao time de imagens um build novo antes de cada plan",
+        "why": "Uma data source só lê o que existe; ela não dispara nada."
+      }
+    ]
+  },
+  "ex-gt0wqd1p": {
+    "prompt": "A Ana não mudou nada nos arquivos, e mesmo assim o plano mostra `aws_instance.web must be replaced`. O que mudou?",
+    "hint": "Veja a linha marcada com `# forces replacement`.",
+    "choices": [
+      {
+        "text": "O provider foi atualizado e agora trata instâncias de outro jeito",
+        "why": "A versão do provider está presa pelo lock file; o plano aponta o `ami` como causa."
+      },
+      {
+        "text": "Alguém parou a instância à mão no console",
+        "why": "Uma instância parada não é motivo para substituí-la; a diferença está no `ami`."
+      },
+      {
+        "text": "A resposta da data source",
+        "why": "Certo. Uma imagem mais nova bateu com `shop-web-*`, o `most_recent` a escolheu, e o `ami` não muda numa máquina em execução."
+      },
+      {
+        "text": "A sub-rede ficou sem endereços",
+        "why": "Nada no plano aponta para a sub-rede; ele cita a imagem."
+      }
+    ]
+  },
+  "ex-g75tcjxt": {
+    "prompt": "Para produção, que mudança faz da atualização de imagem uma decisão revisada em vez de um efeito colateral do próximo plan?",
+    "hint": "A seção reescreveu o `image.tf`.",
+    "choices": [
+      {
+        "text": "Rodar `terraform plan` com menos frequência",
+        "why": "O próximo plan, quando vier, ainda pega a imagem mais nova."
+      },
+      {
+        "text": "Filtrar pelo nome exato da imagem, guardado numa variável",
+        "why": "Isso. Mudar vira um diff de uma linha que alguém revisa."
+      },
+      {
+        "text": "Acrescentar um segundo bloco `filter` pela arquitetura para menos imagens baterem",
+        "why": "Todo build novo tem a mesma arquitetura, então o mais novo ainda ganha."
+      },
+      {
+        "text": "Pôr em `owners` a conta do time de imagens em vez de `self`",
+        "why": "Isso restringe de quem são as imagens, não qual build é escolhido."
+      }
+    ]
+  },
+  "ex-vk1hkpkg": {
+    "prompt": "Um ambiente de rascunho usa `most_recent = true` de propósito. Produção fixa o nome. O time de imagens publica um build novo. O que o próximo plan de cada ambiente mostra?",
+    "hint": "Um segue o mais novo, o outro pede um nome.",
+    "choices": [
+      {
+        "text": "Os dois mostram substituição, porque a lista de imagens mudou",
+        "why": "O filtro fixado ainda só bate com o nome antigo, então a resposta dele não mudou."
+      },
+      {
+        "text": "Nenhum muda até alguém editar um arquivo",
+        "why": "O de rascunho muda sem edição: é para isso que o `most_recent` foi escolhido."
+      },
+      {
+        "text": "O primeiro é substituído; o segundo não tem nada a fazer",
+        "why": "Certo; a mesma lista de imagens dá duas respostas a duas perguntas diferentes."
+      },
+      {
+        "text": "Produção falha porque agora duas imagens batem com `shop-web-*`",
+        "why": "Produção não filtra mais pelo curinga; ela cita um build."
+      }
+    ]
+  },
+  "ex-98894m20": {
+    "prompt": "`data \"aws_availability_zone\" \"app\"` recebe `name = aws_subnet.app.availability_zone`, e o plano já mostra o nome `sa-east-1a`. Por que ela ainda é lida durante o apply?",
+    "hint": "Leia o comentário sob o título dela no plano.",
+    "choices": [
+      {
+        "text": "Buscas de zona são lentas, então o Terraform as roda por último",
+        "why": "Velocidade não tem nada a ver; o plano dá o motivo num comentário."
+      },
+      {
+        "text": "Ela se refere à sub-rede, um recurso com mudanças ainda pendentes",
+        "why": "Isso: \"depends on a resource or a module with changes pending\". A sub-rede é criada primeiro."
+      },
+      {
+        "text": "O nome da zona é desconhecido até a AWS atribuir um à sub-rede",
+        "why": "O nome está escrito no bloco da sub-rede e aparece no plano; ele é conhecido."
+      },
+      {
+        "text": "O moto não responde buscas de zona durante um plan",
+        "why": "A mesma busca foi respondida no plan seguinte, quando a sub-rede já existia."
+      }
+    ]
+  },
+  "ex-fzyjpxh8": {
+    "prompt": "Depois do apply que criou a sub-rede `app`, o output `app_subnets` era `tolist([])`. O que explica a lista vazia?",
+    "hint": "Quando a busca por tag foi lida, comparado a quando a sub-rede foi criada?",
+    "choices": [
+      {
+        "text": "Foi lida durante o plan, antes de existir a sub-rede que ela procura",
+        "why": "Certo. Nada se referia à sub-rede, então nada a fez esperar, e um apply executa o plano que recebeu."
+      },
+      {
+        "text": "O moto indexa tags alguns segundos após a criação",
+        "why": "O plan seguinte achou a sub-rede na hora; tempo dentro do moto não é a causa."
+      },
+      {
+        "text": "A sub-rede ganhou as tags depois de ser criada",
+        "why": "O plano mostra as tags como parte da criação."
+      },
+      {
+        "text": "`aws_subnets` ignora sub-redes que o próprio Terraform gerencia",
+        "why": "O plan seguinte listou exatamente essa sub-rede; a busca só rodou cedo demais."
+      }
+    ]
+  },
+  "ex-ygxcnmj8": {
+    "prompt": "A Ana acrescenta `depends_on = [aws_subnet.app]` à busca por tag e depois uma tag `Owner` à sub-rede. O que o plano mostra para `app_subnets`?",
+    "hint": "A sub-rede agora tem uma mudança pendente.",
+    "choices": [
+      {
+        "text": "A mesma lista de antes, porque a sub-rede mantém o id",
+        "why": "O valor seria o mesmo depois do apply, mas o plano ainda não tem como saber."
+      },
+      {
+        "text": "Uma lista vazia de novo",
+        "why": "A leitura não é mais feita cedo; ela espera o apply."
+      },
+      {
+        "text": "`(known after apply)`",
+        "why": "Isso. Qualquer mudança pendente numa dependência adia a leitura, e tudo o que é construído a partir dela fica desconhecido."
+      },
+      {
+        "text": "Um erro, porque `depends_on` é recusado em data sources",
+        "why": "Ele é aceito; o custo é o adiamento, não um erro."
+      }
+    ]
+  },
+  "ex-tfehqft6": {
+    "prompt": "Num plano, o símbolo que marca uma data source a ser lida é ___.",
+    "hint": "Dois caracteres, uma seta para a esquerda.",
+    "blanks": [
+      {
+        "accept": [
+          "<="
+        ]
+      }
+    ]
+  },
+  "ex-vqzwh91c": {
+    "prompt": "O que `data \"aws_iam_policy_document\"` produz?",
+    "hint": "Veja o atributo que a policy do bucket usa.",
+    "choices": [
+      {
+        "text": "Uma role do IAM que o bucket assume quando serve objetos",
+        "why": "Ela não cria nada no IAM; só escreve um documento."
+      },
+      {
+        "text": "Uma policy em JSON",
+        "why": "Isso, em `.json`, calculado pelo provider a partir dos blocos HCL."
+      },
+      {
+        "text": "Uma cópia da policy já anexada ao bucket na AWS",
+        "why": "Ela não lê nada da AWS; monta um documento novo a partir do que você escreve."
+      },
+      {
+        "text": "Um relatório de quem acessou o bucket",
+        "why": "Logs de acesso são outro serviço; isto é uma policy."
+      }
+    ]
+  },
+  "ex-7gv4fes6": {
+    "prompt": "Ponha em ordem os passos do apply que criou a policy do bucket da loja.",
+    "hint": "O documento precisa do ARN do bucket.",
+    "items": [
+      "`data.local_file.office` é lida (durante o plan)",
+      "`aws_s3_bucket.assets` é criado",
+      "`data.aws_iam_policy_document.assets` é lida",
+      "`aws_s3_bucket_policy.assets` é criado"
+    ],
+    "trap": "Ler o documento de policy antes do bucket é o deslize comum: os `resources` dele precisam do ARN do bucket, que só existe depois que a AWS o cria."
+  },
+  "ex-hk1mhdxf": {
+    "prompt": "`data.local_file.office` foi lida no começo do plan, enquanto o documento de policy esperou o apply. O que fez a diferença?",
+    "hint": "Compare o que cada uma recebe.",
+    "choices": [
+      {
+        "text": "Arquivos locais são lidos antes de qualquer coisa na AWS, por regra do provider local",
+        "why": "Providers não têm essa prioridade; o momento vem do que é conhecido."
+      },
+      {
+        "text": "O documento de policy é mais lento de calcular do que ler um arquivo",
+        "why": "Velocidade não é um motivo que o Terraform dá; o plano disse \"config refers to values not yet known\"."
+      },
+      {
+        "text": "O `filename` do arquivo era conhecido; o ARN do bucket, não",
+        "why": "Certo. Uma leitura espera exatamente enquanto algo que ela recebe for desconhecido."
+      },
+      {
+        "text": "O documento de policy tem `depends_on` apontando para o bucket",
+        "why": "Não tem; a referência a `aws_s3_bucket.assets.arn` basta."
+      }
+    ]
+  },
+  "ex-t92w33ba": {
+    "prompt": "Associe cada busca ao que o plano fez.",
+    "hint": "Data sources no singular querem exatamente um.",
+    "pairs": [
+      {
+        "left": "`aws_vpc` com a tag `shop-prod`, que nenhuma VPC tem",
+        "right": "Erro: no matching EC2 VPC found"
+      },
+      {
+        "left": "`aws_ami` em `shop-web-*` sem `most_recent`, duas imagens",
+        "right": "Erro: more than one result"
+      },
+      {
+        "left": "`aws_subnets` com a tag `Tier = private`, que nenhuma sub-rede tem",
+        "right": "Uma lista vazia, e nenhum erro"
+      }
+    ],
+    "right_distractors": [
+      "A mais nova dos resultados"
+    ]
+  },
+  "ex-p040yh2f": {
+    "prompt": "A configuração da Ana, intocada, de repente falha com `multiple EC2 VPCs matched`. O que aconteceu?",
+    "hint": "Os arquivos dela não mudaram.",
+    "choices": [
+      {
+        "text": "O state dela se corrompeu e lista a VPC duas vezes",
+        "why": "O erro vem da resposta da busca, não do state."
+      },
+      {
+        "text": "Outra pessoa criou mais uma VPC levando as mesmas tags",
+        "why": "Isso: a cópia de staging também levava `Name = shop`."
+      },
+      {
+        "text": "O time de rede apagou a VPC de produção, e o erro lista o que restou",
+        "why": "As duas VPCs estavam lá; o `describe-vpcs` mostrou prod e staging."
+      },
+      {
+        "text": "O moto duplicou a VPC ao reiniciar",
+        "why": "A segunda VPC tem outra faixa e outra tag Environment; alguém a criou."
+      }
+    ]
+  },
+  "ex-3z8f2wx5": {
+    "prompt": "Por que a lista vazia do `aws_subnets` é mais perigosa do que o erro do `aws_vpc`?",
+    "hint": "Qual dos dois para alguma coisa?",
+    "choices": [
+      {
+        "text": "Porque a lista vazia fica no state e não é atualizada",
+        "why": "Ela é lida de novo a cada plan, como qualquer data source."
+      },
+      {
+        "text": "Porque uma lista vazia faz o Terraform apagar as sub-redes que não vê",
+        "why": "Uma data source nunca apaga nada; o perigo é o que se constrói sobre a resposta vazia."
+      },
+      {
+        "text": "Ela passa em silêncio no apply",
+        "why": "Certo. Nenhum erro, nenhum aviso: algo construído sobre zero sub-redes segue em frente, onde o erro parou o plano."
+      },
+      {
+        "text": "Porque data sources no plural são lidas uma vez e guardadas",
+        "why": "No plural ou no singular, uma data source é lida a cada plan."
+      }
+    ]
+  },
+  "ex-bnaqpfz4": {
+    "prompt": "Que correção a Ana aplicou quando a cópia de staging quebrou a busca da VPC?",
+    "hint": "Ela pediu o que queria dizer.",
+    "choices": [
+      {
+        "text": "Acrescentou `most_recent = true` ao `data \"aws_vpc\"` para a VPC mais nova ganhar",
+        "why": "O `aws_vpc` não tem esse argumento, e a VPC mais nova era justamente a de staging."
+      },
+      {
+        "text": "Acrescentou `Environment = \"prod\"` às tags que filtra",
+        "why": "Isso; o plan seguinte achou uma VPC e não apontou mudanças."
+      },
+      {
+        "text": "Copiou o id da VPC de produção para a configuração",
+        "why": "Isso funciona até a rede ser reconstruída, o problema que a busca existia para resolver."
+      },
+      {
+        "text": "Pediu ao time de rede para apagar a VPC de staging",
+        "why": "A rede de staging é legítima; a consulta é que era frouxa."
+      }
+    ]
+  },
+  "ex-mmn9pn0p": {
+    "prompt": "Um colega diz: \"Nosso app lê a rede com `data \"aws_vpc\"`, então se destruirmos o app, a VPC vai junto.\" O que está errado?",
+    "hint": "Quem criou a VPC?",
+    "choices": [
+      {
+        "text": "Nada; um destroy remove as data sources depois dos recursos",
+        "why": "O plan -destroy listou uma coisa: o security group. Data sources nunca são destruídas."
+      },
+      {
+        "text": "Um destroy remove o que a própria configuração criou; ler não dá posse",
+        "why": "Certo; ler a VPC não deu posse dela."
+      },
+      {
+        "text": "A VPC é destruída, mas só depois de pedir aprovação ao time de rede",
+        "why": "O Terraform não tem a noção de pedir a outro time; ele não destrói o que só leu."
+      },
+      {
+        "text": "A VPC fica, mas as sub-redes são removidas com o app",
+        "why": "As sub-redes também foram lidas, pelo `aws_subnets`; estão igualmente fora de alcance."
+      }
+    ]
+  },
+  "ex-yrfzfjr2": {
+    "prompt": "Quais destes fazem a leitura de uma data source esperar o apply? Escolha todos os que se aplicam.",
+    "hint": "Dois motivos aparecem nos planos desta aula.",
+    "choices": [
+      {
+        "text": "Um argumento que se refere a um valor ainda desconhecido",
+        "why": "Sim: o documento de policy esperando o ARN do bucket."
+      },
+      {
+        "text": "Uma referência a um recurso com mudanças pendentes",
+        "why": "Sim: a busca da zona se referindo à sub-rede nova."
+      },
+      {
+        "text": "Um `depends_on` em um recurso com mudanças pendentes",
+        "why": "Sim: a busca por tag depois que a tag `Owner` foi acrescentada."
+      },
+      {
+        "text": "Uma data source que lê um arquivo do notebook",
+        "why": "O `local_file` foi lido no começo do plan; o nome do arquivo era conhecido."
+      },
+      {
+        "text": "Um filtro com curinga como `shop-web-*`",
+        "why": "A busca de imagem foi lida durante o plan; um curinga é um valor conhecido."
+      }
+    ]
+  },
+  "ex-ysdav7jp": {
+    "prompt": "A aplicação da Ana precisa do id do security group do time de banco de dados. Esse time o gerencia com uma configuração de Terraform própria. O que a aula aponta como contrato mais forte do que uma busca por tag?",
+    "hint": "Algo que a outra configuração publica de propósito.",
+    "choices": [
+      {
+        "text": "Um `data \"aws_security_group\"` filtrado pelo nome",
+        "why": "Isso ainda é um palpite sobre algo que ninguém prometeu manter único."
+      },
+      {
+        "text": "Os outputs dela, lidos com `terraform_remote_state`",
+        "why": "Isso; outputs são uma interface que o outro time escolheu, e a aula 8 os usa."
+      },
+      {
+        "text": "Uma cópia dos arquivos `.tf` deles dentro da configuração da Ana",
+        "why": "Blocos de recurso copiados criariam um segundo security group."
+      },
+      {
+        "text": "Um `import` do security group deles para o state da Ana",
+        "why": "Aí duas configurações gerenciariam um recurso e brigariam por ele."
+      }
+    ]
+  },
+  "ex-nqpmkk1t": {
+    "prompt": "Qual data source usada nesta aula não fez requisição nenhuma à AWS?",
+    "hint": "Ela monta a resposta a partir dos blocos que você escreve.",
+    "choices": [
+      {
+        "text": "`aws_subnets`",
+        "why": "Ela pergunta ao EC2 quais sub-redes batem."
+      },
+      {
+        "text": "`aws_caller_identity`",
+        "why": "Ela pergunta ao STS de quem são as credenciais."
+      },
+      {
+        "text": "`aws_ami`",
+        "why": "Ela vasculha o catálogo de imagens do EC2."
+      },
+      {
+        "text": "`aws_iam_policy_document`",
+        "why": "Isso; o provider escreve o JSON localmente. (O `local_file` também fica fora da AWS, lendo o disco do notebook.)"
+      }
+    ]
+  }
+}

@@ -90,13 +90,13 @@ Do you want to perform these actions?
 
   Enter a value: yes
 aws_vpc.shop: Creating...
-aws_vpc.shop: Creation complete after 1s [id=vpc-e011d9a0de19f8728]
+aws_vpc.shop: Creation complete after 2s [id=vpc-7327c901412b20229]
 aws_subnet.web_a: Creating...
 aws_security_group.web: Creating...
-aws_subnet.web_a: Creation complete after 0s [id=subnet-d9c8587bd007db2d1]
-aws_security_group.web: Creation complete after 1s [id=sg-1a39a5aeed1e5da09]
+aws_subnet.web_a: Creation complete after 1s [id=subnet-246685d4ada451bad]
+aws_security_group.web: Creation complete after 1s [id=sg-3475d5edf795d5594]
 aws_vpc_security_group_ingress_rule.https: Creating...
-aws_vpc_security_group_ingress_rule.https: Creation complete after 0s [id=sgr-02c8bd3aa21d33d29]
+aws_vpc_security_group_ingress_rule.https: Creation complete after 0s [id=sgr-dcc6bf0490cd0c301]
 
 Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
 ```
@@ -119,17 +119,17 @@ aws_subnet.web_a
 aws_vpc.shop
 aws_vpc_security_group_ingress_rule.https
 ana@laptop:~/shop$ aws ec2 describe-subnets --filters Name=tag:Name,Values=shop-web-a --query "Subnets[].[SubnetId,VpcId,CidrBlock]" --output text
-subnet-d9c8587bd007db2d1	vpc-e011d9a0de19f8728	10.20.1.0/24
+subnet-246685d4ada451bad	vpc-7327c901412b20229	10.20.1.0/24
 ```
 
 Depois, o teste com que a aula 1 terminou: rodar o apply de novo, sem mudar nada.
 
 ```
 ana@laptop:~/shop$ terraform apply -auto-approve
-aws_vpc.shop: Refreshing state... [id=vpc-e011d9a0de19f8728]
-aws_security_group.web: Refreshing state... [id=sg-1a39a5aeed1e5da09]
-aws_subnet.web_a: Refreshing state... [id=subnet-d9c8587bd007db2d1]
-aws_vpc_security_group_ingress_rule.https: Refreshing state... [id=sgr-02c8bd3aa21d33d29]
+aws_vpc.shop: Refreshing state... [id=vpc-7327c901412b20229]
+aws_security_group.web: Refreshing state... [id=sg-3475d5edf795d5594]
+aws_subnet.web_a: Refreshing state... [id=subnet-246685d4ada451bad]
+aws_vpc_security_group_ingress_rule.https: Refreshing state... [id=sgr-dcc6bf0490cd0c301]
 
 No changes. Your infrastructure matches the configuration.
 

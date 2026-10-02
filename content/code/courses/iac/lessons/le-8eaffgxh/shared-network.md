@@ -92,7 +92,6 @@ data.aws_caller_identity.current: Read complete after 0s [id=123456789012]
 data.aws_vpc.shop: Read complete after 0s [id=vpc-6689436bfc5f4d19d]
 data.aws_subnets.public: Reading...
 data.aws_subnets.public: Read complete after 0s [id=sa-east-1]
-
 ```
 ```
       + vpc_id                 = "vpc-6689436bfc5f4d19d"
@@ -132,4 +131,4 @@ teams to share a network at all.
 
 **What she gave up in exchange is a contract.** Her configuration now depends on a tag the network
 team chose, and on that tag staying unique. Nothing written down says so, which is why
-`not-found`, at the end of this lesson, is about the day it stops being true.
+the last section of this lesson is about the day it stops being true.

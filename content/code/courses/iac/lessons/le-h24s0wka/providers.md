@@ -90,14 +90,14 @@ ana@laptop:~/shop$ terraform init
 Initializing the backend...
 
 Initializing provider plugins...
-- Reusing previous version of hashicorp/aws from the dependency lock file
 - Finding hashicorp/random versions matching "~> 3.8.0"...
 - Finding hashicorp/local versions matching "~> 2.9"...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Installing hashicorp/random v3.8.1...
+- Installed hashicorp/random v3.8.1 (unauthenticated)
 - Installing hashicorp/local v2.9.1...
 - Installed hashicorp/local v2.9.1 (unauthenticated)
 - Using previously-installed hashicorp/aws v6.67.0
-- Installing hashicorp/random v3.8.1...
-- Installed hashicorp/random v3.8.1 (unauthenticated)
 ```
 
 The apply creates the three in the order their references demand: the suffix, then the bucket
@@ -106,35 +106,35 @@ named after it, then the file that names the bucket.
 ```
 Plan: 3 to add, 0 to change, 0 to destroy.
 random_id.bucket: Creating...
-random_id.bucket: Creation complete after 0s [id=Be1_HA]
+random_id.bucket: Creation complete after 0s [id=LvIL9g]
 aws_s3_bucket.assets: Creating...
-aws_s3_bucket.assets: Creation complete after 0s [id=shop-assets-05ed7f1c]
+aws_s3_bucket.assets: Creation complete after 0s [id=shop-assets-2ef20bf6]
 local_file.network_env: Creating...
-local_file.network_env: Creation complete after 0s [id=9bc6364a2e1c6dd1e0b90992e4caf9bdd70577c4]
+local_file.network_env: Creation complete after 0s [id=7e6c26ee85afdb7031fa9435305563d6b82f4623]
 
 Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 ```
 
 ```
 ana@laptop:~/shop$ cat network.env
-VPC_ID=vpc-e011d9a0de19f8728
-SUBNET_ID=subnet-d9c8587bd007db2d1
-BUCKET=shop-assets-05ed7f1c
+VPC_ID=vpc-7327c901412b20229
+SUBNET_ID=subnet-246685d4ada451bad
+BUCKET=shop-assets-2ef20bf6
 ana@laptop:~/shop$ terraform providers
 
 Providers required by configuration:
 .
-├── provider[registry.terraform.io/hashicorp/local] ~> 2.9
 ├── provider[registry.terraform.io/hashicorp/aws] ~> 6.0
-└── provider[registry.terraform.io/hashicorp/random] ~> 3.8.0
+├── provider[registry.terraform.io/hashicorp/random] ~> 3.8.0
+└── provider[registry.terraform.io/hashicorp/local] ~> 2.9
 
 Providers required by state:
+
+    provider[registry.terraform.io/hashicorp/random]
 
     provider[registry.terraform.io/hashicorp/aws]
 
     provider[registry.terraform.io/hashicorp/local]
-
-    provider[registry.terraform.io/hashicorp/random]
 ```
 
 `terraform providers` lists who asked for what, from the configuration and from the state. Each of
@@ -204,13 +204,13 @@ ana@laptop:~/shop$ terraform init -upgrade
 Initializing the backend...
 
 Initializing provider plugins...
-- Finding hashicorp/random versions matching "~> 3.9"...
 - Finding hashicorp/local versions matching "~> 2.9"...
 - Finding hashicorp/aws versions matching "~> 6.0"...
-- Installing hashicorp/random v3.9.1...
-- Installed hashicorp/random v3.9.1 (unauthenticated)
+- Finding hashicorp/random versions matching "~> 3.9"...
 - Using previously-installed hashicorp/local v2.9.1
 - Using previously-installed hashicorp/aws v6.67.0
+- Installing hashicorp/random v3.9.1...
+- Installed hashicorp/random v3.9.1 (unauthenticated)
 ```
 
 ```

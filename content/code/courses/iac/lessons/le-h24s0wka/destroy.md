@@ -16,28 +16,28 @@ every attribute set to `null`, and ends here:
 Plan: 0 to add, 0 to change, 7 to destroy.
 
 Changes to Outputs:
-  - vpc_id                = "vpc-e011d9a0de19f8728" -> null
-  - web_security_group_id = "sg-1a39a5aeed1e5da09" -> null
-  - web_subnet_id         = "subnet-d9c8587bd007db2d1" -> null
+  - vpc_id                = "vpc-7327c901412b20229" -> null
+  - web_security_group_id = "sg-3475d5edf795d5594" -> null
+  - web_subnet_id         = "subnet-246685d4ada451bad" -> null
 
 Do you really want to destroy all resources?
   Terraform will destroy all your managed infrastructure, as shown above.
   There is no undo. Only 'yes' will be accepted to confirm.
 
   Enter a value: yes
-local_file.network_env: Destroying... [id=9bc6364a2e1c6dd1e0b90992e4caf9bdd70577c4]
+local_file.network_env: Destroying... [id=7e6c26ee85afdb7031fa9435305563d6b82f4623]
 local_file.network_env: Destruction complete after 0s
-aws_subnet.web_a: Destroying... [id=subnet-d9c8587bd007db2d1]
-aws_s3_bucket.assets: Destroying... [id=shop-assets-05ed7f1c]
-aws_vpc_security_group_ingress_rule.https: Destroying... [id=sgr-02c8bd3aa21d33d29]
-aws_vpc_security_group_ingress_rule.https: Destruction complete after 0s
-aws_security_group.web: Destroying... [id=sg-1a39a5aeed1e5da09]
+aws_vpc_security_group_ingress_rule.https: Destroying... [id=sgr-dcc6bf0490cd0c301]
+aws_subnet.web_a: Destroying... [id=subnet-246685d4ada451bad]
+aws_s3_bucket.assets: Destroying... [id=shop-assets-2ef20bf6]
 aws_subnet.web_a: Destruction complete after 0s
 aws_s3_bucket.assets: Destruction complete after 0s
-random_id.bucket: Destroying... [id=Be1_HA]
+aws_vpc_security_group_ingress_rule.https: Destruction complete after 0s
+random_id.bucket: Destroying... [id=LvIL9g]
+aws_security_group.web: Destroying... [id=sg-3475d5edf795d5594]
 random_id.bucket: Destruction complete after 0s
 aws_security_group.web: Destruction complete after 0s
-aws_vpc.shop: Destroying... [id=vpc-e011d9a0de19f8728]
+aws_vpc.shop: Destroying... [id=vpc-7327c901412b20229]
 aws_vpc.shop: Destruction complete after 0s
 
 Destroy complete! Resources: 7 destroyed.

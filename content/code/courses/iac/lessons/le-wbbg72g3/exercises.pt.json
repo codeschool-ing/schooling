@@ -1,0 +1,556 @@
+{
+  "ex-z4bntc8a": {
+    "prompt": "Em `resource \"aws_vpc\" \"shop\" { ... }`, o que é `shop`?",
+    "hint": "Um bloco resource leva dois rótulos.",
+    "choices": [
+      {
+        "text": "O tipo de recurso, que escolhe o schema do provider",
+        "why": "Esse é o `aws_vpc`, o primeiro rótulo."
+      },
+      {
+        "text": "O rótulo de nome",
+        "why": "Isso. É o nome que a Ana escolheu, e com o tipo forma o endereço `aws_vpc.shop`."
+      },
+      {
+        "text": "Um argumento cujo valor é uma string",
+        "why": "Um argumento tem sinal de igual; um rótulo fica no cabeçalho do bloco."
+      },
+      {
+        "text": "A tag que a AWS mostra como Name da VPC",
+        "why": "O rótulo nunca chega à AWS; a tag Name vem de `tags`."
+      }
+    ]
+  },
+  "ex-cct8a4z3": {
+    "prompt": "Por que dá para escrever `tags = merge(local.common_tags, { Name = \"shop\" })`, enquanto um bloco aninhado como `lifecycle { ... }` não pode ser produzido por uma função?",
+    "hint": "Procure o sinal de igual.",
+    "choices": [
+      {
+        "text": "`tags` é um argumento cujo valor é um map, e um valor sai de qualquer expressão",
+        "why": "Certo. Um bloco é estrutura no arquivo; um argumento guarda um valor, e valores podem ser calculados."
+      },
+      {
+        "text": "`merge` é uma forma especial reservada para tags",
+        "why": "`merge` funciona em quaisquer maps; a aula o usou em dois literais no console."
+      },
+      {
+        "text": "Blocos são lidos antes de as funções serem carregadas",
+        "why": "Não existe essa ordem de carga; a diferença é entre um valor e uma estrutura."
+      },
+      {
+        "text": "Porque `lifecycle` é do Terraform e `tags` é da AWS",
+        "why": "Quem lê não é a questão; `required_providers` também é do Terraform e é bloco pelo mesmo motivo."
+      }
+    ]
+  },
+  "ex-vc8xbd1s": {
+    "prompt": "A Ana divide a configuração em `main.tf`, `network.tf` e `owner.tf.json` num diretório. O que o Terraform faz com eles?",
+    "hint": "Os nomes de arquivo são uma convenção.",
+    "choices": [
+      {
+        "text": "Lê o `main.tf` primeiro, depois o resto na ordem em que são referenciados",
+        "why": "O `main.tf` não tem status especial; o nome é uma convenção para pessoas."
+      },
+      {
+        "text": "Recusa o arquivo JSON a não ser que todos sejam JSON",
+        "why": "O `validate` da aula passou com os dois tipos num diretório."
+      },
+      {
+        "text": "Trata cada arquivo como um módulo separado",
+        "why": "Um módulo é um diretório, não um arquivo; isso é a aula 10."
+      },
+      {
+        "text": "Lê os três como uma configuração só",
+        "why": "Isso: todo `.tf` e `.tf.json` do diretório, sem ordem que importe."
+      }
+    ]
+  },
+  "ex-nffr3nmd": {
+    "prompt": "Antes de qualquer apply, `aws_vpc.shop.cidr_block` no console imprimiu `(known after apply)`, embora o arquivo diga `\"10.20.0.0/16\"`. Por quê?",
+    "hint": "De onde o console lê um recurso?",
+    "choices": [
+      {
+        "text": "O console lê recursos do state, e não havia nenhum",
+        "why": "Certo. Os valores de um recurso vêm do state; sem nada aplicado, o Terraform escreve o marcador."
+      },
+      {
+        "text": "O moto não estava rodando",
+        "why": "O console não pergunta nada à AWS; avalia contra a configuração e o state."
+      },
+      {
+        "text": "O CIDR era inválido",
+        "why": "A mesma faixa foi aplicada uma seção depois sem reclamação."
+      },
+      {
+        "text": "Uma string entre aspas só é avaliada no apply",
+        "why": "`\"shop-${var.environment}\"` foi avaliada no mesmo console uma linha antes."
+      }
+    ]
+  },
+  "ex-rdfqm52j": {
+    "prompt": "A HCL não tem instrução `if`. Para escolher entre dois valores, usa o operador condicional, escrito `condição ___ a : b`.",
+    "hint": "Um caractere.",
+    "blanks": [
+      {
+        "accept": [
+          "?"
+        ]
+      }
+    ]
+  },
+  "ex-k5hh06v7": {
+    "prompt": "Um colega escreve uma policy de IAM como JSON dentro de um heredoc `<<-EOT`. O que a aula sugere no lugar, e por quê?",
+    "hint": "Um heredoc é uma string.",
+    "choices": [
+      {
+        "text": "`<<EOT`, para manter a indentação",
+        "why": "A indentação não é o problema; as duas formas continuam sendo uma string sem conferência."
+      },
+      {
+        "text": "`jsonencode()` de um valor de verdade, que não produz JSON quebrado",
+        "why": "Isso. Uma vírgula faltando num heredoc é achada pela AWS; um valor passado ao `jsonencode` não tem como ter."
+      },
+      {
+        "text": "Uma diretiva `%{for}` por statement",
+        "why": "Isso monta a mesma string à mão, com mais jeitos de errar."
+      },
+      {
+        "text": "Um arquivo `.tf.json` para a policy",
+        "why": "`.tf.json` é outro jeito de escrever a configuração, não um documento de policy."
+      }
+    ]
+  },
+  "ex-6v22hshd": {
+    "prompt": "O que `cidrsubnet(\"10.20.0.0/16\", 8, 2)` devolve?",
+    "hint": "Oito bits novos, número de rede 2.",
+    "choices": [
+      {
+        "text": "`10.20.0.0/18`",
+        "why": "Isso seriam dois bits novos; o segundo argumento é quantos bits são acrescentados."
+      },
+      {
+        "text": "`10.20.8.0/24`",
+        "why": "O 8 é o número de bits novos, não o número da sub-rede."
+      },
+      {
+        "text": "`10.20.2.0/24`",
+        "why": "Certo: um /16 mais 8 bits é um /24, e o número 2 tem 2 no terceiro octeto."
+      },
+      {
+        "text": "`10.20.0.2`",
+        "why": "Isso é um endereço de host, que o `cidrhost` devolve."
+      }
+    ]
+  },
+  "ex-2n40wccc": {
+    "prompt": "Com `cidrsubnet(\"10.20.0.0/16\", 8, netnum)`, entre quantas sub-redes diferentes o `netnum` pode escolher?",
+    "hint": "Dois elevado ao número de bits novos.",
+    "unit": "sub-redes"
+  },
+  "ex-6fyhwqnh": {
+    "prompt": "`merge({ Project = \"shop\", Owner = \"ana\" }, { Owner = \"bruno\" })` devolve o quê para `Owner`?",
+    "hint": "Que map vence numa chave repetida?",
+    "choices": [
+      {
+        "text": "Um erro de chave duplicada",
+        "why": "Esse erro é de uma expressão `for` montando um map; o `merge` resolve repetições."
+      },
+      {
+        "text": "Uma lista com os dois owners",
+        "why": "Agrupar em listas é o que `...` faz num `for`; o `merge` guarda um valor."
+      },
+      {
+        "text": "`\"ana\"`, porque o primeiro map define os padrões",
+        "why": "É o contrário, e é isso que faz do segundo map uma exceção."
+      },
+      {
+        "text": "`\"bruno\"`",
+        "why": "Isso: o map de depois vence, e `Project` fica do primeiro."
+      }
+    ]
+  },
+  "ex-879tjrm6": {
+    "prompt": "Uma regra de validação precisa aceitar qualquer string que seja uma faixa CIDR válida e recusar o resto. `cidrnetmask(var.cidr)` dá erro numa inválida. Qual deve ser a condição?",
+    "hint": "Uma condição precisa ser verdadeira ou falsa.",
+    "choices": [
+      {
+        "text": "`try(cidrnetmask(var.cidr), false)`",
+        "why": "Para uma faixa válida isso devolve a máscara como string, não `true`, então a condição não é booleana."
+      },
+      {
+        "text": "`can(cidrnetmask(var.cidr))`",
+        "why": "Certo: o `can` transforma \"isso falharia\" em `false` ou `true`, o formato que a própria regra da aula usa."
+      },
+      {
+        "text": "`!can(cidrnetmask(var.cidr))`",
+        "why": "Essa é a regra de cabeça para baixo: recusa toda faixa válida e aceita toda inválida."
+      },
+      {
+        "text": "`cidrnetmask(var.cidr) != null`",
+        "why": "Uma faixa inválida faz a chamada falhar, então a comparação nem acontece e o erro escapa."
+      }
+    ]
+  },
+  "ex-zxkgsbgd": {
+    "prompt": "A Ana roda `terraform plan -var name=shop-test`, onde `name` é um local. O que acontece?",
+    "hint": "Quem alcança um local?",
+    "choices": [
+      {
+        "text": "O local recebe o novo valor nesta execução",
+        "why": "Só variáveis são entradas; um local é interno."
+      },
+      {
+        "text": "Um erro: nenhuma variável com esse nome foi declarada",
+        "why": "Isso, \"Value for undeclared variable\": o `-var` só alcança blocos variable."
+      },
+      {
+        "text": "Um aviso, e o plan usa o valor do local",
+        "why": "Foi um erro, e nenhum plan foi feito."
+      },
+      {
+        "text": "O Terraform cria uma variável chamada `name`",
+        "why": "O Terraform não declara nada por você; ele disse para acrescentar um bloco variable."
+      }
+    ]
+  },
+  "ex-1z722r0d": {
+    "prompt": "Quais destes deveriam ser um local, e não uma variável, pela regra da aula? Escolha todos os que se aplicam.",
+    "hint": "É uma escolha de quem roda o Terraform, ou é derivado?",
+    "choices": [
+      {
+        "text": "O ambiente, `dev` ou `prod`",
+        "why": "É uma escolha de quem roda o Terraform: uma variável."
+      },
+      {
+        "text": "O nome `shop-dev`, montado a partir do ambiente",
+        "why": "Derivado de outros valores: um local."
+      },
+      {
+        "text": "A tag `Project = \"shop\"` em todo recurso",
+        "why": "Um fato que não deve ser sobrescrito: um local."
+      },
+      {
+        "text": "A faixa CIDR da rede",
+        "why": "A aula a cita como escolha de quem roda o Terraform."
+      },
+      {
+        "text": "O map de tags comuns combinado em cada recurso",
+        "why": "Usado em todo lugar e derivado: exatamente o `local.common_tags`."
+      }
+    ]
+  },
+  "ex-6s5v3gcb": {
+    "prompt": "Alguém acrescenta `locals { vpc_cidr = \"10.20.0.0/16\" }` e usa uma vez. O que a aula diz disso?",
+    "hint": "Quando um local merece o lugar?",
+    "choices": [
+      {
+        "text": "É obrigatório, já que literais em recursos são proibidos",
+        "why": "A VPC do `main.tf` ainda tem uma faixa literal, e é válida."
+      },
+      {
+        "text": "Só acrescenta um salto para quem lê",
+        "why": "Isso: usado uma vez, e o nome não diz nada que o valor não diga."
+      },
+      {
+        "text": "Torna o valor definível pela linha de comando",
+        "why": "Nenhum local pode ser definido de fora; a aula mostrou o erro."
+      },
+      {
+        "text": "Transforma a faixa da VPC num valor calculado que aparece como `(known after apply)` no plan",
+        "why": "Um local feito de um literal é conhecido no plan; as faixas das sub-redes foram impressas por inteiro."
+      }
+    ]
+  },
+  "ex-x1rrtfqh": {
+    "prompt": "O default de `network` deixou `public` de fora, declarado como `optional(bool, false)`. O que `var.network.public` continha?",
+    "hint": "O console imprimiu o objeto inteiro.",
+    "choices": [
+      {
+        "text": "`null`",
+        "why": "É o que `optional(bool)` sem segundo argumento dá."
+      },
+      {
+        "text": "`false`",
+        "why": "Isso, preenchido pelo padrão da declaração."
+      },
+      {
+        "text": "Um erro na leitura, já que o atributo falta",
+        "why": "Um atributo opcional está sempre presente depois da conversão; é para isso que serve."
+      },
+      {
+        "text": "`true`",
+        "why": "O padrão na declaração é `false`."
+      }
+    ]
+  },
+  "ex-k559m7rs": {
+    "prompt": "Associe cada tipo ao que ele guarda.",
+    "hint": "Coleções têm um tipo de elemento; tipos estruturais têm um formato.",
+    "pairs": [
+      {
+        "left": "`list(string)`",
+        "right": "Strings em ordem, em qualquer quantidade"
+      },
+      {
+        "left": "`set(string)`",
+        "right": "Strings sem ordem e sem repetidos"
+      },
+      {
+        "left": "`map(string)`",
+        "right": "Strings por chave, quaisquer chaves"
+      },
+      {
+        "left": "`object({ cidr = string, azs = list(string) })`",
+        "right": "Atributos nomeados, cada um com seu tipo"
+      }
+    ],
+    "right_distractors": [
+      "Uma única string"
+    ]
+  },
+  "ex-h5k6stvn": {
+    "prompt": "No console, `\"5\" + 1` deu `6` e `tonumber(\"three\")` falhou. Que regra explica os dois?",
+    "hint": "Quando uma conversão não perde nada?",
+    "choices": [
+      {
+        "text": "A aritmética ignora tipos",
+        "why": "Não ignora: `\"three\" + 1` falharia pelo mesmo motivo que o `tonumber`."
+      },
+      {
+        "text": "Strings só viram números dentro de funções",
+        "why": "`\"5\" + 1` converteu sem função nenhuma."
+      },
+      {
+        "text": "O Terraform converte um valor quando a conversão é exata, e recusa quando não é",
+        "why": "Certo: `\"5\"` é um número escrito como string; `\"three\"` não é um número decimal."
+      },
+      {
+        "text": "O `tonumber` é mais rígido que o `+`, que arredonda",
+        "why": "Nada foi arredondado; os dois usam a mesma conversão."
+      }
+    ]
+  },
+  "ex-6ddnzxca": {
+    "prompt": "O que `{ for i, az in var.network.azs : az => cidrsubnet(var.network.cidr, 8, i + 1) }` produz?",
+    "hint": "Chaves, e uma seta.",
+    "choices": [
+      {
+        "text": "Uma lista de duas faixas",
+        "why": "Colchetes fazem uma lista; estas são chaves."
+      },
+      {
+        "text": "Um map de zona para faixa",
+        "why": "Isso: `sa-east-1a` para `10.20.1.0/24` e `sa-east-1c` para `10.20.2.0/24`."
+      },
+      {
+        "text": "Duas sub-redes na AWS, uma por zona",
+        "why": "Uma expressão produz um valor e não cria nada; criar uma por entrada é o `for_each`, aula 4."
+      },
+      {
+        "text": "Um map de índice para zona",
+        "why": "A chave é `az` e o valor a faixa; o `i` só alimenta o `cidrsubnet`."
+      }
+    ]
+  },
+  "ex-0evxvkhm": {
+    "prompt": "`{ for az in var.network.azs : substr(az, 0, 9) => az }` falhou com \"Duplicate object key\". O que mudou ao acrescentar `...` depois do valor?",
+    "hint": "Duas zonas, uma região.",
+    "choices": [
+      {
+        "text": "A segunda zona sobrescreveu a primeira",
+        "why": "Um `for` não sobrescreve em silêncio; dá erro ou, com `...`, agrupa."
+      },
+      {
+        "text": "Os repetidos foram descartados, como faz o `toset`",
+        "why": "As duas zonas ficaram no resultado."
+      },
+      {
+        "text": "A chave virou o nome inteiro da zona",
+        "why": "A expressão da chave não mudou; o `substr` ainda a cortou em `sa-east-1`."
+      },
+      {
+        "text": "Cada chave agora guarda uma lista de todas as zonas que a produziram",
+        "why": "Certo: `\"sa-east-1\" = [\"sa-east-1a\", \"sa-east-1c\"]`."
+      }
+    ]
+  },
+  "ex-20ejxns7": {
+    "prompt": "`[aws_subnet.a, aws_subnet.c][___].cidr_block` lê `cidr_block` das duas sub-redes; é a forma curta de uma expressão `for`.",
+    "hint": "O operador splat.",
+    "blanks": [
+      {
+        "accept": [
+          "*"
+        ]
+      }
+    ]
+  },
+  "ex-hh2yk2z1": {
+    "prompt": "`terraform plan -var environment=staging` falhou na regra de validação. O que o Terraform tinha planejado ou mudado até ali?",
+    "hint": "A figura põe a validação antes do plan.",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "Isso: o valor foi recusado ao chegar, com a mensagem da Ana."
+      },
+      {
+        "text": "As tags da VPC, que não dependem do ambiente",
+        "why": "Dependem, via `local.common_tags`, e de qualquer forma nada foi planejado."
+      },
+      {
+        "text": "Um plan, mostrado com um aviso no fim",
+        "why": "Um aviso com plan é o que um bloco check dá; a validação é erro."
+      },
+      {
+        "text": "Todo recurso exceto os que leem `var.environment`",
+        "why": "Uma variável reprovada para a execução inteira, não uma parte."
+      }
+    ]
+  },
+  "ex-xhb280yg": {
+    "prompt": "Por que o tamanho do nome do bucket é conferido numa precondition e não na validação de uma variável?",
+    "hint": "De onde vem o nome?",
+    "choices": [
+      {
+        "text": "Regras de validação não podem chamar `length`",
+        "why": "Qualquer função funciona numa condição; `can` e `cidrsubnet` funcionaram."
+      },
+      {
+        "text": "Preconditions rodam depois que o S3 responde",
+        "why": "Ela falhou durante o plan, antes de qualquer coisa chegar ao S3."
+      },
+      {
+        "text": "O nome é montado de três pedaços que nenhuma variável sozinha guarda",
+        "why": "Certo: ele está em `local.bucket`, e a regra pertence ao lado do recurso que o usa."
+      },
+      {
+        "text": "Uma precondition só avisa, e tamanho não vale um erro",
+        "why": "Foi um erro, \"Resource precondition failed\"; só um bloco check avisa."
+      }
+    ]
+  },
+  "ex-q82yy44v": {
+    "prompt": "Ponha estes na ordem em que o Terraform os encontra numa execução em que todos são usados.",
+    "hint": "Os valores chegam, depois o plan, depois o apply.",
+    "items": [
+      "A regra de validação de uma variável",
+      "A precondition de um recurso",
+      "A mudança feita na AWS",
+      "Uma postcondition sobre um valor só conhecido depois da mudança"
+    ],
+    "trap": "Uma postcondition sobre um valor desconhecido não roda antes da mudança: ainda não há o que conferir."
+  },
+  "ex-890pbezv": {
+    "prompt": "O que aconteceu quando o plan rodou com a mesma zona duas vezes e o check `two_zones` falhou? Escolha todos os que se aplicam.",
+    "hint": "Um bloco check não é um erro.",
+    "choices": [
+      {
+        "text": "O plan parou com um erro",
+        "why": "Ele imprimiu um plan inteiro e um aviso."
+      },
+      {
+        "text": "Um aviso imprimiu a mensagem da Ana",
+        "why": "Sim, \"Check block assertion failed\" com a frase dela."
+      },
+      {
+        "text": "O plan propôs substituir a sub-rede `c`",
+        "why": "Sim: uma zona nova força uma sub-rede nova, `-/+`."
+      },
+      {
+        "text": "O próprio Terraform removeu a zona repetida",
+        "why": "Ele não mexeu na entrada; o `distinct` estava só dentro da condição."
+      }
+    ]
+  },
+  "ex-wfa6a06v": {
+    "prompt": "Um colega troca `cidr_block = cidrsubnet(var.network.cidr, 8, 1)` pelo literal `\"10.20.1.0/24\"`, dizendo que é mais fácil de ler. Depois a VPC muda para `10.30.0.0/16`. Qual é a consequência?",
+    "hint": "Dois lugares agora declaram um fato.",
+    "choices": [
+      {
+        "text": "A sub-rede acompanha a VPC, como antes",
+        "why": "Um literal não acompanha nada; era para isso que se calculava."
+      },
+      {
+        "text": "O Terraform reescreve o literal para combinar",
+        "why": "O Terraform nunca edita seus arquivos."
+      },
+      {
+        "text": "A sub-rede fica com uma faixa fora da nova VPC",
+        "why": "Certo. O arquivo agora discorda de si mesmo, e a AWS recusa a sub-rede quando for criada."
+      },
+      {
+        "text": "A regra de validação de `network` pega a divergência",
+        "why": "Essa regra só confere se a faixa tem espaço para /24s; ela nunca vê a sub-rede."
+      }
+    ]
+  },
+  "ex-e4kx808a": {
+    "prompt": "A Ana quer que `instance_type` seja `t3.large` em prod e `t3.micro` em qualquer outro lugar, e um ambiente desconhecido não deve conseguir fazer a consulta falhar. Que expressão serve?",
+    "hint": "Dois resultados, um teste.",
+    "choices": [
+      {
+        "text": "`lookup({ prod = \"t3.large\" }, var.environment)`",
+        "why": "Sem padrão, `dev` é uma chave ausente e um erro, como `staging` foi na aula."
+      },
+      {
+        "text": "`var.environment == \"prod\" ? \"t3.large\" : \"t3.micro\"`",
+        "why": "Isso. Dois resultados a partir de uma comparação é para isso que serve o condicional, e ele não falha por chave."
+      },
+      {
+        "text": "`\"t3.%{ if var.environment == \"prod\" }large%{ endif }\"`",
+        "why": "Fora de prod isso dá `t3.`, que não é tipo de instância."
+      },
+      {
+        "text": "`try(var.environment, \"t3.micro\")`",
+        "why": "Ler a variável nunca falha, então isso devolve o nome do ambiente."
+      }
+    ]
+  },
+  "ex-axen6g68": {
+    "prompt": "Associe cada erro capturado na aula ao que o produziu.",
+    "hint": "Leia a primeira linha de cada um, depois a linha citada.",
+    "pairs": [
+      {
+        "left": "Invalid number literal",
+        "right": "Um `10.20.1.0/24` sem aspas"
+      },
+      {
+        "left": "Value for undeclared variable",
+        "right": "`-var` nomeando um local"
+      },
+      {
+        "left": "Invalid value for input variable",
+        "right": "Uma string onde se declarou uma lista"
+      },
+      {
+        "left": "Resource precondition failed",
+        "right": "Um nome de bucket de 71 caracteres"
+      }
+    ],
+    "right_distractors": [
+      "A asserção falha de um bloco check"
+    ]
+  },
+  "ex-kh56sgs4": {
+    "prompt": "O output da Ana identificou as sub-redes pela tag `Name`, não pela zona. Com a mesma zona dada duas vezes, o que um output identificado pela zona teria feito com o plan?",
+    "hint": "Dois itens, uma chave, num `for` que monta um map.",
+    "choices": [
+      {
+        "text": "Guardado só a faixa da última sub-rede",
+        "why": "Um `for` não sobrescreve em silêncio."
+      },
+      {
+        "text": "Acrescentado um segundo aviso ao lado do do check",
+        "why": "Uma chave repetida é erro, não aviso."
+      },
+      {
+        "text": "Nada, já que outputs são avaliados depois do apply",
+        "why": "Outputs também são planejados; o apply da aula mostrou \"Changes to Outputs\"."
+      },
+      {
+        "text": "Feito falhar com \"Duplicate object key\"",
+        "why": "Certo: as duas sub-redes reclamariam `sa-east-1a`. É por isso que a chave é a tag Name."
+      }
+    ]
+  }
+}

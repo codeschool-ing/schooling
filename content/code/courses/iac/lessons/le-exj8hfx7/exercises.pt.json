@@ -1,0 +1,542 @@
+{
+  "ex-0f2477c2": {
+    "prompt": "Qual é o trabalho principal do `terraform.tfstate`?",
+    "hint": "Veja o que cada entrada junta.",
+    "choices": [
+      {
+        "text": "Guardar os binários de provider que o Terraform baixou",
+        "why": "Os providers ficam em `.terraform/`; o estado não guarda nenhum."
+      },
+      {
+        "text": "Juntar cada endereço da configuração ao id que a AWS deu a ele",
+        "why": "Isso: `aws_vpc.shop` ao lado do id `vpc-…` que a AWS inventou. Nada mais guarda os dois."
+      },
+      {
+        "text": "Manter um log de todo comando que a Ana digitou",
+        "why": "Ele registra o resultado dos applies, não um histórico de comandos."
+      },
+      {
+        "text": "Guardar plans em cache para o próximo rodar mais rápido",
+        "why": "É a crença que a aula corrige: o estado não é um cache, e não pode ser reconstruído."
+      }
+    ]
+  },
+  "ex-1q5vm2jr": {
+    "prompt": "Dois arquivos de estado têm o mesmo `lineage`, um com `serial` 4 e outro com `serial` 9. O que isso diz?",
+    "hint": "Um dos dois números nomeia uma história, o outro um ponto nela.",
+    "choices": [
+      {
+        "text": "Pertencem a duas configurações sem relação que por acaso coincidem",
+        "why": "Estados sem relação teriam lineages diferentes."
+      },
+      {
+        "text": "O de serial 9 foi gravado por uma versão mais nova do Terraform",
+        "why": "Isso é o `terraform_version`; o serial conta gravações."
+      },
+      {
+        "text": "Uma história; o serial 9 é cinco gravações mais novo",
+        "why": "Certo. Mesmo lineage é a mesma história, e o serial sobe um por gravação."
+      },
+      {
+        "text": "O serial 9 guarda nove recursos",
+        "why": "O serial conta gravações, não recursos."
+      }
+    ]
+  },
+  "ex-sm6pq51p": {
+    "prompt": "Por que o Terraform não encontra a `aws_vpc.shop` a cada plan procurando pela tag `Name`?",
+    "hint": "A aula 1 criou algo que responde a isso.",
+    "choices": [
+      {
+        "text": "Tags não podem ser lidas pela API do EC2",
+        "why": "Podem; o `describe-vpcs` filtrou por uma na aula 1."
+      },
+      {
+        "text": "Porque um nome bate com qualquer número de VPCs, e um id nomeia exatamente uma",
+        "why": "Isso. Duas VPCs chamadas `shop` existiram ao mesmo tempo; só um id nomeia exatamente uma."
+      },
+      {
+        "text": "Buscar por tag custa mais chamadas de API do que a AWS permite por minuto",
+        "why": "Limites de taxa não são o motivo; uma busca é uma chamada."
+      },
+      {
+        "text": "Buscas por tag são mais lentas do que ler o arquivo",
+        "why": "Velocidade não é o problema; ambiguidade é."
+      }
+    ]
+  },
+  "ex-x4y7g3zz": {
+    "prompt": "No clone novo, sem estado, quantos recursos o `terraform plan` quis adicionar?",
+    "hint": "Conte o que o `main.tf` declara.",
+    "unit": "recursos"
+  },
+  "ex-g8n09zrn": {
+    "prompt": "O apply do clone criou uma segunda VPC e um segundo security group chamado `web`. Por que a AWS não recusou o segundo grupo?",
+    "hint": "Onde o nome de um security group precisa ser único?",
+    "choices": [
+      {
+        "text": "O nome dele precisa ser único dentro da própria VPC, e este está na VPC nova",
+        "why": "Certo, e o segundo grupo foi criado na segunda VPC."
+      },
+      {
+        "text": "O moto pula as checagens de unicidade que a AWS real faz",
+        "why": "A AWS real também aceitaria; a regra é por VPC."
+      },
+      {
+        "text": "O Terraform o renomeou com um sufixo aleatório",
+        "why": "Os dois se chamam `web`, como a captura mostra."
+      },
+      {
+        "text": "O primeiro grupo tinha sido apagado pelo plan",
+        "why": "Um plan não muda nada, e o primeiro grupo continua listado."
+      }
+    ]
+  },
+  "ex-jwh5nkm5": {
+    "prompt": "Um colega apaga o diretório da duplicata, estado incluído, antes que alguém rode `destroy` nele. Qual é a situação agora?",
+    "hint": "Qual estado conhecia a duplicata?",
+    "choices": [
+      {
+        "text": "O diretório da Ana vê a VPC a mais e se oferece para destruí-la",
+        "why": "O estado dela só conhece os próprios três ids; a duplicata não está nele."
+      },
+      {
+        "text": "A AWS remove a duplicata quando nada a gerencia",
+        "why": "A AWS guarda o que mandaram criar, gerenciado ou não."
+      },
+      {
+        "text": "O Terraform junta as duas redes no próximo apply da Ana",
+        "why": "O Terraform não junta recursos; ele lê os ids que já guarda."
+      },
+      {
+        "text": "A duplicata continua real e cobrada, e nada mais a gerencia",
+        "why": "Isso. Distingui-la da original agora exige ler ids à mão, ou importar (aula 8)."
+      }
+    ]
+  },
+  "ex-80xnpy0p": {
+    "prompt": "O que o `terraform state rm aws_subnet.public_a` faz com a sub-rede na AWS?",
+    "hint": "O `describe-subnets` depois dele responde.",
+    "choices": [
+      {
+        "text": "Apaga, e depois tira do estado",
+        "why": "Isso é o `destroy`; o `state rm` não chama a AWS para apagar."
+      },
+      {
+        "text": "Marca para substituição no próximo apply",
+        "why": "Isso é o `-replace` (aula 6); o `rm` faz o Terraform esquecê-la."
+      },
+      {
+        "text": "Move para um estado de backup no mesmo diretório",
+        "why": "Um backup do estado inteiro é gravado, mas a sub-rede em si não é tocada."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo: a sub-rede continua na AWS, e só o estado a esquece."
+      }
+    ]
+  },
+  "ex-s7d5gf2m": {
+    "prompt": "Depois do `state mv aws_subnet.a aws_subnet.public_a`, mas antes de editar o `main.tf`, o que o plan propôs?",
+    "hint": "O arquivo e o estado agora discordam de um nome.",
+    "choices": [
+      {
+        "text": "Nenhuma mudança, porque o id da sub-rede não mudou",
+        "why": "O id está certo; o endereço no arquivo e no estado diferem."
+      },
+      {
+        "text": "Destruir o `public_a` e criar um `a` novo",
+        "why": "Isso: `1 to add, 0 to change, 1 to destroy`, uma substituição causada por um nome."
+      },
+      {
+        "text": "Renomear a tag `Name` da sub-rede para `public_a`",
+        "why": "Endereços são nomes do Terraform; eles não chegam a uma tag."
+      },
+      {
+        "text": "Um erro, porque `public_a` não está na configuração",
+        "why": "Não é erro: uma entrada do estado sem configuração é planejada para destruição."
+      }
+    ]
+  },
+  "ex-pjrkaya4": {
+    "prompt": "Para ver o que o `terraform state mv` faria sem mudar nada, acrescente a flag ___.",
+    "hint": "Uma flag de ensaio.",
+    "blanks": [
+      {
+        "accept": [
+          "-dry-run",
+          "dry-run",
+          "--dry-run"
+        ]
+      }
+    ]
+  },
+  "ex-mf8vtcym": {
+    "prompt": "Associe cada comando ao que ele faz.",
+    "hint": "Um item da direita não pertence a nenhum comando aqui.",
+    "pairs": [
+      {
+        "left": "terraform state list",
+        "right": "Imprime todos os endereços do estado"
+      },
+      {
+        "left": "terraform state show",
+        "right": "Imprime os atributos registrados de um recurso"
+      },
+      {
+        "left": "terraform state mv",
+        "right": "Muda um endereço, mantendo o objeto"
+      },
+      {
+        "left": "terraform state rm",
+        "right": "Esquece um objeto sem apagá-lo"
+      }
+    ],
+    "right_distractors": [
+      "Apaga o recurso real e a sua entrada"
+    ]
+  },
+  "ex-5z71c4xc": {
+    "prompt": "O que o `terraform plan` comum propôs para a regra da porta 22 que um colega acrescentou à mão?",
+    "hint": "Com qual lado um plan normal tenta fazer a AWS bater?",
+    "choices": [
+      {
+        "text": "Escrever a regra no `main.tf`",
+        "why": "O Terraform não edita a configuração; uma pessoa edita."
+      },
+      {
+        "text": "Nada: regras acrescentadas fora do Terraform são ignoradas",
+        "why": "Com blocos `ingress` em linha o recurso é dono da lista inteira, então a regra a mais é uma diferença."
+      },
+      {
+        "text": "Removê-la",
+        "why": "Isso, um update in-place com as linhas da regra marcadas com `-`."
+      },
+      {
+        "text": "Substituir o security group inteiro",
+        "why": "Foi `~ update in-place`, `1 to change`, não uma substituição."
+      }
+    ]
+  },
+  "ex-j0536n2d": {
+    "prompt": "O que o `terraform apply -refresh-only` muda?",
+    "hint": "O refresh lê; qual dos três lados recebe o que ele leu?",
+    "choices": [
+      {
+        "text": "Os recursos reais, para bater com o estado",
+        "why": "Um apply refresh-only não muda nada na AWS."
+      },
+      {
+        "text": "A configuração, para bater com a AWS",
+        "why": "O Terraform não grava arquivos `.tf`."
+      },
+      {
+        "text": "Só o estado, registrando o que a AWS tem agora",
+        "why": "Certo: aceita que o mundo mudou, sem decidir ainda qual lado vence."
+      },
+      {
+        "text": "O estado e a AWS, para desfazer a mudança do colega",
+        "why": "Desfazer a mudança é o que um `apply` comum faz."
+      }
+    ]
+  },
+  "ex-78wkt633": {
+    "prompt": "As regras do grupo `web` estão escritas como recursos `aws_vpc_security_group_ingress_rule` separados, um para a 443. Um colega acrescenta a porta 22 à mão. O que o próximo plan mostra?",
+    "hint": "Quais regras cada recurso de regra compara?",
+    "choices": [
+      {
+        "text": "Uma mudança removendo a porta 22 do grupo",
+        "why": "Isso acontece com blocos `ingress` em linha, onde o grupo é dono da lista inteira."
+      },
+      {
+        "text": "Nenhuma mudança",
+        "why": "Isso. Cada recurso de regra compara só a si mesmo; uma regra que ninguém declarou fica invisível."
+      },
+      {
+        "text": "Um erro, porque agora duas regras se sobrepõem",
+        "why": "As portas 22 e 443 não se sobrepõem, e drift não é erro."
+      },
+      {
+        "text": "Um novo recurso de regra a ser importado automaticamente",
+        "why": "O Terraform não importa por conta própria; a aula 8 mostra o import como passo deliberado."
+      }
+    ]
+  },
+  "ex-d4mf9hn9": {
+    "prompt": "Por que o bucket do estado foi criado com o aws CLI em vez de no `main.tf`?",
+    "hint": "Do que o primeiro `init` precisaria?",
+    "choices": [
+      {
+        "text": "O Terraform não consegue criar buckets S3",
+        "why": "Consegue; o problema é guardar o próprio estado num bucket que ele cria."
+      },
+      {
+        "text": "Buckets criados pelo CLI são criptografados e os do Terraform não",
+        "why": "Criptografia é uma configuração, seja quem for que crie o bucket."
+      },
+      {
+        "text": "O backend precisa do bucket antes do init, e um destroy o apagaria",
+        "why": "Certo. Então ele é feito uma vez, por fora, à mão ou por uma configuração pequena com estado local."
+      },
+      {
+        "text": "O CLI é mais rápido",
+        "why": "Velocidade não tem nada a ver com isso."
+      }
+    ]
+  },
+  "ex-ghtx5n1b": {
+    "prompt": "A Ana quer `bucket = var.state_bucket` no bloco de backend. O que acontece?",
+    "hint": "Quando o backend é configurado, em relação ao resto?",
+    "choices": [
+      {
+        "text": "Funciona desde que a variável tenha um default",
+        "why": "Defaults não ajudam: nenhuma variável é avaliada nesse momento."
+      },
+      {
+        "text": "É recusado, e o valor vai em `-backend-config` no init",
+        "why": "Isso. O backend é montado antes de qualquer outra coisa ser avaliada."
+      },
+      {
+        "text": "Funciona, mas só com o backend local",
+        "why": "Nenhum bloco de backend pode se referir a variáveis."
+      },
+      {
+        "text": "O Terraform pede o valor de forma interativa a cada plan",
+        "why": "Isso é o que uma variável comum faltando faz, não um backend."
+      }
+    ]
+  },
+  "ex-mqkhxx7d": {
+    "prompt": "Ponha em ordem os passos para levar o estado da loja ao S3.",
+    "hint": "O bucket não pode vir da configuração a que serve.",
+    "items": [
+      "Criar o bucket e ligar o versionamento",
+      "Escrever o `backend.tf` com bucket, key e `use_lockfile`",
+      "Rodar `terraform init -migrate-state` e responder yes",
+      "Conferir o `terraform state list`, e então apagar as sobras locais"
+    ],
+    "trap": "Apagar o arquivo local antes da migração não deixa nada para migrar."
+  },
+  "ex-zhnfpf37": {
+    "prompt": "Com `use_lockfile = true`, onde o backend S3 guarda a trava?",
+    "hint": "Veja a listagem do bucket enquanto o apply espera.",
+    "choices": [
+      {
+        "text": "Numa tabela do DynamoDB indicada no bloco de backend",
+        "why": "Esse era o jeito antigo, `dynamodb_table`, agora deprecated."
+      },
+      {
+        "text": "Num campo dentro do `terraform.tfstate`",
+        "why": "O estado não tem campo de trava; a trava é um objeto separado."
+      },
+      {
+        "text": "Em `.terraform/` na máquina que roda o apply",
+        "why": "Um arquivo local não impediria outra máquina."
+      },
+      {
+        "text": "Num segundo objeto ao lado do estado, com a key terminada em `.tflock`",
+        "why": "Isso, `shop/terraform.tfstate.tflock`, ao lado do estado."
+      }
+    ]
+  },
+  "ex-v00etcn3": {
+    "prompt": "Qual código de status HTTP o S3 devolveu quando a segunda execução tentou pegar a trava?",
+    "hint": "Está impresso ao lado de `PreconditionFailed`."
+  },
+  "ex-c9026nmn": {
+    "prompt": "Por que um `terraform plan` comum pega a trava, se não muda nada na AWS?",
+    "hint": "O que ele leria se um apply estivesse no meio da gravação?",
+    "choices": [
+      {
+        "text": "Para não ler um estado ainda sendo gravado",
+        "why": "Certo: um plan construído sobre metade de um estado descreve um mundo que nunca existiu."
+      },
+      {
+        "text": "Porque um plan se salva no bucket",
+        "why": "Um plan não grava nada no bucket; com `-out` ele salva localmente."
+      },
+      {
+        "text": "Para reservar o direito de aplicar na próxima hora",
+        "why": "A trava é liberada quando o plan sai."
+      },
+      {
+        "text": "Porque o S3 recusa leituras de um objeto destravado",
+        "why": "O S3 não sabe nada da trava do Terraform; a trava é uma convenção entre execuções."
+      }
+    ]
+  },
+  "ex-0xr6zs1j": {
+    "prompt": "Um `terraform plan` falha numa trava cujo `Who` é um runner de CI. Quais destes devem acontecer antes que alguém rode `force-unlock`? Escolha todos os que se aplicam.",
+    "hint": "O perigo é um segundo escritor ao lado de um vivo.",
+    "choices": [
+      {
+        "text": "Confirmar que o job de CI que a pegou não está mais rodando",
+        "why": "Sim: um job lento ainda segura uma trava válida."
+      },
+      {
+        "text": "Anotar o `ID` da trava na mensagem de erro",
+        "why": "Sim; o `force-unlock` recebe esse ID."
+      },
+      {
+        "text": "Apagar o objeto de estado para a próxima execução começar limpa",
+        "why": "Isso é perder o estado, e a rede duplicada que vem depois."
+      },
+      {
+        "text": "Rodar o plan de novo com `-lock=false` para ver se funciona",
+        "why": "Isso pula a proteção em vez de descobrir se ela ainda é necessária."
+      }
+    ]
+  },
+  "ex-c2kc28qg": {
+    "prompt": "Contra o que o `encrypt = true` no bloco de backend protege o estado?",
+    "hint": "Pense em quem ainda pode ler o objeto.",
+    "choices": [
+      {
+        "text": "Alguém que a política do bucket deixa entrar",
+        "why": "O S3 descriptografa para quem pode ler; quem barra as pessoas é a política."
+      },
+      {
+        "text": "Ler o objeto dos discos do S3",
+        "why": "Isso, criptografia em repouso, e nada mais."
+      },
+      {
+        "text": "Uma senha aparecendo na saída do plan",
+        "why": "A saída na tela é outro vazamento, assunto da aula 12."
+      },
+      {
+        "text": "Duas execuções gravando ao mesmo tempo",
+        "why": "Isso é trabalho da trava."
+      }
+    ]
+  },
+  "ex-9tap238a": {
+    "prompt": "A Ana roda `terraform state push old.tfstate` com uma versão de duas gravações atrás. O que acontece?",
+    "hint": "Compare os seriais.",
+    "choices": [
+      {
+        "text": "É recusado: o serial 1 não pode substituir o 3",
+        "why": "Certo, e só o `-force` passa por cima dessa checagem."
+      },
+      {
+        "text": "O estado antigo vira o atual e o próximo plan desfaz as mudanças recentes",
+        "why": "Isso aconteceria com `-force`; sem ele o push é recusado."
+      },
+      {
+        "text": "O S3 cria uma versão nova e mantém a atual como a mais recente",
+        "why": "Nada chega ao S3: o Terraform recusa antes de gravar."
+      },
+      {
+        "text": "O Terraform junta os dois estados",
+        "why": "Estados não se juntam; um substitui o outro ou nada acontece."
+      }
+    ]
+  },
+  "ex-em0djabd": {
+    "prompt": "Quais destes protegem o bucket de estado da loja, como a aula o monta? Escolha todos os que se aplicam.",
+    "hint": "Três falhas diferentes, três defesas.",
+    "choices": [
+      {
+        "text": "Versionamento, para buscar um estado anterior",
+        "why": "Sim; toda gravação continua no bucket."
+      },
+      {
+        "text": "Bloquear o acesso público",
+        "why": "Sim; impede que uma política ou ACL posterior o publique."
+      },
+      {
+        "text": "Commitar uma cópia do estado no git todo dia",
+        "why": "Cópias no git são estados velhos e segredos vazados."
+      },
+      {
+        "text": "Uma política que nomeia quem pode usar o bucket",
+        "why": "Sim; as permissões do bucket são as do estado."
+      },
+      {
+        "text": "Deixar todo desenvolvedor listar o bucket",
+        "why": "Isso entrega a eles todos os segredos de todos os estados ali."
+      }
+    ]
+  },
+  "ex-cmb659wk": {
+    "prompt": "Uma execução de `terraform apply` com o backend S3: ponha em ordem o que acontece.",
+    "hint": "A trava vem antes de qualquer leitura.",
+    "items": [
+      "Criar o objeto `.tflock`",
+      "Ler o estado e fazer o refresh de cada id na AWS",
+      "Mostrar o plan e esperar o yes",
+      "Mudar a AWS e gravar o estado novo",
+      "Apagar o objeto `.tflock`"
+    ],
+    "trap": "Ler o estado antes de pegar a trava é a janela que a trava existe para fechar."
+  },
+  "ex-b3gmdvs5": {
+    "prompt": "Um job de CI novo faz checkout do repositório, que não tem `backend.tf`, e roda `terraform apply -auto-approve`. O estado da Ana está local no laptop dela. O que o job faz?",
+    "hint": "Qual estado o job lê?",
+    "choices": [
+      {
+        "text": "Cria uma segunda cópia de todo recurso",
+        "why": "Isso. Sem estado ele planeja tudo como faltando: a rede duplicada do clone de novo."
+      },
+      {
+        "text": "Falha na trava que o laptop da Ana segura",
+        "why": "A trava de um estado local está no disco da Ana; o job não a enxerga."
+      },
+      {
+        "text": "Baixa o estado da Ana por SSH e não aponta mudanças",
+        "why": "O Terraform só lê o backend com que foi configurado."
+      },
+      {
+        "text": "Recusa rodar, porque o lineage não bate",
+        "why": "Não há estado com que comparar lineages; ele começa um novo."
+      }
+    ]
+  },
+  "ex-wb9qhezv": {
+    "prompt": "Um plan mostra `aws_subnet.public_a will be destroyed` e `aws_subnet.a will be created`, e ninguém mudou a sub-rede. Qual é a causa mais provável?",
+    "hint": "Dois endereços para uma sub-rede.",
+    "choices": [
+      {
+        "text": "A sub-rede derivou e a AWS mudou o CIDR dela",
+        "why": "Drift num atributo aparece como update ou substituição de um endereço, não de dois."
+      },
+      {
+        "text": "O provider foi atualizado e renomeou o tipo do recurso",
+        "why": "O tipo é `aws_subnet` nas duas linhas; só o nome difere."
+      },
+      {
+        "text": "Alguém rodou `state mv` e o arquivo não foi renomeado",
+        "why": "Isso, o meio do caminho que a aula mostrou; renomear o bloco no `main.tf` dá `No changes`."
+      },
+      {
+        "text": "O arquivo de estado está corrompido e precisa ser restaurado de um backup",
+        "why": "Um estado corrompido não carrega; este carregou e planejou."
+      }
+    ]
+  },
+  "ex-w600jk30": {
+    "prompt": "Depois da migração para o S3, quais destes são verdade sobre o diretório de trabalho da Ana? Escolha todos os que se aplicam.",
+    "hint": "Leia o `ls -l` e o `state list` depois da migração.",
+    "choices": [
+      {
+        "text": "O `terraform.tfstate` está vazio",
+        "why": "Sim, zero bytes."
+      },
+      {
+        "text": "O `terraform state list` lê do bucket",
+        "why": "Sim; nada local participa mais."
+      },
+      {
+        "text": "Os backups são atualizados a cada apply",
+        "why": "São sobras do backend local, e a Ana os apaga."
+      },
+      {
+        "text": "Um clone com `backend.tf` planeja `No changes`",
+        "why": "Sim; ele lê o mesmo estado."
+      },
+      {
+        "text": "O `.gitignore` agora precisa permitir `*.tfstate`",
+        "why": "O estado está no S3; nada dele pertence ao git."
+      }
+    ]
+  }
+}

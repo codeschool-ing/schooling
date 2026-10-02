@@ -1,19 +1,20 @@
 ---
-title: Documents built by a data source
+title: Documentos montados por uma data source
 version: 1
 ---
 
-Not every data source asks a cloud anything. Some compute their answer on the laptop, from what you
-give them, and the most used of those builds **IAM policy documents**: the JSON that says who may do
-what to which resource. A policy can be written as a string of JSON inside the configuration, and it
-works. It is also a block of text Terraform cannot check, where a missing comma is found by AWS at
-apply time and a bucket name typed into an ARN is not updated when the bucket is renamed.
+Nem toda data source pergunta algo a uma nuvem. Algumas calculam a resposta no notebook, a partir do
+que você entrega, e a mais usada delas monta **documentos de policy do IAM**: o JSON que diz quem pode
+fazer o quê em qual recurso. Uma policy pode ser escrita como uma string de JSON dentro da
+configuração, e funciona. Também é um bloco de texto que o Terraform não consegue conferir, onde uma
+vírgula faltando é descoberta pela AWS na hora do apply e o nome de um bucket digitado num ARN não
+acompanha o bucket quando ele é renomeado.
 
-`data "aws_iam_policy_document"` writes the JSON for you from HCL blocks, so references, functions
-and Terraform's own syntax checks all apply to it. Ana's bucket for the shop's images gets two
-statements. The first refuses every request that does not use TLS, which is a common baseline for
-buckets. The second lets the account read objects, but only from the office's addresses, which the
-security team keeps in a file in the repository:
+`data "aws_iam_policy_document"` escreve o JSON para você a partir de blocos HCL, então referências,
+funções e as próprias verificações de sintaxe do Terraform valem para ele. O bucket da Ana para as
+imagens da loja ganha duas declarações (statements). A primeira recusa todo pedido que não use TLS,
+uma base comum para buckets. A segunda deixa a conta ler objetos, mas só a partir dos endereços do
+escritório, que o time de segurança mantém num arquivo do repositório:
 
 ```
 203.0.113.0/28
@@ -68,13 +69,12 @@ resource "aws_s3_bucket_policy" "assets" {
 }
 ```
 
-Three data sources meet in that file. **`data.aws_caller_identity`** from the first section gives
-the bucket a name unique to the account and names the account in the second statement. **`data
-"local_file"`** reads the office list; it comes from the `hashicorp/local` provider, and it reads a
-file on the machine running Terraform rather than anything in AWS. And the policy document turns the
-statements into JSON.
+Três data sources se encontram nesse arquivo. **`data.aws_caller_identity`**, da primeira seção, dá
+ao bucket um nome único da conta e cita a conta na segunda declaração. **`data "local_file"`** lê a
+lista do escritório; ela vem do provider `hashicorp/local`, e lê um arquivo da máquina que roda o
+Terraform, não algo na AWS. E o documento de policy transforma as declarações em JSON.
 
-The plan shows two different timings again:
+O plano mostra de novo dois momentos diferentes:
 
 ```
 ana@laptop:~/shop/app$ terraform plan
@@ -101,8 +101,8 @@ data.local_file.office: Read complete after 0s [id=d31eb9db97a1f63a12b9d3ed7b67d
           + sid       = "DenyInsecureTransport"
 ```
 
-The file was read first, at plan time, because its `filename` is known from the start, and so its
-two ranges are already plain values further down the same document:
+O arquivo foi lido primeiro, no plan, porque o `filename` é conhecido desde o começo, e por isso as
+duas faixas já são valores comuns mais abaixo no mesmo documento:
 
 ```
           + condition {
@@ -115,10 +115,9 @@ two ranges are already plain values further down the same document:
             }
 ```
 
-The policy document is deferred, and this time for
-the other reason: **its `resources` refer to the bucket's ARN, a value that does not exist until AWS
-has made the bucket**, so the config refers to values not yet known. During the apply the order is
-exactly what that implies:
+O documento de policy é adiado, e desta vez pelo outro motivo: **os `resources` dele se referem ao
+ARN do bucket, um valor que não existe até a AWS criar o bucket**, então a configuração se refere a
+valores ainda desconhecidos. Durante o apply, a ordem é exatamente a que isso implica:
 
 ```
 Plan: 2 to add, 0 to change, 0 to destroy.
@@ -132,8 +131,8 @@ aws_s3_bucket_policy.assets: Creation complete after 0s [id=shop-assets-12345678
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 ```
 
-The bucket, then the document, then the policy that needed both. What reached AWS is ordinary JSON,
-read back here from the bucket itself:
+O bucket, depois o documento, depois a policy que precisava dos dois. O que chegou à AWS é JSON
+comum, lido aqui de volta do próprio bucket:
 
 ```
 ana@laptop:~/shop/app$ aws s3api get-bucket-policy --bucket shop-assets-123456789012 --query Policy --output text | jq .
@@ -176,13 +175,13 @@ ana@laptop:~/shop/app$ aws s3api get-bucket-policy --bucket shop-assets-12345678
 }
 ```
 
-Two details in it came from the data source rather than from Ana. The `"Version": "2012-10-17"`
-line, which every IAM policy should carry and which is easy to forget by hand, is added for you. And
-the `Principal` of the first statement is the bare `"*"`, which is how AWS spells "anybody" when
-written as `type = "*"`.
+Dois detalhes nele vieram da data source, não da Ana. A linha `"Version": "2012-10-17"`, que toda
+policy do IAM deveria ter e que é fácil esquecer à mão, é acrescentada por ela. E o `Principal` da
+primeira declaração é o `"*"` sozinho, que é como a AWS escreve "qualquer um" quando o bloco diz
+`type = "*"`.
 
-**A file read by a data source is part of the configuration's inputs, the same as a variable.**
-Editing `office-cidrs.txt` changes the next plan, and the review of that pull request is where
-somebody should ask why a new range appeared. For a file that exists before the plan, the `file()`
-function reads it just as well; the data source earns its place when the file is
-written by something else in the same run, and its read then waits like any other.
+**Um arquivo lido por uma data source é uma entrada da configuração, igual a uma variável.** Editar o
+`office-cidrs.txt` muda o próximo plano, e a revisão desse pull request é onde alguém deveria
+perguntar por que apareceu uma faixa nova. Para um arquivo que existe antes do plan, a função
+`file()` lê do mesmo jeito; a data source se justifica quando o arquivo é escrito por outra coisa na
+mesma execução, e aí a leitura espera como qualquer outra.

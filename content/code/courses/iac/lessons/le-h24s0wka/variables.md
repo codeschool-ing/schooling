@@ -132,7 +132,7 @@ And the plan has its answer. Here is its half about the VPC:
 ```
   # aws_vpc.shop will be updated in-place
   ~ resource "aws_vpc" "shop" {
-        id                                   = "vpc-e011d9a0de19f8728"
+        id                                   = "vpc-7327c901412b20229"
       ~ tags                                 = {
           + "Environment" = "dev"
             "Name"        = "shop"
@@ -191,10 +191,10 @@ With `terraform.tfvars` in place, `apply` puts the new tag on both resources:
 
 ```
 Plan: 0 to add, 2 to change, 0 to destroy.
-aws_vpc.shop: Modifying... [id=vpc-e011d9a0de19f8728]
-aws_vpc.shop: Modifications complete after 0s [id=vpc-e011d9a0de19f8728]
-aws_subnet.web_a: Modifying... [id=subnet-d9c8587bd007db2d1]
-aws_subnet.web_a: Modifications complete after 0s [id=subnet-d9c8587bd007db2d1]
+aws_vpc.shop: Modifying... [id=vpc-7327c901412b20229]
+aws_vpc.shop: Modifications complete after 0s [id=vpc-7327c901412b20229]
+aws_subnet.web_a: Modifying... [id=subnet-246685d4ada451bad]
+aws_subnet.web_a: Modifications complete after 0s [id=subnet-246685d4ada451bad]
 
 Apply complete! Resources: 0 added, 2 changed, 0 destroyed.
 ```
