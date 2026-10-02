@@ -8,8 +8,8 @@ leaves, and nothing happens again until she runs it again. The three tools in th
 mostly built the other way round. **An agent lives on every machine, asks a server what that
 machine should look like, and applies the answer, on a timer, whether or not anybody is watching.**
 
-It is tempting to read that as a detail of transport, SSH in one case and an agent's connection in
-the other. It is more than that. Who starts the conversation decides how often the description is
+That reads like a detail of transport, SSH in one case and an agent's connection in the other. It
+decides more than transport: who starts the conversation decides how often the description is
 compared with the machine, and that decides how long a hand edit survives.
 
 ```schooling-figure
@@ -32,7 +32,7 @@ server = puppet
 `runinterval` is in seconds: **1800 is a run every thirty minutes**, on every machine, for as long as
 the agent is running. `server = puppet` is where the agent looks if nobody tells it otherwise, a host
 literally called `puppet`. `certname` is the name the machine is known by; the lab sets it to `laptop`
-in Ana's `puppet.conf` so that it matches the prompt. The name matters more than it looks. The agent
+in Ana's `puppet.conf` so that it matches the prompt. The name matters because the agent
 proves who it is with a certificate signed by a certificate authority that, by default, the Puppet
 server runs, so adding a machine to a pull setup means a new certificate as well as a new agent.
 

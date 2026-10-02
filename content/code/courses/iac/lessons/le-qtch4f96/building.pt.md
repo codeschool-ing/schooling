@@ -142,7 +142,7 @@ template diz. Numa loja de verdade, a conferência antes de publicar é esse ped
 script, derrubando o pipeline quando a resposta está errada.
 
 **Uma versão nomeia uma imagem, para sempre.** A `1.0.0` continua no notebook, ainda quebrada, com o
-próprio nome (a lista de imagens da próxima seção mostra), e fica assim: uma versão publicada e
+próprio nome, como mostra a lista de imagens da próxima seção. E fica assim. Uma versão publicada e
 encontrada com defeito é seguida por uma versão mais nova, nunca reconstruída sob o número antigo.
 Escrever o número à mão no template, duas vezes por build, é como um número acaba reutilizado, e a
 próxima seção o tira de lá.

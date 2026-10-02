@@ -173,5 +173,5 @@ fazer do lado deles, e significa que `ubuntu:24.04` é uma base diferente em dia
 A regra que sai daí é curta. **Em produção, nomeie imagens por uma versão que nunca é reutilizada**,
 e trate uma tag como `latest` ou `24.04` como conveniência para uma pessoa no terminal. Registries
 conseguem impor isso: o Amazon ECR, por exemplo, pode ser configurado para recusar o push de uma tag
-que já existe. A imagem base precisa de um nome mais forte que uma versão, e a última seção desta
-aula dá um a ela.
+que já existe. A imagem base precisa de um nome mais forte que uma versão, e duas seções adiante
+ela ganha um.

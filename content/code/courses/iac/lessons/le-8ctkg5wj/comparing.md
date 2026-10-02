@@ -20,7 +20,7 @@ everything around that model.
 
 Two rows deserve a sentence each.
 
-**Who starts a run** is the row that changes how a team works, for the reasons in the first section of
+**Who starts a run** is the row that changes how a team works, for the reasons in the second section of
 this lesson: an agent corrects drift on its own schedule, including the drift somebody meant. **Order**
 is the row that changes how a description is read. In Ansible and Chef, top to bottom is the truth. In
 Puppet, the relationships are, and top to bottom is only a fallback. Salt numbers states in file order

@@ -173,4 +173,4 @@ the right thing for them to do, and it means `ubuntu:24.04` is a different base 
 The rule that follows is short. **In production, name images by a version that is never reused**,
 and treat a tag like `latest` or `24.04` as a convenience for a human at a terminal. Registries can
 enforce it: Amazon ECR, for one, can be set to refuse pushing a tag that already exists. The base
-image needs a stronger name than a version, and the last section of this lesson gives it one.
+image needs a stronger name than a version, and two sections on, it gets one.

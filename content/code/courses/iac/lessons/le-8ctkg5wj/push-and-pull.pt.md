@@ -8,8 +8,8 @@ e vai embora, e nada acontece de novo até ela rodar de novo. As três ferrament
 construídas, na maior parte, ao contrário. **Um agente mora em cada máquina, pergunta a um servidor
 como aquela máquina deve estar e aplica a resposta, num horário fixo, com ou sem alguém olhando.**
 
-Dá vontade de ler isso como um detalhe de transporte, SSH num caso e a conexão de um agente no outro.
-É mais do que isso. Quem começa a conversa decide com que frequência a descrição é comparada com a
+Isso parece um detalhe de transporte, SSH num caso e a conexão de um agente no outro. Decide mais
+do que o transporte: quem começa a conversa decide com que frequência a descrição é comparada com a
 máquina, e isso decide quanto tempo uma edição feita à mão sobrevive.
 
 ```schooling-figure
@@ -33,7 +33,7 @@ server = puppet
 enquanto o agente estiver rodando. `server = puppet` é onde o agente procura se ninguém disser outra
 coisa, um host chamado literalmente `puppet`. `certname` é o nome pelo qual a máquina é conhecida; o
 laboratório o define como `laptop` no `puppet.conf` da Ana para bater com o prompt. O nome importa
-mais do que parece. O agente prova quem é com um certificado assinado por uma autoridade
+porque o agente prova quem é com um certificado assinado por uma autoridade
 certificadora que, por padrão, o próprio servidor Puppet mantém, então incluir uma máquina num
 arranjo de pull significa um certificado novo, além de um agente novo.
 

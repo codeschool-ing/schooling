@@ -142,6 +142,6 @@ because the template says so. In a real shop the check before publishing is this
 a script, failing the pipeline when the answer is wrong.
 
 **A version names one image, for good.** `1.0.0` is still on the laptop, still broken, under its
-own name (the image list in the next section shows it), and it stays that way: a version that was published and found faulty is followed by a
-newer version, never rebuilt under the old number. Writing the number into the template by hand,
+own name, as the image list in the next section shows. It stays that way. A version that was
+published and found faulty is followed by a newer version, never rebuilt under the old number. Writing the number into the template by hand,
 twice per build, is how a number gets reused, and the next section takes it out.

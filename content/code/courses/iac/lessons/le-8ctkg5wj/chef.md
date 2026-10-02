@@ -10,8 +10,8 @@ ana@laptop:~/shop/salt$ command -v chef-client cinc-client knife || echo "none o
 none of them
 ```
 
-So this section shows a recipe and runs nothing. **The recipe below is illustrative, was not run here,
-and has no output beside it**, because any output would be invented. Everything said about how Chef
+So this section shows a recipe and runs nothing. **The recipe below has no output beside it**, because
+any output would be invented. Everything said about how Chef
 behaves is about the tool in general, not about a run you can see.
 
 ## A recipe is Ruby

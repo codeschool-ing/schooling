@@ -10,8 +10,8 @@ ana@laptop:~/shop/salt$ command -v chef-client cinc-client knife || echo "none o
 none of them
 ```
 
-Então esta seção mostra uma receita e não roda nada. **A receita abaixo é ilustrativa, não foi rodada
-aqui e não tem saída ao lado**, porque qualquer saída seria inventada. Tudo o que se diz sobre como o
+Então esta seção mostra uma receita e não roda nada. **A receita abaixo não tem saída ao lado**, porque
+qualquer saída seria inventada. Tudo o que se diz sobre como o
 Chef se comporta é sobre a ferramenta em geral, não sobre uma execução que você possa ver.
 
 ## Uma receita é Ruby

@@ -67,8 +67,8 @@ started, and the port it listens on.
 `pull = false` is there because of this lab. By default Packer asks Docker Hub for the newest
 `ubuntu:24.04` before every build, and while this lesson was being recorded Docker Hub answered
 those requests with `429 Too Many Requests`. With `pull = false` the build uses the copy already on
-the laptop. Leaving it out is the ordinary setting; the reproducible section of this lesson
-explains why the base image should be pinned either way.
+the laptop. Leaving it out is the ordinary setting; four sections on, this lesson explains
+why the base image should be pinned either way.
 
 **`build`** says what happens. `sources` names the source blocks to start from, and a build can
 list several to produce the same image for several targets at once. Inside it:

@@ -20,7 +20,7 @@ que muda é tudo em volta desse modelo.
 
 Duas linhas merecem uma frase cada.
 
-**Quem começa uma execução** é a linha que muda como um time trabalha, pelos motivos da primeira seção
+**Quem começa uma execução** é a linha que muda como um time trabalha, pelos motivos da segunda seção
 desta aula: um agente corrige o drift no próprio horário, inclusive o drift que alguém quis fazer.
 **Ordem** é a linha que muda como uma descrição é lida. No Ansible e no Chef, de cima para baixo é a
 verdade. No Puppet, os relacionamentos são, e de cima para baixo é só o critério de reserva. O Salt numera os

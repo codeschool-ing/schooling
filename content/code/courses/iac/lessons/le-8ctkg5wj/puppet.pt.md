@@ -173,7 +173,7 @@ O arquivo e o serviço foram **pulados porque a dependência deles falhou**, em 
 assim. Um arquivo de configuração para um pacote que não está instalado, e um serviço ligado sem ele,
 são exatamente o que o `require` existe para evitar.
 
-O `puppet resource` vira a mesma máquina do avesso e descreve o que existe, na sintaxe do próprio
+O `puppet resource` vira o mesmo mecanismo do avesso e descreve o que existe, na sintaxe do próprio
 Puppet:
 
 ```

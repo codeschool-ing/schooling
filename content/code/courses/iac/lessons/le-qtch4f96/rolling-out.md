@@ -139,8 +139,8 @@ aws_instance.web: Destruction complete after 10s
 Apply complete! Resources: 1 added, 0 changed, 1 destroyed.
 ```
 
-The order is lesson 6's `+/-`: the new instance is created first, and only then is the old one,
-kept for a moment as a *deposed object*, destroyed. On a real account the new machine has nothing left to
+The order is lesson 6's `+/-`: the new instance is created first, and the old one, kept for a
+moment as a *deposed object*, is destroyed after it. On a real account the new machine has nothing left to
 install when it boots, so it can start serving as soon as it is up.
 
 ## Rolling back is rolling forward to an older number

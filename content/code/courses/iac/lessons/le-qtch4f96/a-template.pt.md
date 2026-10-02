@@ -68,8 +68,8 @@ que escuta.
 `pull = false` está ali por causa deste laboratório. Por padrão o Packer pede ao Docker Hub o
 `ubuntu:24.04` mais novo antes de cada build, e enquanto esta aula era gravada o Docker Hub respondeu
 a esses pedidos com `429 Too Many Requests`. Com `pull = false` o build usa a cópia que já está no
-notebook. Deixar a linha de fora é o normal; a seção sobre reprodutibilidade, no fim desta aula,
-explica por que a imagem base deve ser fixada de qualquer jeito.
+notebook. Deixar a linha de fora é o normal; quatro seções adiante, esta aula explica
+por que a imagem base deve ser fixada de qualquer jeito.
 
 **`build`** diz o que acontece. `sources` aponta os blocos source de onde partir, e um build pode
 listar vários para produzir a mesma imagem para vários destinos de uma vez. Dentro dele:
