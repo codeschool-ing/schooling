@@ -9,7 +9,7 @@ does, writing the likeliest continuation, at a moment when the likeliest continu
 The correct answers and the invented ones come out of the same step, which is why the text alone
 cannot tell you which one you got.
 
-Lesson 1 ended on that point with one sentence, `the coffee is cold and the cat wakes`: every pair
+Lesson 1 made that point with one sentence, `the coffee is cold and the cat wakes`: every pair
 of words in it came from the file, and the sentence as a whole came from nowhere. Two more
 questions to `toylm` show the two common shapes of the problem.
 

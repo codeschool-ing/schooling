@@ -9,7 +9,7 @@ continuação mais provável, num momento em que a continuação mais provável 
 certas e as inventadas saem do mesmo passo, e é por isso que o texto sozinho não diz qual das duas
 você recebeu.
 
-A lição 1 terminou nesse ponto com uma frase, `the coffee is cold and the cat wakes`: cada par de
+A lição 1 mostrou isso com uma frase, `the coffee is cold and the cat wakes`: cada par de
 palavras dela veio do arquivo, e a frase inteira não veio de lugar nenhum. Mais duas perguntas ao
 `toylm` mostram as duas formas comuns do problema.
 
