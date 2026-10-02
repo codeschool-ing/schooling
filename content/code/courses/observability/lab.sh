@@ -89,6 +89,8 @@ LABFILE
   cat > "$SHOP/compose.yaml" <<'LABFILE'
 # The shop, and everything that watches it. One machine, one command:
 #   docker compose up -d
+# The shop's code is mounted from ./services, so an edit takes effect on
+# `docker compose restart <service>`, without building the image again.
 name: shop
 
 x-shop: &shop
@@ -104,6 +106,7 @@ x-shop: &shop
       fluentd-address: 127.0.0.1:24224
       fluentd-async: "true"
       tag: "{{.Name}}"
+  volumes: ["./services:/app:ro"]
   depends_on: [otel-collector]
 
 services:
@@ -134,7 +137,7 @@ services:
     environment:
       <<: *env
       OTEL_SERVICE_NAME: payments
-    volumes: ["./faults:/faults:ro"]
+    volumes: ["./services:/app:ro", "./faults:/faults:ro"]
 
   mailer:
     <<: *shop
