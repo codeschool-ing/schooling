@@ -42,8 +42,7 @@ stop: end, tokens in 246, out 39
 
 **Every one of the forty replies carries `"order": "4471"`**, including the customer who cannot
 log in and has no order at all. The model had no value for a field it was shown, so it copied the
-one it had. In the stand-in that is a rule; in a real model it is a tendency, and a well-documented
-one: names, dates and numbers from examples turn up in answers about something else.
+one it had. In the stand-in that is a rule; in a real model it is a tendency: names, dates and numbers from examples turn up in answers about something else.
 
 Two things in that transcript are worth keeping.
 
@@ -51,16 +50,16 @@ Two things in that transcript are worth keeping.
 for. A check that only looked for the fields it needed would have passed all forty, and the order
 number would have reached whatever reads the JSON next.
 
-**And every reply failed the same way.** A defect in an example is not an occasional error; it is
-copied into every answer, which makes it loud in a test set and invisible in a demo, where you try
+**And every reply failed the same way.** A defect in an example is not an occasional error: it is
+copied into every answer. That makes it loud in a test set and invisible in a demo, where you try
 one message and the extra field looks like a feature.
 
 ## Keeping examples from teaching the wrong thing
 
-- **Vary whatever should vary.** If all three summaries began with *Wants*, every summary would.
+- Vary whatever should vary. If all three summaries began with *Wants*, every summary would.
   The examples here start with *Wants*, *Wants* and *Asks*, and that is already a pattern.
-- **Remove what belongs to one customer**: names, order numbers, dates, amounts. Replace them with
+- Remove what belongs to one customer: names, order numbers, dates, amounts. Replace them with
   values that are obviously examples, or leave them out.
-- **Make the examples answer exactly what the prompt asks for**, field for field. An example is
+- Make the examples answer exactly what the prompt asks for, field for field. An example is
   the strongest instruction in a prompt, so an example that disagrees with the description wins.
-- **Check strictly**, so that what an example leaks fails a test instead of reaching a reader.
+- Check strictly, so that what an example leaks fails a test instead of reaching a reader.

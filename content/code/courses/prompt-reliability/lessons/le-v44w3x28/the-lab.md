@@ -8,10 +8,10 @@ other thirty-nine times**: writing down what a good answer is, running the promp
 has not seen, and counting. Everything after this section is a way of making that count more
 honest, cheaper or harder to fool.
 
-The whole course follows one prompt. Folio is an online bookshop, invented for the course, and its
-support inbox needs every message sorted before a person reads it: a **category** (billing,
-delivery, returns, account or other), an **urgency** (low, normal or high) and a one-sentence
-**summary**. The answer is JSON, because a program reads it next.
+The whole course follows one prompt. Folio is an online bookshop, invented for the course. Its
+support inbox needs every message sorted before a person reads it: a category (billing,
+delivery, returns, account or other), an urgency (low, normal or high) and a one-sentence
+summary. The answer is JSON, because a program reads it next.
 
 ## The harness
 
@@ -52,7 +52,7 @@ that passed everything.
 ## The model is a stand-in
 
 **The model in this lab is not a language model.** It is `promptlab/standin.py`, about four
-hundred lines of Python written for the course, and its opening comment lists every rule it
+hundred lines of Python written for the course. Its opening comment lists every rule it
 answers by: it sorts a message by keywords, leans towards the labels its examples show, writes the
 shape its first example has, and has a handful of formatting habits at fixed rates.
 

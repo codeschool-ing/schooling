@@ -22,7 +22,7 @@ compartilham `order`, e no substituto **um exemplo puxa as mensagens parecidas c
 próprio rótulo**. Modelos reais são puxados do mesmo jeito, pela semelhança de superfície além do
 sentido, e ninguém consegue dizer de antemão qual superfície eles vão notar.
 
-Então escolher exemplos é escolher a partir do que o modelo vai generalizar. Quatro regras cobrem
+Então escolher exemplos é escolher de onde o modelo vai generalizar. Quatro regras cobrem
 quase tudo.
 
 ## Cubra as fronteiras, não o centro
@@ -32,7 +32,7 @@ certo de qualquer jeito. **Os exemplos que valem os tokens ficam onde dois rótu
 reembolso de livro devolvido (returns, não billing), uma encomenda que chegou encharcada (returns,
 não delivery), uma cobrança por entrega expressa que não aconteceu (billing, não delivery). O
 primeiro exemplo é um desses, e `t37` mostra que um exemplo de fronteira precisa de um vizinho do
-outro lado, um pedido atrasado rotulado delivery, ou ele empurra a linha longe demais.
+outro lado — um pedido atrasado rotulado delivery — ou ele empurra a linha longe demais.
 
 ## Tire-os do tráfego real
 

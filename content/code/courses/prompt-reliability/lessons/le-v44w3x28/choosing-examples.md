@@ -30,7 +30,7 @@ An example of an obvious case teaches the format and little else; the model woul
 meet**: a refund for a returned book (returns, not billing), a parcel that arrived soaked (returns,
 not delivery), a charge for a delivery upgrade that never happened (billing, not delivery). The
 first example is one of those, and `t37` shows that a boundary example needs a neighbour on the
-other side, a late order labelled delivery, or it moves the line too far.
+other side — a late order labelled delivery — or it moves the line too far.
 
 ## Take them from real traffic
 

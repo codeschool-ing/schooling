@@ -160,8 +160,8 @@ one of the oldest results in the field. The paper that introduced GPT-3, *Langua
 Few-Shot Learners* (Brown and others, 2020), is named after it: a handful of demonstrations in the
 prompt raised the model's accuracy on many tasks without changing a single weight. A later study,
 *Rethinking the Role of Demonstrations* (Min and others, 2022), found that much of the gain came
-from the examples showing the format and the set of labels, and survived even when the labels in
-the examples were wrong.
+from the examples showing the format and the set of labels. That part of the gain survived even
+when the labels in the examples were wrong.
 
 That is the useful way to think of an example: **a description says what you want; an example is
 an instance of it**, and an instance leaves less to fill in.

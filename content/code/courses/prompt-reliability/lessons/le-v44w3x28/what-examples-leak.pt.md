@@ -42,8 +42,7 @@ stop: end, tokens in 246, out 39
 
 **Cada uma das quarenta respostas traz `"order": "4471"`**, inclusive a do cliente que não consegue
 entrar e não tem pedido nenhum. O modelo não tinha valor para um campo que lhe mostraram, então
-copiou o que tinha. No substituto isso é uma regra; num modelo real é uma tendência, e bem
-documentada: nomes, datas e números dos exemplos aparecem em respostas sobre outra coisa.
+copiou o que tinha. No substituto isso é uma regra; num modelo real é uma tendência: nomes, datas e números dos exemplos aparecem em respostas sobre outra coisa.
 
 Duas coisas nessa transcrição valem guardar.
 
@@ -51,17 +50,17 @@ Duas coisas nessa transcrição valem guardar.
 pediu. Uma verificação que só procurasse os campos necessários teria aprovado as quarenta, e o número
 do pedido chegaria a quem lê o JSON em seguida.
 
-**E toda resposta falhou do mesmo jeito.** Um defeito num exemplo não é um erro ocasional; ele é
-copiado em todas as respostas, o que o torna barulhento num conjunto de teste e invisível numa
-demonstração, em que você testa uma mensagem e o campo a mais parece um recurso.
+**E toda resposta falhou do mesmo jeito.** Um defeito num exemplo não é um erro ocasional: ele é
+copiado em todas as respostas. Por isso ele aparece com estardalhaço num conjunto de teste e passa
+despercebido numa demonstração, em que você testa uma mensagem e o campo a mais parece um recurso.
 
 ## Impedir que os exemplos ensinem a coisa errada
 
-- **Varie o que deve variar.** Se os três resumos começassem com *Wants*, todo resumo começaria.
+- Varie o que deve variar. Se os três resumos começassem com *Wants*, todo resumo começaria.
   Os exemplos aqui começam com *Wants*, *Wants* e *Asks*, e isso já é um padrão.
-- **Tire o que pertence a um cliente**: nomes, números de pedido, datas, valores. Troque por valores
+- Tire o que pertence a um cliente: nomes, números de pedido, datas, valores. Troque por valores
   que obviamente são de exemplo, ou deixe de fora.
-- **Faça os exemplos responderem exatamente o que o prompt pede**, campo por campo. Um exemplo é a
+- Faça os exemplos responderem exatamente o que o prompt pede, campo por campo. Um exemplo é a
   instrução mais forte de um prompt, então um exemplo que discorda da descrição vence.
-- **Verifique com rigor**, para que o que um exemplo vaza reprove num teste em vez de chegar a um
+- Verifique com rigor, para que o que um exemplo vaza reprove num teste em vez de chegar a um
   leitor.

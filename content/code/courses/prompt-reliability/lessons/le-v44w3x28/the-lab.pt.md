@@ -8,10 +8,10 @@ outras trinta e nove**: escrever o que é uma boa resposta, rodar o prompt em me
 nunca viu e contar. Tudo o que vem depois desta seção é um jeito de deixar essa contagem mais
 honesta, mais barata ou mais difícil de enganar.
 
-O curso inteiro acompanha um prompt. A Folio é uma livraria online, inventada para o curso, e a
+O curso inteiro acompanha um prompt. A Folio é uma livraria online, inventada para o curso. A
 caixa de atendimento dela precisa de cada mensagem classificada antes que uma pessoa a leia: uma
-**categoria** (billing, delivery, returns, account ou other), uma **urgência** (low, normal ou high)
-e um **resumo** de uma frase. A resposta é JSON, porque quem a lê em seguida é um programa.
+categoria (billing, delivery, returns, account ou other), uma urgência (low, normal ou high)
+e um resumo de uma frase. A resposta é JSON, porque quem a lê em seguida é um programa.
 
 ## A bancada
 
@@ -52,8 +52,8 @@ passaram em tudo.
 ## O modelo é um substituto
 
 **O modelo deste laboratório não é um modelo de linguagem.** É o `promptlab/standin.py`, umas
-quatrocentas linhas de Python escritas para o curso, e o comentário de abertura dele lista cada
-regra pela qual responde: classifica uma mensagem por palavras-chave, pende para os rótulos que os
+quatrocentas linhas de Python escritas para o curso. O comentário de abertura dele lista cada
+regra pela qual ele responde: classifica uma mensagem por palavras-chave, pende para os rótulos que os
 exemplos mostram, escreve no formato do primeiro exemplo e tem alguns hábitos de formatação com
 taxas fixas.
 
