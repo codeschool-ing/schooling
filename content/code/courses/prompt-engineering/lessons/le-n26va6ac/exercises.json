@@ -1,0 +1,476 @@
+[
+  {
+    "id": "ex-wrg396wz",
+    "version": 1,
+    "section": "sample-and-vote",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is self-consistency?",
+    "hint": "Several of something, then a count.",
+    "choices": [
+      {
+        "text": "Majority vote over sampled chains",
+        "correct": true,
+        "why": "Right. The reasoning is discarded; the final answers are counted."
+      },
+      {
+        "text": "Ask the model to check its own chain for contradictions",
+        "correct": false,
+        "why": "That is a review step, not a vote among samples."
+      },
+      {
+        "text": "Run one chain at temperature 0 so that it is consistent",
+        "correct": false,
+        "why": "That gives one answer repeated; there is nothing to vote on."
+      },
+      {
+        "text": "Keep the longest chain, since it shows the most work",
+        "correct": false,
+        "why": "Length is not the criterion. The most common final answer is."
+      }
+    ]
+  },
+  {
+    "id": "ex-sj3xjpam",
+    "version": 1,
+    "section": "sample-and-vote",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why were the five `toylm` samples at `--temperature 0` useless for a vote?",
+    "hint": "Lesson 13: what does temperature 0 do at each step?",
+    "choices": [
+      {
+        "text": "Temperature 0 makes the model refuse to sample",
+        "correct": false,
+        "why": "It sampled five times and printed five lines."
+      },
+      {
+        "text": "Five is too few samples for any vote",
+        "correct": false,
+        "why": "Five can work, as the café chains showed. The problem was that they could not differ."
+      },
+      {
+        "text": "The seeds were wrong",
+        "correct": false,
+        "why": "Different seeds were used. At temperature 0 the seed has nothing to choose between."
+      },
+      {
+        "text": "All five take the top token, so they match",
+        "correct": true,
+        "why": "Yes: `six.` five times. A vote among copies counts one answer five times."
+      }
+    ]
+  },
+  {
+    "id": "ex-8pd48htc",
+    "version": 1,
+    "section": "sample-and-vote",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`vote chains/*.txt` printed `majority: 54 (3 of 5)`. How many of the five chains reached 54?",
+    "hint": "Read the last line.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "chains"
+  },
+  {
+    "id": "ex-crh6x45h",
+    "version": 1,
+    "section": "sample-and-vote",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Chains `s3` and `s5` were both wrong. Why does that help the vote rather than hurt it?",
+    "hint": "Compare their answers.",
+    "choices": [
+      {
+        "text": "Wrong chains are removed before the vote",
+        "correct": false,
+        "why": "`vote` counts every file; nothing judges the chains."
+      },
+      {
+        "text": "They split, 66 and 42, instead of outvoting 54",
+        "correct": true,
+        "why": "Right. Wrong chains that scatter cannot form a majority against the right one."
+      },
+      {
+        "text": "Their reasoning was shorter, so they count for less",
+        "correct": false,
+        "why": "Every chain counts as one vote whatever its length."
+      },
+      {
+        "text": "It does hurt: any wrong chain makes the result unreliable",
+        "correct": false,
+        "why": "The vote is built for wrong chains. What matters is whether they agree with each other."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qct1sf7",
+    "version": 1,
+    "section": "sample-and-vote",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does each chain need a fixed answer phrase such as \"the answer is\"?",
+    "hint": "What does `vote` actually compare?",
+    "choices": [
+      {
+        "text": "It makes the model reason more carefully",
+        "correct": false,
+        "why": "The phrase is for extraction, not for reasoning."
+      },
+      {
+        "text": "A program counts final answers, and needs to find them in each chain",
+        "correct": true,
+        "why": "Yes. `vote` reads the last \"answer is ...\" of each file; a chain without one gives no vote."
+      },
+      {
+        "text": "The provider charges less for replies in a fixed format that it can read",
+        "correct": false,
+        "why": "Format does not change the price per token."
+      },
+      {
+        "text": "So that the five chains are worded identically",
+        "correct": false,
+        "why": "The chains are meant to differ; only the answer has to be findable."
+      }
+    ]
+  },
+  {
+    "id": "ex-f49pt95f",
+    "version": 1,
+    "section": "sample-and-vote",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the self-consistency procedure in order.",
+    "hint": "From the prompt to the decision.",
+    "items": [
+      "Write one chain-of-thought prompt ending in a fixed answer line",
+      "Send it N times at a temperature above 0",
+      "Extract the final answer from each reply",
+      "Take the most common answer"
+    ]
+  },
+  {
+    "id": "ex-swj4dqt5",
+    "version": 1,
+    "section": "sample-and-vote",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One vote gives 5 of 5, another 3 of 5. What should a program make of the difference?",
+    "hint": "The share the winner got is a measurement too.",
+    "choices": [
+      {
+        "text": "Nothing: a majority is a majority",
+        "correct": false,
+        "why": "The size of the majority tells you how much the samples agreed."
+      },
+      {
+        "text": "5 of 5 means the model was stuck, so 3 of 5 is better",
+        "correct": false,
+        "why": "Unanimity at a temperature above 0 is agreement, not a fault."
+      },
+      {
+        "text": "Discard both and run at temperature 0",
+        "correct": false,
+        "why": "That removes the variation the vote needs."
+      },
+      {
+        "text": "3 of 5 is weaker; send it to a person or more samples",
+        "correct": true,
+        "why": "Right. A split vote is a reason to look again, a unanimous one less so."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6pqazyr",
+    "version": 1,
+    "section": "limits",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The five chains were 59, 43, 34, 35 and 38 tokens. How many output tokens did the vote cost in total?",
+    "hint": "Add them.",
+    "value": 209,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-baefmemt",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For which task does self-consistency fit worst?",
+    "hint": "Can the answers be compared as strings?",
+    "choices": [
+      {
+        "text": "Working out a bill in reais",
+        "correct": false,
+        "why": "A number can be compared directly."
+      },
+      {
+        "text": "Deciding refund or replace for an order",
+        "correct": false,
+        "why": "A label from a fixed set votes well."
+      },
+      {
+        "text": "Summarising a complaint in a paragraph",
+        "correct": true,
+        "why": "Right. Five paragraphs never match exactly, so every vote is a tie of ones."
+      },
+      {
+        "text": "Answering yes or no to a handbook question",
+        "correct": false,
+        "why": "Yes and no are easy to count."
+      }
+    ]
+  },
+  {
+    "id": "ex-1g0fq047",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three chains answered `54`, `R$ 54` and `54.00`. What does a program comparing strings see, and what is the fix?",
+    "hint": "One answer to a person.",
+    "choices": [
+      {
+        "text": "One answer, since all three are the same number",
+        "correct": false,
+        "why": "A string comparison sees three different strings."
+      },
+      {
+        "text": "Three answers; normalise them first",
+        "correct": true,
+        "why": "Right. Ask for the number only in the prompt, and normalise what comes back before counting."
+      },
+      {
+        "text": "An error, and the vote cannot run",
+        "correct": false,
+        "why": "It runs, and reports a split that is not real."
+      },
+      {
+        "text": "A tie, which proves the question is hard",
+        "correct": false,
+        "why": "This tie measures formatting, not difficulty."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkbf433j",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three samples answered 54, 66 and 42. What does the lesson say about picking one of them at random?",
+    "hint": "What does the tie measure?",
+    "choices": [
+      {
+        "text": "It hides a measurement: the question is hard for this prompt",
+        "correct": true,
+        "why": "Right. More samples, a better prompt or a person are the useful responses."
+      },
+      {
+        "text": "It is fine, since each was a valid sample of the model",
+        "correct": false,
+        "why": "Each is a sample; none has more support than the others, and choosing hides that."
+      },
+      {
+        "text": "It is required by the method",
+        "correct": false,
+        "why": "The method takes the most common answer; with no majority, it gives none."
+      },
+      {
+        "text": "Pick the largest instead, since it is the most cautious",
+        "correct": false,
+        "why": "The size of a number says nothing about whether it is right."
+      }
+    ]
+  },
+  {
+    "id": "ex-1k505f1y",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the holiday question the vote was `yes` 3 of 5, and the handbook says `no`. Why would more samples of the same prompt not help?",
+    "hint": "What did the three wrong chains share?",
+    "choices": [
+      {
+        "text": "Five samples were too few; twenty would correct it",
+        "correct": false,
+        "why": "More samples of the same pull would make the wrong majority firmer, if anything."
+      },
+      {
+        "text": "The vote program miscounted",
+        "correct": false,
+        "why": "It counted correctly: three `yes`, two `no`."
+      },
+      {
+        "text": "The handbook is ambiguous about holidays",
+        "correct": false,
+        "why": "It says plainly that holidays follow Sunday hours."
+      },
+      {
+        "text": "The wrong chains share one cause, the pull of Wednesday, and more samples repeat it",
+        "correct": true,
+        "why": "Right. The fix is in the prompt, such as stepping back to the rules first."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqfrczys",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a vote measure?",
+    "hint": "Not the same thing as truth.",
+    "choices": [
+      {
+        "text": "Whether the answer matches the handbook, since right chains always agree",
+        "correct": false,
+        "why": "The holiday majority agreed and was wrong."
+      },
+      {
+        "text": "How confident the model is in each token",
+        "correct": false,
+        "why": "It never sees token scores, only final answers."
+      },
+      {
+        "text": "How much reasoning the chains contained",
+        "correct": false,
+        "why": "The reasoning is thrown away before counting."
+      },
+      {
+        "text": "Agreement among samples",
+        "correct": true,
+        "why": "Right. Agreement with the facts is a different question, as the holiday vote showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-4chqq7df",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each technique to how it uses the model's reasoning.",
+    "hint": "Lessons 26, 27 and 28.",
+    "pairs": [
+      {
+        "left": "chain of thought",
+        "right": "follows one path to an answer"
+      },
+      {
+        "left": "self-consistency",
+        "right": "follows several paths to the end and counts where they arrive"
+      },
+      {
+        "left": "tree of thoughts",
+        "right": "compares partial paths and drops the weak ones early"
+      }
+    ],
+    "right_distractors": [
+      "asks for the general rule before the question"
+    ]
+  },
+  {
+    "id": "ex-qkkr1j29",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which conditions does self-consistency need to be worth using? Choose all that apply.",
+    "hint": "Variation, comparability, and a reason to pay.",
+    "choices": [
+      {
+        "text": "Samples drawn at a temperature above 0",
+        "correct": true,
+        "why": "Yes: at 0 they are copies."
+      },
+      {
+        "text": "Answers that can be compared, such as a number or a label",
+        "correct": true,
+        "why": "Yes: free text cannot be counted."
+      },
+      {
+        "text": "A wrong answer that costs more than the extra calls",
+        "correct": true,
+        "why": "Yes: five samples cost about five times as much."
+      },
+      {
+        "text": "A model that never makes the same mistake twice",
+        "correct": false,
+        "why": "No such model exists, and the holiday vote shows what happens when mistakes repeat."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0x6egqg",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Self-consistency samples several chains of thought and keeps the final answer chosen by the ___.",
+    "hint": "What `vote` printed on its last line.",
+    "blanks": [
+      {
+        "accept": [
+          "majority",
+          "most",
+          "plurality"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ej8m7sqq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team votes over 10 samples for every customer e-mail reply, to make the replies \"more accurate\". What is wrong with the plan?",
+    "hint": "Two limits at once.",
+    "choices": [
+      {
+        "text": "Free-text replies cannot be counted, and it costs ten times as much",
+        "correct": true,
+        "why": "Right. Nothing to vote on, at ten times the bill."
+      },
+      {
+        "text": "Ten is too many; three would be enough",
+        "correct": false,
+        "why": "The number is not the problem: free text cannot be voted on at any count."
+      },
+      {
+        "text": "Replies must be generated at temperature 0 for a vote",
+        "correct": false,
+        "why": "At 0 the ten samples would be copies."
+      },
+      {
+        "text": "Nothing, if they keep the longest reply",
+        "correct": false,
+        "why": "That is a different rule, and length says nothing about accuracy."
+      }
+    ]
+  }
+]
