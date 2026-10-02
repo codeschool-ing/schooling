@@ -56,10 +56,10 @@ broken: t06 t08 t18 t20 t23 t25 t33 t38
 sign test on the 8 that changed: p = 0.008
 ```
 
-Eight messages broken, and a sign test of 0.008 says that is unlikely to be chance. **The prompt id is the
-same in both runs, and `git diff` would show nothing**, because the change was never in the file. A
+Eight messages broken, and a sign test of 0.008 says that is unlikely to be chance. **The prompt
+id is the same in both runs, and `git diff` would show nothing**, because the change was never in the file. A
 gate that only runs when the prompt file changes would never see it. That is the practical
-argument for the last section's rule: when every parameter lives in the file, every change to what
+argument for the rule in *What a version is*: when every parameter lives in the file, every change to what
 production runs is a change to the file, and the gate sees all of them.
 
 Lesson 15 writes down what a regression like `31a6a59` teaches, so that the next person to make the

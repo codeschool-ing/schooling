@@ -73,7 +73,7 @@ place before.
 
 ## What it does not give you
 
-Git knows that three lines were added on 10 August. It does not know whether the prompt got better.
+Git knows what was added on 10 August. It does not know whether the prompt got better.
 The commit message says what the change was for, and **nothing in the repository says whether it
 did it**. The rest of this lesson puts a number beside each commit, and lesson 15 adds the reason
 the message leaves out.

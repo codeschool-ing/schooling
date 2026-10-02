@@ -124,5 +124,5 @@ stop: end, tokens in 233, out 10
 
 `t04` is the customer who cannot log in. The reply has the example's shape, the right category and
 urgency, and the first example's summary word for word: in the stand-in, an example whose answer is
-not JSON is copied as text, with only the two labels swapped. Not one of the forty replies parses as JSON. The change was a reasonable edit made for a reader, and it stayed in
-the file from 14 August to 17 August, when `03e1151` put the examples back.
+not JSON is copied as text, with only the two labels swapped. Not one of the forty replies parses as JSON. The change
+was a reasonable edit made for a reader, and it stayed in the file from 14 August to 17 August, when `03e1151` put the examples back.

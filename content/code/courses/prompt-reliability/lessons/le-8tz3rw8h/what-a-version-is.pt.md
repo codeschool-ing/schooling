@@ -46,7 +46,7 @@ urgency      28    12
 all          28    12
 ```
 
-O id continua `c1916fcd`, e a nota foi de 36 em 40 para 28. O arquivo não mudou, então o hash dele
+O id continua `c1916fcd`, e a nota foi de 36 de 40 para 28. O arquivo não mudou, então o hash dele
 também não; o que mudou foi uma configuração que o hash nunca viu. Duas execuções arquivadas sob um
 id agora discordam em oito mensagens, e **quem ler os resultados depois não tem como distinguir uma
 da outra**. A aula 8 é onde a temperatura em si é medida; aqui ela é só a configuração mais fácil de
@@ -74,7 +74,7 @@ na linha de comando pertence à execução, e nada o registra.**
   lado de apelidos mais curtos que passam a apontar para um modelo mais novo quando ele sai; a
   documentação de modelos da Anthropic e a da OpenAI descrevem a diferença. Ponha o nome com data no
   cabeçalho e a troca vira um commit que alguém vê. O substituto tem um modelo só, então o
-  laboratório não consegue mostrar este mudando.
+  laboratório não consegue mostrar uma troca de modelo.
 - **O conjunto de teste**, porque uma nota pertence a um par. Trinta e seis de quarenta só significa
   algo ao lado das quarenta, e `cases/dev.jsonl` também está no git, então a versão dele é um commit
   como a do prompt.

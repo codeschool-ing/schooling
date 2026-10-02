@@ -3,7 +3,7 @@ title: Acompanhando o efeito de cada mudança
 version: 1
 ---
 
-Com um arquivo, uma história e um id que significa alguma coisa, o próximo passo óbvio é rodar cada
+Com um arquivo, um histórico e um id que significa alguma coisa, o próximo passo óbvio é rodar cada
 versão contra as mesmas mensagens. O `pl log` faz isso num comando só: para cada commit que mexeu em
 `prompts/triage.txt`, do mais antigo para o mais novo, ele pega o arquivo como era, roda sobre um
 conjunto de teste e imprime dois números.
@@ -63,7 +63,7 @@ c8470c9  2026-08-11  6/10   3329  Escape the message so it cannot close its own 
 Nos dez ataques o mesmo commit levou a nota de 1 para 6, então os tokens dele compraram alguma coisa,
 afinal. O `9683448` continua parado aqui, 1 de 10 antes e depois, e o `c8470c9`, o commit do escape,
 não mexe na nota de nenhum dos dois conjuntos. Seja qual for o modelo, **uma mudança que nenhum
-conjunto de teste enxerga é uma mudança aceita na confiança**. Ou você acrescenta o caso que mostra o
+conjunto de teste enxerga é uma mudança aceita na base da confiança**. Ou você acrescenta o caso que mostra o
 que ela corrige, ou anota que ela não corrige nada que dê para medir.
 
 ## O commit que levou a nota a zero
@@ -123,5 +123,5 @@ stop: end, tokens in 233, out 10
 
 `t04` é o cliente que não consegue entrar. A resposta tem a forma do exemplo, a categoria e a
 urgência certas, e o resumo do primeiro exemplo palavra por palavra: no substituto, um exemplo cuja
-resposta não é JSON é copiado como texto, trocando só os dois rótulos. Nenhuma das quarenta respostas é JSON válido. A mudança foi uma edição razoável, feita pensando num leitor, e
-ficou no arquivo de 14 a 17 de agosto, quando o `03e1151` devolveu os exemplos.
+resposta não é JSON é copiado como texto, trocando só os dois rótulos. Nenhuma das quarenta respostas é JSON válido. A
+mudança foi uma edição razoável, feita pensando num leitor, e ficou no arquivo de 14 a 17 de agosto, quando o `03e1151` devolveu os exemplos.

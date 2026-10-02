@@ -4,7 +4,7 @@ version: 1
 ---
 
 Até aqui, toda aula guardou seus prompts lado a lado: `v2-json.txt`, `v3-examples.txt`,
-`v8-guide.txt`, um arquivo por ideia, para que dois deles rodassem no mesmo fôlego e fossem
+`v8-guide.txt`, um arquivo por ideia, para que dois deles rodassem de uma vez só e fossem
 comparados. É um bom arranjo para ensinar e um arranjo ruim para produção. **Um programa que lê um
 prompt lê um caminho**, e um diretório com vinte versões deixa alguém decidir qual delas está no ar,
 sem nada que registre essa decisão.
@@ -28,7 +28,7 @@ Oito commits, do mais novo para o mais antigo, cada um com um hash curto e uma l
 mudou. O `-- prompts/triage.txt` no final limita o log aos commits que mexeram nesse arquivo, o que
 importa quando o repositório guarda código além de prompts.
 
-As datas desses commits são definidas, não vividas. O `lab.sh` escreve cada versão do arquivo e faz
+As datas desses commits foram escolhidas, não vividas. O `lab.sh` escreve cada versão do arquivo e faz
 o commit com uma data e uma autora escritas ao lado no script, então o log mostra duas semanas de
 agosto de 2026 toda vez que você reconstrói o laboratório. **Os hashes desta aula são, portanto, os
 hashes que você obtém**, e é por isso que dá para citá-los.
@@ -68,12 +68,12 @@ As linhas que começam com `+` foram acrescentadas, as que começam com `-` fora
 é contexto. Esta é a mudança do commit `9683448` para o `931c548`, *"Put the message in tags and say
 it is data"*: três linhas de instrução perto do topo e a mensagem levada para dentro de tags
 `<message>` no fim. Duas cópias de um prompt em dois arquivos também podem ser comparadas, mas nada
-diz quais duas comparar nem em que ordem estiveram no ar. **A história dá a ordem, a data e o autor
+diz quais duas comparar nem em que ordem estiveram no ar. **O histórico dá a ordem, a data e o autor
 de graça**, e desfazer uma mudança é mais um commit, não uma caça ao arquivo que estava lá antes.
 
 ## O que ela não dá
 
-O git sabe que três linhas foram acrescentadas em 10 de agosto. Ele não sabe se o prompt melhorou. A
+O git sabe o que foi acrescentado em 10 de agosto. Ele não sabe se o prompt melhorou. A
 mensagem do commit diz para que a mudança servia, e **nada no repositório diz se ela serviu**. O resto
 desta aula põe um número ao lado de cada commit, e a aula 15 acrescenta o motivo que a mensagem deixa
 de fora.

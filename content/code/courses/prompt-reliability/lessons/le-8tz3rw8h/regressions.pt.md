@@ -4,8 +4,8 @@ version: 1
 ---
 
 A tabela da seção anterior foi impressa depois do fato, para uma aula. Em agosto, nada a imprimiu. O
-`31a6a59` entrou na tarde do dia 14, e se alguém rodou o conjunto de teste contra ele a história não
-conta. Por três dias o prompt no ar respondeu a cada mensagem num formato que nenhum programa
+`31a6a59` entrou na tarde do dia 14, e se alguém rodou o conjunto de teste contra ele o histórico não
+diz. Por três dias o prompt no ar respondeu a cada mensagem num formato que nenhum programa
 conseguia ler. **Uma regressão é encontrada quando alguém olha, e o único alguém confiável é uma
 verificação que roda sozinha.**
 
@@ -42,8 +42,8 @@ Uma barreira montada sobre isso tem três partes, e nenhuma é engenhosa:
 
 ## Uma regressão sem diff
 
-A barreira compara execuções, e uma execução é mais que o arquivo. Aqui está a execução com
-temperatura 0,8 de antes, contra a execução do mesmo arquivo no padrão:
+A barreira compara execuções, e uma execução é mais que o arquivo. Esta é a execução com
+temperatura 0,8 feita antes, contra a execução do mesmo arquivo no padrão:
 
 ```
 ana@lab:~/triage$ pl compare runs/now.jsonl runs/hot.jsonl
@@ -57,7 +57,7 @@ sign test on the 8 that changed: p = 0.008
 Oito mensagens quebradas, e um teste do sinal de 0,008 diz que é improvável que seja acaso. **O id do
 prompt é o mesmo nas duas execuções, e o `git diff` não mostraria nada**, porque a mudança nunca
 esteve no arquivo. Uma barreira que só roda quando o arquivo do prompt muda nunca veria isso. É o
-argumento prático para a regra da seção anterior: quando todo parâmetro mora no arquivo, toda mudança
+argumento prático para a regra de *O que é uma versão*: quando todo parâmetro mora no arquivo, toda mudança
 no que a produção roda é uma mudança no arquivo, e a barreira vê todas.
 
 A aula 15 registra o que uma regressão como a do `31a6a59` ensina, para que a próxima pessoa que for
