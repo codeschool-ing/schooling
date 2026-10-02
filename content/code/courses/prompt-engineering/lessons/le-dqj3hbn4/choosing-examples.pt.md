@@ -46,8 +46,8 @@ Cada exemplo está ali por um motivo, e os motivos são as regras:
 
 1. Cobrir as classes. Há um exemplo de cada um dos quatro rótulos, então nenhum rótulo parece o
    padrão e nenhum parece proibido.
-2. Incluir um caso difícil. O primeiro exemplo é irônico, o caso que o conjunto de teste da lição
-   20 pegou o prompt zero-shot errando. Um exemplo fácil de `negative` não teria ensinado nada que
+2. Incluir um caso difícil. O primeiro exemplo é irônico, o caso em que o conjunto de teste da
+   lição 20 flagrou o erro do prompt zero-shot. Um exemplo fácil de `negative` não teria ensinado nada que
    a descrição já não ensinasse.
 3. Variar a ordem. Os rótulos não aparecem na ordem da lista das instruções, e o caso difícil não é
    o último. Um modelo pode captar a posição dos exemplos além do conteúdo, e o rótulo do último
