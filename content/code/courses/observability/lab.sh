@@ -15,6 +15,7 @@
 #     mailer       takes paid orders off a RabbitMQ queue (lesson 4)
 #     report       the nightly job, run by hand with `docker compose run`
 #     loadgen      simulated customers: a fixed mix of 20 requests, repeated
+#     sandbox      the same image, for running the small scripts in ~/shop/scratch
 #     pager        Alertmanager's webhook lands here and becomes a log line
 #   what it runs on
 #     postgres 16.15, rabbitmq 4.2
@@ -51,7 +52,7 @@ export TZ=America/Sao_Paulo
 as_ana() { su - "$USER_LAB" -c "cd $SHOP && $*"; }
 
 write_files() {
-  mkdir -p "$SHOP/faults" "$SHOP/grafana/dashboards"
+  mkdir -p "$SHOP/faults" "$SHOP/grafana/dashboards" "$SHOP/scratch"
   mkdir -p "$SHOP/."
   cat > "$SHOP/Dockerfile" <<'LABFILE'
 FROM python:3.12-slim
@@ -158,6 +159,18 @@ services:
     restart: "no"
     command: python -m loadgen.load 5 60
     logging: {driver: json-file}
+
+  sandbox:
+    <<: *shop
+    profiles: [jobs]
+    restart: "no"
+    working_dir: /scratch
+    volumes: ["./scratch:/scratch"]
+    environment:
+      <<: *env
+      OTEL_SERVICE_NAME: sandbox
+    logging: {driver: json-file}
+    command: python
 
   pager:
     <<: *shop
