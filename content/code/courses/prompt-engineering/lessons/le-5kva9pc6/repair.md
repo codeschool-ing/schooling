@@ -76,7 +76,7 @@ in it, and checks the new reply with the same steps.
 The loop in the figure has one exit that is easy to forget: **attempts left?** A program that
 retries until the reply is valid will one day meet a reply that is never valid. A complaint that
 truly fits none of the five categories, a schema with a mistake in it, a model that is having an
-outage. Without a limit, that request runs forever and is charged for every attempt.
+outage. Without a limit, that request runs for ever and is charged for every attempt.
 
 So the number of attempts is written down, and it is small. The sketch below allows three in all,
 the first reply and two retries, on the reasoning that a model which got it wrong twice with the

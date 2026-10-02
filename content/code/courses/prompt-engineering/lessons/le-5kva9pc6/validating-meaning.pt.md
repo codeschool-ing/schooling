@@ -33,7 +33,7 @@ ana@lab:~/pe$ grep 100 handbook/refunds.md
 A refund above R$ 100 needs the shift manager's approval.
 ```
 
-A lição 11 usou esse mesmo manual para fundamentar as respostas de um modelo. Aqui ele fornece uma
+A lição 11 usou esse mesmo manual para ancorar as respostas de um modelo. Aqui ele fornece uma
 regra que o programa aplica, escreva o modelo o que escrever.
 
 ## Escrevendo as regras do café como uma conferência
@@ -63,8 +63,8 @@ no rule broken
 exit 0
 ```
 
-A triagem da reclamação 7 quebra a regra do manual, e a conferência diz qual regra, com palavras com
-que uma pessoa consegue agir. A triagem boa da primeira seção de leitura desta lição não quebra
+A triagem da reclamação 7 quebra a regra do manual, e a conferência diz qual regra em palavras que
+permitem a uma pessoa agir. A triagem boa da primeira seção de leitura desta lição não quebra
 nenhuma. As outras duas regras pegam uma resposta que se contradiz: um reembolso sem valor, ou um
 valor sem reembolso.
 

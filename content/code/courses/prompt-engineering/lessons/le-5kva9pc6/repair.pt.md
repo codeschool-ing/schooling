@@ -70,7 +70,7 @@ validador, com o caminho**, então o modelo fica sabendo qual campo e por quê. 
 tente de novo" não lhe dá nada para seguir; esta nomeia `category` e lista os cinco valores
 permitidos.
 
-O programa envia essa mensagem como a próxima vez da mesma conversa, com a resposta ruim ainda nela,
+O programa envia essa mensagem como o próximo turno da mesma conversa, com a resposta ruim ainda nela,
 e confere a nova resposta com os mesmos passos.
 
 ## Limites de tentativas

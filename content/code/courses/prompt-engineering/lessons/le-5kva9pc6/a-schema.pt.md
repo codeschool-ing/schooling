@@ -42,7 +42,7 @@ o schema não nomeou**.
 
 Cada uma dessas linhas é uma decisão sobre o programa que usa a resposta. As categorias são as
 cinco filas que o café tem. Os 80 caracteres são o que cabe numa linha da lista do gerente. O
-`refund_amount` é opcional, porque uma reclamação sem reembolso não tem valor.
+`refund_amount` é opcional, porque uma reclamação sem reembolso não tem valor a devolver.
 
 ## Uma resposta válida
 
