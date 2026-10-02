@@ -192,7 +192,7 @@ exec_as() {  # exec_as USER COMMAND: in ~/shop, with the lab's environment and n
   [ -d "$dir" ] || dir=/home/$u
   # shellcheck disable=SC2046
   runuser -u "$u" -- env -i HOME=/home/$u USER="$u" $(grep -v '^#' $ENVFILE | xargs) \
-    bash -c "cd $dir && $*"
+    bash -c "cd $dir || exit 1; $*"
 }
 
 case ${1:-} in

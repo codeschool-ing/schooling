@@ -444,6 +444,7 @@ class Handler(BaseHTTPRequestHandler):
                     self.event("content_block_delta", {"type": "content_block_delta", "index": i,
                                                        "delta": {"type": "text_delta", "text": p}})
                     sent += 1
+                    record["sent"] = sent
             else:
                 self.event("content_block_start", {"type": "content_block_start", "index": i, "content_block": {
                     "type": "tool_use", "id": next(tool_ids), "name": b[1], "input": {}}})

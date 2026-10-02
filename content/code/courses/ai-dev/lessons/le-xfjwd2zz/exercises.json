@@ -1,0 +1,761 @@
+[
+  {
+    "id": "ex-src1pzem",
+    "version": 1,
+    "section": "why-stream",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did streaming change in `timing.py`?",
+    "hint": "Compare the two lines number by number.",
+    "choices": [
+      {
+        "text": "The total time, from 3.3 s to 0.1 s",
+        "correct": false,
+        "why": "The total was 3.3 s both ways."
+      },
+      {
+        "text": "The number of output tokens",
+        "correct": false,
+        "why": "82 both ways."
+      },
+      {
+        "text": "When the first word arrived",
+        "correct": true,
+        "why": "Right: 0.1 s instead of 3.3 s."
+      },
+      {
+        "text": "The price of the reply",
+        "correct": false,
+        "why": "The same tokens, the same price."
+      }
+    ]
+  },
+  {
+    "id": "ex-jz57c5ky",
+    "version": 1,
+    "section": "why-stream",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In seconds, how long did the whole streamed reply take?",
+    "hint": "The last number on the stream line.",
+    "value": 3.3,
+    "tolerance": 0.05,
+    "unit": "s"
+  },
+  {
+    "id": "ex-t9ncph5y",
+    "version": 1,
+    "section": "why-stream",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The first token takes four seconds and the rest follows quickly. Where should you look first?",
+    "hint": "Which part of the work happens before the first token?",
+    "choices": [
+      {
+        "text": "At `max_tokens`",
+        "correct": false,
+        "why": "That limits the output, which is fast here."
+      },
+      {
+        "text": "At the input",
+        "correct": true,
+        "why": "Right: the prompt's length and the cache; the model reads all of it before writing."
+      },
+      {
+        "text": "At the renderer in the page",
+        "correct": false,
+        "why": "The page has nothing to render yet."
+      },
+      {
+        "text": "At the network between page and relay",
+        "correct": false,
+        "why": "The relay has had nothing to pass on."
+      }
+    ]
+  },
+  {
+    "id": "ex-60df0gak",
+    "version": 1,
+    "section": "why-stream",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these gains nothing from streaming?",
+    "hint": "Who would see the first word?",
+    "choices": [
+      {
+        "text": "A chat window",
+        "correct": false,
+        "why": "A person reads it as it arrives."
+      },
+      {
+        "text": "An editor's inline answer",
+        "correct": false,
+        "why": "A person is waiting at the cursor."
+      },
+      {
+        "text": "The reply box on a support page a customer is reading",
+        "correct": false,
+        "why": "A person is watching it."
+      },
+      {
+        "text": "A nightly job that files tickets as JSON",
+        "correct": true,
+        "why": "Right: a program needs the whole reply, and nobody is watching."
+      }
+    ]
+  },
+  {
+    "id": "ex-fnh8e6f7",
+    "version": 1,
+    "section": "on-the-wire",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of a streamed text reply in order.",
+    "hint": "Open, fill, close.",
+    "items": [
+      "message_start",
+      "content_block_start",
+      "content_block_delta",
+      "content_block_stop",
+      "message_delta",
+      "message_stop"
+    ]
+  },
+  {
+    "id": "ex-ftqa171a",
+    "version": 1,
+    "section": "on-the-wire",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does a reader know a streamed reply is complete?",
+    "hint": "An event, or the connection?",
+    "choices": [
+      {
+        "text": "A `message_stop` event arrived",
+        "correct": true,
+        "why": "Right: a close without it is a reply that did not finish."
+      },
+      {
+        "text": "The connection closed",
+        "correct": false,
+        "why": "A connection can close halfway."
+      },
+      {
+        "text": "No piece arrived for a second",
+        "correct": false,
+        "why": "A slow model pauses too."
+      },
+      {
+        "text": "The text ends with a full stop",
+        "correct": false,
+        "why": "Text says nothing about the stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7exsfzd",
+    "version": 1,
+    "section": "on-the-wire",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the `ping` event for?",
+    "hint": "It carries no text.",
+    "choices": [
+      {
+        "text": "Measuring latency",
+        "correct": false,
+        "why": "It carries no time."
+      },
+      {
+        "text": "Asking the client to confirm it is still there",
+        "correct": false,
+        "why": "Server-sent events go one way."
+      },
+      {
+        "text": "Keeping a quiet connection open",
+        "correct": true,
+        "why": "Right: something in between might close it."
+      },
+      {
+        "text": "Marking the end of the input",
+        "correct": false,
+        "why": "That is not in the stream."
+      }
+    ]
+  },
+  {
+    "id": "ex-ksy97ft9",
+    "version": 1,
+    "section": "on-the-wire",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A stream of server-sent events has the content type ___.",
+    "hint": "text/…",
+    "blanks": [
+      {
+        "accept": [
+          "text/event-stream",
+          "`text/event-stream`"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7b8r9a4d",
+    "version": 1,
+    "section": "with-the-sdk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `dr|ifts` arrive as two pieces?",
+    "hint": "What is a piece, roughly?",
+    "choices": [
+      {
+        "text": "The network split the word between two packets",
+        "correct": false,
+        "why": "The pieces are the provider's, before the network."
+      },
+      {
+        "text": "Pieces follow tokens, and the word is two",
+        "correct": true,
+        "why": "Right: the tokenizer split it."
+      },
+      {
+        "text": "The SDK breaks long words",
+        "correct": false,
+        "why": "The SDK joins pieces; it does not split them."
+      },
+      {
+        "text": "The relay buffered half of it",
+        "correct": false,
+        "why": "There is no relay in `pieces.py`."
+      }
+    ]
+  },
+  {
+    "id": "ex-40ce2b1g",
+    "version": 1,
+    "section": "with-the-sdk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page adds a space between pieces. What does the reader see?",
+    "hint": "Look at the bars.",
+    "choices": [
+      {
+        "text": "Nothing different from the reply itself",
+        "correct": false,
+        "why": "Pieces are not words."
+      },
+      {
+        "text": "A reply in capital letters",
+        "correct": false,
+        "why": "No piece was capitalised."
+      },
+      {
+        "text": "Every word twice",
+        "correct": false,
+        "why": "Pieces do not repeat."
+      },
+      {
+        "text": "Broken words: `dr ifts`",
+        "correct": true,
+        "why": "Right: append each piece as it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4g8vynk",
+    "version": 1,
+    "section": "with-the-sdk",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each API's stream to how it says the reply ended.",
+    "hint": "Two shapes.",
+    "pairs": [
+      {
+        "left": "Anthropic Messages",
+        "right": "`message_stop` after a `message_delta`"
+      },
+      {
+        "left": "OpenAI chat completions",
+        "right": "a chunk with `finish_reason`, then `data: [DONE]`"
+      }
+    ],
+    "right_distractors": [
+      "the connection simply closes"
+    ]
+  },
+  {
+    "id": "ex-smj56154",
+    "version": 1,
+    "section": "with-the-sdk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did `end_turn 15 in, 82 out` come from?",
+    "hint": "After the loop.",
+    "choices": [
+      {
+        "text": "`get_final_message()`",
+        "correct": true,
+        "why": "Right: the message the SDK built when the stream ended."
+      },
+      {
+        "text": "The first event",
+        "correct": false,
+        "why": "That knows the input, not the output."
+      },
+      {
+        "text": "A second request",
+        "correct": false,
+        "why": "There was one request."
+      },
+      {
+        "text": "The labllm log of the request",
+        "correct": false,
+        "why": "The script never reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzrat1gv",
+    "version": 1,
+    "section": "to-the-browser",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the page talk to a relay instead of the model's API?",
+    "hint": "What would the page need to hold?",
+    "choices": [
+      {
+        "text": "Browsers cannot read streams",
+        "correct": false,
+        "why": "`fetch` reads them, as `client.mjs` shows."
+      },
+      {
+        "text": "The relay makes the reply faster",
+        "correct": false,
+        "why": "It adds a hop; it does not speed the model."
+      },
+      {
+        "text": "The request needs the API key",
+        "correct": true,
+        "why": "Right: anything in a page can be read by whoever uses it."
+      },
+      {
+        "text": "The provider refuses browsers",
+        "correct": false,
+        "why": "That is not the reason the section gives."
+      }
+    ]
+  },
+  {
+    "id": "ex-tt48ra9b",
+    "version": 1,
+    "section": "to-the-browser",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `client.mjs` keep `buffer` between reads?",
+    "hint": "Where can a network read end?",
+    "choices": [
+      {
+        "text": "To retry a read that failed with a network error",
+        "correct": false,
+        "why": "Nothing is retried."
+      },
+      {
+        "text": "Reads cut across events",
+        "correct": true,
+        "why": "Right: one ends mid-event, and the half after the last blank line waits for the rest."
+      },
+      {
+        "text": "To slow the page down",
+        "correct": false,
+        "why": "It displays as fast as events complete."
+      },
+      {
+        "text": "To remove the `ping` events",
+        "correct": false,
+        "why": "The relay sends none."
+      }
+    ]
+  },
+  {
+    "id": "ex-fx8hcgeq",
+    "version": 1,
+    "section": "to-the-browser",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What must the relay also do, besides passing pieces on? Choose all that apply.",
+    "hint": "It spends money on every question.",
+    "choices": [
+      {
+        "text": "Check who is asking",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Limit the length and rate of questions",
+        "correct": true,
+        "why": "Yes: one user could use up everyone's limit."
+      },
+      {
+        "text": "Send the API key to the page once",
+        "correct": false,
+        "why": "Never: that is what the relay exists to avoid."
+      },
+      {
+        "text": "Make sure nothing on the way buffers the response",
+        "correct": true,
+        "why": "Yes: buffering removes the stream without an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-sr9tb580",
+    "version": 1,
+    "section": "cancel",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many text pieces had labllm sent when it found the connection closed?",
+    "hint": "The log line.",
+    "value": 9,
+    "tolerance": 0,
+    "unit": "pieces"
+  },
+  {
+    "id": "ex-zttgys5n",
+    "version": 1,
+    "section": "cancel",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does `cancel.py` stop the reply?",
+    "hint": "What happens when the loop is left?",
+    "choices": [
+      {
+        "text": "It sends a stop request to the API",
+        "correct": false,
+        "why": "There is no such request in the script."
+      },
+      {
+        "text": "It sets `max_tokens` lower",
+        "correct": false,
+        "why": "That was fixed before the request."
+      },
+      {
+        "text": "It waits for `message_stop`",
+        "correct": false,
+        "why": "It leaves before then."
+      },
+      {
+        "text": "It leaves the `with` block",
+        "correct": true,
+        "why": "Right: and leaving it closes the response."
+      }
+    ]
+  },
+  {
+    "id": "ex-mg594w5h",
+    "version": 1,
+    "section": "cancel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A person closes the tab. What must the relay do?",
+    "hint": "Who is still paying?",
+    "choices": [
+      {
+        "text": "Finish reading the reply and store it",
+        "correct": false,
+        "why": "Nobody will see it, and it is billed."
+      },
+      {
+        "text": "Close its own request to the provider",
+        "correct": true,
+        "why": "Right: otherwise it pays for a reply nobody reads."
+      },
+      {
+        "text": "Retry the request",
+        "correct": false,
+        "why": "Nobody asked again."
+      },
+      {
+        "text": "Log it as an error",
+        "correct": false,
+        "why": "A stop is a person's choice, not a failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-ph35x5y5",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a stream's failure arrive as an event and not as a status code?",
+    "hint": "When was the status sent?",
+    "choices": [
+      {
+        "text": "The status went out as 200 with the first byte",
+        "correct": true,
+        "why": "Right: it cannot be changed afterwards."
+      },
+      {
+        "text": "Status codes are not allowed in streams",
+        "correct": false,
+        "why": "Every HTTP response has one."
+      },
+      {
+        "text": "The SDK hides status codes",
+        "correct": false,
+        "why": "It reports them, on plain requests."
+      },
+      {
+        "text": "Events are faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-pfh8ertz",
+    "version": 1,
+    "section": "errors",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many characters had reached the screen when the stream broke?",
+    "hint": "The last line of `midstream.py`.",
+    "value": 67,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-p5zxn98w",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A stream breaks after half a paragraph and the page retries on its own. What must it do with the new reply?",
+    "hint": "The new reply starts from the first word.",
+    "choices": [
+      {
+        "text": "Append it to what is shown",
+        "correct": false,
+        "why": "That repeats a sentence and a half."
+      },
+      {
+        "text": "Show it only if it matches the first half",
+        "correct": false,
+        "why": "Two replies to one question need not match."
+      },
+      {
+        "text": "Replace what is shown, visibly",
+        "correct": true,
+        "why": "Right: and the person can see it restarted."
+      },
+      {
+        "text": "Discard it and keep the half",
+        "correct": false,
+        "why": "Half a paragraph is not an answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1xvfmvv",
+    "version": 1,
+    "section": "tool-calls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When can the host run a streamed tool call?",
+    "hint": "When does the JSON parse?",
+    "choices": [
+      {
+        "text": "At `content_block_start`",
+        "correct": false,
+        "why": "No argument has arrived yet."
+      },
+      {
+        "text": "After the first `input_json_delta`",
+        "correct": false,
+        "why": "Half an object does not parse."
+      },
+      {
+        "text": "As soon as the SKU looks complete",
+        "correct": false,
+        "why": "`LAM` looked like nothing; a refund's amount would look complete too early."
+      },
+      {
+        "text": "When the block is complete",
+        "correct": true,
+        "why": "Right: then the arguments parse and can be validated."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2cnqznt",
+    "version": 1,
+    "section": "tool-calls",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A tool call's arguments arrive in events whose delta type is ___.",
+    "hint": "Input, JSON, delta.",
+    "blanks": [
+      {
+        "accept": [
+          "input_json_delta",
+          "`input_json_delta`"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2nqhsd6a",
+    "version": 1,
+    "section": "on-screen",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After two pieces the text is `**Store`. What does a tolerant Markdown renderer show?",
+    "hint": "An opening marker with no close.",
+    "choices": [
+      {
+        "text": "Nothing until the reply ends",
+        "correct": false,
+        "why": "That is the other strategy, waiting for complete blocks."
+      },
+      {
+        "text": "Asterisks, then bold",
+        "correct": true,
+        "why": "Right: two literal asterisks until the close arrives."
+      },
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "A tolerant renderer does not fail on it."
+      },
+      {
+        "text": "The word in bold from the very first piece, guessing the close",
+        "correct": false,
+        "why": "It cannot know the close is coming."
+      }
+    ]
+  },
+  {
+    "id": "ex-myq1qwmw",
+    "version": 1,
+    "section": "on-screen",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How should a screen reader hear a streamed reply?",
+    "hint": "A live region reads every change.",
+    "choices": [
+      {
+        "text": "Once complete, or a sentence at a time",
+        "correct": true,
+        "why": "Right: something a listener can follow."
+      },
+      {
+        "text": "Every piece as it arrives",
+        "correct": false,
+        "why": "That reads out fragments, one after another."
+      },
+      {
+        "text": "Not at all, to avoid noise",
+        "correct": false,
+        "why": "Then a blind reader never hears the answer."
+      },
+      {
+        "text": "Only the first sentence",
+        "correct": false,
+        "why": "The rest of the answer matters too."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvd43ad9",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each moment of a stream to what the page should do.",
+    "hint": "One action each.",
+    "pairs": [
+      {
+        "left": "Before the first piece",
+        "right": "Show that the reply is coming"
+      },
+      {
+        "left": "A piece arrives",
+        "right": "Append it and render"
+      },
+      {
+        "left": "An error event arrives",
+        "right": "Mark the partial text as cut off"
+      },
+      {
+        "left": "The person presses Stop",
+        "right": "Close the stream to the provider"
+      }
+    ],
+    "right_distractors": [
+      "Retry and append the new reply"
+    ]
+  },
+  {
+    "id": "ex-h2nt0rag",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team adds streaming to its support chat. Which plan follows this lesson?",
+    "hint": "Key, events, stop, errors, screen.",
+    "choices": [
+      {
+        "text": "Call the provider from the page with a key limited to chat",
+        "correct": false,
+        "why": "Any key in a page can be read and used."
+      },
+      {
+        "text": "Stream from the relay and retry silently on any error, appending the new text",
+        "correct": false,
+        "why": "Appending a retry repeats the start of the reply."
+      },
+      {
+        "text": "Relay holds the key; Stop closes upstream; errors marked",
+        "correct": true,
+        "why": "Right: each piece of this lesson."
+      },
+      {
+        "text": "Stream everything, including the nightly ticket job",
+        "correct": false,
+        "why": "A program needs the whole reply; nobody watches it."
+      }
+    ]
+  }
+]

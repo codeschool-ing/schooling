@@ -1,0 +1,513 @@
+{
+  "ex-src1pzem": {
+    "prompt": "O que o streaming mudou no `timing.py`?",
+    "hint": "Compare as duas linhas número a número.",
+    "choices": [
+      {
+        "text": "O tempo total, de 3,3 s para 0,1 s",
+        "why": "O total foi 3,3 s dos dois jeitos."
+      },
+      {
+        "text": "O número de tokens de saída",
+        "why": "82 dos dois jeitos."
+      },
+      {
+        "text": "Quando chegou a primeira palavra",
+        "why": "Isso: 0,1 s em vez de 3,3 s."
+      },
+      {
+        "text": "O preço da resposta",
+        "why": "Os mesmos tokens, o mesmo preço."
+      }
+    ]
+  },
+  "ex-jz57c5ky": {
+    "prompt": "Em segundos, quanto levou a resposta inteira em streaming?",
+    "hint": "O último número da linha do stream.",
+    "unit": "s"
+  },
+  "ex-t9ncph5y": {
+    "prompt": "O primeiro token leva quatro segundos e o resto vem rápido. Onde olhar primeiro?",
+    "hint": "Que parte do trabalho acontece antes do primeiro token?",
+    "choices": [
+      {
+        "text": "No `max_tokens`",
+        "why": "Ele limita a saída, que aqui é rápida."
+      },
+      {
+        "text": "Na entrada",
+        "why": "Isso: o tamanho do prompt e o cache; o modelo lê tudo antes de escrever."
+      },
+      {
+        "text": "No renderizador da página",
+        "why": "A página ainda não tem nada para renderizar."
+      },
+      {
+        "text": "Na rede entre página e relay",
+        "why": "O relay não teve nada para repassar."
+      }
+    ]
+  },
+  "ex-60df0gak": {
+    "prompt": "Qual destes não ganha nada com streaming?",
+    "hint": "Quem veria a primeira palavra?",
+    "choices": [
+      {
+        "text": "Uma janela de chat",
+        "why": "Uma pessoa lê conforme chega."
+      },
+      {
+        "text": "A resposta em linha de um editor",
+        "why": "Uma pessoa espera no cursor."
+      },
+      {
+        "text": "A caixa de resposta de uma página de suporte que um cliente lê",
+        "why": "Uma pessoa está olhando."
+      },
+      {
+        "text": "Um job noturno que registra chamados em JSON",
+        "why": "Isso: um programa precisa da resposta inteira, e ninguém está olhando."
+      }
+    ]
+  },
+  "ex-fnh8e6f7": {
+    "prompt": "Ponha em ordem os eventos de uma resposta de texto em streaming.",
+    "hint": "Abrir, encher, fechar.",
+    "items": [
+      "message_start",
+      "content_block_start",
+      "content_block_delta",
+      "content_block_stop",
+      "message_delta",
+      "message_stop"
+    ]
+  },
+  "ex-ftqa171a": {
+    "prompt": "Como quem lê sabe que uma resposta em streaming está completa?",
+    "hint": "Um evento, ou a conexão?",
+    "choices": [
+      {
+        "text": "Chegou um evento `message_stop`",
+        "why": "Isso: um fechamento sem ele é uma resposta que não terminou."
+      },
+      {
+        "text": "A conexão fechou",
+        "why": "Uma conexão pode fechar no meio."
+      },
+      {
+        "text": "Nenhum pedaço chegou por um segundo",
+        "why": "Um modelo lento também faz pausas."
+      },
+      {
+        "text": "O texto termina com ponto final",
+        "why": "O texto não diz nada sobre o stream."
+      }
+    ]
+  },
+  "ex-k7exsfzd": {
+    "prompt": "Para que serve o evento `ping`?",
+    "hint": "Ele não leva texto.",
+    "choices": [
+      {
+        "text": "Medir latência",
+        "why": "Ele não leva tempo nenhum."
+      },
+      {
+        "text": "Pedir ao cliente que confirme que ainda está lá",
+        "why": "Server-sent events vão num sentido só."
+      },
+      {
+        "text": "Manter aberta uma conexão quieta",
+        "why": "Isso: algo no meio poderia fechá-la."
+      },
+      {
+        "text": "Marcar o fim da entrada",
+        "why": "Isso não está no stream."
+      }
+    ]
+  },
+  "ex-ksy97ft9": {
+    "prompt": "Um stream de server-sent events tem o tipo de conteúdo ___.",
+    "hint": "text/…",
+    "blanks": [
+      {
+        "accept": [
+          "text/event-stream",
+          "`text/event-stream`"
+        ]
+      }
+    ]
+  },
+  "ex-7b8r9a4d": {
+    "prompt": "Por que `dr|ifts` chega em dois pedaços?",
+    "hint": "O que é um pedaço, mais ou menos?",
+    "choices": [
+      {
+        "text": "A rede partiu a palavra entre dois pacotes",
+        "why": "Os pedaços são do provedor, antes da rede."
+      },
+      {
+        "text": "Pedaços seguem tokens, e a palavra são dois",
+        "why": "Isso: o tokenizador a partiu."
+      },
+      {
+        "text": "O SDK quebra palavras longas",
+        "why": "O SDK junta pedaços; não os parte."
+      },
+      {
+        "text": "O relay segurou metade",
+        "why": "Não há relay no `pieces.py`."
+      }
+    ]
+  },
+  "ex-40ce2b1g": {
+    "prompt": "Uma página põe um espaço entre os pedaços. O que o leitor vê?",
+    "hint": "Olhe as barras.",
+    "choices": [
+      {
+        "text": "Nada diferente da própria resposta",
+        "why": "Pedaços não são palavras."
+      },
+      {
+        "text": "Uma resposta em letras maiúsculas",
+        "why": "Nenhum pedaço foi capitalizado."
+      },
+      {
+        "text": "Cada palavra duas vezes",
+        "why": "Pedaços não se repetem."
+      },
+      {
+        "text": "Palavras quebradas: `dr ifts`",
+        "why": "Isso: acrescente cada pedaço como veio."
+      }
+    ]
+  },
+  "ex-f4g8vynk": {
+    "prompt": "Ligue o stream de cada API ao jeito de dizer que a resposta terminou.",
+    "hint": "Dois formatos.",
+    "pairs": [
+      {
+        "left": "Anthropic Messages",
+        "right": "`message_stop` depois de um `message_delta`"
+      },
+      {
+        "left": "OpenAI chat completions",
+        "right": "um chunk com `finish_reason`, depois `data: [DONE]`"
+      }
+    ],
+    "right_distractors": [
+      "a conexão simplesmente fecha"
+    ]
+  },
+  "ex-smj56154": {
+    "prompt": "De onde veio o `end_turn 15 in, 82 out`?",
+    "hint": "Depois do laço.",
+    "choices": [
+      {
+        "text": "Do `get_final_message()`",
+        "why": "Isso: a mensagem que o SDK montou quando o stream terminou."
+      },
+      {
+        "text": "Do primeiro evento",
+        "why": "Ele sabe a entrada, não a saída."
+      },
+      {
+        "text": "De uma segunda requisição",
+        "why": "Houve uma requisição."
+      },
+      {
+        "text": "Do log do labllm da requisição",
+        "why": "O script nunca o lê."
+      }
+    ]
+  },
+  "ex-wzrat1gv": {
+    "prompt": "Por que a página fala com um relay em vez da API do modelo?",
+    "hint": "O que a página precisaria guardar?",
+    "choices": [
+      {
+        "text": "Navegadores não leem streams",
+        "why": "O `fetch` lê, como o `client.mjs` mostra."
+      },
+      {
+        "text": "O relay deixa a resposta mais rápida",
+        "why": "Ele acrescenta um salto; não acelera o modelo."
+      },
+      {
+        "text": "A requisição precisa da chave da API",
+        "why": "Isso: tudo numa página pode ser lido por quem a usa."
+      },
+      {
+        "text": "O provedor recusa navegadores",
+        "why": "Não é o motivo que a seção dá."
+      }
+    ]
+  },
+  "ex-tt48ra9b": {
+    "prompt": "Por que o `client.mjs` guarda o `buffer` entre leituras?",
+    "hint": "Onde uma leitura da rede pode terminar?",
+    "choices": [
+      {
+        "text": "Para repetir uma leitura que falhou com erro de rede",
+        "why": "Nada é repetido."
+      },
+      {
+        "text": "Leituras ignoram eventos",
+        "why": "Isso: uma termina no meio de um evento, e a metade depois da última linha em branco espera o resto."
+      },
+      {
+        "text": "Para desacelerar a página",
+        "why": "Ela mostra assim que os eventos se completam."
+      },
+      {
+        "text": "Para tirar os eventos `ping`",
+        "why": "O relay não manda nenhum."
+      }
+    ]
+  },
+  "ex-fx8hcgeq": {
+    "prompt": "O que mais o relay precisa fazer, além de repassar pedaços? Marque todas as que valem.",
+    "hint": "Ele gasta dinheiro a cada pergunta.",
+    "choices": [
+      {
+        "text": "Conferir quem pergunta",
+        "why": "Sim."
+      },
+      {
+        "text": "Limitar o tamanho e a frequência das perguntas",
+        "why": "Sim: um usuário poderia gastar o limite de todos."
+      },
+      {
+        "text": "Mandar a chave da API à página uma vez",
+        "why": "Nunca: é isso que o relay existe para evitar."
+      },
+      {
+        "text": "Garantir que nada no caminho segure a resposta",
+        "why": "Sim: segurar acaba com o stream sem erro."
+      }
+    ]
+  },
+  "ex-sr9tb580": {
+    "prompt": "Quantos pedaços de texto o labllm tinha mandado quando achou a conexão fechada?",
+    "hint": "A linha do log.",
+    "unit": "pedaços"
+  },
+  "ex-zttgys5n": {
+    "prompt": "Como o `cancel.py` para a resposta?",
+    "hint": "O que acontece quando o laço é deixado?",
+    "choices": [
+      {
+        "text": "Manda à API um pedido de parada",
+        "why": "Não há pedido assim no script."
+      },
+      {
+        "text": "Diminui o `max_tokens`",
+        "why": "Isso foi fixado antes da requisição."
+      },
+      {
+        "text": "Espera o `message_stop`",
+        "why": "Ele sai antes disso."
+      },
+      {
+        "text": "Sai do bloco `with`",
+        "why": "Isso: e sair dele fecha a resposta."
+      }
+    ]
+  },
+  "ex-mg594w5h": {
+    "prompt": "Uma pessoa fecha a aba. O que o relay precisa fazer?",
+    "hint": "Quem ainda está pagando?",
+    "choices": [
+      {
+        "text": "Terminar de ler a resposta e guardá-la",
+        "why": "Ninguém vai vê-la, e ela é cobrada."
+      },
+      {
+        "text": "Fechar a própria requisição ao provedor",
+        "why": "Isso: senão paga por uma resposta que ninguém lê."
+      },
+      {
+        "text": "Repetir a requisição",
+        "why": "Ninguém perguntou de novo."
+      },
+      {
+        "text": "Registrar como erro",
+        "why": "Parar é escolha de uma pessoa, não uma falha."
+      }
+    ]
+  },
+  "ex-ph35x5y5": {
+    "prompt": "Por que a falha de um stream chega como evento e não como código de status?",
+    "hint": "Quando o status foi enviado?",
+    "choices": [
+      {
+        "text": "O status saiu como 200 com o primeiro byte",
+        "why": "Isso: não dá para mudá-lo depois."
+      },
+      {
+        "text": "Códigos de status não são permitidos em streams",
+        "why": "Toda resposta HTTP tem um."
+      },
+      {
+        "text": "O SDK esconde códigos de status",
+        "why": "Ele os informa, em requisições comuns."
+      },
+      {
+        "text": "Eventos são mais rápidos",
+        "why": "Velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-pfh8ertz": {
+    "prompt": "Quantos caracteres tinham chegado à tela quando o stream quebrou?",
+    "hint": "A última linha do `midstream.py`.",
+    "unit": "caracteres"
+  },
+  "ex-p5zxn98w": {
+    "prompt": "Um stream quebra depois de meio parágrafo e a página repete sozinha. O que ela precisa fazer com a nova resposta?",
+    "hint": "A nova resposta começa da primeira palavra.",
+    "choices": [
+      {
+        "text": "Acrescentá-la ao que está na tela",
+        "why": "Isso repete uma frase e meia."
+      },
+      {
+        "text": "Mostrá-la só se bater com a primeira metade",
+        "why": "Duas respostas à mesma pergunta não precisam bater."
+      },
+      {
+        "text": "Substituir o que está na tela, de forma visível",
+        "why": "Isso: e a pessoa vê que recomeçou."
+      },
+      {
+        "text": "Descartá-la e ficar com a metade",
+        "why": "Meio parágrafo não é resposta."
+      }
+    ]
+  },
+  "ex-t1xvfmvv": {
+    "prompt": "Quando o host pode rodar uma chamada de ferramenta em streaming?",
+    "hint": "Quando o JSON pode ser lido?",
+    "choices": [
+      {
+        "text": "No `content_block_start`",
+        "why": "Nenhum argumento chegou ainda."
+      },
+      {
+        "text": "Depois do primeiro `input_json_delta`",
+        "why": "Meio objeto não é lido."
+      },
+      {
+        "text": "Assim que o SKU parecer completo",
+        "why": "`LAM` não parecia nada; o valor de um reembolso pareceria completo cedo demais."
+      },
+      {
+        "text": "Quando o bloco está completo",
+        "why": "Isso: aí os argumentos são lidos e validados."
+      }
+    ]
+  },
+  "ex-n2cnqznt": {
+    "prompt": "Os argumentos de uma chamada de ferramenta chegam em eventos cujo tipo de delta é ___.",
+    "hint": "Input, JSON, delta.",
+    "blanks": [
+      {
+        "accept": [
+          "input_json_delta",
+          "`input_json_delta`"
+        ]
+      }
+    ]
+  },
+  "ex-2nqhsd6a": {
+    "prompt": "Depois de dois pedaços o texto é `**Store`. O que um renderizador de Markdown tolerante mostra?",
+    "hint": "Um marcador de abertura sem fechamento.",
+    "choices": [
+      {
+        "text": "Nada até a resposta acabar",
+        "why": "Essa é a outra estratégia, esperar blocos completos."
+      },
+      {
+        "text": "Asteriscos, depois negrito",
+        "why": "Isso: dois asteriscos literais até o fechamento chegar."
+      },
+      {
+        "text": "Um erro",
+        "why": "Um renderizador tolerante não falha nisso."
+      },
+      {
+        "text": "A palavra em negrito desde o primeiro pedaço, adivinhando o fechamento",
+        "why": "Ele não tem como saber que o fechamento vem."
+      }
+    ]
+  },
+  "ex-myq1qwmw": {
+    "prompt": "Como um leitor de tela deve ouvir uma resposta em streaming?",
+    "hint": "Uma região viva lê cada mudança.",
+    "choices": [
+      {
+        "text": "Completa, ou uma frase por vez",
+        "why": "Isso: algo que quem ouve consegue acompanhar."
+      },
+      {
+        "text": "Cada pedaço conforme chega",
+        "why": "Isso lê fragmentos, um atrás do outro."
+      },
+      {
+        "text": "Em momento nenhum, para evitar ruído",
+        "why": "Aí um leitor cego nunca ouve a resposta."
+      },
+      {
+        "text": "Só a primeira frase",
+        "why": "O resto da resposta também importa."
+      }
+    ]
+  },
+  "ex-dvd43ad9": {
+    "prompt": "Ligue cada momento de um stream ao que a página deve fazer.",
+    "hint": "Uma ação cada.",
+    "pairs": [
+      {
+        "left": "Antes do primeiro pedaço",
+        "right": "Mostrar que a resposta está vindo"
+      },
+      {
+        "left": "Chega um pedaço",
+        "right": "Acrescentá-lo e renderizar"
+      },
+      {
+        "left": "Chega um evento de erro",
+        "right": "Marcar o texto parcial como interrompido"
+      },
+      {
+        "left": "A pessoa aperta Parar",
+        "right": "Fechar o stream até o provedor"
+      }
+    ],
+    "right_distractors": [
+      "Repetir e acrescentar a nova resposta"
+    ]
+  },
+  "ex-h2nt0rag": {
+    "prompt": "Um time põe streaming no chat de suporte. Qual plano segue esta aula?",
+    "hint": "Chave, eventos, parada, erros, tela.",
+    "choices": [
+      {
+        "text": "Chamar o provedor da página com uma chave limitada ao chat",
+        "why": "Qualquer chave numa página pode ser lida e usada."
+      },
+      {
+        "text": "Fazer stream pelo relay e repetir em silêncio a cada erro, acrescentando o novo texto",
+        "why": "Acrescentar uma repetição repete o começo da resposta."
+      },
+      {
+        "text": "Relay com a chave; Parar fecha a montante; erros marcados",
+        "why": "Isso: cada peça desta aula."
+      },
+      {
+        "text": "Fazer stream de tudo, inclusive do job noturno de chamados",
+        "why": "Um programa precisa da resposta inteira; ninguém olha."
+      }
+    ]
+  }
+}
