@@ -127,16 +127,16 @@ Ana asks dev for a plan before anything exists, with Terraform's own lines filte
 
 ```
 ana@laptop:~/shop-infra/live/dev$ terragrunt run --all plan 2>&1 | grep -v "terraform: "
-07:33:38.424 INFO   The following units will be run, starting with dependencies and then their dependents:
+07:42:59.754 INFO   The following units will be run, starting with dependencies and then their dependents:
 .
 ╰── network
     ╰── web
-07:33:38.428 INFO   [network] Downloading Terraform configurations from ../../modules/network into ./network/.terragrunt-cache/8NfM1BhQNSu3ej20knfGNG3b5dU/vkRyJKeJSFFqzwTOQfTUBt_KXk0
-07:33:44.694 ERROR  [web] Error: Unknown variable
-07:33:44.694 ERROR  [web]   on /home/ana/shop-infra/live/dev/web/terragrunt.hcl line 15:
-07:33:44.695 ERROR  [web]   15:   vpc_id      = dependency.network.outputs.vpc_id
-07:33:44.695 ERROR  [web] There is no variable named "dependency".
-07:33:44.696 ERROR  Run failed: 2 errors occurred:
+07:42:59.757 INFO   [network] Downloading Terraform configurations from ../../modules/network into ./network/.terragrunt-cache/8NfM1BhQNSu3ej20knfGNG3b5dU/vkRyJKeJSFFqzwTOQfTUBt_KXk0
+07:43:04.798 ERROR  [web] Error: Unknown variable
+07:43:04.799 ERROR  [web]   on /home/ana/shop-infra/live/dev/web/terragrunt.hcl line 15:
+07:43:04.799 ERROR  [web]   15:   vpc_id      = dependency.network.outputs.vpc_id
+07:43:04.799 ERROR  [web] There is no variable named "dependency".
+07:43:04.800 ERROR  Run failed: 2 errors occurred:
 
 * resolving dependency "network" outputs: /home/ana/shop-infra/live/dev/network/terragrunt.hcl is a dependency of /home/ana/shop-infra/live/dev/web/terragrunt.hcl but detected no outputs. Either the target module has not been applied yet, or the module has no outputs.
   
@@ -154,12 +154,12 @@ exist; the other way through is to apply in order. Terragrunt asks first, once, 
 
 ```
 ana@laptop:~/shop-infra/live/dev$ terragrunt run --all apply 2>&1 | grep -v "terraform: "
-07:33:44.981 INFO   The following units will be run, starting with dependencies and then their dependents:
+07:43:04.946 INFO   The following units will be run, starting with dependencies and then their dependents:
 .
 ╰── network
     ╰── web
-Are you sure you want to run 'terragrunt apply' in each unit of the run queue displayed above? (y/n) 07:33:45.029 INFO   TIP (debugging-docs): For help troubleshooting errors, visit https://docs.terragrunt.com/troubleshooting/debugging
-07:33:45.029 ERROR  EOF
+Are you sure you want to run 'terragrunt apply' in each unit of the run queue displayed above? (y/n) 07:43:04.946 INFO   TIP (debugging-docs): For help troubleshooting errors, visit https://docs.terragrunt.com/troubleshooting/debugging
+07:43:04.946 ERROR  EOF
 ```
 
 The question got no answer, because this terminal's input is empty, and Terragrunt stopped with
@@ -167,16 +167,46 @@ The question got no answer, because this terminal's input is empty, and Terragru
 unit in turn:
 
 ```
-ana@laptop:~/shop-infra/live/dev$ terragrunt run --all --non-interactive apply 2>&1 | grep -v "terraform: "
-07:33:45.233 INFO   The following units will be run, starting with dependencies and then their dependents:
-.
-╰── network
-    ╰── web
-07:33:51.833 INFO   [web] Downloading Terraform configurations from ../../modules/web into ./web/.terragrunt-cache/IeaLxhtezokSWz7KRPOsZscXNMQ/oggAgWRx6GeDvWQfFfCMEvrgY4Y
-
-❯❯ Run Summary  2 units  14s
-   ────────────────────────────
-   Succeeded    2
+ana@laptop:~/shop-infra/live/dev$ terragrunt run --all --non-interactive --summary-disable apply 2>&1 | grep -e INFO -e "Apply complete"
+07:43:05.102 INFO   The following units will be run, starting with dependencies and then their dependents:
+07:43:09.305 STDOUT [network] terraform: Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+07:43:10.082 INFO   [web] Downloading Terraform configurations from ../../modules/web into ./web/.terragrunt-cache/IeaLxhtezokSWz7KRPOsZscXNMQ/oggAgWRx6GeDvWQfFfCMEvrgY4Y
+07:43:10.120 INFO   [web] terraform: Initializing the backend...
+07:43:10.138 INFO   [web] terraform: 
+07:43:10.138 INFO   [web] terraform: Successfully configured the backend "s3"! Terraform will automatically
+07:43:10.138 INFO   [web] terraform: use this backend unless the backend configuration changes.
+07:43:10.149 INFO   [web] terraform: Initializing provider plugins...
+07:43:10.149 INFO   [web] terraform: - Finding hashicorp/aws versions matching "~> 6.0"...
+07:43:10.149 INFO   [web] terraform: - Installing hashicorp/aws v6.67.0...
+07:43:10.865 INFO   [web] terraform: - Installed hashicorp/aws v6.67.0 (unauthenticated)
+07:43:10.865 INFO   [web] terraform: Terraform has created a lock file .terraform.lock.hcl to record the provider
+07:43:10.865 INFO   [web] terraform: selections it made above. Include this file in your version control repository
+07:43:10.865 INFO   [web] terraform: so that Terraform can guarantee to make the same selections by default when
+07:43:10.865 INFO   [web] terraform: you run "terraform init" in the future.
+07:43:10.865 INFO   [web] terraform: ╷
+07:43:10.865 INFO   [web] terraform: │ Warning: Incomplete lock file information for providers
+07:43:10.865 INFO   [web] terraform: │ 
+07:43:10.865 INFO   [web] terraform: │ Due to your customized provider installation methods, Terraform was forced
+07:43:10.865 INFO   [web] terraform: │ to calculate lock file checksums locally for the following providers:
+07:43:10.865 INFO   [web] terraform: │   - hashicorp/aws
+07:43:10.865 INFO   [web] terraform: │ 
+07:43:10.865 INFO   [web] terraform: │ The current .terraform.lock.hcl file only includes checksums for
+07:43:10.865 INFO   [web] terraform: │ linux_amd64, so Terraform running on another platform will fail to install
+07:43:10.865 INFO   [web] terraform: │ these providers.
+07:43:10.865 INFO   [web] terraform: │ 
+07:43:10.865 INFO   [web] terraform: │ To calculate additional checksums for another platform, run:
+07:43:10.865 INFO   [web] terraform: │   terraform providers lock -platform=linux_amd64
+07:43:10.865 INFO   [web] terraform: │ (where linux_amd64 is the platform to generate)
+07:43:10.866 INFO   [web] terraform: ╵
+07:43:10.866 INFO   [web] terraform: Terraform has been successfully initialized!
+07:43:10.866 INFO   [web] terraform: 
+07:43:10.866 INFO   [web] terraform: You may now begin working with Terraform. Try running "terraform plan" to see
+07:43:10.866 INFO   [web] terraform: any changes that are required for your infrastructure. All Terraform commands
+07:43:10.866 INFO   [web] terraform: should now work.
+07:43:10.866 INFO   [web] terraform: If you ever set or change modules or backend configuration for Terraform,
+07:43:10.866 INFO   [web] terraform: rerun this command to reinitialize your working directory. If you forget, other
+07:43:10.866 INFO   [web] terraform: commands will detect it and remind you to do so if necessary.
+07:43:15.685 STDOUT [web] terraform: Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 ```
 
 **That one question is the only confirmation a whole environment gets.** Under `run --all`,
@@ -190,20 +220,18 @@ ana@laptop:~/shop-infra/live/dev$ terragrunt run --help | grep -e --no-auto-appr
 After the apply, a plan across the units finds nothing to do, and each unit has its own key:
 
 ```
-ana@laptop:~/shop-infra/live/dev$ terragrunt run --all plan 2>&1 | grep -E "No changes|Plan:|Run Summary|Succeeded|Failed"
-07:34:05.899 STDOUT [network] terraform: No changes. Your infrastructure matches the configuration.
-07:34:12.631 STDOUT [web] terraform: No changes. Your infrastructure matches the configuration.
-❯❯ Run Summary  2 units  12s
-   Succeeded    2
+ana@laptop:~/shop-infra/live/dev$ terragrunt run --all --summary-disable plan 2>&1 | grep -e "No changes" -e "Plan:"
+07:43:19.768 STDOUT [network] terraform: No changes. Your infrastructure matches the configuration.
+07:43:24.127 STDOUT [web] terraform: No changes. Your infrastructure matches the configuration.
 ```
 
 ```
 ana@laptop:~/shop-infra/live/dev$ aws s3 ls --recursive s3://shop-tfstate-123456789012
-2026-10-02 07:33:32        181 envs/dev/terraform.tfstate
-2026-10-02 07:33:37        181 envs/prod/terraform.tfstate
-2026-10-02 07:33:50       4480 live/dev/network/terraform.tfstate
-2026-10-02 07:33:59       2041 live/dev/web/terraform.tfstate
-2026-10-02 07:32:15        181 shop/terraform.tfstate
+2026-10-02 07:42:54        181 envs/dev/terraform.tfstate
+2026-10-02 07:42:59        181 envs/prod/terraform.tfstate
+2026-10-02 07:43:09       4480 live/dev/network/terraform.tfstate
+2026-10-02 07:43:15       2041 live/dev/web/terraform.tfstate
+2026-10-02 07:41:25        181 shop/terraform.tfstate
 ana@laptop:~/shop-infra/live/dev$ find network/.terragrunt-cache -name backend.tf -exec cat {} \;
 # Generated by Terragrunt. Sig: nIlQXj57tbuaRZEa
 terraform {

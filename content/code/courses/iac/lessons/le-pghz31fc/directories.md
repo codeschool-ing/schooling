@@ -145,9 +145,9 @@ Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 ana@laptop:~/shop-infra/envs/prod$ terraform apply -auto-approve | tail -n 1
 Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
 ana@laptop:~/shop-infra/envs/prod$ aws s3 ls --recursive s3://shop-tfstate-123456789012
-2026-10-02 07:33:12       6446 envs/dev/terraform.tfstate
-2026-10-02 07:33:19       8588 envs/prod/terraform.tfstate
-2026-10-02 07:32:15        181 shop/terraform.tfstate
+2026-10-02 07:42:36       6446 envs/dev/terraform.tfstate
+2026-10-02 07:42:41       8588 envs/prod/terraform.tfstate
+2026-10-02 07:41:25        181 shop/terraform.tfstate
 ```
 
 Two state objects, each under a key that says what it is, and each environment's plan reads only

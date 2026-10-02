@@ -108,10 +108,10 @@ Then she asks for a plan with the production values, expecting a second network 
 ```
 ana@laptop:~/shop$ terraform plan -var-file=prod.tfvars -no-color | grep -E "^  #|# forces|^Plan:"
   # aws_security_group.web must be replaced
-      ~ vpc_id                 = "vpc-7c022648d6ed9bb33" -> (known after apply) # forces replacement
+      ~ vpc_id                 = "vpc-1a70c993b12a8438e" -> (known after apply) # forces replacement
   # aws_subnet.public["sa-east-1a"] must be replaced
       ~ cidr_block                                     = "10.21.1.0/24" -> "10.20.1.0/24" # forces replacement
-      ~ vpc_id                                         = "vpc-7c022648d6ed9bb33" -> (known after apply) # forces replacement
+      ~ vpc_id                                         = "vpc-1a70c993b12a8438e" -> (known after apply) # forces replacement
   # aws_subnet.public["sa-east-1c"] will be created
   # aws_vpc.shop must be replaced
       ~ cidr_block                           = "10.21.0.0/16" -> "10.20.0.0/16" # forces replacement

@@ -20,6 +20,15 @@
 #   - the files ana wrote (put below), whose contents the lesson shows in full,
 #     and her git commits, made quietly;
 #   - the quiet `terraform init` in each directory, whose output lesson 2 shows.
+#   - the validation block added to variables.tf in "wrong-workspace", written
+#     by a small python edit and shown in the lesson as the `git diff` after it;
+#   - in "directories", the Owner tag is reverted quietly after the two plans
+#     that show it, and the two directory environments are destroyed quietly
+#     before Terragrunt builds the same thing again (the lesson says so).
+#
+# Terragrunt's run summary is switched off with --summary-disable where it is
+# quoted, and cut off by a line range where it is not: its header starts with
+# a character (U+276F) the interface has no glyph for.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -478,7 +487,7 @@ run 'terragrunt run --all plan 2>&1 | grep -v "terraform: "'
 block tg-ask
 run 'terragrunt run --all apply 2>&1 | grep -v "terraform: "'
 block tg-apply-all
-run 'terragrunt run --all --non-interactive --summary-disable apply 2>&1 | grep -e INFO -e "Apply complete"'
+run 'terragrunt run --all --non-interactive --summary-disable apply 2>&1 | grep -e "units will be run" -e "Apply complete"'
 block tg-approve
 run 'terragrunt run --help | grep -e --no-auto-approve'
 block tg-plan-again

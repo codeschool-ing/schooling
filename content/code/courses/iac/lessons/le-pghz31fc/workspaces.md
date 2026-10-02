@@ -77,9 +77,9 @@ bucket shows where their states went:
 
 ```
 ana@laptop:~/shop$ aws s3 ls --recursive s3://shop-tfstate-123456789012
-2026-10-02 07:32:24       6318 env:/dev/shop/terraform.tfstate
-2026-10-02 07:32:30       8445 env:/prod/shop/terraform.tfstate
-2026-10-02 07:32:15        181 shop/terraform.tfstate
+2026-10-02 07:41:36       6318 env:/dev/shop/terraform.tfstate
+2026-10-02 07:41:44       8445 env:/prod/shop/terraform.tfstate
+2026-10-02 07:41:25        181 shop/terraform.tfstate
 ana@laptop:~/shop$ aws ec2 describe-vpcs --filters Name=tag:Project,Values=shop --query "Vpcs[].[Tags[?Key==\`Name\`]|[0].Value,CidrBlock]" --output text
 shop-dev	10.21.0.0/16
 shop-prod	10.20.0.0/16

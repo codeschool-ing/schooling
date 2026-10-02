@@ -14,10 +14,10 @@ usando os valores de dev:
 ```
 ana@laptop:~/shop$ terraform plan -var-file=dev.tfvars -no-color | grep -E "^  #|# forces|^Plan:"
   # aws_security_group.web must be replaced
-      ~ vpc_id                 = "vpc-cfa32fbf3a0805ad5" -> (known after apply) # forces replacement
+      ~ vpc_id                 = "vpc-6f5c1302ec4961db4" -> (known after apply) # forces replacement
   # aws_subnet.public["sa-east-1a"] must be replaced
       ~ cidr_block                                     = "10.20.1.0/24" -> "10.21.1.0/24" # forces replacement
-      ~ vpc_id                                         = "vpc-cfa32fbf3a0805ad5" -> (known after apply) # forces replacement
+      ~ vpc_id                                         = "vpc-6f5c1302ec4961db4" -> (known after apply) # forces replacement
   # aws_subnet.public["sa-east-1c"] will be destroyed
   # (because key ["sa-east-1c"] is not in for_each map)
   # aws_vpc.shop must be replaced

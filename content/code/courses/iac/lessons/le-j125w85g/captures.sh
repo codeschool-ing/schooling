@@ -24,8 +24,8 @@
 # bucket, made as lesson 7 made it; the files ana wrote (put below), whose
 # contents the lesson shows; and the commits and pushes that stand for merged
 # pull requests, which are the git commands marked below. In the block
-# no-input, `sleep 30 |` stands in for a runner whose input nobody closes and
-# `timeout 5` for the time limit a CI job has.
+# no-input, `sleep 20 |` stands in for a runner whose input nobody closes and
+# `timeout -s INT 5` for the time limit a CI job has.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -316,7 +316,7 @@ block automation
 run 'TF_IN_AUTOMATION= terraform plan -input=false -var-file=prod.tfvars | tail -n 6'
 run 'TF_IN_AUTOMATION=1 terraform plan -input=false -var-file=prod.tfvars | tail -n 3'
 block no-input
-run 'sleep 30 | timeout 5 terraform plan; echo "exit $?"'
+run 'sleep 20 | timeout -s INT 5 terraform plan; echo "exit $?"'
 run 'terraform plan -input=false; echo "exit $?"'
 
 # STAGED: a pull request adding an Owner tag, merged while run 1 waits for

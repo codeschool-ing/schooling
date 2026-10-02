@@ -15,7 +15,7 @@
         "why": "That is what she expected. The state already held dev's VPC, so Terraform compared prod's values with it."
       },
       {
-        "text": "Replacing dev's network",
+        "text": "Replacing dev's network and everything in it",
         "correct": true,
         "why": "Yes. One state, one VPC: the new range forces its replacement, and the subnet and security group inside it go too."
       },
@@ -65,7 +65,7 @@
         "why": "A tag is a value like any other; the plan just proposed changing it from dev to prod."
       },
       {
-        "text": "A state of its own for each",
+        "text": "A state of its own for each environment",
         "correct": true,
         "why": "Right. A plan reads one state, and only a second state lets it see a second environment."
       },
@@ -190,7 +190,7 @@
         "why": "`TF_WORKSPACE` can override it for one command, but the selection itself is stored elsewhere."
       },
       {
-        "text": "In `.terraform/environment`",
+        "text": "In `.terraform/environment` locally",
         "correct": true,
         "why": "Yes: one word in a file `init` created, which git ignores."
       }
@@ -453,7 +453,7 @@
         "why": "S3 never sees how the string was produced."
       },
       {
-        "text": "A backend block cannot use variables",
+        "text": "A backend block cannot use variables of any kind",
         "correct": true,
         "why": "Right: it is configured before anything else is evaluated, so it is literal, or passed with `-backend-config`."
       },
@@ -503,7 +503,7 @@
         "why": "A workspace gives another state, not another version of the code."
       },
       {
-        "text": "Each environment to take the module by version, such as a git `?ref=`, instead of by path",
+        "text": "Pinning each side to a tag, with `?ref=` on a git address instead of a path",
         "correct": true,
         "why": "Right. Then dev moves to the new tag and prod stays where it is until somebody moves it."
       },
@@ -542,7 +542,7 @@
       {
         "text": "It merges all the units into one state",
         "correct": false,
-        "why": "The opposite: every unit gets its own key, four of them here."
+        "why": "The opposite: every unit gets its own key."
       }
     ]
   },
@@ -634,7 +634,7 @@
         "why": "OpenTofu has an S3 backend too; the setting is about which program runs."
       },
       {
-        "text": "Without it Terragrunt runs `tofu`",
+        "text": "Without it, Terragrunt would run `tofu` by default",
         "correct": true,
         "why": "Yes: `--tf-path` says the default is tofu on the PATH."
       },
@@ -725,7 +725,7 @@
         "why": "One configuration cannot hold two module versions, and one backend block makes separate credentials awkward."
       },
       {
-        "text": "A directory per environment",
+        "text": "A directory per environment, two copies",
         "correct": true,
         "why": "Right: each directory has its own credentials and its own `?ref=`, and two copies are cheap."
       },
