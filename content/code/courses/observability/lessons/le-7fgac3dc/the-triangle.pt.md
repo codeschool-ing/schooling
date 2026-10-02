@@ -34,6 +34,6 @@ uma métrica cujos labels se multiplicam, logs cujo volume vira a fatura, e rast
 amostrados.
 
 **Todo sinal desta aula existe porque a loja foi escrita para produzi-lo.** O histograma são umas
-trinta linhas no código da loja, as linhas JSON são um formatador de log, e os spans são um SDK
+quarenta linhas no código da loja, as linhas JSON são um formatador de log, e os spans são um SDK
 configurado na partida mais alguns nomes escolhidos à mão. A aula 2 abre a vitrine e escreve os
 spans dela desde o começo.

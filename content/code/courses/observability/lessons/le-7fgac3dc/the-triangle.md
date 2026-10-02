@@ -34,6 +34,6 @@ breaks: a metric whose labels multiply, logs whose volume becomes the bill, and 
 be sampled.
 
 **Every signal in this lesson exists because the shop was written to produce it.** The histogram is
-about thirty lines in the shop's code, the JSON lines are a log formatter, and the spans are an SDK
+about forty lines in the shop's code, the JSON lines are a log formatter, and the spans are an SDK
 set up at start-up plus a few names chosen by hand. Lesson 2 opens the storefront and writes its
 spans from the beginning.

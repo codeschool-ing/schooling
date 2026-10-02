@@ -687,7 +687,9 @@ LABFILE
 import time
 
 from flask import Response, g, request
-from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
+from opentelemetry import trace
+from prometheus_client import REGISTRY, Counter, Histogram
+from prometheus_client.exposition import choose_encoder
 
 REQUESTS = Counter(
     "http_server_requests",
@@ -712,12 +714,16 @@ def measure(app):
         route = request.url_rule.rule if request.url_rule else "unmatched"
         if route != "/metrics":
             REQUESTS.labels(route, request.method, str(response.status_code)).inc()
-            DURATION.labels(route, request.method).observe(time.perf_counter() - g.started)
+            ctx = trace.get_current_span().get_span_context()
+            exemplar = {"trace_id": format(ctx.trace_id, "032x")} if ctx.is_valid else None
+            DURATION.labels(route, request.method).observe(time.perf_counter() - g.started, exemplar)
         return response
 
     @app.get("/metrics")
     def metrics():
-        return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
+        # OpenMetrics, which carries exemplars, for a scraper that asks for it
+        encoder, content_type = choose_encoder(request.headers.get("Accept"))
+        return Response(encoder(REGISTRY), content_type=content_type)
 LABFILE
   mkdir -p "$SHOP/services/loadgen"
   cat > "$SHOP/services/loadgen/load.py" <<'LABFILE'
