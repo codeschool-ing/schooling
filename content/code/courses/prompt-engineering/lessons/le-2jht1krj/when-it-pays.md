@@ -73,5 +73,5 @@ answering a question from one handbook page, gain nothing from exploring alterna
 **Use the cheapest technique that works on your problem.** A chain of thought is the default for
 anything with intermediate steps. A vote over several chains is for answers that can be compared,
 where a wrong one is costly. A tree is only for a problem that is a search, with states you can
-judge and dead ends you need to leave early. Lesson 29 adds the remaining piece, a model that calls tools between
-its steps.
+judge and dead ends you need to leave early. Lesson 29 adds the remaining piece, a model that
+calls tools between its steps.

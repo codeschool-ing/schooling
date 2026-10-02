@@ -75,5 +75,5 @@ a partir de uma página do manual, não ganham nada explorando alternativas.
 **Use a técnica mais barata que funcione no seu problema.** A cadeia de pensamento é o padrão para
 qualquer coisa com passos intermediários. Uma votação entre várias cadeias serve para respostas que
 dão para comparar, quando uma errada sai cara. Uma árvore é só para um problema que é uma busca, com
-estados que você consegue julgar e becos sem saída de que precisa sair cedo. A lição 29 acrescenta a peça que
-falta, um modelo que chama ferramentas entre os seus passos.
+estados que você consegue julgar e becos sem saída de que precisa sair cedo. A lição 29
+acrescenta a peça que falta, um modelo que chama ferramentas entre os seus passos.
