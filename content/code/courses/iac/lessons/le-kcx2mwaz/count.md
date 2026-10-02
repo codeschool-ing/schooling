@@ -55,21 +55,21 @@ Plan: 5 to add, 0 to change, 0 to destroy.
 Changes to Outputs:
   + gateway = (known after apply)
 aws_vpc.shop: Creating...
-aws_vpc.shop: Creation complete after 2s [id=vpc-8ad0435fdb30b7ada]
+aws_vpc.shop: Creation complete after 1s [id=vpc-ef185f8eeea2f754c]
 aws_internet_gateway.shop[0]: Creating...
 aws_subnet.app[1]: Creating...
-aws_subnet.app[2]: Creating...
 aws_subnet.app[0]: Creating...
-aws_subnet.app[1]: Creation complete after 0s [id=subnet-96ca4032f2afd7d16]
-aws_subnet.app[0]: Creation complete after 0s [id=subnet-6a4f87ebd8f95dc27]
-aws_subnet.app[2]: Creation complete after 0s [id=subnet-f6ec3554398f2a88f]
-aws_internet_gateway.shop[0]: Creation complete after 0s [id=igw-8b2cddb6da6a43170]
+aws_subnet.app[2]: Creating...
+aws_subnet.app[0]: Creation complete after 1s [id=subnet-9485478c607d4a202]
+aws_subnet.app[2]: Creation complete after 1s [id=subnet-151a62e4e9c8c6cb4]
+aws_subnet.app[1]: Creation complete after 1s [id=subnet-a4a6adb3ebc89f9b9]
+aws_internet_gateway.shop[0]: Creation complete after 1s [id=igw-d64e0925c422c6e13]
 
 Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-gateway = "igw-8b2cddb6da6a43170"
+gateway = "igw-d64e0925c422c6e13"
 ```
 
 One block, five resources: the VPC, three subnets and the gateway. The state keeps them under
@@ -106,13 +106,13 @@ Terraform planned the following actions, but then encountered a problem:
   # aws_internet_gateway.shop[0] will be destroyed
   # (because index [0] is out of range for count)
   - resource "aws_internet_gateway" "shop" {
-      - arn      = "arn:aws:ec2:sa-east-1:123456789012:internet-gateway/igw-8b2cddb6da6a43170" -> null
-      - id       = "igw-8b2cddb6da6a43170" -> null
+      - arn      = "arn:aws:ec2:sa-east-1:123456789012:internet-gateway/igw-d64e0925c422c6e13" -> null
+      - id       = "igw-d64e0925c422c6e13" -> null
       - owner_id = "123456789012" -> null
       - region   = "sa-east-1" -> null
       - tags     = {} -> null
       - tags_all = {} -> null
-      - vpc_id   = "vpc-8ad0435fdb30b7ada" -> null
+      - vpc_id   = "vpc-ef185f8eeea2f754c" -> null
     }
 
 Plan: 0 to add, 0 to change, 1 to destroy.
@@ -147,7 +147,7 @@ two. The same plan now goes through, and says what will happen to the output as 
 Plan: 0 to add, 0 to change, 1 to destroy.
 
 Changes to Outputs:
-  - gateway = "igw-8b2cddb6da6a43170" -> null
+  - gateway = "igw-d64e0925c422c6e13" -> null
 ```
 
 **Two limits to keep in mind.** `count` has to be a number Terraform knows while it plans, before

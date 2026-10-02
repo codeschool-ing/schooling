@@ -99,7 +99,7 @@ Terraform will perform the following actions:
 
   # aws_subnet.app[1] has moved to aws_subnet.app["app"]
     resource "aws_subnet" "app" {
-        id                                             = "subnet-96ca4032f2afd7d16"
+        id                                             = "subnet-a4a6adb3ebc89f9b9"
         tags                                           = {
             "Project" = "shop"
         }
@@ -108,7 +108,7 @@ Terraform will perform the following actions:
 
   # aws_subnet.app[2] has moved to aws_subnet.app["db"]
     resource "aws_subnet" "app" {
-        id                                             = "subnet-f6ec3554398f2a88f"
+        id                                             = "subnet-151a62e4e9c8c6cb4"
         tags                                           = {
             "Project" = "shop"
         }
@@ -117,7 +117,7 @@ Terraform will perform the following actions:
 
   # aws_subnet.app[0] has moved to aws_subnet.app["web"]
     resource "aws_subnet" "app" {
-        id                                             = "subnet-6a4f87ebd8f95dc27"
+        id                                             = "subnet-9485478c607d4a202"
         tags                                           = {
             "Project" = "shop"
         }
@@ -138,7 +138,7 @@ Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-gateway = "igw-8b2cddb6da6a43170"
+gateway = "igw-d64e0925c422c6e13"
 ana@laptop:~/shop/network$ terraform state list
 aws_internet_gateway.shop[0]
 aws_subnet.app["app"]

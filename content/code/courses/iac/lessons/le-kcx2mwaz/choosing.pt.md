@@ -127,7 +127,6 @@ ana@laptop:~/shop/routes$ terraform plan -no-color | grep -E "^  # |^Plan"
   # aws_subnet.app["web"] will be created
   # aws_vpc.routes will be created
 Plan: 6 to add, 0 to change, 0 to destroy.
-/home/user/schooling/content/code/courses/iac/lab.sh: line 220: name: unbound variable
 ```
 
 As associações agora são `["db"]` e `["web"]`, com o nome de sub-redes que ela escolheu, e não de
