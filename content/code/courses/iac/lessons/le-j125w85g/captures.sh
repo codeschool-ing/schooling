@@ -23,7 +23,9 @@
 # What is STAGED rather than typed, and not shown in the lesson: the state
 # bucket, made as lesson 7 made it; the files ana wrote (put below), whose
 # contents the lesson shows; and the commits and pushes that stand for merged
-# pull requests, which are the git commands marked below.
+# pull requests, which are the git commands marked below. In the block
+# no-input, `sleep 30 |` stands in for a runner whose input nobody closes and
+# `timeout 5` for the time limit a CI job has.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -309,11 +311,13 @@ block run1-plan
 run './ci.sh plan'
 block run1-files
 run 'ls'
+run 'tail -n 1 plan.txt'
 block automation
 run 'TF_IN_AUTOMATION= terraform plan -input=false -var-file=prod.tfvars | tail -n 6'
 run 'TF_IN_AUTOMATION=1 terraform plan -input=false -var-file=prod.tfvars | tail -n 3'
 block no-input
-run 'terraform plan -input=false'
+run 'sleep 30 | timeout 5 terraform plan; echo "exit $?"'
+run 'terraform plan -input=false; echo "exit $?"'
 
 # STAGED: a pull request adding an Owner tag, merged while run 1 waits for
 # its approval.
@@ -328,7 +332,7 @@ block run2-plan
 run 'git clone -q git/shop.git ci/run-2'
 cd ci/run-2
 run 'git log --oneline -1'
-run './ci.sh plan 2>&1 | grep -E "^  # |^Plan:"'
+run './ci.sh plan 2>&1 | grep -E "# aws|Plan:"'
 
 # Run 1's apply job, approved.
 cd ~
@@ -351,7 +355,7 @@ quiet 'cp ../run-2/tfplan .'
 run './ci.sh apply'
 block run2-replan
 cd ~/ci/run-2
-run './ci.sh plan 2>&1 | grep -E "^  # |^Plan:"'
+run './ci.sh plan 2>&1 | grep -E "# aws|Plan:"'
 quiet 'cp tfplan ../run-2-apply/'
 cd ../run-2-apply
 run './ci.sh apply 2>&1 | tail -n 1'
@@ -365,7 +369,7 @@ quiet "sed -i 's#10.20.1.0/24#10.20.3.0/24#' main.tf"
 block laptop
 run 'git status --short'
 run 'git diff --stat'
-run 'terraform plan -var-file=prod.tfvars | grep -E "^  # |forces replacement|^Plan:"'
+run 'terraform plan -var-file=prod.tfvars | grep -E "# aws|forces replacement|Plan:"'
 quiet 'git checkout -q main.tf'
 
 # A pull request that opens SSH to the world: the scan stops it.
@@ -409,7 +413,8 @@ provider "aws" {
 }
 
 locals {
-  repo = "repo:example/shop"
+  repo   = "repo:example/shop"
+  bucket = "arn:aws:s3:::shop-tfstate-123456789012"
 }
 
 resource "aws_iam_openid_connect_provider" "github" {
@@ -451,35 +456,38 @@ resource "aws_iam_role" "ci" {
   max_session_duration = 3600
 }
 
-# plan reads everything, and writes only the lock file beside the state
-resource "aws_iam_role_policy_attachment" "plan_read" {
-  role       = aws_iam_role.ci["plan"].name
-  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
-}
-
-resource "aws_iam_role_policy" "plan_lock" {
+# plan reads the network and the state, and writes only the lock file
+resource "aws_iam_role_policy" "plan" {
+  name = "plan"
   role = aws_iam_role.ci["plan"].name
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{
-      Effect   = "Allow"
-      Action   = ["s3:PutObject", "s3:DeleteObject"]
-      Resource = "arn:aws:s3:::shop-tfstate-123456789012/shop/terraform.tfstate.tflock"
-    }]
+    Statement = [
+      { Effect = "Allow", Action = ["ec2:Describe*"], Resource = "*" },
+      { Effect = "Allow", Action = ["s3:ListBucket"], Resource = local.bucket },
+      { Effect = "Allow", Action = ["s3:GetObject"], Resource = "${local.bucket}/shop/*" },
+      {
+        Effect   = "Allow"
+        Action   = ["s3:PutObject", "s3:DeleteObject"]
+        Resource = "${local.bucket}/shop/terraform.tfstate.tflock"
+      },
+    ]
   })
 }
 
 # apply changes the network and writes the state
 resource "aws_iam_role_policy" "apply" {
+  name = "apply"
   role = aws_iam_role.ci["apply"].name
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       { Effect = "Allow", Action = ["ec2:*"], Resource = "*" },
+      { Effect = "Allow", Action = ["s3:ListBucket"], Resource = local.bucket },
       {
         Effect   = "Allow"
-        Action   = ["s3:ListBucket", "s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
-        Resource = ["arn:aws:s3:::shop-tfstate-123456789012", "arn:aws:s3:::shop-tfstate-123456789012/shop/*"]
+        Action   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
+        Resource = "${local.bucket}/shop/*"
       },
     ]
   })
@@ -490,4 +498,4 @@ block roles-apply
 run 'terraform apply -auto-approve | tail -n 1'
 block roles-trust
 run 'aws iam get-role --role-name shop-apply --query Role.AssumeRolePolicyDocument'
-run 'aws iam list-attached-role-policies --role-name shop-plan --query "AttachedPolicies[].PolicyArn" --output text'
+run 'aws iam list-role-policies --role-name shop-plan --output text'

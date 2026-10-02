@@ -24,7 +24,7 @@
 #   - Trivy tries to download its checks bundle and falls back to the checks
 #     compiled into the binary. --skip-check-update stops the attempt.
 # tfsec makes no network call. Terrascan is not installed in the lab, and the
-# lesson runs `terrascan version` to show exactly that.
+# lesson runs `which terrascan` to show exactly that.
 #
 # What is STAGED rather than typed, and not shown in the lesson:
 #   - the files ana wrote (put below), whose contents the lesson shows in full,
@@ -105,7 +105,6 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
 
 resource "aws_s3_bucket" "assets" {
   bucket = "shop-assets-123456789012"
-  tags   = { Name = "shop-assets" }
 }
 
 resource "aws_ebs_volume" "data" {
@@ -197,7 +196,6 @@ block tfsec-version
 run 'tfsec --version'
 block tfsec-run
 run 'tfsec --no-colour . | grep -E "^(Result|  [a-z]+\.tf)"'
-run 'tfsec --no-colour . | tail -n 3'
 block legacy
 mkdir -p ../legacy && cd ../legacy
 put main.tf <<'CODE'
@@ -218,7 +216,7 @@ block legacy-run
 run 'tfsec --no-colour . | sed -n "/^Result/,/^  Resolution/p"'
 cd ../shop
 block terrascan
-run 'terrascan version'
+run 'which terrascan; echo "exit $?"'
 
 block suppress
 # STAGED: the edit, shown below as a diff.
@@ -276,12 +274,12 @@ put maintenance.tfvars <<'CODE'
 admin_cidr = "0.0.0.0/0"
 CODE
 block plan
-run 'terraform plan -var-file=maintenance.tfvars -out tfplan | grep "^Plan:"'
+run 'terraform plan -no-color -var-file=maintenance.tfvars -out tfplan | grep -E "^  # |Plan:"'
 run 'terraform show -json tfplan > tfplan.json'
 block plan-checkov
 run 'checkov -f tfplan.json --skip-download --quiet --check CKV_AWS_24 --repo-root-for-plan-enrichment .'
 block plan-trivy
-run 'trivy config --skip-check-update -q tfplan.json | grep -E "^AWS-0107"'
+run 'trivy config --skip-check-update -q tfplan.json | grep -c AWS-0107'
 block var-file
 run 'checkov -d . --skip-download --quiet --compact --check CKV_AWS_24 --var-file maintenance.tfvars --framework terraform'
 block plan-fixed
@@ -293,7 +291,7 @@ block triage-counts
 quiet 'rm -f tfplan tfplan.json'
 run 'checkov -d . --skip-download --quiet --compact | sed -n 3p'
 run 'trivy config --skip-check-update -q . | grep "^Failures"'
-run 'tfsec --no-colour . | tail -n 2'
+run 'tfsec --no-colour . 2> /dev/null | tail -n 2'
 block triage-gate
 run 'trivy config --skip-check-update -q --severity CRITICAL --exit-code 1 . > /dev/null; echo "exit $?"'
 run 'trivy config --skip-check-update -q --severity HIGH,CRITICAL --exit-code 1 . > /dev/null; echo "exit $?"'
@@ -302,7 +300,6 @@ run 'checkov -d . --skip-download --quiet --compact --hard-fail-on HIGH > /dev/n
 run 'checkov -d . --skip-download --quiet --compact --hard-fail-on CKV_AWS_24,CKV2_AWS_6 > /dev/null; echo "exit $?"'
 block triage-disagree
 run 'checkov -d . --skip-download --compact --check CKV_AWS_19 | grep -A1 assets'
-run 'tfsec --no-colour . | grep -B4 "ID aws-s3-enable-bucket-encryption"'
 block baseline
 run 'checkov -d . --skip-download --quiet --compact --create-baseline | tail -n 1'
 put backups.tf <<'CODE'

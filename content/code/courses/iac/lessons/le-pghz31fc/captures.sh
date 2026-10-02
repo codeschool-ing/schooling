@@ -475,10 +475,14 @@ run 'terragrunt run --help | grep -e --tf-path'
 block tg-plan-all
 cd dev
 run 'terragrunt run --all plan 2>&1 | grep -v "terraform: "'
+block tg-ask
+run 'terragrunt run --all apply 2>&1 | grep -v "terraform: "'
 block tg-apply-all
-run 'terragrunt run --all --non-interactive apply 2>&1 | grep -v "terraform: "'
+run 'terragrunt run --all --non-interactive --summary-disable apply 2>&1 | grep -e INFO -e "Apply complete"'
+block tg-approve
+run 'terragrunt run --help | grep -e --no-auto-approve'
 block tg-plan-again
-run 'terragrunt run --all plan 2>&1 | grep -E "No changes|Plan:|Run Summary|Succeeded|Failed"'
+run 'terragrunt run --all --summary-disable plan 2>&1 | grep -e "No changes" -e "Plan:"'
 block tg-after
 run "aws s3 ls --recursive s3://$BUCKET"
 run 'find network/.terragrunt-cache -name backend.tf -exec cat {} \;'
