@@ -1,5 +1,33 @@
 [
   {
+    "id": "review-coupons",
+    "when": {
+      "contains": [
+        "Review this diff"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Three things in this diff:\n\n1. Expiry is off by one day. `today >= until` refuses a coupon on its last valid day: FRIENDS15 says it runs until 2026-10-31, and on 2026-10-31 it is refused. If `until` is the last day it is valid, the test should be `today > until`.\n\n2. `date.today()` is the server's local date. If the shop runs in UTC and its customers are in Brazil, a coupon expires three hours early for them, every evening. Consider passing the date from the request, in the shop's time zone.\n\n3. The lookup is still case-sensitive: `COUPONS` has upper-case keys, so a customer who types `welcome10` will get UnknownCoupon. Normalise the code before looking it up.\n"
+      }
+    ]
+  },
+  {
+    "id": "tests-for-coupons",
+    "when": {
+      "contains": [
+        "Write pytest tests for"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "from datetime import date\n\nimport pytest\n\nfrom shop.cart import Cart\nfrom shop.coupons import ExpiredCoupon, UnknownCoupon, apply_coupon\n\n\ndef test_apply_welcome10():\n    cart = Cart()\n    apply_coupon(cart, \"WELCOME10\", today=date(2026, 10, 2))\n    assert cart.discount_percent == 10\n\n\ndef test_apply_lowercase_code():\n    cart = Cart()\n    apply_coupon(cart, \"friends15\", today=date(2026, 10, 2))\n    assert cart.discount_percent == 15\n\n\ndef test_friends15_expires_on_2026_10_31():\n    with pytest.raises(ExpiredCoupon):\n        apply_coupon(Cart(), \"FRIENDS15\", today=date(2026, 10, 31))\n\n\ndef test_unknown_code():\n    with pytest.raises(UnknownCoupon):\n        apply_coupon(Cart(), \"FREE100\", today=date(2026, 10, 2))\n"
+      }
+    ]
+  },
+  {
     "id": "complete-remove",
     "when": {
       "contains": [

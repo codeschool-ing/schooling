@@ -14,6 +14,11 @@
 # lesson: the lab itself (lab.sh reset), and the files ana wrote (put below),
 # whose contents the lesson shows in full.
 #
+# EVERY REPLY FROM THE ASSISTANT IN THIS LESSON WAS WRITTEN BY THE COURSE. assist
+# is the lab's (lab/assist.py) and asks labllm's scripted-1, whose replies are in
+# lab/scripted.json. The suggestions carry the mistakes the lesson is about on
+# purpose; the tests, the diff and the doctest run against them are real.
+#
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 set -uo pipefail
