@@ -14,7 +14,7 @@ it does worst.
 ```
 
 Lesson 8 showed that the weights do not move while a model is used. Every improvement you have
-made so far in this course, and every one in lessons 20 to 31, changes only the text sent with the
+made so far in this course, and every one in lessons 20 to 29, changes only the text sent with the
 request. **Fine-tuning is training continued on your own examples**: the weights are nudged, the
 way they were in the original training, towards making your examples' answers more likely. The
 result is a new model, and every request after that goes to it.

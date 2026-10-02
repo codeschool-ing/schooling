@@ -14,7 +14,7 @@ o que ele faz pior.
 ```
 
 A lição 8 mostrou que os pesos não se mexem enquanto um modelo é usado. Cada melhoria que você fez
-até aqui neste curso, e cada uma das lições 20 a 31, muda só o texto enviado com o pedido. **O
+até aqui neste curso, e cada uma das lições 20 a 29, muda só o texto enviado com o pedido. **O
 ajuste fino é o treinamento continuado com os seus próprios exemplos**: os pesos são empurrados, do
 mesmo jeito que foram no treinamento original, na direção de tornar mais prováveis as respostas dos
 seus exemplos. O resultado é um modelo novo, e todo pedido daí em diante vai para ele.

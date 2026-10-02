@@ -82,8 +82,8 @@ The per-token price is the visible part. The rest:
 
 - collecting and labelling data: hundreds or thousands of examples, each one checked by a
   person who knows the right answer. This is usually the largest cost, and it is people's time;
-- training runs: each run is billed, and the first run is rarely the last, because you adjust the data
-  and train again;
+- training runs: each run is billed, and the first run is rarely the last, because you adjust the
+  data and train again;
 - evaluation: a held-back set of examples the model never trained on, to show it improved and
   did not get worse at something else. Without it, you cannot tell a good run from a bad one;
 - hosting: a fine-tuned model is either an endpoint at a provider, priced per token and

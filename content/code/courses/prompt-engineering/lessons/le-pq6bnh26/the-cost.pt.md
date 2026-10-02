@@ -81,8 +81,8 @@ O preço por token é a parte visível. O resto:
 
 - juntar e rotular os dados: centenas ou milhares de exemplos, cada um conferido por uma pessoa
   que sabe a resposta certa. Em geral é o maior custo, e é tempo de gente;
-- rodadas de treinamento: cada rodada é cobrada, e a primeira raramente é a última, porque você ajusta
-  os dados e treina de novo;
+- rodadas de treinamento: cada rodada é cobrada, e a primeira raramente é a última, porque você
+  ajusta os dados e treina de novo;
 - avaliação: um conjunto de exemplos separado, com que o modelo nunca treinou, para mostrar que
   ele melhorou e não piorou em outra coisa. Sem isso, você não distingue uma rodada boa de uma ruim;
 - hospedagem: um modelo ajustado é ou um endpoint num provedor, cobrado por token e às vezes por
