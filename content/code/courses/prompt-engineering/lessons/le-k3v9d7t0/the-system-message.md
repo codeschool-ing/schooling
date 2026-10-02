@@ -54,8 +54,8 @@ in the first user message is still in the history on turn three, and it is now o
 many, written in the same voice as the customer's questions. The system message is first, every
 time, and in its own role.
 
-It also means **the system message is paid for on every request**, like the examples of lesson
-21. The next reading section counts one.
+It also means **the system message is paid for on every request**, like the examples of
+lesson 21. The next reading section counts one.
 
 ## Precedence is trained, not enforced
 
