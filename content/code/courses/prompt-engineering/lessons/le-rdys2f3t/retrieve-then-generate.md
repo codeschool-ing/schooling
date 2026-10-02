@@ -72,6 +72,6 @@ a score from one question means nothing beside a score from another.
 ## What happens next
 
 Retrieval does not answer anything. It produces the evidence, and the model writes the answer from
-it, which is the next section. The division is worth keeping in mind: **when a RAG system gives a
+it, which is the next section. That division tells you where to look: **when a RAG system gives a
 wrong answer, the first question is whether the right passage was retrieved**, and that can be
 checked without a model, by running the search on its own, as here.

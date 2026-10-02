@@ -4,14 +4,14 @@ version: 1
 ---
 
 Um prompt ancorado faz uma resposta valer exatamente o que valem os trechos dentro dele. A maior
-parte das falhas de RAG não é do modelo: **a busca devolveu nada, o trecho errado, ou metade do
+parte das falhas de RAG não é do modelo: **a busca não devolveu nada, devolveu o trecho errado, ou metade do
 certo, e o modelo escreveu fielmente a partir do que recebeu.** Cada uma das três dá para ver só com
 o `retrieve`.
 
 ## Palavras diferentes não acham nada
 
-O manual tem um arquivo inteiro sobre a rede de visitantes. Perguntada com outras palavras, a busca
-não acha nada dele:
+O manual tem um arquivo inteiro sobre a rede de visitantes. Quando a pergunta usa outras palavras, a
+busca não acha nada dele:
 
 ```
 ana@lab:~/pe$ retrieve "is there wireless internet for customers"
@@ -68,8 +68,8 @@ vieram três trechos que dividem uma palavra cada com a pergunta e respondem out
 pergunta, com as palavras do próprio manual, põe a regra certa em primeiro.
 
 A busca não tem como saber a diferença. **Não existe uma nota que queira dizer "não relevante"**: os
-três primeiros são devolvidos sejam eles quais forem, e um modelo mandado a responder a partir deles
-vai responder.
+três primeiros são devolvidos sejam eles quais forem, e um modelo instruído a responder a partir deles
+vai fazer isso.
 
 ## Busca por palavra e busca por significado
 

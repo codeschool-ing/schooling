@@ -3,7 +3,7 @@ title: Recuperar, depois gerar
 version: 1
 ---
 
-Um modelo perguntado sobre o horário de domingo do Café Aurora vai responder, com fluência, um
+Pergunte a um modelo o horário de domingo do Café Aurora e ele vai responder, com fluência, um
 horário que soa certo. Ele nunca leu o manual do café: o café foi escrito para este curso, e nenhum
 modelo foi treinado com ele. **Um modelo não tem como conhecer um documento que nunca viu, e o jeito
 de formular a pergunta não muda isso.** O que muda é pôr as linhas relevantes do documento na frente
@@ -73,6 +73,6 @@ nota de uma pergunta não quer dizer nada ao lado da nota de outra.
 ## O que vem depois
 
 A recuperação não responde nada. Ela produz as provas, e o modelo escreve a resposta a partir delas,
-que é o assunto da próxima seção. Vale guardar essa divisão: **quando um sistema de RAG dá uma
+que é o assunto da próxima seção. Essa divisão diz onde olhar: **quando um sistema de RAG dá uma
 resposta errada, a primeira pergunta é se o trecho certo foi recuperado**, e isso dá para conferir
 sem modelo nenhum, rodando a busca sozinha, como aqui.
