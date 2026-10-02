@@ -1,0 +1,808 @@
+[
+  {
+    "id": "ex-r4pwqpv3",
+    "version": 1,
+    "section": "what-it-sees",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who decides which files an editor assistant's model sees?",
+    "hint": "Lesson 1 said the model sees only the request.",
+    "choices": [
+      {
+        "text": "The model, which reads the repository it needs",
+        "correct": false,
+        "why": "The model reads nothing by itself; it gets a request."
+      },
+      {
+        "text": "The provider, from a copy of your repository it keeps",
+        "correct": false,
+        "why": "Nothing in the lesson keeps a copy of the project."
+      },
+      {
+        "text": "The editor tool, when it builds each request",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nobody; every file in the project goes into every request",
+        "correct": false,
+        "why": "A budget of 3,000 tokens would not hold that."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvw8mt81",
+    "version": 1,
+    "section": "what-it-sees",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sending the code before the cursor and the code after it, so the model fills the gap between them, is called fill-in-the-___.",
+    "hint": "Three words, the last one missing.",
+    "blanks": [
+      {
+        "accept": [
+          "middle"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j2jzgx9g",
+    "version": 1,
+    "section": "what-it-sees",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tokens of context did the first `assist complete` send?",
+    "hint": "The first line it printed.",
+    "value": 602,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-awjryhdz",
+    "version": 1,
+    "section": "what-it-sees",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A completion keeps calling `apply_discount()`, which does not exist; the project's function is `apply_coupon()` in `shop/coupons.py`. What does the section suggest checking first?",
+    "hint": "What did the model have in front of it?",
+    "choices": [
+      {
+        "text": "Whether `shop/coupons.py` was in the context at all, as a tab or a named file",
+        "correct": true,
+        "why": "Right. Opening it in a tab is the first fix to try."
+      },
+      {
+        "text": "Whether the model's training cutoff is before the function was written",
+        "correct": false,
+        "why": "The function is in your project, not in the training data either way."
+      },
+      {
+        "text": "Whether the temperature is too high for code",
+        "correct": false,
+        "why": "Inventing a plausible name is a missing-context problem first."
+      },
+      {
+        "text": "Whether the budget is set to more than 3,000 tokens",
+        "correct": false,
+        "why": "A bigger budget helps only if the file was being dropped, which is what the first check finds out."
+      }
+    ]
+  },
+  {
+    "id": "ex-rwqcsq53",
+    "version": 1,
+    "section": "what-leaves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`.env` is listed in `.gitignore`. What does that do about an assistant reading it?",
+    "hint": "`!! .env`.",
+    "choices": [
+      {
+        "text": "It stops every assistant from reading it",
+        "correct": false,
+        "why": "git's list is git's; the editor opens any file."
+      },
+      {
+        "text": "It encrypts the file on disk",
+        "correct": false,
+        "why": "`.gitignore` changes nothing about the file itself."
+      },
+      {
+        "text": "It makes the provider discard the file after use",
+        "correct": false,
+        "why": "The provider never sees your `.gitignore`."
+      },
+      {
+        "text": "Nothing: it only keeps the file out of commits",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-69s56dfr",
+    "version": 1,
+    "section": "what-leaves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `PAYMENTS_KEY = \"pk_lab_…\"` get past `assist`'s secret check while `.env` did not?",
+    "hint": "What does the check look at?",
+    "choices": [
+      {
+        "text": "Python files are never checked",
+        "correct": false,
+        "why": "`settings.py` was checked; it passed."
+      },
+      {
+        "text": "Its name was not on the pattern's list",
+        "correct": true,
+        "why": "Right. The check matches names like token or api_key; a pattern sees a shape, not a fact."
+      },
+      {
+        "text": "The value was too short to be a secret",
+        "correct": false,
+        "why": "It is sixteen characters after the prefix, over the eight the pattern asks for."
+      },
+      {
+        "text": "labllm removed the key before logging it",
+        "correct": false,
+        "why": "The key is in the log: `grep -c` found it once."
+      }
+    ]
+  },
+  {
+    "id": "ex-hk9h9vny",
+    "version": 1,
+    "section": "what-leaves",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A real key was sent to a model provider by mistake. What does the section say to do?",
+    "hint": "Can a request be called back?",
+    "choices": [
+      {
+        "text": "Ask the provider to delete the request from its logs",
+        "correct": false,
+        "why": "There is no way to call a request back, and nothing to verify."
+      },
+      {
+        "text": "Nothing, as long as the key was in a test file",
+        "correct": false,
+        "why": "A key is a key wherever it was typed."
+      },
+      {
+        "text": "Revoke it and issue a new one straight away",
+        "correct": true,
+        "why": "Right. Treat the old one as public."
+      },
+      {
+        "text": "Add the file to `.gitignore`",
+        "correct": false,
+        "why": "That keeps it out of commits and does nothing about what was sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-swka1jqd",
+    "version": 1,
+    "section": "what-leaves",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the section count as protection against sending a secret? Choose all that apply.",
+    "hint": "Four rules close the section.",
+    "choices": [
+      {
+        "text": "Keeping secrets out of files the editor opens",
+        "correct": true,
+        "why": "Yes, and it is the one that does most."
+      },
+      {
+        "text": "A committed exclusion list naming where secrets live",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A longer secret, so the pattern check catches it",
+        "correct": false,
+        "why": "Length was never the hole; the name was."
+      },
+      {
+        "text": "Rotating a secret that did leave",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-0g4fpexj",
+    "version": 1,
+    "section": "completion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did ana write the tests for `remove()` from its docstring and not from the suggested code?",
+    "hint": "What would a test written from the code check?",
+    "choices": [
+      {
+        "text": "Because the suggested code had no comments to read",
+        "correct": false,
+        "why": "Comments are not the issue."
+      },
+      {
+        "text": "A test read off the code checks nothing new",
+        "correct": true,
+        "why": "Right: it only checks that the code does what it does."
+      },
+      {
+        "text": "Because pytest cannot import code written by an assistant",
+        "correct": false,
+        "why": "pytest imports any code."
+      },
+      {
+        "text": "To save tokens on the next request",
+        "correct": false,
+        "why": "The tests were not sent to the model."
+      }
+    ]
+  },
+  {
+    "id": "ex-swercnnj",
+    "version": 1,
+    "section": "completion",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many of the four tests in `tests/test_remove.py` failed against the suggestion?",
+    "hint": "The last line of the run.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "tests"
+  },
+  {
+    "id": "ex-rcgwxnc8",
+    "version": 1,
+    "section": "completion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the section call the usual shape of a wrong suggestion?",
+    "hint": "Two tests passed and two failed.",
+    "choices": [
+      {
+        "text": "Wrong from the first line, which makes it easy to spot",
+        "correct": false,
+        "why": "The first lines were right here."
+      },
+      {
+        "text": "Badly formatted, so review catches it",
+        "correct": false,
+        "why": "It was formatted perfectly."
+      },
+      {
+        "text": "Calling functions that do not exist",
+        "correct": false,
+        "why": "That is a different failure, from lesson 1."
+      },
+      {
+        "text": "Right in the middle, wrong at the edges",
+        "correct": true,
+        "why": "Right: the edges the docstring named."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1ddyz3w",
+    "version": 1,
+    "section": "completion",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put ana's way of accepting `remove()` in order.",
+    "hint": "The intent comes first.",
+    "items": [
+      "Write the signature and the docstring",
+      "Ask for the completion",
+      "Write tests from the docstring",
+      "Run them against the suggestion",
+      "Fix what fails, and run everything"
+    ],
+    "trap": "Writing the tests after reading the suggestion is the usual slip: they end up checking it rather than the docstring."
+  },
+  {
+    "id": "ex-sk6xg2dh",
+    "version": 1,
+    "section": "instructions-file",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many tokens did `AGENTS.md` add to every completion request?",
+    "hint": "Its line in the breakdown.",
+    "value": 87,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-sqf9nz50",
+    "version": 1,
+    "section": "instructions-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`AGENTS.md` says money is integer cents. What makes sure the code actually keeps to that?",
+    "hint": "A request, or a check?",
+    "choices": [
+      {
+        "text": "The tests, and CI running them",
+        "correct": true,
+        "why": "Right. The file improves the odds; a check enforces."
+      },
+      {
+        "text": "The instruction file, since the model must obey it",
+        "correct": false,
+        "why": "It is part of the prompt, which the model continues from, not a rule it is bound by."
+      },
+      {
+        "text": "The model's training on good Python",
+        "correct": false,
+        "why": "Training knows nothing about this project's rule."
+      },
+      {
+        "text": "Repeating the rule in capitals in the file",
+        "correct": false,
+        "why": "Emphasis may help the odds; it still enforces nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-jq6m312k",
+    "version": 1,
+    "section": "instructions-file",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line to whether the section would put it in the instruction file.",
+    "hint": "Four kinds of content are discussed.",
+    "pairs": [
+      {
+        "left": "Run the tests with `python -m pytest`",
+        "right": "Yes: a command"
+      },
+      {
+        "left": "Never edit a test to make it pass",
+        "right": "Yes: a boundary"
+      },
+      {
+        "left": "The staging database password",
+        "right": "No: a secret"
+      },
+      {
+        "left": "Today's sprint goal",
+        "right": "No: it changes too often"
+      }
+    ],
+    "right_distractors": [
+      "Yes: a style rule any developer follows anyway"
+    ]
+  },
+  {
+    "id": "ex-54m4nspg",
+    "version": 1,
+    "section": "refactor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `git apply refactor.diff`, all eight tests passed. Why was that not enough?",
+    "hint": "What did the eight tests have in common?",
+    "choices": [
+      {
+        "text": "pytest was run before the patch was applied",
+        "correct": false,
+        "why": "It ran after; the command is `git apply … && python -m pytest`."
+      },
+      {
+        "text": "A refactoring always needs a hundred tests",
+        "correct": false,
+        "why": "There is no such number."
+      },
+      {
+        "text": "None covered a coupon near the threshold",
+        "correct": true,
+        "why": "Right, so none of them saw the change."
+      },
+      {
+        "text": "The diff was applied to the wrong file",
+        "correct": false,
+        "why": "It changed `shop/cart.py`, as intended."
+      }
+    ]
+  },
+  {
+    "id": "ex-vw4bwa42",
+    "version": 1,
+    "section": "refactor",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cart of 21,000 cents with the WELCOME10 coupon: what should `total()` return, in cents, under the shop's rule that the threshold is checked after the discount?",
+    "hint": "Discount, then is 18,900 under 20,000?",
+    "value": 20400,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-s0vjd4h1",
+    "version": 1,
+    "section": "refactor",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the section say to do before asking for a refactoring of code with thin tests?",
+    "hint": "Pin, then…",
+    "choices": [
+      {
+        "text": "Ask the assistant to also write tests from the new code",
+        "correct": false,
+        "why": "Tests read off the new code pin the new behaviour, mistakes included."
+      },
+      {
+        "text": "Write tests that pin the current behaviour, on the old code",
+        "correct": true,
+        "why": "Right, and commit them first."
+      },
+      {
+        "text": "Raise the context budget so the model sees more",
+        "correct": false,
+        "why": "More context does not check anything."
+      },
+      {
+        "text": "Refactor in one large commit so it can be reverted at once",
+        "correct": false,
+        "why": "Keep the refactoring and any behaviour change apart instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5j6gjpe",
+    "version": 1,
+    "section": "refactor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What exactly changed in `shipping()` in the assistant's diff?",
+    "hint": "Compare the two `if` lines.",
+    "choices": [
+      {
+        "text": "The threshold went from 200.00 to 189.00",
+        "correct": false,
+        "why": "`FREE_SHIPPING_FROM` did not change."
+      },
+      {
+        "text": "The shipping price went up from 15.00",
+        "correct": false,
+        "why": "`SHIPPING` did not change."
+      },
+      {
+        "text": "The discount is no longer applied to the total",
+        "correct": false,
+        "why": "`total()` still subtracts it."
+      },
+      {
+        "text": "The threshold now ignores the discount and looks at the raw subtotal",
+        "correct": true,
+        "why": "Right: it is compared with the subtotal before the discount."
+      }
+    ]
+  },
+  {
+    "id": "ex-da4wa285",
+    "version": 1,
+    "section": "documenting",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The doctest expected `'-0.05'` for `format_price(-5)` and got `___`.",
+    "hint": "Copy it from the failure, quotes included.",
+    "blanks": [
+      {
+        "accept": [
+          "'-1.95'",
+          "-1.95"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-410vws39",
+    "version": 1,
+    "section": "documenting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `format_price(-5)` return `'-1.95'`?",
+    "hint": "Work out `-5 // 100` and `-5 % 100`.",
+    "choices": [
+      {
+        "text": "`//` rounds down, towards minus infinity",
+        "correct": true,
+        "why": "Right: the units are -1 and the remainder 95."
+      },
+      {
+        "text": "The docstring changed the function's behaviour",
+        "correct": false,
+        "why": "A docstring is text; it changed nothing."
+      },
+      {
+        "text": "Negative numbers are converted to floats first",
+        "correct": false,
+        "why": "Nothing here touches a float."
+      },
+      {
+        "text": "`parse_price` was called by mistake",
+        "correct": false,
+        "why": "Only `format_price` ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-ext34tr1",
+    "version": 1,
+    "section": "documenting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the doctest failure, which was wrong: the example or the code?",
+    "hint": "What should a price of minus five cents read as?",
+    "choices": [
+      {
+        "text": "The example, since the code has run in production without complaints",
+        "correct": false,
+        "why": "Nobody had ever asked it about a negative amount."
+      },
+      {
+        "text": "Both; neither says what negative prices mean",
+        "correct": false,
+        "why": "The example states a clear intent, and it is the sensible one."
+      },
+      {
+        "text": "The code: the example states what the function is for, and the code disagrees with it",
+        "correct": true,
+        "why": "Right. The doctest found a real bug."
+      },
+      {
+        "text": "Neither; doctests are unreliable with negative numbers",
+        "correct": false,
+        "why": "The doctest compared two strings exactly, as it always does."
+      }
+    ]
+  },
+  {
+    "id": "ex-w509f6ja",
+    "version": 1,
+    "section": "documenting",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which parts of a generated docstring does the section say to check against the code? Choose all that apply.",
+    "hint": "Claims a fluent writer fills in by plausibility.",
+    "choices": [
+      {
+        "text": "The grammar of its first sentence",
+        "correct": false,
+        "why": "Grammar is not a claim about the code."
+      },
+      {
+        "text": "The exceptions it says the function raises",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The units of the arguments",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Every example, by running it",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tvwz08g",
+    "version": 1,
+    "section": "modes",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each mode to what you review in it.",
+    "hint": "From a line to a pull request.",
+    "pairs": [
+      {
+        "left": "Inline completion",
+        "right": "A line or a block, as it appears"
+      },
+      {
+        "left": "Chat",
+        "right": "A reply or a diff, before applying it"
+      },
+      {
+        "left": "Agent",
+        "right": "The whole change, like a pull request"
+      }
+    ],
+    "right_distractors": [
+      "Nothing; it is checked by the provider"
+    ]
+  },
+  {
+    "id": "ex-mxtjbny6",
+    "version": 1,
+    "section": "modes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An agent in a project you have never worked on asks to run commands. Which permission setting does the section recommend to start with?",
+    "hint": "Slow is safe here.",
+    "choices": [
+      {
+        "text": "Allow any command, so it can finish without interruptions",
+        "correct": false,
+        "why": "That lets text the agent read decide what runs on your machine."
+      },
+      {
+        "text": "Approve each edit and each command it wants to run",
+        "correct": true,
+        "why": "Right, and loosen it on purpose later."
+      },
+      {
+        "text": "Allow commands but forbid file edits",
+        "correct": false,
+        "why": "Commands can edit files too."
+      },
+      {
+        "text": "Forbid everything and paste its plan into a terminal by hand",
+        "correct": false,
+        "why": "That is chat with extra steps, and loses the agent's point."
+      }
+    ]
+  },
+  {
+    "id": "ex-68z0080j",
+    "version": 1,
+    "section": "when-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the section single out security-sensitive code?",
+    "hint": "Think of the generated `verify_signature`.",
+    "choices": [
+      {
+        "text": "Assistants refuse to write it",
+        "correct": false,
+        "why": "They write it readily."
+      },
+      {
+        "text": "It is always longer than other code",
+        "correct": false,
+        "why": "Length is not the point."
+      },
+      {
+        "text": "Its mistakes pass the obvious tests",
+        "correct": true,
+        "why": "Right: tests of valid input pass, and the mistake is exploited later."
+      },
+      {
+        "text": "Providers charge more for it",
+        "correct": false,
+        "why": "Prices are per token, whatever the code is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3gr977v",
+    "version": 1,
+    "section": "when-not",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the section suggest using an assistant for while you are learning a language?",
+    "hint": "Explain, not replace.",
+    "choices": [
+      {
+        "text": "Completing every exercise, to move faster",
+        "correct": false,
+        "why": "That teaches you to accept completions."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "It suggests one use."
+      },
+      {
+        "text": "Writing the tests, so you can write the code",
+        "correct": false,
+        "why": "The section does not say that."
+      },
+      {
+        "text": "Explaining an error, rather than making it go away",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-bw81h15h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate accepted a forty-line agent change to the checkout, the tests passed, and a week later a customer was charged shipping twice. Which habit from this lesson would most likely have caught it?",
+    "hint": "What did the passing tests have in common with lesson 3 section 06?",
+    "choices": [
+      {
+        "text": "Tests pinning the old behaviour first",
+        "correct": true,
+        "why": "Right: green tests that never covered the case caught nothing."
+      },
+      {
+        "text": "A longer instruction file",
+        "correct": false,
+        "why": "An instruction file improves the odds; it checks nothing."
+      },
+      {
+        "text": "Running the agent at a lower temperature",
+        "correct": false,
+        "why": "The current Anthropic API has no temperature, and it would not check anything either."
+      },
+      {
+        "text": "Excluding the tests from the agent's context",
+        "correct": false,
+        "why": "The tests were not the problem; their coverage was."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8w4qngn",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each thing the lesson found to what found it.",
+    "hint": "Four checks, four findings.",
+    "pairs": [
+      {
+        "left": "A cart line left with zero mugs",
+        "right": "A test written from the docstring"
+      },
+      {
+        "left": "Shipping charged differently after a refactoring",
+        "right": "A test pinning the old behaviour"
+      },
+      {
+        "left": "`'-1.95'` for minus five cents",
+        "right": "A doctest"
+      },
+      {
+        "left": "A key sent to the provider",
+        "right": "labllm's request log"
+      }
+    ],
+    "right_distractors": [
+      "The instruction file"
+    ]
+  }
+]
