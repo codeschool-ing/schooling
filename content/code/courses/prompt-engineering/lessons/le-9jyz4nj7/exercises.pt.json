@@ -1,0 +1,348 @@
+{
+  "ex-syddef0d": {
+    "prompt": "O que o `--top-k 2` faz com a lista de próximas palavras?",
+    "hint": "Leia a tabela de `the coffee is` com k = 2.",
+    "choices": [
+      {
+        "text": "Mantém as duas melhores e as reescala para 100%",
+        "why": "Isso. `hot` e `strong` sobrevivem, e as frações viram 76,2% e 23,8%."
+      },
+      {
+        "text": "Corta cada fração pela metade",
+        "why": "Nada é cortado pela metade. Três palavras saem e duas são aumentadas."
+      },
+      {
+        "text": "Mantém todas as palavras mas espreme a cauda, como faz uma temperatura baixa",
+        "why": "Esse é o trabalho da temperatura. O top-k tira palavras de vez."
+      },
+      {
+        "text": "Sorteia duas vezes e fica com a mais comum das duas",
+        "why": "O top-k não sorteia. Ele corta a lista, e um sorteio vem depois."
+      }
+    ]
+  },
+  "ex-h1tjbvmg": {
+    "prompt": "Depois de `the coffee is`, `hot` tem 59,3% e `strong` 18,5%. Com `--top-k 2`, que fração `hot` recebe, em porcentagem?",
+    "hint": "Divida 59,3 pelas duas frações somadas.",
+    "unit": "%"
+  },
+  "ex-hk9h93ej": {
+    "prompt": "Aumentar as frações que sobreviveram para que voltem a somar 100% se chama ___.",
+    "hint": "A palavra do primeiro parágrafo depois da tabela.",
+    "blanks": [
+      {
+        "accept": [
+          "renormalizar",
+          "renormalização",
+          "renormalizacao",
+          "renormalizaçao"
+        ]
+      }
+    ]
+  },
+  "ex-7yqwbfv2": {
+    "prompt": "O `--top-k 1` é o mesmo que o quê?",
+    "hint": "Quantas palavras podem ser sorteadas?",
+    "choices": [
+      {
+        "text": "Temperatura 1 sem nenhum outro controle ajustado na requisição",
+        "why": "Isso mantém todas as palavras que o modelo pontuou."
+      },
+      {
+        "text": "Temperatura 0",
+        "why": "Isso. Uma palavra sobrevive, então a do topo é escolhida toda vez: decodificação gulosa."
+      },
+      {
+        "text": "Top-p igual a 1",
+        "why": "Um top-p de 1 mantém tudo."
+      },
+      {
+        "text": "Um sorteio de uma amostra",
+        "why": "O `--samples` define quantas continuações são escritas, não quantas palavras ficam."
+      }
+    ]
+  },
+  "ex-20bw4qd9": {
+    "prompt": "Com `--top-k 2` depois de `the`, ficam `coffee` e `café`. Por que isso é um problema para k = 2 aqui?",
+    "hint": "Some o que foi jogado fora.",
+    "choices": [
+      {
+        "text": "Mantém palavras demais, porque só uma era provável",
+        "why": "Oito candidatas, nenhuma acima de 30%: o modelo estava dividido, não seguro."
+      },
+      {
+        "text": "Joga fora mais da metade do que o modelo considerou provável",
+        "why": "Isso: fica 48,1%, e `bread`, `cat` e `tea` eram plausíveis. O mesmo k que serve para `the coffee is` é apertado demais aqui."
+      },
+      {
+        "text": "O top-k não pode ser usado no começo de uma frase",
+        "why": "Pode ser usado em qualquer lugar. Ele só mantém uma contagem que ignora o formato da lista."
+      },
+      {
+        "text": "`café` devia ter saído por causa do acento",
+        "why": "Os caracteres não entram. Ela ficou por ter a segunda maior fração."
+      }
+    ]
+  },
+  "ex-vnrb45yr": {
+    "prompt": "O que o top-p mantém?",
+    "hint": "Leia a definição no topo da seção.",
+    "choices": [
+      {
+        "text": "O menor conjunto de palavras do topo cujas frações chegam a p",
+        "why": "Isso. As palavras entram a partir do topo até o total acumulado chegar a p."
+      },
+      {
+        "text": "Cada palavra cuja fração própria passa de p",
+        "why": "Com p = 0,8, isso não manteria nada depois de `the coffee is`, onde nenhuma palavra tem 80%."
+      },
+      {
+        "text": "As p primeiras palavras",
+        "why": "Isso é o top-k, uma contagem. O top-p é uma fração."
+      },
+      {
+        "text": "Uma fração p da probabilidade de cada palavra",
+        "why": "As frações não são reduzidas uma a uma; palavras inteiras saem."
+      }
+    ]
+  },
+  "ex-s7dyh684": {
+    "prompt": "Quantas palavras o `toylm dist \"and the\" --top-p 0.8` manteve?",
+    "hint": "Conte as linhas da tabela.",
+    "unit": "palavras"
+  },
+  "ex-samt4c5a": {
+    "prompt": "Com p = 0,8, por que só o ponto final fica depois de `the coffee is hot`?",
+    "hint": "Qual era a fração dele sozinho?",
+    "choices": [
+      {
+        "text": "O top-p mantém sempre exatamente uma palavra",
+        "why": "Depois de `and the` ele manteve quatro."
+      },
+      {
+        "text": "`and` ficou abaixo do mínimo de 20% que o top-p exige",
+        "why": "Não há mínimo por palavra. `and` saiu porque o total foi atingido antes dela."
+      },
+      {
+        "text": "Os 85% dele sozinho já passam de 0,8, então a contagem para",
+        "why": "Isso. O total acumulado chegou a p com a primeira palavra, então nada mais entrou."
+      },
+      {
+        "text": "O modelo foi avisado de que a frase tinha acabado",
+        "why": "Ninguém o avisou de nada. O ponto final só era o mais provável depois de `is hot`."
+      }
+    ]
+  },
+  "ex-c5g589t9": {
+    "prompt": "`café` e `terrace` tinham 11,8% cada depois de `and the`, e o top-p 0,8 manteve `café`. Por que `café`?",
+    "hint": "A mesma regra decidiu um empate na temperatura 0.",
+    "choices": [
+      {
+        "text": "A fração dela era maior, se você lesse as casas decimais escondidas",
+        "why": "As contagens são iguais: duas cada. Não há decimais escondidas."
+      },
+      {
+        "text": "O top-p prefere palavras mais curtas",
+        "why": "O tamanho não entra."
+      },
+      {
+        "text": "Empates seguem a ordem alfabética",
+        "why": "Isso. O `toylm` ordena palavras empatadas alfabeticamente, então `café` vem primeiro e o total passa de 0,8 com ela."
+      },
+      {
+        "text": "Um sorteio desfez o empate",
+        "why": "Nada é sorteado enquanto o núcleo é formado."
+      }
+    ]
+  },
+  "ex-b6xjrkvh": {
+    "prompt": "Por que se diz que o top-p se adapta e o top-k não?",
+    "hint": "Compare `is hot` e `and the` nos dois controles.",
+    "choices": [
+      {
+        "text": "Ele aprende o valor certo de p com as saídas que já produziu antes",
+        "why": "Nada é aprendido. O mesmo p age sobre uma lista diferente em cada lugar."
+      },
+      {
+        "text": "Mantém poucas palavras quando o modelo está seguro e mais quando está dividido",
+        "why": "Isso: uma palavra depois de `is hot`, quatro depois de `and the`, com o mesmo p. O top-k manteve duas nos dois lugares."
+      },
+      {
+        "text": "Ele é aplicado antes da temperatura, então vê as notas cruas",
+        "why": "No `toylm` ele vem depois da temperatura, e é por isso que a temperatura o altera."
+      },
+      {
+        "text": "Ele tira só as palavras erradas",
+        "why": "Ele tira palavras improváveis. Uma palavra mantida ainda pode ser errada para o seu propósito."
+      }
+    ]
+  },
+  "ex-rfrxpcpe": {
+    "prompt": "Com top-p 0,8 ajustado, você sobe a temperatura de 1 para 2. Quantas palavras sobrevivem depois de `the coffee is`?",
+    "hint": "A temperatura vem antes do top-p.",
+    "choices": [
+      {
+        "text": "Mais: quatro em vez de três",
+        "why": "Isso. Frações achatadas precisam de mais palavras para chegar a 80%."
+      },
+      {
+        "text": "As mesmas três, já que o top-p é independente",
+        "why": "Eles agem sobre a mesma lista em sequência, então não são independentes."
+      },
+      {
+        "text": "Menos: duas em vez de três",
+        "why": "É o que baixar a temperatura costuma fazer."
+      },
+      {
+        "text": "As cinco",
+        "why": "Quatro chegam a 80%; `bitter` continua cortada."
+      }
+    ]
+  },
+  "ex-c9a56pgr": {
+    "prompt": "Ponha os controles na ordem em que o `toylm` os aplica.",
+    "hint": "A docstring no topo do programa.",
+    "items": [
+      "penalidades",
+      "temperatura",
+      "top-k",
+      "top-p",
+      "o sorteio"
+    ]
+  },
+  "ex-2mmhpcdj": {
+    "prompt": "Você mudou temperatura e top-p de uma vez, e a saída melhorou. O que você pode concluir?",
+    "hint": "Como os dois interagem?",
+    "choices": [
+      {
+        "text": "As duas mudanças ajudaram por igual",
+        "why": "Nada numa única comparação diz isso."
+      },
+      {
+        "text": "O top-p ajudou, já que a temperatura só acrescenta aleatoriedade",
+        "why": "A temperatura também alarga ou estreita o núcleo que o top-p mantém."
+      },
+      {
+        "text": "A temperatura ajudou, já que o top-p não tem efeito quando a temperatura está ajustada",
+        "why": "O top-p mudou o resultado em todas as temperaturas mostradas."
+      },
+      {
+        "text": "Não dá para saber qual mudança ajudou",
+        "why": "Isso. Eles agem sobre a mesma lista e afetam um ao outro, então uma mudança conjunta esconde qual importou. Mude um por vez."
+      }
+    ]
+  },
+  "ex-g8y9fxj3": {
+    "prompt": "Top-k 3 e top-p 0,8 estão ajustados depois de `the coffee is`. O que sobrevive no `toylm`?",
+    "hint": "Cada um tira palavras; qual conjunto é menor?",
+    "choices": [
+      {
+        "text": "`hot` e `strong`",
+        "why": "Isso precisaria de k = 2."
+      },
+      {
+        "text": "As cinco palavras",
+        "why": "Os dois controles cortam `cold` e `bitter`."
+      },
+      {
+        "text": "`hot`, `strong` e `ready`",
+        "why": "Isso. Os dois controles mantêm essas três, então o conjunto menor é o mesmo."
+      },
+      {
+        "text": "Só `hot`",
+        "why": "Isso aconteceu na temperatura 0,5 com top-p 0,8, não aqui."
+      }
+    ]
+  },
+  "ex-jas6nvcd": {
+    "prompt": "Você quer usar top-k numa API, e a referência dela nunca menciona um parâmetro de top-k. O que você deve supor?",
+    "hint": "O que a seção diz sobre o conjunto de controles?",
+    "choices": [
+      {
+        "text": "Ele está lá com o mesmo nome, sem documentação",
+        "why": "Não suponha que um parâmetro existe porque outro provedor o tem."
+      },
+      {
+        "text": "Suponha que a API não oferece top-k nenhum",
+        "why": "Isso. Os controles são escolha de cada provedor; algumas APIs conhecidas não têm top-k."
+      },
+      {
+        "text": "O top-p é a mesma coisa com outro nome",
+        "why": "O top-p é uma fração e o top-k uma contagem; eles se comportam de jeitos diferentes."
+      },
+      {
+        "text": "Mandar mesmo assim não faz mal",
+        "why": "Uma API pode recusá-lo, ou ignorá-lo em silêncio e deixar você achando que funcionou."
+      }
+    ]
+  },
+  "ex-77kd60b5": {
+    "prompt": "Quais destas coisas esta lição recomenda? Marque todas as que se aplicam.",
+    "hint": "Uma seção se chama \"Um controle por vez\".",
+    "choices": [
+      {
+        "text": "Ajustar primeiro a temperatura, deixando top-k e top-p nos padrões",
+        "why": "Sim. É o controle de efeito mais visível e contínuo."
+      },
+      {
+        "text": "Recorrer ao top-p quando a saída de vez em quando fica estranha",
+        "why": "Sim. Ele apara a cauda sem achatar as escolhas comuns."
+      },
+      {
+        "text": "Mudar dois controles juntos para ganhar tempo",
+        "why": "Aí você não sabe qual fez o quê."
+      },
+      {
+        "text": "Seguir o provedor quando ele diz para não ajustar temperatura e top-p juntos",
+        "why": "Sim. Alguns provedores recomendam mudar um ou o outro."
+      }
+    ]
+  },
+  "ex-t9bw6cwq": {
+    "prompt": "Ligue cada ajuste ao que ele manteve depois de `the coffee is` no `toylm`.",
+    "hint": "As tabelas desta lição.",
+    "pairs": [
+      {
+        "left": "`--top-k 1`",
+        "right": "só `hot`"
+      },
+      {
+        "left": "`--top-k 2`",
+        "right": "`hot` e `strong`"
+      },
+      {
+        "left": "`--top-p 0.8`",
+        "right": "`hot`, `strong` e `ready`"
+      },
+      {
+        "left": "`--temperature 2 --top-p 0.8`",
+        "right": "quatro palavras, `cold` incluída"
+      }
+    ],
+    "right_distractors": [
+      "as cinco palavras, `bitter` incluída"
+    ]
+  },
+  "ex-kyrs5wvt": {
+    "prompt": "Um modelo na sua temperatura preferida escreve bem, mas de vez em quando uma resposta descamba para uma palavra estranha. Que mudança única esta lição aponta?",
+    "hint": "Qual controle tira a cauda sem remodelar o resto?",
+    "choices": [
+      {
+        "text": "Baixar a temperatura para 0 para nada ser sorteado",
+        "why": "Isso tira toda a variedade, de que você disse gostar."
+      },
+      {
+        "text": "Pôr o top-k em 1",
+        "why": "O mesmo que temperatura 0: tira toda a variedade que você queria manter."
+      },
+      {
+        "text": "Subir a temperatura para as palavras estranhas ficarem mais comuns",
+        "why": "Isso as torna mais frequentes, não menos."
+      },
+      {
+        "text": "Pôr o top-p um pouco abaixo de 1",
+        "why": "Isso. Ele corta a cauda improvável em cada contexto e deixa as escolhas confiantes como estavam."
+      }
+    ]
+  }
+}

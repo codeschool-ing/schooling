@@ -1,0 +1,1681 @@
+{
+  "ex-z771fhjx": {
+    "prompt": "Um modelo recebe um documento muito longo com uma instrução crucial lá atrás, e a resposta ignora a instrução. Qual comportamento do `toylm` é a mesma falha em escala menor?",
+    "hint": "Lição 1.",
+    "choices": [
+      {
+        "text": "`the cat sat on the` terminou na cadeira, porque `sat` estava fora da janela de duas palavras",
+        "why": "Isso. O texto fora do que o modelo enxerga não pesa no que vem depois, seja a janela de duas palavras ou de um trecho muito longo."
+      },
+      {
+        "text": "`the coffee is` deu `hot` três vezes em cinco sorteios",
+        "why": "Isso é sorteio ponderado, que acontece com o prompt inteiro à vista."
+      },
+      {
+        "text": "`sweet` não teve nota nenhuma depois de `coffee is`",
+        "why": "Isso é um par que nunca apareceu no arquivo de treino, não um texto do prompt que o modelo deixou de ver."
+      },
+      {
+        "text": "`the café opens at` deu `seven` com 75%",
+        "why": "Isso é o modelo trabalhando com todo o contexto à vista e dando nota ao que veio depois."
+      }
+    ]
+  },
+  "ex-j3nyg950": {
+    "prompt": "O `toylm next \"the coffee is\"` deu 3,7% para `bitter`. Sorteando em proporção às notas, `bitter` sai mais ou menos uma vez a cada quantos sorteios? Responda com o número inteiro mais próximo.",
+    "hint": "Lição 1.",
+    "unit": "sorteios"
+  },
+  "ex-cr37rah6": {
+    "prompt": "Alguém edita o `corpus.txt` para que `cold` venha depois de `coffee is` muito mais vezes que `hot`, e reconstrói o `toylm`. O que muda no `toylm next \"the coffee is\"`?",
+    "hint": "Lição 1.",
+    "choices": [
+      {
+        "text": "Nada, porque o programa aprendeu que café é servido quente",
+        "why": "Ele não aprendeu nada sobre café; tem contagens de que palavra veio depois de que par."
+      },
+      {
+        "text": "`hot` continua no topo e `cold` aparece como uma nova segunda linha",
+        "why": "A ordem vem direto das contagens, então a palavra contada mais vezes é a que fica no topo."
+      },
+      {
+        "text": "`cold` fica com a nota mais alta, já que as notas são as novas contagens",
+        "why": "Isso. Ele não sabe nada de café além das contagens, então contagens novas são notas novas."
+      },
+      {
+        "text": "A saída é recusada, porque o novo arquivo contradiz um fato",
+        "why": "Não há um banco de fatos para contradizer, só as contagens do arquivo."
+      }
+    ]
+  },
+  "ex-vv8w0vpn": {
+    "prompt": "No teste de vinte execuções, quantas respostas com `seven` o `v3` teve a mais que o `v1`?",
+    "hint": "Lição 2.",
+    "unit": "respostas"
+  },
+  "ex-mcp9jtvz": {
+    "prompt": "Ligue cada parte de um prompt ao que dá errado quando ela falta.",
+    "hint": "Lição 2.",
+    "pairs": [
+      {
+        "left": "instrução",
+        "right": "O modelo adivinha a tarefa"
+      },
+      {
+        "left": "contexto",
+        "right": "O modelo preenche a lacuna com o que é típico"
+      },
+      {
+        "left": "dados de entrada",
+        "right": "Não há nada sobre o que estar certo"
+      },
+      {
+        "left": "formato de saída",
+        "right": "Uma resposta correta que não serve onde vai ser usada"
+      }
+    ],
+    "right_distractors": [
+      "A resposta fica longa demais para ler"
+    ]
+  },
+  "ex-15hfgx30": {
+    "prompt": "Para economizar, uma aplicação manda ao modelo só a mensagem mais nova do usuário em cada vez. O que os usuários vão notar?",
+    "hint": "Lição 2.",
+    "choices": [
+      {
+        "text": "O assistente esquece tudo o que foi dito antes na conversa",
+        "why": "Isso. O modelo não tem memória entre requisições; as vezes anteriores só chegam a ele porque a aplicação as envia de novo."
+      },
+      {
+        "text": "Nada, porque o modelo lembra as vezes anteriores da sessão",
+        "why": "Ele não guarda nada entre requisições. O que parece memória é a conversa inteira, enviada de novo a cada vez."
+      },
+      {
+        "text": "As respostas ficam mais lentas, já que o modelo precisa buscar sozinho as vezes anteriores",
+        "why": "Não há onde ele buscar. O que não está na requisição não existe para o modelo."
+      },
+      {
+        "text": "A mensagem de sistema cai, mas o resto da conversa é mantido",
+        "why": "As vezes anteriores do usuário e do assistente são justamente o que foi cortado, e não ficam guardadas em outro lugar."
+      }
+    ]
+  },
+  "ex-s23rrha2": {
+    "prompt": "Um prompt que passava nos testes no mês passado agora falha, e cinco edições foram feitas desde então. Qual hábito permite achar a edição culpada?",
+    "hint": "Lição 2.",
+    "choices": [
+      {
+        "text": "Um objetivo declarado",
+        "why": "O objetivo diz o que é uma boa resposta. Não diz qual das cinco edições quebrou o prompt."
+      },
+      {
+        "text": "Medir ao longo de muitas execuções",
+        "why": "Medir diz que ele falha agora. Achar qual edição fez isso exige as versões antigas."
+      },
+      {
+        "text": "Casos de teste",
+        "why": "Os testes são como você percebeu. Sem as versões anteriores, você não consegue rodá-los contra cada edição."
+      },
+      {
+        "text": "Versionamento",
+        "why": "Isso. Guardar e nomear cada versão é o que permite rastrear uma regressão até a mudança que a causou."
+      }
+    ]
+  },
+  "ex-q9dsfhym": {
+    "prompt": "Contado com o `cl100k_base`, quantos tokens a mais tem o `hours.pt.txt` em relação ao `hours.en.txt`?",
+    "hint": "Lição 3.",
+    "unit": "tokens"
+  },
+  "ex-60pakb7v": {
+    "prompt": "Uma requisição cola um contrato de vinte páginas no prompt e pede uma resposta de uma linha. Que lado da conta a lição 3 espera que pese mais?",
+    "hint": "Lição 3.",
+    "choices": [
+      {
+        "text": "A saída, já que tokens de saída sempre custam várias vezes mais",
+        "why": "Custam mais cada um. Com uma resposta de uma linha e um documento longo, são poucos demais para pesar mais."
+      },
+      {
+        "text": "Nenhum, já que uma requisição é cobrada inteira e não por partes",
+        "why": "Os provedores cobram entrada e saída por token, separadamente."
+      },
+      {
+        "text": "A entrada, já que o texto colado tem muito mais tokens",
+        "why": "Isso. Tokens de saída custam mais cada um, e aqui são tão poucos que a entrada pesa mais."
+      },
+      {
+        "text": "A saída, já que o modelo precisa ler o contrato enquanto escreve",
+        "why": "Ler o contrato é entrada, processada de uma passada e cobrada como entrada."
+      }
+    ]
+  },
+  "ex-qnbxtncr": {
+    "prompt": "O seu provedor não publica o tokenizador. Você conta os seus prompts com o `tok`, usando o `o200k_base`. Como tratar essas contagens?",
+    "hint": "Lição 3.",
+    "choices": [
+      {
+        "text": "Como exatas, já que todo modelo moderno usa o `o200k_base`",
+        "why": "Outros provedores usam tokenizadores próprios. No momento em que escrevemos, o `o200k_base` é da OpenAI."
+      },
+      {
+        "text": "Como estimativas: a contagem real vem do provedor",
+        "why": "Isso. A contagem de um tokenizador é estimativa para qualquer outro; o provedor conta para você pela API."
+      },
+      {
+        "text": "Como inúteis, já que contagens de dois tokenizadores não têm nada em comum",
+        "why": "Ficam perto o bastante para estimar, como mostraram as contagens do manual na lição 12. Não são exatas."
+      },
+      {
+        "text": "Como um teto, já que vocabulários maiores sempre usam menos tokens",
+        "why": "Menos para alguns textos, não uma garantia para todo texto e todo outro tokenizador."
+      }
+    ]
+  },
+  "ex-kzkebxnq": {
+    "prompt": "O `tok fit` mantém o prompt de sistema de 53 tokens e depois as vezes, da mais nova para trás, até a próxima não caber. As três vezes mais novas do `chat.json` têm 14, 21 e 10 tokens. Com `-b 90`, quantas vezes ele manteria?",
+    "hint": "Lição 4.",
+    "unit": "vezes"
+  },
+  "ex-5cd6q3zx": {
+    "prompt": "Uma aplicação escreve uma nota de resumo antes de descartar vezes antigas, e a nota deixa de fora a alergia a nozes do Bruno. O que a lição 4 diz sobre isso?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "Não há o que fazer, já que notas são sempre incompletas",
+        "why": "A lição 4 dá o remédio: um prompt de resumo que nomeia o que tem de sobreviver."
+      },
+      {
+        "text": "As notas deviam ser abandonadas, já que o corte perde menos",
+        "why": "O corte perdeu a alergia de vez com orçamento de 120. Uma nota que nomeia o que manter a salvou."
+      },
+      {
+        "text": "A nota devia ir numa vez do usuário, onde é lida com mais atenção",
+        "why": "As vezes do usuário são a parte que é cortada. A nota viaja na parte que nunca é cortada."
+      },
+      {
+        "text": "O prompt de resumo precisa dizer o que tem de sobreviver",
+        "why": "Isso. Um resumo perde o único detalhe que importava tão fácil quanto o corte, então o prompt nomeia o que manter: nome, alergias, preferências, promessas."
+      }
+    ]
+  },
+  "ex-qj2jrv52": {
+    "prompt": "Ligue cada parte de uma requisição ao que a faz crescer na janela de contexto.",
+    "hint": "Lição 4.",
+    "pairs": [
+      {
+        "left": "prompt de sistema",
+        "right": "Alguém acrescenta uma regra"
+      },
+      {
+        "left": "histórico",
+        "right": "A conversa continua"
+      },
+      {
+        "left": "entrada",
+        "right": "Um documento ou o resultado de uma ferramenta é incluído"
+      },
+      {
+        "left": "saída",
+        "right": "O modelo escreve"
+      }
+    ],
+    "right_distractors": [
+      "O modelo aprende com o chat"
+    ]
+  },
+  "ex-afvv93nt": {
+    "prompt": "Depois de `the soup of the day is`, o `toylm` deu 50% a tomato, 25% a lentil e 25% a pumpkin. Sorteando em proporção às notas, em que porcentagem dos sorteios a resposta não é tomato?",
+    "hint": "Lição 5.",
+    "unit": "%"
+  },
+  "ex-00xn7z6b": {
+    "prompt": "Um cliente pergunta ao assistente do café: \"Por que vocês pararam de vender leite de aveia?\" O café ainda vende. Que forma da tabela da lição 5 é o risco?",
+    "hint": "Lição 5.",
+    "choices": [
+      {
+        "text": "Uma citação com a forma certa que não existe",
+        "why": "Esse é o risco quando se pede uma fonte. Ninguém pediu aqui."
+      },
+      {
+        "text": "Uma resposta que aceita a premissa falsa e a explica",
+        "why": "Isso. Texto que responde a uma pergunta é mais provável que texto que a contesta, então um motivo para uma mudança que nunca houve é a resposta provável."
+      },
+      {
+        "text": "O valor antigo de um fato que mudou, no presente",
+        "why": "Nada mudou: a premissa é falsa, não desatualizada."
+      },
+      {
+        "text": "Um fato plausível sobre algo parecido com um fato raro",
+        "why": "Leite de aveia num café não é raro. A armadilha está na suposição da pergunta."
+      }
+    ]
+  },
+  "ex-hpp3e1yf": {
+    "prompt": "Depois de acrescentar \"se as fontes não contiverem a resposta, diga que o manual não diz\", a nota de uma equipe cai: o teste delas conta só as perguntas que receberam resposta. O que diz a lição 5?",
+    "hint": "Lição 5.",
+    "choices": [
+      {
+        "text": "O teste premia o comportamento que a linha remove; conte a recusa honesta como acerto",
+        "why": "Isso. Um \"o manual não diz\" curto é um acerto, e um teste que só conta respostas o pune."
+      },
+      {
+        "text": "A linha piorou o assistente, e deve sair",
+        "why": "Ela tornou provável uma resposta honesta. O que precisa mudar é o teste."
+      },
+      {
+        "text": "Baixar a temperatura, para o assistente responder mais perguntas",
+        "why": "Temperatura não é controle de verdade, e responder mais não é o objetivo aqui."
+      },
+      {
+        "text": "Acrescentar \"Não invente coisas\" também, para a nota se recuperar",
+        "why": "Essa linha ajuda muito pouco, já que o modelo não sabe quais respostas prováveis são inventadas."
+      }
+    ]
+  },
+  "ex-fcxk4gra": {
+    "prompt": "O `agent runs/order.txt` chama o `today` no passo 1, a calculadora no passo 2 e responde no passo 3. Rodando com `--max-steps 2`, quantas chamadas de ferramenta acontecem antes de ele parar?",
+    "hint": "Lição 6.",
+    "unit": "chamadas"
+  },
+  "ex-4yb6v3vn": {
+    "prompt": "Uma ferramenta de calculadora é descrita ao modelo com a palavra única \"Aritmética\", e o modelo insiste em mandar `sqrt(2)`, que a ferramenta recusa. Para onde a lição 6 aponta?",
+    "hint": "Lição 6.",
+    "choices": [
+      {
+        "text": "Dar ao modelo uma janela maior, para ele lembrar os erros anteriores",
+        "why": "Os erros já estão à frente dele. O que falta é a frase dizendo o que a ferramenta aceita."
+      },
+      {
+        "text": "Subir o limite de passos, para o modelo achar a forma certa tentando",
+        "why": "Cada volta a mais custa tokens, e tentativa e erro é o que uma descrição clara economiza."
+      },
+      {
+        "text": "Nada: o modelo escolheu a chamada, então a culpa é do modelo",
+        "why": "O modelo decide a partir daquela frase. Uma frase vaga é de quem desenvolve consertar."
+      },
+      {
+        "text": "Reescrever a descrição dizendo que operações a ferramenta aceita",
+        "why": "Isso. A descrição também é prompt: \"números e + - * /\" diz ao modelo o que mandar."
+      }
+    ]
+  },
+  "ex-8xnxw64x": {
+    "prompt": "Ligue cada tipo de linha na saída do `agent` à sua origem.",
+    "hint": "Lição 6.",
+    "pairs": [
+      {
+        "left": "model>",
+        "right": "As vezes escritas para o modelo"
+      },
+      {
+        "left": "tool>",
+        "right": "Uma ferramenta real que rodou"
+      },
+      {
+        "left": "stopped:",
+        "right": "O laço, quando um limite ou as vezes acabaram"
+      }
+    ],
+    "right_distractors": [
+      "O cliente que fez a pergunta"
+    ]
+  },
+  "ex-jw5bymvn": {
+    "prompt": "Um assistente escreve rascunhos de resposta aos e-mails que chegam ao café, e uma pessoa envia cada rascunho. Que conjunto de ferramentas segue o menor privilégio da lição 7?",
+    "hint": "Lição 7.",
+    "choices": [
+      {
+        "text": "Ler, rascunhar e enviar, com uma linha no prompt mandando nunca enviar",
+        "why": "Uma linha no prompt não é controle. Se a tarefa não precisa enviar, não ganha essa ferramenta."
+      },
+      {
+        "text": "Acesso à caixa de entrada e um lugar para texto não enviado, sem ferramenta de envio",
+        "why": "Isso. A tarefa é rascunhar; enviar é trabalho de uma pessoa, então um e-mail injetado não tem com que enviar."
+      },
+      {
+        "text": "Todas as ferramentas de e-mail, para o assistente nunca travar no meio",
+        "why": "Cada ferramenta a mais é algo que uma injeção pode tentar usar."
+      },
+      {
+        "text": "Nenhuma ferramenta, com os e-mails colados à mão a cada vez",
+        "why": "Isso tira o trabalho para o qual o assistente foi feito. O objetivo é as ferramentas de que a tarefa precisa, e só."
+      }
+    ]
+  },
+  "ex-qp6dwnja": {
+    "prompt": "Quais destas continuam valendo depois que o modelo foi enganado por uma injeção? Marque todas as que se aplicam.",
+    "hint": "Lição 7.",
+    "choices": [
+      {
+        "text": "Uma chamada retida até uma pessoa confirmar",
+        "why": "Sim. A pessoa olha a ação em si, que a injeção não consegue disfarçar."
+      },
+      {
+        "text": "Um programa que bloqueia e-mail para endereços de fora da empresa",
+        "why": "Sim. Ele inspeciona a chamada antes de ela ser usada."
+      },
+      {
+        "text": "Uma linha no prompt de sistema mandando ignorar instruções em documentos",
+        "why": "Ela disputa com o texto injetado dentro da mesma janela, e o modelo acabou de perder essa disputa."
+      },
+      {
+        "text": "Uma ferramenta deixada fora da lista de permitidas da tarefa",
+        "why": "Sim. O programa a recusa, seja do que for que o modelo foi convencido."
+      }
+    ]
+  },
+  "ex-26epw8ra": {
+    "prompt": "Um assistente não tem ferramenta nenhuma: ele lê páginas da web que o usuário cola e responde. Que objetivos de uma injeção continuam ao alcance de quem escreveu a página?",
+    "hint": "Lição 7.",
+    "choices": [
+      {
+        "text": "Enganar na resposta, e vazar nela o que está no contexto",
+        "why": "Isso. Agir exige ferramenta, e não há nenhuma; a própria resposta continua sendo uma saída para uma mentira ou um vazamento."
+      },
+      {
+        "text": "Nenhum, já que um assistente sem ferramentas não pode sofrer injeção",
+        "why": "A injeção só precisa de texto que o modelo lê. A resposta ainda pode ser desviada."
+      },
+      {
+        "text": "Agir, já que a resposta consegue mandar um e-mail sozinha",
+        "why": "Uma resposta é texto. Sem ferramenta, nada na conversa envia coisa nenhuma."
+      },
+      {
+        "text": "Só vazar, já que não dá para fazer uma resposta dizer algo falso",
+        "why": "Mudar o que a resposta diz é o terceiro objetivo, e ele só precisa da resposta."
+      }
+    ]
+  },
+  "ex-ps4jc6q3": {
+    "prompt": "Com a conta da lição 8, quantos gigabytes ocupam os pesos de um modelo de 34B a 4 bits?",
+    "hint": "Lição 8.",
+    "unit": "GB"
+  },
+  "ex-wdkgry1h": {
+    "prompt": "Um notebook tem 16 GB de memória, que também guardam o sistema operacional e os programas abertos. Os pesos de qual modelo cabem com folga?",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "Um modelo de 7B a 16 bits, que dá 14 GB",
+        "why": "Não cabe com folga: o sistema operacional e o resto também precisam de memória."
+      },
+      {
+        "text": "Um modelo de 70B a 4 bits",
+        "why": "São 35 GB mesmo a 4 bits: uma estação de trabalho ou um servidor."
+      },
+      {
+        "text": "Um modelo de 7B a 4 bits",
+        "why": "Isso. 3,5 GB deixam bastante espaço, inclusive para a memória de trabalho que um contexto longo exige."
+      },
+      {
+        "text": "Um modelo de 7B em precisão total, 32 bits",
+        "why": "A 4 bytes por peso são 28 GB, quase o dobro do que o notebook tem."
+      }
+    ]
+  },
+  "ex-1312d66w": {
+    "prompt": "Guardar cada peso em menos bits, arredondado para um conjunto mais grosseiro de valores, se chama ___.",
+    "hint": "Lição 8.",
+    "blanks": [
+      {
+        "accept": [
+          "quantização",
+          "quantizacao",
+          "quantizar"
+        ]
+      }
+    ]
+  },
+  "ex-1wfes6nh": {
+    "prompt": "Um colega diz: \"Configurei os parâmetros do modelo para temperatura 0,2 e 300 tokens.\" O que a lição 8 diz que está misturado?",
+    "hint": "Lição 8.",
+    "choices": [
+      {
+        "text": "Nada; parâmetros e configurações são duas palavras para a mesma coisa",
+        "why": "É justamente a palavra emprestada que a lição 8 corrige. Os parâmetros de um modelo são o que ele aprendeu, e não mudam por requisição."
+      },
+      {
+        "text": "São configurações da requisição; parâmetros são os pesos aprendidos",
+        "why": "Isso. O modelo são os números que ele aprendeu. Temperatura e limite de tokens são coisas enviadas com a requisição, lições 13 a 17."
+      },
+      {
+        "text": "A temperatura é um peso, mas o limite de tokens é uma configuração",
+        "why": "Nenhum dos dois é peso. Os dois vão com a requisição e deixam os pesos intactos."
+      },
+      {
+        "text": "Os parâmetros são as frases que o modelo guardou durante o treinamento",
+        "why": "O modelo não guarda frases. Os parâmetros são números, e o que ele leu está espalhado por todos eles."
+      }
+    ]
+  },
+  "ex-5cwbdwnc": {
+    "prompt": "Aos preços ilustrativos, 10.000 requisições custam 4,33 com o `few-shot.txt` e 0,53 com o `short.txt`. Quanto se economiza em um milhão de requisições, nas mesmas unidades?",
+    "hint": "Lição 9.",
+    "unit": ""
+  },
+  "ex-hfgg2pxw": {
+    "prompt": "Quais custos do ajuste fino não aparecem na conta por token? Marque todas as que se aplicam.",
+    "hint": "Lição 9.",
+    "choices": [
+      {
+        "text": "Coletar e rotular centenas de exemplos",
+        "why": "Sim, e costuma ser o maior: tempo de gente conferindo cada resposta."
+      },
+      {
+        "text": "As rodadas de treino, já que a primeira raramente é a última",
+        "why": "Sim. Cada rodada é cobrada, e os dados são ajustados e treinados de novo."
+      },
+      {
+        "text": "Um conjunto de avaliação separado do treino",
+        "why": "Sim. Sem ele, não dá para distinguir uma rodada boa de uma ruim."
+      },
+      {
+        "text": "Os tokens de entrada de cada requisição curta",
+        "why": "Esses são exatamente o que a conta por token cobra."
+      }
+    ]
+  },
+  "ex-w0rhdres": {
+    "prompt": "Um modelo passou por ajuste fino com o horário antigo do café e depois foi treinado de novo com o novo. Pela lição 9, o que continua valendo?",
+    "hint": "Lição 9.",
+    "choices": [
+      {
+        "text": "A segunda rodada sobrescreveu o horário antigo, e só o novo ficou",
+        "why": "O treino empurra os pesos; não substitui um registro. O horário antigo fica lá, sem como tirar."
+      },
+      {
+        "text": "Nada sobra do horário antigo quando o modelo novo entra em uso",
+        "why": "O modelo novo partiu dos pesos antigos, e o horário antigo faz parte deles."
+      },
+      {
+        "text": "O modelo passa a recusar perguntas sobre o horário, já que viu duas respostas",
+        "why": "Ele não detecta conflito. Produz a continuação provável, que pode ser qualquer uma das duas."
+      },
+      {
+        "text": "O horário antigo continua espalhado pelos pesos, sem como tirar",
+        "why": "Isso. Não há como apagar um fato de bilhões de números, e o modelo produz texto provável, não registros guardados."
+      }
+    ]
+  },
+  "ex-kfrqkvej": {
+    "prompt": "As respostas voltam no tom errado, e ninguém tentou ainda reescrever o prompt. A equipe propõe ajuste fino. O que diz a escada da lição 9?",
+    "hint": "Lição 9.",
+    "choices": [
+      {
+        "text": "Fazer o ajuste fino, já que tom é um hábito e hábito é onde o treino é bom",
+        "why": "Tom é hábito, e isso torna o ajuste fino possível mais tarde. A escada sobe um degrau só depois de testar e medir o de baixo."
+      },
+      {
+        "text": "Juntar recuperação, para o modelo ler as respostas antigas do suporte",
+        "why": "Recuperação é para conhecimento que falta ao modelo. Tom errado não é fato ausente."
+      },
+      {
+        "text": "Escrever um prompt mais claro primeiro, e só depois juntar exemplos",
+        "why": "Isso. Formato e tom são os dois primeiros degraus, e o ajuste fino é para um comportamento que já funciona com um prompt longo."
+      },
+      {
+        "text": "Coletar exemplos rotulados primeiro, e depois escolher entre prompt e treino",
+        "why": "Rotular é a parte mais cara do ajuste fino, feita antes de gastar um minuto no degrau mais barato."
+      }
+    ]
+  },
+  "ex-w29pgh2v": {
+    "prompt": "Quais destes são aprendizado de máquina, no sentido da lição 10? Marque todas as que se aplicam.",
+    "hint": "Lição 10.",
+    "choices": [
+      {
+        "text": "Um planejador de rotas que segue regras escritas por um programador",
+        "why": "IA no sentido do campo, não aprendizado de máquina, já que nada foi aprendido de exemplos."
+      },
+      {
+        "text": "Um filtro de spam treinado com mensagens que as pessoas marcaram como spam",
+        "why": "Sim: o comportamento dele foi aprendido de exemplos."
+      },
+      {
+        "text": "O `toylm`, contando que palavra veio depois de cada par",
+        "why": "Sim. Ninguém escreveu a regra de que `hot` vem depois de `coffee is`; ela foi contada do corpus."
+      },
+      {
+        "text": "Um programa de xadrez com regras e pontuação escritas à mão",
+        "why": "É IA, e não aprendeu nada: cada regra foi escrita."
+      }
+    ]
+  },
+  "ex-555zjvey": {
+    "prompt": "Descobre-se que as respostas de um benchmark são `yes` em todas as perguntas. Qual das cinco perguntas da lição 10 pega esse problema?",
+    "hint": "Lição 10.",
+    "choices": [
+      {
+        "text": "O que exatamente foi medido?",
+        "why": "Isso. Um teste cujas respostas são todas `yes` mede se o modelo diz `yes`, que é outra coisa que não a habilidade que ele nomeia."
+      },
+      {
+        "text": "As perguntas podiam estar nos dados de treinamento?",
+        "why": "Isso é contaminação, um problema à parte: memória em vez de habilidade. Aqui as respostas sozinhas entregam a nota."
+      },
+      {
+        "text": "Isto é uma execução, ou muitas?",
+        "why": "Essa pergunta é sobre demonstrações escolhidas entre muitas execuções. Repetir este teste repetiria a mesma falha."
+      },
+      {
+        "text": "Quem mediu, e dá para repetir?",
+        "why": "Quem repetisse teria a mesma nota enganosa, porque a falha está nas próprias perguntas."
+      }
+    ]
+  },
+  "ex-x10s7ssj": {
+    "prompt": "Nas dez amostras para `question : when does the café open ? answer :`, quantas respostas começaram com `yes`?",
+    "hint": "Lição 10.",
+    "unit": "respostas"
+  },
+  "ex-cgqb60az": {
+    "prompt": "Que par de palavras a lição 10 aplica a um grande modelo de linguagem?",
+    "hint": "Lição 10.",
+    "choices": [
+      {
+        "text": "Geral, já que cobre tantas tarefas diferentes",
+        "why": "Essa amplitude vem de um mecanismo estreito. Geral é a palavra de AGI, que nomeia um objetivo."
+      },
+      {
+        "text": "Estreito, e não generativo, já que só prevê",
+        "why": "Prever o próximo token, repetidas vezes, produz conteúdo novo. É isso que generativo quer dizer."
+      },
+      {
+        "text": "Generativo e geral, já que faz a maioria das tarefas intelectuais",
+        "why": "Essa é a descrição de AGI, um objetivo sem definição nem teste aceitos por todos."
+      },
+      {
+        "text": "Generativo e, num sentido real, estreito",
+        "why": "Isso. Ele produz texto novo, e faz uma coisa só, prever o próximo token, que cobre muitas tarefas escritas como texto."
+      }
+    ]
+  },
+  "ex-y9hp5y4t": {
+    "prompt": "Na pergunta sobre feriados, o trecho do topo estava certo e o horário de domingo não foi recuperado. Onde a lição 11 põe a correção?",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "Na instrução do prompt ancorado, mais rígida",
+        "why": "O modelo a seguiria fielmente a partir de trechos que não têm o horário. Nenhuma redação traz uma linha que não foi recuperada."
+      },
+      {
+        "text": "Num modelo maior, que saberia o horário de domingo",
+        "why": "Nenhum modelo foi treinado neste manual. O que não está no prompt não é conhecido."
+      },
+      {
+        "text": "Na forma de cortar o manual em trechos",
+        "why": "Isso. Um corte que separa uma regra do detalhe a que ela remete é problema de divisão em trechos, e a correção está em como os documentos são cortados."
+      },
+      {
+        "text": "Em pedir mais trechos, para o modelo ver tudo",
+        "why": "A linha que falta não tem nenhuma palavra em comum com a pergunta, então fica com zero não importa quantos trechos sejam mantidos."
+      }
+    ]
+  },
+  "ex-mxgt6h56": {
+    "prompt": "O trecho do topo de uma pergunta teve 8,71 e o de outra teve 2,94. O que dá para concluir?",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "O primeiro acerto é umas três vezes melhor que o segundo",
+        "why": "Isso lê as notas como uma escala comum a todas as perguntas. Elas só ordenam os trechos de uma consulta."
+      },
+      {
+        "text": "Nada sobre qual acerto é melhor: as notas ordenam trechos de uma pergunta",
+        "why": "Isso. As notas não são porcentagens e não têm teto fixo, então não significam nada entre perguntas."
+      },
+      {
+        "text": "O segundo trecho é irrelevante, já que ficou abaixo de 3",
+        "why": "Não há nota que signifique irrelevante; 2,94 era a resposta exata da pergunta sobre domingo."
+      },
+      {
+        "text": "A primeira resposta tem 87,1% de chance de estar certa",
+        "why": "Notas do BM25 não são porcentagens nem probabilidades de acerto."
+      }
+    ]
+  },
+  "ex-06m55mzk": {
+    "prompt": "Quais destas falhas acontecem antes de o modelo escrever uma palavra? Marque todas as que se aplicam.",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "Três trechos com uma palavra em comum cada, para o café frio",
+        "why": "Sim. Os três primeiros voltam, sejam o que forem."
+      },
+      {
+        "text": "Uma resposta ancorada com uma frase que não cita fonte",
+        "why": "Essa é do modelo: ele foi além das fontes que recebeu."
+      },
+      {
+        "text": "`wireless internet` não achar nada do `wifi.md`",
+        "why": "Sim. A busca não achou nada, e a resposta nunca foi mostrada ao modelo."
+      },
+      {
+        "text": "A regra de feriados recuperada sem o horário de domingo",
+        "why": "Sim. O corte separou a regra do detalhe antes de qualquer modelo rodar."
+      }
+    ]
+  },
+  "ex-hdhg5pr5": {
+    "prompt": "A fórmula que o `retrieve` usa para dar nota a cada trecho contra uma pergunta se chama ___.",
+    "hint": "Lição 11.",
+    "blanks": [
+      {
+        "accept": [
+          "BM25",
+          "BM-25",
+          "BM 25"
+        ]
+      }
+    ]
+  },
+  "ex-49b40gaz": {
+    "prompt": "Ligue cada critério de escolha de um modelo à pergunta que ele faz.",
+    "hint": "Lição 12.",
+    "pairs": [
+      {
+        "left": "qualidade na sua tarefa",
+        "right": "Quantos dos seus próprios casos de teste ele acerta?"
+      },
+      {
+        "left": "tamanho do contexto",
+        "right": "A sua maior entrada real cabe, com espaço para a resposta?"
+      },
+      {
+        "left": "latência",
+        "right": "Quanto tempo o seu usuário pode esperar por uma resposta?"
+      },
+      {
+        "left": "vida útil",
+        "right": "Quando este modelo exato vai ser aposentado?"
+      }
+    ],
+    "right_distractors": [
+      "Qual modelo está no topo da tabela comparativa pública?"
+    ]
+  },
+  "ex-3xx2q1mt": {
+    "prompt": "Some o `tok count handbook/*.md` de cada codificação. Quantos tokens a mais o `cl100k_base` faz dos seis arquivos do que o `o200k_base`?",
+    "hint": "Lição 12.",
+    "unit": "tokens"
+  },
+  "ex-fj72bn1y": {
+    "prompt": "Você leu os termos de dados de quem fez um modelo e eles servem. Você vai chamar o mesmo modelo por uma plataforma de nuvem que o revende. O que diz a lição 12?",
+    "hint": "Lição 12.",
+    "choices": [
+      {
+        "text": "Nada mais a conferir, já que o modelo e os termos são os mesmos",
+        "why": "O modelo pode ser o mesmo. De onde você o chama é uma decisão própria, com termos próprios."
+      },
+      {
+        "text": "Rodar os pesos você mesmo, já que modelos revendidos não têm termos de dados",
+        "why": "Um modelo revendido vem com os termos da plataforma. Rodar os pesos é outro arranjo, e só para pesos abertos."
+      },
+      {
+        "text": "Ler também os termos da plataforma, já que cada lugar define os seus",
+        "why": "Isso. O mesmo modelo vendido em dois lugares vem com preços, limites, regiões e termos de dados definidos por cada um."
+      },
+      {
+        "text": "Conferir um post recente que compare as políticas das duas plataformas",
+        "why": "A lição 12 diz para nunca responder isso a partir de um post: termos mudam e diferem entre planos."
+      }
+    ]
+  },
+  "ex-r5mw8p14": {
+    "prompt": "À temperatura 1, o `toylm` dá 75% para `seven` e 25% para `eight` depois de `opens at`. Reduzir a temperatura à metade eleva ao quadrado a razão entre duas palavras. Que fatia `seven` recebe à temperatura 0,5, em porcentagem?",
+    "hint": "Lição 13.",
+    "unit": "%"
+  },
+  "ex-tmgbt5kx": {
+    "prompt": "Uma ferramenta que sugere nomes para uma bebida nova do café roda à temperatura 0, e dá o mesmo nome a cada pedido. O que a lição 13 sugere?",
+    "hint": "Lição 13.",
+    "choices": [
+      {
+        "text": "Uma temperatura mais alta, já que você quer candidatos diferentes a cada execução",
+        "why": "Isso. Fazer brainstorming tem muitas respostas boas, e você vai jogar fora a maioria dos candidatos."
+      },
+      {
+        "text": "Manter 0, já que dá o nome mais provável e, portanto, o melhor",
+        "why": "O nome mais provável não é o melhor numa tarefa com muitas respostas boas. Em 0 as outras nunca aparecem."
+      },
+      {
+        "text": "Manter 0 e trocar a semente entre os pedidos",
+        "why": "À temperatura 0 não há sorteio, então a semente não tem nada a decidir."
+      },
+      {
+        "text": "Subir até o topo da faixa, para ter os nomes mais criativos",
+        "why": "Mude um passo de cada vez olhando a saída: no topo, o absurdo chega no mesmo lote."
+      }
+    ]
+  },
+  "ex-3gevhqsa": {
+    "prompt": "Pegar sempre a palavra de nota mais alta, sem sorteio, se chama decodificação ___.",
+    "hint": "Lição 13.",
+    "blanks": [
+      {
+        "accept": [
+          "gulosa",
+          "greedy"
+        ]
+      }
+    ]
+  },
+  "ex-9fqp356q": {
+    "prompt": "O `toylm next \"the\"` deu 29,9% para `coffee`, 18,2% para `café`, 15,6% para `bread`, 11,7% para `cat` e mais quatro abaixo. Quantas palavras o `--top-p 0.5` manteria ali?",
+    "hint": "Lição 14.",
+    "unit": "palavras"
+  },
+  "ex-b8a5kr04": {
+    "prompt": "O top-p também se chama amostragem de ___, pelo nome do conjunto de palavras que ele mantém.",
+    "hint": "Lição 14.",
+    "blanks": [
+      {
+        "accept": [
+          "núcleo",
+          "nucleo",
+          "nucleus"
+        ]
+      }
+    ]
+  },
+  "ex-yft2mrnz": {
+    "prompt": "Depois de `at seven`, o `toylm` dá 100% ao ponto final. O que o `--top-k 2` mantém ali?",
+    "hint": "Lição 14.",
+    "choices": [
+      {
+        "text": "O ponto final e a palavra seguinte mais forte do vocabulário",
+        "why": "Só palavras a que o modelo deu nota podem ser mantidas, e ele deu nota a uma."
+      },
+      {
+        "text": "Só o ponto final, já que há um candidato",
+        "why": "Isso. k é o máximo de palavras mantidas, e aqui só há uma para manter."
+      },
+      {
+        "text": "Nada, já que o top-k precisa de pelo menos dois candidatos",
+        "why": "O top-k mantém até k palavras; menos candidatos quer dizer apenas menos palavras mantidas."
+      },
+      {
+        "text": "Duas cópias do ponto final, com 50% cada",
+        "why": "Há uma palavra com toda a fatia, e a renormalização a deixa em 100%."
+      }
+    ]
+  },
+  "ex-nwfh0t9r": {
+    "prompt": "O `request.txt` tem 79 tokens de entrada. Aos preços ilustrativos de 2 por milhão na entrada e 8 por milhão na saída, com limite de 200 tokens de saída, qual é o máximo que 10.000 requisições podem custar?",
+    "hint": "Lição 15.",
+    "unit": ""
+  },
+  "ex-sgmnj2qh": {
+    "prompt": "Um modelo que raciocina antes de responder devolve uma resposta visível curta com motivo de parada `length`. Que cuidado da lição 15 se aplica?",
+    "hint": "Lição 15.",
+    "choices": [
+      {
+        "text": "Algumas APIs contam os tokens de raciocínio no limite; leia a referência atual",
+        "why": "Isso. O que o parâmetro conta mudou em algumas APIs, então o limite talvez tenha acabado antes de a resposta visível começar."
+      },
+      {
+        "text": "A resposta visível foi curta, então o motivo de parada é um erro de relatório",
+        "why": "`length` quer dizer que o laço foi parado de fora. Trate como corte, não como engano do relatório."
+      },
+      {
+        "text": "Uma resposta curta prova que a instrução funcionou, e o motivo pode ser ignorado",
+        "why": "O motivo de parada é como você descobre qual dos dois aconteceu. Uma resposta cortada raramente parece cortada."
+      },
+      {
+        "text": "O limite só conta o texto visível, então o modelo parou cedo por escolha",
+        "why": "Parar por escolha é `end`. `length` diz que um limite foi atingido, seja o que for que ele contava."
+      }
+    ]
+  },
+  "ex-x279btva": {
+    "prompt": "Por que os tokens de saída custam mais que os de entrada na maioria das tabelas de preço, pela lição 15?",
+    "hint": "Lição 15.",
+    "choices": [
+      {
+        "text": "Os tokens de saída são pedaços de texto mais longos que os de entrada",
+        "why": "Um token é o mesmo tipo de pedaço nos dois casos; o tokenizador não muda para a resposta."
+      },
+      {
+        "text": "Os provedores cobram mais pelo que escrevem para desestimular respostas longas",
+        "why": "A lição 15 dá um motivo na maquinaria: escrever é um passo por token, ler é uma passada."
+      },
+      {
+        "text": "A saída precisa de uma verificação de segurança, cobrada por token",
+        "why": "Nenhuma verificação assim faz parte do motivo da lição 15. O motivo é o passo por token."
+      },
+      {
+        "text": "Cada token de saída exige um passo completo do modelo; o prompt é uma passada",
+        "why": "Isso. O prompt é processado de uma passada, e cada token escrito é mais um passo do laço."
+      }
+    ]
+  },
+  "ex-xva3nc78": {
+    "prompt": "Um prompt em texto puro tem oito exemplos, cada um com uma linha `Message:` e uma `Category:`, e termina num `Category:` aberto. O modelo escreve a categoria e depois um `Message:` inventado. Que parada serve?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "`Category:`, já que a resposta que você quer vem depois dele",
+        "why": "Ele só dispararia depois que uma mensagem inventada já tivesse sido escrita, um rótulo atrasado."
+      },
+      {
+        "text": "`e`, a sequência mais curta para encerrar a resposta depressa",
+        "why": "Uma parada curta dispara dentro de palavras: `hours` passaria, e `refunds` voltaria como `r`."
+      },
+      {
+        "text": "`Message:`, o rótulo que abre o exemplo seguinte",
+        "why": "Isso. Ele marca o fim da unidade que você quer e não aparece dentro de uma categoria."
+      },
+      {
+        "text": "Nenhuma: APIs de chat com lista de mensagens encerram a vez sozinhas",
+        "why": "Isto é texto puro com marcadores seus, que é justamente onde as paradas mais importam."
+      }
+    ]
+  },
+  "ex-8dcxzyef": {
+    "prompt": "O que uma sequência de parada faz que o limite de tokens da lição 15 não faz?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "Faz o modelo saber que deve escrever uma resposta só",
+        "why": "O modelo nunca fica sabendo da parada. Quem confere o texto é o laço."
+      },
+      {
+        "text": "Encerra a resposta num texto que marca o fim da unidade",
+        "why": "Isso. Um limite corta numa contagem, onde quer que caia; uma parada corta onde aparece um marcador escolhido."
+      },
+      {
+        "text": "Mantém o marcador na saída, para o programa achar o fim",
+        "why": "O texto da parada fica de fora, então um programa que precisa do marcador o devolve por conta própria."
+      },
+      {
+        "text": "Melhora a resposta, já que o modelo para antes de errar",
+        "why": "Uma parada decide onde a resposta termina e não faz nada pelo acerto dela."
+      }
+    ]
+  },
+  "ex-zv6fvwnw": {
+    "prompt": "Uma resposta lista preços como `R$ 27.90`, um por linha, e alguém define `.` como parada para a lista acabar no primeiro ponto final. O que acontece?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "A lista fica inteira, já que um preço não é fim de frase",
+        "why": "A parada é comparada como texto, não compreendida. Um ponto dentro de um número continua sendo um ponto."
+      },
+      {
+        "text": "O primeiro preço é cortado no ponto decimal: `R$ 27`",
+        "why": "Isso. Uma parada dispara no texto onde quer que ele apareça, e o preço contém um ponto."
+      },
+      {
+        "text": "O modelo aprende a escrever os preços com vírgula",
+        "why": "O modelo nunca fica sabendo da parada; o laço confere o texto e corta."
+      },
+      {
+        "text": "A resposta informa `length`, então o corte é fácil de ver",
+        "why": "Uma parada informa `stop`, que parece um fim normal. É por isso que é mais difícil de notar."
+      }
+    ]
+  },
+  "ex-br167295": {
+    "prompt": "No laço de `the cat`, `and` está à frente de `on` por cerca de 0,41. Qual é a menor penalidade de presença, com uma casa decimal, que quebra o laço na primeira vez que `cat sleeps` volta?",
+    "hint": "Lição 17.",
+    "unit": ""
+  },
+  "ex-n0v4qc0j": {
+    "prompt": "Você quer empurrar o texto para palavras que ainda não usou, mais perto de \"mudar de assunto\" do que de \"parar de repetir\". Que controle a lição 17 indica?",
+    "hint": "Lição 17.",
+    "choices": [
+      {
+        "text": "A penalidade de frequência",
+        "why": "Essa pesa mais quanto mais a palavra se repete, o que serve para laços e listas que não acabam."
+      },
+      {
+        "text": "Uma temperatura mais alta",
+        "why": "A temperatura achata todas as notas por igual; ela não sabe quais palavras foram usadas."
+      },
+      {
+        "text": "Um top-p de 0,8",
+        "why": "O top-p corta a cauda improvável, o contrário de buscar palavras não usadas."
+      },
+      {
+        "text": "A penalidade de presença",
+        "why": "Isso. Uma cobrança fixa por qualquer palavra já usada empurra o texto para palavras novas."
+      }
+    ]
+  },
+  "ex-teehg3gw": {
+    "prompt": "O prompt é `the cat`. Antes de o `toylm` escrever qualquer coisa, quanto o `--presence-penalty 1` subtrai da nota de `cat`?",
+    "hint": "Lição 17.",
+    "choices": [
+      {
+        "text": "1, já que `cat` aparece uma vez no texto até aqui",
+        "why": "No `toylm` o prompt não conta. Algumas APIs contam, e a referência delas diz isso."
+      },
+      {
+        "text": "1 para cada vez que `cat` aparece no corpus de treino",
+        "why": "As penalidades olham só esta saída, nunca o arquivo de treino."
+      },
+      {
+        "text": "Nada: o `toylm` conta as palavras que escreveu, não o prompt",
+        "why": "Isso. A penalidade incide sobre palavras que já estão na saída, e a saída ainda está vazia."
+      },
+      {
+        "text": "2, uma pelo `the` e uma pelo `cat`",
+        "why": "A penalidade vale para a palavra usada, e nada foi escrito ainda."
+      }
+    ]
+  },
+  "ex-cnjrt8wh": {
+    "prompt": "Uma resposta ao prompt das avaliações passa no parser e traz `\"staff_praised\": \"yes\"`. O que a lição 18 diz que está errado?",
+    "hint": "Lição 18.",
+    "choices": [
+      {
+        "text": "Nada, já que passou no parser e o sentido está claro",
+        "why": "Claro para uma pessoa. O código que testa se `staff_praised` é verdadeiro recebe uma string, e a string `\"no\"` também não é falso."
+      },
+      {
+        "text": "O parser devia ter recusado na primeira aspa",
+        "why": "`\"yes\"` é uma string JSON perfeitamente válida. O parser não tem ideia de que o campo devia ser booleano."
+      },
+      {
+        "text": "Um booleano voltou como palavra, e o parser não confere tipos",
+        "why": "Isso. O programa precisa de `true` como booleano, e o parser só diz se o texto é JSON. O esquema da lição 19 confere o tipo."
+      },
+      {
+        "text": "O nome do campo está errado, devia ser `praised`",
+        "why": "O nome bate com o que o prompt deu. O problema é o tipo do valor."
+      }
+    ]
+  },
+  "ex-8axmghff": {
+    "prompt": "O leitor `csv` do Python leu o `replies/menu.csv` sem aspas, cabeçalho incluído. Em quantas linhas o número de campos foi diferente do cabeçalho?",
+    "hint": "Lição 18.",
+    "unit": "linhas"
+  },
+  "ex-z3ydkf5a": {
+    "prompt": "Quais destes um parser de JSON recusa no momento em que a resposta chega? Marque todas as que se aplicam.",
+    "hint": "Lição 18.",
+    "choices": [
+      {
+        "text": "Aspas simples em volta dos nomes dos campos",
+        "why": "Sim. JSON exige aspas duplas."
+      },
+      {
+        "text": "Uma vírgula depois do último campo",
+        "why": "Sim. JSON recusa a vírgula sobrando no fim."
+      },
+      {
+        "text": "Um campo chamado `mood` onde o prompt disse `sentiment`",
+        "why": "Passa: o parser não sabe que nomes o prompt pediu."
+      },
+      {
+        "text": "Uma frase de introdução antes do objeto",
+        "why": "Sim. JSON precisa começar com um valor, e uma letra não é um."
+      }
+    ]
+  },
+  "ex-2npcat7r": {
+    "prompt": "Uma resposta traz dois objetos JSON, um depois do outro, com uma frase entre eles. O que a lição 19 diz que o `repair` faz com ela?",
+    "hint": "Lição 19.",
+    "choices": [
+      {
+        "text": "O passo 2 fica com o primeiro objeto e descarta o segundo",
+        "why": "O passo 2 pega o texto do primeiro `{` ao último `}`, que aqui contém os dois objetos e a frase entre eles."
+      },
+      {
+        "text": "O passo 3 junta os dois objetos e confere o resultado contra o esquema",
+        "why": "Nada junta objetos. O passo 3 só confere um objeto que já passou no parser."
+      },
+      {
+        "text": "Ele manda a mensagem de acompanhamento na hora, sem tentar o recorte",
+        "why": "Os passos baratos vêm primeiro. A mensagem de acompanhamento é para uma resposta que passou no parser e falhou no esquema."
+      },
+      {
+        "text": "O passo 2 recorta um texto que não passa no parser, e ele diz `still not JSON`",
+        "why": "Isso. Do primeiro `{` ao último `}` cabem os dois objetos e a frase, e o `repair` informa isso em vez de continuar adivinhando."
+      }
+    ]
+  },
+  "ex-1gn0xjq4": {
+    "prompt": "O esboço do laço de reparo define `MAX_ATTEMPTS = 3`. Quantas novas tentativas isso permite depois da primeira resposta?",
+    "hint": "Lição 19.",
+    "unit": "tentativas"
+  },
+  "ex-yvyd8j1g": {
+    "prompt": "No `schema.json`, a linha `\"additionalProperties\": ___` é o que recusa um campo que o esquema nunca nomeou, como `mood`.",
+    "hint": "Lição 19.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ]
+      }
+    ]
+  },
+  "ex-hc7f1ykj": {
+    "prompt": "O `validate` imprimiu `(top level): 'summary' is a required property`. O que diz o `(top level)`?",
+    "hint": "Lição 19.",
+    "choices": [
+      {
+        "text": "O problema é o mais grave dos que ele achou",
+        "why": "O caminho diz onde está um problema, não quanto ele importa."
+      },
+      {
+        "text": "O problema é do objeto em si, não de um campo dentro dele",
+        "why": "Isso. Um campo obrigatório que falta ou um campo a mais é um fato sobre o objeto inteiro, então o caminho é o nível de cima."
+      },
+      {
+        "text": "O problema foi achado na primeira linha do arquivo",
+        "why": "O validador informa caminhos dentro do objeto, não linhas e colunas; isso era o parser da lição 18."
+      },
+      {
+        "text": "O campo `summary` está no topo da resposta, mas vazio",
+        "why": "O campo está ausente, e um campo ausente não tem posição na resposta."
+      }
+    ]
+  },
+  "ex-v4faf073": {
+    "prompt": "Ponha as verificações por que passa uma resposta destinada a um programa na ordem da lição 19, da mais barata à que não é um programa.",
+    "hint": "Lição 19.",
+    "items": [
+      "Passar o JSON pelo parser",
+      "Validar contra o esquema",
+      "Conferir contra as regras do café",
+      "Conferir se ela é fiel à entrada"
+    ]
+  },
+  "ex-x8p4e6pp": {
+    "prompt": "Nas mesmas oito mensagens de teste, quantas a mais as respostas do prompt forte acertaram em relação às do fraco?",
+    "hint": "Lição 20.",
+    "unit": "mensagens"
+  },
+  "ex-drvp934y": {
+    "prompt": "O conjunto de teste de uma equipe tem vinte mensagens, todas tão simples quanto `r1` e `r3`. Dois prompts bem diferentes tiram 20 de 20. O que o resultado diz?",
+    "hint": "Lição 20.",
+    "choices": [
+      {
+        "text": "Os dois prompts estão prontos para produção, já que nenhum errou",
+        "why": "Eles não erraram em entradas fáceis. Sarcasmo, perguntas e outras línguas nunca foram testados."
+      },
+      {
+        "text": "O prompt mais longo é melhor, já que teve a mesma nota com mais detalhe",
+        "why": "Notas iguais em casos fáceis não separam os dois, muito menos favorecem um."
+      },
+      {
+        "text": "O conjunto é grande demais, e oito mensagens teriam bastado",
+        "why": "O tamanho não é o problema: vinte mensagens fáceis e oito fáceis não medem nada difícil."
+      },
+      {
+        "text": "Pouco: um conjunto sem casos difíceis dá nota boa a qualquer prompt",
+        "why": "Isso. Cada linha de um conjunto de teste deve estar lá por um motivo, e os motivos são os casos difíceis: misto, sarcástico, pergunta, outra língua."
+      }
+    ]
+  },
+  "ex-4y4fy06g": {
+    "prompt": "O rotulador classifica `Why was my soup cold again?` como `not_a_review`. O café conta isso como reclamação. Seguindo a lição 20, o que você faz?",
+    "hint": "Lição 20.",
+    "choices": [
+      {
+        "text": "Nada: é uma pergunta, e o prompt diz que perguntas são `not_a_review`",
+        "why": "A decisão do café é que esta é uma reclamação. O prompt tem de levar essa decisão, porque o modelo não consegue adivinhá-la."
+      },
+      {
+        "text": "Troca os quatro rótulos por dois, para o modelo ter menos jeitos de errar",
+        "why": "O café precisa de quatro rótulos. Menos rótulos esconde o caso em vez de decidi-lo."
+      },
+      {
+        "text": "Põe no conjunto de teste como `negative` e nomeia o caso no prompt",
+        "why": "Isso. Cada divergência é uma frase que o prompt precisa, e uma mensagem real rotulada errado entra no conjunto de teste com o rótulo certo."
+      },
+      {
+        "text": "Sobe a temperatura, para o modelo ler a mensagem com mais cuidado",
+        "why": "A temperatura muda como uma palavra é sorteada. Ela não diz ao modelo onde o café traça esta linha."
+      }
+    ]
+  },
+  "ex-hp9pe9g6": {
+    "prompt": "O `tok count` mediu o `prompt-zero.txt` e o `prompt-few.txt`. Quantos tokens os quatro exemplos acrescentaram a cada requisição?",
+    "hint": "Lição 21.",
+    "unit": "tokens"
+  },
+  "ex-jcv4qdkh": {
+    "prompt": "Um prompt de resumo mostra três casos resolvidos, e em cada um o resumo é uma frase que começa com `The customer`. Nada nas instruções fala de uma coisa ou de outra. O que esperar de volta?",
+    "hint": "Lição 21.",
+    "choices": [
+      {
+        "text": "Qualquer tamanho e abertura que as instruções permitam, já que não pediram isso",
+        "why": "Os exemplos também são especificação, e eles dizem uma frase e essa abertura."
+      },
+      {
+        "text": "Respostas no formato dos exemplos, até as duas primeiras palavras",
+        "why": "Isso. Os exemplos ensinam tudo o que têm em comum, de propósito ou não."
+      },
+      {
+        "text": "Aberturas variadas, já que três exemplos são poucos para formar um padrão",
+        "why": "Um exemplo já basta para parecer padrão; três que concordam são um padrão forte."
+      },
+      {
+        "text": "Resumos mais longos, já que o modelo vai tentar juntar o que os exemplos deixaram de fora",
+        "why": "O modelo continua o padrão que tem à frente. Nada no padrão diz mais longo."
+      }
+    ]
+  },
+  "ex-51mfqpky": {
+    "prompt": "Ligue cada regra de escolha de exemplos ao que ela evita.",
+    "hint": "Lição 21.",
+    "pairs": [
+      {
+        "left": "Cobrir as classes",
+        "right": "Um rótulo parecer a resposta padrão"
+      },
+      {
+        "left": "Incluir um caso difícil",
+        "right": "Exemplos que não ensinam nada além da descrição"
+      },
+      {
+        "left": "Variar a ordem",
+        "right": "O rótulo do último exemplo vazar para a resposta"
+      },
+      {
+        "left": "Mantê-los fora do conjunto de teste",
+        "right": "Uma nota que mede memória"
+      }
+    ],
+    "right_distractors": [
+      "Um prompt longo demais para enviar"
+    ]
+  },
+  "ex-vhspg955": {
+    "prompt": "Para economizar tokens, uma aplicação manda a mensagem de sistema só na primeira requisição de cada conversa. O que acontece da segunda requisição em diante?",
+    "hint": "Lição 22.",
+    "choices": [
+      {
+        "text": "Nada muda, já que o modelo lembra a mensagem de sistema",
+        "why": "Não há memória entre requisições. A mensagem de sistema vale só porque é enviada toda vez."
+      },
+      {
+        "text": "As regras continuam valendo, porque a API garante a precedência",
+        "why": "A precedência é treinada, não garantida, e precisa que o texto esteja lá antes de tudo."
+      },
+      {
+        "text": "O modelo pede à aplicação que mande as regras de novo",
+        "why": "Ele não tem como saber que havia regras. Ele continua o texto que recebe."
+      },
+      {
+        "text": "O modelo passa a trabalhar sem instrução permanente alguma",
+        "why": "Isso. O modelo não guarda nada entre requisições, então uma mensagem de sistema que ficou de fora não existe para ele."
+      }
+    ]
+  },
+  "ex-rzmp27kq": {
+    "prompt": "O `prompts/system-v3.txt` tem 149 tokens e vai junto com cada mensagem. Quantos tokens de entrada ele soma em 10.000 mensagens de clientes?",
+    "hint": "Lição 22.",
+    "unit": "tokens"
+  },
+  "ex-xbf5c7f6": {
+    "prompt": "Uma revisão de segurança pergunta o que um atacante saberia se o prompt de sistema do assistente do café fosse revelado inteiro. Se a lição 22 foi seguida, qual é a resposta?",
+    "hint": "Lição 22.",
+    "choices": [
+      {
+        "text": "A senha do Wi-Fi da equipe, que o modelo foi instruído a nunca revelar",
+        "why": "É justamente o que a lição 22 diz para nunca pôr ali: o que o modelo não pode contar, ele não deve receber."
+      },
+      {
+        "text": "Os registros de clientes enviados com cada pergunta",
+        "why": "Dados de clientes não têm lugar num prompt de sistema, e o do café não tem nenhum."
+      },
+      {
+        "text": "Nada que cause dano: ele foi escrito como se fosse ser publicado",
+        "why": "Isso. Nenhuma senha, nenhuma chave, nenhum dado de cliente, nenhuma nota sobre quais regras valem de verdade."
+      },
+      {
+        "text": "Nada mesmo, já que um prompt de sistema não pode ser revelado",
+        "why": "Pode: é texto no contexto do modelo, e a lição 7 mostra como ele volta para fora."
+      }
+    ]
+  },
+  "ex-5d4fxzrq": {
+    "prompt": "A lição 23 diz que o papel que mais muda uma resposta muitas vezes não é o do modelo, mas o do ___: para quem a resposta é.",
+    "hint": "Lição 23.",
+    "blanks": [
+      {
+        "accept": [
+          "leitor",
+          "público",
+          "publico"
+        ]
+      }
+    ]
+  },
+  "ex-ady6aez1": {
+    "prompt": "Qual destas linhas define o papel do leitor, e não o do modelo?",
+    "hint": "Lição 23.",
+    "choices": [
+      {
+        "text": "Explique a um barista novo, no primeiro dia, por que perguntamos sobre alergias",
+        "why": "Isso. Ela nomeia para quem é a resposta, o que define o registro, o vocabulário e o ângulo de uma vez."
+      },
+      {
+        "text": "Você é um professor paciente que explica as coisas devagar às pessoas",
+        "why": "Isso escala o modelo, não o leitor. Para quem é a explicação continua em aberto."
+      },
+      {
+        "text": "Você é o assistente do balcão do Café Aurora: caloroso, breve, simples",
+        "why": "Esse é o papel do modelo, uma voz para todas as respostas."
+      },
+      {
+        "text": "Você é um especialista em alergia alimentar de nível mundial",
+        "why": "Esse é um papel para o modelo, e um que dá tom sem dar conhecimento."
+      }
+    ]
+  },
+  "ex-x9whxtc5": {
+    "prompt": "O assistente do site do café responde certo, com uma voz dura e formal, e o café quer uma voz calorosa e breve. Qual é a correção mais barata, pela lição 23?",
+    "hint": "Lição 23.",
+    "choices": [
+      {
+        "text": "Ajuste fino com algumas centenas de respostas calorosas e breves",
+        "why": "É o degrau mais caro da escada da lição 9, para algo que uma linha de prompt faz."
+      },
+      {
+        "text": "Um manual mais longo, para o assistente ter mais o que dizer",
+        "why": "Mais fatos mudam o que ele sabe, não como ele soa, e breve é o contrário de mais."
+      },
+      {
+        "text": "Vinte exemplos de respostas calorosas em cada requisição",
+        "why": "Exemplos são pagos em cada requisição, e uma linha de papel faz o mesmo por poucos tokens."
+      },
+      {
+        "text": "Uma linha de papel na mensagem de sistema, que dá a voz desejada",
+        "why": "Isso. Um papel é uma linha que muda o registro de todas as respostas seguintes, que é o trabalho aqui."
+      }
+    ]
+  },
+  "ex-epyqz67s": {
+    "prompt": "O `tok count` deu 40 tokens para o `bare.txt` e 216 para o `with-context.txt`. Quantas vezes o prompt sem contexto é o prompt com contexto? Dê uma casa decimal.",
+    "hint": "Lição 24.",
+    "unit": "vezes"
+  },
+  "ex-mz4f9ge8": {
+    "prompt": "O assistente do café leva o manual inteiro no prompt de sistema. Pela lição 24, isso é prompt de sistema ou prompt contextual?",
+    "hint": "Lição 24.",
+    "choices": [
+      {
+        "text": "Só prompt de sistema, já que tudo na mensagem de sistema é instrução",
+        "why": "A mensagem de sistema guarda instruções, e também pode guardar fatos. A lição 24 diz que os fatos moram em qualquer um dos lugares."
+      },
+      {
+        "text": "Só contextual, já que um prompt de sistema não guarda fatos",
+        "why": "Um prompt de sistema pode levar o manual. A lição 24 dá o assistente do café como exemplo."
+      },
+      {
+        "text": "Os dois: os fatos são contexto onde quer que estejam",
+        "why": "Isso. O que torna o prompt contextual é a pergunta feita ao escrevê-lo: o que o modelo precisa saber que não tem como saber sozinho?"
+      },
+      {
+        "text": "Nenhum dos dois: é recuperação, já que o manual é um documento",
+        "why": "Recuperação escolhe trechos por programa a cada requisição. Colar o manual inteiro uma vez no prompt de sistema não é isso."
+      }
+    ]
+  },
+  "ex-d4wwnezx": {
+    "prompt": "O mesmo reembolso de R$ 140 agora precisa de uma nota para o gerente de turno aprovar, não de um e-mail ao cliente. Que tipo de contexto muda primeiro?",
+    "hint": "Lição 24.",
+    "choices": [
+      {
+        "text": "Os dados",
+        "why": "A página de reembolsos e a mensagem do cliente são o mesmo material. O que mudou foi o leitor."
+      },
+      {
+        "text": "Para quem é a resposta",
+        "why": "Isso. Uma nota para o gerente de turno difere em tom e forma de uma resposta ao cliente sobre o mesmo reembolso."
+      },
+      {
+        "text": "Nada, já que os fatos do reembolso são os mesmos",
+        "why": "Os fatos são, e o leitor não. Para quem é a resposta decide o tom e a forma."
+      },
+      {
+        "text": "O modelo, já que a nota do gerente é outra tarefa",
+        "why": "O mesmo modelo escreve as duas. O prompt é que precisa dizer para quem é a nota."
+      }
+    ]
+  },
+  "ex-hpwchrzx": {
+    "prompt": "O `direct.txt` tem 116 tokens; a versão com passo atrás manda o `step1.txt` (122) e depois o `step2.txt` (226). Quantos tokens de entrada a mais a versão com passo atrás manda em relação à direta?",
+    "hint": "Lição 25.",
+    "unit": "tokens"
+  },
+  "ex-mahcaa03": {
+    "prompt": "No balcão: \"O prato errado de um cliente custou R$ 120. Posso reembolsar na hora?\" Qual é uma pergunta de passo atrás para ela, no sentido da lição 25?",
+    "hint": "Lição 25.",
+    "choices": [
+      {
+        "text": "Quais regras do manual decidem quando um reembolso precisa de aprovação?",
+        "why": "Isso. Ela pede as regras de que o caso é uma instância, inclusive a exceção acima de R$ 100 que o texto esconde."
+      },
+      {
+        "text": "Que prato exatamente o cliente pediu, e o que estava errado nele?",
+        "why": "Isso entra mais nos detalhes, a direção contrária de um passo atrás."
+      },
+      {
+        "text": "Posso reembolsar na hora? Responda sim ou não, depois explique.",
+        "why": "É a pergunta original de novo, com um formato a mais."
+      },
+      {
+        "text": "R$ 120 é muito dinheiro para um único prato num café?",
+        "why": "Isso pede uma opinião sobre o preço, não a regra que decide o caso."
+      }
+    ]
+  },
+  "ex-9vp7vryb": {
+    "prompt": "Quais destas perguntas têm a forma em que a lição 25 diz que um passo atrás ajuda? Marque todas as que se aplicam.",
+    "hint": "Lição 25.",
+    "choices": [
+      {
+        "text": "Uma exceção escondida atrás de uma regra mais óbvia",
+        "why": "Sim, a forma do misto quente do feriado: o texto aponta para a regra errada."
+      },
+      {
+        "text": "Uma pergunta de um campo com leis, como a física",
+        "why": "Sim. Nomear a lei é a maior parte do trabalho, como na pergunta do gás."
+      },
+      {
+        "text": "Um momento de uma história mais longa, como uma carreira",
+        "why": "Sim. A história inteira no prompt é contra o que a data é lida."
+      },
+      {
+        "text": "O nome da rede Wi-Fi dos clientes",
+        "why": "Não há princípio por trás: a resposta é uma linha do manual."
+      }
+    ]
+  },
+  "ex-t0wwbrw4": {
+    "prompt": "Resolva passo a passo, como a lição 26 pede ao modelo. Um cliente pede 4 espressos a R$ 9 cada e 1 rolinho de canela a R$ 11. O cartão fidelidade já tem 8 carimbos, e o décimo café é grátis. Quantos reais ele paga?",
+    "hint": "Lição 26.",
+    "unit": "R$"
+  },
+  "ex-svdp3xpx": {
+    "prompt": "Um programa precisa da cadeia e de uma resposta que ele consiga ler sem falha. Além de uma linha fixa `Answer:`, o que a lição 26 indica?",
+    "hint": "Lição 26.",
+    "choices": [
+      {
+        "text": "O último número da resposta, que é onde a resposta costuma ficar",
+        "why": "Pescar um número no texto é o chute que o marcador fixo existia para evitar; a cadeia está cheia de números."
+      },
+      {
+        "text": "Um formato estruturado, com o raciocínio e a resposta em campos separados",
+        "why": "Isso. Os formatos da lição 18 põem o raciocínio num campo e a resposta em outro, e um parser confere os dois."
+      },
+      {
+        "text": "Uma segunda requisição pedindo ao modelo que repita só a resposta",
+        "why": "Isso dobra as chamadas e dá mais uma resposta para ler, com o mesmo problema."
+      },
+      {
+        "text": "Um limite de saída maior, para a linha da resposta nunca ser cortada",
+        "why": "Um limite baixo demais corta a cadeia antes do `Answer:`, mas aumentá-lo não torna a resposta mais fácil de ler."
+      }
+    ]
+  },
+  "ex-488dphrf": {
+    "prompt": "Quais destas ganhariam com pedir os passos primeiro, pela lição 26? Marque todas as que se aplicam.",
+    "hint": "Lição 26.",
+    "choices": [
+      {
+        "text": "O preço de um flat white, lido no cardápio",
+        "why": "Uma pergunta de um passo não tem resultado intermediário, e não ganha nada."
+      },
+      {
+        "text": "Uma conta com vários itens e uma regra de desconto",
+        "why": "Sim: uma regra aplicada antes de uma soma precisa de um resultado intermediário."
+      },
+      {
+        "text": "Dois fatos do manual que precisam ser combinados",
+        "why": "Sim. O primeiro fato, escrito, é a base do segundo passo."
+      },
+      {
+        "text": "Uma soma de seis preços com um total no fim",
+        "why": "Sim. Aritmética com vários itens tem resultados intermediários a escrever."
+      }
+    ]
+  },
+  "ex-hb7twcz9": {
+    "prompt": "As cinco cadeias do café somaram 209 tokens de saída. Uma votação de vinte amostras, com cadeias do mesmo tamanho médio, custaria quantos tokens de saída?",
+    "hint": "Lição 27.",
+    "unit": "tokens"
+  },
+  "ex-jf4we4pp": {
+    "prompt": "Na pergunta do feriado, a votação deu `yes` 3 de 5, e o manual diz `no`. O que a lição 27 propõe?",
+    "hint": "Lição 27.",
+    "choices": [
+      {
+        "text": "Sortear vinte amostras em vez de cinco, para a resposta certa alcançar",
+        "why": "Mais amostras do mesmo prompt repetem o mesmo puxão, e a maioria errada provavelmente ficaria mais firme."
+      },
+      {
+        "text": "Amostrar à temperatura 0, para toda cadeia seguir o caminho mais cuidadoso",
+        "why": "À temperatura 0 toda amostra é uma cópia, e votar entre cópias não é votar."
+      },
+      {
+        "text": "Ficar com a resposta da minoria, já que as cadeias dela citam uma regra",
+        "why": "Escolher pela aparência de uma cadeia é o que a votação devia substituir. O puxão começa no prompt."
+      },
+      {
+        "text": "Recuar até as regras e votar entre cadeias que partem delas",
+        "why": "Isso. As cadeias erradas compartilham um puxão, a palavra quarta-feira, e a correção está no prompt, antes de as amostras serem sorteadas."
+      }
+    ]
+  },
+  "ex-65q4sgd7": {
+    "prompt": "Ligue cada técnica ao que acontece com um beco sem saída, pela tabela comparativa da lição 28.",
+    "hint": "Lição 27.",
+    "pairs": [
+      {
+        "left": "Cadeia de pensamento",
+        "right": "É seguido até o fim"
+      },
+      {
+        "left": "Autoconsistência",
+        "right": "Perde na votação, se for raro"
+      },
+      {
+        "left": "Árvore de pensamentos",
+        "right": "É descartado quando é julgado"
+      }
+    ],
+    "right_distractors": [
+      "É reparado pelo laço e tentado de novo"
+    ]
+  },
+  "ex-dw00cn82": {
+    "prompt": "No nível 2 do `tot 4 9 10 13` com a largura padrão, quantos dos estados propostos repetiam um estado já proposto?",
+    "hint": "Lição 28.",
+    "unit": "estados"
+  },
+  "ex-tb3tdqh1": {
+    "prompt": "Num problema, a maioria das tentativas dá o mesmo primeiro passo tentador, e ele leva a um beco sem saída reconhecível quando se chega lá. Qual técnica lida melhor com isso, pela tabela da lição 28?",
+    "hint": "Lição 28.",
+    "choices": [
+      {
+        "text": "Autoconsistência, que vence o beco sem saída no voto",
+        "why": "O voto só vence um beco sem saída se ele for raro. Quando a maioria das amostras cai nele, a resposta errada ganha."
+      },
+      {
+        "text": "Árvore de pensamentos, que descarta o passo quando ele é julgado",
+        "why": "Isso. A árvore julga estados parciais a cada passo, então um beco sem saída é cortado antes de se gastar mais nele."
+      },
+      {
+        "text": "Cadeia de pensamento, que escreve os passos um por um",
+        "why": "Uma cadeia segue o primeiro passo até o fim, sem como voltar."
+      },
+      {
+        "text": "Qualquer uma das três, já que todas comparam caminhos a cada passo",
+        "why": "Só a árvore compara a cada passo. Uma cadeia nunca compara, e uma votação compara só as respostas finais."
+      }
+    ]
+  },
+  "ex-xej1mthg": {
+    "prompt": "Ponha as três técnicas em ordem de chamadas ao modelo por resposta, da que faz menos à que faz mais.",
+    "hint": "Lição 28.",
+    "items": [
+      "Cadeia de pensamento",
+      "Autoconsistência",
+      "Árvore de pensamentos"
+    ]
+  },
+  "ex-b8na23da": {
+    "prompt": "Ligue cada tipo de linha num rastro ReAct ao que ela contém.",
+    "hint": "Lição 29.",
+    "pairs": [
+      {
+        "left": "Thought:",
+        "right": "O que já se sabe, e o que falta a seguir"
+      },
+      {
+        "left": "Action:",
+        "right": "Uma ferramenta, e o que passar para ela"
+      },
+      {
+        "left": "Observation:",
+        "right": "O que a ferramenta devolveu, palavra por palavra"
+      },
+      {
+        "left": "Answer:",
+        "right": "A resposta, quando nada mais é necessário"
+      }
+    ],
+    "right_distractors": [
+      "O palpite do modelo sobre o que a ferramenta vai devolver"
+    ]
+  },
+  "ex-hr0p7mfq": {
+    "prompt": "Uma ferramenta de estoque devolve `0` sempre que o banco de dados está fora do ar, em vez de um erro. O que a lição 29 diz que isso faz com uma execução ReAct?",
+    "hint": "Lição 29.",
+    "choices": [
+      {
+        "text": "Nada, já que o modelo vai perceber que o banco está fora do ar",
+        "why": "Nada em `0` diz que o banco caiu. O modelo raciocina a partir do que a Observation diz."
+      },
+      {
+        "text": "O laço interrompe a execução, já que `0` não é uma Observation válida",
+        "why": "O laço confere a forma dos turnos, não se a resposta da ferramenta é verdadeira. `0` é uma resposta de forma perfeita."
+      },
+      {
+        "text": "A execução termina no limite de passos, já que o modelo fica tentando de novo",
+        "why": "Com `0` não há o que tentar de novo: o modelo ouviu que não há estoque e segue em frente."
+      },
+      {
+        "text": "Entrega ao modelo um fato errado para raciocinar",
+        "why": "Isso. Um erro claro volta como Observation e o próximo turno age sobre ele; um `0` silencioso parece uma resposta verdadeira."
+      }
+    ]
+  },
+  "ex-x90a24c0": {
+    "prompt": "O `agent runs/refund.txt` responde no passo 4, depois de uma chamada de ferramenta em cada um dos passos 1 a 3. Rodando com `--max-steps 3`, quantas chamadas de ferramenta o laço faria antes de parar?",
+    "hint": "Lição 29.",
+    "unit": "chamadas"
+  },
+  "ex-dc8xde7v": {
+    "prompt": "Ponha os turnos do `agent runs/refund.txt` na ordem em que rodaram.",
+    "hint": "Lição 29.",
+    "items": [
+      "Buscar no manual a regra de aprovação",
+      "Calcular quatro sopas a R$ 27,90",
+      "Buscar no manual como o dinheiro volta",
+      "Responder com o valor, o cartão e a aprovação"
+    ]
+  },
+  "ex-0csw9xkf": {
+    "prompt": "O prompt tuning da lição 30 e a engenharia automática de prompts da lição 31 encontram um prompt em vez de escrevê-lo. O que separa os dois?",
+    "hint": "Lição 30.",
+    "choices": [
+      {
+        "text": "Um aprende vetores contra os pesos; o outro dá nota a prompts escritos",
+        "why": "Isso. O prompt tuning precisa dos pesos e de um gradiente. O APE precisa só de um jeito de mandar texto e de exemplos rotulados."
+      },
+      {
+        "text": "O prompt tuning muda os pesos; o APE os deixa como estão",
+        "why": "Nenhum dos dois muda os pesos. No prompt tuning eles ficam congelados e só os números do soft prompt se mexem."
+      },
+      {
+        "text": "O APE precisa dos pesos, e o prompt tuning funciona por qualquer API",
+        "why": "É o contrário: por uma API não há onde pôr um vetor, enquanto o APE manda texto comum."
+      },
+      {
+        "text": "Só o APE produz algo que se possa dar a um modelo",
+        "why": "Os dois produzem algo que se dá a um modelo. Só o resultado do APE também pode ser lido por uma pessoa."
+      }
+    ]
+  },
+  "ex-becsc2rc": {
+    "prompt": "Na tabela da lição 30, qual dos três é pago como tokens de texto a mais em cada requisição?",
+    "hint": "Lição 30.",
+    "choices": [
+      {
+        "text": "O prompt escrito",
+        "why": "Isso. O custo dele são os tokens do prompt, em cada requisição, como a lição 3 contou."
+      },
+      {
+        "text": "O prompt tuning",
+        "why": "O custo dele é uma rodada de treino e depois quase nada por requisição: os vetores não são texto."
+      },
+      {
+        "text": "O ajuste fino",
+        "why": "Ele custa uma rodada de treino e muitas vezes um preço maior por requisição, e não acrescenta texto ao prompt."
+      },
+      {
+        "text": "Nenhum dos três, já que um modelo é cobrado por resposta",
+        "why": "Modelos são cobrados por token, e os tokens do prompt escrito vão em toda requisição."
+      }
+    ]
+  },
+  "ex-v0py3q4a": {
+    "prompt": "No prompt tuning, os números do soft prompt são treinados enquanto os pesos do próprio modelo ficam ___.",
+    "hint": "Lição 30.",
+    "blanks": [
+      {
+        "accept": [
+          "congelados",
+          "fixos",
+          "inalterados"
+        ]
+      }
+    ]
+  },
+  "ex-ywh8h9ts": {
+    "prompt": "O `the {x} is` tirou 4/4 no `tests.tsv`. Qual foi a nota dele no `held.tsv`, em porcentagem arredondada para o inteiro mais próximo?",
+    "hint": "Lição 31.",
+    "unit": "%"
+  },
+  "ex-n7c0xmgx": {
+    "prompt": "A lição 21 avisou que um prompt cujos exemplos são as próprias mensagens do conjunto de teste tira nota boa pelo motivo errado. Qual ideia da lição 31 é o mesmo aviso?",
+    "hint": "Lição 31.",
+    "choices": [
+      {
+        "text": "A tarefa do proponente é variedade e a do avaliador é julgamento",
+        "why": "Isso divide o trabalho entre dois passos. Não diz nada sobre quais exemplos podem medir o resultado."
+      },
+      {
+        "text": "Exemplos usados para escolher não medem a escolha com honestidade",
+        "why": "Isso. O 4/4 do vencedor gastou o `tests.tsv`, e um conjunto reservado mede com honestidade uma vez por decisão."
+      },
+      {
+        "text": "A correspondência exata pode contar como errada uma resposta correta",
+        "why": "Essa é uma falha da métrica, e vale sejam quais forem os exemplos."
+      },
+      {
+        "text": "Uma pessoa aprova o que vai para produção",
+        "why": "Isso pega o que uma nota não pega, como uma suposição perigosa. É outra salvaguarda."
+      }
+    ]
+  },
+  "ex-6kpg6mc0": {
+    "prompt": "Ponha em ordem uma execução honesta de engenharia automática de prompts.",
+    "hint": "Lição 31.",
+    "items": [
+      "Um modelo propõe prompts candidatos a partir de alguns exemplos",
+      "Cada candidato recebe nota nos exemplos rotulados",
+      "A nota mais alta fica",
+      "O vencedor recebe nota uma vez no conjunto reservado",
+      "Uma pessoa lê o vencedor antes de ele ir para produção"
+    ]
+  }
+}

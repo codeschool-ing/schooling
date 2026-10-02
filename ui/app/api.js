@@ -595,6 +595,11 @@ export async function loadLessonStructure() {
       questions: l.questions || 0,
       sections: (l.sections || []).map((s) => ({
         id: s.id,
+        /* THE SLUG IS THE ADDRESS, and this adapter dropped it like the fields
+           above: `lesson.js` matches `(s.slug || s.id) === sec`, so every link
+           carrying a section's slug landed on the lesson's first section, with
+           nothing on screen saying the address had not been understood. */
+        slug: s.slug,
         title: s.title || s.id,
         /* THE KIND TRAVELS, AND UNTIL NOW ONLY ONE ANSWER TO IT DID. This read
            `kind` to set `video: true` and then dropped the field — so the
@@ -918,6 +923,7 @@ export async function loadCourseContent(courseId) {
       questions: lesson.questions || 0,
       sections: (lesson.sections || []).map((s) => ({
         id: s.id,
+        slug: s.slug,
         title: s.title || s.id,
         ...(s.body ? { body: blocksOf(s.body) } : {}),
         /* THE KIND TRAVELS, AND UNTIL NOW ONLY ONE ANSWER TO IT DID. This read

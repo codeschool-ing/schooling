@@ -1,0 +1,2477 @@
+[
+  {
+    "id": "ex-z771fhjx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A model is given a very long document with one crucial instruction far back in it, and the reply ignores the instruction. Which `toylm` behaviour is the same failure on a smaller scale?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "`the cat sat on the` ended on the chair, because `sat` was out of its two-word window",
+        "correct": true,
+        "why": "Right. Text outside the model's view has no say in what comes next, whether the window is two words or a very long one."
+      },
+      {
+        "text": "`the coffee is` gave `hot` three times in five draws",
+        "correct": false,
+        "why": "That is weighted drawing, which happens with the whole prompt in view."
+      },
+      {
+        "text": "`sweet` got no score at all after `coffee is`",
+        "correct": false,
+        "why": "That is a pair never seen in the training file, not text the model failed to see in the prompt."
+      },
+      {
+        "text": "`the café opens at` gave `seven` at 75%",
+        "correct": false,
+        "why": "That is the model working with its whole context in view and scoring what followed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3nyg950",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`toylm next \"the coffee is\"` gave `bitter` 3.7%. Drawing in proportion to the scores, about once in how many draws does `bitter` come out? Answer to the nearest whole number.",
+    "hint": "Lesson 1.",
+    "value": 27,
+    "tolerance": 1,
+    "unit": "draws"
+  },
+  {
+    "id": "ex-cr37rah6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Somebody edits `corpus.txt` so that `cold` follows `coffee is` far more than `hot` does, and rebuilds `toylm`. What changes in `toylm next \"the coffee is\"`?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Nothing, because the program has learnt that coffee is served hot",
+        "correct": false,
+        "why": "It has learnt nothing about coffee; it has counts of which word followed which pair."
+      },
+      {
+        "text": "`hot` keeps the top score and `cold` appears as a new second line",
+        "correct": false,
+        "why": "The order comes straight from the counts, so the word counted most is the one on top."
+      },
+      {
+        "text": "`cold` gets the top score, since the scores are the new counts",
+        "correct": true,
+        "why": "Right. Nothing about coffee is known apart from the counts, so new counts are new scores."
+      },
+      {
+        "text": "The output is refused, because the new file contradicts a fact",
+        "correct": false,
+        "why": "There is no store of facts to contradict, only the counts in its file."
+      }
+    ]
+  },
+  {
+    "id": "ex-vv8w0vpn",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In the twenty-run test, how many more replies containing `seven` did `v3` get than `v1`?",
+    "hint": "Lesson 2.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "replies"
+  },
+  {
+    "id": "ex-mcp9jtvz",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Match each part of a prompt to what goes wrong when it is missing.",
+    "hint": "Lesson 2.",
+    "pairs": [
+      {
+        "left": "instruction",
+        "right": "The model guesses the task"
+      },
+      {
+        "left": "context",
+        "right": "The model fills the gap with what is typical"
+      },
+      {
+        "left": "input data",
+        "right": "There is nothing to be right about"
+      },
+      {
+        "left": "output format",
+        "right": "A correct reply that cannot be used where it is going"
+      }
+    ],
+    "right_distractors": [
+      "The reply is too long to read"
+    ]
+  },
+  {
+    "id": "ex-15hfgx30",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "To save money, an application sends the model only the newest user message on each turn. What will users notice?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "The assistant forgets everything said earlier in the conversation",
+        "correct": true,
+        "why": "Right. The model has no memory between requests; the earlier turns reach it only because the application sends them again."
+      },
+      {
+        "text": "Nothing, because the model remembers the earlier turns of the session",
+        "correct": false,
+        "why": "It keeps nothing between requests. What looks like memory is the whole conversation, sent again every time."
+      },
+      {
+        "text": "Replies get slower, since the model has to look up the earlier turns itself",
+        "correct": false,
+        "why": "There is nowhere for it to look them up. What is not in the request does not exist for the model."
+      },
+      {
+        "text": "The system message is dropped, but the rest of the conversation is kept",
+        "correct": false,
+        "why": "The earlier user and assistant turns are exactly what was cut, and they are not kept anywhere else."
+      }
+    ]
+  },
+  {
+    "id": "ex-s23rrha2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A prompt that passed its tests last month now fails them, and five edits were made since. Which habit lets you find the edit that caused it?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "A stated goal",
+        "correct": false,
+        "why": "The goal says what a good reply is. It does not tell you which of five edits broke it."
+      },
+      {
+        "text": "Measuring over many runs",
+        "correct": false,
+        "why": "Measuring says that it fails now. Finding which edit did it needs the old versions."
+      },
+      {
+        "text": "Test cases",
+        "correct": false,
+        "why": "The tests are how you noticed. Without the earlier versions you cannot run them against each edit."
+      },
+      {
+        "text": "Versioning",
+        "correct": true,
+        "why": "Right. Every version kept and named is what lets a regression be traced to the change that caused it."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9dsfhym",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Counted with `cl100k_base`, how many more tokens is `hours.pt.txt` than `hours.en.txt`?",
+    "hint": "Lesson 3.",
+    "value": 17,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-60pakb7v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A request pastes a twenty-page contract into the prompt and asks for a one-line answer. Which side of the bill does lesson 3 expect to dominate?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "The output, since output tokens always cost several times more",
+        "correct": false,
+        "why": "They cost more each. With a one-line reply and a long document, there are too few of them to dominate."
+      },
+      {
+        "text": "Neither, since a request is priced as a whole and not by its parts",
+        "correct": false,
+        "why": "Providers bill input and output per token, separately."
+      },
+      {
+        "text": "The input, since the contract is far more tokens than the reply",
+        "correct": true,
+        "why": "Right. Output tokens cost more each, and here there are so few of them that the input outweighs them."
+      },
+      {
+        "text": "The output, since the model has to read the contract while writing",
+        "correct": false,
+        "why": "Reading the contract is input, processed in one pass and billed as input."
+      }
+    ]
+  },
+  {
+    "id": "ex-qnbxtncr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Your provider does not publish its tokenizer. You count your prompts with `tok`, using `o200k_base`. How should you treat those counts?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "As exact, since every modern model uses `o200k_base`",
+        "correct": false,
+        "why": "Other providers use tokenizers of their own. At the time of writing, `o200k_base` is OpenAI's."
+      },
+      {
+        "text": "As estimates: get the real count from the provider",
+        "correct": true,
+        "why": "Right. A count from one tokenizer is an estimate for any other; the provider counts for you through its API."
+      },
+      {
+        "text": "As useless, since counts from two tokenizers share nothing",
+        "correct": false,
+        "why": "They are close enough to estimate with, as the handbook counts in lesson 12 showed. They are not exact."
+      },
+      {
+        "text": "As an upper bound, since bigger vocabularies always use fewer tokens",
+        "correct": false,
+        "why": "Fewer for some texts, not a guarantee for every text and every other tokenizer."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzkebxnq",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`tok fit` keeps the 53-token system prompt, then turns from the newest back until the next one would not fit. The newest three turns of `chat.json` are 14, 21 and 10 tokens. With `-b 90`, how many turns would it keep?",
+    "hint": "Lesson 4.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "turns"
+  },
+  {
+    "id": "ex-5cd6q3zx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An application writes a summary note before dropping old turns, and the note leaves out Bruno's nut allergy. What does lesson 4 say about that?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Nothing can be done, since notes are always incomplete",
+        "correct": false,
+        "why": "Lesson 4 gives the remedy: a summarising prompt that names what must survive."
+      },
+      {
+        "text": "Notes should be dropped, since truncation loses less",
+        "correct": false,
+        "why": "Truncation lost the allergy outright at a budget of 120. A note that names what to keep saved it."
+      },
+      {
+        "text": "The note should go in a user turn, where it is read more closely",
+        "correct": false,
+        "why": "User turns are the part that gets cut. The note travels in the part that is never cut."
+      },
+      {
+        "text": "The summarising prompt has to say what must survive",
+        "correct": true,
+        "why": "Right. A summary can lose the one detail that mattered as easily as truncation, so the prompt names what to keep: name, allergies, preferences, promises."
+      }
+    ]
+  },
+  {
+    "id": "ex-qj2jrv52",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each part of a request to what makes it grow in the context window.",
+    "hint": "Lesson 4.",
+    "pairs": [
+      {
+        "left": "system prompt",
+        "right": "Somebody adds a rule"
+      },
+      {
+        "left": "history",
+        "right": "The conversation goes on"
+      },
+      {
+        "left": "input",
+        "right": "A document or a tool result is included"
+      },
+      {
+        "left": "output",
+        "right": "The model writes"
+      }
+    ],
+    "right_distractors": [
+      "The model learns from the chat"
+    ]
+  },
+  {
+    "id": "ex-afvv93nt",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "After `the soup of the day is`, `toylm` scored tomato 50%, lentil 25% and pumpkin 25%. Drawing in proportion to the scores, in what percentage of draws is the answer something other than tomato?",
+    "hint": "Lesson 5.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-00xn7z6b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A customer asks the café's assistant: \"Why did you stop selling oat milk?\" The café still sells it. Which shape from lesson 5's table is the risk?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "A citation with the right shape that does not exist",
+        "correct": false,
+        "why": "That is the risk when you ask for a source. Nobody asked for one here."
+      },
+      {
+        "text": "A reply that accepts the false premise and explains it",
+        "correct": true,
+        "why": "Right. Text that answers a question is likelier than text that disputes it, so a reason for a change that never happened is the likely reply."
+      },
+      {
+        "text": "The old value of a fact that has changed, in the present tense",
+        "correct": false,
+        "why": "Nothing changed: the premise is false, not out of date."
+      },
+      {
+        "text": "A plausible fact about something similar to a rare one",
+        "correct": false,
+        "why": "Oat milk at a café is not rare. The trap is in the question's assumption."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpp3e1yf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "After adding \"if the sources do not contain the answer, say that the handbook does not say\", a team's score drops: their test counts only the questions that got an answer. What does lesson 5 say?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "The test rewards the behaviour the line removes; count the honest refusal as a success",
+        "correct": true,
+        "why": "Right. A short \"the handbook does not say\" is a success, and a test that counts only answers punishes it."
+      },
+      {
+        "text": "The line made the assistant worse, and should come out",
+        "correct": false,
+        "why": "It made an honest reply likely. The test is what needs changing."
+      },
+      {
+        "text": "Lower the temperature, so the assistant answers more of the questions",
+        "correct": false,
+        "why": "Temperature is not a control for truth, and answering more is not the goal here."
+      },
+      {
+        "text": "Add \"Do not make things up\" too, so the score recovers",
+        "correct": false,
+        "why": "That line helps very little, since the model does not know which likely answers are invented."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcxk4gra",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`agent runs/order.txt` calls `today` on step 1, the calculator on step 2 and answers on step 3. Run with `--max-steps 2`, how many tool calls happen before it stops?",
+    "hint": "Lesson 6.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-4yb6v3vn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A calculator tool is described to the model with the single word \"Arithmetic\", and the model keeps sending `sqrt(2)`, which the tool rejects. What does lesson 6 point to?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Give the model a larger window, so it remembers the earlier errors",
+        "correct": false,
+        "why": "The errors are already in front of it. What is missing is the sentence saying what the tool accepts."
+      },
+      {
+        "text": "Raise the step limit, so the model finds the right form by trying",
+        "correct": false,
+        "why": "Every extra turn costs tokens, and trial and error is what a clear description saves."
+      },
+      {
+        "text": "Nothing: the model chose the call, so the fault lies with the model",
+        "correct": false,
+        "why": "The model decides from that one sentence. A vague sentence is the developer's to fix."
+      },
+      {
+        "text": "Rewrite the description to say which operations the tool takes",
+        "correct": true,
+        "why": "Right. The description is a prompt too: \"numbers and + - * /\" tells the model what to send."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xnxw64x",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each kind of line in `agent`'s output to where it came from.",
+    "hint": "Lesson 6.",
+    "pairs": [
+      {
+        "left": "model>",
+        "right": "The turns written for the model"
+      },
+      {
+        "left": "tool>",
+        "right": "A real tool that ran"
+      },
+      {
+        "left": "stopped:",
+        "right": "The loop, when a limit or the turns ran out"
+      }
+    ],
+    "right_distractors": [
+      "The customer who asked the question"
+    ]
+  },
+  {
+    "id": "ex-jw5bymvn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An assistant drafts replies to the café's incoming e-mail, and a person sends each draft. Which set of tools follows lesson 7's least privilege?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Read, draft and send, with a prompt line saying never to send",
+        "correct": false,
+        "why": "A prompt line is not a control. If the task does not need sending, it does not get it."
+      },
+      {
+        "text": "Inbox access and a place for unsent text, with no sending tool",
+        "correct": true,
+        "why": "Right. The task drafts; sending is a person's job, so an injected e-mail has nothing to send with."
+      },
+      {
+        "text": "Every mail tool, so the assistant is never stuck mid-task",
+        "correct": false,
+        "why": "Every extra tool is something an injection can try to use."
+      },
+      {
+        "text": "No tools, with the e-mails pasted in by hand each time",
+        "correct": false,
+        "why": "That removes the job the assistant was built for. The aim is the tools the task needs, and no more."
+      }
+    ]
+  },
+  {
+    "id": "ex-qp6dwnja",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these still hold after the model has been fooled by an injection? Choose all that apply.",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "A call held until a person confirms it",
+        "correct": true,
+        "why": "Yes. The person looks at the action itself, which the injection cannot disguise."
+      },
+      {
+        "text": "A program that blocks e-mail to addresses outside the company",
+        "correct": true,
+        "why": "Yes. It inspects the call before it is used."
+      },
+      {
+        "text": "A system prompt line saying to ignore instructions in documents",
+        "correct": false,
+        "why": "It competes with the injected text inside the same window, and the model has just lost that contest."
+      },
+      {
+        "text": "A tool left off the task's allow-list",
+        "correct": true,
+        "why": "Yes. The program refuses it whatever the model was persuaded of."
+      }
+    ]
+  },
+  {
+    "id": "ex-26epw8ra",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An assistant has no tools at all: it reads web pages a user pastes in and replies. Which aims of an injection remain open to a page's author?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Misleading the reply, and leaking what is in the context into it",
+        "correct": true,
+        "why": "Right. Acting needs a tool, and there is none; the reply itself is still a way out for a lie or a leak."
+      },
+      {
+        "text": "None, since an assistant without tools cannot be injected",
+        "correct": false,
+        "why": "Injection needs only text the model reads. The reply can still be steered."
+      },
+      {
+        "text": "Acting, since the reply can send an e-mail on its own",
+        "correct": false,
+        "why": "A reply is text. Without a tool, nothing in the conversation sends anything."
+      },
+      {
+        "text": "Only leaking, since a reply cannot be made to say anything false",
+        "correct": false,
+        "why": "Changing what the reply says is the third aim, and it needs nothing but the reply."
+      }
+    ]
+  },
+  {
+    "id": "ex-ps4jc6q3",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Using lesson 8's arithmetic, how many gigabytes do the weights of a 34B model take at 4 bits?",
+    "hint": "Lesson 8.",
+    "value": 17,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-wdkgry1h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A laptop has 16 GB of memory, which also holds the operating system and the programs open on it. Which model's weights fit with room to spare?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "A 7B model at 16 bits, which is 14 GB",
+        "correct": false,
+        "why": "It does not fit with room to spare: the operating system and the rest need memory too."
+      },
+      {
+        "text": "A 70B model at 4 bits",
+        "correct": false,
+        "why": "That is 35 GB even at 4 bits: a workstation or a server."
+      },
+      {
+        "text": "A 7B model at 4 bits",
+        "correct": true,
+        "why": "Right. 3.5 GB leaves plenty of room, including for the working memory a long context needs."
+      },
+      {
+        "text": "A 7B model at full precision, 32 bits",
+        "correct": false,
+        "why": "At 4 bytes a weight that is 28 GB, almost twice what the laptop has."
+      }
+    ]
+  },
+  {
+    "id": "ex-1312d66w",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Storing each weight in fewer bits, rounded to a coarser set of values, is called ___.",
+    "hint": "Lesson 8.",
+    "blanks": [
+      {
+        "accept": [
+          "quantisation",
+          "quantization",
+          "quantising",
+          "quantizing"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1wfes6nh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A colleague says: \"I set the model's parameters to temperature 0.2 and 300 tokens.\" What does lesson 8 say is mixed up?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Nothing; parameters and settings are two words for one thing",
+        "correct": false,
+        "why": "That is the borrowed word lesson 8 corrects. A model's parameters are what it learnt, and they do not change per request."
+      },
+      {
+        "text": "Those are request settings; the parameters are the learnt weights",
+        "correct": true,
+        "why": "Right. The model is its learnt numbers. Temperature and the token limit are things you pass with a request, lessons 13 to 17."
+      },
+      {
+        "text": "Temperature is a weight, but the token limit is a setting",
+        "correct": false,
+        "why": "Neither is a weight. Both are sent with the request and leave the weights untouched."
+      },
+      {
+        "text": "The parameters are the sentences the model stored during its training",
+        "correct": false,
+        "why": "The model stores no sentences. Its parameters are numbers, and what it read is spread across all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-5cwbdwnc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "At the illustrative prices, 10,000 requests cost 4.33 with `few-shot.txt` and 0.53 with `short.txt`. How much is saved over one million requests, in the same units?",
+    "hint": "Lesson 9.",
+    "value": 380,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-hfgg2pxw",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which costs of fine-tuning are not on the per-token bill? Choose all that apply.",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Collecting and labelling hundreds of examples",
+        "correct": true,
+        "why": "Yes, and it is usually the largest: people's time, checking each answer."
+      },
+      {
+        "text": "Training runs, since the first is rarely the last",
+        "correct": true,
+        "why": "Yes. Each run is billed, and the data is adjusted and trained again."
+      },
+      {
+        "text": "An evaluation set held back from training",
+        "correct": true,
+        "why": "Yes. Without it you cannot tell a good run from a bad one."
+      },
+      {
+        "text": "The input tokens of each short request",
+        "correct": false,
+        "why": "Those are exactly what the per-token bill counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0rhdres",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A model was fine-tuned on the café's old opening hours, then trained again on the new ones. By lesson 9, what is still true?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "The second run overwrote the old hours, so only the new ones remain",
+        "correct": false,
+        "why": "Training nudges weights; it does not replace a record. The old hours stay in there with no way to remove them."
+      },
+      {
+        "text": "Nothing is left of the old hours once the new model is served",
+        "correct": false,
+        "why": "The new model started from the old weights, and the old hours are part of them."
+      },
+      {
+        "text": "The model now refuses questions about the hours, since it saw two answers",
+        "correct": false,
+        "why": "It does not detect a conflict. It produces whichever continuation is likely, which may be either."
+      },
+      {
+        "text": "The old hours are still spread through the weights, with no way to remove them",
+        "correct": true,
+        "why": "Right. There is no way to delete a fact from billions of numbers, and the model produces likely text rather than stored records."
+      }
+    ]
+  },
+  {
+    "id": "ex-kfrqkvej",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Replies come back in the wrong tone, and nobody has yet tried rewriting the prompt. The team proposes fine-tuning. What does lesson 9's ladder say?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Fine-tune, since tone is a habit and habits are what training is good at",
+        "correct": false,
+        "why": "Tone is a habit, and that makes fine-tuning possible later. The ladder climbs a rung only after the one below was tried and measured."
+      },
+      {
+        "text": "Add retrieval, so the model can read the support team's earlier replies",
+        "correct": false,
+        "why": "Retrieval is for knowledge the model lacks. A wrong tone is not a missing fact."
+      },
+      {
+        "text": "Write a clearer prompt first, then add examples",
+        "correct": true,
+        "why": "Right. Format and tone are the first two rungs, and fine-tuning is for a behaviour that already works with a long prompt."
+      },
+      {
+        "text": "Collect labelled examples first, then decide between a prompt and training",
+        "correct": false,
+        "why": "Labelling is the dearest part of fine-tuning, done before a minute was spent on the cheapest rung."
+      }
+    ]
+  },
+  {
+    "id": "ex-w29pgh2v",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which of these are machine learning, in lesson 10's sense? Choose all that apply.",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "A route planner following rules a programmer wrote",
+        "correct": false,
+        "why": "AI in the field's sense, not machine learning, since nothing was learnt from examples."
+      },
+      {
+        "text": "A spam filter trained on messages people marked as spam",
+        "correct": true,
+        "why": "Yes: its behaviour was learnt from examples."
+      },
+      {
+        "text": "`toylm`, counting which word followed each pair",
+        "correct": true,
+        "why": "Yes. Nobody wrote the rule that `hot` follows `coffee is`; it was counted from the corpus."
+      },
+      {
+        "text": "A chess program whose rules and scoring were written by hand",
+        "correct": false,
+        "why": "It is AI, and it learnt nothing: every rule was written."
+      }
+    ]
+  },
+  {
+    "id": "ex-555zjvey",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A benchmark's answers turn out to be `yes` for every question. Which of lesson 10's five questions catches that problem?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "What exactly was measured?",
+        "correct": true,
+        "why": "Right. A test whose answers are all `yes` measures whether the model says `yes`, which is something other than the skill it names."
+      },
+      {
+        "text": "Could the questions have been in the training data?",
+        "correct": false,
+        "why": "That is contamination, a separate problem: memory instead of ability. Here the answers alone give the score away."
+      },
+      {
+        "text": "Is this one run, or many?",
+        "correct": false,
+        "why": "That question is about demos chosen from many runs. Repeating this test would repeat the same flaw."
+      },
+      {
+        "text": "Who measured it, and can it be repeated?",
+        "correct": false,
+        "why": "Anybody repeating it would get the same misleading score, because the flaw is in the questions themselves."
+      }
+    ]
+  },
+  {
+    "id": "ex-x10s7ssj",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In the ten samples for `question : when does the café open ? answer :`, how many replies began with `yes`?",
+    "hint": "Lesson 10.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "replies"
+  },
+  {
+    "id": "ex-cgqb60az",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which pair of words does lesson 10 apply to a large language model?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "General, since it covers so many different tasks",
+        "correct": false,
+        "why": "That breadth comes from one narrow mechanism. General is the word in AGI, which names a goal."
+      },
+      {
+        "text": "Narrow, and not generative, since it only predicts",
+        "correct": false,
+        "why": "Predicting the next token, over and over, produces new content. That is what generative means."
+      },
+      {
+        "text": "Generative and general, since it does most intellectual tasks",
+        "correct": false,
+        "why": "That is the description of AGI, a goal with no agreed definition and no agreed test."
+      },
+      {
+        "text": "Generative, and in a real sense narrow",
+        "correct": true,
+        "why": "Right. It produces new text, and it does one thing, predicting the next token, which covers many tasks written as text."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9hp5y4t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "For the public holidays question, the top passage was right and the Sunday hours were not retrieved. Where does lesson 11 put the fix?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "In the grounded prompt's instruction, made stricter",
+        "correct": false,
+        "why": "The model would follow it faithfully from passages that do not hold the hours. No wording supplies a line that was not retrieved."
+      },
+      {
+        "text": "In a larger model, which would know the Sunday hours",
+        "correct": false,
+        "why": "No model was trained on this handbook. What is not in the prompt is not known."
+      },
+      {
+        "text": "In how the handbook is cut into passages",
+        "correct": true,
+        "why": "Right. A cut that separates a rule from the detail it points to is a chunking problem, and the fix is in how the documents are cut."
+      },
+      {
+        "text": "In asking for more passages, so the model sees all of it",
+        "correct": false,
+        "why": "The missing line shares no word with the question, so it scores zero however many passages are kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxgt6h56",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "One question's top passage scored 8.71 and another question's scored 2.94. What can you conclude?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The first match is about three times as good as the second",
+        "correct": false,
+        "why": "That reads the scores as a scale shared by every question. They only order passages for one query."
+      },
+      {
+        "text": "Nothing about which match is better: scores rank passages for one question",
+        "correct": true,
+        "why": "Right. The scores are not percentages and have no fixed top, so they mean nothing across questions."
+      },
+      {
+        "text": "The second passage is irrelevant, since it scored under 3",
+        "correct": false,
+        "why": "There is no score that means not relevant; 2.94 was the exact answer to the Sunday question."
+      },
+      {
+        "text": "The first answer is 87.1% likely to be right",
+        "correct": false,
+        "why": "BM25 scores are not percentages or probabilities of being right."
+      }
+    ]
+  },
+  {
+    "id": "ex-06m55mzk",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these failures happen before the model writes a word? Choose all that apply.",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Three passages that each share one word, for the cold coffee",
+        "correct": true,
+        "why": "Yes. The top three are returned whatever they are."
+      },
+      {
+        "text": "A grounded answer with one sentence that cites no source",
+        "correct": false,
+        "why": "That one is the model's: it went beyond the sources it was given."
+      },
+      {
+        "text": "`wireless internet` finding none of `wifi.md`",
+        "correct": true,
+        "why": "Yes. The search found nothing, and the model was never shown the answer."
+      },
+      {
+        "text": "The holiday rule retrieved without the Sunday hours",
+        "correct": true,
+        "why": "Yes. The cut separated the rule from its detail before any model ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdhg5pr5",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "The formula `retrieve` uses to score each passage against a question is called ___.",
+    "hint": "Lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "BM25",
+          "BM-25",
+          "BM 25"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-49b40gaz",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each criterion for choosing a model to the question it asks.",
+    "hint": "Lesson 12.",
+    "pairs": [
+      {
+        "left": "quality on your task",
+        "right": "How many of your own test cases does it get right?"
+      },
+      {
+        "left": "context size",
+        "right": "Does your longest real input fit, with room for the reply?"
+      },
+      {
+        "left": "latency",
+        "right": "How long can your user wait for a reply?"
+      },
+      {
+        "left": "lifetime",
+        "right": "When will this exact model be retired?"
+      }
+    ],
+    "right_distractors": [
+      "Which model tops the public comparison table?"
+    ]
+  },
+  {
+    "id": "ex-3xx2q1mt",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Add up `tok count handbook/*.md` for each encoding. How many more tokens does `cl100k_base` make of the six files than `o200k_base`?",
+    "hint": "Lesson 12.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-fj72bn1y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "You read a model maker's data terms and they suit you. You will call the same model through a cloud platform that resells it. What does lesson 12 say?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Nothing more to check, since the model and its terms are the same",
+        "correct": false,
+        "why": "The model may be the same. Where you call it from is a decision of its own, with its own terms."
+      },
+      {
+        "text": "Run the weights yourself, since resold models carry no data terms",
+        "correct": false,
+        "why": "A resold model carries the platform's terms. Running weights yourself is a separate arrangement, and only for open weights."
+      },
+      {
+        "text": "Read the platform's terms too: each place sets its own",
+        "correct": true,
+        "why": "Right. The same model sold in two places comes with prices, limits, regions and data terms set by each."
+      },
+      {
+        "text": "Check a recent blog post comparing the two platforms' policies",
+        "correct": false,
+        "why": "Lesson 12 says never to answer these from a blog post: terms change and differ between plans."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5mw8p14",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "At temperature 1, `toylm` gives `seven` 75% and `eight` 25% after `opens at`. Halving the temperature squares the ratio between two words. What share does `seven` get at temperature 0.5, in percent?",
+    "hint": "Lesson 13.",
+    "value": 90,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-tmgbt5kx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A tool that suggests names for a new café drink runs at temperature 0, and gives the same name every time it is asked. What does lesson 13 suggest?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "A higher temperature, since you want different candidates on each run",
+        "correct": true,
+        "why": "Right. Brainstorming has many good answers, and you will throw most candidates away."
+      },
+      {
+        "text": "Keep 0, since it gives the most likely and so the best name",
+        "correct": false,
+        "why": "The most likely name is not the best one for a task with many good answers. At 0 the others never appear."
+      },
+      {
+        "text": "Keep 0 and change the seed between requests",
+        "correct": false,
+        "why": "At temperature 0 there is no draw, so the seed has nothing to decide."
+      },
+      {
+        "text": "Raise it to the top of the range, to get the most creative names",
+        "correct": false,
+        "why": "Change it one step at a time while you watch the output: at the top, nonsense arrives in the same batch."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gevhqsa",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Taking the word with the highest score every time, with no draw, is called ___ decoding.",
+    "hint": "Lesson 13.",
+    "blanks": [
+      {
+        "accept": [
+          "greedy"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9fqp356q",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`toylm next \"the\"` gave `coffee` 29.9%, `café` 18.2%, `bread` 15.6%, `cat` 11.7% and four more below. How many words would `--top-p 0.5` keep there?",
+    "hint": "Lesson 14.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "words"
+  },
+  {
+    "id": "ex-b8a5kr04",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Top-p is also called ___ sampling, after the name of the set of words it keeps.",
+    "hint": "Lesson 14.",
+    "blanks": [
+      {
+        "accept": [
+          "nucleus"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yft2mrnz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "After `at seven`, `toylm` gives the full stop 100%. What does `--top-k 2` keep there?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "The full stop and the next best word in the vocabulary",
+        "correct": false,
+        "why": "Only words the model scored can be kept, and it scored one."
+      },
+      {
+        "text": "The full stop alone, since there is one candidate",
+        "correct": true,
+        "why": "Right. k is the most words kept, and here there is only one to keep."
+      },
+      {
+        "text": "Nothing, since top-k needs at least two candidates",
+        "correct": false,
+        "why": "Top-k keeps up to k words; fewer candidates simply means fewer kept."
+      },
+      {
+        "text": "Two copies of the full stop, at 50% each",
+        "correct": false,
+        "why": "There is one word with all of the share, and renormalising leaves it at 100%."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwfh0t9r",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`request.txt` is 79 input tokens. At the illustrative 2 per million input and 8 per million output, with a limit of 200 output tokens, what is the most 10,000 requests can cost?",
+    "hint": "Lesson 15.",
+    "value": 17.58,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-sgmnj2qh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A model that reasons before it answers returns a short visible reply with finish reason `length`. Which caution from lesson 15 applies?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Some APIs count reasoning tokens against the limit; read the current reference",
+        "correct": true,
+        "why": "Right. What the parameter counts has changed on some APIs, so the limit might have run out before the visible answer began."
+      },
+      {
+        "text": "The visible reply was short, so the finish reason is a reporting error",
+        "correct": false,
+        "why": "`length` means the loop was stopped from outside. Treat it as a cut, not as a mistake in the report."
+      },
+      {
+        "text": "A short reply proves the instruction worked, and the reason can be ignored",
+        "correct": false,
+        "why": "The finish reason is how you find out which of the two happened. A cut answer rarely looks cut."
+      },
+      {
+        "text": "The limit only counts visible text, so the model ended early by choice",
+        "correct": false,
+        "why": "Choosing to end is `end`. `length` says a limit was reached, whatever it was counting."
+      }
+    ]
+  },
+  {
+    "id": "ex-x279btva",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why are output tokens priced higher than input tokens on most price lists, by lesson 15?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Output tokens are longer pieces of text than the input ones",
+        "correct": false,
+        "why": "A token is the same kind of piece either way; the tokenizer does not change for the reply."
+      },
+      {
+        "text": "Providers charge more for what they write to discourage long replies",
+        "correct": false,
+        "why": "Lesson 15 gives a reason in the machinery: writing is a step per token, reading is one pass."
+      },
+      {
+        "text": "Output must be checked for safety, and that check is billed per token",
+        "correct": false,
+        "why": "No such check is part of lesson 15's reason. It is the step per token."
+      },
+      {
+        "text": "Each output token takes a full step of the model; the prompt is one pass",
+        "correct": true,
+        "why": "Right. The prompt is processed in one pass, and every written token is another step of the loop."
+      }
+    ]
+  },
+  {
+    "id": "ex-xva3nc78",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A plain-text prompt holds eight examples, each a `Message:` line and a `Category:` line, and ends on an open `Category:`. The model writes the category, then a new `Message:` of its own. Which stop fits?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "`Category:`, since the answer you want follows it",
+        "correct": false,
+        "why": "It would fire only after an invented message had already been written, one label too late."
+      },
+      {
+        "text": "`e`, the shortest string that ends the reply quickly",
+        "correct": false,
+        "why": "A short stop fires inside words: `hours` would survive, and `refunds` would come back as `r`."
+      },
+      {
+        "text": "`Message:`, the label that starts the next example",
+        "correct": true,
+        "why": "Right. It marks the end of the unit you want and does not occur inside a category."
+      },
+      {
+        "text": "No stop: list-of-messages chat APIs end the turn themselves",
+        "correct": false,
+        "why": "This is plain text with your own markers, which is exactly where stops matter most."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dcxzyef",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What does a stop sequence do that lesson 15's token limit does not?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "It makes the model aware that it should write a single answer",
+        "correct": false,
+        "why": "The model never learns of the stop. The loop checks the text."
+      },
+      {
+        "text": "It ends the reply at a piece of text that marks the end of the unit",
+        "correct": true,
+        "why": "Right. A limit cuts at a count, wherever it falls; a stop cuts where a chosen marker appears."
+      },
+      {
+        "text": "It keeps the marker in the output, so the program can find the end",
+        "correct": false,
+        "why": "The stop text is left out, so a program that needs the marker adds it back."
+      },
+      {
+        "text": "It improves the answer, since the model stops before it can go wrong",
+        "correct": false,
+        "why": "A stop decides where an answer ends and does nothing for whether it is right."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv6fvwnw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A reply lists prices such as `R$ 27.90`, one per line, and somebody sets `.` as a stop so the list ends at the first full stop. What happens?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "The list is kept whole, since a price is not the end of a sentence",
+        "correct": false,
+        "why": "The stop is matched as text, not understood. A full stop inside a number is still a full stop."
+      },
+      {
+        "text": "The first price is cut at its decimal point: `R$ 27`",
+        "correct": true,
+        "why": "Right. A stop fires on the text wherever it appears, and the price contains one."
+      },
+      {
+        "text": "The model learns to write prices with a comma instead",
+        "correct": false,
+        "why": "The model never learns of the stop; the loop checks the text and cuts it."
+      },
+      {
+        "text": "The reply reports `length`, so the cut is easy to spot",
+        "correct": false,
+        "why": "A stop reports `stop`, which looks like a normal ending. That is why it is harder to notice."
+      }
+    ]
+  },
+  {
+    "id": "ex-br167295",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "In the `the cat` loop, `and` leads `on` by about 0.41. What is the smallest presence penalty, to one decimal place, that breaks the loop the first time `cat sleeps` comes round again?",
+    "hint": "Lesson 17.",
+    "value": 0.5,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-n0v4qc0j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "You want the text pushed towards words it has not used at all, closer to \"change the subject\" than to \"stop grinding on\". Which control does lesson 17 point to?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "The frequency penalty",
+        "correct": false,
+        "why": "That one leans harder the more a word repeats, which suits loops and lists that grind on."
+      },
+      {
+        "text": "A higher temperature",
+        "correct": false,
+        "why": "Temperature flattens every score alike; it does not know which words were used."
+      },
+      {
+        "text": "A top-p of 0.8",
+        "correct": false,
+        "why": "Top-p cuts the unlikely tail, which is the opposite of reaching for unused words."
+      },
+      {
+        "text": "The presence penalty",
+        "correct": true,
+        "why": "Right. A flat charge for any word already used pushes the text towards new words."
+      }
+    ]
+  },
+  {
+    "id": "ex-teehg3gw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The prompt is `the cat`. Before `toylm` has written anything, how much does `--presence-penalty 1` subtract from the score of `cat`?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "1, since `cat` appears once in the text so far",
+        "correct": false,
+        "why": "In `toylm` the prompt is not counted. Some APIs do count it, and their reference says so."
+      },
+      {
+        "text": "1 for each time `cat` appears in the training corpus",
+        "correct": false,
+        "why": "Penalties look at this output only, never at the training file."
+      },
+      {
+        "text": "Nothing: `toylm` counts the words it wrote, not the prompt",
+        "correct": true,
+        "why": "Right. The penalty is charged on words already in the output, and the output is still empty."
+      },
+      {
+        "text": "2, once for `the` and once for `cat`",
+        "correct": false,
+        "why": "A penalty applies to the word that was used, and nothing was written yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-cnjrt8wh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A reply to the review prompt parses cleanly and reads `\"staff_praised\": \"yes\"`. What does lesson 18 say is wrong?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Nothing, since it parsed and the meaning is clear",
+        "correct": false,
+        "why": "Clear to a person. Code that tests `staff_praised` for true gets a string, and the string `\"no\"` is not false either."
+      },
+      {
+        "text": "The parser should have refused it at the first quote",
+        "correct": false,
+        "why": "`\"yes\"` is a perfectly good JSON string. The parser has no idea the field was meant to be a boolean."
+      },
+      {
+        "text": "A boolean came back as a word, and parsing does not check types",
+        "correct": true,
+        "why": "Right. A program needs `true` as a boolean, and a parser only says whether the text is JSON. Lesson 19's schema checks the type."
+      },
+      {
+        "text": "The field name is wrong, and should have been `praised`",
+        "correct": false,
+        "why": "The name matches the one the prompt gave. The value's type is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-8axmghff",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Python's `csv` reader read the unquoted `replies/menu.csv`, header included. On how many lines did the field count differ from the header's?",
+    "hint": "Lesson 18.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-z3ydkf5a",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these does a JSON parser refuse the moment the reply arrives? Choose all that apply.",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Single quotes around the field names",
+        "correct": true,
+        "why": "Yes. JSON needs double quotes."
+      },
+      {
+        "text": "A comma after the last field",
+        "correct": true,
+        "why": "Yes. JSON refuses the trailing comma."
+      },
+      {
+        "text": "A field called `mood` where the prompt said `sentiment`",
+        "correct": false,
+        "why": "It parses: the parser does not know which names the prompt asked for."
+      },
+      {
+        "text": "A sentence of introduction before the object",
+        "correct": true,
+        "why": "Yes. JSON has to start with a value, and a letter is not one."
+      }
+    ]
+  },
+  {
+    "id": "ex-2npcat7r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A reply holds two JSON objects, one after the other, with a sentence between them. What does lesson 19 say `repair` does with it?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Step 2 keeps the first object and drops the second",
+        "correct": false,
+        "why": "Step 2 takes the text from the first `{` to the last `}`, which here holds both objects and the sentence between them."
+      },
+      {
+        "text": "Step 3 merges the two objects and checks the result against the schema",
+        "correct": false,
+        "why": "Nothing merges objects. Step 3 only checks one object that has already parsed."
+      },
+      {
+        "text": "It sends the follow-up message at once, without trying the cut",
+        "correct": false,
+        "why": "The cheap steps come first. The follow-up message is for a reply that parsed and failed the schema."
+      },
+      {
+        "text": "Step 2 cuts out text that does not parse, and it says `still not JSON`",
+        "correct": true,
+        "why": "Right. First `{` to last `}` spans both objects and the sentence, and `repair` reports that rather than guessing further."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gn0xjq4",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "The sketch of the repair loop sets `MAX_ATTEMPTS = 3`. How many retries does that allow after the first reply?",
+    "hint": "Lesson 19.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "retries"
+  },
+  {
+    "id": "ex-yvyd8j1g",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In `schema.json`, the line `\"additionalProperties\": ___` is what refuses a field the schema never named, such as `mood`.",
+    "hint": "Lesson 19.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hc7f1ykj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`validate` printed `(top level): 'summary' is a required property`. What does `(top level)` say?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "The problem is the most serious of the ones it found",
+        "correct": false,
+        "why": "The path says where a problem is, not how much it matters."
+      },
+      {
+        "text": "The problem is with the object itself, not with one field inside it",
+        "correct": true,
+        "why": "Right. A missing required field or an extra one is a fact about the whole object, so its path is the top level."
+      },
+      {
+        "text": "The problem was found on the first line of the file",
+        "correct": false,
+        "why": "The validator reports paths into the object, not lines and columns; that was the parser in lesson 18."
+      },
+      {
+        "text": "The `summary` field is at the top of the reply but empty",
+        "correct": false,
+        "why": "The field is absent, and an absent field has no position in the reply."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4faf073",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put the checks a reply meant for a program goes through in lesson 19's order, cheapest first, ending with the one that is not a program.",
+    "hint": "Lesson 19.",
+    "items": [
+      "Parse it as JSON",
+      "Validate it against the schema",
+      "Check it against the café's rules",
+      "Check that it is true to its input"
+    ]
+  },
+  {
+    "id": "ex-x8p4e6pp",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "On the same eight test messages, how many more did the strong prompt's replies get right than the weak prompt's?",
+    "hint": "Lesson 20.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "messages"
+  },
+  {
+    "id": "ex-drvp934y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A team's test set holds twenty messages, all as plain as `r1` and `r3`. Two very different prompts both score 20 of 20. What does the result tell them?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Both prompts are ready to ship, since neither made a mistake",
+        "correct": false,
+        "why": "They made no mistake on easy inputs. Sarcasm, questions and other languages were never asked."
+      },
+      {
+        "text": "The longer prompt is better, since it scored the same with more detail",
+        "correct": false,
+        "why": "Equal scores on easy cases cannot separate the two, let alone favour one."
+      },
+      {
+        "text": "The test set is too large, and eight messages would have been enough",
+        "correct": false,
+        "why": "Size is not the problem: twenty easy messages and eight easy messages both measure nothing hard."
+      },
+      {
+        "text": "Little: a set with no hard cases scores every prompt well",
+        "correct": true,
+        "why": "Right. Each line of a test set should be there for a reason, and the reasons are the hard cases: mixed, sarcastic, a question, another language."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y4fy06g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The labeller files `Why was my soup cold again?` as `not_a_review`. The café counts it as a complaint. Following lesson 20, what do you do?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Nothing: it is a question, and the prompt says questions are `not_a_review`",
+        "correct": false,
+        "why": "The café's decision is that this one is a complaint. The prompt has to carry that decision, because the model cannot guess it."
+      },
+      {
+        "text": "Replace the four labels with two, so the model has fewer ways to be wrong",
+        "correct": false,
+        "why": "The café needs four labels. Fewer labels hides the case instead of deciding it."
+      },
+      {
+        "text": "Add it to the test set as `negative`, and name the case in the prompt",
+        "correct": true,
+        "why": "Right. Every disagreement is a sentence the prompt needs, and a real message labelled wrong goes into the test set with its right label."
+      },
+      {
+        "text": "Raise the temperature, so the model reads the message more carefully",
+        "correct": false,
+        "why": "Temperature changes how a word is drawn. It does not tell the model where the café draws this line."
+      }
+    ]
+  },
+  {
+    "id": "ex-hp9pe9g6",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`tok count` gave `prompt-zero.txt` and `prompt-few.txt`. How many tokens did the four examples add to every request?",
+    "hint": "Lesson 21.",
+    "value": 85,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-jcv4qdkh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A summarising prompt shows three solved cases, and in each the summary is one sentence beginning `The customer`. Nothing in the instructions mentions either. What should you expect back?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "Whatever length and opening the instructions allow, since they did not ask for these",
+        "correct": false,
+        "why": "The examples are a specification too, and they say one sentence and that opening."
+      },
+      {
+        "text": "Replies shaped like the examples, down to their first two words",
+        "correct": true,
+        "why": "Right. Examples teach everything they have in common, whether you meant them to or not."
+      },
+      {
+        "text": "A mix of openings, since three examples are too few to form a pattern",
+        "correct": false,
+        "why": "One example is already enough to look like a pattern; three that agree are a strong one."
+      },
+      {
+        "text": "Longer summaries, since the model will try to add what the examples left out",
+        "correct": false,
+        "why": "The model continues the pattern in front of it. Nothing in the pattern says longer."
+      }
+    ]
+  },
+  {
+    "id": "ex-51mfqpky",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each rule for choosing examples to what it prevents.",
+    "hint": "Lesson 21.",
+    "pairs": [
+      {
+        "left": "Cover the classes",
+        "right": "One label looking like the default"
+      },
+      {
+        "left": "Include a hard case",
+        "right": "Examples that teach nothing the description had not"
+      },
+      {
+        "left": "Vary the order",
+        "right": "The last example's label leaking into the answer"
+      },
+      {
+        "left": "Keep them out of the test set",
+        "right": "A score that measures memory"
+      }
+    ],
+    "right_distractors": [
+      "A prompt too long to send"
+    ]
+  },
+  {
+    "id": "ex-vhspg955",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "To save tokens, an application sends the system message only with the first request of each conversation. What happens from the second request on?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "Nothing changes, since the model remembers the system message",
+        "correct": false,
+        "why": "There is no memory between requests. The system message holds only because it is sent every time."
+      },
+      {
+        "text": "The rules still hold, because precedence is enforced by the API",
+        "correct": false,
+        "why": "Precedence is trained, not enforced, and it needs the text to be there in the first place."
+      },
+      {
+        "text": "The model asks the application to send the rules again",
+        "correct": false,
+        "why": "It has no way to know rules existed. It continues whatever text it is given."
+      },
+      {
+        "text": "The model works with no standing instructions at all",
+        "correct": true,
+        "why": "Right. The model keeps nothing between requests, so a system message left out of a request does not exist for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzmp27kq",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`prompts/system-v3.txt` is 149 tokens and goes with every message. How many input tokens does it account for over 10,000 customer messages?",
+    "hint": "Lesson 22.",
+    "value": 1490000,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-xbf5c7f6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A security review asks what an attacker would learn if the café assistant's system prompt were revealed in full. If lesson 22 was followed, what is the answer?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "The staff Wi-Fi password, which the model was told never to reveal",
+        "correct": false,
+        "why": "That is what lesson 22 says never to put there: what the model must not tell, it must not be given."
+      },
+      {
+        "text": "The customer records sent with each question",
+        "correct": false,
+        "why": "Customer data has no place in a system prompt, and the café's has none."
+      },
+      {
+        "text": "Nothing that does harm: it was written as if it would be published",
+        "correct": true,
+        "why": "Right. No passwords, no keys, no customer data, no notes on which rules are really enforced."
+      },
+      {
+        "text": "Nothing at all, since a system prompt cannot be revealed",
+        "correct": false,
+        "why": "It can: it is text in the model's context, and lesson 7 shows how it comes back out."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d4fxzrq",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Lesson 23 says the role that changes a reply most is often not the model's but the ___'s: who the reply is for.",
+    "hint": "Lesson 23.",
+    "blanks": [
+      {
+        "accept": [
+          "reader",
+          "audience"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ady6aez1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these lines sets the reader's role rather than the model's?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "Explain to a new barista, on their first day, why we ask about allergies",
+        "correct": true,
+        "why": "Right. It names who the reply is for, which sets the register, the vocabulary and the angle at once."
+      },
+      {
+        "text": "You are a patient teacher who explains things to people slowly",
+        "correct": false,
+        "why": "That casts the model, not the reader. Who the explanation is for is still open."
+      },
+      {
+        "text": "You are the assistant at Café Aurora's counter: warm, brief, plain",
+        "correct": false,
+        "why": "That is the model's role, a voice for every reply."
+      },
+      {
+        "text": "You are a world-class food allergy specialist",
+        "correct": false,
+        "why": "That is a role for the model, and one that adds tone and no knowledge."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9whxtc5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The café's website assistant answers correctly in a stiff, formal voice, and the café wants it warm and brief. What is the cheapest fix, by lesson 23?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "Fine-tuning on a few hundred warm, brief replies",
+        "correct": false,
+        "why": "That is the dearest rung of lesson 9's ladder, for something one line of prompt does."
+      },
+      {
+        "text": "A longer handbook, so the assistant has more to say",
+        "correct": false,
+        "why": "More facts change what it knows, not how it sounds, and brief is the opposite of more."
+      },
+      {
+        "text": "Twenty examples of warm replies on every request",
+        "correct": false,
+        "why": "Examples are paid for on every request, and a role line does the same job for a few tokens."
+      },
+      {
+        "text": "One role line in the system message, giving the voice",
+        "correct": true,
+        "why": "Right. A role is one line that changes the register of every reply after it, which is the job here."
+      }
+    ]
+  },
+  {
+    "id": "ex-epyqz67s",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`tok count` gave 40 tokens for `bare.txt` and 216 for `with-context.txt`. How many times the bare prompt is the one with context? Give one decimal place.",
+    "hint": "Lesson 24.",
+    "value": 5.4,
+    "tolerance": 0.05,
+    "unit": "times"
+  },
+  {
+    "id": "ex-mz4f9ge8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The café's assistant carries the whole handbook in its system prompt. Is that system prompting or contextual prompting, by lesson 24?",
+    "hint": "Lesson 24.",
+    "choices": [
+      {
+        "text": "System prompting only, since anything in the system message is an instruction",
+        "correct": false,
+        "why": "The system message holds instructions, and it can also hold facts. Lesson 24 says the facts live in either place."
+      },
+      {
+        "text": "Contextual only, since a system prompt holds no facts",
+        "correct": false,
+        "why": "A system prompt may carry the handbook. Lesson 24 names the café's assistant as the example."
+      },
+      {
+        "text": "Both: the facts are context wherever they sit",
+        "correct": true,
+        "why": "Right. What makes it contextual is the question asked while writing: what does the model need to know that it cannot know otherwise?"
+      },
+      {
+        "text": "Neither: it is retrieval, since the handbook is a document",
+        "correct": false,
+        "why": "Retrieval chooses passages by program for each request. Pasting the whole handbook once in the system prompt is not that."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4wwnezx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The same R$ 140 refund now needs a note for the shift manager to approve, not an e-mail to the customer. Which kind of context changes first?",
+    "hint": "Lesson 24.",
+    "choices": [
+      {
+        "text": "The data",
+        "correct": false,
+        "why": "The refunds page and the customer's message are the same material. The reader is what moved."
+      },
+      {
+        "text": "Who the answer is for",
+        "correct": true,
+        "why": "Right. A note for the shift manager differs in tone and shape from a reply to a customer about the same refund."
+      },
+      {
+        "text": "Nothing, since the facts of the refund are the same",
+        "correct": false,
+        "why": "The facts are, and the reader is not. Who the answer is for decides tone and shape."
+      },
+      {
+        "text": "The model, since a manager's note is a different task",
+        "correct": false,
+        "why": "The same model can write both. The prompt has to say who the note is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpwchrzx",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`direct.txt` is 116 tokens; the step-back version sends `step1.txt` (122) and then `step2.txt` (226). How many more input tokens does the step-back version send than the direct one?",
+    "hint": "Lesson 25.",
+    "value": 232,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-mahcaa03",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "At the counter: \"A customer's wrong dish cost R$ 120. Can I refund it on the spot?\" Which is a step-back question for it, in lesson 25's sense?",
+    "hint": "Lesson 25.",
+    "choices": [
+      {
+        "text": "Which handbook rules decide when a refund needs someone's approval?",
+        "correct": true,
+        "why": "Right. It asks for the rules the case is an instance of, including the exception above R$ 100 that the wording hides."
+      },
+      {
+        "text": "Exactly which dish did the customer order, and what was wrong with it?",
+        "correct": false,
+        "why": "That goes further into the specifics, the opposite direction from a step back."
+      },
+      {
+        "text": "Can I refund it on the spot? Answer yes or no, then explain.",
+        "correct": false,
+        "why": "That is the original question again, with a format added."
+      },
+      {
+        "text": "Is R$ 120 a large amount for a single dish at a café?",
+        "correct": false,
+        "why": "That asks for an opinion about the price, not for the rule that decides the case."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vp7vryb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these questions have the shape lesson 25 says a step back helps? Choose all that apply.",
+    "hint": "Lesson 25.",
+    "choices": [
+      {
+        "text": "An exception hidden behind a more obvious rule",
+        "correct": true,
+        "why": "Yes, the holiday toastie's shape: the wording points at the wrong rule."
+      },
+      {
+        "text": "A question from a field with laws, such as physics",
+        "correct": true,
+        "why": "Yes. Naming the law is most of the work, as with the gas question."
+      },
+      {
+        "text": "One moment in a longer history, such as a career",
+        "correct": true,
+        "why": "Yes. The whole history in the prompt is what the date is read against."
+      },
+      {
+        "text": "The name of the guest Wi-Fi network",
+        "correct": false,
+        "why": "There is no principle behind it: the answer is one line of the handbook."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0wwbrw4",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Work it out step by step, as lesson 26 asks of the model. A customer orders 4 espressos at R$ 9 each and 1 cinnamon bun at R$ 11. Their loyalty card already has 8 stamps, and the tenth coffee is free. How many reais do they pay?",
+    "hint": "Lesson 26.",
+    "value": 38,
+    "tolerance": 0,
+    "unit": "R$"
+  },
+  {
+    "id": "ex-svdp3xpx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A program needs both the chain and an answer it can parse without fail. Beyond a fixed `Answer:` line, what does lesson 26 point to?",
+    "hint": "Lesson 26.",
+    "choices": [
+      {
+        "text": "The last number in the reply, which is where the answer usually sits",
+        "correct": false,
+        "why": "Picking a number out of the text is the guess the fixed marker was there to avoid; the chain is full of numbers."
+      },
+      {
+        "text": "A structured format, with the reasoning and the answer in separate fields",
+        "correct": true,
+        "why": "Right. Lesson 18's formats put the reasoning in one field and the answer in another, and a parser checks both."
+      },
+      {
+        "text": "A second request asking the model to repeat only its answer",
+        "correct": false,
+        "why": "That doubles the calls and gives another reply to parse, with the same problem."
+      },
+      {
+        "text": "A higher output limit, so the answer line is never cut off",
+        "correct": false,
+        "why": "A limit set too low can cut the chain before `Answer:`, but raising it does not make the answer easier to read out."
+      }
+    ]
+  },
+  {
+    "id": "ex-488dphrf",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these would gain from asking for the steps first, by lesson 26? Choose all that apply.",
+    "hint": "Lesson 26.",
+    "choices": [
+      {
+        "text": "The price of one flat white, read off the menu",
+        "correct": false,
+        "why": "A one-step question has no intermediate result, and gains nothing."
+      },
+      {
+        "text": "A bill over several items, with a discount rule",
+        "correct": true,
+        "why": "Yes: a rule applied before a sum needs an intermediate result."
+      },
+      {
+        "text": "Two handbook facts that have to be combined",
+        "correct": true,
+        "why": "Yes. The first fact, written down, is what the second step is conditioned on."
+      },
+      {
+        "text": "A sum of six prices with a total at the end",
+        "correct": true,
+        "why": "Yes. Arithmetic over several items has intermediate results to write."
+      }
+    ]
+  },
+  {
+    "id": "ex-hb7twcz9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The five café chains came to 209 output tokens. A vote of twenty samples, with chains of the same average length, would cost how many output tokens?",
+    "hint": "Lesson 27.",
+    "value": 836,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-jf4we4pp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "On the holiday question, the vote came out `yes` 3 of 5 and the handbook says `no`. What does lesson 27 propose?",
+    "hint": "Lesson 27.",
+    "choices": [
+      {
+        "text": "Draw twenty samples instead of five, so the right answer can catch up",
+        "correct": false,
+        "why": "More samples of the same prompt repeat the same pull, and the wrong majority would most likely grow firmer."
+      },
+      {
+        "text": "Sample at temperature 0, so every chain follows the most careful path",
+        "correct": false,
+        "why": "At temperature 0 every sample is a copy, and a vote among copies is no vote."
+      },
+      {
+        "text": "Keep the minority answer, since the chains behind it quote a rule",
+        "correct": false,
+        "why": "Choosing by how a chain reads is what a vote was meant to replace. The prompt is where the pull starts."
+      },
+      {
+        "text": "Step back to the rules first, then vote among chains that start from them",
+        "correct": true,
+        "why": "Right. The wrong chains share one pull, the word Wednesday, and the fix is in the prompt, before the samples are drawn."
+      }
+    ]
+  },
+  {
+    "id": "ex-65q4sgd7",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Match each technique to what happens to a dead end, by lesson 28's comparison table.",
+    "hint": "Lesson 27.",
+    "pairs": [
+      {
+        "left": "Chain of thought",
+        "right": "It is followed to the end"
+      },
+      {
+        "left": "Self-consistency",
+        "right": "It is outvoted, if it is rare"
+      },
+      {
+        "left": "Tree of thoughts",
+        "right": "It is dropped when it is judged"
+      }
+    ],
+    "right_distractors": [
+      "It is repaired by the loop and retried"
+    ]
+  },
+  {
+    "id": "ex-dw00cn82",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "At level 2 of `tot 4 9 10 13` with the default breadth, how many of the proposed states were repeats of a state already proposed?",
+    "hint": "Lesson 28.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "states"
+  },
+  {
+    "id": "ex-tb3tdqh1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "On some problem, most attempts take the same tempting first step, and it leads to a dead end that can be recognised once you are there. Which technique handles that best, by lesson 28's table?",
+    "hint": "Lesson 28.",
+    "choices": [
+      {
+        "text": "Self-consistency, which outvotes the dead end",
+        "correct": false,
+        "why": "A vote outvotes a dead end only if it is rare. When most samples take it, the wrong answer wins."
+      },
+      {
+        "text": "Tree of thoughts, which drops the step when it is judged",
+        "correct": true,
+        "why": "Right. A tree judges partial states at every step, so a dead end is cut before anything more is spent on it."
+      },
+      {
+        "text": "Chain of thought, which writes the steps out one by one",
+        "correct": false,
+        "why": "A single chain follows its first step to the end, with no way back."
+      },
+      {
+        "text": "Any of the three, since each one compares paths at every step",
+        "correct": false,
+        "why": "Only the tree compares at every step. A chain never compares, and a vote compares only final answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-xej1mthg",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put the three techniques in order of model calls per answer, fewest first.",
+    "hint": "Lesson 28.",
+    "items": [
+      "Chain of thought",
+      "Self-consistency",
+      "Tree of thoughts"
+    ]
+  },
+  {
+    "id": "ex-b8na23da",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each kind of line in a ReAct trace to what it holds.",
+    "hint": "Lesson 29.",
+    "pairs": [
+      {
+        "left": "Thought:",
+        "right": "What is known so far, and what is needed next"
+      },
+      {
+        "left": "Action:",
+        "right": "One tool, and what to give it"
+      },
+      {
+        "left": "Observation:",
+        "right": "What the tool returned, word for word"
+      },
+      {
+        "left": "Answer:",
+        "right": "The reply, once nothing more is needed"
+      }
+    ],
+    "right_distractors": [
+      "The model's guess at what the tool will return"
+    ]
+  },
+  {
+    "id": "ex-hr0p7mfq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A stock tool returns `0` whenever its database is down, instead of an error. What does lesson 29 say that does to a ReAct run?",
+    "hint": "Lesson 29.",
+    "choices": [
+      {
+        "text": "Nothing, since the model will notice the database is down",
+        "correct": false,
+        "why": "Nothing in `0` says the database is down. The model reasons from what the Observation says."
+      },
+      {
+        "text": "The loop stops the run, since `0` is not a valid Observation",
+        "correct": false,
+        "why": "The loop checks the shape of turns, not whether a tool's reply is true. `0` is a perfectly shaped reply."
+      },
+      {
+        "text": "The run ends at the step limit, since the model keeps retrying",
+        "correct": false,
+        "why": "With `0` there is nothing to retry: the model has been told there is no stock and moves on."
+      },
+      {
+        "text": "It hands the model a wrong fact to reason from",
+        "correct": true,
+        "why": "Right. A clear error comes back as an Observation the next turn acts on; a silent `0` reads as a true answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-x90a24c0",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`agent runs/refund.txt` answers on step 4, after a tool call on each of steps 1 to 3. Run with `--max-steps 3`, how many tool calls would the loop make before it stops?",
+    "hint": "Lesson 29.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-dc8xde7v",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Put the turns of `agent runs/refund.txt` in the order they ran.",
+    "hint": "Lesson 29.",
+    "items": [
+      "Search the handbook for the approval rule",
+      "Calculate four soups at R$ 27.90",
+      "Search the handbook for how the money goes back",
+      "Answer with the amount, the card and the approval"
+    ]
+  },
+  {
+    "id": "ex-0csw9xkf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Both lesson 30's prompt tuning and lesson 31's automatic prompt engineering find a prompt instead of writing one. What separates them?",
+    "hint": "Lesson 30.",
+    "choices": [
+      {
+        "text": "One learns vectors against the weights; the other scores written prompts",
+        "correct": true,
+        "why": "Right. Prompt tuning needs the weights and a gradient. APE needs only a way to send text and a set of labelled examples."
+      },
+      {
+        "text": "Prompt tuning changes the weights; APE leaves them as they are",
+        "correct": false,
+        "why": "Neither changes the weights. In prompt tuning they are frozen and only the soft prompt's numbers move."
+      },
+      {
+        "text": "APE needs the weights, and prompt tuning works through any API",
+        "correct": false,
+        "why": "The other way round: through an API there is nowhere to put a vector, while APE sends ordinary text."
+      },
+      {
+        "text": "Only APE produces something a model can be given",
+        "correct": false,
+        "why": "Both produce something a model can be given. Only APE's result can also be read by a person."
+      }
+    ]
+  },
+  {
+    "id": "ex-becsc2rc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In lesson 30's table, which of the three is paid for as extra tokens of text sent with every request?",
+    "hint": "Lesson 30.",
+    "choices": [
+      {
+        "text": "The written prompt",
+        "correct": true,
+        "why": "Right. Its cost is the tokens of the prompt, on every request, as lesson 3 counted."
+      },
+      {
+        "text": "Prompt tuning",
+        "correct": false,
+        "why": "Its cost is a training run, then almost nothing per request: the vectors are not text."
+      },
+      {
+        "text": "Fine-tuning",
+        "correct": false,
+        "why": "It costs a training run and often a higher price per request, and it adds no prompt text."
+      },
+      {
+        "text": "None of them, since a model is priced per answer",
+        "correct": false,
+        "why": "Models are priced per token, and the written prompt's tokens go with every request."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0py3q4a",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In prompt tuning, the soft prompt's numbers are trained while the model's own weights stay ___.",
+    "hint": "Lesson 30.",
+    "blanks": [
+      {
+        "accept": [
+          "frozen",
+          "fixed",
+          "unchanged"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ywh8h9ts",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`the {x} is` scored 4/4 on `tests.tsv`. What was its score on `held.tsv`, as a percentage rounded to the nearest whole number?",
+    "hint": "Lesson 31.",
+    "value": 33,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-n7c0xmgx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Lesson 21 warned that a prompt whose examples are the test set's own messages scores well for the wrong reason. Which idea in lesson 31 is the same warning?",
+    "hint": "Lesson 31.",
+    "choices": [
+      {
+        "text": "The proposer's job is variety and the scorer's is judgement",
+        "correct": false,
+        "why": "That splits the work between two steps. It says nothing about which examples may measure the result."
+      },
+      {
+        "text": "Examples used to choose cannot measure the choice honestly",
+        "correct": true,
+        "why": "Right. The winner's 4/4 used `tests.tsv` up, and a held-out set measures honestly once per decision."
+      },
+      {
+        "text": "Exact match can score a correct reply as wrong",
+        "correct": false,
+        "why": "That is a fault in the metric, and it applies whatever examples are used."
+      },
+      {
+        "text": "A person approves what goes into production",
+        "correct": false,
+        "why": "That catches what a score cannot, such as a harmful assumption. It is a different safeguard."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kpg6mc0",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put an honest run of automatic prompt engineering in order.",
+    "hint": "Lesson 31.",
+    "items": [
+      "A model proposes candidate prompts from a few examples",
+      "Each candidate is scored on the labelled examples",
+      "The highest score is kept",
+      "The winner is scored once on the held-out set",
+      "A person reads the winner before it goes into production"
+    ]
+  }
+]

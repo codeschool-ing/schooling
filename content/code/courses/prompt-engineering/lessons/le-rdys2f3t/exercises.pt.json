@@ -1,0 +1,380 @@
+{
+  "ex-hhtr3hh0": {
+    "prompt": "Por que um modelo não consegue responder sozinho a uma pergunta sobre o manual do Café Aurora, seja qual for a formulação?",
+    "hint": "De onde teria vindo o que ele sabe do manual?",
+    "choices": [
+      {
+        "text": "Ele nunca viu o manual",
+        "why": "Isso. Nenhuma formulação traz um documento que o modelo nunca leu; pôr os trechos no prompt traz."
+      },
+      {
+        "text": "A pergunta era curta demais para ele entender",
+        "why": "O tamanho não é o problema. O modelo não tem fonte para as regras do café."
+      },
+      {
+        "text": "Os modelos se recusam a responder sobre empresas",
+        "why": "Eles respondem de bom grado, e esse é o perigo: uma resposta provável, não a do café."
+      },
+      {
+        "text": "O manual está em Markdown, que os modelos não leem",
+        "why": "Modelos leem Markdown sem problema. Só nunca viram esse arquivo."
+      }
+    ]
+  },
+  "ex-qkhev5rp": {
+    "prompt": "Na geração aumentada por recuperação, o que acontece antes de o modelo escrever qualquer coisa?",
+    "hint": "O nome tem duas metades, em ordem.",
+    "choices": [
+      {
+        "text": "O modelo passa por ajuste fino com os documentos",
+        "why": "Isso muda os pesos, lição 9. O RAG muda só o que é enviado."
+      },
+      {
+        "text": "O modelo procura a resposta na internet",
+        "why": "A busca aqui é nos seus próprios documentos, feita por um programa antes de o modelo ver qualquer coisa."
+      },
+      {
+        "text": "O modelo traduz a pergunta em palavras-chave",
+        "why": "No `retrieve`, um programa descarta as palavras pequenas. O modelo ainda nem entrou."
+      },
+      {
+        "text": "Os trechos relevantes são achados e postos no prompt",
+        "why": "Isso. Primeiro recuperar, depois gerar."
+      }
+    ]
+  },
+  "ex-jp75xq8q": {
+    "prompt": "O `retrieve` imprimiu `query words: caf open sundays` para \"when does the café open on sundays\". Para onde foram `when`, `does`, `the` e `on`?",
+    "hint": "Uma das quatro regras da nota.",
+    "choices": [
+      {
+        "text": "O modelo as julgou irrelevantes",
+        "why": "Nenhum modelo entra nisso. Uma lista fixa de palavras pequenas é removida."
+      },
+      {
+        "text": "Não bateram com nenhum trecho, então foram escondidas",
+        "why": "`the` está em quase todos os trechos. Elas foram removidas antes de qualquer comparação."
+      },
+      {
+        "text": "Palavras pequenas e comuns são descartadas primeiro",
+        "why": "Isso. Elas aparecem em todo lugar e não diriam nada à busca sobre um trecho."
+      },
+      {
+        "text": "Só as três últimas palavras de uma pergunta são usadas",
+        "why": "`caf` não está entre as três últimas. As palavras pequenas saíram onde quer que estivessem."
+      }
+    ]
+  },
+  "ex-s49zr2qd": {
+    "prompt": "`On Sundays it opens at 08:00` fez 2,94 graças a uma palavra, `sundays`. Por que uma palavra conta tanto?",
+    "hint": "Quantos trechos a contêm?",
+    "choices": [
+      {
+        "text": "É a palavra mais longa da pergunta",
+        "why": "O tamanho da palavra não entra na nota."
+      },
+      {
+        "text": "Ela aparece num trecho só do manual",
+        "why": "Isso. Uma palavra rara diz muito sobre o trecho que a tem, então vale mais."
+      },
+      {
+        "text": "É a última palavra da pergunta",
+        "why": "A posição na pergunta também não entra."
+      },
+      {
+        "text": "A busca entendeu que a pergunta é sobre domingos",
+        "why": "A busca compara palavras; nada nela entende coisa nenhuma."
+      }
+    ]
+  },
+  "ex-ptbmhn82": {
+    "prompt": "A palavra `open` da pergunta não bateu com nada no manual. O que isso mostra sobre esta busca?",
+    "hint": "O que o manual diz no lugar?",
+    "choices": [
+      {
+        "text": "O manual não fala de horário de abertura",
+        "why": "Fala, no `hours.md`. Ele diz `opens`."
+      },
+      {
+        "text": "`open` e `opens` são palavras diferentes para ela",
+        "why": "Isso. Uma busca por palavra-chave compara formas exatas, e o manual só diz `opens`."
+      },
+      {
+        "text": "A palavra era comum demais para contar",
+        "why": "As palavras comuns são descartadas pelo nome, e `open` não é uma delas; ela só não aparece."
+      },
+      {
+        "text": "A busca só compara substantivos",
+        "why": "Ela compara qualquer palavra. `opens` é só uma palavra diferente de `open`."
+      }
+    ]
+  },
+  "ex-09kdapmb": {
+    "prompt": "Quantos arquivos o `ls handbook` lista?",
+    "hint": "Conte as linhas.",
+    "unit": "arquivos"
+  },
+  "ex-sxe94rzm": {
+    "prompt": "Um sistema de RAG dá uma resposta errada. O que esta lição diz para conferir primeiro?",
+    "hint": "Dá para conferir sem modelo?",
+    "choices": [
+      {
+        "text": "Se um modelo maior se sairia melhor",
+        "why": "O modelo só pode usar o que recebeu. Confira isso primeiro."
+      },
+      {
+        "text": "Se a temperatura estava alta demais",
+        "why": "É possível, e secundário. As provas vêm antes."
+      },
+      {
+        "text": "Se a pergunta tinha erro de digitação",
+        "why": "Vale olhar, mas a saída da busca responde à pergunta de verdade."
+      },
+      {
+        "text": "Se o trecho certo foi recuperado",
+        "why": "Isso. Rode a busca sozinha; se o trecho não está lá, nenhum prompt conserta."
+      }
+    ]
+  },
+  "ex-d7qm5ckd": {
+    "prompt": "Ponha em ordem as partes do prompt que o `retrieve --prompt` monta.",
+    "hint": "Leia a captura de cima para baixo.",
+    "items": [
+      "A instrução de usar só as fontes e citá-las",
+      "As fontes numeradas, com o arquivo de onde cada uma veio",
+      "A pergunta"
+    ]
+  },
+  "ex-csc5y0gz": {
+    "prompt": "O que a instrução do prompt ancorado pede ao modelo? Marque todas as que se aplicam.",
+    "hint": "Leia as três frases dela.",
+    "choices": [
+      {
+        "text": "Responder usando só as fontes",
+        "why": "Sim: a primeira frase."
+      },
+      {
+        "text": "Citar cada fonte que usar como [1], [2]",
+        "why": "Sim: para a resposta poder ser rastreada."
+      },
+      {
+        "text": "Dizer que o manual não diz, quando as fontes não contêm a resposta",
+        "why": "Sim: a permissão que protege você."
+      },
+      {
+        "text": "Preencher qualquer lacuna com conhecimento geral",
+        "why": "Ela diz o contrário: não responder com conhecimento geral."
+      }
+    ]
+  },
+  "ex-t5f4t766": {
+    "prompt": "Por que o `[1]` numa resposta ancorada importa?",
+    "hint": "O que dá para fazer com ele que não dá com uma frase sem citação?",
+    "choices": [
+      {
+        "text": "Ele faz a resposta soar mais confiável",
+        "why": "Soar confiável é justamente o que a lição 5 critica. A questão é que dá para conferir."
+      },
+      {
+        "text": "Ele liga a resposta a uma linha que dá para conferir",
+        "why": "Isso. Uma pessoa ou um programa abre a fonte e confirma que a resposta está lá."
+      },
+      {
+        "text": "Ele diz ao modelo qual fonte é mais confiável",
+        "why": "O número é para quem lê. Ele registra de onde veio uma afirmação."
+      },
+      {
+        "text": "Ele reduz o custo do pedido",
+        "why": "Uma citação acrescenta alguns tokens; não economiza nada."
+      }
+    ]
+  },
+  "ex-nqd2x20e": {
+    "prompt": "Para \"can I bring my dog\", o prompt saiu sem fontes. Qual resposta é o sistema funcionando certo?",
+    "hint": "O que a instrução permitiu?",
+    "choices": [
+      {
+        "text": "\"O manual não diz se cachorros podem entrar.\"",
+        "why": "Isso. É uma resposta correta sobre o manual, e é o que a instrução pede."
+      },
+      {
+        "text": "\"Cachorros são bem-vindos no terraço.\"",
+        "why": "Uma resposta provável sobre cafés em geral, sem fonte nenhuma por trás."
+      },
+      {
+        "text": "\"Sim, cachorros comportados podem entrar [1].\"",
+        "why": "Não existe [1]. Citar uma fonte que não foi enviada é inventar."
+      },
+      {
+        "text": "Um erro, já que um prompt sem fontes não pode ser enviado",
+        "why": "Pode ser enviado, e a instrução diz ao modelo o que fazer com ele."
+      }
+    ]
+  },
+  "ex-qt9w71kk": {
+    "prompt": "Numa resposta ancorada, uma frase vem sem citação. O que esta lição sugere?",
+    "hint": "O que as citações deixam você perceber?",
+    "choices": [
+      {
+        "text": "Ignorar, já que o resto está citado",
+        "why": "Uma frase sem citação numa resposta ancorada é a que mais vale conferir."
+      },
+      {
+        "text": "Confiar mais nela, já que o modelo não precisou de fonte",
+        "why": "Não precisar de fonte é exatamente o que a ancoragem quer evitar."
+      },
+      {
+        "text": "Apagar as fontes e perguntar de novo",
+        "why": "Isso remove as provas, o que piora tudo."
+      },
+      {
+        "text": "Olhar de perto: é a que mais provavelmente veio de fora das fontes",
+        "why": "Isso. As frases sem citação são onde um modelo vai além do que recebeu, quando vai."
+      }
+    ]
+  },
+  "ex-r61hrrt4": {
+    "prompt": "\"is there wireless internet for customers\" não recuperou nada, embora o `wifi.md` responda. Por quê?",
+    "hint": "Compare as palavras com as do manual.",
+    "choices": [
+      {
+        "text": "O arquivo do Wi-Fi não estava no `handbook/`",
+        "why": "Estava; \"what is the wifi password\" o achou."
+      },
+      {
+        "text": "A pergunta era longa demais",
+        "why": "O tamanho não importou. Nenhuma palavra dela aparece no manual."
+      },
+      {
+        "text": "Perguntas sobre senhas são bloqueadas",
+        "why": "Nada é bloqueado. As palavras simplesmente não batem."
+      },
+      {
+        "text": "Não tem nenhuma palavra em comum com os trechos",
+        "why": "Isso. Uma busca por palavra-chave não vê que duas palavras diferentes querem dizer a mesma coisa."
+      }
+    ]
+  },
+  "ex-ya58jkzc": {
+    "prompt": "Para \"what time does the café open on public holidays\", o primeiro trecho estava certo e os horários faltaram. Que falha é essa?",
+    "hint": "Onde os horários estão escritos?",
+    "choices": [
+      {
+        "text": "A pergunta não tinha palavra em comum com o manual",
+        "why": "Tinha várias, e é por isso que a linha dos feriados fez 8,71."
+      },
+      {
+        "text": "A regra dos feriados não está no manual",
+        "why": "Está, e foi recuperada em primeiro."
+      },
+      {
+        "text": "Um trecho separado do detalhe a que ele se refere",
+        "why": "Isso. `follows the Sunday hours` está numa linha, e o horário de domingo em outra que não tem palavra em comum com a pergunta."
+      },
+      {
+        "text": "O BM25 dá a maior nota ao trecho errado",
+        "why": "O primeiro trecho é a regra certa. O problema é o que ele deixa de fora."
+      }
+    ]
+  },
+  "ex-k8jddmcc": {
+    "prompt": "Com os dois trechos recuperados para a pergunta dos feriados, o que um modelo poderia responder, e por quê?",
+    "hint": "Que horários estão nas fontes?",
+    "choices": [
+      {
+        "text": "08:00, já que ele conhece a regra dos feriados",
+        "why": "A linha das 08:00 não foi recuperada. Um modelo ancorado só usa o que recebeu."
+      },
+      {
+        "text": "07:00, o único horário de abertura nas fontes",
+        "why": "Isso. Ele estaria citando trechos reais e ainda assim erraria, porque a linha de domingo não foi recuperada."
+      },
+      {
+        "text": "Nada, já que modelos ancorados se recusam quando estão em dúvida",
+        "why": "As fontes parecem responder. Não há o que recusar."
+      },
+      {
+        "text": "Que o manual não diz, já que nada foi recuperado",
+        "why": "Dois trechos foram recuperados, e um traz horários."
+      }
+    ]
+  },
+  "ex-m75amqg5": {
+    "prompt": "\"can I get a refund for a cold coffee\" devolveu três trechos, nenhum deles a regra que responde. O que esta lição diz sobre isso?",
+    "hint": "Existe uma nota para \"não relevante\"?",
+    "choices": [
+      {
+        "text": "Os três primeiros voltam sejam eles quais forem",
+        "why": "Isso. A busca devolve as melhores correspondências mesmo quando respondem outra coisa."
+      },
+      {
+        "text": "A busca se recusou porque a pergunta era grosseira",
+        "why": "Não existe esse filtro. Ela devolveu três trechos."
+      },
+      {
+        "text": "A regra de reembolso não está no manual",
+        "why": "Está: uma bebida que não é o que foi descrito é trocada ou reembolsada na hora."
+      },
+      {
+        "text": "Notas abaixo de 3 querem dizer que o trecho foi rejeitado",
+        "why": "As notas não têm sentido fixo entre perguntas; nada foi rejeitado."
+      }
+    ]
+  },
+  "ex-nhb9he9m": {
+    "prompt": "Buscar por significado transforma cada trecho e cada pergunta numa lista de números chamada ___.",
+    "hint": "A palavra aparece na última parte da seção e é ensinada em outro lugar.",
+    "blanks": [
+      {
+        "accept": [
+          "embedding",
+          "embeddings",
+          "vetor de embedding"
+        ]
+      }
+    ]
+  },
+  "ex-ag7r0pae": {
+    "prompt": "Ligue cada falha ao que a causou nas capturas.",
+    "hint": "Os três títulos da última seção.",
+    "pairs": [
+      {
+        "left": "palavras diferentes não acham nada",
+        "right": "\"wireless internet\" contra o `wifi.md`"
+      },
+      {
+        "left": "um trecho cortado no lugar errado",
+        "right": "a linha dos feriados sem o horário de domingo"
+      },
+      {
+        "left": "o trecho errado, com confiança",
+        "right": "uma pergunta de reembolso respondida com a regra dos R$ 100"
+      }
+    ],
+    "right_distractors": [
+      "um modelo que ignorou as fontes"
+    ]
+  },
+  "ex-8tqggyk2": {
+    "prompt": "Um robô de atendimento feito com RAG vive dizendo aos clientes \"o manual não diz\" sobre coisas que o manual cobre. Onde você olha primeiro, e por quê?",
+    "hint": "Qual metade de recuperar-depois-gerar decidiu isso?",
+    "choices": [
+      {
+        "text": "Na temperatura do modelo, que o faz recusar",
+        "why": "A recusa é a instrução funcionando com fontes vazias."
+      },
+      {
+        "text": "Na instrução, que deveria ser removida",
+        "why": "Removê-la deixaria o modelo responder com conhecimento geral, o que é pior."
+      },
+      {
+        "text": "Na recuperação, rodada sozinha com essas perguntas",
+        "why": "Isso. Se os trechos não são recuperados, o modelo está dizendo corretamente que as fontes não contêm a resposta."
+      },
+      {
+        "text": "No manual, que deveria ficar mais curto",
+        "why": "Mais curto não ajuda se as perguntas usam outras palavras."
+      }
+    ]
+  }
+}

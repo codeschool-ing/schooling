@@ -1,0 +1,459 @@
+[
+  {
+    "id": "ex-sk6m1ts6",
+    "version": 1,
+    "section": "the-limit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You set a maximum of 50 output tokens. What does the model do differently?",
+    "hint": "Does the model know the limit exists?",
+    "choices": [
+      {
+        "text": "Nothing; the loop is stopped at 50",
+        "correct": true,
+        "why": "Right. The model writes as it would have, and generation is cut when the count is reached."
+      },
+      {
+        "text": "It plans an answer that fits in 50 tokens",
+        "correct": false,
+        "why": "The model never sees the limit, so it cannot plan around it."
+      },
+      {
+        "text": "It writes faster, so that it finishes in time",
+        "correct": false,
+        "why": "Speed has nothing to do with it. The limit is a count, not a clock."
+      },
+      {
+        "text": "It summarises its answer to fit",
+        "correct": false,
+        "why": "Summarising would need the model to know the limit. Ask for brevity in the prompt instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-yd1t1eqa",
+    "version": 1,
+    "section": "the-limit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`toylm` printed `finish: length`. What happened?",
+    "hint": "There are two reasons generation stops.",
+    "choices": [
+      {
+        "text": "The model chose to end the text",
+        "correct": false,
+        "why": "That is printed as `end`."
+      },
+      {
+        "text": "The output was as long as the prompt",
+        "correct": false,
+        "why": "The prompt's length does not decide when output stops."
+      },
+      {
+        "text": "The answer was complete and the right length",
+        "correct": false,
+        "why": "`length` says nothing about completeness. Often the answer was cut."
+      },
+      {
+        "text": "The loop hit the token limit",
+        "correct": true,
+        "why": "Right. The model did not choose to stop; the count reached `--max-tokens`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ptdqdc7",
+    "version": 1,
+    "section": "the-limit",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`toylm generate \"the menu has\" --temperature 0 --max-tokens 3` printed `soup, bread`. How many tokens did the uncut answer have?",
+    "hint": "Read the run without a tight limit.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-b0567af8",
+    "version": 1,
+    "section": "the-limit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `the menu has soup, bread` a dangerous output?",
+    "hint": "Compare it with the uncut answer.",
+    "choices": [
+      {
+        "text": "It is ungrammatical, so a reader will be confused by it",
+        "correct": false,
+        "why": "It is grammatical, which is exactly the problem."
+      },
+      {
+        "text": "It reads as complete and is false",
+        "correct": true,
+        "why": "Right. The menu also has cake, and a cut list rarely looks cut. Only the finish reason says so."
+      },
+      {
+        "text": "It came from a temperature above 0",
+        "correct": false,
+        "why": "It was written at temperature 0. The limit cut it."
+      },
+      {
+        "text": "Bread is not on the menu",
+        "correct": false,
+        "why": "Bread is on the menu. Cake is the item that was cut off."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2gksfrk",
+    "version": 1,
+    "section": "the-limit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At temperature 0, `toylm` writes `sleeps and the cat sleeps and the cat...` after `the cat` until the limit. Why does it never stop on its own?",
+    "hint": "Follow the top word in each pair.",
+    "choices": [
+      {
+        "text": "The corpus has no full stop after `sleeps`",
+        "correct": false,
+        "why": "It does: `the cat sleeps on the chair by the window .` The full stop is just never the top choice on this path."
+      },
+      {
+        "text": "The likeliest words form a circle that never reaches the end",
+        "correct": true,
+        "why": "Right: `sleeps` → `and` → `the` → `cat` → `sleeps`. Greedy decoding takes the same turn every time."
+      },
+      {
+        "text": "Temperature 0 disables the end token",
+        "correct": false,
+        "why": "The end token can win at temperature 0; `the café opens at` ends after `seven.`"
+      },
+      {
+        "text": "The default limit is too high",
+        "correct": false,
+        "why": "The limit is what stops it. Without the circle, it would end well before."
+      }
+    ]
+  },
+  {
+    "id": "ex-hn2c3fqq",
+    "version": 1,
+    "section": "the-limit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your program asks for a JSON object and parses the reply. Sometimes parsing fails with an unterminated string. What is the most likely cause, and the fix?",
+    "hint": "What did `validate` say about `cut.json`?",
+    "choices": [
+      {
+        "text": "The limit cut the object; raise it and check the finish reason",
+        "correct": true,
+        "why": "Right. A cut object is not JSON. Leave room above the largest reply, and treat `length` as a failure to handle."
+      },
+      {
+        "text": "The model does not know JSON; switch to plain text and parse it yourself",
+        "correct": false,
+        "why": "The complete reply was valid. The failure came from where the loop was stopped."
+      },
+      {
+        "text": "The schema is wrong; loosen it so that more replies pass",
+        "correct": false,
+        "why": "`validate` refused it before reaching the schema: it was not JSON at all."
+      },
+      {
+        "text": "The temperature is too high, so it writes broken syntax",
+        "correct": false,
+        "why": "A cut at the limit happens at any temperature, including 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-sn499bn4",
+    "version": 1,
+    "section": "the-limit",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`tok count reply.json` reported how many tokens for the complete JSON reply?",
+    "hint": "The first column.",
+    "value": 36,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-bzxmvd66",
+    "version": 1,
+    "section": "the-limit",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these should code that calls a model do with a finish reason of `length`? Choose all that apply.",
+    "hint": "The section says what `length` means.",
+    "choices": [
+      {
+        "text": "Treat the reply as possibly incomplete",
+        "correct": true,
+        "why": "Yes. That is what the value says."
+      },
+      {
+        "text": "Retry with a higher limit, or report an error",
+        "correct": true,
+        "why": "Yes. Both handle the cut instead of passing it on."
+      },
+      {
+        "text": "Parse the reply as if it were complete",
+        "correct": false,
+        "why": "That is how a cut list becomes a false fact downstream."
+      },
+      {
+        "text": "Ignore it when the text looks finished",
+        "correct": false,
+        "why": "A cut answer rarely looks cut, so how it looks is no evidence."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hxg9jzw",
+    "version": 1,
+    "section": "cost-control",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does an output limit bound the cost of a request?",
+    "hint": "What happens when the count reaches the limit?",
+    "choices": [
+      {
+        "text": "The provider refunds any tokens written past the limit",
+        "correct": false,
+        "why": "No tokens are written past it. Generation stops."
+      },
+      {
+        "text": "The model writes cheaper tokens near the limit",
+        "correct": false,
+        "why": "Every output token has the same price."
+      },
+      {
+        "text": "Generation stops there, so output never runs past it",
+        "correct": true,
+        "why": "Right. Limit times the output price is the ceiling on what one request's output costs."
+      },
+      {
+        "text": "It lowers the price of every input token in the request",
+        "correct": false,
+        "why": "Input is priced separately and does not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-8zgq0mee",
+    "version": 1,
+    "section": "cost-control",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `tok cost`, 79 input tokens at 2 per million and 40 output tokens at 8 per million. Which part costs more?",
+    "hint": "Compare the two lines.",
+    "choices": [
+      {
+        "text": "The input, since there are almost twice as many input tokens",
+        "correct": false,
+        "why": "Count is only half of it; the price per token is four times higher for output."
+      },
+      {
+        "text": "The output, at about twice the input",
+        "correct": true,
+        "why": "Right: 0.000320 against 0.000158. Fewer tokens, and still the bigger share, because each costs four times as much."
+      },
+      {
+        "text": "They cost the same",
+        "correct": false,
+        "why": "They do not: the two lines differ by a factor of two."
+      },
+      {
+        "text": "It depends on the temperature",
+        "correct": false,
+        "why": "Temperature does not appear in the price."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcd0j1vx",
+    "version": 1,
+    "section": "cost-control",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the illustrative prices and 400 output tokens, `tok cost` gave what total for 10,000 requests?",
+    "hint": "The last line of the second run.",
+    "value": 33.58,
+    "tolerance": 0.005,
+    "unit": ""
+  },
+  {
+    "id": "ex-qgm5qj9j",
+    "version": 1,
+    "section": "cost-control",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A request has a limit of 400 output tokens, at an illustrative 8 per million. What is the most its output can cost?",
+    "hint": "Limit times price.",
+    "choices": [
+      {
+        "text": "0.000158",
+        "correct": false,
+        "why": "That is the input of the example request, not the output bound."
+      },
+      {
+        "text": "Nothing can be said until the reply arrives",
+        "correct": false,
+        "why": "The limit sets a ceiling in advance. That is what makes it a budget."
+      },
+      {
+        "text": "33.58",
+        "correct": false,
+        "why": "That is ten thousand requests, input included."
+      },
+      {
+        "text": "0.0032",
+        "correct": true,
+        "why": "Right: 400 × 8 / 1,000,000. Whatever the model does, it cannot write more than 400 tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-2tje00z7",
+    "version": 1,
+    "section": "cost-control",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does asking for \"one sentence\" in the prompt do that the limit cannot?",
+    "hint": "One changes what is written, the other where it is cut.",
+    "choices": [
+      {
+        "text": "It guarantees the reply stays under the limit",
+        "correct": false,
+        "why": "An instruction is followed often and not always. The limit is the guarantee."
+      },
+      {
+        "text": "It makes the request cheaper per token",
+        "correct": false,
+        "why": "The price per token is fixed by the provider."
+      },
+      {
+        "text": "Nothing; both do the same job",
+        "correct": false,
+        "why": "They do different jobs, which is why the section says to use both."
+      },
+      {
+        "text": "It moves the model towards a short, complete answer",
+        "correct": true,
+        "why": "Right. The limit only stops a long answer part-way through."
+      }
+    ]
+  },
+  {
+    "id": "ex-8vmp3db0",
+    "version": 1,
+    "section": "cost-control",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team sets a tight limit and removes \"reply briefly\" from the prompt to save input tokens. What should they expect?",
+    "hint": "What does a limit without an instruction produce?",
+    "choices": [
+      {
+        "text": "Shorter, complete replies, because the model sees the limit",
+        "correct": false,
+        "why": "The model never sees the limit."
+      },
+      {
+        "text": "A higher bill per request",
+        "correct": false,
+        "why": "The limit still caps output. What they lose is completeness, not money."
+      },
+      {
+        "text": "More replies cut part-way, ending in `length`",
+        "correct": true,
+        "why": "Right. The model writes at its usual length and the limit chops it; the saving on input buys broken output."
+      },
+      {
+        "text": "No change, since instructions are ignored",
+        "correct": false,
+        "why": "Instructions change what is likely. Removing one changes the replies."
+      }
+    ]
+  },
+  {
+    "id": "ex-xc37bq31",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these steps for setting the output limit of a classification request that replies in JSON.",
+    "hint": "Measure first, then decide, then check.",
+    "items": [
+      "Write the instruction asking for the object and nothing else",
+      "Measure the largest valid reply with a tokenizer",
+      "Set the limit a little above that size",
+      "Check the finish reason of every reply before parsing"
+    ]
+  },
+  {
+    "id": "ex-rrn4ngac",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When a reply stops because the limit was reached, `toylm` prints `finish: ___`.",
+    "hint": "One word; the other value is `end`.",
+    "blanks": [
+      {
+        "accept": [
+          "length"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9dmyevzp",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each observation to what it tells you.",
+    "hint": "This lesson's captures.",
+    "pairs": [
+      {
+        "left": "`finish: end`",
+        "right": "the model chose to stop"
+      },
+      {
+        "left": "`finish: length`",
+        "right": "the loop was cut at the limit"
+      },
+      {
+        "left": "`not JSON: Unterminated string`",
+        "right": "an object was cut before it closed"
+      },
+      {
+        "left": "`10,000 requests: 33.58`",
+        "right": "what an unbounded reply costs at scale"
+      }
+    ],
+    "right_distractors": [
+      "the model was told about the limit"
+    ]
+  }
+]

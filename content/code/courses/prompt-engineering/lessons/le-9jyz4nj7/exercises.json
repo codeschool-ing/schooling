@@ -1,0 +1,514 @@
+[
+  {
+    "id": "ex-syddef0d",
+    "version": 1,
+    "section": "top-k",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `--top-k 2` do to the list of next words?",
+    "hint": "Read the table for `the coffee is` with k = 2.",
+    "choices": [
+      {
+        "text": "Keeps the two best and rescales them to 100%",
+        "correct": true,
+        "why": "Right. `hot` and `strong` survive, and their shares become 76.2% and 23.8%."
+      },
+      {
+        "text": "Halves every share",
+        "correct": false,
+        "why": "Nothing is halved. Three words are removed and two are scaled up."
+      },
+      {
+        "text": "Keeps every word but squeezes the tail, the way a low temperature does",
+        "correct": false,
+        "why": "That is temperature's job. Top-k removes words outright."
+      },
+      {
+        "text": "Draws twice and keeps the more common of the two words",
+        "correct": false,
+        "why": "Top-k does not draw. It cuts the list, and one draw follows."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1tjbvmg",
+    "version": 1,
+    "section": "top-k",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `the coffee is`, `hot` has 59.3% and `strong` 18.5%. With `--top-k 2`, what share does `hot` get, in percent?",
+    "hint": "Divide 59.3 by the two shares added together.",
+    "value": 76.2,
+    "tolerance": 0.1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-hk9h93ej",
+    "version": 1,
+    "section": "top-k",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Scaling the surviving shares back up so they add up to 100% is called ___.",
+    "hint": "The word in the first paragraph after the table.",
+    "blanks": [
+      {
+        "accept": [
+          "renormalising",
+          "renormalizing",
+          "renormalisation",
+          "renormalization"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7yqwbfv2",
+    "version": 1,
+    "section": "top-k",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `--top-k 1` the same as?",
+    "hint": "How many words can be drawn?",
+    "choices": [
+      {
+        "text": "Temperature 1 with no other controls set on the request",
+        "correct": false,
+        "why": "That keeps every word the model scored."
+      },
+      {
+        "text": "Temperature 0",
+        "correct": true,
+        "why": "Right. One word survives, so the top word is taken every time: greedy decoding."
+      },
+      {
+        "text": "Top-p of 1",
+        "correct": false,
+        "why": "A top-p of 1 keeps everything."
+      },
+      {
+        "text": "A draw of one sample",
+        "correct": false,
+        "why": "`--samples` sets how many continuations are written, not how many words are kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-20bw4qd9",
+    "version": 1,
+    "section": "top-k",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `--top-k 2` after `the`, `coffee` and `café` are kept. Why is that a problem for k = 2 here?",
+    "hint": "Add up what was thrown away.",
+    "choices": [
+      {
+        "text": "It keeps too many words, because only one was ever likely",
+        "correct": false,
+        "why": "Eight candidates, none above 30%: the model was torn, not sure."
+      },
+      {
+        "text": "It throws away more than half of what the model considered likely",
+        "correct": true,
+        "why": "Right: 48.1% is kept, and `bread`, `cat` and `tea` were plausible. The same k that suits `the coffee is` is far too tight here."
+      },
+      {
+        "text": "Top-k cannot be used at the start of a sentence",
+        "correct": false,
+        "why": "It can be used anywhere. It just keeps a count that ignores the shape of the list."
+      },
+      {
+        "text": "`café` should have been dropped for its accent",
+        "correct": false,
+        "why": "Characters play no part. It was kept for having the second-highest share."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnrb45yr",
+    "version": 1,
+    "section": "top-p",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does top-p keep?",
+    "hint": "Read the definition at the top of the section.",
+    "choices": [
+      {
+        "text": "The smallest set of top words whose shares reach p",
+        "correct": true,
+        "why": "Right. Words are added from the top until the running total reaches p."
+      },
+      {
+        "text": "Every word whose own share, taken alone, is above p",
+        "correct": false,
+        "why": "With p = 0.8, that would keep nothing after `the coffee is`, where no word has 80%."
+      },
+      {
+        "text": "The top p words",
+        "correct": false,
+        "why": "That is top-k, a count. Top-p is a share."
+      },
+      {
+        "text": "A share p of every word's probability",
+        "correct": false,
+        "why": "Shares are not reduced one by one; whole words are dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7dyh684",
+    "version": 1,
+    "section": "top-p",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many words did `toylm dist \"and the\" --top-p 0.8` keep?",
+    "hint": "Count the lines of the table.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "words"
+  },
+  {
+    "id": "ex-samt4c5a",
+    "version": 1,
+    "section": "top-p",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With p = 0.8, why is only the full stop kept after `the coffee is hot`?",
+    "hint": "What was its share alone?",
+    "choices": [
+      {
+        "text": "Top-p always keeps exactly one word",
+        "correct": false,
+        "why": "After `and the` it kept four."
+      },
+      {
+        "text": "`and` scored below the 20% minimum that top-p requires",
+        "correct": false,
+        "why": "There is no per-word minimum. `and` went because the total was reached before it."
+      },
+      {
+        "text": "Its 85% share on its own already passes 0.8, so the count stops",
+        "correct": true,
+        "why": "Right. The running total reached p with the first word, so nothing more was added."
+      },
+      {
+        "text": "The model was told the sentence had ended",
+        "correct": false,
+        "why": "Nobody told it anything. The full stop was simply most likely after `is hot`."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5g589t9",
+    "version": 1,
+    "section": "top-p",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`café` and `terrace` both had 11.8% after `and the`, and top-p 0.8 kept `café`. Why `café`?",
+    "hint": "The same rule decided a tie at temperature 0.",
+    "choices": [
+      {
+        "text": "Its share was higher, if you read the hidden decimals",
+        "correct": false,
+        "why": "The counts are equal: two each. There are no hidden decimals."
+      },
+      {
+        "text": "Top-p prefers shorter words",
+        "correct": false,
+        "why": "Length plays no part."
+      },
+      {
+        "text": "Ties sort alphabetically",
+        "correct": true,
+        "why": "Right. `toylm` orders tied words alphabetically, so `café` comes first and the total passes 0.8 with it."
+      },
+      {
+        "text": "A random draw broke the tie",
+        "correct": false,
+        "why": "Nothing is drawn while the nucleus is formed."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6xjrkvh",
+    "version": 1,
+    "section": "top-p",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is top-p said to adapt where top-k does not?",
+    "hint": "Compare `is hot` and `and the` under both controls.",
+    "choices": [
+      {
+        "text": "It learns the right value of p from the outputs it has produced before",
+        "correct": false,
+        "why": "Nothing is learnt. The same p acts on a different list in each place."
+      },
+      {
+        "text": "It keeps few words when the model is sure and more when it is torn",
+        "correct": true,
+        "why": "Right: one word after `is hot`, four after `and the`, from the same p. Top-k kept two in both places."
+      },
+      {
+        "text": "It is applied before temperature, so it sees the raw scores",
+        "correct": false,
+        "why": "In `toylm` it runs after temperature, and that is why temperature changes it."
+      },
+      {
+        "text": "It removes only the words that are wrong",
+        "correct": false,
+        "why": "It removes unlikely words. A kept word can still be wrong for your purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfrxpcpe",
+    "version": 1,
+    "section": "together",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With top-p 0.8 set, you raise the temperature from 1 to 2. How many words survive after `the coffee is`?",
+    "hint": "Temperature runs before top-p.",
+    "choices": [
+      {
+        "text": "More: four instead of three",
+        "correct": true,
+        "why": "Right. Flattened shares need more words to reach 80%."
+      },
+      {
+        "text": "The same three, since top-p is independent",
+        "correct": false,
+        "why": "They act on the same list in sequence, so they are not independent."
+      },
+      {
+        "text": "Fewer: two instead of three",
+        "correct": false,
+        "why": "That is what lowering the temperature tends to do."
+      },
+      {
+        "text": "All five",
+        "correct": false,
+        "why": "Four reach 80%; `bitter` is still cut."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9a56pgr",
+    "version": 1,
+    "section": "together",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the controls in the order `toylm` applies them.",
+    "hint": "The docstring at the top of the program.",
+    "items": [
+      "penalties",
+      "temperature",
+      "top-k",
+      "top-p",
+      "the draw"
+    ]
+  },
+  {
+    "id": "ex-2mmhpcdj",
+    "version": 1,
+    "section": "together",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You changed temperature and top-p in one go, and the output improved. What can you conclude?",
+    "hint": "How do the two interact?",
+    "choices": [
+      {
+        "text": "Both changes helped equally",
+        "correct": false,
+        "why": "Nothing in a single comparison says that."
+      },
+      {
+        "text": "Top-p helped, since temperature only adds randomness",
+        "correct": false,
+        "why": "Temperature also widens or narrows the nucleus that top-p keeps."
+      },
+      {
+        "text": "Temperature helped, since top-p has no effect when temperature is set",
+        "correct": false,
+        "why": "Top-p changed the result at every temperature shown."
+      },
+      {
+        "text": "You cannot tell which change did it",
+        "correct": true,
+        "why": "Right. They act on the same list and affect each other, so a joint change hides which one mattered. Change one at a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8y9fxj3",
+    "version": 1,
+    "section": "together",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Top-k 3 and top-p 0.8 are both set after `the coffee is`. What survives in `toylm`?",
+    "hint": "Each one removes words; which set is smaller?",
+    "choices": [
+      {
+        "text": "`hot` and `strong`",
+        "correct": false,
+        "why": "That would need k = 2."
+      },
+      {
+        "text": "All five words",
+        "correct": false,
+        "why": "Both controls cut `cold` and `bitter`."
+      },
+      {
+        "text": "`hot`, `strong` and `ready`",
+        "correct": true,
+        "why": "Right. Both controls keep those three, so the smaller set is the same set."
+      },
+      {
+        "text": "Only `hot`",
+        "correct": false,
+        "why": "That happened at temperature 0.5 with top-p 0.8, not here."
+      }
+    ]
+  },
+  {
+    "id": "ex-jas6nvcd",
+    "version": 1,
+    "section": "together",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You want to use top-k on an API, and its reference never mentions a top-k parameter. What should you assume?",
+    "hint": "What does the section say about the set of controls?",
+    "choices": [
+      {
+        "text": "It is there under the same name, undocumented",
+        "correct": false,
+        "why": "Do not assume a parameter exists because another provider has it."
+      },
+      {
+        "text": "Take it that the API does not offer top-k at all",
+        "correct": true,
+        "why": "Right. The controls are each provider's choice; some well-known APIs have no top-k."
+      },
+      {
+        "text": "Top-p is the same thing under another name",
+        "correct": false,
+        "why": "Top-p is a share and top-k a count; they behave differently."
+      },
+      {
+        "text": "Sending it anyway is harmless",
+        "correct": false,
+        "why": "An API may reject it, or quietly ignore it and leave you believing it worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-77kd60b5",
+    "version": 1,
+    "section": "together",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does this lesson recommend? Choose all that apply.",
+    "hint": "One section is called \"One control at a time\".",
+    "choices": [
+      {
+        "text": "Adjust temperature first, leaving top-k and top-p at their defaults",
+        "correct": true,
+        "why": "Yes. It has the most visible, continuous effect."
+      },
+      {
+        "text": "Reach for top-p when output occasionally goes strange",
+        "correct": true,
+        "why": "Yes. It trims the tail without flattening the common choices."
+      },
+      {
+        "text": "Change two controls together to save time",
+        "correct": false,
+        "why": "Then you cannot tell which one did what."
+      },
+      {
+        "text": "Follow the provider's advice where it says not to tune temperature and top-p together",
+        "correct": true,
+        "why": "Yes. Some providers recommend changing one or the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9bw6cwq",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting to what it kept after `the coffee is` in `toylm`.",
+    "hint": "The tables in this lesson.",
+    "pairs": [
+      {
+        "left": "`--top-k 1`",
+        "right": "`hot` only"
+      },
+      {
+        "left": "`--top-k 2`",
+        "right": "`hot` and `strong`"
+      },
+      {
+        "left": "`--top-p 0.8`",
+        "right": "`hot`, `strong` and `ready`"
+      },
+      {
+        "left": "`--temperature 2 --top-p 0.8`",
+        "right": "four words, `cold` included"
+      }
+    ],
+    "right_distractors": [
+      "all five words, `bitter` included"
+    ]
+  },
+  {
+    "id": "ex-kyrs5wvt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A model at your preferred temperature writes well, but now and then a reply veers into an odd word. Which single change does this lesson point to?",
+    "hint": "Which control removes the tail without reshaping the rest?",
+    "choices": [
+      {
+        "text": "Lower the temperature to 0 so nothing is drawn",
+        "correct": false,
+        "why": "That removes all variety, which you said you liked."
+      },
+      {
+        "text": "Set top-k to 1",
+        "correct": false,
+        "why": "Same as temperature 0: it removes all the variety you wanted to keep."
+      },
+      {
+        "text": "Raise the temperature so odd words become more usual",
+        "correct": false,
+        "why": "That makes them more frequent, not less."
+      },
+      {
+        "text": "Set top-p a little below 1",
+        "correct": true,
+        "why": "Right. It cuts the unlikely tail in each context and leaves the confident choices as they were."
+      }
+    ]
+  }
+]

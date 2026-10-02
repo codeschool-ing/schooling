@@ -1,0 +1,525 @@
+[
+  {
+    "id": "ex-t94bnhrg",
+    "version": 1,
+    "section": "the-start-of-a-text",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which description of a prompt matches what the model actually does with it?",
+    "hint": "Lesson 1: what goes into the one step the model performs?",
+    "choices": [
+      {
+        "text": "The start of a text, which the model continues",
+        "correct": true,
+        "why": "Right. The reply is the likeliest continuation of the text you gave it."
+      },
+      {
+        "text": "An order that the model reads, understands and then carries out",
+        "correct": false,
+        "why": "That picture explains the prompts that work and none of the ones that fail. The model continues text."
+      },
+      {
+        "text": "A search query run against what the model has stored",
+        "correct": false,
+        "why": "Nothing is looked up. The model scores the next piece of the text."
+      },
+      {
+        "text": "A setting that chooses which of its answers to give",
+        "correct": false,
+        "why": "There are no stored answers to choose between; there is a distribution over the next piece."
+      }
+    ]
+  },
+  {
+    "id": "ex-8v00950b",
+    "version": 1,
+    "section": "the-start-of-a-text",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`the café opens at` gave `seven` and `eight`; `the café closes at` gave `six` and `noon`. What changed the prediction?",
+    "hint": "Compare the two prompts word by word.",
+    "choices": [
+      {
+        "text": "An instruction to talk about closing time",
+        "correct": false,
+        "why": "No instruction was given. The word `closes` was simply part of the text."
+      },
+      {
+        "text": "A random seed that differed between the two runs",
+        "correct": false,
+        "why": "`toylm next` prints the scores themselves; no draw was involved."
+      },
+      {
+        "text": "The model having learnt something new about the café between the runs",
+        "correct": false,
+        "why": "Nothing about the model changed. Only the text it was given did."
+      },
+      {
+        "text": "One word of the text, `closes`",
+        "correct": true,
+        "why": "Yes. The text is all the model has, so one word moved the whole distribution."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8n2zx10",
+    "version": 1,
+    "section": "the-start-of-a-text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`question : when does the café open ? answer :` made `toylm` say `yes.` Why?",
+    "hint": "Read the context line it printed.",
+    "choices": [
+      {
+        "text": "The model misread `when` as a yes-or-no question",
+        "correct": false,
+        "why": "It never saw `when` at all. Its window was the last two words."
+      },
+      {
+        "text": "There is no opening time anywhere in the corpus",
+        "correct": false,
+        "why": "There is: `the café opens at seven` appears many times."
+      },
+      {
+        "text": "Its window held only `answer :`, after which short replies like `yes` follow",
+        "correct": true,
+        "why": "Right. The layout reached the model and the question did not: two words of window, lesson 1."
+      },
+      {
+        "text": "Temperature 0 always picks the shortest word available",
+        "correct": false,
+        "why": "Temperature 0 picks the highest score, which here was `yes` at 50%."
+      }
+    ]
+  },
+  {
+    "id": "ex-eme3eg5z",
+    "version": 1,
+    "section": "the-start-of-a-text",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A large model would answer the `when does the café open` question properly. What does the `yes.` episode still teach about prompting one?",
+    "hint": "Separate the window from the rule.",
+    "choices": [
+      {
+        "text": "Large models ignore layout and read only the words",
+        "correct": false,
+        "why": "Layout is part of the text, and the text is all any model continues."
+      },
+      {
+        "text": "It continues the shape of the text you give, not only its content",
+        "correct": true,
+        "why": "Yes. A large model sees the whole question and still follows the language, register and format of the document."
+      },
+      {
+        "text": "Question-and-answer layouts are forbidden in prompts and should be avoided",
+        "correct": false,
+        "why": "Nothing forbids them. They steer the reply, which is useful when it is on purpose."
+      },
+      {
+        "text": "Nothing; the episode shows a limit of `toylm` and does not transfer",
+        "correct": false,
+        "why": "The window is `toylm`'s limit. Continuing the layout is what every model does."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wj57by4",
+    "version": 1,
+    "section": "the-start-of-a-text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a chat API request, what does the model actually receive?",
+    "hint": "Look at the figure.",
+    "choices": [
+      {
+        "text": "Only the newest user message, with the rest of the chat kept on the provider's servers",
+        "correct": false,
+        "why": "The application sends the whole conversation each time; the model has no memory between requests."
+      },
+      {
+        "text": "The messages laid out as one text, ending inside an open assistant turn",
+        "correct": true,
+        "why": "Right. Its reply is the continuation of that open turn."
+      },
+      {
+        "text": "Each message separately, answered one by one and joined afterwards",
+        "correct": false,
+        "why": "There is one text and one continuation."
+      },
+      {
+        "text": "A summary of the conversation that the provider writes",
+        "correct": false,
+        "why": "Nothing in the request is a summary unless a program wrote one."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8x9t6v5",
+    "version": 1,
+    "section": "the-start-of-a-text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An assistant seems to remember what you said ten messages ago. Where is that memory?",
+    "hint": "Who sends what, on each request?",
+    "choices": [
+      {
+        "text": "In the request, resent each time",
+        "correct": true,
+        "why": "Yes. The application sends the whole list again; the model itself keeps nothing between requests."
+      },
+      {
+        "text": "In the model's weights, updated after each message you send to it",
+        "correct": false,
+        "why": "Using a model does not train it. The weights are the same before and after your chat."
+      },
+      {
+        "text": "In a database the model queries before every reply",
+        "correct": false,
+        "why": "The model queries nothing. What it sees is the text of the request."
+      },
+      {
+        "text": "In the system prompt, which the model rewrites as the chat goes on",
+        "correct": false,
+        "why": "The system prompt is written by the developer and stays as written."
+      }
+    ]
+  },
+  {
+    "id": "ex-98yhpcvb",
+    "version": 1,
+    "section": "the-start-of-a-text",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each role in a chat request to who writes it.",
+    "hint": "The table of roles.",
+    "pairs": [
+      {
+        "left": "system",
+        "right": "the developer of the application"
+      },
+      {
+        "left": "user",
+        "right": "the person using the application"
+      },
+      {
+        "left": "assistant",
+        "right": "the model, one turn at a time"
+      }
+    ],
+    "right_distractors": [
+      "the provider of the model, once per day"
+    ]
+  },
+  {
+    "id": "ex-5cwy5wxj",
+    "version": 1,
+    "section": "the-start-of-a-text",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The rules, the persona and the format an application sets for its assistant go in the message whose role is ___.",
+    "hint": "The user does not see this one; lesson 22 is about it.",
+    "blanks": [
+      {
+        "accept": [
+          "system"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0r1v9t16",
+    "version": 1,
+    "section": "engineering",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these makes prompt writing engineering, in this lesson's sense?",
+    "hint": "Five habits; what do they have in common?",
+    "choices": [
+      {
+        "text": "Knowing the phrases that unlock better answers",
+        "correct": false,
+        "why": "Phrases are what you change. Engineering is how you find out whether the change helped."
+      },
+      {
+        "text": "Writing long prompts",
+        "correct": false,
+        "why": "Length is not a goal. Each line has to earn its place against the test."
+      },
+      {
+        "text": "A test that says whether a goal was met",
+        "correct": true,
+        "why": "Yes. Without a test, a change cannot be told from an improvement."
+      },
+      {
+        "text": "Using the newest and largest model",
+        "correct": false,
+        "why": "A bigger model is a different input to the same cycle, not the cycle."
+      }
+    ]
+  },
+  {
+    "id": "ex-259vmznm",
+    "version": 1,
+    "section": "engineering",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the measured run, how many of `v3`'s twenty replies contained `seven`?",
+    "hint": "Read the last line of the loop's output.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "replies"
+  },
+  {
+    "id": "ex-sj3349by",
+    "version": 1,
+    "section": "engineering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Four draws from `v2` gave `seven` three times. Why was that not enough to keep `v2`?",
+    "hint": "Compare four draws with twenty.",
+    "choices": [
+      {
+        "text": "Four replies are an impression; over twenty it missed eight times",
+        "correct": true,
+        "why": "Right. The count over twenty showed what four could not, and `v3` passed sixteen."
+      },
+      {
+        "text": "Three out of four is below the 80% that a prompt must reach",
+        "correct": false,
+        "why": "No such threshold was set. The point is that four runs measure too little."
+      },
+      {
+        "text": "`v2` was never tested at all, so its result could not be trusted",
+        "correct": false,
+        "why": "It was tested, twice: four draws, then twenty."
+      },
+      {
+        "text": "The fourth draw changed the model",
+        "correct": false,
+        "why": "Draws do not change the model. They differ because each uses a different seed."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwqvf1r7",
+    "version": 1,
+    "section": "engineering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`v2` added `at` after `answer :` and still gave `six` sometimes. What does that say about the fix?",
+    "hint": "What could the model see after `: at`?",
+    "choices": [
+      {
+        "text": "It made things worse than `v1`",
+        "correct": false,
+        "why": "`v1` passed once in twenty and `v2` twelve times. It was a real improvement."
+      },
+      {
+        "text": "`six` is correct for some days of the week",
+        "correct": false,
+        "why": "The goal said the weekday opening time, which is `seven`. `six` is a closing time."
+      },
+      {
+        "text": "The word `at` should never appear inside a prompt",
+        "correct": false,
+        "why": "The word helped. It was not enough on its own."
+      },
+      {
+        "text": "It fixed the form of the reply, a time, but not which time",
+        "correct": true,
+        "why": "Yes. After `: at` the model cannot tell an opening question from a closing one, so `seven` and `six` tie."
+      }
+    ]
+  },
+  {
+    "id": "ex-eftbabrq",
+    "version": 1,
+    "section": "engineering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are the versions kept in files such as `prompts/v2.txt`?",
+    "hint": "What would be lost without them?",
+    "choices": [
+      {
+        "text": "Because `toylm` can only read prompts from files",
+        "correct": false,
+        "why": "`toylm` takes the prompt on the command line; the files are for the person."
+      },
+      {
+        "text": "So the model can learn from earlier versions of its prompt",
+        "correct": false,
+        "why": "The model sees only the text it is given now."
+      },
+      {
+        "text": "Prompts in files run faster than prompts that are typed in",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "So a regression can be traced to a version",
+        "correct": true,
+        "why": "Right. Versioning lets you compare, go back, and find the change that broke something."
+      }
+    ]
+  },
+  {
+    "id": "ex-enxjszf7",
+    "version": 1,
+    "section": "engineering",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The specific prompt for the door notice has four parts. Which of these lines are output format? Choose all that apply.",
+    "hint": "Which lines say what the reply must look like, rather than what it is about?",
+    "choices": [
+      {
+        "text": "Write the notice in English",
+        "correct": true,
+        "why": "Yes: the language of the reply is part of its format."
+      },
+      {
+        "text": "at most four lines, one line per rule",
+        "correct": true,
+        "why": "Yes: length and layout are format."
+      },
+      {
+        "text": "Opening hours: Monday to Saturday 07:00 to 18:00",
+        "correct": false,
+        "why": "That is input data, the facts the reply must be right about."
+      },
+      {
+        "text": "You are writing the notice for the door of Café Aurora",
+        "correct": false,
+        "why": "That is the instruction and context: the task and where it is going."
+      }
+    ]
+  },
+  {
+    "id": "ex-43d40nma",
+    "version": 1,
+    "section": "engineering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's prompt says only `Summarise this complaint.` The summaries are correct and the support team cannot use them. Which part is most likely missing?",
+    "hint": "The table names what goes wrong without each part.",
+    "choices": [
+      {
+        "text": "Input data",
+        "correct": false,
+        "why": "The complaint is there; the summaries are correct."
+      },
+      {
+        "text": "Output format",
+        "correct": true,
+        "why": "Yes: a reply that is correct and cannot be used where it is going is what a missing format looks like."
+      },
+      {
+        "text": "Instruction",
+        "correct": false,
+        "why": "There is one, and the model followed it."
+      },
+      {
+        "text": "Context about which model is being used",
+        "correct": false,
+        "why": "The model does not need to be told what it is. The team needs a shape it can use."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ch0x3zq",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the prompt engineering cycle in order.",
+    "hint": "It begins before any prompt is written.",
+    "items": [
+      "State the goal in one sentence",
+      "Write test inputs with what a good reply must contain",
+      "Change one thing in the prompt and save it as a new version",
+      "Run every version against the same tests and count the passes"
+    ]
+  },
+  {
+    "id": "ex-4g8jyhva",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate shows you one excellent reply and says the new prompt is better. What is the right next step?",
+    "hint": "What did the twenty-run test add?",
+    "choices": [
+      {
+        "text": "Run both prompts on the same tests, many times, and compare counts",
+        "correct": true,
+        "why": "Right. One reply is an impression; the count over many runs is the measurement."
+      },
+      {
+        "text": "Accept it; an excellent reply proves the prompt works",
+        "correct": false,
+        "why": "One reply cannot show how often the prompt fails."
+      },
+      {
+        "text": "Ask the model which of the two prompts it prefers",
+        "correct": false,
+        "why": "The model's preference is another generated text, not a measurement."
+      },
+      {
+        "text": "Make the prompt longer, since a longer prompt carries more parts",
+        "correct": false,
+        "why": "Longer is not better on its own. Test first."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1p7mt6j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about a chat request is true?",
+    "hint": "Think about what is text and what is not.",
+    "choices": [
+      {
+        "text": "The model checks that the assistant turns were really written by itself",
+        "correct": false,
+        "why": "There is no such check. They are text in a list."
+      },
+      {
+        "text": "The system message is hidden from the model as well as from the user",
+        "correct": false,
+        "why": "The user does not see it. The model does: it is part of the text."
+      },
+      {
+        "text": "A conversation must alternate user and assistant, or the model refuses",
+        "correct": false,
+        "why": "The model continues whatever text it gets."
+      },
+      {
+        "text": "Earlier assistant turns are text that any program is free to write",
+        "correct": true,
+        "why": "Yes. Nothing marks them as the model's own, so the model cannot tell who wrote them."
+      }
+    ]
+  }
+]
