@@ -1,0 +1,449 @@
+{
+  "ex-sgk2ksfc": {
+    "prompt": "O que de fato atravessa a rede da vitrine ao orders para que os dois entrem num rastro só?",
+    "hint": "Foi guardado numa coluna do banco.",
+    "choices": [
+      {
+        "text": "O objeto do span corrente da vitrine, serializado da memória",
+        "why": "Spans não são enviados entre serviços; só ids."
+      },
+      {
+        "text": "Um cabeçalho `traceparent`",
+        "why": "Isso: quatro campos, cinquenta e cinco caracteres."
+      },
+      {
+        "text": "Um cookie que o Jaeger define na primeira requisição de cada sessão",
+        "why": "O Jaeger nunca vê as requisições."
+      },
+      {
+        "text": "Nada: o Collector casa spans pelos horários",
+        "why": "O Collector não junta nada; ids juntam."
+      }
+    ]
+  },
+  "ex-5bf8sn2j": {
+    "prompt": "Ligue cada campo de `00-f1523e868eabe70f75294e789580216e-b0844e71b749fd8f-03` ao que ele é.",
+    "hint": "A figura da seção.",
+    "pairs": [
+      {
+        "left": "`00`",
+        "right": "A versão"
+      },
+      {
+        "left": "`f1523e868eabe70f75294e789580216e`",
+        "right": "O id do rastro"
+      },
+      {
+        "left": "`b0844e71b749fd8f`",
+        "right": "O id do span de quem chamou"
+      },
+      {
+        "left": "`03`",
+        "right": "As flags"
+      }
+    ],
+    "right_distractors": [
+      "O id do pedido no banco"
+    ]
+  },
+  "ex-tddc2d9n": {
+    "prompt": "A requisição vai vitrine → orders → payments. Que campo do `traceparent` é diferente no cabeçalho que o payments recebe em relação ao que o orders recebeu?",
+    "hint": "Cada salto reescreve um.",
+    "choices": [
+      {
+        "text": "O id do rastro, para o payments distinguir o salto",
+        "why": "O id do rastro nunca muda ao longo de um rastro."
+      },
+      {
+        "text": "O id do pai",
+        "why": "Isso: agora é o span do orders que fez a chamada."
+      },
+      {
+        "text": "A versão, que conta os saltos",
+        "why": "A versão é do formato, não um contador."
+      },
+      {
+        "text": "Nenhum: o cabeçalho é repassado sem mudança",
+        "why": "Aí o payments penduraria seu span sob o da vitrine."
+      }
+    ]
+  },
+  "ex-9qfbsynr": {
+    "prompt": "Com `OTEL_PROPAGATORS` sem definir, o SDK usa `tracecontext,___`.",
+    "hint": "O segundo cabeçalho.",
+    "blanks": [
+      {
+        "accept": [
+          "baggage"
+        ]
+      }
+    ]
+  },
+  "ex-gpxthvjg": {
+    "prompt": "Uma empresa está migrando dos cabeçalhos B3 do Zipkin para o Trace Context do W3C, um serviço por vez. O que mantém os rastros inteiros durante a migração?",
+    "hint": "O `OTEL_PROPAGATORS` aceita uma lista.",
+    "choices": [
+      {
+        "text": "Converter os rastros antigos guardados no backend durante a noite, quando todo serviço tiver mudado",
+        "why": "Rastros guardados não são o problema; cabeçalhos vivos são."
+      },
+      {
+        "text": "Desligar o rastreamento até todo serviço migrar",
+        "why": "Isso perde os rastros durante a migração inteira."
+      },
+      {
+        "text": "Todo serviço escreve os dois formatos até o último antigo sumir",
+        "why": "Isso: dois propagadores na lista."
+      },
+      {
+        "text": "Cada serviço escolhe o formato que a própria equipe prefere",
+        "why": "Um par desencontrado quebra o rastro naquele salto."
+      }
+    ]
+  },
+  "ex-adkef45g": {
+    "prompt": "Que operação roda no serviço que envia uma requisição?",
+    "hint": "Na saída.",
+    "choices": [
+      {
+        "text": "Inject",
+        "why": "Isso: escreve o contexto corrente na requisição."
+      },
+      {
+        "text": "Extract",
+        "why": "Esse roda do lado que recebe."
+      },
+      {
+        "text": "Export",
+        "why": "Exportar manda spans a um backend, não contexto a um serviço."
+      },
+      {
+        "text": "Sample",
+        "why": "Amostrar decide o que é guardado, não o que viaja."
+      }
+    ]
+  },
+  "ex-hh62yfw1": {
+    "prompt": "O código do orders nunca chama inject nem extract. Como o rastro dele ainda se conecta dos dois lados?",
+    "hint": "O que a aula 3 instalou?",
+    "choices": [
+      {
+        "text": "O Collector reescreve os spans dele com os pais certos",
+        "why": "O Collector não inventa pais."
+      },
+      {
+        "text": "A instrumentação do Flask extrai, e a do `requests` injeta",
+        "why": "Isso. Propagação por HTTP é o que a instrumentação automática faz melhor."
+      },
+      {
+        "text": "Ele compartilha memória com a vitrine pelo Docker",
+        "why": "Contêineres não compartilham memória assim."
+      },
+      {
+        "text": "Ele lê o id do rastro de volta no banco antes de cada chamada que faz a outro serviço",
+        "why": "A coluna só registra o cabeçalho; nada a lê para propagar."
+      }
+    ]
+  },
+  "ex-t6hz8g2k": {
+    "prompt": "Quais destes portadores precisam de inject e extract escritos à mão, ou de uma instrumentação instalada, no laboratório? Escolha todas as que se aplicam.",
+    "hint": "O HTTP está coberto.",
+    "choices": [
+      {
+        "text": "Uma mensagem na fila do RabbitMQ",
+        "why": "Sim: nada instrumenta o `pika` aqui."
+      },
+      {
+        "text": "Um arquivo deixado para outro programa ler",
+        "why": "Sim: nenhuma biblioteca sabe que aquilo é uma requisição."
+      },
+      {
+        "text": "Uma chamada HTTP do orders ao payments",
+        "why": "A instrumentação do `requests` injeta."
+      },
+      {
+        "text": "Uma linha que uma tarefa vai ler depois",
+        "why": "Sim, e é por isso que o orders guarda `traceparent` numa."
+      }
+    ]
+  },
+  "ex-ndg97q8v": {
+    "prompt": "O payments ainda chamou o `extract`, mas o span foi começado sem `context=ctx`. Por que ele virou a raiz de um rastro novo?",
+    "hint": "O que é o corrente no começo de uma requisição?",
+    "choices": [
+      {
+        "text": "O extract falha quando o resultado não é usado",
+        "why": "Ele funcionou; o resultado só foi jogado fora."
+      },
+      {
+        "text": "A vitrine parou de mandar o cabeçalho",
+        "why": "A vitrine não foi tocada."
+      },
+      {
+        "text": "Ele começou do que estava corrente, e não havia nada",
+        "why": "Isso. Extrair não basta; o span tem de começar no que foi extraído."
+      },
+      {
+        "text": "O Jaeger não junta spans de um serviço reiniciado no meio do rastro",
+        "why": "O reinício foi antes do checkout."
+      }
+    ]
+  },
+  "ex-7n6swd00": {
+    "prompt": "Olhando só o rastro do checkout, qual é a única pista de que o payments caiu fora dele?",
+    "hint": "Olhe a chamada de saída do orders.",
+    "choices": [
+      {
+        "text": "Um status de erro no span `POST` do orders",
+        "why": "A chamada deu certo; nada é marcado."
+      },
+      {
+        "text": "Um aviso que o Jaeger imprime no topo de todo rastro com um serviço faltando",
+        "why": "O Jaeger não tem como saber que falta um span."
+      },
+      {
+        "text": "Um span de cliente sem span de servidor debaixo dele",
+        "why": "Isso. A chamada saiu e a outra metade dela está em outro rastro."
+      },
+      {
+        "text": "O rastro é mais curto no tempo que o checkout",
+        "why": "A raiz dele ainda cobre o checkout inteiro."
+      }
+    ]
+  },
+  "ex-wm18hn34": {
+    "prompt": "Os spans do mailer começaram 22,8 s depois dos do checkout. O que esse intervalo mede?",
+    "hint": "O mailer estava parado.",
+    "choices": [
+      {
+        "text": "Quanto tempo a mensagem ficou parada na fila até o mailer finalmente pegá-la",
+        "why": "Isso: uma espera que ninguém veria sem o rastro."
+      },
+      {
+        "text": "Quanto o envio do e-mail levou",
+        "why": "O envio levou 20 ms, no seu próprio span."
+      },
+      {
+        "text": "Uma diferença de relógio entre dois contêineres na mesma máquina",
+        "why": "Uma máquina tem um relógio."
+      },
+      {
+        "text": "O tempo que o RabbitMQ levou para iniciar",
+        "why": "O RabbitMQ estava rodando o tempo todo."
+      }
+    ]
+  },
+  "ex-wfvcdwde": {
+    "prompt": "Onde o `traceparent` viajou na mensagem do RabbitMQ?",
+    "hint": "A API de gerenciamento mostrou.",
+    "choices": [
+      {
+        "text": "Dentro do corpo JSON, ao lado do pedido",
+        "why": "O corpo é só o pedido."
+      },
+      {
+        "text": "Nos cabeçalhos da mensagem",
+        "why": "Isso, ao lado do corpo, como no HTTP."
+      },
+      {
+        "text": "No nome da fila, como sufixo",
+        "why": "A fila é sempre `orders.placed`."
+      },
+      {
+        "text": "Em lugar nenhum: o mailer pede ao orders",
+        "why": "O mailer nunca chama o orders."
+      }
+    ]
+  },
+  "ex-v4h6taqy": {
+    "prompt": "As convenções de mensageria fariam o orders abrir um span `PRODUCER` em volta da publicação. O que isso acrescentaria ao rastro?",
+    "hint": "Qual é hoje o pai do mailer?",
+    "choices": [
+      {
+        "text": "Um segundo rastro para a fila",
+        "why": "O span de produtor entra no mesmo rastro."
+      },
+      {
+        "text": "O corpo da mensagem, como atributo",
+        "why": "Registrar o corpo não é para que serve um span de produtor."
+      },
+      {
+        "text": "A publicação como passo próprio, com duração",
+        "why": "Isso: o span do consumidor poderia pender dele em vez do `POST /orders`."
+      },
+      {
+        "text": "Nada, porque o RabbitMQ não leva cabeçalhos",
+        "why": "Ele levou `traceparent` na captura."
+      }
+    ]
+  },
+  "ex-2m2yd5p7": {
+    "prompt": "O relatório contou 22 pedidos e fez link para o rastro de cada um. Quantos spans tinha o rastro do próprio relatório?",
+    "hint": "Links não acrescentam spans.",
+    "unit": "spans"
+  },
+  "ex-cecfsj55": {
+    "prompt": "Por que o relatório faz link para os checkouts em vez de fazer de um deles o seu pai?",
+    "hint": "Quantas causas ele tem?",
+    "choices": [
+      {
+        "text": "O Jaeger recusa pais de rastros mais antigos",
+        "why": "O Jaeger não tem essa regra."
+      },
+      {
+        "text": "22 causas, e um pai por span",
+        "why": "Isso. Escolher um deturparia os outros 21."
+      },
+      {
+        "text": "Pais só funcionam dentro de um serviço",
+        "why": "Pais atravessam serviços o tempo todo."
+      },
+      {
+        "text": "Links são mais rápidos para o backend guardar e buscar do que um pai",
+        "why": "Velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-mjpyvrvp": {
+    "prompt": "O Jaeger guarda um link como uma referência do tipo `___`.",
+    "hint": "Um rastro segue de outro.",
+    "blanks": [
+      {
+        "accept": [
+          "FOLLOWS_FROM"
+        ]
+      }
+    ]
+  },
+  "ex-z7pm3e6j": {
+    "prompt": "Por que é correto que o span do relatório noturno não tenha pai?",
+    "hint": "Quem o iniciou?",
+    "choices": [
+      {
+        "text": "Porque o pai dele foi descartado na amostragem",
+        "why": "Não havia pai a amostrar."
+      },
+      {
+        "text": "Ninguém a chamou; um temporizador sim",
+        "why": "Isso. Um temporizador não é um span, então o rastro começa na tarefa."
+      },
+      {
+        "text": "Porque tarefas não podem ter pais em nenhum sistema de rastreamento",
+        "why": "Uma tarefa iniciada por uma esteira rastreada pode e deve ter."
+      },
+      {
+        "text": "Porque o relatório foi rodado à mão no laboratório",
+        "why": "Rodado pelo cron, ainda não teria quem o chamou."
+      }
+    ]
+  },
+  "ex-stmkphdp": {
+    "prompt": "O relatório de ontem à noite nunca rodou. Que sinal consegue dizer isso?",
+    "hint": "O que existe para um trabalho que não aconteceu?",
+    "choices": [
+      {
+        "text": "O rastro dele, que vai mostrar um erro",
+        "why": "Trabalho que nunca rodou não deixa rastro nenhum."
+      },
+      {
+        "text": "As linhas de log dele, que vão dizer que foi pulado e dar o motivo",
+        "why": "Uma tarefa que nunca começou não escreve nada."
+      },
+      {
+        "text": "Uma métrica do tempo passado desde a última execução bem-sucedida da tarefa",
+        "why": "Isso, com um alerta quando passar de um dia."
+      },
+      {
+        "text": "Os links dos checkouts para o relatório",
+        "why": "Links vêm do span do relatório, que não existe."
+      }
+    ]
+  },
+  "ex-4vq41hs1": {
+    "prompt": "Para passar contexto a um processo filho, a convenção do OpenTelemetry define a variável de ambiente ___ no filho.",
+    "hint": "O mesmo nome do cabeçalho, em maiúsculas.",
+    "blanks": [
+      {
+        "accept": [
+          "TRACEPARENT"
+        ]
+      }
+    ]
+  },
+  "ex-xcx2cr4r": {
+    "prompt": "O que é a baggage?",
+    "hint": "Um cabeçalho próprio.",
+    "choices": [
+      {
+        "text": "Spans esperando na fila do processor em lote",
+        "why": "Essa é a fila de exportação."
+      },
+      {
+        "text": "Pares que viajam com o contexto",
+        "why": "Isso: chaves e valores, legíveis por todo serviço adiante."
+      },
+      {
+        "text": "Atributos copiados automaticamente em todo span pelo SDK",
+        "why": "A baggage não é registrada em spans a menos que seja copiada."
+      },
+      {
+        "text": "A parte de um rastro grande demais para exportar",
+        "why": "Não existe isso."
+      }
+    ]
+  },
+  "ex-3szjv8vq": {
+    "prompt": "Quais destes podem ir com segurança na baggage? Escolha todas as que se aplicam.",
+    "hint": "Ela chega a terceiros, em texto puro.",
+    "choices": [
+      {
+        "text": "`shop.channel=mobile-app`",
+        "why": "Sim: não significa nada fora da loja."
+      },
+      {
+        "text": "O e-mail do cliente",
+        "why": "Dado pessoal, enviado a todo serviço chamado."
+      },
+      {
+        "text": "Uma região, como `south`",
+        "why": "Sim."
+      },
+      {
+        "text": "O token de sessão",
+        "why": "Qualquer um que o receber pode usá-lo."
+      }
+    ]
+  },
+  "ex-sqwf14ja": {
+    "prompt": "A vitrine põe `shop.channel` na baggage, e a equipe do payments diz que os spans deles não mostram isso. O que falta?",
+    "hint": "A baggage viaja; não é registrada.",
+    "choices": [
+      {
+        "text": "O payments copiá-la para os seus spans, ou um processor que o faça",
+        "why": "Isso. Nada registra a baggage sozinho."
+      },
+      {
+        "text": "Um segundo cabeçalho `traceparent`",
+        "why": "Um basta; isto é sobre baggage."
+      },
+      {
+        "text": "O suporte do Jaeger a baggage, que precisa ser ligado",
+        "why": "O Jaeger só vê o que foi registrado em spans."
+      },
+      {
+        "text": "Uma variável de ambiente que diga ao payments para confiar na vitrine",
+        "why": "Confiança não é o problema; registro é."
+      }
+    ]
+  },
+  "ex-z8b8476h": {
+    "prompt": "Ponha em ordem os passos do rastro atravessando a fila.",
+    "hint": "Da requisição ao e-mail.",
+    "items": [
+      "O Flask extrai o `traceparent` da vitrine no orders",
+      "O `publish()` injeta o contexto corrente nos cabeçalhos da mensagem",
+      "A mensagem espera na fila",
+      "O mailer extrai dos cabeçalhos e começa um span `CONSUMER`"
+    ]
+  }
+}

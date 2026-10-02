@@ -1,0 +1,663 @@
+[
+  {
+    "id": "ex-sgk2ksfc",
+    "version": 1,
+    "section": "traceparent",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What actually crosses the network from the storefront to orders so that both join one trace?",
+    "hint": "It was stored in a database column.",
+    "choices": [
+      {
+        "text": "The storefront's current span object, serialised in memory",
+        "correct": false,
+        "why": "Spans are not shipped between services; only ids are."
+      },
+      {
+        "text": "A `traceparent` header",
+        "correct": true,
+        "why": "Right: four fields, fifty-five characters."
+      },
+      {
+        "text": "A cookie set by Jaeger on the first request of each session",
+        "correct": false,
+        "why": "Jaeger never sees the requests."
+      },
+      {
+        "text": "Nothing: the Collector matches spans by their timestamps",
+        "correct": false,
+        "why": "The Collector joins nothing; ids do."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bf8sn2j",
+    "version": 1,
+    "section": "traceparent",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of `00-f1523e868eabe70f75294e789580216e-b0844e71b749fd8f-03` to what it is.",
+    "hint": "The figure in the section.",
+    "pairs": [
+      {
+        "left": "`00`",
+        "right": "The version"
+      },
+      {
+        "left": "`f1523e868eabe70f75294e789580216e`",
+        "right": "The trace id"
+      },
+      {
+        "left": "`b0844e71b749fd8f`",
+        "right": "The span id of the caller"
+      },
+      {
+        "left": "`03`",
+        "right": "The flags"
+      }
+    ],
+    "right_distractors": [
+      "The order's database id"
+    ]
+  },
+  {
+    "id": "ex-tddc2d9n",
+    "version": 1,
+    "section": "traceparent",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The request goes storefront → orders → payments. Which field of `traceparent` is different in the header payments receives from the one orders received?",
+    "hint": "Each hop rewrites one.",
+    "choices": [
+      {
+        "text": "The trace id, so payments can tell the hop apart",
+        "correct": false,
+        "why": "The trace id never changes along a trace."
+      },
+      {
+        "text": "The parent id",
+        "correct": true,
+        "why": "Right: it is now the span in orders that made the call."
+      },
+      {
+        "text": "The version, which counts the hops",
+        "correct": false,
+        "why": "The version is the format's, not a counter."
+      },
+      {
+        "text": "None: the header is forwarded unchanged",
+        "correct": false,
+        "why": "Then payments would hang its span under the storefront's."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qfbsynr",
+    "version": 1,
+    "section": "traceparent",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `OTEL_PROPAGATORS` unset, the SDK uses `tracecontext,___`.",
+    "hint": "The second header.",
+    "blanks": [
+      {
+        "accept": [
+          "baggage"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gpxthvjg",
+    "version": 1,
+    "section": "traceparent",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company is moving from Zipkin's B3 headers to W3C Trace Context, one service at a time. What keeps traces whole during the move?",
+    "hint": "`OTEL_PROPAGATORS` takes a list.",
+    "choices": [
+      {
+        "text": "Converting the old traces stored in the backend overnight, once every service has moved",
+        "correct": false,
+        "why": "Stored traces are not the problem; live headers are."
+      },
+      {
+        "text": "Turning tracing off until every service is migrated",
+        "correct": false,
+        "why": "That loses traces for the whole migration."
+      },
+      {
+        "text": "Every service writes both formats until the last old one is gone",
+        "correct": true,
+        "why": "Right: two propagators in the list."
+      },
+      {
+        "text": "Each service picks the format its own team prefers",
+        "correct": false,
+        "why": "A mismatched pair breaks the trace at that hop."
+      }
+    ]
+  },
+  {
+    "id": "ex-adkef45g",
+    "version": 1,
+    "section": "inject-and-extract",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which operation runs in the service sending a request?",
+    "hint": "On the way out.",
+    "choices": [
+      {
+        "text": "Inject",
+        "correct": true,
+        "why": "Right: it writes the current context into the request."
+      },
+      {
+        "text": "Extract",
+        "correct": false,
+        "why": "That runs on the receiving side."
+      },
+      {
+        "text": "Export",
+        "correct": false,
+        "why": "Exporting sends spans to a backend, not context to a service."
+      },
+      {
+        "text": "Sample",
+        "correct": false,
+        "why": "Sampling decides what is kept, not what travels."
+      }
+    ]
+  },
+  {
+    "id": "ex-hh62yfw1",
+    "version": 1,
+    "section": "inject-and-extract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "orders' code never calls inject or extract. How does its trace still connect on both sides?",
+    "hint": "What did lesson 3 install?",
+    "choices": [
+      {
+        "text": "The Collector rewrites its spans with the right parents",
+        "correct": false,
+        "why": "The Collector does not invent parents."
+      },
+      {
+        "text": "Flask's instrumentation extracts, and `requests`' injects",
+        "correct": true,
+        "why": "Right. Propagation over HTTP is what automatic instrumentation does best."
+      },
+      {
+        "text": "It shares memory with the storefront through Docker",
+        "correct": false,
+        "why": "Containers do not share memory like that."
+      },
+      {
+        "text": "It reads the trace id back from the database before every call it makes to another service",
+        "correct": false,
+        "why": "The column only records the header; nothing reads it to propagate."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6hz8g2k",
+    "version": 1,
+    "section": "inject-and-extract",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these carriers need inject and extract written by hand, or an instrumentation installed, in the lab? Choose all that apply.",
+    "hint": "HTTP is covered.",
+    "choices": [
+      {
+        "text": "A message on the RabbitMQ queue",
+        "correct": true,
+        "why": "Yes: nothing instruments `pika` here."
+      },
+      {
+        "text": "A file dropped for another program to read",
+        "correct": true,
+        "why": "Yes: no library knows that is a request."
+      },
+      {
+        "text": "An HTTP call from orders to payments",
+        "correct": false,
+        "why": "The `requests` instrumentation injects it."
+      },
+      {
+        "text": "A row a job will read later",
+        "correct": true,
+        "why": "Yes, which is why orders stores `traceparent` in one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndg97q8v",
+    "version": 1,
+    "section": "missing-extract",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Payments still called `extract`, but the span was started without `context=ctx`. Why did it become the root of a new trace?",
+    "hint": "What is current at the start of a request?",
+    "choices": [
+      {
+        "text": "Extract fails when its result is not used",
+        "correct": false,
+        "why": "It succeeded; the result was just thrown away."
+      },
+      {
+        "text": "The storefront stopped sending the header",
+        "correct": false,
+        "why": "The storefront was not touched."
+      },
+      {
+        "text": "It started from whatever was current, and nothing was",
+        "correct": true,
+        "why": "Right. Extracting is not enough; the span must start in what was extracted."
+      },
+      {
+        "text": "Jaeger cannot join spans from a service restarted mid-trace",
+        "correct": false,
+        "why": "The restart was before the checkout."
+      }
+    ]
+  },
+  {
+    "id": "ex-7n6swd00",
+    "version": 1,
+    "section": "missing-extract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Looking only at the checkout's trace, what is the one clue that payments fell out of it?",
+    "hint": "Look at orders' outgoing call.",
+    "choices": [
+      {
+        "text": "An error status on orders' `POST` span",
+        "correct": false,
+        "why": "The call succeeded; nothing is marked."
+      },
+      {
+        "text": "A warning that Jaeger prints at the top of every trace with a missing service",
+        "correct": false,
+        "why": "Jaeger cannot know a span is missing."
+      },
+      {
+        "text": "A client span with no server span under it",
+        "correct": true,
+        "why": "Right. The call went out and its other half is in another trace."
+      },
+      {
+        "text": "The trace is shorter in time than the checkout",
+        "correct": false,
+        "why": "Its root still covers the whole checkout."
+      }
+    ]
+  },
+  {
+    "id": "ex-wm18hn34",
+    "version": 1,
+    "section": "across-a-queue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The mailer's spans started 22.8 s after the checkout's. What does that gap measure?",
+    "hint": "The mailer was stopped.",
+    "choices": [
+      {
+        "text": "How long the message waited in the queue before the mailer took it",
+        "correct": true,
+        "why": "Right: waiting nobody would see without the trace."
+      },
+      {
+        "text": "How long the e-mail took to send",
+        "correct": false,
+        "why": "Sending took 20 ms, in its own span."
+      },
+      {
+        "text": "A clock difference between two containers on the same machine",
+        "correct": false,
+        "why": "One machine has one clock."
+      },
+      {
+        "text": "The time RabbitMQ needed to start",
+        "correct": false,
+        "why": "RabbitMQ was running throughout."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfvcdwde",
+    "version": 1,
+    "section": "across-a-queue",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did the `traceparent` travel on the RabbitMQ message?",
+    "hint": "The management API showed it.",
+    "choices": [
+      {
+        "text": "Inside the JSON body, beside the order",
+        "correct": false,
+        "why": "The body is only the order."
+      },
+      {
+        "text": "In the message's headers",
+        "correct": true,
+        "why": "Right, beside the body, like HTTP."
+      },
+      {
+        "text": "In the queue's name, as a suffix",
+        "correct": false,
+        "why": "The queue is always `orders.placed`."
+      },
+      {
+        "text": "Nowhere: the mailer asks orders for it",
+        "correct": false,
+        "why": "The mailer never calls orders."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4h6taqy",
+    "version": 1,
+    "section": "across-a-queue",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The messaging conventions would have orders open a `PRODUCER` span around the publish. What would that add to the trace?",
+    "hint": "What is the mailer's parent today?",
+    "choices": [
+      {
+        "text": "A second trace for the queue",
+        "correct": false,
+        "why": "The producer span joins the same trace."
+      },
+      {
+        "text": "The message body, as an attribute",
+        "correct": false,
+        "why": "Recording the body is not what a producer span is for."
+      },
+      {
+        "text": "The publish as a step of its own, with a duration",
+        "correct": true,
+        "why": "Right: the consumer's span could hang from it instead of `POST /orders`."
+      },
+      {
+        "text": "Nothing, because RabbitMQ cannot carry headers",
+        "correct": false,
+        "why": "It carried `traceparent` in the capture."
+      }
+    ]
+  },
+  {
+    "id": "ex-2m2yd5p7",
+    "version": 1,
+    "section": "links",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The report counted 22 orders and linked to each one's trace. How many spans long was the report's own trace?",
+    "hint": "Links do not add spans.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "spans"
+  },
+  {
+    "id": "ex-cecfsj55",
+    "version": 1,
+    "section": "links",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the report link to the checkouts instead of making one of them its parent?",
+    "hint": "How many causes does it have?",
+    "choices": [
+      {
+        "text": "Jaeger refuses parents from older traces",
+        "correct": false,
+        "why": "Jaeger has no such rule."
+      },
+      {
+        "text": "22 causes, and one parent per span",
+        "correct": true,
+        "why": "Right. Picking one would misrepresent the other 21."
+      },
+      {
+        "text": "Parents only work within one service",
+        "correct": false,
+        "why": "Parents cross services all the time."
+      },
+      {
+        "text": "Links are faster for the backend to store and to search than a parent is",
+        "correct": false,
+        "why": "Speed is not why."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjpyvrvp",
+    "version": 1,
+    "section": "links",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Jaeger stores a link as a reference of type `___`.",
+    "hint": "One trace follows from another.",
+    "blanks": [
+      {
+        "accept": [
+          "FOLLOWS_FROM"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z7pm3e6j",
+    "version": 1,
+    "section": "scheduled-jobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is it correct that the nightly report's span has no parent?",
+    "hint": "Who started it?",
+    "choices": [
+      {
+        "text": "Because its parent was sampled out",
+        "correct": false,
+        "why": "There was no parent to sample."
+      },
+      {
+        "text": "Nothing called it; a timer did",
+        "correct": true,
+        "why": "Right. A timer is not a span, so the trace starts at the job."
+      },
+      {
+        "text": "Because jobs are not allowed to have parents in any tracing system",
+        "correct": false,
+        "why": "A job started by a traced pipeline can and should."
+      },
+      {
+        "text": "Because the report was run by hand in the lab",
+        "correct": false,
+        "why": "Run by cron it would still have no caller."
+      }
+    ]
+  },
+  {
+    "id": "ex-stmkphdp",
+    "version": 1,
+    "section": "scheduled-jobs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Last night's report never ran. Which signal can tell you?",
+    "hint": "What exists for work that did not happen?",
+    "choices": [
+      {
+        "text": "Its trace, which will show an error",
+        "correct": false,
+        "why": "Work that never ran leaves no trace at all."
+      },
+      {
+        "text": "Its log lines, which will say that it was skipped and give the reason",
+        "correct": false,
+        "why": "A job that never started writes nothing."
+      },
+      {
+        "text": "A metric of time since the last successful run",
+        "correct": true,
+        "why": "Right, with an alert when it grows past a day."
+      },
+      {
+        "text": "The links from the checkouts to the report",
+        "correct": false,
+        "why": "Links come from the report's span, which does not exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-4vq41hs1",
+    "version": 1,
+    "section": "scheduled-jobs",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To hand context to a child process, OpenTelemetry's convention sets the environment variable ___ in the child.",
+    "hint": "Same name as the header, in capitals.",
+    "blanks": [
+      {
+        "accept": [
+          "TRACEPARENT"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xcx2cr4r",
+    "version": 1,
+    "section": "baggage",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is baggage?",
+    "hint": "Its own header.",
+    "choices": [
+      {
+        "text": "Spans waiting in the batch processor's queue",
+        "correct": false,
+        "why": "That is the export queue."
+      },
+      {
+        "text": "Pairs that travel with the context",
+        "correct": true,
+        "why": "Right: keys and values, readable by every service downstream."
+      },
+      {
+        "text": "Attributes copied onto every span automatically by the SDK",
+        "correct": false,
+        "why": "Baggage is not recorded on spans unless copied."
+      },
+      {
+        "text": "The part of a trace that is too large to export",
+        "correct": false,
+        "why": "No such thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-3szjv8vq",
+    "version": 1,
+    "section": "baggage",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these may safely go into baggage? Choose all that apply.",
+    "hint": "It reaches third parties, in plain text.",
+    "choices": [
+      {
+        "text": "`shop.channel=mobile-app`",
+        "correct": true,
+        "why": "Yes: means nothing outside the shop."
+      },
+      {
+        "text": "The customer's e-mail address",
+        "correct": false,
+        "why": "Personal data, sent to every service called."
+      },
+      {
+        "text": "A region, like `south`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The session token",
+        "correct": false,
+        "why": "Anyone receiving it could use it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sqwf14ja",
+    "version": 1,
+    "section": "baggage",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The storefront puts `shop.channel` into baggage, and the payments team says their spans do not show it. What is missing?",
+    "hint": "Baggage travels; it is not recorded.",
+    "choices": [
+      {
+        "text": "Payments copying it onto its spans, or a processor that does",
+        "correct": true,
+        "why": "Right. Nothing records baggage on its own."
+      },
+      {
+        "text": "A second `traceparent` header",
+        "correct": false,
+        "why": "One is enough; this is about baggage."
+      },
+      {
+        "text": "Jaeger's support for baggage, which must be switched on",
+        "correct": false,
+        "why": "Jaeger only sees what was recorded on spans."
+      },
+      {
+        "text": "An environment variable that tells payments to trust the storefront",
+        "correct": false,
+        "why": "Trust is not the issue; recording is."
+      }
+    ]
+  },
+  {
+    "id": "ex-z8b8476h",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the trace crossing the queue in order.",
+    "hint": "From the request to the e-mail.",
+    "items": [
+      "Flask extracts the storefront's `traceparent` in orders",
+      "`publish()` injects the current context into the message's headers",
+      "The message waits on the queue",
+      "The mailer extracts from the headers and starts a `CONSUMER` span"
+    ]
+  }
+]
