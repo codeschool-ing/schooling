@@ -45,6 +45,7 @@
 #   sudo bash lab.sh as 'cmd'     run a command as ana, in ~/shop
 #   sudo bash lab.sh up PROFILE   also start a profile: elastic, graylog, mesh
 #   sudo bash lab.sh kind-up | kind-down
+#   sudo bash lab.sh kind-load IMAGE...   pull an image here, copy it into kind
 #
 # Recorded on Ubuntu 24.04 with Docker Engine 29.6 and Compose 5.3,
 # TZ=America/Sao_Paulo. The machine needs 4 CPUs and 8 GB of memory, and
@@ -245,6 +246,13 @@ services:
     command: [--config.file=/etc/blackbox.yml]
     volumes: ["./blackbox.yml:/etc/blackbox.yml:ro"]
 
+  envoy:
+    image: envoyproxy/envoy:v1.39.2
+    profiles: [mesh]
+    command: [envoy, -c, /etc/envoy/envoy.yaml, --log-level, warn]
+    volumes: ["./envoy/envoy.yaml:/etc/envoy/envoy.yaml:ro"]
+    ports: ["127.0.0.1:10000:10000", "127.0.0.1:9901:9901"]
+
   grafana:
     image: grafana/grafana:13.0.10
     environment:
@@ -306,6 +314,97 @@ services:
       GRAYLOG_MONGODB_URI: mongodb://mongo:27017/graylog
     depends_on: [mongo, opensearch]
     ports: ["127.0.0.1:9000:9000"]
+LABFILE
+  mkdir -p "$SHOP/envoy"
+  cat > "$SHOP/envoy/envoy.yaml" <<'LABFILE'
+# Envoy for lesson 19: one proxy, two listeners, playing the part a mesh's
+# sidecars play. :10000 sits in front of the storefront; :10001 sits between
+# orders and payments, with a timeout and retries. :9901 is Envoy's admin page.
+static_resources:
+  listeners:
+    - name: storefront
+      address: {socket_address: {address: 0.0.0.0, port_value: 10000}}
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: storefront
+                access_log:
+                  - name: envoy.access_loggers.stdout
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+                      log_format:
+                        json_format:
+                          listener: storefront
+                          method: "%REQ(:METHOD)%"
+                          path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+                          code: "%RESPONSE_CODE%"
+                          ms: "%DURATION%"
+                          upstream_ms: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
+                          attempts: "%UPSTREAM_REQUEST_ATTEMPT_COUNT%"
+                          flags: "%RESPONSE_FLAGS%"
+                route_config:
+                  virtual_hosts:
+                    - name: storefront
+                      domains: ["*"]
+                      routes:
+                        - match: {prefix: /}
+                          route: {cluster: storefront, timeout: 5s}
+                http_filters:
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+    - name: payments
+      address: {socket_address: {address: 0.0.0.0, port_value: 10001}}
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: payments
+                access_log:
+                  - name: envoy.access_loggers.stdout
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+                      log_format:
+                        json_format:
+                          listener: payments
+                          method: "%REQ(:METHOD)%"
+                          path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+                          code: "%RESPONSE_CODE%"
+                          ms: "%DURATION%"
+                          attempts: "%UPSTREAM_REQUEST_ATTEMPT_COUNT%"
+                          flags: "%RESPONSE_FLAGS%"
+                route_config:
+                  virtual_hosts:
+                    - name: payments
+                      domains: ["*"]
+                      routes:
+                        - match: {prefix: /}
+                          route:
+                            cluster: payments
+                            timeout: 2s
+                            retry_policy:
+                              retry_on: 5xx
+                              num_retries: 2
+                http_filters:
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+  clusters:
+    - name: storefront
+      type: STRICT_DNS
+      load_assignment:
+        cluster_name: storefront
+        endpoints: [{lb_endpoints: [{endpoint: {address: {socket_address: {address: storefront, port_value: 8080}}}}]}]
+    - name: payments
+      type: STRICT_DNS
+      load_assignment:
+        cluster_name: payments
+        endpoints: [{lb_endpoints: [{endpoint: {address: {socket_address: {address: payments, port_value: 8082}}}}]}]
+admin:
+  address: {socket_address: {address: 0.0.0.0, port_value: 9901}}
 LABFILE
   mkdir -p "$SHOP/grafana/provisioning/dashboards"
   cat > "$SHOP/grafana/provisioning/dashboards/shop.yaml" <<'LABFILE'
@@ -1146,9 +1245,11 @@ def listing():
 LABFILE
   mkdir -p "$SHOP/services/pager"
   cat > "$SHOP/services/pager/app.py" <<'LABFILE'
-"""The lab's pager: Alertmanager's webhook lands here, and each alert becomes a line.
+"""The lab's pager: Alertmanager's webhooks land here, and each alert becomes a line.
 
-In production this would be PagerDuty, Opsgenie or a phone; here it is a log.
+/page is what would wake somebody, and /ticket what would wait for the morning.
+In production the first would be PagerDuty, Opsgenie or a phone, and the second
+a queue of tickets; here both are a log.
 """
 from flask import Flask, request
 
@@ -1158,11 +1259,10 @@ log = logs.setup()
 app = Flask(__name__)
 
 
-@app.post("/page")
-def page():
+def record(kind):
     note = request.get_json()
     for alert in note["alerts"]:
-        log.warning("PAGE", extra={"fields": {
+        log.warning(kind, extra={"fields": {
             "status": alert["status"],
             "alertname": alert["labels"].get("alertname"),
             "severity": alert["labels"].get("severity"),
@@ -1170,6 +1270,16 @@ def page():
             "receiver": note["receiver"],
         }})
     return {"ok": True}
+
+
+@app.post("/page")
+def page():
+    return record("PAGE")
+
+
+@app.post("/ticket")
+def ticket():
+    return record("TICKET")
 LABFILE
   mkdir -p "$SHOP/services/payments"
   cat > "$SHOP/services/payments/app.py" <<'LABFILE'
@@ -1454,12 +1564,21 @@ KIND
   kind load docker-image shop:1.4.0 --name lab >/dev/null 2>&1
 }
 
+kind_load() {
+  # An image pulled on this machine, copied into the cluster's node. `kind load`
+  # refuses images published for several platforms, and the node itself
+  # cannot reach a registry through this machine's proxy.
+  docker pull -q "$1" >/dev/null &&
+    docker save "$1" | docker exec -i lab-control-plane ctr -n k8s.io images import --snapshotter=overlayfs - >/dev/null
+}
+
 case "${1:-}" in
   up) shift; up "$@" ;;
   reset) shift; down; rm -rf "$SHOP"; up "$@" ;;
   down) down ;;
   as) shift; as_ana "$*" ;;
   kind-up) kind_up ;;
+  kind-load) shift; for i in "$@"; do kind_load "$i"; done ;;
   kind-down) kind delete cluster --name lab >/dev/null 2>&1 || true ;;
   *) sed -n '2,/^set -e/p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
 esac
