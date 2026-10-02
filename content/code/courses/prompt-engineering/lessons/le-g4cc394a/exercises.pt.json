@@ -1,0 +1,357 @@
+{
+  "ex-mztvtahb": {
+    "prompt": "Num registro ReAct, quem escreve a linha `Observation:`?",
+    "hint": "Olhe a tabela dos quatro tipos de linha.",
+    "choices": [
+      {
+        "text": "O programa que roda o laço",
+        "why": "Isso. É o que a ferramenta devolveu, escrito pelo laço, então é um fato que o modelo não inventou."
+      },
+      {
+        "text": "O modelo, depois de escrever a Action dele",
+        "why": "É exatamente o que um sistema real impede com uma sequência de parada: uma Observation escrita pelo modelo é um palpite sobre o que a ferramenta diria."
+      },
+      {
+        "text": "O autor da ferramenta, com antecedência",
+        "why": "A ferramenta roda naquele momento; nada é escrito antes."
+      },
+      {
+        "text": "A pessoa que fez a pergunta, entre um passo e outro",
+        "why": "Ninguém digita entre os passos. O laço executa a ferramenta e devolve o resultado sozinho."
+      }
+    ]
+  },
+  "ex-7cpcr5nm": {
+    "prompt": "O que o ReAct acrescenta à cadeia de pensamento (lição 26)?",
+    "hint": "Compare um registro de raciocínio puro com a execução do reembolso.",
+    "choices": [
+      {
+        "text": "Faz o modelo raciocinar com mais cuidado",
+        "why": "O raciocínio é o mesmo tipo de texto. O que muda é de onde ele parte."
+      },
+      {
+        "text": "Esconde o raciocínio para a resposta ficar mais curta",
+        "why": "O contrário: o raciocínio fica escrito às claras, passo a passo."
+      },
+      {
+        "text": "Deixa o modelo rodar várias ferramentas num passo",
+        "why": "O formato pede uma Action por vez, e o laço lê uma por vez."
+      },
+      {
+        "text": "Um fato de fora do modelo após cada passo",
+        "why": "Isso. Os pensamentos continuam sendo cadeia de pensamento, cortada em pedaços; o que vem entre eles é saída real de ferramenta."
+      }
+    ]
+  },
+  "ex-25ks79ck": {
+    "prompt": "Na execução de `runs/refund.txt`, quantas chamadas de ferramenta o laço fez antes da resposta?",
+    "hint": "Conte as linhas `tool>`.",
+    "unit": "chamadas"
+  },
+  "ex-rtbkv210": {
+    "prompt": "A execução respondeu `R$ 111.60`. De onde veio esse valor?",
+    "hint": "Ache a linha que o produziu.",
+    "choices": [
+      {
+        "text": "Do `refunds.md` do manual",
+        "why": "O manual tem as regras, não os preços. O preço estava na pergunta."
+      },
+      {
+        "text": "Do `111.6` da calculadora (`4 * 27.90`)",
+        "why": "Isso. O modelo escreveu a conta; a calculadora fez a aritmética."
+      },
+      {
+        "text": "O modelo calculou no Thought",
+        "why": "O Thought só diz do que precisa. O número aparece depois que a calculadora o devolveu."
+      },
+      {
+        "text": "Da ferramenta `search`, que achou o preço da sopa",
+        "why": "Nenhuma busca devolveu preço; o manual não tem nenhum."
+      }
+    ]
+  },
+  "ex-hprt9s96": {
+    "prompt": "O prompt ReAct de uma equipe funciona, mas às vezes os registros mostram uma `Observation:` que a ferramenta nunca devolveu. Qual é a correção que a seção indica?",
+    "hint": "Quem deveria poder escrever essa linha?",
+    "choices": [
+      {
+        "text": "Pôr \"nunca escreva sua própria Observation\" no prompt, em maiúsculas",
+        "why": "Uma frase no prompt é um pedido, e este falha justamente quando o modelo se desvia. Uma sequência de parada não depende de o modelo concordar."
+      },
+      {
+        "text": "Tornar `Observation:` uma sequência de parada",
+        "why": "Isso. O modelo para depois da Action, e a única Observation no texto é a que o laço escreveu a partir da ferramenta."
+      },
+      {
+        "text": "Subir a temperatura para o modelo explorar outras redações",
+        "why": "A temperatura muda quais palavras são sorteadas, não se o modelo continua depois da Action."
+      },
+      {
+        "text": "Tirar as linhas Thought para haver menos texto",
+        "why": "As linhas Thought não são a causa, e sem elas o registro perde o que o torna legível."
+      }
+    ]
+  },
+  "ex-jazye3xw": {
+    "prompt": "Quais partes da resposta do reembolso podem ser rastreadas até uma linha da execução? Marque todas as que se aplicam.",
+    "hint": "Percorra a resposta trecho a trecho.",
+    "choices": [
+      {
+        "text": "R$ 111.60",
+        "why": "Sim: o `111.6` da calculadora."
+      },
+      {
+        "text": "o gerente precisa aprovar",
+        "why": "Sim: a primeira busca devolveu a regra dos reembolsos acima de R$ 100."
+      },
+      {
+        "text": "reembolsado no cartão",
+        "why": "Sim: a segunda busca devolveu a regra do cartão ou meio usado para pagar."
+      },
+      {
+        "text": "as sopas foram servidas frias",
+        "why": "Isso veio da pergunta, não de uma ferramenta. É uma premissa, e nada na execução a confere."
+      }
+    ]
+  },
+  "ex-n644vd89": {
+    "prompt": "O `agent runs/ignored.txt` terminou com `done: an answer after 3 steps`, e a resposta estava errada. Por que o laço não reclamou?",
+    "hint": "O que o laço procura numa vez?",
+    "choices": [
+      {
+        "text": "As ferramentas devolveram os fatos errados, então o laço não tinha como saber",
+        "why": "As ferramentas devolveram os fatos certos, duas linhas acima da resposta."
+      },
+      {
+        "text": "O laço reclamou, mas só num arquivo de log que ninguém lê",
+        "why": "Ele imprimiu `done`. Nada mais foi relatado em lugar nenhum."
+      },
+      {
+        "text": "Três passos eram poucos para o laço conferir a resposta",
+        "why": "O número de passos não tem nada a ver; o laço nunca confere o conteúdo de uma resposta."
+      },
+      {
+        "text": "Ele confere a forma",
+        "why": "Isso. Ele acha uma Action ou uma Answer; se a resposta concorda com as observações não é algo que ele consiga julgar."
+      }
+    ]
+  },
+  "ex-st5c3ge0": {
+    "prompt": "Na execução ignorada, o último Thought foi \"That is a normal refund.\" Por que vale reparar nessa linha?",
+    "hint": "O que ela cita?",
+    "choices": [
+      {
+        "text": "É curta demais para ser um Thought válido",
+        "why": "O tamanho não é o problema. Um pensamento curto que citasse a regra dos R$ 100 estaria ótimo."
+      },
+      {
+        "text": "Devia ter sido uma Action",
+        "why": "Não adiantaria; os fatos já estavam lá. O problema é que ele os ignorou."
+      },
+      {
+        "text": "Não cita fato nenhum, e foi ali que a execução perdeu a prova",
+        "why": "Isso. Cada bom Thought aponta para uma observação; este aponta para nada e leva a uma resposta que contradiz uma delas."
+      },
+      {
+        "text": "O laço recusa Thoughts que não terminam em pergunta",
+        "why": "O laço não lê os Thoughts; só os imprime."
+      }
+    ]
+  },
+  "ex-ca780b8f": {
+    "prompt": "`Action: calculator(4 * 27.90)` parou a execução. O que um sistema cuidadoso faria em seguida?",
+    "hint": "A lição 19 tratou de uma resposta que não batia com o esquema.",
+    "choices": [
+      {
+        "text": "Rodar a calculadora mesmo assim, já que o sentido é óbvio",
+        "why": "Óbvio para uma pessoa. Um laço que adivinha o que uma linha malformada quis dizer um dia roda uma chamada que ninguém escreveu."
+      },
+      {
+        "text": "Aceitar a execução como respondida, já que o Thought tinha os números",
+        "why": "Não há linha Answer, e um Thought não é uma resposta."
+      },
+      {
+        "text": "Dizer ao modelo o formato esperado e deixá-lo tentar mais uma vez",
+        "why": "Isso: o mesmo movimento de consertar uma resposta contra um esquema. Adivinhar a chamada é o que ele não deve fazer."
+      },
+      {
+        "text": "Trocar por um modelo maior pelo resto da conversa",
+        "why": "Nada indica que precise de um modelo maior; lembrar o formato é a correção barata e direta."
+      }
+    ]
+  },
+  "ex-8xrdee26": {
+    "prompt": "`calculator[4 * 27,90]` voltou como erro, e a vez seguinte o corrigiu. O que tornou a recuperação possível?",
+    "hint": "Compare com uma ferramenta que devolve `0` quando falha.",
+    "choices": [
+      {
+        "text": "O laço trocou a vírgula por ponto antes de rodar a ferramenta",
+        "why": "O laço passou o texto sem mudança. A ferramenta recusou, e disse por quê."
+      },
+      {
+        "text": "O erro voltou como uma Observation que o modelo podia ler",
+        "why": "Isso. Um erro claro é algo de onde raciocinar; uma falha calada ou um número errado plausível é um fato falso."
+      },
+      {
+        "text": "Preços brasileiros são sempre rejeitados, então o modelo sabia de antemão",
+        "why": "Ele não sabia; leu o erro. E o erro era sobre a vírgula, não sobre o Brasil."
+      },
+      {
+        "text": "O limite de passos obrigou o modelo a tentar de novo",
+        "why": "O limite de passos para execuções; não faz nada ser repetido."
+      }
+    ]
+  },
+  "ex-nxhjxe8n": {
+    "prompt": "Com `--max-steps 2`, a execução do reembolso parou antes da resposta, embora estivesse no caminho certo. O que a seção conclui?",
+    "hint": "O limite está errado porque cortou uma execução boa?",
+    "choices": [
+      {
+        "text": "Manter, e relatar a execução como parada",
+        "why": "Isso. O custo é uma execução boa cortada de vez em quando; a alternativa é uma execução em laço até alguém notar a conta."
+      },
+      {
+        "text": "Tirar o limite, já que ele pode parar uma execução correta",
+        "why": "Sem limite, uma execução que se repete nunca termina, e cada repetição é paga (lição 15)."
+      },
+      {
+        "text": "Tratar a última observação como a resposta",
+        "why": "`111.6` é um número, não uma resposta à pergunta. Apresentá-lo como resposta seria desonesto."
+      },
+      {
+        "text": "Pôr o limite exatamente no número de passos de que a execução precisa",
+        "why": "Ninguém sabe esse número antes da execução; um limite é um teto, não um plano."
+      }
+    ]
+  },
+  "ex-mvkfyzs8": {
+    "prompt": "Por que o `send_email` foi recusado em `runs/email.txt`?",
+    "hint": "Leia a linha `tools allowed:`.",
+    "choices": [
+      {
+        "text": "O endereço de e-mail não era válido",
+        "why": "`manager@example.com` é um endereço bem formado. A recusa veio antes de qualquer endereço ser olhado."
+      },
+      {
+        "text": "O modelo pediu com educação, o que o laço trata como erro",
+        "why": "A educação não entra em jogo; o laço confere o nome da ferramenta contra uma lista."
+      },
+      {
+        "text": "O limite de passos tinha sido atingido",
+        "why": "Era o passo 1 de 2."
+      },
+      {
+        "text": "Não está na lista de permissões padrão",
+        "why": "Isso. As quatro ferramentas que só leem são permitidas; uma que muda algo fora da conversa não é, a menos que alguém a acrescente."
+      }
+    ]
+  },
+  "ex-h1etan43": {
+    "prompt": "Um colega propõe tirar a lista de permissões e escrever no prompt \"só chame send_email se o usuário pediu\". Qual é o problema?",
+    "hint": "A lição 7, e o que as ferramentas trazem para o contexto.",
+    "choices": [
+      {
+        "text": "Prompts não podem conter nomes de ferramentas",
+        "why": "Contêm o tempo todo; o prompt ReAct descreve cada ferramenta, e uma página pode citar uma também."
+      },
+      {
+        "text": "O modelo deixaria de saber que o send_email existe",
+        "why": "Ele continuaria descrito no prompt. A questão é o que o impede, não o que o modelo sabe."
+      },
+      {
+        "text": "Instruções num prompt são ignoradas depois de quatro passos ou mais",
+        "why": "Não existe esse limiar. O ponto é que instruções são pedidos, em qualquer passo."
+      },
+      {
+        "text": "O texto das ferramentas convence o modelo; a lista no código não",
+        "why": "Isso. Uma avaliação ou uma página da web pode trazer instruções, e o modelo as lê; uma conferência no código roda igual, leia ele o que ler."
+      }
+    ]
+  },
+  "ex-swprme03": {
+    "prompt": "Um limite escrito no prompt é um ___ ao modelo; um limite imposto pelo laço vale seja lá do que o modelo tenha sido convencido.",
+    "hint": "A palavra da seção para uma frase que o modelo pode ou não seguir.",
+    "blanks": [
+      {
+        "accept": [
+          "pedido"
+        ]
+      }
+    ]
+  },
+  "ex-gn28yrpx": {
+    "prompt": "Ponha um passo do ReAct em ordem, da vez do modelo até a seguinte.",
+    "hint": "O modelo escreve duas vezes seguidas; depois o laço trabalha.",
+    "items": [
+      "O modelo escreve um Thought",
+      "O modelo escreve uma Action",
+      "O laço confere se a ferramenta é permitida e a executa",
+      "O laço junta a resposta da ferramenta como Observation"
+    ]
+  },
+  "ex-49hj7y4f": {
+    "prompt": "Ligue cada execução ao jeito como o laço a encerrou.",
+    "hint": "Cada veredicto foi impresso na última linha da execução.",
+    "pairs": [
+      {
+        "left": "`runs/ignored.txt`",
+        "right": "done, com uma resposta errada"
+      },
+      {
+        "left": "`runs/paren.txt`",
+        "right": "parada: nem Action nem Answer"
+      },
+      {
+        "left": "`runs/refund.txt --max-steps 2`",
+        "right": "parada: sem resposta dentro do limite"
+      }
+    ],
+    "right_distractors": [
+      "retida até uma pessoa confirmar"
+    ]
+  },
+  "ex-hancshzq": {
+    "prompt": "Um agente ReAct responde a uma pergunta sobre horário de funcionamento. O registro mostra uma busca, que devolveu `nothing found`, e depois uma Answer com horários exatos. O que você deve concluir?",
+    "hint": "De onde os horários podem ter vindo?",
+    "choices": [
+      {
+        "text": "Os horários não vieram de uma ferramenta, então trate-os como palpite do modelo",
+        "why": "Isso. O registro é a prova, e aqui ele não mostra fonte: a Answer ignorou uma observação vazia e respondeu com o que é provável (lição 5)."
+      },
+      {
+        "text": "A resposta é confiável, porque o agente usou uma ferramenta",
+        "why": "Usar uma ferramenta não é o mesmo que usar o resultado dela; esta não devolveu nada."
+      },
+      {
+        "text": "A ferramenta de busca está quebrada e deve ser trocada",
+        "why": "`nothing found` pode ser a resposta correta para aquela consulta. O problema é a resposta que veio depois."
+      },
+      {
+        "text": "O laço devia ter recusado a Answer",
+        "why": "O laço confere a forma. Uma linha Answer é um final válido, diga ela o que disser."
+      }
+    ]
+  },
+  "ex-t3nrjs3x": {
+    "prompt": "Qual destes itens fica no código do laço, e não no prompt?",
+    "hint": "Quais precisam valer mesmo quando o modelo é convencido do contrário?",
+    "choices": [
+      {
+        "text": "Uma descrição de cada ferramenta e do que entregar a ela",
+        "why": "Isso fica no prompt: o modelo precisa dela para escrever uma Action sensata."
+      },
+      {
+        "text": "O formato: Thought, Action, Observation, Answer",
+        "why": "O modelo precisa ver o formato para segui-lo, então ele fica no prompt; o laço também o interpreta."
+      },
+      {
+        "text": "A pergunta que o usuário fez",
+        "why": "A pergunta é a entrada; ela vai no prompt."
+      },
+      {
+        "text": "O número máximo de passos",
+        "why": "Isso. Como a lista de permissões e a retenção de ações que mudam algo, não deve depender de o modelo concordar."
+      }
+    ]
+  }
+}
