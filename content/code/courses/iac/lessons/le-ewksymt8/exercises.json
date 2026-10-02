@@ -1,0 +1,791 @@
+[
+  {
+    "id": "ex-9eshd9dt",
+    "version": 1,
+    "section": "pricing-a-plan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can `price.py` price the two web servers before either of them exists?",
+    "hint": "Look at what `terraform show -json tfplan` printed for each instance.",
+    "choices": [
+      {
+        "text": "The instance type is in the plan already",
+        "correct": true,
+        "why": "Yes. `instance_type` is a plain value in the plan's JSON, and the type is what the hourly price depends on."
+      },
+      {
+        "text": "Terraform asks AWS for a quote while it plans",
+        "correct": false,
+        "why": "No plan asks for prices; the prices came from the cloud course's sheet, copied into the script."
+      },
+      {
+        "text": "moto reports what each instance would have cost on the real account",
+        "correct": false,
+        "why": "moto knows nothing about prices; it imitates the API, not the bill."
+      },
+      {
+        "text": "The script reads the state file written after the apply",
+        "correct": false,
+        "why": "It reads the saved plan, before any apply, which is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-tftna00z",
+    "version": 1,
+    "section": "pricing-a-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the shop's priced plan, which single resource costs the most per month?",
+    "hint": "Read the last column of `price.py`'s output.",
+    "choices": [
+      {
+        "text": "One of the web servers, with its 20 GB disk",
+        "correct": false,
+        "why": "Each one is 52.10 a month; something else is higher."
+      },
+      {
+        "text": "The VPC, because it holds everything else",
+        "correct": false,
+        "why": "The VPC has no line on the sheet: AWS does not charge for it by the hour."
+      },
+      {
+        "text": "The public address the gateway holds",
+        "correct": false,
+        "why": "That is 3.65 a month, the smallest priced line."
+      },
+      {
+        "text": "The NAT gateway",
+        "correct": true,
+        "why": "Yes: 67.89 a month, more than either server, for one block in `network.tf`."
+      }
+    ]
+  },
+  {
+    "id": "ex-pggm9zn5",
+    "version": 1,
+    "section": "pricing-a-plan",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What monthly total, in USD, did `price.py` print for the shop's first plan?",
+    "hint": "The line that starts with `change per month`.",
+    "value": 175.73,
+    "tolerance": 0.01,
+    "unit": "USD a month"
+  },
+  {
+    "id": "ex-g9teqz8x",
+    "version": 1,
+    "section": "pricing-a-plan",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these costs can no plan price, however good the price sheet? Choose all that apply.",
+    "hint": "A plan knows what will exist, not how much it will be used.",
+    "choices": [
+      {
+        "text": "The gigabytes the NAT gateway processes",
+        "correct": true,
+        "why": "Yes: priced per GB, and the plan has no idea how many."
+      },
+      {
+        "text": "The hours of a `t3.medium` instance",
+        "correct": false,
+        "why": "That is fixed by the plan: the type and that it runs all month."
+      },
+      {
+        "text": "Data sent from the web servers to the internet",
+        "correct": true,
+        "why": "Yes: usage, not configuration."
+      },
+      {
+        "text": "A discount the company negotiated with AWS",
+        "correct": true,
+        "why": "Yes: it belongs to the account, not to the configuration."
+      },
+      {
+        "text": "The size of a declared root disk",
+        "correct": false,
+        "why": "`volume_size = 20` is in the plan; the script priced it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzbmexm0",
+    "version": 1,
+    "section": "infracost",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson show no Infracost output at all?",
+    "hint": "What does Infracost ask for that the lab cannot give?",
+    "choices": [
+      {
+        "text": "Infracost only reads plans from Terraform Cloud",
+        "correct": false,
+        "why": "It reads a local directory or a plan's JSON; the problem is elsewhere."
+      },
+      {
+        "text": "Its pricing service is out of reach",
+        "correct": true,
+        "why": "Right. It needs an API key and its own pricing service, and the lab has no network; an invented breakdown is what the course refuses to print."
+      },
+      {
+        "text": "It refuses to price resources that moto created",
+        "correct": false,
+        "why": "It prices code, not resources in an account; moto was never the obstacle."
+      },
+      {
+        "text": "A plan with `-out` cannot be priced by anything",
+        "correct": false,
+        "why": "`price.py` priced exactly such a plan in the previous section."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzyttm22",
+    "version": 1,
+    "section": "infracost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Changing `t3.medium` to `m7i.large` produced a plan of two updates in place. What did the priced version add that the plan did not show?",
+    "hint": "Compare the two outputs of `bigger-price`.",
+    "choices": [
+      {
+        "text": "That both instances would be replaced",
+        "correct": false,
+        "why": "The plan said updated in place, and nothing replaced; pricing does not change the action."
+      },
+      {
+        "text": "That the change was 136.44 USD more a month",
+        "correct": true,
+        "why": "Yes: one word in the diff, and a number nobody would have guessed from it."
+      },
+      {
+        "text": "That `m7i.large` is not sold in `sa-east-1`",
+        "correct": false,
+        "why": "The sheet has a `sa-east-1` price for it, 0.16065 an hour."
+      },
+      {
+        "text": "That the disks would grow with the instance",
+        "correct": false,
+        "why": "The disk stays 20 GB; only the hourly price changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3sv516m",
+    "version": 1,
+    "section": "infracost",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a cost difference on a pull request in order.",
+    "hint": "The baseline has to exist before anything is compared with it.",
+    "items": [
+      "Price the main branch into `infracost-base.json`",
+      "Run `infracost diff` on the pull request's branch",
+      "Post the difference as a comment on the pull request",
+      "The reviewer approves or questions the change"
+    ],
+    "trap": "The comment comes from the diff, and the diff needs the baseline first."
+  },
+  {
+    "id": "ex-pqsgrhex",
+    "version": 1,
+    "section": "infracost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pull request adds a NAT gateway. Infracost prices its hours but shows the per-GB line with no monthly figure. What would give that line a number?",
+    "hint": "Infracost reads one more file for what a plan cannot know.",
+    "choices": [
+      {
+        "text": "A newer version of the AWS provider",
+        "correct": false,
+        "why": "The provider describes resources; it says nothing about traffic."
+      },
+      {
+        "text": "Applying the plan first, so the gateway exists",
+        "correct": false,
+        "why": "Infracost prices code; an existing gateway still has not processed next month's traffic."
+      },
+      {
+        "text": "A usage file with an estimate",
+        "correct": true,
+        "why": "Yes: usage is yours to supply, as a guess written down."
+      },
+      {
+        "text": "A bigger `limit_amount` in the budget",
+        "correct": false,
+        "why": "The budget warns after spending; it feeds nothing into an estimate."
+      }
+    ]
+  },
+  {
+    "id": "ex-r3rjd8dg",
+    "version": 1,
+    "section": "tags",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `default_tags` was added, the plan for `aws_nat_gateway.shop` showed `tags = {}` and four new entries elsewhere. Where?",
+    "hint": "One attribute is what the block says, the other what AWS will hold.",
+    "choices": [
+      {
+        "text": "In `tags_all`",
+        "correct": true,
+        "why": "Yes: the resource's own tags merged over the defaults."
+      },
+      {
+        "text": "In a new `aws_default_tags` resource that the plan would create",
+        "correct": false,
+        "why": "The plan created nothing: 0 to add."
+      },
+      {
+        "text": "In `terraform.tfvars`, which the plan rewrites",
+        "correct": false,
+        "why": "A plan never writes your files; the tfvars is where ana put the values."
+      },
+      {
+        "text": "In the provider's lock file",
+        "correct": false,
+        "why": "The lock file records provider versions and hashes, not tags."
+      }
+    ]
+  },
+  {
+    "id": "ex-83qqzby2",
+    "version": 1,
+    "section": "tags",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The block inside `provider \"aws\"` that merges one set of tags into every resource the provider creates is called ___.",
+    "hint": "Two words joined by an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "default_tags"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d1n36v5f",
+    "version": 1,
+    "section": "tags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana runs a plan with `tags` missing `CostCenter`. What happens?",
+    "hint": "Where does the validation rule run?",
+    "choices": [
+      {
+        "text": "The plan proceeds and AWS rejects the untagged resources at apply",
+        "correct": false,
+        "why": "AWS would accept them; the refusal is Terraform's, and it comes earlier."
+      },
+      {
+        "text": "Terraform fills `CostCenter` with an empty string and warns",
+        "correct": false,
+        "why": "Nothing fills a missing key; the rule fails."
+      },
+      {
+        "text": "Planning fails with the rule's message",
+        "correct": true,
+        "why": "Yes: `Invalid value for variable`, before Terraform asked AWS anything."
+      },
+      {
+        "text": "The resources are planned with three tags",
+        "correct": false,
+        "why": "Nothing was planned at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-g9qj6pw6",
+    "version": 1,
+    "section": "tags",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these end up without the shop's four default tags? Choose all that apply.",
+    "hint": "The defaults reach what this provider creates or updates through this configuration.",
+    "choices": [
+      {
+        "text": "A volume a colleague created with the AWS CLI",
+        "correct": true,
+        "why": "Yes: made by hand, so nothing tagged it."
+      },
+      {
+        "text": "The web servers' root disks, created before the defaults",
+        "correct": true,
+        "why": "Yes: the update tagged the instances and left their disks as they were."
+      },
+      {
+        "text": "The NAT gateway in `network.tf`",
+        "correct": false,
+        "why": "It was in the plan of eight updates and got all four."
+      },
+      {
+        "text": "A subnet this configuration creates next month",
+        "correct": false,
+        "why": "Created by this provider, so it gets the defaults at creation."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6rr1pmk",
+    "version": 1,
+    "section": "orphans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The tagging API answered `[]` when asked for volumes, although three existed. Why?",
+    "hint": "What does the tagging API answer from?",
+    "choices": [
+      {
+        "text": "moto does not emulate volumes",
+        "correct": false,
+        "why": "`describe-volumes` listed all three a moment later."
+      },
+      {
+        "text": "None of them had ever been tagged",
+        "correct": true,
+        "why": "Right: it returns what is or was tagged, so the untagged are outside its world."
+      },
+      {
+        "text": "Volumes belong to S3, which it does not cover",
+        "correct": false,
+        "why": "EBS volumes are EC2 resources; the filter `ec2:volume` named them correctly."
+      },
+      {
+        "text": "The filter needed the region in it",
+        "correct": false,
+        "why": "The region comes from the environment, as in every command of the lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-ca181n28",
+    "version": 1,
+    "section": "orphans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`describe-volumes` listed three untagged volumes. Why is only one of them an orphan?",
+    "hint": "Look at the state column.",
+    "choices": [
+      {
+        "text": "Only one was in `sa-east-1`",
+        "correct": false,
+        "why": "All three were in the same region; the difference is what they are attached to."
+      },
+      {
+        "text": "The other two are smaller than 100 GB, so they cost nothing",
+        "correct": false,
+        "why": "They cost 3.04 a month each; size does not decide ownership."
+      },
+      {
+        "text": "The `in-use` two belong to instances Terraform tracks",
+        "correct": true,
+        "why": "Yes: they are the web servers' disks. The `available` one is attached to nothing and in no state."
+      },
+      {
+        "text": "The other two were created by Bruno",
+        "correct": false,
+        "why": "Bruno made one volume, the 100 GB one."
+      }
+    ]
+  },
+  {
+    "id": "ex-9w6bedvg",
+    "version": 1,
+    "section": "orphans",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way a resource can lose its owner to an example from the course.",
+    "hint": "Lessons 6 and 7 each supplied one.",
+    "pairs": [
+      {
+        "left": "Made by hand",
+        "right": "Bruno's 100 GB export volume"
+      },
+      {
+        "left": "Released by Terraform",
+        "right": "A `removed` block with `destroy = false`"
+      },
+      {
+        "left": "State lost",
+        "right": "A deleted `terraform.tfstate`"
+      },
+      {
+        "left": "Never destroyed",
+        "right": "A preview environment after its merge"
+      }
+    ],
+    "right_distractors": [
+      "A resource with `prevent_destroy`"
+    ]
+  },
+  {
+    "id": "ex-h5tdct52",
+    "version": 1,
+    "section": "orphans",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana finds an `available` 500 GB volume with no tags and no owner anyone remembers. What should come before deleting it?",
+    "hint": "Who can say whether the data matters?",
+    "choices": [
+      {
+        "text": "Import it into the shop's configuration and run `terraform destroy`",
+        "correct": false,
+        "why": "That deletes it with extra steps, and destroys the whole configuration besides."
+      },
+      {
+        "text": "Find who created it, then snapshot it",
+        "correct": true,
+        "why": "Yes: CloudTrail shows the `CreateVolume` call and who made it; a snapshot covers the case where nobody answers."
+      },
+      {
+        "text": "Tag it `Owner = ana` so the budget counts it",
+        "correct": false,
+        "why": "That makes ana the owner of something she knows nothing about; the question is still open."
+      },
+      {
+        "text": "Attach it to a web server to see what is on it",
+        "correct": false,
+        "why": "That turns a production machine into a place to inspect unknown data; ask first."
+      }
+    ]
+  },
+  {
+    "id": "ex-cep1x087",
+    "version": 1,
+    "section": "ephemeral-environments",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the pipeline pass `expires` in, instead of the configuration computing it with `timestamp()`?",
+    "hint": "What does `timestamp()` return on the next run?",
+    "choices": [
+      {
+        "text": "`timestamp()` is not allowed inside `default_tags`",
+        "correct": false,
+        "why": "It is allowed; the trouble is what it does on every later plan."
+      },
+      {
+        "text": "The date would change on every run",
+        "correct": true,
+        "why": "Right: every plan would want to retag everything, and the expiry would keep moving forward."
+      },
+      {
+        "text": "`timestamp()` returns the time in UTC, and tags must be local",
+        "correct": false,
+        "why": "Tags take any string; the time zone is not the problem."
+      },
+      {
+        "text": "The workspace name already contains the date",
+        "correct": false,
+        "why": "It is `pr-21`, the pull request's number."
+      }
+    ]
+  },
+  {
+    "id": "ex-zghx12qm",
+    "version": 1,
+    "section": "ephemeral-environments",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `terraform destroy` in pr-17, `expired.sh` still listed pr-17's instance. What did the next command show?",
+    "hint": "It asked EC2 itself.",
+    "choices": [
+      {
+        "text": "That the destroy had failed and the instance was running",
+        "correct": false,
+        "why": "The destroy said `2 destroyed`, and the state check agreed."
+      },
+      {
+        "text": "It was terminated",
+        "correct": true,
+        "why": "Yes: still visible for a while, costing nothing; the tagging API does not report state."
+      },
+      {
+        "text": "That the instance had been moved to the default workspace",
+        "correct": false,
+        "why": "Workspaces hold states, not instances; nothing moved."
+      },
+      {
+        "text": "That its Expires tag had been removed by the destroy",
+        "correct": false,
+        "why": "The tag was still there; that is why the search listed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3y3adtz8",
+    "version": 1,
+    "section": "ephemeral-environments",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One preview environment costs 55.75 USD a month. How much, in USD, do four of them cost if they are forgotten for two months?",
+    "hint": "Environments times months times the monthly price.",
+    "value": 446,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-r7jmbj6r",
+    "version": 1,
+    "section": "ephemeral-environments",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a preview environment usually go wrong, according to the lesson?",
+    "hint": "Creating it is the part people test.",
+    "choices": [
+      {
+        "text": "The create job builds it in the wrong region",
+        "correct": false,
+        "why": "The lesson's failure is at the other end of its life."
+      },
+      {
+        "text": "The destroy that never runs",
+        "correct": true,
+        "why": "Yes: a failed job, a closed pull request, a renamed branch, and it keeps running."
+      },
+      {
+        "text": "Reviewers click through it and change the production database",
+        "correct": false,
+        "why": "A preview is a copy; the lesson's problem is cost, not access."
+      },
+      {
+        "text": "Two pull requests share one workspace",
+        "correct": false,
+        "why": "Each gets its own, named after the pull request."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4gm7bme",
+    "version": 1,
+    "section": "budgets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The 80% alert of `shop-monthly` arrives. What has the budget done to the running resources?",
+    "hint": "A budget warns.",
+    "choices": [
+      {
+        "text": "Stopped the most expensive instance",
+        "correct": false,
+        "why": "Nothing in `budget.tf` stops anything; acting needs a person, or an action built on purpose."
+      },
+      {
+        "text": "Blocked new resources until next month",
+        "correct": false,
+        "why": "A budget is not a cap."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: it sent a message, hours after the spending it reports."
+      },
+      {
+        "text": "Moved the shop to cheaper instance types",
+        "correct": false,
+        "why": "Only a change to the configuration does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdbrtcyz",
+    "version": 1,
+    "section": "budgets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson show only a plan for `aws_budgets_budget`?",
+    "hint": "Something in the lab, not in the configuration.",
+    "choices": [
+      {
+        "text": "Budgets can only be created in `us-east-1`",
+        "correct": false,
+        "why": "The lesson's reason is moto, not the region."
+      },
+      {
+        "text": "moto fails a read the provider makes after creating it, so the apply never finishes",
+        "correct": true,
+        "why": "Yes: it answers the read of the alert's subscribers with an internal error, which the provider retries."
+      },
+      {
+        "text": "A budget would cost money even in the lab",
+        "correct": false,
+        "why": "Nothing in the lab is billed; moto is an emulator."
+      },
+      {
+        "text": "The validation rule refuses the budget's tags",
+        "correct": false,
+        "why": "The plan shows the budget with all four tags in `tags_all`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgerwtr2",
+    "version": 1,
+    "section": "budgets",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A notification whose `notification_type` is ___ fires on the projection for the month, before actual spending reaches the limit.",
+    "hint": "The other value in `budget.tf` is `ACTUAL`.",
+    "blanks": [
+      {
+        "accept": [
+          "FORECASTED"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-byb95mnk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pull request moves the shop's two web servers from the public-facing subnet to the private one and adds a second NAT gateway in `sa-east-1c`. Infracost's comment shows the hours of the new gateway. What does a careful reviewer still ask?",
+    "hint": "What else does a NAT gateway charge for?",
+    "choices": [
+      {
+        "text": "How much traffic will pass through it",
+        "correct": true,
+        "why": "Yes: the per-GB line has no figure until somebody estimates the traffic."
+      },
+      {
+        "text": "Whether the subnet's CIDR block has a monthly price",
+        "correct": false,
+        "why": "Subnets have no hourly price; the sheet has no line for them."
+      },
+      {
+        "text": "Whether Infracost was run before or after `terraform apply`",
+        "correct": false,
+        "why": "It prices code from the pull request; it ran before any apply by design."
+      },
+      {
+        "text": "Whether the new gateway carries a `Name` tag",
+        "correct": false,
+        "why": "With `default_tags` the cost tags are there anyway; `Name` is not what the bill groups by."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kgsmk50",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team uses `default_tags` everywhere and the validation rule from the lesson. Their monthly report still shows 40 USD with no `Project`. Which explanation fits the lesson best?",
+    "hint": "What do the defaults never reach?",
+    "choices": [
+      {
+        "text": "The validation rule checks values, so a misspelt value passed",
+        "correct": false,
+        "why": "It checks the keys only, and a misspelt value would still carry a `Project` key."
+      },
+      {
+        "text": "Resources made outside Terraform",
+        "correct": true,
+        "why": "Yes: nothing made by hand gets a default tag. That is where an orphan search starts."
+      },
+      {
+        "text": "`default_tags` stops working after the first apply",
+        "correct": false,
+        "why": "The lesson's tags reached eight existing resources on a later apply."
+      },
+      {
+        "text": "AWS removes tags from resources older than a month",
+        "correct": false,
+        "why": "Tags stay until somebody changes them."
+      }
+    ]
+  },
+  {
+    "id": "ex-29djmgxa",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A preview environment's destroy job failed, and its state file is on a runner that was wiped. The resources carry `Environment = pr-30` and an `Expires` date that has passed. How can they be cleaned up?",
+    "hint": "`terraform destroy` needs something that is gone.",
+    "choices": [
+      {
+        "text": "Run `terraform destroy` in a new workspace called `pr-30`",
+        "correct": false,
+        "why": "A new workspace has an empty state, so destroy finds nothing to destroy."
+      },
+      {
+        "text": "Wait: AWS deletes resources whose `Expires` tag has passed",
+        "correct": false,
+        "why": "`Expires` is a convention of this team; AWS gives it no meaning."
+      },
+      {
+        "text": "Lower the budget so its alert stops them",
+        "correct": false,
+        "why": "A budget warns and stops nothing."
+      },
+      {
+        "text": "Find them by tag and delete them by service",
+        "correct": true,
+        "why": "Yes: the tags still work without the state; check each one's real state, and remember the addresses the lab's tagging API leaves out."
+      }
+    ]
+  },
+  {
+    "id": "ex-b313t2q8",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would the lesson's methods let ana catch before the money is spent? Choose all that apply.",
+    "hint": "Before the bill means before the apply, or at least before the month.",
+    "choices": [
+      {
+        "text": "A pull request doubling the web servers' instance size",
+        "correct": true,
+        "why": "Yes: a priced plan shows the difference in review."
+      },
+      {
+        "text": "A configuration that leaves out `CostCenter`",
+        "correct": true,
+        "why": "Yes: the validation rule fails the plan."
+      },
+      {
+        "text": "A sudden traffic spike through the NAT gateway",
+        "correct": false,
+        "why": "Usage is not in any plan; a forecast alert sees it, after it started."
+      },
+      {
+        "text": "A volume a colleague creates by hand tomorrow",
+        "correct": false,
+        "why": "It never passes a review; the orphan search finds it afterwards."
+      }
+    ]
+  }
+]
