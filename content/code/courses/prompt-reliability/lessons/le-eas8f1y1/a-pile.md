@@ -56,8 +56,7 @@ prompts/v8-rules.txt:12: 2 lines shout: 12,13
 A prohibition tells the reader one thing that is wrong, and nothing about what is right. *Do not use
 the category other unless you have to* says that `other` is suspect. It does not say when you have
 to, or which category to use instead. *Do not guess* forbids something every answer to an ambiguous
-message has to do. **Eight rules of that kind mark out what to avoid and leave the target
-unstated**, and the reader, model or person, fills the gap with whatever seems reasonable.
+message has to do. **Eight rules of that kind mark out what to avoid and leave the target unstated**, and the reader — model or person — fills the gap with whatever seems reasonable.
 
 ## The contradiction the linter did not see
 
@@ -73,7 +72,7 @@ It is a question, so line 12 says it can never be high. It is about money, so li
 always be high. **Both rules are absolute and they cannot both hold**, and nothing in the prompt says
 which one gives way. The person who labelled the case said low, for a reason neither rule
 mentions: nobody has lost anything yet, and the answer can wait a day. The linter missed the
-conflict for the reason lesson 2 gave, since it matches words, and *never* and *always* are not on
+conflict for the reason lesson 2 gave: it matches words, and *never* and *always* are not on
 its list of opposites.
 
 Lines 17 and 18 have the same shape in a quieter form. A refund is billing; a refund for a returned

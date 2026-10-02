@@ -55,7 +55,7 @@ rotulou disse. O guia não precisou de uma regra sobre perguntas nem de uma regr
 princípio cobre os casos para os quais duas regras foram escritas, e também aquele em que elas
 colidem.**
 
-## Mais longo, e não enchido
+## Mais longo, sem enchimento
 
 ```
 ana@lab:~/triage$ pl tokens prompts/v8-rules.txt
