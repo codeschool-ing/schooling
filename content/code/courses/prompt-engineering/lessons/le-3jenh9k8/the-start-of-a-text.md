@@ -47,8 +47,8 @@ reached the model and the question did not.
 A large model sees the whole question, so it would not make this mistake. It follows the same rule
 on a larger scale, though: **it continues the document you gave it, in that document's language,
 register and format.** A prompt written as a terse list tends to get a terse list back; a prompt
-that opens a JSON object tends to get the rest of one (lesson 18). Every part of the text is an
-instruction, including the parts you did not mean as one.
+that opens a JSON object tends to get the rest of one, and lesson 18 asks for JSON on purpose. Every
+part of the text is an instruction, including the parts you did not mean as one.
 
 ## A chat is a document with turns
 
@@ -77,7 +77,7 @@ coming back to them:
 
 | role | who writes it | what it is for |
 |---|---|---|
-| `system` | the developer of the application | who the assistant is, the rules, the format; the user does not see it (lesson 22) |
+| `system` | the developer of the application | who the assistant is, the rules, the format; the application does not show it to the user (lesson 22) |
 | `user` | the person using the application | the request itself |
 | `assistant` | the model, one turn at a time | the replies so far, which are sent back with every new request |
 

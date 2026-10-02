@@ -48,8 +48,8 @@ ponto final. O formato chegou ao modelo e a pergunta não.
 Um modelo grande vê a pergunta inteira, então não cometeria esse erro. Mas ele segue a mesma regra
 em escala maior: **ele continua o documento que você deu, no idioma, no registro e no formato desse
 documento.** Um prompt escrito como uma lista seca tende a receber uma lista seca de volta; um
-prompt que abre um objeto JSON tende a receber o resto dele (lição 18). Cada parte do texto é uma
-instrução, inclusive as partes que você não pretendia que fossem.
+prompt que abre um objeto JSON tende a receber o resto dele, e a lição 18 pede JSON de propósito.
+Cada parte do texto é uma instrução, inclusive as partes que você não pretendia que fossem.
 
 ## Um chat é um documento em que cada um fala na sua vez
 
@@ -78,7 +78,7 @@ Vale distinguir os três papéis desde o começo, porque o resto do curso volta 
 
 | papel | quem escreve | para que serve |
 |---|---|---|
-| `system` | quem desenvolve a aplicação | quem o assistente é, as regras, o formato; o usuário não vê (lição 22) |
+| `system` | quem desenvolve a aplicação | quem o assistente é, as regras, o formato; a aplicação não o mostra ao usuário (lição 22) |
 | `user` | a pessoa que usa a aplicação | o pedido em si |
 | `assistant` | o modelo, uma vez de cada vez | as respostas até aqui, enviadas de novo a cada nova requisição |
 
