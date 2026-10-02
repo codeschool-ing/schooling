@@ -53,7 +53,7 @@ ganha uma lição própria:
 | | `toylm` | um grande modelo de linguagem |
 |---|---|---|
 | o que ele prevê | a próxima **palavra** | o próximo **token**, um pedaço de palavra (lição 3) |
-| o que ele olha | as últimas **duas** palavras | muitas vezes centenas de milhares de tokens de uma vez (lição 4) |
+| o que ele olha | as últimas **duas** palavras | centenas de milhares de tokens de uma vez (lição 4) |
 | de onde vêm as notas | uma tabela de **contagens** | bilhões de números chamados **pesos**, aprendidos no treinamento (lição 8) |
 
 A terceira linha é de onde vem a diferença de qualidade. Uma tabela de contagens só consegue repetir

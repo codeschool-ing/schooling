@@ -52,7 +52,7 @@ lesson of its own:
 | | `toylm` | a large language model |
 |---|---|---|
 | what it predicts | the next **word** | the next **token**, a piece of a word (lesson 3) |
-| what it looks at | the last **two** words | often hundreds of thousands of tokens at once (lesson 4) |
+| what it looks at | the last **two** words | hundreds of thousands of tokens at once (lesson 4) |
 | where the scores come from | a table of **counts** | billions of numbers called **weights**, learnt by training (lesson 8) |
 
 The third row is where the difference in quality comes from. A table of counts can only repeat a
