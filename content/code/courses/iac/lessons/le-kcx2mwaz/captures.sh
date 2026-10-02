@@ -17,7 +17,8 @@
 # wrote (put below), whose contents the lesson shows in full; the moments
 # between sections where she deletes a terraform.tfvars she was trying out, or
 # a file she has finished with, which are the `quiet` lines; `terraform init`
-# in each new directory, which lesson 2 already showed; and git's identity.
+# in each new directory, which lesson 2 already showed; the first apply in
+# ~/shop/rules, whose plan the lesson does not need; and git's identity.
 #
 # A file the lesson shows in two versions is written by `rewrite`, below: put
 # names a file by its path, so the later version is written under ~/.v/N/,
@@ -127,12 +128,7 @@ put terraform.tfvars <<'CODE'
 subnets = ["10.20.1.0/24", "10.20.3.0/24"]
 CODE
 run 'terraform plan'
-block index-apply
-run 'terraform apply -auto-approve'
-block index-after
-run 'terraform state list'
 quiet 'rm terraform.tfvars'
-quiet 'terraform apply -auto-approve'
 
 block for-each
 mkdir -p ../scratch && cd ../scratch
@@ -230,7 +226,7 @@ resource "aws_internet_gateway" "shop" {
 }
 CODE
 block moved-without
-run 'terraform plan | grep -E "^  # |^Plan"'
+run 'terraform plan -no-color | grep -E "^  # |^Plan"'
 block moved-file
 put moved.tf <<'CODE'
 moved {
@@ -281,7 +277,45 @@ run 'terraform apply -auto-approve'
 block dynamic-aws
 run 'aws ec2 describe-security-groups --filters Name=group-name,Values=web --query "SecurityGroups[0].IpPermissions[].[IpProtocol,FromPort,IpRanges[0].CidrIp]" --output text'
 block dynamic-more
-run 'terraform plan -var "web_ports=[80, 443, 8443]"'
+run 'terraform plan -no-color -var "web_ports=[80, 443, 8443]" | grep -E "^  # |from_port|^Plan"'
+
+block dynamic-rules
+mkdir -p ../rules && cd ../rules
+put main.tf <<'CODE'
+provider "aws" {
+  region = "sa-east-1"
+}
+
+variable "web_ports" {
+  type    = set(string)
+  default = ["80", "443"]
+}
+
+resource "aws_vpc" "rules" {
+  cidr_block = "10.50.0.0/16"
+}
+
+resource "aws_security_group" "web" {
+  name   = "web"
+  vpc_id = aws_vpc.rules.id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "web" {
+  for_each = var.web_ports
+
+  security_group_id = aws_security_group.web.id
+  ip_protocol       = "tcp"
+  from_port         = each.value
+  to_port           = each.value
+  cidr_ipv4         = "0.0.0.0/0"
+}
+CODE
+quiet 'terraform init'
+quiet 'terraform apply -auto-approve'
+block dynamic-rules-plan
+run 'terraform state list'
+run 'terraform plan -no-color -var '"'"'web_ports=["80", "443", "8443"]'"'"' | grep -E "^  # |^Plan"'
+cd ../network
 
 block provider-aliases
 put backup.tf <<'CODE'
@@ -301,6 +335,15 @@ block aliases-where
 run 'aws s3api get-bucket-location --bucket shop-backup-ana'
 run 'aws ec2 describe-vpcs --region us-east-2 --filters Name=tag:Name,Values=shop --query "Vpcs[].VpcId" --output text'
 run 'aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query "Vpcs[].CidrBlock" --output text'
+block aliases-region
+put logs.tf <<'CODE'
+resource "aws_s3_bucket" "logs" {
+  region = "us-east-2"
+  bucket = "shop-logs-ana"
+}
+CODE
+run 'terraform apply -auto-approve -no-color | grep -E "^  # |region|^Apply"'
+run 'aws s3api get-bucket-location --bucket shop-logs-ana'
 block aliases-missing
 cd ../try
 rewrite 4 main.tf <<'CODE'
@@ -310,10 +353,10 @@ provider "aws" {
 
 resource "aws_s3_bucket" "logs" {
   provider = aws.eu
-  bucket   = "shop-logs-ana"
+  bucket   = "shop-archive-ana"
 }
 CODE
-run 'terraform plan'
+run 'terraform validate'
 cd ../network
 
 block choosing
@@ -376,4 +419,4 @@ resource "aws_route_table_association" "app" {
   route_table_id = aws_route_table.app.id
 }
 CODE
-run 'terraform plan | grep -E "^  # |^Plan"'
+run 'terraform plan -no-color | grep -E "^  # |^Plan"'

@@ -25,11 +25,29 @@
 #     which is what breaks Ana's lookup in "not-found".
 #   - the files ana wrote (put below), whose contents the lesson shows in full.
 #
+# A file ana rewrites is put a second time as ./name (and a third as
+# ././name): the same file on disk, under a different key in the output, so
+# the lesson can quote each version.
+#
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 . "$(dirname "$0")/../../capture.sh"
 
 quiet 'git config --global user.name Ana && git config --global user.email ana@example.com'
+
+# A WORKAROUND FOR THE LAB, not part of the lesson, and it changes no line of
+# output. The shared plugin cache in /opt/iac is written to by every fresh
+# `terraform init` (with no lock file, Terraform 1.16 re-unpacks a provider into
+# the cache rather than trusting the entry), so an init fails with "text file
+# busy" while another run is executing the aws provider, and with "permission
+# denied" for hashicorp/local, whose cache entry is root's. So this run reads
+# the same unpacked providers through a mirror of its own, made of symlinks:
+# Terraform links an unpacked mirror instead of copying it, and nothing shared
+# is ever written.
+M=$HOME/.tf-mirror/registry.terraform.io/hashicorp
+quiet "mkdir -p $M && cp -rs /opt/iac/plugin-cache/registry.terraform.io/hashicorp/aws $M/aws && cp -rs /opt/iac/plugin-cache/registry.terraform.io/hashicorp/local $M/local"
+printf 'provider_installation {\n  filesystem_mirror {\n    path = "%s"\n  }\n}\n' "$HOME/.tf-mirror" > "$HOME/.terraformrc-lab"
+export TF_CLI_CONFIG_FILE=$HOME/.terraformrc-lab
 
 # ---------------------------------------------------------------- the network team
 mkdir -p network-team && cd network-team
@@ -172,7 +190,7 @@ block filters-new
 run 'aws ec2 describe-images --owners self --query "Images[].[Name,ImageId]" --output text'
 block filters-plan
 run 'terraform plan'
-put image.tf <<'CODE'
+put ./image.tf <<'CODE'
 variable "web_image" {
   description = "The exact image the web server runs. Changing it is a deliberate diff."
   type        = string
@@ -239,7 +257,7 @@ run 'terraform apply -auto-approve'
 block when-again
 run 'terraform plan'
 quiet 'terraform apply -auto-approve'
-put subnet.tf <<'CODE'
+put ./subnet.tf <<'CODE'
 resource "aws_subnet" "app" {
   vpc_id            = data.aws_vpc.shop.id
   cidr_block        = "10.20.3.0/24"
@@ -337,6 +355,16 @@ run 'aws s3api get-bucket-policy --bucket shop-assets-123456789012 --query Polic
 # ---------------------------------------------------------------- not-found
 block notfound-vpc
 mkdir -p ../probe && cd ../probe
+put versions.tf <<'CODE'
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+CODE
 put main.tf <<'CODE'
 provider "aws" {
   region = "sa-east-1"
@@ -351,7 +379,7 @@ CODE
 quiet 'terraform init'
 run 'terraform plan'
 block notfound-ami
-put main.tf <<'CODE'
+put ./main.tf <<'CODE'
 provider "aws" {
   region = "sa-east-1"
 }
@@ -367,7 +395,7 @@ data "aws_ami" "web" {
 CODE
 run 'terraform plan'
 block notfound-plural
-put main.tf <<'CODE'
+put ././main.tf <<'CODE'
 provider "aws" {
   region = "sa-east-1"
 }
@@ -389,8 +417,9 @@ cd ../app
 quiet "aws ec2 create-vpc --cidr-block 10.30.0.0/16 --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=shop},{Key=Environment,Value=staging},{Key=Owner,Value=network}]'"
 block notfound-two
 run 'aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query "Vpcs[].[CidrBlock,Tags[?Key==\`Environment\`]|[0].Value]" --output text'
+block notfound-two-plan
 run 'terraform plan'
-put network.tf <<'CODE'
+put ./network.tf <<'CODE'
 data "aws_vpc" "shop" {
   tags = {
     Name        = "shop"

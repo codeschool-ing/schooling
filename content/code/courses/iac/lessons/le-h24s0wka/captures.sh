@@ -28,6 +28,10 @@
 # the same filesystem mirror with no cache at all, which is also what a computer
 # with no configuration does, and deletes .terraform when it ends.
 #
+# A file ana edits is written by `put` again, and the lesson builder keys a
+# file by its path, so the second and third versions are written as ./main.tf
+# and ././main.tf: the same file, under a name the builder can tell apart.
+#
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 . "$(dirname "$0")/../../capture.sh"
@@ -40,6 +44,17 @@ provider_installation {
 }
 RC
 export TF_CLI_CONFIG_FILE=~/.terraformrc-lab
+quiet 'git config --global user.name Ana'
+quiet 'git config --global user.email ana@example.com'
+
+# capture.sh's answer() runs both of its substitutions on the same line, so a
+# prompt answered "yes" comes out as "Enter a value: yes" followed by a second
+# line reading "yes". The same function, stopping after the first that matched.
+answer() {
+  prompt "$1"
+  printf '%s\n' "$2" | eval "$1" 2>&1 | decolour | sed -u "s/^\(  Enter a value: \)\$/\1$2/; t; s/^\(  Enter a value: \)\(.\)/\1$2\n\2/"
+  return 0
+}
 mkdir -p shop && cd shop
 
 block first-configuration
@@ -76,14 +91,24 @@ block init
 run 'terraform init'
 block init-files
 run 'ls -A'
-run 'find .terraform -maxdepth 5'
+run 'find .terraform'
+run 'du -sh .terraform'
 block lock
 run 'cat .terraform.lock.hcl'
+block gitignore
+put .gitignore <<'CODE'
+.terraform/
+*.tfstate
+*.tfstate.*
+CODE
+quiet 'git init -q'
+run 'git add . && git status --short'
+quiet 'git commit -qm "The shop network, first configuration"'
 block providers-lock
 run 'terraform providers lock -platform=darwin_arm64'
 
 block resources
-put main.tf <<'CODE'
+put ./main.tf <<'CODE'
 provider "aws" {
   region = "sa-east-1"
 }
@@ -136,6 +161,7 @@ run 'terraform state list'
 run 'aws ec2 describe-subnets --filters Name=tag:Name,Values=shop-web-a --query "Subnets[].[SubnetId,VpcId,CidrBlock]" --output text'
 block apply-again
 run 'terraform apply -auto-approve'
+quiet 'git add . && git commit -qm "A subnet and the web security group"'
 
 block variables
 put variables.tf <<'CODE'
@@ -156,7 +182,7 @@ variable "https_port" {
   default     = 443
 }
 CODE
-put main.tf <<'CODE'
+put ././main.tf <<'CODE'
 provider "aws" {
   region = "sa-east-1"
 }
@@ -195,8 +221,12 @@ resource "aws_vpc_security_group_ingress_rule" "https" {
   cidr_ipv4         = "0.0.0.0/0"
 }
 CODE
+block main-diff
+run 'git diff main.tf'
 block missing
 run 'terraform plan -input=false'
+block tf-var
+run 'echo var.environment | TF_VAR_environment=dev terraform console'
 block prompted
 answer 'terraform plan' dev
 block tfvars
@@ -209,7 +239,7 @@ run 'echo var.environment | terraform console'
 run 'echo var.environment | TF_VAR_environment=prod terraform console'
 run 'echo var.environment | terraform console -var environment=prod'
 block bad-type
-run 'terraform plan -var https_port=https'
+run 'echo var.https_port | terraform console -var https_port=https'
 block apply-vars
 run 'terraform apply -auto-approve'
 
@@ -232,16 +262,17 @@ run 'terraform apply -auto-approve'
 block output-cmd
 run 'terraform output'
 run 'terraform output vpc_id'
-run 'terraform output -raw vpc_id'
+run 'terraform output -raw vpc_id; echo'
 block output-json
 run 'terraform output -json'
 block output-use
 run 'aws ec2 describe-vpcs --vpc-ids "$(terraform output -raw vpc_id)" --query "Vpcs[].Tags" --output text'
 block output-missing
 run 'terraform output bucket_name'
+quiet 'git add . && git commit -qm "Variables and outputs"'
 
 block providers
-put versions.tf <<'CODE'
+put ./versions.tf <<'CODE'
 terraform {
   required_version = ">= 1.10"
 
@@ -283,6 +314,8 @@ resource "local_file" "network_env" {
   EOT
 }
 CODE
+block versions-diff
+run 'git diff versions.tf'
 block new-provider-plan
 run 'terraform plan'
 block init-2
@@ -311,6 +344,6 @@ run 'jq ".serial, (.resources | length)" terraform.tfstate'
 run 'aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query "Vpcs[].VpcId" --output text'
 run 'aws s3 ls'
 block plan-after-destroy
-run 'terraform plan'
+run 'terraform plan -no-color | grep -E "will be created|^Plan:"'
 
 quiet 'rm -rf .terraform'

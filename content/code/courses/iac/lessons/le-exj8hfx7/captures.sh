@@ -27,6 +27,16 @@
 # The lab's machine calls itself `vm`, so a lock says `ana@vm` where the prompt
 # says laptop: the prompt is printed by capture.sh, the lock by Terraform.
 #
+# Two things this script does that ana would not, both because several lessons
+# are recorded at once on one laptop and share /opt/iac/plugin-cache:
+#   - TF_PLUGIN_CACHE_MAY_BREAK_DEPENDENCY_LOCK_FILE=true, so an init with no
+#     lock file links the aws provider from the cache instead of unpacking it
+#     over the copy another run is executing ("text file busy");
+#   - every quiet init is retried a few times and fails the script loudly if it
+#     never succeeds, because a failed init is otherwise invisible and every
+#     transcript after it is an error message.
+# Neither changes a line the lesson quotes.
+#
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 . "$(dirname "$0")/../../capture.sh"
@@ -39,6 +49,16 @@ answer() {
   prompt "$1"
   printf '%s\n' "$2" | eval "$1" 2>&1 | decolour | sed -u "s/^\(  Enter a value: \)\$/\1$2/; t; s/^\(  Enter a value: \)\(.\)/\1$2\n\2/"
   return 0
+}
+
+export TF_PLUGIN_CACHE_MAY_BREAK_DEPENDENCY_LOCK_FILE=true
+tfinit() {
+  local i
+  for i in 1 2 3 4 5 6; do
+    terraform init -input=false "$@" >/dev/null 2>&1 && terraform providers schema -json >/dev/null 2>&1 && return 0
+    sleep 5
+  done
+  echo "##### FAILED: terraform init $* in $PWD"; exit 1
 }
 
 BUCKET=shop-tfstate-123456789012
@@ -91,7 +111,7 @@ resource "aws_security_group" "web" {
   }
 }
 CODE
-quiet 'terraform init'
+tfinit
 block first-apply
 run 'terraform apply -auto-approve | tail -n 8'
 block ls-state
@@ -116,9 +136,9 @@ cd ~
 run 'git clone -q shop shop-2'
 cd shop-2
 run 'ls -a'
-quiet 'terraform init'
+tfinit
 block clone-plan
-run 'terraform plan | grep -E "^  #|^Plan"'
+run 'terraform plan -no-color | grep -E "^  #|^Plan"'
 block duplicate
 run 'terraform apply -auto-approve | tail -n 1'
 run 'aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query "Vpcs[].[VpcId,CidrBlock]" --output text'
@@ -126,6 +146,8 @@ run 'aws ec2 describe-security-groups --filters Name=group-name,Values=web --que
 block clone-destroy
 run 'terraform destroy -auto-approve | tail -n 1'
 run 'aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query "Vpcs[].[VpcId,CidrBlock]" --output text'
+cd ~
+run 'rm -rf shop-2'
 cd ~/shop
 
 block state-list
@@ -136,14 +158,14 @@ block state-mv
 run 'terraform state mv -dry-run aws_subnet.a aws_subnet.public_a'
 run 'terraform state mv aws_subnet.a aws_subnet.public_a'
 block mv-plan
-run 'terraform plan | grep -E "^  #|^Plan"'
+run 'terraform plan -no-color | grep -E "^  #|^Plan"'
 block mv-fix
 run "sed -i 's/\"aws_subnet\" \"a\"/\"aws_subnet\" \"public_a\"/' main.tf"
 run 'grep aws_subnet main.tf'
 run 'terraform plan | tail -n 3'
 block state-rm
 run 'terraform state rm aws_subnet.public_a'
-run 'terraform plan | grep -E "^  #|^Plan"'
+run 'terraform plan -no-color | grep -E "^  #|^Plan"'
 run 'aws ec2 describe-subnets --filters Name=tag:Name,Values=shop-a --query "Subnets[].[SubnetId,CidrBlock]" --output text'
 block backups
 run 'ls terraform.tfstate*'
@@ -192,10 +214,13 @@ run 'terraform state list'
 run 'rm terraform.tfstate terraform.tfstate.*'
 quiet 'git add backend.tf && git commit -qm "keep the state in S3"'
 block clone-remote
-cd ~/shop-2
-run 'git pull -q'
-quiet 'terraform init -reconfigure'
-run 'terraform plan | tail -n 3'
+cd ~
+run 'git clone -q shop shop-2'
+cd shop-2
+run 'terraform init'
+tfinit
+block clone-remote-plan
+run 'terraform plan'
 cd ~/shop
 
 block locking
@@ -210,7 +235,7 @@ run "aws s3 ls --recursive s3://$BUCKET"
 block lock-refused
 run 'terraform plan'
 block lock-wait
-run 'terraform plan -lock-timeout=60s | tail -n 3'
+run 'terraform plan -lock-timeout=60s'
 wait $FIRST
 run "aws s3 ls --recursive s3://$BUCKET"
 
@@ -222,8 +247,7 @@ sleep 60 | terraform apply >/dev/null 2>&1 &
 FIRST=$!
 for i in $(seq 100); do aws s3 ls "s3://$BUCKET/shop/terraform.tfstate.tflock" >/dev/null 2>&1 && break; sleep 0.2; done
 sleep 1
-kill -9 $FIRST
-quiet 'pkill -x sleep'
+{ kill -9 $FIRST; pkill -x sleep; wait; } 2>/dev/null
 sleep 1
 block stale-plan
 run 'terraform plan 2>&1 | grep -A 7 "Lock Info"'
@@ -244,5 +268,3 @@ run 'jq "{serial, lineage}" old.tfstate'
 run 'terraform state pull | jq "{serial, lineage}"'
 block push-old
 run 'terraform state push old.tfstate'
-block state-grep
-run 'terraform state pull | jq -r ".resources[].instances[].attributes | keys[]" | sort -u | wc -l'
