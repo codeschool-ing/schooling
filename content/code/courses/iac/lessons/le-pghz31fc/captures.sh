@@ -469,9 +469,9 @@ block tg-tree
 run 'tree --noreport live'
 block tg-list
 cd live
-run 'terragrunt list --dag'
 run 'terragrunt list --tree --dag'
-run 'terragrunt dag graph'
+block tg-binary
+run 'terragrunt run --help | grep -e --tf-path'
 block tg-plan-all
 cd dev
 run 'terragrunt run --all plan 2>&1 | grep -v "terraform: "'
