@@ -1,0 +1,342 @@
+{
+  "ex-pe5242zy": {
+    "prompt": "Você manda a um modelo a frase `The kitchen stops taking hot food orders thirty minutes before closing.` O que o próprio modelo recebe?",
+    "hint": "Leia a segunda linha que o `tok show` imprimiu.",
+    "choices": [
+      {
+        "text": "Uma lista de doze números, os ids dos pedaços em que ele foi cortado",
+        "why": "Isso. O tokenizador trocou cada pedaço pelo id dele, e os ids são tudo o que o modelo recebe."
+      },
+      {
+        "text": "Os setenta e um caracteres, um de cada vez",
+        "why": "O modelo nunca vê caracteres. Vê os ids dos pedaços em que eles foram cortados."
+      },
+      {
+        "text": "As doze palavras, escritas como você as digitou",
+        "why": "As palavras viraram números antes de o modelo ver qualquer coisa."
+      },
+      {
+        "text": "Um resumo curto do que a frase quer dizer",
+        "why": "Nada resume o texto antes. Ele é cortado em pedaços e numerado, inteiro."
+      }
+    ]
+  },
+  "ex-6dp4y72n": {
+    "prompt": "O `tok show` imprimiu o pedaço `\" kitchen\"` com o id 10084. O que há exatamente nesse pedaço?",
+    "hint": "Olhe as aspas.",
+    "choices": [
+      {
+        "text": "Só a palavra, já que o tokenizador joga os espaços fora",
+        "why": "Os espaços ficam. Um deles é até um token sozinho na linha de código."
+      },
+      {
+        "text": "A palavra e o ponto final que fecha a frase",
+        "why": "O ponto final é um token próprio, o id 13."
+      },
+      {
+        "text": "As três primeiras letras, com o resto no token seguinte",
+        "why": "`\" kitchen\"` é um pedaço só. Uma palavra só é cortada quando o vocabulário não tem um pedaço inteiro para ela."
+      },
+      {
+        "text": "A palavra junto com o espaço que vem logo antes dela",
+        "why": "Isso. O espaço antes de uma palavra faz parte do token, e é por isso que `\" strawberry\"` e `strawberry` são cortados de jeitos diferentes."
+      }
+    ]
+  },
+  "ex-mt8vccmq": {
+    "prompt": "Com a `o200k_base`, `cozinha` ficou inteira e `trinta` saiu como `\" tr\"` e `\"inta\"`. Por quê?",
+    "hint": "O que o vocabulário tem, e o que falta nele?",
+    "choices": [
+      {
+        "text": "O tokenizador corta cada palavra em português depois da segunda letra",
+        "why": "`cozinha`, `aceitar` e `fechar` ficaram inteiras na mesma frase."
+      },
+      {
+        "text": "`trinta` é um número por extenso, e números são cortados em dígitos",
+        "why": "Foi cortada em `tr` e `inta`, não em dígitos. Números escritos com algarismos é que são cortados em blocos de até três."
+      },
+      {
+        "text": "O vocabulário tem um pedaço para a primeira palavra e nenhum para a segunda",
+        "why": "Isso. Uma palavra sem token próprio é soletrada com pedaços menores que o vocabulário tem."
+      },
+      {
+        "text": "A palavra estava escrita errado",
+        "why": "`trinta` está escrita certo. Ela só não é comum o bastante no texto de treino do tokenizador para ter um pedaço próprio."
+      }
+    ]
+  },
+  "ex-beq3yzwa": {
+    "prompt": "`seven` é um token e `SEVEN` são dois. O que isso significa para o modelo?",
+    "hint": "Compare os ids.",
+    "choices": [
+      {
+        "text": "Nada; o tokenizador passa o texto para minúsculas antes de cortar",
+        "why": "Não passa: os dois saíram com ids diferentes e contagens diferentes."
+      },
+      {
+        "text": "Ele vê duas sequências de números diferentes",
+        "why": "Isso. Maiúsculas mudam os pedaços, e o modelo aprendeu sobre cada sequência separadamente."
+      },
+      {
+        "text": "A versão em maiúsculas é duas vezes mais importante para ele",
+        "why": "O número de tokens não diz nada sobre importância. Diz como os caracteres foram cortados."
+      },
+      {
+        "text": "Ele não lê maiúsculas, então `SEVEN` se perde",
+        "why": "`SE` e `VEN` chegam a ele como quaisquer outros pedaços. Só são pedaços diferentes de `seven`."
+      }
+    ]
+  },
+  "ex-6qmtxs35": {
+    "prompt": "Por que os tokenizadores usam pedaços de palavras, e não palavras inteiras ou letras soltas?",
+    "hint": "Pense no que cada alternativa custa.",
+    "choices": [
+      {
+        "text": "Palavras inteiras deixariam todo texto mais longo do que os pedaços deixam",
+        "why": "As letras soltas é que deixariam os textos mais longos. Palavras inteiras falham porque nenhuma lista contém todas."
+      },
+      {
+        "text": "Uma lista de pedaços soletra qualquer texto e ainda deixa as palavras comuns num token só",
+        "why": "Isso. Palavras inteiras não cobrem cada nome e cada erro de digitação; letras deixariam todo texto várias vezes mais longo."
+      },
+      {
+        "text": "Pedaços de palavras carregam mais sentido que palavras inteiras, então o modelo entende mais",
+        "why": "A escolha é sobre cobrir qualquer texto num tamanho razoável, não sobre sentido."
+      },
+      {
+        "text": "Os modelos não aguentam uma lista com mais de alguns milhares de itens",
+        "why": "A `o200k_base` tem uns duzentos mil, e os ids nas capturas passam de 150.000."
+      }
+    ]
+  },
+  "ex-bwbmn3cz": {
+    "prompt": "Um cliente digita o nome de uma marca que o tokenizador nunca viu. O que acontece com ele?",
+    "hint": "Os bytes soltos continuam na lista.",
+    "choices": [
+      {
+        "text": "Ele é soletrado com pedaços menores",
+        "why": "Isso. O byte-pair encoding mantém os bytes soltos, então qualquer texto pode ser escrito; o custo é ter mais tokens."
+      },
+      {
+        "text": "Ele é trocado por um token especial que quer dizer palavra desconhecida",
+        "why": "Nada fica fora do vocabulário num tokenizador de bytes. O nome é soletrado com pedaços menores."
+      },
+      {
+        "text": "O tokenizador recusa o texto e o pedido falha com um erro",
+        "why": "Qualquer texto pode ser cortado, porque o vocabulário ainda contém cada byte sozinho."
+      },
+      {
+        "text": "O tokenizador acrescenta o nome ao vocabulário para a próxima vez",
+        "why": "O vocabulário é fixado quando o tokenizador é construído. Ele não cresce enquanto você o usa."
+      }
+    ]
+  },
+  "ex-68nmmm37": {
+    "prompt": "A frase em português sobre a cozinha deu 16 tokens com a `o200k_base`. Quantos tokens a mais a `cl100k_base` precisou para ela?",
+    "hint": "Leia a contagem na última linha de cada uma.",
+    "unit": "tokens"
+  },
+  "ex-f0gqj1pk": {
+    "prompt": "Quais destas afirmações valem para a `o200k_base` e a `cl100k_base`? Marque todas as que se aplicam.",
+    "hint": "Compare as duas capturas em inglês linha por linha.",
+    "choices": [
+      {
+        "text": "As duas cortam a frase da cozinha em inglês em 12 tokens",
+        "why": "Sim: doze em cada uma, e os mesmos pedaços."
+      },
+      {
+        "text": "A `o200k_base` tem um vocabulário com cerca do dobro do tamanho",
+        "why": "Sim. O número em cada nome é mais ou menos o tamanho do vocabulário."
+      },
+      {
+        "text": "As duas dão o mesmo id ao mesmo pedaço",
+        "why": "`\"The\"` é 976 numa e 791 na outra. Um id só quer dizer algo dentro da própria lista."
+      },
+      {
+        "text": "A contagem de qualquer uma é uma estimativa para um modelo que usa a outra",
+        "why": "Sim, e para um modelo com tokenizador próprio. É por isso que uma contagem diz qual codificação usou."
+      }
+    ]
+  },
+  "ex-78gg0p17": {
+    "prompt": "Por que os preços e os limites de um modelo são contados em tokens?",
+    "hint": "O que o modelo lê, e o que ele escreve?",
+    "choices": [
+      {
+        "text": "Tokens são uma unidade de cobrança sem relação com o trabalho do modelo",
+        "why": "Eles são o trabalho: um token de saída é um passo do laço da lição 1."
+      },
+      {
+        "text": "As palavras variam de tamanho, então os provedores escolheram uma unidade mais justa com o cliente",
+        "why": "Justiça não é o motivo, e os tokens também variam de tamanho. Tokens são o que o modelo processa."
+      },
+      {
+        "text": "Tokens são as unidades que o modelo lê e escreve, um passo de trabalho cada",
+        "why": "Isso. Cada token de entrada é lido, e cada token de saída é uma volta do laço de geração."
+      },
+      {
+        "text": "Caracteres seriam difíceis demais para um computador contar",
+        "why": "Contar caracteres é trivial. O modelo só não trabalha com caracteres."
+      }
+    ]
+  },
+  "ex-st6b3npe": {
+    "prompt": "O `hours.en.txt` tem 37 palavras e 41 tokens; o `hours.pt.txt` tem 39 palavras e 48 tokens. Você está construindo um produto para clientes brasileiros. O que tirar disso?",
+    "hint": "Qual dos três números a conta usa?",
+    "choices": [
+      {
+        "text": "Estimar pela contagem de palavras em inglês, já que duas palavras de diferença não pesam",
+        "why": "Duas palavras viraram sete tokens, e com a `cl100k_base` a diferença foi de 17."
+      },
+      {
+        "text": "Medir a contagem de tokens com texto real em português antes de estimar qualquer coisa",
+        "why": "Isso. Palavras e caracteres não previram a diferença, e uma regra de bolso tirada do inglês a subestimaria."
+      },
+      {
+        "text": "Contar caracteres, já que o arquivo em português tem menos e por isso custa menos",
+        "why": "Ele tem menos caracteres e mais tokens. A conta segue os tokens."
+      },
+      {
+        "text": "Traduzir todo prompt para o inglês antes, para o custo ficar igual",
+        "why": "A tradução é um passo que pode dar errado e também custa tokens. Meça antes."
+      }
+    ]
+  },
+  "ex-9hhcjrc9": {
+    "prompt": "Nas tabelas de preço dos grandes provedores, um token de saída muitas vezes custa várias vezes mais que um de entrada. Qual é o motivo dado nesta lição?",
+    "hint": "Os tokens de saída podem ser produzidos juntos?",
+    "choices": [
+      {
+        "text": "A saída sai um token por vez; a entrada é lida numa passada",
+        "why": "Isso. Cada token de saída depende do anterior, então não há como produzi-los juntos."
+      },
+      {
+        "text": "Os tokens de saída são pedaços mais longos",
+        "why": "Os dois são cortados pelo mesmo tokenizador. Um token é o mesmo tipo de pedaço nos dois casos."
+      },
+      {
+        "text": "Os provedores só cobram mais pelo que o modelo diz",
+        "why": "Há um motivo técnico: a entrada pode ser processada em paralelo e a saída não."
+      },
+      {
+        "text": "Cada token de saída passa por uma checagem à parte",
+        "why": "Nada nesta lição diz isso. A diferença vem de como os dois são calculados."
+      }
+    ]
+  },
+  "ex-s3an590a": {
+    "prompt": "Com os preços ilustrativos de 2 e 8 por milhão, dez mil pedidos custaram 24,96 com 300 tokens de saída cada e 3,36 com 30. Quanto a conta caiu?",
+    "hint": "Subtraia o segundo total do primeiro.",
+    "unit": ""
+  },
+  "ex-1zwgj75y": {
+    "prompt": "A décima mensagem de um chat custa muito mais entrada que a primeira, embora o usuário tenha digitado mais ou menos o mesmo tanto. Por quê?",
+    "hint": "Lição 2: o que a aplicação envia em cada pedido?",
+    "choices": [
+      {
+        "text": "O modelo cobra a mais por lembrar as vezes anteriores entre um pedido e outro",
+        "why": "Ele não lembra nada entre pedidos. A aplicação envia de novo as vezes anteriores, e elas contam como entrada."
+      },
+      {
+        "text": "O provedor sobe o preço por token depois das primeiras mensagens",
+        "why": "O preço por token não mudou. O número de tokens mudou."
+      },
+      {
+        "text": "As respostas seguintes são mais longas de propósito",
+        "why": "Isso seria saída, não entrada. A entrada cresceu porque o histórico é reenviado."
+      },
+      {
+        "text": "A conversa inteira até ali é enviada de novo como entrada",
+        "why": "Isso. O modelo não guarda nada entre pedidos, então as vezes anteriores são pagas de novo a cada pedido."
+      }
+    ]
+  },
+  "ex-akynwxmq": {
+    "prompt": "O `tok cost` recebe dois preços por milhão de ___: um para a entrada e um para a saída.",
+    "hint": "A unidade em que todo limite e todo preço são contados.",
+    "blanks": [
+      {
+        "accept": [
+          "tokens",
+          "token"
+        ]
+      }
+    ]
+  },
+  "ex-0ds3ek9k": {
+    "prompt": "Um modelo erra a contagem da letra r em `strawberry`. O que o `tok show` explica sobre isso?",
+    "hint": "Quantos pedaços tem `\" strawberry\"`?",
+    "choices": [
+      {
+        "text": "O tokenizador remove as letras repetidas antes de o modelo ler a palavra",
+        "why": "O texto não é alterado, só cortado em pedaços e numerado."
+      },
+      {
+        "text": "A palavra chega como um número, com as letras dentro",
+        "why": "Isso. Os três r não estão na entrada; o modelo só tem o que aprendeu sobre a grafia daquele token."
+      },
+      {
+        "text": "Contar letras exige uma janela de contexto maior que a do modelo",
+        "why": "A pergunta tem sete tokens. A dificuldade é que as letras estão escondidas dentro de um deles."
+      },
+      {
+        "text": "O modelo nunca foi treinado com nomes de frutas em inglês",
+        "why": "Ele tem um token inteiro para `\" strawberry\"`, então a palavra era comum no texto de treino."
+      }
+    ]
+  },
+  "ex-1d69rxa4": {
+    "prompt": "Você precisa que um modelo conte as letras de uma palavra com segurança. Qual instrução transforma as letras em algo que ele consegue ver?",
+    "hint": "O que faria cada letra virar um token próprio?",
+    "choices": [
+      {
+        "text": "Soletrar, uma letra por linha, e então fazer a contagem",
+        "why": "Isso. Escrita assim, cada letra é um token próprio. Um programa é ainda mais confiável."
+      },
+      {
+        "text": "Escrever a palavra em maiúsculas para ela se destacar",
+        "why": "`SEVEN` virou `SE` e `VEN`: ainda pedaços, não letras."
+      },
+      {
+        "text": "Pedir ao modelo que tome um cuidado extra com a grafia",
+        "why": "Cuidado não põe as letras na entrada. Elas continuam escondidas dentro de um token."
+      },
+      {
+        "text": "Subir a temperatura para o modelo explorar mais respostas",
+        "why": "A temperatura muda como o próximo token é sorteado (lição 13), não o que está visível na entrada."
+      }
+    ]
+  },
+  "ex-mcaq2cm7": {
+    "prompt": "`1234567` saiu como `123`, `456` e `7`. Por que isso dificulta as contas para um modelo?",
+    "hint": "Onde estão os dígitos das unidades?",
+    "choices": [
+      {
+        "text": "Os dígitos que precisam se alinhar chegam em blocos",
+        "why": "Isso. As unidades ficam no fim de um bloco que o outro número corta em outro lugar."
+      },
+      {
+        "text": "O modelo não consegue guardar nenhum número acima de 999",
+        "why": "Ele guarda o número sem problema, em três tokens. O problema é alinhar os dígitos entre blocos."
+      },
+      {
+        "text": "O tokenizador arredonda os números grandes antes de o modelo vê-los",
+        "why": "Nada é arredondado: `123` `456` `7` soletram o número inteiro."
+      },
+      {
+        "text": "Os números são tirados da entrada e trocados por um marcador",
+        "why": "Estão todos lá, como tokens quaisquer."
+      }
+    ]
+  },
+  "ex-5xfkgrpw": {
+    "prompt": "Ponha em ordem o que acontece com o seu texto antes de um modelo poder usá-lo.",
+    "hint": "Começa pelo que você digitou.",
+    "items": [
+      "Você escreve o texto",
+      "O tokenizador o corta em pedaços do vocabulário dele",
+      "Cada pedaço é trocado pelo id dele",
+      "O modelo recebe a lista de ids"
+    ]
+  }
+}
