@@ -100,7 +100,7 @@ código**, e a aula 8 seção 07 volta ao que isso quer dizer quando o número i
 
 ## Três coisas que isto mostra
 
-- **O modelo só propõe.** Nada rodou até o `FUNCTIONS[b.name](**b.input)` no host. Um modelo que
+- **O modelo só propõe.** Nada rodou até o host procurar o nome em `FUNCTIONS` e chamar a função. Um modelo que
   pede uma ferramenta que você nunca ligou não recebe nada, e esse é o modelo de segurança inteiro
   da chamada de funções numa linha.
 - **A conversa é o estado.** A segunda requisição leva a pergunta, a chamada e o resultado. Tire

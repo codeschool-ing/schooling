@@ -101,7 +101,7 @@ code's**, and lesson 8 section 07 comes back to what that means when the number 
 
 ## Three things this shows
 
-- **The model only proposes.** Nothing ran until `FUNCTIONS[b.name](**b.input)` in the host. A
+- **The model only proposes.** Nothing ran until the host looked the name up in `FUNCTIONS` and called it. A
   model that asks for a tool you never wired up gets nothing, and that is the whole security model
   of function calling in one line.
 - **The conversation is the state.** The second request carries the question, the call and the
