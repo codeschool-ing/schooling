@@ -67,8 +67,8 @@ lá, que ele está correto, nem que a categoria está certa.
 As duas últimas verificações, `category` e `urgency`, comparam a resposta com a que uma pessoa deu.
 No conjunto de teste essa resposta existe. **Em produção ninguém rotulou a mensagem ainda**, e é
 justamente por isso que um modelo a está classificando. Então `json`, `fields` e `labels` são
-verificações que o programa consumidor pode rodar em toda resposta que receber, e deve; `category` e
-`urgency` só podem ser medidas num conjunto de teste, e as aulas 11 e 12 tratam de fazer isso bem.
+verificações que o programa consumidor pode rodar em toda resposta que receber, e deve. `category` e
+`urgency` só podem ser medidas num conjunto de teste; as aulas 11 e 12 tratam de fazer isso bem.
 
 Essa divisão é o sentido prático de um contrato. **O formato pode ser verificado em cada chamada; o
 conteúdo só pode ser estimado.** Uma resposta que quebra o formato é barrada na porta. Uma resposta

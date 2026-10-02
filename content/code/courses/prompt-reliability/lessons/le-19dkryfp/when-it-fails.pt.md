@@ -48,7 +48,7 @@ que outra pessoa está tratando.
 
 ## Mandar para uma pessoa
 
-Para uma resposta que é analisável mas falha em `labels`, uma categoria que ninguém conhece, o
+Para uma resposta que é analisável mas falha em `labels` — uma categoria que ninguém conhece — o
 destino certo é o mesmo. Mande a resposta crua junto com a mensagem, para a pessoa ver o que deu
 errado e para o caso poder entrar no conjunto de teste depois.
 

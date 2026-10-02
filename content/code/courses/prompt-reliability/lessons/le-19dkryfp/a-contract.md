@@ -66,8 +66,8 @@ that it is accurate, or that the category is right.
 The last two checks, `category` and `urgency`, compare a reply with the answer a person gave. In
 the test set that answer exists. **In production nobody has labelled the message yet**, which is the
 whole reason a model is sorting it. So `json`, `fields` and `labels` are checks the consuming program
-can run on every reply it ever receives, and should; `category` and `urgency` can only be measured
-on a test set, and lessons 11 and 12 are about doing that well.
+can run on every reply it ever receives, and should. `category` and `urgency` can only be
+measured on a test set; lessons 11 and 12 are about doing that well.
 
 That split is the practical meaning of a contract. **The format can be verified on every call; the
 content can only be estimated.** A reply that breaks the format is caught at the door. A reply with

@@ -48,7 +48,7 @@ working.
 
 ## Route to a person
 
-For a reply that parses but fails `labels`, a category nobody has heard of, the right destination
+For a reply that parses but fails `labels` — a category nobody has heard of — the right destination
 is the same. Send the raw reply with the message, so the person can see what went wrong and so the
 cases can be added to the test set later.
 

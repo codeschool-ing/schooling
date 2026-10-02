@@ -8,7 +8,7 @@ lesson takes them again on purpose, with the question this course asks of every 
 often does the structure actually arrive, and what does the program reading it do when it does
 not?**
 
-Start with the idea that has to go first: that JSON is the careful, professional way to ask for an
+The idea that has to go first is that JSON is the careful, professional way to ask for an
 answer, and prose the sloppy one. **Structure is for a reader that is a program.** The same
 message, sorted by the bare prompt and by the one that asks for JSON:
 
@@ -67,8 +67,8 @@ ones. For a router that is a fair price. For a note a person reads, it is paid f
 A field holds what the format lets it hold. The summary here is one sentence because the format
 says so, and a customer with two problems gets one of them summarised. Prose has room for *"mostly
 billing, but they also mention a damaged book"*; a `category` field has room for one word from a
-list of five. **Every field you add is a decision taken away from the model**, which is exactly what
-you want for a value a program branches on and exactly what you do not want for something a person
+list of five. **Every field you add is a decision taken away from the model.** That is exactly what
+you want for a value a program branches on, and exactly what you do not want for something a person
 was going to read and judge.
 
 So the rule is about the reader. Ask for structure when a program consumes the answer, and ask for

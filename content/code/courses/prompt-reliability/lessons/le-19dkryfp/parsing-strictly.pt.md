@@ -38,8 +38,8 @@ sign test on the 12 that changed: p = 0.006
 ```
 
 Trinta e sete de quarenta são analisáveis agora, contra vinte e sete, e o teste do sinal põe a
-mudança em p = 0.006. **A linha tornou os hábitos mais raros, não os eliminou**: três respostas
-ainda voltaram embrulhadas, e `t19` é uma delas, uma resposta que passava com o `v2-json.txt` e
+mudança em p = 0.006. **A linha tornou os hábitos mais raros, não os eliminou.** Três respostas
+ainda voltaram embrulhadas. `t19` é uma delas, uma resposta que passava com o `v2-json.txt` e
 quebrou com o prompt mais rigoroso:
 
 ```

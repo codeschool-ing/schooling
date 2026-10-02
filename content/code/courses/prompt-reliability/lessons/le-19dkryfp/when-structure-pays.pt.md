@@ -7,7 +7,7 @@ version: 1
 retoma os dois de propósito, com a pergunta que este curso faz a toda técnica: **com que frequência
 a estrutura chega de fato, e o que faz o programa que a lê quando ela não chega?**
 
-Comece pela ideia que precisa sair primeiro: a de que JSON é o jeito cuidadoso e profissional de
+A ideia que precisa sair primeiro é a de que JSON é o jeito cuidadoso e profissional de
 pedir uma resposta, e prosa o jeito desleixado. **Estrutura é para um leitor que é um programa.** A
 mesma mensagem, classificada pelo prompt nu e pelo que pede JSON:
 
@@ -66,7 +66,7 @@ os lentos. Para um roteador é um preço justo. Para uma nota que uma pessoa lê
 Um campo guarda o que o formato deixa. O resumo aqui tem uma frase porque o formato manda, e um
 cliente com dois problemas tem um deles resumido. A prosa tem espaço para *"quase tudo é cobrança,
 mas também falam de um livro danificado"*; um campo `category` tem espaço para uma palavra de uma
-lista de cinco. **Cada campo que você acrescenta é uma decisão tirada do modelo**, que é exatamente o
+lista de cinco. **Cada campo que você acrescenta é uma decisão tirada do modelo.** É exatamente o
 que você quer para um valor em que um programa se baseia para decidir, e exatamente o que você não
 quer para algo que uma pessoa ia ler e julgar.
 

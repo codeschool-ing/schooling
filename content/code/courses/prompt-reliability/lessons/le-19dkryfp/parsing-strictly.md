@@ -38,7 +38,7 @@ sign test on the 12 that changed: p = 0.006
 ```
 
 Thirty-seven of forty parse now, against twenty-seven, and the sign test puts the change at p =
-0.006. **The line made the habits rarer, not gone**: three replies still came back wrapped, and
+0.006. **The line made the habits rarer, not gone.** Three replies still came back wrapped.
 `t19` is one of them, a reply that parsed under `v2-json.txt` and broke under the stricter prompt:
 
 ```
