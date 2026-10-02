@@ -10,8 +10,9 @@
 # instance it "launches" is a record with an id and a state, which is exactly
 # what Terraform reads back, and nothing more.
 #
-# WHAT IS REAL. Terraform, OpenTofu, Terragrunt, Packer, Ansible, Checkov, tfsec
-# and Trivy are the released programs at the versions pinned below, and every
+# WHAT IS REAL. Terraform, OpenTofu, Terragrunt, Packer, Ansible, Checkov, tfsec,
+# Trivy, Puppet (Ubuntu's package), Salt and the AWS CDK are the released programs
+# at the versions pinned below, and every
 # provider is the one HashiCorp publishes. The machines Ansible configures are
 # Docker containers running sshd, and the image Packer builds is a real Docker
 # image.
@@ -50,6 +51,9 @@ MOTO=5.2.3
 AWSCLI=1.46.1
 ANSIBLE=2.21.4
 CHECKOV=3.3.22
+SALT=3008.3
+CDK=2.1144.0
+CDK_LIB=2.272.0
 TOFU=v1.13.1
 TERRAGRUNT=v1.1.6
 TFSEC=v1.28.14
@@ -78,7 +82,7 @@ gobuild() { # MODULE@VERSION PACKAGE NAME [LDFLAGS]: built inside its own
 
 tools() {
   apt-get update -q >/dev/null
-  apt-get install -y -q dnsmasq-base iproute2 jq tree unzip openssh-client git >/dev/null
+  apt-get install -y -q dnsmasq-base iproute2 jq tree unzip openssh-client git puppet >/dev/null
   id ana >/dev/null 2>&1 || useradd -m -u 1500 -s /bin/bash ana
   mkdir -p "$OPT/bin"
   hashicorp terraform "$TERRAFORM" "$OPT/dl"
@@ -101,6 +105,9 @@ EOF
   [ -x "$OPT/venv/bin/moto_server" ] || { python3 -m venv "$OPT/venv"; "$OPT/venv/bin/pip" install -q "moto[server]==$MOTO" "awscli==$AWSCLI"; }
   [ -x "$OPT/venv-ansible/bin/ansible" ] || { python3.12 -m venv "$OPT/venv-ansible"; "$OPT/venv-ansible/bin/pip" install -q "ansible-core==$ANSIBLE"; }
   [ -x "$OPT/venv-checkov/bin/checkov" ] || { python3 -m venv "$OPT/venv-checkov"; "$OPT/venv-checkov/bin/pip" install -q "checkov==$CHECKOV"; }
+  [ -x "$OPT/venv-salt/bin/salt-call" ] || { python3 -m venv "$OPT/venv-salt"; "$OPT/venv-salt/bin/pip" install -q "salt==$SALT"; }
+  [ -x "$OPT/cdk/node_modules/.bin/cdk" ] || { mkdir -p "$OPT/cdk" && (cd "$OPT/cdk" && npm init -y >/dev/null \
+    && npm install --silent "aws-cdk@$CDK" "aws-cdk-lib@$CDK_LIB" "constructs@10"); }
   gobuild "github.com/opentofu/opentofu@$TOFU" ./cmd/tofu tofu \
     "-X github.com/opentofu/opentofu/version.dev=no"
   gobuild "github.com/gruntwork-io/terragrunt@$TERRAGRUNT" . terragrunt \
@@ -151,7 +158,8 @@ inside() {
   local moto=$!
   local i; for i in $(seq 50); do curl -s -o /dev/null localhost:4566 && break; sleep 0.2; done
   cat > "$home/.lab-env" <<EOF
-export PATH=$OPT/bin:$OPT/venv/bin:$OPT/venv-ansible/bin:$OPT/venv-checkov/bin:/usr/local/bin:/usr/bin:/bin
+export PATH=$OPT/bin:$OPT/venv/bin:$OPT/venv-ansible/bin:$OPT/venv-checkov/bin:$OPT/venv-salt/bin:$OPT/cdk/node_modules/.bin:$(dirname "$(command -v node)"):/usr/local/bin:/usr/bin:/bin
+export NODE_PATH=$OPT/cdk/node_modules CDK_DISABLE_CLI_TELEMETRY=true
 export HOME=/home/ana USER=ana TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat
 export TF_CLI_CONFIG_FILE=$OPT/terraformrc CHECKPOINT_DISABLE=1 TF_IN_AUTOMATION=
 export AWS_ENDPOINT_URL=http://localhost:4566 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test AWS_DEFAULT_REGION=sa-east-1
