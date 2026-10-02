@@ -1,0 +1,755 @@
+[
+  {
+    "id": "ex-ygx0nr3h",
+    "version": 1,
+    "section": "made-visible",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A team buys an observability product and points it at production. What will its dashboards show about a value the code never records?",
+    "hint": "A dashboard draws what it was sent.",
+    "choices": [
+      {
+        "text": "Nothing: no tool shows a number that was never produced",
+        "correct": true,
+        "why": "Right. Somebody has to decide what the system says about itself before any tool can draw it."
+      },
+      {
+        "text": "An estimate, inferred from the values it does receive",
+        "correct": false,
+        "why": "A product can compute from what it receives, and a value never sent is not among them."
+      },
+      {
+        "text": "The value, read directly from the process's memory",
+        "correct": false,
+        "why": "No tool reads arbitrary variables from a running service; something has to emit them."
+      },
+      {
+        "text": "A gap, which the vendor fills in once the agent learns the code",
+        "correct": false,
+        "why": "An agent can instrument libraries it knows, but it cannot guess a business value nobody recorded."
+      }
+    ]
+  },
+  {
+    "id": "ex-4tmt2e1m",
+    "version": 1,
+    "section": "made-visible",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which question is observability rather than monitoring?",
+    "hint": "One of them nobody planned for.",
+    "choices": [
+      {
+        "text": "Is the error rate above two per cent?",
+        "correct": false,
+        "why": "A threshold somebody already knew to watch: monitoring."
+      },
+      {
+        "text": "Is the disk of the database server more than 90% full?",
+        "correct": false,
+        "why": "A known condition, checked continuously: monitoring."
+      },
+      {
+        "text": "Why are checkouts with one card brand slower since Tuesday?",
+        "correct": true,
+        "why": "Right. Nobody wrote a check for it in advance; it is asked after the fact, of signals rich enough to answer."
+      },
+      {
+        "text": "Is the storefront answering its health check?",
+        "correct": false,
+        "why": "Up or down is the classic monitoring question."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtj1fe7f",
+    "version": 1,
+    "section": "made-visible",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each signal to what one of it is.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "metric",
+        "right": "A number sampled over time, with a few labels"
+      },
+      {
+        "left": "log",
+        "right": "One event, written when it happened, with fields"
+      },
+      {
+        "left": "trace",
+        "right": "One request's path through every service it touched"
+      }
+    ],
+    "right_distractors": [
+      "A copy of the database taken every night"
+    ]
+  },
+  {
+    "id": "ex-seqp6979",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, which part was written for the course rather than installed?",
+    "hint": "Look at the images.",
+    "choices": [
+      {
+        "text": "Prometheus and Alertmanager",
+        "correct": false,
+        "why": "Both run from their official images, unmodified."
+      },
+      {
+        "text": "The shop: every container whose image is `shop:1.4.0`",
+        "correct": true,
+        "why": "Right. The shop is the thing being observed; everything that watches it is real software."
+      },
+      {
+        "text": "The OpenTelemetry Collector, rewritten to keep the lab small",
+        "correct": false,
+        "why": "It is the contrib distribution, unmodified."
+      },
+      {
+        "text": "Grafana's dashboards and its data sources",
+        "correct": false,
+        "why": "Grafana is the official image; lesson 7 builds the dashboards."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ss5trsv",
+    "version": 1,
+    "section": "the-lab",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the shop's services in the order a paid checkout reaches them.",
+    "hint": "The customer, the order, the money, the e-mail.",
+    "items": [
+      "storefront",
+      "orders",
+      "payments",
+      "mailer, through the queue"
+    ]
+  },
+  {
+    "id": "ex-2sbqdtn8",
+    "version": 1,
+    "section": "the-lab",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which shapes of a production system does the lab's shop have? Choose all that apply.",
+    "hint": "Four are in the section.",
+    "choices": [
+      {
+        "text": "HTTP calls between services",
+        "correct": true,
+        "why": "Yes: storefront to orders to payments."
+      },
+      {
+        "text": "A database",
+        "correct": true,
+        "why": "Yes, PostgreSQL behind orders."
+      },
+      {
+        "text": "A queue",
+        "correct": true,
+        "why": "Yes, RabbitMQ between orders and mailer."
+      },
+      {
+        "text": "A scheduled job",
+        "correct": true,
+        "why": "Yes, the nightly report."
+      },
+      {
+        "text": "A content delivery network in front of the storefront",
+        "correct": false,
+        "why": "There is none; the storefront is published on 127.0.0.1."
+      }
+    ]
+  },
+  {
+    "id": "ex-tyw1prck",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You open `localhost:9090` from another computer on the same network as the lab and nothing answers. Why?",
+    "hint": "Where are the ports published?",
+    "choices": [
+      {
+        "text": "Prometheus listens only while a lesson's capture runs",
+        "correct": false,
+        "why": "It runs as long as the lab is up."
+      },
+      {
+        "text": "Every port is published on 127.0.0.1, so only the lab machine itself reaches it",
+        "correct": true,
+        "why": "Right, and `localhost` on the other computer is that computer anyway."
+      },
+      {
+        "text": "Port 9090 belongs to Grafana, which needs a password",
+        "correct": false,
+        "why": "Grafana is on 3000; 9090 is Prometheus."
+      },
+      {
+        "text": "Docker refuses connections until `lab.sh reset` runs again",
+        "correct": false,
+        "why": "A reset rebuilds the lab; it has nothing to do with who may connect."
+      }
+    ]
+  },
+  {
+    "id": "ex-02p71qr1",
+    "version": 1,
+    "section": "from-outside",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With payments slowed down, the checkout answered `201 in 1.536103 s`. What would a check that only asks \"did it answer with a success code?\" report?",
+    "hint": "What is the status code?",
+    "choices": [
+      {
+        "text": "That everything is fine",
+        "correct": true,
+        "why": "Right. The order was stored and charged; only the time is wrong, and this check does not look at time."
+      },
+      {
+        "text": "That the checkout failed, because of the time",
+        "correct": false,
+        "why": "The check never reads the time."
+      },
+      {
+        "text": "That payments is slow",
+        "correct": false,
+        "why": "From outside, the services behind the storefront are invisible."
+      },
+      {
+        "text": "Nothing until the second request arrives",
+        "correct": false,
+        "why": "It judges each request on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2dazznt",
+    "version": 1,
+    "section": "from-outside",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Healthy, the checkout took 0.036398 s. To the nearest whole millisecond, how many milliseconds is that?",
+    "hint": "A second has a thousand.",
+    "value": 36,
+    "tolerance": 0,
+    "unit": "milliseconds"
+  },
+  {
+    "id": "ex-bq4zefvd",
+    "version": 1,
+    "section": "from-outside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can no amount of studying the slow `201` tell you which service spent the time?",
+    "hint": "What does the answer contain?",
+    "choices": [
+      {
+        "text": "Because `curl` rounds the time to the millisecond",
+        "correct": false,
+        "why": "It prints microseconds; the problem is not precision."
+      },
+      {
+        "text": "Because the storefront hides the services it calls for security",
+        "correct": false,
+        "why": "Nothing is hidden on purpose; the answer just has no field for it."
+      },
+      {
+        "text": "The answer carries one status and one total, and the split between services was never put in it",
+        "correct": true,
+        "why": "Right. Four services, a database and a queue collapse into one number at the edge."
+      },
+      {
+        "text": "Because the slow part was the network between `curl` and the storefront",
+        "correct": false,
+        "why": "The trace shows it was payments; the network here is one machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6jkr5nh",
+    "version": 1,
+    "section": "metrics",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The histogram's `_sum` was 167.50 seconds over a `_count` of 111 checkouts. What was the mean checkout time, in seconds, to two decimal places?",
+    "hint": "Divide.",
+    "value": 1.51,
+    "tolerance": 0.01,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-hnjnk5cf",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bucket `le=\"1.0\"` reads 2 and `le=\"2.5\"` reads 111. How many checkouts took more than one second and at most two and a half?",
+    "hint": "Buckets are cumulative.",
+    "choices": [
+      {
+        "text": "111, because that is the value of the 2.5 bucket",
+        "correct": false,
+        "why": "Each bucket counts everything at or below its bound, including the 2 fast ones."
+      },
+      {
+        "text": "109",
+        "correct": true,
+        "why": "Right: 111 at or under 2.5, minus 2 at or under 1."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "Those are the ones at or under one second."
+      },
+      {
+        "text": "It cannot be known from buckets",
+        "correct": false,
+        "why": "The difference between two adjacent buckets is exactly that count."
+      }
+    ]
+  },
+  {
+    "id": "ex-p44qxa7c",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Prometheus reported a 99th percentile of 2.485 s, while every slow checkout waited the same 1.5 s in payments. What produced the difference?",
+    "hint": "What does a histogram know about one request?",
+    "choices": [
+      {
+        "text": "A few requests were lost between the scrape and the query",
+        "correct": false,
+        "why": "Losing requests would lower the counts, not raise the estimate above every real value."
+      },
+      {
+        "text": "The 99th percentile includes the time Prometheus took to scrape",
+        "correct": false,
+        "why": "Scraping does not add to the measured durations."
+      },
+      {
+        "text": "The histogram only knows the bucket, so Prometheus assumed the 109 requests between 1 and 2.5 s were spread evenly",
+        "correct": true,
+        "why": "Right. The estimate is read off that assumption, and the real values were all near the bottom of the bucket."
+      },
+      {
+        "text": "`rate()` multiplies the result by the length of its window, so a window of two minutes doubles every percentile the query returns",
+        "correct": false,
+        "why": "`rate()` is a per-second average over the window; nothing is doubled."
+      }
+    ]
+  },
+  {
+    "id": "ex-a5zbk7wh",
+    "version": 1,
+    "section": "metrics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the checkout histogram cost the same at a thousand checkouts as at a million?",
+    "hint": "What grows: the lines or the numbers on them?",
+    "choices": [
+      {
+        "text": "Only its numbers grow",
+        "correct": true,
+        "why": "Right. A metric aggregates; traffic changes values, not the number of series."
+      },
+      {
+        "text": "Prometheus throws away every request after the first thousand",
+        "correct": false,
+        "why": "Nothing is discarded; every request is counted."
+      },
+      {
+        "text": "It is compressed more as it grows",
+        "correct": false,
+        "why": "Compression is not why; the count of lines is fixed."
+      },
+      {
+        "text": "It is only read once a day",
+        "correct": false,
+        "why": "It is scraped every fifteen seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-73exypvk",
+    "version": 1,
+    "section": "metrics",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the line `..._bucket{le=\"0.5\",...} 2.0`, the label `le` stands for less than or ___.",
+    "hint": "Buckets include their upper bound.",
+    "blanks": [
+      {
+        "accept": [
+          "equal",
+          "equal to"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h8dp706z",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can the storefront's log line say that the checkout histogram cannot?",
+    "hint": "Look at the fields.",
+    "choices": [
+      {
+        "text": "How many checkouts there were in the last two minutes",
+        "correct": false,
+        "why": "Counting over time is the metric's job, and it does it cheaply."
+      },
+      {
+        "text": "Which order it was, which product, and how it ended",
+        "correct": true,
+        "why": "Right: order 111, a kettle, paid. A log line is one event with its own values."
+      },
+      {
+        "text": "Where the second and a half was spent",
+        "correct": false,
+        "why": "No line mentions the wait; nobody wrote one."
+      },
+      {
+        "text": "The 99th percentile of checkout time",
+        "correct": false,
+        "why": "A percentile is computed over many requests, from a metric."
+      }
+    ]
+  },
+  {
+    "id": "ex-9mcdr8j8",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could `grep` on the trace id find the same checkout in the logs of `payments` and `orders`?",
+    "hint": "Who wrote that field?",
+    "choices": [
+      {
+        "text": "Because the services share one log file",
+        "correct": false,
+        "why": "Each container writes its own output."
+      },
+      {
+        "text": "Because the trace id is the order number written in hexadecimal, so it is the same wherever the order goes",
+        "correct": false,
+        "why": "It is a random 128-bit id, unrelated to the order."
+      },
+      {
+        "text": "Each service logs the id of the request it serves, and the id travelled with it",
+        "correct": true,
+        "why": "Right. Lesson 4 is how it travels."
+      },
+      {
+        "text": "Because Loki copies the field into every service's lines",
+        "correct": false,
+        "why": "Loki stores lines; it does not add fields to them."
+      }
+    ]
+  },
+  {
+    "id": "ex-8kyxq8jw",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The lab runs on one machine, so `docker compose logs` found every line. Why does it also send them to Loki?",
+    "hint": "Think of production.",
+    "choices": [
+      {
+        "text": "Production runs on many machines, and one place that holds every line is what lets the same search reach all of them",
+        "correct": true,
+        "why": "Right. Lesson 9 is centralised logs."
+      },
+      {
+        "text": "`docker compose logs` drops lines older than one minute",
+        "correct": false,
+        "why": "It keeps them; the problem is reach, not age."
+      },
+      {
+        "text": "Loki is faster at grep than grep",
+        "correct": false,
+        "why": "Speed on one machine is not the reason."
+      },
+      {
+        "text": "The JSON is only valid once Loki parses it",
+        "correct": false,
+        "why": "The lines are JSON as written."
+      }
+    ]
+  },
+  {
+    "id": "ex-v96jww62",
+    "version": 1,
+    "section": "logs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Reading the logs of the slow checkout, where do you find the 1.5 second wait?",
+    "hint": "Who would have had to write it?",
+    "choices": [
+      {
+        "text": "In the `level` field of the payments line",
+        "correct": false,
+        "why": "It says INFO; the level is not a duration."
+      },
+      {
+        "text": "In the orders line, as `status`",
+        "correct": false,
+        "why": "That field is not there, and status is the outcome."
+      },
+      {
+        "text": "Nowhere; nobody logged it",
+        "correct": true,
+        "why": "Right. A log says only what a program chose to say."
+      },
+      {
+        "text": "In the storefront line, as `outcome`",
+        "correct": false,
+        "why": "`outcome` is `paid`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ymhprq0h",
+    "version": 1,
+    "section": "traces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the trace, `payments` spent almost all its time in a child span. What does that child span tell you that `POST /charge` alone did not?",
+    "hint": "Look at its name.",
+    "choices": [
+      {
+        "text": "Which step inside payments took the time",
+        "correct": true,
+        "why": "Right: waiting for the card network, named by the code that waited."
+      },
+      {
+        "text": "That the charge failed",
+        "correct": false,
+        "why": "It was approved; the trace carries no error."
+      },
+      {
+        "text": "That orders called payments twice",
+        "correct": false,
+        "why": "There is one call."
+      },
+      {
+        "text": "How many checkouts were slow",
+        "correct": false,
+        "why": "A trace is one request; counting is the metric's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-agv9cdkn",
+    "version": 1,
+    "section": "traces",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which spans in the slow checkout's trace come from a service that has no OpenTelemetry code of its own? Choose all that apply.",
+    "hint": "Which service runs under `opentelemetry-instrument`?",
+    "choices": [
+      {
+        "text": "`INSERT`",
+        "correct": true,
+        "why": "Yes, from orders' database driver, instrumented automatically."
+      },
+      {
+        "text": "`UPDATE`",
+        "correct": true,
+        "why": "Yes, the same."
+      },
+      {
+        "text": "`POST /orders`",
+        "correct": true,
+        "why": "Yes, from Flask, instrumented automatically."
+      },
+      {
+        "text": "`wait for the card network`",
+        "correct": false,
+        "why": "That one payments' own code opened by hand."
+      },
+      {
+        "text": "`orders.placed process`",
+        "correct": false,
+        "why": "mailer's own code opened it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jet50mc",
+    "version": 1,
+    "section": "traces",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The storefront's span took about as long as everything under it. If the wait in payments were removed, which spans would get shorter?",
+    "hint": "A parent lasts at least as long as the children it waits for.",
+    "choices": [
+      {
+        "text": "Only `wait for the card network`",
+        "correct": false,
+        "why": "Every span waiting on it would also shrink."
+      },
+      {
+        "text": "Only the mailer's spans, which run last",
+        "correct": false,
+        "why": "The mailer works after the queue and is not waiting on payments."
+      },
+      {
+        "text": "The wait and every span waiting on it, up to `POST /checkout`",
+        "correct": true,
+        "why": "Right. That chain is the critical path, and lesson 11 reads it."
+      },
+      {
+        "text": "None, because a span measures the code that runs and not the time spent waiting",
+        "correct": false,
+        "why": "A span measures wall time from start to end, waits included."
+      }
+    ]
+  },
+  {
+    "id": "ex-xejnre5c",
+    "version": 1,
+    "section": "the-triangle",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the signal that answers it first.",
+    "hint": "That, where, why.",
+    "pairs": [
+      {
+        "left": "Are checkouts slower than usual right now?",
+        "right": "metric"
+      },
+      {
+        "left": "Which service spent the time in this checkout?",
+        "right": "trace"
+      },
+      {
+        "left": "What exactly did payments decide for order 111?",
+        "right": "log"
+      }
+    ],
+    "right_distractors": [
+      "a backup"
+    ]
+  },
+  {
+    "id": "ex-cfks5tjg",
+    "version": 1,
+    "section": "the-triangle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What lets you go from the slow trace to the log lines of the same request?",
+    "hint": "It is a field both carry.",
+    "choices": [
+      {
+        "text": "The timestamp, matched to the second",
+        "correct": false,
+        "why": "Many requests share a second; time narrows the search but does not join."
+      },
+      {
+        "text": "Its id, which the shop writes into each line",
+        "correct": true,
+        "why": "Right. It is the join between the two signals."
+      },
+      {
+        "text": "The service name, which both signals carry",
+        "correct": false,
+        "why": "Every request of that service shares it."
+      },
+      {
+        "text": "The order id, which traces always record",
+        "correct": false,
+        "why": "Only where the code put it there, and it does not exist for requests that are not orders."
+      }
+    ]
+  },
+  {
+    "id": "ex-b0j30zqr",
+    "version": 1,
+    "section": "the-triangle",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An alert fires on the checkout percentile at 3 a.m. Which order of looking wastes the least time?",
+    "hint": "From the many to the one.",
+    "choices": [
+      {
+        "text": "Logs first, reading every line written since midnight until something stands out",
+        "correct": false,
+        "why": "Without a service or a request to look for, this is reading the haystack."
+      },
+      {
+        "text": "Traces first, opening them at random",
+        "correct": false,
+        "why": "Random traces are mostly the healthy majority."
+      },
+      {
+        "text": "The metric for when, a slow trace from then for where, its logs for why",
+        "correct": true,
+        "why": "Right. Each step narrows the next one."
+      },
+      {
+        "text": "Restart every service and then read the metric",
+        "correct": false,
+        "why": "Restarting first destroys the evidence and may not help."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gwddjzq",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Metrics say that something is wrong, traces say ___ it is wrong, and logs say why.",
+    "hint": "A place.",
+    "blanks": [
+      {
+        "accept": [
+          "where"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

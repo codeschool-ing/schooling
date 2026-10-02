@@ -1,0 +1,475 @@
+{
+  "ex-5541bffy": {
+    "prompt": "Como as métricas da loja chegam ao Prometheus?",
+    "hint": "Quem começa a conversa?",
+    "choices": [
+      {
+        "text": "Cada serviço as manda ao Prometheus quando um valor muda",
+        "why": "Isso é push; o Prometheus puxa."
+      },
+      {
+        "text": "O Prometheus as pede a cada alvo num ritmo fixo",
+        "why": "Isso: uma coleta, a cada quinze segundos aqui."
+      },
+      {
+        "text": "O Collector as encaminha junto com os rastros",
+        "why": "Neste laboratório o Collector leva rastros e logs, não as métricas da loja."
+      },
+      {
+        "text": "O Loki as extrai das linhas de log",
+        "why": "O Loki guarda logs."
+      }
+    ]
+  },
+  "ex-gjaesjd8": {
+    "prompt": "Um serviço que empurra suas métricas cai. O que o sistema de monitoramento percebe?",
+    "hint": "O que o pull dá de graça ao Prometheus?",
+    "choices": [
+      {
+        "text": "Talvez nada: o serviço só fica quieto",
+        "why": "Isso. Com pull, a própria coleta falha é registrada como `up` 0."
+      },
+      {
+        "text": "Um erro, mandado pelo serviço ao cair",
+        "why": "Um processo caindo raramente consegue mandar algo."
+      },
+      {
+        "text": "O mesmo que com pull: `up` vira 0",
+        "why": "`up` existe porque é o Prometheus quem pergunta."
+      },
+      {
+        "text": "Uma lacuna que o Prometheus preenche com o último valor recebido daquele serviço",
+        "why": "Nada a preenche."
+      }
+    ]
+  },
+  "ex-jt8b185f": {
+    "prompt": "Para cada alvo, a cada coleta, o Prometheus registra uma métrica chamada `___` que vale 1 se a coleta funcionou e 0 se não.",
+    "hint": "Duas letras.",
+    "blanks": [
+      {
+        "accept": [
+          "up"
+        ]
+      }
+    ]
+  },
+  "ex-0h79c9ce": {
+    "prompt": "Ligue cada parte de uma linha do formato de texto de métricas ao que ela é.",
+    "hint": "A resposta da vitrine.",
+    "pairs": [
+      {
+        "left": "`# HELP`",
+        "right": "O que a métrica conta"
+      },
+      {
+        "left": "`# TYPE`",
+        "right": "Counter, gauge, histogram ou summary"
+      },
+      {
+        "left": "`{code=\"200\",route=\"/health\"}`",
+        "right": "Os labels que fazem desta uma série"
+      },
+      {
+        "left": "`7.0`",
+        "right": "O valor atual"
+      }
+    ],
+    "right_distractors": [
+      "A hora em que a requisição foi feita"
+    ]
+  },
+  "ex-654m3ksm": {
+    "prompt": "Que seletor devolve toda série da vitrine cujo código de status é 4xx?",
+    "hint": "Uma expressão regular.",
+    "choices": [
+      {
+        "text": "`http_server_requests_total{job=\"storefront\", code=\"4xx\"}`",
+        "why": "`=` casa o texto literal `4xx`, que nenhuma série tem."
+      },
+      {
+        "text": "`http_server_requests_total{job=\"storefront\", code=~\"4..\"}`",
+        "why": "Isso: `=~` aceita uma expressão regular."
+      },
+      {
+        "text": "`http_server_requests_total{job=\"storefront\", code!=\"2..\"}`",
+        "why": "`!=` é exato, e também não excluiria 5xx."
+      },
+      {
+        "text": "`http_server_requests_total{job=\"storefront\"} > 400`",
+        "why": "Isso compara o valor do contador, não o código."
+      }
+    ]
+  },
+  "ex-53kzjy8n": {
+    "prompt": "Por que `http_server_requests_total{code=\"201\"}` = 281 quase não diz nada sozinho?",
+    "hint": "Desde quando?",
+    "choices": [
+      {
+        "text": "281 está abaixo da precisão do Prometheus",
+        "why": "Precisão não é o problema."
+      },
+      {
+        "text": "Contadores são zerados a cada coleta, então 281 cobre quinze segundos",
+        "why": "Uma coleta lê o contador; não zera nada."
+      },
+      {
+        "text": "Conta desde que o processo começou, quando quer que tenha sido",
+        "why": "Isso. A taxa dele é que carrega informação."
+      },
+      {
+        "text": "O valor está em milhares",
+        "why": "É uma contagem simples."
+      }
+    ]
+  },
+  "ex-xp2zmaav": {
+    "prompt": "O que `rate(http_server_requests_total[1m])` responde?",
+    "hint": "Por quê?",
+    "choices": [
+      {
+        "text": "O número de requisições no último minuto",
+        "why": "Isso é o `increase()`."
+      },
+      {
+        "text": "Requisições por segundo, na média do último minuto",
+        "why": "Isso."
+      },
+      {
+        "text": "A requisição mais rápida do último minuto",
+        "why": "Contadores não dizem nada sobre durações."
+      },
+      {
+        "text": "Quantas vezes o contador foi coletado no último minuto",
+        "why": "Isso daria quatro, seja qual for o tráfego."
+      }
+    ]
+  },
+  "ex-7n77n10r": {
+    "prompt": "O `rate(...[1m])` devolveu 4,222 para o código 201 e 0,267 para o 402. Com duas casas decimais, quantos checkouts por segundo é isso no total?",
+    "hint": "Some.",
+    "unit": "requisições por segundo"
+  },
+  "ex-reqghggw": {
+    "prompt": "A vitrine reiniciou e o contador dela caiu de 339 para 123. O que o `rate()` através do reinício fez?",
+    "hint": "Um contador só pode crescer.",
+    "choices": [
+      {
+        "text": "Devolveu uma taxa negativa no minuto do reinício",
+        "why": "Isso é o que a subtração ingênua daria, e o que o `rate()` evita."
+      },
+      {
+        "text": "Não devolveu nada até o contador passar de 339 de novo",
+        "why": "Ele continuou respondendo."
+      },
+      {
+        "text": "Tratou a queda como reinício",
+        "why": "Isso: continuou contando do zero, cerca de cinco por segundo, como antes."
+      },
+      {
+        "text": "Fez a média dos valores antigo e novo",
+        "why": "Não há média de valores."
+      }
+    ]
+  },
+  "ex-vq07pvb8": {
+    "prompt": "Para contar quantas vezes um contador voltou a zero numa janela, o PromQL tem a função `___()`.",
+    "hint": "Plural de reset, em inglês.",
+    "blanks": [
+      {
+        "accept": [
+          "resets"
+        ]
+      }
+    ]
+  },
+  "ex-g877ztxs": {
+    "prompt": "O `increase(...[1m])` devolveu 304,4 um dia. Como uma contagem de requisições pode ser fracionária?",
+    "hint": "Como a janela é coberta?",
+    "choices": [
+      {
+        "text": "Algumas requisições contam como metade porque falharam",
+        "why": "Toda requisição conta como uma."
+      },
+      {
+        "text": "Ele extrapola das coletas dentro da janela para a janela inteira",
+        "why": "Isso. É uma estimativa, não uma contagem."
+      },
+      {
+        "text": "O Prometheus guarda contadores como floats e erros de arredondamento se acumulam",
+        "why": "A fração é muito maior que arredondamento de float."
+      },
+      {
+        "text": "O contador foi zerado no meio da janela",
+        "why": "Um reinício é tratado, e não causa frações."
+      }
+    ]
+  },
+  "ex-5y7y5r4j": {
+    "prompt": "Por que alertar pela fração de cobranças falhas em vez da taxa de falhas?",
+    "hint": "Cinco requisições por segundo ou cinco mil.",
+    "choices": [
+      {
+        "text": "O sentido dela depende do tráfego",
+        "why": "Isso. A mesma taxa de falhas é alarmante a cinco requisições por segundo e nada a cinco mil; uma fração continua com sentido."
+      },
+      {
+        "text": "O Prometheus não consegue alertar sobre uma taxa",
+        "why": "Ele alerta sobre qualquer expressão."
+      },
+      {
+        "text": "Uma fração é mais barata de calcular",
+        "why": "Custa mais: duas somas e uma divisão."
+      },
+      {
+        "text": "Taxas só estão disponíveis em regras de gravação",
+        "why": "`rate()` funciona em qualquer lugar."
+      }
+    ]
+  },
+  "ex-7y947pmv": {
+    "prompt": "O payments foi instruído a falhar a cada 20ª cobrança, e a proporção voltou como 0,0495. Em porcentagem, arredondada ao inteiro, quantas cobranças falham?",
+    "hint": "Uma em vinte.",
+    "unit": "por cento"
+  },
+  "ex-rz8rp3gb": {
+    "prompt": "Alguém escreve a proporção como erros em `[1m]` divididos pelo total em `[5m]`. O que está errado?",
+    "hint": "Compare as metades.",
+    "choices": [
+      {
+        "text": "Nada: taxas são por segundo, então janelas não importam",
+        "why": "Janelas diferentes fazem médias de períodos diferentes."
+      },
+      {
+        "text": "`[5m]` não é permitido numa divisão",
+        "why": "É permitido; só está errado aqui."
+      },
+      {
+        "text": "As duas metades descrevem períodos diferentes, então a fração não é fração de nada",
+        "why": "Isso. Os dois lados precisam da mesma janela."
+      },
+      {
+        "text": "Erros precisam usar `increase()` e totais `rate()`",
+        "why": "Misturá-los também estaria errado."
+      }
+    ]
+  },
+  "ex-by31nwdm": {
+    "prompt": "Ligue cada exporter ao que ele traduz.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "node-exporter",
+        "right": "A máquina Linux"
+      },
+      {
+        "left": "postgres-exporter",
+        "right": "As estatísticas do banco"
+      },
+      {
+        "left": "blackbox-exporter",
+        "right": "Uma requisição enviada de fora"
+      }
+    ],
+    "right_distractors": [
+      "As métricas de negócio da própria loja"
+    ]
+  },
+  "ex-wcx5sgtj": {
+    "prompt": "O que o blackbox exporter pega que as métricas da própria vitrine não pegam?",
+    "hint": "Ele age como um cliente.",
+    "choices": [
+      {
+        "text": "Quantos checkouts foram recusados",
+        "why": "A vitrine conta isso sozinha."
+      },
+      {
+        "text": "Requisições que nunca chegam à vitrine",
+        "why": "Isso: um caminho quebrado na frente de um serviço saudável."
+      },
+      {
+        "text": "O uso de memória da vitrine",
+        "why": "Isso é métrica da máquina ou do próprio processo."
+      },
+      {
+        "text": "O id de rastro de uma requisição lenta",
+        "why": "Uma sonda não tem rastro."
+      }
+    ]
+  },
+  "ex-qp9rq1rt": {
+    "prompt": "Você acrescenta Redis à loja. Qual é a primeira coisa a procurar?",
+    "hint": "Escrever é o último recurso.",
+    "choices": [
+      {
+        "text": "Um jeito de fazer o Redis empurrar ao Pushgateway",
+        "why": "O Pushgateway é para tarefas que terminam."
+      },
+      {
+        "text": "Um pacote de instrumentação para rastros OpenTelemetry",
+        "why": "Isso cobre as chamadas dos clientes, não o estado do próprio Redis."
+      },
+      {
+        "text": "Um exporter de Redis existente",
+        "why": "Isso. Quase tudo já tem um."
+      },
+      {
+        "text": "Um horário para escrever do zero um exporter de Redis em Python",
+        "why": "Procure antes de escrever."
+      }
+    ]
+  },
+  "ex-k93j01an": {
+    "prompt": "Por que o Prometheus não consegue coletar o relatório noturno diretamente?",
+    "hint": "Quanto tempo ele vive?",
+    "choices": [
+      {
+        "text": "Ele não tem servidor HTTP",
+        "why": "Daria para acrescentar um; o problema é o tempo."
+      },
+      {
+        "text": "Ele termina antes da próxima coleta poder chegar",
+        "why": "Isso: cerca de um segundo, contra quinze."
+      },
+      {
+        "text": "As métricas dele são rastros",
+        "why": "Ele tem rastro e métricas, separados."
+      },
+      {
+        "text": "Tarefas não são permitidas em `scrape_configs`",
+        "why": "Qualquer endereço pode ser alvo."
+      }
+    ]
+  },
+  "ex-jn81eb3g": {
+    "prompt": "Por que o relatório empurra um timestamp do último sucesso em vez de um contador de execuções?",
+    "hint": "O que acontece na noite em que ele não roda?",
+    "choices": [
+      {
+        "text": "Timestamps ocupam menos espaço no Pushgateway",
+        "why": "Espaço não é o motivo."
+      },
+      {
+        "text": "Contadores não podem ser empurrados",
+        "why": "Podem."
+      },
+      {
+        "text": "A idade dele cresce quando nada roda",
+        "why": "Isso: `time() -` ele continua crescendo, e um alerta dispara pela ausência. Um contador só ficaria parado."
+      },
+      {
+        "text": "Um timestamp também registra quais pedidos foram contados",
+        "why": "É um número."
+      }
+    ]
+  },
+  "ex-tfj8h7h2": {
+    "prompt": "Quais destes são bons motivos para NÃO usar o Pushgateway num serviço de longa duração? Escolha todas as que se aplicam.",
+    "hint": "O que ele guarda, e o que ele perde?",
+    "choices": [
+      {
+        "text": "Ele guarda o último valor depois que o serviço morre",
+        "why": "Sim: um serviço morto parece vivo."
+      },
+      {
+        "text": "O `up` por instância da coleta se perde",
+        "why": "Sim."
+      },
+      {
+        "text": "Ele não guarda gauges",
+        "why": "O relatório empurrou dois."
+      },
+      {
+        "text": "Ele exige TLS",
+        "why": "O do laboratório fala HTTP puro."
+      }
+    ]
+  },
+  "ex-y9jntd2z": {
+    "prompt": "O que uma regra de gravação faz?",
+    "hint": "`record:`",
+    "choices": [
+      {
+        "text": "Registra toda consulta que um painel manda",
+        "why": "Ela registra o resultado da própria expressão."
+      },
+      {
+        "text": "Guarda um resultado como série",
+        "why": "Isso: o resultado de uma expressão, com nome novo, calculado uma vez por avaliação."
+      },
+      {
+        "text": "Manda um alerta quando uma série é gravada",
+        "why": "Isso é uma regra de alerta."
+      },
+      {
+        "text": "Grava o TSDB em disco",
+        "why": "O armazenamento faz isso sozinho."
+      }
+    ]
+  },
+  "ex-hw9mxpby": {
+    "prompt": "Ponha em ordem a vida do alerta PaymentsFailing.",
+    "hint": "Da regra ao pager.",
+    "items": [
+      "A proporção passa de 2% e o alerta fica pendente",
+      "A condição se mantém por dois minutos e o alerta dispara",
+      "O Prometheus o manda ao Alertmanager",
+      "O Alertmanager o agrupa e o manda ao pager"
+    ]
+  },
+  "ex-g13nr5er": {
+    "prompt": "A proporção de erros passa de 2% por 90 segundos e volta a cair. O que acontece com `for: 2m`?",
+    "hint": "Pendente não é disparado.",
+    "choices": [
+      {
+        "text": "Ele dispara por 90 segundos",
+        "why": "Ele nunca chega a disparar."
+      },
+      {
+        "text": "Fica pendente, volta a inativo, e ninguém é chamado",
+        "why": "Isso: um soluço, não um chamado."
+      },
+      {
+        "text": "Dispara quando os dois minutos passam, mesmo a condição tendo sumido",
+        "why": "A condição tem de se manter o tempo todo."
+      },
+      {
+        "text": "O Alertmanager o recebe como resolvido",
+        "why": "Um alerta pendente nunca é enviado."
+      }
+    ]
+  },
+  "ex-zx04vzqe": {
+    "prompt": "Quem decide que o chamado PaymentsFailing vai ao pager e não ao e-mail?",
+    "hint": "O Prometheus só decide que ele dispara.",
+    "choices": [
+      {
+        "text": "O label `severity: page` da regra, lido pelo Prometheus",
+        "why": "O label é informação; rotear não é trabalho do Prometheus."
+      },
+      {
+        "text": "O pager, que assina os alertas de que gosta",
+        "why": "O pager só recebe."
+      },
+      {
+        "text": "As rotas do Alertmanager",
+        "why": "Isso, e a aula 16 roteia por esse label."
+      },
+      {
+        "text": "O Collector",
+        "why": "O Collector não está no caminho do alerta."
+      }
+    ]
+  },
+  "ex-m9ka9s8p": {
+    "prompt": "A forma comum de uma proporção de erros é `sum(rate(erros[1m])) / sum(___(todos[1m]))`.",
+    "hint": "A mesma função dos dois lados.",
+    "blanks": [
+      {
+        "accept": [
+          "rate"
+        ]
+      }
+    ]
+  }
+}

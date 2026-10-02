@@ -1,0 +1,2814 @@
+[
+  {
+    "id": "ex-8zfyhb9s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A dashboard shows request rates, but nobody can say which service made one checkout slow. Which signal is missing?",
+    "hint": "Lesson 1. Which signal says where?",
+    "choices": [
+      {
+        "text": "Traces",
+        "correct": true,
+        "why": "Right: a trace says where one request spent its time."
+      },
+      {
+        "text": "More metrics, broken down by host and by process",
+        "correct": false,
+        "why": "Metrics aggregate away the single request."
+      },
+      {
+        "text": "A log line written at the end of every request by the load balancer",
+        "correct": false,
+        "why": "That sees only the outside of the request."
+      },
+      {
+        "text": "An uptime check from another country",
+        "correct": false,
+        "why": "It sees nothing inside."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8ehjvz2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What joins a log line to the trace of the same request?",
+    "hint": "Lesson 1. The triangle.",
+    "choices": [
+      {
+        "text": "The timestamp, matched to the nearest millisecond against each span",
+        "correct": false,
+        "why": "Times collide under load."
+      },
+      {
+        "text": "The service name, which both carry as a label",
+        "correct": false,
+        "why": "Many requests share a service."
+      },
+      {
+        "text": "The trace id written in the line",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The process id of the container that wrote both",
+        "correct": false,
+        "why": "Many requests share a process."
+      }
+    ]
+  },
+  {
+    "id": "ex-9p59r1c7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why can no observability product show a number the service never produced?",
+    "hint": "Lesson 1. Where signals come from.",
+    "choices": [
+      {
+        "text": "Because products are forbidden to estimate missing values by their licences",
+        "correct": false,
+        "why": "Not a matter of licences."
+      },
+      {
+        "text": "Because the network drops anything not sent over OTLP",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "Because metrics are only computed once a day",
+        "correct": false,
+        "why": "They are not."
+      },
+      {
+        "text": "Every signal exists because the code was written to emit it",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6bxqmz00",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A histogram reports a 99th percentile of 0.4975 s. What is that number?",
+    "hint": "Lessons 1 and 6. Interpolated.",
+    "choices": [
+      {
+        "text": "The duration of the slowest request in the window, measured exactly",
+        "correct": false,
+        "why": "A histogram keeps no single request."
+      },
+      {
+        "text": "An estimate inside a bucket, not a time any request took",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The average of the slowest one per cent of requests",
+        "correct": false,
+        "why": "Not an average."
+      },
+      {
+        "text": "The upper bound of the last bucket",
+        "correct": false,
+        "why": "It is interpolated inside a bucket."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wcayebd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Monitoring and observability answer different questions. Which pair matches them?",
+    "hint": "Lesson 1. Known questions, new questions.",
+    "choices": [
+      {
+        "text": "Monitoring uses metrics; observability uses logs, and the two never meet",
+        "correct": false,
+        "why": "Both use all signals."
+      },
+      {
+        "text": "Monitoring is for operations; observability is for developers only",
+        "correct": false,
+        "why": "Not a split by team."
+      },
+      {
+        "text": "Monitoring: is a known thing wrong? Observability: why, for a question nobody planned?",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They are two names for the same thing",
+        "correct": false,
+        "why": "The lesson separates them."
+      }
+    ]
+  },
+  {
+    "id": "ex-3tjjjdh6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The OpenTelemetry API is installed but no SDK. What happens when the code starts a span?",
+    "hint": "Lesson 2. Two pieces on purpose.",
+    "choices": [
+      {
+        "text": "Nothing: no error, and nothing recorded",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The program crashes with an import error at the first call",
+        "correct": false,
+        "why": "The API works alone."
+      },
+      {
+        "text": "The span is buffered until an SDK is installed",
+        "correct": false,
+        "why": "Nothing is kept."
+      },
+      {
+        "text": "The span is printed on standard output instead",
+        "correct": false,
+        "why": "Not without an exporter."
+      }
+    ]
+  },
+  {
+    "id": "ex-4445ryd6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does a service use the batch span processor rather than the simple one?",
+    "hint": "Lesson 2. 1.85 seconds against 0.08.",
+    "choices": [
+      {
+        "text": "The simple processor drops every span with an error status",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "The batch processor compresses spans so they take no memory",
+        "correct": false,
+        "why": "They still take memory."
+      },
+      {
+        "text": "The simple processor only works with Jaeger",
+        "correct": false,
+        "why": "It works with any exporter."
+      },
+      {
+        "text": "It exports off the request's path, in batches",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdqw5pjd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A child span's parent is missing in the trace. What usually went wrong in the code?",
+    "hint": "Lesson 2. Nothing named a parent.",
+    "choices": [
+      {
+        "text": "The child span was too short for the store to keep",
+        "correct": false,
+        "why": "Short spans are kept."
+      },
+      {
+        "text": "The parent context was never passed to where the child started",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Two spans cannot share a service, so the store dropped one of them",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "The parent span was sampled at a different rate from the child",
+        "correct": false,
+        "why": "Sampling is lesson 12, and follows the parent."
+      }
+    ]
+  },
+  {
+    "id": "ex-6a384rxm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which span name follows the rule of lesson 2?",
+    "hint": "Lesson 2. The name says what kind of work.",
+    "choices": [
+      {
+        "text": "`GET /orders/{id}`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`GET /orders/1011`",
+        "correct": false,
+        "why": "One operation per order."
+      },
+      {
+        "text": "`order 1011 for customer ana`",
+        "correct": false,
+        "why": "That belongs in attributes."
+      },
+      {
+        "text": "`handler`",
+        "correct": false,
+        "why": "Says nothing about the work."
+      }
+    ]
+  },
+  {
+    "id": "ex-tawzfrcq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A charge is declined by the card network, and the payments span records it. Should the span be marked as an error?",
+    "hint": "Lesson 2. A failure is the span's own.",
+    "choices": [
+      {
+        "text": "Yes, any refusal anywhere is an error for every span above it",
+        "correct": false,
+        "why": "Callers decide their own status."
+      },
+      {
+        "text": "Yes, because the HTTP status will be 4xx",
+        "correct": false,
+        "why": "A 4xx is not the server's error."
+      },
+      {
+        "text": "No: the span did its work correctly, and the decline is an outcome",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only if the customer complains",
+        "correct": false,
+        "why": "Status is set when the span ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-2vqjsbw0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "How does `opentelemetry-instrument` add spans to a program nobody changed?",
+    "hint": "Lesson 3. Before the program runs.",
+    "choices": [
+      {
+        "text": "It rewrites the source files on disk before starting them",
+        "correct": false,
+        "why": "Nothing on disk changes."
+      },
+      {
+        "text": "It reads the network traffic and builds spans from packets",
+        "correct": false,
+        "why": "That is not how it works."
+      },
+      {
+        "text": "It asks the kernel for a trace of every system call",
+        "correct": false,
+        "why": "Not what it does."
+      },
+      {
+        "text": "It replaces library functions in memory: monkey-patching",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-z05xgefj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which of these can automatic instrumentation not record by itself?",
+    "hint": "Lesson 3. What the request was about.",
+    "choices": [
+      {
+        "text": "The HTTP route and status code of each request",
+        "correct": false,
+        "why": "It records those."
+      },
+      {
+        "text": "Which product the customer bought",
+        "correct": true,
+        "why": "Right: business meaning needs code."
+      },
+      {
+        "text": "The SQL query, with placeholders",
+        "correct": false,
+        "why": "It records that."
+      },
+      {
+        "text": "The outgoing HTTP call to another service",
+        "correct": false,
+        "why": "It records that."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2yr9c45",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 3 measured 25.1 ms against 24.1 ms at the median, with and without instrumentation. What is the right conclusion?",
+    "hint": "Lesson 3. One run, one machine.",
+    "choices": [
+      {
+        "text": "Instrumentation adds four per cent to every request in production",
+        "correct": false,
+        "why": "One run says less than that."
+      },
+      {
+        "text": "Instrumentation makes requests faster on the second run",
+        "correct": false,
+        "why": "Not what was measured."
+      },
+      {
+        "text": "The difference is close to the noise between two runs",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The median is the wrong statistic, so nothing can be said",
+        "correct": false,
+        "why": "Something can be said."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzymnc2g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A service with automatic instrumentation calls another through a client library nothing instruments. What shows in the traces?",
+    "hint": "Lessons 3 and 4.",
+    "choices": [
+      {
+        "text": "Two traces for one request",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "One trace, with a gap where the call was",
+        "correct": false,
+        "why": "The context did not cross."
+      },
+      {
+        "text": "An error span marked by the SDK",
+        "correct": false,
+        "why": "Nothing fails."
+      },
+      {
+        "text": "Nothing at all from either service",
+        "correct": false,
+        "why": "Each still records its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-689y5p90",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "When is mixing automatic and manual instrumentation the right answer?",
+    "hint": "Lesson 3. The usual answer.",
+    "choices": [
+      {
+        "text": "Never, because two SDKs in one process conflict",
+        "correct": false,
+        "why": "It is one SDK."
+      },
+      {
+        "text": "Only for services written in Java, where agents exist",
+        "correct": false,
+        "why": "Python mixes them too."
+      },
+      {
+        "text": "Only during a migration, then one of the two is removed",
+        "correct": false,
+        "why": "The mix is a lasting choice."
+      },
+      {
+        "text": "As a lasting split: the agent for libraries, hand-written code for business attributes and spans",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-9dtx0gvk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which header carries the trace context between the shop's services?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "`X-Request-Id`",
+        "correct": false,
+        "why": "Not the W3C header."
+      },
+      {
+        "text": "`traceparent`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Authorization`",
+        "correct": false,
+        "why": "That carries credentials."
+      },
+      {
+        "text": "`baggage`, the only one OpenTelemetry sends by default",
+        "correct": false,
+        "why": "traceparent carries the trace."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2wxz0g5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a `traceparent`, which field changes at every hop and which never does?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "The parent span id changes; the trace id stays",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The trace id changes; the span id stays",
+        "correct": false,
+        "why": "The other way round."
+      },
+      {
+        "text": "Both change at every hop, to protect the privacy of the callers",
+        "correct": false,
+        "why": "The trace id must stay."
+      },
+      {
+        "text": "Neither changes; only the flags do",
+        "correct": false,
+        "why": "The span id changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqcz49q1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "How does a trace cross RabbitMQ in the shop?",
+    "hint": "Lesson 4. Where the carrier is.",
+    "choices": [
+      {
+        "text": "RabbitMQ adds the trace id to every message by itself",
+        "correct": false,
+        "why": "It knows nothing of traces."
+      },
+      {
+        "text": "The mailer guesses the trace from the order id",
+        "correct": false,
+        "why": "Nothing guesses."
+      },
+      {
+        "text": "The context is injected into the message's headers and extracted by the consumer",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The trace stops at the queue and a new one starts",
+        "correct": false,
+        "why": "Only when nobody carries it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3n1z83xt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does the nightly report link to orders rather than become their child?",
+    "hint": "Lesson 4. Twenty-two requests.",
+    "choices": [
+      {
+        "text": "Child spans are not allowed in scheduled jobs",
+        "correct": false,
+        "why": "They are."
+      },
+      {
+        "text": "Links are faster to export than parents",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "The orders have already been deleted when the job runs",
+        "correct": false,
+        "why": "They have not."
+      },
+      {
+        "text": "One run is caused by many requests; links relate traces without merging them",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4pgfanw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "What must never go into baggage?",
+    "hint": "Lesson 4. It travels everywhere.",
+    "choices": [
+      {
+        "text": "The id of the tenant, used to route requests",
+        "correct": false,
+        "why": "That is a typical use."
+      },
+      {
+        "text": "Anything personal or secret",
+        "correct": true,
+        "why": "Right: it reaches every service and third party on the path."
+      },
+      {
+        "text": "A feature flag's name",
+        "correct": false,
+        "why": "That is a typical use."
+      },
+      {
+        "text": "Any value longer than a word",
+        "correct": false,
+        "why": "Length is not the rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0hn76gt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "How does Prometheus get the shop's metrics?",
+    "hint": "Lesson 5. Who sends?",
+    "choices": [
+      {
+        "text": "Each service pushes its metrics to Prometheus every fifteen seconds",
+        "correct": false,
+        "why": "That is push; Prometheus pulls."
+      },
+      {
+        "text": "The Collector forwards every metric from the logs",
+        "correct": false,
+        "why": "Not in this lab."
+      },
+      {
+        "text": "It scrapes each target's `/metrics` on a schedule",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It reads the containers' standard output",
+        "correct": false,
+        "why": "That is where logs go."
+      }
+    ]
+  },
+  {
+    "id": "ex-saqesxgk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A counter went from 339 to 123 between two scrapes. What does `rate()` make of it?",
+    "hint": "Lesson 5. A restart.",
+    "choices": [
+      {
+        "text": "A counter reset: it counts from zero again, not a drop",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A negative rate, which it reports as an error in its own log",
+        "correct": false,
+        "why": "It handles resets."
+      },
+      {
+        "text": "It ignores the series until it grows again",
+        "correct": false,
+        "why": "It keeps counting."
+      },
+      {
+        "text": "A gauge: it stops treating it as a counter",
+        "correct": false,
+        "why": "The type does not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-c03g8bzw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why alert on the share of failing requests rather than on the rate of errors?",
+    "hint": "Lesson 5. Traffic changes.",
+    "choices": [
+      {
+        "text": "Rates cannot be computed over errors",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "A share is cheaper for Prometheus to store over long windows",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "Alertmanager only accepts numbers between 0 and 1",
+        "correct": false,
+        "why": "It accepts any."
+      },
+      {
+        "text": "A rate grows with traffic; a share says how bad it is for each request",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-0tx7jkfj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does the nightly report push a timestamp to the Pushgateway instead of being scraped?",
+    "hint": "Lesson 5. A job that ends.",
+    "choices": [
+      {
+        "text": "Because Prometheus cannot scrape Python programs",
+        "correct": false,
+        "why": "The services are Python."
+      },
+      {
+        "text": "It ends before any scrape; the timestamp says when it last succeeded",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because the report has no network access",
+        "correct": false,
+        "why": "It does."
+      },
+      {
+        "text": "Because timestamps cannot be exposed on `/metrics`",
+        "correct": false,
+        "why": "They can."
+      }
+    ]
+  },
+  {
+    "id": "ex-n054rmfh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An alerting rule with `for: 2m` has been true for one minute. What state is it in?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Pending",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Firing, and Alertmanager has been told",
+        "correct": false,
+        "why": "Not yet."
+      },
+      {
+        "text": "Inactive, until two minutes pass",
+        "correct": false,
+        "why": "It is pending."
+      },
+      {
+        "text": "Resolved",
+        "correct": false,
+        "why": "It is still true."
+      }
+    ]
+  },
+  {
+    "id": "ex-cptbk6y0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which metric type should count requests served?",
+    "hint": "Lesson 6. It only goes up.",
+    "choices": [
+      {
+        "text": "Gauge, so that it can be reset by hand every day",
+        "correct": false,
+        "why": "The wrong type breaks the math."
+      },
+      {
+        "text": "Summary",
+        "correct": false,
+        "why": "That measures sizes or durations."
+      },
+      {
+        "text": "Counter",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Histogram with one bucket",
+        "correct": false,
+        "why": "A counter is the tool."
+      }
+    ]
+  },
+  {
+    "id": "ex-a2s1x0yc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why can percentiles from two summaries not be combined into one?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Because summaries store no count of observations at all",
+        "correct": false,
+        "why": "They do store a count."
+      },
+      {
+        "text": "Because Prometheus forbids `sum` on summaries",
+        "correct": false,
+        "why": "Not forbidden."
+      },
+      {
+        "text": "Because each summary uses a different unit",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "Percentiles cannot be added or averaged",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3hwhj1w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A label `user_id` is added to a request counter with 20 000 users. What happens to the series?",
+    "hint": "Lesson 6. Every combination.",
+    "choices": [
+      {
+        "text": "One series per label name, so one more",
+        "correct": false,
+        "why": "Per value, not per name."
+      },
+      {
+        "text": "One series per user, times every other label combination",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, as long as the scrape interval is long enough to absorb it",
+        "correct": false,
+        "why": "Interval does not change cardinality."
+      },
+      {
+        "text": "Prometheus refuses the scrape",
+        "correct": false,
+        "why": "It accepts it, and pays."
+      }
+    ]
+  },
+  {
+    "id": "ex-zp9gp31r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Where does the lesson put the fix for a label that blew up cardinality?",
+    "hint": "Lesson 6. Relabelling is a bandage.",
+    "choices": [
+      {
+        "text": "In Prometheus, with a rule that drops the label at scrape time",
+        "correct": false,
+        "why": "The scrape still brings every sample."
+      },
+      {
+        "text": "In Grafana, by hiding the series",
+        "correct": false,
+        "why": "They are still stored."
+      },
+      {
+        "text": "In the code that sets the label",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In the database, by deleting old series",
+        "correct": false,
+        "why": "New ones keep coming."
+      }
+    ]
+  },
+  {
+    "id": "ex-hnqg95c8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A histogram's buckets are 0.25 s and 0.5 s, and the 99th percentile comes out at 0.4975 s. How much should you trust the third decimal?",
+    "hint": "Lesson 6. Interpolation.",
+    "choices": [
+      {
+        "text": "Little: the value is interpolated between two buckets",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Completely: Prometheus keeps every observation",
+        "correct": false,
+        "why": "It keeps counts per bucket."
+      },
+      {
+        "text": "Not at all: percentiles from histograms are random from one scrape to the next",
+        "correct": false,
+        "why": "They are estimates, not random."
+      },
+      {
+        "text": "Only if the scrape interval is one second",
+        "correct": false,
+        "why": "The interval is not the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-0df2r2fm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Where does Grafana store the metrics it draws?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "In its own time-series database",
+        "correct": false,
+        "why": "It stores none."
+      },
+      {
+        "text": "In the browser's local storage",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "In the dashboard JSON",
+        "correct": false,
+        "why": "That holds queries, not data."
+      },
+      {
+        "text": "Nowhere: it asks its data sources on every draw",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7g35jej",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does the deploy robot use a service account token rather than the admin password?",
+    "hint": "Lesson 7. 200 for the search, 403 for the delete.",
+    "choices": [
+      {
+        "text": "Tokens are faster to check than passwords",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "It gets only the permissions it needs, and revoking it touches nothing else",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Grafana forbids admins from creating annotations",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "The admin password expires every day",
+        "correct": false,
+        "why": "It does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-ysencrf6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A panel shows 1.7% errors over ten minutes during an outage in which one charge in ten failed. What hid the outage?",
+    "hint": "Lesson 7. The window.",
+    "choices": [
+      {
+        "text": "A long average: the quiet minutes diluted the bad ones",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An average over hosts",
+        "correct": false,
+        "why": "The window, not hosts."
+      },
+      {
+        "text": "A missing series shown as zero",
+        "correct": false,
+        "why": "The series was there."
+      },
+      {
+        "text": "The panel used the wrong data source",
+        "correct": false,
+        "why": "Same source."
+      }
+    ]
+  },
+  {
+    "id": "ex-pv973chh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a Grafana annotation record?",
+    "hint": "Lesson 7. What people did.",
+    "choices": [
+      {
+        "text": "A metric's value at a moment, copied out of Prometheus",
+        "correct": false,
+        "why": "Annotations are not metrics."
+      },
+      {
+        "text": "The text of every alert Alertmanager sent",
+        "correct": false,
+        "why": "Not by itself."
+      },
+      {
+        "text": "A moment and what somebody did then, such as a deploy",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A comment on a dashboard's JSON",
+        "correct": false,
+        "why": "It is stored with a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdm0he8h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A series disappears because a service stopped exporting it. What does a panel usually show, and why is that dangerous?",
+    "hint": "Lesson 7. Missing looks like zero.",
+    "choices": [
+      {
+        "text": "An error banner, which makes people panic",
+        "correct": false,
+        "why": "It usually shows no error."
+      },
+      {
+        "text": "The last value, frozen, which looks like the service is fine",
+        "correct": false,
+        "why": "Prometheus marks it stale."
+      },
+      {
+        "text": "A spike, from the counter resetting",
+        "correct": false,
+        "why": "No reset happened."
+      },
+      {
+        "text": "A flat line or nothing, which reads as zero errors",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-xz72x3h6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Where should a containerised service write its log lines?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "To a file inside the container, rotated daily",
+        "correct": false,
+        "why": "Lost with the container."
+      },
+      {
+        "text": "To standard output, and nothing else",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Directly to Elasticsearch over HTTP",
+        "correct": false,
+        "why": "The platform collects stdout."
+      },
+      {
+        "text": "To syslog on the host",
+        "correct": false,
+        "why": "Not in this design."
+      }
+    ]
+  },
+  {
+    "id": "ex-q0h475j4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What should the `ERROR` level mean?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Anything unexpected, however small",
+        "correct": false,
+        "why": "That fills the level with noise."
+      },
+      {
+        "text": "That the service is about to crash and must be restarted",
+        "correct": false,
+        "why": "Not necessarily."
+      },
+      {
+        "text": "That somebody has something to do about it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "That the customer saw a 4xx",
+        "correct": false,
+        "why": "A 4xx is often expected."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1w3zqp9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An exception is caught, logged, re-raised, and logged again by the caller. What does lesson 8 recommend?",
+    "hint": "Once, where it is handled.",
+    "choices": [
+      {
+        "text": "Log it once, where it is handled",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Log it at every level so nothing is lost",
+        "correct": false,
+        "why": "That is the seventeen lines."
+      },
+      {
+        "text": "Never log exceptions, only their messages",
+        "correct": false,
+        "why": "The stack is useful."
+      },
+      {
+        "text": "Log it only in the outermost service",
+        "correct": false,
+        "why": "Where it is handled."
+      }
+    ]
+  },
+  {
+    "id": "ex-sg7wvjsp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why should a field be named `duration_ms` rather than `duration`?",
+    "hint": "Lesson 8. The unit in the name.",
+    "choices": [
+      {
+        "text": "Elasticsearch rejects field names without underscores",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Shorter names compress worse",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "`duration` is a reserved word in JSON",
+        "correct": false,
+        "why": "It is not."
+      },
+      {
+        "text": "The unit is part of the meaning, and readers should not guess it",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dq21q6m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Sampling `INFO` lines at one in ten kept 95 of 990. What is a sampled log good for?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Finding what happened to one particular order, by its id",
+        "correct": false,
+        "why": "That line may be gone."
+      },
+      {
+        "text": "Which kinds of things happen, and in what proportion",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Counting errors exactly",
+        "correct": false,
+        "why": "Errors are not sampled, and counting is for metrics."
+      },
+      {
+        "text": "Nothing; sampling logs is always wrong",
+        "correct": false,
+        "why": "It has a use."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjc2vqcs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does Loki index for each line?",
+    "hint": "Lesson 9. Streams.",
+    "choices": [
+      {
+        "text": "Only the stream's labels",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Every field of every line",
+        "correct": false,
+        "why": "That is Elasticsearch."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "Labels are indexed."
+      },
+      {
+        "text": "The full text, word by word",
+        "correct": false,
+        "why": "That is Elasticsearch's way."
+      }
+    ]
+  },
+  {
+    "id": "ex-mrggyh72",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why did one shop store take 80 MB of memory and another 1.5 GB for the same logs?",
+    "hint": "Lesson 9. Where each one pays.",
+    "choices": [
+      {
+        "text": "Elasticsearch keeps two copies of everything",
+        "correct": false,
+        "why": "A single node keeps one."
+      },
+      {
+        "text": "Loki compresses logs and Elasticsearch never does, so its disk fills",
+        "correct": false,
+        "why": "Both compress."
+      },
+      {
+        "text": "Loki indexes labels only; Elasticsearch indexes every field",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Loki dropped most of the lines",
+        "correct": false,
+        "why": "It kept them."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5wfvdg0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A LogQL query filters on a JSON field nobody indexed. How does Loki answer it?",
+    "hint": "Lesson 9. A parser in the query.",
+    "choices": [
+      {
+        "text": "It refuses the query",
+        "correct": false,
+        "why": "It answers."
+      },
+      {
+        "text": "It indexes the field on the fly and keeps the index",
+        "correct": false,
+        "why": "It keeps no index."
+      },
+      {
+        "text": "It asks Elasticsearch",
+        "correct": false,
+        "why": "They are separate."
+      },
+      {
+        "text": "It reads the stream's lines and parses each one at query time",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ynzfg3q8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does Graylog add on top of OpenSearch?",
+    "hint": "Lesson 9. The product around it.",
+    "choices": [
+      {
+        "text": "A faster index format",
+        "correct": false,
+        "why": "OpenSearch indexes."
+      },
+      {
+        "text": "Inputs, streams, users and alerts: the product around the store",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Trace storage",
+        "correct": false,
+        "why": "Not its role here."
+      },
+      {
+        "text": "A metrics engine that replaces Prometheus",
+        "correct": false,
+        "why": "It does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-81m3m1wp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team chooses a log store. Which question matters most, according to lesson 9?",
+    "hint": "Where each one pays.",
+    "choices": [
+      {
+        "text": "Which has the most stars on GitHub",
+        "correct": false,
+        "why": "Not a criterion."
+      },
+      {
+        "text": "Which is newest",
+        "correct": false,
+        "why": "Not a criterion."
+      },
+      {
+        "text": "How the team will search, and what indexing everything would cost",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Which one the cloud provider hosts",
+        "correct": false,
+        "why": "One input, not the main one."
+      }
+    ]
+  },
+  {
+    "id": "ex-65677n56",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "How long should logs be kept?",
+    "hint": "Lesson 10. Not a technical question.",
+    "choices": [
+      {
+        "text": "As long as their purpose needs, decided per kind of log",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "As long as the disk allows",
+        "correct": false,
+        "why": "That is not a reason."
+      },
+      {
+        "text": "Forever, in case they are needed",
+        "correct": false,
+        "why": "Cost and risk with no purpose."
+      },
+      {
+        "text": "Exactly thirty days, as the LGPD requires",
+        "correct": false,
+        "why": "The LGPD sets no such number."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6vm1m4g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What should a log carry instead of a customer's CPF?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "The CPF hashed with MD5",
+        "correct": false,
+        "why": "Easily reversed."
+      },
+      {
+        "text": "The CPF's last four digits only, in every line the service writes",
+        "correct": false,
+        "why": "Still personal data."
+      },
+      {
+        "text": "The customer's name instead",
+        "correct": false,
+        "why": "Also personal data."
+      },
+      {
+        "text": "An identifier that means nothing outside the system",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxbytek1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Redaction runs in the Collector. Which copy of a secret does it fail to remove?",
+    "hint": "Lesson 10. Before the Collector.",
+    "choices": [
+      {
+        "text": "The one in Loki",
+        "correct": false,
+        "why": "The Collector cleans what it forwards."
+      },
+      {
+        "text": "The container's own log on the machine",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The one in Elasticsearch",
+        "correct": false,
+        "why": "Same."
+      },
+      {
+        "text": "None; the Collector sees every copy the container writes",
+        "correct": false,
+        "why": "The container log comes first."
+      }
+    ]
+  },
+  {
+    "id": "ex-ed10dcxm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is deleting a leaked line from Loki or Elasticsearch never finished?",
+    "hint": "Lesson 10. Copies.",
+    "choices": [
+      {
+        "text": "Copies exist elsewhere: backups, the container's log, other stores",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Both stores forbid deletes",
+        "correct": false,
+        "why": "They allow them."
+      },
+      {
+        "text": "Deleted lines come back after a restart",
+        "correct": false,
+        "why": "They do not."
+      },
+      {
+        "text": "The delete takes years to run",
+        "correct": false,
+        "why": "Not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdf0m5hn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A field-name filter removes `card` and `authorization`. Which leak can it still miss?",
+    "hint": "Lesson 10. Names on the list.",
+    "choices": [
+      {
+        "text": "A card number written in the `card` field of the body",
+        "correct": false,
+        "why": "That name is on the list."
+      },
+      {
+        "text": "The `Authorization` header",
+        "correct": false,
+        "why": "On the list."
+      },
+      {
+        "text": "A token in a field called `x_api_credential`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A password in the `card` field",
+        "correct": false,
+        "why": "Removed by name."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmrqd0q1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In a trace view, which span is usually the longest bar?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The span that did the most work",
+        "correct": false,
+        "why": "Duration includes waiting."
+      },
+      {
+        "text": "The database call",
+        "correct": false,
+        "why": "Usually short."
+      },
+      {
+        "text": "The last span to start",
+        "correct": false,
+        "why": "Not necessarily long."
+      },
+      {
+        "text": "The root",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-4eaw6x21",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A checkout's root span took 439 ms and the card network wait 400 ms. Making the `INSERT` ten times faster saves how much of the checkout?",
+    "hint": "Lesson 11. The INSERT took about a millisecond.",
+    "choices": [
+      {
+        "text": "About ten per cent",
+        "correct": false,
+        "why": "The INSERT was tiny."
+      },
+      {
+        "text": "Under a millisecond",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "About forty milliseconds",
+        "correct": false,
+        "why": "It took one."
+      },
+      {
+        "text": "Nothing, because the INSERT is off the critical path",
+        "correct": false,
+        "why": "It is on it, just short."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxhzft42",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why did Zipkin's dependency graph show no edge to the mailer?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The mailer exports to Jaeger only",
+        "correct": false,
+        "why": "The Collector sends every span to both."
+      },
+      {
+        "text": "The mailer's spans arrive too late for the graph's window",
+        "correct": false,
+        "why": "They arrive within milliseconds."
+      },
+      {
+        "text": "No producer span or broker was recorded, so nothing pairs with its consumer span",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Zipkin only draws services that answer HTTP",
+        "correct": false,
+        "why": "It also draws messaging edges, when recorded."
+      }
+    ]
+  },
+  {
+    "id": "ex-cn06py01",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A failed checkout has four red spans. Where do you start reading?",
+    "hint": "Lesson 11. The bottom of the column.",
+    "choices": [
+      {
+        "text": "At the deepest red span with no red child",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "At the root, where the customer saw it fail",
+        "correct": false,
+        "why": "It reports what came from below."
+      },
+      {
+        "text": "At the span with the longest duration",
+        "correct": false,
+        "why": "Errors are not about duration."
+      },
+      {
+        "text": "At whichever span Zipkin lists first",
+        "correct": false,
+        "why": "The order is not depth."
+      }
+    ]
+  },
+  {
+    "id": "ex-smn28qb2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why does the storefront expose no exemplars while orders does?",
+    "hint": "Lesson 11. When the duration is observed.",
+    "choices": [
+      {
+        "text": "The storefront answers only the classic text format",
+        "correct": false,
+        "why": "They share `web.py`."
+      },
+      {
+        "text": "Prometheus does not scrape the storefront",
+        "correct": false,
+        "why": "It does."
+      },
+      {
+        "text": "Exemplars are only allowed on POST routes",
+        "correct": false,
+        "why": "Checkout is a POST."
+      },
+      {
+        "text": "The storefront's hand-written span has ended before the metric is recorded",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3rj3zfx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Where does head sampling decide whether to keep a trace?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "In the Collector, after the trace ends",
+        "correct": false,
+        "why": "That is tail sampling."
+      },
+      {
+        "text": "In the service that starts the trace, before anything has happened",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In Jaeger, when the trace is stored",
+        "correct": false,
+        "why": "Too late for head sampling."
+      },
+      {
+        "text": "In each service independently, by coin toss",
+        "correct": false,
+        "why": "The decision travels from the root."
+      }
+    ]
+  },
+  {
+    "id": "ex-rg8zhtv0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The storefront samples one in ten and the other services use `parentbased_always_on`. What does a kept trace contain?",
+    "hint": "Lesson 12. Who obeys.",
+    "choices": [
+      {
+        "text": "Every span of every service, because they follow the flag",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only the storefront's span",
+        "correct": false,
+        "why": "The others follow the flag."
+      },
+      {
+        "text": "One span in ten of each service",
+        "correct": false,
+        "why": "The whole trace is kept or dropped."
+      },
+      {
+        "text": "Every span, plus a copy of each in every service's own trace",
+        "correct": false,
+        "why": "There is one trace."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8q8wzzz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What keeps the shop's rates and error ratios exact while tail sampling drops nine traces in ten?",
+    "hint": "Lesson 12. Count before dropping.",
+    "choices": [
+      {
+        "text": "Counting the traces Jaeger kept and multiplying by ten to estimate the rest",
+        "correct": false,
+        "why": "The sample is biased."
+      },
+      {
+        "text": "A `for:` clause on every alert",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "The spanmetrics connector, fed every span before the sampler",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Sampling the logs at the same rate",
+        "correct": false,
+        "why": "That does not restore counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxmxdy4m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why must every span of a trace reach the same Collector for tail sampling?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Collectors cannot talk to Jaeger at the same time",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "The trace id is different in each Collector",
+        "correct": false,
+        "why": "It is the same."
+      },
+      {
+        "text": "OTLP refuses spans split across hosts",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Deciding needs the whole trace in one place",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-am9kvn3c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Under tail sampling, an exemplar opens to \"trace not found\". What happened?",
+    "hint": "Lesson 12. Who chose the exemplar.",
+    "choices": [
+      {
+        "text": "Prometheus lost the exemplar's labels",
+        "correct": false,
+        "why": "The id is intact."
+      },
+      {
+        "text": "The histogram chose a request whose trace the sampler later dropped",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Jaeger expires traces after one minute",
+        "correct": false,
+        "why": "Not in the lab."
+      },
+      {
+        "text": "The exemplar points at a span, not a trace",
+        "correct": false,
+        "why": "It carries a trace id."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjqqtp97",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does an error tracker such as Sentry record?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Every request, with its duration",
+        "correct": false,
+        "why": "That is tracing."
+      },
+      {
+        "text": "Every metric of the host",
+        "correct": false,
+        "why": "That is infrastructure monitoring."
+      },
+      {
+        "text": "Exceptions, with their stack, local variables and context",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only the log lines at `ERROR`",
+        "correct": false,
+        "why": "It records exceptions."
+      }
+    ]
+  },
+  {
+    "id": "ex-e7vcbypv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why did a card number reach the error tracker's event in lesson 13?",
+    "hint": "Nobody wrote it there.",
+    "choices": [
+      {
+        "text": "The SDK sends local variables by default, and the card was one",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The breadcrumbs logged the request body",
+        "correct": false,
+        "why": "The logs did not mention it."
+      },
+      {
+        "text": "`send_default_pii` was turned on in the script",
+        "correct": false,
+        "why": "It was off."
+      },
+      {
+        "text": "The Collector copied it from a span",
+        "correct": false,
+        "why": "The Collector was not involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0s4hz6m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "How does the lab send every trace to a hosted product as well as to Jaeger?",
+    "hint": "Lesson 13. One place.",
+    "choices": [
+      {
+        "text": "Each service gets a second exporter and the vendor's key",
+        "correct": false,
+        "why": "Nothing changes in the services."
+      },
+      {
+        "text": "Jaeger forwards a copy of every trace it stores",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "A cron job copies Jaeger's database every night",
+        "correct": false,
+        "why": "Not how it works."
+      },
+      {
+        "text": "One more exporter in the Collector, with the key from the environment",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-0s3n5hq1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which unit of a hosted product's bill grows when a team adds an `order_id` label to a metric?",
+    "hint": "Lessons 6 and 13.",
+    "choices": [
+      {
+        "text": "Hosts",
+        "correct": false,
+        "why": "Machines did not change."
+      },
+      {
+        "text": "Custom metric series",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Seats for users",
+        "correct": false,
+        "why": "Nobody was added."
+      },
+      {
+        "text": "Gigabytes of logs ingested",
+        "correct": false,
+        "why": "No log changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-wb1sgyte",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team wants to keep the option of leaving its vendor. What does lesson 13 say to keep out of the business code?",
+    "hint": "Where vendor code may live.",
+    "choices": [
+      {
+        "text": "The vendor's own instrumentation library",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "OpenTelemetry's API",
+        "correct": false,
+        "why": "That is what keeps it portable."
+      },
+      {
+        "text": "Semantic convention attribute names on spans",
+        "correct": false,
+        "why": "Every vendor reads them."
+      },
+      {
+        "text": "Any logging at all",
+        "correct": false,
+        "why": "Logging is not the lock-in."
+      }
+    ]
+  },
+  {
+    "id": "ex-bncn9sxt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What should a liveness probe check?",
+    "hint": "Lesson 14. What a restart can fix.",
+    "choices": [
+      {
+        "text": "That the database is reachable",
+        "correct": false,
+        "why": "A restart cannot fix the database."
+      },
+      {
+        "text": "That every downstream service is ready",
+        "correct": false,
+        "why": "That spreads failures."
+      },
+      {
+        "text": "That the process itself still answers",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "That checkouts succeed end to end",
+        "correct": false,
+        "why": "That is a synthetic check."
+      }
+    ]
+  },
+  {
+    "id": "ex-0by3wzx4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Docker marks a container unhealthy. What does Docker do next on a single machine?",
+    "hint": "Lesson 14. `RestartCount`.",
+    "choices": [
+      {
+        "text": "It restarts the container after three failures",
+        "correct": false,
+        "why": "It restarts nothing."
+      },
+      {
+        "text": "It removes the container from the network",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "It stops the containers that depend on it",
+        "correct": false,
+        "why": "It stops nothing."
+      },
+      {
+        "text": "Nothing beyond recording the status",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvwcf3zw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Kubernetes pod's readiness probe fails. What changes?",
+    "hint": "Lesson 14. The endpoint slice.",
+    "choices": [
+      {
+        "text": "The pod is restarted",
+        "correct": false,
+        "why": "That is liveness."
+      },
+      {
+        "text": "The Service stops sending it traffic; the pod keeps running",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The pod is deleted and replaced",
+        "correct": false,
+        "why": "It stays."
+      },
+      {
+        "text": "Nothing until liveness also fails",
+        "correct": false,
+        "why": "They act independently."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcxvd9p4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A liveness probe checks the database, which goes down for ten minutes. What happens to a service with three replicas?",
+    "hint": "Lesson 14. The probe that kills.",
+    "choices": [
+      {
+        "text": "One replica restarts while the others keep serving",
+        "correct": false,
+        "why": "All fail the same probe."
+      },
+      {
+        "text": "Kubernetes pauses the probe until the database returns",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "All three restart together, again and again",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The replicas move to a node that can reach the database",
+        "correct": false,
+        "why": "It is down everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-pej29an2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is a synthetic checkout a better outside check than `/health`?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "It follows the customer's path through every dependency",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It costs nothing and creates no data",
+        "correct": false,
+        "why": "Every probe is a real order."
+      },
+      {
+        "text": "It runs inside the container",
+        "correct": false,
+        "why": "It runs from outside."
+      },
+      {
+        "text": "It replaces the error ratio",
+        "correct": false,
+        "why": "They cover each other."
+      }
+    ]
+  },
+  {
+    "id": "ex-frwm144r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What is an SLO?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "The share of good events, measured",
+        "correct": false,
+        "why": "That is the SLI."
+      },
+      {
+        "text": "A contract with a refund when it is missed",
+        "correct": false,
+        "why": "That is an SLA."
+      },
+      {
+        "text": "The number of failures left this month",
+        "correct": false,
+        "why": "That is the budget."
+      },
+      {
+        "text": "A target for an SLI over a window",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ynbnvr8y",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "An objective of 99.9% over 28 days allows how many minutes of total outage? Answer to the nearest minute.",
+    "hint": "Lesson 15. 40320 minutes in 28 days.",
+    "value": 40,
+    "tolerance": 1,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-63yyb0ah",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The availability SLI for a window is 99.7% against an objective of 99.5%. What fraction of the budget is spent?",
+    "hint": "Lesson 15. 0.3 of 0.5.",
+    "choices": [
+      {
+        "text": "0.2%",
+        "correct": false,
+        "why": "That is the gap between the two."
+      },
+      {
+        "text": "60%",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "40%",
+        "correct": false,
+        "why": "That is what remains."
+      },
+      {
+        "text": "99.7%",
+        "correct": false,
+        "why": "That is the SLI."
+      }
+    ]
+  },
+  {
+    "id": "ex-m54054f2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does the shop's availability SLI count a declined card as a good event?",
+    "hint": "Lesson 15. Whose failure?",
+    "choices": [
+      {
+        "text": "The system answered correctly; the failure was not ours",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Declined cards are too rare to count",
+        "correct": false,
+        "why": "75 in five minutes."
+      },
+      {
+        "text": "The storefront cannot tell them from orders placed, in its own counter",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "They are retried until they succeed",
+        "correct": false,
+        "why": "Nothing retries them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ww09766m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team's budget is spent with ten days of the window left. What does a good error budget policy make it do?",
+    "hint": "Lesson 15. Mechanical, agreed in advance.",
+    "choices": [
+      {
+        "text": "Hold a meeting to decide whether to slow down",
+        "correct": false,
+        "why": "The policy already decided."
+      },
+      {
+        "text": "Find out who spent it",
+        "correct": false,
+        "why": "It is about pace, not people."
+      },
+      {
+        "text": "Ship only fixes and reliability work until it recovers",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Lower the objective until the budget is positive again, then raise it back",
+        "correct": false,
+        "why": "That hides the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-j31bf6c5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which alert should wake somebody at night?",
+    "hint": "Lesson 16. Symptom, not cause.",
+    "choices": [
+      {
+        "text": "CPU above 90% on one host for five minutes",
+        "correct": false,
+        "why": "A cause that may hurt nobody."
+      },
+      {
+        "text": "A disk at 80% that fills by a few per cent a week",
+        "correct": false,
+        "why": "That is a ticket."
+      },
+      {
+        "text": "A scrape target down for a minute",
+        "correct": false,
+        "why": "That is a ticket."
+      },
+      {
+        "text": "Checkouts failing fast enough to empty the budget in two days",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ghp8gdp",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The objective is 99.5% and 3% of checkouts are failing. What is the burn rate?",
+    "hint": "Lesson 16. 3% over 0.5%.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-ejtqzcvq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does the fast-burn alert need both a long and a short window above the threshold?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "So that it fires twice as often",
+        "correct": false,
+        "why": "It fires less often."
+      },
+      {
+        "text": "The long one proves the damage is large; the short one that it is still happening",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because Prometheus averages the two into one value",
+        "correct": false,
+        "why": "Both are checked separately."
+      },
+      {
+        "text": "Because one window cannot be evaluated alone",
+        "correct": false,
+        "why": "It can."
+      }
+    ]
+  },
+  {
+    "id": "ex-6etwg8zv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In the lab, a page and a ticket fire about the same objective. What does inhibition do?",
+    "hint": "Lesson 16. The same `slo`.",
+    "choices": [
+      {
+        "text": "It deletes the ticket rule from Prometheus",
+        "correct": false,
+        "why": "It changes no rule."
+      },
+      {
+        "text": "It turns the ticket into a second page",
+        "correct": false,
+        "why": "The opposite."
+      },
+      {
+        "text": "It holds back the ticket while the page fires",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It delays the page until the ticket has been read by someone",
+        "correct": false,
+        "why": "The page goes immediately."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nr69zvr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A silence is added for twenty minutes of maintenance, and the failure outlasts it. What happens when it ends?",
+    "hint": "Lesson 16. Silence the page, not the problem.",
+    "choices": [
+      {
+        "text": "The page is sent, as it should be",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing until somebody renews the silence",
+        "correct": false,
+        "why": "The alert is still firing."
+      },
+      {
+        "text": "The alert is deleted and must be recreated",
+        "correct": false,
+        "why": "Silences delete nothing."
+      },
+      {
+        "text": "The silence renews itself while the alert fires",
+        "correct": false,
+        "why": "It does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wpd4732",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Who should be the incident commander during a SEV-1?",
+    "hint": "Lesson 17. Not the one debugging.",
+    "choices": [
+      {
+        "text": "The engineer who knows the failing service best, so they can fix and command at once",
+        "correct": false,
+        "why": "Commanding and debugging conflict."
+      },
+      {
+        "text": "The most senior manager available",
+        "correct": false,
+        "why": "Seniority is not the role."
+      },
+      {
+        "text": "Whoever wrote the release that broke",
+        "correct": false,
+        "why": "That is blame, not a role."
+      },
+      {
+        "text": "Someone who does not debug, and coordinates the response",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mbf1902",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What decides an incident's severity?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "How hard the fix is",
+        "correct": false,
+        "why": "Not the users' view."
+      },
+      {
+        "text": "The impact on users",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Which team owns the failing service",
+        "correct": false,
+        "why": "Ownership routes, not severity."
+      },
+      {
+        "text": "The number of alerts that fired",
+        "correct": false,
+        "why": "Alerts are not impact."
+      }
+    ]
+  },
+  {
+    "id": "ex-avppr68q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A release went out three minutes before the page. What should the response do first?",
+    "hint": "Lesson 17. Mitigate first.",
+    "choices": [
+      {
+        "text": "Roll the release back, and understand it afterwards",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Read the release's code until the bug is found",
+        "correct": false,
+        "why": "Customers wait meanwhile."
+      },
+      {
+        "text": "Write the postmortem while the details are fresh in everybody's mind",
+        "correct": false,
+        "why": "That comes after the incident."
+      },
+      {
+        "text": "Raise the alert's threshold so the page stops",
+        "correct": false,
+        "why": "That hides it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6v1pj57f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which belongs in a status update to customers?",
+    "hint": "Lesson 17. In their words.",
+    "choices": [
+      {
+        "text": "The names of the services and the error codes",
+        "correct": false,
+        "why": "Not for customers."
+      },
+      {
+        "text": "The provider whose outage caused it",
+        "correct": false,
+        "why": "No blame on the status page."
+      },
+      {
+        "text": "What is affected, what to do, and when the next update comes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A guess at the root cause, to reassure people",
+        "correct": false,
+        "why": "Say what is known."
+      }
+    ]
+  },
+  {
+    "id": "ex-axggbwk0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why build the incident's timeline from annotations and the pager's log rather than from people's memory?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Memory is not admissible in a blameless review",
+        "correct": false,
+        "why": "It is a source too."
+      },
+      {
+        "text": "Annotations record the cause of each event",
+        "correct": false,
+        "why": "They record what was done."
+      },
+      {
+        "text": "The pager log is the only record the law accepts in an audit",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "They were written at the moment, with exact times",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-czb6ffxk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why is a postmortem blameless?",
+    "hint": "Lesson 18. Method, not kindness.",
+    "choices": [
+      {
+        "text": "Because nobody ever makes mistakes",
+        "correct": false,
+        "why": "People do."
+      },
+      {
+        "text": "People report what they did honestly only when it cannot cost them",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because the law forbids naming people",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "Because blame takes too long to assign",
+        "correct": false,
+        "why": "Not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-17fzw04a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a postmortem list instead of a single root cause?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "The people involved, by seniority",
+        "correct": false,
+        "why": "Not blameless."
+      },
+      {
+        "text": "Every alert that fired that month",
+        "correct": false,
+        "why": "Not relevant."
+      },
+      {
+        "text": "Contributing factors, including the defences that worked",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The five whys, and nothing else",
+        "correct": false,
+        "why": "One chain misses the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqfxs7x9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Nine incidents took twenty minutes each and one took nine hours. Why is the mean time to resolve misleading?",
+    "hint": "Lesson 18. Skewed durations.",
+    "choices": [
+      {
+        "text": "About an hour and a quarter describes none of the ten incidents",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The mean cannot be computed for durations",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "The long incident should be excluded",
+        "correct": false,
+        "why": "It is the most important one."
+      },
+      {
+        "text": "Means are always lower than medians",
+        "correct": false,
+        "why": "Here it is higher."
+      }
+    ]
+  },
+  {
+    "id": "ex-nw7gsg88",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Where do the actions of a postmortem come from?",
+    "hint": "Lesson 18. Missing defences.",
+    "choices": [
+      {
+        "text": "From the person who caused the incident",
+        "correct": false,
+        "why": "Not blameless."
+      },
+      {
+        "text": "From the alerts that fired",
+        "correct": false,
+        "why": "Alerts are one input."
+      },
+      {
+        "text": "From the vendor's support team",
+        "correct": false,
+        "why": "Not the source."
+      },
+      {
+        "text": "From the missing defences, not only the trigger",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-30t8v7z9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team of three wants to run a round-the-clock rota. What does lesson 18 say?",
+    "hint": "Five or six people.",
+    "choices": [
+      {
+        "text": "Three is enough if each takes one week in three",
+        "correct": false,
+        "why": "Too often to recover."
+      },
+      {
+        "text": "It is a trade that needs very rare pages",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is impossible and should not be tried",
+        "correct": false,
+        "why": "It is a trade, not impossible."
+      },
+      {
+        "text": "It works if nobody is paid for being on call",
+        "correct": false,
+        "why": "The opposite."
+      }
+    ]
+  },
+  {
+    "id": "ex-hme4pwh1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does a service mesh produce without any change to the application's code?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Request counts, latencies and status per pair of services",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Business attributes such as the product bought",
+        "correct": false,
+        "why": "The proxy cannot know those."
+      },
+      {
+        "text": "Complete traces across every service",
+        "correct": false,
+        "why": "The app must pass the context."
+      },
+      {
+        "text": "Log lines with stack traces",
+        "correct": false,
+        "why": "Not from a proxy."
+      }
+    ]
+  },
+  {
+    "id": "ex-t891b0gk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A proxy retries payments' failures, and the storefront reports no errors. What should the team watch out for?",
+    "hint": "Lesson 19. Two sides disagree.",
+    "choices": [
+      {
+        "text": "Nothing: the problem is solved",
+        "correct": false,
+        "why": "Payments is still failing."
+      },
+      {
+        "text": "The storefront's metrics are broken",
+        "correct": false,
+        "why": "They are correct."
+      },
+      {
+        "text": "The failing service still fails, and gets more load than before",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The proxy has stopped counting errors",
+        "correct": false,
+        "why": "It counts the retries."
+      }
+    ]
+  },
+  {
+    "id": "ex-tpegkn5j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does Istio's STRICT peer authentication do to a pod with no sidecar?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Injects a sidecar into it automatically",
+        "correct": false,
+        "why": "Not in another namespace."
+      },
+      {
+        "text": "Lets it through, but logs a warning",
+        "correct": false,
+        "why": "That is permissive mode."
+      },
+      {
+        "text": "Moves it into the mesh namespace",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "Refuses its connections, since it cannot present a certificate",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-tc3avtwc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does a route timeout often make a system healthier?",
+    "hint": "Lesson 19. A fast failure.",
+    "choices": [
+      {
+        "text": "It makes slow requests succeed",
+        "correct": false,
+        "why": "They fail."
+      },
+      {
+        "text": "It frees the waiting caller instead of holding its threads",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It hides failures from every metric",
+        "correct": false,
+        "why": "The 504 is counted."
+      },
+      {
+        "text": "It retries until the dependency answers",
+        "correct": false,
+        "why": "That is not a timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqhsaypq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team runs five services in Python and wants better telemetry. What does lesson 19 recommend?",
+    "hint": "Where the signals are richest.",
+    "choices": [
+      {
+        "text": "Install Istio first, since it gives telemetry for free",
+        "correct": false,
+        "why": "The code gives richer signals."
+      },
+      {
+        "text": "Linkerd, because it uses less memory than Istio",
+        "correct": false,
+        "why": "Still a mesh for the wrong reason."
+      },
+      {
+        "text": "OpenTelemetry in the code, and a mesh only when its other reasons appear",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No telemetry until there are more services",
+        "correct": false,
+        "why": "The incident will not wait."
+      }
+    ]
+  }
+]

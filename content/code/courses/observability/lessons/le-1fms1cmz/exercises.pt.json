@@ -1,0 +1,524 @@
+{
+  "ex-31bypb0q": {
+    "prompt": "O `no_sdk.py` abriu um span com só a API instalada. O que ele registrou?",
+    "hint": "Olhe o id de rastro que ele imprimiu.",
+    "choices": [
+      {
+        "text": "Um erro dizendo que nenhum SDK foi configurado",
+        "why": "A API nunca levanta erro por isso; o silêncio é o desenho dela."
+      },
+      {
+        "text": "Nada: um span que não registra, com id de rastro zero",
+        "why": "Isso. Sem um SDK a API devolve spans que não fazem nada, a custo baixo."
+      },
+      {
+        "text": "Um span guardado em memória até um SDK ser instalado depois",
+        "why": "Nada é guardado; não há para onde ele ir."
+      },
+      {
+        "text": "Um span impresso no console por padrão",
+        "why": "Imprimir exige o exporter de console, que é parte do SDK."
+      }
+    ]
+  },
+  "ex-8jbdaph3": {
+    "prompt": "Por que é útil que a API sozinha não registre nada?",
+    "hint": "Pense em quem escreve uma biblioteca.",
+    "choices": [
+      {
+        "text": "Deixa os spans mais rápidos de ler num backend",
+        "why": "Nenhum span chega a backend nenhum."
+      },
+      {
+        "text": "Permite instalar o SDK sem reiniciar",
+        "why": "O SDK é configurado quando o programa começa."
+      },
+      {
+        "text": "Uma biblioteca distribui sua instrumentação a quem nunca configurou o OpenTelemetry, quase sem custo para essas pessoas",
+        "why": "Isso. As chamadas ficam na biblioteca e quase não custam nada até alguém instalar um SDK."
+      },
+      {
+        "text": "Mantém dados pessoais fora dos rastros",
+        "why": "Registrar ou não um span não tem nada a ver com o que se põe nele."
+      }
+    ]
+  },
+  "ex-q1xs412j": {
+    "prompt": "Ligue cada peça do SDK ao seu trabalho.",
+    "hint": "A figura da seção.",
+    "pairs": [
+      {
+        "left": "TracerProvider",
+        "right": "Cria spans reais, e carrega o resource"
+      },
+      {
+        "left": "span processor",
+        "right": "Decide quando um span terminado é exportado"
+      },
+      {
+        "left": "exporter",
+        "right": "Envia ou imprime o span"
+      },
+      {
+        "left": "resource",
+        "right": "Diz quem produziu os spans, como `service.name`"
+      }
+    ],
+    "right_distractors": [
+      "Escolhe que spans o backend mostra primeiro"
+    ]
+  },
+  "ex-0qv0gr9c": {
+    "prompt": "O atributo de resource pelo qual todo backend agrupa os spans é `service.___`.",
+    "hint": "Como o serviço se chama.",
+    "blanks": [
+      {
+        "accept": [
+          "name"
+        ]
+      }
+    ]
+  },
+  "ex-ha0w0vw8": {
+    "prompt": "A equipe decide mandar os rastros para outro backend. O que precisa mudar no código de checkout da vitrine?",
+    "hint": "O código de checkout usa só a API.",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "Isso. Para onde os spans vão é configuração do SDK, definida uma vez na partida."
+      },
+      {
+        "text": "Toda chamada a `start_as_current_span`",
+        "why": "São chamadas da API e são as mesmas seja qual for o backend."
+      },
+      {
+        "text": "Os nomes dos atributos, para casar com o novo backend",
+        "why": "As convenções semânticas são compartilhadas por todo backend."
+      },
+      {
+        "text": "O argumento `kind=SpanKind.SERVER`",
+        "why": "O kind descreve o trabalho, não o destino."
+      }
+    ]
+  },
+  "ex-5vta9ab0": {
+    "prompt": "Na saída do `first_span.py`, `parent_id` é `null`. O que isso faz do span?",
+    "hint": "Onde um rastro começa?",
+    "choices": [
+      {
+        "text": "Um span que falhou ao exportar",
+        "why": "Ele exportou: está impresso."
+      },
+      {
+        "text": "A raiz do seu rastro",
+        "why": "Isso. Um span sem pai é onde seu rastro começa."
+      },
+      {
+        "text": "Um span de outro serviço",
+        "why": "Um pai remoto ainda seria um id de pai."
+      },
+      {
+        "text": "Um span interno que o backend vai esconder",
+        "why": "`INTERNAL` é o tipo dele, e nada é escondido."
+      }
+    ]
+  },
+  "ex-z1qy9c3h": {
+    "prompt": "O span começou em `03:33:35.497358` e terminou em `03:33:35.497481`. Quantos microssegundos ele durou?",
+    "hint": "Subtraia os últimos seis dígitos.",
+    "unit": "microssegundos"
+  },
+  "ex-h935wfr1": {
+    "prompt": "Por que ids de rastro e de span são aleatórios em vez de numerados em sequência?",
+    "hint": "Quem entregaria o próximo número?",
+    "choices": [
+      {
+        "text": "Números aleatórios comprimem melhor no armazenamento",
+        "why": "Comprimem pior, se tanto."
+      },
+      {
+        "text": "Para que ninguém adivinhe quantos pedidos a loja recebe",
+        "why": "Isso seria um efeito colateral, não o motivo."
+      },
+      {
+        "text": "O W3C proíbe contadores em cabeçalhos",
+        "why": "Não existe essa regra."
+      },
+      {
+        "text": "Todo processo começa rastros sem pedir um número a ninguém",
+        "why": "Isso. Um contador exigiria um lugar para distribuir números, e todo serviço dependeria dele."
+      }
+    ]
+  },
+  "ex-hj1jwhbm": {
+    "prompt": "Ninguém definiu `service.instance.id`, e mesmo assim o resource tinha um. Para que serve?",
+    "hint": "Pode haver mais de uma cópia de um serviço.",
+    "choices": [
+      {
+        "text": "Distinguir duas cópias rodando do mesmo serviço",
+        "why": "Isso. O SDK gera um por execução do programa."
+      },
+      {
+        "text": "Ligar o span ao span pai quando esse pai roda em outro serviço",
+        "why": "Pais se ligam por ids de span, não pelo resource."
+      },
+      {
+        "text": "Identificar o sistema operacional da máquina",
+        "why": "Seriam outros atributos de resource, que este script não definiu."
+      },
+      {
+        "text": "Contar quantos spans o processo fez",
+        "why": "É um id, não uma contagem."
+      }
+    ]
+  },
+  "ex-sj4d8wt1": {
+    "prompt": "No `nested.py`, o `price()` nunca recebe o span da cesta. Como cada consulta acaba sendo filha dele?",
+    "hint": "O que o `start_as_current_span` lê?",
+    "choices": [
+      {
+        "text": "O tracer lembra o último span que criou",
+        "why": "Ele usa o span corrente, não o último criado; um span terminado não é pai."
+      },
+      {
+        "text": "O span da cesta é o corrente enquanto o `price()` roda",
+        "why": "Isso. O `start_as_current_span` toma o span corrente como pai."
+      },
+      {
+        "text": "O exporter reconstrói a árvore pelos horários de início",
+        "why": "O id do pai é definido quando o span começa, não adivinhado depois."
+      },
+      {
+        "text": "O Python passa o pai implicitamente, como argumento escondido de toda função",
+        "why": "Não há argumento escondido; o span corrente vive numa variável de contexto."
+      }
+    ]
+  },
+  "ex-2dq9tm9q": {
+    "prompt": "O console imprimiu as duas consultas antes da cesta. Por quê?",
+    "hint": "Quando um span é exportado?",
+    "choices": [
+      {
+        "text": "O console ordena os spans pelo id",
+        "why": "Os ids são aleatórios; nenhuma ordenação é aplicada."
+      },
+      {
+        "text": "A cesta foi exportada tarde porque era maior",
+        "why": "O tamanho não tem nada a ver."
+      },
+      {
+        "text": "Um span é exportado quando termina, e a cesta terminou por último",
+        "why": "Isso, e é por isso que um backend tem de reconstruir a árvore pelos ids e nunca pela ordem de chegada."
+      },
+      {
+        "text": "Spans filhos sempre têm prioridade maior que seus pais no processor",
+        "why": "Processors não têm prioridades."
+      }
+    ]
+  },
+  "ex-kyj2qaha": {
+    "prompt": "As duas consultas levaram 10,2 ms cada e a cesta 20,7 ms. Quantos milissegundos da cesta foram gastos fora das duas consultas?",
+    "hint": "Subtraia as duas.",
+    "unit": "milissegundos"
+  },
+  "ex-z8yx20w0": {
+    "prompt": "Um serviço atende cada requisição entregando o trabalho a uma `threading.Thread` nova. Spans criados nessa thread aparecem como raízes de rastros novos. O que aconteceu?",
+    "hint": "Com o que uma thread nova começa?",
+    "choices": [
+      {
+        "text": "O SDK se recusa a registrar de mais de uma thread",
+        "why": "Ele registra de qualquer thread; o que faltou foi o pai."
+      },
+      {
+        "text": "A thread nova começou sem span corrente, então não havia nada para ser o pai",
+        "why": "Isso. O contexto tem de ser entregue à thread explicitamente."
+      },
+      {
+        "text": "O processor em lote reordena spans entre threads",
+        "why": "A ordem não decide pais; ids decidem."
+      },
+      {
+        "text": "Threads recebem um `service.instance.id` novo",
+        "why": "O resource pertence ao processo, não à thread."
+      }
+    ]
+  },
+  "ex-8jw9mffq": {
+    "prompt": "Que atributo pertence às convenções semânticas do OpenTelemetry e não à loja?",
+    "hint": "Qual qualquer serviço web usaria?",
+    "choices": [
+      {
+        "text": "`shop.sku`",
+        "why": "O prefixo `shop.` marca os da própria loja."
+      },
+      {
+        "text": "`http.route`",
+        "why": "Isso. Significa a mesma coisa em todo serviço e todo backend."
+      },
+      {
+        "text": "`shop.total_cents`",
+        "why": "Um atributo da loja; nenhuma convenção sabe de totais em centavos."
+      },
+      {
+        "text": "`shop.quantity`",
+        "why": "De novo o prefixo da loja."
+      }
+    ]
+  },
+  "ex-ms82tvfy": {
+    "prompt": "Por que os atributos próprios da loja começam com `shop.`?",
+    "hint": "As convenções crescem.",
+    "choices": [
+      {
+        "text": "O Jaeger só guarda um atributo cujo nome comece com algum tipo de prefixo",
+        "why": "Ele guarda qualquer chave."
+      },
+      {
+        "text": "Atributos com prefixo são indexados para busca",
+        "why": "Um prefixo não muda nada na indexação."
+      },
+      {
+        "text": "Para que uma convenção publicada depois nunca colida com eles",
+        "why": "Isso. `sku` sozinho poderia um dia significar outra coisa na convenção de outra pessoa."
+      },
+      {
+        "text": "O prefixo cifra os valores",
+        "why": "Um nome não cifra nada."
+      }
+    ]
+  },
+  "ex-nazh1h76": {
+    "prompt": "Quais destes nunca devem ser definidos como atributo de span? Escolha todas as que se aplicam.",
+    "hint": "Por onde um rastro viaja?",
+    "choices": [
+      {
+        "text": "O número do cartão do corpo da requisição",
+        "why": "Sim. Um rastro é guardado, transmitido e lido amplamente."
+      },
+      {
+        "text": "O token de sessão de um cabeçalho",
+        "why": "Sim. Qualquer um lendo o rastro poderia usá-lo."
+      },
+      {
+        "text": "O id do pedido",
+        "why": "Um id é seguro e é exatamente o que torna um pedido achável."
+      },
+      {
+        "text": "O SKU do produto",
+        "why": "Um código de produto não carrega nada pessoal."
+      },
+      {
+        "text": "A senha do cliente",
+        "why": "Sim, nunca, em lugar nenhum."
+      }
+    ]
+  },
+  "ex-ezasex54": {
+    "prompt": "Por que um span pode carregar um id de pedido como atributo quando a aula 6 alerta contra um id de pedido como label de métrica?",
+    "hint": "Quanto custa cada valor a mais?",
+    "choices": [
+      {
+        "text": "Atributos são descartados pelo Collector, labels não",
+        "why": "O Collector repassa atributos."
+      },
+      {
+        "text": "Spans são amostrados, então ids nunca se acumulam",
+        "why": "O laboratório guarda todo span; amostragem não é o motivo."
+      },
+      {
+        "text": "Um span é guardado uma vez sejam quais forem os valores; um valor de label cria uma série nova que continua existindo",
+        "why": "Isso. É por isso que alta cardinalidade fica nos atributos."
+      },
+      {
+        "text": "Métricas não guardam números acima de um milhão",
+        "why": "Valores não são o problema; valores distintos de label são."
+      }
+    ]
+  },
+  "ex-870wnzax": {
+    "prompt": "Que chamada marca o span da vitrine como falho?",
+    "hint": "Uma registra, a outra julga.",
+    "choices": [
+      {
+        "text": "`span.set_status(Status(StatusCode.ERROR, ...))`",
+        "why": "Isso. Os backends transformam isso em `error: true`."
+      },
+      {
+        "text": "`span.record_exception(e)`",
+        "why": "Isso acrescenta um evento com a exceção; não marca falha por si só."
+      },
+      {
+        "text": "`log.error(...)`",
+        "why": "Uma linha de log é um sinal separado."
+      },
+      {
+        "text": "`return {\"error\": ...}, 503`",
+        "why": "O código de resposta chega ao cliente; o status do span é definido à parte."
+      }
+    ]
+  },
+  "ex-92gc7jjv": {
+    "prompt": "O que é um evento de span?",
+    "hint": "A exceção foi um.",
+    "choices": [
+      {
+        "text": "Um span filho sem duração",
+        "why": "Eventos não são spans e não têm id."
+      },
+      {
+        "text": "Uma linha de log copiada para o rastro pelo Loki",
+        "why": "O Loki guarda logs; não escreve em rastros."
+      },
+      {
+        "text": "Uma anotação com horário dentro de um span",
+        "why": "Isso, com atributos próprios, como o tipo da exceção."
+      },
+      {
+        "text": "Um alerta disparado de um span falho",
+        "why": "Alertas vêm de regras, da aula 5 em diante."
+      }
+    ]
+  },
+  "ex-ed9gxdv9": {
+    "prompt": "A vitrine responde `404` para um produto desconhecido. Seguindo as convenções HTTP do OpenTelemetry, que span é marcado como erro?",
+    "hint": "Quem errou?",
+    "choices": [
+      {
+        "text": "O do cliente e o do servidor",
+        "why": "Essa é a regra para um `5xx`."
+      },
+      {
+        "text": "Só o do servidor, porque recusou",
+        "why": "Recusar corretamente é o servidor fazendo seu trabalho."
+      },
+      {
+        "text": "Só o do cliente, se o cliente estiver instrumentado",
+        "why": "Isso. Um `4xx` é falha de quem chamou; o status do servidor fica sem definir."
+      },
+      {
+        "text": "Nenhum, porque `404` não é falha para ninguém",
+        "why": "É uma falha para o cliente que pediu algo que não existe."
+      }
+    ]
+  },
+  "ex-b73bmee3": {
+    "prompt": "O `cost.py` exportou 2000 spans em 1,85 s com o processor simples e 0,08 s com o em lote. Para onde foi o tempo a mais do simples?",
+    "hint": "Quando cada um envia?",
+    "choices": [
+      {
+        "text": "Comprimir cada span antes de enviar",
+        "why": "Compressão não é o que difere entre os dois."
+      },
+      {
+        "text": "Uma ida e volta HTTP ao Collector dentro de cada bloco `with`",
+        "why": "Isso: o código esperou pela rede uma vez por span."
+      },
+      {
+        "text": "Criar 2000 threads, uma por span",
+        "why": "Nenhum dos dois cria uma thread por span."
+      },
+      {
+        "text": "Tentar de novo spans que o Collector recusou",
+        "why": "Nada foi recusado."
+      }
+    ]
+  },
+  "ex-zjx40ngf": {
+    "prompt": "Um serviço usando o processor em lote é morto com `kill -9`. Quais afirmações são verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "Onde os spans esperam entre envios?",
+    "choices": [
+      {
+        "text": "Spans ainda na fila se perdem",
+        "why": "Sim. Nada roda depois de um `kill -9`."
+      },
+      {
+        "text": "Os spans perdidos são dos seus últimos segundos",
+        "why": "Sim, muitas vezes os que explicariam a morte."
+      },
+      {
+        "text": "O tratador de saída do SDK os descarrega antes",
+        "why": "Tratadores de saída rodam numa saída normal, não num `kill -9`."
+      },
+      {
+        "text": "O Collector pede ao processo os spans não enviados",
+        "why": "O Collector só recebe; nunca puxa de um serviço."
+      }
+    ]
+  },
+  "ex-eqmr7hh2": {
+    "prompt": "A variável de ambiente que diz ao exporter OTLP para onde enviar é `OTEL_EXPORTER_OTLP____`.",
+    "hint": "O endereço para onde aponta.",
+    "blanks": [
+      {
+        "accept": [
+          "_ENDPOINT"
+        ]
+      }
+    ]
+  },
+  "ex-cd7fjprr": {
+    "prompt": "O Collector para de responder por dez minutos. O que o processor em lote do Python faz com os spans novos?",
+    "hint": "A fila é limitada.",
+    "choices": [
+      {
+        "text": "Guarda todo span em memória até o Collector voltar",
+        "why": "Isso cresceria sem limite e poderia derrubar o serviço."
+      },
+      {
+        "text": "Bloqueia cada requisição até haver espaço",
+        "why": "A telemetria nunca segura o serviço."
+      },
+      {
+        "text": "Guarda até o limite e descarta o resto",
+        "why": "Isso: 2048 por padrão. Perder telemetria é a falha certa."
+      },
+      {
+        "text": "Escreve em arquivo e manda depois",
+        "why": "O SDK não tem fila em disco."
+      }
+    ]
+  },
+  "ex-p622j8xp": {
+    "prompt": "Cinquenta pedidos produziram cinquenta operações no Jaeger. Que nome teria produzido uma?",
+    "hint": "Um modelo, não um valor.",
+    "choices": [
+      {
+        "text": "`GET /orders/1011`",
+        "why": "Esse é o problema: o id está no nome."
+      },
+      {
+        "text": "`GET order 1011 for kettle`",
+        "why": "Ainda um valor no nome."
+      },
+      {
+        "text": "`GET /orders/{id}`",
+        "why": "Isso, com o id num atributo."
+      },
+      {
+        "text": "`GET /orders/` mais um sufixo aleatório",
+        "why": "Qualquer parte por requisição multiplica os nomes."
+      }
+    ]
+  },
+  "ex-y35b6y69": {
+    "prompt": "Ponha as consequências de nomear spans com o id do pedido na ordem em que aparecem, do primeiro span à fatura.",
+    "hint": "Comece pela lista de operações.",
+    "items": [
+      "Cada pedido acrescenta uma operação à lista do serviço",
+      "Filtrar por operação vira buscar um pedido",
+      "Métricas calculadas por operação ganham uma série por pedido",
+      "A fatura de séries cresce a cada pedido"
+    ]
+  },
+  "ex-cmmc34mk": {
+    "prompt": "O nome de um span diz que tipo de trabalho é; os seus ___ dizem qual instância desse trabalho foi.",
+    "hint": "Pares de chave e valor.",
+    "blanks": [
+      {
+        "accept": [
+          "atributos"
+        ]
+      }
+    ]
+  }
+}

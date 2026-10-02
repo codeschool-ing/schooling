@@ -1,0 +1,449 @@
+{
+  "ex-12jtsf9b": {
+    "prompt": "O `orders` não tem código de rastreamento. O que lhe dá spans?",
+    "hint": "Olhe o comando dele.",
+    "choices": [
+      {
+        "text": "O Jaeger, que lê o log de consultas do banco",
+        "why": "O Jaeger guarda spans; não os cria."
+      },
+      {
+        "text": "O `opentelemetry-instrument`, que modifica as bibliotecas dele antes de rodar",
+        "why": "Isso. Ele configura o SDK e envolve Flask, requests e psycopg."
+      },
+      {
+        "text": "A vitrine, que registra spans em nome dele",
+        "why": "Cada processo registra os seus próprios spans."
+      },
+      {
+        "text": "O Collector, que observa o tráfego entre contêineres",
+        "why": "O Collector recebe spans; não fareja tráfego."
+      }
+    ]
+  },
+  "ex-v81vt811": {
+    "prompt": "Substituir as funções de uma biblioteca em tempo de execução por invólucros se chama monkey-___.",
+    "hint": "Como remendar roupa, em inglês.",
+    "blanks": [
+      {
+        "accept": [
+          "patching"
+        ]
+      }
+    ]
+  },
+  "ex-wf4j3ydt": {
+    "prompt": "Que pacotes decidem o que o `opentelemetry-instrument` modifica num dado serviço?",
+    "hint": "Cada biblioteca tem o seu.",
+    "choices": [
+      {
+        "text": "As bibliotecas que o código do serviço importa no topo de cada arquivo",
+        "why": "Importar uma biblioteca não basta; a instrumentação dela tem de estar instalada."
+      },
+      {
+        "text": "Os pacotes de instrumentação instalados ao lado delas",
+        "why": "Isso: um por biblioteca, carregado se presente."
+      },
+      {
+        "text": "Uma lista na configuração do Collector",
+        "why": "O Collector é um processo separado e não modifica nada."
+      },
+      {
+        "text": "`OTEL_SERVICE_NAME`",
+        "why": "Isso dá o nome do serviço; não escolhe nada."
+      }
+    ]
+  },
+  "ex-4w9ver07": {
+    "prompt": "O que o `opentelemetry-bootstrap` faz?",
+    "hint": "Vem com o lançador.",
+    "choices": [
+      {
+        "text": "Inicia o Collector ao lado do serviço",
+        "why": "Nunca inicia processos."
+      },
+      {
+        "text": "Escreve spans à mão no código",
+        "why": "Não toca em nenhum arquivo de código."
+      },
+      {
+        "text": "Lista os pacotes de instrumentação que casam com o que está instalado",
+        "why": "Isso, e pode instalá-los."
+      },
+      {
+        "text": "Converte nomes antigos de atributos em novos",
+        "why": "Isso é trabalho do `OTEL_SEMCONV_STABILITY_OPT_IN`."
+      }
+    ]
+  },
+  "ex-gy0a0p9c": {
+    "prompt": "Ligue cada span do orders à biblioteca que o abriu.",
+    "hint": "Quem recebe, quem chama para fora?",
+    "pairs": [
+      {
+        "left": "`POST /orders` (server)",
+        "right": "Flask"
+      },
+      {
+        "left": "`INSERT` (client)",
+        "right": "psycopg"
+      },
+      {
+        "left": "`POST` (client)",
+        "right": "requests"
+      }
+    ],
+    "right_distractors": [
+      "pika"
+    ]
+  },
+  "ex-kq9ny2q7": {
+    "prompt": "O `db.statement` do span `INSERT` mostra `%s` onde iam o SKU e o total. Por que os valores não aparecem?",
+    "hint": "Como o código os entregou ao psycopg?",
+    "choices": [
+      {
+        "text": "O código os passou como parâmetros, separados do texto da consulta",
+        "why": "Isso. A instrumentação registra o comando que recebeu."
+      },
+      {
+        "text": "O Collector remove todo valor que parece dado antes de guardar",
+        "why": "O Collector do laboratório não faz redação; a aula 10 acrescenta alguma."
+      },
+      {
+        "text": "O Jaeger esconde valores a não ser que se peça",
+        "why": "Ele mostra o que guardou."
+      },
+      {
+        "text": "Os valores eram longos demais para um atributo",
+        "why": "Eram curtos; nunca estiveram no comando."
+      }
+    ]
+  },
+  "ex-4qf0tq2f": {
+    "prompt": "Um painel filtra spans por `http.request.method = POST` e mostra a vitrine mas não o orders. Por quê?",
+    "hint": "Compare os nomes de atributo que cada serviço mandou.",
+    "choices": [
+      {
+        "text": "O orders não atende requisições POST",
+        "why": "Ele atende `POST /orders`."
+      },
+      {
+        "text": "O filtro só funciona em spans manuais",
+        "why": "Um filtro casa atributos, quem quer que os tenha definido."
+      },
+      {
+        "text": "Os spans dele vêm de uma instrumentação ainda no antigo `http.method`",
+        "why": "Isso. Duas gerações de nomes se misturam até o opt-in ser definido."
+      },
+      {
+        "text": "O Jaeger descarta atributos de serviços sem código",
+        "why": "Ele guardou dezesseis."
+      }
+    ]
+  },
+  "ex-3443myhg": {
+    "prompt": "A variável de ambiente que passa as instrumentações para os nomes estáveis de atributos é `OTEL_SEMCONV_STABILITY____`.",
+    "hint": "Você opta.",
+    "blanks": [
+      {
+        "accept": [
+          "_OPT_IN"
+        ]
+      }
+    ]
+  },
+  "ex-8zhsepbq": {
+    "prompt": "Por que o orders exclui `/health` e `/metrics` do rastreamento?",
+    "hint": "Quem as chama, e com que frequência?",
+    "choices": [
+      {
+        "text": "Elas devolvem erros que poluiriam a taxa de erros",
+        "why": "Elas respondem 200."
+      },
+      {
+        "text": "São chamadas num ritmo fixo, e encheriam os rastros de ruído",
+        "why": "Isso: um rastro a cada quinze segundos que ninguém quer."
+      },
+      {
+        "text": "O Flask não rastreia uma rota que devolve JSON",
+        "why": "O checkout devolve JSON e é rastreado."
+      },
+      {
+        "text": "Não são rotas, então nenhum span existe",
+        "why": "As duas são rotas; a exclusão é o que as remove."
+      }
+    ]
+  },
+  "ex-e6e8dycv": {
+    "prompt": "Com `OTEL_PYTHON_DISABLED_INSTRUMENTATIONS=psycopg`, o que aconteceu com as chamadas ao banco?",
+    "hint": "Compare as operações antes e depois.",
+    "choices": [
+      {
+        "text": "Falharam, porque o driver foi descarregado",
+        "why": "O checkout deu certo; só o envolvimento foi pulado."
+      },
+      {
+        "text": "Foram rastreadas dentro do `POST /orders` com outro nome",
+        "why": "Nenhum span novo apareceu."
+      },
+      {
+        "text": "Rodaram como antes, sem spans",
+        "why": "Isso. Só o vigiar foi desligado."
+      },
+      {
+        "text": "Foram direto ao Collector como métricas",
+        "why": "A exportação de métricas está desligada no orders."
+      }
+    ]
+  },
+  "ex-zk5dxh43": {
+    "prompt": "Uma instrumentação começa a produzir milhares de spans inúteis em produção. Qual é a resposta segura mais rápida?",
+    "hint": "Sem nova versão.",
+    "choices": [
+      {
+        "text": "Reescrever o serviço com spans feitos à mão",
+        "why": "São semanas de trabalho, não uma resposta rápida."
+      },
+      {
+        "text": "Parar o Collector até consertar",
+        "why": "Isso perde a telemetria de todos os serviços."
+      },
+      {
+        "text": "Apagar o pacote de instrumentação dentro do contêiner rodando e esperar que ele perceba",
+        "why": "A modificação já está em memória, e a próxima implantação a traz de volta."
+      },
+      {
+        "text": "Desligar essa instrumentação pela variável de ambiente e reiniciar",
+        "why": "Isso. Silencia uma biblioteca e deixa o resto."
+      }
+    ]
+  },
+  "ex-74wmrp4k": {
+    "prompt": "Quais destes a instrumentação automática do orders NÃO registra? Escolha todas as que se aplicam.",
+    "hint": "As bordas são vistas, o interior não.",
+    "choices": [
+      {
+        "text": "Que produto foi pedido",
+        "why": "Sim: o Flask não sabe o que é um pedido."
+      },
+      {
+        "text": "A publicação no RabbitMQ",
+        "why": "Sim: nenhuma instrumentação para o `pika` está instalada."
+      },
+      {
+        "text": "A chamada ao payments",
+        "why": "Esse é o span de cliente do `requests`."
+      },
+      {
+        "text": "A rota que foi chamada",
+        "why": "`http.route` está lá."
+      },
+      {
+        "text": "Se o pedido foi pago",
+        "why": "Sim: isso é lógica da própria loja."
+      }
+    ]
+  },
+  "ex-sj0kzrmp": {
+    "prompt": "Com a linha de inject removida, a vitrine e o mailer registraram ids de rastro diferentes para um checkout. O que isso quer dizer?",
+    "hint": "Olhe o pai do span do mailer.",
+    "choices": [
+      {
+        "text": "O mailer tratou de outro pedido",
+        "why": "Era o mesmo pedido; só o rastro se partiu."
+      },
+      {
+        "text": "Terminou no orders, e o consumidor começou outro",
+        "why": "Isso. O span de consumo dele não tem pai."
+      },
+      {
+        "text": "O Jaeger fundiu dois rastros por engano",
+        "why": "Nada foi fundido; são dois."
+      },
+      {
+        "text": "A fila rejeitou os cabeçalhos da mensagem e entregou o corpo sozinho",
+        "why": "Não havia cabeçalhos de rastro a rejeitar."
+      }
+    ]
+  },
+  "ex-xxfb9g2x": {
+    "prompt": "A espera de 1,5 s no payments foi achada na aula 1 por causa de um span escrito à mão. O que o rastro teria mostrado sem esse span?",
+    "hint": "O que envolve a espera?",
+    "choices": [
+      {
+        "text": "Nada do payments",
+        "why": "O span `POST /charge` dele ainda existiria."
+      },
+      {
+        "text": "`POST /charge` levando 1501 ms sem nada dentro",
+        "why": "Isso. O tempo está lá; o motivo não."
+      },
+      {
+        "text": "Um span automático chamado `time.sleep`",
+        "why": "Nada instrumenta o `time.sleep`."
+      },
+      {
+        "text": "Um erro, porque um span não pode durar mais de um segundo",
+        "why": "Spans duram o que o trabalho durar."
+      }
+    ]
+  },
+  "ex-cz7msdjb": {
+    "prompt": "Como a linha acrescentada em `create()` alcançou o span que o Flask tinha aberto?",
+    "hint": "Qual span é o corrente dentro do tratador?",
+    "choices": [
+      {
+        "text": "Abrindo um span novo com o mesmo nome",
+        "why": "Nenhum span novo é aberto."
+      },
+      {
+        "text": "Pedindo o id do span ao Jaeger",
+        "why": "O código nunca fala com o Jaeger."
+      },
+      {
+        "text": "Com `trace.get_current_span()`",
+        "why": "Isso. O span do Flask é o corrente durante a requisição inteira."
+      },
+      {
+        "text": "Por uma variável de ambiente lida pelo Flask",
+        "why": "Valores de atributo vêm do código."
+      }
+    ]
+  },
+  "ex-mhj8thw8": {
+    "prompt": "Quanto custa `trace.get_current_span().set_attribute(...)` num processo sem SDK?",
+    "hint": "O primeiro script da aula 2.",
+    "choices": [
+      {
+        "text": "Levanta erro, porque não há span",
+        "why": "A API nunca levanta erro por isso."
+      },
+      {
+        "text": "Quase nada",
+        "why": "Isso: cai num span que não faz nada, e é por isso que a linha pode ficar sem risco."
+      },
+      {
+        "text": "Um rastro novo, começado só para o atributo e fechado logo depois",
+        "why": "Nada é registrado sem um SDK."
+      },
+      {
+        "text": "Uma requisição HTTP ao Collector",
+        "why": "Nenhum exporter existe sem um SDK."
+      }
+    ]
+  },
+  "ex-qwe8ywg2": {
+    "prompt": "Ponha em ordem os passos de acrescentar `shop.sku` ao span automático do orders.",
+    "hint": "Editar, aplicar, testar, ler.",
+    "items": [
+      "Acrescentar a importação e a linha `set_attribute` em `create()`",
+      "Reiniciar o orders para o código montado ser lido de novo",
+      "Mandar um checkout",
+      "Ler os atributos do span `POST /orders` no Jaeger"
+    ]
+  },
+  "ex-g44mmpp3": {
+    "prompt": "O bench.py mediu mediana de 25,1 ms com instrumentação e 24,1 ms sem. Quantos milissegundos por pedido a instrumentação somou na mediana?",
+    "hint": "Subtraia.",
+    "unit": "milissegundos"
+  },
+  "ex-0xvgf7eh": {
+    "prompt": "Por que o mesmo custo fixo por span importaria mais num acerto de cache respondido em 0,1 ms do que num pedido?",
+    "hint": "Compare com o resto da requisição.",
+    "choices": [
+      {
+        "text": "Vira a maior parte do tempo da requisição em vez de uma fatia pequena",
+        "why": "Isso. Um pedido gasta 25 ms em trabalho real."
+      },
+      {
+        "text": "Caches não podem ser rastreados",
+        "why": "Nada proíbe."
+      },
+      {
+        "text": "Um acerto de cache cria mais spans que um pedido",
+        "why": "Cria menos."
+      },
+      {
+        "text": "O processor em lote é mais lento para requisições pequenas",
+        "why": "Ele funciona igual seja qual for a requisição."
+      }
+    ]
+  },
+  "ex-mah8rb0j": {
+    "prompt": "O teste mostrou uma diferença de um milissegundo numa execução de 300. Qual é a conclusão honesta?",
+    "hint": "De que tamanho é o ruído entre duas execuções?",
+    "choices": [
+      {
+        "text": "A instrumentação custa exatamente quatro por cento em todo lugar",
+        "why": "Uma execução numa máquina não diz nada tão preciso."
+      },
+      {
+        "text": "A instrumentação é de graça",
+        "why": "Ela mediu um custo, só que pequeno."
+      },
+      {
+        "text": "O custo é pequeno, perto do ruído entre execuções",
+        "why": "Isso, e os custos que valem preocupação estão em outro lugar."
+      },
+      {
+        "text": "O teste está quebrado e precisa rodar até dar zero",
+        "why": "Um resultado de que não se gosta não é teste quebrado."
+      }
+    ]
+  },
+  "ex-kagyptvs": {
+    "prompt": "Com que arranjo o orders fica, e por que é o comum?",
+    "hint": "A terceira coluna.",
+    "choices": [
+      {
+        "text": "Só à mão, porque spans automáticos usam nomes antigos",
+        "why": "O orders mantém os spans automáticos."
+      },
+      {
+        "text": "Automática para as bordas, mais algumas linhas para o que só o código sabe",
+        "why": "Isso: o jeito mais barato de cobrir os dois."
+      },
+      {
+        "text": "Só automática, porque spans escritos à mão são mais lentos que os que uma biblioteca abre",
+        "why": "Velocidade não é a diferença; cobertura é."
+      },
+      {
+        "text": "Nenhum: depende dos spans da vitrine",
+        "why": "Cada serviço registra os seus."
+      }
+    ]
+  },
+  "ex-ptfgrywy": {
+    "prompt": "O agente de Java, o lançador de .NET e uma ferramenta eBPF são todos automáticos. Que limites eles compartilham com o do Python? Escolha todas as que se aplicam.",
+    "hint": "Os três lugares em que ela para.",
+    "choices": [
+      {
+        "text": "Não conseguem nomear um objeto de negócio",
+        "why": "Sim."
+      },
+      {
+        "text": "Não veem dentro da lógica do próprio serviço",
+        "why": "Sim."
+      },
+      {
+        "text": "Não veem requisições HTTP",
+        "why": "Ver HTTP é exatamente o que fazem bem."
+      },
+      {
+        "text": "Não seguem um cliente que não conhecem",
+        "why": "Sim."
+      }
+    ]
+  },
+  "ex-43mygehw": {
+    "prompt": "A instrumentação automática desenha as ___ de um serviço; o código tem de dizer o que acontece entre elas.",
+    "hint": "Onde um serviço encontra uma biblioteca.",
+    "blanks": [
+      {
+        "accept": [
+          "bordas"
+        ]
+      }
+    ]
+  }
+}

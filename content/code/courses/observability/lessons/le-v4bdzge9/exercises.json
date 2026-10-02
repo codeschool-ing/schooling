@@ -1,0 +1,703 @@
+[
+  {
+    "id": "ex-5541bffy",
+    "version": 1,
+    "section": "pull",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How do the shop's metrics reach Prometheus?",
+    "hint": "Who starts the conversation?",
+    "choices": [
+      {
+        "text": "Each service sends them to Prometheus when a value changes",
+        "correct": false,
+        "why": "That is push; Prometheus pulls."
+      },
+      {
+        "text": "Prometheus asks each target for them on a schedule",
+        "correct": true,
+        "why": "Right: a scrape, every fifteen seconds here."
+      },
+      {
+        "text": "The Collector forwards them along with the traces",
+        "correct": false,
+        "why": "In this lab the Collector carries traces and logs, not the shop's metrics."
+      },
+      {
+        "text": "Loki extracts them from the log lines",
+        "correct": false,
+        "why": "Loki stores logs."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjaesjd8",
+    "version": 1,
+    "section": "pull",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service that pushes its metrics crashes. What does the monitoring system notice?",
+    "hint": "What does pull give Prometheus for free?",
+    "choices": [
+      {
+        "text": "Possibly nothing: the service just goes quiet",
+        "correct": true,
+        "why": "Right. With pull, the failed scrape itself is recorded as `up` 0."
+      },
+      {
+        "text": "An error, sent by the service as it crashes",
+        "correct": false,
+        "why": "A crashing process rarely gets to send anything."
+      },
+      {
+        "text": "The same as with pull: `up` becomes 0",
+        "correct": false,
+        "why": "`up` exists because Prometheus does the asking."
+      },
+      {
+        "text": "A gap that Prometheus fills with the last value it received from that service",
+        "correct": false,
+        "why": "Nothing fills it in."
+      }
+    ]
+  },
+  {
+    "id": "ex-jt8b185f",
+    "version": 1,
+    "section": "pull",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For every target, on every scrape, Prometheus records a metric called `___` that is 1 if the scrape worked and 0 if not.",
+    "hint": "Two letters.",
+    "blanks": [
+      {
+        "accept": [
+          "up"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0h79c9ce",
+    "version": 1,
+    "section": "pull",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of a line in the metrics text format to what it is.",
+    "hint": "The storefront's answer.",
+    "pairs": [
+      {
+        "left": "`# HELP`",
+        "right": "What the metric counts"
+      },
+      {
+        "left": "`# TYPE`",
+        "right": "Counter, gauge, histogram or summary"
+      },
+      {
+        "left": "`{code=\"200\",route=\"/health\"}`",
+        "right": "The labels that make this one series"
+      },
+      {
+        "left": "`7.0`",
+        "right": "The current value"
+      }
+    ],
+    "right_distractors": [
+      "The time the request was made"
+    ]
+  },
+  {
+    "id": "ex-654m3ksm",
+    "version": 1,
+    "section": "selectors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which selector returns every storefront series whose status code is a 4xx?",
+    "hint": "A regular expression.",
+    "choices": [
+      {
+        "text": "`http_server_requests_total{job=\"storefront\", code=\"4xx\"}`",
+        "correct": false,
+        "why": "`=` matches the literal text `4xx`, which no series has."
+      },
+      {
+        "text": "`http_server_requests_total{job=\"storefront\", code=~\"4..\"}`",
+        "correct": true,
+        "why": "Right: `=~` takes a regular expression."
+      },
+      {
+        "text": "`http_server_requests_total{job=\"storefront\", code!=\"2..\"}`",
+        "correct": false,
+        "why": "`!=` is exact, and would not exclude 5xx either."
+      },
+      {
+        "text": "`http_server_requests_total{job=\"storefront\"} > 400`",
+        "correct": false,
+        "why": "That compares the counter's value, not the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-53kzjy8n",
+    "version": 1,
+    "section": "selectors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `http_server_requests_total{code=\"201\"}` = 281 tell you almost nothing on its own?",
+    "hint": "Since when?",
+    "choices": [
+      {
+        "text": "281 is below Prometheus's precision",
+        "correct": false,
+        "why": "Precision is not the problem."
+      },
+      {
+        "text": "Counters are reset by every scrape, so 281 covers fifteen seconds",
+        "correct": false,
+        "why": "A scrape reads the counter; it resets nothing."
+      },
+      {
+        "text": "It counts since the process started, whenever that was",
+        "correct": true,
+        "why": "Right. Its rate is what carries information."
+      },
+      {
+        "text": "The value is in thousands",
+        "correct": false,
+        "why": "It is a plain count."
+      }
+    ]
+  },
+  {
+    "id": "ex-xp2zmaav",
+    "version": 1,
+    "section": "rate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `rate(http_server_requests_total[1m])` answer?",
+    "hint": "Per what?",
+    "choices": [
+      {
+        "text": "The number of requests in the last minute",
+        "correct": false,
+        "why": "That is `increase()`."
+      },
+      {
+        "text": "Requests per second, averaged over the last minute",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The fastest request of the last minute",
+        "correct": false,
+        "why": "Counters say nothing about durations."
+      },
+      {
+        "text": "How many times the counter was scraped in the last minute",
+        "correct": false,
+        "why": "That would be four, whatever the traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-7n77n10r",
+    "version": 1,
+    "section": "rate",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`rate(...[1m])` returned 4.222 for code 201 and 0.267 for 402. To two decimal places, how many checkouts per second is that in total?",
+    "hint": "Add them.",
+    "value": 4.49,
+    "tolerance": 0.01,
+    "unit": "requests per second"
+  },
+  {
+    "id": "ex-reqghggw",
+    "version": 1,
+    "section": "rate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The storefront restarted and its counter fell from 339 to 123. What did `rate()` over the restart do?",
+    "hint": "A counter can only grow.",
+    "choices": [
+      {
+        "text": "It returned a negative rate for the minute of the restart",
+        "correct": false,
+        "why": "That is what naive subtraction would give, and what `rate()` avoids."
+      },
+      {
+        "text": "It returned nothing until the counter passed 339 again",
+        "correct": false,
+        "why": "It kept answering throughout."
+      },
+      {
+        "text": "Took the drop as a reset",
+        "correct": true,
+        "why": "Right: it kept counting from zero, about five a second, as before."
+      },
+      {
+        "text": "It averaged the old and new values",
+        "correct": false,
+        "why": "No averaging of values happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-vq07pvb8",
+    "version": 1,
+    "section": "rate",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To count how many times a counter went back to zero in a window, PromQL has the function `___()`.",
+    "hint": "Plural of reset.",
+    "blanks": [
+      {
+        "accept": [
+          "resets"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g877ztxs",
+    "version": 1,
+    "section": "rate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`increase(...[1m])` returned 304.4 one day. How can a count of requests be fractional?",
+    "hint": "How is the window covered?",
+    "choices": [
+      {
+        "text": "Some requests are counted as half because they failed",
+        "correct": false,
+        "why": "Every request counts as one."
+      },
+      {
+        "text": "It extrapolates from the scrapes inside the window to the whole window",
+        "correct": true,
+        "why": "Right. It is an estimate, not a tally."
+      },
+      {
+        "text": "Prometheus stores counters as floats and rounding errors pile up",
+        "correct": false,
+        "why": "The fraction is far larger than float rounding."
+      },
+      {
+        "text": "The counter was reset in the middle of the window",
+        "correct": false,
+        "why": "A reset is handled, and does not cause fractions."
+      }
+    ]
+  },
+  {
+    "id": "ex-5y7y5r4j",
+    "version": 1,
+    "section": "error-ratio",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why alert on the share of failed charges instead of the rate of failures?",
+    "hint": "Five requests a second or five thousand.",
+    "choices": [
+      {
+        "text": "Its meaning depends on traffic",
+        "correct": true,
+        "why": "Right. The same rate of failures is alarming at five requests a second and nothing at five thousand; a share stays meaningful."
+      },
+      {
+        "text": "Prometheus cannot alert on a rate",
+        "correct": false,
+        "why": "It can alert on any expression."
+      },
+      {
+        "text": "A share is cheaper to compute",
+        "correct": false,
+        "why": "It costs more: two sums and a division."
+      },
+      {
+        "text": "Rates are only available in recording rules",
+        "correct": false,
+        "why": "`rate()` works anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-7y947pmv",
+    "version": 1,
+    "section": "error-ratio",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Payments was told to fail every 20th charge, and the ratio came back as 0.0495. As a percentage, to the nearest whole number, how many charges fail?",
+    "hint": "One in twenty.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "percent"
+  },
+  {
+    "id": "ex-rz8rp3gb",
+    "version": 1,
+    "section": "error-ratio",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone writes the ratio as errors over `[1m]` divided by total over `[5m]`. What is wrong?",
+    "hint": "Compare the halves.",
+    "choices": [
+      {
+        "text": "Nothing: rates are per second, so windows do not matter",
+        "correct": false,
+        "why": "Different windows average different periods."
+      },
+      {
+        "text": "`[5m]` is not allowed in a division",
+        "correct": false,
+        "why": "It is allowed; it is just wrong here."
+      },
+      {
+        "text": "The two halves describe different periods, so the share is not a share of anything",
+        "correct": true,
+        "why": "Right. Both sides need the same window."
+      },
+      {
+        "text": "Errors must use `increase()` and totals `rate()`",
+        "correct": false,
+        "why": "Mixing them would be wrong too."
+      }
+    ]
+  },
+  {
+    "id": "ex-by31nwdm",
+    "version": 1,
+    "section": "exporters",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each exporter to what it translates.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "node-exporter",
+        "right": "The Linux machine"
+      },
+      {
+        "left": "postgres-exporter",
+        "right": "The database's statistics"
+      },
+      {
+        "left": "blackbox-exporter",
+        "right": "A request sent from outside"
+      }
+    ],
+    "right_distractors": [
+      "The shop's own business metrics"
+    ]
+  },
+  {
+    "id": "ex-wcx5sgtj",
+    "version": 1,
+    "section": "exporters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can the blackbox exporter catch that the storefront's own metrics cannot?",
+    "hint": "It acts like a client.",
+    "choices": [
+      {
+        "text": "How many checkouts were declined",
+        "correct": false,
+        "why": "The storefront counts those itself."
+      },
+      {
+        "text": "Requests that never reach the storefront",
+        "correct": true,
+        "why": "Right: a broken path in front of a healthy service."
+      },
+      {
+        "text": "The storefront's memory use",
+        "correct": false,
+        "why": "That is the machine's or the process's own metric."
+      },
+      {
+        "text": "The trace id of a slow request",
+        "correct": false,
+        "why": "A probe has no trace."
+      }
+    ]
+  },
+  {
+    "id": "ex-qp9rq1rt",
+    "version": 1,
+    "section": "exporters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You add Redis to the shop. What is the first thing to look for?",
+    "hint": "Writing is the last resort.",
+    "choices": [
+      {
+        "text": "A way to make Redis push to the Pushgateway",
+        "correct": false,
+        "why": "The Pushgateway is for jobs that end."
+      },
+      {
+        "text": "An instrumentation package for OpenTelemetry traces",
+        "correct": false,
+        "why": "That covers clients' calls, not Redis's own state."
+      },
+      {
+        "text": "An existing Redis exporter",
+        "correct": true,
+        "why": "Right. Almost everything already has one."
+      },
+      {
+        "text": "A time to write a Redis exporter in Python from scratch",
+        "correct": false,
+        "why": "Look before writing."
+      }
+    ]
+  },
+  {
+    "id": "ex-k93j01an",
+    "version": 1,
+    "section": "short-lived-jobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can Prometheus not scrape the nightly report directly?",
+    "hint": "How long does it live?",
+    "choices": [
+      {
+        "text": "It has no HTTP server",
+        "correct": false,
+        "why": "One could be added; the problem is time."
+      },
+      {
+        "text": "It exits before the next scrape could arrive",
+        "correct": true,
+        "why": "Right: about a second, against fifteen."
+      },
+      {
+        "text": "Its metrics are traces",
+        "correct": false,
+        "why": "It has a trace and metrics, separately."
+      },
+      {
+        "text": "Jobs are not allowed in `scrape_configs`",
+        "correct": false,
+        "why": "Any address can be a target."
+      }
+    ]
+  },
+  {
+    "id": "ex-jn81eb3g",
+    "version": 1,
+    "section": "short-lived-jobs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the report push a timestamp of its last success rather than a counter of runs?",
+    "hint": "What happens on the night it does not run?",
+    "choices": [
+      {
+        "text": "Timestamps take less space in the Pushgateway",
+        "correct": false,
+        "why": "Space is not the reason."
+      },
+      {
+        "text": "Counters cannot be pushed",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "Its age grows when nothing runs",
+        "correct": true,
+        "why": "Right: `time() -` it keeps growing, so an alert can fire on absence. A counter would just stay still."
+      },
+      {
+        "text": "A timestamp also records which orders were counted",
+        "correct": false,
+        "why": "It is one number."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfj8h7h2",
+    "version": 1,
+    "section": "short-lived-jobs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are good reasons NOT to use the Pushgateway for a long-running service? Choose all that apply.",
+    "hint": "What does it keep, and what does it lose?",
+    "choices": [
+      {
+        "text": "It keeps the last value after the service dies",
+        "correct": true,
+        "why": "Yes: a dead service looks alive."
+      },
+      {
+        "text": "The per-instance `up` from scraping is lost",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "It cannot store gauges",
+        "correct": false,
+        "why": "The report pushed two."
+      },
+      {
+        "text": "It requires TLS",
+        "correct": false,
+        "why": "The lab's speaks plain HTTP."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9jntd2z",
+    "version": 1,
+    "section": "rules-and-alerts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a recording rule do?",
+    "hint": "`record:`",
+    "choices": [
+      {
+        "text": "Records every query a dashboard sends",
+        "correct": false,
+        "why": "It records the result of its own expression."
+      },
+      {
+        "text": "Saves a result as a series",
+        "correct": true,
+        "why": "Right: an expression's result, under a new name, computed once per evaluation."
+      },
+      {
+        "text": "Sends an alert when a series is recorded",
+        "correct": false,
+        "why": "That is an alerting rule."
+      },
+      {
+        "text": "Saves the TSDB to disk",
+        "correct": false,
+        "why": "Storage does that on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-hw9mxpby",
+    "version": 1,
+    "section": "rules-and-alerts",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of the PaymentsFailing alert in order.",
+    "hint": "From the rule to the pager.",
+    "items": [
+      "The ratio crosses 2% and the alert becomes pending",
+      "The condition holds for two minutes and the alert fires",
+      "Prometheus sends it to Alertmanager",
+      "Alertmanager groups it and sends it to the pager"
+    ]
+  },
+  {
+    "id": "ex-g13nr5er",
+    "version": 1,
+    "section": "rules-and-alerts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The error ratio rises above 2% for 90 seconds and falls back. What happens with `for: 2m`?",
+    "hint": "Pending is not firing.",
+    "choices": [
+      {
+        "text": "It fires for 90 seconds",
+        "correct": false,
+        "why": "It never reaches firing."
+      },
+      {
+        "text": "It goes pending, then back to inactive, and nobody is paged",
+        "correct": true,
+        "why": "Right: a blip, not a page."
+      },
+      {
+        "text": "It fires once the two minutes are up, even though the condition cleared",
+        "correct": false,
+        "why": "The condition must hold throughout."
+      },
+      {
+        "text": "Alertmanager receives it as resolved",
+        "correct": false,
+        "why": "A pending alert is never sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-zx04vzqe",
+    "version": 1,
+    "section": "rules-and-alerts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Who decides that the PaymentsFailing page goes to the pager rather than to e-mail?",
+    "hint": "Prometheus only decides that it fires.",
+    "choices": [
+      {
+        "text": "The rule's `severity: page` label, read by Prometheus",
+        "correct": false,
+        "why": "The label is information; routing is not Prometheus's job."
+      },
+      {
+        "text": "The pager, which subscribes to alerts it likes",
+        "correct": false,
+        "why": "The pager only receives."
+      },
+      {
+        "text": "Alertmanager's routes",
+        "correct": true,
+        "why": "Right, and lesson 16 routes on that label."
+      },
+      {
+        "text": "The Collector",
+        "correct": false,
+        "why": "The Collector is not in the alert path."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9ka9s8p",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The usual shape of an error ratio is `sum(rate(errors[1m])) / sum(___(all[1m]))`.",
+    "hint": "The same function on both sides.",
+    "blanks": [
+      {
+        "accept": [
+          "rate"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

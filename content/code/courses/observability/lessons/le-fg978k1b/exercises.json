@@ -1,0 +1,643 @@
+[
+  {
+    "id": "ex-hkahq55v",
+    "version": 1,
+    "section": "counters-and-gauges",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each metric to its type.",
+    "hint": "Does it only go up?",
+    "pairs": [
+      {
+        "left": "`http_server_requests_total`",
+        "right": "counter"
+      },
+      {
+        "left": "`process_resident_memory_bytes`",
+        "right": "gauge"
+      },
+      {
+        "left": "`http_server_request_duration_seconds`",
+        "right": "histogram"
+      }
+    ],
+    "right_distractors": [
+      "trace"
+    ]
+  },
+  {
+    "id": "ex-w255g0e4",
+    "version": 1,
+    "section": "counters-and-gauges",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Messages waiting in a queue right now: counter or gauge?",
+    "hint": "Can it go down?",
+    "choices": [
+      {
+        "text": "Gauge",
+        "correct": true,
+        "why": "Right: how many there are now, up and down."
+      },
+      {
+        "text": "Counter, because messages are counted",
+        "correct": false,
+        "why": "Counting is not the test; going down is."
+      },
+      {
+        "text": "Histogram, because messages wait different times",
+        "correct": false,
+        "why": "The waiting time would be a histogram; the number waiting is not."
+      },
+      {
+        "text": "Either, as long as it ends in `_total`",
+        "correct": false,
+        "why": "`_total` marks a counter, and a queue depth is not one."
+      }
+    ]
+  },
+  {
+    "id": "ex-h50g8d6d",
+    "version": 1,
+    "section": "counters-and-gauges",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`rate(process_cpu_seconds_total[1m])` returned 0.0193. What percentage of one processor core is the storefront using, to the nearest whole number?",
+    "hint": "Seconds of CPU per second.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "percent"
+  },
+  {
+    "id": "ex-30r29jey",
+    "version": 1,
+    "section": "counters-and-gauges",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team reports \"requests so far\" as a gauge and graphs `rate()` of it. What goes wrong at the first restart?",
+    "hint": "What does `rate()` assume?",
+    "choices": [
+      {
+        "text": "Nothing: a gauge and a counter are stored the same way",
+        "correct": false,
+        "why": "Storage is the same; the meaning `rate()` assumes is not."
+      },
+      {
+        "text": "The value drops, and the graph is wrong around it",
+        "correct": true,
+        "why": "Right: declared as a gauge, the drop is not handled as a reset, and the series cannot be summed across instances either."
+      },
+      {
+        "text": "Prometheus refuses to scrape a gauge that only grows",
+        "correct": false,
+        "why": "It scrapes whatever it is given."
+      },
+      {
+        "text": "The `_created` line is missing, so the rate is zero",
+        "correct": false,
+        "why": "`_created` does not decide the rate."
+      }
+    ]
+  },
+  {
+    "id": "ex-k20yt9a3",
+    "version": 1,
+    "section": "histograms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The buckets read `le=\"0.025\"` 16 and `le=\"0.05\"` 270. How many checkouts took between 25 and 50 ms?",
+    "hint": "Cumulative.",
+    "choices": [
+      {
+        "text": "270",
+        "correct": false,
+        "why": "That bucket includes the 16 below it."
+      },
+      {
+        "text": "286",
+        "correct": false,
+        "why": "Buckets are not added together."
+      },
+      {
+        "text": "254",
+        "correct": true,
+        "why": "Right: 270 minus 16."
+      },
+      {
+        "text": "16",
+        "correct": false,
+        "why": "Those are the ones at or under 25 ms."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqz48b8d",
+    "version": 1,
+    "section": "histograms",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With every checkout taking about 0.33 s, the median came back as 0.375. Where did 0.375 come from?",
+    "hint": "Which bucket held them?",
+    "choices": [
+      {
+        "text": "A few slow checkouts pulled the median up",
+        "correct": false,
+        "why": "All took about the same; a median is not pulled by outliers."
+      },
+      {
+        "text": "The 300 ms fault plus 75 ms of network",
+        "correct": false,
+        "why": "The number is the bucket's, not a sum of delays."
+      },
+      {
+        "text": "The middle of the 0.25 to 0.5 bucket, which held them all",
+        "correct": true,
+        "why": "Right. With nothing finer to read, interpolation lands in the middle."
+      },
+      {
+        "text": "`rate()` rounded to the nearest eighth",
+        "correct": false,
+        "why": "No such rounding exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bzsmzfv",
+    "version": 1,
+    "section": "histograms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The target is \"checkouts under 300 ms\". What makes the histogram answer that exactly?",
+    "hint": "Where are the boundaries?",
+    "choices": [
+      {
+        "text": "More traffic, so interpolation averages out",
+        "correct": false,
+        "why": "More traffic does not move bucket boundaries."
+      },
+      {
+        "text": "A higher percentile, like the 99.9th",
+        "correct": false,
+        "why": "A higher percentile is still interpolated."
+      },
+      {
+        "text": "A bucket boundary at 0.3",
+        "correct": true,
+        "why": "Right: then \"under 0.3\" is a bucket's count."
+      },
+      {
+        "text": "A summary instead of a histogram",
+        "correct": false,
+        "why": "The Python client's summary has no quantiles at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-8h2hj6np",
+    "version": 1,
+    "section": "histograms",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A histogram answers exactly the share of observations below a value that is a bucket ___.",
+    "hint": "Where one bucket ends.",
+    "blanks": [
+      {
+        "accept": [
+          "boundary",
+          "bound",
+          "edge",
+          "limit"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9kp0670t",
+    "version": 1,
+    "section": "summaries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the Python client's summary publish after three observations?",
+    "hint": "Look at the output.",
+    "choices": [
+      {
+        "text": "A count, a sum and a created time",
+        "correct": true,
+        "why": "Right: no quantiles."
+      },
+      {
+        "text": "The three observations, one per line",
+        "correct": false,
+        "why": "Observations are never published."
+      },
+      {
+        "text": "The 50th, 90th and 99th percentiles of the three",
+        "correct": false,
+        "why": "Clients in other languages publish those; Python's does not."
+      },
+      {
+        "text": "Buckets, like a histogram",
+        "correct": false,
+        "why": "A summary has no buckets."
+      }
+    ]
+  },
+  {
+    "id": "ex-24xrbtvz",
+    "version": 1,
+    "section": "summaries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three copies of a service each publish a 99th percentile from a summary. How do you get the 99th percentile of all three together?",
+    "hint": "What would you need?",
+    "choices": [
+      {
+        "text": "Average the three numbers",
+        "correct": false,
+        "why": "An average of percentiles is not a percentile."
+      },
+      {
+        "text": "Take the largest of the three",
+        "correct": false,
+        "why": "That is an upper bound at best, and often far off."
+      },
+      {
+        "text": "You cannot, from those numbers",
+        "correct": true,
+        "why": "Right. Histogram buckets can be summed; percentiles cannot."
+      },
+      {
+        "text": "Weight each by its request count",
+        "correct": false,
+        "why": "Weighting does not recover the distribution."
+      }
+    ]
+  },
+  {
+    "id": "ex-n7ezb9mv",
+    "version": 1,
+    "section": "labels",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The storefront counts requests by route, method and status code. What is one series?",
+    "hint": "Combinations.",
+    "choices": [
+      {
+        "text": "One request",
+        "correct": false,
+        "why": "Requests increment series; they are not series."
+      },
+      {
+        "text": "One label",
+        "correct": false,
+        "why": "A label alone is not a series."
+      },
+      {
+        "text": "One combination of label values",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "One scrape",
+        "correct": false,
+        "why": "A scrape reads every series."
+      }
+    ]
+  },
+  {
+    "id": "ex-zs4c635t",
+    "version": 1,
+    "section": "labels",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A metric has labels route (3 values), method (2) and code (4). At most how many series can it have on one instance?",
+    "hint": "Multiply.",
+    "value": 24,
+    "tolerance": 0,
+    "unit": "series"
+  },
+  {
+    "id": "ex-ky2wjjgw",
+    "version": 1,
+    "section": "labels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Counted by plan, the logins made three series, but the head grew by 22. Where did the rest come from?",
+    "hint": "What does a new target bring?",
+    "choices": [
+      {
+        "text": "From other users logging in at the same time",
+        "correct": false,
+        "why": "The experiment counts its own fixed 20000."
+      },
+      {
+        "text": "From `_created` gauges and the new target's own metrics",
+        "correct": true,
+        "why": "Right: `up`, scrape statistics and the process metrics came too."
+      },
+      {
+        "text": "From Prometheus keeping three copies of every series for safety",
+        "correct": false,
+        "why": "It keeps one."
+      },
+      {
+        "text": "From the logins of the previous experiment, still in memory",
+        "correct": false,
+        "why": "This was the first one."
+      }
+    ]
+  },
+  {
+    "id": "ex-eff1mz12",
+    "version": 1,
+    "section": "cardinality",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a label's cardinality?",
+    "hint": "Distinct values.",
+    "choices": [
+      {
+        "text": "How long its name is",
+        "correct": false,
+        "why": "Length does not matter."
+      },
+      {
+        "text": "How many distinct values it takes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "How often it is scraped",
+        "correct": false,
+        "why": "Labels are not scraped on their own."
+      },
+      {
+        "text": "How many metrics use it",
+        "correct": false,
+        "why": "That is a different count."
+      }
+    ]
+  },
+  {
+    "id": "ex-zb79pq5h",
+    "version": 1,
+    "section": "cardinality",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With logins counted by user, Prometheus went from 96 MB to 158 MB. How many megabytes did the one label cost?",
+    "hint": "Subtract.",
+    "value": 62,
+    "tolerance": 1,
+    "unit": "megabytes"
+  },
+  {
+    "id": "ex-a58zjtc1",
+    "version": 1,
+    "section": "cardinality",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are bad metric labels? Choose all that apply.",
+    "hint": "Values that grow with traffic.",
+    "choices": [
+      {
+        "text": "`request_id`",
+        "correct": true,
+        "why": "Yes: one series per request."
+      },
+      {
+        "text": "`email`",
+        "correct": true,
+        "why": "Yes: one per customer, and personal data too."
+      },
+      {
+        "text": "`route`, with the template `/orders/{id}`",
+        "correct": false,
+        "why": "A template is a small known set."
+      },
+      {
+        "text": "`code`",
+        "correct": false,
+        "why": "A handful of status codes."
+      },
+      {
+        "text": "`url`, with the full query string",
+        "correct": true,
+        "why": "Yes: every distinct URL is a series."
+      }
+    ]
+  },
+  {
+    "id": "ex-31hkww0k",
+    "version": 1,
+    "section": "cardinality",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where should the user id of a slow login go, if not in a metric label?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "Nowhere: user ids must never be recorded",
+        "correct": false,
+        "why": "An opaque id is fine in a span; personal data like an e-mail is not."
+      },
+      {
+        "text": "In a separate metric just for user ids",
+        "correct": false,
+        "why": "That is the same cardinality with a different name."
+      },
+      {
+        "text": "On the login's span",
+        "correct": true,
+        "why": "Right: stored once, whatever its value."
+      },
+      {
+        "text": "In the metric's `# HELP` line",
+        "correct": false,
+        "why": "HELP describes the metric, not a request."
+      }
+    ]
+  },
+  {
+    "id": "ex-vah2fypb",
+    "version": 1,
+    "section": "finding-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Memory climbs and you do not know which metric. Which request names the culprit fastest?",
+    "hint": "Prometheus keeps statistics about its head.",
+    "choices": [
+      {
+        "text": "`up`, to see which target is new",
+        "correct": false,
+        "why": "The culprit may be an old target with a new label."
+      },
+      {
+        "text": "The TSDB status API",
+        "correct": true,
+        "why": "Right: series per metric, values per label."
+      },
+      {
+        "text": "`prometheus_tsdb_head_series` over a week",
+        "correct": false,
+        "why": "It says that it grew, not what grew."
+      },
+      {
+        "text": "Restarting Prometheus and watching it fill again",
+        "correct": false,
+        "why": "Slow, and loses the evidence."
+      }
+    ]
+  },
+  {
+    "id": "ex-394yqsts",
+    "version": 1,
+    "section": "finding-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why look at the TSDB status page when nothing is wrong?",
+    "hint": "To recognise a jump.",
+    "choices": [
+      {
+        "text": "To know the normal numbers, so a jump stands out",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It resets the counters when visited",
+        "correct": false,
+        "why": "Visiting changes nothing."
+      },
+      {
+        "text": "Prometheus drops series nobody has viewed",
+        "correct": false,
+        "why": "It keeps them all."
+      },
+      {
+        "text": "It is the only place series can be deleted",
+        "correct": false,
+        "why": "It is a read-only view."
+      }
+    ]
+  },
+  {
+    "id": "ex-1vvv34r7",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the drop rule, 20016 samples per scrape survived instead of about 16. Why?",
+    "hint": "What did the regex name?",
+    "choices": [
+      {
+        "text": "The rule only applies after Prometheus restarts",
+        "correct": false,
+        "why": "It was reloaded, and `_total` disappeared."
+      },
+      {
+        "text": "It dropped only `demo_logins_total`, and the `_created` series came through",
+        "correct": true,
+        "why": "Right. A rule is as complete as its regular expression."
+      },
+      {
+        "text": "Relabelling cannot drop more than half a scrape",
+        "correct": false,
+        "why": "No such limit."
+      },
+      {
+        "text": "The logins container sent the series twice",
+        "correct": false,
+        "why": "Each series is sent once per scrape."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xe3tttt",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the real fix for a high-cardinality label belong?",
+    "hint": "The relabel rule is a stopgap.",
+    "choices": [
+      {
+        "text": "In the managed service's pricing plan",
+        "correct": false,
+        "why": "A bigger plan pays for the problem."
+      },
+      {
+        "text": "In more memory for Prometheus",
+        "correct": false,
+        "why": "That postpones it."
+      },
+      {
+        "text": "In the instrumentation",
+        "correct": true,
+        "why": "Right: count by plan, put the user on the span."
+      },
+      {
+        "text": "In a shorter retention",
+        "correct": false,
+        "why": "Active series cost memory whatever the retention."
+      }
+    ]
+  },
+  {
+    "id": "ex-wpt7j2gv",
+    "version": 1,
+    "section": "the-bill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the response to a cardinality explosion in a sensible order.",
+    "hint": "Find, stop, fix, prevent.",
+    "items": [
+      "Find the metric and label in the TSDB status",
+      "Drop the metric at the scrape with a relabel rule",
+      "Change the instrumentation to a small set of values",
+      "Remove the relabel rule once the new version is everywhere"
+    ]
+  },
+  {
+    "id": "ex-s8j7mtmq",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A label value that identifies one request or one user belongs in a ___ or a log line, never in a metric.",
+    "hint": "Lesson 2's signal.",
+    "blanks": [
+      {
+        "accept": [
+          "trace",
+          "span"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

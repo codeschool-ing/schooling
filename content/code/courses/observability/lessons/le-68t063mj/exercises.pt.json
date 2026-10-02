@@ -1,0 +1,524 @@
+{
+  "ex-8vm1ew9p": {
+    "prompt": "Por que os rastros costumam ser o sinal amostrado, e não as métricas?",
+    "hint": "Com o que cada um cresce?",
+    "choices": [
+      {
+        "text": "Rastros são menos úteis que métricas durante um incidente",
+        "why": "Respondem outra pergunta, não uma menor."
+      },
+      {
+        "text": "Um rastro cresce com cada requisição; uma métrica, com os labels",
+        "why": "Isso."
+      },
+      {
+        "text": "Métricas não podem ser amostradas de jeito nenhum",
+        "why": "O motivo é custo, não possibilidade."
+      },
+      {
+        "text": "Armazenamentos de rastros recusam mais que um número fixo de spans",
+        "why": "Não foi esse limite o motivo."
+      }
+    ]
+  },
+  "ex-shtgh482": {
+    "prompt": "O laboratório mediu 4,5 checkouts e 35 spans por segundo. Mais ou menos quantos spans um checkout produz? Responda ao número inteiro mais próximo.",
+    "hint": "Divida.",
+    "unit": "spans"
+  },
+  "ex-fffvzrkw": {
+    "prompt": "Qual é a troca principal entre decidir na cabeça e na cauda?",
+    "hint": "Quando cada uma decide, e o que sabe nesse momento.",
+    "choices": [
+      {
+        "text": "A cabeça é barata e cega; a cauda vê desfechos e segura todo span",
+        "why": "Isso."
+      },
+      {
+        "text": "A cabeça guarda erros; a cauda guarda uma fração fixa",
+        "why": "É o contrário."
+      },
+      {
+        "text": "A cabeça precisa de um Collector para decidir; a cauda, só do SDK de cada serviço",
+        "why": "O contrário."
+      },
+      {
+        "text": "Elas diferem só na fração que guardam",
+        "why": "Diferem no que conseguem saber."
+      }
+    ]
+  },
+  "ex-nb400zhg": {
+    "prompt": "Um `traceparent` termina em `-02`. O que faz o serviço que o recebe, com um amostrador baseado no pai?",
+    "hint": "O bit mais baixo.",
+    "choices": [
+      {
+        "text": "Registra o rastro, já que `02` é maior que zero",
+        "why": "O que conta é o bit mais baixo."
+      },
+      {
+        "text": "Não o registra: o bit de amostragem está desligado",
+        "why": "Isso; o `2` é o flag de id aleatório."
+      },
+      {
+        "text": "Toma uma decisão própria com um número aleatório novo",
+        "why": "Um amostrador baseado no pai segue o pai."
+      },
+      {
+        "text": "Rejeita a requisição por estar malformada",
+        "why": "`02` é válido."
+      }
+    ]
+  },
+  "ex-9mkvpx6x": {
+    "prompt": "Como o `TraceIdRatioBased` decide se guarda um rastro?",
+    "hint": "Dois serviços chegam à mesma resposta sem conversar.",
+    "choices": [
+      {
+        "text": "Sorteia um número aleatório novo para cada span novo que qualquer serviço inicia",
+        "why": "Aí dois serviços discordariam."
+      },
+      {
+        "text": "Guarda um rastro a cada dez, na ordem em que começam",
+        "why": "Ele não guarda contador."
+      },
+      {
+        "text": "Lê o trace id como número e o guarda abaixo de um limite",
+        "why": "Isso."
+      },
+      {
+        "text": "Pergunta ao Collector quantos rastros ele já guardou",
+        "why": "Não pergunta a ninguém."
+      }
+    ]
+  },
+  "ex-cqwd0mn1": {
+    "prompt": "O amostrador `parentbased_traceidratio` segue um pai se houver um e, se não houver, guarda uma ___ fixa dos rastros raiz.",
+    "hint": "Uma razão.",
+    "blanks": [
+      {
+        "accept": [
+          "fração",
+          "proporção",
+          "razão"
+        ]
+      }
+    ]
+  },
+  "ex-3tre4nw4": {
+    "prompt": "Com amostragem na cabeça de um em dez, o trace id de uma linha de log leva a \"trace not found\". Qual é o motivo mais provável?",
+    "hint": "Toda linha leva um id.",
+    "choices": [
+      {
+        "text": "A linha de log foi escrita por um serviço sem SDK nenhum, então não existe rastro",
+        "why": "Ela tem um id, então tem SDK."
+      },
+      {
+        "text": "O rastro não foi amostrado, embora a linha ainda leve o id dele",
+        "why": "Isso."
+      },
+      {
+        "text": "O Jaeger caiu e perdeu todo rastro que tinha",
+        "why": "Outros ids são achados."
+      },
+      {
+        "text": "O id no log é o span id, não o trace id",
+        "why": "O campo é o trace id."
+      }
+    ]
+  },
+  "ex-jcgvvdee": {
+    "prompt": "Qual é a principal fraqueza da amostragem na cabeça?",
+    "hint": "Quando ela decide.",
+    "choices": [
+      {
+        "text": "Custa mais que a amostragem na cauda",
+        "why": "É a mais barata."
+      },
+      {
+        "text": "Exige reiniciar todo serviço diariamente para a fração valer",
+        "why": "Não há essa necessidade."
+      },
+      {
+        "text": "Descarta requisições lentas e com falha tão facilmente quanto as rápidas",
+        "why": "Isso."
+      },
+      {
+        "text": "Não pode ser configurada sem mudar código",
+        "why": "O ambiente basta."
+      }
+    ]
+  },
+  "ex-p514nszr": {
+    "prompt": "A vitrine amostra um em dez, e o `orders` está em `always_on`. O que aparece no armazenamento?",
+    "hint": "Quem registra o quê.",
+    "choices": [
+      {
+        "text": "Exatamente os mesmos rastros de antes da mudança",
+        "why": "O orders agora registra também os descartados."
+      },
+      {
+        "text": "Rastros que começam no orders, com um pai que nunca foi exportado",
+        "why": "Isso."
+      },
+      {
+        "text": "Um erro do SDK recusando a configuração",
+        "why": "A configuração é válida."
+      },
+      {
+        "text": "Nada do orders",
+        "why": "Ele registra tudo."
+      }
+    ]
+  },
+  "ex-p4cxe651": {
+    "prompt": "Que regra mantém inteiros os rastros amostrados na cabeça?",
+    "hint": "Um decide, os outros seguem.",
+    "choices": [
+      {
+        "text": "Todo serviço amostra a própria fração de forma independente",
+        "why": "Isso parte os rastros."
+      },
+      {
+        "text": "Amostrar na raiz; amostradores baseados no pai em todo o resto",
+        "why": "Isso."
+      },
+      {
+        "text": "Manter `always_on` em todo serviço depois da raiz",
+        "why": "Isso registra o meio dos rastros descartados."
+      },
+      {
+        "text": "Amostrar só no Collector",
+        "why": "Isso é amostragem na cauda, outro esquema."
+      }
+    ]
+  },
+  "ex-cfwr9y0a": {
+    "prompt": "O serviço de cima guarda 50% e o de baixo 10%, ambos com `TraceIdRatioBased` puro sobre o mesmo trace id. O que acontece com os rastros entre 10% e 50%?",
+    "hint": "Mesmo id, limites diferentes.",
+    "choices": [
+      {
+        "text": "Os dois os guardam, já que os ids são os mesmos",
+        "why": "Os limites são diferentes."
+      },
+      {
+        "text": "Nenhum os guarda",
+        "why": "O de cima guarda."
+      },
+      {
+        "text": "O de cima os guarda e o de baixo descarta a parte dele",
+        "why": "Isso: rastros quebrados."
+      },
+      {
+        "text": "O de baixo os guarda e o de cima descarta a parte dele",
+        "why": "O limite do de baixo é menor."
+      }
+    ]
+  },
+  "ex-mktz45wq": {
+    "prompt": "Por que o amostrador na cauda do laboratório guarda 5% dos rastros comuns além dos erros e dos lentos?",
+    "hint": "Comparado com quê?",
+    "choices": [
+      {
+        "text": "Para ter uma base de rastros normais com que comparar os problemas",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque o processador exige pelo menos três políticas para começar",
+        "why": "Uma basta."
+      },
+      {
+        "text": "Para manter as span metrics exatas",
+        "why": "Elas contam todo span antes da amostragem."
+      },
+      {
+        "text": "Porque 5% dos rastros são sempre erros",
+        "why": "Erros têm política própria."
+      }
+    ]
+  },
+  "ex-sr6xwpja": {
+    "prompt": "Sobre quais destes uma política de amostragem na cauda pode decidir? Escolha todas as que se aplicam.",
+    "hint": "Ela vê o rastro inteiro.",
+    "choices": [
+      {
+        "text": "Um status de erro em qualquer span",
+        "why": "Sim."
+      },
+      {
+        "text": "A duração total do rastro",
+        "why": "Sim."
+      },
+      {
+        "text": "O valor de um atributo, como o id de um cliente",
+        "why": "Sim."
+      },
+      {
+        "text": "Se o cliente vai voltar amanhã",
+        "why": "Nada no rastro sabe isso."
+      }
+    ]
+  },
+  "ex-rp9s6yxj": {
+    "prompt": "O que o `decision_wait` define?",
+    "hint": "O Collector segura o rastro.",
+    "choices": [
+      {
+        "text": "Quanto tempo um rastro guardado fica no Jaeger",
+        "why": "Isso é a retenção do armazenamento."
+      },
+      {
+        "text": "Quanto tempo depois do primeiro span de um rastro o Collector decide",
+        "why": "Isso."
+      },
+      {
+        "text": "Quanto tempo um serviço espera antes de exportar um span",
+        "why": "Isso é o batch processor do SDK."
+      },
+      {
+        "text": "A latência acima da qual um rastro conta como lento",
+        "why": "Isso é o limite da política de latência."
+      }
+    ]
+  },
+  "ex-hrx2a9e1": {
+    "prompt": "Ponha em ordem o que acontece com um rastro na amostragem na cauda.",
+    "hint": "Do primeiro span ao armazenamento.",
+    "items": [
+      "Todo serviço registra e exporta os spans dele",
+      "O Collector os segura sob o trace id",
+      "O `decision_wait` passa",
+      "As políticas são avaliadas sobre o rastro inteiro",
+      "O rastro é mandado aos armazenamentos ou descartado"
+    ]
+  },
+  "ex-m39306d7": {
+    "prompt": "Dois Collectors ficam atrás de um balanceador comum em rodízio, os dois amostrando na cauda. O que dá errado?",
+    "hint": "Para onde vão os spans de um rastro.",
+    "choices": [
+      {
+        "text": "Nada, já que cada Collector toma a mesma decisão a partir do mesmo trace id",
+        "why": "Eles veem metades diferentes."
+      },
+      {
+        "text": "Cada um vê parte de um rastro e o julga sem o resto",
+        "why": "Isso."
+      },
+      {
+        "text": "O balanceador descarta todo span com status de erro antes de ele chegar",
+        "why": "Ele não lê spans."
+      },
+      {
+        "text": "Os dois Collectors guardam cada rastro duas vezes",
+        "why": "Cada um segura spans diferentes."
+      }
+    ]
+  },
+  "ex-kq98gssa": {
+    "prompt": "Para que serve o exportador `loadbalancing` na frente de amostradores na cauda?",
+    "hint": "Ele encaminha por uma chave.",
+    "choices": [
+      {
+        "text": "Espalha os spans por igual para cortar a memória de cada Collector",
+        "why": "Espalhar por igual é o problema."
+      },
+      {
+        "text": "Amostra rastros antes de chegarem à segunda camada",
+        "why": "Ele encaminha; não amostra."
+      },
+      {
+        "text": "Manda todos os spans de um rastro ao mesmo Collector",
+        "why": "Isso: pelo trace id."
+      },
+      {
+        "text": "Tenta de novo os spans que um Collector recusou",
+        "why": "Esse não é o propósito aqui."
+      }
+    ]
+  },
+  "ex-bc8v1czv": {
+    "prompt": "Durante uma parada o mailer tira mensagens com 26 s de atraso, e o `decision_wait` é 10 s. O que pode acontecer a um checkout guardado?",
+    "hint": "O span do mailer chega depois da decisão.",
+    "choices": [
+      {
+        "text": "A decisão dele é adiada até chegar o span do mailer",
+        "why": "A espera é fixa."
+      },
+      {
+        "text": "Acaba guardado sem os spans do mailer",
+        "why": "Isso, quando a decisão é esquecida."
+      },
+      {
+        "text": "O Collector recusa o span do mailer e registra um erro",
+        "why": "Ele o aceita."
+      },
+      {
+        "text": "O span do mailer pode ser guardado duas vezes",
+        "why": "Ele é julgado uma vez, sozinho."
+      }
+    ]
+  },
+  "ex-nv1rfg4n": {
+    "prompt": "Por que as span metrics precisam ser calculadas antes do amostrador?",
+    "hint": "O que o armazenamento tem depois.",
+    "choices": [
+      {
+        "text": "O amostrador apaga os atributos de que elas precisam",
+        "why": "Ele descarta rastros inteiros."
+      },
+      {
+        "text": "Depois dele, os spans que sobram são uma amostra enviesada, não o tráfego",
+        "why": "Isso."
+      },
+      {
+        "text": "O Prometheus recusa métricas que vêm de uma esteira com um amostrador nela",
+        "why": "Ele não tem essa regra."
+      },
+      {
+        "text": "O conector não pode rodar depois de nenhum processador na esteira do mesmo Collector",
+        "why": "Pode; a questão é o que ele vê."
+      }
+    ]
+  },
+  "ex-5qj1yzy8": {
+    "prompt": "Com a amostragem na cauda do laboratório, uma taxa de erros é calculada a partir dos rastros no Jaeger. Como ela se compara com a verdade?",
+    "hint": "Todo erro é guardado, e 5% do resto.",
+    "choices": [
+      {
+        "text": "É exata, porque todo erro é guardado",
+        "why": "O denominador não é."
+      },
+      {
+        "text": "É mais ou menos um décimo da verdade",
+        "why": "Os erros estão todos lá."
+      },
+      {
+        "text": "É várias vezes alta demais",
+        "why": "Isso."
+      },
+      {
+        "text": "Não pode ser calculada de jeito nenhum",
+        "why": "Pode, errada."
+      }
+    ]
+  },
+  "ex-a939eam6": {
+    "prompt": "Um span se chama `GET /orders/1047` em vez de `GET /orders/{id}`. O que o conector `spanmetrics` faz disso?",
+    "hint": "A aula 2 e a aula 6.",
+    "choices": [
+      {
+        "text": "Uma série para todos os pedidos, já que o conector tira números",
+        "why": "Ele não reescreve nomes."
+      },
+      {
+        "text": "Uma série nova para cada pedido",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada, já que o conector pula spans de servidor",
+        "why": "Ele os conta."
+      },
+      {
+        "text": "Um erro de nome de span inválido",
+        "why": "O nome é válido, só caro."
+      }
+    ]
+  },
+  "ex-8zzkp4jy": {
+    "prompt": "Um exemplar no histograma do `orders` abre como \"trace not found\" com amostragem na cauda. Por quê?",
+    "hint": "Quem escolheu o exemplar, e quando?",
+    "choices": [
+      {
+        "text": "O histograma o escolheu antes de o amostrador descartar o rastro",
+        "why": "Isso."
+      },
+      {
+        "text": "O Prometheus corrompe os trace ids que guarda",
+        "why": "Os ids estão intactos."
+      },
+      {
+        "text": "Exemplares nomeiam spans, não rastros",
+        "why": "Eles levam um trace id."
+      },
+      {
+        "text": "O rastro foi guardado mas ainda não indexado",
+        "why": "Os exemplares eram velhos o bastante."
+      }
+    ]
+  },
+  "ex-r86sbvgb": {
+    "prompt": "Com amostragem na cabeça, como fazer os exemplares apontarem só para rastros guardados?",
+    "hint": "A decisão é conhecida durante a requisição.",
+    "choices": [
+      {
+        "text": "Subir a fração de amostragem para metade, para a maioria dos exemplares achar o rastro",
+        "why": "Metade ainda faltaria."
+      },
+      {
+        "text": "Anexar um exemplar só quando o span é amostrado",
+        "why": "Isso."
+      },
+      {
+        "text": "Guardar exemplares no Jaeger em vez do Prometheus",
+        "why": "Isso não muda qual rastro existe."
+      },
+      {
+        "text": "Tirar a parte do `#` da saída OpenMetrics",
+        "why": "Isso tira os exemplares de vez."
+      }
+    ]
+  },
+  "ex-k7tnfxer": {
+    "prompt": "Uma equipe amostra 1% na cabeça e reclama que os checkouts que falharam nunca estão no Jaeger. Qual é a melhor mudança?",
+    "hint": "Quem pode saber que uma requisição falhou?",
+    "choices": [
+      {
+        "text": "Subir a fração na cabeça para 50%",
+        "why": "Metade das falhas ainda some, a cinquenta vezes o custo."
+      },
+      {
+        "text": "Pôr `always_on` no serviço que falha",
+        "why": "Isso parte os rastros ao meio."
+      },
+      {
+        "text": "Registrar tudo e amostrar na cauda, guardando todo erro",
+        "why": "Isso."
+      },
+      {
+        "text": "Contar falhas pelos rastros em vez dos logs, que também são amostrados",
+        "why": "Contar é trabalho das métricas."
+      }
+    ]
+  },
+  "ex-3wmxee4s": {
+    "prompt": "Ligue cada pergunta ao sinal que deve respondê-la com amostragem.",
+    "hint": "Contagens das métricas, histórias dos rastros.",
+    "pairs": [
+      {
+        "left": "Quantos checkouts falharam na última hora?",
+        "right": "span metrics ou os contadores do próprio serviço"
+      },
+      {
+        "left": "Por que este checkout falhou?",
+        "right": "um rastro guardado"
+      },
+      {
+        "left": "O que cada serviço disse sobre ele?",
+        "right": "as linhas de log dele, pelo trace id"
+      },
+      {
+        "left": "Como é um checkout normal?",
+        "right": "a base que o amostrador guarda"
+      }
+    ]
+  },
+  "ex-j7gse0cw": {
+    "prompt": "Ordene estas configurações da mais barata para a mais cara no que chega ao Collector.",
+    "hint": "A amostragem na cabeça descarta na origem.",
+    "items": [
+      "Amostragem na cabeça a 1%",
+      "Amostragem na cabeça a 10%",
+      "Amostragem na cauda de todo rastro"
+    ]
+  }
+}

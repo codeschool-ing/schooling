@@ -1,0 +1,768 @@
+[
+  {
+    "id": "ex-8vm1ew9p",
+    "version": 1,
+    "section": "why-sample",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are traces the signal that usually gets sampled, rather than metrics?",
+    "hint": "What does each one grow with?",
+    "choices": [
+      {
+        "text": "Traces are less useful than metrics during an incident",
+        "correct": false,
+        "why": "They answer a different question, not a lesser one."
+      },
+      {
+        "text": "A trace grows with every request; a metric grows with its labels",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Metrics cannot be sampled at all",
+        "correct": false,
+        "why": "The reason is cost, not possibility."
+      },
+      {
+        "text": "Trace stores refuse more than a fixed number of spans",
+        "correct": false,
+        "why": "No such limit was the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-shtgh482",
+    "version": 1,
+    "section": "why-sample",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lab measured 4.5 checkouts and 35 spans a second. About how many spans does one checkout produce? Answer to the nearest whole number.",
+    "hint": "Divide.",
+    "value": 8,
+    "tolerance": 1,
+    "unit": "spans"
+  },
+  {
+    "id": "ex-fffvzrkw",
+    "version": 1,
+    "section": "why-sample",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the main trade between deciding at the head and at the tail?",
+    "hint": "When each decides, and what it knows then.",
+    "choices": [
+      {
+        "text": "The head is cheap and blind; the tail sees outcomes and holds every span",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The head keeps errors; the tail keeps a fixed fraction",
+        "correct": false,
+        "why": "It is the other way round."
+      },
+      {
+        "text": "The head needs a Collector to decide; the tail needs only each service's SDK",
+        "correct": false,
+        "why": "The other way round."
+      },
+      {
+        "text": "They differ only in the fraction they keep",
+        "correct": false,
+        "why": "They differ in what they can know."
+      }
+    ]
+  },
+  {
+    "id": "ex-nb400zhg",
+    "version": 1,
+    "section": "head-sampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `traceparent` ends in `-02`. What does the receiving service with a parent-based sampler do?",
+    "hint": "The low bit.",
+    "choices": [
+      {
+        "text": "It records the trace, since `02` is above zero",
+        "correct": false,
+        "why": "The low bit is what counts."
+      },
+      {
+        "text": "It does not record it: the sampled bit is off",
+        "correct": true,
+        "why": "Right; `2` is the random-id flag."
+      },
+      {
+        "text": "It makes its own decision with a fresh random number",
+        "correct": false,
+        "why": "A parent-based sampler follows the parent."
+      },
+      {
+        "text": "It rejects the request as malformed",
+        "correct": false,
+        "why": "`02` is valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-9mkvpx6x",
+    "version": 1,
+    "section": "head-sampling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How does `TraceIdRatioBased` decide whether to keep a trace?",
+    "hint": "Two services reach the same answer without talking.",
+    "choices": [
+      {
+        "text": "It draws a fresh random number for every new span that any service starts",
+        "correct": false,
+        "why": "Then two services would disagree."
+      },
+      {
+        "text": "It keeps every tenth trace in the order they start",
+        "correct": false,
+        "why": "It keeps no counter."
+      },
+      {
+        "text": "It reads the trace id as a number and keeps it below a bound",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It asks the Collector how many traces it has stored",
+        "correct": false,
+        "why": "It asks nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqwd0mn1",
+    "version": 1,
+    "section": "head-sampling",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The sampler `parentbased_traceidratio` follows a parent if there is one, and otherwise keeps a fixed ___ of root traces.",
+    "hint": "A ratio.",
+    "blanks": [
+      {
+        "accept": [
+          "fraction",
+          "proportion",
+          "ratio"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3tre4nw4",
+    "version": 1,
+    "section": "head-sampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under head sampling at one in ten, a log line's trace id leads to \"trace not found\". What is the likeliest reason?",
+    "hint": "Every line carries an id.",
+    "choices": [
+      {
+        "text": "The log line was written by a service with no SDK installed at all, so no trace exists",
+        "correct": false,
+        "why": "It has an id, so it has an SDK."
+      },
+      {
+        "text": "The trace was not sampled, though the line still carries its id",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Jaeger has crashed and lost every trace it held",
+        "correct": false,
+        "why": "Other ids are found."
+      },
+      {
+        "text": "The id in the log is the span id, not the trace id",
+        "correct": false,
+        "why": "The field is the trace id."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcgvvdee",
+    "version": 1,
+    "section": "head-sampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is head sampling's main weakness?",
+    "hint": "When it decides.",
+    "choices": [
+      {
+        "text": "It costs more than tail sampling",
+        "correct": false,
+        "why": "It is the cheaper one."
+      },
+      {
+        "text": "It needs every service to be restarted daily so that the fraction applies",
+        "correct": false,
+        "why": "No such need."
+      },
+      {
+        "text": "It drops slow and failed requests as readily as fast ones",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It cannot be configured without changing code",
+        "correct": false,
+        "why": "The environment is enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-p514nszr",
+    "version": 1,
+    "section": "the-flag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The storefront samples one in ten, and `orders` is set to `always_on`. What appears in the store?",
+    "hint": "Who records what.",
+    "choices": [
+      {
+        "text": "Exactly the same traces as before the change",
+        "correct": false,
+        "why": "orders now records the dropped ones too."
+      },
+      {
+        "text": "Traces that start at orders, with a parent that was never exported",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An error from the SDK refusing the setting",
+        "correct": false,
+        "why": "The setting is valid."
+      },
+      {
+        "text": "Nothing from orders at all",
+        "correct": false,
+        "why": "It records everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4cxe651",
+    "version": 1,
+    "section": "the-flag",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What rule keeps head-sampled traces whole?",
+    "hint": "One decides, the rest follow.",
+    "choices": [
+      {
+        "text": "Every service samples its own fraction independently",
+        "correct": false,
+        "why": "That splits traces."
+      },
+      {
+        "text": "Sample at the root; parent-based samplers everywhere else",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Keep `always_on` in every service that is downstream of the root",
+        "correct": false,
+        "why": "That records the dropped traces' middles."
+      },
+      {
+        "text": "Sample only in the Collector",
+        "correct": false,
+        "why": "That is tail sampling, a different scheme."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfwr9y0a",
+    "version": 1,
+    "section": "the-flag",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Upstream keeps 50% and downstream keeps 10%, both with plain `TraceIdRatioBased` on the same trace id. What happens to the traces between 10% and 50%?",
+    "hint": "Same id, different bounds.",
+    "choices": [
+      {
+        "text": "Both keep them, since the ids are the same",
+        "correct": false,
+        "why": "The bounds differ."
+      },
+      {
+        "text": "Neither keeps them",
+        "correct": false,
+        "why": "Upstream does."
+      },
+      {
+        "text": "Upstream keeps them and downstream drops its part",
+        "correct": true,
+        "why": "Right: broken traces."
+      },
+      {
+        "text": "Downstream keeps them and upstream drops its part",
+        "correct": false,
+        "why": "Downstream's bound is lower."
+      }
+    ]
+  },
+  {
+    "id": "ex-mktz45wq",
+    "version": 1,
+    "section": "tail-sampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lab's tail sampler keep 5% of ordinary traces as well as errors and slow ones?",
+    "hint": "Compared with what?",
+    "choices": [
+      {
+        "text": "To have a baseline of normal traces to compare problems with",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because the processor requires at least three policies before it will start",
+        "correct": false,
+        "why": "One is enough."
+      },
+      {
+        "text": "To keep span metrics accurate",
+        "correct": false,
+        "why": "Those count every span before sampling."
+      },
+      {
+        "text": "Because 5% of traces are always errors",
+        "correct": false,
+        "why": "Errors have their own policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-sr6xwpja",
+    "version": 1,
+    "section": "tail-sampling",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a tail sampling policy decide on? Choose all that apply.",
+    "hint": "It sees the whole trace.",
+    "choices": [
+      {
+        "text": "An error status on any span",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The trace's total duration",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "An attribute's value, such as a customer id",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Whether the customer will come back tomorrow",
+        "correct": false,
+        "why": "Nothing in the trace knows that."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp9s6yxj",
+    "version": 1,
+    "section": "tail-sampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `decision_wait` set?",
+    "hint": "The Collector holds the trace.",
+    "choices": [
+      {
+        "text": "How long a kept trace stays in Jaeger",
+        "correct": false,
+        "why": "That is the store's retention."
+      },
+      {
+        "text": "How long after a trace's first span the Collector decides",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "How long a service waits before exporting a span",
+        "correct": false,
+        "why": "That is the batch processor in the SDK."
+      },
+      {
+        "text": "The latency above which a trace counts as slow",
+        "correct": false,
+        "why": "That is the latency policy's threshold."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrx2a9e1",
+    "version": 1,
+    "section": "tail-sampling",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to one trace under tail sampling in order.",
+    "hint": "From the first span to the store.",
+    "items": [
+      "Every service records and exports its spans",
+      "The Collector holds them under the trace id",
+      "`decision_wait` passes",
+      "The policies are evaluated on the whole trace",
+      "The trace is sent to the stores or dropped"
+    ]
+  },
+  {
+    "id": "ex-m39306d7",
+    "version": 1,
+    "section": "what-tail-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two Collectors sit behind an ordinary round-robin load balancer, both tail sampling. What goes wrong?",
+    "hint": "Where the spans of one trace go.",
+    "choices": [
+      {
+        "text": "Nothing, since each Collector makes the same decision from the same trace id",
+        "correct": false,
+        "why": "They see different halves."
+      },
+      {
+        "text": "Each sees part of a trace and judges it without the rest",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The load balancer drops every span that carries an error status before it arrives",
+        "correct": false,
+        "why": "It does not read spans."
+      },
+      {
+        "text": "The two Collectors keep each trace twice",
+        "correct": false,
+        "why": "Each holds different spans."
+      }
+    ]
+  },
+  {
+    "id": "ex-kq98gssa",
+    "version": 1,
+    "section": "what-tail-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the `loadbalancing` exporter for, in front of tail samplers?",
+    "hint": "It routes by one key.",
+    "choices": [
+      {
+        "text": "It spreads spans evenly to cut each Collector's memory",
+        "correct": false,
+        "why": "Even spreading is the problem."
+      },
+      {
+        "text": "It samples traces before they reach the second layer",
+        "correct": false,
+        "why": "It routes; it does not sample."
+      },
+      {
+        "text": "It sends all spans of a trace to the same Collector",
+        "correct": true,
+        "why": "Right: by trace id."
+      },
+      {
+        "text": "It retries spans that a Collector refused",
+        "correct": false,
+        "why": "That is not its purpose here."
+      }
+    ]
+  },
+  {
+    "id": "ex-bc8v1czv",
+    "version": 1,
+    "section": "what-tail-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During an outage the mailer takes messages 26 s late, and `decision_wait` is 10 s. What can happen to a kept checkout?",
+    "hint": "The mailer's span arrives after the decision.",
+    "choices": [
+      {
+        "text": "Its decision is delayed until the mailer's span arrives",
+        "correct": false,
+        "why": "The wait is fixed."
+      },
+      {
+        "text": "It ends up stored without the mailer's spans",
+        "correct": true,
+        "why": "Right, once the decision is forgotten."
+      },
+      {
+        "text": "The Collector refuses the mailer's span and logs an error",
+        "correct": false,
+        "why": "It accepts it."
+      },
+      {
+        "text": "The mailer's span may be kept twice",
+        "correct": false,
+        "why": "It is judged once, alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-nv1rfg4n",
+    "version": 1,
+    "section": "span-metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must span metrics be computed before the sampler?",
+    "hint": "What the store holds afterwards.",
+    "choices": [
+      {
+        "text": "The sampler deletes the attributes they need",
+        "correct": false,
+        "why": "It drops whole traces."
+      },
+      {
+        "text": "After it, the spans left are a biased sample, not the traffic",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Prometheus refuses metrics that come from a pipeline with a sampler in it",
+        "correct": false,
+        "why": "It has no such rule."
+      },
+      {
+        "text": "The connector cannot run after any processor in the same Collector's pipeline",
+        "correct": false,
+        "why": "It can; the point is what it sees."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qj1yzy8",
+    "version": 1,
+    "section": "span-metrics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under the lab's tail sampling, an error ratio is computed from the traces in Jaeger. How does it compare with the truth?",
+    "hint": "Every error is kept, and 5% of the rest.",
+    "choices": [
+      {
+        "text": "It is exact, because every error is kept",
+        "correct": false,
+        "why": "The denominator is not."
+      },
+      {
+        "text": "It is about one tenth of the truth",
+        "correct": false,
+        "why": "The errors are all there."
+      },
+      {
+        "text": "It is several times too high",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It cannot be computed at all",
+        "correct": false,
+        "why": "It can, wrongly."
+      }
+    ]
+  },
+  {
+    "id": "ex-a939eam6",
+    "version": 1,
+    "section": "span-metrics",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A span is named `GET /orders/1047` instead of `GET /orders/{id}`. What does the `spanmetrics` connector make of it?",
+    "hint": "Lesson 2 and lesson 6.",
+    "choices": [
+      {
+        "text": "One series for all orders, as the connector strips numbers",
+        "correct": false,
+        "why": "It does not rewrite names."
+      },
+      {
+        "text": "A new series for every order",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, as the connector skips server spans",
+        "correct": false,
+        "why": "It counts them."
+      },
+      {
+        "text": "An error for an invalid span name",
+        "correct": false,
+        "why": "The name is valid, just costly."
+      }
+    ]
+  },
+  {
+    "id": "ex-8zzkp4jy",
+    "version": 1,
+    "section": "what-sampling-breaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An exemplar on `orders`' histogram opens to \"trace not found\" under tail sampling. Why?",
+    "hint": "Who chose the exemplar, and when?",
+    "choices": [
+      {
+        "text": "The histogram chose it before the sampler dropped the trace",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Prometheus corrupts trace ids it stores",
+        "correct": false,
+        "why": "The ids are intact."
+      },
+      {
+        "text": "Exemplars name spans, not traces",
+        "correct": false,
+        "why": "They carry a trace id."
+      },
+      {
+        "text": "The trace was kept but not yet indexed",
+        "correct": false,
+        "why": "The exemplars were old enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-r86sbvgb",
+    "version": 1,
+    "section": "what-sampling-breaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under head sampling, how can exemplars be made to point only at kept traces?",
+    "hint": "The decision is known during the request.",
+    "choices": [
+      {
+        "text": "Raise the sampling fraction to one half, so most exemplars find their trace",
+        "correct": false,
+        "why": "Half would still be missing."
+      },
+      {
+        "text": "Attach an exemplar only when the span is sampled",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Store exemplars in Jaeger instead of Prometheus",
+        "correct": false,
+        "why": "That changes nothing about which trace exists."
+      },
+      {
+        "text": "Drop the `#` part from the OpenMetrics output",
+        "correct": false,
+        "why": "That removes exemplars altogether."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7tnfxer",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team head-samples 1% and complains that failed checkouts are never in Jaeger. What is the best change?",
+    "hint": "Who can know a request failed?",
+    "choices": [
+      {
+        "text": "Raise the head fraction to 50%",
+        "correct": false,
+        "why": "Half the failures still vanish, at fifty times the cost."
+      },
+      {
+        "text": "Set `always_on` in the service that fails",
+        "correct": false,
+        "why": "That breaks traces in half."
+      },
+      {
+        "text": "Record everything and tail-sample, keeping every error",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Count failures from the traces instead of from the logs, which are sampled too",
+        "correct": false,
+        "why": "Counting is the metrics' job."
+      }
+    ]
+  },
+  {
+    "id": "ex-3wmxee4s",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the signal that should answer it under sampling.",
+    "hint": "Counts from metrics, stories from traces.",
+    "pairs": [
+      {
+        "left": "How many checkouts failed in the last hour?",
+        "right": "span metrics or the service's own counters"
+      },
+      {
+        "left": "Why did this one checkout fail?",
+        "right": "a kept trace"
+      },
+      {
+        "left": "What did each service say about it?",
+        "right": "its log lines, by trace id"
+      },
+      {
+        "left": "What does a normal checkout look like?",
+        "right": "the baseline the sampler keeps"
+      }
+    ]
+  },
+  {
+    "id": "ex-j7gse0cw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these setups from cheapest to most expensive in what reaches the Collector.",
+    "hint": "Head sampling drops at the source.",
+    "items": [
+      "Head sampling at 1%",
+      "Head sampling at 10%",
+      "Tail sampling of every trace"
+    ]
+  }
+]

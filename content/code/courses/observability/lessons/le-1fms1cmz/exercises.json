@@ -1,0 +1,777 @@
+[
+  {
+    "id": "ex-31bypb0q",
+    "version": 1,
+    "section": "api-and-sdk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`no_sdk.py` opened a span with only the API installed. What did it record?",
+    "hint": "Look at the trace id it printed.",
+    "choices": [
+      {
+        "text": "An error saying no SDK was configured",
+        "correct": false,
+        "why": "The API never raises for this; silence is its design."
+      },
+      {
+        "text": "Nothing: a non-recording span with a zero trace id",
+        "correct": true,
+        "why": "Right. Without an SDK the API hands back spans that do nothing, cheaply."
+      },
+      {
+        "text": "A span kept in memory until an SDK is installed later",
+        "correct": false,
+        "why": "Nothing is kept; there is nowhere for it to go."
+      },
+      {
+        "text": "A span printed to the console by default",
+        "correct": false,
+        "why": "Printing needs the console exporter, which is part of the SDK."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jbdaph3",
+    "version": 1,
+    "section": "api-and-sdk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is it useful that the API alone records nothing?",
+    "hint": "Think of a library author.",
+    "choices": [
+      {
+        "text": "It makes spans faster to read in a backend",
+        "correct": false,
+        "why": "No span reaches any backend."
+      },
+      {
+        "text": "It lets the SDK be installed without restarting",
+        "correct": false,
+        "why": "The SDK is set up when the program starts."
+      },
+      {
+        "text": "A library ships its instrumentation to people who never set OpenTelemetry up, at almost no cost to them",
+        "correct": true,
+        "why": "Right. The calls stay in the library and cost nearly nothing until someone installs an SDK."
+      },
+      {
+        "text": "It keeps personal data out of traces",
+        "correct": false,
+        "why": "Whether a span records has nothing to do with what is put in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1xs412j",
+    "version": 1,
+    "section": "api-and-sdk",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each SDK piece to its job.",
+    "hint": "The figure in the section.",
+    "pairs": [
+      {
+        "left": "TracerProvider",
+        "right": "Creates real spans, and carries the resource"
+      },
+      {
+        "left": "span processor",
+        "right": "Decides when a finished span is exported"
+      },
+      {
+        "left": "exporter",
+        "right": "Sends or prints the span"
+      },
+      {
+        "left": "resource",
+        "right": "Says who produced the spans, such as `service.name`"
+      }
+    ],
+    "right_distractors": [
+      "Chooses which spans the backend shows first"
+    ]
+  },
+  {
+    "id": "ex-0qv0gr9c",
+    "version": 1,
+    "section": "api-and-sdk",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The resource attribute every backend groups spans by is `service.___`.",
+    "hint": "What the service is called.",
+    "blanks": [
+      {
+        "accept": [
+          "name"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ha0w0vw8",
+    "version": 1,
+    "section": "api-and-sdk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The team decides to send traces to a different backend. What has to change in the storefront's checkout code?",
+    "hint": "The checkout code uses only the API.",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Where spans go is the SDK's configuration, set once at start-up."
+      },
+      {
+        "text": "Every `start_as_current_span` call",
+        "correct": false,
+        "why": "Those are API calls and are the same whatever the backend."
+      },
+      {
+        "text": "The attribute names, to match the new backend",
+        "correct": false,
+        "why": "Semantic conventions are shared by every backend."
+      },
+      {
+        "text": "The `kind=SpanKind.SERVER` argument",
+        "correct": false,
+        "why": "The kind describes the work, not the destination."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vta9ab0",
+    "version": 1,
+    "section": "a-first-span",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `first_span.py`'s output, `parent_id` is `null`. What does that make the span?",
+    "hint": "Where does a trace start?",
+    "choices": [
+      {
+        "text": "A span that failed to export",
+        "correct": false,
+        "why": "It exported: it is printed."
+      },
+      {
+        "text": "The root of its trace",
+        "correct": true,
+        "why": "Right. A span with no parent is where its trace begins."
+      },
+      {
+        "text": "A span from another service",
+        "correct": false,
+        "why": "A remote parent would still be a parent id."
+      },
+      {
+        "text": "An internal span the backend will hide",
+        "correct": false,
+        "why": "`INTERNAL` is its kind, and nothing is hidden."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1qy9c3h",
+    "version": 1,
+    "section": "a-first-span",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The span started at `03:33:35.497358` and ended at `03:33:35.497481`. How many microseconds did it last?",
+    "hint": "Subtract the last six digits.",
+    "value": 123,
+    "tolerance": 0,
+    "unit": "microseconds"
+  },
+  {
+    "id": "ex-h935wfr1",
+    "version": 1,
+    "section": "a-first-span",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why are trace and span ids random rather than numbered in sequence?",
+    "hint": "Who would hand out the next number?",
+    "choices": [
+      {
+        "text": "Random numbers compress better in storage",
+        "correct": false,
+        "why": "They compress worse, if anything."
+      },
+      {
+        "text": "So that nobody can guess how many orders the shop takes",
+        "correct": false,
+        "why": "That would be a side effect, not the reason."
+      },
+      {
+        "text": "The W3C forbids counters in headers",
+        "correct": false,
+        "why": "There is no such rule."
+      },
+      {
+        "text": "Every process can start traces without asking anyone else for a number",
+        "correct": true,
+        "why": "Right. A counter would need one place to hand out numbers, and every service would depend on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hj1jwhbm",
+    "version": 1,
+    "section": "a-first-span",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nobody set `service.instance.id`, yet the resource carried one. What is it for?",
+    "hint": "There can be more than one copy of a service.",
+    "choices": [
+      {
+        "text": "Telling apart two running copies of the same service",
+        "correct": true,
+        "why": "Right. The SDK generates one per run of the program."
+      },
+      {
+        "text": "Linking the span to its parent span when that parent runs in another service",
+        "correct": false,
+        "why": "Parents are linked by span ids, not by the resource."
+      },
+      {
+        "text": "Identifying the machine's operating system",
+        "correct": false,
+        "why": "That would be other resource attributes, which this script did not set."
+      },
+      {
+        "text": "Counting how many spans the process has made",
+        "correct": false,
+        "why": "It is an id, not a count."
+      }
+    ]
+  },
+  {
+    "id": "ex-sj4d8wt1",
+    "version": 1,
+    "section": "nesting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `nested.py`, `price()` never receives the basket's span. How does each lookup end up as its child?",
+    "hint": "What does `start_as_current_span` read?",
+    "choices": [
+      {
+        "text": "The tracer remembers the last span it created",
+        "correct": false,
+        "why": "It uses the current span, not the last one created; a finished span is not a parent."
+      },
+      {
+        "text": "The basket's span is current while `price()` runs",
+        "correct": true,
+        "why": "Right. `start_as_current_span` takes the current span as parent."
+      },
+      {
+        "text": "The exporter rebuilds the tree from start times",
+        "correct": false,
+        "why": "The parent id is set when the span starts, not guessed later."
+      },
+      {
+        "text": "Python passes the parent implicitly, as a hidden argument to every function",
+        "correct": false,
+        "why": "There is no hidden argument; the current span lives in a context variable."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dq9tm9q",
+    "version": 1,
+    "section": "nesting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The console printed the two lookups before the basket. Why?",
+    "hint": "When is a span exported?",
+    "choices": [
+      {
+        "text": "The console sorts spans by span id",
+        "correct": false,
+        "why": "The ids are random; no sort is applied."
+      },
+      {
+        "text": "The basket was exported late because it was larger",
+        "correct": false,
+        "why": "Size has nothing to do with it."
+      },
+      {
+        "text": "A span is exported when it ends, and the basket ended last",
+        "correct": true,
+        "why": "Right, which is why a backend must rebuild the tree from ids and never from arrival order."
+      },
+      {
+        "text": "Child spans always have a higher priority than their parents in the processor",
+        "correct": false,
+        "why": "Processors have no priorities."
+      }
+    ]
+  },
+  {
+    "id": "ex-kyj2qaha",
+    "version": 1,
+    "section": "nesting",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The two lookups took 10.2 ms each and the basket 20.7 ms. How many milliseconds of the basket were spent outside both lookups?",
+    "hint": "Subtract both.",
+    "value": 0.3,
+    "tolerance": 0.05,
+    "unit": "milliseconds"
+  },
+  {
+    "id": "ex-z8yx20w0",
+    "version": 1,
+    "section": "nesting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service handles each request by handing the work to a new `threading.Thread`. Spans created in that thread appear as roots of new traces. What happened?",
+    "hint": "What does a new thread start with?",
+    "choices": [
+      {
+        "text": "The SDK refuses to record from more than one thread",
+        "correct": false,
+        "why": "It records from any thread; the parent is what went missing."
+      },
+      {
+        "text": "The new thread started with no current span, so nothing was there to be the parent",
+        "correct": true,
+        "why": "Right. The context has to be handed to the thread explicitly."
+      },
+      {
+        "text": "The batch processor reorders spans across threads",
+        "correct": false,
+        "why": "Order does not decide parents; ids do."
+      },
+      {
+        "text": "Threads get a new `service.instance.id`",
+        "correct": false,
+        "why": "The resource belongs to the process, not the thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jw9mffq",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which attribute belongs to OpenTelemetry's semantic conventions rather than to the shop?",
+    "hint": "Which one would any web service use?",
+    "choices": [
+      {
+        "text": "`shop.sku`",
+        "correct": false,
+        "why": "The `shop.` prefix marks the shop's own."
+      },
+      {
+        "text": "`http.route`",
+        "correct": true,
+        "why": "Right. It means the same thing in every service and every backend."
+      },
+      {
+        "text": "`shop.total_cents`",
+        "correct": false,
+        "why": "A shop attribute; no convention knows about totals in cents."
+      },
+      {
+        "text": "`shop.quantity`",
+        "correct": false,
+        "why": "Again the shop's prefix."
+      }
+    ]
+  },
+  {
+    "id": "ex-ms82tvfy",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the shop's own attributes start with `shop.`?",
+    "hint": "Conventions grow.",
+    "choices": [
+      {
+        "text": "Jaeger only stores an attribute whose name starts with a prefix of some kind",
+        "correct": false,
+        "why": "It stores any key."
+      },
+      {
+        "text": "Prefixed attributes are indexed for search",
+        "correct": false,
+        "why": "A prefix changes nothing about indexing."
+      },
+      {
+        "text": "So that a convention published later never clashes with them",
+        "correct": true,
+        "why": "Right. `sku` alone could one day mean something else in somebody else's convention."
+      },
+      {
+        "text": "The prefix encrypts their values",
+        "correct": false,
+        "why": "A name encrypts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nazh1h76",
+    "version": 1,
+    "section": "attributes",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these should never be set as a span attribute? Choose all that apply.",
+    "hint": "Where does a trace travel?",
+    "choices": [
+      {
+        "text": "The card number from the request body",
+        "correct": true,
+        "why": "Yes. A trace is stored, shipped and read widely."
+      },
+      {
+        "text": "The session token from a header",
+        "correct": true,
+        "why": "Yes. Anyone reading the trace could use it."
+      },
+      {
+        "text": "The order id",
+        "correct": false,
+        "why": "An id is safe and is exactly what makes one order findable."
+      },
+      {
+        "text": "The product's SKU",
+        "correct": false,
+        "why": "A product code carries nothing personal."
+      },
+      {
+        "text": "The customer's password",
+        "correct": true,
+        "why": "Yes, never, anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezasex54",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a span carry an order id as an attribute when lesson 6 warns against an order id as a metric label?",
+    "hint": "What does each extra value cost?",
+    "choices": [
+      {
+        "text": "Attributes are dropped by the Collector, labels are not",
+        "correct": false,
+        "why": "The Collector forwards attributes."
+      },
+      {
+        "text": "Spans are sampled, so ids never accumulate",
+        "correct": false,
+        "why": "The lab keeps every span; sampling is not the reason."
+      },
+      {
+        "text": "A span is stored once whatever its values; a label value makes a new series that lives on",
+        "correct": true,
+        "why": "Right. That is why high cardinality belongs in attributes."
+      },
+      {
+        "text": "Metrics cannot hold numbers above a million",
+        "correct": false,
+        "why": "Values are not the problem; distinct label values are."
+      }
+    ]
+  },
+  {
+    "id": "ex-870wnzax",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which call marks the storefront's span as failed?",
+    "hint": "One records, the other judges.",
+    "choices": [
+      {
+        "text": "`span.set_status(Status(StatusCode.ERROR, ...))`",
+        "correct": true,
+        "why": "Right. Backends turn that into `error: true`."
+      },
+      {
+        "text": "`span.record_exception(e)`",
+        "correct": false,
+        "why": "That adds an event with the exception; it does not by itself mark failure."
+      },
+      {
+        "text": "`log.error(...)`",
+        "correct": false,
+        "why": "A log line is a separate signal."
+      },
+      {
+        "text": "`return {\"error\": ...}, 503`",
+        "correct": false,
+        "why": "The response code reaches the customer; the span's status is set separately."
+      }
+    ]
+  },
+  {
+    "id": "ex-92gc7jjv",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a span event?",
+    "hint": "The exception was one.",
+    "choices": [
+      {
+        "text": "A child span with no duration",
+        "correct": false,
+        "why": "Events are not spans and have no id."
+      },
+      {
+        "text": "A log line copied into the trace by Loki",
+        "correct": false,
+        "why": "Loki stores logs; it does not write into traces."
+      },
+      {
+        "text": "A timestamped note inside a span",
+        "correct": true,
+        "why": "Right, with attributes of its own, like the exception's type."
+      },
+      {
+        "text": "An alert raised from a failed span",
+        "correct": false,
+        "why": "Alerts come from rules, lesson 5 onward."
+      }
+    ]
+  },
+  {
+    "id": "ex-ed9gxdv9",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The storefront answers `404` for an unknown product. Following OpenTelemetry's HTTP conventions, which span is marked as an error?",
+    "hint": "Who made the mistake?",
+    "choices": [
+      {
+        "text": "Both the client's and the server's",
+        "correct": false,
+        "why": "That is the rule for a `5xx`."
+      },
+      {
+        "text": "Only the server's, because it refused",
+        "correct": false,
+        "why": "Refusing correctly is the server doing its job."
+      },
+      {
+        "text": "Only the client's, if the client is instrumented",
+        "correct": true,
+        "why": "Right. A `4xx` is the caller's failure; the server's status stays unset."
+      },
+      {
+        "text": "Neither, because `404` is not a failure for anyone",
+        "correct": false,
+        "why": "It is a failure for the client that asked for something that does not exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-b73bmee3",
+    "version": 1,
+    "section": "exporting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cost.py` exported 2000 spans in 1.85 s with the simple processor and 0.08 s with the batch one. Where did the simple processor's extra time go?",
+    "hint": "When does each one send?",
+    "choices": [
+      {
+        "text": "Compressing each span before sending",
+        "correct": false,
+        "why": "Compression is not what differs between the two."
+      },
+      {
+        "text": "An HTTP round trip to the Collector inside every `with` block",
+        "correct": true,
+        "why": "Right: the code waited for the network once per span."
+      },
+      {
+        "text": "Creating 2000 threads, one per span",
+        "correct": false,
+        "why": "Neither processor creates a thread per span."
+      },
+      {
+        "text": "Retrying spans the Collector refused",
+        "correct": false,
+        "why": "Nothing was refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-zjx40ngf",
+    "version": 1,
+    "section": "exporting",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service using the batch processor is killed with `kill -9`. Which statements are true? Choose all that apply.",
+    "hint": "Where are spans waiting between sends?",
+    "choices": [
+      {
+        "text": "Spans still in the queue are lost",
+        "correct": true,
+        "why": "Yes. Nothing runs after a `kill -9`."
+      },
+      {
+        "text": "The lost spans are from its last seconds",
+        "correct": true,
+        "why": "Yes, often the ones that would explain the death."
+      },
+      {
+        "text": "The SDK's exit handler flushes them first",
+        "correct": false,
+        "why": "Exit handlers run on a normal exit, not on `kill -9`."
+      },
+      {
+        "text": "The Collector asks the process for its unsent spans",
+        "correct": false,
+        "why": "The Collector only receives; it never pulls from a service."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqmr7hh2",
+    "version": 1,
+    "section": "exporting",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The environment variable that tells the OTLP exporter where to send is `OTEL_EXPORTER_OTLP____`.",
+    "hint": "The address it points at.",
+    "blanks": [
+      {
+        "accept": [
+          "_ENDPOINT"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cd7fjprr",
+    "version": 1,
+    "section": "exporting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Collector stops answering for ten minutes. What does the Python batch processor do with new spans?",
+    "hint": "The queue is bounded.",
+    "choices": [
+      {
+        "text": "Keeps every span in memory until the Collector returns",
+        "correct": false,
+        "why": "That would grow without limit and could take the service down."
+      },
+      {
+        "text": "Blocks each request until there is room",
+        "correct": false,
+        "why": "Telemetry never holds up the service."
+      },
+      {
+        "text": "Keeps up to its limit and drops the rest",
+        "correct": true,
+        "why": "Right: 2048 by default. Losing telemetry is the right failure."
+      },
+      {
+        "text": "Writes them to a file and sends them later",
+        "correct": false,
+        "why": "The SDK has no disk queue."
+      }
+    ]
+  },
+  {
+    "id": "ex-p622j8xp",
+    "version": 1,
+    "section": "naming",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Fifty orders produced fifty operations in Jaeger. Which name would have produced one?",
+    "hint": "A template, not a value.",
+    "choices": [
+      {
+        "text": "`GET /orders/1011`",
+        "correct": false,
+        "why": "That is the problem: the id is in the name."
+      },
+      {
+        "text": "`GET order 1011 for kettle`",
+        "correct": false,
+        "why": "Still a value in the name."
+      },
+      {
+        "text": "`GET /orders/{id}`",
+        "correct": true,
+        "why": "Right, with the id in an attribute."
+      },
+      {
+        "text": "`GET /orders/` plus a random suffix",
+        "correct": false,
+        "why": "Any per-request part multiplies the names."
+      }
+    ]
+  },
+  {
+    "id": "ex-y35b6y69",
+    "version": 1,
+    "section": "naming",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the consequences of naming spans with the order id in the order they appear, from the first span to the bill.",
+    "hint": "Start in the list of operations.",
+    "items": [
+      "Each order adds an operation to the service's list",
+      "Filtering by operation becomes searching for one order",
+      "Metrics computed per operation get one series per order",
+      "The bill for series grows with every order"
+    ]
+  },
+  {
+    "id": "ex-cmmc34mk",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A span's name says what kind of work it is; its ___ say which instance of that work it was.",
+    "hint": "Key and value pairs.",
+    "blanks": [
+      {
+        "accept": [
+          "attributes"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

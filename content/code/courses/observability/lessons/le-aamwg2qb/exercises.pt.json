@@ -1,0 +1,388 @@
+{
+  "ex-6axp1sar": {
+    "prompt": "Por que a loja não manda seus logs direto ao Loki por HTTP?",
+    "hint": "O que cada serviço teria então de fazer?",
+    "choices": [
+      {
+        "text": "O Loki não aceita HTTP",
+        "why": "O Collector chega a ele por HTTP."
+      },
+      {
+        "text": "Repetir e guardar em buffer em todo serviço",
+        "why": "Isso: o serviço ainda mudaria junto com o armazenamento. Um shipper fora dele faz isso uma vez."
+      },
+      {
+        "text": "HTTP exporia os logs à internet",
+        "why": "A rede do laboratório é local."
+      },
+      {
+        "text": "O Python não consegue escrever JSON por HTTP",
+        "why": "Consegue."
+      }
+    ]
+  },
+  "ex-2zs94bkm": {
+    "prompt": "Para acrescentar o Elasticsearch e o Graylog, o que mudou?",
+    "hint": "O diff.",
+    "choices": [
+      {
+        "text": "A configuração do Collector, e uma input no Graylog",
+        "why": "Isso. Nenhum serviço mudou."
+      },
+      {
+        "text": "A configuração de log de cada serviço",
+        "why": "Os serviços ainda imprimem JSON na stdout."
+      },
+      {
+        "text": "O driver de log do Docker, uma vez por armazenamento",
+        "why": "O Docker ainda entrega as linhas a um lugar só."
+      },
+      {
+        "text": "A esteira de rastros",
+        "why": "Ela ficou intocada."
+      }
+    ]
+  },
+  "ex-tgm8dmj1": {
+    "prompt": "O Compose lê o `compose.___.yaml` por cima do `compose.yaml` quando ele existe.",
+    "hint": "Ele sobrepõe.",
+    "blanks": [
+      {
+        "accept": [
+          "override"
+        ]
+      }
+    ]
+  },
+  "ex-35b3yq9h": {
+    "prompt": "O que o Loki indexa?",
+    "hint": "Não as linhas.",
+    "choices": [
+      {
+        "text": "Todo campo de toda linha",
+        "why": "Isso é o Elasticsearch."
+      },
+      {
+        "text": "Os labels de cada stream",
+        "why": "Isso. As linhas são comprimidas e varridas quando pedidas."
+      },
+      {
+        "text": "O id de rastro de cada linha",
+        "why": "Fica na linha, sem índice."
+      },
+      {
+        "text": "Só as linhas ERROR",
+        "why": "Toda linha é guardada do mesmo jeito."
+      }
+    ]
+  },
+  "ex-rx059t1a": {
+    "prompt": "O Loki do laboratório tinha um label, `service_name`, com quatro valores. Quantos streams?",
+    "hint": "Um por conjunto de labels.",
+    "unit": "streams"
+  },
+  "ex-dsc650vs": {
+    "prompt": "Alguém acrescenta `trace_id` como label do Loki para deixar a busca por rastro rápida. O que acontece?",
+    "hint": "Um stream por valor de label.",
+    "choices": [
+      {
+        "text": "Buscas por id de rastro ficam rápidas e nada mais muda",
+        "why": "O índice deixa de ser pequeno."
+      },
+      {
+        "text": "Um stream novo para cada requisição que chega",
+        "why": "Isso: o índice cresce com o tráfego, a cardinalidade da aula 6 em logs."
+      },
+      {
+        "text": "O Loki recusa labels com mais de 16 caracteres",
+        "why": "O problema é quantidade, não tamanho."
+      },
+      {
+        "text": "As linhas perdem o campo de id de rastro",
+        "why": "A linha fica como era."
+      }
+    ]
+  },
+  "ex-2jtvmjkt": {
+    "prompt": "O que o `| json` faz numa consulta LogQL?",
+    "hint": "Um estágio de parser.",
+    "choices": [
+      {
+        "text": "Faz o Loki guardar a linha como JSON",
+        "why": "Não muda nada guardado."
+      },
+      {
+        "text": "Indexa os campos para a próxima vez",
+        "why": "Nada é indexado por uma consulta."
+      },
+      {
+        "text": "Transforma os campos de cada linha em labels",
+        "why": "Isso, para os estágios seguintes, na hora da consulta."
+      },
+      {
+        "text": "Valida as linhas e descarta as quebradas",
+        "why": "Linhas malformadas ganham um label de erro, não são apagadas."
+      }
+    ]
+  },
+  "ex-rzqyz9kf": {
+    "prompt": "Por que pôr `|= \"approved\\\": false\"` na frente do `| json` num intervalo grande?",
+    "hint": "Qual estágio é mais barato por linha?",
+    "choices": [
+      {
+        "text": "Filtrar é mais barato que interpretar",
+        "why": "Isso: menos linhas chegam ao parser."
+      },
+      {
+        "text": "O parser só funciona depois de um filtro",
+        "why": "Funciona sozinho, como a aula rodou."
+      },
+      {
+        "text": "Filtros tornam o resultado exato",
+        "why": "Os dois dão a mesma resposta; um é mais rápido."
+      },
+      {
+        "text": "O Loki indexa o texto filtrado",
+        "why": "Ele não indexa texto."
+      }
+    ]
+  },
+  "ex-v2f1h5pk": {
+    "prompt": "Em cinco minutos o payments registrou 615 \"charge decided\" e 32 \"card network unavailable\". Que fração das cobranças falhou, em porcentagem, com uma casa decimal?",
+    "hint": "Falhas sobre todas as cobranças.",
+    "unit": "por cento"
+  },
+  "ex-37270f9v": {
+    "prompt": "Um painel calcula erros por minuto com `count_over_time` sobre todo serviço, atualizado a cada 15 s. Qual é o desenho melhor?",
+    "hint": "Perguntado a cada quinze segundos.",
+    "choices": [
+      {
+        "text": "Atualizar a cada 5 s",
+        "why": "Isso triplica o custo."
+      },
+      {
+        "text": "Acrescentar ao Loki um label por mensagem de erro",
+        "why": "Mais streams, mesma varredura."
+      },
+      {
+        "text": "Usar os contadores de erro dos próprios serviços no Prometheus",
+        "why": "Isso: métricas a partir de logs servem a perguntas que ninguém previu."
+      },
+      {
+        "text": "Levar o painel para o Kibana",
+        "why": "Mesmo custo de consulta, outra tela."
+      }
+    ]
+  },
+  "ex-96gnfwdh": {
+    "prompt": "Uma consulta `term` pela string exata \"card network unavailable\" não achou nada. Por quê?",
+    "hint": "Como um campo de texto é guardado?",
+    "choices": [
+      {
+        "text": "Os documentos ainda não tinham sido indexados",
+        "why": "Trinta foram achados logo depois por outra consulta."
+      },
+      {
+        "text": "O campo é texto, indexado pelas palavras",
+        "why": "Isso: `match_phrase` casa a frase."
+      },
+      {
+        "text": "`term` diferencia maiúsculas e o texto era maiúsculo",
+        "why": "O texto é minúsculo."
+      },
+      {
+        "text": "O Elasticsearch descarta linhas com espaços",
+        "why": "Não é assim."
+      }
+    ]
+  },
+  "ex-wtntnan8": {
+    "prompt": "Por que o `order_id` chegou ao Elasticsearch como `600.0`?",
+    "hint": "Olhe o mapeamento.",
+    "choices": [
+      {
+        "text": "A loja o registra como decimal",
+        "why": "A loja registra `600`."
+      },
+      {
+        "text": "Um mapeamento float, decidido pelos valores recebidos",
+        "why": "Isso: decidido pelos doubles que o Collector repassa."
+      },
+      {
+        "text": "O Elasticsearch guarda todo número como texto",
+        "why": "Aí não imprimiria `.0`."
+      },
+      {
+        "text": "O Graylog o mudou antes de o Elasticsearch o ver",
+        "why": "O Graylog escreve no OpenSearch, não neste Elasticsearch."
+      }
+    ]
+  },
+  "ex-nggyf0yn": {
+    "prompt": "O que indexar todo campo na entrada compra para o Elasticsearch? Escolha todas as que se aplicam.",
+    "hint": "E quanto custa?",
+    "choices": [
+      {
+        "text": "Agregações respondidas pelo índice",
+        "why": "Sim: a contagem por serviço não leu linha nenhuma."
+      },
+      {
+        "text": "Buscas rápidas em qualquer campo",
+        "why": "Sim."
+      },
+      {
+        "text": "Menos memória que o Loki",
+        "why": "Usou muito mais."
+      },
+      {
+        "text": "Escritas mais baratas",
+        "why": "A escrita é onde ele paga."
+      }
+    ]
+  },
+  "ex-vvjewp32": {
+    "prompt": "Onde o Graylog guarda as linhas de log em si?",
+    "hint": "Dois companheiros.",
+    "choices": [
+      {
+        "text": "No MongoDB",
+        "why": "O MongoDB guarda a configuração dele."
+      },
+      {
+        "text": "No OpenSearch",
+        "why": "Isso."
+      },
+      {
+        "text": "No Loki",
+        "why": "O Loki é um armazenamento separado neste laboratório."
+      },
+      {
+        "text": "Em arquivos do próprio Graylog",
+        "why": "Ele os guarda no OpenSearch."
+      }
+    ]
+  },
+  "ex-16306fse": {
+    "prompt": "Ligue cada armazenamento ao nome que ele deu ao `order_id` da loja.",
+    "hint": "Todo armazenamento renomeia na entrada.",
+    "pairs": [
+      {
+        "left": "Elasticsearch",
+        "right": "`attributes.order_id`"
+      },
+      {
+        "left": "Graylog",
+        "right": "`otel_attributes_order_id`"
+      },
+      {
+        "left": "Loki",
+        "right": "`order_id`, dentro da linha"
+      }
+    ],
+    "right_distractors": [
+      "`orderId`"
+    ]
+  },
+  "ex-jfwpj66f": {
+    "prompt": "Um alerta é copiado do Graylog para o Elasticsearch e nunca dispara. Qual é a primeira coisa a conferir?",
+    "hint": "Nomes antes da lógica.",
+    "choices": [
+      {
+        "text": "Se o Elasticsearch suporta alertas",
+        "why": "Plausível, mas nomes quebram primeiro."
+      },
+      {
+        "text": "Os nomes de campo na consulta",
+        "why": "Isso: `otel_attributes_` contra `attributes.`."
+      },
+      {
+        "text": "O fuso horário dos dois servidores",
+        "why": "Os dois guardam UTC."
+      },
+      {
+        "text": "Se as linhas foram amostradas",
+        "why": "Os dois receberam toda linha."
+      }
+    ]
+  },
+  "ex-2t7r8rgv": {
+    "prompt": "O Loki achou uma linha para o checkout falho e os outros dois acharam três. Por quê?",
+    "hint": "Olhe o seletor do Loki.",
+    "choices": [
+      {
+        "text": "O Loki descartou duas linhas",
+        "why": "Estavam em outros streams."
+      },
+      {
+        "text": "A consulta ao Loki só selecionou o stream do payments",
+        "why": "Isso. Sem o label acharia as três."
+      },
+      {
+        "text": "Elasticsearch e Graylog duplicam linhas",
+        "why": "As três linhas são de três serviços diferentes."
+      },
+      {
+        "text": "O Loki só guarda linhas ERROR",
+        "why": "Guarda todo nível."
+      }
+    ]
+  },
+  "ex-vak1jbtg": {
+    "prompt": "O Graylog usava 719,7 MiB, o OpenSearch 991,8 MiB e o MongoDB 113,4 MiB. Quantos MiB juntos, arredondado ao inteiro?",
+    "hint": "Some.",
+    "unit": "MiB"
+  },
+  "ex-1mat2hkc": {
+    "prompt": "Por que a captura esperou 45 segundos antes de buscar a falha mais recente?",
+    "hint": "Os lotes do exporter.",
+    "choices": [
+      {
+        "text": "As linhas mais novas levam um tempo para chegar ao Elasticsearch",
+        "why": "Isso: o exporter dele manda em lotes."
+      },
+      {
+        "text": "O Jaeger só mostra rastros com mais de 45 segundos",
+        "why": "O Jaeger respondeu na aula 1 em segundos."
+      },
+      {
+        "text": "O Loki comprime linhas por 45 segundos antes de guardar",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "O Graylog precisa reiniciar a input",
+        "why": "A input rodou o tempo todo."
+      }
+    ]
+  },
+  "ex-kv0mn0d5": {
+    "prompt": "Ordene os três armazenamentos pela memória que usaram no laboratório, do menor para o maior.",
+    "hint": "Conte o Graylog com os companheiros.",
+    "items": [
+      "Loki",
+      "Elasticsearch",
+      "Graylog com OpenSearch e MongoDB"
+    ]
+  },
+  "ex-p90h5w5h": {
+    "prompt": "Uma equipe já roda Prometheus e Grafana e busca logs sobretudo por serviço e id de rastro. Que armazenamento cabe melhor?",
+    "hint": "Poucos labels, escritas baratas.",
+    "choices": [
+      {
+        "text": "Graylog, pelos streams e papéis",
+        "why": "Possível, a um custo maior do que precisam."
+      },
+      {
+        "text": "Loki",
+        "why": "Isso: labels para o serviço, um filtro de linha para o id."
+      },
+      {
+        "text": "Elasticsearch, pelas agregações",
+        "why": "Eles não precisam delas."
+      },
+      {
+        "text": "Nenhum: manter o `docker compose logs`",
+        "why": "Isso só alcança uma máquina."
+      }
+    ]
+  }
+}

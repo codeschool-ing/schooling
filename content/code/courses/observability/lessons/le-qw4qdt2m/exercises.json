@@ -1,0 +1,664 @@
+[
+  {
+    "id": "ex-12jtsf9b",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`orders` has no tracing code. What gives it spans?",
+    "hint": "Look at its command.",
+    "choices": [
+      {
+        "text": "Jaeger, which reads the database's query log",
+        "correct": false,
+        "why": "Jaeger stores spans; it does not make them."
+      },
+      {
+        "text": "`opentelemetry-instrument`, which patches its libraries before it runs",
+        "correct": true,
+        "why": "Right. It sets up the SDK and wraps Flask, requests and psycopg."
+      },
+      {
+        "text": "The storefront, which records spans on its behalf",
+        "correct": false,
+        "why": "Each process records its own spans."
+      },
+      {
+        "text": "The Collector, which watches the traffic between containers",
+        "correct": false,
+        "why": "The Collector receives spans; it does not sniff traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-v81vt811",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Replacing a library's functions at run time with wrappers is called monkey-___.",
+    "hint": "Like mending clothes.",
+    "blanks": [
+      {
+        "accept": [
+          "patching"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wf4j3ydt",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which packages decide what `opentelemetry-instrument` patches in a given service?",
+    "hint": "Each library has its own.",
+    "choices": [
+      {
+        "text": "The libraries the service's code imports at the top of each file",
+        "correct": false,
+        "why": "Importing a library is not enough; its instrumentation has to be installed."
+      },
+      {
+        "text": "The instrumentation packages installed beside them",
+        "correct": true,
+        "why": "Right: one per library, loaded if present."
+      },
+      {
+        "text": "A list in the Collector's configuration",
+        "correct": false,
+        "why": "The Collector is a separate process and patches nothing."
+      },
+      {
+        "text": "`OTEL_SERVICE_NAME`",
+        "correct": false,
+        "why": "That names the service; it chooses nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-4w9ver07",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `opentelemetry-bootstrap` do?",
+    "hint": "It comes with the launcher.",
+    "choices": [
+      {
+        "text": "It starts the Collector beside the service",
+        "correct": false,
+        "why": "It never starts processes."
+      },
+      {
+        "text": "It writes spans by hand into the code",
+        "correct": false,
+        "why": "It touches no source file."
+      },
+      {
+        "text": "It lists instrumentation packages matching what is installed",
+        "correct": true,
+        "why": "Right, and can install them."
+      },
+      {
+        "text": "It converts old attribute names into new ones",
+        "correct": false,
+        "why": "That is `OTEL_SEMCONV_STABILITY_OPT_IN`'s job."
+      }
+    ]
+  },
+  {
+    "id": "ex-gy0a0p9c",
+    "version": 1,
+    "section": "what-it-records",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each span in orders to the library that opened it.",
+    "hint": "Who receives, who calls out?",
+    "pairs": [
+      {
+        "left": "`POST /orders` (server)",
+        "right": "Flask"
+      },
+      {
+        "left": "`INSERT` (client)",
+        "right": "psycopg"
+      },
+      {
+        "left": "`POST` (client)",
+        "right": "requests"
+      }
+    ],
+    "right_distractors": [
+      "pika"
+    ]
+  },
+  {
+    "id": "ex-kq9ny2q7",
+    "version": 1,
+    "section": "what-it-records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `INSERT` span's `db.statement` shows `%s` where the SKU and total went. Why are the values missing?",
+    "hint": "How did the code hand them to psycopg?",
+    "choices": [
+      {
+        "text": "The code passed them as parameters, apart from the query text",
+        "correct": true,
+        "why": "Right. The instrumentation records the statement it was given."
+      },
+      {
+        "text": "The Collector removes every value that looks like data before storing",
+        "correct": false,
+        "why": "The lab's Collector does no redaction; lesson 10 adds some."
+      },
+      {
+        "text": "Jaeger hides values unless asked for them",
+        "correct": false,
+        "why": "It shows what it stored."
+      },
+      {
+        "text": "The values were too long for an attribute",
+        "correct": false,
+        "why": "They were short; they were never in the statement."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qf0tq2f",
+    "version": 1,
+    "section": "what-it-records",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard filters spans on `http.request.method = POST` and shows the storefront but not orders. Why?",
+    "hint": "Compare the attribute names each service sent.",
+    "choices": [
+      {
+        "text": "orders handles no POST requests",
+        "correct": false,
+        "why": "It handles `POST /orders`."
+      },
+      {
+        "text": "The filter only works on manual spans",
+        "correct": false,
+        "why": "A filter matches attributes, whoever set them."
+      },
+      {
+        "text": "Its spans come from an instrumentation still on the older `http.method`",
+        "correct": true,
+        "why": "Right. Two generations of names are mixed until the opt-in is set."
+      },
+      {
+        "text": "Jaeger drops attributes from services without code",
+        "correct": false,
+        "why": "It kept sixteen of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-3443myhg",
+    "version": 1,
+    "section": "what-it-records",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The environment variable that switches instrumentations to the stable attribute names is `OTEL_SEMCONV_STABILITY____`.",
+    "hint": "You opt in.",
+    "blanks": [
+      {
+        "accept": [
+          "_OPT_IN"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8zhsepbq",
+    "version": 1,
+    "section": "configuring",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does orders exclude `/health` and `/metrics` from tracing?",
+    "hint": "Who calls them, and how often?",
+    "choices": [
+      {
+        "text": "They return errors that would pollute the error rate",
+        "correct": false,
+        "why": "They answer 200."
+      },
+      {
+        "text": "They are called on a schedule, and would fill the traces with noise",
+        "correct": true,
+        "why": "Right: a trace every fifteen seconds that nobody wants."
+      },
+      {
+        "text": "Flask cannot trace a route that returns JSON",
+        "correct": false,
+        "why": "The checkout returns JSON and is traced."
+      },
+      {
+        "text": "They are not routes, so no span exists",
+        "correct": false,
+        "why": "Both are routes; the exclusion is what removes them."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6e8dycv",
+    "version": 1,
+    "section": "configuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `OTEL_PYTHON_DISABLED_INSTRUMENTATIONS=psycopg`, what happened to the database calls?",
+    "hint": "Compare the operations before and after.",
+    "choices": [
+      {
+        "text": "They failed, because the driver was unloaded",
+        "correct": false,
+        "why": "The checkout succeeded; only the wrapping was skipped."
+      },
+      {
+        "text": "They were traced under `POST /orders` with a new name",
+        "correct": false,
+        "why": "No new span appeared."
+      },
+      {
+        "text": "They ran as before, with no spans",
+        "correct": true,
+        "why": "Right. Only the watching was switched off."
+      },
+      {
+        "text": "They went straight to the Collector as metrics",
+        "correct": false,
+        "why": "Metrics export is off in orders."
+      }
+    ]
+  },
+  {
+    "id": "ex-zk5dxh43",
+    "version": 1,
+    "section": "configuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An instrumentation starts producing thousands of useless spans in production. What is the quickest safe response?",
+    "hint": "No release needed.",
+    "choices": [
+      {
+        "text": "Rewrite the service with hand-made spans",
+        "correct": false,
+        "why": "That is weeks of work, not a quick response."
+      },
+      {
+        "text": "Stop the Collector until it is fixed",
+        "correct": false,
+        "why": "That loses every service's telemetry."
+      },
+      {
+        "text": "Delete the instrumentation package inside the running container and wait for it to notice",
+        "correct": false,
+        "why": "The patch is already in memory, and the next deploy brings it back."
+      },
+      {
+        "text": "Disable that one instrumentation with its environment variable and restart",
+        "correct": true,
+        "why": "Right. It silences one library and leaves the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-74wmrp4k",
+    "version": 1,
+    "section": "where-it-stops",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does automatic instrumentation of orders NOT record? Choose all that apply.",
+    "hint": "Edges are seen, the inside is not.",
+    "choices": [
+      {
+        "text": "Which product was ordered",
+        "correct": true,
+        "why": "Yes: Flask does not know what an order is."
+      },
+      {
+        "text": "The publish to RabbitMQ",
+        "correct": true,
+        "why": "Yes: no instrumentation for `pika` is installed."
+      },
+      {
+        "text": "The call to payments",
+        "correct": false,
+        "why": "That is the `requests` client span."
+      },
+      {
+        "text": "The route that was called",
+        "correct": false,
+        "why": "`http.route` is there."
+      },
+      {
+        "text": "Whether the order was paid",
+        "correct": true,
+        "why": "Yes: that is the shop's own logic."
+      }
+    ]
+  },
+  {
+    "id": "ex-sj0kzrmp",
+    "version": 1,
+    "section": "where-it-stops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the inject line removed, the storefront and the mailer logged different trace ids for one checkout. What does that mean?",
+    "hint": "Look at the mailer span's parent.",
+    "choices": [
+      {
+        "text": "The mailer handled a different order",
+        "correct": false,
+        "why": "It was the same order; only the trace was split."
+      },
+      {
+        "text": "The trace ended at orders, and the mailer began a new one",
+        "correct": true,
+        "why": "Right. Its consumer span has no parent."
+      },
+      {
+        "text": "Jaeger merged two traces by mistake",
+        "correct": false,
+        "why": "Nothing was merged; they are two."
+      },
+      {
+        "text": "The queue rejected the message's headers and delivered the body on its own",
+        "correct": false,
+        "why": "There were no trace headers to reject."
+      }
+    ]
+  },
+  {
+    "id": "ex-xxfb9g2x",
+    "version": 1,
+    "section": "where-it-stops",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "payments' 1.5 s wait was found in lesson 1 because of a hand-written span. What would the trace have shown without that span?",
+    "hint": "What surrounds the wait?",
+    "choices": [
+      {
+        "text": "Nothing at all from payments",
+        "correct": false,
+        "why": "Its `POST /charge` span would still exist."
+      },
+      {
+        "text": "`POST /charge` taking 1501 ms with nothing inside",
+        "correct": true,
+        "why": "Right. The time is there; the reason is not."
+      },
+      {
+        "text": "An automatic span named `time.sleep`",
+        "correct": false,
+        "why": "Nothing instruments `time.sleep`."
+      },
+      {
+        "text": "An error, because a span cannot last over a second",
+        "correct": false,
+        "why": "Spans last as long as the work."
+      }
+    ]
+  },
+  {
+    "id": "ex-cz7msdjb",
+    "version": 1,
+    "section": "mixing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How did the line added to `create()` reach the span Flask had opened?",
+    "hint": "Which span is current inside the handler?",
+    "choices": [
+      {
+        "text": "By opening a new span with the same name",
+        "correct": false,
+        "why": "No new span is opened."
+      },
+      {
+        "text": "By asking Jaeger for the span id",
+        "correct": false,
+        "why": "The code never talks to Jaeger."
+      },
+      {
+        "text": "With `trace.get_current_span()`",
+        "correct": true,
+        "why": "Right. Flask's span is current for the whole request."
+      },
+      {
+        "text": "Through an environment variable read by Flask",
+        "correct": false,
+        "why": "Attribute values come from the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhj8thw8",
+    "version": 1,
+    "section": "mixing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `trace.get_current_span().set_attribute(...)` cost in a process with no SDK?",
+    "hint": "Lesson 2's first script.",
+    "choices": [
+      {
+        "text": "It raises, because there is no span",
+        "correct": false,
+        "why": "The API never raises for that."
+      },
+      {
+        "text": "Next to nothing",
+        "correct": true,
+        "why": "Right: it lands on a do-nothing span, which is why the line is safe to leave in."
+      },
+      {
+        "text": "A new trace, started just for the attribute and closed right after it",
+        "correct": false,
+        "why": "Nothing is recorded without an SDK."
+      },
+      {
+        "text": "One HTTP request to the Collector",
+        "correct": false,
+        "why": "No exporter exists without an SDK."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwe8ywg2",
+    "version": 1,
+    "section": "mixing",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of adding `shop.sku` to orders' automatic span in order.",
+    "hint": "Edit, apply, test, read.",
+    "items": [
+      "Add the import and the `set_attribute` line to `create()`",
+      "Restart orders so the mounted code is read again",
+      "Send a checkout",
+      "Read the `POST /orders` span's attributes in Jaeger"
+    ]
+  },
+  {
+    "id": "ex-g44mmpp3",
+    "version": 1,
+    "section": "overhead",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "bench.py measured a median of 25.1 ms with instrumentation and 24.1 ms without. How many milliseconds per order did instrumentation add at the median?",
+    "hint": "Subtract.",
+    "value": 1.0,
+    "tolerance": 0.05,
+    "unit": "milliseconds"
+  },
+  {
+    "id": "ex-0xvgf7eh",
+    "version": 1,
+    "section": "overhead",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why would the same fixed cost per span matter more on a cache hit answered in 0.1 ms than on an order?",
+    "hint": "Compare it with the rest of the request.",
+    "choices": [
+      {
+        "text": "It becomes most of the request's time instead of a small share",
+        "correct": true,
+        "why": "Right. An order spends 25 ms on real work."
+      },
+      {
+        "text": "Caches are not allowed to be traced",
+        "correct": false,
+        "why": "Nothing forbids it."
+      },
+      {
+        "text": "A cache hit creates more spans than an order",
+        "correct": false,
+        "why": "It creates fewer."
+      },
+      {
+        "text": "The batch processor is slower for small requests",
+        "correct": false,
+        "why": "It works the same whatever the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-mah8rb0j",
+    "version": 1,
+    "section": "overhead",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The benchmark showed a difference of one millisecond in one run of 300. What is the honest conclusion?",
+    "hint": "How big is the noise between two runs?",
+    "choices": [
+      {
+        "text": "Instrumentation costs exactly four per cent everywhere",
+        "correct": false,
+        "why": "One run on one machine says nothing that precise."
+      },
+      {
+        "text": "Instrumentation is free",
+        "correct": false,
+        "why": "It measured a cost, just a small one."
+      },
+      {
+        "text": "The cost is small, near the noise between runs",
+        "correct": true,
+        "why": "Right, and the costs worth worrying about are elsewhere."
+      },
+      {
+        "text": "The benchmark is broken and must be rerun until zero",
+        "correct": false,
+        "why": "A result you dislike is not a broken test."
+      }
+    ]
+  },
+  {
+    "id": "ex-kagyptvs",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which arrangement does orders end up with, and why is it the usual one?",
+    "hint": "The third column.",
+    "choices": [
+      {
+        "text": "By hand only, because automatic spans use old names",
+        "correct": false,
+        "why": "orders keeps its automatic spans."
+      },
+      {
+        "text": "Automatic for the edges, plus a few lines for what only the code knows",
+        "correct": true,
+        "why": "Right: the cheapest way to cover both."
+      },
+      {
+        "text": "Automatic only, because hand-written spans are slower than the ones a library opens",
+        "correct": false,
+        "why": "Speed is not the difference; coverage is."
+      },
+      {
+        "text": "Neither: it relies on the storefront's spans",
+        "correct": false,
+        "why": "Each service records its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptfgrywy",
+    "version": 1,
+    "section": "choosing",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Java's agent, .NET's launcher and an eBPF tool are all automatic. Which limits do they share with Python's? Choose all that apply.",
+    "hint": "The three places it stops.",
+    "choices": [
+      {
+        "text": "They cannot name a business object",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "They cannot see inside the service's own logic",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "They cannot see HTTP requests",
+        "correct": false,
+        "why": "Seeing HTTP is exactly what they do well."
+      },
+      {
+        "text": "They cannot follow a client they do not know",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-43mygehw",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Automatic instrumentation draws the ___ of a service; the code has to say what happens between them.",
+    "hint": "Where a service meets a library.",
+    "blanks": [
+      {
+        "accept": [
+          "edges"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
