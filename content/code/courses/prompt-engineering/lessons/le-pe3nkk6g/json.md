@@ -56,7 +56,8 @@ reply against. Here the description is in prose, and the check is only whether t
 
 ## Three replies, and what a parser says to each
 
-These are three replies of the kind models send back, written into files on the workbench. The
+These are three replies of the kind models send back, written by the course into files on the
+workbench. The
 first is what was asked for:
 
 ```
@@ -113,7 +114,7 @@ exit 1
 This is Python's way of writing a dictionary, and it is close enough to JSON to fool the eye. JSON
 needs double quotes, spells the boolean `true` in lower case, and refuses the comma after the last
 field. The error names only the first problem, at line 2 column 3, the opening `'`. **A parser
-reports where it stopped, not everything that is wrong**, so fixing that quote by hand would only
+reports where it stopped, not everything that is wrong**, so fixing the quotes by hand would only
 move the error to `True`.
 
 ## What to take from the three

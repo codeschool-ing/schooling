@@ -43,7 +43,7 @@ A mesma convenção funciona na saída. O prompt pede o raciocínio ou o coment�
 você quiser isso, e a única coisa de que o seu programa precisa dentro de uma tag com nome:
 `<label>negative</label>`. O programa ignora todo o resto.
 
-Estas são duas respostas gravadas em arquivos na bancada, e uma linha de Python que procura a tag.
+Estas são duas respostas que o curso escreveu em arquivos na bancada, e uma linha de Python que procura a tag.
 Ela imprime o que está entre `<label>` e `</label>`, e **sai com código 1 quando não encontra
 nada**:
 
@@ -62,7 +62,7 @@ no label found
 exit 1
 ```
 
-A segunda resposta traz a mesma resposta, e uma pessoa lê `Label: negative` sem pestanejar. O
+A segunda resposta traz o mesmo rótulo, e uma pessoa lê `Label: negative` sem pestanejar. O
 extrator não a encontra, e **esse é o resultado certo**: ele diz isso e sai com 1. Um extrator que
 recorresse a "pegar a última palavra da resposta" teria funcionado aqui e devolvido `staff.` na
 próxima resposta que pusesse o rótulo primeiro.

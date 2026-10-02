@@ -11,7 +11,7 @@ fields, and the comma is also an ordinary character that fields contain.
 ## A reply that parses and is wrong
 
 Here the café asked for its menu as CSV with three columns, and this is the kind of reply that
-comes back. It was written into a file on the workbench and read with Python's `csv` module, which
+comes back. The course wrote it into a file on the workbench, and it was read with Python's `csv` module, which
 prints how many fields it found on each line and what they were:
 
 ```

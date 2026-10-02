@@ -57,7 +57,8 @@ lida pelo parser.
 
 ## Três respostas, e o que um parser diz a cada uma
 
-Estas são três respostas do tipo que os modelos devolvem, gravadas em arquivos na bancada. A
+Estas são três respostas do tipo que os modelos devolvem, escritas pelo curso em arquivos na
+bancada. A
 primeira é o que foi pedido:
 
 ```
@@ -114,8 +115,8 @@ exit 1
 Esse é o jeito do Python de escrever um dicionário, e ele é parecido o bastante com JSON para
 enganar o olho. O JSON exige aspas duplas, escreve o booleano `true` em minúsculas e recusa a
 vírgula depois do último campo. O erro aponta só o primeiro problema, na linha 2, coluna 3, o `'`
-de abertura. **Um parser informa onde parou, não tudo o que está errado**, então consertar essa
-aspa à mão só empurraria o erro para o `True`.
+de abertura. **Um parser informa onde parou, não tudo o que está errado**, então consertar as
+aspas à mão só empurraria o erro para o `True`.
 
 ## O que levar das três
 

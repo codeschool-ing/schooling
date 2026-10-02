@@ -10,8 +10,8 @@ campos, e a vírgula é também um caractere comum que os campos contêm.
 
 ## Uma resposta que é lida e está errada
 
-Aqui o café pediu o cardápio em CSV com três colunas, e este é o tipo de resposta que volta. Ela
-foi gravada num arquivo na bancada e lida com o módulo `csv` do Python, que imprime quantos campos
+Aqui o café pediu o cardápio em CSV com três colunas, e este é o tipo de resposta que volta. O curso
+a escreveu num arquivo na bancada, e ela foi lida com o módulo `csv` do Python, que imprime quantos campos
 encontrou em cada linha e quais eram:
 
 ```

@@ -43,7 +43,7 @@ The same convention works on the way out. The prompt asks for the reasoning or t
 plain text, if you want it at all, and for the one thing your program needs inside a named tag:
 `<label>negative</label>`. The program ignores everything else.
 
-These are two replies written into files on the workbench, and one line of Python that looks for
+These are two replies the course wrote into files on the workbench, and one line of Python that looks for
 the tag. It prints what is between `<label>` and `</label>`, and it **exits with status 1 when it
 finds nothing**:
 
