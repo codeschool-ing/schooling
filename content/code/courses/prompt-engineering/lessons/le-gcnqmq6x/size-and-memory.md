@@ -14,8 +14,8 @@ and the width is chosen:
 
 | width | bytes per weight | what it is |
 |---|---|---|
-| 32 bits | 4 | full precision, as most training is done |
-| 16 bits | 2 | the usual width a model is published and served at |
+| 32 bits | 4 | full precision |
+| 16 bits | 2 | the usual width a model's weights are published at |
 | 8 bits | 1 | quantised: each weight rounded to one of at most 256 values |
 | 4 bits | ½ | quantised harder: each weight rounded to one of at most 16 values |
 

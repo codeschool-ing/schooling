@@ -14,8 +14,8 @@ fixa, e a largura é uma escolha:
 
 | largura | bytes por peso | o que é |
 |---|---|---|
-| 32 bits | 4 | precisão total, como a maior parte do treinamento é feita |
-| 16 bits | 2 | a largura usual em que um modelo é publicado e servido |
+| 32 bits | 4 | precisão total |
+| 16 bits | 2 | a largura usual em que os pesos de um modelo são publicados |
 | 8 bits | 1 | quantizado: cada peso arredondado para um de no máximo 256 valores |
 | 4 bits | ½ | quantizado com mais força: cada peso arredondado para um de no máximo 16 valores |
 
@@ -86,8 +86,8 @@ suposto: procure essa medição onde a versão quantizada é publicada.
 
 ## Por que isso decide onde um modelo roda
 
-Pense num notebook com 16 GB de memória, que também precisa caber o sistema operacional e tudo o
-que estiver aberto nele. O modelo de 7B a 16 bits, 14 GB, não cabe com folga. A 4 bits, 3,5 GB,
+Pense num notebook com 16 GB de memória, em que também precisam caber o sistema operacional e tudo
+o que estiver aberto nele. O modelo de 7B a 16 bits, 14 GB, não cabe com folga. A 4 bits, 3,5 GB,
 cabe. O modelo de 70B precisa de 35 GB mesmo a 4 bits, o que é uma estação de trabalho ou um
 servidor.
 
