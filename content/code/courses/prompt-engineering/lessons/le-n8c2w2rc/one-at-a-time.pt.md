@@ -88,12 +88,12 @@ fluente e uma resposta correta são coisas diferentes.
 ## De continuar texto a responder perguntas
 
 O `toylm` continua texto. Um assistente de chat parece fazer outra coisa: ele responde. A distância
-é menor do que parece. **Uma conversa também é um texto**, com as vezes de cada um marcadas: quem
-falou, e o que disse. O modelo recebe esse texto e precisa do próximo pedaço, que é a vez do
+é menor do que parece. **Uma conversa também é um texto**, com os turnos de cada um marcados: quem
+falou, e o que disse. O modelo recebe esse texto e precisa do próximo pedaço, que é o turno do
 assistente.
 
 O que faz desse próximo pedaço uma resposta útil, e não outra pergunta no mesmo estilo, é mais
-treinamento depois do primeiro. O modelo é treinado de novo com muitas conversas em que a vez do
+treinamento depois do primeiro. O modelo é treinado de novo com muitas conversas em que o turno do
 assistente é uma boa resposta, e depois ajustado com o julgamento de pessoas sobre quais respostas
 eram melhores. Depois disso, **a continuação mais provável de uma pergunta é uma resposta a ela**. O
 mecanismo não mudou; o que mudou foi o que ele aprendeu a achar provável.

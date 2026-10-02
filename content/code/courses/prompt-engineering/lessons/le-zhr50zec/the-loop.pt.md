@@ -12,7 +12,7 @@ decisões.
 ## Uma ferramenta que não existe
 
 Um modelo pode pedir qualquer coisa a que consiga dar nome, inclusive uma ferramenta que ninguém
-construiu. Aqui a vez pede a previsão do tempo:
+construiu. Aqui o turno pede a previsão do tempo:
 
 ```
 ana@lab:~/pe$ agent runs/weather.txt
@@ -26,7 +26,7 @@ done: an answer after 2 steps
 ```
 
 O `agent` não tem ferramenta `weather`, então não executou nada e **devolveu um erro que o modelo
-consegue ler**: não há ferramenta chamada weather. A vez seguinte usa isso e diz, com honestidade,
+consegue ler**: não há ferramenta chamada weather. O turno seguinte usa isso e diz, com honestidade,
 que não tem como conferir. Um laço que ignorasse o pedido desconhecido, ou devolvesse um resultado
 vazio, deixaria o modelo preencher o silêncio com uma previsão provável (lição 5). Um erro claro é
 informação, e o modelo consegue agir com base nele.
@@ -54,8 +54,8 @@ done: an answer after 3 steps
 O pedido da data foi **recusado pelo programa**, e a calculadora rodou mesmo assim. A recusa não
 depende de o modelo concordar com nada: `today` não estava na lista, então não rodou.
 
-Agora leia a resposta. Ela ainda diz "Saturday 3 October", porque as vezes foram escritas antes e
-reproduzidas acontecesse o que acontecesse. **Um modelo de verdade, no passo 3, não teria data
+Agora leia a resposta. Ela ainda diz "Saturday 3 October", porque os turnos foram escritos antes e
+reproduzidos acontecesse o que acontecesse. **Um modelo de verdade, no passo 3, não teria data
 nenhuma na frente dele**, só a recusa. Ele deveria dizer que não sabe que dia é amanhã; se citasse
 um dia mesmo assim, esse dia seria inventado. A lista de permissões controlou o que o agente podia
 fazer, e não fez nada para tornar a resposta verdadeira. As duas coisas ainda precisam ser
@@ -82,7 +82,7 @@ como respondida**. O limite existe porque um modelo pode continuar pedindo, com 
 diferente a cada vez ou a mesma chamada de novo, e cada vez custa tokens (lição 3). Alguém precisa
 decidir quantas voltas uma tarefa vale, e o programa é onde essa decisão pode ser imposta.
 
-A mesma coisa acontece quando as vezes do modelo acabam antes de um `Answer:`. Este arquivo tem duas
+A mesma coisa acontece quando os turnos do modelo acabam antes de um `Answer:`. Este arquivo tem duas
 ações e nada depois delas:
 
 ```

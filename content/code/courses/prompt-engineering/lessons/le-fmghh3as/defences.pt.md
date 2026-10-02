@@ -15,7 +15,7 @@ Planeje para a execução em que ele obedece.
 
 ## A execução em que o modelo obedece
 
-A mesma tarefa de resumo, com vezes escritas pelo curso para mostrar um modelo que segue a avaliação
+A mesma tarefa de resumo, com turnos escritos pelo curso para mostrar um modelo que segue a avaliação
 2:
 
 ```

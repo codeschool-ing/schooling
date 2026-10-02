@@ -54,12 +54,12 @@ quais operações ele pode mandar, e que `sqrt(2)` não vai funcionar.
 
 ## Uma execução na bancada
 
-O `agent` é o programa que fica em volta do modelo. A entrada dele é um arquivo com as vezes do
-modelo, um bloco por vez, separados por `---`; as linhas que começam com `#` são notas e são
-puladas. **As vezes são escritas pelo curso, sabendo o que as ferramentas vão devolver, porque
-nenhum modelo é alcançável da bancada.** Todo o resto é real: o `agent` lê cada vez, acha a linha
+O `agent` é o programa que fica em volta do modelo. A entrada dele é um arquivo com os turnos do
+modelo, um bloco por turno, separados por `---`; as linhas que começam com `#` são notas e são
+puladas. **Os turnos são escritos pelo curso, sabendo o que as ferramentas vão devolver, porque
+nenhum modelo é alcançável da bancada.** Todo o resto é real: o `agent` lê cada turno, acha a linha
 `Action:`, executa a ferramenta e imprime o que ela devolveu. Eis uma pergunta sobre uma encomenda
-de bolos, e as vezes que um modelo poderia escrever para ela:
+de bolos, e os turnos que um modelo poderia escrever para ela:
 
 ```
 ana@lab:~/pe$ cat runs/order.txt
@@ -88,7 +88,7 @@ step 3
 done: an answer after 3 steps
 ```
 
-Leia as linhas por quem as escreveu. As linhas `model>` são o arquivo de vezes. **As linhas `tool>`
+Leia as linhas por quem as escreveu. As linhas `model>` são o arquivo de turnos. **As linhas `tool>`
 foram impressas por ferramentas de verdade**: a data veio do `today`, e o `127.5` da calculadora,
 que calculou `3 * 42.50`. A resposta então junta as duas, e esse último passo é do próprio modelo:
 deduzir que o dia depois de sexta, 2 de outubro, é sábado, 3 de outubro, e escrever `127.5` como
