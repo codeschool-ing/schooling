@@ -21,6 +21,8 @@ on() { printf 'ana@lab:~/pe$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
 # put PATH: a file ana wrote in ~/pe, from stdin. Its content is shown in the lesson.
 put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
 block() { printf '##### %s\n' "$1"; }
+# One capture at a time: every run rebuilds ~/pe from nothing.
+exec 9>/var/tmp/pe-capture.lock; flock 9
 lab reset >/dev/null
 
 block next-word
