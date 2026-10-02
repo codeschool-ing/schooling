@@ -29,14 +29,18 @@ block() { printf '##### %s\n' "$1"; }
 lab reset
 put selftime.jq <<'JQ'
 # One line per span of a Jaeger trace: service, name, duration, and self time,
-# the part of the duration not spent waiting for a child span.
+# the part of the duration not spent inside a child span.
 .data[0] as $t
+| ($t.spans | map({key: .spanID, value: .}) | from_entries) as $span
 | ($t.spans | map({key: .spanID, value: 0}) | from_entries) as $zero
-| (reduce ($t.spans[] | select(.references | length > 0) | {p: .references[0].spanID, d: .duration})
-     as $c ($zero; .[$c.p] += $c.d)) as $children
+| (reduce ($t.spans[] | select(.references | length > 0)) as $c ($zero;
+     $span[$c.references[0].spanID] as $p
+     | (([$c.startTime + $c.duration, $p.startTime + $p.duration] | min)
+        - ([$c.startTime, $p.startTime] | max)) as $inside
+     | .[$p.spanID] += ([$inside, 0] | max))) as $waited
 | $t.spans | sort_by(.startTime) | .[]
 | [$t.processes[.processID].serviceName, .operationName,
-   "\(.duration / 1000 | floor) ms", "self \((.duration - $children[.spanID]) / 1000 | floor) ms"]
+   "\(.duration / 1000 | floor) ms", "self \((.duration - $waited[.spanID]) / 1000 | floor) ms"]
 | @tsv
 JQ
 put compose.override.yaml <<'YAML'
@@ -52,11 +56,12 @@ sleep 90
 
 block read
 TRACE=$(lab as "docker compose logs --no-log-prefix storefront | grep 'checkout finished' | tail -1 | jq -r .trace_id")
+sleep 15
 on "curl -s localhost:16686/api/traces/$TRACE | jq -r -f selftime.jq"
 
 block jaeger
 START=$(date -u -d '-3 min' +%Y-%m-%dT%H:%M:%SZ); END=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-on "curl -sG localhost:16686/api/v3/traces --data-urlencode query.service_name=storefront --data-urlencode 'query.operation_name=POST /checkout' --data-urlencode query.duration_min=400ms --data-urlencode query.start_time_min=$START --data-urlencode query.start_time_max=$END --data-urlencode query.search_depth=5 | jq -r '[.result.resourceSpans[].scopeSpans[].spans[] | select(.name == \"POST /checkout\")] | .[] | [.traceId, ((.endTimeUnixNano | tonumber) - (.startTimeUnixNano | tonumber)) / 1e6 | floor] | @tsv'"
+on "curl -sG localhost:16686/api/v3/traces --data-urlencode query.service_name=storefront --data-urlencode 'query.operation_name=POST /checkout' --data-urlencode query.duration_min=400ms --data-urlencode query.start_time_min=$START --data-urlencode query.start_time_max=$END --data-urlencode query.search_depth=5 | jq -r '[.result.resourceSpans[].scopeSpans[].spans[] | select(.name == \"POST /checkout\")] | .[] | [.traceId, ((((.endTimeUnixNano | tonumber) - (.startTimeUnixNano | tonumber)) / 1e6) | floor)] | @tsv'"
 
 block zipkin
 on "curl -s localhost:9411/api/v2/trace/$TRACE | jq -r 'sort_by(.timestamp) | .[] | [.localEndpoint.serviceName, .kind // \"-\", .name, \"\(.duration / 1000 | floor) ms\"] | @tsv'"
@@ -68,7 +73,7 @@ sleep 30
 on "docker compose start mailer 2>&1 | tail -1"
 sleep 20
 for t in $(lab as "docker compose logs --no-log-prefix --since 60s mailer | grep 'confirmation sent' | jq -r .trace_id | awk 'NR % 30 == 1' | head -5"); do
-  on "curl -s localhost:16686/api/traces/$t | jq -r '.data[0].spans as \$s | (\$s[] | select(.operationName == \"POST /orders\") | .startTime + .duration) as \$published | (\$s[] | select(.operationName == \"orders.placed process\") | .startTime) as \$taken | \"waited in the queue: \((\$taken - \$published) / 1000 | floor) ms\"'"
+  on "curl -s localhost:16686/api/traces/$t | jq -r '.data[0].spans as \$s | (\$s[] | select(.operationName == \"UPDATE\") | .startTime + .duration) as \$published | (\$s[] | select(.operationName == \"orders.placed process\") | .startTime) as \$taken | \"waited in the queue: \((\$taken - \$published) / 1000 | floor) ms\"'"
 done
 
 block errors
@@ -80,8 +85,8 @@ on "curl -sG localhost:9411/api/v2/traces --data-urlencode serviceName=payments 
 
 block exemplars
 on "cat compose.override.yaml"
-on "curl -s -H 'Accept: application/openmetrics-text' localhost:8080/metrics | grep -m2 'duration_seconds_bucket{.*checkout.* # '"
-on "curl -sG localhost:9090/api/v1/query_exemplars --data-urlencode 'query=http_server_request_duration_seconds_bucket{job=\"storefront\",route=\"/checkout\"}' --data-urlencode start=\$(date -d '-2 min' +%s) --data-urlencode end=\$(date +%s) | jq -r '.data[].exemplars[:3][] | [.labels.trace_id, .value] | @tsv'"
-EX=$(lab as "curl -sG localhost:9090/api/v1/query_exemplars --data-urlencode 'query=http_server_request_duration_seconds_bucket{job=\"storefront\",route=\"/checkout\"}' --data-urlencode start=\$(date -d '-2 min' +%s) --data-urlencode end=\$(date +%s) | jq -r '.data[0].exemplars[0].labels.trace_id'")
+on "docker compose exec prometheus wget -qO- --header 'Accept: application/openmetrics-text' orders:8081/metrics | grep -m2 'duration_seconds_bucket{.* # '"
+on "curl -sG localhost:9090/api/v1/query_exemplars --data-urlencode 'query=http_server_request_duration_seconds_bucket{job=\"orders\",route=\"/orders\"}' --data-urlencode start=\$(date -d '-2 min' +%s) --data-urlencode end=\$(date +%s) | jq -r '.data[].exemplars[:3][] | [.labels.trace_id, .value] | @tsv'"
+EX=$(lab as "curl -sG localhost:9090/api/v1/query_exemplars --data-urlencode 'query=http_server_request_duration_seconds_bucket{job=\"orders\",route=\"/orders\"}' --data-urlencode start=\$(date -d '-2 min' +%s) --data-urlencode end=\$(date +%s) | jq -r '.data[0].exemplars[0].labels.trace_id'")
 on "curl -s localhost:16686/api/traces/$EX | jq -r -f selftime.jq | head -3"
 quiet "rm faults/payments.json compose.override.yaml && docker compose up -d prometheus"

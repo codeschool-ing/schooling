@@ -1,0 +1,641 @@
+{
+  "ex-g7y86v77": {
+    "prompt": "Numa visão de rastro, por que a barra mais longa raramente responde onde o tempo foi parar?",
+    "hint": "O que um pai faz enquanto os filhos rodam?",
+    "choices": [
+      {
+        "text": "Porque a barra mais longa costuma ser um span interno, que ninguém instrumenta",
+        "why": "A mais longa costuma ser a raiz, um span de servidor."
+      },
+      {
+        "text": "Porque costuma ser a raiz, que dura tanto quanto os filhos que espera",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque o Jaeger desenha as barras em escala logarítmica",
+        "why": "A escala é linear."
+      },
+      {
+        "text": "Porque a duração de um span é só uma estimativa feita pelo armazenamento",
+        "why": "O serviço a mede."
+      }
+    ]
+  },
+  "ex-rdks2w5v": {
+    "prompt": "O que é o tempo próprio de um span?",
+    "hint": "A parte que não pertence a ninguém abaixo.",
+    "choices": [
+      {
+        "text": "O tempo entre o início do span e o início do primeiro filho",
+        "why": "Só uma das lacunas."
+      },
+      {
+        "text": "A duração do span medida pelo armazenamento, e não pelo serviço",
+        "why": "Mesma duração, outro relógio; não é tempo próprio."
+      },
+      {
+        "text": "A duração dele menos o tempo passado dentro dos filhos",
+        "why": "Isso."
+      },
+      {
+        "text": "O tempo de CPU que o serviço gastou nele",
+        "why": "O tempo próprio inclui esperar por qualquer coisa não instrumentada."
+      }
+    ]
+  },
+  "ex-nazmwyfr": {
+    "prompt": "O `POST /orders` mostra 25 ms de tempo próprio que nenhum filho explica. Qual é a explicação mais provável?",
+    "hint": "A aula 4 disse o que nada instrumenta.",
+    "choices": [
+      {
+        "text": "Trabalho que ninguém instrumentou: publicar no RabbitMQ por uma conexão nova",
+        "why": "Isso: o tempo próprio é onde o trabalho não instrumentado aparece."
+      },
+      {
+        "text": "A diferença de relógio entre o contêiner do orders e o do payments",
+        "why": "Mesmo host, mesmo relógio."
+      },
+      {
+        "text": "O tempo que o mailer levou mandando o e-mail de confirmação",
+        "why": "Isso rodou depois de o pai terminar e não é descontado."
+      },
+      {
+        "text": "O Jaeger arredondando cada filho para baixo até o milissegundo",
+        "why": "O arredondamento é menor que um milissegundo por span."
+      }
+    ]
+  },
+  "ex-xj4jz7y1": {
+    "prompt": "Um span filho começa depois de o pai terminar. Quanto ele deve reduzir o tempo próprio do pai?",
+    "hint": "A sobreposição.",
+    "choices": [
+      {
+        "text": "A duração inteira dele",
+        "why": "O pai não estava esperando por ele."
+      },
+      {
+        "text": "Metade da duração dele",
+        "why": "Não há sobreposição para dividir."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso: nenhuma parte dele cai dentro do pai."
+      },
+      {
+        "text": "A duração dele mais a lacuna antes dele",
+        "why": "Isso deixaria o tempo próprio negativo."
+      }
+    ]
+  },
+  "ex-q8rk7kzy": {
+    "prompt": "Ponha em ordem os passos de ler um rastro lento.",
+    "hint": "Ache o trabalho, depois pergunte sobre ele.",
+    "items": [
+      "Achar o rastro, por um id de um log ou por uma busca",
+      "Calcular o tempo próprio de cada span",
+      "Escolher o span com mais tempo próprio no caminho crítico",
+      "Ler os atributos e as linhas de log desse span"
+    ]
+  },
+  "ex-jx6j0s37": {
+    "prompt": "Um handler chama preços (280 ms) e estoque (120 ms) ao mesmo tempo. O estoque fica duas vezes mais rápido. O que acontece com a requisição?",
+    "hint": "Por qual chamada a requisição espera?",
+    "choices": [
+      {
+        "text": "Fica 60 ms mais rápida",
+        "why": "Não era pelo estoque que ela esperava."
+      },
+      {
+        "text": "Leva o mesmo tempo de antes",
+        "why": "Isso: o estoque tinha folga."
+      },
+      {
+        "text": "Fica com a metade do tempo",
+        "why": "Só o estoque mudou."
+      },
+      {
+        "text": "Fica mais lenta, porque o estoque agora termina antes dos preços e precisa esperar",
+        "why": "Terminar cedo não custa nada."
+      }
+    ]
+  },
+  "ex-930s85dy": {
+    "prompt": "No exemplo paralelo, os preços levam 280 ms e o estoque 120 ms. Quantos milissegundos de folga o estoque tem?",
+    "hint": "A diferença.",
+    "unit": "ms"
+  },
+  "ex-sb7gfrrz": {
+    "prompt": "Como você acha o caminho crítico de uma requisição no rastro dela?",
+    "hint": "Comece pelo fim.",
+    "choices": [
+      {
+        "text": "Seguir os spans com mais tempo próprio da raiz para baixo",
+        "why": "O tempo próprio pode ficar fora do caminho crítico."
+      },
+      {
+        "text": "Seguir o primeiro filho de cada span",
+        "why": "O primeiro a começar não é o último a terminar."
+      },
+      {
+        "text": "A partir do fim da raiz, entrar no filho que terminou por último, e repetir",
+        "why": "Isso."
+      },
+      {
+        "text": "Escolher os spans marcados como erro",
+        "why": "Erros e caminho crítico são perguntas diferentes."
+      }
+    ]
+  },
+  "ex-te1j77s8": {
+    "prompt": "Duas chamadas são feitas em paralelo para ganhar tempo. O que você deve ler em seguida nos rastros novos?",
+    "hint": "O caminho se moveu.",
+    "choices": [
+      {
+        "text": "Nada: uma requisição paralela não tem caminho crítico",
+        "why": "Toda requisição tem um."
+      },
+      {
+        "text": "O irmão que agora é o mais lento, por onde passa o caminho crítico",
+        "why": "Isso."
+      },
+      {
+        "text": "O irmão mais rápido, já que chamadas paralelas disputam a CPU e ele agora demora mais",
+        "why": "É o mais lento que encerra a requisição."
+      },
+      {
+        "text": "A raiz, cujo tempo próprio agora é a requisição inteira",
+        "why": "A raiz ainda espera pelos filhos."
+      }
+    ]
+  },
+  "ex-qrp15d8t": {
+    "prompt": "O mailer está no caminho crítico do checkout?",
+    "hint": "O cliente esperou por ele?",
+    "choices": [
+      {
+        "text": "Sim, todo span do rastro está nele",
+        "why": "Só o que encerra a requisição."
+      },
+      {
+        "text": "Não, mas está no caminho de quando o e-mail chega",
+        "why": "Isso."
+      },
+      {
+        "text": "Só enquanto a fila está vazia",
+        "why": "O checkout nunca espera pelo mailer."
+      },
+      {
+        "text": "Sim, sempre que o mailer for por acaso o serviço mais lento do rastro",
+        "why": "A velocidade não o põe no caminho."
+      }
+    ]
+  },
+  "ex-0vexb7nq": {
+    "prompt": "Uma busca no Jaeger por checkouts lentos não devolve nada para uma hora que você sabe que foi lenta. Que explicação combina com a seção?",
+    "hint": "O que o armazenamento guardou.",
+    "choices": [
+      {
+        "text": "O formulário de busca só aceita os últimos quinze minutos",
+        "why": "A janela é você quem escolhe."
+      },
+      {
+        "text": "Rastros lentos nunca são exportados, por projeto",
+        "why": "Nada filtra por duração por padrão."
+      },
+      {
+        "text": "Os rastros não foram guardados: fora da amostra, expirados ou perdidos num reinício",
+        "why": "Isso."
+      },
+      {
+        "text": "O Jaeger busca só por trace id",
+        "why": "Ele busca por serviço, operação, duração e tags."
+      }
+    ]
+  },
+  "ex-yr9at8zy": {
+    "prompt": "Por que dava para buscar os checkouts da loja por produto?",
+    "hint": "A aula 2.",
+    "choices": [
+      {
+        "text": "O Jaeger lê o corpo da requisição de todo span",
+        "why": "Ele vê só o que o span carrega."
+      },
+      {
+        "text": "A vitrine escreve `shop.sku` no span dela",
+        "why": "Isso."
+      },
+      {
+        "text": "A instrumentação automática acrescenta o produto a todo span",
+        "why": "Ela não sabe nada de produtos."
+      },
+      {
+        "text": "O Collector o copia dos logs",
+        "why": "O span o carrega desde o início."
+      }
+    ]
+  },
+  "ex-wje8m4f3": {
+    "prompt": "Por quais destes uma busca no Jaeger pode filtrar? Escolha todas as que se aplicam.",
+    "hint": "Os campos do formulário.",
+    "choices": [
+      {
+        "text": "O serviço",
+        "why": "Sim."
+      },
+      {
+        "text": "O nome da operação",
+        "why": "Sim."
+      },
+      {
+        "text": "Uma duração mínima",
+        "why": "Sim."
+      },
+      {
+        "text": "O IP do cliente, quando nenhum span o carrega",
+        "why": "Só o que alguém escreveu."
+      },
+      {
+        "text": "Uma linha do código-fonte do serviço",
+        "why": "Spans não carregam código."
+      }
+    ]
+  },
+  "ex-g5n24zx9": {
+    "prompt": "O laboratório exporta todo span para o Jaeger e para o Zipkin. Onde essa escolha é feita?",
+    "hint": "Não nos serviços.",
+    "choices": [
+      {
+        "text": "No SDK de cada serviço, com dois exportadores",
+        "why": "Os serviços mandam OTLP uma vez."
+      },
+      {
+        "text": "No Jaeger, que repassa uma cópia ao Zipkin",
+        "why": "Nenhum armazenamento repassa."
+      },
+      {
+        "text": "Na configuração do Collector",
+        "why": "Isso."
+      },
+      {
+        "text": "Nas fontes de dados do Grafana",
+        "why": "O Grafana lê; não roteia nada."
+      }
+    ]
+  },
+  "ex-6ze6x3yk": {
+    "prompt": "Ligue cada tipo de span ao lado que ele registra.",
+    "hint": "A transcrição do Zipkin.",
+    "pairs": [
+      {
+        "left": "CLIENT",
+        "right": "fazendo uma chamada"
+      },
+      {
+        "left": "SERVER",
+        "right": "respondendo a uma chamada"
+      },
+      {
+        "left": "CONSUMER",
+        "right": "tirando uma mensagem"
+      },
+      {
+        "left": "sem tipo",
+        "right": "trabalho interno"
+      }
+    ]
+  },
+  "ex-d5txtgxn": {
+    "prompt": "O grafo de dependências do Zipkin mostra vitrine → orders → payments, mas nenhum mailer. Por quê?",
+    "hint": "Como as arestas são construídas.",
+    "choices": [
+      {
+        "text": "Os spans do mailer estão num rastro diferente do checkout",
+        "why": "Estão no mesmo rastro."
+      },
+      {
+        "text": "O Zipkin descarta spans que começam mais de um segundo depois da raiz",
+        "why": "O rastro acima os mostra."
+      },
+      {
+        "text": "Sem span de produtor e sem broker nomeado, a fila não faz aresta",
+        "why": "Isso."
+      },
+      {
+        "text": "O mailer estava parado durante a janela",
+        "why": "Ele rodou na maior parte dela."
+      }
+    ]
+  },
+  "ex-q1pqtvzf": {
+    "prompt": "Um grafo de dependências construído a partir de rastros não tem uma aresta que você esperava. O que isso diz primeiro?",
+    "hint": "O mapa desenha o que é registrado.",
+    "choices": [
+      {
+        "text": "Que os dois serviços nunca conversam",
+        "why": "Talvez; a instrumentação vem antes."
+      },
+      {
+        "text": "Que a instrumentação pode não registrar essa chamada",
+        "why": "Isso."
+      },
+      {
+        "text": "Que o armazenamento pode ter ficado sem memória",
+        "why": "Uma aresta inteira, não spans ao acaso."
+      },
+      {
+        "text": "Que o grafo precisa de uma janela maior para ser desenhado",
+        "why": "As outras arestas estão lá."
+      }
+    ]
+  },
+  "ex-r1f0t7se": {
+    "prompt": "O rastro do checkout aparece com 26 segundos, mas o cliente esperou 0,44 s. Que número descreve o cliente?",
+    "hint": "Por qual span ele esperou?",
+    "choices": [
+      {
+        "text": "A duração do span raiz",
+        "why": "Isso."
+      },
+      {
+        "text": "O comprimento do rastro, do primeiro início ao último fim",
+        "why": "Isso inclui a fila."
+      },
+      {
+        "text": "O span do mailer",
+        "why": "O cliente nunca esperou por ele."
+      },
+      {
+        "text": "A soma da duração de todo span",
+        "why": "Spans aninhados seriam contados duas vezes."
+      }
+    ]
+  },
+  "ex-8hyekse2": {
+    "prompt": "Durante a parada do mailer, por que as mensagens mais antigas esperaram mais?",
+    "hint": "Quando foram tiradas?",
+    "choices": [
+      {
+        "text": "O RabbitMQ entrega as mensagens mais novas primeiro",
+        "why": "Uma fila é primeiro a entrar, primeiro a sair."
+      },
+      {
+        "text": "Todas saíram numa rajada no reinício, a mais antiga primeiro",
+        "why": "Isso: a mais antiga estava lá havia mais tempo."
+      },
+      {
+        "text": "As mensagens mais antigas eram maiores",
+        "why": "Têm o mesmo tamanho."
+      },
+      {
+        "text": "O mailer tenta mensagens antigas três vezes antes de pegar as novas",
+        "why": "Nada falhou."
+      }
+    ]
+  },
+  "ex-325b8ng3": {
+    "prompt": "Entre dois hosts reais, uma espera na fila calculada a partir de dois spans sai como −3 ms. O que é isso?",
+    "hint": "Dois relógios.",
+    "choices": [
+      {
+        "text": "Uma mensagem entregue antes de ser publicada",
+        "why": "Impossível; os relógios discordam."
+      },
+      {
+        "text": "Diferença de relógio entre os hosts, ruído em volta de uma espera curta",
+        "why": "Isso."
+      },
+      {
+        "text": "Um bug na propagação do contexto entre os dois serviços",
+        "why": "Os spans se juntaram."
+      },
+      {
+        "text": "Uma mensagem que pulou a fila inteira",
+        "why": "Toda mensagem passa por ela."
+      }
+    ]
+  },
+  "ex-pv4bckn1": {
+    "prompt": "Um armazenamento de rastros mede um rastro do início do primeiro span até o ___ do último span.",
+    "hint": "O contrário de início.",
+    "blanks": [
+      {
+        "accept": [
+          "fim",
+          "final"
+        ]
+      }
+    ]
+  },
+  "ex-hydc4a07": {
+    "prompt": "Um checkout que falhou tem quatro spans vermelhos. Qual é a origem?",
+    "hint": "Profundidade.",
+    "choices": [
+      {
+        "text": "A raiz, porque o cliente viu o erro ali",
+        "why": "Ela relata o que veio de baixo."
+      },
+      {
+        "text": "O primeiro da lista que o Zipkin devolve",
+        "why": "A ordem da lista não é profundidade."
+      },
+      {
+        "text": "O span vermelho mais profundo sem filho vermelho",
+        "why": "Isso."
+      },
+      {
+        "text": "O de maior duração",
+        "why": "Erros não têm a ver com duração."
+      }
+    ]
+  },
+  "ex-prgah607": {
+    "prompt": "Um serviço captura uma exceção e responde 200. O que o rastro dele mostra?",
+    "hint": "Um span vermelho é marcado por alguém.",
+    "choices": [
+      {
+        "text": "Nenhum erro, a não ser que o código defina o status ele mesmo",
+        "why": "Isso."
+      },
+      {
+        "text": "Um span vermelho, já que o SDK registra toda exceção",
+        "why": "Só uma que escapa do span."
+      },
+      {
+        "text": "Um erro só no span de quem chamou",
+        "why": "Quem chamou recebeu um 200."
+      },
+      {
+        "text": "Uma lacuna no rastro onde o span deveria estar",
+        "why": "O span está lá, verde."
+      }
+    ]
+  },
+  "ex-a6m9c5v9": {
+    "prompt": "O span vermelho mais profundo é o do payments, nomeando uma rede de cartões que ninguém instrumenta. O que isso significa para o diagnóstico?",
+    "hint": "O lugar mais profundo que você consegue ver.",
+    "choices": [
+      {
+        "text": "A falha está com certeza no código do payments",
+        "why": "Ela pode estar um passo além."
+      },
+      {
+        "text": "A falha pode estar além do que os rastros enxergam",
+        "why": "Isso."
+      },
+      {
+        "text": "O rastro pode estar quebrado e deve ser descartado",
+        "why": "Ele é correto até a borda dele."
+      },
+      {
+        "text": "O span do orders é a origem real",
+        "why": "Ele está acima do payments."
+      }
+    ]
+  },
+  "ex-ahyyyevg": {
+    "prompt": "O que é um exemplar?",
+    "hint": "Fica ao lado de uma contagem.",
+    "choices": [
+      {
+        "text": "Um bucket de histograma que foi amostrado",
+        "why": "É um trace id, não um bucket."
+      },
+      {
+        "text": "O trace id de uma requisição real, guardado ao lado da contagem de um bucket",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma linha de log típica anexada a um painel",
+        "why": "Logs não entram."
+      },
+      {
+        "text": "O valor de exemplo que um alerta guarda ao lado da regra, mostrando o que o fez disparar",
+        "why": "Não é o que a palavra significa aqui."
+      }
+    ]
+  },
+  "ex-xtf2whxk": {
+    "prompt": "Que peças precisaram concordar para os exemplares chegarem ao Prometheus? Escolha todas as que se aplicam.",
+    "hint": "Três peças.",
+    "choices": [
+      {
+        "text": "O código observa com o trace id atual",
+        "why": "Sim."
+      },
+      {
+        "text": "O scrape pede e recebe OpenMetrics",
+        "why": "Sim."
+      },
+      {
+        "text": "O Prometheus roda com o armazenamento de exemplares ligado",
+        "why": "Sim."
+      },
+      {
+        "text": "O Jaeger é configurado para empurrar ids ao Prometheus",
+        "why": "O Jaeger não entra."
+      },
+      {
+        "text": "O Loki indexa o trace id",
+        "why": "Não para exemplares."
+      }
+    ]
+  },
+  "ex-5gjdbkpy": {
+    "prompt": "Por que a vitrine não expõe exemplares e o orders expõe?",
+    "hint": "Quando a medição é feita.",
+    "choices": [
+      {
+        "text": "A vitrine não é coletada pelo Prometheus",
+        "why": "Ela é coletada."
+      },
+      {
+        "text": "Os spans da vitrine ficam fora da amostra",
+        "why": "Nada é amostrado ainda."
+      },
+      {
+        "text": "O span dela já terminou quando a duração é observada",
+        "why": "Isso."
+      },
+      {
+        "text": "A vitrine responde só no formato de texto clássico",
+        "why": "Ela compartilha o `web.py` com o orders."
+      }
+    ]
+  },
+  "ex-h0r60v4d": {
+    "prompt": "Um scrape recebe o formato de texto clássico em vez de OpenMetrics. O que acontece com os exemplares?",
+    "hint": "O que cada formato consegue carregar.",
+    "choices": [
+      {
+        "text": "Chegam num arquivo separado",
+        "why": "Esse arquivo não existe."
+      },
+      {
+        "text": "Não são mandados",
+        "why": "Isso."
+      },
+      {
+        "text": "Chegam como labels extras em cada bucket",
+        "why": "Isso multiplicaria séries."
+      },
+      {
+        "text": "Chegam, mas o Grafana não consegue desenhá-los",
+        "why": "Eles nunca chegam."
+      }
+    ]
+  },
+  "ex-t4mpfs22": {
+    "prompt": "Um gráfico de latência mostra um bucket lento enchendo. Ponha em ordem os passos desse gráfico até uma causa.",
+    "hint": "Cada passo usa uma ligação da aula.",
+    "items": [
+      "Clicar num ponto de exemplar no bucket lento",
+      "Abrir no Jaeger o rastro que ele nomeia",
+      "Achar o span do caminho crítico com mais tempo próprio",
+      "Ler os atributos desse span e as linhas de log com o trace id dele"
+    ]
+  },
+  "ex-jkf3kea6": {
+    "prompt": "Ligue cada pergunta ao lugar desta aula que a responde.",
+    "hint": "Um por seção.",
+    "pairs": [
+      {
+        "left": "Quais serviços chamam quais, e com que frequência?",
+        "right": "o grafo de dependências do Zipkin"
+      },
+      {
+        "left": "Quais checkouts levaram mais de 400 ms na última hora?",
+        "right": "uma busca no Jaeger"
+      },
+      {
+        "left": "Que requisição está por trás deste ponto do gráfico?",
+        "right": "um exemplar"
+      },
+      {
+        "left": "Quanto tempo as confirmações ficaram no RabbitMQ?",
+        "right": "a lacuna entre dois spans através da fila"
+      }
+    ]
+  },
+  "ex-jjmncw4c": {
+    "prompt": "Um rastro diz: raiz 900 ms, próprio 5; `GET /price` 850 ms, próprio 840; `GET /stock` 300 ms, próprio 300, rodando em paralelo com `GET /price`. Que mudança encurta mais a requisição?",
+    "hint": "Que span está no caminho crítico, e de quem é o tempo próprio?",
+    "choices": [
+      {
+        "text": "Deixar o `GET /stock` duas vezes mais rápido, por ser o segundo maior",
+        "why": "Ele tem folga; a requisição não espera por ele."
+      },
+      {
+        "text": "Deixar mais rápido o trabalho dentro do `GET /price`",
+        "why": "Isso: no caminho crítico, e próprio dele."
+      },
+      {
+        "text": "Tirar os cinco milissegundos de tempo próprio da raiz",
+        "why": "Cinco de 900."
+      },
+      {
+        "text": "Rodar o `GET /stock` antes do `GET /price` em vez de ao lado dele",
+        "why": "Isso acrescenta 300 ms ao caminho."
+      }
+    ]
+  }
+}
