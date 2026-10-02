@@ -77,7 +77,8 @@ gobuild() { # MODULE@VERSION PACKAGE NAME [LDFLAGS]: built inside its own
 }
 
 tools() {
-  apt-get install -y -q dnsmasq-base iproute2 jq tree unzip >/dev/null
+  apt-get update -q >/dev/null
+  apt-get install -y -q dnsmasq-base iproute2 jq tree unzip openssh-client git >/dev/null
   id ana >/dev/null 2>&1 || useradd -m -u 1500 -s /bin/bash ana
   mkdir -p "$OPT/bin"
   hashicorp terraform "$TERRAFORM" "$OPT/dl"
@@ -156,6 +157,10 @@ export TF_CLI_CONFIG_FILE=$OPT/terraformrc CHECKPOINT_DISABLE=1 TF_IN_AUTOMATION
 export AWS_ENDPOINT_URL=http://localhost:4566 AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test AWS_DEFAULT_REGION=sa-east-1
 export PACKER_PLUGIN_PATH=$OPT/packer-plugins
 EOF
+  if [ -f "$OPT/ssh/id_ed25519" ]; then
+    mkdir -p "$home/.ssh" && cp "$OPT/ssh/id_ed25519" "$OPT/ssh/id_ed25519.pub" "$home/.ssh/"
+    chmod 700 "$home/.ssh" && chmod 600 "$home/.ssh/id_ed25519"
+  fi
   chown -R ana: "$home"
   local status=0
   runuser -u ana -- env -i bash -c '. /home/ana/.lab-env; cd /home/ana; "$@"' lab "$@" || status=$?
@@ -170,6 +175,10 @@ HOSTS="web1:172.30.0.11 web2:172.30.0.12 db1:172.30.0.21"
 hosts() {
   case $1 in
     up)
+      if ! docker info >/dev/null 2>&1; then
+        setsid dockerd >/var/log/iac-dockerd.log 2>&1 </dev/null &
+        local i; for i in $(seq 60); do docker info >/dev/null 2>&1 && break; sleep 0.5; done
+      fi
       docker network inspect iac >/dev/null 2>&1 || docker network create --subnet 172.30.0.0/24 iac >/dev/null
       if ! docker image inspect iac-host >/dev/null 2>&1; then
         docker build -q -t iac-host - >/dev/null <<'EOF'
@@ -180,13 +189,16 @@ RUN apt-get update -q && apt-get install -yq openssh-server python3 sudo && rm -
 CMD ["/usr/sbin/sshd", "-D", "-e"]
 EOF
       fi
-      [ -f /home/ana/.ssh/id_ed25519 ] || runuser -u ana -- bash -c 'mkdir -p ~/.ssh && ssh-keygen -q -t ed25519 -N "" -C ana@laptop -f ~/.ssh/id_ed25519'
+      # ana's key lives with the lab rather than in /home/ana, because every run
+      # gets a /home/ana of its own; `inside` copies it into each one
+      mkdir -p "$OPT/ssh"
+      [ -f "$OPT/ssh/id_ed25519" ] || ssh-keygen -q -t ed25519 -N "" -C ana@laptop -f "$OPT/ssh/id_ed25519"
       local h name addr
       for h in $HOSTS; do
         name=${h%%:*} addr=${h#*:}
         docker rm -f "$name" >/dev/null 2>&1 || true
         docker run -d --name "$name" --hostname "$name" --network iac --ip "$addr" iac-host >/dev/null
-        docker cp /home/ana/.ssh/id_ed25519.pub "$name:/home/deploy/.ssh/authorized_keys"
+        docker cp "$OPT/ssh/id_ed25519.pub" "$name:/home/deploy/.ssh/authorized_keys"
         docker exec "$name" chown deploy: /home/deploy/.ssh/authorized_keys
         grep -q " $name\$" /etc/hosts || printf '%s %s\n' "$addr" "$name" >> /etc/hosts
       done
