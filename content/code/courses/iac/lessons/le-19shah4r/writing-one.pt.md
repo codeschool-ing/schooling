@@ -59,7 +59,7 @@ variable "subnets" {
 **Nenhuma das três tem default.** A faixa de uma VPC não tem um valor razoável que sirva a toda
 chamada, e um default aqui deixaria alguém esquecer o argumento e ganhar uma rede que colide com
 outra. O tipo de `subnets` é um objeto por key, então quem escrever `az` errado fica sabendo no plan,
-em vez de descobrir uma sub-rede na zona errada. "interface" volta à regra de validação.
+em vez de descobrir uma sub-rede na zona errada. A próxima seção volta à regra de validação.
 
 E os valores saem pelo `outputs.tf`:
 

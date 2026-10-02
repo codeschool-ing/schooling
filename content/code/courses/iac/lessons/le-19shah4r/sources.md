@@ -17,7 +17,7 @@ it. Three shapes cover nearly every case:
 
 A path is recognised by its leading `./` or `../`. Terraform also understands archives over HTTPS,
 S3 and GCS buckets and a shorthand for GitHub, but Git and a registry are the two you will meet in
-most configurations, and "the-registry" covers the second.
+most configurations, and the second has a section of its own, two sections on.
 
 ## Publishing to Git
 
@@ -62,7 +62,7 @@ ana@laptop:~/shop$ terraform plan
 ```
 
 `git::` tells Terraform to use Git, the URL is anything `git clone` accepts, and `?ref=v1.0.0` is
-handed to Git as the thing to check out. As in "what-a-module-is", the plan refuses before an
+handed to Git as the thing to check out. As it did three sections back, the plan refuses before an
 `init`, and this time the message says why: the call's source is not the one that was installed.
 The `init` downloads:
 

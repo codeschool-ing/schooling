@@ -23,9 +23,9 @@ ana@laptop:~/src/terraform-aws-network$ tree --noreport
 └── versions.tf
 ```
 
-Each file has one job. `main.tf`, `variables.tf` and `outputs.tf` are the three from "writing-one",
+Each file has one job. `main.tf`, `variables.tf` and `outputs.tf` are the three from five sections back,
 and splitting them is a convention rather than a rule: a reader who wants the interface opens two
-short files and never needs the third. `moved.tf` keeps the `moved` blocks from "versioning" in one
+short files and never needs the third. `moved.tf` keeps the `moved` blocks from two sections back in one
 place, so the day they can be deleted they are easy to find. `CHANGELOG.md` is the note that came
 with `v2.0.0`. The other three are new.
 
@@ -75,8 +75,8 @@ Read CHANGELOG.md before upgrading across a major version.
 ```
 
 The example call is the most-read part of any module. Its `source` is written for a real Git server
-rather than the lab's stand-in, and its `ref` is the current version, so whoever copies it starts on a
-version that is still maintained. The registry shows this file as the module's page, and tools such
+rather than the lab's stand-in, and its `ref` is the current version, so whoever copies it starts
+on a version that is still maintained. The registry shows this file as the module's page, and tools such
 as `terraform-docs` can generate the list of inputs and outputs from `variables.tf` and
 `outputs.tf`, which keeps the two from disagreeing.
 

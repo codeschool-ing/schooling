@@ -20,8 +20,8 @@ module "vpc" {
 
 `terraform-aws-modules` is the publisher, `vpc` the module and `aws` the provider it is for.
 `~> 6.0` means any `6.x` from `6.0` up, and not `7.0`: when it installs the module, Terraform picks
-the newest version the registry lists inside that range. **This is the one transcript in the lesson that needs the
-internet**, and the lab has none, so here is what `init` does when it cannot reach the registry:
+the newest version the registry lists inside that range. **This is the one transcript in the
+lesson that needs the internet**, and the lab has none, so here is what `init` does when it cannot reach the registry:
 
 ```
 ana@laptop:~/try-registry$ terraform init
@@ -47,7 +47,7 @@ It shows the first step of the protocol. Terraform asks the host for
 live; with the answer it would list the module's versions, choose one, and ask where to download it
 from. The lab's DNS knows no `registry.terraform.io`, so the first question never left the laptop.
 On a computer with a network, the same `init` prints `Downloading` and the version it chose, and
-the module lands in `.terraform/modules/vpc` just as the Git copy did in "sources".
+the module lands in `.terraform/modules/vpc` just as the Git copy did two sections back.
 
 **Nothing of that module appears in this lesson**, because nothing of it was ever downloaded here.
 Its inputs, its outputs and what it creates are on its page in the registry, which is where to read
@@ -55,10 +55,10 @@ them.
 
 A registry address can also have four parts, with a host name in front:
 `app.terraform.io/shop/network/aws`. That is a **private registry**, such as the one HCP Terraform
-gives an organisation, and it is why the error in "sources" said a registry address has "three or
+gives an organisation, and it is why the error two sections back said a registry address has "three or
 four" components. Publishing to the public registry has rules of its own: a public GitHub
 repository named `terraform-<PROVIDER>-<NAME>`, releases tagged with semantic versions, and the file
-layout of "layout". The tags become the versions the registry lists.
+layout the next section describes. The tags become the versions the registry lists.
 
 ## A module runs with your credentials
 
@@ -87,5 +87,5 @@ source, which fetches a URL. None of them is wrong in itself, and each one is wo
 Then pin it. **`.terraform.lock.hcl` records providers and not modules**, so a range is resolved
 again by every fresh `init`, on a colleague's laptop or in a pipeline, and two of them can get two
 versions. For a module you do not control, an exact `version = "…"` is safer: a new release reaches
-your configuration only when you change the line, and the plan after that change is the review. When you upgrade, read the changelog first, then the plan, and look for replacements the
-way "versioning" did.
+your configuration only when you change the line, and the plan after that change is the review. When you upgrade, read the changelog first, then the
+plan, and look for replacements the way the previous section did.

@@ -48,17 +48,17 @@ um documento pequeno que diz onde ficam as APIs de módulos e de providers daque
 resposta, ele listaria as versões do módulo, escolheria uma e perguntaria de onde baixá-la. O DNS do
 laboratório não conhece nenhum `registry.terraform.io`, então a primeira pergunta nunca saiu do
 laptop. Num computador com rede, o mesmo `init` imprime `Downloading` e a versão escolhida, e o
-módulo cai em `.terraform/modules/vpc` como a cópia do Git caiu em "sources".
+módulo cai em `.terraform/modules/vpc` como a cópia do Git caiu duas seções atrás.
 
 **Nada desse módulo aparece nesta aula**, porque nada dele foi baixado aqui. As entradas, as saídas
 e o que ele cria estão na página dele no registry, que é onde lê-los.
 
 Um endereço de registry também pode ter quatro partes, com um nome de host na frente:
 `app.terraform.io/shop/network/aws`. Isso é um **registry privado**, como o que o HCP Terraform dá a
-uma organização, e é por isso que o erro em "sources" dizia que um endereço de registry tem "three
+uma organização, e é por isso que o erro de duas seções atrás dizia que um endereço de registry tem "three
 or four" componentes. Publicar no registry público tem regras próprias: um repositório público no
 GitHub chamado `terraform-<PROVIDER>-<NAME>`, releases marcadas com versões semânticas, e a
-organização de arquivos de "layout". As tags viram as versões que o registry lista.
+organização de arquivos que a próxima seção descreve. As tags viram as versões que o registry lista.
 
 ## Um módulo roda com as suas credenciais
 
@@ -88,5 +88,5 @@ Depois, fixe a versão. **O `.terraform.lock.hcl` registra providers e não mód
 é resolvida de novo a cada `init` do zero, no laptop de um colega ou num pipeline, e dois deles podem
 pegar duas versões. Para um módulo que você não controla, um `version = "…"` exato é mais seguro: uma
 versão nova só chega à sua configuração quando você muda a linha, e o plan depois dessa mudança é a
-revisão. Ao atualizar, leia primeiro o changelog, depois o plan, e procure substituições como em
-"versioning".
+revisão. Ao atualizar, leia primeiro o changelog, depois o plan, e procure substituições como na
+seção anterior.

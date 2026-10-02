@@ -31,8 +31,8 @@ ana@laptop:~/shop$ terraform plan
 ╵
 ```
 
-`module.shop is object with 2 attributes` is the whole answer. **From outside, a module call is an object
-whose attributes are its outputs**, `vpc_id` and `subnet_ids`, and nothing else. The resource
+`module.shop is object with 2 attributes` is the whole answer. **From outside, a module call is
+an object whose attributes are its outputs**, `vpc_id` and `subnet_ids`, and nothing else. The resource
 `aws_vpc.this` exists, it is in the state, and the root still cannot name it. That is deliberate: if
 callers could reach in, the module's author could never rename a resource without breaking them.
 The fix is an output in the module, written on purpose, which then becomes part of the interface.
@@ -77,8 +77,9 @@ wrong for half of them is a trap with documentation.
 
 **Do not wrap a single resource.** A module around one `aws_s3_bucket`, with a variable for each of
 its arguments, gives the caller the same resource behind a second name, and every argument the
-provider adds later is missing until somebody adds a variable for it. A module earns its place when it puts several resources together with decisions made: a
-VPC *and* its subnets *and* their tags, the way this network does.
+provider adds later is missing until somebody adds a variable for it. A module earns its place
+when it puts several resources together with decisions made: a VPC *and* its subnets *and* their
+tags, the way this network does.
 
 **Do not configure providers inside a module.** Look at what `modules/network` lacks: there is no
 `provider "aws"` block in it. It uses the provider configuration of whoever calls it, so the same

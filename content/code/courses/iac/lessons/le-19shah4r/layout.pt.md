@@ -24,8 +24,8 @@ ana@laptop:~/src/terraform-aws-network$ tree --noreport
 ```
 
 Cada arquivo tem um trabalho. `main.tf`, `variables.tf` e `outputs.tf` são os três de
-"writing-one", e separá-los é uma convenção, não uma regra: quem quer a interface abre dois arquivos
-curtos e nunca precisa do terceiro. `moved.tf` guarda os blocos `moved` de "versioning" num lugar só,
+cinco seções atrás, e separá-los é uma convenção, não uma regra: quem quer a interface abre dois arquivos
+curtos e nunca precisa do terceiro. `moved.tf` guarda os blocos `moved` de duas seções atrás num lugar só,
 para que no dia em que puderem ser apagados sejam fáceis de achar. `CHANGELOG.md` é a nota que veio
 com a `v2.0.0`. Os outros três são novos.
 

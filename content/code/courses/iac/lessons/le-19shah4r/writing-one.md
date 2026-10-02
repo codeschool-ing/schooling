@@ -59,8 +59,8 @@ variable "subnets" {
 **Not one of the three has a default.** A VPC's range has no sensible value that suits every caller,
 and a default here would let somebody forget the argument and get a network that collides with
 another. The `subnets` type is an object per key, so a caller who misspells `az` is told at plan
-time rather than discovering a subnet in the wrong zone. "interface" comes back to the validation
-rule.
+time rather than discovering a subnet in the wrong zone. The next section comes back to the
+validation rule.
 
 And the values go out through `outputs.tf`:
 
@@ -164,7 +164,7 @@ module.shop.aws_subnet.this["c"]
 module.shop.aws_vpc.this
 ```
 
-**Two copies of the same three lines of HCL, kept apart by their prefix.** `module.shop` has two
+**Two copies of the same HCL, kept apart by their prefix.** `module.shop` has two
 subnets and `module.analytics` has one, because each call passed its own map. The two never
 collide in the state because their addresses differ, and they never collide in AWS because the
 caller chose different ranges.

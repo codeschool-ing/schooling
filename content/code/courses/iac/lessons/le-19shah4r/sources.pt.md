@@ -17,7 +17,7 @@ Terraform busca. Três formatos cobrem quase todos os casos:
 
 Um caminho é reconhecido pelo `./` ou `../` no começo. O Terraform também entende arquivos
 compactados por HTTPS, buckets S3 e GCS e um atalho para o GitHub, mas Git e registry são os dois que
-você vai encontrar na maioria das configurações, e "the-registry" trata do segundo.
+você vai encontrar na maioria das configurações, e o segundo ganha uma seção própria, duas seções adiante.
 
 ## Publicando no Git
 
@@ -62,7 +62,7 @@ ana@laptop:~/shop$ terraform plan
 ```
 
 `git::` diz ao Terraform para usar o Git, a URL é qualquer coisa que o `git clone` aceite, e
-`?ref=v1.0.0` é entregue ao Git como o que fazer checkout. Como em "what-a-module-is", o plan recusa
+`?ref=v1.0.0` é entregue ao Git como a referência do checkout. Como fez três seções atrás, o plan recusa
 antes de um `init`, e desta vez a mensagem diz por quê: o source da chamada não é o que foi
 instalado. O `init` baixa:
 

@@ -31,8 +31,8 @@ ana@laptop:~/shop$ terraform plan
 ╵
 ```
 
-`module.shop is object with 2 attributes` é a resposta inteira. **Vista de fora, uma chamada de módulo é um
-objeto cujos atributos são os outputs dele**, `vpc_id` e `subnet_ids`, e mais nada. O recurso
+`module.shop is object with 2 attributes` é a resposta inteira. **Vista de fora, uma chamada de
+módulo é um objeto cujos atributos são os outputs dele**, `vpc_id` e `subnet_ids`, e mais nada. O recurso
 `aws_vpc.this` existe, está no state, e mesmo assim o root não consegue nomeá-lo. É de propósito: se
 quem chama pudesse entrar, o autor do módulo nunca poderia renomear um recurso sem quebrar alguém. A
 correção é um output no módulo, escrito de propósito, que passa então a fazer parte da interface.
