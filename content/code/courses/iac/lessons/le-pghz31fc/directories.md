@@ -135,7 +135,7 @@ diff -r envs/dev/main.tf envs/prod/main.tf
 >   environment = "prod"
 ```
 
-Six lines of values, and the backend key. The key has to be written out in each copy, because, as
+Four lines of values in each, and the backend key. The key has to be written out in each copy, because, as
 lesson 7 showed, a backend block cannot use variables. Each directory is initialised and applied on
 its own, with no arguments at all:
 
@@ -145,9 +145,9 @@ Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 ana@laptop:~/shop-infra/envs/prod$ terraform apply -auto-approve | tail -n 1
 Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
 ana@laptop:~/shop-infra/envs/prod$ aws s3 ls --recursive s3://shop-tfstate-123456789012
-2026-10-02 07:42:36       6446 envs/dev/terraform.tfstate
-2026-10-02 07:42:41       8588 envs/prod/terraform.tfstate
-2026-10-02 07:41:25        181 shop/terraform.tfstate
+2026-10-02 12:15:15       6446 envs/dev/terraform.tfstate
+2026-10-02 12:15:25       8588 envs/prod/terraform.tfstate
+2026-10-02 12:13:21        181 shop/terraform.tfstate
 ```
 
 Two state objects, each under a key that says what it is, and each environment's plan reads only
