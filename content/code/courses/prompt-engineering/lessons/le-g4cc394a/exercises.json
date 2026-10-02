@@ -1,0 +1,525 @@
+[
+  {
+    "id": "ex-mztvtahb",
+    "version": 1,
+    "section": "thought-action-observation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a ReAct trace, who writes the `Observation:` line?",
+    "hint": "Look at the table of the four kinds of line.",
+    "choices": [
+      {
+        "text": "The program running the loop",
+        "correct": true,
+        "why": "Right. It is what the tool returned, written by the loop, so it is a fact the model did not make up."
+      },
+      {
+        "text": "The model, after it has written its Action",
+        "correct": false,
+        "why": "That is exactly what a real system prevents with a stop sequence: an Observation the model writes is a guess about what the tool would say."
+      },
+      {
+        "text": "The tool's author, ahead of time",
+        "correct": false,
+        "why": "The tool runs at that moment; nothing is written in advance."
+      },
+      {
+        "text": "The person who asked the question, between steps",
+        "correct": false,
+        "why": "Nobody types between steps. The loop runs the tool and hands the result back on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cpcr5nm",
+    "version": 1,
+    "section": "thought-action-observation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does ReAct add to chain of thought (lesson 26)?",
+    "hint": "Compare a trace of pure reasoning with the refund run.",
+    "choices": [
+      {
+        "text": "It makes the model reason more carefully",
+        "correct": false,
+        "why": "The reasoning is the same kind of text. What changes is what it gets to reason from."
+      },
+      {
+        "text": "It hides the reasoning so the answer is shorter",
+        "correct": false,
+        "why": "The opposite: the reasoning is written in the open, step by step."
+      },
+      {
+        "text": "It lets the model run several tools in one step",
+        "correct": false,
+        "why": "The format asks for one Action at a time, and the loop reads one per turn."
+      },
+      {
+        "text": "A fact from outside the model after each step",
+        "correct": true,
+        "why": "Yes. The thoughts are still chain of thought, cut into pieces; what comes between them is real tool output."
+      }
+    ]
+  },
+  {
+    "id": "ex-25ks79ck",
+    "version": 1,
+    "section": "thought-action-observation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the run of `runs/refund.txt`, how many tool calls did the loop make before the answer?",
+    "hint": "Count the `tool>` lines.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-rtbkv210",
+    "version": 1,
+    "section": "thought-action-observation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The run answered `R$ 111.60`. Where did that amount come from?",
+    "hint": "Find the line that produced it.",
+    "choices": [
+      {
+        "text": "From the handbook's `refunds.md`",
+        "correct": false,
+        "why": "The handbook has the rules, not the prices. The price was in the question."
+      },
+      {
+        "text": "The calculator's `111.6`, from `4 * 27.90`",
+        "correct": true,
+        "why": "Right. The model wrote the sum; the calculator did the arithmetic."
+      },
+      {
+        "text": "The model worked it out in its Thought",
+        "correct": false,
+        "why": "The Thought only says what is needed. The number appears after the calculator returned it."
+      },
+      {
+        "text": "The `search` tool, which found the price of the soup",
+        "correct": false,
+        "why": "No search returned a price; the handbook has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-hprt9s96",
+    "version": 1,
+    "section": "thought-action-observation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's ReAct prompt works, but traces sometimes show an `Observation:` the tool never returned. What is the fix the section names?",
+    "hint": "Who should be allowed to write that line?",
+    "choices": [
+      {
+        "text": "Add \"never write your own Observation\" to the prompt in capital letters",
+        "correct": false,
+        "why": "A sentence in the prompt is a request, and this one is broken exactly when the model drifts. A stop sequence does not depend on the model agreeing."
+      },
+      {
+        "text": "Make `Observation:` a stop sequence",
+        "correct": true,
+        "why": "Yes. The model stops after its Action, and the only Observation in the text is the one the loop wrote from the tool."
+      },
+      {
+        "text": "Raise the temperature so the model explores other wordings",
+        "correct": false,
+        "why": "Temperature changes which words are drawn, not whether the model continues past its Action."
+      },
+      {
+        "text": "Remove the Thought lines so there is less text",
+        "correct": false,
+        "why": "The Thought lines are not the cause, and without them the trace loses what makes it readable."
+      }
+    ]
+  },
+  {
+    "id": "ex-jazye3xw",
+    "version": 1,
+    "section": "thought-action-observation",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which parts of the refund answer can be traced to a line in the run? Choose all that apply.",
+    "hint": "Go through the answer phrase by phrase.",
+    "choices": [
+      {
+        "text": "R$ 111.60",
+        "correct": true,
+        "why": "Yes: the calculator's `111.6`."
+      },
+      {
+        "text": "the manager has to approve it",
+        "correct": true,
+        "why": "Yes: the first search returned the rule about refunds above R$ 100."
+      },
+      {
+        "text": "refunded to the card",
+        "correct": true,
+        "why": "Yes: the second search returned the rule about the card or method used to pay."
+      },
+      {
+        "text": "the soups were served cold",
+        "correct": false,
+        "why": "That came from the question, not from any tool. It is a premise, and nothing in the run checks it."
+      }
+    ]
+  },
+  {
+    "id": "ex-n644vd89",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`agent runs/ignored.txt` ended with `done: an answer after 3 steps`, and the answer was wrong. Why did the loop not object?",
+    "hint": "What does the loop look for in a turn?",
+    "choices": [
+      {
+        "text": "The tools returned the wrong facts, so the loop had no way to know",
+        "correct": false,
+        "why": "The tools returned the right facts, two lines above the answer."
+      },
+      {
+        "text": "The loop did object, but only in a log file nobody reads",
+        "correct": false,
+        "why": "It printed `done`. Nothing else was reported anywhere."
+      },
+      {
+        "text": "Three steps was too few for the loop to check the answer",
+        "correct": false,
+        "why": "The number of steps has nothing to do with it; the loop never checks an answer's content."
+      },
+      {
+        "text": "It checks shape",
+        "correct": true,
+        "why": "Right. It finds an Action or an Answer; whether the answer agrees with the observations is not something it judges."
+      }
+    ]
+  },
+  {
+    "id": "ex-st5c3ge0",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the ignored run, the last Thought was \"That is a normal refund.\" Why is that line worth noticing?",
+    "hint": "What does it cite?",
+    "choices": [
+      {
+        "text": "It is too short to be a valid Thought",
+        "correct": false,
+        "why": "Length is not the problem. A short thought that cites the R$ 100 rule would have been fine."
+      },
+      {
+        "text": "It should have been an Action",
+        "correct": false,
+        "why": "It could not usefully be one; the facts were already there. The problem is that it ignored them."
+      },
+      {
+        "text": "It names no fact, and that is where the run lost its evidence",
+        "correct": true,
+        "why": "Yes. Each good Thought points at an observation; this one points at nothing and leads to an answer that contradicts one."
+      },
+      {
+        "text": "The loop refuses Thoughts that do not end in a question",
+        "correct": false,
+        "why": "The loop does not read Thoughts at all; it prints them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ca780b8f",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Action: calculator(4 * 27.90)` stopped the run. What would a careful system do next?",
+    "hint": "Lesson 19 handled a reply that did not match its schema.",
+    "choices": [
+      {
+        "text": "Run the calculator anyway, since the meaning is obvious",
+        "correct": false,
+        "why": "Obvious to a person. A loop that guesses what a malformed line meant will one day run a call nobody wrote."
+      },
+      {
+        "text": "Accept the run as answered, since the Thought had the numbers",
+        "correct": false,
+        "why": "There is no Answer line, and a Thought is not a reply."
+      },
+      {
+        "text": "Tell the model the expected format and let it try once more",
+        "correct": true,
+        "why": "Right: the same move as repairing a reply against a schema. Guessing the call is what it must not do."
+      },
+      {
+        "text": "Switch to a larger model for the rest of the conversation",
+        "correct": false,
+        "why": "Nothing says a larger model is needed; a format reminder is the cheap, direct fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xrdee26",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`calculator[4 * 27,90]` came back as an error, and the next turn fixed it. What made the recovery possible?",
+    "hint": "Compare with a tool that returns `0` when it fails.",
+    "choices": [
+      {
+        "text": "The loop rewrote the comma as a point before running the tool",
+        "correct": false,
+        "why": "The loop passed the text unchanged. The tool refused it, and said why."
+      },
+      {
+        "text": "The error came back as an Observation the model could read",
+        "correct": true,
+        "why": "Yes. A clear error is something to reason from; a silent failure or a plausible wrong number is a false fact."
+      },
+      {
+        "text": "Brazilian prices are always rejected, so the model knew in advance",
+        "correct": false,
+        "why": "It did not know; it read the error. And the error was about the comma, not about Brazil."
+      },
+      {
+        "text": "The step limit forced the model to try again",
+        "correct": false,
+        "why": "The step limit stops runs; it does not make anything retry."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxhjxe8n",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--max-steps 2`, the refund run stopped before its answer although it was on the right track. What does the section conclude?",
+    "hint": "Is the limit wrong because it cut off a good run?",
+    "choices": [
+      {
+        "text": "Keep it, and report the run as stopped",
+        "correct": true,
+        "why": "Right. The cost is a good run cut short now and then; the alternative is a run that loops until somebody notices the bill."
+      },
+      {
+        "text": "Remove the limit, since it can stop a correct run",
+        "correct": false,
+        "why": "Without one, a run that repeats itself never ends, and every repetition is paid for (lesson 15)."
+      },
+      {
+        "text": "Treat the last observation as the answer",
+        "correct": false,
+        "why": "`111.6` is a number, not an answer to the question. Presenting it as one would be dishonest."
+      },
+      {
+        "text": "Set the limit to exactly the number of steps the run needs",
+        "correct": false,
+        "why": "Nobody knows that number before the run; a limit is a ceiling, not a plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-mvkfyzs8",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was `send_email` refused in `runs/email.txt`?",
+    "hint": "Read the line `tools allowed:`.",
+    "choices": [
+      {
+        "text": "The e-mail address was not valid",
+        "correct": false,
+        "why": "`manager@example.com` is a well-formed address. The refusal came before any address was looked at."
+      },
+      {
+        "text": "The model asked politely, which the loop treats as a mistake",
+        "correct": false,
+        "why": "Politeness plays no part; the loop checks the tool's name against a list."
+      },
+      {
+        "text": "The step limit had been reached",
+        "correct": false,
+        "why": "The refusal came at step 1, and the run went on to a second step."
+      },
+      {
+        "text": "It is not on the default allow-list",
+        "correct": true,
+        "why": "Yes. The four tools that only read are allowed; one that changes something outside the conversation is not, unless somebody adds it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1etan43",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes dropping the allow-list and writing \"only call send_email if the user asked\" in the prompt instead. What is the problem?",
+    "hint": "Lesson 7, and what tools bring back into the context.",
+    "choices": [
+      {
+        "text": "Prompts cannot contain the names of tools",
+        "correct": false,
+        "why": "They routinely do; you can see the ReAct prompt describe every tool, and a page may name one too."
+      },
+      {
+        "text": "The model would no longer know that send_email exists",
+        "correct": false,
+        "why": "It would still be described in the prompt. The issue is what stops it, not what the model knows."
+      },
+      {
+        "text": "Instructions in a prompt are ignored once the run has four steps or more",
+        "correct": false,
+        "why": "There is no such threshold. The point is that instructions are requests, at any step."
+      },
+      {
+        "text": "Tool output sways the model; the list in the code does not",
+        "correct": true,
+        "why": "Right. A review or a web page may carry instructions, and the model reads them; a check in the code runs the same way whatever it read."
+      }
+    ]
+  },
+  {
+    "id": "ex-swprme03",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A limit written in the prompt is a ___ to the model; a limit enforced by the loop holds whatever the model was persuaded of.",
+    "hint": "The section's word for a sentence the model may or may not follow.",
+    "blanks": [
+      {
+        "accept": [
+          "request"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gn28yrpx",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put one ReAct step in order, from the model's turn to the next one.",
+    "hint": "The model writes twice in a row; then the loop works.",
+    "items": [
+      "The model writes a Thought",
+      "The model writes an Action",
+      "The loop checks the tool is allowed and runs it",
+      "The loop adds the tool's reply as an Observation"
+    ]
+  },
+  {
+    "id": "ex-49hj7y4f",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each run to how the loop ended it.",
+    "hint": "Each verdict was printed on the run's last line.",
+    "pairs": [
+      {
+        "left": "`runs/ignored.txt`",
+        "right": "done, with a wrong answer"
+      },
+      {
+        "left": "`runs/paren.txt`",
+        "right": "stopped: neither an Action nor an Answer"
+      },
+      {
+        "left": "`runs/refund.txt --max-steps 2`",
+        "right": "stopped: no answer within the limit"
+      }
+    ],
+    "right_distractors": [
+      "held until a person confirms"
+    ]
+  },
+  {
+    "id": "ex-hancshzq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A ReAct agent answers a question about opening hours. Its trace shows one search, which returned `nothing found`, and then an Answer with exact times. What should you conclude?",
+    "hint": "Where could the times have come from?",
+    "choices": [
+      {
+        "text": "The times did not come from a tool, so treat them as the model's guess",
+        "correct": true,
+        "why": "Right. The trace is the evidence, and here it shows no source: the Answer ignored an empty observation and answered from what is likely (lesson 5)."
+      },
+      {
+        "text": "The answer is reliable, because the agent used a tool",
+        "correct": false,
+        "why": "Using a tool is not the same as using its result; this one returned nothing."
+      },
+      {
+        "text": "The search tool is broken and should be replaced",
+        "correct": false,
+        "why": "`nothing found` may be the correct reply to that query. The problem is the answer that followed it."
+      },
+      {
+        "text": "The loop should have refused the Answer",
+        "correct": false,
+        "why": "The loop checks shape. An Answer line is a valid ending, whatever it says."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3nrjs3x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belongs in the loop's code rather than in the prompt?",
+    "hint": "Which ones must hold even when the model is persuaded otherwise?",
+    "choices": [
+      {
+        "text": "A description of each tool and what to give it",
+        "correct": false,
+        "why": "That belongs in the prompt: the model needs it to write a sensible Action."
+      },
+      {
+        "text": "The format: Thought, Action, Observation, Answer",
+        "correct": false,
+        "why": "The model needs to see the format to follow it, so it is written in the prompt; the loop also parses it."
+      },
+      {
+        "text": "The question the user asked",
+        "correct": false,
+        "why": "The question is the input; it goes into the prompt."
+      },
+      {
+        "text": "The maximum number of steps",
+        "correct": true,
+        "why": "Yes. Like the allow-list and the hold on actions that change something, it must not depend on the model agreeing."
+      }
+    ]
+  }
+]

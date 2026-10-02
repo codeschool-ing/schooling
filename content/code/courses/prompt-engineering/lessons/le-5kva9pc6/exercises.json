@@ -1,0 +1,510 @@
+[
+  {
+    "id": "ex-314bp87n",
+    "version": 1,
+    "section": "a-schema",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a JSON Schema check that a JSON parser does not?",
+    "hint": "Syntax against shape.",
+    "choices": [
+      {
+        "text": "Field names, types, allowed values and required fields",
+        "correct": true,
+        "why": "Right. The parser only says the text is JSON; the schema says it is the object you accept."
+      },
+      {
+        "text": "Whether the text is JSON at all",
+        "correct": false,
+        "why": "That is the parser's job, lesson 18. The validator needs parsed JSON to start from."
+      },
+      {
+        "text": "Whether the values are true",
+        "correct": false,
+        "why": "No schema reads the complaint. Truth needs the input, as the last reading section shows."
+      },
+      {
+        "text": "Whether the model was confident",
+        "correct": false,
+        "why": "Nothing in a reply measures confidence, and a schema would not read it if it did."
+      }
+    ]
+  },
+  {
+    "id": "ex-ej52qp37",
+    "version": 1,
+    "section": "a-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`triage/bad-2.json` added a field called `mood`. Which line of the schema made the validator report it?",
+    "hint": "Which keyword refuses a name the schema did not list?",
+    "choices": [
+      {
+        "text": "`\"required\": [\"category\", \"refund\", \"summary\"]`",
+        "correct": false,
+        "why": "`required` lists fields that must be present. It says nothing about extra ones, and it caught the missing `summary` instead."
+      },
+      {
+        "text": "`\"type\": \"object\"`",
+        "correct": false,
+        "why": "The reply is an object, so that line is satisfied."
+      },
+      {
+        "text": "`\"category\": {\"enum\": [...]}`",
+        "correct": false,
+        "why": "The enum constrains `category`'s value only."
+      },
+      {
+        "text": "`\"additionalProperties\": false`",
+        "correct": true,
+        "why": "Yes. Without it, `mood` would pass and travel along unnoticed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejehgea8",
+    "version": 1,
+    "section": "a-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the validator list all three problems in `bad-1.json` when lesson 18's parser stopped at the first?",
+    "hint": "What does each tool need before it can look at a field?",
+    "choices": [
+      {
+        "text": "The validator is a newer, more capable program than Python's parser",
+        "correct": false,
+        "why": "Age has nothing to do with it. The two answer different questions."
+      },
+      {
+        "text": "It was asked to with a flag",
+        "correct": false,
+        "why": "`validate` was given no flag. Reporting everything is how it works."
+      },
+      {
+        "text": "The object is already parsed, so every field gets checked",
+        "correct": true,
+        "why": "Right. Parsing stops where the syntax breaks; validation walks a complete object and reports every rule it breaks."
+      },
+      {
+        "text": "The three problems were on the same line",
+        "correct": false,
+        "why": "They are in three fields. Lines do not matter once the text is parsed."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcwnderw",
+    "version": 1,
+    "section": "a-schema",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many problems did `validate` report for `triage/bad-1.json`?",
+    "hint": "The line before the exit status.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "problems"
+  },
+  {
+    "id": "ex-21cgyghq",
+    "version": 1,
+    "section": "a-schema",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a JSON Schema, the keyword ___ lists the only values a field may take, such as the five categories.",
+    "hint": "Four letters, short for enumeration.",
+    "blanks": [
+      {
+        "accept": [
+          "enum"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nzrm0m12",
+    "version": 1,
+    "section": "a-schema",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The café adds a sixth complaint queue, `hygiene`. The schema is in the prompt and in the program. What is the advantage of that arrangement?",
+    "hint": "Where would the change have to be made otherwise?",
+    "choices": [
+      {
+        "text": "One edit updates both, so they cannot disagree",
+        "correct": true,
+        "why": "Yes. If the prompt described the categories in prose and the program kept its own list, one of the two would be left behind."
+      },
+      {
+        "text": "The model learns `hygiene` permanently",
+        "correct": false,
+        "why": "A prompt changes nothing in the model. It only shapes the reply to that request."
+      },
+      {
+        "text": "No validation is needed once the prompt has the schema",
+        "correct": false,
+        "why": "The model can still reply outside it; the check in the program is what catches that."
+      },
+      {
+        "text": "The schema makes the model's classification of hygiene complaints correct",
+        "correct": false,
+        "why": "It makes the label one of six words. Choosing the right one is still the model's job, and still checkable."
+      }
+    ]
+  },
+  {
+    "id": "ex-0grtq60w",
+    "version": 1,
+    "section": "repair",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`repair` on `replies/fenced.txt` printed `step 2: parsed characters 47 to 166`. What did step 2 do?",
+    "hint": "Where do the braces sit in the file?",
+    "choices": [
+      {
+        "text": "Asked the model to send the reply again without the fence",
+        "correct": false,
+        "why": "No model is called. Step 2 is a cut, done locally."
+      },
+      {
+        "text": "Removed every character that was not part of a JSON value, anywhere in the file",
+        "correct": false,
+        "why": "It cuts once, between two braces. It does not filter characters."
+      },
+      {
+        "text": "Rewrote the object to match the schema",
+        "correct": false,
+        "why": "It never edits the object. Step 3 checks it as it is."
+      },
+      {
+        "text": "Took the text from the first `{` to the last `}`",
+        "correct": true,
+        "why": "Right. That drops the sentence, the code fence and the sign-off, and leaves the object."
+      }
+    ]
+  },
+  {
+    "id": "ex-63dm19kp",
+    "version": 1,
+    "section": "repair",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was no second request to the model needed for `fenced.txt`?",
+    "hint": "Was the answer wrong, or its wrapping?",
+    "choices": [
+      {
+        "text": "Lowering the temperature had already fixed it",
+        "correct": false,
+        "why": "Temperature was never changed. The fix was a cut."
+      },
+      {
+        "text": "A fenced reply is valid JSON",
+        "correct": false,
+        "why": "It is not: step 1 failed on the first character."
+      },
+      {
+        "text": "The right object was there, only wrapped",
+        "correct": true,
+        "why": "Yes. Steps 1 to 3 cost nothing and recovered it."
+      },
+      {
+        "text": "The validator skips replies that contain a code fence",
+        "correct": false,
+        "why": "It checked the object cut from inside the fence, and found it valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-ta06mqb5",
+    "version": 1,
+    "section": "repair",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes the follow-up message from `repair` on `wrong-enum.txt` more useful than \"that was wrong, try again\"?",
+    "hint": "Read its middle line.",
+    "choices": [
+      {
+        "text": "It is shorter",
+        "correct": false,
+        "why": "It is longer. Precision is what helps."
+      },
+      {
+        "text": "It contains the original complaint again",
+        "correct": false,
+        "why": "It contains the validator's errors, not the complaint."
+      },
+      {
+        "text": "It names the field and lists the allowed values",
+        "correct": true,
+        "why": "Right. The model is told `category` and the five values, which is something to act on."
+      },
+      {
+        "text": "It tells the model which category is correct",
+        "correct": false,
+        "why": "It says which values are allowed, not which one applies."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9hjxpn4",
+    "version": 1,
+    "section": "repair",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program retries until the reply passes the schema, with no limit. One complaint fits none of the categories, and the schema has no `other`. What happens?",
+    "hint": "Is there an exit for a reply that is never valid?",
+    "choices": [
+      {
+        "text": "The model invents a sixth category and the validator accepts it",
+        "correct": false,
+        "why": "The enum refuses any value it does not list."
+      },
+      {
+        "text": "The loop never ends, and each attempt is billed",
+        "correct": true,
+        "why": "Right. A reply that is never valid needs a limit, and then a recorded failure."
+      },
+      {
+        "text": "The validator eventually gives up and accepts the last reply",
+        "correct": false,
+        "why": "Validators do not give up. The loop is the caller's code."
+      },
+      {
+        "text": "The model is forced to pick one of the categories, so it ends at once",
+        "correct": false,
+        "why": "Without constrained decoding nothing forces it, and with it the loop ends but the label may be wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfexrpzx",
+    "version": 1,
+    "section": "repair",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A provider's structured output mode restricts decoding to your schema. Which statement about it is true?",
+    "hint": "Shape and meaning were kept apart.",
+    "choices": [
+      {
+        "text": "The reply fits the schema, and that does not make its category right",
+        "correct": true,
+        "why": "Right. It removes most of the shape failures and none of the meaning failures."
+      },
+      {
+        "text": "The rules check in `rules.py` is unnecessary once the mode is on",
+        "correct": false,
+        "why": "The refund of 140 fits the schema and still breaks the café's rule."
+      },
+      {
+        "text": "Every provider names its parameters the same way, so the code is portable",
+        "correct": false,
+        "why": "Names differ and change; the lesson says to take them from the provider's documentation."
+      },
+      {
+        "text": "It lets the model write any JSON Schema feature you like",
+        "correct": false,
+        "why": "Some modes accept only a subset of JSON Schema. Check the documentation."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3gmys84",
+    "version": 1,
+    "section": "repair",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `repair` in the order it tries them.",
+    "hint": "Each step is tried only when the one before it failed.",
+    "items": [
+      "Parse the reply as it is",
+      "Cut from the first { to the last } and parse that",
+      "Check the object against the schema",
+      "Print the follow-up message with the errors"
+    ]
+  },
+  {
+    "id": "ex-00j7fgxw",
+    "version": 1,
+    "section": "validating-meaning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`triage/7.json` passed the schema. What was wrong with `refund_amount: 140`?",
+    "hint": "Read the complaint again.",
+    "choices": [
+      {
+        "text": "140 is not a number",
+        "correct": false,
+        "why": "It is a number, which is all the schema asked."
+      },
+      {
+        "text": "Refund amounts have to be written as strings",
+        "correct": false,
+        "why": "The schema says `number`, and 140 is one."
+      },
+      {
+        "text": "Nothing; it matches the complaint",
+        "correct": false,
+        "why": "It matches one number in the complaint, the wrong one."
+      },
+      {
+        "text": "The customer paid R$ 70 twice, so R$ 70 is owed",
+        "correct": true,
+        "why": "Right. The model put the whole charge in the field. Both numbers are in the complaint, and no schema knows which is owed."
+      }
+    ]
+  },
+  {
+    "id": "ex-7h94jtf5",
+    "version": 1,
+    "section": "validating-meaning",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "According to `handbook/refunds.md`, above how many reais does a refund need the shift manager's approval?",
+    "hint": "The `grep` line.",
+    "value": 100,
+    "tolerance": 0,
+    "unit": "reais"
+  },
+  {
+    "id": "ex-kkd3fs5r",
+    "version": 1,
+    "section": "validating-meaning",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these can `rules.py` catch? Choose all that apply.",
+    "hint": "It reads the triage, never the complaint.",
+    "choices": [
+      {
+        "text": "A refund of R$ 140, above the manager's limit",
+        "correct": true,
+        "why": "Yes. That is its third rule, and it fired on complaint 7."
+      },
+      {
+        "text": "`refund: true` with no amount",
+        "correct": true,
+        "why": "Yes. A reply that contradicts itself is caught by its first rule."
+      },
+      {
+        "text": "A refund of R$ 140 when R$ 70 was owed",
+        "correct": false,
+        "why": "Not without the complaint. Checking against the input needs another check, or a person."
+      },
+      {
+        "text": "A summary that describes a different complaint",
+        "correct": false,
+        "why": "`rules.py` never reads the complaint, so it cannot compare the two."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsqym157",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In what order should a reply meant for a program be checked?",
+    "hint": "Cheapest first.",
+    "choices": [
+      {
+        "text": "Parse, then schema, then the café's rules",
+        "correct": true,
+        "why": "Right. Each layer needs the one before it: no schema without a parsed object, no rule without known fields."
+      },
+      {
+        "text": "Rules, then schema, then parse",
+        "correct": false,
+        "why": "The rules read fields, which do not exist until the reply is parsed and shaped."
+      },
+      {
+        "text": "Schema only, since it includes parsing and rules",
+        "correct": false,
+        "why": "A schema needs parsed JSON first, and it does not express the café's rules well."
+      },
+      {
+        "text": "Parse, then send it back to the model to check itself",
+        "correct": false,
+        "why": "A model's view of its own reply is no evidence, lesson 5. The checks here are programs."
+      }
+    ]
+  },
+  {
+    "id": "ex-e26wd2hn",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each failure to the check that catches it first.",
+    "hint": "One check catches nothing in this list.",
+    "pairs": [
+      {
+        "left": "a sentence before the object",
+        "right": "parsing"
+      },
+      {
+        "left": "`\"refund\": \"no\"`",
+        "right": "the schema"
+      },
+      {
+        "left": "a refund above R$ 100",
+        "right": "the café's rules"
+      },
+      {
+        "left": "R$ 140 where R$ 70 was owed",
+        "right": "reading the reply against the complaint"
+      }
+    ],
+    "right_distractors": [
+      "a higher temperature"
+    ]
+  },
+  {
+    "id": "ex-ffaajpxc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Retries have run out and the last reply still fails the schema. What does the lesson say the program does?",
+    "hint": "The complaint still has to go somewhere.",
+    "choices": [
+      {
+        "text": "Uses the last reply anyway, since it is the best available",
+        "correct": false,
+        "why": "An invalid reply used anyway is the silent failure the loop exists to prevent."
+      },
+      {
+        "text": "Raises the limit and keeps trying",
+        "correct": false,
+        "why": "A limit you raise when it is reached is no limit."
+      },
+      {
+        "text": "Drops the complaint without a trace",
+        "correct": false,
+        "why": "Then nobody ever learns it failed, which is the worst outcome."
+      },
+      {
+        "text": "Records the failure and sends the complaint to a person",
+        "correct": true,
+        "why": "Right. A slower path for one complaint, with the reply and errors attached, instead of a silent hole."
+      }
+    ]
+  }
+]

@@ -1,0 +1,513 @@
+[
+  {
+    "id": "ex-42p2ckms",
+    "version": 1,
+    "section": "generate-and-score",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What assumption does automatic prompt engineering drop?",
+    "hint": "What does the usual way of improving a prompt rely on?",
+    "choices": [
+      {
+        "text": "That the prompt which reads best works best",
+        "correct": true,
+        "why": "Right. It measures instead of trusting how a prompt reads."
+      },
+      {
+        "text": "That a model needs a prompt at all",
+        "correct": false,
+        "why": "Every candidate is still a prompt; the method chooses among them."
+      },
+      {
+        "text": "That examples with known answers are useful",
+        "correct": false,
+        "why": "It depends on them: they are what each candidate is scored on."
+      },
+      {
+        "text": "That a person has to write the first draft of every prompt the system uses",
+        "correct": false,
+        "why": "A person may still write candidates; that is not the assumption it gives up."
+      }
+    ]
+  },
+  {
+    "id": "ex-ap5tpqfq",
+    "version": 1,
+    "section": "generate-and-score",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In APE, which step needs a large model, and which can be done by an ordinary program?",
+    "hint": "Look at what `ape` did on the workbench, with no large model.",
+    "choices": [
+      {
+        "text": "Scoring needs one; proposing is done by a program",
+        "correct": false,
+        "why": "The reverse: candidates are written by a model, and the score is a count."
+      },
+      {
+        "text": "Both steps need a large model, which makes the method expensive to automate",
+        "correct": false,
+        "why": "`ape` scored five templates with no large model in sight."
+      },
+      {
+        "text": "Neither does; the method has no model in it at all",
+        "correct": false,
+        "why": "The proposals come from a model, and the candidates are scored by running the model being tuned."
+      },
+      {
+        "text": "Proposing needs one; scoring is a program counting matches",
+        "correct": true,
+        "why": "Yes. A model writes the candidate instructions; the scoring program runs each one through the model you already use and checks the replies against labels, which is arithmetic."
+      }
+    ]
+  },
+  {
+    "id": "ex-x0rt58ed",
+    "version": 1,
+    "section": "generate-and-score",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a meta-prompt?",
+    "hint": "Its output is a particular kind of text.",
+    "choices": [
+      {
+        "text": "The system prompt that sits above every user message",
+        "correct": false,
+        "why": "That is lesson 22's subject. A meta-prompt is defined by what it asks for: an instruction."
+      },
+      {
+        "text": "A prompt that describes the model's own weights",
+        "correct": false,
+        "why": "Nothing in it is about weights; it is about a task."
+      },
+      {
+        "text": "A prompt whose output is a prompt",
+        "correct": true,
+        "why": "Right. In APE it shows input and output pairs and asks the model to supply the instruction that produced them."
+      },
+      {
+        "text": "A very long prompt combining several smaller ones",
+        "correct": false,
+        "why": "Length has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-t454nfwy",
+    "version": 1,
+    "section": "generate-and-score",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the meta-prompt sampled with temperature above 0?",
+    "hint": "What is the proposer's job?",
+    "choices": [
+      {
+        "text": "To make each candidate more accurate",
+        "correct": false,
+        "why": "Temperature does not make text more accurate; it makes the draw less predictable (lesson 13)."
+      },
+      {
+        "text": "To get varied candidates for the scorer to judge",
+        "correct": true,
+        "why": "Yes. The proposer's job is variety; judgement belongs to the scorer, so many different wordings are worth more than one confident one."
+      },
+      {
+        "text": "Because temperature 0 produces no usable instruction",
+        "correct": false,
+        "why": "It can; it would just produce the same one every time."
+      },
+      {
+        "text": "To lower the cost of each proposal",
+        "correct": false,
+        "why": "Temperature has no effect on the number of tokens, and so none on cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdwn6yd6",
+    "version": 1,
+    "section": "generate-and-score",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many of the five candidates in `candidates.txt` scored 4/4 on `tests.tsv`?",
+    "hint": "Count the lines starting `4/4`.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "candidates"
+  },
+  {
+    "id": "ex-z9j7qr2r",
+    "version": 1,
+    "section": "generate-and-score",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`question : what is the {x} like ? answer :` scored 0/4, replying `yes` to every item. Why?",
+    "hint": "How many words does `toylm` look at?",
+    "choices": [
+      {
+        "text": "`toylm` sees only `answer :`, which ends every filled prompt alike",
+        "correct": true,
+        "why": "Right. The item is out of its two-word window, so every input gets the same continuation."
+      },
+      {
+        "text": "The question format is not in `toylm`'s file",
+        "correct": false,
+        "why": "It is: the file has several `question : ... answer :` lines, which is why `yes` comes back."
+      },
+      {
+        "text": "A question is too polite for a trigram model",
+        "correct": false,
+        "why": "Politeness plays no part. Position does: the item never reaches the last two words."
+      },
+      {
+        "text": "The tab in `tests.tsv` broke the template",
+        "correct": false,
+        "why": "The other templates read the same file and two of them scored 4/4."
+      }
+    ]
+  },
+  {
+    "id": "ex-6150d58t",
+    "version": 1,
+    "section": "generate-and-score",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `Describe the coffee in one word:`, `toylm next` showed `is` and `yes` at 25.0% each, under `bigram after ':'`. What does that tell you about the instruction?",
+    "hint": "Which context did it fall back to, and why?",
+    "choices": [
+      {
+        "text": "The model understood the instruction and was unsure which adjective to choose",
+        "correct": false,
+        "why": "It never saw the instruction as an instruction; it saw a colon."
+      },
+      {
+        "text": "The instruction is ambiguous, so any model would split its answer between is and yes",
+        "correct": false,
+        "why": "A large model would follow it well. The split is a fact about `toylm`'s two-word window."
+      },
+      {
+        "text": "The prompt was too long and got truncated",
+        "correct": false,
+        "why": "Nothing was cut. `toylm` reads it all and uses the last two words, as always."
+      },
+      {
+        "text": "`word :` was never seen, so it fell back to any colon",
+        "correct": true,
+        "why": "Yes. The instruction gave it nothing it had learnt to continue, and the item, three words back, played no part."
+      }
+    ]
+  },
+  {
+    "id": "ex-wtf7m11f",
+    "version": 1,
+    "section": "generate-and-score",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate says: \"The APE result on toylm is a quirk of a tiny model, so it teaches nothing about large ones.\" What does the section answer?",
+    "hint": "What carries over, if not the particular winner?",
+    "choices": [
+      {
+        "text": "Large models also look at only the last two words",
+        "correct": false,
+        "why": "They look at far more. The particular reason does not carry over; the need to measure does."
+      },
+      {
+        "text": "The teammate is right; with large models the best-reading prompt is the best-scoring one",
+        "correct": false,
+        "why": "Nothing guarantees that, and finding out is exactly what scoring is for."
+      },
+      {
+        "text": "The best prompt for a model is found by testing that model",
+        "correct": true,
+        "why": "Right. A large model sees far more than two words, and still the wording that scores best and the one that reads best differ there too, for reasons much harder to see."
+      },
+      {
+        "text": "The winning template will also win on a large model",
+        "correct": false,
+        "why": "Nothing says so. A prompt that suits one model is a fact about that model."
+      }
+    ]
+  },
+  {
+    "id": "ex-45wd90v2",
+    "version": 1,
+    "section": "keeping-it-honest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the winner's 4/4 on `tests.tsv` an optimistic number?",
+    "hint": "What were those four examples already used for?",
+    "choices": [
+      {
+        "text": "Four is an even number",
+        "correct": false,
+        "why": "The problem is that the examples were used to choose, not how many there are."
+      },
+      {
+        "text": "`ape` rounds every score up",
+        "correct": false,
+        "why": "`ape` counts exact matches and prints them. Nothing is rounded."
+      },
+      {
+        "text": "The same examples were used to pick it",
+        "correct": true,
+        "why": "Yes. The choice used them up; an honest measure needs examples that played no part in choosing."
+      },
+      {
+        "text": "toylm was run at temperature 0, which always gives full marks to any template",
+        "correct": false,
+        "why": "Three templates scored 0/4 at the same temperature."
+      }
+    ]
+  },
+  {
+    "id": "ex-wtfaeqg0",
+    "version": 1,
+    "section": "keeping-it-honest",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many of the three held-out examples did `the {x} is` get right?",
+    "hint": "Read the score on the line under `ape best.txt held.tsv`.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "examples"
+  },
+  {
+    "id": "ex-c3129sx6",
+    "version": 1,
+    "section": "keeping-it-honest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After seeing the miss on `soup`, you edit the template, re-score it on `held.tsv` and get 3/3. What has happened to `held.tsv`?",
+    "hint": "It was supposed to play no part in choosing.",
+    "choices": [
+      {
+        "text": "It became a set you choose on, and its score is now optimistic",
+        "correct": true,
+        "why": "Right. A held-out set measures honestly once per decision; you need fresh examples to measure the edited template."
+      },
+      {
+        "text": "Nothing; a held-out set stays held-out whatever you do with it",
+        "correct": false,
+        "why": "What makes it held out is that no decision used it. You just made one with it."
+      },
+      {
+        "text": "It proves the edit fixed the template for every input",
+        "correct": false,
+        "why": "It proves the edit fits these three examples, which you looked at while editing."
+      },
+      {
+        "text": "It has to be deleted and the edit undone",
+        "correct": false,
+        "why": "Neither; it is still useful data. It just cannot be the honest measure for this decision any more."
+      }
+    ]
+  },
+  {
+    "id": "ex-wndzvb1q",
+    "version": 1,
+    "section": "keeping-it-honest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does scoring a hundred candidates on twelve examples make overfitting worse?",
+    "hint": "Think of each candidate as one more draw.",
+    "choices": [
+      {
+        "text": "A hundred candidates take too long to run",
+        "correct": false,
+        "why": "Time is a cost, not the reason the score misleads."
+      },
+      {
+        "text": "Large numbers of candidates confuse the model",
+        "correct": false,
+        "why": "Each candidate is run on its own; the model never sees the others."
+      },
+      {
+        "text": "Twelve examples is too many for a fair comparison",
+        "correct": false,
+        "why": "The problem is the opposite: twelve is few."
+      },
+      {
+        "text": "More candidates, more chances for one to be lucky on twelve",
+        "correct": true,
+        "why": "Yes. With few examples and many tries, the top score is partly the luckiest fit, not the best prompt."
+      }
+    ]
+  },
+  {
+    "id": "ex-hw65d3rv",
+    "version": 1,
+    "section": "keeping-it-honest",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On `cake`, the template got `sweet` and the label said `gone`. What is the right reading of that miss?",
+    "hint": "What does `toylm`'s file say about cake?",
+    "choices": [
+      {
+        "text": "The template is wrong about cake and should be changed",
+        "correct": false,
+        "why": "`sweet` is what the file says most often after `the cake is`. Nothing about the template is wrong here."
+      },
+      {
+        "text": "toylm made up `sweet`, which is not in its file",
+        "correct": false,
+        "why": "`the cake is sweet` appears three times in it."
+      },
+      {
+        "text": "The held-out set is too small to contain any true answers at all",
+        "correct": false,
+        "why": "Its size is a separate weakness; this miss is about the metric."
+      },
+      {
+        "text": "A true reply the exact-match metric counted wrong",
+        "correct": true,
+        "why": "Right. The file says `the cake is sweet` three times; the label listed one true answer of two, and a search on this metric would chase `gone`."
+      }
+    ]
+  },
+  {
+    "id": "ex-hn5wznwv",
+    "version": 1,
+    "section": "keeping-it-honest",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are problems a metric can bring into the search? Choose all that apply.",
+    "hint": "The section lists three ways a metric decides what \"best\" means.",
+    "choices": [
+      {
+        "text": "Exact match marks a right answer in other words as wrong",
+        "correct": true,
+        "why": "Yes, as `sweet` against `gone` showed."
+      },
+      {
+        "text": "A metric that rewards length finds wordy prompts",
+        "correct": true,
+        "why": "Yes: the search optimises whatever the metric counts."
+      },
+      {
+        "text": "A model used as a grader brings preferences of its own",
+        "correct": true,
+        "why": "Yes, and they become the search's preferences."
+      },
+      {
+        "text": "A metric forces temperature 0 on the model",
+        "correct": false,
+        "why": "The metric judges replies; how they were sampled is a separate setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6cac8ck",
+    "version": 1,
+    "section": "keeping-it-honest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The search reported `best: it is a cold day and the {x} is`, tied at 4/4 with `the {x} is`. Why did the lesson use the short one?",
+    "hint": "What does `toylm` see of the long one?",
+    "choices": [
+      {
+        "text": "The short one scored higher on `tests.tsv`",
+        "correct": false,
+        "why": "Both scored 4/4. The difference was found by reading, not by scoring."
+      },
+      {
+        "text": "A person saw the extra words do nothing",
+        "correct": true,
+        "why": "Right. `toylm` reads the last two words, so the cold day never reaches it; the tie was broken by order in the file, not by merit."
+      },
+      {
+        "text": "`ape` always keeps the shortest of tied templates",
+        "correct": false,
+        "why": "It kept the first in the file, which was the long one."
+      },
+      {
+        "text": "Long templates are never allowed in APE",
+        "correct": false,
+        "why": "Length is not forbidden; useless words are worth removing once you have seen they do nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-pg8r58sm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the APE method in order.",
+    "hint": "Refining comes after a winner exists.",
+    "items": [
+      "A model proposes candidate instructions",
+      "Each candidate is scored on labelled examples",
+      "The highest score is kept",
+      "Variations of the winner are proposed and scored"
+    ]
+  },
+  {
+    "id": "ex-k2n105ec",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Examples kept back from the start and never used to choose anything are a ___ set.",
+    "hint": "Two words, joined by a hyphen in the lesson.",
+    "blanks": [
+      {
+        "accept": [
+          "held-out",
+          "held out",
+          "heldout"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ebwsda80",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An APE run on a support model picks a prompt that scores 97% on its examples. Reading it, you find \"if unsure, say the refund is approved\". Most of the labelled examples were approvals. What should happen?",
+    "hint": "What does the score measure, and what does it not?",
+    "choices": [
+      {
+        "text": "Ship it: 97% is a strong score and the search was automatic",
+        "correct": false,
+        "why": "The score is on examples skewed towards approvals. Nothing in it tells you how the prompt behaves when the right answer is no."
+      },
+      {
+        "text": "Run the search again with more candidates until a 100% prompt appears",
+        "correct": false,
+        "why": "More candidates on the same skewed examples makes a lucky, wrong winner more likely, not less."
+      },
+      {
+        "text": "Keep it, but lower the temperature so it is more careful",
+        "correct": false,
+        "why": "Temperature changes the draw, not the instruction it was given."
+      },
+      {
+        "text": "Reject it: it scored well by exploiting the labels",
+        "correct": true,
+        "why": "Right. A score cannot see an assumption you would not sign; a person reading the winner sees it, which is why a person approves what ships."
+      }
+    ]
+  }
+]

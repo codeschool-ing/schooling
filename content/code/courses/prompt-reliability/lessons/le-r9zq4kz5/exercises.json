@@ -1,0 +1,575 @@
+[
+  {
+    "id": "ex-6x89ygf0",
+    "version": 1,
+    "section": "a-test-set",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does each line of `cases/dev.jsonl` hold?",
+    "hint": "Two parts.",
+    "choices": [
+      {
+        "text": "A message and a person's answer",
+        "correct": true,
+        "why": "Right: the answer a person decided was right. Everything after that is arithmetic."
+      },
+      {
+        "text": "A message and the model's reply to it, saved the first time the prompt ran",
+        "correct": false,
+        "why": "Replies go in `runs/`; the case holds the person's answer."
+      },
+      {
+        "text": "A prompt and the message it was written for",
+        "correct": false,
+        "why": "Prompts live in `prompts/`."
+      },
+      {
+        "text": "A message and its cost in tokens",
+        "correct": false,
+        "why": "Cost is computed from runs, not stored in cases."
+      }
+    ]
+  },
+  {
+    "id": "ex-hb9txast",
+    "version": 1,
+    "section": "a-test-set",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why write each label before running the prompt on the message?",
+    "hint": "What changes once you have seen the model's answer?",
+    "choices": [
+      {
+        "text": "The harness refuses a case whose label was added after a run",
+        "correct": false,
+        "why": "Nothing in the harness checks when a label was written."
+      },
+      {
+        "text": "Labels written later cost more tokens",
+        "correct": false,
+        "why": "Labels are not sent to the model."
+      },
+      {
+        "text": "Afterwards you judge whether its answer is acceptable",
+        "correct": true,
+        "why": "Right: an easier test than deciding what the message is about."
+      },
+      {
+        "text": "So the model cannot read the label",
+        "correct": false,
+        "why": "The model never sees `expect` either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfkevzbd",
+    "version": 1,
+    "section": "a-test-set",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`v4` passes 34 of 40 and `v3` passes 36. The sign test on the four messages that changed gives p = 0.625. What does that say?",
+    "hint": "How often would a coin split four that unevenly?",
+    "choices": [
+      {
+        "text": "`v3` is better, by two messages",
+        "correct": false,
+        "why": "Two messages is well within what chance produces."
+      },
+      {
+        "text": "Forty cases cannot tell these two apart",
+        "correct": true,
+        "why": "Right. A coin would do at least that more than half the time."
+      },
+      {
+        "text": "`v4` is better, because the p-value is above 0.5",
+        "correct": false,
+        "why": "A p-value does not point at a winner."
+      },
+      {
+        "text": "The test set has a wrong label",
+        "correct": false,
+        "why": "Nothing here suggests one."
+      }
+    ]
+  },
+  {
+    "id": "ex-szy6336y",
+    "version": 1,
+    "section": "a-test-set",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A set of 40 cases sees differences of about ten points. Roughly how many cases would it take to see differences half that size?",
+    "hint": "Noise shrinks with the square root of the count.",
+    "value": 160,
+    "tolerance": 10,
+    "unit": "cases"
+  },
+  {
+    "id": "ex-ee0hh14s",
+    "version": 1,
+    "section": "checks-as-unit-tests",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put `pl check`'s checks in the order they run.",
+    "hint": "Cheapest and most certain first.",
+    "items": [
+      "`json`",
+      "`fields`",
+      "`labels`",
+      "`category`",
+      "`urgency`"
+    ]
+  },
+  {
+    "id": "ex-6ntbmjza",
+    "version": 1,
+    "section": "checks-as-unit-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which checks could run on every reply in production, where no person has labelled the message?",
+    "hint": "Which ones need `expect`?",
+    "choices": [
+      {
+        "text": "Only `category` and `urgency`",
+        "correct": false,
+        "why": "Those are exactly the two that need a label."
+      },
+      {
+        "text": "All five",
+        "correct": false,
+        "why": "Two need the person's answer."
+      },
+      {
+        "text": "`json`, `fields` and `labels`",
+        "correct": true,
+        "why": "Right: they need only the reply and the specification."
+      },
+      {
+        "text": "None of them: checks belong in the test set and nowhere else",
+        "correct": false,
+        "why": "Lesson 10 used `json` on live replies to refuse injected ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvmr7bvm",
+    "version": 1,
+    "section": "checks-as-unit-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`t03` failed `json`. Why is it not also listed as a wrong category?",
+    "hint": "What happens after the first failure?",
+    "choices": [
+      {
+        "text": "Its category was right",
+        "correct": false,
+        "why": "Nobody can tell: the reply could not be read."
+      },
+      {
+        "text": "The list shows only the first check each reply failed",
+        "correct": true,
+        "why": "Right, which makes it a list of first causes."
+      },
+      {
+        "text": "Category is only checked at temperature 0",
+        "correct": false,
+        "why": "Temperature does not change which checks run."
+      },
+      {
+        "text": "`--failures` hides category failures unless asked",
+        "correct": false,
+        "why": "It shows them; `t37` is listed under category in v3."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctgrjgh5",
+    "version": 1,
+    "section": "checks-as-unit-tests",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a check worth having, according to the section? Choose all that apply.",
+    "hint": "Four properties.",
+    "choices": [
+      {
+        "text": "It gives the same verdict every time",
+        "correct": true,
+        "why": "Yes: a check that changes its mind is a second thing to measure."
+      },
+      {
+        "text": "It is as strict as the program that reads the reply",
+        "correct": true,
+        "why": "Yes, or it passes replies the program will refuse."
+      },
+      {
+        "text": "It checks several properties at once, to save time",
+        "correct": false,
+        "why": "One property each, so a failure says what failed."
+      },
+      {
+        "text": "Its failure says what it saw",
+        "correct": true,
+        "why": "Yes: *urgency normal, expected low* is a to-do item."
+      }
+    ]
+  },
+  {
+    "id": "ex-11dtx8yj",
+    "version": 1,
+    "section": "the-easy-set",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `v3-examples.txt` pass 36 of 40 on `dev.jsonl` and only 11 of 30 on `holdout.jsonl`?",
+    "hint": "Who wrote each set, and when?",
+    "choices": [
+      {
+        "text": "The holdout was run at a higher temperature",
+        "correct": false,
+        "why": "Both runs were at temperature 0."
+      },
+      {
+        "text": "Holdout replies stopped being valid JSON halfway through",
+        "correct": false,
+        "why": "All 30 parse; the sorting fails."
+      },
+      {
+        "text": "Dev was written by the prompt's author",
+        "correct": true,
+        "why": "Right, and the holdout came later, from harder messages. Dev measured the messages its author imagined."
+      },
+      {
+        "text": "The holdout's labels were written carelessly",
+        "correct": false,
+        "why": "Nothing suggests that; the messages are harder."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4f12tf8",
+    "version": 1,
+    "section": "the-easy-set",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`v3` beat `v4` on dev by 36 to 34, and they tie at 11 on the holdout. What does that suggest?",
+    "hint": "A choice made on one set, checked on another.",
+    "choices": [
+      {
+        "text": "The holdout is too small to be used for anything",
+        "correct": false,
+        "why": "Small, but it is exactly the check the dev score could not give."
+      },
+      {
+        "text": "`v4` is the better prompt after all",
+        "correct": false,
+        "why": "A tie says neither."
+      },
+      {
+        "text": "Choosing by dev bought nothing visible",
+        "correct": true,
+        "why": "Right: what made `v3` better on dev does not show elsewhere."
+      },
+      {
+        "text": "Dev and the holdout measure the same thing",
+        "correct": false,
+        "why": "Then they would not differ by 90% against 37%."
+      }
+    ]
+  },
+  {
+    "id": "ex-b6kvs0xf",
+    "version": 1,
+    "section": "the-easy-set",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A second set, built apart and run only when deciding, so that it is never tuned against, is called a ___ set.",
+    "hint": "You hold it back.",
+    "blanks": [
+      {
+        "accept": [
+          "holdout",
+          "held-out",
+          "held out"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zw2zmvpn",
+    "version": 1,
+    "section": "the-easy-set",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After shipping, you read why `h01` fails, change the prompt until it passes, and report the new holdout score. What is wrong with that number?",
+    "hint": "What did `h01` become when you fixed it?",
+    "choices": [
+      {
+        "text": "Nothing, as long as the fix to the prompt is small",
+        "correct": false,
+        "why": "Size does not matter; the prompt was fitted to that case."
+      },
+      {
+        "text": "The holdout is now a second dev set",
+        "correct": true,
+        "why": "Right, and you need a new holdout."
+      },
+      {
+        "text": "It should be reported out of 29 instead of 30",
+        "correct": false,
+        "why": "Removing one case does not undo the fitting."
+      },
+      {
+        "text": "Holdout scores have to be run at temperature 1",
+        "correct": false,
+        "why": "Temperature is unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dn41pe9",
+    "version": 1,
+    "section": "contamination",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`v11-contaminated.txt` uses `t21`, `t23` and `t37` as its examples. What happens to those three cases?",
+    "hint": "The prompt contains their answers.",
+    "choices": [
+      {
+        "text": "They fail, because the model is confused by seeing them twice",
+        "correct": false,
+        "why": "All three pass."
+      },
+      {
+        "text": "They cannot fail any more, so they measure nothing",
+        "correct": true,
+        "why": "Right: they are answered by copying."
+      },
+      {
+        "text": "They are skipped by the harness",
+        "correct": false,
+        "why": "Nothing in the harness notices."
+      },
+      {
+        "text": "They cost no tokens",
+        "correct": false,
+        "why": "They cost the same as any message."
+      }
+    ]
+  },
+  {
+    "id": "ex-vck78f29",
+    "version": 1,
+    "section": "contamination",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the 37 dev messages that are not its examples, how many does `v11-contaminated.txt` pass?",
+    "hint": "It passes 37 of 40, and three of the 37 are its own examples.",
+    "value": 34,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-27wq728n",
+    "version": 1,
+    "section": "contamination",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Contamination raised the dev score by only one point here. Why is a small rise the dangerous kind?",
+    "hint": "What does a one-point rise look like after somebody improved the examples?",
+    "choices": [
+      {
+        "text": "It looks like ordinary progress",
+        "correct": true,
+        "why": "Right: nothing about it announces a leak."
+      },
+      {
+        "text": "Small rises are never significant",
+        "correct": false,
+        "why": "Significance is not the issue; the cases measure nothing."
+      },
+      {
+        "text": "It makes the holdout score fall",
+        "correct": false,
+        "why": "The holdout went from 11 to 12 here."
+      },
+      {
+        "text": "One point is the most contamination can ever add",
+        "correct": false,
+        "why": "It adds as many as leaked cases that were failing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5p4esj1y",
+    "version": 1,
+    "section": "flaky-results",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two runs of the same prompt at temperature 1, with different seeds, passed 31 and 28. How many messages changed result between them?",
+    "hint": "`fixed` plus `broken`.",
+    "value": 13,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-7g7cbrab",
+    "version": 1,
+    "section": "flaky-results",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At temperature 1, `t14` failed five calls of five. What kind of finding is that?",
+    "hint": "Did it pass at temperature 0?",
+    "choices": [
+      {
+        "text": "A flaky case that needs more samples to measure",
+        "correct": false,
+        "why": "It never changes; there is nothing to sample."
+      },
+      {
+        "text": "A stable defect, in the prompt or in the label",
+        "correct": true,
+        "why": "Right: one run finds it, at any temperature."
+      },
+      {
+        "text": "Proof that temperature 1 is too high for this task",
+        "correct": false,
+        "why": "It fails at temperature 0 too."
+      },
+      {
+        "text": "Bad luck in the draw",
+        "correct": false,
+        "why": "Five of five, and the same at temperature 0, is not luck."
+      }
+    ]
+  },
+  {
+    "id": "ex-wt4y0r5q",
+    "version": 1,
+    "section": "flaky-results",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A test that passes and fails the same input on different calls is called ___.",
+    "hint": "Programmers' word for it.",
+    "blanks": [
+      {
+        "accept": [
+          "flaky"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-95tj3h1p",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each observation to what it tells you.",
+    "hint": "One each.",
+    "pairs": [
+      {
+        "left": "A case fails every call, at any temperature",
+        "right": "A defect in the prompt or the label"
+      },
+      {
+        "left": "A case fails some calls and passes others",
+        "right": "A rate, which only samples can measure"
+      },
+      {
+        "left": "The dev score rises by one after examples are added",
+        "right": "Check the examples are not test cases"
+      },
+      {
+        "left": "Dev passes 90% and the holdout 37%",
+        "right": "The dev set is easier than real traffic"
+      }
+    ],
+    "right_distractors": [
+      "The checks run in the wrong order"
+    ]
+  },
+  {
+    "id": "ex-tnt9ns1y",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague reports: \"New prompt: 38/40 on dev, up from 36. Ship it.\" The prompt runs at temperature 0.7 and was tuned on dev. What do you ask for first?",
+    "hint": "Three things in this lesson could each produce those two points.",
+    "choices": [
+      {
+        "text": "A rerun of the same command, to confirm the 38",
+        "correct": false,
+        "why": "One more run is one more draw; it says little."
+      },
+      {
+        "text": "Rates over samples for both prompts, the holdout, and a check that no example is a dev case",
+        "correct": true,
+        "why": "Right: flakiness, tuning and contamination each fake a gain."
+      },
+      {
+        "text": "A larger dev set written by the same colleague",
+        "correct": false,
+        "why": "More of the same author's messages keeps the same blind spot."
+      },
+      {
+        "text": "The cost of the new prompt",
+        "correct": false,
+        "why": "Worth knowing, but it does not test whether the gain is real."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjcg59js",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is the strongest evidence that one prompt is better than another?",
+    "hint": "Count what each result rests on.",
+    "choices": [
+      {
+        "text": "One run each on dev, three cases apart",
+        "correct": false,
+        "why": "Two runs of one prompt differed by three here."
+      },
+      {
+        "text": "Higher on the holdout, with a sign test well below 0.05",
+        "correct": true,
+        "why": "Right: unseen cases, and a split a coin would rarely produce."
+      },
+      {
+        "text": "Higher on dev after its examples were copied from dev",
+        "correct": false,
+        "why": "Those cases measure nothing."
+      },
+      {
+        "text": "Its author is confident",
+        "correct": false,
+        "why": "Confidence is not a measurement."
+      }
+    ]
+  }
+]

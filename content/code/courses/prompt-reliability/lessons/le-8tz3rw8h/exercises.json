@@ -1,0 +1,585 @@
+[
+  {
+    "id": "ex-tz32f127",
+    "version": 1,
+    "section": "prompts-in-git",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a production prompt live in one file with a history, rather than one file per version?",
+    "hint": "Think about the program that reads it.",
+    "choices": [
+      {
+        "text": "Git refuses to store more than one prompt file in a directory",
+        "correct": false,
+        "why": "Git stores as many files as you like; the lab has twenty prompts in one directory."
+      },
+      {
+        "text": "The program reads one path, and git records which text was live and when",
+        "correct": true,
+        "why": "Right. A directory of versions leaves somebody to choose, and records nothing about the choice."
+      },
+      {
+        "text": "Separate files make every call cost more tokens, because each one is sent along",
+        "correct": false,
+        "why": "Only the prompt that is sent costs tokens, wherever it is stored."
+      },
+      {
+        "text": "A single file is loaded faster by the program, so each call returns sooner",
+        "correct": false,
+        "why": "Where a prompt is stored has nothing to do with how fast a call is."
+      }
+    ]
+  },
+  {
+    "id": "ex-m6xb0058",
+    "version": 1,
+    "section": "prompts-in-git",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are the commit hashes in this lesson the same as the ones you get when you rebuild the lab?",
+    "hint": "What does `lab.sh` write beside each version?",
+    "choices": [
+      {
+        "text": "Git numbers commits in order",
+        "correct": false,
+        "why": "A hash is computed from the content, the author and the dates, not counted."
+      },
+      {
+        "text": "The course ships a copy of its own `.git` directory inside `lab.sh`",
+        "correct": false,
+        "why": "`lab.sh` writes each file and commits it; there is no copied repository."
+      },
+      {
+        "text": "The dates and the author are set by the script, so every input to the hash is fixed",
+        "correct": true,
+        "why": "Right. Same content, same author, same dates, same hash."
+      },
+      {
+        "text": "Hashes ignore dates",
+        "correct": false,
+        "why": "They include them, which is why the dates had to be set."
+      }
+    ]
+  },
+  {
+    "id": "ex-ay6b14p9",
+    "version": 1,
+    "section": "prompts-in-git",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `git diff 9683448 931c548 -- prompts/triage.txt` tell you that the two commit messages do not?",
+    "hint": "A message says what somebody meant to do.",
+    "choices": [
+      {
+        "text": "Whether the change improved the score",
+        "correct": false,
+        "why": "Nothing in git knows the score; that needs a run."
+      },
+      {
+        "text": "Who approved the change",
+        "correct": false,
+        "why": "A diff shows lines, not approvals."
+      },
+      {
+        "text": "Exactly which lines were added and removed",
+        "correct": true,
+        "why": "Right: the message is the intention, the diff is the change."
+      },
+      {
+        "text": "How many tokens the new version costs on every call to the model",
+        "correct": false,
+        "why": "That is `pl tokens` or `pl log`, not a diff."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjdzpm98",
+    "version": 1,
+    "section": "prompts-in-git",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To print the file as it was at commit `c8470c9`, you run `git ___ c8470c9:prompts/triage.txt`.",
+    "hint": "The same subcommand prints a commit with its diff.",
+    "blanks": [
+      {
+        "accept": [
+          "show"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2hackz20",
+    "version": 1,
+    "section": "what-a-version-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pl run` printed the id `c1916fcd` for today's file and for the copy taken from commit `c8470c9`. Why are they equal?",
+    "hint": "The id is a hash of something.",
+    "choices": [
+      {
+        "text": "The harness caches ids by file name",
+        "correct": false,
+        "why": "The two files had different names and still got one id."
+      },
+      {
+        "text": "Every byte is the same",
+        "correct": true,
+        "why": "Right. The diff between the commits has no lines, and the id is a hash of the bytes."
+      },
+      {
+        "text": "The id is the date of the newest commit",
+        "correct": false,
+        "why": "It is the start of a SHA-256 of the file."
+      },
+      {
+        "text": "Both runs used the same test set",
+        "correct": false,
+        "why": "The test set is not part of the prompt id."
+      }
+    ]
+  },
+  {
+    "id": "ex-vd5d268v",
+    "version": 1,
+    "section": "what-a-version-is",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Running `prompts/triage.txt` with `--set temperature=0.8` kept the id `c1916fcd`. How many of the 40 dev messages passed everything?",
+    "hint": "The `all` row of `pl check runs/hot.jsonl`.",
+    "value": 28,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1hmh5b82",
+    "version": 1,
+    "section": "what-a-version-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should `temperature` be written above the `---` in the prompt file rather than passed with `--set`?",
+    "hint": "What does the id see?",
+    "choices": [
+      {
+        "text": "`--set` is ignored by the stand-in",
+        "correct": false,
+        "why": "It is not ignored: the score fell from 36 to 28."
+      },
+      {
+        "text": "In the file it is part of the hashed bytes, so a change to it changes the id",
+        "correct": true,
+        "why": "Right. On the command line it belongs to one run and nothing records it."
+      },
+      {
+        "text": "The header makes calls cheaper",
+        "correct": false,
+        "why": "Where a setting is written does not change what a call costs."
+      },
+      {
+        "text": "`--set` only accepts whole numbers",
+        "correct": false,
+        "why": "It accepted 0.8."
+      }
+    ]
+  },
+  {
+    "id": "ex-wnfwc652",
+    "version": 1,
+    "section": "what-a-version-is",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong to a version of a prompt, in the lesson's sense? Choose all that apply.",
+    "hint": "Four things.",
+    "choices": [
+      {
+        "text": "The text of the file",
+        "correct": true,
+        "why": "Yes, and git tracks it."
+      },
+      {
+        "text": "The model it is sent to",
+        "correct": true,
+        "why": "Yes: the same text on another model is another prompt."
+      },
+      {
+        "text": "The test set its score was measured on",
+        "correct": true,
+        "why": "Yes: a score belongs to a pair."
+      },
+      {
+        "text": "The name of the person who committed it",
+        "correct": false,
+        "why": "Git records it, but it does not change what the prompt does."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2sam24w",
+    "version": 1,
+    "section": "what-a-version-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A provider moves a short model alias to a newer model. Your prompt file names the alias and has not changed. What has happened to your version?",
+    "hint": "The text is half of what produces the answer.",
+    "choices": [
+      {
+        "text": "Nothing, because the prompt id did not change",
+        "correct": false,
+        "why": "The id covers the file; the model behind the alias is outside it."
+      },
+      {
+        "text": "It is a new version that no commit records",
+        "correct": true,
+        "why": "Right. Naming the dated model in the header turns that move into a visible commit."
+      },
+      {
+        "text": "The provider has to send you a diff",
+        "correct": false,
+        "why": "No provider can diff your prompt; nothing in your repository changed."
+      },
+      {
+        "text": "Only the cost changed",
+        "correct": false,
+        "why": "The answers can change too: the model is half of what produces them."
+      }
+    ]
+  },
+  {
+    "id": "ex-nt2yz6w2",
+    "version": 1,
+    "section": "tracking-the-effect",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pl log` print for each commit of `prompts/triage.txt`?",
+    "hint": "Two numbers, and where they come from.",
+    "choices": [
+      {
+        "text": "The number of lines the commit changed",
+        "correct": false,
+        "why": "That is `git show --stat`, not `pl log`."
+      },
+      {
+        "text": "A score and its tokens",
+        "correct": true,
+        "why": "Right: it runs each version, it does not read old results."
+      },
+      {
+        "text": "The prompt id only",
+        "correct": false,
+        "why": "It prints the passes and the tokens beside the subject."
+      },
+      {
+        "text": "Who reviewed each change",
+        "correct": false,
+        "why": "Nothing in the lab records a review."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgshcjbr",
+    "version": 1,
+    "section": "tracking-the-effect",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`9683448` used 11636 tokens over the forty dev calls and `f361c0a` used 11036. How many extra tokens per call did the new instruction add?",
+    "hint": "Subtract, then divide by the number of calls.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-ymx18j4q",
+    "version": 1,
+    "section": "tracking-the-effect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`931c548` added 1720 tokens on dev and left the score at 36 of 40. What did `pl log cases/attacks.jsonl` show about it?",
+    "hint": "Dev does not test what the change was for.",
+    "choices": [
+      {
+        "text": "Nothing changed there either",
+        "correct": false,
+        "why": "It went from 1 to 6 of 10."
+      },
+      {
+        "text": "It broke every attack",
+        "correct": false,
+        "why": "That was `31a6a59`, at 0 of 10."
+      },
+      {
+        "text": "It took the attacks from 1 of 10 to 6",
+        "correct": true,
+        "why": "Right: its tokens bought something dev cannot see."
+      },
+      {
+        "text": "It made the attack set cheaper to run than before",
+        "correct": false,
+        "why": "Tokens rose from 2818 to 3302."
+      }
+    ]
+  },
+  {
+    "id": "ex-095htt80",
+    "version": 1,
+    "section": "tracking-the-effect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `31a6a59` take the score to zero although the instruction to reply with JSON was still in the prompt?",
+    "hint": "Lesson 1: which wins, a description or an example?",
+    "choices": [
+      {
+        "text": "The stand-in copies the shape of the first example, and the examples were no longer JSON",
+        "correct": true,
+        "why": "Right. The example disagreed with the description and won."
+      },
+      {
+        "text": "The prompt became too long for the model",
+        "correct": false,
+        "why": "It became shorter: 9739 tokens against 13356."
+      },
+      {
+        "text": "The message tags were removed",
+        "correct": false,
+        "why": "The diff touches only the three `Output:` lines."
+      },
+      {
+        "text": "Temperature was raised",
+        "correct": false,
+        "why": "No parameter changed in that commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-74n28nxd",
+    "version": 1,
+    "section": "tracking-the-effect",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A change leaves every test set's score where it was and adds 40 tokens per call. What does the lesson say to do?",
+    "hint": "A change no test set can see is taken on trust.",
+    "choices": [
+      {
+        "text": "Merge it, since nothing broke",
+        "correct": false,
+        "why": "Nothing broke and nothing was shown to improve; the tokens are paid on every call."
+      },
+      {
+        "text": "Revert it at once, because a change that moves no score is always wrong",
+        "correct": false,
+        "why": "It may fix something real that no case tests yet."
+      },
+      {
+        "text": "Run it again, a few more times, until one of the scores moves and settles the question",
+        "correct": false,
+        "why": "At temperature 0 the stand-in answers the same way every time."
+      },
+      {
+        "text": "Add a case that shows what it fixes, or record that it fixes nothing measurable",
+        "correct": true,
+        "why": "Right. Either way the next reader knows what the tokens are for."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzty04me",
+    "version": 1,
+    "section": "regressions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the gate the lesson describes, which line of `pl compare` decides whether a change is stopped?",
+    "hint": "A total can stay put while one message is fixed and another broken.",
+    "choices": [
+      {
+        "text": "The total of passes",
+        "correct": false,
+        "why": "A total hides a swap of one fixed for one broken."
+      },
+      {
+        "text": "The `broken` line",
+        "correct": true,
+        "why": "Right: it names every message the change broke."
+      },
+      {
+        "text": "The p value of the sign test",
+        "correct": false,
+        "why": "One broken message matters even when the p value says nothing."
+      },
+      {
+        "text": "The prompt id of the newer run",
+        "correct": false,
+        "why": "The id says which file ran, not whether it got worse."
+      }
+    ]
+  },
+  {
+    "id": "ex-znxxrg78",
+    "version": 1,
+    "section": "regressions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Comparing `c8470c9` with `31a6a59` on dev, how many messages did `pl compare` list as broken?",
+    "hint": "The `broken` count.",
+    "value": 36,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gxzn9a38",
+    "version": 1,
+    "section": "regressions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The run at temperature 0.8 broke eight messages. Why would a gate that runs only when the prompt file changes miss it?",
+    "hint": "Where was the change?",
+    "choices": [
+      {
+        "text": "Because eight is too few to count",
+        "correct": false,
+        "why": "The sign test put it at 0.008."
+      },
+      {
+        "text": "Because sampling makes every run different",
+        "correct": false,
+        "why": "That explains the answers, not why the gate would not run."
+      },
+      {
+        "text": "The file never changed",
+        "correct": true,
+        "why": "Right. With every parameter in the file, every change is a change to the file."
+      },
+      {
+        "text": "Because `pl compare` ignores the temperature",
+        "correct": false,
+        "why": "It compared the two runs and found the eight."
+      }
+    ]
+  },
+  {
+    "id": "ex-fan86mr8",
+    "version": 1,
+    "section": "regressions",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong to the gate the section describes? Choose all that apply.",
+    "hint": "Three parts, none of them clever.",
+    "choices": [
+      {
+        "text": "It runs on every change to a prompt file, before the merge",
+        "correct": true,
+        "why": "Yes: a check somebody has to remember runs on the days they remember."
+      },
+      {
+        "text": "It runs every test set the prompt has",
+        "correct": true,
+        "why": "Yes: dev alone is blind to what the attack set sees."
+      },
+      {
+        "text": "It fails on any broken message and prints the ids",
+        "correct": true,
+        "why": "Yes, and a merge anyway is explained in the commit."
+      },
+      {
+        "text": "It runs once a week on the live prompt",
+        "correct": false,
+        "why": "A weekly run finds the regression days late, as August did."
+      }
+    ]
+  },
+  {
+    "id": "ex-9dg023r9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these steps for a change to `prompts/triage.txt` in the order the lesson implies.",
+    "hint": "The gate runs before anything reaches production.",
+    "items": [
+      "Edit the file, parameters included",
+      "Run the new file and the live one over every test set",
+      "Compare the runs and read the broken messages",
+      "Merge, or explain in the commit why a broken message is acceptable"
+    ]
+  },
+  {
+    "id": "ex-zjc9wrk4",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each commit to what `pl log` showed about it.",
+    "hint": "Read the two columns down.",
+    "pairs": [
+      {
+        "left": "`f361c0a`, three examples",
+        "right": "Score up from 24 to 36, tokens more than doubled"
+      },
+      {
+        "left": "`9683448`, only the JSON",
+        "right": "Tokens up, no score moved on any set shown"
+      },
+      {
+        "left": "`931c548`, message in tags",
+        "right": "Flat on dev, 1 to 6 on the attacks"
+      },
+      {
+        "left": "`31a6a59`, examples as plain lines",
+        "right": "Score to zero, tokens down"
+      }
+    ],
+    "right_distractors": [
+      "Score up, tokens down"
+    ]
+  },
+  {
+    "id": "ex-595kd54d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate reports 36 of 40 for 'the triage prompt' in a chat message, with no id. What is missing before anybody can rebuild that result?",
+    "hint": "Four things make a version.",
+    "choices": [
+      {
+        "text": "Only the date of the message, since the history then shows which commit was live that day",
+        "correct": false,
+        "why": "A date does not say which text, settings, model or test set produced it."
+      },
+      {
+        "text": "The file's id with its parameters, the model, and which test set at which commit",
+        "correct": true,
+        "why": "Right: without all four, the number is about something nobody can rebuild."
+      },
+      {
+        "text": "The sign test's p value",
+        "correct": false,
+        "why": "A p value compares two runs; it does not identify one."
+      },
+      {
+        "text": "A screenshot of the output, so that nobody can retype any of the numbers wrongly later",
+        "correct": false,
+        "why": "A picture of the number is the same number with the same gaps."
+      }
+    ]
+  }
+]

@@ -1,0 +1,506 @@
+[
+  {
+    "id": "ex-k5h8rpkk",
+    "version": 1,
+    "section": "why-it-happens",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which description of a hallucination matches how it comes about?",
+    "hint": "Lesson 1: what does a model write, every time?",
+    "choices": [
+      {
+        "text": "The likeliest continuation, at a moment when it is false",
+        "correct": true,
+        "why": "Right. The same step produces the right answers and the invented ones."
+      },
+      {
+        "text": "A rare fault in the model's hardware",
+        "correct": false,
+        "why": "Nothing breaks. The model is doing exactly what it always does."
+      },
+      {
+        "text": "The model lying on purpose to please you",
+        "correct": false,
+        "why": "It has no purpose to lie with. It writes what is likely."
+      },
+      {
+        "text": "A lookup that fetched the wrong row from a database of facts",
+        "correct": false,
+        "why": "There is no database of facts inside the model, and no lookup."
+      }
+    ]
+  },
+  {
+    "id": "ex-wkn1nmcw",
+    "version": 1,
+    "section": "why-it-happens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`toylm generate \"the soup of the day is\" --samples 5` answered tomato three times, pumpkin once and lentil once. Which statement is true?",
+    "hint": "What does the file say about today?",
+    "choices": [
+      {
+        "text": "Tomato is today's soup, since it won three of the five draws",
+        "correct": false,
+        "why": "It won because the file mentions it most. That says nothing about today."
+      },
+      {
+        "text": "The model is broken, since it disagrees with itself",
+        "correct": false,
+        "why": "Drawing in proportion to the scores is expected to give different answers (lesson 1)."
+      },
+      {
+        "text": "Lentil is false, since it came up only once",
+        "correct": false,
+        "why": "Lentil is as likely to be today's soup as tomato. Nothing in the file says either way."
+      },
+      {
+        "text": "Each answer is likely, and none is known",
+        "correct": true,
+        "why": "Yes. The file lists soups from several days and says nothing about today."
+      }
+    ]
+  },
+  {
+    "id": "ex-ycdfrfz8",
+    "version": 1,
+    "section": "why-it-happens",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What score did `toylm next \"the owner of the café is\"` give to `full`?",
+    "hint": "Read the percentage on the only line.",
+    "value": 100,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-rc27b80e",
+    "version": 1,
+    "section": "why-it-happens",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many times does the word `owner` occur in the corpus, according to `grep -c`?",
+    "hint": "The number `grep -c` printed.",
+    "value": 0,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-hbn0hwyd",
+    "version": 1,
+    "section": "why-it-happens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `toylm` give `full` 100% after `the owner of the café is`?",
+    "hint": "Read the context line.",
+    "choices": [
+      {
+        "text": "The corpus says the owner is full",
+        "correct": false,
+        "why": "The corpus never mentions an owner; `grep -c` found none."
+      },
+      {
+        "text": "Its window held `café is`, and in the corpus `café is` is followed by `full` every time",
+        "correct": true,
+        "why": "Right. The score measures the file's consistency after those two words, not anything about owners."
+      },
+      {
+        "text": "A score of 100% means it checked the answer first",
+        "correct": false,
+        "why": "Nothing was checked. A score is a share of counts."
+      },
+      {
+        "text": "The temperature was 0",
+        "correct": false,
+        "why": "`toylm next` prints the scores before any temperature is applied."
+      }
+    ]
+  },
+  {
+    "id": "ex-x627kktf",
+    "version": 1,
+    "section": "why-it-happens",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A model gives an answer a very high probability. What does that tell you?",
+    "hint": "What was `full` at 100% evidence of?",
+    "choices": [
+      {
+        "text": "How consistent its training text was after that context",
+        "correct": true,
+        "why": "Right. The high score sat on `full`, an answer with nothing to do with the question."
+      },
+      {
+        "text": "How likely the answer is to be true",
+        "correct": false,
+        "why": "Likely and true are different things. `full` was 100% and is not an answer about owners."
+      },
+      {
+        "text": "How many sources confirmed the answer before it was written",
+        "correct": false,
+        "why": "No sources are consulted. The score comes from the model's weights or, here, counts."
+      },
+      {
+        "text": "How carefully the model reasoned",
+        "correct": false,
+        "why": "No reasoning is involved in a score; it is the output of one step."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkhtkg5b",
+    "version": 1,
+    "section": "why-it-happens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an invented citation look exactly like a real one?",
+    "hint": "Look at the last row of the table.",
+    "choices": [
+      {
+        "text": "The model copies a real paper and changes the names",
+        "correct": false,
+        "why": "It does not copy and edit. It writes each piece as the likely continuation."
+      },
+      {
+        "text": "The model checks that the journal exists but not the article",
+        "correct": false,
+        "why": "It checks nothing. Every part of the citation is generated the same way."
+      },
+      {
+        "text": "Invented citations contain a hidden marker that only software can detect",
+        "correct": false,
+        "why": "There is no marker. Looking the reference up is the way to find out."
+      },
+      {
+        "text": "Citations follow a pattern",
+        "correct": true,
+        "why": "Right, and the model continues the pattern as fluently as a sentence. The form is all you can see."
+      }
+    ]
+  },
+  {
+    "id": "ex-gq771jan",
+    "version": 1,
+    "section": "why-it-happens",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these requests are especially prone to a confident wrong answer? Choose all that apply.",
+    "hint": "The table lists four shapes.",
+    "choices": [
+      {
+        "text": "A fact that is rare in the text the model learnt from",
+        "correct": true,
+        "why": "Yes: a common pattern about something similar tends to win."
+      },
+      {
+        "text": "A fact that has changed since the training text was written",
+        "correct": true,
+        "why": "Yes: the old value was in far more of the text, and it comes back in the present tense."
+      },
+      {
+        "text": "A question built on a false premise",
+        "correct": true,
+        "why": "Yes: text that answers a question is likelier than text that disputes it."
+      },
+      {
+        "text": "Repeating a sentence that is in the prompt you sent",
+        "correct": false,
+        "why": "The sentence is in front of the model, so copying it is the likely continuation. That is why grounding works."
+      }
+    ]
+  },
+  {
+    "id": "ex-y34safqn",
+    "version": 1,
+    "section": "why-it-happens",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why has training not removed hallucination?",
+    "hint": "What would the model need in order to check itself?",
+    "choices": [
+      {
+        "text": "Nobody has tried to train models to admit uncertainty",
+        "correct": false,
+        "why": "They have, and models have improved. The problem shrinks without going away."
+      },
+      {
+        "text": "Hallucination happens only with older models",
+        "correct": false,
+        "why": "Newer models hallucinate less, and they still do."
+      },
+      {
+        "text": "The model has no separate store of facts to check its text against",
+        "correct": true,
+        "why": "Right. What it knows and what it finds likely are the same thing inside it."
+      },
+      {
+        "text": "It is caused by a bug that is fixed in every new version",
+        "correct": false,
+        "why": "It is not a bug. It comes from the same step that produces correct answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-7yjwg822",
+    "version": 1,
+    "section": "reducing-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does adding \"Do not make things up\" to a prompt help so little?",
+    "hint": "Could the model follow it if it wanted to?",
+    "choices": [
+      {
+        "text": "Models ignore every instruction that is phrased as a negative",
+        "correct": false,
+        "why": "Negative instructions are followed often enough. This one asks for something the model cannot see."
+      },
+      {
+        "text": "The model does not know which of its likely answers are invented",
+        "correct": true,
+        "why": "Right. If it could tell, it would not write them."
+      },
+      {
+        "text": "The sentence is too short to have any effect",
+        "correct": false,
+        "why": "Length is not the problem. The model has nothing to check its answers against."
+      },
+      {
+        "text": "The instruction is removed by the provider before the request reaches the model",
+        "correct": false,
+        "why": "Nothing removes it. It reaches the model and cannot be acted on."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1zex8hn",
+    "version": 1,
+    "section": "reducing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`retrieve --prompt` numbers each source. What does the number add?",
+    "hint": "What can a reader do with `[1]`?",
+    "choices": [
+      {
+        "text": "The reply names the source it used, which makes it checkable",
+        "correct": true,
+        "why": "Yes. A reader or a program goes to source 1 and sees whether it says that."
+      },
+      {
+        "text": "It ranks the sources by how true they are",
+        "correct": false,
+        "why": "The order comes from keyword matching, which says nothing about truth."
+      },
+      {
+        "text": "Numbers make a model obey instructions",
+        "correct": false,
+        "why": "They are labels for citing. They change nothing about obedience."
+      },
+      {
+        "text": "It stops the model from using general knowledge",
+        "correct": false,
+        "why": "The instruction asks for that. The numbers make the reply checkable."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8v03hay",
+    "version": 1,
+    "section": "reducing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For \"Who owns the café?\", retrieval returned two lines about opening hours. Why does the instruction's second sentence matter here?",
+    "hint": "What is the likeliest continuation of a question?",
+    "choices": [
+      {
+        "text": "It makes retrieval find a passage about the owner",
+        "correct": false,
+        "why": "Retrieval had already run. The handbook has no such passage."
+      },
+      {
+        "text": "It forbids the model from mentioning the café",
+        "correct": false,
+        "why": "It does no such thing. It says what to reply when the sources lack the answer."
+      },
+      {
+        "text": "It tells the model to search the internet when the handbook has no answer",
+        "correct": false,
+        "why": "It says the opposite: do not answer from general knowledge."
+      },
+      {
+        "text": "It gives the model an honest way out",
+        "correct": true,
+        "why": "Right: saying the handbook does not say becomes a likely reply instead of an invented owner."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsvmvf4d",
+    "version": 1,
+    "section": "reducing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`grep -rF` found the first quote in `refunds.md` and found the second nowhere. What does that show about a reply built on the second quote?",
+    "hint": "What can a program check without judging anything?",
+    "choices": [
+      {
+        "text": "The handbook is incomplete and should be updated",
+        "correct": false,
+        "why": "The handbook is fine. The quote was invented."
+      },
+      {
+        "text": "`grep` failed, because quotes need a smarter search",
+        "correct": false,
+        "why": "An exact quote is exactly what `grep -F` finds."
+      },
+      {
+        "text": "The reply is wrong only if a person agrees",
+        "correct": false,
+        "why": "No judgement is needed: the sentence is either in the file or it is not."
+      },
+      {
+        "text": "The claim it rests on has no source",
+        "correct": true,
+        "why": "Right. A quote missing from the source is a hallucination caught automatically."
+      }
+    ]
+  },
+  {
+    "id": "ex-fsns89h7",
+    "version": 1,
+    "section": "reducing-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At temperature 0, `toylm` said tomato three times out of three. What should you conclude?",
+    "hint": "Lesson 13: what does temperature 0 do?",
+    "choices": [
+      {
+        "text": "Tomato is now confirmed as today's soup",
+        "correct": false,
+        "why": "Three runs of the same rule agree with each other by construction. Nothing was confirmed."
+      },
+      {
+        "text": "Temperature 0 is the setting that prevents hallucination",
+        "correct": false,
+        "why": "It removes variety, not error. The answer is the same and still unknown."
+      },
+      {
+        "text": "It is consistent, which is not the same as correct",
+        "correct": true,
+        "why": "Right. It repeats the likeliest answer, including when the likeliest answer is invented."
+      },
+      {
+        "text": "The model has learnt from the earlier draws",
+        "correct": false,
+        "why": "Nothing changes in the model between runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-p19d6kdf",
+    "version": 1,
+    "section": "reducing-it",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "If the sources do not contain the answer, the instruction from `retrieve --prompt` asks for the reply \"the handbook does not ___\".",
+    "hint": "The verb in the instruction's second sentence.",
+    "blanks": [
+      {
+        "accept": [
+          "say"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8z7yg4tj",
+    "version": 1,
+    "section": "reducing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reply cites a web page that supports its claim. What is the cheapest useful check?",
+    "hint": "Each reference either exists or does not.",
+    "choices": [
+      {
+        "text": "Open the link",
+        "correct": true,
+        "why": "Right. It takes a minute, and an invented reference fails at once."
+      },
+      {
+        "text": "Ask the same model whether the link is real",
+        "correct": false,
+        "why": "Its answer about the link comes from the same likely-text step as the link itself."
+      },
+      {
+        "text": "Trust it if the address looks like a real site's",
+        "correct": false,
+        "why": "An invented link has the right shape; that is why it is convincing."
+      },
+      {
+        "text": "Run the prompt again at a lower temperature",
+        "correct": false,
+        "why": "That makes the same reply more consistent, not more correct."
+      }
+    ]
+  },
+  {
+    "id": "ex-5cy4qg5r",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a grounded answer, checked, in order.",
+    "hint": "It starts before the model is asked anything.",
+    "items": [
+      "Find the passages that match the question",
+      "Put them in the prompt, numbered, with the instruction",
+      "The model replies and quotes the source it used",
+      "Check each quote against the source"
+    ]
+  },
+  {
+    "id": "ex-fcvghtg8",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each remedy to what it does.",
+    "hint": "The headings of the second section.",
+    "pairs": [
+      {
+        "left": "supply the sources",
+        "right": "puts the true text where the model can see it"
+      },
+      {
+        "left": "allow \"the handbook does not say\"",
+        "right": "makes an honest refusal a likely reply"
+      },
+      {
+        "left": "ask for exact quotes",
+        "right": "makes a claim checkable by a program"
+      }
+    ],
+    "right_distractors": [
+      "makes every answer the model gives true"
+    ]
+  }
+]

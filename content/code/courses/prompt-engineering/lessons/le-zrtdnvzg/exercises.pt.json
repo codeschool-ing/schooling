@@ -1,0 +1,335 @@
+{
+  "ex-mc9zqz2v": {
+    "prompt": "O `tok show` imprimiu `17045` para `\"Answer\"`. O que o modelo faz com esse número?",
+    "hint": "É uma quantidade ou um endereço?",
+    "choices": [
+      {
+        "text": "Busca o vetor guardado naquela linha da tabela dele",
+        "why": "Isso. O id é um endereço; o modelo calcula com o embedding para onde ele aponta."
+      },
+      {
+        "text": "Multiplica o número pelos pesos",
+        "why": "O id nunca é usado como quantidade. O dobro do id não significaria o dobro de nada."
+      },
+      {
+        "text": "Compara com os ids da resposta que ele quer",
+        "why": "Nada é comparado com ids. O modelo trabalha com os vetores."
+      },
+      {
+        "text": "Transforma de volta na palavra Answer e lê",
+        "why": "O modelo nunca volta às letras; texto é só para as pessoas nas duas pontas."
+      }
+    ]
+  },
+  "ex-fxgvb68h": {
+    "prompt": "A mesma frase recebeu os ids `17045 306 1001 2195 13` no o200k_base e `16533 304 832 3492 13` no cl100k_base. O que isso mostra sobre um soft prompt?",
+    "hint": "Um id é um endereço na tabela de quem?",
+    "choices": [
+      {
+        "text": "Soft prompts precisam ser tokenizados duas vezes para funcionar nas duas codificações",
+        "why": "Um soft prompt nunca é tokenizado: são vetores, não texto."
+      },
+      {
+        "text": "Os dois tokenizadores dividem a frase em pedaços diferentes",
+        "why": "Os pedaços são idênticos nas duas linhas. Só os ids mudaram."
+      },
+      {
+        "text": "Os ids são aleatórios e mudam a cada vez que você roda o tokenizador",
+        "why": "Rode de novo e você recebe os mesmos ids. Eles diferem entre codificações, não entre execuções."
+      },
+      {
+        "text": "Ele é de um modelo; outro lê os mesmos números de outro jeito",
+        "why": "Isso. Um soft prompt é ajustado contra os pesos congelados e a tabela de um modelo, e não quer dizer nada em particular para outro."
+      }
+    ]
+  },
+  "ex-rnjv4h76": {
+    "prompt": "No prompt tuning, quais números mudam durante o treino?",
+    "hint": "Olhe onde termina a seta tracejada da figura.",
+    "choices": [
+      {
+        "text": "Os pesos do modelo, um pouco de cada vez",
+        "why": "Isso é fine-tuning (lição 9). O prompt tuning deixa cada peso como estava."
+      },
+      {
+        "text": "Os ids dos tokens da entrada",
+        "why": "Ids são endereços fixados pelo tokenizador. Nada no treino os muda."
+      },
+      {
+        "text": "Os do soft prompt",
+        "why": "Isso. Os pesos do modelo ficam congelados; só os poucos vetores na frente da entrada se mexem."
+      },
+      {
+        "text": "O soft prompt e também os pesos da última camada do modelo",
+        "why": "Só o soft prompt. Treinar qualquer parte do modelo seria uma forma de fine-tuning."
+      }
+    ]
+  },
+  "ex-zjhc8856": {
+    "prompt": "Um soft prompt é treinado por descida do ___, o mesmo procedimento que treina os pesos do modelo, para começo de conversa.",
+    "hint": "Os passos numerados da seção, o passo 3.",
+    "blanks": [
+      {
+        "accept": [
+          "gradiente"
+        ]
+      }
+    ]
+  },
+  "ex-17kn2h2q": {
+    "prompt": "Um colega quer imprimir o soft prompt treinado da equipe para revisá-lo como um escrito. O que ele vai encontrar?",
+    "hint": "Os vetores podem ser transformados de volta em palavras?",
+    "choices": [
+      {
+        "text": "Uma instrução curta em inglês claro, perto do que a equipe teria escrito",
+        "why": "Nada no treino empurra os vetores na direção de palavras. A graça do método é estar livre de ser palavras."
+      },
+      {
+        "text": "Vetores que não são palavra nenhuma, então não há frase para revisar",
+        "why": "Isso. Dá para listar os tokens mais próximos, mas os vetores nunca foram nenhum deles, e o que volta não se lê como instrução."
+      },
+      {
+        "text": "Os exemplos de treino, guardados dentro dos vetores",
+        "why": "Um soft prompt são alguns vetores, não uma cópia do conjunto de treino."
+      },
+      {
+        "text": "Uma lista de ids de tokens que dá para decodificar com o `tok`",
+        "why": "Não há ids: os vetores nunca foram buscados na tabela, então não há o que decodificar."
+      }
+    ]
+  },
+  "ex-3mmpsr6q": {
+    "prompt": "Do que você precisa para fazer prompt tuning? Marque todas as que se aplicam.",
+    "hint": "A seção lista duas exigências que um prompt escrito não tem.",
+    "choices": [
+      {
+        "text": "Os pesos do modelo",
+        "why": "Sim: para pôr vetores na entrada e calcular o gradiente através do modelo."
+      },
+      {
+        "text": "Exemplos rotulados da tarefa",
+        "why": "Sim: o treino precisa de respostas para comparar, e de algumas guardadas à parte para conferir o resultado."
+      },
+      {
+        "text": "A interface de chat de um provedor",
+        "why": "Uma interface de chat só aceita texto; não há onde pôr um vetor."
+      },
+      {
+        "text": "Permissão para alterar os pesos do modelo",
+        "why": "Os pesos são só lidos, nunca alterados. Tê-los basta."
+      }
+    ]
+  },
+  "ex-ekd6zvpv": {
+    "prompt": "O que diferencia o prefix tuning do prompt tuning?",
+    "hint": "Onde ficam os vetores aprendidos?",
+    "choices": [
+      {
+        "text": "Ele treina também os pesos do modelo",
+        "why": "Não: como o prompt tuning, ele deixa o modelo congelado."
+      },
+      {
+        "text": "O prefixo dele é escrito em palavras por uma pessoa",
+        "why": "O prefixo também são vetores aprendidos. Um prefixo escrito seria só um prompt."
+      },
+      {
+        "text": "Ele funciona por uma API hospedada, porque o prefixo vai como texto em cada pedido ao modelo",
+        "why": "Ele precisa dos pesos, pelo mesmo motivo que o prompt tuning."
+      },
+      {
+        "text": "Os vetores dele entram em cada camada, não só na entrada",
+        "why": "Isso. A família é a mesma, modelo congelado e poucos números treinados; o prefix tuning os põe mais fundo."
+      }
+    ]
+  },
+  "ex-18d4vfzv": {
+    "prompt": "Qual dos três uma pessoa consegue ler e corrigir à mão?",
+    "hint": "A linha da tabela sobre leitura.",
+    "choices": [
+      {
+        "text": "O soft prompt, se você imprimir os vetores",
+        "why": "Imprimir dá números, e as palavras mais próximas não formam uma instrução."
+      },
+      {
+        "text": "Os pesos do fine-tuning, pelo painel do provedor",
+        "why": "Um painel mostra métricas do treino. Não mostra pesos como algo que uma pessoa leia."
+      },
+      {
+        "text": "O prompt escrito",
+        "why": "Isso. Soft prompts são vetores e as mudanças do fine-tuning são pesos; nenhum dos dois se lê como texto."
+      },
+      {
+        "text": "Os três, com as ferramentas certas",
+        "why": "Só um dos três é texto."
+      }
+    ]
+  },
+  "ex-f5fhc5e0": {
+    "prompt": "Você usa um modelo por uma API hospedada e quer que ele siga o estilo da casa. Qual dos três está aberto a você sem pedir nada ao provedor?",
+    "hint": "O que você consegue pôr num pedido?",
+    "choices": [
+      {
+        "text": "Prompt tuning, enviando os vetores em cada pedido",
+        "why": "Uma API de texto não tem onde pôr um vetor, e você não conseguiria treinar um sem os pesos de qualquer jeito."
+      },
+      {
+        "text": "Fine-tuning, subindo exemplos para qualquer modelo que você consiga chamar",
+        "why": "Só onde o provedor o oferece como serviço, nos modelos que ele escolhe."
+      },
+      {
+        "text": "Um prompt escrito",
+        "why": "Isso. Um pedido leva texto; não há campo para um vetor, e você não tem os pesos."
+      },
+      {
+        "text": "Nenhum; um modelo hospedado não pode ser guiado",
+        "why": "Um prompt escrito o guia; é disso que trata este curso."
+      }
+    ]
+  },
+  "ex-92fmqavb": {
+    "prompt": "Uma empresa atende oito tarefas diferentes com um modelo de pesos abertos no próprio hardware. Por que ela escolheria prompt tuning em vez de fine-tuning?",
+    "hint": "O que precisa ser guardado por tarefa em cada caso?",
+    "choices": [
+      {
+        "text": "O prompt tuning não precisa de exemplos de treino",
+        "why": "Precisa de exemplos rotulados, como o fine-tuning."
+      },
+      {
+        "text": "Um modelo congelado, mais um soft prompt pequeno por tarefa",
+        "why": "Isso. O fine-tuning significaria oito conjuntos de pesos para guardar e servir; oito soft prompts são um punhado de vetores cada."
+      },
+      {
+        "text": "Soft prompts podem ser lidos e aprovados pela equipe de compliance",
+        "why": "Eles não podem ser lidos; esse é um dos custos deles."
+      },
+      {
+        "text": "O prompt tuning dá respostas melhores que o fine-tuning em qualquer tarefa",
+        "why": "Não existe essa garantia. A vantagem aqui é guardar e servir, não a qualidade."
+      }
+    ]
+  },
+  "ex-23wnwd5q": {
+    "prompt": "Um fornecedor diz que o assistente dele é \"ajustado para trabalho jurídico\". Que pergunta esta lição manda você fazer?",
+    "hint": "Três colunas, três coisas diferentes.",
+    "choices": [
+      {
+        "text": "Qual dos três foi alterado",
+        "why": "Isso. Uma instrução escrita se lê e se confere; vetores e pesos não, e mudar cada um custa coisas diferentes."
+      },
+      {
+        "text": "Quantos parâmetros o modelo tem",
+        "why": "O tamanho não diz nada sobre o que foi feito para adaptá-lo."
+      },
+      {
+        "text": "Se ele usa ReAct",
+        "why": "ReAct é um jeito de escrever prompts com ferramentas; não é um tipo de ajuste."
+      },
+      {
+        "text": "Se o treino foi feito em 2026",
+        "why": "Uma data não diz qual dos três métodos foi usado."
+      }
+    ]
+  },
+  "ex-yays0dts": {
+    "prompt": "Sua equipe troca de um modelo para outro. O que acontece com um soft prompt treinado para o primeiro?",
+    "hint": "A linha sobre passar para outro modelo.",
+    "choices": [
+      {
+        "text": "Ele é aproveitado, já que vetores independem do modelo",
+        "why": "Cada modelo tem sua tabela e seus pesos; os vetores só querem dizer algo para aquele contra o qual foram ajustados."
+      },
+      {
+        "text": "Ele é convertido com o tokenizador do novo modelo",
+        "why": "Um soft prompt não tem tokens para converter."
+      },
+      {
+        "text": "Ele continua funcionando, com qualidade menor",
+        "why": "Nada nele é compartilhado com o novo modelo. Não há motivo para esperar que funcione."
+      },
+      {
+        "text": "Tem de ser treinado de novo do zero",
+        "why": "Isso, como no fine-tuning. Um prompt escrito é reescrito e testado de novo, o que leva minutos."
+      }
+    ]
+  },
+  "ex-dbvtqheb": {
+    "prompt": "Na tabela de comparação, em quantas das três colunas uma pessoa consegue ler o que foi alterado?",
+    "hint": "A linha \"uma pessoa consegue ler\".",
+    "unit": "colunas"
+  },
+  "ex-41dgcjes": {
+    "prompt": "Ponha uma rodada de prompt tuning em ordem.",
+    "hint": "Os passos 1 a 4 da seção.",
+    "items": [
+      "Começar o soft prompt de números aleatórios ou embeddings comuns",
+      "Passar um exemplo rotulado pelo modelo congelado",
+      "Comparar a saída com a resposta desejada",
+      "Ajustar só os números do soft prompt por descida do gradiente"
+    ]
+  },
+  "ex-zcd7xd4e": {
+    "prompt": "Ligue cada método ao que ele altera.",
+    "hint": "A primeira linha da tabela.",
+    "pairs": [
+      {
+        "left": "prompt escrito",
+        "right": "o texto enviado em cada pedido"
+      },
+      {
+        "left": "prompt tuning",
+        "right": "alguns vetores na frente da entrada"
+      },
+      {
+        "left": "fine-tuning",
+        "right": "os pesos do modelo"
+      }
+    ],
+    "right_distractors": [
+      "os ids do tokenizador"
+    ]
+  },
+  "ex-sgrpevyx": {
+    "prompt": "Qual afirmação sobre o melhor soft prompt para uma tarefa é verdadeira?",
+    "hint": "Para que ele foi otimizado, e do que ele estava livre?",
+    "choices": [
+      {
+        "text": "Uma pessoa nunca o escreveria; ele nem precisa ser palavras",
+        "why": "Isso. Ele foi otimizado pelo efeito num modelo, livre de qualquer linha da tabela, e é também por isso que os prompts escritos que funcionam melhor parecem estranhos em certos casos (lição 31)."
+      },
+      {
+        "text": "É o melhor prompt escrito, achado automaticamente",
+        "why": "Procurar prompts escritos é o método da lição 31. Um soft prompt nem é texto."
+      },
+      {
+        "text": "Funciona igualmente bem para todo modelo do mesmo tamanho",
+        "why": "Ele fica preso aos pesos congelados contra os quais foi ajustado."
+      },
+      {
+        "text": "Torna os pesos do modelo dispensáveis na hora de gerar",
+        "why": "O modelo continua fazendo todo o trabalho; o soft prompt só fica na frente da entrada."
+      }
+    ]
+  },
+  "ex-r6xw485z": {
+    "prompt": "Por que este curso gasta quase todas as lições na primeira coluna da tabela?",
+    "hint": "Quem consegue trabalhar nela?",
+    "choices": [
+      {
+        "text": "Qualquer um a lê e a muda, sem conjunto de treino",
+        "why": "Isso. É a única das três que não precisa de pesos nem de dados rotulados, e a única que uma pessoa consegue revisar."
+      },
+      {
+        "text": "É o método que dá os melhores resultados em toda tarefa",
+        "why": "A tabela compara acesso e custo, não uma classificação de qualidade."
+      },
+      {
+        "text": "As outras duas logo vão deixar de ser usadas",
+        "why": "Nada na lição diz isso; as duas são usadas onde as exigências delas são atendidas."
+      },
+      {
+        "text": "É o mais novo dos três métodos",
+        "why": "A idade não é o argumento; o acesso é."
+      }
+    ]
+  }
+}
