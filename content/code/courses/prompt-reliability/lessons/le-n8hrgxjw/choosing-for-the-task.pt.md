@@ -78,8 +78,8 @@ que custa. Este laboratório não consegue medir isso, porque o substituto não 
 aula 12 mede o tom em respostas que o curso escreveu. **Decida por tarefa, e mantenha classificação
 e extração em 0.**
 
-A aula 19 sorteia de propósito, várias vezes por mensagem, e faz uma votação. É um jeito de usar a
-aleatoriedade em vez de sofrer com ela, e custa uma chamada por amostra.
+A aula 19 sorteia de propósito, várias vezes por mensagem, e faz uma votação. Assim a aleatoriedade
+trabalha a seu favor, e cada amostra custa uma chamada.
 
 ## Zero não é garantia
 

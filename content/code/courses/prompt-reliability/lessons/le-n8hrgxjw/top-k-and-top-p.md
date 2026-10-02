@@ -35,8 +35,8 @@ probability between them, and each one's share is now divided by that: `on` goes
 
 **Top-p keeps the smallest set of top candidates whose probabilities add up to at least p.** The
 first three add up to 86.1%, which is short of 90%, so `lost` joins them and the total reaches
-92.8%. Four words stay. Top-k is a count and top-p is a share, and the difference shows when the
-distribution changes shape: k keeps three words whether the top one has 99% or 40%, while p keeps
+92.8%. Four words stay. Top-k is a count and top-p is a share. The difference shows when the distribution
+changes shape: k keeps three words whether the top one has 99% or 40%, while p keeps
 fewer words when one dominates and more when the probability is spread out.
 
 ## The order of the steps

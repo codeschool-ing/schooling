@@ -36,7 +36,7 @@ probabilidade entre si, e a parte de cada uma agora é dividida por isso: `on` v
 
 **O top-p mantém o menor conjunto de candidatas do topo cujas probabilidades somam pelo menos p.** As
 três primeiras somam 86.1%, abaixo de 90%, então `lost` entra e o total chega a 92.8%. Ficam quatro
-palavras. Top-k é uma contagem e top-p é uma fração, e a diferença aparece quando a distribuição
+palavras. Top-k é uma contagem e top-p é uma fração. A diferença aparece quando a distribuição
 muda de forma: k mantém três palavras quer a do topo tenha 99% ou 40%, enquanto p mantém menos
 palavras quando uma domina e mais quando a probabilidade está espalhada.
 
@@ -83,5 +83,5 @@ configuração depende das configurações aplicadas antes dela.**
 
 Os provedores diferem em quais delas expõem e nos detalhes de como as combinam. A Messages API da
 Anthropic aceita `temperature`, `top_k` e `top_p`; a Chat Completions API da OpenAI aceita
-`temperature` e `top_p` e não tem `top_k`. Leia a documentação daquele que você chama, e mude uma
-configuração de cada vez, pelo motivo que a aula 7 deu.
+`temperature` e `top_p` e não tem `top_k`. Leia a documentação daquele que você chama e mude uma
+configuração de cada vez, pelo motivo dado na aula 7.

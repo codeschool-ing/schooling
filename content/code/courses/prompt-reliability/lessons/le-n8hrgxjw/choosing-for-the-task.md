@@ -77,8 +77,8 @@ gives you the same text five times, and some sampling is what makes a second cal
 This lab cannot measure that, because the stand-in does not write replies; lesson 12 measures tone
 on replies the course wrote. **Decide per task, and keep classification and extraction at 0.**
 
-Lesson 19 samples on purpose, several times per message, and votes. That is a way of using the
-randomness rather than suffering it, and it costs a call per sample.
+Lesson 19 samples on purpose, several times per message, and votes. That puts the randomness to work,
+and it costs a call per sample.
 
 ## Zero is not a guarantee
 
