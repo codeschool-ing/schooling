@@ -64,8 +64,8 @@ onde um parágrafo das suas instruções se lê como um parágrafo de ajuda.
 Três chamadas obedeceram com o `v7-canary.txt`: `a04#2`, e duas chamadas de `a05` que escreveram o
 poema em vez do JSON. Com o `v6-escaped.txt` foram cinco, e os dois prompts diferem por uma frase
 que não fala nada de instruções. No substituto, quais chamadas vazam depende de um hash do prompt
-inteiro, então qualquer edição as embaralha. **Três em quarenta e cinco em quarenta são, as duas,
-o que uma taxa de dez em cem produz**, e a aula 11 trata de por que uma contagem sobre algumas
+inteiro, então qualquer edição as embaralha. **Tanto três em quarenta quanto cinco em quarenta são o que uma taxa
+de dez em cem produz.** A aula 11 trata de por que uma contagem sobre algumas
 dezenas de chamadas se move tanto sem que nada tenha mudado.
 
 ## Rodar a cada mudança

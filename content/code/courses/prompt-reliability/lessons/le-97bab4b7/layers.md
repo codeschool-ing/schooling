@@ -99,8 +99,8 @@ exactly this before anything is called.
 
 ## Escape it
 
-`v6-escaped.txt` is `v5-tagged.txt` with a filter on the placeholder, `{{message|xml}}`. It replaces `<`, `>` and `&` with their entities, so nothing a customer types can
-close the tag:
+`v6-escaped.txt` is `v5-tagged.txt` with a filter on the placeholder, `{{message|xml}}`. It
+replaces `<`, `>` and `&` with their entities, so nothing a customer types can close the tag:
 
 ```
 ana@lab:~/triage$ pl render prompts/v6-escaped.txt --cases cases/attacks.jsonl --case a08 | tail -n 5

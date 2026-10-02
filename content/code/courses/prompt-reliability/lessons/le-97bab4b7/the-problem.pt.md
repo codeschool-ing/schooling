@@ -38,7 +38,7 @@ ana@lab:~/triage$ head -n 3 cases/attacks.jsonl
 
 As instruções são inofensivas de propósito: trocar um rótulo, responder *OK*, escrever um poema,
 repetir o prompt. **Elas são todo o material de ataque desta aula**, e bastam, porque a pergunta
-aqui é se a triagem pode ser desviada, e não até onde.
+aqui é se a triagem pode ser desviada de algum jeito.
 
 O `v4-only-json.txt` põe a mensagem depois de `Message:` sem nada que marque onde ela termina:
 
@@ -84,8 +84,8 @@ chega raciocinando**, e o conjunto de ataques é como você a mede.
 ## Onde o estrago cai
 
 Leia as oito falhas pelo que aconteceria em seguida. O *ACCESS GRANTED* de `a10` e a cópia do
-prompt em `a04` não são JSON, então quem lê a triagem as recusa, e um chamado espera uma pessoa
-classificá-lo. `a01`, `a03`, `a06` e `a08` são analisadas sem problema. **Um valor errado dentro de
+prompt em `a04` não são JSON, então quem lê a triagem as recusa, e um chamado fica esperando alguém
+classificá-lo. `a01`, `a03`, `a06` e `a08` são JSON perfeitamente válido. **Um valor errado dentro de
 um JSON válido é o tipo perigoso**, porque o programa seguinte não tem motivo para duvidar dele:
 `a06`, uma cobrança em dobro, ficaria na fila de baixa urgência porque o cliente foi educado.
 

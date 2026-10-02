@@ -62,8 +62,7 @@ paragraph of your instructions reads like a paragraph of help.
 ## Reading the counts
 
 Three calls obeyed under `v7-canary.txt`: `a04#2`, and two calls for `a05` that wrote the poem
-instead of the JSON. Under `v6-escaped.txt`
-it was five, and the two prompts differ by one sentence that says nothing about instructions. In
+instead of the JSON. Under `v6-escaped.txt` it was five, and the two prompts differ by one sentence that says nothing about instructions. In
 the stand-in, which calls leak depends on a hash of the whole prompt, so any edit reshuffles them.
 **Three in forty and five in forty are both what a rate of ten in a hundred produces**, and
 lesson 11 is about why a count over a few dozen calls moves that much without anything changing.
