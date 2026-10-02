@@ -39,22 +39,22 @@ tokens  words  chars  file
 
 A resposta certa custou 94 tokens de saída contra 5 da errada: quase dezenove vezes mais. **Tokens
 de saída costumam ter preço mais alto que os de entrada**, e também são a parte lenta, já que cada
-um é um passo do laço da lição 1. Uma cadeia em toda requisição de um serviço movimentado multiplica
+um é um passo do laço da lição 1. Uma cadeia em cada chamada de um serviço movimentado multiplica
 a conta e a espera. O limite de tokens máximos da lição 15 também pesa mais aqui: um limite
 pensado para respostas curtas pode cortar a cadeia antes de ela chegar à linha `Answer:`, e a
-resposta fica sem resposta nenhuma.
+saída fica sem resposta nenhuma.
 
 ## Modelos que raciocinam antes de responder
 
-No momento em que este curso é escrito (2026), vários fornecedores vendem modelos treinados para
+No momento em que este curso é escrito (2026), vários provedores vendem modelos treinados para
 produzir sozinhos uma cadeia de raciocínio antes da resposta visível, muitas vezes chamados de
 modelos de raciocínio (*reasoning* ou *thinking*). Com eles, "pense passo a passo" acrescenta
 pouco, porque os passos acontecem de qualquer jeito. Duas coisas valem conferir na documentação do
-fornecedor do modelo que você usa: **se os tokens de raciocínio são cobrados como saída mesmo
+provedor do modelo que você usa: **se os tokens de raciocínio são cobrados como saída mesmo
 quando você não os vê**, e se há um ajuste de quanto raciocínio permitir. A fonte é a documentação
 e a data dela; uma lista num curso ficaria desatualizada em poucos meses.
 
-## Uma cadeia pode ler bem e estar errada
+## Uma cadeia pode soar bem e estar errada
 
 Os passos parecem uma explicação, e isso os torna convincentes. Eles são gerados do mesmo jeito que
 todo o resto, e nada os confere. O curso escreveu esta cadeia como ilustração de uma errada e
@@ -77,5 +77,5 @@ por um programa, como a linha de Python da seção anterior fez, confira assim.
 
 Uma cadeia também não é um registro fiel de como se chegou à resposta. Um modelo pode escrever
 passos arrumados que levam a uma resposta que ele daria de qualquer forma. Trate a cadeia como
-texto que ajuda a resposta e ajuda você a ver uma curva errada, não como prova. A lição 27 usa
+texto que ajuda a resposta e ajuda você a notar um desvio no caminho, não como prova. A lição 27 usa
 isso: se uma cadeia pode errar, várias cadeias podem ser comparadas.
