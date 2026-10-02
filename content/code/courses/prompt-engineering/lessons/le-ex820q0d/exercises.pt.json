@@ -1,0 +1,305 @@
+{
+  "ex-sk6m1ts6": {
+    "prompt": "Você ajusta um máximo de 50 tokens de saída. O que o modelo faz de diferente?",
+    "hint": "O modelo sabe que o limite existe?",
+    "choices": [
+      {
+        "text": "Nada; o laço é parado em 50",
+        "why": "Isso. O modelo escreve como teria escrito, e a geração é cortada quando a contagem chega lá."
+      },
+      {
+        "text": "Ele planeja uma resposta que caiba em 50 tokens",
+        "why": "O modelo nunca vê o limite, então não tem como planejar em volta dele."
+      },
+      {
+        "text": "Ele escreve mais rápido, para terminar a tempo",
+        "why": "A velocidade não tem nada a ver. O limite é uma contagem, não um relógio."
+      },
+      {
+        "text": "Ele resume a resposta para caber",
+        "why": "Resumir exigiria que o modelo soubesse do limite. Peça brevidade no prompt."
+      }
+    ]
+  },
+  "ex-yd1t1eqa": {
+    "prompt": "O `toylm` imprimiu `finish: length`. O que aconteceu?",
+    "hint": "Há dois motivos para a geração parar.",
+    "choices": [
+      {
+        "text": "O modelo escolheu terminar o texto",
+        "why": "Isso aparece como `end`."
+      },
+      {
+        "text": "A saída ficou do tamanho do prompt",
+        "why": "O tamanho do prompt não decide quando a saída para."
+      },
+      {
+        "text": "A resposta estava completa e no tamanho certo",
+        "why": "`length` não diz nada sobre estar completa. Muitas vezes a resposta foi cortada."
+      },
+      {
+        "text": "O laço bateu no limite de tokens",
+        "why": "Isso. O modelo não escolheu parar; a contagem chegou ao `--max-tokens`."
+      }
+    ]
+  },
+  "ex-7ptdqdc7": {
+    "prompt": "O `toylm generate \"the menu has\" --temperature 0 --max-tokens 3` imprimiu `soup, bread`. Quantos tokens tinha a resposta sem corte?",
+    "hint": "Leia a execução sem limite apertado.",
+    "unit": "tokens"
+  },
+  "ex-b0567af8": {
+    "prompt": "Por que `the menu has soup, bread` é uma saída perigosa?",
+    "hint": "Compare com a resposta sem corte.",
+    "choices": [
+      {
+        "text": "É agramatical, então quem lê vai ficar confuso com ela",
+        "why": "É gramatical, e esse é justamente o problema."
+      },
+      {
+        "text": "Parece completa e é falsa",
+        "why": "Isso. O cardápio também tem bolo, e uma lista cortada raramente parece cortada. Só o motivo de término diz isso."
+      },
+      {
+        "text": "Veio de uma temperatura acima de 0",
+        "why": "Foi escrita na temperatura 0. O limite a cortou."
+      },
+      {
+        "text": "Pão não está no cardápio",
+        "why": "Pão está no cardápio. O bolo é o item que ficou de fora."
+      }
+    ]
+  },
+  "ex-z2gksfrk": {
+    "prompt": "Na temperatura 0, o `toylm` escreve `sleeps and the cat sleeps and the cat...` depois de `the cat` até o limite. Por que ele nunca para sozinho?",
+    "hint": "Siga a palavra do topo em cada par.",
+    "choices": [
+      {
+        "text": "O corpus não tem ponto final depois de `sleeps`",
+        "why": "Tem: `the cat sleeps on the chair by the window .` O ponto final só nunca é a primeira escolha nesse caminho."
+      },
+      {
+        "text": "As palavras mais prováveis formam um círculo que nunca chega ao fim",
+        "why": "Isso: `sleeps` → `and` → `the` → `cat` → `sleeps`. A decodificação gulosa faz a mesma curva toda vez."
+      },
+      {
+        "text": "A temperatura 0 desliga o token de fim",
+        "why": "O token de fim pode ganhar na temperatura 0; `the café opens at` termina depois de `seven.`"
+      },
+      {
+        "text": "O limite padrão é alto demais",
+        "why": "O limite é o que o para. Sem o círculo, ele acabaria bem antes."
+      }
+    ]
+  },
+  "ex-hn2c3fqq": {
+    "prompt": "O seu programa pede um objeto JSON e faz o parse da resposta. Às vezes o parse falha com uma string não terminada. Qual a causa mais provável, e o conserto?",
+    "hint": "O que o `validate` disse sobre o `cut.json`?",
+    "choices": [
+      {
+        "text": "O limite cortou o objeto; aumente-o e confira o motivo de término",
+        "why": "Isso. Um objeto cortado não é JSON. Deixe folga acima da maior resposta, e trate `length` como falha a tratar."
+      },
+      {
+        "text": "O modelo não sabe JSON; mude para texto puro e faça o parse você mesmo",
+        "why": "A resposta completa era válida. A falha veio de onde o laço foi parado."
+      },
+      {
+        "text": "O schema está errado; afrouxe-o para mais respostas passarem",
+        "why": "O `validate` recusou antes de chegar ao schema: nem era JSON."
+      },
+      {
+        "text": "A temperatura está alta demais, então ele escreve sintaxe quebrada",
+        "why": "Um corte no limite acontece em qualquer temperatura, inclusive 0."
+      }
+    ]
+  },
+  "ex-sn499bn4": {
+    "prompt": "Quantos tokens o `tok count reply.json` informou para a resposta JSON completa?",
+    "hint": "A primeira coluna.",
+    "unit": "tokens"
+  },
+  "ex-bzxmvd66": {
+    "prompt": "Quais destas coisas o código que chama um modelo deve fazer com um motivo de término `length`? Marque todas as que se aplicam.",
+    "hint": "A seção diz o que `length` quer dizer.",
+    "choices": [
+      {
+        "text": "Tratar a resposta como possivelmente incompleta",
+        "why": "Sim. É isso que o valor diz."
+      },
+      {
+        "text": "Tentar de novo com um limite maior, ou informar um erro",
+        "why": "Sim. As duas tratam o corte em vez de passá-lo adiante."
+      },
+      {
+        "text": "Fazer o parse da resposta como se estivesse completa",
+        "why": "É assim que uma lista cortada vira um fato falso mais adiante."
+      },
+      {
+        "text": "Ignorá-lo quando o texto parece terminado",
+        "why": "Uma resposta cortada raramente parece cortada, então a aparência não prova nada."
+      }
+    ]
+  },
+  "ex-5hxg9jzw": {
+    "prompt": "Por que um limite de saída limita o custo de uma requisição?",
+    "hint": "O que acontece quando a contagem chega ao limite?",
+    "choices": [
+      {
+        "text": "O provedor devolve o dinheiro dos tokens escritos além do limite",
+        "why": "Nenhum token é escrito além dele. A geração para."
+      },
+      {
+        "text": "O modelo escreve tokens mais baratos perto do limite",
+        "why": "Todo token de saída tem o mesmo preço."
+      },
+      {
+        "text": "A geração para ali, então a saída nunca passa dele",
+        "why": "Isso. O limite vezes o preço de saída é o teto do custo da saída de uma requisição."
+      },
+      {
+        "text": "Ele baixa o preço de cada token de entrada da requisição",
+        "why": "A entrada tem preço separado e não muda."
+      }
+    ]
+  },
+  "ex-8zgq0mee": {
+    "prompt": "No `tok cost`, 79 tokens de entrada a 2 por milhão e 40 de saída a 8 por milhão. Qual parte custa mais?",
+    "hint": "Compare as duas linhas.",
+    "choices": [
+      {
+        "text": "A entrada, já que há quase o dobro de tokens de entrada",
+        "why": "A contagem é só metade da história; o preço por token é quatro vezes maior na saída."
+      },
+      {
+        "text": "A saída, umas duas vezes a entrada",
+        "why": "Isso: 0.000320 contra 0.000158. Menos tokens, e ainda a parte maior, porque cada um custa quatro vezes mais."
+      },
+      {
+        "text": "Custam o mesmo",
+        "why": "Não custam: as duas linhas diferem por um fator de dois."
+      },
+      {
+        "text": "Depende da temperatura",
+        "why": "A temperatura não aparece no preço."
+      }
+    ]
+  },
+  "ex-xcd0j1vx": {
+    "prompt": "Com os preços ilustrativos e 400 tokens de saída, que total o `tok cost` deu para 10.000 requisições?",
+    "hint": "A última linha da segunda execução.",
+    "unit": ""
+  },
+  "ex-qgm5qj9j": {
+    "prompt": "Uma requisição tem limite de 400 tokens de saída, a um preço ilustrativo de 8 por milhão. Qual o máximo que a saída dela pode custar?",
+    "hint": "Limite vezes preço.",
+    "choices": [
+      {
+        "text": "0.000158",
+        "why": "Essa é a entrada da requisição de exemplo, não o teto da saída."
+      },
+      {
+        "text": "Não dá para dizer nada antes de a resposta chegar",
+        "why": "O limite fixa um teto de antemão. É isso que o torna um orçamento."
+      },
+      {
+        "text": "33.58",
+        "why": "Isso são dez mil requisições, com a entrada incluída."
+      },
+      {
+        "text": "0.0032",
+        "why": "Isso: 400 × 8 / 1.000.000. Faça o modelo o que fizer, ele não escreve mais que 400 tokens."
+      }
+    ]
+  },
+  "ex-2tje00z7": {
+    "prompt": "O que pedir \"uma frase\" no prompt faz que o limite não faz?",
+    "hint": "Um muda o que é escrito, o outro onde é cortado.",
+    "choices": [
+      {
+        "text": "Garante que a resposta fique abaixo do limite",
+        "why": "Uma instrução é seguida com frequência, e não sempre. O limite é a garantia."
+      },
+      {
+        "text": "Torna a requisição mais barata por token",
+        "why": "O preço por token é fixado pelo provedor."
+      },
+      {
+        "text": "Nada; os dois fazem o mesmo trabalho",
+        "why": "Eles fazem trabalhos diferentes, e é por isso que a seção diz para usar os dois."
+      },
+      {
+        "text": "Leva o modelo a uma resposta curta e completa",
+        "why": "Isso. O limite só para uma resposta longa no meio."
+      }
+    ]
+  },
+  "ex-8vmp3db0": {
+    "prompt": "Uma equipe põe um limite apertado e tira \"responda de forma breve\" do prompt para economizar tokens de entrada. O que ela deve esperar?",
+    "hint": "O que um limite sem instrução produz?",
+    "choices": [
+      {
+        "text": "Respostas mais curtas e completas, porque o modelo vê o limite",
+        "why": "O modelo nunca vê o limite."
+      },
+      {
+        "text": "Uma conta maior por requisição",
+        "why": "O limite continua tampando a saída. O que se perde é a completude, não dinheiro."
+      },
+      {
+        "text": "Mais respostas cortadas no meio, terminando em `length`",
+        "why": "Isso. O modelo escreve no tamanho de sempre e o limite corta; a economia na entrada compra saída quebrada."
+      },
+      {
+        "text": "Nenhuma mudança, já que instruções são ignoradas",
+        "why": "Instruções mudam o que é provável. Tirar uma muda as respostas."
+      }
+    ]
+  },
+  "ex-xc37bq31": {
+    "prompt": "Ponha em ordem os passos para ajustar o limite de saída de uma requisição de classificação que responde em JSON.",
+    "hint": "Primeiro medir, depois decidir, depois conferir.",
+    "items": [
+      "Escrever a instrução pedindo o objeto e nada mais",
+      "Medir a maior resposta válida com um tokenizador",
+      "Pôr o limite um pouco acima desse tamanho",
+      "Conferir o motivo de término de cada resposta antes do parse"
+    ]
+  },
+  "ex-rrn4ngac": {
+    "prompt": "Quando uma resposta para porque o limite foi atingido, o `toylm` imprime `finish: ___`.",
+    "hint": "Uma palavra; o outro valor é `end`.",
+    "blanks": [
+      {
+        "accept": [
+          "length"
+        ]
+      }
+    ]
+  },
+  "ex-9dmyevzp": {
+    "prompt": "Ligue cada observação ao que ela diz a você.",
+    "hint": "As capturas desta lição.",
+    "pairs": [
+      {
+        "left": "`finish: end`",
+        "right": "o modelo escolheu parar"
+      },
+      {
+        "left": "`finish: length`",
+        "right": "o laço foi cortado no limite"
+      },
+      {
+        "left": "`not JSON: Unterminated string`",
+        "right": "um objeto foi cortado antes de fechar"
+      },
+      {
+        "left": "`10,000 requests: 33.58`",
+        "right": "o que uma resposta sem limite custa em escala"
+      }
+    ],
+    "right_distractors": [
+      "o modelo foi avisado do limite"
+    ]
+  }
+}
