@@ -139,16 +139,16 @@ imprime o state que o mock produziu, e a sub-rede mostra do que um mock é feito
 ```
 # aws_subnet.this["a"]:
 resource "aws_subnet" "this" {
-    arn                                 = "e7wo1igt"
+    arn                                 = "jhm1adza"
     availability_zone                   = "sa-east-1a"
-    availability_zone_id                = "3qhc3q4h"
+    availability_zone_id                = "403cwd9r"
     cidr_block                          = "10.20.1.0/24"
-    id                                  = "gd2g4m58"
-    ipv6_cidr_block                     = "6ywiqajd"
-    ipv6_cidr_block_association_id      = "10crxbcv"
-    owner_id                            = "h85gu9hk"
-    private_dns_hostname_type_on_launch = "4r24fotg"
-    region                              = "gwazfv01"
+    id                                  = "l0t3iehz"
+    ipv6_cidr_block                     = "kugbyqub"
+    ipv6_cidr_block_association_id      = "t4n5woph"
+    owner_id                            = "cjw54oll"
+    private_dns_hostname_type_on_launch = "fpr535ti"
+    region                              = "241ub8wp"
     tags                                = {
         "Name" = "shop-a"
     }

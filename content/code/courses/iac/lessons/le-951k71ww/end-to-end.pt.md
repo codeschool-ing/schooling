@@ -170,7 +170,7 @@ tests/range.tftest.hcl... in progress
   run "plan_accepts_it"... pass
   run "apply_refuses_it"... fail
 ╷
-│ Error: creating EC2 Subnet: operation error EC2: CreateSubnet, https response error StatusCode: 400, RequestID: HAVr2SqRlRyV3U8B3Fq1PQiad5RaUa7L4Ih5matGpjVhLpbEuwm9, api error InvalidSubnet.Range: The CIDR '10.30.1.0/24' is invalid.
+│ Error: creating EC2 Subnet: operation error EC2: CreateSubnet, https response error StatusCode: 400, RequestID: qEQGGh8HNnVprVhob3z5gwJyohxQIqEXuYWJ29WOm5bUT5WKwxJp, api error InvalidSubnet.Range: The CIDR '10.30.1.0/24' is invalid.
 │ 
 │   with aws_subnet.this["b"],
 │   on main.tf line 11, in resource "aws_subnet" "this":
@@ -192,9 +192,9 @@ numa conta real, o que uma limpeza que falhou deixa para trás fica lá, e é co
 remover.
 
 Uma falha ponta a ponta é cara de encontrar, então a resposta certa é subir esse conhecimento na
-escada. A Ana acrescenta a `subnets` uma regra que compara a rede de cada sub-rede com a da VPC,
-que exige Terraform 1.9 porque a condição lê uma segunda variável, e um run no `rules.tftest.hcl`
-que espera a recusa:
+escada. A Ana acrescenta a `subnets` uma regra que compara a rede de cada sub-rede com a da VPC;
+ela exige Terraform 1.9, porque a condição lê uma segunda variável. Depois acrescenta ao
+`rules.tftest.hcl` um run que espera a recusa da regra:
 
 ```
 ana@laptop:~/shop/modules/network$ tail -n 10 variables.tf

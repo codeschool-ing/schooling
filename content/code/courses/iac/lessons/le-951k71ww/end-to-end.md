@@ -170,7 +170,7 @@ tests/range.tftest.hcl... in progress
   run "plan_accepts_it"... pass
   run "apply_refuses_it"... fail
 ╷
-│ Error: creating EC2 Subnet: operation error EC2: CreateSubnet, https response error StatusCode: 400, RequestID: HAVr2SqRlRyV3U8B3Fq1PQiad5RaUa7L4Ih5matGpjVhLpbEuwm9, api error InvalidSubnet.Range: The CIDR '10.30.1.0/24' is invalid.
+│ Error: creating EC2 Subnet: operation error EC2: CreateSubnet, https response error StatusCode: 400, RequestID: qEQGGh8HNnVprVhob3z5gwJyohxQIqEXuYWJ29WOm5bUT5WKwxJp, api error InvalidSubnet.Range: The CIDR '10.30.1.0/24' is invalid.
 │ 
 │   with aws_subnet.this["b"],
 │   on main.tf line 11, in resource "aws_subnet" "this":
@@ -191,9 +191,9 @@ ana@laptop:~/shop/modules/network$ aws ec2 describe-vpcs --query "Vpcs[].[CidrBl
 account, whatever a failed teardown leaves behind stays, and is billed, until somebody removes it.
 
 An end-to-end failure is expensive to find, so the right response is to move the knowledge up the
-ladder. Ana adds a rule to `subnets` that compares each subnet's network with the VPC's, which
-needs Terraform 1.9 because the condition reads a second variable, and a run to `rules.tftest.hcl`
-that expects it to refuse:
+ladder. Ana adds a rule to `subnets` that compares each subnet's network with the VPC's; it needs
+Terraform 1.9, because the condition reads a second variable. Then she adds a run to
+`rules.tftest.hcl` that expects the rule to refuse:
 
 ```
 ana@laptop:~/shop/modules/network$ tail -n 10 variables.tf
