@@ -1,0 +1,567 @@
+[
+  {
+    "id": "ex-6mskq32h",
+    "version": 1,
+    "section": "tokens-not-words",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, `They were charged twice for order 4471.` is seven words and eight tokens. Where does the eighth come from?",
+    "hint": "Look at the end of the sentence.",
+    "choices": [
+      {
+        "text": "The number 4471 is split into two tokens",
+        "correct": false,
+        "why": "In the lab a run of digits is one token."
+      },
+      {
+        "text": "The full stop",
+        "correct": true,
+        "why": "Right: every punctuation mark is a token of its own in the lab."
+      },
+      {
+        "text": "The newline that `echo` adds at the end of the line",
+        "correct": false,
+        "why": "Whitespace is not counted by the lab's tokenizer."
+      },
+      {
+        "text": "The word *charged*, which is long enough to be split",
+        "correct": false,
+        "why": "The lab never splits a word; a real tokenizer might."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndpafv0m",
+    "version": 1,
+    "section": "tokens-not-words",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put inside one JSON field, `{\"summary\": \"…\"}`, the eight-token sentence came to how many tokens?",
+    "hint": "The second `pl tokens` line.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-3dyqq7nc",
+    "version": 1,
+    "section": "tokens-not-words",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The reply to `t01` is 32 tokens and its summary is 8 of them. What are the other 24?",
+    "hint": "Count what is around the sentence.",
+    "choices": [
+      {
+        "text": "The spaces and line breaks of the indented JSON",
+        "correct": false,
+        "why": "The lab does not count whitespace at all."
+      },
+      {
+        "text": "The message, which the model repeats before answering",
+        "correct": false,
+        "why": "The reply holds no copy of the message."
+      },
+      {
+        "text": "Field names, labels and punctuation",
+        "correct": true,
+        "why": "Right: 19 punctuation marks and 5 names and labels."
+      },
+      {
+        "text": "Hidden reasoning",
+        "correct": false,
+        "why": "The stand-in writes nothing it does not print."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9s3arsh",
+    "version": 1,
+    "section": "tokens-not-words",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Does the lab's token count tell you what a provider will bill for the same text?",
+    "hint": "Whose tokenizer does a provider bill by?",
+    "choices": [
+      {
+        "text": "Yes, because every tokenizer counts punctuation the same way",
+        "correct": false,
+        "why": "Real tokenizers often merge punctuation with what sits beside it."
+      },
+      {
+        "text": "No: the provider counts with its own tokenizer",
+        "correct": true,
+        "why": "Right. What carries over is the proportion of structure, not the number."
+      },
+      {
+        "text": "Yes, for English text",
+        "correct": false,
+        "why": "Language does not make two tokenizers agree."
+      },
+      {
+        "text": "Only for JSON",
+        "correct": false,
+        "why": "Format does not make them agree either."
+      }
+    ]
+  },
+  {
+    "id": "ex-8efghfxr",
+    "version": 1,
+    "section": "tokens-not-words",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cap chosen by thinking about how long the ___ ought to be comes out too small, because that part is only a quarter of the reply.",
+    "hint": "The part of the reply a person reads.",
+    "blanks": [
+      {
+        "accept": [
+          "summary"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-btj71m3x",
+    "version": 1,
+    "section": "the-hard-cap",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `max_tokens=30`, how many of the forty replies passed every check?",
+    "hint": "The `all` line of `pl check runs/cap30.jsonl`.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0eg1gvj8",
+    "version": 1,
+    "section": "the-hard-cap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `t35` pass under the cap of 30 when 39 others failed?",
+    "hint": "Look at `out` on its last line.",
+    "choices": [
+      {
+        "text": "Its message asked for a short answer",
+        "correct": false,
+        "why": "It did not; the customer just loves the shop."
+      },
+      {
+        "text": "The stand-in noticed the cap and wrote less",
+        "correct": false,
+        "why": "Nothing in the reply changed; the cap removes, it does not plan."
+      },
+      {
+        "text": "Its reply was 29 tokens",
+        "correct": true,
+        "why": "Right: its summary was four words, and the whole reply fitted under the cap."
+      },
+      {
+        "text": "The cap does not apply to replies sorted as other, since nothing reads them",
+        "correct": false,
+        "why": "The cap applies to every reply alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-cynjhg3m",
+    "version": 1,
+    "section": "the-hard-cap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A reply ends with `stop: max_tokens`. What does that tell you?",
+    "hint": "Compare it with `stop: end`.",
+    "choices": [
+      {
+        "text": "The limit ended it, not the model",
+        "correct": true,
+        "why": "Right, so the end of the reply is missing."
+      },
+      {
+        "text": "The model judged the answer complete and stopped",
+        "correct": false,
+        "why": "That is `end`."
+      },
+      {
+        "text": "The prompt was too long for the model to read",
+        "correct": false,
+        "why": "The cap is on output, not input."
+      },
+      {
+        "text": "The reply cost more than the cap allows",
+        "correct": false,
+        "why": "The cap counts tokens, and a cut reply is charged for what it wrote."
+      }
+    ]
+  },
+  {
+    "id": "ex-cz9jjhv9",
+    "version": 1,
+    "section": "the-hard-cap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague sets `max_tokens` to 20 on a prompt that writes one-paragraph replies to customers, to keep them short. What will the replies look like?",
+    "hint": "Does the cap change what the model plans to write?",
+    "choices": [
+      {
+        "text": "Shorter and complete: the model fits its answer to the limit",
+        "correct": false,
+        "why": "The limit decides where writing stops, not what is written."
+      },
+      {
+        "text": "Unchanged, because the provider ignores very small limits",
+        "correct": false,
+        "why": "A limit is applied whatever its size."
+      },
+      {
+        "text": "Rejected before any text is written",
+        "correct": false,
+        "why": "Nothing refuses the request; it is cut."
+      },
+      {
+        "text": "Most of them stopped in mid-sentence",
+        "correct": true,
+        "why": "Right. To get short replies, ask for them in the prompt."
+      }
+    ]
+  },
+  {
+    "id": "ex-229bj5b1",
+    "version": 1,
+    "section": "asking-for-length",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `v4-words.txt`, `t37` came back shorter and still valid JSON, while the cap of 30 broke it. What is the difference?",
+    "hint": "Which of the two changed what was written?",
+    "choices": [
+      {
+        "text": "The words prompt also raised the cap, so the reply had room to finish",
+        "correct": false,
+        "why": "No cap was set in that run."
+      },
+      {
+        "text": "The request changed what was written; the cap removed the end",
+        "correct": true,
+        "why": "Right: asking shapes the answer, the cap only cuts it."
+      },
+      {
+        "text": "A request for length turns the cap off",
+        "correct": false,
+        "why": "Under the cap of 30 the words prompt failed 39 times as well."
+      },
+      {
+        "text": "Short summaries are never cut",
+        "correct": false,
+        "why": "They are, when the frame plus the summary passes the cap."
+      }
+    ]
+  },
+  {
+    "id": "ex-85d6ezxp",
+    "version": 1,
+    "section": "asking-for-length",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Mean output tokens went from 38.0 to 36.8 when the prompt asked for under 12 words. By how many tokens per reply did the mean fall?",
+    "hint": "Subtract.",
+    "value": 1.2,
+    "tolerance": 0.05,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-mcbqktpk",
+    "version": 1,
+    "section": "asking-for-length",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did asking for a summary under 12 words lower the mean output by so little?",
+    "hint": "Which part of the reply is allowed to shrink?",
+    "choices": [
+      {
+        "text": "The stand-in ignored the request and wrote its usual one-sentence summaries anyway",
+        "correct": false,
+        "why": "It obeyed: `t37` was cut to twelve words."
+      },
+      {
+        "text": "The prompt grew by a few words, and the length of the output follows the prompt",
+        "correct": false,
+        "why": "Input length does not set output length."
+      },
+      {
+        "text": "Only the summary shrinks, and the JSON frame around it stays the same size",
+        "correct": true,
+        "why": "Right, and many summaries were under twelve words already."
+      },
+      {
+        "text": "Twelve words is the stand-in's minimum",
+        "correct": false,
+        "why": "It has no minimum; `t35`'s summary was four words."
+      }
+    ]
+  },
+  {
+    "id": "ex-ttdzxp1a",
+    "version": 1,
+    "section": "asking-for-length",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under `max_tokens=30`, the prompt asking for under 12 words still passed 1 reply in 40. What should change?",
+    "hint": "Twelve words of summary sit inside a frame.",
+    "choices": [
+      {
+        "text": "Ask for fewer words, under six",
+        "correct": false,
+        "why": "That fights the cap with the content; the cap is what is wrong."
+      },
+      {
+        "text": "The cap: well above the asked length plus the frame",
+        "correct": true,
+        "why": "Right. The request sets the size; the cap is only the guard."
+      },
+      {
+        "text": "Drop the request, since the cap already limits length",
+        "correct": false,
+        "why": "Then every long reply is cut instead of shortened."
+      },
+      {
+        "text": "Parse the cut replies leniently",
+        "correct": false,
+        "why": "A cut reply is a failure, not a parsing problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-xssf2z5w",
+    "version": 1,
+    "section": "asking-for-length",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of asking for a length in the prompt? Choose all that apply.",
+    "hint": "Compare it with the cap.",
+    "choices": [
+      {
+        "text": "It changes what the model writes",
+        "correct": true,
+        "why": "Yes: the brace still closes."
+      },
+      {
+        "text": "It has to be checked, like a label",
+        "correct": true,
+        "why": "Yes: the stand-in kept twelve words where under 12 allowed eleven."
+      },
+      {
+        "text": "It makes the cap unnecessary",
+        "correct": false,
+        "why": "The cap is for the reply that ignores the request."
+      },
+      {
+        "text": "It does not stop a reply that ignores it",
+        "correct": true,
+        "why": "Yes, which is why the cap stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-092266x2",
+    "version": 1,
+    "section": "setting-the-cap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does choosing a cap start?",
+    "hint": "A cap must stay out of the way of ordinary replies.",
+    "choices": [
+      {
+        "text": "The length you asked the summary to be",
+        "correct": false,
+        "why": "The summary is a quarter of the reply."
+      },
+      {
+        "text": "The provider's largest allowed value",
+        "correct": false,
+        "why": "That guards against nothing."
+      },
+      {
+        "text": "The mean output of a run, since most replies are close to it",
+        "correct": false,
+        "why": "Half the replies are longer than a mean-ish cap."
+      },
+      {
+        "text": "The longest ordinary reply, measured over a test set",
+        "correct": true,
+        "why": "Right: `pl latency` prints it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1eye7fx8",
+    "version": 1,
+    "section": "setting-the-cap",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the confidence field added and a cap of 100, how many tokens was the longest reply?",
+    "hint": "The last line of `pl latency runs/v9-100.jsonl`.",
+    "value": 54,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-55qs1nbd",
+    "version": 1,
+    "section": "setting-the-cap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under a cap of 50, two replies with the confidence field were cut, yet `all` read 36, as it did with a cap of 100. Why?",
+    "hint": "What else was wrong with `t37` and `t24`?",
+    "choices": [
+      {
+        "text": "Both were already failing on a label",
+        "correct": true,
+        "why": "Right: the cut changed why they failed and not how many failed."
+      },
+      {
+        "text": "The harness leaves cut replies out of the count",
+        "correct": false,
+        "why": "They are counted, as `json` failures."
+      },
+      {
+        "text": "The harness ran the two cut replies again without the cap",
+        "correct": false,
+        "why": "Nothing is re-run; each call is made once."
+      },
+      {
+        "text": "A cut reply passes `all` if its category is right",
+        "correct": false,
+        "why": "A reply that fails `json` fails every check after it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzjzn4nx",
+    "version": 1,
+    "section": "setting-the-cap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A reader adds the missing closing brace to `t24`, parses it, and gets the right answer. Why is that still a bad rule for the reader?",
+    "hint": "Where will the next cut land?",
+    "choices": [
+      {
+        "text": "Adding a character to a reply is slower than parsing it",
+        "correct": false,
+        "why": "Speed is not the problem."
+      },
+      {
+        "text": "The next cut lands inside a summary, and the repair accepts it with its end missing",
+        "correct": true,
+        "why": "Right: a reply that stopped at `max_tokens` is a failure, whatever is left of it."
+      },
+      {
+        "text": "JSON forbids adding braces after the fact",
+        "correct": false,
+        "why": "Nothing in JSON forbids it; the risk is accepting a truncated answer."
+      },
+      {
+        "text": "The confidence value would be lost",
+        "correct": false,
+        "why": "In `t24` it was there; the trouble is the other cuts."
+      }
+    ]
+  },
+  {
+    "id": "ex-vykbxm55",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of setting a cap in order.",
+    "hint": "Measure, set, watch, repeat.",
+    "items": [
+      "Run the prompt over a test set and read the longest reply",
+      "Set the cap well above that, about twice",
+      "Treat every reply that stopped at the cap as a failure, and count them",
+      "Measure again when the prompt changes"
+    ]
+  },
+  {
+    "id": "ex-ezhhx7cf",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to what it told you in this lesson.",
+    "hint": "One each.",
+    "pairs": [
+      {
+        "left": "`pl tokens`",
+        "right": "How many tokens a piece of text is"
+      },
+      {
+        "left": "`pl latency`",
+        "right": "The mean and the longest output of a run"
+      },
+      {
+        "left": "`pl show`",
+        "right": "One reply and why it stopped"
+      },
+      {
+        "left": "`pl check --failures`",
+        "right": "Each failure and its reason"
+      }
+    ],
+    "right_distractors": [
+      "The price of a million calls"
+    ]
+  },
+  {
+    "id": "ex-8rkxj6c5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a prompt change, `pl check` starts reporting `json` failures with the reason `cut off at max_tokens`. What do you do?",
+    "hint": "The prompt changed and the cap did not.",
+    "choices": [
+      {
+        "text": "Add *be brief* to the prompt so that the replies fit under the cap again",
+        "correct": false,
+        "why": "That changes the answer to suit a guard that is in the wrong place."
+      },
+      {
+        "text": "Close the cut replies in the reader, adding the quote and brace they are missing",
+        "correct": false,
+        "why": "A cut reply is a failure, not something to repair."
+      },
+      {
+        "text": "Measure the new longest reply and raise the cap well above it",
+        "correct": true,
+        "why": "Right: the cap was set for the old prompt."
+      },
+      {
+        "text": "Set the temperature to 0",
+        "correct": false,
+        "why": "Temperature does not decide where writing stops."
+      }
+    ]
+  }
+]
