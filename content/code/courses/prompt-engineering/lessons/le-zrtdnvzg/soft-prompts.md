@@ -29,7 +29,8 @@ ana@lab:~/pe$ tok show "Answer in one word." -e cl100k_base
 ```
 
 The pieces are the same and four of the five ids have changed, because each id is an address in
-its own model's table; the full stop happens to sit at `13` in both. Hold on to that: it decides what a learnt prompt can and cannot be moved to.
+its own model's table; the full stop happens to sit at `13` in both. Hold on to that: it decides what
+a learnt prompt can and cannot be moved to.
 
 ## Skipping the words
 
@@ -64,8 +65,9 @@ text.** You can look for the token whose embedding is nearest to each vector, an
 does not read as an instruction, because the vector was never any of those words. You
 cannot review it, edit it by hand, or explain it to a colleague the way you would a written prompt.
 
-It is also tied to one model. The vectors were tuned against that model's frozen weights, and the
-capture above shows how little two models' tables share: another model reads the same numbers as
+It is also tied to one model. The vectors were tuned against that model's frozen weights. The capture
+above already shows two vocabularies giving one sentence different addresses, and the vectors
+behind the addresses differ from model to model as well: another model reads the same numbers as
 something else entirely.
 
 And it needs two things a written prompt does not:

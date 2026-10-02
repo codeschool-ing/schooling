@@ -29,7 +29,8 @@ ana@lab:~/pe$ tok show "Answer in one word." -e cl100k_base
 ```
 
 Os pedaços são os mesmos e quatro dos cinco ids mudaram, porque cada id é um endereço na tabela
-do seu próprio modelo; o ponto final calha de estar no `13` nos dois. Guarde isso: é o que decide para onde um prompt aprendido pode ou não ser levado.
+do seu próprio modelo; o ponto final calha de estar no `13` nos dois. Guarde isso: é o que decide
+para onde um prompt aprendido pode ou não ser levado.
 
 ## Pulando as palavras
 
@@ -66,8 +67,9 @@ volta não se lê como uma instrução, porque o vetor nunca foi nenhuma daquela
 consegue revisá-lo, editá-lo à mão nem explicá-lo a um colega como faria com um prompt escrito.
 
 Ele também fica preso a um modelo. Os vetores foram ajustados contra os pesos congelados daquele
-modelo, e a captura acima mostra o pouco que as tabelas de dois modelos têm em comum: outro modelo
-lê os mesmos números como algo completamente diferente.
+modelo. A captura acima já mostra dois vocabulários dando endereços diferentes à mesma frase, e os
+vetores por trás dos endereços também mudam de um modelo para outro: outro modelo lê os mesmos
+números como algo completamente diferente.
 
 E ele precisa de duas coisas que um prompt escrito não precisa:
 

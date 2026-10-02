@@ -12,7 +12,7 @@ price. **The question is not which is most advanced but which numbers you are al
 | what changes | the text sent with each request | a few learnt vectors in front of the input | the model's weights, or a part of them |
 | what stays fixed | the model | the model | the base you started from |
 | what you need | access to the model, by chat or API | the weights, a training set, and hardware to train on | a training set, and either the weights or a provider's training service |
-| what it costs | the tokens of the prompt, on every request (lesson 3) | a training run, then almost nothing per request | a training run, and often a higher price per request for a custom model |
+| what it costs | the tokens of the prompt, on every request (lesson 3) | a training run, then almost nothing per request | a training run, and at some providers a higher price per token for the tuned model |
 | can a person read it | **yes** | no: it is vectors | no: it is weights |
 | moving to another model | rewrite and test again | train again from the start | train again from the start |
 | how fast you can change it | minutes | a new training run | a new training run |
