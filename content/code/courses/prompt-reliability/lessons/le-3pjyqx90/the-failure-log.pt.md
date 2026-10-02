@@ -59,13 +59,13 @@ Custo        9739 tokens em dev contra 13356; mais barato, e inútil
 
 Cinco linhas carregam o peso.
 
-- **Mensagem e Resposta** são a evidência, citada em vez de descrita. Uma resposta real diz
+- *Mensagem* e *Resposta* são a evidência, citada em vez de descrita. Uma resposta real diz
   mais a um leitor que uma frase sobre respostas, e `t04` mostra duas coisas de uma vez: a forma
   copiada do exemplo e o resumo do primeiro exemplo colado numa mensagem sobre senha.
-- **Pego por** nomeia a verificação, ou a verificação que teria pegado. Quando a resposta é *nenhuma
+- *Pego por* nomeia a verificação, ou a verificação que teria pegado. Quando a resposta é *nenhuma
   teria pegado*, essa linha é a mais importante do registro, porque é um buraco nos testes.
-- **Correção** nomeia um commit, para que a entrada e a história apontem uma para a outra.
-- **Teste novo** é o que mantém a correção de pé.
+- *Correção* nomeia um commit, para que a entrada e a história apontem uma para a outra.
+- *Teste novo* é o que mantém a correção de pé.
 
 ## A linha que mais importa
 

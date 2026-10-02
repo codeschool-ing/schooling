@@ -57,14 +57,14 @@ Cost         9739 tokens on dev against 13356; cheaper, and useless
 
 Five lines carry the weight.
 
-- **Message and Model said** are the evidence, quoted rather than described. One real reply tells a
+- *Message* and *Model said* are the evidence, quoted rather than described. One real reply tells a
   reader more than a sentence about replies, and `t04` shows two things at once: the shape copied
   from the example, and the first example's summary pasted into a message about a password.
-- **Caught by** names the check, or the check that would have caught it. When the answer is
+- *Caught by* names the check, or the check that would have caught it. When the answer is
   *nothing would have*, that line is the most important one in the log, because it is a hole in
   the tests.
-- **Fix** names a commit, so the entry and the history point at each other.
-- **Test added** is what keeps it fixed.
+- *Fix* names a commit, so the entry and the history point at each other.
+- *Test added* is what keeps it fixed.
 
 ## The line that matters most
 

@@ -4,8 +4,8 @@ version: 1
 ---
 
 Um registro de decisão é um arquivo curto escrito no momento em que uma escolha é feita, dizendo o
-que foi escolhido e por quê. A forma vem da arquitetura de software: o texto de Michael Nygard
-*Documenting Architecture Decisions* (2011) propôs um arquivo pequeno e numerado por decisão, com o
+que foi escolhido e por quê. A forma vem da arquitetura de software. No texto *Documenting
+Architecture Decisions* (2011), Michael Nygard propôs um arquivo pequeno e numerado por decisão, com o
 contexto, a decisão, o status e as consequências, guardado no repositório junto com o código. **Ele
 funciona para prompts pelo mesmo motivo que funciona para código**: as escolhas que parecem mais
 estranhas costumam ser as que alguém aprendeu do jeito difícil.
@@ -67,17 +67,17 @@ Revisar quando
 
 Cada parte está ali para um leitor que não estava na sala.
 
-- **Contexto** diz o que era verdade quando a escolha foi feita, para que o leitor saiba se ainda é.
-- **Opções consideradas** lista as que perderam, com os números. A opção rejeitada é a que a próxima
+- *Contexto* diz o que era verdade quando a escolha foi feita, para que o leitor saiba se ainda é.
+- *Opções consideradas* lista as que perderam, com os números. A opção rejeitada é a que a próxima
   pessoa vai propor, e é aqui que ela descobre que já foi tentada.
-- **Decisão** é um parágrafo, e dá o mecanismo além do veredito: a resposta copia o primeiro
+- *Decisão* é um parágrafo, e dá o mecanismo além do veredito: a resposta copia o primeiro
   exemplo.
-- **Evidência** é um comando e o que ele imprimiu. Colar a saída mantém a afirmação verificável
+- *Evidência* é um comando e o que ele imprimiu. Colar a saída mantém a afirmação verificável
   depois que os arquivos de execução sumirem; o comando deixa qualquer um produzi-la de novo.
-- **Revisar quando** nomeia as condições que tornariam a decisão errada. **Um registro sem isso
+- *Revisar quando* nomeia as condições que tornariam a decisão errada. **Um registro sem isso
   parece permanente**, e nada num prompt é.
 
-## Mantendo os registros honestos
+## Como manter os registros honestos
 
 Numere os registros e nunca edite um depois de aceito. Quando uma decisão for revertida, escreva um
 registro novo que diga isso e marque o antigo como substituído, que é a regra que o texto de Nygard

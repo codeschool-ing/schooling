@@ -67,15 +67,15 @@ Revisit when
 
 Each part is there for a reader who was not in the room.
 
-- **Context** says what was true when the choice was made, so a reader can tell whether it still
+- *Context* says what was true when the choice was made, so a reader can tell whether it still
   is.
-- **Options considered** lists the ones that lost, with their numbers. The rejected option is the
+- *Options considered* lists the ones that lost, with their numbers. The rejected option is the
   one the next person will propose, and this is where they find it was tried.
-- **Decision** is one paragraph, and it gives the mechanism as well as the verdict: the reply copies
+- *Decision* is one paragraph, and it gives the mechanism as well as the verdict: the reply copies
   the first example.
-- **Evidence** is a command and what it printed. Pasting the output keeps the claim checkable after
+- *Evidence* is a command and what it printed. Pasting the output keeps the claim checkable after
   the run files are gone; the command lets anybody produce it again.
-- **Revisit when** names the conditions that would make the decision wrong. **A record without
+- *Revisit when* names the conditions that would make the decision wrong. **A record without
   one reads as permanent**, and nothing about a prompt is.
 
 ## Keeping them honest

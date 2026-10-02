@@ -65,10 +65,10 @@ pronto, e onze de trinta em mensagens mais difíceis diz que não é. Uma ficha 
 de dev seria verdadeira e enganaria todo mundo que a lesse. A linha *para que não serve* faz o mesmo
 trabalho em palavras: diz onde termina o que foi testado, para que ninguém descubra isso em produção.
 
-## Mantendo a ficha verdadeira
+## Como manter a ficha verdadeira
 
 Uma ficha é uma afirmação sobre uma versão. Quando o prompt muda e a ficha não, ela descreve um
-prompt que não existe mais, e nada nela parece velho. Dois hábitos evitam isso.
+prompt que não existe mais, e nada nela parece desatualizado. Dois hábitos evitam isso.
 
 - **Produza os números com os mesmos comandos que a barreira roda**, e atualize a ficha na mesma
   mudança que altera o prompt. A barreira já calculou os números; copiá-los é um minuto de trabalho.

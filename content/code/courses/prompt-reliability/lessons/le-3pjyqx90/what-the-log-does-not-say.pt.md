@@ -32,7 +32,7 @@ Make the examples easier to read
 ## Seis meses depois
 
 Imagine alguém que entra no time em fevereiro e abre `prompts/triage.txt` pela primeira vez. Os
-exemplos são linhas compridas de JSON com todas as aspas, e são difíceis de ler. **A melhoria óbvia
+exemplos são linhas compridas de JSON com todas as aspas escapadas, e são difíceis de ler. **A melhoria óbvia
 é a que o `31a6a59` fez**, e nada perto do prompt diz que ela já foi feita, levou a nota a zero e foi
 revertida três dias depois. O log tem os dois commits, mas ninguém lê um log procurando motivo para
 não fazer alguma coisa. A pessoa que sabia mudou de time, e a explicação, se houve uma, está numa
