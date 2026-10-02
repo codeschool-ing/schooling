@@ -49,7 +49,7 @@ resource "random_password" "db" {
 ana@laptop:~/shop/tofu$ tofu apply -auto-approve -no-color | grep -E "^Apply"
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 ana@laptop:~/shop/tofu$ jq -r ".resources[0].instances[0].attributes.result" terraform.tfstate
-1OZKLjF&(Op+poj5iG}r
+<<k9VdD%LM0mWVF(m3&?
 ```
 
 A plain state, password readable, the starting point of every existing configuration. Ana adds the
@@ -71,8 +71,14 @@ terraform {
       keys = key_provider.pbkdf2.passphrase
     }
 
+    method "unencrypted" "migrate" {}
+
     state {
       method = method.aes_gcm.state
+
+      fallback {
+        method = method.unencrypted.migrate
+      }
     }
   }
 }
@@ -80,8 +86,8 @@ terraform {
 
 Four pieces. The **key provider** `pbkdf2` derives a key from a passphrase, and needs nothing else.
 The **method** `aes_gcm` encrypts with that key. The `state` block says the state is written with
-that method. And the **fallback** lets this one run read the state that
-is still plain: without it, OpenTofu would try to decrypt a file that was never encrypted, and stop.
+that method. And the **fallback** lets this one run read the state that is still plain: without
+it, OpenTofu would try to decrypt a file that was never encrypted, and stop.
 
 The passphrase is a variable on purpose. Written into the file, it would be one more secret in git;
 here it was exported in the shell beforehand as `TF_VAR_state_passphrase`, which is how a pipeline
@@ -102,16 +108,17 @@ ana@laptop:~/shop/tofu$ jq "keys" terraform.tfstate
   "serial"
 ]
 ana@laptop:~/shop/tofu$ jq -r ".encrypted_data" terraform.tfstate | cut -c 1-64
-j+6DyCT58MYHu8+56Lk9nhOfA3SQ/I8tnyxJ3aBRoZaaYTuLF6ZQtCDPtZxcbw+F
+qbFmTxtO+mzpi0/71keIGUxl5WFBLvhCeUr2osANv3cJMCXNu5XTC3TClvm5ZD0B
 ana@laptop:~/shop/tofu$ grep -c "\"result\"" terraform.tfstate
 0
 ana@laptop:~/shop/tofu$ jq -r ".meta[]" terraform.tfstate | base64 -d; echo
-{"salt":"Y8JlTqMGpogSXCMkK6mhtxZRdoZsKwQiTtf3CbJxsV4=","iterations":600000,"hash_function":"sha512","key_length":32}
+{"salt":"MjbK6Nj6UlGm+3KPiShY2cJK8CvC1R9fXxFjBKjxV3I=","iterations":600000,"hash_function":"sha512","key_length":32}
 ```
 
 The state is now a short envelope: a serial and a lineage, left in the clear, and `encrypted_data`,
-which is the state itself. The word `result` appears nowhere in the file. The `meta` entry holds what is needed to derive the key again from the passphrase (a
-random salt, the iteration count, the hash) and not the key. OpenTofu reads it back as before:
+which is the state itself. The word `result` appears nowhere in the file. The `meta` entry holds
+what is needed to derive the key again from the passphrase (a random salt, the iteration count, the
+hash) and not the key. OpenTofu reads it back as before:
 
 ```
 ana@laptop:~/shop/tofu$ tofu state list

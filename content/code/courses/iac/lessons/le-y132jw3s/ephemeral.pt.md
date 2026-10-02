@@ -112,9 +112,9 @@ Plan: 2 to add, 0 to change, 0 to destroy.
 ephemeral.random_password.db: Opening...
 ephemeral.random_password.db: Opening complete after 0s
 aws_secretsmanager_secret.db: Creating...
-aws_secretsmanager_secret.db: Creation complete after 0s [id=arn:aws:secretsmanager:sa-east-1:123456789012:secret:shop/db-gEukTM]
+aws_secretsmanager_secret.db: Creation complete after 0s [id=arn:aws:secretsmanager:sa-east-1:123456789012:secret:shop/db-DbkrLp]
 aws_secretsmanager_secret_version.db: Creating...
-aws_secretsmanager_secret_version.db: Creation complete after 0s [id=arn:aws:secretsmanager:sa-east-1:123456789012:secret:shop/db-gEukTM|terraform-hiC47oIDWpnzGYtchiJzyfQ2Lu]
+aws_secretsmanager_secret_version.db: Creation complete after 0s [id=arn:aws:secretsmanager:sa-east-1:123456789012:secret:shop/db-DbkrLp|terraform-NMPEy8K6cBHWa6IhrzMm6DaUuU]
 ephemeral.random_password.db: Closing...
 ephemeral.random_password.db: Closing complete after 0s
 
@@ -134,7 +134,7 @@ ana@laptop:~/shop/secrets-wo$ jq ".resources[] | select(.type == \"aws_secretsma
   "secret_string_wo_version": 1
 }
 ana@laptop:~/shop/secrets-wo$ aws secretsmanager get-secret-value --secret-id shop/db --query "[VersionId, SecretString]" --output text
-terraform-hiC47oIDWpnzGYtchiJzyfQ2Lu	%<wUfcy(acJ7?dzO5+7>
+terraform-NMPEy8K6cBHWa6IhrzMm6DaUuU	ngOV9>cMQsdK[39k8ZBf
 ```
 
 O `random_password` não está mais no estado, porque um recurso efêmero nunca está. O
@@ -165,7 +165,7 @@ ana@laptop:~/shop/secrets-wo$ terraform apply -auto-approve -no-color | grep -E 
 Plan: 1 to add, 0 to change, 1 to destroy.
 Apply complete! Resources: 1 added, 0 changed, 1 destroyed.
 ana@laptop:~/shop/secrets-wo$ aws secretsmanager get-secret-value --secret-id shop/db --query "[VersionId, SecretString]" --output text
-terraform-snxSG0E3KnvUNSPVrhawUmDqYK	<SO_P*Ns)0nuBxX@FxwB
+terraform-9rdFy781rAK0qcHNgidIkxlMLx	ddj$V9fsVCL:ojD1srEg
 ```
 
 Neste recurso, o número novo substitui o objeto de versão, que é como o Secrets Manager guarda um

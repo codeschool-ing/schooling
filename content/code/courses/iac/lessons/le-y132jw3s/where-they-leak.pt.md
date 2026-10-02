@@ -73,7 +73,7 @@ ana@laptop:~/shop$ git ls-files
 main.tf
 terraform.tfvars
 ana@laptop:~/shop$ git log --oneline
-229cfe9 web server with its database password
+c775f29 web server with its database password
 ```
 
 Quando ela percebe, para de versionar o arquivo e acrescenta o padrão ao `.gitignore`. **Isso deixa
@@ -82,8 +82,8 @@ o arquivo fora do próximo commit e de nenhum anterior**:
 ```
 ana@laptop:~/shop$ git rm -q --cached terraform.tfvars && echo "*.tfvars" >> .gitignore
 ana@laptop:~/shop$ git commit -qam "stop tracking terraform.tfvars" && git log --oneline
-9498a51 stop tracking terraform.tfvars
-229cfe9 web server with its database password
+08183e1 stop tracking terraform.tfvars
+c775f29 web server with its database password
 ana@laptop:~/shop$ git show HEAD~1:terraform.tfvars
 db_password = "s3cr3t-Shop-2026"
 ```
@@ -117,12 +117,12 @@ aula 9. Esse arquivo é um zip, e carrega os valores com que o plan foi feito:
 ```
 ana@laptop:~/shop$ terraform plan -out=tfplan > /dev/null
 ana@laptop:~/shop$ unzip -l tfplan | tail -n +4 | head -n -2
-     1771  2026-10-02 07:18   tfplan
-     3055  2026-10-02 07:18   tfstate
-      145  2026-10-02 07:18   tfstate-prev
-      676  2026-10-02 07:18   tfconfig/m-/main.tf
-       41  2026-10-02 07:18   tfconfig/modules.json
-      281  2026-10-02 07:18   .terraform.lock.hcl
+     1771  2026-10-02 07:23   tfplan
+     3055  2026-10-02 07:23   tfstate
+      145  2026-10-02 07:23   tfstate-prev
+      676  2026-10-02 07:23   tfconfig/m-/main.tf
+       41  2026-10-02 07:23   tfconfig/modules.json
+      281  2026-10-02 07:23   .terraform.lock.hcl
 ana@laptop:~/shop$ unzip -p tfplan | grep -a -c s3cr3t-Shop-2026
 2
 ```

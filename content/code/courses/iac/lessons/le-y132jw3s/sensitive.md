@@ -116,8 +116,8 @@ echo "DB_PASSWORD=s3cr3t-Shop-2026" > /etc/shop.env
 **`sensitive = true` changes nothing that is written to disk.** The state, the saved plan and the
 git history from the last section are exactly as they were. Most providers already mark their
 obviously secret arguments sensitive in their own schema, such as the `password` of a database or
-the `secret_string` of a secret, which is why a plan rarely prints those; `user_data` is not one of
-them, because most scripts are not secret, and so it took Ana's marking to hide it.
+the `secret_string` of a secret, which is why a plan rarely prints those. `user_data` is not one of
+them, because most scripts are not secret, so it took Ana's marking to hide it.
 
 The habit to keep is cheap: mark every variable and output that carries a secret, and let the output
 check catch the ones you missed. The belief to drop is that a sensitive value is a protected one.

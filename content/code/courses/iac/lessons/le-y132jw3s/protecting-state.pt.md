@@ -49,7 +49,7 @@ resource "random_password" "db" {
 ana@laptop:~/shop/tofu$ tofu apply -auto-approve -no-color | grep -E "^Apply"
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 ana@laptop:~/shop/tofu$ jq -r ".resources[0].instances[0].attributes.result" terraform.tfstate
-1OZKLjF&(Op+poj5iG}r
+<<k9VdD%LM0mWVF(m3&?
 ```
 
 Um estado puro, senha legível, o ponto de partida de toda configuração existente. A Ana acrescenta a
@@ -71,8 +71,14 @@ terraform {
       keys = key_provider.pbkdf2.passphrase
     }
 
+    method "unencrypted" "migrate" {}
+
     state {
       method = method.aes_gcm.state
+
+      fallback {
+        method = method.unencrypted.migrate
+      }
     }
   }
 }
@@ -102,11 +108,11 @@ ana@laptop:~/shop/tofu$ jq "keys" terraform.tfstate
   "serial"
 ]
 ana@laptop:~/shop/tofu$ jq -r ".encrypted_data" terraform.tfstate | cut -c 1-64
-j+6DyCT58MYHu8+56Lk9nhOfA3SQ/I8tnyxJ3aBRoZaaYTuLF6ZQtCDPtZxcbw+F
+qbFmTxtO+mzpi0/71keIGUxl5WFBLvhCeUr2osANv3cJMCXNu5XTC3TClvm5ZD0B
 ana@laptop:~/shop/tofu$ grep -c "\"result\"" terraform.tfstate
 0
 ana@laptop:~/shop/tofu$ jq -r ".meta[]" terraform.tfstate | base64 -d; echo
-{"salt":"Y8JlTqMGpogSXCMkK6mhtxZRdoZsKwQiTtf3CbJxsV4=","iterations":600000,"hash_function":"sha512","key_length":32}
+{"salt":"MjbK6Nj6UlGm+3KPiShY2cJK8CvC1R9fXxFjBKjxV3I=","iterations":600000,"hash_function":"sha512","key_length":32}
 ```
 
 O estado agora é um envelope curto: um serial e uma lineage, deixados às claras, e `encrypted_data`,

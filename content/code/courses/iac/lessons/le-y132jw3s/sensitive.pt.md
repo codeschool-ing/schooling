@@ -117,8 +117,8 @@ echo "DB_PASSWORD=s3cr3t-Shop-2026" > /etc/shop.env
 **`sensitive = true` não muda nada do que é gravado em disco.** O estado, o plan salvo e o histórico
 do git da seção anterior estão exatamente como estavam. A maioria dos providers já marca como
 sensitive, no próprio schema, os argumentos obviamente secretos, como o `password` de um banco ou o
-`secret_string` de um secret, e é por isso que um plan raramente os imprime; o `user_data` não é um
-deles, porque a maioria dos scripts não é secreta, e por isso precisou da marcação da Ana para ficar
+`secret_string` de um secret, e é por isso que um plan raramente os imprime. O `user_data` não é um
+deles, porque a maioria dos scripts não é secreta, então precisou da marcação da Ana para ficar
 escondido.
 
 O hábito a manter é barato: marque toda variável e todo output que carrega um segredo, e deixe a

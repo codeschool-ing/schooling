@@ -57,11 +57,11 @@ ana@laptop:~/shop/secrets$ jq ".resources[] | {type, result: .instances[0].attri
 {
   "type": "aws_secretsmanager_secret_version",
   "result": null,
-  "secret_string": "f6agby3@{ahN7&Q7FdG1"
+  "secret_string": "(?9)(nP+eyR49qE-tz<s"
 }
 {
   "type": "random_password",
-  "result": "f6agby3@{ahN7&Q7FdG1",
+  "result": "(?9)(nP+eyR49qE-tz<s",
   "secret_string": null
 }
 ```
@@ -101,10 +101,10 @@ data "aws_secretsmanager_secret_version" "db" {
 ```
 ana@laptop:~/shop/secrets$ terraform apply -auto-approve -no-color | grep -E "^data|^Apply"
 data.aws_secretsmanager_secret_version.db: Reading...
-data.aws_secretsmanager_secret_version.db: Read complete after 0s [id=arn:aws:secretsmanager:sa-east-1:123456789012:secret:shop/db-LuGmIM|AWSCURRENT]
+data.aws_secretsmanager_secret_version.db: Read complete after 0s [id=arn:aws:secretsmanager:sa-east-1:123456789012:secret:shop/db-kXEiPh|AWSCURRENT]
 Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 ana@laptop:~/shop/secrets$ jq ".resources[] | select(.mode == \"data\") | .instances[0].attributes.secret_string" terraform.tfstate
-"f6agby3@{ahN7&Q7FdG1"
+"(?9)(nP+eyR49qE-tz<s"
 ```
 
 O mesmo valor, pela terceira vez, vindo de uma configuração que só o leu. Um time que guarda as
