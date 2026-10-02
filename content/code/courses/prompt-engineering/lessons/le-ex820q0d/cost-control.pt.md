@@ -56,7 +56,7 @@ one request: 0.003358
 
 A entrada não mudou. **A conta de dez mil requisições foi de 4,78 para 33,58, tudo por causa da
 saída.** É isso que uma resposta sem limite custa em escala, e é também mais ou menos o que você
-paga quando um modelo cai num laço como o da seção anterior e corre até o limite.
+paga quando um modelo cai num laço como o da seção anterior e roda até um limite de 400.
 
 ## Um limite é um orçamento por requisição
 

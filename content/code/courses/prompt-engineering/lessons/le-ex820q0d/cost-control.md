@@ -55,7 +55,7 @@ one request: 0.003358
 
 The input did not change. **The bill for ten thousand requests went from 4.78 to 33.58, all of it
 from output.** That is what an unbounded reply costs at scale, and it is also roughly what you pay
-when a model falls into a loop like the one in the previous section and runs until the limit.
+when a model falls into a loop like the one in the previous section and runs to a limit of 400.
 
 ## A limit is a budget per request
 
