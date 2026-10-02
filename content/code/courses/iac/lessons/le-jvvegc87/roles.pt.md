@@ -107,6 +107,13 @@ de uma play:
 Os dois templates vão para `roles/web/templates/` como estão, e o playbook encolhe para aquilo de que
 devia tratar desde o começo, quais hosts recebem qual role:
 
+```yaml
+- name: Web servers
+  hosts: web
+  become: true
+  roles:
+    - web
+```
 
 **Uma reestruturação que não muda nada nas máquinas deveria provar isso**, e aqui a prova é uma
 execução:

@@ -40,7 +40,7 @@
 # site.yml#2...). put would print every version under the same name.
 version() {
   mkdir -p "$(dirname "$2")" && cat > "$2"
-  printf '##### file:%s\n' "$1"; cat "$2"; printf '##### end-file\n'
+  printf '##### file:%s/%s\n' "${PWD/#\/home\/ana/\~}" "$1"; cat "$2"; printf '##### end-file\n'
 }
 
 mkdir -p shop/ansible && cd shop/ansible

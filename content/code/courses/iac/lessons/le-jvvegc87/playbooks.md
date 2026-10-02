@@ -8,6 +8,39 @@ of **tasks**; each task calls one module with its arguments, exactly as `-m` and
 command line, and has a name a person can read. Ana's first playbook makes the two web servers into
 web servers:
 
+```yaml
+- name: Web servers
+  hosts: web
+  become: true
+  tasks:
+    - name: Install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Write the index page
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: "<h1>shop</h1>\n"
+        mode: "0644"
+
+    - name: Configure the site
+      ansible.builtin.copy:
+        dest: /etc/nginx/sites-available/default
+        content: |
+          server {
+              listen 80 default_server;
+              root /var/www/html;
+          }
+        mode: "0644"
+
+    - name: Start nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+```
 
 Read it as a description rather than a script. *nginx is present*, *this file has this content*,
 *the service is started*. Each module finds out whether that is already true and acts only if it is

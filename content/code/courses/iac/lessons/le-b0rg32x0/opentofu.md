@@ -93,7 +93,7 @@ Initializing provider plugins...
 ```
 
 **The configuration did not change, and it failed.** Nothing is wrong with it: Terraform
-initialises this directory as it did in lesson 2. The difference is in how each program reads the
+initialised these same two files in lesson 2. The difference is in how each program reads the
 `source` line, and that is the one thing about OpenTofu you have to understand before anything
 else, because it decides where every provider comes from. The next section is about that line.
 

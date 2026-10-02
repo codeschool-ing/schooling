@@ -96,6 +96,14 @@ machines; to remove something you write a task that says it is `absent`.
 A playbook stays at `changed=0` only if every task is honest. Here is one that is not, a check of
 nginx's configuration with `command`:
 
+```yaml
+- name: Check nginx's configuration
+  hosts: web
+  become: true
+  tasks:
+    - name: Test the configuration
+      ansible.builtin.command: nginx -t
+```
 
 ```
 TASK [Test the configuration] **************************************************
@@ -111,6 +119,15 @@ That is the second run, and every run looks the same. `nginx -t` changes nothing
 `command` cannot know that. **A task that reports a change it did not make hides the ones that
 matter**, because nobody reads a summary that is never zero. Tell Ansible what counts as a change:
 
+```yaml
+- name: Check nginx's configuration
+  hosts: web
+  become: true
+  tasks:
+    - name: Test the configuration
+      ansible.builtin.command: nginx -t
+      changed_when: false
+```
 
 ```
 ana@laptop:~/shop/ansible$ ansible-playbook check.yml

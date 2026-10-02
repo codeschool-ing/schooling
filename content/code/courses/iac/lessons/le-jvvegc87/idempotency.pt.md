@@ -96,6 +96,14 @@ que aquilo está `absent`.
 Um playbook só fica em `changed=0` se toda tarefa for honesta. Aqui está uma que não é, uma
 verificação da configuração do nginx com `command`:
 
+```yaml
+- name: Check nginx's configuration
+  hosts: web
+  become: true
+  tasks:
+    - name: Test the configuration
+      ansible.builtin.command: nginx -t
+```
 
 ```
 TASK [Test the configuration] **************************************************
@@ -111,6 +119,15 @@ Essa é a segunda execução, e toda execução sai igual. O `nginx -t` não mud
 não tem como saber. **Uma tarefa que aponta uma mudança que não fez esconde as que importam**,
 porque ninguém lê um resumo que nunca dá zero. Diga ao Ansible o que conta como mudança:
 
+```yaml
+- name: Check nginx's configuration
+  hosts: web
+  become: true
+  tasks:
+    - name: Test the configuration
+      ansible.builtin.command: nginx -t
+      changed_when: false
+```
 
 ```
 ana@laptop:~/shop/ansible$ ansible-playbook check.yml

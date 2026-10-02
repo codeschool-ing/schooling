@@ -42,6 +42,48 @@ provides: the host's name as the inventory spells it.
 The playbook now renders both, and the task that writes nginx's configuration **notifies a
 handler**:
 
+```yaml
+- name: Web servers
+  hosts: web
+  become: true
+  tasks:
+    - name: Install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Create the site's directory
+      ansible.builtin.file:
+        path: "{{ shop_root }}"
+        state: directory
+        mode: "0755"
+
+    - name: Write the index page
+      ansible.builtin.template:
+        src: index.html.j2
+        dest: "{{ shop_root }}/index.html"
+        mode: "0644"
+
+    - name: Configure the shop's site
+      ansible.builtin.template:
+        src: shop.conf.j2
+        dest: /etc/nginx/sites-available/default
+        mode: "0644"
+      notify: Reload nginx
+
+    - name: Start nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+
+  handlers:
+    - name: Reload nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+```
 
 A **handler** is a task that runs only when notified, and only once, at the end of the play. If the
 configuration task reports `changed`, nginx is reloaded after everything else; if it reports `ok`,

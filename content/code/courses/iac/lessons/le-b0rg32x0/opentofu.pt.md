@@ -95,8 +95,8 @@ Initializing provider plugins...
 ╵
 ```
 
-**A configuração não mudou, e falhou.** Não há nada de errado com ela: o Terraform inicializa este
-diretório como fez na aula 2. A diferença está em como cada programa lê a linha `source`, e essa é a
+**A configuração não mudou, e falhou.** Não há nada de errado com ela: o Terraform inicializou estes
+mesmos dois arquivos na aula 2. A diferença está em como cada programa lê a linha `source`, e essa é a
 única coisa do OpenTofu que você precisa entender antes de todo o resto, porque ela decide de onde vem
 cada provider. A próxima seção é sobre essa linha.
 

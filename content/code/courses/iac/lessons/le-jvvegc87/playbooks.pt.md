@@ -8,6 +8,39 @@ uma lista de **tarefas** (tasks); cada tarefa chama um módulo com seus argument
 `-m` e `-a` faziam na linha de comando, e tem um nome que uma pessoa consegue ler. O primeiro
 playbook da Ana transforma os dois servidores web em servidores web:
 
+```yaml
+- name: Web servers
+  hosts: web
+  become: true
+  tasks:
+    - name: Install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Write the index page
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: "<h1>shop</h1>\n"
+        mode: "0644"
+
+    - name: Configure the site
+      ansible.builtin.copy:
+        dest: /etc/nginx/sites-available/default
+        content: |
+          server {
+              listen 80 default_server;
+              root /var/www/html;
+          }
+        mode: "0644"
+
+    - name: Start nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+```
 
 Leia como uma descrição, não como um script. *O nginx está presente*, *este arquivo tem este
 conteúdo*, *o serviço está iniciado*. Cada módulo descobre se aquilo já é verdade e só age se não
