@@ -1,0 +1,2738 @@
+[
+  {
+    "id": "ex-xfzpxsds",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A team creates its S3 bucket from a shell script. On a new account the script works; run again on the same account, it stops with an error saying the bucket already exists. What does the script lack?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Idempotency",
+        "correct": true,
+        "why": "Running it twice does not leave the world as running it once did; the script repeats a create step instead of comparing first."
+      },
+      {
+        "text": "A security group in front of the bucket",
+        "correct": false,
+        "why": "A security group is a firewall in front of a machine, and has nothing to do with a step that repeats."
+      },
+      {
+        "text": "Configuration management on the account",
+        "correct": false,
+        "why": "Configuration management is about what is inside a machine. A bucket is a provisioned resource."
+      },
+      {
+        "text": "Drift between the account and the console",
+        "correct": false,
+        "why": "Drift is a difference between a description and what exists. Here the script simply ran its steps twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-yxvndza2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Which of these is a provisioning job rather than a configuration management job?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Installing nginx at a given version on thirty machines",
+        "correct": false,
+        "why": "Packages on a running machine are invisible to the cloud's API: configuration management."
+      },
+      {
+        "text": "Adding a DNS record",
+        "correct": true,
+        "why": "A DNS record is something a provider sells and changes through its API: provisioning."
+      },
+      {
+        "text": "Deciding which users can log in to a server over SSH",
+        "correct": false,
+        "why": "Users on a machine live in its operating system: configuration management."
+      },
+      {
+        "text": "Editing the contents of a file under /etc",
+        "correct": false,
+        "why": "A file on a disk is reached over SSH or an agent: configuration management."
+      }
+    ]
+  },
+  {
+    "id": "ex-has0vzqj",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A colleague opened a rule by hand on the shop's `web` security group, and `network.sh` has never heard of it. Which port does that rule open?",
+    "hint": "Lesson 1.",
+    "value": 22,
+    "tolerance": 0,
+    "unit": "port"
+  },
+  {
+    "id": "ex-afbg2bp8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A shop runs its web servers as immutable infrastructure. Version 7 goes out and turns out to be broken. What does rolling back look like?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Logging in to each server and undoing the upgrade",
+        "correct": false,
+        "why": "That is the mutable way, and it depends on somebody knowing what the edit was."
+      },
+      {
+        "text": "Running the configuration tool again against the same servers with version 6 pinned in its variables",
+        "correct": false,
+        "why": "That edits running machines, which immutable infrastructure does not do."
+      },
+      {
+        "text": "Starting copies of version 6 again and swapping them in",
+        "correct": true,
+        "why": "Nothing was edited, so the previous copy is still exactly what it was built as."
+      },
+      {
+        "text": "Restoring each server's disk from last night's backup",
+        "correct": false,
+        "why": "A backup is for state that accumulates. The servers carry none; they are rebuilt from a build."
+      }
+    ]
+  },
+  {
+    "id": "ex-bza3nwm9",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put in order what `terraform apply` does that makes a second run change nothing.",
+    "hint": "Lesson 1.",
+    "items": [
+      "Read what exists",
+      "Compare it with the description",
+      "Make only the difference"
+    ]
+  },
+  {
+    "id": "ex-3qxww72m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A configuration asks for a provider with `version = \"~> 2.4\"`, and nothing is locked yet. Which release may `terraform init` select?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "2.3.9",
+        "correct": false,
+        "why": "Below the 2.4 the range starts at."
+      },
+      {
+        "text": "3.0.0",
+        "correct": false,
+        "why": "`~> 2.4` lets the last number written grow, so it stops before 3.0."
+      },
+      {
+        "text": "2.9.1",
+        "correct": true,
+        "why": "Any 2.x from 2.4 on is inside `~> 2.4`."
+      },
+      {
+        "text": "1.9.0",
+        "correct": false,
+        "why": "A lower major version is outside the range."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3yerbkg",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The same variable is set in four places. Put the sources in order from the one that loses to the one that wins.",
+    "hint": "Lesson 2.",
+    "items": [
+      "`TF_VAR_` in the environment",
+      "`terraform.tfvars`",
+      "A file ending in `.auto.tfvars`",
+      "`-var` on the command line"
+    ],
+    "trap": "The environment variable comes first, so it loses to every file: the opposite of what most tools do."
+  },
+  {
+    "id": "ex-4z4ycf3n",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Unless `-parallelism` says otherwise, at most how many operations does Terraform start at once while walking the graph?",
+    "hint": "Lesson 2.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "operations"
+  },
+  {
+    "id": "ex-f6vehh3w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A configuration holds a VPC, a subnet in it, a security group in it and an ingress rule on the group. During `terraform destroy`, which goes last?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "The ingress rule, since it was declared last in the file",
+        "correct": false,
+        "why": "The order in the file means nothing; the rule depends on things and nothing depends on it, so it goes early."
+      },
+      {
+        "text": "The VPC",
+        "correct": true,
+        "why": "Destroy walks the graph backwards, and everything else points at the VPC."
+      },
+      {
+        "text": "The subnet",
+        "correct": false,
+        "why": "The subnet is a leaf: it depends on the VPC and nothing depends on it."
+      },
+      {
+        "text": "Whichever AWS happens to answer last",
+        "correct": false,
+        "why": "The leaves may finish in any order, but the VPC waits for all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-13ys1tc1",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these does `terraform validate` catch? Choose all that apply.",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "A reference to `aws_vpc.shp` when the VPC is called `shop`",
+        "correct": true,
+        "why": "Every reference has to point at something declared."
+      },
+      {
+        "text": "A subnet range that lies outside its VPC's range",
+        "correct": false,
+        "why": "Only AWS knows that rule, so it passes validate and fails at apply."
+      },
+      {
+        "text": "An argument name that the resource type does not have",
+        "correct": true,
+        "why": "Validate checks every argument exists for its type."
+      },
+      {
+        "text": "Expired AWS credentials",
+        "correct": false,
+        "why": "Validate asks AWS nothing and needs no credentials."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xqjx736",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What does `cidrhost(\"10.20.1.0/24\", 10)` return?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "\"10.20.10.0/24\"",
+        "correct": false,
+        "why": "That would be a subnet, numbered 10; `cidrhost` returns one address."
+      },
+      {
+        "text": "\"10.20.1.10\"",
+        "correct": true,
+        "why": "Host number 10 inside the range."
+      },
+      {
+        "text": "\"10.20.1.0/10\"",
+        "correct": false,
+        "why": "The second argument is not a prefix length."
+      },
+      {
+        "text": "\"10.20.11.0\"",
+        "correct": false,
+        "why": "Nothing is added to the third octet."
+      }
+    ]
+  },
+  {
+    "id": "ex-djcfgvx1",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "S3 refuses a bucket name longer than a fixed length, and Ana's precondition encodes that limit. How many characters is it?",
+    "hint": "Lesson 3.",
+    "value": 63,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-7ag5ywtt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A team wants a plan to go ahead but print a warning when the subnets end up in a single zone. Where does that rule belong?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "In a `validation` block on the zones variable",
+        "correct": false,
+        "why": "A failed validation stops the run before anything is planned."
+      },
+      {
+        "text": "In a precondition in the subnet's `lifecycle`",
+        "correct": false,
+        "why": "A failed precondition is an error, and the plan fails."
+      },
+      {
+        "text": "In a `check` block",
+        "correct": true,
+        "why": "A failed assertion in a check is a warning, and the run carries on."
+      },
+      {
+        "text": "In a postcondition that refers to `self`",
+        "correct": false,
+        "why": "A failed postcondition is an error too, sometimes after the change was made."
+      }
+    ]
+  },
+  {
+    "id": "ex-aspgc6p5",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each function to what it returns.",
+    "hint": "Lesson 3.",
+    "pairs": [
+      {
+        "left": "`try`",
+        "right": "The first argument that does not fail"
+      },
+      {
+        "left": "`can`",
+        "right": "Whether an expression would fail, as true or false"
+      },
+      {
+        "left": "`lookup`",
+        "right": "A key's value from a map, or a default"
+      },
+      {
+        "left": "`merge`",
+        "right": "One map, the later map winning on a shared key"
+      }
+    ],
+    "right_distractors": [
+      "A function you defined yourself"
+    ]
+  },
+  {
+    "id": "ex-5ht39vmm",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A collection type has one element type and any length; an object or a tuple, which fixes the shape, is a ___ type.",
+    "hint": "Lesson 3.",
+    "blanks": [
+      {
+        "accept": [
+          "structural"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tdk0dshd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Four subnets are made with `count` from a list of four ranges. A new range is inserted at the front of the list. A subnet's range forces replacement. What does the plan propose?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "One subnet is created and nothing else is touched",
+        "correct": false,
+        "why": "That is what adding at the end would do. Inserting at the front shifts every index."
+      },
+      {
+        "text": "Four replacements and one creation",
+        "correct": true,
+        "why": "Each existing index now holds the previous element's range, so each is replaced, and index 4 is new."
+      },
+      {
+        "text": "Four in-place updates of `cidr_block`",
+        "correct": false,
+        "why": "A range cannot be edited in place; the plan marks it `forces replacement`."
+      },
+      {
+        "text": "An error, since a `count` list cannot grow at the front",
+        "correct": false,
+        "why": "Terraform accepts the edit and plans exactly what the addresses say."
+      }
+    ]
+  },
+  {
+    "id": "ex-wr56fvnv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A database exists only when `var.with_db` is true, through `count = var.with_db ? 1 : 0`. Which output still works when there is no copy?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "`aws_db_instance.main[0].id`",
+        "correct": false,
+        "why": "With zero copies `[0]` points at nothing: Invalid index."
+      },
+      {
+        "text": "`one(aws_db_instance.main[*].id)`",
+        "correct": true,
+        "why": "The splat gives a list of one or none, and `one()` turns none into `null`."
+      },
+      {
+        "text": "`aws_db_instance.main.id`",
+        "correct": false,
+        "why": "With `count`, the bare name is a list of copies and has no `id`."
+      },
+      {
+        "text": "`aws_db_instance.main[*].id[0]`",
+        "correct": false,
+        "why": "Still an index into what may be an empty list."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjd09p7k",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each line a plan printed to what caused it.",
+    "hint": "Lesson 4.",
+    "pairs": [
+      {
+        "left": "`because index [2] is out of range for count`",
+        "right": "A list feeding `count` got shorter"
+      },
+      {
+        "left": "`because key [\"app\"] is not in for_each map`",
+        "right": "A key was left out of a map"
+      },
+      {
+        "left": "`because resource does not use count`",
+        "right": "`count` became `for_each` with no `moved` blocks"
+      },
+      {
+        "left": "`has moved to`",
+        "right": "A block paired an old address with a new one"
+      }
+    ],
+    "right_distractors": [
+      "A provider alias was deleted"
+    ]
+  },
+  {
+    "id": "ex-5ypb0m13",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Dev, staging and prod each keep their own state for the same configuration. A resource is renamed. Why is a `moved` block better than running `terraform state mv` by hand?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "`terraform state mv` was removed in Terraform 1.1",
+        "correct": false,
+        "why": "The command still works; 1.1 is when the block arrived."
+      },
+      {
+        "text": "The block also changes the resource in AWS",
+        "correct": false,
+        "why": "A move calls nothing in AWS; it renames an entry in the state."
+      },
+      {
+        "text": "Every state gets the move on its next plan, and a reviewer sees it",
+        "correct": true,
+        "why": "It travels with the change, in the same pull request, to every place the configuration is applied."
+      },
+      {
+        "text": "The command cannot rename resources that use `for_each`",
+        "correct": false,
+        "why": "It can; the reason to prefer the block is that it is part of the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-xadt8x2e",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "At the level of a whole resource, `for_each` takes a map or a ___ of strings, and refuses a list.",
+    "hint": "Lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "set"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w71skv4y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`data \"aws_subnet\" \"db\"` (singular) looks a subnet up by the tag `Tier = db`, and a colleague has just created a second subnet with that tag. What happens on the next plan?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "The plan picks the newer of the two subnets",
+        "correct": false,
+        "why": "Nothing picks by date unless asked, and `aws_subnet` has no such switch here."
+      },
+      {
+        "text": "Planning fails",
+        "correct": true,
+        "why": "A singular data source has to find exactly one thing, and refuses to choose between two."
+      },
+      {
+        "text": "The lookup returns both ids as a list",
+        "correct": false,
+        "why": "That is what the plural `aws_subnets` does; the singular one returns one or fails."
+      },
+      {
+        "text": "A warning is printed and the first match is used",
+        "correct": false,
+        "why": "Choosing at random would deploy different things on different days; it is an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2x4wx0n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Two teams with two AWS accounts want to know whether their subnets sit in the same physical zone. What should they compare?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "The zone name, such as `sa-east-1a`",
+        "correct": false,
+        "why": "Zone names are shuffled per account, so the same name can be two buildings."
+      },
+      {
+        "text": "The zone id",
+        "correct": true,
+        "why": "A zone id such as `sae1-az1` names the same zone in every account."
+      },
+      {
+        "text": "The region returned by `data \"aws_region\"`",
+        "correct": false,
+        "why": "Both are in São Paulo; the region says nothing about the zone."
+      },
+      {
+        "text": "The subnets' CIDR ranges",
+        "correct": false,
+        "why": "A range is an address plan and says nothing about where the subnet sits."
+      }
+    ]
+  },
+  {
+    "id": "ex-7vzag9sz",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Ana's bucket-policy configuration reads `aws_caller_identity`, `local_file` and `aws_iam_policy_document`, and declares the bucket and the bucket policy. How many resources did its plan say it would add?",
+    "hint": "Lesson 5.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-whnmk5rt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "To pin production to one image, Ana filtered on the exact name and also removed `most_recent = true`. Why could it go?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "It made the read wait until the apply",
+        "correct": false,
+        "why": "`most_recent` changes which image is chosen, not when the read happens."
+      },
+      {
+        "text": "A filter on one name has one match, and one match needs no tie-break",
+        "correct": true,
+        "why": "If the name ever matched two, the plan would stop with an error rather than choose."
+      },
+      {
+        "text": "Terraform refuses `most_recent` together with a `filter` block",
+        "correct": false,
+        "why": "The first version used both together without complaint."
+      },
+      {
+        "text": "It was what made the plan replace the server",
+        "correct": false,
+        "why": "It chose the newest build, but with an exact name it would have chosen the same one anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-0c592s6d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`data \"aws_subnets\"` feeds an autoscaling group, and an empty answer would be a mistake. What does the lesson suggest?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Add `depends_on` to the lookup",
+        "correct": false,
+        "why": "That changes when it is read, and an empty answer stays empty."
+      },
+      {
+        "text": "Wrap the ids in `try()`",
+        "correct": false,
+        "why": "An empty list is not a failure, so there is nothing for `try` to catch."
+      },
+      {
+        "text": "Refuse it with a precondition or a check",
+        "correct": true,
+        "why": "A plural lookup answers an empty list without an error or a warning, so the refusal has to be written."
+      },
+      {
+        "text": "Set `most_recent = true` on it",
+        "correct": false,
+        "why": "That is a tie-break for images, and there is nothing to break here."
+      }
+    ]
+  },
+  {
+    "id": "ex-dj7arkzr",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each symbol in a plan to what it says will happen.",
+    "hint": "Lesson 6.",
+    "pairs": [
+      {
+        "left": "`~`",
+        "right": "The resource is edited where it stands"
+      },
+      {
+        "left": "`-/+`",
+        "right": "The old one goes, then the new one is made"
+      },
+      {
+        "left": "`+/-`",
+        "right": "The new one is made, then the old one goes"
+      },
+      {
+        "left": "`.`",
+        "right": "Terraform forgets it and AWS keeps it"
+      }
+    ],
+    "right_distractors": [
+      "The resource is read from another state"
+    ]
+  },
+  {
+    "id": "ex-0vz7psw2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An autoscaler moves an Auto Scaling group's `desired_capacity` all day, and every apply resets it to the number in the file. Which lifecycle setting fits?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "`prevent_destroy = true`",
+        "correct": false,
+        "why": "Nothing is being destroyed; the size is being reset."
+      },
+      {
+        "text": "`create_before_destroy = true`",
+        "correct": false,
+        "why": "That orders a replacement, and there is no replacement here."
+      },
+      {
+        "text": "`ignore_changes = [desired_capacity]`",
+        "correct": true,
+        "why": "Another system owns that value on purpose, so Terraform stops comparing it after creation."
+      },
+      {
+        "text": "`replace_triggered_by = [desired_capacity]`",
+        "correct": false,
+        "why": "That would replace the group whenever the number moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-bewayb6f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Ana wants `web` replaced whenever `var.release` changes, and wraps the variable in a `terraform_data` resource before naming it in `replace_triggered_by`. Why the wrapper?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "A variable cannot be read inside a `lifecycle` block of any kind",
+        "correct": false,
+        "why": "The point is what the trigger lists, not where variables may appear."
+      },
+      {
+        "text": "The trigger takes resources or their attributes, and a variable is neither",
+        "correct": true,
+        "why": "`terraform_data` stores the value, so a new release is an update the trigger can see."
+      },
+      {
+        "text": "It makes `user_data` force a replacement",
+        "correct": false,
+        "why": "The provider still updates `user_data` in place; the trigger is what replaces the machine."
+      },
+      {
+        "text": "It keeps the release out of the state",
+        "correct": false,
+        "why": "`terraform_data` is a resource, and its value is in the state."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rk34nnf",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "HashiCorp calls `terraform taint` deprecated and recommends the `-___` option of plan and apply instead, which lives in one command line.",
+    "hint": "Lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "replace"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-56n8y5yp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The assets bucket carries `prevent_destroy = true`, and the team really does want it gone. How does the lesson say to do it?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Run `terraform destroy -target` on the bucket",
+        "correct": false,
+        "why": "The error names `-target` as an escape hatch; the lesson's way is two reviewed commits."
+      },
+      {
+        "text": "Delete its block and the setting together in one commit",
+        "correct": false,
+        "why": "That works, and it is exactly how a careless refactor gets past the setting."
+      },
+      {
+        "text": "One reviewed commit removes the setting, a later one the bucket",
+        "correct": true,
+        "why": "Each step is then an edit somebody makes, and reviews, on purpose."
+      },
+      {
+        "text": "Empty the bucket by hand first, then apply",
+        "correct": false,
+        "why": "An empty bucket is still protected, and the plan is still refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-t3v5mfnf",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A scheduled job runs `terraform plan -detailed-exitcode` every night to catch drift. Which exit code tells it there are changes?",
+    "hint": "Lesson 7.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6rjhvckr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A plan shows a rule somebody added by hand to the `web` group, and the team agrees the rule is needed for good. What is the way out?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Run `terraform apply`, which records the rule",
+        "correct": false,
+        "why": "An ordinary apply makes AWS match the file, so it removes the rule."
+      },
+      {
+        "text": "Write the rule into `main.tf` and have it reviewed",
+        "correct": true,
+        "why": "When the world should win, the change belongs in the file; then the plan has nothing to do."
+      },
+      {
+        "text": "Apply `-refresh-only` and leave the file as it is",
+        "correct": false,
+        "why": "That records the rule in the state, and the next ordinary apply still removes it."
+      },
+      {
+        "text": "Add `ignore_changes = [ingress]` to the group",
+        "correct": false,
+        "why": "That hides every future difference in the rules, which is drift with a permission slip."
+      }
+    ]
+  },
+  {
+    "id": "ex-q435mjed",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "An older configuration's S3 backend names a `dynamodb_table`. What was that table for?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Keeping the state's version history",
+        "correct": false,
+        "why": "History comes from versioning on the bucket."
+      },
+      {
+        "text": "Encrypting the state at rest",
+        "correct": false,
+        "why": "That is `encrypt = true`, done by S3."
+      },
+      {
+        "text": "Holding the locks",
+        "correct": true,
+        "why": "Before S3 could lock with a conditional write, the backend kept its locks there; `use_lockfile` replaces it."
+      },
+      {
+        "text": "Listing who may read the bucket",
+        "correct": false,
+        "why": "Who may read it is the bucket's access policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-xybke196",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "With the S3 backend and `use_lockfile = true`, which of these end a run and leave a lock behind that blocks the next one? Choose all that apply.",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "The laptop running the apply loses power",
+        "correct": true,
+        "why": "A killed process removes nothing."
+      },
+      {
+        "text": "Somebody presses Ctrl-C during the apply",
+        "correct": false,
+        "why": "A run stopped with Ctrl-C removes its lock."
+      },
+      {
+        "text": "The CI runner is reclaimed halfway through",
+        "correct": true,
+        "why": "Killed, not stopped: the `.tflock` object stays."
+      },
+      {
+        "text": "The apply finishes and prints `Apply complete!`",
+        "correct": false,
+        "why": "A run that ends normally deletes the lock object."
+      }
+    ]
+  },
+  {
+    "id": "ex-1e9nhp6h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`terraform state push -force` overrides the serial and lineage checks. When does the lesson call it the right tool?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "When a colleague's laptop has a newer copy of the state",
+        "correct": false,
+        "why": "A newer copy pushes without `-force`; the danger is a stale one."
+      },
+      {
+        "text": "To move a state from one bucket to another",
+        "correct": false,
+        "why": "Changing backends is an `init -migrate-state` job."
+      },
+      {
+        "text": "The state is damaged, an older version is good, nothing else runs",
+        "correct": true,
+        "why": "And a plan straight after, read carefully, since every change since that version is unknown again."
+      },
+      {
+        "text": "Whenever a lock has outlived its run",
+        "correct": false,
+        "why": "A stale lock is `force-unlock`, and it does not touch the state's contents."
+      }
+    ]
+  },
+  {
+    "id": "ex-p56ssrj7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The app needs the network's VPC id, but the security team will not let the app's pipeline read the whole network state. Which arrangement does the lesson offer?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "`terraform_remote_state` reading only the outputs",
+        "correct": false,
+        "why": "Terraform shows only outputs, but it downloads the whole state to do so, so the access is the same."
+      },
+      {
+        "text": "An SSM parameter the network writes",
+        "correct": true,
+        "why": "A value written somewhere meant for sharing is a narrower door than the state."
+      },
+      {
+        "text": "A `moved` block from the network into the app",
+        "correct": false,
+        "why": "A `moved` block cannot name another state, and the VPC should stay where it is."
+      },
+      {
+        "text": "Copying the VPC id into the app's `terraform.tfvars`",
+        "correct": false,
+        "why": "A copied id points at nothing the day the network is rebuilt."
+      }
+    ]
+  },
+  {
+    "id": "ex-91cn9pwf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The network team wants to rename an output that two other configurations read. How does the lesson say to treat it?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Rename it and apply; the readers' plans will show the change",
+        "correct": false,
+        "why": "The readers' plans fail, for the wrong team and maybe weeks later."
+      },
+      {
+        "text": "Keep both names until every reader moves",
+        "correct": true,
+        "why": "Adding an output is free; removing or renaming one is a change to announce."
+      },
+      {
+        "text": "With a `moved` block from the old output to the new one",
+        "correct": false,
+        "why": "`moved` renames resources inside a state, not outputs other states read."
+      },
+      {
+        "text": "It cannot be done once anybody reads it",
+        "correct": false,
+        "why": "It can, over two changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-61gvjzf5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "An `import` block adopts an S3 bucket. What goes in its `id`?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "The bucket's ARN",
+        "correct": false,
+        "why": "Each resource type has its own import id; for a bucket it is not the ARN."
+      },
+      {
+        "text": "The address in the configuration",
+        "correct": false,
+        "why": "That is `to`."
+      },
+      {
+        "text": "The bucket's name",
+        "correct": true,
+        "why": "For a bucket the import id is its name; the provider documentation says so per resource."
+      },
+      {
+        "text": "The key of the state that held it before",
+        "correct": false,
+        "why": "An import reads the cloud, not another state."
+      }
+    ]
+  },
+  {
+    "id": "ex-xg4m84th",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Before which Terraform version was the `terraform import` command the only way to adopt a resource, because import blocks did not exist yet?",
+    "hint": "Lesson 8.",
+    "value": 1.5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2dtrcff5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A team splits a large state into two halves of equal size, cutting the file in the middle. What does the lesson predict?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Both configurations have to change for every feature",
+        "correct": true,
+        "why": "A cut follows ownership and lifecycle, never the size of a file; a random cut is worse than one state."
+      },
+      {
+        "text": "Plans become slower, since there are two locks",
+        "correct": false,
+        "why": "Each plan refreshes fewer resources, so it is faster; the problem is elsewhere."
+      },
+      {
+        "text": "Terraform refuses two states in one bucket",
+        "correct": false,
+        "why": "One bucket holds many states, each under its own key."
+      },
+      {
+        "text": "Nothing, as long as the halves stay below a size limit",
+        "correct": false,
+        "why": "There is no size rule; the question is who changes what, and how often."
+      }
+    ]
+  },
+  {
+    "id": "ex-34eebyhn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A resource carries `create_before_destroy = true` and a change forces its replacement. In `terraform show -json`, what are its `actions`?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "`[\"delete\",\"create\"]`",
+        "correct": false,
+        "why": "That is the default order, destroy first."
+      },
+      {
+        "text": "`[\"replace\"]`",
+        "correct": false,
+        "why": "There is no single replace action; a replacement is a list of two."
+      },
+      {
+        "text": "`[\"create\",\"delete\"]`",
+        "correct": true,
+        "why": "The same two actions, in the order the lifecycle setting asks for."
+      },
+      {
+        "text": "`[\"update\"]`",
+        "correct": false,
+        "why": "An update keeps the object; a replacement does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-bd2hjany",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The text of Ana's saved plan showed seven resources with something to do. How many entries did `resource_changes` list in the JSON of the same plan?",
+    "hint": "Lesson 9.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "entries"
+  },
+  {
+    "id": "ex-cm8e3kv5",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are inside a saved plan file such as `tfplan`? Choose all that apply.",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "The state the plan was computed against",
+        "correct": true,
+        "why": "`tfstate` is in the archive, which is why a stale plan can be detected."
+      },
+      {
+        "text": "A copy of the configuration",
+        "correct": true,
+        "why": "`tfconfig/` holds the `.tf` files."
+      },
+      {
+        "text": "The provider program itself",
+        "correct": false,
+        "why": "The 789M provider stays in `.terraform/`; the plan carries the lock file, not the binary."
+      },
+      {
+        "text": "The lock file",
+        "correct": true,
+        "why": "`.terraform.lock.hcl` is one of the seven files."
+      }
+    ]
+  },
+  {
+    "id": "ex-hm3960qv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A team finds itself running `terraform apply -target=...` every week. What does the lesson say that habit is telling them?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "That their plans are too long to read and need a guard",
+        "correct": false,
+        "why": "A guard reads a plan; it does not change what the plan contains."
+      },
+      {
+        "text": "That the provider needs upgrading",
+        "correct": false,
+        "why": "Nothing about a provider version makes targeting routine."
+      },
+      {
+        "text": "Two things that change on different schedules share a state",
+        "correct": true,
+        "why": "Splitting them gives each a full plan that is as small as the target pretended to be."
+      },
+      {
+        "text": "Nothing: `-target` is the precise way to apply",
+        "correct": false,
+        "why": "Terraform's own warning calls it a tool for exceptional situations."
+      }
+    ]
+  },
+  {
+    "id": "ex-aaa030jz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A script runs right after `terraform apply` and configures the new instance over SSH. What should it check first?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "That the plan line said `0 to destroy`",
+        "correct": false,
+        "why": "That is about the plan, not about whether the apply succeeded."
+      },
+      {
+        "text": "The exit code of `terraform apply`",
+        "correct": true,
+        "why": "An apply that failed halfway exits with 1, and the instance may never have been started."
+      },
+      {
+        "text": "That `terraform validate` passes",
+        "correct": false,
+        "why": "Validate passed before the apply too; the failure came from the API."
+      },
+      {
+        "text": "That the saved plan file is still on disk",
+        "correct": false,
+        "why": "The file being there says nothing about how the apply went."
+      }
+    ]
+  },
+  {
+    "id": "ex-01y9z5mp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A published module gains one new output, `vpc_cidr`, and nothing else changes. By semantic versioning, which number goes up?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Patch",
+        "correct": false,
+        "why": "A patch fixes something without adding to what callers see; this adds."
+      },
+      {
+        "text": "Minor",
+        "correct": true,
+        "why": "Something callers may use or ignore was added, and no caller has to change."
+      },
+      {
+        "text": "Major",
+        "correct": false,
+        "why": "Nobody's code breaks when an output appears."
+      },
+      {
+        "text": "None: outputs are not part of the interface",
+        "correct": false,
+        "why": "Outputs are half of the interface."
+      }
+    ]
+  },
+  {
+    "id": "ex-xx6q0c6c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Reading a third-party module before adopting it, which of these deserves a question because it runs a program while the plan is computed?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "A `variable` with a validation rule",
+        "correct": false,
+        "why": "A validation evaluates an expression; it runs nothing."
+      },
+      {
+        "text": "An `external` data source",
+        "correct": true,
+        "why": "It runs a program during the plan, with your access."
+      },
+      {
+        "text": "A `resource \"aws_subnet\"` block",
+        "correct": false,
+        "why": "It creates a subnet at apply, which is what the module says it does."
+      },
+      {
+        "text": "An `output` block",
+        "correct": false,
+        "why": "An output hands a value back; it runs nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qrf2fz7",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`terraform init` installs a module from a registry. Put the steps of the protocol in order.",
+    "hint": "Lesson 10.",
+    "items": [
+      "Ask the host for `/.well-known/terraform.json`",
+      "List the module's versions",
+      "Choose one inside the `version` constraint",
+      "Ask where to download it from"
+    ]
+  },
+  {
+    "id": "ex-kjkt41dj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A caller writes `source = \"git::https://git.example.com/shop/terraform-aws-network.git//modules/endpoints?ref=v2.1.0\"`. What does the `//` mark?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "A comment: the rest of the line is ignored",
+        "correct": false,
+        "why": "Inside a string it is part of the address."
+      },
+      {
+        "text": "A private registry host",
+        "correct": false,
+        "why": "A private registry is a fourth component in front of a registry address."
+      },
+      {
+        "text": "A subdirectory of the repository to use as the module",
+        "correct": true,
+        "why": "A module's own `modules/` parts are reached that way."
+      },
+      {
+        "text": "A second repository fetched alongside the first",
+        "correct": false,
+        "why": "One repository, one checkout, one directory inside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-32s6zvmj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Ana's module says `required_version = \">= 1.1\"`. Why that floor?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "It carries `moved` blocks, and those arrived in Terraform 1.1",
+        "correct": true,
+        "why": "An older Terraform would fail on a block it has never heard of; the floor says so first."
+      },
+      {
+        "text": "Version 6 of the AWS provider needs it",
+        "correct": false,
+        "why": "The provider floor is a separate line, `>= 6.0`."
+      },
+      {
+        "text": "The registry refuses modules without a floor",
+        "correct": false,
+        "why": "The reason is a feature the module uses."
+      },
+      {
+        "text": "It pins every caller to 1.1 exactly",
+        "correct": false,
+        "why": "`>=` is a floor, not a pin."
+      }
+    ]
+  },
+  {
+    "id": "ex-dpsjpn4n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The S3 backend says `key = \"shop/terraform.tfstate\"` and keeps the default prefix. Where does the state of a workspace called `staging` go?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "`shop/staging/terraform.tfstate`",
+        "correct": false,
+        "why": "The workspace goes in front of the key, not inside it."
+      },
+      {
+        "text": "`env:/staging/shop/terraform.tfstate`",
+        "correct": true,
+        "why": "`env:` is the default `workspace_key_prefix`, then the workspace, then the key."
+      },
+      {
+        "text": "`shop/terraform.tfstate`",
+        "correct": false,
+        "why": "Only `default` keeps the plain key."
+      },
+      {
+        "text": "`staging/terraform.tfstate`",
+        "correct": false,
+        "why": "The key from the backend block is kept, behind a prefix."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dy3g9cj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A team adds `mock_outputs` to the `dependency \"network\"` block of its web unit. What problem does that solve?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "It lets two units share one state key",
+        "correct": false,
+        "why": "Each unit gets its own key from its path; that is not what mocks are for."
+      },
+      {
+        "text": "It skips the confirmation question of `run --all`",
+        "correct": false,
+        "why": "That is `--non-interactive`."
+      },
+      {
+        "text": "It runs the web unit before the network unit",
+        "correct": false,
+        "why": "The dependency still orders network first."
+      },
+      {
+        "text": "A plan of web before network exists",
+        "correct": true,
+        "why": "Placeholder values stand in until the dependency's state has real outputs."
+      }
+    ]
+  },
+  {
+    "id": "ex-fv9sjv3v",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each layout to the classic mistake the lesson gives it.",
+    "hint": "Lesson 11.",
+    "pairs": [
+      {
+        "left": "Workspaces",
+        "right": "Applying with the wrong one selected"
+      },
+      {
+        "left": "A directory per environment",
+        "right": "Editing one copy and forgetting the other"
+      },
+      {
+        "left": "Terragrunt",
+        "right": "A `run --all` reaching more than intended"
+      }
+    ],
+    "right_distractors": [
+      "Two runs writing the same state at once"
+    ]
+  },
+  {
+    "id": "ex-y0gn4vr0",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "To run one command in a given workspace without changing what `.terraform/environment` says, set the environment variable ___.",
+    "hint": "Lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "TF_WORKSPACE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z8b88fh5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Why does `.terragrunt-cache/` belong in `.gitignore`?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "It holds the AWS credentials Terragrunt uses",
+        "correct": false,
+        "why": "Credentials come from the environment, as for Terraform."
+      },
+      {
+        "text": "It is the state of every unit",
+        "correct": false,
+        "why": "The states are in the S3 bucket, one key per unit."
+      },
+      {
+        "text": "It is where Terragrunt copies the module and writes generated files",
+        "correct": true,
+        "why": "It is rebuilt on every run, like `.terraform/`."
+      },
+      {
+        "text": "Git cannot store files that start with a dot",
+        "correct": false,
+        "why": "It can; `.gitignore` itself is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-s1kzfc7e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A resource needs a password, and its provider offers no write-only argument for it. Ana marks the variable `sensitive = true` and applies. Where is the password now?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Nowhere on disk; sensitive values are dropped after the apply",
+        "correct": false,
+        "why": "That describes an ephemeral value in a write-only argument, which this resource does not have."
+      },
+      {
+        "text": "In the state, in plain text",
+        "correct": true,
+        "why": "`sensitive` keeps it off the screen; the state records every argument as given."
+      },
+      {
+        "text": "In the state, encrypted with the variable's own key",
+        "correct": false,
+        "why": "Terraform has no such key and no way to encrypt the state before writing it."
+      },
+      {
+        "text": "Only in AWS, since the provider received it",
+        "correct": false,
+        "why": "Whatever the provider returns goes into the state, and it returns what it was given."
+      }
+    ]
+  },
+  {
+    "id": "ex-ntxx16z4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A variable is declared with `ephemeral = true`, and Ana passes it to a bucket's `tags`. What happens?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "The tag is written and then hidden in the plan",
+        "correct": false,
+        "why": "Hiding is what `sensitive` does; an ephemeral value is refused outright here."
+      },
+      {
+        "text": "The tag is set once and never compared again",
+        "correct": false,
+        "why": "That would need a write-only argument, and `tags` is not one."
+      },
+      {
+        "text": "Terraform refuses before planning",
+        "correct": true,
+        "why": "An ephemeral value may not go anywhere that is persisted, and an ordinary argument is."
+      },
+      {
+        "text": "The value goes to the state but not to the plan file",
+        "correct": false,
+        "why": "An ephemeral value is written to neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-gsx3s1rj",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which of these arrangements leave a database password in the state file? Choose all that apply.",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Reading it from Secrets Manager with a data source",
+        "correct": true,
+        "why": "A data source writes what it reads."
+      },
+      {
+        "text": "`random_password` feeding `secret_string`",
+        "correct": true,
+        "why": "Twice: as `result` and as `secret_string`."
+      },
+      {
+        "text": "`manage_master_user_password = true` on the database",
+        "correct": false,
+        "why": "RDS generates and keeps it; the state holds the secret's ARN."
+      },
+      {
+        "text": "An ephemeral password into `secret_string_wo`",
+        "correct": false,
+        "why": "The value reaches AWS and nothing on disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-j8fvv67r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The state is encrypted by OpenTofu with `aes_gcm`, and somebody runs `tofu plan` with the wrong passphrase. What happens?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "It decrypts to garbage and the plan proposes recreating everything",
+        "correct": false,
+        "why": "AES-GCM does not decrypt to garbage."
+      },
+      {
+        "text": "It falls back to reading the state as plain text",
+        "correct": false,
+        "why": "A fallback exists only if configured, and it was removed after the migration."
+      },
+      {
+        "text": "The run stops: message authentication failed",
+        "correct": true,
+        "why": "The cipher refuses rather than produce a wrong state."
+      },
+      {
+        "text": "It plans against an empty state",
+        "correct": false,
+        "why": "It never gets as far as a plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-0txdfb01",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The S3 backend has `encrypt = true` and a KMS key of the team's own. Who can still read the state in plain text?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Nobody: the object is encrypted",
+        "correct": false,
+        "why": "It is encrypted on S3's disks and decrypted for every authorised reader."
+      },
+      {
+        "text": "Only AWS staff",
+        "correct": false,
+        "why": "The encryption is aimed at the disks, and authorised readers get plain text."
+      },
+      {
+        "text": "Anyone allowed the bucket and the key",
+        "correct": true,
+        "why": "The key adds a second permission, and a reader with both gets plain text, as does any copy pulled to a laptop."
+      },
+      {
+        "text": "Anyone with read access to the Git repository",
+        "correct": false,
+        "why": "The state is not in the repository."
+      }
+    ]
+  },
+  {
+    "id": "ex-td57xkak",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Since which Terraform version is `terraform test` built in, with no extra tool to install?",
+    "hint": "Lesson 13.",
+    "value": 1.6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4t615xm3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A team weighs Terratest against `terraform test` with a helper module of data sources. What can Terratest check that the helper module cannot?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Whether the VPC's range is what AWS reports",
+        "correct": false,
+        "why": "The helper module reads that back with `data \"aws_vpc\"`."
+      },
+      {
+        "text": "An HTTP answer from a server it just built",
+        "correct": true,
+        "why": "A Go test can call anything, including the machine it created; the price is a second language."
+      },
+      {
+        "text": "How many subnets AWS holds in the VPC",
+        "correct": false,
+        "why": "`data \"aws_subnets\"` in the helper module answers that."
+      },
+      {
+        "text": "Whether the resources are destroyed afterwards",
+        "correct": false,
+        "why": "`terraform test` tears down each file itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-rwmt9py6",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these can a run under `mock_provider \"aws\" {}`, with suitable overrides, actually establish? Choose all that apply.",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "That the module wires the subnet's `vpc_id` to its VPC",
+        "correct": true,
+        "why": "That is the module's own logic, which is what a mock proves."
+      },
+      {
+        "text": "That a validation rule refuses a near-miss value",
+        "correct": true,
+        "why": "`expect_failures` works under a mock; the rules file needs no AWS."
+      },
+      {
+        "text": "That AWS accepts the subnet's range inside the VPC",
+        "correct": false,
+        "why": "That question never reaches a mock; only an apply against the API finds it."
+      },
+      {
+        "text": "That the account may create subnets at all",
+        "correct": false,
+        "why": "Permissions are AWS's answer, and a mock calls no API."
+      }
+    ]
+  },
+  {
+    "id": "ex-pf5acrf2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A module carries a `check` block that warns when only one zone is given. Ana wants a run that proves it fires. What does the lesson say?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "List the check in `expect_failures`, as for a variable",
+        "correct": false,
+        "why": "A check's failure is a warning and never stops a plan, so there is nothing to expect."
+      },
+      {
+        "text": "It is a poor thing to build a test around, since it only warns",
+        "correct": true,
+        "why": "Rules that must hold belong in a validation or a precondition, and those can be tested."
+      },
+      {
+        "text": "Use `command = apply`, since checks run after apply",
+        "correct": false,
+        "why": "Applying changes nothing about a warning being a warning."
+      },
+      {
+        "text": "Replace the check with an `override_data` block",
+        "correct": false,
+        "why": "An override supplies a value; it does not test a rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvksw7sp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Before `validate` in a pipeline, `terraform init -backend=___` installs providers and modules without touching the remote state.",
+    "hint": "Lesson 13.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dchb473h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A pipeline gates the shop with `trivy config --severity CRITICAL --exit-code 1`, and the code opens port 22 to `0.0.0.0/0`. What does the gate do?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "Lets it through",
+        "correct": true,
+        "why": "Trivy rates that finding `HIGH`, and the gate only fails on `CRITICAL`."
+      },
+      {
+        "text": "Fails, since port 22 is always critical",
+        "correct": false,
+        "why": "The severity is the rule author's, and this rule says `HIGH`."
+      },
+      {
+        "text": "Fails, since any finding sets the exit code",
+        "correct": false,
+        "why": "`--severity` limits which findings count toward the exit code."
+      },
+      {
+        "text": "Cannot decide offline, and exits with an error",
+        "correct": false,
+        "why": "Trivy's severities ship inside its checks, so they are there offline."
+      }
+    ]
+  },
+  {
+    "id": "ex-qae14dqv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Checkov ids come in two families, `CKV_AWS_…` and `CKV2_AWS_…`. What does the `2` mark?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "A second, stricter version of the same rule",
+        "correct": false,
+        "why": "They are different rules, not versions of one."
+      },
+      {
+        "text": "A rule that needs the Prisma Cloud download",
+        "correct": false,
+        "why": "Both families ran offline in the lab."
+      },
+      {
+        "text": "A check of the links between resources",
+        "correct": true,
+        "why": "That is how `CKV2_AWS_6` notices that no public access block points at the bucket."
+      },
+      {
+        "text": "A rule written by the user, not by Checkov",
+        "correct": false,
+        "why": "Ana's own rule happened to use that prefix; the built-in `CKV2_` checks are Checkov's."
+      }
+    ]
+  },
+  {
+    "id": "ex-cf3vh9qd",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these silence a rule for every resource, including one somebody adds next month? Choose all that apply.",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "`checkov --skip-check CKV2_AWS_5` in the pipeline",
+        "correct": true,
+        "why": "A command-line skip applies to the whole run."
+      },
+      {
+        "text": "`#checkov:skip=CKV2_AWS_5:reason` inside one block",
+        "correct": false,
+        "why": "An inline skip covers that one resource."
+      },
+      {
+        "text": "A skip listed in the scanner's configuration file",
+        "correct": true,
+        "why": "Like the command line, it lives away from the code and covers everything."
+      },
+      {
+        "text": "`#trivy:ignore:AWS-0132` above one block",
+        "correct": false,
+        "why": "It applies to the block below it."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3pzcqzt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A year from now, somebody reads `Suppress comment: No comment provided` in a Checkov report. What is the trouble the lesson points to?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "Checkov will refuse that skip on its next release",
+        "correct": false,
+        "why": "Checkov does not refuse a skip without a reason; the habit has to come from review."
+      },
+      {
+        "text": "It looks like a skip added to pass a build",
+        "correct": true,
+        "why": "With no reason to argue with, nobody removes it."
+      },
+      {
+        "text": "The finding counts as failed anyway",
+        "correct": false,
+        "why": "It is reported as `SKIPPED`."
+      },
+      {
+        "text": "The skip expired and the finding is back",
+        "correct": false,
+        "why": "Checkov's inline skip has no expiry field; that is Trivy's `exp:`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dd7ee0s",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "To switch a gate on in a repository that already has findings, Checkov records today's findings as known in a ___ file, and from then on only new ones fail.",
+    "hint": "Lesson 14.",
+    "blanks": [
+      {
+        "accept": [
+          "baseline"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rk5jpqdz",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put the pipeline's steps in the order the lesson gives them, from the one that needs least to the one that needs most.",
+    "hint": "Lesson 15.",
+    "items": [
+      "`fmt -check` and `validate`",
+      "The scanner",
+      "`plan`, with read access",
+      "`apply`, with write access"
+    ],
+    "trap": "The scanner needs no credentials either; it sits after validate because it is the slower of the two cheap gates."
+  },
+  {
+    "id": "ex-9t3r5xww",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Under the workflow's `concurrency` group, run 1 is waiting for approval and run 2 is pending. Run 3 starts. What happens to run 2?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "It runs alongside run 3",
+        "correct": false,
+        "why": "Only one run of a group is in progress at a time."
+      },
+      {
+        "text": "It is cancelled, and run 3 waits in its place",
+        "correct": true,
+        "why": "A group holds one pending run; the newest commit contains every change merged before it."
+      },
+      {
+        "text": "Run 1 is cancelled so that run 2 can start",
+        "correct": false,
+        "why": "`cancel-in-progress: false` keeps the running one; cancelling an apply halfway is a partial apply."
+      },
+      {
+        "text": "Run 3 fails with a lock error",
+        "correct": false,
+        "why": "The queue holds it before it reaches the state."
+      }
+    ]
+  },
+  {
+    "id": "ex-0jvjtx3y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In the GitLab file, `resource_group: production` sits on the `apply` job only. Can a saved plan still go stale while it waits?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "No: the group queues every job of the pipeline",
+        "correct": false,
+        "why": "It queues only the jobs that carry it."
+      },
+      {
+        "text": "No: GitLab replans before applying",
+        "correct": false,
+        "why": "The apply job applies the artifact; nothing replans it."
+      },
+      {
+        "text": "Yes, and the stale-plan refusal catches it",
+        "correct": true,
+        "why": "Plans are not in the group, so two can be made against one state; Terraform refuses the one that went stale."
+      },
+      {
+        "text": "Yes, and the stale plan is applied anyway",
+        "correct": false,
+        "why": "Terraform checks the serial and refuses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5k2n2sd1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The shop moves its pipeline to GitLab. What changes in the AWS configuration that lets jobs in without a key?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "An IAM user's key goes into GitLab's variables",
+        "correct": false,
+        "why": "That is the stored key the lesson removes."
+      },
+      {
+        "text": "Nothing: AWS trusts any OpenID Connect issuer",
+        "correct": false,
+        "why": "AWS trusts the issuers it is told to; moto, which trusts any token, is the lab's limit."
+      },
+      {
+        "text": "The issuer becomes `https://gitlab.com`, and the roles match GitLab's `sub`",
+        "correct": true,
+        "why": "Such as `project_path:example/shop:ref_type:branch:ref:main`."
+      },
+      {
+        "text": "The roles' policies drop the `.tflock` permission",
+        "correct": false,
+        "why": "A plan still locks the state, whatever runs it."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4v3a4ss",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "How does Atlantis's order differ from the pipeline this lesson built?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "It applies from the pull request, before the merge",
+        "correct": true,
+        "why": "A comment `atlantis apply` applies, and each directory is locked to one pull request until it merges."
+      },
+      {
+        "text": "It never saves a plan",
+        "correct": false,
+        "why": "The difference the lesson names is when it applies."
+      },
+      {
+        "text": "It runs only on HCP Terraform",
+        "correct": false,
+        "why": "Atlantis is a server you run yourself."
+      },
+      {
+        "text": "It applies every merge without asking anybody",
+        "correct": false,
+        "why": "Somebody comments to apply."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6ngkyya",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The priced plan said 175.73 USD a month, and the shop's budget is 300. Why not set the limit at the estimate?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "The estimate is a floor: usage comes on top",
+        "correct": true,
+        "why": "Traffic, requests and processed gigabytes are in no plan; 300 leaves room without making the alert useless."
+      },
+      {
+        "text": "AWS refuses a budget below 300 USD",
+        "correct": false,
+        "why": "There is no such floor; the number is the shop's choice."
+      },
+      {
+        "text": "Tax is added to list prices at about 70%",
+        "correct": false,
+        "why": "The lesson gives no tax figure; the gap is for usage."
+      },
+      {
+        "text": "So that the alert never fires in a normal month",
+        "correct": false,
+        "why": "Too much room is the failure the lesson warns about: an alert that never fires."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1je9kvc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does the budget alert on 80% of actual spending and on 100% of the forecast, and not on 100% of actual?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "AWS only allows percentages below 100 for actual spending",
+        "correct": false,
+        "why": "The choice is about timing, not about what AWS allows."
+      },
+      {
+        "text": "Billing data lags, so 100% of actual reports money already gone",
+        "correct": true,
+        "why": "The forecast is the earliest warning there is."
+      },
+      {
+        "text": "At 100% the budget stops the resources by itself",
+        "correct": false,
+        "why": "A budget warns; it stops nothing."
+      },
+      {
+        "text": "Forecasts are free and actual alerts are billed",
+        "correct": false,
+        "why": "Nothing in the lesson is about what the alerts cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-vk6en2tn",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The lesson's defences follow the order of cost. Put them in that order, from the earliest to the net under all of them.",
+    "hint": "Lesson 16.",
+    "items": [
+      "A price beside the pull request",
+      "Tags that cannot be left out",
+      "A search for what nobody owns, and expiry dates",
+      "A budget that warns after the money moved"
+    ]
+  },
+  {
+    "id": "ex-4dddjx6b",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "`price.py` turns an hourly price into a monthly one by counting a month as ___ hours, the cloud course's convention.",
+    "hint": "Lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "730"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cqk6m7s7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`default_tags` sets `Environment = \"prod\"`, and one resource sets `tags = { Environment = \"staging\" }` itself. What does AWS hold for that resource?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "`prod`",
+        "correct": false,
+        "why": "The defaults lose where the resource names the same key."
+      },
+      {
+        "text": "`staging`",
+        "correct": true,
+        "why": "`tags_all` is the resource's own tags merged over the defaults, and the resource's value wins."
+      },
+      {
+        "text": "Both, as two tags",
+        "correct": false,
+        "why": "A key holds one value."
+      },
+      {
+        "text": "Neither: the plan fails on the conflict",
+        "correct": false,
+        "why": "There is no conflict to fail on; there is a rule for which wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-j967cc28",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A company still runs Terraform 1.5.7. Under which licence is that release?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "BSL 1.1, like every release since 2014",
+        "correct": false,
+        "why": "The change came in August 2023 and covers 1.6.0 and later."
+      },
+      {
+        "text": "MPL 2.0",
+        "correct": true,
+        "why": "The BSL names Terraform 1.6.0 or later as the licensed work, so 1.5 and earlier stay under the MPL."
+      },
+      {
+        "text": "Apache 2.0",
+        "correct": false,
+        "why": "That is the CDK's and Pulumi's licence."
+      },
+      {
+        "text": "The Linux Foundation's licence",
+        "correct": false,
+        "why": "The Linux Foundation hosts OpenTofu, which is under MPL 2.0; it has no licence of its own here."
+      }
+    ]
+  },
+  {
+    "id": "ex-gbhvghwj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which CDK construct maps one to one onto a CloudFormation type and decides nothing for you?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "`ec2.Vpc`",
+        "correct": false,
+        "why": "It is the level above, with defaults such as a NAT gateway per zone."
+      },
+      {
+        "text": "`ec2.CfnVPC`",
+        "correct": true,
+        "why": "The `Cfn…` constructs are CloudFormation types written in the program's language."
+      },
+      {
+        "text": "`Tags.of(stack)`",
+        "correct": false,
+        "why": "It adds a tag to everything in a stack; it is not a resource."
+      },
+      {
+        "text": "A pattern that assembles several services",
+        "correct": false,
+        "why": "Patterns are the highest level, and decide the most."
+      }
+    ]
+  },
+  {
+    "id": "ex-66cgjzhr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which idea from earlier in the course is a Pulumi stack closest to?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "A CloudFormation stack",
+        "correct": false,
+        "why": "The name is shared; a CloudFormation stack is the state inside AWS, and Pulumi keeps its own."
+      },
+      {
+        "text": "A Terraform workspace",
+        "correct": true,
+        "why": "An instance of one project with its own configuration and its own state, one per environment."
+      },
+      {
+        "text": "A Terraform module",
+        "correct": false,
+        "why": "A module is code called with values; a stack is an instance with a state."
+      },
+      {
+        "text": "A provider",
+        "correct": false,
+        "why": "Pulumi has providers too, and they are what talk to the API."
+      }
+    ]
+  },
+  {
+    "id": "ex-80c2jp6t",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put what happens in order, from an empty AWS account to a CDK app's network existing.",
+    "hint": "Lesson 17.",
+    "items": [
+      "`cdk bootstrap` creates the `CDKToolkit` stack",
+      "The app is synthesised into a template",
+      "A change set is created from the template",
+      "CloudFormation creates the resources"
+    ]
+  },
+  {
+    "id": "ex-7t62p63v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Terraform's model has four parts: a description, providers, a plan and a state. What does CloudFormation change?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Nothing; only the licence differs",
+        "correct": false,
+        "why": "That is OpenTofu."
+      },
+      {
+        "text": "The description becomes a program",
+        "correct": false,
+        "why": "That is the CDK and Pulumi; a CloudFormation template is still a description."
+      },
+      {
+        "text": "It moves the engine and the state into AWS",
+        "correct": true,
+        "why": "AWS computes the change set, makes the calls and keeps the result in the stack."
+      },
+      {
+        "text": "It removes the review step",
+        "correct": false,
+        "why": "A change set is the review step."
+      }
+    ]
+  },
+  {
+    "id": "ex-6yqp4708",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A playbook made mostly of `ansible.builtin.command` tasks is run with `--check`. How much does that tell Ana?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Little",
+        "correct": true,
+        "why": "A module that runs a program cannot predict what the program would do, so the check says little."
+      },
+      {
+        "text": "Exactly what `terraform plan` would",
+        "correct": false,
+        "why": "`--check` is only as good as each module's ability to predict."
+      },
+      {
+        "text": "Nothing, because `--check` runs every command for real",
+        "correct": false,
+        "why": "`--check` changes nothing on the machines."
+      },
+      {
+        "text": "Everything, as long as `--diff` is added",
+        "correct": false,
+        "why": "`--diff` shows file differences; it cannot predict a program either."
+      }
+    ]
+  },
+  {
+    "id": "ex-3s99erwt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The shop no longer wants `tree` on the web servers, which a task installed months ago. What does Ansible need?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Deleting the task that installed it",
+        "correct": false,
+        "why": "Ansible keeps no record of what it made, so a deleted task removes nothing."
+      },
+      {
+        "text": "A task that says `state: absent`",
+        "correct": true,
+        "why": "Removing something is itself a state to describe."
+      },
+      {
+        "text": "`ansible-playbook --check` to find it",
+        "correct": false,
+        "why": "A check reports on what the playbook mentions, and changes nothing."
+      },
+      {
+        "text": "A handler that reloads nginx",
+        "correct": false,
+        "why": "A reload has nothing to do with a package."
+      }
+    ]
+  },
+  {
+    "id": "ex-h18yb4x7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A role sets `shop_root` in its `vars/main.yml`, and `group_vars/web.yml` sets a different value. Which value does a host in `web` get?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "The one in `group_vars/web.yml`",
+        "correct": false,
+        "why": "That would be true against `defaults`; a role's `vars` wins over group variables."
+      },
+      {
+        "text": "The role's `vars/main.yml`",
+        "correct": true,
+        "why": "`vars` entries win over the inventory and group variables, so they are effectively fixed."
+      },
+      {
+        "text": "Neither: Ansible stops on the conflict",
+        "correct": false,
+        "why": "A fixed order of precedence decides; there is no conflict error."
+      },
+      {
+        "text": "Whichever file was edited last",
+        "correct": false,
+        "why": "Precedence is by place, not by date."
+      }
+    ]
+  },
+  {
+    "id": "ex-tnp057bv",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The template task that writes nginx's configuration notifies `Reload nginx`, and this run changes the file. Put what happens in order.",
+    "hint": "Lesson 18.",
+    "items": [
+      "The configuration task reports changed",
+      "`Start nginx` runs",
+      "The play's tasks are done",
+      "nginx is reloaded, once"
+    ],
+    "trap": "A handler does not run where it is notified; it waits for the end of the play."
+  },
+  {
+    "id": "ex-ee8qj6bd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "When does the lesson say the `aws_ec2` inventory plugin is the better choice than a file Terraform writes?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "When machines come and go faster than anybody applies",
+        "correct": true,
+        "why": "It asks the cloud at run time, so the list is never older than the run."
+      },
+      {
+        "text": "When the machines have no Python",
+        "correct": false,
+        "why": "Every managed machine needs Python whatever builds the inventory."
+      },
+      {
+        "text": "When a reviewer should read the inventory in a pull request",
+        "correct": false,
+        "why": "That is the file's advantage: plain text in the repository."
+      },
+      {
+        "text": "When Terraform should run Ansible at creation",
+        "correct": false,
+        "why": "That is `local-exec`, which runs once and never again."
+      }
+    ]
+  },
+  {
+    "id": "ex-4hfg3sqk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A Salt minion has not been told where its master is. Which host does it look for?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "`localhost`",
+        "correct": false,
+        "why": "Running from local disk is a separate switch, `file_client: local`."
+      },
+      {
+        "text": "`master`",
+        "correct": false,
+        "why": "That is the role's name, not the default host."
+      },
+      {
+        "text": "`salt`",
+        "correct": true,
+        "why": "`config.get master` answered `salt`, as Puppet's agent looks for `puppet`."
+      },
+      {
+        "text": "`puppet`",
+        "correct": false,
+        "why": "That is the Puppet agent's default."
+      }
+    ]
+  },
+  {
+    "id": "ex-vsv8jn6k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In a Puppet setup with a server, what does adding a new machine need besides installing the agent?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "An SSH key the server can log in with",
+        "correct": false,
+        "why": "That is how Ansible reaches a machine; Puppet's agent connects out."
+      },
+      {
+        "text": "A certificate signed by the certificate authority",
+        "correct": true,
+        "why": "The agent proves who it is with it, and by default the Puppet server runs that authority."
+      },
+      {
+        "text": "A line in an inventory file on a laptop",
+        "correct": false,
+        "why": "An inventory is Ansible's list of machines to push to."
+      },
+      {
+        "text": "A Terraform output with the machine's address",
+        "correct": false,
+        "why": "The agent asks the server; nobody needs its address to start a run."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0r9qjtj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`state.show_sls` listed Ana's three states with `order: 10000`, `10001` and `10002`. What do those numbers say?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "How long each state took, in microseconds",
+        "correct": false,
+        "why": "Durations are in the run's output, in milliseconds."
+      },
+      {
+        "text": "File order, unless a requisite moves it",
+        "correct": true,
+        "why": "Salt numbers states in the order written, unless a requisite says otherwise."
+      },
+      {
+        "text": "A graph built from relationships, as in Puppet",
+        "correct": false,
+        "why": "In Puppet the graph decides first; Salt starts from the file."
+      },
+      {
+        "text": "Priorities, where the highest runs first",
+        "correct": false,
+        "why": "10000 ran first."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpf00816",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Besides applying states, what does a Salt master's open channel to its minions let you do?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Run any single command on every minion at once",
+        "correct": true,
+        "why": "`salt '*' cmd.run 'uptime'` makes the master a remote control as well as a description."
+      },
+      {
+        "text": "Sign the minions' certificates for Puppet",
+        "correct": false,
+        "why": "Puppet's certificates come from Puppet's own authority."
+      },
+      {
+        "text": "Keep a state file of what every minion holds",
+        "correct": false,
+        "why": "None of these tools keeps a Terraform-style state of what it made."
+      },
+      {
+        "text": "Skip Jinja so the YAML is read as written",
+        "correct": false,
+        "why": "Jinja runs before the YAML is read, master or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-vzd8edzc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Salt has `salt-ssh` for machines with no minion, and Ansible has `ansible-pull`. What does the lesson take from those two?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "That push and pull are a default, not a wall",
+        "correct": true,
+        "why": "Each tool can run the other way; the arrangement it ships with is the default."
+      },
+      {
+        "text": "That Salt and Ansible are the same tool",
+        "correct": false,
+        "why": "They differ in language, agent and order; the two commands only cross the line."
+      },
+      {
+        "text": "That agents are obsolete",
+        "correct": false,
+        "why": "The lesson keeps agents for long-lived machines that must stay as described."
+      },
+      {
+        "text": "That a timer is needed for both",
+        "correct": false,
+        "why": "Neither command is about a timer."
+      }
+    ]
+  },
+  {
+    "id": "ex-k5wp8h4n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Ana builds the pinned template twice in a row with the same version and commit, and the two image ids differ. Is the build reproducible, as the lesson means it?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "No: reproducible means a byte-identical image",
+        "correct": false,
+        "why": "The lesson says plainly that it does not mean that."
+      },
+      {
+        "text": "Yes: timestamps differ, and nothing installed does",
+        "correct": true,
+        "why": "Same software at the same versions from the same template; the ids differ by timestamps inside the image."
+      },
+      {
+        "text": "No: the digest pin was ignored",
+        "correct": false,
+        "why": "The `Run command` line shows the build started from the digest."
+      },
+      {
+        "text": "It cannot be known without pulling from Docker Hub",
+        "correct": false,
+        "why": "`dpkg-query` inside each image answers what is installed."
+      }
+    ]
+  },
+  {
+    "id": "ex-tb92he16",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What does the `manifest` post-processor hand to the next step of an image pipeline?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "The image itself, pushed to a registry",
+        "correct": false,
+        "why": "It writes a file; pushing is another step."
+      },
+      {
+        "text": "A file saying which image was built, from which commit",
+        "correct": true,
+        "why": "`manifest.json` has the artifact id and the `custom_data` with version and commit."
+      },
+      {
+        "text": "The Terraform plan that rolls the image out",
+        "correct": false,
+        "why": "The handover to Terraform is the version, in a reviewed `terraform.tfvars`."
+      },
+      {
+        "text": "The result of running the image",
+        "correct": false,
+        "why": "Running and checking the image is a separate step the pipeline adds."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3y4j6p7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The shop wants its registry to make sure a version tag, once pushed, can never name different contents. What does the lesson point to?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Tagging every build `latest` as well",
+        "correct": false,
+        "why": "`latest` is the pointer every build moves."
+      },
+      {
+        "text": "A registry that refuses to push a tag that exists",
+        "correct": true,
+        "why": "Amazon ECR, for one, can be set that way."
+      },
+      {
+        "text": "Building with `pull = false`",
+        "correct": false,
+        "why": "That keeps Packer from fetching the base; it says nothing about the result's tag."
+      },
+      {
+        "text": "A `LABEL` with the version inside the image",
+        "correct": false,
+        "why": "A label tells where an image came from; it does not stop a tag being moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwhggf59",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The shop grows to several web servers behind a load balancer. How does the lesson say a new image reaches them?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Ansible logs in to each server and upgrades nginx",
+        "correct": false,
+        "why": "That edits running machines, which the immutable model does not do."
+      },
+      {
+        "text": "Each server pulls `latest` on a timer",
+        "correct": false,
+        "why": "`latest` names different images on different days, and nothing reviews it."
+      },
+      {
+        "text": "Through a launch template and an instance refresh",
+        "correct": true,
+        "why": "The Auto Scaling group replaces its instances in batches to match the new image id."
+      },
+      {
+        "text": "One `terraform apply -replace` per server, by hand",
+        "correct": false,
+        "why": "The shape is one new image id in one place, and the group does the replacing."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7b38hvx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An image pipeline has just built a new version, and every provisioner exited with zero. What should it do before publishing?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Nothing more: Packer has checked it",
+        "correct": false,
+        "why": "Packer checks exit codes, and `1.0.0` passed them and would not start."
+      },
+      {
+        "text": "Start the image and ask it something",
+        "correct": true,
+        "why": "A request that fails the pipeline when the answer is wrong, as lesson 13 runs a module before trusting it."
+      },
+      {
+        "text": "Retag the previous version as the new one",
+        "correct": false,
+        "why": "A version names one image for good."
+      },
+      {
+        "text": "Run `packer validate` on the template again",
+        "correct": false,
+        "why": "Validate checks the template; it never looks at the image."
+      }
+    ]
+  }
+]

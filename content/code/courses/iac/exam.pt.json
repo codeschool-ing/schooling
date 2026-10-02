@@ -1,0 +1,1914 @@
+{
+  "ex-xfzpxsds": {
+    "prompt": "Um time cria o bucket S3 com um script de shell. Numa conta nova o script funciona; rodado de novo na mesma conta, para com um erro dizendo que o bucket já existe. O que falta ao script?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Idempotência",
+        "why": "Rodar duas vezes não deixa o mundo como rodar uma vez deixou; o script repete um passo de criação em vez de comparar antes."
+      },
+      {
+        "text": "Um security group na frente do bucket",
+        "why": "Security group é o firewall na frente de uma máquina e não tem relação com um passo que se repete."
+      },
+      {
+        "text": "Gerência de configuração na conta",
+        "why": "Gerência de configuração trata do que está dentro de uma máquina. Um bucket é um recurso provisionado."
+      },
+      {
+        "text": "Drift entre a conta e o console",
+        "why": "Drift é a diferença entre uma descrição e o que existe. Aqui o script só executou seus passos duas vezes."
+      }
+    ]
+  },
+  "ex-yxvndza2": {
+    "prompt": "Qual destes é trabalho de provisionamento, e não de gerência de configuração?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Instalar o nginx numa versão definida em trinta máquinas",
+        "why": "Pacotes numa máquina rodando são invisíveis para a API da nuvem: gerência de configuração."
+      },
+      {
+        "text": "Criar um registro de DNS",
+        "why": "Um registro de DNS é algo que um provedor vende e altera pela API: provisionamento."
+      },
+      {
+        "text": "Decidir quais usuários entram num servidor por SSH",
+        "why": "Usuários numa máquina vivem no sistema operacional dela: gerência de configuração."
+      },
+      {
+        "text": "Editar o conteúdo de um arquivo em /etc",
+        "why": "Um arquivo num disco é alcançado por SSH ou por um agente: gerência de configuração."
+      }
+    ]
+  },
+  "ex-has0vzqj": {
+    "prompt": "Um colega abriu à mão uma regra no security group `web` da loja, e o `network.sh` nunca ouviu falar dela. Que porta essa regra abre?",
+    "hint": "Aula 1.",
+    "unit": "porta"
+  },
+  "ex-afbg2bp8": {
+    "prompt": "Uma loja roda seus servidores web como infraestrutura imutável. A versão 7 entra no ar e está quebrada. Como fica o rollback?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Entrar em cada servidor e desfazer o upgrade",
+        "why": "Esse é o jeito mutável, e depende de alguém saber qual foi a edição."
+      },
+      {
+        "text": "Rodar a ferramenta de configuração de novo nos mesmos servidores com a versão 6 fixada nas variáveis",
+        "why": "Isso edita máquinas em execução, o que a infraestrutura imutável não faz."
+      },
+      {
+        "text": "Subir de novo cópias da versão 6 e trocá-las pelas novas",
+        "why": "Nada foi editado, então a cópia anterior continua exatamente como foi construída."
+      },
+      {
+        "text": "Restaurar o disco de cada servidor do backup da noite anterior",
+        "why": "Backup serve para estado que se acumula. Os servidores não carregam nenhum; são refeitos a partir de um build."
+      }
+    ]
+  },
+  "ex-bza3nwm9": {
+    "prompt": "Ponha em ordem o que o `terraform apply` faz para que uma segunda execução não mude nada.",
+    "hint": "Aula 1.",
+    "items": [
+      "Ler o que existe",
+      "Comparar com a descrição",
+      "Fazer só a diferença"
+    ]
+  },
+  "ex-3qxww72m": {
+    "prompt": "Uma configuração pede um provider com `version = \"~> 2.4\"`, e nada está travado ainda. Que versão o `terraform init` pode escolher?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "2.3.9",
+        "why": "Abaixo do 2.4 em que a faixa começa."
+      },
+      {
+        "text": "3.0.0",
+        "why": "`~> 2.4` deixa crescer o último número escrito, então para antes do 3.0."
+      },
+      {
+        "text": "2.9.1",
+        "why": "Qualquer 2.x a partir de 2.4 está dentro de `~> 2.4`."
+      },
+      {
+        "text": "1.9.0",
+        "why": "Uma versão major menor está fora da faixa."
+      }
+    ]
+  },
+  "ex-x3yerbkg": {
+    "prompt": "A mesma variável está definida em quatro lugares. Ponha as fontes em ordem, da que perde para a que ganha.",
+    "hint": "Aula 2.",
+    "items": [
+      "`TF_VAR_` no ambiente",
+      "`terraform.tfvars`",
+      "Um arquivo terminado em `.auto.tfvars`",
+      "`-var` na linha de comando"
+    ],
+    "trap": "A variável de ambiente vem primeiro, então perde para qualquer arquivo: o contrário do que a maioria das ferramentas faz."
+  },
+  "ex-4z4ycf3n": {
+    "prompt": "Se o `-parallelism` não disser outra coisa, quantas operações no máximo o Terraform inicia ao mesmo tempo ao percorrer o grafo?",
+    "hint": "Aula 2.",
+    "unit": "operações"
+  },
+  "ex-f6vehh3w": {
+    "prompt": "Uma configuração tem uma VPC, uma subnet nela, um security group nela e uma regra de entrada no grupo. No `terraform destroy`, qual sai por último?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "A regra de entrada, porque foi declarada por último no arquivo",
+        "why": "A ordem no arquivo não significa nada; a regra depende de coisas e nada depende dela, então sai cedo."
+      },
+      {
+        "text": "A VPC",
+        "why": "O destroy percorre o grafo de trás para frente, e todo o resto aponta para a VPC."
+      },
+      {
+        "text": "A subnet",
+        "why": "A subnet é uma folha: depende da VPC e nada depende dela."
+      },
+      {
+        "text": "A que a AWS responder por último",
+        "why": "As folhas podem terminar em qualquer ordem, mas a VPC espera por todas."
+      }
+    ]
+  },
+  "ex-13ys1tc1": {
+    "prompt": "Quais destes o `terraform validate` pega? Marque todos os que se aplicam.",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Uma referência a `aws_vpc.shp` quando a VPC se chama `shop`",
+        "why": "Toda referência tem que apontar para algo declarado."
+      },
+      {
+        "text": "Uma faixa de subnet fora da faixa da VPC",
+        "why": "Só a AWS conhece essa regra, então passa no validate e falha no apply."
+      },
+      {
+        "text": "Um nome de argumento que o tipo de recurso não tem",
+        "why": "O validate confere se cada argumento existe para o tipo."
+      },
+      {
+        "text": "Credenciais da AWS expiradas",
+        "why": "O validate não pergunta nada à AWS e não precisa de credenciais."
+      }
+    ]
+  },
+  "ex-0xqjx736": {
+    "prompt": "O que `cidrhost(\"10.20.1.0/24\", 10)` devolve?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "\"10.20.10.0/24\"",
+        "why": "Isso seria uma subnet, a de número 10; o `cidrhost` devolve um endereço."
+      },
+      {
+        "text": "\"10.20.1.10\"",
+        "why": "O host de número 10 dentro da faixa."
+      },
+      {
+        "text": "\"10.20.1.0/10\"",
+        "why": "O segundo argumento não é tamanho de prefixo."
+      },
+      {
+        "text": "\"10.20.11.0\"",
+        "why": "Nada é somado ao terceiro octeto."
+      }
+    ]
+  },
+  "ex-djcfgvx1": {
+    "prompt": "O S3 recusa nome de bucket mais longo que um tamanho fixo, e a precondition da Ana codifica esse limite. Quantos caracteres são?",
+    "hint": "Aula 3.",
+    "unit": "caracteres"
+  },
+  "ex-7ag5ywtt": {
+    "prompt": "Um time quer que o plan siga em frente, mas mostre um aviso quando as subnets ficarem numa zona só. Onde essa regra fica?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Num bloco `validation` na variável das zonas",
+        "why": "Uma validation que falha para a execução antes de qualquer plano."
+      },
+      {
+        "text": "Numa precondition no `lifecycle` da subnet",
+        "why": "Uma precondition que falha é erro, e o plano falha."
+      },
+      {
+        "text": "Num bloco `check`",
+        "why": "Uma asserção que falha num check é aviso, e a execução continua."
+      },
+      {
+        "text": "Numa postcondition que se refere a `self`",
+        "why": "Uma postcondition que falha também é erro, às vezes depois de a mudança ter sido feita."
+      }
+    ]
+  },
+  "ex-aspgc6p5": {
+    "prompt": "Ligue cada função ao que ela devolve.",
+    "hint": "Aula 3.",
+    "pairs": [
+      {
+        "left": "`try`",
+        "right": "O primeiro argumento que não falha"
+      },
+      {
+        "left": "`can`",
+        "right": "Se uma expressão falharia, como true ou false"
+      },
+      {
+        "left": "`lookup`",
+        "right": "O valor de uma chave num mapa, ou um padrão"
+      },
+      {
+        "left": "`merge`",
+        "right": "Um mapa só, o último vencendo numa chave repetida"
+      }
+    ],
+    "right_distractors": [
+      "Uma função que você mesmo definiu"
+    ]
+  },
+  "ex-5ht39vmm": {
+    "prompt": "Um tipo coleção tem um tipo de elemento e qualquer tamanho; um object ou uma tuple, que fixa o formato, é um tipo ___.",
+    "hint": "Aula 3.",
+    "blanks": [
+      {
+        "accept": [
+          "estrutural"
+        ]
+      }
+    ]
+  },
+  "ex-tdk0dshd": {
+    "prompt": "Quatro subnets são criadas com `count` a partir de uma lista de quatro faixas. Uma faixa nova entra no início da lista. A faixa de uma subnet força substituição. O que o plano propõe?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Uma subnet é criada e nada mais é tocado",
+        "why": "Isso é o que acrescentar no fim faria. Inserir no início desloca todos os índices."
+      },
+      {
+        "text": "Quatro substituições e uma criação",
+        "why": "Cada índice existente passa a ter a faixa do elemento anterior, então cada um é substituído, e o índice 4 é novo."
+      },
+      {
+        "text": "Quatro atualizações in-place do `cidr_block`",
+        "why": "Uma faixa não pode ser editada no lugar; o plano marca `forces replacement`."
+      },
+      {
+        "text": "Um erro, porque uma lista de `count` não pode crescer pelo início",
+        "why": "O Terraform aceita a edição e planeja exatamente o que os endereços dizem."
+      }
+    ]
+  },
+  "ex-wr56fvnv": {
+    "prompt": "Um banco só existe quando `var.with_db` é true, por meio de `count = var.with_db ? 1 : 0`. Qual output continua funcionando quando não há cópia?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "`aws_db_instance.main[0].id`",
+        "why": "Com zero cópias, `[0]` não aponta para nada: Invalid index."
+      },
+      {
+        "text": "`one(aws_db_instance.main[*].id)`",
+        "why": "O splat dá uma lista com um ou nenhum, e o `one()` transforma nenhum em `null`."
+      },
+      {
+        "text": "`aws_db_instance.main.id`",
+        "why": "Com `count`, o nome sozinho é uma lista de cópias e não tem `id`."
+      },
+      {
+        "text": "`aws_db_instance.main[*].id[0]`",
+        "why": "Continua sendo um índice numa lista que pode estar vazia."
+      }
+    ]
+  },
+  "ex-fjd09p7k": {
+    "prompt": "Ligue cada linha que um plano imprimiu ao que a causou.",
+    "hint": "Aula 4.",
+    "pairs": [
+      {
+        "left": "`because index [2] is out of range for count`",
+        "right": "Uma lista que alimenta o `count` ficou menor"
+      },
+      {
+        "left": "`because key [\"app\"] is not in for_each map`",
+        "right": "Uma chave saiu de um mapa"
+      },
+      {
+        "left": "`because resource does not use count`",
+        "right": "`count` virou `for_each` sem blocos `moved`"
+      },
+      {
+        "left": "`has moved to`",
+        "right": "Um bloco ligou um endereço antigo a um novo"
+      }
+    ],
+    "right_distractors": [
+      "Um alias de provider foi apagado"
+    ]
+  },
+  "ex-5ypb0m13": {
+    "prompt": "Dev, staging e prod guardam cada um seu state para a mesma configuração. Um recurso é renomeado. Por que um bloco `moved` é melhor do que rodar `terraform state mv` à mão?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "O `terraform state mv` foi removido no Terraform 1.1",
+        "why": "O comando continua funcionando; o 1.1 é quando o bloco chegou."
+      },
+      {
+        "text": "O bloco também altera o recurso na AWS",
+        "why": "Um move não chama nada na AWS; ele renomeia uma entrada no state."
+      },
+      {
+        "text": "Todo state recebe o move no próximo plan, e quem revisa vê",
+        "why": "Ele vai junto com a mudança, no mesmo pull request, para todo lugar onde a configuração é aplicada."
+      },
+      {
+        "text": "O comando não consegue renomear recursos que usam `for_each`",
+        "why": "Consegue; o motivo para preferir o bloco é que ele faz parte do código."
+      }
+    ]
+  },
+  "ex-xadt8x2e": {
+    "prompt": "No nível de um recurso inteiro, o `for_each` aceita um mapa ou um ___ de strings, e recusa uma lista.",
+    "hint": "Aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "set",
+          "conjunto"
+        ]
+      }
+    ]
+  },
+  "ex-w71skv4y": {
+    "prompt": "`data \"aws_subnet\" \"db\"` (singular) procura uma subnet pela tag `Tier = db`, e um colega acabou de criar uma segunda subnet com essa tag. O que acontece no próximo plan?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "O plano escolhe a mais nova das duas subnets",
+        "why": "Nada escolhe por data sem ser pedido, e o `aws_subnet` não tem essa opção aqui."
+      },
+      {
+        "text": "O planejamento falha",
+        "why": "Uma data source singular tem que achar exatamente uma coisa, e se recusa a escolher entre duas."
+      },
+      {
+        "text": "A consulta devolve os dois ids numa lista",
+        "why": "Isso é o que o plural `aws_subnets` faz; o singular devolve um ou falha."
+      },
+      {
+        "text": "Um aviso é impresso e o primeiro resultado é usado",
+        "why": "Escolher ao acaso implantaria coisas diferentes em dias diferentes; é um erro."
+      }
+    ]
+  },
+  "ex-z2x4wx0n": {
+    "prompt": "Dois times com duas contas AWS querem saber se suas subnets estão na mesma zona física. O que devem comparar?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "O nome da zona, como `sa-east-1a`",
+        "why": "Os nomes de zona são embaralhados por conta, então o mesmo nome pode ser dois prédios."
+      },
+      {
+        "text": "O id da zona",
+        "why": "Um id de zona como `sae1-az1` nomeia a mesma zona em toda conta."
+      },
+      {
+        "text": "A região devolvida por `data \"aws_region\"`",
+        "why": "As duas estão em São Paulo; a região não diz nada sobre a zona."
+      },
+      {
+        "text": "As faixas CIDR das subnets",
+        "why": "Uma faixa é um plano de endereços e não diz nada sobre onde a subnet fica."
+      }
+    ]
+  },
+  "ex-7vzag9sz": {
+    "prompt": "A configuração da política do bucket da Ana lê `aws_caller_identity`, `local_file` e `aws_iam_policy_document`, e declara o bucket e a política do bucket. Quantos recursos o plano disse que ia adicionar?",
+    "hint": "Aula 5.",
+    "unit": "recursos"
+  },
+  "ex-whnmk5rt": {
+    "prompt": "Para fixar a produção numa imagem, a Ana filtrou pelo nome exato e também tirou o `most_recent = true`. Por que ele podia sair?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Ele fazia a leitura esperar até o apply",
+        "why": "O `most_recent` muda qual imagem é escolhida, não quando a leitura acontece."
+      },
+      {
+        "text": "Um filtro com um nome só tem um resultado, e um resultado não precisa de desempate",
+        "why": "Se o nome um dia batesse com duas, o plano pararia com erro em vez de escolher."
+      },
+      {
+        "text": "O Terraform recusa `most_recent` junto com um bloco `filter`",
+        "why": "A primeira versão usou os dois juntos sem reclamação."
+      },
+      {
+        "text": "Era ele que fazia o plano substituir o servidor",
+        "why": "Ele escolhia o build mais novo, mas com um nome exato escolheria o mesmo de qualquer jeito."
+      }
+    ]
+  },
+  "ex-0c592s6d": {
+    "prompt": "`data \"aws_subnets\"` alimenta um autoscaling group, e uma resposta vazia seria um erro. O que a aula sugere?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Pôr `depends_on` na consulta",
+        "why": "Isso muda quando é lida, e uma resposta vazia continua vazia."
+      },
+      {
+        "text": "Envolver os ids em `try()`",
+        "why": "Uma lista vazia não é falha, então não há nada para o `try` pegar."
+      },
+      {
+        "text": "Recusá-la com uma precondition ou um check",
+        "why": "Uma consulta plural responde lista vazia sem erro nem aviso, então a recusa tem que ser escrita."
+      },
+      {
+        "text": "Pôr `most_recent = true` nela",
+        "why": "Isso é um desempate para imagens, e aqui não há o que desempatar."
+      }
+    ]
+  },
+  "ex-dj7arkzr": {
+    "prompt": "Ligue cada símbolo de um plano ao que ele diz que vai acontecer.",
+    "hint": "Aula 6.",
+    "pairs": [
+      {
+        "left": "`~`",
+        "right": "O recurso é editado onde está"
+      },
+      {
+        "left": "`-/+`",
+        "right": "O antigo sai, depois o novo é criado"
+      },
+      {
+        "left": "`+/-`",
+        "right": "O novo é criado, depois o antigo sai"
+      },
+      {
+        "left": "`.`",
+        "right": "O Terraform esquece e a AWS mantém"
+      }
+    ],
+    "right_distractors": [
+      "O recurso é lido de outro state"
+    ]
+  },
+  "ex-0vz7psw2": {
+    "prompt": "Um autoscaler muda o `desired_capacity` de um Auto Scaling group o dia todo, e cada apply volta ao número do arquivo. Qual configuração de lifecycle se encaixa?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "`prevent_destroy = true`",
+        "why": "Nada está sendo destruído; o tamanho está sendo resetado."
+      },
+      {
+        "text": "`create_before_destroy = true`",
+        "why": "Isso ordena uma substituição, e aqui não há substituição."
+      },
+      {
+        "text": "`ignore_changes = [desired_capacity]`",
+        "why": "Outro sistema é dono desse valor de propósito, então o Terraform para de compará-lo depois da criação."
+      },
+      {
+        "text": "`replace_triggered_by = [desired_capacity]`",
+        "why": "Isso substituiria o grupo toda vez que o número mudasse."
+      }
+    ]
+  },
+  "ex-bewayb6f": {
+    "prompt": "A Ana quer o `web` substituído toda vez que `var.release` mudar, e embrulha a variável num recurso `terraform_data` antes de citá-lo no `replace_triggered_by`. Por que o embrulho?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Uma variável não pode ser lida dentro de nenhum tipo de bloco `lifecycle`",
+        "why": "A questão é o que o gatilho lista, não onde variáveis podem aparecer."
+      },
+      {
+        "text": "O gatilho aceita recursos ou atributos deles, e uma variável não é nenhum dos dois",
+        "why": "O `terraform_data` guarda o valor, então um release novo é uma atualização que o gatilho enxerga."
+      },
+      {
+        "text": "Faz o `user_data` forçar substituição",
+        "why": "O provider continua atualizando o `user_data` no lugar; quem substitui a máquina é o gatilho."
+      },
+      {
+        "text": "Mantém o release fora do state",
+        "why": "O `terraform_data` é um recurso, e o valor dele fica no state."
+      }
+    ]
+  },
+  "ex-7rk34nnf": {
+    "prompt": "A HashiCorp chama o `terraform taint` de obsoleto e recomenda no lugar a opção `-___` do plan e do apply, que vive numa linha de comando só.",
+    "hint": "Aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "replace"
+        ]
+      }
+    ]
+  },
+  "ex-56n8y5yp": {
+    "prompt": "O bucket de assets tem `prevent_destroy = true`, e o time quer mesmo apagá-lo. Como a aula diz para fazer?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Rodar `terraform destroy -target` no bucket",
+        "why": "O erro cita o `-target` como saída; o caminho da aula são dois commits revisados."
+      },
+      {
+        "text": "Apagar o bloco e a configuração juntos num commit",
+        "why": "Funciona, e é exatamente como um refactor descuidado passa pela proteção."
+      },
+      {
+        "text": "Um commit revisado tira a configuração, outro depois tira o bucket",
+        "why": "Cada passo vira uma edição que alguém faz, e revisa, de propósito."
+      },
+      {
+        "text": "Esvaziar o bucket à mão antes, depois aplicar",
+        "why": "Um bucket vazio continua protegido, e o plano continua recusado."
+      }
+    ]
+  },
+  "ex-t3v5mfnf": {
+    "prompt": "Um job agendado roda `terraform plan -detailed-exitcode` toda noite para pegar drift. Que código de saída diz a ele que há mudanças?",
+    "hint": "Aula 7."
+  },
+  "ex-6rjhvckr": {
+    "prompt": "Um plano mostra uma regra que alguém adicionou à mão no grupo `web`, e o time concorda que a regra é necessária de vez. Qual é a saída?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Rodar `terraform apply`, que registra a regra",
+        "why": "Um apply comum faz a AWS ficar igual ao arquivo, então remove a regra."
+      },
+      {
+        "text": "Escrever a regra no `main.tf` e mandar revisar",
+        "why": "Quando o mundo deve ganhar, a mudança vai para o arquivo; aí o plano não tem nada a fazer."
+      },
+      {
+        "text": "Aplicar `-refresh-only` e deixar o arquivo como está",
+        "why": "Isso registra a regra no state, e o próximo apply comum ainda a remove."
+      },
+      {
+        "text": "Pôr `ignore_changes = [ingress]` no grupo",
+        "why": "Isso esconde toda diferença futura nas regras, que é drift com autorização."
+      }
+    ]
+  },
+  "ex-q435mjed": {
+    "prompt": "O backend S3 de uma configuração antiga cita uma `dynamodb_table`. Para que servia essa tabela?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Guardar o histórico de versões do state",
+        "why": "O histórico vem do versionamento do bucket."
+      },
+      {
+        "text": "Criptografar o state em repouso",
+        "why": "Isso é o `encrypt = true`, feito pelo S3."
+      },
+      {
+        "text": "Guardar os locks",
+        "why": "Antes de o S3 conseguir travar com escrita condicional, o backend guardava os locks lá; o `use_lockfile` o substitui."
+      },
+      {
+        "text": "Listar quem pode ler o bucket",
+        "why": "Quem pode ler é a política de acesso do bucket."
+      }
+    ]
+  },
+  "ex-xybke196": {
+    "prompt": "Com o backend S3 e `use_lockfile = true`, quais destes terminam uma execução e deixam para trás um lock que bloqueia a próxima? Marque todos os que se aplicam.",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "O laptop que roda o apply fica sem energia",
+        "why": "Um processo morto não remove nada."
+      },
+      {
+        "text": "Alguém aperta Ctrl-C durante o apply",
+        "why": "Uma execução parada com Ctrl-C remove o seu lock."
+      },
+      {
+        "text": "O runner de CI é recolhido no meio",
+        "why": "Morto, não parado: o objeto `.tflock` fica."
+      },
+      {
+        "text": "O apply termina e imprime `Apply complete!`",
+        "why": "Uma execução que termina normalmente apaga o objeto de lock."
+      }
+    ]
+  },
+  "ex-1e9nhp6h": {
+    "prompt": "O `terraform state push -force` passa por cima das checagens de serial e lineage. Quando a aula diz que é a ferramenta certa?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Quando o laptop de um colega tem uma cópia mais nova do state",
+        "why": "Uma cópia mais nova sobe sem `-force`; o perigo é uma velha."
+      },
+      {
+        "text": "Para mover um state de um bucket para outro",
+        "why": "Trocar de backend é trabalho do `init -migrate-state`."
+      },
+      {
+        "text": "O state está danificado, uma versão antiga é boa, nada mais roda",
+        "why": "E um plan logo depois, lido com cuidado, já que toda mudança desde aquela versão volta a ser desconhecida."
+      },
+      {
+        "text": "Sempre que um lock sobreviveu à sua execução",
+        "why": "Um lock órfão é `force-unlock`, que não mexe no conteúdo do state."
+      }
+    ]
+  },
+  "ex-p56ssrj7": {
+    "prompt": "O app precisa do id da VPC da rede, mas o time de segurança não deixa o pipeline do app ler o state inteiro da rede. Que arranjo a aula oferece?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "`terraform_remote_state` lendo só os outputs",
+        "why": "O Terraform mostra só os outputs, mas baixa o state inteiro para isso, então o acesso é o mesmo."
+      },
+      {
+        "text": "Um parâmetro SSM que a rede grava",
+        "why": "Um valor gravado num lugar feito para compartilhar é uma porta mais estreita do que o state."
+      },
+      {
+        "text": "Um bloco `moved` da rede para o app",
+        "why": "Um bloco `moved` não consegue citar outro state, e a VPC deve ficar onde está."
+      },
+      {
+        "text": "Copiar o id da VPC para o `terraform.tfvars` do app",
+        "why": "Um id copiado aponta para o nada no dia em que a rede for refeita."
+      }
+    ]
+  },
+  "ex-91cn9pwf": {
+    "prompt": "O time de rede quer renomear um output que duas outras configurações leem. Como a aula diz para tratar isso?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Renomear e aplicar; os planos de quem lê vão mostrar a mudança",
+        "why": "Os planos de quem lê falham, para o time errado e talvez semanas depois."
+      },
+      {
+        "text": "Manter os dois nomes até todo leitor mudar",
+        "why": "Adicionar output é de graça; remover ou renomear é mudança a anunciar."
+      },
+      {
+        "text": "Com um bloco `moved` do output antigo para o novo",
+        "why": "O `moved` renomeia recursos dentro de um state, não outputs que outros states leem."
+      },
+      {
+        "text": "Não dá para fazer depois que alguém lê",
+        "why": "Dá, em duas mudanças."
+      }
+    ]
+  },
+  "ex-61gvjzf5": {
+    "prompt": "Um bloco `import` adota um bucket S3. O que vai no `id` dele?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O ARN do bucket",
+        "why": "Cada tipo de recurso tem seu id de import; para bucket não é o ARN."
+      },
+      {
+        "text": "O endereço na configuração",
+        "why": "Isso é o `to`."
+      },
+      {
+        "text": "O nome do bucket",
+        "why": "Para bucket, o id de import é o nome; a documentação do provider diz isso por recurso."
+      },
+      {
+        "text": "A chave do state que o guardava antes",
+        "why": "Um import lê a nuvem, não outro state."
+      }
+    ]
+  },
+  "ex-xg4m84th": {
+    "prompt": "Antes de qual versão do Terraform o comando `terraform import` era o único jeito de adotar um recurso, porque os blocos import ainda não existiam?",
+    "hint": "Aula 8."
+  },
+  "ex-2dtrcff5": {
+    "prompt": "Um time divide um state grande em duas metades do mesmo tamanho, cortando o arquivo no meio. O que a aula prevê?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "As duas configurações precisam mudar a cada funcionalidade",
+        "why": "O corte segue dono e ciclo de vida, nunca o tamanho de um arquivo; um corte ao acaso é pior que um state só."
+      },
+      {
+        "text": "Os planos ficam mais lentos, porque há dois locks",
+        "why": "Cada plano atualiza menos recursos, então é mais rápido; o problema está em outro lugar."
+      },
+      {
+        "text": "O Terraform recusa dois states num bucket",
+        "why": "Um bucket guarda vários states, cada um em sua chave."
+      },
+      {
+        "text": "Nada, desde que as metades fiquem abaixo de um limite de tamanho",
+        "why": "Não há regra de tamanho; a pergunta é quem muda o quê, e com que frequência."
+      }
+    ]
+  },
+  "ex-34eebyhn": {
+    "prompt": "Um recurso tem `create_before_destroy = true` e uma mudança força a substituição dele. No `terraform show -json`, quais são as `actions` dele?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "`[\"delete\",\"create\"]`",
+        "why": "Essa é a ordem padrão, destruir primeiro."
+      },
+      {
+        "text": "`[\"replace\"]`",
+        "why": "Não existe ação replace única; uma substituição é uma lista de duas."
+      },
+      {
+        "text": "`[\"create\",\"delete\"]`",
+        "why": "As mesmas duas ações, na ordem que a configuração de lifecycle pede."
+      },
+      {
+        "text": "`[\"update\"]`",
+        "why": "Um update mantém o objeto; uma substituição não."
+      }
+    ]
+  },
+  "ex-bd2hjany": {
+    "prompt": "O texto do plano salvo da Ana mostrou sete recursos com algo a fazer. Quantas entradas o `resource_changes` listou no JSON do mesmo plano?",
+    "hint": "Aula 9.",
+    "unit": "entradas"
+  },
+  "ex-cm8e3kv5": {
+    "prompt": "Quais destes estão dentro de um arquivo de plano salvo como o `tfplan`? Marque todos os que se aplicam.",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "O state contra o qual o plano foi calculado",
+        "why": "O `tfstate` está no arquivo, e é por isso que um plano velho é detectado."
+      },
+      {
+        "text": "Uma cópia da configuração",
+        "why": "O `tfconfig/` guarda os arquivos `.tf`."
+      },
+      {
+        "text": "O próprio programa do provider",
+        "why": "O provider de 789M fica no `.terraform/`; o plano leva o lock file, não o binário."
+      },
+      {
+        "text": "O lock file",
+        "why": "O `.terraform.lock.hcl` é um dos sete arquivos."
+      }
+    ]
+  },
+  "ex-hm3960qv": {
+    "prompt": "Um time se pega rodando `terraform apply -target=...` toda semana. O que a aula diz que esse hábito está contando?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Que os planos estão longos demais para ler e precisam de uma guarda",
+        "why": "Uma guarda lê um plano; não muda o que o plano contém."
+      },
+      {
+        "text": "Que o provider precisa de upgrade",
+        "why": "Nada na versão do provider torna o target rotineiro."
+      },
+      {
+        "text": "Duas coisas que mudam em ritmos diferentes dividem um state",
+        "why": "Separá-las dá a cada uma um plano completo tão pequeno quanto o target fingia ser."
+      },
+      {
+        "text": "Nada: o `-target` é o jeito preciso de aplicar",
+        "why": "O próprio aviso do Terraform o chama de ferramenta para situações excepcionais."
+      }
+    ]
+  },
+  "ex-aaa030jz": {
+    "prompt": "Um script roda logo depois do `terraform apply` e configura a instância nova por SSH. O que ele deve conferir primeiro?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Que a linha do plano dizia `0 to destroy`",
+        "why": "Isso é sobre o plano, não sobre se o apply deu certo."
+      },
+      {
+        "text": "O código de saída do `terraform apply`",
+        "why": "Um apply que falhou no meio sai com 1, e a instância pode nunca ter sido iniciada."
+      },
+      {
+        "text": "Que o `terraform validate` passa",
+        "why": "O validate passou antes do apply também; a falha veio da API."
+      },
+      {
+        "text": "Que o arquivo do plano salvo ainda está no disco",
+        "why": "O arquivo estar lá não diz nada sobre como foi o apply."
+      }
+    ]
+  },
+  "ex-01y9z5mp": {
+    "prompt": "Um módulo publicado ganha um output novo, `vpc_cidr`, e nada mais muda. Pelo versionamento semântico, qual número sobe?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Patch",
+        "why": "Um patch corrige algo sem acrescentar ao que quem chama vê; isto acrescenta."
+      },
+      {
+        "text": "Minor",
+        "why": "Foi acrescentado algo que quem chama pode usar ou ignorar, e ninguém precisa mudar."
+      },
+      {
+        "text": "Major",
+        "why": "O código de ninguém quebra quando um output aparece."
+      },
+      {
+        "text": "Nenhum: outputs não fazem parte da interface",
+        "why": "Outputs são metade da interface."
+      }
+    ]
+  },
+  "ex-xx6q0c6c": {
+    "prompt": "Lendo um módulo de terceiros antes de adotá-lo, qual destes merece uma pergunta porque roda um programa enquanto o plano é calculado?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Uma `variable` com regra de validação",
+        "why": "Uma validação avalia uma expressão; não roda nada."
+      },
+      {
+        "text": "Uma data source `external`",
+        "why": "Ela roda um programa durante o plano, com o seu acesso."
+      },
+      {
+        "text": "Um bloco `resource \"aws_subnet\"`",
+        "why": "Cria uma subnet no apply, que é o que o módulo diz que faz."
+      },
+      {
+        "text": "Um bloco `output`",
+        "why": "Um output devolve um valor; não roda nada."
+      }
+    ]
+  },
+  "ex-1qrf2fz7": {
+    "prompt": "O `terraform init` instala um módulo de um registry. Ponha os passos do protocolo em ordem.",
+    "hint": "Aula 10.",
+    "items": [
+      "Pedir ao host o `/.well-known/terraform.json`",
+      "Listar as versões do módulo",
+      "Escolher uma dentro da restrição `version`",
+      "Perguntar de onde baixá-la"
+    ]
+  },
+  "ex-kjkt41dj": {
+    "prompt": "Quem chama escreve `source = \"git::https://git.example.com/shop/terraform-aws-network.git//modules/endpoints?ref=v2.1.0\"`. O que o `//` marca?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Um comentário: o resto da linha é ignorado",
+        "why": "Dentro de uma string faz parte do endereço."
+      },
+      {
+        "text": "Um host de registry privado",
+        "why": "Um registry privado é um quarto componente na frente de um endereço de registry."
+      },
+      {
+        "text": "Um subdiretório do repositório a usar como módulo",
+        "why": "As partes `modules/` de um módulo são alcançadas assim."
+      },
+      {
+        "text": "Um segundo repositório baixado junto com o primeiro",
+        "why": "Um repositório, um checkout, um diretório dentro dele."
+      }
+    ]
+  },
+  "ex-32s6zvmj": {
+    "prompt": "O módulo da Ana diz `required_version = \">= 1.1\"`. Por que esse piso?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Ele tem blocos `moved`, e esses chegaram no Terraform 1.1",
+        "why": "Um Terraform mais antigo falharia num bloco que não conhece; o piso avisa antes."
+      },
+      {
+        "text": "A versão 6 do provider AWS exige isso",
+        "why": "O piso do provider é outra linha, `>= 6.0`."
+      },
+      {
+        "text": "O registry recusa módulos sem piso",
+        "why": "O motivo é um recurso que o módulo usa."
+      },
+      {
+        "text": "Fixa todo chamador exatamente no 1.1",
+        "why": "`>=` é um piso, não uma fixação."
+      }
+    ]
+  },
+  "ex-dpsjpn4n": {
+    "prompt": "O backend S3 diz `key = \"shop/terraform.tfstate\"` e mantém o prefixo padrão. Onde fica o state de um workspace chamado `staging`?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "`shop/staging/terraform.tfstate`",
+        "why": "O workspace vai na frente da chave, não dentro dela."
+      },
+      {
+        "text": "`env:/staging/shop/terraform.tfstate`",
+        "why": "`env:` é o `workspace_key_prefix` padrão, depois o workspace, depois a chave."
+      },
+      {
+        "text": "`shop/terraform.tfstate`",
+        "why": "Só o `default` fica com a chave pura."
+      },
+      {
+        "text": "`staging/terraform.tfstate`",
+        "why": "A chave do bloco de backend é mantida, atrás de um prefixo."
+      }
+    ]
+  },
+  "ex-6dy3g9cj": {
+    "prompt": "Um time acrescenta `mock_outputs` ao bloco `dependency \"network\"` da sua unidade web. Que problema isso resolve?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Deixa duas unidades dividirem uma chave de state",
+        "why": "Cada unidade recebe sua chave do caminho; não é para isso que servem os mocks."
+      },
+      {
+        "text": "Pula a pergunta de confirmação do `run --all`",
+        "why": "Isso é o `--non-interactive`."
+      },
+      {
+        "text": "Roda a unidade web antes da unidade network",
+        "why": "A dependência continua pondo network primeiro."
+      },
+      {
+        "text": "Um plan da web antes de a network existir",
+        "why": "Valores provisórios ocupam o lugar até o state da dependência ter outputs reais."
+      }
+    ]
+  },
+  "ex-fv9sjv3v": {
+    "prompt": "Ligue cada layout ao erro clássico que a aula atribui a ele.",
+    "hint": "Aula 11.",
+    "pairs": [
+      {
+        "left": "Workspaces",
+        "right": "Aplicar com o errado selecionado"
+      },
+      {
+        "left": "Um diretório por ambiente",
+        "right": "Editar uma cópia e esquecer a outra"
+      },
+      {
+        "left": "Terragrunt",
+        "right": "Um `run --all` alcançando mais do que o pretendido"
+      }
+    ],
+    "right_distractors": [
+      "Duas execuções escrevendo o mesmo state ao mesmo tempo"
+    ]
+  },
+  "ex-y0gn4vr0": {
+    "prompt": "Para rodar um comando num workspace sem mudar o que o `.terraform/environment` diz, defina a variável de ambiente ___.",
+    "hint": "Aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "TF_WORKSPACE"
+        ]
+      }
+    ]
+  },
+  "ex-z8b88fh5": {
+    "prompt": "Por que o `.terragrunt-cache/` vai no `.gitignore`?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Guarda as credenciais da AWS que o Terragrunt usa",
+        "why": "As credenciais vêm do ambiente, como no Terraform."
+      },
+      {
+        "text": "É o state de cada unidade",
+        "why": "Os states estão no bucket S3, uma chave por unidade."
+      },
+      {
+        "text": "É onde o Terragrunt copia o módulo e grava os arquivos gerados",
+        "why": "É refeito a cada execução, como o `.terraform/`."
+      },
+      {
+        "text": "O Git não guarda arquivos que começam com ponto",
+        "why": "Guarda; o próprio `.gitignore` é um."
+      }
+    ]
+  },
+  "ex-s1kzfc7e": {
+    "prompt": "Um recurso precisa de uma senha, e o provider dele não oferece argumento write-only para ela. A Ana marca a variável `sensitive = true` e aplica. Onde está a senha agora?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum do disco; valores sensitive são descartados depois do apply",
+        "why": "Isso descreve um valor ephemeral num argumento write-only, que este recurso não tem."
+      },
+      {
+        "text": "No state, em texto puro",
+        "why": "O `sensitive` o tira da tela; o state registra todo argumento como foi dado."
+      },
+      {
+        "text": "No state, criptografado com a chave da própria variável",
+        "why": "O Terraform não tem chave assim nem jeito de criptografar o state antes de gravar."
+      },
+      {
+        "text": "Só na AWS, porque o provider o recebeu",
+        "why": "O que o provider devolve vai para o state, e ele devolve o que recebeu."
+      }
+    ]
+  },
+  "ex-ntxx16z4": {
+    "prompt": "Uma variável é declarada com `ephemeral = true`, e a Ana a passa para as `tags` de um bucket. O que acontece?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "A tag é gravada e depois escondida no plano",
+        "why": "Esconder é o que o `sensitive` faz; um valor ephemeral é recusado de cara aqui."
+      },
+      {
+        "text": "A tag é definida uma vez e nunca mais comparada",
+        "why": "Isso exigiria um argumento write-only, e `tags` não é um."
+      },
+      {
+        "text": "O Terraform recusa antes de planejar",
+        "why": "Um valor ephemeral não pode ir para nada que seja persistido, e um argumento comum é."
+      },
+      {
+        "text": "O valor vai para o state mas não para o arquivo de plano",
+        "why": "Um valor ephemeral não é gravado em nenhum dos dois."
+      }
+    ]
+  },
+  "ex-gsx3s1rj": {
+    "prompt": "Quais destes arranjos deixam uma senha de banco no arquivo de state? Marque todos os que se aplicam.",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Lê-la do Secrets Manager com uma data source",
+        "why": "Uma data source grava o que lê."
+      },
+      {
+        "text": "`random_password` alimentando `secret_string`",
+        "why": "Duas vezes: como `result` e como `secret_string`."
+      },
+      {
+        "text": "`manage_master_user_password = true` no banco",
+        "why": "O RDS gera e guarda a senha; o state tem o ARN do secret."
+      },
+      {
+        "text": "Uma senha ephemeral no `secret_string_wo`",
+        "why": "O valor chega à AWS e a nada no disco."
+      }
+    ]
+  },
+  "ex-j8fvv67r": {
+    "prompt": "O state está criptografado pelo OpenTofu com `aes_gcm`, e alguém roda `tofu plan` com a passphrase errada. O que acontece?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Decifra em lixo e o plano propõe recriar tudo",
+        "why": "O AES-GCM não decifra em lixo."
+      },
+      {
+        "text": "Volta a ler o state como texto puro",
+        "why": "Um fallback só existe se configurado, e foi removido depois da migração."
+      },
+      {
+        "text": "A execução para: message authentication failed",
+        "why": "A cifra recusa em vez de produzir um state errado."
+      },
+      {
+        "text": "Planeja contra um state vazio",
+        "why": "Nunca chega a um plano."
+      }
+    ]
+  },
+  "ex-0txdfb01": {
+    "prompt": "O backend S3 tem `encrypt = true` e uma chave KMS do próprio time. Quem ainda consegue ler o state em texto puro?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Ninguém: o objeto está criptografado",
+        "why": "Está criptografado nos discos do S3 e é decifrado para todo leitor autorizado."
+      },
+      {
+        "text": "Só funcionários da AWS",
+        "why": "A criptografia mira os discos, e leitores autorizados recebem texto puro."
+      },
+      {
+        "text": "Quem tiver permissão no bucket e na chave",
+        "why": "A chave acrescenta uma segunda permissão, e um leitor com as duas recebe texto puro, assim como qualquer cópia puxada para um laptop."
+      },
+      {
+        "text": "Quem tiver leitura no repositório Git",
+        "why": "O state não está no repositório."
+      }
+    ]
+  },
+  "ex-td57xkak": {
+    "prompt": "Desde qual versão do Terraform o `terraform test` vem embutido, sem ferramenta extra para instalar?",
+    "hint": "Aula 13."
+  },
+  "ex-4t615xm3": {
+    "prompt": "Um time compara o Terratest com o `terraform test` usando um módulo auxiliar de data sources. O que o Terratest consegue conferir e o módulo auxiliar não?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Se a faixa da VPC é a que a AWS informa",
+        "why": "O módulo auxiliar lê isso de volta com `data \"aws_vpc\"`."
+      },
+      {
+        "text": "Uma resposta HTTP de um servidor que acabou de criar",
+        "why": "Um teste em Go pode chamar qualquer coisa, inclusive a máquina que criou; o preço é uma segunda linguagem."
+      },
+      {
+        "text": "Quantas subnets a AWS tem na VPC",
+        "why": "O `data \"aws_subnets\"` no módulo auxiliar responde isso."
+      },
+      {
+        "text": "Se os recursos são destruídos depois",
+        "why": "O `terraform test` desmonta cada arquivo sozinho."
+      }
+    ]
+  },
+  "ex-rwmt9py6": {
+    "prompt": "Quais destes uma execução sob `mock_provider \"aws\" {}`, com overrides adequados, consegue de fato estabelecer? Marque todos os que se aplicam.",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Que o módulo liga o `vpc_id` da subnet à sua VPC",
+        "why": "Essa é a lógica do próprio módulo, que é o que um mock prova."
+      },
+      {
+        "text": "Que uma regra de validação recusa um valor quase certo",
+        "why": "O `expect_failures` funciona sob mock; o arquivo de regras não precisa de AWS."
+      },
+      {
+        "text": "Que a AWS aceita a faixa da subnet dentro da VPC",
+        "why": "Essa pergunta nunca chega a um mock; só um apply contra a API descobre."
+      },
+      {
+        "text": "Que a conta pode criar subnets",
+        "why": "Permissões são resposta da AWS, e um mock não chama API nenhuma."
+      }
+    ]
+  },
+  "ex-pf5acrf2": {
+    "prompt": "Um módulo tem um bloco `check` que avisa quando só uma zona é passada. A Ana quer uma execução que prove que ele dispara. O que a aula diz?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Pôr o check no `expect_failures`, como para uma variável",
+        "why": "A falha de um check é aviso e nunca para um plano, então não há o que esperar."
+      },
+      {
+        "text": "É uma base ruim para um teste, já que só avisa",
+        "why": "Regras que precisam valer ficam numa validation ou precondition, e essas podem ser testadas."
+      },
+      {
+        "text": "Usar `command = apply`, já que checks rodam depois do apply",
+        "why": "Aplicar não muda o fato de um aviso ser aviso."
+      },
+      {
+        "text": "Trocar o check por um bloco `override_data`",
+        "why": "Um override fornece um valor; não testa uma regra."
+      }
+    ]
+  },
+  "ex-qvksw7sp": {
+    "prompt": "Antes do `validate` num pipeline, `terraform init -backend=___` instala providers e módulos sem mexer no state remoto.",
+    "hint": "Aula 13.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ]
+      }
+    ]
+  },
+  "ex-dchb473h": {
+    "prompt": "Um pipeline barra a loja com `trivy config --severity CRITICAL --exit-code 1`, e o código abre a porta 22 para `0.0.0.0/0`. O que a barreira faz?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Deixa passar",
+        "why": "O Trivy classifica esse achado como `HIGH`, e a barreira só falha em `CRITICAL`."
+      },
+      {
+        "text": "Falha, porque a porta 22 é crítica",
+        "why": "A severidade é do autor da regra, e esta regra diz `HIGH`."
+      },
+      {
+        "text": "Falha, porque qualquer achado define o código de saída",
+        "why": "O `--severity` limita quais achados contam para o código de saída."
+      },
+      {
+        "text": "Não consegue decidir offline, e sai com erro",
+        "why": "As severidades do Trivy vêm dentro das checagens, então estão lá offline."
+      }
+    ]
+  },
+  "ex-qae14dqv": {
+    "prompt": "Os ids do Checkov vêm em duas famílias, `CKV_AWS_…` e `CKV2_AWS_…`. O que o `2` marca?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Uma segunda versão, mais rígida, da mesma regra",
+        "why": "São regras diferentes, não versões de uma."
+      },
+      {
+        "text": "Uma regra que precisa do download da Prisma Cloud",
+        "why": "As duas famílias rodaram offline no laboratório."
+      },
+      {
+        "text": "Uma checagem das ligações entre recursos",
+        "why": "É assim que o `CKV2_AWS_6` nota que nenhum public access block aponta para o bucket."
+      },
+      {
+        "text": "Uma regra escrita pelo usuário, não pelo Checkov",
+        "why": "A regra da Ana por acaso usou esse prefixo; as checagens `CKV2_` embutidas são do Checkov."
+      }
+    ]
+  },
+  "ex-cf3vh9qd": {
+    "prompt": "Quais destes silenciam uma regra para todo recurso, inclusive um que alguém acrescente no mês que vem? Marque todos os que se aplicam.",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "`checkov --skip-check CKV2_AWS_5` no pipeline",
+        "why": "Um skip na linha de comando vale para a execução inteira."
+      },
+      {
+        "text": "`#checkov:skip=CKV2_AWS_5:motivo` dentro de um bloco",
+        "why": "Um skip inline cobre aquele recurso."
+      },
+      {
+        "text": "Um skip listado no arquivo de configuração do scanner",
+        "why": "Como a linha de comando, fica longe do código e cobre tudo."
+      },
+      {
+        "text": "`#trivy:ignore:AWS-0132` acima de um bloco",
+        "why": "Vale para o bloco logo abaixo."
+      }
+    ]
+  },
+  "ex-p3pzcqzt": {
+    "prompt": "Daqui a um ano, alguém lê `Suppress comment: No comment provided` num relatório do Checkov. Qual é o problema que a aula aponta?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "O Checkov vai recusar esse skip na próxima versão",
+        "why": "O Checkov não recusa um skip sem motivo; o hábito tem que vir da revisão."
+      },
+      {
+        "text": "Parece um skip posto para o build passar",
+        "why": "Sem motivo para contestar, ninguém o remove."
+      },
+      {
+        "text": "O achado conta como falha mesmo assim",
+        "why": "Ele aparece como `SKIPPED`."
+      },
+      {
+        "text": "O skip expirou e o achado voltou",
+        "why": "O skip inline do Checkov não tem campo de validade; isso é o `exp:` do Trivy."
+      }
+    ]
+  },
+  "ex-2dd7ee0s": {
+    "prompt": "Para ligar uma barreira num repositório que já tem achados, o Checkov registra os achados de hoje como conhecidos num arquivo de ___, e dali em diante só os novos falham.",
+    "hint": "Aula 14.",
+    "blanks": [
+      {
+        "accept": [
+          "baseline",
+          "linha de base"
+        ]
+      }
+    ]
+  },
+  "ex-rk5jpqdz": {
+    "prompt": "Ponha os passos do pipeline na ordem que a aula dá, do que precisa de menos ao que precisa de mais.",
+    "hint": "Aula 15.",
+    "items": [
+      "`fmt -check` e `validate`",
+      "O scanner",
+      "`plan`, com acesso de leitura",
+      "`apply`, com acesso de escrita"
+    ],
+    "trap": "O scanner também não precisa de credenciais; fica depois do validate por ser a mais lenta das duas barreiras baratas."
+  },
+  "ex-9t3r5xww": {
+    "prompt": "No grupo `concurrency` do workflow, a execução 1 espera aprovação e a 2 está pendente. A 3 começa. O que acontece com a 2?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Roda junto com a 3",
+        "why": "Só uma execução do grupo fica em andamento por vez."
+      },
+      {
+        "text": "É cancelada, e a 3 espera no lugar dela",
+        "why": "Um grupo guarda uma execução pendente; o commit mais novo contém toda mudança mesclada antes."
+      },
+      {
+        "text": "A 1 é cancelada para a 2 começar",
+        "why": "O `cancel-in-progress: false` mantém a que está rodando; cancelar um apply no meio é um apply parcial."
+      },
+      {
+        "text": "A 3 falha com erro de lock",
+        "why": "A fila a segura antes de ela chegar ao state."
+      }
+    ]
+  },
+  "ex-0jvjtx3y": {
+    "prompt": "No arquivo do GitLab, `resource_group: production` está só no job `apply`. Um plano salvo ainda pode ficar velho enquanto espera?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Não: o grupo enfileira todos os jobs do pipeline",
+        "why": "Enfileira só os jobs que o declaram."
+      },
+      {
+        "text": "Não: o GitLab replaneja antes de aplicar",
+        "why": "O job de apply aplica o artefato; nada replaneja."
+      },
+      {
+        "text": "Sim, e a recusa de plano velho pega",
+        "why": "Os plans não estão no grupo, então dois podem ser feitos contra um state; o Terraform recusa o que ficou velho."
+      },
+      {
+        "text": "Sim, e o plano velho é aplicado mesmo assim",
+        "why": "O Terraform confere o serial e recusa."
+      }
+    ]
+  },
+  "ex-5k2n2sd1": {
+    "prompt": "A loja leva o pipeline para o GitLab. O que muda na configuração da AWS que deixa os jobs entrarem sem chave?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Uma chave de usuário IAM vai para as variáveis do GitLab",
+        "why": "Essa é a chave guardada que a aula elimina."
+      },
+      {
+        "text": "Nada: a AWS confia em qualquer emissor OpenID Connect",
+        "why": "A AWS confia nos emissores que lhe disserem; o moto, que aceita qualquer token, é o limite do laboratório."
+      },
+      {
+        "text": "O emissor passa a ser `https://gitlab.com`, e as roles casam o `sub` do GitLab",
+        "why": "Como `project_path:example/shop:ref_type:branch:ref:main`."
+      },
+      {
+        "text": "As políticas das roles perdem a permissão do `.tflock`",
+        "why": "Um plan continua travando o state, seja quem for que o rode."
+      }
+    ]
+  },
+  "ex-j4v3a4ss": {
+    "prompt": "Em que a ordem do Atlantis difere do pipeline que a aula montou?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Aplica a partir do pull request, antes do merge",
+        "why": "Um comentário `atlantis apply` aplica, e cada diretório fica travado para um pull request até o merge."
+      },
+      {
+        "text": "Nunca salva um plano",
+        "why": "A diferença que a aula cita é quando ele aplica."
+      },
+      {
+        "text": "Só roda no HCP Terraform",
+        "why": "O Atlantis é um servidor que você mesmo roda."
+      },
+      {
+        "text": "Aplica todo merge sem perguntar a ninguém",
+        "why": "Alguém comenta para aplicar."
+      }
+    ]
+  },
+  "ex-h6ngkyya": {
+    "prompt": "O plano precificado disse 175,73 USD por mês, e o orçamento da loja é 300. Por que não pôr o limite na estimativa?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "A estimativa é um piso: o uso vem por cima",
+        "why": "Tráfego, requisições e gigabytes processados não estão em plano nenhum; 300 deixa folga sem inutilizar o alerta."
+      },
+      {
+        "text": "A AWS recusa orçamento abaixo de 300 USD",
+        "why": "Não existe esse piso; o número é escolha da loja."
+      },
+      {
+        "text": "O imposto soma uns 70% aos preços de lista",
+        "why": "A aula não dá número de imposto; a folga é para o uso."
+      },
+      {
+        "text": "Para que o alerta nunca dispare num mês normal",
+        "why": "Folga demais é a falha que a aula aponta: um alerta que nunca dispara."
+      }
+    ]
+  },
+  "ex-v1je9kvc": {
+    "prompt": "Por que o orçamento avisa em 80% do gasto real e em 100% da previsão, e não em 100% do real?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "A AWS só permite porcentagens abaixo de 100 para gasto real",
+        "why": "A escolha é sobre tempo, não sobre o que a AWS permite."
+      },
+      {
+        "text": "Os dados de cobrança atrasam, então 100% do real avisa dinheiro já gasto",
+        "why": "A previsão é o aviso mais cedo que existe."
+      },
+      {
+        "text": "Em 100% o orçamento para os recursos sozinho",
+        "why": "Um orçamento avisa; não para nada."
+      },
+      {
+        "text": "Previsões são grátis e alertas de gasto real são cobrados",
+        "why": "Nada na aula trata do custo dos alertas."
+      }
+    ]
+  },
+  "ex-vk6en2tn": {
+    "prompt": "As defesas da aula seguem a ordem do custo. Ponha-as nessa ordem, da mais cedo até a rede debaixo de todas.",
+    "hint": "Aula 16.",
+    "items": [
+      "Um preço ao lado do pull request",
+      "Tags que não podem faltar",
+      "Uma busca pelo que não tem dono, e datas de validade",
+      "Um orçamento que avisa depois de o dinheiro sair"
+    ]
+  },
+  "ex-4dddjx6b": {
+    "prompt": "O `price.py` transforma um preço por hora em mensal contando um mês como ___ horas, a convenção do curso de nuvem.",
+    "hint": "Aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "730"
+        ]
+      }
+    ]
+  },
+  "ex-cqk6m7s7": {
+    "prompt": "O `default_tags` define `Environment = \"prod\"`, e um recurso define ele mesmo `tags = { Environment = \"staging\" }`. O que a AWS guarda para esse recurso?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "`prod`",
+        "why": "Os padrões perdem quando o recurso cita a mesma chave."
+      },
+      {
+        "text": "`staging`",
+        "why": "O `tags_all` é a mescla das tags do recurso sobre os padrões, e o valor do recurso vence."
+      },
+      {
+        "text": "As duas, como duas tags",
+        "why": "Uma chave guarda um valor."
+      },
+      {
+        "text": "Nenhuma: o plano falha no conflito",
+        "why": "Não há conflito para falhar; há uma regra de quem vence."
+      }
+    ]
+  },
+  "ex-j967cc28": {
+    "prompt": "Uma empresa ainda roda o Terraform 1.5.7. Sob qual licença está essa versão?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "BSL 1.1, como toda versão desde 2014",
+        "why": "A mudança veio em agosto de 2023 e cobre a 1.6.0 em diante."
+      },
+      {
+        "text": "MPL 2.0",
+        "why": "A BSL cita o Terraform 1.6.0 ou posterior como obra licenciada, então a 1.5 e anteriores ficam na MPL."
+      },
+      {
+        "text": "Apache 2.0",
+        "why": "Essa é a licença do CDK e do Pulumi."
+      },
+      {
+        "text": "A licença da Linux Foundation",
+        "why": "A Linux Foundation abriga o OpenTofu, que está na MPL 2.0; ela não tem licença própria aqui."
+      }
+    ]
+  },
+  "ex-gbhvghwj": {
+    "prompt": "Qual construct do CDK corresponde um a um a um tipo do CloudFormation e não decide nada por você?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "`ec2.Vpc`",
+        "why": "É o nível acima, com padrões como um NAT gateway por zona."
+      },
+      {
+        "text": "`ec2.CfnVPC`",
+        "why": "Os constructs `Cfn…` são tipos do CloudFormation escritos na linguagem do programa."
+      },
+      {
+        "text": "`Tags.of(stack)`",
+        "why": "Acrescenta uma tag a tudo numa stack; não é um recurso."
+      },
+      {
+        "text": "Um padrão que monta vários serviços",
+        "why": "Os padrões são o nível mais alto, e decidem mais."
+      }
+    ]
+  },
+  "ex-66cgjzhr": {
+    "prompt": "De qual ideia vista antes no curso uma stack do Pulumi mais se aproxima?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Uma stack do CloudFormation",
+        "why": "O nome é o mesmo; uma stack do CloudFormation é o state dentro da AWS, e o Pulumi guarda o seu."
+      },
+      {
+        "text": "Um workspace do Terraform",
+        "why": "Uma instância de um projeto com configuração e state próprios, uma por ambiente."
+      },
+      {
+        "text": "Um módulo do Terraform",
+        "why": "Um módulo é código chamado com valores; uma stack é uma instância com state."
+      },
+      {
+        "text": "Um provider",
+        "why": "O Pulumi também tem providers, e são eles que falam com a API."
+      }
+    ]
+  },
+  "ex-80c2jp6t": {
+    "prompt": "Ponha em ordem o que acontece, de uma conta AWS vazia até a rede de um app CDK existir.",
+    "hint": "Aula 17.",
+    "items": [
+      "O `cdk bootstrap` cria a stack `CDKToolkit`",
+      "O app é sintetizado num template",
+      "Um change set é criado a partir do template",
+      "O CloudFormation cria os recursos"
+    ]
+  },
+  "ex-7t62p63v": {
+    "prompt": "O modelo do Terraform tem quatro partes: uma descrição, providers, um plano e um state. O que o CloudFormation muda?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Nada; só a licença difere",
+        "why": "Esse é o OpenTofu."
+      },
+      {
+        "text": "A descrição vira um programa",
+        "why": "Esses são o CDK e o Pulumi; um template do CloudFormation continua sendo descrição."
+      },
+      {
+        "text": "Leva o motor e o state para dentro da AWS",
+        "why": "A AWS calcula o change set, faz as chamadas e guarda o resultado na stack."
+      },
+      {
+        "text": "Elimina a etapa de revisão",
+        "why": "Um change set é a etapa de revisão."
+      }
+    ]
+  },
+  "ex-6yqp4708": {
+    "prompt": "Um playbook feito quase só de tarefas `ansible.builtin.command` roda com `--check`. Quanto isso conta para a Ana?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Pouco",
+        "why": "Um módulo que roda um programa não prevê o que o programa faria, então a checagem diz pouco."
+      },
+      {
+        "text": "Exatamente o que um `terraform plan` diria",
+        "why": "O `--check` vale o quanto cada módulo consegue prever."
+      },
+      {
+        "text": "Nada, porque o `--check` roda cada comando de verdade",
+        "why": "O `--check` não muda nada nas máquinas."
+      },
+      {
+        "text": "Tudo, desde que se acrescente `--diff`",
+        "why": "O `--diff` mostra diferenças de arquivo; também não prevê um programa."
+      }
+    ]
+  },
+  "ex-3s99erwt": {
+    "prompt": "A loja não quer mais o `tree` nos servidores web, que uma tarefa instalou meses atrás. Do que o Ansible precisa?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Apagar a tarefa que o instalou",
+        "why": "O Ansible não guarda registro do que fez, então uma tarefa apagada não remove nada."
+      },
+      {
+        "text": "Uma tarefa que diz `state: absent`",
+        "why": "Remover algo também é um estado a descrever."
+      },
+      {
+        "text": "`ansible-playbook --check` para achá-lo",
+        "why": "Uma checagem relata o que o playbook menciona, e não muda nada."
+      },
+      {
+        "text": "Um handler que recarrega o nginx",
+        "why": "Recarregar não tem relação com um pacote."
+      }
+    ]
+  },
+  "ex-h18yb4x7": {
+    "prompt": "Uma role define `shop_root` no `vars/main.yml`, e o `group_vars/web.yml` define outro valor. Qual valor um host em `web` recebe?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "O do `group_vars/web.yml`",
+        "why": "Valeria contra `defaults`; o `vars` da role vence as variáveis de grupo."
+      },
+      {
+        "text": "O do `vars/main.yml` da role",
+        "why": "Entradas em `vars` vencem o inventário e as variáveis de grupo, então ficam na prática fixas."
+      },
+      {
+        "text": "Nenhum: o Ansible para no conflito",
+        "why": "Uma ordem fixa de precedência decide; não há erro de conflito."
+      },
+      {
+        "text": "O arquivo editado por último",
+        "why": "A precedência é por lugar, não por data."
+      }
+    ]
+  },
+  "ex-tnp057bv": {
+    "prompt": "A tarefa de template que escreve a configuração do nginx notifica `Reload nginx`, e esta execução muda o arquivo. Ponha em ordem o que acontece.",
+    "hint": "Aula 18.",
+    "items": [
+      "A tarefa de configuração relata mudança",
+      "O `Start nginx` roda",
+      "As tarefas do play terminam",
+      "O nginx é recarregado, uma vez"
+    ],
+    "trap": "Um handler não roda onde é notificado; espera o fim do play."
+  },
+  "ex-ee8qj6bd": {
+    "prompt": "Quando a aula diz que o plugin de inventário `aws_ec2` é melhor escolha do que um arquivo escrito pelo Terraform?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Quando máquinas vêm e vão mais rápido do que alguém aplica",
+        "why": "Ele pergunta à nuvem na hora da execução, então a lista nunca é mais velha que a execução."
+      },
+      {
+        "text": "Quando as máquinas não têm Python",
+        "why": "Toda máquina gerenciada precisa de Python, seja quem for que monte o inventário."
+      },
+      {
+        "text": "Quando alguém deve revisar o inventário num pull request",
+        "why": "Essa é a vantagem do arquivo: texto puro no repositório."
+      },
+      {
+        "text": "Quando o Terraform deve rodar o Ansible na criação",
+        "why": "Isso é o `local-exec`, que roda uma vez e nunca mais."
+      }
+    ]
+  },
+  "ex-4hfg3sqk": {
+    "prompt": "Um minion do Salt não foi informado de onde está seu master. Que host ele procura?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "`localhost`",
+        "why": "Rodar do disco local é outra opção, `file_client: local`."
+      },
+      {
+        "text": "`master`",
+        "why": "Esse é o nome do papel, não o host padrão."
+      },
+      {
+        "text": "`salt`",
+        "why": "O `config.get master` respondeu `salt`, como o agente do Puppet procura `puppet`."
+      },
+      {
+        "text": "`puppet`",
+        "why": "Esse é o padrão do agente do Puppet."
+      }
+    ]
+  },
+  "ex-vsv8jn6k": {
+    "prompt": "Num arranjo Puppet com servidor, do que precisa a inclusão de uma máquina nova além de instalar o agente?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Uma chave SSH com que o servidor possa entrar",
+        "why": "É assim que o Ansible alcança uma máquina; o agente do Puppet conecta de dentro para fora."
+      },
+      {
+        "text": "Um certificado assinado pela autoridade certificadora",
+        "why": "O agente prova quem é com ele, e por padrão o servidor Puppet roda essa autoridade."
+      },
+      {
+        "text": "Uma linha num arquivo de inventário num laptop",
+        "why": "Inventário é a lista de máquinas do Ansible para onde ele empurra."
+      },
+      {
+        "text": "Um output do Terraform com o endereço da máquina",
+        "why": "O agente pergunta ao servidor; ninguém precisa do endereço dele para iniciar uma execução."
+      }
+    ]
+  },
+  "ex-s0r9qjtj": {
+    "prompt": "O `state.show_sls` listou os três states da Ana com `order: 10000`, `10001` e `10002`. O que esses números dizem?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Quanto tempo cada state levou, em microssegundos",
+        "why": "As durações estão na saída da execução, em milissegundos."
+      },
+      {
+        "text": "A ordem do arquivo, salvo um requisito",
+        "why": "O Salt numera os states na ordem escrita, a menos que um requisito diga outra coisa."
+      },
+      {
+        "text": "Um grafo feito de relações, como no Puppet",
+        "why": "No Puppet o grafo decide primeiro; o Salt parte do arquivo."
+      },
+      {
+        "text": "Prioridades, onde a mais alta roda primeiro",
+        "why": "O 10000 rodou primeiro."
+      }
+    ]
+  },
+  "ex-cpf00816": {
+    "prompt": "Além de aplicar states, o que o canal aberto de um master do Salt para seus minions deixa você fazer?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Rodar qualquer comando avulso em todos os minions de uma vez",
+        "why": "O `salt '*' cmd.run 'uptime'` faz do master um controle remoto além de uma descrição."
+      },
+      {
+        "text": "Assinar os certificados dos minions para o Puppet",
+        "why": "Os certificados do Puppet vêm da autoridade do próprio Puppet."
+      },
+      {
+        "text": "Guardar um arquivo de state do que cada minion tem",
+        "why": "Nenhuma dessas ferramentas guarda um state ao estilo do Terraform do que fez."
+      },
+      {
+        "text": "Pular o Jinja para o YAML ser lido como escrito",
+        "why": "O Jinja roda antes de o YAML ser lido, com master ou sem."
+      }
+    ]
+  },
+  "ex-vzd8edzc": {
+    "prompt": "O Salt tem o `salt-ssh` para máquinas sem minion, e o Ansible tem o `ansible-pull`. O que a aula tira desses dois?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Que push e pull são um padrão, não um muro",
+        "why": "Cada ferramenta pode rodar do outro jeito; o arranjo de fábrica é o padrão."
+      },
+      {
+        "text": "Que Salt e Ansible são a mesma ferramenta",
+        "why": "Diferem em linguagem, agente e ordem; os dois comandos só cruzam a linha."
+      },
+      {
+        "text": "Que agentes estão obsoletos",
+        "why": "A aula mantém agentes para máquinas longevas que precisam ficar como descritas."
+      },
+      {
+        "text": "Que um timer é necessário para os dois",
+        "why": "Nenhum dos dois comandos trata de timer."
+      }
+    ]
+  },
+  "ex-k5wp8h4n": {
+    "prompt": "A Ana faz o build do template fixado duas vezes seguidas com a mesma versão e o mesmo commit, e os dois ids de imagem diferem. O build é reprodutível, no sentido da aula?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Não: reprodutível quer dizer imagem idêntica byte a byte",
+        "why": "A aula diz com todas as letras que não quer dizer isso."
+      },
+      {
+        "text": "Sim: os timestamps diferem, e nada instalado difere",
+        "why": "Mesmo software nas mesmas versões a partir do mesmo template; os ids diferem por timestamps dentro da imagem."
+      },
+      {
+        "text": "Não: a fixação por digest foi ignorada",
+        "why": "A linha `Run command` mostra que o build partiu do digest."
+      },
+      {
+        "text": "Não dá para saber sem baixar do Docker Hub",
+        "why": "O `dpkg-query` dentro de cada imagem responde o que está instalado."
+      }
+    ]
+  },
+  "ex-tb92he16": {
+    "prompt": "O que o post-processor `manifest` entrega ao passo seguinte de um pipeline de imagens?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "A própria imagem, enviada a um registry",
+        "why": "Ele grava um arquivo; enviar é outro passo."
+      },
+      {
+        "text": "Um arquivo dizendo qual imagem foi feita, de qual commit",
+        "why": "O `manifest.json` tem o id do artefato e o `custom_data` com versão e commit."
+      },
+      {
+        "text": "O plano do Terraform que distribui a imagem",
+        "why": "A passagem para o Terraform é a versão, num `terraform.tfvars` revisado."
+      },
+      {
+        "text": "O resultado de rodar a imagem",
+        "why": "Rodar e conferir a imagem é um passo à parte que o pipeline acrescenta."
+      }
+    ]
+  },
+  "ex-w3y4j6p7": {
+    "prompt": "A loja quer que o registry garanta que uma tag de versão, uma vez enviada, nunca nomeie outro conteúdo. Para o que a aula aponta?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Marcar todo build também como `latest`",
+        "why": "O `latest` é o ponteiro que todo build move."
+      },
+      {
+        "text": "Um registry que recusa enviar uma tag que já existe",
+        "why": "O Amazon ECR, por exemplo, pode ser configurado assim."
+      },
+      {
+        "text": "Fazer o build com `pull = false`",
+        "why": "Isso impede o Packer de buscar a base; não diz nada sobre a tag do resultado."
+      },
+      {
+        "text": "Um `LABEL` com a versão dentro da imagem",
+        "why": "Um label diz de onde a imagem veio; não impede uma tag de ser movida."
+      }
+    ]
+  },
+  "ex-pwhggf59": {
+    "prompt": "A loja passa a ter vários servidores web atrás de um load balancer. Como a aula diz que uma imagem nova chega a eles?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "O Ansible entra em cada servidor e atualiza o nginx",
+        "why": "Isso edita máquinas em execução, o que o modelo imutável não faz."
+      },
+      {
+        "text": "Cada servidor baixa o `latest` num timer",
+        "why": "O `latest` nomeia imagens diferentes em dias diferentes, e nada o revisa."
+      },
+      {
+        "text": "Por um launch template e um instance refresh",
+        "why": "O Auto Scaling group substitui suas instâncias em lotes para casar com o novo id de imagem."
+      },
+      {
+        "text": "Um `terraform apply -replace` por servidor, à mão",
+        "why": "O formato é um id de imagem novo num lugar só, e o grupo faz a substituição."
+      }
+    ]
+  },
+  "ex-x7b38hvx": {
+    "prompt": "Um pipeline de imagens acabou de fazer o build de uma versão nova, e todo provisioner saiu com zero. O que ele deve fazer antes de publicar?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "Nada mais: o Packer já conferiu",
+        "why": "O Packer confere códigos de saída, e o `1.0.0` passou neles e não subia."
+      },
+      {
+        "text": "Subir a imagem e perguntar algo a ela",
+        "why": "Uma requisição que reprova o pipeline quando a resposta está errada, como a aula 13 roda um módulo antes de confiar nele."
+      },
+      {
+        "text": "Retaguear a versão anterior como a nova",
+        "why": "Uma versão nomeia uma imagem para sempre."
+      },
+      {
+        "text": "Rodar `packer validate` no template de novo",
+        "why": "O validate confere o template; nunca olha a imagem."
+      }
+    ]
+  }
+}
