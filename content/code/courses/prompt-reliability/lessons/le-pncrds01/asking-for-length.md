@@ -36,7 +36,7 @@ number and not the word in front of it. A language model would more often write 
 sentence than chop a long one, and it would also miss a word limit now and then. **A length you ask
 for is a length you check**, the same way you check a label.
 
-The reply is still JSON, though, and that is the difference that matters here. The request changed
+The reply is still JSON, though. The request changed
 what was written, and the closing brace was part of what was written. **Asking shapes the answer; the
 cap only cuts it.**
 

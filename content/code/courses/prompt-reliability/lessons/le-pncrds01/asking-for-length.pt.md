@@ -36,7 +36,7 @@ não a palavra antes dele. Um modelo de linguagem escreveria mais vezes uma fras
 do que cortaria uma longa, e também erraria um limite de palavras de vez em quando. **Um tamanho que
 você pede é um tamanho que você confere**, do mesmo jeito que confere um rótulo.
 
-Só que a resposta continua sendo JSON, e é essa a diferença que importa aqui. O pedido mudou o que
+Só que a resposta continua sendo JSON. O pedido mudou o que
 foi escrito, e a chave de fechamento fazia parte do que foi escrito. **Pedir dá forma à resposta; o
 limite só a corta.**
 
@@ -56,7 +56,7 @@ ana@lab:~/triage$ pl compare runs/v4.jsonl runs/words.jsonl --answers
 ```
 
 O `pl latency` mostra os tempos de resposta que o substituto calcula e, na última linha, os tokens de
-saída da execução. A média foi de 38.0 para 36.8, pouco mais de um token por resposta, e a resposta
+saída da execução. A média foi de 38,0 para 36,8, pouco mais de um token por resposta, e a resposta
 mais longa de 50 para 48. É pouco, e a figura de *Tokens, não palavras* diz por quê: o resumo é a
 única parte da resposta que pode encolher, e muitos resumos já tinham menos de doze palavras.
 `--answers` compara o que cada resposta disse, e não se ela passou: as quarenta categorias saíram

@@ -71,7 +71,6 @@ parada é o único campo que diz se uma resposta está completa**, e lê-lo não
 ## Para que serve um limite
 
 **Um limite é uma proteção contra saída descontrolada, nunca um jeito de pedir brevidade.** Respostas
-que se repetem ou continuam escrevendo além do formato são uma falha que todo mundo que trabalha com
-isso já viu, e um limite interrompe uma delas antes que ela encha um log ou uma fatura. Uma proteção
+que se repetem ou continuam escrevendo além do formato são uma falha conhecida na prática, e um limite interrompe uma delas antes que ela encha um log ou uma fatura. Uma proteção
 que dispara no tráfego comum está no lugar errado, e trinta, aqui, disparou em trinta e nove
 mensagens de quarenta. Pedir uma resposta mais curta é outra ferramenta, e é a próxima seção.

@@ -23,7 +23,7 @@ sentence is seven words and eight tokens, because the full stop counts. Put it i
 and it doubles to sixteen: the two braces, the colon and the four quotation marks are a token each,
 and so is the field's name.
 
-**A real tokenizer splits differently, and a provider charges by its own count.** Common words tend
+**A real tokeniser splits differently, and a provider charges by its own count.** Common words tend
 to be one token, rare or long words are split into pieces, and punctuation is often merged with what
 stands next to it. So the lab's counts are nobody's bill. What carries over is the proportion this
 lesson is about: in a JSON answer, a large share of what the model writes is structure.

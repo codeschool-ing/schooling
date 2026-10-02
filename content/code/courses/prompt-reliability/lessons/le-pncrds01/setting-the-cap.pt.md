@@ -16,7 +16,7 @@ output tokens: mean 38.0, max 50
 ```
 
 Nas setenta mensagens, o conjunto de desenvolvimento e o de reserva juntos, a resposta mais longa
-teve 50 tokens e a média foi 38.0. Um limite de 50 passaria todas hoje. **Um limite exatamente no
+teve 50 tokens e a média foi 38,0. Um limite de 50 passaria todas hoje. **Um limite exatamente no
 máximo medido não tem folga**, e o prompt não vai ficar igual. A versão da aula 21 pede um quarto
 campo, uma nota de confiança, e aqui ela roda sob um limite de 50:
 

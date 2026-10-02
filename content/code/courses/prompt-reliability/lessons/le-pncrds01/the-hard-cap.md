@@ -71,7 +71,7 @@ field that says whether a reply is complete**, and reading it costs nothing.
 ## What a cap is for
 
 **A cap is a guard against runaway output, never a way to ask for brevity.** Replies that repeat
-themselves or keep writing past the format are a failure every practitioner has seen, and a cap
+themselves or keep writing past the format are a familiar failure in practice, and a cap
 stops one before it fills a log or a bill. A guard that fires on ordinary traffic is in the wrong
 place, and thirty, here, fired on thirty-nine messages out of forty. Asking for a shorter answer is a
 different tool, and it is the next section.
