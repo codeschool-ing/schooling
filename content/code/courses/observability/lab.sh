@@ -364,6 +364,85 @@ compactor:
   delete_request_store: filesystem
 LABFILE
   mkdir -p "$SHOP/otel"
+  cat > "$SHOP/otel/collector-fanout.yaml" <<'LABFILE'
+# The Collector of collector.yaml, sending every trace to one more place
+# (lesson 13): an OTLP endpoint of the kind a hosted product gives you, with the
+# key that identifies the account read from the environment.
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  fluent_forward:
+    endpoint: 0.0.0.0:24224
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 400
+  batch: {}
+  # A batch from Docker mixes every container's lines under one resource, so
+  # the lines are regrouped by their own "service" field, one resource each,
+  # before that field becomes the resource's service.name.
+  groupbyattrs/service:
+    keys: [service]
+  transform/service:
+    error_mode: ignore
+    log_statements:
+      - context: resource
+        statements:
+          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
+  transform/logs:
+    error_mode: ignore
+    log_statements:
+      - context: log
+        conditions:
+          - IsMatch(body, "^\\{")
+        statements:
+          - merge_maps(attributes, ParseJSON(body), "upsert")
+          - set(severity_text, attributes["level"])
+          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
+          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
+
+exporters:
+  debug:
+    verbosity: basic
+  otlp_grpc/jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+  zipkin:
+    endpoint: http://zipkin:9411/api/v2/spans
+  otlp_http/loki:
+    endpoint: http://loki:3100/otlp
+  otlp_http/vendor:
+    endpoint: http://vendor:4318
+    encoding: json
+    headers:
+      api-key: ${env:VENDOR_API_KEY}
+
+service:
+  telemetry:
+    metrics:
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp_grpc/jaeger, zipkin, otlp_http/vendor]
+    logs:
+      receivers: [fluent_forward]
+      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
+      exporters: [otlp_http/loki]
+LABFILE
+  mkdir -p "$SHOP/otel"
   cat > "$SHOP/otel/collector-logs.yaml" <<'LABFILE'
 # The same Collector, sending every log line to three stores at once:
 # Loki, Elasticsearch and Graylog. Lesson 9 switches to it.
@@ -719,6 +798,7 @@ opentelemetry-distro==0.66b0
 opentelemetry-instrumentation-flask==0.66b0
 opentelemetry-instrumentation-requests==0.66b0
 opentelemetry-instrumentation-psycopg==0.66b0
+sentry-sdk==2.71.0
 LABFILE
   mkdir -p "$SHOP/services/common"
   cat > "$SHOP/services/common/__init__.py" <<'LABFILE'
@@ -1269,10 +1349,12 @@ LABFILE
 wheels() {
   # The image installs from these and from nothing else, so a build never
   # depends on the index answering on the day.
-  [ -d "$SHOP/wheels" ] && return
+  # A copy of the requirements they were downloaded for says when to fetch again.
+  cmp -s "$SHOP/requirements.txt" "$SHOP/wheels/.requirements" && return
   pip3 download -q -d "$SHOP/wheels" --python-version 3.12 --only-binary=:all: \
     --platform manylinux_2_17_x86_64 --platform manylinux2014_x86_64 \
-    --platform manylinux_2_28_x86_64 -r "$SHOP/requirements.txt"
+    --platform manylinux_2_28_x86_64 -r "$SHOP/requirements.txt" &&
+    cp "$SHOP/requirements.txt" "$SHOP/wheels/.requirements"
 }
 
 wait_for() {
