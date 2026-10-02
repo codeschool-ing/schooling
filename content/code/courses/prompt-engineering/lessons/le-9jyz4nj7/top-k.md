@@ -67,6 +67,6 @@ context: trigram after '<s> the'
 Here k = 2 keeps `coffee` and `café`, 48.1% between them, and throws away more than half of what
 the model considered likely: `bread`, `cat` and `tea` included.
 
-**Top-k cuts the same number of words whether the model is sure or torn.** A k that is right for
+**Top-k keeps the same number of words whether the model is sure or torn.** A k that is right for
 one context is too tight for the next and too loose for the one after. That is the problem the
 next section solves.

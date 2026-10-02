@@ -55,7 +55,7 @@ context: trigram after 'and the'
   café      13.3%  #####
 ```
 
-São precisas quatro palavras para passar de 80%: 35,3, 58,8, 76,4 e então 88,2. `café` e `terrace`
+São necessárias quatro palavras para passar de 80%: 35,3, 58,8, 76,4 e então 88,2. `café` e `terrace`
 empataram em 11,8%, e o `toylm` mantém a empatada que vem primeiro na ordem alfabética, a mesma
 regra que usa na temperatura 0.
 

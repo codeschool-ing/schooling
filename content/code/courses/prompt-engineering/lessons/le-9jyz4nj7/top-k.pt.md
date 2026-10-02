@@ -67,6 +67,6 @@ context: trigram after '<s> the'
 Aqui k = 2 mantém `coffee` e `café`, 48,1% somadas, e joga fora mais da metade do que o modelo
 considerou provável, `bread`, `cat` e `tea` incluídas.
 
-**O top-k corta o mesmo número de palavras esteja o modelo seguro ou dividido.** Um k certo para um
+**O top-k mantém o mesmo número de palavras esteja o modelo seguro ou dividido.** Um k certo para um
 contexto é apertado demais para o seguinte e frouxo demais para o outro. É esse o problema que a
 próxima seção resolve.

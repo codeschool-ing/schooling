@@ -26,7 +26,7 @@ context: trigram after 'coffee is'
   cold      15.1%  ######
 ```
 
-As frações foram achatadas antes de o top-p medi-las, então foram precisas quatro palavras para
+As frações foram achatadas antes de o top-p medi-las, então foram necessárias quatro palavras para
 chegar a 80%. Em 0,5 a primeira já tinha 86,8% depois da divisão (lição 13), então o núcleo é
 `hot` sozinha:
 
@@ -75,7 +75,7 @@ diz isso, siga.
 
 O conjunto de controles é escolha do provedor. No momento em que este curso foi escrito (2026), a
 temperatura está em quase todas, o top-p é muito oferecido, e o top-k falta em algumas APIs
-conhecidas. Os nomes também variam: você pode encontrar `top_p`, `topP` ou `nucleus`. **Leia a
+conhecidas. Os nomes também variam: uma API escreve `top_p` e outra `topP`. **Leia a
 referência da API do modelo que você chama, confira a data na página, e não suponha que um parâmetro
 existe porque outro provedor o tem.** Uma API pode recusar um parâmetro que não conhece ou ignorá-lo
 em silêncio, e o segundo caso é o que custa uma tarde.

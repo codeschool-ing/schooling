@@ -74,7 +74,7 @@ documentation says so, follow it.
 
 The set of controls is the provider's choice. At the time of writing (2026), temperature is
 nearly universal, top-p is widely offered, and top-k is missing from some well-known APIs. The
-names differ too: you may find `top_p`, `topP` or `nucleus`. **Read the API reference of the
+names differ too: one API spells it `top_p` and another `topP`. **Read the API reference of the
 model you call, check the date on the page, and do not assume a parameter exists because another
 provider has it.** An API may reject a parameter it does not know or quietly ignore it, and the
 second is the one that costs an afternoon.
