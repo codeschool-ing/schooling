@@ -13,8 +13,10 @@
 # compose.override.yaml, whose contents the lesson shows; simulated
 # customers, five requests a second, started in the background and left
 # buying for thirty minutes so that every window holds real traffic; and the
-# faults: payments failing every fourth charge for forty seconds, then every
-# tenth for six minutes. Times, counts, ids and dates differ on every run.
+# faults: payments failing every fiftieth charge for twelve seconds at the
+# start, so that the counter of failed checkouts exists before anything is
+# measured; then every fourth for forty seconds; then every tenth for six
+# minutes. Times, counts, ids and dates differ on every run.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -38,6 +40,12 @@ curl -sG localhost:9090/api/v1/query --data-urlencode "query=$1" |
 SH
 quiet "chmod +x promq"
 quiet "docker compose run -d --rm loadgen python -m loadgen.load 5 4200"
+# One failed charge, thirty minutes before anything is measured, so that the
+# storefront's counter for code="502" already exists when the blip happens.
+sleep 20
+quiet "echo '{\"fail_every\": 50}' > faults/payments.json"
+sleep 12
+quiet "rm faults/payments.json"
 
 block rules
 put prometheus/rules/burn.yml <<'YAML'
