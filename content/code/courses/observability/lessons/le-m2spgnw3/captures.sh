@@ -16,7 +16,8 @@
 # itself, built by `lab.sh reset mesh`; the promq helper from lesson 5;
 # compose.override.yaml and
 # k8s/mesh.yaml, whose contents the lesson shows; simulated customers, five
-# requests a second, started in the background; payments told to fail every
+# requests a second, started in the background; twenty more checkouts sent
+# through Envoy before its counters are read; payments told to fail every
 # tenth charge and later to wait 2500 ms; the kind cluster, created by
 # `lab.sh kind-up`, with Istio's two images copied into it by
 # `lab.sh kind-load`; and waiting for each rollout. Ids, times, counts and
@@ -48,6 +49,8 @@ block front
 on "sed -n '/^  listeners:/,/^      filter_chains:/p' envoy/envoy.yaml"
 on "curl -s -X POST localhost:10000/checkout -H 'Content-Type: application/json' -d '{\"sku\": \"kettle\", \"qty\": 1, \"card\": \"4111 1111 1111 1111\"}'"
 on "docker logs shop-envoy-1 2>&1 | grep '\"listener\":\"storefront\"' | tail -1 | jq -c ."
+quiet "for i in \$(seq 1 20); do curl -s -o /dev/null -X POST localhost:10000/checkout -H 'Content-Type: application/json' -d '{\"sku\": \"kettle\", \"qty\": 1, \"card\": \"4111 1111 1111 1111\"}'; done"
+sleep 8
 on "curl -s localhost:9901/stats | grep -E '^http\.storefront\.downstream_rq_(total|2xx|4xx|5xx):'"
 on "curl -s localhost:9901/stats/prometheus | grep -E '^envoy_cluster_upstream_rq_time_bucket\{envoy_cluster_name=\"storefront\",le=\"(25|50|100)\"\}'"
 
@@ -78,8 +81,8 @@ quiet "rm faults/payments.json compose.override.yaml && docker compose up -d ord
 block cost
 on "docker stats --no-stream --format '{{.Name}}  {{.CPUPerc}}  {{.MemUsage}}' shop-envoy-1 shop-storefront-1 shop-orders-1"
 
-lab kind-up
-lab kind-load docker.io/istio/pilot:1.30.5 docker.io/istio/proxyv2:1.30.5
+lab kind-up >/dev/null 2>&1
+lab kind-load docker.io/istio/pilot:1.30.5 docker.io/istio/proxyv2:1.30.5 >/dev/null 2>&1
 quiet "mkdir -p k8s"
 put k8s/mesh.yaml <<'YAML'
 apiVersion: apps/v1
@@ -122,7 +125,7 @@ YAML
 quiet "kubectl wait --for=condition=Ready node --all --timeout=180s"
 
 block istio
-on "istioctl install --set profile=minimal --set hub=docker.io/istio -y 2>&1 | tail -2"
+on "istioctl install --set profile=minimal --set hub=docker.io/istio -y >/dev/null 2>&1 && kubectl -n istio-system get deployments"
 on "kubectl create namespace shop-mesh && kubectl label namespace shop-mesh istio-injection=enabled"
 on "kubectl -n shop-mesh apply -f k8s/mesh.yaml"
 quiet "kubectl -n shop-mesh rollout status deploy/server deploy/client --timeout=180s"
@@ -147,12 +150,12 @@ YAML
 on "cat k8s/strict.yaml"
 on "kubectl apply -f k8s/strict.yaml"
 sleep 10
-on "kubectl -n outside exec probe -- python -c \"import urllib.request; print(urllib.request.urlopen('http://server.shop-mesh/', timeout=3).status)\" 2>&1 | tail -1"
+on "kubectl -n outside exec probe -- python -c \"import urllib.request; print(urllib.request.urlopen('http://server.shop-mesh/', timeout=3).status)\" 2>&1 | tail -2"
 on "kubectl -n shop-mesh logs deploy/client -c client --since=20s | wc -l"
 
 block linkerd
 on "linkerd version --client"
-on "linkerd install --crds --set installGatewayAPI=true | grep '^kind:' | sort | uniq -c"
+on "linkerd install --crds --set installGatewayAPI=true 2>/dev/null | grep '^kind:' | sort | uniq -c"
 on "linkerd install --ignore-cluster | grep -E '^kind:|image:' | sort | uniq -c"
 
 quiet "kubectl delete namespace shop-mesh outside"
