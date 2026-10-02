@@ -46,7 +46,7 @@ ana@lab:~/triage$ grep -n -A5 "^def review" promptlab/standin.py
 Ele pontua a mensagem de novo com a mesma tabela de palavras-chave com que respondeu. Essa leitura
 deixa de fora o que o prompt de triagem acrescentava, os exemplos e a ordem da lista, já que o
 prompt de revisão não traz nenhum dos dois. Então ele diz WRONG em três casos: a resposta não é
-analisável, o rótulo que ele mesmo põe em primeiro difere do da resposta, ou os dois melhores
+JSON válido, o rótulo que ele mesmo põe em primeiro difere do da resposta, ou os dois melhores
 rótulos dele estão próximos. Fora isso, diz OK.
 
 Essa regra foi escolhida para se parecer com um relato honesto da autoavaliação. **Um revisor só

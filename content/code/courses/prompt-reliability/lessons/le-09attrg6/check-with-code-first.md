@@ -21,13 +21,13 @@ model's review of the same two replies cost two calls and was no more right.
 
 Most of what goes wrong with this course's answers is visible to a program:
 
-- **Parsing**: the reply is JSON, and nothing else.
-- **Fields**: the fields asked for, and no others. That is what caught the copied order number in
+- Parsing: the reply is JSON, and nothing else.
+- Fields: the fields asked for, and no others. That is what caught the copied order number in
   lesson 1.
-- **Labels**: each value is from its list.
-- **A canary**: `pl check --canary` fails a reply that repeats a word the prompt must never reveal,
+- Labels: each value is from its list.
+- A canary: `pl check --canary` fails a reply that repeats a word the prompt must never reveal,
   the test lesson 10 used for leaked instructions.
-- **Length and words**: lesson 6 counted lengths and lesson 12 checked tone with rules.
+- Length and words: lesson 6 counted lengths and lesson 12 checked tone with rules.
 
 Every one of those is a line of code with a right answer, and none of them should be a question for
 a model.

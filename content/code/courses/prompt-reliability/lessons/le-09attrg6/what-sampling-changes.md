@@ -58,7 +58,7 @@ configuration says little about another. Measure the check on the settings you w
 The stand-in's rule makes this split exact. For real models the research is mixed, and one result
 is worth knowing by name. *Large Language Models Cannot Self-Correct Reasoning Yet* (Huang and
 others, 2023) asked models to review and revise their own answers to reasoning problems with no
-outside information, and found that this often failed to improve them and sometimes made them
+outside information. It found that this often failed to improve them and sometimes made them
 worse, by talking a right answer into a wrong one, as the reviewer did with `h27` above. The authors
 also pointed out that some earlier reports of self-correction working had relied on knowing, from
 outside the model, when an answer was wrong.

@@ -40,9 +40,9 @@ h27  right  WRONG: the category should be billing
 h27  wrong  OK
 ```
 
-`t37` é um deslize quatro vezes. A temperatura 0 responde delivery, que está certo, e quatro
+`t37` é um deslize repetido quatro vezes. A temperatura 0 responde delivery, que está certo, e quatro
 amostras sortearam outra coisa; o revisor diz *the category should be delivery* para cada uma. A
-quinta amostra estava certa e levou uma dúvida, como na execução com temperatura 0.
+quinta amostra estava certa e mesmo assim foi posta em dúvida, como na execução com temperatura 0.
 
 `h27` é o cartão-presente de novo, e um equívoco. Quatro amostras disseram billing, o rótulo em que
 o substituto acredita, e o revisor aprovou as quatro. Uma amostra sorteou account, o rótulo da
@@ -60,7 +60,7 @@ produção.
 A regra do substituto torna essa divisão exata. Para modelos reais a pesquisa é mista, e vale saber
 um resultado pelo nome. *Large Language Models Cannot Self-Correct Reasoning Yet* (Huang e outros,
 2023) pediu a modelos que revisassem e corrigissem as próprias respostas a problemas de raciocínio
-sem nenhuma informação de fora, e viu que isso muitas vezes não as melhorava e às vezes as piorava,
+sem nenhuma informação de fora. O artigo viu que isso muitas vezes não as melhorava e às vezes as piorava,
 convencendo o modelo a trocar uma resposta certa por uma errada, como o revisor fez com `h27` acima.
 Os autores também apontaram que alguns relatos anteriores de autocorreção bem-sucedida dependiam de
 saber, de fora do modelo, quando uma resposta estava errada.

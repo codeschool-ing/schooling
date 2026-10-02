@@ -4,7 +4,7 @@ version: 1
 ---
 
 As duas primeiras marcações certas da autoavaliação na execução com temperatura 0 foram respostas
-que não eram analisáveis. Um programa acha essas sem perguntar a ninguém:
+que não eram JSON válido. Um programa acha essas sem perguntar a ninguém:
 
 ```
 ana@lab:~/triage$ pl check runs/v6.jsonl --failures | grep json
@@ -22,13 +22,13 @@ custou duas chamadas e não acertou mais.
 
 Quase tudo o que dá errado nas respostas deste curso é visível para um programa:
 
-- **Análise**: a resposta é JSON, e nada além disso.
-- **Campos**: os campos pedidos, e nenhum outro. Foi isso que pegou o número de pedido copiado na
+- Formato: a resposta é JSON, e nada além disso.
+- Campos: os campos pedidos, e nenhum outro. Foi isso que pegou o número de pedido copiado na
   aula 1.
-- **Rótulos**: cada valor está na sua lista.
-- **Um canário**: o `pl check --canary` reprova uma resposta que repete uma palavra que o prompt
+- Rótulos: cada valor está na sua lista.
+- Um canário: o `pl check --canary` reprova uma resposta que repete uma palavra que o prompt
   nunca deve revelar, o teste que a aula 10 usou para instruções vazadas.
-- **Tamanho e palavras**: a aula 6 contou tamanhos e a aula 12 verificou o tom com regras.
+- Tamanho e palavras: a aula 6 contou tamanhos e a aula 12 verificou o tom com regras.
 
 Cada um desses é uma linha de código com resposta certa, e nenhum deveria ser uma pergunta para um
 modelo.
@@ -52,5 +52,5 @@ A ordem vem dos custos:
 **Meça a verificação do modelo como qualquer outra verificação**: contra rótulos que uma pessoa deu,
 em precisão e revocação, na configuração que você roda. E lembre da aula 19 ao escolher o
 verificador. Um revisor que tem os mesmos pontos cegos do modelo que respondeu deixa passar os
-mesmos erros, e outro modelo, ou o mesmo com evidência que a primeira chamada não tinha, é o jeito
+mesmos erros. Outro modelo, ou o mesmo com evidência que a primeira chamada não tinha, é o jeito
 de fazer os erros dele serem outros.
