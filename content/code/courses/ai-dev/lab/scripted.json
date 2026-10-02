@@ -1,5 +1,249 @@
 [
   {
+    "id": "comma-iterate",
+    "when": {
+      "contains": [
+        "1.234,56",
+        "unified diff"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "diff --git a/shop/money.py b/shop/money.py\nindex 3eb6322..b9a7ed0 100644\n--- a/shop/money.py\n+++ b/shop/money.py\n@@ -2,8 +2,11 @@\n \n \n def parse_price(text: str) -> int:\n-    \"\"\"Turn a price as people write it into cents: '12.90' -> 1290.\"\"\"\n-    units, _, cents = text.strip().replace(\",\", \".\").partition(\".\")\n+    \"\"\"Turn a price as people write it into cents: '12.90' or '12,90' -> 1290.\"\"\"\n+    text = text.strip().replace(\",\", \".\")\n+    units, _, cents = text.partition(\".\")\n+    if not units.lstrip(\"-\").isdigit() or not (cents == \"\" or cents.isdigit()) or len(cents) > 2:\n+        raise ValueError(f\"not a price: {text!r}\")\n     cents = (cents + \"00\")[:2]\n     return int(units) * 100 + int(cents)\n \n"
+      }
+    ]
+  },
+  {
+    "id": "comma-diff",
+    "when": {
+      "contains": [
+        "Traceback",
+        "unified diff"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "diff --git a/shop/money.py b/shop/money.py\nindex 9af0e26..3eb6322 100644\n--- a/shop/money.py\n+++ b/shop/money.py\n@@ -3,7 +3,7 @@\n \n def parse_price(text: str) -> int:\n     \"\"\"Turn a price as people write it into cents: '12.90' -> 1290.\"\"\"\n-    units, _, cents = text.strip().partition(\".\")\n+    units, _, cents = text.strip().replace(\",\", \".\").partition(\".\")\n     cents = (cents + \"00\")[:2]\n     return int(units) * 100 + int(cents)\n \n"
+      }
+    ]
+  },
+  {
+    "id": "comma-plan",
+    "when": {
+      "contains": [
+        "Do not write code yet"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "1. Write the tests first, from what the change must do: '12,90' and '12,9' parse like '12.90' and '12.9', the existing dot keeps working, and '1.234,56' is refused, because a dot and a comma in one price leave no way to tell which is the decimal separator.\n2. Change parse_price to read a comma as the decimal separator, keeping the arithmetic in integers as CONVENTIONS.md requires.\n3. Run the whole suite, not only the new tests.\n"
+      }
+    ]
+  },
+  {
+    "id": "comma-vague",
+    "when": {
+      "contains": [
+        "Fix parse_price"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Here is a version that handles both separators:\n\ndef parse_price(text: str) -> int:\n    return round(float(text.strip().replace(\",\", \".\")) * 100)\n"
+      }
+    ]
+  },
+  {
+    "id": "commit-v2-# How this p",
+    "when": {
+      "contains": [
+        "commit message",
+        "Examples of this project",
+        "# How this project is written"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Write down the project's conventions"
+      }
+    ]
+  },
+  {
+    "id": "commit-v2-isdigit",
+    "when": {
+      "contains": [
+        "commit message",
+        "Examples of this project",
+        "isdigit"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Accept a decimal comma in parse_price"
+      }
+    ]
+  },
+  {
+    "id": "commit-v2-Money is an ",
+    "when": {
+      "contains": [
+        "commit message",
+        "Examples of this project",
+        "Money is an integer number of cents"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Keep prices as integer cents"
+      }
+    ]
+  },
+  {
+    "id": "commit-v2-FREE_SHIPPIN",
+    "when": {
+      "contains": [
+        "commit message",
+        "Examples of this project",
+        "class Cart:"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Add a cart with lines, a discount and shipping"
+      }
+    ]
+  },
+  {
+    "id": "commit-v2-UnknownCoupo",
+    "when": {
+      "contains": [
+        "commit message",
+        "Examples of this project",
+        "UnknownCoupon"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Add coupon codes with a percentage off"
+      }
+    ]
+  },
+  {
+    "id": "commit-v2-# shop",
+    "when": {
+      "contains": [
+        "commit message",
+        "Examples of this project",
+        "# shop"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Explain the project in a README"
+      }
+    ]
+  },
+  {
+    "id": "commit-v1-# How this p",
+    "when": {
+      "contains": [
+        "commit message",
+        "# How this project is written"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Add CONVENTIONS.md"
+      }
+    ]
+  },
+  {
+    "id": "commit-v1-isdigit",
+    "when": {
+      "contains": [
+        "commit message",
+        "isdigit"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Updated the parse_price function to support a comma as the decimal separator and added validation for invalid inputs."
+      }
+    ]
+  },
+  {
+    "id": "commit-v1-Money is an ",
+    "when": {
+      "contains": [
+        "commit message",
+        "Money is an integer number of cents"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Added parse_price and format_price functions to handle money as integer cents, with tests."
+      }
+    ]
+  },
+  {
+    "id": "commit-v1-FREE_SHIPPIN",
+    "when": {
+      "contains": [
+        "commit message",
+        "class Cart:"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Implemented Cart and Line dataclasses with subtotal, discount, shipping and total calculations."
+      }
+    ]
+  },
+  {
+    "id": "commit-v1-UnknownCoupo",
+    "when": {
+      "contains": [
+        "commit message",
+        "UnknownCoupon"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Added coupon support."
+      }
+    ]
+  },
+  {
+    "id": "commit-v1-# shop",
+    "when": {
+      "contains": [
+        "commit message",
+        "# shop"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Updated README."
+      }
+    ]
+  },
+  {
     "id": "review-coupons",
     "when": {
       "contains": [
