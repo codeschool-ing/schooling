@@ -41,7 +41,7 @@ ana@lab:~/pe$ toylm generate "the café closes at" --samples 7
 ```
 
 That is already a small vote, counted by eye: `six` five times, `noon on sunday` twice. Both are
-true in the café's corpus, which is the point of the next section. A large model sampled the same
+true in the café's corpus, and the next reading section comes back to what that means for a vote. A large model sampled the same
 way gives chains that differ in wording, in the order of the steps, and sometimes in a step that
 goes wrong.
 

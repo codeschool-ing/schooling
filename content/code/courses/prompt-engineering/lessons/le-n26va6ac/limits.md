@@ -95,7 +95,7 @@ of the same prompt repeats the same pull**, so more samples would most likely ma
 majority firmer, not weaker. The fix is in the prompt: step back to the rules first (lesson 25),
 and then vote among chains that start from them.
 
-The same is true of `toylm`'s seven samples above. `six` won five to two, and on a Sunday it is
+The same is true of `toylm`'s seven samples in the previous reading section. `six` won five to two, and on a Sunday it is
 the wrong answer: the café closes at noon. **A vote measures agreement between samples, not
 agreement with the facts.**
 

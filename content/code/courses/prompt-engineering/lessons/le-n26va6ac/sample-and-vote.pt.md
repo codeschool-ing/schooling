@@ -3,7 +3,7 @@ title: Amostrar várias cadeias e votar
 version: 1
 ---
 
-A lição 26 terminou numa cadeia que lia bem e estava errada. O conserto tentador é deixar essa
+A lição 26 terminou numa cadeia que soava bem e estava errada. O conserto tentador é deixar essa
 cadeia mais cuidadosa: uma instrução melhor, um exemplo mais longo. **A autoconsistência
 (*self-consistency*) segue outro caminho: pede várias cadeias de pensamento para a mesma pergunta e
 fica com a resposta final a que a maioria chega.** Ela não tenta acertar nenhuma cadeia sozinha.
@@ -41,7 +41,8 @@ ana@lab:~/pe$ toylm generate "the café closes at" --samples 7
 ```
 
 Isso já é uma pequena votação, contada de olho: `six` cinco vezes, `noon on sunday` duas. As duas
-são verdadeiras no corpus do café, e esse é o assunto da próxima seção. Um modelo grande
+são verdadeiras no corpus do café, e a próxima seção de leitura volta ao que isso quer dizer numa
+votação. Um modelo grande
 amostrado do mesmo jeito dá cadeias que variam na redação, na ordem dos passos e, às vezes, num
 passo que dá errado.
 

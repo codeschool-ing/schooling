@@ -96,7 +96,7 @@ A maioria é `yes`, e o manual diz `no`. As três cadeias erradas têm uma causa
 deixariam a maioria errada mais firme, e não mais fraca. O conserto está no prompt: recuar até as
 regras primeiro (lição 25), e então votar entre cadeias que partem delas.
 
-O mesmo vale para as sete amostras do `toylm` acima. `six` ganhou por cinco a dois, e num domingo
+O mesmo vale para as sete amostras do `toylm` na seção de leitura anterior. `six` ganhou por cinco a dois, e num domingo
 é a resposta errada: o café fecha ao meio-dia. **Uma votação mede a concordância entre as
 amostras, não a concordância com os fatos.**
 
