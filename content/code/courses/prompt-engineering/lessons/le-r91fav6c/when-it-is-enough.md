@@ -4,7 +4,7 @@ version: 1
 ---
 
 The usual way to judge a prompt is to try it on one or two inputs, read the replies, and decide it
-looks good. That judges the inputs you happened to pick, and it is how the weak prompt of the last
+looks good. That judges the inputs you happened to pick, and it is how the weak prompt of the previous
 reading section would pass: try it on a glowing review, get `positive`, ship it. **A prompt is
 judged by a test set**: a handful of inputs whose right answers were decided by a person
 beforehand, run through the prompt, and counted.
@@ -83,7 +83,8 @@ Three of eight. Read the five failures by kind, because they are not the same pr
 - `r8` is a label in the wrong language. The prompt never said which language the labels are in.
 - `r5` is the sarcasm, read literally.
 
-Four of the five are things the strong prompt says out loud. Its replies:
+The strong prompt says all five out loud: the form, the questions, the language and the sarcasm.
+Its replies:
 
 ```
 ana@lab:~/pe$ cat replies-strong.txt

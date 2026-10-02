@@ -83,7 +83,8 @@ Três de oito. Leia as cinco falhas por tipo, porque não são o mesmo problema:
 - `r8` é um rótulo no idioma errado. O prompt nunca disse em que idioma os rótulos estão.
 - `r5` é a ironia, lida ao pé da letra.
 
-Quatro das cinco são coisas que o prompt forte diz com todas as letras. As respostas dele:
+O prompt forte diz as cinco com todas as letras: a forma, as perguntas, o idioma e a ironia. As
+respostas dele:
 
 ```
 ana@lab:~/pe$ cat replies-strong.txt
