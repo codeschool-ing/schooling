@@ -133,9 +133,11 @@ EOF
 # on localhost:4566, a home directory that is new for this run, and the
 # environment ana's shell has. Root sets the lab up; CMD runs as ana.
 #
-# LAB_HOSTS=1 keeps the laptop's own network instead, which is what lessons 18
-# to 20 need: the containers of `hosts up` are on a bridge of the laptop's, and
-# Packer talks to its Docker daemon. moto then listens on the laptop itself.
+# LAB_HOSTS=1 keeps the laptop's own network instead, which is what lesson 18
+# needs: the containers of `hosts up` are on a bridge of the laptop's. moto then
+# listens on the laptop itself, so two such runs at once share it. Lesson 20's
+# Packer half does not run in here at all: ana has no access to the Docker
+# daemon, so that lesson's captures.sh runs it outside the lab and says so.
 run() {
   local id; id=$(date +%s%N)
   mkdir -p "$RUNS/$id"
