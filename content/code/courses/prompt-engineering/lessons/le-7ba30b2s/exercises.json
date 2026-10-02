@@ -1,0 +1,476 @@
+[
+  {
+    "id": "ex-tvxk5m71",
+    "version": 1,
+    "section": "thinking-out-loud",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is chain-of-thought prompting?",
+    "hint": "What comes before the answer?",
+    "choices": [
+      {
+        "text": "Asking for the intermediate steps before the answer",
+        "correct": true,
+        "why": "Right. The answer is then predicted with the steps in front of it."
+      },
+      {
+        "text": "Asking the model to explain its answer after giving it, so that a reader can follow the reasoning it used",
+        "correct": false,
+        "why": "Steps written after the answer cannot shape it. The order is the point."
+      },
+      {
+        "text": "Chaining several models, each one passing its answer to the next",
+        "correct": false,
+        "why": "That is a pipeline of calls. Chain of thought is one reply with steps in it."
+      },
+      {
+        "text": "Repeating the question until the answer stops changing",
+        "correct": false,
+        "why": "That is closer to lesson 27's idea, and it is not this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsn4davg",
+    "version": 1,
+    "section": "thinking-out-loud",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is R$ 66 not a random mistake for the café order?",
+    "hint": "Compute the bill if nobody had a loyalty card.",
+    "choices": [
+      {
+        "text": "It is a typo for 56",
+        "correct": false,
+        "why": "Nothing in the order gives 56. 66 has a clear source."
+      },
+      {
+        "text": "The model rounded R$ 54 up to the nearest ten and added the cake again",
+        "correct": false,
+        "why": "No arithmetic in the order produces that path; 66 is the full price."
+      },
+      {
+        "text": "The model added the 9 stamps as reais",
+        "correct": false,
+        "why": "9 added to anything here does not give 66."
+      },
+      {
+        "text": "It is the bill with every coffee paid",
+        "correct": true,
+        "why": "Right: 3 x 12 + 2 x 15 = 66. The loyalty step was skipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggtbxrdp",
+    "version": 1,
+    "section": "thinking-out-loud",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does writing the steps help a model that only ever predicts the next token?",
+    "hint": "Lesson 1's loop: what is the next token predicted from?",
+    "choices": [
+      {
+        "text": "It switches the model into a separate reasoning mode with its own memory",
+        "correct": false,
+        "why": "There is no separate memory: the written text is the only scratch space."
+      },
+      {
+        "text": "The model checks each step against the handbook",
+        "correct": false,
+        "why": "Nothing checks the steps. That is why a chain can be wrong."
+      },
+      {
+        "text": "Each step becomes text the next tokens are predicted from",
+        "correct": true,
+        "why": "Yes. By the time it writes `Answer:`, `Total: 24 + 30 = R$ 54` is already in the text."
+      },
+      {
+        "text": "Longer replies are drawn at a lower temperature",
+        "correct": false,
+        "why": "Length does not change the temperature."
+      }
+    ]
+  },
+  {
+    "id": "ex-xpfybjph",
+    "version": 1,
+    "section": "thinking-out-loud",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which question gains least from chain of thought?",
+    "hint": "Does it need an intermediate result?",
+    "choices": [
+      {
+        "text": "How much does a table pay for three coffees and two cakes with a card on nine stamps?",
+        "correct": false,
+        "why": "That needs the loyalty step before the sum."
+      },
+      {
+        "text": "What does a flat white cost?",
+        "correct": true,
+        "why": "Right. One step, nothing to write in between."
+      },
+      {
+        "text": "If the café opens at 07:00 on weekdays, how many hours is it open from Monday to Saturday?",
+        "correct": false,
+        "why": "Two intermediate results: hours a day, then days."
+      },
+      {
+        "text": "Two refunds of R$ 60 and R$ 70 for one customer: does either need the manager?",
+        "correct": false,
+        "why": "Each amount is compared with R$ 100 first."
+      }
+    ]
+  },
+  {
+    "id": "ex-8aztppk9",
+    "version": 1,
+    "section": "thinking-out-loud",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of asking for a chain to what it puts in the prompt.",
+    "hint": "Few-shot shows; zero-shot tells.",
+    "pairs": [
+      {
+        "left": "few-shot chain of thought",
+        "right": "a worked example with its steps, then the new question"
+      },
+      {
+        "left": "zero-shot chain of thought",
+        "right": "an instruction to work step by step, with no example"
+      },
+      {
+        "left": "direct prompt",
+        "right": "the question and a request for the answer only"
+      }
+    ],
+    "right_distractors": [
+      "a second call that asks for the general rule"
+    ]
+  },
+  {
+    "id": "ex-79fzcgkj",
+    "version": 1,
+    "section": "thinking-out-loud",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is a few-shot chain worth its extra tokens over \"think step by step\"?",
+    "hint": "What does the example teach that the instruction does not?",
+    "choices": [
+      {
+        "text": "When you need a set layout of steps, or the model keeps skipping one",
+        "correct": true,
+        "why": "Yes. The example fixes the format and how far to break the problem down."
+      },
+      {
+        "text": "Always: zero-shot chains do not work",
+        "correct": false,
+        "why": "Zero-shot chains do work, and are usually enough to start with."
+      },
+      {
+        "text": "When the question has a single step and the model answers it in one line",
+        "correct": false,
+        "why": "Then no chain is needed at all."
+      },
+      {
+        "text": "When you want the reply to be shorter",
+        "correct": false,
+        "why": "An example in the prompt makes the input longer; it does not shorten the reply."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5mr2yp4",
+    "version": 1,
+    "section": "thinking-out-loud",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Python line printed `66 54 29`. Which number is the correct bill for the café order with the loyalty card?",
+    "hint": "The second number applied the free coffee.",
+    "value": 54,
+    "tolerance": 0,
+    "unit": "R$"
+  },
+  {
+    "id": "ex-jqgvetnn",
+    "version": 1,
+    "section": "using-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why fix a last line such as `Answer: 54` in the instruction?",
+    "hint": "The chain is full of numbers.",
+    "choices": [
+      {
+        "text": "So the model gets the arithmetic right",
+        "correct": false,
+        "why": "The marker helps reading the reply, not the reasoning."
+      },
+      {
+        "text": "Because the provider rejects replies with no answer line",
+        "correct": false,
+        "why": "Nothing rejects them; your program has to decide."
+      },
+      {
+        "text": "So a program finds the result",
+        "correct": true,
+        "why": "Right: `grep \"^Answer:\"` found it in one line."
+      },
+      {
+        "text": "It makes the reply cheaper",
+        "correct": false,
+        "why": "It adds a few tokens. Its value is in parsing."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkh4t6zg",
+    "version": 1,
+    "section": "using-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reply comes back with a chain but no `Answer:` line. What should the program do?",
+    "hint": "Lesson 19's attitude to output.",
+    "choices": [
+      {
+        "text": "Use the last number in the text, since the answer usually comes last",
+        "correct": false,
+        "why": "The last number may be a step. Guessing is how a wrong total slips through."
+      },
+      {
+        "text": "Use the largest number in the text",
+        "correct": false,
+        "why": "Nothing makes the largest number the answer."
+      },
+      {
+        "text": "Treat it as failed",
+        "correct": true,
+        "why": "Right. Retry or report it: picking a number from the chain is a guess among its intermediate results."
+      },
+      {
+        "text": "Assume the answer was zero",
+        "correct": false,
+        "why": "Inventing a value is worse than reporting a failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjtka4rq",
+    "version": 1,
+    "section": "using-it",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`tok count` gave 5 tokens for `direct.txt` and 94 for `chain.txt`. How many more output tokens did the chain cost?",
+    "hint": "Subtract.",
+    "value": 89,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-xfw035x7",
+    "version": 1,
+    "section": "using-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service sets the maximum output to 20 tokens to keep replies short, then turns on chain of thought. What breaks?",
+    "hint": "Lesson 15, and the 94 tokens above.",
+    "choices": [
+      {
+        "text": "The chain is cut before its `Answer:` line, so the reply has no answer",
+        "correct": true,
+        "why": "Right. The 94-token chain would stop a fifth of the way through."
+      },
+      {
+        "text": "Nothing; the limit applies only to the answer line",
+        "correct": false,
+        "why": "The limit counts every output token, steps included."
+      },
+      {
+        "text": "The model shortens the steps to fit",
+        "correct": false,
+        "why": "It is not told about the limit and does not plan for it; it is simply stopped."
+      },
+      {
+        "text": "The input becomes too long",
+        "correct": false,
+        "why": "The limit is on output; the input is unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-sg4qh7mz",
+    "version": 1,
+    "section": "using-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With a model trained to reason before answering, what should you check in the provider's documentation?",
+    "hint": "Two things the section names.",
+    "choices": [
+      {
+        "text": "Whether you still need to write \"think step by step\" in each prompt you send to it",
+        "correct": false,
+        "why": "With such models the instruction adds little; that is not the thing to look up."
+      },
+      {
+        "text": "Whether its chains are guaranteed correct",
+        "correct": false,
+        "why": "No chain is guaranteed; documentation will not say otherwise."
+      },
+      {
+        "text": "Which course lists its price",
+        "correct": false,
+        "why": "Prices and models change; the provider's dated documentation is the source."
+      },
+      {
+        "text": "Whether hidden reasoning is billed, and whether you set its amount",
+        "correct": true,
+        "why": "Yes. Reasoning you cannot see is still output you pay for."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0z1kg34",
+    "version": 1,
+    "section": "using-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The 42 chain reads carefully and its arithmetic is right line by line. What is wrong with it?",
+    "hint": "Check each step against the handbook, not only the sums.",
+    "choices": [
+      {
+        "text": "Its arithmetic is wrong in the last line, where the total is added",
+        "correct": false,
+        "why": "12 + 30 is 42. The arithmetic holds; a fact does not."
+      },
+      {
+        "text": "It forgot to include the cake",
+        "correct": false,
+        "why": "The cake is there: 2 x 15 = R$ 30."
+      },
+      {
+        "text": "Nothing; it is a different but valid reading of the loyalty rule",
+        "correct": false,
+        "why": "The handbook says the tenth coffee is free, nothing about a new card being free."
+      },
+      {
+        "text": "It invents a second free coffee the handbook does not give",
+        "correct": true,
+        "why": "Right. Fluent steps on a false fact; the error is in the facts, not the arithmetic."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1xg49k3",
+    "version": 1,
+    "section": "using-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the lesson say a chain of thought is NOT?",
+    "hint": "Can you read the model's real process off it?",
+    "choices": [
+      {
+        "text": "Text that helps the answer along",
+        "correct": false,
+        "why": "It is that: the steps condition the answer."
+      },
+      {
+        "text": "Something you pay for as output tokens",
+        "correct": false,
+        "why": "It is that too: 94 tokens in the example."
+      },
+      {
+        "text": "A faithful record of the reasoning",
+        "correct": true,
+        "why": "Right. Tidy steps do not prove the answer came from them."
+      },
+      {
+        "text": "A place where a wrong turn in the reasoning can be spotted by a reader",
+        "correct": false,
+        "why": "It is: the 42 chain's wrong rule is visible in its second line."
+      }
+    ]
+  },
+  {
+    "id": "ex-hmmma5np",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the parts of a zero-shot chain-of-thought exchange in order.",
+    "hint": "From what you send to what your program keeps.",
+    "items": [
+      "The question",
+      "The instruction to work step by step and end with an `Answer:` line",
+      "The model's steps",
+      "The `Answer:` line your program extracts"
+    ]
+  },
+  {
+    "id": "ex-5r8spt39",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about chain of thought are true? Choose all that apply.",
+    "hint": "Mechanism, cost and trust.",
+    "choices": [
+      {
+        "text": "The steps become text the answer is predicted from",
+        "correct": true,
+        "why": "Yes: that is the mechanism."
+      },
+      {
+        "text": "It multiplies output tokens",
+        "correct": true,
+        "why": "Yes: 94 against 5 in the lesson."
+      },
+      {
+        "text": "Correct arithmetic in every line makes the answer correct",
+        "correct": false,
+        "why": "The 42 chain had correct sums on a false fact."
+      },
+      {
+        "text": "A fixed answer line makes the reply parseable",
+        "correct": true,
+        "why": "Yes: one `grep` found it."
+      }
+    ]
+  },
+  {
+    "id": "ex-thwtkth0",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Chain of thought helps most on problems whose answer needs ___ results, such as a rule applied before a sum.",
+    "hint": "Results in the middle, between question and answer.",
+    "blanks": [
+      {
+        "accept": [
+          "intermediate",
+          "intermediary",
+          "in-between"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
