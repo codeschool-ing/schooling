@@ -29,10 +29,10 @@ E o Envoy já o registrou, no log de acesso, como uma linha JSON por requisiçã
 
 ```
 ana@obs:~/shop$ docker logs shop-envoy-1 2>&1 | grep '"listener":"storefront"' | tail -1 | jq -c .
-{"attempts":1,"code":201,"flags":"-","listener":"storefront","method":"POST","ms":64,"path":"/checkout","upstream_ms":"62"}
+{"attempts":1,"code":201,"flags":"-","listener":"storefront","method":"POST","ms":36,"path":"/checkout","upstream_ms":"35"}
 ```
 
-Os campos são escolha do laboratório, definidos no `envoy.yaml`. `ms` é a requisição inteira como o Envoy a viu, 64 milissegundos, e `upstream_ms` são os 62 que a storefront levou para responder; a parte do próprio proxy foi de dois. O `attempts` importa na próxima seção.
+Os campos são escolha do laboratório, definidos no `envoy.yaml`. `ms` é a requisição inteira como o Envoy a viu, 36 milissegundos, e `upstream_ms` são os 35 que a storefront levou para responder; a parte do próprio proxy foi de um. O `attempts` importa na próxima seção.
 
 O Envoy mantém contadores para cada listener e cada upstream, na porta de administração:
 
@@ -49,11 +49,11 @@ Vinte e uma requisições, todas 2xx: a de cima e mais vinte mandadas pelo Envoy
 ```
 ana@obs:~/shop$ curl -s localhost:9901/stats/prometheus | grep -E '^envoy_cluster_upstream_rq_time_bucket\{envoy_cluster_name="storefront",le="(25|50|100)"\}'
 envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name="storefront",le="25"} 0
-envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name="storefront",le="50"} 20
+envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name="storefront",le="50"} 18
 envoy_cluster_upstream_rq_time_bucket{envoy_cluster_name="storefront",le="100"} 21
 ```
 
-Os buckets são cumulativos, como em todo histograma do Prometheus: nenhuma das 21 respondeu em até 25 milissegundos, 20 em até 50, e todas em até 100. O Prometheus pode coletar esse endpoint como qualquer outro alvo, o que dá um painel de latência para cada serviço atrás do proxy sem instrumentação nenhuma.
+Os buckets são cumulativos, como em todo histograma do Prometheus: nenhuma das 21 respondeu em até 25 milissegundos, 18 em até 50, e todas em até 100. O Prometheus pode coletar esse endpoint como qualquer outro alvo, o que dá um painel de latência para cada serviço atrás do proxy sem instrumentação nenhuma.
 
 **Nada disso precisou de uma linha do código da storefront.** Essa é toda a promessa de um mesh, e também
 o seu limite: o Envoy sabe o método, o caminho, o status e o tempo, e nada sobre a chaleira.

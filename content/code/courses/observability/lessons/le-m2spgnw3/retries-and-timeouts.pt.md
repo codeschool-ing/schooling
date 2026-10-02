@@ -31,11 +31,11 @@ Noventa segundos depois, as taxas por serviço e status:
 
 ```
 ana@obs:~/shop$ ./promq 'sum by (job, code) (rate(http_server_requests_total{job=~"storefront|payments",route=~"/checkout|/charge"}[1m]))'
-code=200 job=payments  9.02222222222222
-code=201 job=storefront  8.510543741528343
-code=402 job=storefront  0.488856298468991
-code=503 job=storefront  0
+code=200 job=payments  8.999999999999998
+code=201 job=storefront  8.488888888888887
+code=402 job=storefront  0.5111111111111111
 code=503 job=payments  0.9999999999999999
+code=503 job=storefront  0
 ```
 
 Payments responde umas nove cobranças por segundo com 200 e uma com 503, então a falha está funcionando. A storefront responde 201, e 402 para os cartões recusados dos clientes simulados; a série de 503 dela está em zero. **Nenhum cliente viu a falha.**
@@ -51,7 +51,7 @@ O Envoy tentou de novo 90 das 905 requisições que mandou a payments, e as 90 d
 
 ```
 ana@obs:~/shop$ docker logs shop-envoy-1 2>&1 | grep '"listener":"payments"' | grep -m1 '"attempts":2' | jq -c .
-{"attempts":2,"code":200,"flags":"-","listener":"payments","method":"POST","ms":16,"path":"/charge"}
+{"attempts":2,"code":200,"flags":"-","listener":"payments","method":"POST","ms":25,"path":"/charge"}
 ```
 
 **O mesh deixou uma falha invisível para os clientes, e isso é ao mesmo tempo o uso e o perigo dele.**
@@ -74,10 +74,10 @@ Depois, o timeout. Payments recebe a ordem de levar 2,5 segundos por cobrança, 
 
 ```
 ana@obs:~/shop$ docker logs shop-envoy-1 2>&1 | grep '"listener":"payments"' | tail -1 | jq -c .
-{"attempts":1,"code":504,"flags":"UT","listener":"payments","method":"POST","ms":2000,"path":"/charge"}
+{"attempts":1,"code":504,"flags":"UT","listener":"payments","method":"POST","ms":1999,"path":"/charge"}
 ```
 
-O Envoy desistiu aos 2000 milissegundos e respondeu 504 ele mesmo; a flag `UT` quer dizer timeout da requisição ao upstream. Não tentou de novo, porque o timeout da rota vale para todas as tentativas juntas e já tinha se esgotado.
+O Envoy desistiu aos 1999 milissegundos e respondeu 504 ele mesmo; a flag `UT` quer dizer timeout da requisição ao upstream. Não tentou de novo, porque o timeout da rota vale para todas as tentativas juntas e já tinha se esgotado.
 
 ```
 ana@obs:~/shop$ curl -s -X POST localhost:8080/checkout -H 'Content-Type: application/json' -d '{"sku": "kettle", "qty": 1, "card": "4111 1111 1111 1111"}' -w ' %{http_code}\n'

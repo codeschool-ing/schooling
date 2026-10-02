@@ -30,11 +30,11 @@ the rates by service and status:
 
 ```
 ana@obs:~/shop$ ./promq 'sum by (job, code) (rate(http_server_requests_total{job=~"storefront|payments",route=~"/checkout|/charge"}[1m]))'
-code=200 job=payments  9.02222222222222
-code=201 job=storefront  8.510543741528343
-code=402 job=storefront  0.488856298468991
-code=503 job=storefront  0
+code=200 job=payments  8.999999999999998
+code=201 job=storefront  8.488888888888887
+code=402 job=storefront  0.5111111111111111
 code=503 job=payments  0.9999999999999999
+code=503 job=storefront  0
 ```
 
 Payments answers about nine charges a second with 200 and one with 503, so the fault is working. The storefront answers 201, and 402 for the cards the simulated customers get declined; its 503 series is zero. **No customer saw the failure.**
@@ -50,7 +50,7 @@ Envoy retried 90 of the 905 requests it sent to payments, and all 90 retries suc
 
 ```
 ana@obs:~/shop$ docker logs shop-envoy-1 2>&1 | grep '"listener":"payments"' | grep -m1 '"attempts":2' | jq -c .
-{"attempts":2,"code":200,"flags":"-","listener":"payments","method":"POST","ms":16,"path":"/charge"}
+{"attempts":2,"code":200,"flags":"-","listener":"payments","method":"POST","ms":25,"path":"/charge"}
 ```
 
 **The mesh made a failure invisible to customers, and that is both its use and its danger.** Three
@@ -71,10 +71,10 @@ Then the timeout. Payments is told to take 2.5 seconds per charge, longer than t
 
 ```
 ana@obs:~/shop$ docker logs shop-envoy-1 2>&1 | grep '"listener":"payments"' | tail -1 | jq -c .
-{"attempts":1,"code":504,"flags":"UT","listener":"payments","method":"POST","ms":2000,"path":"/charge"}
+{"attempts":1,"code":504,"flags":"UT","listener":"payments","method":"POST","ms":1999,"path":"/charge"}
 ```
 
-Envoy gave up at 2000 milliseconds and answered 504 itself; the flag `UT` means upstream request timeout. It did not retry, because the route's timeout covers every attempt together and it had run out.
+Envoy gave up at 1999 milliseconds and answered 504 itself; the flag `UT` means upstream request timeout. It did not retry, because the route's timeout covers every attempt together and it had run out.
 
 ```
 ana@obs:~/shop$ curl -s -X POST localhost:8080/checkout -H 'Content-Type: application/json' -d '{"sku": "kettle", "qty": 1, "card": "4111 1111 1111 1111"}' -w ' %{http_code}\n'

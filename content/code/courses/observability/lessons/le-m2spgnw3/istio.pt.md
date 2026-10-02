@@ -7,13 +7,12 @@ O Istio coloca um Envoy ao lado de cada pod e configura todos eles a partir de u
 `istiod`. O laboratório instala o perfil mínimo dele no cluster kind, com imagens do Docker Hub:
 
 ```
-ana@obs:~/shop$ istioctl install --set profile=minimal --set hub=docker.io/istio -y 2>&1 | grep '✔'
-✔ Istio core installed ⛵️
-✔ Istiod installed 🧠
-✔ Installation complete
+ana@obs:~/shop$ istioctl install --set profile=minimal --set hub=docker.io/istio -y >/dev/null 2>&1 && kubectl -n istio-system get deployments
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+istiod   1/1     1            1           7s
 ```
 
-Um namespace com o rótulo `istio-injection=enabled` diz ao Istio para acrescentar o proxy a todo pod
+No perfil mínimo, o plano de controle inteiro é esse único Deployment. Um namespace com o rótulo `istio-injection=enabled` diz ao Istio para acrescentar o proxy a todo pod
 criado nele. Duas cargas pequenas vão para lá: um servidor, e um cliente que faz requisições a ele duas
 vezes por segundo:
 
@@ -30,8 +29,8 @@ deployment.apps/client created
 ```
 ana@obs:~/shop$ kubectl -n shop-mesh get pods
 NAME                      READY   STATUS    RESTARTS   AGE
-client-6fd79bfb55-69sgd   2/2     Running   0          4s
-server-dd589bb9d-lrh7v    2/2     Running   0          4s
+client-6fd79bfb55-qwd9p   2/2     Running   0          5s
+server-dd589bb9d-54l7k    2/2     Running   0          6s
 ```
 
 **Cada pod está `2/2`**: dois contêineres onde o manifesto pediu um. Quais dois:
@@ -56,7 +55,7 @@ source_workload="client"
 source_principal="spiffe://cluster.local/ns/shop-mesh/sa/default"
 destination_workload="server"
 response_code="200"
-connection_security_policy="mutual_tls"} 41
+connection_security_policy="mutual_tls"} 42
 ```
 
-Quarenta e uma requisições de `client` para `server`, todas 200, contadas pelo proxy do servidor (`reporter="destination"`). Os rótulos são o que o mesh acrescenta: que carga chamou qual, com que identidade, e como a conexão foi protegida. Nenhuma das aplicações foi alterada para produzir nada disso.
+Quarenta e duas requisições de `client` para `server`, todas 200, contadas pelo proxy do servidor (`reporter="destination"`). Os rótulos são o que o mesh acrescenta: que carga chamou qual, com que identidade, e como a conexão foi protegida. Nenhuma das aplicações foi alterada para produzir nada disso.

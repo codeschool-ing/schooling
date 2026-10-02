@@ -10,12 +10,12 @@ O Envoy do laboratório, medido depois da seção de novas tentativas, ao lado d
 
 ```
 ana@obs:~/shop$ docker stats --no-stream --format '{{.Name}}  {{.CPUPerc}}  {{.MemUsage}}' shop-envoy-1 shop-storefront-1 shop-orders-1
-shop-envoy-1  0.38%  16.94MiB / 15.72GiB
-shop-storefront-1  3.68%  35.13MiB / 15.72GiB
-shop-orders-1  78.91%  48.2MiB / 15.72GiB
+shop-envoy-1  0.47%  16.93MiB / 15.72GiB
+shop-storefront-1  3.61%  35.69MiB / 15.72GiB
+shop-orders-1  65.35%  48.06MiB / 15.72GiB
 ```
 
-Dezessete megabytes e menos de meio por cento de uma CPU, contra 35 megabytes da storefront que ele atende. Um proxy é barato. A versão do mesh é um por pod.
+Dezessete megabytes e menos de meio por cento de uma CPU, contra 36 megabytes da storefront que ele atende. Um proxy é barato. A versão do mesh é um por pod.
 
 Os custos vêm de quatro tipos:
 
