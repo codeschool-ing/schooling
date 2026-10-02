@@ -5,7 +5,7 @@ version: 1
 
 Adding facts to a prompt is half the job. **The other half is laying them out so the model can
 tell the material from the instruction**, and the instruction from the material that only looks
-like one. This is the prompt that produced the second reply in the previous section, as ana saved
+like one. This is the prompt the second reply in the previous section was written for, as ana saved
 it in `with-context.txt`:
 
 ```

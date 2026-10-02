@@ -33,8 +33,8 @@ context: trigram after 'opens at'
 ```
 
 `seven`, and the context line says why. **`toylm` saw `opens at` and nothing else.** The one word
-that should decide the answer, `sunday`, is four words back, outside the window, and as far as the
-model is concerned it was never written. It answered the question it could see, and that question
+that should decide the answer, `sunday`, is the fifth word from the end, outside the window, and as
+far as the model is concerned it was never written. It answered the question it could see, and that question
 was about an ordinary day.
 
 A large model's window is enormous by comparison, and the rule is the same at its edge: text that

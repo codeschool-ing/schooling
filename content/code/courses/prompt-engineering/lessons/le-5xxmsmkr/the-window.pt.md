@@ -33,7 +33,7 @@ context: trigram after 'opens at'
 ```
 
 `seven`, e a linha de contexto diz por quê. **O `toylm` viu `opens at` e mais nada.** A única
-palavra que deveria decidir a resposta, `sunday`, está quatro palavras atrás, fora da janela, e
+palavra que deveria decidir a resposta, `sunday`, é a quinta a contar do fim, fora da janela, e
 para o modelo ela nunca foi escrita. Ele respondeu à pergunta que conseguia ver, e essa pergunta era
 sobre um dia comum.
 

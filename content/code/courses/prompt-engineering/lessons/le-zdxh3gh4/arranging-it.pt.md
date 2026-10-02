@@ -5,7 +5,7 @@ version: 1
 
 Pôr fatos num prompt é metade do trabalho. **A outra metade é dispô-los de modo que o modelo
 distinga o material da instrução**, e a instrução do material que só parece uma. Este é o prompt
-que produziu a segunda resposta da seção anterior, como a ana o salvou em `with-context.txt`:
+para o qual a segunda resposta da seção anterior foi escrita, como a ana o salvou em `with-context.txt`:
 
 ```
 <handbook>
@@ -46,7 +46,7 @@ ganha uma borda visível, o que importa para a penúltima decisão.
 
 O manual e a mensagem vêm primeiro; o que fazer com eles vem por último. Com poucas linhas de
 material a ordem quase não importa. **Com páginas dele, o pedido posto no fim é o texto mais
-próximo de onde a resposta começa**, e vários guias de prompting de fornecedores recomendam essa
+próximo de onde a resposta começa**, e vários guias de prompting de provedores recomendam essa
 ordem para documentos longos no momento em que este curso é escrito (2026). Confira o guia do
 modelo que você usa, porque o conselho depende de como uma família específica de modelos foi
 treinada.
@@ -82,7 +82,7 @@ tokens  words  chars  file
 ```
 
 O contexto multiplicou o prompt por mais de cinco: 40 tokens viraram 216. Aqui isso é barato, e é
-pago em **cada** requisição, porque um modelo não guarda nada entre uma chamada e outra; o que ele
+pago em **cada** pedido, porque um modelo não guarda nada entre uma chamada e outra; o que ele
 precisar tem de ser enviado de novo. O manual inteiro tem seis páginas curtas:
 
 ```
@@ -111,12 +111,12 @@ Então a pergunta útil não é quanto contexto mandar, e sim **qual contexto es
 Para um e-mail, dá para escolher à mão.
 
 ::: track ai
-Escolher por programa, a cada requisição, é recuperação: a lição 11 mostrou o `retrieve`
+Escolher por programa, a cada pedido, é recuperação: a lição 11 mostrou o `retrieve`
 escolhendo as linhas do manual que compartilham palavras com uma pergunta, e o curso `rag`
 constrói essa etapa direito, com embeddings e um índice.
 :::
 
 ::: track *
-Escolher por programa, a cada requisição, é recuperação: a lição 11 mostrou o `retrieve`
+Escolher por programa, a cada pedido, é recuperação: a lição 11 mostrou o `retrieve`
 escolhendo as linhas do manual que compartilham palavras com uma pergunta e pondo-as no prompt.
 :::

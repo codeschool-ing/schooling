@@ -87,8 +87,8 @@ pôr só esses no prompt.
 
 Algumas tarefas precisam do documento inteiro: o resumo de um contrato, todas as datas de um ano de
 atas. Quando ele não cabe, **divida-o em pedaços que caibam com espaço para a resposta, dê a mesma
-instrução a cada pedaço e junte as respostas** num último pedido. Duas coisas dão errado. Um fato pode ser cortado ao meio na fronteira entre dois
-pedaços, e é por isso que os pedaços costumam se sobrepor em algumas frases. E uma pergunta que
+instrução a cada pedaço e junte as respostas** num último pedido. Duas coisas dão errado. Um fato
+pode ser cortado ao meio na fronteira entre dois pedaços, e é por isso que os pedaços costumam se sobrepor em algumas frases. E uma pergunta que
 precisa de duas partes distantes do documento ao mesmo tempo, como "a cláusula 9 contradiz a
 cláusula 2?", não pode ser respondida por nenhum pedaço sozinho.
 
@@ -106,5 +106,5 @@ modelos melhoraram desde então, e o conselho que saiu daí continua barato de s
 - se você precisa de um fato de um contexto longo, teste com esse fato em posições diferentes antes
   de confiar no resultado.
 
-Os cinco hábitos voltam ao `toylm` perguntado sobre o domingo. O modelo só responde com o que está
+Os cinco hábitos remetem ao `toylm` e à pergunta sobre o domingo. O modelo só responde com o que está
 na frente dele, e decidir o que está na frente dele é trabalho seu, não do modelo.

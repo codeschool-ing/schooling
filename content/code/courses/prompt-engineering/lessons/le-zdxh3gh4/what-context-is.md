@@ -83,8 +83,9 @@ invented.
 
 Context is facts about this task. Two neighbouring techniques put text in the prompt for other
 reasons. A system prompt (lesson 22) carries the instructions that hold for a whole conversation
-or application; a role (lesson 23) tells the model whose voice to answer in. The facts can live
-in either place, and often do: a café's assistant might carry its handbook in the system prompt.
+or application; a role (lesson 23) tells the model whose voice to answer in. The facts can travel
+with either: the café's system prompt in lesson 22 says where its facts come from, and the handbook
+text itself arrives with each question.
 **What makes it contextual prompting is the question you ask while writing it: what does the
 model need to know about this situation that it cannot know otherwise?**
 

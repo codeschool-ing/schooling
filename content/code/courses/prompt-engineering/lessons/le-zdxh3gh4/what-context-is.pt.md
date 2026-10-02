@@ -35,7 +35,7 @@ Abraços,
 A equipe
 ```
 
-Ela lê bem, e **duas das suas promessas quebram as regras do Café Aurora**: o manual diz que um
+O texto soa bem, e **duas das suas promessas quebram as regras do Café Aurora**: o manual diz que um
 reembolso volta para o cartão que pagou, nunca em dinheiro, e que qualquer valor acima de
 R$ 100 precisa da aprovação do gerente do turno. O modelo não conhecia nenhuma das duas regras.
 Ele escreveu o que respostas de reembolso costumam dizer, que é a alucinação da lição 5 na sua
@@ -85,9 +85,9 @@ inventado.
 
 Contexto são fatos sobre esta tarefa. Duas técnicas vizinhas põem texto no prompt por outros
 motivos. Um prompt de sistema (lição 22) carrega as instruções que valem para uma conversa ou uma
-aplicação inteira; um papel (lição 23) diz ao modelo com que voz responder. Os fatos podem morar
-em qualquer um dos dois, e muitas vezes moram: o assistente de um café pode levar o manual no
-prompt de sistema. **O que torna isso prompting contextual é a pergunta que você faz enquanto
+aplicação inteira; um papel (lição 23) diz ao modelo com que voz responder. Os fatos podem ir
+junto com qualquer um dos dois: o prompt de sistema do café na lição 22 diz de onde vêm os fatos
+dele, e o texto do manual chega com cada pergunta. **O que torna isso prompting contextual é a pergunta que você faz enquanto
 escreve: o que o modelo precisa saber sobre esta situação que ele não tem como saber de outro
 jeito?**
 

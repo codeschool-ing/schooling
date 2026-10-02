@@ -88,8 +88,8 @@ and putting only those in the prompt.
 
 Some jobs need all of a document: a summary of a contract, every date in a year of minutes. When
 it does not fit, **split it into chunks that each fit with room for the reply, give every chunk the
-same instruction, and combine the answers** in a last request. Two things go wrong. A fact can be cut in half at a chunk boundary, which is
-why chunks usually overlap by a few sentences. And a question that needs two distant parts of the
+same instruction, and combine the answers** in a last request. Two things go wrong. A fact can be
+cut in half at a chunk boundary, which is why chunks usually overlap by a few sentences. And a question that needs two distant parts of the
 document at once, such as "does clause 9 contradict clause 2?", cannot be answered from either
 chunk alone.
 
@@ -107,5 +107,5 @@ middle. Models have improved since, and the advice it led to is still cheap to f
 - if you need a fact from a long context, test with that fact at different positions before you
   trust the result.
 
-All five habits come back to `toylm` asked about Sunday. The model can only answer from what is in
+All five habits go back to `toylm` and the question about Sunday. The model can only answer from what is in
 front of it, and deciding what is in front of it is your job, not the model's.
