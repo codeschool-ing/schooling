@@ -4,9 +4,9 @@ version: 1
 ---
 
 Um registro que termina em `done` parece sucesso, e o laço não tem outra palavra para isso. **O laço
-consegue conferir a forma de cada vez e os limites de cada chamada; não consegue conferir se o
+consegue conferir a forma de cada turno e os limites de cada chamada; não consegue conferir se o
 raciocínio está certo.** Cinco execuções, cada uma quebrada num lugar diferente, mostram que falhas
-caem de cada lado dessa linha. Todas as vezes foram escritas pelo curso; as respostas das
+caem de cada lado dessa linha. Todos os turnos foram escritos pelo curso; as respostas das
 ferramentas e os veredictos do laço são o que o `agent` imprimiu.
 
 ## Uma observação que o modelo ignora
@@ -32,7 +32,7 @@ done: an answer after 3 steps
 
 Os dois fatos necessários para a resposta certa estão na tela, a duas linhas um do outro, e a
 resposta diz o contrário do primeiro: acima de R$ 100 precisa de aprovação, e ela diz que não
-precisa. O laço imprime `done`, porque uma vez com `Answer:` é tudo o que ele procura. Esta é a
+precisa. O laço imprime `done`, porque um turno com `Answer:` é tudo o que ele procura. Esta é a
 falha que o ReAct torna visível sem impedir: **a prova está no registro, então uma pessoa, ou uma
 segunda conferência, consegue pegá-la**. Repare também no último Thought. "That is a normal refund"
 ("é um reembolso comum") não cita fato nenhum, e um pensamento que não cita nada é o lugar de
@@ -78,13 +78,13 @@ step 3
 done: an answer after 3 steps
 ```
 
-O erro voltou como Observation, então a vez seguinte pôde lê-lo e corrigir a chamada. **Uma
+O erro voltou como Observation, então o turno seguinte pôde lê-lo e corrigir a chamada. **Uma
 ferramenta que responde com uma mensagem de erro clara dá ao modelo algo de onde raciocinar**, ao
 passo que uma ferramenta que falha calada, ou devolve `0`, entrega a ele um fato errado.
 
 ## Uma execução que esgota os passos
 
-`--max-steps` é o número de vezes que o laço reproduz antes de desistir. Aqui está a execução boa da
+`--max-steps` é o número de turnos que o laço reproduz antes de desistir. Aqui está a execução boa da
 seção anterior, com limite de dois:
 
 ```

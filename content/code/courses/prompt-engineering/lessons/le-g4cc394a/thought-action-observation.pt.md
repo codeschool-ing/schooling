@@ -55,8 +55,8 @@ Quanto volta, como, e alguém precisa aprovar?
 
 ## Uma execução completa
 
-O `agent` é o laço da lição 6. As vezes que ele reproduz estão num arquivo, separadas por `---`, e
-as linhas que começam com `#` são notas que ele pula. **As vezes abaixo foram escritas pelo curso,
+O `agent` é o laço da lição 6. Os turnos que ele reproduz estão num arquivo, separados por `---`, e
+as linhas que começam com `#` são notas que ele pula. **Os turnos abaixo foram escritos pelo curso,
 sabendo o que as ferramentas iam devolver**, porque nenhum modelo é alcançável da bancada. Tudo o
 que aparece depois de `tool>` é real: a busca no manual e a conta foram executadas de fato.
 
@@ -107,13 +107,13 @@ estão escritas onde você pode conferir.
 
 ## A Observation nunca é do modelo
 
-Na tabela acima, uma linha é escrita por outro. Isso é de propósito, e os sistemas reais garantem.
-Um modelo a quem se pede para continuar um registro ReAct continua de bom grado depois da própria
-Action e escreve também uma `Observation:`, com o resultado que parecer provável, e depois raciocina
-a partir desse resultado inventado. Por isso o programa define `Observation:` como sequência de
+Na tabela acima, uma linha é escrita por outro autor. Isso é de propósito, e os sistemas reais
+garantem isso. Um modelo a quem se pede para continuar um registro ReAct pode seguir adiante depois
+da própria Action e escrever também uma `Observation:`, com o resultado que parecer provável, e
+depois raciocinar a partir desse resultado inventado. Por isso o programa define `Observation:` como sequência de
 parada (lição 16): **a geração para no instante em que o modelo começa a escrever o que a ferramenta
 disse**, o laço executa a ferramenta e escreve a Observation ele mesmo.
 
 O `agent` chega ao mesmo efeito por outro caminho: lê uma Action por vez e imprime sob `tool>` o que
-a ferramenta devolveu, nunca o que a vez afirma. De um jeito ou de outro, a regra é a que faz o
+a ferramenta devolveu, nunca o que o turno afirma. De um jeito ou de outro, a regra é a que faz o
 método valer a pena: os fatos do registro vêm de fora do modelo.

@@ -107,7 +107,7 @@ them.
 ## The Observation is never the model's
 
 In the table above, one line is written by somebody else. That is deliberate, and real systems
-enforce it. A model asked to continue a ReAct trace will happily continue past its own Action and
+enforce it. A model asked to continue a ReAct trace can carry on past its own Action and
 write an `Observation:` too, with whatever result seems likely, and then reason from that invented
 result. So the program sets `Observation:` as a stop sequence (lesson 16): **generation halts the
 moment the model starts to write what the tool said**, the loop runs the tool, and writes the
