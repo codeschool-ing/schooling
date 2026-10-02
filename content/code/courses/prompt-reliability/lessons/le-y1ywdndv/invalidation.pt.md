@@ -11,11 +11,11 @@ prefixo, e a consequência é a mesma.
 O `v17-message-first` era o caso extremo, um primeiro bloco diferente em cada chamada. Edições comuns
 fazem a mesma coisa de forma mais discreta:
 
-- **Uma palavra mudada no guia** torna novo todo bloco daquela palavra em diante. As chamadas seguintes
+- Uma palavra mudada no guia torna novo todo bloco daquela palavra em diante. As chamadas seguintes
   gravam tudo de novo, e só então começam a ler.
-- **Um exemplo novo** inserido perto do topo desloca todos os tokens depois dele, então todos os
+- Um exemplo novo inserido perto do topo desloca todos os tokens depois dele, então todos os
   blocos seguintes mudam mesmo que o texto deles não tenha mudado.
-- **Uma data, o nome de um cliente ou o número de um chamado no começo**, *"Today is 14 August.
+- Uma data, o nome de um cliente ou o número de um chamado no começo, *"Today is 14 August.
   Customer: Maria Souza."*, varia a cada chamada exatamente como a mensagem, e custa ao cache tudo o
   que vem depois.
 

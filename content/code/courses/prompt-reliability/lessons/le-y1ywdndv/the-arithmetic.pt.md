@@ -13,7 +13,7 @@ ana@lab:~/triage$ grep cache prices.json
 
 A entrada comum custa 300 centavos o milhão de tokens. **Ler do cache custa um décimo disso, e gravar
 nele custa um quarto a mais.** As proporções são do curso; a forma, uma leitura barata e uma gravação
-cara, é a que os provedores descrevem, e a documentação deles dá os números deles.
+cara, é a que os provedores descrevem, e cada um dá os próprios números na documentação.
 
 ## Quanto o cache economizou
 
@@ -58,10 +58,10 @@ chamadas contra 75.755. A saída não mexeu, porque um cache só mexe no prompt.
 O `v17-message-first` pagou `6.0216` centavos, mais do que as mesmas chamadas pagariam sem cache
 nenhum: pela mesma aritmética, (827 + 9312) × 300 + 1521 × 1500 = 5.323.200 milionésimos, ou 5,3232
 centavos. Os 9312 tokens dele que passaram pelo cache foram todos gravações, cada uma 75 centavos por
-milhão mais cara que a entrada comum, e nenhum foi lido de volta: 9312 × 75 = 698.400 milionésimos de
-centavo gastos guardando blocos que ninguém usou. **Um prefixo usado uma vez custa mais com cache do
+milhão mais cara que a entrada comum, e nenhum foi lido de volta. São 9312 × 75 = 698.400
+milionésimos de centavo gastos guardando blocos que ninguém usou. **Um prefixo usado uma vez custa mais com cache do
 que sem.** Com estes preços, um bloco gravado uma vez e lido uma vez custa 375 + 30 = 405 contra 600
-para lê-lo comum duas vezes, então um bloco se paga a partir do segundo uso. Um prefixo que se repete
+para lê-lo duas vezes como entrada comum, então um bloco se paga a partir do segundo uso. Um prefixo que se repete
 em poucas chamadas por dia, e expira entre elas, pode nunca chegar ao segundo uso.
 
 ## E o tempo

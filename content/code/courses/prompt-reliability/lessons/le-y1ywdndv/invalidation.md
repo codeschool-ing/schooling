@@ -11,11 +11,11 @@ and the consequence is the same.
 `v17-message-first` was the extreme case, a different block one on every call. Ordinary edits do
 the same thing more quietly:
 
-- **One word changed in the guide** makes every block from that word on new. The next calls write
+- One word changed in the guide makes every block from that word on new. The next calls write
   them all again, and only then start reading.
-- **A new example** inserted near the top moves every token after it, so every block after it
+- A new example inserted near the top moves every token after it, so every block after it
   changes even though their text did not.
-- **A date, a customer's name or a ticket number placed early**, *"Today is 14 August. Customer:
+- A date, a customer's name or a ticket number placed early, *"Today is 14 August. Customer:
   Maria Souza."*, varies per call exactly as the message does, and costs the cache everything
   after it.
 

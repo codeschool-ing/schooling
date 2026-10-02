@@ -41,7 +41,7 @@ Então, no substituto:
 - O cache só liga quando o arquivo do prompt diz `cache: on` acima do `---`, e dura uma execução do
   `pl run`.
 
-O mínimo é fácil de ver. O prompt nu da aula 1 é curto, e ligar o cache para ele não muda nada:
+O mínimo é fácil de ver. O prompt cru da aula 1 é curto, e ligar o cache para ele não muda nada:
 
 ```
 ana@lab:~/triage$ pl run prompts/v1-bare.txt cases/dev.jsonl --set cache=on --out runs/short.jsonl
