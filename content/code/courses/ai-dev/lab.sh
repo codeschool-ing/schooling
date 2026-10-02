@@ -150,7 +150,7 @@ build_embeddings() {
     /home/ana/.cache/wordllama/tokenizers/
 }
 
-# The project, as it stands before lesson 1: four commits, dated, by ana.
+# The project, as it stands before lesson 1: five commits, dated, by ana.
 build_shop() {
   rm -rf /home/ana/shop
   runuser -u ana -- bash "$HERE/lab/shop.sh" /home/ana/shop

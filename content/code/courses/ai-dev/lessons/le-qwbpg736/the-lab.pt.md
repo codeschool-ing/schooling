@@ -11,6 +11,7 @@ computador Linux, uma desenvolvedora chamada ana, e o projeto dela.
 ana@dev:~/shop$ python --version
 Python 3.11.15
 ana@dev:~/shop$ git log --oneline
+19265e0 Conventions
 b88cbb3 README
 c2b5d79 Coupons
 fe437dd A cart with lines, a discount and shipping

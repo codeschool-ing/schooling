@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ana's project as it stands before lesson 1, built into the directory given:
-# a shop's cart, its prices and its tests, in four commits with fixed dates, so
+# a shop's cart, its prices and its tests, in five commits with fixed dates, so
 # every `git log` and every hash in the lessons comes out the same.
 set -euo pipefail
 D=$1
@@ -175,3 +175,43 @@ cents everywhere; `shop.money` is the only place that turns it into text.
     python -m pytest
 EOF
 commit "2026-09-24T11:30:00-03:00" "README"
+
+cat > CONVENTIONS.md <<'EOF'
+# How this project is written
+
+These are the rules a change to `shop` is reviewed against. They are short on
+purpose: each one is here because breaking it once cost somebody an afternoon.
+
+## Money
+
+- Every amount is an integer number of cents, in a variable or field whose
+  name or comment says so. A float never holds money, not even briefly.
+- Rounding happens in one place per calculation, and the code says which way.
+  A discount rounds down, in the customer's disfavour by less than a cent,
+  because `//` does; if that ever changes, it changes in `Cart.discount()`.
+- Text is produced by `shop.money.format_price` and parsed by
+  `shop.money.parse_price`. Nothing else turns cents into text.
+
+## Code
+
+- Python 3.11, standard library only. A dependency needs a reason in the pull
+  request that adds it.
+- Type hints on every public function. `-> None` is written, not implied.
+- Errors are exceptions with a name (`UnknownCoupon`), never a returned `None`
+  or `False` that the caller has to remember to check.
+- No function longer than about forty lines. If it is, it is two functions.
+
+## Tests
+
+- Every change to behaviour comes with a test that fails without it.
+- Tests are written from what the code is for, not from what it currently
+  does. A test that only records today's output protects today's bugs.
+- Test names say the rule: `test_free_shipping_from_200`, not `test_shipping_2`.
+- `python -m pytest` is green before a commit, every commit.
+
+## Commits
+
+- One change per commit, with a subject line in the imperative that says what
+  the change does, under sixty characters.
+EOF
+commit "2026-09-25T16:20:00-03:00" "Conventions"
