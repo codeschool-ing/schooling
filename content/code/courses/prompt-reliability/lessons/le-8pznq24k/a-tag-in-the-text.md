@@ -81,8 +81,8 @@ inside the message and the urgency is `normal`.
 Two things to notice in that last reply. **The fix lives in the template, not in the model**: no
 wording in the instructions could have stopped the tag from closing, because the template is what
 put it there. And the summary now carries `&lt;/message&gt;`, the customer's text in its escaped
-form. That is the honest record of what they wrote; a screen that shows the summary still has to
-escape it for its own format, which is a separate job for a separate place.
+form. That is the honest record of what they wrote. Escaping it for display is the job of whichever
+screen shows the summary, in that screen's own format.
 
 What a model does with an instruction that stays inside the tags, and how to test for it, is
 lesson 10.

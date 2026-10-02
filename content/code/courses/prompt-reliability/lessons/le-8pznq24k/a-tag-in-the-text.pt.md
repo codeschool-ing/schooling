@@ -78,8 +78,8 @@ mensagem e a urgência é `normal`.
 
 Duas coisas a notar nessa última resposta. **A correção mora no template, não no modelo**: nenhuma
 redação nas instruções teria impedido a tag de fechar, porque foi o template que a colocou lá. E o
-resumo agora traz `&lt;/message&gt;`, o texto do cliente na forma escapada. É o registro honesto do
-que ele escreveu; uma tela que mostra o resumo ainda precisa escapá-lo para o próprio formato, o que
-é outro trabalho, em outro lugar.
+resumo agora traz `&lt;/message&gt;`, o texto do cliente na forma escapada. É o registro fiel do
+que ele escreveu. Escapá-lo para exibição é trabalho da tela que mostrar o resumo, no formato dessa
+tela.
 
 O que um modelo faz com uma instrução que continua dentro das tags, e como testar isso, é a aula 10.

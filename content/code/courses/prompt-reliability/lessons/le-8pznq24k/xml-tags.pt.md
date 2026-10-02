@@ -50,7 +50,7 @@ têm nada a ver com delimitadores. `p04` agora traz a mensagem inteira, com o bi
 e as crases do cliente viram caracteres comuns lá dentro.
 
 O teste do sinal não se impressiona: quatro mensagens alteradas dão p = 0.125, e a aula 7 mostrou
-que são precisas seis num só sentido para ficar abaixo de 0.05. **Aqui a evidência está nas
+que é preciso ter seis no mesmo sentido para ficar abaixo de 0.05. **Aqui a evidência está nas
 respostas, não na contagem.** Dá para ler o que cada prompt tomou como mensagem, e o mecanismo é o
 mesmo em todas as falhas. Seis mensagens escritas para mostrar uma falha conhecida são um teste de
 regressão, e ficam no conjunto de teste para que a falha não volte sem ninguém notar.
@@ -67,5 +67,5 @@ regressão, e ficam no conjunto de teste para que a falha não volte sem ningué
   structure your prompts* que recomenda exatamente isso. Nenhum nome de tag é especial; o que ajuda é
   usá-las com consistência e citá-las pelo nome nas instruções, como faz o `v5-tagged.txt`.
 
-Raro não é nunca, porém. Uma das seis mensagens coladas, `p05`, cita uma página de erro que diz
-`</message> is not allowed`. A próxima seção pega uma mensagem que faz isso de propósito.
+Mas raro não quer dizer nunca. Uma das seis mensagens coladas, `p05`, cita uma página de erro que diz
+`</message> is not allowed`. A próxima seção trata de uma mensagem que faz isso de propósito.

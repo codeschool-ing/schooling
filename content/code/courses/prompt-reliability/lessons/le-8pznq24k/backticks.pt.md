@@ -3,8 +3,8 @@ title: Crases triplas
 version: 1
 ---
 
-O primeiro delimitador que a maioria das pessoas usa é o que o Markdown usa para código: três crases
-acima da mensagem e três abaixo. `prompts/v5-backticks.txt` faz isso, e diz isso nas instruções:
+O primeiro delimitador a que a maioria recorre é o do Markdown para código: três crases
+acima da mensagem e três abaixo. `prompts/v5-backticks.txt` faz isso e avisa nas instruções:
 
 ```
 ana@lab:~/triage$ cat -n prompts/v5-backticks.txt
@@ -48,7 +48,7 @@ p06    category  other, expected delivery
 ```
 
 Uma aprovação em seis. Quatro das cinco falhas são categorias, e todas são `other`, o rótulo de uma
-mensagem que o substituto não conseguiu situar. Isto é o que ele recebeu para `p01`, e o que fez
+mensagem que o substituto não conseguiu situar. Veja o que ele recebeu em `p01` e o que fez
 com isso:
 
 ```
