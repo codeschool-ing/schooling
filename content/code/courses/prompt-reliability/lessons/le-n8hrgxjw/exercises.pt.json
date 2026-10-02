@@ -1,0 +1,396 @@
+{
+  "ex-6vgb5xa6": {
+    "prompt": "Qual etapa transforma as pontuações de um modelo para a próxima palavra em probabilidades?",
+    "hint": "Eleve *e* a cada pontuação e divida pelo total.",
+    "choices": [
+      {
+        "text": "Softmax",
+        "why": "Certo: aí tudo soma um."
+      },
+      {
+        "text": "Top-k, que fica com as poucas mais prováveis e descarta o resto",
+        "why": "Top-k corta uma distribuição que o softmax já produziu."
+      },
+      {
+        "text": "O tokenizador",
+        "why": "Ele divide o texto em tokens; não pontua nada."
+      },
+      {
+        "text": "A temperatura, sozinha",
+        "why": "A temperatura divide as pontuações; o softmax ainda precisa transformá-las em probabilidades."
+      }
+    ]
+  },
+  "ex-fyj0zbc3": {
+    "prompt": "`on` tem 3.1 e `delayed` 2.6. Com temperatura 1, quantas vezes `on` é mais provável, aproximadamente? Use duas casas decimais.",
+    "hint": "*e* elevado à diferença."
+  },
+  "ex-rp24gh1h": {
+    "prompt": "`purple` tem probabilidade de 0.1% e não saiu nenhuma vez em 1.000 tentativas. O que se conclui?",
+    "hint": "Aumente a escala.",
+    "choices": [
+      {
+        "text": "Nunca sai, já que o amostrador ignora candidatas abaixo de 1%",
+        "why": "Nada na amostragem simples descarta uma candidata por ser pequena."
+      },
+      {
+        "text": "A probabilidade mostrada está errada",
+        "why": "Mil sorteios é uma amostra pequena de um evento de 0.1%."
+      },
+      {
+        "text": "Em um milhão de chamadas, sai umas mil vezes",
+        "why": "Certo: raro por chamada não é raro por dia."
+      },
+      {
+        "text": "A amostragem está quebrada na cauda",
+        "why": "Está funcionando como a aritmética diz."
+      }
+    ]
+  },
+  "ex-dg4vfdyt": {
+    "prompt": "Somar 10 a todas as pontuações deixa as probabilidades exatamente como estavam. Por quê?",
+    "hint": "A que o softmax responde?",
+    "choices": [
+      {
+        "text": "O softmax só usa a ordem das pontuações",
+        "why": "O tamanho das distâncias também importa, e é por isso que a temperatura funciona."
+      },
+      {
+        "text": "Só importam as diferenças entre pontuações",
+        "why": "Certo: uma constante somada a todas se cancela."
+      },
+      {
+        "text": "Pontuações acima de 10 são limitadas antes de o softmax vê-las",
+        "why": "Nada é limitado."
+      },
+      {
+        "text": "O softmax divide cada pontuação pela maior delas primeiro",
+        "why": "Ele divide pelo total das exponenciais."
+      }
+    ]
+  },
+  "ex-d20hc07e": {
+    "prompt": "O que uma temperatura abaixo de 1 faz com a distribuição?",
+    "hint": "Em 0.2, `on` tinha 92.2%.",
+    "choices": [
+      {
+        "text": "Achata, para as palavras menos prováveis saírem mais vezes do que antes",
+        "why": "Isso é temperatura acima de 1."
+      },
+      {
+        "text": "Concentra na candidata do topo",
+        "why": "Certo: as distâncias entre pontuações são esticadas."
+      },
+      {
+        "text": "Remove a metade de baixo das palavras",
+        "why": "Remover é o que top-k e top-p fazem."
+      },
+      {
+        "text": "Nada até chegar a 0",
+        "why": "0.2 levou `on` de 45.1% para 92.2%."
+      }
+    ]
+  },
+  "ex-17r30fdz": {
+    "prompt": "Com temperatura 1.5, que porcentagem o `pl sample` deu a `on`?",
+    "hint": "A primeira linha da execução em 1.5.",
+    "unit": "%"
+  },
+  "ex-4s8wfkk7": {
+    "prompt": "O `pl sample` não aceita temperatura 0, enquanto o `pl run` usa 0 por padrão. Por que isso é coerente?",
+    "hint": "O que a fórmula faz com a temperatura?",
+    "choices": [
+      {
+        "text": "O `pl run` arredonda 0 para 0.1 sem avisar",
+        "why": "Em 0 o substituto pega a pontuação mais alta; nada é arredondado."
+      },
+      {
+        "text": "0 é o limite, a candidata do topo sem sorteio, e o `pl sample` existe para mostrar um sorteio",
+        "why": "Certo: dividir por zero é indefinido, então 0 é definido como o limite."
+      },
+      {
+        "text": "Temperatura 0 só existe para classificação",
+        "why": "Ela existe para qualquer tarefa; é uma configuração do amostrador."
+      },
+      {
+        "text": "Eles usam amostradores diferentes",
+        "why": "Os dois usam `distribution` em `sample.py` acima de 0."
+      }
+    ]
+  },
+  "ex-bwv9ysc4": {
+    "prompt": "Com temperatura 0 o amostrador fica com a candidata do ___ toda vez, sem sorteio nenhum.",
+    "hint": "A de pontuação mais alta.",
+    "blanks": [
+      {
+        "accept": [
+          "topo"
+        ]
+      }
+    ]
+  },
+  "ex-7pr4kt1t": {
+    "prompt": "Por que uma temperatura de 1 não promete a mesma aleatoriedade em dois modelos diferentes?",
+    "hint": "Pelo que a temperatura divide?",
+    "choices": [
+      {
+        "text": "Os provedores definem 1 de jeitos diferentes nas tabelas de preço",
+        "why": "Preço não tem nada a ver."
+      },
+      {
+        "text": "A temperatura é mais fraca em textos em outras línguas que não o inglês",
+        "why": "Ela age sobre pontuações, seja qual for a língua do texto."
+      },
+      {
+        "text": "Ela divide pontuações, e a distância entre elas varia",
+        "why": "Certo: no substituto ficam a menos de um ponto, então 1 é muito."
+      },
+      {
+        "text": "Um deles ignora a configuração e usa um padrão próprio",
+        "why": "Os provedores a aplicam; a questão é a escala das pontuações."
+      }
+    ]
+  },
+  "ex-fdkdr1zk": {
+    "prompt": "Com `--top-p 0.9`, `lost` foi mantida junto com as três primeiras. Por quê?",
+    "hint": "Some as três primeiras.",
+    "choices": [
+      {
+        "text": "Top-p sempre mantém quatro palavras",
+        "why": "Uma contagem fixa é o top-k; o top-p mantém uma fração."
+      },
+      {
+        "text": "Três davam só 86.1%",
+        "why": "Certo: abaixo de 90%, então a quarta entra."
+      },
+      {
+        "text": "`lost` tem pontuação acima de 1",
+        "why": "`ready` tem 1.0 e foi cortada; o limite é uma fração, não uma pontuação."
+      },
+      {
+        "text": "0.9 arredonda para quatro candidatas",
+        "why": "Nada é arredondado; as probabilidades são somadas."
+      }
+    ]
+  },
+  "ex-v2fc4s15": {
+    "prompt": "Com `--top-k 3`, que porcentagem `on` recebeu depois de renormalizar?",
+    "hint": "45.1% dividido pela fração que as três mantinham.",
+    "unit": "%"
+  },
+  "ex-22h2ytm7": {
+    "prompt": "Numa distribuição em que a palavra do topo tem 97% da probabilidade, quantas palavras `top-k 3` e `top-p 0.9` mantêm?",
+    "hint": "Um é contagem, o outro é fração.",
+    "choices": [
+      {
+        "text": "Três cada um",
+        "why": "O top-p para assim que a fração é alcançada."
+      },
+      {
+        "text": "Top-k mantém três; top-p mantém uma",
+        "why": "Certo: 97% já passa de 90%."
+      },
+      {
+        "text": "Top-k mantém uma; top-p mantém três",
+        "why": "O top-k mantém a contagem dele, sejam quais forem as frações."
+      },
+      {
+        "text": "Os dois mantêm as palavras cuja fração passa dos 3% que a do topo deixou",
+        "why": "Nenhum dos dois funciona com um limite por palavra."
+      }
+    ]
+  },
+  "ex-mjnxt27j": {
+    "prompt": "Ponha as etapas do amostrador do laboratório na ordem em que ele as aplica.",
+    "hint": "`distribution` em `sample.py`.",
+    "items": [
+      "Softmax das pontuações divididas pela temperatura",
+      "Manter as k candidatas do topo",
+      "Manter o menor conjunto do topo que alcança p",
+      "Renormalizar o que sobrou e sortear"
+    ]
+  },
+  "ex-dg7hpedr": {
+    "prompt": "`--top-p 0.9` manteve quatro palavras com temperatura 1 e cinco com 1.5. Por quê?",
+    "hint": "Qual etapa roda primeiro?",
+    "choices": [
+      {
+        "text": "A temperatura veio antes e a achatou",
+        "why": "Certo: o efeito de uma configuração depende do que rodou antes."
+      },
+      {
+        "text": "O top-p é aplicado antes da temperatura",
+        "why": "O código mostra a temperatura primeiro."
+      },
+      {
+        "text": "1.5 acrescenta uma palavra ao que o top-p mantém",
+        "why": "A temperatura não acrescenta nada diretamente; ela muda as probabilidades."
+      },
+      {
+        "text": "Foi ruído de amostragem, e outra execução manteria quatro",
+        "why": "Quais palavras ficam é calculado, não sorteado."
+      }
+    ]
+  },
+  "ex-50620b0z": {
+    "prompt": "Qual destes aceita `temperature` e `top_p`, mas não tem `top_k`?",
+    "hint": "A seção cita duas APIs hospedadas.",
+    "choices": [
+      {
+        "text": "A Messages API da Anthropic",
+        "why": "Ela aceita os três."
+      },
+      {
+        "text": "O `pl sample` do laboratório",
+        "why": "Ele também tem `--top-k`."
+      },
+      {
+        "text": "A Chat Completions API da OpenAI",
+        "why": "Certo, e por isso você lê a documentação da API que chama."
+      },
+      {
+        "text": "O `pl run` com `--set`",
+        "why": "`--set top_k=…` é aceito."
+      }
+    ]
+  },
+  "ex-w78ydwpg": {
+    "prompt": "Em 350 chamadas, as categorias certas eram 280 com temperatura 0. Quantas com temperatura 1?",
+    "hint": "A linha `category` de `pl check runs/t1.jsonl`."
+  },
+  "ex-e2zcg3db": {
+    "prompt": "A linha `json` ficou em 340 nas temperaturas 0, 0.2 e 1. Por quê?",
+    "hint": "O que decide os hábitos de formatação do substituto?",
+    "choices": [
+      {
+        "text": "A temperatura nunca afeta a formatação, em modelo nenhum",
+        "why": "Isso é uma afirmação sobre modelos reais que a aula não faz."
+      },
+      {
+        "text": "O prompt pede JSON, o que anula a temperatura",
+        "why": "As categorias mudaram, então a temperatura não foi anulada."
+      },
+      {
+        "text": "Coincidência",
+        "why": "Três contagens idênticas não são acaso aqui; há uma regra."
+      },
+      {
+        "text": "No substituto, os hábitos dependem do prompt e da mensagem",
+        "why": "Certo: não são sorteados pelo amostrador."
+      }
+    ]
+  },
+  "ex-stq3066b": {
+    "prompt": "Uma equipe encaminha chamados de suporte com temperatura 0.3, \"para ter um pouco de flexibilidade\". O que a medição desta aula sugere?",
+    "hint": "O que aconteceu em 0.2?",
+    "choices": [
+      {
+        "text": "Nada muda abaixo de 0.5",
+        "why": "Em 0.2 as categorias já perderam 9 de 280."
+      },
+      {
+        "text": "Decisões apertadas viram de uma chamada para outra; uma tarefa com uma resposta certa fica em 0",
+        "why": "Certo: flexibilidade no encaminhamento é o mesmo chamado indo para duas filas."
+      },
+      {
+        "text": "Deveriam subir para 1 para ver mais variedade",
+        "why": "Em 1 o substituto perdeu 86 de 280 categorias certas."
+      },
+      {
+        "text": "0.3 está bem desde que o top-p também esteja definido, para que os rótulos improváveis sejam cortados",
+        "why": "O top-p corta a cauda; as decisões apertadas estão no topo."
+      }
+    ]
+  },
+  "ex-4mze9hj1": {
+    "prompt": "Um modelo hospedado com temperatura 0 às vezes dá uma categoria diferente para a mesma mensagem. Qual é a explicação mais provável?",
+    "hint": "O que a documentação do próprio provedor diz sobre 0?",
+    "choices": [
+      {
+        "text": "A configuração de temperatura foi ignorada pelo provedor naquela chamada",
+        "why": "Ela foi aplicada; 0 apenas não é totalmente determinístico ali."
+      },
+      {
+        "text": "Agrupamento e ponto flutuante trocam quase empates",
+        "why": "Certo: zero não é garantia de saída idêntica."
+      },
+      {
+        "text": "O modelo aprendeu com a chamada anterior",
+        "why": "Uma chamada não muda o modelo."
+      },
+      {
+        "text": "A mensagem foi para o cache na primeira vez e o cache devolveu uma categoria antiga",
+        "why": "Um cache de prompt guarda entrada processada, não respostas."
+      }
+    ]
+  },
+  "ex-kw85z2zy": {
+    "prompt": "Para quais destas uma temperatura acima de 0 é uma escolha razoável? Marque todas as que se aplicam.",
+    "hint": "A tarefa tem uma resposta certa?",
+    "choices": [
+      {
+        "text": "Cinco linhas de assunto para uma newsletter, para escolher uma",
+        "why": "Sim: cinco linhas idênticas seriam inúteis."
+      },
+      {
+        "text": "Classificar mensagens em cinco categorias",
+        "why": "Uma resposta certa: fique em 0."
+      },
+      {
+        "text": "Rascunhar respostas que não devem soar iguais",
+        "why": "Sim: ali a variedade é o objetivo."
+      },
+      {
+        "text": "Sortear várias respostas de propósito para votar nelas",
+        "why": "Sim: a aula 19 usa a aleatoriedade em vez de sofrer com ela."
+      }
+    ]
+  },
+  "ex-pcpawk37": {
+    "prompt": "Associe cada configuração ao que ela fez com *Your parcel is ___*.",
+    "hint": "Um cada.",
+    "pairs": [
+      {
+        "left": "`--temperature 0.2`",
+        "right": "Quase todo sorteio foi a palavra do topo"
+      },
+      {
+        "left": "`--temperature 1.5`",
+        "right": "Palavras sem sentido foram sorteadas"
+      },
+      {
+        "left": "`--top-k 3`",
+        "right": "Sobraram exatamente três candidatas"
+      },
+      {
+        "left": "`--top-p 0.9`",
+        "right": "O menor número de palavras do topo que chega a 90%"
+      }
+    ],
+    "right_distractors": [
+      "A escrita parou em 90% do limite"
+    ]
+  },
+  "ex-hjdw5je1": {
+    "prompt": "No laboratório você roda com `--set temperature=0 --set top_p=0.5`. O que a configuração de top-p muda?",
+    "hint": "Há sorteio com temperatura 0?",
+    "choices": [
+      {
+        "text": "Nada: em 0 o rótulo do topo é escolhido sem sorteio",
+        "why": "Certo. O top-p só importa quando algo é sorteado."
+      },
+      {
+        "text": "Divide pela metade os rótulos que ele pode escolher",
+        "why": "Em 0 nada é escolhido de um conjunto; pega-se o topo."
+      },
+      {
+        "text": "Deixa as respostas mais aleatórias",
+        "why": "O top-p só remove candidatas."
+      },
+      {
+        "text": "Anula a temperatura",
+        "why": "A temperatura é aplicada primeiro."
+      }
+    ]
+  }
+}
