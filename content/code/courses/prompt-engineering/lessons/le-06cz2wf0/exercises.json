@@ -1,0 +1,430 @@
+[
+  {
+    "id": "ex-ce27z11e",
+    "version": 1,
+    "section": "the-loop",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `toylm` at temperature 0 write `sleeps and the cat sleeps and the cat...` after `the cat`?",
+    "hint": "Follow the top word of each pair.",
+    "choices": [
+      {
+        "text": "The likeliest words form a circle",
+        "correct": true,
+        "why": "Right: `sleeps`, `and`, `the`, `cat`, and back to `sleeps`. Temperature 0 takes the top word every time."
+      },
+      {
+        "text": "The corpus says `the cat sleeps and the cat sleeps` many times over in a row",
+        "correct": false,
+        "why": "It says it three times, and only twice in a row each time. The loop comes from the pairs, not from one long line."
+      },
+      {
+        "text": "The model is broken",
+        "correct": false,
+        "why": "Each step is a correct reading of the counts. The circle is a property of the scores."
+      },
+      {
+        "text": "A penalty was set too high on the full stop",
+        "correct": false,
+        "why": "No penalty was set in that run."
+      }
+    ]
+  },
+  {
+    "id": "ex-ja79yv31",
+    "version": 1,
+    "section": "the-loop",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `cat sleeps`, what share did `toylm next` give to `and`, in percent?",
+    "hint": "The first line of the table.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-esd3gqqp",
+    "version": 1,
+    "section": "the-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is repetition most visible at low temperatures?",
+    "hint": "What breaks a circle by chance?",
+    "choices": [
+      {
+        "text": "Low temperatures make the model forget what it wrote",
+        "correct": false,
+        "why": "The model never remembers what it wrote beyond its window, at any temperature."
+      },
+      {
+        "text": "High temperatures apply a penalty automatically",
+        "correct": false,
+        "why": "Temperature and penalties are separate controls."
+      },
+      {
+        "text": "Nothing is drawn at 0, so no lucky escape",
+        "correct": true,
+        "why": "Right. A draw at a higher temperature takes the second choice now and then, and escapes many circles by luck; greedy decoding never does."
+      },
+      {
+        "text": "The limit is lower at low temperatures",
+        "correct": false,
+        "why": "The limit is set separately and does not depend on temperature."
+      }
+    ]
+  },
+  {
+    "id": "ex-bm70n72t",
+    "version": 1,
+    "section": "the-loop",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A large model repeats the same paragraph at temperature 0. Which explanation fits this lesson?",
+    "hint": "What does a model's score know about the text so far?",
+    "choices": [
+      {
+        "text": "Its context window is full, so it can no longer see that it repeated itself",
+        "correct": false,
+        "why": "A paragraph back is well inside a large model's window. It sees the repeat, and the repeat is still likely."
+      },
+      {
+        "text": "Recent text makes similar text likely, with no rule against it",
+        "correct": true,
+        "why": "Right. Its circles are bigger than `toylm`'s, and the cause is the same."
+      },
+      {
+        "text": "Temperature 0 adds the previous paragraph to the prompt",
+        "correct": false,
+        "why": "Nothing is added to the prompt. Each token is appended to the text as always."
+      },
+      {
+        "text": "The model ran out of things to say",
+        "correct": false,
+        "why": "There is no supply of things to say. There are scores, and the likeliest leads back."
+      }
+    ]
+  },
+  {
+    "id": "ex-bx6acfen",
+    "version": 1,
+    "section": "two-penalties",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a penalty change?",
+    "hint": "Read the first paragraph of the section.",
+    "choices": [
+      {
+        "text": "The instructions the model receives",
+        "correct": false,
+        "why": "The model receives no instruction. It is arithmetic on the scores."
+      },
+      {
+        "text": "The scores of words already in the output",
+        "correct": true,
+        "why": "Right. An amount is subtracted from each used word's score before the step."
+      },
+      {
+        "text": "The words in the model's vocabulary",
+        "correct": false,
+        "why": "The vocabulary is fixed. A penalty only lowers some scores."
+      },
+      {
+        "text": "The number of tokens the model may write",
+        "correct": false,
+        "why": "That is the limit, lesson 15."
+      }
+    ]
+  },
+  {
+    "id": "ex-4b1nsnwa",
+    "version": 1,
+    "section": "two-penalties",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A word has appeared three times in the output. With a frequency penalty of 0.2, how much is subtracted from its score in `toylm`?",
+    "hint": "Frequency multiplies by the count.",
+    "choices": [
+      {
+        "text": "0.6",
+        "correct": true,
+        "why": "Right: 0.2 × 3."
+      },
+      {
+        "text": "0.2",
+        "correct": false,
+        "why": "That is what a presence penalty of 0.2 would subtract, whatever the count."
+      },
+      {
+        "text": "0.8",
+        "correct": false,
+        "why": "That would be four appearances."
+      },
+      {
+        "text": "Nothing, since penalties apply only from the fourth appearance onwards",
+        "correct": false,
+        "why": "They apply from the first appearance."
+      }
+    ]
+  },
+  {
+    "id": "ex-ck400qc4",
+    "version": 1,
+    "section": "two-penalties",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A word has appeared three times. With a presence penalty of 0.2, how much is subtracted?",
+    "hint": "Presence is a flat charge.",
+    "choices": [
+      {
+        "text": "0.6",
+        "correct": false,
+        "why": "That is the frequency penalty's arithmetic: 0.2 × 3."
+      },
+      {
+        "text": "0.2 for each of the three appearances, plus 0.2 once more for being present",
+        "correct": false,
+        "why": "Presence is charged once, not per appearance."
+      },
+      {
+        "text": "Nothing, because presence only counts words in the prompt",
+        "correct": false,
+        "why": "In `toylm` both penalties count only the output."
+      },
+      {
+        "text": "0.2",
+        "correct": true,
+        "why": "Right. The same after one appearance or ten."
+      }
+    ]
+  },
+  {
+    "id": "ex-682t2nvw",
+    "version": 1,
+    "section": "two-penalties",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 0.2, the frequency penalty broke the `the cat` loop and the presence penalty did not. Why?",
+    "hint": "`and` leads `on` by about 0.41.",
+    "choices": [
+      {
+        "text": "Presence is applied after temperature, where it has less effect",
+        "correct": false,
+        "why": "`toylm` applies both penalties first, before temperature."
+      },
+      {
+        "text": "Presence penalises the word `on` as well as `and`",
+        "correct": false,
+        "why": "`on` had not appeared yet, so neither penalty touched it."
+      },
+      {
+        "text": "Only frequency grows past 0.41",
+        "correct": true,
+        "why": "Right. Frequency reached 0.6 after three repeats; presence stayed at 0.2 for ever."
+      },
+      {
+        "text": "Presence needs sampling to work and fails completely at temperature 0",
+        "correct": false,
+        "why": "Both act on the scores, at any temperature. 0.2 was simply too small to close the gap."
+      }
+    ]
+  },
+  {
+    "id": "ex-07169749",
+    "version": 1,
+    "section": "two-penalties",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`and` leads `on` by about 0.41 in the scores. What is the smallest whole number of earlier `and`s at which a frequency penalty of 0.2 lets `on` win?",
+    "hint": "0.2 times the count has to exceed 0.41.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-781qsy3g",
+    "version": 1,
+    "section": "two-penalties",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--frequency-penalty 0.2`, the output ended `...on the chair by the window.` and still reported `finish: length`. Why?",
+    "hint": "Count the tokens.",
+    "choices": [
+      {
+        "text": "The penalty cut the text",
+        "correct": false,
+        "why": "Penalties change scores. They never cut text."
+      },
+      {
+        "text": "The sentence ended exactly on the 20th token",
+        "correct": true,
+        "why": "Right. The limit was reached at the full stop, before the model could pick the end, so the reason is `length` (lesson 15)."
+      },
+      {
+        "text": "The model never chose to stop at all because of the penalty",
+        "correct": false,
+        "why": "It might have, one step later; the limit came first."
+      },
+      {
+        "text": "`length` is what every penalised run reports",
+        "correct": false,
+        "why": "With 0.5 the same prompt ended with `end`."
+      }
+    ]
+  },
+  {
+    "id": "ex-k83g22tp",
+    "version": 1,
+    "section": "two-penalties",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `--presence-penalty 5`, `question :` became `is the bread comes out of the day? answer: yes.` What went wrong?",
+    "hint": "What is the likeliest word after `the bread`?",
+    "choices": [
+      {
+        "text": "`is` was needed again and got pushed down",
+        "correct": true,
+        "why": "Right. It had 76.5% after `the bread`, and the penalty put `comes` ahead. A penalty cannot tell a needed repeat from a fault."
+      },
+      {
+        "text": "A presence penalty of 5 raises the temperature",
+        "correct": false,
+        "why": "The penalty changes scores before temperature; it does not change the temperature."
+      },
+      {
+        "text": "The prompt was too short for the model to understand",
+        "correct": false,
+        "why": "The same prompt gave a plainer question without the penalty."
+      },
+      {
+        "text": "`comes` was the likeliest word after `the bread`",
+        "correct": false,
+        "why": "`is` had 76.5%; `comes` had 11.8%."
+      }
+    ]
+  },
+  {
+    "id": "ex-89mc8yht",
+    "version": 1,
+    "section": "two-penalties",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For which of these replies should penalties be left at 0? Choose all that apply.",
+    "hint": "Where is repetition the point?",
+    "choices": [
+      {
+        "text": "A JSON object with many keys",
+        "correct": true,
+        "why": "Yes. It repeats quotes, braces and commas by design."
+      },
+      {
+        "text": "A program that reuses its variable names",
+        "correct": true,
+        "why": "Yes. The names have to repeat."
+      },
+      {
+        "text": "An answer about one named person",
+        "correct": true,
+        "why": "Yes. The name has to come back."
+      },
+      {
+        "text": "A brainstorm that keeps suggesting the same idea",
+        "correct": false,
+        "why": "That is the repetition a penalty is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-j8d85b5x",
+    "version": 1,
+    "section": "two-penalties",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The penalty that subtracts more each time a word repeats is the ___ penalty.",
+    "hint": "Its name is about how often.",
+    "blanks": [
+      {
+        "accept": [
+          "frequency"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9fd3w50r",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each run of `toylm generate \"the cat\" --temperature 0 --max-tokens 20` to what it printed.",
+    "hint": "The captures in this lesson.",
+    "pairs": [
+      {
+        "left": "no penalty",
+        "right": "the circle until the limit"
+      },
+      {
+        "left": "`--frequency-penalty 0.5`",
+        "right": "`on the chair by the window`, and `end`"
+      },
+      {
+        "left": "`--presence-penalty 0.2`",
+        "right": "the circle until the limit, penalty and all"
+      },
+      {
+        "left": "`--frequency-penalty 0.2`",
+        "right": "three laps, then `on the chair`, at exactly 20 tokens"
+      }
+    ],
+    "right_distractors": [
+      "`the cat wakes`, and `end`"
+    ]
+  },
+  {
+    "id": "ex-stjmck6r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An assistant at temperature 0 keeps repeating the same suggestion in a list. Following this lesson, what do you try first?",
+    "hint": "Start small, change one thing.",
+    "choices": [
+      {
+        "text": "A presence penalty of 5, to be sure",
+        "correct": false,
+        "why": "Too high a penalty pushes the model off the words its sentences need."
+      },
+      {
+        "text": "A small frequency penalty, raised until it stops",
+        "correct": true,
+        "why": "Right. Start at 0, raise one penalty in small steps, and stop as soon as the repetition does."
+      },
+      {
+        "text": "Both penalties at their maximum, and a higher temperature",
+        "correct": false,
+        "why": "Three changes at once, each one large: you cannot tell what helped, and the text will get stranger."
+      },
+      {
+        "text": "A lower token limit",
+        "correct": false,
+        "why": "That cuts the list short; it does not stop the repeat."
+      }
+    ]
+  }
+]

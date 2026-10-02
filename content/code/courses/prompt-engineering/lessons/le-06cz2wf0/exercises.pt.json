@@ -1,0 +1,292 @@
+{
+  "ex-ce27z11e": {
+    "prompt": "Por que o `toylm` na temperatura 0 escreve `sleeps and the cat sleeps and the cat...` depois de `the cat`?",
+    "hint": "Siga a palavra do topo de cada par.",
+    "choices": [
+      {
+        "text": "As palavras mais prováveis formam um círculo",
+        "why": "Isso: `sleeps`, `and`, `the`, `cat`, e de volta a `sleeps`. A temperatura 0 pega a palavra do topo toda vez."
+      },
+      {
+        "text": "O corpus diz `the cat sleeps and the cat sleeps` muitas vezes seguidas",
+        "why": "Diz três vezes, e só duas seguidas em cada uma. O laço vem dos pares, não de uma linha comprida."
+      },
+      {
+        "text": "O modelo está quebrado",
+        "why": "Cada passo é uma leitura correta das contagens. O círculo é uma propriedade das notas."
+      },
+      {
+        "text": "Uma penalidade alta demais foi posta no ponto final",
+        "why": "Nenhuma penalidade foi posta nessa execução."
+      }
+    ]
+  },
+  "ex-ja79yv31": {
+    "prompt": "Depois de `cat sleeps`, que fração o `toylm next` deu a `and`, em porcentagem?",
+    "hint": "A primeira linha da tabela.",
+    "unit": "%"
+  },
+  "ex-esd3gqqp": {
+    "prompt": "Por que a repetição aparece mais em temperaturas baixas?",
+    "hint": "O que quebra um círculo por acaso?",
+    "choices": [
+      {
+        "text": "Temperaturas baixas fazem o modelo esquecer o que escreveu",
+        "why": "O modelo nunca se lembra do que escreveu além da janela, em temperatura nenhuma."
+      },
+      {
+        "text": "Temperaturas altas aplicam uma penalidade automaticamente",
+        "why": "Temperatura e penalidades são controles separados."
+      },
+      {
+        "text": "Em 0 nada é sorteado, então não há fuga por sorte",
+        "why": "Isso. Um sorteio numa temperatura mais alta pega a segunda escolha de vez em quando e escapa de muitos círculos por sorte; a decodificação gulosa nunca escapa."
+      },
+      {
+        "text": "O limite é menor em temperaturas baixas",
+        "why": "O limite é ajustado à parte e não depende da temperatura."
+      }
+    ]
+  },
+  "ex-bm70n72t": {
+    "prompt": "Um modelo grande repete o mesmo parágrafo na temperatura 0. Que explicação combina com esta lição?",
+    "hint": "O que a nota de um modelo sabe sobre o texto até aqui?",
+    "choices": [
+      {
+        "text": "A janela de contexto encheu, então ele não vê mais que se repetiu",
+        "why": "Um parágrafo atrás está bem dentro da janela de um modelo grande. Ele vê a repetição, e ela continua provável."
+      },
+      {
+        "text": "Texto recente torna provável um parecido, sem regra contra",
+        "why": "Isso. Os círculos dele são maiores que os do `toylm`, e a causa é a mesma."
+      },
+      {
+        "text": "A temperatura 0 junta o parágrafo anterior ao prompt",
+        "why": "Nada é juntado ao prompt. Cada token é acrescentado ao texto como sempre."
+      },
+      {
+        "text": "O modelo ficou sem o que dizer",
+        "why": "Não existe um estoque de coisas a dizer. Existem notas, e a mais provável leva de volta."
+      }
+    ]
+  },
+  "ex-bx6acfen": {
+    "prompt": "O que uma penalidade muda?",
+    "hint": "Leia o primeiro parágrafo da seção.",
+    "choices": [
+      {
+        "text": "As instruções que o modelo recebe",
+        "why": "O modelo não recebe instrução nenhuma. É aritmética sobre as notas."
+      },
+      {
+        "text": "As notas das palavras que já estão na saída",
+        "why": "Isso. Um valor é subtraído da nota de cada palavra usada antes do passo."
+      },
+      {
+        "text": "As palavras do vocabulário do modelo",
+        "why": "O vocabulário é fixo. Uma penalidade só baixa algumas notas."
+      },
+      {
+        "text": "O número de tokens que o modelo pode escrever",
+        "why": "Esse é o limite, lição 15."
+      }
+    ]
+  },
+  "ex-4b1nsnwa": {
+    "prompt": "Uma palavra apareceu três vezes na saída. Com uma penalidade de frequência de 0,2, quanto é subtraído da nota dela no `toylm`?",
+    "hint": "A frequência multiplica pela contagem.",
+    "choices": [
+      {
+        "text": "0,6",
+        "why": "Isso: 0,2 × 3."
+      },
+      {
+        "text": "0,2",
+        "why": "Isso é o que uma penalidade de presença de 0,2 subtrairia, qualquer que fosse a contagem."
+      },
+      {
+        "text": "0,8",
+        "why": "Isso seriam quatro aparições."
+      },
+      {
+        "text": "Nada, já que as penalidades só valem a partir da quarta aparição",
+        "why": "Elas valem a partir da primeira aparição."
+      }
+    ]
+  },
+  "ex-ck400qc4": {
+    "prompt": "Uma palavra apareceu três vezes. Com uma penalidade de presença de 0,2, quanto é subtraído?",
+    "hint": "A presença é uma taxa fixa.",
+    "choices": [
+      {
+        "text": "0,6",
+        "why": "Essa é a conta da penalidade de frequência: 0,2 × 3."
+      },
+      {
+        "text": "0,2 por cada uma das três aparições, mais 0,2 uma vez por estar presente",
+        "why": "A presença é cobrada uma vez, não por aparição."
+      },
+      {
+        "text": "Nada, porque a presença só conta palavras do prompt",
+        "why": "No `toylm` as duas penalidades contam só a saída."
+      },
+      {
+        "text": "0,2",
+        "why": "Isso. O mesmo depois de uma aparição ou de dez."
+      }
+    ]
+  },
+  "ex-682t2nvw": {
+    "prompt": "Em 0,2, a penalidade de frequência quebrou o laço de `the cat` e a de presença não. Por quê?",
+    "hint": "`and` está à frente de `on` por cerca de 0,41.",
+    "choices": [
+      {
+        "text": "A presença é aplicada depois da temperatura, onde tem menos efeito",
+        "why": "O `toylm` aplica as duas penalidades primeiro, antes da temperatura."
+      },
+      {
+        "text": "A presença penaliza a palavra `on` além de `and`",
+        "why": "`on` ainda não tinha aparecido, então nenhuma das duas a tocou."
+      },
+      {
+        "text": "Só a frequência cresce além de 0,41",
+        "why": "Isso. A frequência chegou a 0,6 depois de três repetições; a presença ficou em 0,2 para sempre."
+      },
+      {
+        "text": "A presença precisa de amostragem para funcionar e falha por completo na temperatura 0",
+        "why": "As duas agem sobre as notas, em qualquer temperatura. 0,2 era pouco para fechar a distância."
+      }
+    ]
+  },
+  "ex-07169749": {
+    "prompt": "`and` está à frente de `on` por cerca de 0,41 nas notas. Qual o menor número inteiro de `and` anteriores com que uma penalidade de frequência de 0,2 deixa `on` ganhar?",
+    "hint": "0,2 vezes a contagem precisa passar de 0,41.",
+    "unit": "vezes"
+  },
+  "ex-781qsy3g": {
+    "prompt": "Com `--frequency-penalty 0.2`, a saída terminou em `...on the chair by the window.` e mesmo assim informou `finish: length`. Por quê?",
+    "hint": "Conte os tokens.",
+    "choices": [
+      {
+        "text": "A penalidade cortou o texto",
+        "why": "Penalidades mudam notas. Nunca cortam texto."
+      },
+      {
+        "text": "A frase terminou exatamente no 20º token",
+        "why": "Isso. O limite foi atingido no ponto final, antes de o modelo poder escolher o fim, então o motivo é `length` (lição 15)."
+      },
+      {
+        "text": "O modelo nunca escolheu parar por causa da penalidade",
+        "why": "Talvez escolhesse, um passo depois; o limite veio antes."
+      },
+      {
+        "text": "`length` é o que toda execução penalizada informa",
+        "why": "Com 0,5 o mesmo prompt terminou com `end`."
+      }
+    ]
+  },
+  "ex-k83g22tp": {
+    "prompt": "Com `--presence-penalty 5`, `question :` virou `is the bread comes out of the day? answer: yes.` O que deu errado?",
+    "hint": "Qual a palavra mais provável depois de `the bread`?",
+    "choices": [
+      {
+        "text": "`is` era necessária e foi empurrada para baixo",
+        "why": "Isso. Ela tinha 76,5% depois de `the bread`, e a penalidade pôs `comes` na frente. Uma penalidade não distingue uma repetição necessária de um defeito."
+      },
+      {
+        "text": "Uma penalidade de presença de 5 sobe a temperatura",
+        "why": "A penalidade muda as notas antes da temperatura; ela não muda a temperatura."
+      },
+      {
+        "text": "O prompt era curto demais para o modelo entender",
+        "why": "O mesmo prompt deu uma pergunta mais simples sem a penalidade."
+      },
+      {
+        "text": "`comes` era a palavra mais provável depois de `the bread`",
+        "why": "`is` tinha 76,5%; `comes` tinha 11,8%."
+      }
+    ]
+  },
+  "ex-89mc8yht": {
+    "prompt": "Em quais destas respostas as penalidades devem ficar em 0? Marque todas as que se aplicam.",
+    "hint": "Onde a repetição é o objetivo?",
+    "choices": [
+      {
+        "text": "Um objeto JSON com muitas chaves",
+        "why": "Sim. Ele repete aspas, chaves e vírgulas por construção."
+      },
+      {
+        "text": "Um programa que reutiliza os nomes das variáveis",
+        "why": "Sim. Os nomes precisam se repetir."
+      },
+      {
+        "text": "Uma resposta sobre uma pessoa com nome",
+        "why": "Sim. O nome precisa voltar."
+      },
+      {
+        "text": "Um brainstorming que insiste em sugerir a mesma ideia",
+        "why": "Essa é a repetição para a qual uma penalidade existe."
+      }
+    ]
+  },
+  "ex-j8d85b5x": {
+    "prompt": "A penalidade que subtrai mais a cada vez que uma palavra se repete é a penalidade de ___.",
+    "hint": "O nome dela fala de quantas vezes.",
+    "blanks": [
+      {
+        "accept": [
+          "frequência",
+          "frequencia",
+          "frequency"
+        ]
+      }
+    ]
+  },
+  "ex-9fd3w50r": {
+    "prompt": "Ligue cada execução de `toylm generate \"the cat\" --temperature 0 --max-tokens 20` ao que ela imprimiu.",
+    "hint": "As capturas desta lição.",
+    "pairs": [
+      {
+        "left": "sem penalidade",
+        "right": "o círculo até o limite"
+      },
+      {
+        "left": "`--frequency-penalty 0.5`",
+        "right": "`on the chair by the window`, e `end`"
+      },
+      {
+        "left": "`--presence-penalty 0.2`",
+        "right": "o círculo até o limite, com penalidade e tudo"
+      },
+      {
+        "left": "`--frequency-penalty 0.2`",
+        "right": "três voltas, depois `on the chair`, em exatos 20 tokens"
+      }
+    ],
+    "right_distractors": [
+      "`the cat wakes`, e `end`"
+    ]
+  },
+  "ex-stjmck6r": {
+    "prompt": "Um assistente na temperatura 0 fica repetindo a mesma sugestão numa lista. Seguindo esta lição, o que você tenta primeiro?",
+    "hint": "Comece pequeno, mude uma coisa.",
+    "choices": [
+      {
+        "text": "Uma penalidade de presença de 5, para garantir",
+        "why": "Uma penalidade alta demais empurra o modelo para fora das palavras de que as frases precisam."
+      },
+      {
+        "text": "Uma penalidade de frequência pequena, subida até a repetição parar",
+        "why": "Isso. Comece em 0, suba uma penalidade em passos pequenos, e pare assim que a repetição parar."
+      },
+      {
+        "text": "As duas penalidades no máximo, e uma temperatura mais alta",
+        "why": "Três mudanças de uma vez, todas grandes: você não sabe o que ajudou, e o texto vai ficar mais estranho."
+      },
+      {
+        "text": "Um limite de tokens menor",
+        "why": "Isso corta a lista; não para a repetição."
+      }
+    ]
+  }
+}
