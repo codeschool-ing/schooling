@@ -1,0 +1,573 @@
+[
+  {
+    "id": "ex-4qnghjas",
+    "version": 1,
+    "section": "why-delimit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a delimiter around the customer's message do?",
+    "hint": "The model sees one stream of text.",
+    "choices": [
+      {
+        "text": "It hides the message from the model so that it cannot be obeyed",
+        "correct": false,
+        "why": "The model still reads it; it just knows where it is."
+      },
+      {
+        "text": "It writes down where the customer's words start and end",
+        "correct": true,
+        "why": "Right, instead of leaving the boundary to a guess."
+      },
+      {
+        "text": "It makes the prompt shorter",
+        "correct": false,
+        "why": "It adds a few tokens."
+      },
+      {
+        "text": "It turns the message into JSON before the call so the model can parse it",
+        "correct": false,
+        "why": "The message goes in as text."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rtkg1kj",
+    "version": 1,
+    "section": "why-delimit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `v4-only-json.txt`, the summary for `p01` was the error message the customer pasted. Why, in the stand-in?",
+    "hint": "What does the stand-in look for before `Message:`?",
+    "choices": [
+      {
+        "text": "The error message was the longest sentence in the message, so it was picked as the summary",
+        "correct": false,
+        "why": "Length has nothing to do with it."
+      },
+      {
+        "text": "The prompt had no delimiter, so it took the customer's backticks for one",
+        "correct": true,
+        "why": "Right: they were the only delimiter in sight."
+      },
+      {
+        "text": "The message was cut at `max_tokens`",
+        "correct": false,
+        "why": "The reply stopped with `end`."
+      },
+      {
+        "text": "Errors are always sorted as other",
+        "correct": false,
+        "why": "No such rule; it read the wrong span."
+      }
+    ]
+  },
+  {
+    "id": "ex-9460m6cy",
+    "version": 1,
+    "section": "why-delimit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A prompt ends with `Message: {{message}}` and no delimiter. When does that work?",
+    "hint": "Two conditions.",
+    "choices": [
+      {
+        "text": "Whenever the model is large enough to work out the boundary for itself",
+        "correct": false,
+        "why": "A bigger model still has to guess the boundary."
+      },
+      {
+        "text": "Only when the message is in English",
+        "correct": false,
+        "why": "Language is not the condition."
+      },
+      {
+        "text": "While it is last and holds nothing like structure",
+        "correct": true,
+        "why": "Right, and pasted text breaks the second condition."
+      },
+      {
+        "text": "When the temperature is 0",
+        "correct": false,
+        "why": "Temperature does not move a boundary."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxq9273w",
+    "version": 1,
+    "section": "backticks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the section show `v5-backticks.txt` with `cat -n` instead of `cat`?",
+    "hint": "This page is Markdown.",
+    "choices": [
+      {
+        "text": "To make the prompt easier to count in tokens, line by line",
+        "correct": false,
+        "why": "Line numbers have nothing to do with tokens."
+      },
+      {
+        "text": "`cat` refuses files that contain backticks",
+        "correct": false,
+        "why": "`cat` prints anything."
+      },
+      {
+        "text": "The model reads the line numbers and uses them to find the message",
+        "correct": false,
+        "why": "The numbers are for the page, not the model."
+      },
+      {
+        "text": "Three backticks would close the page's code block",
+        "correct": true,
+        "why": "Right: the same failure, one level up."
+      }
+    ]
+  },
+  {
+    "id": "ex-840zzxpg",
+    "version": 1,
+    "section": "backticks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under `v5-backticks.txt`, how many of the six pasted messages passed every check?",
+    "hint": "The `all` line.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-55xgpzzn",
+    "version": 1,
+    "section": "backticks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `v5-backticks.txt`, the summary for `p04` was only *When will they try again?* Why?",
+    "hint": "Count the sets of backticks in the rendered prompt.",
+    "choices": [
+      {
+        "text": "The stand-in summarises only questions",
+        "correct": false,
+        "why": "It summarised the courier's note under `v5-tagged`."
+      },
+      {
+        "text": "It took the last pair of backticks",
+        "correct": true,
+        "why": "Right: the customer's own backticks broke the message in two."
+      },
+      {
+        "text": "The note was too long",
+        "correct": false,
+        "why": "Length did not matter; the boundary did."
+      },
+      {
+        "text": "The courier's note was in another language",
+        "correct": false,
+        "why": "It was in English."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcmr10cf",
+    "version": 1,
+    "section": "backticks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`pl render` warned that the message closes its delimiter; `pl run` said nothing. What habit does that suggest?",
+    "hint": "When would you ever see the warning?",
+    "choices": [
+      {
+        "text": "Render a few real cases whenever the template changes, and read the warnings",
+        "correct": true,
+        "why": "Right: the run renders with warnings off."
+      },
+      {
+        "text": "Ignore the warnings, since the run succeeded",
+        "correct": false,
+        "why": "It succeeded at producing wrong answers."
+      },
+      {
+        "text": "Delete messages that contain backticks",
+        "correct": false,
+        "why": "Those are real customers; the template has to cope."
+      },
+      {
+        "text": "Run at a higher temperature to vary the boundary",
+        "correct": false,
+        "why": "Temperature does not move a boundary."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfz421k5",
+    "version": 1,
+    "section": "backticks",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A delimiter that the content may contain is a delimiter the content may ___.",
+    "hint": "What a closing mark does.",
+    "blanks": [
+      {
+        "accept": [
+          "close",
+          "end",
+          "break"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tn47hkcf",
+    "version": 1,
+    "section": "xml-tags",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under `v5-tagged.txt`, how many of the six pasted messages passed every check?",
+    "hint": "The `all` line.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-xb26dbb7",
+    "version": 1,
+    "section": "xml-tags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From backticks to tags: fixed 4, broken 0, sign test p = 0.125. How should you read that?",
+    "hint": "Lesson 7: how many changes does the test need?",
+    "choices": [
+      {
+        "text": "The tags made no difference, since p is above 0.05",
+        "correct": false,
+        "why": "Above 0.05 means the count cannot show it, not that there is nothing."
+      },
+      {
+        "text": "Too few changes for the test; the replies show the mechanism",
+        "correct": true,
+        "why": "Right: you can read what each prompt took as the message."
+      },
+      {
+        "text": "p = 0.125 proves the tags are better",
+        "correct": false,
+        "why": "A p value proves nothing on its own, and this one is not small."
+      },
+      {
+        "text": "Run it again a few times to collect more evidence before deciding",
+        "correct": false,
+        "why": "At temperature 0 the stand-in gives the same six answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-d16ft0da",
+    "version": 1,
+    "section": "xml-tags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can a closing tag do that a closing fence of backticks cannot?",
+    "hint": "`</message>` against three backticks.",
+    "choices": [
+      {
+        "text": "Name the section it ends",
+        "correct": true,
+        "why": "Right: a fence closes whatever is open."
+      },
+      {
+        "text": "Stop the model from reading the message",
+        "correct": false,
+        "why": "The model reads it either way."
+      },
+      {
+        "text": "Escape the text inside it automatically",
+        "correct": false,
+        "why": "Escaping is a separate step, the `|xml` filter."
+      },
+      {
+        "text": "Make the prompt cheaper than one that uses backticks",
+        "correct": false,
+        "why": "A tag costs a few more tokens than three backticks."
+      }
+    ]
+  },
+  {
+    "id": "ex-8grc5egq",
+    "version": 1,
+    "section": "xml-tags",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which reasons does the section give for preferring tags? Choose all that apply.",
+    "hint": "Three reasons, and one claim it rejects.",
+    "choices": [
+      {
+        "text": "They are rare in what customers write",
+        "correct": true,
+        "why": "Yes, far rarer than backticks."
+      },
+      {
+        "text": "They have names, so each section can be referred to",
+        "correct": true,
+        "why": "Yes: the instructions can name `<message>`."
+      },
+      {
+        "text": "Anthropic's documentation recommends them for structuring prompts",
+        "correct": true,
+        "why": "Yes: *Use XML tags to structure your prompts*."
+      },
+      {
+        "text": "Certain tag names carry a special meaning to models",
+        "correct": false,
+        "why": "No name is special; consistency is what helps."
+      }
+    ]
+  },
+  {
+    "id": "ex-20qgbkxy",
+    "version": 1,
+    "section": "xml-tags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A prompt carries the customer's message, their order record and their last three messages. How do you delimit it?",
+    "hint": "Each piece of data is a section.",
+    "choices": [
+      {
+        "text": "One pair of tags around all three",
+        "correct": false,
+        "why": "Then nothing says where one ends and the next starts."
+      },
+      {
+        "text": "Backticks for the order, tags for the rest",
+        "correct": false,
+        "why": "Mixing marks gives the content more ways to close one."
+      },
+      {
+        "text": "A named tag for each, referred to by name in the instructions",
+        "correct": true,
+        "why": "Right, and each value escaped as it goes in."
+      },
+      {
+        "text": "No delimiters, with the instructions placed last",
+        "correct": false,
+        "why": "Then every boundary is a guess."
+      }
+    ]
+  },
+  {
+    "id": "ex-k22q1nhd",
+    "version": 1,
+    "section": "a-tag-in-the-text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `v5-tagged.txt`, `a08` came back with urgency `high`. Why?",
+    "hint": "Read the rendered prompt as a parser would.",
+    "choices": [
+      {
+        "text": "The customer was genuinely angry",
+        "correct": false,
+        "why": "The person who labelled it said normal."
+      },
+      {
+        "text": "Tags make every message more urgent",
+        "correct": false,
+        "why": "The other pasted messages kept their urgency."
+      },
+      {
+        "text": "The stand-in obeys every message that mentions urgency",
+        "correct": false,
+        "why": "It obeyed because the line had left the message."
+      },
+      {
+        "text": "Its tag moved a line out",
+        "correct": true,
+        "why": "Right: its closing tag put the next line among the instructions, and text outside the delimiters is read as one."
+      }
+    ]
+  },
+  {
+    "id": "ex-vs7w3avz",
+    "version": 1,
+    "section": "a-tag-in-the-text",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `{{message|xml}}` do that `{{message}}` does not?",
+    "hint": "Compare the two renders of `a08`.",
+    "choices": [
+      {
+        "text": "Wraps the message in tags",
+        "correct": false,
+        "why": "The tags are in the template either way."
+      },
+      {
+        "text": "Turns the message into XML elements",
+        "correct": false,
+        "why": "It does the opposite: tags become plain text."
+      },
+      {
+        "text": "Escapes `<`, `>` and `&` before the value goes in",
+        "correct": true,
+        "why": "Right, so the customer's text cannot close a tag."
+      },
+      {
+        "text": "Removes anything in the message that looks like an instruction",
+        "correct": false,
+        "why": "The instruction is still there, inside the message."
+      }
+    ]
+  },
+  {
+    "id": "ex-xax4m3x3",
+    "version": 1,
+    "section": "a-tag-in-the-text",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why could no rewording of the instructions have fixed `a08` under `v5-tagged.txt`?",
+    "hint": "Who put the line outside the tags?",
+    "choices": [
+      {
+        "text": "The stand-in ignores instructions",
+        "correct": false,
+        "why": "It follows them; the trouble is which text counts as one."
+      },
+      {
+        "text": "The template inserted the customer's tag, and with it the boundary",
+        "correct": true,
+        "why": "Right: the fix belongs in the template, by escaping."
+      },
+      {
+        "text": "Instructions are read after the message",
+        "correct": false,
+        "why": "Order is not the issue here."
+      },
+      {
+        "text": "A08 is unfixable by design and the case exists to show that some attacks cannot be stopped",
+        "correct": false,
+        "why": "Escaping fixed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9b56xwv9",
+    "version": 1,
+    "section": "a-tag-in-the-text",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `v6-escaped` summary for `a08` carries `&lt;/message&gt;`. What should a web page that shows it do?",
+    "hint": "Two formats, two jobs.",
+    "choices": [
+      {
+        "text": "Turn it back into a real tag before storing it",
+        "correct": false,
+        "why": "That rebuilds the problem in the next place it is used."
+      },
+      {
+        "text": "Strip everything that looks like a tag",
+        "correct": false,
+        "why": "That changes what the customer wrote."
+      },
+      {
+        "text": "Nothing; escaped text is safe everywhere",
+        "correct": false,
+        "why": "It was escaped for the prompt, not for the page."
+      },
+      {
+        "text": "Escape it for HTML, as a separate job",
+        "correct": true,
+        "why": "Right: each format escapes for itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjdsck8y",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the places where the stand-in looks for the message.",
+    "hint": "Its opening comment lists them.",
+    "items": [
+      "Inside `<message>` tags",
+      "Inside the last pair of triple backticks",
+      "After the last `Message:`"
+    ]
+  },
+  {
+    "id": "ex-x1eep9vs",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each prompt to what happened to it in this lesson.",
+    "hint": "One each.",
+    "pairs": [
+      {
+        "left": "`v4-only-json.txt`",
+        "right": "The customer's backticks were taken as the delimiter"
+      },
+      {
+        "left": "`v5-backticks.txt`",
+        "right": "Four sets of backticks, and the last pair won"
+      },
+      {
+        "left": "`v5-tagged.txt`",
+        "right": "A customer's closing tag ended the message early"
+      },
+      {
+        "left": "`v6-escaped.txt`",
+        "right": "The whole message stayed inside the tags"
+      }
+    ],
+    "right_distractors": [
+      "Every reply was cut at `max_tokens`"
+    ]
+  },
+  {
+    "id": "ex-ckw1wdjz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You add a second section to the prompt, `<order>{{order}}</order>`, filled from the order database. What else does it need?",
+    "hint": "Where does the value come from, and what can it contain?",
+    "choices": [
+      {
+        "text": "Nothing: database values are trusted",
+        "correct": false,
+        "why": "A product title or an address in the database was typed by somebody too."
+      },
+      {
+        "text": "Backticks instead of tags, so the two sections differ",
+        "correct": false,
+        "why": "That brings back the backtick failure."
+      },
+      {
+        "text": "The `|xml` filter: values from outside the template hold whatever was typed into them",
+        "correct": true,
+        "why": "Right, and a rendered case with a tag in it, to check."
+      },
+      {
+        "text": "A note in the instructions saying the order is safe",
+        "correct": false,
+        "why": "Wording cannot stop a tag from closing."
+      }
+    ]
+  }
+]
