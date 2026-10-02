@@ -8,9 +8,9 @@ command line. The shape is always the same: **which hosts, which module, which a
 
 ```
 ana@laptop:~/shop/ansible$ ansible web -m command -a whoami
-web1 | CHANGED | rc=0 >>
-deploy
 web2 | CHANGED | rc=0 >>
+deploy
+web1 | CHANGED | rc=0 >>
 deploy
 ```
 
@@ -67,13 +67,13 @@ Run the same thing again:
 
 ```
 ana@laptop:~/shop/ansible$ ansible web -m apt -a "name=tree state=present" --become
-web1 | SUCCESS => {
-    "cache_update_time": 1790937614,
+web2 | SUCCESS => {
+    "cache_update_time": 1790954402,
     "cache_updated": false,
     "changed": false
 }
-web2 | SUCCESS => {
-    "cache_update_time": 1790937614,
+web1 | SUCCESS => {
+    "cache_update_time": 1790954403,
     "cache_updated": false,
     "changed": false
 }
@@ -114,9 +114,9 @@ ii  grep           3.11-4build1 amd64        GNU grep, egrep and fgrepdpkg-query
 dpkg-query: no packages found matching -c
 dpkg-query: no packages found matching ^iiThe command exited with a non-zero return code.
 ana@laptop:~/shop/ansible$ ansible web -m shell -a "dpkg -l | grep -c ^ii"
-web2 | CHANGED | rc=0 >>
-193
 web1 | CHANGED | rc=0 >>
+193
+web2 | CHANGED | rc=0 >>
 193
 ```
 

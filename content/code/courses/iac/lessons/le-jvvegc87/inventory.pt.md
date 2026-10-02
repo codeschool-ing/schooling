@@ -64,15 +64,15 @@ Agora a pergunta com que toda sessão de Ansible começa: eu consigo alcançá-l
 
 ```
 ana@laptop:~/shop/ansible$ ansible all -m ping
+db1 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
 web2 | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }
 web1 | SUCCESS => {
-    "changed": false,
-    "ping": "pong"
-}
-db1 | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }

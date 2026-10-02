@@ -131,20 +131,20 @@ ok: [web2]
 ok: [web1]
 
 TASK [web : Create the site's directory] ***************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 TASK [web : Write the index page] **********************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 TASK [web : Configure the shop's site] *****************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 TASK [web : Start nginx] *******************************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 PLAY RECAP *********************************************************************
 web1                       : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   

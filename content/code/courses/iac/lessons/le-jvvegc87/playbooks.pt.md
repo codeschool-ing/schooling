@@ -58,12 +58,12 @@ ana@laptop:~/shop/ansible$ ansible-playbook site.yml
 PLAY [Web servers] *************************************************************
 
 TASK [Gathering Facts] *********************************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 TASK [Install nginx] ***********************************************************
-changed: [web1]
 changed: [web2]
+changed: [web1]
 
 TASK [Write the index page] ****************************************************
 changed: [web2]
@@ -74,8 +74,8 @@ changed: [web1]
 changed: [web2]
 
 TASK [Start nginx] *************************************************************
-changed: [web1]
 changed: [web2]
+changed: [web1]
 
 PLAY RECAP *********************************************************************
 web1                       : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
