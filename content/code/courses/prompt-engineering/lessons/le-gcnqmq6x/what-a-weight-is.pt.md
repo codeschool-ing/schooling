@@ -61,10 +61,10 @@ eram comuns no texto e o formato de programas e de argumentos.
 
 Isso tem duas consequências que surpreendem:
 
-- **não dá para procurar uma frase nos pesos.** O que o modelo leu está espalhado por todos eles,
+- não dá para procurar uma frase nos pesos: o que o modelo leu está espalhado por todos eles,
   misturado com tudo o mais que ele leu. É por isso que ele produz texto fluente que não aparece em
   lugar nenhum dos dados de treinamento, e por isso que erra um fato que leu muitas vezes;
-- **os pesos não mudam enquanto você usa o modelo.** Uma conversa não ensina nada a ele; o que ele
+- os pesos não mudam enquanto você usa o modelo, e uma conversa não ensina nada a ele; o que ele
   "lembra" dentro de um chat é o texto anterior enviado de novo como entrada, que é a lição 4. Mudar
   os pesos é outro trabalho, e a lição 9 trata de quando vale a pena fazê-lo.
 

@@ -60,10 +60,10 @@ were common in the text, and the shapes of programs and arguments.
 
 That has two consequences that surprise people:
 
-- **you cannot search the weights for a sentence.** What the model read is spread across all of
+- you cannot search the weights for a sentence: what the model read is spread across all of
   them, mixed with everything else it read. That is why it can produce fluent text that appears
   nowhere in its training data, and why it can be wrong about a fact it read many times;
-- **the weights do not change while you use the model.** A conversation does not teach it
+- the weights do not change while you use the model, and a conversation does not teach it
   anything; what it "remembers" within a chat is the earlier text sent again as input, which is
   lesson 4. Changing the weights is a separate job, and lesson 9 is about when it is worth doing.
 
