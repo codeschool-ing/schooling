@@ -8,8 +8,8 @@ idea is old, and `prompt-engineering` met one form of it in its lesson 27, self-
 lesson takes it again on purpose**, with this course's question: on seventy messages with known
 answers, does the vote actually beat the single prompt, and what does it cost?
 
-Before measuring, it is worth knowing what a vote can do at best, because the arithmetic is short
-and it names the assumption everything else depends on.
+What a vote can do at best takes a few lines of arithmetic, and those lines name the assumption
+everything else depends on.
 
 ## Three voters at 80%
 

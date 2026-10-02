@@ -77,8 +77,8 @@ message the stand-in misreads, it misreads under every wording, because the word
 surrounds the message and not how the message is scored. All eleven are holdout cases, the harder
 messages, which is where a shared blind spot would be.
 
-Real models are not a keyword table, but the shape carries over as a practitioner's observation:
-**prompts sent to the same model tend to share its mistakes**, because what the model does not
+Real models are not a keyword table, but the shape carries over as a practitioner's observation.
+**Prompts sent to the same model tend to share its mistakes**, because what the model does not
 know, it does not know under any wording. Diversity has to come from somewhere real, such as a
 different model, different evidence in the prompt, or a different way of reaching the answer. Three
 rewordings of one prompt are close to one voter counted three times.

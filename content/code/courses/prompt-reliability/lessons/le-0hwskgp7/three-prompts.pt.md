@@ -22,13 +22,13 @@ majority of 3              58/70 right
 unanimous on 54 cases, a tie on 0
 ```
 
-O `pl vote` lê a categoria de cada resposta, só a conta como certa quando a resposta é analisável e
+O `pl vote` lê a categoria de cada resposta, só a conta como certa quando a resposta é JSON válido e
 bate com o rótulo da pessoa, e fica com a maioria em cada caso. Dois dos prompts fazem 56 de 70,
 exatamente 80%, e o terceiro 53. A maioria faz **58, duas a mais que o melhor prompt sozinho**. Se
 os três fossem independentes, a conta da seção anterior diz que uma maioria de votantes a 80%
 acertaria cerca de 0,896 × 70, quase 63.
 
-Então os três não são independentes. O jeito de ver quanto falta para isso é contar, para cada
+Então os três não são independentes. O jeito de ver o quanto estão longe disso é contar, para cada
 caso, quantos dos três erraram:
 
 ```
@@ -59,7 +59,7 @@ ana@lab:~/triage$ for r in v3 v4 v6; do pl check runs/$r.jsonl --failures | awk 
 
 O laço imprime cada caso que falhou em `json` ou `category` com cada prompt, e o `uniq -c` conta
 com quantos prompts cada um falhou. Dez casos erraram com um prompt só, e a votação corrigiu todos:
-os outros dois venceram no voto. Isso inclui respostas que não eram analisáveis, que não chegam a
+os outros dois venceram no voto. Isso inclui respostas que não eram JSON válido, que nem chegam a
 votar. Um caso, `h28`, errou com dois prompts, e a votação foi com eles. **Onze casos erraram com
 os três**, e aí votação nenhuma resolve.
 
@@ -78,7 +78,7 @@ o que está em volta da mensagem e não a pontuação dela. Os onze são casos d
 mais difíceis, que é onde um ponto cego compartilhado estaria.
 
 Modelos reais não são uma tabela de palavras-chave, mas o formato se mantém como observação de quem
-trabalha com eles: **prompts enviados ao mesmo modelo tendem a compartilhar os erros dele**, porque
+trabalha com eles. **Prompts enviados ao mesmo modelo tendem a compartilhar os erros dele**, porque
 o que o modelo não sabe ele não sabe com redação nenhuma. A diversidade precisa vir de algum lugar
 real, como outro modelo, outra evidência no prompt ou outro caminho até a resposta. Três redações de
 um prompt são quase um votante contado três vezes.

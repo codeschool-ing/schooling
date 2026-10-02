@@ -28,7 +28,7 @@ cost of a million calls like them: 92,649 cents
 ```
 
 O `pl cost` soma os tokens que uma execução usou e os precifica com o `prices.json`, que guarda os
-preços do curso e de nenhum fornecedor. O `v6-escaped` custa 6,4854 centavos por setenta chamadas.
+preços do curso e de nenhum provedor. O `v6-escaped` custa 6,4854 centavos por setenta chamadas.
 A execução com cinco amostras usou os mesmos 120,6 tokens de entrada por chamada, fez cinco vezes
 mais chamadas e custou 32,4270 centavos, exatamente cinco vezes mais. Em troca, acertou quatro
 mensagens a menos.
@@ -68,13 +68,13 @@ soma.
 
 Três coisas decidem, e cada uma é algo que você consegue medir:
 
-- **Quanto custa um erro.** Duas respostas certas a mais em setenta valem 3,3 vezes a conta quando
+- Quanto custa um erro: duas respostas certas a mais em setenta valem 3,3 vezes a conta quando
   um rótulo errado deixa uma conta invadida na fila errada. Não valem quando um rótulo errado
   significa uma pessoa reclassificando uma pergunta sobre a newsletter.
-- **Quanto custa uma chamada.** Um ensemble de três chamadas a um modelo pequeno e barato pode
+- Quanto custa uma chamada: um ensemble de três chamadas a um modelo pequeno e barato pode
   custar menos que uma chamada a um grande. É uma comparação que vale rodar com o `pl cost` nos
   dois.
-- **Quão diferentes são os membros.** A conta só rende quando os membros erram coisas diferentes.
+- Quão diferentes são os membros: a conta só rende quando os membros erram coisas diferentes.
   Conte do jeito da seção dos três prompts, caso a caso, antes de contar dinheiro.
 
 A ordem dessas verificações importa. **Meça o ganho da votação contra a melhor chamada única

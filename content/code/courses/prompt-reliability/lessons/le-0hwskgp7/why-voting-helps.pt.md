@@ -8,8 +8,8 @@ antiga, e o `prompt-engineering` viu uma forma dela na aula 27, a autoconsistên
 volta a ela de propósito**, com a pergunta deste curso: em setenta mensagens com respostas
 conhecidas, a votação ganha mesmo do prompt sozinho, e quanto ela custa?
 
-Antes de medir, vale saber o que uma votação consegue fazer no melhor caso, porque a conta é curta
-e dá nome à suposição da qual todo o resto depende.
+O que uma votação consegue fazer no melhor caso cabe em poucas linhas de conta, e essas linhas dão
+nome à suposição da qual todo o resto depende.
 
 ## Três votantes a 80%
 

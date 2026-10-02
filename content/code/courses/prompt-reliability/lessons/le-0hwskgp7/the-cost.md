@@ -66,12 +66,12 @@ at the same time, and the wait is the slowest member's. The money is still the s
 
 Three things decide it, and each is something you can measure:
 
-- **What an error costs.** Two more right answers in seventy are worth 3.3 times the bill when a
+- What an error costs: two more right answers in seventy are worth 3.3 times the bill when a
   wrong label leaves a hijacked account in the wrong queue. They are not when a wrong label means a
   person re-sorts a newsletter question.
-- **What a call costs.** An ensemble of three calls to a small, cheap model can cost less than one
+- What a call costs: an ensemble of three calls to a small, cheap model can cost less than one
   call to a large one. That is a comparison worth running with `pl cost` on both.
-- **How different the members are.** The arithmetic only pays out when the members make different
+- How different the members are: the arithmetic only pays out when the members make different
   mistakes. Count it the way the three-prompt section did, case by case, before counting money.
 
 The order of those checks matters. **Measure the vote's gain against the best single call first**;
