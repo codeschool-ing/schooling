@@ -24,9 +24,26 @@
 # quoted from there and copied over the real one. Terraform reads only the
 # directory it runs in and never sees ~/.v.
 #
+# One arrangement of the lab is changed here, quietly, and changes nothing the
+# lesson quotes: Terraform gets a provider cache of its own in /home/ana,
+# filled from the same local mirror. The cache lab.sh shares between runs is
+# rewritten by every `terraform init` of every run, and two runs at once made
+# init fail with "text file busy" or a checksum mismatch.
+#
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 . "$(dirname "$0")/../../capture.sh"
+
+mkdir -p "$HOME/.tfcache"
+cat > "$HOME/.terraformrc" <<'RC'
+provider_installation {
+  filesystem_mirror {
+    path = "/opt/iac/mirror"
+  }
+}
+plugin_cache_dir = "/home/ana/.tfcache"
+RC
+export TF_CLI_CONFIG_FILE=$HOME/.terraformrc
 
 rewrite() { # N FILE <<'CODE'
   local here=$PWD

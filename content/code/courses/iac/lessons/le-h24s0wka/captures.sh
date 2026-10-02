@@ -15,16 +15,31 @@
 # different ones.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the files ana
-# wrote (put below), whose contents the lesson shows in full; the moments
-# between sections where she moves terraform.tfvars aside and back, or edits a
-# constraint, which are the `quiet` lines; and git's identity.
+# wrote (put below), whose contents the lesson shows in full; the one edit to
+# a version constraint, which is the `quiet` sed below; and the CLI
+# configuration Terraform reads, which this script writes for itself.
+#
+# THAT LAST ONE IS A WORKAROUND. The lab's /opt/iac/terraformrc also names a
+# plugin_cache_dir shared by every run on the machine, and with several lessons
+# captured at once one init rewrote the cached aws provider under another: init
+# failed with "text file busy", and a working directory initialised a moment
+# earlier failed every command after it with "does not match any of the
+# checksums recorded in the dependency lock file". So this script installs from
+# the same filesystem mirror with no cache at all, which is also what a computer
+# with no configuration does, and deletes .terraform when it ends.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 . "$(dirname "$0")/../../capture.sh"
 
-quiet 'git config --global user.name Ana'
-quiet 'git config --global user.email ana@example.com'
+cat > ~/.terraformrc-lab <<'RC'
+provider_installation {
+  filesystem_mirror {
+    path = "/opt/iac/mirror"
+  }
+}
+RC
+export TF_CLI_CONFIG_FILE=~/.terraformrc-lab
 mkdir -p shop && cd shop
 
 block first-configuration
@@ -297,3 +312,5 @@ run 'aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query "Vpcs[].V
 run 'aws s3 ls'
 block plan-after-destroy
 run 'terraform plan'
+
+quiet 'rm -rf .terraform'
