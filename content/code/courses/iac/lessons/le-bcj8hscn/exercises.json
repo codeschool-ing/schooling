@@ -1,0 +1,911 @@
+[
+  {
+    "id": "ex-v3jrqb1y",
+    "version": 1,
+    "section": "reading-a-plan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a plan's body, what does `-/+` in front of a resource mean?",
+    "hint": "Read the legend at the top of the plan.",
+    "choices": [
+      {
+        "text": "It is updated where it stands and keeps its id",
+        "correct": false,
+        "why": "That is `~`, update in-place."
+      },
+      {
+        "text": "Destroyed, then replaced",
+        "correct": true,
+        "why": "Yes: destroy and then create replacement, in that order by default."
+      },
+      {
+        "text": "It leaves the state but stays in AWS",
+        "correct": false,
+        "why": "That is what a `removed` block does; a plan shows it differently."
+      },
+      {
+        "text": "A second copy is created beside the first one",
+        "correct": false,
+        "why": "The old one goes; there is never a lasting second copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmvvwawj",
+    "version": 1,
+    "section": "reading-a-plan",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's plan ended with `Plan: 4 to add, 1 to change, 2 to destroy.` How many of those four adds were resources that did not exist before in any form, rather than replacements?",
+    "hint": "One of the adds is the new half of a `-/+`.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-amm0s2w4",
+    "version": 1,
+    "section": "reading-a-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A plan says an instance must be replaced. Where do you find which argument is responsible?",
+    "hint": "Look inside the resource's block.",
+    "choices": [
+      {
+        "text": "In the `Plan:` summary at the bottom",
+        "correct": false,
+        "why": "The summary counts actions and gives no reasons."
+      },
+      {
+        "text": "On the argument whose new value is followed by `# forces replacement`",
+        "correct": true,
+        "why": "Yes: in Ana's plan it was `ami`."
+      },
+      {
+        "text": "On the `id`, which shows `(known after apply)`",
+        "correct": false,
+        "why": "The new id is unknown because of the replacement, not the cause of it."
+      },
+      {
+        "text": "In the legend of symbols",
+        "correct": false,
+        "why": "The legend lists the symbols this plan uses, nothing per resource."
+      }
+    ]
+  },
+  {
+    "id": "ex-8vh15jbp",
+    "version": 1,
+    "section": "reading-a-plan",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each symbol in a plan to what Terraform will do.",
+    "hint": "The plan's legend says each one in words.",
+    "pairs": [
+      {
+        "left": "`+`",
+        "right": "Create a new object"
+      },
+      {
+        "left": "`~`",
+        "right": "Change the object where it is"
+      },
+      {
+        "left": "`-`",
+        "right": "Destroy the object"
+      },
+      {
+        "left": "`<=`",
+        "right": "Read a data source"
+      }
+    ],
+    "right_distractors": [
+      "Move the object to a new address"
+    ]
+  },
+  {
+    "id": "ex-c7my6h1w",
+    "version": 1,
+    "section": "reading-a-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Ana's plan, `data.aws_iam_policy_document.assets_read` will be read during apply. Why not during the plan, as usual?",
+    "hint": "What does its `resources` argument refer to?",
+    "choices": [
+      {
+        "text": "Policy documents are read late by design",
+        "correct": false,
+        "why": "They are read during the plan when their arguments are known."
+      },
+      {
+        "text": "It names the ARN of a bucket that is not created yet",
+        "correct": true,
+        "why": "Right: the ARN is unknown until the bucket exists, so the read waits for it."
+      },
+      {
+        "text": "The policy holds a sensitive value",
+        "correct": false,
+        "why": "Nothing in it is sensitive; the deferral comes from an unknown value."
+      },
+      {
+        "text": "The provider cannot reach IAM while it is planning",
+        "correct": false,
+        "why": "The provider read the role during the same plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-c99wghy0",
+    "version": 1,
+    "section": "reading-a-plan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The plan shows `result = (sensitive value)` for `random_password.db`. What does that marker tell you?",
+    "hint": "Lesson 12 follows the value after the plan.",
+    "choices": [
+      {
+        "text": "The value is generated later, when something reads it",
+        "correct": false,
+        "why": "It is generated during the apply like any attribute; the marker is about printing."
+      },
+      {
+        "text": "Terraform encrypts it before writing the state",
+        "correct": false,
+        "why": "Terraform does no such thing; lesson 12 shows the value in the state."
+      },
+      {
+        "text": "The password is held in memory and not saved",
+        "correct": false,
+        "why": "It is saved, in the state, like every attribute."
+      },
+      {
+        "text": "The output hides it",
+        "correct": true,
+        "why": "Yes. Hidden from what is printed, and nothing more."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3j05fg9",
+    "version": 1,
+    "section": "saved-plans",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `terraform apply tfplan` do that `terraform apply` with no argument does not?",
+    "hint": "Think about where each one's actions come from.",
+    "choices": [
+      {
+        "text": "It plans again and saves the result to the file",
+        "correct": false,
+        "why": "Saving is `plan -out`; applying the file plans nothing new."
+      },
+      {
+        "text": "It asks for confirmation twice",
+        "correct": false,
+        "why": "It asks nothing at all: the review was the question."
+      },
+      {
+        "text": "Carries out the reviewed plan, unasked",
+        "correct": true,
+        "why": "Yes: the actions in the file, with no new plan and no prompt."
+      },
+      {
+        "text": "It refreshes the state and stops there",
+        "correct": false,
+        "why": "That would be `-refresh-only`, lesson 7."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzg1m1td",
+    "version": 1,
+    "section": "saved-plans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana saved a plan on `change`, then applied a hotfix from another branch. Why did `terraform apply tfplan` refuse afterwards?",
+    "hint": "Compare the serials.",
+    "choices": [
+      {
+        "text": "The state moved on",
+        "correct": true,
+        "why": "Right: the plan carries an older serial than the state file now has."
+      },
+      {
+        "text": "The hotfix branch had not been merged into `change`",
+        "correct": false,
+        "why": "Git history is not what Terraform checks; it compares states."
+      },
+      {
+        "text": "A saved plan expires a few hours after it is written",
+        "correct": false,
+        "why": "There is no timer; the refusal names the state changing."
+      },
+      {
+        "text": "Two people tried to apply one plan at once",
+        "correct": false,
+        "why": "Nobody else was applying it; the hotfix was a different change."
+      }
+    ]
+  },
+  {
+    "id": "ex-v5re9jbs",
+    "version": 1,
+    "section": "saved-plans",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every write to a state file increases a counter in it, its ___, and a saved plan carries the value it was computed against.",
+    "hint": "`jq` printed it from the file and from inside `tfplan`.",
+    "blanks": [
+      {
+        "accept": [
+          "serial"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d6wbztk6",
+    "version": 1,
+    "section": "saved-plans",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say a saved plan file should be handled like the state?",
+    "hint": "Look at what `unzip -l tfplan` listed.",
+    "choices": [
+      {
+        "text": "It holds a copy of the state",
+        "correct": true,
+        "why": "Yes: `tfstate` and `tfstate-prev` are inside, secrets included."
+      },
+      {
+        "text": "Terraform deletes it after one apply",
+        "correct": false,
+        "why": "The file stays on disk; it just becomes stale."
+      },
+      {
+        "text": "It is the one copy of the configuration that Terraform trusts",
+        "correct": false,
+        "why": "It carries a copy of the configuration, but the files in the directory are the source."
+      },
+      {
+        "text": "Git refuses to store binary files of that size",
+        "correct": false,
+        "why": "Git would store it happily; that is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1k66z6p",
+    "version": 1,
+    "section": "saved-plans",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a reviewed change in order.",
+    "hint": "The review happens between writing the file and applying it.",
+    "items": [
+      "Run `terraform plan -out=tfplan`",
+      "A reviewer reads `terraform show tfplan`",
+      "Run `terraform apply tfplan`",
+      "`terraform plan -detailed-exitcode` exits with 0"
+    ],
+    "trap": "Applying first and reviewing afterwards reviews nothing."
+  },
+  {
+    "id": "ex-fkcz2tnr",
+    "version": 1,
+    "section": "plan-json",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the output of `terraform show -json tfplan`, how does a default replacement appear in `actions`?",
+    "hint": "Two actions, in the order they happen.",
+    "choices": [
+      {
+        "text": "`[\"replace\"]`",
+        "correct": false,
+        "why": "There is no `replace` action; it is spelled as two."
+      },
+      {
+        "text": "`[\"update\"]`, with a flag",
+        "correct": false,
+        "why": "`update` is `~`; a replacement destroys."
+      },
+      {
+        "text": "`[\"delete\",\"create\"]`",
+        "correct": true,
+        "why": "Yes, and `[\"create\",\"delete\"]` with `create_before_destroy`."
+      },
+      {
+        "text": "Two entries for the address, a `delete` and then a `create`",
+        "correct": false,
+        "why": "It is one entry per address, with a list of two actions."
+      }
+    ]
+  },
+  {
+    "id": "ex-2hv1e82p",
+    "version": 1,
+    "section": "plan-json",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Ana's guard read the JSON plan instead of searching the text plan for lines starting with `-`?",
+    "hint": "Who promises what about each format?",
+    "choices": [
+      {
+        "text": "The text plan leaves deletions out",
+        "correct": false,
+        "why": "The text shows them; it is just made for eyes, not programs."
+      },
+      {
+        "text": "jq runs faster than grep on large plans",
+        "correct": false,
+        "why": "Speed was never the reason."
+      },
+      {
+        "text": "Its layout is not a stable format",
+        "correct": true,
+        "why": "Right: the JSON has a `format_version`; the text layout changes between releases."
+      },
+      {
+        "text": "The JSON includes the ids that AWS invents",
+        "correct": false,
+        "why": "Both show ids where known; that does not decide anything here."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1w6vsgk",
+    "version": 1,
+    "section": "plan-json",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`terraform plan -detailed-exitcode` exits with 2. What does that mean?",
+    "hint": "0, 1 and 2 each mean something different.",
+    "choices": [
+      {
+        "text": "The plan failed with an error",
+        "correct": false,
+        "why": "An error is 1."
+      },
+      {
+        "text": "Exactly two resources will change",
+        "correct": false,
+        "why": "The code is not a count."
+      },
+      {
+        "text": "The state was refreshed and there is nothing to do",
+        "correct": false,
+        "why": "Nothing to do is 0."
+      },
+      {
+        "text": "There are changes to make",
+        "correct": true,
+        "why": "Yes. A scheduled job can ask that every night."
+      }
+    ]
+  },
+  {
+    "id": "ex-fewegsen",
+    "version": 1,
+    "section": "plan-json",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these plans would Ana's `check-plan.sh` refuse? Choose all that apply.",
+    "hint": "It looks for one word in each list of actions.",
+    "choices": [
+      {
+        "text": "A plan that removes a subnet's block from the file",
+        "correct": true,
+        "why": "Yes: a `delete`."
+      },
+      {
+        "text": "A plan that moves an instance to a new AMI",
+        "correct": true,
+        "why": "Yes: a replacement contains `delete`."
+      },
+      {
+        "text": "A plan that opens SSH to `0.0.0.0/0`",
+        "correct": false,
+        "why": "An update in place; the guard passes it, which is why a person reads plans too."
+      },
+      {
+        "text": "A plan that adds three resources",
+        "correct": false,
+        "why": "Creates only; it printed `ok`."
+      },
+      {
+        "text": "A plan with a data source read during apply",
+        "correct": false,
+        "why": "A `read` is not a `delete`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vp29twcz",
+    "version": 1,
+    "section": "what-to-look-for",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A plan says `0 to add, 2 to change, 0 to destroy` and passes the guard. Why does the lesson call it the most dangerous change it shows?",
+    "hint": "Read the values, not the symbols.",
+    "choices": [
+      {
+        "text": "Both updates force replacements that the summary hides",
+        "correct": false,
+        "why": "A replacement would be counted in add and destroy; these are true updates."
+      },
+      {
+        "text": "It widens SSH and a role",
+        "correct": true,
+        "why": "Right: SSH to every address and `s3:*` on the bucket, both as `~`."
+      },
+      {
+        "text": "Updates in place stop the instance while they run",
+        "correct": false,
+        "why": "Neither change touches the instance."
+      },
+      {
+        "text": "The policy is replaced by a string Terraform cannot read",
+        "correct": false,
+        "why": "Terraform decoded it and showed the one key that changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-tz8b8xzk",
+    "version": 1,
+    "section": "what-to-look-for",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a provider upgrade show up for review?",
+    "hint": "It is a file next to the configuration.",
+    "choices": [
+      {
+        "text": "As `~` on each resource of that provider",
+        "correct": false,
+        "why": "An upgrade changes no resource block; the plan may show nothing at all."
+      },
+      {
+        "text": "In `terraform.tfstate`",
+        "correct": false,
+        "why": "The state records resources, not the version the run should use."
+      },
+      {
+        "text": "In the output of `terraform version` on the reviewer's laptop",
+        "correct": false,
+        "why": "That shows what one machine has, not what the change asks for."
+      },
+      {
+        "text": "In the diff of `.terraform.lock.hcl`",
+        "correct": true,
+        "why": "Yes: the version and the hashes change there."
+      }
+    ]
+  },
+  {
+    "id": "ex-zp8sn3hn",
+    "version": 1,
+    "section": "what-to-look-for",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After Ana raised the `random` constraint to `~> 3.9`, `terraform plan` stopped with an error instead of using 3.9.1. Why?",
+    "hint": "Read the error's first sentence.",
+    "choices": [
+      {
+        "text": "Version 3.9.1 was missing from the lab's mirror",
+        "correct": false,
+        "why": "It was there; `init -upgrade` installed it a moment later."
+      },
+      {
+        "text": "The lock file still said 3.8.1",
+        "correct": true,
+        "why": "Right: a plan never changes the lock file; `init -upgrade` does, as a reviewable diff."
+      },
+      {
+        "text": "A new constraint needs a fresh state file",
+        "correct": false,
+        "why": "The state was untouched by the upgrade."
+      },
+      {
+        "text": "The `~>` operator forbids a change of minor version",
+        "correct": false,
+        "why": "`~> 3.9` allows 3.9.1; the constraint was satisfied."
+      }
+    ]
+  },
+  {
+    "id": "ex-5mvjz1ka",
+    "version": 1,
+    "section": "what-to-look-for",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the lesson suggest you do before you start reading a plan?",
+    "hint": "It turns reading into checking.",
+    "choices": [
+      {
+        "text": "Run the guard script against it first",
+        "correct": false,
+        "why": "Useful, but the guard sees deletes only."
+      },
+      {
+        "text": "Say what you expect it to say",
+        "correct": true,
+        "why": "Yes: then a count you did not predict is a question to answer."
+      },
+      {
+        "text": "Delete `.terraform` and run `terraform init` again",
+        "correct": false,
+        "why": "That changes nothing about what the plan proposes."
+      },
+      {
+        "text": "Read the `Plan:` summary line and decide from it",
+        "correct": false,
+        "why": "The summary is where to compare, not where to decide."
+      }
+    ]
+  },
+  {
+    "id": "ex-ter8jfda",
+    "version": 1,
+    "section": "partial-apply",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An apply fails on one resource after creating two others. What happens to the two that were created?",
+    "hint": "An apply is not a transaction.",
+    "choices": [
+      {
+        "text": "Terraform rolls them back automatically",
+        "correct": false,
+        "why": "There is no rollback; each create was a separate API call."
+      },
+      {
+        "text": "They exist in AWS but the state does not know them",
+        "correct": false,
+        "why": "Each is written to the state the moment the API answers."
+      },
+      {
+        "text": "They stay, recorded in the state",
+        "correct": true,
+        "why": "Yes: `aws_security_group.batch` was in `state list`."
+      },
+      {
+        "text": "They are destroyed and created again on the next apply",
+        "correct": false,
+        "why": "The next plan proposed only the two missing resources."
+      }
+    ]
+  },
+  {
+    "id": "ex-xd1n4jcd",
+    "version": 1,
+    "section": "partial-apply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the plan accept `10.30.3.0/24` for a subnet in a `10.20.0.0/16` VPC?",
+    "hint": "Which check needs the VPC, and who has it?",
+    "choices": [
+      {
+        "text": "moto skips range checks that AWS would make",
+        "correct": false,
+        "why": "moto refused it with `InvalidSubnet.Range`, at apply time."
+      },
+      {
+        "text": "The plan was saved before the VPC existed",
+        "correct": false,
+        "why": "The VPC had existed since the first apply."
+      },
+      {
+        "text": "It is valid CIDR syntax; the fit is the API's check",
+        "correct": true,
+        "why": "Right: Terraform checks the shape, and the API knows the VPC."
+      },
+      {
+        "text": "`-out` turns validation off",
+        "correct": false,
+        "why": "A saved plan is validated like any other."
+      }
+    ]
+  },
+  {
+    "id": "ex-jc1ykjzj",
+    "version": 1,
+    "section": "partial-apply",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the failed apply, why does `aws_instance.batch` not appear in the log at all?",
+    "hint": "What did it need from another resource?",
+    "choices": [
+      {
+        "text": "Instances are created last in any apply",
+        "correct": false,
+        "why": "The order comes from the graph, not from the type."
+      },
+      {
+        "text": "The security group failed first",
+        "correct": false,
+        "why": "The security group was created."
+      },
+      {
+        "text": "Its subnet id never came",
+        "correct": true,
+        "why": "Yes: with no subnet there was no id to pass, so it was never started."
+      },
+      {
+        "text": "It was left out of the saved plan by the typo",
+        "correct": false,
+        "why": "It was in the plan; the after-failure plan still proposed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2nndh9x1",
+    "version": 1,
+    "section": "partial-apply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `-/+` replacement, in the default order, fails on the create call. What is left in AWS?",
+    "hint": "Which half ran first?",
+    "choices": [
+      {
+        "text": "The old object, untouched",
+        "correct": false,
+        "why": "That is the `+/-` order, where the old one is destroyed last."
+      },
+      {
+        "text": "Both, until the next apply cleans up",
+        "correct": false,
+        "why": "The old one was destroyed before the create was tried."
+      },
+      {
+        "text": "A half-built new object",
+        "correct": false,
+        "why": "The create call failed, so the API made nothing."
+      },
+      {
+        "text": "Neither: the old one is already gone",
+        "correct": true,
+        "why": "Right, and lesson 6's `create_before_destroy` exists for this."
+      }
+    ]
+  },
+  {
+    "id": "ex-ah6bya83",
+    "version": 1,
+    "section": "targeting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana ran `terraform plan -target=aws_subnet.d`. Why did the VPC's new `Project` tag appear in the plan too?",
+    "hint": "What does the subnet's block refer to?",
+    "choices": [
+      {
+        "text": "Tag changes go out with any target",
+        "correct": false,
+        "why": "The instance's change, also pending, was left out."
+      },
+      {
+        "text": "The subnet references the VPC",
+        "correct": true,
+        "why": "Yes: a target brings its dependencies and what is pending on them."
+      },
+      {
+        "text": "`-target` applies every update and skips only creations",
+        "correct": false,
+        "why": "The subnet, a creation, was the target; the resize, an update, was skipped."
+      },
+      {
+        "text": "Both blocks were edited in the same commit",
+        "correct": false,
+        "why": "Terraform knows nothing of commits; the graph decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-yf80gz09",
+    "version": 1,
+    "section": "targeting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is a use of `-target` that the lesson accepts?",
+    "hint": "Read the warning Terraform prints.",
+    "choices": [
+      {
+        "text": "Applying one team's part of a shared configuration every week",
+        "correct": false,
+        "why": "That is the sign the configuration should be split, lesson 8."
+      },
+      {
+        "text": "When an error from Terraform suggests it",
+        "correct": true,
+        "why": "Yes, like a `for_each` over values known only after apply."
+      },
+      {
+        "text": "Skipping review for a change everybody agrees on",
+        "correct": false,
+        "why": "Targeting changes what is applied, and review still applies."
+      },
+      {
+        "text": "Leaving a risky change in the file for months",
+        "correct": false,
+        "why": "That is exactly the drift targeting leaves behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-97bd3ztn",
+    "version": 1,
+    "section": "targeting",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After an apply with `-target`, Terraform warns that \"applied changes may be ___\", because what the file asks for and what exists now differ on purpose.",
+    "hint": "The warning's title, its last word.",
+    "blanks": [
+      {
+        "accept": [
+          "incomplete"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6wmst4ws",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You change a database instance's engine version and the plan says `Plan: 1 to add, 0 to change, 1 to destroy.` What should you conclude before reading further?",
+    "hint": "How is a replacement counted?",
+    "choices": [
+      {
+        "text": "It is being upgraded in place, with a short restart",
+        "correct": false,
+        "why": "That would be `1 to change`."
+      },
+      {
+        "text": "Two separate resources are involved, one new and one removed",
+        "correct": false,
+        "why": "Nothing new was written in the file; one add and one destroy on one edit is the shape of a replacement."
+      },
+      {
+        "text": "A replica is added and the old one removed after the data is copied",
+        "correct": false,
+        "why": "Terraform copies no data; it calls create and delete."
+      },
+      {
+        "text": "A rebuild: find the `# forces replacement`",
+        "correct": true,
+        "why": "Yes. The body confirms which argument forced it, and a new database starts empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjdfmmrk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pipeline saves a plan, waits two days for approval, and then `apply tfplan` fails as stale. What is the right response?",
+    "hint": "What does the refusal protect?",
+    "choices": [
+      {
+        "text": "Run `terraform apply -auto-approve` so it goes through",
+        "correct": false,
+        "why": "That applies a plan nobody has reviewed."
+      },
+      {
+        "text": "Plan again, and review the new plan",
+        "correct": true,
+        "why": "Right: the world changed, so the old review no longer describes what would happen."
+      },
+      {
+        "text": "Copy the old state back so the serials match",
+        "correct": false,
+        "why": "That would erase whatever the other apply recorded."
+      },
+      {
+        "text": "Apply the same file with `-target` on each resource",
+        "correct": false,
+        "why": "A stale plan is refused however it is sliced."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5622ebr",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these changes would pass a guard that refuses deletes, yet should stop a reviewer? Choose all that apply.",
+    "hint": "The guard looks for one action; the reviewer reads values.",
+    "choices": [
+      {
+        "text": "A security group rule whose `cidr_ipv4` becomes `0.0.0.0/0`",
+        "correct": true,
+        "why": "Yes: an update in place that exposes a port."
+      },
+      {
+        "text": "An IAM policy whose `Action` becomes `s3:*`",
+        "correct": true,
+        "why": "Yes: an update in place that grants deletion."
+      },
+      {
+        "text": "A lock file moving a provider to a new version",
+        "correct": true,
+        "why": "Yes: new behaviour with no resource edited."
+      },
+      {
+        "text": "A subnet's `Name` tag renamed",
+        "correct": false,
+        "why": "A tag is metadata; nothing is exposed or lost."
+      },
+      {
+        "text": "A resource block removed from the file",
+        "correct": false,
+        "why": "The guard refuses that one itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-m6m2qqn3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job runs `terraform plan -detailed-exitcode` on main and gets 2, though nobody merged anything that day. What is the likeliest explanation?",
+    "hint": "The configuration did not move. What else is compared?",
+    "choices": [
+      {
+        "text": "Someone changed the infrastructure by hand",
+        "correct": true,
+        "why": "Right: drift, which lesson 7 showed."
+      },
+      {
+        "text": "Last night's saved plan expired and must be made again",
+        "correct": false,
+        "why": "Plan files do not expire, and this job saves none."
+      },
+      {
+        "text": "The provider upgraded itself during the night",
+        "correct": false,
+        "why": "The lock file pins it; an upgrade needs `init -upgrade`."
+      },
+      {
+        "text": "Another job was holding the state lock",
+        "correct": false,
+        "why": "A held lock is an error, exit 1."
+      }
+    ]
+  }
+]
