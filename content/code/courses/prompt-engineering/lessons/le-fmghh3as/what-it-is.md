@@ -21,9 +21,9 @@ write yourself, which is almost immediately.
 | indirect | text the model reads while doing its job | a web page, an e-mail, a document or a review contains a sentence addressed to the assistant |
 
 Direct injection is the one people picture, and it is the smaller problem: the person typing gets
-little beyond what the assistant would do for them anyway, plus whatever is written in its prompt. **Indirect injection is the
-serious one**, because the author of the text is a stranger whose words reach the model with the
-same weight as yours, often while it holds tools on your behalf.
+little beyond what the assistant would do for them anyway, plus whatever is written in its prompt.
+**Indirect injection is the serious one**, because the author of the text is a stranger whose
+words reach the model with the same weight as yours, often while it holds tools on your behalf.
 
 ## An instruction inside a review
 
