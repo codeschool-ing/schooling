@@ -1,0 +1,554 @@
+[
+  {
+    "id": "ex-0bp493fe",
+    "version": 1,
+    "section": "what-a-cache-reuses",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a prompt cache store?",
+    "hint": "The answer is still written fresh every time.",
+    "choices": [
+      {
+        "text": "The answers to earlier calls, so that a repeated question is answered from memory",
+        "correct": false,
+        "why": "Nothing about the answer is stored; it is generated on every call."
+      },
+      {
+        "text": "The work of reading the start of a prompt",
+        "correct": true,
+        "why": "Right: a later call starting with the same tokens skips that part."
+      },
+      {
+        "text": "The whole conversation with a customer",
+        "correct": false,
+        "why": "It keeps no conversation; it matches prefixes of prompts."
+      },
+      {
+        "text": "The customer's message, to save tokens",
+        "correct": false,
+        "why": "The message is the part that varies, and the least reusable."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezgs2wth",
+    "version": 1,
+    "section": "what-a-cache-reuses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the stand-in, a prompt's first block differs from every earlier call's, but blocks 2 to 7 match one exactly. How many tokens are read from the cache?",
+    "hint": "The run of matching blocks starts at the first.",
+    "choices": [
+      {
+        "text": "192, the six blocks that match",
+        "correct": false,
+        "why": "A block is only read when every block before it matched."
+      },
+      {
+        "text": "224, since the whole prompt is cached",
+        "correct": false,
+        "why": "Block 1 differs, so nothing after it is reused."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right: the first block ends the run before it starts."
+      },
+      {
+        "text": "32, the first block only",
+        "correct": false,
+        "why": "The first block is the one that differs."
+      }
+    ]
+  },
+  {
+    "id": "ex-sg8er8x3",
+    "version": 1,
+    "section": "what-a-cache-reuses",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Below how many tokens does the stand-in never cache a prompt?",
+    "hint": "`MINIMUM` in `model.py`.",
+    "value": 64,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-nxnx6yd5",
+    "version": 1,
+    "section": "what-a-cache-reuses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about real providers' caches does the lesson make?",
+    "hint": "Some cache by themselves; some where you mark it.",
+    "choices": [
+      {
+        "text": "They all use 32-token blocks and a 64-token minimum, exactly like the stand-in does",
+        "correct": false,
+        "why": "Those are the course's numbers, not any provider's."
+      },
+      {
+        "text": "They cache whole conversations, so a customer's earlier messages are never sent twice",
+        "correct": false,
+        "why": "They cache a prefix of a prompt."
+      },
+      {
+        "text": "They match a prefix, with their own sizes, minimums, time limits and prices",
+        "correct": true,
+        "why": "Right: read your provider's documentation for the model you call."
+      },
+      {
+        "text": "They never charge for writing",
+        "correct": false,
+        "why": "The lesson says nothing so absolute; prices are theirs to set."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1f0m904",
+    "version": 1,
+    "section": "what-a-cache-reuses",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did turning the cache on for `v1-bare` change nothing in `pl cost`?",
+    "hint": "Look at the input per call.",
+    "choices": [
+      {
+        "text": "At 36.5 tokens a call, no prompt reached the 64-token minimum for caching",
+        "correct": true,
+        "why": "Right: a prompt under the minimum is never cached."
+      },
+      {
+        "text": "`--set` cannot turn the cache on",
+        "correct": false,
+        "why": "It can; `cache` is one of the parameters."
+      },
+      {
+        "text": "The bare prompt has no JSON",
+        "correct": false,
+        "why": "Format has nothing to do with caching."
+      },
+      {
+        "text": "The cache only works on holdout",
+        "correct": false,
+        "why": "It works on any test set."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nddvqkv",
+    "version": 1,
+    "section": "order-matters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`v17-message-first` read 0 tokens from the cache over forty calls. Why?",
+    "hint": "What is in its first block?",
+    "choices": [
+      {
+        "text": "The cache was off",
+        "correct": false,
+        "why": "It wrote 9312 tokens, so it was on."
+      },
+      {
+        "text": "Its first block holds the message",
+        "correct": true,
+        "why": "Right, and a block is only read when every block before it matched."
+      },
+      {
+        "text": "The prompt was under the 64-token minimum for caching",
+        "correct": false,
+        "why": "It is about 250 tokens a call, far above 64."
+      },
+      {
+        "text": "The guide was too long to fit into the cache's blocks",
+        "correct": false,
+        "why": "Length is no obstacle; position is."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqf6wq7y",
+    "version": 1,
+    "section": "order-matters",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`v17-static-first` read 8736 tokens from the cache; every call but the first read the same number. How many tokens did each of those calls read?",
+    "hint": "Forty calls, and the first had nothing to read.",
+    "value": 224,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-btk9t77q",
+    "version": 1,
+    "section": "order-matters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the rule for ordering a cached prompt?",
+    "hint": "The cache matches from the start.",
+    "choices": [
+      {
+        "text": "The fixed part first, what varies last",
+        "correct": true,
+        "why": "Right: the shared prefix is what can be reused."
+      },
+      {
+        "text": "The message first, so that the model reads it while it is fresh",
+        "correct": false,
+        "why": "That is the order that read nothing from the cache."
+      },
+      {
+        "text": "Alphabetical order of the sections",
+        "correct": false,
+        "why": "Order matters for what is shared, not for the alphabet."
+      },
+      {
+        "text": "It makes no difference to a cache",
+        "correct": false,
+        "why": "It made the difference between 3.0302 and 6.0216 cents."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnbgk38e",
+    "version": 1,
+    "section": "order-matters",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A block is read from the cache only when every block ___ it matched as well.",
+    "hint": "Its position relative to the blocks that come first.",
+    "blanks": [
+      {
+        "accept": [
+          "before"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-458hp0z3",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the cache on, `v17-static-first` paid for 10139 input tokens, as `v8-guide` did without it. What did the cache change?",
+    "hint": "827, 8736 and 576.",
+    "choices": [
+      {
+        "text": "The number of tokens the model read",
+        "correct": false,
+        "why": "Both read 10139."
+      },
+      {
+        "text": "The output tokens, which the cache shortened",
+        "correct": false,
+        "why": "Output was 1536 in both; a cache only touches the prompt."
+      },
+      {
+        "text": "What each token cost",
+        "correct": true,
+        "why": "Right: most were read at a tenth of the price."
+      },
+      {
+        "text": "The answers, which became shorter and therefore cheaper to produce",
+        "correct": false,
+        "why": "The answers were identical, message by message."
+      }
+    ]
+  },
+  {
+    "id": "ex-krwfsczn",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the lab's prices, how much does one block of 32 tokens cost to write to the cache, in millionths of a cent?",
+    "hint": "32 × 375.",
+    "value": 12000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4t7e9jyw",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the lab's prices, from which use does a cached block start costing less than reading it plain every time?",
+    "hint": "Written once at 375, then read at 30; plain is 300 each time.",
+    "choices": [
+      {
+        "text": "From the first",
+        "correct": false,
+        "why": "Once: 375 against 300. A prefix used once costs more cached."
+      },
+      {
+        "text": "From the second",
+        "correct": true,
+        "why": "Right: 375 + 30 = 405 against 600."
+      },
+      {
+        "text": "From the tenth, because a read costs a tenth of plain input",
+        "correct": false,
+        "why": "The tenth is the read price, not the break-even."
+      },
+      {
+        "text": "Never, because a write always costs more than it saves",
+        "correct": false,
+        "why": "The guide-first run saved 43%."
+      }
+    ]
+  },
+  {
+    "id": "ex-kq22txyn",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`v17-message-first` cost more with the cache than the same calls without it. Why?",
+    "hint": "What happened to the 9312 cached tokens?",
+    "choices": [
+      {
+        "text": "Its answers were longer",
+        "correct": false,
+        "why": "Output was 1521 tokens against 1536; shorter, not longer."
+      },
+      {
+        "text": "The cache charges a fee per call on top of the token prices",
+        "correct": false,
+        "why": "There is no per-call fee in `prices.json`."
+      },
+      {
+        "text": "Reading from the cache costs more than plain input",
+        "correct": false,
+        "why": "A read costs a tenth of plain input, and it read nothing anyway."
+      },
+      {
+        "text": "Its writes went unread",
+        "correct": true,
+        "why": "Right: 9312 × 75 millionths of a cent for nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-e51n5z5m",
+    "version": 1,
+    "section": "invalidation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team adds the date at the top of a cached prompt: *Today is 14 August.* What happens to the cache?",
+    "hint": "When does the date change?",
+    "choices": [
+      {
+        "text": "Nothing, because the date is short",
+        "correct": false,
+        "why": "Length does not matter; position does."
+      },
+      {
+        "text": "Every block after the date is new each day, so the guide is written again daily",
+        "correct": true,
+        "why": "Right. Put the date at the end, with the message."
+      },
+      {
+        "text": "Only the block holding the date is rewritten each day; the guide after it is still read",
+        "correct": false,
+        "why": "A block only matches if everything before it matches."
+      },
+      {
+        "text": "The cache refuses prompts with dates",
+        "correct": false,
+        "why": "It refuses nothing; it just stops matching."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdxsejf2",
+    "version": 1,
+    "section": "invalidation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pl compare` of `v8-guide` against `v17-static-first` printed `fixed 0, broken 0`. What does that establish?",
+    "hint": "Same template, cache off and on.",
+    "choices": [
+      {
+        "text": "The cache made the prompt better",
+        "correct": false,
+        "why": "Nothing was fixed."
+      },
+      {
+        "text": "Turning the cache on changed no result on any message",
+        "correct": true,
+        "why": "Right: cost and time changed, the answers did not."
+      },
+      {
+        "text": "The two prompts use different models",
+        "correct": false,
+        "why": "Same model, same template."
+      },
+      {
+        "text": "The cache is broken and did not run on any of the forty calls at all",
+        "correct": false,
+        "why": "It read 8736 tokens; it ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-mc6bpdxm",
+    "version": 1,
+    "section": "invalidation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new example is inserted near the top of a cached guide. Why do blocks whose text did not change stop being read?",
+    "hint": "Blocks are cut by position, from the start.",
+    "choices": [
+      {
+        "text": "It shifts every token after it, so each later block now holds different tokens",
+        "correct": true,
+        "why": "Right, and each block's key covers every block before it as well."
+      },
+      {
+        "text": "The cache is cleared by every commit",
+        "correct": false,
+        "why": "The cache knows nothing about commits."
+      },
+      {
+        "text": "Examples are never cached",
+        "correct": false,
+        "why": "Fixed examples are exactly what a cache is for."
+      },
+      {
+        "text": "The prompt became too long",
+        "correct": false,
+        "why": "Length is not the problem; the shift is."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vxbzn4a",
+    "version": 1,
+    "section": "invalidation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Moving the message first changed which replies passed (5 fixed, 3 broken). What does the capture say caused it?",
+    "hint": "All forty categories agree, and every difference is in `json`.",
+    "choices": [
+      {
+        "text": "The cache returned stale answers",
+        "correct": false,
+        "why": "A cache stores no answers, and cache on and off agreed on every message."
+      },
+      {
+        "text": "The reorder changed the text, and the stand-in's formatting habits fell on other messages",
+        "correct": true,
+        "why": "Right: same rate, different messages. A reorder is a prompt change."
+      },
+      {
+        "text": "The model misread the guide when it came second",
+        "correct": false,
+        "why": "Every category and urgency matched; only the wrapping moved."
+      },
+      {
+        "text": "The sign test proved the message-first order better",
+        "correct": false,
+        "why": "At 0.727 it proved nothing either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-va3kg95m",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the parts of a cached triage prompt from first to last.",
+    "hint": "Fixed first, varying last.",
+    "items": [
+      "The instructions and the guide to the categories",
+      "The fixed examples",
+      "Today's date",
+      "The customer's message"
+    ]
+  },
+  {
+    "id": "ex-mkv18sv2",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each run to what the cache did in it.",
+    "hint": "Read the `cache_read` and `cache_write` rows.",
+    "pairs": [
+      {
+        "left": "`v17-static-first`",
+        "right": "Read 8736, wrote 576"
+      },
+      {
+        "left": "`v17-message-first`",
+        "right": "Read nothing, wrote 9312"
+      },
+      {
+        "left": "`v1-bare` with the cache on",
+        "right": "Nothing at all: under the minimum"
+      },
+      {
+        "left": "`v8-guide`",
+        "right": "Cache off: all 10139 tokens plain input"
+      }
+    ],
+    "right_distractors": [
+      "Read everything, wrote nothing"
+    ]
+  },
+  {
+    "id": "ex-ft1cxasx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague turns the cache on and moves the examples to the end of the prompt in the same commit. The bill falls and the score drops by two. What should happen next?",
+    "hint": "Two changes, one of them to the text.",
+    "choices": [
+      {
+        "text": "Keep it: caching never changes answers, so the two points are noise from the stand-in's habits",
+        "correct": false,
+        "why": "Moving the examples changed the text, and that can change answers."
+      },
+      {
+        "text": "Turn the cache off again",
+        "correct": false,
+        "why": "The cache is the part least likely to have moved the score."
+      },
+      {
+        "text": "Split it: the cache alone, then the reorder through the gate with its broken messages named",
+        "correct": true,
+        "why": "Right: a cache should change only cost; a reorder is a prompt change."
+      },
+      {
+        "text": "Move the message to the top as well",
+        "correct": false,
+        "why": "That would cost the cache everything after it."
+      }
+    ]
+  }
+]
