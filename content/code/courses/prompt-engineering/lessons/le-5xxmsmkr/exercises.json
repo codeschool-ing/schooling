@@ -1,0 +1,495 @@
+[
+  {
+    "id": "ex-a7r6ptn1",
+    "version": 1,
+    "section": "the-window",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a model's context window?",
+    "hint": "Lesson 2: what does the application send with each request?",
+    "choices": [
+      {
+        "text": "The most tokens a request holds, reply included",
+        "correct": true,
+        "why": "Right. The instructions, the history, the new input and the reply all share it."
+      },
+      {
+        "text": "Everything the model remembers from your earlier chats",
+        "correct": false,
+        "why": "It remembers nothing between requests. The window is what one request can carry."
+      },
+      {
+        "text": "The part of the conversation the screen shows",
+        "correct": false,
+        "why": "The screen has nothing to do with it. The window is counted in tokens, per request."
+      },
+      {
+        "text": "How long the model takes to answer",
+        "correct": false,
+        "why": "It is a size, not a time: a number of tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxa1anf0",
+    "version": 1,
+    "section": "the-window",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`toylm generate \"on sunday the café opens at\" --temperature 0` wrote `seven.`, although the corpus says the café opens at eight on Sunday. Why?",
+    "hint": "Read the context line of `toylm next`.",
+    "choices": [
+      {
+        "text": "The corpus never mentions Sunday",
+        "correct": false,
+        "why": "It does, twice: `the café opens at eight on sunday`."
+      },
+      {
+        "text": "Temperature 0 makes the model skip words it has seen rarely",
+        "correct": false,
+        "why": "Temperature 0 picks the highest score. The scores came from `opens at` alone."
+      },
+      {
+        "text": "Seven is the correct opening time on Sundays",
+        "correct": false,
+        "why": "The corpus says eight on Sunday. The model never saw that the question was about Sunday."
+      },
+      {
+        "text": "Its window held `opens at` and nothing more",
+        "correct": true,
+        "why": "Yes. `sunday` was four words back, outside the window, so it had no effect on the answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mnh4ccd",
+    "version": 1,
+    "section": "the-window",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the `grep` of the corpus, how many lines say the café opens at seven?",
+    "hint": "Read the count in front of each line.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-1hprvgnc",
+    "version": 1,
+    "section": "the-window",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these take up room in the context window of a request? Choose all that apply.",
+    "hint": "The table lists four things.",
+    "choices": [
+      {
+        "text": "The system prompt",
+        "correct": true,
+        "why": "Yes. It is sent with every request and counts every time."
+      },
+      {
+        "text": "The earlier turns of the conversation",
+        "correct": true,
+        "why": "Yes, both sides, because the application sends them again."
+      },
+      {
+        "text": "The reply the model is about to write",
+        "correct": true,
+        "why": "Yes. The reply is written inside the same window, which is why a full input leaves no room."
+      },
+      {
+        "text": "The text the model was trained on",
+        "correct": false,
+        "why": "Training text shaped the model's weights. It is not sent with the request."
+      },
+      {
+        "text": "Your chats in other windows of the same app",
+        "correct": false,
+        "why": "Only what the application puts into this request counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-aymz5bde",
+    "version": 1,
+    "section": "the-window",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A request's input fills almost all of the model's window. What happens to the reply?",
+    "hint": "Where is the reply written?",
+    "choices": [
+      {
+        "text": "The model compresses the input by itself to make room for a full reply",
+        "correct": false,
+        "why": "Nothing compresses the input. Whatever is sent is read as it is."
+      },
+      {
+        "text": "It runs out of room and stops, and the API reports `length`",
+        "correct": true,
+        "why": "Right. The reply shares the window with the input, and lesson 15 is about that finish reason."
+      },
+      {
+        "text": "The provider stretches the window for that one request",
+        "correct": false,
+        "why": "The window is a fixed property of the model."
+      },
+      {
+        "text": "The reply is written into a separate window of its own",
+        "correct": false,
+        "why": "There is one window. The reply is generated inside it, after the input."
+      }
+    ]
+  },
+  {
+    "id": "ex-bk9z88pm",
+    "version": 1,
+    "section": "the-window",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should you read the size of a model's window?",
+    "hint": "Sizes change between models and versions.",
+    "choices": [
+      {
+        "text": "In the provider's documentation for that model, with the page's date",
+        "correct": true,
+        "why": "Yes. Read it for the model you use, and note when the page was written."
+      },
+      {
+        "text": "Ask the model in a chat how big its window is",
+        "correct": false,
+        "why": "A model's answer about itself is generated text, and it is easily out of date."
+      },
+      {
+        "text": "In last year's list of popular models",
+        "correct": false,
+        "why": "Sizes change between versions. A list from last year can be wrong today."
+      },
+      {
+        "text": "Anywhere, since it is the same for all models",
+        "correct": false,
+        "why": "It differs between models and versions."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7q69ws4",
+    "version": 1,
+    "section": "truncation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When a conversation is too long for its budget, what decides which turns are left out?",
+    "hint": "`tok fit` plays that part in the lesson.",
+    "choices": [
+      {
+        "text": "The model, while reading, skips the turns it finds least useful",
+        "correct": false,
+        "why": "The model receives only what the program sent. It does not choose."
+      },
+      {
+        "text": "The provider drops turns at random",
+        "correct": false,
+        "why": "The rule is chosen by the application. The usual one drops the oldest turns first."
+      },
+      {
+        "text": "The user, by deleting old messages on the screen",
+        "correct": false,
+        "why": "Truncation happens without the user doing anything, and usually without telling them."
+      },
+      {
+        "text": "A program, before the model sees anything",
+        "correct": true,
+        "why": "Right. The model never knows what was dropped; it receives what is left."
+      }
+    ]
+  },
+  {
+    "id": "ex-5q2k82gn",
+    "version": 1,
+    "section": "truncation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`tok fit chat.json -b 120` kept 3 of 7 turns. How many tokens did it send?",
+    "hint": "The last line of the output.",
+    "value": 98,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-jjn2sjr2",
+    "version": 1,
+    "section": "truncation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a budget of 120, an assistant could recommend the carrot and walnut cake to Bruno. What went wrong?",
+    "hint": "Which turns were dropped?",
+    "choices": [
+      {
+        "text": "The model saw the allergy and ignored it",
+        "correct": false,
+        "why": "It never saw it. Turn 1 was dropped before the request was sent."
+      },
+      {
+        "text": "The system prompt was dropped",
+        "correct": false,
+        "why": "All three runs kept the system prompt, 53 tokens."
+      },
+      {
+        "text": "The turn where Bruno said he was allergic was one of the oldest, so it was dropped",
+        "correct": true,
+        "why": "Yes. The rule is oldest first, and the important fact happened to be said first."
+      },
+      {
+        "text": "The budget raised the temperature",
+        "correct": false,
+        "why": "A token budget has nothing to do with temperature. It decides what is sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qdczs22",
+    "version": 1,
+    "section": "truncation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `tok fit` keep the system prompt, whatever else it drops?",
+    "hint": "What would the assistant lose without it?",
+    "choices": [
+      {
+        "text": "The system prompt is the shortest message",
+        "correct": false,
+        "why": "At 53 tokens it is the longest message in the conversation."
+      },
+      {
+        "text": "It holds the rules",
+        "correct": true,
+        "why": "Right: what the assistant is for, how to reply, and that the kitchen uses nuts."
+      },
+      {
+        "text": "An API refuses any request that has no system prompt in it",
+        "correct": false,
+        "why": "That is not why. It is kept because it carries the instructions."
+      },
+      {
+        "text": "It is the newest message",
+        "correct": false,
+        "why": "It is the first message. Keeping it is an exception to dropping the oldest first."
+      }
+    ]
+  },
+  {
+    "id": "ex-tyxmj83g",
+    "version": 1,
+    "section": "truncation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a chat application cutting the history quietly more dangerous than an API refusing a request that is too long?",
+    "hint": "Which of the two would you notice?",
+    "choices": [
+      {
+        "text": "Nothing signals the loss; the reply reads normally",
+        "correct": true,
+        "why": "Right. A refusal is an error somebody sees; a truncated request looks exactly like a normal one."
+      },
+      {
+        "text": "Truncation costs more than an error",
+        "correct": false,
+        "why": "A truncated request costs less. The danger is in the content of the reply."
+      },
+      {
+        "text": "Truncation also deletes the messages from the user's screen",
+        "correct": false,
+        "why": "The user still sees them. Only the request to the model is cut, which is why the user is surprised."
+      },
+      {
+        "text": "The API's error message is written by the model",
+        "correct": false,
+        "why": "An error is returned by the provider's software, and no reply is generated."
+      }
+    ]
+  },
+  {
+    "id": "ex-tc1ygjw0",
+    "version": 1,
+    "section": "truncation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`tok fit` keeps the system prompt, then keeps turns starting from the ___ one and working backwards.",
+    "hint": "The one the user just sent.",
+    "blanks": [
+      {
+        "accept": [
+          "newest",
+          "latest",
+          "last",
+          "most recent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j54v08y2",
+    "version": 1,
+    "section": "strategies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`chat-noted.json` added one sentence about Bruno to the system prompt. Cut to the same budget of 120, what changed?",
+    "hint": "Compare the two `tok fit` runs at 120.",
+    "choices": [
+      {
+        "text": "No turn was dropped this time",
+        "correct": false,
+        "why": "The same four turns were dropped."
+      },
+      {
+        "text": "The request became cheaper",
+        "correct": false,
+        "why": "It went from 98 tokens to 116. The note costs tokens on every request."
+      },
+      {
+        "text": "The allergy turn was moved to the end of the conversation",
+        "correct": false,
+        "why": "The turns are unchanged. The note is in the system prompt."
+      },
+      {
+        "text": "The allergy survived in the part that is not cut",
+        "correct": true,
+        "why": "Yes. The same four turns were dropped, and the fact moved to where truncation does not reach."
+      }
+    ]
+  },
+  {
+    "id": "ex-61n5hg58",
+    "version": 1,
+    "section": "strategies",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The system prompt grew from 53 tokens to 71 with the note. How many tokens does the note add to every request?",
+    "hint": "Subtract.",
+    "value": 18,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-warwsprh",
+    "version": 1,
+    "section": "strategies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Your assistant answers questions from a long staff handbook. What does this lesson recommend sending with each question?",
+    "hint": "Lesson 11 builds the recommended way.",
+    "choices": [
+      {
+        "text": "The whole handbook, every time, so nothing is missing",
+        "correct": false,
+        "why": "That pays for every page on every request, and buries the line that answers among the others."
+      },
+      {
+        "text": "Only the passages that match the question",
+        "correct": true,
+        "why": "Right. The rest costs tokens and is text the model has to read past."
+      },
+      {
+        "text": "A summary of the handbook written once at the start",
+        "correct": false,
+        "why": "A summary drops details, and the detail a question needs is often the one it left out."
+      },
+      {
+        "text": "Nothing, since the model already knows the handbook",
+        "correct": false,
+        "why": "It knows nothing about this café's handbook unless the text is in the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6z5r4xs",
+    "version": 1,
+    "section": "strategies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A study found models used information at the start and end of a long context better than in the middle. What follows for a prompt with many documents?",
+    "hint": "Where does the most important material go?",
+    "choices": [
+      {
+        "text": "Put the instruction and the key material at the start or the end, and test other positions",
+        "correct": true,
+        "why": "Right. Do not bury what matters, and check the result with the fact moved around."
+      },
+      {
+        "text": "Use the biggest window available, since the model reads it all equally",
+        "correct": false,
+        "why": "The finding is that it does not read it all equally."
+      },
+      {
+        "text": "Put the most important document in the middle so it has context on both sides",
+        "correct": false,
+        "why": "The middle is where information was used worst."
+      },
+      {
+        "text": "Send each document twice",
+        "correct": false,
+        "why": "That doubles the cost and still leaves copies in the middle."
+      }
+    ]
+  },
+  {
+    "id": "ex-sx8k439q",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps `tok fit` follows in order.",
+    "hint": "It starts with the message it never drops.",
+    "items": [
+      "Keep the system prompt",
+      "Take the newest turn",
+      "Add older turns one at a time while they fit",
+      "Stop at the first turn that does not fit, and drop it and everything older"
+    ]
+  },
+  {
+    "id": "ex-8xk0zser",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each strategy to the problem it deals with.",
+    "hint": "The headings of the last section.",
+    "pairs": [
+      {
+        "left": "carry a note forward",
+        "right": "a detail said in a turn that is about to be dropped"
+      },
+      {
+        "left": "retrieve passages",
+        "right": "material too large to paste into every request"
+      },
+      {
+        "left": "split into chunks",
+        "right": "a job that needs all of a document longer than the window"
+      }
+    ],
+    "right_distractors": [
+      "a reply drawn at too high a temperature"
+    ]
+  }
+]
