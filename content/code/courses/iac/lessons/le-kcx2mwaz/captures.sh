@@ -420,3 +420,7 @@ resource "aws_route_table_association" "app" {
 }
 CODE
 run 'terraform plan -no-color | grep -E "^  # |^Plan"'
+
+# a last marker, so anything the lab prints while it tears down lands in no
+# quoted block
+block end

@@ -23,12 +23,12 @@ Terraform will perform the following actions:
 
   # aws_subnet.app[1] must be replaced
 -/+ resource "aws_subnet" "app" {
-      ~ arn                                            = "arn:aws:ec2:sa-east-1:123456789012:subnet/subnet-d8ac29fa3f1f0aab7" -> (known after apply)
+      ~ arn                                            = "arn:aws:ec2:sa-east-1:123456789012:subnet/subnet-96ca4032f2afd7d16" -> (known after apply)
       ~ availability_zone                              = "sa-east-1b" -> (known after apply)
       ~ availability_zone_id                           = "sae1-az2" -> (known after apply)
       ~ cidr_block                                     = "10.20.2.0/24" -> "10.20.3.0/24" # forces replacement
       - enable_lni_at_device_index                     = 0 -> null
-      ~ id                                             = "subnet-d8ac29fa3f1f0aab7" -> (known after apply)
+      ~ id                                             = "subnet-96ca4032f2afd7d16" -> (known after apply)
       + ipv6_cidr_block                                = (known after apply)
       + ipv6_cidr_block_association_id                 = (known after apply)
       - map_customer_owned_ip_on_launch                = false -> null

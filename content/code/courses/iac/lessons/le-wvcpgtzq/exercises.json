@@ -1,0 +1,760 @@
+[
+  {
+    "id": "ex-xgpapszb",
+    "version": 1,
+    "section": "update-or-replace",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A plan shows `-/+ resource \"aws_instance\" \"web\"`. What will happen to the instance?",
+    "hint": "Read the two symbols in the order they are written.",
+    "choices": [
+      {
+        "text": "Its arguments change and it keeps its id",
+        "correct": false,
+        "why": "That is `~`, update in place. `-/+` gives it a new id."
+      },
+      {
+        "text": "It is destroyed, then a new one is created",
+        "correct": true,
+        "why": "Yes: destroy and then create replacement, the default order."
+      },
+      {
+        "text": "A new one is created, then the old one is destroyed",
+        "correct": false,
+        "why": "That order is `+/-`, which needs `create_before_destroy`."
+      },
+      {
+        "text": "It is removed from the state and left running in AWS",
+        "correct": false,
+        "why": "That is what a `removed` block with `destroy = false` does; the plan shows it with a dot."
+      }
+    ]
+  },
+  {
+    "id": "ex-hhg9b4zt",
+    "version": 1,
+    "section": "update-or-replace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana changed only the subnet's `cidr_block`, yet the plan also replaces `aws_instance.web`. Why?",
+    "hint": "Look at which argument carries `# forces replacement` on the instance.",
+    "choices": [
+      {
+        "text": "Terraform replaces everything in a configuration when one resource is replaced",
+        "correct": false,
+        "why": "The VPC was not touched; only what references the subnet followed it."
+      },
+      {
+        "text": "The instance's private address is computed from the range",
+        "correct": false,
+        "why": "It is, but that is not what the plan blames: the comment is on `subnet_id`."
+      },
+      {
+        "text": "Its `subnet_id` becomes a new, unknown id",
+        "correct": true,
+        "why": "Right. The new subnet's id is known after apply, and an instance cannot move subnets in place."
+      },
+      {
+        "text": "Tags on the subnet are copied to the instance",
+        "correct": false,
+        "why": "Nothing copies tags between them; the subnet's tags were not even part of this change."
+      }
+    ]
+  },
+  {
+    "id": "ex-h4z2shm5",
+    "version": 1,
+    "section": "update-or-replace",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's plan for the new subnet range, how many resources does the summary line say will be destroyed?",
+    "hint": "Count the replacements: each one destroys one object.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0vnspzbd",
+    "version": 1,
+    "section": "create-before-destroy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "During an apply with `create_before_destroy`, Terraform prints `aws_instance.web (deposed object …): Destroying...`. What is the deposed object?",
+    "hint": "Which of the two instances still has to go?",
+    "choices": [
+      {
+        "text": "A copy of the state kept as a backup",
+        "correct": false,
+        "why": "It is an entry in the state, but for a real object, not a backup of the file."
+      },
+      {
+        "text": "The old instance",
+        "correct": true,
+        "why": "Yes: the replacement exists already, and the old one is kept aside until it is destroyed."
+      },
+      {
+        "text": "The new instance, if its creation failed",
+        "correct": false,
+        "why": "If creation fails the old one is simply kept; the deposed object is the one being replaced."
+      },
+      {
+        "text": "An instance AWS stopped for maintenance",
+        "correct": false,
+        "why": "AWS plays no part; deposed is Terraform's word for the object a replacement displaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-dgedfwv1",
+    "version": 1,
+    "section": "create-before-destroy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A security group with `name = \"web\"` and `create_before_destroy = true` gets a new description, and the apply fails with `InvalidGroup.Duplicate`. What is the fix the lesson uses?",
+    "hint": "Two groups have to exist at once, for a moment.",
+    "choices": [
+      {
+        "text": "Remove `create_before_destroy` so the old group goes first",
+        "correct": false,
+        "why": "That brings the gap back, and on real AWS a group in use cannot be deleted first anyway."
+      },
+      {
+        "text": "Delete the old group by hand and apply again",
+        "correct": false,
+        "why": "A manual change outside the file is exactly the drift Terraform exists to prevent."
+      },
+      {
+        "text": "Replace `name` with `name_prefix`",
+        "correct": true,
+        "why": "Yes: Terraform adds a unique suffix, so old and new can coexist during the swap."
+      },
+      {
+        "text": "Keep the old description so nothing is replaced",
+        "correct": false,
+        "why": "It avoids this replacement and leaves the next one, for any forcing argument, to fail the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6t1wmqz",
+    "version": 1,
+    "section": "create-before-destroy",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `web` security group has `name_prefix` and `create_before_destroy`, and its description changes. Put the apply's steps in order.",
+    "hint": "`+/-` is read left to right.",
+    "items": [
+      "The plan marks the group `+/-`",
+      "A group with a new suffixed name is created",
+      "The old group is kept as a deposed object",
+      "The deposed group is destroyed"
+    ]
+  },
+  {
+    "id": "ex-t0391kzj",
+    "version": 1,
+    "section": "prevent-destroy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`terraform destroy` in `~/shop/assets` stops with `Instance cannot be destroyed` for the assets bucket. What happened to the logs bucket, which has no `prevent_destroy`?",
+    "hint": "Is part of a refused plan applied?",
+    "choices": [
+      {
+        "text": "It was destroyed, since only the assets bucket is protected",
+        "correct": false,
+        "why": "The whole plan was refused before anything ran; the lesson's `aws s3 ls` still lists it."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: Terraform does not apply part of a plan it rejected."
+      },
+      {
+        "text": "It was emptied but kept",
+        "correct": false,
+        "why": "Terraform never got as far as touching any bucket."
+      },
+      {
+        "text": "It was removed from the state and left in AWS",
+        "correct": false,
+        "why": "That is a `removed` block's job; a refused destroy changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-1yd86547",
+    "version": 1,
+    "section": "prevent-destroy",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The assets bucket has `prevent_destroy = true`. Which of these still delete it? Choose all that apply.",
+    "hint": "The setting lives in one place.",
+    "choices": [
+      {
+        "text": "A refactor that deletes its resource block, then `apply`",
+        "correct": true,
+        "why": "Yes: the protection was in the block, and the plan says the bucket is not in configuration."
+      },
+      {
+        "text": "Renaming the bucket in the file, then `apply`",
+        "correct": false,
+        "why": "The rename forces a replacement, and the plan is refused."
+      },
+      {
+        "text": "Somebody deleting it with the AWS CLI",
+        "correct": true,
+        "why": "Yes: the setting is Terraform's and reaches nothing outside it."
+      },
+      {
+        "text": "`terraform destroy` with the block unchanged",
+        "correct": false,
+        "why": "That is the case it refuses, as the lesson showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-cn0f5dy9",
+    "version": 1,
+    "section": "prevent-destroy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson value `prevent_destroy` most on the rename of the bucket?",
+    "hint": "What would a reviewer see in the diff?",
+    "choices": [
+      {
+        "text": "Renames are the commonest change to buckets",
+        "correct": false,
+        "why": "The lesson makes no claim about frequency."
+      },
+      {
+        "text": "A rename is slow and blocks the apply for minutes",
+        "correct": false,
+        "why": "Speed has nothing to do with it; nothing was even attempted."
+      },
+      {
+        "text": "The diff looks like a one-string edit while the plan is a replacement",
+        "correct": true,
+        "why": "Yes: it catches a destructive change that reads as harmless."
+      },
+      {
+        "text": "AWS forbids renaming buckets that hold objects",
+        "correct": false,
+        "why": "No bucket can be renamed in place at all; that is why it is a replacement."
+      }
+    ]
+  },
+  {
+    "id": "ex-42berzfn",
+    "version": 1,
+    "section": "ignore-changes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Ana write `ignore_changes = [tags[\"CostCenter\"]]` rather than `ignore_changes = [tags]`?",
+    "hint": "Who should still own the `Name` tag?",
+    "choices": [
+      {
+        "text": "`[tags]` is not valid syntax",
+        "correct": false,
+        "why": "It is valid, and it would have silenced the plan too."
+      },
+      {
+        "text": "So that her own edits to the other tags are still applied",
+        "correct": true,
+        "why": "Yes: ignoring all tags would make her own future changes look applied and not be."
+      },
+      {
+        "text": "Because the cost tool only runs on weekdays",
+        "correct": false,
+        "why": "Its schedule plays no part in what Terraform compares."
+      },
+      {
+        "text": "To keep `tags_all` out of the state",
+        "correct": false,
+        "why": "Both stay in the state; ignore_changes only stops the comparison."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgncrsdy",
+    "version": 1,
+    "section": "ignore-changes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a `lifecycle` block, the argument that lists attributes Terraform stops comparing with the file once the resource exists is `___`.",
+    "hint": "Two words joined by an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "ignore_changes"
+        ],
+        "ignore_case": true,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-skyjc3fk",
+    "version": 1,
+    "section": "ignore-changes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague raised the instance type by hand last week because the configuration's was too small, and proposes `ignore_changes = [instance_type]` to silence the plan. What does the lesson say?",
+    "hint": "Does another system own this value on purpose?",
+    "choices": [
+      {
+        "text": "Fine, since the plan noise is the real damage",
+        "correct": false,
+        "why": "The noise matters, but here the cure is to settle the value, not to hide it."
+      },
+      {
+        "text": "Use `ignore_changes = all` instead, to be safe",
+        "correct": false,
+        "why": "That stops Terraform looking at the instance at all, the opposite of safe."
+      },
+      {
+        "text": "Put the type in the file, or put the old one back",
+        "correct": true,
+        "why": "Yes: it is drift with a permission slip, not a value another system owns."
+      },
+      {
+        "text": "Fine, if the colleague also adds a tag explaining it",
+        "correct": false,
+        "why": "A tag does not change who owns the value; the file and the instance would still disagree, silently."
+      }
+    ]
+  },
+  {
+    "id": "ex-myp7azb7",
+    "version": 1,
+    "section": "forcing-replacement",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both `terraform apply -replace=aws_instance.web` and `terraform taint aws_instance.web` lead to a replacement. What is the difference the lesson stresses?",
+    "hint": "Where does each one write the instruction?",
+    "choices": [
+      {
+        "text": "`-replace` works only with `create_before_destroy`",
+        "correct": false,
+        "why": "It works on any resource; the `+/-` in the lesson came from the lifecycle setting."
+      },
+      {
+        "text": "`taint` marks the shared state, so a colleague's next plan carries it",
+        "correct": true,
+        "why": "Right; `-replace` lives in one command and shows in the reviewed plan."
+      },
+      {
+        "text": "`taint` replaces at once, with no plan",
+        "correct": false,
+        "why": "It only marks; the replacement comes from a later plan and apply."
+      },
+      {
+        "text": "Nothing; they are two names for one command",
+        "correct": false,
+        "why": "The plans even word it differently: `as requested` against `is tainted`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4kqb7fp",
+    "version": 1,
+    "section": "forcing-replacement",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without a trigger, the plan for release `2026.10.2` updates `user_data` in place. Why does Ana not accept that?",
+    "hint": "When does a machine read its user data?",
+    "choices": [
+      {
+        "text": "The running machine would keep the old release",
+        "correct": true,
+        "why": "Yes: user data runs at first boot, so the new text would sit unused."
+      },
+      {
+        "text": "An in-place update of `user_data` is refused by the AWS API",
+        "correct": false,
+        "why": "The provider plans it in place because the API allows it."
+      },
+      {
+        "text": "Updating in place would delete the instance's disk without warning",
+        "correct": false,
+        "why": "An in-place update keeps the instance and its disk; that is the problem here, not the cure."
+      },
+      {
+        "text": "The variable `release` is not allowed inside `user_data`",
+        "correct": false,
+        "why": "It is allowed, and the plan showed it interpolated."
+      }
+    ]
+  },
+  {
+    "id": "ex-1kpj9d8r",
+    "version": 1,
+    "section": "forcing-replacement",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each comment from a plan in this lesson to what caused it.",
+    "hint": "Four causes; one option is left over.",
+    "pairs": [
+      {
+        "left": "`will be replaced, as requested`",
+        "right": "the `-replace` option"
+      },
+      {
+        "left": "`is tainted, so must be replaced`",
+        "right": "a mark written into the state"
+      },
+      {
+        "left": "`will be replaced due to changes in replace_triggered_by`",
+        "right": "a change to another resource it names"
+      },
+      {
+        "left": "`# forces replacement`",
+        "right": "an argument that cannot be updated in place"
+      }
+    ],
+    "right_distractors": [
+      "a tag added by the cost tool"
+    ]
+  },
+  {
+    "id": "ex-yqgchjq1",
+    "version": 1,
+    "section": "depends-on",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `~/shop/boot`, why does `terraform graph` show no edge from the instance to the object?",
+    "hint": "How does the instance name the bucket?",
+    "choices": [
+      {
+        "text": "Instances cannot depend on S3 resources",
+        "correct": false,
+        "why": "They can, and the reference version gave it exactly that edge."
+      },
+      {
+        "text": "The graph only shows edges between resources of the same service",
+        "correct": false,
+        "why": "The edges come from references, whatever the service."
+      },
+      {
+        "text": "The bucket is named inside a plain string",
+        "correct": true,
+        "why": "Yes: to Terraform `s3://shop-boot-dev/boot.sh` is text, not a reference."
+      },
+      {
+        "text": "The object was not created yet",
+        "correct": false,
+        "why": "The graph comes from the configuration, before and after any apply alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-df3s16zp",
+    "version": 1,
+    "section": "depends-on",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change does the lesson prefer for the boot script's hidden dependency?",
+    "hint": "Is there something the instance could reference?",
+    "choices": [
+      {
+        "text": "`depends_on = [aws_s3_object.script]` with a comment",
+        "correct": false,
+        "why": "It works, and it is the second choice: the reason stays outside the expression."
+      },
+      {
+        "text": "Writing the bucket and key into `user_data` through references",
+        "correct": true,
+        "why": "Yes: the same edge, the name written once, and no `depends_on`."
+      },
+      {
+        "text": "Running `terraform apply` twice",
+        "correct": false,
+        "why": "The first boot would still race the upload on the first apply."
+      },
+      {
+        "text": "`-parallelism=1` on every apply",
+        "correct": false,
+        "why": "That serialises everything and still does not say which order is needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-eremnfaq",
+    "version": 1,
+    "section": "depends-on",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which costs of `depends_on` does the lesson name? Choose all that apply.",
+    "hint": "Think of the reader, the apply, and data sources.",
+    "choices": [
+      {
+        "text": "It says to wait but not why",
+        "correct": true,
+        "why": "Yes; hence the comment beside it."
+      },
+      {
+        "text": "A long list turns a parallel apply into a queue",
+        "correct": true,
+        "why": "Yes; everything listed has to finish first."
+      },
+      {
+        "text": "It forces the resource to be replaced on every apply",
+        "correct": false,
+        "why": "That would be a trigger; `depends_on` only orders."
+      },
+      {
+        "text": "On a data source it can push the read to apply time",
+        "correct": true,
+        "why": "Yes, when the dependency has changes pending."
+      },
+      {
+        "text": "It stores the dependency in the AWS account",
+        "correct": false,
+        "why": "The edge lives in Terraform's graph only; AWS never hears of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhfstf2f",
+    "version": 1,
+    "section": "removed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana deletes the logs bucket's resource block and runs `terraform plan`. What does the plan propose?",
+    "hint": "In the state and missing from the file.",
+    "choices": [
+      {
+        "text": "To destroy the bucket",
+        "correct": true,
+        "why": "Yes: `because aws_s3_bucket.logs is not in configuration`."
+      },
+      {
+        "text": "To forget the bucket and leave it in AWS",
+        "correct": false,
+        "why": "That needs a `removed` block with `destroy = false`."
+      },
+      {
+        "text": "No changes, since the file no longer mentions it",
+        "correct": false,
+        "why": "The state still does, and Terraform reads absence from the file as a wish to destroy."
+      },
+      {
+        "text": "An error asking for `terraform state rm`",
+        "correct": false,
+        "why": "No error; the plan simply destroys it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jw9r9t4e",
+    "version": 1,
+    "section": "removed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson prefer a `removed` block to `terraform state rm` for handing the logs bucket to the data team?",
+    "hint": "The same argument as `-replace` against `taint`.",
+    "choices": [
+      {
+        "text": "`state rm` deletes the bucket in AWS",
+        "correct": false,
+        "why": "It only edits the state, like the block; the difference is how the change is made."
+      },
+      {
+        "text": "Terraform 1.7 removed `state rm`",
+        "correct": false,
+        "why": "1.7 added the block; the command still exists and lesson 7 uses it."
+      },
+      {
+        "text": "The block is reviewed in a pull request and shows in the plan",
+        "correct": true,
+        "why": "Yes: the command runs on the shared state and nobody reviews it."
+      },
+      {
+        "text": "Only the block keeps the bucket's objects",
+        "correct": false,
+        "why": "Neither touches the bucket or its objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-90snnyqk",
+    "version": 1,
+    "section": "removed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After applying the `removed` block, what does each side hold?",
+    "hint": "Compare `terraform state list` with `aws s3 ls`.",
+    "choices": [
+      {
+        "text": "The state has both buckets and AWS has only the assets bucket",
+        "correct": false,
+        "why": "The reverse: the state forgot the logs bucket, AWS kept it."
+      },
+      {
+        "text": "The state has the assets bucket; AWS has both",
+        "correct": true,
+        "why": "Yes: one entry left the state and nothing in the cloud changed."
+      },
+      {
+        "text": "Both have only the assets bucket",
+        "correct": false,
+        "why": "That would be a destroy; `destroy = false` kept the bucket."
+      },
+      {
+        "text": "Both still have both, until the block is deleted from the file",
+        "correct": false,
+        "why": "The apply already took it out of the state; deleting the block later changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-dnn7g6g6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A database resource has a fixed `identifier = \"shop\"` and `create_before_destroy = true`. A change forces a replacement. What should Ana expect, going by this lesson?",
+    "hint": "It is the security group's story with another resource.",
+    "choices": [
+      {
+        "text": "A smooth swap, since creating first is always safe",
+        "correct": false,
+        "why": "Creating first needs both to exist at once, and a fixed unique name forbids it."
+      },
+      {
+        "text": "A collision on the name, with the old one untouched",
+        "correct": true,
+        "why": "Yes: the creation fails first, and destroying the old one was the next step."
+      },
+      {
+        "text": "The old database destroyed and no new one created",
+        "correct": false,
+        "why": "With create_before_destroy the destroy comes after a successful create."
+      },
+      {
+        "text": "Terraform renames the old database automatically",
+        "correct": false,
+        "why": "Terraform never renames to make room; that is what `name_prefix`-style arguments are for."
+      }
+    ]
+  },
+  {
+    "id": "ex-h94scxj6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pull request moves every bucket from `main.tf` into a new `storage.tf`, and the assets bucket's block was lost in the move. The bucket has `prevent_destroy`. What does the next plan do?",
+    "hint": "Where was the protection written?",
+    "choices": [
+      {
+        "text": "Refuses, because the state remembers `prevent_destroy`",
+        "correct": false,
+        "why": "The setting is read from the block, and the block is gone."
+      },
+      {
+        "text": "Plans to destroy the bucket",
+        "correct": true,
+        "why": "Yes, as the lesson's plan showed with the block deleted."
+      },
+      {
+        "text": "Fails because `storage.tf` is not a recognised file name",
+        "correct": false,
+        "why": "Every `.tf` file in the directory is part of the configuration."
+      },
+      {
+        "text": "Shows no changes, since the other buckets are unchanged",
+        "correct": false,
+        "why": "The lost bucket is still in the state, so its absence is a change."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1sv3yms",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each situation to the tool from this lesson that fits it.",
+    "hint": "One tool is left over.",
+    "pairs": [
+      {
+        "left": "An autoscaler sets the group's size all day",
+        "right": "`ignore_changes`"
+      },
+      {
+        "left": "A new app version must mean a new machine",
+        "right": "`replace_triggered_by`"
+      },
+      {
+        "left": "Another team takes over a bucket",
+        "right": "a `removed` block"
+      },
+      {
+        "left": "The product images must never be lost to a plan",
+        "right": "`prevent_destroy`"
+      },
+      {
+        "left": "A boot script reads a bucket named in a string",
+        "right": "a reference, or `depends_on`"
+      }
+    ],
+    "right_distractors": [
+      "`terraform taint`"
+    ]
+  },
+  {
+    "id": "ex-w6qqmc68",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana reviews a plan whose summary is `2 to add, 0 to change, 2 to destroy`, for a pull request that only edited a subnet. Which conclusions are justified? Choose all that apply.",
+    "hint": "Replacements are counted as one add and one destroy.",
+    "choices": [
+      {
+        "text": "Two resources are being replaced",
+        "correct": true,
+        "why": "Yes, most likely the subnet and something that references it."
+      },
+      {
+        "text": "Nothing will be lost, because the subnet is empty",
+        "correct": false,
+        "why": "The second replacement may be an instance with a disk; read whose `# forces replacement` it is."
+      },
+      {
+        "text": "The `# forces replacement` comments say which argument caused each",
+        "correct": true,
+        "why": "Yes; that is the line to read first."
+      },
+      {
+        "text": "The pull request must have edited two files",
+        "correct": false,
+        "why": "One edited line was enough in the lesson; the second replacement followed a reference."
+      }
+    ]
+  }
+]

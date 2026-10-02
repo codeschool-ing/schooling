@@ -74,14 +74,15 @@ O plano mostra no que o bloco `dynamic` se transformou, dois blocos `ingress` co
               + to_port          = 80
                 # (1 unchanged attribute hidden)
             },
+        ]
 ```
 
 A AWS concorda, o que dá para conferir sem o Terraform:
 
 ```
 ana@laptop:~/shop/network$ aws ec2 describe-security-groups --filters Name=group-name,Values=web --query "SecurityGroups[0].IpPermissions[].[IpProtocol,FromPort,IpRanges[0].CidrIp]" --output text
-tcp	443	0.0.0.0/0
 tcp	80	0.0.0.0/0
+tcp	443	0.0.0.0/0
 ```
 
 ## Lendo o plano quando a lista cresce

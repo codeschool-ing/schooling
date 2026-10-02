@@ -48,13 +48,13 @@ The apply creates four resources, and the addresses carry the keys:
 ```
 Plan: 4 to add, 0 to change, 0 to destroy.
 aws_vpc.scratch: Creating...
-aws_vpc.scratch: Creation complete after 0s [id=vpc-9f4f6b807b26d6873]
+aws_vpc.scratch: Creation complete after 1s [id=vpc-aa3637c237d354dc1]
 aws_subnet.app["web"]: Creating...
 aws_subnet.app["app"]: Creating...
 aws_subnet.app["db"]: Creating...
-aws_subnet.app["web"]: Creation complete after 0s [id=subnet-675699df59e1cf7fe]
-aws_subnet.app["db"]: Creation complete after 0s [id=subnet-ae07c22d294549bb8]
-aws_subnet.app["app"]: Creation complete after 0s [id=subnet-7b75b27cac6c8819a]
+aws_subnet.app["web"]: Creation complete after 0s [id=subnet-26d3b5fe2878535e6]
+aws_subnet.app["app"]: Creation complete after 0s [id=subnet-d8208f30f1c769002]
+aws_subnet.app["db"]: Creation complete after 0s [id=subnet-a247c432631647404]
 
 Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
 ```
