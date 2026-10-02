@@ -1,0 +1,593 @@
+{
+  "ex-g8hf3epj": {
+    "prompt": "O que um scanner de configuração como o Checkov lê quando varre o `~/shop`?",
+    "hint": "Ele não precisa de credenciais.",
+    "choices": [
+      {
+        "text": "Os recursos da conta da AWS, pela API",
+        "why": "Isso exigiria credenciais e uma API; uma varredura da configuração não usa nenhuma das duas."
+      },
+      {
+        "text": "O arquivo de state, para saber o que foi aplicado",
+        "why": "O scanner nunca abre o state; ele lê o texto da configuração."
+      },
+      {
+        "text": "Os arquivos `.tf`",
+        "why": "Isso. Ele lê a configuração e compara cada recurso com as suas regras."
+      },
+      {
+        "text": "A saída do último `terraform plan`, salva pelo Terraform",
+        "why": "Um plan pode ser varrido, mas só quando você o salva e passa explicitamente; `-d .` lê arquivos."
+      }
+    ]
+  },
+  "ex-3kbj3bp2": {
+    "prompt": "Um colega abriu a porta 22 para `0.0.0.0/0` à mão com a aws CLI. Depois disso o Checkov relata `PASSED` no `CKV_AWS_24` para todo recurso. Por quê?",
+    "hint": "Onde essa regra existe?",
+    "choices": [
+      {
+        "text": "Porque nenhum arquivo menciona a porta 22, e a regra só existe na conta",
+        "why": "Certo. A varredura está correta sobre o texto, e a conta fica fora do que ela lê; um plan encontra isso."
+      },
+      {
+        "text": "O moto não relata regras feitas à mão",
+        "why": "O `describe-security-groups` mostrou a regra; o Checkov simplesmente nunca perguntou à AWS."
+      },
+      {
+        "text": "O `CKV_AWS_24` verifica só a porta 443",
+        "why": "O título dele é sobre a porta 22, e ele falhou no `ssh.tf` quando a regra foi para um arquivo."
+      },
+      {
+        "text": "Ele precisa que se tire o `--skip-download` para ver regras ao vivo",
+        "why": "O download são guidelines e severidades, não os recursos da conta."
+      }
+    ]
+  },
+  "ex-wrax2nfv": {
+    "prompt": "Quais destes ficam fora do que uma varredura da configuração consegue ver? Escolha todos os que se aplicam.",
+    "hint": "Pense em onde cada fato mora.",
+    "choices": [
+      {
+        "text": "Um valor passado na hora do plan com `-var-file`",
+        "why": "Sim; nada no diretório diz qual vai ser."
+      },
+      {
+        "text": "Uma regra digitada à mão na conta",
+        "why": "Sim; ela só existe na AWS."
+      },
+      {
+        "text": "Um bucket sem recurso de bloqueio de acesso público",
+        "why": "Isso é um fato sobre os arquivos, e o `CKV2_AWS_6` o encontrou."
+      },
+      {
+        "text": "`0.0.0.0/0` escrito literalmente no `ssh.tf`",
+        "why": "Está no texto; o Checkov e o Trivy relataram."
+      },
+      {
+        "text": "Se alguém ainda precisa da regra de SSH",
+        "why": "Sim; isso é um julgamento sobre o sistema, não sobre o texto."
+      }
+    ]
+  },
+  "ex-9dzwk0g3": {
+    "prompt": "A Ana roda o Checkov offline com `--skip-download`. O que ela perde em relação a uma execução conectada?",
+    "hint": "Para que servia o download?",
+    "choices": [
+      {
+        "text": "Todos os checks escritos para a AWS",
+        "why": "Os checks estão no pacote; 35 rodaram offline."
+      },
+      {
+        "text": "Severidades e links de guia",
+        "why": "Certo. Os dois vêm das guidelines da Prisma Cloud, e os checks não trazem severidade própria."
+      },
+      {
+        "text": "A capacidade de varrer qualquer coisa que não sejam arquivos Terraform",
+        "why": "Os frameworks também são locais; o download é só metadado."
+      },
+      {
+        "text": "Nomes de arquivo e números de linha nos achados",
+        "why": "Todo achado offline ainda imprimiu `File: /ssh.tf:1-8` e afins."
+      }
+    ]
+  },
+  "ex-cs7gfjnd": {
+    "prompt": "A opção do Checkov que o impede de pedir guidelines à API da Prisma Cloud em toda execução é `--___`.",
+    "hint": "Duas palavras unidas por hífen.",
+    "blanks": [
+      {
+        "accept": [
+          "skip-download"
+        ]
+      }
+    ]
+  },
+  "ex-w54xjbky": {
+    "prompt": "O `CKV2_AWS_6` diz que o bucket não tem bloqueio de acesso público, embora o recurso do bucket não tenha argumento para isso. Como o check sabe?",
+    "hint": "Olhe o prefixo do id.",
+    "choices": [
+      {
+        "text": "Ele pergunta ao S3 as configurações do bucket",
+        "why": "O Checkov nunca chama a AWS."
+      },
+      {
+        "text": "Ele procura na configuração outro recurso que aponte para o bucket",
+        "why": "Isso. Checks `CKV2_` olham ligações entre recursos, aqui um `aws_s3_bucket_public_access_block`."
+      },
+      {
+        "text": "Ele supõe que todo bucket é público",
+        "why": "Ele não supõe; não achou nenhum bloqueio apontando para este bucket."
+      },
+      {
+        "text": "Ele lê o arquivo de state",
+        "why": "Uma varredura da configuração não abre o state."
+      }
+    ]
+  },
+  "ex-vvnjy0qq": {
+    "prompt": "O check próprio da Ana, `CKV2_SHOP_1`, aprovou `aws_vpc_security_group_ingress_rule.https`, que permite `0.0.0.0/0`. Por quê?",
+    "hint": "A definição tem dois ramos unidos por `or`.",
+    "choices": [
+      {
+        "text": "A porta 443 não é a porta 22, então o primeiro ramo vale",
+        "why": "Certo. A regra só restringe regras da porta 22."
+      },
+      {
+        "text": "Checks próprios nunca reprovam um recurso que um check embutido já aprovou",
+        "why": "Os checks são independentes; ele reprovou a regra de SSH independentemente dos outros resultados."
+      },
+      {
+        "text": "HTTPS é isento em toda regra do Checkov",
+        "why": "Nada isenta HTTPS; quem decide é o YAML."
+      },
+      {
+        "text": "`203.0.113.0/24` contém `0.0.0.0/0`",
+        "why": "É o contrário, e o check compara com `equals`, não com contenção."
+      }
+    ]
+  },
+  "ex-ympv0xn3": {
+    "prompt": "Dois pipelines rodam o mesmo binário do Trivy sobre o mesmo commit, um com rede e outro sem. Os relatórios diferem. Qual a causa mais provável?",
+    "hint": "De onde podem vir os checks do Trivy?",
+    "choices": [
+      {
+        "text": "O Trivy sorteia uma amostra de checks a cada execução, e uma execução com rede sorteia mais",
+        "why": "Nada é aleatório; a diferença é qual conjunto de checks foi carregado."
+      },
+      {
+        "text": "O conectado baixou um checks bundle mais novo",
+        "why": "Isso. O outro recorreu aos checks embutidos no binário."
+      },
+      {
+        "text": "Sem rede o Trivy varre só o `main.tf` e pula os outros arquivos do diretório",
+        "why": "Offline ele relatou o `main.tf` e o `ssh.tf`."
+      },
+      {
+        "text": "Severidades precisam da rede",
+        "why": "Isso é o Checkov. As severidades do Trivy vêm com cada check."
+      }
+    ]
+  },
+  "ex-vm3fp1nd": {
+    "prompt": "O Trivy relatou `AWS-0107` para a regra de SSH e nada para a de HTTPS, que também permite `0.0.0.0/0`. Por quê?",
+    "hint": "Leia a explicação do próprio check.",
+    "choices": [
+      {
+        "text": "O check trata de portas de administração remota como 22 e 3389",
+        "why": "Isso; a porta 443 aberta ao mundo é a razão de ser de um servidor web."
+      },
+      {
+        "text": "A regra de HTTPS tem descrição",
+        "why": "As duas têm; descrições não mudam este check."
+      },
+      {
+        "text": "Ela foi suprimida com um comentário ignore no `main.tf`",
+        "why": "Nenhum comentário tocou essa regra; o único ignore do Trivy foi o `AWS-0132` no bucket."
+      },
+      {
+        "text": "O Trivy lê só um arquivo por tipo de recurso",
+        "why": "Ele leu os dois arquivos e relatou por arquivo."
+      }
+    ]
+  },
+  "ex-krxv8fg4": {
+    "prompt": "Por que o Trivy imprime o link `See https://avd.aquasec.com/...` mesmo no laboratório sem rede, enquanto o link `Guide:` do Checkov some?",
+    "hint": "De onde vem cada link?",
+    "choices": [
+      {
+        "text": "O Trivy guarda em cache todas as páginas da documentação na instalação",
+        "why": "Ele imprime um link, não uma página, e o link está no check."
+      },
+      {
+        "text": "O Checkov esconde links no modo `--compact`",
+        "why": "O `checkov-one` rodou sem `--compact` e ainda não teve a linha `Guide:`."
+      },
+      {
+        "text": "O link do Trivy faz parte do check no binário",
+        "why": "Certo; o do Checkov vem do download de guidelines que o `--skip-download` desliga."
+      },
+      {
+        "text": "Os links do Trivy apontam para um arquivo local",
+        "why": "O link é um endereço https; ele só é impresso, não buscado."
+      }
+    ]
+  },
+  "ex-q9q1k9vs": {
+    "prompt": "O tfsec relatou doze resultados sobre a loja e nenhum no `ssh.tf`, mas marcou a mesma regra como `CRITICAL` no `legacy/main.tf`. O que explica isso?",
+    "hint": "Compare como a regra está escrita em cada arquivo.",
+    "choices": [
+      {
+        "text": "As regras dele conhecem o bloco `ingress` em linha e não o `aws_vpc_security_group_ingress_rule`",
+        "why": "Isso. Um tipo de recurso que nenhuma regra menciona produz silêncio, que parece aprovação."
+      },
+      {
+        "text": "O tfsec pula arquivos que não sejam o `main.tf`",
+        "why": "Ele lê todo arquivo `.tf`; só não tinha regra para aquele tipo de recurso."
+      },
+      {
+        "text": "Uma regra num arquivo próprio é revisada, então o tfsec confia nela",
+        "why": "Scanners não sabem nada de revisão; casam texto com regras."
+      },
+      {
+        "text": "O aviso suprime achados",
+        "why": "O aviso vai para a saída de erro e não muda nenhum resultado."
+      }
+    ]
+  },
+  "ex-eawxqf3e": {
+    "prompt": "Um time mantém o tfsec no pipeline e teme que ele esteja deixando passar tipos de recurso novos. Que prática da aula mostraria isso no build, e não num incidente?",
+    "hint": "A aula usou um arquivo ruim de propósito.",
+    "choices": [
+      {
+        "text": "Rodar o tfsec duas vezes e comparar as contagens",
+        "why": "Duas execuções das mesmas regras sobre o mesmo código concordam; isso não acha nada."
+      },
+      {
+        "text": "Varrer um exemplo sabidamente ruim no pipeline e falhar se o achado sumir",
+        "why": "Certo. Silêncio num arquivo que tem de falhar é o sintoma, e o build o vê."
+      },
+      {
+        "text": "Acrescentar `--minimum-severity CRITICAL`",
+        "why": "Isso mostra menos, não o que as regras não enxergam."
+      },
+      {
+        "text": "Suprimir todo resultado que o tfsec dá",
+        "why": "Isso tira os achados que ele tem e não diz nada sobre os que faltam."
+      }
+    ]
+  },
+  "ex-kdhbw4cw": {
+    "prompt": "Onde vai um comentário `#checkov:skip=CKV_AWS_144:motivo`, e o que acontece com o motivo?",
+    "hint": "Veja o diff que a Ana escreveu.",
+    "choices": [
+      {
+        "text": "Dentro do bloco do recurso; ele aparece no relatório",
+        "why": "Isso, como `Suppress comment:` embaixo de `SKIPPED`."
+      },
+      {
+        "text": "Na linha acima do bloco; o Checkov descarta",
+        "why": "Essa posição é a do Trivy, e o Checkov guarda o motivo."
+      },
+      {
+        "text": "No `.checkov.baseline`; ele é conferido com um número de ticket",
+        "why": "O baseline é uma lista de ids de check por recurso; nada confere tickets."
+      },
+      {
+        "text": "Na linha de comando; ele aparece no código de saída",
+        "why": "Um skip de linha de comando não tem motivo, e códigos de saída carregam números."
+      }
+    ]
+  },
+  "ex-3x8ews7r": {
+    "prompt": "O Trivy relatou 11 achados no `main.tf`. A Ana acrescenta `#trivy:ignore:AWS-0132:exp:2027-03-31` acima do bucket e roda em 2026-10-02. Quantos achados o Trivy relata no `main.tf` agora?",
+    "hint": "A validade está no futuro.",
+    "unit": "achados"
+  },
+  "ex-4apwtfmb": {
+    "prompt": "Ligue cada achado sobre a loja ao que a aula fez com ele.",
+    "hint": "Uma supressão serve para dois dos três tipos de achado.",
+    "pairs": [
+      {
+        "left": "`CKV_AWS_24`: SSH de `0.0.0.0/0`",
+        "right": "mudar o valor, não suprimir"
+      },
+      {
+        "left": "`CKV2_AWS_5`: grupo ligado a nada nesta configuração",
+        "right": "um falso positivo, pulado com motivo"
+      },
+      {
+        "left": "`CKV_AWS_144`: sem cópia em outra região",
+        "right": "uma decisão de custo, pulada com motivo"
+      },
+      {
+        "left": "`AWS-0132`: sem chave gerida pelo cliente",
+        "right": "ignorado até uma data"
+      }
+    ],
+    "right_distractors": [
+      "pulado para todo recurso na linha de comando"
+    ]
+  },
+  "ex-pf880ymq": {
+    "prompt": "O que acontece com um comentário `#trivy:ignore:AWS-0132:exp:...` depois que a data passa?",
+    "hint": "A Ana pôs a data no passado para descobrir.",
+    "choices": [
+      {
+        "text": "O Trivy apaga o comentário do arquivo",
+        "why": "O Trivy nunca edita os seus arquivos; o comentário fica e para de valer."
+      },
+      {
+        "text": "O achado volta",
+        "why": "Isso: o `AWS-0132` reapareceu e a contagem foi de 10 para 11."
+      },
+      {
+        "text": "O Trivy relata o comentário vencido como erro de sintaxe e para a varredura",
+        "why": "A varredura rodou normalmente e só incluiu o achado."
+      },
+      {
+        "text": "O achado vira `LOW`",
+        "why": "Ele voltou como `HIGH`, a severidade dele."
+      }
+    ]
+  },
+  "ex-wcnttxtr": {
+    "prompt": "Depois que `cidr_ipv4` virou `var.admin_cidr` sem default, o Checkov aprovou o `CKV_AWS_24` na regra de SSH. O que esse `PASSED` quer dizer?",
+    "hint": "Ele conseguia ver o valor?",
+    "choices": [
+      {
+        "text": "Que uma variável é sempre mais segura que um literal",
+        "why": "O valor acabou sendo `0.0.0.0/0`; a variável só o mudou de lugar."
+      },
+      {
+        "text": "Nada de errado no que ele conseguiu ler",
+        "why": "Certo. Sem valor não havia por que falhar, e isso aparece como aprovação."
+      },
+      {
+        "text": "Que o Checkov leu o `maintenance.tfvars` automaticamente",
+        "why": "Ele só falhou quando recebeu `--var-file maintenance.tfvars`."
+      },
+      {
+        "text": "Que a regra está restrita à faixa do escritório",
+        "why": "Naquele momento o arquivo dizia `0.0.0.0/0`; a faixa do escritório veio depois."
+      }
+    ]
+  },
+  "ex-jaqhs3aa": {
+    "prompt": "Ponha os passos de uma varredura do plan em ordem, como a Ana rodou.",
+    "hint": "O scanner lê JSON, não o plan binário.",
+    "items": [
+      "`terraform plan -var-file=maintenance.tfvars -out tfplan`",
+      "`terraform show -json tfplan > tfplan.json`",
+      "`checkov -f tfplan.json --repo-root-for-plan-enrichment .`",
+      "corrigir o valor, e então rodar o plan e varrer de novo"
+    ],
+    "trap": "O Checkov não lê o `tfplan` binário direto; ele precisa do JSON."
+  },
+  "ex-y965dbtq": {
+    "prompt": "Por que a aula diz para tratar o `tfplan.json` como o arquivo de state?",
+    "hint": "A aula 12 é sobre o mesmo risco.",
+    "choices": [
+      {
+        "text": "Ele fica travado durante o apply",
+        "why": "Travamento é do backend de state, não deste arquivo."
+      },
+      {
+        "text": "O Terraform o lê no próximo plan",
+        "why": "O Terraform não o lê; é uma exportação para ferramentas como o Checkov."
+      },
+      {
+        "text": "Ele guarda todos os valores em claro, inclusive os sensitive",
+        "why": "Isso; mantenha-o fora de pull requests e de artefatos de longa duração."
+      },
+      {
+        "text": "O Checkov o reescreve com os achados",
+        "why": "O Checkov só o lê."
+      }
+    ]
+  },
+  "ex-qb9brtqe": {
+    "prompt": "O que `--repo-root-for-plan-enrichment .` acrescenta à varredura do plan pelo Checkov?",
+    "hint": "Compare as linhas `File:` com e sem ela.",
+    "choices": [
+      {
+        "text": "Leva um achado de volta ao arquivo e às linhas do código-fonte",
+        "why": "Certo: `ssh.tf:6-13` com o código, em vez de `/tfplan.json:0-0`."
+      },
+      {
+        "text": "Faz o Checkov rodar o plan sozinho",
+        "why": "A Ana rodou o `terraform plan`; o Checkov nunca chama o Terraform."
+      },
+      {
+        "text": "Carrega os arquivos tfvars da raiz",
+        "why": "Os valores já estavam no plan."
+      },
+      {
+        "text": "Liga as severidades offline",
+        "why": "Severidades ainda precisam do download."
+      }
+    ]
+  },
+  "ex-598jpfsm": {
+    "prompt": "O portão do Checkov offline da Ana é `--hard-fail-on HIGH`. A varredura tem nove checks reprovados. Que código de saída ele dá, e por quê?",
+    "hint": "De onde vêm as severidades do Checkov?",
+    "choices": [
+      {
+        "text": "1, porque nove checks falharam e qualquer falha reprova a execução",
+        "why": "Com `--hard-fail-on` só achados que casam reprovam a execução, e nenhum casou."
+      },
+      {
+        "text": "0, já que offline nenhum achado tem severidade",
+        "why": "Isso. O portão aprova tudo, em silêncio; use ids de check no lugar."
+      },
+      {
+        "text": "2, erro de uso por severidade desconhecida",
+        "why": "`HIGH` é um valor válido; só não casou com nada."
+      },
+      {
+        "text": "1, porque o `CKV_AWS_24` é HIGH",
+        "why": "Offline nada é HIGH, e o `CKV_AWS_24` estava aprovado naquele momento."
+      }
+    ]
+  },
+  "ex-xy5dqpbq": {
+    "prompt": "O Trivy classifica `AWS-0107` (SSH aberto para qualquer endereço) e `AWS-0132` (sem chave gerida pelo cliente no bucket de fotos) os dois como `HIGH`. O que a aula diz que os separa?",
+    "hint": "A figura tem dois eixos.",
+    "choices": [
+      {
+        "text": "A exposição deles",
+        "why": "Certo: um atende qualquer um na internet; o outro é a escolha de chave para fotos públicas."
+      },
+      {
+        "text": "O scanner que os achou, já que o Trivy e o Checkov classificam a mesma regra de modos diferentes",
+        "why": "Os dois são achados do Trivy com a mesma severidade."
+      },
+      {
+        "text": "O arquivo onde cada achado está, porque o `ssh.tf` chegou depois",
+        "why": "Qual arquivo guarda uma regra não diz nada sobre o risco dela."
+      },
+      {
+        "text": "A ordem no relatório, que segue o risco",
+        "why": "O relatório é ordenado por check e arquivo, não por risco."
+      }
+    ]
+  },
+  "ex-ep4711kk": {
+    "prompt": "A Ana cria um baseline do Checkov e depois acrescenta o `backups.tf` com um bucket novo. Quais achados a próxima execução com `--baseline` relata?",
+    "hint": "Um baseline registra o que é conhecido.",
+    "choices": [
+      {
+        "text": "Todos os dezesseis, antigos e novos juntos, com os novos marcados para o revisor distinguir",
+        "why": "Os nove antigos ficaram totalmente de fora."
+      },
+      {
+        "text": "Só os sete do bucket novo",
+        "why": "Isso, e o código de saída é 1: código novo cumpre as regras."
+      },
+      {
+        "text": "Nenhum, porque o bucket repete um existente e o baseline já lista esses checks",
+        "why": "O baseline é por recurso; o `aws_s3_bucket.backups` não estava nele."
+      },
+      {
+        "text": "Só checks com severidade, o que numa execução offline significa nenhum",
+        "why": "Um baseline não depende de severidades."
+      }
+    ]
+  },
+  "ex-8vkscw92": {
+    "prompt": "O tfsec diz que o bucket da loja *não tem criptografia habilitada*; o Checkov aprova o `CKV_AWS_19` nele, e o Trivy só mostra o `AWS-0088` com `--include-deprecated-checks`. Que leitura se encaixa?",
+    "hint": "O que o S3 mudou em janeiro de 2023?",
+    "choices": [
+      {
+        "text": "Um bug do Checkov que os outros pegaram",
+        "why": "O Trivy concorda com o Checkov ao aposentar a versão dele da regra."
+      },
+      {
+        "text": "O bucket só não está criptografado no moto, então as ferramentas discordam sobre o emulador",
+        "why": "Nenhum dos scanners fala com o moto; eles leem o arquivo."
+      },
+      {
+        "text": "Um falso positivo de uma regra antiga",
+        "why": "Certo. O S3 criptografa objetos novos por padrão agora; a regra descreve uma AWS mais antiga."
+      },
+      {
+        "text": "Um problema real: pôr um `#tfsec:ignore` e seguir",
+        "why": "Se fosse real, suprimir seria o movimento errado; e não é real."
+      }
+    ]
+  },
+  "ex-cn6wfpfe": {
+    "prompt": "Chega um tipo de recurso novo da AWS e o time escreve as regras de firewall de um banco de dados com ele. Checkov, Trivy e tfsec não relatam nada nesses arquivos. O que o time deve concluir primeiro?",
+    "hint": "Lembre o que o tfsec fez com o `ssh.tf`.",
+    "choices": [
+      {
+        "text": "Que as regras estão seguras, já que três ferramentas independentes concordam",
+        "why": "Três ferramentas cujas regras não conhecem o tipo concordam pelo silêncio, o que não prova nada."
+      },
+      {
+        "text": "Nada ainda: testar primeiro um exemplo sabidamente ruim",
+        "why": "Isso. Silêncio sobre um tipo desconhecido parece aprovação até um arquivo ruim provar que as regras o enxergam."
+      },
+      {
+        "text": "Que é preciso tirar o `--skip-download` dos scanners",
+        "why": "Só o Checkov tem essa opção, e ela trata de metadados, não de quais recursos as regras conhecem."
+      },
+      {
+        "text": "Que uma varredura do plan é obrigatória para todo tipo de recurso novo",
+        "why": "Um plan fornece valores; não ensina a uma regra um tipo de recurso que ela nunca menciona."
+      }
+    ]
+  },
+  "ex-qybfdwbh": {
+    "prompt": "Um módulo lê `allowed_cidrs` de uma variável cujo valor só é definido pelo ambiente do pipeline como `TF_VAR_allowed_cidrs`. Que verificação pegaria um valor aberto ao mundo ali?",
+    "hint": "Nenhum arquivo do repositório guarda o valor.",
+    "choices": [
+      {
+        "text": "`checkov -d .` sobre o repositório",
+        "why": "A variável não tem valor nos arquivos, então o check passa como passou para `admin_cidr`."
+      },
+      {
+        "text": "`checkov -d . --var-file terraform.tfvars`",
+        "why": "O valor está no ambiente, não nesse arquivo."
+      },
+      {
+        "text": "`tfsec --minimum-severity HIGH`",
+        "why": "Um filtro de saída não revela um valor que o tfsec nunca viu."
+      },
+      {
+        "text": "Uma varredura do Checkov sobre o JSON do plan",
+        "why": "Certo. O plan é feito no ambiente do pipeline, então ele guarda o valor."
+      }
+    ]
+  },
+  "ex-xjqe13e5": {
+    "prompt": "A Ana está desenhando o portão do pipeline da loja. Quais destes o enfraqueceriam sem ninguém perceber? Escolha todos os que se aplicam.",
+    "hint": "Procure portões que aprovam quando não enxergam.",
+    "choices": [
+      {
+        "text": "Usar `--hard-fail-on HIGH` no Checkov offline",
+        "why": "Sim; ele sai com 0 seja o que for que encontre."
+      },
+      {
+        "text": "Usar só `CRITICAL` no portão do Trivy",
+        "why": "Sim; ele aprovou esta configuração, com as falhas de acesso público e tudo."
+      },
+      {
+        "text": "Usar uma lista de ids de check no portão do Checkov",
+        "why": "Esse portão falhou como devia, código de saída 1."
+      },
+      {
+        "text": "Um `--skip-check` na linha de comando para uma regra que um recurso não precisa",
+        "why": "Sim; silencia a regra para todo recurso, inclusive o próximo."
+      },
+      {
+        "text": "Um skip em linha com motivo, revisado no mesmo diff",
+        "why": "Esse é o tipo visível de exceção que a aula recomenda."
+      }
+    ]
+  },
+  "ex-px1pjhzj": {
+    "prompt": "Ligue cada situação ao comportamento de scanner da aula que a explica.",
+    "hint": "Quatro comportamentos, um para cada.",
+    "pairs": [
+      {
+        "left": "O Checkov imprime um traceback de Python e depois varre",
+        "right": "não alcançou a Prisma Cloud"
+      },
+      {
+        "left": "O Trivy registra `Falling back to embedded checks`",
+        "right": "não havia checks bundle mais novo disponível"
+      },
+      {
+        "left": "O tfsec fica em silêncio sobre o `ssh.tf`",
+        "right": "nenhuma regra conhece aquele tipo de recurso"
+      },
+      {
+        "left": "O Checkov aprova `var.admin_cidr`",
+        "right": "o valor não está nos arquivos"
+      }
+    ],
+    "right_distractors": [
+      "o achado foi suprimido em linha"
+    ]
+  }
+}

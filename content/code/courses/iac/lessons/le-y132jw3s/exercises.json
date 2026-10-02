@@ -1,0 +1,808 @@
+[
+  {
+    "id": "ex-qvpvv5zx",
+    "version": 1,
+    "section": "where-they-leak",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana runs `git rm --cached terraform.tfvars`, adds `*.tfvars` to `.gitignore` and commits. Who can still read the password she had committed weeks before?",
+    "hint": "`git show HEAD~1:terraform.tfvars` answered.",
+    "choices": [
+      {
+        "text": "Whoever has a clone of the repository",
+        "correct": true,
+        "why": "Yes. The new commit stops tracking the file; the old commit still holds it, in every clone, fork and backup."
+      },
+      {
+        "text": "Nobody, since the file has left the repository",
+        "correct": false,
+        "why": "It left the next commit. The capture printed it from the one before."
+      },
+      {
+        "text": "People who check out the newest commit",
+        "correct": false,
+        "why": "The newest commit is precisely the one without the file."
+      },
+      {
+        "text": "Whoever can read the state bucket",
+        "correct": false,
+        "why": "The state is a different copy, and there was no apply yet. The question is about git."
+      }
+    ]
+  },
+  {
+    "id": "ex-mkztc6z2",
+    "version": 1,
+    "section": "where-they-leak",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A password was committed and pushed to the shop's repository a month ago. What is the repair the lesson says works?",
+    "hint": "Think about the clones you do not control.",
+    "choices": [
+      {
+        "text": "Rewrite the history and force-push the result",
+        "correct": false,
+        "why": "That cleans this copy of the repository and reaches none of the clones already made."
+      },
+      {
+        "text": "Mark the variable `sensitive = true`",
+        "correct": false,
+        "why": "That changes what Terraform prints, not what git stored a month ago."
+      },
+      {
+        "text": "Rotate it",
+        "correct": true,
+        "why": "Yes. Change the password at the database and treat the old one as public, because it is."
+      },
+      {
+        "text": "Add `*.tfvars` to `.gitignore` and commit again",
+        "correct": false,
+        "why": "Right for the future, and it does nothing for the commit that already carries the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-dx1djq2e",
+    "version": 1,
+    "section": "where-they-leak",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before any apply, where did the lesson find the password Ana wrote in `terraform.tfvars`? Choose all that apply.",
+    "hint": "Three copies come before the state exists.",
+    "choices": [
+      {
+        "text": "In the git history",
+        "correct": true,
+        "why": "Yes, in the commit that carried the file."
+      },
+      {
+        "text": "In the plan printed on the screen",
+        "correct": true,
+        "why": "Yes, inside `user_data`, before it was marked sensitive."
+      },
+      {
+        "text": "In `.terraform.lock.hcl`",
+        "correct": false,
+        "why": "The lock file records provider versions and hashes, no values."
+      },
+      {
+        "text": "Inside the saved plan file `tfplan`",
+        "correct": true,
+        "why": "Yes: `grep` found it on two lines of the unzipped archive."
+      },
+      {
+        "text": "In the attributes of the AMI data source",
+        "correct": false,
+        "why": "The image lookup has nothing to do with the password."
+      }
+    ]
+  },
+  {
+    "id": "ex-t65673n3",
+    "version": 1,
+    "section": "where-they-leak",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Once a password has been committed and pushed, the repair that works is to ___ it: set a new one at the database and treat the old value as public.",
+    "hint": "The word for replacing a secret on purpose.",
+    "blanks": [
+      {
+        "accept": [
+          "rotate"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hmv3sha7",
+    "version": 1,
+    "section": "sensitive",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `sensitive = true` on a variable change?",
+    "hint": "The section calls it a promise about one thing.",
+    "choices": [
+      {
+        "text": "The state stores that value encrypted",
+        "correct": false,
+        "why": "The capture found the password in the state in plain text after the marking."
+      },
+      {
+        "text": "What Terraform prints, in plans and listings",
+        "correct": true,
+        "why": "Yes. It hides the value in plans and listings, and changes nothing on disk."
+      },
+      {
+        "text": "The value is left out of a saved plan file",
+        "correct": false,
+        "why": "A saved plan carries the values it was made with, marked or not."
+      },
+      {
+        "text": "Outputs refuse to return it, even with `-raw`",
+        "correct": false,
+        "why": "`terraform output -raw db_password` printed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6vqvjhz",
+    "version": 1,
+    "section": "sensitive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana has just hidden the password variable. Why does Terraform then refuse `output \"db_password\" { value = var.db_password }`?",
+    "hint": "Read the last line of the error.",
+    "choices": [
+      {
+        "text": "A root module may not export a password at all",
+        "correct": false,
+        "why": "It may; the next attempt, with one more argument, applied."
+      },
+      {
+        "text": "Outputs cannot refer to input variables",
+        "correct": false,
+        "why": "They can; the corrected output still says `var.db_password`."
+      },
+      {
+        "text": "It has to declare itself sensitive as well",
+        "correct": true,
+        "why": "Yes. A value built from a secret has to say so where it leaves the configuration."
+      },
+      {
+        "text": "The variable has no default",
+        "correct": false,
+        "why": "The value came from `terraform.tfvars`; a default has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2nbtm8c3",
+    "version": 1,
+    "section": "sensitive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`terraform output` lists `db_password = <sensitive>`. Which of these commands prints the password itself?",
+    "hint": "An output exists to be read by something.",
+    "choices": [
+      {
+        "text": "`terraform plan`",
+        "correct": false,
+        "why": "The plan shows `(sensitive value)` in its place."
+      },
+      {
+        "text": "`terraform output -json`",
+        "correct": true,
+        "why": "Yes. Asked for by name or as JSON, a sensitive output hands over its value."
+      },
+      {
+        "text": "`terraform show`",
+        "correct": false,
+        "why": "`show` renders the state the way the plan renders a change, with sensitive values hidden."
+      },
+      {
+        "text": "`terraform output` with `TF_LOG=debug` set",
+        "correct": false,
+        "why": "A debug log adds Terraform's own messages; the listing still says `<sensitive>`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ne91f6qn",
+    "version": 1,
+    "section": "sensitive",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the variable and the output were both marked sensitive and applied, on how many lines of `terraform.tfstate` did `grep -c` find the password?",
+    "hint": "One for the output, one for the script that writes the file.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-y1016gdx",
+    "version": 1,
+    "section": "in-the-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Nobody typed the password `random_password` generated. Where is it after the apply?",
+    "hint": "`jq` printed two of them.",
+    "choices": [
+      {
+        "text": "In the state, in plain text",
+        "correct": true,
+        "why": "Yes: as `result` and again as `secret_string`."
+      },
+      {
+        "text": "Nowhere: Terraform discards it",
+        "correct": false,
+        "why": "It keeps them; that is how the next run knows the password already exists."
+      },
+      {
+        "text": "In the state, hashed with bcrypt",
+        "correct": false,
+        "why": "The hash is there as well, beside the password itself."
+      },
+      {
+        "text": "Only in Secrets Manager",
+        "correct": false,
+        "why": "Secrets Manager has it, and so does the state on her disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpaga9yg",
+    "version": 1,
+    "section": "in-the-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `random_password` keep its `result` in the state at all?",
+    "hint": "What would the next plan do without it?",
+    "choices": [
+      {
+        "text": "The provider forgot to mark it sensitive",
+        "correct": false,
+        "why": "It is marked: `sensitive_attributes` listed `result`."
+      },
+      {
+        "text": "So `terraform output` can print it",
+        "correct": false,
+        "why": "The configuration had no output at all."
+      },
+      {
+        "text": "Secrets Manager reads it back from the state",
+        "correct": false,
+        "why": "AWS never reads Terraform's state; it got the value through the API."
+      },
+      {
+        "text": "So the next run reuses that same password",
+        "correct": true,
+        "why": "Yes. Without the stored value every plan would generate a new password."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3xba5fy",
+    "version": 1,
+    "section": "in-the-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Another team creates its passwords by hand in Secrets Manager and reads them into Terraform with `data \"aws_secretsmanager_secret_version\"`. What does their state hold?",
+    "hint": "Ana's `read.tf` only read.",
+    "choices": [
+      {
+        "text": "The ARN of each secret and no value",
+        "correct": false,
+        "why": "That is the managed arrangement of a later section, where Terraform never asks for the value."
+      },
+      {
+        "text": "Nothing, since a data source is read-only",
+        "correct": false,
+        "why": "Read-only describes AWS, not the state: what is read is recorded."
+      },
+      {
+        "text": "Every password it reads, in plain text",
+        "correct": true,
+        "why": "Yes. The data source's `secret_string` was the third copy in the section."
+      },
+      {
+        "text": "Each password as a hash",
+        "correct": false,
+        "why": "Nothing hashes a value read by a data source."
+      }
+    ]
+  },
+  {
+    "id": "ex-g7kd3ad4",
+    "version": 1,
+    "section": "in-the-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The state lists `result` under `sensitive_attributes` for `random_password`. What does Terraform use that list for?",
+    "hint": "Compare what the plan showed with what `jq` found.",
+    "choices": [
+      {
+        "text": "To encrypt them before writing",
+        "correct": false,
+        "why": "`jq` read them in plain text right beside the list."
+      },
+      {
+        "text": "To keep those values off the screen",
+        "correct": true,
+        "why": "Yes. It knows which values are secret and hides them when printing, and writes them all the same."
+      },
+      {
+        "text": "To skip them when comparing in a plan",
+        "correct": false,
+        "why": "They are compared like any other attribute; that is why they are kept."
+      },
+      {
+        "text": "To leave them out of `terraform state pull`",
+        "correct": false,
+        "why": "A pull returns the state exactly as stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-arg7d7hz",
+    "version": 1,
+    "section": "ephemeral",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`secret_string = ephemeral.random_password.db.result` fails with `Invalid use of ephemeral value`. Why?",
+    "hint": "The error says what `secret_string` is not.",
+    "choices": [
+      {
+        "text": "`random_password` exists only as a managed resource",
+        "correct": false,
+        "why": "The random provider has the ephemeral form too; the error is about where the value goes."
+      },
+      {
+        "text": "`secret_string` is persisted to the state",
+        "correct": true,
+        "why": "Yes. An ephemeral value may only go somewhere nothing is written down, such as a write-only argument."
+      },
+      {
+        "text": "The AWS provider in the lab accepts no ephemeral values",
+        "correct": false,
+        "why": "It accepted one in `secret_string_wo` on the next try."
+      },
+      {
+        "text": "Terraform 1.16 needs `ephemeral = true` on the resource",
+        "correct": false,
+        "why": "There is no such argument on a resource; `ephemeral = true` belongs to variables and outputs."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkbrjxp1",
+    "version": 1,
+    "section": "ephemeral",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An argument that accepts an ephemeral value, passes it to the provider during the apply and keeps no record of it is a ___ argument, and its name ends in `_wo`.",
+    "hint": "Two words joined by a hyphen.",
+    "blanks": [
+      {
+        "accept": [
+          "write-only",
+          "write only",
+          "writeonly"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ke8ta1cb",
+    "version": 1,
+    "section": "ephemeral",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The ephemeral resource generated a new password on the second run, and `terraform plan` said `No changes`. Why?",
+    "hint": "What is there in the state to compare?",
+    "choices": [
+      {
+        "text": "The ephemeral resource returns the same password every time",
+        "correct": false,
+        "why": "It produces a fresh one whenever it is opened, which was twice in a single apply."
+      },
+      {
+        "text": "AWS refused the second password",
+        "correct": false,
+        "why": "Nothing was sent, so AWS had nothing to refuse."
+      },
+      {
+        "text": "Terraform has no stored value to compare it with",
+        "correct": true,
+        "why": "Yes. It only resends the value when `secret_string_wo_version` changes."
+      },
+      {
+        "text": "The plan skipped the ephemeral resource",
+        "correct": false,
+        "why": "Plans open it too; the apply transcript showed it opened while planning."
+      }
+    ]
+  },
+  {
+    "id": "ex-at2vqsbp",
+    "version": 1,
+    "section": "ephemeral",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happened during `terraform apply` with the write-only argument in order.",
+    "hint": "The ephemeral resource is opened twice.",
+    "items": [
+      "The ephemeral password is opened and closed to make the plan",
+      "The plan shows `(write-only attribute)` for `secret_string_wo`",
+      "The ephemeral password is opened again for the apply",
+      "The secret version is created with the value",
+      "The ephemeral password is closed and the value dropped"
+    ],
+    "trap": "Many expect a single opening. The plan needs the value too, so the resource is opened once for the plan and once for the apply."
+  },
+  {
+    "id": "ex-90s7hzmz",
+    "version": 1,
+    "section": "secret-managers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `manage_master_user_password = true`, what does the state hold about the database password?",
+    "hint": "`password` was null.",
+    "choices": [
+      {
+        "text": "The password, marked sensitive",
+        "correct": false,
+        "why": "`password` was null in the state; Terraform never received it."
+      },
+      {
+        "text": "A bcrypt hash of it",
+        "correct": false,
+        "why": "That was `random_password`'s extra attribute, not the database's."
+      },
+      {
+        "text": "The ARN of the secret that holds it, with its KMS key",
+        "correct": true,
+        "why": "Yes: `master_user_secret` names where the password is, not what it is."
+      },
+      {
+        "text": "The password, encrypted with KMS",
+        "correct": false,
+        "why": "The KMS key in the state is the one Secrets Manager uses; the password itself is not there."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjr68k4h",
+    "version": 1,
+    "section": "secret-managers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the managed arrangement, how does the shop's application get the database password?",
+    "hint": "It is not Terraform's job any more.",
+    "choices": [
+      {
+        "text": "From a Terraform output read at deploy time",
+        "correct": false,
+        "why": "The only output is the ARN, which says where the password is."
+      },
+      {
+        "text": "It asks Secrets Manager, by ARN, when it starts",
+        "correct": true,
+        "why": "Yes, with an IAM policy allowing `GetSecretValue` on that one secret."
+      },
+      {
+        "text": "From a file `user_data` writes when the machine boots",
+        "correct": false,
+        "why": "That was the leaking design of the first section."
+      },
+      {
+        "text": "From the state, through `terraform_remote_state`",
+        "correct": false,
+        "why": "The state does not hold the password, so there is nothing to read there."
+      }
+    ]
+  },
+  {
+    "id": "ex-vm0mrbd3",
+    "version": 1,
+    "section": "secret-managers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does letting RDS manage the password buy, according to the lesson? Choose all that apply.",
+    "hint": "Look back at the four copies, and at who rotates.",
+    "choices": [
+      {
+        "text": "The password is in none of the four copies",
+        "correct": true,
+        "why": "Yes: not in git, a printed plan, a plan file or the state."
+      },
+      {
+        "text": "A rotation needs no apply",
+        "correct": true,
+        "why": "Yes; RDS and Secrets Manager rotate it between themselves."
+      },
+      {
+        "text": "The application needs no change to its code",
+        "correct": false,
+        "why": "The cost moves there: it has to fetch the secret and fetch it again after a rotation."
+      },
+      {
+        "text": "Every read is an API call a real account logs",
+        "correct": true,
+        "why": "Yes, in CloudTrail; moto keeps no such log, so the lab could not show it."
+      },
+      {
+        "text": "Terraform notices when the password changes",
+        "correct": false,
+        "why": "Terraform never sees the password, so it has nothing to notice."
+      }
+    ]
+  },
+  {
+    "id": "ex-z13p1wxn",
+    "version": 1,
+    "section": "protecting-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Against whom does `encrypt = true` in the S3 backend protect the state?",
+    "hint": "Where is the object encrypted, and who gets it decrypted?",
+    "choices": [
+      {
+        "text": "A colleague whose IAM policy lets them read the bucket",
+        "correct": false,
+        "why": "S3 decrypts the object for every authorised reader."
+      },
+      {
+        "text": "Somebody holding a copy from `terraform state pull`",
+        "correct": false,
+        "why": "That copy left the bucket decrypted."
+      },
+      {
+        "text": "Somebody who reads S3's own disks directly",
+        "correct": true,
+        "why": "Yes. The object is encrypted at rest, and handed over in plain text to whoever the bucket lets in."
+      },
+      {
+        "text": "A pipeline log that prints the plan",
+        "correct": false,
+        "why": "A log is not the bucket at all; that is what `sensitive` is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3kwy26p",
+    "version": 1,
+    "section": "protecting-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the OpenTofu configuration, what is the `fallback` with the `unencrypted` method for?",
+    "hint": "It was removed right after one apply.",
+    "choices": [
+      {
+        "text": "Reading the state while it is still unencrypted",
+        "correct": true,
+        "why": "Yes. Without it, OpenTofu would try to decrypt a file that was never encrypted."
+      },
+      {
+        "text": "Writing a readable copy beside the encrypted state",
+        "correct": false,
+        "why": "A fallback is about reading; `grep` found no `result` anywhere in the file."
+      },
+      {
+        "text": "Letting Terraform read the encrypted state",
+        "correct": false,
+        "why": "Terraform failed on the file: it does not know the format."
+      },
+      {
+        "text": "Opening the state when the passphrase is lost",
+        "correct": false,
+        "why": "Left in place it would accept a plain file, not decrypt an encrypted one."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2zz0c3s",
+    "version": 1,
+    "section": "protecting-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the passphrase a variable, set as `TF_VAR_state_passphrase`, and not written into `encryption.tf`?",
+    "hint": "Where does `encryption.tf` end up?",
+    "choices": [
+      {
+        "text": "OpenTofu rejects a literal passphrase",
+        "correct": false,
+        "why": "A literal would work; the problem is where the file goes."
+      },
+      {
+        "text": "Because `encryption.tf` is committed with the rest of the configuration",
+        "correct": true,
+        "why": "Yes. A passphrase in it would be one more secret in the git history."
+      },
+      {
+        "text": "A variable makes the key longer",
+        "correct": false,
+        "why": "The key length comes from the key provider (32 in `meta`), not from where the passphrase was written."
+      },
+      {
+        "text": "To keep the passphrase out of the encrypted state",
+        "correct": false,
+        "why": "The passphrase is never stored in the state; `meta` holds a salt and parameters."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6v7p2jz",
+    "version": 1,
+    "section": "protecting-state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A year after the migration, the passphrase is lost. The bucket is versioned. What in it can still be read?",
+    "hint": "Which versions were never encrypted?",
+    "choices": [
+      {
+        "text": "Every version, by deriving the key from the salt in `meta`",
+        "correct": false,
+        "why": "The salt is half of the derivation; the passphrase is the other half."
+      },
+      {
+        "text": "The latest version, because S3 decrypts it for an authorised reader",
+        "correct": false,
+        "why": "S3 removes its own encryption, not OpenTofu's."
+      },
+      {
+        "text": "The versions from before the migration",
+        "correct": true,
+        "why": "Yes, in plain text, which is why the lesson says to delete them and rotate what they held."
+      },
+      {
+        "text": "Nothing, since S3 deletes the versions OpenTofu cannot read",
+        "correct": false,
+        "why": "S3 knows nothing about OpenTofu's encryption and deletes nothing on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hp38ngv",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each measure to the copy of the password it removes.",
+    "hint": "Five measures, five places, one place left over.",
+    "pairs": [
+      {
+        "left": "`*.tfvars` in `.gitignore` from the first commit",
+        "right": "The git history"
+      },
+      {
+        "left": "`sensitive = true`",
+        "right": "The plan on a screen or in a CI log"
+      },
+      {
+        "left": "A write-only argument fed by an ephemeral value",
+        "right": "The state and the saved plan file"
+      },
+      {
+        "left": "`manage_master_user_password = true`",
+        "right": "Every copy: Terraform never sees it"
+      },
+      {
+        "left": "OpenTofu's state encryption",
+        "right": "The plain text of a state that left the program"
+      }
+    ],
+    "right_distractors": [
+      "The value inside the running application"
+    ]
+  },
+  {
+    "id": "ex-g2a7wge6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's configuration reads the shop's existing password with `data \"aws_secretsmanager_secret_version\"` and passes it to `password` on `aws_db_instance`. With the lab's AWS provider, which change keeps the password out of the state and still uses that secret?",
+    "hint": "Two halves: how it is read, and where it goes.",
+    "choices": [
+      {
+        "text": "Mark the data source and the `password` argument sensitive",
+        "correct": false,
+        "why": "That hides the value on the screen; both copies stay in the state."
+      },
+      {
+        "text": "Read it with the ephemeral resource and pass it to `password_wo`",
+        "correct": true,
+        "why": "Yes. Both exist in the lab's provider: the ephemeral form of the secret version, and `aws_db_instance` in the write-only list."
+      },
+      {
+        "text": "Move the data source into a child module",
+        "correct": false,
+        "why": "A child module's resources and data sources go into the same state."
+      },
+      {
+        "text": "Add `password` to `lifecycle { ignore_changes }`",
+        "correct": false,
+        "why": "`ignore_changes` changes what a plan compares, and the value is still stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-1j9spb47",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's team wants to encrypt the state of an existing configuration with OpenTofu. Put the steps in order.",
+    "hint": "The fallback is there for exactly one run.",
+    "items": [
+      "Store the passphrase in the pipeline's secret store as `TF_VAR_state_passphrase`",
+      "Add the `encryption` block with an `unencrypted` fallback",
+      "Run `tofu apply`, which writes the state encrypted",
+      "Remove the fallback and the `unencrypted` method",
+      "Delete the plain versions in the bucket and rotate what they held"
+    ],
+    "trap": "Removing the fallback before the first encrypted write leaves OpenTofu unable to read the plain state it starts from."
+  },
+  {
+    "id": "ex-yjn8t8cn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A reviewer reads a pull request: `random_password` feeds `secret_string`, and every variable and output is marked sensitive. The description says the password is now safe. What does the reviewer reply?",
+    "hint": "Count the copies `jq` found.",
+    "choices": [
+      {
+        "text": "Approve: nothing generated by Terraform is stored",
+        "correct": false,
+        "why": "`random_password` stores its result on purpose, so the next run reuses it."
+      },
+      {
+        "text": "Approve, if the state bucket has `encrypt = true`",
+        "correct": false,
+        "why": "That protects S3's disks; every reader of the bucket gets the state in plain text."
+      },
+      {
+        "text": "The state still holds it twice; switch to an ephemeral value and a write-only argument",
+        "correct": true,
+        "why": "Yes. `sensitive` only hides it on screen, and the write-only pair keeps it out of the state."
+      },
+      {
+        "text": "Ask for `ignore_changes = [secret_string]`",
+        "correct": false,
+        "why": "That stops later plans from updating it and still stores the value."
+      }
+    ]
+  }
+]

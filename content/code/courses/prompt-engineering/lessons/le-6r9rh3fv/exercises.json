@@ -1,0 +1,512 @@
+[
+  {
+    "id": "ex-pe5242zy",
+    "version": 1,
+    "section": "pieces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You send a model the sentence `The kitchen stops taking hot food orders thirty minutes before closing.` What does the model itself receive?",
+    "hint": "Read the second line `tok show` printed.",
+    "choices": [
+      {
+        "text": "A list of twelve numbers, the ids of the pieces it was cut into",
+        "correct": true,
+        "why": "Right. The tokenizer replaced each piece with its id, and the ids are all the model gets."
+      },
+      {
+        "text": "The seventy-one characters, one at a time",
+        "correct": false,
+        "why": "The model never sees characters. It sees the ids of the pieces they were cut into."
+      },
+      {
+        "text": "The eleven words, spelt as you typed them",
+        "correct": false,
+        "why": "The words were turned into numbers before the model saw anything."
+      },
+      {
+        "text": "A short summary of what the sentence means",
+        "correct": false,
+        "why": "Nothing summarises the text first. It is cut into pieces and numbered, all of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dp4y72n",
+    "version": 1,
+    "section": "pieces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`tok show` printed the piece `\" kitchen\"` with the id 10084. What exactly is in that piece?",
+    "hint": "Look at the quotation marks.",
+    "choices": [
+      {
+        "text": "The word alone, since the tokenizer throws spaces away",
+        "correct": false,
+        "why": "Spaces are kept. One of them is even a token of its own in the line of code."
+      },
+      {
+        "text": "The word and the full stop that ends the sentence",
+        "correct": false,
+        "why": "The full stop is a token of its own, id 13."
+      },
+      {
+        "text": "The first three letters, with the rest in the next token",
+        "correct": false,
+        "why": "`\" kitchen\"` is one piece. A word is cut only when the vocabulary has no whole piece for it."
+      },
+      {
+        "text": "The word together with the space that comes in front of it",
+        "correct": true,
+        "why": "Yes. The space before a word belongs to the token, which is why `\" strawberry\"` and `strawberry` are cut differently."
+      }
+    ]
+  },
+  {
+    "id": "ex-mt8vccmq",
+    "version": 1,
+    "section": "pieces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `o200k_base`, `cozinha` stayed whole and `trinta` came out as `\" tr\"` and `\"inta\"`. Why?",
+    "hint": "What does the vocabulary have, and what does it lack?",
+    "choices": [
+      {
+        "text": "The tokenizer splits every Portuguese word after its second letter",
+        "correct": false,
+        "why": "`cozinha`, `aceitar` and `fechar` all stayed whole in the same sentence."
+      },
+      {
+        "text": "`trinta` is a number word, and numbers are cut into digits",
+        "correct": false,
+        "why": "It was cut into `tr` and `inta`, not digits. Numbers written in digits are cut in chunks of up to three."
+      },
+      {
+        "text": "The vocabulary holds a piece for the first word and none for the second",
+        "correct": true,
+        "why": "Right. A word without a token of its own is spelt from smaller pieces the vocabulary does have."
+      },
+      {
+        "text": "The word was misspelt",
+        "correct": false,
+        "why": "`trinta` is spelt correctly. It is simply not common enough in the tokenizer's training text to have a piece of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-beq3yzwa",
+    "version": 1,
+    "section": "pieces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`seven` is one token and `SEVEN` is two. What does that mean for the model?",
+    "hint": "Compare the ids.",
+    "choices": [
+      {
+        "text": "Nothing; the tokenizer lowercases text before cutting it",
+        "correct": false,
+        "why": "It does not: the two came out with different ids and a different count."
+      },
+      {
+        "text": "It sees two different sequences of numbers",
+        "correct": true,
+        "why": "Yes. Case changes the pieces, and the model learnt about each sequence separately."
+      },
+      {
+        "text": "The capital version is twice as important to it",
+        "correct": false,
+        "why": "The number of tokens says nothing about importance. It says how the characters were cut."
+      },
+      {
+        "text": "It cannot read capitals, so `SEVEN` is lost",
+        "correct": false,
+        "why": "`SE` and `VEN` reach it like any other pieces. They are just different pieces from `seven`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qmtxs35",
+    "version": 1,
+    "section": "pieces",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do tokenizers use pieces of words, rather than whole words or single letters?",
+    "hint": "Think about what each alternative costs.",
+    "choices": [
+      {
+        "text": "Whole words would make every text longer than pieces do",
+        "correct": false,
+        "why": "It is single letters that would make texts longer. Whole words fail because no list can contain them all."
+      },
+      {
+        "text": "A list of pieces spells any text and still keeps common words to one token",
+        "correct": true,
+        "why": "Right. Whole words cannot cover every name and typo; letters would make every text several times longer."
+      },
+      {
+        "text": "Pieces of words carry more meaning than whole words, so the model understands more",
+        "correct": false,
+        "why": "The choice is about covering any text at a sensible length, not about meaning."
+      },
+      {
+        "text": "Models cannot handle a list with more than a few thousand entries",
+        "correct": false,
+        "why": "`o200k_base` has about two hundred thousand, and the ids in the captures go past 150,000."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwbmn3cz",
+    "version": 1,
+    "section": "pieces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A customer types a brand name the tokenizer has never seen. What happens to it?",
+    "hint": "Single bytes are still in the list.",
+    "choices": [
+      {
+        "text": "It is spelt out of smaller pieces",
+        "correct": true,
+        "why": "Yes. Byte-pair encoding keeps the single bytes, so any text can be written; the cost is more tokens."
+      },
+      {
+        "text": "It is replaced by a special token that means unknown word",
+        "correct": false,
+        "why": "Nothing is out of vocabulary for a byte-level tokenizer. The name is spelt from smaller pieces."
+      },
+      {
+        "text": "The tokenizer refuses the text and the request fails with an error",
+        "correct": false,
+        "why": "Any text can be cut, because the vocabulary still contains every single byte."
+      },
+      {
+        "text": "The tokenizer adds the name to its vocabulary for next time",
+        "correct": false,
+        "why": "The vocabulary is fixed when the tokenizer is built. It does not grow while you use it."
+      }
+    ]
+  },
+  {
+    "id": "ex-68nmmm37",
+    "version": 1,
+    "section": "pieces",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Portuguese sentence about the kitchen was 16 tokens with `o200k_base`. How many more tokens did `cl100k_base` need for it?",
+    "hint": "Read the count on the last line of each.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-f0gqj1pk",
+    "version": 1,
+    "section": "pieces",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of `o200k_base` and `cl100k_base`? Choose all that apply.",
+    "hint": "Compare the two English captures line by line.",
+    "choices": [
+      {
+        "text": "They cut the English kitchen sentence into 12 tokens each",
+        "correct": true,
+        "why": "Yes: twelve with each, and the same pieces."
+      },
+      {
+        "text": "`o200k_base` has a vocabulary about twice the size",
+        "correct": true,
+        "why": "Yes. The number in each name is roughly the size of the vocabulary."
+      },
+      {
+        "text": "They give the same id to the same piece",
+        "correct": false,
+        "why": "`\"The\"` is 976 in one and 791 in the other. An id only means something inside its own list."
+      },
+      {
+        "text": "A count from either one is an estimate for a model that uses the other",
+        "correct": true,
+        "why": "Yes, and for a model with a tokenizer of its own. That is why a count names its encoding."
+      }
+    ]
+  },
+  {
+    "id": "ex-78gg0p17",
+    "version": 1,
+    "section": "counting-and-cost",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are a model's prices and limits counted in tokens?",
+    "hint": "What does the model read, and what does it write?",
+    "choices": [
+      {
+        "text": "Tokens are a billing unit with no connection to the work the model does",
+        "correct": false,
+        "why": "They are the work: one output token is one step of the loop from lesson 1."
+      },
+      {
+        "text": "Words vary in length, so providers picked a unit that is fairer to customers",
+        "correct": false,
+        "why": "Fairness is not the reason, and tokens vary in length too. Tokens are what the model processes."
+      },
+      {
+        "text": "Tokens are the units the model reads and writes, one step of work each",
+        "correct": true,
+        "why": "Right. Each input token is read and each output token is one turn of the generation loop."
+      },
+      {
+        "text": "Characters would be too difficult for a computer to count",
+        "correct": false,
+        "why": "Counting characters is trivial. The model simply does not work in characters."
+      }
+    ]
+  },
+  {
+    "id": "ex-st6b3npe",
+    "version": 1,
+    "section": "counting-and-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hours.en.txt` is 37 words and 41 tokens; `hours.pt.txt` is 39 words and 48 tokens. You are building a product for Brazilian customers. What should you take from this?",
+    "hint": "Which of the three numbers does the bill use?",
+    "choices": [
+      {
+        "text": "Estimate from English word counts, since two words of difference is negligible",
+        "correct": false,
+        "why": "Two words became seven tokens, and with `cl100k_base` the gap was 17."
+      },
+      {
+        "text": "Measure the token count on real Portuguese text before estimating anything",
+        "correct": true,
+        "why": "Yes. Words and characters did not predict the difference, and a rule of thumb taken from English would underestimate it."
+      },
+      {
+        "text": "Count characters, since the Portuguese file has fewer of them and so costs less",
+        "correct": false,
+        "why": "It has fewer characters and more tokens. The bill follows the tokens."
+      },
+      {
+        "text": "Translate every prompt into English first to make the cost the same",
+        "correct": false,
+        "why": "Translation is a step that can go wrong and costs tokens too. Measure first."
+      }
+    ]
+  },
+  {
+    "id": "ex-9hhcjrc9",
+    "version": 1,
+    "section": "counting-and-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the price lists of large providers, an output token often costs several times more than an input token. What is the reason given in this lesson?",
+    "hint": "Can the output tokens be produced together?",
+    "choices": [
+      {
+        "text": "Output comes one token at a time; input is read in one pass",
+        "correct": true,
+        "why": "Right. Each output token depends on the one before it, so they cannot be produced together."
+      },
+      {
+        "text": "Output tokens are longer pieces of text",
+        "correct": false,
+        "why": "Both are cut by the same tokenizer. A token is the same kind of piece either way."
+      },
+      {
+        "text": "Providers simply charge more for what the model says",
+        "correct": false,
+        "why": "There is a technical reason: the input can be processed in parallel and the output cannot."
+      },
+      {
+        "text": "Each output token passes a separate safety check",
+        "correct": false,
+        "why": "Nothing in this lesson says so. The difference comes from how the two are computed."
+      }
+    ]
+  },
+  {
+    "id": "ex-s3an590a",
+    "version": 1,
+    "section": "counting-and-cost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the illustrative prices 2 and 8 per million, ten thousand requests cost 24.96 with 300 output tokens each and 3.36 with 30. By how much did the bill fall?",
+    "hint": "Subtract the second total from the first.",
+    "value": 21.6,
+    "tolerance": 0.005,
+    "unit": ""
+  },
+  {
+    "id": "ex-1zwgj75y",
+    "version": 1,
+    "section": "counting-and-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The tenth message in a chat costs much more input than the first, although the user typed about the same amount. Why?",
+    "hint": "Lesson 2: what does the application send with each request?",
+    "choices": [
+      {
+        "text": "The model charges extra for remembering the earlier turns between requests",
+        "correct": false,
+        "why": "It remembers nothing between requests. The application sends the earlier turns again, and they are counted as input."
+      },
+      {
+        "text": "The provider raises the price per token after the first few messages",
+        "correct": false,
+        "why": "The price per token did not change. The number of tokens did."
+      },
+      {
+        "text": "Later replies are longer by design",
+        "correct": false,
+        "why": "That would be output, not input. The input grew because the history is resent."
+      },
+      {
+        "text": "The whole conversation so far is sent again as input",
+        "correct": true,
+        "why": "Yes. The model keeps nothing between requests, so the earlier turns are paid for again every time."
+      }
+    ]
+  },
+  {
+    "id": "ex-akynwxmq",
+    "version": 1,
+    "section": "counting-and-cost",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`tok cost` takes two prices per million ___: one for input and one for output.",
+    "hint": "The unit every limit and price is counted in.",
+    "blanks": [
+      {
+        "accept": [
+          "tokens",
+          "token"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0ds3ek9k",
+    "version": 1,
+    "section": "quirks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A model miscounts the letter r in `strawberry`. What does `tok show` explain about that?",
+    "hint": "How many pieces is `\" strawberry\"`?",
+    "choices": [
+      {
+        "text": "The tokenizer removes repeated letters before the model reads the word",
+        "correct": false,
+        "why": "The text is not changed, only cut into pieces and numbered."
+      },
+      {
+        "text": "The word arrives as one number, with its letters inside",
+        "correct": true,
+        "why": "Right. The three r's are not in the input; the model has only what it learnt about that token's spelling."
+      },
+      {
+        "text": "Counting letters needs a bigger context window than the model has",
+        "correct": false,
+        "why": "The question is seven tokens. The difficulty is that the letters are hidden inside one of them."
+      },
+      {
+        "text": "The model was never trained on English names of fruit",
+        "correct": false,
+        "why": "It has a whole token for `\" strawberry\"`, so the word was common in its training text."
+      }
+    ]
+  },
+  {
+    "id": "ex-1d69rxa4",
+    "version": 1,
+    "section": "quirks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need a model to count letters in a word reliably. Which instruction turns the letters into something it can see?",
+    "hint": "What would make each letter its own token?",
+    "choices": [
+      {
+        "text": "Spell the word out one letter per line, then count the letters",
+        "correct": true,
+        "why": "Yes. Written out, each letter is a token of its own. A program is more reliable still."
+      },
+      {
+        "text": "Write the word in capitals so that it stands out",
+        "correct": false,
+        "why": "`SEVEN` became `SE` and `VEN`: still pieces, not letters."
+      },
+      {
+        "text": "Tell the model to take extra care with spelling",
+        "correct": false,
+        "why": "Care does not put the letters into the input. They are still hidden inside a token."
+      },
+      {
+        "text": "Raise the temperature so the model explores more answers",
+        "correct": false,
+        "why": "Temperature changes how the next token is drawn (lesson 13), not what is visible in the input."
+      }
+    ]
+  },
+  {
+    "id": "ex-mcaq2cm7",
+    "version": 1,
+    "section": "quirks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`1234567` came out as `123`, `456` and `7`. Why does that make arithmetic harder for a model?",
+    "hint": "Where are the units digits?",
+    "choices": [
+      {
+        "text": "The digits that must line up arrive in chunks",
+        "correct": true,
+        "why": "Right. The units sit at the end of a chunk the other number has cut in a different place."
+      },
+      {
+        "text": "The model cannot hold any number above 999",
+        "correct": false,
+        "why": "It holds the number fine as three tokens. The problem is lining digits up across chunks."
+      },
+      {
+        "text": "The tokenizer rounds large numbers before the model sees them",
+        "correct": false,
+        "why": "Nothing is rounded: `123` `456` `7` spell the whole number."
+      },
+      {
+        "text": "Numbers are removed from the input and replaced with a placeholder",
+        "correct": false,
+        "why": "They are all there, as tokens like any others."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xfkgrpw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put what happens to your text before a model can use it in order.",
+    "hint": "It starts with what you typed.",
+    "items": [
+      "You write the text",
+      "The tokenizer cuts it into pieces from its vocabulary",
+      "Each piece is replaced by its id",
+      "The model receives the list of ids"
+    ]
+  }
+]

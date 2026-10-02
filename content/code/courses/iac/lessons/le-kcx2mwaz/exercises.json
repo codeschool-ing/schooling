@@ -1,0 +1,810 @@
+[
+  {
+    "id": "ex-3t45ngfa",
+    "version": 1,
+    "section": "count",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`aws_subnet.app` has `count = 3`. What is the address of the first subnet?",
+    "hint": "The index starts where most programming languages start it.",
+    "choices": [
+      {
+        "text": "`aws_subnet.app[1]`",
+        "correct": false,
+        "why": "That is the second copy: `count.index` starts at zero."
+      },
+      {
+        "text": "`aws_subnet.app.first`",
+        "correct": false,
+        "why": "There is no such attribute; a copy is reached by its index in square brackets."
+      },
+      {
+        "text": "`aws_subnet.app[0]`",
+        "correct": true,
+        "why": "Yes. The copies are numbered from zero, and the apply printed `aws_subnet.app[0]: Creating...`."
+      },
+      {
+        "text": "`aws_subnet.app-0`",
+        "correct": false,
+        "why": "A hyphen would be part of a name; the index goes in square brackets after the resource's address."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qehwytt",
+    "version": 1,
+    "section": "count",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `count` called a meta-argument rather than an argument of `aws_subnet`?",
+    "hint": "Who reads it: Terraform or the AWS provider?",
+    "choices": [
+      {
+        "text": "Because the AWS API takes a number of copies in one call",
+        "correct": false,
+        "why": "The provider never sees `count`; it receives one subnet per copy."
+      },
+      {
+        "text": "Terraform reads it itself, before the provider sees anything",
+        "correct": true,
+        "why": "Right. It is handled before the provider sees anything, so it means the same on every resource type."
+      },
+      {
+        "text": "Because it is written first in the block, by convention",
+        "correct": false,
+        "why": "Putting it first is a readability habit; the name comes from who interprets it."
+      },
+      {
+        "text": "Because the state stores it beside each subnet",
+        "correct": false,
+        "why": "What the state keeps is one entry per address; `count` itself is not what makes it a meta-argument."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwyztq68",
+    "version": 1,
+    "section": "count",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`count = var.public ? 1 : 0` on a gateway, and an output reads `aws_internet_gateway.shop[0].id`. What happens when `public` is false?",
+    "hint": "Look at what `aws_internet_gateway.shop` holds when there are no copies.",
+    "choices": [
+      {
+        "text": "The output becomes an empty string",
+        "correct": false,
+        "why": "Terraform does not invent a value for a missing element; the lesson's plan stopped with an error."
+      },
+      {
+        "text": "Terraform keeps the old gateway",
+        "correct": false,
+        "why": "A reference does not keep a resource alive; the plan did list the gateway for destruction before failing."
+      },
+      {
+        "text": "The plan stops with `Invalid index`",
+        "correct": true,
+        "why": "Yes. The list is empty, so `[0]` points at nothing; `one(aws_internet_gateway.shop[*].id)` copes with zero."
+      },
+      {
+        "text": "Terraform creates the gateway anyway",
+        "correct": false,
+        "why": "`count` decides how many copies exist; a reference cannot raise it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ced5s3ja",
+    "version": 1,
+    "section": "count",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a block with `count`, the number of the copy being built, starting at zero, is `count.___`.",
+    "hint": "The name a list position has in most languages.",
+    "blanks": [
+      {
+        "accept": [
+          "index"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kmf53zbz",
+    "version": 1,
+    "section": "the-index-problem",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three subnets were made with `count` from a list of three ranges. The middle range is removed. What does the plan do to `aws_subnet.app[1]`?",
+    "hint": "Which range does index 1 point at after the removal?",
+    "choices": [
+      {
+        "text": "Replaces it, because its argument is now the third range",
+        "correct": true,
+        "why": "Its argument became the third range, and a subnet's range forces replacement."
+      },
+      {
+        "text": "Destroys it, since it held the removed range",
+        "correct": false,
+        "why": "Terraform matches by address, not by range; the destroyed one was `[2]`, out of range for count."
+      },
+      {
+        "text": "Leaves it alone, since only the list changed",
+        "correct": false,
+        "why": "The list feeds the block: `var.subnets[1]` is now a different range."
+      },
+      {
+        "text": "Updates its range in place",
+        "correct": false,
+        "why": "A subnet's range cannot be edited in place; the plan marked it `# forces replacement`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ysb53pqe",
+    "version": 1,
+    "section": "the-index-problem",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's plan for removing the middle subnet, how many resources were to be destroyed?",
+    "hint": "The summary line counts a replacement as both an add and a destroy.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-j23prvm9",
+    "version": 1,
+    "section": "the-index-problem",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which edit to a list used with `count` leaves every existing subnet untouched?",
+    "hint": "Which change moves no existing index?",
+    "choices": [
+      {
+        "text": "Sorting the list so the ranges read in order",
+        "correct": false,
+        "why": "Sorting can move every element, and each moved copy is replaced."
+      },
+      {
+        "text": "Inserting a new range at the front of the list",
+        "correct": false,
+        "why": "Every existing element moves up one index."
+      },
+      {
+        "text": "Adding a range at the end",
+        "correct": true,
+        "why": "Yes. No existing index moves, so the plan only adds a copy."
+      },
+      {
+        "text": "Removing the first range from the list",
+        "correct": false,
+        "why": "Every element after it moves down a place."
+      }
+    ]
+  },
+  {
+    "id": "ex-kyzfgs5x",
+    "version": 1,
+    "section": "the-index-problem",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A list of three bucket names drives `count`, and the name only goes into a tag, which can be changed in place. The middle name is removed. What does the plan show?",
+    "hint": "Nothing forces replacement here.",
+    "choices": [
+      {
+        "text": "Nothing, because a tag is not part of the resource's identity",
+        "correct": false,
+        "why": "The tag of copy `[1]` changes value, so the plan has to show it."
+      },
+      {
+        "text": "An update to `[1]` and a destroy of `[2]`",
+        "correct": true,
+        "why": "Right. Copy `[1]` quietly takes the third name and the third copy goes, which is harder to notice than a replacement."
+      },
+      {
+        "text": "One destroy of the copy whose tag held the removed name",
+        "correct": false,
+        "why": "That is what `for_each` would do; `count` matches by position."
+      },
+      {
+        "text": "A replacement of both `[1]` and `[2]`",
+        "correct": false,
+        "why": "A tag change is an in-place update, and `[2]` has no element left, so it is destroyed rather than replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-76zg7397",
+    "version": 1,
+    "section": "for-each",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `for_each = { web = \"10.20.1.0/24\", db = \"10.20.3.0/24\" }`, what is `each.value` in the copy for `db`?",
+    "hint": "Key on the left, value on the right.",
+    "choices": [
+      {
+        "text": "`\"db\"`",
+        "correct": false,
+        "why": "That is `each.key`."
+      },
+      {
+        "text": "`1`, its position in the map",
+        "correct": false,
+        "why": "A map has no positions that `for_each` uses; that is the point of it."
+      },
+      {
+        "text": "`\"10.20.3.0/24\"`",
+        "correct": true,
+        "why": "Yes: the value on the right of the key."
+      },
+      {
+        "text": "The whole map, so each copy can see the others",
+        "correct": false,
+        "why": "Each copy sees one entry: `each.key` and `each.value`."
+      }
+    ]
+  },
+  {
+    "id": "ex-pjy29mtm",
+    "version": 1,
+    "section": "for-each",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `for_each = [\"10.30.0.0/16\", \"10.31.0.0/16\"]` fail, while the same values wrapped in `toset(...)` work?",
+    "hint": "What would name each copy?",
+    "choices": [
+      {
+        "text": "A list's elements have no name but their position",
+        "correct": true,
+        "why": "Right. A set of strings uses the strings themselves as keys; a list would bring position back."
+      },
+      {
+        "text": "Lists of more than one network range are rejected by the AWS provider",
+        "correct": false,
+        "why": "The provider never saw it: the error came from Terraform reading `for_each`."
+      },
+      {
+        "text": "`toset` converts the ranges to numbers Terraform can count",
+        "correct": false,
+        "why": "The elements stay strings; they become the keys."
+      },
+      {
+        "text": "Square brackets are reserved for `count` in HCL",
+        "correct": false,
+        "why": "Square brackets write any list or tuple; the error said it was given a tuple."
+      }
+    ]
+  },
+  {
+    "id": "ex-qn89zaw0",
+    "version": 1,
+    "section": "for-each",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a resource with `for_each` over a map, the name on the left of the current entry is `each.___`.",
+    "hint": "The other one is `each.value`.",
+    "blanks": [
+      {
+        "accept": [
+          "key"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yhe230h5",
+    "version": 1,
+    "section": "moved",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana rewrites three `count` subnets as `for_each` and changes nothing else. Without `moved` blocks, what does the plan propose?",
+    "hint": "Terraform matches on addresses.",
+    "choices": [
+      {
+        "text": "Nothing, since the ranges are identical",
+        "correct": false,
+        "why": "Terraform does not compare ranges to work out identity; the old addresses simply vanished from the file."
+      },
+      {
+        "text": "Three in-place renames",
+        "correct": false,
+        "why": "An address is not a property of the subnet in AWS; there is nothing to update there."
+      },
+      {
+        "text": "Three destroys and three creates",
+        "correct": true,
+        "why": "Yes: `Plan: 3 to add, 0 to change, 3 to destroy.`, each destroy because the resource does not use count."
+      },
+      {
+        "text": "An error asking for `state mv`",
+        "correct": false,
+        "why": "Terraform plans the change happily; that is why it has to be read."
+      }
+    ]
+  },
+  {
+    "id": "ex-pcearxe8",
+    "version": 1,
+    "section": "moved",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does applying a plan made only of `has moved to` lines change in AWS?",
+    "hint": "Where do addresses live?",
+    "choices": [
+      {
+        "text": "It retags each subnet with its new key",
+        "correct": false,
+        "why": "The plan showed no tag changes; the summary was 0 to change."
+      },
+      {
+        "text": "Nothing: only the state's addresses change",
+        "correct": true,
+        "why": "Right. It rewrites the addresses in the state; the subnets keep their ids."
+      },
+      {
+        "text": "It recreates the subnets one at a time",
+        "correct": false,
+        "why": "No subnet is recreated: the ids in the plan are the ones from the original apply."
+      },
+      {
+        "text": "It moves them into the VPC named in the block",
+        "correct": false,
+        "why": "A `moved` block names two addresses and nothing else; no VPC is involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2mm0870",
+    "version": 1,
+    "section": "moved",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps for changing a live `count` resource to `for_each` without replacing anything in order.",
+    "hint": "Read the plan before you trust it.",
+    "items": [
+      "Rewrite the block with `for_each` over a map",
+      "Write one `moved` block per old index",
+      "Run `terraform plan` and check every line says `has moved to`",
+      "Apply, and confirm `terraform state list` shows the keys"
+    ],
+    "trap": "Applying before reading the plan is the slip: a wrong pairing shows up there as a replacement."
+  },
+  {
+    "id": "ex-axgsmyxd",
+    "version": 1,
+    "section": "moved",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana pairs `aws_subnet.app[0]` (10.20.1.0/24) with `aws_subnet.app[\"app\"]`, whose range in the file is 10.20.2.0/24. What does the plan show for that subnet?",
+    "hint": "The move happens first; then the file is compared with what was moved.",
+    "choices": [
+      {
+        "text": "A move, and then a replacement because the range differs",
+        "correct": true,
+        "why": "Right. Terraform moves it and then finds the range wrong, which forces replacement. A correct move plans nothing."
+      },
+      {
+        "text": "A move with no changes",
+        "correct": false,
+        "why": "The file asks for 10.20.2.0/24 at that address and the subnet has 10.20.1.0/24."
+      },
+      {
+        "text": "An error, since Terraform checks that a moved block keeps the same range",
+        "correct": false,
+        "why": "Terraform checks the addresses, not what the resource holds."
+      },
+      {
+        "text": "An in-place update of the range",
+        "correct": false,
+        "why": "A subnet's range cannot be updated in place."
+      }
+    ]
+  },
+  {
+    "id": "ex-enwnqtzh",
+    "version": 1,
+    "section": "dynamic-blocks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside `dynamic \"ingress\" { for_each = var.web_ports ... }`, how does `content` refer to the current port?",
+    "hint": "The variable is named after the block.",
+    "choices": [
+      {
+        "text": "`each.value`",
+        "correct": false,
+        "why": "`each` belongs to a resource-level `for_each`; a dynamic block names its iterator after itself."
+      },
+      {
+        "text": "`ingress.value`",
+        "correct": true,
+        "why": "Yes; `iterator` can rename it."
+      },
+      {
+        "text": "`var.web_ports.value`",
+        "correct": false,
+        "why": "That is the whole list, which has no `value` attribute."
+      },
+      {
+        "text": "`count.index`",
+        "correct": false,
+        "why": "No `count` is involved, and an index would give the position rather than the port."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqztf20b",
+    "version": 1,
+    "section": "dynamic-blocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Port 8443 is added to a list feeding a `dynamic \"ingress\"` block. Why does the plan list five rules, two going out and three coming in?",
+    "hint": "Where do the rules live?",
+    "choices": [
+      {
+        "text": "The dynamic block replaces the whole security group on every change",
+        "correct": false,
+        "why": "The plan said `update in-place` and `0 to add`; the group is kept."
+      },
+      {
+        "text": "They are one set inside one resource, compared whole",
+        "correct": true,
+        "why": "Right. The reviewer has to spot by eye that only 8443 is new; separate rule resources make it one line."
+      },
+      {
+        "text": "The ports were sorted, which shifted every index",
+        "correct": false,
+        "why": "The list was appended to, not sorted; the display comes from comparing a set."
+      },
+      {
+        "text": "moto rejected the first two rules and they must be created again",
+        "correct": false,
+        "why": "This was a plan; nothing had been sent to moto yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3yjwfaq",
+    "version": 1,
+    "section": "dynamic-blocks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about `dynamic` blocks match the lesson? Choose all that apply.",
+    "hint": "Three are true.",
+    "choices": [
+      {
+        "text": "They generate nested blocks, which cannot take `count` or `for_each` themselves",
+        "correct": true,
+        "why": "That is what they are for."
+      },
+      {
+        "text": "Their `for_each` accepts a list",
+        "correct": true,
+        "why": "Unlike the resource-level argument; `ingress.key` is then the index."
+      },
+      {
+        "text": "Each generated block gets its own address in the state",
+        "correct": false,
+        "why": "The blocks live inside one resource with one address; separate rule resources are what get addresses."
+      },
+      {
+        "text": "Mixing inline `ingress` with `aws_vpc_security_group_ingress_rule` on one group makes them undo each other",
+        "correct": true,
+        "why": "Each style tries to own the full set of rules."
+      },
+      {
+        "text": "They are the preferred way to write security group rules in the AWS provider",
+        "correct": false,
+        "why": "The provider's documentation recommends the separate rule resources."
+      }
+    ]
+  },
+  {
+    "id": "ex-4xdxmv58",
+    "version": 1,
+    "section": "provider-aliases",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A configuration has `provider \"aws\" { region = \"sa-east-1\" }` and `provider \"aws\" { alias = \"us\", region = \"us-east-2\" }`. A bucket has no `provider` argument. Where is it created?",
+    "hint": "Which block is the default?",
+    "choices": [
+      {
+        "text": "In `us-east-2`, the last provider block declared in the files",
+        "correct": false,
+        "why": "Order of declaration does not matter; the block without an alias is the default."
+      },
+      {
+        "text": "In `sa-east-1`",
+        "correct": true,
+        "why": "Yes. Only resources that say `provider = aws.us` use the alias."
+      },
+      {
+        "text": "In both regions, one copy each",
+        "correct": false,
+        "why": "A provider block is a connection, not a copy machine; that would take two resources."
+      },
+      {
+        "text": "Nowhere: Terraform asks which one to use",
+        "correct": false,
+        "why": "There is no ambiguity to ask about; the unaliased block is the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-ww4eykm1",
+    "version": 1,
+    "section": "provider-aliases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With version 6 of the AWS provider, when is a provider alias still needed instead of the resource's `region` argument?",
+    "hint": "What else does a provider block carry besides a region?",
+    "choices": [
+      {
+        "text": "When the bucket name has to be unique across regions",
+        "correct": false,
+        "why": "Bucket names are a matter for S3, not for how Terraform connects."
+      },
+      {
+        "text": "When the resource goes to `us-east-2`",
+        "correct": false,
+        "why": "The lesson's `logs` bucket used `region = \"us-east-2\"` and landed there."
+      },
+      {
+        "text": "When the second configuration is another account, role or set of credentials",
+        "correct": true,
+        "why": "Right. Credentials, roles and `default_tags` are provider settings a resource argument cannot change."
+      },
+      {
+        "text": "When there are more than two regions in one configuration",
+        "correct": false,
+        "why": "The number of regions does not matter; what differs between them does."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gzz44za",
+    "version": 1,
+    "section": "provider-aliases",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate deletes the `provider \"aws\" { alias = \"us\" ... }` block while the backup bucket it created still exists. What happens on the next plan?",
+    "hint": "A resource remembers which configuration created it.",
+    "choices": [
+      {
+        "text": "The bucket moves to `sa-east-1` with the default provider",
+        "correct": false,
+        "why": "Terraform cannot move a bucket between regions, and it does not switch a resource's provider silently."
+      },
+      {
+        "text": "Terraform plans to destroy the bucket as an orphan",
+        "correct": false,
+        "why": "To destroy it Terraform would need the configuration that reaches it, which is gone."
+      },
+      {
+        "text": "An error saying that configuration is still required",
+        "correct": true,
+        "why": "Yes: `Provider configuration not present`. Re-add the alias, remove the resources, then the alias."
+      },
+      {
+        "text": "Nothing, because the resource block still names `aws.us`",
+        "correct": false,
+        "why": "Naming an alias nobody declares is exactly what fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-myfjh0zz",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the tool the lesson's table gives it.",
+    "hint": "One option is left over.",
+    "pairs": [
+      {
+        "left": "A resource that exists only when a flag is true",
+        "right": "`count = var.x ? 1 : 0`"
+      },
+      {
+        "left": "Subnets that each have a role",
+        "right": "`for_each` over a map"
+      },
+      {
+        "left": "Nested blocks with no resource of their own",
+        "right": "`dynamic`"
+      },
+      {
+        "left": "One bucket in another account",
+        "right": "a provider alias"
+      }
+    ],
+    "right_distractors": [
+      "`depends_on`"
+    ]
+  },
+  {
+    "id": "ex-0qq3w7m8",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`for_each = toset(values(aws_subnet.app)[*].id)` fails on the first plan. Why?",
+    "hint": "When does AWS invent a subnet id?",
+    "choices": [
+      {
+        "text": "Subnet ids contain hyphens, which are not allowed in keys",
+        "correct": false,
+        "why": "Any string can be a key; the trouble is that these strings do not exist yet."
+      },
+      {
+        "text": "AWS invents subnet ids at apply, so the keys are unknown while planning",
+        "correct": true,
+        "why": "Right. Iterate over `aws_subnet.app`, whose keys Ana wrote, and use `each.value.id`."
+      },
+      {
+        "text": "`toset` cannot convert a list of ids",
+        "correct": false,
+        "why": "`toset` converts lists of strings; the error was about unknown values."
+      },
+      {
+        "text": "A route table association cannot use `for_each` at all",
+        "correct": false,
+        "why": "The fixed version used `for_each = aws_subnet.app` on the same resource type."
+      }
+    ]
+  },
+  {
+    "id": "ex-8crgzc7k",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these does lesson 6, not this lesson, teach?",
+    "hint": "The family of meta-arguments has five members.",
+    "choices": [
+      {
+        "text": "`provider`, to send a resource to another region",
+        "correct": false,
+        "why": "That was this lesson's `provider-aliases` section."
+      },
+      {
+        "text": "`for_each`, to name copies by key",
+        "correct": false,
+        "why": "That was this lesson."
+      },
+      {
+        "text": "`lifecycle`",
+        "correct": true,
+        "why": "Yes, with `depends_on`: what happens to a resource over time."
+      },
+      {
+        "text": "`count`, as an on/off switch with `? 1 : 0`",
+        "correct": false,
+        "why": "That was this lesson's first section."
+      }
+    ]
+  },
+  {
+    "id": "ex-pd4nskyg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ten IAM users are created with `count` from a list sorted by name. A new hire, Bruno, is added and the list is sorted again. What does the plan do to the users after Bruno?",
+    "hint": "A user's name is the identity AWS knows it by.",
+    "choices": [
+      {
+        "text": "Leaves them alone",
+        "correct": false,
+        "why": "The names did not change, but their indexes did, and Terraform matches on the index."
+      },
+      {
+        "text": "Gives each one a different name",
+        "correct": true,
+        "why": "Right. Every copy after the insertion shifts by one, so each index now asks for a different name, and the last index is new."
+      },
+      {
+        "text": "Adds Bruno at the end only",
+        "correct": false,
+        "why": "He was sorted into the middle, not appended; only an append leaves the rest alone."
+      },
+      {
+        "text": "Fails, since two copies cannot hold the same name during the plan",
+        "correct": false,
+        "why": "The plan computes the shift without complaint; it is the reader who has to catch it."
+      }
+    ]
+  },
+  {
+    "id": "ex-06yqc17t",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A plan for a change described as \"remove one subnet\" ends with `1 to add, 0 to change, 2 to destroy`. Which conclusions are justified? Choose all that apply.",
+    "hint": "Compare the summary with what was asked.",
+    "choices": [
+      {
+        "text": "A subnet that should stay is being replaced",
+        "correct": true,
+        "why": "One add and one extra destroy is a replacement of something nobody asked to touch."
+      },
+      {
+        "text": "The subnets look like `count` over a list",
+        "correct": true,
+        "why": "That shape is the index problem's signature."
+      },
+      {
+        "text": "Terraform has a bug in how it computes subnet ranges",
+        "correct": false,
+        "why": "The plan does exactly what the addresses say."
+      },
+      {
+        "text": "The plan is safe to apply because the totals still end at two subnets",
+        "correct": false,
+        "why": "The count of subnets is right and the identity of one of them is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-2kansb8m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A module you publish switches a resource from `count` to `for_each` with `moved` blocks. Six months later a colleague wants to delete the `moved` blocks. What is the risk?",
+    "hint": "Who else applies this configuration?",
+    "choices": [
+      {
+        "text": "None: once applied anywhere, the move is recorded for everybody",
+        "correct": false,
+        "why": "Each state records its own moves; a user who has not upgraded still has the old addresses."
+      },
+      {
+        "text": "Terraform refuses to plan a configuration without them",
+        "correct": false,
+        "why": "It plans fine; the trouble is what it plans for states with old addresses."
+      },
+      {
+        "text": "The subnets that were already moved get moved back",
+        "correct": false,
+        "why": "Deleting a `moved` block moves nothing back; it only stops future moves."
+      },
+      {
+        "text": "States that still hold `[0]`, `[1]`, `[2]` get destroys and recreates on their next plan",
+        "correct": true,
+        "why": "Right. Their states still hold `[0]`, `[1]`, `[2]`, and without the blocks the plan destroys and recreates."
+      }
+    ]
+  }
+]

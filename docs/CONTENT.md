@@ -211,9 +211,9 @@ repository can see that:
 
 | what | names |
 |---|---|
-| keyword languages | `javascript` `typescript` `python` `go` `java` `kotlin` `swift` `sql` `r` `dockerfile` |
+| keyword languages | `javascript` `typescript` `python` `go` `java` `kotlin` `swift` `sql` `r` `dockerfile` `hcl` |
 | the ones carried by position | `html` `css` `json` `yaml` `ini` `vim` `sh` |
-| aliases | `js` `jsx` `mjs` `node` `ts` `tsx` `py` `golang` `kt` `htm` `xml` `yml` `toml` `conf` `cfg` `properties` `vimrc` `bash` `zsh` `shell` `console` `terminal` |
+| aliases | `js` `jsx` `mjs` `node` `ts` `tsx` `py` `golang` `kt` `htm` `xml` `yml` `toml` `conf` `cfg` `properties` `vimrc` `tf` `terraform` `bash` `zsh` `shell` `console` `terminal` |
 
 A language nobody has taught it yet is a table entry in `RULES`: what starts a comment, what
 quotes a string, and the words. Five hand-written expressions is what makes somebody skip it

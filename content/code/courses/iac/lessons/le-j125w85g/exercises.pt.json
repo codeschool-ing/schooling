@@ -1,0 +1,573 @@
+{
+  "ex-n35vza67": {
+    "prompt": "A Ana tem uma edição sem commit no `main.tf` e roda `terraform plan`. O que o plan descreve?",
+    "hint": "Veja o que o `git status` imprimiu antes do plan.",
+    "choices": [
+      {
+        "text": "O último commit da branch dela",
+        "why": "O Terraform não pergunta nada ao git; ele leu o arquivo editado no disco."
+      },
+      {
+        "text": "Os arquivos como estão no disco",
+        "why": "Isso. A faixa nova apareceu no plan embora nenhum commit a tivesse."
+      },
+      {
+        "text": "O que estiver na `main` do repositório remoto",
+        "why": "O Terraform nunca lê o remoto; quem faz isso é o clone do pipeline."
+      },
+      {
+        "text": "Nada até a edição ter commit, já que o Terraform recusa uma árvore suja",
+        "why": "Não existe essa recusa; a captura mostra um plan completo de uma árvore suja."
+      }
+    ]
+  },
+  "ex-8ac78cqk": {
+    "prompt": "O diff da mudança da Ana tem uma linha. Por que a aula diz que quem revisa precisa também do plan?",
+    "hint": "O que aquela linha fez com a sub-rede?",
+    "choices": [
+      {
+        "text": "Um diff de uma linha é curto demais para revisar",
+        "why": "O tamanho não é o problema; a consequência é que não aparece nele."
+      },
+      {
+        "text": "O plan mostra que a linha substitui a sub-rede, o que o diff não diz",
+        "why": "Certo: `# forces replacement`, um a adicionar e um a destruir, por uma mudança de faixa."
+      },
+      {
+        "text": "Revisores não sabem ler HCL",
+        "why": "Sabem; a questão é o que o HCL causa, que só um plan calcula."
+      },
+      {
+        "text": "O GitHub exige o plan antes de um merge",
+        "why": "O GitHub não sabe nada de Terraform; o pipeline publica o plan porque as pessoas precisam dele."
+      }
+    ]
+  },
+  "ex-79eabwvb": {
+    "prompt": "Quais destes mudam quando o apply sai dos laptops e vai para um pipeline só? Escolha todos os que se aplicam.",
+    "hint": "A tabela da seção tem três linhas.",
+    "choices": [
+      {
+        "text": "Qual versão do Terraform aplica",
+        "why": "Sim: uma versão, escrita no workflow."
+      },
+      {
+        "text": "Onde ficam as credenciais que escrevem",
+        "why": "Sim: num só lugar, para um só job, em vez de em cada laptop."
+      },
+      {
+        "text": "Se a mudança é sensata",
+        "why": "Pessoas ainda decidem isso; o pipeline só faz a parte mecânica."
+      },
+      {
+        "text": "Se existe registro de cada apply e do commit dele",
+        "why": "Sim: um log por execução, ligado a um commit e a uma aprovação."
+      },
+      {
+        "text": "Se o Terraform precisa de state",
+        "why": "Precisa onde quer que rode; o pipeline usa o mesmo state no S3."
+      }
+    ]
+  },
+  "ex-1smmremv": {
+    "prompt": "Ponha em ordem os passos do pipeline na `main`, do merge até a mudança ser feita.",
+    "hint": "O arquivo precisa existir antes que alguém possa lê-lo.",
+    "items": [
+      "plan -out, salvo num arquivo",
+      "o arquivo guardado como artefato",
+      "uma pessoa lê e aprova",
+      "apply desse arquivo"
+    ],
+    "trap": "Aprovar antes de o plan ser salvo é aprovar algo que ainda pode mudar."
+  },
+  "ex-fc5q3nbj": {
+    "prompt": "No pipeline da aula, por que `check` e `scan` rodam antes do `plan`?",
+    "hint": "Compare o que cada passo exige.",
+    "choices": [
+      {
+        "text": "O Terraform se recusa a fazer plan de código sem formatação",
+        "why": "Ele faz o plan sem reclamar; o `fmt -check` é uma regra que o pipeline acrescenta."
+      },
+      {
+        "text": "Um plan escreve na nuvem, então tem de ser o penúltimo",
+        "why": "Um plan não escreve nada na nuvem; ele lê, e trava o state."
+      },
+      {
+        "text": "São baratos e não exigem credenciais",
+        "why": "Isso. Uma falha ali custa segundos e nenhuma credencial chegou a ser entregue."
+      },
+      {
+        "text": "O scanner lê o arquivo de plan",
+        "why": "Aqui o Trivy lê os arquivos `.tf`; varrer um plan é assunto da aula 14."
+      }
+    ]
+  },
+  "ex-kks8adz1": {
+    "prompt": "O pull request já tem um plan que os revisores leram. Por que outro plan é feito na `main` depois do merge?",
+    "hint": "Dois pull requests aprovados na mesma manhã.",
+    "choices": [
+      {
+        "text": "Ele envelhece assim que outra coisa entra na `main`",
+        "why": "Certo. O plan do pull request vale para o state que leu; o aplicado tem de sair da `main` como ela está."
+      },
+      {
+        "text": "O plan de um pull request não pode ser salvo",
+        "why": "Poderia; ele não é aplicado porque envelhece, não por um limite."
+      },
+      {
+        "text": "Para usar o role de apply",
+        "why": "O plan na `main` também roda com o role de plan, só de leitura."
+      },
+      {
+        "text": "O Terraform faz o plan de cada branch num state diferente",
+        "why": "Os dois leem a mesma chave de state no bucket."
+      }
+    ]
+  },
+  "ex-sha1r0ky": {
+    "prompt": "Na captura, o que fez o pipeline parar no pull request que abria a porta 22?",
+    "hint": "Veja a última linha da captura.",
+    "choices": [
+      {
+        "text": "O `terraform validate` rejeitou a regra",
+        "why": "O `check` passou: o arquivo era HCL válido."
+      },
+      {
+        "text": "O código de saída diferente de zero do Trivy",
+        "why": "Isso. O `--exit-code 1` transforma um achado HIGH num passo com falha, e um passo com falha encerra o job."
+      },
+      {
+        "text": "O plan mostrou um security group sendo substituído",
+        "why": "Nenhum plan chegou a rodar; o scan parou o pipeline antes."
+      },
+      {
+        "text": "A AWS recusou a regra quando o pipeline tentou criá-la",
+        "why": "Nada chegou à AWS; o scan lê arquivos e não precisa de credenciais."
+      }
+    ]
+  },
+  "ex-12q22ezn": {
+    "prompt": "Por que o workflow escreve `actions/checkout@3d3c42e…` em vez de `actions/checkout@v7`?",
+    "hint": "Qual dos dois o dono da action pode mudar?",
+    "choices": [
+      {
+        "text": "Uma tag se move; um commit, não",
+        "why": "Certo. O que a tag apontar roda com as suas credenciais, então o pin é o commit."
+      },
+      {
+        "text": "O GitHub não aceita mais tags no `uses`",
+        "why": "Aceita; a escolha é de confiança, não de sintaxe."
+      },
+      {
+        "text": "O download é mais rápido",
+        "why": "Velocidade não tem nada a ver."
+      },
+      {
+        "text": "Para que o Dependabot não consiga atualizar a action",
+        "why": "Pins ainda podem ser atualizados, de propósito; o comentário com a tag existe para deixar isso legível."
+      }
+    ]
+  },
+  "ex-sz07jqx5": {
+    "prompt": "Por que cada passo do workflow chama o `ci.sh` em vez de listar ele mesmo os comandos do Terraform?",
+    "hint": "Pense no arquivo do GitLab e no laptop da Ana.",
+    "choices": [
+      {
+        "text": "O GitHub não roda mais de um comando por passo",
+        "why": "Um bloco `run:` aceita muitas linhas; o passo do comentário neste workflow tem duas."
+      },
+      {
+        "text": "Scripts de shell rodam mais rápido do que passos em YAML",
+        "why": "Os dois rodam os mesmos comandos no mesmo shell."
+      },
+      {
+        "text": "Para esconder os comandos de quem lê os logs",
+        "why": "O contrário: o `set -x` imprime cada comando no log."
+      },
+      {
+        "text": "Os passos ficam escritos uma vez e rodam iguais em qualquer lugar",
+        "why": "Isso: GitHub, GitLab e um laptop rodam os mesmos estágios, e foi assim que esta aula os rodou."
+      }
+    ]
+  },
+  "ex-6b5076ff": {
+    "prompt": "Sem uma flag, uma variável que falta faz o Terraform esperar uma resposta em `Enter a value:`. A flag que transforma essa pergunta num erro imediato é `-input=___`.",
+    "hint": "Um booleano.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ]
+      }
+    ]
+  },
+  "ex-yh13z8zz": {
+    "prompt": "O que definir `TF_IN_AUTOMATION` muda na captura?",
+    "hint": "Compare as últimas linhas dos dois plans.",
+    "choices": [
+      {
+        "text": "Pula a pergunta de confirmação do `apply`",
+        "why": "Isso é o `-auto-approve`, ou aplicar um plan salvo; a variável só muda palavras."
+      },
+      {
+        "text": "Faz o Terraform falhar quando precisaria de entrada",
+        "why": "Isso é o `-input=false`; a aula mostra os dois porque é fácil confundi-los."
+      },
+      {
+        "text": "Somem os conselhos dirigidos a uma pessoa no teclado",
+        "why": "Isso. A nota sobre `-out` e a dica de rodar `terraform apply \"tfplan\"` ficam de fora."
+      },
+      {
+        "text": "Os códigos de cor são retirados da saída",
+        "why": "Cor é o `-no-color`; a variável não mexe nisso."
+      }
+    ]
+  },
+  "ex-219pf53b": {
+    "prompt": "Associe cada função do projeto à palavra-chave do GitLab que a cumpre.",
+    "hint": "Veja a tabela que compara os dois dialetos.",
+    "pairs": [
+      {
+        "left": "Levar o arquivo do plan a um job posterior",
+        "right": "artifacts"
+      },
+      {
+        "left": "Parar até alguém apertar um botão",
+        "right": "when: manual"
+      },
+      {
+        "left": "Só um apply por vez",
+        "right": "resource_group"
+      },
+      {
+        "left": "Um token para a AWS sem chave guardada",
+        "right": "id_tokens"
+      }
+    ],
+    "right_distractors": [
+      "cache",
+      "retry"
+    ]
+  },
+  "ex-vt1sygjw": {
+    "prompt": "Por que a aula chama o `expire_in: 3 days` do artefato de plan de decisão, e não de faxina?",
+    "hint": "O que mais existe dentro de um plan salvo?",
+    "choices": [
+      {
+        "text": "O GitLab cobra por dia de artefato guardado",
+        "why": "Custo não é o argumento que a aula usa."
+      },
+      {
+        "text": "O Terraform recusa plans com mais de três dias",
+        "why": "O Terraform confere o serial do state, não a idade do arquivo."
+      },
+      {
+        "text": "O arquivo guarda uma cópia do state",
+        "why": "Certo. Guardá-lo por mais tempo mantém essa cópia baixável por mais tempo, para um plan que esperou tanto que deveria ser refeito em vez de aplicado."
+      },
+      {
+        "text": "Artefatos mais antigos que isso são apagados do bucket de state",
+        "why": "Artefatos ficam no GitLab, não no bucket de state."
+      }
+    ]
+  },
+  "ex-8dtssvcf": {
+    "prompt": "O que o laboratório conferiu nos dois arquivos de workflow?",
+    "hint": "Veja os comandos `python3`.",
+    "choices": [
+      {
+        "text": "YAML válido, com os jobs esperados",
+        "why": "Isso, e a aula diz o quão pouco isso prova."
+      },
+      {
+        "text": "Que rodam no GitHub e no GitLab",
+        "why": "O laboratório não tem nenhum dos dois; os arquivos nunca rodaram."
+      },
+      {
+        "text": "Que toda action e toda imagem existem",
+        "why": "Nada no laboratório chegou ao GitHub ou a um registry."
+      },
+      {
+        "text": "Que a troca OIDC funciona",
+        "why": "Só uma execução real mostraria a troca; e o moto aceitaria qualquer token."
+      }
+    ]
+  },
+  "ex-yyd70zyt": {
+    "prompt": "O que há de errado com a access key de um usuário IAM guardada nos secrets do repositório?",
+    "hint": "Por quanto tempo ela funciona, e de onde?",
+    "choices": [
+      {
+        "text": "O GitHub recusa secrets com mais de 40 caracteres",
+        "why": "Não há limite desse tipo em jogo aqui."
+      },
+      {
+        "text": "Vive até ser rotacionada e funciona de qualquer lugar",
+        "why": "Certo. Um vazamento e ela é de outra pessoa enquanto ninguém perceber."
+      },
+      {
+        "text": "O Terraform não lê chaves de variáveis de ambiente",
+        "why": "Lê; é por isso que o atalho funciona de primeira."
+      },
+      {
+        "text": "Access keys não conseguem aplicar, só fazer plan",
+        "why": "Uma chave faz tudo o que o usuário dela pode, e esse é o problema."
+      }
+    ]
+  },
+  "ex-dtsqr7ag": {
+    "prompt": "A trust policy do role de apply compara o `sub` com `repo:example/shop:environment:production`. O que isso garante?",
+    "hint": "Quais jobs entram nesse environment?",
+    "choices": [
+      {
+        "text": "Só jobs da branch `main` podem fazer plan",
+        "why": "O plan usa o outro role, que confia também em pull requests."
+      },
+      {
+        "text": "O token não expira enquanto o environment existir",
+        "why": "As credenciais expiram dentro de uma hora de qualquer forma."
+      },
+      {
+        "text": "Acesso de escrita só depois da aprovação",
+        "why": "Isso. Um job só entra em `production` depois de aprovado, então aprovação e credencial são um portão só."
+      },
+      {
+        "text": "O moto recusa tokens de qualquer outro repositório",
+        "why": "O moto não avalia trust policy nenhuma; a aula diz isso."
+      }
+    ]
+  },
+  "ex-ght6zsgf": {
+    "prompt": "Um colega tira `s3:PutObject` e `s3:DeleteObject` do role de plan, para deixá-lo realmente só de leitura. O que acontece com o próximo plan?",
+    "hint": "O `backend.tf` tem `use_lockfile = true`.",
+    "choices": [
+      {
+        "text": "Falha, porque não consegue gravar o lock file",
+        "why": "Certo. Um plan trava o state, e com `use_lockfile` o lock é um objeto gravado ao lado dele."
+      },
+      {
+        "text": "Roda, já que um plan só lê",
+        "why": "Ele lê a nuvem, mas também pega o lock do state, que é uma escrita no bucket."
+      },
+      {
+        "text": "Roda sem lock e imprime um aviso",
+        "why": "O Terraform não pula o lock por conta própria; ele falha ao adquiri-lo."
+      },
+      {
+        "text": "Roda, mas não consegue mais ler o state",
+        "why": "Ler o state é `s3:GetObject`, que continua lá."
+      }
+    ]
+  },
+  "ex-a1ynrzfe": {
+    "prompt": "Por que o role de plan deve poder ler e nada mais? Escolha todos os que se aplicam.",
+    "hint": "De quem é o código que um plan num pull request roda?",
+    "choices": [
+      {
+        "text": "Providers executam código durante um plan",
+        "why": "Sim, então um plan não é uma leitura passiva."
+      },
+      {
+        "text": "Um data source como o `external` roda um programa que a configuração nomeia",
+        "why": "Sim, e a configuração vem de quem abriu o pull request."
+      },
+      {
+        "text": "Ler o state exige a política `ReadOnlyAccess`",
+        "why": "`s3:GetObject` na chave basta; o laboratório escreveu isso explicitamente."
+      },
+      {
+        "text": "Quem consegue abrir um pull request consegue fazer o plan agir com esse role",
+        "why": "Sim, e é por isso que as credenciais dele devem valer pouco."
+      },
+      {
+        "text": "A AWS recusa um role de plan que pode escrever",
+        "why": "A AWS o emite sem problema; a restrição é você quem escreve."
+      }
+    ]
+  },
+  "ex-600bxfmk": {
+    "prompt": "O job de apply da execução 1 rodou num clone cujo `main.tf` pedia uma tag `Owner`. A VPC que ele criou não tem nenhuma. Por quê?",
+    "hint": "O que um plan salvo carrega?",
+    "choices": [
+      {
+        "text": "O moto descarta tags que não conhece",
+        "why": "O moto guardou `Name` e `Environment`; o plan nunca pediu `Owner`."
+      },
+      {
+        "text": "O `init` voltou o arquivo para o commit do plan",
+        "why": "O `init` não mexe em `.tf` nenhum; o `grep` ainda achou `Owner` depois."
+      },
+      {
+        "text": "O plan guarda a própria configuração",
+        "why": "Certo. O `apply tfplan` executa o que foi calculado e aprovado, não o que os arquivos em volta dizem agora."
+      },
+      {
+        "text": "Tags são aplicadas por uma segunda execução do `apply`",
+        "why": "Tags são argumentos comuns; a tag veio depois, pelo próprio plan da execução 2."
+      }
+    ]
+  },
+  "ex-tr2x5qxq": {
+    "prompt": "Por que o job de apply na `main` não deve rodar `terraform apply -auto-approve`?",
+    "hint": "O que ele aplicaria?",
+    "choices": [
+      {
+        "text": "Faz o plan de novo e aplica um plan que ninguém leu",
+        "why": "Isso: a aprovação seria de um plan e o apply, de outro."
+      },
+      {
+        "text": "O `-auto-approve` não é permitido com backend S3",
+        "why": "É permitido; as aulas o usaram com backend S3."
+      },
+      {
+        "text": "Ignora o lock do state",
+        "why": "Pega o lock como qualquer apply."
+      },
+      {
+        "text": "Precisa de um terminal para mostrar o plan",
+        "why": "Imprime o plan no log, e ninguém aprovou esse plan."
+      }
+    ]
+  },
+  "ex-e6s5kkab": {
+    "prompt": "O artefato de plan expirou antes que alguém aprovasse a execução. O que o pipeline deve fazer?",
+    "hint": "Um plan é uma afirmação sobre um momento.",
+    "choices": [
+      {
+        "text": "Aplicar sem arquivo de plan, já que o código foi revisado",
+        "why": "Esse é o recurso que a aula proíbe: aplica um plan que ninguém leu."
+      },
+      {
+        "text": "Rodar o job de plan de novo e ter esse plan lido",
+        "why": "Certo. Expirar, como ficar stale, quer dizer plan de novo e leitura de novo."
+      },
+      {
+        "text": "Aumentar o `retention-days` e rodar de novo só o job de apply",
+        "why": "O arquivo já foi embora; uma retenção maior não o traz de volta."
+      },
+      {
+        "text": "Copiar o `tfplan` de um laptop",
+        "why": "Isso aplicaria um arquivo que ninguém revisou, feito por um laptop que o pipeline substituiu."
+      }
+    ]
+  },
+  "ex-s42t5kzz": {
+    "prompt": "A execução 2 fez o plan enquanto a execução 1 esperava aprovação. Quantos recursos o primeiro plan da execução 2 propôs adicionar?",
+    "hint": "A linha `Plan:` dele.",
+    "unit": "recursos"
+  },
+  "ex-28hevw9x": {
+    "prompt": "O lock de state da aula 7 estava ativo o tempo todo. Por que a execução 2 ainda fez plan contra um state prestes a mudar?",
+    "hint": "Quando o lock é segurado, e por quanto tempo?",
+    "choices": [
+      {
+        "text": "O lock só cobre o `apply`",
+        "why": "Um plan também pega o lock, como as permissões do role de plan mostraram."
+      },
+      {
+        "text": "Um lock só impede duas operações no mesmo instante",
+        "why": "Certo. Cada plan o segurou por pouco tempo; nada impediu o segundo plan quando o primeiro terminou de planejar."
+      },
+      {
+        "text": "O `-lock-timeout=5m` desligou o lock",
+        "why": "Ele faz o Terraform esperar por um lock, não pulá-lo."
+      },
+      {
+        "text": "As duas execuções usaram chaves de state diferentes",
+        "why": "As duas usaram `shop/terraform.tfstate`; é por isso que a execução 2 ficou stale."
+      }
+    ]
+  },
+  "ex-kepataef": {
+    "prompt": "Por que o `cancel-in-progress` está como `false` no bloco `concurrency` do workflow?",
+    "hint": "O que acontece com um apply cancelado no meio?",
+    "choices": [
+      {
+        "text": "Para que pull requests nunca sejam cancelados",
+        "why": "A configuração trata do job em execução no grupo, qualquer que seja o evento."
+      },
+      {
+        "text": "O GitHub exige isso quando há `environment`",
+        "why": "Não existe essa exigência; é uma escolha de segurança."
+      },
+      {
+        "text": "Para manter toda execução pendente na fila",
+        "why": "Execuções pendentes continuam sendo trocadas por mais novas; isto só protege a que está rodando."
+      },
+      {
+        "text": "Um apply cancelado é um apply parcial",
+        "why": "Isso: o apply parcial da aula 9, feito de propósito."
+      }
+    ]
+  },
+  "ex-xexgmq83": {
+    "prompt": "Um time mantém o workflow do GitHub, mas muda o checkout do job `apply` para `ref: main`. Dois merges entram com minutos de diferença. Qual é o risco?",
+    "hint": "O que o job de apply lê do checkout, e o que lê do plan?",
+    "choices": [
+      {
+        "text": "O arquivo de plan é ignorado e o commit mais novo é aplicado",
+        "why": "O `apply tfplan` segue o plan, como a execução 1 da aula mostrou."
+      },
+      {
+        "text": "Um lock file de outro commit",
+        "why": "Certo. O `init` lê o backend e o lock file do checkout, e um plan cujas seleções de provider diferem é recusado."
+      },
+      {
+        "text": "Os dois commits são aplicados duas vezes",
+        "why": "Cada execução aplica o próprio plan uma vez; a segunda pode ficar stale."
+      },
+      {
+        "text": "Nenhum: o checkout não importa para o `apply tfplan`",
+        "why": "A configuração vem do plan, mas o backend e o lock file vêm do checkout."
+      }
+    ]
+  },
+  "ex-m3nr075k": {
+    "prompt": "Um time quer um pipeline mais rápido e propõe: num merge, rodar `terraform apply -auto-approve` na `main`, já que o plan do pull request foi revisado. Qual execução desta aula mostra a falha?",
+    "hint": "Qual plan era verdadeiro quando foi feito e falso depois?",
+    "choices": [
+      {
+        "text": "O pull request que abria a porta 22",
+        "why": "O scan parou esse antes de qualquer plan; ele não diz nada sobre revisar plans."
+      },
+      {
+        "text": "A execução 2, cujo plan propôs uma segunda rede",
+        "why": "Certo. O que foi revisado já não era o que aconteceria; com `-auto-approve`, o apply teria feito um plan novo e ninguém teria lido esse plan também."
+      },
+      {
+        "text": "A mudança de sub-rede sem commit no laptop da Ana",
+        "why": "Isso mostra por que laptops não devem aplicar, não por que uma mudança com merge precisa de um plan novo e lido."
+      },
+      {
+        "text": "A configuração `ci-roles`",
+        "why": "Essas são as credenciais, aplicadas uma vez por um administrador."
+      }
+    ]
+  },
+  "ex-hw9r518s": {
+    "prompt": "A empresa da Ana sai do GitHub e vai para o GitLab. Quais destes precisam mudar? Escolha todos os que se aplicam.",
+    "hint": "Separe o que agenda os passos do que os passos são.",
+    "choices": [
+      {
+        "text": "O `ci.sh`",
+        "why": "Os dois arquivos chamam o mesmo script; é para isso que ele existe."
+      },
+      {
+        "text": "O arquivo que agenda os jobs",
+        "why": "Sim: `.gitlab-ci.yml` no lugar do workflow."
+      },
+      {
+        "text": "O provedor OIDC e as condições de `sub` na AWS",
+        "why": "Sim: o emissor passa a ser `https://gitlab.com` e o `sub` tem o formato do GitLab."
+      },
+      {
+        "text": "O backend S3 e o lock file dele",
+        "why": "O state não se importa com qual serviço de CI faz plan contra ele."
+      },
+      {
+        "text": "A configuração Terraform da rede",
+        "why": "A rede é a mesma, seja quem for que rode o pipeline."
+      }
+    ]
+  }
+}

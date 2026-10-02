@@ -618,6 +618,17 @@ const RULES = {
       ONBUILD STOPSIGNAL HEALTHCHECK SHELL AS`,
   }),
 
+  /* HCL is what Terraform, OpenTofu and Packer are written in. `#` and `//`
+     both start a comment; a heredoc is left uncoloured rather than guessed. */
+  hcl: language({
+    line: ['#', '//'],
+    quotes: ['"'],
+    keywords: `terraform required_providers required_version provider resource data variable
+      output locals module moved import removed check backend cloud for_each count depends_on
+      lifecycle dynamic content for in if each self var local true false null packer source
+      build provisioner required_plugins`,
+  }),
+
   /* ---------- and the ones that are not keyword languages ----------
 
      CSS, HTML, JSON, YAML and INI have no vocabulary to list: what carries the
@@ -735,6 +746,7 @@ const ALIAS = {
   yml: 'yaml',
   toml: 'ini', conf: 'ini', cfg: 'ini', properties: 'ini',
   vimrc: 'vim',
+  tf: 'hcl', terraform: 'hcl',
   bash: 'sh', zsh: 'sh', shell: 'sh', console: 'sh', terminal: 'sh',
 };
 

@@ -1,0 +1,588 @@
+{
+  "ex-9p3h0b04": {
+    "prompt": "A Ana aplicou o `dev.tfvars` e depois, no mesmo diretório e no mesmo estado, pediu um plan com o `prod.tfvars`. O que o plan propôs?",
+    "hint": "O estado guardava uma VPC quando o plan começou.",
+    "choices": [
+      {
+        "text": "Uma segunda rede para prod, criada ao lado da de dev",
+        "why": "Era o que ela esperava. O estado já guardava a VPC de dev, então o Terraform comparou os valores de prod com ela."
+      },
+      {
+        "text": "Substituir a rede de dev e tudo o que há nela",
+        "why": "Isso. Um estado, uma VPC: a faixa nova força a substituição, e a sub-rede e o security group dentro dela vão junto."
+      },
+      {
+        "text": "Nada, porque um arquivo `.tfvars` não pode mudar um recurso que já existe",
+        "why": "Valores alimentam a configuração como qualquer outra mudança; o plan propôs três substituições."
+      },
+      {
+        "text": "Um erro dizendo que o ambiente tinha mudado",
+        "why": "O Terraform não faz ideia do que é um ambiente; ele viu valores diferentes para os mesmos recursos."
+      }
+    ]
+  },
+  "ex-07nmh8e8": {
+    "prompt": "Nesse mesmo plan, com o `prod.tfvars` contra o estado de dev, quantos recursos teriam sido destruídos?",
+    "hint": "Leia a linha de resumo do plan.",
+    "unit": "recursos"
+  },
+  "ex-zg8mqy1w": {
+    "prompt": "Para o Terraform, o que faz de dev e prod dois ambientes, e não um?",
+    "hint": "Do que a tentativa que deu errado tinha um só?",
+    "choices": [
+      {
+        "text": "Um arquivo `.tfvars` separado para cada um",
+        "why": "A Ana tinha dois, e o segundo ainda reescreveu o primeiro ambiente."
+      },
+      {
+        "text": "Uma tag `Environment` em todo recurso",
+        "why": "Uma tag é um valor como outro qualquer; o plan só propôs mudá-la de dev para prod."
+      },
+      {
+        "text": "Um estado próprio para cada um dos ambientes",
+        "why": "Certo. Um plan lê um estado, e só um segundo estado permite enxergar um segundo ambiente."
+      },
+      {
+        "text": "Nomes diferentes para as variáveis em cada ambiente",
+        "why": "As variáveis são as mesmas de propósito: mesmo código, valores diferentes."
+      }
+    ]
+  },
+  "ex-fw6tgmv6": {
+    "prompt": "O que dar a cada ambiente o seu estado proporciona? Escolha todos os que se aplicam.",
+    "hint": "Uma das opções precisa de uma camada abaixo do estado.",
+    "choices": [
+      {
+        "text": "Um plan de prod que lista só as mudanças de prod",
+        "why": "Sim; ele lê o estado de prod e mais nada."
+      },
+      {
+        "text": "Credenciais de dev que não alcançam prod",
+        "why": "Dois estados numa conta, lidos com as mesmas chaves, estão separados só pela contabilidade; isso exige credenciais ou contas separadas."
+      },
+      {
+        "text": "Uma trava por ambiente, para dev nunca bloquear prod",
+        "why": "Sim; cada estado tem a sua trava."
+      },
+      {
+        "text": "Um erro em dev, aplicado, que estraga só dev",
+        "why": "Sim; os recursos de prod não estão no estado de dev para um plan mudar."
+      },
+      {
+        "text": "Contas menores, já que dev é feito de valores mais baratos",
+        "why": "Valores mais baratos são uma escolha de valores, não de estado."
+      }
+    ]
+  },
+  "ex-425sjy5x": {
+    "prompt": "Com o que começa um workspace criado com `terraform workspace new dev`?",
+    "hint": "Leia a mensagem que o `new` imprimiu.",
+    "choices": [
+      {
+        "text": "Uma cópia do estado do workspace `default`",
+        "why": "Ele começa sem nada, e por isso o primeiro plan de prod criou tudo."
+      },
+      {
+        "text": "Um estado vazio",
+        "why": "Isso. A configuração é a mesma; o estado por trás dela é novo."
+      },
+      {
+        "text": "Um diretório novo com uma cópia da configuração",
+        "why": "O diretório e os arquivos ficam como estão; só o estado muda."
+      },
+      {
+        "text": "Um bucket só dele para o estado",
+        "why": "Mesmo bucket, mesmo bloco de backend; o backend S3 o guarda sob outra key."
+      }
+    ]
+  },
+  "ex-rcvc4yc0": {
+    "prompt": "Para dar a todo recurso o nome do estado que é dono dele, a Ana escreveu `name = \"shop-${___}\"` no `main.tf`.",
+    "hint": "A expressão que guarda o nome do workspace selecionado.",
+    "blanks": [
+      {
+        "accept": [
+          "terraform.workspace"
+        ]
+      }
+    ]
+  },
+  "ex-8170vrda": {
+    "prompt": "Onde o Terraform registra qual workspace está selecionado?",
+    "hint": "A Ana o imprimiu com `cat`.",
+    "choices": [
+      {
+        "text": "No bucket de estado, ao lado dos estados",
+        "why": "O bucket guarda um estado por workspace e nenhum registro de qual você escolheu."
+      },
+      {
+        "text": "No `backend.tf`, que o `select` reescreve",
+        "why": "O `select` não toca em nenhum arquivo que a Ana escreveu; o `git diff` mostraria se tocasse."
+      },
+      {
+        "text": "Nas variáveis de ambiente do shell",
+        "why": "O `TF_WORKSPACE` pode sobrepor a seleção num comando, mas ela mesma fica guardada em outro lugar."
+      },
+      {
+        "text": "Em `.terraform/environment`, localmente",
+        "why": "Isso: uma palavra num arquivo que o `init` criou e o git ignora."
+      }
+    ]
+  },
+  "ex-dg3wq5dd": {
+    "prompt": "Depois que os dois workspaces foram aplicados, por que o `shop/terraform.tfstate` continuava no bucket, sem prefixo `env:/`?",
+    "hint": "Qual workspace mantém a key simples?",
+    "choices": [
+      {
+        "text": "É o estado do workspace `default`, esvaziado pelo destroy anterior",
+        "why": "Certo: 181 bytes de um estado que não guarda nada."
+      },
+      {
+        "text": "É um backup que o backend S3 guarda de prod",
+        "why": "Backups de gravações anteriores são versões da mesma key, não outra key."
+      },
+      {
+        "text": "É a trava",
+        "why": "Uma trava é um objeto `.tflock`, e some quando a execução termina."
+      },
+      {
+        "text": "É o estado de dev, porque dev foi criado primeiro",
+        "why": "O estado de dev está em `env:/dev/`, como todo workspace exceto o `default`."
+      }
+    ]
+  },
+  "ex-129pnvn0": {
+    "prompt": "Um colega clona o repositório da Ana, roda `terraform init` e planeja com o `prod.tfvars` sem selecionar nada. Que estado esse plan lê?",
+    "hint": "A seleção está em algo que o clone copiou?",
+    "choices": [
+      {
+        "text": "O de prod, porque foi o que a Ana selecionou",
+        "why": "A seleção dela é um arquivo no `.terraform` dela, que o git ignora; o clone nunca o teve."
+      },
+      {
+        "text": "O de dev, porque foi o primeiro workspace criado",
+        "why": "A ordem de criação não decide nada; um checkout novo começa em `default`."
+      },
+      {
+        "text": "O do `default`",
+        "why": "Isso, e com o estado destruído que está lá ele planejaria criar uma rede de prod inteira ao lado da real."
+      },
+      {
+        "text": "Nenhum: o Terraform se recusa a planejar até que um workspace seja selecionado",
+        "why": "Sempre há um workspace selecionado, e sem escolha ele é o `default`."
+      }
+    ]
+  },
+  "ex-2mche5cc": {
+    "prompt": "A Ana quer o workspace `prod` apagado, com os recursos removidos e não esquecidos. Ponha os comandos em ordem.",
+    "hint": "O Terraform recusa apagar um workspace que ainda rastreia recursos, ou aquele em que você está.",
+    "items": [
+      "`terraform workspace select prod`",
+      "`terraform destroy -var-file=prod.tfvars`",
+      "`terraform workspace select default`",
+      "`terraform workspace delete prod`"
+    ],
+    "trap": "Apagar primeiro é recusado enquanto o estado rastreia algo, e o `-force` deixaria os recursos rodando sem registro."
+  },
+  "ex-gsyngw1t": {
+    "prompt": "Quando a Ana rodou o plan com o `dev.tfvars` com `prod` selecionado, o que na tela dela dizia prod antes de o plan voltar?",
+    "hint": "Olhe a linha que ela digitou.",
+    "choices": [
+      {
+        "text": "O prompt, que nomeia o workspace",
+        "why": "Ele dizia `ana@laptop:~/shop$`, igual em todo workspace."
+      },
+      {
+        "text": "O nome do diretório",
+        "why": "Workspaces mantêm um diretório para todos os ambientes."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo, e esse é o risco inteiro: a seleção é um arquivo escondido que ninguém lê."
+      },
+      {
+        "text": "Um aviso do Terraform de que prod estava selecionado",
+        "why": "O Terraform não imprime aviso assim; ele não sabe qual workspace importa."
+      }
+    ]
+  },
+  "ex-t3nmpmg0": {
+    "prompt": "O bloco `validation` compara `var.environment` com `terraform.workspace`. Qual erro ele NÃO pega?",
+    "hint": "Do que a comparação precisa ter em mãos?",
+    "choices": [
+      {
+        "text": "O `dev.tfvars` passado com `prod` selecionado",
+        "why": "É o acidente para o qual foi escrito, e ele o recusou."
+      },
+      {
+        "text": "O `prod.tfvars` passado com `dev` selecionado",
+        "why": "A mesma comparação ao contrário; ele recusa isso também."
+      },
+      {
+        "text": "Uma edição no `main.tf` testada com prod selecionado",
+        "why": "Certo. Com os próprios valores de prod os dois lados concordam, e a mudança não testada vai para prod."
+      },
+      {
+        "text": "Um arquivo de valores cuja linha `environment` diz `staging` com `dev` selecionado",
+        "why": "`staging` não é `dev`, então a validação o reprova como qualquer outra diferença."
+      }
+    ]
+  },
+  "ex-etk4kwa0": {
+    "prompt": "Com `prod` selecionado, a Ana rodou `TF_WORKSPACE=dev terraform plan -var-file=dev.tfvars` e depois `terraform workspace show`. O que o `show` imprimiu?",
+    "hint": "Uma variável de ambiente grava algo no disco?",
+    "choices": [
+      {
+        "text": "`dev`, já que a variável o selecionou",
+        "why": "Ela selecionou dev para aquele comando e não anotou nada."
+      },
+      {
+        "text": "`prod`",
+        "why": "Isso. A seleção guardada fica intacta, e é isso que torna a variável segura num script."
+      },
+      {
+        "text": "`default`, porque a variável a zera",
+        "why": "Nada a zera; o arquivo continua dizendo prod."
+      },
+      {
+        "text": "Um erro, porque a variável e o arquivo discordam",
+        "why": "Eles podem discordar; a variável simplesmente vence enquanto está definida."
+      }
+    ]
+  },
+  "ex-fem48ve6": {
+    "prompt": "Um pipeline que só tem as credenciais de dev roda `terraform apply -auto-approve -var-file=prod.tfvars` com `prod` selecionado, por engano. Prod mora numa conta da AWS só dela. O que acontece?",
+    "hint": "Valores e workspace concordam aqui. O que sobra para impedir?",
+    "choices": [
+      {
+        "text": "O bloco `validation` o recusa",
+        "why": "O `environment` é prod e o workspace é prod: a checagem passa."
+      },
+      {
+        "text": "O Terraform pede confirmação mesmo assim, porque o workspace se chama prod",
+        "why": "Nomes de workspace não significam nada para o Terraform, e o `-auto-approve` pula a pergunta."
+      },
+      {
+        "text": "Ele aplica em prod, já que toda checagem concorda",
+        "why": "Toda checagem da configuração concorda, mas as credenciais não alcançam a conta de prod."
+      },
+      {
+        "text": "Ele falha por falta de acesso, e prod fica intocado",
+        "why": "Certo. É a camada abaixo do estado, e a única defesa que não depende de alguém escolher certo."
+      }
+    ]
+  },
+  "ex-d9372kfh": {
+    "prompt": "No layout de um diretório por ambiente, como a Ana escolhe para qual ambiente é um plan?",
+    "hint": "Olhe o prompt na captura do apply.",
+    "choices": [
+      {
+        "text": "Com `-var-file`",
+        "why": "Não há arquivo de valores para passar: os valores estão escritos nas chamadas de módulo de cada diretório."
+      },
+      {
+        "text": "Rodando `terraform workspace select` antes",
+        "why": "Cada diretório usa o seu workspace `default`; o próprio diretório é a escolha."
+      },
+      {
+        "text": "Pelo diretório em que ela roda, `envs/dev` ou `envs/prod`",
+        "why": "Isso, e o prompt mostra em toda linha."
+      },
+      {
+        "text": "Com `TF_WORKSPACE`",
+        "why": "Essa variável escolhe um workspace dentro de um diretório; aqui não há nada a escolher."
+      }
+    ]
+  },
+  "ex-trd0pb7q": {
+    "prompt": "Por que o `backend.tf` de cada ambiente escreve a sua key por extenso, em vez de tirá-la de uma variável compartilhada pelos dois?",
+    "hint": "A aula 7 disse quando o bloco de backend é lido.",
+    "choices": [
+      {
+        "text": "O S3 recusa keys de objeto calculadas pelo Terraform",
+        "why": "O S3 nunca vê como a string foi produzida."
+      },
+      {
+        "text": "Esse bloco é lido antes de qualquer valor de entrada existir",
+        "why": "Certo: ele é configurado antes de qualquer outra coisa ser avaliada, então é literal, ou passado com `-backend-config`."
+      },
+      {
+        "text": "Para que o `diff -r` mostre a diferença entre os ambientes",
+        "why": "O diff mostra, mas isso é consequência, não o motivo."
+      },
+      {
+        "text": "O Terraform exige keys únicas entre todos os repositórios",
+        "why": "O Terraform não sabe nada de outros repositórios; a unicidade é trabalho seu."
+      }
+    ]
+  },
+  "ex-fc7k34vb": {
+    "prompt": "A Ana acrescentou uma tag `Owner` ao módulo de rede compartilhado e planejou em `envs/prod`. Quantos recursos o plan de prod quis mudar?",
+    "hint": "Prod tem uma VPC e uma sub-rede por zona.",
+    "unit": "recursos"
+  },
+  "ex-6e5d2y9x": {
+    "prompt": "A Ana quer que dev rode uma versão nova do módulo de rede por uma semana enquanto prod fica na antiga. Os dois diretórios usam `source = \"../../modules/network\"`. Do que ela precisa?",
+    "hint": "Onde uma origem de módulo diz qual versão ela quer?",
+    "choices": [
+      {
+        "text": "Nada: prod só muda quando alguém aplica lá",
+        "why": "O próximo apply de prod, por qualquer motivo, pega o que estiver no caminho naquele dia."
+      },
+      {
+        "text": "Um workspace chamado `trial` dentro de `envs/dev`",
+        "why": "Um workspace dá outro estado, não outra versão do código."
+      },
+      {
+        "text": "Fixar cada lado numa tag, com `?ref=` num endereço git em vez de um caminho",
+        "why": "Certo. Aí dev passa para a tag nova e prod fica onde está até alguém mudá-lo."
+      },
+      {
+        "text": "Uma cópia do código novo em `envs/dev/backend.tf`",
+        "why": "O bloco de backend diz onde o estado mora, não o que o módulo faz."
+      }
+    ]
+  },
+  "ex-1gpx28ke": {
+    "prompt": "O que o Terragrunt faz com o bloco `remote_state` do `root.hcl`?",
+    "hint": "Veja o arquivo encontrado dentro de `.terragrunt-cache`.",
+    "choices": [
+      {
+        "text": "Guarda o estado de cada unit num servidor do Terragrunt",
+        "why": "Não existe servidor assim; os estados estão no bucket S3 da Ana."
+      },
+      {
+        "text": "Escreve um `backend.tf` em cada unit, com a key pelo caminho da unit",
+        "why": "Isso: `live/dev/network/terraform.tfstate` para `dev/network`, um bloco escrito uma vez."
+      },
+      {
+        "text": "Troca o backend S3 por um próprio",
+        "why": "O arquivo gerado é um bloco de backend S3 comum, que o Terraform lê."
+      },
+      {
+        "text": "Junta todas as units num estado só",
+        "why": "O contrário: cada unit ganha a sua key."
+      }
+    ]
+  },
+  "ex-y2zv7j3v": {
+    "prompt": "Por que o primeiro `terragrunt run --all plan` em `live/dev` falhou para a unit web?",
+    "hint": "Do que a web precisa da network, e de onde isso vem?",
+    "choices": [
+      {
+        "text": "A unit network ainda não tinha outputs, porque nada tinha sido aplicado",
+        "why": "Certo. Um plan não lê um output de um estado que não existe; mock outputs ou um apply em ordem resolvem."
+      },
+      {
+        "text": "O Terragrunt rodou as duas units em ordem aleatória",
+        "why": "Ele imprimiu a ordem antes, network e depois web."
+      },
+      {
+        "text": "O bloco `dependency` se escreve `dependencies`",
+        "why": "`dependency` está certo; o erro é sobre os outputs, não o nome."
+      },
+      {
+        "text": "O moto não consegue responder ao Terragrunt",
+        "why": "A unit network planejou sem problema contra o moto, e o apply depois funcionou."
+      }
+    ]
+  },
+  "ex-9bzbd38f": {
+    "prompt": "Ligue cada parte dos arquivos do Terragrunt ao que ela faz.",
+    "hint": "Duas delas escrevem arquivos; uma decide a ordem.",
+    "pairs": [
+      {
+        "left": "`include`",
+        "right": "traz as configurações do `root.hcl` para a unit"
+      },
+      {
+        "left": "`dependency`",
+        "right": "lê os outputs de outra unit e roda aquela unit antes"
+      },
+      {
+        "left": "`remote_state`",
+        "right": "gera o `backend.tf` com uma key a partir do caminho da unit"
+      },
+      {
+        "left": "`generate \"provider\"`",
+        "right": "escreve o bloco do provider em cada unit"
+      },
+      {
+        "left": "`inputs`",
+        "right": "dá valores às variáveis do módulo"
+      }
+    ],
+    "right_distractors": [
+      "roda um comando do Terraform em cada unit abaixo"
+    ]
+  },
+  "ex-bna2pzqp": {
+    "prompt": "Por que o `root.hcl` define `terraform_binary = \"terraform\"`?",
+    "hint": "A própria ajuda dele nomeia o padrão.",
+    "choices": [
+      {
+        "text": "Para fixar o Terraform na versão do lock file",
+        "why": "Ele nomeia um programa, não uma versão."
+      },
+      {
+        "text": "Porque o backend S3 só funciona com o Terraform",
+        "why": "O OpenTofu também tem backend S3; a configuração é sobre qual programa roda."
+      },
+      {
+        "text": "Sem ela, o Terragrunt rodaria o `tofu` por padrão",
+        "why": "Isso: o `--tf-path` diz que o padrão é o tofu no PATH."
+      },
+      {
+        "text": "Para o Terragrunt achar módulos no registry",
+        "why": "Origens de módulo não têm nada a ver com qual binário roda."
+      }
+    ]
+  },
+  "ex-0370fp7c": {
+    "prompt": "Em `live/prod`, alguém roda `terragrunt run --all --non-interactive apply`. Quantas vezes uma pessoa é chamada a confirmar antes de as units serem aplicadas?",
+    "hint": "Dois mecanismos pulam uma pergunta cada.",
+    "choices": [
+      {
+        "text": "Uma vez por unit, quando cada apply do Terraform pergunta",
+        "why": "Sob o `run --all`, o Terragrunt acrescenta `-auto-approve` a cada um, então eles não perguntam."
+      },
+      {
+        "text": "Uma vez, pela fila inteira",
+        "why": "Essa é a pergunta do próprio Terragrunt, e o `--non-interactive` a responde."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "Certo: o `--non-interactive` responde a pergunta do Terragrunt e o `-auto-approve` pula a do Terraform."
+      },
+      {
+        "text": "Duas: uma para network, uma para web",
+        "why": "O Terraform de nenhuma das units pergunta sob o `run --all`."
+      }
+    ]
+  },
+  "ex-rp5m62vn": {
+    "prompt": "Um time quer uma cópia de vida curta da stack para cada pull request, idêntica às outras, numa conta, destruída no merge. Qual layout serve melhor?",
+    "hint": "Criar uma deveria ser um comando só.",
+    "choices": [
+      {
+        "text": "Um diretório por pull request",
+        "why": "Cada pull request acrescentaria arquivos raiz copiados ao repositório e os removeria de novo."
+      },
+      {
+        "text": "Terragrunt, com uma árvore de units por pull request",
+        "why": "Funciona, mas é a maior maquinaria para cópias idênticas e descartáveis."
+      },
+      {
+        "text": "Workspaces",
+        "why": "Isso: `workspace new`, apply, destroy, `workspace delete`, e nada precioso em nenhum deles."
+      },
+      {
+        "text": "Um estado compartilhado por todos os pull requests",
+        "why": "É o erro da primeira seção: cada um reescreveria os outros."
+      }
+    ]
+  },
+  "ex-5q9777yx": {
+    "prompt": "Dev e prod, um estado cada; prod numa conta da AWS só dela e mantido uma versão de módulo atrás de dev. Qual layout serve melhor?",
+    "hint": "Dois ambientes, um estado cada: quanta repetição há para remover?",
+    "choices": [
+      {
+        "text": "Workspaces com um bloco de validação",
+        "why": "Uma configuração não comporta duas versões de módulo, e um bloco de backend torna credenciais separadas desajeitadas."
+      },
+      {
+        "text": "Um diretório por ambiente, com duas cópias",
+        "why": "Certo: cada diretório tem as suas credenciais e o seu `?ref=`, e duas cópias são baratas."
+      },
+      {
+        "text": "Terragrunt, porque só ele fixa módulos por ambiente",
+        "why": "Diretórios simples também fixam por ambiente; o Terragrunt compensa quando as cópias se multiplicam."
+      },
+      {
+        "text": "Um diretório e dois arquivos `.tfvars`",
+        "why": "Um estado para os dois, que é o plan de substituição da primeira seção."
+      }
+    ]
+  },
+  "ex-dhknj6vq": {
+    "prompt": "Quais destes valem para os três layouts desta aula? Escolha todos os que se aplicam.",
+    "hint": "Confira cada um contra os workspaces, o diferente da turma.",
+    "choices": [
+      {
+        "text": "Cada ambiente tem o seu estado",
+        "why": "Sim; era o problema que os três resolvem."
+      },
+      {
+        "text": "O ambiente aparece no caminho",
+        "why": "Não com workspaces: um diretório para todos."
+      },
+      {
+        "text": "O código dos módulos pode ser compartilhado entre ambientes",
+        "why": "Sim; até os workspaces compartilham a configuração inteira."
+      },
+      {
+        "text": "As credenciais de dev não alcançam prod",
+        "why": "Isso exige credenciais ou contas separadas, que nenhum layout dá por si só."
+      },
+      {
+        "text": "O Terraform é a única ferramenta para instalar",
+        "why": "O Terragrunt é uma segunda."
+      }
+    ]
+  },
+  "ex-s0vhgq67": {
+    "prompt": "A Ana move prod de workspaces para `envs/prod`, cuja key de backend é `envs/prod/terraform.tfstate`. O estado da rede de prod em funcionamento continua em `env:/prod/shop/terraform.tfstate`. O que faz um `terraform apply` em `envs/prod`?",
+    "hint": "Que estado esse diretório lê, e o que há nele?",
+    "choices": [
+      {
+        "text": "Encontra o estado antigo pelo prefixo `env:` e não planeja mudanças",
+        "why": "O prefixo pertence aos workspaces da configuração antiga; este backend lê a própria key e mais nada."
+      },
+      {
+        "text": "Cria uma segunda rede de prod ao lado da primeira",
+        "why": "Certo: estado vazio significa criar tudo, a duplicata da aula 7 de novo. Mova o estado antes, como faz a aula 8."
+      },
+      {
+        "text": "Recusa, porque a faixa da VPC já está em uso",
+        "why": "A AWS aceita duas VPCs com a mesma faixa; a aula 1 criou exatamente isso."
+      },
+      {
+        "text": "Adota a VPC em funcionamento porque as tags batem",
+        "why": "O Terraform nunca casa recursos por tag; só o estado junta um endereço a um id."
+      }
+    ]
+  },
+  "ex-35mw6tv4": {
+    "prompt": "Do zero, alguém roda `terragrunt run --all apply` em `live/prod` e responde `y`. Ponha o que acontece em ordem.",
+    "hint": "A dependency decide o meio.",
+    "items": [
+      "O Terragrunt lista a fila, network e depois web, e pergunta uma vez",
+      "O Terraform aplica a unit network, com `-auto-approve`",
+      "O Terragrunt lê o output `vpc_id` do estado da network",
+      "O Terraform aplica a unit web com esse id como entrada"
+    ],
+    "trap": "A web não pode ir antes da network: a entrada dela é um output de um estado que ainda não existe."
+  },
+  "ex-1b4hbtjs": {
+    "prompt": "Um colega roda `terraform workspace delete -force prod` enquanto prod ainda guarda a rede em funcionamento. Qual é a situação depois?",
+    "hint": "O `-force` desliga a checagem que recusou a Ana. Sobre o que a recusa avisava?",
+    "choices": [
+      {
+        "text": "A rede é destruída junto com o workspace",
+        "why": "Apagar um workspace apaga o estado, nunca os recursos; é por isso que a checagem existe."
+      },
+      {
+        "text": "A rede continua rodando e nenhum estado a registra",
+        "why": "Certo. O Terraform a perdeu de vista, como a recusa dizia, e só um import a traz de volta à gestão."
+      },
+      {
+        "text": "O workspace `default` assume os recursos de prod",
+        "why": "Cada workspace tem o seu estado; nada é movido para o `default`."
+      },
+      {
+        "text": "Nada muda até prod ser selecionado de novo",
+        "why": "O estado some na hora; selecionar `prod` de novo começaria um workspace vazio."
+      }
+    ]
+  }
+}

@@ -1,0 +1,327 @@
+{
+  "ex-bd0brr30": {
+    "prompt": "Por que um modelo chamado a continuar um texto de perguntas e respostas muitas vezes escreve outra pergunta depois da resposta?",
+    "hint": "O que costuma vir depois de uma resposta num texto assim?",
+    "choices": [
+      {
+        "text": "A próxima pergunta é a continuação mais provável",
+        "why": "Isso. Nada no modelo trata uma resposta como o fim do trabalho."
+      },
+      {
+        "text": "Ele entendeu errado o prompt e achou que você fez duas perguntas",
+        "why": "Não precisa de mal-entendido. Ele continua um texto, e nesse texto uma pergunta vem depois de uma resposta."
+      },
+      {
+        "text": "O limite de saída estava alto demais",
+        "why": "Um limite menor corta numa contagem, não depois da resposta. A causa é o que é provável a seguir."
+      },
+      {
+        "text": "A temperatura 0 o obriga a continuar escrevendo",
+        "why": "Na temperatura 0 o `toylm` parou depois de `yes.` A continuação veio de um sorteio na temperatura 1."
+      }
+    ]
+  },
+  "ex-nkcyej01": {
+    "prompt": "O que `finish: stop` quer dizer no `toylm`?",
+    "hint": "Três motivos para um laço terminar.",
+    "choices": [
+      {
+        "text": "O modelo escolheu parar",
+        "why": "Isso é `end`."
+      },
+      {
+        "text": "O limite de tokens foi atingido",
+        "why": "Isso é `length`."
+      },
+      {
+        "text": "O usuário interrompeu a execução",
+        "why": "Ninguém interrompeu nada. O laço conferiu o texto e achou a parada."
+      },
+      {
+        "text": "Uma sequência de parada apareceu na saída, e o texto foi cortado antes dela",
+        "why": "Isso. O terceiro motivo, ao lado de `end` e `length`."
+      }
+    ]
+  },
+  "ex-r5kaz0w4": {
+    "prompt": "Com `--stop question`, a semente 1 imprimiu `yes.` e não `yes. question`. Para onde foi a palavra `question`?",
+    "hint": "O texto da parada faz parte da resposta?",
+    "choices": [
+      {
+        "text": "O modelo foi instruído a não escrevê-la",
+        "why": "O modelo nunca vê a sequência de parada. Quem faz o trabalho é o laço."
+      },
+      {
+        "text": "Nunca foi gerada",
+        "why": "Foi: a contagem de saída foi de 3 tokens para 2 mostrados, e o terceiro era `question`."
+      },
+      {
+        "text": "Foi escrita, e depois tirada junto com a parada",
+        "why": "Isso. O laço a achou no texto e cortou a saída logo antes dela."
+      },
+      {
+        "text": "Foi para o fim do prompt",
+        "why": "A geração não muda o prompt."
+      }
+    ]
+  },
+  "ex-m7haej31": {
+    "prompt": "O `toylm generate ... --stop question` imprimiu `yes.` com `output 3 tokens`. Quantos desses tokens aparecem na saída?",
+    "hint": "Conte `yes` e o ponto final.",
+    "unit": "tokens"
+  },
+  "ex-snfg6dgs": {
+    "prompt": "De oito sementes, quantas saídas mudaram ao acrescentar `--stop question`?",
+    "hint": "Compare as duas listas de oito.",
+    "choices": [
+      {
+        "text": "As oito, já que a parada vale para toda execução",
+        "why": "Ela é conferida em toda execução, e só dispara onde o texto aparece."
+      },
+      {
+        "text": "Uma, a semente 1, que tinha seguido em frente",
+        "why": "Isso. Uma parada muda só as execuções que chegam até ela; as outras sete nunca escreveram `question`."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "A semente 1 perdeu a segunda pergunta inventada."
+      },
+      {
+        "text": "Quatro, as que responderam `yes`",
+        "why": "As respostas `yes` que terminaram sozinhas não mudaram."
+      }
+    ]
+  },
+  "ex-69zhzd7c": {
+    "prompt": "Nenhuma das oito respostas a `when does the café open ?` disse `seven`, embora o corpus responda com `at seven` duas vezes. Por quê?",
+    "hint": "O que a primeira captura disse que o modelo olhou?",
+    "choices": [
+      {
+        "text": "O `toylm` vê só `answer :`, não a pergunta",
+        "why": "Isso. A pergunta está fora da janela de duas palavras, então ele responde com a continuação mais comum de `answer :`."
+      },
+      {
+        "text": "A sequência de parada tirou `seven` de todas as respostas",
+        "why": "Sem a parada as respostas eram as mesmas. A parada só tirou uma segunda pergunta."
+      },
+      {
+        "text": "`seven` não tem contagem depois de `answer :` por causa da parada",
+        "why": "As contagens vêm do corpus. `at` vem sim depois de `answer :`, e então `six` ou `seven`."
+      },
+      {
+        "text": "A temperatura 1 impede a palavra mais provável de ganhar",
+        "why": "Na temperatura 1 a palavra mais provável ganha a maioria dos sorteios. `yes` era a mais provável depois de `answer :`."
+      }
+    ]
+  },
+  "ex-cq7z89y2": {
+    "prompt": "O que uma sequência de parada faz pelo acerto de uma resposta?",
+    "hint": "Leia o último parágrafo da seção.",
+    "choices": [
+      {
+        "text": "Garante que a resposta é a primeira que o modelo quis dar",
+        "why": "Ela só corta texto. A primeira resposta pode estar errada, como `yes` estava."
+      },
+      {
+        "text": "Obriga o modelo a responder à pergunta feita",
+        "why": "O modelo nunca vê a sequência de parada."
+      },
+      {
+        "text": "Tira da resposta os fatos inventados",
+        "why": "Ela tira o texto depois de um marcador, inventado ou não."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. Ela decide onde a resposta termina; se a resposta está certa é outro problema."
+      }
+    ]
+  },
+  "ex-c0154f4t": {
+    "prompt": "O `--stop and` transformou `soup, bread and cake.` em `soup, bread`. O que deu errado?",
+    "hint": "Onde `and` pode aparecer?",
+    "choices": [
+      {
+        "text": "`and` é longo demais para uma parada",
+        "why": "O tamanho não é o problema; o problema é um texto curto e comum."
+      },
+      {
+        "text": "A parada só funciona na temperatura 1",
+        "why": "Ela funcionou, na temperatura 0. Só funcionou no lugar errado."
+      },
+      {
+        "text": "O texto da parada aparece dentro de uma resposta legítima",
+        "why": "Isso. Uma parada dispara onde quer que o texto dela apareça, inclusive dentro de uma resposta que você queria inteira."
+      },
+      {
+        "text": "O limite cortou a resposta",
+        "why": "O motivo de término foi `stop`, não `length`."
+      }
+    ]
+  },
+  "ex-m8e49hce": {
+    "prompt": "O `--stop at` transformou `cold and the cat wakes.` em `cold and the c`. Por quê?",
+    "hint": "Como o `toylm` compara uma parada?",
+    "choices": [
+      {
+        "text": "`at` é uma palavra reservada no `toylm`",
+        "why": "Nenhuma palavra é reservada. É uma comparação simples de texto."
+      },
+      {
+        "text": "A parada casou com o `at` do prompt",
+        "why": "Só o texto gerado é conferido, não o prompt."
+      },
+      {
+        "text": "Ele compara texto, e `cat` contém `at`",
+        "why": "Isso. Uma parada é um teste de substring, então uma parada curta dispara dentro de palavras maiores."
+      },
+      {
+        "text": "O modelo escolheu terminar no meio da palavra",
+        "why": "O modelo escolheu `cat`. O laço cortou."
+      }
+    ]
+  },
+  "ex-sd397n6s": {
+    "prompt": "Por que uma parada que dispara dentro de uma resposta é mais difícil de notar que um limite que corta uma?",
+    "hint": "Compare os motivos de término.",
+    "choices": [
+      {
+        "text": "Uma parada tira a resposta inteira",
+        "why": "Ela tira só o que vem depois do texto da parada."
+      },
+      {
+        "text": "Terminar em `stop` parece sucesso",
+        "why": "Isso. `length` diz que algo foi cortado; `stop` é o que uma parada que funciona também informa."
+      },
+      {
+        "text": "As paradas são aplicadas depois de a resposta chegar ao seu programa",
+        "why": "O laço as aplica durante a geração."
+      },
+      {
+        "text": "Limites sempre produzem uma mensagem de erro da API que é mostrada ao usuário",
+        "why": "Um limite produz `length`, não um erro. O seu código precisa conferir."
+      }
+    ]
+  },
+  "ex-x0pbzpgf": {
+    "prompt": "O seu programa precisa do marcador que disparou a parada. O que ele deve fazer?",
+    "hint": "O texto da parada está na saída?",
+    "choices": [
+      {
+        "text": "Acrescentar ele mesmo o marcador de volta",
+        "why": "Isso. O texto da parada não vem na saída, no `toylm` nem na maioria das APIs de modelo."
+      },
+      {
+        "text": "Lê-lo da saída, onde ele é a última palavra",
+        "why": "Ele não está lá; a saída termina logo antes dele."
+      },
+      {
+        "text": "Escolher uma parada mais longa para que ela seja mantida",
+        "why": "O tamanho não decide se ela fica."
+      },
+      {
+        "text": "Pedir ao modelo no prompt que repita duas vezes o texto da parada",
+        "why": "Aí a primeira dispara e a segunda nunca é escrita."
+      }
+    ]
+  },
+  "ex-n96n64yf": {
+    "prompt": "Você usa o prompt `question :` e quer só a pergunta. Que parada serve?",
+    "hint": "Que rótulo começa o turno do outro lado?",
+    "choices": [
+      {
+        "text": "`question`",
+        "why": "Esse rótulo já está no prompt; o turno que você quer vem depois dele."
+      },
+      {
+        "text": "`?`",
+        "why": "Um ponto de interrogação pode terminar o turno, e também pode aparecer dentro de uma pergunta mais longa."
+      },
+      {
+        "text": "Nenhuma: o modelo escreve um turno e depois espera",
+        "why": "Sem parada o `toylm` escreveu a resposta também."
+      },
+      {
+        "text": "`answer`",
+        "why": "Isso. Ele começa o próximo turno, então parar ali mantém exatamente a pergunta."
+      }
+    ]
+  },
+  "ex-ycm59yak": {
+    "prompt": "Quais destas coisas fazem uma boa sequência de parada? Marque todas as que se aplicam.",
+    "hint": "Leia o parágrafo final.",
+    "choices": [
+      {
+        "text": "Marca o fim da unidade que você quer",
+        "why": "Sim. É para isso que uma parada existe."
+      },
+      {
+        "text": "Não pode aparecer dentro de uma resposta legítima",
+        "why": "Sim. Senão ela corta respostas que você queria inteiras."
+      },
+      {
+        "text": "Já foi vista disparando em respostas reais",
+        "why": "Sim. Uma parada que você nunca viu disparar não foi testada."
+      },
+      {
+        "text": "É a mais curta possível",
+        "why": "Textos curtos aparecem por acaso, como `at` dentro de `cat`."
+      }
+    ]
+  },
+  "ex-peb7jp78": {
+    "prompt": "Quando o `--stop` é dado duas vezes, a geração termina na que aparecer ___.",
+    "hint": "Uma palavra sobre ordem.",
+    "blanks": [
+      {
+        "accept": [
+          "primeiro",
+          "primeira",
+          "antes"
+        ]
+      }
+    ]
+  },
+  "ex-k6edz8hg": {
+    "prompt": "Ligue cada execução ao motivo de término dela.",
+    "hint": "Esta lição e a lição 15.",
+    "pairs": [
+      {
+        "left": "`question :` com `--stop answer`",
+        "right": "stop"
+      },
+      {
+        "left": "`the menu has` com `--max-tokens 3`",
+        "right": "length"
+      },
+      {
+        "left": "`the café opens at` na temperatura 0",
+        "right": "end"
+      }
+    ],
+    "right_distractors": [
+      "error"
+    ]
+  },
+  "ex-81kc8dxg": {
+    "prompt": "Um assistente de chat feito sobre texto puro com os rótulos `User:` e `Assistant:` às vezes escreve uma linha `User:` por conta própria. Qual o risco, e o conserto?",
+    "hint": "A quem essa linha seria atribuída?",
+    "choices": [
+      {
+        "text": "Um turno inventado do usuário vira ação; pare em `User:`",
+        "why": "Isso. O modelo está pondo palavras na boca do usuário. Parar no rótulo do próximo turno mantém só o turno do assistente."
+      },
+      {
+        "text": "A resposta fica mais longa; baixe o limite de tokens",
+        "why": "Um limite corta numa contagem e pode deixar passar um turno inventado curto."
+      },
+      {
+        "text": "Nada; o programa ignora rótulos",
+        "why": "O programa pode muito bem ler essa linha como entrada do usuário."
+      },
+      {
+        "text": "O modelo está confuso; suba a temperatura",
+        "why": "Uma temperatura mais alta torna a continuação mais provável, não menos."
+      }
+    ]
+  }
+}

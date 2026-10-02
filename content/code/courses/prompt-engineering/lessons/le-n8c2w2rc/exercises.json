@@ -1,0 +1,526 @@
+[
+  {
+    "id": "ex-svmaq3sm",
+    "version": 1,
+    "section": "next-word",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`toylm next \"the coffee is\"` printed five words with percentages. What were those percentages?",
+    "hint": "Read the header of the table.",
+    "choices": [
+      {
+        "text": "The share of times each word followed `coffee is` in its file",
+        "correct": true,
+        "why": "Right. A trigram model turns the counts of what followed a pair of words into percentages."
+      },
+      {
+        "text": "How sure the model is that the coffee is hot",
+        "correct": false,
+        "why": "It knows nothing about any coffee. It knows which words followed `coffee is` in its file."
+      },
+      {
+        "text": "The share of the café's customers who would describe their coffee with each of those words",
+        "correct": false,
+        "why": "There are no customers behind the numbers, only a file of 761 words."
+      },
+      {
+        "text": "A ranking of answers to the question",
+        "correct": false,
+        "why": "No question was asked. The command gave the model a piece of text and asked what comes next."
+      }
+    ]
+  },
+  {
+    "id": "ex-4tnzhd3s",
+    "version": 1,
+    "section": "next-word",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `the coffee is`, the word `sweet` got no line at all. Why?",
+    "hint": "Think about where every percentage came from.",
+    "choices": [
+      {
+        "text": "`sweet` is not one of the words in the model's vocabulary at all",
+        "correct": false,
+        "why": "It is: the file says `the cake is sweet` three times. It is missing from this table because of where it appeared."
+      },
+      {
+        "text": "The display hides every word scoring below 3%",
+        "correct": false,
+        "why": "`--show` limits how many lines print, and it says how many it left out. Here nothing was left out."
+      },
+      {
+        "text": "Sweet coffee is unusual in cafés",
+        "correct": false,
+        "why": "The model has no idea what is usual for coffee. It has counts from one file."
+      },
+      {
+        "text": "The file never has `sweet` after `coffee is`, only after `cake is`",
+        "correct": true,
+        "why": "Yes. A word it never saw in that place gets nothing, even though `sweet` is in its vocabulary (`the cake is sweet`)."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6e26b4c",
+    "version": 1,
+    "section": "next-word",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a large language model do that `toylm` also does?",
+    "hint": "The table compares the two on three rows. What did they share?",
+    "choices": [
+      {
+        "text": "It looks at the last two words only",
+        "correct": false,
+        "why": "That is `toylm`'s window. A large model looks at a very long stretch of text, lesson 4."
+      },
+      {
+        "text": "It keeps a table of how often each pair of words occurred in what it read",
+        "correct": false,
+        "why": "A large model has learnt weights, not a table of counts."
+      },
+      {
+        "text": "It scores every next piece",
+        "correct": true,
+        "why": "Yes. Both output the same thing; they differ in how far back they look, what a piece is and where the scores come from."
+      },
+      {
+        "text": "It splits the text it reads into whole words",
+        "correct": false,
+        "why": "A large model splits text into tokens, which are pieces of words, lesson 3."
+      }
+    ]
+  },
+  {
+    "id": "ex-jw5gt1v3",
+    "version": 1,
+    "section": "next-word",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody says the model \"looked up\" that the café opens at seven. What is wrong with the phrase?",
+    "hint": "What did `toylm next` actually print for `the café opens at`?",
+    "choices": [
+      {
+        "text": "Nothing; it found the line in its file and returned it",
+        "correct": false,
+        "why": "It did not return a line. It returned scores for the next word: `seven` 75%, `eight` 25%."
+      },
+      {
+        "text": "It scored next words, and `eight` got a quarter",
+        "correct": true,
+        "why": "Right. There is no lookup and no single stored answer; there is a distribution, and a quarter of it says `eight`."
+      },
+      {
+        "text": "The model guessed at random, so seven was luck",
+        "correct": false,
+        "why": "Not at random: `seven` had three times the score of `eight`, because it followed `opens at` three times as often."
+      },
+      {
+        "text": "Models search the internet for a café's opening hours before they answer a question about them",
+        "correct": false,
+        "why": "`toylm` has no network and no search. It has counts from 761 words."
+      }
+    ]
+  },
+  {
+    "id": "ex-spb91dww",
+    "version": 1,
+    "section": "next-word",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`toylm` is a ___ model: it predicts the next word from counts of what followed each pair of words.",
+    "hint": "The prefix means three: two words of context and the one predicted.",
+    "blanks": [
+      {
+        "accept": [
+          "trigram",
+          "tri-gram"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zbtps6ja",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does generation do after the model has scored the next word?",
+    "hint": "Look at the loop in the figure.",
+    "choices": [
+      {
+        "text": "It picks one word, adds it to the text, and scores again",
+        "correct": true,
+        "why": "Yes. Generation is that step in a loop."
+      },
+      {
+        "text": "It writes the rest of the sentence from those scores",
+        "correct": false,
+        "why": "The scores are only for the very next word. The rest needs the loop."
+      },
+      {
+        "text": "It checks the word against a store of facts",
+        "correct": false,
+        "why": "There is no such check in the loop. That is why a fluent sentence can be false."
+      },
+      {
+        "text": "It asks the user which word to keep",
+        "correct": false,
+        "why": "Nobody is asked. A rule picks, such as the highest score or a weighted draw."
+      }
+    ]
+  },
+  {
+    "id": "ex-1n8mjxb7",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`toylm generate \"the cat sat on the\" --temperature 0` wrote `chair by the window.` though the file says `the cat sat on the mat`. Why?",
+    "hint": "Read the context line of `toylm next`.",
+    "choices": [
+      {
+        "text": "Temperature 0 picks the next word at random",
+        "correct": false,
+        "why": "Temperature 0 picks the highest score every time, which here is `chair`."
+      },
+      {
+        "text": "The model prefers to write the longer sentences",
+        "correct": false,
+        "why": "It has no preference about length. It scored `chair` highest after `on the`."
+      },
+      {
+        "text": "The file is wrong about where the cat sat",
+        "correct": false,
+        "why": "The file says both things. The model could only see the part that mentions neither cat."
+      },
+      {
+        "text": "`sat` is out of its two-word window",
+        "correct": true,
+        "why": "Right. It sees only `on the`, where `chair` (3) beats `mat` (2)."
+      }
+    ]
+  },
+  {
+    "id": "ex-4gbw2ehb",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`toylm generate \"the café opens at\" --temperature 0` printed `prompt 4 tokens, output 2 tokens`. How many tokens went in and came out together?",
+    "hint": "Add the two.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-mc00xkc3",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Five draws from `the coffee is` gave `hot` three times. What explains the other two?",
+    "hint": "How does the command pick a word when temperature is not 0?",
+    "choices": [
+      {
+        "text": "The model was trained again between the draws",
+        "correct": false,
+        "why": "Nothing changed in the model. Each draw used a different random seed."
+      },
+      {
+        "text": "They came from a bug in the sampling code",
+        "correct": false,
+        "why": "They are what weighted drawing is expected to produce."
+      },
+      {
+        "text": "Words are drawn in proportion to their scores",
+        "correct": true,
+        "why": "Yes. `hot` has 59.3%, so it should win about six draws in ten, and the rest go to the others."
+      },
+      {
+        "text": "Draws ignore the scores and pick any word in the vocabulary with the same chance",
+        "correct": false,
+        "why": "If they did, `bitter` would be as common as `hot`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xpb3fv0k",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`the coffee is cold and the cat wakes.` came out of `toylm`. Which statement about it is true?",
+    "hint": "Check the sentence against the file, pair by pair and as a whole.",
+    "choices": [
+      {
+        "text": "It is in the file, since the model repeats what it saw",
+        "correct": false,
+        "why": "It repeats pairs. The sentence as a whole is new."
+      },
+      {
+        "text": "Each pair of words is in the file; the sentence is not",
+        "correct": true,
+        "why": "Right. Fluent text built from familiar pieces, with nothing behind it, which is how lesson 5 begins."
+      },
+      {
+        "text": "It is ungrammatical, which is how you can tell",
+        "correct": false,
+        "why": "It is perfectly grammatical. That is what makes this kind of error hard to spot."
+      },
+      {
+        "text": "It shows the model worked out that cold coffee wakes the cat",
+        "correct": false,
+        "why": "No reasoning took place. Each word followed the two words before it somewhere in the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2p35vvx",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`toylm` printed `finish: end`. What does that say?",
+    "hint": "There are two reasons generation stops.",
+    "choices": [
+      {
+        "text": "The model picked the token that means the text is over, and the loop ended",
+        "correct": true,
+        "why": "Yes. The other reason is a limit somebody set, lesson 15."
+      },
+      {
+        "text": "It ran out of words",
+        "correct": false,
+        "why": "Vocabulary has nothing to do with stopping."
+      },
+      {
+        "text": "The output reached the maximum number of tokens allowed",
+        "correct": false,
+        "why": "That reason is printed as `length`, not `end`."
+      },
+      {
+        "text": "An error interrupted the loop",
+        "correct": false,
+        "why": "Nothing failed. `end` is the normal way for a short answer to finish."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nd9svck",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a chat assistant answer a question instead of continuing it with another question?",
+    "hint": "Was the mechanism changed, or what the model finds likely?",
+    "choices": [
+      {
+        "text": "A second program detects questions and writes the answers to them",
+        "correct": false,
+        "why": "There is no second program writing answers. The same model writes the assistant's turn."
+      },
+      {
+        "text": "Chat models predict whole sentences",
+        "correct": false,
+        "why": "They still predict one token at a time."
+      },
+      {
+        "text": "The question is removed before the model sees it",
+        "correct": false,
+        "why": "The question is exactly what the model is given."
+      },
+      {
+        "text": "Training made answering likely",
+        "correct": true,
+        "why": "Right. The loop is the same; training changed what counts as likely after a question."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtrv006r",
+    "version": 1,
+    "section": "the-workbench",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In this course, how can you tell a real capture from a reply written as an illustration?",
+    "hint": "Look at what is in front of the first line.",
+    "choices": [
+      {
+        "text": "Illustrations are in English and captures are in Portuguese",
+        "correct": false,
+        "why": "Both are in English inside the fence; the prompt is what tells them apart."
+      },
+      {
+        "text": "Captures are shorter",
+        "correct": false,
+        "why": "Length says nothing about where text came from."
+      },
+      {
+        "text": "You cannot, so treat everything as an illustration",
+        "correct": false,
+        "why": "There is a way: the prompt marks a capture, and an illustration is labelled as one."
+      },
+      {
+        "text": "A capture starts with a prompt",
+        "correct": true,
+        "why": "Yes. An illustration has no prompt, and the sentence before it says the course wrote it."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwzyr3b5",
+    "version": 1,
+    "section": "the-workbench",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these in the workbench are real software doing a real job? Choose all that apply.",
+    "hint": "One tool's input is replayed from files the lessons write.",
+    "choices": [
+      {
+        "text": "`tok`, the tokenizer",
+        "correct": true,
+        "why": "Yes: the o200k_base and cl100k_base encodings, the same ones production code uses."
+      },
+      {
+        "text": "`toylm`, as a language model",
+        "correct": true,
+        "why": "Yes. It is small, and it is a real language model built from real counts."
+      },
+      {
+        "text": "The model's turns that `agent` reads",
+        "correct": false,
+        "why": "Those are written by the lessons and played back. The loop around them is real; the turns are not a model's."
+      },
+      {
+        "text": "`validate`, the JSON Schema check",
+        "correct": true,
+        "why": "Yes: the `jsonschema` library."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0er015b",
+    "version": 1,
+    "section": "the-workbench",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You run a prompt from this course on a real model and get a different reply from the illustration. What does that mean?",
+    "hint": "What did this section promise about illustrations?",
+    "choices": [
+      {
+        "text": "The model is broken and you should report it",
+        "correct": false,
+        "why": "A different wording is expected, not a fault."
+      },
+      {
+        "text": "Nothing is wrong: replies vary between models and between two runs of one prompt",
+        "correct": true,
+        "why": "Right. Lesson 13 explains the variation between two runs of the same prompt."
+      },
+      {
+        "text": "The illustration was a capture that changed",
+        "correct": false,
+        "why": "Illustrations are written by the course and say so. They were never captures."
+      },
+      {
+        "text": "You have to run it again and again until the reply matches the one in the course",
+        "correct": false,
+        "why": "No reply is guaranteed to match. Judge it against what you asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-cq888nzj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one round of generation in order.",
+    "hint": "It starts with the text that already exists.",
+    "items": [
+      "Take the text written so far",
+      "Give every possible next word a score",
+      "Pick one word from the scores",
+      "Add that word to the end of the text"
+    ]
+  },
+  {
+    "id": "ex-c8fvrp9q",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of `toylm` to the large language model's version of it.",
+    "hint": "The table in the first section.",
+    "pairs": [
+      {
+        "left": "the next word",
+        "right": "the next token"
+      },
+      {
+        "left": "the last two words",
+        "right": "a window of hundreds of thousands of tokens"
+      },
+      {
+        "left": "a table of counts",
+        "right": "billions of learnt weights"
+      }
+    ],
+    "right_distractors": [
+      "a list of stored answers"
+    ]
+  },
+  {
+    "id": "ex-wj9t937p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A model says, fluently, that a café you never mentioned opens at seven. What does this lesson say you can conclude?",
+    "hint": "What is the model's output, underneath?",
+    "choices": [
+      {
+        "text": "It found the café's hours in its training data",
+        "correct": false,
+        "why": "It may have; it may also have produced a typical opening time. The output alone does not say which."
+      },
+      {
+        "text": "The confident wording means it checked the hours before it replied",
+        "correct": false,
+        "why": "The wording is generated by the same loop as the hour. Nothing checked anything."
+      },
+      {
+        "text": "The answer is wrong, since models cannot know facts",
+        "correct": false,
+        "why": "Likely text is often true. The point is that you cannot tell which from the fluency."
+      },
+      {
+        "text": "Seven was likely, which is not the same as true",
+        "correct": true,
+        "why": "Right. A likely continuation and a fact coincide often, and not always."
+      }
+    ]
+  }
+]

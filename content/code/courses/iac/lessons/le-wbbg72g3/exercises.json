@@ -1,0 +1,809 @@
+[
+  {
+    "id": "ex-z4bntc8a",
+    "version": 1,
+    "section": "syntax",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `resource \"aws_vpc\" \"shop\" { ... }`, what is `shop`?",
+    "hint": "A resource block takes two labels.",
+    "choices": [
+      {
+        "text": "The resource type, which picks the provider's schema",
+        "correct": false,
+        "why": "That is `aws_vpc`, the first label."
+      },
+      {
+        "text": "The name label",
+        "correct": true,
+        "why": "Yes. It is the name Ana chose, and with the type it makes the address `aws_vpc.shop`."
+      },
+      {
+        "text": "An argument whose value is a string",
+        "correct": false,
+        "why": "An argument has an equals sign; a label sits in the block's header."
+      },
+      {
+        "text": "The tag AWS shows as the VPC's Name",
+        "correct": false,
+        "why": "The label never reaches AWS; the Name tag comes from `tags`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cct8a4z3",
+    "version": 1,
+    "section": "syntax",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can `tags = merge(local.common_tags, { Name = \"shop\" })` be written, while a nested block like `lifecycle { ... }` cannot be produced by a function?",
+    "hint": "Look for the equals sign.",
+    "choices": [
+      {
+        "text": "`tags` is an argument whose value is a map, and a value comes from any expression",
+        "correct": true,
+        "why": "Right. A block is structure in the file; an argument holds a value, and values can be computed."
+      },
+      {
+        "text": "`merge` is a special form reserved for tags",
+        "correct": false,
+        "why": "`merge` works on any maps; the lesson used it on two literal ones in the console."
+      },
+      {
+        "text": "Blocks are read before functions are loaded",
+        "correct": false,
+        "why": "There is no such loading order; the difference is between a value and a structure."
+      },
+      {
+        "text": "Because `lifecycle` belongs to Terraform and `tags` to AWS",
+        "correct": false,
+        "why": "Who reads it is not the point; `required_providers` is Terraform's too and is a block for the same reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-vc8xbd1s",
+    "version": 1,
+    "section": "syntax",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana splits her configuration into `main.tf`, `network.tf` and `owner.tf.json` in one directory. What does Terraform do with them?",
+    "hint": "The file names are a convention.",
+    "choices": [
+      {
+        "text": "Reads `main.tf` first, then the rest in the order they are referenced",
+        "correct": false,
+        "why": "`main.tf` has no special status; its name is a convention for people."
+      },
+      {
+        "text": "Refuses the JSON file unless every file is JSON",
+        "correct": false,
+        "why": "The lesson's `validate` passed with both kinds in one directory."
+      },
+      {
+        "text": "Treats each file as a separate module",
+        "correct": false,
+        "why": "A module is a directory, not a file; that is lesson 10."
+      },
+      {
+        "text": "Reads all three as one configuration",
+        "correct": true,
+        "why": "Yes: every `.tf` and `.tf.json` in the directory, in no meaningful order."
+      }
+    ]
+  },
+  {
+    "id": "ex-nffr3nmd",
+    "version": 1,
+    "section": "expressions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before anything was applied, `aws_vpc.shop.cidr_block` in the console printed `(known after apply)`, though the file says `\"10.20.0.0/16\"`. Why?",
+    "hint": "Where does the console read a resource from?",
+    "choices": [
+      {
+        "text": "The console reads resources from the state, and there was none",
+        "correct": true,
+        "why": "Right. A resource's values come from the state; with nothing applied, Terraform writes the placeholder."
+      },
+      {
+        "text": "moto was not running",
+        "correct": false,
+        "why": "The console asks AWS nothing; it evaluates against the configuration and the state."
+      },
+      {
+        "text": "The CIDR was invalid",
+        "correct": false,
+        "why": "The same range was applied a section later without complaint."
+      },
+      {
+        "text": "A quoted string is evaluated only during apply",
+        "correct": false,
+        "why": "`\"shop-${var.environment}\"` was evaluated in the same console a line earlier."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdfqm52j",
+    "version": 1,
+    "section": "expressions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "HCL has no `if` statement. To choose between two values it uses the conditional operator, written `condition ___ a : b`.",
+    "hint": "One character.",
+    "blanks": [
+      {
+        "accept": [
+          "?"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k5hh06v7",
+    "version": 1,
+    "section": "expressions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague writes an IAM policy as JSON inside a `<<-EOT` heredoc. What does the lesson suggest instead, and why?",
+    "hint": "A heredoc is a string.",
+    "choices": [
+      {
+        "text": "`<<EOT`, so the indentation is kept",
+        "correct": false,
+        "why": "Indentation is not the problem; either form is still an unchecked string."
+      },
+      {
+        "text": "`jsonencode()` of a real value, which cannot produce broken JSON",
+        "correct": true,
+        "why": "Yes. A missing comma in a heredoc is found by AWS; a value passed to `jsonencode` cannot have one."
+      },
+      {
+        "text": "A `%{for}` directive per statement",
+        "correct": false,
+        "why": "That builds the same string by hand, with more ways to get it wrong."
+      },
+      {
+        "text": "A `.tf.json` file for the policy",
+        "correct": false,
+        "why": "`.tf.json` is another way to write the configuration, not a policy document."
+      }
+    ]
+  },
+  {
+    "id": "ex-6v22hshd",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `cidrsubnet(\"10.20.0.0/16\", 8, 2)` return?",
+    "hint": "Eight new bits, network number 2.",
+    "choices": [
+      {
+        "text": "`10.20.0.0/18`",
+        "correct": false,
+        "why": "That would be two new bits; the second argument is how many bits are added."
+      },
+      {
+        "text": "`10.20.8.0/24`",
+        "correct": false,
+        "why": "The 8 is the number of new bits, not the subnet's number."
+      },
+      {
+        "text": "`10.20.2.0/24`",
+        "correct": true,
+        "why": "Right: a /16 plus 8 bits is a /24, and number 2 has 2 in the third octet."
+      },
+      {
+        "text": "`10.20.0.2`",
+        "correct": false,
+        "why": "That is a host address, which `cidrhost` returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-2n40wccc",
+    "version": 1,
+    "section": "functions",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `cidrsubnet(\"10.20.0.0/16\", 8, netnum)`, how many different subnets can `netnum` choose from?",
+    "hint": "Two to the power of the new bits.",
+    "value": 256,
+    "tolerance": 0,
+    "unit": "subnets"
+  },
+  {
+    "id": "ex-6fyhwqnh",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`merge({ Project = \"shop\", Owner = \"ana\" }, { Owner = \"bruno\" })` returns what for `Owner`?",
+    "hint": "Which map wins on a shared key?",
+    "choices": [
+      {
+        "text": "An error about a duplicate key",
+        "correct": false,
+        "why": "That error belongs to a `for` expression building a map; `merge` resolves duplicates."
+      },
+      {
+        "text": "A list holding both owners",
+        "correct": false,
+        "why": "Grouping into lists is what `...` does in a `for`; `merge` keeps one value."
+      },
+      {
+        "text": "`\"ana\"`, because the first map sets the defaults",
+        "correct": false,
+        "why": "It is the other way round, which is what makes the second map an override."
+      },
+      {
+        "text": "`\"bruno\"`",
+        "correct": true,
+        "why": "Yes: the later map wins, and `Project` is kept from the first."
+      }
+    ]
+  },
+  {
+    "id": "ex-879tjrm6",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A validation rule must accept any string that is a valid CIDR range and refuse everything else. `cidrnetmask(var.cidr)` errors on an invalid one. What should the condition be?",
+    "hint": "A condition must be true or false.",
+    "choices": [
+      {
+        "text": "`try(cidrnetmask(var.cidr), false)`",
+        "correct": false,
+        "why": "For a valid range this returns a mask string, not `true`, so the condition is not a boolean."
+      },
+      {
+        "text": "`can(cidrnetmask(var.cidr))`",
+        "correct": true,
+        "why": "Right: `can` turns \"would this fail\" into `false` or `true`, the shape the lesson's own rule uses."
+      },
+      {
+        "text": "`!can(cidrnetmask(var.cidr))`",
+        "correct": false,
+        "why": "That is the rule upside down: it refuses every valid range and accepts every invalid one."
+      },
+      {
+        "text": "`cidrnetmask(var.cidr) != null`",
+        "correct": false,
+        "why": "An invalid range makes the call fail, so the comparison is never reached and the error escapes."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxkgsbgd",
+    "version": 1,
+    "section": "locals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana runs `terraform plan -var name=shop-test`, where `name` is a local. What happens?",
+    "hint": "Who can reach a local?",
+    "choices": [
+      {
+        "text": "The local takes the new value for this run",
+        "correct": false,
+        "why": "Only variables are inputs; a local is internal."
+      },
+      {
+        "text": "An error: no variable of that name is declared",
+        "correct": true,
+        "why": "Yes, \"Value for undeclared variable\": `-var` only reaches variable blocks."
+      },
+      {
+        "text": "A warning, and the plan uses the local's value",
+        "correct": false,
+        "why": "It was an error, and no plan was made."
+      },
+      {
+        "text": "Terraform creates a variable called `name`",
+        "correct": false,
+        "why": "Terraform never declares anything for you; it said to add a variable block."
+      }
+    ]
+  },
+  {
+    "id": "ex-1z722r0d",
+    "version": 1,
+    "section": "locals",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these should be a local rather than a variable, by the lesson's rule? Choose all that apply.",
+    "hint": "Is it a choice for whoever runs Terraform, or derived?",
+    "choices": [
+      {
+        "text": "The environment, `dev` or `prod`",
+        "correct": false,
+        "why": "That is a choice the person running Terraform makes: a variable."
+      },
+      {
+        "text": "The name `shop-dev`, built from the environment",
+        "correct": true,
+        "why": "Derived from other values: a local."
+      },
+      {
+        "text": "The `Project = \"shop\"` tag on every resource",
+        "correct": true,
+        "why": "A fact that should not be overridden: a local."
+      },
+      {
+        "text": "The network's CIDR range",
+        "correct": false,
+        "why": "The lesson names it as a choice for whoever runs Terraform."
+      },
+      {
+        "text": "The map of common tags merged into each resource",
+        "correct": true,
+        "why": "Used everywhere and derived: exactly `local.common_tags`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6s5v3gcb",
+    "version": 1,
+    "section": "locals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody adds `locals { vpc_cidr = \"10.20.0.0/16\" }` and uses it once. What does the lesson say about it?",
+    "hint": "When does a local earn its place?",
+    "choices": [
+      {
+        "text": "It is required, since literals in resources are forbidden",
+        "correct": false,
+        "why": "The VPC in `main.tf` still has a literal range, and it is valid."
+      },
+      {
+        "text": "It only adds a jump for the reader",
+        "correct": true,
+        "why": "Yes: used once, and its name says nothing the value does not."
+      },
+      {
+        "text": "It makes the value settable from the command line",
+        "correct": false,
+        "why": "No local can be set from outside; the lesson showed the error."
+      },
+      {
+        "text": "It turns the VPC's range into a computed value that appears as `(known after apply)` in the plan",
+        "correct": false,
+        "why": "A local made of a literal is known at plan time; the subnets' ranges were printed in full."
+      }
+    ]
+  },
+  {
+    "id": "ex-x1rrtfqh",
+    "version": 1,
+    "section": "types",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The `network` default left out `public`, declared as `optional(bool, false)`. What did `var.network.public` hold?",
+    "hint": "The console printed the whole object.",
+    "choices": [
+      {
+        "text": "`null`",
+        "correct": false,
+        "why": "That is what `optional(bool)` without a second argument gives."
+      },
+      {
+        "text": "`false`",
+        "correct": true,
+        "why": "Yes, filled in from the declaration's default."
+      },
+      {
+        "text": "An error on read, since the attribute is missing",
+        "correct": false,
+        "why": "An optional attribute is always present after conversion; that is its purpose."
+      },
+      {
+        "text": "`true`",
+        "correct": false,
+        "why": "The default in the declaration is `false`."
+      }
+    ]
+  },
+  {
+    "id": "ex-k559m7rs",
+    "version": 1,
+    "section": "types",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each type to what it holds.",
+    "hint": "Collections have one element type; structural types have a shape.",
+    "pairs": [
+      {
+        "left": "`list(string)`",
+        "right": "Strings in order, any number of them"
+      },
+      {
+        "left": "`set(string)`",
+        "right": "Strings with no order and no duplicates"
+      },
+      {
+        "left": "`map(string)`",
+        "right": "Strings by key, any keys"
+      },
+      {
+        "left": "`object({ cidr = string, azs = list(string) })`",
+        "right": "Named attributes, each with its own type"
+      }
+    ],
+    "right_distractors": [
+      "A single string"
+    ]
+  },
+  {
+    "id": "ex-h5k6stvn",
+    "version": 1,
+    "section": "types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the console, `\"5\" + 1` gave `6` and `tonumber(\"three\")` failed. What rule explains both?",
+    "hint": "When can a conversion lose nothing?",
+    "choices": [
+      {
+        "text": "Arithmetic ignores types",
+        "correct": false,
+        "why": "It does not: `\"three\" + 1` would fail for the same reason `tonumber` did."
+      },
+      {
+        "text": "Strings convert to numbers only inside functions",
+        "correct": false,
+        "why": "`\"5\" + 1` converted with no function at all."
+      },
+      {
+        "text": "Terraform converts a value when the conversion is exact, and refuses when it is not",
+        "correct": true,
+        "why": "Right: `\"5\"` is a number written as a string; `\"three\"` is not a decimal number."
+      },
+      {
+        "text": "`tonumber` is stricter than `+`, which rounds",
+        "correct": false,
+        "why": "Nothing was rounded; both use the same conversion."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ddnzxca",
+    "version": 1,
+    "section": "for-expressions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `{ for i, az in var.network.azs : az => cidrsubnet(var.network.cidr, 8, i + 1) }` produce?",
+    "hint": "Braces, and an arrow.",
+    "choices": [
+      {
+        "text": "A list of two ranges",
+        "correct": false,
+        "why": "Square brackets make a list; these are braces."
+      },
+      {
+        "text": "A map from zone to range",
+        "correct": true,
+        "why": "Yes: `sa-east-1a` to `10.20.1.0/24` and `sa-east-1c` to `10.20.2.0/24`."
+      },
+      {
+        "text": "Two subnets in AWS, one per zone",
+        "correct": false,
+        "why": "An expression produces a value and creates nothing; creating one per entry is `for_each`, lesson 4."
+      },
+      {
+        "text": "A map from index to zone",
+        "correct": false,
+        "why": "The key is `az` and the value the range; `i` only feeds `cidrsubnet`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0evxvkhm",
+    "version": 1,
+    "section": "for-expressions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`{ for az in var.network.azs : substr(az, 0, 9) => az }` failed with \"Duplicate object key\". What did adding `...` after the value change?",
+    "hint": "Two zones, one region.",
+    "choices": [
+      {
+        "text": "The second zone overwrote the first",
+        "correct": false,
+        "why": "A `for` never overwrites silently; it errors, or with `...` it groups."
+      },
+      {
+        "text": "Duplicates were dropped, as `toset` does",
+        "correct": false,
+        "why": "Both zones were kept in the result."
+      },
+      {
+        "text": "The key became the full zone name",
+        "correct": false,
+        "why": "The key expression did not change; `substr` still cut it to `sa-east-1`."
+      },
+      {
+        "text": "Each key now holds a list of every zone that produced it",
+        "correct": true,
+        "why": "Right: `\"sa-east-1\" = [\"sa-east-1a\", \"sa-east-1c\"]`."
+      }
+    ]
+  },
+  {
+    "id": "ex-20ejxns7",
+    "version": 1,
+    "section": "for-expressions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`[aws_subnet.a, aws_subnet.c][___].cidr_block` reads `cidr_block` from both subnets; it is short for a `for` expression.",
+    "hint": "The splat operator.",
+    "blanks": [
+      {
+        "accept": [
+          "*"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hh2yk2z1",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`terraform plan -var environment=staging` failed on the validation rule. What had Terraform planned or changed by then?",
+    "hint": "The figure puts validation before the plan.",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Yes: the value was refused as it arrived, with Ana's message."
+      },
+      {
+        "text": "The VPC's tags, which do not depend on the environment",
+        "correct": false,
+        "why": "They do depend on it, through `local.common_tags`, and nothing was planned anyway."
+      },
+      {
+        "text": "A plan, shown with a warning at the end",
+        "correct": false,
+        "why": "A warning with a plan is what a check block gives; validation is an error."
+      },
+      {
+        "text": "Every resource except the ones that read `var.environment`",
+        "correct": false,
+        "why": "A failed variable stops the whole run, not a part of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhb280yg",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the bucket name's length checked in a precondition rather than in a variable's validation?",
+    "hint": "Where does the name come from?",
+    "choices": [
+      {
+        "text": "Validation rules cannot call `length`",
+        "correct": false,
+        "why": "Any function works in a condition; `can` and `cidrsubnet` did."
+      },
+      {
+        "text": "Preconditions run after S3 answers",
+        "correct": false,
+        "why": "It failed during the plan, before anything reached S3."
+      },
+      {
+        "text": "The name is built from three pieces that no single variable holds",
+        "correct": true,
+        "why": "Right: it lives in `local.bucket`, and the rule belongs beside the resource that uses it."
+      },
+      {
+        "text": "A precondition only warns, and length is not worth an error",
+        "correct": false,
+        "why": "It was an error, \"Resource precondition failed\"; only a check block warns."
+      }
+    ]
+  },
+  {
+    "id": "ex-q82yy44v",
+    "version": 1,
+    "section": "validation",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these in the order Terraform meets them in a run where every one of them is used.",
+    "hint": "Values arrive, then the plan, then the apply.",
+    "items": [
+      "A variable's validation rule",
+      "A resource's precondition",
+      "The change made in AWS",
+      "A postcondition on a value only known after the change"
+    ],
+    "trap": "A postcondition on an unknown value cannot run before the change: there is nothing to check yet."
+  },
+  {
+    "id": "ex-890pbezv",
+    "version": 1,
+    "section": "validation",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happened when the plan ran with the same zone given twice and the `two_zones` check failed? Choose all that apply.",
+    "hint": "A check block is not an error.",
+    "choices": [
+      {
+        "text": "The plan stopped with an error",
+        "correct": false,
+        "why": "It printed a full plan and a warning."
+      },
+      {
+        "text": "A warning printed Ana's message",
+        "correct": true,
+        "why": "Yes, \"Check block assertion failed\" with her sentence."
+      },
+      {
+        "text": "The plan proposed replacing subnet `c`",
+        "correct": true,
+        "why": "Yes: a new zone forces a new subnet, `-/+`."
+      },
+      {
+        "text": "Terraform removed the duplicate zone itself",
+        "correct": false,
+        "why": "It changed nothing about the input; `distinct` was only inside the condition."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfa6a06v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate replaces `cidr_block = cidrsubnet(var.network.cidr, 8, 1)` with the literal `\"10.20.1.0/24\"`, saying it is easier to read. Later the VPC moves to `10.30.0.0/16`. What is the consequence?",
+    "hint": "Two places now state one fact.",
+    "choices": [
+      {
+        "text": "The subnet follows the VPC, as before",
+        "correct": false,
+        "why": "A literal follows nothing; that was the point of computing it."
+      },
+      {
+        "text": "Terraform rewrites the literal to match",
+        "correct": false,
+        "why": "Terraform never edits your files."
+      },
+      {
+        "text": "The subnet keeps a range outside the new VPC",
+        "correct": true,
+        "why": "Right. The file now disagrees with itself, and AWS refuses the subnet when it is created."
+      },
+      {
+        "text": "The validation rule on `network` catches the mismatch",
+        "correct": false,
+        "why": "That rule checks only that the range has room for /24s; it never sees the subnet."
+      }
+    ]
+  },
+  {
+    "id": "ex-e4kx808a",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana wants `instance_type` to be `t3.large` in prod and `t3.micro` anywhere else, and an unknown environment should not be able to fail the lookup. Which expression fits?",
+    "hint": "Two outcomes, one test.",
+    "choices": [
+      {
+        "text": "`lookup({ prod = \"t3.large\" }, var.environment)`",
+        "correct": false,
+        "why": "Without a default, `dev` is a missing key and an error, as `staging` was in the lesson."
+      },
+      {
+        "text": "`var.environment == \"prod\" ? \"t3.large\" : \"t3.micro\"`",
+        "correct": true,
+        "why": "Yes. Two outcomes from one comparison is what the conditional operator is for, and it cannot fail on a key."
+      },
+      {
+        "text": "`\"t3.%{ if var.environment == \"prod\" }large%{ endif }\"`",
+        "correct": false,
+        "why": "Outside prod this gives `t3.`, which is not an instance type."
+      },
+      {
+        "text": "`try(var.environment, \"t3.micro\")`",
+        "correct": false,
+        "why": "Reading the variable never fails, so this returns the environment's name."
+      }
+    ]
+  },
+  {
+    "id": "ex-axen6g68",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each error the lesson captured to what produced it.",
+    "hint": "Read the first line of each, then the quoted line.",
+    "pairs": [
+      {
+        "left": "Invalid number literal",
+        "right": "An unquoted `10.20.1.0/24`"
+      },
+      {
+        "left": "Value for undeclared variable",
+        "right": "`-var` naming a local"
+      },
+      {
+        "left": "Invalid value for input variable",
+        "right": "A string where a list was declared"
+      },
+      {
+        "left": "Resource precondition failed",
+        "right": "A bucket name of 71 characters"
+      }
+    ],
+    "right_distractors": [
+      "A check block's failed assertion"
+    ]
+  },
+  {
+    "id": "ex-kh56sgs4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's output keyed subnets by `Name` tag, not by zone. With the same zone given twice, what would a zone-keyed output have done to the plan?",
+    "hint": "Two items, one key, in a `for` building a map.",
+    "choices": [
+      {
+        "text": "Kept only the last subnet's range",
+        "correct": false,
+        "why": "A `for` never overwrites silently."
+      },
+      {
+        "text": "Added a second warning beside the check's",
+        "correct": false,
+        "why": "A duplicate key is an error, not a warning."
+      },
+      {
+        "text": "Nothing, since outputs are evaluated after apply",
+        "correct": false,
+        "why": "Outputs are planned too; the lesson's apply showed \"Changes to Outputs\"."
+      },
+      {
+        "text": "Failed it with \"Duplicate object key\"",
+        "correct": true,
+        "why": "Right: both subnets would claim `sa-east-1a`. That is why the key is the Name tag."
+      }
+    ]
+  }
+]

@@ -1,0 +1,836 @@
+[
+  {
+    "id": "ex-v2vky0hr",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`network.sh` ran once and created a VPC, a subnet and a security group. Which question can the script itself answer a month later?",
+    "hint": "A script records what was done on the day it ran.",
+    "choices": [
+      {
+        "text": "What exists in the account today",
+        "correct": false,
+        "why": "Only AWS knows that; the script never looks."
+      },
+      {
+        "text": "Which commands were sent the day it ran",
+        "correct": true,
+        "why": "Yes. That is all a list of steps records: what was asked for, once."
+      },
+      {
+        "text": "What a colleague changed by hand since then",
+        "correct": false,
+        "why": "A change made elsewhere leaves no trace in the file."
+      },
+      {
+        "text": "What a second run of it would do",
+        "correct": false,
+        "why": "Nothing in it says; the lesson had to run it to find out, and got a second VPC."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9epjjtx",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `network.sh` capture the output of `create-vpc` into `VPC` instead of just printing it?",
+    "hint": "Look at what the next two commands need.",
+    "choices": [
+      {
+        "text": "To print it at the end, for the record",
+        "correct": false,
+        "why": "It is printed at the end, but that is not why it is kept: the next commands need it."
+      },
+      {
+        "text": "Because AWS refuses a second VPC unless the first id is passed back",
+        "correct": false,
+        "why": "AWS needs no such thing; the lesson's second run created a second VPC without it."
+      },
+      {
+        "text": "The commands after it need that id",
+        "correct": true,
+        "why": "Right. The subnet and the security group must name their VPC, and only AWS knows its id."
+      },
+      {
+        "text": "To make the script idempotent",
+        "correct": false,
+        "why": "Keeping an id does not stop the script creating everything again on the next run."
+      }
+    ]
+  },
+  {
+    "id": "ex-0js6hebs",
+    "version": 1,
+    "section": "by-hand",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A server or network that exists only as the result of a sequence of manual steps, slightly different from every other and impossible to rebuild exactly, is called a ___.",
+    "hint": "A thing of which no two are alike.",
+    "blanks": [
+      {
+        "accept": [
+          "snowflake",
+          "snowflake server"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wef94z4z",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A colleague opened port 22 on the `web` security group from another machine. What is the gap between that group and `network.sh` called?",
+    "hint": "It is the name of the lesson's second section.",
+    "choices": [
+      {
+        "text": "A conflict",
+        "correct": false,
+        "why": "Nothing conflicted: AWS accepted the change and the file never knew."
+      },
+      {
+        "text": "Drift",
+        "correct": true,
+        "why": "Yes: what exists has moved away from what was described."
+      },
+      {
+        "text": "A rollback",
+        "correct": false,
+        "why": "A rollback undoes a change; here a change was added."
+      },
+      {
+        "text": "A replacement of the security group",
+        "correct": false,
+        "why": "The group kept its id; a rule was added to it in place."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd746wv2",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The team agrees that whoever changes the network by hand will also update `network.sh` afterwards. What does the lesson say about this arrangement?",
+    "hint": "Who produced the drift in the first place?",
+    "choices": [
+      {
+        "text": "It is the same arrangement that produced the drift",
+        "correct": true,
+        "why": "Right. It depends on everybody remembering every time, which is what failed. The cure is making the file the only way a change happens."
+      },
+      {
+        "text": "It cures drift as long as the update happens on the same day",
+        "correct": false,
+        "why": "The day does not matter; the change still happened before anybody could review it, and nothing checks that the file was updated."
+      },
+      {
+        "text": "It works if the script is kept in version control",
+        "correct": false,
+        "why": "Version control records edits to the file; it cannot see a change made in the cloud."
+      },
+      {
+        "text": "It makes the change reviewable before it happens",
+        "correct": false,
+        "why": "The edit to the file comes after the change, so nobody reviews anything in time."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kf3qqn8",
+    "version": 1,
+    "section": "drift",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are reasons the lesson gives for drift being worse than a missing note? Choose all that apply.",
+    "hint": "Three reasons, each in bold.",
+    "choices": [
+      {
+        "text": "It stays invisible until somebody compares",
+        "correct": true,
+        "why": "Yes; the network works, so nothing prompts anybody to look."
+      },
+      {
+        "text": "It slows the cloud down",
+        "correct": false,
+        "why": "Drift is a difference in configuration, not in performance."
+      },
+      {
+        "text": "Later changes are built on top of it",
+        "correct": true,
+        "why": "Yes; it compounds."
+      },
+      {
+        "text": "Nobody could review the change before it happened",
+        "correct": true,
+        "why": "Yes; it was typed straight into the cloud."
+      },
+      {
+        "text": "AWS deletes resources that drift",
+        "correct": false,
+        "why": "AWS keeps whatever it is told; it has no idea what was intended."
+      }
+    ]
+  },
+  {
+    "id": "ex-4kbabp74",
+    "version": 1,
+    "section": "two-jobs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is configuration management rather than provisioning?",
+    "hint": "Can the cloud's API see it?",
+    "choices": [
+      {
+        "text": "Creating a subnet in `sa-east-1a`",
+        "correct": false,
+        "why": "A subnet is a resource the provider sells: provisioning."
+      },
+      {
+        "text": "Opening port 443 on a security group",
+        "correct": false,
+        "why": "A security group rule is created through the cloud's API: provisioning."
+      },
+      {
+        "text": "Writing `/etc/nginx/nginx.conf` on a running machine",
+        "correct": true,
+        "why": "Yes. A file inside the operating system is invisible to the cloud's API."
+      },
+      {
+        "text": "Creating a bucket for the shop's images",
+        "correct": false,
+        "why": "A bucket is a provider resource: provisioning."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j0txe1m",
+    "version": 1,
+    "section": "two-jobs",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each tool to the job the lesson gives it.",
+    "hint": "Three jobs, one of them about images.",
+    "pairs": [
+      {
+        "left": "Terraform",
+        "right": "Provisioning"
+      },
+      {
+        "left": "Ansible",
+        "right": "Configuration management"
+      },
+      {
+        "left": "Packer",
+        "right": "Machine images"
+      }
+    ],
+    "right_distractors": [
+      "Scanning for exposed resources"
+    ]
+  },
+  {
+    "id": "ex-a5jvggyn",
+    "version": 1,
+    "section": "two-jobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana could create the shop's VPC with Ansible's cloud modules. Why does the lesson call that the second-best tool for the job?",
+    "hint": "Think about what happens when a line is deleted.",
+    "choices": [
+      {
+        "text": "Ansible cannot talk to the AWS API at all",
+        "correct": false,
+        "why": "It can; the lesson says it works. The problem is what it remembers."
+      },
+      {
+        "text": "It keeps no record of what it created",
+        "correct": true,
+        "why": "Right. Without a record, deleting a line removes nothing: it cannot tell which resources are its own."
+      },
+      {
+        "text": "Ansible needs an agent installed in the VPC",
+        "correct": false,
+        "why": "A VPC has no operating system to install anything in, and Ansible pushes over SSH anyway."
+      },
+      {
+        "text": "YAML cannot describe a network range",
+        "correct": false,
+        "why": "A range is a string; any format can carry it."
+      }
+    ]
+  },
+  {
+    "id": "ex-kg6fx1qc",
+    "version": 1,
+    "section": "two-jobs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Terraform starts a machine and runs a script on it once, at creation, that installs nginx. Six months later somebody edits nginx's file on that machine by hand. What does the next `terraform apply` do about it?",
+    "hint": "Which layer is the edited file in?",
+    "choices": [
+      {
+        "text": "Runs the creation script again and restores the file",
+        "correct": false,
+        "why": "A script run at creation is never run again; that is the lesson's point about it."
+      },
+      {
+        "text": "Replaces the machine, because its configuration changed",
+        "correct": false,
+        "why": "Terraform cannot see a file inside the machine, so it sees no change."
+      },
+      {
+        "text": "Nothing: the file is inside the OS, where the cloud's API cannot look",
+        "correct": true,
+        "why": "Right. The machine's attributes match, so Terraform reports no changes, and the edit drifts on."
+      },
+      {
+        "text": "Reports the edited file as drift",
+        "correct": false,
+        "why": "That would need it to read the disk, which is configuration management's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ve40v6b",
+    "version": 1,
+    "section": "declarative",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did running `network.sh` a second time produce?",
+    "hint": "Look at the `describe-vpcs` that followed.",
+    "choices": [
+      {
+        "text": "An error, because a VPC named `shop` already existed",
+        "correct": false,
+        "why": "AWS does not treat the Name tag as unique; it accepted the second one."
+      },
+      {
+        "text": "Nothing, because the VPC was already there",
+        "correct": false,
+        "why": "That is what `terraform apply` did; the script never checks."
+      },
+      {
+        "text": "A second VPC with the same name and range",
+        "correct": true,
+        "why": "Yes: two VPCs called `shop`, both `10.20.0.0/16`."
+      },
+      {
+        "text": "A new subnet inside the existing VPC",
+        "correct": false,
+        "why": "The script creates a new VPC first and puts the subnet in that one."
+      }
+    ]
+  },
+  {
+    "id": "ex-amzr2957",
+    "version": 1,
+    "section": "declarative",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An operation that leaves the world the same whether it runs once or twice is called ___.",
+    "hint": "The property `terraform apply` has and `network.sh` lacks.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e5fh7kjt",
+    "version": 1,
+    "section": "declarative",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `terraform apply` printed `No changes.` What did Terraform do before deciding that?",
+    "hint": "Read the first line of that output.",
+    "choices": [
+      {
+        "text": "Read the existing VPC back from AWS and compared it with the file",
+        "correct": true,
+        "why": "Yes: `Refreshing state...` is the read, and the comparison found nothing to do."
+      },
+      {
+        "text": "Checked the file's modification time",
+        "correct": false,
+        "why": "Terraform compares content with the real resource, not timestamps."
+      },
+      {
+        "text": "Created the VPC again and deleted the duplicate",
+        "correct": false,
+        "why": "It created nothing: `0 added`."
+      },
+      {
+        "text": "Asked AWS whether any VPC called `shop-tf` was in use",
+        "correct": false,
+        "why": "It looked up its own VPC by the id it remembered, not by name."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkt2sdbe",
+    "version": 1,
+    "section": "declarative",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To compare, Terraform has to know which real VPC belongs to which line of the file. Where does that knowledge live?",
+    "hint": "Lessons 7 and 8 are about it.",
+    "choices": [
+      {
+        "text": "In the Name tag",
+        "correct": false,
+        "why": "Tags can be changed by anybody, and two VPCs shared one in this very lesson."
+      },
+      {
+        "text": "In the state, Terraform's record of what it made",
+        "correct": true,
+        "why": "Yes; the script needed none because it never asked anything."
+      },
+      {
+        "text": "In AWS, which remembers which tool created each resource",
+        "correct": false,
+        "why": "AWS keeps no such link; the second VPC from the script looks exactly like the first."
+      },
+      {
+        "text": "In `main.tf`, after the first apply writes the id into it",
+        "correct": false,
+        "why": "Terraform never edits your configuration; the file shown is the one ana wrote."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmzrkf2f",
+    "version": 1,
+    "section": "declarative",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `network.sh` ran twice and `terraform apply` ran twice, how many VPCs existed in the lab's account in total?",
+    "hint": "Two from one, one from the other.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "VPCs"
+  },
+  {
+    "id": "ex-hc0zmffx",
+    "version": 1,
+    "section": "mutable-immutable",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under immutable infrastructure, how does a new version of the web server reach production?",
+    "hint": "Nothing running is edited.",
+    "choices": [
+      {
+        "text": "A tool logs in to each machine and upgrades the package",
+        "correct": false,
+        "why": "That is the mutable column: editing what runs."
+      },
+      {
+        "text": "New machines replace the old ones",
+        "correct": true,
+        "why": "Yes: new machines are built with it, put in service, and the old ones destroyed."
+      },
+      {
+        "text": "The machines are rebooted so they pick up the new version",
+        "correct": false,
+        "why": "A reboot runs what is already on the disk; something still has to put the new version there."
+      },
+      {
+        "text": "It is copied into place and the service restarted",
+        "correct": false,
+        "why": "Copying into a running machine is an in-place change."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdqy8c26",
+    "version": 1,
+    "section": "mutable-immutable",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson keep a database on the mutable side even in a shop that replaces everything else?",
+    "hint": "What would be thrown away with it?",
+    "choices": [
+      {
+        "text": "Databases cannot be created by Terraform",
+        "correct": false,
+        "why": "They can; the question is whether to throw one away for each change."
+      },
+      {
+        "text": "Its value is the data that has built up on it",
+        "correct": true,
+        "why": "Right. Replacing it would replace the data, so the state is kept in a few managed places."
+      },
+      {
+        "text": "Database servers are pets by law",
+        "correct": false,
+        "why": "No law says so; it is a design decision."
+      },
+      {
+        "text": "Immutable machines are slower to start",
+        "correct": false,
+        "why": "Start-up time is not the reason given; the data is."
+      }
+    ]
+  },
+  {
+    "id": "ex-22n52g01",
+    "version": 1,
+    "section": "mutable-immutable",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to what the lesson's table says happens.",
+    "hint": "Two columns, two rows of the table.",
+    "pairs": [
+      {
+        "left": "A change, on mutable infrastructure",
+        "right": "An edit to what is running"
+      },
+      {
+        "left": "A change, on immutable infrastructure",
+        "right": "A new copy, then a swap"
+      },
+      {
+        "left": "Rolling back, on mutable infrastructure",
+        "right": "Undo the edit, if anybody knows what it was"
+      },
+      {
+        "left": "Rolling back, on immutable infrastructure",
+        "right": "Start the previous copy again"
+      }
+    ]
+  },
+  {
+    "id": "ex-95e4m93n",
+    "version": 1,
+    "section": "the-tools",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which tool in the lesson's table provisions only AWS, from YAML or JSON templates?",
+    "hint": "It is AWS's own.",
+    "choices": [
+      {
+        "text": "Pulumi",
+        "correct": false,
+        "why": "Pulumi works with any provider, in general-purpose languages."
+      },
+      {
+        "text": "OpenTofu",
+        "correct": false,
+        "why": "OpenTofu is the Terraform fork, written in HCL for any provider."
+      },
+      {
+        "text": "CloudFormation",
+        "correct": true,
+        "why": "Yes; the AWS CDK generates its templates from code."
+      },
+      {
+        "text": "Salt",
+        "correct": false,
+        "why": "Salt is configuration management."
+      }
+    ]
+  },
+  {
+    "id": "ex-neexpf13",
+    "version": 1,
+    "section": "the-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Terraform, what is a provider?",
+    "hint": "Terraform itself knows nothing about AWS.",
+    "choices": [
+      {
+        "text": "The cloud company that bills the account",
+        "correct": false,
+        "why": "In everyday speech, yes; in Terraform the word names a program."
+      },
+      {
+        "text": "A program that knows one API",
+        "correct": true,
+        "why": "Yes. It turns resource blocks into that API's calls and reads the result back; there is one per API."
+      },
+      {
+        "text": "The `provider` block's region setting",
+        "correct": false,
+        "why": "The block configures the provider; the region is one of its arguments."
+      },
+      {
+        "text": "A module published on the registry",
+        "correct": false,
+        "why": "Modules are lesson 10 and are written in HCL; providers are compiled programs."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhz3mt2p",
+    "version": 1,
+    "section": "the-tools",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants one tool that both creates its cloud network and keeps nginx's files right on thirty running machines. What does the lesson recommend instead?",
+    "hint": "The table has no row for it.",
+    "choices": [
+      {
+        "text": "Terraform for both, with a creation script for nginx",
+        "correct": false,
+        "why": "A creation script runs once and then drifts."
+      },
+      {
+        "text": "Ansible for both, since it has cloud modules",
+        "correct": false,
+        "why": "It keeps no record of what it created."
+      },
+      {
+        "text": "Two tools, with a clear line between them",
+        "correct": true,
+        "why": "Yes: one for provisioning, one for configuration or Packer. Lesson 18 draws that line between Terraform and Ansible."
+      },
+      {
+        "text": "CloudFormation, which covers everything on AWS",
+        "correct": false,
+        "why": "It is a provisioning tool; it does not manage files inside machines either."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8qr9maq",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, what makes the AWS CLI and Terraform talk to moto instead of to Amazon?",
+    "hint": "One of the four variables.",
+    "choices": [
+      {
+        "text": "`AWS_DEFAULT_REGION=sa-east-1`",
+        "correct": false,
+        "why": "That chooses the region, wherever the endpoint is."
+      },
+      {
+        "text": "`AWS_ACCESS_KEY_ID=test`",
+        "correct": false,
+        "why": "A key says who is asking, not where the request goes."
+      },
+      {
+        "text": "`AWS_ENDPOINT_URL=http://localhost:4566`",
+        "correct": true,
+        "why": "Yes: every call goes to that address."
+      },
+      {
+        "text": "`provider \"aws\" { region = \"sa-east-1\" }`",
+        "correct": false,
+        "why": "The provider block is the same as for a real account; that is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-qsmnvdkh",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto accepted `aws_instance` and returned an id. What does that instance actually do in the lab?",
+    "hint": "moto imitates the API, not the machines behind it.",
+    "choices": [
+      {
+        "text": "It runs on the laptop as a small virtual machine",
+        "correct": false,
+        "why": "moto runs nothing; lessons 18 to 20 use containers when a running machine is needed."
+      },
+      {
+        "text": "It answers on port 443 like a real server",
+        "correct": false,
+        "why": "No packet reaches it; there is nothing to answer."
+      },
+      {
+        "text": "Nothing: it is a record with an id and a state",
+        "correct": true,
+        "why": "Right, and that is exactly what Terraform reads back."
+      },
+      {
+        "text": "It is created in a real AWS account in the background",
+        "correct": false,
+        "why": "No real account is involved, and nothing is billed."
+      }
+    ]
+  },
+  {
+    "id": "ex-pgfyw1df",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At home, `aws sts get-caller-identity` answers `Could not connect to the endpoint URL`. What does the lesson tell you to check first?",
+    "hint": "Nothing answered at the address.",
+    "choices": [
+      {
+        "text": "That `moto_server` is running and the port matches `AWS_ENDPOINT_URL`",
+        "correct": true,
+        "why": "Yes; the message means nothing is listening there."
+      },
+      {
+        "text": "That the key pair is `test`",
+        "correct": false,
+        "why": "A wrong key gives a credentials error, after connecting."
+      },
+      {
+        "text": "That the provider block has the right region",
+        "correct": false,
+        "why": "The CLI call involves no provider block, and the region does not stop a connection."
+      },
+      {
+        "text": "That Terraform is version 1.16",
+        "correct": false,
+        "why": "Terraform is not involved in an AWS CLI call."
+      }
+    ]
+  },
+  {
+    "id": "ex-26t7d4rc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps to follow these lessons on your own computer in order.",
+    "hint": "moto has to be running before anything asks it something.",
+    "items": [
+      "Install Terraform",
+      "Install moto and the AWS CLI with pip",
+      "Start `moto_server -p 4566` in its own terminal",
+      "Export the four `AWS_` variables in your working terminal",
+      "Run `aws sts get-caller-identity` to check"
+    ],
+    "trap": "Exporting the variables in moto's own terminal is the usual slip: the terminal you type commands in is the one that needs them."
+  },
+  {
+    "id": "ex-gm01t9pb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague rebuilds the shop's network in a new region by running `network.sh`. SSH works in the old region and not in the new one. Why?",
+    "hint": "Which rule is in the file, and which only in the old group?",
+    "choices": [
+      {
+        "text": "Port 22 was opened by hand and never written down",
+        "correct": true,
+        "why": "Right: the rebuild produced exactly what was written, which is the network without the drift."
+      },
+      {
+        "text": "Security groups cannot be copied from one AWS region to another",
+        "correct": false,
+        "why": "Nothing was copied; the script created a new group from its own lines."
+      },
+      {
+        "text": "The new VPC has a different range",
+        "correct": false,
+        "why": "The script uses the same `10.20.0.0/16` everywhere."
+      },
+      {
+        "text": "SSH is blocked in some AWS regions",
+        "correct": false,
+        "why": "No region blocks it; the group simply has no rule for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-djqfhxh8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is idempotent?",
+    "hint": "Running it twice leaves the world as running it once.",
+    "choices": [
+      {
+        "text": "`aws ec2 create-vpc --cidr-block 10.20.0.0/16`",
+        "correct": false,
+        "why": "Each run creates another VPC."
+      },
+      {
+        "text": "`terraform apply` with an unchanged `main.tf`",
+        "correct": true,
+        "why": "Yes: the second run found no changes."
+      },
+      {
+        "text": "`aws ec2 authorize-security-group-ingress` for a new rule",
+        "correct": false,
+        "why": "The second call fails or adds again; either way it is not a description of an end state."
+      },
+      {
+        "text": "`sh network.sh`",
+        "correct": false,
+        "why": "Its second run made a second network."
+      }
+    ]
+  },
+  {
+    "id": "ex-ek1qr1vg",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements about the lab are true? Choose all that apply.",
+    "hint": "moto, the providers, and the bill.",
+    "choices": [
+      {
+        "text": "The providers are the ones HashiCorp publishes",
+        "correct": true,
+        "why": "Yes; only where they were downloaded from differs."
+      },
+      {
+        "text": "moto keeps what it is told after it stops",
+        "correct": false,
+        "why": "It keeps everything in memory and forgets it when it stops."
+      },
+      {
+        "text": "A configuration from these lessons works on a real account once `AWS_ENDPOINT_URL` is unset",
+        "correct": true,
+        "why": "Yes, with real credentials, and with a real bill."
+      },
+      {
+        "text": "Terraform prints different plans against moto than against AWS for the same file",
+        "correct": false,
+        "why": "The plan is computed from the file and the state; moto only answers the API calls."
+      }
+    ]
+  }
+]

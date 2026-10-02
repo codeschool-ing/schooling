@@ -1,0 +1,837 @@
+[
+  {
+    "id": "ex-v6ajehq2",
+    "version": 1,
+    "section": "the-layers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the checks on the lesson's ladder, which is the only one that costs money on a real account?",
+    "hint": "Which one creates something?",
+    "choices": [
+      {
+        "text": "`terraform validate`",
+        "correct": false,
+        "why": "It reads files and the providers' schemas; it never calls an API."
+      },
+      {
+        "text": "A test run with `command = plan`",
+        "correct": false,
+        "why": "A plan asks AWS questions and creates nothing."
+      },
+      {
+        "text": "`terraform fmt -check`",
+        "correct": false,
+        "why": "It looks at the layout of files and needs nothing at all."
+      },
+      {
+        "text": "A test run with `command = apply`",
+        "correct": true,
+        "why": "Yes. It builds the resources, and on a real account they are billed while they exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-7848vr8m",
+    "version": 1,
+    "section": "the-layers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `terraform validate` need before it can check a configuration?",
+    "hint": "The schema it checks against lives somewhere.",
+    "choices": [
+      {
+        "text": "Credentials that the account accepts",
+        "correct": false,
+        "why": "It makes no API call, so it needs none."
+      },
+      {
+        "text": "The providers installed",
+        "correct": true,
+        "why": "Right. The schemas are inside the providers, which is why a fresh checkout needs `terraform init` first."
+      },
+      {
+        "text": "A value for each variable that has no default",
+        "correct": false,
+        "why": "It printed `Success!` for a module with three such variables and no values."
+      },
+      {
+        "text": "A state file from an earlier apply",
+        "correct": false,
+        "why": "It never reads the state; the module in the lesson had never been applied."
+      }
+    ]
+  },
+  {
+    "id": "ex-v5ntfekx",
+    "version": 1,
+    "section": "the-layers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each check with what it can find.",
+    "hint": "Each rung finds what the one above it cannot.",
+    "pairs": [
+      {
+        "left": "`terraform fmt -check`",
+        "right": "Four spaces where two belong"
+      },
+      {
+        "left": "`terraform validate`",
+        "right": "An argument the provider does not have"
+      },
+      {
+        "left": "A run with `command = plan`",
+        "right": "A subnet named differently from the test's expectation"
+      },
+      {
+        "left": "A run with `command = apply`",
+        "right": "A range AWS refuses to create"
+      }
+    ],
+    "right_distractors": [
+      "A change somebody made by hand last week"
+    ]
+  },
+  {
+    "id": "ex-8reb39m1",
+    "version": 1,
+    "section": "the-layers",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the checks in the order of the lesson's ladder, cheapest first.",
+    "hint": "From layout to a real apply.",
+    "items": [
+      "`terraform fmt -check`",
+      "`terraform validate`",
+      "A test run with `command = plan`",
+      "A test run with `command = apply`"
+    ],
+    "trap": "`validate` comes after `fmt` because it needs the providers installed, and `fmt` needs nothing."
+  },
+  {
+    "id": "ex-0a8342wk",
+    "version": 1,
+    "section": "fmt-validate",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What exit status did `terraform fmt -check -diff` return when `outputs.tf` was out of layout?",
+    "hint": "The capture printed it after the diff.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-nbey2kbe",
+    "version": 1,
+    "section": "fmt-validate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The module has three variables and none has a default. Why did `terraform validate` print `Success!` without asking for any value?",
+    "hint": "What does it check, and what does it never look at?",
+    "choices": [
+      {
+        "text": "It filled each one with an empty string",
+        "correct": false,
+        "why": "It does not invent values; it never evaluates the variables at all."
+      },
+      {
+        "text": "It read them from `terraform.tfvars`",
+        "correct": false,
+        "why": "There is no such file in the module, and `validate` would not read it anyway."
+      },
+      {
+        "text": "It checks the configuration, not the values",
+        "correct": true,
+        "why": "Yes. That is its strength and its limit: no value means no question about a value."
+      },
+      {
+        "text": "A module's variables are only checked by the root module that calls it",
+        "correct": false,
+        "why": "The module was validated on its own, and the variables were still never asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1wyq84b",
+    "version": 1,
+    "section": "fmt-validate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a fresh checkout, `terraform validate` stops with `Missing required provider`. Which command should a pipeline run first, without touching the state?",
+    "hint": "It installs what the configuration needs.",
+    "choices": [
+      {
+        "text": "`terraform providers lock`",
+        "correct": false,
+        "why": "That records checksums in the lock file; it installs nothing into the working directory."
+      },
+      {
+        "text": "`terraform plan -refresh=false`",
+        "correct": false,
+        "why": "A plan needs the providers too, and it would also need the backend and values."
+      },
+      {
+        "text": "`terraform init -backend=false`",
+        "correct": true,
+        "why": "Right: providers and modules are installed and the state is left alone."
+      },
+      {
+        "text": "`terraform fmt -recursive`",
+        "correct": false,
+        "why": "That rewrites layout and installs nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-kantjz8g",
+    "version": 1,
+    "section": "fmt-validate",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Run as `terraform fmt ___`, the command rewrites nothing and exits with a non-zero status when a file is out of layout.",
+    "hint": "A flag of one word.",
+    "blanks": [
+      {
+        "accept": [
+          "-check",
+          "--check"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yebm0eyf",
+    "version": 1,
+    "section": "terraform-test",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which files does `terraform test` read?",
+    "hint": "Written in HCL, under `tests/` by default.",
+    "choices": [
+      {
+        "text": "`*_test.tf`",
+        "correct": false,
+        "why": "A `.tf` file would be part of the configuration itself."
+      },
+      {
+        "text": "`*.tfvars`",
+        "correct": false,
+        "why": "Those hold values, not tests."
+      },
+      {
+        "text": "`*.tftest.hcl`",
+        "correct": true,
+        "why": "Yes, in the module's directory and in `tests/`."
+      },
+      {
+        "text": "`*_test.go`",
+        "correct": false,
+        "why": "That is a Go test, which is how Terratest is written, not `terraform test`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztf8958s",
+    "version": 1,
+    "section": "terraform-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The module has no `provider` block, but `plan.tftest.hcl` has one. Why?",
+    "hint": "Who configures providers for a module?",
+    "choices": [
+      {
+        "text": "In a test, the file is the module's caller",
+        "correct": true,
+        "why": "Right. A module leaves provider configuration to whoever calls it, and here that is the test file."
+      },
+      {
+        "text": "`terraform test` overrides the module's provider block with the one in the test file",
+        "correct": false,
+        "why": "The module has no provider block to override."
+      },
+      {
+        "text": "To switch off the credentials check",
+        "correct": false,
+        "why": "The block only sets the region; the credentials were still checked, as the dead-endpoint run showed."
+      },
+      {
+        "text": "Without it, the plan would run against the real AWS instead of moto",
+        "correct": false,
+        "why": "`AWS_ENDPOINT_URL` sends calls to moto either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-ykdppcrg",
+    "version": 1,
+    "section": "terraform-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `command = plan`, the assertion `aws_subnet.this[\"a\"].vpc_id == aws_vpc.this.id` failed with `Unknown condition value`. Why?",
+    "hint": "Who invents a VPC's id, and when?",
+    "choices": [
+      {
+        "text": "`vpc_id` is not an attribute an assertion may read",
+        "correct": false,
+        "why": "It is; the end-to-end run asserted on it after an apply."
+      },
+      {
+        "text": "Both ids exist only after AWS creates the resources",
+        "correct": true,
+        "why": "Yes. During a plan they are unknown, and Terraform refuses to call an unknown condition a pass."
+      },
+      {
+        "text": "The subnet had been placed in the default VPC",
+        "correct": false,
+        "why": "Nothing was placed anywhere; a plan creates nothing."
+      },
+      {
+        "text": "moto had stopped answering",
+        "correct": false,
+        "why": "The run reached the assertion, so the provider had been configured."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d8mtekj",
+    "version": 1,
+    "section": "terraform-test",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside a `run` block, `command = ___` makes the run create nothing, and its assertions are checked against what Terraform would do.",
+    "hint": "The other value is `apply`.",
+    "blanks": [
+      {
+        "accept": [
+          "plan"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-17ctn90v",
+    "version": 1,
+    "section": "mocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `AWS_ENDPOINT_URL` pointing at a port where nothing listens, both runs of `plan.tftest.hcl` reported `skip` rather than `fail`. Why?",
+    "hint": "Read the error under the two runs.",
+    "choices": [
+      {
+        "text": "A plan run is never allowed to fail",
+        "correct": false,
+        "why": "The same file failed earlier, when the subnet names changed."
+      },
+      {
+        "text": "Terraform skips plan runs when the state is empty",
+        "correct": false,
+        "why": "The state was empty on every run of this lesson, and they ran."
+      },
+      {
+        "text": "The provider could not be configured, so no run was attempted",
+        "correct": true,
+        "why": "Right: the credentials check against STS found nothing listening."
+      },
+      {
+        "text": "Their assertions had no values to compare",
+        "correct": false,
+        "why": "The variables were set; the runs never got as far as the assertions."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwrdwm30",
+    "version": 1,
+    "section": "mocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `mock_provider \"aws\" {}` alone, the precondition reported that `sa-east-1a` is not a zone the region offers. Why?",
+    "hint": "What did the error say the list of names was?",
+    "choices": [
+      {
+        "text": "The mock answers in `us-east-1` unless told otherwise",
+        "correct": false,
+        "why": "The mock invents strings; it has no region of its own to answer from."
+      },
+      {
+        "text": "The mock returned an empty list of zones",
+        "correct": true,
+        "why": "Yes. A mock answers a list with an empty one, so no zone existed until the override supplied some."
+      },
+      {
+        "text": "Preconditions are not evaluated under a mock, so the zone was never checked",
+        "correct": false,
+        "why": "It was evaluated, which is why it failed."
+      },
+      {
+        "text": "moto has no zone called `sa-east-1a`",
+        "correct": false,
+        "why": "moto was never asked; the endpoint pointed at nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-4aw8zq93",
+    "version": 1,
+    "section": "mocks",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did the mock provider in `unit.tftest.hcl` do? Choose all that apply.",
+    "hint": "Look at the `-verbose` output and at what was never asked.",
+    "choices": [
+      {
+        "text": "Invented a value for the subnet's `arn`",
+        "correct": true,
+        "why": "Yes, eight random characters."
+      },
+      {
+        "text": "Called the AWS API to read the zones",
+        "correct": false,
+        "why": "It never calls an API; the zones came from Ana's override."
+      },
+      {
+        "text": "Kept the VPC id Ana set with `override_resource`",
+        "correct": true,
+        "why": "Yes; the subnet's `vpc_id` came out as that value."
+      },
+      {
+        "text": "Refused a subnet range outside the VPC",
+        "correct": false,
+        "why": "Nothing in a mock knows that rule; AWS enforced it in the end-to-end run."
+      },
+      {
+        "text": "Let the run apply without creating anything",
+        "correct": true,
+        "why": "Yes; the run had no `command = plan`, so it applied, to the mock."
+      }
+    ]
+  },
+  {
+    "id": "ex-a1a134vm",
+    "version": 1,
+    "section": "mocks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which block gave `data.aws_availability_zones.here` the list of São Paulo zones in the unit test?",
+    "hint": "It targets one data source by its address.",
+    "choices": [
+      {
+        "text": "`override_resource`",
+        "correct": false,
+        "why": "That one fixed the VPC's id; it targets a resource."
+      },
+      {
+        "text": "`expect_failures`",
+        "correct": false,
+        "why": "That lists objects that must fail; it supplies no values."
+      },
+      {
+        "text": "`variables`",
+        "correct": false,
+        "why": "The zones are not an input of the module."
+      },
+      {
+        "text": "`override_data`",
+        "correct": true,
+        "why": "Right, with `target = data.aws_availability_zones.here`."
+      }
+    ]
+  },
+  {
+    "id": "ex-862jw1k0",
+    "version": 1,
+    "section": "expect-failures",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `rules.tftest.hcl`, the run `cidr_without_a_mask` sets `cidr = \"10.20.0.0\"` and `expect_failures = [var.cidr]`. When does it pass?",
+    "hint": "The list names an object, not just an outcome.",
+    "choices": [
+      {
+        "text": "When the plan completes with no error at all",
+        "correct": false,
+        "why": "Then the rule let a bad value through, and the run fails."
+      },
+      {
+        "text": "When the variable's own rule refuses the value",
+        "correct": true,
+        "why": "Yes. A refusal from anywhere else does not count, as the loosened rule showed."
+      },
+      {
+        "text": "When the provider refuses the range",
+        "correct": false,
+        "why": "That happened with the loosened rule, and the run failed with `Missing expected failure`."
+      },
+      {
+        "text": "When the apply against AWS fails",
+        "correct": false,
+        "why": "The run only plans, against a mock; nothing reaches AWS."
+      }
+    ]
+  },
+  {
+    "id": "ex-1a2qcemm",
+    "version": 1,
+    "section": "expect-failures",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the rule loosened to `can(regex(\"^[0-9./]+$\", var.cidr))`, the value `10.20.0.0` was still refused. Why did the run fail anyway?",
+    "hint": "Who refused it?",
+    "choices": [
+      {
+        "text": "`expect_failures` cannot be used together with a mock provider",
+        "correct": false,
+        "why": "The same file passed with the mock before the rule was loosened."
+      },
+      {
+        "text": "The regular expression itself was invalid",
+        "correct": false,
+        "why": "It was valid, and it matched `10.20.0.0`; that was the problem."
+      },
+      {
+        "text": "The provider refused it, and `var.cidr` did not",
+        "correct": true,
+        "why": "Right. The failure came from the AWS provider's check on `cidr_block`, not from the object the test named."
+      },
+      {
+        "text": "The zone run that followed it also failed",
+        "correct": false,
+        "why": "That run was skipped, not failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbm0pf5r",
+    "version": 1,
+    "section": "expect-failures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `cidr_without_a_mask` failed, `zone_from_another_region` reported `skip`. What does that say about the zone rule?",
+    "hint": "A skipped run was not attempted.",
+    "choices": [
+      {
+        "text": "It is broken as well",
+        "correct": false,
+        "why": "A broken rule would have produced a failure, not a skip."
+      },
+      {
+        "text": "It passed, since a skip is counted as a pass",
+        "correct": false,
+        "why": "The summary counts skips apart: `0 passed, 1 failed, 1 skipped`."
+      },
+      {
+        "text": "This run says nothing about it",
+        "correct": true,
+        "why": "Yes. Terraform did not carry on past the failed run, so the zone rule was not tested at all."
+      },
+      {
+        "text": "Its precondition was removed by the failure",
+        "correct": false,
+        "why": "A test changes no file; the precondition is still in `main.tf`."
+      }
+    ]
+  },
+  {
+    "id": "ex-sr3rrzzr",
+    "version": 1,
+    "section": "expect-failures",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When the object named in `expect_failures` lets a bad value through, Terraform reports the error `Missing expected ___`.",
+    "hint": "The error is in English in both languages.",
+    "blanks": [
+      {
+        "accept": [
+          "failure"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r034rect",
+    "version": 1,
+    "section": "end-to-end",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `range.tftest.hcl`, `plan_accepts_it` passed and `apply_refuses_it` failed for a subnet of `10.30.1.0/24` in a VPC of `10.20.0.0/16`. What refused the subnet?",
+    "hint": "Read the error code.",
+    "choices": [
+      {
+        "text": "The zone precondition in `main.tf`",
+        "correct": false,
+        "why": "The zone was `sa-east-1a`, which the region offers."
+      },
+      {
+        "text": "`terraform validate`, run by the test before the apply",
+        "correct": false,
+        "why": "The test runs no `validate`, and it would have no values to look at."
+      },
+      {
+        "text": "The API, with `InvalidSubnet.Range`",
+        "correct": true,
+        "why": "Yes. Only the apply asked AWS to create it, and AWS said no."
+      },
+      {
+        "text": "The validation rule on `subnets`",
+        "correct": false,
+        "why": "That rule did not exist yet; Ana added it after this run."
+      }
+    ]
+  },
+  {
+    "id": "ex-n9b2arqq",
+    "version": 1,
+    "section": "end-to-end",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the run `aws_agrees` get the VPC id that `build` created?",
+    "hint": "An earlier run's outputs are addressable.",
+    "choices": [
+      {
+        "text": "`module.build.vpc_id`",
+        "correct": false,
+        "why": "`build` is a run, not a module call."
+      },
+      {
+        "text": "`run.build.vpc_id`",
+        "correct": true,
+        "why": "Right: the output `vpc_id` of the run called `build`."
+      },
+      {
+        "text": "`data.aws_vpc.built.id`",
+        "correct": false,
+        "why": "That data source needs the id first; it is what reads the VPC back."
+      },
+      {
+        "text": "`output.vpc_id`",
+        "correct": false,
+        "why": "Inside `aws_agrees` the module under test is the helper, which has no such output."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4yqxsnk",
+    "version": 1,
+    "section": "end-to-end",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the end-to-end file ran, `describe-vpcs` listed exactly one VPC. Which one?",
+    "hint": "Its range was `172.31.0.0/16`.",
+    "choices": [
+      {
+        "text": "The one `build` created, kept for the next run",
+        "correct": false,
+        "why": "The teardown destroyed it."
+      },
+      {
+        "text": "The default VPC moto creates",
+        "correct": true,
+        "why": "Yes, as AWS does in every region; the test's own VPC was gone."
+      },
+      {
+        "text": "A VPC created by the helper module",
+        "correct": false,
+        "why": "The helper only has data sources; it creates nothing."
+      },
+      {
+        "text": "A copy left by a failed teardown",
+        "correct": false,
+        "why": "The teardown reported success, and the VPC listed is marked as the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwtge0gd",
+    "version": 1,
+    "section": "end-to-end",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are reasons the lesson gives for running end-to-end tests less often than the rest? Choose all that apply.",
+    "hint": "Cost, speed and what can be left behind.",
+    "choices": [
+      {
+        "text": "On a real account they create resources that are billed",
+        "correct": true,
+        "why": "Yes; the lab used moto, so nothing was billed here."
+      },
+      {
+        "text": "They cannot run against moto",
+        "correct": false,
+        "why": "The lesson ran them against moto."
+      },
+      {
+        "text": "They are the slowest rung of the ladder",
+        "correct": true,
+        "why": "Yes, they build and destroy real resources."
+      },
+      {
+        "text": "A failed teardown leaves resources behind",
+        "correct": true,
+        "why": "Yes, which is what the help text tells you to watch."
+      },
+      {
+        "text": "Assertions are not allowed in a run that applies",
+        "correct": false,
+        "why": "`build` asserted on the subnets after applying."
+      }
+    ]
+  },
+  {
+    "id": "ex-8tqtsakx",
+    "version": 1,
+    "section": "end-to-end",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many runs passed in the final `terraform test` of the whole suite?",
+    "hint": "Four files: two, two, three and one.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "runs"
+  },
+  {
+    "id": "ex-85j3x9te",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what Ana did with the out-of-range subnet, from discovery to a cheap test.",
+    "hint": "The end-to-end failure came first.",
+    "items": [
+      "An apply in a test fails with `InvalidSubnet.Range`",
+      "A validation rule on `subnets` compares each range with the VPC's",
+      "A run expecting `var.subnets` to fail joins `rules.tftest.hcl`",
+      "The mocked rules pass with no AWS reachable"
+    ],
+    "trap": "The test for the rule comes after the rule: before it, `expect_failures = [var.subnets]` would report a missing failure."
+  },
+  {
+    "id": "ex-wn7kh2dp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A module's variable `instance_type` has a validation that allows only `t3.` types. Which test checks that rule with no cloud access at all?",
+    "hint": "No AWS, and a refusal that must come from the variable.",
+    "choices": [
+      {
+        "text": "An apply run against moto that asserts the type of the instance it created",
+        "correct": false,
+        "why": "moto is an API; the question asked for no cloud at all, and this tests the accepted case, not the refusal."
+      },
+      {
+        "text": "`terraform validate` with `-var instance_type=m5.large`",
+        "correct": false,
+        "why": "`validate` never evaluates values, so the rule would not run."
+      },
+      {
+        "text": "A mocked plan with `m5.large` and `expect_failures = [var.instance_type]`",
+        "correct": true,
+        "why": "Yes: the mock removes AWS, and `expect_failures` demands the refusal from that variable."
+      },
+      {
+        "text": "A plan run against AWS with an `assert` that the type starts with `t3.`",
+        "correct": false,
+        "why": "It needs AWS, and it checks a good value rather than the rule's refusal."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkd14bpx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A run with `command = plan` asserts that `aws_instance.web.private_ip` starts with `10.20.`. No override sets that address. What happens?",
+    "hint": "Who chooses the address, and when?",
+    "choices": [
+      {
+        "text": "It fails with `Unknown condition value`",
+        "correct": true,
+        "why": "Yes. AWS assigns the address on creation, so during a plan it is unknown, as the subnet's `vpc_id` was."
+      },
+      {
+        "text": "It passes, because the subnet's range starts with `10.20.`",
+        "correct": false,
+        "why": "Terraform does not infer an address from a range; the value is unknown."
+      },
+      {
+        "text": "It is skipped until an apply provides the value",
+        "correct": false,
+        "why": "Skips happen when a run is not attempted; this one is attempted and errors."
+      },
+      {
+        "text": "It passes, and the check moves to the apply",
+        "correct": false,
+        "why": "Terraform refuses to call an unknown condition a pass."
+      }
+    ]
+  },
+  {
+    "id": "ex-r1a0pmqv",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes deleting the end-to-end file, because the unit tests pass under a mock. Which of these would then go unchecked? Choose all that apply.",
+    "hint": "Which questions only AWS can answer?",
+    "choices": [
+      {
+        "text": "A typo in an argument name",
+        "correct": false,
+        "why": "`validate` catches that, with no AWS."
+      },
+      {
+        "text": "Whether AWS reports the network as the module described it",
+        "correct": true,
+        "why": "Yes; only `aws_agrees` read it back from AWS."
+      },
+      {
+        "text": "A range AWS refuses for a reason no rule knows yet",
+        "correct": true,
+        "why": "Yes; that is how the out-of-range subnet was found."
+      },
+      {
+        "text": "A rule that accepts a near miss",
+        "correct": false,
+        "why": "The mocked `expect_failures` runs catch that."
+      },
+      {
+        "text": "A file out of the canonical layout",
+        "correct": false,
+        "why": "`fmt -check` catches that."
+      }
+    ]
+  }
+]

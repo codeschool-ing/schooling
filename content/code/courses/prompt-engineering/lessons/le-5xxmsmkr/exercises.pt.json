@@ -1,0 +1,329 @@
+{
+  "ex-a7r6ptn1": {
+    "prompt": "O que é a janela de contexto de um modelo?",
+    "hint": "Lição 2: o que a aplicação envia em cada pedido?",
+    "choices": [
+      {
+        "text": "O máximo de tokens de um pedido, resposta incluída",
+        "why": "Isso. As instruções, o histórico, a entrada nova e a resposta dividem a janela."
+      },
+      {
+        "text": "Tudo o que o modelo lembra dos seus chats anteriores",
+        "why": "Ele não lembra nada entre pedidos. A janela é o que um pedido consegue carregar."
+      },
+      {
+        "text": "A parte da conversa que a tela mostra",
+        "why": "A tela não tem nada a ver. A janela é contada em tokens, por pedido."
+      },
+      {
+        "text": "Quanto tempo o modelo leva para responder",
+        "why": "É um tamanho, não um tempo: um número de tokens."
+      }
+    ]
+  },
+  "ex-gxa1anf0": {
+    "prompt": "O `toylm generate \"on sunday the café opens at\" --temperature 0` escreveu `seven.`, embora o corpus diga que o café abre às oito no domingo. Por quê?",
+    "hint": "Leia a linha de contexto do `toylm next`.",
+    "choices": [
+      {
+        "text": "O corpus nunca menciona o domingo",
+        "why": "Menciona, duas vezes: `the café opens at eight on sunday`."
+      },
+      {
+        "text": "Temperatura 0 faz o modelo pular palavras que ele viu poucas vezes",
+        "why": "Temperatura 0 escolhe a nota mais alta. As notas vieram só de `opens at`."
+      },
+      {
+        "text": "Sete é o horário certo de abertura no domingo",
+        "why": "O corpus diz oito no domingo. O modelo nunca viu que a pergunta era sobre domingo."
+      },
+      {
+        "text": "A janela dele tinha `opens at` e mais nada",
+        "why": "Isso. `sunday` era a quinta palavra a contar do fim, fora da janela, então não teve efeito na resposta."
+      }
+    ]
+  },
+  "ex-3mnh4ccd": {
+    "prompt": "No `grep` do corpus, quantas linhas dizem que o café abre às sete?",
+    "hint": "Leia a contagem na frente de cada linha.",
+    "unit": "linhas"
+  },
+  "ex-1hprvgnc": {
+    "prompt": "Quais destas coisas ocupam espaço na janela de contexto de um pedido? Marque todas as que se aplicam.",
+    "hint": "A tabela lista quatro coisas.",
+    "choices": [
+      {
+        "text": "O prompt de sistema",
+        "why": "Sim. Ele vai em todo pedido e conta toda vez."
+      },
+      {
+        "text": "As vezes anteriores da conversa",
+        "why": "Sim, dos dois lados, porque a aplicação as envia de novo."
+      },
+      {
+        "text": "A resposta que o modelo está para escrever",
+        "why": "Sim. A resposta é escrita dentro da mesma janela, e é por isso que uma entrada cheia não deixa espaço."
+      },
+      {
+        "text": "O texto com que o modelo foi treinado",
+        "why": "O texto de treino moldou os pesos do modelo. Ele não vai junto com o pedido."
+      },
+      {
+        "text": "Os seus chats em outras janelas do mesmo aplicativo",
+        "why": "Só conta o que a aplicação põe neste pedido."
+      }
+    ]
+  },
+  "ex-aymz5bde": {
+    "prompt": "A entrada de um pedido enche quase toda a janela do modelo. O que acontece com a resposta?",
+    "hint": "Onde a resposta é escrita?",
+    "choices": [
+      {
+        "text": "O modelo comprime a entrada sozinho para abrir espaço para uma resposta completa",
+        "why": "Nada comprime a entrada. O que é enviado é lido como está."
+      },
+      {
+        "text": "Ela fica sem espaço e para, e a API informa `length`",
+        "why": "Isso. A resposta divide a janela com a entrada, e a lição 15 trata desse motivo de parada."
+      },
+      {
+        "text": "O provedor estica a janela para aquele pedido",
+        "why": "A janela é uma propriedade fixa do modelo."
+      },
+      {
+        "text": "A resposta é escrita numa janela separada, só dela",
+        "why": "Há uma janela só. A resposta é gerada dentro dela, depois da entrada."
+      }
+    ]
+  },
+  "ex-bk9z88pm": {
+    "prompt": "Onde você deve ler o tamanho da janela de um modelo?",
+    "hint": "Os tamanhos mudam entre modelos e versões.",
+    "choices": [
+      {
+        "text": "Na documentação do provedor sobre aquele modelo, com a data da página",
+        "why": "Isso. Leia para o modelo que você usa, e anote quando a página foi escrita."
+      },
+      {
+        "text": "Perguntando ao modelo, num chat, de que tamanho é a janela dele",
+        "why": "A resposta de um modelo sobre si mesmo é texto gerado, e fica desatualizada com facilidade."
+      },
+      {
+        "text": "Na lista de modelos populares do ano passado",
+        "why": "Os tamanhos mudam entre versões. Uma lista do ano passado pode estar errada hoje."
+      },
+      {
+        "text": "Em qualquer lugar, já que é o mesmo para todos os modelos",
+        "why": "Ele muda entre modelos e versões."
+      }
+    ]
+  },
+  "ex-m7q69ws4": {
+    "prompt": "Quando uma conversa é longa demais para o orçamento, o que decide quais vezes ficam de fora?",
+    "hint": "Na lição, o `tok fit` faz esse papel.",
+    "choices": [
+      {
+        "text": "O modelo, enquanto lê, pula as vezes que acha menos úteis",
+        "why": "O modelo recebe só o que o programa enviou. Ele não escolhe."
+      },
+      {
+        "text": "O provedor descarta vezes ao acaso",
+        "why": "A regra é escolhida pela aplicação. A comum descarta primeiro as vezes mais antigas."
+      },
+      {
+        "text": "O usuário, apagando mensagens antigas na tela",
+        "why": "O corte acontece sem o usuário fazer nada, e em geral sem avisá-lo."
+      },
+      {
+        "text": "Um programa, antes de o modelo ver qualquer coisa",
+        "why": "Isso. O modelo nunca sabe o que foi descartado; ele recebe o que sobrou."
+      }
+    ]
+  },
+  "ex-5q2k82gn": {
+    "prompt": "O `tok fit chat.json -b 120` manteve 3 de 7 vezes. Quantos tokens ele enviou?",
+    "hint": "A última linha da saída.",
+    "unit": "tokens"
+  },
+  "ex-jjn2sjr2": {
+    "prompt": "Com orçamento de 120, um assistente poderia recomendar ao Bruno o bolo de cenoura com nozes. O que deu errado?",
+    "hint": "Quais vezes foram descartadas?",
+    "choices": [
+      {
+        "text": "O modelo viu a alergia e a ignorou",
+        "why": "Ele nunca a viu. A vez 1 foi descartada antes de o pedido ser enviado."
+      },
+      {
+        "text": "O prompt de sistema foi descartado",
+        "why": "As três execuções mantiveram o prompt de sistema, 53 tokens."
+      },
+      {
+        "text": "A vez em que o Bruno disse ter alergia era das mais antigas, então foi descartada",
+        "why": "Isso. A regra é a mais antiga primeiro, e o fato importante calhou de ser dito primeiro."
+      },
+      {
+        "text": "O orçamento subiu a temperatura",
+        "why": "Um orçamento de tokens não tem nada a ver com temperatura. Ele decide o que é enviado."
+      }
+    ]
+  },
+  "ex-4qdczs22": {
+    "prompt": "Por que o `tok fit` mantém o prompt de sistema, descarte o que descartar?",
+    "hint": "O que o assistente perderia sem ele?",
+    "choices": [
+      {
+        "text": "O prompt de sistema é a mensagem mais curta",
+        "why": "Com 53 tokens, é a mensagem mais longa da conversa."
+      },
+      {
+        "text": "Ele guarda as regras",
+        "why": "Isso: para que serve o assistente, como responder e que a cozinha usa nozes."
+      },
+      {
+        "text": "Uma API recusa qualquer pedido que não tenha prompt de sistema",
+        "why": "Não é esse o motivo. Ele é mantido porque carrega as instruções."
+      },
+      {
+        "text": "É a mensagem mais nova",
+        "why": "É a primeira mensagem. Mantê-la é uma exceção a descartar as mais antigas primeiro."
+      }
+    ]
+  },
+  "ex-tyxmj83g": {
+    "prompt": "Por que uma aplicação de chat cortar o histórico em silêncio é mais perigoso que uma API recusar um pedido longo demais?",
+    "hint": "Qual dos dois você perceberia?",
+    "choices": [
+      {
+        "text": "Nada sinaliza a perda: a resposta sai normal",
+        "why": "Isso. Uma recusa é um erro que alguém vê; um pedido cortado parece exatamente um pedido normal."
+      },
+      {
+        "text": "O corte custa mais que um erro",
+        "why": "Um pedido cortado custa menos. O perigo está no conteúdo da resposta."
+      },
+      {
+        "text": "O corte também apaga as mensagens da tela do usuário",
+        "why": "O usuário continua vendo as mensagens. Só o pedido ao modelo é cortado, e é por isso que o usuário se surpreende."
+      },
+      {
+        "text": "A mensagem de erro da API é escrita pelo modelo",
+        "why": "Um erro é devolvido pelo software do provedor, e nenhuma resposta é gerada."
+      }
+    ]
+  },
+  "ex-tc1ygjw0": {
+    "prompt": "O `tok fit` mantém o prompt de sistema e depois mantém as vezes começando pela mais ___ e indo para trás.",
+    "hint": "A que o usuário acabou de enviar.",
+    "blanks": [
+      {
+        "accept": [
+          "nova",
+          "recente",
+          "nova de todas"
+        ]
+      }
+    ]
+  },
+  "ex-j54v08y2": {
+    "prompt": "O `chat-noted.json` acrescentou uma frase sobre o Bruno ao prompt de sistema. Cortado para o mesmo orçamento de 120, o que mudou?",
+    "hint": "Compare as duas execuções do `tok fit` com 120.",
+    "choices": [
+      {
+        "text": "Nenhuma vez foi descartada desta vez",
+        "why": "As mesmas quatro vezes foram descartadas."
+      },
+      {
+        "text": "O pedido ficou mais barato",
+        "why": "Ele foi de 98 tokens para 116. A nota custa tokens em cada pedido."
+      },
+      {
+        "text": "A vez da alergia foi movida para o fim da conversa",
+        "why": "As vezes não mudaram. A nota está no prompt de sistema."
+      },
+      {
+        "text": "A alergia sobreviveu na parte que não é cortada",
+        "why": "Isso. As mesmas quatro vezes foram descartadas, e o fato foi para onde o corte não chega."
+      }
+    ]
+  },
+  "ex-61n5hg58": {
+    "prompt": "O prompt de sistema cresceu de 53 tokens para 71 com a nota. Quantos tokens a nota acrescenta a cada pedido?",
+    "hint": "Subtraia.",
+    "unit": "tokens"
+  },
+  "ex-warwsprh": {
+    "prompt": "O seu assistente responde perguntas a partir de um manual longo da equipe. O que esta lição recomenda enviar com cada pergunta?",
+    "hint": "A lição 11 constrói o jeito recomendado.",
+    "choices": [
+      {
+        "text": "O manual inteiro, toda vez, para nada faltar",
+        "why": "Isso paga cada página em cada pedido e enterra a linha que responde no meio das outras."
+      },
+      {
+        "text": "Só os trechos que combinam com a pergunta",
+        "why": "Isso. O resto custa tokens e é texto que o modelo precisa atravessar."
+      },
+      {
+        "text": "Um resumo do manual escrito uma vez, no começo",
+        "why": "Um resumo deixa detalhes de fora, e o detalhe de que uma pergunta precisa muitas vezes é o que ficou de fora."
+      },
+      {
+        "text": "Nada, já que o modelo já conhece o manual",
+        "why": "Ele não sabe nada do manual deste café, a menos que o texto esteja no pedido."
+      }
+    ]
+  },
+  "ex-t6z5r4xs": {
+    "prompt": "Um estudo viu que os modelos usavam a informação do começo e do fim de um contexto longo melhor que a do meio. O que se segue para um prompt com muitos documentos?",
+    "hint": "Onde vai o material mais importante?",
+    "choices": [
+      {
+        "text": "Pôr a instrução e o material principal no começo ou no fim, e testar outras posições",
+        "why": "Isso. Não enterre o que importa, e confira o resultado com o fato em outros lugares."
+      },
+      {
+        "text": "Usar a maior janela disponível, já que o modelo lê tudo por igual",
+        "why": "A descoberta é justamente que ele não lê tudo por igual."
+      },
+      {
+        "text": "Pôr o documento mais importante no meio, para ele ter contexto dos dois lados",
+        "why": "O meio é onde a informação foi pior aproveitada."
+      },
+      {
+        "text": "Enviar cada documento duas vezes",
+        "why": "Isso dobra o custo e ainda deixa cópias no meio."
+      }
+    ]
+  },
+  "ex-sx8k439q": {
+    "prompt": "Ponha em ordem os passos que o `tok fit` segue.",
+    "hint": "Começa pela mensagem que ele nunca descarta.",
+    "items": [
+      "Manter o prompt de sistema",
+      "Pegar a vez mais nova",
+      "Acrescentar vezes mais antigas, uma a uma, enquanto couberem",
+      "Parar na primeira vez que não cabe, e descartá-la junto com todas as mais antigas"
+    ]
+  },
+  "ex-8xk0zser": {
+    "prompt": "Ligue cada estratégia ao problema de que ela trata.",
+    "hint": "Os títulos da última seção.",
+    "pairs": [
+      {
+        "left": "levar uma nota adiante",
+        "right": "um detalhe dito numa vez que está para ser descartada"
+      },
+      {
+        "left": "recuperar trechos",
+        "right": "material grande demais para colar em todo pedido"
+      },
+      {
+        "left": "dividir em pedaços",
+        "right": "uma tarefa que precisa de um documento inteiro maior que a janela"
+      }
+    ],
+    "right_distractors": [
+      "uma resposta sorteada com temperatura alta demais"
+    ]
+  }
+}

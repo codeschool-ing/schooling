@@ -1,0 +1,854 @@
+[
+  {
+    "id": "ex-6r98tzp5",
+    "version": 1,
+    "section": "push-and-pull",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a pull arrangement, what starts a Puppet run on one of the shop's servers?",
+    "hint": "Look at which side opens the conversation in the figure.",
+    "choices": [
+      {
+        "text": "The Puppet server, as soon as a manifest changes",
+        "correct": false,
+        "why": "The server waits to be asked; it compiles a catalogue when an agent connects."
+      },
+      {
+        "text": "An SSH connection from Ana's laptop",
+        "correct": false,
+        "why": "That is push, the way lesson 18 runs Ansible."
+      },
+      {
+        "text": "The agent on that server, on its timer",
+        "correct": true,
+        "why": "Yes. The agent asks the server what the machine should be, every `runinterval` seconds."
+      },
+      {
+        "text": "A person typing `puppet apply` on it",
+        "correct": false,
+        "why": "That is the serverless mode this lesson uses in the lab, not the pull arrangement."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbwn2txj",
+    "version": 1,
+    "section": "push-and-pull",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`puppet config print` showed `runinterval = 1800`. How many minutes apart are an agent's runs?",
+    "hint": "The value is in seconds.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-k209bbe7",
+    "version": 1,
+    "section": "push-and-pull",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 10:12 somebody edits nginx's file by hand on a server whose Puppet agent runs with the default settings. What happens to the edit?",
+    "hint": "The agent compares on every run.",
+    "choices": [
+      {
+        "text": "It stays until somebody runs Puppet by hand",
+        "correct": false,
+        "why": "That is what happens under push; an agent does not wait for anybody."
+      },
+      {
+        "text": "The next agent run writes the described file back, within half an hour",
+        "correct": true,
+        "why": "Right. The next run finds a difference and writes the file as described."
+      },
+      {
+        "text": "The agent refuses the write as it is typed",
+        "correct": false,
+        "why": "The agent is not watching the file; it compares only when it runs."
+      },
+      {
+        "text": "The server copies the edit into the manifest",
+        "correct": false,
+        "why": "Nothing ever writes back into the description; the description wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhfn7nnn",
+    "version": 1,
+    "section": "push-and-pull",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During a night outage the on-call engineer fixes it by editing a file on a server that runs a Puppet agent. The outage ends. What does the lesson say about the morning after?",
+    "hint": "The agent cannot tell a fix from a mistake.",
+    "choices": [
+      {
+        "text": "The fix is safe, because the agent leaves files a person edited",
+        "correct": false,
+        "why": "It has no idea who edited a file; it only sees a difference."
+      },
+      {
+        "text": "The agent reverts it, and the outage returns",
+        "correct": true,
+        "why": "Yes, unless the fix went into the manifest. The description is the one place a change lasts."
+      },
+      {
+        "text": "The agent stops running until somebody re-enables it",
+        "correct": false,
+        "why": "A hand edit does not stop an agent; it is exactly what the agent corrects."
+      },
+      {
+        "text": "The server records the edit as the new desired state",
+        "correct": false,
+        "why": "Nothing flows from the machine back into the description."
+      }
+    ]
+  },
+  {
+    "id": "ex-26ffna4v",
+    "version": 1,
+    "section": "push-and-pull",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are costs the lesson gives for the pull arrangement? Choose all that apply.",
+    "hint": "Software on every machine has a price.",
+    "choices": [
+      {
+        "text": "An agent to install, upgrade and keep running on each machine",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A server that every machine has to reach",
+        "correct": true,
+        "why": "Yes, and it needs backing up."
+      },
+      {
+        "text": "Certificates to issue and revoke",
+        "correct": true,
+        "why": "Yes; each agent proves who it is with one."
+      },
+      {
+        "text": "The control machine reaching every target at the moment of the run",
+        "correct": false,
+        "why": "That is the cost of push, where one machine connects out."
+      },
+      {
+        "text": "A hand edit that lasts until somebody runs the tool again",
+        "correct": false,
+        "why": "That is push too; an agent corrects it on its next run."
+      }
+    ]
+  },
+  {
+    "id": "ex-8kjneqyp",
+    "version": 1,
+    "section": "push-and-pull",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson place Salt between push and pull?",
+    "hint": "Who opens the connection, and who sends the commands?",
+    "choices": [
+      {
+        "text": "It needs no agent, like Ansible, but polls like Puppet",
+        "correct": false,
+        "why": "Salt does have an agent, the minion."
+      },
+      {
+        "text": "Minions connect out; the master sends commands down at once",
+        "correct": true,
+        "why": "Right: the machine opens the connection, as with pull, and the master acts immediately, as with push."
+      },
+      {
+        "text": "It alternates, pulling on even hours and pushing on odd ones",
+        "correct": false,
+        "why": "There is no such schedule; the difference is who opens the connection and who starts the run."
+      },
+      {
+        "text": "It runs over SSH only",
+        "correct": false,
+        "why": "`salt-ssh` exists, but a minion keeps its own connection to the master."
+      }
+    ]
+  },
+  {
+    "id": "ex-mb7ahkw9",
+    "version": 1,
+    "section": "puppet",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`puppet apply` printed `Compiled catalog for laptop`. What is the catalogue?",
+    "hint": "With an agent, the server sends it down.",
+    "choices": [
+      {
+        "text": "A cache of the packages Puppet has downloaded",
+        "correct": false,
+        "why": "Puppet keeps no such list; the catalogue is about resources."
+      },
+      {
+        "text": "The manifest worked out for one machine",
+        "correct": true,
+        "why": "Yes: every resource, variables filled in, relationships resolved."
+      },
+      {
+        "text": "The list of machines the Puppet server knows about",
+        "correct": false,
+        "why": "It is for one machine, named after `for`."
+      },
+      {
+        "text": "The certificate issued to the machine called `laptop`",
+        "correct": false,
+        "why": "The certname names the machine; the catalogue is what it should contain."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9fxe3ny",
+    "version": 1,
+    "section": "puppet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `puppet apply site.pp` printed only the compile and apply lines, with no `Notice` for any resource. Why?",
+    "hint": "Compare with the first run.",
+    "choices": [
+      {
+        "text": "It ran in `--noop` mode by default the second time",
+        "correct": false,
+        "why": "`--noop` prints what it would change; nothing needed changing."
+      },
+      {
+        "text": "Every resource already matched the manifest, so there was nothing to do",
+        "correct": true,
+        "why": "Right. That is idempotency: a run where everything is as described does nothing."
+      },
+      {
+        "text": "Puppet applies each manifest only once per machine",
+        "correct": false,
+        "why": "It applies it every time; an agent does so every thirty minutes."
+      },
+      {
+        "text": "The catalogue was reused from the first run without being checked",
+        "correct": false,
+        "why": "Each resource was checked; checking found nothing to do."
+      }
+    ]
+  },
+  {
+    "id": "ex-ha7vdpf4",
+    "version": 1,
+    "section": "puppet",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`puppet apply --___ server.pp` compares the manifest with the machine and reports what it would change, without changing anything.",
+    "hint": "Four letters: no operation.",
+    "blanks": [
+      {
+        "accept": [
+          "noop"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-aydd8cg9",
+    "version": 1,
+    "section": "puppet",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the first apply, a hand edit, and the third apply, `cat` printed `reloads.log`. How many lines did it hold?",
+    "hint": "The `exec` runs only when `shop.conf` changes.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-aqavwwfz",
+    "version": 1,
+    "section": "puppet",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Run as Ana without `--noop`, `server.pp` failed to install nginx. Why did Puppet not try the file and the service at all?",
+    "hint": "Read the two `Skipping` lines.",
+    "choices": [
+      {
+        "text": "Puppet stops a manifest at its first error",
+        "correct": false,
+        "why": "It carries on with resources that do not depend on the failure; these two did."
+      },
+      {
+        "text": "Ana is not root, so everything under `/etc` was skipped in advance",
+        "correct": false,
+        "why": "The skip message names a failed dependency, not a path or a user."
+      },
+      {
+        "text": "They depend on the package, which failed",
+        "correct": true,
+        "why": "Right. `require` and `notify` put them after the package in the graph, and a resource whose dependency failed is skipped."
+      },
+      {
+        "text": "A failed resource makes Puppet switch to `--noop` for the rest",
+        "correct": false,
+        "why": "There is no such switch; they were skipped, not simulated."
+      }
+    ]
+  },
+  {
+    "id": "ex-bye5s9vq",
+    "version": 1,
+    "section": "puppet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`puppet resource package nginx` printed `provider => 'apt'`. What does provider mean here?",
+    "hint": "Not the Terraform meaning.",
+    "choices": [
+      {
+        "text": "The Terraform provider that installed nginx",
+        "correct": false,
+        "why": "Terraform is not involved, and in Terraform the word names a program for a cloud's API."
+      },
+      {
+        "text": "The mirror the package is downloaded from",
+        "correct": false,
+        "why": "Where `apt` downloads from is apt's own configuration."
+      },
+      {
+        "text": "The backend that turns the type into apt commands",
+        "correct": true,
+        "why": "Yes. The same type gets a different provider on another system."
+      },
+      {
+        "text": "The module on the Puppet Forge that defines packages",
+        "correct": false,
+        "why": "`package` is a built-in type, not a Forge module."
+      }
+    ]
+  },
+  {
+    "id": "ex-re90sn90",
+    "version": 1,
+    "section": "salt",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Salt, what are grains?",
+    "hint": "`grains.item os` answered `Ubuntu`.",
+    "choices": [
+      {
+        "text": "Data a master hands to chosen minions, secrets among it",
+        "correct": false,
+        "why": "That is pillar."
+      },
+      {
+        "text": "The states inside an `.sls` file",
+        "correct": false,
+        "why": "States are the descriptions; grains are facts."
+      },
+      {
+        "text": "Facts a minion gathers about its machine",
+        "correct": true,
+        "why": "Yes, like the operating system that `web.sls` wrote into the page."
+      },
+      {
+        "text": "The minions a top file targets",
+        "correct": false,
+        "why": "The top file targets minions by id or pattern, such as `'*'`."
+      }
+    ]
+  },
+  {
+    "id": "ex-qg7y4rg6",
+    "version": 1,
+    "section": "salt",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each Salt word to what it is.",
+    "hint": "One of the right-hand items belongs to no word.",
+    "pairs": [
+      {
+        "left": "master",
+        "right": "The server"
+      },
+      {
+        "left": "minion",
+        "right": "The agent on each machine"
+      },
+      {
+        "left": "top file",
+        "right": "Which states apply to which minions"
+      },
+      {
+        "left": "pillar",
+        "right": "Data given to particular minions"
+      }
+    ],
+    "right_distractors": [
+      "The order states run in"
+    ]
+  },
+  {
+    "id": "ex-ndtfjfag",
+    "version": 1,
+    "section": "salt",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Salt's dry run, the counterpart of Puppet's `--noop`, is `salt-call --local state.apply test=___`.",
+    "hint": "A boolean, written the way Python writes it.",
+    "blanks": [
+      {
+        "accept": [
+          "True"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j9g4098x",
+    "version": 1,
+    "section": "salt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the second `state.apply`, `reload-web` reported `Clean`. Why did the command not run?",
+    "hint": "Look at its requisite.",
+    "choices": [
+      {
+        "text": "`cmd.run` runs only on a minion's first apply",
+        "correct": false,
+        "why": "It ran again after the hand edit, on a later apply."
+      },
+      {
+        "text": "Salt remembered the result of the first run and reused it",
+        "correct": false,
+        "why": "Salt checked the page; the command is skipped because the page did not change."
+      },
+      {
+        "text": "`test=True` was still in effect from the dry run",
+        "correct": false,
+        "why": "Each `salt-call` is separate; the second apply had no `test=True`."
+      },
+      {
+        "text": "`onchanges` saw no change",
+        "correct": true,
+        "why": "Right: it runs the command only when `index.html` changed, and nothing did."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzzchqh8",
+    "version": 1,
+    "section": "salt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `file_client: local` change in Ana's minion configuration?",
+    "hint": "It is the masterless switch.",
+    "choices": [
+      {
+        "text": "States are read from the machine's own disk",
+        "correct": true,
+        "why": "Yes, from `file_roots`, instead of from a master."
+      },
+      {
+        "text": "Salt writes its logs and cache under Ana's directory",
+        "correct": false,
+        "why": "That is `root_dir`."
+      },
+      {
+        "text": "The minion runs without root",
+        "correct": false,
+        "why": "That is `user: ana`."
+      },
+      {
+        "text": "The minion looks for a master on the local network instead of the internet",
+        "correct": false,
+        "why": "With `file_client: local` it does not look for a master at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-xraj4wzy",
+    "version": 1,
+    "section": "salt",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A mistyped Jinja condition in `web.sls` leaves one block out, and the YAML that comes out is still valid. What does the lesson suggest for seeing what Salt will do?",
+    "hint": "The file Salt reads is not the file you wrote.",
+    "choices": [
+      {
+        "text": "Run a YAML linter over `web.sls`",
+        "correct": false,
+        "why": "The file you wrote is not YAML yet, and what comes out is valid YAML anyway."
+      },
+      {
+        "text": "Read the rendered states with `state.show_sls`",
+        "correct": true,
+        "why": "Yes: it shows what Salt received after Jinja ran, missing block included."
+      },
+      {
+        "text": "Check the summary of a `test=True` run for a failure",
+        "correct": false,
+        "why": "Nothing fails: a block that is absent is simply not run."
+      },
+      {
+        "text": "Compare the grains before and after with `grains.item`",
+        "correct": false,
+        "why": "The grains did not change; the template did."
+      }
+    ]
+  },
+  {
+    "id": "ex-gav3879q",
+    "version": 1,
+    "section": "chef",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the Chef section show a recipe with no output beside it?",
+    "hint": "Look at its first capture.",
+    "choices": [
+      {
+        "text": "Chef prints nothing when a run succeeds",
+        "correct": false,
+        "why": "It does print; the lesson simply had no Chef to run."
+      },
+      {
+        "text": "Recipes cannot run without a Chef Infra Server",
+        "correct": false,
+        "why": "Local mode runs them without a server."
+      },
+      {
+        "text": "Chef is not installed in the lab, and output nobody ran would be invented",
+        "correct": true,
+        "why": "Right. The last block of the captures shows that none of Chef's commands exist there."
+      },
+      {
+        "text": "Its output is the same as Puppet's, so it would repeat",
+        "correct": false,
+        "why": "The output is different; it was left out because nothing was run."
+      }
+    ]
+  },
+  {
+    "id": "ex-znzdb1z1",
+    "version": 1,
+    "section": "chef",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A recipe has a line of plain Ruby, between two resources, that reads the file the first resource creates. On a fresh machine, what does that line find?",
+    "hint": "Chef reads a run in two phases.",
+    "choices": [
+      {
+        "text": "The file, since Chef applies everything in the order written",
+        "correct": false,
+        "why": "Resources converge in order, but plain Ruby ran earlier, while the resources were being collected."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: it ran in the first phase, before any resource was applied."
+      },
+      {
+        "text": "An error, because Chef refuses Ruby outside a resource",
+        "correct": false,
+        "why": "A recipe is Ruby; any Ruby is allowed, which is the source of the surprise."
+      },
+      {
+        "text": "The file's content from the template",
+        "correct": false,
+        "why": "The template has not been rendered when that line runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9m912ty",
+    "version": 1,
+    "section": "chef",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps that take a changed cookbook to a machine running `chef-client` against a server in order.",
+    "hint": "The workstation first, the convergence last.",
+    "items": [
+      "Upload the cookbook to the Chef Infra Server with `knife`",
+      "`chef-client` fetches the run-list and the cookbooks it needs",
+      "The Ruby of every recipe is evaluated and the resources collected",
+      "Each resource is converged, in the order it was written"
+    ],
+    "trap": "Evaluating and converging are not the same step: the Ruby runs before any resource is applied."
+  },
+  {
+    "id": "ex-1vsa2n8v",
+    "version": 1,
+    "section": "chef",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job advert asks for experience with Cinc. What is it?",
+    "hint": "The recipes are the same.",
+    "choices": [
+      {
+        "text": "Chef's command-line tool for uploading cookbooks",
+        "correct": false,
+        "why": "That is `knife`."
+      },
+      {
+        "text": "The template format Chef renders",
+        "correct": false,
+        "why": "That is ERB."
+      },
+      {
+        "text": "A community build of Chef's open-source code under another name",
+        "correct": true,
+        "why": "Yes, used where Chef's own binaries and their licence terms do not suit."
+      },
+      {
+        "text": "Chef's server",
+        "correct": false,
+        "why": "That is the Chef Infra Server."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vbv924n",
+    "version": 1,
+    "section": "comparing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to what makes something run only when another thing changed.",
+    "hint": "The last row of the table.",
+    "pairs": [
+      {
+        "left": "Ansible",
+        "right": "a handler"
+      },
+      {
+        "left": "Puppet",
+        "right": "`notify` and `refreshonly`"
+      },
+      {
+        "left": "Chef",
+        "right": "`notifies`"
+      },
+      {
+        "left": "Salt",
+        "right": "`onchanges`"
+      }
+    ],
+    "right_distractors": [
+      "`depends_on`"
+    ]
+  },
+  {
+    "id": "ex-pr9khs46",
+    "version": 1,
+    "section": "comparing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In which of the four tools is the order the resources are written in only a fallback?",
+    "hint": "A graph comes first.",
+    "choices": [
+      {
+        "text": "Ansible",
+        "correct": false,
+        "why": "Tasks run as written."
+      },
+      {
+        "text": "Chef",
+        "correct": false,
+        "why": "Resources converge as written."
+      },
+      {
+        "text": "Salt",
+        "correct": false,
+        "why": "File order, which a requisite can override."
+      },
+      {
+        "text": "Puppet",
+        "correct": true,
+        "why": "Yes: relationships decide, and the manifest order only where there are none."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3d45t8m",
+    "version": 1,
+    "section": "comparing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop deploys by building a new image and replacing every web server; none lives more than a week. Which way of configuring them does the lesson favour?",
+    "hint": "Short-lived machines have little time to drift.",
+    "choices": [
+      {
+        "text": "A Puppet agent on each, correcting drift every thirty minutes",
+        "correct": false,
+        "why": "An agent earns its place on long-lived machines; here there is almost nothing to correct."
+      },
+      {
+        "text": "Bake it into the image",
+        "correct": true,
+        "why": "Right. Configuration moves into the image the machine is built from, which is lesson 20."
+      },
+      {
+        "text": "A Salt master pushing `state.apply` to every minion each hour",
+        "correct": false,
+        "why": "That keeps long-lived machines right; these are replaced before they drift."
+      },
+      {
+        "text": "Chef in local mode on every boot",
+        "correct": false,
+        "why": "It works, but it repeats at every boot what could be done once, in the image."
+      }
+    ]
+  },
+  {
+    "id": "ex-ym8md76j",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these do Ansible, Puppet, Chef and Salt all share? Choose all that apply.",
+    "hint": "The model under the syntax.",
+    "choices": [
+      {
+        "text": "Resources with a desired state",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "An agent installed on every machine",
+        "correct": false,
+        "why": "Ansible has none; it connects over SSH."
+      },
+      {
+        "text": "A run that acts only where something differs",
+        "correct": true,
+        "why": "Yes; every second run in this lesson changed nothing."
+      },
+      {
+        "text": "Descriptions written in YAML",
+        "correct": false,
+        "why": "Puppet has its own language and Chef is Ruby."
+      },
+      {
+        "text": "A way to say one resource depends on another",
+        "correct": true,
+        "why": "Yes: `require`, a requisite, or the order of tasks and resources."
+      }
+    ]
+  },
+  {
+    "id": "ex-h85vzekz",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to its way of showing what it would change without changing anything.",
+    "hint": "One of them is lesson 18's.",
+    "pairs": [
+      {
+        "left": "Puppet",
+        "right": "`--noop`"
+      },
+      {
+        "left": "Salt",
+        "right": "`test=True`"
+      },
+      {
+        "left": "Ansible",
+        "right": "`--check`"
+      }
+    ],
+    "right_distractors": [
+      "`-auto-approve`"
+    ]
+  },
+  {
+    "id": "ex-qnwbxcef",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana moves the `file` resource of `server.pp` into another manifest and drops its `require`. On a fresh server, what can now go wrong?",
+    "hint": "Without a relationship, what decides the order?",
+    "choices": [
+      {
+        "text": "Nothing: Puppet sorts resources by type, packages first",
+        "correct": false,
+        "why": "Puppet has no ordering by type; relationships decide, and without one the manifest order does."
+      },
+      {
+        "text": "Puppet refuses to compile a file under `/etc` with no `require`",
+        "correct": false,
+        "why": "A resource with no relationship compiles; that is why the risk is silent."
+      },
+      {
+        "text": "Nothing orders the configuration after the package any more",
+        "correct": true,
+        "why": "Right. The file can be written before nginx is installed, into a directory the package has not created yet."
+      },
+      {
+        "text": "The service is restarted on every run",
+        "correct": false,
+        "why": "Restarts come from `notify`, which was kept; the lost relationship is about order."
+      }
+    ]
+  },
+  {
+    "id": "ex-nspbs4ek",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company keeps 400 long-lived servers, and an auditor asks for proof each month that their configuration stayed as described. Which arrangement does the lesson's comparison point to?",
+    "hint": "Who checks between the times somebody remembers?",
+    "choices": [
+      {
+        "text": "Ansible run by hand whenever a change is made",
+        "correct": false,
+        "why": "Between runs nothing compares, so a hand edit can last for months unseen."
+      },
+      {
+        "text": "New images for every change, with Packer",
+        "correct": false,
+        "why": "That fits machines that are replaced; these are kept for years."
+      },
+      {
+        "text": "An agent on each, correcting and reporting on every run",
+        "correct": true,
+        "why": "Yes: long-lived machines under audit are where an agent pays for itself."
+      },
+      {
+        "text": "Terraform, since it compares the description with what exists",
+        "correct": false,
+        "why": "Terraform sees the cloud's resources, not files inside the machines."
+      }
+    ]
+  }
+]

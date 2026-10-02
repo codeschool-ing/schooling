@@ -1,0 +1,525 @@
+{
+  "ex-xgpapszb": {
+    "prompt": "Um plan mostra `-/+ resource \"aws_instance\" \"web\"`. O que vai acontecer com a instância?",
+    "hint": "Leia os dois símbolos na ordem em que estão escritos.",
+    "choices": [
+      {
+        "text": "Os argumentos mudam e ela mantém o id",
+        "why": "Isso é `~`, update in-place. `-/+` dá a ela um id novo."
+      },
+      {
+        "text": "Ela é destruída, depois uma nova é criada",
+        "why": "Isso: destroy and then create replacement, a ordem padrão."
+      },
+      {
+        "text": "Uma nova é criada, depois a antiga é destruída",
+        "why": "Essa ordem é `+/-`, que precisa de `create_before_destroy`."
+      },
+      {
+        "text": "Ela sai do state e continua rodando na AWS",
+        "why": "Isso é o que um bloco `removed` com `destroy = false` faz; o plan mostra com um ponto."
+      }
+    ]
+  },
+  "ex-hhg9b4zt": {
+    "prompt": "A Ana mudou só o `cidr_block` da sub-rede, e ainda assim o plan substitui também a `aws_instance.web`. Por quê?",
+    "hint": "Veja qual argumento tem `# forces replacement` na instância.",
+    "choices": [
+      {
+        "text": "O Terraform substitui tudo numa configuração quando um recurso é substituído",
+        "why": "A VPC não foi tocada; só o que referencia a sub-rede foi junto."
+      },
+      {
+        "text": "O endereço privado da instância é calculado a partir da faixa",
+        "why": "É, mas não é isso que o plan culpa: o comentário está em `subnet_id`."
+      },
+      {
+        "text": "O `subnet_id` dela vira um id novo, desconhecido",
+        "why": "Certo. O id da sub-rede nova só se sabe após o apply, e uma instância não muda de sub-rede no lugar."
+      },
+      {
+        "text": "As tags da sub-rede são copiadas para a instância",
+        "why": "Nada copia tags entre elas; as tags da sub-rede nem fizeram parte desta mudança."
+      }
+    ]
+  },
+  "ex-h4z2shm5": {
+    "prompt": "No plan da aula para a nova faixa da sub-rede, quantos recursos a linha de resumo diz que serão destruídos?",
+    "hint": "Conte as substituições: cada uma destrói um objeto."
+  },
+  "ex-0vnspzbd": {
+    "prompt": "Durante um apply com `create_before_destroy`, o Terraform imprime `aws_instance.web (deposed object …): Destroying...`. O que é o deposed object?",
+    "hint": "Qual das duas instâncias ainda precisa ir embora?",
+    "choices": [
+      {
+        "text": "Uma cópia do state guardada como backup",
+        "why": "É uma entrada no state, mas de um objeto real, não um backup do arquivo."
+      },
+      {
+        "text": "A instância antiga",
+        "why": "Isso: a substituta já existe, e a antiga fica de lado até ser destruída."
+      },
+      {
+        "text": "A instância nova, se a criação dela falhou",
+        "why": "Se a criação falha a antiga simplesmente fica; o deposed object é a que está sendo substituída."
+      },
+      {
+        "text": "Uma instância que a AWS parou para manutenção",
+        "why": "A AWS não entra nisso; deposed é a palavra do Terraform para o objeto que uma substituição deslocou."
+      }
+    ]
+  },
+  "ex-dgedfwv1": {
+    "prompt": "Um security group com `name = \"web\"` e `create_before_destroy = true` recebe uma descrição nova, e o apply falha com `InvalidGroup.Duplicate`. Qual a correção que a aula usa?",
+    "hint": "Dois grupos precisam existir ao mesmo tempo, por um momento.",
+    "choices": [
+      {
+        "text": "Tirar o `create_before_destroy` para o grupo antigo ir primeiro",
+        "why": "Isso traz o intervalo de volta, e na AWS real um grupo em uso nem pode ser apagado primeiro."
+      },
+      {
+        "text": "Apagar o grupo antigo à mão e aplicar de novo",
+        "why": "Uma mudança manual fora do arquivo é justamente o drift que o Terraform existe para evitar."
+      },
+      {
+        "text": "Trocar `name` por `name_prefix`",
+        "why": "Isso: o Terraform acrescenta um sufixo único, e o antigo e o novo coexistem durante a troca."
+      },
+      {
+        "text": "Manter a descrição antiga para nada ser substituído",
+        "why": "Evita esta substituição e deixa a próxima, por qualquer argumento que force, falhar do mesmo jeito."
+      }
+    ]
+  },
+  "ex-k6t1wmqz": {
+    "prompt": "O security group `web` tem `name_prefix` e `create_before_destroy`, e a descrição dele muda. Ponha os passos do apply em ordem.",
+    "hint": "`+/-` se lê da esquerda para a direita.",
+    "items": [
+      "O plan marca o grupo com `+/-`",
+      "Um grupo com um nome novo, com sufixo, é criado",
+      "O grupo antigo fica guardado como deposed object",
+      "O grupo deposto é destruído"
+    ]
+  },
+  "ex-t0391kzj": {
+    "prompt": "O `terraform destroy` em `~/shop/assets` para com `Instance cannot be destroyed` para o bucket de assets. O que aconteceu com o bucket de logs, que não tem `prevent_destroy`?",
+    "hint": "Parte de um plan recusado é aplicada?",
+    "choices": [
+      {
+        "text": "Foi destruído, já que só o bucket de assets é protegido",
+        "why": "O plan inteiro foi recusado antes de qualquer coisa rodar; o `aws s3 ls` da aula ainda o lista."
+      },
+      {
+        "text": "Nada: a execução inteira foi recusada",
+        "why": "Certo: o Terraform não aplica parte de um plan que rejeitou."
+      },
+      {
+        "text": "Foi esvaziado mas mantido",
+        "why": "O Terraform nem chegou a tocar em bucket nenhum."
+      },
+      {
+        "text": "Saiu do state e ficou na AWS",
+        "why": "Esse é o trabalho de um bloco `removed`; um destroy recusado não muda nada."
+      }
+    ]
+  },
+  "ex-1yd86547": {
+    "prompt": "O bucket de assets tem `prevent_destroy = true`. Quais destes ainda o apagam? Escolha todos os que se aplicam.",
+    "hint": "A configuração mora num lugar só.",
+    "choices": [
+      {
+        "text": "Uma refatoração que apaga o bloco do recurso, depois `apply`",
+        "why": "Sim: a proteção estava no bloco, e o plan diz que o bucket não está na configuração."
+      },
+      {
+        "text": "Renomear o bucket no arquivo, depois `apply`",
+        "why": "A renomeação força uma substituição, e o plan é recusado."
+      },
+      {
+        "text": "Alguém apagá-lo com a AWS CLI",
+        "why": "Sim: a configuração é do Terraform e não alcança nada fora dele."
+      },
+      {
+        "text": "`terraform destroy` com o bloco intacto",
+        "why": "Esse é o caso que ele recusa, como a aula mostrou."
+      }
+    ]
+  },
+  "ex-cn0f5dy9": {
+    "prompt": "Por que a aula valoriza o `prevent_destroy` sobretudo na renomeação do bucket?",
+    "hint": "O que um revisor veria no diff?",
+    "choices": [
+      {
+        "text": "Renomeações são a mudança mais comum em buckets",
+        "why": "A aula não afirma nada sobre frequência."
+      },
+      {
+        "text": "Uma renomeação é lenta e trava o apply por minutos",
+        "why": "Velocidade não tem nada a ver; nada chegou a ser tentado."
+      },
+      {
+        "text": "O diff parece a edição de uma string enquanto o plan é uma substituição",
+        "why": "Isso: pega uma mudança destrutiva que parece inofensiva."
+      },
+      {
+        "text": "A AWS proíbe renomear buckets que têm objetos",
+        "why": "Nenhum bucket pode ser renomeado no lugar; é por isso que vira substituição."
+      }
+    ]
+  },
+  "ex-42berzfn": {
+    "prompt": "Por que a Ana escreve `ignore_changes = [tags[\"CostCenter\"]]` em vez de `ignore_changes = [tags]`?",
+    "hint": "Quem ainda deveria ser dono da tag `Name`?",
+    "choices": [
+      {
+        "text": "`[tags]` não é sintaxe válida",
+        "why": "É válida, e também teria calado o plan."
+      },
+      {
+        "text": "Para que as edições dela nas outras tags continuem sendo aplicadas",
+        "why": "Isso: ignorar todas as tags faria as mudanças futuras dela parecerem aplicadas sem estar."
+      },
+      {
+        "text": "Porque a ferramenta de custos só roda em dias úteis",
+        "why": "O horário dela não tem papel no que o Terraform compara."
+      },
+      {
+        "text": "Para tirar `tags_all` do state",
+        "why": "Os dois continuam no state; ignore_changes só para a comparação."
+      }
+    ]
+  },
+  "ex-qgncrsdy": {
+    "prompt": "Dentro de um bloco `lifecycle`, o argumento que lista atributos que o Terraform para de comparar com o arquivo depois que o recurso existe é `___`.",
+    "hint": "Duas palavras unidas por um sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "ignore_changes"
+        ]
+      }
+    ]
+  },
+  "ex-skyjc3fk": {
+    "prompt": "Um colega aumentou o tipo da instância à mão semana passada porque o da configuração era pequeno demais, e propõe `ignore_changes = [instance_type]` para calar o plan. O que diz a aula?",
+    "hint": "Outro sistema é dono deste valor de propósito?",
+    "choices": [
+      {
+        "text": "Tudo bem, já que o ruído no plan é o dano real",
+        "why": "O ruído importa, mas aqui a cura é decidir o valor, não escondê-lo."
+      },
+      {
+        "text": "Usar `ignore_changes = all` em vez disso, por segurança",
+        "why": "Isso faz o Terraform deixar de olhar para a instância inteira, o contrário de seguro."
+      },
+      {
+        "text": "Pôr o tipo no arquivo, ou pôr o antigo de volta",
+        "why": "Isso: é drift com autorização assinada, não um valor que outro sistema possui."
+      },
+      {
+        "text": "Tudo bem, se o colega também puser uma tag explicando",
+        "why": "Uma tag não muda quem é dono do valor; o arquivo e a instância continuariam discordando, em silêncio."
+      }
+    ]
+  },
+  "ex-myp7azb7": {
+    "prompt": "Tanto `terraform apply -replace=aws_instance.web` quanto `terraform taint aws_instance.web` levam a uma substituição. Qual a diferença que a aula destaca?",
+    "hint": "Onde cada um escreve a instrução?",
+    "choices": [
+      {
+        "text": "`-replace` só funciona com `create_before_destroy`",
+        "why": "Funciona em qualquer recurso; o `+/-` da aula veio da configuração de lifecycle."
+      },
+      {
+        "text": "`taint` marca o state compartilhado, e o próximo plan de um colega o carrega",
+        "why": "Certo; `-replace` vive num comando e aparece no plan revisado."
+      },
+      {
+        "text": "`taint` substitui na hora, sem plan",
+        "why": "Ele só marca; a substituição vem de um plan e apply posteriores."
+      },
+      {
+        "text": "Nada; são dois nomes para um comando",
+        "why": "Os plans até dizem diferente: `as requested` contra `is tainted`."
+      }
+    ]
+  },
+  "ex-a4kqb7fp": {
+    "prompt": "Sem gatilho, o plan para a release `2026.10.2` atualiza o `user_data` no lugar. Por que a Ana não aceita isso?",
+    "hint": "Quando uma máquina lê o user data dela?",
+    "choices": [
+      {
+        "text": "A máquina em execução ficaria com a release antiga",
+        "why": "Isso: o user data roda no primeiro boot, então o texto novo ficaria parado."
+      },
+      {
+        "text": "Um update in-place de `user_data` é recusado pela API da AWS",
+        "why": "O provider planeja no lugar porque a API permite."
+      },
+      {
+        "text": "Atualizar no lugar apagaria o disco da instância sem aviso",
+        "why": "Um update in-place mantém a instância e o disco; esse é o problema aqui, não a cura."
+      },
+      {
+        "text": "A variável `release` não é permitida dentro de `user_data`",
+        "why": "É permitida, e o plan a mostrou interpolada."
+      }
+    ]
+  },
+  "ex-1kpj9d8r": {
+    "prompt": "Ligue cada comentário de plan desta aula ao que o causou.",
+    "hint": "Quatro causas; sobra uma opção.",
+    "pairs": [
+      {
+        "left": "`will be replaced, as requested`",
+        "right": "a opção `-replace`"
+      },
+      {
+        "left": "`is tainted, so must be replaced`",
+        "right": "uma marca escrita no state"
+      },
+      {
+        "left": "`will be replaced due to changes in replace_triggered_by`",
+        "right": "uma mudança em outro recurso que ele nomeia"
+      },
+      {
+        "left": "`# forces replacement`",
+        "right": "um argumento que não pode ser atualizado no lugar"
+      }
+    ],
+    "right_distractors": [
+      "uma tag acrescentada pela ferramenta de custos"
+    ]
+  },
+  "ex-yqgchjq1": {
+    "prompt": "Em `~/shop/boot`, por que o `terraform graph` não mostra aresta da instância para o objeto?",
+    "hint": "Como a instância nomeia o bucket?",
+    "choices": [
+      {
+        "text": "O Terraform não ordena instâncias depois de objetos do S3",
+        "why": "Podem, e a versão com referência deu exatamente essa aresta."
+      },
+      {
+        "text": "O grafo desenha arestas entre recursos de um mesmo serviço",
+        "why": "As arestas vêm de referências, seja qual for o serviço."
+      },
+      {
+        "text": "O bucket é nomeado dentro de uma string comum",
+        "why": "Isso: para o Terraform `s3://shop-boot-dev/boot.sh` é texto, não referência."
+      },
+      {
+        "text": "O objeto ainda não tinha sido criado",
+        "why": "O grafo vem da configuração, antes e depois de qualquer apply."
+      }
+    ]
+  },
+  "ex-df3s16zp": {
+    "prompt": "Qual mudança a aula prefere para a dependência escondida do script de boot?",
+    "hint": "Há algo que a instância poderia referenciar?",
+    "choices": [
+      {
+        "text": "`depends_on = [aws_s3_object.script]` com um comentário",
+        "why": "Funciona, e é a segunda opção: o motivo fica fora da expressão."
+      },
+      {
+        "text": "Escrever o bucket e a chave no `user_data` por referências",
+        "why": "Isso: a mesma aresta, o nome escrito uma vez, e nenhum `depends_on`."
+      },
+      {
+        "text": "Rodar `terraform apply` duas vezes",
+        "why": "O primeiro boot ainda disputaria corrida com o upload no primeiro apply."
+      },
+      {
+        "text": "`-parallelism=1` em todo apply",
+        "why": "Isso serializa tudo e ainda não diz qual ordem é necessária."
+      }
+    ]
+  },
+  "ex-eremnfaq": {
+    "prompt": "Quais custos do `depends_on` a aula cita? Escolha todos os que se aplicam.",
+    "hint": "Pense em quem lê, no apply e nos data sources.",
+    "choices": [
+      {
+        "text": "Ele diz para esperar mas não por quê",
+        "why": "Sim; daí o comentário ao lado."
+      },
+      {
+        "text": "Uma lista longa transforma um apply paralelo numa fila",
+        "why": "Sim; tudo o que está listado precisa terminar antes."
+      },
+      {
+        "text": "Ele força o recurso a ser substituído a cada apply",
+        "why": "Isso seria um gatilho; `depends_on` só ordena."
+      },
+      {
+        "text": "Num data source ele pode empurrar a leitura para o apply",
+        "why": "Sim, quando a dependência tem mudanças pendentes."
+      },
+      {
+        "text": "Ele guarda a dependência na conta da AWS",
+        "why": "A aresta só existe no grafo do Terraform; a AWS nunca fica sabendo."
+      }
+    ]
+  },
+  "ex-bhfstf2f": {
+    "prompt": "A Ana apaga o bloco do bucket de logs e roda `terraform plan`. O que o plan propõe?",
+    "hint": "No state e ausente do arquivo.",
+    "choices": [
+      {
+        "text": "Destruir o bucket, tanto na AWS quanto no state",
+        "why": "Isso: `because aws_s3_bucket.logs is not in configuration`."
+      },
+      {
+        "text": "Esquecer o bucket e deixá-lo na AWS",
+        "why": "Isso precisa de um bloco `removed` com `destroy = false`."
+      },
+      {
+        "text": "Nenhuma mudança, já que o arquivo não o menciona mais",
+        "why": "O state ainda menciona, e o Terraform lê a ausência no arquivo como desejo de destruir."
+      },
+      {
+        "text": "Um erro pedindo `terraform state rm`",
+        "why": "Nenhum erro; o plan simplesmente o destrói."
+      }
+    ]
+  },
+  "ex-jw9r9t4e": {
+    "prompt": "Por que a aula prefere um bloco `removed` a `terraform state rm` para entregar o bucket de logs ao time de dados?",
+    "hint": "O mesmo argumento de `-replace` contra `taint`.",
+    "choices": [
+      {
+        "text": "`state rm` apaga o bucket na AWS",
+        "why": "Ele só edita o state, como o bloco; a diferença é como a mudança é feita."
+      },
+      {
+        "text": "O Terraform 1.7 removeu o `state rm`",
+        "why": "O 1.7 trouxe o bloco; o comando continua existindo e a aula 7 o usa."
+      },
+      {
+        "text": "O bloco é revisado num pull request e aparece no plan",
+        "why": "Isso: o comando roda no state compartilhado e ninguém o revisa."
+      },
+      {
+        "text": "O bloco mantém os objetos, e o `state rm` esvazia o bucket",
+        "why": "Nenhum dos dois toca no bucket ou nos objetos dele."
+      }
+    ]
+  },
+  "ex-90snnyqk": {
+    "prompt": "Depois de aplicar o bloco `removed`, o que cada lado guarda?",
+    "hint": "Compare `terraform state list` com `aws s3 ls`.",
+    "choices": [
+      {
+        "text": "O state tem os dois buckets e a AWS só o de assets",
+        "why": "O contrário: o state esqueceu o bucket de logs, a AWS o manteve."
+      },
+      {
+        "text": "O state tem o bucket de assets; a AWS tem os dois",
+        "why": "Isso: uma entrada saiu do state e nada na nuvem mudou."
+      },
+      {
+        "text": "Os dois têm só o bucket de assets",
+        "why": "Isso seria um destroy; `destroy = false` manteve o bucket."
+      },
+      {
+        "text": "Os dois ainda têm os dois, até o bloco ser apagado do arquivo",
+        "why": "O apply já o tirou do state; apagar o bloco depois não muda nada."
+      }
+    ]
+  },
+  "ex-dnn7g6g6": {
+    "prompt": "Um recurso de banco de dados tem `identifier = \"shop\"` fixo e `create_before_destroy = true`. Uma mudança força uma substituição. O que a Ana deve esperar, pelo que esta aula ensina?",
+    "hint": "É a história do security group com outro recurso.",
+    "choices": [
+      {
+        "text": "Uma troca tranquila, já que criar primeiro é a ordem segura",
+        "why": "Criar primeiro exige que os dois existam ao mesmo tempo, e um nome único fixo proíbe isso."
+      },
+      {
+        "text": "Uma colisão no nome, com o antigo intacto",
+        "why": "Isso: a criação falha primeiro, e destruir o antigo era o passo seguinte."
+      },
+      {
+        "text": "O banco antigo destruído e nenhum novo criado",
+        "why": "Com create_before_destroy o destroy vem depois de uma criação bem-sucedida."
+      },
+      {
+        "text": "O Terraform renomeia o banco antigo automaticamente",
+        "why": "O Terraform não renomeia para abrir espaço; é para isso que existem argumentos como `name_prefix`."
+      }
+    ]
+  },
+  "ex-h94scxj6": {
+    "prompt": "Um pull request move todos os buckets de `main.tf` para um `storage.tf` novo, e o bloco do bucket de assets se perdeu na mudança. O bucket tem `prevent_destroy`. O que o próximo plan faz?",
+    "hint": "Onde a proteção estava escrita?",
+    "choices": [
+      {
+        "text": "Recusa, porque o state lembra do `prevent_destroy`",
+        "why": "A configuração é lida do bloco, e o bloco sumiu."
+      },
+      {
+        "text": "Planeja destruir o bucket",
+        "why": "Isso, como o plan da aula mostrou com o bloco apagado."
+      },
+      {
+        "text": "Falha porque `storage.tf` não é um nome de arquivo reconhecido",
+        "why": "Todo arquivo `.tf` do diretório faz parte da configuração."
+      },
+      {
+        "text": "Não mostra mudanças, já que os outros buckets não mudaram",
+        "why": "O bucket perdido ainda está no state, então a ausência dele é uma mudança."
+      }
+    ]
+  },
+  "ex-m1sv3yms": {
+    "prompt": "Ligue cada situação à ferramenta desta aula que se encaixa nela.",
+    "hint": "Sobra uma ferramenta.",
+    "pairs": [
+      {
+        "left": "Um autoscaler define o tamanho do grupo o dia todo",
+        "right": "`ignore_changes`"
+      },
+      {
+        "left": "Uma versão nova do app tem de significar uma máquina nova",
+        "right": "`replace_triggered_by`"
+      },
+      {
+        "left": "Outro time assume um bucket",
+        "right": "um bloco `removed`"
+      },
+      {
+        "left": "As imagens dos produtos nunca podem ser perdidas por um plan",
+        "right": "`prevent_destroy`"
+      },
+      {
+        "left": "Um script de boot lê um bucket nomeado numa string",
+        "right": "uma referência, ou `depends_on`"
+      }
+    ],
+    "right_distractors": [
+      "`terraform taint`"
+    ]
+  },
+  "ex-w6qqmc68": {
+    "prompt": "A Ana revisa um plan cujo resumo é `2 to add, 0 to change, 2 to destroy`, de um pull request que só editou uma sub-rede. Quais conclusões se justificam? Escolha todas as que se aplicam.",
+    "hint": "Substituições contam como um add e um destroy.",
+    "choices": [
+      {
+        "text": "Dois recursos estão sendo substituídos",
+        "why": "Sim, muito provavelmente a sub-rede e algo que a referencia."
+      },
+      {
+        "text": "Nada será perdido, porque a sub-rede está vazia",
+        "why": "A segunda substituição pode ser uma instância com disco; leia de quem é o `# forces replacement`."
+      },
+      {
+        "text": "Os comentários `# forces replacement` dizem qual argumento causou cada uma",
+        "why": "Sim; é a linha a ler primeiro."
+      },
+      {
+        "text": "O pull request editou dois arquivos",
+        "why": "Uma linha editada bastou na aula; a segunda substituição seguiu uma referência."
+      }
+    ]
+  }
+}

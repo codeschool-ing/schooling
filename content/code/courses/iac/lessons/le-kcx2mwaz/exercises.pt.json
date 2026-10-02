@@ -1,0 +1,553 @@
+{
+  "ex-3t45ngfa": {
+    "prompt": "`aws_subnet.app` tem `count = 3`. Qual é o endereço da primeira sub-rede?",
+    "hint": "O índice começa onde a maioria das linguagens de programação o começa.",
+    "choices": [
+      {
+        "text": "`aws_subnet.app[1]`",
+        "why": "Essa é a segunda cópia: o `count.index` começa em zero."
+      },
+      {
+        "text": "`aws_subnet.app.first`",
+        "why": "Não existe esse atributo; uma cópia é alcançada pelo índice entre colchetes."
+      },
+      {
+        "text": "`aws_subnet.app[0]`",
+        "why": "Isso. As cópias são numeradas a partir de zero, e o apply imprimiu `aws_subnet.app[0]: Creating...`."
+      },
+      {
+        "text": "`aws_subnet.app-0`",
+        "why": "Um hífen faria parte de um nome; o índice vai entre colchetes depois do endereço do resource."
+      }
+    ]
+  },
+  "ex-7qehwytt": {
+    "prompt": "Por que o `count` é chamado de meta-argumento e não de argumento do `aws_subnet`?",
+    "hint": "Quem o lê: o Terraform ou o provider da AWS?",
+    "choices": [
+      {
+        "text": "Porque a API da AWS aceita um número de cópias numa chamada",
+        "why": "O provider nunca vê o `count`; ele recebe uma sub-rede por cópia."
+      },
+      {
+        "text": "O próprio Terraform o lê, antes de o provider ver qualquer coisa",
+        "why": "Certo. Ele é tratado antes de o provider ver qualquer coisa, então significa o mesmo em todo tipo de resource."
+      },
+      {
+        "text": "Porque é escrito primeiro no bloco, por convenção",
+        "why": "Pôr na frente é hábito de legibilidade; o nome vem de quem o interpreta."
+      },
+      {
+        "text": "Porque o state o guarda ao lado de cada sub-rede",
+        "why": "O state guarda uma entrada por endereço; não é isso que faz do `count` um meta-argumento."
+      }
+    ]
+  },
+  "ex-dwyztq68": {
+    "prompt": "`count = var.public ? 1 : 0` num gateway, e um output lê `aws_internet_gateway.shop[0].id`. O que acontece quando `public` é false?",
+    "hint": "Veja o que `aws_internet_gateway.shop` guarda quando não há cópias.",
+    "choices": [
+      {
+        "text": "O output vira uma string vazia",
+        "why": "O Terraform não inventa valor para um elemento que falta; o plano da aula parou com erro."
+      },
+      {
+        "text": "O Terraform mantém o gateway antigo",
+        "why": "Uma referência não mantém um resource vivo; o plano listou o gateway para destruição antes de falhar."
+      },
+      {
+        "text": "O plano para com `Invalid index`",
+        "why": "Isso. A lista está vazia, então `[0]` não aponta para nada; `one(aws_internet_gateway.shop[*].id)` aguenta o zero."
+      },
+      {
+        "text": "O Terraform cria o gateway mesmo assim",
+        "why": "O `count` decide quantas cópias existem; uma referência não consegue aumentá-lo."
+      }
+    ]
+  },
+  "ex-ced5s3ja": {
+    "prompt": "Dentro de um bloco com `count`, o número da cópia sendo construída, começando em zero, é `count.___`.",
+    "hint": "O nome que uma posição de lista tem na maioria das linguagens.",
+    "blanks": [
+      {
+        "accept": [
+          "index"
+        ]
+      }
+    ]
+  },
+  "ex-kmf53zbz": {
+    "prompt": "Três sub-redes foram feitas com `count` a partir de uma lista de três faixas. A faixa do meio é removida. O que o plano faz com `aws_subnet.app[1]`?",
+    "hint": "Para qual faixa o índice 1 aponta depois da remoção?",
+    "choices": [
+      {
+        "text": "Substitui, porque o argumento dela agora é a terceira faixa",
+        "why": "O argumento dela virou a terceira faixa, e a faixa de uma sub-rede força substituição."
+      },
+      {
+        "text": "Destrói, porque ela guardava a faixa removida",
+        "why": "O Terraform casa por endereço, não por faixa; a destruída foi a `[2]`, fora do alcance do count."
+      },
+      {
+        "text": "Deixa como está, já que só a lista mudou",
+        "why": "A lista alimenta o bloco: `var.subnets[1]` agora é outra faixa."
+      },
+      {
+        "text": "Atualiza a faixa no lugar",
+        "why": "A faixa de uma sub-rede não pode ser editada no lugar; o plano marcou `# forces replacement`."
+      }
+    ]
+  },
+  "ex-ysb53pqe": {
+    "prompt": "No plano da aula para remover a sub-rede do meio, quantos recursos seriam destruídos?",
+    "hint": "A linha de resumo conta uma substituição como uma criação e uma destruição.",
+    "unit": "recursos"
+  },
+  "ex-j23prvm9": {
+    "prompt": "Qual edição numa lista usada com `count` deixa intacta toda sub-rede existente?",
+    "hint": "Qual mudança não move nenhum índice existente?",
+    "choices": [
+      {
+        "text": "Ordenar a lista para as faixas ficarem em ordem",
+        "why": "Ordenar pode mover cada elemento, e cada cópia movida é substituída."
+      },
+      {
+        "text": "Inserir uma faixa nova no começo da lista",
+        "why": "Cada elemento existente sobe um índice."
+      },
+      {
+        "text": "Acrescentar uma faixa no fim",
+        "why": "Isso. Nenhum índice existente se move, então o plano só acrescenta uma cópia."
+      },
+      {
+        "text": "Remover a primeira faixa da lista",
+        "why": "Cada elemento depois dela desce uma posição."
+      }
+    ]
+  },
+  "ex-kyzfgs5x": {
+    "prompt": "Uma lista de três nomes alimenta um `count`, e o nome só vai para uma tag, que pode ser alterada no lugar. O nome do meio é removido. O que o plano mostra?",
+    "hint": "Nada força substituição aqui.",
+    "choices": [
+      {
+        "text": "Nada, porque uma tag não faz parte da identidade do resource",
+        "why": "A tag da cópia `[1]` muda de valor, então o plano precisa mostrá-la."
+      },
+      {
+        "text": "Uma atualização de `[1]` e uma destruição de `[2]`",
+        "why": "Certo. A cópia `[1]` assume em silêncio o terceiro nome e a terceira cópia sai, o que é mais difícil de notar que uma substituição."
+      },
+      {
+        "text": "Uma destruição da cópia cuja tag tinha o nome removido",
+        "why": "Isso é o que o `for_each` faria; o `count` casa por posição."
+      },
+      {
+        "text": "Uma substituição de `[1]` e de `[2]`",
+        "why": "Mudança de tag é atualização no lugar, e `[2]` não tem mais elemento, então é destruída e não substituída."
+      }
+    ]
+  },
+  "ex-76zg7397": {
+    "prompt": "Com `for_each = { web = \"10.20.1.0/24\", db = \"10.20.3.0/24\" }`, o que é `each.value` na cópia de `db`?",
+    "hint": "Chave à esquerda, valor à direita.",
+    "choices": [
+      {
+        "text": "`\"db\"`",
+        "why": "Esse é o `each.key`."
+      },
+      {
+        "text": "`1`, a posição dele no map",
+        "why": "Um map não tem posições que o `for_each` use; é essa a ideia dele."
+      },
+      {
+        "text": "`\"10.20.3.0/24\"`",
+        "why": "Isso: o valor à direita da chave."
+      },
+      {
+        "text": "O map inteiro, para que cada cópia veja as outras",
+        "why": "Cada cópia vê uma entrada: `each.key` e `each.value`."
+      }
+    ]
+  },
+  "ex-pjy29mtm": {
+    "prompt": "Por que `for_each = [\"10.30.0.0/16\", \"10.31.0.0/16\"]` falha, enquanto os mesmos valores dentro de `toset(...)` funcionam?",
+    "hint": "O que daria nome a cada cópia?",
+    "choices": [
+      {
+        "text": "Os elementos de uma lista não têm nome além da posição",
+        "why": "Certo. Um set de strings usa as próprias strings como chaves; uma lista traria a posição de volta."
+      },
+      {
+        "text": "Listas de mais de uma faixa de rede são recusadas pelo provider da AWS",
+        "why": "O provider nem viu: o erro veio do Terraform lendo o `for_each`."
+      },
+      {
+        "text": "O `toset` converte as faixas em números que o Terraform consegue contar",
+        "why": "Os elementos continuam strings; eles viram as chaves."
+      },
+      {
+        "text": "Colchetes são reservados para o `count` no HCL",
+        "why": "Colchetes escrevem qualquer lista ou tuple; o erro disse que recebeu um tuple."
+      }
+    ]
+  },
+  "ex-qn89zaw0": {
+    "prompt": "Num resource com `for_each` sobre um map, o nome à esquerda da entrada atual é `each.___`.",
+    "hint": "O outro é `each.value`.",
+    "blanks": [
+      {
+        "accept": [
+          "key"
+        ]
+      }
+    ]
+  },
+  "ex-yhe230h5": {
+    "prompt": "A Ana reescreve três sub-redes de `count` como `for_each` e não muda mais nada. Sem blocos `moved`, o que o plano propõe?",
+    "hint": "O Terraform casa por endereços.",
+    "choices": [
+      {
+        "text": "Nada, já que as faixas são idênticas",
+        "why": "O Terraform não compara faixas para descobrir identidade; os endereços antigos simplesmente sumiram do arquivo."
+      },
+      {
+        "text": "Três renomeações no lugar",
+        "why": "Um endereço não é uma propriedade da sub-rede na AWS; não há nada para atualizar lá."
+      },
+      {
+        "text": "Três destruições e três criações",
+        "why": "Isso: `Plan: 3 to add, 0 to change, 3 to destroy.`, cada destruição porque o resource não usa count."
+      },
+      {
+        "text": "Um erro pedindo `state mv`",
+        "why": "O Terraform planeja a mudança sem reclamar; é por isso que ela precisa ser lida."
+      }
+    ]
+  },
+  "ex-pcearxe8": {
+    "prompt": "O que aplicar um plano feito só de linhas `has moved to` muda na AWS?",
+    "hint": "Onde vivem os endereços?",
+    "choices": [
+      {
+        "text": "Refaz as tags de cada sub-rede com a chave nova",
+        "why": "O plano não mostrou mudança de tag; o resumo foi 0 to change."
+      },
+      {
+        "text": "Nada: só os endereços no state mudam",
+        "why": "Certo. Ele reescreve os endereços no state; as sub-redes mantêm seus ids."
+      },
+      {
+        "text": "Recria as sub-redes uma de cada vez",
+        "why": "Nenhuma sub-rede é recriada: os ids no plano são os do apply original."
+      },
+      {
+        "text": "Move as sub-redes para a VPC citada no bloco",
+        "why": "Um bloco `moved` nomeia dois endereços e mais nada; nenhuma VPC está envolvida."
+      }
+    ]
+  },
+  "ex-b2mm0870": {
+    "prompt": "Ponha em ordem os passos para trocar um resource `count` em produção para `for_each` sem substituir nada.",
+    "hint": "Leia o plano antes de confiar nele.",
+    "items": [
+      "Reescrever o bloco com `for_each` sobre um map",
+      "Escrever um bloco `moved` por índice antigo",
+      "Rodar `terraform plan` e conferir que cada linha diz `has moved to`",
+      "Aplicar e confirmar que `terraform state list` mostra as chaves"
+    ],
+    "trap": "Aplicar antes de ler o plano é o deslize: um casamento errado aparece lá como substituição."
+  },
+  "ex-axgsmyxd": {
+    "prompt": "A Ana casa `aws_subnet.app[0]` (10.20.1.0/24) com `aws_subnet.app[\"app\"]`, cuja faixa no arquivo é 10.20.2.0/24. O que o plano mostra para essa sub-rede?",
+    "hint": "A mudança de endereço vem primeiro; depois o arquivo é comparado com o que foi movido.",
+    "choices": [
+      {
+        "text": "Uma mudança de endereço e, depois, uma substituição porque a faixa difere",
+        "why": "Certo. O Terraform move e depois acha a faixa errada, o que força substituição. Um moved certo não planeja nada."
+      },
+      {
+        "text": "Uma mudança de endereço sem alterações",
+        "why": "O arquivo pede 10.20.2.0/24 nesse endereço e a sub-rede tem 10.20.1.0/24."
+      },
+      {
+        "text": "Um erro, já que o Terraform confere se um bloco moved mantém a mesma faixa",
+        "why": "O Terraform confere os endereços, não o que o resource guarda."
+      },
+      {
+        "text": "Uma atualização da faixa no lugar",
+        "why": "A faixa de uma sub-rede não pode ser atualizada no lugar."
+      }
+    ]
+  },
+  "ex-enwnqtzh": {
+    "prompt": "Dentro de `dynamic \"ingress\" { for_each = var.web_ports ... }`, como o `content` se refere à porta atual?",
+    "hint": "A variável tem o nome do bloco.",
+    "choices": [
+      {
+        "text": "`each.value`",
+        "why": "O `each` pertence ao `for_each` no nível do resource; um bloco dynamic dá ao iterador o próprio nome."
+      },
+      {
+        "text": "`ingress.value`",
+        "why": "Isso; o `iterator` pode renomeá-lo."
+      },
+      {
+        "text": "`var.web_ports.value`",
+        "why": "Essa é a lista inteira, que não tem atributo `value`."
+      },
+      {
+        "text": "`count.index`",
+        "why": "Não há `count` envolvido, e um índice daria a posição e não a porta."
+      }
+    ]
+  },
+  "ex-pqztf20b": {
+    "prompt": "A porta 8443 é acrescentada a uma lista que alimenta um bloco `dynamic \"ingress\"`. Por que o plano lista cinco regras, duas saindo e três entrando?",
+    "hint": "Onde moram as regras?",
+    "choices": [
+      {
+        "text": "O bloco dynamic substitui o security group inteiro a cada mudança",
+        "why": "O plano disse `update in-place` e `0 to add`; o grupo é mantido."
+      },
+      {
+        "text": "São um set dentro de um resource, comparado inteiro",
+        "why": "Certo. Quem revisa precisa notar a olho que só a 8443 é nova; resources de regra separados deixam isso numa linha."
+      },
+      {
+        "text": "As portas foram ordenadas, o que deslocou cada índice",
+        "why": "A lista ganhou um item no fim, não foi ordenada; a exibição vem de comparar um set."
+      },
+      {
+        "text": "O moto recusou as duas primeiras regras e elas precisam ser criadas de novo",
+        "why": "Isso foi um plano; nada tinha sido enviado ao moto ainda."
+      }
+    ]
+  },
+  "ex-y3yjwfaq": {
+    "prompt": "Quais afirmações sobre blocos `dynamic` batem com a aula? Escolha todas as que se aplicam.",
+    "hint": "Três são verdadeiras.",
+    "choices": [
+      {
+        "text": "Geram blocos aninhados, que não aceitam `count` nem `for_each` por conta própria",
+        "why": "É para isso que servem."
+      },
+      {
+        "text": "O `for_each` deles aceita uma lista",
+        "why": "Ao contrário do argumento no nível do resource; `ingress.key` é então o índice."
+      },
+      {
+        "text": "Cada bloco gerado ganha endereço próprio no state",
+        "why": "Os blocos moram dentro de um resource com um endereço; resources de regra separados é que ganham endereços."
+      },
+      {
+        "text": "Misturar `ingress` embutido com `aws_vpc_security_group_ingress_rule` num grupo faz um desfazer o outro",
+        "why": "Cada estilo tenta ser dono do conjunto todo de regras."
+      },
+      {
+        "text": "São o jeito preferido de escrever regras de security group no provider da AWS",
+        "why": "A documentação do provider recomenda os resources de regra separados."
+      }
+    ]
+  },
+  "ex-4xdxmv58": {
+    "prompt": "Uma configuração tem `provider \"aws\" { region = \"sa-east-1\" }` e `provider \"aws\" { alias = \"us\", region = \"us-east-2\" }`. Um bucket não tem argumento `provider`. Onde ele é criado?",
+    "hint": "Qual bloco é o padrão?",
+    "choices": [
+      {
+        "text": "Em `us-east-2`, o último bloco de provider declarado nos arquivos",
+        "why": "A ordem de declaração não importa; o bloco sem alias é o padrão."
+      },
+      {
+        "text": "Em `sa-east-1`",
+        "why": "Isso. Só os resources que dizem `provider = aws.us` usam o alias."
+      },
+      {
+        "text": "Nas duas regiões, uma cópia em cada",
+        "why": "Um bloco de provider é uma conexão, não uma copiadora; isso exigiria dois resources."
+      },
+      {
+        "text": "Em lugar nenhum: o Terraform pergunta qual usar",
+        "why": "Não há ambiguidade a perguntar; o bloco sem alias é o padrão."
+      }
+    ]
+  },
+  "ex-ww4eykm1": {
+    "prompt": "Com a versão 6 do provider da AWS, quando um alias de provider ainda é necessário em vez do argumento `region` do resource?",
+    "hint": "O que mais um bloco de provider carrega além de uma região?",
+    "choices": [
+      {
+        "text": "Quando o nome do bucket precisa ser único entre regiões",
+        "why": "Nome de bucket é assunto do S3, não de como o Terraform se conecta."
+      },
+      {
+        "text": "Quando o resource vai para `us-east-2`",
+        "why": "O bucket `logs` da aula usou `region = \"us-east-2\"` e foi parar lá."
+      },
+      {
+        "text": "Quando a segunda configuração é outra conta, role ou conjunto de credenciais",
+        "why": "Certo. Credenciais, roles e `default_tags` são configurações do provider que um argumento do resource não muda."
+      },
+      {
+        "text": "Quando há mais de duas regiões numa configuração",
+        "why": "O número de regiões não importa; o que difere entre elas é que importa."
+      }
+    ]
+  },
+  "ex-3gzz44za": {
+    "prompt": "Um colega apaga o bloco `provider \"aws\" { alias = \"us\" ... }` enquanto o bucket de backup que ele criou ainda existe. O que acontece no próximo plano?",
+    "hint": "Um resource lembra qual configuração o criou.",
+    "choices": [
+      {
+        "text": "O bucket vai para `sa-east-1` com o provider padrão",
+        "why": "O Terraform não move um bucket entre regiões, e não troca o provider de um resource em silêncio."
+      },
+      {
+        "text": "O Terraform planeja destruir o bucket como órfão",
+        "why": "Para destruí-lo o Terraform precisaria da configuração que o alcança, que sumiu."
+      },
+      {
+        "text": "Um erro dizendo que essa configuração ainda é exigida",
+        "why": "Isso: `Provider configuration not present`. Recoloque o alias, remova os recursos, depois o alias."
+      },
+      {
+        "text": "Nada, porque o bloco do resource ainda cita `aws.us`",
+        "why": "Citar um alias que ninguém declara é justamente o que falha."
+      }
+    ]
+  },
+  "ex-myfjh0zz": {
+    "prompt": "Associe cada situação à ferramenta que a tabela da aula dá a ela.",
+    "hint": "Sobra uma opção.",
+    "pairs": [
+      {
+        "left": "Um resource que só existe quando uma flag é verdadeira",
+        "right": "`count = var.x ? 1 : 0`"
+      },
+      {
+        "left": "Sub-redes que têm, cada uma, um papel",
+        "right": "`for_each` sobre um map"
+      },
+      {
+        "left": "Blocos aninhados sem resource próprio",
+        "right": "`dynamic`"
+      },
+      {
+        "left": "Um bucket em outra conta",
+        "right": "um alias de provider"
+      }
+    ],
+    "right_distractors": [
+      "`depends_on`"
+    ]
+  },
+  "ex-0qq3w7m8": {
+    "prompt": "`for_each = toset(values(aws_subnet.app)[*].id)` falha no primeiro plano. Por quê?",
+    "hint": "Quando a AWS inventa o id de uma sub-rede?",
+    "choices": [
+      {
+        "text": "Ids de sub-rede têm hífen, que não é permitido em chaves",
+        "why": "Qualquer string pode ser chave; o problema é que essas strings ainda não existem."
+      },
+      {
+        "text": "A AWS inventa os ids no apply, então as chaves são desconhecidas no plano",
+        "why": "Certo. Percorra `aws_subnet.app`, cujas chaves a Ana escreveu, e use `each.value.id`."
+      },
+      {
+        "text": "O `toset` não converte uma lista de ids",
+        "why": "O `toset` converte listas de strings; o erro era sobre valores desconhecidos."
+      },
+      {
+        "text": "Uma associação de route table não aceita `for_each`",
+        "why": "A versão corrigida usou `for_each = aws_subnet.app` no mesmo tipo de resource."
+      }
+    ]
+  },
+  "ex-8crgzc7k": {
+    "prompt": "Qual destes a aula 6, e não esta, ensina?",
+    "hint": "A família de meta-argumentos tem cinco membros.",
+    "choices": [
+      {
+        "text": "`provider`, para mandar um resource para outra região",
+        "why": "Essa foi a seção `provider-aliases` desta aula."
+      },
+      {
+        "text": "`for_each`, para nomear cópias por chave",
+        "why": "Isso foi nesta aula."
+      },
+      {
+        "text": "`lifecycle`",
+        "why": "Isso, junto com `depends_on`: o que acontece com um resource ao longo do tempo."
+      },
+      {
+        "text": "`count`, como liga-desliga com `? 1 : 0`",
+        "why": "Essa foi a primeira seção desta aula."
+      }
+    ]
+  },
+  "ex-pd4nskyg": {
+    "prompt": "Dez usuários IAM são criados com `count` a partir de uma lista ordenada por nome. Um novo funcionário, Bruno, é acrescentado e a lista é ordenada de novo. O que o plano faz com os usuários depois do Bruno?",
+    "hint": "O nome de um usuário é a identidade pela qual a AWS o conhece.",
+    "choices": [
+      {
+        "text": "Deixa como estão",
+        "why": "Os nomes não mudaram, mas os índices sim, e o Terraform casa pelo índice."
+      },
+      {
+        "text": "Dá a cada um o nome de outro usuário",
+        "why": "Certo. Cada cópia depois da inserção desloca um, então cada índice pede outro nome, e o último índice é novo."
+      },
+      {
+        "text": "Só acrescenta o Bruno no fim",
+        "why": "Ele foi ordenado para o meio, não acrescentado no fim; só acrescentar no fim deixa o resto em paz."
+      },
+      {
+        "text": "Falha, já que duas cópias não podem ter o mesmo nome durante o plano",
+        "why": "O plano calcula o deslocamento sem reclamar; quem precisa pegar é quem lê."
+      }
+    ]
+  },
+  "ex-06yqc17t": {
+    "prompt": "Um plano para uma mudança descrita como \"remover uma sub-rede\" termina com `1 to add, 0 to change, 2 to destroy`. Quais conclusões se justificam? Escolha todas as que se aplicam.",
+    "hint": "Compare o resumo com o que foi pedido.",
+    "choices": [
+      {
+        "text": "Uma sub-rede que deveria ficar está sendo substituída",
+        "why": "Uma criação e uma destruição a mais são a substituição de algo que ninguém pediu para tocar."
+      },
+      {
+        "text": "As sub-redes parecem feitas com `count` sobre uma lista",
+        "why": "Esse formato é a assinatura do problema do índice."
+      },
+      {
+        "text": "O Terraform tem um bug no cálculo das faixas de sub-rede",
+        "why": "O plano faz exatamente o que os endereços dizem."
+      },
+      {
+        "text": "O plano é seguro de aplicar porque o total ainda termina em duas sub-redes",
+        "why": "A quantidade de sub-redes está certa e a identidade de uma delas não."
+      }
+    ]
+  },
+  "ex-2kansb8m": {
+    "prompt": "Um módulo que você publica troca um resource de `count` para `for_each` com blocos `moved`. Seis meses depois um colega quer apagar os blocos `moved`. Qual é o risco?",
+    "hint": "Quem mais aplica essa configuração?",
+    "choices": [
+      {
+        "text": "Nenhum: aplicado em qualquer lugar, a mudança fica registrada para todo mundo",
+        "why": "Cada state registra suas próprias mudanças; quem não atualizou ainda tem os endereços antigos."
+      },
+      {
+        "text": "O Terraform se recusa a planejar uma configuração sem eles",
+        "why": "Ele planeja normalmente; o problema é o que ele planeja para states com endereços antigos."
+      },
+      {
+        "text": "As sub-redes que já foram movidas voltam para os endereços antigos",
+        "why": "Apagar um bloco `moved` não move nada de volta; só impede mudanças futuras."
+      },
+      {
+        "text": "States que ainda têm `[0]`, `[1]`, `[2]` ganham destruições e recriações no próximo plano",
+        "why": "Certo. Os states deles ainda têm `[0]`, `[1]`, `[2]`, e sem os blocos o plano destrói e recria."
+      }
+    ]
+  }
+}

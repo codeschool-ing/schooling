@@ -1,0 +1,491 @@
+[
+  {
+    "id": "ex-mdvjp43k",
+    "version": 1,
+    "section": "what-a-weight-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`toylm info` ends with `parameters: 436 stored counts`. What are those 436 parameters?",
+    "hint": "Open `model.json` in your head.",
+    "choices": [
+      {
+        "text": "The counts the model learnt, which are the whole model",
+        "correct": true,
+        "why": "Right. `toylm save` writes them to a file, and that file is the model."
+      },
+      {
+        "text": "The settings you can pass to `toylm generate`, such as the temperature",
+        "correct": false,
+        "why": "Those are sampling controls, chosen per request. They are not part of the model."
+      },
+      {
+        "text": "The sentences of the corpus, kept so the model can find them again",
+        "correct": false,
+        "why": "No sentence is stored. The file holds counts of which word followed which."
+      },
+      {
+        "text": "The number of distinct words in its vocabulary",
+        "correct": false,
+        "why": "The vocabulary is 72 words. The 436 are counts across three tables."
+      }
+    ]
+  },
+  {
+    "id": "ex-t37e242k",
+    "version": 1,
+    "section": "what-a-weight-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`model.json` holds `'coffee is': {'bitter': 1, 'cold': 2, 'hot': 16, 'ready': 3, 'strong': 5}`. You change `16` to `1` and run `toylm next \"the coffee is\"` from the edited file. What happens?",
+    "hint": "The percentages come from these counts and from nothing else.",
+    "choices": [
+      {
+        "text": "Nothing, since the corpus still says the coffee is hot",
+        "correct": false,
+        "why": "The corpus was only used to fill in the counts. Once the counts exist, they are the model."
+      },
+      {
+        "text": "`hot` still leads, because the model remembers its training",
+        "correct": false,
+        "why": "There is no memory outside the counts. The file is the whole model."
+      },
+      {
+        "text": "The model refuses to load the file because the counts no longer match",
+        "correct": false,
+        "why": "Nothing checks the counts against the corpus. It loads whatever numbers are there."
+      },
+      {
+        "text": "`strong` leads, and `hot` drops to about 8%",
+        "correct": true,
+        "why": "Right. The total becomes 12, so `strong` has 5 of 12 and `hot` 1 of 12. Change a parameter and the model changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-b75yzzx8",
+    "version": 1,
+    "section": "what-a-weight-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a weight in a large language model?",
+    "hint": "How does it get its value?",
+    "choices": [
+      {
+        "text": "A count of how often a word followed another",
+        "correct": false,
+        "why": "That is `toylm`'s kind of parameter. A neural network's weights are learnt numbers, not counts."
+      },
+      {
+        "text": "A sentence the model read in training, compressed so it can be retrieved",
+        "correct": false,
+        "why": "The weights do not store sentences you could retrieve. What it read is spread across all of them."
+      },
+      {
+        "text": "A number learnt in training, with no meaning of its own",
+        "correct": true,
+        "why": "Right. No single one has a meaning you could read; the behaviour comes from all of them together."
+      },
+      {
+        "text": "How much each word in your prompt matters",
+        "correct": false,
+        "why": "That changes with every prompt. Weights are fixed once training is over."
+      }
+    ]
+  },
+  {
+    "id": "ex-ykqhy8d0",
+    "version": 1,
+    "section": "what-a-weight-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does training give the weights their values?",
+    "hint": "What is checked after each prediction?",
+    "choices": [
+      {
+        "text": "Programmers set them by hand, one rule at a time",
+        "correct": false,
+        "why": "Nobody sets billions of numbers by hand. They start random and are adjusted automatically."
+      },
+      {
+        "text": "Each one is nudged towards making the real next token more likely",
+        "correct": true,
+        "why": "Right. Repeated over enormous amounts of text, the nudges add up to grammar, facts and structure."
+      },
+      {
+        "text": "They are copied from the counts of a trigram model of the same text",
+        "correct": false,
+        "why": "No count table is involved. A network learns its own numbers from its errors."
+      },
+      {
+        "text": "Each weight is assigned to one fact and filled in with it",
+        "correct": false,
+        "why": "No weight holds one fact. Facts, as far as a model has them, are spread across many weights."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxbybk12",
+    "version": 1,
+    "section": "what-a-weight-is",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are true of a large model you are chatting with? Choose all that apply.",
+    "hint": "Where does what it \"remembers\" in the chat come from?",
+    "choices": [
+      {
+        "text": "Its weights are the same at the end of the chat as at the start",
+        "correct": true,
+        "why": "Yes. Using a model does not change its weights."
+      },
+      {
+        "text": "What it recalls from earlier in the chat was sent to it again as input",
+        "correct": true,
+        "why": "Yes. The earlier turns are part of the text it is given, lesson 4."
+      },
+      {
+        "text": "Correcting it updates its weights, so tomorrow it will remember",
+        "correct": false,
+        "why": "A correction lives in this conversation's text. The weights do not change because of it."
+      },
+      {
+        "text": "You can search its weights for a sentence it read in training",
+        "correct": false,
+        "why": "What it read is spread across all of its weights. There is nothing to search."
+      }
+    ]
+  },
+  {
+    "id": "ex-dng1njd0",
+    "version": 1,
+    "section": "what-a-weight-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A model described as 70B has seventy ___ weights.",
+    "hint": "B is a word, not a unit of memory.",
+    "blanks": [
+      {
+        "accept": [
+          "billion"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7pa3y2hr",
+    "version": 1,
+    "section": "what-a-weight-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two models are both 7B. What can you conclude about them from that alone?",
+    "hint": "What does the count decide exactly, and what does it not?",
+    "choices": [
+      {
+        "text": "They give the same answers, since they have the same parameters",
+        "correct": false,
+        "why": "The same number of weights is not the same weights. Their values differ."
+      },
+      {
+        "text": "They were trained on the same amount of text",
+        "correct": false,
+        "why": "The count says nothing about how much text either one read."
+      },
+      {
+        "text": "Both are worse than every 70B model at every task",
+        "correct": false,
+        "why": "Size is not quality. A smaller model can do better on a given task."
+      },
+      {
+        "text": "They need the same memory at the same width, and still differ a lot in quality",
+        "correct": true,
+        "why": "Right. The count fixes the memory; training data and training time decide much of the quality."
+      }
+    ]
+  },
+  {
+    "id": "ex-ynp7c1vy",
+    "version": 1,
+    "section": "what-a-weight-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An article says a model \"has memorised the internet\". What does this lesson say is wrong with the picture?",
+    "hint": "Could you find a web page inside the weights?",
+    "choices": [
+      {
+        "text": "Models were never trained on web pages",
+        "correct": false,
+        "why": "Much training text comes from the web. The point is what the weights are, not where the text came from."
+      },
+      {
+        "text": "Nothing is wrong: the weights are the internet compressed, and can be decompressed",
+        "correct": false,
+        "why": "There is no decompression that gives the pages back. The text left patterns in numbers, not a copy."
+      },
+      {
+        "text": "Its weights are numbers shaped by the text, not a copy of it",
+        "correct": true,
+        "why": "Right. That is why it writes text found nowhere in its training data, and why it gets facts it read wrong."
+      },
+      {
+        "text": "It only memorised the parts that fit in its context window",
+        "correct": false,
+        "why": "The context window is the text of one request, lesson 4. It has nothing to do with training."
+      }
+    ]
+  },
+  {
+    "id": "ex-bx1tncj7",
+    "version": 1,
+    "section": "size-and-memory",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many gigabytes do the weights of a 13B model take at 16 bits?",
+    "hint": "Parameters times bytes per parameter. Sixteen bits is two bytes.",
+    "value": 26,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-rbk02p5f",
+    "version": 1,
+    "section": "size-and-memory",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many gigabytes do the weights of a 70B model take at 4 bits?",
+    "hint": "Half a byte each.",
+    "value": 35,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-z99nbqbv",
+    "version": 1,
+    "section": "size-and-memory",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A model's weights take 8 GB at 8 bits. How many gigabytes would they take at 32 bits?",
+    "hint": "Count the bytes per weight at each width.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-me85fwyy",
+    "version": 1,
+    "section": "size-and-memory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`quant.py` rounded four numbers to 4 bits. What happened to `0.0173`?",
+    "hint": "Read the 4-bit line of the capture.",
+    "choices": [
+      {
+        "text": "It stayed exactly the same, as the largest of the four did",
+        "correct": false,
+        "why": "The largest number sets the step and is always kept exactly. The smallest is the one most at risk."
+      },
+      {
+        "text": "It became 0.0162, an error of about one thousandth",
+        "correct": false,
+        "why": "That is the 8-bit result. At 4 bits the steps are far coarser."
+      },
+      {
+        "text": "It grew to match the other weights",
+        "correct": false,
+        "why": "Rounding moves a number to the nearest step; it does not pull small numbers up."
+      },
+      {
+        "text": "It became 0",
+        "correct": true,
+        "why": "Right. At 4 bits the step was larger than the number, so it rounded to zero and whatever it contributed is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtxknvkj",
+    "version": 1,
+    "section": "size-and-memory",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does quantising a model from 16 bits to 4 bits trade?",
+    "hint": "What is lost when a number is rounded?",
+    "choices": [
+      {
+        "text": "Speed for accuracy, since 4-bit models are always more accurate",
+        "correct": false,
+        "why": "Rounding loses information. A 4-bit model is never more accurate than the same model at 16 bits."
+      },
+      {
+        "text": "Weights for parameters",
+        "correct": false,
+        "why": "Those are two names for the same numbers. Quantising keeps all of them and stores each one in fewer bits."
+      },
+      {
+        "text": "The number of weights, which falls from seven billion to under two",
+        "correct": false,
+        "why": "The count is unchanged. Each weight takes fewer bits."
+      },
+      {
+        "text": "Some quality, for a quarter of the memory",
+        "correct": true,
+        "why": "Right. The same weights are stored with fewer bits each, and rounding costs a little accuracy."
+      }
+    ]
+  },
+  {
+    "id": "ex-6xvtfd2s",
+    "version": 1,
+    "section": "size-and-memory",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 7B model at 8 bits needs 7 GB for its weights, and your machine has 8 GB free for it. You want it to read long documents. What does this lesson say to expect?",
+    "hint": "The weights are the floor, not the total.",
+    "choices": [
+      {
+        "text": "No problem, since the weights fit with a gigabyte to spare",
+        "correct": false,
+        "why": "The spare gigabyte has to hold the working memory for the context, which grows with its length."
+      },
+      {
+        "text": "It runs, but answers in 8-bit text",
+        "correct": false,
+        "why": "The width is about how weights are stored. The text it writes is the same kind of text."
+      },
+      {
+        "text": "Trouble: working memory grows with the context, and almost none is left",
+        "correct": true,
+        "why": "Right. The weights fit, but the text being processed needs memory too, and a long document needs more of it."
+      },
+      {
+        "text": "It cannot run at all, as models only run at 16 bits",
+        "correct": false,
+        "why": "Quantised models run; that is the point of quantising them."
+      }
+    ]
+  },
+  {
+    "id": "ex-s3316xqc",
+    "version": 1,
+    "section": "size-and-memory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You call a model through a provider's API. Whose problem is the memory its weights need?",
+    "hint": "Who holds the weights?",
+    "choices": [
+      {
+        "text": "Yours, since the weights are downloaded to your machine with each request",
+        "correct": false,
+        "why": "Nothing is downloaded. The request goes to the provider's machines and the reply comes back."
+      },
+      {
+        "text": "Theirs, since they run the model for you; you pay per token",
+        "correct": true,
+        "why": "Right. The arithmetic matters when you run the weights yourself."
+      },
+      {
+        "text": "Yours: you choose the width in the request",
+        "correct": false,
+        "why": "The width of a hosted model is the provider's choice, not a request setting."
+      },
+      {
+        "text": "Nobody's, because API models do not have weights",
+        "correct": false,
+        "why": "Every model has weights. With an API they sit on someone else's hardware."
+      }
+    ]
+  },
+  {
+    "id": "ex-qy7pewx2",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps for working out whether a downloaded model fits your machine in order.",
+    "hint": "Start from what the model card tells you.",
+    "items": [
+      "Find the number of parameters",
+      "Choose the width, and so the bytes per weight",
+      "Multiply them to get the memory for the weights",
+      "Leave room for the context and everything else running"
+    ]
+  },
+  {
+    "id": "ex-va4sjs7z",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each width to the bytes each weight takes.",
+    "hint": "Divide the bits by eight.",
+    "pairs": [
+      {
+        "left": "32 bits",
+        "right": "4 bytes"
+      },
+      {
+        "left": "16 bits",
+        "right": "2 bytes"
+      },
+      {
+        "left": "8 bits",
+        "right": "1 byte"
+      },
+      {
+        "left": "4 bits",
+        "right": "half a byte"
+      }
+    ],
+    "right_distractors": [
+      "16 bytes"
+    ]
+  },
+  {
+    "id": "ex-sw4x71h9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says: \"Our model learnt the new prices from yesterday's chats, since it saw them so many times.\" What does this lesson say?",
+    "hint": "Did anything change the weights yesterday?",
+    "choices": [
+      {
+        "text": "That is right, since repetition is how training works",
+        "correct": false,
+        "why": "Repetition matters in training. Chatting with a deployed model is not training it."
+      },
+      {
+        "text": "It learnt them only if the chats used the same wording",
+        "correct": false,
+        "why": "Wording does not matter here. Nothing in a chat changes the weights."
+      },
+      {
+        "text": "It learnt them, but only until the provider resets it overnight",
+        "correct": false,
+        "why": "There is nothing to reset. The weights never changed."
+      },
+      {
+        "text": "The weights did not change; the chats were only input",
+        "correct": true,
+        "why": "Right. Using a model does not train it. Lesson 9 is about changing the weights on purpose, and what that costs."
+      }
+    ]
+  }
+]

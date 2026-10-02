@@ -1,0 +1,532 @@
+{
+  "ex-rhdyah8q": {
+    "prompt": "O que a janela de contexto de um modelo precisa comportar?",
+    "hint": "Veja por que a segunda requisição foi recusada.",
+    "choices": [
+      {
+        "text": "Só o prompt, já que a resposta é escrita em outro lugar",
+        "why": "A resposta é escrita na mesma janela, token por token."
+      },
+      {
+        "text": "O prompt e a resposta juntos",
+        "why": "Isso."
+      },
+      {
+        "text": "Só a resposta; o prompt é lido antes de a janela abrir",
+        "why": "O prompt é a primeira coisa na janela."
+      },
+      {
+        "text": "O que o provedor decidir no dia, conforme a carga",
+        "why": "A janela é um limite publicado do modelo."
+      }
+    ]
+  },
+  "ex-j5vrvxek": {
+    "prompt": "O `window.py 900 200` deu certo e o `window.py 900 400` foi recusado. O prompt era idêntico. O que mudou?",
+    "hint": "1.717 + 400.",
+    "choices": [
+      {
+        "text": "O segundo prompt foi tokenizado diferente por causa do limite maior",
+        "why": "O prompt é contado do mesmo jeito: 1.717 nas duas vezes."
+      },
+      {
+        "text": "O labllm tinha esgotado o limite de taxa na primeira requisição",
+        "why": "Um limite de taxa responde 429, não 400 com essa mensagem."
+      },
+      {
+        "text": "Um `max_tokens` de 400 passa do limite por resposta do `tiny-1`",
+        "why": "Esse limite é 512; quem o quebrou foi a requisição com 600."
+      },
+      {
+        "text": "O espaço pedido para a resposta levou o total além de 2.048",
+        "why": "Isso: 1.717 mais 400 dá 2.117."
+      }
+    ]
+  },
+  "ex-t57cx66q": {
+    "prompt": "O `window.py 900 200` usou 1.717 tokens de prompt e permitiu 200 de saída. Quantos dos 2.048 tokens do `tiny-1` sobraram?",
+    "hint": "Subtraia os dois da janela.",
+    "unit": "tokens"
+  },
+  "ex-a5fzhbtq": {
+    "prompt": "Um colega propõe mandar o repositório inteiro, 600 mil tokens, com cada pergunta, já que a janela do modelo é de um milhão. Que objeção da seção uma janela maior não removeria?",
+    "hint": "Três motivos são listados.",
+    "choices": [
+      {
+        "text": "Vai ser recusado, já que nunca se oferece uma janela tão grande",
+        "why": "A tabela lista janelas de um milhão e mais."
+      },
+      {
+        "text": "O tokenizador não aguenta arquivos desse tamanho",
+        "why": "Tamanho não é problema do tokenizador."
+      },
+      {
+        "text": "Informação no meio de um contexto longo é mal usada",
+        "why": "Isso, e o custo e a espera continuam."
+      },
+      {
+        "text": "Repositórios não podem ser enviados como texto",
+        "why": "Podem; o `cache.py` manda um."
+      }
+    ]
+  },
+  "ex-y8x4h2mh": {
+    "prompt": "O `tiktoken` contou 15 tokens para a pergunta e o contador do labllm disse 18, com a mesma codificação. De onde vêm os outros 3?",
+    "hint": "As regras do próprio labllm, listadas na aula 1.",
+    "choices": [
+      {
+        "text": "O labllm soma 3 por mensagem de embrulho",
+        "why": "Isso: o lugar do que uma API real põe em volta de cada mensagem."
+      },
+      {
+        "text": "O `tiktoken` ignora pontuação, então sempre conta a menos",
+        "why": "Ele conta cada caractere; o `?` da pergunta é um token."
+      },
+      {
+        "text": "A resposta do modelo foi contada antes",
+        "why": "Nada foi gerado; é uma chamada de contagem."
+      },
+      {
+        "text": "A pergunta foi traduzida antes de ser contada",
+        "why": "Nada traduz coisa nenhuma."
+      }
+    ]
+  },
+  "ex-3mmjtmqy": {
+    "prompt": "Quantos tokens uma definição de ferramenta acrescentou à pergunta no `count.py`?",
+    "hint": "71 contra 18.",
+    "unit": "tokens"
+  },
+  "ex-z5e3ydm9": {
+    "prompt": "Você precisa saber quantos tokens vão ser cobrados numa requisição a um modelo cujo tokenizador não é publicado. De onde vem esse número?",
+    "hint": "Uma contagem inclui o embrulho.",
+    "choices": [
+      {
+        "text": "O `tiktoken` com `o200k_base`, já que todo provedor o usa",
+        "why": "Só os modelos da OpenAI estão associados a ele."
+      },
+      {
+        "text": "O número de palavras vezes 1,3",
+        "why": "Uma razão é um chute que muda com a língua e o assunto."
+      },
+      {
+        "text": "O endpoint de contagem do provedor, ou o `usage` da resposta",
+        "why": "Isso."
+      },
+      {
+        "text": "O tamanho em caracteres dividido por quatro",
+        "why": "Mesmo problema de qualquer razão."
+      }
+    ]
+  },
+  "ex-2t5aq4g1": {
+    "prompt": "Por que registrar o `usage` em toda chamada desde o primeiro dia?",
+    "hint": "Que pergunta a fatura levanta?",
+    "choices": [
+      {
+        "text": "O provedor apaga depois de uma hora",
+        "why": "Está na resposta; a questão é guardar."
+      },
+      {
+        "text": "Para dividir a fatura por funcionalidade depois",
+        "why": "Isso. Só o uso por requisição diz que funcionalidade gastou."
+      },
+      {
+        "text": "Porque o SDK se recusa a rodar sem um logger",
+        "why": "O SDK não tem essa regra."
+      },
+      {
+        "text": "Para retreinar o modelo com o seu tráfego",
+        "why": "Uso é uma contagem, não dado de treino."
+      }
+    ]
+  },
+  "ex-xvtvz85c": {
+    "prompt": "Preços de modelos são dados em dólares por milhão de tokens, escrito `$` por ___.",
+    "hint": "Quatro letras, como a tabela imprime.",
+    "blanks": [
+      {
+        "accept": [
+          "MTok",
+          "M tok",
+          "mtok"
+        ]
+      }
+    ]
+  },
+  "ex-eynzhmyz": {
+    "prompt": "Com os preços do Claude Sonnet 5.5 (US$ 2 de entrada, US$ 10 de saída por MTok), quanto custa uma requisição com 4.000 tokens de entrada e 1.000 de saída, em dólares?",
+    "hint": "4.000 × 2 / 1.000.000, mais a saída.",
+    "unit": "dólares"
+  },
+  "ex-xw3dqnbs": {
+    "prompt": "Por que o `prices.py` imprime a data ao lado dos preços da Anthropic e um commit ao lado dos outros?",
+    "hint": "Uma fonte tem versão e a outra não.",
+    "choices": [
+      {
+        "text": "Para o script recusar preços com mais de um mês",
+        "why": "Ele não recusa nada; a data é para quem lê."
+      },
+      {
+        "text": "Porque a lei exige data em qualquer preço",
+        "why": "O motivo da seção é poder conferir um número, não a lei."
+      },
+      {
+        "text": "Porque os preços do LiteLLM estão sempre desatualizados",
+        "why": "O commit os fixa; não diz nada da idade deles."
+      },
+      {
+        "text": "Uma página muda no lugar; um commit não",
+        "why": "Isso. A data faz parte do número da página, e o commit fixa o outro arquivo."
+      }
+    ]
+  },
+  "ex-y5mt22qc": {
+    "prompt": "Na tabela, que comparação mostra a maior razão de preço por token de entrada?",
+    "hint": "Divida.",
+    "choices": [
+      {
+        "text": "`gpt-5.5` contra `gpt-5.4-nano`",
+        "why": "Isso: 5 contra 0,2 dá 25 vezes."
+      },
+      {
+        "text": "Claude Opus 5.5 contra Claude Haiku 4.5",
+        "why": "4 contra 1 dá quatro vezes."
+      },
+      {
+        "text": "`gemini-pro-latest` contra `gemini-3.5-flash`",
+        "why": "2 contra 1,5 é um terço a mais."
+      },
+      {
+        "text": "Claude Sonnet 5.5 contra `gemini-pro-latest`",
+        "why": "Os dois custam US$ 2."
+      }
+    ]
+  },
+  "ex-zf2dr2wh": {
+    "prompt": "Por que o `cost.py` usa `Decimal` em vez de `float`?",
+    "hint": "A loja guarda os preços do mesmo jeito, pelo mesmo motivo.",
+    "choices": [
+      {
+        "text": "Porque o SDK devolve o `usage` como `Decimal` e os dois precisam bater",
+        "why": "O `usage` é de inteiros."
+      },
+      {
+        "text": "Porque `float` não guarda números acima de mais ou menos um milhão",
+        "why": "Guarda, mas não toda fração exatamente."
+      },
+      {
+        "text": "Erros de arredondamento em frações de centavo somam em milhões de requisições",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque contas com `Decimal` são mais rápidas que com `float`",
+        "why": "É mais lento; o motivo não é esse."
+      }
+    ]
+  },
+  "ex-etm25eyp": {
+    "prompt": "A requisição do `cost.py` teve 10 tokens de entrada e 147 de saída. Que mudança cortaria mais o custo?",
+    "hint": "Onde estão quase 99% dele?",
+    "choices": [
+      {
+        "text": "Uma pergunta mais curta",
+        "why": "A pergunta tem 10 tokens; quase não há o que cortar."
+      },
+      {
+        "text": "Um teto menor para o tamanho da resposta",
+        "why": "Isso, já que a saída é quase todo o custo."
+      },
+      {
+        "text": "Pôr a pergunta em cache",
+        "why": "Dez tokens ficam abaixo de qualquer mínimo de cache, e custam quase nada."
+      },
+      {
+        "text": "Mandar com temperatura 0",
+        "why": "A temperatura não muda o preço."
+      }
+    ]
+  },
+  "ex-14nn9tng": {
+    "prompt": "Com os preços do Claude Haiku 4.5 (US$ 1 de entrada, US$ 5 de saída), quanto custa um mês de 1.000 requisições por dia, cada uma com 2.000 tokens de entrada e 200 de saída? Considere um mês de 30 dias.",
+    "hint": "Custo de uma requisição, vezes 1.000, vezes 30.",
+    "unit": "dólares"
+  },
+  "ex-5yaage5c": {
+    "prompt": "Que custos a seção diz que uma primeira estimativa deixa de fora? Escolha todos os que se aplicam.",
+    "hint": "A última parte da seção.",
+    "choices": [
+      {
+        "text": "Uma resposta que o seu código jogou fora depois de cobrada",
+        "why": "Sim: foi cobrada inteira."
+      },
+      {
+        "text": "O preço por milhão de tokens",
+        "why": "É o principal dado da estimativa."
+      },
+      {
+        "text": "O histórico de uma conversa, reenviado a cada turno",
+        "why": "Sim."
+      },
+      {
+        "text": "Os seus próprios testes e experimentos",
+        "why": "Sim, um dos motivos de a aula 4 deixar modelos fora dos testes de unidade."
+      }
+    ]
+  },
+  "ex-fsa6pfqn": {
+    "prompt": "O total no turno 10 era 9.270 tokens e no turno 20 era 38.740. Por que dobrar os turnos dá umas quatro vezes a entrada?",
+    "hint": "O que cada requisição leva?",
+    "choices": [
+      {
+        "text": "O labllm cobra mais por token depois do décimo turno",
+        "why": "O preço por token nunca muda."
+      },
+      {
+        "text": "As respostas ficaram mais longas ao longo da conversa",
+        "why": "A resposta era o mesmo texto fixo em todo turno."
+      },
+      {
+        "text": "O cache expirou no meio",
+        "why": "Nenhum cache foi usado nesta execução."
+      },
+      {
+        "text": "Cada requisição leva todos os turnos anteriores",
+        "why": "Isso, então o total cresce com o quadrado do tamanho."
+      }
+    ]
+  },
+  "ex-gq9tpek5": {
+    "prompt": "Ligue cada jeito de lidar com uma conversa longa ao que ele custa.",
+    "hint": "Cada um tira alguma coisa.",
+    "pairs": [
+      {
+        "left": "Manter só as últimas trocas",
+        "right": "O modelo esquece os turnos mais antigos"
+      },
+      {
+        "left": "Trocar turnos antigos por um resumo",
+        "right": "Uma requisição extra de vez em quando"
+      },
+      {
+        "left": "Começar uma conversa nova",
+        "right": "Tudo o que foi dito antes"
+      }
+    ],
+    "right_distractors": [
+      "Nada"
+    ]
+  },
+  "ex-cpw6t528": {
+    "prompt": "Quantos tokens de entrada as vinte requisições do `conversation.py` somaram?",
+    "hint": "A última linha.",
+    "unit": "tokens"
+  },
+  "ex-q1adfb1e": {
+    "prompt": "No `cache.py`, a primeira requisição pagou US$ 0,003511 pela entrada e teria pago US$ 0,002812 sem cache. Por que mais?",
+    "hint": "Veja as colunas de preço.",
+    "choices": [
+      {
+        "text": "O labllm contou o prompt de sistema duas vezes",
+        "why": "Contou uma vez, como escrita no cache."
+      },
+      {
+        "text": "A primeira requisição do dia é cobrada mais caro",
+        "why": "Nenhum preço depende da hora aqui."
+      },
+      {
+        "text": "Escrever no cache custa mais que ler sem cache",
+        "why": "Isso: US$ 2,50 contra US$ 2 por MTok."
+      },
+      {
+        "text": "A pergunta era mais longa",
+        "why": "Tinha 8 tokens contra 9 na segunda."
+      }
+    ]
+  },
+  "ex-8wcwhd4m": {
+    "prompt": "Ponha as partes de uma requisição na ordem que faz o cache acertar mais vezes.",
+    "hint": "O que nunca muda vem primeiro.",
+    "items": [
+      "Instruções",
+      "Definições de ferramentas",
+      "Documentos",
+      "A conversa até aqui",
+      "A pergunta nova"
+    ],
+    "trap": "Pôr a pergunta nova ou um horário no começo é o deslize comum: tudo depois disso deixa de casar."
+  },
+  "ex-7s26s195": {
+    "prompt": "Um prompt de sistema começa com `Today is 2026-10-02 14:31:07.` e depois traz 3.000 tokens de instruções marcadas para cache. O registro mostra escritas no cache em toda requisição e nenhuma leitura. Por quê?",
+    "hint": "O cache casa a partir do começo.",
+    "choices": [
+      {
+        "text": "O horário torna cada prefixo novo",
+        "why": "Isso: nada é reaproveitado. Mova-o para depois da parte em cache."
+      },
+      {
+        "text": "3.000 tokens está abaixo do mínimo de todo provedor",
+        "why": "Está bem acima dos 1.024 do labllm."
+      },
+      {
+        "text": "Cache só funciona para ferramentas",
+        "why": "Prompts de sistema foram para o cache no `cache.py`."
+      },
+      {
+        "text": "Leituras só aparecem depois da quinta requisição",
+        "why": "Uma leitura apareceu na segunda no `cache.py`."
+      }
+    ]
+  },
+  "ex-avab13yd": {
+    "prompt": "O campo do `usage` que mostra o cache sendo reaproveitado começa com `cache_` e termina com `_input_tokens`. A palavra entre os dois é ___.",
+    "hint": "Não é a escrita.",
+    "blanks": [
+      {
+        "accept": [
+          "read"
+        ]
+      }
+    ]
+  },
+  "ex-vf5badzj": {
+    "prompt": "Uma resposta volta com `stop_reason` igual a `max_tokens`. O que isso quer dizer?",
+    "hint": "Quem decidiu que tinha terminado?",
+    "choices": [
+      {
+        "text": "O modelo terminou e usou exatamente o espaço que recebeu",
+        "why": "Terminar é `end_turn`."
+      },
+      {
+        "text": "Acabou o espaço antes de ele terminar",
+        "why": "Isso."
+      },
+      {
+        "text": "Ele bateu numa das sequências de parada",
+        "why": "Isso é `stop_sequence`."
+      },
+      {
+        "text": "O provedor se recusou a responder",
+        "why": "Uma recusa é informada de outro jeito."
+      }
+    ]
+  },
+  "ex-7nt9yn7w": {
+    "prompt": "Uma funcionalidade pede JSON e interpreta a resposta. O que ela deve fazer quando o `stop_reason` é `max_tokens`?",
+    "hint": "Um documento JSON cortado é JSON?",
+    "choices": [
+      {
+        "text": "Interpretar, e preencher os campos que faltam com valores padrão",
+        "why": "Os campos que chegaram também podem estar cortados."
+      },
+      {
+        "text": "Fechar as chaves e interpretar",
+        "why": "Isso faz outro documento parecer completo."
+      },
+      {
+        "text": "Usar se interpretar sem erro",
+        "why": "Uma lista cortada ainda pode ser válida, e é mais curta."
+      },
+      {
+        "text": "Tratar a chamada como falha",
+        "why": "Isso: tentar de novo com mais espaço, ou avisar."
+      }
+    ]
+  },
+  "ex-wj7rbqbj": {
+    "prompt": "Por que um `max_tokens` generoso não é desperdício de dinheiro?",
+    "hint": "Pelo que você é cobrado?",
+    "choices": [
+      {
+        "text": "Você paga pelos tokens escritos, não pelo espaço permitido",
+        "why": "Isso."
+      },
+      {
+        "text": "Os provedores devolvem o espaço não usado no fim do mês",
+        "why": "Não há o que devolver; ele nunca foi cobrado."
+      },
+      {
+        "text": "Porque tokens de saída são de graça",
+        "why": "A saída é a direção cara."
+      },
+      {
+        "text": "É desperdício; a seção recomenda o menor valor possível",
+        "why": "Ela recomenda um teto um pouco acima da maior resposta esperada."
+      }
+    ]
+  },
+  "ex-0za38x8w": {
+    "prompt": "Onde a seção põe a verificação que recusa uma requisição grande demais?",
+    "hint": "Antes ou depois do dinheiro?",
+    "choices": [
+      {
+        "text": "Num painel revisto uma vez por semana",
+        "why": "Isso é depois da fatura."
+      },
+      {
+        "text": "No console do provedor, como único limite",
+        "why": "O console é a última linha, e para a funcionalidade de todo mundo."
+      },
+      {
+        "text": "No código, antes de a requisição sair",
+        "why": "Isso."
+      },
+      {
+        "text": "No prompt, pedindo ao modelo respostas curtas",
+        "why": "O modelo não pode recusar uma entrada que já foi cobrada."
+      }
+    ]
+  },
+  "ex-qtgfrb8d": {
+    "prompt": "Quantos tokens de entrada tinha a requisição recusada no `budget.py`?",
+    "hint": "A segunda linha da execução.",
+    "unit": "tokens"
+  },
+  "ex-vxj6n47w": {
+    "prompt": "Ligue cada campo ou ajuste ao que ele informa ou controla.",
+    "hint": "Os quatro foram usados nesta aula.",
+    "pairs": [
+      {
+        "left": "`max_tokens`",
+        "right": "O máximo que a resposta pode ter"
+      },
+      {
+        "left": "`stop_reason`",
+        "right": "Por que a resposta terminou"
+      },
+      {
+        "left": "`cache_read_input_tokens`",
+        "right": "Quanto do prompt foi reaproveitado"
+      },
+      {
+        "left": "`usage.output_tokens`",
+        "right": "O que foi escrito, e cobrado"
+      }
+    ],
+    "right_distractors": [
+      "O tamanho da janela"
+    ]
+  },
+  "ex-6445var2": {
+    "prompt": "Um chat de suporte manda 2.500 tokens de instruções fixas, reenvia todas as trocas anteriores e deixa as respostas irem até 4.000 tokens. A fatura dobrou num mês de tráfego estável. Que mudança ataca a causa que esta aula procuraria primeiro?",
+    "hint": "Que custo cresce sem mais usuários?",
+    "choices": [
+      {
+        "text": "Subir o `max_tokens`, para menos respostas serem cortadas e repetidas",
+        "why": "Subir o teto não diminui a entrada."
+      },
+      {
+        "text": "Limitar ou resumir o histórico, e pôr o prompt de sistema em cache",
+        "why": "Isso: conversas mais longas fazem a entrada crescer mais que linearmente."
+      },
+      {
+        "text": "Passar para temperatura 0",
+        "why": "A temperatura não afeta a fatura."
+      },
+      {
+        "text": "Contar tokens com o `tiktoken` em vez do endpoint do provedor",
+        "why": "Isso muda a estimativa, não a fatura."
+      }
+    ]
+  }
+}

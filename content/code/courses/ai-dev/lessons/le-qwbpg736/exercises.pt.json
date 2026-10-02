@@ -1,0 +1,623 @@
+{
+  "ex-vc7rv3j8": {
+    "prompt": "O que um modelo de linguagem produz a cada passo da geração?",
+    "hint": "Veja o que o `lab/next.py` imprime.",
+    "choices": [
+      {
+        "text": "A próxima palavra da resposta, escolhida consultando o texto de treino",
+        "why": "Nada é consultado, e a unidade é um token, não uma palavra."
+      },
+      {
+        "text": "Uma frase completa, que depois é cortada em tokens para o usuário",
+        "why": "Frases são construídas um token por vez; nada sai inteiro."
+      },
+      {
+        "text": "Uma probabilidade para cada próximo token possível",
+        "why": "Isso. Escolher um deles é um passo separado."
+      },
+      {
+        "text": "Uma nota dizendo o quanto o texto até ali é verdadeiro",
+        "why": "Nada no laço mede verdade, que é o ponto da aula 1 seção 07."
+      }
+    ]
+  },
+  "ex-tybdj174": {
+    "prompt": "Depois de `If the file does not`, o `tinylm` põe ` exist` em quarto, empatado com ` add` e ` close`. Por que a escolha óbvia de um leitor não ganha?",
+    "hint": "`context used: 2 tokens`.",
+    "choices": [
+      {
+        "text": "Ele só vê `does not`, e no corpus muitas palavras vêm depois dessas duas",
+        "why": "Isso. Dois tokens de contexto não dizem de que frase sobre arquivo se trata."
+      },
+      {
+        "text": "O corpus dele não contém a palavra exist",
+        "why": "Contém: ` exist` está na lista, com 7,7%."
+      },
+      {
+        "text": "A decodificação gulosa estava desligada no `next.py`",
+        "why": "O `next.py` nem decodifica; ele imprime a distribuição."
+      },
+      {
+        "text": "O espaço inicial faz de ` exist` um token mais raro que `exist`",
+        "why": "O espaço faz parte do token nos cinco, então não os distingue."
+      }
+    ]
+  },
+  "ex-57wbcyms": {
+    "prompt": "A execução gulosa termina com `the type of the` repetido quatro vezes. O que tiraria este modelo do laço?",
+    "hint": "Guloso quer dizer que o mesmo contexto sempre dá o mesmo token.",
+    "choices": [
+      {
+        "text": "Um prompt mais longo, para o modelo ter mais texto a continuar",
+        "why": "O laço começa depois do prompt, e daí em diante só os dois últimos tokens contam."
+      },
+      {
+        "text": "Mais tokens de saída, para o laço ter espaço de se resolver",
+        "why": "Mais tokens são mais repetições."
+      },
+      {
+        "text": "Outra semente, mantendo a temperatura em 0",
+        "why": "Com 0 não há sorteio, então a semente nunca é usada."
+      },
+      {
+        "text": "Sortear da distribuição em vez de pegar o do topo",
+        "why": "Isso. Um sorteio sai do laço assim que outro token é escolhido."
+      }
+    ]
+  },
+  "ex-nqs6chrc": {
+    "prompt": "Ligue cada consequência do laço de geração à aula que trata dela.",
+    "hint": "A última parte da seção lista quatro.",
+    "pairs": [
+      {
+        "left": "Uma resposta longa demora mais que uma curta",
+        "right": "Aula 9, streaming"
+      },
+      {
+        "left": "Você paga por cada token de entrada e de saída",
+        "right": "Aula 2, custo"
+      },
+      {
+        "left": "Nada no laço confere fatos",
+        "right": "Aula 11, riscos"
+      },
+      {
+        "left": "O modelo só vê o que a requisição leva",
+        "right": "Aula 1 seção 06, contexto"
+      }
+    ],
+    "right_distractors": [
+      "Aula 4, geração de testes"
+    ]
+  },
+  "ex-fx9k2bgy": {
+    "prompt": "Em `Token|isation| is| not| splitting`, para onde vai o espaço antes de `is`?",
+    "hint": "Veja onde cai o `|`.",
+    "choices": [
+      {
+        "text": "Some, porque tokenizadores ignoram espaços",
+        "why": "Os oito espaços de indentação da linha de código são um token próprio, então espaço é mantido."
+      },
+      {
+        "text": "Para o mesmo token que `is`",
+        "why": "Isso: ` is` é um token só, com o espaço."
+      },
+      {
+        "text": "Para um token próprio, entre `isation` e `is`",
+        "why": "Não há `| |` entre eles; o espaço está dentro de ` is`."
+      },
+      {
+        "text": "Para o fim de `isation`",
+        "why": "O `|` cai antes do espaço, não depois."
+      }
+    ]
+  },
+  "ex-7cgp88wv": {
+    "prompt": "Com o `o200k_base`, quantos tokens tem a frase `A tokenização não divide o texto nos espaços.`?",
+    "hint": "A terceira linha da primeira captura.",
+    "unit": "tokens"
+  },
+  "ex-xwsykxqz": {
+    "prompt": "`1290000` sai como `129|000|0`. O que isso diz sobre pedir a um modelo que some um pedido?",
+    "hint": "O que o modelo recebe são os pedaços.",
+    "choices": [
+      {
+        "text": "Nada; o tokenizador junta os pedaços de novo num número antes do modelo ver",
+        "why": "O modelo recebe ids de token, e estes são três."
+      },
+      {
+        "text": "Que preços devem ir com ponto decimal, que tokeniza limpo",
+        "why": "`.sub` mostra que o ponto é só mais um lugar para cortar."
+      },
+      {
+        "text": "O modelo nunca vê o número como número, então faça a soma em código",
+        "why": "Isso. É por isso que a loja guarda dinheiro em código."
+      },
+      {
+        "text": "Só que o `o200k_base` é má escolha; o `cl100k_base` mantém números inteiros",
+        "why": "Os dois cortam dígitos em grupos; o ponto da seção vale para tokenizadores em geral."
+      }
+    ]
+  },
+  "ex-v24bbx14": {
+    "prompt": "Você conta um prompt com o `tiktoken` e dá 1.200 tokens. Para quem esse número vale?",
+    "hint": "Uma contagem pertence a um tokenizador.",
+    "choices": [
+      {
+        "text": "Para quem usa um modelo que o `tiktoken` associa à mesma codificação",
+        "why": "Isso. Para qualquer outro modelo é uma estimativa."
+      },
+      {
+        "text": "Para qualquer um, já que token é a mesma unidade em todo provedor",
+        "why": "`espaços` é um token numa codificação e dois em outra."
+      },
+      {
+        "text": "Para a cobrança da Anthropic, já que o `tiktoken` segue o formato deles",
+        "why": "A Anthropic não publica o tokenizador e conta para você."
+      },
+      {
+        "text": "Para ninguém; contagens de token são aleatórias e mudam a cada execução",
+        "why": "Um tokenizador é determinístico: o mesmo texto sempre dá os mesmos ids."
+      }
+    ]
+  },
+  "ex-50dn4t7w": {
+    "prompt": "O `shop/cart.py` tem 265 tokens para 121 palavras, então código custa cerca de ___ tokens por palavra, contra um e meio na prosa do corpus.",
+    "hint": "Divida e arredonde para um número inteiro.",
+    "blanks": [
+      {
+        "accept": [
+          "2",
+          "dois"
+        ]
+      }
+    ]
+  },
+  "ex-hh28g0cg": {
+    "prompt": "O que faz uma temperatura 0?",
+    "hint": "Veja o que a semente fez com 0.",
+    "choices": [
+      {
+        "text": "Faz o modelo recusar respostas incertas",
+        "why": "A temperatura só muda a forma de uma distribuição; não acrescenta recusa."
+      },
+      {
+        "text": "Dá a cada token a mesma chance",
+        "why": "É para isso que uma temperatura muito alta tende."
+      },
+      {
+        "text": "Desliga o contexto, e só o prompt é usado",
+        "why": "O contexto é usado do mesmo jeito em qualquer temperatura."
+      },
+      {
+        "text": "O token do topo sempre ganha, o que é decodificação gulosa",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-dr16wwj6": {
+    "prompt": "O teste de um colega manda o mesmo prompt a um modelo hospedado com temperatura 0 e compara a resposta com um texto guardado. Ele falha uma vez em trinta. O que está errado?",
+    "hint": "O que a seção diz que os provedores prometem?",
+    "choices": [
+      {
+        "text": "A temperatura devia ser 1, que é o padrão",
+        "why": "Uma temperatura maior faz a resposta variar mais, não menos."
+      },
+      {
+        "text": "O teste depende de um modelo se repetir, o que nada garante",
+        "why": "Isso. Um teste que precisa de uma resposta fixa não devia chamar um modelo."
+      },
+      {
+        "text": "A semente devia ser fixa, o que torna determinístico qualquer modelo hospedado",
+        "why": "Onde a semente é aceita, os provedores chamam o resultado de melhor esforço."
+      },
+      {
+        "text": "O prompt é curto demais para a temperatura 0 fazer efeito",
+        "why": "A temperatura age em todo sorteio, qualquer que seja o tamanho do prompt."
+      }
+    ]
+  },
+  "ex-9rn53d31": {
+    "prompt": "Com top-p em 0,5, que tokens podem ser sorteados?",
+    "hint": "É uma fatia da probabilidade, não uma contagem.",
+    "choices": [
+      {
+        "text": "Os cinco tokens mais prováveis, quaisquer que sejam as probabilidades",
+        "why": "Um número fixo de tokens é o top-k."
+      },
+      {
+        "text": "Qualquer token com probabilidade própria acima de 50%, e nenhum outro",
+        "why": "Quase nunca existe um token assim; o corte é um total acumulado."
+      },
+      {
+        "text": "Os mais prováveis até somarem metade",
+        "why": "Isso."
+      },
+      {
+        "text": "Metade do vocabulário, escolhida ao acaso antes de cada sorteio",
+        "why": "Os tokens mantidos são os mais prováveis, em ordem."
+      }
+    ]
+  },
+  "ex-3tc0kztp": {
+    "prompt": "O `lab/knobs.py` perguntou ao SDK de cada provedor quais entre temperatura, top-p, top-k e semente a chamada de geração aceita. Qual não aceitou nenhum?",
+    "hint": "A primeira linha da saída.",
+    "choices": [
+      {
+        "text": "O `GenerateContentConfig` do Google, que deixa o sorteio para o modelo",
+        "why": "Ele aceitou os quatro."
+      },
+      {
+        "text": "O `messages.create` da Anthropic",
+        "why": "Isso: como os modelos Claude sorteiam tokens é decisão da Anthropic."
+      },
+      {
+        "text": "O `chat.completions.create` da OpenAI, que os levou para outro lugar",
+        "why": "Ele aceitou temperatura, top-p e semente."
+      },
+      {
+        "text": "Nenhum dos três; todo provedor expõe temperatura",
+        "why": "Isso já foi verdade e não é da API atual da Anthropic."
+      }
+    ]
+  },
+  "ex-yeyeq96q": {
+    "prompt": "Ligue cada tarefa à temperatura que a seção recomenda.",
+    "hint": "Existe uma única resposta certa?",
+    "pairs": [
+      {
+        "left": "Transformar uma nota fiscal em campos JSON",
+        "right": "Baixa, de 0 a 0,3"
+      },
+      {
+        "left": "Sugerir dez nomes para um novo endpoint",
+        "right": "Perto do padrão"
+      },
+      {
+        "left": "Classificar um chamado como cobrança ou entrega",
+        "right": "Baixa, de 0 a 0,3 de novo"
+      }
+    ],
+    "right_distractors": [
+      "Acima de 1,5"
+    ]
+  },
+  "ex-7cbng8h2": {
+    "prompt": "O que é um embedding, no sentido da seção?",
+    "hint": "O WordLlama devolveu um por texto.",
+    "choices": [
+      {
+        "text": "Um vetor por texto, posto conforme o assunto dele",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma cópia comprimida do texto, que pode ser decodificada de volta nas palavras",
+        "why": "Nada decodifica 256 números de volta numa frase."
+      },
+      {
+        "text": "A lista de ids de token que o tokenizador produziu",
+        "why": "Esses são inteiros que indexam um vocabulário; um embedding é uma direção no espaço."
+      },
+      {
+        "text": "Uma frase de resumo escrita pelo modelo",
+        "why": "Um modelo de embedding não escreve texto."
+      }
+    ]
+  },
+  "ex-eb524qmn": {
+    "prompt": "Para `the cart total is wrong`, o WordLlama põe `the cart page loads slowly` em primeiro. Por quê?",
+    "hint": "O que o vencedor e a consulta têm em comum?",
+    "choices": [
+      {
+        "text": "Uma página de carrinho lenta é a causa mais comum de um total errado no fechamento",
+        "why": "São dois problemas diferentes; a seção diz que o vencedor está errado."
+      },
+      {
+        "text": "A similaridade de cosseno favorece frases mais curtas",
+        "why": "O vencedor não é o mais curto, e o tamanho não entra no cosseno."
+      },
+      {
+        "text": "Divide `the cart` com a consulta, e este modelo pequeno se apoia nisso",
+        "why": "Isso. As reformulações quase não dividem palavras e perdem."
+      },
+      {
+        "text": "A consulta não foi normalizada, então as notas não significam nada",
+        "why": "O `similar.py` pede vetores normalizados com `norm=True`."
+      }
+    ]
+  },
+  "ex-7tng82y8": {
+    "prompt": "Uma busca de suporte acha o trecho do manual sobre cupons para a pergunta *dá para usar um cupom duas vezes?* O trecho diz que não. Pelo que a seção mostrou, qual é o papel do embedding em acertar a resposta?",
+    "hint": "`was accepted` contra `was not accepted`: 0,964.",
+    "choices": [
+      {
+        "text": "Todo, já que um trecho próximo da pergunta é um trecho que concorda com ela",
+        "why": "O mais próximo de *was accepted* foi *was not accepted*."
+      },
+      {
+        "text": "Achar o trecho; se ele diz sim ou não tem de ser lido pelo modelo gerador ou por uma pessoa",
+        "why": "Isso. Embeddings situam o texto pelo assunto."
+      },
+      {
+        "text": "Nenhum, porque embeddings não acham trechos sobre cupons",
+        "why": "Acharam; essa parte é o que fazem bem."
+      },
+      {
+        "text": "Decidir a resposta, desde que a nota passe de 0,9",
+        "why": "Uma nota é uma ordenação, não um veredito, e 0,964 foi a frase oposta."
+      }
+    ]
+  },
+  "ex-5d49na2h": {
+    "prompt": "O modelo A dá 0,81 a um par de frases e o modelo B dá 0,47 ao mesmo par. O que você conclui?",
+    "hint": "A seção diz com o que uma nota pode ser comparada.",
+    "choices": [
+      {
+        "text": "O modelo A entendeu melhor o par",
+        "why": "Um número maior de outro modelo não é uma leitura melhor do mesmo par."
+      },
+      {
+        "text": "O modelo B está quebrado, já que 0,47 é menos que 0,5",
+        "why": "Não há limiar de 0,5; as escalas variam entre modelos."
+      },
+      {
+        "text": "As frases significam 81% a mesma coisa",
+        "why": "Um cosseno não é uma porcentagem de igualdade."
+      },
+      {
+        "text": "Nada, até ver como cada modelo ordena outros pares",
+        "why": "Isso. Compare notas só com notas do mesmo modelo."
+      }
+    ]
+  },
+  "ex-mbeh25j0": {
+    "prompt": "Como um aplicativo de chat faz um modelo responder *quantos itens tem agora?* sobre um carrinho citado dois turnos antes?",
+    "hint": "Veja o que a terceira requisição levou.",
+    "choices": [
+      {
+        "text": "O modelo guarda os dois primeiros turnos na memória até a sessão acabar",
+        "why": "O modelo não guarda nada entre requisições."
+      },
+      {
+        "text": "Ele manda a conversa inteira de novo com a pergunta nova",
+        "why": "Isso. Memória é só isso."
+      },
+      {
+        "text": "O provedor anexa as respostas anteriores por conta própria",
+        "why": "Na captura, a lista foi montada e enviada pelo `turns.py`."
+      },
+      {
+        "text": "Não faz; modelos respondem uma pergunta por vez",
+        "why": "Faz, mandando o histórico."
+      }
+    ]
+  },
+  "ex-z77q019g": {
+    "prompt": "No `turns.py`, quantos tokens de entrada o terceiro turno levou?",
+    "hint": "A terceira linha da captura.",
+    "unit": "tokens"
+  },
+  "ex-h7zada35": {
+    "prompt": "Quais destes dividem a janela de contexto com a conversa? Escolha todos os que se aplicam.",
+    "hint": "A seção lista o que mais uma requisição leva.",
+    "choices": [
+      {
+        "text": "O prompt de sistema",
+        "why": "Sim, é texto na requisição."
+      },
+      {
+        "text": "Os dados de treino do modelo",
+        "why": "Dados de treino não são enviados; moldaram os parâmetros muito antes."
+      },
+      {
+        "text": "As definições de ferramentas",
+        "why": "Sim, contam como tudo o mais."
+      },
+      {
+        "text": "A resposta que o modelo está prestes a escrever",
+        "why": "Sim: entrada e saída dividem uma janela."
+      }
+    ]
+  },
+  "ex-eb9k0x6s": {
+    "prompt": "Um assistente escreve código para o `requests` 2.x num projeto que fixa o `httpx` e nunca importa `requests`. O assistente não recebeu o arquivo de dependências. O que a regra prática da seção diz sobre isso?",
+    "hint": "Se não está na requisição…",
+    "choices": [
+      {
+        "text": "O assistente está com defeito, porque devia saber que bibliotecas o projeto usa",
+        "why": "Ele só pode saber o que recebeu."
+      },
+      {
+        "text": "O modelo devia ser retreinado com o projeto",
+        "why": "Na prática, não é por treino que os fatos de um projeto chegam ao modelo."
+      },
+      {
+        "text": "Nada; assistentes leem o repositório inteiro sozinhos",
+        "why": "Só o que uma ferramenta põe no contexto; a aula 3 mostra o que um editor junta."
+      },
+      {
+        "text": "Ele chutou, porque o fato que decide a resposta não estava no contexto",
+        "why": "Isso. Ponha o arquivo de dependências no contexto."
+      }
+    ]
+  },
+  "ex-ym7ad9gq": {
+    "prompt": "O dia em que termina o texto de treino de um modelo é chamado de ___ de treino.",
+    "hint": "Depois dele, o modelo não sabe nada novo.",
+    "blanks": [
+      {
+        "accept": [
+          "corte",
+          "data de corte",
+          "cutoff"
+        ]
+      }
+    ]
+  },
+  "ex-mg666hjh": {
+    "prompt": "Perguntado sobre a França, o `tinylm` escreveu `a string, and A binascii.Error is raised if`. Qual afirmação sobre essa saída está certa?",
+    "hint": "`context used: 1 tokens`.",
+    "choices": [
+      {
+        "text": "É ruído aleatório, sem relação com o corpus",
+        "why": "É o texto mais provável do próprio corpus depois de ` is`."
+      },
+      {
+        "text": "Quer dizer que o modelo sabia que estava errado e mudou de assunto",
+        "why": "Uma distribuição não tem sinal para isso."
+      },
+      {
+        "text": "É o que vem depois de ` is` no corpus dele, escrito sem nenhum sinal de que a pergunta era inédita",
+        "why": "Isso."
+      },
+      {
+        "text": "Teria acertado com mais tokens de saída",
+        "why": "Mais tokens continuam o mesmo texto do recuo."
+      }
+    ]
+  },
+  "ex-z9pv7009": {
+    "prompt": "Ligue cada alucinação à forma que a seção dá a ela.",
+    "hint": "Três formas, para quem desenvolve.",
+    "pairs": [
+      {
+        "left": "`cart.compute_totals()` quando o método é `total()`",
+        "right": "Uma API que não existe"
+      },
+      {
+        "left": "Código para a 1.x de uma biblioteca depois que o projeto passou para a 2.x",
+        "right": "Uma API que existia"
+      },
+      {
+        "left": "`import shopcart_utils`, que ninguém nunca publicou",
+        "right": "Um pacote que não existe"
+      }
+    ],
+    "right_distractors": [
+      "Uma temperatura errada"
+    ]
+  },
+  "ex-k54356bh": {
+    "prompt": "Por que o \"não sei\" de um modelo grande não basta para dizer quando ele está reconstruindo em vez de lembrando?",
+    "hint": "De onde vem a frase?",
+    "choices": [
+      {
+        "text": "É um hábito aprendido, não a leitura do que ele sabe",
+        "why": "Isso. Nenhum sinal interno acompanha o que ele aprendeu."
+      },
+      {
+        "text": "Os provedores proíbem os modelos grandes de admitir ignorância numa resposta",
+        "why": "Eles dizem; a questão é quando."
+      },
+      {
+        "text": "A frase só aparece com temperatura 0, que a maioria das aplicações evita",
+        "why": "A temperatura não decide se o modelo foi treinado para dizer isso."
+      },
+      {
+        "text": "A API tira essa frase das respostas antes de elas chegarem",
+        "why": "Nada tira."
+      }
+    ]
+  },
+  "ex-pc0egv45": {
+    "prompt": "De onde vêm as respostas do `scripted-1`?",
+    "hint": "A tabela da seção.",
+    "choices": [
+      {
+        "text": "Do `tinylm`, treinado num corpus maior que o do `tiny-1`",
+        "why": "Esse é o `tiny-1`, e é o mesmo modelo pequeno."
+      },
+      {
+        "text": "Escritas pelo curso, escolhidas por regras simples",
+        "why": "Isso, e toda aula que mostra uma diz isso."
+      },
+      {
+        "text": "De um provedor real, guardadas no dia da gravação",
+        "why": "Nenhuma API de modelo estava ao alcance da máquina."
+      },
+      {
+        "text": "Do WordLlama, o modelo de embeddings do laboratório",
+        "why": "O WordLlama só faz embeddings; não escreve texto."
+      }
+    ]
+  },
+  "ex-g4dahspa": {
+    "prompt": "Para rodar o código do curso contra a API real da Anthropic, o que muda além do nome do modelo?",
+    "hint": "Como os SDKs encontram o labllm?",
+    "choices": [
+      {
+        "text": "O SDK, que tem de ser trocado pelo verdadeiro do provedor",
+        "why": "Os SDKs do laboratório são os verdadeiros dos provedores."
+      },
+      {
+        "text": "Os corpos das requisições, que o labllm lê num formato próprio",
+        "why": "O labllm lê os formatos dos provedores."
+      },
+      {
+        "text": "Nada; o código já chega à API real",
+        "why": "Ele chega a `127.0.0.1:8400`."
+      },
+      {
+        "text": "As duas variáveis de ambiente: a URL base e a chave",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-2dxvk5nd": {
+    "prompt": "Ponha um passo da geração em ordem.",
+    "hint": "O laço da seção, do texto até ali ao passo seguinte.",
+    "items": [
+      "Ler o contexto",
+      "Dar uma probabilidade a cada próximo token possível",
+      "Escolher um token da distribuição",
+      "Acrescentá-lo ao contexto"
+    ]
+  },
+  "ex-nge4mzyy": {
+    "prompt": "Ligue cada coisa da aula à unidade em que é medida.",
+    "hint": "Uma delas não é uma contagem.",
+    "pairs": [
+      {
+        "left": "Uma janela de contexto",
+        "right": "Tokens"
+      },
+      {
+        "left": "Um embedding do WordLlama",
+        "right": "256 números"
+      },
+      {
+        "left": "A similaridade entre dois embeddings",
+        "right": "Um cosseno"
+      },
+      {
+        "left": "A temperatura",
+        "right": "Um número que muda a forma da distribuição"
+      }
+    ],
+    "right_distractors": [
+      "Palavras"
+    ]
+  },
+  "ex-339p59sa": {
+    "prompt": "Uma loja quer que um modelo responda clientes sobre os pedidos deles. Que desenho decorre desta aula?",
+    "hint": "O que o modelo sabe sobre o pedido de um cliente?",
+    "choices": [
+      {
+        "text": "Ajustar o modelo toda noite com a tabela de pedidos",
+        "why": "Treino é lento, congela no corte e ainda reconstrói em vez de consultar."
+      },
+      {
+        "text": "Perguntar ao modelo o que o cliente pediu e conferir a confiança da resposta",
+        "why": "Não há sinal de confiança para conferir."
+      },
+      {
+        "text": "Buscar o pedido em código e pôr no contexto da requisição",
+        "why": "Isso. Se não está na requisição, o modelo não sabe."
+      },
+      {
+        "text": "Usar temperatura 0, para o modelo não poder inventar um pedido",
+        "why": "A temperatura muda o sorteio, não o que o modelo sabe."
+      }
+    ]
+  }
+}

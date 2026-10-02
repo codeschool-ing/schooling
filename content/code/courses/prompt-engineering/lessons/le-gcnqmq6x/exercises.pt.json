@@ -1,0 +1,329 @@
+{
+  "ex-mdvjp43k": {
+    "prompt": "O `toylm info` termina com `parameters: 436 stored counts`. O que são esses 436 parâmetros?",
+    "hint": "Abra o `model.json` de cabeça.",
+    "choices": [
+      {
+        "text": "As contagens que o modelo aprendeu, que são o modelo inteiro",
+        "why": "Isso. O `toylm save` grava essas contagens num arquivo, e esse arquivo é o modelo."
+      },
+      {
+        "text": "As configurações que você pode passar para o `toylm generate`, como a temperatura",
+        "why": "Esses são controles de amostragem, escolhidos a cada pedido. Não fazem parte do modelo."
+      },
+      {
+        "text": "As frases do corpus, guardadas para o modelo achá-las de novo",
+        "why": "Nenhuma frase é guardada. O arquivo tem contagens de qual palavra veio depois de qual."
+      },
+      {
+        "text": "O número de palavras distintas do vocabulário",
+        "why": "O vocabulário tem 72 palavras. Os 436 são contagens de três tabelas."
+      }
+    ]
+  },
+  "ex-t37e242k": {
+    "prompt": "O `model.json` tem `'coffee is': {'bitter': 1, 'cold': 2, 'hot': 16, 'ready': 3, 'strong': 5}`. Você troca `16` por `1` e roda `toylm next \"the coffee is\"` a partir do arquivo editado. O que acontece?",
+    "hint": "As porcentagens vêm dessas contagens e de mais nada.",
+    "choices": [
+      {
+        "text": "Nada, já que o corpus continua dizendo que o café está quente",
+        "why": "O corpus só serviu para preencher as contagens. Depois que elas existem, elas são o modelo."
+      },
+      {
+        "text": "`hot` continua na frente, porque o modelo lembra do treinamento",
+        "why": "Não há memória fora das contagens. O arquivo é o modelo inteiro."
+      },
+      {
+        "text": "O modelo se recusa a carregar o arquivo porque as contagens não batem mais",
+        "why": "Nada confere as contagens contra o corpus. Ele carrega os números que estiverem lá."
+      },
+      {
+        "text": "`strong` passa à frente, e `hot` cai para uns 8%",
+        "why": "Isso. O total vira 12, então `strong` tem 5 de 12 e `hot` 1 de 12. Mude um parâmetro e o modelo muda."
+      }
+    ]
+  },
+  "ex-b75yzzx8": {
+    "prompt": "O que é um peso num grande modelo de linguagem?",
+    "hint": "Como ele ganha o valor que tem?",
+    "choices": [
+      {
+        "text": "Uma contagem de quantas vezes uma palavra veio depois de outra",
+        "why": "Esse é o tipo de parâmetro do `toylm`. Os pesos de uma rede neural são números aprendidos, não contagens."
+      },
+      {
+        "text": "Uma frase que o modelo leu no treinamento, comprimida para poder ser recuperada",
+        "why": "Os pesos não guardam frases que se possa recuperar. O que ele leu está espalhado por todos eles."
+      },
+      {
+        "text": "Um número aprendido no treinamento, sem significado próprio",
+        "why": "Isso. Nenhum, sozinho, tem um significado legível; o comportamento vem de todos juntos."
+      },
+      {
+        "text": "O quanto cada palavra do seu prompt importa",
+        "why": "Isso muda a cada prompt. Os pesos ficam fixos quando o treinamento termina."
+      }
+    ]
+  },
+  "ex-ykqhy8d0": {
+    "prompt": "Como o treinamento dá valor aos pesos?",
+    "hint": "O que é conferido depois de cada previsão?",
+    "choices": [
+      {
+        "text": "Programadores definem os pesos à mão, uma regra de cada vez",
+        "why": "Ninguém define bilhões de números à mão. Eles começam aleatórios e são ajustados automaticamente."
+      },
+      {
+        "text": "Cada um é empurrado para tornar o próximo token real mais provável",
+        "why": "Isso. Repetidos sobre quantidades enormes de texto, os empurrões viram gramática, fatos e estrutura."
+      },
+      {
+        "text": "Eles são copiados das contagens de um modelo de trigramas do mesmo texto",
+        "why": "Nenhuma tabela de contagens entra nisso. Uma rede aprende os próprios números a partir dos próprios erros."
+      },
+      {
+        "text": "Cada peso é atribuído a um fato e preenchido com ele",
+        "why": "Nenhum peso guarda um fato. Os fatos, na medida em que um modelo os tem, estão espalhados por muitos pesos."
+      }
+    ]
+  },
+  "ex-sxbybk12": {
+    "prompt": "Quais destas coisas valem para um modelo grande com quem você está conversando? Marque todas as que se aplicam.",
+    "hint": "De onde vem o que ele \"lembra\" no chat?",
+    "choices": [
+      {
+        "text": "Os pesos dele são os mesmos no fim do chat e no começo",
+        "why": "Sim. Usar um modelo não muda os pesos dele."
+      },
+      {
+        "text": "O que ele recorda do começo do chat foi enviado de novo a ele como entrada",
+        "why": "Sim. As vezes anteriores fazem parte do texto que ele recebe, lição 4."
+      },
+      {
+        "text": "Corrigi-lo atualiza os pesos, então amanhã ele vai lembrar",
+        "why": "Uma correção vive no texto desta conversa. Os pesos não mudam por causa dela."
+      },
+      {
+        "text": "Dá para procurar nos pesos uma frase que ele leu no treinamento",
+        "why": "O que ele leu está espalhado por todos os pesos. Não há o que procurar."
+      }
+    ]
+  },
+  "ex-dng1njd0": {
+    "prompt": "Um modelo descrito como 70B tem setenta ___ de pesos.",
+    "hint": "O B é uma palavra, não uma unidade de memória.",
+    "blanks": [
+      {
+        "accept": [
+          "bilhões",
+          "bilhoes",
+          "bilhão"
+        ]
+      }
+    ]
+  },
+  "ex-7pa3y2hr": {
+    "prompt": "Dois modelos são de 7B. O que dá para concluir sobre eles só com isso?",
+    "hint": "O que a contagem decide com exatidão, e o que ela não decide?",
+    "choices": [
+      {
+        "text": "Dão as mesmas respostas, já que têm os mesmos parâmetros",
+        "why": "O mesmo número de pesos não é os mesmos pesos. Os valores são outros."
+      },
+      {
+        "text": "Foram treinados com a mesma quantidade de texto",
+        "why": "A contagem não diz nada sobre quanto texto cada um leu."
+      },
+      {
+        "text": "Os dois são piores que qualquer modelo de 70B em qualquer tarefa",
+        "why": "Tamanho não é qualidade. Um modelo menor se sai melhor em certas tarefas."
+      },
+      {
+        "text": "Precisam da mesma memória na mesma largura, e ainda assim diferem muito em qualidade",
+        "why": "Isso. A contagem fixa a memória; os dados e o tempo de treinamento decidem boa parte da qualidade."
+      }
+    ]
+  },
+  "ex-ynp7c1vy": {
+    "prompt": "Um artigo diz que um modelo \"decorou a internet\". O que esta lição diz que está errado nessa imagem?",
+    "hint": "Daria para achar uma página da web dentro dos pesos?",
+    "choices": [
+      {
+        "text": "Os modelos nunca foram treinados com páginas da web",
+        "why": "Muito do texto de treinamento vem da web. A questão é o que os pesos são, não de onde veio o texto."
+      },
+      {
+        "text": "Nada está errado: os pesos são a internet comprimida, e dá para descomprimir",
+        "why": "Não há descompressão que devolva as páginas. O texto deixou padrões em números, não uma cópia."
+      },
+      {
+        "text": "Os pesos são números moldados pelo texto, não uma cópia dele",
+        "why": "Isso. É por isso que ele escreve texto que não está em lugar nenhum dos dados de treinamento, e erra fatos que leu."
+      },
+      {
+        "text": "Ele só decorou as partes que couberam na janela de contexto",
+        "why": "A janela de contexto é o texto de um pedido, lição 4. Não tem nada a ver com treinamento."
+      }
+    ]
+  },
+  "ex-bx1tncj7": {
+    "prompt": "Quantos gigabytes ocupam os pesos de um modelo de 13B a 16 bits?",
+    "hint": "Parâmetros vezes bytes por parâmetro. Dezesseis bits são dois bytes.",
+    "unit": "GB"
+  },
+  "ex-rbk02p5f": {
+    "prompt": "Quantos gigabytes ocupam os pesos de um modelo de 70B a 4 bits?",
+    "hint": "Meio byte cada.",
+    "unit": "GB"
+  },
+  "ex-z99nbqbv": {
+    "prompt": "Os pesos de um modelo ocupam 8 GB a 8 bits. Quantos gigabytes ocupariam a 32 bits?",
+    "hint": "Conte os bytes por peso em cada largura.",
+    "unit": "GB"
+  },
+  "ex-me85fwyy": {
+    "prompt": "O `quant.py` arredondou quatro números para 4 bits. O que aconteceu com `0.0173`?",
+    "hint": "Leia a linha de 4 bits da captura.",
+    "choices": [
+      {
+        "text": "Ficou exatamente igual, como o maior dos quatro ficou",
+        "why": "O maior número define o degrau e sempre fica exato. O menor é o que corre mais risco."
+      },
+      {
+        "text": "Virou 0.0162, um erro de cerca de um milésimo",
+        "why": "Esse é o resultado a 8 bits. A 4 bits os degraus são muito mais grossos."
+      },
+      {
+        "text": "Cresceu para ficar parecido com os outros pesos",
+        "why": "Arredondar leva um número ao degrau mais próximo; não puxa os pequenos para cima."
+      },
+      {
+        "text": "Virou 0",
+        "why": "Isso. A 4 bits o degrau era maior que o número, então ele foi arredondado para zero e o que contribuía sumiu."
+      }
+    ]
+  },
+  "ex-qtxknvkj": {
+    "prompt": "O que quantizar um modelo de 16 bits para 4 bits troca?",
+    "hint": "O que se perde quando um número é arredondado?",
+    "choices": [
+      {
+        "text": "Velocidade por precisão, já que modelos de 4 bits são sempre mais precisos",
+        "why": "Arredondar perde informação. Um modelo a 4 bits nunca é mais preciso que o mesmo modelo a 16 bits."
+      },
+      {
+        "text": "Pesos por parâmetros",
+        "why": "São dois nomes para os mesmos números. Quantizar mantém todos e guarda cada um em menos bits."
+      },
+      {
+        "text": "O número de pesos, que cai de sete bilhões para menos de dois",
+        "why": "A contagem não muda. Cada peso ocupa menos bits."
+      },
+      {
+        "text": "Um pouco de qualidade, por um quarto da memória",
+        "why": "Isso. Os mesmos pesos são guardados com menos bits cada, e o arredondamento custa um pouco de precisão."
+      }
+    ]
+  },
+  "ex-6xvtfd2s": {
+    "prompt": "Um modelo de 7B a 8 bits precisa de 7 GB para os pesos, e a sua máquina tem 8 GB livres para ele. Você quer que ele leia documentos longos. O que esta lição diz para esperar?",
+    "hint": "Os pesos são o piso, não o total.",
+    "choices": [
+      {
+        "text": "Nenhum problema, já que os pesos cabem com um gigabyte de folga",
+        "why": "O gigabyte de folga tem de guardar a memória de trabalho do contexto, que cresce com o tamanho dele."
+      },
+      {
+        "text": "Ele roda, mas responde em texto de 8 bits",
+        "why": "A largura diz como os pesos são guardados. O texto que ele escreve é o mesmo tipo de texto."
+      },
+      {
+        "text": "Problema: a memória de trabalho cresce com o contexto, e quase nada sobra",
+        "why": "Isso. Os pesos cabem, mas o texto em processamento também precisa de memória, e um documento longo precisa de mais."
+      },
+      {
+        "text": "Não roda de jeito nenhum, já que modelos só rodam a 16 bits",
+        "why": "Modelos quantizados rodam; é para isso que se quantiza."
+      }
+    ]
+  },
+  "ex-s3316xqc": {
+    "prompt": "Você chama um modelo pela API de um provedor. De quem é o problema da memória que os pesos dele precisam?",
+    "hint": "Quem guarda os pesos?",
+    "choices": [
+      {
+        "text": "Seu, já que os pesos são baixados para a sua máquina a cada pedido",
+        "why": "Nada é baixado. O pedido vai para as máquinas do provedor e a resposta volta."
+      },
+      {
+        "text": "Do provedor, que guarda os pesos; você paga por token",
+        "why": "Isso. A conta importa quando você mesmo roda os pesos."
+      },
+      {
+        "text": "Seu: você escolhe a largura no pedido",
+        "why": "A largura de um modelo hospedado é escolha do provedor, não uma configuração do pedido."
+      },
+      {
+        "text": "De ninguém, porque modelos de API não têm pesos",
+        "why": "Todo modelo tem pesos. Com uma API, eles ficam no hardware de outra pessoa."
+      }
+    ]
+  },
+  "ex-qy7pewx2": {
+    "prompt": "Ponha em ordem os passos para descobrir se um modelo baixado cabe na sua máquina.",
+    "hint": "Comece pelo que o cartão do modelo informa.",
+    "items": [
+      "Achar o número de parâmetros",
+      "Escolher a largura e, com ela, os bytes por peso",
+      "Multiplicar os dois para obter a memória dos pesos",
+      "Deixar espaço para o contexto e para o resto que estiver rodando"
+    ]
+  },
+  "ex-va4sjs7z": {
+    "prompt": "Ligue cada largura aos bytes que cada peso ocupa.",
+    "hint": "Divida os bits por oito.",
+    "pairs": [
+      {
+        "left": "32 bits",
+        "right": "4 bytes"
+      },
+      {
+        "left": "16 bits",
+        "right": "2 bytes"
+      },
+      {
+        "left": "8 bits",
+        "right": "1 byte"
+      },
+      {
+        "left": "4 bits",
+        "right": "meio byte"
+      }
+    ],
+    "right_distractors": [
+      "16 bytes"
+    ]
+  },
+  "ex-sw4x71h9": {
+    "prompt": "Um colega diz: \"Nosso modelo aprendeu os preços novos com os chats de ontem, já que viu esses preços tantas vezes.\" O que esta lição diz?",
+    "hint": "Alguma coisa mudou os pesos ontem?",
+    "choices": [
+      {
+        "text": "Está certo, já que repetição é como o treinamento funciona",
+        "why": "A repetição importa no treinamento. Conversar com um modelo em produção não é treiná-lo."
+      },
+      {
+        "text": "Aprendeu só se os chats usaram as mesmas palavras",
+        "why": "As palavras não importam aqui. Nada num chat muda os pesos."
+      },
+      {
+        "text": "Aprendeu, mas só até o provedor reiniciá-lo de madrugada",
+        "why": "Não há o que reiniciar. Os pesos nunca mudaram."
+      },
+      {
+        "text": "Os pesos não mudaram; os chats de ontem foram só texto de entrada",
+        "why": "Isso. Usar um modelo não o treina. A lição 9 trata de mudar os pesos de propósito, e do que isso custa."
+      }
+    ]
+  }
+}

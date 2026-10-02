@@ -1,0 +1,796 @@
+[
+  {
+    "id": "ex-0f2477c2",
+    "version": 1,
+    "section": "what-state-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the main job of `terraform.tfstate`?",
+    "hint": "Look at what each entry pairs together.",
+    "choices": [
+      {
+        "text": "To store the provider binaries Terraform downloaded",
+        "correct": false,
+        "why": "Providers live under `.terraform/`; the state holds none of them."
+      },
+      {
+        "text": "To pair each address in the configuration with the id AWS gave it",
+        "correct": true,
+        "why": "Yes: `aws_vpc.shop` beside the `vpc-…` id AWS invented. Nothing else holds both."
+      },
+      {
+        "text": "To keep a log of every command Ana typed",
+        "correct": false,
+        "why": "It records the result of applies, not a history of commands."
+      },
+      {
+        "text": "To cache plans so the next one runs faster",
+        "correct": false,
+        "why": "That is the belief the lesson corrects: the state is not a cache, and it cannot be rebuilt."
+      }
+    ]
+  },
+  {
+    "id": "ex-1q5vm2jr",
+    "version": 1,
+    "section": "what-state-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two state files have the same `lineage`, one with `serial` 4 and one with `serial` 9. What does that say?",
+    "hint": "One of the two numbers names a history, the other a point in it.",
+    "choices": [
+      {
+        "text": "They belong to two unrelated configurations that happen to match",
+        "correct": false,
+        "why": "Unrelated states would have different lineages."
+      },
+      {
+        "text": "The one with serial 9 was written by a newer Terraform version",
+        "correct": false,
+        "why": "That is `terraform_version`; the serial counts writes."
+      },
+      {
+        "text": "One history; serial 9 is five writes newer",
+        "correct": true,
+        "why": "Right. Same lineage means the same history, and the serial goes up by one per write."
+      },
+      {
+        "text": "Serial 9 holds nine resources",
+        "correct": false,
+        "why": "The serial is a counter of writes, not of resources."
+      }
+    ]
+  },
+  {
+    "id": "ex-sm6pq51p",
+    "version": 1,
+    "section": "what-state-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Terraform not find `aws_vpc.shop` on each plan by searching for its `Name` tag?",
+    "hint": "Lesson 1 created something that answers this.",
+    "choices": [
+      {
+        "text": "Tags are not readable through the EC2 API",
+        "correct": false,
+        "why": "They are; `describe-vpcs` filtered on one in lesson 1."
+      },
+      {
+        "text": "Because a name matches any number of VPCs, and an id names exactly one",
+        "correct": true,
+        "why": "Yes. Two VPCs called `shop` existed at once; only an id names exactly one."
+      },
+      {
+        "text": "Searching by tag costs more API calls than AWS allows per minute",
+        "correct": false,
+        "why": "Rate limits are not the reason; one search is one call."
+      },
+      {
+        "text": "Tag searches are slower than reading the file",
+        "correct": false,
+        "why": "Speed is not the problem; ambiguity is."
+      }
+    ]
+  },
+  {
+    "id": "ex-x4y7g3zz",
+    "version": 1,
+    "section": "losing-it",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the fresh clone with no state, how many resources did `terraform plan` want to add?",
+    "hint": "Count what `main.tf` declares.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-g8n09zrn",
+    "version": 1,
+    "section": "losing-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The clone's apply created a second VPC and a second security group called `web`. Why did AWS not refuse the second group?",
+    "hint": "Where does a security group's name have to be unique?",
+    "choices": [
+      {
+        "text": "Its name has to be unique inside its own VPC, and this one is in the new VPC",
+        "correct": true,
+        "why": "Right, and the second group was created in the second VPC."
+      },
+      {
+        "text": "Moto skips the uniqueness checks that real AWS performs",
+        "correct": false,
+        "why": "Real AWS would accept it too; the rule is per VPC."
+      },
+      {
+        "text": "Terraform renamed it with a random suffix",
+        "correct": false,
+        "why": "Both are called `web`, as the capture shows."
+      },
+      {
+        "text": "The first group had been deleted by the plan",
+        "correct": false,
+        "why": "A plan changes nothing, and the first group is still listed."
+      }
+    ]
+  },
+  {
+    "id": "ex-jwh5nkm5",
+    "version": 1,
+    "section": "losing-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague deletes the duplicate's directory, state included, before anybody runs `destroy` in it. What is the situation now?",
+    "hint": "Which state knew the duplicate?",
+    "choices": [
+      {
+        "text": "Ana's directory sees the extra VPC and offers to destroy it",
+        "correct": false,
+        "why": "Her state knows only its own three ids; the duplicate is not in it."
+      },
+      {
+        "text": "AWS removes the duplicate once nothing manages it",
+        "correct": false,
+        "why": "AWS keeps what it was told to create, managed or not."
+      },
+      {
+        "text": "Terraform merges the two networks on Ana's next apply",
+        "correct": false,
+        "why": "Terraform never merges resources; it reads ids it already holds."
+      },
+      {
+        "text": "The duplicate stays real and billed, and nothing manages it any more",
+        "correct": true,
+        "why": "Yes. Telling it apart from the original now means reading ids by hand, or importing (lesson 8)."
+      }
+    ]
+  },
+  {
+    "id": "ex-80xnpy0p",
+    "version": 1,
+    "section": "state-commands",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `terraform state rm aws_subnet.public_a` do to the subnet in AWS?",
+    "hint": "The `describe-subnets` after it answers this.",
+    "choices": [
+      {
+        "text": "Deletes it, then removes it from the state",
+        "correct": false,
+        "why": "That is `destroy`; `state rm` never calls AWS to delete."
+      },
+      {
+        "text": "Marks it for replacement on the next apply",
+        "correct": false,
+        "why": "That is `-replace` (lesson 6); `rm` makes Terraform forget it."
+      },
+      {
+        "text": "Moves it to a backup state in the same directory",
+        "correct": false,
+        "why": "A backup of the whole state is written, but the subnet itself is untouched."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: the subnet stays in AWS, and only the state forgets it."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7d5gf2m",
+    "version": 1,
+    "section": "state-commands",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `state mv aws_subnet.a aws_subnet.public_a`, but before editing `main.tf`, what did the plan propose?",
+    "hint": "The file and the state now disagree about a name.",
+    "choices": [
+      {
+        "text": "No changes, because the subnet's id did not change",
+        "correct": false,
+        "why": "The id is fine; the address in the file and in the state differ."
+      },
+      {
+        "text": "To destroy `public_a` and create a new `a` in its place",
+        "correct": true,
+        "why": "Yes: `1 to add, 0 to change, 1 to destroy`, a replacement caused by a name."
+      },
+      {
+        "text": "To rename the subnet's `Name` tag to `public_a`",
+        "correct": false,
+        "why": "Addresses are Terraform's names; they never reach a tag."
+      },
+      {
+        "text": "An error, because `public_a` is not in the configuration",
+        "correct": false,
+        "why": "It is not an error: a state entry with no configuration is planned for destruction."
+      }
+    ]
+  },
+  {
+    "id": "ex-pjrkaya4",
+    "version": 1,
+    "section": "state-commands",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To see what `terraform state mv` would do without changing anything, add the flag ___.",
+    "hint": "A rehearsal flag.",
+    "blanks": [
+      {
+        "accept": [
+          "-dry-run",
+          "dry-run",
+          "--dry-run"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mf8vtcym",
+    "version": 1,
+    "section": "state-commands",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to what it does.",
+    "hint": "One right-hand item belongs to no command here.",
+    "pairs": [
+      {
+        "left": "terraform state list",
+        "right": "Prints every address the state holds"
+      },
+      {
+        "left": "terraform state show",
+        "right": "Prints one resource's recorded attributes"
+      },
+      {
+        "left": "terraform state mv",
+        "right": "Changes an address, keeping the object"
+      },
+      {
+        "left": "terraform state rm",
+        "right": "Forgets an object without deleting it"
+      }
+    ],
+    "right_distractors": [
+      "Deletes the real resource and its entry"
+    ]
+  },
+  {
+    "id": "ex-5z71c4xc",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the ordinary `terraform plan` propose for the port 22 rule a colleague added by hand?",
+    "hint": "Which side does a normal plan try to make AWS match?",
+    "choices": [
+      {
+        "text": "To write the rule into `main.tf`",
+        "correct": false,
+        "why": "Terraform never edits the configuration; a person does."
+      },
+      {
+        "text": "Nothing: rules added outside Terraform are ignored",
+        "correct": false,
+        "why": "With inline `ingress` blocks the resource owns the whole list, so the extra rule is a difference."
+      },
+      {
+        "text": "To remove it",
+        "correct": true,
+        "why": "Yes, an update in place with the rule's lines marked `-`."
+      },
+      {
+        "text": "To replace the whole security group",
+        "correct": false,
+        "why": "It was `~ update in-place`, `1 to change`, not a replacement."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0536n2d",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `terraform apply -refresh-only` change?",
+    "hint": "Refresh reads; which of the three sides receives what it read?",
+    "choices": [
+      {
+        "text": "The real resources, to match the state",
+        "correct": false,
+        "why": "A refresh-only apply changes nothing in AWS."
+      },
+      {
+        "text": "The configuration, to match AWS",
+        "correct": false,
+        "why": "Terraform never writes `.tf` files."
+      },
+      {
+        "text": "Only the state, recording what AWS has now",
+        "correct": true,
+        "why": "Right: it accepts that the world moved, without deciding yet which side wins."
+      },
+      {
+        "text": "Both the state and AWS, to undo the colleague's change",
+        "correct": false,
+        "why": "Undoing the change is what a plain `apply` does."
+      }
+    ]
+  },
+  {
+    "id": "ex-78wkt633",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The `web` group's rules are written as separate `aws_vpc_security_group_ingress_rule` resources, one for 443. A colleague adds port 22 by hand. What does the next plan show?",
+    "hint": "Which rules does each rule resource compare?",
+    "choices": [
+      {
+        "text": "A change removing port 22 from the group",
+        "correct": false,
+        "why": "That happens with inline `ingress` blocks, where the group owns the whole list."
+      },
+      {
+        "text": "No changes",
+        "correct": true,
+        "why": "Yes. Each rule resource compares only itself; a rule nobody declared is invisible."
+      },
+      {
+        "text": "An error, because two rules now overlap",
+        "correct": false,
+        "why": "Ports 22 and 443 do not overlap, and drift is not an error."
+      },
+      {
+        "text": "A new rule resource to be imported automatically",
+        "correct": false,
+        "why": "Terraform does not import on its own; lesson 8 shows import as a deliberate step."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4mf9hn9",
+    "version": 1,
+    "section": "remote-backend",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was the state bucket created with the aws CLI instead of in `main.tf`?",
+    "hint": "What would the very first `init` need?",
+    "choices": [
+      {
+        "text": "Terraform cannot create S3 buckets",
+        "correct": false,
+        "why": "It can; the problem is storing its own state in one it creates."
+      },
+      {
+        "text": "Buckets created by the CLI are encrypted and Terraform's are not",
+        "correct": false,
+        "why": "Encryption is a setting, whoever creates the bucket."
+      },
+      {
+        "text": "The backend needs the bucket to exist before init, and a destroy would delete it",
+        "correct": true,
+        "why": "Right. So it is made once, outside, by hand or by a small configuration with local state."
+      },
+      {
+        "text": "The CLI is faster",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghtx5n1b",
+    "version": 1,
+    "section": "remote-backend",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana wants `bucket = var.state_bucket` in the backend block. What happens?",
+    "hint": "When is the backend configured, compared with the rest?",
+    "choices": [
+      {
+        "text": "It works once the variable has a default",
+        "correct": false,
+        "why": "Defaults do not help: no variable is evaluated at that point."
+      },
+      {
+        "text": "It is refused, and the value goes in `-backend-config`",
+        "correct": true,
+        "why": "Yes. The backend is set up before anything else is evaluated."
+      },
+      {
+        "text": "It works, but only with the local backend",
+        "correct": false,
+        "why": "No backend block can refer to variables."
+      },
+      {
+        "text": "Terraform asks for the value interactively at every plan",
+        "correct": false,
+        "why": "That is what a missing ordinary variable does, not a backend."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqkhxx7d",
+    "version": 1,
+    "section": "remote-backend",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of moving the shop's state into S3 in order.",
+    "hint": "The bucket cannot come from the configuration it serves.",
+    "items": [
+      "Create the bucket and turn on versioning",
+      "Write `backend.tf` with bucket, key and `use_lockfile`",
+      "Run `terraform init -migrate-state` and answer yes",
+      "Check `terraform state list`, then delete the local leftovers"
+    ],
+    "trap": "Deleting the local file before the migration leaves nothing to migrate."
+  },
+  {
+    "id": "ex-zhnfpf37",
+    "version": 1,
+    "section": "locking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `use_lockfile = true`, where does the S3 backend keep its lock?",
+    "hint": "Look at the bucket listing while the apply waits.",
+    "choices": [
+      {
+        "text": "In a DynamoDB table named in the backend block",
+        "correct": false,
+        "why": "That was the older way, `dynamodb_table`, now deprecated."
+      },
+      {
+        "text": "In a field inside `terraform.tfstate`",
+        "correct": false,
+        "why": "The state has no lock field; the lock is a separate object."
+      },
+      {
+        "text": "In `.terraform/` on the machine running the apply",
+        "correct": false,
+        "why": "A local file could not stop another machine."
+      },
+      {
+        "text": "In a second object beside the state, its key ending in `.tflock`",
+        "correct": true,
+        "why": "Yes, `shop/terraform.tfstate.tflock`, beside the state."
+      }
+    ]
+  },
+  {
+    "id": "ex-v00etcn3",
+    "version": 1,
+    "section": "locking",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which HTTP status code did S3 return when the second run tried to take the lock?",
+    "hint": "It is printed beside `PreconditionFailed`.",
+    "value": 412,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-c9026nmn",
+    "version": 1,
+    "section": "locking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a plain `terraform plan` take the lock, though it changes nothing in AWS?",
+    "hint": "What would it read if an apply were halfway through writing?",
+    "choices": [
+      {
+        "text": "So that it never reads a state being written",
+        "correct": true,
+        "why": "Right: a plan built on half a state describes a world that never existed."
+      },
+      {
+        "text": "Because a plan saves itself in the bucket",
+        "correct": false,
+        "why": "A plan writes nothing to the bucket unless you save it yourself with `-out`, and then locally."
+      },
+      {
+        "text": "To reserve the right to apply within the next hour",
+        "correct": false,
+        "why": "The lock is released when the plan exits."
+      },
+      {
+        "text": "Because S3 refuses reads of an unlocked object",
+        "correct": false,
+        "why": "S3 knows nothing about Terraform's lock; the lock is a convention between runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xr6zs1j",
+    "version": 1,
+    "section": "locking",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `terraform plan` fails on a lock whose `Who` is a CI runner. Which of these should happen before anyone runs `force-unlock`? Choose all that apply.",
+    "hint": "The danger is a second writer beside a live one.",
+    "choices": [
+      {
+        "text": "Confirm the CI job that took it is no longer running",
+        "correct": true,
+        "why": "Yes: a slow job still holds a valid lock."
+      },
+      {
+        "text": "Note the lock's `ID` from the error",
+        "correct": true,
+        "why": "Yes; `force-unlock` takes that ID."
+      },
+      {
+        "text": "Delete the state object so the next run starts clean",
+        "correct": false,
+        "why": "That is losing the state, and the duplicate network that follows."
+      },
+      {
+        "text": "Rerun the plan with `-lock=false` to see whether it works",
+        "correct": false,
+        "why": "That skips the protection instead of finding out whether it is still needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2kc28qg",
+    "version": 1,
+    "section": "protecting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `encrypt = true` in the backend block protect the state against?",
+    "hint": "Think of who is still allowed to read the object.",
+    "choices": [
+      {
+        "text": "Someone the bucket policy lets in",
+        "correct": false,
+        "why": "S3 decrypts for anyone allowed to read; the policy is what keeps people out."
+      },
+      {
+        "text": "Reading it off S3's own disks",
+        "correct": true,
+        "why": "Yes, encryption at rest, and nothing more."
+      },
+      {
+        "text": "A password showing in plan output",
+        "correct": false,
+        "why": "Screen output is a different leak, the subject of lesson 12."
+      },
+      {
+        "text": "Two runs writing at once",
+        "correct": false,
+        "why": "That is the lock's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tap238a",
+    "version": 1,
+    "section": "protecting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana runs `terraform state push old.tfstate` with a version two writes old. What happens?",
+    "hint": "Compare the serials.",
+    "choices": [
+      {
+        "text": "It is refused: serial 1 cannot replace serial 3",
+        "correct": true,
+        "why": "Right, and only `-force` overrides that check."
+      },
+      {
+        "text": "The old state becomes current and the next plan undoes recent changes",
+        "correct": false,
+        "why": "That would happen with `-force`; without it the push is refused."
+      },
+      {
+        "text": "S3 creates a new version and keeps the current one as latest",
+        "correct": false,
+        "why": "Nothing reaches S3: Terraform refuses before writing."
+      },
+      {
+        "text": "Terraform merges the two states",
+        "correct": false,
+        "why": "States are never merged; one replaces the other or nothing happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-em0djabd",
+    "version": 1,
+    "section": "protecting",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these protect the shop's state bucket, as the lesson sets it up? Choose all that apply.",
+    "hint": "Three different failures, three defences.",
+    "choices": [
+      {
+        "text": "Versioning, so an older state can be fetched",
+        "correct": true,
+        "why": "Yes; every write is still in the bucket."
+      },
+      {
+        "text": "Blocking public access",
+        "correct": true,
+        "why": "Yes; it stops a later policy or ACL publishing it."
+      },
+      {
+        "text": "Committing a copy of the state to git each day",
+        "correct": false,
+        "why": "Copies in git are stale states and leaked secrets."
+      },
+      {
+        "text": "A policy naming who may use the bucket",
+        "correct": true,
+        "why": "Yes; the bucket's permissions are the state's permissions."
+      },
+      {
+        "text": "Letting every developer list the bucket",
+        "correct": false,
+        "why": "That hands them every secret in every state there."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmb659wk",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A run of `terraform apply` with the S3 backend: put what happens in order.",
+    "hint": "The lock comes before any read.",
+    "items": [
+      "Create the `.tflock` object",
+      "Read the state and refresh each id from AWS",
+      "Show the plan and wait for yes",
+      "Change AWS and write the new state",
+      "Delete the `.tflock` object"
+    ],
+    "trap": "Reading the state before taking the lock is the window the lock exists to close."
+  },
+  {
+    "id": "ex-b3gmdvs5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new CI job checks out the repository, which has no `backend.tf`, and runs `terraform apply -auto-approve`. Ana's state is local on her laptop. What does the job do?",
+    "hint": "Which state does the job read?",
+    "choices": [
+      {
+        "text": "Creates a second copy of every resource",
+        "correct": true,
+        "why": "Yes. With no state it plans everything as missing: the clone's duplicate network again."
+      },
+      {
+        "text": "Fails on the lock Ana's laptop holds",
+        "correct": false,
+        "why": "A local state's lock is on Ana's disk; the job cannot see it."
+      },
+      {
+        "text": "Downloads Ana's state over SSH and reports no changes",
+        "correct": false,
+        "why": "Terraform only reads the backend it is configured with."
+      },
+      {
+        "text": "Refuses to run, because the lineage does not match",
+        "correct": false,
+        "why": "There is no state to compare lineages with; it starts a new one."
+      }
+    ]
+  },
+  {
+    "id": "ex-wb9qhezv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A plan shows `aws_subnet.public_a will be destroyed` and `aws_subnet.a will be created`, and nobody changed the subnet. What is the likeliest cause?",
+    "hint": "Two addresses for one subnet.",
+    "choices": [
+      {
+        "text": "The subnet drifted and AWS changed its CIDR",
+        "correct": false,
+        "why": "Drift on an attribute shows as an update or a replacement of one address, not two addresses."
+      },
+      {
+        "text": "The provider was upgraded and renamed the resource type",
+        "correct": false,
+        "why": "The type is `aws_subnet` on both lines; only the name differs."
+      },
+      {
+        "text": "Somebody ran `state mv` and the file was not renamed",
+        "correct": true,
+        "why": "Yes, the half-way point the lesson showed; renaming the block in `main.tf` gives `No changes`."
+      },
+      {
+        "text": "The state file is corrupted and must be restored from a backup",
+        "correct": false,
+        "why": "A corrupted state fails to load; this one loaded and planned."
+      }
+    ]
+  },
+  {
+    "id": "ex-w600jk30",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the migration to S3, which of these are true of Ana's working directory? Choose all that apply.",
+    "hint": "Read the `ls -l` and the `state list` after the migration.",
+    "choices": [
+      {
+        "text": "`terraform.tfstate` is empty",
+        "correct": true,
+        "why": "Yes, zero bytes."
+      },
+      {
+        "text": "`terraform state list` reads from the bucket",
+        "correct": true,
+        "why": "Yes; nothing local is involved any more."
+      },
+      {
+        "text": "The backups are refreshed on every apply",
+        "correct": false,
+        "why": "They are leftovers of the local backend, and Ana deletes them."
+      },
+      {
+        "text": "A clone with `backend.tf` plans `No changes`",
+        "correct": true,
+        "why": "Yes; it reads the same state."
+      },
+      {
+        "text": "`.gitignore` must now allow `*.tfstate`",
+        "correct": false,
+        "why": "The state is in S3; nothing about it belongs in git."
+      }
+    ]
+  }
+]

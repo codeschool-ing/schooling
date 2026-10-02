@@ -1,0 +1,625 @@
+{
+  "ex-v3jrqb1y": {
+    "prompt": "No corpo de um plano, o que quer dizer `-/+` na frente de um recurso?",
+    "hint": "Leia a legenda no topo do plano.",
+    "choices": [
+      {
+        "text": "Ele é atualizado onde está e mantém o id",
+        "why": "Isso é o `~`, update in-place."
+      },
+      {
+        "text": "Destruído primeiro, depois trocado por um novo",
+        "why": "Isso: destroy and then create replacement, nessa ordem por padrão."
+      },
+      {
+        "text": "Sai do estado mas continua na AWS",
+        "why": "Isso é o que um bloco `removed` faz; um plano mostra isso de outro jeito."
+      },
+      {
+        "text": "Uma segunda cópia é criada ao lado da primeira",
+        "why": "O antigo vai embora; não fica uma segunda cópia."
+      }
+    ]
+  },
+  "ex-xmvvwawj": {
+    "prompt": "O plano da Ana terminou com `Plan: 4 to add, 1 to change, 2 to destroy.` Quantas dessas quatro criações eram recursos que não existiam antes de forma nenhuma, e não substituições?",
+    "hint": "Uma das criações é a metade nova de um `-/+`.",
+    "unit": "recursos"
+  },
+  "ex-amm0s2w4": {
+    "prompt": "Um plano diz que uma instância precisa ser substituída. Onde você encontra qual argumento é o responsável?",
+    "hint": "Olhe dentro do bloco do recurso.",
+    "choices": [
+      {
+        "text": "No resumo `Plan:` no fim",
+        "why": "O resumo conta ações e não dá motivos."
+      },
+      {
+        "text": "No argumento cujo valor novo vem seguido de `# forces replacement`",
+        "why": "Isso: no plano da Ana foi o `ami`."
+      },
+      {
+        "text": "No `id`, que mostra `(known after apply)`",
+        "why": "O id novo é desconhecido por causa da substituição, não é a causa dela."
+      },
+      {
+        "text": "Na legenda de símbolos",
+        "why": "A legenda lista os símbolos que o plano usa, nada por recurso."
+      }
+    ]
+  },
+  "ex-8vh15jbp": {
+    "prompt": "Associe cada símbolo de um plano ao que o Terraform vai fazer.",
+    "hint": "A legenda do plano diz cada um em palavras.",
+    "pairs": [
+      {
+        "left": "`+`",
+        "right": "Criar um objeto novo"
+      },
+      {
+        "left": "`~`",
+        "right": "Mudar o objeto onde ele está"
+      },
+      {
+        "left": "`-`",
+        "right": "Destruir o objeto"
+      },
+      {
+        "left": "`<=`",
+        "right": "Ler um data source"
+      }
+    ],
+    "right_distractors": [
+      "Mover o objeto para um endereço novo"
+    ]
+  },
+  "ex-c7my6h1w": {
+    "prompt": "No plano da Ana, `data.aws_iam_policy_document.assets_read` vai ser lido durante o apply. Por que não durante o plano, como de costume?",
+    "hint": "A que o argumento `resources` dele se refere?",
+    "choices": [
+      {
+        "text": "Documentos de política são lidos tarde por projeto",
+        "why": "Eles são lidos durante o plano quando os argumentos são conhecidos."
+      },
+      {
+        "text": "Cita o ARN de um bucket que ainda não foi criado",
+        "why": "Certo: o ARN é desconhecido até o bucket existir, então a leitura espera por ele."
+      },
+      {
+        "text": "A política guarda um valor sensível",
+        "why": "Nada nela é sensível; o adiamento vem de um valor desconhecido."
+      },
+      {
+        "text": "O provider não consegue falar com o IAM enquanto planeja",
+        "why": "O provider leu a role durante o mesmo plano."
+      }
+    ]
+  },
+  "ex-c99wghy0": {
+    "prompt": "O plano mostra `result = (sensitive value)` para `random_password.db`. O que esse marcador diz?",
+    "hint": "A aula 12 segue o valor depois do plano.",
+    "choices": [
+      {
+        "text": "O valor é gerado depois, quando algo o lê",
+        "why": "Ele é gerado durante o apply como qualquer atributo; o marcador é sobre impressão."
+      },
+      {
+        "text": "O Terraform o criptografa antes de gravar o estado",
+        "why": "O Terraform não faz isso; a aula 12 mostra o valor no estado."
+      },
+      {
+        "text": "A senha fica na memória e não é salva",
+        "why": "Ela é salva, no estado, como todo atributo."
+      },
+      {
+        "text": "Fica escondido da saída que o Terraform imprime",
+        "why": "Isso. Escondido do que é impresso, e nada além."
+      }
+    ]
+  },
+  "ex-c3j05fg9": {
+    "prompt": "O que o `terraform apply tfplan` faz que o `terraform apply` sem argumento não faz?",
+    "hint": "Pense de onde vêm as ações de cada um.",
+    "choices": [
+      {
+        "text": "Planeja de novo e salva o resultado no arquivo",
+        "why": "Salvar é o `plan -out`; aplicar o arquivo não planeja nada novo."
+      },
+      {
+        "text": "Pede confirmação duas vezes",
+        "why": "Não pergunta nada: a revisão foi a pergunta."
+      },
+      {
+        "text": "Executa o plano revisado, sem perguntar",
+        "why": "Isso: as ações do arquivo, sem plano novo e sem prompt."
+      },
+      {
+        "text": "Atualiza o estado e para por aí",
+        "why": "Isso seria o `-refresh-only`, aula 7."
+      }
+    ]
+  },
+  "ex-mzg1m1td": {
+    "prompt": "A Ana salvou um plano no `change` e depois aplicou um hotfix de outro branch. Por que o `terraform apply tfplan` recusou depois?",
+    "hint": "Compare os seriais.",
+    "choices": [
+      {
+        "text": "O estado andou",
+        "why": "Certo: o plano carrega um serial mais velho do que o arquivo de estado tem agora."
+      },
+      {
+        "text": "O branch do hotfix não tinha sido mesclado no `change`",
+        "why": "O histórico do git não é o que o Terraform confere; ele compara estados."
+      },
+      {
+        "text": "Um plano salvo expira algumas horas depois de gravado",
+        "why": "Não há relógio; a recusa fala do estado que mudou."
+      },
+      {
+        "text": "Duas pessoas tentaram aplicar um plano ao mesmo tempo",
+        "why": "Ninguém mais o aplicava; o hotfix era outra mudança."
+      }
+    ]
+  },
+  "ex-v5re9jbs": {
+    "prompt": "Cada vez que o Terraform grava uma mudança num arquivo de estado, ele aumenta um contador ali, o ___, e um plano salvo carrega o valor sobre o qual foi calculado.",
+    "hint": "O `jq` o imprimiu do arquivo e de dentro do `tfplan`.",
+    "blanks": [
+      {
+        "accept": [
+          "serial"
+        ]
+      }
+    ]
+  },
+  "ex-d6wbztk6": {
+    "prompt": "Por que a aula diz que um arquivo de plano salvo deve ser tratado como o estado?",
+    "hint": "Veja o que o `unzip -l tfplan` listou.",
+    "choices": [
+      {
+        "text": "Dentro dele há uma cópia do estado, com segredos e tudo",
+        "why": "Isso: `tfstate` e `tfstate-prev` estão dentro, segredos incluídos."
+      },
+      {
+        "text": "O Terraform o apaga depois de um apply",
+        "why": "O arquivo fica no disco; só fica stale."
+      },
+      {
+        "text": "É a única cópia da configuração em que o Terraform confia",
+        "why": "Ele carrega uma cópia da configuração, mas os arquivos do diretório são a fonte."
+      },
+      {
+        "text": "O git se recusa a guardar arquivos binários desse tamanho",
+        "why": "O git o guardaria sem reclamar; esse é o problema."
+      }
+    ]
+  },
+  "ex-t1k66z6p": {
+    "prompt": "Coloque os passos de uma mudança revisada em ordem.",
+    "hint": "A revisão acontece entre gravar o arquivo e aplicá-lo.",
+    "items": [
+      "Rodar `terraform plan -out=tfplan`",
+      "Um revisor lê `terraform show tfplan`",
+      "Rodar `terraform apply tfplan`",
+      "`terraform plan -detailed-exitcode` sai com 0"
+    ],
+    "trap": "Aplicar primeiro e revisar depois não revisa nada."
+  },
+  "ex-fkcz2tnr": {
+    "prompt": "Na saída do `terraform show -json tfplan`, como aparece em `actions` uma substituição padrão?",
+    "hint": "Duas ações, na ordem em que acontecem.",
+    "choices": [
+      {
+        "text": "`[\"replace\"]`",
+        "why": "Não existe ação `replace`; ela é escrita como duas."
+      },
+      {
+        "text": "`[\"update\"]`, com uma flag",
+        "why": "`update` é o `~`; uma substituição destrói."
+      },
+      {
+        "text": "`[\"delete\",\"create\"]`",
+        "why": "Isso, e `[\"create\",\"delete\"]` com `create_before_destroy`."
+      },
+      {
+        "text": "Duas entradas para o endereço, um `delete` e depois um `create`",
+        "why": "É uma entrada por endereço, com uma lista de duas ações."
+      }
+    ]
+  },
+  "ex-2hv1e82p": {
+    "prompt": "Por que a trava da Ana lê o plano em JSON em vez de procurar no plano em texto linhas que comecem com `-`?",
+    "hint": "Quem promete o quê sobre cada formato?",
+    "choices": [
+      {
+        "text": "O plano em texto omite exclusões",
+        "why": "O texto as mostra; só é feito para olhos, não para programas."
+      },
+      {
+        "text": "O jq roda mais rápido que o grep em planos grandes",
+        "why": "Velocidade nunca foi o motivo."
+      },
+      {
+        "text": "O layout dele não é um formato estável",
+        "why": "Certo: o JSON tem um `format_version`; o layout do texto muda entre versões."
+      },
+      {
+        "text": "O JSON inclui os ids que a AWS inventa",
+        "why": "Os dois mostram ids quando conhecidos; isso não decide nada aqui."
+      }
+    ]
+  },
+  "ex-z1w6vsgk": {
+    "prompt": "O `terraform plan -detailed-exitcode` sai com 2. O que isso quer dizer?",
+    "hint": "0, 1 e 2 querem dizer coisas diferentes.",
+    "choices": [
+      {
+        "text": "O plano falhou com um erro",
+        "why": "Um erro é 1."
+      },
+      {
+        "text": "Exatamente dois recursos vão mudar",
+        "why": "O código não é uma contagem."
+      },
+      {
+        "text": "O estado foi atualizado e não há nada a fazer",
+        "why": "Nada a fazer é 0."
+      },
+      {
+        "text": "O plano achou mudanças que ainda não foram aplicadas",
+        "why": "Isso. Um job agendado pode perguntar isso toda noite."
+      }
+    ]
+  },
+  "ex-fewegsen": {
+    "prompt": "Quais destes planos o `check-plan.sh` da Ana recusaria? Escolha todos os que se aplicam.",
+    "hint": "Ele procura uma palavra em cada lista de ações.",
+    "choices": [
+      {
+        "text": "Um plano que tira do arquivo o bloco de uma sub-rede",
+        "why": "Sim: um `delete`."
+      },
+      {
+        "text": "Um plano que passa uma instância para uma AMI nova",
+        "why": "Sim: uma substituição contém `delete`."
+      },
+      {
+        "text": "Um plano que abre o SSH para `0.0.0.0/0`",
+        "why": "Um update in-place; a trava o deixa passar, e é por isso que uma pessoa também lê planos."
+      },
+      {
+        "text": "Um plano que acrescenta três recursos",
+        "why": "Só criações; ele imprimiu `ok`."
+      },
+      {
+        "text": "Um plano com um data source lido durante o apply",
+        "why": "Um `read` não é um `delete`."
+      }
+    ]
+  },
+  "ex-vp29twcz": {
+    "prompt": "Um plano diz `0 to add, 2 to change, 0 to destroy` e passa pela trava. Por que a aula o chama de a mudança mais perigosa que ela mostra?",
+    "hint": "Leia os valores, não os símbolos.",
+    "choices": [
+      {
+        "text": "Os dois updates forçam substituições que o resumo esconde",
+        "why": "Uma substituição contaria em add e destroy; estes são updates de verdade."
+      },
+      {
+        "text": "Abre o SSH para a internet e alarga o acesso de uma role",
+        "why": "Certo: SSH para todo endereço e `s3:*` no bucket, os dois como `~`."
+      },
+      {
+        "text": "Updates in-place param a instância enquanto rodam",
+        "why": "Nenhuma das mudanças mexe na instância."
+      },
+      {
+        "text": "A política é trocada por uma string que o Terraform não consegue ler",
+        "why": "O Terraform a decodificou e mostrou a única chave que mudou."
+      }
+    ]
+  },
+  "ex-tz8b8xzk": {
+    "prompt": "Onde um upgrade de provider aparece para revisão?",
+    "hint": "É um arquivo ao lado da configuração.",
+    "choices": [
+      {
+        "text": "Como `~` em cada recurso desse provider",
+        "why": "Um upgrade não muda bloco de recurso; o plano pode não mostrar nada."
+      },
+      {
+        "text": "No `terraform.tfstate`",
+        "why": "O estado registra recursos, não a versão que a execução deve usar."
+      },
+      {
+        "text": "Na saída do `terraform version` no laptop do revisor",
+        "why": "Isso mostra o que uma máquina tem, não o que a mudança pede."
+      },
+      {
+        "text": "No diff do `.terraform.lock.hcl`",
+        "why": "Isso: a versão e os hashes mudam ali."
+      }
+    ]
+  },
+  "ex-zp8sn3hn": {
+    "prompt": "Depois que a Ana subiu a restrição do `random` para `~> 3.9`, o `terraform plan` parou com um erro em vez de usar a 3.9.1. Por quê?",
+    "hint": "Leia a primeira frase do erro.",
+    "choices": [
+      {
+        "text": "A versão 3.9.1 não estava no mirror do laboratório",
+        "why": "Estava lá; o `init -upgrade` a instalou logo depois."
+      },
+      {
+        "text": "O lock file ainda dizia 3.8.1",
+        "why": "Certo: um plano não muda o lock file; o `init -upgrade` muda, num diff revisável."
+      },
+      {
+        "text": "Uma restrição nova precisa de um arquivo de estado novo",
+        "why": "O estado não foi tocado pelo upgrade."
+      },
+      {
+        "text": "O operador `~>` proíbe mudar a versão minor",
+        "why": "`~> 3.9` permite a 3.9.1; a restrição foi satisfeita."
+      }
+    ]
+  },
+  "ex-5mvjz1ka": {
+    "prompt": "O que a aula sugere que você faça antes de começar a ler um plano?",
+    "hint": "Isso transforma leitura em conferência.",
+    "choices": [
+      {
+        "text": "Rodar a trava sobre ele primeiro",
+        "why": "Útil, mas a trava só enxerga exclusões."
+      },
+      {
+        "text": "Dizer o que você espera que ele diga",
+        "why": "Isso: aí uma contagem que você não previu é uma pergunta a responder."
+      },
+      {
+        "text": "Apagar o `.terraform` e rodar `terraform init` de novo",
+        "why": "Isso não muda nada no que o plano propõe."
+      },
+      {
+        "text": "Ler a linha de resumo `Plan:` e decidir por ela",
+        "why": "O resumo é onde comparar, não onde decidir."
+      }
+    ]
+  },
+  "ex-ter8jfda": {
+    "prompt": "Um apply falha num recurso depois de criar dois outros. O que acontece com os dois que foram criados?",
+    "hint": "Um apply não é uma transação.",
+    "choices": [
+      {
+        "text": "O Terraform os desfaz automaticamente",
+        "why": "Não existe rollback; cada criação foi uma chamada de API separada."
+      },
+      {
+        "text": "Existem na AWS mas o estado não os conhece",
+        "why": "Cada um é gravado no estado no momento em que a API responde."
+      },
+      {
+        "text": "Continuam na AWS e ficam registrados no estado",
+        "why": "Isso: o `aws_security_group.batch` estava no `state list`."
+      },
+      {
+        "text": "São destruídos e criados de novo no próximo apply",
+        "why": "O plano seguinte propôs só os dois recursos que faltavam."
+      }
+    ]
+  },
+  "ex-xd1n4jcd": {
+    "prompt": "Por que o plano aceitou `10.30.3.0/24` para uma sub-rede numa VPC `10.20.0.0/16`?",
+    "hint": "Qual conferência precisa da VPC, e quem a tem?",
+    "choices": [
+      {
+        "text": "O moto pula conferências de faixa que a AWS faria",
+        "why": "O moto a recusou com `InvalidSubnet.Range`, no apply."
+      },
+      {
+        "text": "O plano foi salvo antes de a VPC existir",
+        "why": "A VPC existia desde o primeiro apply."
+      },
+      {
+        "text": "É uma sintaxe de CIDR válida; o encaixe é conferido pela API",
+        "why": "Certo: o Terraform confere o formato, e a API conhece a VPC."
+      },
+      {
+        "text": "O `-out` desliga a validação",
+        "why": "Um plano salvo é validado como qualquer outro."
+      }
+    ]
+  },
+  "ex-jc1ykjzj": {
+    "prompt": "No apply que falhou, por que o `aws_instance.batch` nem aparece no log?",
+    "hint": "Do que ele precisava de outro recurso?",
+    "choices": [
+      {
+        "text": "Instâncias são criadas por último em qualquer apply",
+        "why": "A ordem vem do grafo, não do tipo."
+      },
+      {
+        "text": "O security group falhou primeiro",
+        "why": "O security group foi criado."
+      },
+      {
+        "text": "Precisava do id de uma sub-rede que nunca foi criada",
+        "why": "Isso: sem sub-rede não havia id para passar, então ela nunca foi iniciada."
+      },
+      {
+        "text": "Ficou fora do plano salvo por causa do erro de digitação",
+        "why": "Estava no plano; o plano depois da falha ainda o propunha."
+      }
+    ]
+  },
+  "ex-2nndh9x1": {
+    "prompt": "Uma substituição `-/+`, na ordem padrão, falha na chamada de criação. O que sobra na AWS?",
+    "hint": "Qual metade rodou primeiro?",
+    "choices": [
+      {
+        "text": "O objeto antigo, intacto",
+        "why": "Essa é a ordem `+/-`, em que o antigo é destruído por último."
+      },
+      {
+        "text": "Os dois, até o próximo apply limpar",
+        "why": "O antigo foi destruído antes de a criação ser tentada."
+      },
+      {
+        "text": "Um objeto novo construído pela metade",
+        "why": "A chamada de criação falhou, então a API não fez nada."
+      },
+      {
+        "text": "Nenhum dos dois: o antigo já se foi",
+        "why": "Certo, e o `create_before_destroy` da aula 6 existe para isso."
+      }
+    ]
+  },
+  "ex-ah6bya83": {
+    "prompt": "A Ana rodou `terraform plan -target=aws_subnet.d`. Por que a tag `Project` nova da VPC também apareceu no plano?",
+    "hint": "A que o bloco da sub-rede se refere?",
+    "choices": [
+      {
+        "text": "Mudanças de tag vão junto com qualquer target",
+        "why": "A mudança da instância, também pendente, ficou de fora."
+      },
+      {
+        "text": "O bloco da sub-rede referencia `aws_vpc.shop.id`",
+        "why": "Isso: um target traz as dependências e o que estiver pendente nelas."
+      },
+      {
+        "text": "O `-target` aplica todo update e pula só criações",
+        "why": "A sub-rede, uma criação, era o target; o resize, um update, foi pulado."
+      },
+      {
+        "text": "Os dois blocos foram editados no mesmo commit",
+        "why": "O Terraform não sabe nada de commits; quem decide é o grafo."
+      }
+    ]
+  },
+  "ex-yf80gz09": {
+    "prompt": "Qual destes é um uso do `-target` que a aula aceita?",
+    "hint": "Leia o aviso que o Terraform imprime.",
+    "choices": [
+      {
+        "text": "Aplicar toda semana a parte de um time numa configuração compartilhada",
+        "why": "Esse é o sinal de que a configuração deveria ser dividida, aula 8."
+      },
+      {
+        "text": "Quando uma mensagem de erro do próprio Terraform manda usá-lo",
+        "why": "Isso, como um `for_each` sobre valores conhecidos só depois do apply."
+      },
+      {
+        "text": "Pular a revisão de uma mudança com a qual todos concordam",
+        "why": "Mirar muda o que é aplicado, e a revisão continua valendo."
+      },
+      {
+        "text": "Deixar uma mudança arriscada no arquivo por meses",
+        "why": "Esse é exatamente o drift que o target deixa para trás."
+      }
+    ]
+  },
+  "ex-97bd3ztn": {
+    "prompt": "Depois de um apply com `-target`, o Terraform avisa que \"applied changes may be ___\", porque o que o arquivo pede e o que existe agora diferem de propósito.",
+    "hint": "O título do aviso, a última palavra.",
+    "blanks": [
+      {
+        "accept": [
+          "incomplete",
+          "incompletas",
+          "incompletos"
+        ]
+      }
+    ]
+  },
+  "ex-6wmst4ws": {
+    "prompt": "Você muda a versão do motor de uma instância de banco de dados e o plano diz `Plan: 1 to add, 0 to change, 1 to destroy.` O que concluir antes de ler mais?",
+    "hint": "Como uma substituição é contada?",
+    "choices": [
+      {
+        "text": "Está sendo atualizado no lugar, com um reinício curto",
+        "why": "Isso seria `1 to change`."
+      },
+      {
+        "text": "Há dois recursos separados envolvidos, um novo e um removido",
+        "why": "Nada novo foi escrito no arquivo; uma criação e uma destruição numa edição só é o formato de uma substituição."
+      },
+      {
+        "text": "Uma réplica é adicionada e a antiga removida depois que os dados são copiados",
+        "why": "O Terraform não copia dados; ele chama create e delete."
+      },
+      {
+        "text": "Uma reconstrução: ache o `# forces replacement`",
+        "why": "Isso. O corpo confirma qual argumento a forçou, e um banco novo começa vazio."
+      }
+    ]
+  },
+  "ex-bjdfmmrk": {
+    "prompt": "Um pipeline salva um plano, espera dois dias por aprovação, e então o `apply tfplan` falha como stale. Qual é a resposta certa?",
+    "hint": "O que a recusa protege?",
+    "choices": [
+      {
+        "text": "Rodar `terraform apply -auto-approve` para passar",
+        "why": "Isso aplica um plano que ninguém revisou."
+      },
+      {
+        "text": "Planejar de novo, e revisar o plano novo",
+        "why": "Certo: o mundo mudou, então a revisão antiga já não descreve o que aconteceria."
+      },
+      {
+        "text": "Copiar o estado antigo de volta para os seriais baterem",
+        "why": "Isso apagaria o que o outro apply registrou."
+      },
+      {
+        "text": "Aplicar o mesmo arquivo com `-target` em cada recurso",
+        "why": "Um plano stale é recusado como quer que seja fatiado."
+      }
+    ]
+  },
+  "ex-d5622ebr": {
+    "prompt": "Quais destas mudanças passariam por uma trava que recusa exclusões e mesmo assim deveriam parar um revisor? Escolha todas as que se aplicam.",
+    "hint": "A trava procura uma ação; o revisor lê valores.",
+    "choices": [
+      {
+        "text": "Uma regra de security group cujo `cidr_ipv4` vira `0.0.0.0/0`",
+        "why": "Sim: um update in-place que expõe uma porta."
+      },
+      {
+        "text": "Uma política IAM cujo `Action` vira `s3:*`",
+        "why": "Sim: um update in-place que concede exclusão."
+      },
+      {
+        "text": "Um lock file passando um provider para uma versão nova",
+        "why": "Sim: comportamento novo sem recurso editado."
+      },
+      {
+        "text": "A tag `Name` de uma sub-rede renomeada",
+        "why": "Uma tag é metadado; nada é exposto nem perdido."
+      },
+      {
+        "text": "Um bloco de recurso removido do arquivo",
+        "why": "A trava recusa essa ela mesma."
+      }
+    ]
+  },
+  "ex-m6m2qqn3": {
+    "prompt": "Um job noturno roda `terraform plan -detailed-exitcode` na main e recebe 2, embora ninguém tenha mesclado nada naquele dia. Qual é a explicação mais provável?",
+    "hint": "A configuração não mudou. O que mais é comparado?",
+    "choices": [
+      {
+        "text": "Alguém mudou a infraestrutura à mão",
+        "why": "Certo: drift, que a aula 7 mostrou."
+      },
+      {
+        "text": "O plano salvo da noite anterior expirou e precisa ser refeito",
+        "why": "Planos salvos não expiram, e este job não salva nenhum."
+      },
+      {
+        "text": "O provider se atualizou sozinho durante a noite",
+        "why": "O lock file o fixa; um upgrade precisa de `init -upgrade`."
+      },
+      {
+        "text": "Outro job estava segurando o lock do estado",
+        "why": "Um lock preso é um erro, saída 1."
+      }
+    ]
+  }
+}

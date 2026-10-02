@@ -1,0 +1,834 @@
+[
+  {
+    "id": "ex-n35vza67",
+    "version": 1,
+    "section": "why",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana has an uncommitted edit to `main.tf` and runs `terraform plan`. What does the plan describe?",
+    "hint": "Look at what `git status` printed before the plan.",
+    "choices": [
+      {
+        "text": "The last commit on her branch",
+        "correct": false,
+        "why": "Terraform does not ask git anything; it read the edited file on disk."
+      },
+      {
+        "text": "The files as they are on disk",
+        "correct": true,
+        "why": "Yes. The new range appeared in the plan although no commit contained it."
+      },
+      {
+        "text": "Whatever is on `main` in the remote repository",
+        "correct": false,
+        "why": "Terraform never reads the remote; that is the pipeline's clone doing it."
+      },
+      {
+        "text": "Nothing until the edit is committed, since Terraform refuses a dirty tree",
+        "correct": false,
+        "why": "There is no such refusal; the capture shows a full plan from a dirty tree."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ac78cqk",
+    "version": 1,
+    "section": "why",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The diff of Ana's change is one line. Why does the lesson say a reviewer needs the plan as well?",
+    "hint": "What did that one line do to the subnet?",
+    "choices": [
+      {
+        "text": "A one-line diff is too short to review",
+        "correct": false,
+        "why": "Its length is not the problem; its consequence is invisible in it."
+      },
+      {
+        "text": "The plan shows that the line replaces the subnet, which the diff does not say",
+        "correct": true,
+        "why": "Right: `# forces replacement`, one to add and one to destroy, from a range change."
+      },
+      {
+        "text": "Reviewers cannot read HCL",
+        "correct": false,
+        "why": "They can; the point is what the HCL causes, which only a plan computes."
+      },
+      {
+        "text": "The plan is required by GitHub before a merge",
+        "correct": false,
+        "why": "GitHub knows nothing about Terraform; the pipeline posts the plan because people need it."
+      }
+    ]
+  },
+  {
+    "id": "ex-79eabwvb",
+    "version": 1,
+    "section": "why",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does moving the apply from laptops into one pipeline change? Choose all that apply.",
+    "hint": "The section's table has three rows.",
+    "choices": [
+      {
+        "text": "Which Terraform version applies",
+        "correct": true,
+        "why": "Yes: one version, written in the workflow."
+      },
+      {
+        "text": "Where credentials that can write live",
+        "correct": true,
+        "why": "Yes: in one place, for one job, instead of on every laptop."
+      },
+      {
+        "text": "Whether the change is a wise one",
+        "correct": false,
+        "why": "People still decide that; the pipeline only does the mechanical part."
+      },
+      {
+        "text": "Whether there is a record of each apply and its commit",
+        "correct": true,
+        "why": "Yes: a log per run, tied to a commit and an approval."
+      },
+      {
+        "text": "Whether Terraform needs a state",
+        "correct": false,
+        "why": "It needs one wherever it runs; the pipeline uses the same S3 state."
+      }
+    ]
+  },
+  {
+    "id": "ex-1smmremv",
+    "version": 1,
+    "section": "the-flow",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the pipeline's steps on `main` in order, from the merge to the change being made.",
+    "hint": "The file has to exist before anybody can read it.",
+    "items": [
+      "plan -out, saved to a file",
+      "the file kept as an artifact",
+      "a person reads and approves it",
+      "apply of that file"
+    ],
+    "trap": "Approving before the plan is saved approves something that can still change."
+  },
+  {
+    "id": "ex-fc5q3nbj",
+    "version": 1,
+    "section": "the-flow",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's pipeline, why do `check` and `scan` run before `plan`?",
+    "hint": "Compare what each step needs.",
+    "choices": [
+      {
+        "text": "Terraform refuses to plan unformatted code",
+        "correct": false,
+        "why": "It plans it happily; `fmt -check` is a rule the pipeline adds."
+      },
+      {
+        "text": "A plan writes to the cloud, so it has to be last but one",
+        "correct": false,
+        "why": "A plan writes nothing in the cloud; it reads, and locks the state."
+      },
+      {
+        "text": "They are cheap and need no credentials",
+        "correct": true,
+        "why": "Yes. A failure there costs seconds and no credential was ever handed out."
+      },
+      {
+        "text": "The scanner reads the plan file",
+        "correct": false,
+        "why": "Here Trivy reads the `.tf` files; scanning a plan is lesson 14's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-kks8adz1",
+    "version": 1,
+    "section": "the-flow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The pull request already has a plan the reviewers read. Why is another plan made on `main` after the merge?",
+    "hint": "Two pull requests approved on the same morning.",
+    "choices": [
+      {
+        "text": "It goes stale once anything else lands on `main`",
+        "correct": true,
+        "why": "Right. The pull request's plan is true for the state it read; the applied one must be made from `main` as it is."
+      },
+      {
+        "text": "A pull request's plan cannot be saved",
+        "correct": false,
+        "why": "It could be; it is not applied because it goes stale, not because of a limit."
+      },
+      {
+        "text": "To use the apply role",
+        "correct": false,
+        "why": "The plan on `main` runs with the read-only plan role too."
+      },
+      {
+        "text": "Terraform plans each branch into a different state",
+        "correct": false,
+        "why": "Both read the same state key in the bucket."
+      }
+    ]
+  },
+  {
+    "id": "ex-sha1r0ky",
+    "version": 1,
+    "section": "the-flow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the capture, what made the pipeline stop on the pull request that opened port 22?",
+    "hint": "Look at the last line of the capture.",
+    "choices": [
+      {
+        "text": "`terraform validate` rejected the rule",
+        "correct": false,
+        "why": "`check` passed: the file was valid HCL."
+      },
+      {
+        "text": "Trivy's non-zero exit code",
+        "correct": true,
+        "why": "Yes. `--exit-code 1` turns a HIGH finding into a failed step, and a failed step ends the job."
+      },
+      {
+        "text": "The plan showed a security group being replaced",
+        "correct": false,
+        "why": "No plan ran at all; the scan stopped the pipeline first."
+      },
+      {
+        "text": "AWS refused the rule when the pipeline tried to create it",
+        "correct": false,
+        "why": "Nothing reached AWS; the scan reads files and needs no credentials."
+      }
+    ]
+  },
+  {
+    "id": "ex-12q22ezn",
+    "version": 1,
+    "section": "github-actions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the workflow write `actions/checkout@3d3c42e…` instead of `actions/checkout@v7`?",
+    "hint": "Which of the two can the action's owner change?",
+    "choices": [
+      {
+        "text": "A tag is movable; a commit is not",
+        "correct": true,
+        "why": "Right. Whatever the tag points at runs with your credentials, so the pin is the commit."
+      },
+      {
+        "text": "GitHub no longer accepts tags in `uses`",
+        "correct": false,
+        "why": "It accepts them; the choice is about trust, not syntax."
+      },
+      {
+        "text": "It downloads faster",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      },
+      {
+        "text": "So that Dependabot cannot update the action",
+        "correct": false,
+        "why": "Pins can still be updated, deliberately; the comment with the tag is there to make that readable."
+      }
+    ]
+  },
+  {
+    "id": "ex-sz07jqx5",
+    "version": 1,
+    "section": "github-actions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does every step in the workflow call `ci.sh` instead of listing the Terraform commands itself?",
+    "hint": "Think about the GitLab file and Ana's laptop.",
+    "choices": [
+      {
+        "text": "GitHub cannot run more than one command per step",
+        "correct": false,
+        "why": "A `run:` block can hold many lines; the comment step in this workflow has two."
+      },
+      {
+        "text": "Shell scripts run faster than YAML steps",
+        "correct": false,
+        "why": "Both run the same commands in the same shell."
+      },
+      {
+        "text": "To hide the commands from people reading the logs",
+        "correct": false,
+        "why": "The opposite: `set -x` prints every command into the log."
+      },
+      {
+        "text": "The steps are written once and run the same anywhere",
+        "correct": true,
+        "why": "Yes: GitHub, GitLab and a laptop run the same stages, which is also how this lesson ran them."
+      }
+    ]
+  },
+  {
+    "id": "ex-6b5076ff",
+    "version": 1,
+    "section": "github-actions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without a flag, a missing variable makes Terraform wait for an answer at `Enter a value:`. The flag that turns that question into an immediate error is `-input=___`.",
+    "hint": "A boolean.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yh13z8zz",
+    "version": 1,
+    "section": "github-actions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does setting `TF_IN_AUTOMATION` change in the capture?",
+    "hint": "Compare the last lines of the two plans.",
+    "choices": [
+      {
+        "text": "It skips the confirmation question of `apply`",
+        "correct": false,
+        "why": "That is `-auto-approve`, or applying a saved plan; the variable only changes wording."
+      },
+      {
+        "text": "It makes Terraform fail when input would be needed",
+        "correct": false,
+        "why": "That is `-input=false`; the lesson shows both because they are easy to confuse."
+      },
+      {
+        "text": "Advice meant for a person at a keyboard disappears",
+        "correct": true,
+        "why": "Yes. The note about `-out` and the hint to run `terraform apply \"tfplan\"` are left out."
+      },
+      {
+        "text": "Colour codes are removed from the output",
+        "correct": false,
+        "why": "Colour is `-no-color`; the variable leaves it alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-219pf53b",
+    "version": 1,
+    "section": "gitlab-ci",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each job of the design to the GitLab keyword that does it.",
+    "hint": "Look at the table that compares the two dialects.",
+    "pairs": [
+      {
+        "left": "Carry the plan's file to a later job",
+        "right": "artifacts"
+      },
+      {
+        "left": "Stop until a person presses a button",
+        "right": "when: manual"
+      },
+      {
+        "left": "Only one apply at a time",
+        "right": "resource_group"
+      },
+      {
+        "left": "A token for AWS without a stored key",
+        "right": "id_tokens"
+      }
+    ],
+    "right_distractors": [
+      "cache",
+      "retry"
+    ]
+  },
+  {
+    "id": "ex-vt1sygjw",
+    "version": 1,
+    "section": "gitlab-ci",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call `expire_in: 3 days` on the plan artifact a decision rather than housekeeping?",
+    "hint": "What else is inside a saved plan?",
+    "choices": [
+      {
+        "text": "GitLab charges for every day an artifact is kept",
+        "correct": false,
+        "why": "Cost is not the argument the lesson makes."
+      },
+      {
+        "text": "Terraform refuses plans older than three days",
+        "correct": false,
+        "why": "Terraform checks the state's serial, not the file's age."
+      },
+      {
+        "text": "The file holds a copy of the state",
+        "correct": true,
+        "why": "Right. Keeping it longer keeps that copy downloadable for longer, for a plan that has waited so long it should be made again rather than applied."
+      },
+      {
+        "text": "Artifacts older than that are deleted from the state bucket",
+        "correct": false,
+        "why": "Artifacts live in GitLab, not in the state bucket."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dtssvcf",
+    "version": 1,
+    "section": "gitlab-ci",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the lab check about the two workflow files?",
+    "hint": "Look at the `python3` commands.",
+    "choices": [
+      {
+        "text": "Valid YAML, with the expected jobs",
+        "correct": true,
+        "why": "Yes, and the lesson says how little that proves."
+      },
+      {
+        "text": "That they run on GitHub and GitLab",
+        "correct": false,
+        "why": "The lab has neither; the files were never run."
+      },
+      {
+        "text": "That every action and image exists",
+        "correct": false,
+        "why": "Nothing in the lab reached GitHub or a registry."
+      },
+      {
+        "text": "That the OIDC exchange works",
+        "correct": false,
+        "why": "Only a real run would show the exchange; moto would accept any token anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-yyd70zyt",
+    "version": 1,
+    "section": "credentials",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is wrong with an IAM user's access key stored in the repository's secrets?",
+    "hint": "How long does it work, and from where?",
+    "choices": [
+      {
+        "text": "GitHub refuses secrets longer than 40 characters",
+        "correct": false,
+        "why": "There is no such limit in play here."
+      },
+      {
+        "text": "It lives until rotated and works from anywhere",
+        "correct": true,
+        "why": "Right. One leak and it is somebody else's for as long as nobody notices."
+      },
+      {
+        "text": "Terraform cannot read keys from environment variables",
+        "correct": false,
+        "why": "It can; that is why the shortcut works on the first try."
+      },
+      {
+        "text": "Access keys cannot apply, only plan",
+        "correct": false,
+        "why": "A key can do whatever its user may do, which is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-dtsqr7ag",
+    "version": 1,
+    "section": "credentials",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The apply role's trust policy matches `sub` to `repo:example/shop:environment:production`. What does that buy?",
+    "hint": "Which jobs enter that environment?",
+    "choices": [
+      {
+        "text": "Only jobs of the `main` branch may plan",
+        "correct": false,
+        "why": "Planning uses the other role, which trusts pull requests too."
+      },
+      {
+        "text": "The token never expires while the environment exists",
+        "correct": false,
+        "why": "The credentials expire within the hour regardless."
+      },
+      {
+        "text": "Write access only after approval",
+        "correct": true,
+        "why": "Yes. A job enters `production` only once approved, so the approval and the credential are one gate."
+      },
+      {
+        "text": "Moto refuses tokens from any other repository",
+        "correct": false,
+        "why": "Moto evaluates no trust policy at all; the lesson says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-ght6zsgf",
+    "version": 1,
+    "section": "credentials",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague removes `s3:PutObject` and `s3:DeleteObject` from the plan role, to make it truly read-only. What happens to the next plan?",
+    "hint": "`use_lockfile = true` is in `backend.tf`.",
+    "choices": [
+      {
+        "text": "It fails, because it cannot write the lock file",
+        "correct": true,
+        "why": "Right. A plan locks the state, and with `use_lockfile` the lock is an object written beside it."
+      },
+      {
+        "text": "It runs, since a plan only reads",
+        "correct": false,
+        "why": "It reads the cloud, but it also takes the state lock, which is a write to the bucket."
+      },
+      {
+        "text": "It runs without a lock and prints a warning",
+        "correct": false,
+        "why": "Terraform does not skip the lock on its own; it fails to acquire it."
+      },
+      {
+        "text": "It runs, but cannot read the state any more",
+        "correct": false,
+        "why": "Reading the state is `s3:GetObject`, which stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-a1ynrzfe",
+    "version": 1,
+    "section": "credentials",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should the plan role be able to read and nothing more? Choose all that apply.",
+    "hint": "Whose code does a plan on a pull request run?",
+    "choices": [
+      {
+        "text": "Providers execute code during a plan",
+        "correct": true,
+        "why": "Yes, so a plan is not a passive read."
+      },
+      {
+        "text": "A data source such as `external` runs a program the configuration names",
+        "correct": true,
+        "why": "Yes, and the configuration comes from whoever opened the pull request."
+      },
+      {
+        "text": "Reading the state needs the `ReadOnlyAccess` policy",
+        "correct": false,
+        "why": "`s3:GetObject` on the key is enough; the lab wrote it out."
+      },
+      {
+        "text": "Whoever can open a pull request can make the plan act with that role",
+        "correct": true,
+        "why": "Yes, which is why its credentials must be worth little."
+      },
+      {
+        "text": "A plan role that can write is refused by AWS",
+        "correct": false,
+        "why": "AWS will happily issue it; the restraint is yours to write."
+      }
+    ]
+  },
+  {
+    "id": "ex-600bxfmk",
+    "version": 1,
+    "section": "applying-the-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Run 1's apply job ran in a clone whose `main.tf` asked for an `Owner` tag. The VPC it created has none. Why?",
+    "hint": "What does a saved plan carry?",
+    "choices": [
+      {
+        "text": "Moto drops tags it does not know",
+        "correct": false,
+        "why": "Moto kept `Name` and `Environment`; the plan never asked for `Owner`."
+      },
+      {
+        "text": "`init` reverted the file to the plan's commit",
+        "correct": false,
+        "why": "`init` touches no `.tf` file; `grep` still found `Owner` afterwards."
+      },
+      {
+        "text": "The plan holds its own configuration",
+        "correct": true,
+        "why": "Right. `apply tfplan` carries out what was computed and approved, not what the files around it say now."
+      },
+      {
+        "text": "Tags are applied by a second run of `apply`",
+        "correct": false,
+        "why": "Tags are ordinary arguments; the tag came later through run 2's own plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-tr2x5qxq",
+    "version": 1,
+    "section": "applying-the-plan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why must the apply job on `main` not run `terraform apply -auto-approve`?",
+    "hint": "What would it apply?",
+    "choices": [
+      {
+        "text": "It plans again and applies a plan nobody read",
+        "correct": true,
+        "why": "Yes: the approval would be for one plan and the apply for another."
+      },
+      {
+        "text": "`-auto-approve` is not allowed with an S3 backend",
+        "correct": false,
+        "why": "It is allowed; the lessons used it on the S3 backend."
+      },
+      {
+        "text": "It ignores the state lock",
+        "correct": false,
+        "why": "It takes the lock like any apply."
+      },
+      {
+        "text": "It needs a terminal to show the plan",
+        "correct": false,
+        "why": "It prints the plan to the log, which nobody approved."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6s5kkab",
+    "version": 1,
+    "section": "applying-the-plan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The plan artifact expired before anybody approved the run. What should the pipeline do?",
+    "hint": "A plan is a statement about one moment.",
+    "choices": [
+      {
+        "text": "Apply without a plan file, since the code was reviewed",
+        "correct": false,
+        "why": "That is the fallback the lesson forbids: it applies a plan nobody read."
+      },
+      {
+        "text": "Run the plan job again and have that plan read",
+        "correct": true,
+        "why": "Right. Expiry, like staleness, means plan again and read again."
+      },
+      {
+        "text": "Raise `retention-days` and re-run only the apply job",
+        "correct": false,
+        "why": "The file is already gone; a longer retention cannot bring it back."
+      },
+      {
+        "text": "Copy `tfplan` from a laptop",
+        "correct": false,
+        "why": "That would apply a file no reviewer saw, made by a laptop the pipeline replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-s42t5kzz",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Run 2 planned while run 1 was waiting for approval. How many resources did run 2's first plan propose to add?",
+    "hint": "Its `Plan:` line.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "resources"
+  },
+  {
+    "id": "ex-28hevw9x",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The state lock from lesson 7 was in place the whole time. Why did run 2 still plan against a state that was about to change?",
+    "hint": "When is the lock held, and for how long?",
+    "choices": [
+      {
+        "text": "The lock only covers `apply`",
+        "correct": false,
+        "why": "A plan takes the lock too, as the plan role's permissions showed."
+      },
+      {
+        "text": "A lock only stops two operations at the same instant",
+        "correct": true,
+        "why": "Right. Each plan held it briefly; nothing stopped the second plan once the first had finished planning."
+      },
+      {
+        "text": "`-lock-timeout=5m` disabled the lock",
+        "correct": false,
+        "why": "It makes Terraform wait for a lock, not skip it."
+      },
+      {
+        "text": "The two runs used different state keys",
+        "correct": false,
+        "why": "Both used `shop/terraform.tfstate`; that is why run 2 went stale."
+      }
+    ]
+  },
+  {
+    "id": "ex-kepataef",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `cancel-in-progress` set to `false` in the workflow's `concurrency` block?",
+    "hint": "What happens to an apply cancelled halfway?",
+    "choices": [
+      {
+        "text": "So that pull requests are never cancelled",
+        "correct": false,
+        "why": "The setting is about the running job of the group, whatever its event."
+      },
+      {
+        "text": "GitHub requires it when `environment` is used",
+        "correct": false,
+        "why": "There is no such requirement; it is a choice about safety."
+      },
+      {
+        "text": "To keep every pending run in the queue",
+        "correct": false,
+        "why": "Pending runs are still replaced by newer ones; this only protects the running one."
+      },
+      {
+        "text": "A cancelled apply is a partial apply",
+        "correct": true,
+        "why": "Yes: lesson 9's partial apply, made on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-xexgmq83",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps the GitHub workflow but changes the `apply` job's checkout to `ref: main`. Two merges land minutes apart. What is the risk?",
+    "hint": "What does the apply job read from the checkout, and what from the plan?",
+    "choices": [
+      {
+        "text": "The plan file is ignored and the newer commit is applied",
+        "correct": false,
+        "why": "`apply tfplan` follows the plan, as the lesson's run 1 showed."
+      },
+      {
+        "text": "A lock file from another commit",
+        "correct": true,
+        "why": "Right. `init` reads the backend and the lock file from the checkout, and a plan whose provider selections differ is refused."
+      },
+      {
+        "text": "Both commits are applied twice",
+        "correct": false,
+        "why": "Each run applies its own plan once; the second may go stale."
+      },
+      {
+        "text": "None: the checkout does not matter to `apply tfplan`",
+        "correct": false,
+        "why": "The configuration comes from the plan, but the backend and the lock file come from the checkout."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3nr075k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants a faster pipeline and proposes: on a merge, run `terraform apply -auto-approve` on `main`, since the pull request's plan was already reviewed. Which run in this lesson shows the flaw?",
+    "hint": "Which plan was true when made and false later?",
+    "choices": [
+      {
+        "text": "The pull request that opened port 22",
+        "correct": false,
+        "why": "The scan stopped that one before any plan; it says nothing about reviewing plans."
+      },
+      {
+        "text": "Run 2, whose plan proposed a second network",
+        "correct": true,
+        "why": "Right. What was reviewed was no longer what would happen; with `-auto-approve` the apply would have planned afresh and nobody would have read that plan either."
+      },
+      {
+        "text": "Ana's uncommitted subnet change on her laptop",
+        "correct": false,
+        "why": "That shows why laptops should not apply, not why a merged change needs a fresh, read plan."
+      },
+      {
+        "text": "The `ci-roles` configuration",
+        "correct": false,
+        "why": "That is the credentials, applied once by an administrator."
+      }
+    ]
+  },
+  {
+    "id": "ex-hw9r518s",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's company moves from GitHub to GitLab. Which of these must change? Choose all that apply.",
+    "hint": "Separate what schedules the steps from what the steps are.",
+    "choices": [
+      {
+        "text": "`ci.sh`",
+        "correct": false,
+        "why": "Both files call the same script; that is why it exists."
+      },
+      {
+        "text": "The file that schedules the jobs",
+        "correct": true,
+        "why": "Yes: `.gitlab-ci.yml` instead of the workflow."
+      },
+      {
+        "text": "The OIDC provider and the `sub` conditions in AWS",
+        "correct": true,
+        "why": "Yes: the issuer becomes `https://gitlab.com` and `sub` has GitLab's shape."
+      },
+      {
+        "text": "The S3 backend and its lock file",
+        "correct": false,
+        "why": "The state does not care which CI service plans against it."
+      },
+      {
+        "text": "The Terraform configuration of the network",
+        "correct": false,
+        "why": "The network is the same whatever runs the pipeline."
+      }
+    ]
+  }
+]
