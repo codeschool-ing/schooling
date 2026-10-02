@@ -49,10 +49,10 @@ sleeps and the cat sleeps and the cat sleeps and the cat sleeps and the cat slee
 -- finish: length, prompt 2 tokens, output 20 tokens
 ```
 
-**A penalidade de frequência chegou lá na terceira repetição; a de presença nunca chegou.** Depois de
+**A penalidade de frequência chegou lá depois do terceiro `and`; a de presença nunca chegou.** Depois de
 um `and`, F = 0,2 subtrai 0,2; depois de dois, 0,4, ainda um pouco abaixo; depois de três, 0,6, e
 `on` ganha. A penalidade de presença subtrai 0,2 depois do primeiro `and` e nunca mais que isso,
-então `and` mantém a vantagem para sempre e o laço corre até o limite. A execução de frequência
+então `and` mantém a vantagem para sempre e o laço vai até o limite. A execução de frequência
 calhou de terminar a frase no vigésimo token, e é por isso que ainda informa `length` (lição 15).
 
 ```schooling-figure
@@ -63,7 +63,7 @@ Então a penalidade de frequência é a que pesa mais sobre uma palavra quanto m
 serve para laços e listas que não param. A de presença empurra o texto para palavras que ele ainda
 não usou, o que fica mais perto de "mudar de assunto".
 
-## Demais de qualquer uma
+## Qualquer uma em excesso
 
 Uma penalidade não distingue uma repetição que é defeito de uma repetição que é a própria língua.
 Palavras como `is` e `the` precisam aparecer de novo e de novo em frases comuns. Sem penalidade, o
@@ -106,7 +106,7 @@ penalidades ficam em 0.
 
 ## Faixas e padrões
 
-Onde uma API oferece esses dois controles, o padrão habitual é que os dois venham em 0, ou seja,
+Onde uma API oferece esses dois controles, o comum é que os dois venham em 0, ou seja,
 desligados, e que o provedor documente uma faixa, às vezes com valores negativos que tornam a
 repetição mais provável. Nem toda API os oferece, e se eles contam só a saída, como no `toylm`, ou
 também o prompt, é decisão do provedor. **Comece em 0, suba uma das duas em passos pequenos enquanto

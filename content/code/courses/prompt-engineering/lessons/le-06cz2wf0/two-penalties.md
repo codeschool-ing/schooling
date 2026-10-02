@@ -49,7 +49,7 @@ sleeps and the cat sleeps and the cat sleeps and the cat sleeps and the cat slee
 -- finish: length, prompt 2 tokens, output 20 tokens
 ```
 
-**The frequency penalty got there on the third repeat; the presence penalty never did.** After
+**The frequency penalty got there after the third `and`; the presence penalty never did.** After
 one `and`, F = 0.2 subtracts 0.2; after two, 0.4, still just short; after three, 0.6, and `on`
 wins. The presence penalty subtracts 0.2 after the first `and` and never more, so `and` keeps its
 lead for ever and the loop runs to the limit. The frequency run happened to end its sentence on
