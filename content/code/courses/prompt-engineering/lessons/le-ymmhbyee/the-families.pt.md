@@ -14,13 +14,13 @@ notas, porque é justamente isso que envelhece primeiro.
 |---|---|---|
 | OpenAI | modelos GPT, incluindo alguns feitos para raciocinar longamente antes de responder | os apps do ChatGPT e a API da OpenAI; ela também publicou alguns modelos de pesos abertos |
 | Google | Gemini; Gemma, uma família à parte de modelos menores de pesos abertos | os apps do Gemini, a API do Google e o Google Cloud; os pesos do Gemma podem ser baixados |
-| Anthropic | Claude | os apps do Claude, a API da Anthropic e grandes plataformas de nuvem que o revendem |
+| Anthropic | Claude | os apps do Claude, a API da Anthropic e grandes plataformas de nuvem que também o oferecem |
 | Meta | Llama | pesos que você baixa sob a licença própria da Meta, e o assistente da Meta nos apps dela |
 | xAI | Grok | o app do Grok, a plataforma X e a API da xAI; ela publicou os pesos de um modelo Grok mais antigo |
 
 Três coisas na tabela importam mais que os nomes.
 
-**Cada família são muitos modelos.** Um provedor costuma oferecer vários tamanhos de cada geração ao
+**Cada família tem muitos modelos.** Um provedor costuma oferecer vários tamanhos de cada geração ao
 mesmo tempo: um grande, mais capaz e mais lento, e menores, mais baratos e mais rápidos. "Usamos o
 Claude" ou "usamos o GPT" diz qual empresa, não qual modelo, e dois modelos da mesma família podem
 ser mais diferentes entre si que dois modelos de empresas diferentes.
@@ -40,7 +40,7 @@ Vale nomear uma novidade, porque ela muda o jeito de usar um modelo. Vários pro
 modelos treinados para escrever uma longa cadeia de passos intermediários antes da resposta final,
 às vezes escondida de você e às vezes mostrada. Eles tendem a se sair melhor em problemas de muitos
 passos, como matemática e código, e gastam mais tokens e mais tempo por resposta, que você paga. A
-lição 26 é a técnica de prompt da qual esses modelos nasceram.
+lição 26 é a cadeia de pensamento, a técnica de prompt que pede esses passos no próprio prompt.
 
 ## No que não confiar nesta seção
 

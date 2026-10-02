@@ -14,7 +14,7 @@ scores, because those are exactly what goes stale first.
 |---|---|---|
 | OpenAI | GPT models, including ones built to reason at length before answering | the ChatGPT apps and OpenAI's API; it has also published some models with open weights |
 | Google | Gemini; Gemma, a separate family of smaller open-weight models | the Gemini apps, Google's API and Google Cloud; Gemma weights can be downloaded |
-| Anthropic | Claude | the Claude apps, Anthropic's API, and large cloud platforms that resell it |
+| Anthropic | Claude | the Claude apps, Anthropic's API, and large cloud platforms that also offer it |
 | Meta | Llama | weights you download under Meta's own licence, and Meta's assistant in its apps |
 | xAI | Grok | the Grok app, the X platform and xAI's API; it has published the weights of an earlier Grok model |
 
@@ -40,7 +40,7 @@ One development is worth naming because it changes how a model is used. Several 
 offer models trained to write out a long chain of intermediate steps before the final answer,
 sometimes hidden from you and sometimes shown. They tend to do better on problems with many steps,
 such as mathematics and code, and they spend more tokens and more time per answer, which you pay
-for. Lesson 26 is the prompting technique these models grew out of.
+for. Lesson 26 is chain of thought, the prompting technique that asks for those steps in the prompt.
 
 ## What not to trust in this section
 

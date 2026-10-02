@@ -68,7 +68,7 @@ tokens  words  chars  file
     48     35    209  handbook/wifi.md
 ```
 
-Isso são duas codificações de um só provedor. Os tokenizadores dos outros provedores diferem de
+São duas codificações de um só provedor. Os tokenizadores dos outros provedores diferem de
 novo, e nenhum deles está na bancada, então este curso não mostra contagem para eles. A regra que
 decorre disso não precisa de uma: **compare quanto custa um pedido típico inteiro em cada
 provedor**, o que os contadores de tokens deles ou um pedido de teste dizem, e não o preço por
@@ -92,7 +92,7 @@ tem nenhuma. O que não fica desatualizado é o método: o seu próprio conjunto
 pedido inteiro e os documentos datados do provedor.
 
 ::: track ai
-O curso `ai-models`, mais à frente nesta trilha, pega esse assunto: os provedores um a um, quando
+O curso `ai-models`, mais à frente nesta trilha, trata desse assunto: os provedores um a um, quando
 vale rodar você mesmo modelos de pesos abertos e como avaliar candidatos com os seus próprios casos.
 :::
 
