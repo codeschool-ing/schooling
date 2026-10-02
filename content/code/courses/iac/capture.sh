@@ -41,7 +41,7 @@ run() {
 }
 answer() {
   prompt "$1"
-  printf '%s\n' "$2" | eval "$1" 2>&1 | decolour | sed -u "s/^\(  Enter a value: \)\$/\1$2/; s/^\(  Enter a value: \)\(.\)/\1$2\n\2/"
+  printf '%s\n' "$2" | eval "$1" 2>&1 | decolour | sed -u "s/^\(  Enter a value: \)\$/\1$2/; t; s/^\(  Enter a value: \)\(.\)/\1$2\n\2/"
   return 0
 }
 quiet() { eval "$1" >/dev/null 2>&1 </dev/null || true; }

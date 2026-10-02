@@ -21,8 +21,8 @@
 # releases.hashicorp.com, PyPI, npm and the Go module proxy, and not the
 # Terraform Registry or GitHub's release downloads. So:
 #   - the providers are downloaded from releases.hashicorp.com, checked against
-#     HashiCorp's published SHA256SUMS, and served to Terraform from a local
-#     directory (a "filesystem mirror"). terraform init prints the same lines
+#     HashiCorp's published SHA256SUMS, unpacked, and served to Terraform from a
+#     local directory (a "filesystem mirror"). terraform init prints the same lines
 #     either way; what it writes into the lock file differs, and lesson 2 says
 #     how.
 #   - tofu, terragrunt, tfsec, trivy and the Docker plugin for Packer are built
@@ -93,15 +93,23 @@ tools() {
   for p in $PROVIDERS; do
     hashicorp "terraform-provider-${p%%:*}" "${p#*:}" "$OPT/mirror/registry.terraform.io/hashicorp/${p%%:*}"
   done
+  # The same providers, unpacked: from an unpacked mirror Terraform links the
+  # provider into .terraform instead of copying it, so a run does not write
+  # 800 MB per working directory and no two runs ever write the same file.
+  local z d
+  for z in "$OPT"/mirror/registry.terraform.io/hashicorp/*/*.zip; do
+    p=${z%/*}; p=${p##*/}; v=${z##*_${p}_}; v=${z#*terraform-provider-${p}_}; v=${v%%_*}
+    d=$OPT/unpacked/registry.terraform.io/hashicorp/$p/$v/linux_amd64
+    [ -d "$d" ] || { mkdir -p "$d" && unzip -oq "$z" -d "$d"; }
+  done
+  chmod -R a+rX "$OPT/unpacked"
   cat > "$OPT/terraformrc" <<EOF
 provider_installation {
   filesystem_mirror {
-    path = "$OPT/mirror"
+    path = "$OPT/unpacked"
   }
 }
-plugin_cache_dir = "$OPT/plugin-cache"
 EOF
-  mkdir -p "$OPT/plugin-cache" && chmod 1777 "$OPT/plugin-cache"
   [ -x "$OPT/venv/bin/moto_server" ] || { python3 -m venv "$OPT/venv"; "$OPT/venv/bin/pip" install -q "moto[server]==$MOTO" "awscli==$AWSCLI"; }
   [ -x "$OPT/venv-ansible/bin/ansible" ] || { python3.12 -m venv "$OPT/venv-ansible"; "$OPT/venv-ansible/bin/pip" install -q "ansible-core==$ANSIBLE"; }
   [ -x "$OPT/venv-checkov/bin/checkov" ] || { python3 -m venv "$OPT/venv-checkov"; "$OPT/venv-checkov/bin/pip" install -q "checkov==$CHECKOV"; }
@@ -119,14 +127,6 @@ EOF
   gobuild "github.com/hashicorp/packer-plugin-docker@$PACKER_DOCKER" . packer-plugin-docker
   PACKER_PLUGIN_PATH=$OPT/packer-plugins "$OPT/bin/packer" plugins install \
     --path "$OPT/bin/packer-plugin-docker" github.com/hashicorp/docker >/dev/null
-  # warm the plugin cache once, so a run links the aws provider rather than
-  # unpacking 700 MB of it into every working directory
-  local warm; warm=$(mktemp -d)
-  { printf 'terraform {\n  required_providers {\n'
-    for p in aws local random null tls; do printf '    %s = { source = "hashicorp/%s" }\n' $p $p; done
-    printf '  }\n}\n'; } > "$warm/main.tf"
-  (cd "$warm" && TF_CLI_CONFIG_FILE=$OPT/terraformrc CHECKPOINT_DISABLE=1 "$OPT/bin/terraform" init -no-color >/dev/null)
-  rm -rf "$warm"
 }
 
 # run CMD...: inside its own network and mount namespaces, with an empty moto
@@ -174,6 +174,8 @@ EOF
   runuser -u ana -- env -i bash -c '. /home/ana/.lab-env; cd /home/ana; "$@"' lab "$@" || status=$?
   kill "$(cat "$home/.dnsmasq.pid")" 2>/dev/null || true
   kill "$moto" 2>/dev/null || true
+  # what a run made is only ever read through its transcript
+  umount /home/ana 2>/dev/null; rm -rf "$home"
   return $status
 }
 
