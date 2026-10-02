@@ -158,6 +158,8 @@ def scripted(system, messages, tools):
             continue
         if "no_tools" in w and names:
             continue
+        if "not_tool" in w and w["not_tool"] in names:
+            continue
         if "after_tool" in w and not results:
             continue
         if "turns" in w and turns != w["turns"]:

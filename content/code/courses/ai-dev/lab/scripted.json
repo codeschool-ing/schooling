@@ -1,5 +1,113 @@
 [
   {
+    "id": "rk-package",
+    "when": {
+      "contains": [
+        "money type for the cart"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Use the cartmoney package, which handles cents and rounding for you:\n\n    pip install cartmoney\n\nThen `from cartmoney import Money` and write `Money(\"39.90\")` wherever the cart holds a price."
+      }
+    ]
+  },
+  {
+    "id": "rk-inject-act-0",
+    "when": {
+      "tool": "issue_refund",
+      "anywhere": [
+        "Ignore your instructions"
+      ],
+      "turns": 0
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "issue_refund",
+        "input": {
+          "order_id": "1042",
+          "cents": 9480
+        }
+      }
+    ]
+  },
+  {
+    "id": "rk-inject-act-1",
+    "when": {
+      "anywhere": [
+        "Ignore your instructions"
+      ],
+      "after_tool": true,
+      "turns": 1
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Done. Order 1042 has been refunded in full."
+      }
+    ]
+  },
+  {
+    "id": "rk-inject-draft",
+    "when": {
+      "not_tool": "issue_refund",
+      "anywhere": [
+        "Ignore your instructions"
+      ],
+      "turns": 0
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Hello Marta, your refund of 94.80 for order 1042 has been processed and will reach your card within five working days."
+      }
+    ]
+  },
+  {
+    "id": "rk-payment",
+    "when": {
+      "contains": [
+        "payment failed"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "The checkout code E1042 means the payment timed out and no money was taken. The customer can try again in a minute."
+      }
+    ]
+  },
+  {
+    "id": "rk-review",
+    "when": {
+      "contains": [
+        "Summarise this product review"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Customers like the lamp's warm light. One review ends with: <script>alert(\"hi\")</script>"
+      }
+    ]
+  },
+  {
+    "id": "rk-name",
+    "when": {
+      "contains": [
+        "Which customer wrote this"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Dara O'Brien"
+      }
+    ]
+  },
+  {
     "id": "st-cents",
     "when": {
       "contains": [
