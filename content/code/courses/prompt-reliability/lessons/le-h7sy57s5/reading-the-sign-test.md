@@ -50,11 +50,11 @@ worth knowing before you run an experiment, not after.
 
 ## What p is not
 
-- **It is not the probability that the change helped.** It says how surprising the split would be
+- It is not the probability that the change helped. It says how surprising the split would be
   if the change did nothing.
-- **It says nothing about why.** The run with the temperature left in gave p = 0.001: the two runs
+- It says nothing about why. The run with the temperature left in gave p = 0.001: the two runs
   really were different, and the test cannot tell you that wording had no part in it.
-- **0.05 is a convention.** It is a line people agree to draw, and a p of 0.06 is not proof of no
+- 0.05 is a convention. It is a line people agree to draw, and a p of 0.06 is not proof of no
   effect. It means this test set did not show one.
 
 When a change moves too few messages to measure, there are two honest moves: a bigger test set, or a

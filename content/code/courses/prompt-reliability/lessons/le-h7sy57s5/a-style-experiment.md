@@ -103,8 +103,7 @@ real models do too: their output can shift with changes to a prompt that a perso
 cosmetic, and nobody can say beforehand which messages a rewording will move.
 
 So the honest report of this experiment is short. **Rewriting the field list as prose made no
-difference that seventy messages can show.** The two that moved were noise, and the sign test said
-so before anybody looked at a reply: p = 0.500 means that a fair coin splits two tosses at least
+difference that seventy messages can show.** The two that moved were noise, and the sign test said so before anybody looked at a reply. A p of 0.500 means that a fair coin splits two tosses at least
 this unevenly half the time. The next section reads that number properly.
 
 ```schooling-figure

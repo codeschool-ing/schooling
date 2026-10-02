@@ -99,11 +99,11 @@ inteiro que recebe, mensagem incluída. Um prompt que pede só o objeto JSON dei
 e os dois pedem. Mas **qualquer mudança na redação muda o hash, e com ele quais mensagens ganham um
 bloco ou uma frase solta.** Mover um ponto final bastaria. É a versão do substituto de algo que
 modelos reais também fazem: a saída deles pode mudar com alterações no prompt que uma pessoa chamaria
-de cosméticas, e ninguém consegue dizer de antemão quais mensagens uma nova redação vai mexer.
+de cosméticas, e ninguém consegue dizer de antemão em quais mensagens uma nova redação vai mexer.
 
 Então o relato honesto deste experimento é curto. **Reescrever a lista de campos em prosa não fez
 diferença que setenta mensagens consigam mostrar.** As duas que se mexeram eram ruído, e o teste do
-sinal disse isso antes de alguém olhar uma resposta: p = 0.500 quer dizer que uma moeda honesta
+sinal disse isso antes de alguém olhar uma resposta. Um p de 0.500 quer dizer que uma moeda honesta
 divide dois lançamentos de forma ao menos tão desigual metade das vezes. A próxima seção lê esse
 número com cuidado.
 

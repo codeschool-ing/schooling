@@ -8,7 +8,7 @@ pontua mais. **Isso só funciona quando a redação é a única coisa diferente 
 execuções.** Um experimento muda uma coisa, no mesmo conjunto de teste, com os mesmos parâmetros, ou
 o número que ele produz não consegue dizer qual mudança fez o quê.
 
-Veja o que acontece quando essa regra escapa. `prompts/v6-escaped.txt` lista os campos em tópicos, e
+Veja o que acontece quando essa regra é esquecida. `prompts/v6-escaped.txt` lista os campos em tópicos, e
 `prompts/v7-prose.txt` diz as mesmas coisas num parágrafo. Alguém roda a versão em prosa para ver se
 o modelo a entende melhor, e por acaso deixa no comando uma temperatura de amostragem de 0.8, sobra
 de um experimento anterior:
@@ -47,12 +47,12 @@ execução.
 
 ## O que fica fixo
 
-- **O conjunto de teste.** As duas execuções leem `cases/all.jsonl`, as setenta mensagens. Duas
+- O conjunto de teste. As duas execuções leem `cases/all.jsonl`, as setenta mensagens. Duas
   execuções em mensagens diferentes comparam as mensagens tanto quanto os prompts.
-- **Os parâmetros.** Temperatura, o limite de saída e tudo o mais que dá para passar com `--set`.
-- **Tudo no prompt, menos a mudança.** Os mesmos rótulos, na mesma ordem, com os mesmos exemplos ou
+- Os parâmetros. Temperatura, o limite de saída e tudo o mais que dá para passar com `--set`.
+- Tudo no prompt, menos a mudança. Os mesmos rótulos, na mesma ordem, com os mesmos exemplos ou
   nenhum.
-- **A comparação é mensagem a mensagem.** O `pl compare` alinha os dois resultados de cada
+- A comparação é mensagem a mensagem. O `pl compare` alinha os dois resultados de cada
   mensagem, porque dois totais que diferem em dois podem esconder catorze mensagens andando em
   sentidos opostos.
 

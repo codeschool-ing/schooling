@@ -34,8 +34,7 @@ mesmo conjunto de teste, os mesmos parâmetros, e `pl compare`. **Este laborató
 mostrar o efeito de um formato de entrada nas respostas**, porque o substituto classifica por
 palavras-chave e lê um valor do mesmo jeito, seja qual for o entorno. Modelos reais não são tão
 indiferentes. *Quantifying Language Models' Sensitivity to Spurious Features in Prompt Design*
-(Sclar e outros, 2023) mudou só a formatação de prompts few-shot, como separadores, espaçamento e
-maiúsculas, e relatou diferenças de acurácia de até 76 pontos num modelo, o LLaMA-2-13B. A
+(Sclar e outros, 2023) mudou só a formatação de prompts few-shot, como separadores, espaçamento e maiúsculas. O estudo relatou diferenças de acurácia de até 76 pontos num modelo, o LLaMA-2-13B. A
 recomendação dos autores foi relatar o desempenho de um prompt numa faixa de formatos plausíveis, e
 não no único que alguém por acaso escreveu.
 

@@ -34,7 +34,7 @@ the same test set, the same parameters, and `pl compare`. **This lab cannot show
 an input format on the answers**, because the stand-in sorts by keywords and reads a value the same
 way whatever surrounds it. Real models are not so indifferent. *Quantifying Language Models'
 Sensitivity to Spurious Features in Prompt Design* (Sclar and others, 2023) changed only the
-formatting of few-shot prompts, such as separators, spacing and casing, and reported accuracy
+formatting of few-shot prompts, such as separators, spacing and casing. It reported accuracy
 differences of up to 76 points on one model, LLaMA-2-13B. The authors' advice was to report a
 prompt's performance across a range of plausible formats, not on the single one somebody happened
 to write.

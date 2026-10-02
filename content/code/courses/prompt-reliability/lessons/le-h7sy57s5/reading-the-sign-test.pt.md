@@ -12,11 +12,10 @@ Só as mensagens cujo resultado mudou entram no teste. As 46 que passaram nos do
 falharam nos dois não dizem nada sobre a diferença entre eles, e é por isso que um conjunto de teste
 de setenta pode guardar pouquíssima evidência sobre uma mudança em particular.
 
-## Quantas mensagens alteradas são precisas
+## Quantas mensagens alteradas são necessárias
 
 Quando todas as mensagens alteradas vão para o mesmo lado, a conta é curta. Cada mensagem é um
-lançamento de moeda, e a chance de todas as *n* caírem do mesmo lado é meio multiplicado por ele
-mesmo *n* vezes. Qualquer um dos lados conta, então p é o dobro disso. A função do próprio
+lançamento de moeda, e a chance de todas as *n* caírem do mesmo lado é um meio multiplicado por si mesmo *n* vezes. Qualquer um dos lados conta, então p é o dobro disso. A função do próprio
 laboratório, a que o `pl compare` chama, dá os mesmos números:
 
 ```
@@ -44,17 +43,17 @@ ana@lab:~/triage$ python3 -c 'from promptlab.cli import sign_test; [print(n, 1, 
 9 1 0.021
 ```
 
-Com uma quebrada, são precisas oito corrigidas para p cair abaixo de 0.05. O experimento da prosa teve
+Com uma quebrada, são necessárias oito corrigidas para p cair abaixo de 0.05. O experimento da prosa teve
 duas mensagens alteradas, então **nenhum resultado que ele pudesse produzir contaria como
 evidência**. Vale saber disso antes de rodar um experimento, e não depois.
 
 ## O que p não é
 
-- **Não é a probabilidade de a mudança ter ajudado.** Diz quão surpreendente a divisão seria se a
+- Não é a probabilidade de a mudança ter ajudado. Diz quão surpreendente a divisão seria se a
   mudança não fizesse nada.
-- **Não diz nada sobre o porquê.** A execução com a temperatura esquecida deu p = 0.001: as duas
+- Não diz nada sobre o porquê. A execução com a temperatura esquecida deu p = 0.001: as duas
   execuções eram mesmo diferentes, e o teste não tem como dizer que a redação não teve parte nisso.
-- **0.05 é uma convenção.** É uma linha que as pessoas combinam traçar, e um p de 0.06 não prova
+- 0.05 é uma convenção. É uma linha que as pessoas combinam traçar, e um p de 0.06 não prova
   ausência de efeito. Quer dizer que este conjunto de teste não mostrou um.
 
 Quando uma mudança mexe em poucas mensagens demais para medir, há duas saídas honestas: um conjunto

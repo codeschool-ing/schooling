@@ -46,12 +46,12 @@ and at 0.8. Lesson 14 versions prompts properly; until then, write the command d
 
 ## What stays fixed
 
-- **The test set.** Both runs read `cases/all.jsonl`, all seventy messages. Two runs on different
+- The test set. Both runs read `cases/all.jsonl`, all seventy messages. Two runs on different
   messages compare the messages as much as the prompts.
-- **The parameters.** Temperature, the output cap and everything else you can `--set`.
-- **Everything in the prompt except the change.** The same labels, in the same order, with the
+- The parameters. Temperature, the output cap and everything else you can `--set`.
+- Everything in the prompt except the change. The same labels, in the same order, with the
   same examples or none.
-- **The comparison is message by message.** `pl compare` lines up each message's two results,
+- The comparison is message by message. `pl compare` lines up each message's two results,
   because two totals that differ by two can hide fourteen messages moving in opposite directions.
 
 The next section runs the experiment again, with the temperature where it belongs.
