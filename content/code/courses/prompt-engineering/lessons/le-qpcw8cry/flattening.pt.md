@@ -4,7 +4,7 @@ version: 1
 ---
 
 A temperatura costuma ser descrita como um botão de criatividade: aumente e o modelo fica mais
-imaginativo, diminua e ele fica mais cuidadoso. Essa imagem serve para o uso e erra no que se mexe.
+imaginativo, diminua e ele fica mais cuidadoso. Essa imagem serve para o dia a dia e erra sobre o que se mexe.
 **A temperatura não muda nada do que o modelo sabe. Ela remodela as probabilidades que o modelo
 deu, logo antes de uma palavra ser sorteada delas.** As palavras continuam as mesmas; só mudam as
 frações que cada uma recebe.
@@ -63,25 +63,25 @@ Um modelo não calcula porcentagens primeiro. Ele calcula uma nota para cada pal
 pelo total, para que as frações somem 100%. A temperatura entra no meio. **Cada nota é dividida pela
 temperatura antes de as porcentagens serem calculadas.**
 
-Dividir por um número menor que 1 aumenta todas as notas, e as diferenças entre elas junto, então a
-fração da palavra do topo cresce. Dividir por um número maior que 1 encolhe as diferenças, e as
+Dividir por um número menor que 1 afasta as notas umas das outras, então as diferenças entre elas
+crescem e a fração da palavra do topo cresce junto. Dividir por um número maior que 1 encolhe as diferenças, e as
 frações andam na direção de ficarem iguais. Nas tabelas acima, `hot` era 3,2 vezes mais provável
 que `strong` na temperatura 1 (59,3% contra 18,5%). Em 0,5 é umas dez vezes mais provável (86,8%
 contra 8,5%), porque cortar a temperatura pela metade eleva essa razão ao quadrado.
 
-O `toylm` faz exatamente isso. As notas dele são os logaritmos das contagens, e a função que aplica
+O `toylm` faz exatamente isso. As notas dele são os logaritmos das frações que as contagens dão, e a função que aplica
 os controles as divide pela temperatura antes de transformá-las de volta em frações. As notas de
 um modelo grande vêm dos pesos em vez de contagens, e a divisão é a mesma.
 
 ## Os dois extremos
 
-Há dois valores nas pontas, e vale conhecer os dois porque os dois são usados.
+A divisão tem dois limites, e cada um diz algo sobre os valores perto dele.
 
 - Conforme a temperatura cai para 0, a fração da palavra do topo vai para 100%. No 0 em si a
   divisão não existe, então as implementações tratam o caso como uma regra à parte: pegar a
   palavra do topo. Esse é o assunto da próxima seção.
-- Conforme a temperatura sobe, toda palavra que tinha alguma nota vai para uma fração igual. Uma
-  palavra a que o modelo deu 0,3% ganha tantos sorteios quanto a que recebeu 86,8%.
+- Conforme a temperatura sobe, toda palavra que tinha alguma nota vai para uma fração igual. No
+  limite, `bitter`, a que o modelo deu 3,7%, ganha tantos sorteios quanto `hot`, a que deu 59,3%.
 
 **Nenhum dos extremos acrescenta uma palavra que o modelo não pontuou.** O `toylm` nunca vai dizer
 `sweet` depois de `coffee is`, em temperatura nenhuma, porque `sweet` nunca veio depois dessas duas

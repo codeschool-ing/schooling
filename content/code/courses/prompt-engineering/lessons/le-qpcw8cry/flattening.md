@@ -63,25 +63,25 @@ A model does not compute percentages first. It computes a score for every word, 
 and divide by the total, so that the shares add up to 100%. Temperature goes in between. **Every
 score is divided by the temperature before the percentages are worked out.**
 
-Dividing by a number below 1 makes every score bigger, and the differences between them bigger
-with it, so the top word's share grows. Dividing by a number above 1 shrinks the differences and
-the shares move towards equal. In the tables above, `hot` was 3.2 times as likely as `strong`
+Dividing by a number below 1 pushes the scores further apart, so the differences between them
+grow and the top word's share grows with them. Dividing by a number above 1 shrinks the
+differences, and the shares move towards equal. In the tables above, `hot` was 3.2 times as likely as `strong`
 at temperature 1 (59.3% against 18.5%). At 0.5 it is about ten times as likely (86.8% against
 8.5%), because halving the temperature squares that ratio.
 
-`toylm` does exactly this. Its scores are the logarithms of its counts, and the function that
+`toylm` does exactly this. Its scores are the logarithms of the shares its counts give, and the function that
 applies the controls divides them by the temperature before it turns them back into shares. A
 large model's scores come from its weights instead of from counts, and the division is the same.
 
 ## Two limits
 
-Two settings sit at the ends, and both are worth knowing because both get used.
+The division has two limits, and each says something about the settings near it.
 
 - As the temperature falls towards 0, the top word's share heads to 100%. At 0 itself the
   division is undefined, so implementations treat it as a rule of its own: take the top word.
   That is the next section.
-- As the temperature rises, every word that had any score heads towards an equal share. A word
-  the model gave 0.3% gets as many draws as the one it gave 86.8%.
+- As the temperature rises, every word that had any score heads towards an equal share. In the
+  limit, `bitter`, which the model gave 3.7%, gets as many draws as `hot`, which it gave 59.3%.
 
 **Neither end adds a word the model did not already score.** `toylm` will never say `sweet`
 after `coffee is` at any temperature, because `sweet` never followed those two words in its
