@@ -65,9 +65,10 @@ resource "aws_eip" "web" {
 ```
 
 `Environment` é o nome do workspace, e `Expires` é uma variável. **O pipeline calcula a data e a
-passa**, em vez de a configuração calculá-la com `timestamp()`, porque essa função devolve um valor novo
-a cada execução: todo plano seguinte ia querer mudar todas as tags, e a data andaria para a frente
-cada vez que alguém mexesse no ambiente. O pull request 21 ganha o seu workspace e uma semana:
+passa.** Calcular na configuração com `timestamp()` parece mais arrumado e falha, porque essa função
+devolve um valor novo a cada execução. Todo plano seguinte ia querer mudar todas as tags, e a data
+andaria para a frente cada vez que alguém mexesse no ambiente. O pull request 21 ganha o seu workspace
+e uma semana:
 
 ```
 ana@laptop:~/shop-preview$ terraform workspace new pr-21

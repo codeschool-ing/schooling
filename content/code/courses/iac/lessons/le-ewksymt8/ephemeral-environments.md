@@ -66,10 +66,10 @@ resource "aws_eip" "web" {
 ```
 
 `Environment` is the workspace's name, and `Expires` is a variable. **The pipeline computes the date
-and passes it in**, rather than the configuration computing it with `timestamp()`, because that
-function returns a new value on every run: every later plan would want to change every tag, and the
-date would move forward each time the environment was touched. Pull request 21 gets its workspace and
-a week:
+and passes it in.** Computing it in the configuration with `timestamp()` looks tidier and fails,
+because that function returns a new value on every run. Every later plan would want to change every
+tag, and the date would move forward each time anybody touched the environment. Pull request 21 gets
+its workspace and a week:
 
 ```
 ana@laptop:~/shop-preview$ terraform workspace new pr-21
