@@ -10,8 +10,7 @@ e, numa aplicação, fica na mensagem de sistema da lição 22, já que vale par
 **Um papel é um jeito de escolher com que tipo de texto a resposta vai se parecer.** Um modelo
 produz texto provável (lição 1), e o texto de onde ele aprendeu foi escrito por muitos tipos de
 pessoa para muitos tipos de leitor. Um barista explicando café a um cliente escreve diferente de
-um torrador ensinando aprendizes, e uma linha de papel torna um desses estilos o provável de
-continuar.
+um torrador ensinando aprendizes, e uma linha de papel torna provável continuar num desses estilos.
 
 ## Quatro coisas que um papel define
 

@@ -4,7 +4,7 @@ version: 1
 ---
 
 A crença comum por trás de "Você é um especialista de nível mundial" é que a linha melhora as
-respostas na substância: mais exatas, mais sabidas, com mais autoridade. **Um papel não acrescenta
+respostas na substância: mais exatas, mais bem informadas, com mais autoridade. **Um papel não acrescenta
 conhecimento nem autoridade.** O modelo sabe o que sabia antes da linha, e nada do que ele diz fica
 mais verdadeiro por causa do título que recebeu.
 
