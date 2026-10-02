@@ -1,7 +1,75 @@
 [
   {
+    "id": "complete-remove",
+    "when": {
+      "contains": [
+        "def remove(self, sku",
+        "<CURSOR>"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "        for line in self.lines:\n            if line.sku == sku:\n                line.quantity -= quantity\n                return\n        raise ValueError(f\"{sku} is not in the cart\")\n"
+      }
+    ]
+  },
+  {
+    "id": "refactor-total",
+    "when": {
+      "contains": [
+        "computes the subtotal once"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "diff --git a/shop/cart.py b/shop/cart.py\nindex 230a8bd..38a07b4 100644\n--- a/shop/cart.py\n+++ b/shop/cart.py\n@@ -31,10 +31,14 @@ class Cart:\n     def discount(self) -> int:\n         return self.subtotal() * self.discount_percent // 100\n \n-    def shipping(self) -> int:\n-        if self.subtotal() - self.discount() >= FREE_SHIPPING_FROM:\n+    def shipping(self, subtotal: int | None = None) -> int:\n+        if subtotal is None:\n+            subtotal = self.subtotal()\n+        if subtotal >= FREE_SHIPPING_FROM:\n             return 0\n         return SHIPPING\n \n     def total(self) -> int:\n-        return self.subtotal() - self.discount() + self.shipping()\n+        subtotal = self.subtotal()\n+        discount = subtotal * self.discount_percent // 100\n+        return subtotal - discount + self.shipping(subtotal)\n"
+      }
+    ]
+  },
+  {
+    "id": "payment-question",
+    "when": {
+      "contains": [
+        "payment"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Nothing in the files shown takes a payment: shop/cart.py computes the total and settings.py only holds a key for the payment service. A payment that fails is failing in code that is not in this context. Look at whatever reads PAYMENTS_KEY."
+      }
+    ]
+  },
+  {
+    "id": "docstring-format-price",
+    "when": {
+      "contains": [
+        "docstring",
+        "format_price"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "    \"\"\"Turn cents into a price as people read it.\n\n    >>> format_price(1290)\n    '12.90'\n    >>> format_price(5)\n    '0.05'\n    >>> format_price(-5)\n    '-0.05'\n    \"\"\"\n"
+      }
+    ]
+  },
+  {
     "id": "shipping-explained",
-    "when": {"contains": ["shipping"], "no_tools": true},
-    "reply": [{"type": "text", "text": "The cart charges a flat 15.00 for shipping, and nothing at all once the order reaches 200.00. The threshold is checked after the discount, not before it: a cart of 210.00 with a 10% coupon comes to 189.00 and pays shipping again. Every amount is held in integer cents, so 15.00 is the constant SHIPPING = 1500 and 200.00 is FREE_SHIPPING_FROM = 20000, both in shop/cart.py. The rule lives in Cart.shipping(), which Cart.total() calls after subtracting the discount. If you change the threshold, test_free_shipping_from_200 in tests/test_cart.py is the test that should change with it."}]
+    "when": {
+      "contains": [
+        "shipping"
+      ],
+      "no_tools": true
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "The cart charges a flat 15.00 for shipping, and nothing at all once the order reaches 200.00. The threshold is checked after the discount, not before it: a cart of 210.00 with a 10% coupon comes to 189.00 and pays shipping again. Every amount is held in integer cents, so 15.00 is the constant SHIPPING = 1500 and 200.00 is FREE_SHIPPING_FROM = 20000, both in shop/cart.py. The rule lives in Cart.shipping(), which Cart.total() calls after subtracting the discount. If you change the threshold, test_free_shipping_from_200 in tests/test_cart.py is the test that should change with it."
+      }
+    ]
   }
 ]

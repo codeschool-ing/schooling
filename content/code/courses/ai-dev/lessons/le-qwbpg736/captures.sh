@@ -103,6 +103,24 @@ block sampling-seeds
 for s in 1 2 3; do
   on "python lab/generate.py \"The default value is\" --tokens 16 --temperature 0.7 --seed $s"
 done
+block sampling-apis
+put lab/knobs.py <<'PY'
+import inspect
+
+import anthropic
+import openai
+from google.genai import types
+
+calls = {
+    "anthropic messages.create": inspect.signature(anthropic.Anthropic().messages.create).parameters,
+    "openai chat.completions.create": inspect.signature(openai.OpenAI().chat.completions.create).parameters,
+    "google GenerateContentConfig": types.GenerateContentConfig.model_fields,
+}
+for name, params in calls.items():
+    have = [k for k in ("temperature", "top_p", "top_k", "seed") if k in params]
+    print(f"{name:32} {' '.join(have) or '(none of them)'}")
+PY
+on 'python lab/knobs.py'
 block sampling-top-p
 on 'python lab/generate.py "The default value is" --tokens 16 --temperature 1.5 --top-p 0.5 --seed 7'
 

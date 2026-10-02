@@ -12,6 +12,7 @@
 #   /opt/aidev           Python 3.11 in a virtual environment, with the
 #                        providers' SDKs and everything the lessons import
 #   127.0.0.1:8400       labllm, the stand-in provider (lab/labllm.py)
+#   /opt/aidev/bin/assist  an editor assistant small enough to read (lab/assist.py)
 #   /var/log/labllm      every request labllm received, one JSON line each
 #
 # WHAT IS REAL AND WHAT WAS WRITTEN FOR THE COURSE. No model API was reachable
@@ -100,10 +101,16 @@ build_venv() {
   [ -x $VENV/bin/python ] || python3 -m venv $VENV
   # shellcheck disable=SC2086
   $VENV/bin/pip install -q $PYLIBS
+  mkdir -p $SHARE
+  install_lab
+}
+
+# The lab's own programs: the two that make up labllm, and assist (lesson 3).
+install_lab() {
   local site
   site=$($VENV/bin/python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')
   install -m 0644 "$HERE/lab/tinylm.py" "$HERE/lab/labllm.py" "$site/"
-  mkdir -p $SHARE
+  install -m 0755 "$HERE/lab/assist.py" $VENV/bin/assist
 }
 
 build_tokenizer() {
@@ -193,7 +200,7 @@ case ${1:-} in
     need; build_user; write_env; build_venv; build_tokenizer; build_tinylm
     build_embeddings; build_shop; start_llm ;;
   reset)
-    write_env; build_tinylm; build_shop; start_llm ;;
+    write_env; install_lab; build_tinylm; build_shop; start_llm ;;
   down)
     stop_llm ;;
   exec)

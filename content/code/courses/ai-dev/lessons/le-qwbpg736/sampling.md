@@ -5,8 +5,8 @@ version: 1
 
 Greedy decoding gets stuck in loops, as lesson 1 section 02 showed. So by default a model does
 not take the most likely token: it **draws one at random, weighted by the probabilities**. A token
-with 5% is picked about one time in twenty. Three settings change that draw, and every provider's
-API exposes at least the first two.
+with 5% is picked about one time in twenty. Three settings change that draw. Whether you are
+allowed to touch them depends on the provider, as the end of this section shows.
 
 ## Temperature
 
@@ -52,9 +52,9 @@ The default value is a list of (n - 1)
     25: 70 years
 ```
 
-**This is why the same question to a hosted model gives a different answer each time.** Most
-provider APIs do not let you fix the seed, and the ones that accept one describe the result as
-best effort. Even at temperature 0, the providers do not promise identical output for identical
+**This is why the same question to a hosted model gives a different answer each time.** Some
+provider APIs do not let you fix the seed at all, and the ones that accept one describe the result
+as best effort. Even at temperature 0, the providers do not promise identical output for identical
 requests: the arithmetic on their hardware is not guaranteed to come out bit for bit the same
 from one request to the next. **Do not build anything that relies on a model repeating
 itself exactly.** If a test needs a fixed answer, the test should not be calling a model; lesson
@@ -79,7 +79,25 @@ both**: they act on the same thing, and moving both makes it impossible to tell 
 changed the output. Some providers also offer **top-k**, which keeps a fixed number of tokens
 rather than a share of the probability.
 
-## What to set for programming work
+## Which APIs let you set them
+
+These are settings of the draw, and the draw happens on the provider's side, so the provider
+decides which of them you may change. The lab has the three providers' current SDKs installed,
+and asking each one what its generation call accepts gives three different answers:
+
+```
+ana@dev:~/shop$ python lab/knobs.py
+anthropic messages.create        (none of them)
+openai chat.completions.create   temperature top_p seed
+google GenerateContentConfig     temperature top_p top_k seed
+```
+
+**Anthropic's current API takes none of the four.** The `anthropic` SDK has no such argument, and
+its API reference, read on 2 October 2026, does not mention one: how Claude models draw their
+tokens is Anthropic's decision. OpenAI's Chat Completions accepts temperature, top-p and a seed,
+and Google's adds top-k. Lesson 10 lays the three APIs side by side.
+
+## What to set for programming work, where you can
 
 - **Code, extraction, classification: a low temperature**, 0 to 0.3. There is a correct answer and
   variety only adds ways to be wrong.
@@ -88,5 +106,6 @@ rather than a share of the probability.
 - **Leave the rest at their defaults** until you have a measured reason to move them. A setting
   copied from a blog post is a setting nobody on your team can explain later.
 
-The parameter names differ slightly between providers (lesson 10 lays the three APIs side by
-side), but temperature and top-p mean the same thing in all of them.
+Where the API offers no temperature, the same goals are reached in the request instead: ask for one
+answer in a fixed format when you want consistency, and for several alternatives when you want
+variety. Lesson 5 is about writing those requests.

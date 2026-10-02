@@ -5,8 +5,8 @@ version: 1
 
 A decodificação gulosa fica presa em laços, como a aula 1 seção 02 mostrou. Por isso, por padrão,
 um modelo não pega o token mais provável: ele **sorteia um, com peso dado pelas probabilidades**.
-Um token com 5% sai mais ou menos uma vez em vinte. Três ajustes mudam esse sorteio, e a API de
-todo provedor expõe pelo menos os dois primeiros.
+Um token com 5% sai mais ou menos uma vez em vinte. Três ajustes mudam esse sorteio. Se você pode
+mexer neles depende do provedor, como o fim desta seção mostra.
 
 ## Temperatura
 
@@ -52,9 +52,9 @@ The default value is a list of (n - 1)
     25: 70 years
 ```
 
-**É por isso que a mesma pergunta a um modelo hospedado dá uma resposta diferente a cada vez.** A
-maioria das APIs de provedores não deixa fixar a semente, e as que aceitam uma descrevem o
-resultado como melhor esforço. Mesmo com temperatura 0, os provedores não prometem saída idêntica
+**É por isso que a mesma pergunta a um modelo hospedado dá uma resposta diferente a cada vez.**
+Algumas APIs de provedores nem deixam fixar a semente, e as que aceitam uma descrevem o resultado
+como melhor esforço. Mesmo com temperatura 0, os provedores não prometem saída idêntica
 para requisições idênticas: a aritmética no hardware deles não tem garantia de dar bit a bit o
 mesmo resultado de uma requisição para a outra. **Não construa nada que dependa de um modelo se
 repetir exatamente.** Se um teste precisa de uma resposta fixa, o teste não devia chamar um
@@ -79,7 +79,26 @@ não os dois**: eles agem sobre a mesma coisa, e mexer nos dois torna impossíve
 saída. Alguns provedores também oferecem o **top-k**, que mantém um número fixo de tokens em vez de
 uma fatia da probabilidade.
 
-## O que usar em trabalho de programação
+## Que APIs deixam mexer neles
+
+São ajustes do sorteio, e o sorteio acontece do lado do provedor, então é o provedor quem decide
+quais deles você pode mudar. O laboratório tem os SDKs atuais dos três provedores instalados, e
+perguntar a cada um o que a chamada de geração aceita dá três respostas diferentes:
+
+```
+ana@dev:~/shop$ python lab/knobs.py
+anthropic messages.create        (none of them)
+openai chat.completions.create   temperature top_p seed
+google GenerateContentConfig     temperature top_p top_k seed
+```
+
+**A API atual da Anthropic não aceita nenhum dos quatro.** O SDK `anthropic` não tem esse
+argumento, e a referência da API, lida em 2 de outubro de 2026, não menciona nenhum: como os
+modelos Claude sorteiam os tokens é decisão da Anthropic. O Chat Completions da OpenAI aceita
+temperatura, top-p e semente, e o do Google acrescenta o top-k. A aula 10 põe as três APIs lado a
+lado.
+
+## O que usar em trabalho de programação, onde se pode
 
 - **Código, extração, classificação: temperatura baixa**, de 0 a 0,3. Existe uma resposta certa, e
   variedade só acrescenta jeitos de errar.
@@ -88,5 +107,6 @@ uma fatia da probabilidade.
 - **Deixe o resto no padrão** até ter um motivo medido para mexer. Um ajuste copiado de um post é um
   ajuste que ninguém do time consegue explicar depois.
 
-Os nomes dos parâmetros mudam um pouco entre provedores (a aula 10 põe as três APIs lado a lado),
-mas temperatura e top-p querem dizer a mesma coisa em todos.
+Onde a API não oferece temperatura, os mesmos objetivos se alcançam na própria requisição: peça uma
+resposta num formato fixo quando quiser consistência, e várias alternativas quando quiser
+variedade. A aula 5 é sobre escrever essas requisições.
