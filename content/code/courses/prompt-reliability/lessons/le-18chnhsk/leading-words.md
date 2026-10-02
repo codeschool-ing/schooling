@@ -76,10 +76,10 @@ is the one above, the prompt with and without the sentence, compared answer by a
 Leading words are easy to write and hard to see, because each one was added for a reason. Read a
 prompt for:
 
-- **Base rates**: *most*, *usually*, *nearly all*, *rarely*. In the stand-in these are the words
+- Base rates: *most*, *usually*, *nearly all*, *rarely*. In the stand-in these are the words
   that trigger the rule.
-- **Expectations about the customer**: *customers are often confused about*, *people usually want*.
-- **Examples in the instructions**: *for instance, a late parcel*. A sentence that names one kind
+- Expectations about the customer: *customers are often confused about*, *people usually want*.
+- Examples in the instructions: *for instance, a late parcel*. A sentence that names one kind
   of message is a candidate like the others, and is tested the same way.
 
 **A prompt should say what to do with each message**, and leave facts about the inbox to whoever

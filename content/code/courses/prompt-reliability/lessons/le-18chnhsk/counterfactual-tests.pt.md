@@ -84,7 +84,7 @@ vezes e compare; o que difere entre essas duas execuções difere sem motivo nen
 entre Maria e John só conta acima disso. No substituto, com temperatura 0, o piso é zero. Num modelo
 real, não há garantia de que seja.
 
-## Montando um conjunto contrafactual
+## Como montar um conjunto contrafactual
 
 - **Mude uma coisa só.** Um `diff` dos dois arquivos deve mostrar o atributo e mais nada, como
   mostraria aqui.

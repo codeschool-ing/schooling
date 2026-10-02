@@ -72,15 +72,15 @@ uma frase específica move um modelo específico. O que quem trabalha com eles r
 prompt que diz o que esperar tende a receber mais disso. É uma afirmação para testar, nunca para
 supor, e o teste é o de cima: o prompt com e sem a frase, comparado resposta a resposta.
 
-## Encontrando essas palavras no seu prompt
+## Como encontrá-las no seu prompt
 
 Palavras indutoras são fáceis de escrever e difíceis de ver, porque cada uma entrou por um motivo.
 Leia o prompt procurando:
 
-- **Taxas de base**: *most*, *usually*, *nearly all*, *rarely*. No substituto, são essas as
+- Taxas de base: *most*, *usually*, *nearly all*, *rarely*. No substituto, são essas as
   palavras que disparam a regra.
-- **Expectativas sobre o cliente**: *customers are often confused about*, *people usually want*.
-- **Exemplos nas instruções**: *for instance, a late parcel*. Uma frase que cita um tipo de
+- Expectativas sobre o cliente: *customers are often confused about*, *people usually want*.
+- Exemplos nas instruções: *for instance, a late parcel*. Uma frase que cita um tipo de
   mensagem é candidata como as outras, e se testa do mesmo jeito.
 
 **Um prompt deve dizer o que fazer com cada mensagem**, e deixar os fatos sobre a caixa de entrada

@@ -87,8 +87,8 @@ urgency      47    23
 all          47    23
 ```
 
-A verificação de categoria vai de 45 para 57. Os dois prompts têm as setenta respostas analisáveis,
-então toda essa diferença está nos rótulos.
+A verificação de categoria vai de 45 para 57. Nos dois prompts as setenta respostas passam na
+verificação de JSON, então toda essa diferença está nos rótulos.
 
 Cuidado com o que isso prova. Os dois prompts diferem em mais do que a contagem de cada rótulo:
 as mensagens também são outras, e um exemplo também puxa por semelhança. A comparação mede um

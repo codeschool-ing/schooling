@@ -94,7 +94,8 @@ A regra do substituto é uma constante que alguém escolheu. Modelos reais têm 
 próprios, e eles estão documentados. *Calibrate Before Use: Improving Few-Shot Performance of
 Language Models* (Zhao e outros, 2021) viu que o GPT-3, classificando com alguns exemplos no
 prompt, favorecia os rótulos dos exemplos mais próximos do fim, o que os autores chamaram de
-**viés de recência**, e que os mesmos exemplos em outra ordem podiam mudar muito a acurácia. *Large
+**viés de recência**. Viram também que os mesmos exemplos em outra ordem podiam mudar muito a
+acurácia. *Large
 Language Models Are Not Robust Multiple Choice Selectors* (Zheng e outros, 2023) viu modelos
 preferindo certas posições e letras de alternativa a outras, independentemente do que as
 alternativas diziam.

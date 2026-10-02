@@ -92,8 +92,8 @@ the sign test's `p = 0.688` on the passes is a measurement of the wrong thing.
 The stand-in's rule is a constant somebody chose. Real models have position effects of their own,
 and they are documented. *Calibrate Before Use: Improving Few-Shot Performance of Language Models*
 (Zhao and others, 2021) found that GPT-3, classifying with a few examples in the prompt, favoured
-the labels of the examples placed nearest the end, which the authors called **recency bias**, and
-that the same examples in a different order could move accuracy a long way. *Large Language Models
+the labels of the examples placed nearest the end, which the authors called **recency bias**. They
+also found that the same examples in a different order could move accuracy a long way. *Large Language Models
 Are Not Robust Multiple Choice Selectors* (Zheng and others, 2023) found models preferring some
 option positions and letters over others, whatever the options said.
 
