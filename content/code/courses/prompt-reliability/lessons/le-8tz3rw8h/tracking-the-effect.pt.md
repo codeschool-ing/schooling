@@ -121,7 +121,7 @@ ana@lab:~/triage$ pl show runs/31a6a59.jsonl t04
 stop: end, tokens in 233, out 10
 ```
 
-`t04` é o cliente que não consegue entrar. A resposta tem a forma do exemplo, a categoria certa, uma
-urgência que a pessoa não daria e o resumo do primeiro exemplo palavra por palavra. Nenhuma das
-quarenta respostas é JSON válido. A mudança foi uma edição razoável, feita pensando num leitor, e
+`t04` é o cliente que não consegue entrar. A resposta tem a forma do exemplo, a categoria e a
+urgência certas, e o resumo do primeiro exemplo palavra por palavra: no substituto, um exemplo cuja
+resposta não é JSON é copiado como texto, trocando só os dois rótulos. Nenhuma das quarenta respostas é JSON válido. A mudança foi uma edição razoável, feita pensando num leitor, e
 ficou no arquivo de 14 a 17 de agosto, quando o `03e1151` devolveu os exemplos.
