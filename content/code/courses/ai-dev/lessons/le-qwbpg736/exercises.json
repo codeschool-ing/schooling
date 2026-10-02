@@ -1,0 +1,873 @@
+[
+  {
+    "id": "ex-vc7rv3j8",
+    "version": 1,
+    "section": "next-token",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a language model produce at each step of generation?",
+    "hint": "Look at what `lab/next.py` prints.",
+    "choices": [
+      {
+        "text": "The next word of the answer, chosen by looking it up in its training text",
+        "correct": false,
+        "why": "Nothing is looked up, and the unit is a token rather than a word."
+      },
+      {
+        "text": "A complete sentence, which is then cut into tokens for the user",
+        "correct": false,
+        "why": "Sentences are built a token at a time; nothing is produced whole."
+      },
+      {
+        "text": "A probability for every possible next token",
+        "correct": true,
+        "why": "Right. Choosing one of them is a separate step."
+      },
+      {
+        "text": "A score saying how true the text so far is",
+        "correct": false,
+        "why": "Nothing in the loop measures truth, which is lesson 1 section 07's point."
+      }
+    ]
+  },
+  {
+    "id": "ex-tybdj174",
+    "version": 1,
+    "section": "next-token",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `If the file does not`, `tinylm` ranks ` exist` fourth, level with ` add` and ` close`. Why does a reader's obvious choice not win?",
+    "hint": "`context used: 2 tokens`.",
+    "choices": [
+      {
+        "text": "It only sees `does not`, and in its corpus many words follow those two",
+        "correct": true,
+        "why": "Right. Two tokens of context cannot tell which file sentence this is."
+      },
+      {
+        "text": "Its corpus never contains the word exist",
+        "correct": false,
+        "why": "It does: ` exist` is in the list, at 7.7%."
+      },
+      {
+        "text": "Greedy decoding was switched off for `next.py`",
+        "correct": false,
+        "why": "`next.py` does not decode at all; it prints the distribution."
+      },
+      {
+        "text": "The leading space makes ` exist` a rarer token than `exist`",
+        "correct": false,
+        "why": "The space is part of the token in every one of the five, so it cannot separate them."
+      }
+    ]
+  },
+  {
+    "id": "ex-57wbcyms",
+    "version": 1,
+    "section": "next-token",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The greedy run ends in `the type of the` repeated four times. What would stop that loop in this model?",
+    "hint": "Greedy means the same context always gives the same token.",
+    "choices": [
+      {
+        "text": "A longer prompt, so the model has more text to continue from",
+        "correct": false,
+        "why": "The loop starts after the prompt, and from then on only the last two tokens matter."
+      },
+      {
+        "text": "More output tokens, so the loop has room to run its course",
+        "correct": false,
+        "why": "More tokens are more repetitions."
+      },
+      {
+        "text": "Another seed, keeping the temperature at 0",
+        "correct": false,
+        "why": "At 0 there is no draw, so the seed is never used."
+      },
+      {
+        "text": "Drawing from the distribution instead of taking the top",
+        "correct": true,
+        "why": "Right. A draw can leave the loop the moment another token is picked."
+      }
+    ]
+  },
+  {
+    "id": "ex-nqs6chrc",
+    "version": 1,
+    "section": "next-token",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each consequence of the generation loop to the lesson that deals with it.",
+    "hint": "The last part of the section lists four.",
+    "pairs": [
+      {
+        "left": "A long answer takes longer than a short one",
+        "right": "Lesson 9, streaming"
+      },
+      {
+        "left": "You pay for every token in and out",
+        "right": "Lesson 2, cost"
+      },
+      {
+        "left": "Nothing in the loop checks facts",
+        "right": "Lesson 11, risks"
+      },
+      {
+        "left": "The model sees only what the request carries",
+        "right": "Lesson 1 section 06, context"
+      }
+    ],
+    "right_distractors": [
+      "Lesson 4, test generation"
+    ]
+  },
+  {
+    "id": "ex-fx9k2bgy",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `Token|isation| is| not| splitting`, where does the space before `is` go?",
+    "hint": "Read where the `|` falls.",
+    "choices": [
+      {
+        "text": "It is dropped, since tokenizers ignore whitespace",
+        "correct": false,
+        "why": "The eight spaces of indentation in the code line are a token of their own, so whitespace is kept."
+      },
+      {
+        "text": "Into the same token as `is`",
+        "correct": true,
+        "why": "Right: ` is` is one token, space included."
+      },
+      {
+        "text": "Into a token of its own, between `isation` and `is`",
+        "correct": false,
+        "why": "There is no `| |` between them; the space is inside ` is`."
+      },
+      {
+        "text": "At the end of `isation`",
+        "correct": false,
+        "why": "The `|` falls before the space, not after it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cgp88wv",
+    "version": 1,
+    "section": "tokens",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under `o200k_base`, how many tokens is the Portuguese sentence `A tokenização não divide o texto nos espaços.`?",
+    "hint": "The third line of the first capture.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-xwsykxqz",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`1290000` comes out as `129|000|0`. What does that tell you about asking a model to add up an order?",
+    "hint": "What the model receives is the pieces.",
+    "choices": [
+      {
+        "text": "Nothing; the tokenizer joins the pieces back into a number before the model sees them",
+        "correct": false,
+        "why": "The model receives token ids, and these are three of them."
+      },
+      {
+        "text": "That prices should be sent with a decimal point, which tokenizes cleanly",
+        "correct": false,
+        "why": "`.sub` shows that a dot is just one more piece to split at."
+      },
+      {
+        "text": "The model never sees the number as a number, so do the sum in code",
+        "correct": true,
+        "why": "Right. That is why the shop keeps money in code."
+      },
+      {
+        "text": "Only that `o200k_base` is a poor choice; `cl100k_base` keeps numbers whole",
+        "correct": false,
+        "why": "Both cut digits into groups; the section's point is about tokenizers in general."
+      }
+    ]
+  },
+  {
+    "id": "ex-v24bbx14",
+    "version": 1,
+    "section": "tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You count a prompt with `tiktoken` and get 1,200 tokens. Who can you quote that number to?",
+    "hint": "A count belongs to a tokenizer.",
+    "choices": [
+      {
+        "text": "Somebody using a model that `tiktoken` maps to the same encoding",
+        "correct": true,
+        "why": "Right. For any other model it is an estimate."
+      },
+      {
+        "text": "Anybody, since a token is the same unit for every provider",
+        "correct": false,
+        "why": "`espaços` is one token in one encoding and two in another."
+      },
+      {
+        "text": "Anthropic's billing team, since `tiktoken` follows their format",
+        "correct": false,
+        "why": "Anthropic does not publish its tokenizer, and counts for you instead."
+      },
+      {
+        "text": "Nobody; token counts are random and change on every run",
+        "correct": false,
+        "why": "A tokenizer is deterministic: the same text always gives the same ids."
+      }
+    ]
+  },
+  {
+    "id": "ex-50dn4t7w",
+    "version": 1,
+    "section": "tokens",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shop/cart.py` is 265 tokens for 121 words, so code costs about ___ tokens a word, against one and a half for the corpus's prose.",
+    "hint": "Divide, and round to a whole number.",
+    "blanks": [
+      {
+        "accept": [
+          "2",
+          "two"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hh28g0cg",
+    "version": 1,
+    "section": "sampling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a temperature of 0 do?",
+    "hint": "Look at what the seed did at 0.",
+    "choices": [
+      {
+        "text": "It makes the model refuse uncertain answers",
+        "correct": false,
+        "why": "Temperature only reshapes a distribution; it adds no refusal."
+      },
+      {
+        "text": "It gives every token the same chance",
+        "correct": false,
+        "why": "That is what a very high temperature tends towards."
+      },
+      {
+        "text": "It turns off the context, so only the prompt is used",
+        "correct": false,
+        "why": "The context is used the same way at every temperature."
+      },
+      {
+        "text": "The top token always wins, which is greedy decoding",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-dr16wwj6",
+    "version": 1,
+    "section": "sampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A teammate's test sends the same prompt to a hosted model at temperature 0 and compares the reply to a saved string. It fails one run in thirty. What is wrong?",
+    "hint": "What does the section say providers promise?",
+    "choices": [
+      {
+        "text": "The temperature should be 1, which is the default",
+        "correct": false,
+        "why": "A higher temperature makes the reply vary more, not less."
+      },
+      {
+        "text": "The test relies on a model repeating itself, which nothing guarantees",
+        "correct": true,
+        "why": "Right. A test that needs a fixed answer should not call a model."
+      },
+      {
+        "text": "The seed should be fixed, which makes every hosted model deterministic",
+        "correct": false,
+        "why": "Where a seed is accepted at all, the providers call the result best effort."
+      },
+      {
+        "text": "The prompt is too short for temperature 0 to take effect",
+        "correct": false,
+        "why": "Temperature acts on every draw, whatever the prompt's length."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rn53d31",
+    "version": 1,
+    "section": "sampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With top-p at 0.5, which tokens can be drawn?",
+    "hint": "It is a share of the probability, not a count.",
+    "choices": [
+      {
+        "text": "The five most likely tokens, whatever their probabilities",
+        "correct": false,
+        "why": "A fixed number of tokens is top-k."
+      },
+      {
+        "text": "Any token whose own probability is above 50%, and no other",
+        "correct": false,
+        "why": "There is rarely any such token; the cut is a running total."
+      },
+      {
+        "text": "The likeliest tokens until they add up to half",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Half of the vocabulary, chosen at random before each draw",
+        "correct": false,
+        "why": "The kept tokens are the most likely ones, in order."
+      }
+    ]
+  },
+  {
+    "id": "ex-yeyeq96q",
+    "version": 1,
+    "section": "sampling",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each task to the temperature the section recommends.",
+    "hint": "Is there one correct answer?",
+    "pairs": [
+      {
+        "left": "Turning an invoice into JSON fields",
+        "right": "Low, 0 to 0.3"
+      },
+      {
+        "left": "Suggesting ten names for a new endpoint",
+        "right": "Around the default"
+      },
+      {
+        "left": "Classifying a ticket as billing or delivery",
+        "right": "Low, 0 to 0.3 again"
+      }
+    ],
+    "right_distractors": [
+      "Above 1.5"
+    ]
+  },
+  {
+    "id": "ex-7cbng8h2",
+    "version": 1,
+    "section": "embeddings",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is an embedding, as the section uses the word?",
+    "hint": "WordLlama returned one of them per text.",
+    "choices": [
+      {
+        "text": "One vector per text, placed by what the text is about",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A compressed copy of the text that can be decoded back into the words",
+        "correct": false,
+        "why": "Nothing decodes 256 numbers back into a sentence."
+      },
+      {
+        "text": "The list of token ids the tokenizer produced",
+        "correct": false,
+        "why": "Those are integers indexing a vocabulary; an embedding is a direction in space."
+      },
+      {
+        "text": "A summary sentence written by the model",
+        "correct": false,
+        "why": "An embedding model writes no text."
+      }
+    ]
+  },
+  {
+    "id": "ex-eb524qmn",
+    "version": 1,
+    "section": "embeddings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For `the cart total is wrong`, WordLlama ranks `the cart page loads slowly` first. Why?",
+    "hint": "What do the winner and the query share?",
+    "choices": [
+      {
+        "text": "A slow cart page is the most frequent cause of a wrong total at checkout",
+        "correct": false,
+        "why": "They are two different problems; the section says the winner is wrong."
+      },
+      {
+        "text": "Cosine similarity favours shorter sentences",
+        "correct": false,
+        "why": "The winner is not the shortest candidate, and length does not enter the cosine."
+      },
+      {
+        "text": "It shares `the cart`, and this small model leans on shared words",
+        "correct": true,
+        "why": "Right. The rephrasings share almost no words and lose."
+      },
+      {
+        "text": "The query was not normalised, so the scores are meaningless",
+        "correct": false,
+        "why": "`similar.py` asks for normalised vectors with `norm=True`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tng82y8",
+    "version": 1,
+    "section": "embeddings",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A support search finds the handbook passage about coupons for the question *can a coupon be used twice?* The passage says it cannot. What, from this section, is the embedding's part in getting the answer right?",
+    "hint": "`was accepted` against `was not accepted`: 0.964.",
+    "choices": [
+      {
+        "text": "All of it, since a passage close to the question is a passage that agrees with it",
+        "correct": false,
+        "why": "The closest match to *was accepted* was *was not accepted*."
+      },
+      {
+        "text": "Finding the passage; whether it says yes or no has to be read by the generating model or a person",
+        "correct": true,
+        "why": "Right. Embeddings place text by subject."
+      },
+      {
+        "text": "None, because embeddings cannot find passages about coupons",
+        "correct": false,
+        "why": "They found it; that part is what they are good at."
+      },
+      {
+        "text": "Deciding the answer, as long as the score is above 0.9",
+        "correct": false,
+        "why": "A score is a ranking, not a verdict, and 0.964 was the opposite statement."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d49na2h",
+    "version": 1,
+    "section": "embeddings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Model A scores a pair of sentences 0.81 and model B scores the same pair 0.47. What can you conclude?",
+    "hint": "The section says what a score can be compared with.",
+    "choices": [
+      {
+        "text": "Model A understood the pair better",
+        "correct": false,
+        "why": "A higher number from another model is not a better reading of the same pair."
+      },
+      {
+        "text": "Model B is broken, since 0.47 is below 0.5",
+        "correct": false,
+        "why": "There is no threshold of 0.5; scales differ between models."
+      },
+      {
+        "text": "The sentences mean 81% the same thing",
+        "correct": false,
+        "why": "A cosine is not a percentage of sameness."
+      },
+      {
+        "text": "Nothing, until you see how each model ranks other pairs",
+        "correct": true,
+        "why": "Right. Compare scores only with scores from the same model."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbeh25j0",
+    "version": 1,
+    "section": "context",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does a chat application make a model answer *how many items are in it now?* about a cart mentioned two turns earlier?",
+    "hint": "Look at what the third request carried.",
+    "choices": [
+      {
+        "text": "The model keeps the first two turns in memory until the session ends",
+        "correct": false,
+        "why": "The model keeps nothing between requests."
+      },
+      {
+        "text": "It sends the whole conversation again with the new question",
+        "correct": true,
+        "why": "Right. That is all memory is."
+      },
+      {
+        "text": "The provider attaches the previous replies by itself",
+        "correct": false,
+        "why": "In the capture, the list was built and sent by `turns.py`."
+      },
+      {
+        "text": "It cannot; models answer one question at a time",
+        "correct": false,
+        "why": "It can, by sending the history."
+      }
+    ]
+  },
+  {
+    "id": "ex-z77q019g",
+    "version": 1,
+    "section": "context",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `turns.py`, how many input tokens did the third turn carry?",
+    "hint": "The third line of the capture.",
+    "value": 47,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-h7zada35",
+    "version": 1,
+    "section": "context",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these share the context window with the conversation? Choose all that apply.",
+    "hint": "The section lists what else a request carries.",
+    "choices": [
+      {
+        "text": "The system prompt",
+        "correct": true,
+        "why": "Yes, it is text in the request."
+      },
+      {
+        "text": "The model's training data",
+        "correct": false,
+        "why": "Training data is not sent; it shaped the parameters long before."
+      },
+      {
+        "text": "Tool definitions",
+        "correct": true,
+        "why": "Yes, they are counted like everything else."
+      },
+      {
+        "text": "The reply the model is about to write",
+        "correct": true,
+        "why": "Yes: input and output share one window."
+      }
+    ]
+  },
+  {
+    "id": "ex-eb9k0x6s",
+    "version": 1,
+    "section": "context",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An assistant writes code for `requests` 2.x in a project that pins `httpx` and never imports `requests`. The assistant was not shown the dependency file. What does the section's working rule say about this?",
+    "hint": "If it is not in the request…",
+    "choices": [
+      {
+        "text": "The assistant is faulty, since it should know which libraries the project uses",
+        "correct": false,
+        "why": "It can only know what it was sent."
+      },
+      {
+        "text": "The model should be retrained on the project",
+        "correct": false,
+        "why": "Training is not how a project's facts reach a model in practice."
+      },
+      {
+        "text": "Nothing; assistants read the whole repository by themselves",
+        "correct": false,
+        "why": "Only what a tool puts in the context; lesson 3 shows what an editor gathers."
+      },
+      {
+        "text": "It guessed, because the fact that decides the answer was not in its context",
+        "correct": true,
+        "why": "Right. Put the dependency file in the context."
+      }
+    ]
+  },
+  {
+    "id": "ex-ym7ad9gq",
+    "version": 1,
+    "section": "knowledge",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The day a model's training text stops is called its training ___.",
+    "hint": "After it, the model knows nothing new.",
+    "blanks": [
+      {
+        "accept": [
+          "cutoff",
+          "cut-off",
+          "cut off"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mg666hjh",
+    "version": 1,
+    "section": "knowledge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Asked about France, `tinylm` wrote `a string, and A binascii.Error is raised if`. Which statement about that output is right?",
+    "hint": "`context used: 1 tokens`.",
+    "choices": [
+      {
+        "text": "It is random noise, unrelated to the corpus",
+        "correct": false,
+        "why": "It is the corpus's own most likely text after ` is`."
+      },
+      {
+        "text": "It means the model knew it was wrong and changed the subject",
+        "correct": false,
+        "why": "There is no signal for that in a distribution."
+      },
+      {
+        "text": "It is what follows ` is` in its corpus, written with no sign that the question was unseen",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It would have been correct with more output tokens",
+        "correct": false,
+        "why": "More tokens continue the same backed-off text."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9pv7009",
+    "version": 1,
+    "section": "knowledge",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each hallucination to the shape the section gives it.",
+    "hint": "Three shapes for a developer.",
+    "pairs": [
+      {
+        "left": "`cart.compute_totals()` when the method is `total()`",
+        "right": "An API that does not exist"
+      },
+      {
+        "left": "Code for a library's 1.x after the project moved to 2.x",
+        "right": "An API that used to exist"
+      },
+      {
+        "left": "`import shopcart_utils`, which nobody ever published",
+        "right": "A package that does not exist"
+      }
+    ],
+    "right_distractors": [
+      "A wrong temperature"
+    ]
+  },
+  {
+    "id": "ex-k54356bh",
+    "version": 1,
+    "section": "knowledge",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a large model's \"I don't know\" not enough to tell you when it is reconstructing rather than recalling?",
+    "hint": "Where does the phrase come from?",
+    "choices": [
+      {
+        "text": "It is a learnt habit, not a reading of what it knows",
+        "correct": true,
+        "why": "Right. No internal signal tracks what it learnt."
+      },
+      {
+        "text": "Providers forbid their large models from admitting ignorance in a reply",
+        "correct": false,
+        "why": "They do say it; the question is when."
+      },
+      {
+        "text": "The phrase appears only at temperature 0, which most applications avoid",
+        "correct": false,
+        "why": "Temperature does not decide whether a model was trained to say it."
+      },
+      {
+        "text": "The API removes that phrase from replies before they arrive",
+        "correct": false,
+        "why": "Nothing removes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pc0egv45",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where do the replies of `scripted-1` come from?",
+    "hint": "The table in the section.",
+    "choices": [
+      {
+        "text": "From `tinylm`, trained on a larger corpus than `tiny-1`",
+        "correct": false,
+        "why": "That is `tiny-1`, and it is the same small model."
+      },
+      {
+        "text": "Written by the course, chosen by simple rules",
+        "correct": true,
+        "why": "Right, and every lesson that shows one says so."
+      },
+      {
+        "text": "From a real provider, saved on the day of recording",
+        "correct": false,
+        "why": "No model API was reachable from the machine."
+      },
+      {
+        "text": "From WordLlama, the lab's embedding model",
+        "correct": false,
+        "why": "WordLlama only makes embeddings; it writes no text."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4dahspa",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To run this course's code against Anthropic's real API, what has to change besides the model name?",
+    "hint": "How do the SDKs find labllm?",
+    "choices": [
+      {
+        "text": "The SDK, which must be replaced with the provider's real one",
+        "correct": false,
+        "why": "The SDKs in the lab are the providers' real ones."
+      },
+      {
+        "text": "The request bodies, which labllm reads in its own format",
+        "correct": false,
+        "why": "labllm reads the providers' formats."
+      },
+      {
+        "text": "Nothing; the code already reaches the real API",
+        "correct": false,
+        "why": "It reaches `127.0.0.1:8400`."
+      },
+      {
+        "text": "The two environment variables: the base URL and the key",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dxvk5nd",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one step of generation in order.",
+    "hint": "The section's loop, from the text so far to the next step.",
+    "items": [
+      "Read the context",
+      "Give every possible next token a probability",
+      "Pick one token from the distribution",
+      "Append it to the context"
+    ]
+  },
+  {
+    "id": "ex-nge4mzyy",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each thing from the lesson to what it is measured in.",
+    "hint": "One of them is not a count.",
+    "pairs": [
+      {
+        "left": "A context window",
+        "right": "Tokens"
+      },
+      {
+        "left": "An embedding from WordLlama",
+        "right": "256 numbers"
+      },
+      {
+        "left": "Similarity between two embeddings",
+        "right": "A cosine"
+      },
+      {
+        "left": "Temperature",
+        "right": "A number that reshapes the distribution"
+      }
+    ],
+    "right_distractors": [
+      "Words"
+    ]
+  },
+  {
+    "id": "ex-339p59sa",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop wants a model to reply to customers about their own orders. Which design follows from this lesson?",
+    "hint": "What does the model know about a customer's order?",
+    "choices": [
+      {
+        "text": "Fine-tune the model nightly on the orders table",
+        "correct": false,
+        "why": "Training is slow, frozen at its cutoff, and still reconstructs rather than looks up."
+      },
+      {
+        "text": "Ask the model what the customer ordered and check the reply for confidence",
+        "correct": false,
+        "why": "There is no confidence signal to check."
+      },
+      {
+        "text": "Look the order up in code and put it in the request's context",
+        "correct": true,
+        "why": "Right. If it is not in the request, the model does not know it."
+      },
+      {
+        "text": "Use temperature 0, so the model cannot invent an order",
+        "correct": false,
+        "why": "Temperature changes the draw, not what the model knows."
+      }
+    ]
+  }
+]
