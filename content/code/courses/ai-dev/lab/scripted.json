@@ -1,5 +1,229 @@
 [
   {
+    "id": "agent-1042-0",
+    "when": {
+      "tool": "get_order",
+      "anywhere": [
+        "order 1042",
+        "still return"
+      ],
+      "turns": 0
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "I will look up the order first."
+      },
+      {
+        "type": "tool_use",
+        "name": "get_order",
+        "input": {
+          "order_id": "1042"
+        }
+      }
+    ]
+  },
+  {
+    "id": "agent-1042-1",
+    "when": {
+      "tool": "read_handbook",
+      "anywhere": [
+        "order 1042",
+        "still return"
+      ],
+      "turns": 1
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "read_handbook",
+        "input": {
+          "name": "returns"
+        }
+      }
+    ]
+  },
+  {
+    "id": "agent-1042-2",
+    "when": {
+      "anywhere": [
+        "order 1042",
+        "still return"
+      ],
+      "turns": 2
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Yes. Order 1042 was delivered on 28 September 2026, and the handbook allows a return within 30 days of delivery, so the customer has until 28 October 2026. The two mugs must be unused and in their original packaging."
+      }
+    ]
+  },
+  {
+    "id": "agent-refund-no",
+    "when": {
+      "anywhere": [
+        "Refund order 1042",
+        "refused by the operator"
+      ],
+      "turns": 1
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "The refund was not issued: the operator declined it."
+      }
+    ]
+  },
+  {
+    "id": "agent-refund-yes",
+    "when": {
+      "anywhere": [
+        "Refund order 1042"
+      ],
+      "turns": 1
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Refunded 79.80 on order 1042, the two mugs. Shipping was not refunded, since the handbook refunds it only when the whole order is returned."
+      }
+    ]
+  },
+  {
+    "id": "agent-refund-0",
+    "when": {
+      "tool": "issue_refund",
+      "anywhere": [
+        "Refund order 1042"
+      ],
+      "turns": 0
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "issue_refund",
+        "input": {
+          "order_id": "1042",
+          "cents": 7980
+        }
+      }
+    ]
+  },
+  {
+    "id": "agent-lamp-0",
+    "when": {
+      "tool": "read_handbook",
+      "anywhere": [
+        "cheapest lamp"
+      ],
+      "turns": 0
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "read_handbook",
+        "input": {
+          "name": "products"
+        }
+      }
+    ]
+  },
+  {
+    "id": "agent-lamp-1",
+    "when": {
+      "tool": "read_handbook",
+      "anywhere": [
+        "cheapest lamp"
+      ],
+      "turns": 1
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "read_handbook",
+        "input": {
+          "name": "shipping"
+        }
+      }
+    ]
+  },
+  {
+    "id": "agent-lamp-2",
+    "when": {
+      "tool": "read_handbook",
+      "anywhere": [
+        "cheapest lamp"
+      ],
+      "turns": 2
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "read_handbook",
+        "input": {
+          "name": "coupons"
+        }
+      }
+    ]
+  },
+  {
+    "id": "agent-lamp-3",
+    "when": {
+      "tool": "read_handbook",
+      "anywhere": [
+        "cheapest lamp"
+      ],
+      "turns": 3
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "read_handbook",
+        "input": {
+          "name": "warranty"
+        }
+      }
+    ]
+  },
+  {
+    "id": "agent-lamp-4",
+    "when": {
+      "tool": "read_handbook",
+      "anywhere": [
+        "cheapest lamp"
+      ],
+      "turns": 4
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "read_handbook",
+        "input": {
+          "name": "returns"
+        }
+      }
+    ]
+  },
+  {
+    "id": "agent-under-100",
+    "when": {
+      "tool": "read_handbook",
+      "anywhere": [
+        "lamp under 100.00"
+      ]
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "read_handbook",
+        "input": {
+          "name": "products"
+        }
+      }
+    ]
+  },
+  {
     "id": "rag-40-days",
     "when": {
       "contains": [
