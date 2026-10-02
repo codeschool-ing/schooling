@@ -9,7 +9,7 @@ whole.** Choosing one is choosing a string that marks the end and never occurs b
 
 ## A stop inside a legitimate answer
 
-Somebody worried that `toylm` runs on with `and the cat sleeps and the cat...` might reach for
+Somebody worried that `toylm` runs on with `and the cat sleeps and the cat...` (lesson 15) might reach for
 `and` as a stop. On a different prompt that breaks a correct answer:
 
 ```
@@ -41,7 +41,7 @@ appear by accident.**
 
 ## The stop text is not in the output
 
-In every run above the stop text itself is missing: `yes.` and not `yes. question`, `is there
+In every run with a stop in this lesson, the stop text itself is missing: `yes.` and not `yes. question`, `is there
 cake?` and not `is there cake? answer`. That is the usual behaviour of model APIs too, and it has
 a consequence: **if your program needs the marker, add it back yourself.** The output count still
 includes the token that triggered the stop. In the café run, `toylm` reported 3 output tokens for
