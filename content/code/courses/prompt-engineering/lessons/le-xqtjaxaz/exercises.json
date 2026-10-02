@@ -1,0 +1,477 @@
+[
+  {
+    "id": "ex-bd0brr30",
+    "version": 1,
+    "section": "cutting-the-loop",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a model asked to continue a question-and-answer text often write another question after its answer?",
+    "hint": "What usually follows an answer in such a text?",
+    "choices": [
+      {
+        "text": "The next question is the likeliest continuation",
+        "correct": true,
+        "why": "Right. Nothing in the model treats one answer as the end of the job."
+      },
+      {
+        "text": "It misunderstood the prompt and thought you asked two questions",
+        "correct": false,
+        "why": "No misunderstanding is needed. It continues text, and in that text a question follows an answer."
+      },
+      {
+        "text": "Its output limit was set too high",
+        "correct": false,
+        "why": "A lower limit cuts at a count, not after the answer. The cause is what is likely next."
+      },
+      {
+        "text": "Temperature 0 forces it to keep writing",
+        "correct": false,
+        "why": "At temperature 0 `toylm` stopped after `yes.` The run-on came from a draw at temperature 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-nkcyej01",
+    "version": 1,
+    "section": "cutting-the-loop",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `finish: stop` mean in `toylm`?",
+    "hint": "Three reasons a loop can end.",
+    "choices": [
+      {
+        "text": "The model chose to stop",
+        "correct": false,
+        "why": "That is `end`."
+      },
+      {
+        "text": "The token limit was reached",
+        "correct": false,
+        "why": "That is `length`."
+      },
+      {
+        "text": "The user interrupted the run",
+        "correct": false,
+        "why": "Nobody interrupted anything. The loop checked the text and found the stop."
+      },
+      {
+        "text": "A stop sequence appeared in the output, and the text was cut before it",
+        "correct": true,
+        "why": "Right. The third reason beside `end` and `length`."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5kaz0w4",
+    "version": 1,
+    "section": "cutting-the-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `--stop question`, seed 1 printed `yes.` and not `yes. question`. Where did the word `question` go?",
+    "hint": "Is the stop text part of the answer?",
+    "choices": [
+      {
+        "text": "The model was told not to write it",
+        "correct": false,
+        "why": "The model never sees the stop sequence. The loop does the work."
+      },
+      {
+        "text": "It was never generated",
+        "correct": false,
+        "why": "It was: the output count was 3 tokens for 2 shown, and the third was `question`."
+      },
+      {
+        "text": "It was written, then removed with the stop",
+        "correct": true,
+        "why": "Right. The loop found it in the text and cut the output just before it."
+      },
+      {
+        "text": "It moved to the end of the prompt",
+        "correct": false,
+        "why": "The prompt is not changed by generation."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7haej31",
+    "version": 1,
+    "section": "cutting-the-loop",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`toylm generate ... --stop question` printed `yes.` with `output 3 tokens`. How many of those tokens are visible in the output?",
+    "hint": "Count `yes` and the full stop.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-snfg6dgs",
+    "version": 1,
+    "section": "cutting-the-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of eight seeds, how many outputs did adding `--stop question` change?",
+    "hint": "Compare the two lists of eight.",
+    "choices": [
+      {
+        "text": "All eight, since the stop applies to every run",
+        "correct": false,
+        "why": "It is checked in every run, and it fires only where the text appears."
+      },
+      {
+        "text": "One, seed 1, which had run on",
+        "correct": true,
+        "why": "Right. A stop changes only runs that reach it; the other seven never wrote `question`."
+      },
+      {
+        "text": "None of them",
+        "correct": false,
+        "why": "Seed 1 lost its invented second question."
+      },
+      {
+        "text": "Four, the ones that answered `yes`",
+        "correct": false,
+        "why": "The `yes` answers that ended on their own were unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-69zhzd7c",
+    "version": 1,
+    "section": "cutting-the-loop",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "None of the eight answers to `when does the café open ?` said `seven`, though the corpus answers it with `at seven` twice. Why?",
+    "hint": "What did the first capture say the model looked at?",
+    "choices": [
+      {
+        "text": "`toylm` sees only `answer :`, not the question",
+        "correct": true,
+        "why": "Right. The question is outside its two-word window, so it answers with the commonest continuation of `answer :`."
+      },
+      {
+        "text": "The stop sequence removed `seven` from every answer",
+        "correct": false,
+        "why": "Without the stop the answers were the same. The stop only removed a second question."
+      },
+      {
+        "text": "`seven` has no count after `answer :` because of the stop",
+        "correct": false,
+        "why": "Counts come from the corpus. `at` does follow `answer :`, and then `six` or `seven`."
+      },
+      {
+        "text": "Temperature 1 prevents the likeliest word from ever winning",
+        "correct": false,
+        "why": "At temperature 1 the likeliest word wins most draws. `yes` was the likeliest after `answer :`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cq7z89y2",
+    "version": 1,
+    "section": "cutting-the-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a stop sequence do for the correctness of an answer?",
+    "hint": "Read the last paragraph of the section.",
+    "choices": [
+      {
+        "text": "It guarantees the answer is the first one the model meant",
+        "correct": false,
+        "why": "It only cuts text. The first answer can be wrong, as `yes` was."
+      },
+      {
+        "text": "It forces the model to answer the question asked",
+        "correct": false,
+        "why": "The model never sees the stop sequence."
+      },
+      {
+        "text": "It removes invented facts from the reply",
+        "correct": false,
+        "why": "It removes text after a marker, invented or not."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. It decides where the answer ends; whether the answer is right is another problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0154f4t",
+    "version": 1,
+    "section": "choosing-stops",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`--stop and` turned `soup, bread and cake.` into `soup, bread`. What went wrong?",
+    "hint": "Where can `and` appear?",
+    "choices": [
+      {
+        "text": "`and` is too long for a stop",
+        "correct": false,
+        "why": "Length is not the problem; a short common string is the problem."
+      },
+      {
+        "text": "The stop only works at temperature 1",
+        "correct": false,
+        "why": "It worked, at temperature 0. It just worked in the wrong place."
+      },
+      {
+        "text": "The stop text occurs inside a legitimate answer",
+        "correct": true,
+        "why": "Right. A stop fires wherever its text appears, including inside an answer you wanted whole."
+      },
+      {
+        "text": "The limit cut the answer",
+        "correct": false,
+        "why": "The finish reason was `stop`, not `length`."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8e49hce",
+    "version": 1,
+    "section": "choosing-stops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`--stop at` turned `cold and the cat wakes.` into `cold and the c`. Why?",
+    "hint": "How does `toylm` match a stop?",
+    "choices": [
+      {
+        "text": "`at` is a reserved word in `toylm`",
+        "correct": false,
+        "why": "No word is reserved. It is a plain text comparison."
+      },
+      {
+        "text": "The stop matched the `at` in the prompt",
+        "correct": false,
+        "why": "Only the generated text is checked, not the prompt."
+      },
+      {
+        "text": "It matches text, and `cat` contains `at`",
+        "correct": true,
+        "why": "Right. A stop is a substring test, so a short stop fires inside longer words."
+      },
+      {
+        "text": "The model chose to end mid-word",
+        "correct": false,
+        "why": "The model chose `cat`. The loop cut it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sd397n6s",
+    "version": 1,
+    "section": "choosing-stops",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a stop that fires inside an answer harder to notice than a limit that cuts one?",
+    "hint": "Compare the finish reasons.",
+    "choices": [
+      {
+        "text": "A stop removes the whole answer",
+        "correct": false,
+        "why": "It removes only what follows the stop text."
+      },
+      {
+        "text": "Ending on `stop` looks like success",
+        "correct": true,
+        "why": "Right. `length` says something was cut; `stop` is what a working stop also reports."
+      },
+      {
+        "text": "Stops are applied after the reply reaches your program",
+        "correct": false,
+        "why": "The loop applies them while generating."
+      },
+      {
+        "text": "Limits always produce an error message from the API that is shown to the user",
+        "correct": false,
+        "why": "A limit produces `length`, not an error. Your code has to check it."
+      }
+    ]
+  },
+  {
+    "id": "ex-x0pbzpgf",
+    "version": 1,
+    "section": "choosing-stops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Your program needs the marker that triggered the stop. What should it do?",
+    "hint": "Is the stop text in the output?",
+    "choices": [
+      {
+        "text": "Add the marker back itself",
+        "correct": true,
+        "why": "Right. The stop text is not included in the output, in `toylm` or in most model APIs."
+      },
+      {
+        "text": "Read it from the output, where it is the last word",
+        "correct": false,
+        "why": "It is not there; the output ends just before it."
+      },
+      {
+        "text": "Choose a longer stop so that it is kept",
+        "correct": false,
+        "why": "Length does not decide whether it is kept."
+      },
+      {
+        "text": "Ask the model in the prompt to repeat the stop text twice",
+        "correct": false,
+        "why": "Then the first one fires and the second is never written."
+      }
+    ]
+  },
+  {
+    "id": "ex-n96n64yf",
+    "version": 1,
+    "section": "choosing-stops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You prompt with `question :` and want only the question. Which stop fits?",
+    "hint": "Which label starts the other side's turn?",
+    "choices": [
+      {
+        "text": "`question`",
+        "correct": false,
+        "why": "That label is already in the prompt; the turn you want follows it."
+      },
+      {
+        "text": "`?`",
+        "correct": false,
+        "why": "A question mark can end the turn, and it can also appear inside a longer question."
+      },
+      {
+        "text": "No stop: the model writes one turn and then waits",
+        "correct": false,
+        "why": "Without a stop `toylm` wrote the answer as well."
+      },
+      {
+        "text": "`answer`",
+        "correct": true,
+        "why": "Right. It begins the next turn, so stopping there keeps exactly the question."
+      }
+    ]
+  },
+  {
+    "id": "ex-ycm59yak",
+    "version": 1,
+    "section": "choosing-stops",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a good stop sequence? Choose all that apply.",
+    "hint": "Read the closing paragraph.",
+    "choices": [
+      {
+        "text": "It marks the end of the unit you want",
+        "correct": true,
+        "why": "Yes. That is what a stop is for."
+      },
+      {
+        "text": "It cannot occur inside a legitimate answer",
+        "correct": true,
+        "why": "Yes. Otherwise it cuts answers you wanted whole."
+      },
+      {
+        "text": "It has been seen to fire on real replies",
+        "correct": true,
+        "why": "Yes. A stop you never saw fire has not been tested."
+      },
+      {
+        "text": "It is as short as possible",
+        "correct": false,
+        "why": "Short strings occur by accident, like `at` inside `cat`."
+      }
+    ]
+  },
+  {
+    "id": "ex-peb7jp78",
+    "version": 1,
+    "section": "choosing-stops",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When `--stop` is given twice, generation ends at whichever of the two appears ___.",
+    "hint": "One word about order.",
+    "blanks": [
+      {
+        "accept": [
+          "first"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k6edz8hg",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each run to its finish reason.",
+    "hint": "This lesson and lesson 15.",
+    "pairs": [
+      {
+        "left": "`question :` with `--stop answer`",
+        "right": "stop"
+      },
+      {
+        "left": "`the menu has` with `--max-tokens 3`",
+        "right": "length"
+      },
+      {
+        "left": "`the café opens at` at temperature 0",
+        "right": "end"
+      }
+    ],
+    "right_distractors": [
+      "error"
+    ]
+  },
+  {
+    "id": "ex-81kc8dxg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A chat assistant built on plain text with `User:` and `Assistant:` labels sometimes writes a `User:` line of its own. What is the risk, and the fix?",
+    "hint": "Who would that line be attributed to?",
+    "choices": [
+      {
+        "text": "An invented user turn could be acted on; stop at `User:`",
+        "correct": true,
+        "why": "Right. The model is putting words in the user's mouth. Stopping at the next turn's label keeps only the assistant's turn."
+      },
+      {
+        "text": "The reply gets longer; lower the token limit",
+        "correct": false,
+        "why": "A limit cuts at a count and may let a short invented turn through."
+      },
+      {
+        "text": "Nothing; the program ignores labels",
+        "correct": false,
+        "why": "The program may well read that line as input from the user."
+      },
+      {
+        "text": "The model is confused; raise the temperature",
+        "correct": false,
+        "why": "A higher temperature makes run-ons more likely, not less."
+      }
+    ]
+  }
+]
