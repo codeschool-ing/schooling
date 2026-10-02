@@ -125,8 +125,7 @@ run 'jq . .terraform/modules/modules.json'
 block plan-one
 run 'terraform plan -no-color | grep -E "^  #|^Plan"'
 block second-call
-cat >> main.tf <<'CODE'
-
+put analytics.tf <<'CODE'
 module "analytics" {
   source = "./modules/network"
 
@@ -136,13 +135,15 @@ module "analytics" {
     a = { az = "sa-east-1a", cidr = "10.30.1.0/24" }
   }
 }
-
+CODE
+put web.tf <<'CODE'
 resource "aws_security_group" "web" {
   name        = "web"
   description = "web servers"
   vpc_id      = module.shop.vpc_id
 }
-
+CODE
+put outputs.tf <<'CODE'
 output "shop_vpc_id" {
   value = module.shop.vpc_id
 }
@@ -151,7 +152,6 @@ output "shop_subnet_ids" {
   value = module.shop.subnet_ids
 }
 CODE
-printf '##### file:%s\n' '~/shop/main.tf'; cat main.tf; printf '##### end-file\n'
 block second-init
 run 'terraform init | grep -A3 "Initializing modules"'
 block apply-two
@@ -164,21 +164,21 @@ quiet 'git init -q && printf ".terraform/\n*.tfstate\n*.tfstate.*\n" > .gitignor
 
 # ---------------------------------------------------------------- interface
 block reach-in
-cp main.tf main.tf.keep
-cat >> main.tf <<'CODE'
+cp outputs.tf outputs.tf.keep
+cat >> outputs.tf <<'CODE'
 
 output "shop_vpc_cidr" {
   value = module.shop.aws_vpc.this.cidr_block
 }
 CODE
-run 'tail -n 4 main.tf'
+run 'tail -n 3 outputs.tf'
 run 'terraform plan'
-cp main.tf.keep main.tf
+mv outputs.tf.keep outputs.tf
 block bad-cidr
-sed -i 's|cidr = "10.30.0.0/16"|cidr = "10.30.0.0/33"|' main.tf
-run 'grep -n "10.30.0.0" main.tf'
+sed -i 's|cidr = "10.30.0.0/16"|cidr = "10.30.0.0/33"|' analytics.tf
+run 'grep -n "10.30.0.0" analytics.tf'
 run 'terraform plan'
-cp main.tf.keep main.tf
+sed -i 's|cidr = "10.30.0.0/33"|cidr = "10.30.0.0/16"|' analytics.tf
 
 block provider-inside
 mkdir -p ~/legacy/modules/bucket && cd ~/legacy
@@ -216,7 +216,6 @@ run 'terraform apply -auto-approve | tail -n 1'
 : > main.tf
 run 'terraform plan'
 cd ~/shop
-rm -f main.tf.keep
 
 # ---------------------------------------------------------------- sources
 block publish
@@ -229,8 +228,8 @@ run 'git push -q origin main v1.0.0'
 run 'git ls-remote --tags origin'
 cd ~/shop
 block git-source
-sed -i 's|source = "./modules/network"|source = "git::file:///home/ana/git/terraform-aws-network.git?ref=v1.0.0"|' main.tf
-run 'grep -n "source" main.tf'
+sed -i 's|source = "./modules/network"|source = "git::file:///home/ana/git/terraform-aws-network.git?ref=v1.0.0"|' main.tf analytics.tf
+run 'grep -n "source =" *.tf'
 run 'terraform plan'
 block git-init
 run 'terraform init'
@@ -241,8 +240,8 @@ run 'jq -c ".Modules[] | {Key, Source, Dir}" .terraform/modules/modules.json'
 run 'ls .terraform/modules/shop'
 block git-version
 cp main.tf main.tf.keep
-sed -i '0,/?ref=v1.0.0"/s//?ref=v1.0.0"\n  version = "1.0.0"/' main.tf
-run 'sed -n 15,18p main.tf'
+sed -i 's/?ref=v1.0.0"/?ref=v1.0.0"\n  version = "1.0.0"/' main.tf
+run 'grep -A1 "source =" main.tf'
 run 'terraform init'
 cp main.tf.keep main.tf
 rm -f main.tf.keep
@@ -259,7 +258,7 @@ run 'git diff --stat'
 quiet 'git commit -qam "call the subnets private"'
 quiet 'git push -q origin rename'
 cd ~/shop
-sed -i 's|?ref=v1.0.0|?ref=rename|' main.tf
+sed -i 's|?ref=v1.0.0|?ref=rename|' main.tf analytics.tf
 quiet 'terraform init'
 run 'terraform plan -no-color | grep -E "^  #|^Plan"'
 block moved
@@ -276,7 +275,7 @@ quiet 'git checkout -q main && git merge -q rename'
 run 'git tag v1.1.0'
 run 'git push -q origin main v1.1.0'
 cd ~/shop
-sed -i 's|?ref=rename|?ref=v1.1.0|' main.tf
+sed -i 's|?ref=rename|?ref=v1.1.0|' main.tf analytics.tf
 quiet 'terraform init'
 block moved-plan
 run 'terraform plan'
@@ -307,7 +306,7 @@ quiet 'git add -A && git commit -qm "rename cidr to cidr_block"'
 run 'git tag v2.0.0'
 run 'git push -q origin main v2.0.0'
 cd ~/shop
-sed -i 's|?ref=v1.1.0|?ref=v2.0.0|' main.tf
+sed -i 's|?ref=v1.1.0|?ref=v2.0.0|' main.tf analytics.tf
 quiet 'terraform init'
 block breaking-plan
 run 'terraform plan'
