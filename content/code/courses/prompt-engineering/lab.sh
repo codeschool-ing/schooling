@@ -570,7 +570,8 @@ def main():
             return
         for line in run_tool(action[0], action[1].strip(), allowed).splitlines():
             print("  tool>  %s" % line)
-    print("stopped: %d steps and no answer" % steps)
+    played = min(steps, len(turns))
+    print("stopped: %d step%s and no answer" % (played, "" if played == 1 else "s"))
 
 
 main()
