@@ -1,0 +1,399 @@
+{
+  "ex-48z5nw5t": {
+    "prompt": "Por que a aula substitui o `PaymentsFailing` como page?",
+    "hint": "Causa ou sintoma?",
+    "choices": [
+      {
+        "text": "Ele aciona por uma causa, não pelo que os clientes sentem",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque o payments nunca falha em produção",
+        "why": "Pode falhar."
+      },
+      {
+        "text": "Porque o Alertmanager não roteia alertas sobre o payments",
+        "why": "Ele roteia por labels."
+      },
+      {
+        "text": "Porque o limite de 2% é alto demais para qualquer serviço",
+        "why": "O limite não é a questão."
+      }
+    ]
+  },
+  "ex-t32ryevr": {
+    "prompt": "Que pergunta decide se um alerta deve ser um page?",
+    "hint": "Sobre a pessoa acordada.",
+    "choices": [
+      {
+        "text": "A causa é conhecida?",
+        "why": "Pages muitas vezes chegam antes de a causa ser conhecida."
+      },
+      {
+        "text": "A métrica mudou mais de 10%?",
+        "why": "Uma mudança não é necessidade de agir."
+      },
+      {
+        "text": "Alguém precisa agir agora, antes de amanhecer?",
+        "why": "Isso."
+      },
+      {
+        "text": "O serviço é da equipe de plantão?",
+        "why": "Dono roteia; não decide urgência."
+      }
+    ]
+  },
+  "ex-k3m2sxz9": {
+    "prompt": "Ligue cada sinal à severidade que a aula dá a ele.",
+    "hint": "Clientes prejudicados agora, ou algo para olhar.",
+    "pairs": [
+      {
+        "left": "checkouts falhando rápido o bastante para esvaziar o orçamento em dois dias",
+        "right": "page"
+      },
+      {
+        "left": "um alvo de scrape fora por um minuto",
+        "right": "ticket"
+      },
+      {
+        "left": "checkouts falhando rápido o bastante para esvaziar o orçamento em nove dias",
+        "right": "ticket, pela regra de queima lenta"
+      }
+    ]
+  },
+  "ex-ebx6ygx5": {
+    "prompt": "O objetivo é 99,5%. Na última hora, 2% dos checkouts falharam. Qual é a taxa de queima?",
+    "hint": "Taxa de erros sobre a taxa permitida.",
+    "unit": "vezes"
+  },
+  "ex-phvwf9j7": {
+    "prompt": "Com uma taxa de queima de 14,4 sustentada, quanto dura um orçamento de 28 dias?",
+    "hint": "28 dividido por 14,4.",
+    "choices": [
+      {
+        "text": "14,4 horas",
+        "why": "Dias, não horas."
+      },
+      {
+        "text": "Uma semana, mais ou menos, o tempo de costume para perceber",
+        "why": "Isso é uma queima de 4."
+      },
+      {
+        "text": "28 dias",
+        "why": "Isso é uma queima de 1."
+      },
+      {
+        "text": "Uns dois dias",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-e2k0xett": {
+    "prompt": "Às quatro da manhã ninguém está comprando, e o checkout está quebrado. O que o alerta de taxa de queima faz?",
+    "hint": "Nada sobre nada.",
+    "choices": [
+      {
+        "text": "Dispara, já que toda requisição falha e a razão vira um",
+        "why": "Não há requisições."
+      },
+      {
+        "text": "Nada: sem tráfego a razão é indefinida",
+        "why": "Isso; a sonda sintética cobre isso."
+      },
+      {
+        "text": "Dispara duas vezes, uma por janela",
+        "why": "Ele não consegue disparar."
+      },
+      {
+        "text": "Dispara um ticket em vez de um page, já que a noite está quieta",
+        "why": "Nenhum dispara."
+      }
+    ]
+  },
+  "ex-n1yn53yp": {
+    "prompt": "Por que o alerta rápido precisa da taxa de queima alta em 5 minutos e em 1 minuto?",
+    "hint": "Tamanho e atualidade.",
+    "choices": [
+      {
+        "text": "Para disparar duas vezes mais",
+        "why": "Dispara menos."
+      },
+      {
+        "text": "Porque o Prometheus não avalia uma taxa de 5 minutos sozinha",
+        "why": "Consegue."
+      },
+      {
+        "text": "A janela longa diz que é grande; a curta, que ainda está acontecendo",
+        "why": "Isso."
+      },
+      {
+        "text": "Para tirar a média dos dois números num limite só",
+        "why": "Os dois precisam passar; nada é somado."
+      }
+    ]
+  },
+  "ex-tb3x65gc": {
+    "prompt": "Um pico de 40 segundos joga a taxa de queima de 1 minuto muito acima de 14,4. Por que ninguém é acionado?",
+    "hint": "A outra janela.",
+    "choices": [
+      {
+        "text": "A taxa de queima de 5 minutos ficou abaixo do limite",
+        "why": "Isso."
+      },
+      {
+        "text": "O pager estava fora",
+        "why": "Ele estava no ar."
+      },
+      {
+        "text": "O Alertmanager descarta alertas mais curtos que um minuto antes de roteá-los",
+        "why": "Ele não tem essa regra."
+      },
+      {
+        "text": "A regra tem `for: 5m`",
+        "why": "Ela não tem `for`."
+      }
+    ]
+  },
+  "ex-n1aa707c": {
+    "prompt": "Por que a regra rápida não tem cláusula `for:`?",
+    "hint": "O que o `for:` acrescentaria?",
+    "choices": [
+      {
+        "text": "Porque `for:` não é permitido em regras de gravação",
+        "why": "Estas são regras de alerta."
+      },
+      {
+        "text": "Porque o pager acrescenta o próprio atraso",
+        "why": "Ele não acrescenta nada."
+      },
+      {
+        "text": "Porque o Alertmanager espera cinco minutos antes de mandar qualquer coisa",
+        "why": "O `group_wait` é dez segundos."
+      },
+      {
+        "text": "A janela longa já filtra picos, e o `for` só atrasaria pages reais",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-pb3065x4": {
+    "prompt": "O que pertence às anotações de um page? Escolha todas as que se aplicam.",
+    "hint": "Para a pessoa acordada.",
+    "choices": [
+      {
+        "text": "A consequência para os usuários, em palavras",
+        "why": "Sim."
+      },
+      {
+        "text": "A medição atual",
+        "why": "Sim."
+      },
+      {
+        "text": "Um link para o runbook",
+        "why": "Sim."
+      },
+      {
+        "text": "A expressão PromQL e o limite dela",
+        "why": "Isso está na regra, não serve a um celular às 3 da manhã."
+      }
+    ]
+  },
+  "ex-9nss5w0q": {
+    "prompt": "O que é um runbook?",
+    "hint": "O page aponta para ele.",
+    "choices": [
+      {
+        "text": "O registro de todo page já mandado",
+        "why": "Isso é o histórico do pager."
+      },
+      {
+        "text": "Uma página curta: o que o alerta significa, o que verificar, como reverter, quem chamar",
+        "why": "Isso."
+      },
+      {
+        "text": "O arquivo YAML das regras de alerta",
+        "why": "Isso é a regra."
+      },
+      {
+        "text": "A agenda de quem está de plantão",
+        "why": "Isso é a escala."
+      }
+    ]
+  },
+  "ex-d99bjz3w": {
+    "prompt": "Nas rotas do laboratório, para onde vai um alerta com `severity=\"ticket\"`?",
+    "hint": "O receptor padrão.",
+    "choices": [
+      {
+        "text": "Para o receptor `tickets`, o padrão da rota",
+        "why": "Isso."
+      },
+      {
+        "text": "Para o pager, como todo alerta que não tem severidade nenhuma",
+        "why": "Só pages vão para lá."
+      },
+      {
+        "text": "A lugar nenhum: tickets são descartados",
+        "why": "Vão para o receptor padrão."
+      },
+      {
+        "text": "Ao Prometheus, que o guarda até uma pessoa ler a fila de tickets",
+        "why": "O Alertmanager manda; não devolve alertas."
+      }
+    ]
+  },
+  "ex-7j19fm3n": {
+    "prompt": "Durante o incidente o alerta de ticket está `suppressed` com um id em `inhibitedBy`. Por quê?",
+    "hint": "A regra de inibição.",
+    "choices": [
+      {
+        "text": "O ticket foi silenciado à mão",
+        "why": "Um silêncio aparece em `silencedBy`."
+      },
+      {
+        "text": "A regra do ticket falhou ao ser avaliada",
+        "why": "Ela estava ativa."
+      },
+      {
+        "text": "Um page com o mesmo `slo` está disparando, então o ticket é segurado",
+        "why": "Isso."
+      },
+      {
+        "text": "Tickets só são mandados no horário de trabalho",
+        "why": "Nenhuma regra de horário está configurada."
+      }
+    ]
+  },
+  "ex-rsfr472h": {
+    "prompt": "O Alertmanager junta alertas relacionados numa notificação usando a configuração `group____` da rota.",
+    "hint": "Por quais labels?",
+    "blanks": [
+      {
+        "accept": [
+          "_by"
+        ]
+      }
+    ]
+  },
+  "ex-yhjrtpc2": {
+    "prompt": "O que torna um silêncio melhor do que subir o limite do alerta durante uma manutenção?",
+    "hint": "O que acontece depois.",
+    "choices": [
+      {
+        "text": "Um silêncio também para a avaliação da regra no Prometheus",
+        "why": "A regra continua sendo avaliada."
+      },
+      {
+        "text": "Um silêncio apaga o histórico do alerta",
+        "why": "Ele não apaga nada."
+      },
+      {
+        "text": "Um limite não pode ser mudado sem reiniciar",
+        "why": "Um reload basta."
+      },
+      {
+        "text": "Ele termina sozinho e registra quem e por quê",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-s9jk2h63": {
+    "prompt": "O silêncio acabou com a taxa de queima ainda alta. O que acontece?",
+    "hint": "Silencie o page, não o problema.",
+    "choices": [
+      {
+        "text": "Nada até o alerta resolver e disparar de novo",
+        "why": "Ele continua disparando."
+      },
+      {
+        "text": "O page é mandado, o que está certo",
+        "why": "Isso."
+      },
+      {
+        "text": "O silêncio se estende sozinho por mais vinte minutos",
+        "why": "Silêncios não se estendem."
+      },
+      {
+        "text": "O alerta vira um ticket",
+        "why": "A severidade não muda."
+      }
+    ]
+  },
+  "ex-7yt75rn4": {
+    "prompt": "O que é fadiga de alertas?",
+    "hint": "O que o ruído frequente faz com as pessoas.",
+    "choices": [
+      {
+        "text": "O Prometheus ficando lento com regras demais",
+        "why": "É sobre pessoas."
+      },
+      {
+        "text": "A bateria do pager acabando",
+        "why": "Não é o que significa."
+      },
+      {
+        "text": "Pessoas ignorando pages porque a maioria não pedia ação",
+        "why": "Isso."
+      },
+      {
+        "text": "O Alertmanager descartando notificações repetidas quando um grupo passa do limite",
+        "why": "Isso é agrupamento."
+      }
+    ]
+  },
+  "ex-02660g1b": {
+    "prompt": "Na revisão semanal, um page disparou duas vezes à noite e não pediu ação nenhuma vez. O que a equipe deve fazer naquela semana?",
+    "hint": "Um page que falha no teste.",
+    "choices": [
+      {
+        "text": "Mudar o alerta: o limite, a severidade, ou apagá-lo",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada, já que dois pages por semana estão dentro do limite de dois incidentes por turno",
+        "why": "O limite não é o teste."
+      },
+      {
+        "text": "Pedir à pessoa de plantão para reconhecer mais rápido",
+        "why": "Velocidade não era o problema."
+      },
+      {
+        "text": "Acrescentar um segundo page para confirmar o primeiro",
+        "why": "Isso dobra o ruído."
+      }
+    ]
+  },
+  "ex-d2zh31hv": {
+    "prompt": "Ponha em ordem o que aconteceu durante o incidente do laboratório.",
+    "hint": "O log do pager.",
+    "items": [
+      "O payments começa a falhar uma cobrança em dez",
+      "O page dispara",
+      "O page oscila para resolvido, e o ticket sai",
+      "Um silêncio é acrescentado para a manutenção",
+      "A falha é removida e o page é resolvido"
+    ]
+  },
+  "ex-bh6vyqdh": {
+    "prompt": "Uma equipe aciona por CPU acima de 90%, disco acima de 80% e taxa de erros do payments acima de 2%, e é acordada três vezes por semana. O que deve mudar primeiro?",
+    "hint": "Sintoma, depois causas como tickets.",
+    "choices": [
+      {
+        "text": "Subir todo limite em dez pontos",
+        "why": "Ainda causas, ainda acionando."
+      },
+      {
+        "text": "Acrescentar um quarto page para memória",
+        "why": "Mais causas, mais ruído."
+      },
+      {
+        "text": "Rotear os três para um canal de chat que ninguém lê",
+        "why": "Isso os esconde."
+      },
+      {
+        "text": "Acionar pela taxa de queima do SLO do usuário; fazer das três causas tickets",
+        "why": "Isso."
+      }
+    ]
+  }
+}
