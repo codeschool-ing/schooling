@@ -42,7 +42,7 @@ allow issue_refund({"order_id": "1042", "cents": 7980})? [y/N] n
 [1] result: refused by the operator
 [2] model:  The refund was not issued: the operator declined it.
 ana@dev:~/shop$ cat data/refunds.log 2>&1
-1042 7980
+cat: data/refunds.log: No such file or directory
 ```
 
 O host devolveu *refused by the operator* ao modelo como resultado de erro, o modelo informou que o
@@ -56,7 +56,6 @@ allow issue_refund({"order_id": "1042", "cents": 7980})? [y/N] y
 [1] result: refunded 7980 cents on order 1042
 [2] model:  Refunded 79.80 on order 1042, the two mugs. Shipping was not refunded, since the handbook refunds it only when the whole order is returned.
 ana@dev:~/shop$ cat data/refunds.log
-1042 7980
 1042 7980
 ```
 

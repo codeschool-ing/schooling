@@ -19,6 +19,9 @@
 # lab/scripted.json. They carry the mistakes the lesson is about on purpose;
 # the prompts, git apply, the tests and the evaluation harness are real.
 #
+# pytest ends with how long its run took, "8 passed in 0.57s". That figure is
+# measured, not written, and a rerun moves it by a few hundredths of a second.
+#
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 set -uo pipefail

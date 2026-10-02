@@ -29,6 +29,7 @@ lab() { bash "$LAB_SH" "$@"; }
 on() { printf 'ana@dev:~/shop$ %s\n' "$*"; lab exec ana "$*" 2>&1 || true; }
 put() { lab exec ana "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
 block() { printf '##### %s\n' "$1"; }
+lab reset >/dev/null
 put docs/handbook/returns.md <<'MD'
 # Returns and refunds
 
