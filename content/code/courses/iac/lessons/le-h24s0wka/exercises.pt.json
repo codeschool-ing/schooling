@@ -1,0 +1,618 @@
+{
+  "ex-yv9tn51m": {
+    "prompt": "A Ana tira o bloco `aws_vpc.shop` do `main.tf` e o põe num arquivo novo, `network.tf`, no mesmo diretório, e roda `terraform plan`. O que o plano propõe?",
+    "hint": "Como o Terraform lê um diretório?",
+    "choices": [
+      {
+        "text": "Substituir a VPC, porque o bloco agora mora em outro arquivo",
+        "why": "O arquivo em que um bloco está não faz parte da identidade dele; o endereço `aws_vpc.shop` faz."
+      },
+      {
+        "text": "Nenhuma mudança",
+        "why": "Certo. Todos os arquivos `.tf` do diretório são um documento só, e os nomes dos arquivos não significam nada para o Terraform."
+      },
+      {
+        "text": "Uma segunda VPC, criada a partir do `network.tf`",
+        "why": "Continua havendo um bloco com esse endereço; movê-lo não o copia."
+      },
+      {
+        "text": "Ele ignora o `network.tf` até o `versions.tf` listá-lo",
+        "why": "Nenhum arquivo lista os outros: todo arquivo `.tf` do diretório é lido."
+      }
+    ]
+  },
+  "ex-yzbr3tvy": {
+    "prompt": "Em `resource \"aws_vpc\" \"shop\"`, o que é `shop`?",
+    "hint": "Um dos dois rótulos é definido pelo provider, o outro por você.",
+    "choices": [
+      {
+        "text": "O tipo do recurso, que o provider da AWS define",
+        "why": "O tipo é o primeiro rótulo, `aws_vpc`."
+      },
+      {
+        "text": "A tag `Name` da VPC na AWS",
+        "why": "A tag é um argumento dentro do bloco; por acaso também diz `shop`, e poderia dizer qualquer coisa."
+      },
+      {
+        "text": "O id que a AWS vai dar à VPC",
+        "why": "A AWS inventa o id na criação; ninguém o escreve num arquivo."
+      },
+      {
+        "text": "Um nome escolhido pela Ana, usado no endereço `aws_vpc.shop`",
+        "why": "Isso. Tipo mais nome é o endereço que o resto da configuração usa."
+      }
+    ]
+  },
+  "ex-ya6m0y4r": {
+    "prompt": "Ligue cada bloco ao que ele faz na configuração da Ana.",
+    "hint": "Três blocos, três funções, e uma função que nenhum bloco faz.",
+    "pairs": [
+      {
+        "left": "`terraform { required_providers { … } }`",
+        "right": "Nomeia os plugins de que a configuração precisa, e quais versões"
+      },
+      {
+        "left": "`provider \"aws\" { … }`",
+        "right": "Configura o plugin, aqui com uma região"
+      },
+      {
+        "left": "`resource \"aws_vpc\" \"shop\" { … }`",
+        "right": "Pede que uma coisa exista"
+      }
+    ],
+    "right_distractors": [
+      "Guarda a chave de acesso e o segredo da AWS"
+    ]
+  },
+  "ex-cmepnvzg": {
+    "prompt": "O que o `terraform init` cria na conta da AWS?",
+    "hint": "Ele prepara um diretório.",
+    "choices": [
+      {
+        "text": "Os recursos da configuração, sem perguntar",
+        "why": "Criar recursos é trabalho do apply, e o apply pergunta antes."
+      },
+      {
+        "text": "Recurso nenhum",
+        "why": "Certo. Ele instala providers no `.terraform/` e escreve o lock file; a AWS não é tocada."
+      },
+      {
+        "text": "Um recurso de teste para conferir as credenciais",
+        "why": "O init nem precisa de credenciais; ele não chama a AWS."
+      },
+      {
+        "text": "Um arquivo de state vazio num bucket",
+        "why": "Nesta aula o state é um arquivo local, e o primeiro apply o escreve."
+      }
+    ]
+  },
+  "ex-ec1456w5": {
+    "prompt": "A Ana vai fazer o primeiro commit. Quais destes pertencem ao repositório? Escolha todos os que se aplicam.",
+    "hint": "Um deles tem 789M e é refeito por um comando.",
+    "choices": [
+      {
+        "text": "`.terraform.lock.hcl`",
+        "why": "Sim: ele faz todo init, em qualquer lugar, escolher as mesmas versões de provider."
+      },
+      {
+        "text": "`.terraform/`",
+        "why": "Esse é o próprio programa do provider; o `init` o refaz, então ele é ignorado."
+      },
+      {
+        "text": "`main.tf`",
+        "why": "Sim, é a própria descrição."
+      },
+      {
+        "text": "`versions.tf`",
+        "why": "Sim; ele diz quais providers e versões a configuração aceita."
+      },
+      {
+        "text": "`terraform.tfstate`",
+        "why": "O `.gitignore` da Ana o exclui; a aula 7 diz onde ele deve ficar."
+      }
+    ]
+  },
+  "ex-rjc2ebcd": {
+    "prompt": "A Ana faz commit do lock file do laboratório, que tem um único hash `h1:` para `linux_amd64`. Um colega num Mac roda `terraform init`. O que acontece?",
+    "hint": "O aviso que o init imprimiu disse quais plataformas o arquivo cobre.",
+    "choices": [
+      {
+        "text": "O init recalcula o hash para macOS e segue em silêncio",
+        "why": "Um lock file existe para recusar um pacote que não consegue conferir; não confia em silêncio num pacote novo."
+      },
+      {
+        "text": "O init instala o pacote de Linux, que roda no Mac",
+        "why": "Um provider é um programa compilado para uma plataforma; a versão de Linux não roda no macOS."
+      },
+      {
+        "text": "O init falha: nenhum hash confere com o pacote do Mac",
+        "why": "Certo. O aviso disse isso, e o `terraform providers lock` com acesso à internet acrescenta as outras plataformas."
+      },
+      {
+        "text": "O init ignora o lock file e escolhe a 6.x mais nova",
+        "why": "Só o `init -upgrade` escolhe de novo; um init simples respeita o lock file."
+      }
+    ]
+  },
+  "ex-z1bks762": {
+    "prompt": "Por que a Ana não precisa dizer ao Terraform que a sub-rede tem de ser criada depois da VPC?",
+    "hint": "Veja o que o `vpc_id` da sub-rede recebe.",
+    "choices": [
+      {
+        "text": "Porque o bloco da VPC vem primeiro no `main.tf`",
+        "why": "A ordem dos blocos no arquivo é ignorada."
+      },
+      {
+        "text": "Porque o Terraform cria os recursos em ordem alfabética de tipo",
+        "why": "O plano é impresso em ordem alfabética; a criação segue o grafo."
+      },
+      {
+        "text": "A referência `aws_vpc.shop.id` é a dependência",
+        "why": "Isso. Uma referência leva a dependência junto com o valor, e o grafo é montado a partir das referências."
+      },
+      {
+        "text": "Porque a API da AWS recusa sub-redes até existir uma VPC, e o Terraform tenta de novo",
+        "why": "Não há tentativa de novo aqui: a sub-rede nem começa até o id da VPC existir."
+      }
+    ]
+  },
+  "ex-287t6wdg": {
+    "prompt": "Em `vpc_id = aws_vpc.shop.id`, o `id` não é um valor que a Ana definiu; é um que a VPC tem depois de existir. Valores desse tipo se chamam ___.",
+    "hint": "O oposto de um argumento.",
+    "blanks": [
+      {
+        "accept": [
+          "atributos",
+          "atributo"
+        ]
+      }
+    ]
+  },
+  "ex-dgnace5n": {
+    "prompt": "A Ana dá a uma sub-rede a faixa `10.30.1.0/24` dentro da VPC `10.20.0.0/16`. O `terraform validate` diz que a configuração é válida. O que acontece no apply?",
+    "hint": "Qual programa conhece a regra sobre faixas?",
+    "choices": [
+      {
+        "text": "A AWS recusa a sub-rede",
+        "why": "Certo. O validate confere se a configuração é coerente; só a API sabe que uma sub-rede precisa caber na VPC."
+      },
+      {
+        "text": "A sub-rede é criada, já que o validate passou",
+        "why": "Válido quer dizer coerente, não aceito."
+      },
+      {
+        "text": "O Terraform alarga a faixa da VPC para a sub-rede caber",
+        "why": "O Terraform não reescreve os seus argumentos; cria o que você declarou ou falha."
+      },
+      {
+        "text": "O plano o recusa antes de o apply fazer a pergunta",
+        "why": "O plano não chama a API para criar nada, então a faixa só é conferida quando a sub-rede é criada."
+      }
+    ]
+  },
+  "ex-x33f0ahd": {
+    "prompt": "No primeiro plano, o `vpc_id` do security group mostra `(known after apply)` embora o `main.tf` o defina. Por quê?",
+    "hint": "Ele recebe o quê?",
+    "choices": [
+      {
+        "text": "A Ana esqueceu de defini-lo",
+        "why": "Ele está definido, como `aws_vpc.shop.id`."
+      },
+      {
+        "text": "É o id da VPC, e a VPC ainda não existe",
+        "why": "Isso. O plano é calculado antes de tudo acontecer, então um valor que a AWS inventa é uma lacuna nele."
+      },
+      {
+        "text": "O provider esconde valores que vêm de outros recursos",
+        "why": "Nada é escondido; o valor simplesmente não existe na hora do plano."
+      },
+      {
+        "text": "O moto não informa ids de VPC durante um plano",
+        "why": "Contra a AWS real o plano mostra o mesmo: não há VPC para informar."
+      }
+    ]
+  },
+  "ex-z45zek3h": {
+    "prompt": "O segundo apply da Ana rodou depois que os quatro recursos existiam, com o `main.tf` sem mudança. Quantos recursos ele acrescentou?",
+    "hint": "Leia a última linha dele.",
+    "unit": "recursos"
+  },
+  "ex-ramjjbsd": {
+    "prompt": "O `terraform apply` mostra o plano e pergunta. A Ana digita `y` e aperta Enter. O que acontece?",
+    "hint": "A pergunta diz o que aceita.",
+    "choices": [
+      {
+        "text": "O apply é cancelado",
+        "why": "Certo: só a palavra exata `yes` aprova. Qualquer outra coisa cancela, como o `no` na aula."
+      },
+      {
+        "text": "Os quatro recursos são criados, já que `y` abrevia yes",
+        "why": "O Terraform não aceita abreviações aqui, de propósito."
+      },
+      {
+        "text": "O Terraform faz a mesma pergunta de novo",
+        "why": "Ele não repete a pergunta; a execução termina com `Apply cancelled.`"
+      },
+      {
+        "text": "Só a VPC é criada, como aprovação parcial",
+        "why": "Não existe aprovação parcial: o plano é aceito inteiro ou não é."
+      }
+    ]
+  },
+  "ex-31fypeqd": {
+    "prompt": "Ponha estes passos do primeiro apply na ordem em que o log os mostra terminando.",
+    "hint": "Siga as setas do grafo.",
+    "items": [
+      "`aws_vpc.shop`: Creation complete",
+      "`aws_security_group.web`: Creation complete",
+      "`aws_vpc_security_group_ingress_rule.https`: Creating...",
+      "`Apply complete! Resources: 4 added`"
+    ],
+    "trap": "O plano também lista a regra por último, mas por outro motivo: o plano é alfabético, o apply segue o grafo."
+  },
+  "ex-zeeex3ye": {
+    "prompt": "O `terraform.tfvars` diz `environment = \"dev\"`. A Ana roda `TF_VAR_environment=prod terraform plan`. Qual valor o plano usa?",
+    "hint": "Onde o ambiente fica na ordem do Terraform?",
+    "choices": [
+      {
+        "text": "`prod`, porque uma variável de ambiente se sobrepõe a um arquivo",
+        "why": "É assim que muitas ferramentas se comportam, e é o contrário da ordem do Terraform."
+      },
+      {
+        "text": "Nenhum: dois valores para uma variável são um erro",
+        "why": "Nem erro nem aviso: uma fonte simplesmente vence."
+      },
+      {
+        "text": "O Terraform pergunta qual a Ana quis dizer",
+        "why": "Ele só pergunta quando não há valor nenhum."
+      },
+      {
+        "text": "`dev`",
+        "why": "Certo. `TF_VAR_` é a fonte mais fraca; o console da aula mostrou o `prod` perdendo para o arquivo, e só o `-var` o venceu."
+      }
+    ]
+  },
+  "ex-fqtm6wkq": {
+    "prompt": "`environment` não tem default. Um pipeline roda `terraform plan -input=false` sem passar um valor. O que acontece?",
+    "hint": "Em que o `-input=false` transforma a pergunta?",
+    "choices": [
+      {
+        "text": "Ele planeja com uma string vazia",
+        "why": "Uma variável obrigatória não tem valor de reserva; uma string vazia seria um valor que alguém escolheu."
+      },
+      {
+        "text": "O plano falha com `No value for required variable`",
+        "why": "Isso, nomeando a variável e a linha que a declarou, que é o que você quer onde ninguém pode responder."
+      },
+      {
+        "text": "Ele espera alguém digitar um valor",
+        "why": "Isso é o que acontece num terminal sem `-input=false`."
+      },
+      {
+        "text": "Ele pula os recursos que usam a variável",
+        "why": "O Terraform não planeja meia configuração; ele para."
+      }
+    ]
+  },
+  "ex-y2fy8mkh": {
+    "prompt": "Para dar um valor à variável `environment` pelo shell, a Ana exporta uma variável chamada ___.",
+    "hint": "Um prefixo fixo, depois o nome da variável.",
+    "blanks": [
+      {
+        "accept": [
+          "TF_VAR_environment"
+        ]
+      }
+    ]
+  },
+  "ex-07t99yax": {
+    "prompt": "O que muda ao acrescentar `default = 443` à variável `https_port`?",
+    "hint": "Compare com `environment`, que não tem.",
+    "choices": [
+      {
+        "text": "Fixa a porta em 443, sem arquivo ou flag que a mude",
+        "why": "Um default só é usado quando nenhuma fonte dá valor; `-var https_port=8443` ainda venceria."
+      },
+      {
+        "text": "Torna a variável opcional",
+        "why": "Isso: com default, o Terraform nem pergunta nem falha quando nenhum valor é dado."
+      },
+      {
+        "text": "Define o tipo da variável como número",
+        "why": "O tipo vem de `type = number`; um default precisa servir nele, mas não o define."
+      },
+      {
+        "text": "Escreve 443 no `terraform.tfvars`",
+        "why": "O Terraform não edita os seus arquivos; o default fica no bloco da variável."
+      }
+    ]
+  },
+  "ex-vbk9cexw": {
+    "prompt": "Um script de shell precisa do id da VPC como string pura para passar a `aws ec2 describe-vpcs --vpc-ids`. Qual comando o entrega?",
+    "hint": "Sem aspas, sem quebra de linha.",
+    "choices": [
+      {
+        "text": "`terraform output vpc_id`",
+        "why": "Isso imprime o valor na sintaxe do HCL, com aspas que o AWS CLI receberia como parte do id."
+      },
+      {
+        "text": "`terraform output -json`",
+        "why": "Isso é para programas que leem JSON; um shell receberia um documento inteiro."
+      },
+      {
+        "text": "`terraform output -raw vpc_id`",
+        "why": "Certo: a string pura, que a aula pôs dentro de `$( … )`."
+      },
+      {
+        "text": "`grep vpc- terraform.tfstate`",
+        "why": "O formato do state é assunto do Terraform, e esse grep pega mais de uma linha."
+      }
+    ]
+  },
+  "ex-yzea0fe7": {
+    "prompt": "A Ana acrescenta um bloco `output \"bucket_name\"` ao `outputs.tf` e roda logo `terraform output bucket_name`, sem aplicar. O que ela recebe?",
+    "hint": "De onde o `terraform output` lê?",
+    "choices": [
+      {
+        "text": "Um erro dizendo que o output não foi encontrado, sugerindo um apply",
+        "why": "Isso. Os outputs vêm do state, e só um apply escreve um novo lá."
+      },
+      {
+        "text": "O nome do bucket, calculado a partir dos arquivos",
+        "why": "O `terraform output` não avalia os arquivos; lê o que o último apply guardou."
+      },
+      {
+        "text": "`(known after apply)`",
+        "why": "Essa marcação é de um plano, não do `terraform output`."
+      },
+      {
+        "text": "Uma linha vazia",
+        "why": "Ele falha com uma mensagem em vez de não imprimir nada."
+      }
+    ]
+  },
+  "ex-21n9hjeb": {
+    "prompt": "Ligue cada comando ao que ele imprime.",
+    "hint": "Três leitores: uma pessoa, um shell, um programa.",
+    "pairs": [
+      {
+        "left": "`terraform output`",
+        "right": "Todos os outputs, um `nome = valor` por linha"
+      },
+      {
+        "left": "`terraform output vpc_id`",
+        "right": "Um valor na sintaxe do HCL, com aspas"
+      },
+      {
+        "left": "`terraform output -raw vpc_id`",
+        "right": "A string pura, sem nem uma quebra de linha"
+      },
+      {
+        "left": "`terraform output -json`",
+        "right": "Cada output com o tipo e a marcação de sensível"
+      }
+    ],
+    "right_distractors": [
+      "Os ids lidos ao vivo da API da AWS"
+    ]
+  },
+  "ex-v0bfdtrz": {
+    "prompt": "O mirror tem o random 3.8.1 e o 3.9.1, e nada está travado ainda. O `versions.tf` pede `version = \"~> 3.8.0\"`. Qual versão o `terraform init` instala?",
+    "hint": "Com três números escritos, qual deles pode crescer?",
+    "choices": [
+      {
+        "text": "A 3.9.1, a mais nova disponível",
+        "why": "`~> 3.8.0` para antes da 3.9; isso seria `~> 3.8`."
+      },
+      {
+        "text": "Nenhuma: `~>` precisa de uma versão exata que exista",
+        "why": "`~>` é um intervalo, e a 3.8.1 está dentro dele."
+      },
+      {
+        "text": "A 3.8.1",
+        "why": "Certo: só o patch pode crescer, então a 3.8.1 é a mais nova que o intervalo permite, como o lock file mostrou."
+      },
+      {
+        "text": "A 3.8.0, a versão escrita na restrição",
+        "why": "A restrição é um limite inferior, não uma trava, e a 3.8.0 nem está no mirror."
+      }
+    ]
+  },
+  "ex-memxd2ar": {
+    "prompt": "A Ana muda a restrição do random de `~> 3.8.0` para `~> 3.9`, e o `terraform plan` recusa com `Inconsistent dependency lock file`. O que ela roda?",
+    "hint": "A 3.8.1 travada está fora do intervalo novo.",
+    "choices": [
+      {
+        "text": "Apagar o `.terraform/` e planejar de novo",
+        "why": "A discordância é com o lock file, que continua lá e continua dizendo 3.8.1."
+      },
+      {
+        "text": "`terraform init -upgrade`",
+        "why": "Isso. Ele escolhe de novo dentro de cada restrição e reescreve o lock file, que um revisor então vê no diff."
+      },
+      {
+        "text": "`terraform plan -upgrade`",
+        "why": "O plan não instala providers; escolher versões é trabalho do init."
+      },
+      {
+        "text": "`terraform apply`, que instala o que o plano precisa",
+        "why": "O apply recusa pelo mesmo motivo que o plan."
+      }
+    ]
+  },
+  "ex-j2k6hgqr": {
+    "prompt": "O nome do bucket é `shop-assets-` seguido de `random_id.bucket.hex`. Por que o nome não muda a cada plano?",
+    "hint": "Onde o random guarda o que sorteou?",
+    "choices": [
+      {
+        "text": "O valor é sorteado uma vez, na criação, e guardado no state",
+        "why": "Certo, e fica até o recurso ser destruído; é para isso que ele é um recurso."
+      },
+      {
+        "text": "O random pergunta à AWS quais sufixos estão livres",
+        "why": "O provider random não chama nada fora dele."
+      },
+      {
+        "text": "O sufixo é derivado do id da VPC",
+        "why": "Nada no `storage.tf` liga os dois."
+      },
+      {
+        "text": "O lock file registra o sufixo",
+        "why": "O lock file registra versões e hashes de providers, não valores de recursos."
+      }
+    ]
+  },
+  "ex-p1ytj3nx": {
+    "prompt": "Depois que o `terraform destroy` terminou, o que havia no `terraform.tfstate`?",
+    "hint": "A Ana pediu ao `jq` o tamanho de `resources`.",
+    "choices": [
+      {
+        "text": "O arquivo tinha sido apagado junto com os recursos",
+        "why": "O `ls` ainda o listava; o destroy não apaga o state."
+      },
+      {
+        "text": "Os sete recursos, marcados como destruídos",
+        "why": "Recursos destruídos saem do state; nada fica como lápide."
+      },
+      {
+        "text": "Um state com zero recursos",
+        "why": "Isso: um registro de que esta configuração não gerencia nada agora."
+      },
+      {
+        "text": "O state anterior, renomeado para `.backup`",
+        "why": "O backup é um arquivo à parte ao lado dele; o próprio `terraform.tfstate` ficou, vazio de recursos."
+      }
+    ]
+  },
+  "ex-hqs1xcwm": {
+    "prompt": "Quais destes o `terraform destroy` da Ana apagou? Escolha todos os que se aplicam.",
+    "hint": "Sete recursos, três providers.",
+    "choices": [
+      {
+        "text": "A VPC no moto",
+        "why": "Sim, por último, quando não sobrava nada dentro dela."
+      },
+      {
+        "text": "O `network.env` no notebook",
+        "why": "Sim: destruir um `local_file` apaga o arquivo."
+      },
+      {
+        "text": "`main.tf`",
+        "why": "A configuração fica intacta; o plano seguinte a leu e propôs sete criações."
+      },
+      {
+        "text": "O bucket `shop-assets-`",
+        "why": "Sim; o `aws s3 ls` não listou nada depois."
+      },
+      {
+        "text": "`.terraform.lock.hcl`",
+        "why": "O lock file e o `.terraform/` ficam, então nada precisa ser instalado de novo."
+      }
+    ]
+  },
+  "ex-n2nv20p6": {
+    "prompt": "Um colega criou uma VPC à mão na mesma conta, com a tag `Name = shop`. O que o `terraform destroy` da Ana faz com ela?",
+    "hint": "O que o destroy lê para decidir o que remover?",
+    "choices": [
+      {
+        "text": "Apaga, já que a tag dela bate com a configuração",
+        "why": "O Terraform não reconhece recursos pela tag; conhece-os pelos ids no state."
+      },
+      {
+        "text": "Deixa em paz",
+        "why": "Certo. Ela não está no state, então o destroy nem sabe que ela existe."
+      },
+      {
+        "text": "Recusa rodar até a VPC extra ser importada",
+        "why": "O destroy não procura recursos que não acompanha; importar é assunto da aula 8."
+      },
+      {
+        "text": "A adota no state no lugar da destruída",
+        "why": "Nada é adotado sozinho; o state só guarda o que esta configuração criou ou importou."
+      }
+    ]
+  },
+  "ex-vgd6v80a": {
+    "prompt": "Ponha em ordem a vida da rede da loja nesta aula.",
+    "hint": "Nada roda antes de os providers serem instalados.",
+    "items": [
+      "Escrever o `versions.tf` e o `main.tf`",
+      "`terraform init`",
+      "`terraform plan`",
+      "`terraform apply`, respondendo `yes`",
+      "`terraform output -raw vpc_id`",
+      "`terraform destroy`"
+    ],
+    "trap": "Pedir um output antes do apply é o deslize comum: os outputs vêm do state, que só um apply escreve."
+  },
+  "ex-etrrfmer": {
+    "prompt": "Um colega clona o repositório da Ana, que tem os arquivos `.tf` e o lock file mas, como planejado, não tem `.terraform/`, e roda `terraform plan` direto. O que acontece?",
+    "hint": "O lock file nomeia versões; não contém programas.",
+    "choices": [
+      {
+        "text": "O plano roda, porque o lock file prende cada provider",
+        "why": "Prender uma versão não é instalá-la; o programa continua faltando."
+      },
+      {
+        "text": "O Terraform baixa as versões travadas como parte do plano",
+        "why": "O plan não instala nada; isso é trabalho só do init."
+      },
+      {
+        "text": "Recusa até o `terraform init` instalar os providers",
+        "why": "Certo. Uma cópia nova sempre precisa de init, que então instala exatamente as versões travadas."
+      },
+      {
+        "text": "Propõe criar a rede inteira uma segunda vez",
+        "why": "Ele nem chega a um plano; e esse risco é sobre o state, assunto da aula 7."
+      }
+    ]
+  },
+  "ex-27wgscb5": {
+    "prompt": "A Ana quer planejar produção a partir deste diretório, que mantém um `terraform.tfvars` com `environment = \"dev\"`. Ela tem `export TF_VAR_environment=prod` no shell. O que faz o plano usar `prod`?",
+    "hint": "Valores na linha de comando são a fonte mais forte.",
+    "choices": [
+      {
+        "text": "Nada mais: o export já faz isso",
+        "why": "O export é a fonte mais fraca; o arquivo vence, e o plano diz `dev`."
+      },
+      {
+        "text": "Rodar `terraform init` de novo, para o export ser lido",
+        "why": "O init não lê valores de variáveis; a ordem das fontes é a mesma depois dele."
+      },
+      {
+        "text": "`-var-file=prod.tfvars` na linha de comando",
+        "why": "Isso. Um arquivo nomeado na linha de comando vence o `terraform.tfvars`, e a escolha fica visível no próprio comando."
+      },
+      {
+        "text": "Renomear a variável para `TF_VAR_environment` no `variables.tf`",
+        "why": "O prefixo pertence à variável do shell, não à declaração; a variável deixaria de ser `var.environment`."
+      }
+    ]
+  },
+  "ex-ks4n1ft2": {
+    "prompt": "Quais destas edições fazem o `terraform plan` recusar até a Ana rodar o `init` (com ou sem `-upgrade`)? Escolha todos os que se aplicam.",
+    "hint": "Pergunte se o lock file ainda concorda com o `required_providers`.",
+    "choices": [
+      {
+        "text": "Um segundo recurso `aws_subnet`",
+        "why": "O provider aws já está instalado; um recurso novo de um tipo conhecido não precisa de init."
+      },
+      {
+        "text": "Um provider `tls` acrescentado ao `required_providers`",
+        "why": "Sim: um provider sem versão escolhida, como foram o `random` e o `local`."
+      },
+      {
+        "text": "Um output novo",
+        "why": "Outputs não envolvem provider; o apply os registra."
+      },
+      {
+        "text": "Uma restrição que deixa a versão travada de fora",
+        "why": "Sim: `Inconsistent dependency lock file`, até o `init -upgrade` escolher de novo."
+      },
+      {
+        "text": "Uma variável com default",
+        "why": "Variáveis são lidas na hora do plano; nada precisa ser instalado."
+      }
+    ]
+  }
+}
