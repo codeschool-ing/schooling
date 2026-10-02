@@ -33,7 +33,7 @@ on it.
 
 ## A tool that is not allowed
 
-`--allow` sets the tools a task may use. The default is the four that only read something:
+`--allow` replaces the list of tools a task may use. The default is the four that only read something:
 `calculator`, `reviews`, `search` and `today`. The same cake order, with only the calculator
 allowed:
 

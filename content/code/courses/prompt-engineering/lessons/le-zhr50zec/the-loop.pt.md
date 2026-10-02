@@ -33,7 +33,7 @@ informação, e o modelo consegue agir com base nele.
 
 ## Uma ferramenta que não é permitida
 
-O `--allow` define as ferramentas que uma tarefa pode usar. O padrão são as quatro que só leem
+O `--allow` substitui a lista de ferramentas que uma tarefa pode usar. O padrão são as quatro que só leem
 alguma coisa: `calculator`, `reviews`, `search` e `today`. A mesma encomenda de bolos, com só a
 calculadora permitida:
 
@@ -66,7 +66,7 @@ lista padrão. A lição 7 mostra por que uma ferramenta assim é tratada de out
 
 ## Uma execução que chega ao limite
 
-O `--max-steps` é o número de vezes que o laço reproduz antes de desistir. Com limite de um:
+O `--max-steps` é o número de passos que o laço reproduz antes de desistir. Com limite de um:
 
 ```
 ana@lab:~/pe$ agent runs/order.txt --max-steps 1

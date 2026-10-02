@@ -11,7 +11,7 @@ depois o modelo é chamado a continuar, com o resultado na frente dele.
 
 Sem esse arranjo, duas coisas que você já viu dão errado. Perguntado sobre a data de hoje, um
 modelo só consegue escrever uma data provável, que é o problema da lição 5; perguntado quanto é
-3 × 42.50, ele faz conta com blocos de dígitos, que é o problema da lição 3. Uma ferramenta troca a
+3 × 42,50, ele faz conta com blocos de dígitos, que é o problema da lição 3. Uma ferramenta troca a
 resposta provável por uma consultada ou calculada.
 
 ## Dizer ao modelo o que ele pode pedir
