@@ -362,7 +362,9 @@ block tofu-read
 run 'tofu state list'
 run 'tofu plan | tail -n 3'
 block tofu-no-fallback
-put encryption.tf <<'CODE'
+# The same file without the fallback, rewritten quietly: the lesson shows the
+# state block that is left, from the sed below.
+cat > encryption.tf <<'CODE'
 variable "state_passphrase" {
   type      = string
   sensitive = true
