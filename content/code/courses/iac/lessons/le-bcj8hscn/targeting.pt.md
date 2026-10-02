@@ -50,7 +50,7 @@ Ela pede só a sub-rede:
 ```
   # aws_vpc.shop will be updated in-place
   ~ resource "aws_vpc" "shop" {
-        id                                   = "vpc-94a255b041c39caf1"
+        id                                   = "vpc-bf1e4c53969619f51"
       ~ tags                                 = {
             "Name"    = "shop"
             "Owner"   = "ana"
@@ -87,10 +87,10 @@ Ela aplica mesmo assim, já que uma tag é inofensiva, e o Terraform acrescenta 
 fim:
 
 ```
-aws_vpc.shop: Modifying... [id=vpc-94a255b041c39caf1]
-aws_vpc.shop: Modifications complete after 0s [id=vpc-94a255b041c39caf1]
+aws_vpc.shop: Modifying... [id=vpc-bf1e4c53969619f51]
+aws_vpc.shop: Modifications complete after 0s [id=vpc-bf1e4c53969619f51]
 aws_subnet.d: Creating...
-aws_subnet.d: Creation complete after 0s [id=subnet-4df160d465a1f1c8f]
+aws_subnet.d: Creation complete after 0s [id=subnet-d13af5782a2f49e4a]
 ╷
 │ Warning: Resource targeting is in effect
 │ 

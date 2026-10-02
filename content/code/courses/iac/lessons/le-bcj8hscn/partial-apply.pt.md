@@ -50,11 +50,11 @@ apagado. Então o apply:
 
 ```
 ana@laptop:~/shop$ terraform apply tfplan; echo "exit $?"
-aws_security_group.batch: Creating...
 aws_subnet.c: Creating...
-aws_security_group.batch: Creation complete after 0s [id=sg-55938378a924559d7]
+aws_security_group.batch: Creating...
+aws_security_group.batch: Creation complete after 1s [id=sg-0f05ca3472b6dbbca]
 ╷
-│ Error: creating EC2 Subnet: operation error EC2: CreateSubnet, https response error StatusCode: 400, RequestID: Y6gEEcciwJipTraIYUsTmnBQKHDUfKNo619ZMi9HtfDXZPKlQxs8, api error InvalidSubnet.Range: The CIDR '10.30.3.0/24' is invalid.
+│ Error: creating EC2 Subnet: operation error EC2: CreateSubnet, https response error StatusCode: 400, RequestID: c90SD4mAktjhE1nWlSkLjgYWfZYKv4KibyRoPxnPSPW8I43QpAJO, api error InvalidSubnet.Range: The CIDR '10.30.3.0/24' is invalid.
 │ 
 │   with aws_subnet.c,
 │   on main.tf line 86, in resource "aws_subnet" "c":
@@ -107,10 +107,10 @@ faixa para `10.20.3.0/24` e aplica de novo:
 
 ```
 ana@laptop:~/shop$ terraform apply -auto-approve | tail -n 6
-aws_subnet.c: Creation complete after 0s [id=subnet-f317b8374c94be923]
+aws_subnet.c: Creation complete after 0s [id=subnet-ec52a070d4b58b596]
 aws_instance.batch: Creating...
 aws_instance.batch: Still creating... [00m10s elapsed]
-aws_instance.batch: Creation complete after 10s [id=i-8c152ae277885b20c]
+aws_instance.batch: Creation complete after 10s [id=i-0f4b71b89e1e778e8]
 
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 ```

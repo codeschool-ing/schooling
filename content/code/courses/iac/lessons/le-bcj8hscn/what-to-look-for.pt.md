@@ -57,15 +57,15 @@ E o plano:
   # aws_vpc_security_group_ingress_rule.ssh will be updated in-place
   ~ resource "aws_vpc_security_group_ingress_rule" "ssh" {
       ~ cidr_ipv4              = "203.0.113.0/24" -> "0.0.0.0/0"
-        id                     = "sgr-fca929b5f154db51b"
+        id                     = "sgr-b7e88ab5e67d5b3a9"
         # (8 unchanged attributes hidden)
     }
 
 Plan: 0 to add, 2 to change, 0 to destroy.
 ```
 
-Dois `~`, zero destruições, a trava passa. Na prática, o plano abre o SSH do `web` para todo
-endereço da internet, onde antes estava aberto para a faixa de um escritório, e deixa a role da
+Dois `~`, zero destruições, e a trava o deixaria passar. Na prática, o plano abre o SSH do `web` para todo
+endereço da internet, onde antes estava aberto para a faixa de um escritório. E deixa a role da
 instância fazer qualquer coisa com os objetos do bucket, inclusive apagá-los, onde antes ela só
 podia lê-los. Nada nos símbolos coloca isso acima de uma troca de tag. **Um alargamento é um update
 in-place**, e só uma pessoa que lê os valores o enxerga.

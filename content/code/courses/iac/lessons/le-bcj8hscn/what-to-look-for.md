@@ -57,16 +57,16 @@ And the plan:
   # aws_vpc_security_group_ingress_rule.ssh will be updated in-place
   ~ resource "aws_vpc_security_group_ingress_rule" "ssh" {
       ~ cidr_ipv4              = "203.0.113.0/24" -> "0.0.0.0/0"
-        id                     = "sgr-fca929b5f154db51b"
+        id                     = "sgr-b7e88ab5e67d5b3a9"
         # (8 unchanged attributes hidden)
     }
 
 Plan: 0 to add, 2 to change, 0 to destroy.
 ```
 
-Two `~`, zero destroys, the guard passes. In practice the plan opens SSH on `web` to every address
-on the internet, where it was open to one office range, and lets the instance's role do anything
-to the bucket's objects, delete them included, where it could only read them. Nothing in the
+Two `~`, zero destroys, and the guard would pass it. In practice the plan opens SSH on `web` to every address
+on the internet, where it was open to one office range. It also lets the instance's role do
+anything to the bucket's objects, delete them included, where it could only read them. Nothing in the
 symbols ranks those above a tag change. **A widening is an update in place**, and only a person
 who reads the values sees it.
 
