@@ -90,6 +90,17 @@ modules:
   http_2xx:
     prober: http
     timeout: 5s
+  # A synthetic checkout (lesson 14): the path a customer takes, not a
+  # health endpoint. Every probe is a real order of one kettle.
+  checkout:
+    prober: http
+    timeout: 5s
+    http:
+      method: POST
+      headers:
+        Content-Type: application/json
+      body: '{"sku": "kettle", "qty": 1, "card": "4111 1111 1111 1111"}'
+      valid_status_codes: [201]
 LABFILE
   mkdir -p "$SHOP/."
   cat > "$SHOP/compose.yaml" <<'LABFILE'
@@ -1068,6 +1079,26 @@ def publish(order):
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/ready")
+def ready():
+    """Ready to take an order: the database answers and the broker takes a connection."""
+    checks = {}
+    try:
+        with psycopg.connect(DB, connect_timeout=2) as conn:
+            conn.execute("SELECT 1")
+        checks["postgres"] = "ok"
+    except psycopg.Error as e:
+        checks["postgres"] = type(e).__name__
+    try:
+        params = pika.ConnectionParameters(RABBIT, socket_timeout=2, connection_attempts=1)
+        with pika.BlockingConnection(params):
+            checks["rabbitmq"] = "ok"
+    except pika.exceptions.AMQPError as e:
+        checks["rabbitmq"] = type(e).__name__
+    ok = all(v == "ok" for v in checks.values())
+    return {"ready": ok, "checks": checks}, 200 if ok else 503
 
 
 @app.post("/orders")
