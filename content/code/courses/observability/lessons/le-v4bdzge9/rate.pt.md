@@ -14,9 +14,9 @@ code=402 instance=storefront:8080 job=storefront method=POST route=/checkout  0.
 
 Cerca de 4,2 checkouts por segundo responderam `201` e 0,27 responderam `402`, um cartão recusado.
 Os clientes simulados mandam cinco requisições por segundo, uma em dez delas uma listagem de
-produtos, então 4,5 checkouts por segundo é o total, e somar as duas linhas dá 4,49. Para obter essa
-soma do Prometheus, as séries são **agregadas**: `sum by (route)` soma toda série que compartilha uma
-rota e mantém só esse label:
+produtos, então 4,5 checkouts por segundo é o total. Somar as duas linhas dá 4,49. Para obter essa
+soma do Prometheus, as séries são **agregadas**: `sum by (route)` soma toda série que compartilha
+uma rota e mantém só esse label:
 
 ```
 ana@obs:~/shop$ ./promq 'sum by (route) (rate(http_server_requests_total{job="storefront"}[1m]))'
@@ -35,8 +35,7 @@ ana@obs:~/shop$ ./promq 'sum(increase(http_server_requests_total{job="storefront
 
 304, perto de 60 segundos vezes as 5,07 requisições por segundo que as três rotas somam. **Os dois
 são estimativas**, calculadas a partir das coletas que caíram dentro da janela e esticadas para
-cobri-la toda, e é por isso que o `increase()` pode devolver um número que não é uma contagem
-inteira.
+cobri-la toda. É por isso que o `increase()` pode devolver um número que não é uma contagem inteira.
 
 O motivo para sempre passar pelo `rate()` em vez de subtrair dois valores à mão é o que acontece
 quando um processo reinicia. A vitrine é reiniciada, e o contador dela é lido antes e depois:

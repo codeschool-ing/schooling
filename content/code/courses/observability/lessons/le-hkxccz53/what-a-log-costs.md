@@ -14,15 +14,15 @@ ana@obs:~/shop$ curl -s 'localhost:9200/_cat/indices/logs-*?h=docs.count,store.s
 10649 2.7mb
 ```
 
-**2.5 MB written, 2.7 MB stored**, for 10649 lines. Elasticsearch keeps more than it was sent:
-every line is stored whole, as the original JSON in `body.text`, again as parsed fields, and once
-more in the index that makes each field searchable. Loki compresses its chunks and indexes almost
-nothing, and is usually several times smaller than the raw text, but in this lab its chunks were
-still in memory and there was nothing on disk to weigh yet.
+**2.5 MB written, 2.7 MB stored**, for 10649 lines. Elasticsearch keeps more than it was sent: every
+line is stored whole, as the original JSON in `body.text`, again as parsed fields, and once more in
+the index that makes each field searchable. Loki compresses its chunks and indexes almost nothing,
+and is usually several times smaller than the raw text. In this lab, though, its chunks were still
+in memory and there was nothing on disk to weigh yet.
 
 The arithmetic that decides a budget is short. **2.5 MB in ten minutes is about 360 MB a day**, raw,
-for a shop at five requests a second. Multiply by the traffic a real shop has, by the number of
-copies a store keeps for safety, often two or three, and by the days it is kept, and the three
+for a shop at five requests a second. Multiply that by the traffic a real shop has, by the number of
+copies a store keeps for safety, often two or three, and by the days it is kept. Then the three
 numbers that a team controls are clear:
 
 | | what moves it | where this course deals with it |

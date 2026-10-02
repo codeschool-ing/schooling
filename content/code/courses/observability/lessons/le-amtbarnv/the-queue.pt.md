@@ -16,7 +16,7 @@ ana@obs:~/shop$ docker compose start mailer 2>&1 | tail -1
 ```
 
 Vinte segundos depois, cinco das confirmações que o mailer mandou no último minuto são escolhidas em
-passos iguais pelo log dele, e cada rastro responde a uma pergunta: quanto tempo entre o `UPDATE`,
+passos iguais pelo log dele. Cada rastro responde a uma pergunta: quanto tempo entre o `UPDATE`,
 depois do qual o `orders` publica, e o mailer tirar a mensagem?
 
 ```
@@ -33,9 +33,9 @@ waited in the queue: 13716 ms
 ```
 
 As duas primeiras foram publicadas antes da parada e esperaram milissegundos, que é a fila fazendo o
-trabalho dela sem ninguém notar. **As outras três foram publicadas com o mailer parado**, e as esperas
-delas caem em degraus: a mensagem mais antiga esperou mais, e cada uma depois dela menos, porque todas
-foram tiradas numa rajada quando o mailer voltou.
+trabalho dela sem ninguém notar. **As outras três foram publicadas com o mailer parado**, e as
+esperas delas caem em degraus. A mensagem mais antiga esperou mais, e cada uma depois dela menos,
+porque todas foram tiradas numa rajada quando o mailer voltou.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 280\" role=\"img\" aria-label=\"Quanto cinco confirmações esperaram na fila, na ordem em que foram publicadas. 11 ms, 7 ms, 26666 ms, 20294 ms, 13716 ms. As duas primeiras foram publicadas antes de o mailer parar; as três últimas durante a parada, e a mais antiga delas esperou mais.\"><defs><marker id=\"dq-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><path d=\"M110 230 L680 230\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"102\" y=\"230.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">0 s</text><text x=\"102\" y=\"173.33333333333334\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">10 s</text><text x=\"102\" y=\"116.66666666666667\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">20 s</text><text x=\"102\" y=\"60.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">30 s</text><rect x=\"140\" y=\"228\" width=\"60\" height=\"2\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"170\" y=\"218\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">11 ms</text><rect x=\"250\" y=\"228\" width=\"60\" height=\"2\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"280\" y=\"218\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">7 ms</text><rect x=\"360\" y=\"78.89266666666666\" width=\"60\" height=\"151.10733333333334\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"390\" y=\"68.89266666666666\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">26666 ms</text><rect x=\"470\" y=\"115.00066666666666\" width=\"60\" height=\"114.99933333333334\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"500\" y=\"105.00066666666666\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">20294 ms</text><rect x=\"580\" y=\"152.276\" width=\"60\" height=\"77.724\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"610\" y=\"142.276\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">13716 ms</text><text x=\"250\" y=\"252\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">antes da parada</text><text x=\"470\" y=\"252\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">publicadas com o mailer parado</text><text x=\"400\" y=\"30\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">tempo na fila, por ordem de publicação</text></svg>", "caption": "Um acúmulo esvazia do mais antigo para o mais novo. A espera de uma mensagem é o tempo entre a publicação dela e o momento em que o mailer, de volta, chegou a ela."}
@@ -52,6 +52,6 @@ Duas coisas sobre ler isso num armazenamento de rastros:
   alguns milissegundos de diferença de relógio podem fazer uma espera curta parecer negativa, o que é
   ruído, enquanto uma espera de segundos é um achado.
 
-As métricas da própria fila, a profundidade e os consumidores dela, dizem a mesma coisa pelo outro lado:
-a aula 5 consultou as do RabbitMQ. A métrica diz que um acúmulo se formou; os rastros dizem quais pedidos
-estavam nele e com quanto atraso cada confirmação saiu.
+As métricas da própria fila, a profundidade e os consumidores dela, dizem a mesma coisa pelo outro
+lado: a aula 5 consultou as do RabbitMQ. A métrica diz que um acúmulo se formou. Os rastros dizem
+quais pedidos estavam nele e com quanto atraso cada confirmação saiu.

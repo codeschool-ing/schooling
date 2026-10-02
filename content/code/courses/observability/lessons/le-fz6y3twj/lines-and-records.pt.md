@@ -35,7 +35,7 @@ INFO checkout finished for order 5002 in 31ms (kettle, paid)
 ```
 
 Agora a pergunta que uma investigação de fato faz: *que checkouts levaram 150 milissegundos ou
-mais?* Contra as frases, é uma expressão regular que precisa saber onde o número fica, que ele vem
+mais?* Contra as frases, é uma expressão regular. Ela precisa saber onde o número fica, que ele vem
 seguido de `ms`, e como dizer *um número de pelo menos 150* um dígito por vez. Contra os registros,
 é um campo e uma comparação:
 
@@ -48,7 +48,7 @@ ana@obs:~/shop$ jq -c 'select(.duration_ms >= 150)' scratch/json.log | wc -l
 
 **Quarenta e nove dos dois jeitos**, então a expressão regular está certa, desta vez. Ela também
 erra no dia em que alguém mudar a frase para *in 0.217 s*, não casa nada se uma linha disser *in
-1200 ms* com espaço, e não pode ser lida pela próxima pessoa sem um minuto de reflexão. O campo
+1200 ms* com espaço. E a próxima pessoa não consegue lê-la sem um minuto de reflexão. O campo
 sobrevive a tudo isso, e se compõe: a pergunta seguinte, *os lentos que foram pagos, com o id do
 pedido*, é mais uma condição:
 
@@ -59,5 +59,5 @@ ana@obs:~/shop$ jq -c 'select(.duration_ms >= 150 and .outcome == "paid") | {ord
 {"order_id":5068,"duration_ms":183}
 ```
 
-Esse é o argumento inteiro do log estruturado, e o resto desta aula trata de fazê-lo bem: **uma linha
+Esse é o argumento inteiro do log estruturado. O resto desta aula trata de fazê-lo bem: **uma linha
 de log é um registro com campos nomeados, e a frase é só um dos campos**.

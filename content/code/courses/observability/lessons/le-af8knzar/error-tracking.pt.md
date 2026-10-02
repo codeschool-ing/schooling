@@ -3,11 +3,11 @@ title: O que um rastreador de erros registra
 version: 1
 ---
 
-Um rastreador de erros é a ideia mais antiga desses produtos e a mais estreita. **Ele registra exceções,
-não requisições**, e registra cada uma com muito mais em volta do que uma linha de log ou um span leva.
-O SDK do Sentry é o exemplo aqui porque é de código aberto e se instala como qualquer biblioteca; o
-script relata uma exceção do jeito que um serviço faria, só que o transport dele escreve o evento num
-arquivo em vez de enviá-lo:
+Um rastreador de erros é a ideia mais antiga desses produtos e a mais estreita. **Ele registra
+exceções, não requisições**, e registra cada uma com muito mais em volta do que uma linha de log ou
+um span leva. O SDK do Sentry é o exemplo aqui porque é de código aberto e se instala como qualquer
+biblioteca. O script relata uma exceção do jeito que um serviço faria, só que o transport dele
+escreve o evento num arquivo em vez de enviá-lo:
 
 ```schooling-example
 {
@@ -107,11 +107,11 @@ Quatro coisas nele que nenhum sinal deste curso carregou até aqui:
   apareceu pela primeira vez e se a versão que dizia corrigi-lo corrigiu.
 - **Um nível e tags**, que o tornam buscável como uma issue, e não como texto.
 
-O que o evento não mostra é a coisa mais útil que o produto faz com ele. **O servidor agrupa eventos em
-issues** pela pilha, então dez mil deste erro são uma linha numa tela, com uma contagem, a primeira e
-a última vez em que foi visto e as versões em que apareceu. Agrupar pela pilha é o motivo de um
-rastreador de erros ser mais quieto que uma busca em logs, e também de ele errar de um jeito
-reconhecível: um bug levantado de dois lugares vira duas issues, e dois bugs levantados de uma função
-auxiliar viram uma.
+O que o evento não mostra é a coisa mais útil que o produto faz com ele. **O servidor agrupa eventos
+em issues** pela pilha, então dez mil deste erro são uma linha numa tela, com uma contagem, a
+primeira e a última vez em que foi visto e as versões em que apareceu. Agrupar pela pilha é o motivo
+de um rastreador de erros ser mais quieto que uma busca em logs. É também o motivo de ele errar de
+um jeito reconhecível: um bug levantado de dois lugares vira duas issues, e dois bugs levantados de
+uma função auxiliar viram uma.
 
 E há uma linha na saída que não devia estar lá. A próxima seção é sobre ela.

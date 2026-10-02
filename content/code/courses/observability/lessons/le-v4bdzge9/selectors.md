@@ -43,6 +43,6 @@ __name__=http_server_requests_total code=402 instance=storefront:8080 job=storef
 ```
 
 **These numbers alone answer almost nothing.** 281 checkouts answered `201` since the storefront
-started, and that start could have been a minute or a month ago: a counter only grows, and its value
+started, and that start could have been a minute or a month ago. A counter only grows, and its value
 depends mostly on how long the process has been running. A counter becomes a useful number when it
 is asked how fast it is growing, which is the next section.

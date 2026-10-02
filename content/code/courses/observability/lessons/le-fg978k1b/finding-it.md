@@ -20,7 +20,7 @@ le	113
 ```
 
 `demo_logins_total` and `demo_logins_created` with about twenty thousand series each, far above
-anything else; the next metric down, from RabbitMQ, has 496. And the label with the most distinct
+anything else. The next metric down, from RabbitMQ, has 496. And the label with the most distinct
 values is `user_id`, with 20000, against 1225 metric names in the whole lab. **Two requests and the
 culprit has a name**: the metric, the label, and from the series' own labels, the job that sends it.
 

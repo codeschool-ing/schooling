@@ -22,12 +22,12 @@ ana@obs:~/shop$ docker compose run --rm sandbox python flags.py
 00-78389170ad267c7309c8b6b3e668f664-29b99cefc9378fe5-03 recorded
 ```
 
-Cada linha é um `traceparent`, o cabeçalho que a aula 4 desmontou, e a resposta está no último campo.
-**`03` diz que o rastro está sendo registrado**, `02` que não está; o `2` nos dois é o flag que a aula
-4 mencionou, dizendo que os bits do trace id são aleatórios, a propriedade de que este amostrador
-depende. O `TraceIdRatioBased` não joga dado: ele lê o trace id como um número e guarda o rastro se
-esse número cai abaixo da fração. Dois serviços com o mesmo id e a mesma fração chegam à mesma
-resposta sem conversar.
+Cada linha é um `traceparent`, o cabeçalho que a aula 4 desmontou, e a resposta está no último
+campo. **`03` diz que o rastro está sendo registrado**, `02` que não está. O `2` nos dois é o flag
+que a aula 4 mencionou, dizendo que os bits do trace id são aleatórios, a propriedade de que este
+amostrador depende. O `TraceIdRatioBased` não joga dado: ele lê o trace id como um número e guarda o
+rastro se esse número cai abaixo da fração. Dois serviços com o mesmo id e a mesma fração chegam à
+mesma resposta sem conversar.
 
 A loja não precisa de código para isso. O SDK lê o amostrador do ambiente, então a vitrine, onde
 começa o rastro de todo checkout, ganha um num override, guardando um rastro em dez:
@@ -71,9 +71,10 @@ cea0990a2b7b980d4e2464447e909c9d  trace not found
 ```
 
 Nenhum dos dez foi guardado. A um em dez isso acontece mais ou menos uma vez em três, e a seção
-seguinte mostra rastros guardados inteiros. Todo checkout ainda escreveu a linha de log dele, com o trace id, fosse qual fosse a
-decisão; um trace id num log não é promessa de que o rastro foi guardado, um fato a lembrar na próxima
-vez que um clique de uma linha de log para o Jaeger não achar nada.
+seguinte mostra rastros guardados inteiros. Todo checkout ainda escreveu a linha de log dele, com o
+trace id, fosse qual fosse a decisão. Um trace id num log não é promessa de que o rastro foi
+guardado: lembre disso na próxima vez que um clique de uma linha de log para o Jaeger não achar
+nada.
 
 A amostragem na cabeça é barata naquilo que mais importa: **um rastro descartado não custa quase nada
 desde o primeiro span**. Os SDKs não o exportam, a rede não o carrega e o armazenamento nunca o vê. A

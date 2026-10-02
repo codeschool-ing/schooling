@@ -3,8 +3,8 @@ title: A dashboard is a file
 version: 1
 ---
 
-Dashboards built by clicking have a familiar life: somebody makes a good one, somebody else changes
-a query to investigate something and forgets to change it back, and a month later nobody knows which
+Dashboards built by clicking have a familiar life. Somebody makes a good one, and somebody else changes
+a query to investigate something and forgets to change it back. A month later nobody knows which
 version was right or who broke it. **A dashboard stored as a file in version control has a history,
 a review, and a way back.** Grafana's dashboards are JSON, and the lab's provisioning reads every
 file in `grafana/dashboards` on start-up and again every few seconds. The shop's:
@@ -52,8 +52,8 @@ Duration, 50th and 99th percentile
 ```
 
 Two results for *Shop*: the folder, which Grafana created for the provisioning, and the dashboard,
-with its `uid`, title and tag. The dashboard says it is **provisioned**, and that is not just a
-label. An attempt to save over it through the API, the same request the interface's save button
+with its `uid`, title and tag. The dashboard says it is **provisioned**, and Grafana acts on
+it. An attempt to save over it through the API, the same request the interface's save button
 sends:
 
 ```

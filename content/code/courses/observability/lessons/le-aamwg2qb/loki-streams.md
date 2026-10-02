@@ -17,7 +17,7 @@ ana@obs:~/shop$ curl -sG localhost:3100/loki/api/v1/series --data-urlencode 'mat
 ```
 
 One label, `service_name`, four values, **four streams**. Every line the shop writes, every field
-of it, the order id, the trace id, the message, lives inside one of those four streams, compressed
+of it, the order id, the trace id, the message, lives inside one of those four streams. The streams are compressed
 in chunks that Loki does not index at all. A query starts by choosing streams with a label selector,
 the same `{...}` syntax as a PromQL selector, and then reads the chosen streams' lines and filters
 them.

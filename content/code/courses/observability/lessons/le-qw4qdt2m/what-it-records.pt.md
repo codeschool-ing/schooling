@@ -39,14 +39,14 @@ ana@obs:~/shop$ curl -s localhost:16686/api/traces/56414d8c2542c07251f5be8731616
 ```
 
 **Esses nomes não são os que a aula 2 usou.** A vitrine, instrumentada à mão, registrou
-`http.request.method` e `http.response.status_code`; aqui é `http.method` e `http.url`, e o span
+`http.request.method` e `http.response.status_code`. Aqui é `http.method` e `http.url`, e o span
 do banco diz `db.statement` e `net.peer.name`. São os nomes **antigos** das mesmas convenções
 semânticas, que o OpenTelemetry depois renomeou e declarou estáveis. As bibliotecas de
 instrumentação continuam emitindo os antigos por padrão para que os painéis que as pessoas já
-construíram não quebrem da noite para o dia, e uma variável de ambiente,
+construíram não quebrem da noite para o dia. Uma variável de ambiente,
 `OTEL_SEMCONV_STABILITY_OPT_IN`, passa um serviço para os nomes novos um domínio de cada vez.
 
 Então a loja, como está, mistura duas gerações de nomes, e uma consulta por `http.request.method`
 acha a vitrine e não acha o orders. **Esse é o estado normal de um sistema real** durante uma
-migração que leva anos, e vale conferir quais nomes um backend realmente guarda antes de escrever
+migração que leva anos. Vale conferir quais nomes um backend realmente guarda antes de escrever
 um painel contra eles.

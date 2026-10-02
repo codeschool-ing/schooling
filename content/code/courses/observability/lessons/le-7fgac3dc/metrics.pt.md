@@ -44,6 +44,6 @@ para que a suposição custe menos.
 
 Mesmo com esse erro, a métrica cumpriu seu papel: **os checkouts passaram de milissegundos para
 segundos**, e um alerta escrito sobre este número teria disparado. O que ela não sabe dizer é por
-quê. Os labels são rota e método, então todo checkout parece igual para ela; nenhuma linha aqui
+quê. Os labels são rota e método, então todo checkout parece igual para ela. Nenhuma linha aqui
 menciona o payments, e nenhuma consegue apontar para uma requisição em particular. Esse é o
 trabalho dos dois sinais seguintes.

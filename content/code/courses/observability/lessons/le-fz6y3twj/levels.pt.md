@@ -46,12 +46,12 @@ ana@obs:~/shop$ docker compose run --rm -e PYTHONPATH=/app -e LOG_LEVEL=ERROR sa
 ```
 
 **O nível definido é um piso**: `INFO` escreve INFO e tudo acima, e `DEBUG` acrescenta a consulta
-ao cache. `ERROR` deixa uma linha. O código não mudou entre as três execuções; o ambiente mudou, e é
+ao cache. `ERROR` deixa uma linha. O código não mudou entre as três execuções; o ambiente mudou. É
 isso que permite a um serviço em apuros ficar mais falante sem uma nova versão, e voltar ao normal
 quando a causa é achada.
 
 Dois hábitos mantêm os níveis úteis. **Um `ERROR` deveria querer dizer que alguém talvez precise
-fazer algo**: um cartão recusado não é erro do serviço, é um resultado normal registrado em `INFO`,
+fazer algo.** Um cartão recusado não é erro do serviço. É um resultado normal registrado em `INFO`,
 exatamente como a aula 2 deixou em paz o status de um span num `404`. E **`WARNING` é para o que o
-serviço sobreviveu**, uma nova tentativa ou um plano B; se ninguém jamais agiria sobre um aviso, ele
+serviço sobreviveu**, uma nova tentativa ou um plano B. Se ninguém jamais agiria sobre um aviso, ele
 é um `INFO` falando mais alto.

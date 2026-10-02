@@ -54,4 +54,4 @@ aconteceu fora do caminho da requisição; a aula 2 mostrou o que o processor si
 uma execução de 300 numa máquina: **uma diferença de um milissegundo está perto do ruído entre duas
 execuções**, o que já é a conclusão útil. O custo que vale preocupação raramente é o envolver. É um
 span por item dentro de um laço de dez mil, um atributo que serializa um objeto inteiro, ou guardar
-todo rastro de um serviço movimentado, e a aula 12 trata do último deles.
+todo rastro de um serviço movimentado. A aula 12 trata do último deles.

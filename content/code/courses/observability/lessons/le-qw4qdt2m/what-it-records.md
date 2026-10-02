@@ -39,14 +39,14 @@ ana@obs:~/shop$ curl -s localhost:16686/api/traces/56414d8c2542c07251f5be8731616
 ```
 
 **These names are not the ones lesson 2 used.** The storefront, instrumented by hand, recorded
-`http.request.method` and `http.response.status_code`; here it is `http.method` and `http.url`, and
+`http.request.method` and `http.response.status_code`. Here it is `http.method` and `http.url`, and
 the database span says `db.statement` and `net.peer.name`. They are the **older** names of the same
 semantic conventions, which OpenTelemetry has since renamed and declared stable. Instrumentation
 libraries keep emitting the old ones by default so that the dashboards people already built do not
-break overnight, and an environment variable, `OTEL_SEMCONV_STABILITY_OPT_IN`, opts a service into
+break overnight. An environment variable, `OTEL_SEMCONV_STABILITY_OPT_IN`, opts a service into
 the new names one domain at a time.
 
 So the shop, as it stands, mixes two generations of names, and a query for `http.request.method`
 finds the storefront and misses orders. **That is the normal state of a real system** during a
-migration that takes years, and it is worth checking which names a backend actually holds before
+migration that takes years. It is worth checking which names a backend actually holds before
 writing a dashboard against them.

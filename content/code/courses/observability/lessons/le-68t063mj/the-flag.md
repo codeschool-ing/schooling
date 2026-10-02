@@ -22,15 +22,15 @@ a077ec50a8c43066fff61ebfd2b6bb52  7 spans, top: orders POST /orders
 d327f72414490d1217784a591cbcb57e  8 spans, top: storefront POST /checkout
 ```
 
-Seven of the ten are **traces with no root**: the storefront dropped them, and `orders` recorded them
-anyway, seven spans from `POST /orders` down. The other three are whole, eight spans from the
-storefront down, or six for a checkout whose card was declined and so sent no e-mail; the
-storefront kept those, and every service obeyed.
+Seven of the ten are **traces with no root**: the storefront dropped them, and `orders` recorded
+them anyway, seven spans from `POST /orders` down. The other three are whole, eight spans from the
+storefront down, or six for a checkout whose card was declined and so sent no e-mail. The storefront
+kept those, and every service obeyed.
 
 Nothing failed and no service logged a complaint. The store simply fills with traces that start in
-the middle: their top span is `orders`' `POST /orders`, and it points at a parent span that was never
-exported. Jaeger warns about the missing parent in its interface; a dashboard counting traces counts
-these as whole; and a tail sampler, in the next section, would judge them without their root.
+the middle: their top span is `orders`' `POST /orders`, and it points at a parent span that was
+never exported. Jaeger warns about the missing parent in its interface. A dashboard counting traces
+counts these as whole, and a tail sampler, in the next section, would judge them without their root.
 
 This happens in practice in three ways:
 

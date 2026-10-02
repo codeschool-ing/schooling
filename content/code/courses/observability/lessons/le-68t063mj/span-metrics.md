@@ -3,10 +3,10 @@ title: Counting before dropping
 version: 1
 ---
 
-Once nine in ten traces are gone, the traces can no longer be counted. A dashboard of *checkouts
-per second* built from the store would show a tenth of the truth with head sampling, and something
-stranger with tail sampling: **almost every error and slow request, and 5% of the rest**, so the
-error ratio computed from it would be several times too high.
+Once nine in ten traces are gone, the traces can no longer be counted. A dashboard of *checkouts per
+second* built from the store would show a tenth of the truth with head sampling. With tail sampling
+it would show something stranger: **almost every error and slow request, and 5% of the rest**, so
+the error ratio computed from it would be several times too high.
 
 The answer is to count first. The Collector's **`spanmetrics` connector** reads every span before the
 sampler sees it and turns them into rate, error and duration metrics, one series per service, span
@@ -62,5 +62,5 @@ would put the 99th percentile far too high.
 Two consequences worth knowing. **The series are one per span name**, so a span named after an order
 id, the mistake lesson 2 warned about, becomes one series per order here, and the bill lesson 6
 described. And spans give these metrics for free, which makes them tempting as a replacement for
-metrics written in code: they are good for rate, errors and duration of what is traced, and blind
-to everything a span does not carry, like a queue's depth or a pool's size.
+metrics written in code. They are good for rate, errors and duration of what is traced, and blind to
+everything a span does not carry, like a queue's depth or a pool's size.

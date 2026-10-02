@@ -43,10 +43,11 @@ instance=storefront:8080 job=storefront  0.01933333333333333
 seconds, so its rate is *seconds of processor per second*: 0.019, about two per cent of one core.
 
 **The wrong type breaks the math silently.** `rate()` of a gauge treats every drop as a restart and
-produces nonsense; a gauge reporting *requests so far* loses everything at a restart and cannot be
+produces nonsense. A gauge reporting *requests so far* loses everything at a restart and cannot be
 added up across instances. The rule of thumb: if the question is *how many happened*, it is a
 counter; if it is *how many are there right now*, it is a gauge.
 
-The `_created` lines are a third thing, gauges the client library adds beside each counter and
-histogram: the time the series was created, which lets a backend tell a restart from a counter
-that was always zero. They are worth noticing now, because this lesson's experiment trips over them.
+The `_created` lines are a third thing: gauges the client library adds beside each counter and
+histogram. Each holds the time the series was created, which lets a backend tell a restart from a
+counter that was always zero. They are worth noticing now, because this lesson's experiment trips
+over them.

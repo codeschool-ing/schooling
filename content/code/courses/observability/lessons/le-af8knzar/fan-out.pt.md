@@ -8,8 +8,8 @@ no meio, é um exportador a mais.** Os serviços continuam mandando OTLP ao Coll
 manda cada rastro a tantos lugares quantos exportadores ele tiver.
 
 O laboratório não tem conta em fornecedor nenhum e nem deve ter, então o lugar é um substituto: o
-`standin.py`, um programa de vinte linhas na sandbox que aceita OTLP por HTTP do jeito que uma entrada
-hospedada aceita e imprime quem mandou o quê. O exportador que aponta para ele, em
+`standin.py`. É um programa de vinte linhas na sandbox que aceita OTLP por HTTP do jeito que uma
+entrada hospedada aceita e imprime quem mandou o quê. O exportador que aponta para ele, em
 `otel/collector-fanout.yaml`:
 
 ```
@@ -83,7 +83,8 @@ log do Collector diz por quê, nas palavras da rede. **Nesse ritmo a fila dura u
 hora**, e depois disso a cópia do fornecedor perde dados enquanto as outras não perdem nada.
 
 Duas coisas decorrem disso para quem manda dados a um fornecedor. **A fila é memória**, e uma parada
-longa no fornecedor a enche e então perde dados, então o tamanho dela é uma decisão sobre quanto tempo
-de parada você aguenta; o Collector também pode mantê-la em disco com uma extensão de armazenamento. E
-**a fila é uma métrica**, então o alerta que diz *o fornecedor parou de aceitar nossos dados* pode ser
-escrito no seu próprio Prometheus, que continua funcionando quando o fornecedor não funciona.
+longa no fornecedor a enche e então perde dados, então o tamanho dela é uma decisão sobre quanto
+tempo de parada você aguenta. O Collector também pode mantê-la em disco com uma extensão de
+armazenamento. E **a fila é uma métrica**, então o alerta que diz *o fornecedor parou de aceitar
+nossos dados* pode ser escrito no seu próprio Prometheus, que continua funcionando quando o
+fornecedor não funciona.

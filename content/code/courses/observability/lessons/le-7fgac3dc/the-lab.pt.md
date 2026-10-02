@@ -31,7 +31,7 @@ zipkin              openzipkin/zipkin:3.6.1
 ```
 
 **A loja é a parte escrita para o curso**, todo contêiner cuja imagem é `shop:1.4.0`. Um checkout
-chega ao `storefront`, que pede ao `orders` para guardá-lo; o `orders` pede ao `payments` para
+chega ao `storefront`, que pede ao `orders` para guardá-lo. O `orders` pede ao `payments` para
 cobrar o cartão e, depois de pago, põe uma mensagem numa fila do RabbitMQ que o `mailer` retira
 para mandar a confirmação. O `pager` é onde os alertas chegam na aula 16, e mais dois programas da
 mesma imagem só rodam quando chamados: `report`, a tarefa noturna da aula 4, e `loadgen`, que faz
@@ -56,7 +56,7 @@ Todo trecho de código que este curso mostra traz uma nota dizendo o que faz, e 
 :::
 
 ::: track *
-Os serviços são escritos em Python. Você precisa conseguir lê-lo, não escrevê-lo: todo trecho de
+Os serviços são escritos em Python. Você precisa conseguir lê-lo, não escrevê-lo. Todo trecho de
 código que este curso mostra traz uma nota dizendo o que faz, e o que você muda nele é uma ou duas
 linhas que a aula entrega prontas.
 :::
@@ -73,10 +73,10 @@ e dizem quando o fazem.
 
 Para montar o mesmo laboratório você precisa de uma máquina Linux, sendo uma máquina virtual o
 mais fácil, com o Docker Engine e o plugin Compose, quatro processadores e 8 GB de memória. O
-script que o constrói é o `lab.sh`, publicado com o código-fonte deste curso; `sudo bash lab.sh up`
+script que o constrói é o `lab.sh`, publicado com o código-fonte deste curso. Rodar `sudo bash lab.sh up`
 escreve `~/shop`, constrói a imagem da loja e sobe tudo, e `sudo bash lab.sh reset` joga tudo fora
 e recomeça do zero. As transcrições de toda aula começam de um reset, então **o que você vê na sua
-máquina depois de um reset é o que a aula mostra**, exceto pelas partes que mudam a cada execução:
+máquina depois de um reset é o que a aula mostra**. As exceções são as partes que mudam a cada execução:
 datas, durações no milissegundo e os ids aleatórios que todo rastro recebe.
 
 **Quando algo não responde**, pergunte ao Docker antes de perguntar ao programa: `docker compose ps`

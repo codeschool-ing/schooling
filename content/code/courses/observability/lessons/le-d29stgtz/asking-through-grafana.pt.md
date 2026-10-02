@@ -42,5 +42,5 @@ Isso tem duas consequências que vale saber antes de construir qualquer coisa em
 é quase sempre **uma consulta lenta na fonte de dados**, e o conserto está no PromQL ou no LogQL, numa
 regra de gravação ou num intervalo de tempo mais estreito, não no Grafana. E um painel aberto por
 cinquenta pessoas ao mesmo tempo, atualizando a cada trinta segundos, são cinquenta vezes a consulta
-de cada painel contra o Prometheus, que é o motivo mais barato que existe para dar a um painel pesado
+de cada painel contra o Prometheus. Esse é o motivo mais barato que existe para dar a um painel pesado
 uma regra de gravação.

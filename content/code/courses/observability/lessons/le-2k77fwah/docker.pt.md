@@ -19,9 +19,9 @@ services:
       start_period: 10s
 ```
 
-`interval` é a frequência, `timeout` quanto uma verificação pode levar, `retries` quantas falhas
-seguidas deixam o contêiner *unhealthy*, e `start_period` um tempo de tolerância depois de um início em
-que as falhas não contam, a versão do Docker de uma sonda de startup. Com o banco no ar:
+`interval` é a frequência, `timeout` quanto uma verificação pode levar, e `retries` quantas falhas
+seguidas deixam o contêiner *unhealthy*. `start_period` é um tempo de tolerância depois de um início
+em que as falhas não contam, a versão do Docker de uma sonda de startup. Com o banco no ar:
 
 ```
 ana@obs:~/shop$ docker compose ps orders --format '{{.Name}}  {{.Status}}'
@@ -55,9 +55,9 @@ ana@obs:~/shop$ docker inspect --format '{{.RestartCount}}' shop-orders-1
 0
 ```
 
-**O Docker não reinicia nada por estar unhealthy.** Uma política de reinício reage ao processo terminar,
-nunca a um healthcheck que falhou; só o Swarm, o orquestrador do próprio Docker, troca contêineres
-unhealthy. Numa máquina só, o status é informação: o `docker ps` o mostra, o Compose pode fazer outro
-serviço esperar por ele com `depends_on` e `condition: service_healthy`, e um monitor pode lê-lo. Esse
-é o comportamento certo para uma verificação de readiness, já que reiniciar o `orders` não traria o
-banco de volta, mas não é o que as pessoas esperam da primeira vez.
+**O Docker não reinicia nada por estar unhealthy.** Uma política de reinício reage ao processo
+terminar, nunca a um healthcheck que falhou. Só o Swarm, o orquestrador do próprio Docker, troca
+contêineres unhealthy. Numa máquina só, o status é informação: o `docker ps` o mostra, o Compose
+pode fazer outro serviço esperar por ele com `depends_on` e `condition: service_healthy`, e um
+monitor pode lê-lo. Esse é o comportamento certo para uma verificação de readiness, já que reiniciar
+o `orders` não traria o banco de volta, mas não é o que as pessoas esperam da primeira vez.

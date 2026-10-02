@@ -51,4 +51,4 @@ Leia estas linhas procurando o segundo e meio de lentidão, e **nada nelas o men
 foi decidida e o pedido foi guardado; cada linha é verdadeira. Um log diz o que um programa
 escolheu dizer nos momentos em que escolheu dizer, e ninguém escreveu "vou esperar 1,5 segundo".
 Daria para calcular o tempo pelos campos `time` de linhas em quatro serviços, se todos os relógios
-concordassem no milissegundo, e o sinal seguinte mede isso por você, dentro de cada serviço.
+concordassem no milissegundo. O sinal seguinte mede isso por você, dentro de cada serviço.

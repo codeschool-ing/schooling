@@ -46,7 +46,7 @@ when it ends and the basket could only end after both lookups had. The times nes
 milliseconds for the basket, around two lookups of 10.2.
 
 **The parent was never passed.** `price()` has no argument for it. OpenTelemetry keeps a *current
-span*, the one whose `with` block the code is inside, and `start_as_current_span` both reads it to
+span*, the one whose `with` block the code is inside. `start_as_current_span` both reads it to
 pick the parent and replaces it for the duration of its own block. In Python the current span lives
 in a `contextvars` variable, so it follows a function call naturally and an `asyncio` task takes a
 copy when it is created. **A new thread does not**: it starts with no current span, which is one of

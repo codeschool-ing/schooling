@@ -4,8 +4,8 @@ version: 1
 ---
 
 A log is the most widely read thing a system produces. It is copied to a shipper, a store, a backup
-and often a vendor; it is read by every developer debugging and every operator on call; it is kept
-for days or months; and nobody reviews it line by line. **Anything written to a log should be
+and often a vendor. It is read by every developer debugging and every operator on call. It is kept
+for days or months, and nobody reviews it line by line. **Anything written to a log should be
 assumed readable by everybody with access to any of those places, for as long as the longest
 retention.** From that, the list writes itself:
 
@@ -18,8 +18,8 @@ retention.** From that, the list writes itself:
 | health, religion, union membership, ethnic origin, sex life | *sensitive* personal data in the LGPD, with stricter rules still |
 | the body of a request or response, in full | it carries all of the above sooner or later |
 
-The LGPD, Brazil's general data protection law, is the frame that matters for the people this
-course is written for. It does not forbid logging personal data; it requires a purpose, the minimum
+The LGPD, Brazil's general data protection law, is the frame that matters for the people this course
+is written for. It does not forbid logging personal data. It requires a purpose, the minimum
 necessary for that purpose, security proportionate to the risk, and the ability to answer a person
 who asks what is held about them or asks for it to be deleted. **A log full of personal data fails
 all four at once**: its purpose was debugging, it holds everything, it is read by many, and the next

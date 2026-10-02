@@ -38,6 +38,6 @@ saber que pagou não a aprova.
 Isso é tudo o que o lado de fora consegue dizer. O checkout atravessou quatro serviços, um banco de
 dados e uma fila, e daqui ele é um número só. **Qual deles gastou o tempo não está na resposta**, e
 nenhuma quantidade de atenção à resposta vai pôr isso lá. O que vem a seguir é o mesmo checkout
-visto por três sinais que a loja foi construída para emitir, e cada um existe porque algumas linhas
+visto por três sinais que a loja foi construída para emitir. Cada um existe porque algumas linhas
 de código da loja o produzem. Em seguida o laboratório rodou um minuto de clientes simulados, duas
 requisições por segundo, para que os sinais tenham mais de uma requisição dentro.

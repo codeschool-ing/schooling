@@ -4,9 +4,9 @@ version: 1
 ---
 
 O contexto que viaja tem uma segunda parte além do rastro. A **baggage** é um conjunto de pares de
-chave e valor que um serviço põe no contexto e que todo serviço adiante consegue ler, levado num
-cabeçalho próprio ao lado do `traceparent`. O `baggage.py` define uma entrada e faz o inject, como
-um serviço faria antes de chamar o seguinte:
+chave e valor que um serviço põe no contexto e que todo serviço adiante consegue ler. Ela é levada
+num cabeçalho próprio ao lado do `traceparent`. O `baggage.py` define uma entrada e faz o inject,
+como um serviço faria antes de chamar o seguinte:
 
 ```python
 from opentelemetry import baggage, context, propagate, trace
@@ -32,9 +32,9 @@ baggage: shop.channel=mobile-app
 ```
 
 O segundo cabeçalho é a baggage: `shop.channel=mobile-app`. Um serviço três saltos adiante consegue
-lê-la com `baggage.get_baggage("shop.channel")` e, por exemplo, registrá-la nos seus próprios spans,
-para que *os checkouts do aplicativo estão mais lentos?* possa ser perguntado a um serviço que nunca
-viu o aplicativo.
+lê-la com `baggage.get_baggage("shop.channel")`. Ele poderia, por exemplo, registrá-la nos seus
+próprios spans, para que *os checkouts do aplicativo estão mais lentos?* possa ser perguntado a um
+serviço que nunca viu o aplicativo.
 
 Duas propriedades da baggage passam despercebidas com facilidade, e as duas dão problema:
 
@@ -48,6 +48,6 @@ Duas propriedades da baggage passam despercebidas com facilidade, e as duas dão
 
 Essa segunda propriedade é a regra: **nada pessoal nem secreto vai na baggage**. Nem o e-mail ou o
 CPF de um cliente, nem um token de sessão, nem um nome de máquina interno que você não publicaria.
-Um canal, uma região, um id de cliente corporativo que não significa nada fora da empresa: é para isso
-que ela serve. E como cada entrada é enviada em toda chamada, ela também custa bytes; algumas poucas
-entradas curtas são o teto, não o começo.
+Um canal, uma região, um id de cliente corporativo que não significa nada fora da empresa: é para
+isso que ela serve. E como cada entrada é enviada em toda chamada, ela também custa bytes. Algumas
+poucas entradas curtas são o teto, não o começo.

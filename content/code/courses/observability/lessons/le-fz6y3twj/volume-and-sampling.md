@@ -69,8 +69,8 @@ ana@obs:~/shop$ docker compose run --rm -e PYTHONPATH=/app sandbox python sample
      10 WARNING
 ```
 
-**95 of 990 `INFO` lines kept, and all 10 warnings.** The sample is random, so 95 rather than 99, and
-that is the property to remember: a sampled log is good for *what kinds of things happen* and *how
+**95 of 990 `INFO` lines kept, and all 10 warnings.** The sample is random, so 95 rather than 99.
+That is the property to remember: a sampled log is good for *what kinds of things happen* and *how
 often, roughly*, and useless for *what happened to order 5011*. That is why sampling comes last, why
 it never touches errors, and why the trace, sampled by its own rules in lesson 12, carries the trace
 id that finds a request's lines when they were kept.

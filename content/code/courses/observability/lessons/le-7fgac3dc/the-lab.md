@@ -31,7 +31,7 @@ zipkin              openzipkin/zipkin:3.6.1
 ```
 
 **The shop is the part written for the course**, every container whose image is `shop:1.4.0`. A
-checkout arrives at `storefront`, which asks `orders` to store it; `orders` asks `payments` to
+checkout arrives at `storefront`, which asks `orders` to store it. `orders` asks `payments` to
 charge the card and, once it is paid, puts a message on a RabbitMQ queue that `mailer` takes off to
 send the confirmation. `pager` is where alerts land in lesson 16, and two more programs from the same
 image run only when asked: `report`, the nightly job of lesson 4, and `loadgen`, which plays
@@ -56,7 +56,7 @@ change in it is a line or two that the lesson gives you whole.
 :::
 
 ::: track *
-The services are written in Python. You need to be able to read it, not to write it: every piece
+The services are written in Python. You need to be able to read it, not to write it. Every piece
 of code this course shows carries a note saying what it does, and what you change in it is a line
 or two that the lesson gives you whole.
 :::
@@ -72,10 +72,10 @@ The exporters turn the machine, the database and an outside probe into metrics. 
 
 To build the same lab you need a Linux machine, a virtual machine being the easiest, with Docker
 Engine and the Compose plugin, four processors and 8 GB of memory. The script that builds it is
-`lab.sh`, published with this course's source; `sudo bash lab.sh up` writes `~/shop`, builds the
+`lab.sh`, published with this course's source. Running `sudo bash lab.sh up` writes `~/shop`, builds the
 shop's image and starts everything, and `sudo bash lab.sh reset` throws it all away and starts
 again from nothing. Every lesson's transcripts begin from a reset, so **what you see on your
-machine after a reset is what the lesson shows**, except for the parts that are different on every
+machine after a reset is what the lesson shows**. The exceptions are the parts that are different on every
 run: dates, durations to the millisecond, and the random ids every trace gets.
 
 **When something does not answer**, ask Docker before asking the program: `docker compose ps`

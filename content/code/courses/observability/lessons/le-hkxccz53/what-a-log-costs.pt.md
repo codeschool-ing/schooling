@@ -14,16 +14,16 @@ ana@obs:~/shop$ curl -s 'localhost:9200/_cat/indices/logs-*?h=docs.count,store.s
 10649 2.7mb
 ```
 
-**2,5 MB escritos, 2,7 MB guardados**, para 10649 linhas. O Elasticsearch guarda mais do que recebeu:
-toda linha é guardada inteira, como o JSON original em `body.text`, de novo como campos
+**2,5 MB escritos, 2,7 MB guardados**, para 10649 linhas. O Elasticsearch guarda mais do que
+recebeu: toda linha é guardada inteira, como o JSON original em `body.text`, de novo como campos
 interpretados, e mais uma vez no índice que torna cada campo buscável. O Loki comprime os chunks e
-não indexa quase nada, e costuma ser várias vezes menor que o texto bruto, mas neste laboratório os
-chunks dele ainda estavam em memória e não havia nada em disco para pesar.
+não indexa quase nada, e costuma ser várias vezes menor que o texto bruto. Neste laboratório, porém,
+os chunks dele ainda estavam em memória e não havia nada em disco para pesar.
 
-A conta que decide um orçamento é curta. **2,5 MB em dez minutos são cerca de 360 MB por dia**, brutos,
-para uma loja a cinco requisições por segundo. Multiplique pelo tráfego que uma loja real tem, pelo
-número de cópias que um armazenamento mantém por segurança, muitas vezes duas ou três, e pelos dias de
-guarda, e os três números que uma equipe controla ficam claros:
+A conta que decide um orçamento é curta. **2,5 MB em dez minutos são cerca de 360 MB por dia**,
+brutos, para uma loja a cinco requisições por segundo. Multiplique isso pelo tráfego que uma loja
+real tem, pelo número de cópias que um armazenamento mantém por segurança, muitas vezes duas ou
+três, e pelos dias de guarda. Aí os três números que uma equipe controla ficam claros:
 
 | | o que o move | onde este curso trata dele |
 |---|---|---|

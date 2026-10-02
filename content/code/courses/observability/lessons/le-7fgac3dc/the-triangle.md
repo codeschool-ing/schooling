@@ -29,7 +29,7 @@ The three also cost differently, and that shapes how much of each a team can aff
 | log | every event written | one line per event, often several per request | days to weeks |
 | trace | every request traced | one span per step | days, and often only a sample |
 
-These are tendencies rather than laws, and lessons 6, 10 and 12 each take one row and show where it
+These are tendencies rather than laws. Lessons 6, 10 and 12 each take one row and show where it
 breaks: a metric whose labels multiply, logs whose volume becomes the bill, and traces that have to
 be sampled.
 

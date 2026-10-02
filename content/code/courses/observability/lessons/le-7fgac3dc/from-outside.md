@@ -37,6 +37,6 @@ paid does not pass it.
 That is everything the outside can tell you. The checkout crossed four services, a database and a
 queue, and from here it is one number. **Which of them spent the time is not in the answer**, and
 no amount of staring at the answer will put it there. What follows is the same checkout as seen by
-three signals that the shop was built to emit, and each one exists because a few lines of code in
+three signals that the shop was built to emit. Each one exists because a few lines of code in
 the shop produce it. The lab then ran one minute of simulated customers, two requests a second, so
 that the signals have more than one request in them.

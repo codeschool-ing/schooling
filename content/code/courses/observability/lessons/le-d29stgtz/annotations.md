@@ -52,4 +52,4 @@ whether the rollback had worked.
 
 That lag is the window, and the next section is about choosing it. The annotation is what makes the
 lag readable at all: **with the line and the mark on one panel, cause and effect are one glance
-apart**, and an incident's timeline in lesson 17 starts from exactly these marks.
+apart**. An incident's timeline in lesson 17 starts from exactly these marks.

@@ -4,7 +4,7 @@ version: 1
 ---
 
 The second defence is in the Collector, where every service's lines pass whether or not their code
-was careful. The filter was taken back out of `logs.py` to show it working alone, and a third
+was careful. The filter was taken back out of `logs.py` to show the pipeline working alone. A third
 Collector file adds two statements to the `transform` processor, before the JSON is parsed, so the
 parsed fields are made from the cleaned text:
 
@@ -52,7 +52,7 @@ output before the Collector does, still has the secret.
 ```
 
 That is why the order matters: **the code is the first defence and the pipeline is the second**. The
-pipeline catches the service somebody forgot to update and the library that logs on its own; the code
-catches everything, everywhere the line goes. The Collector also ships a dedicated `redaction`
+pipeline catches the service somebody forgot to update and the library that logs on its own. The
+code catches everything, everywhere the line goes. The Collector also ships a dedicated `redaction`
 processor, built around an allow-list of attribute names, which is stricter still: what is not
 listed is dropped.

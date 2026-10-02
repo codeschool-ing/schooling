@@ -20,7 +20,7 @@ le	113
 ```
 
 `demo_logins_total` e `demo_logins_created` com cerca de vinte mil séries cada, muito acima de
-qualquer outra coisa; a métrica seguinte, do RabbitMQ, tem 496. E o label com mais valores distintos
+qualquer outra coisa. A métrica seguinte, do RabbitMQ, tem 496. E o label com mais valores distintos
 é `user_id`, com 20000, contra 1225 nomes de métrica no laboratório inteiro. **Duas requisições e o
 culpado tem nome**: a métrica, o label e, pelos labels das próprias séries, o job que a manda.
 

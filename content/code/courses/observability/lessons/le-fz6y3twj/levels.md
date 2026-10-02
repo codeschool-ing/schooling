@@ -47,10 +47,10 @@ ana@obs:~/shop$ docker compose run --rm -e PYTHONPATH=/app -e LOG_LEVEL=ERROR sa
 
 **The level set is a floor**: `INFO` writes INFO and everything above it, and `DEBUG` adds the cache
 lookup. `ERROR` leaves one line. The code did not change between the three runs; the environment
-did, which is what lets a service in trouble be made more talkative without a release, and turned
+did. That is what lets a service in trouble be made more talkative without a release, and turned
 back once the cause is found.
 
-Two habits keep levels useful. **An `ERROR` should mean that somebody may need to do something**:
-a declined card is not an error of the service, it is a normal outcome logged at `INFO`, exactly as
+Two habits keep levels useful. **An `ERROR` should mean that somebody may need to do something.**
+A declined card is not an error of the service. It is a normal outcome logged at `INFO`, exactly as
 lesson 2 left a span's status alone for a `404`. And **`WARNING` is for what the service survived**,
-a retry or a fallback; if nobody would ever act on a warning, it is `INFO` with a louder voice.
+a retry or a fallback. If nobody would ever act on a warning, it is `INFO` with a louder voice.

@@ -35,7 +35,7 @@ INFO checkout finished for order 5002 in 31ms (kettle, paid)
 ```
 
 Now the question an investigation actually asks: *which checkouts took 150 milliseconds or more?*
-Against the sentences, it is a regular expression that has to know where the number sits, that it
+Against the sentences, it is a regular expression. It has to know where the number sits, that it
 is followed by `ms`, and how to say *a number at least 150* one digit at a time. Against the records,
 it is a field and a comparison:
 
@@ -48,7 +48,7 @@ ana@obs:~/shop$ jq -c 'select(.duration_ms >= 150)' scratch/json.log | wc -l
 
 **Forty-nine both ways**, so the regular expression is right, this time. It is also wrong the day
 somebody changes the sentence to *in 0.217 s*, matches nothing if a line says *in 1200 ms* with a
-space, and cannot be read by the next person without a minute's thought. The field survives all of
+space. And the next person cannot read it without a minute's thought. The field survives all of
 that, and it composes: the next question, *the slow ones that were paid, with their order ids*,
 is one more condition:
 
@@ -59,5 +59,5 @@ ana@obs:~/shop$ jq -c 'select(.duration_ms >= 150 and .outcome == "paid") | {ord
 {"order_id":5068,"duration_ms":183}
 ```
 
-That is the whole argument for structured logging, and the rest of this lesson is about doing it
+That is the whole argument for structured logging. The rest of this lesson is about doing it
 well: **a log line is a record with named fields, and the sentence is just one field of it**.

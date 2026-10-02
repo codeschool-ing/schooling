@@ -92,7 +92,7 @@ seguidas, e o kubelet matou o contêiner. O reinício curou porque a falha morav
 um sistema de arquivos novo, sem o `/tmp/stuck`. Esse é o único tipo de falha que um reinício cura, e a
 próxima seção é sobre o outro tipo.
 
-Duas configurações decidem quanto tudo isso leva. `periodSeconds` vezes `failureThreshold` é a demora
-entre uma falha e a ação, nove segundos para esta sonda de liveness; e uma terceira sonda, a
+Duas configurações decidem quanto tudo isso leva. `periodSeconds` vezes `failureThreshold` é a
+demora entre uma falha e a ação, nove segundos para esta sonda de liveness. Uma terceira sonda, a
 `startupProbe`, segura as outras duas enquanto um serviço lento inicia, para a liveness não matar um
 processo que ainda está carregando.

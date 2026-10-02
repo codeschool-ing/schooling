@@ -49,6 +49,6 @@ Prometheus	prometheus	prometheus	http://prometheus:9090
 
 **The `uid` is what everything else refers to**, and the file chose it on purpose. A dashboard that
 names its data source by a `uid` written in the file works the same on every Grafana that loaded the
-same file; one that names it by an id Grafana generated works only on the Grafana that generated it.
+same file. One that names it by an id Grafana generated works only on the Grafana that generated it.
 The admin password comes from a file the lab wrote, `.grafana-password`, read by `$(cat ...)` so it
-never appears on the screen; the next section stops needing it at all.
+never appears on the screen. The next section stops needing it at all.

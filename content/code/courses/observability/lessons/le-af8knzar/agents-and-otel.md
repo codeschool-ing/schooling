@@ -23,6 +23,6 @@ that has to be removed line by line.
 
 Two cautions keep the rule honest. Accepting OTLP is not the same as treating it as a first-class
 input: some features of a product may work only with its own agent, and the evaluation should check
-which. And semantic conventions, the attribute names lesson 2 followed, are what a vendor's interface
-reads to draw its views; data that follows them looks right in every product, and data that does not
-looks half-empty in all of them.
+which. And semantic conventions, the attribute names lesson 2 followed, are what a vendor's
+interface reads to draw its views. Data that follows them looks right in every product, and data
+that does not looks half-empty in all of them.

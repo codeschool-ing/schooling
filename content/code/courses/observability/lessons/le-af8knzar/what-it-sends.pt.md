@@ -7,12 +7,12 @@ Olhe de novo o frame de `checkout` acima: **`"card": "'4111 1111 1111 1111'"`**.
 número do cartão no evento. O SDK recolhe toda variável local de todo frame por padrão, porque é isso
 que torna o evento útil, e o número do cartão era uma variável local.
 
-É o vazamento da aula 10 por outro caminho. Lá o número do cartão chegou aos logs porque uma linha de
-depuração registrou um objeto inteiro; aqui ele chega aos servidores de um terceiro porque uma exceção
-aconteceu numa função que o tinha no escopo. **O padrão de um rastreador de erros é mandar mais do que
-você pensaria em escrever.** O SDK limpa alguns nomes por padrão, `password`, `token`, `authorization`,
-`cookie` e uns trinta outros no total, e troca os valores deles por `[Filtered]`. `card` não está na
-lista, e nenhum nome que o seu próprio código inventou está.
+É o vazamento da aula 10 por outro caminho. Lá o número do cartão chegou aos logs porque uma linha
+de depuração registrou um objeto inteiro. Aqui ele chega aos servidores de um terceiro porque uma
+exceção aconteceu numa função que o tinha no escopo. **O padrão de um rastreador de erros é mandar
+mais do que você pensaria em escrever.** O SDK limpa alguns nomes por padrão, `password`, `token`,
+`authorization`, `cookie` e uns trinta outros no total, e troca os valores deles por `[Filtered]`.
+`card` não está na lista, e nenhum nome que o seu próprio código inventou está.
 
 A correção tem a forma da da aula 10: uma lista de nomes cujos valores são segredos, aplicada antes de
 qualquer coisa sair. Aqui é um argumento do `init`:

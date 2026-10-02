@@ -5,7 +5,7 @@ version: 1
 
 The fix for the first gap is not to replace the automatic instrumentation. **It is to add to the
 span it already opened.** Flask's instrumentation makes its `SERVER` span the current span for the
-whole request, so code inside the handler can reach it with `trace.get_current_span()` and set an
+whole request. Code inside the handler can therefore reach it with `trace.get_current_span()` and set an
 attribute on it, with no new span and no setup. One line in `create()` does it, and the import
 grows by one name:
 
@@ -26,8 +26,8 @@ ana@obs:~/shop$ curl -s localhost:16686/api/traces/e5978340492b8d7ed0b69c7ed6adc
 ```
 
 **`shop.sku` now sits beside `http.route`** on a span that Flask opened. The same function works for
-everything this lesson found missing: `set_attribute` for what the request was about, a
-`start_as_current_span` of your own around a slow piece of internal work, and the propagation calls
+everything this lesson found missing. Call `set_attribute` for what the request was about, open a
+`start_as_current_span` of your own around a slow piece of internal work, and make the propagation calls
 of lesson 4 at the client nobody instrumented. The line is cheap: with no SDK, `get_current_span()`
 returns the same do-nothing span `no_sdk.py` printed in lesson 2, so it costs nothing where tracing
 is off.

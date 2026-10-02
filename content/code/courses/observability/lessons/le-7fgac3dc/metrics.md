@@ -44,5 +44,5 @@ the assumption costs less.
 
 Even with that error, the metric did its job: **checkouts went from milliseconds to seconds**, and an
 alert written on this number would have fired. What it cannot say is why. The labels are route and
-method, so every checkout looks the same to it; no line here mentions payments, and none can point
+method, so every checkout looks the same to it. No line here mentions payments, and none can point
 at one particular request. That is the next two signals' work.

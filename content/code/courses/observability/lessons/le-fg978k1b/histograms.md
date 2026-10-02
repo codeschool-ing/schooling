@@ -3,10 +3,10 @@ title: Histograms, and what a bucket cannot say
 version: 1
 ---
 
-Durations cannot be a counter or a gauge: the question is not *how many* but *how they were
-spread*. A **histogram** answers it by counting each observation into the buckets whose upper bound
-it fits under, `le` for *less than or equal*, and every bucket includes the ones below it. The
-storefront's checkout histogram, healthy:
+Durations cannot be a counter or a gauge: the question is not *how many* but *how they were spread*.
+A **histogram** answers it by counting each observation into the buckets whose upper bound it fits
+under, `le` for *less than or equal*. Every bucket includes the ones below it. The storefront's
+checkout histogram, healthy:
 
 ```
 ana@obs:~/shop$ curl -s localhost:8080/metrics | grep 'request_duration_seconds_bucket{.*checkout'
@@ -53,12 +53,12 @@ ana@obs:~/shop$ ./promq 'histogram_quantile(0.99, sum by (le) (rate(http_server_
 ```
 
 **0.375 and 0.4975**: the middle and nearly the top of the bucket between 0.25 and 0.5, because that
-bucket now holds every checkout and there is nothing finer to read. The real checkouts all took about
-the same time; a median of 375 milliseconds is the bucket's midpoint, not a measurement. Lesson 1's
-2.485 seconds was the same effect in a wider bucket.
+bucket now holds every checkout and there is nothing finer to read. The real checkouts all took
+about the same time. A median of 375 milliseconds is the bucket's midpoint, not a measurement.
+Lesson 1's 2.485 seconds was the same effect in a wider bucket.
 
 Two consequences decide how histograms are used. **Choose buckets around the values you care
-about**: if the target is *checkouts under 300 milliseconds*, a bucket boundary at 0.3 makes that
+about.** If the target is *checkouts under 300 milliseconds*, a bucket boundary at 0.3 makes that
 question exact, and no amount of interpolation replaces it. And **ask the question a histogram
 answers exactly**, which is not a percentile but a share below a bound:
 

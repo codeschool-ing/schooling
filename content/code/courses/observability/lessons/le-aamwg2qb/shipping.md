@@ -4,11 +4,11 @@ version: 1
 ---
 
 Lesson 8 left every service printing JSON to its standard output and knowing nothing about where it
-goes. **Something has to collect those lines and deliver them**, and the general name for it is a
+goes. **Something has to collect those lines and deliver them.** The general name for it is a
 log *shipper* or *agent*: Fluent Bit, Vector, Logstash, Promtail and its successor Alloy, or the
 OpenTelemetry Collector, which the lab already runs for traces. Putting this job outside the service
-is what lets the service stay simple, and it is what lets the destination change without a release:
-a service that sends its logs straight to a store over HTTP has to retry, buffer and authenticate
+is what lets the service stay simple, and what lets the destination change without a release.
+A service that sends its logs straight to a store over HTTP has to retry, buffer and authenticate
 itself, and changes every time the store does.
 
 In the lab the path is Docker's `fluentd` logging driver, which hands each line to the Collector,

@@ -65,7 +65,7 @@ Três famílias se misturam nessa lista, e distingui-las é a maior parte da hab
 
 **O que não está na lista importa tanto quanto.** O corpo da requisição levava um número de cartão,
 e o código nunca o copia para um atributo. Um rastro é guardado, transmitido entre sistemas,
-amostrado, exportado para fornecedores e lido por qualquer pessoa depurando; um número de cartão,
+amostrado, exportado para fornecedores e lido por qualquer pessoa depurando. Um número de cartão,
 uma senha, um token ou um documento pessoal nele vaza para todos esses lugares de uma vez. A aula
 10 faz o mesmo argumento para logs, com calma.
 

@@ -18,10 +18,10 @@ they can find. **It is about where each one pays**, and that follows from how it
 **Two warnings that hold whichever is chosen.** A log store's cost is driven by the volume it is
 sent, which is why lesson 8's advice comes before any of these and lesson 10's retention comes
 right after. And labels in Loki carry the same danger as labels in Prometheus: a label per request,
-user or trace id is a stream per value, and the small index that makes Loki cheap stops being small.
+user or trace id is a stream per value. The small index that makes Loki cheap then stops being small.
 Values like those belong in the line, where `| json` and a filter find them.
 
 The Elastic Stack's other parts, **Logstash** or **Beats** for shipping and **Kibana** for reading,
-are left out of this lab on purpose: the Collector already ships, and Kibana's screens are a product
+are left out of this lab on purpose. The Collector already ships, and Kibana's screens are a product
 that changes faster than this course. What the lab shows is the part that decides the cost, the
 index, and the query that reaches it.

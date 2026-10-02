@@ -52,6 +52,7 @@ route=/orders  4.5014254035087715
 ```
 
 Só `/orders`, porque o `web.py` pula o `/metrics` e nada sonda o `orders` neste laboratório. Se o
-healthcheck da aula 14 tivesse ficado ligado, o `/ready` estaria nesta lista também, doze requisições
-por minuto que dão certo sempre que o banco está no ar, e **um SLI sobre todas as rotas contaria sondas
-como clientes satisfeitos**. Um indicador nomeia a rota, ou a operação, que um cliente de fato usa.
+healthcheck da aula 14 tivesse ficado ligado, o `/ready` estaria nesta lista também: doze
+requisições por minuto que dão certo sempre que o banco está no ar. **Um SLI sobre todas as rotas
+contaria sondas como clientes satisfeitos.** Um indicador nomeia a rota, ou a operação, que um
+cliente de fato usa.

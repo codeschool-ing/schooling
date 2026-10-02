@@ -31,7 +31,7 @@ trace id: 00000000000000000000000000000000
 
 **Nenhum erro, e nada registrado.** O span existe, o código rodou, e o id do rastro é zero: um
 span que não faz parte de rastro nenhum. É a API fazendo exatamente o que promete. Sem um SDK ela
-devolve spans que não fazem nada, a custo baixo, para que uma biblioteca possa ser instrumentada
+devolve spans que não fazem nada, a custo baixo. Assim uma biblioteca pode ser instrumentada
 uma vez e distribuída a quem nunca configurou o OpenTelemetry, quase sem custo para essas pessoas.
 
 O **SDK** é o que torna as chamadas reais, e ele é configurado uma vez, quando o programa começa.

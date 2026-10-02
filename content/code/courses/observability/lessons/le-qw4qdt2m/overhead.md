@@ -53,4 +53,4 @@ request's path; lesson 2 showed what the simple processor would add. And it is o
 machine: **a difference of one millisecond is close to the noise between two runs**, which is itself
 the useful conclusion. The cost worth worrying about is rarely the wrapping. It is a span per item
 inside a loop of ten thousand, an attribute that serialises a whole object, or keeping every trace
-of a busy service, and lesson 12 is about the last of those.
+of a busy service. Lesson 12 is about the last of those.

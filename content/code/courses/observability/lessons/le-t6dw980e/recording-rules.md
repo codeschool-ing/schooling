@@ -3,9 +3,9 @@ title: The objective, written as rules
 version: 1
 ---
 
-An SLI computed by hand is a query; an objective a team lives by is **a set of recording rules**,
-evaluated every few seconds and stored as series, so that dashboards and alerts read the same numbers
-and nobody retypes the expression with a different window. The shop's, in
+An SLI computed by hand is a query. An objective a team lives by is **a set of recording rules**,
+evaluated every few seconds and stored as series. That way dashboards and alerts read the same
+numbers and nobody retypes the expression with a different window. The shop's, in
 `prometheus/rules/slo.yml`:
 
 ```
@@ -42,9 +42,9 @@ what, and how:
 - **`checkout:error_budget_remaining:ratio_1h`**: what is left of the budget, as a fraction. 1 means
   untouched, 0 means spent, and a negative number means the objective was missed.
 
-**The window is one hour.** A real objective uses 28 days, and a lesson cannot wait 28 days to watch it
-move, so the lab compresses it: every expression is the same with `[28d]` in place of `[1h]`, and every
-conclusion scales. Prometheus is told to read the file again:
+**The window is one hour.** A real objective uses 28 days, and a lesson cannot wait 28 days to watch
+it move. So the lab compresses it: every expression is the same with `[28d]` in place of `[1h]`, and
+every conclusion scales. Prometheus is told to read the file again:
 
 ```
 ana@obs:~/shop$ curl -s -X POST localhost:9090/-/reload && curl -s localhost:9090/api/v1/rules | jq -r '.data.groups[] | select(.name == "checkout-slo") | .rules[] | [.name, .health] | @tsv'
@@ -54,10 +54,10 @@ checkout:sli_latency:ratio_rate1h	unknown
 checkout:error_budget_remaining:ratio_1h	unknown
 ```
 
-The four rules are loaded, with health `unknown` because none has been evaluated yet; thirty seconds
+The four rules are loaded, with health `unknown` because none has been evaluated yet. Thirty seconds
 later the first values exist.
 
 Two practical notes. A 28-day `rate` over raw counters reads 28 days of samples on every evaluation,
-which is expensive; real setups record the short-window ratios and average those, or keep the long
-window in a store built for it. And **the objective, 0.995, is written in one place**: if it appears in
-every alert and every panel, the day it changes is the day they start to disagree.
+which is expensive. Real setups record the short-window ratios and average those, or keep the long
+window in a store built for it. And **the objective, 0.995, is written in one place**: if it appears
+in every alert and every panel, the day it changes is the day they start to disagree.

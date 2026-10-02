@@ -30,5 +30,5 @@ ana@obs:~/shop$ curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bear
 **200 for the search, 403 for the delete.** That refusal is the point of the exercise: a token that
 leaks from a pipeline's logs can annotate and edit dashboards, and it cannot remove the data sources
 every dashboard depends on. Every call from here to the end of the lesson uses the token instead of
-the password, which is the habit worth copying: **the admin password is for setting things up, and a
+the password. That is the habit worth copying: **the admin password is for setting things up, and a
 token with the smallest role that works is for everything automated**.

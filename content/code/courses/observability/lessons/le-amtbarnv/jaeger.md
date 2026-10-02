@@ -20,8 +20,8 @@ ced73eb37b6c3b1ec4a1e9332fd9990d	422
 ```
 
 Five traces, the most the request asked for, each with the root span's duration in milliseconds. In
-the interface the same search draws them as dots on a time axis, with duration as the height, and
-the dots worth opening are the high ones and the ones that sit apart from the crowd.
+the interface the same search draws them as dots on a time axis, with duration as the height. The
+dots worth opening are the high ones and the ones that sit apart from the crowd.
 
 Three things about searching are worth knowing before an incident rather than during one:
 
@@ -39,6 +39,6 @@ The lab reads one trace with `/api/traces/<id>`, the endpoint the interface itse
 stayed stable for years, but the project documents version 3 as the API to build on, and a script
 that outlives an upgrade should use that one.
 
-Jaeger began at Uber in 2015 and is now a CNCF project; version 2 is built on the OpenTelemetry
+Jaeger began at Uber in 2015 and is now a CNCF project. Version 2 is built on the OpenTelemetry
 Collector, which is why the lab's Collector speaks to it in OTLP, the same protocol the services
 speak to the Collector.

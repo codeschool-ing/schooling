@@ -23,11 +23,11 @@ ana@obs:~/shop$ docker compose logs --no-log-prefix storefront orders payments m
 ```
 
 Três linhas entre milhares, todas da partida. **Toda linha escrita enquanto se atende uma requisição
-tem o id**, que é a propriedade que importa, e ela vale sem ninguém lembrar de passar o id ao logger,
+tem o id**, que é a propriedade que importa. Ela vale sem ninguém lembrar de passar o id ao logger,
 porque o formatador o lê do mesmo span corrente que os rastros usam.
 
 Essa é a vantagem de tirar o id do rastreamento em vez de inventar um id de requisição próprio. Um
 `request_id` caseiro tem de ser gerado na borda, posto num cabeçalho, lido em todo serviço e passado
-a toda chamada de log, e é mais uma coisa que a propagação da aula 4 tem de levar. O id do rastro já
-é levado. **Onde um serviço não rastreia**, um id de requisição ainda é muito melhor que nada, e a
+a toda chamada de log. É mais uma coisa que a propagação da aula 4 tem de levar. O id do rastro já
+é levado. **Onde um serviço não rastreia**, um id de requisição ainda é muito melhor que nada. A
 regra é a mesma: gere uma vez na borda, propague em toda chamada, escreva em toda linha.

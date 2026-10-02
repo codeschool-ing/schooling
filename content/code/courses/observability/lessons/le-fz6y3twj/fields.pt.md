@@ -27,8 +27,8 @@ três regras valem em todo o catálogo deste curso:
   vê e recusa ou descarta as linhas que discordam.
 
 O OpenTelemetry tem o seu próprio **modelo de dados de log**, com um corpo, uma severidade, atributos
-e o contexto do rastro como campos do registro, e o Collector mapeia o JSON da loja para ele na
-entrada: a consulta ao Loki da aula 1 achou as linhas por `service_name` porque o Collector copiou o
+e o contexto do rastro como campos do registro. O Collector mapeia o JSON da loja para ele na
+entrada. A consulta ao Loki da aula 1 achou as linhas por `service_name` porque o Collector copiou o
 campo `service` para o resource. Um serviço que registra pela ponte de logging do OpenTelemetry
-produz esse modelo direto; um que imprime JSON, como a loja, depende da esteira para mapeá-lo, e os
+produz esse modelo direto. Um que imprime JSON, como a loja, depende da esteira para mapeá-lo, e os
 dois terminam no mesmo lugar.

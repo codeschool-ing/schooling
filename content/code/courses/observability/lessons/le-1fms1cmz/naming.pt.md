@@ -34,15 +34,15 @@ GET /orders/{id}
 ```
 
 **Cinquenta operações contra uma**, para as mesmas cinquenta requisições. A lista do primeiro
-serviço cresce um item a cada pedido que a loja receber; os três primeiros são `1011`, `1047` e
+serviço cresce um item a cada pedido que a loja receber. Os três primeiros são `1011`, `1047` e
 `1026`, numa ordem que ninguém escolheu. Um filtro por operação virou uma busca por um pedido. Uma
 latência agregada por operação são cinquenta médias de uma requisição cada. Backends que calculam
-métricas a partir de spans, o que a aula 12 faz com o Collector, criam uma série por operação, e o
+métricas a partir de spans, o que a aula 12 faz com o Collector, criam uma série por operação. O
 nome virou o label que estoura a fatura na aula 6.
 
 A regra decorre daquilo para que um nome serve: **o nome de um span diz que tipo de trabalho é
 este**, e os atributos dizem qual instância dele. `GET /orders/{id}` com `shop.order_id = 1011`
 mantém os dois: a operação é uma linha em toda lista, e o pedido 1011 continua a uma busca de
 distância. As convenções semânticas escrevem isso para HTTP, onde o nome é o método e o modelo da
-rota, e para bancos de dados, onde é a operação e a tabela, nunca a consulta inteira com seus
+rota. Fazem o mesmo para bancos de dados, onde é a operação e a tabela, nunca a consulta inteira com seus
 valores.

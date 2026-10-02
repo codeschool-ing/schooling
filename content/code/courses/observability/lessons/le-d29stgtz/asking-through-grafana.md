@@ -40,5 +40,5 @@ computed in Grafana.
 That has two consequences worth knowing before building anything on it. A slow dashboard is almost
 always **a slow query in the data source**, and the fix is in PromQL or LogQL, a recording rule or a
 narrower time range, not in Grafana. And a dashboard opened by fifty people at once, refreshing every
-thirty seconds, is fifty times every panel's query against Prometheus, which is the cheapest reason
+thirty seconds, is fifty times every panel's query against Prometheus. That is the cheapest reason
 there is to give a heavy panel a recording rule.

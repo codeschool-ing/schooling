@@ -18,12 +18,12 @@ hábitos a impedem de virar uma ilha:
   logs.
 
 O caso oposto também existe: uma tarefa **que é** iniciada por algo com rastro, uma esteira de
-implantação rodando uma migração ou um serviço lançando um processo trabalhador. Aí o contexto do pai
-precisa chegar a um processo novo, e não há cabeçalho para levá-lo. O OpenTelemetry acrescentou uma
-convenção para isso: o pai define as variáveis de ambiente `TRACEPARENT` e `TRACESTATE` para o
-filho, no mesmo formato dos cabeçalhos, e o filho extrai do seu ambiente como um servidor extrai de
-uma requisição. É recente, e poucas ferramentas a leem sozinhas por enquanto, então um script lançado
-assim pode precisar das duas linhas escritas à mão.
+implantação rodando uma migração ou um serviço lançando um processo trabalhador. Aí o contexto do
+pai precisa chegar a um processo novo, e não há cabeçalho para levá-lo. O OpenTelemetry acrescentou
+uma convenção para isso. O pai define as variáveis de ambiente `TRACEPARENT` e `TRACESTATE` para o
+filho, no mesmo formato dos cabeçalhos. O filho extrai do seu ambiente como um servidor extrai de
+uma requisição. É recente, e poucas ferramentas a leem sozinhas por enquanto, então um script
+lançado assim pode precisar das duas linhas escritas à mão.
 
 O que o rastro de uma tarefa agendada não consegue é dizer **que a tarefa não rodou**. Um rastro só
 existe para trabalho que aconteceu; a noite em que o agendador falhou não deixa span nenhum. Essa

@@ -30,5 +30,5 @@ Três diferenças importam na prática:
   uma corrigida volta. Acrescentou rastreamento depois, e é o único dos quatro cujo servidor você
   mesmo pode rodar.
 
-Elastic, Grafana Cloud e Honeycomb vendem o mesmo tipo de coisa e aparecem nas mesmas avaliações; os
+Elastic, Grafana Cloud e Honeycomb vendem o mesmo tipo de coisa e aparecem nas mesmas avaliações. Os
 dois primeiros são as formas hospedadas de armazenamentos que este curso rodou.

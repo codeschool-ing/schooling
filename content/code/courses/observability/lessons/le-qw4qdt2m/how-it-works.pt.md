@@ -16,7 +16,7 @@ ana@obs:~/shop$ grep -A3 '^  orders:' compose.yaml
 
 **O `opentelemetry-instrument` roda antes do programa e o modifica.** É um pequeno lançador que
 configura o SDK e depois inicia o comando de verdade, o `waitress-serve`, no mesmo processo. Entre
-uma coisa e outra ele faz o passo que a aula 2 nunca teve: para cada biblioteca que sabe
+uma coisa e outra ele faz o passo que a aula 2 nunca teve. Para cada biblioteca que sabe
 instrumentar, substitui as funções dela por invólucros que abrem um span, chamam a original e
 fecham o span. Isso se chama **monkey-patching**, e o Python permite porque as funções de um módulo
 são atributos que qualquer um pode reatribuir.
@@ -40,8 +40,8 @@ opentelemetry-instrumentation-wsgi       0.66b0
 
 O Flask para as requisições que chegam, o `requests` para as chamadas que saem, o psycopg para o
 banco. Os pacotes `wsgi` e `dbapi` são as camadas genéricas sobre as quais o primeiro e o último
-são construídos. A imagem os instalou porque os requisitos dela os nomeavam; o
-`opentelemetry-bootstrap`, que vem com o lançador, pode em vez disso ler o que um programa tem
+são construídos. A imagem os instalou porque os requisitos dela os nomeavam. Em vez disso, o
+`opentelemetry-bootstrap`, que vem com o lançador, pode ler o que um programa tem
 instalado e imprimir os pacotes de instrumentação correspondentes.
 
 **Todo o resto vem do ambiente**, o mesmo SDK que a aula 2 montou à mão, descrito por variáveis em

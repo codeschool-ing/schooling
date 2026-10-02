@@ -25,10 +25,10 @@ não têm ou deixam para você montar:
 | replay de sessão | uma reconstrução do que o usuário viu antes de um erro | nada comum |
 | detecção de anomalias | uma linha de base aprendida por série, e um alerta quando ela quebra | regras de gravação escritas à mão |
 
-A terceira é que **as ligações vêm prontas**. A aula 7 configurou uma fonte de dados por sinal e a aula
-11 precisou de mais uma configuração para os exemplares; um produto hospedado tem todo sinal num
-armazenamento só, com o trace id ligando logs a rastros por padrão.
+A terceira é que **as ligações vêm prontas**. A aula 7 configurou uma fonte de dados por sinal e a
+aula 11 precisou de mais uma configuração para os exemplares. Um produto hospedado tem todo sinal
+num armazenamento só, com o trace id ligando logs a rastros por padrão.
 
 O que ele não vende é uma ideia diferente. Os mesmos três sinais, o mesmo trace id, a mesma conta de
-cardinalidade: tudo o que da aula 1 à aula 12 foi dito ainda vale, e os produtos são julgados por quão
+cardinalidade: tudo o que da aula 1 à aula 12 foi dito ainda vale. Os produtos são julgados por quão
 bem fazem essas coisas e a que preço.

@@ -47,7 +47,7 @@ A call in the storefront, then, looks like this:
 
 The message is a fixed phrase and the values are fields. **The message never interpolates a
 value**: `"checkout finished"` is the same string for every checkout, which is what lets lesson 9
-count them by message, and the order number is in `order_id`, where it can be searched without
+count them by message. The order number is in `order_id`, where it can be searched without
 parsing a sentence.
 
 Writing to standard output is a decision with a name, from the *twelve-factor app* principles: a

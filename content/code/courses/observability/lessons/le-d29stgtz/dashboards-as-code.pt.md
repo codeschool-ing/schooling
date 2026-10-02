@@ -3,8 +3,8 @@ title: Um painel é um arquivo
 version: 1
 ---
 
-Painéis montados com cliques têm uma vida conhecida: alguém faz um bom, outra pessoa muda uma consulta
-para investigar algo e esquece de desfazer, e um mês depois ninguém sabe qual versão estava certa nem
+Painéis montados com cliques têm uma vida conhecida. Alguém faz um bom, e outra pessoa muda uma consulta
+para investigar algo e esquece de desfazer. Um mês depois ninguém sabe qual versão estava certa nem
 quem a quebrou. **Um painel guardado como arquivo no controle de versão tem histórico, revisão, e um
 caminho de volta.** Os painéis do Grafana são JSON, e o provisionamento do laboratório lê todo arquivo
 em `grafana/dashboards` na partida e de novo a cada poucos segundos. O da loja:
@@ -52,7 +52,7 @@ Duration, 50th and 99th percentile
 ```
 
 Dois resultados para *Shop*: a pasta, que o Grafana criou para o provisionamento, e o painel, com seu
-`uid`, título e tag. O painel diz que é **provisionado**, e isso não é só um rótulo. Uma tentativa de
+`uid`, título e tag. O painel diz que é **provisionado**, e o Grafana age de acordo. Uma tentativa de
 salvar por cima dele pela API, a mesma requisição que o botão de salvar da interface manda:
 
 ```

@@ -29,8 +29,8 @@ Traceback (most recent call last):
 
 **Dezessete linhas**, e uma esteira de logs que recolhe a saída uma linha por vez guarda dezessete
 registros. O primeiro diz *Traceback*, o último diz o que deu errado, e os do meio são o caminho no
-código. Num serviço movimentado, linhas de outras requisições chegam entre eles; uma busca pelo tipo
-do erro acha a última linha sozinha, sem o código que o levantou; e nenhuma das dezessete carrega o
+código. Num serviço movimentado, linhas de outras requisições chegam entre eles. Uma busca pelo tipo
+do erro acha a última linha sozinha, sem o código que o levantou. E nenhuma das dezessete carrega o
 id do rastro da requisição que falhou.
 
 O `caught.py` captura a mesma exceção e a registra pelo formatador da loja com `log.exception`, que

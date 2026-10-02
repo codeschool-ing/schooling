@@ -28,6 +28,6 @@ ana@obs:~/shop$ curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bear
 
 **200 para a busca, 403 para o apagar.** Essa recusa é o ponto do exercício: um token que vaza dos
 logs de uma esteira consegue anotar e editar painéis, e não consegue remover as fontes de dados de
-que todo painel depende. Toda chamada daqui até o fim da aula usa o token em vez da senha, e é esse o
+que todo painel depende. Toda chamada daqui até o fim da aula usa o token em vez da senha. Esse é o
 hábito que vale copiar: **a senha de administrador é para configurar, e um token com o menor papel que
 funcione é para tudo o que é automático**.

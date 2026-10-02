@@ -4,9 +4,9 @@ version: 1
 ---
 
 Every store keeps lines until something deletes them, and the default is often *forever*. **A
-retention period is a decision about how far back an investigation can look**, weighed against
-cost and against the risk of holding data longer than it is needed, which the LGPD counts as a risk
-in itself.
+retention period is a decision about how far back an investigation can look**, weighed against cost
+and against the risk of holding data longer than it is needed. The LGPD counts that as a risk in
+itself.
 
 Loki's is one line in its configuration, applied by its compactor, which deletes chunks older than
 the period:

@@ -16,7 +16,7 @@ ana@obs:~/shop$ grep -A3 '^  orders:' compose.yaml
 
 **`opentelemetry-instrument` runs before the program and changes it.** It is a small launcher that
 sets up the SDK and then starts the real command, `waitress-serve`, in the same process. Between
-the two it does the step lesson 2 never had: for each library it knows how to instrument, it
+the two it does the step lesson 2 never had. For each library it knows how to instrument, it
 replaces the library's functions with wrappers that open a span, call the original and close the
 span. This is called **monkey-patching**, and Python allows it because a module's functions are
 attributes anyone can reassign.
@@ -40,8 +40,8 @@ opentelemetry-instrumentation-wsgi       0.66b0
 
 Flask for the requests that arrive, `requests` for the calls that leave, psycopg for the database.
 The `wsgi` and `dbapi` packages are the generic layers the first and the last are built on. The
-image installed them because its requirements named them; `opentelemetry-bootstrap`, which comes
-with the launcher, can instead read what a program has installed and print the instrumentation
+image installed them because its requirements named them. Instead, `opentelemetry-bootstrap`, which comes
+with the launcher, can read what a program has installed and print the instrumentation
 packages that match.
 
 **Everything else comes from the environment**, the same SDK lesson 2 built by hand, described by

@@ -43,12 +43,12 @@ instance=storefront:8080 job=storefront  0.01933333333333333
 segundos, então a taxa dele é *segundos de processador por segundo*: 0,019, cerca de dois por cento
 de um núcleo.
 
-**O tipo errado quebra a conta em silêncio.** O `rate()` de um gauge trata toda queda como reinício e
-produz absurdos; um gauge informando *requisições até agora* perde tudo num reinício e não pode ser
-somado entre instâncias. A regra prática: se a pergunta é *quantos aconteceram*, é um counter; se é
-*quantos há agora*, é um gauge.
+**O tipo errado quebra a conta em silêncio.** O `rate()` de um gauge trata toda queda como reinício
+e produz absurdos. Um gauge informando *requisições até agora* perde tudo num reinício e não pode
+ser somado entre instâncias. A regra prática: se a pergunta é *quantos aconteceram*, é um counter;
+se é *quantos há agora*, é um gauge.
 
-As linhas `_created` são uma terceira coisa, gauges que a biblioteca cliente acrescenta ao lado de
-cada counter e histograma: a hora em que a série foi criada, o que permite a um backend distinguir um
-reinício de um contador que sempre foi zero. Vale reparar nelas agora, porque o experimento desta
-aula tropeça nelas.
+As linhas `_created` são uma terceira coisa: gauges que a biblioteca cliente acrescenta ao lado de
+cada counter e histograma. Cada um guarda a hora em que a série foi criada, o que permite a um
+backend distinguir um reinício de um contador que sempre foi zero. Vale reparar nelas agora, porque
+o experimento desta aula tropeça nelas.

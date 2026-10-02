@@ -21,7 +21,7 @@ ced73eb37b6c3b1ec4a1e9332fd9990d	422
 ```
 
 Cinco rastros, o máximo que a requisição pediu, cada um com a duração do span raiz em milissegundos.
-Na interface, a mesma busca os desenha como pontos num eixo de tempo, com a duração como altura, e os
+Na interface, a mesma busca os desenha como pontos num eixo de tempo, com a duração como altura. Os
 pontos que vale abrir são os altos e os que ficam afastados da multidão.
 
 Três coisas sobre buscar valem ser sabidas antes de um incidente, e não durante:
@@ -40,6 +40,6 @@ O laboratório lê um rastro com `/api/traces/<id>`, o endpoint que a própria i
 estável há anos, mas o projeto documenta a versão 3 como a API sobre a qual construir, e um script que
 precisa sobreviver a uma atualização deve usar essa.
 
-O Jaeger nasceu na Uber em 2015 e hoje é um projeto da CNCF; a versão 2 é construída sobre o
+O Jaeger nasceu na Uber em 2015 e hoje é um projeto da CNCF. A versão 2 é construída sobre o
 OpenTelemetry Collector, e é por isso que o Collector do laboratório fala com ele em OTLP, o mesmo
 protocolo que os serviços falam com o Collector.

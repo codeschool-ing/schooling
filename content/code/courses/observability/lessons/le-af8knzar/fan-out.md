@@ -7,8 +7,8 @@ Trying a hosted product, or leaving one, used to mean touching every service. **
 the middle it is one exporter more.** The services keep sending OTLP to the Collector, and the
 Collector sends each trace to as many places as it has exporters.
 
-The lab has no account with any vendor and should not, so the place is a stand-in: `standin.py`, a
-twenty-line program in the sandbox that accepts OTLP over HTTP the way a hosted intake does and
+The lab has no account with any vendor and should not, so the place is a stand-in: `standin.py`. It
+is a twenty-line program in the sandbox that accepts OTLP over HTTP the way a hosted intake does and
 prints who sent what. The exporter that points at it, in `otel/collector-fanout.yaml`:
 
 ```
@@ -84,6 +84,6 @@ and after that the vendor's copy loses data while the others lose nothing.
 
 Two things follow for anybody sending to a vendor. **The queue is memory**, and a long outage at the
 vendor fills it and then loses data, so its size is a decision about how long an outage you can ride
-out; the Collector can also keep it on disk with a storage extension. And **the queue is a metric**,
+out. The Collector can also keep it on disk with a storage extension. And **the queue is a metric**,
 so the alert that says *the vendor has stopped accepting our data* can be written in your own
 Prometheus, which keeps working when the vendor does not.

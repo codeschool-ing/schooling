@@ -32,9 +32,9 @@ orders	INSERT	da0ba127ae104cef
 ```
 
 `b0844e71b749fd8f` is the storefront's `POST /checkout`, the span that was current when the
-storefront called `orders`, and it is the parent of `orders`' own `POST /orders`. Each hop rewrites
-the third field with its own span id, so the next service hangs its spans under the right parent,
-while the second field never changes.
+storefront called `orders`. It is the parent of `orders`' own `POST /orders`. Each hop rewrites the
+third field with its own span id, so the next service hangs its spans under the right parent, while
+the second field never changes.
 
 The last field carries the sampling decision, which lesson 12 depends on: the low bit says *this
 trace is being recorded*, so every service downstream records it too. The bit above it, set here,
@@ -48,6 +48,6 @@ OTEL_PROPAGATORS not set
 ```
 
 Unset means `tracecontext,baggage`: the W3C `traceparent` above and a second header, `baggage`,
-which this lesson's last section is about. Other formats exist, Zipkin's **B3** being the one met
-most, and a system migrating between them can list two propagators so that every service writes both
+which this lesson's last section is about. Other formats exist, and Zipkin's **B3** is the one met
+most. A system migrating between them can list two propagators, so that every service writes both
 until the last old one is gone. Lesson 11 meets B3.

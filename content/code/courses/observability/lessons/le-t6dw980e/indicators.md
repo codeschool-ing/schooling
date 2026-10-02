@@ -50,7 +50,7 @@ ana@obs:~/shop$ ./promq 'sum by (route) (rate(http_server_requests_total{job="or
 route=/orders  4.5014254035087715
 ```
 
-Only `/orders`, because `web.py` skips `/metrics` and nothing probes `orders` in this lab. Had lesson
-14's healthcheck stayed on, `/ready` would be on this list too, twelve requests a minute that succeed
-whenever the database is up, and **an SLI over every route would count probes as satisfied
-customers**. An indicator names the route, or the operation, that a customer actually uses.
+Only `/orders`, because `web.py` skips `/metrics` and nothing probes `orders` in this lab. Had
+lesson 14's healthcheck stayed on, `/ready` would be on this list too: twelve requests a minute that
+succeed whenever the database is up. **An SLI over every route would count probes as satisfied
+customers.** An indicator names the route, or the operation, that a customer actually uses.

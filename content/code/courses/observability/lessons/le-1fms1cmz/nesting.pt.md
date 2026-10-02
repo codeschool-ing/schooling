@@ -47,7 +47,7 @@ exportado quando termina e a cesta só podia terminar depois das duas consultas.
 se aninham: 20,7 milissegundos para a cesta, em volta de duas consultas de 10,2.
 
 **O pai nunca foi passado.** O `price()` não tem argumento para ele. O OpenTelemetry mantém um
-*span corrente*, aquele em cujo bloco `with` o código está, e o `start_as_current_span` tanto o lê
+*span corrente*, aquele em cujo bloco `with` o código está. O `start_as_current_span` tanto o lê
 para escolher o pai quanto o substitui durante o seu próprio bloco. Em Python o span corrente vive
 numa variável de `contextvars`, então ele acompanha naturalmente uma chamada de função, e uma tarefa
 `asyncio` leva uma cópia quando é criada. **Uma thread nova não leva**: ela começa sem span

@@ -36,7 +36,7 @@ product:
   transfer, and personal data reaches traces and logs more often than anybody plans.
 - **What is only available with the vendor's own agent?** That is the lock-in that remains.
 
-A common result is a mixture: metrics and logs in a self-run stack where the volume is high and the
-use is routine, and a hosted product for the part that is hardest to run well, often error tracking
-or traces. **The Collector makes the mixture cheap**, which is the strongest argument for putting one
-in front of whatever you choose.
+A common result is a mixture. Metrics and logs go in a self-run stack where the volume is high and
+the use is routine, and a hosted product takes the part that is hardest to run well, often error
+tracking or traces. **The Collector makes the mixture cheap**, which is the strongest argument for
+putting one in front of whatever you choose.

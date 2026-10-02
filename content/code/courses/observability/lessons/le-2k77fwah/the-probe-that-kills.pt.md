@@ -72,12 +72,12 @@ deep-556bf5bcdd-s5flf   1/1     Running   3 (64s ago)   3m32s
 deep-556bf5bcdd-vnsfv   1/1     Running   3 (64s ago)   3m32s
 ```
 
-Os reinícios param, e a contagem fica em três, o registro de uma queda que este serviço não teve. Com
-tráfego real o estrago é maior que a contagem: requisições se perderam a cada reinício, caches foram
-esvaziados, e quando o banco voltou toda cópia estava iniciando ou cumprindo uma espera, então a
+Os reinícios param, e a contagem fica em três, o registro de uma queda que este serviço não teve.
+Com tráfego real o estrago é maior que a contagem: requisições se perderam a cada reinício, e caches
+foram esvaziados. Quando o banco voltou toda cópia estava iniciando ou cumprindo uma espera, então a
 recuperação levou mais do que a queda precisava.
 
 A correção é uma frase: **a liveness verifica o processo, a readiness verifica as dependências.** Se
-esta verificação fosse uma sonda de readiness, as três cópias teriam saído do Service enquanto o banco
-estava fora e voltado sozinhas poucos segundos depois de ele voltar, sem nada reiniciado e nada
-perdido.
+esta verificação fosse uma sonda de readiness, as três cópias teriam saído do Service enquanto o
+banco estava fora. Teriam voltado sozinhas poucos segundos depois de ele voltar, sem nada reiniciado
+e nada perdido.

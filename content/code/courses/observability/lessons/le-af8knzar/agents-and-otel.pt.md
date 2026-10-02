@@ -22,8 +22,8 @@ código do fornecedor na borda**, nos exportadores do Collector ou numa distribu
 possa ser trocada. Uma biblioteca de fornecedor dentro do código de negócio é o tipo caro de
 dependência, aquele que precisa ser tirado linha por linha.
 
-Dois cuidados mantêm a regra honesta. Aceitar OTLP não é o mesmo que tratá-lo como entrada de primeira
-classe: alguns recursos de um produto podem funcionar só com o agente dele, e a avaliação deve
-verificar quais. E as convenções semânticas, os nomes de atributo que a aula 2 seguiu, são o que a
-interface de um fornecedor lê para desenhar as visões dela; dados que as seguem aparecem certos em todo
-produto, e dados que não seguem aparecem meio vazios em todos.
+Dois cuidados mantêm a regra honesta. Aceitar OTLP não é o mesmo que tratá-lo como entrada de
+primeira classe: alguns recursos de um produto podem funcionar só com o agente dele, e a avaliação
+deve verificar quais. E as convenções semânticas, os nomes de atributo que a aula 2 seguiu, são o
+que a interface de um fornecedor lê para desenhar as visões dela. Dados que as seguem aparecem
+certos em todo produto, e dados que não seguem aparecem meio vazios em todos.

@@ -29,7 +29,7 @@ the trace as Jaeger's API returns it:
 ```
 
 It builds a table of every span by id, then walks each child and adds to its parent **the part of
-the child that falls inside the parent's own interval**, so a child that starts after its parent has
+the child that falls inside the parent's own interval**. A child that starts after its parent has
 ended, like a message taken off a queue, adds nothing. What remains of each duration is self time.
 
 The shop runs with payments slowed by 400 ms, and five simulated customers a second are buying. One
@@ -50,9 +50,9 @@ mailer	send confirmation	20 ms	self 20 ms
 
 Read the third column top to bottom and every span looks guilty: the storefront took 439 ms, orders
 436, the call to payments 404. **The fourth column says that almost none of them did anything.** The
-storefront spent 3 ms of its own, and payments' `POST /charge` spent none: all 400 ms are inside one
-span, `wait for the card network`, which the payments code opens by hand around the call it cannot see into. That is the whole answer, and
-it is one line out of nine.
+storefront spent 3 ms of its own, and payments' `POST /charge` spent none. All 400 ms are inside one
+span, `wait for the card network`, which the payments code opens by hand around the call it cannot
+see into. That is the whole answer, and it is one line out of nine.
 
 Two lines are worth a second look:
 

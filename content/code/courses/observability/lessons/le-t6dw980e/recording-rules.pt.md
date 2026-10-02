@@ -3,9 +3,9 @@ title: O objetivo, escrito como regras
 version: 1
 ---
 
-Um SLI calculado à mão é uma consulta; um objetivo com que uma equipe convive é **um conjunto de regras
-de gravação**, avaliadas a cada poucos segundos e guardadas como séries, para que painéis e alertas
-leiam os mesmos números e ninguém redigite a expressão com outra janela. As da loja, em
+Um SLI calculado à mão é uma consulta. Um objetivo com que uma equipe convive é **um conjunto de
+regras de gravação**, avaliadas a cada poucos segundos e guardadas como séries. Assim painéis e
+alertas leem os mesmos números e ninguém redigite a expressão com outra janela. As da loja, em
 `prometheus/rules/slo.yml`:
 
 ```
@@ -42,9 +42,9 @@ de quê, e como:
 - **`checkout:error_budget_remaining:ratio_1h`**: o que resta do orçamento, como fração. 1 quer dizer
   intacto, 0 quer dizer gasto, e um número negativo quer dizer que o objetivo foi descumprido.
 
-**A janela é de uma hora.** Um objetivo real usa 28 dias, e uma aula não pode esperar 28 dias para vê-lo
-se mexer, então o laboratório a comprime: toda expressão é a mesma com `[28d]` no lugar de `[1h]`, e
-toda conclusão escala. O Prometheus recebe a ordem de ler o arquivo de novo:
+**A janela é de uma hora.** Um objetivo real usa 28 dias, e uma aula não pode esperar 28 dias para
+vê-lo se mexer. Então o laboratório a comprime: toda expressão é a mesma com `[28d]` no lugar de
+`[1h]`, e toda conclusão escala. O Prometheus recebe a ordem de ler o arquivo de novo:
 
 ```
 ana@obs:~/shop$ curl -s -X POST localhost:9090/-/reload && curl -s localhost:9090/api/v1/rules | jq -r '.data.groups[] | select(.name == "checkout-slo") | .rules[] | [.name, .health] | @tsv'
@@ -54,10 +54,11 @@ checkout:sli_latency:ratio_rate1h	unknown
 checkout:error_budget_remaining:ratio_1h	unknown
 ```
 
-As quatro regras estão carregadas, com saúde `unknown` porque nenhuma foi avaliada ainda; trinta
+As quatro regras estão carregadas, com saúde `unknown` porque nenhuma foi avaliada ainda. Trinta
 segundos depois existem os primeiros valores.
 
-Duas notas práticas. Um `rate` de 28 dias sobre contadores crus lê 28 dias de amostras a cada avaliação,
-o que é caro; montagens reais gravam as razões de janela curta e tiram a média delas, ou guardam a
-janela longa num armazenamento feito para isso. E **o objetivo, 0.995, está escrito num lugar só**: se
-ele aparece em todo alerta e todo painel, o dia em que muda é o dia em que eles começam a discordar.
+Duas notas práticas. Um `rate` de 28 dias sobre contadores crus lê 28 dias de amostras a cada
+avaliação, o que é caro. Montagens reais gravam as razões de janela curta e tiram a média delas, ou
+guardam a janela longa num armazenamento feito para isso. E **o objetivo, 0.995, está escrito num
+lugar só**: se ele aparece em todo alerta e todo painel, o dia em que muda é o dia em que eles
+começam a discordar.

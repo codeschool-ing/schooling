@@ -5,9 +5,9 @@ version: 1
 
 A queue breaks the picture of a request in the same place lesson 3 found: the caller does not wait
 for the work it causes. `orders` publishes the paid order and answers the storefront at once, and
-the mailer takes the message whenever it gets to it. **The context has to ride inside the message**,
-and the lab's two services write the same inject and extract as HTTP, with the message's headers as
-the carrier:
+the mailer takes the message whenever it gets to it. **The context has to ride inside the message.**
+The lab's two services write the same inject and extract as HTTP, with the message's headers as the
+carrier:
 
 ```schooling-example
 {
@@ -63,8 +63,8 @@ ana@obs:~/shop$ curl -s -u guest:guest -H 'Content-Type: application/json' -X PO
 ```
 
 The body is the order, and beside it, in the AMQP headers, **the same `traceparent` format the HTTP
-calls carry**. Twenty seconds later the mailer is started again, it takes the message, and the
-checkout's trace is read with each span's start in seconds from the first:
+calls carry**. Twenty seconds later the mailer is started again and takes the message. The
+checkout's trace is then read with each span's start in seconds from the first:
 
 ```
 ana@obs:~/shop$ docker compose start mailer
@@ -87,6 +87,7 @@ nobody would see otherwise, which is what makes *the e-mails are late* debuggabl
 
 The messaging conventions go one step further than the lab does: the publisher opens a `PRODUCER`
 span around the publish, and the consumer's span can name it. `orders` opens no such span, because
-nothing instruments `pika` here, so the mailer's parent is `POST /orders` itself. The instrumentation
-package for `pika`, `opentelemetry-instrumentation-pika`, does both halves and adds the producer
-span; the lab writes the calls by hand because seeing them once is the point of this lesson.
+nothing instruments `pika` here, so the mailer's parent is `POST /orders` itself. The
+instrumentation package for `pika`, `opentelemetry-instrumentation-pika`, does both halves and adds
+the producer span. The lab writes the calls by hand because seeing them once is the point of this
+lesson.

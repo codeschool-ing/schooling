@@ -52,5 +52,5 @@ guardava checkouts lentos. Quem reverteu e ficou olhando o painel teria passado 
 perguntando se o rollback tinha funcionado.
 
 Esse atraso é a janela, e a seção seguinte trata de escolhê-la. A anotação é o que torna o atraso
-legível: **com a linha e a marca num painel só, causa e efeito ficam a uma olhada de distância**, e a
+legível: **com a linha e a marca num painel só, causa e efeito ficam a uma olhada de distância**. A
 linha do tempo de um incidente na aula 17 começa exatamente destas marcas.

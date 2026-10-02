@@ -29,7 +29,7 @@ ana@obs:~/shop$ curl -s -u admin:$(cat .graylog-password) -H 'X-Requested-By: an
 ```
 
 The same failures, two of them, with their order ids and trace ids. **The prefixes are worth noticing
-before writing anything against them**: every store renames fields on the way in, Elasticsearch
-nests them under `attributes.`, Graylog flattens them with `otel_attributes_`, Loki leaves them in the
-line, and a query, dashboard or alert copied from one store to another fails on the names before it
+before writing anything against them.** Every store renames fields on the way in. Elasticsearch
+nests them under `attributes.`, Graylog flattens them with `otel_attributes_`, and Loki leaves them in the
+line. A query, dashboard or alert copied from one store to another fails on the names before it
 fails on anything else.

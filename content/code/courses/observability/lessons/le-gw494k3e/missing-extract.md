@@ -22,8 +22,8 @@ ana@obs:~/shop$ docker compose logs --no-log-prefix payments | grep 'charge deci
 ec2f711fe663aea741f0cc263469fb72
 ```
 
-**Two trace ids for one checkout**, the same symptom lesson 3 met at the queue, this time over
-plain HTTP. The header still arrived and was still extracted; without `context=ctx` the span simply
+**Two trace ids for one checkout**, the same symptom lesson 3 met at the queue, this time over plain
+HTTP. The header still arrived and was still extracted. Without `context=ctx` the span simply
 started from payments' own current context, which is empty at the start of a request, so it became
 the root of a new trace. And the checkout's trace, read from the storefront's side:
 

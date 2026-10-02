@@ -27,8 +27,8 @@ across the catalogue of this course:
   first value it sees and refuses or drops the lines that disagree.
 
 OpenTelemetry has its own **log data model**, with a body, a severity, attributes and the trace
-context as fields of the record, and the Collector maps the shop's JSON into it on the way in:
-lesson 1's Loki query found the lines by `service_name` because the Collector copied the `service`
+context as fields of the record. The Collector maps the shop's JSON into it on the way in.
+Lesson 1's Loki query found the lines by `service_name` because the Collector copied the `service`
 field into the resource. A service that logs through OpenTelemetry's logging bridge produces that
-model directly; one that prints JSON, as the shop does, relies on the pipeline to map it, and both
+model directly. One that prints JSON, as the shop does, relies on the pipeline to map it, and both
 end in the same place.

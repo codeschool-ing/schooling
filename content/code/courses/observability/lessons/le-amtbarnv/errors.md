@@ -3,9 +3,9 @@ title: Following an error to where it began
 version: 1
 ---
 
-A failed request rarely fails in one span. **The error starts in one place and every caller above
-it reports a failure of its own**, so a trace of a failure is a column of red, and the work is
-finding the bottom of it.
+A failed request rarely fails in one span. **The error starts in one place and every caller above it
+reports a failure of its own.** So a trace of a failure is a column of red, and the work is finding
+the bottom of it.
 
 For one minute, every tenth charge fails, as the lab's payments service is told to in its fault
 file. Then Zipkin is asked for the traces in the last two minutes where payments carries an error:
@@ -36,9 +36,9 @@ by the order they print in:
 | orders `post /orders` | it gave up on the order and answered with an error of its own |
 | storefront `post /checkout` | it received that error and passed it to the customer |
 
-**The origin is the deepest error span with no erroring child**, here payments' `POST /charge`. Every
-span above it is accurate and none of them is the cause. In Jaeger's interface the same search is
-the tag `error=true`, and the trace view draws an icon on every failing span; the bottom one is
+**The origin is the deepest error span with no erroring child**, here payments' `POST /charge`.
+Every span above it is accurate and none of them is the cause. In Jaeger's interface the same search
+is the tag `error=true`, and the trace view draws an icon on every failing span. The bottom one is
 where to start reading, and its attributes and its log lines are where the reason is.
 
 Two cautions:

@@ -22,15 +22,15 @@ a077ec50a8c43066fff61ebfd2b6bb52  7 spans, top: orders POST /orders
 d327f72414490d1217784a591cbcb57e  8 spans, top: storefront POST /checkout
 ```
 
-Sete dos dez são **rastros sem raiz**: a vitrine os descartou, e o `orders` os registrou mesmo assim,
-sete spans do `POST /orders` para baixo. Os outros três estão inteiros, oito spans da vitrine para
-baixo, ou seis para um checkout cujo cartão foi recusado e por isso não mandou e-mail; a vitrine os
-guardou, e todo serviço obedeceu.
+Sete dos dez são **rastros sem raiz**: a vitrine os descartou, e o `orders` os registrou mesmo
+assim, sete spans do `POST /orders` para baixo. Os outros três estão inteiros, oito spans da vitrine
+para baixo, ou seis para um checkout cujo cartão foi recusado e por isso não mandou e-mail. A
+vitrine os guardou, e todo serviço obedeceu.
 
 Nada falhou e nenhum serviço registrou reclamação. O armazenamento simplesmente se enche de rastros
-que começam no meio: o span de cima deles é o `POST /orders` do `orders`, e ele aponta para um span pai
-que nunca foi exportado. O Jaeger avisa sobre o pai ausente na interface; um painel que conta rastros
-os conta como inteiros; e um amostrador na cauda, na seção seguinte, os julgaria sem a raiz.
+que começam no meio: o span de cima deles é o `POST /orders` do `orders`, e ele aponta para um span
+pai que nunca foi exportado. O Jaeger avisa sobre o pai ausente na interface. Um painel que conta
+rastros os conta como inteiros, e um amostrador na cauda, na seção seguinte, os julgaria sem a raiz.
 
 Isso acontece na prática de três jeitos:
 

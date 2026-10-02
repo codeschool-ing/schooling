@@ -17,7 +17,7 @@ cada serviço:
 **A resposta comum é a terceira coluna.** A instrumentação automática é o jeito mais barato de
 acertar as bordas, de forma consistente e com os nomes das convenções, e o código acrescenta o que
 só ele sabe. Um serviço instrumentado inteiramente à mão, como a vitrine, faz sentido quando é
-pequeno, quando as bibliotecas que usa não têm instrumentação, ou para ensinar, que é por que a aula
+pequeno, quando as bibliotecas que usa não têm instrumentação, ou para ensinar. É por isso que a aula
 2 fez assim.
 
 A mesma ideia existe fora do Python com outra maquinaria. O agente de Java é um JAR carregado com

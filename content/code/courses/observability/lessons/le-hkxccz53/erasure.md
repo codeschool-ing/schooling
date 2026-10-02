@@ -4,8 +4,8 @@ version: 1
 ---
 
 The leak was found. Now the lines that already reached the stores have to go, and **this is where
-logs are at their worst**: they are built to be appended to, not edited, and a store that was
-designed for millions of writes a minute was not designed for deleting one.
+logs are at their worst**. They are built to be appended to, not edited. A store designed for
+millions of writes a minute was not designed for deleting one.
 
 Loki accepts a **delete request**: a LogQL selector and filter, and a time range. It does not delete
 on the spot. The request is queued, and the compactor rewrites the affected chunks on its next pass,
@@ -31,9 +31,9 @@ because the filter in the code had masked it, and the third reached it already m
 Collector. Each defence shows up in the count.
 
 And the copies nobody asked about are still there: the container's own log on the machine, any
-backup taken of either store, any vendor the logs were exported to, and any person who copied a
-line into a ticket. **Deleting a log line is never finished**, which turns the LGPD's right to
-deletion into an argument about design rather than about tooling: the line that never held a
-person's data needs no deletion. That is the rule this lesson ends on. Log identifiers that mean
-nothing outside the system, keep lines only as long as they are useful, and treat a store full of
-personal data as the incident it is.
+backup taken of either store, any vendor the logs were exported to, and any person who copied a line
+into a ticket. **Deleting a log line is never finished.** That turns the LGPD's right to deletion
+into an argument about design rather than about tooling: the line that never held a person's data
+needs no deletion. That is the rule this lesson ends on. Log identifiers that mean nothing outside
+the system, keep lines only as long as they are useful, and treat a store full of personal data as
+the incident it is.

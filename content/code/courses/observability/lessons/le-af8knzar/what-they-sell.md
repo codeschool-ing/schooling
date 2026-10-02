@@ -26,9 +26,9 @@ lack or leave to you to assemble:
 | anomaly detection | a baseline learnt per series, and an alert when it breaks | recording rules written by hand |
 
 The third is that **the joins come built**. Lesson 7 configured a data source per signal and lesson
-11 needed one more setting for exemplars; a hosted product has every signal in one store, with the trace
-id joining logs to traces by default.
+11 needed one more setting for exemplars. A hosted product has every signal in one store, with the
+trace id joining logs to traces by default.
 
 What it does not sell is a different idea. The same three signals, the same trace id, the same
-cardinality bill: everything lesson 1 to lesson 12 said still applies, and the products are judged
-on how well they do those things and at what price.
+cardinality bill: everything lesson 1 to lesson 12 said still applies. The products are judged on
+how well they do those things and at what price.

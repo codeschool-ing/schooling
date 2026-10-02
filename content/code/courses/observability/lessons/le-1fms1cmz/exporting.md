@@ -54,17 +54,17 @@ batch: 2000 spans in 0.08 s
 ```
 
 **1.85 seconds against 0.08**, for the same 2000 spans. The simple processor exports each span the
-moment it ends, so every `with` block waited for an HTTP request to the Collector and back: almost a
+moment it ends, so every `with` block waited for an HTTP request to the Collector and back. That is almost a
 millisecond per span, added to the code being measured. The batch processor puts the finished span
 in a queue and returns. A thread of its own sends the queue in batches, every few seconds or when
 enough have piled up, and the code never waits for the network.
 
 So **the batch processor is the one for a service**, and the simple one is for a script you are
-reading on a console. The batch processor has a cost of its own, and it is the reason `cost.py`
+reading on a console. The batch processor has a cost of its own. It is the reason `cost.py`
 ends with `provider.shutdown()`: spans waiting in the queue are lost if the process dies before the
 next send. A normal exit flushes them, because the SDK registers a shutdown when the provider is
 created. A process killed outright, by the kernel running out of memory or by `kill -9`, takes its
-last few seconds of spans with it, and they are usually the seconds that explain why it died.
+last few seconds of spans with it. Those are usually the seconds that explain why it died.
 
 The queue is also bounded. If the Collector stops answering, the batch processor keeps a fixed
 number of spans, 2048 by default in Python, and drops the rest rather than growing until the

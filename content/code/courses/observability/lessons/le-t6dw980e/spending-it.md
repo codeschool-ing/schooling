@@ -13,11 +13,11 @@ ana@obs:~/shop$ ./promq '(1 - checkout:sli_availability:ratio_rate5m) / (1 - 0.9
   5.871224271357906
 ```
 
-**97% of checkouts in the last five minutes succeeded**, which sounds healthy, and is **5.9 times the
-rate the objective allows**. That second number is the **burn rate**: the error ratio divided by the
-ratio the objective permits, here 0.5%. A burn rate of 1 spends the budget in exactly one window; 5.9
-would spend an hour's budget in about ten minutes, and a 28-day budget in under five days. Lesson 16
-alerts on it.
+**97% of checkouts in the last five minutes succeeded**, which sounds healthy, and is **5.9 times
+the rate the objective allows**. That second number is the **burn rate**: the error ratio divided by
+the ratio the objective permits, here 0.5%. A burn rate of 1 spends the budget in exactly one
+window. A burn rate of 5.9 would spend an hour's budget in about ten minutes, and a 28-day budget in
+under five days. Lesson 16 alerts on it.
 
 The fault is removed, and a minute and a half later the hour is read again:
 
@@ -41,8 +41,9 @@ of the hour's budget went in four minutes.**
 ```
 
 Two lessons sit in those numbers. **An SLI that reads 99.7% can still mean trouble**: the objective
-was met, and there is a third of the budget left for the rest of the window. Another incident like this
-one would miss it. And **the window decides how dramatic an incident looks**: the same 55 failures
-against a 28-day budget of about fifty thousand would be about a tenth of one per cent of it. The lab's one-hour window makes every
-incident look large on purpose, so that a lesson can watch the budget move; a real team sees this as a
-small dip in a long line, and the policy in the next section decides what that dip means.
+was met, and there is a third of the budget left for the rest of the window. Another incident like
+this one would miss it. And **the window decides how dramatic an incident looks**: the same 55
+failures against a 28-day budget of about fifty thousand would be about a tenth of one per cent of
+it. The lab's one-hour window makes every incident look large on purpose, so that a lesson can watch
+the budget move. A real team sees this as a small dip in a long line, and the policy in the next
+section decides what that dip means.

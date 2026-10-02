@@ -24,10 +24,10 @@ trace not found
 Quatro exemplares, quatro rastros que não existem. Com 12% dos rastros guardados, esse é o resultado
 comum. Com amostragem na cabeça existe uma correção, porque a decisão é conhecida enquanto a
 requisição roda: anexar um exemplar só quando o span é amostrado. O `web.py` do laboratório verifica
-só que existe um span, e acrescentar `ctx.trace_flags.sampled` a esse teste faria todo exemplar apontar
-para um rastro guardado; o SDK de métricas do próprio OpenTelemetry faz isso por padrão, com o filtro
-de exemplares `trace_based`. Com amostragem na cauda nada no momento da medição sabe a resposta, e um
-exemplar é um palpite.
+só que existe um span, e acrescentar `ctx.trace_flags.sampled` a esse teste faria todo exemplar
+apontar para um rastro guardado. O SDK de métricas do próprio OpenTelemetry faz isso por padrão, com
+o filtro de exemplares `trace_based`. Com amostragem na cauda nada no momento da medição sabe a
+resposta, e um exemplar é um palpite.
 
 **Uma linha de log nomeia um rastro que pode não existir.** A seção da amostragem na cabeça mostrou: toda
 linha leva um trace id, e nove em dez deles não levam a lugar nenhum. As linhas de uma requisição que
@@ -41,5 +41,5 @@ em dez deles, e o resultado parece completo. Com amostragem na cauda ela acha to
 as contagens; os rastros são exemplos do que as contagens descrevem.
 
 Um armazenamento amostrado é um conjunto de exemplos escolhidos por regras, e as regras pertencem à
-documentação do sistema: quem lê um rastro, ou não acha um, precisa saber que requisições podem ter
+documentação do sistema. Quem lê um rastro, ou não acha um, precisa saber que requisições podem ter
 sido descartadas.

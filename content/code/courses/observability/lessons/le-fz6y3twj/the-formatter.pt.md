@@ -47,7 +47,7 @@ Uma chamada na vitrine, então, fica assim:
 
 A mensagem é uma frase fixa e os valores são campos. **A mensagem nunca interpola um valor**:
 `"checkout finished"` é a mesma string para todo checkout, e é isso que permite à aula 9 contá-los
-pela mensagem, e o número do pedido está em `order_id`, onde pode ser buscado sem analisar uma frase.
+pela mensagem. O número do pedido está em `order_id`, onde pode ser buscado sem analisar uma frase.
 
 Escrever na saída padrão é uma decisão com nome, dos princípios do *twelve-factor app*: um serviço
 trata seus logs como um fluxo e deixa o recolhimento a cargo de quem o executa. Neste laboratório o

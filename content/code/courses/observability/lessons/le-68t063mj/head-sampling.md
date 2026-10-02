@@ -23,11 +23,11 @@ ana@obs:~/shop$ docker compose run --rm sandbox python flags.py
 ```
 
 Every line is a `traceparent`, the header lesson 4 took apart, and the answer is in its last field.
-**`03` says the trace is being recorded**, `02` that it is not; the `2` in both is the flag lesson 4
-mentioned, saying the trace id's bits are random, which is the property this sampler relies on. `TraceIdRatioBased`
-does not roll a die: it reads the trace id as a number and keeps the trace if that number falls
-below the fraction. Two services given the same id and the same fraction reach the same answer
-without talking to each other.
+**`03` says the trace is being recorded**, `02` that it is not. The `2` in both is the flag lesson 4
+mentioned, saying the trace id's bits are random, which is the property this sampler relies on.
+`TraceIdRatioBased` does not roll a die: it reads the trace id as a number and keeps the trace if
+that number falls below the fraction. Two services given the same id and the same fraction reach the
+same answer without talking to each other.
 
 The shop needs no code for this. The SDK reads its sampler from the environment, so the storefront,
 where every checkout's trace begins, is given one in an override, keeping one trace in ten:
@@ -70,9 +70,9 @@ cea0990a2b7b980d4e2464447e909c9d  trace not found
 7d199f333e9aa3e8317b43b2c5ae6009  trace not found
 ```
 
-None of the ten was kept. At one in ten that happens about one time in three, and the next section shows
-kept traces whole. Every checkout still wrote its log line, with its trace id, whatever the decision; a
-trace id in a log is no promise that the trace was kept, which is a fact to remember the next time a
+None of the ten was kept. At one in ten that happens about one time in three, and the next section
+shows kept traces whole. Every checkout still wrote its log line, with its trace id, whatever the
+decision. A trace id in a log is no promise that the trace was kept: remember that the next time a
 click from a log line to Jaeger finds nothing.
 
 Head sampling is cheap in the way that matters most: **a dropped trace costs almost nothing from its

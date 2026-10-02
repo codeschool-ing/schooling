@@ -73,11 +73,11 @@ deep-556bf5bcdd-vnsfv   1/1     Running   3 (64s ago)   3m32s
 ```
 
 The restarts stop, and the count stays at three, the record of an outage this service did not have.
-With real traffic the damage is worse than the count: requests were dropped at every restart, caches
-were emptied, and when the database returned every copy was either starting or waiting out a
+With real traffic the damage is worse than the count: requests were dropped at every restart, and
+caches were emptied. When the database returned every copy was either starting or waiting out a
 back-off, so the recovery took longer than the outage needed to.
 
 The fix is a sentence: **liveness checks the process, readiness checks the dependencies.** Had this
 check been a readiness probe, the three copies would have left the Service while the database was
-gone and come back by themselves a few seconds after it returned, with nothing restarted and nothing
-lost.
+gone. They would have come back by themselves a few seconds after it returned, with nothing
+restarted and nothing lost.

@@ -35,7 +35,7 @@ mais barato mantendo as regras de alerta perto do PromQL e os painéis poucos.
   transferência, e dados pessoais chegam a rastros e logs com mais frequência do que alguém planeja.
 - **O que só existe com o agente do próprio fornecedor?** Esse é o aprisionamento que sobra.
 
-Um resultado comum é uma mistura: métricas e logs numa pilha operada pela equipe, onde o volume é alto
-e o uso é rotineiro, e um produto hospedado para a parte mais difícil de operar bem, muitas vezes o
-rastreamento de erros ou os rastros. **O Collector torna a mistura barata**, e esse é o argumento mais
-forte para pôr um na frente do que quer que você escolha.
+Um resultado comum é uma mistura. Métricas e logs ficam numa pilha operada pela equipe, onde o
+volume é alto e o uso é rotineiro, e um produto hospedado fica com a parte mais difícil de operar
+bem, muitas vezes o rastreamento de erros ou os rastros. **O Collector torna a mistura barata**, e
+esse é o argumento mais forte para pôr um na frente do que quer que você escolha.

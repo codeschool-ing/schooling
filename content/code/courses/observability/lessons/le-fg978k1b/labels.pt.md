@@ -80,7 +80,7 @@ ana@obs:~/shop$ ./promq 'prometheus_tsdb_head_series'
 __name__=prometheus_tsdb_head_series instance=localhost:9090 job=prometheus  3782
 ```
 
-**Três séries**, uma por plano, somando 20000, e a memória ativa (head) cresceu 22: seis para os
-logins, porque todo counter traz o seu gauge `_created`, e o resto para o próprio alvo novo, o `up`
+**Três séries**, uma por plano, somando 20000, e a memória ativa (head) cresceu 22. Seis são dos
+logins, porque todo counter traz o seu gauge `_created`. O resto é do próprio alvo novo: o `up`
 dele, as estatísticas de coleta e as métricas de processo que a biblioteca cliente publica. Nada a
 ver.

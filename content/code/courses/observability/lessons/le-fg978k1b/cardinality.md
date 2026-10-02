@@ -18,9 +18,9 @@ __name__=prometheus_tsdb_head_series instance=localhost:9090 job=prometheus  438
 ```
 
 **20000 series for one counter, and the head went from 3782 to 43805.** The counter's twenty
-thousand were joined by twenty thousand `_created` gauges, one per series, so a single label added
-forty thousand series, ten times everything the rest of the lab holds. The number of distinct
-values a label takes is called its **cardinality**, and this is what *high cardinality* costs:
+thousand were joined by twenty thousand `_created` gauges, one per series. A single label added
+forty thousand series, ten times everything the rest of the lab holds. The number of distinct values
+a label takes is called its **cardinality**, and this is what *high cardinality* costs:
 
 ```
 ana@obs:~/shop$ ./promq 'scrape_samples_scraped{job="logins"}'
@@ -39,9 +39,9 @@ __name__=process_resident_memory_bytes instance=localhost:9090 job=prometheus  1
 
 **158 MB, up from 96**, for one counter of one experiment, before a single dashboard has asked for
 anything. Every one of those series lives in memory while it is active, is written to disk, and is
-indexed so a query can find it; each costs little, and there are forty thousand of them. Real
-systems make the same mistake with a request id, an e-mail address, a full URL with its query
-string or a timestamp in a label, and the series multiply with traffic until Prometheus runs out of
+indexed so a query can find it. Each costs little, and there are forty thousand of them. Real
+systems make the same mistake with a request id, an e-mail address, a full URL with its query string
+or a timestamp in a label. The series then multiply with traffic until Prometheus runs out of
 memory.
 
 **The rule is lesson 2's, turned around.** On a span, a user id is the right place for detail,

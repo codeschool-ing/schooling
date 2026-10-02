@@ -21,9 +21,9 @@ ana@obs:~/shop$ curl -s -u admin:$(cat .graylog-password) -H 'X-Requested-By: an
 "2026-10-02T15:42:58.000Z","checkout failed",
 ```
 
-**The same failure in all three**, with one difference that is the selector's and not the store's:
-the Loki query named `{service_name="payments"}` and found payments' line; Elasticsearch and Graylog
-were asked for the trace id in every service's lines and found three, payments' *card network
+**The same failure in all three**, with one difference that is the selector's and not the store's.
+The Loki query named `{service_name="payments"}` and found payments' line. Elasticsearch and Graylog
+were asked for the trace id in every service's lines and found three: payments' *card network
 unavailable*, orders' *payment failed* and the storefront's *checkout failed*. Removing the label
 from the Loki query would have found all three there too, at the cost of reading every stream.
 
@@ -55,8 +55,8 @@ ana@obs:~/shop$ rm faults/payments.json compose.override.yaml
 ```
 
 **Loki, 80 MB. Elasticsearch, 1.5 GB. Graylog and its two companions, about 1.8 GB.** These are the
-same lines, a few thousand of them, on stores that were all configured small; most of the JVMs'
+same lines, a few thousand of them, on stores that were all configured small. Most of the JVMs'
 memory is a heap reserved up front, and none of these numbers scales linearly with traffic. What
 they show is the shape of the trade in this lesson's figure: Loki keeps writing cheap and pays when it
-reads; the other two pay to index every line, and keep the memory to do it. The fault file and the
+reads. The other two pay to index every line, and keep the memory to do it. The fault file and the
 override were removed at the end of the capture.

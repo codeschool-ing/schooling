@@ -63,9 +63,9 @@ ana@obs:~/shop$ ./promq 'sum(rate(otelcol_exporter_sent_spans{exporter="zipkin"}
   4.933333333333334
 ```
 
-Chegam quarenta spans por segundo e saem cinco. **Os rastros no armazenamento agora são os que vale abrir**: uma busca no Jaeger por erros
-acha todo erro dos últimos dois minutos, e uma busca por checkouts lentos acha todo checkout lento, não
-um em dez.
+Chegam quarenta spans por segundo e saem cinco. **Os rastros no armazenamento agora são os que vale
+abrir**. Uma busca no Jaeger por erros acha todo erro dos últimos dois minutos, e uma busca por
+checkouts lentos acha todo checkout lento, não um em dez.
 
 As políticas são avaliadas juntas e qualquer uma basta. O processador tem mais tipos que esses três:
 pelo valor de um atributo, por número de spans, por taxa por segundo, e combinações deles. Uma política

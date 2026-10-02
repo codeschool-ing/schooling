@@ -28,7 +28,7 @@ ana@obs:~/shop$ curl -s -u admin:$(cat .graylog-password) -H 'X-Requested-By: an
 ```
 
 As mesmas falhas, duas delas, com ids de pedido e de rastro. **Os prefixos merecem atenção antes de
-escrever qualquer coisa contra eles**: todo armazenamento renomeia campos na entrada, o Elasticsearch
-os aninha sob `attributes.`, o Graylog os achata com `otel_attributes_`, o Loki os deixa na linha, e
-uma consulta, um painel ou um alerta copiado de um armazenamento para outro falha nos nomes antes de
+escrever qualquer coisa contra eles.** Todo armazenamento renomeia campos na entrada. O Elasticsearch
+os aninha sob `attributes.`, o Graylog os achata com `otel_attributes_`, e o Loki os deixa na linha.
+Uma consulta, um painel ou um alerta copiado de um armazenamento para outro falha nos nomes antes de
 falhar em qualquer outra coisa.

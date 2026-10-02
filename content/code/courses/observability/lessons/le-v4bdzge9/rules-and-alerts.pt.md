@@ -40,12 +40,12 @@ groups:
           summary: "The nightly report has not finished for over 26 hours"
 ```
 
-Uma **regra de gravação**, `record:`, avalia uma expressão e guarda o resultado como uma série
-nova com o nome dado. `job:http_server_requests:rate1m` é a taxa por job e código, calculada uma vez
-por avaliação em vez de uma vez por painel e por alerta que a queira; o nome segue a convenção
+Uma **regra de gravação**, `record:`, avalia uma expressão e guarda o resultado como uma série nova
+com o nome dado. `job:http_server_requests:rate1m` é a taxa por job e código, calculada uma vez por
+avaliação em vez de uma vez por painel e por alerta que a queira. O nome segue a convenção
 *nível:métrica:operação*. Uma **regra de alerta**, `alert:`, avalia uma expressão e, para cada série
 que volta, mantém um alerta. `PaymentsFailing` é a proporção do começo desta aula, escrita sobre a
-regra de gravação, e `ReportNotRun` é o timestamp do Pushgateway com vinte e seis horas em cima: um
+regra de gravação. `ReportNotRun` é o timestamp do Pushgateway com vinte e seis horas em cima: um
 dia, mais uma folga para uma execução que começou tarde.
 
 O arquivo é verificado com o `promtool`, da própria imagem do Prometheus, e o Prometheus é avisado
@@ -83,7 +83,7 @@ PaymentsFailing	firing	2026-10-02T10:07:39.145836091Z
 ```
 
 O Prometheus só decide que um alerta está disparado. **Quem fica sabendo é trabalho do
-Alertmanager**: ele recebe todo alerta disparado, agrupa os que andam juntos, segura os repetidos, e
+Alertmanager.** Ele recebe todo alerta disparado, agrupa os que andam juntos, segura os repetidos, e
 manda cada grupo a um receptor. O do laboratório roteia tudo para o pager:
 
 ```

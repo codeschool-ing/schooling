@@ -32,12 +32,12 @@ demo_request_seconds_created 1.790936343199444e+09
 outras linguagens calculam, e a saída deles traz linhas como `{quantile="0.99"}`. Mesmo assim, um
 summary tem um defeito que nenhum cliente conserta: **percentis não se somam**. Se três cópias de um
 serviço informam cada uma um percentil 99, nenhuma conta com os três números dá o percentil 99 de
-todas as requisições juntas; seriam necessárias as observações, que foram jogadas fora. Buckets *se
-somam*: somar os buckets de três histogramas dá o histograma dos três, e o percentil dele está certo
-até a resolução do bucket.
+todas as requisições juntas. Seriam necessárias as observações, e elas foram jogadas fora. Buckets
+*se somam*: somar os buckets de três histogramas dá o histograma dos três, e o percentil dele está
+certo até a resolução do bucket.
 
 É por isso que a vitrine usa um histograma, e que o conselho é o mesmo em quase todo lugar: **um
 histograma, com buckets escolhidos de propósito**. O Prometheus 3 também suporta **histogramas
 nativos**, cujos buckets são escolhidos automaticamente numa resolução relativa fixa e guardados de
-forma muito mais compacta; eles exigem que a biblioteca cliente e o servidor concordem no formato, e
+forma muito mais compacta. Eles exigem que a biblioteca cliente e o servidor concordem no formato, e
 os buckets clássicos do laboratório são o que este curso usa para medir.

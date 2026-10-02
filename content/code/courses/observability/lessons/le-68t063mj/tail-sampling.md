@@ -63,9 +63,9 @@ ana@obs:~/shop$ ./promq 'sum(rate(otelcol_exporter_sent_spans{exporter="zipkin"}
   4.933333333333334
 ```
 
-Forty spans a second arrive and five leave. **The traces in the store are now the ones worth opening**: a search in Jaeger for
-errors finds every error of the last two minutes, and a search for slow checkouts finds every slow
-one, not one in ten.
+Forty spans a second arrive and five leave. **The traces in the store are now the ones worth
+opening**. A search in Jaeger for errors finds every error of the last two minutes, and a search for
+slow checkouts finds every slow one, not one in ten.
 
 The policies are evaluated together and any one of them is enough. The processor has more types than
 these three: on an attribute's value, on a span count, on the rate per second, and combinations of

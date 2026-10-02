@@ -19,9 +19,9 @@ services:
       start_period: 10s
 ```
 
-`interval` is how often, `timeout` how long one check may take, `retries` how many failures in a row
-make the container *unhealthy*, and `start_period` a grace time after a start in which failures do
-not count, Docker's version of a startup probe. With the database up:
+`interval` is how often, `timeout` how long one check may take, and `retries` how many failures in a
+row make the container *unhealthy*. `start_period` is a grace time after a start in which failures
+do not count, Docker's version of a startup probe. With the database up:
 
 ```
 ana@obs:~/shop$ docker compose ps orders --format '{{.Name}}  {{.Status}}'
@@ -56,7 +56,7 @@ ana@obs:~/shop$ docker inspect --format '{{.RestartCount}}' shop-orders-1
 ```
 
 **Docker restarts nothing for being unhealthy.** A restart policy reacts to the process exiting,
-never to a failed healthcheck; only Swarm, Docker's own orchestrator, replaces unhealthy containers.
+never to a failed healthcheck. Only Swarm, Docker's own orchestrator, replaces unhealthy containers.
 On a single machine the status is information: `docker ps` shows it, Compose can make another
 service wait for it with `depends_on` and `condition: service_healthy`, and a monitor can read it.
 That is the right behaviour for a readiness check, since restarting `orders` would not bring the

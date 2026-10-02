@@ -14,13 +14,13 @@ a span. So a scheduled job's trace starts at the job, and three habits keep it f
   many failed. The report sets `report.orders` and `report.paid` on its span, which is what lets
   *the report counted nothing last Tuesday* be found by searching rather than by reading logs.
 
-The opposite case also exists: a job **that is** started by something with a trace, a deploy pipeline
-running a migration or a service launching a worker process. There the parent's context has to reach
-a new process, and there is no header to carry it. OpenTelemetry has added a convention for that:
-the parent sets the environment variables `TRACEPARENT` and `TRACESTATE` for the child, in the same
-format as the headers, and the child extracts from its environment as a server extracts from a
-request. It is recent, and few tools read it on their own yet, so a script launched that way may need
-the two lines written by hand.
+The opposite case also exists: a job **that is** started by something with a trace, a deploy
+pipeline running a migration or a service launching a worker process. There the parent's context has
+to reach a new process, and there is no header to carry it. OpenTelemetry has added a convention for
+that. The parent sets the environment variables `TRACEPARENT` and `TRACESTATE` for the child, in the
+same format as the headers. The child extracts from its environment as a server extracts from a
+request. It is recent, and few tools read it on their own yet, so a script launched that way may
+need the two lines written by hand.
 
 What a scheduled job's trace cannot do is say **that the job did not run**. A trace exists only for
 work that happened; the night the scheduler failed leaves no span at all. That question belongs to a

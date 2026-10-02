@@ -4,10 +4,10 @@ version: 1
 ---
 
 A aula 8 deixou todo serviço imprimindo JSON na saída padrão e sem saber nada de para onde isso vai.
-**Algo tem de recolher essas linhas e entregá-las**, e o nome geral disso é um *shipper* ou *agente* de
+**Algo tem de recolher essas linhas e entregá-las.** O nome geral disso é um *shipper* ou *agente* de
 logs: Fluent Bit, Vector, Logstash, Promtail e o sucessor dele, o Alloy, ou o OpenTelemetry Collector,
 que o laboratório já roda para os rastros. Pôr esse trabalho fora do serviço é o que permite ao serviço
-continuar simples, e é o que permite ao destino mudar sem uma nova versão: um serviço que manda seus
+continuar simples, e o que permite ao destino mudar sem uma nova versão. Um serviço que manda seus
 logs direto a um armazenamento por HTTP tem de tentar de novo, guardar em buffer e se autenticar
 sozinho, e muda toda vez que o armazenamento muda.
 

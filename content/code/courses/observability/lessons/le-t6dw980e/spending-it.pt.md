@@ -13,11 +13,11 @@ ana@obs:~/shop$ ./promq '(1 - checkout:sli_availability:ratio_rate5m) / (1 - 0.9
   5.871224271357906
 ```
 
-**97% dos checkouts dos últimos cinco minutos deram certo**, o que soa saudável, e é **5,9 vezes a taxa
-que o objetivo permite**. Esse segundo número é a **taxa de queima**: a taxa de erros dividida pela taxa
-que o objetivo permite, aqui 0,5%. Uma taxa de queima de 1 gasta o orçamento em exatamente uma janela;
-5,9 gastaria o orçamento de uma hora em uns dez minutos, e um orçamento de 28 dias em menos de cinco
-dias. A aula 16 alerta sobre ela.
+**97% dos checkouts dos últimos cinco minutos deram certo**, o que soa saudável, e é **5,9 vezes a
+taxa que o objetivo permite**. Esse segundo número é a **taxa de queima**: a taxa de erros dividida
+pela taxa que o objetivo permite, aqui 0,5%. Uma taxa de queima de 1 gasta o orçamento em exatamente
+uma janela. Uma taxa de queima de 5,9 gastaria o orçamento de uma hora em uns dez minutos, e um
+orçamento de 28 dias em menos de cinco dias. A aula 16 alerta sobre ela.
 
 A falha é removida, e um minuto e meio depois a hora é lida de novo:
 
@@ -42,8 +42,8 @@ hora foram em quatro minutos.**
 
 Há duas lições nesses números. **Um SLI de 99,7% ainda pode significar problema**: o objetivo foi
 cumprido, e resta um terço do orçamento para o resto da janela. Outro incidente como este o
-descumpriria. E **a janela decide quão dramático um incidente parece**: as mesmas 55 falhas contra um
-orçamento de 28 dias de uns cinquenta mil seriam cerca de um décimo de um por cento dele. A janela de uma
-hora do laboratório faz todo incidente parecer grande de propósito, para uma aula poder ver o orçamento
-se mexer; uma equipe real vê isso como uma pequena queda numa linha longa, e a política da próxima seção
-decide o que essa queda significa.
+descumpriria. E **a janela decide quão dramático um incidente parece**: as mesmas 55 falhas contra
+um orçamento de 28 dias de uns cinquenta mil seriam cerca de um décimo de um por cento dele. A
+janela de uma hora do laboratório faz todo incidente parecer grande de propósito, para uma aula
+poder ver o orçamento se mexer. Uma equipe real vê isso como uma pequena queda numa linha longa, e a
+política da próxima seção decide o que essa queda significa.

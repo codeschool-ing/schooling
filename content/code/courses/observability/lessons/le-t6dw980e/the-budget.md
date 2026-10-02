@@ -34,9 +34,10 @@ and 22 minutes of everything failing.
 - migrations, experiments, a new database version, a change of cloud region;
 - the failures nobody chose: a provider's outage, a bad disk, a bug from last month.
 
-It turns a quarrel into arithmetic. The people building features want to release; the people answering
-the pager want stability. Without a budget each side argues from experience; **with one, the question is
-whether there is budget left**, and the answer is a number both read off the same dashboard.
+It turns a quarrel into arithmetic. The people building features want to release; the people
+answering the pager want stability. Without a budget each side argues from experience. **With one,
+the question is whether there is budget left**, and the answer is a number both read off the same
+dashboard.
 
 The budget is measured in failures, not time, and that matters at night: an outage at four in the
 morning, when ten customers are buying, spends far less of it than the same outage at lunchtime.

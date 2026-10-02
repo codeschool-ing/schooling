@@ -21,7 +21,7 @@ Isso faz valer a pena conhecer pelo nome os jeitos como ele pode estar errado:
   confiável; costuma provar um objetivo frouxo. Aperte-o até significar alguma coisa, ou pare de pagar
   pela confiabilidade de que ninguém precisa.
 
-**E o objetivo não é a meta.** Uma equipe que ajusta o SLI para parecer bem, movendo o limite, excluindo
-uma rota ou rotulando uma falha como culpa do cliente, tem um painel verde e os mesmos clientes
-insatisfeitos. O SLO só é útil enquanto concorda com o que os clientes dizem; quando os dois discordam,
-quem está errado é o SLO.
+**E o objetivo não é a meta.** Uma equipe que ajusta o SLI para parecer bem, movendo o limite,
+excluindo uma rota ou rotulando uma falha como culpa do cliente, tem um painel verde e os mesmos
+clientes insatisfeitos. O SLO só é útil enquanto concorda com o que os clientes dizem. Quando os
+dois discordam, quem está errado é o SLO.

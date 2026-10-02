@@ -5,9 +5,9 @@ version: 1
 
 Os serviços da loja publicam as próprias métricas porque o curso os escreveu assim. Uma máquina
 Linux, um banco PostgreSQL ou um site que não é seu não publicam nada no formato do Prometheus. **Um
-exporter é um pequeno programa que pergunta a uma coisa dessas sobre ela mesma, do jeito que ela
-puder ser perguntada, e responde à coleta do Prometheus com o resultado.** O laboratório roda três,
-e o RabbitMQ tem um embutido:
+exporter é um pequeno programa que pergunta a uma coisa dessas sobre ela mesma e responde à coleta
+do Prometheus com o resultado.** Ele pergunta do jeito que a coisa puder ser perguntada. O
+laboratório roda três, e o RabbitMQ tem um embutido:
 
 | alvo | o que ele traduz | como pergunta |
 |---|---|---|
@@ -30,7 +30,7 @@ __name__=probe_success instance=http://storefront:8080/health job=blackbox  1
 ```
 
 A carga média da máquina no último minuto, o banco respondendo, uma fila vazia, e a sonda externa
-dando certo. **A última é de outra natureza.** As outras três relatam o que um sistema diz de si; o
+dando certo. **A última é de outra natureza.** As outras três relatam o que um sistema diz de si. O
 blackbox exporter age como um cliente e relata o que viveu, dividido por fase:
 
 ```

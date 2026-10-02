@@ -29,8 +29,8 @@ Traceback (most recent call last):
 
 **Seventeen lines**, and a log pipeline that collects standard output one line at a time stores
 seventeen records. The first says *Traceback*, the last says what went wrong, and the ones between
-are the code path. In a busy service, other requests' lines arrive between them; a search for the
-error's type finds the last line on its own, without the code that raised it; and none of the
+are the code path. In a busy service, other requests' lines arrive between them. A search for the
+error's type finds the last line on its own, without the code that raised it. And none of the
 seventeen carries the trace id of the request that failed.
 
 `caught.py` catches the same exception and logs it through the shop's formatter with

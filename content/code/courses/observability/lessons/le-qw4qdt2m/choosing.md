@@ -17,7 +17,7 @@ makes for each service:
 **The usual answer is the third column.** Automatic instrumentation is the cheapest way to get the
 edges right, consistently and in the conventions' names, and the code adds what only it knows. A
 service instrumented entirely by hand, like the storefront, makes sense when it is small, when the
-libraries it uses have no instrumentation, or for teaching, which is why lesson 2 did it that way.
+libraries it uses have no instrumentation, or for teaching. That is why lesson 2 did it that way.
 
 The same idea exists outside Python with different machinery. Java's agent is a JAR loaded with
 `-javaagent` that rewrites classes as they load. .NET and Node.js have their own launchers and

@@ -94,6 +94,6 @@ starts with a fresh filesystem, without `/tmp/stuck`. That is the only kind of f
 cure, and the next section is about the other kind.
 
 Two settings decide how long all this takes. `periodSeconds` times `failureThreshold` is the delay
-between a fault and the action, nine seconds for this liveness probe; and a third probe,
-`startupProbe`, holds the other two back while a slow service starts, so that liveness does not kill
-a process that is still loading.
+between a fault and the action, nine seconds for this liveness probe. A third probe, `startupProbe`,
+holds the other two back while a slow service starts, so that liveness does not kill a process that
+is still loading.

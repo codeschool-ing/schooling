@@ -5,8 +5,8 @@ version: 1
 
 Todo armazenamento guarda as linhas até algo apagá-las, e o padrão muitas vezes é *para sempre*.
 **Um período de retenção é uma decisão sobre até onde uma investigação consegue olhar para trás**,
-pesada contra o custo e contra o risco de guardar dados por mais tempo do que o necessário, que a LGPD
-conta como um risco em si.
+pesada contra o custo e contra o risco de guardar dados por mais tempo do que o necessário. A LGPD
+conta isso como um risco em si.
 
 O do Loki é uma linha na configuração, aplicada pelo compactor dele, que apaga os chunks mais velhos
 que o período:

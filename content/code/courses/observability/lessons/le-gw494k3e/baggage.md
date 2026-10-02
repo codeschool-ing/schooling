@@ -4,8 +4,8 @@ version: 1
 ---
 
 The context that travels has a second part besides the trace. **Baggage** is a set of key and value
-pairs that a service puts into the context and that every service downstream can read, carried in
-its own header beside `traceparent`. `baggage.py` sets one entry and injects, as a service would
+pairs that a service puts into the context and that every service downstream can read. It is carried
+in its own header beside `traceparent`. `baggage.py` sets one entry and injects, as a service would
 before calling the next:
 
 ```python
@@ -32,8 +32,8 @@ baggage: shop.channel=mobile-app
 ```
 
 The second header is the baggage: `shop.channel=mobile-app`. A service three hops away can read it
-with `baggage.get_baggage("shop.channel")` and, for instance, record it on its own spans, so that
-*are checkouts from the mobile app slower?* can be asked of a service that never saw the app.
+with `baggage.get_baggage("shop.channel")`. It could, for instance, record it on its own spans, so
+that *are checkouts from the mobile app slower?* can be asked of a service that never saw the app.
 
 Two properties of baggage are easy to miss, and both cause trouble:
 
@@ -46,6 +46,6 @@ Two properties of baggage are easy to miss, and both cause trouble:
 
 That second property is the rule: **nothing personal or secret goes into baggage**. Not a customer's
 e-mail or tax number, not a session token, not an internal hostname you would not publish. A
-channel, a region, a tenant id that means nothing outside the company: those are what it is for.
-And because every entry is sent on every call, it has a cost in bytes too; a few short entries are
-the ceiling, not the start.
+channel, a region, a tenant id that means nothing outside the company: those are what it is for. And
+because every entry is sent on every call, it has a cost in bytes too. A few short entries are the
+ceiling, not the start.

@@ -18,11 +18,11 @@ que conseguem achar. **É sobre onde cada um paga**, e isso decorre de como ele 
 **Dois avisos que valem qualquer que seja a escolha.** O custo de um armazenamento de logs é dado
 pelo volume que ele recebe, e é por isso que o conselho da aula 8 vem antes de qualquer um destes e
 a retenção da aula 10 vem logo depois. E labels no Loki carregam o mesmo perigo que labels no
-Prometheus: um label por requisição, usuário ou id de rastro é um stream por valor, e o índice pequeno
-que torna o Loki barato deixa de ser pequeno. Valores assim vão na linha, onde `| json` e um filtro os
+Prometheus: um label por requisição, usuário ou id de rastro é um stream por valor. O índice pequeno
+que torna o Loki barato então deixa de ser pequeno. Valores assim vão na linha, onde `| json` e um filtro os
 acham.
 
 As outras partes do Elastic Stack, o **Logstash** ou os **Beats** para transportar e o **Kibana** para
-ler, ficam de fora deste laboratório de propósito: o Collector já transporta, e as telas do Kibana são
+ler, ficam de fora deste laboratório de propósito. O Collector já transporta, e as telas do Kibana são
 um produto que muda mais rápido que este curso. O que o laboratório mostra é a parte que decide o
 custo, o índice, e a consulta que chega a ele.

@@ -78,6 +78,6 @@ ana@obs:~/shop$ ./promq 'prometheus_tsdb_head_series'
 __name__=prometheus_tsdb_head_series instance=localhost:9090 job=prometheus  3782
 ```
 
-**Three series**, one per plan, adding up to 20000, and the head grew by 22: six for the logins,
-because every counter brings its `_created` gauge, and the rest for the new target itself, its
-`up`, its scrape statistics and the process metrics the client library publishes. Nothing to see.
+**Three series**, one per plan, adding up to 20000, and the head grew by 22. Six are for the logins,
+because every counter brings its `_created` gauge. The rest are for the new target itself: its `up`,
+its scrape statistics and the process metrics the client library publishes. Nothing to see.

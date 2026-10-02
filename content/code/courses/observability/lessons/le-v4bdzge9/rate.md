@@ -15,9 +15,9 @@ code=402 instance=storefront:8080 job=storefront method=POST route=/checkout  0.
 
 About 4.2 checkouts a second answered `201` and 0.27 answered `402`, a declined card. The simulated
 customers send five requests a second, one in ten of them a product listing, so 4.5 checkouts a
-second is the whole of it, and adding the two lines gives 4.49. To get that sum from Prometheus, the
-series are **aggregated**: `sum by (route)` adds every series that shares a route and keeps only that
-label:
+second is the whole of it. Adding the two lines gives 4.49. To get that sum from Prometheus, the
+series are **aggregated**: `sum by (route)` adds every series that shares a route and keeps only
+that label:
 
 ```
 ana@obs:~/shop$ ./promq 'sum by (route) (rate(http_server_requests_total{job="storefront"}[1m]))'
@@ -36,7 +36,7 @@ ana@obs:~/shop$ ./promq 'sum(increase(http_server_requests_total{job="storefront
 
 304, close to 60 seconds times the 5.07 requests a second the three routes add up to. **Both are
 estimates**, worked out from the scrapes that fell inside the window and stretched to cover all of
-it, which is why `increase()` can return a number that is not a whole count.
+it. That is why `increase()` can return a number that is not a whole count.
 
 The reason to always go through `rate()` rather than subtracting two values yourself is what happens
 when a process restarts. The storefront is restarted, and its counter is read before and after:

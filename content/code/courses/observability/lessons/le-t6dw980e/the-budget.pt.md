@@ -36,9 +36,9 @@ horas e 22 minutos de tudo falhando.
 - migrações, experimentos, uma versão nova do banco, uma troca de região na nuvem;
 - as falhas que ninguém escolheu: a queda de um fornecedor, um disco ruim, um bug do mês passado.
 
-Ele transforma uma briga em aritmética. Quem constrói funcionalidades quer lançar; quem atende o plantão
-quer estabilidade. Sem um orçamento cada lado argumenta pela experiência; **com um, a pergunta é se ainda
-há orçamento**, e a resposta é um número que os dois leem no mesmo painel.
+Ele transforma uma briga em aritmética. Quem constrói funcionalidades quer lançar; quem atende o
+plantão quer estabilidade. Sem um orçamento cada lado argumenta pela experiência. **Com um, a
+pergunta é se ainda há orçamento**, e a resposta é um número que os dois leem no mesmo painel.
 
 O orçamento é medido em falhas, não em tempo, e isso importa de noite: uma queda às quatro da manhã,
 com dez clientes comprando, gasta muito menos dele que a mesma queda na hora do almoço.

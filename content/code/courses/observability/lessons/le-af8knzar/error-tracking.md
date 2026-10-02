@@ -5,9 +5,9 @@ version: 1
 
 An error tracker is the oldest of these products' ideas and the narrowest. **It records exceptions,
 not requests**, and it records each one with far more around it than a log line or a span carries.
-Sentry's SDK is the example here because it is open source and installs like any library; the
-script reports one exception the way a service would, except that its transport writes the event to
-a file instead of sending it:
+Sentry's SDK is the example here because it is open source and installs like any library. The script
+reports one exception the way a service would, except that its transport writes the event to a file
+instead of sending it:
 
 ```schooling-example
 {
@@ -107,10 +107,10 @@ Four things in it that no signal in this course has carried so far:
   first appeared and whether the release that claimed to fix it did.
 - **A level and tags**, which make it searchable as an issue rather than as text.
 
-What the event does not show is the most useful thing the product does with it. **The server
-groups events into issues** by their stack, so ten thousand of this error are one line on a screen,
-with a count, a first and last time seen, and the releases it appeared in. Grouping by stack is why
-an error tracker is quieter than a log search, and also why it is wrong in a recognisable way: one
+What the event does not show is the most useful thing the product does with it. **The server groups
+events into issues** by their stack, so ten thousand of this error are one line on a screen, with a
+count, a first and last time seen, and the releases it appeared in. Grouping by stack is why an
+error tracker is quieter than a log search. It is also why it is wrong in a recognisable way: one
 bug raised from two places is two issues, and two bugs raised from one helper are one.
 
 And there is a line in the output that should not be there. The next section is about it.

@@ -28,9 +28,9 @@ programa `jq` sobre o rastro como a API do Jaeger o devolve:
 | @tsv
 ```
 
-Ele monta uma tabela de todo span por id, depois percorre cada filho e soma ao pai **a parte do filho
-que cai dentro do intervalo do próprio pai**, então um filho que começa depois de o pai terminar, como
-uma mensagem tirada de uma fila, não soma nada. O que sobra de cada duração é o tempo próprio.
+Ele monta uma tabela de todo span por id, depois percorre cada filho e soma ao pai **a parte do
+filho que cai dentro do intervalo do próprio pai**. Um filho que começa depois de o pai terminar,
+como uma mensagem tirada de uma fila, não soma nada. O que sobra de cada duração é o tempo próprio.
 
 A loja roda com o payments atrasado em 400 ms, e cinco clientes simulados por segundo estão comprando.
 Um dos checkouts deles, escolhido no log da vitrine pela última linha:
@@ -48,11 +48,12 @@ mailer	orders.placed process	20 ms	self 0 ms
 mailer	send confirmation	20 ms	self 20 ms
 ```
 
-Leia a terceira coluna de cima para baixo e todo span parece culpado: a vitrine levou 439 ms, o orders
-436, a chamada ao payments 404. **A quarta coluna diz que quase nenhum deles fez alguma coisa.** A
-vitrine gastou 3 ms próprios, e o `POST /charge` do payments, nenhum: os 400 ms estão todos dentro de
-um span, `wait for the card network`, que o código do payments abre à mão em volta da chamada que ele
-não consegue enxergar por dentro. Essa é a resposta inteira, e ela é uma linha de nove.
+Leia a terceira coluna de cima para baixo e todo span parece culpado: a vitrine levou 439 ms, o
+orders 436, a chamada ao payments 404. **A quarta coluna diz que quase nenhum deles fez alguma
+coisa.** A vitrine gastou 3 ms próprios, e o `POST /charge` do payments, nenhum. Os 400 ms estão
+todos dentro de um span, `wait for the card network`, que o código do payments abre à mão em volta
+da chamada que ele não consegue enxergar por dentro. Essa é a resposta inteira, e ela é uma linha de
+nove.
 
 Duas linhas merecem um segundo olhar:
 

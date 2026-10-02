@@ -14,16 +14,16 @@ ana@obs:~/shop$ ./promq 'otelcol_processor_tail_sampling_sampling_traces_on_memo
 __name__=otelcol_processor_tail_sampling_sampling_traces_on_memory instance=otel-collector:8888 job=otel-collector  707
 ```
 
-707 traces held at this moment, at five checkouts a second. The figure grows with traffic times
-the wait, and `num_traces` is its ceiling: when more traces arrive than it allows, the oldest are
+707 traces held at this moment, at five checkouts a second. The figure grows with traffic times the
+wait, and `num_traces` is its ceiling. When more traces arrive than it allows, the oldest are
 dropped before any decision is made, and counted in
-`otelcol_processor_tail_sampling_sampling_trace_dropped_too_early`. A wait too short decides before slow traces end; a
-wait too long holds more in memory. **The wait should be a little longer than your slowest normal
-request**, which is a number the span metrics in the next section can tell you.
+`otelcol_processor_tail_sampling_sampling_trace_dropped_too_early`. A wait too short decides before
+slow traces end; a wait too long holds more in memory. **The wait should be a little longer than
+your slowest normal request**, which is a number the span metrics in the next section can tell you.
 
 **Every span of a trace has to reach the same Collector.** One Collector sees every span here. With
 two behind an ordinary load balancer, the storefront's span of a checkout can land on one and
-payments' span on the other, and each judges half a trace: one sees an error with no slow root, the
+payments' span on the other. Each then judges half a trace: one sees an error with no slow root, the
 other a slow root with no error.
 
 ```schooling-figure
@@ -37,6 +37,6 @@ Collectors to run, and the routing has to be told when one is added or removed.
 **Late spans.** The mailer's span arrives when the mailer takes the message, and lesson 11 measured
 waits of twenty-six seconds during an outage, longer than any sensible `decision_wait`. By then the
 trace has been decided. The processor remembers recent decisions, and `decision_cache` can make it
-remember more, so a late span can follow its trace; a span that arrives after the decision is
+remember more, so a late span can follow its trace. A span that arrives after the decision is
 forgotten starts a trace of its own and is judged alone. **A queue can make a trace longer than the
 sampler is willing to wait**, and a kept checkout may then be missing its mailer.

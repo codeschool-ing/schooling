@@ -18,7 +18,7 @@ ana@obs:~/shop$ curl -sG localhost:9090/api/v1/query --data-urlencode 'query=sum
 
 **5,9 por cento no último minuto, 1,7 por cento nos últimos dez**, para as mesmas falhas. Um painel
 com janela de dez minutos teria mostrado um calombo suave durante uma queda em que uma cobrança em
-dez falhava; uma janela de um minuto a mostra como foi, e é mais ruidosa o resto do tempo. Nenhuma
+dez falhava. Uma janela de um minuto a mostra como foi, e é mais ruidosa o resto do tempo. Nenhuma
 das duas está errada. Um painel deve dizer que janela usa, no título ou na legenda, e um alerta, na
 aula 16, usa duas ao mesmo tempo.
 
@@ -28,7 +28,7 @@ por isso que a aula 6 gastou uma seção com o que um percentil de buckets conse
 dizer.
 
 **Uma série ausente parece um zero.** Se o payments para de responder às coletas, a fração de erros
-dele não é zero, é desconhecida, e um painel que desenha *sem dados* como uma linha reta em zero diz
+dele não é zero, é desconhecida. Um painel que desenha *sem dados* como uma linha reta em zero diz
 o contrário da verdade. Mostre lacunas como lacunas, e mantenha o `up` no mesmo painel.
 
 **O eixo exagera.** Um eixo y que começa em 0,98 transforma uma mudança de 0,995 para 0,991 num

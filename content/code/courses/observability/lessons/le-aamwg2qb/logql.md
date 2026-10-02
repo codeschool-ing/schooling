@@ -24,7 +24,7 @@ ana@obs:~/shop$ curl -sG localhost:3100/loki/api/v1/query_range --data-urlencode
 
 **The filter runs on fields, but nothing was indexed to make it possible**: Loki parsed every
 payments line in the range to find these. That is fine for a few minutes of one service and slow for
-a month of all of them, and it is why a line filter that narrows cheaply, `|= "approved\": false"`,
+a month of all of them. It is why a line filter that narrows cheaply, `|= "approved\": false"`,
 is often put in front of the parser.
 
 LogQL can also turn lines into numbers. `count_over_time` counts lines in a window, and with
@@ -42,7 +42,7 @@ charge decided	615
 ```
 
 Lines per service in the last minute, and payments' lines in the last five by message: **615
-charges decided and 32 card-network failures**, about one in twenty as configured, give or take the edges
+charges decided and 32 card-network failures**. That is about one in twenty as configured, give or take the edges
 of the window. These are metrics computed from logs at query time, useful for a question nobody made
-a metric for in advance; for anything asked every fifteen seconds by a dashboard or an alert, the
+a metric for in advance. For anything asked every fifteen seconds by a dashboard or an alert, the
 service's own counter from lessons 5 and 6 is far cheaper.

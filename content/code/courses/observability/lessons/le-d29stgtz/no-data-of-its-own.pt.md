@@ -49,6 +49,6 @@ Prometheus	prometheus	prometheus	http://prometheus:9090
 
 **O `uid` é aquilo a que todo o resto se refere**, e o arquivo o escolheu de propósito. Um painel
 que nomeia a fonte de dados por um `uid` escrito no arquivo funciona igual em todo Grafana que
-carregou o mesmo arquivo; um que a nomeia por um id que o Grafana gerou só funciona no Grafana que o
+carregou o mesmo arquivo. Um que a nomeia por um id que o Grafana gerou só funciona no Grafana que o
 gerou. A senha de administrador vem de um arquivo que o laboratório escreveu, `.grafana-password`,
-lido por `$(cat ...)` para nunca aparecer na tela; a seção seguinte deixa de precisar dela.
+lido por `$(cat ...)` para nunca aparecer na tela. A seção seguinte deixa de precisar dela.

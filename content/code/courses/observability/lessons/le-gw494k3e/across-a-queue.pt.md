@@ -5,7 +5,7 @@ version: 1
 
 Uma fila quebra a imagem de uma requisição no mesmo lugar que a aula 3 achou: quem chama não espera
 o trabalho que causa. O `orders` publica o pedido pago e responde à vitrine na hora, e o mailer pega
-a mensagem quando chegar a vez dela. **O contexto tem de viajar dentro da mensagem**, e os dois
+a mensagem quando chegar a vez dela. **O contexto tem de viajar dentro da mensagem.** Os dois
 serviços do laboratório escrevem o mesmo inject e extract do HTTP, com os cabeçalhos da mensagem
 como portador:
 
@@ -63,8 +63,8 @@ ana@obs:~/shop$ curl -s -u guest:guest -H 'Content-Type: application/json' -X PO
 ```
 
 O corpo é o pedido, e ao lado dele, nos cabeçalhos AMQP, **o mesmo formato `traceparent` que as
-chamadas HTTP levam**. Vinte segundos depois o mailer é iniciado de novo, pega a mensagem, e o
-rastro do checkout é lido com o início de cada span em segundos a partir do primeiro:
+chamadas HTTP levam**. Vinte segundos depois o mailer é iniciado de novo e pega a mensagem. O rastro
+do checkout é então lido com o início de cada span em segundos a partir do primeiro:
 
 ```
 ana@obs:~/shop$ docker compose start mailer
@@ -90,5 +90,5 @@ As convenções de mensageria vão um passo além do laboratório: quem publica 
 em volta da publicação, e o span do consumidor pode apontar para ele. O `orders` não abre esse span,
 porque nada instrumenta o `pika` aqui, então o pai do mailer é o próprio `POST /orders`. O pacote de
 instrumentação para o `pika`, `opentelemetry-instrumentation-pika`, faz as duas metades e acrescenta
-o span de produtor; o laboratório escreve as chamadas à mão porque vê-las uma vez é o objetivo desta
+o span de produtor. O laboratório escreve as chamadas à mão porque vê-las uma vez é o objetivo desta
 aula.

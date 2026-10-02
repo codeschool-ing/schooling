@@ -70,7 +70,7 @@ ana@obs:~/shop$ docker compose run --rm -e PYTHONPATH=/app sandbox python sample
 ```
 
 **95 de 990 linhas `INFO` guardadas, e todos os 10 avisos.** A amostra é aleatória, por isso 95 e não
-99, e essa é a propriedade a lembrar: um log amostrado serve para *que tipos de coisa acontecem* e *com
+99. Essa é a propriedade a lembrar: um log amostrado serve para *que tipos de coisa acontecem* e *com
 que frequência, mais ou menos*, e não serve para *o que aconteceu com o pedido 5011*. É por isso que a
 amostragem vem por último, que ela nunca toca nos erros, e que o rastro, amostrado pelas suas próprias
 regras na aula 12, leva o id que acha as linhas de uma requisição quando elas foram guardadas.

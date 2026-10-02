@@ -23,5 +23,5 @@ That makes the ways it can be wrong worth knowing by name:
 
 **And the objective is not the goal.** A team that tunes its SLI to look good, by moving the
 threshold, excluding a route or relabelling a failure as the customer's fault, has a green dashboard
-and the same unhappy customers. The SLO is only useful while it agrees with what customers say; when
+and the same unhappy customers. The SLO is only useful while it agrees with what customers say. When
 the two disagree, it is the SLO that is wrong.

@@ -32,12 +32,12 @@ demo_request_seconds_created 1.790936343199444e+09
 in other languages do, and their output carries lines like `{quantile="0.99"}`. Even there, a
 summary has a flaw no client can fix: **percentiles cannot be added**. If three copies of a service
 each report a 99th percentile, no arithmetic on the three numbers gives the 99th percentile of all
-their requests together; you would need the observations, which were thrown away. Buckets *can* be
-added: summing three histograms' buckets gives the histogram of all three, and its percentile is
+their requests together. You would need the observations, and they were thrown away. Buckets *can*
+be added: summing three histograms' buckets gives the histogram of all three, and its percentile is
 right up to the bucket's resolution.
 
 That is why the storefront uses a histogram, and why the advice is the same almost everywhere: **a
 histogram, with buckets chosen on purpose**. Prometheus 3 also supports **native histograms**, whose
-buckets are chosen automatically at a fixed relative resolution and stored far more compactly; they
+buckets are chosen automatically at a fixed relative resolution and stored far more compactly. They
 need the client library and the server to agree on the format, and the lab's classic buckets are
 what this course measures with.

@@ -3,9 +3,9 @@ title: Seguindo um erro até onde ele começou
 version: 1
 ---
 
-Uma requisição que falha raramente falha num span só. **O erro começa num lugar e todo chamador acima
-dele relata uma falha própria**, então o rastro de uma falha é uma coluna de vermelho, e o trabalho é
-achar o fundo dela.
+Uma requisição que falha raramente falha num span só. **O erro começa num lugar e todo chamador
+acima dele relata uma falha própria.** Então o rastro de uma falha é uma coluna de vermelho, e o
+trabalho é achar o fundo dela.
 
 Durante um minuto, uma em cada dez cobranças falha, como o arquivo de falhas manda o payments do
 laboratório fazer. Depois o Zipkin é consultado pelos rastros dos últimos dois minutos em que o payments
@@ -37,10 +37,10 @@ profundidade, e não pela ordem em que aparecem:
 | `post /orders` do orders | ele desistiu do pedido e respondeu com um erro próprio |
 | `post /checkout` da vitrine | ele recebeu esse erro e o passou ao cliente |
 
-**A origem é o span de erro mais profundo sem filho com erro**, aqui o `POST /charge` do payments. Todo
-span acima dele está correto e nenhum deles é a causa. Na interface do Jaeger a mesma busca é a tag
-`error=true`, e a visão do rastro desenha um ícone em todo span que falhou; o de baixo é por onde
-começar a ler, e os atributos e as linhas de log dele são onde está o motivo.
+**A origem é o span de erro mais profundo sem filho com erro**, aqui o `POST /charge` do payments.
+Todo span acima dele está correto e nenhum deles é a causa. Na interface do Jaeger a mesma busca é a
+tag `error=true`, e a visão do rastro desenha um ícone em todo span que falhou. O de baixo é por
+onde começar a ler, e os atributos e as linhas de log dele são onde está o motivo.
 
 Dois cuidados:
 

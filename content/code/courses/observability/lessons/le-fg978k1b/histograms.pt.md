@@ -5,7 +5,7 @@ version: 1
 
 Durações não cabem num counter nem num gauge: a pergunta não é *quantas* mas *como se espalharam*.
 Um **histograma** responde contando cada observação nos buckets sob cujo limite superior ela cabe,
-`le` de *less than or equal*, menor ou igual, e todo bucket inclui os de baixo. O histograma de
+`le` de *less than or equal*, menor ou igual. Todo bucket inclui os de baixo. O histograma de
 checkout da vitrine, saudável:
 
 ```
@@ -52,13 +52,13 @@ ana@obs:~/shop$ ./promq 'histogram_quantile(0.99, sum by (le) (rate(http_server_
   0.4975
 ```
 
-**0,375 e 0,4975**: o meio e quase o topo do bucket entre 0,25 e 0,5, porque esse bucket agora guarda
-todos os checkouts e não há nada mais fino para ler. Os checkouts reais levaram todos mais ou menos o
-mesmo tempo; uma mediana de 375 milissegundos é o ponto médio do bucket, não uma medida. Os 2,485
-segundos da aula 1 eram o mesmo efeito num bucket mais largo.
+**0,375 e 0,4975**: o meio e quase o topo do bucket entre 0,25 e 0,5, porque esse bucket agora
+guarda todos os checkouts e não há nada mais fino para ler. Os checkouts reais levaram todos mais ou
+menos o mesmo tempo. Uma mediana de 375 milissegundos é o ponto médio do bucket, não uma medida. Os
+2,485 segundos da aula 1 eram o mesmo efeito num bucket mais largo.
 
 Duas consequências decidem como histogramas são usados. **Escolha buckets em volta dos valores que
-importam**: se a meta é *checkouts abaixo de 300 milissegundos*, um limite de bucket em 0,3 torna
+importam.** Se a meta é *checkouts abaixo de 300 milissegundos*, um limite de bucket em 0,3 torna
 essa pergunta exata, e nenhuma interpolação o substitui. E **faça a pergunta que um histograma
 responde com exatidão**, que não é um percentil mas uma fração abaixo de um limite:
 

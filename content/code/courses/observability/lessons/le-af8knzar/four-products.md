@@ -30,5 +30,5 @@ Three differences matter in practice:
   says when a fixed one comes back. It added tracing later, and it is the only one of the four whose
   server can be run yourself.
 
-Elastic, Grafana Cloud and Honeycomb sell the same kind of thing and come up in the same evaluations;
-the first two are the hosted forms of stores this course has run.
+Elastic, Grafana Cloud and Honeycomb sell the same kind of thing and come up in the same
+evaluations. The first two are the hosted forms of stores this course has run.

@@ -51,4 +51,4 @@ Read these lines looking for the slow second and a half, and **nothing in them m
 charge was decided and the order was stored; each line is true. A log says what a program chose to
 say at the moments it chose to say it, and nobody wrote "I am about to wait 1.5 seconds". You could
 work the time out from the `time` fields of lines in four services, if every clock agreed to the
-millisecond, and the next signal measures it for you, inside each service.
+millisecond. The next signal measures it for you, inside each service.

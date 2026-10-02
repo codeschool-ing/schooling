@@ -8,10 +8,10 @@ card number into the event. The SDK collects every local variable of every frame
 because that is what makes the event useful, and the card number was a local variable.
 
 This is lesson 10's leak by another road. There the card number reached the logs because a debug
-line logged a whole object; here it reaches a third party's servers because an exception happened
-in a function that had it in scope. **An error tracker's default is to send more than you would
-think to write.** The SDK does scrub some names by default, `password`, `token`, `authorization`,
-`cookie` and about thirty others in all, and replaces their values with `[Filtered]`. `card` is not on the
+line logged a whole object. Here it reaches a third party's servers because an exception happened in
+a function that had it in scope. **An error tracker's default is to send more than you would think
+to write.** The SDK does scrub some names by default, `password`, `token`, `authorization`, `cookie`
+and about thirty others in all, and replaces their values with `[Filtered]`. `card` is not on the
 list, and nor is any name your own code invented.
 
 The fix is the same shape as lesson 10's: a list of names whose values are secrets, applied before

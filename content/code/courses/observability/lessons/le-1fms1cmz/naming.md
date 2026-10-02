@@ -34,14 +34,14 @@ GET /orders/{id}
 ```
 
 **Fifty operations against one**, for the same fifty requests. The list in the first service grows
-by one with every order the shop ever takes; its first three are `1011`, `1047` and `1026`, in no
+by one with every order the shop ever takes. Its first three are `1011`, `1047` and `1026`, in no
 order anybody chose. A filter by operation is now a search for one order. A latency
 aggregated per operation is fifty averages of one request each. Backends that compute metrics from
-spans, which lesson 12 does with the Collector, make one series per operation, and the name has
+spans, which lesson 12 does with the Collector, make one series per operation. The name has
 become the label that blows up the bill in lesson 6.
 
 The rule follows from what a name is for: **a span's name says what kind of work this is**, and the
 attributes say which instance of it. `GET /orders/{id}` with `shop.order_id = 1011` keeps both: the
 operation is one row in every list, and order 1011 is still one search away. The semantic
-conventions write this down for HTTP, where the name is the method and the route template, and for
+conventions write this down for HTTP, where the name is the method and the route template. They do the same for
 databases, where it is the operation and the table, never the full query with its values.

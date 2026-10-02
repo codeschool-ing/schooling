@@ -32,7 +32,7 @@ orders	INSERT	da0ba127ae104cef
 ```
 
 `b0844e71b749fd8f` é o `POST /checkout` da vitrine, o span que era o corrente quando a vitrine
-chamou o `orders`, e ele é o pai do `POST /orders` do próprio `orders`. Cada salto reescreve o
+chamou o `orders`. Ele é o pai do `POST /orders` do próprio `orders`. Cada salto reescreve o
 terceiro campo com o id do seu próprio span, para que o serviço seguinte pendure seus spans debaixo
 do pai certo, enquanto o segundo campo nunca muda.
 
@@ -48,7 +48,7 @@ ana@obs:~/shop$ docker compose exec orders env | grep OTEL_PROPAGATORS || echo '
 OTEL_PROPAGATORS not set
 ```
 
-Sem definir quer dizer `tracecontext,baggage`: o `traceparent` do W3C acima e um segundo
-cabeçalho, `baggage`, de que trata a última seção desta aula. Existem outros formatos, sendo o
-**B3** do Zipkin o mais encontrado, e um sistema migrando entre eles pode listar dois propagadores
-para que todo serviço escreva os dois até o último antigo sumir. A aula 11 encontra o B3.
+Sem definir quer dizer `tracecontext,baggage`: o `traceparent` do W3C acima e um segundo cabeçalho,
+`baggage`, de que trata a última seção desta aula. Existem outros formatos, e o **B3** do Zipkin é o
+mais encontrado. Um sistema migrando entre eles pode listar dois propagadores, para que todo serviço
+escreva os dois até o último antigo sumir. A aula 11 encontra o B3.

@@ -4,10 +4,10 @@ version: 1
 ---
 
 No seu próprio Prometheus, cardinalidade custa memória e disco. **Num serviço gerenciado ela custa
-dinheiro direto**, porque a maioria dos produtos hospedados de métricas cobra pelo número de séries
-ativas, ou pelo número de amostras ingeridas, que é séries vezes coletas. A conta não precisa da
-tabela de preços de fornecedor nenhum. Um label transformou 3782 séries em 43805: seja quanto for que
-uma série custa numa fatura, esse label multiplicou a parte de métricas dela por mais de onze. Se o
+dinheiro direto.** A maioria dos produtos hospedados de métricas cobra pelo número de séries ativas,
+ou pelo número de amostras ingeridas, que é séries vezes coletas. A conta não precisa da tabela de
+preços de fornecedor nenhum. Um label transformou 3782 séries em 43805: seja quanto for que uma
+série custa numa fatura, esse label multiplicou a parte de métricas dela por mais de onze. Se o
 experimento fosse um serviço real rodando em cinquenta cópias, cada cópia teria acrescentado as suas
 quarenta mil.
 
@@ -37,13 +37,13 @@ __name__=scrape_samples_post_metric_relabeling instance=logins:8000 job=logins  
 ana@obs:~/shop$ ./promq 'count(demo_logins_total)'
 ```
 
-**A coleta ainda trouxe 40016 amostras, e 20016 sobreviveram.** A regra descartou `demo_logins_total`,
-então a consulta por ele agora não devolve nada, mas ela nomeava só essa métrica, e as vinte mil
-séries `_created` passaram intactas. Esse é o estado honesto de um remendo rápido: ele barra a parte
-que alguém escreveu, ao custo de coletar e interpretar tudo antes, e é tão completo quanto a sua
-expressão regular.
+**A coleta ainda trouxe 40016 amostras, e 20016 sobreviveram.** A regra descartou
+`demo_logins_total`, então a consulta por ele agora não devolve nada. Mas ela nomeava só essa
+métrica, e as vinte mil séries `_created` passaram intactas. Esse é o estado honesto de um remendo
+rápido. Ele barra a parte que alguém escreveu, ao custo de coletar e interpretar tudo antes, e é tão
+completo quanto a sua expressão regular.
 
 **O conserto é no código**: contar por `plan`, ou por nada, e pôr o id do usuário no span do login,
 onde a aula 2 diz que ele não custa nada. Uma regra de reetiquetagem é como uma equipe estanca o
-sangramento numa sexta à noite; uma mudança na instrumentação é como ela impede que aconteça de novo.
-O experimento foi parado depois desta captura e o `prometheus.yml` restaurado.
+sangramento numa sexta à noite. Uma mudança na instrumentação é como ela impede que aconteça de
+novo. O experimento foi parado depois desta captura e o `prometheus.yml` restaurado.

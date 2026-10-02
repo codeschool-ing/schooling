@@ -44,6 +44,6 @@ __name__=http_server_requests_total code=402 instance=storefront:8080 job=storef
 ```
 
 **Esses números sozinhos quase não respondem nada.** 281 checkouts responderam `201` desde que a
-vitrine começou, e esse começo pode ter sido há um minuto ou há um mês: um contador só cresce, e o
+vitrine começou, e esse começo pode ter sido há um minuto ou há um mês. Um contador só cresce, e o
 valor dele depende sobretudo de há quanto tempo o processo está rodando. Um contador vira um número
 útil quando se pergunta com que velocidade ele está crescendo, que é a seção seguinte.

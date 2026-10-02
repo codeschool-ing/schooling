@@ -23,7 +23,7 @@ ec2f711fe663aea741f0cc263469fb72
 ```
 
 **Dois ids de rastro para um checkout**, o mesmo sintoma que a aula 3 encontrou na fila, agora em
-HTTP comum. O cabeçalho ainda chegou e ainda foi extraído; sem `context=ctx` o span simplesmente
+HTTP comum. O cabeçalho ainda chegou e ainda foi extraído. Sem `context=ctx` o span simplesmente
 começou do contexto corrente do próprio payments, que está vazio no começo de uma requisição, e
 virou a raiz de um rastro novo. E o rastro do checkout, lido do lado da vitrine:
 

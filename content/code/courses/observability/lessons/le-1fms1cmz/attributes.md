@@ -64,7 +64,7 @@ Three families are mixed in that list, and telling them apart is most of the ski
 
 **What is not in the list matters as much.** The request body carried a card number, and the code
 never copies it into an attribute. A trace is stored, shipped between systems, sampled, exported to
-vendors and read by anybody debugging; a card number, a password, a token or a personal document
+vendors and read by anybody debugging. A card number, a password, a token or a personal document
 in it leaks to every one of those places at once. Lesson 10 makes the same argument for logs, at
 length.
 

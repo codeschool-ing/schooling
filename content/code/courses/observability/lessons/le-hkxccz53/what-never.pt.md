@@ -4,8 +4,8 @@ version: 1
 ---
 
 Um log é a coisa mais amplamente lida que um sistema produz. Ele é copiado para um shipper, um
-armazenamento, um backup e muitas vezes um fornecedor; é lido por todo desenvolvedor depurando e
-todo operador de plantão; é guardado por dias ou meses; e ninguém o revisa linha a linha. **Tudo o
+armazenamento, um backup e muitas vezes um fornecedor. É lido por todo desenvolvedor depurando e
+todo operador de plantão. É guardado por dias ou meses, e ninguém o revisa linha a linha. **Tudo o
 que é escrito num log deve ser tratado como legível por qualquer pessoa com acesso a qualquer um
 desses lugares, pelo tempo da maior retenção.** A partir disso, a lista se escreve sozinha:
 
@@ -19,7 +19,7 @@ desses lugares, pelo tempo da maior retenção.** A partir disso, a lista se esc
 | o corpo inteiro de uma requisição ou resposta | ele carrega tudo isso acima, mais cedo ou mais tarde |
 
 A LGPD, a lei geral de proteção de dados do Brasil, é o quadro que importa para as pessoas para quem
-este curso é escrito. Ela não proíbe registrar dados pessoais; ela exige uma finalidade, o mínimo
+este curso é escrito. Ela não proíbe registrar dados pessoais. Ela exige uma finalidade, o mínimo
 necessário para essa finalidade, segurança proporcional ao risco, e a capacidade de responder a uma
 pessoa que pergunte o que se guarda sobre ela ou peça para apagar. **Um log cheio de dados pessoais
 falha nas quatro de uma vez**: a finalidade era depurar, ele guarda tudo, é lido por muitos, e as

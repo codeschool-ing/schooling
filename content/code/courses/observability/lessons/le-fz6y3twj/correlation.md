@@ -23,12 +23,12 @@ ana@obs:~/shop$ docker compose logs --no-log-prefix storefront orders payments m
 ```
 
 Three lines out of thousands, all from start-up. **Every line written while serving a request has
-the id**, which is the property that matters, and it holds without anybody remembering to pass the
+the id**, which is the property that matters. It holds without anybody remembering to pass the
 id to the logger, because the formatter reads it from the same current span the traces use.
 
 That is the advantage of taking the id from tracing over inventing a request id of one's own. A
 home-made `request_id` has to be generated at the edge, put in a header, read in every service and
-passed to every log call, and it is one more thing lesson 4's propagation has to carry. The trace id
+passed to every log call. It is one more thing lesson 4's propagation has to carry. The trace id
 is already carried. **Where a service does not trace**, a request id is still far better than
-nothing, and the rule is the same: generate it once at the edge, propagate it on every call, write
+nothing. The rule is the same: generate it once at the edge, propagate it on every call, write
 it in every line.

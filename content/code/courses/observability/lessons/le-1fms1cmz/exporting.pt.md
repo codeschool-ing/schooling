@@ -55,16 +55,16 @@ batch: 2000 spans in 0.08 s
 
 **1,85 segundo contra 0,08**, para os mesmos 2000 spans. O processor simples exporta cada span no
 momento em que ele termina, então cada bloco `with` esperou uma requisição HTTP ao Collector ir e
-voltar: quase um milissegundo por span, somado ao código sendo medido. O processor em lote põe o
+voltar. É quase um milissegundo por span, somado ao código sendo medido. O processor em lote põe o
 span terminado numa fila e retorna. Uma thread própria manda a fila em lotes, a cada poucos segundos
 ou quando bastante coisa se acumulou, e o código nunca espera pela rede.
 
 Então **o processor em lote é o de um serviço**, e o simples é para um script que você está lendo
-num console. O processor em lote tem um custo próprio, e é o motivo de o `cost.py` terminar com
+num console. O processor em lote tem um custo próprio. É o motivo de o `cost.py` terminar com
 `provider.shutdown()`: spans esperando na fila se perdem se o processo morrer antes do próximo
 envio. Uma saída normal os descarrega, porque o SDK registra um encerramento quando o provider é
 criado. Um processo morto de uma vez, pelo kernel sem memória ou por `kill -9`, leva junto seus
-últimos segundos de spans, e costumam ser justamente os segundos que explicam por que ele morreu.
+últimos segundos de spans. Costumam ser justamente os segundos que explicam por que ele morreu.
 
 A fila também é limitada. Se o Collector parar de responder, o processor em lote guarda um número
 fixo de spans, 2048 por padrão em Python, e descarta o resto em vez de crescer até o serviço ficar

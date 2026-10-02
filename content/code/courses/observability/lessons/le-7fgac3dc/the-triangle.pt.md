@@ -29,7 +29,7 @@ Os três também custam de formas diferentes, e isso define quanto de cada uma e
 | log | cada evento escrito | uma linha por evento, muitas vezes várias por requisição | dias a semanas |
 | rastro | cada requisição rastreada | um span por passo | dias, e muitas vezes só uma amostra |
 
-São tendências e não leis, e as aulas 6, 10 e 12 pegam cada uma uma linha e mostram onde ela quebra:
+São tendências e não leis. As aulas 6, 10 e 12 pegam cada uma uma linha e mostram onde ela quebra:
 uma métrica cujos labels se multiplicam, logs cujo volume vira a fatura, e rastros que precisam ser
 amostrados.
 

@@ -31,7 +31,7 @@ trace id: 00000000000000000000000000000000
 
 **No error, and nothing recorded.** The span exists, the code ran, and the trace id is zero: a span
 that is not part of any trace. That is the API doing exactly what it promises. Without an SDK it
-hands back spans that do nothing, cheaply, so a library can be instrumented once and shipped to
+hands back spans that do nothing, cheaply. That means a library can be instrumented once and shipped to
 people who never set OpenTelemetry up, at almost no cost to them.
 
 The **SDK** is what makes the calls real, and it is set up once, when the program starts. It has

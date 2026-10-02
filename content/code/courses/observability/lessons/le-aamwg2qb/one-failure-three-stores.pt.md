@@ -21,9 +21,9 @@ ana@obs:~/shop$ curl -s -u admin:$(cat .graylog-password) -H 'X-Requested-By: an
 "2026-10-02T15:42:58.000Z","checkout failed",
 ```
 
-**A mesma falha nos três**, com uma diferença que é do seletor e não do armazenamento: a consulta ao
-Loki nomeou `{service_name="payments"}` e achou a linha do payments; ao Elasticsearch e ao Graylog foi
-pedido o id do rastro nas linhas de todo serviço, e eles acharam três, o *card network unavailable* do
+**A mesma falha nos três**, com uma diferença que é do seletor e não do armazenamento. A consulta ao
+Loki nomeou `{service_name="payments"}` e achou a linha do payments. Ao Elasticsearch e ao Graylog foi
+pedido o id do rastro nas linhas de todo serviço, e eles acharam três: o *card network unavailable* do
 payments, o *payment failed* do orders e o *checkout failed* da vitrine. Tirar o label da consulta ao
 Loki teria achado as três lá também, ao custo de ler todo stream.
 
@@ -55,8 +55,8 @@ ana@obs:~/shop$ rm faults/payments.json compose.override.yaml
 ```
 
 **Loki, 80 MB. Elasticsearch, 1,5 GB. O Graylog e os seus dois companheiros, cerca de 1,8 GB.** São as
-mesmas linhas, alguns milhares, em armazenamentos todos configurados pequenos; a maior parte da
+mesmas linhas, alguns milhares, em armazenamentos todos configurados pequenos. A maior parte da
 memória das JVMs é um heap reservado de antemão, e nenhum desses números cresce linearmente com o
 tráfego. O que eles mostram é a forma da troca na figura desta aula: o Loki mantém a escrita barata e
-paga quando lê; os outros dois pagam para indexar toda linha, e guardam a memória para isso. O arquivo
+paga quando lê. Os outros dois pagam para indexar toda linha, e guardam a memória para isso. O arquivo
 de falhas e o override foram removidos no fim da captura.

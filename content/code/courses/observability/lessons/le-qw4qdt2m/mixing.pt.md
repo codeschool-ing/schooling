@@ -5,7 +5,7 @@ version: 1
 
 O remédio para a primeira lacuna não é substituir a instrumentação automática. **É acrescentar ao
 span que ela já abriu.** A instrumentação do Flask torna o seu span `SERVER` o span corrente durante
-a requisição inteira, então o código dentro do tratador consegue alcançá-lo com
+a requisição inteira. Por isso o código dentro do tratador consegue alcançá-lo com
 `trace.get_current_span()` e definir um atributo nele, sem span novo e sem configuração. Uma linha
 em `create()` faz isso, e a importação ganha um nome:
 
@@ -27,8 +27,8 @@ ana@obs:~/shop$ curl -s localhost:16686/api/traces/e5978340492b8d7ed0b69c7ed6adc
 ```
 
 **`shop.sku` agora está ao lado de `http.route`** num span que o Flask abriu. A mesma função serve
-para tudo o que esta aula achou faltando: `set_attribute` para aquilo de que a requisição tratava,
-um `start_as_current_span` próprio em volta de um trabalho interno lento, e as chamadas de
+para tudo o que esta aula achou faltando. Chame `set_attribute` para aquilo de que a requisição tratava,
+abra um `start_as_current_span` próprio em volta de um trabalho interno lento, e faça as chamadas de
 propagação da aula 4 no cliente que ninguém instrumentou. A linha é barata: sem SDK, o
 `get_current_span()` devolve o mesmo span que não faz nada que o `no_sdk.py` imprimiu na aula 2,
 então não custa nada onde o rastreamento está desligado.
