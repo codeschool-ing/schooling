@@ -17,8 +17,10 @@
 # account and its token in .grafana-token, made as lesson 7 made them;
 # simulated customers, five requests a second, started in the background;
 # the fault file, written right after the release annotation and removed
-# right after the rollback annotation; and waiting for the page and for its
-# resolution. Times, counts, ids and dates differ on every run.
+# right after the rollback annotation; a minute between declaring the incident
+# and rolling back, standing for the investigation the lesson describes; and
+# waiting for the page, for its resolution, and for the five-minute burn rate
+# to fall below 1. Times, counts, ids and dates differ on every run.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -134,15 +136,21 @@ mark incident "SEV-2 declared: checkouts failing, IC ana"
 on "./promq 'sum by (job) (rate(http_server_requests_total{code=~\"5..\"}[2m])) / sum by (job) (rate(http_server_requests_total[2m]))'"
 on "curl -s -H \"Authorization: Bearer \$(cat .grafana-token)\" 'localhost:3000/api/annotations?from='\$(date -d '-30 min' +%s000) | jq -r '.[] | [(.time/1000 | strftime(\"%H:%M:%S\")), (.tags | join(\",\")), .text] | @tsv'"
 
+sleep 60
 block mitigate
 mark deploy "payments rolled back to 1.4.0"
 quiet "rm faults/payments.json"
 sleep 90
 on "./promq '{__name__=~\"checkout:burn_rate:.*\"}'"
 wait_pager resolved
+for _ in $(seq 1 60); do
+  lab as "./promq 'checkout:burn_rate:5m < 1'" | grep -q . && break
+  sleep 10
+done
+on "./promq '{__name__=~\"checkout:burn_rate:.*\"}'"
 
 block resolved
-mark incident "resolved: burn rate below 1, checkouts normal"
+mark incident "resolved: 5-minute burn rate below 1, checkouts normal"
 on "docker compose logs --no-log-prefix pager | grep '\"PAGE\"' | jq -c '{time, status, alertname}'"
 
 block timeline
