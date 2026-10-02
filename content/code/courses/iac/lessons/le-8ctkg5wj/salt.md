@@ -6,8 +6,8 @@ version: 1
 Salt calls its descriptions **states**, kept in `.sls` files, and writes them in YAML. Before the YAML
 is read, each file goes through **Jinja**, the same template language lesson 18 uses for its
 templates, so a state file can hold variables, loops and conditions. The rest of the vocabulary is
-short: the server is the **master**, the agent is the **minion**, the facts a minion gathers about its
-machine are **grains**, and data a master hands to particular minions, secrets among it, is **pillar**.
+short: the server is the *master*, the agent is the *minion*, the facts a minion gathers about its
+machine are *grains*, and data a master hands to particular minions, secrets among it, is *pillar*.
 
 There is no master in the lab. Salt runs masterless here with `salt-call --local`, as Ana, from a
 directory she owns, and the minion's configuration says where everything is:
@@ -90,9 +90,9 @@ line per state:
 ```
 ana@laptop:~/shop/salt$ salt-call --local -c etc state.apply test=True --state-output=terse
 local:
-  Name: /home/ana/www - Function: file.directory - Result: Differs - Started: 12:19:39.805248 - Duration: 3.905 ms
-  Name: /home/ana/www/index.html - Function: file.managed - Result: Differs - Started: 12:19:39.809432 - Duration: 1.25 ms
-  Name: echo reloaded >> /home/ana/www/reloads.log - Function: cmd.run - Result: Differs - Started: 12:19:39.812490 - Duration: 0.356 ms
+  Name: /home/ana/www - Function: file.directory - Result: Differs - Started: 12:28:34.769907 - Duration: 3.206 ms
+  Name: /home/ana/www/index.html - Function: file.managed - Result: Differs - Started: 12:28:34.773342 - Duration: 2.283 ms
+  Name: echo reloaded >> /home/ana/www/reloads.log - Function: cmd.run - Result: Differs - Started: 12:28:34.776856 - Duration: 0.378 ms
 
 Summary for local
 ------------
@@ -100,7 +100,7 @@ Succeeded: 3 (unchanged=3, changed=3)
 Failed:    0
 ------------
 Total states run:     3
-Total run time:   5.511 ms
+Total run time:   5.867 ms
 ```
 
 `Differs` on all three: nothing exists yet. Then the real run, with the changes shown in full:
@@ -113,8 +113,8 @@ local:
     Function: file.directory
       Result: True
      Comment: 
-     Started: 12:19:41.765537
-    Duration: 4.153 ms
+     Started: 12:28:36.117267
+    Duration: 3.326 ms
      Changes:   
               ----------
               /home/ana/www:
@@ -126,8 +126,8 @@ local:
     Function: file.managed
       Result: True
      Comment: File /home/ana/www/index.html updated
-     Started: 12:19:41.769983
-    Duration: 40.501 ms
+     Started: 12:28:36.120786
+    Duration: 3.532 ms
      Changes:   
               ----------
               diff:
@@ -140,12 +140,12 @@ local:
         Name: echo reloaded >> /home/ana/www/reloads.log
       Result: True
      Comment: Command "echo reloaded >> /home/ana/www/reloads.log" run
-     Started: 12:19:41.811959
-    Duration: 4.102 ms
+     Started: 12:28:36.125298
+    Duration: 4.487 ms
      Changes:   
               ----------
               pid:
-                  16721
+                  9073
               retcode:
                   0
               stderr:
@@ -157,7 +157,7 @@ Succeeded: 3 (changed=3)
 Failed:    0
 ------------
 Total states run:     3
-Total run time:  48.756 ms
+Total run time:  11.345 ms
 ```
 
 The directory is new, the file is new with mode `0644`, and the command ran because the file changed;
@@ -167,9 +167,9 @@ read first**: three states, three changed, none failed. The second run:
 ```
 ana@laptop:~/shop/salt$ salt-call --local -c etc state.apply --state-output=terse
 local:
-  Name: /home/ana/www - Function: file.directory - Result: Clean - Started: 12:19:45.107657 - Duration: 3.479 ms
-  Name: /home/ana/www/index.html - Function: file.managed - Result: Clean - Started: 12:19:45.111405 - Duration: 2.912 ms
-  Name: echo reloaded >> /home/ana/www/reloads.log - Function: cmd.run - Result: Clean - Started: 12:19:45.115564 - Duration: 0.011 ms
+  Name: /home/ana/www - Function: file.directory - Result: Clean - Started: 12:28:37.505507 - Duration: 3.028 ms
+  Name: /home/ana/www/index.html - Function: file.managed - Result: Clean - Started: 12:28:37.508741 - Duration: 3.496 ms
+  Name: echo reloaded >> /home/ana/www/reloads.log - Function: cmd.run - Result: Clean - Started: 12:28:37.513170 - Duration: 0.007 ms
 
 Summary for local
 ------------
@@ -177,7 +177,7 @@ Succeeded: 3
 Failed:    0
 ------------
 Total states run:     3
-Total run time:   6.402 ms
+Total run time:   6.531 ms
 ```
 
 `Clean` on all three. The command is clean too, because `onchanges` found nothing that changed.
@@ -193,8 +193,8 @@ local:
     Function: file.managed
       Result: True
      Comment: File /home/ana/www/index.html updated
-     Started: 12:19:47.147139
-    Duration: 286.153 ms
+     Started: 12:28:38.943959
+    Duration: 8.947 ms
      Changes:   
               ----------
               diff:
@@ -209,12 +209,12 @@ local:
         Name: echo reloaded >> /home/ana/www/reloads.log
       Result: True
      Comment: Command "echo reloaded >> /home/ana/www/reloads.log" run
-     Started: 12:19:47.434693
-    Duration: 4.56 ms
+     Started: 12:28:38.954103
+    Duration: 4.216 ms
      Changes:   
               ----------
               pid:
-                  16891
+                  9242
               retcode:
                   0
               stderr:
@@ -226,7 +226,7 @@ Succeeded: 3 (changed=2)
 Failed:    0
 ------------
 Total states run:     3
-Total run time: 293.895 ms
+Total run time:  19.422 ms
 ```
 
 The diff is the whole story: the hand edit is the `-` line, the description is the `+` line, and the

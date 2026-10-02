@@ -63,7 +63,7 @@ Notice: /Stage[main]/Main/File[/home/ana/web]/ensure: created
 Notice: /Stage[main]/Main/File[/home/ana/web/index.html]/ensure: defined content as '{sha256}783652ab6a6189ef05ab6994f3bdeb6fc0cdcec3150ad6df4f6c56fff8a0a993'
 Notice: /Stage[main]/Main/File[/home/ana/web/shop.conf]/ensure: defined content as '{sha256}292f046193dabb234e26be4c8d5cb125558e85ac5094b1419ffed38a4d949aae'
 Notice: /Stage[main]/Main/Exec[reload-web]: Triggered 'refresh' from 1 event
-Notice: Applied catalog in 0.03 seconds
+Notice: Applied catalog in 0.05 seconds
 ```
 
 Leia de cima para baixo. O aviso é do laboratório: o Facter, a parte do Puppet que levanta fatos sobre
@@ -79,7 +79,7 @@ A segunda execução do mesmo manifest:
 ```
 ana@laptop:~/shop/puppet$ puppet apply site.pp
 Warning: Could not retrieve either serverip or serverip6 fact
-Notice: Compiled catalog for laptop in environment production in 0.03 seconds
+Notice: Compiled catalog for laptop in environment production in 0.04 seconds
 Notice: Applied catalog in 0.01 seconds
 ```
 
@@ -93,7 +93,7 @@ Agora alguém edita a configuração à mão, e o Puppet roda de novo:
 ana@laptop:~/shop/puppet$ echo "listen 8080;" > ~/web/shop.conf
 ana@laptop:~/shop/puppet$ puppet apply site.pp
 Warning: Could not retrieve either serverip or serverip6 fact
-Notice: Compiled catalog for laptop in environment production in 0.03 seconds
+Notice: Compiled catalog for laptop in environment production in 0.04 seconds
 Notice: /Stage[main]/Main/File[/home/ana/web/shop.conf]/content: content changed '{sha256}717bae503ae6108953042113e8bb6284b71a2c1c73665b7cc9cc06711dbe7138' to '{sha256}292f046193dabb234e26be4c8d5cb125558e85ac5094b1419ffed38a4d949aae'
 Notice: /Stage[main]/Main/Exec[reload-web]: Triggered 'refresh' from 1 event
 Notice: Applied catalog in 0.03 seconds
@@ -143,13 +143,13 @@ informa sem mudar nada:
 ```
 ana@laptop:~/shop/puppet$ puppet apply --noop server.pp
 Warning: Could not retrieve either serverip or serverip6 fact
-Notice: Compiled catalog for laptop in environment production in 0.27 seconds
+Notice: Compiled catalog for laptop in environment production in 0.32 seconds
 Notice: /Stage[main]/Main/Package[nginx]/ensure: current_value 'purged', should be 'present' (noop)
 Notice: /Stage[main]/Main/File[/etc/nginx/sites-enabled/shop]/ensure: current_value 'absent', should be 'file' (noop)
 Notice: /Stage[main]/Main/Service[nginx]/ensure: current_value 'stopped', should be 'running' (noop)
 Notice: Class[Main]: Would have triggered 'refresh' from 3 events
 Notice: Stage[main]: Would have triggered 'refresh' from 1 event
-Notice: Applied catalog in 1.68 seconds
+Notice: Applied catalog in 1.70 seconds
 ```
 
 Cada linha traz o valor atual e o que deveria ter. Sem `--noop`, o pacote falha, e o grafo mostra seu
@@ -158,7 +158,7 @@ valor:
 ```
 ana@laptop:~/shop/puppet$ puppet apply server.pp
 Warning: Could not retrieve either serverip or serverip6 fact
-Notice: Compiled catalog for laptop in environment production in 0.27 seconds
+Notice: Compiled catalog for laptop in environment production in 0.28 seconds
 Error: Execution of '/usr/bin/apt-get -q -y -o DPkg::Options::=--force-confold install nginx' returned 100: E: Could not open lock file /var/lib/dpkg/lock-frontend - open (13: Permission denied)
 E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), are you root?
 Error: /Stage[main]/Main/Package[nginx]/ensure: change from 'purged' to 'present' failed: Execution of '/usr/bin/apt-get -q -y -o DPkg::Options::=--force-confold install nginx' returned 100: E: Could not open lock file /var/lib/dpkg/lock-frontend - open (13: Permission denied)
@@ -166,7 +166,7 @@ E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), are y
 Notice: /Stage[main]/Main/File[/etc/nginx/sites-enabled/shop]: Dependency Package[nginx] has failures: true
 Warning: /Stage[main]/Main/File[/etc/nginx/sites-enabled/shop]: Skipping because of failed dependencies
 Warning: /Stage[main]/Main/Service[nginx]: Skipping because of failed dependencies
-Notice: Applied catalog in 1.45 seconds
+Notice: Applied catalog in 1.52 seconds
 ```
 
 O arquivo e o serviço foram **pulados porque a dependência deles falhou**, em vez de tentados mesmo

@@ -6,9 +6,9 @@ version: 1
 O Salt chama as descrições dele de **states**, guardados em arquivos `.sls` e escritos em YAML. Antes de
 o YAML ser lido, cada arquivo passa pelo **Jinja**, a mesma linguagem de template que a aula 18 usa nos
 templates dela, então um arquivo de state pode ter variáveis, laços e condições. O resto do vocabulário
-é curto: o servidor é o **master**, o agente é o **minion**, os fatos que um minion levanta sobre a
-máquina são os **grains**, e os dados que um master entrega a minions específicos, segredos entre eles,
-são o **pillar**.
+é curto: o servidor é o *master*, o agente é o *minion*, os fatos que um minion levanta sobre a
+máquina são os *grains*, e os dados que um master entrega a minions específicos, segredos entre eles,
+são o *pillar*.
 
 Não há master no laboratório. O Salt roda aqui sem master, com `salt-call --local`, como a Ana, a partir
 de um diretório dela, e a configuração do minion diz onde está cada coisa:
@@ -92,9 +92,9 @@ linha por state:
 ```
 ana@laptop:~/shop/salt$ salt-call --local -c etc state.apply test=True --state-output=terse
 local:
-  Name: /home/ana/www - Function: file.directory - Result: Differs - Started: 12:19:39.805248 - Duration: 3.905 ms
-  Name: /home/ana/www/index.html - Function: file.managed - Result: Differs - Started: 12:19:39.809432 - Duration: 1.25 ms
-  Name: echo reloaded >> /home/ana/www/reloads.log - Function: cmd.run - Result: Differs - Started: 12:19:39.812490 - Duration: 0.356 ms
+  Name: /home/ana/www - Function: file.directory - Result: Differs - Started: 12:28:34.769907 - Duration: 3.206 ms
+  Name: /home/ana/www/index.html - Function: file.managed - Result: Differs - Started: 12:28:34.773342 - Duration: 2.283 ms
+  Name: echo reloaded >> /home/ana/www/reloads.log - Function: cmd.run - Result: Differs - Started: 12:28:34.776856 - Duration: 0.378 ms
 
 Summary for local
 ------------
@@ -102,7 +102,7 @@ Succeeded: 3 (unchanged=3, changed=3)
 Failed:    0
 ------------
 Total states run:     3
-Total run time:   5.511 ms
+Total run time:   5.867 ms
 ```
 
 `Differs` nos três: nada existe ainda. Depois a execução de verdade, com as mudanças mostradas por
@@ -116,8 +116,8 @@ local:
     Function: file.directory
       Result: True
      Comment: 
-     Started: 12:19:41.765537
-    Duration: 4.153 ms
+     Started: 12:28:36.117267
+    Duration: 3.326 ms
      Changes:   
               ----------
               /home/ana/www:
@@ -129,8 +129,8 @@ local:
     Function: file.managed
       Result: True
      Comment: File /home/ana/www/index.html updated
-     Started: 12:19:41.769983
-    Duration: 40.501 ms
+     Started: 12:28:36.120786
+    Duration: 3.532 ms
      Changes:   
               ----------
               diff:
@@ -143,12 +143,12 @@ local:
         Name: echo reloaded >> /home/ana/www/reloads.log
       Result: True
      Comment: Command "echo reloaded >> /home/ana/www/reloads.log" run
-     Started: 12:19:41.811959
-    Duration: 4.102 ms
+     Started: 12:28:36.125298
+    Duration: 4.487 ms
      Changes:   
               ----------
               pid:
-                  16721
+                  9073
               retcode:
                   0
               stderr:
@@ -160,7 +160,7 @@ Succeeded: 3 (changed=3)
 Failed:    0
 ------------
 Total states run:     3
-Total run time:  48.756 ms
+Total run time:  11.345 ms
 ```
 
 O diretório é novo, o arquivo é novo com modo `0644`, e o comando rodou porque o arquivo mudou; para o
@@ -170,9 +170,9 @@ ler primeiro**: três states, três mudados, nenhum com falha. A segunda execuç
 ```
 ana@laptop:~/shop/salt$ salt-call --local -c etc state.apply --state-output=terse
 local:
-  Name: /home/ana/www - Function: file.directory - Result: Clean - Started: 12:19:45.107657 - Duration: 3.479 ms
-  Name: /home/ana/www/index.html - Function: file.managed - Result: Clean - Started: 12:19:45.111405 - Duration: 2.912 ms
-  Name: echo reloaded >> /home/ana/www/reloads.log - Function: cmd.run - Result: Clean - Started: 12:19:45.115564 - Duration: 0.011 ms
+  Name: /home/ana/www - Function: file.directory - Result: Clean - Started: 12:28:37.505507 - Duration: 3.028 ms
+  Name: /home/ana/www/index.html - Function: file.managed - Result: Clean - Started: 12:28:37.508741 - Duration: 3.496 ms
+  Name: echo reloaded >> /home/ana/www/reloads.log - Function: cmd.run - Result: Clean - Started: 12:28:37.513170 - Duration: 0.007 ms
 
 Summary for local
 ------------
@@ -180,7 +180,7 @@ Succeeded: 3
 Failed:    0
 ------------
 Total states run:     3
-Total run time:   6.402 ms
+Total run time:   6.531 ms
 ```
 
 `Clean` nos três. O comando também está limpo, porque o `onchanges` não achou nada que tivesse mudado.
@@ -196,8 +196,8 @@ local:
     Function: file.managed
       Result: True
      Comment: File /home/ana/www/index.html updated
-     Started: 12:19:47.147139
-    Duration: 286.153 ms
+     Started: 12:28:38.943959
+    Duration: 8.947 ms
      Changes:   
               ----------
               diff:
@@ -212,12 +212,12 @@ local:
         Name: echo reloaded >> /home/ana/www/reloads.log
       Result: True
      Comment: Command "echo reloaded >> /home/ana/www/reloads.log" run
-     Started: 12:19:47.434693
-    Duration: 4.56 ms
+     Started: 12:28:38.954103
+    Duration: 4.216 ms
      Changes:   
               ----------
               pid:
-                  16891
+                  9242
               retcode:
                   0
               stderr:
@@ -229,7 +229,7 @@ Succeeded: 3 (changed=2)
 Failed:    0
 ------------
 Total states run:     3
-Total run time: 293.895 ms
+Total run time:  19.422 ms
 ```
 
 O diff conta a história inteira: a edição à mão é a linha `-`, a descrição é a linha `+`, e a linha `+`
