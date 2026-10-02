@@ -10,14 +10,15 @@ palavras. **A engenharia de prompt automática abandona a suposição e mede no 
 muitos prompts candidatos, dar nota a cada um em exemplos cuja resposta você conhece, e ficar com o
 de nota mais alta.**
 
-O método tem quatro partes, e só a primeira precisa de um modelo grande:
+O método tem quatro partes. Propor exige um modelo que escreva prompts; pontuar exige o modelo que
+você vai usar, rodado por um programa que conta:
 
-1. **propor**: um modelo vê alguns exemplos da tarefa e recebe o pedido de escrever instruções que
-   os produziriam, muitas vezes seguidas;
-2. **pontuar**: cada candidato roda num conjunto de exemplos rotulados, e uma métrica conta quantas
-   respostas dele estão certas;
-3. **ficar**: a nota mais alta vence;
-4. **refinar**, se você quiser: pede-se ao modelo variações do vencedor, que também recebem nota.
+1. Propor. Um modelo vê alguns exemplos da tarefa e recebe o pedido de escrever instruções que os
+   produziriam, muitas vezes seguidas.
+2. Pontuar. Cada candidato roda num conjunto de exemplos rotulados, e uma métrica conta quantas
+   respostas dele estão certas.
+3. Ficar. A nota mais alta vence.
+4. Refinar, se você quiser. Pede-se ao modelo variações do vencedor, que também recebem nota.
 
 O nome vem de um artigo de 2022, "Large Language Models Are Human-Level Prompt Engineers", que
 chamou o método de APE.

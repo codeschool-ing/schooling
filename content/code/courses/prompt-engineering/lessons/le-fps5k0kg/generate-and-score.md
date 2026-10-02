@@ -9,14 +9,15 @@ one that works best on the model. Lesson 30 showed that the best prompt need not
 **Automatic prompt engineering drops the assumption and measures instead: generate many candidate
 prompts, score each one on examples whose answers you know, and keep the one that scores highest.**
 
-The method has four parts, and only the first needs a large model:
+The method has four parts. Proposing needs a model that writes prompts; scoring needs the
+model you will use, run by a program that counts:
 
-1. **propose**: a model is shown a few examples of the task and asked to write instructions that
-   would produce them, many times over;
-2. **score**: each candidate is run on a set of labelled examples, and a metric counts how many of
-   its answers are right;
-3. **keep**: the highest score wins;
-4. **refine**, if you want: the model is asked for variations of the winner, and those are scored
+1. Propose. A model is shown a few examples of the task and asked to write instructions that
+   would produce them, many times over.
+2. Score. Each candidate is run on a set of labelled examples, and a metric counts how many of
+   its answers are right.
+3. Keep. The highest score wins.
+4. Refine, if you want. The model is asked for variations of the winner, and those are scored
    in turn.
 
 The name comes from a 2022 paper, "Large Language Models Are Human-Level Prompt Engineers", which
