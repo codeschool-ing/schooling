@@ -91,7 +91,7 @@
         "why": "A captura achou a senha no estado em texto puro depois da marcação."
       },
       {
-        "text": "O que o Terraform imprime",
+        "text": "O que o Terraform imprime, em plans e listagens",
         "why": "Isso. Esconde o valor em plans e listagens, e não muda nada em disco."
       },
       {
@@ -162,15 +162,15 @@
         "why": "Isso: como `result` e de novo como `secret_string`."
       },
       {
-        "text": "Em lugar nenhum, porque o Terraform descarta os valores que gera",
+        "text": "Em lugar nenhum: o Terraform a descarta",
         "why": "Ele guarda; é assim que a próxima execução sabe que a senha já existe."
       },
       {
-        "text": "No estado, como hash bcrypt e mais nada",
+        "text": "No estado, como hash bcrypt",
         "why": "O hash também está lá, ao lado da própria senha."
       },
       {
-        "text": "No Secrets Manager, e não no disco da Ana",
+        "text": "Só no Secrets Manager",
         "why": "O Secrets Manager tem, e o estado no disco dela também."
       }
     ]
@@ -180,19 +180,19 @@
     "hint": "O que o próximo plan faria sem ele?",
     "choices": [
       {
-        "text": "Porque o provider esqueceu de marcá-lo como sensitive",
+        "text": "O provider esqueceu de marcá-lo como sensitive",
         "why": "Está marcado: o `sensitive_attributes` listou `result`."
       },
       {
-        "text": "Para que o `terraform output` tenha algo a imprimir",
+        "text": "Para o `terraform output` poder imprimi-lo",
         "why": "A configuração nem tinha output."
       },
       {
-        "text": "Porque o Secrets Manager lê a senha de volta do estado",
+        "text": "O Secrets Manager o lê de volta do estado",
         "why": "A AWS nunca lê o estado do Terraform; recebeu o valor pela API."
       },
       {
-        "text": "Para a próxima execução reaproveitá-la",
+        "text": "Para a próxima execução reaproveitar a mesma senha",
         "why": "Isso. Sem o valor guardado, todo plan geraria uma senha nova."
       }
     ]
@@ -224,11 +224,11 @@
     "hint": "Compare o que o plan mostrou com o que o `jq` achou.",
     "choices": [
       {
-        "text": "Para cifrar esses atributos antes de gravar",
+        "text": "Para cifrá-los antes de gravar",
         "why": "O `jq` os leu em texto puro logo ao lado da lista."
       },
       {
-        "text": "Para manter esses valores fora da tela",
+        "text": "Para manter esses valores longe da tela",
         "why": "Isso. Ele sabe quais valores são secretos e os esconde ao imprimir, e os grava do mesmo jeito."
       },
       {
@@ -395,7 +395,7 @@
         "why": "Essa cópia saiu do bucket decifrada."
       },
       {
-        "text": "Alguém lendo os discos do S3",
+        "text": "Quem lê diretamente os discos do S3",
         "why": "Isso. O objeto é cifrado em repouso, e entregue em texto puro a quem o bucket deixa entrar."
       },
       {
@@ -409,7 +409,7 @@
     "hint": "Ele foi removido logo depois de um apply.",
     "choices": [
       {
-        "text": "Ler o estado que ainda estava puro",
+        "text": "Ler o estado enquanto ele ainda não está cifrado",
         "why": "Isso. Sem ele, o OpenTofu tentaria decifrar um arquivo que nunca foi cifrado."
       },
       {

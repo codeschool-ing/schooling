@@ -17,12 +17,17 @@
 #
 # What is STAGED rather than typed, and not shown in the lesson: the files ana
 # wrote (put below), whose contents the lesson shows; `terraform init`, whose
-# output is lesson 2's subject; and four edits made with sed and undone the
-# same way, each marked STAGED below: a mistyped argument for `validate` to
-# find, a colleague's change to the subnet names for a test to catch, a
-# validation rule switched off to show a test noticing, and the removal of a
-# test file that was only there to show an error. Where a file is written a
-# second time, `put ./name` keeps both versions apart in the output.
+# output is lesson 2's subject, except the one run in "end-to-end"; three edits
+# made with sed and undone the same way, each marked STAGED below: a mistyped
+# argument for `validate` to find, a colleague's change to the subnet names
+# for a test to catch, and a validation rule loosened to show a test noticing;
+# and the removal of a test file that was only there to show an error. Where a
+# file is written a second time, `put ./name` keeps both versions apart in the
+# output.
+#
+# Several commands run with AWS_ENDPOINT_URL pointing at port 4567, where
+# nothing listens: that is how the lesson shows which tests need AWS and which
+# do not, and it is typed, not staged.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 

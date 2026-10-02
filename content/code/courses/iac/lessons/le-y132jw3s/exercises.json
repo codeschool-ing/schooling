@@ -135,7 +135,7 @@
         "why": "The capture found the password in the state in plain text after the marking."
       },
       {
-        "text": "What Terraform prints",
+        "text": "What Terraform prints, in plans and listings",
         "correct": true,
         "why": "Yes. It hides the value in plans and listings, and changes nothing on disk."
       },
@@ -244,17 +244,17 @@
         "why": "Yes: as `result` and again as `secret_string`."
       },
       {
-        "text": "Nowhere, because Terraform discards the values it generates",
+        "text": "Nowhere: Terraform discards it",
         "correct": false,
         "why": "It keeps them; that is how the next run knows the password already exists."
       },
       {
-        "text": "In the state, as a bcrypt hash and no more",
+        "text": "In the state, hashed with bcrypt",
         "correct": false,
         "why": "The hash is there as well, beside the password itself."
       },
       {
-        "text": "In Secrets Manager, and not on Ana's disk",
+        "text": "Only in Secrets Manager",
         "correct": false,
         "why": "Secrets Manager has it, and so does the state on her disk."
       }
@@ -271,22 +271,22 @@
     "hint": "What would the next plan do without it?",
     "choices": [
       {
-        "text": "Because the provider forgot to mark it sensitive",
+        "text": "The provider forgot to mark it sensitive",
         "correct": false,
         "why": "It is marked: `sensitive_attributes` listed `result`."
       },
       {
-        "text": "So that `terraform output` has something to print",
+        "text": "So `terraform output` can print it",
         "correct": false,
         "why": "The configuration had no output at all."
       },
       {
-        "text": "Because Secrets Manager reads the password back from the state",
+        "text": "Secrets Manager reads it back from the state",
         "correct": false,
         "why": "AWS never reads Terraform's state; it got the value through the API."
       },
       {
-        "text": "So the next run reuses it",
+        "text": "So the next run reuses that same password",
         "correct": true,
         "why": "Yes. Without the stored value every plan would generate a new password."
       }
@@ -335,7 +335,7 @@
     "hint": "Compare what the plan showed with what `jq` found.",
     "choices": [
       {
-        "text": "To encrypt those attributes before writing",
+        "text": "To encrypt them before writing",
         "correct": false,
         "why": "`jq` read them in plain text right beside the list."
       },
@@ -581,7 +581,7 @@
         "why": "That copy left the bucket decrypted."
       },
       {
-        "text": "Somebody reading S3's disks",
+        "text": "Somebody who reads S3's own disks directly",
         "correct": true,
         "why": "Yes. The object is encrypted at rest, and handed over in plain text to whoever the bucket lets in."
       },
@@ -603,7 +603,7 @@
     "hint": "It was removed right after one apply.",
     "choices": [
       {
-        "text": "Reading the state that was still plain",
+        "text": "Reading the state while it is still unencrypted",
         "correct": true,
         "why": "Yes. Without it, OpenTofu would try to decrypt a file that was never encrypted."
       },
