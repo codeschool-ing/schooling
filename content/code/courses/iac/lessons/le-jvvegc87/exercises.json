@@ -1,0 +1,811 @@
+[
+  {
+    "id": "ex-nq64166x",
+    "version": 1,
+    "section": "inventory",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What has to be on `web1` for Ana's laptop to configure it with Ansible?",
+    "hint": "Look at what the lesson says Ubuntu already ships.",
+    "choices": [
+      {
+        "text": "An Ansible agent registered with a central server",
+        "correct": false,
+        "why": "That is the picture the lesson corrects: Ansible pushes from the laptop and has no agent."
+      },
+      {
+        "text": "A copy of the inventory and the playbook",
+        "correct": false,
+        "why": "Both stay on the control node; the machine only receives small programs while a command runs."
+      },
+      {
+        "text": "An SSH server and Python",
+        "correct": true,
+        "why": "Yes. Ansible logs in over SSH and runs modules written in Python; nothing else is installed."
+      },
+      {
+        "text": "Ansible itself, at the same version as the laptop's",
+        "correct": false,
+        "why": "Ansible is installed once, on the control node, and never on the machines it manages."
+      }
+    ]
+  },
+  {
+    "id": "ex-hqdxvh12",
+    "version": 1,
+    "section": "inventory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ansible db1 -m ping` comes back as `UNREACHABLE!`. What does that tell Ana?",
+    "hint": "Compare it with FAILED.",
+    "choices": [
+      {
+        "text": "The module ran and returned an error",
+        "correct": false,
+        "why": "That would be FAILED: logged in, and the task went wrong."
+      },
+      {
+        "text": "Ansible never managed to log in",
+        "correct": true,
+        "why": "Right. In the lesson it was SSH refusing `root`, whose key is not authorised; no module ran at all."
+      },
+      {
+        "text": "The machine does not answer ICMP echo requests from the laptop",
+        "correct": false,
+        "why": "Ansible's `ping` is a module run over SSH, not the network ping."
+      },
+      {
+        "text": "`db1` is missing from the inventory",
+        "correct": false,
+        "why": "A host the inventory does not have matches nothing; Ansible would not try to reach it at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tdbnyp8",
+    "version": 1,
+    "section": "inventory",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each line of Ana's `inventory.ini` to what it does.",
+    "hint": "A name in brackets is not a host.",
+    "pairs": [
+      {
+        "left": "`[web]`",
+        "right": "Starts a group"
+      },
+      {
+        "left": "`web1`",
+        "right": "Names a host"
+      },
+      {
+        "left": "`[all:vars]`",
+        "right": "Sets variables for every host"
+      },
+      {
+        "left": "`ansible_user=deploy`",
+        "right": "Chooses the SSH login"
+      }
+    ],
+    "right_distractors": [
+      "Installs Python on the host"
+    ]
+  },
+  {
+    "id": "ex-jmmq5pj2",
+    "version": 1,
+    "section": "ad-hoc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana runs `ansible web -m apt -a \"name=tree state=present\" --become` a second time, right after the first. What does each host report?",
+    "hint": "The module looks before it acts.",
+    "choices": [
+      {
+        "text": "CHANGED, because apt-get install ran again on the machine",
+        "correct": false,
+        "why": "That is what `command` would report. `apt` checks first and installs nothing when the package is there."
+      },
+      {
+        "text": "FAILED, because the package already exists",
+        "correct": false,
+        "why": "A state that is already true is a success, not an error."
+      },
+      {
+        "text": "UNREACHABLE, until the cache is refreshed",
+        "correct": false,
+        "why": "UNREACHABLE is about logging in; the cache has nothing to do with it."
+      },
+      {
+        "text": "SUCCESS with `\"changed\": false`",
+        "correct": true,
+        "why": "Yes. The package is present, so the module did nothing and says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-t7q3pqfy",
+    "version": 1,
+    "section": "ad-hoc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ansible web1 -m command -a \"dpkg -l | grep -c ^ii\"` fails, and the same text with `-m shell` prints a number. Why?",
+    "hint": "Who interprets the `|`?",
+    "choices": [
+      {
+        "text": "`command` runs the program with no shell, so the pipe became arguments to `dpkg`",
+        "correct": true,
+        "why": "Right. dpkg received `|`, `grep`, `-c` and `^ii` as package names."
+      },
+      {
+        "text": "`command` needs `--become` to read the package list",
+        "correct": false,
+        "why": "Listing packages needs no root; `shell` ran without `--become` too."
+      },
+      {
+        "text": "grep is not installed on web1",
+        "correct": false,
+        "why": "It is; the failed output even lists the package `grep`."
+      },
+      {
+        "text": "Ad-hoc commands accept one word",
+        "correct": false,
+        "why": "`tree --version` worked with `command`; it takes several arguments."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtmef9mn",
+    "version": 1,
+    "section": "ad-hoc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `ansible web1 -m command -a \"tree --version\"` report CHANGED, when it only printed a version?",
+    "hint": "What can `command` know about the program it ran?",
+    "choices": [
+      {
+        "text": "Printing a version updates apt's cache",
+        "correct": false,
+        "why": "Nothing on the machine changed; the report comes from what the module can know."
+      },
+      {
+        "text": "It cannot tell",
+        "correct": true,
+        "why": "Yes. `command` runs a program and cannot see what it did, so it assumes a change every time."
+      },
+      {
+        "text": "The first run of any module on a host is reported as a change",
+        "correct": false,
+        "why": "`ping` reported `\"changed\": false` on its first run, and `command` reports CHANGED on every run."
+      },
+      {
+        "text": "Ad-hoc commands always report CHANGED, unlike playbooks",
+        "correct": false,
+        "why": "The second `apt` ad-hoc command reported SUCCESS; it depends on the module, not on how it is run."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9z4gghs",
+    "version": 1,
+    "section": "playbooks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The first run of `site.yml` ends with `web1 : ok=5 changed=4`. How should Ana read the two numbers?",
+    "hint": "One of them contains the other.",
+    "choices": [
+      {
+        "text": "Nine tasks ran: five fine and four that changed",
+        "correct": false,
+        "why": "The counts overlap: `ok` includes every successful task, changed or not."
+      },
+      {
+        "text": "Five tasks succeeded and four of them changed something",
+        "correct": true,
+        "why": "Right. The fifth, gathering facts, changed nothing."
+      },
+      {
+        "text": "Four tasks still need a second run",
+        "correct": false,
+        "why": "A change is something done, not something pending; the second run reported changed=0."
+      },
+      {
+        "text": "Four warnings",
+        "correct": false,
+        "why": "`changed` counts tasks that altered the machine; warnings are not counted in the recap."
+      }
+    ]
+  },
+  {
+    "id": "ex-963k0bma",
+    "version": 1,
+    "section": "playbooks",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `ansible-playbook site.yml` printed on its first run in order.",
+    "hint": "One task nobody wrote comes first.",
+    "items": [
+      "PLAY [Web servers]",
+      "TASK [Gathering Facts]",
+      "TASK [Install nginx]",
+      "TASK [Start nginx]",
+      "PLAY RECAP"
+    ],
+    "trap": "Gathering Facts runs before the first task in the file, and the recap is always last."
+  },
+  {
+    "id": "ex-b6wh5dy2",
+    "version": 1,
+    "section": "playbooks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A playbook has five tasks. On `web2` the third one fails; on `web1` everything succeeds. What is the state of `web2` afterwards?",
+    "hint": "Ansible keeps no state to roll back to.",
+    "choices": [
+      {
+        "text": "As before the run, because the play rolls web2 back",
+        "correct": false,
+        "why": "Nothing is rolled back; what tasks one and two did stays done."
+      },
+      {
+        "text": "Fully configured, because web1 finished the play for both",
+        "correct": false,
+        "why": "Each host is configured on its own; web1 succeeding does nothing to web2."
+      },
+      {
+        "text": "Tasks one and two applied, three to five not",
+        "correct": true,
+        "why": "Right. The failing host stops where it failed, and the next run starts from the top and finds the first two already true."
+      },
+      {
+        "text": "Unchanged, since a failed host is skipped from the start",
+        "correct": false,
+        "why": "Ansible cannot know a task will fail before running it; the earlier tasks ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-cc3d9gjd",
+    "version": 1,
+    "section": "idempotency",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A colleague edited `index.html` on `web1` by hand. Ana runs `site.yml` with nothing new in it. What happens?",
+    "hint": "Look at the recap after the edit.",
+    "choices": [
+      {
+        "text": "The page is put back on web1 and web2 is left alone",
+        "correct": true,
+        "why": "Yes: changed=1 on web1, changed=0 on web2."
+      },
+      {
+        "text": "Nothing, because the playbook did not change",
+        "correct": false,
+        "why": "Ansible compares with the machine, not with the last run; the machine changed."
+      },
+      {
+        "text": "The page is rewritten on both web servers",
+        "correct": false,
+        "why": "web2's page already matched, so its task reported ok."
+      },
+      {
+        "text": "The run fails, reporting drift on web1",
+        "correct": false,
+        "why": "A difference is not an error; the task corrects it and reports changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-677w1n95",
+    "version": 1,
+    "section": "idempotency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A task runs `nginx -t` with `ansible.builtin.command`. Why does the lesson add `changed_when: false`?",
+    "hint": "What does a recap that is never zero cost?",
+    "choices": [
+      {
+        "text": "To stop the task from running on the second run",
+        "correct": false,
+        "why": "It still runs every time; only what it reports changes. Skipping is what `creates` does."
+      },
+      {
+        "text": "To keep the run from failing when the configuration is wrong",
+        "correct": false,
+        "why": "That would be `failed_when`; a wrong configuration should still fail the check."
+      },
+      {
+        "text": "So the recap shows real changes",
+        "correct": true,
+        "why": "Right. A task that always says changed hides the changes that matter."
+      },
+      {
+        "text": "Because `nginx -t` modifies the configuration file",
+        "correct": false,
+        "why": "It only reads and tests it; that is exactly why reporting a change is wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqqxs96t",
+    "version": 1,
+    "section": "idempotency",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `command` task that makes `/etc/ssl/certs/shop.crt` is skipped on later runs once that file exists, because the task names it with the argument ___.",
+    "hint": "A verb in the third person.",
+    "blanks": [
+      {
+        "accept": [
+          "creates",
+          "creates:"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jgghc7cc",
+    "version": 1,
+    "section": "idempotency",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana deletes the `Write the index page` task from `site.yml` and runs it. What happens to `/var/www/html/index.html` on the web servers?",
+    "hint": "Is there a record of what Ansible made?",
+    "choices": [
+      {
+        "text": "It is deleted, as Terraform would destroy a removed resource",
+        "correct": false,
+        "why": "Terraform can because its state lists what it made; Ansible has no such list."
+      },
+      {
+        "text": "It stays as it is",
+        "correct": true,
+        "why": "Right. Ansible only checks what the playbook mentions; to remove it you write a task with `state: absent`."
+      },
+      {
+        "text": "The run fails because the file is no longer managed",
+        "correct": false,
+        "why": "An unmanaged file is invisible to the run, not an error."
+      },
+      {
+        "text": "It is emptied on the next run with `--check`",
+        "correct": false,
+        "why": "`--check` changes nothing at all, and nothing mentions the file any more."
+      }
+    ]
+  },
+  {
+    "id": "ex-gsxxw81a",
+    "version": 1,
+    "section": "templates-handlers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does the `Reload nginx` handler run?",
+    "hint": "Compare the runs before and after the variable changed.",
+    "choices": [
+      {
+        "text": "After every task that notifies it, immediately",
+        "correct": false,
+        "why": "Handlers wait for the end of the play, and run once however many tasks notified them."
+      },
+      {
+        "text": "On every run, after the last task",
+        "correct": false,
+        "why": "The run that followed, with nothing new, had no handler at all: nothing notified it."
+      },
+      {
+        "text": "At the end of the play, if a notifying task changed",
+        "correct": true,
+        "why": "Yes. The configuration task reported changed, and the reload followed after every task."
+      },
+      {
+        "text": "Only when nginx is not running",
+        "correct": false,
+        "why": "Starting a stopped nginx is the `Start nginx` task's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndnbt2ad",
+    "version": 1,
+    "section": "templates-handlers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana adds `www.shop.example.com` to `shop_server_name` in `group_vars/web.yml` and runs `site.yml --diff`. How many changes does the recap report for `web1`?",
+    "hint": "Count the template and what it notified.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "changes"
+  },
+  {
+    "id": "ex-fqve49sn",
+    "version": 1,
+    "section": "templates-handlers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The index page template contains `{{ inventory_hostname }}`, and nobody declared that variable. Where does it come from?",
+    "hint": "web1 and web2 served different pages.",
+    "choices": [
+      {
+        "text": "Ansible sets it: the host's name as the inventory spells it",
+        "correct": true,
+        "why": "Right, which is why each host rendered its own page from one template."
+      },
+      {
+        "text": "From `group_vars/web.yml`",
+        "correct": false,
+        "why": "That file sets only `shop_server_name` and `shop_root`."
+      },
+      {
+        "text": "From the machine's `/etc/hostname`, read by Jinja2",
+        "correct": false,
+        "why": "Templates are rendered on the control node, and the value is the inventory's name, not the machine's."
+      },
+      {
+        "text": "It is an environment variable on the laptop",
+        "correct": false,
+        "why": "Nothing in Ana's shell sets it; Ansible provides it per host."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bfnx1ze",
+    "version": 1,
+    "section": "templates-handlers",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each place sets `shop_server_name` to a different value. Match each to its rank, 1 being the weakest.",
+    "hint": "The lesson lists them from weakest to strongest.",
+    "pairs": [
+      {
+        "left": "a role's `defaults/main.yml`",
+        "right": "1"
+      },
+      {
+        "left": "`group_vars/web.yml`",
+        "right": "2"
+      },
+      {
+        "left": "`host_vars/web1.yml`",
+        "right": "3"
+      },
+      {
+        "left": "`-e` on the command line",
+        "right": "4"
+      }
+    ]
+  },
+  {
+    "id": "ex-mr4n728w",
+    "version": 1,
+    "section": "roles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a role, which directory holds variables the caller is expected to override?",
+    "hint": "The weakest place of all.",
+    "choices": [
+      {
+        "text": "`vars/`",
+        "correct": false,
+        "why": "`vars` wins over inventory and group variables, so a caller cannot easily override it."
+      },
+      {
+        "text": "`meta/`",
+        "correct": false,
+        "why": "`meta` holds the author, platforms and dependencies, not variables."
+      },
+      {
+        "text": "`files/`",
+        "correct": false,
+        "why": "`files` holds files copied as they are."
+      },
+      {
+        "text": "`defaults/`",
+        "correct": true,
+        "why": "Yes. Defaults lose to almost everything, which is what makes them overridable."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2ytyfqp",
+    "version": 1,
+    "section": "roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After moving everything into the `web` role, Ana runs `site.yml` and gets `changed=0`. What does that prove?",
+    "hint": "What would a mistake in the move have done to the machines?",
+    "choices": [
+      {
+        "text": "The role was never used",
+        "correct": false,
+        "why": "The tasks are named `web : Install nginx`, so they came from the role."
+      },
+      {
+        "text": "That the move describes the same machines as before",
+        "correct": true,
+        "why": "Right. A task that now rendered something different would have reported changed."
+      },
+      {
+        "text": "That the role's defaults won over `group_vars/web.yml`",
+        "correct": false,
+        "why": "The opposite: the default lacks `www`; had it won, the file would have changed."
+      },
+      {
+        "text": "That the machines were replaced by new ones",
+        "correct": false,
+        "why": "New machines would have needed nginx installed: many changes, not zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7veznqm",
+    "version": 1,
+    "section": "roles",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `ansible-galaxy role init --init-path roles web` create? Choose all that apply.",
+    "hint": "Look at the tree it printed.",
+    "choices": [
+      {
+        "text": "`roles/web/tasks/main.yml`",
+        "correct": true,
+        "why": "Yes, the role's tasks."
+      },
+      {
+        "text": "`roles/web/inventory.ini`",
+        "correct": false,
+        "why": "A role knows nothing of which hosts it runs on; the inventory belongs to the project."
+      },
+      {
+        "text": "`roles/web/handlers/main.yml`",
+        "correct": true,
+        "why": "Yes, the role's handlers."
+      },
+      {
+        "text": "`roles/web/defaults/main.yml`",
+        "correct": true,
+        "why": "Yes, the role's default variables."
+      },
+      {
+        "text": "`roles/web/site.yml`",
+        "correct": false,
+        "why": "The playbook stays outside and names the role."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7bavh0f",
+    "version": 1,
+    "section": "from-terraform",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lesson's handover, what do Terraform and Ansible share?",
+    "hint": "Neither tool knows the other exists.",
+    "choices": [
+      {
+        "text": "The state file, which Ansible reads to find the hosts",
+        "correct": false,
+        "why": "Ansible never reads Terraform's state in the lesson."
+      },
+      {
+        "text": "A provisioner that runs the playbook at creation",
+        "correct": false,
+        "why": "That alternative is named and set aside: it runs once and never again."
+      },
+      {
+        "text": "`hosts.ini`",
+        "correct": true,
+        "why": "Yes. Terraform writes it with `local_file`, Ansible reads it with `-i`."
+      },
+      {
+        "text": "An SSH connection opened by Terraform",
+        "correct": false,
+        "why": "Terraform opens no connection to the machines here; Ansible does."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8t0jkrd",
+    "version": 1,
+    "section": "from-terraform",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `~/shop/infra` take the machines' addresses as a variable instead of reading them from `aws_instance` resources?",
+    "hint": "What is moto, and what is it not?",
+    "choices": [
+      {
+        "text": "`local_file` cannot read attributes of other resources",
+        "correct": false,
+        "why": "Any argument can reference another resource; `templatefile` would take them just the same."
+      },
+      {
+        "text": "Moto runs no machines",
+        "correct": true,
+        "why": "Right. An instance moto creates has no address anything answers on, so the containers' addresses are given instead."
+      },
+      {
+        "text": "Private addresses must never be written into a file",
+        "correct": false,
+        "why": "The inventory is exactly such a file, and that is fine."
+      },
+      {
+        "text": "Ansible refuses addresses that Terraform computed",
+        "correct": false,
+        "why": "Ansible cannot tell where a line in the inventory came from."
+      }
+    ]
+  },
+  {
+    "id": "ex-nft2vmy0",
+    "version": 1,
+    "section": "from-terraform",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `hosts.ini`, the line is `web1 ansible_host=172.30.0.11`. Which name appears in the PLAY RECAP?",
+    "hint": "One name is for people, the other for SSH.",
+    "choices": [
+      {
+        "text": "`172.30.0.11`",
+        "correct": false,
+        "why": "The address is only where the connection goes."
+      },
+      {
+        "text": "`web1`",
+        "correct": true,
+        "why": "Yes. The host keeps its inventory name everywhere in Ansible; `ansible_host` changes only the connection."
+      },
+      {
+        "text": "`deploy@172.30.0.11`",
+        "correct": false,
+        "why": "The user and address are connection details, not the host's name."
+      },
+      {
+        "text": "`local_file.inventory`",
+        "correct": false,
+        "why": "That is the Terraform resource that wrote the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-0q2kp1kd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The machines are rebuilt every week by Terraform with new addresses, and Ana keeps `inventory.ini` up to date by hand. What goes wrong first?",
+    "hint": "Who knows the new addresses?",
+    "choices": [
+      {
+        "text": "Ansible refuses to run against hosts it saw before",
+        "correct": false,
+        "why": "Ansible keeps no memory of hosts between runs."
+      },
+      {
+        "text": "Terraform plans to destroy the inventory file",
+        "correct": false,
+        "why": "A file written by hand is not in Terraform's state at all."
+      },
+      {
+        "text": "The file goes stale after a rebuild, silently",
+        "correct": true,
+        "why": "Right. Only the tool that created the machines knows the addresses; the lesson has it write the file."
+      },
+      {
+        "text": "The new machines lack Python, so every task fails",
+        "correct": false,
+        "why": "Ubuntu ships Python; the problem is reaching the right machine at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdec8z9s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A role's task runs `systemctl reload nginx` with `command` on every run. The recap is never zero. What is the fix the lesson points to?",
+    "hint": "When should a reload happen at all?",
+    "choices": [
+      {
+        "text": "Add `changed_when: false` to the task",
+        "correct": false,
+        "why": "The recap would read zero, but nginx would still be reloaded every run: the report becomes false instead of the work becoming right."
+      },
+      {
+        "text": "A handler, notified by the configuration task",
+        "correct": true,
+        "why": "Right. The reload then happens only when the configuration changed, and the recap tells the truth."
+      },
+      {
+        "text": "Use `shell` instead of `command`",
+        "correct": false,
+        "why": "`shell` cannot know what the program did either."
+      },
+      {
+        "text": "Move the task into `vars/main.yml`",
+        "correct": false,
+        "why": "`vars` holds variables, not tasks."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1sfmanx",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would show up in a run of Ana's `site.yml`, as written at the end of the lesson? Choose all that apply.",
+    "hint": "The playbook checks only what it mentions.",
+    "choices": [
+      {
+        "text": "Someone stopped nginx on web2",
+        "correct": true,
+        "why": "Yes: `Start nginx` would report changed on web2."
+      },
+      {
+        "text": "Someone installed `htop` on web1 by hand",
+        "correct": false,
+        "why": "No task mentions htop, so no run reports it."
+      },
+      {
+        "text": "Someone edited the shop's nginx site on web1",
+        "correct": true,
+        "why": "Yes: the template task would rewrite it and notify the reload."
+      },
+      {
+        "text": "Someone added a cron job on web2",
+        "correct": false,
+        "why": "Nothing in the role mentions cron."
+      },
+      {
+        "text": "Someone deleted `/var/www/shop` on web1",
+        "correct": true,
+        "why": "Yes: the directory task would recreate it, and the index page task would write the page again."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4398h4e",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the handover from lesson 1 in order, as this lesson ran it.",
+    "hint": "The file comes before anybody reads it.",
+    "items": [
+      "`terraform apply` in `~/shop/infra`",
+      "`local_file` writes `hosts.ini`",
+      "`ssh-keyscan` trusts the machines' keys by address",
+      "`ansible-playbook -i hosts.ini site.yml`"
+    ],
+    "trap": "The host keys must be trusted before Ansible connects by address."
+  }
+]
