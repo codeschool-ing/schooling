@@ -21,7 +21,7 @@ that way:
 
 The quizzes, numbers, blanks, orderings and matchings at the end of this lesson are graded that way.
 A judge like the one in this lesson could grade an essay, and the platform declined it. One of its
-own rules says why in a sentence: its algebra grader checks expressions at fixed points rather than
+own rules says why in a sentence. Its algebra grader checks expressions at fixed points rather than
 random ones, because a student told they were right on Tuesday and wrong on Thursday cannot find out
 which was the mistake.
 
@@ -33,14 +33,14 @@ a certificate rests on it.
 
 ## Where a judge earns its place
 
-That is not an argument against judges. It is an argument about where they go. **Use a judge where
+So the question is where a judge goes. **Use a judge where
 its mistakes are cheap and something else catches them:**
 
-- **Ranking drafts.** Five candidate replies, ordered for a person who edits the top one. A wrong
+- Ranking drafts: five candidate replies, ordered for a person who edits the top one. A wrong
   ranking costs that person a few seconds.
-- **Triage for people.** Deciding which replies a person reads first. The person still reads, and
+- Triage for people: deciding which replies a person reads first. The person still reads, and
   disagrees when the judge is wrong.
-- **Watching a trend.** The share of replies judged poor this week against last week. A steady
+- Watching a trend: the share of replies judged poor this week against last week. A steady
   bias moves both weeks alike, so a trend survives biases a single verdict does not.
 
 In each case the judge's verdict is an input to somebody's decision. In an exam it would be the

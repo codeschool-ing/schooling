@@ -43,13 +43,13 @@ ana@lab:~/triage$ head -n 1 cases/pairs.jsonl
 ```
 
 Em `j01` a pessoa escolheu `b`: ela diz o que aconteceu e o que foi feito. `a` é um parágrafo de
-tranquilização em que nada acontece.
+frases tranquilizadoras em que nada acontece.
 
 ## O que o juiz do substituto faz
 
-O substituto reconhece o prompt do juiz pelas tags e pontua cada resposta com uma rubrica curta: um
-ponto por um pedido de desculpas ou um agradecimento, um ponto por dizer o que será feito, um ponto
-por citar o que está em jogo, como o pedido ou o reembolso, e uma penalidade por pontos de
+O substituto reconhece o prompt do juiz pelas tags e pontua cada resposta com uma rubrica curta. Dá um
+ponto por um pedido de desculpas ou um agradecimento, um ponto por dizer o que será feito e um ponto
+por citar o que está em jogo, como o pedido ou o reembolso, e penaliza os pontos de
 exclamação. **Depois ele soma duas coisas que a rubrica nunca pediu**, e as declara:
 
 ```

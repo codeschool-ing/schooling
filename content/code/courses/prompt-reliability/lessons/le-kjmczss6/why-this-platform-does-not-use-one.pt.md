@@ -14,13 +14,13 @@ verificação que dá o mesmo veredito sempre**, e a plataforma é construída p
 
 - todo tipo de questão tem um corretor determinístico, e ter um é a condição para um tipo existir,
   e é por isso que redações em texto livre ficam de fora;
-- todo gabarito passa pelo mesmo corretor antes de ser publicado, então um gabarito que corrige a si
-  mesmo errado nunca chega a um aluno;
+- todo gabarito passa pelo mesmo corretor antes de ser publicado, então um gabarito que reprova a si
+  mesmo nunca chega a um aluno;
 - uma questão de um tipo que o corretor não conhece é um erro, nunca uma aprovação.
 
 Os quizzes, números, lacunas, ordenações e associações no fim desta aula são corrigidos assim. Um
 juiz como o desta aula poderia corrigir uma redação, e a plataforma recusou. Uma das regras dela diz o
-motivo numa frase: o corretor de álgebra confere expressões em pontos fixos, e não aleatórios, porque
+motivo numa frase. O corretor de álgebra confere expressões em pontos fixos, e não aleatórios, porque
 um aluno que ouviu que acertou na terça e errou na quinta não tem como descobrir qual foi o engano.
 
 **Um juiz com viés de posição é a terça e a quinta desse aluno.** Troque a ordem de duas respostas e
@@ -31,14 +31,14 @@ lugar: um certificado se apoia nela.
 
 ## Onde um juiz merece o lugar
 
-Isso não é um argumento contra juízes. É um argumento sobre onde eles ficam. **Use um juiz onde os
+A questão, então, é onde um juiz fica. **Use um juiz onde os
 erros dele são baratos e alguma outra coisa os pega:**
 
-- **Ordenar rascunhos.** Cinco respostas candidatas, ordenadas para uma pessoa que edita a primeira.
+- Ordenar rascunhos: cinco respostas candidatas, ordenadas para uma pessoa que edita a primeira.
   Uma ordem errada custa a essa pessoa alguns segundos.
-- **Triagem para pessoas.** Decidir quais respostas uma pessoa lê primeiro. A pessoa continua lendo,
+- Triagem para pessoas: decidir quais respostas uma pessoa lê primeiro. A pessoa continua lendo,
   e discorda quando o juiz erra.
-- **Acompanhar uma tendência.** A fração de respostas julgadas ruins nesta semana contra a semana
+- Acompanhar uma tendência: a fração de respostas julgadas ruins nesta semana contra a semana
   passada. Um viés estável move as duas semanas por igual, então uma tendência sobrevive a vieses que
   um veredito isolado não sobrevive.
 

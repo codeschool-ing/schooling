@@ -39,7 +39,7 @@ agrees AND keeps its verdict: 7 of 16
 Seis de dezesseis vereditos viram: `j03`, `j07`, `j08`, `j10`, `j11` e `j13`. Em todos o juiz
 escolheu `a` quando `a` vinha primeiro e `b` quando `b` vinha primeiro. **Um veredito que muda quando
 só a ordem muda é um veredito sobre a ordem.** Três desses seis, `j03`, `j08` e `j10`, tinham
-concordado com a pessoa na primeira execução, e essa concordância foi um acaso de lugar.
+concordado com a pessoa na primeira execução, e essa concordância foi um acaso de posição.
 
 ## Comprimento
 
@@ -79,12 +79,12 @@ resposta mais longa é mais longa nas duas ordens.**
 
 ## O que a literatura encontrou
 
-Os vieses do substituto foram postos ali de propósito, e foram escolhidos porque juízes reais se
-mostraram com eles. *Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena* (Zheng e outros, 2023)
+Os vieses do substituto foram postos ali de propósito, e foram escolhidos porque se descobriu que
+juízes reais os têm. *Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena* (Zheng e outros, 2023)
 documentou o viés de posição, a preferência pela resposta numa certa posição, e o viés de verbosidade,
 a preferência pela resposta mais longa, em modelos de linguagem usados como juízes. O mesmo artigo
-relatou que os vereditos de um modelo forte concordavam com as preferências humanas mais ou menos tanto
-quanto as pessoas concordavam entre si, o que explica por que a técnica se espalhou, e por que os
+relatou que os vereditos de um modelo forte concordavam com as preferências humanas mais ou menos com a
+mesma frequência com que as pessoas concordavam entre si, o que explica por que a técnica se espalhou, e por que os
 vieses dela importam.
 
 ## O que os reduz

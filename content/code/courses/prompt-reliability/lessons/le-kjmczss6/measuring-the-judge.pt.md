@@ -39,7 +39,7 @@ mede a concordância além do acaso**, uma estatística que Jacob Cohen publicou
 isto: dois avaliadores classificando os mesmos itens em categorias.
 
 Ele precisa de dois números. A concordância observada é 10 de 16, 0,625. A concordância esperada
-pelo acaso vem de com que frequência cada avaliador usa cada resposta:
+pelo acaso vem da frequência com que cada avaliador usa cada resposta:
 
 ```
 ana@lab:~/triage$ grep -c '"human": "a"' cases/pairs.jsonl
@@ -48,11 +48,11 @@ ana@lab:~/triage$ grep -c '"human": "a"' cases/pairs.jsonl
 
 A pessoa escolheu `a` em 8 pares de 16, e o juiz escolheu `a` em 10. Se os dois respondessem de forma
 independente nessas taxas, diriam os dois `a` com probabilidade 8/16 × 10/16 = 0,3125, e os dois `b`
-com probabilidade 8/16 × 6/16 = 0,1875, então concordariam 0,5 das vezes por acaso.
+com probabilidade 8/16 × 6/16 = 0,1875. Então concordariam 0,5 das vezes por acaso.
 
 O kappa é quanto a concordância observada se afastou do acaso, como fração de quanto poderia ter se
 afastado: (0,625 − 0,5) / (1 − 0,5) = 0,25. **Um kappa de 0 é um juiz que concorda com as pessoas
-exatamente tanto quanto o acaso, e 1 é concordância perfeita.** A escala mais citada, de Landis e Koch
+exatamente com a frequência que o acaso daria, e 1 é concordância perfeita.** A escala mais citada, de Landis e Koch
 em 1977, chama de razoável a faixa de 0,21 a 0,40. Este juiz classifica pares um pouco melhor que uma
 moeda.
 

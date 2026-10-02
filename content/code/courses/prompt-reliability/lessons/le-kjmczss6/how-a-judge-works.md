@@ -47,9 +47,10 @@ of reassurance in which nothing happens.
 
 ## What the stand-in's judge does
 
-The stand-in recognises the judge's prompt by its tags and scores each reply against a short rubric:
-a point for an apology or thanks, a point for saying what will be done, a point for naming the thing
-at stake, such as the order or the refund, and a penalty for exclamation marks. **Then it adds two
+The stand-in recognises the judge's prompt by its tags and scores each reply against a short rubric.
+It gives a point for an apology or thanks, a point for saying what will be done and a point for
+naming the thing at stake, such as the order or the refund, and it penalises exclamation
+marks. **Then it adds two
 things the rubric never asked for**, and declares them:
 
 ```

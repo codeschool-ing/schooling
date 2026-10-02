@@ -49,7 +49,7 @@ ana@lab:~/triage$ grep -c '"human": "a"' cases/pairs.jsonl
 
 The person chose `a` in 8 pairs of 16, and the judge chose `a` in 10. If the two answered
 independently at those rates, they would both say `a` with probability 8/16 × 10/16 = 0.3125, and
-both say `b` with probability 8/16 × 6/16 = 0.1875, so they would agree 0.5 of the time by chance.
+both say `b` with probability 8/16 × 6/16 = 0.1875. So they would agree 0.5 of the time by chance.
 
 Kappa is how far the observed agreement got from chance, as a share of how far it could have got:
 (0.625 − 0.5) / (1 − 0.5) = 0.25. **A kappa of 0 is a judge that agrees with people exactly as often
