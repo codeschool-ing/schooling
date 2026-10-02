@@ -18,7 +18,7 @@ ana@lab:~/pe$ tok show "The kitchen stops taking hot food orders thirty minutes 
 12 tokens, 71 characters (o200k_base)
 ```
 
-Twelve words and a full stop, twelve tokens. Each word is one piece, and **the space in front of a
+Eleven words and a full stop, twelve tokens. Each word is one piece, and **the space in front of a
 word belongs to the token**: the piece is `" kitchen"`, space included, and its number is 10084.
 `"The"` has no space because it starts the text. The numbers mean nothing in themselves; 976 is
 simply where `"The"` sits in the list.

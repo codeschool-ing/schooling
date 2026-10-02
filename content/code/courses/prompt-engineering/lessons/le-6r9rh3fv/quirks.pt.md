@@ -65,13 +65,13 @@ calculadora nunca comete, sem nenhum sinal no texto de que erraram.
 
 Dois remédios, e os dois voltam neste curso:
 
-- **Transformar as letras em tokens.** Peça que a palavra seja soletrada primeiro, uma letra por
-  linha, e depois contada: escrita assim, cada letra vira um token próprio, e o modelo conta coisas
+- Transformar as letras em tokens. Peça que a palavra seja soletrada primeiro, uma letra por
+  linha, e depois contada. Escrita assim, cada letra vira um token próprio, e o modelo conta coisas
   que consegue ver. A lição 26 faz o mesmo com o raciocínio, pedindo que os passos sejam escritos
   antes da resposta.
-- **Passar o trabalho para um programa.** Contar, inverter e fazer contas têm respostas exatas que
+- Passar o trabalho para um programa. Contar, inverter e fazer contas têm respostas exatas que
   umas poucas linhas de código produzem sempre. A lição 6 deixa o modelo pedir uma calculadora, e
-  essa é a ferramenta certa para 4 × 27.90, acertasse o modelo ou não.
+  essa é a ferramenta certa para 4 × 27,90, acertasse o modelo ou não.
 
 Nada disso é motivo para desconfiar do que um modelo escreve sobre o sentido das coisas. **Um modelo
 é bom no que é visível nos tokens, que é quais pedaços vêm depois de quais**, e fraco no que está

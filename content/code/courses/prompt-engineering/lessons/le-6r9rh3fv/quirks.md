@@ -66,11 +66,11 @@ calculator never makes, without any sign in the text that they did.
 
 Two remedies, and they come up again in this course:
 
-- **Make the letters into tokens.** Ask for the word to be spelt out first, one letter per line,
-  and then counted: written out, each letter becomes a token of its own, and the model counts
+- Make the letters into tokens. Ask for the word to be spelt out first, one letter per line,
+  and then counted. Written out, each letter becomes a token of its own, and the model counts
   things it can see. Lesson 26 does the same with reasoning, by asking for the steps to be written
   before the answer.
-- **Give the job to a program.** Counting, reversing and arithmetic have exact answers that a few
+- Give the job to a program. Counting, reversing and arithmetic have exact answers that a few
   lines of code produce every time. Lesson 6 lets a model ask a calculator, and that is the right
   tool for 4 × 27.90 whether or not the model would have got it right.
 

@@ -19,7 +19,7 @@ ana@lab:~/pe$ tok show "The kitchen stops taking hot food orders thirty minutes 
 12 tokens, 71 characters (o200k_base)
 ```
 
-Doze palavras e um ponto final, doze tokens. Cada palavra é um pedaço, e **o espaço antes de uma
+Onze palavras e um ponto final, doze tokens. Cada palavra é um pedaço, e **o espaço antes de uma
 palavra faz parte do token**: o pedaço é `" kitchen"`, com espaço, e o número dele é 10084. `"The"`
 não tem espaço porque abre o texto. Os números não significam nada por si; 976 é só a posição de
 `"The"` na lista.
