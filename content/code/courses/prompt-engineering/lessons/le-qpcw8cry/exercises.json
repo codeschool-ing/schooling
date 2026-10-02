@@ -1,0 +1,529 @@
+[
+  {
+    "id": "ex-xeq49tf1",
+    "version": 1,
+    "section": "flattening",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does raising the temperature change?",
+    "hint": "Compare the three tables for `the coffee is`.",
+    "choices": [
+      {
+        "text": "How evenly the shares are spread among the words",
+        "correct": true,
+        "why": "Right. The same five words appear at every temperature; at 2 their shares are closer together than at 0.5."
+      },
+      {
+        "text": "Which words the model knows",
+        "correct": false,
+        "why": "The vocabulary is fixed by training. `sweet` never appears after `coffee is`, at any temperature."
+      },
+      {
+        "text": "The order in which the words are ranked",
+        "correct": false,
+        "why": "The order was hot, strong, ready, cold, bitter in all three tables."
+      },
+      {
+        "text": "The facts the model learnt from its file during training",
+        "correct": false,
+        "why": "Temperature is applied after the scores are computed. The model itself is untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-twt9xz6g",
+    "version": 1,
+    "section": "flattening",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At what point does temperature act?",
+    "hint": "Think of the steps from scores to a drawn word.",
+    "choices": [
+      {
+        "text": "During training, when the model's weights are learnt",
+        "correct": false,
+        "why": "Training is long over by the time you send a prompt. Temperature is a setting per request."
+      },
+      {
+        "text": "After the word is drawn, to decide whether to keep it",
+        "correct": false,
+        "why": "Nothing is checked after the draw. The shares were already reshaped before it."
+      },
+      {
+        "text": "Before the model reads the prompt",
+        "correct": false,
+        "why": "The prompt is read first, and the scores come from it. Temperature works on those scores."
+      },
+      {
+        "text": "After the scores, before the draw",
+        "correct": true,
+        "why": "Yes. Every score is divided by the temperature, then turned into shares, then one word is drawn."
+      }
+    ]
+  },
+  {
+    "id": "ex-8my2jj7d",
+    "version": 1,
+    "section": "flattening",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`toylm dist \"the coffee is\" --temperature 2` gave `bitter` what percentage?",
+    "hint": "Read the last line of the third table.",
+    "value": 9.6,
+    "tolerance": 0.05,
+    "unit": "%"
+  },
+  {
+    "id": "ex-x2bx3tpp",
+    "version": 1,
+    "section": "flattening",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At temperature 1, `hot` is about 3.2 times as likely as `strong`. What happens to that ratio at temperature 0.5?",
+    "hint": "The scores are divided by 0.5, which doubles them.",
+    "choices": [
+      {
+        "text": "It doubles, to about 6.4",
+        "correct": false,
+        "why": "Doubling the scores doubles the gap, and the ratio grows exponentially with the gap, not in proportion to it."
+      },
+      {
+        "text": "It is squared, to about ten",
+        "correct": true,
+        "why": "Right: 86.8% against 8.5%. Doubling every score doubles the gap between two of them, and the ratio of the shares is e raised to that gap."
+      },
+      {
+        "text": "It stays at 3.2, since only the overall shape changes",
+        "correct": false,
+        "why": "The tables show it moving: 86.8 against 8.5 is about ten to one."
+      },
+      {
+        "text": "It halves, to about 1.6",
+        "correct": false,
+        "why": "That is the direction a higher temperature moves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-cajebcwd",
+    "version": 1,
+    "section": "flattening",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why will `toylm` never say `sweet` after `coffee is`, even at a very high temperature?",
+    "hint": "What does temperature act on?",
+    "choices": [
+      {
+        "text": "A high temperature only boosts words that were already common in the file",
+        "correct": false,
+        "why": "It does the opposite: it brings the rare words up towards the common ones."
+      },
+      {
+        "text": "`sweet` has no score there to rescale",
+        "correct": true,
+        "why": "Right. Temperature reshapes the scores the model gave; a word that never followed `coffee is` has nothing to reshape."
+      },
+      {
+        "text": "`toylm` caps its temperature below the level where new words would appear",
+        "correct": false,
+        "why": "There is no cap. The command refuses only a negative temperature."
+      },
+      {
+        "text": "`sweet` is not in its vocabulary",
+        "correct": false,
+        "why": "It is: the file says `the cake is sweet`. It is missing after `coffee is`."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5bp53jp",
+    "version": 1,
+    "section": "flattening",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The raw score a model gives each next token, before it is turned into a share, is called a ___.",
+    "hint": "The word for the number before the percentages are worked out.",
+    "blanks": [
+      {
+        "accept": [
+          "logit"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yxndaja7",
+    "version": 1,
+    "section": "temperature-zero",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two runs of `toylm generate \"the coffee is\" --temperature 0` with seeds 1 and 2 printed the same thing. Why?",
+    "hint": "What is the seed for?",
+    "choices": [
+      {
+        "text": "Both seeds happened to draw the same word",
+        "correct": false,
+        "why": "With nothing to draw, there was no luck involved."
+      },
+      {
+        "text": "The seed is ignored by `toylm` entirely",
+        "correct": false,
+        "why": "At temperature 1 the same seeds gave different sentences, so it is not ignored."
+      },
+      {
+        "text": "The model remembered its answer from the first run",
+        "correct": false,
+        "why": "Each run starts from nothing. No state is kept between them."
+      },
+      {
+        "text": "At 0 nothing is drawn, so the seed has no work",
+        "correct": true,
+        "why": "Right. The top word is taken every time; the seed only matters when something is drawn."
+      }
+    ]
+  },
+  {
+    "id": "ex-fg4p4j9p",
+    "version": 1,
+    "section": "temperature-zero",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`is the` gives `bread`, `coffee` and `soup` a third each. Why does `toylm` at temperature 0 always pick `bread`?",
+    "hint": "Look at how ties are broken.",
+    "choices": [
+      {
+        "text": "Bread is mentioned most often in the corpus",
+        "correct": false,
+        "why": "The three shares are exactly equal here, so frequency decided nothing."
+      },
+      {
+        "text": "Temperature 0 picks the shortest word when scores are equal",
+        "correct": false,
+        "why": "Length plays no part. `soup` is as short as `bread` and loses to it."
+      },
+      {
+        "text": "Ties are sorted alphabetically",
+        "correct": true,
+        "why": "Yes. A rule decides the tie, so the output is still the same every run."
+      },
+      {
+        "text": "It is drawn at random among the three",
+        "correct": false,
+        "why": "At 0 nothing is drawn. If it were random, the three would take turns."
+      }
+    ]
+  },
+  {
+    "id": "ex-3snxaf1j",
+    "version": 1,
+    "section": "temperature-zero",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You call a hosted model at temperature 0 and two requests return slightly different text. What is the best explanation?",
+    "hint": "What happens to near-ties on many processors?",
+    "choices": [
+      {
+        "text": "The API ignored the temperature you sent",
+        "correct": false,
+        "why": "Not needed to explain it: output at temperature 0 can vary on a hosted model without that, and the provider's documentation says what it guarantees."
+      },
+      {
+        "text": "The model learnt from your first request before answering the second",
+        "correct": false,
+        "why": "A model does not train on requests while it answers them."
+      },
+      {
+        "text": "Arithmetic differed, and a near-tie flipped",
+        "correct": true,
+        "why": "Right. Floating-point sums in a different order, a different batch or an updated model can change which token is on top, and the rest follows."
+      },
+      {
+        "text": "Temperature 0 is random by design, like temperature 1",
+        "correct": false,
+        "why": "At 0 the top token is taken. The variation comes from the machinery, not from a draw."
+      }
+    ]
+  },
+  {
+    "id": "ex-3wwga8bx",
+    "version": 1,
+    "section": "temperature-zero",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are reasons a hosted model at temperature 0 can still vary between requests? Choose all that apply.",
+    "hint": "The section lists three, all outside the idea of temperature.",
+    "choices": [
+      {
+        "text": "Floating-point sums done in a different order",
+        "correct": true,
+        "why": "Yes. On near-ties the last digit can decide the top token."
+      },
+      {
+        "text": "The request being batched with other requests",
+        "correct": true,
+        "why": "Yes. How a batch is formed can change the arithmetic."
+      },
+      {
+        "text": "The model behind the name being updated",
+        "correct": true,
+        "why": "Yes, and that changes everything at once."
+      },
+      {
+        "text": "The temperature being applied after the draw",
+        "correct": false,
+        "why": "Temperature is applied before the draw, and at 0 there is no draw."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhq3xnt5",
+    "version": 1,
+    "section": "temperature-zero",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Your extraction pipeline runs at temperature 0. What does this lesson say your code must still do?",
+    "hint": "Close to deterministic is not guaranteed.",
+    "choices": [
+      {
+        "text": "Handle a reply that differs between runs",
+        "correct": true,
+        "why": "Right. Variation is rare at 0, and the program still has to cope with it."
+      },
+      {
+        "text": "Nothing more: temperature 0 guarantees identical replies from a hosted model",
+        "correct": false,
+        "why": "That guarantee is what providers do not make."
+      },
+      {
+        "text": "Retry until two replies match exactly",
+        "correct": false,
+        "why": "Two matching replies can both be wrong; matching is not the test of a good reply."
+      },
+      {
+        "text": "Raise the temperature slightly so the output becomes stable",
+        "correct": false,
+        "why": "A higher temperature adds variation; it does not remove it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ejjfhty",
+    "version": 1,
+    "section": "temperature-zero",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At temperature 0 a model gives the same wrong opening hour every run. What does the repetition tell you?",
+    "hint": "Temperature 0 picks the most likely answer.",
+    "choices": [
+      {
+        "text": "That it is probably correct, since a guess would vary",
+        "correct": false,
+        "why": "Stability comes from the rule, not from knowledge, and a rule can repeat a mistake."
+      },
+      {
+        "text": "That the model checked the hour against a source",
+        "correct": false,
+        "why": "Nothing in the loop checks facts."
+      },
+      {
+        "text": "That the temperature setting was ignored by the provider",
+        "correct": false,
+        "why": "A repeated answer is exactly what temperature 0 should produce."
+      },
+      {
+        "text": "Only that it is the likeliest answer",
+        "correct": true,
+        "why": "Right. Repetition shows the model's top choice, and a top choice can be wrong; lesson 5 is about why."
+      }
+    ]
+  },
+  {
+    "id": "ex-kesdttp4",
+    "version": 1,
+    "section": "choosing-a-temperature",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which task does this lesson suggest running at temperature 0, or close to it?",
+    "hint": "One right output, or many good ones?",
+    "choices": [
+      {
+        "text": "Brainstorming twenty names for a new drink",
+        "correct": false,
+        "why": "That wants different candidates each run, so a higher temperature."
+      },
+      {
+        "text": "Writing a friendly reply to a customer",
+        "correct": false,
+        "why": "Ordinary writing starts from the provider's default."
+      },
+      {
+        "text": "Suggesting alternative headlines for an article",
+        "correct": false,
+        "why": "Alternatives to pick from want variety."
+      },
+      {
+        "text": "Pulling the date and total out of invoices",
+        "correct": true,
+        "why": "Right. There is one right output, and any variation is an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8bw07m7",
+    "version": 1,
+    "section": "choosing-a-temperature",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 1.5, two of six samples said `eight on sunday` after `the café opens at`. What is wrong with that answer?",
+    "hint": "Check it against the file.",
+    "choices": [
+      {
+        "text": "Nothing; it is a sentence from the file, so it is correct",
+        "correct": false,
+        "why": "Being in the file makes it fluent and true of Sundays, not the answer to when the café opens."
+      },
+      {
+        "text": "It is not grammatical",
+        "correct": false,
+        "why": "It is grammatical. The problem is what it says, not how."
+      },
+      {
+        "text": "True on Sundays, wrong for the other days",
+        "correct": true,
+        "why": "Right. It is a real sentence from the file, drawn where it does not answer the question."
+      },
+      {
+        "text": "`eight` has no score after `opens at`, so it cannot be drawn",
+        "correct": false,
+        "why": "It has 25% at temperature 1, and 1.5 raises its share."
+      }
+    ]
+  },
+  {
+    "id": "ex-py1hv1xj",
+    "version": 1,
+    "section": "choosing-a-temperature",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody raises the temperature to get more accurate answers. What is wrong with the plan?",
+    "hint": "What does temperature decide?",
+    "choices": [
+      {
+        "text": "Nothing: higher temperatures make the model reason more",
+        "correct": false,
+        "why": "Temperature reshapes scores; it adds no reasoning."
+      },
+      {
+        "text": "Temperature decides how far down the list a draw reaches, not truth",
+        "correct": true,
+        "why": "Right. A higher temperature draws unlikely continuations more often, and those are wrong more often."
+      },
+      {
+        "text": "Accuracy needs a temperature above 2",
+        "correct": false,
+        "why": "There is no setting that makes answers truer."
+      },
+      {
+        "text": "Accuracy depends only on the seed",
+        "correct": false,
+        "why": "The seed decides which draw happens, and often changes the wording. It has nothing to do with truth."
+      }
+    ]
+  },
+  {
+    "id": "ex-tpdek325",
+    "version": 1,
+    "section": "choosing-a-temperature",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A prompt can be read two ways, and at temperature 0 you always get the same reading. What has temperature 0 done to the ambiguity?",
+    "hint": "Where did the other reading go?",
+    "choices": [
+      {
+        "text": "Hidden it",
+        "correct": true,
+        "why": "Right. The likeliest reading wins every run and the other never shows. The fix belongs in the prompt."
+      },
+      {
+        "text": "Removed it, because the model settled on the correct reading of the prompt",
+        "correct": false,
+        "why": "It settled on the likeliest reading, which need not be the one you meant."
+      },
+      {
+        "text": "Nothing at all; ambiguity only exists at a high temperature, where several readings appear",
+        "correct": false,
+        "why": "The ambiguity is in the prompt at every temperature. A high one only makes it visible."
+      },
+      {
+        "text": "Doubled it",
+        "correct": false,
+        "why": "The output did not vary, so nothing was doubled."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0pva7pk",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps from the model's scores to a drawn word in order, at a temperature above 0.",
+    "hint": "Temperature acts between two of them.",
+    "items": [
+      "The model gives every next word a score",
+      "Every score is divided by the temperature",
+      "The scores are turned into shares that add up to 100%",
+      "One word is drawn in proportion to its share"
+    ]
+  },
+  {
+    "id": "ex-zt2k3nma",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each temperature to what `toylm` did with `the coffee is`.",
+    "hint": "The tables and runs in this lesson.",
+    "pairs": [
+      {
+        "left": "0",
+        "right": "`hot` every run, nothing drawn"
+      },
+      {
+        "left": "0.5",
+        "right": "`hot` at 86.8%, the rest squeezed"
+      },
+      {
+        "left": "1",
+        "right": "the model's own shares, `hot` at 59.3%"
+      },
+      {
+        "left": "2",
+        "right": "`bitter` up to 9.6%"
+      }
+    ],
+    "right_distractors": [
+      "`sweet` appears for the first time"
+    ]
+  }
+]

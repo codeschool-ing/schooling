@@ -1,0 +1,362 @@
+{
+  "ex-xeq49tf1": {
+    "prompt": "O que muda quando você aumenta a temperatura?",
+    "hint": "Compare as três tabelas de `the coffee is`.",
+    "choices": [
+      {
+        "text": "O quanto as frações ficam espalhadas por igual",
+        "why": "Isso. As mesmas cinco palavras aparecem em todas as temperaturas; em 2 as frações estão mais próximas do que em 0,5."
+      },
+      {
+        "text": "As palavras que o modelo conhece",
+        "why": "O vocabulário é fixado pelo treinamento. `sweet` nunca aparece depois de `coffee is`, em temperatura nenhuma."
+      },
+      {
+        "text": "A ordem em que as palavras são classificadas",
+        "why": "A ordem foi hot, strong, ready, cold, bitter nas três tabelas."
+      },
+      {
+        "text": "Os fatos que o modelo aprendeu com o arquivo no treinamento",
+        "why": "A temperatura é aplicada depois de as notas serem calculadas. O modelo em si fica intacto."
+      }
+    ]
+  },
+  "ex-twt9xz6g": {
+    "prompt": "Em que momento a temperatura age?",
+    "hint": "Pense nos passos que vão das notas a uma palavra sorteada.",
+    "choices": [
+      {
+        "text": "No treinamento, quando os pesos do modelo são aprendidos",
+        "why": "O treinamento já acabou quando você manda um prompt. A temperatura é um ajuste de cada requisição."
+      },
+      {
+        "text": "Depois do sorteio da palavra, para decidir se ela fica",
+        "why": "Nada é conferido depois do sorteio. As frações já foram remodeladas antes dele."
+      },
+      {
+        "text": "Antes de o modelo ler o prompt",
+        "why": "O prompt é lido primeiro, e as notas vêm dele. A temperatura trabalha sobre essas notas."
+      },
+      {
+        "text": "Depois das notas, antes do sorteio",
+        "why": "Sim. Cada nota é dividida pela temperatura, depois vira fração, depois uma palavra é sorteada."
+      }
+    ]
+  },
+  "ex-8my2jj7d": {
+    "prompt": "O `toylm dist \"the coffee is\" --temperature 2` deu a `bitter` que porcentagem?",
+    "hint": "Leia a última linha da terceira tabela.",
+    "unit": "%"
+  },
+  "ex-x2bx3tpp": {
+    "prompt": "Na temperatura 1, `hot` é umas 3,2 vezes mais provável que `strong`. O que acontece com essa razão na temperatura 0,5?",
+    "hint": "As notas são divididas por 0,5, o que as dobra.",
+    "choices": [
+      {
+        "text": "Ela dobra, para umas 6,4",
+        "why": "Dobrar as notas dobra a distância, e a razão cresce exponencialmente com a distância, não em proporção."
+      },
+      {
+        "text": "Ela vai ao quadrado, para umas dez",
+        "why": "Isso: 86,8% contra 8,5%. Dobrar cada nota dobra a distância entre duas delas, e a razão das frações é e elevado a essa distância."
+      },
+      {
+        "text": "Fica em 3,2, já que só muda o formato geral",
+        "why": "As tabelas mostram que ela muda: 86,8 contra 8,5 é umas dez para uma."
+      },
+      {
+        "text": "Cai pela metade, para umas 1,6",
+        "why": "Essa é a direção em que uma temperatura mais alta a leva."
+      }
+    ]
+  },
+  "ex-cajebcwd": {
+    "prompt": "Por que o `toylm` nunca vai dizer `sweet` depois de `coffee is`, mesmo numa temperatura muito alta?",
+    "hint": "Sobre o que a temperatura age?",
+    "choices": [
+      {
+        "text": "Uma temperatura alta só reforça as palavras que já eram comuns no arquivo",
+        "why": "Ela faz o contrário: traz as raras para perto das comuns."
+      },
+      {
+        "text": "`sweet` não tem nota ali para reescalar",
+        "why": "Isso. A temperatura remodela as notas que o modelo deu; uma palavra que nunca veio depois de `coffee is` não tem nada a remodelar."
+      },
+      {
+        "text": "O `toylm` limita a temperatura abaixo do nível em que palavras novas apareceriam",
+        "why": "Não há limite. O comando só recusa uma temperatura negativa."
+      },
+      {
+        "text": "`sweet` não está no vocabulário",
+        "why": "Está: o arquivo diz `the cake is sweet`. Ela falta depois de `coffee is`."
+      }
+    ]
+  },
+  "ex-s5bp53jp": {
+    "prompt": "A nota bruta que um modelo dá a cada próximo token, antes de ela virar fração, se chama ___.",
+    "hint": "O nome do número antes de as porcentagens serem calculadas.",
+    "blanks": [
+      {
+        "accept": [
+          "logit",
+          "logito"
+        ]
+      }
+    ]
+  },
+  "ex-yxndaja7": {
+    "prompt": "Duas execuções de `toylm generate \"the coffee is\" --temperature 0` com as sementes 1 e 2 imprimiram a mesma coisa. Por quê?",
+    "hint": "Para que serve a semente?",
+    "choices": [
+      {
+        "text": "As duas sementes calharam de sortear a mesma palavra",
+        "why": "Sem nada para sortear, não houve sorte envolvida."
+      },
+      {
+        "text": "O `toylm` ignora a semente por completo",
+        "why": "Na temperatura 1 as mesmas sementes deram frases diferentes, então ela não é ignorada."
+      },
+      {
+        "text": "O modelo lembrou a resposta da primeira execução",
+        "why": "Cada execução começa do zero. Nenhum estado fica guardado entre elas."
+      },
+      {
+        "text": "Em 0 nada é sorteado, então a semente fica sem trabalho",
+        "why": "Isso. A palavra do topo é escolhida toda vez; a semente só importa quando algo é sorteado."
+      }
+    ]
+  },
+  "ex-fg4p4j9p": {
+    "prompt": "`is the` dá um terço a `bread`, `coffee` e `soup`. Por que o `toylm` na temperatura 0 escolhe sempre `bread`?",
+    "hint": "Veja como os empates são desfeitos.",
+    "choices": [
+      {
+        "text": "Pão é o item mais citado no corpus",
+        "why": "As três frações são exatamente iguais aqui, então a frequência não decidiu nada."
+      },
+      {
+        "text": "A temperatura 0 escolhe a palavra mais curta quando as notas empatam",
+        "why": "O tamanho não entra. `soup` é tão curta quanto `bread` e perde para ela."
+      },
+      {
+        "text": "Os empates são ordenados alfabeticamente",
+        "why": "Sim. Uma regra decide o empate, então a saída continua igual em toda execução."
+      },
+      {
+        "text": "Ela é sorteada entre as três",
+        "why": "Em 0 nada é sorteado. Se fosse ao acaso, as três se revezariam."
+      }
+    ]
+  },
+  "ex-3snxaf1j": {
+    "prompt": "Você chama um modelo hospedado na temperatura 0 e duas requisições devolvem textos um pouco diferentes. Qual a melhor explicação?",
+    "hint": "O que acontece com quase-empates em muitos processadores?",
+    "choices": [
+      {
+        "text": "A API ignorou a temperatura que você mandou",
+        "why": "Não é preciso isso para explicar: a saída na temperatura 0 pode variar num modelo hospedado sem isso, e a documentação do provedor diz o que ele garante."
+      },
+      {
+        "text": "O modelo aprendeu com a sua primeira requisição antes de responder a segunda",
+        "why": "Um modelo não treina com as requisições enquanto as responde."
+      },
+      {
+        "text": "A aritmética mudou, e um quase-empate virou",
+        "why": "Isso. Somas de ponto flutuante em outra ordem, outro lote ou um modelo atualizado chegam a trocar o token do topo, e o resto vem atrás."
+      },
+      {
+        "text": "A temperatura 0 é aleatória por projeto, como a 1",
+        "why": "Em 0 o token do topo é escolhido. A variação vem da maquinaria, não de um sorteio."
+      }
+    ]
+  },
+  "ex-3wwga8bx": {
+    "prompt": "Quais destes são motivos para um modelo hospedado na temperatura 0 ainda variar entre requisições? Marque todos os que se aplicam.",
+    "hint": "A seção lista três, todos fora da ideia de temperatura.",
+    "choices": [
+      {
+        "text": "Somas de ponto flutuante feitas em outra ordem",
+        "why": "Sim. Num quase-empate, o último dígito pode decidir o token do topo."
+      },
+      {
+        "text": "A requisição ser agrupada com outras num lote",
+        "why": "Sim. O jeito como o lote é formado pode mudar a aritmética."
+      },
+      {
+        "text": "O modelo por trás do nome ser atualizado",
+        "why": "Sim, e isso muda tudo de uma vez."
+      },
+      {
+        "text": "A temperatura ser aplicada depois do sorteio",
+        "why": "A temperatura é aplicada antes do sorteio, e em 0 não há sorteio."
+      }
+    ]
+  },
+  "ex-xhq3xnt5": {
+    "prompt": "O seu processo de extração roda na temperatura 0. O que esta lição diz que o seu código ainda precisa fazer?",
+    "hint": "Quase determinístico não é garantido.",
+    "choices": [
+      {
+        "text": "Lidar com uma resposta que muda entre execuções",
+        "why": "Isso. A variação é rara em 0, e o programa ainda precisa dar conta dela."
+      },
+      {
+        "text": "Nada mais: a temperatura 0 garante respostas idênticas de um modelo hospedado",
+        "why": "Essa garantia é justamente a que os provedores não dão."
+      },
+      {
+        "text": "Repetir até duas respostas baterem exatamente",
+        "why": "Duas respostas iguais podem estar ambas erradas; bater não é o teste de uma boa resposta."
+      },
+      {
+        "text": "Subir um pouco a temperatura para a saída ficar estável",
+        "why": "Uma temperatura mais alta acrescenta variação; não a remove."
+      }
+    ]
+  },
+  "ex-7ejjfhty": {
+    "prompt": "Na temperatura 0 um modelo dá o mesmo horário de abertura errado em toda execução. O que a repetição diz?",
+    "hint": "A temperatura 0 escolhe a resposta mais provável.",
+    "choices": [
+      {
+        "text": "Que provavelmente está certa, já que um chute variaria",
+        "why": "A estabilidade vem da regra, não do conhecimento, e uma regra pode repetir um erro."
+      },
+      {
+        "text": "Que o modelo conferiu o horário numa fonte",
+        "why": "Nada no laço confere fatos."
+      },
+      {
+        "text": "Que o provedor ignorou o ajuste de temperatura",
+        "why": "Uma resposta repetida é exatamente o que a temperatura 0 deve produzir."
+      },
+      {
+        "text": "Só que é a resposta mais provável",
+        "why": "Isso. A repetição mostra a primeira escolha do modelo, e ela pode estar errada; a lição 5 explica por quê."
+      }
+    ]
+  },
+  "ex-kesdttp4": {
+    "prompt": "Qual tarefa esta lição sugere rodar na temperatura 0, ou perto disso?",
+    "hint": "Uma saída certa, ou muitas boas?",
+    "choices": [
+      {
+        "text": "Inventar vinte nomes para uma bebida nova",
+        "why": "Isso pede candidatos diferentes a cada execução, então uma temperatura mais alta."
+      },
+      {
+        "text": "Escrever uma resposta simpática a um cliente",
+        "why": "Redação comum começa no padrão do provedor."
+      },
+      {
+        "text": "Sugerir títulos alternativos para um artigo",
+        "why": "Alternativas para escolher pedem variedade."
+      },
+      {
+        "text": "Tirar a data e o total de notas fiscais",
+        "why": "Isso. Há uma saída certa, e qualquer variação é erro."
+      }
+    ]
+  },
+  "ex-x8bw07m7": {
+    "prompt": "Em 1,5, duas de seis amostras disseram `eight on sunday` depois de `the café opens at`. O que há de errado nessa resposta?",
+    "hint": "Confira contra o arquivo.",
+    "choices": [
+      {
+        "text": "Nada; é uma frase do arquivo, então está certa",
+        "why": "Estar no arquivo a torna fluente e verdadeira aos domingos, não a resposta para quando o café abre."
+      },
+      {
+        "text": "Ela não é gramatical",
+        "why": "Ela é gramatical. O problema é o que diz, não como diz."
+      },
+      {
+        "text": "Vale aos domingos e erra nos outros dias",
+        "why": "Isso. É uma frase real do arquivo, sorteada onde não responde à pergunta."
+      },
+      {
+        "text": "`eight` não tem nota depois de `opens at`, então não poderia ser sorteada",
+        "why": "Ela tem 25% na temperatura 1, e 1,5 aumenta essa fração."
+      }
+    ]
+  },
+  "ex-py1hv1xj": {
+    "prompt": "Alguém aumenta a temperatura para ter respostas mais precisas. O que há de errado no plano?",
+    "hint": "O que a temperatura decide?",
+    "choices": [
+      {
+        "text": "Nada: temperaturas mais altas fazem o modelo raciocinar mais",
+        "why": "A temperatura remodela notas; não acrescenta raciocínio."
+      },
+      {
+        "text": "A temperatura decide até onde o sorteio desce na lista, não a verdade",
+        "why": "Isso. Uma temperatura mais alta sorteia continuações improváveis com mais frequência, e essas erram mais."
+      },
+      {
+        "text": "Precisão exige uma temperatura acima de 2",
+        "why": "Não existe ajuste que torne as respostas mais verdadeiras."
+      },
+      {
+        "text": "A precisão depende só da semente",
+        "why": "A semente decide qual sorteio acontece. Não tem nada a ver com verdade."
+      }
+    ]
+  },
+  "ex-tpdek325": {
+    "prompt": "Um prompt pode ser lido de dois jeitos, e na temperatura 0 você sempre recebe a mesma leitura. O que a temperatura 0 fez com a ambiguidade?",
+    "hint": "Para onde foi a outra leitura?",
+    "choices": [
+      {
+        "text": "Escondeu",
+        "why": "Isso. A leitura mais provável ganha toda vez e a outra nunca aparece. O conserto é no prompt."
+      },
+      {
+        "text": "Resolveu, porque o modelo ficou com a leitura correta do prompt",
+        "why": "Ele ficou com a leitura mais provável, que não precisa ser a que você quis dizer."
+      },
+      {
+        "text": "Nada; ambiguidade só existe numa temperatura alta, em que várias leituras aparecem",
+        "why": "A ambiguidade está no prompt em qualquer temperatura. Uma alta só a deixa visível."
+      },
+      {
+        "text": "Dobrou a ambiguidade",
+        "why": "A saída não variou, então nada dobrou."
+      }
+    ]
+  },
+  "ex-t0pva7pk": {
+    "prompt": "Ponha em ordem os passos que vão das notas do modelo a uma palavra sorteada, numa temperatura acima de 0.",
+    "hint": "A temperatura age entre dois deles.",
+    "items": [
+      "O modelo dá uma nota a cada próxima palavra",
+      "Cada nota é dividida pela temperatura",
+      "As notas viram frações que somam 100%",
+      "Uma palavra é sorteada em proporção à sua fração"
+    ]
+  },
+  "ex-zt2k3nma": {
+    "prompt": "Ligue cada temperatura ao que o `toylm` fez com `the coffee is`.",
+    "hint": "As tabelas e execuções desta lição.",
+    "pairs": [
+      {
+        "left": "0",
+        "right": "`hot` em toda execução, nada sorteado"
+      },
+      {
+        "left": "0.5",
+        "right": "`hot` com 86,8%, o resto espremido"
+      },
+      {
+        "left": "1",
+        "right": "as frações do próprio modelo, `hot` com 59,3%"
+      },
+      {
+        "left": "2",
+        "right": "`bitter` sobe para 9,6%"
+      }
+    ],
+    "right_distractors": [
+      "`sweet` aparece pela primeira vez"
+    ]
+  }
+}
