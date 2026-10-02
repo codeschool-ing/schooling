@@ -39,7 +39,7 @@ equipe de account nunca vai vê-las a menos que alguém as encaminhe.
 **A precisão se lê descendo uma coluna**: das mensagens que o prompt chamou de delivery, que fração
 era delivery? Treze de dezoito, 0,72. Cinco dos chamados da equipe de entregas são trabalho de outra
 pessoa. Account tem a forma oposta, precisão 1,00: quando o prompt diz account ele acerta, e diz
-account vezes de menos.
+account menos vezes do que devia.
 
 Um prompt consegue subir um abaixando o outro. Chamar tudo de account levaria o recall de account a
 1,00 e a precisão dele ao chão. É por isso que os dois são informados juntos, por rótulo.
@@ -75,7 +75,7 @@ precisão de high é 1,00, então nada foi escalado sem motivo.
 
 O acerto de urgência é 54 de 70, e esse número conta `h03` exatamente como as sete mensagens de
 urgência baixa classificadas como normal, cujo único custo é serem respondidas um pouco antes do
-necessário. **Uma mensagem urgente perdida e um alarme falso são, os dois, uma resposta errada, e não
+necessário. **Uma mensagem urgente perdida e um alarme falso são ambos uma resposta errada, e não
 custam o mesmo.** Decida quanto custa cada tipo de erro antes de ler a matriz, e informe as células
-caras pelo nome: *seis high classificadas como normal* é uma frase sobre a qual alguém age, e *0,77*
+caras pelo nome. *Seis high classificadas como normal* é uma frase que leva alguém a agir; *0,77*
 não é.

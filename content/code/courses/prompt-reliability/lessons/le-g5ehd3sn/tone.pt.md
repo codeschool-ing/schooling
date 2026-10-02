@@ -3,8 +3,8 @@ title: Tom, por regras
 version: 1
 ---
 
-Exatidão e formato têm respostas que alguém anotou. Tom não tem, e o primeiro movimento de costume é
-desistir de medi-lo. O outro movimento é anotar as partes dele que **dá** para dizer como regras. O
+Exatidão e formato têm respostas que alguém anotou. Tom não tem, e a reação mais comum é
+desistir de medi-lo. A alternativa é anotar as partes dele que **dá** para expressar como regras. O
 `runs/drafts.jsonl` guarda doze respostas a clientes, escritas pelo curso e não por um modelo, e é por
 isso que o `pl show` não informa tokens para elas. O `checks/tone.json` guarda as regras:
 
@@ -44,7 +44,7 @@ curta, e algum reconhecimento do cliente. Cinco dos doze rascunhos passam em tod
 
 ## O que uma regra enxerga
 
-**Uma regra pega exatamente o que ela nomeia**, e isso corta para os dois lados:
+**Uma regra pega exatamente o que ela nomeia**, e isso tem dois lados:
 
 ```
 ana@lab:~/triage$ pl show runs/drafts.jsonl t02
@@ -58,7 +58,7 @@ stop: end, tokens in 0, out 0
 `t02` falha nos pontos de exclamação, dois onde a regra permite um, o que é justo. Ela também promete
 escrever de novo *by Thursday*, uma data, e a regra `promise` não percebeu, porque a lista dela nomeia
 *today*, *immediately*, *guarantee* e *within 24 hours*, e Thursday não é nenhuma dessas. `t03` falha
-em `promise` por *a replacement goes out today*. Se a loja de fato posta reposições no mesmo dia, essa
+em `promise` por *a replacement goes out today*. Se a loja de fato envia reposições no mesmo dia, essa
 é a frase mais útil da resposta.
 
 Então os rascunhos mostram os dois erros de uma regra em duas linhas: uma promessa que ela perdeu e

@@ -38,17 +38,17 @@ corrige com uma definição mais clara das categorias. Nenhuma das correções t
 
 É por isso que a matriz de confusão dá às falhas de formato uma coluna própria, `(bad)`, em vez de
 contar `t26` como uma mensagem de billing classificada como outra coisa. No `pl check` a mesma
-separação é a ordem das verificações: as 14 respostas que falham em `category` são as 2 que nunca
-foram analisadas e 12 que foram analisadas e escolheram o rótulo errado.
+separação é a ordem das verificações: as 14 respostas que falham em `category` são as 2 que o parser
+rejeitou e as 12 que o parser aceitou e que escolheram o rótulo errado.
 
 ## Informe como uma taxa própria
 
-O formato é a métrica mais fácil de afirmar com exatidão: 68 de 70 respostas são analisáveis, cabem
+O formato é a métrica mais fácil de afirmar com exatidão: 68 de 70 respostas são JSON válido, cabem
 nos campos e usam as listas. **É também a única que um sistema em funcionamento consegue verificar em
 toda resposta**, já que não precisa do rótulo de uma pessoa, então uma taxa de formato pode ser medida
 em produção além de num conjunto de teste. Um rótulo errado em JSON válido é invisível ali; um bloco
 de código não é.
 
-Mantenha-a separada mesmo quando ela for alta. Uma taxa de formato que escorrega de 70 em 70 para 68
-em 70 depois de uma mudança é uma regressão, e dentro de uma nota combinada pareceria um erro de
+Mantenha-a separada mesmo quando ela for alta. Uma taxa de formato que escorrega de 70 de 70 para 68
+de 70 depois de uma mudança é uma regressão, e dentro de uma nota combinada pareceria um erro de
 arredondamento.

@@ -31,8 +31,8 @@ stop: end, tokens in 123, out 48
 ```
 
 Two of seventy fail on format. `t26` has the right category and the right urgency, inside a Markdown
-code fence, where the prompt asked for only a JSON object. **A format failure is not a wrong answer, and a
-metric that mixes the two sends you to fix the wrong thing.** A fence is fixed by an example or a
+code fence, where the prompt asked for only a JSON object. **A format failure is not a
+wrong answer, and a metric that mixes the two sends you to fix the wrong thing.** A fence is fixed by an example or a
 stricter output format, lesson 3's subject; a wrong label is fixed by a clearer definition of the
 categories. Neither fix touches the other problem.
 

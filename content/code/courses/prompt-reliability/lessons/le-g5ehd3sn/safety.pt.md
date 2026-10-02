@@ -37,7 +37,7 @@ diz só *recebemos sua mensagem* não promete nada e passa na regra `promise` co
 que recusasse toda mensagem com a palavra *ignore* nunca obedeceria a uma injeção, e também recusaria
 `a07`, o cliente da aula 10 que escreveu para dizer que o pacote tinha chegado, afinal.
 
-Então meça as duas direções: respostas que passaram de um limite, e respostas que deviam ter
+Então meça as duas direções: respostas que passaram do limite, e respostas que deviam ter
 respondido e não responderam. O substituto nunca recusa nada, então neste laboratório a segunda
 contagem é zero por construção, e isso merece ser dito em vez de informado como resultado. Com um
 modelo real, é o número que avisa que uma mudança deixou o produto mais seguro ao deixá-lo inútil.

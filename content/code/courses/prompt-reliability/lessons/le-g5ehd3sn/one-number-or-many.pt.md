@@ -31,7 +31,7 @@ accuracy 56/70 = 0.80
 ```
 
 O `v3-examples.txt` e o `v6-escaped.txt` têm o mesmo acerto de categoria nas mesmas setenta
-mensagens: 56 de 70, 0,80. Por baixo, são prompts diferentes. Toda resposta da `v3` é analisável,
+mensagens: 56 de 70, 0,80. Por baixo, são prompts diferentes. Toda resposta da `v3` é JSON válido,
 contra 68 de 70 da `v6`. Mas a `v3` classificou 23 mensagens como billing e só 14 eram, uma precisão
 de billing de 0,61 contra 0,87 da `v6`. O primeiro exemplo dela é uma mensagem de billing, e no
 substituto todo exemplo puxa para o próprio rótulo as mensagens que se parecem com ele, o efeito que a

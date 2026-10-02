@@ -73,7 +73,7 @@ queue. It is one of six high messages sorted normal: recall for high is 0.62. Pr
 1.00, so nothing was escalated that should not have been.
 
 Urgency accuracy is 54 of 70, and that number counts `h03` exactly like the seven low-urgency
-messages sorted normal, whose only cost is being answered a little sooner than they needed. **A missed urgent message and a false
-alarm are both one wrong answer, and they do not cost the same.** Decide what each kind of mistake
-costs before you read the matrix, and report the expensive cells by name: *six high sorted normal*
-is a sentence somebody acts on, and *0.77* is not.
+messages sorted normal, whose only cost is being answered a little sooner than they needed. **A missed
+urgent message and a false alarm are both one wrong answer, and they do not cost the same.** Decide
+what each kind of mistake costs before you read the matrix, and report the expensive cells by name.
+*Six high sorted normal* is a sentence somebody acts on; *0.77* is not.
