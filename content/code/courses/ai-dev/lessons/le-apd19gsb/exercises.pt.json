@@ -1,0 +1,533 @@
+{
+  "ex-9w45efge": {
+    "prompt": "O que o modelo recebe sobre `get_stock`? Marque todas as que valem.",
+    "hint": "A definição, não a função.",
+    "choices": [
+      {
+        "text": "O nome",
+        "why": "Sim."
+      },
+      {
+        "text": "A descrição",
+        "why": "Sim: é por ela que ele decide se a ferramenta serve."
+      },
+      {
+        "text": "O corpo da função Python",
+        "why": "A função fica no seu processo."
+      },
+      {
+        "text": "O JSON Schema dos argumentos",
+        "why": "Sim: o `input_schema`."
+      }
+    ]
+  },
+  "ex-r7jqc2sh": {
+    "prompt": "Em que papel o host devolve o resultado da ferramenta?",
+    "hint": "Uma conversa tem dois lados.",
+    "choices": [
+      {
+        "text": "`assistant`, porque o modelo pediu",
+        "why": "A vez do assistant é a resposta do modelo."
+      },
+      {
+        "text": "`system`, porque é informação",
+        "why": "O prompt de sistema não é onde resultados vão."
+      },
+      {
+        "text": "`user`, num bloco `tool_result`",
+        "why": "Isso: o resultado fica do lado do usuário na conversa."
+      },
+      {
+        "text": "`tool`, um terceiro papel",
+        "why": "Esse é o formato da OpenAI, não o da API de Messages."
+      }
+    ]
+  },
+  "ex-sgmn8hwx": {
+    "prompt": "Um `tool_result` diz a que chamada responde no campo ___.",
+    "hint": "O id do bloco `tool_use`, com outro nome.",
+    "blanks": [
+      {
+        "accept": [
+          "tool_use_id",
+          "`tool_use_id`"
+        ]
+      }
+    ]
+  },
+  "ex-2qt4rwgn": {
+    "prompt": "Quando a primeira resposta chegou com `stop_reason: tool_use`, o que o `get_stock` tinha feito?",
+    "hint": "Procure a linha que o chama.",
+    "choices": [
+      {
+        "text": "Rodado do lado do provedor",
+        "why": "O provedor não tem cópia da loja."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso: ele só roda quando o host chama `FUNCTIONS[b.name]`."
+      },
+      {
+        "text": "Rodado dentro do modelo",
+        "why": "Um modelo produz texto e não roda código."
+      },
+      {
+        "text": "Rodado e guardado o resultado",
+        "why": "Nada rodou, então nada foi guardado."
+      }
+    ]
+  },
+  "ex-n48ykk65": {
+    "prompt": "Por que o esquema faz do `order_id` uma string com padrão, e não um inteiro?",
+    "hint": "Olhe o `orders.json`.",
+    "choices": [
+      {
+        "text": "Strings custam menos tokens",
+        "why": "Não é o motivo dado, e não vale para quatro dígitos."
+      },
+      {
+        "text": "JSON não tem inteiros",
+        "why": "Tem números, e o esquema usa `integer` em `quantity`."
+      },
+      {
+        "text": "Modelos não escrevem números",
+        "why": "O modelo escreveu `1042` como número na primeira chamada."
+      },
+      {
+        "text": "Chaves da loja são strings",
+        "why": "Isso: um número erraria toda consulta."
+      }
+    ]
+  },
+  "ex-zr5sjvw1": {
+    "prompt": "Ligue cada palavra-chave do esquema ao que ela barra no `create_return`.",
+    "hint": "Quatro palavras, quatro portas.",
+    "pairs": [
+      {
+        "left": "`enum`",
+        "right": "Um motivo escrito como frase"
+      },
+      {
+        "left": "`minimum`",
+        "right": "Uma devolução de zero canecas"
+      },
+      {
+        "left": "`additionalProperties: false`",
+        "right": "Uma chave que o modelo inventou"
+      },
+      {
+        "left": "`required`",
+        "right": "Uma chamada sem motivo nenhum"
+      }
+    ],
+    "right_distractors": [
+      "Um pedido que nunca foi entregue"
+    ]
+  },
+  "ex-sfwvtask": {
+    "prompt": "Quantos problemas o `check_args.py` listou para o segundo conjunto de argumentos?",
+    "hint": "Conte as linhas impressas.",
+    "unit": "problemas"
+  },
+  "ex-qesdtk4w": {
+    "prompt": "Qual destas o esquema do `create_return` conseguiria verificar?",
+    "hint": "Formato de uma chamada, ou estado da loja?",
+    "choices": [
+      {
+        "text": "Que `quantity` é um número inteiro",
+        "why": "Isso: é o formato da chamada."
+      },
+      {
+        "text": "Que o pedido 1042 existe",
+        "why": "Isso exige os dados da loja."
+      },
+      {
+        "text": "Que o pedido foi entregue",
+        "why": "É o status do pedido, que é estado."
+      },
+      {
+        "text": "Que sobra uma caneca para devolver",
+        "why": "Depende das devoluções já abertas."
+      }
+    ]
+  },
+  "ex-rrnj5a86": {
+    "prompt": "Ponha em ordem o que o host faz com uma chamada de ferramenta.",
+    "hint": "Formato antes de estado.",
+    "items": [
+      "Conferir os argumentos contra o esquema",
+      "Rodar a função, que confere as regras da loja",
+      "Devolver o resultado, ou o erro, como tool_result"
+    ]
+  },
+  "ex-a09x1gzr": {
+    "prompt": "Por que a segunda chamada do modelo deu certo?",
+    "hint": "O que ele tinha na segunda vez que faltava na primeira?",
+    "choices": [
+      {
+        "text": "O host afrouxou o esquema",
+        "why": "O esquema não mudou entre as chamadas."
+      },
+      {
+        "text": "Pediram ao modelo que se esforçasse",
+        "why": "Nenhuma mensagem assim foi enviada."
+      },
+      {
+        "text": "O erro nomeou os dois problemas",
+        "why": "Isso: o tipo do número do pedido e os quatro motivos aceitos."
+      },
+      {
+        "text": "As regras da loja foram puladas",
+        "why": "Elas rodaram, e passaram."
+      }
+    ]
+  },
+  "ex-xsq0badv": {
+    "prompt": "Depois da `R-1042-1`, quantas canecas do pedido 1042 sobravam para devolver?",
+    "hint": "O erro da loja diz.",
+    "unit": "canecas"
+  },
+  "ex-ad71heht": {
+    "prompt": "Ligue cada regra ao lugar onde a seção a põe.",
+    "hint": "Formato, estado ou pedido.",
+    "pairs": [
+      {
+        "left": "`quantity` é pelo menos 1",
+        "right": "O esquema"
+      },
+      {
+        "left": "Um pedido enviado não pode ser devolvido",
+        "right": "A função"
+      },
+      {
+        "left": "Seja educado com o cliente",
+        "right": "O prompt"
+      }
+    ],
+    "right_distractors": [
+      "O console do provedor"
+    ]
+  },
+  "ex-yq2ede69": {
+    "prompt": "O modelo pede duas chamadas numa resposta. Quantas mensagens de usuário levam os resultados?",
+    "hint": "Os papéis se alternam.",
+    "choices": [
+      {
+        "text": "Duas, uma por resultado",
+        "why": "Duas mensagens de usuário seguidas quebram a alternância."
+      },
+      {
+        "text": "Uma, com os dois",
+        "why": "Isso: cada resultado ligado à sua chamada pelo id."
+      },
+      {
+        "text": "Nenhuma; os resultados vão no prompt de sistema da próxima requisição",
+        "why": "Resultados fazem parte da conversa."
+      },
+      {
+        "text": "Uma, só com o primeiro",
+        "why": "A API recusa isso, como o `one_result.py` mostra."
+      }
+    ]
+  },
+  "ex-nwj51djm": {
+    "prompt": "Qual pergunta precisa de duas chamadas em duas respostas separadas?",
+    "hint": "A segunda chamada precisa do resultado da primeira?",
+    "choices": [
+      {
+        "text": "MUG-01 e GLASS-03 estão em estoque?",
+        "why": "Os dois SKUs são conhecidos de saída."
+      },
+      {
+        "text": "Quanto custam MUG-01 e LAMP-02?",
+        "why": "Os dois SKUs são conhecidos de saída."
+      },
+      {
+        "text": "LAMP-02 está em estoque?",
+        "why": "Isso é uma chamada."
+      },
+      {
+        "text": "Tudo do pedido 1042 está em estoque?",
+        "why": "Isso: os SKUs vêm do pedido, então a consulta de estoque espera por ele."
+      }
+    ]
+  },
+  "ex-1kyxgjep": {
+    "prompt": "Quando a seção diz para desligar chamadas paralelas?",
+    "hint": "Leituras ou escritas?",
+    "choices": [
+      {
+        "text": "Chamadas que mudam algo, numa ordem que importa",
+        "why": "Isso: como dois reembolsos em que o segundo confere o que o primeiro deixou."
+      },
+      {
+        "text": "Em toda chamada, para poupar tokens",
+        "why": "Chamadas paralelas poupam idas e voltas."
+      },
+      {
+        "text": "Em consultas de estoque",
+        "why": "Para leituras elas são só menos idas e voltas."
+      },
+      {
+        "text": "Quando o modelo é pequeno",
+        "why": "A seção liga isso ao que as chamadas fazem."
+      }
+    ]
+  },
+  "ex-7g17bz0q": {
+    "prompt": "Por que o `order_id` do chamado pode ser `null`?",
+    "hint": "A que um número obrigatório empurraria o modelo?",
+    "choices": [
+      {
+        "text": "Porque o JSON Schema precisa de um padrão",
+        "why": "Ele não precisa de padrão."
+      },
+      {
+        "text": "Para encurtar o JSON",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "Para evitar um número inventado",
+        "why": "Isso: muitos e-mails não trazem nenhum."
+      },
+      {
+        "text": "Porque a fila o ignora",
+        "why": "A fila ordena por ele quando existe."
+      }
+    ]
+  },
+  "ex-qrcmcbkv": {
+    "prompt": "A decodificação restrita de um provedor garante o formato do chamado. O que o validador ainda pega?",
+    "hint": "O formato está garantido; o que mais importa?",
+    "choices": [
+      {
+        "text": "Nada; dá para apagá-lo",
+        "why": "A seção diz para mantê-lo."
+      },
+      {
+        "text": "Palavras-chave que o provedor não respeitou",
+        "why": "Isso: e ele vale seja lá o que o provedor fez."
+      },
+      {
+        "text": "Um número de pedido errado que cabe no padrão",
+        "why": "Nenhuma verificação de esquema sabe qual pedido é o certo."
+      },
+      {
+        "text": "Respostas lentas",
+        "why": "Um validador não mede tempo."
+      }
+    ]
+  },
+  "ex-qde3h68s": {
+    "prompt": "O que o labllm fez com o `output_config`?",
+    "hint": "Leia a última linha da captura.",
+    "choices": [
+      {
+        "text": "Aceitou e ignorou",
+        "why": "É isso que ele evita fazer."
+      },
+      {
+        "text": "Restringiu a saída",
+        "why": "Ele não tem decodificador para restringir."
+      },
+      {
+        "text": "Repassou a um modelo de verdade",
+        "why": "O laboratório não alcança modelo de verdade."
+      },
+      {
+        "text": "Recusou com um 400",
+        "why": "Isso, e a mensagem diz por quê."
+      }
+    ]
+  },
+  "ex-65hnqmmf": {
+    "prompt": "Que problemas a tentativa 1 teve? Marque todas as que valem.",
+    "hint": "Leia a linha de stderr.",
+    "choices": [
+      {
+        "text": "`shipping` não é uma categoria aceita",
+        "why": "Sim."
+      },
+      {
+        "text": "`urgent` não é booleano",
+        "why": "Era `true`, um booleano."
+      },
+      {
+        "text": "Falta o `order_id`",
+        "why": "Sim."
+      },
+      {
+        "text": "A resposta não era JSON",
+        "why": "Ela foi lida; o esquema falhou."
+      }
+    ]
+  },
+  "ex-kav1qdh8": {
+    "prompt": "Por que o `extract` devolve os motivos em vez de só pedir de novo?",
+    "hint": "O que muda entre as duas requisições?",
+    "choices": [
+      {
+        "text": "A API exige uma explicação",
+        "why": "A API não exige nada disso."
+      },
+      {
+        "text": "Repetir sem nada é a mesma requisição",
+        "why": "Isso: os motivos são o que faltava ao modelo."
+      },
+      {
+        "text": "Para alongar a conversa",
+        "why": "Mais longo custa mais, e só ajuda se levar informação."
+      },
+      {
+        "text": "Para registrar a falha",
+        "why": "Registrar é trabalho do `stderr`."
+      }
+    ]
+  },
+  "ex-70hcgq1f": {
+    "prompt": "O que acontece com um e-mail cujo chamado falha nas duas tentativas?",
+    "hint": "A última linha do programa.",
+    "choices": [
+      {
+        "text": "É registrado com a última resposta",
+        "why": "Um chamado que nunca passou não é registrado."
+      },
+      {
+        "text": "É repetido até passar",
+        "why": "O limite é dois."
+      },
+      {
+        "text": "É apagado",
+        "why": "Nada é apagado."
+      },
+      {
+        "text": "Vai para uma pessoa",
+        "why": "Isso: o `extract` devolve `None` e o programa diz."
+      }
+    ]
+  },
+  "ex-avwxzsza": {
+    "prompt": "Quantas devoluções o `retry.py` abriu antes de a chave entrar?",
+    "hint": "Conte os ids no `returns.json`.",
+    "unit": "devoluções"
+  },
+  "ex-0v0dtg3n": {
+    "prompt": "De onde vem a chave de idempotência?",
+    "hint": "Quem a atribui, e quem não conseguiria digitá-la por acidente?",
+    "choices": [
+      {
+        "text": "O modelo a escreve como argumento",
+        "why": "Então o modelo poderia repeti-la ou inventá-la."
+      },
+      {
+        "text": "O e-mail do cliente",
+        "why": "Duas devoluções do mesmo cliente a dividiriam."
+      },
+      {
+        "text": "O `id` do bloco `tool_use`",
+        "why": "Isso: a API atribui um por chamada, e uma repetição traz o mesmo."
+      },
+      {
+        "text": "A hora atual",
+        "why": "Uma repetição acontece em outra hora."
+      }
+    ]
+  },
+  "ex-4e0xzs6a": {
+    "prompt": "Por que a chave é conferida antes da verificação de quantidade, e não depois?",
+    "hint": "O que a verificação de quantidade diria na repetição?",
+    "choices": [
+      {
+        "text": "Uma repetição precisa responder como a primeira chamada",
+        "why": "Isso: a essa altura sobram menos canecas, e a repetição seria recusada."
+      },
+      {
+        "text": "É mais rápido",
+        "why": "Velocidade não é o motivo dado."
+      },
+      {
+        "text": "A verificação de quantidade tem um bug",
+        "why": "Ela está certa; o que importa é a ordem."
+      },
+      {
+        "text": "O Python exige",
+        "why": "O Python não exige essa ordem."
+      }
+    ]
+  },
+  "ex-yrzjpbja": {
+    "prompt": "O que muda nos argumentos das chat completions da OpenAI?",
+    "hint": "Olhe as aspas que o `repr` imprimiu.",
+    "choices": [
+      {
+        "text": "Vêm em XML",
+        "why": "Vêm em JSON."
+      },
+      {
+        "text": "Chegam como uma string de JSON",
+        "why": "Isso: seu código chama `json.loads`, que pode falhar."
+      },
+      {
+        "text": "São posicionais",
+        "why": "São nomeados, como no esquema."
+      },
+      {
+        "text": "Vão na mensagem de sistema",
+        "why": "Ficam na mensagem do assistant."
+      }
+    ]
+  },
+  "ex-88gfsn4d": {
+    "prompt": "Ligue cada nome da Anthropic ao equivalente na OpenAI.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "`input_schema`",
+        "right": "`parameters`"
+      },
+      {
+        "left": "`tool_use_id`",
+        "right": "`tool_call_id`"
+      },
+      {
+        "left": "`stop_reason: tool_use`",
+        "right": "`finish_reason: tool_calls`"
+      }
+    ],
+    "right_distractors": [
+      "`functionResponse`"
+    ]
+  },
+  "ex-d19jz418": {
+    "prompt": "Uma ferramenta `cancel_order` vai ser oferecida a um modelo. Qual plano segue esta aula?",
+    "hint": "Esquema, regras, erros, repetições.",
+    "choices": [
+      {
+        "text": "Uma descrição longa pedindo cuidado ao modelo",
+        "why": "Uma descrição é um pedido, não uma verificação."
+      },
+      {
+        "text": "Um esquema frouxo, para o modelo nunca ser recusado",
+        "why": "Uma recusa com motivo é como o modelo se corrige."
+      },
+      {
+        "text": "Repetir até a chamada dar certo",
+        "why": "Uma chamada que muda algo precisa de chave antes de poder ser repetida."
+      },
+      {
+        "text": "Esquema estrito, verificações na função, erros legíveis, uma chave",
+        "why": "Isso: cada camada desta aula."
+      }
+    ]
+  },
+  "ex-1164hdsa": {
+    "prompt": "Ponha em ordem o laço de reparo de um e-mail.",
+    "hint": "Pedir, conferir, explicar, parar.",
+    "items": [
+      "Pedir o chamado ao modelo",
+      "Ler e validar a resposta",
+      "Devolver os motivos e pedir de novo",
+      "Desistir e mandar o e-mail a uma pessoa"
+    ]
+  }
+}

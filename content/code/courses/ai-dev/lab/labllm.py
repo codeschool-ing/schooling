@@ -336,6 +336,16 @@ class Handler(BaseHTTPRequestHandler):
         for a, b in zip(msgs, msgs[1:]):
             if a.get("role") == b.get("role"):
                 raise Refusal(400, "invalid_request_error", "messages: roles must alternate between \"user\" and \"assistant\"")
+        for k, (a, b) in enumerate(zip(msgs, msgs[1:]), 1):
+            asked = [x["id"] for x in a.get("content") or [] if isinstance(x, dict) and x.get("type") == "tool_use" and x.get("id")]
+            given = {x.get("tool_use_id") for x in b.get("content") or [] if isinstance(x, dict) and x.get("type") == "tool_result"}
+            missing = [i for i in asked if i not in given]
+            if a.get("role") == "assistant" and missing:
+                raise Refusal(400, "invalid_request_error",
+                              f"messages.{k}: tool_use ids without a tool_result in the next message: {', '.join(missing)}")
+        if "output_config" in req:
+            raise Refusal(400, "invalid_request_error",
+                          "output_config: labllm does not constrain its output; validate the reply yourself")
         if need_max and req["max_tokens"] > MODELS[model]["max_output"]:
             raise Refusal(400, "invalid_request_error",
                           f"max_tokens: {req['max_tokens']} > {MODELS[model]['max_output']}, which is the maximum allowed number of output tokens for {model}")

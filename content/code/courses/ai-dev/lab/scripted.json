@@ -1,5 +1,189 @@
 [
   {
+    "id": "fc-stock-0",
+    "when": {
+      "tool": "get_stock",
+      "anywhere": [
+        "LAMP-02 in stock"
+      ],
+      "turns": 0
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "get_stock",
+        "input": {
+          "sku": "LAMP-02"
+        }
+      }
+    ]
+  },
+  {
+    "id": "fc-stock-1",
+    "when": {
+      "anywhere": [
+        "LAMP-02 in stock"
+      ],
+      "turns": 1
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Yes. LAMP-02 is in stock, 4 units, at 210.00."
+      }
+    ]
+  },
+  {
+    "id": "fc-two-0",
+    "when": {
+      "tool": "get_stock",
+      "anywhere": [
+        "MUG-01 and GLASS-03"
+      ],
+      "turns": 0
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "I will check both."
+      },
+      {
+        "type": "tool_use",
+        "name": "get_stock",
+        "input": {
+          "sku": "MUG-01"
+        }
+      },
+      {
+        "type": "tool_use",
+        "name": "get_stock",
+        "input": {
+          "sku": "GLASS-03"
+        }
+      }
+    ]
+  },
+  {
+    "id": "fc-two-1",
+    "when": {
+      "anywhere": [
+        "MUG-01 and GLASS-03"
+      ],
+      "turns": 1
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "MUG-01 is in stock, 37 units at 39.90. GLASS-03 is out of stock."
+      }
+    ]
+  },
+  {
+    "id": "fc-return-0",
+    "when": {
+      "tool": "create_return",
+      "anywhere": [
+        "return one mug from order 1042"
+      ],
+      "turns": 0
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "create_return",
+        "input": {
+          "order_id": 1042,
+          "sku": "MUG-01",
+          "quantity": 1,
+          "reason": "customer changed their mind"
+        }
+      }
+    ]
+  },
+  {
+    "id": "fc-return-1",
+    "when": {
+      "tool": "create_return",
+      "anywhere": [
+        "return one mug from order 1042"
+      ],
+      "turns": 1
+    },
+    "reply": [
+      {
+        "type": "tool_use",
+        "name": "create_return",
+        "input": {
+          "order_id": "1042",
+          "sku": "MUG-01",
+          "quantity": 1,
+          "reason": "changed_mind"
+        }
+      }
+    ]
+  },
+  {
+    "id": "fc-return-2",
+    "when": {
+      "anywhere": [
+        "return one mug from order 1042"
+      ],
+      "turns": 2
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "Return R-1042-1 is open for one MUG-01 from order 1042. The customer will receive a prepaid label by email."
+      }
+    ]
+  },
+  {
+    "id": "fc-extract-2-good",
+    "when": {
+      "system": "Extract the ticket",
+      "anywhere": [
+        "no update since",
+        "is not valid"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "{\"order_id\": \"1043\", \"category\": \"delivery\", \"summary\": \"Lamp shipped on 30 September; tracking has had no update since. Needed by Saturday.\", \"urgent\": true}"
+      }
+    ]
+  },
+  {
+    "id": "fc-extract-2-bad",
+    "when": {
+      "system": "Extract the ticket",
+      "anywhere": [
+        "no update since"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "{\"category\": \"shipping\", \"summary\": \"Lamp shipped on 30 September; tracking has had no update since. Needed by Saturday.\", \"urgent\": true}"
+      }
+    ]
+  },
+  {
+    "id": "fc-extract-1",
+    "when": {
+      "system": "Extract the ticket",
+      "anywhere": [
+        "one of the two mugs"
+      ]
+    },
+    "reply": [
+      {
+        "type": "text",
+        "text": "{\"order_id\": \"1042\", \"category\": \"return\", \"summary\": \"Wants to return one of two mugs, unused.\", \"urgent\": false}"
+      }
+    ]
+  },
+  {
     "id": "agent-1042-0",
     "when": {
       "tool": "get_order",
