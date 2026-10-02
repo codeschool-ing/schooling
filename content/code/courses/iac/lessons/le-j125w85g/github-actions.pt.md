@@ -107,7 +107,7 @@ Na `main`, o arquivo salvo sobe como artefato e o `apply` espera pelo environmen
 
 **Cada action está fixada num commit, com a tag de origem ao lado.** Uma tag como `v7` é um nome
 que o dono da action pode mover para outro código a qualquer momento, e esse código passa a rodar
-com as suas credenciais. Um commit não se move. Os cinco commits deste arquivo são aqueles para os
+com as suas credenciais. Um commit não se move. Os seis commits deste arquivo são aqueles para os
 quais as tags apontavam em 2 de outubro de 2026, lidos de cada repositório com `git ls-remote`; o
 comentário é o que torna o pin legível para quem, mais tarde, decidir que ele envelheceu. O
 `terraform_version` fixa o próprio Terraform na versão que este curso usa, e

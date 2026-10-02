@@ -106,7 +106,7 @@ where the approval lives; the section on applying the plan comes back to it.
 
 **Every action is pinned to a commit, with the tag it came from beside it.** A tag such as `v7` is a
 name the action's owner can move to other code at any time, and that code then runs with your
-credentials. A commit cannot move. The five commits in this file are what those tags pointed to on
+credentials. A commit cannot move. The six commits in this file are what those tags pointed to on
 2 October 2026, read from each repository with `git ls-remote`; the comment is what makes the pin
 readable to whoever later decides it is old. `terraform_version` pins Terraform itself to the
 version this course uses, and `terraform_wrapper: false` turns off a wrapper the action installs
