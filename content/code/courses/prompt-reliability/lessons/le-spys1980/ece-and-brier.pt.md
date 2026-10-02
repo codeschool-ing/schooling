@@ -27,10 +27,10 @@ de arredondar e imprime 0,088.
 O ECE diz quanto os números declarados erram em média. Não diz em que direção, e um modelo que é
 pouco confiante numa faixa e confiante demais em outra soma as duas distâncias.
 
-A medida já era usada antes, e o artigo que a tornou a de costume é *On Calibration of Modern
+A medida já era usada antes, e o artigo que a tornou padrão é *On Calibration of Modern
 Neural Networks* (Guo e outros, 2017). Ele viu que os classificadores profundos da época
-exageravam a confiança bem mais que redes mais antigas e menores, mediu isso com ECE e diagramas de
-confiabilidade, e mostrou que um único reescalonamento das saídas, o temperature scaling, corrigia
+exageravam a confiança bem mais que redes mais antigas e menores, e mediu isso com ECE e diagramas
+de confiabilidade. Mostrou também que um único reescalonamento das saídas, o temperature scaling, corrigia
 boa parte. Aquele artigo tratava das probabilidades que um classificador calcula; a confiança desta
 aula é um número que um modelo escreve. **A medição é a mesma nos dois casos**: o que foi afirmado,
 contra o que aconteceu.

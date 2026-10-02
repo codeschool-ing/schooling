@@ -5,7 +5,7 @@ version: 1
 
 Pergunte a um modelo quão seguro ele está e ele responde, com um número de duas casas decimais. O
 número parece uma probabilidade. **É texto que o modelo escreveu**, como a categoria ao lado, e
-nada garante que tenha sido calculado a partir de alguma coisa. Calibração é a pergunta sobre se
+nada garante que tenha sido calculado a partir de alguma coisa. Calibração é saber se
 esse número bate com a frequência com que o modelo acerta quando o diz.
 
 O prompt desta aula acrescenta um quarto campo:

@@ -72,7 +72,7 @@ confidence its answer has not earned.
 It did help. On the holdout, answering everything gives 0.57; answering at 0.80 or above gives
 0.68, and the eight messages it held back went to a person. A confidence that is miscalibrated can
 still rank answers usefully, and that ranking is what a threshold uses. What it cannot do is
-promise the accuracy it promised on the set it was chosen on.
+deliver the accuracy it promised on the set it was chosen on.
 
 So the rules for a stated confidence are the rules for any other output:
 

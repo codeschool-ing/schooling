@@ -24,7 +24,7 @@ ECE 0.088   Brier 0.139
 ```
 
 O `pl calibrate` separa as respostas em faixas pela confiança declarada, aqui cinco faixas de
-largura 0,1 a partir de 0,5, e imprime para cada faixa quantas respostas caíram nela, a média da
+largura 0,1 a partir de 0,5. Para cada faixa, imprime quantas respostas caíram nela, a média da
 confiança declarada e a fração que estava certa. A faixa de 0,5 a 0,6 está vazia, já que o
 substituto nunca declara menos de 0,62.
 

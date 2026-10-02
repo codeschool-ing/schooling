@@ -23,7 +23,7 @@ ECE 0.088   Brier 0.139
 ```
 
 `pl calibrate` sorts the replies into bins by stated confidence, here five bins of width 0.1 from
-0.5 up, and prints for each bin how many replies fell in it, their mean stated confidence and the
+0.5 up. For each bin it prints how many replies fell in it, their mean stated confidence and the
 share that were right. The bin from 0.5 to 0.6 is empty, since the stand-in never states less than
 0.62.
 

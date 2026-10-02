@@ -28,9 +28,9 @@ model that is underconfident in one bin and overconfident in another adds both g
 
 The measure was used before, and the paper that made it the usual one is *On Calibration of Modern
 Neural Networks* (Guo and others, 2017). It found that the deep classifiers of the time were
-markedly more overconfident than older, smaller networks, measured them with ECE and reliability
-diagrams, and showed that a single rescaling of their outputs, temperature scaling, fixed much of
-it. That paper was about the probabilities a classifier computes; the confidence in this lesson is
+markedly more overconfident than older, smaller networks, and measured them with ECE and
+reliability diagrams. It also showed that a single rescaling of their outputs, temperature scaling,
+fixed much of it. That paper was about the probabilities a classifier computes; the confidence in this lesson is
 a number a model writes. **The measurement is the same either way**: what was claimed, against what
 happened.
 

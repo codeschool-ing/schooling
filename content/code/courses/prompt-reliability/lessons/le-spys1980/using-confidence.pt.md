@@ -91,6 +91,6 @@ Então as regras para uma confiança declarada são as regras de qualquer outra 
 
 Esta foi a última aula. Cada uma delas rodou o mesmo prompt nas mesmas mensagens e perguntou se uma
 mudança se sustentava, numa contagem que podia ter saído ao contrário. Uma confiança é mais uma
-afirmação que um modelo faz sobre a própria resposta, e recebe o que toda afirmação recebeu neste
+afirmação que um modelo faz sobre a própria resposta. Ela recebe o que toda afirmação recebeu neste
 curso: um conjunto de teste, os rótulos de uma pessoa e um número que você calculou, e não um que lhe
 disseram.
