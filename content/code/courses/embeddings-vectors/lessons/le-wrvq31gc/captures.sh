@@ -208,6 +208,7 @@ def other(code):
 mine = QdrantClient(path="qdrant")
 print("qdrant, second process:", other(
     "from qdrant_client import QdrantClient; QdrantClient(path='qdrant')"))
+mine.close()
 table = lancedb.connect("lance").open_table("help")
 print("lance, this process:  ", table.count_rows(), "rows, version", table.version)
 print("lance, second process:", other(

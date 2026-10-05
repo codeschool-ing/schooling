@@ -16,7 +16,7 @@ section was written to a file, and reading it back costs about the file's size:
 
 ```
 ana@lab:~/emb$ ls -l random.faiss
--rw-r--r-- 1 ana ana 30720045 Oct  5 14:23 random.faiss
+-rw-r--r-- 1 ana ana 30720045 Oct  5 14:24 random.faiss
 ana@lab:~/emb$ python mem.py
 20000 vectors; 29 MB more memory in this process
 ```
@@ -42,15 +42,15 @@ program holds each directory open and starts a second process against it:
       "note": "`other` runs a line of Python in a second process and returns the last line it printed, or the last line of its error."
     },
     {
-      "code": "mine = QdrantClient(path=\"qdrant\")\nprint(\"qdrant, second process:\", other(\n    \"from qdrant_client import QdrantClient; QdrantClient(path='qdrant')\"))",
-      "note": "This process opens the Qdrant directory, and a second process tries to open it too."
+      "code": "mine = QdrantClient(path=\"qdrant\")\nprint(\"qdrant, second process:\", other(\n    \"from qdrant_client import QdrantClient; QdrantClient(path='qdrant')\"))\nmine.close()",
+      "note": "This process opens the Qdrant directory, a second process tries to open it too, and this one closes it."
     },
     {
       "code": "table = lancedb.connect(\"lance\").open_table(\"help\")\nprint(\"lance, this process:  \", table.count_rows(), \"rows, version\", table.version)\nprint(\"lance, second process:\", other(\n    \"import lancedb; from minilm import embed; t = lancedb.connect('lance').open_table('help'); \"\n    \"t.add([{'id': 'h42', 'category': 'orders', 'lang': 'en', 'title': 'x', 'vector': embed('x')[0]}]); \"\n    \"print(t.count_rows(), 'rows, version', t.version)\"))\nprint(\"lance, this process:  \", table.count_rows(), \"rows, version\", table.version)\ntable.checkout_latest()\nprint(\"lance, after checkout:\", table.count_rows(), \"rows, version\", table.version)",
       "note": "This process opens the LanceDB table; a second process adds a row; this one counts again, then moves to the latest version."
     }
   ],
-  "output": "ana@lab:~/emb$ python two.py\nqdrant, second process: RuntimeError: Storage folder qdrant is already accessed by another instance of Qdrant client. If you require concurrent access, use Qdrant server instead.\nlance, this process:   40 rows, version 3\nlance, second process: 41 rows, version 4\nlance, this process:   40 rows, version 3\nlance, after checkout: 41 rows, version 4\nException ignored in: <function QdrantClient.__del__ at 0x7f0304f28e00>\nTraceback (most recent call last):\n  File \"/opt/emb/lib/python3.11/site-packages/qdrant_client/qdrant_client.py\", line 169, in __del__\n  File \"/opt/emb/lib/python3.11/site-packages/qdrant_client/qdrant_client.py\", line 178, in close\n  File \"/opt/emb/lib/python3.11/site-packages/qdrant_client/local/qdrant_local.py\", line 109, in close\nImportError: sys.meta_path is None, Python is likely shutting down"
+  "output": "ana@lab:~/emb$ python two.py\nqdrant, second process: RuntimeError: Storage folder qdrant is already accessed by another instance of Qdrant client. If you require concurrent access, use Qdrant server instead.\nlance, this process:   40 rows, version 3\nlance, second process: 41 rows, version 4\nlance, this process:   40 rows, version 3\nlance, after checkout: 41 rows, version 4"
 }
 ```
 

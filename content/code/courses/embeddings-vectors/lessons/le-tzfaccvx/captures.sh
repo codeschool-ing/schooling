@@ -175,7 +175,7 @@ from tinystore import Store
 
 store = Store.load("store")
 question = "my parcel says delivered but it never came"
-for run in range(2):                                 # the second run is timed
+for run in range(2):                       # print the second, warm run
     t0 = time.perf_counter()
     q = embed(question)[0]
     t1 = time.perf_counter()

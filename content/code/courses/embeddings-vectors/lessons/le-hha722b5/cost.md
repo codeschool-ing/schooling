@@ -31,7 +31,7 @@ mistral/mistral-embed          mistral                          0.100       -   
 ```
 
 Prices are in US dollars per million tokens. The **batch** column is the price through OpenAI's
-Batch API, where you upload a file of requests and collect the results later, within a day; the
+Batch API, where you upload a file of requests and collect the results later, within a day. The
 sheet lists it at half the ordinary price for the two text-embedding-3 models and has no batch
 price for ada-002. The Batch API was not run here; labembed does not imitate it.
 

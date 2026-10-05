@@ -32,7 +32,7 @@ mistral/mistral-embed          mistral                          0.100       -   
 
 Os preços são em dólares americanos por milhão de tokens. A coluna **batch** é o preço pela Batch
 API da OpenAI, em que você envia um arquivo de requisições e recolhe os resultados depois, dentro
-de um dia; a planilha a lista pela metade do preço comum para os dois modelos text-embedding-3 e
+de um dia. A planilha a lista pela metade do preço comum para os dois modelos text-embedding-3 e
 não tem preço em lote para o ada-002. A Batch API não foi rodada aqui; o labembed não a imita.
 
 Preços mudam. Uma planilha num commit fixo é um ponto de referência para conferir uma conta, não um

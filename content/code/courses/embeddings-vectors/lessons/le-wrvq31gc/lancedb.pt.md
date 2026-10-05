@@ -86,15 +86,15 @@ como:
 
 ```
 ana@lab:~/emb$ find lance -type f | sort
-lance/help.lance/_transactions/0-24dddc8e-55d2-4657-a033-b55270f3e615.txn
-lance/help.lance/_transactions/1-8ed5e0e5-d968-4614-9c9a-0e59f670ec9e.txn
-lance/help.lance/_transactions/2-e225f4cb-74a1-46e6-9a7b-0fe61a5e0dac.txn
+lance/help.lance/_transactions/0-4692446b-a88b-41ab-8324-6d54f642fd99.txn
+lance/help.lance/_transactions/1-0906e05f-9fda-44c5-b3ba-d71085bc1307.txn
+lance/help.lance/_transactions/2-c9672946-c519-4cb1-8856-97574b72b86e.txn
 lance/help.lance/_versions/18446744073709551612.manifest
 lance/help.lance/_versions/18446744073709551613.manifest
 lance/help.lance/_versions/18446744073709551614.manifest
 lance/help.lance/_versions/latest_version_hint.json
-lance/help.lance/data/0011011110101101000010012a38754bf3ae31d9f2dd79c3a4.lance
-lance/help.lance/data/100011111011110000011110d2cce04a5cbd1acfbde7a4aa40.lance
+lance/help.lance/data/010001110001111101101100d025274b918f5b95fbf82865c9.lance
+lance/help.lance/data/111000101001111111110001cc51b347a3a213c5871aca4232.lance
 ```
 
 Um manifesto por versão em `_versions`, um registro de transação por escrita, e dois arquivos de
