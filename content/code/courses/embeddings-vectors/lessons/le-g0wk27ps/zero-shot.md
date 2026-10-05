@@ -74,7 +74,7 @@ the purpose, and keep the test set for a last look at the end.
 ## Where zero-shot fits
 
 Zero-shot classification is how a new queue starts, not where it stays. It sorts the first messages
-well enough to be useful; a person corrects the ones it gets wrong; and after a few weeks there are
+well enough to be useful, and a person corrects the ones it gets wrong. After a few weeks there are
 enough labelled tickets for centroids or a trained classifier, which beat it here by four tickets.
 
 Its other use is for labels that change. Adding a sixth desk to a zero-shot classifier is one more

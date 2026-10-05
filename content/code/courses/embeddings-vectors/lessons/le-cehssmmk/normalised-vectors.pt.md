@@ -67,8 +67,8 @@ comprimento, 1,905 contra 1,490. Tire os comprimentos e a ordem se inverte: coss
 Audiobooks e 0,247 para o artigo das escolas.
 
 Nas 24 perguntas, o artigo em primeiro mudou em cinco, e **nas cinco a escolha do cosseno é o artigo
-que o curso marcou como resposta**. O comprimento não estava acrescentando informação. Estava
-acrescentando um ruído com padrão.
+que o curso marcou como resposta**. O comprimento não dizia
+nada sobre a pergunta, só o quanto os tokens de cada texto discordam entre si.
 
 ## Normalize uma vez, na hora de gravar
 

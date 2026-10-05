@@ -76,8 +76,8 @@ guarde o conjunto de teste para uma última olhada no fim.
 ## Onde a classificação sem exemplos se encaixa
 
 A classificação zero-shot é como uma fila nova começa, não onde ela fica. Ela separa as primeiras
-mensagens bem o bastante para ser útil; uma pessoa corrige as que ela erra; e depois de algumas
-semanas há tickets rotulados suficientes para centroides ou para um classificador treinado, que aqui
+mensagens bem o bastante para ser útil, e uma pessoa corrige as que ela erra. Depois de algumas
+semanas, há tickets rotulados suficientes para centroides ou para um classificador treinado, que aqui
 a vencem por quatro tickets.
 
 O outro uso é para rótulos que mudam. Acrescentar um sexto setor a um classificador zero-shot é uma

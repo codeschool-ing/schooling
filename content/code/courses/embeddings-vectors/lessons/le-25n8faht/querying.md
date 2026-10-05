@@ -38,9 +38,8 @@ ana@lab:~/emb$ python search.py "the box never showed up"
  0.290  h19  Wrong book in the parcel
 ```
 
-**The money-back question returns the two articles that answer it among its top three**, the gift
-article and the refund article, as in lesson 1, but this time against all 40 articles rather than
-six that were picked for it. *the box never showed up* finds **A parcel marked as delivered that
+**The money-back question puts the refund article second, behind the gift article, as in lesson
+1**, but this time against all 40 articles rather than six that were picked for it. *the box never showed up* finds **A parcel marked as delivered that
 never arrived** at 0.458, without one meaningful word in common.
 
 Look at what comes second and third for the box. **Resetting your password** at 0.300 and **Wrong
@@ -55,7 +54,7 @@ numbers each. Then `np.argsort(-scores)` sorts all of them, from the highest sco
 `argsort` sorts upwards and the minus sign turns it round. Nothing is skipped and nothing is
 guessed, so the top three are exactly the three closest.
 
-That is called **exact** or **brute-force** search, and for 40 articles it is the right tool. Its
+That is called **exact** search, or brute-force search, and for 40 articles it is the right tool. Its
 cost grows with every document added: a million articles would be a million dot products per
 question. Lesson 11 measures where that starts to hurt, and lesson 15 builds the indexes that avoid
 reading every vector, at the price of sometimes missing one.

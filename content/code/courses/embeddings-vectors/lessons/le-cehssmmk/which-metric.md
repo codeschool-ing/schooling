@@ -12,7 +12,7 @@ because it returns normalised vectors, the dot product and L2 give the same rank
 
 So the rule is short. Use the measure the model was trained with. If its vectors are normalised, or
 you normalise them yourself, any of the three ranks identically, and the **dot product**, called
-**inner product** in most libraries, is the cheapest to compute.
+*inner product* in most libraries, is the cheapest to compute.
 
 ## Similarities and distances
 
@@ -61,7 +61,7 @@ Forget the sign and a query that sorts the other way returns the worst article i
 Lesson 14 writes these operators into real queries.
 
 Other tools use other words for the same three. FAISS calls the dot product `IP` and has separate
-index types for `L2`; Chroma and hnswlib name a collection's space `cosine`, `ip` or `l2` and
+index types for `L2`. Chroma and hnswlib name a collection's space `cosine`, `ip` or `l2` and
 return a distance in every case, so a smaller number is a better match. Lesson 12 puts Chroma's
 distances beside the cosines they came from. Before you sort a result or set a threshold on it, find out which
 of the two kinds of number you are holding.

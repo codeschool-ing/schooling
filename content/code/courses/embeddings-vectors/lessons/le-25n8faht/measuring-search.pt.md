@@ -15,7 +15,7 @@ uma com o artigo ou os artigos que o curso decidiu que a respondem. A primeira �
 
 ## Recall em k
 
-A medida é simples. Para cada pergunta, rode a busca e olhe os `k` primeiros resultados; conte a
+Para cada pergunta, rode a busca e olhe os `k` primeiros resultados; conte a
 pergunta como encontrada se um artigo relevante estiver entre eles. O **recall@1** pergunta se o
 artigo certo veio primeiro, e o **recall@3** se ele ficou entre os três primeiros, que é mais ou
 menos o que um cliente lê antes de desistir.

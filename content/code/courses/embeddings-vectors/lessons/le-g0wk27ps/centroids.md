@@ -77,8 +77,8 @@ customers.
 
 The furthest are where to look when something is wrong. **Why do you need my date of birth?**
 scores 0.251 against the account centroid, below every other desk's least typical ticket. It is a
-question about personal data, which the team files under accounts, so the label is defensible; but
-in a real queue of thousands, the tickets furthest from their own centroid are a short list of
+question about personal data, which the team files under accounts, so the label is defensible.
+In a real queue of thousands, though, the tickets furthest from their own centroid are a short list of
 candidates for a person to check.
 
 ## Where one point per desk is not enough

@@ -67,9 +67,9 @@ throw information away; a picture of two arrows never does.
 A cosine can only take values from −1 to 1, and the line `0.0 -1.0` in the output shows the two
 landmarks besides the top one:
 
-- **1**: the same direction, whatever the lengths.
-- **0**: perpendicular. `c = (1, −2, 0)` has a dot product with `a` of 2 − 2 + 0 = 0.
-- **−1**: opposite. `−a` points straight back.
+- 1 is the same direction, whatever the lengths.
+- 0 is perpendicular: `c = (1, −2, 0)` has a dot product with `a` of 2 − 2 + 0 = 0.
+- −1 is opposite: `−a` points straight back.
 
 Read that as geometry and not yet as meaning. For text, a cosine near 1 is a near-duplicate, but a
 cosine of 0 is not "unrelated" and nothing in practice sits near −1. The section *A crowded space*

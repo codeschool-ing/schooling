@@ -91,14 +91,14 @@ would.
 - `t024`, a spine dented because the box was squashed, went to returns. A damaged book is
   something a customer may well want to send back, and the returns tickets talk about books that
   arrived wrong. The label says shipping because the damage happened in transit.
-- `t027`, a delivery charge taken twice, went to payments. The previous section saw the model
+- `t027`, a delivery charge taken twice, went to payments. The section *A trained classifier* saw the model
   split almost evenly on it. A double charge is a payments problem by any reading; the team filed it
   under shipping because the charge was for delivery.
 - `t058`, whether the 30-day limit runs from ordering or from arrival, went to shipping. It is
   about the returns policy, and nearly every word in it is about delivery.
 
 **Two of the three are arguments about the label, not failures of the model.** A classifier can
-only learn the boundaries that the labels draw, and when a ticket honestly belongs to two desks, a
+only learn the boundaries that the labels draw. When a ticket honestly belongs to two desks, a
 second person sorting it by hand would disagree with the first some of the time too. Before
 trying to fix a classifier, read its mistakes: some are the labelling scheme asking to be
 clarified.

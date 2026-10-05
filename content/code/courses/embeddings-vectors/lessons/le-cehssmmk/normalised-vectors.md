@@ -63,8 +63,8 @@ actually offers 15% off to schools. Audiobooks wins on length, 1.905 against 1.4
 lengths out and the order flips: cosine 0.212 for Audiobooks and 0.247 for the schools article.
 
 Over the 24 questions, the article ranked first changed for five of them, and **in all five the
-cosine's choice is the article the course marked as the answer**. The length was not adding
-information. It was adding noise with a pattern.
+cosine's choice is the article the course marked as the answer**. The length carried nothing
+the question asked about, only how much each text's tokens disagree.
 
 ## Normalise once, when you write
 

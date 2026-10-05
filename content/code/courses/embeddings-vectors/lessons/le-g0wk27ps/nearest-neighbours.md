@@ -32,7 +32,7 @@ ana@lab:~/emb$ jq -r '.split + " " + .label' data/tickets.jsonl | sort | uniq -c
 The 100 marked `train` are what a method is allowed to look at. The 50 marked `test` are held back
 to measure it, ten per desk, and no method in this lesson sees their labels until the score is
 counted. A test set that the method has learned from measures memory, not classification; the
-section *Measuring a classifier* comes back to why that separation is the whole point.
+section *Measuring a classifier* comes back to that separation.
 
 ## Embed once, keep the vectors
 

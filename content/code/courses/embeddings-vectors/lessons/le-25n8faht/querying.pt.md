@@ -38,9 +38,8 @@ ana@lab:~/emb$ python search.py "the box never showed up"
  0.290  h19  Wrong book in the parcel
 ```
 
-**A pergunta sobre dinheiro de volta traz entre os três primeiros os dois artigos que a respondem**,
-o do presente e o do reembolso, como na aula 1, mas agora contra os 40 artigos, e não contra seis
-escolhidos a dedo. *the box never showed up* ("a caixa nunca chegou") encontra **A parcel marked as
+**A pergunta sobre dinheiro de volta põe o artigo do reembolso em segundo, atrás do artigo do
+presente, como na aula 1**, mas agora contra os 40 artigos, e não contra seis escolhidos a dedo. *the box never showed up* ("a caixa nunca chegou") encontra **A parcel marked as
 delivered that never arrived** ("um pacote marcado como entregue que nunca chegou") com 0,458, sem
 nenhuma palavra importante em comum.
 
@@ -57,7 +56,7 @@ como escolher `k`.
 `argsort` ordena para cima e o sinal de menos inverte. Nada é pulado e nada é estimado, então os
 três primeiros são exatamente os três mais próximos.
 
-Isso se chama busca **exata**, ou de **força bruta**, e para 40 artigos é a ferramenta certa. O
+Isso se chama busca **exata**, ou de força bruta, e para 40 artigos é a ferramenta certa. O
 custo cresce a cada documento novo: um milhão de artigos seriam um milhão de produtos escalares por
 pergunta. A aula 11 mede onde isso começa a doer, e a aula 15 constrói os índices que evitam ler
 todos os vetores, ao preço de às vezes perder um.

@@ -79,7 +79,8 @@ clientes.
 Os mais distantes são onde procurar quando algo está errado. **Why do you need my date of birth?**
 ("por que vocês precisam da minha data de nascimento?") tem 0,251 contra o centroide de contas,
 abaixo do ticket menos típico de todos os outros setores. É uma pergunta sobre dados pessoais, que a
-equipe arquiva em contas, então o rótulo se defende; mas numa fila real de milhares, os tickets mais
+equipe arquiva em contas, então o rótulo se defende.
+Numa fila real de milhares, porém, os tickets mais
 distantes do próprio centroide são uma lista curta de candidatos para uma pessoa conferir.
 
 ## Quando um ponto por setor não basta

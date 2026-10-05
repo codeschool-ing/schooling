@@ -57,9 +57,8 @@ levou o tempo que a primeira linha imprimiu. A parte pesada, ler a língua, o mo
 antes de o treino começar; o classificador só aprende onde traçar linhas entre pontos que já estão
 arrumados por significado.
 
-E ele acertou **47 de 50, exatamente o que os centroides acertaram**. Isso contradiz uma imagem que
-vale nomear: a de que um modelo treinado tem de vencer os métodos que não aprendem nada. Não tem, e
-aqui não vence, por dois motivos visíveis nos dados. Os vetores do MiniLM já põem estes cinco
+E ele acertou **47 de 50, exatamente o que os centroides acertaram**. É comum imaginar que um modelo
+treinado tem de vencer os métodos que não aprendem nada. Não tem, e aqui não vence, por dois motivos visíveis nos dados. Os vetores do MiniLM já põem estes cinco
 setores em lugares diferentes, então sobra pouco para um peso corrigir; e 20 exemplos por setor não
 são muitos para aprender 384 pesos cada.
 

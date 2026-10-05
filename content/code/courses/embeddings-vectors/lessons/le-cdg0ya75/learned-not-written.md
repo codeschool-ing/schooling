@@ -76,9 +76,9 @@ wordllama  1.0
 ['▁the', '▁dog', '▁bit', '▁the', '▁man']
 ```
 
-**WordLlama scores the two sentences as identical, 1.0**, and it is right to by its own design: the
-two sentences contain exactly the same five tokens, the last line shows them, and an average does
-not care about order. All-MiniLM-L6-v2 sees a difference, 0.9795, because its layers let *dog* and
+**WordLlama scores the two sentences as identical, 1.0**, and by its own design it is right to.
+The two sentences contain exactly the same five tokens, which the last line shows, and an average
+does not care about order. All-MiniLM-L6-v2 sees a difference, 0.9795, because its layers let *dog* and
 *man* know which side of *bit* they are on.
 
 Notice how small that difference is. Even the contextual model scores *the dog bit the man* and

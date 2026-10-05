@@ -67,9 +67,9 @@ precisou jogar informação fora; uma figura de duas setas nunca precisa.
 Um cosseno só pode valer de −1 a 1, e a linha `0.0 -1.0` da saída mostra os dois marcos além do de
 cima:
 
-- **1**: a mesma direção, sejam quais forem os comprimentos.
-- **0**: perpendicular. `c = (1, −2, 0)` tem produto escalar com `a` de 2 − 2 + 0 = 0.
-- **−1**: oposta. `−a` aponta exatamente para trás.
+- 1 é a mesma direção, sejam quais forem os comprimentos.
+- 0 é perpendicular: `c = (1, −2, 0)` tem produto escalar com `a` de 2 − 2 + 0 = 0.
+- −1 é a direção oposta: `−a` aponta exatamente para trás.
 
 Leia isso como geometria, e ainda não como significado. Em texto, um cosseno perto de 1 é um quase
 duplicado, mas um cosseno 0 não quer dizer "sem relação", e na prática nada fica perto de −1. A

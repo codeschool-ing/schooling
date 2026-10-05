@@ -91,14 +91,14 @@ leria.
 - `t024`, uma lombada amassada porque a caixa foi esmagada, foi para devoluções. Um livro danificado
   é algo que o cliente bem pode querer devolver, e os tickets de devolução falam de livros que
   chegaram errados. O rótulo diz entrega porque o dano aconteceu no transporte.
-- `t027`, um frete cobrado duas vezes, foi para pagamentos. A seção anterior viu o modelo quase
+- `t027`, um frete cobrado duas vezes, foi para pagamentos. A seção *Um classificador treinado* viu o modelo quase
   dividido ao meio nele. Uma cobrança em dobro é um problema de pagamento por qualquer leitura; a
   equipe arquivou em entregas porque a cobrança era do frete.
 - `t058`, se o prazo de 30 dias conta a partir do pedido ou da chegada, foi para entregas. É sobre a
   política de devolução, e quase toda palavra dele é sobre entrega.
 
 **Dois dos três são discussões sobre o rótulo, não falhas do modelo.** Um classificador só aprende
-as fronteiras que os rótulos traçam, e quando um ticket pertence honestamente a dois setores, uma
+as fronteiras que os rótulos traçam. Quando um ticket pertence honestamente a dois setores, uma
 segunda pessoa separando à mão também discordaria da primeira de vez em quando. Antes de tentar
 consertar um classificador, leia os erros dele: alguns são o esquema de rótulos pedindo para ser
 esclarecido.

@@ -4,7 +4,7 @@ version: 1
 ---
 
 A aula 1 buscou na central de ajuda com `grep`, e perdeu. Não foi uma luta justa: o `grep` só diz
-se uma linha contém um texto. Uma busca por palavras de verdade **ordena** os documentos pelo
+se uma linha contém um texto. Uma busca por palavras de verdade *ordena* os documentos pelo
 quanto as palavras deles combinam com as da pergunta, e a função de ordenação que a maioria dos
 buscadores usa há décadas é o **BM25**. Ele é o padrão do Lucene, e portanto do Elasticsearch e do
 OpenSearch. Antes de construir uma busca por significado, vale construir a que ela precisa vencer.
@@ -24,7 +24,7 @@ OpenSearch. Antes de construir uma busca por significado, vale construir a que e
     },
     {
       "code": "def bm25(query, k1=1.5, b=0.75):\n    scores = [0.0] * len(docs)\n    for w in words(query):\n        if w not in df:\n            continue\n        idf = math.log(1 + (len(docs) - df[w] + 0.5) / (df[w] + 0.5))\n        for i, d in enumerate(docs):\n            tf = d.count(w)\n            scores[i] += idf * tf * (k1 + 1) / (tf + k1 * (1 - b + b * len(d) / average))\n    return scores",
-      "note": "O BM25 propriamente dito. Para cada palavra da consulta que existe na central de ajuda, `idf` é alto para uma palavra rara e baixo para uma comum; `tf` é quantas vezes a palavra aparece neste artigo, amortecido por `k1` e ajustado pelo tamanho do artigo em relação à média por meio de `b`. Os dois valores padrão são escolhas comuns."
+      "note": "O BM25 propriamente dito. Para cada palavra da consulta que existe na central de ajuda, `idf` é alto para uma palavra rara e baixo para uma comum. `tf` é quantas vezes a palavra aparece neste artigo, amortecido por `k1` e ajustado pelo tamanho do artigo em relação à média por meio de `b`. Os dois valores padrão são escolhas comuns."
     },
     {
       "code": "def keyword_search(query):\n    scores = bm25(query)\n    found = [i for i in range(len(docs)) if scores[i] > 0]\n    return sorted(found, key=lambda i: -scores[i])",

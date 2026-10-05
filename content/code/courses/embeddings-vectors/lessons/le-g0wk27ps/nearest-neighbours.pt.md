@@ -32,7 +32,7 @@ ana@lab:~/emb$ jq -r '.split + " " + .label' data/tickets.jsonl | sort | uniq -c
 As 100 marcadas como `train` são o que um método pode olhar. As 50 marcadas como `test` ficam de
 fora para medir o método, dez por setor, e nenhum método desta aula vê os rótulos delas antes de a
 nota ser contada. Um conjunto de teste com que o método aprendeu mede memória, não classificação; a
-seção *Medindo um classificador* volta ao motivo de essa separação ser o ponto central.
+seção *Medindo um classificador* volta a essa separação.
 
 ## Gerar os vetores uma vez e guardar
 

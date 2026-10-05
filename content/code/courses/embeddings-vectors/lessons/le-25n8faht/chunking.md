@@ -66,10 +66,10 @@ end without any warning, which is a second and separate reason to chunk; lesson 
 
 Two numbers define a simple chunker, and both are choices rather than facts:
 
-- **Size.** Small chunks are about one thing and match sharply, but a sentence torn from its
+- Size: small chunks are about one thing and match sharply, but a sentence torn from its
   context can stop making sense. Large chunks keep the context and drift back towards the
   whole-page problem.
-- **Overlap.** Windows that share a few words at each edge keep a sentence that crosses a
+- Overlap: windows that share a few words at each edge keep a sentence that crosses a
   boundary whole in at least one of them. `windows()` uses 40 words with 10 shared, which made 59
   chunks from 13 pages.
 

@@ -57,9 +57,9 @@ in the time the first line printed. The heavy part, reading the language, was do
 model before training started; the classifier only learns where to draw lines between points that
 are already arranged by meaning.
 
-And it scored **47 of 50, exactly what the centroids scored**. That contradicts a picture worth
-naming: that a trained model must beat the methods that learn nothing. It does not have to, and
-here it does not, for two reasons that are both visible in the data. MiniLM's vectors already put
+And it scored **47 of 50, exactly what the centroids scored**. A common picture says a trained
+model must beat the methods that learn nothing. It does not have to, and here it does not, for two
+reasons that are both visible in the data. MiniLM's vectors already put
 these five desks in different places, so there is little left for a weighting to fix; and 20
 examples per desk are not many from which to learn 384 weights each.
 

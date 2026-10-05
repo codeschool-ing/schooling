@@ -12,7 +12,7 @@ devolve vetores normalizados, o produto escalar e a L2 dão a mesma ordem que o 
 
 Então a regra é curta. Use a medida com que o modelo foi treinado. Se os vetores estão normalizados,
 ou se você os normaliza, qualquer uma das três ordena igual, e o **produto escalar**, chamado de
-**produto interno** (*inner product*) na maioria das bibliotecas, é o mais barato de calcular.
+*produto interno* (*inner product*) na maioria das bibliotecas, é o mais barato de calcular.
 
 ## Similaridades e distâncias
 
@@ -61,7 +61,7 @@ resultado em primeiro. Esqueça o sinal e uma consulta que ordena ao contrário 
 da tabela. A aula 14 escreve esses operadores em consultas de verdade.
 
 Outras ferramentas usam outras palavras para as mesmas três. O FAISS chama o produto escalar de `IP`
-e tem tipos de índice separados para `L2`; o Chroma e o hnswlib dão ao espaço de uma coleção o nome
+e tem tipos de índice separados para `L2`. O Chroma e o hnswlib dão ao espaço de uma coleção o nome
 `cosine`, `ip` ou `l2` e devolvem uma distância em todos os casos, então um número menor é um
 resultado melhor. A aula 12 põe as distâncias do Chroma ao lado dos cossenos de onde elas vieram.
 Antes de ordenar um resultado ou pôr um limite nele, descubra qual dos dois tipos de número você

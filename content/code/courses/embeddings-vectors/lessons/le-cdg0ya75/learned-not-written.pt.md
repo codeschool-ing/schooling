@@ -76,7 +76,7 @@ wordllama  1.0
 ```
 
 **O WordLlama dá nota 1,0 às duas frases, como se fossem idênticas**, e pelo próprio desenho ele
-está certo: as duas frases têm exatamente os mesmos cinco tokens, que a última linha mostra, e uma
+está certo. As duas frases têm exatamente os mesmos cinco tokens, que a última linha mostra, e uma
 média não liga para a ordem. O all-MiniLM-L6-v2 enxerga uma diferença, 0,9795, porque as camadas
 deixam *dog* e *man* saberem de que lado de *bit* estão.
 

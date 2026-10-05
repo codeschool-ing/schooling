@@ -14,7 +14,7 @@ the article or articles the course decided answer it. The first one is
 
 ## Recall at k
 
-The measure is simple. For each question, run the search and look at the top `k` results; count
+For each question, run the search and look at the top `k` results; count
 the question as found if a relevant article is among them. **Recall@1** asks whether the right
 article came first, and **recall@3** whether it made the top three, which is roughly what a
 customer reads before giving up.

@@ -68,10 +68,10 @@ isso.
 
 Dois números definem um cortador simples, e os dois são escolhas, não fatos:
 
-- **Tamanho.** Pedaços pequenos tratam de uma coisa só e combinam com precisão, mas uma frase
+- Tamanho: pedaços pequenos tratam de uma coisa só e combinam com precisão, mas uma frase
   arrancada do contexto pode deixar de fazer sentido. Pedaços grandes guardam o contexto e voltam a
   escorregar para o problema da página inteira.
-- **Sobreposição.** Janelas que dividem algumas palavras em cada borda mantêm inteira, em pelo menos
+- Sobreposição: janelas que dividem algumas palavras em cada borda mantêm inteira, em pelo menos
   uma delas, uma frase que cruza um limite. `windows()` usa 40 palavras com 10 em comum, o que deu
   59 pedaços a partir de 13 páginas.
 
