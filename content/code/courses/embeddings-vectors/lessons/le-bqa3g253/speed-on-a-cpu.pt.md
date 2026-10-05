@@ -61,22 +61,22 @@ rodada mais rápida:
 ## Lotes numa thread só
 
 O conselho comum é que lotes maiores são mais rápidos, e numa placa de vídeo ou com muitas threads
-isso costuma valer: uma chamada faz a conta de muitos textos de uma vez. **Aqui, numa thread só, o lote
-de 1 rodou a 292 textos por segundo e o lote de 150 a 198.** O lote economiza o custo fixo de cada
+isso costuma valer: uma chamada faz a conta de muitos textos de uma vez. **Aqui, numa thread só, isso valeu só até certo ponto.** O lote de 8 rodou a 245 textos por segundo,
+contra 222 do lote de 1, e depois o lote de 32 caiu para 200 e o de 150 para 193. O lote economiza o custo fixo de cada
 chamada, que é pequeno, e cobra o **preenchimento**, que não é. Um lote é um retângulo da largura do
 texto mais longo, então todo ticket mais curto dentro dele é completado com pedaços `[PAD]`, e o
 transformer faz a conta inteira em cada um deles antes de a máscara jogar o resultado fora. Quanto
 maior o lote, maior a chance de ele ter um ticket longo que faz todo o resto pagar.
 
 **Ordenar os textos por tamanho antes de montar os lotes tira a maior parte do preenchimento**: o lote
-de 32 foi de 209 textos por segundo para 309, a linha mais rápida do MiniLM. O sentence-transformers
+de 32 foi de 200 textos por segundo para 231. O sentence-transformers
 ordena por tamanho dentro do `encode` exatamente por isso e devolve os vetores na sua ordem; um laço
 escrito à mão precisa fazer isso de propósito.
 
 ## O modelo estático
 
-**O WordLlama transformou 25.561 tickets por segundo em vetores**, cerca de 83 vezes a linha mais
-rápida do MiniLM. Não há transformer para rodar: o vetor de cada token é buscado numa tabela e entra
+**O WordLlama transformou 21.776 tickets por segundo em vetores**, 89 vezes a linha mais rápida do
+MiniLM, o lote de 8; as duas últimas linhas do programa fazem essa divisão e a conta seguinte. Não há transformer para rodar: o vetor de cada token é buscado numa tabela e entra
 numa média, que é a diferença que a aula 1 traçou entre um modelo estático e um contextual. A seção
 anterior o achou tão preciso quanto o MiniLM nas perguntas da central de ajuda, então aqui o modelo
 mais barato é também o muito mais rápido. A aula 10 mede os modelos estáticos mais a fundo e pergunta
@@ -84,8 +84,8 @@ do que eles abrem mão.
 
 ## Para que servem os números
 
-A 309 textos por segundo, os 40 artigos levam bem menos de um segundo, e um milhão de documentos
-levam cerca de 54 minutos de um núcleo. Essa conta, textos divididos pela taxa medida, é como
+A 245 textos por segundo, os 40 artigos levam bem menos de um segundo, e um milhão de documentos
+levam 68 minutos de um núcleo. Essa conta, textos divididos pela taxa medida, é como
 dimensionar uma reindexação antes de começar, e a aula 18 a usa para a conta em dinheiro. Meça com os
 seus próprios textos: os tickets são curtos, e o tempo de um modelo cresce com o tamanho do que ele
 lê, até o limite em que ele para de ler.

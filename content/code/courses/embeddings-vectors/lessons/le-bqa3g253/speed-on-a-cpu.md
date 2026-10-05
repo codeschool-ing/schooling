@@ -60,21 +60,22 @@ processes were running during this measurement, so another run prints other numb
 ## Batching on one thread
 
 The common advice is that larger batches are faster, and on a graphics card or many threads it
-usually holds: one call does many texts' arithmetic at once. **Here, on one thread, batch 1 ran at
-292 texts a second and batch 150 at 198.** Batching saves the overhead of each call, which is small,
+usually holds: one call does many texts' arithmetic at once. **Here, on one thread, it held only up to a point.** Batch 8 ran at 245 texts a second against
+222 for batch 1, and then batch 32 fell to 200 and batch 150 to 193. Batching saves the overhead of each call, which is small,
 and costs **padding**, which is not. A batch is one rectangle as wide as its longest text, so every
 shorter ticket in it is filled out with `[PAD]` pieces, and the transformer does the full arithmetic
 on every one of them before the mask throws the result away. The larger the batch, the more likely
 it holds one long ticket that makes everything else in it pay.
 
-**Sorting the texts by length before batching removes most of the padding**: batch 32 went from 209
-texts a second to 309, the fastest MiniLM line. sentence-transformers sorts by length inside
+**Sorting the texts by length before batching removes most of the padding**: batch 32 went from 200
+texts a second to 231. sentence-transformers sorts by length inside
 `encode` for exactly this reason and hands the vectors back in your order; a hand-written loop has
 to do it on purpose.
 
 ## The static model
 
-**WordLlama embedded 25,561 tickets a second**, about 83 times the fastest MiniLM line. There is no
+**WordLlama embedded 21,776 tickets a second**, 89 times the fastest MiniLM line, batch 8; the
+program's last two lines do that division and the next one. There is no
 transformer to run: each token's vector is looked up in a table and averaged, which is the
 difference lesson 1 drew between a static model and a contextual one. The previous section found
 it as accurate as MiniLM on the help centre's questions, so here the cheaper model is also the
@@ -82,8 +83,8 @@ much faster one. Lesson 10 measures static models further and asks what they giv
 
 ## What the numbers are for
 
-At 309 texts a second, the 40 articles take well under a second and a million documents take
-about 54 minutes of one core. That arithmetic, texts divided by measured rate, is how to size a
+At 245 texts a second, the 40 articles take well under a second and a million documents take
+68 minutes of one core. That arithmetic, texts divided by measured rate, is how to size a
 re-indexing job before starting it, and lesson 18 uses it for the bill. Measure with your own
 texts: the tickets are short, and a model's time grows with the length of what it reads, up to the
 limit where it stops reading.
