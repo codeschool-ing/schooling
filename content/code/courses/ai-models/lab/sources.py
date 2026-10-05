@@ -45,6 +45,7 @@ DOCS = {
     "llama4-card": LLAMA + ("models/llama4/MODEL_CARD.md",),
     "qwen-licence": ("QwenLM/Qwen", "2df8e8ac450fa185c421a08b0090ef81826caa6e",
                      "Tongyi Qianwen LICENSE AGREEMENT"),
+    "qwen3-readme": ("QwenLM/Qwen3", "7a2f61ffc7a20d47efcd2bf97f6f2bf52729042e", "README.md"),
     "deepseek-v3-licence": ("deepseek-ai/DeepSeek-V3", "9b4e9788e4a3a731f7567338ed15d3ec549ce03b",
                             "LICENSE-MODEL"),
     "deepseek-v3-readme": ("deepseek-ai/DeepSeek-V3", "9b4e9788e4a3a731f7567338ed15d3ec549ce03b", "README.md"),
