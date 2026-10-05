@@ -1,0 +1,486 @@
+{
+  "ex-w3me33ab": {
+    "prompt": "O `flat.py` imprimiu `positions: [17 14 21]`. O que são esses números?",
+    "hint": "O programa precisou de uma lista própria para transformá-los em h18, h15 e h22.",
+    "choices": [
+      {
+        "text": "Onde os vetores ficam no índice, contando do 0",
+        "why": "Certo. 17 é o 18º vetor adicionado, e só a lista `ids` guardada ao lado do índice diz que ele é h18."
+      },
+      {
+        "text": "Os ids h17, h14 e h21",
+        "why": "Os artigos foram h18, h15 e h22. O FAISS não conhece nenhum dos seus ids; os números só se parecem com eles."
+      },
+      {
+        "text": "As distâncias dos três artigos mais próximos",
+        "why": "As notas vieram à parte, como 0.4456, 0.4376 e 0.3994; estes são inteiros."
+      },
+      {
+        "text": "Quantas palavras cada artigo tem em comum com a pergunta",
+        "why": "O FAISS nunca vê uma palavra. Ele compara vetores e informa onde estão os mais próximos."
+      }
+    ]
+  },
+  "ex-ms3zsw0e": {
+    "prompt": "Por que o `ids.py` transforma h15 em 15 antes de adicioná-lo ao `IndexIDMap`?",
+    "hint": "Que tipo o `add_with_ids` recebe?",
+    "choices": [
+      {
+        "text": "O FAISS ordena os vetores pelo id, e strings não se ordenam",
+        "why": "Strings se ordenam muito bem. O motivo é o tipo que o FAISS guarda: um inteiro de 64 bits por vetor."
+      },
+      {
+        "text": "O `IndexIDMap` guarda inteiros de 64 bits, não strings",
+        "why": "Certo. Cada vetor recebe um inteiro, e o arquivo cresceu 39 × 8 bytes por causa deles."
+      },
+      {
+        "text": "Um número deixa o vetor guardado mais curto",
+        "why": "O vetor tem 1.536 bytes de qualquer jeito; o id fica ao lado, com 8 bytes cada."
+      },
+      {
+        "text": "O FAISS precisa que cada id seja igual à posição do vetor",
+        "why": "Então o `IndexIDMap` não serviria para nada; depois de remover o 18 voltaram os ids 15, 22 e 14, não posições."
+      }
+    ]
+  },
+  "ex-d4wgtgb2": {
+    "prompt": "O `ids.py` gravou 39 vetores de 384 números float32 com ids de 64 bits. Ignorando o cabeçalho, quantos bytes ocupariam 1.000 vetores assim com os seus ids?",
+    "hint": "Um vetor tem 1.536 bytes e um id tem 8.",
+    "unit": "bytes"
+  },
+  "ex-t0f0ad0q": {
+    "prompt": "Um programa usa as posições do FAISS como ids dos artigos e apaga um artigo reconstruindo o índice sem ele. O que acontece com as buscas depois, se a lista de ids do programa não for refeita também?",
+    "hint": "Um índice plano numera os vetores na ordem em que foram adicionados.",
+    "choices": [
+      {
+        "text": "O FAISS deixa um buraco na posição apagada, então nada muda",
+        "why": "Um índice reconstruído não lembra do antigo; as posições dele voltam a ser de 0 a n − 1."
+      },
+      {
+        "text": "O FAISS levanta um erro porque a lista e o índice têm tamanhos diferentes",
+        "why": "O FAISS nunca vê a lista. Ele responde com posições, e o programa as procura onde quer que apontem."
+      },
+      {
+        "text": "O artigo apagado continua voltando de um cache",
+        "why": "Não existe cache de resultados. A busca é nova a cada vez; o erro está na tradução das posições."
+      },
+      {
+        "text": "Os resultados após o removido saem com o nome errado",
+        "why": "Certo. As posições depois dele descem uma casa, e a lista antiga transforma cada uma no artigo anterior, sem erro nenhum."
+      }
+    ]
+  },
+  "ex-dvbdcag6": {
+    "prompt": "O `wrong.py` adicionou um vetor de 256 números a um índice de 384 dimensões. O que o FAISS informou?",
+    "hint": "Compare com o que o Chroma disse na aula 12.",
+    "choices": [
+      {
+        "text": "Um ValueError nomeando as duas dimensões",
+        "why": "Isso se parece mais com a mensagem do Chroma. O FAISS levantou uma asserção sem nada dentro."
+      },
+      {
+        "text": "Nada, depois de completar o vetor com zeros",
+        "why": "Ele recusou o vetor; o programa imprimiu a exceção."
+      },
+      {
+        "text": "Um AssertionError com a mensagem vazia",
+        "why": "Certo. O erro foi pego e não foi explicado: uma biblioteca não gasta nada para dizer o que deu errado."
+      },
+      {
+        "text": "Um aviso, e o vetor foi cortado para caber",
+        "why": "Nenhum vetor foi guardado; a chamada levantou uma exceção."
+      }
+    ]
+  },
+  "ex-p242q6ky": {
+    "prompt": "Qual dos quatro índices do `factory.py` precisou de treino antes de aceitar qualquer vetor, e por quê?",
+    "hint": "Leia a segunda coluna, e pense de que são feitas 64 células.",
+    "choices": [
+      {
+        "text": "Os dois IVF, já que as células vêm de agrupar vetores de exemplo",
+        "why": "Certo. Os dois índices IVF imprimiram True: as 64 células têm de ser achadas a partir de dados parecidos com os que vão guardar."
+      },
+      {
+        "text": "O HNSW32, porque o grafo tem de ser aprendido antes",
+        "why": "O grafo é construído à medida que os vetores entram; `needs training` imprimiu False para o HNSW32."
+      },
+      {
+        "text": "Os quatro, já que todo índice é ajustado aos seus dados",
+        "why": "Flat e HNSW32 imprimiram False. Um índice plano não tem nada a ajustar."
+      },
+      {
+        "text": "Só o IVF64,PQ16, porque comprimir exige um dicionário",
+        "why": "A compressão dele treina, sim, mas o IVF64,Flat também imprimiu True, por causa das células."
+      }
+    ]
+  },
+  "ex-573s0cx2": {
+    "prompt": "O `IVF64,PQ16` guarda cada vetor em 16 bytes em vez de 1.536. Por que fator os bytes dos próprios vetores ficam menores?",
+    "hint": "Divida um pelo outro.",
+    "unit": "vezes"
+  },
+  "ex-zkqvrh04": {
+    "prompt": "Um colega lê a saída do `factory.py` e conclui que o PQ não serve para nada, já que o recall dele foi 0.210. O que está errado nessa conclusão?",
+    "hint": "O que eram os 20.000 vetores, e que configurações a busca usou?",
+    "choices": [
+      {
+        "text": "Nada, já que a compressão perde quatro quintos dos vizinhos em quaisquer dados",
+        "why": "A perda depende dos dados: aqui as cópias ruidosas de cada texto estavam tão juntas que 16 bytes não conseguiam ordená-las."
+      },
+      {
+        "text": "Vale para estas cópias apertadas nos padrões, não para todo dado",
+        "why": "Certo. Os vetores eram cópias ruidosas de 310 reais, e a busca usou os padrões do FAISS; os dois mudam o número."
+      },
+      {
+        "text": "Recall é a medida errada para um índice comprimido",
+        "why": "O recall contra a resposta exata é justamente como um índice aproximado é julgado; a aula 15 também o usa."
+      },
+      {
+        "text": "O PQ16 nunca foi treinado, então o resultado não vale",
+        "why": "Ele imprimiu `needs training: True` e o programa o treinou antes de adicionar."
+      }
+    ]
+  },
+  "ex-dhs2p80k": {
+    "prompt": "Ligue cada parte de uma string de fábrica do FAISS ao que ela quer dizer.",
+    "hint": "Um significado da direita não pertence a nenhuma delas.",
+    "pairs": [
+      {
+        "left": "Flat",
+        "right": "Cada vetor guardado como é, comparado com a pergunta"
+      },
+      {
+        "left": "HNSW32",
+        "right": "Um grafo de ligações entre vizinhos"
+      },
+      {
+        "left": "IVF64",
+        "right": "O espaço dividido em 64 células"
+      },
+      {
+        "left": "PQ16",
+        "right": "Cada vetor comprimido em 16 bytes"
+      }
+    ],
+    "right_distractors": [
+      "O índice guardado numa GPU"
+    ]
+  },
+  "ex-k7kdta9f": {
+    "prompt": "A primeira busca do `lance_load.py` devolveu 1.1089 para h18. Por que não o 0.4456 da aula 1?",
+    "hint": "O mesmo número apareceu na aula 12, num dos espaços do Chroma.",
+    "choices": [
+      {
+        "text": "O LanceDB usou outro modelo de embedding",
+        "why": "Os vetores vieram do `minilm.embed`, os mesmos da aula 1; só a medida mudou."
+      },
+      {
+        "text": "Os vetores foram guardados como float16",
+        "why": "O esquema diz `fixed_size_list<item: float>[384]`: floats de 32 bits."
+      },
+      {
+        "text": "O LanceDB soma as distâncias dos três resultados",
+        "why": "Cada linha tem a sua `_distance`; h15 e h22 voltaram com as delas."
+      },
+      {
+        "text": "O padrão do LanceDB é L2 ao quadrado, não similaridade",
+        "why": "Certo. 2 − 2 × 0,4456 dá cerca de 1,1089. Com `distance_type(\"cosine\")` ele devolveu distâncias cosseno."
+      }
+    ]
+  },
+  "ex-saw5qd6m": {
+    "prompt": "Depois do delete no `lance_versions.py`, o diretório ainda tinha um arquivo de dados com h41 dentro. Por quê?",
+    "hint": "O `checkout(2)` ainda contou 41 linhas.",
+    "choices": [
+      {
+        "text": "O delete falhou e ninguém foi avisado",
+        "why": "A versão 3 contou 40 linhas: o delete funcionou, gravando uma versão nova."
+      },
+      {
+        "text": "O LanceDB só remove arquivos quando o processo termina",
+        "why": "O arquivo ainda estava lá num comando seguinte, depois que o `lance_versions.py` terminou."
+      },
+      {
+        "text": "A versão 2 ainda o lista, e versões antigas ficam até a limpeza",
+        "why": "Certo. Um delete cria uma versão nova e não mexe em arquivo nenhum; o `optimize(cleanup_older_than=...)` é o que remove as antigas."
+      },
+      {
+        "text": "Esse arquivo também guarda as outras 40 linhas",
+        "why": "A versão 1 tinha um arquivo de dados e a versão 2 tinha dois; h41 foi para um arquivo só dele."
+      }
+    ]
+  },
+  "ex-gr324v1k": {
+    "prompt": "Toda escrita numa tabela do LanceDB, inclusive um delete, cria uma nova ___ da tabela, e o `checkout` pode voltar a uma mais antiga.",
+    "hint": "O `lance_versions.py` imprimiu uma por escrita.",
+    "blanks": [
+      {
+        "accept": [
+          "versão",
+          "versao",
+          "version"
+        ]
+      }
+    ]
+  },
+  "ex-m4xym1ae": {
+    "prompt": "A importação de ontem à noite numa tabela do LanceDB deu errado. Ponha em ordem os passos para ler a tabela como ela estava antes.",
+    "hint": "Você precisa de um número antes de ir a qualquer lugar.",
+    "items": [
+      "Listar as versões da tabela",
+      "Escolher a versão criada antes da importação",
+      "Fazer o checkout dessa versão",
+      "Ler dela, e depois voltar à mais recente"
+    ],
+    "trap": "O checkout vem depois da escolha: `checkout` precisa do número de versão que o `list_versions` dá."
+  },
+  "ex-4xnwste7": {
+    "prompt": "O que roda o `QdrantClient(path=\"qdrant\")`?",
+    "hint": "Nenhum servidor foi iniciado em lugar nenhum desta aula.",
+    "choices": [
+      {
+        "text": "Uma versão em Python da API do Qdrant dentro do programa",
+        "why": "Certo. O modo local guarda os dados num diretório e responde às mesmas chamadas dentro do processo."
+      },
+      {
+        "text": "O servidor do Qdrant, iniciado em segundo plano",
+        "why": "O servidor é um programa à parte que o laboratório não conseguiu baixar; nada foi iniciado."
+      },
+      {
+        "text": "Uma conexão com o Qdrant Cloud",
+        "why": "Isso precisa de uma URL e de uma chave. `path=` nomeia um diretório desta máquina."
+      },
+      {
+        "text": "O servidor do Chroma com outro nome",
+        "why": "Chroma e Qdrant são projetos separados; o cliente aqui é o do próprio Qdrant."
+      }
+    ]
+  },
+  "ex-s5tvmpbf": {
+    "prompt": "O modo local respondeu a uma pergunta de 256 números com o 'shapes (40,384) and (256,) not aligned' do NumPy. O que isso mostra?",
+    "hint": "De quem é a mensagem?",
+    "choices": [
+      {
+        "text": "O servidor do Qdrant recusou a consulta",
+        "why": "Não havia servidor rodando. A mensagem veio do NumPy, dentro do programa."
+      },
+      {
+        "text": "O modo local busca num array do NumPy, de forma exata",
+        "why": "Certo. A pergunta foi multiplicada pelos 40 vetores de uma vez, e é por isso também que `indexed vectors` deu 0."
+      },
+      {
+        "text": "A coleção tinha sido criada com 256 dimensões",
+        "why": "Ela foi criada com `size=384`, e os formatos na mensagem também dizem 384."
+      },
+      {
+        "text": "O NumPy é o mecanismo de armazenamento do servidor do Qdrant",
+        "why": "O servidor é escrito em Rust. O NumPy é o que o modo local em Python usa."
+      }
+    ]
+  },
+  "ex-jwtrvqqf": {
+    "prompt": "Um teste cria um índice de payload em `category` no modo local do Qdrant e confere que uma consulta filtrada devolve os artigos certos. O que ele não mostrou sobre um servidor do Qdrant?",
+    "hint": "Leia o aviso que o `qd_local.py` imprimiu.",
+    "choices": [
+      {
+        "text": "Se o payload consegue guardar o título do artigo",
+        "why": "O título voltou no payload de cada resultado; isso o teste mostrou."
+      },
+      {
+        "text": "Se uma condição `must` fica só com os pontos que combinam",
+        "why": "A consulta filtrada devolveu só artigos de e-book, então a condição foi aplicada."
+      },
+      {
+        "text": "Se a coleção mantém 384 dimensões",
+        "why": "A dimensão é conferida nos dois, e a pergunta de 256 números foi recusada."
+      },
+      {
+        "text": "Se o servidor filtra sem conferir ponto por ponto",
+        "why": "Certo. O modo local ignora índices de payload e confere cada ponto; como o filtro de um servidor usa o índice ficou sem teste."
+      }
+    ]
+  },
+  "ex-29haq9qy": {
+    "prompt": "No Qdrant, o objeto JSON guardado com cada ponto, que um filtro lê, se chama ___.",
+    "hint": "A palavra do Qdrant para metadados.",
+    "blanks": [
+      {
+        "accept": [
+          "payload",
+          "payloads",
+          "carga"
+        ]
+      }
+    ]
+  },
+  "ex-kbqhcy5s": {
+    "prompt": "O Qdrant recusou um ponto com o id h15. Por quê?",
+    "hint": "O `qd.py` guardou 15 e pôs o id do artigo em outro lugar.",
+    "choices": [
+      {
+        "text": "O modo local só aceita inteiros, e o servidor aceita strings",
+        "why": "A regra é do Qdrant, no servidor e no modo local: um inteiro sem sinal ou um UUID."
+      },
+      {
+        "text": "Já existia um ponto com esse id",
+        "why": "Ids existentes são sobrescritos pelo `upsert`; a mensagem disse que o id não é um UUID válido."
+      },
+      {
+        "text": "Os ids do Qdrant são inteiros sem sinal ou UUIDs",
+        "why": "Certo. Por isso o `qd.py` usou 15 como id e guardou \"h15\" no payload, como `article`."
+      },
+      {
+        "text": "Um id tem de começar com um dígito",
+        "why": "Uma string que começa com dígito também é recusada, a não ser que seja um UUID."
+      }
+    ]
+  },
+  "ex-jv4yyfpy": {
+    "prompt": "Carregar o `random.faiss` custou 29 MB a um processo. Quatro workers web carregam o arquivo ao iniciar, cada um. Quantos MB, mais ou menos, ocupam as quatro cópias?",
+    "hint": "Cada processo guarda a própria cópia.",
+    "unit": "MB"
+  },
+  "ex-dsv9m6yj": {
+    "prompt": "No `two.py`, um segundo processo adicionou uma linha à tabela do LanceDB, e o primeiro continuou contando 40. Por quê?",
+    "hint": "Veja os números de versão que cada linha imprimiu.",
+    "choices": [
+      {
+        "text": "Ele ainda lia a versão 3, a que tinha aberto",
+        "why": "Certo. Um leitor fica na sua versão até pedir a mais recente, que é o que o `checkout_latest()` fez."
+      },
+      {
+        "text": "A escrita do segundo processo falhou",
+        "why": "Ele imprimiu 41 linhas e a versão 4, e depois do `checkout_latest()` o primeiro processo as viu."
+      },
+      {
+        "text": "O LanceDB aceita um escritor só e descartou a linha em silêncio",
+        "why": "A linha ficou: no fim, a versão 4 contou 41 para os dois processos."
+      },
+      {
+        "text": "A contagem lê só o primeiro arquivo de dados",
+        "why": "Antes, a versão 2 contou 41 linhas em dois arquivos de dados."
+      }
+    ]
+  },
+  "ex-8p5mem75": {
+    "prompt": "A busca da Marginalia vai rodar em oito processos workers sobre um catálogo que vai crescer para milhões de vetores, atualizado o dia todo. Que forma serve?",
+    "hint": "Conte as cópias, e pergunte quem vê uma atualização.",
+    "choices": [
+      {
+        "text": "Um arquivo do FAISS que cada worker carrega e recarrega a cada hora",
+        "why": "Oito cópias de milhões de vetores na memória, cada uma até uma hora atrasada, e alguma outra coisa tem de gravar o arquivo."
+      },
+      {
+        "text": "Um servidor que os oito workers consultam",
+        "why": "Certo. Uma cópia, mantida em dia, e um processo cujo trabalho é servi-la; o custo é rodá-lo."
+      },
+      {
+        "text": "O modo local do Qdrant aberto por cada worker",
+        "why": "O `two.py` mostrou o segundo processo recusado: o modo local aceita um dono só."
+      },
+      {
+        "text": "O LanceDB aberto por cada worker, sem nunca pedir a versão mais recente",
+        "why": "Cada worker continuaria lendo a versão que abriu e perderia as atualizações do dia."
+      }
+    ]
+  },
+  "ex-qw7zayvt": {
+    "prompt": "Quais destes rodam dentro do seu próprio programa, sem servidor em lugar nenhum? Marque todas as que se aplicam.",
+    "hint": "Veja o que cada construtor recebeu: um caminho ou uma URL.",
+    "choices": [
+      {
+        "text": "Um índice do FAISS",
+        "why": "Sim. É uma biblioteca e mora na memória do processo."
+      },
+      {
+        "text": "Uma tabela do LanceDB aberta com `lancedb.connect(\"lance\")`",
+        "why": "Sim. Um diretório e uma biblioteca, sem servidor."
+      },
+      {
+        "text": "O Qdrant com `QdrantClient(path=\"qdrant\")`",
+        "why": "Sim. O modo local é Python dentro do programa."
+      },
+      {
+        "text": "O Qdrant com `QdrantClient(url=\"http://localhost:6333\")`",
+        "why": "Isso é um cliente de um servidor Qdrant, mesmo na mesma máquina."
+      },
+      {
+        "text": "Um índice do Pinecone",
+        "why": "O Pinecone roda só como serviço, alcançado pela rede."
+      }
+    ]
+  },
+  "ex-1q9vyj8x": {
+    "prompt": "Ligue cada configuração ao que a busca dela devolve.",
+    "hint": "Duas delas põem o número mais alto primeiro.",
+    "pairs": [
+      {
+        "left": "FAISS IndexFlatIP",
+        "right": "Produto interno, o mais alto primeiro"
+      },
+      {
+        "left": "LanceDB sem distance_type",
+        "right": "Distância L2 ao quadrado, a menor primeiro"
+      },
+      {
+        "left": "Qdrant, Distance.COSINE",
+        "right": "Similaridade cosseno, a mais alta primeiro"
+      },
+      {
+        "left": "LanceDB, distance_type cosine",
+        "right": "Um menos a similaridade, a menor primeiro"
+      }
+    ],
+    "right_distractors": [
+      "O ângulo entre os vetores em graus"
+    ]
+  },
+  "ex-1hxdf0h7": {
+    "prompt": "Ordene os quatro índices do `factory.py` pelo tamanho que ocuparam depois de gravados, do menor para o maior.",
+    "hint": "A compressão deixou um deles com um trigésimo do tamanho dos outros.",
+    "items": [
+      "IVF64,PQ16",
+      "Flat",
+      "IVF64,Flat",
+      "HNSW32"
+    ],
+    "trap": "O IVF64,Flat é um pouco maior que o Flat, não menor: ele guarda cada vetor inteiro e acrescenta os seus 64 centroides e os ids de cada célula."
+  },
+  "ex-hqpgaaar": {
+    "prompt": "Qual destes precisa de um depósito à parte para os títulos dos artigos, porque não guarda nada além de vetores e números?",
+    "hint": "Um deles devolveu posições.",
+    "choices": [
+      {
+        "text": "LanceDB",
+        "why": "O título era uma coluna da tabela, devolvida com cada resultado."
+      },
+      {
+        "text": "Qdrant",
+        "why": "O título viajou no payload de cada ponto."
+      },
+      {
+        "text": "Chroma",
+        "why": "A coleção da aula 12 guardava os documentos e os metadados ela mesma."
+      },
+      {
+        "text": "FAISS",
+        "why": "Certo. Ele guarda vetores e, com o `IndexIDMap`, inteiros; todo o resto mora em outro lugar, com eles como chave."
+      }
+    ]
+  },
+  "ex-caw6p90n": {
+    "prompt": "Embrulhado num `IndexIDMap`, um índice do FAISS devolve os seus próprios ___ de 64 bits em vez das posições dos vetores.",
+    "hint": "O `ids.py` os passou com `add_with_ids`.",
+    "blanks": [
+      {
+        "accept": [
+          "ids",
+          "id",
+          "inteiros",
+          "identificadores",
+          "integers"
+        ]
+      }
+    ]
+  }
+}
