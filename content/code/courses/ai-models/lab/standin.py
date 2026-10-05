@@ -13,6 +13,7 @@ shapes of eight APIs, closely enough that each SDK talks to it unmodified.
     POST /v1/chat/completions                   OpenAI Chat Completions, and
                                                 Mistral, which has the same shape
     POST /v1/responses   GET /v1/responses/ID   OpenAI Responses
+    DELETE /v1/responses/ID
     POST /v1beta/models/M:generateContent       Gemini, and :streamGenerateContent
     POST /v1beta/models/M:countTokens           and :countTokens
     GET  /v1beta/models                         and the list
@@ -357,6 +358,9 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         self.handle_any("POST")
 
+    def do_DELETE(self):
+        self.handle_any("DELETE")
+
     def route(self, method, path, provider, req, headers, record):
         if provider == "ollama":
             return self.ollama(method, path, req, record)
@@ -369,6 +373,11 @@ class Handler(BaseHTTPRequestHandler):
                 {"name": "models/" + m, "displayName": m, "inputTokenLimit": v["window"],
                  "outputTokenLimit": v["max_output"],
                  "supportedGenerationMethods": ["generateContent", "countTokens"]} for m, v in MODELS.items()]})
+        if method == "DELETE" and path.startswith("/v1/responses/"):
+            rid = path.rsplit("/", 1)[1]
+            if STORED.pop(rid, None) is None:
+                raise Refusal(404, "invalid_request_error", f"Response with id '{rid}' not found.")
+            return self.send_json(200, {"id": rid, "object": "response", "deleted": True}, headers)
         if method == "GET" and path.startswith("/v1/responses/"):
             rid = path.rsplit("/", 1)[1]
             if rid not in STORED:
@@ -586,6 +595,10 @@ class Handler(BaseHTTPRequestHandler):
                                   for i in items if i.get("role") in (None, "user", "assistant")]
         system = req.get("instructions")
         limit = req.get("max_output_tokens") or 1024
+        if req.get("truncation") == "auto":
+            # drop items from the beginning of the conversation until it fits
+            while len(conversation) > 1 and count(system, conversation) + limit > self.model_of(model)["window"]:
+                conversation = conversation[1:]
         toks, reason, n_in = self.produce(model, system, conversation, limit, req.get("temperature"), record)
         text = "".join(toks)
         usage = {"input_tokens": n_in, "input_tokens_details": {"cached_tokens": 0},

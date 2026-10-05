@@ -1,0 +1,246 @@
+{
+  "ex-cv5z9889": {
+    "prompt": "Ligue cada campo da Chat Completions ao equivalente na Responses.",
+    "hint": "A tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "uma mensagem system",
+        "right": "instructions"
+      },
+      {
+        "left": "messages",
+        "right": "input"
+      },
+      {
+        "left": "choices[0].message.content",
+        "right": "output_text"
+      },
+      {
+        "left": "prompt_tokens",
+        "right": "input_tokens"
+      }
+    ],
+    "right_distractors": [
+      "previous_messages"
+    ]
+  },
+  "ex-kvcbzyng": {
+    "prompt": "Por que o output é uma lista na Responses API?",
+    "hint": "O que mais uma resposta pode conter?",
+    "choices": [
+      {
+        "text": "Guarda uma resposta por escolha pedida",
+        "why": "Isso são as choices da Chat Completions."
+      },
+      {
+        "text": "Uma resposta tem vários tipos de item",
+        "why": "Isso: mensagens, raciocínio, chamadas de ferramenta."
+      },
+      {
+        "text": "Cada token é um item",
+        "why": "Não."
+      },
+      {
+        "text": "Guarda os turnos anteriores da conversa",
+        "why": "Esses ficam pelo previous_response_id."
+      }
+    ]
+  },
+  "ex-sg92tjrv": {
+    "prompt": "Uma segunda requisição leva previous_response_id mas não instructions. O que o modelo lê?",
+    "hint": "A docstring de instructions.",
+    "choices": [
+      {
+        "text": "O histórico e as instruções anteriores",
+        "why": "Instruções não são levadas adiante."
+      },
+      {
+        "text": "O histórico, sem instruções",
+        "why": "Isso: 49 tokens no chain.py."
+      },
+      {
+        "text": "Só a entrada nova",
+        "why": "O histórico é lido."
+      },
+      {
+        "text": "Nada: a requisição é recusada",
+        "why": "Ela dá certo."
+      }
+    ]
+  },
+  "ex-x3kxm30s": {
+    "prompt": "Com previous_response_id, a ana manda um e-mail curto por turno. O que acontece com os tokens de entrada cobrados, turno após turno?",
+    "hint": "O que o modelo lê?",
+    "choices": [
+      {
+        "text": "Ficam do tamanho de um e-mail",
+        "why": "O modelo lê o histórico."
+      },
+      {
+        "text": "Zero após o turno um",
+        "why": "Não."
+      },
+      {
+        "text": "Crescem com o histórico que o modelo lê",
+        "why": "Isso: a economia está no que ela manda."
+      },
+      {
+        "text": "Não são cobrados quando armazenados",
+        "why": "Nada diz isso."
+      }
+    ]
+  },
+  "ex-kh5xra8z": {
+    "prompt": "Pela documentação do SDK, por pelo menos quantos dias uma resposta armazenada é guardada?",
+    "hint": "O parâmetro store.",
+    "unit": "dias"
+  },
+  "ex-ed51kb2m": {
+    "prompt": "A classificação da ana nunca encadeia respostas. Que ajuste combina com ela?",
+    "hint": "Nada a guardar.",
+    "choices": [
+      {
+        "text": "O padrão, para que as respostas possam ser auditadas depois pela API",
+        "why": "O log dela é o lugar para isso."
+      },
+      {
+        "text": "store=False",
+        "why": "Isso: não custa nada."
+      },
+      {
+        "text": "truncation=\"auto\"",
+        "why": "Isso é sobre entrada longa."
+      },
+      {
+        "text": "previous_response_id em toda chamada",
+        "why": "Isso as encadeia."
+      }
+    ]
+  },
+  "ex-rbp9ar5d": {
+    "prompt": "A ana apaga uma resposta armazenada e o retrieve devolve 404. O que isso estabelece?",
+    "hint": "O que a API devolve, e o que mais.",
+    "choices": [
+      {
+        "text": "Que a OpenAI não tem cópia do e-mail em lugar nenhum",
+        "why": "A política de dados rege isso."
+      },
+      {
+        "text": "Que a API não o devolve mais",
+        "why": "Isso."
+      },
+      {
+        "text": "Que ela nunca chegou a ser armazenada",
+        "why": "Foi buscada antes."
+      },
+      {
+        "text": "Que a chave foi revogada",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-f11rhr58": {
+    "prompt": "Uma requisição da Responses é maior que a janela do modelo e não define truncation. O que acontece?",
+    "hint": "O padrão é disabled.",
+    "choices": [
+      {
+        "text": "Um erro 400",
+        "why": "Isso, ao contrário do Ollama da aula 14."
+      },
+      {
+        "text": "Os itens mais antigos são descartados em silêncio",
+        "why": "Isso é o auto."
+      },
+      {
+        "text": "Os itens mais novos são descartados",
+        "why": "Não."
+      },
+      {
+        "text": "Ela trava até o cliente desistir",
+        "why": "Ela responde na hora, com um erro."
+      }
+    ]
+  },
+  "ex-h1fer27a": {
+    "prompt": "A janela do standin-small é de 32.768 tokens e o substituto reserva 1.024 para a saída. Qual é o máximo de entrada que truncation=auto pode deixar?",
+    "hint": "Subtraia.",
+    "unit": "tokens"
+  },
+  "ex-t5v2bxab": {
+    "prompt": "O responses.parse devolve Order(order='LB-20471') para um e-mail sobre o LB-20417. Que verificação pega isso?",
+    "hint": "Nenhuma promessa cobre o valor.",
+    "choices": [
+      {
+        "text": "A leitura do SDK, que valida contra a classe",
+        "why": "É um Order válido."
+      },
+      {
+        "text": "O modo strict",
+        "why": "O schema é satisfeito."
+      },
+      {
+        "text": "Comparar com a resposta esperada",
+        "why": "Isso: aula 5."
+      },
+      {
+        "text": "O status HTTP",
+        "why": "É 200."
+      }
+    ]
+  },
+  "ex-q32wn5ye": {
+    "prompt": "Na Responses API, o parâmetro que leva um JSON Schema para a resposta é text.___.",
+    "hint": "A captura do fio.",
+    "blanks": [
+      {
+        "accept": [
+          "format"
+        ]
+      }
+    ]
+  },
+  "ex-2wq7a9b4": {
+    "prompt": "Quais destes são padrões da Responses API, como o SDK os documenta? Marque todos os que se aplicam.",
+    "hint": "store e truncation.",
+    "choices": [
+      {
+        "text": "Respostas são armazenadas",
+        "why": "Sim."
+      },
+      {
+        "text": "Entrada longa demais é recusada",
+        "why": "Sim: truncation disabled."
+      },
+      {
+        "text": "Instruções passam para o turno seguinte",
+        "why": "Não passam."
+      },
+      {
+        "text": "A saída é texto simples",
+        "why": "Pode ser qualquer um; não é um dos padrões citados."
+      }
+    ]
+  },
+  "ex-9xb94mz9": {
+    "prompt": "O harness da ana fala Chat Completions. O que mudá-lo para a Responses API muda no que ele mede?",
+    "hint": "O último parágrafo da seção 02.",
+    "choices": [
+      {
+        "text": "A precisão do modelo",
+        "why": "O modelo é o mesmo."
+      },
+      {
+        "text": "Nada; só o código que lê as respostas",
+        "why": "Isso."
+      },
+      {
+        "text": "O preço por token",
+        "why": "Mesmo modelo, mesmo preço."
+      },
+      {
+        "text": "O tokenizador",
+        "why": "Mesmo modelo."
+      }
+    ]
+  }
+}
