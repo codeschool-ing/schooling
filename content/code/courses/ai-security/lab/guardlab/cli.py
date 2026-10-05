@@ -27,6 +27,10 @@ course.
     guard reverse HASH --list FILE  a dictionary attack on such an id
     guard ratelimit FILE --per-key N [--per-user M]
                                     a request log replayed against limits
+    guard cnpj NUMBER               whether a CNPJ's check digits are right
+    guard onboard FILE [--id ID]    applications for API access, decided
+    guard drift ACCOUNT [--limit PCT]
+                                    a customer's usage against its use case
 """
 import argparse
 import datetime as dt
@@ -379,6 +383,53 @@ def cmd_ratelimit(a):
     return 0
 
 
+# ---- knowing the customer ----------------------------------------------------
+
+def cmd_cnpj(a):
+    from . import kyc
+    ok = kyc.cnpj_ok(a.number)
+    print("%s  check digits %s" % (a.number, "right" if ok else "WRONG"))
+    return 0 if ok else 1
+
+
+def cmd_onboard(a):
+    from . import kyc
+    registry = load("data/cnpj-registry.json")
+    use_cases = load("data/use-cases.json")
+    with open(a.file, encoding="utf-8") as fh:
+        apps = [json.loads(line) for line in fh if line.strip()]
+    for app in apps:
+        if a.id and app["id"] != a.id:
+            continue
+        now = dt.date.fromisoformat(a.now) if a.now else dt.date.today()
+        decision, tier, reasons = kyc.onboard(app, registry, use_cases, now)
+        print("%-5s  %-22s %-7s %-8s %s" % (app["id"], app["company"], decision, tier, reasons[0]))
+        for r in reasons[1:]:
+            print("%-5s  %-22s %-7s %-8s %s" % ("", "", "", "", r))
+
+
+def cmd_drift(a):
+    declared = {"p-docelar": "customer-support"}[a.account]
+    with open(os.path.join(HOME, "data", "partner-usage.jsonl")) as fh:
+        rows = [json.loads(line) for line in fh if line.strip()]
+    weeks = {}
+    for r in rows:
+        if r["account"] == a.account:
+            weeks.setdefault(r["week"], {})[r["topic"]] = r["requests"]
+    print("%s declared: %s" % (a.account, declared))
+    print("week       requests  in use case  outside  largest outside")
+    for week, topics in weeks.items():
+        n = sum(topics.values())
+        inside = topics.get(declared, 0)
+        out = {t: k for t, k in topics.items() if t != declared}
+        top = max(out, key=out.get) if out else "-"
+        share = 100 * (n - inside) / n
+        flag = "  DRIFT" if share > a.limit else ""
+        print("%s  %8d  %10.0f%%  %6.0f%%  %s%s" % (
+            week, n, 100 * inside / n, share, top, flag))
+    print("limit: more than %d%% of a week outside the declared use case" % a.limit)
+
+
 # ---- the lab's own setup --------------------------------------------------
 
 def cmd_build(a):
@@ -511,6 +562,21 @@ def main(argv=None):
     s.add_argument("--per-key", type=int, required=True)
     s.add_argument("--per-user", type=int)
     s.set_defaults(fn=cmd_ratelimit)
+
+    s = sub.add_parser("cnpj")
+    s.add_argument("number")
+    s.set_defaults(fn=cmd_cnpj)
+
+    s = sub.add_parser("onboard")
+    s.add_argument("file")
+    s.add_argument("--id")
+    s.add_argument("--now")
+    s.set_defaults(fn=cmd_onboard)
+
+    s = sub.add_parser("drift")
+    s.add_argument("account")
+    s.add_argument("--limit", type=int, default=30)
+    s.set_defaults(fn=cmd_drift)
 
     s = sub.add_parser("_build")
     s.set_defaults(fn=cmd_build)

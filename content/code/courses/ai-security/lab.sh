@@ -20,7 +20,9 @@
 #                  a ticket loses before a third-party model sees it),
 #                  fairness.py (rates per group), standin.py (THE STAND-IN
 #                  SCORER, below), moderation.py (THE STAND-IN MODERATION
-#                  ENDPOINT, below) and cli.py (every command)
+#                  ENDPOINT, below), enduser.py and ratelimit.py (end-user
+#                  ids and limits), kyc.py (deciding who gets API access)
+#                  and cli.py (every command)
 #   bin/guard      the command line
 #   logs/raw/      the assistant's call log, one file per day, word for word
 #   logs/redacted/ the same records with personal data replaced
@@ -47,6 +49,10 @@
 #   - The requests in data/api-requests.jsonl were written by the lab, from
 #     the table in guardlab/ratelimit.py, and the addresses in
 #     data/emails.txt are invented: every first name with every surname.
+#   - The applications for API access, data/cnpj-registry.json (which
+#     stands in for the Receita Federal's public CNPJ data) and the usage
+#     log in data/partner-usage.jsonl were written by the course. The
+#     companies are invented; the CNPJ check-digit algorithm is the real one.
 #   - guardlab/moderation.py is NOT A MODERATION MODEL either: a list of
 #     English words with weights the course chose, answering with a score
 #     per category the way a moderation endpoint does. The sixty messages in
