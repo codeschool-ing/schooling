@@ -20,6 +20,7 @@ shapes of eight APIs, closely enough that each SDK talks to it unmodified.
     POST /v2/chat   /v2/rerank                  Cohere
     POST /hf/v1/chat/completions                Hugging Face's router
     GET  /openrouter/api/v1/models              OpenRouter
+    GET  /openrouter/api/v1/key                 and what the key has spent
     POST /openrouter/api/v1/chat/completions
     port 11434
     POST /api/chat  /api/generate  GET /api/tags  POST /api/show  GET /api/ps
@@ -103,7 +104,8 @@ HF_ROUTES = {
 # The course's own rule, standing for the Data Policy tag OpenRouter shows.
 STORES = {"standin-east": True, "standin-west": False}
 
-CONFIG = {"rpm": 50, "fail_next": None, "fail_count": 0, "down": [], "jitter": 0}
+CONFIG = {"rpm": 50, "fail_next": None, "fail_count": 0, "down": [], "jitter": 0, "or_key_limit": None}
+SPENT = {}       # OpenRouter: dollars each key has spent, for its credit limit
 LOCK = threading.Lock()
 COUNTER = itertools.count(1)
 SEEN = {}        # key -> deque of request times
@@ -204,9 +206,10 @@ def pieces(text):
 # ---------------------------------------------------------------- the server
 
 class Refusal(Exception):
-    def __init__(self, status, kind, message, headers=None):
+    def __init__(self, status, kind, message, headers=None, body_metadata=None):
         super().__init__(message)
         self.status, self.kind, self.message, self.headers = status, kind, message, headers or {}
+        self.metadata = body_metadata
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -304,7 +307,7 @@ class Handler(BaseHTTPRequestHandler):
                               f"This request would exceed the rate limit of {limit} requests per minute.",
                               dict(self.limit_headers(provider, limit, 0, wait), **{"retry-after": wait}))
             q.append(now)
-            reset = int(60 - (now - q[0])) + 1
+            reset = int(60 - (now - q[-1])) + 1  # when the newest request leaves the window
             return self.limit_headers(provider, limit, limit - len(q), reset)
 
     @staticmethod
@@ -312,7 +315,8 @@ class Handler(BaseHTTPRequestHandler):
         if provider == "anthropic":
             return {"anthropic-ratelimit-requests-limit": limit,
                     "anthropic-ratelimit-requests-remaining": remaining,
-                    "anthropic-ratelimit-requests-reset": f"in {reset}s"}
+                    "anthropic-ratelimit-requests-reset":
+                        time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time() + reset))}
         if provider in ("openai", "mistral", "openrouter", "hf"):
             return {"x-ratelimit-limit-requests": limit, "x-ratelimit-remaining-requests": remaining,
                     "x-ratelimit-reset-requests": f"{reset}s"}
@@ -330,6 +334,8 @@ class Handler(BaseHTTPRequestHandler):
             obj = {"message": e.message}
         elif provider == "ollama":
             obj = {"error": e.message}
+        elif provider == "openrouter" and e.metadata:
+            obj = {"error": {"code": e.status, "message": e.message, "metadata": e.metadata}}
         else:
             obj = {"error": {"message": e.message, "type": e.kind, "code": None}}
         self.send_json(e.status, obj, e.headers)
@@ -352,7 +358,7 @@ class Handler(BaseHTTPRequestHandler):
                     if CONFIG.get("fail_next") and not CONFIG.get("fail_count"):
                         CONFIG["fail_count"] = 1
                     if CONFIG.pop("clear", None):
-                        SEEN.clear(); TURNS.clear(); STORED.clear()
+                        SEEN.clear(); TURNS.clear(); STORED.clear(); SPENT.clear()
                 return self.send_json(200, dict(CONFIG))
             req = self.body() if method == "POST" else {}
             if req:
@@ -399,6 +405,13 @@ class Handler(BaseHTTPRequestHandler):
             if rid not in STORED:
                 raise Refusal(404, "invalid_request_error", f"Response with id '{rid}' not found.")
             return self.send_json(200, STORED[rid]["response"], headers)
+        if method == "GET" and path == "/openrouter/api/v1/key":
+            limit, used = CONFIG["or_key_limit"], round(SPENT.get(self.key(), 0.0), 8)
+            return self.send_json(200, {"data": {
+                "label": "lab key", "limit": limit, "limit_reset": None,
+                "limit_remaining": None if limit is None else round(max(limit - used, 0.0), 8),
+                "include_byok_in_limit": False, "usage": used, "usage_daily": used, "usage_weekly": used,
+                "usage_monthly": used, "is_free_tier": False}})
         if method == "GET" and path == "/openrouter/api/v1/models":
             return self.send_json(200, {"data": [
                 {"id": k, "name": k, "context_length": MODELS[v["base"]]["window"],
@@ -590,6 +603,12 @@ class Handler(BaseHTTPRequestHandler):
 
     # -- OpenRouter: one model, several upstreams, and a list of models to fall back through
     def openrouter(self, req, headers, record):
+        limit = CONFIG["or_key_limit"]
+        if limit is not None and SPENT.get(self.key(), 0.0) >= limit:
+            raise Refusal(402, "payment_required",
+                          "This API key has reached its credit limit.",
+                          body_metadata={"limit_source": "openrouter_key_limit",
+                                         "remedy_hint": "Raise the key's credit limit or wait for it to reset."})
         wanted = req.get("models") or [req.get("model")]
         prefs = req.get("provider") or {}
         tried = []
@@ -613,9 +632,14 @@ class Handler(BaseHTTPRequestHandler):
                     continue
                 record["routed"] = {"model": name, "provider": up, "tried": tried}
                 price = (float(route["prompt"]), float(route["completion"]))
+                key = self.key()
+
+                def cost(i, o):
+                    c = round(i * price[0] + o * price[1], 8)
+                    SPENT[key] = SPENT.get(key, 0.0) + c
+                    return c
                 return self.chat(req, headers, record, extra={
-                    "model": route["base"], "shown": name, "provider": up,
-                    "cost": lambda i, o: round(i * price[0] + o * price[1], 8)})
+                    "model": route["base"], "shown": name, "provider": up, "cost": cost})
         record["routed"] = {"tried": tried}
         raise Refusal(503, "provider_unavailable", "No allowed providers are available for the selected model. "
                       + "; ".join(tried))
