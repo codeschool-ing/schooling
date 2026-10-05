@@ -33,6 +33,7 @@ DOCS = {
     "llama3.1-use-policy": LLAMA + ("models/llama3_1/USE_POLICY.md",),
     "llama3.1-card": LLAMA + ("models/llama3_1/MODEL_CARD.md",),
     "llama3.1-prompt-format": LLAMA + ("models/llama3_1/prompt_format.md",),
+    "llama-skus": LLAMA + ("models/sku_list.py",),
     "llama4-licence": LLAMA + ("models/llama4/LICENSE",),
     "llama4-card": LLAMA + ("models/llama4/MODEL_CARD.md",),
     "qwen-licence": ("QwenLM/Qwen", "2df8e8ac450fa185c421a08b0090ef81826caa6e",
