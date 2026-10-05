@@ -1,0 +1,463 @@
+{
+  "ex-e6jr7xgm": {
+    "prompt": "Por que não escrever 'Language: Portuguese' no texto de cada artigo antes de transformá-lo em vetor, em vez de guardar um campo de idioma?",
+    "hint": "'Isto está em português' é questão de grau?",
+    "choices": [
+      {
+        "text": "Porque um texto mais longo gasta mais tokens para virar vetor",
+        "why": "Algumas palavras não custam quase nada. O problema é o que uma nota de semelhança consegue ou não responder."
+      },
+      {
+        "text": "Porque o modelo recusaria as palavras a mais",
+        "why": "Um modelo transforma em vetor qualquer texto que recebe. Ele transformaria o rótulo e o misturaria ao significado."
+      },
+      {
+        "text": "A pergunta tem resposta sim ou não, e a semelhança só dá graus",
+        "why": "Certo. Um rótulo no texto empurra um pouco o vetor; um campo testado por um filtro responde exatamente, toda vez."
+      },
+      {
+        "text": "Porque artigos em português não têm vetor num modelo inglês",
+        "why": "Eles têm vetor, 384 números como qualquer texto; a aula 1 mostrou que eles caem como ruído para um modelo inglês, mais um motivo para um rótulo não ajudar."
+      }
+    ]
+  },
+  "ex-1qapr426": {
+    "prompt": "Pelas contagens que o `jq` imprimiu, quantos artigos da central de ajuda NÃO estão na categoria payments?",
+    "hint": "Todos os artigos, menos os de payments.",
+    "unit": "artigos"
+  },
+  "ex-f9qa1n4x": {
+    "prompt": "Ligue cada campo de metadados à pergunta que ele responde para uma busca.",
+    "hint": "Uma pergunta é do vetor, não de nenhum campo.",
+    "pairs": [
+      {
+        "left": "Idioma",
+        "right": "Este leitor consegue ler?"
+      },
+      {
+        "left": "Data",
+        "right": "Está atual?"
+      },
+      {
+        "left": "Estoque",
+        "right": "Dá para comprar?"
+      },
+      {
+        "left": "Cliente (tenant)",
+        "right": "Ele tem permissão de ver?"
+      }
+    ],
+    "right_distractors": [
+      "É sobre o mesmo assunto da pergunta?"
+    ]
+  },
+  "ex-tana2fm3": {
+    "prompt": "'I was charged twice' com o filtro category = 'payments' e k = 3: o pós-filtro devolveu 2 artigos. Por que não 3?",
+    "hint": "Veja quais eram os três mais próximos.",
+    "choices": [
+      {
+        "text": "A categoria de pagamentos só tem dois artigos",
+        "why": "Ela tem seis, e o pré-filtro achou um terceiro, o h25."
+      },
+      {
+        "text": "Um dos 3 mais próximos era de devolução, e nada o substituiu",
+        "why": "Certo. O filtro rodou sobre os 3 já escolhidos e descartou um; a pós-filtragem nunca volta para buscar mais."
+      },
+      {
+        "text": "O terceiro artigo de pagamento teve nota abaixo de zero",
+        "why": "O h25 tirou 0,112, acima de zero. Não foi a nota que o tirou; ele nunca esteve entre os três primeiros."
+      },
+      {
+        "text": "O k conta o artigo filtrado como um dos 3",
+        "why": "O k escolheu três artigos; depois o filtro removeu um. Nada o conta, ele simplesmente sumiu."
+      }
+    ]
+  },
+  "ex-hdehg0dw": {
+    "prompt": "Em `ten.sql`, toda consulta pediu ao pgvector 10 linhas em português e recebeu 0 ou 1. O que produziu isso?",
+    "hint": "Veja onde a linha Filter fica no plano.",
+    "choices": [
+      {
+        "text": "A tabela tinha menos de 10 linhas em português",
+        "why": "Uma linha em 50 de 5.000 são 100 linhas em português, e o índice parcial depois devolveu 10 para todas as consultas."
+      },
+      {
+        "text": "O planejador ignorou a cláusula WHERE",
+        "why": "O plano mostra a linha Filter, e toda linha devolvida era em português. O WHERE rodou, só que depois do índice."
+      },
+      {
+        "text": "O índice entregou os 40 candidatos mais próximos e o filtro guardou os em português",
+        "why": "Certo. O ef_search limita os candidatos a 40, e um em cinquenta deles está em português: menos de um em média."
+      },
+      {
+        "text": "Vetores aleatórios não podem ser filtrados por idioma",
+        "why": "O idioma é uma coluna comum; os vetores serem aleatórios não muda nada no funcionamento do WHERE."
+      }
+    ]
+  },
+  "ex-tbm7e94k": {
+    "prompt": "A varredura HNSW do pgvector entrega 40 candidatos e uma linha em 50 está em português. Em média, quantas linhas em português sobrevivem ao filtro?",
+    "hint": "40 vezes a fração que passa.",
+    "unit": "linhas"
+  },
+  "ex-4d46ak8k": {
+    "prompt": "Rodar a busca, ficar com os k mais próximos e só então descartar os que não passam na condição se chama ___.",
+    "hint": "O filtro vem depois.",
+    "blanks": [
+      {
+        "accept": [
+          "pós-filtragem",
+          "pos-filtragem",
+          "pós filtragem",
+          "pós-filtro",
+          "post-filtering",
+          "postfiltering"
+        ]
+      }
+    ]
+  },
+  "ex-carj7yqc": {
+    "prompt": "Com hnsw.ef_search em 400, a linha de consulta 7 ainda recebeu só 3 das suas 10 linhas em português. O que isso implica para uma página que precisa mostrar 10?",
+    "hint": "O 400 foi uma garantia para as outras linhas, ou uma chance melhor?",
+    "choices": [
+      {
+        "text": "Subir para 1.000 e o problema acaba",
+        "why": "Uma lista mais larga torna a falta mais rara. Nada nela promete que a caminhada encontre 10 linhas em português."
+      },
+      {
+        "text": "Uma lista mais larga é uma chance melhor e não uma garantia, então o filtro precisa mudar de lugar",
+        "why": "Certo. Um pré-filtro, um índice parcial ou um filtro aplicado durante a caminhada devolvem 10 sempre que 10 passam; o ef_search só melhora as chances."
+      },
+      {
+        "text": "A linha 7 tem menos de 10 vizinhos em português",
+        "why": "Toda linha tem as mesmas 100 linhas em português para escolher; o índice parcial devolveu 10 para a linha 7."
+      },
+      {
+        "text": "O índice está quebrado e precisa ser reconstruído",
+        "why": "Nada está quebrado. Uma caminhada aproximada visita parte do grafo, e nessa parte só 3 passaram."
+      }
+    ]
+  },
+  "ex-2405x2tz": {
+    "prompt": "Ponha em ordem o que acontece no pgvector 0.6.0 com uma consulta com WHERE lang = 'pt' que o planejador manda pelo índice HNSW.",
+    "hint": "O filtro não é o primeiro.",
+    "items": [
+      "O índice anda pelo grafo a partir do ponto de entrada",
+      "Ele entrega até ef_search candidatos, os mais próximos primeiro",
+      "O PostgreSQL testa o lang de cada candidato",
+      "O LIMIT guarda no máximo 10 que passaram",
+      "A consulta devolve o que sobrou, talvez menos de 10"
+    ],
+    "trap": "O teste de idioma não vem antes da caminhada: isso seria um pré-filtro, que é o que o índice parcial fez."
+  },
+  "ex-zj1ysa77": {
+    "prompt": "`prefilter_cost.py` levou 0,7 ms para lang = 'pt' e 83,3 ms para lang = 'en'. Por que a diferença?",
+    "hint": "Conte as linhas que cada um buscou.",
+    "choices": [
+      {
+        "text": "Texto em inglês demora mais para comparar que português",
+        "why": "São vetores aleatórios com um rótulo. A conta por linha é a mesma, diga o rótulo o que disser."
+      },
+      {
+        "text": "A consulta em inglês precisou ordenar os 10 resultados",
+        "why": "As duas ordenaram 10. A diferença está em quantas linhas receberam nota antes disso."
+      },
+      {
+        "text": "A primeira execução estava fria, e o inglês rodou depois",
+        "why": "Cada tempo é o melhor de 20 execuções, então uma partida a frio não está nele."
+      },
+      {
+        "text": "Ela buscou 178.000 linhas de forma exata em vez de 2.000",
+        "why": "Certo. Um pré-filtro é uma busca exata sobre o que passa, e o custo acompanha o tamanho desse subconjunto."
+      }
+    ]
+  },
+  "ex-b06cvndv": {
+    "prompt": "Quantas vezes mais a consulta pré-filtrada levou para lang = 'en' do que para lang = 'pt'? Arredonde para um número inteiro.",
+    "hint": "83,3 ms contra 0,7 ms.",
+    "unit": "vezes"
+  },
+  "ex-gndd3fva": {
+    "prompt": "Depois que o índice parcial `WHERE lang = 'pt'` foi criado, o que `ten.sql` devolveu?",
+    "hint": "Quais consultas podem usar um índice criado com essa condição?",
+    "choices": [
+      {
+        "text": "10 linhas em português para toda consulta, e a coluna do espanhol sem mudança",
+        "why": "Certo. Toda linha do índice parcial já passa, então a consulta em português não tem nada a filtrar; a de espanhol continua pelo índice completo e pelo filtro dele."
+      },
+      {
+        "text": "10 linhas nas duas colunas",
+        "why": "As contagens do espanhol ficaram entre 2 e 6. O índice novo cobre lang = 'pt' e mais nada."
+      },
+      {
+        "text": "As mesmas contagens de antes, já que o planejador manteve o índice antigo",
+        "why": "A coluna do português foi de 0 ou 1 para 10 em todas as linhas, então o planejador usou o índice novo."
+      },
+      {
+        "text": "Um erro, já que uma tabela só pode ter um índice HNSW",
+        "why": "O CREATE INDEX imprimiu CREATE INDEX, e a tabela passou a ter dois índices HNSW."
+      }
+    ]
+  },
+  "ex-jmrhmfsq": {
+    "prompt": "Uma tabela guarda documentos de 20.000 clientes, filtrados por customer_id. Alguém propõe um índice HNSW parcial por cliente. O que há de errado nisso?",
+    "hint": "Um índice parcial existe para cada valor que você der a ele.",
+    "choices": [
+      {
+        "text": "Índices parciais não podem usar um operador vetorial",
+        "why": "A aula criou um com vector_cosine_ops e o planejador o usou."
+      },
+      {
+        "text": "Vinte mil índices para construir e manter atualizados, um por valor",
+        "why": "Certo. Um índice parcial combina com um campo de poucos valores que importam; um valor por cliente pede os outros desenhos da seção de clientes."
+      },
+      {
+        "text": "Um índice parcial devolve menos de k linhas, como um pós-filtro",
+        "why": "O contrário: toda linha dele passa, então ele devolveu 10 de 10 em ten.sql."
+      },
+      {
+        "text": "Ele vazaria documentos entre clientes",
+        "why": "Cada índice cobre só as linhas do seu cliente. O custo é o número de índices, não um vazamento."
+      }
+    ]
+  },
+  "ex-ezjj08j7": {
+    "prompt": "Em `lance_filter.py`, `prefilter=False` devolveu uma lista vazia. Por quê?",
+    "hint": "Quais eram os 3 artigos mais próximos da pergunta em inglês?",
+    "choices": [
+      {
+        "text": "O LanceDB não consegue filtrar por uma coluna de texto",
+        "why": "Com prefilter=True o mesmo filtro na mesma coluna devolveu três artigos."
+      },
+      {
+        "text": "A tabela não tinha índice, então a filtragem foi desligada",
+        "why": "Não havia índice vetorial, e a busca rodou de forma exata; o filtro rodou também, depois dela."
+      },
+      {
+        "text": "Ele filtrou os 3 mais próximos, e todos eram em inglês",
+        "why": "Certo. Isso é pós-filtragem: a mesma lista vazia que post_filter deu em filtered.py."
+      },
+      {
+        "text": "A métrica de cosseno põe os artigos em português por último",
+        "why": "A métrica não olha idiomas. As três linhas em português simplesmente não estavam entre as três mais próximas."
+      }
+    ]
+  },
+  "ex-0drxtnac": {
+    "prompt": "O Qdrant em modo local avisou que índices de payload não têm efeito. O que isso diz sobre a consulta filtrada que ele rodou depois?",
+    "hint": "Como o modo local busca?",
+    "choices": [
+      {
+        "text": "O filtro foi ignorado, então os resultados não foram filtrados",
+        "why": "Os resultados foram h40, h39 e h38, os três artigos em português. O filtro rodou; o que ficou sem uso foi o índice dele."
+      },
+      {
+        "text": "A consulta caiu para um pós-filtro e perdeu resultados",
+        "why": "Ela devolveu os três artigos em português com k = 3, o que um pós-filtro nesta pergunta não faz."
+      },
+      {
+        "text": "Ele deu nota a todos os pontos e mascarou os que não passam no filtro, de forma exata",
+        "why": "Certo. O modo local é exato e não precisa de índice para o filtro; o índice de payload importa para o grafo HNSW do servidor."
+      },
+      {
+        "text": "A coleção precisa ser criada de novo com o índice já definido",
+        "why": "Recriá-la não muda nada no modo local. O aviso diz para usar o servidor se você precisa de índices de payload."
+      }
+    ]
+  },
+  "ex-ktpqfsmw": {
+    "prompt": "No LanceDB, `.where(\"lang = 'pt'\", ___=True)` aplica a condição antes da busca vetorial.",
+    "hint": "O nome do parâmetro diz quando.",
+    "blanks": [
+      {
+        "accept": [
+          "prefilter"
+        ]
+      }
+    ]
+  },
+  "ex-qcabzc9n": {
+    "prompt": "Quais destes devolveram os três artigos em português para 'how do I return a book' com o filtro de idioma e k = 3? Escolha todos os que se aplicam.",
+    "hint": "Dois deles filtram depois que os três mais próximos foram escolhidos.",
+    "choices": [
+      {
+        "text": "Chroma com where",
+        "why": "Sim: h40, h39 e h38, com a condição decidindo quais registros podiam ser devolvidos."
+      },
+      {
+        "text": "LanceDB com prefilter=False",
+        "why": "Devolveu uma lista vazia: os três mais próximos estavam em inglês."
+      },
+      {
+        "text": "Qdrant local com um Filter",
+        "why": "Sim: ele dá nota a todos os pontos e mascara o resto."
+      },
+      {
+        "text": "pre_filter em store.py",
+        "why": "Sim: buscou só nas três linhas em português."
+      },
+      {
+        "text": "post_filter em store.py",
+        "why": "Devolveu []: o filtro veio depois dos três artigos em inglês."
+      }
+    ]
+  },
+  "ex-1se7cpbv": {
+    "prompt": "Pela documentação do HNSW filtrável do Qdrant, por que um filtro estreito não deixa o servidor dele sem resultados como deixou o pgvector 0.6.0?",
+    "hint": "Onde a condição é conferida?",
+    "choices": [
+      {
+        "text": "A lista de candidatos padrão dele é muito maior que 40",
+        "why": "Uma lista maior só tornaria a falta mais rara, como o ef_search 400 fez. A diferença está em onde a condição é conferida."
+      },
+      {
+        "text": "Ele confere a condição durante a caminhada, ou busca um subconjunto pequeno de forma exata",
+        "why": "Certo. Os pontos rejeitados não gastam a lista de resultados, e um filtro estreito é atendido por uma busca exata sobre os poucos pontos que passam."
+      },
+      {
+        "text": "Ele mantém uma coleção separada para cada valor de payload",
+        "why": "Esse é o desenho de uma coleção por cliente, que você escolhe por conta própria. O HNSW filtrável funciona dentro de uma coleção."
+      },
+      {
+        "text": "Ele também devolve menos resultados, e completa com outros sem filtro",
+        "why": "Completar com linhas que não passam no filtro quebraria o sentido do filtro. Nada na aula descreve isso."
+      }
+    ]
+  },
+  "ex-3tx58pva": {
+    "prompt": "`tenant_search.py` sem loja informada falhou com um erro. Por que esse é o comportamento desejado?",
+    "hint": "Compare com o que um filtro vazio faz na maior parte do código.",
+    "choices": [
+      {
+        "text": "Erros são mais baratos que conjuntos de resultados vazios",
+        "why": "Custo não é a questão. O que importa é o que um cliente esquecido consegue ver."
+      },
+      {
+        "text": "Uma conexão que não diz quem é não recebe nada, em vez de receber tudo",
+        "why": "Certo. A política compara cada linha com app.shop, e sem app.shop a consulta não roda, então uma configuração esquecida falha em vez de vazar."
+      },
+      {
+        "text": "Mostra que o papel helpdesk não tem permissão de SELECT",
+        "why": "O helpdesk tem SELECT; o mesmo papel devolveu linhas assim que uma loja foi definida."
+      },
+      {
+        "text": "A tabela não tem linhas para uma loja ausente, então o PostgreSQL avisa",
+        "why": "O PostgreSQL acusou uma configuração desconhecida, não uma loja ausente. Uma consulta que não acha linhas devolve um resultado vazio, não um erro."
+      }
+    ]
+  },
+  "ex-8jxem666": {
+    "prompt": "A API da Marginalia aceita `{\"query\": ..., \"shop\": ...}` no corpo da requisição e passa `shop` para a busca vetorial como filtro. Qual é a falha?",
+    "hint": "Quem decide o valor de shop?",
+    "choices": [
+      {
+        "text": "Um corpo JSON é mais lento de interpretar que uma query string",
+        "why": "Velocidade não é a questão; qualquer canal que o cliente preenche tem a mesma falha."
+      },
+      {
+        "text": "O filtro deveria ser aplicado antes da busca",
+        "why": "Antes ou depois, um filtro cujo valor o cliente escolhe filtra pelo que o cliente pedir."
+      },
+      {
+        "text": "Bancos vetoriais não conseguem filtrar por um campo de texto como shop",
+        "why": "Os quatro motores desta aula filtraram por campos de texto como lang."
+      },
+      {
+        "text": "O cliente escolhe a própria loja, então qualquer cliente pode pedir a de outro",
+        "why": "Certo. O cliente precisa vir da sessão autenticada no servidor; um valor na requisição é uma alegação."
+      }
+    ]
+  },
+  "ex-r0fhcpmq": {
+    "prompt": "Por que `tenant_search.py` troca para o papel helpdesk em vez de buscar como ana?",
+    "hint": "A quem a segurança em nível de linha se aplica?",
+    "choices": [
+      {
+        "text": "ana é dona da tabela e superusuária, e as duas coisas pulam a política",
+        "why": "Certo. Como ana, a busca veria as linhas de todas as lojas; a política vale para um papel que não é dono nem superusuário."
+      },
+      {
+        "text": "ana não consegue ler o tipo vector",
+        "why": "ana criou a extensão e carregou a tabela com vetores em shops.py."
+      },
+      {
+        "text": "helpdesk é mais rápido porque tem menos permissões",
+        "why": "Permissões não mudam a velocidade de uma consulta. Mudam quais linhas a política deixa passar."
+      },
+      {
+        "text": "app.shop só pode ser definido por um papel chamado helpdesk",
+        "why": "Qualquer papel pode definir uma configuração personalizada; é a política, não a configuração, que precisa de um papel a quem se aplique."
+      }
+    ]
+  },
+  "ex-gexrep45": {
+    "prompt": "A segurança em nível de ___ do PostgreSQL acrescenta a condição de uma política a toda consulta sobre uma tabela.",
+    "hint": "Ela age por registro.",
+    "blanks": [
+      {
+        "accept": [
+          "linha",
+          "row",
+          "row-level"
+        ]
+      }
+    ]
+  },
+  "ex-1c4062hq": {
+    "prompt": "Ligue cada busca que rodou nesta aula ao jeito como o filtro foi aplicado.",
+    "hint": "Uma descrição não combina com nenhuma.",
+    "pairs": [
+      {
+        "left": "Chroma com where",
+        "right": "A condição escolheu quais registros podiam ser devolvidos"
+      },
+      {
+        "left": "LanceDB com prefilter=False",
+        "right": "Os 3 mais próximos foram filtrados depois"
+      },
+      {
+        "left": "Qdrant em modo local",
+        "right": "Todos os pontos avaliados, o filtro aplicado como máscara"
+      },
+      {
+        "left": "pgvector pelo índice HNSW completo",
+        "right": "Cada candidato que o índice entregou foi testado"
+      }
+    ],
+    "right_distractors": [
+      "O filtro foi entregue a um reranqueador"
+    ]
+  },
+  "ex-sg6mywe7": {
+    "prompt": "Ordene estas consultas pré-filtradas de `prefilter_cost.py` da mais rápida para a mais lenta.",
+    "hint": "O tempo acompanha as linhas buscadas.",
+    "items": [
+      "lang = 'pt', 2.000 linhas",
+      "lang = 'es', 20.000 linhas",
+      "lang = 'en', 178.000 linhas"
+    ],
+    "trap": "O filtro mais estreito é o mais rápido, não o mais lento: um pré-filtro trabalha menos quanto mais o filtro remove."
+  },
+  "ex-e2dpzvhj": {
+    "prompt": "Uma loja mostra 'livros parecidos com este, em estoque' com k = 10 sobre um índice HNSW, e 95% dos livros estão em estoque. Que jeito de filtrar combina?",
+    "hint": "Aplique a regra desta aula sobre a largura do filtro.",
+    "choices": [
+      {
+        "text": "Um pré-filtro exato, já que só ele é correto",
+        "why": "Ele é correto e busca 95% dos livros por força bruta a cada visualização, que é o caso de filtro largo em que a pré-filtragem é lenta."
+      },
+      {
+        "text": "Buscar no índice e filtrar depois: quase todo candidato passa",
+        "why": "Certo. Com 95% passando, um pós-filtro sobre os candidatos perde cerca de um em vinte, e alargar um pouco a lista de candidatos cobre isso."
+      },
+      {
+        "text": "Um índice parcial para cada livro",
+        "why": "Um índice parcial é por valor de uma condição, não por livro; um por livro seriam milhares de índices minúsculos."
+      },
+      {
+        "text": "Segurança em nível de linha na coluna de estoque",
+        "why": "Estoque não é permissão. A segurança em nível de linha é sobre quem pode ver uma linha, e aqui todos podem."
+      }
+    ]
+  }
+}

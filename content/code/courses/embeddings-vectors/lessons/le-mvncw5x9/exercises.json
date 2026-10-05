@@ -1,0 +1,716 @@
+[
+  {
+    "id": "ex-yf3b9wzb",
+    "version": 1,
+    "section": "jina-api",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `jina.py` need no Jina SDK to call Jina's embeddings endpoint?",
+    "hint": "Compare the request and the answer with lesson 7's.",
+    "choices": [
+      {
+        "text": "Its request and answer copy the shape of OpenAI's /v1/embeddings",
+        "correct": true,
+        "why": "Right. A POST with a bearer token, model and input in the body, data[i].embedding and usage in the answer: any HTTP client speaks that."
+      },
+      {
+        "text": "Because labembed converts each request into Jina's own format first",
+        "correct": false,
+        "why": "labembed answers the shape it receives; it converts nothing. Against api.jina.ai the same program works because Jina accepts that shape itself."
+      },
+      {
+        "text": "httpx is Jina's official client library",
+        "correct": false,
+        "why": "httpx is a general HTTP client that the openai package installed. Nothing about it is Jina's."
+      },
+      {
+        "text": "Jina returns plain text, so there is nothing to decode",
+        "correct": false,
+        "why": "Jina returns JSON with the vectors as lists of numbers, the same as OpenAI with encoding_format float."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1pcqp15",
+    "version": 1,
+    "section": "jina-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`jina.py` printed `query and passage identical: True`. What does that line establish?",
+    "hint": "Who computed the two vectors?",
+    "choices": [
+      {
+        "text": "That Jina's task field changes nothing in any model",
+        "correct": false,
+        "why": "It shows nothing about Jina's models: no request reached Jina. jina-embeddings-v3 uses different weights per task, so its two vectors differ."
+      },
+      {
+        "text": "Only that labembed ignores the task",
+        "correct": true,
+        "why": "Right. Both lab models are symmetric: labembed checks and records the task and computes the same vector anyway. It is a fact about the lab, not about Jina."
+      },
+      {
+        "text": "That retrieval.query and retrieval.passage are two names for one task",
+        "correct": false,
+        "why": "Jina documents them as two tasks, one for the question and one for the text that answers it; that is the point of asymmetric search."
+      },
+      {
+        "text": "That the second request was answered from a cache",
+        "correct": false,
+        "why": "labembed computes every vector on every request; the log shows three separate successful requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxr9y8bw",
+    "version": 1,
+    "section": "jina-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service logs \"bad request, our bug\" when an embedding call returns 400, and \"provider outage, retry later\" for any other error. What does it log when `task` is misspelled in a Jina call?",
+    "hint": "Look at the status in the third line of jina.py's output.",
+    "choices": [
+      {
+        "text": "\"bad request, our bug\", since a misspelled field is a malformed request",
+        "correct": false,
+        "why": "That would be right if the status were 400. Jina's refusal comes back as 422, which this check does not recognise."
+      },
+      {
+        "text": "The outage message, and the call is repeated for nothing",
+        "correct": true,
+        "why": "Right. The status is 422, so the check falls through to the outage branch, and repeating the call will not fix a wrong task name."
+      },
+      {
+        "text": "Nothing, because Jina ignores fields it does not know",
+        "correct": false,
+        "why": "That is labembed's behaviour for late_chunking, a field it does not implement. task is checked, and a bad value is refused."
+      },
+      {
+        "text": "\"bad request, our bug\", because labembed answers 400 to every refusal",
+        "correct": false,
+        "why": "labembed answered this one with 422; jina-log shows status 422 for the refused request."
+      }
+    ]
+  },
+  {
+    "id": "ex-djzxb8n3",
+    "version": 1,
+    "section": "jina-api",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does Jina's `late_chunking` change, compared with embedding each chunk of a document on its own?",
+    "hint": "Where does the cut between chunks happen, before the layers or after them?",
+    "choices": [
+      {
+        "text": "Each chunk is still embedded alone, only later, after the document is stored",
+        "correct": false,
+        "why": "Late refers to where the cut happens inside the model, not to when the request is made."
+      },
+      {
+        "text": "The whole document gets one vector, copied to every chunk",
+        "correct": false,
+        "why": "Each chunk still gets its own vector; what changes is what the layers saw before the average."
+      },
+      {
+        "text": "Chunks share the layers and split only at the average",
+        "correct": true,
+        "why": "Right. Each chunk's vector is the mean of its own pieces, but those pieces were computed with the neighbouring chunks in view."
+      },
+      {
+        "text": "The model decides where to cut the document",
+        "correct": false,
+        "why": "The chunks are still yours, sent as the input list. The model only reads them together."
+      }
+    ]
+  },
+  {
+    "id": "ex-7k52wrg5",
+    "version": 1,
+    "section": "jina-api",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a Jina request body, the field whose values include `retrieval.query` and `separation` is called ___.",
+    "hint": "It tells the model what the text is for.",
+    "blanks": [
+      {
+        "accept": [
+          "task"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5kw819c7",
+    "version": 1,
+    "section": "jina-api",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Jina task to the text it is meant for.",
+    "hint": "One description belongs to no task.",
+    "pairs": [
+      {
+        "left": "retrieval.query",
+        "right": "A customer's search question"
+      },
+      {
+        "left": "retrieval.passage",
+        "right": "A help article a search should find"
+      },
+      {
+        "left": "text-matching",
+        "right": "Two texts compared on an equal footing"
+      },
+      {
+        "left": "separation",
+        "right": "Texts to be grouped into clusters"
+      }
+    ],
+    "right_distractors": [
+      "Detecting which language a text is in"
+    ]
+  },
+  {
+    "id": "ex-qwekqsvw",
+    "version": 1,
+    "section": "voyage-mistral-and-others",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`prices.py` prints `-` in the dims column for `voyage/voyage-3.5`. What does the dash mean?",
+    "hint": "Whose sheet is it?",
+    "choices": [
+      {
+        "text": "voyage-3.5 returns vectors of no fixed length",
+        "correct": false,
+        "why": "A model returns one dimension for every text; the dash says the sheet has no value, not that the model has none."
+      },
+      {
+        "text": "The sheet records no dimension for it",
+        "correct": true,
+        "why": "Right. A gap on a third party's sheet is a question for the provider's own documentation."
+      },
+      {
+        "text": "The dimension is zero until a request asks for one",
+        "correct": false,
+        "why": "Nothing on the sheet says so, and no model returns zero numbers by default."
+      },
+      {
+        "text": "Voyage sells it only with the batch discount, which the sheet leaves out",
+        "correct": false,
+        "why": "The batch column is a separate column, and it is also a dash. Neither dash says anything about how Voyage sells it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sk7xp3jn",
+    "version": 1,
+    "section": "voyage-mistral-and-others",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sheet.py` found 149 embedding rows, and the only row naming Jina has the mode `rerank`. What follows for this course?",
+    "hint": "A reranker is not an embedding model.",
+    "choices": [
+      {
+        "text": "Jina's embedding models are free, which is why they have no price row",
+        "correct": false,
+        "why": "A missing row is missing data, not a price of zero."
+      },
+      {
+        "text": "Jina sells rerankers and no embedding models",
+        "correct": false,
+        "why": "jina.py uses Jina's documented embeddings endpoint; the sheet simply does not list those models."
+      },
+      {
+        "text": "It cannot quote a Jina embedding price from its one source",
+        "correct": true,
+        "why": "Right. Every price here comes from LiteLLM's sheet at one commit, and that sheet has no Jina embedding row."
+      },
+      {
+        "text": "Jina's embedding price is the reranker's price",
+        "correct": false,
+        "why": "A reranker is a different model doing a different job; its price says nothing about embeddings."
+      }
+    ]
+  },
+  {
+    "id": "ex-m2xa9dm3",
+    "version": 1,
+    "section": "voyage-mistral-and-others",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia pays Together for `bge-base-en-v1.5` by the token. What does it keep that it would not keep with a model only its maker serves?",
+    "hint": "Who else has the weights?",
+    "choices": [
+      {
+        "text": "The option of running the same open weights itself if it ever leaves the host",
+        "correct": true,
+        "why": "Right. The weights are public, so the model does not depend on the host staying in business or keeping its price."
+      },
+      {
+        "text": "A guarantee that the host's vectors match ones computed on its own machines",
+        "correct": false,
+        "why": "That depends on whether the host runs the model at the same precision, and it is a question to ask before mixing them."
+      },
+      {
+        "text": "Inputs of 32000 tokens",
+        "correct": false,
+        "why": "That is Voyage's limit. The sheet lists 512 tokens for bge-base-en-v1.5."
+      },
+      {
+        "text": "Customer texts that never leave its own servers",
+        "correct": false,
+        "why": "A hosted model receives every text sent to it, whoever made the weights."
+      }
+    ]
+  },
+  {
+    "id": "ex-f75qyr5s",
+    "version": 1,
+    "section": "voyage-mistral-and-others",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A model trained for one kind of text, such as `voyage-law-2` for contracts or `voyage-code-3` for programs, is called a ___ model.",
+    "hint": "The word for a field of knowledge.",
+    "blanks": [
+      {
+        "accept": [
+          "domain",
+          "domain-specific",
+          "specialised",
+          "specialized"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-794mdr7q",
+    "version": 1,
+    "section": "static-embeddings",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "According to `static.py`, what is WordLlama's model?",
+    "hint": "Look at the shape printed on the first line.",
+    "choices": [
+      {
+        "text": "Six transformer layers small enough to run on a CPU",
+        "correct": false,
+        "why": "That describes MiniLM. WordLlama has no layers, which is what makes it static."
+      },
+      {
+        "text": "A table of 32000 rows of 256 numbers",
+        "correct": true,
+        "why": "Right. One row per token: a text's vector is the average of its tokens' rows, normalised, and the program rebuilt it by hand."
+      },
+      {
+        "text": "A list of synonyms for each word",
+        "correct": false,
+        "why": "No list of words is involved; the rows are numbers learned in training."
+      },
+      {
+        "text": "An ONNX file like MiniLM's, five times smaller",
+        "correct": false,
+        "why": "The file is a table of numbers in safetensors format, and there is no network in it to run."
+      }
+    ]
+  },
+  {
+    "id": "ex-ph273bgm",
+    "version": 1,
+    "section": "static-embeddings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `misses.py`, WordLlama gave *Is there a cheaper postage option for a single paperback?* the label of a ticket about swapping a paperback for a hardcover. Why?",
+    "hint": "What does an average of a dozen token vectors weigh?",
+    "choices": [
+      {
+        "text": "WordLlama saw more returns than shipping questions in training",
+        "correct": false,
+        "why": "Nothing in the lesson measures its training mix, and the miss is explained by the words the two tickets share."
+      },
+      {
+        "text": "The training ticket about the hardcover was mislabelled",
+        "correct": false,
+        "why": "It is a returns question and is labelled returns; MiniLM found a different, shipping ticket."
+      },
+      {
+        "text": "WordLlama cuts every text after its first few tokens",
+        "correct": false,
+        "why": "It reads all the tokens; static.py averaged all 14 of this sentence's."
+      },
+      {
+        "text": "A shared word weighs heavily in an average that ignores how words combine",
+        "correct": true,
+        "why": "Right. paperback pulls both averages the same way, and with no layers nothing tells postage apart from swapping."
+      }
+    ]
+  },
+  {
+    "id": "ex-5kzm5t01",
+    "version": 1,
+    "section": "static-embeddings",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`speed.py` measured MiniLM at 723.6 ms for the 150 tickets. How many texts per second is that?",
+    "hint": "Divide the texts by the seconds.",
+    "value": 207,
+    "tolerance": 1,
+    "unit": "texts/s"
+  },
+  {
+    "id": "ex-qpv7wfek",
+    "version": 1,
+    "section": "static-embeddings",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the 26489 texts per second `speed.py` measured for WordLlama, how many seconds would 1,000,000 texts of that kind take on this machine?",
+    "hint": "One million divided by the rate.",
+    "value": 37.75,
+    "tolerance": 0.5,
+    "unit": "s"
+  },
+  {
+    "id": "ex-6wykz3nv",
+    "version": 1,
+    "section": "static-embeddings",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put in order what `static.py` does by hand to rebuild WordLlama's vector for a sentence.",
+    "hint": "The division by the length is last, as in every model this course runs.",
+    "items": [
+      "Split the sentence into token ids",
+      "Take each token's row from the table",
+      "Average the rows",
+      "Divide by the length"
+    ],
+    "trap": "Nothing runs between the lookup and the average: a layer there would make it a contextual model."
+  },
+  {
+    "id": "ex-n32jj5yn",
+    "version": 1,
+    "section": "switching-models",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `switch.py`, model B is model A rotated, and on its own it finds 19 of 24 right, like A. Why do B's questions against A's articles find 1?",
+    "hint": "A rotation keeps the angles between B's vectors. What does it do to the coordinates?",
+    "choices": [
+      {
+        "text": "The rotation made B a worse model",
+        "correct": false,
+        "why": "B scored 19 of 24 on its own, the same as A; a rotation changes no dot product within one model."
+      },
+      {
+        "text": "Their coordinates mean different things",
+        "correct": true,
+        "why": "Right. So a dot product between them measures nothing: the scores stay in a band of noise, from -0.151 to 0.210, with nothing standing out."
+      },
+      {
+        "text": "The vectors lost their unit length in the rotation",
+        "correct": false,
+        "why": "A rotation keeps every length; the trouble is the direction each coordinate now points in."
+      },
+      {
+        "text": "Different dimensions, so NumPy mixed up the coordinates",
+        "correct": false,
+        "why": "Both have 384 dimensions, which is why no error appeared. The ValueError came from WordLlama's 256."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdms3re1",
+    "version": 1,
+    "section": "switching-models",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During a migration, why keep writing to the old collection for a while after reads move to the new one?",
+    "hint": "Think about the day something goes wrong with the new model.",
+    "choices": [
+      {
+        "text": "Queries are still compared against both collections and the scores merged",
+        "correct": false,
+        "why": "That would mix two models in one ranking, which is the failure switch.py measured. Reads name one collection."
+      },
+      {
+        "text": "The old model has to keep learning from new documents",
+        "correct": false,
+        "why": "A model does not learn from the documents it embeds; its weights are fixed."
+      },
+      {
+        "text": "So switching back is one change, with nothing missing",
+        "correct": true,
+        "why": "Right. If the new model disappoints, the old collection is complete and current, and the search points back at it."
+      },
+      {
+        "text": "Deleting a collection is only allowed once it receives no more writes",
+        "correct": false,
+        "why": "Nothing forbids it; the reason is to keep the way back open, not a rule of the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-maqrj5zm",
+    "version": 1,
+    "section": "switching-models",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The backfill step re-embeds 100,000 articles with MiniLM at the 207 texts per second `speed.py` measured. How many minutes does it take on this machine?",
+    "hint": "Seconds first, then divide by 60.",
+    "value": 8.05,
+    "tolerance": 0.1,
+    "unit": "min"
+  },
+  {
+    "id": "ex-9mppaq7e",
+    "version": 1,
+    "section": "switching-models",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of moving a live search to a new model in order.",
+    "hint": "Reads move only after the new collection is complete and measured.",
+    "items": [
+      "Create a new collection and write every new document to both",
+      "Re-embed the existing documents into the new collection",
+      "Measure the new collection on the relevance judgements",
+      "Point the search at the new collection",
+      "Delete the old collection"
+    ],
+    "trap": "Backfilling before dual-writing leaves a gap: documents written during the backfill would be missing from the new collection."
+  },
+  {
+    "id": "ex-x3m49pgt",
+    "version": 1,
+    "section": "switching-models",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The fact to store beside every vector, so that a query is only ever compared with vectors it can be compared with, is which ___ produced it.",
+    "hint": "Name and version.",
+    "blanks": [
+      {
+        "accept": [
+          "model",
+          "embedding model"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gtbsgmcb",
+    "version": 1,
+    "section": "choosing-a-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Jina publishes the weights of jina-embeddings-v3 under CC BY-NC 4.0. What does that mean for Marginalia, a shop?",
+    "hint": "NC stands for non-commercial.",
+    "choices": [
+      {
+        "text": "Any open weights are free to run in production",
+        "correct": false,
+        "why": "Open weights are a download, not a licence to use; the licence is a separate question and here it says non-commercial."
+      },
+      {
+        "text": "Testing is fine, but production needs an agreement with Jina or its API",
+        "correct": true,
+        "why": "Right. A non-commercial licence rules out running the weights in the shop's product without a separate agreement."
+      },
+      {
+        "text": "The vectors it produces belong to Jina and cannot be stored",
+        "correct": false,
+        "why": "The licence governs the weights, not the vectors you compute; the problem is running the model commercially at all."
+      },
+      {
+        "text": "Only the code is restricted; the weights are MIT like WordLlama's",
+        "correct": false,
+        "why": "It is the other way round in the lesson's example: the licence named is the weights'. WordLlama's package declares MIT."
+      }
+    ]
+  },
+  {
+    "id": "ex-frg7vvhc",
+    "version": 1,
+    "section": "choosing-a-model",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A leaderboard ranks model X above model Y on average. On Marginalia's 24 questions, Y finds one more right article first than X. What is the sound conclusion?",
+    "hint": "How much is one question out of 24 worth?",
+    "choices": [
+      {
+        "text": "Y is better for Marginalia, because its own data decides",
+        "correct": false,
+        "why": "Its own data does decide, but one question in 24 is within noise; it needs more judgements or a look at the failures."
+      },
+      {
+        "text": "X is better, because the leaderboard averages far more data",
+        "correct": false,
+        "why": "More data, but not Marginalia's; WordLlama and MiniLM swapped places between two of the course's own tasks."
+      },
+      {
+        "text": "One question in 24 separates nothing yet",
+        "correct": true,
+        "why": "Right. Twenty-four questions catch a model that is clearly wrong, not a difference of one: add judgements and read the misses, which say more than the count."
+      },
+      {
+        "text": "Pick the cheaper of the two, since quality is a tie",
+        "correct": false,
+        "why": "Price comes last, after the measurement has said something; here it has not yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-w0p9mzw8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A marketplace must find near-duplicate listings among 50 million short product titles every night, on CPU servers. What is the reasonable first model to try?",
+    "hint": "Short texts, a huge count, no GPU.",
+    "choices": [
+      {
+        "text": "A hosted transformer API, since only transformers compare short texts well",
+        "correct": false,
+        "why": "WordLlama did as well or better than MiniLM on the short help-centre questions; and 50 million titles a night is a large bill and a lot of traffic."
+      },
+      {
+        "text": "A static model, checked first on a sample of known duplicates",
+        "correct": true,
+        "why": "Right. Short texts whose words carry the meaning are where an average holds up, and its speed fits the volume; the sample is what confirms it."
+      },
+      {
+        "text": "MiniLM on one thread, as minilm.py runs it",
+        "correct": false,
+        "why": "At the 207 texts a second measured here, 50 million titles take far longer than one night."
+      },
+      {
+        "text": "Any model, because a job at night has no time limit",
+        "correct": false,
+        "why": "It has to finish before the next night's run, and the measured speeds differ by two orders of magnitude."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmhjzpmj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team swaps a 1536-dimension model for another 1536-dimension model, embeds only new articles with it, and keeps everything in one collection. What do they see?",
+    "hint": "switch.py measured the case without an error.",
+    "choices": [
+      {
+        "text": "A dimension error on the first query",
+        "correct": false,
+        "why": "The dimensions match, so the arithmetic runs; the ValueError in switch.py needed 256 against 384."
+      },
+      {
+        "text": "Results and scores as usual, with the old articles ranked by pure noise",
+        "correct": true,
+        "why": "Right. Nothing fails; new queries meet old vectors from another coordinate system, as B against A did in switch.py."
+      },
+      {
+        "text": "The same ranking as before, because the dimension did not change",
+        "correct": false,
+        "why": "The dimension is the count of numbers, not their meaning; two models' coordinates are unrelated."
+      },
+      {
+        "text": "Old articles always ranking first, because they were stored earlier",
+        "correct": false,
+        "why": "Storage order plays no part in a dot product; the old articles are ranked by noise, high or low."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrr9rrbg",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each row of the price sheet to the kind of offer it is.",
+    "hint": "One kind has no row here.",
+    "pairs": [
+      {
+        "left": "voyage/voyage-law-2",
+        "right": "A model trained for one kind of text"
+      },
+      {
+        "left": "novita/baai/bge-m3",
+        "right": "An open model sold by a hosting company"
+      },
+      {
+        "left": "jina-reranker-v2-base-multilingual",
+        "right": "A model that rescores a short list of results"
+      },
+      {
+        "left": "text-embedding-3-small",
+        "right": "A general model sold by its maker"
+      }
+    ],
+    "right_distractors": [
+      "A static model with no layers"
+    ]
+  },
+  {
+    "id": "ex-xj8ewccy",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are yes-or-no questions that rule a model out before anything is measured? Choose all that apply.",
+    "hint": "A question with a measured answer belongs to the second pass.",
+    "choices": [
+      {
+        "text": "Is sending the texts to a hosted API allowed?",
+        "correct": true,
+        "why": "Yes. If not, every hosted model is out, whatever it scores."
+      },
+      {
+        "text": "Does the licence of the weights allow commercial use?",
+        "correct": true,
+        "why": "Yes. A model you are not allowed to run is not worth measuring."
+      },
+      {
+        "text": "Was it trained on the languages of the texts?",
+        "correct": true,
+        "why": "Yes. Lesson 1 showed an English model treating a Portuguese title as unrelated to its translation."
+      },
+      {
+        "text": "Does it find more right articles first on our 24 questions?",
+        "correct": false,
+        "why": "That is the measurement of the second pass, made only on the models that survived the first."
+      },
+      {
+        "text": "Is it the cheapest on the sheet?",
+        "correct": false,
+        "why": "Price comes last, after the measurement; a cheap model that loses questions is not cheaper."
+      }
+    ]
+  }
+]

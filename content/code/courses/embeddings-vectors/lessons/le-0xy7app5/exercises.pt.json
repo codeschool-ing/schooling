@@ -1,0 +1,502 @@
+{
+  "ex-qfx846he": {
+    "prompt": "O `load.py` passou ids, documentos e metadados para `col.add`, e nenhum vetor. De onde vieram os 40 vetores?",
+    "hint": "Veja o que o `same.py` comparou.",
+    "choices": [
+      {
+        "text": "O Chroma rodou a sua função de embedding padrão sobre os textos",
+        "why": "Certo. Sem o argumento `embeddings`, o próprio Chroma transforma os documentos em vetores, e o `same.py` achou o vetor guardado igual ao do `minilm.embed` até a oitava casa decimal."
+      },
+      {
+        "text": "O Chroma guardou só os textos e gera um vetor a cada consulta que chega",
+        "why": "Os vetores são feitos quando os registros são gravados: o `same.py` leu de volta um vetor guardado com `include=[\"embeddings\"]`."
+      },
+      {
+        "text": "O Chroma mandou os textos para o labembed, o fornecedor substituto do laboratório",
+        "why": "A função de embedding padrão roda um arquivo ONNX dentro do processo Python; nada no `load.py` fala com a porta 8500."
+      },
+      {
+        "text": "O Chroma passou cada texto por um hash de 384 números",
+        "why": "Um hash não chegaria a 3.7e-08 do vetor do modelo. Os números vieram do modelo."
+      }
+    ]
+  },
+  "ex-7m3ry5g7": {
+    "prompt": "O `same.py` comparou o vetor guardado pelo Chroma para h15 com o `minilm.embed` do mesmo texto e achou uma diferença máxima de cerca de 3.7e-08. O que isso mostra?",
+    "hint": "De onde o `minilm.py` tirou o arquivo do modelo?",
+    "choices": [
+      {
+        "text": "O Chroma comprime um pouco os vetores ao guardá-los",
+        "why": "Um vetor comprimido diferiria muito mais do que na oitava casa decimal, e o array guardado tinha os 384 números em float32."
+      },
+      {
+        "text": "Os dois são o mesmo modelo, e a diferença é arredondamento",
+        "why": "Certo. O `minilm.py` roda a exportação ONNX do próprio Chroma, então a única diferença são dois programas fazendo a mesma conta numa ordem um pouco diferente."
+      },
+      {
+        "text": "São modelos diferentes que por acaso concordam muito",
+        "why": "Dois modelos diferentes dão coordenadas sem relação, como a aula 1 mostrou; concordar até a oitava casa é ser o mesmo modelo."
+      },
+      {
+        "text": "O Chroma normaliza o vetor e o `minilm.py` não",
+        "why": "Os dois devolvem vetores de comprimento 1. Normalizar um e não o outro mudaria todos os números, não a oitava casa."
+      }
+    ]
+  },
+  "ex-x4h2mh0j": {
+    "prompt": "Um job noturno reimporta a central de ajuda no Chroma com `col.add`, usando os ids dos artigos. Um artigo foi editado ontem. O que a coleção guarda para ele depois da execução desta noite?",
+    "hint": "O `change.py` chamou `add` duas vezes com o mesmo id.",
+    "choices": [
+      {
+        "text": "O texto editado, porque `add` substitui um registro de mesmo id",
+        "why": "Isso é o que o `upsert` faz. O segundo `add` do `change.py` deixou 'Gift cards by email.' no lugar."
+      },
+      {
+        "text": "O texto antigo e o vetor antigo, sem nenhum erro",
+        "why": "Certo. `add` com um id que já existe não muda nada e não avisa, então o job fica para sempre com a primeira versão de cada artigo."
+      },
+      {
+        "text": "As duas versões, sob o mesmo id",
+        "why": "A contagem ficou em 41 depois do segundo `add`: um registro por id."
+      },
+      {
+        "text": "Nada para aquele artigo, porque a importação para com um erro de id duplicado",
+        "why": "Nenhum erro foi levantado; o programa seguiu para a linha do `upsert`."
+      }
+    ]
+  },
+  "ex-5q8pb0y2": {
+    "prompt": "O `dims.py` consultou a coleção com um vetor de 256 números do WordLlama e o Chroma recusou. O que aconteceria com um vetor de outro modelo que também devolve 384 números?",
+    "hint": "O que exatamente a mensagem de erro comparou?",
+    "choices": [
+      {
+        "text": "O Chroma recusaria, porque registra qual modelo fez a coleção",
+        "why": "A conferência é a dimensão: 'expecting embedding with dimension of 384, got 256'. Outro vetor de 384 números passa por ela."
+      },
+      {
+        "text": "O Chroma converteria o vetor para o modelo da coleção antes",
+        "why": "Não existe conversão entre modelos; as coordenadas de um não têm nada a ver com as do outro."
+      },
+      {
+        "text": "O Chroma responderia, e a ordenação não significaria nada",
+        "why": "Certo. O tamanho bate, então a consulta roda, mas as coordenadas dos dois modelos não têm relação, como a aula 1 avisou. O banco não tem como saber."
+      },
+      {
+        "text": "O Chroma responderia certo, já que os dois têm 384 dimensões",
+        "why": "Dimensão igual não torna dois modelos comparáveis; a aula 1 disse isso de quaisquer dois modelos."
+      }
+    ]
+  },
+  "ex-jzww3pgw": {
+    "prompt": "Para inserir um registro quando o id é novo e sobrescrevê-lo quando o id já existe, chame o método ___ do Chroma.",
+    "hint": "O `change.py` o usou depois que o segundo `add` não mudou nada.",
+    "blanks": [
+      {
+        "accept": [
+          "upsert",
+          "upsert()",
+          "col.upsert"
+        ]
+      }
+    ]
+  },
+  "ex-z6hwyzkn": {
+    "prompt": "A Marginalia quer uma cópia de segurança da coleção da central de ajuda guardada com `PersistentClient`. O que ela precisa copiar, enquanto nada estiver gravando?",
+    "hint": "Onde a listagem achou os arquivos?",
+    "choices": [
+      {
+        "text": "O diretório `chroma`",
+        "why": "Certo. O diretório é o banco inteiro: o arquivo SQLite e o diretório do índice ao lado dele."
+      },
+      {
+        "text": "Só o `chroma.sqlite3`",
+        "why": "O índice mora no diretório ao lado, com o nome do id do segmento; copiar um arquivo deixa o outro para trás."
+      },
+      {
+        "text": "Uma exportação dos vetores, já que os textos podem ser refeitos a partir deles",
+        "why": "Um vetor não pode ser lido de volta como o seu texto. Os documentos ficam guardados à parte, no arquivo SQLite."
+      },
+      {
+        "text": "Nada, já que o Chroma guarda uma cópia nos próprios servidores",
+        "why": "O `PersistentClient` não tem servidor; o diretório no disco da Marginalia é a única cópia."
+      }
+    ]
+  },
+  "ex-9aps6vhz": {
+    "prompt": "O `inside.py` contou 160 linhas em `embedding_metadata` para 40 registros com três chaves de metadados cada. Quantas linhas dariam 100 registros com cinco chaves de metadados cada, com o documento guardado do mesmo jeito?",
+    "hint": "O documento é guardado como mais uma chave.",
+    "unit": "linhas"
+  },
+  "ex-zjvzzy93": {
+    "prompt": "A `embeddings_queue` tinha 45 linhas depois do `load.py` e do `change.py`. Por que 45 e não 40?",
+    "hint": "Leia as cinco últimas linhas que o `inside.py` imprimiu.",
+    "choices": [
+      {
+        "text": "Ela guarda uma linha por versão de cada registro, e h41 teve cinco versões",
+        "why": "h41 teve dois textos, e duas das cinco linhas nem são mudanças de h41: uma é o `add` ignorado, outra é o `update` de h99."
+      },
+      {
+        "text": "Registros apagados ficam nela como cinco marcadores",
+        "why": "Só uma das cinco linhas é um delete. As outras são dois adds, um upsert e um update."
+      },
+      {
+        "text": "Ela conta uma linha por artigo mais uma por categoria",
+        "why": "São seis categorias, o que daria 46, e as linhas que o `inside.py` imprimiu nomeiam escritas, não categorias."
+      },
+      {
+        "text": "Ela registra cada chamada de escrita, e o `change.py` fez cinco, inclusive duas que não mudaram nada",
+        "why": "Certo. Os 40 adds do `load.py` e o add, add, upsert, update e delete do `change.py`, cada um registrado como qualquer outra escrita."
+      }
+    ]
+  },
+  "ex-bjnb71zz": {
+    "prompt": "No `grow.py`, o `data_level0.bin` tinha 167.600 bytes com 40 registros e continuava com 167.600 com 940. Um colega conclui que 900 registros se perderam. O que você diria a ele?",
+    "hint": "Olhe a primeira linha que o `grow.py` imprimiu.",
+    "choices": [
+      {
+        "text": "Eles se perderam, e só um reinício os traria de volta",
+        "why": "`col.count()` imprimiu 940, o que o Chroma não poderia informar sobre registros perdidos."
+      },
+      {
+        "text": "No registro de escritas; os arquivos do índice esperam 1.000 escritas",
+        "why": "Certo. `sync_threshold` é 1.000, e o arquivo mudou entre 940 e 1.040 registros. O tamanho do arquivo não diz nada sobre a contagem."
+      },
+      {
+        "text": "Eles foram guardados num segundo diretório de índice que a listagem não mostrou",
+        "why": "`grow` tinha uma coleção e um diretório de segmento; o crescimento apareceu no mesmo arquivo, em 1.040."
+      },
+      {
+        "text": "Eles couberam nas posições vazias, já que o arquivo tinha lugar para cem registros",
+        "why": "Cem posições não guardam 940 registros; o arquivo só não foi regravado até o limite."
+      }
+    ]
+  },
+  "ex-jhmhe67x": {
+    "prompt": "Com o `chroma run` servindo o diretório, o `remote.py` passou `query_texts`. Que programa transformou a pergunta em vetor?",
+    "hint": "Onde roda a função de embedding do cliente Python?",
+    "choices": [
+      {
+        "text": "O servidor `chroma run`, que carregou o all-MiniLM-L6-v2",
+        "why": "O servidor nunca carregou um modelo: o cliente Python gera o vetor antes de mandar qualquer coisa."
+      },
+      {
+        "text": "O próprio `remote.py`, pela função de embedding da coleção",
+        "why": "Certo. O cliente roda a função de embedding, e a pergunta atravessou a rede como 384 números."
+      },
+      {
+        "text": "O labembed, na porta 8500",
+        "why": "Nada no `remote.py` nem na coleção aponta para o labembed; a função padrão do Chroma roda dentro do processo."
+      },
+      {
+        "text": "Nenhum programa: o servidor buscou o texto com a sua tabela de texto completo",
+        "why": "As respostas vieram com distâncias, que uma busca por texto não produz; foi uma busca vetorial."
+      }
+    ]
+  },
+  "ex-56xryzy2": {
+    "prompt": "Um time testou `distance < 0.6` numa coleção cosseno e depois rodou o mesmo código numa coleção criada sem configuração. Agora a busca não devolve nada, e nada dá erro. Por quê?",
+    "hint": "Qual é o espaço padrão, e onde h18 caiu nele?",
+    "choices": [
+      {
+        "text": "O índice da coleção nova ainda está sendo construído",
+        "why": "Uma coleção responde assim que os registros são adicionados; o `distances.py` consultou as novas na hora."
+      },
+      {
+        "text": "A coleção nova usou outro modelo de embedding",
+        "why": "Mesmo com os mesmos vetores, como no `distances.py`, os números mudam: mudou o espaço, não o modelo."
+      },
+      {
+        "text": "No padrão, L2 ao quadrado, o melhor ficou em 1,1089",
+        "why": "Certo. `l2` dá 2 − 2 × similaridade, então os mesmos artigos ficam acima de 1, e um corte em 0,6 não fica com nenhum."
+      },
+      {
+        "text": "O espaço padrão devolve similaridades, então a comparação tem de ser invertida",
+        "why": "O `l2` padrão também devolve uma distância, menor é mais perto; só a escala muda."
+      }
+    ]
+  },
+  "ex-t1sb07a9": {
+    "prompt": "Por que o `distances.py` criou duas coleções novas em vez de passar a `help` para outro espaço?",
+    "hint": "O que o `space.py` tentou?",
+    "choices": [
+      {
+        "text": "O Chroma permite um espaço por diretório",
+        "why": "Um diretório guardou `help`, `help_l2` e `help_ip`, em três espaços."
+      },
+      {
+        "text": "O espaço só pode mudar enquanto a coleção está vazia",
+        "why": "O `modify` não aceita `space` de jeito nenhum; o erro listou os campos que ele aceita."
+      },
+      {
+        "text": "Mudar o espaço apagaria os documentos",
+        "why": "Não havia mudança a fazer: o Chroma recusou antes de qualquer coisa acontecer."
+      },
+      {
+        "text": "O espaço de uma coleção é fixado quando ela é criada",
+        "why": "Certo. O `modify` do `space.py` foi recusado, e a lista de campos deixou `space` de fora. Outro espaço quer dizer outra coleção."
+      }
+    ]
+  },
+  "ex-rq0ykwpx": {
+    "prompt": "Dois vetores unitários têm produto escalar 0,30. Que distância uma coleção do Chroma criada sem configuração devolve entre eles?",
+    "hint": "O espaço padrão é `l2`, e ele é ao quadrado.",
+    "unit": ""
+  },
+  "ex-fjn9xey6": {
+    "prompt": "A coleção de ajuda da Marginalia foi criada no espaço `l2` e precisa medir cosseno. Ponha os passos em ordem.",
+    "hint": "A coleção antiga é a última coisa a sair.",
+    "items": [
+      "Criar uma coleção nova com o espaço cosseno",
+      "Adicionar a ela o id, o documento, os metadados e o vetor de cada registro",
+      "Apontar o código de busca para a coleção nova",
+      "Apagar a coleção antiga"
+    ],
+    "trap": "Apagar primeiro deixa a busca sem nada, e não existe `modify` que mude um espaço no lugar."
+  },
+  "ex-fgxwgqr8": {
+    "prompt": "No `pine.py`, o que faz um namespace?",
+    "hint": "Os artigos em inglês e em português foram para lugares diferentes de um índice.",
+    "choices": [
+      {
+        "text": "Define a região onde o índice fica guardado",
+        "why": "A região está no `ServerlessSpec`, escolhida uma vez para o índice todo."
+      },
+      {
+        "text": "Divide um índice, e uma consulta só vê o namespace que nomeia",
+        "why": "Certo. `en` e `pt` são duas partições de `help`, e uma consulta nomeia exatamente uma."
+      },
+      {
+        "text": "Dá nome ao modelo de embedding que o índice usa",
+        "why": "O `pine.py` gera os vetores ele mesmo; um namespace não diz nada sobre modelo."
+      },
+      {
+        "text": "Lista as chaves de metadados que um filtro pode ler",
+        "why": "Os filtros leem os metadados de cada registro; o namespace decide quais registros entram na busca."
+      }
+    ]
+  },
+  "ex-t5v8erng": {
+    "prompt": "A Marginalia leva a busca de uma coleção cosseno do Chroma para um índice cosseno do Pinecone e mantém a regra 'mostrar um artigo quando o número for menor que 0,6'. O que dá errado?",
+    "hint": "Para que lado aponta o número do Pinecone?",
+    "choices": [
+      {
+        "text": "Nada, já que os dois usam cosseno e devolvem os mesmos números",
+        "why": "O Chroma devolve 1 − similaridade e o Pinecone a própria similaridade; mesma métrica, convenções opostas."
+      },
+      {
+        "text": "Os números do Pinecone vão de 0 a 2, então a regra deixa passar poucos",
+        "why": "Essa é a faixa da distância cosseno do Chroma. A nota cosseno do Pinecone é uma similaridade, mais alta para o mais próximo."
+      },
+      {
+        "text": "Lá ele é uma similaridade, e a regra agora pega os piores resultados",
+        "why": "Certo. Num índice cosseno o melhor resultado tem a nota mais alta, então a regra antiga escolhe os artigos mais longe da pergunta."
+      },
+      {
+        "text": "O Pinecone recusa limiares e só aceita `top_k`",
+        "why": "O cliente devolve a nota de cada resultado; o que fazer com ela depois é escolha do seu programa."
+      }
+    ]
+  },
+  "ex-382ms9v9": {
+    "prompt": "No Pinecone, uma partição dentro de um índice que a consulta nomeia, como `en` no `pine.py`, se chama ___.",
+    "hint": "Os três artigos em português foram gravados em outra.",
+    "blanks": [
+      {
+        "accept": [
+          "namespace",
+          "namespaces",
+          "espaço de nomes"
+        ]
+      }
+    ]
+  },
+  "ex-1pdk0b21": {
+    "prompt": "O que `alpha=0.5` pede no `query.hybrid` do Weaviate?",
+    "hint": "1 e 0 são as duas buscas puras.",
+    "choices": [
+      {
+        "text": "Só resultados mais perto que uma distância de 0,5",
+        "why": "Isso seria um limite de distância; o `alpha` pesa duas buscas uma contra a outra."
+      },
+      {
+        "text": "Metade dos resultados da lista de palavras, metade da lista vetorial",
+        "why": "As duas listas são fundidas numa ordenação só, não tomadas pela metade."
+      },
+      {
+        "text": "Peso igual para a busca por palavras e a busca vetorial",
+        "why": "Certo. 1 é uma busca puramente vetorial e 0 uma puramente por palavras; 0,5 pesa as duas igualmente."
+      },
+      {
+        "text": "Uma busca vetorial em metade da coleção, sorteada",
+        "why": "Nada é sorteado. O `alpha` equilibra o BM25 com a distância vetorial."
+      }
+    ]
+  },
+  "ex-560s4gcj": {
+    "prompt": "Uma coleção do Weaviate usa `Configure.Vectors.text2vec_openai(...)` em vez de `self_provided`. O que muda para a Marginalia?",
+    "hint": "Quem chama o fornecedor?",
+    "choices": [
+      {
+        "text": "O programa da Marginalia tem de mandar vetores em toda consulta",
+        "why": "Isso é o `self_provided`. Com um módulo vetorizador, uma consulta pode chegar como texto pelo `near_text`."
+      },
+      {
+        "text": "O servidor chama a OpenAI ao inserir e consultar",
+        "why": "Certo. O embedding passa para o servidor: ele guarda a chave do fornecedor, e o fornecedor cobra cada chamada."
+      },
+      {
+        "text": "O Weaviate deixa de usar HNSW e busca por palavras",
+        "why": "O vetorizador só decide quem faz os vetores; o índice vetorial é configurado à parte."
+      },
+      {
+        "text": "Os vetores são calculados uma vez pelo Weaviate e nunca mais",
+        "why": "Cada objeto inserido e cada consulta em texto passa pelo módulo, então as chamadas continuam."
+      }
+    ]
+  },
+  "ex-wvc0f184": {
+    "prompt": "A Marginalia leva a busca da central de ajuda do `PersistentClient` para o `chroma run` num servidor. O que passa a ser trabalho do time que antes não era?",
+    "hint": "O `remote.py` usou os mesmos métodos de coleção.",
+    "choices": [
+      {
+        "text": "Reescrever o código de busca para outra API",
+        "why": "O `remote.py` mudou só o construtor; todas as chamadas à coleção ficaram iguais."
+      },
+      {
+        "text": "Escolher um novo modelo de embedding",
+        "why": "O cliente continua rodando a mesma função padrão; o modelo não mudou."
+      },
+      {
+        "text": "Manter um processo servidor rodando, atualizado, monitorado e com cópia de segurança",
+        "why": "Certo. Num servidor que você roda, o processo e os arquivos são seus para operar."
+      },
+      {
+        "text": "Pagar ao Chroma por cada consulta",
+        "why": "O `chroma run` é software de código aberto na sua máquina; pagar por uso é a forma hospedada."
+      }
+    ]
+  },
+  "ex-g080wt5t": {
+    "prompt": "Ligue cada jeito de fazer vetores ao lugar onde o modelo roda.",
+    "hint": "Um lugar da direita não é onde modelo nenhum roda.",
+    "pairs": [
+      {
+        "left": "A função de embedding padrão do Chroma",
+        "right": "Dentro do seu programa Python"
+      },
+      {
+        "left": "Um módulo vetorizador do Weaviate",
+        "right": "O servidor Weaviate chama um fornecedor"
+      },
+      {
+        "left": "O self_provided do Weaviate",
+        "right": "O seu código, antes de mandar os vetores"
+      },
+      {
+        "left": "Um índice do Pinecone com modelo integrado",
+        "right": "Do lado do Pinecone, com um modelo dele"
+      }
+    ],
+    "right_distractors": [
+      "Dentro do arquivo do índice HNSW"
+    ]
+  },
+  "ex-nbtpt3wm": {
+    "prompt": "A Marginalia está escolhendo onde vão morar os vetores das mensagens dos clientes: um diretório do Chroma ou um serviço hospedado. Que perguntas decidem isso? Marque todas as que se aplicam.",
+    "hint": "Pense em quem opera e no que sai de casa.",
+    "choices": [
+      {
+        "text": "Quem vai operar o banco e ser acordado quando ele falhar",
+        "why": "Sim. Um diretório é seu para rodar; um serviço hospedado é do fornecedor."
+      },
+      {
+        "text": "Se esses vetores podem sair das máquinas da Marginalia",
+        "why": "Sim. A aula 1 disse que o vetor de uma mensagem é dado pessoal como a mensagem, então para onde ele vai é uma questão de privacidade."
+      },
+      {
+        "text": "Quantos programas precisam alcançar os dados ao mesmo tempo",
+        "why": "Sim. Um programa pode ser dono de um diretório; muitos programas precisam de um servidor, seu ou do fornecedor."
+      },
+      {
+        "text": "Qual dos dois é mais rápido com quarenta artigos",
+        "why": "Com quarenta artigos não há o que medir; qualquer um deles, ou o NumPy, é rápido o bastante."
+      },
+      {
+        "text": "Se os vetores são guardados como float32",
+        "why": "Todos guardam números; o formato não decide onde o banco roda."
+      }
+    ]
+  },
+  "ex-s861rzpt": {
+    "prompt": "Numa coleção do Chroma criada com o espaço cosseno, o número que uma consulta devolve é um menos a ___ dos dois vetores.",
+    "hint": "A aula 1 chamou isso de nota.",
+    "blanks": [
+      {
+        "accept": [
+          "similaridade",
+          "similaridade cosseno",
+          "similarity",
+          "produto escalar"
+        ]
+      }
+    ]
+  },
+  "ex-mhej5dt6": {
+    "prompt": "Ligue cada configuração ao que uma consulta devolve com ela.",
+    "hint": "Duas delas dão o mesmo número para vetores unitários.",
+    "pairs": [
+      {
+        "left": "Chroma, espaço cosine",
+        "right": "1 − similaridade cosseno, menor é mais perto"
+      },
+      {
+        "left": "Chroma, espaço ip",
+        "right": "1 − produto escalar, menor é mais perto"
+      },
+      {
+        "left": "Chroma, espaço l2",
+        "right": "Distância euclidiana ao quadrado"
+      },
+      {
+        "left": "Pinecone, métrica cosine",
+        "right": "A similaridade, a mais alta primeiro"
+      }
+    ],
+    "right_distractors": [
+      "O ângulo entre os vetores em graus"
+    ]
+  },
+  "ex-zxbq91p7": {
+    "prompt": "A Marginalia serve o seu diretório do Chroma com `chroma run` e busca nele a partir de outro programa. Ponha os passos em ordem.",
+    "hint": "A pergunta vira números antes de viajar.",
+    "items": [
+      "Iniciar o chroma run com o caminho do diretório",
+      "Conectar com o HttpClient e pegar a coleção",
+      "O cliente gera o vetor da pergunta com a função da coleção",
+      "O servidor busca no índice e devolve ids e distâncias"
+    ],
+    "trap": "O servidor não gera o vetor da pergunta: o cliente Python faz isso antes de mandar qualquer coisa."
+  },
+  "ex-359escdc": {
+    "prompt": "Os três artigos em português nunca podem aparecer para uma pergunta em inglês no Pinecone, mesmo se alguém esquecer um filtro. Que desenho garante isso?",
+    "hint": "Uma destas opções exige que toda consulta lembre de algo.",
+    "choices": [
+      {
+        "text": "Um campo de metadados lang igual a pt, e um filtro nele em cada consulta",
+        "why": "Isso só funciona enquanto toda consulta levar o filtro; uma consulta sem ele vê todos os artigos."
+      },
+      {
+        "text": "Uma métrica diferente para os registros em português",
+        "why": "Um índice tem uma métrica, fixada na criação, para todos os registros dele."
+      },
+      {
+        "text": "Gravar os vetores em português com valores menores",
+        "why": "Mudar os números só distorceria a ordenação; não separa nada."
+      },
+      {
+        "text": "Um namespace só deles, com as perguntas em inglês consultando só en",
+        "why": "Certo. Uma consulta nomeia um namespace e nunca vê os outros, então esquecer um filtro não tem como vazá-los."
+      }
+    ]
+  }
+}

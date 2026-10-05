@@ -1,0 +1,714 @@
+[
+  {
+    "id": "ex-s1dr58r4",
+    "version": 1,
+    "section": "running-locally",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Marginalia's lawyer rules that no customer message, and nothing computed from one, may leave its own servers. Which way of embedding the messages fits?",
+    "hint": "Lesson 1 said what a vector of a message is.",
+    "choices": [
+      {
+        "text": "A hosted provider asked for fewer dimensions",
+        "correct": false,
+        "why": "Fewer numbers are still computed on the provider's servers from the message, which has to be sent there first."
+      },
+      {
+        "text": "A hosted provider, with the task type set correctly",
+        "correct": false,
+        "why": "The task type changes how the vector is made, not where. The text still crosses to the provider."
+      },
+      {
+        "text": "An open model run on Marginalia's own machine",
+        "correct": true,
+        "why": "Right. The text is embedded where it is stored, and neither it nor the vector goes anywhere else."
+      },
+      {
+        "text": "Cohere's int8 output, which carries less of the text",
+        "correct": false,
+        "why": "Every encoding is computed by Cohere after the text reaches it, and a vector is personal data whatever its encoding."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bet8q1s",
+    "version": 1,
+    "section": "running-locally",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `st.py`, the sentence-transformers version, shown in the lesson but never run?",
+    "hint": "Read the two lines curl printed.",
+    "choices": [
+      {
+        "text": "sentence-transformers does not support all-MiniLM-L6-v2",
+        "correct": false,
+        "why": "The model was published by the sentence-transformers project and is one of its best-known models."
+      },
+      {
+        "text": "huggingface.co refused this machine's download",
+        "correct": true,
+        "why": "Yes. The 403 with `host_not_allowed` came from the network, and PyTorch's index was out of reach too."
+      },
+      {
+        "text": "It needs an API key that the course could not hand out",
+        "correct": false,
+        "why": "An open model needs no key; the download is public. The obstacle was the network."
+      },
+      {
+        "text": "The program contains an error the lesson leaves in on purpose",
+        "correct": false,
+        "why": "The code follows the library's documented API. It was not run because the model could not be downloaded, not because of the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-9xq1wvrz",
+    "version": 1,
+    "section": "running-locally",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without sentence-transformers or PyTorch, how does this lab run all-MiniLM-L6-v2?",
+    "hint": "Look at what `lab.sh` downloaded and from where.",
+    "choices": [
+      {
+        "text": "A smaller copy retrained for the course on the help centre",
+        "correct": false,
+        "why": "Nothing was retrained. The weights are the published ones, and their checksum says so."
+      },
+      {
+        "text": "WordLlama, served under MiniLM's name",
+        "correct": false,
+        "why": "WordLlama is the other model, with 256 numbers. The 384-number vectors come from MiniLM's own weights."
+      },
+      {
+        "text": "Chroma's ONNX export of the same weights, run by onnxruntime",
+        "correct": true,
+        "why": "Right. lab.sh fetched it from Chroma's storage and checked it against the SHA-256 in Chroma's code."
+      },
+      {
+        "text": "PyTorch installed from a mirror the lab reached instead of the official index",
+        "correct": false,
+        "why": "PyTorch was not installed at all; onnxruntime runs the ONNX file without it."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2pcypj5",
+    "version": 1,
+    "section": "running-locally",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`model.onnx` is 90,387,606 bytes. If nearly all of it is float32 weights, about how many million numbers does it hold? Answer to one decimal place.",
+    "hint": "A float32 takes four bytes.",
+    "value": 22.6,
+    "tolerance": 0.1,
+    "unit": "million"
+  },
+  {
+    "id": "ex-91bpqrjw",
+    "version": 1,
+    "section": "inside-the-model",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to a title inside `encode` when it is embedded in a batch with a longer title.",
+    "hint": "The mask is built before the transformer runs, and used again after it.",
+    "items": [
+      "Split each text into word pieces",
+      "Pad the shorter text and build the attention mask",
+      "Run the transformer: one vector per position",
+      "Average the vectors where the mask is 1",
+      "Divide the average by its length"
+    ],
+    "trap": "Normalising comes last, after pooling: dividing each piece's vector by its length first would give a different average."
+  },
+  {
+    "id": "ex-ecmzvb3t",
+    "version": 1,
+    "section": "inside-the-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `inside.py`, the first title's mask printed `[1, 1, 1, 1, 1, 1, 1, 0, 0, 0]`. What do the zeros mark?",
+    "hint": "Count the pieces of *When your refund arrives*.",
+    "choices": [
+      {
+        "text": "Words the model considers unimportant",
+        "correct": false,
+        "why": "The model never decides importance with the mask; it is fixed before the transformer runs."
+      },
+      {
+        "text": "Positions that are padding, not pieces of the title",
+        "correct": true,
+        "why": "Yes. The batch is ten wide because of the longer title, and the last three positions of this one are [PAD]."
+      },
+      {
+        "text": "The coordinates of the vector to drop",
+        "correct": false,
+        "why": "The mask has one entry per position, ten here, not one per coordinate, 384."
+      },
+      {
+        "text": "The [CLS] and [SEP] markers",
+        "correct": false,
+        "why": "The markers are real positions with a 1; they are the first and seventh entries."
+      }
+    ]
+  },
+  {
+    "id": "ex-tc7g5pyc",
+    "version": 1,
+    "section": "inside-the-model",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague writes their own pooling that averages every position, padding included. It passes their tests, which embed one text at a time. When do their results go wrong?",
+    "hint": "When does a text have any padding at all?",
+    "choices": [
+      {
+        "text": "Never, since normalising afterwards cancels the padding out",
+        "correct": false,
+        "why": "Normalising rescales the vector; it does not remove what the padding added. inside.py measured 0.9189, not 1."
+      },
+      {
+        "text": "Only for texts longer than 256 pieces",
+        "correct": false,
+        "why": "Long texts are truncated, not padded. Padding fills short texts up to the longest in their batch."
+      },
+      {
+        "text": "Whenever a short text shares a batch with a longer one",
+        "correct": true,
+        "why": "Right. Alone, a text has no padding and the bug is invisible; in a batch, how wrong its vector is depends on its neighbours."
+      },
+      {
+        "text": "Every time, by the same amount for every text, so rankings stay the same",
+        "correct": false,
+        "why": "The amount depends on how much padding each text received, so it differs per text and rankings can change."
+      }
+    ]
+  },
+  {
+    "id": "ex-btnfcx9a",
+    "version": 1,
+    "section": "inside-the-model",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Turning the vectors of a text's pieces into one vector by averaging them, ignoring the padding, is called mean ___.",
+    "hint": "sentence-transformers keeps it in its own module, between the transformer and the normalisation.",
+    "blanks": [
+      {
+        "accept": [
+          "pooling"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w3dhkjt6",
+    "version": 1,
+    "section": "max-length",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `minilm.py` do with a text of 407 word pieces?",
+    "hint": "Look at what the vector said about a sentence added at the end.",
+    "choices": [
+      {
+        "text": "Raises an error naming the limit",
+        "correct": false,
+        "why": "No error appeared. That is the danger: nothing tells you."
+      },
+      {
+        "text": "Returns two vectors, one for each half",
+        "correct": false,
+        "why": "One text gives one vector. Splitting a long text is something you do before embedding, deliberately."
+      },
+      {
+        "text": "Reads the first 256, markers included, and ignores the rest",
+        "correct": true,
+        "why": "Yes, silently, as sentence-transformers does for this model."
+      },
+      {
+        "text": "Reads every piece, but each one counts for less",
+        "correct": false,
+        "why": "Text past the limit does not count for less; it does not count at all. Adding a sentence there changed nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1wvw88f",
+    "version": 1,
+    "section": "max-length",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `length.py`, a sentence added after the long text left the vector unchanged, and the same sentence added before it changed the vector. Why?",
+    "hint": "Where is the cut?",
+    "choices": [
+      {
+        "text": "The model gives the start of a text more weight than the end",
+        "correct": false,
+        "why": "Within the limit, mean pooling weighs every real piece the same. The difference is which pieces are inside the limit."
+      },
+      {
+        "text": "Text past the cut is unread; text before it moves the cut",
+        "correct": true,
+        "why": "Right. Only 254 pieces of text are read; new pieces at the start take places inside them."
+      },
+      {
+        "text": "The sentence at the end repeated words already in the text",
+        "correct": false,
+        "why": "A repeated word inside the limit would still change the average. It changed nothing because it was outside the limit."
+      },
+      {
+        "text": "Chroma had cached the vector of the long text",
+        "correct": false,
+        "why": "These two vectors came from minilm.py, which caches nothing; Chroma was only compared at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-kc9p9mnv",
+    "version": 1,
+    "section": "max-length",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "all-MiniLM-L6-v2 reads 256 pieces, `[CLS]` and `[SEP]` included. A document has 600 pieces of text, not counting those two. How many of its pieces are not in its vector?",
+    "hint": "Two of the 256 places are taken by the markers.",
+    "value": 346,
+    "tolerance": 0,
+    "unit": "pieces"
+  },
+  {
+    "id": "ex-ab9b89cc",
+    "version": 1,
+    "section": "max-length",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia plans Portuguese versions of long articles, with as many words as the English ones. What does `length.py`'s output suggest?",
+    "hint": "Compare h38 with h03 in words and in pieces.",
+    "choices": [
+      {
+        "text": "The limit is the same number of words in every language",
+        "correct": false,
+        "why": "The limit is in pieces, and h38 needed 102 pieces for 48 words where h03 needed 65 for 53."
+      },
+      {
+        "text": "The limit counts characters, so accents use it up faster",
+        "correct": false,
+        "why": "The limit counts word pieces from the tokenizer, not characters."
+      },
+      {
+        "text": "Portuguese sentences are longer, so they are refused",
+        "correct": false,
+        "why": "Nothing is refused; text past the limit is dropped silently, in any language."
+      },
+      {
+        "text": "They reach the cut sooner: more pieces per word",
+        "correct": true,
+        "why": "Right. An English vocabulary has fewer whole Portuguese words, so the same 254 pieces hold fewer of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ywpat2fj",
+    "version": 1,
+    "section": "model-cards",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`config.json` says 512 positions, `tokenizer.json` truncates at 128, and the model card says 256. Which limit should a pipeline using this model assume?",
+    "hint": "Which source describes how the model was meant to be used?",
+    "choices": [
+      {
+        "text": "512, since that is the room the architecture has",
+        "correct": false,
+        "why": "That is how many positions it can hold, not how it was published to be used."
+      },
+      {
+        "text": "128, because it is the file the tokenizer actually reads",
+        "correct": false,
+        "why": "minilm.py and Chroma both override it, as sentence-transformers does. Reading only the file gives vectors different from the published model's."
+      },
+      {
+        "text": "256, the card's number",
+        "correct": true,
+        "why": "Yes. It is the number sentence-transformers applies, and the card is the description of the model's intended use."
+      },
+      {
+        "text": "Whichever is smallest, to be on the safe side",
+        "correct": false,
+        "why": "Using 128 changes every vector of a text longer than 128 pieces. Safe would be matching the published setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-7t7614ek",
+    "version": 1,
+    "section": "model-cards",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each line of a model card to the question it answers.",
+    "hint": "One answer belongs to a hosted provider's page, not to a card.",
+    "pairs": [
+      {
+        "left": "Dimension",
+        "right": "How much each vector costs to store"
+      },
+      {
+        "left": "Maximum sequence length",
+        "right": "Where the silent cut falls"
+      },
+      {
+        "left": "Languages",
+        "right": "Whether a Portuguese text means anything to it"
+      },
+      {
+        "left": "Licence",
+        "right": "Whether you may use it in a product"
+      }
+    ],
+    "right_distractors": [
+      "What each request is billed"
+    ]
+  },
+  {
+    "id": "ex-ttzpgc2s",
+    "version": 1,
+    "section": "model-cards",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An E5 model's card says queries start with `query: ` and documents with `passage: `. Your indexing code left the prefix off the documents. What happens?",
+    "hint": "What would the model have to know to refuse?",
+    "choices": [
+      {
+        "text": "The model refuses any text that lacks its prefix",
+        "correct": false,
+        "why": "A model is a function from text to numbers; it has no way to refuse. It embeds whatever arrives."
+      },
+      {
+        "text": "It returns vectors it was not trained to make, silently",
+        "correct": true,
+        "why": "Right. Like a wrong task type in lesson 8, the mistake is silent, and only a measurement on your questions shows it."
+      },
+      {
+        "text": "Nothing changes, because a prefix is only a label for people",
+        "correct": false,
+        "why": "The prefix is part of the text the model reads; the card asks for it because it was in the training data."
+      },
+      {
+        "text": "The tokenizer adds the prefix itself when it is missing",
+        "correct": false,
+        "why": "Tokenizers cut text into pieces; they do not know a text's role. The prefix is yours to add."
+      }
+    ]
+  },
+  {
+    "id": "ex-06395w8m",
+    "version": 1,
+    "section": "model-cards",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The page published with an open model's weights, stating its dimension, limits, languages and licence, is its model ___.",
+    "hint": "A hosted provider's equivalent is a pricing page.",
+    "blanks": [
+      {
+        "accept": [
+          "card"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d9wz95p4",
+    "version": 1,
+    "section": "benchmarks-and-your-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the 24 questions MiniLM put the right article first 19 times and WordLlama 20, and no question was wrong for both. What does that say?",
+    "hint": "Look at the two lists of misses.",
+    "choices": [
+      {
+        "text": "WordLlama is the better embedding model in general",
+        "correct": false,
+        "why": "One domain and 24 questions cannot say anything in general, and the misses show the gap is a few questions."
+      },
+      {
+        "text": "The two models behave the same on every question",
+        "correct": false,
+        "why": "They got different questions wrong, so on four or five questions each they behaved differently."
+      },
+      {
+        "text": "MiniLM was run without normalising, which cost it a question",
+        "correct": false,
+        "why": "inside.py checked minilm.py against two other implementations; its vectors are normalised."
+      },
+      {
+        "text": "Different blind spots, with a few questions deciding",
+        "correct": true,
+        "why": "Yes. One question is about four points; the score hides that each model fails somewhere else."
+      }
+    ]
+  },
+  {
+    "id": "ex-xkb0c3gz",
+    "version": 1,
+    "section": "benchmarks-and-your-data",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia's legal team wants to search its supplier contracts, each several thousand words of dense language. Does `bench.py` justify choosing WordLlama for that?",
+    "hint": "What was measured, and on what texts?",
+    "choices": [
+      {
+        "text": "Yes: it beat MiniLM at rank 1 and in the top 3",
+        "correct": false,
+        "why": "It did, on short help articles and customers' questions. Contracts are another domain and another length."
+      },
+      {
+        "text": "No: nothing here measured contracts",
+        "correct": true,
+        "why": "Right. A result on one corpus licenses a choice for that corpus. The contracts need their own set of questions."
+      },
+      {
+        "text": "Yes, because the MTEB leaderboard ranks static models first",
+        "correct": false,
+        "why": "The lesson made no claim about where the leaderboard ranks them, and a leaderboard is other people's data anyway."
+      },
+      {
+        "text": "No, because a static model cannot represent legal vocabulary",
+        "correct": false,
+        "why": "Nothing measured here says that. The honest answer is that it has not been measured on contracts."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqhtnjpe",
+    "version": 1,
+    "section": "benchmarks-and-your-data",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does each number in `bench.py`'s output count?",
+    "hint": "It is the measurement from lesson 3.",
+    "choices": [
+      {
+        "text": "Questions whose relevant article came first, or in the top 3",
+        "correct": true,
+        "why": "Yes: 19 and 22 for MiniLM, 20 and 24 for WordLlama, out of 24 questions."
+      },
+      {
+        "text": "Articles each model embedded without an error",
+        "correct": false,
+        "why": "Every article was embedded; the numbers count questions, out of 24."
+      },
+      {
+        "text": "The average cosine score between each question and its article",
+        "correct": false,
+        "why": "Scores are not printed at all. The program counts questions answered by the ranking."
+      },
+      {
+        "text": "How many pieces each model read for the questions",
+        "correct": false,
+        "why": "Pieces belong to the length section. bench.py counts questions found at rank 1 and in the top 3."
+      }
+    ]
+  },
+  {
+    "id": "ex-45mr5w42",
+    "version": 1,
+    "section": "speed-on-a-cpu",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On one thread, MiniLM embedded the tickets at 292 texts a second in batches of 1 and at 198 in one batch of 150. Why did the big batch lose?",
+    "hint": "What does a batch do to a short ticket next to a long one?",
+    "choices": [
+      {
+        "text": "A batch of 150 does not fit in memory and the machine swaps",
+        "correct": false,
+        "why": "150 short tickets take very little memory. The cost is arithmetic, not memory."
+      },
+      {
+        "text": "onnxruntime refuses batches larger than 32 and splits them slowly",
+        "correct": false,
+        "why": "Nothing was refused or split; the batch of 150 ran as one call."
+      },
+      {
+        "text": "Every ticket is padded to the longest one and the padding is computed too",
+        "correct": true,
+        "why": "Right. The transformer works on every position, padding included, before the mask discards it."
+      },
+      {
+        "text": "The large batch ran on fewer threads than the small ones",
+        "correct": false,
+        "why": "Every run used the same single thread; minilm.py sets that."
+      }
+    ]
+  },
+  {
+    "id": "ex-pxjdbvfq",
+    "version": 1,
+    "section": "speed-on-a-cpu",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the fastest MiniLM rate `speed.py` printed, 309 texts a second on one core, how many seconds does embedding 50,000 tickets take?",
+    "hint": "Texts divided by rate.",
+    "value": 161.8,
+    "tolerance": 1,
+    "unit": "s"
+  },
+  {
+    "id": "ex-vsjw3xkv",
+    "version": 1,
+    "section": "speed-on-a-cpu",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did WordLlama embed the tickets about 83 times faster than MiniLM?",
+    "hint": "Lesson 1 drew the difference between the two kinds of model.",
+    "choices": [
+      {
+        "text": "It ran on all four processors while MiniLM used one",
+        "correct": false,
+        "why": "The gap is far larger than four, and the reason is the work itself: there is no transformer to run."
+      },
+      {
+        "text": "Its vectors are binary, which are faster to compute",
+        "correct": false,
+        "why": "WordLlama's vectors here are ordinary floats, 256 of them."
+      },
+      {
+        "text": "It averages fixed token vectors from a table, with no layers",
+        "correct": true,
+        "why": "Yes. A lookup and an average, against six layers in which every piece attends to every other."
+      },
+      {
+        "text": "It remembered the tickets from the first of the three runs",
+        "correct": false,
+        "why": "Nothing is cached between runs; each run embeds all 150 tickets again."
+      }
+    ]
+  },
+  {
+    "id": "ex-qz7azdwy",
+    "version": 1,
+    "section": "speed-on-a-cpu",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sorting the texts by ___ before cutting them into batches removes most of the padding.",
+    "hint": "What decides how many [PAD] pieces a short text receives?",
+    "blanks": [
+      {
+        "accept": [
+          "length",
+          "size"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hkcx9x5q",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are reasons to run an open embedding model on your own machine? Choose all that apply.",
+    "hint": "Think about money, data and change.",
+    "choices": [
+      {
+        "text": "Neither the text nor its vector leaves your machine",
+        "correct": true,
+        "why": "Yes. That is the reason a privacy rule can be satisfied at all."
+      },
+      {
+        "text": "There is no bill per text, only the machine's cost",
+        "correct": true,
+        "why": "Yes. The cost moves to your processor, which the speed section measured."
+      },
+      {
+        "text": "The model file stays the same until you change it",
+        "correct": true,
+        "why": "Yes. A checksum pins it; a hosted model can be updated or retired under you."
+      },
+      {
+        "text": "Open models are always more accurate than hosted ones",
+        "correct": false,
+        "why": "Nothing in the course measured that, and leaderboards show both kinds at every level."
+      },
+      {
+        "text": "Running locally removes the limit on input length",
+        "correct": false,
+        "why": "The limit belongs to the model. all-MiniLM-L6-v2 reads 256 pieces wherever it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-3q5tmgjc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order these texts from the fewest word pieces to the most, as `length.py` measured them.",
+    "hint": "The Portuguese articles take more pieces than their word counts suggest.",
+    "items": [
+      "h03, English, 53 words",
+      "h40, Portuguese, 44 words",
+      "h39, Portuguese, 44 words",
+      "h38, Portuguese, 48 words",
+      "The shipping bodies joined"
+    ],
+    "trap": "h03 is not in the middle: with the most words of the four articles, it has the fewest pieces, 65."
+  },
+  {
+    "id": "ex-hr7w9gdb",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each number from this lesson to what it is.",
+    "hint": "Three of them are lengths, and they disagree.",
+    "pairs": [
+      {
+        "left": "384",
+        "right": "Numbers in every all-MiniLM-L6-v2 vector"
+      },
+      {
+        "left": "256",
+        "right": "Pieces the model card says it reads"
+      },
+      {
+        "left": "128",
+        "right": "Where tokenizer.json cuts if nobody changes it"
+      },
+      {
+        "left": "512",
+        "right": "Positions the architecture has room for"
+      }
+    ],
+    "right_distractors": [
+      "Texts per call Cohere accepts"
+    ]
+  }
+]

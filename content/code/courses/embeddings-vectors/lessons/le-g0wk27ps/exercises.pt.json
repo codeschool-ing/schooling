@@ -1,0 +1,455 @@
+{
+  "ex-7yq4jwbn": {
+    "prompt": "Por que todo programa desta aula deixa os 50 tickets de teste fora daquilo com que um método pode aprender?",
+    "hint": "Pense no que a nota deveria dizer.",
+    "choices": [
+      {
+        "text": "Porque transformar os 150 tickets de uma vez passaria do limite de 256 pedaços do modelo",
+        "why": "O limite de 256 pedaços vale para um texto, não para um lote; tickets.py transforma cada parte numa chamada só, sem problema."
+      },
+      {
+        "text": "Porque os tickets de teste não têm rótulo no arquivo",
+        "why": "Eles têm, como o começo do arquivo mostra; o rótulo é contra o que a nota é contada."
+      },
+      {
+        "text": "Para que a nota diga como o método lida com mensagens que nunca viu",
+        "why": "Isso. Um método avaliado em tickets com que aprendeu é avaliado pela memória, o que não diz nada sobre as mensagens de amanhã."
+      },
+      {
+        "text": "Para que o k vizinhos tenha menos tickets para comparar e rode mais rápido",
+        "why": "A velocidade não tem nada a ver. A separação existe para que a medida seja honesta."
+      }
+    ]
+  },
+  "ex-b2ct0eac": {
+    "prompt": "`knn.py` calcula `S = Xte @ Xtr.T` com 50 tickets de teste e 100 de treino. Quantos produtos escalares essa linha calcula?",
+    "hint": "Um para cada par de um ticket de teste e um de treino.",
+    "unit": "dot products"
+  },
+  "ex-8q63y62s": {
+    "prompt": "O k-NN acertou 46 de 50 com `k=1` e 42 com `k=3`. Como três vizinhos podem ir pior que um?",
+    "hint": "Uma votação não muda nada enquanto os vizinhos concordam.",
+    "choices": [
+      {
+        "text": "Com `k=3` os vetores entram numa média antes da comparação, o que os borra",
+        "why": "Nada vira média em knn.py; os rótulos dos k mais próximos são contados, e os vetores ficam como estão."
+      },
+      {
+        "text": "Com `k=3` cada ticket de teste é comparado com apenas três tickets de treino",
+        "why": "Cada ticket de teste continua comparado com os 100; o k só decide quantos dos mais próximos são contados."
+      },
+      {
+        "text": "Um `k` maior usa um tipo de número menos preciso para as notas",
+        "why": "As notas são os mesmos produtos escalares em float32 para qualquer k; só a votação muda."
+      },
+      {
+        "text": "Quando os três discordam, dois tickets mais distantes vencem o mais próximo na votação",
+        "why": "Isso. Com k=1 o ticket mais próximo decide sozinho; com k=3 um par de tickets mais distantes com outro rótulo vence a contagem."
+      }
+    ]
+  },
+  "ex-0qasfrkf": {
+    "prompt": "A Marginalia decide que, a partir do mês que vem, todo pedido de reembolso, de livro impresso ou de e-book, vai para um novo setor de reembolsos. Do que o classificador k-NN desta aula precisa?",
+    "hint": "Separe o que os vetores guardam do que os rótulos guardam.",
+    "choices": [
+      {
+        "text": "De todos os tickets transformados em vetor de novo, porque os vetores foram calculados com os rótulos antigos",
+        "why": "O modelo de embedding nunca viu um rótulo. Os vetores descrevem o texto, e o texto não mudou."
+      },
+      {
+        "text": "Dos tickets de reembolso guardados com o rótulo trocado; nenhum vetor muda e nada é treinado",
+        "why": "Isso. O k-NN copia rótulos de tickets guardados. Troque esses rótulos, e os tickets novos de reembolso recebem o setor novo dos vizinhos; os vetores nunca dependeram dos rótulos."
+      },
+      {
+        "text": "De nada, porque os tickets de reembolso já estão perto uns dos outros",
+        "why": "Estar perto é o motivo de eles se moverem juntos, mas eles vão para o rótulo que carregam; até a troca, carregam os antigos."
+      },
+      {
+        "text": "De um novo modelo de embedding treinado com tickets de reembolso até formarem um grupo próprio",
+        "why": "Os tickets de reembolso já ficam juntos, como os vizinhos de t054 mostraram; o que falta é um rótulo, não um modelo."
+      }
+    ]
+  },
+  "ex-g5xq9jte": {
+    "prompt": "Dar a um ticket o rótulo mais frequente entre os k tickets rotulados mais perto dele se chama k ___ mais próximos.",
+    "hint": "Os tickets mais perto moram ao lado dele.",
+    "blanks": [
+      {
+        "accept": [
+          "vizinhos",
+          "vizinho",
+          "neighbours",
+          "neighbors"
+        ]
+      }
+    ]
+  },
+  "ex-0gqws4dk": {
+    "prompt": "Por que `centroids.py` divide cada centroide pelo próprio comprimento antes de comparar?",
+    "hint": "A armadilha da aula 2 com vetores de comprimentos diferentes.",
+    "choices": [
+      {
+        "text": "Porque o `mean` do NumPy devolve um vetor 384 vezes grande demais",
+        "why": "A média está certa; ela sai menor que 1, e não maior, porque os vetores apontam em direções diferentes."
+      },
+      {
+        "text": "Para que nenhum setor vença produtos escalares só porque a média dele saiu mais longa",
+        "why": "Isso. Depois da divisão os cinco centroides têm comprimento 1, e o produto escalar compara só direções."
+      },
+      {
+        "text": "Para transformar as cinco notas em probabilidades que somam 1",
+        "why": "Isso é o que a regressão logística faz com as notas dela. Um centroide normalizado continua dando cossenos, que não somam nada em especial."
+      },
+      {
+        "text": "Porque os vetores dos tickets não tinham comprimento 1 desde o começo",
+        "why": "Todo vetor do all-MiniLM-L6-v2 tem comprimento 1; é a média deles que não tem."
+      }
+    ]
+  },
+  "ex-f2kx4fah": {
+    "prompt": "Antes da nova normalização, o centroide de devoluções tinha comprimento 0,592 e o de pagamentos 0,526. O que essa diferença diz?",
+    "hint": "Vinte setas somadas: quando a soma é mais longa?",
+    "choices": [
+      {
+        "text": "Devoluções tem mais tickets de treino que pagamentos",
+        "why": "Os dois têm 20. A média divide pela contagem, então a contagem não decide o comprimento de qualquer jeito."
+      },
+      {
+        "text": "Os tickets de pagamento são textos mais curtos",
+        "why": "Todo vetor de ticket tem comprimento 1, seja qual for o tamanho do texto; o comprimento do centroide vem das direções."
+      },
+      {
+        "text": "O centroide de devoluções vai vencer mais comparações depois da nova normalização",
+        "why": "Depois dela os cinco têm comprimento 1, que é o motivo de fazê-la; o comprimento antigo não conta mais."
+      },
+      {
+        "text": "Os tickets de devolução apontam em direções mais parecidas",
+        "why": "Isso. Vetores que concordam somam uma média mais longa; quanto mais variado o setor, mais curto o centroide."
+      }
+    ]
+  },
+  "ex-6dg75cth": {
+    "prompt": "Dois vetores de comprimento 1 têm produto escalar 0,5. Qual é o comprimento da média deles, com três casas decimais?",
+    "hint": "O comprimento ao quadrado de a + b é a·a + 2a·b + b·b. Depois divida o comprimento por dois.",
+    "unit": ""
+  },
+  "ex-9br10aq0": {
+    "prompt": "`centroids.py` também imprime, para cada setor, o ticket de treino mais distante do centroide daquele setor. Para que serve essa lista?",
+    "hint": "Why do you need my date of birth? foi o ticket de contas mais distante.",
+    "choices": [
+      {
+        "text": "Uma lista para uma pessoa conferir",
+        "why": "Isso. Os tickets menos típicos são onde um rótulo errado, ou um setor que na verdade são dois grupos, aparece primeiro."
+      },
+      {
+        "text": "Apagar esses tickets automaticamente, porque eles baixam a precisão",
+        "why": "Nada mostrou que eles baixam, e o ticket da data de nascimento estava com o rótulo certo; apagar exemplos atípicos joga fora justamente os casos difíceis."
+      },
+      {
+        "text": "Escolher o protótipo de cada setor para o relatório",
+        "why": "O protótipo é o ticket mais próximo, o mais típico; o mais distante é o oposto."
+      },
+      {
+        "text": "Escolher o valor de `k` para o k vizinhos mais próximos",
+        "why": "O k se escolhe medindo a taxa de acerto com vários valores, como knn.py fez; as distâncias aos centroides não dizem nada sobre isso."
+      }
+    ]
+  },
+  "ex-6x3f3nbt": {
+    "prompt": "Uma regressão logística como a de `trained.py` é treinada com os vetores de 256 números do WordLlama para separar tickets em seis setores. Quantos números ela aprende?",
+    "hint": "Um peso por coordenada por setor, e uma constante por setor.",
+    "unit": "números"
+  },
+  "ex-pk9gkvg6": {
+    "prompt": "Com os vetores do MiniLM, regressão logística e centroides acertaram 47 de 50. Que explicação combina com o que a aula mediu?",
+    "hint": "Veja o que o embedding já tinha feito antes de o treino começar.",
+    "choices": [
+      {
+        "text": "A regressão logística ignora os vetores e lê as palavras de cada ticket",
+        "why": "Ela só vê os 384 números de cada ticket; não tem acesso às palavras."
+      },
+      {
+        "text": "`max_iter=1000` parou o treino antes de terminar",
+        "why": "max_iter é um teto aumentado para que o otimizador consiga terminar; ele terminou, em milissegundos, sem aviso."
+      },
+      {
+        "text": "Os vetores já separam os setores, e 20 tickets por setor deixam pouco para aprender",
+        "why": "Isso. Um peso aprendido só corrige o que o espaço erra, e aqui ele erra pouco; com vetores mais fracos a diferença apareceu."
+      },
+      {
+        "text": "Um modelo treinado e um centroide sempre empatam quando todo setor tem o mesmo número de tickets",
+        "why": "Com os vetores do WordLlama e 20 por setor, também equilibrado, eles acertaram 44 e 42."
+      }
+    ]
+  },
+  "ex-950709ct": {
+    "prompt": "Com os vetores do WordLlama e 20 tickets por setor, o vizinho mais próximo acertou 40, os centroides 42 e a regressão logística 44. O que isso sustenta?",
+    "hint": "Compare com a mesma linha do MiniLM, em que os três acertaram 46, 47 e 47.",
+    "choices": [
+      {
+        "text": "O WordLlama é um modelo melhor que o MiniLM para classificar tickets",
+        "why": "Toda nota do WordLlama fica abaixo da nota do MiniLM para o mesmo método; aqui ele é o mais fraco dos dois."
+      },
+      {
+        "text": "Pesos aprendidos ajudam mais quando os vetores separam pior",
+        "why": "Isso. Com os vetores mais nítidos do MiniLM os três ficaram a um ticket um do outro; com os do WordLlama, o treino ganhou dois sobre os centroides."
+      },
+      {
+        "text": "A regressão logística precisa de menos exemplos que os centroides",
+        "why": "A tabela diz o contrário: com 2 por setor no WordLlama, os centroides acertaram 39 e a regressão logística 36."
+      },
+      {
+        "text": "Um modelo estático não serve para classificar por vizinho mais próximo",
+        "why": "Ele serviu: 40 de 50 é um classificador que funciona, só que mais fraco."
+      }
+    ]
+  },
+  "ex-n1tpfh3n": {
+    "prompt": "A equipe quer que os tickets sobre os quais o classificador está em dúvida vão para uma pessoa em vez de um setor. t027 teve 0,388 para pagamentos e 0,368 para entrega. O que fazer?",
+    "hint": "Uma probabilidade deste modelo é uma ordem da confiança dele.",
+    "choices": [
+      {
+        "text": "Mandar para uma pessoa todo ticket abaixo de 0,5, porque abaixo disso o modelo erra mais do que acerta",
+        "why": "Isso lê a probabilidade como promessa de acerto, que ninguém mediu; com cinco setores, uma probabilidade máxima abaixo de 0,5 ainda pode acertar na maioria das vezes."
+      },
+      {
+        "text": "Trocar para o k vizinhos mais próximos, que informa a confiança com mais precisão",
+        "why": "O k-NN, como foi escrito aqui, devolve um rótulo e mais nada; não informa confiança nenhuma."
+      },
+      {
+        "text": "Treinar de novo até que a maior probabilidade de todo ticket de teste passe de 0,9",
+        "why": "Treinar nos tickets de teste até eles parecerem certos é aprender com o conjunto de teste; aí as notas mediriam memória."
+      },
+      {
+        "text": "Escolher um corte pela frequência de erro dos tickets de baixa probabilidade em dados rotulados separados",
+        "why": "Isso. Se 0,388 é baixo o bastante para preocupar é uma medida nos seus próprios dados, como qualquer limite."
+      }
+    ]
+  },
+  "ex-6r3vmkda": {
+    "prompt": "De qual método desta aula a classificação zero-shot, do jeito que `zeroshot.py` faz, mais se aproxima?",
+    "hint": "Quais são os cinco vetores com que cada ticket é comparado?",
+    "choices": [
+      {
+        "text": "Da regressão logística, com as descrições usadas como pesos aprendidos",
+        "why": "Nada é aprendido em zeroshot.py: as descrições viram vetores e são comparadas por produto escalar, sem peso ajustado."
+      },
+      {
+        "text": "Do k vizinhos mais próximos com `k=5`, um vizinho por setor",
+        "why": "O k-NN com k=5 pega os cinco tickets de treino mais próximos, que podem ser todos de um setor; o zero-shot compara sempre com exatamente um texto por setor."
+      },
+      {
+        "text": "Dos centroides, com frases no lugar das médias",
+        "why": "Isso. Cada ticket vai para o mais próximo de cinco vetores, um por setor; só a origem desses vetores muda."
+      },
+      {
+        "text": "De uma busca pelos nomes dos setores dentro de cada ticket",
+        "why": "Nenhuma palavra é casada: os nomes puros acertaram 39 pelo significado, e returns ou account aparecem em poucos tickets."
+      }
+    ]
+  },
+  "ex-4kr22k1b": {
+    "prompt": "Ordene as três redações que `zeroshot.py` testou, da que acertou mais tickets de teste para a que acertou menos.",
+    "hint": "Uma frase listando o que um setor atende foi a melhor.",
+    "items": [
+      "Uma frase descrevendo o que cada setor atende",
+      "Os nomes puros dos setores",
+      "Uma mensagem de exemplo por setor"
+    ],
+    "trap": "As mensagens de exemplo não ficam no meio: um ticket em particular por setor foi o pior, 35, abaixo dos 39 dos nomes puros."
+  },
+  "ex-bmhxv9js": {
+    "prompt": "Ana testa dez redações das cinco descrições nos 50 tickets de teste e informa a nota da melhor, 45. O que há de errado com esse 45?",
+    "hint": "De onde veio a escolha da redação?",
+    "choices": [
+      {
+        "text": "A redação foi escolhida pela nota nesses mesmos 50 tickets",
+        "why": "Isso. Escolher entre dez pela nota no teste é aprender com o conjunto de teste por meio de uma pessoa; o 45 não vai se manter assim em tickets novos."
+      },
+      {
+        "text": "Nada, porque o zero-shot não usa rótulos e por isso não pode aprender com o conjunto de teste",
+        "why": "Os rótulos do conjunto de teste foram usados, para dar nota a cada redação; a escolha da redação carrega o que eles disseram."
+      },
+      {
+        "text": "Uma nota de 45 é impossível sem tickets de treino rotulados",
+        "why": "Nada a torna impossível; a melhor redação aqui já chegou a 43 sem nenhum ticket de treino."
+      },
+      {
+        "text": "Cada redação precisa de um conjunto de teste próprio, com 50 tickets diferentes",
+        "why": "As redações podem dividir um conjunto de teste se nenhuma for escolhida por ele; o problema é a escolha, não a divisão."
+      }
+    ]
+  },
+  "ex-5gpjv5qg": {
+    "prompt": "Separar tickets só com um texto curto descrevendo cada setor, sem nenhum exemplo rotulado, se chama classificação ___.",
+    "hint": "O número de exemplos de que ela precisa, em inglês.",
+    "blanks": [
+      {
+        "accept": [
+          "zero-shot",
+          "zero shot",
+          "zeroshot"
+        ]
+      }
+    ]
+  },
+  "ex-v2qtbstg": {
+    "prompt": "Na matriz de confusão que `measure.py` imprimiu, o que conta um número fora da diagonal?",
+    "hint": "As linhas são o setor real, as colunas o escolhido.",
+    "choices": [
+      {
+        "text": "Tickets do conjunto de treino que o classificador viu duas vezes",
+        "why": "A matriz é feita só com os 50 tickets de teste, cada um contado uma vez."
+      },
+      {
+        "text": "Tickets cuja maior probabilidade ficou abaixo de 0,5",
+        "why": "A matriz conta rótulos, não probabilidades; t027 está fora da diagonal porque o rótulo previsto errou, qualquer que fosse a probabilidade."
+      },
+      {
+        "text": "Setores que não receberam nenhum ticket",
+        "why": "Um setor sem tickets mostraria uma coluna de zeros; todo número é uma contagem de tickets, na diagonal ou fora dela."
+      },
+      {
+        "text": "Tickets mandados a um setor que o rótulo não diz",
+        "why": "Isso. A linha diz a que setor o ticket pertence e a coluna para onde ele foi; fora da diagonal os dois diferem."
+      }
+    ]
+  },
+  "ex-gqrgwq4q": {
+    "prompt": "Um classificador manda 12 tickets para o setor de devoluções, e 9 deles são mesmo devoluções. O conjunto de teste tem 10 tickets de devolução ao todo. Qual é a precisão do setor de devoluções, em porcentagem?",
+    "hint": "A precisão pergunta sobre os tickets que o setor recebeu.",
+    "unit": "%"
+  },
+  "ex-yz4d24p0": {
+    "prompt": "Ligue cada medida da saída de `measure.py` à pergunta que ela responde.",
+    "hint": "Duas delas são sobre um setor só, por lados opostos.",
+    "pairs": [
+      {
+        "left": "recall",
+        "right": "Quantos tickets do próprio setor chegaram a ele?"
+      },
+      {
+        "left": "precision",
+        "right": "Quantos tickets mandados a um setor pertencem a ele?"
+      },
+      {
+        "left": "confusion matrix",
+        "right": "Para onde foram os tickets de cada setor?"
+      },
+      {
+        "left": "f1-score",
+        "right": "Precisão e revocação num número só"
+      }
+    ],
+    "right_distractors": [
+      "Quão rápido é o classificador?"
+    ]
+  },
+  "ex-jpvfnzc5": {
+    "prompt": "Dois dos três erros do classificador treinado, t024 e t027, são tickets que cabem honestamente em dois setores. Qual é o próximo passo útil?",
+    "hint": "De quem é a fronteira pouco clara: do modelo ou da equipe?",
+    "choices": [
+      {
+        "text": "Acrescentar esses tickets ao conjunto de treino e medir de novo nos mesmos 50",
+        "why": "Aí o método aprendeu com os tickets de teste, e a nota nova mede a memória desses dois."
+      },
+      {
+        "text": "Combinar uma regra para os casos ambíguos e rotular de novo",
+        "why": "Isso. Um classificador só aprende as fronteiras que os rótulos traçam; se pessoas discordariam nesses tickets, a regra é o que se conserta primeiro."
+      },
+      {
+        "text": "Trocar por um modelo de embedding com mais dimensões",
+        "why": "O modelo pôs t027 entre pagamentos e entrega porque ele fala dos dois; mais dimensões não decidem qual setor a equipe quer."
+      },
+      {
+        "text": "Tirar os tickets ambíguos do conjunto de teste para a nota refletir o modelo",
+        "why": "Filas reais têm tickets ambíguos; um conjunto de teste sem eles dá uma nota que o classificador não vai ter em uso."
+      }
+    ]
+  },
+  "ex-z1vx8edy": {
+    "prompt": "Em outro conjunto de 50 tickets de teste, o método A acerta 47 e o método B acerta 46. O que dá para concluir sobre os dois?",
+    "hint": "Um ticket são dois pontos em cem.",
+    "choices": [
+      {
+        "text": "A é dois pontos melhor, então A deve ir para produção",
+        "why": "Dois pontos aqui são um ticket, bem dentro do que outra amostra de 50 poderia mudar."
+      },
+      {
+        "text": "B é melhor, porque menos acertos quer dizer menos sobreajuste",
+        "why": "Uma nota de teste mais baixa não é sinal de nada bom; o sobreajuste aparece como nota de teste abaixo da nota de treino, que ninguém mediu aqui."
+      },
+      {
+        "text": "Nada confiável sobre qual é melhor: eles diferem por um único ticket",
+        "why": "Isso. Em outros 50 tickets tirados do mesmo jeito a ordem poderia se inverter; decidir isso pede mais dados de teste ou validação cruzada."
+      },
+      {
+        "text": "A é pelo menos tão bom quanto B em todos os setores",
+        "why": "Um total não diz nada sobre os setores; A poderia ser melhor em três e pior em dois, como a matriz de confusão mostraria."
+      }
+    ]
+  },
+  "ex-rztn13pg": {
+    "prompt": "Ponha em ordem o que acontece quando um ticket novo é separado por centroides, começando pelos tickets de treino rotulados.",
+    "hint": "Os centroides ficam prontos antes de o ticket novo chegar.",
+    "items": [
+      "Transformar em vetor os tickets de treino rotulados",
+      "Tirar a média dos vetores de cada setor",
+      "Dividir cada média pelo seu comprimento",
+      "Transformar em vetor o ticket novo",
+      "Comparar com os cinco centroides e ficar com o maior"
+    ],
+    "trap": "A nova normalização vem logo depois da média e antes de qualquer comparação; um centroide comparado com o comprimento antigo vence pelo comprimento."
+  },
+  "ex-bpxjn3v7": {
+    "prompt": "Quais destas afirmações valem para o k vizinhos mais próximos do jeito que `knn.py` faz? Marque todas as que se aplicam.",
+    "hint": "Pense no que ele guarda e no que ele calcula.",
+    "choices": [
+      {
+        "text": "Um ticket separado agora pode ser usado sem treino nenhum, acrescentando o vetor dele",
+        "why": "Sim. Aprender é acrescentar: a comparação de amanhã inclui uma linha a mais."
+      },
+      {
+        "text": "Cada decisão pode ser rastreada até os tickets guardados que a produziram",
+        "why": "Sim. neighbours.py fez exatamente isso com t021 e t054."
+      },
+      {
+        "text": "Ele guarda todos os vetores rotulados e compara cada ticket novo com todos",
+        "why": "Sim. Esse é o custo dele, e é por isso que em escala ele vira o problema de busca das aulas 11 e 15."
+      },
+      {
+        "text": "Ele devolve uma probabilidade para cada setor junto com o rótulo",
+        "why": "Isso é o predict_proba da regressão logística; knn.py devolve só o rótulo vencedor."
+      },
+      {
+        "text": "Trocar o rótulo de um ticket guardado obriga a transformar todos os tickets em vetor de novo",
+        "why": "Os vetores não dependem dos rótulos; trocar um rótulo muda uma posição de ytr e mais nada."
+      }
+    ]
+  },
+  "ex-n5mdw8ka": {
+    "prompt": "Ligue cada método àquilo com que um ticket novo é comparado, ou que dá a nota dele.",
+    "hint": "Conte os vetores que cada um guarda.",
+    "pairs": [
+      {
+        "left": "k vizinhos mais próximos",
+        "right": "Todos os tickets de treino rotulados"
+      },
+      {
+        "left": "centroides",
+        "right": "Um vetor médio por setor"
+      },
+      {
+        "left": "zero-shot",
+        "right": "Uma descrição escrita por setor"
+      },
+      {
+        "left": "regressão logística",
+        "right": "Pesos aprendidos para cada coordenada"
+      }
+    ],
+    "right_distractors": [
+      "Os 50 tickets de teste"
+    ]
+  }
+}

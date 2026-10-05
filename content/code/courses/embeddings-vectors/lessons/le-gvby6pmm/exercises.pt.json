@@ -1,0 +1,463 @@
+{
+  "ex-kf4jdm0z": {
+    "prompt": "Perguntado 'do you sell concert tickets?', `search.py` devolveu três artigos, embora a Marginalia não venda ingressos. Por quê?",
+    "hint": "Veja o que `search` faz depois de ordenar.",
+    "choices": [
+      {
+        "text": "O modelo julgou que o artigo do vale-presente fala de ingressos",
+        "why": "Julgou que ele estava mais perto que os outros 39, com 0,252. Mais perto não é o mesmo que falar de ingressos: as notas são baixas, e alguma coisa precisava ficar em terceiro."
+      },
+      {
+        "text": "Ele fica com os três mais próximos, seja qual for a nota",
+        "why": "Certo. Uma busca top-k ordena e fica com k. Sempre existem três artigos mais próximos, então ela sempre devolve três, e não tem como dizer que nenhum serve."
+      },
+      {
+        "text": "O k era grande demais: com k = 1 não teria devolvido nada",
+        "why": "Com k = 1 ele devolve um artigo, Orders for schools and libraries com 0,293. O k muda quantos voltam, nunca se volta alguma coisa."
+      },
+      {
+        "text": "Os vetores não estavam normalizados, então perguntas curtas casam com qualquer coisa",
+        "why": "O all-MiniLM-L6-v2 já devolve vetores de comprimento 1. Normalizar não muda nenhuma ordem aqui; os três resultados vêm de pedir três."
+      }
+    ]
+  },
+  "ex-1vjxrhm8": {
+    "prompt": "Para 'the box never showed up', o artigo de senha tirou 0,300, mais que o melhor artigo para a pergunta do show, 0,293. O que isso diz sobre as notas?",
+    "hint": "O artigo de senha é resposta para alguma das duas perguntas?",
+    "choices": [
+      {
+        "text": "O artigo de senha é um pouco relevante para uma caixa que sumiu",
+        "why": "Ele não tem nada a ver com uma caixa que nunca chegou; ocupou o segundo lugar porque k era 3. Uma nota de 0,300 aqui é ruído."
+      },
+      {
+        "text": "A pergunta da caixa é mais bem coberta pela central de ajuda que a do show, por 0,007",
+        "why": "A pergunta da caixa é coberta, mas pelo primeiro resultado com 0,458, não pelo artigo de senha. Comparar ruído entre perguntas não diz nada sobre cobertura."
+      },
+      {
+        "text": "Uma nota ordena artigos para uma pergunta; não é uma nota numa escala fixa",
+        "why": "Certo. Textos sem relação ainda caem numa faixa de notas pequenas e positivas em 384 dimensões, então o mesmo número é ruído para uma pergunta e o melhor resultado para outra."
+      },
+      {
+        "text": "As notas são porcentagens, então os dois têm cerca de 30% de relevância",
+        "why": "Um cosseno não é probabilidade nem porcentagem. 0,300 diz que o artigo de senha estava mais perto daquela pergunta que outros 37, e nada sobre o quanto ele é relevante."
+      }
+    ]
+  },
+  "ex-6kdazy48": {
+    "prompt": "Uma busca que ordena todas as notas e fica com as k primeiras se chama busca ___.",
+    "hint": "O nome que esta aula dá a ela: uma palavra e uma letra unidas por hífen.",
+    "blanks": [
+      {
+        "accept": [
+          "top-k",
+          "top k",
+          "topk"
+        ]
+      }
+    ]
+  },
+  "ex-h752br7b": {
+    "prompt": "Que mudança permite que a pergunta do show volte sem nenhum artigo?",
+    "hint": "Alguma coisa precisa olhar o quanto as notas são altas.",
+    "choices": [
+      {
+        "text": "Pôr k em 1",
+        "why": "k = 1 ainda devolve o artigo mais próximo. Nenhum valor de k acima de zero devolve nada."
+      },
+      {
+        "text": "Um modelo com mais dimensões, que separa melhor os assuntos",
+        "why": "Um modelo maior dá outras notas, e uma busca top-k sobre elas ainda devolve k artigos."
+      },
+      {
+        "text": "Ordenar as notas da menor para a maior",
+        "why": "Isso devolve os três artigos menos parecidos: ainda três, e piores."
+      },
+      {
+        "text": "Uma nota mínima, medida, abaixo da qual os resultados caem",
+        "why": "Certo. Um corte é o único botão aqui que olha as notas em si, então é o único que pode devolver uma lista vazia."
+      }
+    ]
+  },
+  "ex-q50p5nat": {
+    "prompt": "Pela tabela de `recall_k.py`, quantas perguntas a mais das 24 o all-MiniLM-L6-v2 encontra com k = 10 do que com k = 1?",
+    "hint": "Leia a primeira e a última linha da coluna minilm.",
+    "unit": "perguntas"
+  },
+  "ex-r2wr3k2g": {
+    "prompt": "Pela coluna de tokens de `recall_k.py`, quantas vezes mais tokens k = 10 repassa do que k = 3? Duas casas decimais.",
+    "hint": "544 contra 162.",
+    "unit": "vezes"
+  },
+  "ex-merbybh9": {
+    "prompt": "O all-MiniLM-L6-v2 põe a resposta de 'my order came in pieces' na posição 12. O que a aula sugere para ela?",
+    "hint": "O que um k de 12 custaria a todas as outras perguntas?",
+    "choices": [
+      {
+        "text": "Um segundo modelo: o WordLlama tem as 24 com k = 3",
+        "why": "Certo. É uma pergunta que este modelo ordena mal, então a correção é um avaliador que a ordene bem, sozinho ou junto do primeiro num reranqueamento."
+      },
+      {
+        "text": "Subir k para 12, já que isso pega todas as perguntas",
+        "why": "Pega esta e repassa doze artigos para cada pergunta só para salvá-la, quatro vezes os tokens de k = 3."
+      },
+      {
+        "text": "Uma nota de corte mais baixa, para que a resposta não seja descartada",
+        "why": "Um corte só remove resultados; não consegue mover um artigo da posição 12 para as três primeiras."
+      },
+      {
+        "text": "Subir o hnsw.ef_search, para o índice olhar mais longe",
+        "why": "Esta busca é NumPy exato sobre 40 artigos, sem índice. A posição 12 é a ordem do modelo, não do índice."
+      }
+    ]
+  },
+  "ex-kzen65dh": {
+    "prompt": "O que `recall_k.py` mostrou para o all-MiniLM-L6-v2 entre k = 4 e k = 10?",
+    "hint": "Olhe a coluna minilm da quarta linha para baixo.",
+    "choices": [
+      {
+        "text": "Uma pergunta a mais encontrada a cada passo, até 24",
+        "why": "A coluna fica em 23 de k = 4 a k = 10. Os resultados a mais não encontraram nenhuma resposta nova."
+      },
+      {
+        "text": "Nenhuma pergunta nova encontrada, enquanto os tokens continuavam crescendo",
+        "why": "Certo. Encontradas fica em 23 enquanto os tokens vão de 217 a 544. Depois da curva, o gráfico é plano e o custo não."
+      },
+      {
+        "text": "Menos perguntas encontradas, porque o ruído empurrou respostas para fora",
+        "why": "O encontrado-em-k nunca cai quando k cresce: um k maior guarda tudo o que um menor tinha e acrescenta mais."
+      },
+      {
+        "text": "A mesma contagem do WordLlama em todo k",
+        "why": "O WordLlama chegou a 24 com k = 3; o all-MiniLM-L6-v2 parou em 23."
+      }
+    ]
+  },
+  "ex-xre4pmgb": {
+    "prompt": "A central de ajuda da Marginalia cresce de 40 artigos para 4.000, com o mesmo modelo. A equipe tinha escolhido k = 3 pela curva. O que ela deve fazer?",
+    "hint": "De quem é a propriedade da curva?",
+    "choices": [
+      {
+        "text": "Manter 3: o k pertence ao modelo, que não mudou",
+        "why": "A curva pertence ao modelo e ao corpus juntos. Mais artigos significa mais quase-acertos disputando os primeiros lugares."
+      },
+      {
+        "text": "Multiplicar por 100, já que o corpus cresceu cem vezes",
+        "why": "O k diz respeito a quão fundo na ordem as respostas ficam, não a uma fração do corpus. Trezentos resultados afogariam qualquer leitor."
+      },
+      {
+        "text": "Medir de novo o encontrado-em-k com perguntas sobre os artigos novos",
+        "why": "Certo. A curva foi medida em 40 artigos e vale para eles. Em 4.000 espera-se que ela suba mais devagar, e só uma nova medida diz onde ela fica plana."
+      },
+      {
+        "text": "Baixar para k = 1, já que um corpus maior tem uma resposta exata para mais perguntas",
+        "why": "Mais artigos acrescentam concorrentes além de respostas. Nada medido aqui diz que o primeiro lugar fica mais confiável."
+      }
+    ]
+  },
+  "ex-3kfy85pj": {
+    "prompt": "No all-MiniLM-L6-v2, qual dos cortes que `threshold.py` testou recusa as 8 perguntas fora do assunto e guarda mais respostas?",
+    "hint": "A melhor nota da pergunta do show foi 0,293.",
+    "choices": [
+      {
+        "text": "0,25",
+        "why": "Guarda as 24 respostas mas deixa passar a pergunta do show com 0,293: sete de oito recusadas."
+      },
+      {
+        "text": "0,20",
+        "why": "Só quatro das oito perguntas fora do assunto ficam abaixo dele."
+      },
+      {
+        "text": "0,35",
+        "why": "Recusa as oito, mas guarda 20 respostas contra 22 no corte mais baixo que também recusa todas."
+      },
+      {
+        "text": "0,30",
+        "why": "Certo. 8 de 8 recusadas e 22 de 24 guardadas. As duas respostas perdidas são o preço de recusar os estranhos."
+      }
+    ]
+  },
+  "ex-shtq4pbd": {
+    "prompt": "Um colega troca o all-MiniLM-L6-v2 pelo WordLlama e mantém o corte de 0,25. Na central de ajuda, o que acontece?",
+    "hint": "Leia a metade do WordLlama na saída.",
+    "choices": [
+      {
+        "text": "Nada muda, já que 0,25 é um cosseno nos dois modelos",
+        "why": "Os dois são cossenos, e cada modelo espalha as notas de um jeito. O mesmo número guarda 24 respostas num e 21 no outro."
+      },
+      {
+        "text": "Todas as perguntas fora do assunto são recusadas, e 3 respostas se perdem",
+        "why": "Certo. Os artigos certos do WordLlama descem até 0,139, então 21 de 24 sobrevivem, e a melhor nota fora do assunto dele é 0,243, abaixo da linha."
+      },
+      {
+        "text": "As 24 respostas ficam e a pergunta do show passa, como antes",
+        "why": "Isso era o all-MiniLM-L6-v2 em 0,25. Os números do WordLlama são outros: 21 guardadas, 8 recusadas."
+      },
+      {
+        "text": "Toda pergunta volta vazia, já que as notas do WordLlama são todas mais baixas",
+        "why": "A maior parte das notas de artigo certo do WordLlama fica acima de 0,25, até 0,687. Mais baixo na ponta de baixo não é mais baixo em tudo."
+      }
+    ]
+  },
+  "ex-4tsp9qk0": {
+    "prompt": "A Marginalia mediu um corte de 0,30 na central de ajuda. Quais destas mudanças pedem uma nova medida? Escolha todas as que se aplicam.",
+    "hint": "Pergunte se a mudança mexe nas notas.",
+    "choices": [
+      {
+        "text": "Trocar para outro modelo de embedding",
+        "why": "Sim. Todas as notas mudam, e esta aula mediu o mesmo 0,25 querendo dizer coisas diferentes em dois modelos."
+      },
+      {
+        "text": "Subir k de 3 para 5",
+        "why": "O k decide quantos resultados ficam, não a nota de nenhum deles. O corte se aplica às mesmas notas."
+      },
+      {
+        "text": "Transformar em vetores pedaços dos artigos em vez dos artigos inteiros",
+        "why": "Sim. Um documento diferente é um vetor diferente, então todas as notas se mexem."
+      },
+      {
+        "text": "Acrescentar alguns milhares de artigos",
+        "why": "Sim. Mais artigos trazem quase-acertos que sobem a melhor nota que uma pergunta fora do assunto consegue achar."
+      },
+      {
+        "text": "Rodar a busca num servidor mais rápido",
+        "why": "O mesmo modelo sobre o mesmo texto dá o mesmo vetor em qualquer máquina, então as notas não se mexem."
+      }
+    ]
+  },
+  "ex-e0mwfqh6": {
+    "prompt": "Diferente do k, uma nota mínima, ou ___, deixa uma busca não devolver nada.",
+    "hint": "A palavra para a linha que uma nota precisa alcançar.",
+    "blanks": [
+      {
+        "accept": [
+          "corte",
+          "limiar",
+          "threshold",
+          "cut-off",
+          "cutoff"
+        ]
+      }
+    ]
+  },
+  "ex-j302gzsj": {
+    "prompt": "No pgvector 0.6.0 do laboratório, com `hnsw.ef_search` no padrão, quantas linhas `LIMIT 100` devolveu pelo índice HNSW?",
+    "hint": "O padrão é o que o `SHOW` imprimiu.",
+    "unit": "linhas"
+  },
+  "ex-8bv1xzjb": {
+    "prompt": "O que mostrou que as 40 linhas eram coisa do índice e não da tabela?",
+    "hint": "Encontre a execução que não usou o índice.",
+    "choices": [
+      {
+        "text": "O EXPLAIN mostrou uma varredura sequencial sobre 40 linhas",
+        "why": "O EXPLAIN mostrou um Index Scan em points_embedding_idx, que é o índice trabalhando, não uma tabela de 40 linhas."
+      },
+      {
+        "text": "Um count(*) sobre a tabela inteira imprimiu 40",
+        "why": "Nenhuma consulta contou a tabela. fill.py inseriu 2.000 linhas, e a contagem era do que a consulta com LIMIT devolveu."
+      },
+      {
+        "text": "Com as varreduras de índice desligadas, a mesma consulta devolveu 100",
+        "why": "Certo. Sem o índice o PostgreSQL ordena todas as linhas exatamente, e as 100 voltaram. A tabela sempre as teve."
+      },
+      {
+        "text": "Subir o LIMIT para 200 devolveu 80",
+        "why": "Isso não foi executado, e não aconteceria: a varredura é limitada pelo ef_search, então LIMIT 200 no padrão ainda rende no máximo 40."
+      }
+    ]
+  },
+  "ex-ngtst69b": {
+    "prompt": "Em `ef.py`, o hnswlib estava com a largura de busca em 10 e recebeu um pedido de 100 vizinhos. O que aconteceu?",
+    "hint": "Leia os dois números que ele imprimiu.",
+    "choices": [
+      {
+        "text": "Devolveu 10, o tamanho da lista de candidatos",
+        "why": "Esse é o comportamento do pgvector, não do hnswlib. O hnswlib imprimiu got 100."
+      },
+      {
+        "text": "Levantou um erro, já que o ef precisa ser pelo menos k",
+        "why": "Nenhum erro: o programa imprimiu a linha e terminou normalmente."
+      },
+      {
+        "text": "Devolveu 100 e continuou informando ef como 10",
+        "why": "Certo. Ele busca com o maior entre ef e k naquela consulta e não mexe na configuração, então um k grande custa mais sem ninguém tocar no ef."
+      },
+      {
+        "text": "Devolveu 100 e mudou o ef para 100 dali em diante",
+        "why": "index.ef imprimiu 10 depois da consulta. A busca mais larga valeu só para aquela consulta."
+      }
+    ]
+  },
+  "ex-5b89ybxt": {
+    "prompt": "Uma página no pgvector 0.6.0 lista os 50 artigos mais próximos do que está sendo lido. Depois que um índice HNSW é criado, ela lista 40. Ninguém mudou a consulta. O que resolve?",
+    "hint": "O número 40 é um padrão em algum lugar.",
+    "choices": [
+      {
+        "text": "Reconstruir o índice com um M maior",
+        "why": "O M define quantas ligações cada nó guarda. As linhas que uma consulta devolve são limitadas pela lista de busca, o ef_search, que continua em 40."
+      },
+      {
+        "text": "Pôr o hnsw.ef_search em pelo menos 50 para aquela consulta",
+        "why": "Certo. A varredura para quando os candidatos do ef_search acabam, então ela precisa comportar pelo menos o LIMIT, e mais para um bom recall."
+      },
+      {
+        "text": "Escrever LIMIT 60 para que sobrem 50",
+        "why": "O LIMIT não é o limite. Com ef_search em 40, LIMIT 60 ainda devolve 40."
+      },
+      {
+        "text": "Aumentar a coluna para mais dimensões",
+        "why": "A dimensão não tem nada a ver com quantas linhas a varredura rende; o teto vem da lista de busca."
+      }
+    ]
+  },
+  "ex-g5ezrvmx": {
+    "prompt": "Ponha em ordem os passos de uma busca que recupera e depois reranqueia.",
+    "hint": "O avaliador lento nunca vê a coleção inteira.",
+    "items": [
+      "Transformar a pergunta em vetor",
+      "Buscar 20 candidatos com a passada rápida",
+      "Dar nota a cada candidato com o avaliador mais lento",
+      "Ordenar os candidatos pela nota nova",
+      "Repassar os 5 melhores"
+    ],
+    "trap": "O avaliador mais lento não vem primeiro: aí ele teria que avaliar a coleção inteira, que é o que a passada rápida existe para evitar."
+  },
+  "ex-paasqve7": {
+    "prompt": "Por que um cross-encoder é usado em poucos candidatos e não numa coleção inteira?",
+    "hint": "O que um bi-encoder consegue guardar que um cross-encoder não consegue?",
+    "choices": [
+      {
+        "text": "Os vetores dele são grandes demais para guardar de cada documento",
+        "why": "Um cross-encoder não produz vetores guardados. A saída dele é uma nota por par de pergunta e documento."
+      },
+      {
+        "text": "Ele só lê inglês",
+        "why": "O idioma é uma propriedade dos dados de treino de qualquer modelo, cross-encoder ou não. Não é o que limita onde ele roda."
+      },
+      {
+        "text": "Cada par custa uma execução do modelo, e nada é calculado antes",
+        "why": "Certo. Ele lê pergunta e documento juntos, então nada pode ser pré-calculado: um milhão de documentos seriam um milhão de execuções por pergunta."
+      },
+      {
+        "text": "As notas dele são piores que as de um produto escalar em listas longas",
+        "why": "As notas são o motivo para usá-lo. O limite é o custo, não a qualidade."
+      }
+    ]
+  },
+  "ex-zv6tn0rk": {
+    "prompt": "Só os bits encontraram 16 perguntas na posição 1; os 5 primeiros pelos bits, reranqueados pelos floats, encontraram 19. O que o reranqueamento mudou?",
+    "hint": "Os candidatos eram os mesmos cinco.",
+    "choices": [
+      {
+        "text": "A ordem dos cinco, pelas notas dos vetores completos",
+        "why": "Certo. Os bits puseram o artigo certo entre os cinco primeiros mas nem sempre em primeiro; as notas exatas ordenaram esses cinco corretamente."
+      },
+      {
+        "text": "Quais cinco artigos eram candidatos",
+        "why": "Os candidatos vieram dos bits nas duas linhas. O reranqueamento só os reordenou."
+      },
+      {
+        "text": "Os próprios bits, recalculados com mais precisão",
+        "why": "Os códigos continuaram com 48 bytes cada. O reranqueamento leu os vetores float guardados ao lado."
+      },
+      {
+        "text": "O modelo, do all-MiniLM-L6-v2 para o WordLlama",
+        "why": "Esse foi o segundo experimento. O primeiro usou um modelo só, seus bits e seus floats."
+      }
+    ]
+  },
+  "ex-h9hthcps": {
+    "prompt": "Ligue cada parte de uma busca em duas etapas ao que ela faz.",
+    "hint": "Uma descrição não pertence a nenhuma.",
+    "pairs": [
+      {
+        "left": "Primeira passada",
+        "right": "Busca um conjunto generoso de candidatos, barato"
+      },
+      {
+        "left": "Reranqueamento",
+        "right": "Reordena poucos candidatos com um avaliador melhor"
+      },
+      {
+        "left": "Bi-encoder",
+        "right": "Transforma pergunta e documento separadamente, então os documentos ficam guardados"
+      },
+      {
+        "left": "Cross-encoder",
+        "right": "Lê pergunta e documento juntos e devolve uma nota"
+      }
+    ],
+    "right_distractors": [
+      "Define o número de dimensões dos vetores"
+    ]
+  },
+  "ex-n4qaa34e": {
+    "prompt": "Ligue cada botão ao que ele controla.",
+    "hint": "Uma descrição sobra.",
+    "pairs": [
+      {
+        "left": "k",
+        "right": "Quantos resultados uma busca pede"
+      },
+      {
+        "left": "hnsw.ef_search",
+        "right": "Quantos candidatos a varredura HNSW do pgvector guarda"
+      },
+      {
+        "left": "Nota de corte",
+        "right": "A nota mais baixa que um resultado pode ter"
+      },
+      {
+        "left": "Profundidade do reranqueamento",
+        "right": "Quantos candidatos o avaliador mais lento vê"
+      }
+    ],
+    "right_distractors": [
+      "Quantos bytes cada vetor ocupa"
+    ]
+  },
+  "ex-r6mak5ef": {
+    "prompt": "Ordene estas configurações por quantas das 24 perguntas encontraram na posição 1, da menor para a maior.",
+    "hint": "16, 19, 20 e 23.",
+    "items": [
+      "Só os bits do all-MiniLM-L6-v2",
+      "Floats do all-MiniLM-L6-v2, todos os artigos",
+      "Só o WordLlama",
+      "Os 10 do WordLlama, reranqueados pelos dois modelos"
+    ],
+    "trap": "Os floats completos não são o melhor: o WordLlama sozinho encontrou uma a mais, e os dois modelos juntos três a mais que isso."
+  },
+  "ex-pbhvy4m3": {
+    "prompt": "No pgvector 0.6.0, uma consulta HNSW com LIMIT 100 devolve no máximo tantas linhas quanto a configuração hnsw.___ permite.",
+    "hint": "O padrão dela é 40.",
+    "blanks": [
+      {
+        "accept": [
+          "ef_search"
+        ]
+      }
+    ]
+  },
+  "ex-reqgyf2f": {
+    "prompt": "O assistente de chat da Marginalia recebe os 10 primeiros artigos para cada pergunta, e às vezes cita um que não tem nada a ver com ela. Pelas medidas desta aula, que mudança ataca isso mais diretamente?",
+    "hint": "Onde a curva ficou plana, e o que era tudo depois dela?",
+    "choices": [
+      {
+        "text": "Repassar 20, para que o artigo certo esteja lá toda vez",
+        "why": "A curva já estava plana em k = 4. Mais dez artigos trazem mais ruído para citar e nenhuma resposta nova."
+      },
+      {
+        "text": "Um corte de 0,8, para guardar só resultados fortes",
+        "why": "Nenhum artigo certo tirou 0,8; o melhor foi 0,686. Esse corte não repassaria nada para nenhuma das 24 perguntas."
+      },
+      {
+        "text": "Buscar 10, reranquear, repassar 2 ou 3",
+        "why": "Certo. A primeira etapa mantém o recall de um k largo, e o assistente lê só os poucos que o avaliador melhor põe primeiro, então há menos ruído para citar."
+      },
+      {
+        "text": "Baixar o hnsw.ef_search, para o índice devolver menos linhas",
+        "why": "Isso corta linhas ao acaso do ponto de vista do assistente, pela largura de busca do índice e não por relevância, e pode cortar o artigo certo também."
+      }
+    ]
+  }
+}

@@ -1,0 +1,675 @@
+[
+  {
+    "id": "ex-45x4nhjf",
+    "version": 1,
+    "section": "more-like-this",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under The Hound of the Baskervilles, a detective story, the nearest book was Wuthering Heights, a romance. Why?",
+    "hint": "Read the two blurbs side by side.",
+    "choices": [
+      {
+        "text": "The model read the genre field and both books are gothic",
+        "correct": false,
+        "why": "The genre field was not embedded, and it says mystery for one and romance for the other."
+      },
+      {
+        "text": "Both books were written by members of the Brontë family",
+        "correct": false,
+        "why": "The Hound is by Arthur Conan Doyle; and the author's name was not in the embedded text anyway."
+      },
+      {
+        "text": "Both blurbs are set on the moors and turn on a family",
+        "correct": true,
+        "why": "Right. The vectors were made from title and blurb, and those two blurbs describe similar places and situations."
+      },
+      {
+        "text": "At scores around 0.4 the order is random from one run to the next",
+        "correct": false,
+        "why": "The model has no randomness: the same text gives the same vector, and the same order, every run."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7n9qmmv",
+    "version": 1,
+    "section": "more-like-this",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A catalogue has 40 books, 8 in each of 5 genres. If each book's 5 nearest neighbours were picked at random among the other 39, how many of the 200 neighbours would share the book's genre, on average? Give one decimal.",
+    "hint": "For one book, 7 of the 39 others share its genre. `genres.py` did the same sum for 60 books.",
+    "value": 35.9,
+    "tolerance": 0.05,
+    "unit": "neighbours"
+  },
+  {
+    "id": "ex-38s0225g",
+    "version": 1,
+    "section": "more-like-this",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Writing the genre in front of each title and blurb raised the same-genre neighbours from 94 to 235 of 300. What does that show?",
+    "hint": "Did the model change, or did its input?",
+    "choices": [
+      {
+        "text": "The model got better at understanding blurbs",
+        "correct": false,
+        "why": "The model is identical in both runs; only the text it was given changed."
+      },
+      {
+        "text": "What you embed decides what counts as similar",
+        "correct": true,
+        "why": "Right. The same model, given the genre as its first words, now places books by shelf; the choice of text is a design decision."
+      },
+      {
+        "text": "The genre labels in the data were wrong before",
+        "correct": false,
+        "why": "The labels were the same in both counts; they were simply not part of the text the first time."
+      },
+      {
+        "text": "The title-and-blurb vectors had not been normalised",
+        "correct": false,
+        "why": "Every vector all-MiniLM-L6-v2 returns has length 1, in both runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wvxhz9v",
+    "version": 1,
+    "section": "more-like-this",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Recommending books from what they are, their title and blurb, rather than from who bought them, is called ___-based recommendation.",
+    "hint": "It reads what is inside the book's record.",
+    "blanks": [
+      {
+        "accept": [
+          "content"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fq7dy0pr",
+    "version": 1,
+    "section": "more-like-this",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia starts embedding each book as its author's name, its title and its blurb. What happens to the row under a Verne novel?",
+    "hint": "Think about what two Verne books now have in common as text.",
+    "choices": [
+      {
+        "text": "Nothing changes, because the model skips proper names",
+        "correct": false,
+        "why": "The model embeds every word it is given; Bleak House was found for a query by one word of its title."
+      },
+      {
+        "text": "Only books by Verne can appear in the row from then on",
+        "correct": false,
+        "why": "Shared text raises a score, it does not exclude anything; other books still compete on everything else in their blurbs."
+      },
+      {
+        "text": "Every score falls, because longer texts give shorter vectors",
+        "correct": false,
+        "why": "Every vector from this model has length 1, however long the text."
+      },
+      {
+        "text": "Verne's other books move up, now sharing his name",
+        "correct": true,
+        "why": "Right. Shared words pull vectors together, as the genre did; the row now leans towards the same author, which the author cap was there to limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjeej2ty",
+    "version": 1,
+    "section": "a-reader-as-a-vector",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does `reader.py` build a vector for a reader?",
+    "hint": "It uses nothing but the books she finished.",
+    "choices": [
+      {
+        "text": "The average of her finished books' vectors, renormalised",
+        "correct": true,
+        "why": "Right. Then her recommendations are the unread books nearest that direction."
+      },
+      {
+        "text": "The vector of the most recent book she finished",
+        "correct": false,
+        "why": "Every finished book counts, and equally; the program does not know the order she read them in."
+      },
+      {
+        "text": "A vector learned from what the other readers finished",
+        "correct": false,
+        "why": "That is collaborative filtering, which this lesson describes and does not build."
+      },
+      {
+        "text": "The embedding of her name and her account details",
+        "correct": false,
+        "why": "Nothing about the reader herself is embedded; only the books' titles and blurbs are."
+      }
+    ]
+  },
+  {
+    "id": "ex-k388q77g",
+    "version": 1,
+    "section": "a-reader-as-a-vector",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Lia's two books have a similarity of 0.207, and their average had length 0.777. Another reader has finished two books whose similarity is 0.6. What is the length of her average, to three decimals?",
+    "hint": "The squared length of a + b is 2 + 2 × (a · b) for unit vectors; then halve the length.",
+    "value": 0.894,
+    "tolerance": 0.002,
+    "unit": ""
+  },
+  {
+    "id": "ex-q6ctxtcr",
+    "version": 1,
+    "section": "a-reader-as-a-vector",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Adventures of Sherlock Holmes scores 0.411 against the Hound, nearly as high as Wuthering Heights, yet it is not on Lia's list. Why not?",
+    "hint": "Her vector is built from two books.",
+    "choices": [
+      {
+        "text": "Lia has already finished it",
+        "correct": false,
+        "why": "She finished Pride and Prejudice and the Hound only; the Holmes stories were a candidate like any other."
+      },
+      {
+        "text": "Detective stories are filtered out for readers of romance",
+        "correct": false,
+        "why": "reader.py applies no rule but skipping finished books; nothing removes a genre."
+      },
+      {
+        "text": "It is far from Pride and Prejudice, and both scores add up",
+        "correct": true,
+        "why": "Right. The score against the average is the sum of the two, so a book close to only one of hers falls behind books fairly close to both."
+      },
+      {
+        "text": "Recommendations need a score of at least 0.5 against each book",
+        "correct": false,
+        "why": "There is no threshold: the five highest scores against the average are shown, and Wuthering Heights itself is under 0.5 against both."
+      }
+    ]
+  },
+  {
+    "id": "ex-rvnhp0w6",
+    "version": 1,
+    "section": "a-reader-as-a-vector",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a reader with unit-length book vectors, what is a candidate's score against her renormalised average equal to?",
+    "hint": "Write the average as a sum divided by its length.",
+    "choices": [
+      {
+        "text": "The highest of its scores against any one of her books",
+        "correct": false,
+        "why": "That would be a different recommender, one that keeps the tastes apart; the average adds the scores instead."
+      },
+      {
+        "text": "Its scores against her books, summed and scaled",
+        "correct": true,
+        "why": "Right. The constant is the length of the sum of her books' vectors, the same for every candidate, so the ranking is the ranking by the sum."
+      },
+      {
+        "text": "The product of its scores against each of her books",
+        "correct": false,
+        "why": "A dot product with a sum is a sum of dot products; nothing is multiplied together."
+      },
+      {
+        "text": "Its score against the book she finished most recently",
+        "correct": false,
+        "why": "The average treats every finished book the same, whenever it was read."
+      }
+    ]
+  },
+  {
+    "id": "ex-jg4846wz",
+    "version": 1,
+    "section": "a-reader-as-a-vector",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order Lia's five recommendations as `reader.py` ranked them, from the highest score to the lowest.",
+    "hint": "The book between her two tastes came first.",
+    "items": [
+      "Wuthering Heights",
+      "The Mysterious Affair at Styles",
+      "Great Expectations",
+      "The Scarlet Pimpernel",
+      "Jane Eyre"
+    ],
+    "trap": "Jane Eyre is last, by 0.001 behind The Scarlet Pimpernel, although it is the other romance on the list."
+  },
+  {
+    "id": "ex-cvzqhd4f",
+    "version": 1,
+    "section": "leaving-things-out",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `filters.py` walk down the ranking until it has five, instead of taking the top five and removing what breaks a rule?",
+    "hint": "Count what would survive for Caio.",
+    "choices": [
+      {
+        "text": "Walking down is faster than sorting the scores",
+        "correct": false,
+        "why": "The walk runs over a ranking that was already sorted; it saves nothing on sorting."
+      },
+      {
+        "text": "Cutting first would change the books' scores",
+        "correct": false,
+        "why": "A score depends on two vectors and nothing else; where the list is cut cannot change it."
+      },
+      {
+        "text": "The rules can only be checked against the whole catalogue at once",
+        "correct": false,
+        "why": "Each rule is checked one book at a time, which is exactly what the loop does."
+      },
+      {
+        "text": "Removing books after the cut leaves fewer than five; for Caio it would leave one",
+        "correct": true,
+        "why": "Right. His top five held his three finished books and an out-of-stock one, so only one would remain."
+      }
+    ]
+  },
+  {
+    "id": "ex-e79s1hbe",
+    "version": 1,
+    "section": "leaving-things-out",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A vector index returns the nearest 50 books for a reader, and the shop's rules then remove 46 of them. How many recommendations does the reader get from that one request?",
+    "hint": "Rules applied after the search can only remove.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "books"
+  },
+  {
+    "id": "ex-c9wbc8ba",
+    "version": 1,
+    "section": "leaving-things-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is \"one book per author\" applied as a rule on the data rather than left to the similarity of the vectors?",
+    "hint": "What text went into each vector?",
+    "choices": [
+      {
+        "text": "That field never went into the embedded text",
+        "correct": true,
+        "why": "Right. The vectors were made from title and blurb; sameness that lives in a field the model never read has to be checked against that field."
+      },
+      {
+        "text": "Embeddings cannot represent people's names",
+        "correct": false,
+        "why": "They can represent any text they are given; the name was simply not part of this text."
+      },
+      {
+        "text": "Comparing authors through vectors is forbidden by the catalogue's licence",
+        "correct": false,
+        "why": "No licence is involved; the reason is what the vectors were built from."
+      },
+      {
+        "text": "MMR already removes a second book by the same author",
+        "correct": false,
+        "why": "It did not: Around the World in Eighty Days stayed beside another Verne at every λ."
+      }
+    ]
+  },
+  {
+    "id": "ex-prx737f8",
+    "version": 1,
+    "section": "leaving-things-out",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each measure in this lesson to the problem it prevents.",
+    "hint": "Two are rules on the books' data; one works on the vectors.",
+    "pairs": [
+      {
+        "left": "skipping finished books",
+        "right": "Recommending a book the reader already has"
+      },
+      {
+        "left": "an out-of-stock list",
+        "right": "Offering what the shop cannot sell"
+      },
+      {
+        "left": "one book per author",
+        "right": "Two authors holding four of five places"
+      },
+      {
+        "left": "MMR",
+        "right": "Five suggestions that resemble each other"
+      }
+    ],
+    "right_distractors": [
+      "A new reader with no history"
+    ]
+  },
+  {
+    "id": "ex-8vkqrtwy",
+    "version": 1,
+    "section": "diversity",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What list does MMR give with λ = 1?",
+    "hint": "Look at what the second term is multiplied by.",
+    "choices": [
+      {
+        "text": "The books in a random order",
+        "correct": false,
+        "why": "Nothing in MMR is random; at λ = 1 it is the ordinary ranking."
+      },
+      {
+        "text": "The most varied list it can make",
+        "correct": false,
+        "why": "Variety only counts as λ falls; at 1 it does not count at all."
+      },
+      {
+        "text": "The plain similarity ranking",
+        "correct": true,
+        "why": "Right. 1 − λ is 0, so resemblance to the picks costs nothing; mmr.py's first list matched reader.py's."
+      },
+      {
+        "text": "The books sorted by author",
+        "correct": false,
+        "why": "MMR never reads the author; it compares vectors."
+      }
+    ]
+  },
+  {
+    "id": "ex-7batyg3r",
+    "version": 1,
+    "section": "diversity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At λ = 0.5, Persuasion, a romance scoring 0.176 against Caio, took second place. Why?",
+    "hint": "Half the value is relevance, half is difference.",
+    "choices": [
+      {
+        "text": "It is Caio's closest unread book",
+        "correct": false,
+        "why": "It is the furthest from him of anything on the four lists; Journey to the Centre of the Earth, at 0.536, is the closest."
+      },
+      {
+        "text": "It resembles nothing already picked, and at 0.5 being different counts as much as being relevant",
+        "correct": true,
+        "why": "Right. MMR did what the setting asked; the setting was too low for this catalogue."
+      },
+      {
+        "text": "MMR always adds one book of each genre",
+        "correct": false,
+        "why": "MMR knows nothing of genres; it compares vectors, and at λ = 0.7 the list had no romance at all."
+      },
+      {
+        "text": "λ = 0.5 removes every science-fiction book after the first",
+        "correct": false,
+        "why": "Around the World in Eighty Days and Moby-Dick are adventures, and nothing removes a genre; the penalty is about resemblance to the picks."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fqyym6e",
+    "version": 1,
+    "section": "diversity",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With λ = 0.7, a book has a similarity of 0.40 to the reader, and its highest similarity to a book already picked is 0.50. What is its MMR value?",
+    "hint": "λ times the first, minus (1 − λ) times the second.",
+    "value": 0.13,
+    "tolerance": 0.001,
+    "unit": ""
+  },
+  {
+    "id": "ex-a2fswyn4",
+    "version": 1,
+    "section": "diversity",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Choosing results one at a time, each paying a penalty for resembling those already chosen, is called maximal marginal ___.",
+    "hint": "The R in MMR.",
+    "blanks": [
+      {
+        "accept": [
+          "relevance"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-x3bszhd1",
+    "version": 1,
+    "section": "cold-start",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Lost World was ready to recommend before a single copy was sold. What made that possible?",
+    "hint": "Where does a book's vector come from in this lesson?",
+    "choices": [
+      {
+        "text": "It copied the vector of the most similar book in the catalogue",
+        "correct": false,
+        "why": "It got its own vector from its own text; Journey to the Centre of the Earth was only its nearest neighbour."
+      },
+      {
+        "text": "Three readers had to finish it first",
+        "correct": false,
+        "why": "Nobody had read it; that is the point of the example."
+      },
+      {
+        "text": "New books are shown first to every reader",
+        "correct": false,
+        "why": "Only Caio and Íris would have seen it in their top five; the rest would not."
+      },
+      {
+        "text": "Its vector comes from its own title and blurb",
+        "correct": true,
+        "why": "Right. Content-based recommendation needs nothing from readers, so a new book is placed on its first day."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0bhc8f0",
+    "version": 1,
+    "section": "cold-start",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marcos has an account and has finished nothing. Why can `reader.py` not produce a list for him?",
+    "hint": "What is his vector made from?",
+    "choices": [
+      {
+        "text": "The average of no vectors is not a vector",
+        "correct": true,
+        "why": "Right. With nothing finished there is nothing to average, so the fallbacks are popularity or asking him."
+      },
+      {
+        "text": "His account is too new for the model to accept",
+        "correct": false,
+        "why": "The model never sees accounts; it only embeds text."
+      },
+      {
+        "text": "The model refuses readers who have no name on file",
+        "correct": false,
+        "why": "Marcos has a name; and the model never sees a reader's name either."
+      },
+      {
+        "text": "His vector would be all ones and match every book equally",
+        "correct": false,
+        "why": "There is no vector at all to be all ones; the mean of an empty list is undefined."
+      }
+    ]
+  },
+  {
+    "id": "ex-b562fx3s",
+    "version": 1,
+    "section": "cold-start",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A large shop with millions of readers adds a new book this morning. Which approach can recommend it today?",
+    "hint": "What does each approach need to have a vector for the book?",
+    "choices": [
+      {
+        "text": "Collaborative filtering, because millions of readers are plenty of data",
+        "correct": false,
+        "why": "The data is about other books; for this one there is no reader at all, so it has no vector there."
+      },
+      {
+        "text": "Both, since both end up comparing vectors",
+        "correct": false,
+        "why": "They compare vectors once they have them; only one of them can make a vector for an unread book."
+      },
+      {
+        "text": "Content-based, because it embeds the blurb",
+        "correct": true,
+        "why": "Right. Collaborative filtering learns a book's vector from who read it, and nobody has; millions of readers of other books do not help this one."
+      },
+      {
+        "text": "Neither, until the book has sold at least one copy",
+        "correct": false,
+        "why": "The Lost World was placed from its blurb alone, before any sale."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhq801hr",
+    "version": 1,
+    "section": "cold-start",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Asked for \"ghost stories and haunted houses\", the search found The Turn of the Screw first and Bleak House, a novel about a lawsuit, second. Why Bleak House?",
+    "hint": "Look at its title.",
+    "choices": [
+      {
+        "text": "Bleak House is a ghost story in the catalogue",
+        "correct": false,
+        "why": "Its blurb is about an inheritance lawsuit in London's courts; its genre is literary."
+      },
+      {
+        "text": "Dickens is the most popular author among the readers",
+        "correct": false,
+        "why": "Popularity is not part of the score; the search only compares the query's vector with the books'."
+      },
+      {
+        "text": "The query was embedded with a different model from the books",
+        "correct": false,
+        "why": "coldstart.py embeds the query with the same embed function as the books; otherwise none of the scores would mean anything."
+      },
+      {
+        "text": "Its title has *house*, which weighs a lot in a short query",
+        "correct": true,
+        "why": "Right. The title is part of the embedded text, and in a five-word query one shared word moves the score a long way."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7ejj1gw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what `filters.py` does to give Caio five recommendations, starting from nothing.",
+    "hint": "The books are embedded before anything is known about Caio.",
+    "items": [
+      "Embed every book's title and blurb",
+      "Average the vectors of the books Caio finished and renormalise",
+      "Score every book against that vector and sort",
+      "Walk down the ranking, skipping books that break a rule",
+      "Stop when five books have been picked"
+    ],
+    "trap": "The rules are applied during the walk, not before the ranking and not after a cut at five."
+  },
+  {
+    "id": "ex-5ytp4xfr",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nina has finished one book, Around the World in Eighty Days. Which of these are true? Choose all that apply.",
+    "hint": "An average of one.",
+    "choices": [
+      {
+        "text": "Her vector is that book's vector",
+        "correct": true,
+        "why": "Yes. The average of one unit vector is the vector itself."
+      },
+      {
+        "text": "Her list is the row under that book",
+        "correct": true,
+        "why": "Yes. reader.py r12 and like.py b28 printed the same five books with the same scores."
+      },
+      {
+        "text": "Her average had length 1.000 before renormalising",
+        "correct": true,
+        "why": "Yes. One vector of length 1 averages to itself, so there was nothing to renormalise."
+      },
+      {
+        "text": "Her list can only contain adventure books, the genre she read",
+        "correct": false,
+        "why": "Her list had four science-fiction books and a mystery; genre is not a rule here."
+      },
+      {
+        "text": "She needs the popularity fallback, like Marcos",
+        "correct": false,
+        "why": "One book is enough to build a vector; the fallback is for a reader with none."
+      }
+    ]
+  },
+  {
+    "id": "ex-ps2n3k4p",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each reader or book to how this lesson's recommender handles it.",
+    "hint": "One of them has no vector at all.",
+    "pairs": [
+      {
+        "left": "a book added today",
+        "right": "Embed its blurb; it can be recommended at once"
+      },
+      {
+        "left": "a reader who has finished nothing",
+        "right": "Show what is popular, or ask what they like"
+      },
+      {
+        "left": "a reader with one finished book",
+        "right": "The row under that book"
+      },
+      {
+        "left": "a reader with two different tastes",
+        "right": "A list from the point between them"
+      }
+    ],
+    "right_distractors": [
+      "Retrain the embedding model"
+    ]
+  }
+]
