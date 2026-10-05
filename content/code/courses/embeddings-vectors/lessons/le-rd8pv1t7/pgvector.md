@@ -4,13 +4,15 @@ version: 1
 ---
 
 Lessons 12 and 13 put the help centre into stores built for vectors: Chroma, FAISS, LanceDB,
-Qdrant. It is easy to come away thinking vector search needs a database of its own. Marginalia's
-orders, accounts and articles already live in PostgreSQL, and **pgvector** turns that database
-into a vector store with one statement. It is an extension, the same mechanism PostGIS uses to add geographic
-types, and it adds three things: a column type called
-`vector`, operators that measure the distance between two of them, and two kinds of index.
+Qdrant. It is easy to come away thinking that vector search needs a database of its own.
+Marginalia's orders, accounts and articles already live in PostgreSQL, and **pgvector** turns that
+database into a vector store. It is an extension, the same mechanism PostGIS uses to add geographic
+types, and it adds three things: a column type called `vector`, operators that measure the distance
+between two vectors, and two kinds of index.
 
-The lab runs PostgreSQL 16 with the pgvector package Ubuntu 24.04 ships. Here is the schema:
+Lesson 2 installed it in a scratch database to compare three distances on paper. Here it holds the
+help centre. The lab runs PostgreSQL 16 with the pgvector package Ubuntu 24.04 ships, and the schema
+is two ordinary tables:
 
 ```schooling-example
 {
@@ -60,9 +62,9 @@ Indexes:
 
 **The extension is version 0.6.0**, and that number matters more than usual. pgvector moves fast:
 0.7.0 added a half-precision `halfvec` type, sparse vectors and indexes over binary vectors, and
-0.8.0 added iterative index scans, which lesson 17 comes back to. None of those exist in 0.6.0, so nothing in this
-course runs them. A hosted service chooses its own version, and the first query to send to any
-PostgreSQL you did not install is the `extversion` one above.
+0.8.0 added iterative index scans, which lesson 17 comes back to. None of those exist in 0.6.0, so
+nothing in this course runs them. A hosted service chooses its own version, and the first query to
+send to any PostgreSQL you did not install is the `extversion` one above.
 
 ## Loading the help centre
 
@@ -107,8 +109,9 @@ ana@lab:~/emb$ psql -c "SELECT id, vector_dims(embedding) AS dims, round(vector_
 ```
 
 **Each stored vector takes 1,544 bytes**: the 384 × 4 = 1,536 bytes of `float32` numbers lesson 1
-counted, plus an 8-byte header that holds the size and the dimension. pgvector keeps every coordinate in single
-precision, whatever Python sends. The length column says the model's unit length survived the trip.
+counted, plus an 8-byte header that holds the dimension. pgvector keeps every coordinate in single
+precision, whatever Python sends. The `length` column says the model's unit length survived the
+trip. Lesson 18 weighs the whole row and the indexes around it; this is only the value.
 
 ## The type checks the dimension
 
@@ -124,4 +127,4 @@ That is worth more than it looks. Lesson 1 showed that a vector from one model m
 to a vector from another, and the commonest way to mix them is a script that loads the wrong
 model. When the two models have different dimensions, this column catches it at the first INSERT.
 Two models with the same dimension slip through, which is why the model's name belongs in the
-table as well, in a column or in the table's own name.
+schema as well, in a column or in the table's own name.
