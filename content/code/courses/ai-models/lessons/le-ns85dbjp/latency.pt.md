@@ -18,8 +18,8 @@ da resposta.
 ## Medir, e por que uma execução só não diz nada
 
 A latência varia de uma requisição para a outra: filas, outros clientes, a rede. Então ela é medida
-muitas vezes e relatada como uma **distribuição**: a **mediana** (p50), o que uma requisição típica
-vê, e o **percentil 95** (p95), o que uma requisição em vinte vê, ou pior. O p95 é o número de que um
+muitas vezes e relatada como uma **distribuição**: a mediana (p50), o que uma requisição típica
+vê, e o percentil 95 (p95), o que uma requisição em vinte vê, ou pior. O p95 é o número de que um
 usuário irritado se lembra.
 
 O `lab/latency.py` faz streaming da mesma requisição de rascunho vinte vezes para cada modelo do

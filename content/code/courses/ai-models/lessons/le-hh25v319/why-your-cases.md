@@ -5,7 +5,7 @@ version: 1
 
 Every lesson so far has ended in the same place: quality has to be measured, and only on your own
 work. This lesson is the measuring, and it is the part of the course that outlives every product
-the later lessons name. A model you choose this year will be retired; the cases you write to choose
+lessons 6 to 20 name. A model you choose this year will be retired; the cases you write to choose
 it will choose its replacement.
 
 ## What a benchmark cannot tell you

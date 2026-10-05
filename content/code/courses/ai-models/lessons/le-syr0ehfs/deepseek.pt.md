@@ -61,5 +61,5 @@ quarto do de saída. O autor concorre com todo mundo que baixou os pesos dele.
 
 Para a ana isso transforma uma pergunta em duas. Se o DeepSeek V4 Flash é bom o bastante é a pergunta
 da aula 5, respondida uma vez. Onde rodá-lo é a pergunta da aula 10 seção 05, respondida host a host por
-preço, latência, precisão e, para uma loja brasileira, **onde o host processa os dados**, o que na API do
-próprio autor quer dizer numa empresa sediada na China, e nos outros quer dizer onde cada um disser.
+preço, latência, precisão e, para uma loja brasileira, **onde o host processa os dados**. Na API do
+próprio autor isso quer dizer uma empresa sediada na China; nos outros, onde cada um disser.

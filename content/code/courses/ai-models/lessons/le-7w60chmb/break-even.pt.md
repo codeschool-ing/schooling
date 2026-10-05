@@ -20,8 +20,8 @@ porque um rótulo é uma palavra ou duas. As respostas do substituto foram escri
 contagens são reais**, feitas com o mesmo tokenizador para todos os casos.
 
 O `lab/breakeven.py` pega esses números, arredondados para cima, 59 de entrada e 2 de saída, os
-preços de um modelo na tabela e o custo mensal de uma máquina. A Lantern Books recebe **uns 400
-e-mails por dia**, e a máquina custa **US$ 1.500 por mês**: os dois são suposições do curso, redondas
+preços de um modelo na tabela e o custo mensal de uma máquina. A Lantern Books recebe uns 400
+e-mails por dia, e a máquina custa US$ 1.500 por mês: os dois são suposições do curso, redondas
 o bastante para serem lidas como tais.
 
 ```

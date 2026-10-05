@@ -21,8 +21,8 @@ gpt-6-astra                                     922,000   128000       10       
 
 Two naming schemes sit side by side.
 
-**GPT-5, by version and size.** A version number (5.4, 5.5) and, below the full model, a **mini**
-and a **nano**. Within version 5.4 the steps are steep: nano costs $0.20 a million input tokens,
+**GPT-5, by version and size.** A version number (5.4, 5.5) and, below the full model, a mini
+and a nano. Within version 5.4 the steps are steep: nano costs $0.20 a million input tokens,
 mini $0.75, the full model $2.50, more than twelve times nano. The window steps too: 272,000 tokens
 for mini and nano, about a million for the full models. 5.5 has no mini or nano in this selection,
 which is common: the small sizes of a family often lag a version behind the large one, as Gemini's

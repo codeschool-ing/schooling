@@ -31,7 +31,7 @@ gemini/gemini-flash-latest                    1,048,576    65536     0.75     3.
 gemini/gemini-pro-latest                      1,048,576    65536        2       12  VFSCRP
 ```
 
-**Três faixas de novo**, com nomes de velocidade: **Flash-Lite**, a mais barata, **Flash** e **Pro**.
+**Três faixas de novo**, com nomes de velocidade: Flash-Lite, a mais barata, Flash e Pro.
 Todas têm janela de 1.048.576 tokens, um milhão em binário, e escrevem até 65.536. A janela é a mesma
 em todo preço, que é a primeira coisa que separa esta família da aula anterior, em que o modelo mais
 barato tinha um quinto da janela.

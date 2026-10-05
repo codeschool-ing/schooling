@@ -28,9 +28,9 @@ nos dois: o modelo escolheu errado.
 
 **Os dois números importam, por motivos diferentes.** O tolerante mede se o modelo entendeu a tarefa.
 O estrito mede se o programa consegue usar a resposta como ela vem. Uma distância entre eles é um
-problema com conserto, seja com uma etapa de arrumação no programa (que então *é* a regra tolerante,
-então escreva uma vez e use nos dois lugares), seja com uma instrução ou um recurso de saída
-estruturada (a coluna `S` da aula 4) que faça o modelo escrever exatamente o rótulo.
+problema com conserto. Um conserto é uma etapa de arrumação no programa, que então *é* a regra
+tolerante, então escreva uma vez e use nos dois lugares. O outro é uma instrução ou um recurso de
+saída estruturada (a coluna `S` da aula 4) que faça o modelo escrever exatamente o rótulo.
 
 ## Na extração: interpreta ou não
 

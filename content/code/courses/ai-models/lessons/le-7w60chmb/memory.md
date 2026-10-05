@@ -61,7 +61,7 @@ Read the table one column at a time.
 **Parameters.** 8,030,261,248: the "8B" in the name is a rounding of a number you can compute. The
 70B is 70.6 billion and the 405B is 405.9 billion.
 
-**Bytes per parameter.** Each weight is stored at some precision. At **16 bits**, the precision the
+**Bytes per parameter.** Each weight is stored at some precision. At 16 bits, the precision the
 models are released in, each parameter takes two bytes, so 8 billion parameters take **16 GB**. At
 8 bits, half that; at 4 bits, a quarter. Section 04 is about what that costs in quality.
 

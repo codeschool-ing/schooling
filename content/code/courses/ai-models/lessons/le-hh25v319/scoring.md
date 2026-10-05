@@ -28,9 +28,9 @@ wrong.
 
 **Both numbers matter, for different reasons.** Loose measures whether the model understood the
 task. Strict measures whether the program can use the reply as it comes. A gap between them is a
-fixable problem, either with a tidying step in the program (which then *is* the loose rule, so
-write it once and use it in both places) or with an instruction or a structured-output feature
-(lesson 4's `S` column) that makes the model write exactly the label.
+fixable problem. One fix is a tidying step in the program, which then *is* the loose rule, so
+write it once and use it in both places. The other is an instruction or a structured-output
+feature (lesson 4's `S` column) that makes the model write exactly the label.
 
 ## For extraction: does it parse
 

@@ -24,8 +24,8 @@ ana@desk:~/desk$ sheet pick --min-window 32000 | sed -n 2p
 2722 entries pass
 ```
 
-Das 2.990 entradas de chat com preço, **2.722** aceitam 32.000 tokens, **1.666** aceitam 200.000 e
-**761** aceitam um milhão ou mais. A requisição mais longa da ana, a política mais uma conversa longa
+Das 2.990 entradas de chat com preço, 2.722 aceitam 32.000 tokens, 1.666 aceitam 200.000 e
+761 aceitam um milhão ou mais. A requisição mais longa da ana, a política mais uma conversa longa
 por e-mail, fica abaixo de 10.000 tokens. **Todo modelo que ela poderia razoavelmente pôr na lista
 curta comporta isso muitas vezes**, o que faz da janela um limite que ela passa com folga e nada mais.
 

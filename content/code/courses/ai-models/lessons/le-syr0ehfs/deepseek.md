@@ -61,6 +61,6 @@ output. The maker competes with everybody who downloaded its weights.
 
 For ana, that turns one question into two. Whether DeepSeek V4 Flash is good enough is lesson 5's
 question, answered once. Where to run it is lesson 10 section 05's question, answered per host on
-price, latency, precision and, for a Brazilian shop, **where the host processes the data**, which
-for the maker's own API means in a company based in China, and for the others means wherever each
-of them says.
+price, latency, precision and, for a Brazilian shop, **where the host processes the data**. For
+the maker's own API that means a company based in China; for the others, wherever each of them
+says.

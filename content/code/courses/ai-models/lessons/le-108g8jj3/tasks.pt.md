@@ -4,7 +4,7 @@ version: 1
 ---
 
 Toda família das aulas 6 a 11 era de modelos de chat: texto entra, texto sai, qualquer tarefa que dê
-para descrever. O **Hugging Face** é onde a maioria dos modelos abertos é publicada, pelos autores e por
+para descrever. O Hugging Face é onde a maioria dos modelos abertos é publicada, pelos autores e por
 todo mundo, e ele os organiza por **tarefa**. A lista de tarefas mora no próprio código-fonte do Hugging
 Face, que o laboratório lê num commit fixado; o comentário acima dela diz para que ela serve:
 

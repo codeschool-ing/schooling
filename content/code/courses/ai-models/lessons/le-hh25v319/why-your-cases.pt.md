@@ -5,7 +5,7 @@ version: 1
 
 Todas as aulas até aqui terminaram no mesmo lugar: qualidade precisa ser medida, e só no seu próprio
 trabalho. Esta aula é a medição, e é a parte do curso que sobrevive a todo produto que as aulas
-seguintes citam. Um modelo que você escolhe este ano vai ser aposentado; os casos que você escreve
+6 a 20 citam. Um modelo que você escolhe este ano vai ser aposentado; os casos que você escreve
 para escolhê-lo vão escolher o substituto.
 
 ## O que um benchmark não diz

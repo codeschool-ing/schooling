@@ -62,7 +62,7 @@ Leia a tabela uma coluna de cada vez.
 **Parâmetros.** 8.030.261.248: o "8B" do nome é um arredondamento de um número que você consegue
 calcular. A 70B tem 70,6 bilhões e a 405B, 405,9 bilhões.
 
-**Bytes por parâmetro.** Cada peso é guardado com alguma precisão. Em **16 bits**, a precisão em que
+**Bytes por parâmetro.** Cada peso é guardado com alguma precisão. Em 16 bits, a precisão em que
 os modelos são publicados, cada parâmetro ocupa dois bytes, então 8 bilhões de parâmetros ocupam
 **16 GB**. Em 8 bits, metade; em 4 bits, um quarto. A seção 04 trata do que isso custa em qualidade.
 

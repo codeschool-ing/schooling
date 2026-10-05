@@ -17,8 +17,8 @@ length of the reply.
 ## Measuring it, and why a single run says nothing
 
 Latency varies from one request to the next: queues, other customers, the network. So it is
-measured many times and reported as a **distribution**: the **median** (p50), what a typical
-request sees, and the **95th percentile** (p95), what one request in twenty sees or worse. The p95
+measured many times and reported as a **distribution**: the median (p50), what a typical
+request sees, and the 95th percentile (p95), what one request in twenty sees or worse. The p95
 is the number an annoyed user remembers.
 
 `lab/latency.py` streams the same drafting request twenty times to each of the stand-in's models

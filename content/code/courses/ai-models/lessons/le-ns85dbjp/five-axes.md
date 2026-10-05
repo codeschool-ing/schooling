@@ -3,8 +3,8 @@ title: Five criteria, two kinds
 version: 1
 ---
 
-Every comparison of models ends up on the same five criteria: **quality**, **cost**, **latency**,
-**context** and **privacy**. The mistake is treating them as five scores to add up. They are two
+Every comparison of models ends up on the same five criteria: quality, cost, latency,
+context and privacy. The mistake is treating them as five scores to add up. They are two
 different kinds of thing, and they are used in two different steps.
 
 ```schooling-figure

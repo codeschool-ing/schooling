@@ -22,7 +22,7 @@ gpt-6-astra                                     922,000   128000       10       
 Dois esquemas de nome convivem.
 
 **GPT-5, por versão e tamanho.** Um número de versão (5.4, 5.5) e, abaixo do modelo completo, um
-**mini** e um **nano**. Dentro da versão 5.4 os degraus são íngremes: o nano custa US$ 0,20 o milhão
+mini e um nano. Dentro da versão 5.4 os degraus são íngremes: o nano custa US$ 0,20 o milhão
 de tokens de entrada, o mini US$ 0,75, o completo US$ 2,50, mais de doze vezes o nano. A janela também
 sobe: 272.000 tokens no mini e no nano, cerca de um milhão nos completos. A 5.5 não tem mini nem nano
 nesta seleção, o que é comum: os tamanhos pequenos de uma família muitas vezes ficam uma versão atrás

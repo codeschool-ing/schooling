@@ -31,7 +31,7 @@ gemini/gemini-flash-latest                    1,048,576    65536     0.75     3.
 gemini/gemini-pro-latest                      1,048,576    65536        2       12  VFSCRP
 ```
 
-**Three tiers again**, named for speed: **Flash-Lite**, the cheapest, **Flash**, and **Pro**. Every
+**Three tiers again**, named for speed: Flash-Lite, the cheapest, Flash, and Pro. Every
 one of them has a window of 1,048,576 tokens, a million in binary, and writes up to 65,536. The
 window is the same at every price, which is the first thing that sets this family apart from the
 previous lesson's, where the cheapest model had a fifth of the window.

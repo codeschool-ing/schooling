@@ -4,7 +4,7 @@ version: 1
 ---
 
 Every family in lessons 6 to 11 was a chat model: text in, text out, any task you can describe.
-**Hugging Face** is where most open models are published, by their makers and by everybody else, and
+Hugging Face is where most open models are published, by their makers and by everybody else, and
 it organises them by **task**. The list of tasks lives in Hugging Face's own source code, which the
 lab reads at a pinned commit; the comment above it says what the list is for:
 

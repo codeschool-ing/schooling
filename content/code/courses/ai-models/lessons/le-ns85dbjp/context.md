@@ -25,7 +25,7 @@ ana@desk:~/desk$ sheet pick --min-window 32000 | sed -n 2p
 2722 entries pass
 ```
 
-Of 2,990 priced chat entries, **2,722** take 32,000 tokens, **1,666** take 200,000, and **761** take a
+Of 2,990 priced chat entries, 2,722 take 32,000 tokens, 1,666 take 200,000, and 761 take a
 million or more. Ana's longest request, the policy plus a long e-mail thread, is under 10,000
 tokens. **Every model she could reasonably shortlist fits it many times over**, which makes the
 window a threshold she passes by a mile and nothing more.

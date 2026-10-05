@@ -20,8 +20,8 @@ word or two. The stand-in's replies are written by the course; **the counts are 
 the same tokenizer for every case.
 
 `lab/breakeven.py` takes those numbers, rounded up to 59 in and 2 out, a model's prices from the
-sheet, and the monthly cost of a machine. Lantern Books receives **about 400 e-mails a day**, and
-the machine costs **$1,500 a month**: both are the course's assumptions, round enough to be read as
+sheet, and the monthly cost of a machine. Lantern Books receives about 400 e-mails a day, and
+the machine costs $1,500 a month: both are the course's assumptions, round enough to be read as
 such.
 
 ```

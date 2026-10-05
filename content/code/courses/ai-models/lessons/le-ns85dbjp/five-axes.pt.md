@@ -3,8 +3,8 @@ title: Cinco critérios, dois tipos
 version: 1
 ---
 
-Toda comparação de modelos termina nos mesmos cinco critérios: **qualidade**, **custo**,
-**latência**, **contexto** e **privacidade**. O erro é tratá-los como cinco notas para somar. São
+Toda comparação de modelos termina nos mesmos cinco critérios: qualidade, custo,
+latência, contexto e privacidade. O erro é tratá-los como cinco notas para somar. São
 dois tipos diferentes de coisa, usados em dois passos diferentes.
 
 ```schooling-figure
