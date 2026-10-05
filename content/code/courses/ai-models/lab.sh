@@ -16,7 +16,8 @@
 #                         js-tiktoken for the token counter
 #   127.0.0.1:8500        standin, which answers in place of eight providers
 #   127.0.0.1:11434       standin again, where Ollama listens
-#   /var/log/standin      every request standin received, one JSON line each
+#   /var/log/standin      every request standin received, one JSON line each,
+#                         which `wire` prints back (lab/wire.py)
 #
 # WHAT IS REAL AND WHAT WAS WRITTEN FOR THE COURSE. No model API is reachable
 # from the machine this was recorded on, and an API key is a bill a course
@@ -113,6 +114,7 @@ install_lab() {
   install -m 0644 "$HERE/lab/cases.jsonl" "$HERE/lab/answers.json" "$HERE/lab/replies.json" $SHARE/
   install -m 0755 "$HERE/lab/sheet.py" $VENV/bin/sheet
   install -m 0755 "$HERE/lab/sources.py" $VENV/bin/sources
+  install -m 0755 "$HERE/lab/wire.py" $VENV/bin/wire
 }
 
 # The two things fetched from the network, once, so that every command in the
