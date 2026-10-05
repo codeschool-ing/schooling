@@ -22,6 +22,11 @@ course.
     guard modeval FILE --category C (--threshold T [--show] | --sweep |
                   --review R --block B)
                                     the endpoint measured against labels
+    guard enduser ACCOUNT [--provider P] | --naive EMAIL
+                                    the id sent to a provider for one user
+    guard reverse HASH --list FILE  a dictionary attack on such an id
+    guard ratelimit FILE --per-key N [--per-user M]
+                                    a request log replayed against limits
 """
 import argparse
 import datetime as dt
@@ -333,6 +338,47 @@ def cmd_modeval(a):
     return 0
 
 
+# ---- end-user ids and rate limits ------------------------------------------
+
+def cmd_enduser(a):
+    from . import enduser as e
+    if a.naive:
+        print(e.naive_id(a.naive))
+        return 0
+    with open(os.path.join(HOME, "keys", a.provider + ".key"), "rb") as fh:
+        key = fh.read().strip()
+    print(e.end_user_id(a.account, key))
+    return 0
+
+
+def cmd_reverse(a):
+    from . import enduser as e
+    with open(a.list, encoding="utf-8") as fh:
+        guesses = [line.strip() for line in fh if line.strip()]
+    for n, g in enumerate(guesses, 1):
+        if e.naive_id(g) == a.hash:
+            print("found after %d guesses: %s" % (n, g))
+            return 0
+    print("not found in %d guesses" % len(guesses))
+    return 1
+
+
+def cmd_ratelimit(a):
+    from . import ratelimit as r
+    with open(a.file) as fh:
+        rows = [json.loads(line) for line in fh if line.strip()]
+    out = r.replay(rows, a.per_key, a.per_user)
+    print("limits: %d a minute per key%s" % (
+        a.per_key, ", %d a minute per user" % a.per_user if a.per_user else ""))
+    print("%-25s %5s %8s %8s" % ("end user", "sent", "allowed", "refused"))
+    for user in sorted(out):
+        sent, allowed = out[user]
+        print("%-25s %5d %8d %8d" % (user, sent, allowed, sent - allowed))
+    hit = [u for u, (s_, al) in out.items() if s_ > al]
+    print("%d of %d users had a request refused" % (len(hit), len(out)))
+    return 0
+
+
 # ---- the lab's own setup --------------------------------------------------
 
 def cmd_build(a):
@@ -359,6 +405,18 @@ def cmd_build(a):
             "out_tokens": sum(r["out_tokens"] for r in rs),
             "ms_max": max(r["ms"] for r in rs)}
             for s, rs in sorted(group(recs, "surface").items())])
+    from . import ratelimit
+    ratelimit.build(os.path.join(HOME, "data", "api-requests.jsonl"))
+    first = ["ana", "bruno", "carla", "diego", "elisa", "fernanda", "gustavo", "helena",
+             "igor", "juliana", "karina", "lucas", "marcos", "natalia", "otavio", "paula",
+             "rafael", "sofia", "tiago", "vitoria"]
+    last = ["almeida", "barros", "costa", "dias", "ferreira", "gomes", "lima", "moreira",
+            "nunes", "oliveira", "prado", "ribeiro", "rocha", "santos", "silva", "souza",
+            "teixeira", "vieira", "xavier", "zanetti"]
+    with open(os.path.join(HOME, "data", "emails.txt"), "w") as fh:
+        for f in first:
+            for l in last:
+                fh.write("%s.%s@example.com.br\n" % (f, l))
     from . import fairness
     for version in fairness.COUNTS:
         fairness.build(os.path.join(HOME, "data", "shortlist-%s.csv" % version), version)
@@ -436,6 +494,23 @@ def main(argv=None):
     s.add_argument("--review", type=float)
     s.add_argument("--block", type=float)
     s.set_defaults(fn=cmd_modeval)
+
+    s = sub.add_parser("enduser")
+    s.add_argument("account", nargs="?")
+    s.add_argument("--provider", default="provider-a")
+    s.add_argument("--naive")
+    s.set_defaults(fn=cmd_enduser)
+
+    s = sub.add_parser("reverse")
+    s.add_argument("hash")
+    s.add_argument("--list", required=True)
+    s.set_defaults(fn=cmd_reverse)
+
+    s = sub.add_parser("ratelimit")
+    s.add_argument("file")
+    s.add_argument("--per-key", type=int, required=True)
+    s.add_argument("--per-user", type=int)
+    s.set_defaults(fn=cmd_ratelimit)
 
     s = sub.add_parser("_build")
     s.set_defaults(fn=cmd_build)

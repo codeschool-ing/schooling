@@ -44,6 +44,9 @@
 #     data/shortlist-v1.csv and -v2.csv are written from the counts in
 #     guardlab/fairness.py, and the profiles in data/profiles.jsonl are
 #     invented.
+#   - The requests in data/api-requests.jsonl were written by the lab, from
+#     the table in guardlab/ratelimit.py, and the addresses in
+#     data/emails.txt are invented: every first name with every surname.
 #   - guardlab/moderation.py is NOT A MODERATION MODEL either: a list of
 #     English words with weights the course chose, answering with a score
 #     per category the way a moderation endpoint does. The sixty messages in
@@ -79,5 +82,11 @@ GUARD=$here PYTHONPATH=$here exec python3 -m guardlab.cli "$@"
 GUARD
 chmod +x "$LAB/bin/guard"
 find "$LAB/guardlab" -name __pycache__ -prune -exec rm -rf {} +
+# THE KEYS ARE FIXED, so that every capture prints the same ids. A real key
+# is random, at least 32 bytes, and kept in a secret store, never in a file
+# beside the code.
+mkdir -p "$LAB/keys"
+printf 'lab-key-for-provider-a-not-secret-0001\n' > "$LAB/keys/provider-a.key"
+printf 'lab-key-for-provider-b-not-secret-0002\n' > "$LAB/keys/provider-b.key"
 "$LAB/bin/guard" _build
 echo "lab ready in $LAB — put $LAB/bin on your PATH"
