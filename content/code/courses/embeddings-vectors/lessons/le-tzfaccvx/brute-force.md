@@ -4,11 +4,11 @@ version: 1
 ---
 
 Every search in lessons 3 to 10 was the same line of NumPy: multiply the question's vector by every
-stored vector and sort the scores. It is easy to file that line under "toy" and assume a real
-system does something cleverer from the start. **It is not a toy. It is exact search**, the method
-that returns the true nearest vectors, and it is the yardstick every faster method is measured
-against; lesson 15 measures approximate indexes by how often they agree with it. What it costs is
-the question here, and the cost has a simple shape: **every query reads every vector.**
+stored vector and sort the scores. It is easy to file that line under "toy" and assume a real system
+does something cleverer from the start. **It is not a toy. It is exact search**, the method that
+returns the true nearest vectors, and it is the yardstick every faster method is measured against;
+lesson 15 measures approximate indexes by how often they agree with it. This section measures what
+it costs, and the cost has a simple shape: **every query reads every vector.**
 
 `brute.py` times it at three sizes. The vectors are random rather than embedded texts, because a
 million random numbers take seconds to make and a million embedded texts would take hours, and the
@@ -50,11 +50,11 @@ ana@lab:~/emb$ python brute.py
 1,000,000   1536 MB  129.16 ms         8    384,000,000
 ```
 
-**The time follows the count.** Ten times the vectors took 8.9 times as long from the first row to
-the second, from 0.66 ms to 5.86 ms. The work is one multiply-add per number stored, and the last
-column is the vector count times 384. From the second row to the third it took 22 times as
-long, 129.16 ms. A million vectors are 1536 MB, and every query has to pull all of it through the
-processor; at that size the likeliest limit is how fast memory can be read, not how fast the
+**The time follows the count.** Ten times the vectors took 8.9 times as long from the first row
+to the second, from 0.66 ms to 5.86 ms, and 22 times as long from the second to the third, 129.16
+ms. The work is one multiply-add per number stored, which is the last column: the vector count
+times 384. A million vectors are 1536 MB, and every query has to pull all of it through the
+processor. At that size the likeliest limit is how fast memory can be read, not how fast the
 multiplications are done.
 
 ```schooling-figure
@@ -63,8 +63,8 @@ multiplications are done.
 
 The queries-per-second column is the same measurement turned round, and it is the one that decides
 whether this is enough. At ten thousand vectors one core answers 1526 searches a second, which is
-more than most help centres will ever be asked. At a million it answers 8. Every answer is still exact; there
-are simply only eight of them a second per core, and a second core only doubles that.
+more than most help centres will ever be asked. At a million it answers 8. Every answer is still
+exact; there are simply only eight of them a second per core, and a second core only doubles that.
 
 ## When reading everything is the right answer
 

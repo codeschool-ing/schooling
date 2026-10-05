@@ -3,7 +3,7 @@ title: Bytes per vector
 version: 1
 ---
 
-The size of a vector store is decided the day you choose the model, long before you choose a
+You decide the size of a vector store the day you choose the model, long before you choose a
 database. It is the number of dimensions times four bytes, times the number of rows. People tend
 to expect a database to shrink that, or at least to add nothing to it. This section measures what
 it really adds.
@@ -13,11 +13,11 @@ it really adds.
 Every coordinate is a `float32`, so a vector costs **4 × d bytes**, whatever text it came from.
 That is 1,536 bytes for the 384 numbers of all-MiniLM-L6-v2 (lesson 1 printed it), 6,144 for the
 1536 of text-embedding-3-small, and twice that again for the 3072 of text-embedding-3-large or
-gemini-embedding-001. The dimension is printed in the `dims` column of the price sheet that section 05 of this lesson
-quotes, and it is the one number on that sheet that you pay for every month rather than once.
+gemini-embedding-001. The dimension is printed in the `dims` column of the price sheet that
+section 05 of this lesson quotes, and it is the one number on that sheet that you pay for every month rather than once.
 
-Because the contents of the numbers make no difference to their size, the measurements in this
-lesson use random vectors of length 1 instead of embeddings: 20,000 of them, at 384 and at 1536
+The contents of the numbers make no difference to their size, so the measurements in this lesson
+use random vectors of length 1 instead of embeddings. There are 20,000 of them, at 384 and at 1536
 dimensions, from a helper six lines long.
 
 ```python
@@ -127,11 +127,11 @@ wasted. `indexes` is the primary key, 466,944 bytes in both tables.
 
 **At 1536 dimensions the table proper is almost empty.** `heap` is 1,212,416 bytes and `toast` is
 163,840,000. A vector of 1536 dimensions, over 6 KB, is too big to share a page with its
-neighbours, so PostgreSQL moves it out of the row into the table's **TOAST** storage, cut into chunks, and leaves a pointer
-behind. pgvector 0.6.0 declares its type `STORAGE external`, which means moved out and never
+neighbours. PostgreSQL moves it out of the row into the table's **TOAST** storage, cut into
+chunks, and leaves a pointer behind. pgvector 0.6.0 declares its type `STORAGE external`, which means moved out and never
 compressed. Counting everything, a row costs 8,371 bytes for 6,144 bytes of numbers.
 
-Nothing here is a defect, and both overheads are fixed per row. What it means in practice is that
-**the raw arithmetic understates what a database will hold**, so when you budget, multiply by
-the measured `per_row` and not by 4 × d. And that is still before any index, which is the next
+Nothing here is a defect, and both overheads are fixed per row. In practice, **the raw
+arithmetic understates what a database will hold**, so when you budget, multiply by the measured
+`per_row` and not by 4 × d. And that is still before any index, which is the next
 section.

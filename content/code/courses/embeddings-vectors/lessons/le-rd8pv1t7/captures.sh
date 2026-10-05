@@ -15,9 +15,9 @@
 # only to make a table big enough for the planner to want an index.
 #
 # Supabase and MongoDB Atlas are hosted services this machine cannot reach, so
-# supabase_search.py and atlas_search.py are shown in the lesson and are NOT
-# run here. match.sql, the SQL function the Supabase section calls, is plain
-# PostgreSQL and is run below.
+# supabase_search.py, atlas_setup.py and atlas_search.py are shown in the
+# lesson and are NOT run here. match.sql, the SQL function the Supabase section
+# calls, is plain PostgreSQL and is run below.
 #
 # Every vector comes from all-MiniLM-L6-v2 or WordLlama, run on this machine,
 # and is stored by pgvector 0.6.0 in PostgreSQL 16; lab.sh says where each
@@ -252,6 +252,9 @@ on 'python search.py "how do I get my money back"'
 
 block match
 on 'psql -f match.sql'
+
+block matchdims
+on 'psql -c "SELECT * FROM match_articles(array_fill(0.1::real, ARRAY[256])::vector, 0.4, 3)"'
 
 block edit
 on 'python edit.py'

@@ -84,7 +84,7 @@ ana@lab:~/emb$ psql -f ten.sql
 **Toda linha de consulta recebeu as suas 10 linhas em português.** A coluna do espanhol não mudou,
 porque o índice novo só cobre `lang = 'pt'`; as consultas em espanhol continuam passando pelo índice
 completo e pelo filtro dele. Um índice parcial é mais um índice para construir e manter atualizado
-para cada valor que você der a ele, então ele combina com um campo de poucos valores que importam,
+para cada valor que você der a ele. Por isso combina com um campo de poucos valores que importam,
 como um idioma ou um status, e não com um que tenha um valor por cliente. A seção sobre clientes
 desta aula volta a isso.
 

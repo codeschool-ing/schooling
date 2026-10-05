@@ -24,7 +24,7 @@ would not, and it is cheap to make. The 100 queries are more noisy copies.
     },
     {
       "code": "exact = faiss.IndexFlatIP(384)\nexact.add(X)\n_, truth = exact.search(Q, 10)\nfaiss.write_index(exact, \"random.faiss\")",
-      "note": "The exact answer: a flat index searched for the 10 nearest of each query. It is also written to `random.faiss` for later."
+      "note": "The exact answer: a flat index searched for the 10 nearest of each query. It is also written to `random.faiss`, which the last section of this lesson reads back."
     },
     {
       "code": "for spec in (\"Flat\", \"HNSW32\", \"IVF64,Flat\", \"IVF64,PQ16\"):\n    index = faiss.index_factory(384, spec, faiss.METRIC_INNER_PRODUCT)\n    needs = not index.is_trained\n    index.train(X)\n    index.add(X)\n    _, I = index.search(Q, 10)\n    recall = np.mean([len(set(a) & set(b)) / 10 for a, b in zip(I, truth)])\n    size = faiss.serialize_index(index).nbytes\n    print(f\"{spec:11} needs training: {str(needs):5}  {size:>11,} bytes  recall@10 {recall:.3f}\")",
@@ -46,8 +46,8 @@ answer, recall 1.000 by definition, and it needs no training. Its 30,720,045 byt
 vectors of 1,536 bytes and a 45-byte header: nothing but the vectors.
 
 **`HNSW32`** builds a graph in which every vector is linked to some of its neighbours, and a search
-walks the graph instead of reading everything; the 32 sets how many links each vector gets. It found all ten of the exact
-neighbours for every query on this data, and it is the largest of the four, at 36,162,530 bytes:
+walks the graph instead of reading everything; the 32 sets how many links each vector gets. It
+found all ten of the exact neighbours for every query on this data, and it is the largest of the four, at 36,162,530 bytes:
 the vectors plus the links. Lesson 15 builds the graph.
 
 **`IVF64,Flat`** splits the space into 64 cells and searches only the cell nearest the query.
@@ -64,5 +64,5 @@ it properly.
 **These recalls belong to this data and to FAISS's default search settings**, which visit one cell
 of an IVF index and keep 16 candidates in an HNSW search. Every one of the approximate indexes has a
 dial that trades time for recall, which is the subject of lesson 15, and the bytes are lesson 18's.
-Here the point is narrower: when a database's documentation says it uses HNSW, IVF or PQ, you now
-know which of these four ideas it means.
+For now, when a database's documentation says it uses HNSW, IVF or PQ, you know which of these
+four ideas it means.

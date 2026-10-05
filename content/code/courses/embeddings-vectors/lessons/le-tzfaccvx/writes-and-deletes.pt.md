@@ -58,15 +58,15 @@ quais existem.
 A edição do `h15` entrou desse jeito, e a segunda linha mostra o que ela custou por dentro. **As
 linhas foram de 40 para 41, enquanto os registros vivos continuaram 40.** O vetor antigo do `h15`
 continua no array, marcado como morto; o novo foi acrescentado no fim. O ranking não mudou, porque
-trocar *três* por *cinco* dias úteis quase não mexe no sentido, e esse é o resultado certo: o vetor
-foi calculado de novo a partir do texto novo.
+trocar *três* por *cinco* dias úteis quase não mexe no sentido, e esse é o resultado certo:
+`writes.py` calculou o vetor de novo a partir do texto novo.
 
 **Essa é a regra que o armazenamento não consegue garantir por você: um vetor precisa ser
 recalculado sempre que o texto dele muda.** `upsert` recebe o vetor e o texto como dois argumentos,
 e nada impede quem chama de passar o texto novo com o vetor velho. O registro então responde a
-perguntas sobre o que o artigo dizia antes e mostra o que ele diz agora. Todo banco de verdade tem
-a mesma brecha, porque nenhum consegue conferir se um vetor pertence a um texto; o código que
-escreve precisa transformar o texto em vetor no mesmo passo, toda vez.
+perguntas sobre o que o artigo dizia antes e mostra o que ele diz agora. Todo banco de verdade tem a
+mesma brecha, porque nenhum consegue conferir se um vetor pertence a um texto. O código que escreve
+precisa transformar o texto em vetor no mesmo passo, toda vez.
 
 ## Uma remoção deixa uma lápide
 
@@ -75,14 +75,13 @@ primeiro e traz o `h14`. **Mas as linhas continuaram 41.** A remoção só desli
 linha, então o vetor continua lá, ainda multiplicado por toda consulta e depois descartado. Uma
 marca assim, no lugar de algo apagado, se chama **lápide** (*tombstone*).
 
-Lápides não são preguiça. Tirar uma linha do meio de um array significa mover todas as linhas
-depois dela, e num índice de verdade é pior. Um índice aproximado, que a aula 15 constrói, é uma
-estrutura de ligações entre vetores, e tirar um vetor dela significa consertar cada ligação que
-passava por ele. Marcar como morto é instantâneo. O custo é pago depois, de uma vez.
+As lápides existem porque remover sai caro. Tirar uma linha do meio de um array significa mover
+todas as linhas depois dela, e num índice de verdade é pior. Um índice aproximado, que a aula 15
+constrói, é uma estrutura de ligações entre vetores, e tirar um vetor dela significa consertar cada
+ligação que passava por ele. Marcar como morto é instantâneo. O custo é pago depois, de uma vez.
 
 **Salvar é onde o armazenamento paga.** `save()` grava só as linhas vivas, então o armazenamento em
-disco tem 39 registros, e os arquivos encolheram exatamente um vetor: `vectors.npy` foi de 61.568
-para 60.032 bytes, uma diferença de 1.536, que são 384 números de 4 bytes. Os bancos de verdade
-chamam esse passo de compactação, vacuum ou reconstrução, rodam em segundo plano e ficam mais
-lentos enquanto lápides demais se acumulam. A aula 18 mede quanto custa reconstruir um índice, e
-quando vale a pena.
+disco tem 39 registros. O `vectors.npy` encolheu exatamente um vetor, de 61.568 para 60.032 bytes,
+uma diferença de 1.536, que são 384 números de 4 bytes. Os bancos de verdade chamam esse passo de
+compactação, vacuum ou reconstrução, rodam em segundo plano e ficam mais lentos enquanto lápides
+demais se acumulam. A aula 18 mede quanto custa reconstruir um índice, e quando vale a pena.

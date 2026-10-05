@@ -35,8 +35,8 @@ out. The lab's stand-in provider has no rerank endpoint, so none was called here
 
 ## The same pattern, measured
 
-The pattern does not need a cross-encoder to be seen working, and both stages of the experiment
-below ran on this machine. In the first, the fast pass compares **one bit per coordinate** instead
+You can see the pattern work without a cross-encoder, and both stages of the experiment below ran
+on this machine. In the first, the fast pass compares **one bit per coordinate** instead
 of 384 floats; in the second, the fast pass is WordLlama and the better scorer is both models
 together.
 

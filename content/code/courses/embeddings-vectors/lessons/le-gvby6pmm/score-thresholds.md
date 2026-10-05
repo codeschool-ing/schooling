@@ -12,8 +12,8 @@ The difficulty is the number itself. It is tempting to pick a round one, 0.5 bec
 0.8 because it sounds strict. The cut-off has to come from scores you have measured, and the
 measurement has to include questions that **should** get nothing, which a set of relevance
 judgements does not have on its own. So `threshold.py` adds eight questions the help centre has no
-article for, and compares two sets of scores per model: the score each of the 24 questions gives
-its right article, and the best score each off-topic question gets from any article.
+article for. Then it compares two sets of scores per model: the score each of the 24 questions
+gives its right article, and the best score each off-topic question gets from any article.
 
 ```schooling-example
 {
@@ -44,16 +44,16 @@ its right article, and the best score each off-topic question gets from any arti
 ## The two groups overlap
 
 **For all-MiniLM-L6-v2 the weakest right article scores 0.253 and the strongest off-topic question
-scores 0.293.** There is no cut-off that keeps every answer and turns away every stranger: at 0.25
-all 24 answers survive and the concert question gets through; at 0.30 every off-topic question is
-turned away and two real answers are lost with them. Choosing between those is a product decision,
+scores 0.293.** There is no cut-off that keeps every answer and turns away every stranger. At 0.25
+all 24 answers survive and the concert question gets through. At 0.30 every off-topic question is
+turned away, and two real answers are lost with them. Choosing between those is a product decision,
 not a mathematical one. A help centre that hands a customer to a person when it finds nothing might
 prefer 0.30; one where an empty page is a dead end might prefer 0.25.
 
-Notice also that the cut-off was chosen on the right articles, and it is applied to every result.
-With a cut-off of 0.25, the search for *the box never showed up* from the first section would still
-return the password article at 0.300 and the wrong-book article at 0.290. **A threshold trims the noise below it and keeps
-the noise above it.** It complements k rather than replacing it.
+The cut-off was chosen on the right articles, and it applies to every result. With a cut-off of
+0.25, the search for *the box never showed up* from the first section would still return the
+password article at 0.300 and the wrong-book article at 0.290. **A threshold trims the noise below
+it and keeps the noise above it.** It complements k rather than replacing it.
 
 ## The number belongs to the model
 

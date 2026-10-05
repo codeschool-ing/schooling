@@ -3,10 +3,10 @@ title: O que um banco acrescenta
 version: 1
 ---
 
-A primeira imagem comum de um banco vetorial é "a coisa que deixa a busca rápida". Velocidade é
-uma das coisas que ele acrescenta, e para os 40 artigos da Marginalia é a que menos importa: a
-seção anterior buscou dez mil vetores em menos de um milissegundo. **A maior parte do que um banco
-vetorial acrescenta é o que um banco acrescenta a qualquer coisa**: os dados sobrevivem ao
+A imagem que muita gente faz primeiro de um banco vetorial é "a coisa que deixa a busca rápida".
+Velocidade é uma das coisas que ele acrescenta, e para os 40 artigos da Marginalia é a que menos
+importa: a seção anterior buscou dez mil vetores em menos de um milissegundo. **A maior parte do que
+um banco vetorial acrescenta é o que um banco acrescenta a qualquer coisa**: os dados sobrevivem ao
 programa, os registros têm nome, e podem ser alterados um de cada vez enquanto outras pessoas leem.
 
 Compare isso com os arrays das aulas 3 a 10. Uma matriz de vetores do NumPy não tem:
@@ -23,10 +23,10 @@ Compare isso com os arrays das aulas 3 a 10. Uma matriz de vetores do NumPy não
 - Índice. Cada consulta lê todos os vetores, ao custo que a seção anterior mediu.
 - Backups, controle de acesso, nem registro de qual modelo fez os números.
 
-**Um banco vetorial é um armazenamento que resolve tudo isso.** Antes dos de verdade, ajuda ver
-que o núcleo é pequeno. O programa abaixo é um armazenamento inteiro em umas cinquenta linhas:
+**Um banco vetorial é um armazenamento que resolve tudo isso.** Antes dos de verdade, ajuda ver que
+o núcleo é pequeno. O programa abaixo é um armazenamento inteiro em umas cinquenta linhas:
 persistência, ids, metadados, atualizações, remoções e um filtro, com busca exata por dentro. Não
-tem índice nem concorrência, e não foi feito para produção; foi feito para que cada palavra das
+tem índice nem concorrência, e não serve para produção. Ele existe para que cada palavra das
 próximas três seções seja algo que você rodou.
 
 ```schooling-example

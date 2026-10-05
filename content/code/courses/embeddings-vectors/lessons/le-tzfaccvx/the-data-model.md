@@ -42,7 +42,7 @@ dot product, which for unit vectors is cosine similarity, as lesson 2 showed. Ch
 comparison as a `space` when the collection is created, and pgvector bakes it into the operator and
 the index. Changing any of the three means a new collection, which is lesson 10's migration.
 
-The small store enforces the first two, and its refusals are the point:
+The small store enforces the first two:
 
 ```schooling-example
 {
@@ -76,12 +76,12 @@ ValueError: this collection holds all-MiniLM-L6-v2 vectors, not lab-minilm
 384, and no arithmetic can join them. Every real database refuses this too, with its own message.
 
 **The second refusal is the one that saves you.** The question's vector came from all-MiniLM-L6-v2,
-and `lab-minilm` is labembed's name for that very same model. The store cannot know that: it compares
-names, not weights, and it refuses. That is the right side to fail on: a search that trusted
-whatever vector it was handed would also take one from a different model with the same dimension,
-the silent failure lesson 10 measured. So the name has to be one string, written the same way
-everywhere. The store checks it only on the way out. `upsert` checks the dimension and trusts its
-caller about the model, a gap a real system closes by embedding in one place only.
+and `lab-minilm` is labembed's name for that very same model. The store cannot know that: it
+compares names, not weights, and it refuses. That is the right side to fail on: a search that
+trusted whatever vector it was handed would also take one from a different model with the same
+dimension, the silent failure lesson 10 measured. So the name has to be one string, written the same
+way everywhere. The store checks it only on the way out. `upsert` checks the dimension and trusts
+its caller about the model, a gap a real system closes by embedding in one place only.
 
 Most real databases never ask for the model's name. Chroma comes closest: it can embed the text for
 you with an embedding function tied to the collection, which lesson 12 shows. pgvector and Qdrant

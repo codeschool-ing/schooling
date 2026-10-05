@@ -12,7 +12,7 @@ cannot be compared, and changing models means computing every stored vector agai
 Lesson 1 stated this. `switch.py` measures it, with a trick that makes the two models as alike as
 two models can be. Model B is model A with every vector rotated by the same random rotation in 384
 dimensions. Lesson 2 shows that a rotation changes no dot product between two rotated vectors, so B
-is exactly as good a model as A. What it is not is the same coordinate system.
+is exactly as good a model as A. But its coordinates are not A's.
 
 ```schooling-example
 {
@@ -55,11 +55,11 @@ ValueError: matmul: Input operand 1 has a mismatch in its core dimension 0, with
 
 **Each model on its own finds the right article first for 19 of the 24 questions.** Mixed, B's
 questions against A's articles, it finds 1, about what picking one of the 40 articles at random
-would give. The scores say why. A against A runs up to 0.686, the right article standing well clear of
-the rest; B against A stays between −0.151 and 0.210 for every pair, a band of noise with nothing
+would give. The scores say why. A against A runs up to 0.686, with the right article well clear of
+the rest. B against A stays between −0.151 and 0.210 for every pair, a band of noise with nothing
 standing out.
 
-Two real models are further apart than a rotation, not closer: they were trained on different data
+Two real models are further apart than a rotation: they were trained on different data
 and nothing ties one coordinate system to the other. The rotation is the most favourable case, and
 it still fails.
 
@@ -72,9 +72,9 @@ measurement against relevance judgements, like lesson 3's, would show that it is
 ## Record the model beside the vector
 
 The defence is a fact stored with the data: **which model, and which version of it, produced each
-vector.** A collection holds the vectors of one model, its name is written down where the search
-code reads it, and the query is embedded with that same model. Lesson 11 builds a small store that
-keeps exactly that.
+vector.** A collection holds the vectors of one model, you write its name where the search code
+reads it, and you embed the query with that same model. Lesson 11 builds a small store that keeps
+exactly that.
 
 ## A migration that never mixes them
 
@@ -85,16 +85,16 @@ answered by one model at a time.
 {"svg": "<svg viewBox=\"0 0 740 300\" role=\"img\" aria-label=\"A grid of four steps in time, left to right, for two collections. Step 1, dual-write: the old collection, model A, takes writes and serves reads; the new collection, model B, takes writes. Step 2, backfill: the same, and the new collection is also filled with every old document re-embedded. Step 3, switch reads: the new collection serves reads; both still take writes. Step 4, delete old: the old collection is gone and the new one takes writes and serves reads.\"><defs><marker id=\"migen-ah0\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><path d=\"M170 22 L728 22\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#migen-ah0)\"></path><text x=\"728\" y=\"10\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">time</text><text x=\"236\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--phosphor)\" font-weight=\"600\">1  dual-write</text><text x=\"378\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--phosphor)\" font-weight=\"600\">2  backfill</text><text x=\"520\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--phosphor)\" font-weight=\"600\">3  switch reads</text><text x=\"662\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--phosphor)\" font-weight=\"600\">4  delete old</text><text x=\"16\" y=\"104\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">old collection</text><text x=\"16\" y=\"122\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">model A</text><text x=\"16\" y=\"194\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">new collection</text><text x=\"16\" y=\"212\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">model B</text><rect x=\"170\" y=\"80\" width=\"132\" height=\"66\" rx=\"6\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"236\" y=\"113\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">writes + reads</text><rect x=\"312\" y=\"80\" width=\"132\" height=\"66\" rx=\"6\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"378\" y=\"113\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">writes + reads</text><rect x=\"454\" y=\"80\" width=\"132\" height=\"66\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"520\" y=\"113\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">writes</text><rect x=\"596\" y=\"80\" width=\"132\" height=\"66\" rx=\"6\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"5 4\"></rect><text x=\"662\" y=\"113\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">deleted</text><rect x=\"170\" y=\"170\" width=\"132\" height=\"66\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"236\" y=\"203\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">writes</text><rect x=\"312\" y=\"170\" width=\"132\" height=\"66\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"378\" y=\"195\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">writes</text><text x=\"378\" y=\"213\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--amber)\">+ backfill</text><rect x=\"454\" y=\"170\" width=\"132\" height=\"66\" rx=\"6\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"520\" y=\"203\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">writes + reads</text><rect x=\"596\" y=\"170\" width=\"132\" height=\"66\" rx=\"6\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"662\" y=\"203\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">writes + reads</text><text x=\"370\" y=\"270\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">every read is answered by one collection, and so by one model</text></svg>", "caption": "The four steps of a model migration. The highlighted cell in each step is the collection that answers searches: the old one until step 3, the new one from then on, never both."}
 ```
 
-1. **Dual-write.** Create a second collection for the new model. From now on every new or edited
+1. Dual-write. Create a second collection for the new model. From now on every new or edited
    document is embedded with both models and written to both collections. Reads still go to the
    old one.
-2. **Backfill.** Re-embed every existing document with the new model into the new collection, in
+2. Backfill. Re-embed every existing document with the new model into the new collection, in
    batches, at whatever pace the provider's rate limit and the budget allow. Lesson 18 prices this
    step, and it is usually the expensive one.
-3. **Switch reads.** First measure the new collection on the same relevance judgements as the old
+3. Switch reads. First measure the new collection on the same relevance judgements as the old
    one, then point the search at it: questions embedded with the new model, searched in the new
    collection. Keep writing to both for a while, so that switching back is one change.
-4. **Delete the old collection** once nobody needs to switch back.
+4. Delete the old collection once nobody needs to switch back.
 
 The two collections exist side by side from step 1 to step 4, so storage doubles for that time,
 which lesson 18 also counts. A query never meets a vector from the other model, because the read

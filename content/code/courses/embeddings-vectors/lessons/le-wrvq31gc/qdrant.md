@@ -91,8 +91,8 @@ multiplies the query against all of them, so its search is exact and its errors 
 `indexed vectors: 0` says the same from the other side. A server builds an HNSW index once a
 collection is large enough, and has its own error messages; neither was run here.
 
-And a payload index, which on a server lets a filter be answered from an index instead of by
-checking every point, is accepted and ignored, with a warning that says so. Lesson 17 shows why
+Local mode also accepts a payload index and ignores it, with a warning that says so. On a server,
+that index lets Qdrant answer a filter from an index instead of checking every point. Lesson 17 shows why
 that index matters once filters meet an HNSW graph. The directory holds a SQLite file and two small
 files of bookkeeping:
 
@@ -112,6 +112,5 @@ listening on its default port:
 client = QdrantClient(url="http://localhost:6333")
 ```
 
-That was not run, for the reason above. It is also the honest use of local mode: write and test
-against it on a laptop, and know that speed, indexing and concurrency will only be true on the
-server.
+That line was not run, for the reason above. It also shows what local mode is for: writing and
+testing on a laptop, knowing that only the server will show real speed, indexing and concurrency.

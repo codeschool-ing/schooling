@@ -44,7 +44,7 @@ mostrou. O Chroma pede a comparação como um `space` na criação da coleção,
 operador e no índice. Mudar qualquer uma das três significa uma coleção nova, que é a migração da
 aula 10.
 
-O armazenamento pequeno garante as duas primeiras, e as recusas dele são o ponto:
+O armazenamento pequeno garante as duas primeiras:
 
 ```schooling-example
 {

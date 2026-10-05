@@ -24,9 +24,10 @@ Lay that against the arrays of lessons 3 to 10. A NumPy matrix of vectors has:
 - No backups, no access control, and no record of which model made the numbers.
 
 **A vector database is a store that answers all of those.** Before the real ones, it helps to see
-that the core is small. The program below is a whole store in about fifty lines: persistence, ids, metadata, updates, deletes and a filter, with exact
-search inside. It has no index and no concurrency, and it is not meant for production; it is meant
-to make every word of the next three sections something you have run.
+that the core is small. The program below is a whole store in about fifty lines: persistence, ids,
+metadata, updates, deletes and a filter, with exact search inside. It has no index and no
+concurrency, and it is not for production. It is there so that every word of the next three sections
+is something you have run.
 
 ```schooling-example
 {

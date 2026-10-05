@@ -5,9 +5,9 @@ version: 1
 
 Até aqui o k era seu para escolher. Com um índice aproximado ele é em parte do índice. A aula 15
 mostrou que o HNSW busca andando por um grafo e mantendo uma lista dos melhores candidatos que viu,
-e que o tamanho dessa lista, o **ef**, é o botão entre velocidade e recall. O que a aula 15 não
-precisou dizer é o que acontece quando você pede mais resultados do que essa lista comporta. Duas
-bibliotecas respondem de jeitos opostos.
+e que o tamanho dessa lista, o **ef**, é o botão entre velocidade e recall. A aula 15 não
+precisou dizer o que acontece quando você pede mais resultados do que essa lista comporta, e duas
+bibliotecas respondem a isso de jeitos opostos.
 
 ## O pgvector devolve menos linhas
 
@@ -64,8 +64,7 @@ ana@lab:~/emb$ psql -f top100.sql -c "SHOW hnsw.ef_search"
 `hnsw.ef_search` candidatos, 40 se você não mudar, e a varredura do índice para quando eles acabam.
 `LIMIT 100` não consegue pedir mais do que a varredura produz. O primeiro `SHOW` falhou porque a
 configuração pertence à biblioteca do pgvector, que a sessão carrega na primeira vez que usa um
-vetor; depois da consulta, o mesmo `SHOW` imprime o 40. O plano confirma que é o índice que
-está trabalhando:
+vetor; depois da consulta, o mesmo `SHOW` imprime o 40. O plano confirma que é o índice que está trabalhando:
 
 ```
 ana@lab:~/emb$ psql -c "EXPLAIN (COSTS OFF) SELECT id FROM points ORDER BY embedding <=> (SELECT embedding FROM points WHERE id = 7) LIMIT 100"
@@ -136,8 +135,8 @@ tenha mexido no `ef`.
 
 ## O que fazer com isso
 
-A regra que cobre os dois cabe numa linha: **a largura de busca do índice tem que ser pelo menos k**,
-e maior que k se você quer um bom recall. No pgvector isso é uma configuração sua:
+Uma regra cobre os dois: **a largura de busca do índice tem que ser pelo menos k**, e maior que k se
+você quer um bom recall. No pgvector isso é uma configuração sua:
 
 ```sql
 SET hnsw.ef_search = 100;

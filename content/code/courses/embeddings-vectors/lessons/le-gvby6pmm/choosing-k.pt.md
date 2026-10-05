@@ -56,7 +56,7 @@ quase toda a subida nos dois ou três primeiros passos.
 As duas últimas linhas da saída dizem por que a curva para onde para. *send books to another
 country* (mandar livros para outro país) tem a resposta na posição 4, que é o passo de 22 para 23.
 *my order came in pieces* (meu pedido veio em pedaços) tem a resposta na posição 12, além de
-qualquer k do gráfico: subir k até 10 não chega lá, e um k grande o bastante para chegar repassaria
+qualquer k do gráfico. Subir k até 10 não chega lá, e um k grande o bastante para chegar repassaria
 doze artigos para cada pergunta para salvar uma. Essa é uma pergunta que o modelo erra, e k é a
 ferramenta errada para ela. Um segundo modelo é a certa: o WordLlama tem as 24 com k = 3, e a seção
 sobre reranqueamento põe os dois modelos para trabalhar juntos.
@@ -69,14 +69,15 @@ quem vier depois:
   cuidado que a resposta. Dez artigos onde três bastariam são mais do que o triplo da conta pelas
   mesmas respostas, e sete chances a mais de citar o errado;
 - uma pessoa, numa página de resultados, lê os primeiros e para. Uma tela tem espaço para um
-  punhado de resultados, e o décimo raramente é visto;
+  punhado de resultados, e pouca gente chega ao décimo;
 - a próxima etapa da busca, como um reranqueador, gasta tempo por candidato.
 
 ## Um jeito de escolher
 
 Escolha k pela sua própria curva, não pelo costume. Meça o encontrado-em-k em perguntas de resposta
 conhecida, como `recall_k.py` faz, e fique com o menor k depois do qual a curva fica plana. Nesta
-central de ajuda isso dá 2 ou 3 para o all-MiniLM-L6-v2 e 3 para o WordLlama.
+central de ajuda isso dá 4 para o all-MiniLM-L6-v2, ou 2 se a única pergunta ganha em k = 4 contar como ruído, e 3
+para o WordLlama.
 
 Dois cuidados mantêm esse número honesto. **24 perguntas é uma amostra pequena**: uma pergunta vale
 cerca de quatro pontos do total, e o passo de 22 para 23 é uma pergunta. E a curva pertence ao

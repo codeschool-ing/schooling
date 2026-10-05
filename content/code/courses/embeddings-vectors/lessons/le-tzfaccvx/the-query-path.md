@@ -51,10 +51,10 @@ tuning touches.
 
 ## The steps, and what each one becomes
 
-**1. Embed the question, with the collection's model.** The same model that embedded the
-documents, as the previous sections insisted, and on every query: a question cannot be embedded in
-advance. That makes it a cost per query, which the speeds lesson 10 measured put in the right
-order of magnitude: one text through MiniLM on this machine takes milliseconds.
+**1. Embed the question, with the collection's model.** The same model that embedded the documents,
+as the previous sections insisted, and on every query: a question cannot be embedded in advance.
+That makes it a cost per query. The speeds lesson 10 measured give its order of magnitude: one text
+through MiniLM on this machine takes milliseconds.
 
 **2. Find candidates.** The small store reads every vector, which is lesson 3's exact search and
 this lesson's first section. A vector database replaces this step with an **approximate index**
@@ -64,9 +64,9 @@ vectors is what the index exists to avoid. Lesson 15 shows how one works and wha
 costs.
 
 **3. Filter.** `lang="en"` kept the Portuguese articles out. The small store checks it on every
-record and gives the ones that fail a score of minus infinity, which is correct and simple. Inside an approximate index it is harder,
-because the index finds the nearest vectors first and some of them may fail the filter; lesson 17
-measures what that does to the results.
+record and gives the ones that fail a score of minus infinity, which is correct and simple. Inside
+an approximate index it is harder, because the index finds the nearest vectors first and some of
+them may fail the filter. Lesson 17 measures what that does to the results.
 
 **4. Rerank, optionally.** Some systems take more candidates than they need and rescore them with
 a slower, better model before keeping the best few. Lesson 16 describes it. The small

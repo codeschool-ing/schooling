@@ -11,8 +11,8 @@ nunca o próprio banco, e essa é a diferença em relação ao `PersistentClient
 
 Nenhuma das três rodou aqui. O modo embutido busca o servidor no GitHub, que este laboratório não
 alcança, e não havia outro servidor a que se conectar. O programa abaixo foi escrito para o pacote
-`weaviate-client` e conferido contra as assinaturas da versão 4.23.1 num ambiente separado; ele nunca
-recebeu resposta, e nenhuma saída é mostrada.
+`weaviate-client` e conferido contra as assinaturas da versão 4.23.1 num ambiente separado. Ele
+nunca recebeu resposta, então nenhuma saída é mostrada.
 
 ```python
 import json
@@ -57,10 +57,10 @@ client.close()
 
 ## Uma coleção tem um esquema
 
-**A coleção do Weaviate declara as suas propriedades com tipos**, enquanto os metadados do Chroma eram
-qualquer dicionário que você passasse. `article_id` guarda o id da Marginalia porque o identificador
-do próprio Weaviate é um UUID: `generate_uuid5("h15")` deriva um a partir do id do artigo, então h15
-recebe o mesmo UUID a cada importação em vez de um novo aleatório.
+**A coleção do Weaviate declara as suas propriedades com tipos**, enquanto os metadados do Chroma
+eram qualquer dicionário que você passasse. `article_id` guarda o id da Marginalia porque o
+identificador do próprio Weaviate é um UUID: `generate_uuid5("h15")` deriva um a partir do id do
+artigo, então h15 recebe o mesmo UUID a cada importação em vez de um novo aleatório.
 
 O lado vetorial da coleção é configurado em `vector_config`, e é aqui que o desenho do Weaviate
 aparece. **`self_provided` quer dizer que você traz os vetores**, como `weav.py` faz com o
@@ -72,22 +72,23 @@ fornecedor guardada no servidor e a conta do fornecedor chegando a cada inserç�
 
 ## Distância, de novo
 
-`MetadataQuery(distance=True)` pede a distância de cada resultado, e para um índice cosseno o Weaviate
-usa a mesma convenção do Chroma: um menos a similaridade, menor é mais perto. Então h15, que o Chroma
-pôs a 0,5624 da pergunta, voltaria com essa distância aqui também, se os vetores forem os mesmos; isso
-sai da definição e não foi medido.
+`MetadataQuery(distance=True)` pede a distância de cada resultado, e para um índice cosseno o
+Weaviate usa a mesma convenção do Chroma: um menos a similaridade, menor é mais perto. Então h15,
+que o Chroma pôs a 0,5624 da pergunta, voltaria com essa distância aqui também, se os vetores forem
+os mesmos. Isso sai da definição e não foi medido.
 
-Os filtros são montados com um pequeno construtor, `Filter.by_property("category").equal("returns")`,
-em vez de um dicionário, e vários se combinam com `&` e `|`.
+Os filtros são montados com um pequeno construtor,
+`Filter.by_property("category").equal("returns")`, em vez de um dicionário, e vários se combinam com
+`&` e `|`.
 
 ## Busca híbrida numa chamada só
 
 **`query.hybrid` roda uma busca por palavras e uma busca vetorial e funde as duas listas**, que é a
-busca híbrida da aula 3 feita pelo banco. O Weaviate mantém um índice de palavras das propriedades de
-texto, então `query="refund"` é pontuada com BM25 enquanto `vector=q` é pontuado pela distância.
+busca híbrida da aula 3 feita pelo banco. O Weaviate mantém um índice de palavras das propriedades
+de texto, então `query="refund"` é pontuada com BM25 enquanto `vector=q` é pontuado pela distância.
 
 `alpha` regula o equilíbrio: 1 é uma busca puramente vetorial, 0 uma busca puramente por palavras, e
 0,5 pesa as duas igualmente. `fusion_type` escolhe como as duas listas são fundidas, pela posição,
 como a fusão por posição recíproca da aula 3, ou pela nota normalizada. O `alpha` certo para a
-Marginalia é uma medida, feita do jeito que a aula 3 fez, com as 24 perguntas de `queries.jsonl`, e não
-um valor para copiar.
+Marginalia é uma medida, feita do jeito que a aula 3 fez, com as 24 perguntas de `queries.jsonl`, e
+não um valor para copiar.

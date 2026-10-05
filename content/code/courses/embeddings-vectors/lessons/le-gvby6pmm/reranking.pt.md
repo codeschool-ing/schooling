@@ -36,8 +36,8 @@ então nenhum foi chamado aqui também.
 
 ## O mesmo padrão, medido
 
-O padrão não precisa de um cross-encoder para ser visto funcionando, e as duas etapas do experimento
-abaixo rodaram nesta máquina. No primeiro, a passada rápida compara **um bit por coordenada** em vez
+Dá para ver o padrão funcionar sem um cross-encoder, e as duas etapas do experimento abaixo rodaram
+nesta máquina. No primeiro, a passada rápida compara **um bit por coordenada** em vez
 de 384 floats; no segundo, a passada rápida é o WordLlama e o avaliador melhor são os dois modelos
 juntos.
 

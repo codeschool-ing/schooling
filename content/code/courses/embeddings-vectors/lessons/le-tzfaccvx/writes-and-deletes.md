@@ -57,15 +57,15 @@ centre every night can upsert all 40 articles without first asking which ones ex
 The edit to `h15` went in that way, and the second line shows what it cost inside. **The rows went
 from 40 to 41 while the live records stayed at 40.** The old vector of `h15` is still in the array,
 marked dead; the new one was appended. The ranking did not move, because changing *three* to *five*
-working days hardly moves the meaning, and that is the right result: the vector was computed again
-from the new text.
+working days hardly moves the meaning, and that is the right result: `writes.py` computed the vector
+again from the new text.
 
-**That is the rule the store cannot enforce for you: a vector has to be recomputed whenever its
-text changes.** `upsert` takes the vector and the text as two arguments, and nothing stops a caller
-from passing new text with the old vector. The record then answers questions about what the
-article used to say and shows what it says now. Every real database has the same gap, because none
-of them can check that a vector belongs to a text; the code that writes has to embed in the same
-step, every time.
+**That is the rule the store cannot enforce for you: a vector has to be recomputed whenever its text
+changes.** `upsert` takes the vector and the text as two arguments, and nothing stops a caller from
+passing new text with the old vector. The record then answers questions about what the article used
+to say and shows what it says now. Every real database has the same gap, because none of them can
+check that a vector belongs to a text. The code that writes has to embed in the same step, every
+time.
 
 ## A delete leaves a tombstone
 
@@ -74,13 +74,13 @@ brings in `h14`. **But the rows stayed at 41.** The delete only cleared the row'
 the vector is still there, still multiplied by every query and then discarded. A marker like that,
 standing in for something deleted, is called a **tombstone**.
 
-Tombstones are not laziness. Removing a row from the middle of an array means moving every row after
-it, and in a real index it is worse. An approximate index, which lesson 15 builds, is a structure
-of links between vectors, and taking one vector out of it means repairing every link that passed
-through it. Marking it dead is instant. The cost is paid later, all at once.
+Tombstones exist because removal is expensive. Removing a row from the middle of an array means
+moving every row after it, and in a real index it is worse. An approximate index, which lesson 15
+builds, is a structure of links between vectors, and taking one vector out of it means repairing
+every link that passed through it. Marking it dead is instant. The cost is paid later, all at once.
 
 **Saving is where the store pays it.** `save()` writes only the live rows, so the store on disk
-holds 39 records, and the files shrank by exactly one vector: `vectors.npy` went from 61568 to
-60032 bytes, a difference of 1,536, which is 384 numbers of 4 bytes. Real databases call that step
-compaction, vacuuming or rebuilding, run it in the background, and get slower while too many
-tombstones pile up. Lesson 18 measures what rebuilding an index costs, and when it is worth doing.
+holds 39 records. `vectors.npy` shrank by exactly one vector, from 61568 to 60032 bytes, a
+difference of 1,536, which is 384 numbers of 4 bytes. Real databases call that step compaction,
+vacuuming or rebuilding, run it in the background, and get slower while too many tombstones pile up.
+Lesson 18 measures what rebuilding an index costs, and when it is worth doing.

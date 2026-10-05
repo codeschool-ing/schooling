@@ -97,10 +97,9 @@ wordllama is 128 times faster
 ```
 
 **O WordLlama transformou as 150 mensagens 128 vezes mais rápido**: 5,7 ms contra 723,6 ms, ou
-26.489 textos por segundo contra 207. Um detalhe da medição: `minilm.py` roda o modelo numa thread
-só, e esta máquina tem quatro núcleos. Mesmo um ganho perfeito de quatro vezes usando todos eles
-deixaria o MiniLM umas 32 vezes mais lento, então a diferença é uma propriedade dos dois modelos, e
-não da configuração.
+26.489 textos por segundo contra 207. O `minilm.py` roda o modelo numa thread só, e esta máquina tem
+quatro núcleos. Mesmo um ganho perfeito de quatro vezes usando todos eles deixaria o MiniLM umas 32
+vezes mais lento, então a diferença é uma propriedade dos dois modelos, e não da configuração.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 330\" role=\"img\" aria-label=\"Três pares de barras comparando o all-MiniLM-L6-v2 com o WordLlama nesta máquina. Textos transformados em vetor por segundo: MiniLM 207, WordLlama 26489. Perguntas da central de ajuda com um artigo certo entre os três primeiros, de 24: MiniLM 22, WordLlama 24. Tickets de teste rotulados certo pelo ticket de treino mais próximo, de 50: MiniLM 46, WordLlama 40.\"><rect x=\"470\" y=\"18\" width=\"14\" height=\"14\" rx=\"2\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"490\" y=\"25\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">all-MiniLM-L6-v2</text><rect x=\"620\" y=\"18\" width=\"14\" height=\"14\" rx=\"2\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"640\" y=\"25\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">WordLlama</text><text x=\"30\" y=\"58\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">textos transformados em vetor por segundo</text><rect x=\"30\" y=\"74\" width=\"4.4\" height=\"18\" rx=\"2\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"42.4\" y=\"83\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">207</text><rect x=\"30\" y=\"98\" width=\"560\" height=\"18\" rx=\"2\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"598\" y=\"107\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">26489</text><text x=\"30\" y=\"144\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">perguntas com um artigo certo entre os 3 primeiros, de 24</text><rect x=\"30\" y=\"160\" width=\"513.3\" height=\"18\" rx=\"2\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"551.3\" y=\"169\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">22</text><rect x=\"30\" y=\"184\" width=\"560\" height=\"18\" rx=\"2\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"598\" y=\"193\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">24</text><text x=\"30\" y=\"230\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">tickets de teste rotulados certo, de 50</text><rect x=\"30\" y=\"246\" width=\"560\" height=\"18\" rx=\"2\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"598\" y=\"255\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">46</text><rect x=\"30\" y=\"270\" width=\"487\" height=\"18\" rx=\"2\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"525\" y=\"279\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">40</text><text x=\"690\" y=\"316\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">cada linha está na escala do seu maior valor</text></svg>", "caption": "Medido nesta máquina com os dados do curso. O WordLlama é duas ordens de grandeza mais rápido e se sai bem nas perguntas curtas da central de ajuda; nos tickets de frases inteiras ele acerta seis a menos."}
@@ -150,7 +149,7 @@ wordllama  top-1 20/24  top-3 24/24  tickets 40/50
 **Na busca, o WordLlama foi tão bem quanto o MiniLM ou melhor**: 20 contra 19 em primeiro, 24
 contra 22 entre os três primeiros. **Nos tickets ele acertou 6 a menos**, 40 de 50 contra 46. Dois
 resultados em direções opostas, com dados escritos para este curso, e os dois pequenos o bastante
-para uma pergunta ou um ticket mudá-los. Que é o motivo para olhar os próprios tickets:
+para uma pergunta ou um ticket mudá-los. Por isso, olhe os próprios tickets:
 
 ```schooling-example
 {
@@ -177,10 +176,10 @@ t120 [account] My wishlist is empty after I signed in on my laptop.
 
 **O WordLlama casou por uma palavra em comum e errou o sentido.** Uma pergunta sobre frete mais
 barato para um livro de bolso (*paperback*) foi parar num ticket sobre trocar um *paperback* por
-capa dura; uma lista de desejos vazia (*empty*) depois do login foi parar numa biblioteca de
-e-books vazia num tablet. As palavras *paperback* e *empty* dominam uma média de uma dúzia de
-tokens. O MiniLM, cujas camadas combinam as palavras antes da média, achou tickets que compartilham
-a situação: frete, e listas que sumiram de um perfil.
+capa dura. Uma lista de desejos vazia (*empty*) depois do login foi parar numa biblioteca de e-books
+vazia num tablet. As palavras *paperback* e *empty* dominam uma média de uma dúzia de tokens. O
+MiniLM, cujas camadas combinam as palavras antes da média, achou tickets que compartilham a
+situação: frete, e listas que sumiram de um perfil.
 
 As perguntas da central de ajuda são curtas, e as palavras-chave delas dão nome ao assunto, que é
 o caso em que uma média se sai bem. Os tickets são frases inteiras cujo sentido está em como as
@@ -189,8 +188,8 @@ palavras se combinam, e é aí que as camadas pagam o que custam.
 ## Model2Vec, descrito e não executado
 
 O WordLlama é um jeito de fazer um modelo estático. O **Model2Vec** é outro: ele pega um sentence
-transformer que já existe, passa cada token do vocabulário por ele uma vez e guarda as saídas como
-a tabela, encolhida com análise de componentes principais. O resultado herda parte do que o
+transformer que já existe, passa cada token do vocabulário por ele uma vez e guarda as saídas como a
+tabela, encolhida com análise de componentes principais. O resultado herda parte do que o
 transformer sabia, e há versões multilíngues. Segundo o próprio README, o WordLlama 0.4 consegue
-carregá-los com `WordLlama.load_m2v(...)`, mas os modelos ficam no Hugging Face, que está fora de
-alcance a partir desta máquina, então nenhum foi carregado nem medido aqui.
+carregá-los com `WordLlama.load_m2v(...)`. Os modelos ficam no Hugging Face, fora de alcance desta
+máquina, então nenhum foi carregado nem medido aqui.

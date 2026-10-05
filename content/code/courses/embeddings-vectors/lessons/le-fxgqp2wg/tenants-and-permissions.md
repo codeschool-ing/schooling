@@ -106,9 +106,9 @@ connection that forgot to say who it is gets nothing.
 
 Two cautions about the demonstration. `ana` owns the table and is the database's superuser, and
 both of those skip row-level security, which is why the search runs as `helpdesk`, a role with only
-`SELECT`. And the policy is a condition PostgreSQL applies to the rows the plan produces, so on a
-large table with an HNSW index it behaves like any other filter in the post-filtering section: a
-small tenant in a big table gets fewer than k rows. The fixes there apply here too.
+`SELECT`. And the policy is a condition PostgreSQL applies to the rows the plan produces. On a
+large table with an HNSW index it behaves like the filters in the post-filtering section: a small
+tenant in a big table gets fewer than k rows. The fixes there apply here too.
 
 ## One collection, or one per tenant
 
@@ -123,9 +123,9 @@ vectors because they are somewhere else. Each has its place:
 | a forgotten filter | leaks, unless the database enforces it | cannot leak across tenants |
 | deleting a tenant | a delete over many rows | dropping one collection |
 
-The vector databases name the second option in their own terms: Qdrant documents both a payload
-field per tenant and a collection per tenant, Pinecone has namespaces inside an index, Chroma has
-tenants and databases above its collections, and lesson 14 met Supabase recommending row-level
+The vector databases have their own terms for both options. Qdrant documents both a payload field
+per tenant and a collection per tenant, Pinecone has namespaces inside an index, and Chroma has
+tenants and databases above its collections. Lesson 14 met Supabase recommending row-level
 security for the same purpose. None of those hosted options was run here.
 
 Whichever you choose, the test is the same as everywhere in this lesson: write the query that should

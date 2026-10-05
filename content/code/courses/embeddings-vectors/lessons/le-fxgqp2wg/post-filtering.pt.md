@@ -182,5 +182,5 @@ consulta, e não a elimina.
 O pgvector 0.8.0 acrescentou as **varreduras iterativas de índice** (iterative index scans) para
 exatamente este caso: quando o filtro deixou o `LIMIT` por preencher, a varredura volta ao grafo
 atrás de mais candidatos. O laboratório roda o 0.6.0, que não as tem, então elas não foram executadas
-aqui; se o seu banco tiver o 0.8.0 ou mais novo, elas são uma configuração a procurar antes de
+aqui. Se o seu banco tiver o 0.8.0 ou mais novo, elas são uma configuração a procurar antes de
 partir para qualquer outra coisa.

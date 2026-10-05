@@ -31,8 +31,8 @@ mistral/mistral-embed          mistral                          0.100       -   
 ana@lab:~/emb$ python3 prices.py --json > prices.json
 ```
 
-The second command saves the same rows as JSON for a program to read. This one counts the tokens
-in every text the lab has that is not a question, times the local model on them, and scales both
+The second command saves the same rows as JSON for a program to read. `reembed.py` counts the
+tokens in every text the lab has that is not a question, times the local model on them, and scales both
 to a million:
 
 ```schooling-example
@@ -111,8 +111,8 @@ ana@lab:~/emb$ python rebuild.py
 Eight times the vectors took 4.76 s against 0.54 s, so **the build grows at least in proportion
 to the count**, because each insertion searches a graph that is bigger than the last one did. The
 per-vector column wanders from run to run on a machine doing other work, so read the totals. In
-pgvector the same build on 20,000 rows took `7385.761 ms` at 384 dimensions and `46553.018 ms` at 1536
-(section 03 of this lesson); dimension multiplies the cost of every comparison the build makes.
+pgvector the same build on 20,000 rows took `7385.761 ms` at 384 dimensions and `46553.018 ms` at
+1536 (section 03 of this lesson); dimension multiplies the cost of every comparison the build makes.
 
 ## Both at once
 
@@ -120,8 +120,8 @@ A migration that does not stop the search keeps the old vectors and their index 
 new ones are written and built, and only then moves the reads across. For that window **you store
 both sets**: the old model's rows and index plus the new model's, at the new model's dimension.
 Moving from 384 to 1536 dimensions in pgvector, with HNSW, takes a row from 1,676 + 2,048 bytes to
-8,371 + 8,192, and during the move you hold the sum. Section 07 of this lesson prices exactly that
-for a larger corpus.
+8,371 + 8,192, and during the move you hold the sum. Section 07 of this lesson prices a move like
+that for a larger corpus.
 
 So reindexing costs tokens or hours of a CPU, the time to build the new index, and a period of
 double storage. Of the three, the last is the one to plan capacity for, because it arrives all at

@@ -29,8 +29,8 @@ looks at the price.
 **A licence is a yes or no question, and open weights do not answer it by themselves.** WordLlama's
 package declares the MIT licence, and all-MiniLM-L6-v2 is published under Apache 2.0: both allow a
 shop to use them commercially. Jina publishes the weights of jina-embeddings-v3 under CC BY-NC 4.0,
-a non-commercial licence, so a shop can read and test them but needs an agreement with Jina to run
-them in production, or pays for the API instead. Read the licence on the model card before the
+a non-commercial licence. A shop can read and test them, but to run them in production it needs an
+agreement with Jina, or pays for the API instead. Read the licence on the model card before the
 first benchmark, because a model you may not use is not worth measuring.
 
 **Privacy is also a yes or no question.** Lesson 1 showed that a vector of a customer's message is
@@ -64,8 +64,8 @@ ana@lab:~/emb$ jq -r .lang data/help.jsonl | sort | uniq -c
 
 A help centre with Portuguese articles will be asked Portuguese questions. That rules out every
 English-only model before anything is measured, including both of the lab's: the lab uses them
-because they run on this machine, not because they fit the shop. The
-survivors are multilingual models, hosted or open. Whether the texts may go to a hosted API is the
-shop's decision about its customers' messages, and if the answer is no, the list shrinks to open
-multilingual models with a licence that allows commercial use. Those few are measured on the 24
-questions, with Portuguese questions added, and the best of them is priced last.
+because they run on this machine, not because they fit the shop. The survivors are multilingual
+models, hosted or open. Whether the texts may go to a hosted API is the shop's decision about its
+customers' messages, and if the answer is no, the list shrinks to open multilingual models with a
+licence that allows commercial use. The shop measures those few on the 24 questions, with Portuguese
+questions added, and prices the best of them last.

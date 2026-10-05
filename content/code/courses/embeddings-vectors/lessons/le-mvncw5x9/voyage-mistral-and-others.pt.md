@@ -35,11 +35,11 @@ palavra que a aula 9 mostrou que o all-MiniLM-L6-v2 lê.
 
 **Um traço é uma lacuna na tabela, não um zero.** A coluna `dims` está vazia para os dois
 fornecedores porque a tabela não registra a dimensão deles, e `batch` está vazia porque ela não
-registra preço de lote com desconto para eles. Nenhum dos dois quer dizer que a coisa não existe.
-Um valor que falta na tabela de um terceiro é uma pergunta para a documentação do próprio
-fornecedor, e o mesmo vale para o formato de requisição da Voyage, que recebe um `input_type` de
-`query` ou `document`, como o da Cohere na aula 8. O SDK de nenhum dos dois está instalado no
-laboratório e nenhuma das duas APIs estava ao alcance, então nenhum código deles aparece aqui.
+registra preço de lote com desconto para eles. Nenhum dos dois quer dizer que a coisa não existe. Um
+valor que falta na tabela de um terceiro é uma pergunta para a documentação do próprio fornecedor.
+Vale o mesmo para o formato de requisição da Voyage, que recebe um `input_type` de `query` ou
+`document`, como o da Cohere na aula 8. O SDK de nenhum dos dois está instalado no laboratório e
+nenhuma das duas APIs estava ao alcance, então nenhum código deles aparece aqui.
 
 ## O que mais a tabela tem
 
@@ -104,5 +104,5 @@ misturar, e não depois.
 768 dimensões e 512 tokens de entrada. Barato por token, e um artigo longo precisa ser cortado em
 pedaços antes de caber.
 
-Nenhuma dessas linhas é uma recomendação, e nada nesta seção foi medido. A seção *Escolher um
-modelo* diz como transformar uma lista assim numa decisão.
+Nenhuma dessas linhas é uma recomendação, e nada nesta seção foi medido. A última seção desta aula,
+*Escolher um modelo*, diz como transformar uma lista assim numa decisão.

@@ -3,8 +3,8 @@ title: Bytes por vetor
 version: 1
 ---
 
-O tamanho de um armazenamento de vetores é decidido no dia em que você escolhe o modelo, muito
-antes de escolher um banco de dados. É o número de dimensões vezes quatro bytes, vezes o número de
+Você decide o tamanho de um armazenamento de vetores no dia em que escolhe o modelo, muito antes
+de escolher um banco de dados. É o número de dimensões vezes quatro bytes, vezes o número de
 linhas. A expectativa comum é que o banco encolha isso, ou pelo menos não acrescente nada. Esta
 seção mede o que ele acrescenta de verdade.
 
@@ -16,9 +16,9 @@ origem. São 1.536 bytes para os 384 números do all-MiniLM-L6-v2 (a aula 1 impr
 gemini-embedding-001. A dimensão aparece na coluna `dims` da tabela de preços que a seção 05 desta
 aula cita, e é o único número dessa tabela que você paga todo mês, e não uma vez só.
 
-Como o conteúdo dos números não muda o tamanho deles, as medições desta aula usam vetores
-aleatórios de comprimento 1 em vez de embeddings: 20.000 deles, com 384 e com 1536 dimensões, saídos
-de um auxiliar de seis linhas.
+O conteúdo dos números não muda o tamanho deles, então as medições desta aula usam vetores
+aleatórios de comprimento 1 em vez de embeddings. São 20.000 deles, com 384 e com 1536 dimensões,
+saídos de um auxiliar de seis linhas.
 
 ```python
 import numpy as np
@@ -129,12 +129,12 @@ tabelas.
 
 **Com 1536 dimensões a tabela propriamente dita fica quase vazia.** `heap` tem 1.212.416 bytes e
 `toast` tem 163.840.000. Um vetor de 1536 dimensões, mais de 6 KB, é grande demais para dividir uma
-página com os vizinhos, então o PostgreSQL o tira da linha e o leva para o armazenamento **TOAST** da
+página com os vizinhos. O PostgreSQL o tira da linha e o leva para o armazenamento **TOAST** da
 tabela, cortado em pedaços, deixando um ponteiro no lugar. O pgvector 0.6.0 declara o tipo como
 `STORAGE external`, o que quer dizer levado para fora e nunca comprimido. Contando tudo, uma linha
 custa 8.371 bytes para 6.144 bytes de números.
 
-Nada disso é defeito, e os dois custos extras são fixos por linha. O que isso quer dizer na prática
-é que **a conta crua subestima o que um banco vai ocupar**: no orçamento, multiplique pelo
+Nada disso é defeito, e os dois custos extras são fixos por linha. Na prática, **a conta crua
+subestima o que um banco vai ocupar**: no orçamento, multiplique pelo
 `per_row` medido, e não por 4 × d. E isso ainda é antes de qualquer índice, que é o assunto da
 próxima seção.

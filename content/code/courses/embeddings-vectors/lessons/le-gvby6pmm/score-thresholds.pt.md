@@ -11,8 +11,8 @@ encontramos um artigo sobre isso* em vez de oferecer um vale-presente.
 A dificuldade é o número em si. É tentador escolher um redondo, 0,5 porque é metade, ou 0,8 porque
 soa rigoroso. O corte precisa sair de notas que você mediu, e a medida precisa incluir perguntas que
 **não deveriam** receber nada, que um conjunto de julgamentos de relevância sozinho não tem. Por isso
-`threshold.py` acrescenta oito perguntas para as quais a central de ajuda não tem artigo, e compara
-dois conjuntos de notas por modelo: a nota que cada uma das 24 perguntas dá ao artigo certo, e a
+`threshold.py` acrescenta oito perguntas para as quais a central de ajuda não tem artigo. Depois
+compara dois conjuntos de notas por modelo: a nota que cada uma das 24 perguntas dá ao artigo certo, e a
 melhor nota que cada pergunta fora do assunto tira de qualquer artigo.
 
 ```schooling-example
@@ -44,13 +44,13 @@ melhor nota que cada pergunta fora do assunto tira de qualquer artigo.
 ## Os dois grupos se sobrepõem
 
 **No all-MiniLM-L6-v2 o artigo certo mais fraco tira 0,253 e a pergunta fora do assunto mais forte
-tira 0,293.** Não existe corte que guarde todas as respostas e recuse todos os estranhos: em 0,25 as
-24 respostas sobrevivem e a pergunta do show passa; em 0,30 todas as perguntas fora do assunto são
-recusadas e duas respostas de verdade se perdem junto. Escolher entre os dois é uma decisão de
+tira 0,293.** Não existe corte que guarde todas as respostas e recuse todos os estranhos. Em 0,25 as
+24 respostas sobrevivem e a pergunta do show passa. Em 0,30 todas as perguntas fora do assunto são
+recusadas, e duas respostas de verdade se perdem junto. Escolher entre os dois é uma decisão de
 produto, não de matemática. Uma central de ajuda que passa o cliente para uma pessoa quando não
 encontra nada talvez prefira 0,30; uma em que a página vazia é um beco sem saída talvez prefira 0,25.
 
-Note também que o corte foi escolhido pelos artigos certos, e é aplicado a todos os resultados. Com
+O corte foi escolhido pelos artigos certos, e vale para todos os resultados. Com
 um corte de 0,25, a busca por *the box never showed up* da primeira seção ainda devolveria o artigo
 de senha com 0,300 e o do livro errado com 0,290. **Um corte apara o ruído abaixo dele e mantém o
 ruído acima.** Ele complementa o k em vez de substituí-lo.

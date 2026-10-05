@@ -101,8 +101,8 @@ returns **distances**, and the section after next takes them apart.
 The other two queries filter. `where` reads the metadata, and with the categories narrowed to
 payments and e-books the refund articles are gone: *Refunds for e-books* (h33) rises to second.
 `where_document` reads the text itself, and `$contains` is a plain substring test: every article
-without the string is dropped before ranking, so all three that came back mention a card. Lesson 17 is about
-how a filter and the index work together, and where that goes wrong.
+without the string is dropped before ranking, so all three that came back mention a card. Lesson 17
+is about how a filter and the index work together, and where that goes wrong.
 
 ## One model per collection, checked by size
 
@@ -133,9 +133,9 @@ collection, in its metadata or in its name.
 
 ## Changing what is stored
 
-`add`, `upsert`, `update` and `delete` are the four writes. They do not behave the way their names
-suggest in every case, and this program tries each one on a record for an article that does not
-exist, h41, so the forty real ones are left alone:
+`add`, `upsert`, `update` and `delete` are the four writes. They do not always behave the way their
+names suggest. This program tries each one on a record for an article that does not exist, h41, so
+the forty real ones are left alone:
 
 ```schooling-example
 {
@@ -169,9 +169,9 @@ exist, h41, so the forty real ones are left alone:
 
 **The second `add` changed nothing and said nothing.** The id was already there, so Chroma kept the
 first text and moved on. `upsert` is the write that replaces: insert if new, overwrite if not. And
-`update` on h99, an id nobody ever stored, raised no error either. A program that re-imports the help
-centre every night with `add` would keep the first version of every article forever, and nothing in
-its output would show it. Use `upsert` for anything that can be written twice.
+`update` on h99, an id nobody ever stored, raised no error either. A program that re-imports the
+help centre every night with `add` would keep the first version of every article forever, and
+nothing in its output would show it. Use `upsert` for anything that can be written twice.
 
 A changed document gets a new vector: Chroma runs the embedding function again on `upsert` and on
 an `update` that carries text. The text and its vector cannot drift apart, which is the consistency

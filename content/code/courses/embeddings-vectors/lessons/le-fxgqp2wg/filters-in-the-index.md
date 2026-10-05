@@ -3,11 +3,11 @@ title: Filters in the index
 version: 1
 ---
 
-Neither order is good everywhere, so the vector databases have done what pgvector 0.6.0 does
-not: they take the filter **with** the query and decide inside the engine how to
-apply it. The interface looks the same in each, a vector, a k and a condition, and what differs is
-what happens to the condition. The three that ran in lessons 12 and 13 all ran here, on the
-help centre, with the same question and the filter `lang = 'pt'`.
+Neither order is good everywhere, so the vector databases have done what pgvector 0.6.0 does not:
+they take the filter **with** the query and decide inside the engine how to apply it. The
+interface looks the same in each, a vector, a k and a condition, and what differs is what happens
+to the condition. The three that ran in lessons 12 and 13 all ran here, on the help centre, with
+the same question and the filter `lang = 'pt'`.
 
 ## Chroma
 
@@ -91,16 +91,16 @@ because the Qdrant server was out of reach from the lab:
 }
 ```
 
-**The filtered query returned the three Portuguese articles.** The warning is the interesting line.
-Local mode scores every point and applies the filter as a mask, which is exact and needs no index,
-so it ignores the payload index and says so.
+**The filtered query returned the three Portuguese articles.** The warning comes from how local
+mode works: it scores every point and applies the filter as a mask, which is exact and needs no
+index, so it ignores the payload index and says so.
 
 The **server** is where the payload index matters, and it was not run here. Qdrant documents its
-approach as **filterable HNSW**: with a payload index on a field, the server estimates how many
-points a filter passes and, when it passes few, searches them exactly, which is a pre-filter;
-otherwise it walks the HNSW graph and checks the condition during the walk, so rejected points do
-not use up the result list the way they did in pgvector. It also adds links to the graph for indexed
-values so that the part of the graph a filter leaves is still connected. That is the design that
+approach as **filterable HNSW**. With a payload index on a field, the server estimates how many
+points a filter passes, and when it passes few, it searches them exactly, which is a pre-filter.
+Otherwise it walks the HNSW graph and checks the condition during the walk, so rejected points do
+not use up the result list the way they did in pgvector. It also adds links to the graph for
+indexed values, so that the part of the graph a filter leaves is still connected. That design
 removes the trade from the previous two sections, at the cost of creating the payload indexes
 before loading the data.
 

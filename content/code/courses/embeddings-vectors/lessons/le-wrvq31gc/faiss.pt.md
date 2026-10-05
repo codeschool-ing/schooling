@@ -85,7 +85,7 @@ coerência que a aula 11 pediu de qualquer armazenamento, sem ninguém para gara
 
 ## Uma biblioteca confere pouco
 
-O Chroma recusou um vetor do WordLlama com uma frase que nomeava as duas dimensões. O FAISS também
+Na aula 12, o Chroma recusou um vetor do WordLlama com uma frase que nomeava as duas dimensões. O FAISS também
 recusa, e diz isto:
 
 ```python
@@ -104,6 +104,6 @@ ana@lab:~/emb$ python wrong.py
 AssertionError ''
 ```
 
-Uma asserção com a mensagem vazia. O erro foi pego, e o programa que o cometeu não fica sabendo nada
-sobre ele. É a troca que uma biblioteca faz o tempo todo: ela supõe que quem chama conhece a dimensão,
+Uma asserção com a mensagem vazia. O FAISS pegou o erro, e o programa que o cometeu não fica sabendo
+nada sobre ele. É a troca que uma biblioteca faz o tempo todo: ela supõe que quem chama conhece a dimensão,
 a métrica e o significado de cada id, e não gasta nada conferindo.

@@ -51,7 +51,7 @@ Então uma busca por *water damage* não consegue achar este texto pelo vetor, d
 disser.
 
 **Os três artigos mais longos, nas primeiras linhas da saída, são os três em português**, e nenhum
-deles é o mais longo em palavras: o h38 tem 48 palavras e 102 pedaços, enquanto o artigo inglês mais
+deles é o mais longo em palavras. O h38 tem 48 palavras e 102 pedaços; o artigo inglês mais
 longo em pedaços, o h03, tem 53 palavras e 65. Um modelo com vocabulário inglês quebra palavras em
 português em pedaços mais numerosos e menores, então o mesmo limite comporta menos palavras de outra
 língua.

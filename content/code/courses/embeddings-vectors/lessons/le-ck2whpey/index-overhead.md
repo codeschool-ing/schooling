@@ -59,8 +59,8 @@ At 1536 dimensions it is 8,192 bytes a row: one whole 8 KB page per vector. The 
 which store each vector once inside its cell, come to 1,664 and 8,233 bytes a row, about the size of
 the table again.
 
-So a table with both indexes holds every vector three times. You would rarely keep two vector indexes on
-one column in production, but **one index already doubles the bill**, and the figure shows by how
+So a table with both indexes holds every vector three times. You would rarely keep two vector
+indexes on one column in production, but **one index already doubles the bill**, and the figure shows by how
 much against the numbers themselves.
 
 ```schooling-figure
@@ -113,7 +113,7 @@ the vectors**, and that is a choice of pgvector's design rather than a law of HN
 ## Building it is the slow part
 
 Read the `Time:` lines again. pgvector took `7385.761 ms` for the HNSW index on 384 dimensions and
-46553.018 ms on 1536, against `790.394 ms` and `2351.658 ms` for IVFFlat. hnswlib, outside the
+`46553.018 ms` on 1536, against `790.394 ms` and `2351.658 ms` for IVFFlat. hnswlib, outside the
 database, built its graphs in 1.82 s and 11.13 s. **HNSW is the expensive index to build**,
 because every vector added is a search through the graph built so far.
 

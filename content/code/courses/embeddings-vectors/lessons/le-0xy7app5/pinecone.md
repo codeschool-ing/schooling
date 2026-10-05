@@ -9,7 +9,7 @@ start. **That is the whole difference from Chroma, and most of what follows come
 
 It also means nothing in this section ran. The lab has no route to Pinecone's API, and an account
 would be needed anyway. The program below is written for the `pinecone` Python package and was
-checked against the signatures of version 10.0.0, in an environment of its own; its requests were
+checked against the signatures of version 10.0.0, in an environment of its own. Its requests were
 never answered, so no output is shown and none is invented.
 
 ```python
@@ -45,7 +45,7 @@ for m in res.matches:
 Chroma's space was. 384 and `cosine` match all-MiniLM-L6-v2. `ServerlessSpec` says where the index
 lives, a cloud and a region; you choose the region because the data sits there and every query
 travels to it. Version 10.0.0 of the client still accepts this call and marks `dimension`, `metric`
-and `spec` as deprecated in favour of a `schema=` and a `deployment=` argument, so check the current
+and `spec` as deprecated in favour of a `schema=` and a `deployment=` argument. Check the current
 form before you copy it.
 
 **Pinecone stores vectors, not texts.** The program embeds the articles itself and sends the
@@ -63,7 +63,7 @@ Portuguese ones into `pt`, and a query names exactly one namespace, so it never 
 That is a cheap and strict way to separate languages, or customers, which lesson 17 comes back to.
 
 **A query sends a vector, `top_k` and a filter.** The filter language is MongoDB's style, with
-operators such as `$eq`, `$in` and `$gte`; Chroma's `where` uses the same style, so the filter
+operators such as `$eq`, `$in` and `$gte`. Chroma's `where` uses the same style, so the filter
 in `pine.py` and the one in `ask.py` look alike.
 
 ## Scores point the other way

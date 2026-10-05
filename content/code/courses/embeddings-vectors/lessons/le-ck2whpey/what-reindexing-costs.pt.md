@@ -32,8 +32,8 @@ mistral/mistral-embed          mistral                          0.100       -   
 ana@lab:~/emb$ python3 prices.py --json > prices.json
 ```
 
-O segundo comando grava as mesmas linhas em JSON para um programa ler. Este aqui conta os tokens de
-todo texto do laboratório que não é pergunta, mede o tempo do modelo local sobre eles e escala as
+O segundo comando grava as mesmas linhas em JSON para um programa ler. O `reembed.py` conta os tokens
+de todo texto do laboratório que não é pergunta, mede o tempo do modelo local sobre eles e escala as
 duas coisas para um milhão:
 
 ```schooling-example
@@ -124,8 +124,8 @@ Uma migração que não para a busca mantém os vetores antigos e o índice dele
 novos são escritos e construídos, e só então muda as leituras. Nessa janela **você guarda os dois
 conjuntos**: as linhas e o índice do modelo antigo mais os do novo, na dimensão do novo. Passar de
 384 para 1536 dimensões no pgvector, com HNSW, leva uma linha de 1.676 + 2.048 bytes para 8.371 + 8.192,
-e durante a mudança você guarda a soma. A seção 07 desta aula calcula exatamente isso para um acervo
-maior.
+e durante a mudança você guarda a soma. A seção 07 desta aula calcula uma mudança assim para um
+acervo maior.
 
 Então reindexar custa tokens ou horas de CPU, o tempo de construir o índice novo e um período de
 armazenamento em dobro. Das três, a última é a que pede planejamento de capacidade, porque chega de

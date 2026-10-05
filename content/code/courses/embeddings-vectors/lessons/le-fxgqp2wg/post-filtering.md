@@ -171,10 +171,10 @@ SET
 ```
 
 At 400 candidates the Spanish column is full and the Portuguese one mostly is, though query row 7
-still got only 3. A wider search makes the shortfall rarer, at a cost per query, and does not rule it
-out.
+still got only 3. A wider search makes the shortfall rarer, at a cost per query, and does not rule
+it out.
 
 pgvector 0.8.0 added **iterative index scans** for exactly this case: when the filter has left the
 `LIMIT` unfilled, the scan goes back to the graph for more candidates. The lab runs 0.6.0, which
-does not have them, so they were not run here; if your database has 0.8.0 or later, they are a
+does not have them, so they were not run here. If your database has 0.8.0 or later, they are a
 setting to look up before reaching for anything else.

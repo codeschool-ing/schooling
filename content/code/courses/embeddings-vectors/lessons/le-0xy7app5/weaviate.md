@@ -12,7 +12,7 @@ itself, which is the difference from Chroma's `PersistentClient`.
 None of the three ran here. The embedded mode fetches the server from GitHub, which this lab cannot
 reach, and there was no server to connect to otherwise. The program below is written for the
 `weaviate-client` package and checked against the signatures of version 4.23.1 in an environment of
-its own; it was never answered, and no output is shown.
+its own. Nothing ever answered it, so no output is shown.
 
 ```python
 import json
@@ -73,9 +73,9 @@ key held by the server and the provider's bill arriving for every insert.
 ## Distance, again
 
 `MetadataQuery(distance=True)` asks for the distance of each result, and for a cosine index Weaviate
-uses the same convention as Chroma: one minus the similarity, smaller is closer. So h15, which Chroma
-put at 0.5624 from the question, would come back at that distance here too, if the vectors are the
-same; that follows from the definition and was not measured.
+uses the same convention as Chroma: one minus the similarity, smaller is closer. So h15, which
+Chroma put at 0.5624 from the question, would come back at that distance here too, if the vectors
+are the same. That follows from the definition and was not measured.
 
 Filters are built with a small builder, `Filter.by_property("category").equal("returns")`, rather
 than a dictionary, and several combine with `&` and `|`.
@@ -87,6 +87,7 @@ lesson 3's hybrid search done by the database. Weaviate keeps a keyword index of
 properties, so `query="refund"` is scored with BM25 while `vector=q` is scored by distance.
 
 `alpha` sets the balance: 1 is a pure vector search, 0 a pure keyword search, and 0.5 weighs them
-equally. `fusion_type` chooses how the two lists are merged, either by rank, as lesson 3's reciprocal
-rank fusion did, or by normalised score. The right `alpha` for Marginalia is a measurement, made the
-way lesson 3 made it, with the 24 questions in `queries.jsonl`, not a value to copy.
+equally. `fusion_type` chooses how the two lists are merged, either by rank, as lesson 3's
+reciprocal rank fusion did, or by normalised score. The right `alpha` for Marginalia is a
+measurement, made the way lesson 3 made it, with the 24 questions in `queries.jsonl`, not a value to
+copy.

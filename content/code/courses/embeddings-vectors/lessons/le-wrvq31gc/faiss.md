@@ -84,7 +84,8 @@ the consistency lesson 11 asked of any store, with nobody to enforce it.
 
 ## A library checks little
 
-Chroma refused a WordLlama vector with a sentence naming both dimensions. FAISS refuses it too,
+In lesson 12, Chroma refused a WordLlama vector with a sentence naming both dimensions. FAISS
+refuses it too,
 and says this:
 
 ```python
@@ -103,6 +104,6 @@ ana@lab:~/emb$ python wrong.py
 AssertionError ''
 ```
 
-An assertion with an empty message. The mistake was caught, and the program that made it learns
+An assertion with an empty message. FAISS caught the mistake, and the program that made it learns
 nothing about what it was. That is the trade a library makes throughout: it assumes the caller
 knows the dimension, the metric and the meaning of every id, and it spends nothing on checking.

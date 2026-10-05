@@ -91,8 +91,8 @@ multiplica a pergunta por todos eles, então a busca é exata e os erros são do
 0` diz o mesmo pelo outro lado. Um servidor constrói um índice HNSW quando a coleção fica grande o
 bastante, e tem as próprias mensagens de erro; nenhum dos dois rodou aqui.
 
-E um índice de payload, que num servidor permite responder a um filtro por um índice em vez de
-conferir cada ponto, é aceito e ignorado, com um aviso que diz isso. A aula 17 mostra por que esse
+O modo local também aceita um índice de payload e o ignora, com um aviso que diz isso. Num servidor,
+esse índice deixa o Qdrant responder a um filtro por um índice em vez de conferir cada ponto. A aula 17 mostra por que esse
 índice importa quando filtros encontram um grafo HNSW. O diretório guarda um arquivo SQLite e dois
 arquivos pequenos de controle:
 
@@ -112,5 +112,6 @@ na porta padrão:
 client = QdrantClient(url="http://localhost:6333")
 ```
 
-Isso não rodou, pelo motivo acima. Esse também é o uso honesto do modo local: escrever e testar
-contra ele num notebook, sabendo que velocidade, indexação e concorrência só serão verdade no servidor.
+Essa linha não rodou, pelo motivo acima. Ela também mostra para que serve o modo local: escrever e
+testar no seu laptop, sabendo que só o servidor vai mostrar a velocidade, a indexação e a
+concorrência de verdade.

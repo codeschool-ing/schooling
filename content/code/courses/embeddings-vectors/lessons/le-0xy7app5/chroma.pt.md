@@ -59,9 +59,9 @@ ana@lab:~/emb$ python same.py
 A maior diferença entre os 384 números está na oitava casa decimal, que é o que sobra de dois
 programas fazendo a mesma conta numa ordem um pouco diferente. Mesmo modelo, mesmos vetores.
 
-Essa comodidade também é uma decisão que alguém tomou por você. A coleção agora depende de um
-modelo escolhido pelo padrão do Chroma, e a aula 1 disse o que isso compromete: toda pergunta tem de
-virar vetor pelo mesmo modelo, e trocá-lo significa recalcular o vetor de todo registro. Passe
+Essa comodidade também é uma decisão que alguém tomou por você. A coleção agora depende de um modelo
+escolhido pelo padrão do Chroma, e a aula 1 disse com o que isso compromete você: toda pergunta tem
+de virar vetor pelo mesmo modelo, e trocá-lo significa recalcular o vetor de todo registro. Passe
 `embedding_function=` ao criar a coleção, ou passe você mesmo `embeddings=`, e a escolha fica sua e
 visível no código.
 
@@ -103,8 +103,8 @@ melhor. O Chroma devolve **distâncias**, e a seção depois da próxima as desm
 As outras duas consultas filtram. `where` lê os metadados, e com as categorias limitadas a
 pagamentos e e-books os artigos de reembolso somem: *Refunds for e-books* (h33) sobe para segundo.
 `where_document` lê o próprio texto, e `$contains` é um simples teste de substring: todo artigo sem
-a sequência é descartado antes de ordenar, então os três que voltaram mencionam um cartão. A aula 17 trata de
-como um filtro e o índice trabalham juntos, e de onde isso dá errado.
+a sequência é descartado antes de ordenar, então os três que voltaram mencionam um cartão. A aula 17
+trata de como um filtro e o índice trabalham juntos, e de onde isso dá errado.
 
 ## Um modelo por coleção, conferido pelo tamanho
 
@@ -136,8 +136,8 @@ nos metadados dela ou no nome.
 ## Mudando o que está guardado
 
 `add`, `upsert`, `update` e `delete` são as quatro escritas. Elas nem sempre se comportam como o
-nome sugere, e este programa testa cada uma num registro de um artigo que não existe, h41, para que
-os quarenta de verdade fiquem intactos:
+nome sugere. Este programa testa cada uma num registro de um artigo que não existe, h41, para que os
+quarenta de verdade fiquem intactos:
 
 ```schooling-example
 {
@@ -170,10 +170,11 @@ os quarenta de verdade fiquem intactos:
 ```
 
 **O segundo `add` não mudou nada e não disse nada.** O id já estava lá, então o Chroma manteve o
-primeiro texto e seguiu em frente. `upsert` é a escrita que substitui: insere se for novo, sobrescreve
-se não for. E o `update` em h99, um id que ninguém guardou, também não levantou erro. Um programa que
-reimporta a central de ajuda toda noite com `add` ficaria para sempre com a primeira versão de cada
-artigo, e nada na saída dele mostraria isso. Use `upsert` para tudo que possa ser gravado duas vezes.
+primeiro texto e seguiu em frente. `upsert` é a escrita que substitui: insere se for novo,
+sobrescreve se não for. E o `update` em h99, um id que ninguém guardou, também não levantou erro. Um
+programa que reimporta a central de ajuda toda noite com `add` ficaria para sempre com a primeira
+versão de cada artigo, e nada na saída dele mostraria isso. Use `upsert` para tudo que possa ser
+gravado duas vezes.
 
 Um documento alterado ganha um vetor novo: o Chroma roda a função de embedding de novo no `upsert` e
 num `update` que traga texto. O texto e o seu vetor não têm como se desencontrar, que é a coerência

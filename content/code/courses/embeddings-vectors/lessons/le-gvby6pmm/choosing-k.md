@@ -54,7 +54,7 @@ their climbing in the first two or three steps.
 
 The last two lines of the output say why the curve stops where it does. *send books to another
 country* has its answer at 4, which is the step from 22 to 23. *my order came in pieces* has its
-answer at 12, beyond any k on the chart: raising k to 10 does not reach it, and a k large enough
+answer at 12, beyond any k on the chart. Raising k to 10 does not reach it, and a k large enough
 to reach it would hand on twelve articles for every question to rescue one. That is a question the
 model gets wrong, and k is the wrong tool for it. A second model is the right one: WordLlama has
 all 24 by k = 3, and the section on reranking puts the two models to work together.
@@ -64,17 +64,18 @@ first article costs 55 tokens, three cost 162 and ten cost 544. Every one of tho
 by whatever comes next:
 
 - a language model, in the `rag` course, pays for every token of context and reads the noise as
-  carefully as the answer. Ten articles where three would do is more than three times the bill for the same
-  answers, and seven extra chances to quote the wrong one;
+  carefully as the answer. Ten articles where three would do is more than three times the bill for
+  the same answers, and seven extra chances to quote the wrong one;
 - a person, on a results page, reads the first few and stops. A screen has room for a handful
-  of results, and the tenth is rarely seen;
+  of results, and few readers reach the tenth;
 - the next stage of the search, such as a reranker, takes time per candidate.
 
 ## A way to choose
 
 Pick k from your own curve, not from habit. Measure found-at-k on questions with known answers, as
 `recall_k.py` does, and take the smallest k after which the curve is flat. On this help centre
-that is 2 or 3 for all-MiniLM-L6-v2 and 3 for WordLlama.
+that is 4 for all-MiniLM-L6-v2, or 2 if the single question gained at k = 4 counts as noise, and 3
+for WordLlama.
 
 Two cautions keep that number honest. **24 questions is a small sample**: one question is about
 four points of the total, and the step from 22 to 23 is one question. And the curve belongs to the

@@ -54,9 +54,9 @@ preocupa as pessoas, e é a mais barata da página.
 
 **Os vetores têm 12,29 GB como números crus e mais que o dobro disso no Postgres**: 16,70 GB de
 tabela e 16,38 GB de índice HNSW, a partir dos 8.348 e 8.192 bytes por linha medidos com 1536
-dimensões. Isso é disco que você paga todo mês, e o índice é a parte que precisa caber na memória,
-porque uma busca salta de página em página pelo grafo e cada página fora da memória é uma leitura do
-disco. Quanto custa um GB de memória ou de disco depende de onde você roda, e nenhuma tabela deste
+dimensões. Isso é disco que você paga todo mês. O índice também é a parte que precisa caber na memória,
+porque uma busca salta de página em página pelo grafo, e cada página fora da memória é uma leitura
+do disco. Quanto custa um GB de memória ou de disco depende de onde você roda, e nenhuma tabela deste
 curso tem esse preço; multiplique estes tamanhos pelos preços do seu provedor.
 
 **Acompanhar as mudanças é barato.** Se 5% dos trechos mudam num mês, refazer os vetores deles custa

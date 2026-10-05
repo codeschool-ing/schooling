@@ -5,13 +5,13 @@ version: 1
 
 A aula 7 chamou o endpoint de embeddings da OpenAI e a aula 8 chamou os do Gemini e da Cohere, cada
 um pelo SDK do próprio fornecedor. O endpoint da Jina AI não precisa de SDK próprio, porque **ele
-copia o formato da OpenAI**: um `POST` em `/v1/embeddings` com um token bearer, um corpo com
-`model` e `input`, e uma resposta em que `data[i].embedding` traz os vetores e `usage` conta os
+copia o formato da OpenAI**. A requisição é um `POST` em `/v1/embeddings` com um token bearer e um
+corpo com `model` e `input`; na resposta, `data[i].embedding` traz os vetores e `usage` conta os
 tokens. O que a Jina acrescenta são alguns campos próprios no mesmo corpo, e um deles muda o vetor.
 
 O programa abaixo chama esse endpoint com o `httpx`, o cliente HTTP que o pacote `openai` já
 trouxe. O endereço e a chave vêm do ambiente. Nesta máquina, `JINA_BASE_URL` aponta para o
-**labembed**, o servidor substituto do curso em 127.0.0.1:8500: ele responde ao formato de
+**labembed**, o servidor substituto do curso em 127.0.0.1:8500. Ele responde ao formato de
 requisição da Jina com vetores dos dois modelos que o laboratório roda, com nomes de modelo do
 próprio laboratório, por isso o modelo aqui é `lab-wordllama`. Contra o serviço de verdade, o
 endereço seria `https://api.jina.ai/v1`, a chave seria uma do painel da Jina e o modelo seria um
@@ -67,8 +67,7 @@ ajuda em vetores com `retrieval.passage` e a pergunta da cliente com `retrieval.
 **O laboratório não faz isso, e a segunda linha mostra.** Os dois modelos do laboratório são
 simétricos. O labembed confere a tarefa, registra e calcula o mesmo vetor, diga ela o que disser;
 então `query and passage identical: True` é um fato sobre o labembed, e não sobre a Jina. Com o
-jina-embeddings-v3 os dois vetores seriam diferentes, e essa diferença é a razão de existir do
-campo.
+jina-embeddings-v3 os dois vetores seriam diferentes, e o campo existe por causa dessa diferença.
 
 **Uma tarefa que a Jina não conhece é recusada**, e o labembed copia a recusa: a mensagem lista as
 cinco que ela aceita.
@@ -87,20 +86,20 @@ ana@lab:~/emb$ tail -n 4 /var/log/labembed/requests.jsonl | jq -c "{provider, ta
 {"provider":"jina","task":null,"dims":null,"status":422}
 ```
 
-As quatro requisições foram para `/v1/embeddings`, o caminho que uma requisição da OpenAI usa, e
-o labembed as distinguiu só pela chave: `provider` diz `jina`. A primeira pediu 64 dimensões e as duas seguintes receberam as 256
-completas. A requisição recusada não tem tarefa registrada, porque foi barrada antes de a tarefa
-ser aceita.
+As quatro requisições foram para `/v1/embeddings`, o caminho que uma requisição da OpenAI usa, e o
+labembed as distinguiu só pela chave: `provider` diz `jina`. A primeira pediu 64 dimensões e as duas
+seguintes receberam as 256 completas. A requisição recusada não tem tarefa registrada, porque o
+labembed a barrou antes de aceitar uma.
 
 ## Late chunking, descrito e não executado
 
 A aula 3 corta um documento longo em pedaços e transforma cada pedaço em vetor separadamente. Isso
-perde contexto: um pedaço que diz *it arrives in five working days* ("chega em cinco dias úteis")
-já não diz o que é esse *it*. O campo `late_chunking` da Jina mira exatamente nisso. Com ele
-ligado, os pedaços enviados numa mesma requisição são lidos pelo modelo juntos, como um texto só,
-e só depois a parte de cada pedaço vira o próprio vetor pela média. A aula 9 mostrou essa média, o
-mean pooling no fim do modelo; o late chunking põe o corte depois das camadas em vez de antes, e
-assim o vetor de cada pedaço já viu os vizinhos.
+perde contexto: um pedaço que diz *it arrives in five working days* ("chega em cinco dias úteis") já
+não diz o que é esse *it*. O campo `late_chunking` da Jina mira exatamente nisso. Com ele ligado, o
+modelo lê juntos os pedaços de uma mesma requisição, como um texto só, e só depois tira a média da
+parte de cada pedaço para formar o vetor dele. A aula 9 mostrou essa média, o mean pooling no fim do
+modelo; o late chunking põe o corte depois das camadas em vez de antes, e assim o vetor de cada
+pedaço já viu os vizinhos.
 
 ```python
 r = httpx.post("https://api.jina.ai/v1/embeddings",

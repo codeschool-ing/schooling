@@ -46,8 +46,8 @@ is the shape to remember: the cost of a pre-filter follows the size of what pass
 
 So the two orders fail in opposite places. **Post-filtering fails when the filter is narrow**: it
 returns too few rows. **Pre-filtering is slow when the filter is wide**: it is exact and searches
-too many. A filter that passes 1% of the rows wants the pre-filter, one that passes nearly all of them loses
-little to a post-filter, and the hard cases are in between.
+too many. A filter that passes 1% of the rows wants the pre-filter, one that passes
+nearly all of them loses little to a post-filter, and the hard cases are in between.
 
 ## Pre-filtering inside PostgreSQL
 
@@ -82,7 +82,7 @@ ana@lab:~/emb$ psql -f ten.sql
 
 **Every query row got its 10 Portuguese rows.** The Spanish column is unchanged, because the new
 index only covers `lang = 'pt'`; Spanish queries still go through the full index and its filter.
-A partial index is one more index to build and keep up to date for each value you give it, so it
+A partial index is one more index to build and keep up to date for each value you give it. So it
 suits a field with a few values that matter, such as a language or a status, and not one with a
 value per customer. The tenants section of this lesson comes back to that.
 

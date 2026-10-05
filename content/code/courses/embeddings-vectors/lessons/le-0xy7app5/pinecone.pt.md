@@ -9,7 +9,7 @@ e o Pinecone roda os índices; não existe diretório seu guardando-os nem proce
 
 Isso também quer dizer que nada nesta seção rodou. O laboratório não tem rota até a API do Pinecone,
 e seria preciso uma conta de qualquer jeito. O programa abaixo foi escrito para o pacote Python
-`pinecone` e conferido contra as assinaturas da versão 10.0.0, num ambiente separado; as requisições
+`pinecone` e conferido contra as assinaturas da versão 10.0.0, num ambiente separado. As requisições
 dele nunca foram respondidas, então nenhuma saída é mostrada e nenhuma é inventada.
 
 ```python
@@ -41,12 +41,12 @@ for m in res.matches:
 
 ## O que o programa pede
 
-**Um índice é criado com a sua dimensão e a sua métrica**, e as duas ficam fixas dali em diante, como
-o espaço do Chroma. 384 e `cosine` combinam com o all-MiniLM-L6-v2. `ServerlessSpec` diz onde o índice
-mora, uma nuvem e uma região; você escolhe a região porque os dados ficam lá e toda consulta viaja até
-ela. A versão 10.0.0 do cliente ainda aceita essa chamada e marca `dimension`, `metric` e `spec` como
-obsoletos, em favor de um argumento `schema=` e de um `deployment=`, então confira a forma atual antes
-de copiar.
+**Um índice é criado com a sua dimensão e a sua métrica**, e as duas ficam fixas dali em diante,
+como o espaço do Chroma. 384 e `cosine` combinam com o all-MiniLM-L6-v2. `ServerlessSpec` diz onde o
+índice mora, uma nuvem e uma região; você escolhe a região porque os dados ficam lá e toda consulta
+viaja até ela. A versão 10.0.0 do cliente ainda aceita essa chamada e marca `dimension`, `metric` e
+`spec` como obsoletos, em favor de um argumento `schema=` e de um `deployment=`. Confira a forma
+atual antes de copiar.
 
 **O Pinecone guarda vetores, não textos.** O programa transforma os artigos em vetores ele mesmo e
 manda os números, que é o arranjo comum: não há `documents=` nem função de embedding padrão. O
@@ -62,9 +62,9 @@ Marginalia, ligado pelo id.
 português para `pt`, e uma consulta nomeia exatamente um namespace, então ela nunca vê o outro. É um
 jeito barato e rígido de separar idiomas, ou clientes, e a aula 17 volta a isso.
 
-**Uma consulta manda um vetor, `top_k` e um filtro.** A linguagem de filtro segue o estilo do MongoDB,
-com operadores como `$eq`, `$in` e `$gte`; o `where` do Chroma usa o mesmo estilo, então o filtro de
-`pine.py` e o de `ask.py` se parecem.
+**Uma consulta manda um vetor, `top_k` e um filtro.** A linguagem de filtro segue o estilo do
+MongoDB, com operadores como `$eq`, `$in` e `$gte`. O `where` do Chroma usa o mesmo estilo, então o
+filtro de `pine.py` e o de `ask.py` se parecem.
 
 ## As notas apontam para o outro lado
 
@@ -74,10 +74,10 @@ diz isso com todas as letras: `cosine` e `dotproduct` põem as notas mais altas 
 põe as mais baixas primeiro. Levar um limiar de um banco para o outro exige convertê-lo, e a seção
 anterior mostrou como um corte dá errado quando ninguém converte.
 
-## O que você abre mão, e o que ganha
+## Do que você abre mão, e o que ganha
 
 Você não roda nada. Não há diretório para guardar cópia, processo para reiniciar, índice para
-reconstruir à mão; o Pinecone escala o índice e o mantém disponível. Em troca, os dados saem das suas
-máquinas, toda consulta é uma ida e volta pela rede até a região escolhida, e a conta depende de
-quanto você guarda e de quanto lê e grava. A comparação no fim desta aula põe isso ao lado dos outros
-dois.
+reconstruir à mão; o Pinecone escala o índice e o mantém disponível. Em troca, os dados saem das
+suas máquinas, toda consulta é uma ida e volta pela rede até a região escolhida, e a conta depende
+de quanto você guarda e de quanto lê e grava. A comparação no fim desta aula põe isso ao lado dos
+outros dois.

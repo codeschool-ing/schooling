@@ -91,18 +91,18 @@ Este é o cliente Python do Qdrant em **modo local**, a implementação dentro d
 }
 ```
 
-**A consulta filtrada devolveu os três artigos em português.** O aviso é a linha interessante. O modo
-local dá nota a todos os pontos e aplica o filtro como uma máscara, o que é exato e não precisa de
-índice, então ele ignora o índice de payload e diz isso.
+**A consulta filtrada devolveu os três artigos em português.** O aviso vem do jeito como o modo
+local funciona: ele dá nota a todos os pontos e aplica o filtro como uma máscara, o que é exato e não precisa
+de índice, então ele ignora o índice de payload e diz isso.
 
 O **servidor** é onde o índice de payload importa, e ele não foi executado aqui. O Qdrant documenta a
-sua abordagem como **HNSW filtrável** (filterable HNSW): com um índice de payload num campo, o
-servidor estima quantos pontos um filtro deixa passar e, quando são poucos, busca neles de forma
-exata, o que é um pré-filtro; senão, anda pelo grafo HNSW e confere a condição durante a caminhada,
+sua abordagem como **HNSW filtrável** (filterable HNSW). Com um índice de payload num campo, o
+servidor estima quantos pontos um filtro deixa passar, e quando são poucos, busca neles de forma
+exata, o que é um pré-filtro. Senão, anda pelo grafo HNSW e confere a condição durante a caminhada,
 então os pontos rejeitados não gastam a lista de resultados como gastaram no pgvector. Ele também
 acrescenta ligações ao grafo para os valores indexados, para que a parte do grafo que um filtro
-deixa continue conectada. Esse é o desenho que elimina a troca das duas seções anteriores, ao custo
-de criar os índices de payload antes de carregar os dados.
+deixa continue conectada. Esse desenho elimina a troca das duas seções anteriores, ao custo de
+criar os índices de payload antes de carregar os dados.
 
 ## O que procurar num banco de dados
 

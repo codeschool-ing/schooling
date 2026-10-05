@@ -4,8 +4,8 @@ version: 1
 ---
 
 `PersistentClient(path="chroma")` criou um diretório, e o diretório é o banco inteiro. Não há outra
-cópia nem um processo segurando-o: pare o programa, copie o diretório, e você copiou o banco. Há dois
-tipos de arquivo lá dentro.
+cópia nem um processo segurando-o: pare o programa, copie o diretório, e você copiou o banco. Há
+dois tipos de arquivo lá dentro.
 
 ```
 ana@lab:~/emb$ ls -l chroma chroma/*/
@@ -24,10 +24,10 @@ ana@lab:~/emb$ du -sh chroma
 552K	chroma
 ```
 
-**`chroma.sqlite3` é o registro de tudo; o diretório com nome de identificador comprido é o índice.**
-O identificador é o id do segmento vetorial da coleção, e os quatro arquivos `.bin` dele são um índice
-HNSW, o grafo que permite a uma busca não ler todos os vetores. A aula 15 constrói esse grafo. Esta
-seção é sobre o que fica onde.
+**`chroma.sqlite3` é o registro de tudo; o diretório com nome de identificador comprido é o
+índice.** O identificador é o id do segmento vetorial da coleção, e os quatro arquivos `.bin` dele
+são um índice HNSW, o grafo que permite a uma busca não ler todos os vetores. A aula 15 constrói
+esse grafo. Esta seção é sobre o que fica onde.
 
 ## Um arquivo SQLite comum
 
@@ -64,11 +64,11 @@ registros vezes quatro: as três chaves de metadados que você passou e o própr
 sob a chave `chroma:document`. Os documentos também estão numa tabela de texto completo,
 `embedding_fulltext_search`, com uma linha cada.
 
-**`embeddings_queue` é um registro de escritas**, e tem 45 linhas: as quarenta do `load.py` e as cinco
-escritas do `change.py`. Cada uma carrega o seu vetor, 1.536 bytes, que são os 384 números de quatro
-bytes da aula 1. Leia as cinco últimas e as duas escritas que não mudaram nada estão lá: o segundo
-`add` de h41 e o `update` de h99 foram registrados como qualquer outra escrita, embora nenhum dos dois
-tenha mudado um registro.
+**`embeddings_queue` é um registro de escritas**, e tem 45 linhas: as quarenta do `load.py` e as
+cinco escritas do `change.py`. Cada uma carrega o seu vetor, 1.536 bytes, que são os 384 números de
+quatro bytes da aula 1. Leia as cinco últimas e as duas escritas que não mudaram nada estão lá: o
+segundo `add` de h41 e o `update` de h99 foram registrados como qualquer outra escrita, embora
+nenhum dos dois tenha mudado um registro.
 
 ## O arquivo do índice anda atrás do registro
 
@@ -102,11 +102,11 @@ sync_threshold: 1000
  1040 records   data_level0.bin 1,743,040 bytes
 ```
 
-**Novecentos registros entraram e o arquivo não se mexeu.** O Chroma só regrava os arquivos do índice
-depois que se acumulam `sync_threshold` escritas, 1.000 por padrão, e até lá as escritas que os
-arquivos ainda não alcançaram ficam no registro dentro do `chroma.sqlite3`. Entre 940 e 1.040
-registros o limite foi cruzado e o arquivo foi regravado. Então o tamanho dos arquivos `.bin` não diz
-nada sobre quantos registros existem; `col.count()` diz.
+**Novecentos registros entraram e o arquivo não se mexeu.** O Chroma só regrava os arquivos do
+índice depois que se acumulam `sync_threshold` escritas, 1.000 por padrão, e até lá as escritas que
+os arquivos ainda não alcançaram ficam no registro dentro do `chroma.sqlite3`. Entre 940 e 1.040
+registros as escritas passaram do limite e o Chroma regravou o arquivo. Então o tamanho dos arquivos
+`.bin` não diz nada sobre quantos registros existem; `col.count()` diz.
 
 Os dois tamanhos também mostram como o arquivo é organizado. 1.743.040 bytes são 1.040 posições de
 1.676 bytes, e 167.600 são 100 dessas posições: o primeiro arquivo tinha lugar para cem registros
@@ -138,8 +138,8 @@ print(col.count(), r["ids"][0], [round(d, 4) for d in r["distances"][0]])
 ```
 
 Mesma contagem, mesmos três artigos, mesmas distâncias. Só o construtor do cliente mudou. Um detalhe
-muda junto e passa fácil despercebido: **o embedding continua acontecendo no seu programa**. O cliente
-Python roda a função de embedding da coleção antes de mandar qualquer coisa, então `query_texts`
-atravessou a rede como vetor, e o servidor nunca carregou um modelo. O Chroma Cloud, a versão
-hospedada, é acessado por um terceiro construtor, `CloudClient`, com uma chave de API; ele não foi
-usado aqui.
+muda junto e passa despercebido com facilidade: **o embedding continua acontecendo no seu
+programa**. O cliente Python roda a função de embedding da coleção antes de mandar qualquer coisa,
+então `query_texts` atravessou a rede como vetor, e o servidor nunca carregou um modelo. O Chroma
+Cloud, a versão hospedada, é acessado por um terceiro construtor, `CloudClient`, com uma chave de
+API; ele não foi usado aqui.

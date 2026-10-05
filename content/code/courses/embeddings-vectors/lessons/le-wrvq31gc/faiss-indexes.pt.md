@@ -25,7 +25,7 @@ ruidosas.
     },
     {
       "code": "exact = faiss.IndexFlatIP(384)\nexact.add(X)\n_, truth = exact.search(Q, 10)\nfaiss.write_index(exact, \"random.faiss\")",
-      "note": "A resposta exata: um índice plano buscando os 10 mais próximos de cada pergunta. Ele também é gravado em `random.faiss` para depois."
+      "note": "A resposta exata: um índice plano buscando os 10 mais próximos de cada pergunta. Ele também é gravado em `random.faiss`, que a última seção desta aula lê de volta."
     },
     {
       "code": "for spec in (\"Flat\", \"HNSW32\", \"IVF64,Flat\", \"IVF64,PQ16\"):\n    index = faiss.index_factory(384, spec, faiss.METRIC_INNER_PRODUCT)\n    needs = not index.is_trained\n    index.train(X)\n    index.add(X)\n    _, I = index.search(Q, 10)\n    recall = np.mean([len(set(a) & set(b)) / 10 for a, b in zip(I, truth)])\n    size = faiss.serialize_index(index).nbytes\n    print(f\"{spec:11} needs training: {str(needs):5}  {size:>11,} bytes  recall@10 {recall:.3f}\")",
@@ -63,6 +63,6 @@ mantê-las na ordem certa. Com vetores menos apertados a perda é menor, e a aul
 
 **Esses recalls pertencem a estes dados e às configurações de busca padrão do FAISS**, que visitam
 uma célula de um índice IVF e mantêm 16 candidatos numa busca HNSW. Cada um dos índices aproximados
-tem um botão que troca tempo por recall, que é o assunto da aula 15, e os bytes são da aula 18. Aqui
-o ponto é mais estreito: quando a documentação de um banco disser que ele usa HNSW, IVF ou PQ, você
-já sabe qual destas quatro ideias ela quer dizer.
+tem um botão que troca tempo por recall, que é o assunto da aula 15, e os bytes são da aula 18. Por
+ora, quando a documentação de um banco disser que ele usa HNSW, IVF ou PQ, você já sabe qual destas
+quatro ideias ela quer dizer.

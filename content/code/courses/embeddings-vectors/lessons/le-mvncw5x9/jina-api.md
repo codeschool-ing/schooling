@@ -5,13 +5,13 @@ version: 1
 
 Lesson 7 called OpenAI's embeddings endpoint and lesson 8 called Gemini's and Cohere's, each through
 the provider's own SDK. Jina AI's endpoint needs no SDK of its own, because **it copies OpenAI's
-shape**: a `POST` to `/v1/embeddings` with a bearer token, a body with `model` and `input`, and an
-answer whose `data[i].embedding` holds the vectors and whose `usage` counts the tokens. What Jina
-adds is a few fields of its own in the same body, and one of them changes the vector.
+shape**. A request is a `POST` to `/v1/embeddings` with a bearer token and a body with `model` and
+`input`; in the answer, `data[i].embedding` holds the vectors and `usage` counts the tokens. What
+Jina adds is a few fields of its own in the same body, and one of them changes the vector.
 
 The program below calls it with `httpx`, the HTTP client the `openai` package already brought in.
 The address and the key come from the environment. On this machine `JINA_BASE_URL` points at
-**labembed**, the course's stand-in server on 127.0.0.1:8500: it answers Jina's request shape with
+**labembed**, the course's stand-in server on 127.0.0.1:8500. It answers Jina's request shape with
 vectors from the two models the lab runs, under the lab's own model names, so the model here is
 `lab-wordllama`. Against the real service the address would be `https://api.jina.ai/v1`, the key
 one from Jina's dashboard and the model one of Jina's, such as `jina-embeddings-v3`. Nothing else in
@@ -86,19 +86,19 @@ ana@lab:~/emb$ tail -n 4 /var/log/labembed/requests.jsonl | jq -c "{provider, ta
 {"provider":"jina","task":null,"dims":null,"status":422}
 ```
 
-All four requests went to `/v1/embeddings`, the path an OpenAI request uses, and labembed told
-them apart by the key alone: `provider` says `jina`. The first asked for 64 dimensions and the next two got the full 256. The refused
-request has no task recorded, because it was turned away before the task was accepted.
+All four requests went to `/v1/embeddings`, the path an OpenAI request uses, and labembed told them
+apart by the key alone: `provider` says `jina`. The first asked for 64 dimensions and the next two
+got the full 256. The refused request has no task recorded, because labembed turned it away before
+accepting one.
 
 ## Late chunking, described and not run
 
 Lesson 3 cuts a long document into chunks and embeds each chunk on its own. That loses context: a
 chunk saying *it arrives in five working days* no longer says what *it* is. Jina's `late_chunking`
-field is aimed at exactly that. With it set, the chunks sent in one request are read by the model
-together, as one text, and only then is each chunk's share of the pieces averaged into its own
-vector. Lesson 9 showed that average, the mean pooling at the end of the model; late chunking moves
-the cut to after the layers instead of before them, so each chunk's vector has seen its
-neighbours.
+field is aimed at exactly that. With it set, the model reads the chunks of one request together, as
+one text, and only then averages each chunk's share of the pieces into its own vector. Lesson 9
+showed that average, the mean pooling at the end of the model; late chunking moves the cut to after
+the layers instead of before them, so each chunk's vector has seen its neighbours.
 
 ```python
 r = httpx.post("https://api.jina.ai/v1/embeddings",

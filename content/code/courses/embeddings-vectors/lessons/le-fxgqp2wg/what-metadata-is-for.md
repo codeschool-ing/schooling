@@ -44,16 +44,16 @@ it. A wrong language is a bad result. A row from another customer's account is a
 **Why not let the vector carry it?** The tempting shortcut is to write the field into the text
 before embedding, *Language: Portuguese. Como devolver um livro*, and hope the search sorts it
 out. Lesson 1 showed what that hope is worth: all-MiniLM-L6-v2 scored *How to return a book*
-against its own Portuguese translation as two unrelated texts. Similarity is a matter of degree, and *is
-this in Portuguese* has a yes or no answer. A filter gives the exact answer every time.
+against its own Portuguese translation as two unrelated texts. Similarity is a matter of degree,
+and *is this in Portuguese* has a yes or no answer. A filter gives the exact answer every time.
 
 ## Stored beside the vector
 
 Lesson 11 described a record as an id, a vector and its metadata, and every database in lessons 12
 to 14 stores them that way: Chroma's `metadatas`, LanceDB's columns, Qdrant's payload, PostgreSQL's
 ordinary columns. Keep the fields as typed values (a date as a date, a price as a number) so that
-a filter can compare them, and keep them on the same record as the vector so that a filter and a
+a filter can compare them. Keep them on the same record as the vector, so that a filter and a
 search can run in one request.
 
-The question the rest of this lesson answers is how the two run together, because there are two
-orders to do it in, and they do not give the same results.
+The rest of this lesson is about how the two run together. There are two orders to do it in, and
+they do not give the same results.

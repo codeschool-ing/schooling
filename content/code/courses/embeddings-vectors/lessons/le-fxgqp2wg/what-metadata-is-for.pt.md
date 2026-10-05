@@ -52,8 +52,8 @@ grau, e *isto está em português* tem resposta sim ou não. Um filtro dá a res
 A aula 11 descreveu um registro como um id, um vetor e seus metadados, e todo banco das aulas 12 a
 14 os guarda assim: os `metadatas` do Chroma, as colunas do LanceDB, o payload do Qdrant, as colunas
 comuns do PostgreSQL. Guarde os campos com tipo (uma data como data, um preço como número) para que
-um filtro possa compará-los, e guarde-os no mesmo registro do vetor para que filtro e busca possam
+um filtro possa compará-los. Guarde-os no mesmo registro do vetor, para que filtro e busca possam
 rodar numa só requisição.
 
-A pergunta que o resto desta aula responde é como os dois rodam juntos, porque há duas ordens para
-fazer isso, e elas não dão os mesmos resultados.
+O resto desta aula trata de como os dois rodam juntos. Há duas ordens para fazer isso, e elas não
+dão os mesmos resultados.

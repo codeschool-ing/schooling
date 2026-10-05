@@ -54,8 +54,8 @@ and it is the cheapest line on the page.
 
 **The vectors are 12.29 GB as raw numbers and over twice that in Postgres**: 16.70 GB of
 table and 16.38 GB of HNSW index, from the 8,348 and 8,192 bytes a row measured at 1536 dimensions.
-That is disk you pay for every month, and the index is the part that has to fit in memory,
-because a search hops from page to page through the graph and every page not in memory is a read
+That is disk you pay for every month. The index is also the part that has to fit in memory,
+because a search hops from page to page through the graph, and every page not in memory is a read
 from disk. What a GB of memory or disk costs depends on where you run, and no sheet in this course
 prices it; multiply these sizes by your own host's prices.
 

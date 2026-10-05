@@ -4,7 +4,7 @@ version: 1
 ---
 
 Quando uma busca parece lenta, o banco vetorial é o primeiro suspeito, porque é a parte com "busca"
-na descrição do trabalho. Nos tamanhos com que a maioria das aplicações começa, ele costuma ser o
+no nome do cargo. Nos tamanhos com que a maioria das aplicações começa, ele costuma ser o
 suspeito errado. Uma consulta passa por vários passos entre a pergunta e a resposta, e o jeito de
 saber para onde vai o tempo é medir cada um. `path.py` faz uma pergunta ao armazenamento pequeno e
 mede os passos em separado:
@@ -53,9 +53,8 @@ nenhum ajuste de banco toca.
 
 **1. Transformar a pergunta em vetor, com o modelo da coleção.** O mesmo modelo que transformou os
 documentos, como as seções anteriores insistiram, e em toda consulta: uma pergunta não pode ser
-transformada em vetor com antecedência. Isso faz dela um custo por consulta, que as velocidades
-medidas na aula 10 põem na ordem de grandeza certa: um texto pelo MiniLM nesta máquina leva
-milissegundos.
+transformada em vetor com antecedência. Isso faz dela um custo por consulta. As velocidades medidas
+na aula 10 dão a ordem de grandeza: um texto pelo MiniLM nesta máquina leva milissegundos.
 
 **2. Achar candidatos.** O armazenamento pequeno lê todos os vetores, que é a busca exata da aula 3
 e a primeira seção desta aula. Um banco vetorial troca esse passo por um **índice aproximado**, que
@@ -66,7 +65,7 @@ que o índice existe para evitar. A aula 15 mostra como um índice funciona e qu
 **3. Filtrar.** `lang="en"` deixou os artigos em português de fora. O armazenamento pequeno confere
 o filtro em cada registro e dá aos que não passam uma nota de menos infinito, o que é correto e
 simples. Dentro de um índice aproximado é mais difícil, porque o índice acha primeiro os vetores
-mais próximos e alguns deles podem não passar no filtro; a aula 17 mede o que isso faz com os
+mais próximos e alguns deles podem não passar no filtro. A aula 17 mede o que isso faz com os
 resultados.
 
 **4. Reordenar, se for o caso.** Alguns sistemas pegam mais candidatos do que precisam e dão nova

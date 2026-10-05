@@ -12,8 +12,8 @@ são do segundo.
 
 ## A memória é por processo
 
-Um índice do FAISS mora na memória do programa que o carregou. O índice plano da seção anterior foi
-gravado num arquivo, e lê-lo de volta custa mais ou menos o tamanho do arquivo:
+Um índice do FAISS mora na memória do programa que o carregou. O índice plano que o `factory.py`
+construiu foi gravado em `random.faiss`, e lê-lo de volta custa mais ou menos o tamanho do arquivo:
 
 ```
 ana@lab:~/emb$ ls -l random.faiss
@@ -61,7 +61,7 @@ serviu o diretório dele com `chroma run` antes de deixar vários programas usá
 
 **O LanceDB deixou o segundo processo gravar**, e o primeiro não viu a linha nova: ele continuava
 lendo a versão 3, a que tinha aberto, e contou 40. Só o `checkout_latest()` o levou para a versão 4 e
-41 linhas. É o versionamento das seções anteriores funcionando, e é uma escolha que o seu programa tem
+41 linhas. É o versionamento do LanceDB funcionando, e é uma escolha que o seu programa tem
 de fazer de propósito: quão desatualizado um leitor pode estar, e quando ele olha de novo.
 
 ## Quanto custa cada lado
@@ -78,8 +78,8 @@ de fazer de propósito: quão desatualizado um leitor pode estar, e quando ele o
 protótipos, de todo teste, de uma ferramenta de linha de comando e da central de ajuda da Marginalia
 hoje. **Vá para o outro lado da rede quando vários programas precisarem dos mesmos vetores, ou quando
 eles não couberem mais ao lado de cada worker.** A mudança é mais barata do que parece quando a
-biblioteca com que você começou tem um servidor com a mesma API, que é o caso do Chroma e do Qdrant:
-a aula 12 mudou um construtor, e `QdrantClient(url=...)` é a mesma mudança. Sair do FAISS significa
+biblioteca com que você começou tem um servidor com a mesma API. É o caso do Chroma e do Qdrant: a
+aula 12 mudou um construtor, e `QdrantClient(url=...)` é a mesma mudança. Sair do FAISS significa
 escrever o servidor em volta dele, ou adotar um banco de dados.
 
 A aula 14 acrescenta uma última opção que as seis ferramentas daqui não cobrem: os vetores guardados

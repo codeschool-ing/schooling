@@ -50,7 +50,7 @@ cut.
 So a search for *water damage* cannot find this text through its vector, whatever the text says.
 
 **The three longest articles, in the first lines of the output, are the three Portuguese ones**, and
-none of them is the longest in words: h38 has 48 words and 102 pieces, while the longest English
+none of them is the longest in words. Article h38 has 48 words and 102 pieces; the longest English
 article by pieces, h03, has 53 words and 65. A model with an English vocabulary breaks Portuguese
 words into more and smaller pieces, so the same limit holds fewer words of another language.
 

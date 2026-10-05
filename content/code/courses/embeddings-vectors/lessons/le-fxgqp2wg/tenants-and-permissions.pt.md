@@ -107,9 +107,9 @@ conexão que esqueceu de dizer quem é não recebe nada.
 
 Dois cuidados sobre a demonstração. `ana` é dona da tabela e é a superusuária do banco, e as duas
 coisas pulam a segurança em nível de linha, por isso a busca roda como `helpdesk`, um papel só com
-`SELECT`. E a política é uma condição que o PostgreSQL aplica às linhas que o plano produz, então
-numa tabela grande com índice HNSW ela se comporta como qualquer outro filtro da seção de
-pós-filtragem: um cliente pequeno numa tabela grande recebe menos de k linhas. As soluções de lá
+`SELECT`. E a política é uma condição que o PostgreSQL aplica às linhas que o plano produz. Numa
+tabela grande com índice HNSW, ela se comporta como os filtros da seção de pós-filtragem: um
+cliente pequeno numa tabela grande recebe menos de k linhas. As soluções de lá
 valem aqui também.
 
 ## Uma coleção, ou uma por cliente
@@ -126,10 +126,10 @@ lugar:
 | um filtro esquecido | vaza, a menos que o banco garanta o filtro | não tem como vazar entre clientes |
 | apagar um cliente | um delete sobre muitas linhas | descartar uma coleção |
 
-Os bancos vetoriais dão nome à segunda opção nos seus próprios termos: o Qdrant documenta tanto um
-campo de payload por cliente quanto uma coleção por cliente, o Pinecone tem namespaces dentro de um
-índice, o Chroma tem tenants e databases acima das coleções, e a aula 14 viu o Supabase recomendar a
-segurança em nível de linha para o mesmo fim. Nenhuma dessas opções hospedadas foi executada aqui.
+Os bancos vetoriais têm os próprios termos para as duas opções. O Qdrant documenta tanto um campo
+de payload por cliente quanto uma coleção por cliente, o Pinecone tem namespaces dentro de um
+índice, e o Chroma tem tenants e databases acima das coleções. A aula 14 viu o Supabase recomendar
+a segurança em nível de linha para o mesmo fim. Nenhuma dessas opções hospedadas foi executada aqui.
 
 Seja qual for a escolha, o teste é o mesmo de toda esta aula: escreva a consulta que deveria não
 devolver nada, uma busca de um cliente por uma frase que só aparece nos documentos de outro, e

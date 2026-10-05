@@ -26,12 +26,12 @@ o preço.
 | Quão rápido ele precisa ser? | textos por segundo no seu hardware, ou o limite de requisições do fornecedor | esta aula: WordLlama 128 vezes mais rápido que o MiniLM aqui |
 | Quanto você consegue guardar? | dimensões × 4 bytes por vetor, antes de qualquer índice | a aula 1 mediu um vetor; a aula 18 mede o resto |
 
-**Uma licença é uma pergunta de sim ou não, e pesos abertos não a respondem sozinhos.** O pacote
-do WordLlama declara a licença MIT, e o all-MiniLM-L6-v2 é publicado sob Apache 2.0: as duas
-permitem que uma loja os use comercialmente. A Jina publica os pesos do jina-embeddings-v3 sob CC
-BY-NC 4.0, uma licença não comercial, então uma loja pode lê-los e testá-los, mas precisa de um
-acordo com a Jina para rodá-los em produção, ou paga pela API. Leia a licença no model card antes
-do primeiro benchmark, porque um modelo que você não pode usar não vale a medição.
+**Uma licença é uma pergunta de sim ou não, e pesos abertos não a respondem sozinhos.** O pacote do
+WordLlama declara a licença MIT, e o all-MiniLM-L6-v2 é publicado sob Apache 2.0: as duas permitem
+que uma loja os use comercialmente. A Jina publica os pesos do jina-embeddings-v3 sob CC BY-NC 4.0,
+uma licença não comercial. Uma loja pode lê-los e testá-los, mas, para rodá-los em produção, precisa
+de um acordo com a Jina, ou paga pela API. Leia a licença no model card antes do primeiro benchmark,
+porque um modelo que você não pode usar não vale a medição.
 
 **Privacidade também é uma pergunta de sim ou não.** A aula 1 mostrou que o vetor da mensagem de
 uma cliente é dado pessoal. Mandar a mensagem para uma API hospedada para obter esse vetor é mandar
@@ -62,11 +62,10 @@ ana@lab:~/emb$ jq -r .lang data/help.jsonl | sort | uniq -c
       3 pt
 ```
 
-Uma central de ajuda com artigos em português vai receber perguntas em português. Isso elimina
-todo modelo só de inglês antes de qualquer medição, inclusive os dois do laboratório: o
-laboratório os usa porque eles rodam nesta máquina, e não porque servem para a loja. Sobram os
-modelos multilíngues, hospedados ou abertos. Se os textos podem ir para uma API hospedada é uma
-decisão da loja sobre as mensagens dos clientes, e se a resposta for não, a lista encolhe para
-modelos abertos multilíngues com uma licença que permita uso comercial. Esses poucos são medidos
-nas 24 perguntas, com perguntas em português acrescentadas, e o melhor deles recebe preço por
-último.
+Uma central de ajuda com artigos em português vai receber perguntas em português. Isso elimina todo
+modelo só de inglês antes de qualquer medição, inclusive os dois do laboratório: o laboratório os
+usa porque eles rodam nesta máquina, e não porque servem para a loja. Sobram os modelos
+multilíngues, hospedados ou abertos. Se os textos podem ir para uma API hospedada é uma decisão da
+loja sobre as mensagens dos clientes, e se a resposta for não, a lista encolhe para modelos abertos
+multilíngues com uma licença que permita uso comercial. A loja mede esses poucos nas 24 perguntas,
+com perguntas em português acrescentadas, e só no fim põe preço no melhor deles.

@@ -11,8 +11,8 @@ FAISS, LanceDB, Chroma's `PersistentClient` and Qdrant's local mode are the firs
 
 ## Memory is per process
 
-A FAISS index lives in the memory of the program that loaded it. The flat index of the previous
-section was written to a file, and reading it back costs about the file's size:
+A FAISS index lives in the memory of the program that loaded it. The flat index `factory.py` built
+was written to `random.faiss`, and reading it back costs about the file's size:
 
 ```
 ana@lab:~/emb$ ls -l random.faiss
@@ -60,7 +60,7 @@ its directory with `chroma run` before letting several programs at it.
 
 **LanceDB let the second process write**, and the first one did not see the new row: it was still
 reading version 3, the version it had opened, and counted 40. Only `checkout_latest()` moved it to
-version 4 and 41 rows. That is the versioning of the previous sections at work, and it is a choice
+version 4 and 41 rows. That is LanceDB's versioning at work, and it is a choice
 your program has to make on purpose: how stale a reader may be, and when it looks again.
 
 ## What each side costs
@@ -76,9 +76,8 @@ your program has to make on purpose: how stale a reader may be, and when it look
 **Start in your process when one program owns the data**, which is most prototypes, every test, a
 command-line tool and Marginalia's help centre today. **Move behind a network when several programs
 need the same vectors, or when they no longer fit beside every worker.** The move is cheaper than it
-sounds when the library you started with has a server with the same API, which is the case for
-Chroma and for Qdrant: lesson 12 changed one constructor, and `QdrantClient(url=...)` is the same
-change. Moving from FAISS means writing the server around it, or adopting a database.
+sounds when the library you started with has a server with the same API. Chroma and Qdrant both
+do: lesson 12 changed one constructor, and `QdrantClient(url=...)` is the same change. Moving from FAISS means writing the server around it, or adopting a database.
 
 Lesson 14 adds a last option that the six tools here do not cover: the vectors stored in the
 database a shop already runs, beside the orders and the customers, and queried with SQL.

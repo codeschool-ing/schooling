@@ -93,10 +93,10 @@ wordllama      5.7 ms    26489 texts/s
 wordllama is 128 times faster
 ```
 
-**WordLlama embedded the 150 messages 128 times faster**: 5.7 ms against 723.6 ms, or 26489 texts
-a second against 207. One detail about the measurement: `minilm.py` runs the model on one thread,
-and this machine has four cores. Even a perfect fourfold gain from using all of them would leave
-MiniLM about 32 times slower, so the gap is a property of the two models, not of the setting.
+**WordLlama embedded the 150 messages 128 times faster**: 5.7 ms against 723.6 ms, or 26489 texts a
+second against 207. `minilm.py` runs the model on one thread, and this machine has four cores. Even
+a perfect fourfold gain from using all of them would leave MiniLM about 32 times slower, so the gap
+is a property of the two models, not of the setting.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 330\" role=\"img\" aria-label=\"Three pairs of bars comparing all-MiniLM-L6-v2 with WordLlama on this machine. Texts embedded per second: MiniLM 207, WordLlama 26489. Help-centre questions with a right article in the top three, of 24: MiniLM 22, WordLlama 24. Test tickets labelled correctly by the nearest training ticket, of 50: MiniLM 46, WordLlama 40.\"><rect x=\"470\" y=\"18\" width=\"14\" height=\"14\" rx=\"2\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"490\" y=\"25\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">all-MiniLM-L6-v2</text><rect x=\"620\" y=\"18\" width=\"14\" height=\"14\" rx=\"2\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"640\" y=\"25\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">WordLlama</text><text x=\"30\" y=\"58\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">texts embedded per second</text><rect x=\"30\" y=\"74\" width=\"4.4\" height=\"18\" rx=\"2\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"42.4\" y=\"83\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">207</text><rect x=\"30\" y=\"98\" width=\"560\" height=\"18\" rx=\"2\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"598\" y=\"107\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">26489</text><text x=\"30\" y=\"144\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">questions with a right article in the top 3, of 24</text><rect x=\"30\" y=\"160\" width=\"513.3\" height=\"18\" rx=\"2\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"551.3\" y=\"169\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">22</text><rect x=\"30\" y=\"184\" width=\"560\" height=\"18\" rx=\"2\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"598\" y=\"193\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">24</text><text x=\"30\" y=\"230\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">test tickets labelled right, of 50</text><rect x=\"30\" y=\"246\" width=\"560\" height=\"18\" rx=\"2\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"598\" y=\"255\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">46</text><rect x=\"30\" y=\"270\" width=\"487\" height=\"18\" rx=\"2\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"525\" y=\"279\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">40</text><text x=\"690\" y=\"316\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">each row is scaled to its own largest value</text></svg>", "caption": "Measured on this machine with the course's data. WordLlama is two orders of magnitude faster and holds its own on the short help-centre questions; on whole-sentence tickets it gets six fewer right."}
@@ -112,8 +112,8 @@ budget.
 Speed is only worth something if the vectors still do the job. `quality.py` measures two jobs with
 both models. The first is the search of lesson 3: for each of the 24 questions in `queries.jsonl`,
 does a right article come first, or in the top three? The second is a plain classifier for the 50
-test tickets, which gives each one the label of the most similar of the 100 training tickets. Lesson 4 builds it, and
-better ones; this one is enough to compare two models.
+test tickets, which gives each one the label of the most similar of the 100 training tickets. Lesson
+4 builds it, and better ones; this one is enough to compare two models.
 
 ```schooling-example
 {
@@ -144,8 +144,8 @@ wordllama  top-1 20/24  top-3 24/24  tickets 40/50
 
 **On the search, WordLlama did as well as MiniLM or better**: 20 against 19 at the top, 24 against
 22 in the top three. **On the tickets it got 6 fewer right**, 40 of 50 against 46. Two results in
-opposite directions, from data written for this course, and both small enough that one question
-or one ticket moves them. Which is the reason to look at the tickets themselves:
+opposite directions, from data written for this course, and both small enough that one question or
+one ticket moves them. So look at the tickets themselves:
 
 ```schooling-example
 {
@@ -171,7 +171,7 @@ t120 [account] My wishlist is empty after I signed in on my laptop.
 ```
 
 **WordLlama matched on a shared word and missed the meaning.** A question about cheaper postage for
-a paperback went to a ticket about swapping a paperback for a hardcover; a wishlist that is empty
+a paperback went to a ticket about swapping a paperback for a hardcover. A wishlist that is empty
 after signing in went to an e-book library that is empty on a tablet. The words *paperback* and
 *empty* dominate an average of a dozen tokens. MiniLM, whose layers combine the words before the
 average, found tickets that share the situation instead: postage, and lists that disappeared from
@@ -187,5 +187,5 @@ WordLlama is one way to make a static model. **Model2Vec** is another: it takes 
 transformer, runs every token of its vocabulary through it once, and keeps the outputs as the table,
 shrunk with principal component analysis. The result inherits some of what the transformer knew,
 including multilingual versions. WordLlama 0.4 can load them with `WordLlama.load_m2v(...)`,
-according to its own README, but the models are hosted on Hugging Face, which is out of reach from
-this machine, so none was loaded or measured here.
+according to its own README. The models are hosted on Hugging Face, out of reach from this machine,
+so none was loaded or measured here.

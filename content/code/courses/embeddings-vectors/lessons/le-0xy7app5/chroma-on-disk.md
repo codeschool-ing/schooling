@@ -104,13 +104,13 @@ sync_threshold: 1000
 **Nine hundred records went in and the file did not move.** Chroma rewrites the index files only
 after `sync_threshold` writes have piled up, 1,000 by default, and until then the writes the files
 have not caught up with are in the log inside `chroma.sqlite3`. Between 940 and 1,040 records the
-threshold was crossed and the file was rewritten. So the size of the `.bin` files tells you nothing
-about how many records there are; `col.count()` does.
+writes crossed the threshold and Chroma rewrote the file. So the size of the `.bin` files tells you
+nothing about how many records there are; `col.count()` does.
 
 The two sizes also show how the file is laid out. 1,743,040 bytes is 1,040 slots of 1,676 bytes, and
 167,600 is 100 of the same slots: the first file had room for a hundred records while it held forty.
-Each slot is one vector's 1,536 bytes plus the links to its neighbours in the graph. Lesson 18 counts
-that overhead for a real collection.
+Each slot is one vector's 1,536 bytes plus the links to its neighbours in the graph. Lesson 18
+counts that overhead for a real collection.
 
 ## The same directory, served
 

@@ -34,10 +34,10 @@ all-MiniLM-L6-v2 reads.
 
 **A dash is a gap in the sheet, not a zero.** The `dims` column is empty for both providers because
 the sheet does not record their dimension, and `batch` is empty because it records no discounted
-batch price for them. Neither means the thing is absent. A missing value on a third party's sheet
-is a question for the provider's own documentation, and the same goes for Voyage's request shape,
-which takes an `input_type` of `query` or `document` like Cohere's in lesson 8. Neither provider's
-SDK is installed in the lab and neither API was reachable, so none of their code appears here.
+batch price for them. Neither means the thing is absent. A missing value on a third party's sheet is
+a question for the provider's own documentation. So is Voyage's request shape, which takes an
+`input_type` of `query` or `document` like Cohere's in lesson 8. Neither provider's SDK is installed
+in the lab and neither API was reachable, so none of their code appears here.
 
 ## What else the sheet holds
 
@@ -84,9 +84,9 @@ The rows the program picked fall into two groups, and each is a different kind o
 **Models trained for one kind of text.** Voyage sells `voyage-code-3`, `voyage-law-2` and
 `voyage-finance-2`, and Mistral sells `codestral-embed`. They are sold on the claim that a model
 trained on code, contracts or financial reports places those texts better than a general one. They
-also cost more on this sheet: 0.180 for Voyage's code model against 0.060 for its general one. Whether
-the claim holds for your texts is a measurement, made the way lesson 9 measured MiniLM against
-WordLlama: on your own questions with your own judgements.
+also cost more on this sheet: 0.180 for Voyage's code model against 0.060 for its general one.
+Whether the claim holds for your texts is a measurement, made the way lesson 9 measured MiniLM
+against WordLlama: on your own questions with your own judgements.
 
 **Open models sold by the token.** `nomic-embed-text-v1.5` from Nomic, `bge-base-en-v1.5` and
 `bge-m3` from BAAI are open models whose weights anybody can download, which lesson 9 is about.
@@ -101,5 +101,5 @@ question to ask the host before you mix them rather than after.
 dimensions and 512 tokens of input. Cheap per token, and a long article has to be cut into pieces
 before it fits.
 
-None of these rows is a recommendation, and nothing in this section was measured. The section *Choosing a model*
-says how to turn a list like this into a decision.
+None of these rows is a recommendation, and nothing in this section was measured. The last section
+of this lesson, *Choosing a model*, says how to turn a list like this into a decision.

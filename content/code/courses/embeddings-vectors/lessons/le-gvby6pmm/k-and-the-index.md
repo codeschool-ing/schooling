@@ -5,9 +5,9 @@ version: 1
 
 So far k has been yours to choose. With an approximate index it is partly the index's. Lesson 15
 showed that HNSW searches by walking a graph and keeping a list of the best candidates it has seen,
-and that the length of that list, **ef**, is the dial between speed and recall. What lesson 15 did
-not need to say is what happens when you ask for more results than that list holds. Two libraries
-answer it in opposite ways.
+and that the length of that list, **ef**, is the dial between speed and recall. Lesson 15 did not
+need to say what happens when you ask for more results than that list holds, and two libraries
+answer that in opposite ways.
 
 ## pgvector returns fewer rows
 
@@ -64,8 +64,7 @@ ana@lab:~/emb$ psql -f top100.sql -c "SHOW hnsw.ef_search"
 keeps `hnsw.ef_search` candidates, 40 unless you set it, and the index scan stops when they run out.
 `LIMIT 100` cannot ask for more than the scan produces. The first `SHOW` failed because the setting
 belongs to pgvector's library, which a session loads the first time it uses a vector; after the
-query, the same `SHOW` prints the 40. The plan confirms the index is doing the
-work:
+query, the same `SHOW` prints the 40. The plan confirms the index is doing the work:
 
 ```
 ana@lab:~/emb$ psql -c "EXPLAIN (COSTS OFF) SELECT id FROM points ORDER BY embedding <=> (SELECT embedding FROM points WHERE id = 7) LIMIT 100"
@@ -136,8 +135,8 @@ touched `ef`.
 
 ## What to do with it
 
-The rule that covers both is one line: **the index's search breadth must be at least k**, and
-larger than k if you want good recall. In pgvector that is a setting you own:
+One rule covers both: **the index's search breadth must be at least k**, and larger than k if you
+want good recall. In pgvector that is a setting you own:
 
 ```sql
 SET hnsw.ef_search = 100;
