@@ -1,0 +1,2565 @@
+[
+  {
+    "id": "ex-g0hq1yyc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A customer searches the help centre for 'money back' and the article she needs says 'refund'. Why does an embedding search find it when a keyword search does not?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "It compares meanings, and training put the two phrasings close together",
+        "correct": true,
+        "why": "Right. The vectors of texts that mean similar things point in similar directions, whatever words they use."
+      },
+      {
+        "text": "It keeps a list of synonyms that includes refund",
+        "correct": false,
+        "why": "No synonym list is involved. That is the hand-kept trick embeddings replace."
+      },
+      {
+        "text": "It ignores the words and searches by category",
+        "correct": false,
+        "why": "It never sees a category. The categories in the lesson's picture came out of the meaning of the titles."
+      },
+      {
+        "text": "It reads every article to the customer's question with a language model, one at a time",
+        "correct": false,
+        "why": "An embedding search compares stored vectors with the question's vector; no model reads the articles at query time."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbbgdssd",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A model returns 1536 numbers per text, each a float32. How many bytes does one vector take?",
+    "hint": "Lesson 1: four bytes a number.",
+    "value": 6144,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-pkw3zhvn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "WordLlama gives 'the dog bit the man' and 'the man bit the dog' exactly the same vector. What kind of model behaves like that?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "A contextual model with too few layers",
+        "correct": false,
+        "why": "Even few layers let pieces see their neighbours, so order would move the vector a little."
+      },
+      {
+        "text": "A static one that averages fixed token vectors",
+        "correct": true,
+        "why": "Right. The two sentences have the same tokens, and an average of the same vectors does not depend on their order."
+      },
+      {
+        "text": "Any model whose vectors are normalised to length 1",
+        "correct": false,
+        "why": "all-MiniLM-L6-v2 normalises too and scored the pair 0.9795, not 1.0. Normalising does not remove order."
+      },
+      {
+        "text": "A multilingual model that has been asked about an English sentence",
+        "correct": false,
+        "why": "Language support has nothing to do with order; the cause is how the vector is built from the tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-47zscg47",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team wants to flag customer messages that do NOT ask for a refund, using the similarity to 'I want a refund' with a threshold. Why will that fail?",
+    "hint": "Lesson 1, what an embedding is not.",
+    "choices": [
+      {
+        "text": "The threshold has to be different for every customer",
+        "correct": false,
+        "why": "The problem is not the customers: the vectors themselves put a negation close to the sentence it negates."
+      },
+      {
+        "text": "Short messages always score higher than long ones",
+        "correct": false,
+        "why": "Length is not what decides the score here; 'I do not want a refund' is longer and still scored 0.892."
+      },
+      {
+        "text": "A negated sentence scores closer than a paraphrase, so no threshold separates them",
+        "correct": true,
+        "why": "Right. Negation changes the assertion and keeps the subject, and the subject is what the embedding captures best."
+      },
+      {
+        "text": "Similarity scores are only defined between texts of equal length",
+        "correct": false,
+        "why": "Every text gives a vector of the same dimension, so any two can be compared."
+      }
+    ]
+  },
+  {
+    "id": "ex-hmmh1hzv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Training a model on pairs of texts that belong together, pulling each pair close and pushing the rest of the batch away, is called ___ training.",
+    "hint": "Lesson 1.",
+    "blanks": [
+      {
+        "accept": [
+          "contrastive"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-91bqkykr",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these statements about an embedding are true? Choose all that apply.",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "The same text through the same model always gives the same vector",
+        "correct": true,
+        "why": "Yes. There is no randomness at inference, which is what lets a stored vector be reused."
+      },
+      {
+        "text": "A vector of a customer's message should be treated as personal data",
+        "correct": true,
+        "why": "Yes. Inversion research rebuilt short texts from their vectors."
+      },
+      {
+        "text": "Two models of the same dimension produce comparable vectors",
+        "correct": false,
+        "why": "The coordinates of one model have nothing to do with the other's; the dimension only lets the arithmetic run."
+      },
+      {
+        "text": "Each coordinate measures one nameable property of the text",
+        "correct": false,
+        "why": "Information is spread over all the coordinates; none of them means anything alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-32qrx82t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "One colleague scores all-MiniLM-L6-v2 vectors with the full cosine formula, another with the plain dot product `D @ q`. How do their results compare?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "The dot product ranks long articles higher, so the lists differ",
+        "correct": false,
+        "why": "That happens only when lengths differ. Every vector this model returns has length 1."
+      },
+      {
+        "text": "The numbers and the order are the same",
+        "correct": true,
+        "why": "Right. With both lengths equal to 1, dividing by them changes nothing, so the dot product is the cosine."
+      },
+      {
+        "text": "The cosine is always larger, though the order matches",
+        "correct": false,
+        "why": "Dividing by 1 × 1 leaves the dot product exactly as it was."
+      },
+      {
+        "text": "The order is reversed, because one is a distance",
+        "correct": false,
+        "why": "Neither is a distance: both are similarities, higher is closer."
+      }
+    ]
+  },
+  {
+    "id": "ex-d30eysyj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "pgvector's `<=>` returns 1 for two vectors. What is their cosine similarity, and what does that say about them?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "1: they point the same way",
+        "correct": false,
+        "why": "That would be a cosine distance of 0. `<=>` returns one minus the similarity."
+      },
+      {
+        "text": "−1: they point in opposite directions",
+        "correct": false,
+        "why": "Opposite arrows have a cosine distance of 2."
+      },
+      {
+        "text": "0, so they are perpendicular",
+        "correct": true,
+        "why": "Right. Cosine distance is 1 − cosine similarity, so a distance of 1 is a similarity of 0: arrows at right angles."
+      },
+      {
+        "text": "It cannot be known without the vectors' lengths",
+        "correct": false,
+        "why": "Cosine distance already divides the lengths out; it depends on the angle alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-3zw35rfk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An index was created with L2 distance and holds normalised vectors. Someone proposes rebuilding it with inner product to get better results. What will change in the ranking?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "Nothing: for unit vectors both measures give the same order",
+        "correct": true,
+        "why": "Right. For length-1 vectors the squared distance is 2 − 2 × the dot product, so the orders match. The rebuild buys cheaper arithmetic, not better results."
+      },
+      {
+        "text": "The best results improve, because inner product was what the model was trained for",
+        "correct": false,
+        "why": "The model's training measure matters, but with normalised vectors the three measures rank identically."
+      },
+      {
+        "text": "The ranking reverses, because inner product is a similarity",
+        "correct": false,
+        "why": "The database handles the direction; best first stays best first."
+      },
+      {
+        "text": "Long documents start winning",
+        "correct": false,
+        "why": "Every vector has length 1, so no document is longer than another."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhaq62k6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A pair of tickets scores 0.35 with one model, and another pair scores 0.55 with a different model. Which pair is more closely related?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "The second pair, since 0.55 is higher",
+        "correct": false,
+        "why": "Each model's scores sit in their own band. A higher number from a different model is not a closer match."
+      },
+      {
+        "text": "The first pair, since lower scores are rarer",
+        "correct": false,
+        "why": "Rarity depends on each model's band, which the question does not give."
+      },
+      {
+        "text": "Neither: both are below 0.6, so both are unrelated",
+        "correct": false,
+        "why": "With all-MiniLM-L6-v2, only 6.0% of ticket pairs even reach 0.4. A fixed cut-off like 0.6 means nothing across models."
+      },
+      {
+        "text": "No telling: compare each score with its own model's band",
+        "correct": true,
+        "why": "Right. Scores are not comparable across models; place each against the distribution of its own model on the same kind of text."
+      }
+    ]
+  },
+  {
+    "id": "ex-xrsshgbg",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Two unit-length vectors have a cosine similarity of 0.68. What is the square of the L2 distance between them?",
+    "hint": "Lesson 2.",
+    "value": 0.64,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-37x7tv3c",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order these medians and means that `crowded.py` measured, from the lowest to the highest.",
+    "hint": "Lesson 2.",
+    "items": [
+      "Median of the random-arrow pairs",
+      "Median of WordLlama's ticket pairs",
+      "Median of MiniLM's ticket pairs",
+      "MiniLM's mean for pairs with the same label"
+    ],
+    "trap": "Random arrows sit lowest, around zero: real tickets share a subject, so even WordLlama's lower band sits above them."
+  },
+  {
+    "id": "ex-yjj4cp7b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Marginalia replaces all-MiniLM-L6-v2 with a different embedding model. What has to happen to `index.npy`?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Nothing, as long as the new model also returns 384 numbers",
+        "correct": false,
+        "why": "Equal dimensions do not make two models' vectors comparable."
+      },
+      {
+        "text": "Only articles edited since the change need new vectors",
+        "correct": false,
+        "why": "Every stored vector came from the old model, so none of them can be compared with a question from the new one."
+      },
+      {
+        "text": "Every article is embedded again with the new model, and questions too",
+        "correct": true,
+        "why": "Right. Questions and documents must come from the same model, so the whole index is rebuilt."
+      },
+      {
+        "text": "The old vectors are normalised again to match the new model",
+        "correct": false,
+        "why": "Normalising changes lengths, not which model the directions came from."
+      }
+    ]
+  },
+  {
+    "id": "ex-pvysd567",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team judges its new search by asking five colleagues to try it and say whether the results look good. What is missing?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "A larger group of colleagues",
+        "correct": false,
+        "why": "More opinions after the fact still measure impressions, not whether the right document came back."
+      },
+      {
+        "text": "Questions with their answers decided before the search runs",
+        "correct": true,
+        "why": "Right. Relevance judgements let you count recall@1 and recall@3 and compare two versions on the same footing."
+      },
+      {
+        "text": "A faster machine for the test",
+        "correct": false,
+        "why": "Speed has nothing to do with whether the results are right."
+      },
+      {
+        "text": "Asking the colleagues to rate each result from 1 to 10",
+        "correct": false,
+        "why": "Ratings given while looking at the results are still opinions formed after the fact, and they cannot be compared between versions."
+      }
+    ]
+  },
+  {
+    "id": "ex-pccah826",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A customer pastes the error code `E-4471` into the help search. It appears in exactly one article. Which search is more dependable for this query?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "The embedding search, because it understands what the code means",
+        "correct": false,
+        "why": "A code has almost no meaning to place; in the lesson the embedding search left the article holding `4.90` at rank 11."
+      },
+      {
+        "text": "Either, since both read the same articles",
+        "correct": false,
+        "why": "They rank by different things, and on exact strings they differed sharply: 8 of 8 first against 3 of 8."
+      },
+      {
+        "text": "The keyword search: a rare exact string gets a high idf",
+        "correct": true,
+        "why": "Right. One article out of many contains it, so BM25 puts that article first and matches nothing else."
+      },
+      {
+        "text": "Neither, until the code is translated into words",
+        "correct": false,
+        "why": "BM25 needs no translation; it matches the string as it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-begdhem6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "With `k = 60` and equal weights, document A is first in the embedding list and missing from the keyword list; document B is first in the keyword list and missing from the embedding list. How do they finish after fusion?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "A wins, because the embedding search was the stronger one on the lesson's questions",
+        "correct": false,
+        "why": "RRF knows nothing about which list is better; with equal weights a first place counts the same in either."
+      },
+      {
+        "text": "B wins, because keyword matches are exact",
+        "correct": false,
+        "why": "Exactness plays no part in the formula; only ranks and weights do."
+      },
+      {
+        "text": "Both are dropped, because each is missing from one list",
+        "correct": false,
+        "why": "A document missing from a list just gets nothing from it; it keeps what the other list gives."
+      },
+      {
+        "text": "They tie, each scoring 1/61",
+        "correct": true,
+        "why": "Right. Each gets 1/(60 + 1) from the one list it is in and nothing from the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-cd14wdxk",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The share of test questions for which a relevant document appears among the first k results is called ___ at k.",
+    "hint": "Lesson 3.",
+    "blanks": [
+      {
+        "accept": [
+          "recall"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-caf3bafb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these steps belong to the half of a search that runs ahead of time, once per article? Choose all that apply.",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Embedding every article",
+        "correct": true,
+        "why": "Yes. It is the slow step, and an unchanged article keeps its vector."
+      },
+      {
+        "text": "Saving the vectors with their ids in the same order",
+        "correct": true,
+        "why": "Yes. The matrix and the ids are written together when the index is built."
+      },
+      {
+        "text": "Embedding the customer's question",
+        "correct": false,
+        "why": "No. The question only exists when the customer types it."
+      },
+      {
+        "text": "Sorting the scores and keeping the top k",
+        "correct": false,
+        "why": "No. Scores exist only once a question has been compared with the stored vectors."
+      }
+    ]
+  },
+  {
+    "id": "ex-70qnzg5x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Marginalia's team sorts new tickets by hand every day. Which method lets today's sorted tickets improve tomorrow's predictions with no training run in between?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "k-nearest neighbours: each sorted ticket is one more stored vector",
+        "correct": true,
+        "why": "Right. Learning is appending; tomorrow's comparison simply includes today's rows."
+      },
+      {
+        "text": "Logistic regression, whose weights adjust themselves as tickets arrive",
+        "correct": false,
+        "why": "Its weights only change when it is fitted again; new tickets mean a new training run."
+      },
+      {
+        "text": "Zero-shot classification, which learns from the labels the team adds",
+        "correct": false,
+        "why": "Zero-shot reads no labels at all; it compares tickets with written descriptions."
+      },
+      {
+        "text": "Centroids, which keep yesterday's averages fixed whatever is added",
+        "correct": false,
+        "why": "A centroid that never changes ignores the new tickets; including them means recomputing the average."
+      }
+    ]
+  },
+  {
+    "id": "ex-6t8vefa9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In the centroid method, what is each desk's centroid?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "The training ticket nearest the middle of all 100",
+        "correct": false,
+        "why": "That would be one ticket for the whole set; a centroid is computed per desk, and it is an average, not a ticket."
+      },
+      {
+        "text": "The desk's name, embedded as a single word",
+        "correct": false,
+        "why": "That is the bare-names wording of zero-shot, which scored 39; the centroid comes from labelled tickets."
+      },
+      {
+        "text": "The renormalised average of that desk's training vectors",
+        "correct": true,
+        "why": "Right. One vector per desk, put back on length 1 so that dot products compare directions."
+      },
+      {
+        "text": "The test ticket the classifier is least sure about",
+        "correct": false,
+        "why": "Test tickets never go into a centroid; they are kept out to measure it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mpq2z62",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Tomorrow Marginalia opens a sixth desk, for gift cards, and no ticket has been labelled for it yet. What is the quickest way to start sending tickets there?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Retrain the logistic regression on the five existing desks",
+        "correct": false,
+        "why": "A model trained on five desks can only answer with those five; it has never seen the sixth."
+      },
+      {
+        "text": "Average yesterday's tickets to make a gift-card centroid",
+        "correct": false,
+        "why": "Without labels there is no way to know which of yesterday's tickets were about gift cards."
+      },
+      {
+        "text": "Raise k so that more neighbours get a vote",
+        "correct": false,
+        "why": "No stored ticket carries the new label, so no vote can ever choose it."
+      },
+      {
+        "text": "Add a sentence describing the desk to a zero-shot classifier",
+        "correct": true,
+        "why": "Right. A new label in zero-shot is one more description; labelled examples can come later."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rzmyjp2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The refunds desk must not receive tickets that belong elsewhere, even if a few of its own go astray. Which of its numbers should the team watch?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Its recall",
+        "correct": false,
+        "why": "Recall is how many of the desk's own tickets reached it; that is the number for a desk that must miss nothing."
+      },
+      {
+        "text": "Its precision",
+        "correct": true,
+        "why": "Right. Precision is how many of the tickets sent to the desk belong there."
+      },
+      {
+        "text": "The overall accuracy of the classifier",
+        "correct": false,
+        "why": "One number for all desks hides where the mistakes go; the confusion matrix and per-desk numbers show it."
+      },
+      {
+        "text": "Its support in the report",
+        "correct": false,
+        "why": "Support is just how many test tickets the desk has, ten each here; it measures nothing about the classifier."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6sgnp4y",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A test set has 40 tickets. How many percentage points of accuracy is a single ticket worth?",
+    "hint": "Lesson 4: on 50 tickets, one was two points.",
+    "value": 2.5,
+    "tolerance": 0.01,
+    "unit": "%"
+  },
+  {
+    "id": "ex-r11dhte5",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each method to how many of the 50 test tickets it sorted correctly with MiniLM's vectors and all 100 training tickets.",
+    "hint": "Lesson 4.",
+    "pairs": [
+      {
+        "left": "nearest neighbour, k=1",
+        "right": "46"
+      },
+      {
+        "left": "nearest neighbours, k=3",
+        "right": "42"
+      },
+      {
+        "left": "centroids",
+        "right": "47"
+      },
+      {
+        "left": "zero-shot with descriptions",
+        "right": "43"
+      }
+    ],
+    "right_distractors": [
+      "50"
+    ]
+  },
+  {
+    "id": "ex-2krbxyam",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why does a recommender built on a reader's average have to skip the books she has finished?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "The model gives a finished book a score of exactly zero",
+        "correct": false,
+        "why": "The model knows nothing about who read what; finished books score high, not zero."
+      },
+      {
+        "text": "Finished books are removed from the catalogue automatically",
+        "correct": false,
+        "why": "Nothing removes them; they stay for every other reader, which is why the skip is per reader."
+      },
+      {
+        "text": "Her vector is made from them, so they score highest",
+        "correct": true,
+        "why": "Right. Caio's three finished books sat at the top of his own ranking until filters.py skipped them."
+      },
+      {
+        "text": "They only appear when MMR is switched off",
+        "correct": false,
+        "why": "They appear with or without MMR; mmr.py excluded them from its pool before choosing anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-eamvvz9j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A reader's vector is the renormalised average of the two books she finished, which are about different things. Which unread books does it put first?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Books fairly close to both of her books",
+        "correct": true,
+        "why": "Right. The score against the average is the sum of the two scores, scaled; Wuthering Heights led Lia's list that way."
+      },
+      {
+        "text": "Books very close to either one of her books, whatever their score against the other",
+        "correct": false,
+        "why": "A book close to one and far from the other has a low sum; Sense and Sensibility missed Lia's list for that reason."
+      },
+      {
+        "text": "Books in the genre of the book she finished most recently",
+        "correct": false,
+        "why": "The average ignores order and genre; it only adds similarities."
+      },
+      {
+        "text": "The books most other readers have finished",
+        "correct": false,
+        "why": "That is the popularity fallback for a reader with no books, not what the average does."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtr5h2bn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A shop lists thirty editions of Pride and Prejudice with nearly identical blurbs, and an Austen fan's five recommendations are five editions of that one novel. Which change addresses it?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Showing fifty recommendations instead of five",
+        "correct": false,
+        "why": "The editions would still fill the top of the list; a longer list only hides the problem lower down."
+      },
+      {
+        "text": "Writing the genre in front of every blurb before embedding",
+        "correct": false,
+        "why": "That pulls books of one genre closer together, so the editions would stay just as close to each other."
+      },
+      {
+        "text": "Renormalising the reader's average a second time",
+        "correct": false,
+        "why": "A vector of length 1 renormalised is the same vector; nothing in the list changes."
+      },
+      {
+        "text": "MMR with λ below 1, or a rule of one edition per title",
+        "correct": true,
+        "why": "Right. The editions resemble each other, which is exactly what MMR penalises; a rule on the title field catches it directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-zw04wxan",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "For Marcos, who has finished nothing, the lesson showed the most finished books. Why is that list weak evidence in this shop?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Popular books have no vectors, so they cannot be ranked",
+        "correct": false,
+        "why": "Every book in the catalogue has a vector; popularity simply does not use it."
+      },
+      {
+        "text": "It rests on a few counts: the top book was finished by 3",
+        "correct": true,
+        "why": "Right. With twelve readers, popularity is a handful of counts; with thousands it becomes a sensible default."
+      },
+      {
+        "text": "Popularity is computed from the blurbs, which are short",
+        "correct": false,
+        "why": "Popularity counts who finished what and never reads a blurb."
+      },
+      {
+        "text": "The counts change every time the model is run",
+        "correct": false,
+        "why": "Counting finished books involves no model and gives the same answer every time."
+      }
+    ]
+  },
+  {
+    "id": "ex-9c28ngy6",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "With λ = 0.6, a book's similarity to the reader is 0.50 and its highest similarity to a book already picked is 0.70. What is its MMR value?",
+    "hint": "Lesson 5: λ times the first, minus (1 − λ) times the second.",
+    "value": 0.02,
+    "tolerance": 0.001,
+    "unit": ""
+  },
+  {
+    "id": "ex-1hr2gsde",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order one round of MMR as mmr.py runs it, and what follows.",
+    "hint": "Lesson 5.",
+    "items": [
+      "Score each remaining book's similarity to the reader",
+      "Subtract the penalty for its highest similarity to a book already picked",
+      "Pick the book with the highest value",
+      "Move it from the pool to the list",
+      "Repeat until the list holds five"
+    ],
+    "trap": "The penalty is computed before the pick, against the books already on the list, never against the whole pool."
+  },
+  {
+    "id": "ex-g1r9zxh5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why does anomaly detection with embeddings score messages by their distance from normal data instead of training a label for the odd ones?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "The odd messages share nothing, and new kinds keep arriving",
+        "correct": true,
+        "why": "Right. Spam, foreign languages and noise are not one category, so there is nothing stable to learn a label from."
+      },
+      {
+        "text": "Distances are cheaper to compute than a classifier's prediction",
+        "correct": false,
+        "why": "Cost is not the reason. Lesson 4's classifiers were cheap too; they simply cannot answer none of these."
+      },
+      {
+        "text": "A classifier refuses messages it has never seen",
+        "correct": false,
+        "why": "The opposite: lesson 6's classifier gave every odd message one of its five labels."
+      },
+      {
+        "text": "Normal messages cannot be labelled",
+        "correct": false,
+        "why": "They were labelled: the 150 tickets carry one of five labels each. The odd ones are what cannot be described."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1ajw2z1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A shop's normal messages fall into five distinct topics. Which score is more likely to separate odd messages well, and why?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Distance to the mean of all messages, because it uses every one of them",
+        "correct": false,
+        "why": "The mean sits between the five topics, where no real message lives; that is how the spam hid at 16th in lesson 6."
+      },
+      {
+        "text": "The k-th nearest normal message, since each topic keeps its own near neighbours",
+        "correct": true,
+        "why": "Right. A normal message has a close neighbour in its own topic wherever that topic sits; an odd one has none."
+      },
+      {
+        "text": "The distance to the longest normal message",
+        "correct": false,
+        "why": "Length plays no part: the vectors all have length 1. Nothing in the lesson scores against one chosen message."
+      },
+      {
+        "text": "The share of normal messages within 0.5, because a fixed radius is objective",
+        "correct": false,
+        "why": "A fixed radius is a number picked by hand, and scores bunch differently per model, as lesson 2 showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-r89e8996",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ana sets the cut-off at the 99th percentile of held-out normal scores instead of the 90th. What does she trade?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Fewer false alarms, at the risk of letting more odd messages through",
+        "correct": true,
+        "why": "Right. With k=5 in lesson 6, the 99th percentile flagged nothing by mistake and missed two odd messages."
+      },
+      {
+        "text": "More false alarms, for catching every odd message",
+        "correct": false,
+        "why": "That is the 90th percentile's side of the trade: three normal messages flagged, every odd one caught."
+      },
+      {
+        "text": "Nothing, because a percentile of normal data says nothing about the cut-off's effect",
+        "correct": false,
+        "why": "It moves the line, and the line decides both how many normal messages and how many odd ones are flagged."
+      },
+      {
+        "text": "A slower detector, because a higher percentile compares more messages",
+        "correct": false,
+        "why": "Every message is scored the same way whatever the line. Only the decision after the score changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-4s0yj25p",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A detector flags 10 messages, 6 of which are really odd, and there were 8 odd messages in all. What is its recall, as a fraction with two decimals?",
+    "hint": "Lesson 6.",
+    "value": 0.75,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-bq8vkw9v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A new product launches and many customers ask about it. The per-message flags barely rise, but most of the new messages have their nearest neighbour among each other. What is the right reading?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "A spam campaign, since similar messages arrived together",
+        "correct": false,
+        "why": "Similar messages arriving together is what a new topic looks like too. Read them: in lesson 6 they were customers asking about a subscription."
+      },
+      {
+        "text": "The detector is broken and should be rebuilt from scratch",
+        "correct": false,
+        "why": "It is working: it describes the old normal faithfully. What moved is the traffic, not the detector."
+      },
+      {
+        "text": "A new topic: drift to handle by adding a category and re-baselining with reviewed messages",
+        "correct": true,
+        "why": "Right. It is not an anomaly in any message; the reference needs to learn the new normal, from messages somebody has read."
+      },
+      {
+        "text": "Nothing, because only flagged messages matter",
+        "correct": false,
+        "why": "The batch numbers are exactly what reveal a topic that per-message flags undercount."
+      }
+    ]
+  },
+  {
+    "id": "ex-afnj3wpn",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these can a detector that measures distance from normal messages, with an English-only embedding model, be expected to flag? Choose all that apply.",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "A message that is only random keyboard characters",
+        "correct": true,
+        "why": "Yes. Noise has no near neighbour among real tickets; lesson 6's keyboard line ranked among the odd ones."
+      },
+      {
+        "text": "A job application sent to the support address",
+        "correct": true,
+        "why": "Yes. Its subject is far from every ticket, as m37 showed."
+      },
+      {
+        "text": "A refund request for an amount far above the order's price",
+        "correct": false,
+        "why": "No. By subject it is an ordinary refund request; the vector does not weigh amounts."
+      },
+      {
+        "text": "An ordinary delivery question written in good English",
+        "correct": false,
+        "why": "No. That is exactly what the reference is made of."
+      }
+    ]
+  },
+  {
+    "id": "ex-4syttvny",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "An embeddings response holds three vectors. Which field ties each vector to the text it came from?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "`index`",
+        "correct": true,
+        "why": "Right. It is the position of the text in the `input` list; sort or look up by it rather than trusting the order."
+      },
+      {
+        "text": "`usage`, which lists the tokens of each text",
+        "correct": false,
+        "why": "`usage` holds totals for the whole request, not one entry per text."
+      },
+      {
+        "text": "`model`, repeated on every vector",
+        "correct": false,
+        "why": "`model` appears once, for the whole response, and names the model, not the text."
+      },
+      {
+        "text": "`object`, which carries the text itself",
+        "correct": false,
+        "why": "`object` just says embedding. The text is never sent back."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zgj2pm6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ana calls the embeddings endpoint with plain `requests` instead of the SDK and gets a JSON list of decimal numbers. What would shrink the response, and what does she then have to do?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Send fewer texts per request; nothing else changes",
+        "correct": false,
+        "why": "That shrinks each response by shrinking the work, not the encoding. The same vectors still travel as long decimal text."
+      },
+      {
+        "text": "Ask for `dimensions=1`, since one number is always enough",
+        "correct": false,
+        "why": "One coordinate is not a usable vector, and lab-minilm refuses the parameter anyway."
+      },
+      {
+        "text": "Compress the input text before sending it",
+        "correct": false,
+        "why": "The input is small; the size is in the vectors coming back."
+      },
+      {
+        "text": "Ask for `encoding_format=\"base64\"`, then decode it as little-endian float32",
+        "correct": true,
+        "why": "Right. That is what the SDK does on its own; lesson 7 measured 8,594 bytes against 2,203 for one vector."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxgd9w08",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A batch of 1,000 product descriptions is refused with 400, and one description in it is an empty string. What is the right fix?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Retry the same request until the server accepts it",
+        "correct": false,
+        "why": "A 400 says the request is wrong; it fails the same way every time, which is why the SDK does not retry it."
+      },
+      {
+        "text": "Remove empty texts before building each batch",
+        "correct": true,
+        "why": "Right. One empty string makes the server refuse the whole request, not just that slot."
+      },
+      {
+        "text": "Split the batch into requests of one text each",
+        "correct": false,
+        "why": "The batch is well under the 2,048-input limit. Splitting only multiplies requests; the empty one still fails."
+      },
+      {
+        "text": "Switch to a model that accepts the `dimensions` parameter",
+        "correct": false,
+        "why": "The refusal is about the input, not the output size."
+      }
+    ]
+  },
+  {
+    "id": "ex-45r19692",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team truncates stored 1,536-number vectors to 512 by keeping the first 512 numbers, and compares queries truncated the same way by dot product. Search gets noticeably worse than asking the API for `dimensions=512`. What did they most likely skip?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Converting the vectors to float64 first",
+        "correct": false,
+        "why": "Precision is not the issue; float32 was fine at every size in lesson 7."
+      },
+      {
+        "text": "Re-embedding the documents with the same model",
+        "correct": false,
+        "why": "The prefix of a vector from a model trained for it is usable without re-embedding; the API does the same cut."
+      },
+      {
+        "text": "Choosing a different tokeniser for the queries",
+        "correct": false,
+        "why": "Queries and documents went through the same model; tokenisers decide tokens, not this ranking."
+      },
+      {
+        "text": "Renormalising each cut vector to length 1",
+        "correct": true,
+        "why": "Right. Cut vectors keep different shares of their length, so longer ones win for being long; lesson 7's renormalised cut matched the API exactly."
+      }
+    ]
+  },
+  {
+    "id": "ex-tx8h3hwc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "At LiteLLM's sheet price of $0.130 per million tokens for text-embedding-3-large, what does it cost to embed 4 million chunks of 250 tokens each, in US dollars?",
+    "hint": "Lesson 7.",
+    "value": 130,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-qmh70v34",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "With the client's defaults, a provider answers a call's first two requests with 429 and the third with 200. What does the calling code observe?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "A RateLimitError, which it must catch and retry itself",
+        "correct": false,
+        "why": "The SDK retries 429 up to max_retries before raising; here the third attempt succeeded."
+      },
+      {
+        "text": "The vector, returned normally after a short delay",
+        "correct": true,
+        "why": "Right. In lesson 7 the call returned after 2.2 s and the program never saw the refusals; only the server log did."
+      },
+      {
+        "text": "Two warnings printed, then the vector",
+        "correct": false,
+        "why": "The SDK printed nothing; the refusals showed up only in the server's log."
+      },
+      {
+        "text": "An empty response, since the first request failed",
+        "correct": false,
+        "why": "The response carried all 384 numbers from the successful attempt."
+      }
+    ]
+  },
+  {
+    "id": "ex-pxnx7ban",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team moves its embedding code to the cohere SDK and calls `co.embed(model=..., texts=...)` exactly as before, with nothing else. What happens?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Cohere fills in `search_document` and embeds the texts",
+        "correct": false,
+        "why": "There is no default: the models from version 3 on require the parameter, and the SDK enforces it."
+      },
+      {
+        "text": "Python raises a TypeError before any request is sent",
+        "correct": true,
+        "why": "Right. `input_type` is a required keyword argument of the SDK's `embed`."
+      },
+      {
+        "text": "The server answers with a 400 naming the missing field",
+        "correct": false,
+        "why": "That is what a hand-written HTTP request gets. Through the SDK, the call never leaves Python."
+      },
+      {
+        "text": "It works, because `input_type` only changes what the call is billed",
+        "correct": false,
+        "why": "The input type says what the text is for; it has nothing to do with the bill."
+      }
+    ]
+  },
+  {
+    "id": "ex-pf56s7xz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An index stores Cohere `ubinary` vectors. Which comparison ranks them correctly against a query encoded the same way?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "A dot product of the packed bytes, read as ordinary numbers",
+        "correct": false,
+        "why": "Each byte packs eight unrelated coordinates; multiplying bytes as numbers mixes them into a meaningless score."
+      },
+      {
+        "text": "Cosine similarity after turning each byte into a float",
+        "correct": false,
+        "why": "Same problem: the byte is eight bits, not one value, so its float means nothing."
+      },
+      {
+        "text": "The count of bits that differ, fewer meaning closer",
+        "correct": true,
+        "why": "Yes, the Hamming distance; quantised.py negated it so that higher meant closer."
+      },
+      {
+        "text": "Euclidean distance between the byte values",
+        "correct": false,
+        "why": "Distances between packed bytes measure the packing, not the coordinates."
+      }
+    ]
+  },
+  {
+    "id": "ex-kevvyzk9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`gemini.py` asked `lab-wordllama` for 128 numbers and their lengths printed as 1.0. Why can you not rely on that against gemini-embedding-001 at 768?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "labembed rescales cut vectors; Google says it does not",
+        "correct": true,
+        "why": "Right. The lab's behaviour hid the step; the last part of gemini.py exists for Google's."
+      },
+      {
+        "text": "Every embedding API returns unit vectors, so you can",
+        "correct": false,
+        "why": "Google documents the opposite for its truncated sizes, and some models return vectors of any length."
+      },
+      {
+        "text": "The SDK normalises every response it receives",
+        "correct": false,
+        "why": "The SDK passes the values through; the lab server did the normalising."
+      },
+      {
+        "text": "WordLlama's first 128 coordinates happen to have length 1",
+        "correct": false,
+        "why": "A prefix of a unit vector is shorter than 1. The server divided by the length after cutting."
+      }
+    ]
+  },
+  {
+    "id": "ex-793x5n45",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why does Cohere ask what each text is for?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "To pick the price tier for the call",
+        "correct": false,
+        "why": "The bill counts tokens; the input type does not change it."
+      },
+      {
+        "text": "To detect which language the text is in",
+        "correct": false,
+        "why": "Language has nothing to do with the input type; it names the text's role."
+      },
+      {
+        "text": "To place questions near answers",
+        "correct": true,
+        "why": "Yes. Search is asymmetric, and the model is told which side each text is on."
+      },
+      {
+        "text": "To decide how many numbers the vector will have",
+        "correct": false,
+        "why": "That is `output_dimension`, a separate parameter."
+      }
+    ]
+  },
+  {
+    "id": "ex-sqsjy7ce",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Marginalia keeps one million lab-minilm vectors in their `ubinary` form. How many megabytes is that, counting a megabyte as 1,000,000 bytes and nothing but the vectors?",
+    "hint": "Lesson 8.",
+    "value": 48,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-r76qyp7a",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these did labembed accept and then ignore in this lesson? Choose all that apply.",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Gemini's `task_type`",
+        "correct": true,
+        "why": "Yes. tasks.py got identical vectors for four task types, and the log recorded all four."
+      },
+      {
+        "text": "Cohere's `input_type`",
+        "correct": true,
+        "why": "Yes. search.py found 19 and 22 whichever type the questions were sent with."
+      },
+      {
+        "text": "`output_dimensionality` sent for `lab-wordllama`",
+        "correct": false,
+        "why": "It was honoured: the vectors came back with 128 numbers."
+      },
+      {
+        "text": "A provider's model name such as `gemini-embedding-001`",
+        "correct": false,
+        "why": "It was refused with a 404, not ignored."
+      },
+      {
+        "text": "Cohere's limit of 96 texts per call",
+        "correct": false,
+        "why": "It was enforced: 97 texts got a 400."
+      }
+    ]
+  },
+  {
+    "id": "ex-40qkj1mp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A teammate's pooling divides the summed vectors by the number of positions rather than by the sum of the mask. On texts embedded one at a time it matches `minilm.py` exactly. Why?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Normalising afterwards hides any difference in the divisor",
+        "correct": false,
+        "why": "Normalising hides a constant factor, but here the padding rows also change the sum; that shows in a batch."
+      },
+      {
+        "text": "No padding when alone, so both counts agree",
+        "correct": true,
+        "why": "Right. The mask is all ones, and the bug only appears when a batch pads a shorter text."
+      },
+      {
+        "text": "The tokenizer removes padding before the transformer runs",
+        "correct": false,
+        "why": "Padding goes into the transformer; the mask is how its rows are kept out of the average."
+      },
+      {
+        "text": "onnxruntime applies the mask to the pooling by itself",
+        "correct": false,
+        "why": "The model returns one vector per position; pooling is your code's job, as inside.py did it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wea4whzr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which file in Chroma's export of all-MiniLM-L6-v2 is the transformer itself?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "tokenizer.json",
+        "correct": false,
+        "why": "That file holds the tokenizer and its default settings, the 128 among them."
+      },
+      {
+        "text": "model.onnx",
+        "correct": true,
+        "why": "Yes, 90,387,606 bytes of weights that onnxruntime executes."
+      },
+      {
+        "text": "vocab.txt",
+        "correct": false,
+        "why": "That is the list of word pieces the tokenizer can produce."
+      },
+      {
+        "text": "config.json",
+        "correct": false,
+        "why": "It describes the architecture, such as 384 numbers and 6 layers, but holds no weights."
+      }
+    ]
+  },
+  {
+    "id": "ex-7x6fkf1d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Marginalia embeds 2,000-word e-book descriptions whole with all-MiniLM-L6-v2. Customers say questions about how the descriptions end find nothing. What is the likeliest cause?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Only 254 pieces are read; the endings are cut off",
+        "correct": true,
+        "why": "Right. Everything past the cut is dropped silently, so no vector describes the endings."
+      },
+      {
+        "text": "The model was trained on English and the descriptions are English too",
+        "correct": false,
+        "why": "English text is what it reads best; language is not the problem here."
+      },
+      {
+        "text": "Mean pooling gives the last pieces of a text less weight",
+        "correct": false,
+        "why": "Every real piece within the limit counts equally; the endings are simply outside it."
+      },
+      {
+        "text": "Chroma refuses texts that long, so the descriptions were never stored",
+        "correct": false,
+        "why": "Chroma 1.5.9 accepted the long text in length.py and cut it silently, just as minilm.py does."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0438xrp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "You run a published model outside the library it was published with. What should you do before trusting its vectors?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Check that every vector has length 1",
+        "correct": false,
+        "why": "A vector with a missing pooling step can still be normalised; length 1 proves nothing about the rest."
+      },
+      {
+        "text": "Check the output has the dimension on the card",
+        "correct": false,
+        "why": "A wrong pooling or a wrong length limit still gives the right dimension."
+      },
+      {
+        "text": "Compare some vectors with a reference implementation",
+        "correct": true,
+        "why": "Yes. inside.py did that against minilm.py and Chroma, to a difference of 1.4901161e-08."
+      },
+      {
+        "text": "Time it, since a wrong model is slower",
+        "correct": false,
+        "why": "Speed says nothing about whether the vectors are right."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgtqnwvk",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "An E5 model's card asks for `query: ` at the start of every query and ___ at the start of every document.",
+    "hint": "Lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "passage:",
+          "passage"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cqgjyyj8",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each model to how it is told whether a text is a query or a document.",
+    "hint": "Lesson 9.",
+    "pairs": [
+      {
+        "left": "E5",
+        "right": "`query: ` or `passage: ` written into the text"
+      },
+      {
+        "left": "Nomic's embedding models",
+        "right": "`search_query: ` or `search_document: ` in the text"
+      },
+      {
+        "left": "BGE",
+        "right": "An instruction in front of the query only"
+      },
+      {
+        "left": "all-MiniLM-L6-v2",
+        "right": "Nothing: it is symmetric"
+      }
+    ],
+    "right_distractors": [
+      "A `task_type` field in the request"
+    ]
+  },
+  {
+    "id": "ex-ergawqtj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Marginalia moves its help-centre search to jina-embeddings-v3. Which `task` should it send with the articles, and which with the customers' questions?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "text-matching for both, since both sides are text",
+        "correct": false,
+        "why": "text-matching is for two texts compared on an equal footing; a question and the article that answers it are not that."
+      },
+      {
+        "text": "retrieval.passage for articles, retrieval.query for questions",
+        "correct": true,
+        "why": "Right. Asymmetric search: the model uses a different set of task weights for the text to find and for the question."
+      },
+      {
+        "text": "retrieval.document for articles, retrieval.query for questions",
+        "correct": false,
+        "why": "retrieval.document is the Gemini-shaped slip; Jina refuses it with a 422 and calls that side a passage."
+      },
+      {
+        "text": "classification for articles, because each one has a category",
+        "correct": false,
+        "why": "The category is metadata; classification is for texts being sorted into labels, not for search."
+      }
+    ]
+  },
+  {
+    "id": "ex-941kpxrv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "WordLlama's weights file is about five and a half times smaller than MiniLM's `model.onnx`. What is missing from it?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Half of its vocabulary",
+        "correct": false,
+        "why": "The table has 32000 rows, one per token; nothing was cut from the vocabulary."
+      },
+      {
+        "text": "The tokenizer, which is downloaded separately at every call",
+        "correct": false,
+        "why": "The tokenizer ships with the package and is loaded once; it is not what the size difference is."
+      },
+      {
+        "text": "The layers: it is only a table of token vectors",
+        "correct": true,
+        "why": "Right. MiniLM's file is mostly the weights of six layers; a static model looks rows up and averages them."
+      },
+      {
+        "text": "Nothing: the file is compressed and expands to the same size",
+        "correct": false,
+        "why": "Its size is exactly 32000 × 256 × 2 bytes plus a header; it is a plain table, not a compressed network."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqhcnjzp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Halfway through a migration, a bug makes the search embed questions with the old model while reading from the new collection. What do customers see?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Plausible-looking results ranked by noise, if the dimensions match",
+        "correct": true,
+        "why": "Right. Same dimension means no error; switch.py's mixed case found 1 of 24, about chance."
+      },
+      {
+        "text": "An error on every query",
+        "correct": false,
+        "why": "Only if the dimensions differ, as WordLlama against MiniLM did. Same-size vectors multiply without complaint."
+      },
+      {
+        "text": "Slightly worse results, since both models know English",
+        "correct": false,
+        "why": "Knowing the same language does not share a coordinate system; the scores between models measure nothing."
+      },
+      {
+        "text": "The old results, because the old collection is still being written",
+        "correct": false,
+        "why": "Reads point at the new collection; the old one being up to date does not help a query that never reaches it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdatjcmv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The price sheet lists `bge-base-en-v1.5` from Together with a maximum input of 512 tokens. What does that mean for Marginalia's longest articles?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Nothing: the host splits long texts and averages them for you",
+        "correct": false,
+        "why": "Nothing on the sheet says so; a limit is a limit, and what happens past it is cutting or refusal."
+      },
+      {
+        "text": "Text past the limit has to be cut into chunks first",
+        "correct": true,
+        "why": "Right. Cheap per token, but a long article must be split before it fits, or its end is lost."
+      },
+      {
+        "text": "It returns 512-dimension vectors for long texts",
+        "correct": false,
+        "why": "512 is the input limit in tokens; the sheet lists 768 dimensions for this model."
+      },
+      {
+        "text": "Long articles cost 512 times more",
+        "correct": false,
+        "why": "The price is per token; the limit says how many tokens one input may hold, not what they cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-80sgqd99",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "WordLlama's table has 32000 rows of 256 numbers, stored at 2 bytes a number. How many bytes is the table, without the file's header?",
+    "hint": "Lesson 10.",
+    "value": 16384000,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-hvcx6rbd",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The Jina field that makes the chunks of one request pass through the model together, so each chunk's vector has seen its neighbours, is called ___.",
+    "hint": "Lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "late_chunking",
+          "late chunking"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ggm3ap3v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why does this course call exact search the yardstick for faster methods?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Because it is the fastest method at every size",
+        "correct": false,
+        "why": "It reads every vector; brute.py measured it growing with the count."
+      },
+      {
+        "text": "It returns the true nearest vectors",
+        "correct": true,
+        "why": "Right. Anything approximate is judged by how often it agrees with exact search."
+      },
+      {
+        "text": "Because databases forbid approximate search for small collections",
+        "correct": false,
+        "why": "No database forbids it; for small collections exact search is simply the better choice."
+      },
+      {
+        "text": "Because its scores are higher than any index's",
+        "correct": false,
+        "why": "The scores come from the vectors; an index computes the same scores for the vectors it finds."
+      }
+    ]
+  },
+  {
+    "id": "ex-6brhejqg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A store deletes thousands of records a day and is never compacted. What happens to its searches?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Deleted records start appearing in the results",
+        "correct": false,
+        "why": "The alive flag keeps them out of every result; the tombstone is still respected."
+      },
+      {
+        "text": "Nothing, because a tombstone takes no space",
+        "correct": false,
+        "why": "The vector stays in the array: rows stayed at 41 with 39 alive until the save."
+      },
+      {
+        "text": "They slow down, since dead rows are still read",
+        "correct": true,
+        "why": "Right. Every tombstone is still multiplied by every query and then thrown away."
+      },
+      {
+        "text": "The store refuses new writes until it is compacted",
+        "correct": false,
+        "why": "tinystore never refuses a write for that; it keeps appending rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-dq2kcqyc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why can a vector database not embed the customer's question in advance, the way it embeds the articles?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Because questions are too short to embed well",
+        "correct": false,
+        "why": "Short texts embed fine; MiniLM handled every question in this course."
+      },
+      {
+        "text": "The question only exists when it is asked",
+        "correct": true,
+        "why": "Right. So embedding it is paid on every query, and in path.py it was the largest step."
+      },
+      {
+        "text": "Because the model changes between one query and the next",
+        "correct": false,
+        "why": "The collection's model is fixed; the same model embeds every question."
+      },
+      {
+        "text": "Because questions must be embedded by a different model from the articles",
+        "correct": false,
+        "why": "The opposite: the question has to use the collection's own model, or the scores mean nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ek5wm0t0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Marginalia's articles already live in its content system, edited daily. Should the vector store keep a copy of each text?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Yes, always, or the search has nothing to return",
+        "correct": false,
+        "why": "The search returns ids; the text can be fetched from the content system by id."
+      },
+      {
+        "text": "No: a vector store refuses records without metadata",
+        "correct": false,
+        "why": "Text and metadata are separate parts, and the text is optional."
+      },
+      {
+        "text": "It is a trade: one lookup saved, against two copies that drift",
+        "correct": true,
+        "why": "Right. A copy saves fetching; keeping only the id avoids a stale text in the store."
+      },
+      {
+        "text": "Yes, because the vector can be rebuilt from the text later",
+        "correct": false,
+        "why": "Rebuilding needs the model, not a second copy; the content system already holds the text."
+      }
+    ]
+  },
+  {
+    "id": "ex-h104e9yj",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "brute.py measured 129.16 ms per exact query over a million vectors on one core. Assuming four cores each answer queries at that rate, how many queries a second do they answer together?",
+    "hint": "Lesson 11.",
+    "value": 31,
+    "tolerance": 1,
+    "unit": "queries/s"
+  },
+  {
+    "id": "ex-ewrf6sz3",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "Which of these does a collection fix when it is created? Choose all that apply.",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The model its vectors come from",
+        "correct": true,
+        "why": "Yes. One collection, one model."
+      },
+      {
+        "text": "The dimension",
+        "correct": true,
+        "why": "Yes. 384 for MiniLM, and a vector of another size is refused."
+      },
+      {
+        "text": "How vectors are compared",
+        "correct": true,
+        "why": "Yes. Changing the comparison means a new collection."
+      },
+      {
+        "text": "How many records it will hold",
+        "correct": false,
+        "why": "Records are added and deleted freely; the count changes all the time."
+      },
+      {
+        "text": "The text of each article",
+        "correct": false,
+        "why": "Texts change and are re-embedded through upserts; nothing fixes them."
+      }
+    ]
+  },
+  {
+    "id": "ex-na06phch",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Chroma collection was created with `configuration={\"hnsw\": {\"space\": \"cosine\"}}`. A query returns 0.30 for one article. What is that article's cosine similarity to the question?",
+    "choices": [
+      {
+        "text": "0.30",
+        "correct": false,
+        "why": "That reads the distance as a score. Chroma returns a distance, smaller is closer."
+      },
+      {
+        "text": "0.70",
+        "correct": true,
+        "why": "Right. In the cosine space Chroma returns one minus the similarity, so 1 − 0.30 = 0.70."
+      },
+      {
+        "text": "0.85",
+        "correct": false,
+        "why": "That would be the l2 space, where the number is 2 − 2 × similarity. This collection is cosine."
+      },
+      {
+        "text": "It cannot be known without the vectors",
+        "correct": false,
+        "why": "The cosine space defines the number exactly: one minus the similarity."
+      }
+    ],
+    "hint": "Lesson 12."
+  },
+  {
+    "id": "ex-80mt549w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Marginalia keeps its help centre in Chroma and passes `embeddings=` itself, computed with WordLlama truncated to 384 numbers, into a collection first filled with all-MiniLM-L6-v2 vectors. What does Chroma do?",
+    "choices": [
+      {
+        "text": "Refuses, because the collection records the model's name",
+        "correct": false,
+        "why": "Chroma checks the dimension, not the model. Both give 384 numbers."
+      },
+      {
+        "text": "Accepts them, and searches now mix two unrelated spaces",
+        "correct": true,
+        "why": "Right. The size matches, so nothing complains, and the two models' coordinates mean different things."
+      },
+      {
+        "text": "Converts them to MiniLM's space before storing",
+        "correct": false,
+        "why": "No database can translate between two models' coordinates."
+      },
+      {
+        "text": "Accepts them and re-embeds the documents to match",
+        "correct": false,
+        "why": "Passing `embeddings=` skips the embedding function; Chroma stores what it is given."
+      }
+    ],
+    "hint": "Lesson 12."
+  },
+  {
+    "id": "ex-magvt5ny",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A colleague estimates the number of records in a Chroma collection from the size of its `data_level0.bin` file. Why is that unreliable?",
+    "choices": [
+      {
+        "text": "The file holds only the documents, not the vectors",
+        "correct": false,
+        "why": "The documents are in chroma.sqlite3; the .bin files are the HNSW index with the vectors."
+      },
+      {
+        "text": "Chroma compresses the file differently each time",
+        "correct": false,
+        "why": "The sizes were exact multiples of one slot size; nothing was compressed."
+      },
+      {
+        "text": "Each record's size depends on its text's length",
+        "correct": false,
+        "why": "Every slot is the same size: one 384-number vector plus its links."
+      },
+      {
+        "text": "The file is sized ahead and rewritten only after many writes",
+        "correct": true,
+        "why": "Right. It stayed at 167,600 bytes from 40 records to 940; the recent writes waited in the log in SQLite."
+      }
+    ],
+    "hint": "Lesson 12."
+  },
+  {
+    "id": "ex-e612k9t0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which of these does Pinecone's index give you that a Chroma `PersistentClient` directory does not?",
+    "choices": [
+      {
+        "text": "Distances where smaller is closer",
+        "correct": false,
+        "why": "That is Chroma's convention. Pinecone's cosine score is a similarity, highest first."
+      },
+      {
+        "text": "A default embedding model applied to `documents=`",
+        "correct": false,
+        "why": "That is Chroma's default function; Pinecone's ordinary index takes vectors you computed."
+      },
+      {
+        "text": "A database nobody on your team has to run",
+        "correct": true,
+        "why": "Right. Pinecone operates the index; a directory is yours to keep, back up and serve."
+      },
+      {
+        "text": "A dimension that can change after creation",
+        "correct": false,
+        "why": "Pinecone fixes the dimension and metric at creation, like Chroma's space."
+      }
+    ],
+    "hint": "Lesson 12."
+  },
+  {
+    "id": "ex-01jvyhv2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Weaviate hybrid query for the help centre is run with `alpha=1`. What did it search with?",
+    "choices": [
+      {
+        "text": "BM25 keyword scores alone",
+        "correct": false,
+        "why": "That is `alpha=0`. At 1 the keyword side has no weight."
+      },
+      {
+        "text": "The vector side alone",
+        "correct": true,
+        "why": "Right. An alpha of 1 is a pure vector search, 0 a pure keyword search."
+      },
+      {
+        "text": "Both, equally weighted",
+        "correct": false,
+        "why": "Equal weight is 0.5."
+      },
+      {
+        "text": "Whichever list returned more results",
+        "correct": false,
+        "why": "Alpha is a fixed weight between the two, not a choice made per query."
+      }
+    ],
+    "hint": "Lesson 12."
+  },
+  {
+    "id": "ex-n6htas41",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each Chroma call with what it did to an id that already existed, or did not, in lesson 12.",
+    "pairs": [
+      {
+        "left": "add with an existing id",
+        "right": "Kept the old record and raised nothing"
+      },
+      {
+        "left": "upsert with an existing id",
+        "right": "Replaced the text and its vector"
+      },
+      {
+        "left": "update with a missing id",
+        "right": "Did nothing and raised nothing"
+      },
+      {
+        "left": "delete with an existing id",
+        "right": "Removed the record and lowered the count"
+      }
+    ],
+    "right_distractors": [
+      "Raised a duplicate-id error"
+    ],
+    "hint": "Lesson 12."
+  },
+  {
+    "id": "ex-v3va2bbn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Marginalia stores its 40 article vectors in a FAISS `IndexFlatIP`. Where must the article titles live?",
+    "choices": [
+      {
+        "text": "In the index, as a field beside each vector",
+        "correct": false,
+        "why": "FAISS stores vectors and, with IndexIDMap, integers. It has no fields."
+      },
+      {
+        "text": "Elsewhere, keyed by position or id",
+        "correct": true,
+        "why": "Right. A dictionary, a file or a database, kept in step with the index by your program."
+      },
+      {
+        "text": "In the FAISS file written by write_index",
+        "correct": false,
+        "why": "That file holds the vectors, the ids and a header; its size added up to nothing more."
+      },
+      {
+        "text": "In a payload attached at search time",
+        "correct": false,
+        "why": "Payloads are Qdrant's; FAISS has nothing of the kind."
+      }
+    ],
+    "hint": "Lesson 13."
+  },
+  {
+    "id": "ex-z1afhery",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A flat FAISS index holds 50,000 vectors of 384 float32 numbers. Ignoring the header, how many bytes is its file?",
+    "value": 76800000,
+    "tolerance": 0,
+    "unit": "bytes",
+    "hint": "Lesson 13."
+  },
+  {
+    "id": "ex-p0kgtygf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Before adding a single vector to an `IVF64,Flat` index, what does FAISS need?",
+    "choices": [
+      {
+        "text": "A list of ids for every vector",
+        "correct": false,
+        "why": "Ids are what IndexIDMap adds; IVF works with or without them."
+      },
+      {
+        "text": "A GPU",
+        "correct": false,
+        "why": "faiss-cpu built and searched it in the lab."
+      },
+      {
+        "text": "A second, flat index to check results against",
+        "correct": false,
+        "why": "The flat index in factory.py was there to measure recall, not because IVF requires it."
+      },
+      {
+        "text": "Training on example vectors",
+        "correct": true,
+        "why": "Right. The cells come from clustering data like the data the index will hold."
+      }
+    ],
+    "hint": "Lesson 13."
+  },
+  {
+    "id": "ex-q3d7wy4z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Marginalia moves a search from LanceDB with no `distance_type` to Qdrant with `Distance.COSINE`, and keeps the rule 'show results below 1.15'. What happens?",
+    "choices": [
+      {
+        "text": "It works the same, since both measured the same vectors",
+        "correct": false,
+        "why": "Same vectors, different numbers: LanceDB's default was squared L2, Qdrant's is the similarity."
+      },
+      {
+        "text": "Nothing passes, since Qdrant's scores are above 1.15",
+        "correct": false,
+        "why": "Cosine similarities of unit vectors never exceed 1."
+      },
+      {
+        "text": "All of them pass, the weakest too, since similarity tops out at 1",
+        "correct": true,
+        "why": "Right. Qdrant returns similarities, at most 1, so every one is below 1.15 whatever its quality."
+      },
+      {
+        "text": "Qdrant refuses the threshold",
+        "correct": false,
+        "why": "The client returns scores; what the program does with them is its own choice."
+      }
+    ],
+    "hint": "Lesson 13."
+  },
+  {
+    "id": "ex-29jrspvk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A nightly job rewrites a LanceDB table of 100,000 rows from scratch, and the disk keeps filling up week after week. Why?",
+    "choices": [
+      {
+        "text": "LanceDB stores each vector twice, once per column",
+        "correct": false,
+        "why": "The vector is one column; nothing is duplicated within a version."
+      },
+      {
+        "text": "The HNSW graph grows with every search",
+        "correct": false,
+        "why": "Searches write nothing; versions are made by writes."
+      },
+      {
+        "text": "A version per night, each keeping its files",
+        "correct": true,
+        "why": "Right. Older versions stay readable until they are cleaned up, for instance with optimize(cleanup_older_than=...)."
+      },
+      {
+        "text": "Deleted rows are kept as tombstones inside the same file",
+        "correct": false,
+        "why": "LanceDB changes no file it has written; a delete makes a new version that lists other files."
+      }
+    ],
+    "hint": "Lesson 13."
+  },
+  {
+    "id": "ex-6c2fh2sy",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A test suite runs against Qdrant's local mode (`QdrantClient(path=...)`). Which of these does a green run say nothing about for the Qdrant server? Choose all that apply.",
+    "choices": [
+      {
+        "text": "How fast an HNSW search is",
+        "correct": true,
+        "why": "Yes. Local mode searches a NumPy array exactly and builds no HNSW index."
+      },
+      {
+        "text": "Whether filters use a payload index",
+        "correct": true,
+        "why": "Yes. Local mode ignores payload indexes with a warning."
+      },
+      {
+        "text": "Several programs using the data at once",
+        "correct": true,
+        "why": "Yes. Local mode refused a second process; a server is built for many clients."
+      },
+      {
+        "text": "Whether ids must be integers or UUIDs",
+        "correct": false,
+        "why": "That rule is Qdrant's in both, so the tests do cover it."
+      },
+      {
+        "text": "The shape of the calls the program makes",
+        "correct": false,
+        "why": "The client API is the same; changing the constructor is the only difference."
+      }
+    ],
+    "hint": "Lesson 13."
+  },
+  {
+    "id": "ex-mgenpp22",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A help-centre search returns 5 articles for every question, including 'what time is it in Tokyo'. The product manager wants 'no results' when nothing fits. What do you add?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "k = 1, so only the best article is shown",
+        "correct": false,
+        "why": "k = 1 still returns one article for every question. No value of k returns nothing."
+      },
+      {
+        "text": "A score cut-off, measured on on-topic and off-topic questions",
+        "correct": true,
+        "why": "Right. Only a cut-off looks at the scores themselves, and it has to come from scores measured on both kinds of question."
+      },
+      {
+        "text": "A higher hnsw.ef_search",
+        "correct": false,
+        "why": "That decides how many candidates the index keeps, not whether any of them is good enough."
+      },
+      {
+        "text": "A reranker that reorders the five articles by a better score",
+        "correct": false,
+        "why": "A reranker changes the order of the five, and five still come back."
+      }
+    ]
+  },
+  {
+    "id": "ex-6rsn1dee",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "You chose a cut-off of 0.30 with all-MiniLM-L6-v2. The team switches to another embedding model and keeps 0.30. What should you expect?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "The same behaviour, since both models return cosines",
+        "correct": false,
+        "why": "Both return cosines, and each spreads them differently: the lesson's 0.25 kept 24 answers with one model and 21 with the other."
+      },
+      {
+        "text": "More results, since a newer model scores everything higher",
+        "correct": false,
+        "why": "Nothing measured says a model's scores rise with its age. They differ, in a direction only a measurement shows."
+      },
+      {
+        "text": "Nothing reliable until it is measured again",
+        "correct": true,
+        "why": "Right. A cut-off belongs to one model on one corpus; with a new model it has to be chosen again from new scores."
+      },
+      {
+        "text": "Fewer results, since cut-offs scale with the number of dimensions",
+        "correct": false,
+        "why": "No such rule appeared. The two models in the lesson have 384 and 256 dimensions and their scores do not follow it."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5gywkwy",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "By the tokens column of `recall_k.py`, how many more tokens per question does handing on the top 8 articles cost than the top 3?",
+    "hint": "Lesson 16.",
+    "value": 272,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-nnzw5wwa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In the lab's pgvector 0.6.0, with hnsw.ef_search at its default, a query through the HNSW index has LIMIT 25. How many rows can it return at most?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "40, the size of the candidate list",
+        "correct": false,
+        "why": "The LIMIT still applies: 40 candidates are produced and the LIMIT keeps 25 of them."
+      },
+      {
+        "text": "Fewer than 25, as with LIMIT 100",
+        "correct": false,
+        "why": "LIMIT 100 fell short because 100 is more than 40. A LIMIT of 25 fits inside the 40 candidates."
+      },
+      {
+        "text": "25",
+        "correct": true,
+        "why": "Right. The scan yields up to 40 candidates, which is enough to fill a LIMIT of 25; the shortfall starts above 40."
+      },
+      {
+        "text": "None: an error is raised when LIMIT is below ef_search",
+        "correct": false,
+        "why": "No such error exists; LIMIT 100 above it returned rows quietly too."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqhm4ph4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A search fetches 10 candidates with a fast first pass and reranks them with a much better scorer. Which article can it never put first?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "One the first pass ranked tenth",
+        "correct": false,
+        "why": "Tenth is still among the candidates, and lifting such an article is what the rerank is for."
+      },
+      {
+        "text": "One the first pass left out of the 10",
+        "correct": true,
+        "why": "Right. The rerank only reorders what it is given, so the first pass's recall caps the whole search."
+      },
+      {
+        "text": "One whose first-pass score was below zero",
+        "correct": false,
+        "why": "A negative score in the first pass does not stop the better scorer from ranking it first, as long as it is a candidate."
+      },
+      {
+        "text": "One that the better scorer and the first pass both rate highly",
+        "correct": false,
+        "why": "That is the article most likely to end first. Agreement between the two is what the lesson's two-model rerank used."
+      }
+    ]
+  },
+  {
+    "id": "ex-aph4szrc",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these grow with k? Choose all that apply.",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "The tokens handed to a language model",
+        "correct": true,
+        "why": "Yes. Each article added is read and paid for: 55 tokens at k = 1, 544 at k = 10 in the lesson."
+      },
+      {
+        "text": "The cost of embedding the question",
+        "correct": false,
+        "why": "The question is embedded once whatever k is."
+      },
+      {
+        "text": "The work of a reranker over the candidates",
+        "correct": true,
+        "why": "Yes. A slower scorer spends time per candidate it is given."
+      },
+      {
+        "text": "hnswlib's search breadth, once k is above ef",
+        "correct": true,
+        "why": "Yes. It searches with the larger of ef and k, so a large k widens the search by itself."
+      },
+      {
+        "text": "The number of questions found at rank 1",
+        "correct": false,
+        "why": "Found at rank 1 does not depend on k at all; it stayed at 19 for all-MiniLM-L6-v2."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndj5mx7b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A recipe site on pgvector 0.6.0 asks its HNSW index for 10 recipes WHERE vegetarian, with hnsw.ef_search at 40. Two recipes in a hundred are vegetarian. What does it get?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "10, because WHERE runs before the index",
+        "correct": false,
+        "why": "The plan in the lesson put the Filter under the Index Scan: it runs on what the index yields."
+      },
+      {
+        "text": "0 or 1 rows, most of the time",
+        "correct": true,
+        "why": "Right. 40 candidates times two in a hundred is under one vegetarian recipe on average."
+      },
+      {
+        "text": "An error, since the filter is too narrow for the index",
+        "correct": false,
+        "why": "Nothing fails. The lesson's Portuguese queries returned short lists with no error and no warning."
+      },
+      {
+        "text": "10 rows, but slower than an unfiltered query",
+        "correct": false,
+        "why": "Time is not what goes wrong here; the count is."
+      }
+    ]
+  },
+  {
+    "id": "ex-q55emawn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The same recipe site wants 10 vegetarian recipes whenever 10 exist, on pgvector 0.6.0. Which change gives that?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Raising hnsw.ef_search to 400",
+        "correct": false,
+        "why": "That made a shortfall rarer in the lesson, and query row 7 still got 3 of 10."
+      },
+      {
+        "text": "Writing LIMIT 100 and keeping the first 10 that come back",
+        "correct": false,
+        "why": "The LIMIT is not the bound; the scan still yields at most ef_search candidates before the filter."
+      },
+      {
+        "text": "A partial HNSW index WHERE vegetarian",
+        "correct": true,
+        "why": "Right. Every row in it passes, so nothing is filtered out after the scan; the lesson's partial index returned 10 for every query."
+      },
+      {
+        "text": "Running ANALYZE on the table",
+        "correct": false,
+        "why": "ANALYZE updates the planner's statistics. The lesson's table had been analysed and still came up short."
+      }
+    ]
+  },
+  {
+    "id": "ex-wc0e5v12",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "When is an exact pre-filter a poor choice?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "When the filter passes very few rows",
+        "correct": false,
+        "why": "That is where it shines: the lesson searched 2,000 rows in 0.7 ms."
+      },
+      {
+        "text": "When the filter passes nearly every row",
+        "correct": true,
+        "why": "Right. It becomes a brute-force search over almost the whole collection: 178,000 rows took 83.3 ms in the lesson."
+      },
+      {
+        "text": "When k is small",
+        "correct": false,
+        "why": "k barely changes the cost; the number of rows that pass decides it."
+      },
+      {
+        "text": "When the metadata field is a date rather than a word",
+        "correct": false,
+        "why": "The type of the field changes how it is compared, not how many rows are searched afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-e7rx03et",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team adds `WHERE shop = %s` to every search query, filling it from the signed-in session. What risk remains that row-level security would remove?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "The client can still choose the shop",
+        "correct": false,
+        "why": "Not here: the value comes from the server's session, which is what the lesson asks for."
+      },
+      {
+        "text": "A WHERE clause is slower than a policy",
+        "correct": false,
+        "why": "A policy is a condition PostgreSQL adds to the query; speed is not the difference."
+      },
+      {
+        "text": "HNSW ignores WHERE clauses on text columns",
+        "correct": false,
+        "why": "The lesson's language filter on a text column ran; it ran after the index, which is a different matter."
+      },
+      {
+        "text": "The next query written without it shows every shop's rows",
+        "correct": true,
+        "why": "Right. The boundary lives in each query, so one that forgets it leaks; a policy is one place below them all, and with no shop set it fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-65cpvqyz",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "In Qdrant, the metadata stored with each point is called its ___.",
+    "hint": "Lesson 17.",
+    "blanks": [
+      {
+        "accept": [
+          "payload"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d09skfjy",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each situation to the approach the lesson points to.",
+    "hint": "Lesson 17.",
+    "pairs": [
+      {
+        "left": "A filter passes 1% of rows",
+        "right": "Filter first, then search the subset exactly"
+      },
+      {
+        "left": "A filter passes 95% of rows",
+        "right": "Search the index, then filter the candidates"
+      },
+      {
+        "left": "Customers must never see each other's rows",
+        "right": "A policy in the database, or a collection each"
+      },
+      {
+        "left": "One language is filtered on constantly",
+        "right": "A partial index for that value"
+      }
+    ],
+    "right_distractors": [
+      "Raise k until the page fills"
+    ]
+  },
+  {
+    "id": "ex-ej6jkdf0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The same 20,000 vectors of 384 dimensions took 1536.0 bytes a vector in a `.npy` file and 1,676 bytes a row in a pgvector table. Where does the difference come from?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "pgvector stores each number as float64",
+        "correct": false,
+        "why": "That would double the vector to over 3,000 bytes. pgvector stores four-byte floats, plus a small header."
+      },
+      {
+        "text": "Headers, and pages that take whole rows only",
+        "correct": true,
+        "why": "Right. The vector gets a header, the row gets one and a pointer, and the space left at the end of each 8 KB page is wasted."
+      },
+      {
+        "text": "The primary key index is counted inside each row",
+        "correct": false,
+        "why": "The primary key was the separate indexes column, 466,944 bytes for the whole table."
+      },
+      {
+        "text": "PostgreSQL keeps the text of each vector beside it",
+        "correct": false,
+        "why": "The table held only an id and the vector; there was no text to keep."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxa300ag",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team will keep 1,000,000 vectors of 768 dimensions in pgvector with one HNSW index. Which estimate of the disk they need is the right shape?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "About 3 GB, the raw float32 numbers",
+        "correct": false,
+        "why": "That counts the numbers once. The table holds them with row overhead and the HNSW index holds its own copy."
+      },
+      {
+        "text": "A little over 3 GB, since an index adds only links",
+        "correct": false,
+        "why": "That is true of hnswlib's file, which stores the vectors once. pgvector's index stores every vector again."
+      },
+      {
+        "text": "More than twice the raw numbers: table and index each hold a copy",
+        "correct": true,
+        "why": "Right. In the lesson the HNSW index alone was larger per row than the table at 384 dimensions."
+      },
+      {
+        "text": "Less than the raw numbers, since PostgreSQL compresses large values",
+        "correct": false,
+        "why": "pgvector 0.6.0 declares its type STORAGE external: moved out of the row and never compressed."
+      }
+    ]
+  },
+  {
+    "id": "ex-91vyxdvb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Marginalia archives 60% of its help-centre chunks in one afternoon and deletes their rows from a pgvector table with an HNSW index. What gets the index back to the size of what is left?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "A REINDEX of the table",
+        "correct": true,
+        "why": "Right. Rebuilding from the remaining rows is what halved the indexes in the lesson; CONCURRENTLY keeps searches running while it works."
+      },
+      {
+        "text": "A plain VACUUM, which returns the freed space",
+        "correct": false,
+        "why": "VACUUM took over two minutes in the lesson and changed no size: it keeps the freed space inside the files for reuse."
+      },
+      {
+        "text": "Nothing, because DELETE removes the entries from the index at once",
+        "correct": false,
+        "why": "After the DELETE every size stayed exactly as before; the rows are only marked dead."
+      },
+      {
+        "text": "Raising hnsw.ef_search so the graph skips the deleted rows",
+        "correct": false,
+        "why": "ef_search changes how much of the graph a query explores. It writes nothing and frees nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-vx1qqk6v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team needs its vectors to take about a quarter of their float32 size and wants each text's nearest neighbours to change as little as possible. Going by the lesson's measurements, what should it try first?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Keep only the first quarter of the dimensions",
+        "correct": false,
+        "why": "WordLlama cut to 64 of its 256 dimensions kept 0.642 of the neighbours: fewer numbers cost far more than fewer bits."
+      },
+      {
+        "text": "int8",
+        "correct": true,
+        "why": "Right. A quarter of the bytes plus one scale per vector, and 0.995 of the neighbours kept for both models."
+      },
+      {
+        "text": "Binary codes, one bit per number",
+        "correct": false,
+        "why": "That is a thirty-second of the size, not a quarter, and it kept only 0.705 and 0.600 of the neighbours."
+      },
+      {
+        "text": "float16 applied twice",
+        "correct": false,
+        "why": "There is no such step: float16 is a fixed two-byte format, which halves the size once."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qaswe3f",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "At the sheet's $0.02 per million tokens for text-embedding-3-small, what does embedding 500,000 chunks of 400 tokens cost, in dollars?",
+    "hint": "Lesson 18.",
+    "value": 4,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-hebg0t6e",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "In the lab's pgvector 0.6.0, an HNSW index is refused on a vector column with more than ___ dimensions, so 3072-number vectors have to be shortened first.",
+    "hint": "Lesson 18.",
+    "blanks": [
+      {
+        "accept": [
+          "2000",
+          "2,000"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
