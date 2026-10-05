@@ -17,7 +17,14 @@ course was recorded on could reach when the providers' own sites could not.
 
 The wrapping is this program's, so a long paragraph fits a page; the words
 are the document's. Standard library only.
+
+A FEW ARE WEB PAGES, AND A WEB PAGE HAS NO COMMIT. Those are read once, on
+the day `sources fetch` runs, reduced from HTML to one line per piece of text,
+and kept with the date they were read; every quote from one prints that date,
+and the lessons repeat it.
 """
+import datetime
+import html
 import os
 import signal
 import re
@@ -55,11 +62,33 @@ DOCS = {
     "hf-tasks": ("huggingface/huggingface.js", "3064743fce9a4b29b4d9c4ab4c38217526de2c2f",
                  "packages/tasks/src/pipelines.ts"),
 }
+PAGES = {
+    "claude-models": "https://platform.claude.com/docs/en/about-claude/models/overview",
+    "claude-pricing": "https://platform.claude.com/docs/en/about-claude/pricing",
+}
+
+
+def page_text(raw):
+    """One line per piece of visible text, the way a reader meets it on the page."""
+    raw = re.sub(r"<script.*?</script>|<style.*?</style>", "", raw, flags=re.S)
+    text = html.unescape(re.sub(r"<[^>]+>", "\n", raw))
+    return "\n".join(line.strip() for line in text.splitlines() if line.strip()) + "\n"
 
 
 def fetch(name):
-    repo, commit, path = DOCS[name]
     local = os.path.join(CACHE, name)
+    if name in PAGES:
+        if not os.path.exists(local):
+            os.makedirs(CACHE, exist_ok=True)
+            req = urllib.request.Request(PAGES[name], headers={"User-Agent": "curl/8.5.0"})
+            with urllib.request.urlopen(req) as r:
+                text = page_text(r.read().decode("utf-8"))
+            with open(local + ".part", "w", encoding="utf-8") as f:
+                f.write(f"read {datetime.date.today().isoformat()}\n" + text)
+            os.rename(local + ".part", local)
+        with open(local, encoding="utf-8") as f:
+            return f.read().split("\n", 1)[1]
+    repo, commit, path = DOCS[name]
     if not os.path.exists(local):
         os.makedirs(CACHE, exist_ok=True)
         url = f"https://raw.githubusercontent.com/{repo}/{commit}/" + urllib.parse.quote(path)
@@ -76,19 +105,25 @@ def main():
     if not args or args[0] not in ("list", "quote", "lines", "words", "fetch"):
         sys.exit(__doc__)
     if args[0] == "fetch":
-        for name in DOCS:
+        for name in list(DOCS) + list(PAGES):
             fetch(name)
         return
     if args[0] == "list":
         for name, (repo, commit, path) in DOCS.items():
             print(f"{name:26} {repo}@{commit[:8]}  {path}")
+        for name, url in PAGES.items():
+            print(f"{name:26} {url}")
         return
     name = args[1]
-    if name not in DOCS:
+    if name not in DOCS and name not in PAGES:
         sys.exit(f"sources: no document named {name}")
     text = fetch(name)
-    repo, commit, path = DOCS[name]
-    print(f"# {repo}@{commit[:8]} {path}")
+    if name in PAGES:
+        with open(os.path.join(CACHE, name), encoding="utf-8") as f:
+            print(f"# {PAGES[name]}, {f.readline().strip()}")
+    else:
+        repo, commit, path = DOCS[name]
+        print(f"# {repo}@{commit[:8]} {path}")
     if args[0] == "words":
         print(f"{len(text.split()):,} words, {len(text.splitlines()):,} lines")
         return
