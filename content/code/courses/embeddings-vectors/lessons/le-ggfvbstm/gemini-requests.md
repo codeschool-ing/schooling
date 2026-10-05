@@ -5,7 +5,8 @@ version: 1
 
 Every provider's embedding call has the same shape: text goes in, one vector per text comes back,
 and the details that differ are the names of things. Lesson 7 met that shape through OpenAI's SDK.
-This section meets it through Google's, `google-genai`, and three later sections through Cohere's.
+This section meets it through Google's, `google-genai`, and so does the next; the three after that
+use Cohere's.
 
 **Neither SDK talks to Google or Cohere here.** Both talk to **labembed**, a small server written
 for this course that listens on `127.0.0.1:8500`. It answers the same URLs with the same JSON the

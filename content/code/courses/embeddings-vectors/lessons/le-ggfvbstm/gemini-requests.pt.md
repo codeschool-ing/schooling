@@ -5,7 +5,7 @@ version: 1
 
 A chamada de embedding de todo provedor tem o mesmo formato: entra texto, volta um vetor por texto,
 e o que muda são os nomes das coisas. A aula 7 conheceu esse formato pelo SDK da OpenAI. Esta seção
-o conhece pelo do Google, `google-genai`, e três seções mais adiante pelo do Cohere.
+o conhece pelo do Google, `google-genai`, e a próxima também; as três seguintes usam o do Cohere.
 
 **Nenhum dos dois SDKs fala com o Google ou com o Cohere aqui.** Os dois falam com o
 **labembed**, um servidor pequeno escrito para este curso que escuta em `127.0.0.1:8500`. Ele
