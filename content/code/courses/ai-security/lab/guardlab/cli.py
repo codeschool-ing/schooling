@@ -31,6 +31,10 @@ course.
     guard onboard FILE [--id ID]    applications for API access, decided
     guard drift ACCOUNT [--limit PCT]
                                     a customer's usage against its use case
+    guard check-in FILE             requests against the input rules
+    guard check-out FILE            model replies against the output schema
+    guard retry ID [ID ...]         the retry loop, with course-written replies
+                                    standing in for the model's attempts
 """
 import argparse
 import datetime as dt
@@ -430,6 +434,77 @@ def cmd_drift(a):
     print("limit: more than %d%% of a week outside the declared use case" % a.limit)
 
 
+# ---- inputs and outputs ------------------------------------------------------
+
+def jsonl(path):
+    with open(path, encoding="utf-8") as fh:
+        return [json.loads(line) for line in fh if line.strip()]
+
+
+def report(ident, problems):
+    if not problems:
+        print("%-6s ok" % ident)
+    for i, p in enumerate(problems):
+        print("%-6s %-7s %s" % (ident if i == 0 else "", "REJECT" if i == 0 else "", p))
+
+
+def cmd_check_in(a):
+    from . import shapes
+    rules = load("data/input-rules.json")
+    bad = 0
+    for req in jsonl(a.file):
+        ident = req.pop("id")
+        problems = shapes.check_input(req, rules)
+        bad += bool(problems)
+        report(ident, problems)
+    return 1 if bad else 0
+
+
+def cmd_check_out(a):
+    from . import shapes
+    schema = load("data/output-schema.json")
+    hosts = load("data/allowed-hosts.json")
+    budgets = {r["id"]: r.get("budget_cents") for r in jsonl(os.path.join(HOME, "data", "inputs.jsonl"))}
+    bad = 0
+    for out in jsonl(a.file):
+        if a.id and out["id"] != a.id:
+            continue
+        if a.show:
+            print(out["text"])
+        problems = shapes.check_output(out["text"], schema, hosts, budgets.get(out["request"]))
+        bad += bool(problems)
+        report(out["id"], problems)
+    return 1 if bad else 0
+
+
+def cmd_retry(a):
+    """THE MODEL IS A STAND-IN HERE: each attempt is the next reply named on
+    the command line, taken from data/outputs.jsonl, which the course wrote.
+    What is real is the loop and the checks."""
+    from . import retry, shapes
+    schema = load("data/output-schema.json")
+    hosts = load("data/allowed-hosts.json")
+    texts = {o["id"]: o["text"] for o in jsonl(os.path.join(HOME, "data", "outputs.jsonl"))}
+    replies = iter(a.ids)
+
+    def call(feedback):
+        if feedback:
+            print("           sent back: %d problem(s) with the previous reply" % len(feedback))
+        return texts[next(replies)]
+
+    def check(text):
+        return shapes.check_output(text, schema, hosts, 120000)
+
+    for n, problems in retry.ask(call, check, attempts=len(a.ids)):
+        print("attempt %d  %s" % (n, "ok" if not problems else "REJECT " + problems[0]))
+        for p in problems[1:]:
+            print("                  %s" % p)
+    if problems:
+        print("no valid reply after %d attempts: the job goes to a person" % len(a.ids))
+        return 1
+    return 0
+
+
 # ---- the lab's own setup --------------------------------------------------
 
 def cmd_build(a):
@@ -577,6 +652,20 @@ def main(argv=None):
     s.add_argument("account")
     s.add_argument("--limit", type=int, default=30)
     s.set_defaults(fn=cmd_drift)
+
+    s = sub.add_parser("check-in")
+    s.add_argument("file")
+    s.set_defaults(fn=cmd_check_in)
+
+    s = sub.add_parser("check-out")
+    s.add_argument("file")
+    s.add_argument("--id")
+    s.add_argument("--show", action="store_true")
+    s.set_defaults(fn=cmd_check_out)
+
+    s = sub.add_parser("retry")
+    s.add_argument("ids", nargs="+")
+    s.set_defaults(fn=cmd_retry)
 
     s = sub.add_parser("_build")
     s.set_defaults(fn=cmd_build)

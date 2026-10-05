@@ -21,8 +21,9 @@
 #                  fairness.py (rates per group), standin.py (THE STAND-IN
 #                  SCORER, below), moderation.py (THE STAND-IN MODERATION
 #                  ENDPOINT, below), enduser.py and ratelimit.py (end-user
-#                  ids and limits), kyc.py (deciding who gets API access)
-#                  and cli.py (every command)
+#                  ids and limits), kyc.py (deciding who gets API access),
+#                  shapes.py and retry.py (what goes into a call and what
+#                  comes out) and cli.py (every command)
 #   bin/guard      the command line
 #   logs/raw/      the assistant's call log, one file per day, word for word
 #   logs/redacted/ the same records with personal data replaced
@@ -34,12 +35,18 @@
 #                  it may be sent to a model for, a reply to restore
 #   outbox/ vault/ written by `guard minimise`: what would be sent, and the
 #                  placeholders that stay behind
+#   keys/          the HMAC keys `guard enduser` uses, FIXED so that the
+#                  captures repeat; see the comment where they are written
 #
 # WHAT IS WRITTEN BY THE COURSE AND NOT MEASURED
 #
 #   - Every record in the log, prompts AND replies, was written by the
 #     course. No model produced any of the replies; they are there so the
-#     tools have something realistic to read.
+#     tools have something realistic to read. Every CPF, card number,
+#     phone number, e-mail address and key in them is invented: the CPFs
+#     have valid check digits on purpose, the cards are the networks'
+#     published test numbers, and the AWS key is the one Amazon's own
+#     documentation uses as an example.
 #   - guardlab/standin.py is NOT A MODEL. It is a scoring rule the course
 #     wrote, with a bonus for Southeastern postcodes put there on purpose so
 #     that lesson 9 has a proxy to find. The shortlist decisions in
@@ -53,6 +60,10 @@
 #     stands in for the Receita Federal's public CNPJ data) and the usage
 #     log in data/partner-usage.jsonl were written by the course. The
 #     companies are invented; the CNPJ check-digit algorithm is the real one.
+#   - The model replies in data/outputs.jsonl were written by the course, each
+#     one to be caught by a different rule; `guard retry` replays them in
+#     place of a model's attempts. The requests in data/inputs.jsonl were
+#     written by the course too.
 #   - guardlab/moderation.py is NOT A MODERATION MODEL either: a list of
 #     English words with weights the course chose, answering with a score
 #     per category the way a moderation endpoint does. The sixty messages in
@@ -60,10 +71,6 @@
 #   - data/reply-4471.txt is what the course wrote in place of a model's
 #     reply to the minimised ticket. No model was called; it exists so that
 #     `guard restore` has placeholders to put back.
-#   - Every CPF, card number, phone number, e-mail address and key in them
-#     is invented. The CPFs have valid check digits on purpose, the cards are
-#     the networks' published test numbers, and the AWS key is the one
-#     Amazon's own documentation uses as an example.
 #
 # What IS real is everything the tools compute: every count, match and file
 # a lesson quotes was printed by running them.

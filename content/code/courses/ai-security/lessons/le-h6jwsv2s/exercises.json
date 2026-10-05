@@ -1,0 +1,509 @@
+[
+  {
+    "id": "ex-s4sd2f2z",
+    "version": 1,
+    "section": "inputs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each rejected request to the rule that caught it.",
+    "hint": "One rule on the right caught nothing in this run.",
+    "pairs": [
+      {
+        "left": "in-2",
+        "right": "A length limit on the description"
+      },
+      {
+        "left": "in-3",
+        "right": "An allowlist of fields"
+      },
+      {
+        "left": "in-4",
+        "right": "A closed list of categories"
+      },
+      {
+        "left": "in-6",
+        "right": "A type: money as an integer number of cents"
+      }
+    ],
+    "right_distractors": [
+      "A required field that was missing"
+    ]
+  },
+  {
+    "id": "ex-d3c1byr6",
+    "version": 1,
+    "section": "inputs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an allowlist of fields matter for a request that is turned into a prompt?",
+    "hint": "What does a builder that copies every field do with an extra one?",
+    "choices": [
+      {
+        "text": "Extra fields make the JSON invalid for the provider",
+        "correct": false,
+        "why": "The provider would accept it; the problem is what the prompt then says."
+      },
+      {
+        "text": "A copied extra field becomes text nobody wrote",
+        "correct": true,
+        "why": "Right: naming the accepted fields closes that path for nothing."
+      },
+      {
+        "text": "The LGPD forbids sending more than four fields to a model",
+        "correct": false,
+        "why": "There is no such number in the law; necessity is about purpose, not a count."
+      },
+      {
+        "text": "Fields are billed separately from the text of the prompt",
+        "correct": false,
+        "why": "Billing is by tokens, whatever field they came from."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7p61mw7",
+    "version": 1,
+    "section": "inputs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `in-5` refused although it reads like an ordinary sentence on most screens?",
+    "hint": "Who reads the characters in stored order, and who in drawn order?",
+    "choices": [
+      {
+        "text": "It is shorter than the minimum length of a description",
+        "correct": false,
+        "why": "It is 57 characters, and there is no minimum."
+      },
+      {
+        "text": "Its category is not on the closed list",
+        "correct": false,
+        "why": "Its category is design, which is on the list."
+      },
+      {
+        "text": "The model and a reviewer would read two different texts",
+        "correct": true,
+        "why": "Right: zero-width spaces and a right-to-left override change what is drawn, not what is stored."
+      },
+      {
+        "text": "Bakeries in Recife are not served by the intake",
+        "correct": false,
+        "why": "Nothing in the rules is about place."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbw7vxmr",
+    "version": 1,
+    "section": "inputs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`in-2`'s description is 5,145 characters and the limit is 2,000. By how many characters is it over?",
+    "hint": "Subtract.",
+    "value": 3145,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-4kfp49p3",
+    "version": 1,
+    "section": "inputs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes cutting long descriptions to 2,000 characters instead of refusing them. When does the lesson say cleaning is right?",
+    "hint": "Who decides what the client meant?",
+    "choices": [
+      {
+        "text": "Whenever possible, so the client sees no error",
+        "correct": false,
+        "why": "A cut description may lose the sentence that mattered, and the client would not know."
+      },
+      {
+        "text": "Never, because any change to what a user typed breaks the LGPD",
+        "correct": false,
+        "why": "Trimming spaces is a change, and nobody is harmed by it."
+      },
+      {
+        "text": "When the fix is certain and harmless, like trimming spaces",
+        "correct": true,
+        "why": "Right: cutting a description changes what the person meant without telling them."
+      },
+      {
+        "text": "When the model can work out from context which part was cut away",
+        "correct": false,
+        "why": "The model never sees the part that was cut."
+      }
+    ]
+  },
+  {
+    "id": "ex-qyry1gtv",
+    "version": 1,
+    "section": "outputs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson refuse `out-2` instead of finding the first `{` and parsing from there?",
+    "hint": "What else would that parser accept?",
+    "choices": [
+      {
+        "text": "Digging JSON out of prose accepts any reply with an object in it",
+        "correct": true,
+        "why": "Right: including a reply that says something else around the object."
+      },
+      {
+        "text": "Parsing from the first brace is slower than parsing the whole reply",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "The friendly sentence breaks the provider's billing",
+        "correct": false,
+        "why": "Billing does not depend on the shape of the reply."
+      },
+      {
+        "text": "JSON after a sentence is never valid, whatever the parser",
+        "correct": false,
+        "why": "It is valid once cut out; the danger is in the cutting."
+      }
+    ]
+  },
+  {
+    "id": "ex-d496m9wz",
+    "version": 1,
+    "section": "outputs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`out-5` suggests R$ 9.900,00 for a job with a R$ 1.200,00 budget, and passes the schema. Why?",
+    "hint": "What does a schema look at?",
+    "choices": [
+      {
+        "text": "The schema's maximum is set too high and should be lowered to fix it",
+        "correct": false,
+        "why": "Lowering the maximum would refuse expensive jobs that are legitimate."
+      },
+      {
+        "text": "A schema checks each value alone, and this rule relates two values",
+        "correct": true,
+        "why": "Right: the price and the budget are compared in code after the schema."
+      },
+      {
+        "text": "Prices are never checked, because the client can always negotiate",
+        "correct": false,
+        "why": "The lab checks it, in the rule after the schema."
+      },
+      {
+        "text": "The budget field is optional in the output",
+        "correct": false,
+        "why": "The budget is in the request, not in the reply."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsz6btnp",
+    "version": 1,
+    "section": "outputs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`out-6` links to `https://pay-tarefa.example/confirm`. Why does `^https://` pass it and the host allowlist refuse it?",
+    "hint": "Which part of the URL is the problem?",
+    "choices": [
+      {
+        "text": "The pattern checks the scheme; the host is the problem",
+        "correct": true,
+        "why": "Right: a lookalike host on https is still somebody else's page."
+      },
+      {
+        "text": "The pattern is checked on the first link of the list and not the rest",
+        "correct": false,
+        "why": "It applies to every item of the array."
+      },
+      {
+        "text": "HTTPS links are safe, so the host allowlist is just a second opinion",
+        "correct": false,
+        "why": "HTTPS says the connection is encrypted, not whose server it reaches."
+      },
+      {
+        "text": "The allowlist refuses any link with a path after the host",
+        "correct": false,
+        "why": "The allowed link to help.tarefa.example has a path and passes."
+      }
+    ]
+  },
+  {
+    "id": "ex-dne26yva",
+    "version": 1,
+    "section": "outputs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which schema keywords caught a reply in this lesson's run? Choose all that apply.",
+    "hint": "Read the paths in the rejections.",
+    "choices": [
+      {
+        "text": "`enum`, on the category of `out-3`",
+        "correct": true,
+        "why": "Yes: illustration is not one of the five."
+      },
+      {
+        "text": "`additionalProperties: false`, on `out-4`",
+        "correct": true,
+        "why": "Yes: internal_notes is not a named field."
+      },
+      {
+        "text": "`maxLength` and `maxItems`, on `out-7`",
+        "correct": true,
+        "why": "Yes: a 607-character summary and seven skills."
+      },
+      {
+        "text": "`minimum`, on the price of `out-5`",
+        "correct": false,
+        "why": "`out-5` was caught by the budget rule after the schema, not by a schema keyword."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfackpjj",
+    "version": 1,
+    "section": "outputs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Setting `additionalProperties` to ___ makes the schema refuse any field it does not name.",
+    "hint": "A JSON boolean.",
+    "blanks": [
+      {
+        "accept": [
+          "false"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-05aajzc2",
+    "version": 1,
+    "section": "outputs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A provider's structured output mode guarantees that replies are valid JSON matching a schema. What is left to check?",
+    "hint": "The format is settled. What about what is inside?",
+    "choices": [
+      {
+        "text": "Nothing more, since the mode already applies the whole of the schema",
+        "correct": false,
+        "why": "It settles the shape; rules like the budget and the host allowlist are not in any schema."
+      },
+      {
+        "text": "Whether the reply arrived before the request timed out",
+        "correct": false,
+        "why": "Arriving is not the same as being right."
+      },
+      {
+        "text": "The values: cross-field rules, hosts, the price",
+        "correct": true,
+        "why": "Right: a well-formed reply can still carry a lookalike link or an absurd price."
+      },
+      {
+        "text": "The spelling of the words in each string of the reply",
+        "correct": false,
+        "why": "Spelling is not a validation rule here."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4851k33",
+    "version": 1,
+    "section": "failing-well",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the lab's retry loop send to the model on the second attempt?",
+    "hint": "Look at `feedback`.",
+    "choices": [
+      {
+        "text": "The same prompt, unchanged, in the hope of a different reply",
+        "correct": false,
+        "why": "It passes the problems along, so the retry knows what was wrong."
+      },
+      {
+        "text": "The validator's list of what was wrong with the previous reply",
+        "correct": true,
+        "why": "Right: the messages are written to be read by the model as well as a person."
+      },
+      {
+        "text": "The previous reply, corrected by the validator",
+        "correct": false,
+        "why": "The validator reports; it never corrects."
+      },
+      {
+        "text": "A request to switch to a larger model",
+        "correct": false,
+        "why": "The loop calls the same `call` each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-hbnn7akw",
+    "version": 1,
+    "section": "failing-well",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After two rejected attempts, what reaches the client in the lab's design?",
+    "hint": "A validator fails closed.",
+    "choices": [
+      {
+        "text": "The second reply, marked as unverified",
+        "correct": false,
+        "why": "Showing it defeats the validator."
+      },
+      {
+        "text": "The first reply, since its problems were smaller",
+        "correct": false,
+        "why": "Neither reply passed; neither is shown."
+      },
+      {
+        "text": "Nothing from them; a person takes the job",
+        "correct": true,
+        "why": "Right: a reply that could not be checked is treated as a reply that failed."
+      },
+      {
+        "text": "A third attempt, and then a fourth until one passes",
+        "correct": false,
+        "why": "The loop has a hard limit; without one, a bad day costs without end."
+      }
+    ]
+  },
+  {
+    "id": "ex-sw7nbshr",
+    "version": 1,
+    "section": "failing-well",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson set `max_tokens` close to what the schema allows instead of generously high?",
+    "hint": "What does a rambling reply cost, and how does it end?",
+    "choices": [
+      {
+        "text": "Providers refuse requests whose `max_tokens` is set above 400 tokens",
+        "correct": false,
+        "why": "No such rule; the limit is the developer's choice."
+      },
+      {
+        "text": "A short limit makes the model write more carefully",
+        "correct": false,
+        "why": "The limit cuts the reply; it does not change how it is written."
+      },
+      {
+        "text": "Low limits are required by the LGPD's necessity principle",
+        "correct": false,
+        "why": "Necessity is about personal data, not about reply length."
+      },
+      {
+        "text": "A rambling reply fails fast and cheap; retry handles it",
+        "correct": true,
+        "why": "Right: the schema caps the summary anyway, so the extra tokens buy nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-emdy8g8m",
+    "version": 1,
+    "section": "failing-well",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each limit to what it bounds.",
+    "hint": "One bound on the right has no limit in this lesson.",
+    "pairs": [
+      {
+        "left": "attempts per request",
+        "right": "How often one request is retried"
+      },
+      {
+        "left": "`max_tokens` on each call",
+        "right": "The length and cost of one reply"
+      },
+      {
+        "left": "tokens per user per day",
+        "right": "What one person can spend"
+      },
+      {
+        "left": "tool calls per task",
+        "right": "How far an agent goes before it stops"
+      }
+    ],
+    "right_distractors": [
+      "How many providers one key can reach"
+    ]
+  },
+  {
+    "id": "ex-1h0xq28d",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the path of one job request through the intake in order.",
+    "hint": "Check before and after the model, then decide.",
+    "items": [
+      "Check the request against the input rules",
+      "Call the model with `max_tokens` set",
+      "Check the reply against the schema, the budget rule and the host allowlist",
+      "Retry once with the problems, or hand the job to a person"
+    ]
+  },
+  {
+    "id": "ex-k2sffgs9",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the seven replies in `data/outputs.jsonl`, how many did `guard check-out` reject?",
+    "hint": "Count the REJECT lines that start a reply.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "replies"
+  },
+  {
+    "id": "ex-c6g05bvt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The intake's daily rejection count doubles the morning after the provider updates its model. What does the lesson say this is?",
+    "hint": "What changed, and who noticed first?",
+    "choices": [
+      {
+        "text": "Noise: rejection counts vary from day to day for no reason",
+        "correct": false,
+        "why": "Doubling the morning after an update is a signal with a cause next to it."
+      },
+      {
+        "text": "The validator is too strict and should be loosened",
+        "correct": false,
+        "why": "Loosening the rules to match a worse model hides the change it found."
+      },
+      {
+        "text": "Proof that the new model is unsafe and must be blocked",
+        "correct": false,
+        "why": "It is evidence of a change, to be investigated; not proof of anything yet."
+      },
+      {
+        "text": "The first sign of a change, before any client complains",
+        "correct": true,
+        "why": "Right: the count is in the metrics tier of lesson 21, with no text in it."
+      }
+    ]
+  }
+]
