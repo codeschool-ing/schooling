@@ -281,7 +281,9 @@ class Handler(BaseHTTPRequestHandler):
             raise Refusal(401, "authentication_error", {
                 "anthropic": "invalid x-api-key", "google": "API key not valid. Please pass a valid API key.",
                 "cohere": "invalid api token"}.get(provider, "Incorrect API key provided"))
-        if provider == "anthropic" and not self.headers.get("anthropic-version"):
+        # the version header belongs to the Messages API; the OpenAI-compatible path does without
+        if provider == "anthropic" and not self.headers.get("anthropic-version") \
+                and self.path.split("?")[0] != "/v1/chat/completions":
             raise Refusal(400, "invalid_request_error", "anthropic-version: header is required")
         with LOCK:
             if CONFIG["fail_count"]:

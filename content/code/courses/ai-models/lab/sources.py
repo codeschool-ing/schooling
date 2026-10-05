@@ -98,6 +98,7 @@ PAGES = {
     "claude-errors": "https://platform.claude.com/docs/en/api/errors",
     "claude-rate-limits": "https://platform.claude.com/docs/en/api/rate-limits",
     "claude-versioning": "https://platform.claude.com/docs/en/api/versioning",
+    "claude-openai-compat": "https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk",
 }
 
 
