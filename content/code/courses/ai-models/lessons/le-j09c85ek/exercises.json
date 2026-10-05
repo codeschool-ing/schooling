@@ -1,0 +1,366 @@
+[
+  {
+    "id": "ex-cv5z9889",
+    "version": 1,
+    "section": "shape",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each Chat Completions field to its Responses counterpart.",
+    "hint": "Section 02's table.",
+    "pairs": [
+      {
+        "left": "a system message",
+        "right": "instructions"
+      },
+      {
+        "left": "messages",
+        "right": "input"
+      },
+      {
+        "left": "choices[0].message.content",
+        "right": "output_text"
+      },
+      {
+        "left": "prompt_tokens",
+        "right": "input_tokens"
+      }
+    ],
+    "right_distractors": [
+      "previous_messages"
+    ]
+  },
+  {
+    "id": "ex-kvcbzyng",
+    "version": 1,
+    "section": "shape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is output a list in the Responses API?",
+    "hint": "What else can a response hold?",
+    "choices": [
+      {
+        "text": "It holds one answer per choice requested",
+        "correct": false,
+        "why": "That is Chat Completions' choices."
+      },
+      {
+        "text": "A response holds several kinds of item",
+        "correct": true,
+        "why": "Right: messages, reasoning, tool calls."
+      },
+      {
+        "text": "Each token is an item",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "It keeps the earlier turns of the conversation",
+        "correct": false,
+        "why": "Those are kept by previous_response_id."
+      }
+    ]
+  },
+  {
+    "id": "ex-sg92tjrv",
+    "version": 1,
+    "section": "state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A second request carries previous_response_id but no instructions. What does the model read?",
+    "hint": "The docstring of instructions.",
+    "choices": [
+      {
+        "text": "The history and the earlier instructions",
+        "correct": false,
+        "why": "Instructions are not carried over."
+      },
+      {
+        "text": "The history, without instructions",
+        "correct": true,
+        "why": "Right: 49 tokens in chain.py."
+      },
+      {
+        "text": "Only the new input",
+        "correct": false,
+        "why": "The history is read."
+      },
+      {
+        "text": "Nothing: the request is refused",
+        "correct": false,
+        "why": "It succeeds."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3kxm30s",
+    "version": 1,
+    "section": "state",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With previous_response_id, ana sends one short e-mail per turn. What happens to the input tokens she is billed for, turn after turn?",
+    "hint": "What does the model read?",
+    "choices": [
+      {
+        "text": "They stay the size of one e-mail",
+        "correct": false,
+        "why": "The model reads the history."
+      },
+      {
+        "text": "Zero after turn one",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "They grow with the history the model reads",
+        "correct": true,
+        "why": "Right: the saving is in what she sends."
+      },
+      {
+        "text": "They are not billed when stored",
+        "correct": false,
+        "why": "Nothing says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-kh5xra8z",
+    "version": 1,
+    "section": "store",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By the SDK's documentation, for at least how many days is a stored response kept?",
+    "hint": "The store parameter.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-ed51kb2m",
+    "version": 1,
+    "section": "store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ana's sorting never chains responses. Which setting suits it?",
+    "hint": "Nothing to keep.",
+    "choices": [
+      {
+        "text": "The default, so that answers can be audited later through the API",
+        "correct": false,
+        "why": "Her own log is the place for that."
+      },
+      {
+        "text": "store=False",
+        "correct": true,
+        "why": "Right: it costs nothing."
+      },
+      {
+        "text": "truncation=\"auto\"",
+        "correct": false,
+        "why": "That is about long input."
+      },
+      {
+        "text": "previous_response_id on every call",
+        "correct": false,
+        "why": "That chains them."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbp9ar5d",
+    "version": 1,
+    "section": "store",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "ana deletes a stored response and retrieve returns 404. What does that establish?",
+    "hint": "What the API returns, and what else.",
+    "choices": [
+      {
+        "text": "That OpenAI holds no copy of the e-mail anywhere",
+        "correct": false,
+        "why": "The data policy governs that."
+      },
+      {
+        "text": "That the API no longer returns it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "That it was never stored in the first place",
+        "correct": false,
+        "why": "It was retrieved before."
+      },
+      {
+        "text": "That the key was revoked",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-f11rhr58",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Responses request is longer than the model's window and sets no truncation. What happens?",
+    "hint": "The default is disabled.",
+    "choices": [
+      {
+        "text": "A 400 error",
+        "correct": true,
+        "why": "Right, unlike lesson 14's Ollama."
+      },
+      {
+        "text": "The oldest items are dropped silently",
+        "correct": false,
+        "why": "That is auto."
+      },
+      {
+        "text": "The newest items are dropped",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "It hangs until the client times out",
+        "correct": false,
+        "why": "It answers at once, with an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1fer27a",
+    "version": 1,
+    "section": "limits",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "standin-small's window is 32,768 tokens and the stand-in keeps 1,024 for output. What is the most input truncation=auto can leave?",
+    "hint": "Subtract.",
+    "value": 31744,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-t5v2bxab",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "responses.parse returns Order(order='LB-20471') for an e-mail about LB-20417. Which check catches it?",
+    "hint": "Neither promise covers the value.",
+    "choices": [
+      {
+        "text": "The SDK's parse, which validates against the class",
+        "correct": false,
+        "why": "It is a valid Order."
+      },
+      {
+        "text": "strict mode",
+        "correct": false,
+        "why": "The schema is satisfied."
+      },
+      {
+        "text": "Comparing it with the expected answer",
+        "correct": true,
+        "why": "Right: lesson 5."
+      },
+      {
+        "text": "The HTTP status",
+        "correct": false,
+        "why": "It is 200."
+      }
+    ]
+  },
+  {
+    "id": "ex-q32wn5ye",
+    "version": 1,
+    "section": "limits",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the Responses API, the parameter that carries a JSON Schema for the answer is text.___.",
+    "hint": "The wire capture.",
+    "blanks": [
+      {
+        "accept": [
+          "format"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2wq7a9b4",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are defaults of the Responses API, as the SDK documents them? Choose all that apply.",
+    "hint": "store and truncation.",
+    "choices": [
+      {
+        "text": "Responses are stored",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Too long an input is refused",
+        "correct": true,
+        "why": "Yes: truncation disabled."
+      },
+      {
+        "text": "Instructions carry over to the next turn",
+        "correct": false,
+        "why": "They do not."
+      },
+      {
+        "text": "Output is plain text",
+        "correct": false,
+        "why": "Can be either; it is not one of the defaults quoted."
+      }
+    ]
+  },
+  {
+    "id": "ex-9xb94mz9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ana's harness speaks Chat Completions. What does moving it to the Responses API change about what it measures?",
+    "hint": "Section 02's last paragraph.",
+    "choices": [
+      {
+        "text": "The accuracy of the model",
+        "correct": false,
+        "why": "The model is the same."
+      },
+      {
+        "text": "Nothing; only the code reading replies",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The price per token",
+        "correct": false,
+        "why": "Same model, same price."
+      },
+      {
+        "text": "The tokenizer",
+        "correct": false,
+        "why": "Same model."
+      }
+    ]
+  }
+]

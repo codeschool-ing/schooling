@@ -1,0 +1,401 @@
+{
+  "ex-1jdrjery": {
+    "prompt": "Ponha as camadas de um modelo auto-hospedado em ordem, de baixo até a que o seu programa chama.",
+    "hint": "A figura da seção 02, de baixo para cima.",
+    "items": [
+      "O hardware",
+      "Os pesos",
+      "O runtime",
+      "O servidor"
+    ],
+    "trap": "O runtime carrega os pesos, então os pesos ficam abaixo dele."
+  },
+  "ex-d2861fsy": {
+    "prompt": "Qual número, sozinho, decide se um modelo roda ou não numa máquina?",
+    "hint": "Não com que velocidade; se roda.",
+    "choices": [
+      {
+        "text": "O número de núcleos do processador",
+        "why": "Núcleos importam para alguns runtimes; não decidem se os pesos cabem."
+      },
+      {
+        "text": "A velocidade da conexão de rede com a máquina",
+        "why": "A rede leva requisições; não guarda o modelo."
+      },
+      {
+        "text": "A memória do acelerador",
+        "why": "Isso. Pesos que não cabem não rodam, ou rodam de uma memória mais lenta."
+      },
+      {
+        "text": "O tamanho do disco onde os pesos ficam",
+        "why": "O disco guarda; a geração lê da memória."
+      }
+    ]
+  },
+  "ex-wr285bw0": {
+    "prompt": "Um modelo auto-hospedado passa numa checagem de saúde que manda 'olá' a cada minuto, mas falha com alguns e-mails reais. Que causa a seção 07 descreve?",
+    "hint": "Do que um prompt longo precisa que um curto não precisa?",
+    "choices": [
+      {
+        "text": "O modelo recusa e-mails que contêm endereços",
+        "why": "Nada na aula sugere uma recusa."
+      },
+      {
+        "text": "A memória acaba em prompts longos enquanto os curtos ainda cabem",
+        "why": "Isso. O cache cresce com o prompt, e o 'olá' nunca o faz crescer."
+      },
+      {
+        "text": "A checagem de saúde gasta o limite de requisições",
+        "why": "Um servidor auto-hospedado não tem limite a menos que você ponha um."
+      },
+      {
+        "text": "O runtime só suporta inglês",
+        "why": "Idiomas pertencem ao modelo, não ao runtime."
+      }
+    ]
+  },
+  "ex-fxmeab9c": {
+    "prompt": "Um modelo tem 8 bilhões de parâmetros guardados com 16 bits cada. Quantos gigabytes os pesos ocupam?",
+    "hint": "Dezesseis bits são dois bytes.",
+    "unit": "GB"
+  },
+  "ex-3pmpw0wy": {
+    "prompt": "O mesmo modelo de 8 bilhões de parâmetros é quantizado para 4 bits. Quantos gigabytes os pesos ocupam agora?",
+    "hint": "Meio byte por parâmetro.",
+    "unit": "GB"
+  },
+  "ex-1c7txxvj": {
+    "prompt": "Por que o '8B' no nome de um modelo não é o número exato de parâmetros?",
+    "hint": "O size.py imprimiu o exato.",
+    "choices": [
+      {
+        "text": "Arredonda 8.030.261.248",
+        "why": "Isso, e o número exato sai da arquitetura publicada."
+      },
+      {
+        "text": "Conta só as camadas que são treinadas",
+        "why": "Todo parâmetro é treinado; o nome é um arredondamento."
+      },
+      {
+        "text": "Conta tokens nos dados de treino, em bilhões",
+        "why": "O cartão dá uns 15 trilhões de tokens de treino, outro número."
+      },
+      {
+        "text": "Os provedores arredondam para cima por marketing, e o número real é bem menor que o rótulo",
+        "why": "O número real é um pouco maior, e foi arredondado, não inflado."
+      }
+    ]
+  },
+  "ex-440cpwpn": {
+    "prompt": "A Llama 3.1 8B precisa de 128 KiB de cache KV por token. Quatro requisições de 8.192 tokens são atendidas ao mesmo tempo. O que o cache acrescenta aos 4 GB de pesos em 4 bits?",
+    "hint": "1 GiB por requisição desse tamanho.",
+    "choices": [
+      {
+        "text": "Nada: o cache fica no disco",
+        "why": "Ele fica na memória do acelerador, ao lado dos pesos."
+      },
+      {
+        "text": "1 GiB, dividido pelas quatro requisições",
+        "why": "Cada requisição em atendimento precisa do próprio cache."
+      },
+      {
+        "text": "Uns 4 GiB, tanto quanto os pesos",
+        "why": "Isso. Com contextos longos e vários usuários, o cache rivaliza com o modelo."
+      },
+      {
+        "text": "128 KiB, já que o cache é por token e não por requisição",
+        "why": "É por token de cada requisição: 128 KiB vezes 8.192 vezes quatro."
+      }
+    ]
+  },
+  "ex-k4mgesec": {
+    "prompt": "O que é quantização?",
+    "hint": "Mesmos pesos, menos bits.",
+    "choices": [
+      {
+        "text": "Treinar um modelo menor para imitar um maior",
+        "why": "Isso é destilação, que a aula 2 viu nos destilados do R1."
+      },
+      {
+        "text": "Guardar os mesmos pesos com menos precisão",
+        "why": "Isso. Números de 16 bits viram de 8 ou de 4."
+      },
+      {
+        "text": "Remover as camadas que menos contribuem",
+        "why": "Isso é poda; a quantização mantém todos os pesos."
+      },
+      {
+        "text": "Dividir um modelo entre várias máquinas para cada uma guardar uma parte",
+        "why": "Isso divide a carga de memória sem mudar a precisão."
+      }
+    ]
+  },
+  "ex-b929bke4": {
+    "prompt": "Qual tarefa da ana corre mais risco com um modelo quantizado em 4 bits, e por quê?",
+    "hint": "Quais tarefas sofrem primeiro?",
+    "choices": [
+      {
+        "text": "Classificar, porque cinco rótulos pedem mais precisão que três",
+        "why": "O número de rótulos não é o que a precisão afeta."
+      },
+      {
+        "text": "Rascunhar respostas, porque texto longo usa mais memória",
+        "why": "Memória é sobre caber; esta pergunta é sobre qualidade."
+      },
+      {
+        "text": "Extração, já que JSON exato é um formato preciso",
+        "why": "Isso. Formatos rígidos estão entre as primeiras coisas a sofrer, então é o que conferir."
+      },
+      {
+        "text": "Nenhuma: quatro bits não perdem nada",
+        "why": "Quatro bits perdem um pouco, de modo desigual."
+      }
+    ]
+  },
+  "ex-r4q4etb7": {
+    "prompt": "Como uma versão em 4 bits de um modelo que a ana avalia deve aparecer na avaliação da aula 5?",
+    "hint": "É o mesmo candidato?",
+    "choices": [
+      {
+        "text": "Herda a nota do de 16 bits, já que os pesos são os mesmos",
+        "why": "São os mesmos pesos em outra precisão, o que pode mudar respostas."
+      },
+      {
+        "text": "Como linha própria, com nota própria",
+        "why": "Isso. Ele só é mais barato se a nota ainda for boa o bastante."
+      },
+      {
+        "text": "Fica de fora, porque modelos quantizados não podem ser avaliados contra uma API",
+        "why": "Qualquer modelo que responde pode ser avaliado."
+      },
+      {
+        "text": "Como nota de rodapé da linha de 16 bits",
+        "why": "Uma nota de rodapé esconde exatamente a diferença que importa."
+      }
+    ]
+  },
+  "ex-918cefnw": {
+    "prompt": "Por que a velocidade de geração para uma requisição sozinha depende sobretudo da largura de banda de memória?",
+    "hint": "O que é lido a cada token?",
+    "choices": [
+      {
+        "text": "Porque os tokens são guardados na memória antes de serem enviados",
+        "why": "Uns poucos tokens são minúsculos; os pesos não."
+      },
+      {
+        "text": "Porque o prompt é copiado a cada token",
+        "why": "O cache existe justamente para evitar isso."
+      },
+      {
+        "text": "Porque a aritmética em aceleradores é lenta",
+        "why": "A aritmética é rápida; a espera é pelos dados."
+      },
+      {
+        "text": "Cada peso é lido uma vez por token novo",
+        "why": "Isso, então a velocidade é mais ou menos a largura de banda dividida pelo tamanho dos pesos."
+      }
+    ]
+  },
+  "ex-63rff6hf": {
+    "prompt": "Com 2.000 GB/s de largura de banda de memória, qual é o teto em tokens por segundo para um modelo cujos pesos ocupam 40 GB?",
+    "hint": "Largura de banda dividida pelo tamanho dos pesos.",
+    "unit": "tokens por segundo"
+  },
+  "ex-qny6w51n": {
+    "prompt": "Um servidor junta requisições em lotes. O que acontece com a vazão total e com a velocidade de cada requisição?",
+    "hint": "Os pesos são lidos uma vez por passo para todos.",
+    "choices": [
+      {
+        "text": "A vazão total sobe; cada requisição fica um pouco mais lenta",
+        "why": "Isso, e é assim que uma máquina ocupada fica barata por token."
+      },
+      {
+        "text": "As duas sobem, já que os pesos são lidos menos vezes",
+        "why": "Cada requisição agora divide cada passo com outras."
+      },
+      {
+        "text": "As duas caem, porque o lote precisa esperar o membro mais lento",
+        "why": "A vazão total é justamente o que o lote aumenta."
+      },
+      {
+        "text": "Nada muda; lotes só economizam memória",
+        "why": "Lotes mudam a vazão, com algum custo de memória."
+      }
+    ]
+  },
+  "ex-mtq65t69": {
+    "prompt": "Uma requisição custa US$ 69 por milhão de requisições numa API, e uma máquina custa US$ 1.500 por mês. Quantas requisições por mês fazem os dois custarem o mesmo? Responda em milhões, com uma casa decimal.",
+    "hint": "1.500 dividido por 69, em milhões.",
+    "unit": "milhões de requisições"
+  },
+  "ex-vaxpx5nv": {
+    "prompt": "Na seção 06, o que é real e o que é suposição do curso?",
+    "hint": "Quais números vieram de uma captura?",
+    "choices": [
+      {
+        "text": "Os preços são supostos; o volume de e-mail é medido",
+        "why": "É o contrário nos dois casos."
+      },
+      {
+        "text": "Contagens de tokens e preços são reais; volume e custo da máquina são supostos",
+        "why": "Isso, e a aula diz qual é qual ao lado de cada número."
+      },
+      {
+        "text": "Tudo é medido no tráfego real da Lantern Books",
+        "why": "A Lantern Books não existe; o volume dela é uma suposição."
+      },
+      {
+        "text": "Tudo é suposição",
+        "why": "As contagens foram feitas por um tokenizador real e os preços lidos da tabela."
+      }
+    ]
+  },
+  "ex-0kxnyx4j": {
+    "prompt": "A tarefa de rascunho da ana manda um prompt de 2.000 tokens e recebe 300 de volta. Comparada com a classificação, o que acontece com o volume de equilíbrio de uma máquina?",
+    "hint": "Custo por requisição, depois a divisão.",
+    "choices": [
+      {
+        "text": "Sobe, porque respostas longas são mais lentas",
+        "why": "Velocidade não entra na conta de equilíbrio; custo por requisição entra."
+      },
+      {
+        "text": "Fica igual, já que o custo da máquina é fixo",
+        "why": "O lado da API na comparação muda."
+      },
+      {
+        "text": "Dobra, porque agora são duas tarefas",
+        "why": "O número de tarefas não é o fator."
+      },
+      {
+        "text": "Cai, na mesma proporção em que o custo por requisição sobe",
+        "why": "Isso. Requisições mais caras fazem a máquina se pagar com volume menor."
+      }
+    ]
+  },
+  "ex-3xwndmaw": {
+    "prompt": "Quais destes viram trabalho seu quando você auto-hospeda? Marque todos os que se aplicam.",
+    "hint": "A lista da seção 07.",
+    "choices": [
+      {
+        "text": "Aplicar patches no runtime e nos drivers",
+        "why": "Sim."
+      },
+      {
+        "text": "Acrescentar capacidade quando a carga cresce",
+        "why": "Sim."
+      },
+      {
+        "text": "Responder quando ele para num domingo",
+        "why": "Sim."
+      },
+      {
+        "text": "Treinar o modelo de novo todo mês",
+        "why": "Nada exige treinar de novo; um modelo no disco fica como está."
+      }
+    ]
+  },
+  "ex-b90mv6qp": {
+    "prompt": "Por que uma máquina auto-hospedada precisa ser dimensionada para o pico e não para a média?",
+    "hint": "Quando os e-mails chegam?",
+    "choices": [
+      {
+        "text": "Porque runtimes se recusam a iniciar abaixo de uma carga mínima",
+        "why": "Runtimes iniciam bem sem nada para fazer."
+      },
+      {
+        "text": "A capacidade é fixa, e a carga vem em amontoados",
+        "why": "Isso. A frota de um provedor absorve o amontoado; uma máquina tem o que tem."
+      },
+      {
+        "text": "Porque o preço por hora sobe com o uso",
+        "why": "Uma máquina custa o mesmo por hora, ocupada ou parada."
+      },
+      {
+        "text": "Porque os pesos crescem nos períodos de pico e encolhem depois que a carga passa",
+        "why": "Os pesos não mudam de tamanho."
+      }
+    ]
+  },
+  "ex-pvyz2zv5": {
+    "prompt": "Os prontuários de um hospital não podem sair do prédio. O volume é pequeno e a conta favorece uma API. O que diz a seção 08?",
+    "hint": "Um filtro, não uma nota.",
+    "choices": [
+      {
+        "text": "Usar a API: a conta decide",
+        "why": "Uma linha que se aplica de verdade pesa mais que a conta."
+      },
+      {
+        "text": "Auto-hospedar; a exigência decide",
+        "why": "Isso. O trabalho da seção 07 vira o preço de uma exigência."
+      },
+      {
+        "text": "Usar um modelo aberto num host, que mantém os dados dentro",
+        "why": "Um host recebe os dados."
+      },
+      {
+        "text": "Esperar o volume crescer o bastante para justificar uma máquina",
+        "why": "Volume não é a linha que se aplica aqui."
+      }
+    ]
+  },
+  "ex-cp06f9bh": {
+    "prompt": "Ligue cada situação ao motivo da seção 08 em que ela se encaixa.",
+    "hint": "A primeira coluna da tabela.",
+    "pairs": [
+      {
+        "left": "O sistema de um navio sem conexão no mar",
+        "right": "Sem rede"
+      },
+      {
+        "left": "Um contrato proíbe mandar texto a terceiros",
+        "right": "Os dados não podem sair"
+      },
+      {
+        "left": "O modelo não pode mudar até a equipe decidir",
+        "right": "Controle do tempo"
+      },
+      {
+        "left": "Um modelo com fine-tuning que nenhum host oferece",
+        "right": "Um modelo que ninguém vende"
+      }
+    ],
+    "right_distractors": [
+      "Um preço por token mais barato"
+    ]
+  },
+  "ex-b75hnddv": {
+    "prompt": "Qual caminho do meio mantém os dados numa conta que a Lantern Books controla sem ela mesma rodar a máquina?",
+    "hint": "Seção 08, 'Dois caminhos do meio'.",
+    "choices": [
+      {
+        "text": "Um modelo aberto num host terceiro",
+        "why": "Os dados vão para o host."
+      },
+      {
+        "text": "Um modelo fechado na rota global do autor",
+        "why": "Isso manda os dados para onde houver capacidade."
+      },
+      {
+        "text": "Uma implantação dedicada na própria conta de nuvem",
+        "why": "Isso. Outra pessoa roda; os dados ficam numa conta que ela controla."
+      },
+      {
+        "text": "Um modelo quantizado num notebook",
+        "why": "Isso é auto-hospedar, com máquina e tudo."
+      }
+    ]
+  },
+  "ex-vyqc6e4b": {
+    "prompt": "O cache que um runtime guarda para não recalcular o prompt a cada token novo se chama cache ___.",
+    "hint": "Duas letras: o que ele guarda para cada token.",
+    "blanks": [
+      {
+        "accept": [
+          "KV",
+          "chave-valor",
+          "chave valor"
+        ]
+      }
+    ]
+  }
+}

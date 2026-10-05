@@ -1,0 +1,603 @@
+[
+  {
+    "id": "ex-1jdrjery",
+    "version": 1,
+    "section": "what-you-run",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the layers of a self-hosted model in order, from the bottom to the one your program calls.",
+    "hint": "Section 02's figure, bottom up.",
+    "items": [
+      "The hardware",
+      "The weights",
+      "The runtime",
+      "The server"
+    ],
+    "trap": "The runtime loads the weights, so the weights sit below it."
+  },
+  {
+    "id": "ex-d2861fsy",
+    "version": 1,
+    "section": "what-you-run",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which single number decides whether a model runs on a given machine at all?",
+    "hint": "Not how fast; whether.",
+    "choices": [
+      {
+        "text": "The number of processor cores",
+        "correct": false,
+        "why": "Cores matter for some runtimes; they do not decide whether the weights fit."
+      },
+      {
+        "text": "The speed of the network connection to the machine",
+        "correct": false,
+        "why": "The network carries requests; it does not hold the model."
+      },
+      {
+        "text": "Accelerator memory",
+        "correct": true,
+        "why": "Right. Weights that do not fit do not run, or run from slower memory."
+      },
+      {
+        "text": "The size of the disk the weights are stored on",
+        "correct": false,
+        "why": "A disk stores them; generation reads them from memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-wr285bw0",
+    "version": 1,
+    "section": "what-you-run",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A self-hosted model passes a health check that sends 'hello' every minute, yet fails on some real e-mails. Which cause does section 07 describe?",
+    "hint": "What does a long prompt need that a short one does not?",
+    "choices": [
+      {
+        "text": "The model refuses e-mails that contain addresses",
+        "correct": false,
+        "why": "Nothing in the lesson suggests a refusal."
+      },
+      {
+        "text": "Memory runs out on long prompts while short ones still fit",
+        "correct": true,
+        "why": "Right. The cache grows with the prompt, and 'hello' never grows it."
+      },
+      {
+        "text": "The health check uses up the rate limit",
+        "correct": false,
+        "why": "A self-hosted server has no rate limit unless you add one."
+      },
+      {
+        "text": "The runtime only supports English",
+        "correct": false,
+        "why": "Languages belong to the model, not the runtime."
+      }
+    ]
+  },
+  {
+    "id": "ex-fxmeab9c",
+    "version": 1,
+    "section": "memory",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A model has 8 billion parameters stored at 16 bits each. How many gigabytes do the weights take?",
+    "hint": "Sixteen bits is two bytes.",
+    "value": 16,
+    "tolerance": 0.5,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-3pmpw0wy",
+    "version": 1,
+    "section": "memory",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same 8-billion-parameter model is quantised to 4 bits. How many gigabytes do the weights take now?",
+    "hint": "Half a byte per parameter.",
+    "value": 4,
+    "tolerance": 0.25,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-1c7txxvj",
+    "version": 1,
+    "section": "memory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is '8B' in a model's name not the exact number of parameters?",
+    "hint": "size.py printed the exact one.",
+    "choices": [
+      {
+        "text": "It rounds 8,030,261,248",
+        "correct": true,
+        "why": "Right, and the exact number follows from the published architecture."
+      },
+      {
+        "text": "It counts only the layers that are trained",
+        "correct": false,
+        "why": "Every parameter is trained; the name is a rounding."
+      },
+      {
+        "text": "It counts tokens in the training data, in billions",
+        "correct": false,
+        "why": "The card gives about 15 trillion tokens of training data, a different number."
+      },
+      {
+        "text": "Providers round it up for marketing, and the true count is much lower than the label",
+        "correct": false,
+        "why": "The true count is slightly higher, and it was rounded, not inflated."
+      }
+    ]
+  },
+  {
+    "id": "ex-440cpwpn",
+    "version": 1,
+    "section": "memory",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Llama 3.1 8B needs 128 KiB of KV cache per token. Four requests of 8,192 tokens are served at once. What does the cache add to the 4 GB of 4-bit weights?",
+    "hint": "1 GiB per request of that length.",
+    "choices": [
+      {
+        "text": "Nothing: the cache lives on the disk",
+        "correct": false,
+        "why": "It is held in accelerator memory, beside the weights."
+      },
+      {
+        "text": "1 GiB, shared by the four requests",
+        "correct": false,
+        "why": "Each request being served needs its own cache."
+      },
+      {
+        "text": "About 4 GiB, as much again as the weights",
+        "correct": true,
+        "why": "Right. At long contexts and several users, the cache rivals the model."
+      },
+      {
+        "text": "128 KiB, since the cache is per token and not per request",
+        "correct": false,
+        "why": "It is per token of every request: 128 KiB times 8,192 times four."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4mgesec",
+    "version": 1,
+    "section": "quantisation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is quantisation?",
+    "hint": "Same weights, fewer bits.",
+    "choices": [
+      {
+        "text": "Training a smaller model to imitate a larger one",
+        "correct": false,
+        "why": "That is distillation, which lesson 2 met in R1's distills."
+      },
+      {
+        "text": "Storing the same weights with less precision",
+        "correct": true,
+        "why": "Right. 16-bit numbers become 8- or 4-bit ones."
+      },
+      {
+        "text": "Removing the layers that contribute least",
+        "correct": false,
+        "why": "That is pruning; quantisation keeps every weight."
+      },
+      {
+        "text": "Splitting a model across several machines so each holds part of it",
+        "correct": false,
+        "why": "That shares the memory load without changing precision."
+      }
+    ]
+  },
+  {
+    "id": "ex-b929bke4",
+    "version": 1,
+    "section": "quantisation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of ana's tasks is most at risk from a 4-bit quantised model, and why?",
+    "hint": "Which tasks suffer first?",
+    "choices": [
+      {
+        "text": "Sorting, because five labels need more precision than three",
+        "correct": false,
+        "why": "The number of labels is not what precision affects."
+      },
+      {
+        "text": "Drafting replies, because long text uses more memory",
+        "correct": false,
+        "why": "Memory is about fitting; this question is about quality."
+      },
+      {
+        "text": "Extraction, since exact JSON is a precise format",
+        "correct": true,
+        "why": "Right. Strict formats are among the first things to suffer, so they are what to check."
+      },
+      {
+        "text": "None of them: four bits loses nothing",
+        "correct": false,
+        "why": "Four bits loses a little, unevenly."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4q4etb7",
+    "version": 1,
+    "section": "quantisation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How should a 4-bit version of a model ana is evaluating appear in lesson 5's evaluation?",
+    "hint": "Is it the same candidate?",
+    "choices": [
+      {
+        "text": "It inherits the 16-bit score, as the weights are the same",
+        "correct": false,
+        "why": "They are the same weights at different precision, which can change answers."
+      },
+      {
+        "text": "As its own row, with its own score",
+        "correct": true,
+        "why": "Right. It is only cheaper if its score is still good enough."
+      },
+      {
+        "text": "It is left out, because quantised models cannot be evaluated against an API",
+        "correct": false,
+        "why": "Any model that answers can be evaluated."
+      },
+      {
+        "text": "As a footnote to the 16-bit row",
+        "correct": false,
+        "why": "A footnote hides exactly the difference that matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-918cefnw",
+    "version": 1,
+    "section": "throughput",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does generation speed for a single request depend mostly on memory bandwidth?",
+    "hint": "What is read for every token?",
+    "choices": [
+      {
+        "text": "Because tokens are stored in memory before being sent",
+        "correct": false,
+        "why": "A few tokens are tiny; the weights are not."
+      },
+      {
+        "text": "Because the prompt is copied in for every token",
+        "correct": false,
+        "why": "The cache exists precisely to avoid that."
+      },
+      {
+        "text": "Because arithmetic on accelerators is slow",
+        "correct": false,
+        "why": "The arithmetic is quick; the waiting is for data."
+      },
+      {
+        "text": "Every weight is read once per new token",
+        "correct": true,
+        "why": "Right, so speed is roughly bandwidth over the size of the weights."
+      }
+    ]
+  },
+  {
+    "id": "ex-63rff6hf",
+    "version": 1,
+    "section": "throughput",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With 2,000 GB/s of memory bandwidth, what is the ceiling in tokens per second for a model whose weights take 40 GB?",
+    "hint": "Bandwidth divided by the size of the weights.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "tokens per second"
+  },
+  {
+    "id": "ex-qny6w51n",
+    "version": 1,
+    "section": "throughput",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server batches requests. What happens to total throughput and to each request's speed?",
+    "hint": "The weights are read once per step for everyone.",
+    "choices": [
+      {
+        "text": "More tokens a second in all; each one a little slower",
+        "correct": true,
+        "why": "Right, which is how a busy machine becomes cheap per token."
+      },
+      {
+        "text": "Both rise, since the weights are read less often",
+        "correct": false,
+        "why": "Each request now shares each step with others."
+      },
+      {
+        "text": "Both fall, because the batch has to wait for its slowest member",
+        "correct": false,
+        "why": "Total throughput is what batching raises."
+      },
+      {
+        "text": "Nothing changes; batching only saves memory",
+        "correct": false,
+        "why": "Batching changes throughput, at some cost in memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtq65t69",
+    "version": 1,
+    "section": "break-even",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A request costs $69 per million requests through an API, and a machine costs $1,500 a month. How many requests a month make them cost the same? Answer in millions, to one decimal place.",
+    "hint": "1,500 divided by 69, in millions.",
+    "value": 21.7,
+    "tolerance": 0.05,
+    "unit": "million requests"
+  },
+  {
+    "id": "ex-vaxpx5nv",
+    "version": 1,
+    "section": "break-even",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In section 06, what is real and what is the course's assumption?",
+    "hint": "Which numbers came from a capture?",
+    "choices": [
+      {
+        "text": "The prices are assumed; the volume of e-mail is measured",
+        "correct": false,
+        "why": "It is the other way round for both."
+      },
+      {
+        "text": "Token counts and prices are real; volume and machine cost are assumed",
+        "correct": true,
+        "why": "Right, and the lesson says which is which beside each number."
+      },
+      {
+        "text": "Everything is measured on Lantern Books' real traffic",
+        "correct": false,
+        "why": "Lantern Books does not exist; its volume is an assumption."
+      },
+      {
+        "text": "Everything is an assumption",
+        "correct": false,
+        "why": "The token counts were made by a real tokenizer and the prices read from the sheet."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kxnyx4j",
+    "version": 1,
+    "section": "break-even",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "ana's drafting task sends a 2,000-token prompt and gets 300 tokens back. Compared with sorting, what happens to the break-even volume for a machine?",
+    "hint": "Cost per request, then the division.",
+    "choices": [
+      {
+        "text": "It rises, because long replies are slower",
+        "correct": false,
+        "why": "Speed is not in the break-even sum; cost per request is."
+      },
+      {
+        "text": "It stays the same, since the machine's cost is fixed",
+        "correct": false,
+        "why": "The API side of the comparison changes."
+      },
+      {
+        "text": "It doubles, because there are two tasks now",
+        "correct": false,
+        "why": "The number of tasks is not the factor."
+      },
+      {
+        "text": "It falls, by as much as the cost per request rises",
+        "correct": true,
+        "why": "Right. Dearer requests make a machine pay for itself at a lower volume."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xwndmaw",
+    "version": 1,
+    "section": "operations",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these become your job when you self-host? Choose all that apply.",
+    "hint": "Section 07's list.",
+    "choices": [
+      {
+        "text": "Patching the runtime and the drivers",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Adding capacity when the load grows",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Answering when it stops on a Sunday",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Retraining the model every month",
+        "correct": false,
+        "why": "Nothing requires retraining; a model on disk stays as it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-b90mv6qp",
+    "version": 1,
+    "section": "operations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a self-hosted machine have to be sized for the peak rather than the average?",
+    "hint": "When do the e-mails arrive?",
+    "choices": [
+      {
+        "text": "Because runtimes refuse to start below a minimum load",
+        "correct": false,
+        "why": "Runtimes start fine with nothing to do."
+      },
+      {
+        "text": "Its capacity is fixed, and the load comes in bunches",
+        "correct": true,
+        "why": "Right. An API provider's fleet absorbs the bunch; one machine has what it has."
+      },
+      {
+        "text": "Because the price per hour rises with use",
+        "correct": false,
+        "why": "A machine costs the same per hour, busy or idle."
+      },
+      {
+        "text": "Because the weights grow during busy periods and shrink again once the load has passed",
+        "correct": false,
+        "why": "The weights do not change size."
+      }
+    ]
+  },
+  {
+    "id": "ex-pvyz2zv5",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A hospital's records may not leave its building. Its volume is small and the arithmetic favours an API. What does section 08 say?",
+    "hint": "A filter, not a score.",
+    "choices": [
+      {
+        "text": "Use the API: the arithmetic decides",
+        "correct": false,
+        "why": "One row that truly applies outweighs the arithmetic."
+      },
+      {
+        "text": "Self-host; the requirement decides",
+        "correct": true,
+        "why": "Right. Section 07's work becomes the price of a requirement."
+      },
+      {
+        "text": "Use an open model from a host, which keeps data in",
+        "correct": false,
+        "why": "A host receives the data."
+      },
+      {
+        "text": "Wait until volume grows enough to justify a machine",
+        "correct": false,
+        "why": "Volume is not the row that applies here."
+      }
+    ]
+  },
+  {
+    "id": "ex-cp06f9bh",
+    "version": 1,
+    "section": "when-it-pays",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the reason in section 08 that it falls under.",
+    "hint": "The table's first column.",
+    "pairs": [
+      {
+        "left": "A ship's system with no connection at sea",
+        "right": "No network"
+      },
+      {
+        "left": "A contract forbids sending text to third parties",
+        "right": "The data must not leave"
+      },
+      {
+        "left": "The model must not change until the team decides",
+        "right": "Control of time"
+      },
+      {
+        "left": "A fine-tuned model no host offers",
+        "right": "A model nobody sells"
+      }
+    ],
+    "right_distractors": [
+      "A cheaper price per token"
+    ]
+  },
+  {
+    "id": "ex-b75hnddv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which middle path keeps the data in an account Lantern Books controls without running the machine itself?",
+    "hint": "Section 08, 'Two middle paths'.",
+    "choices": [
+      {
+        "text": "An open model from a third-party host",
+        "correct": false,
+        "why": "The data goes to the host."
+      },
+      {
+        "text": "A closed model on its maker's global route",
+        "correct": false,
+        "why": "That sends the data wherever there is capacity."
+      },
+      {
+        "text": "A dedicated deployment in its own cloud account",
+        "correct": true,
+        "why": "Right. Somebody else runs it; the data stays in an account it controls."
+      },
+      {
+        "text": "A quantised model on a laptop",
+        "correct": false,
+        "why": "That is self-hosting, machine and all."
+      }
+    ]
+  },
+  {
+    "id": "ex-vyqc6e4b",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The cache a runtime keeps so it does not recompute the prompt for every new token is called the ___ cache.",
+    "hint": "Two letters: what it stores for each token.",
+    "blanks": [
+      {
+        "accept": [
+          "KV",
+          "key-value",
+          "key value"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,318 @@
+[
+  {
+    "id": "ex-z7qfcb8x",
+    "version": 1,
+    "section": "shape",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these does every Messages API request carry? Choose all that apply.",
+    "hint": "Three in the body, and headers.",
+    "choices": [
+      {
+        "text": "model",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "max_tokens",
+        "correct": true,
+        "why": "Yes: it is required."
+      },
+      {
+        "text": "anthropic-version",
+        "correct": true,
+        "why": "Yes, as a header."
+      },
+      {
+        "text": "temperature",
+        "correct": false,
+        "why": "Optional."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypyw1txz",
+    "version": 1,
+    "section": "shape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reply comes back with stop_reason max_tokens. What should ana's program assume about its text?",
+    "hint": "The limit was reached.",
+    "choices": [
+      {
+        "text": "It is complete, only short",
+        "correct": false,
+        "why": "It was cut."
+      },
+      {
+        "text": "It was cut off at the limit",
+        "correct": true,
+        "why": "Right: the JSON was half an object."
+      },
+      {
+        "text": "The model refused",
+        "correct": false,
+        "why": "That is not what max_tokens means."
+      },
+      {
+        "text": "The request failed and was retried by the SDK",
+        "correct": false,
+        "why": "It was a 200."
+      }
+    ]
+  },
+  {
+    "id": "ex-tty9wssf",
+    "version": 1,
+    "section": "shape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the anthropic-version header for?",
+    "hint": "A date.",
+    "choices": [
+      {
+        "text": "It picks the model's release",
+        "correct": false,
+        "why": "The model field does that."
+      },
+      {
+        "text": "It is the SDK's version number",
+        "correct": false,
+        "why": "That is in the user-agent."
+      },
+      {
+        "text": "It names the API shape the program expects",
+        "correct": true,
+        "why": "Right, so the API can change without breaking it."
+      },
+      {
+        "text": "It sets the billing period",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-4wvj4x6g",
+    "version": 1,
+    "section": "errors",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the SDK's default settings, how many requests at most can one messages.create call send?",
+    "hint": "One, and two retries.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-v6qad8nm",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ana's program printed one answer after 2.0 s. What did the stand-in's log show?",
+    "hint": "wire --count 3.",
+    "choices": [
+      {
+        "text": "One request, answered slowly",
+        "correct": false,
+        "why": "There were three."
+      },
+      {
+        "text": "Two 529s and a 200",
+        "correct": true,
+        "why": "Right: the SDK retried twice."
+      },
+      {
+        "text": "Three 200s, one per retry",
+        "correct": false,
+        "why": "Two failed."
+      },
+      {
+        "text": "A 429, then a 200 after the wait",
+        "correct": false,
+        "why": "The failures were 529."
+      }
+    ]
+  },
+  {
+    "id": "ex-bb41scwz",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do automatic retries matter for lesson 21's rate limit?",
+    "hint": "What counts against the limit?",
+    "choices": [
+      {
+        "text": "Each retry is a request",
+        "correct": true,
+        "why": "Right: 50 calls can be 150 requests."
+      },
+      {
+        "text": "Retries are free but slow the program",
+        "correct": false,
+        "why": "They are requests like any other."
+      },
+      {
+        "text": "The SDK pauses all other calls while it retries",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "Retries raise the limit",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-wv8qjaqq",
+    "version": 1,
+    "section": "errors",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To turn the SDK's retries off, ana creates the client with ___=0.",
+    "hint": "A client setting.",
+    "blanks": [
+      {
+        "accept": [
+          "max_retries"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-549nm2j4",
+    "version": 1,
+    "section": "caching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A request marks a 60-token system prompt with cache_control, on a model whose minimum is 1,024. What happens?",
+    "hint": "The documentation's sentence.",
+    "choices": [
+      {
+        "text": "A 400 error naming the minimum",
+        "correct": false,
+        "why": "No error is returned."
+      },
+      {
+        "text": "It is padded and cached",
+        "correct": false,
+        "why": "Nothing is padded."
+      },
+      {
+        "text": "It runs uncached, and nothing says so",
+        "correct": true,
+        "why": "Right: both cache fields are 0."
+      },
+      {
+        "text": "It is cached at a higher price",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-hnbcqcf5",
+    "version": 1,
+    "section": "caching",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reply's usage says cache_read_input_tokens 1104, cache_creation_input_tokens 0 and input_tokens 24. How many input tokens did the model read in all?",
+    "hint": "Add the three.",
+    "value": 1128,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-9h3faacm",
+    "version": 1,
+    "section": "caching",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cost report multiplies input_tokens by the input price. What goes wrong on cached requests?",
+    "hint": "What does input_tokens count here?",
+    "choices": [
+      {
+        "text": "It double-counts the cached prefix",
+        "correct": false,
+        "why": "It leaves it out."
+      },
+      {
+        "text": "It leaves out the cached tokens",
+        "correct": true,
+        "why": "Right: they are in the two cache fields."
+      },
+      {
+        "text": "Nothing; cached tokens are free",
+        "correct": false,
+        "why": "Reads cost a tenth; writes more."
+      },
+      {
+        "text": "It uses the output price by mistake",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgj7rb4w",
+    "version": 1,
+    "section": "caching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Caching made ana's long prompt about eight times cheaper on input. What does that say about whether to use the examples?",
+    "hint": "Cheap is not right.",
+    "choices": [
+      {
+        "text": "Use them: cheaper means better",
+        "correct": false,
+        "why": "Price says nothing about quality."
+      },
+      {
+        "text": "Drop them: the cache will expire overnight",
+        "correct": false,
+        "why": "That costs one write a morning."
+      },
+      {
+        "text": "Nothing; lesson 5's cases decide",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Use them only on Sonnet, where caching is free",
+        "correct": false,
+        "why": "It is not free."
+      }
+    ]
+  },
+  {
+    "id": "ex-22vgkas9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put lesson 17's three cache calls in the order cache.py made them.",
+    "hint": "Short, then long, then long again.",
+    "items": [
+      "Nothing written, nothing read",
+      "1,104 tokens written",
+      "1,104 tokens read"
+    ]
+  }
+]

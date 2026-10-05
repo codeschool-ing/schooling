@@ -1,0 +1,268 @@
+{
+  "ex-k8vmtkqr": {
+    "prompt": "No Transformers.js, qual metade faz a conta do modelo?",
+    "hint": "A metade que executa um grafo.",
+    "choices": [
+      {
+        "text": "O tokenizador, que também transforma números de volta em rótulos",
+        "why": "Os rótulos vêm do config.json, pela biblioteca."
+      },
+      {
+        "text": "O ONNX Runtime",
+        "why": "Isso: nativo no Node, WebAssembly no navegador."
+      },
+      {
+        "text": "O Hub, que roda remotamente",
+        "why": "Nada é buscado no Hub aqui."
+      },
+      {
+        "text": "O config.json, que guarda a arquitetura",
+        "why": "Ele nomeia a arquitetura; não calcula nada."
+      }
+    ]
+  },
+  "ex-tt8wzphx": {
+    "prompt": "Ligue cada dtype ao arquivo que o Transformers.js pede.",
+    "hint": "A tabela de sufixos.",
+    "pairs": [
+      {
+        "left": "fp32",
+        "right": "onnx/model.onnx"
+      },
+      {
+        "left": "q8",
+        "right": "onnx/model_quantized.onnx"
+      },
+      {
+        "left": "q4",
+        "right": "onnx/model_q4.onnx"
+      },
+      {
+        "left": "fp16",
+        "right": "onnx/model_fp16.onnx"
+      }
+    ],
+    "right_distractors": [
+      "onnx/model_fp32.onnx"
+    ]
+  },
+  "ex-rxnqq89v": {
+    "prompt": "O programa da ana não diz dtype. No Node, na CPU, ele carrega model.onnx. Que arquivo a mesma chamada pede num navegador rodando WebAssembly?",
+    "hint": "DEFAULT_DEVICE_DTYPE_MAPPING.",
+    "choices": [
+      {
+        "text": "model.onnx, como no Node",
+        "why": "O padrão do navegador é q8."
+      },
+      {
+        "text": "model_fp16.onnx, porque navegadores preferem meia precisão",
+        "why": "O mapeamento diz q8 para wasm."
+      },
+      {
+        "text": "model_quantized.onnx",
+        "why": "Isso: q8 em wasm."
+      },
+      {
+        "text": "model_q4.onnx",
+        "why": "q4 não é padrão aqui."
+      }
+    ]
+  },
+  "ex-bs5gw27s": {
+    "prompt": "O modelo da ana dá a cada uma das 224 palavras do vocabulário cinco números, um por rótulo, e soma um viés por rótulo. Quantos números são?",
+    "hint": "224 × 5 + 5.",
+    "unit": "números"
+  },
+  "ex-0c3zmvch": {
+    "prompt": "O config.json diz model_type: bert, e o modelo da ana não é um BERT. Por que o Transformers.js carrega mesmo assim?",
+    "hint": "Do que o código de carregamento precisa do grafo?",
+    "choices": [
+      {
+        "text": "Ele confere os pesos e corrige o tipo",
+        "why": "Não confere nada; acredita no arquivo."
+      },
+      {
+        "text": "O grafo tem as entradas e a saída que esse código espera",
+        "why": "Isso: input_ids, attention_mask, logits."
+      },
+      {
+        "text": "Qualquer model_type carrega qualquer arquivo ONNX",
+        "why": "O tipo escolhe o código de carregamento."
+      },
+      {
+        "text": "Porque o train-sorter baixou um BERT",
+        "why": "Nada foi baixado."
+      }
+    ]
+  },
+  "ex-nfp90597": {
+    "prompt": "O número de pedido 20488 virou [UNK]. O que o modelo tira dele?",
+    "hint": "O que um token desconhecido carrega?",
+    "choices": [
+      {
+        "text": "Lê como pedido, então pende para order-status",
+        "why": "Não consegue ler nada."
+      },
+      {
+        "text": "Trata como a palavra conhecida mais próxima",
+        "why": "Não há mais próxima; é um token para tudo o que é desconhecido."
+      },
+      {
+        "text": "Nada: [UNK] não carrega evidência",
+        "why": "Isso."
+      },
+      {
+        "text": "Recusa o e-mail",
+        "why": "Classifica pelas outras palavras."
+      }
+    ]
+  },
+  "ex-jq33q0ad": {
+    "prompt": "O arquivo que transforma o quarto número do modelo em product-question é o ___ (diga o nome do arquivo).",
+    "hint": "Ele guarda o id2label.",
+    "blanks": [
+      {
+        "accept": [
+          "config.json"
+        ]
+      }
+    ]
+  },
+  "ex-xrh8w2qh": {
+    "prompt": "O c36 foi classificado como address-change com nota 0,502. O que a nota diz à ana?",
+    "hint": "Confiança ou precisão?",
+    "choices": [
+      {
+        "text": "O modelo estava inseguro neste",
+        "why": "Isso: nota é confiança, não precisão."
+      },
+      {
+        "text": "Que metade dos dez casos de fora estão certos",
+        "why": "A nota é sobre um e-mail."
+      },
+      {
+        "text": "Que address-change acerta metade das vezes",
+        "why": "Isso precisaria de muitos casos."
+      },
+      {
+        "text": "Nada; notas são aleatórias",
+        "why": "A mesma entrada dá a mesma nota."
+      }
+    ]
+  },
+  "ex-dq5da2dd": {
+    "prompt": "Sete de dez casos de fora acertaram. O que a ana pode concluir sobre a precisão do modelo?",
+    "hint": "Seção 06 da aula 5.",
+    "choices": [
+      {
+        "text": "É 70%",
+        "why": "Essa é a taxa desta amostra, não do modelo."
+      },
+      {
+        "text": "É pior que qualquer modelo de chat",
+        "why": "Nada os comparou."
+      },
+      {
+        "text": "É de pelo menos 90% nos casos de treino, então está bom",
+        "why": "Casos de treino não dizem nada sobre os novos."
+      },
+      {
+        "text": "Algo entre 40% e 89%: largo demais para decidir",
+        "why": "Isso: o intervalo de Wilson em dez casos."
+      }
+    ]
+  },
+  "ex-e733stpg": {
+    "prompt": "Depois que a ana apertou o botão, quantas requisições levaram o texto do e-mail?",
+    "hint": "Procure uma requisição depois do clique.",
+    "choices": [
+      {
+        "text": "Uma, para o servidor da página",
+        "why": "Não há requisição depois do clique."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "Isso: rodou no navegador."
+      },
+      {
+        "text": "Uma, para o Hub",
+        "why": "Modelos remotos estavam desligados."
+      },
+      {
+        "text": "Nove, uma por arquivo",
+        "why": "Essas carregaram a página, o runtime e o modelo."
+      }
+    ]
+  },
+  "ex-xey9s0xr": {
+    "prompt": "A página baixou 27.507.633 bytes e o .wasm do runtime era 26.861.777 deles. Que porcentagem do total era o .wasm? Responda com uma casa decimal.",
+    "hint": "Divida e multiplique por 100.",
+    "unit": "%"
+  },
+  "ex-c43gptxs": {
+    "prompt": "Por que o sort.html aponta wasmPaths para um caminho no próprio servidor?",
+    "hint": "Onde a biblioteca procura, senão?",
+    "choices": [
+      {
+        "text": "O runtime é mais rápido do mesmo host",
+        "why": "Velocidade não é o argumento."
+      },
+      {
+        "text": "Sem isso a página usa os servidores do Hub para rodar o modelo",
+        "why": "O runtime roda no navegador de qualquer jeito."
+      },
+      {
+        "text": "Senão uma CDN pública fica sabendo quem abriu a página",
+        "why": "Isso: cdn.jsdelivr.net, um terceiro."
+      },
+      {
+        "text": "O arquivo .wasm não é permitido numa CDN",
+        "why": "Não há essa regra."
+      }
+    ]
+  },
+  "ex-3qkjct4t": {
+    "prompt": "A página da ana funciona nos testes no Node e depois mostra 'loading the model…' para sempre no navegador. Que mudança resolve, dado que o repositório dela só tem model.onnx?",
+    "hint": "Que arquivo o navegador pediu?",
+    "choices": [
+      {
+        "text": "Passar dtype: \"fp32\" ao pipeline",
+        "why": "Isso: o mesmo arquivo nos dois."
+      },
+      {
+        "text": "Ligar allowRemoteModels",
+        "why": "Isso busca no Hub, o que ela queria evitar."
+      },
+      {
+        "text": "Renomear o config.json",
+        "why": "O arquivo que falta é o modelo quantizado."
+      },
+      {
+        "text": "Usar um modelo maior",
+        "why": "Tamanho não é o problema."
+      }
+    ]
+  },
+  "ex-jevmg4vt": {
+    "prompt": "Quais destes passam para o lado do visitante quando um modelo roda na página? Marque todos os que se aplicam.",
+    "hint": "A coluna de preço da seção 05.",
+    "choices": [
+      {
+        "text": "Baixar o runtime e o modelo",
+        "why": "Sim."
+      },
+      {
+        "text": "A memória de que o modelo precisa",
+        "why": "Sim."
+      },
+      {
+        "text": "Uma conta por token",
+        "why": "Não há."
+      },
+      {
+        "text": "Escolher a licença do modelo",
+        "why": "A licença pertence ao modelo."
+      }
+    ]
+  }
+}
