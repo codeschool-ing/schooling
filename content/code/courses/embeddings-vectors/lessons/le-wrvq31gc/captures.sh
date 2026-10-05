@@ -199,13 +199,24 @@ print("indexed vectors:", client.get_collection("help").indexed_vectors_count)
 EOF_FILE
 put two.py <<'EOF_FILE'
 import subprocess
+import lancedb
 from qdrant_client import QdrantClient
 
+def other(code):
+    r = subprocess.run(["python", "-c", code], capture_output=True, text=True)
+    return (r.stdout or r.stderr).strip().splitlines()[-1]
 mine = QdrantClient(path="qdrant")
-other = subprocess.run(
-    ["python", "-c", "from qdrant_client import QdrantClient; QdrantClient(path='qdrant')"],
-    capture_output=True, text=True)
-print("second process:", other.stderr.strip().splitlines()[-1])
+print("qdrant, second process:", other(
+    "from qdrant_client import QdrantClient; QdrantClient(path='qdrant')"))
+table = lancedb.connect("lance").open_table("help")
+print("lance, this process:  ", table.count_rows(), "rows, version", table.version)
+print("lance, second process:", other(
+    "import lancedb; from minilm import embed; t = lancedb.connect('lance').open_table('help'); "
+    "t.add([{'id': 'h42', 'category': 'orders', 'lang': 'en', 'title': 'x', 'vector': embed('x')[0]}]); "
+    "print(t.count_rows(), 'rows, version', t.version)"))
+print("lance, this process:  ", table.count_rows(), "rows, version", table.version)
+table.checkout_latest()
+print("lance, after checkout:", table.count_rows(), "rows, version", table.version)
 EOF_FILE
 
 block flat
