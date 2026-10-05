@@ -13,6 +13,11 @@ course.
                                     what a third-party model is sent
     guard restore VAULT REPLY       its reply, with the placeholders put back
     guard sensitive TEXT            what the sensitive-data word list sees
+    guard fairness FILE --group COL [--reference VALUE]
+                                    rates per group, and the gaps between them
+    guard score FILE                the stand-in scorer over a set of profiles
+    guard counterfactual FILE       the same, with each CEP moved to the
+                                    other end of the country
 """
 import argparse
 import datetime as dt
@@ -190,6 +195,82 @@ def cmd_restore(a):
     return 0
 
 
+# ---- fairness ---------------------------------------------------------------
+
+def fmt(x):
+    return "  -  " if x != x else "%.2f" % x
+
+
+def cmd_fairness(a):
+    from . import fairness as f
+    groups = f.load(a.file, a.group)
+    stats = {g: f.rates(rows) for g, rows in groups.items()}
+    print("%-10s %4s  %5s  %8s  %5s  %5s  %9s" % (
+        a.group, "n", "base", "selected", "TPR", "FPR", "precision"))
+    for g, s in stats.items():
+        if s["n"] < f.MINIMUM:
+            print("%-10s %4d  too few to measure (fewer than %d)" % (g, s["n"], f.MINIMUM))
+            continue
+        print("%-10s %4d  %5s  %8s  %5s  %5s  %9s" % (
+            g, s["n"], fmt(s["base"]), fmt(s["selected"]), fmt(s["tpr"]),
+            fmt(s["fpr"]), fmt(s["precision"])))
+    measured = {g: s for g, s in stats.items() if s["n"] >= f.MINIMUM}
+    ref = a.reference or max(measured, key=lambda g: measured[g]["selected"])
+    print("reference: %s" % ref)
+    for g, s in measured.items():
+        if g == ref:
+            continue
+        r = measured[ref]
+        ratio = s["selected"] / r["selected"]
+        print("%s against %s" % (g, ref))
+        print("  selection ratio   %.2f%s" % (ratio, "   below the four-fifths line (0.80)"
+                                                 if ratio < 0.8 else ""))
+        for key, name in (("tpr", "TPR gap"), ("fpr", "FPR gap"),
+                          ("precision", "precision gap")):
+            print("  %-17s %+.2f" % (name, s[key] - r[key]))
+
+
+def profiles(path):
+    with open(path, encoding="utf-8") as fh:
+        return [json.loads(line) for line in fh if line.strip()]
+
+
+def cmd_score(a):
+    from . import standin
+    print("%-8s %-9s %-10s %6s %4s  %5s  %s" % (
+        "who", "region", "cep", "rating", "jobs", "score", "shortlisted"))
+    for p in profiles(a.file):
+        s = standin.score(p)
+        print("%-8s %-9s %-10s %6.1f %4d  %5.2f  %s" % (
+            p["applicant"], p["region"], p["cep"], p["rating"], p["jobs"], s,
+            "yes" if s >= standin.THRESHOLD else "no"))
+    print("threshold %.1f" % standin.THRESHOLD)
+
+
+def cmd_counterfactual(a):
+    """Moves every CEP to the other end of the country and scores again.
+    Nothing else about the profile changes, so any decision that flips was
+    decided by the CEP alone."""
+    from . import standin
+    flips = {}
+    print("%-8s %-9s %-10s %5s   %-10s %5s" % (
+        "who", "region", "cep", "score", "swapped", "score"))
+    for p in profiles(a.file):
+        other = dict(p, cep="50010-000" if p["cep"][0] in "0123" else "01310-100")
+        s1, s2 = standin.score(p), standin.score(other)
+        before, after = s1 >= standin.THRESHOLD, s2 >= standin.THRESHOLD
+        note = ""
+        if before != after:
+            note = "  FLIP: %s" % ("shortlisted -> out" if before else "out -> shortlisted")
+            flips[p["region"]] = flips.get(p["region"], 0) + 1
+        print("%-8s %-9s %-10s %5.2f   %-10s %5.2f%s" % (
+            p["applicant"], p["region"], p["cep"], s1, other["cep"], s2, note))
+    total = len(profiles(a.file))
+    print("%d of %d decisions changed when only the CEP did (%s)" % (
+        sum(flips.values()), total,
+        ", ".join("%s %d" % kv for kv in flips.items()) or "none"))
+
+
 # ---- the lab's own setup --------------------------------------------------
 
 def cmd_build(a):
@@ -216,6 +297,9 @@ def cmd_build(a):
             "out_tokens": sum(r["out_tokens"] for r in rs),
             "ms_max": max(r["ms"] for r in rs)}
             for s, rs in sorted(group(recs, "surface").items())])
+    from . import fairness
+    for version in fairness.COUNTS:
+        fairness.build(os.path.join(HOME, "data", "shortlist-%s.csv" % version), version)
 
 
 def group(rows, key):
@@ -262,6 +346,20 @@ def main(argv=None):
     s = sub.add_parser("sensitive")
     s.add_argument("text")
     s.set_defaults(fn=cmd_sensitive)
+
+    s = sub.add_parser("fairness")
+    s.add_argument("file")
+    s.add_argument("--group", required=True)
+    s.add_argument("--reference")
+    s.set_defaults(fn=cmd_fairness)
+
+    s = sub.add_parser("score")
+    s.add_argument("file")
+    s.set_defaults(fn=cmd_score)
+
+    s = sub.add_parser("counterfactual")
+    s.add_argument("file")
+    s.set_defaults(fn=cmd_counterfactual)
 
     s = sub.add_parser("_build")
     s.set_defaults(fn=cmd_build)

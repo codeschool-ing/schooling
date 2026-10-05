@@ -17,8 +17,9 @@
 #
 #   guardlab/      the tools, in Python's standard library: detect.py (what
 #                  counts as personal data in free text), minimise.py (what
-#                  a ticket loses before a third-party model sees it) and
-#                  cli.py (every command)
+#                  a ticket loses before a third-party model sees it),
+#                  fairness.py (rates per group), standin.py (THE STAND-IN
+#                  SCORER, below) and cli.py (every command)
 #   bin/guard      the command line
 #   logs/raw/      the assistant's call log, one file per day, word for word
 #   logs/redacted/ the same records with personal data replaced
@@ -36,6 +37,12 @@
 #   - Every record in the log, prompts AND replies, was written by the
 #     course. No model produced any of the replies; they are there so the
 #     tools have something realistic to read.
+#   - guardlab/standin.py is NOT A MODEL. It is a scoring rule the course
+#     wrote, with a bonus for Southeastern postcodes put there on purpose so
+#     that lesson 9 has a proxy to find. The shortlist decisions in
+#     data/shortlist-v1.csv and -v2.csv are written from the counts in
+#     guardlab/fairness.py, and the profiles in data/profiles.jsonl are
+#     invented.
 #   - data/reply-4471.txt is what the course wrote in place of a model's
 #     reply to the minimised ticket. No model was called; it exists so that
 #     `guard restore` has placeholders to put back.
