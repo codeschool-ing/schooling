@@ -7,9 +7,9 @@ Every provider's embedding call has the same shape: text goes in, one vector per
 and the details that differ are the names of things. Lesson 7 met that shape through OpenAI's SDK.
 This section meets it through Google's, `google-genai`, and three later sections through Cohere's.
 
-**Neither SDK talks to Google or Cohere here.** Both talk to **labembed**, a small server written for this course that listens on `127.0.0.1:8500`.
-It answers the same URLs with the same JSON the providers answer with, closely enough that their own
-libraries accept it unmodified. Its vectors are
+**Neither SDK talks to Google or Cohere here.** Both talk to **labembed**, a small server written
+for this course that listens on `127.0.0.1:8500`. It answers the same URLs with the same JSON the
+providers answer with, closely enough that their own libraries accept it unmodified. Its vectors are
 real, from the two models that run on this machine, served under the lab's own names `lab-minilm`
 (384 numbers) and `lab-wordllama` (256). What it is not is Google's model: it refuses the name
 `gemini-embedding-001` rather than answer with something else wearing it. Against Google the code
@@ -61,18 +61,17 @@ is the next section's subject.
 
 `output_dimensionality=128` asked for 128 numbers instead of the model's 256, and got them. The
 server keeps the first 128 coordinates and drops the rest, which only works for a model trained so
-that its leading coordinates carry most of the meaning on their own; lesson 7 measured what that
+that its leading coordinates carry most of the meaning on their own. Lesson 7 measured what that
 costs `lab-wordllama` on the 24 queries. `lab-minilm` was not trained that way, and asking it for
 128 is refused, as the second refusal at the end of this section shows.
 
 Google's own model, **gemini-embedding-001**, returns 3,072 numbers by default and is documented as
 trained for exactly this truncation, with 768 and 1,536 as the recommended smaller sizes. Its
-documentation adds a detail that is easy to miss: **only the full 3,072-number output comes back
-normalised.** A shorter one is the first coordinates of a unit vector, which is no longer of length
+documentation also says that **only the full 3,072-number output comes back normalised.** A shorter one is the first coordinates of a unit vector, which is no longer of length
 1, so a dot product between two of them is not a cosine any more. The last part of `gemini.py`
-divides every vector by its length for that reason. labembed renormalises after truncating, which is why the
-lengths printed before that line are already 1.0, and here the line changes nothing; against Google it is the line that keeps every score in lesson 2's
-range.
+divides every vector by its length for that reason. labembed renormalises after truncating, which
+is why the lengths printed before that line are already 1.0 and the line changes nothing here.
+Against Google, it is the line that keeps every score in lesson 2's range.
 
 ## When a request is refused
 

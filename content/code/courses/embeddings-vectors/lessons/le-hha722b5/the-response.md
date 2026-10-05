@@ -48,9 +48,8 @@ list lab-minilm Usage(prompt_tokens=14, total_tokens=14)
 Each embedding object carries an **`index`**, the position of its text in the `input` list. The
 lines above came back in order, 0, 1, 2, and it is tempting to rely on that and zip `data` with
 the inputs. That relies on an arrangement; the index is the field whose job is to say which text a
-vector belongs to. Sorting by it, or looking texts up by it as `response.py` does,
-costs one line and removes a way to file a vector under the wrong article without any error at
-all. The next section's batching function does exactly that.
+vector belongs to. Sorting by it, or looking texts up by it as `response.py` does, costs
+one line and removes a way to file a vector under the wrong article without any error at all. The next section's batching function does exactly that.
 
 **`usage.prompt_tokens`** is what the request is billed on. An embedding has no output tokens, so
 `total_tokens` is the same number. The section on cost comes back to how those tokens are counted.
@@ -79,7 +78,8 @@ ana@lab:~/emb$ curl -s $OPENAI_BASE_URL/embeddings -H "Authorization: Bearer $OP
 2203
 ```
 
-The answer as decimal numbers is 8,594 bytes; as base64 it is 2,203, about a quarter. Written out as
-text, each number takes over twenty characters; in base64 it takes under six. Multiply that by every vector in a batch of two thousand texts, then by
-every batch, and the saving is why the SDK asks for base64 without being told. If you call the endpoint without the SDK, ask for base64
+The answer as decimal numbers is 8,594 bytes; as base64 it is 2,203, about a quarter. Written out
+as text, each number takes over twenty characters; in base64 it takes under six. Multiply that by
+every vector in a batch of two thousand texts, then by every batch, and the saving is why the SDK
+asks for base64 without being told. If you call the endpoint without the SDK, ask for base64
 yourself and decode it as little-endian `float32`, as `response.py` did.

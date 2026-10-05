@@ -48,11 +48,11 @@ because its pieces took places inside the 254 and pushed as many pieces of the o
 cut.
 
 So a search for *water damage* cannot find this text through its vector, whatever the text says.
-The first lines of the output hold a second lesson. **The three longest articles are the three
-Portuguese ones**, and none of them is the longest in words: h38 has 48 words and 102 pieces, while
-the longest English article by pieces, h03, has 53 words and 65. A model with an English vocabulary
-breaks Portuguese words into more and smaller pieces, so the same limit holds fewer words of another
-language.
+
+**The three longest articles, in the first lines of the output, are the three Portuguese ones**, and
+none of them is the longest in words: h38 has 48 words and 102 pieces, while the longest English
+article by pieces, h03, has 53 words and 65. A model with an English vocabulary breaks Portuguese
+words into more and smaller pieces, so the same limit holds fewer words of another language.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Bars measured in word pieces. The eight shipping articles joined are 407 pieces; the model reads the first 254 of them, up to the word bent, and drops the other 153. Below, the longest single article, h38, in Portuguese, is 102 pieces for 48 words, and the longest English one, h03, is 65 pieces for 53 words.\"><text x=\"40\" y=\"30\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">shipping bodies joined</text><rect x=\"40\" y=\"42\" width=\"387\" height=\"34\" rx=\"3\" fill=\"var(--phosphor-dim)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><rect x=\"427\" y=\"42\" width=\"233.1\" height=\"34\" rx=\"3\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"233.5\" y=\"59\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">read: 254 pieces</text><text x=\"543.6\" y=\"59\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">dropped: 153 pieces</text><path d=\"M427 30 L427 160\" stroke=\"var(--amber)\" stroke-width=\"1.6\" fill=\"none\" stroke-dasharray=\"5 3\"></path><text x=\"433\" y=\"30\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--amber)\">the limit</text><text x=\"421\" y=\"90\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--amber)\">bent</text><rect x=\"40\" y=\"116\" width=\"155.4\" height=\"22\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"201.4\" y=\"127\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">102</text><text x=\"231.4\" y=\"127\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">h38, Portuguese, 48 words</text><rect x=\"40\" y=\"150\" width=\"99\" height=\"22\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"145\" y=\"161\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">65</text><text x=\"175\" y=\"161\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">h03, English, 53 words</text><text x=\"40\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">0</text><path d=\"M40 184 L40 188\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"192.4\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">100</text><path d=\"M192.4 184 L192.4 188\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"344.8\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">200</text><path d=\"M344.8 184 L344.8 188\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"427\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--amber)\">254</text><path d=\"M427 184 L427 188\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"497.1\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">300</text><path d=\"M497.1 184 L497.1 188\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"649.5\" y=\"196\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">400</text><path d=\"M649.5 184 L649.5 188\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M40 184 L680 184\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"660.2\" y=\"90\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">407</text><text x=\"680\" y=\"220\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">word pieces</text></svg>", "caption": "The model reads 254 pieces of text and the rest is not in the vector. The same limit holds fewer words of Portuguese, because an English vocabulary cuts Portuguese words into more pieces."}
@@ -65,17 +65,16 @@ language.
 That is a reasonable default for a library and a dangerous one for a pipeline, because the place
 where it bites is the long documents, and nothing in the output marks them.
 
-**Chroma truncates silently too**, in the version this lab runs. Its embedding function has a
-check that raises a `ValueError` for a text over 256 pieces, and the last line of `length.py` shows
-it did not fire: Chroma's tokenizer is set to cut at 256 before the check counts, so the check
-counts at most 256 and passes. The vector it returned matches `minilm.py`'s for the same long text
-to `1.1920929e-07`, which is to say it is the same truncated vector.
+**Chroma truncates silently too**, in the version this lab runs. Its embedding function has a check
+that raises a `ValueError` for a text over 256 pieces. The last line of `length.py` shows it did not
+fire: Chroma's tokenizer is set to cut at 256 before the check counts, so the check counts at most
+256 and passes. The vector it returned matches `minilm.py`'s for the same long text to
+`1.1920929e-07`, which is to say it is the same truncated vector.
 
 ## What to do about it
 
 Count before you embed. `minilm.pieces(text)` gives every piece of a text, before the cut, and every
-model's own tokenizer can do the same; a text over the limit is one to cut deliberately rather
-than leave to the library. Lesson 3 cut long texts into chunks for search, and `rag` makes chunk
-size a design decision. The limit is a property of each model, written on its card, and the next
-section is about where to read it; lesson 8's price sheet showed how far apart the providers' limits
-are.
+model's own tokenizer can do the same; a text over the limit is one to cut deliberately rather than
+leave to the library. Lesson 3 cut long texts into chunks for search, and `rag` makes chunk size a
+design decision. The limit is a property of each model, written on its card, and the next section is
+about where to read it. Lesson 8's price sheet showed how far apart the providers' limits are.

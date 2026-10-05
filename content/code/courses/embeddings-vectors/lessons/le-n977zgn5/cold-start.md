@@ -60,15 +60,15 @@ Marcos asked for ghost stories:
 ## A new book has a vector at once
 
 *The Lost World* is not in the catalogue. Its blurb, written into the program, is embedded the same
-way as the other sixty, and the book is ready to recommend before a single copy is sold: its nearest
+way as the other sixty, and the book is ready to recommend before a single copy is sold. Its nearest
 neighbour is *Journey to the Centre of the Earth*, at 0.643, another professor on an expedition to a
 lost prehistoric world. The second half of the program asks every reader's vector where the new
 book would rank among the books they have not read. **Caio would see it first.**
 
 Íris would see it third, at 0.374, and she has finished *Walden*, *Meditations* and *On the Origin
-of Species*. A professor who finds dinosaurs still alive is probably close to a book about
-species changing over generations in the model's eyes, and whether a reader of philosophy wants an
-adventure is something only she can say. It is a reasonable guess, made on the first day, from text
+of Species*. In the model's eyes, a professor who finds dinosaurs still alive is
+probably close to a book about species changing over generations. Whether a reader of philosophy
+wants an adventure is something only she can say. It is a reasonable guess, made on the first day, from text
 alone.
 
 That is the strength of **content-based** recommendation, which is everything this lesson has

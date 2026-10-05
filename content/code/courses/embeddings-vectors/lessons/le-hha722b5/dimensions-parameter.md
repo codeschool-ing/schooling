@@ -9,8 +9,8 @@ text-embedding-3 models, is a request parameter: **`dimensions`** asks for a sho
 OpenAI describes the shorter vector as trading some accuracy for size.
 
 It can work because, by OpenAI's account, those models were trained so that the **first**
-coordinates carry the most information, and a prefix of the vector is a usable vector on its own. Not every
-model is built like that. An ordinary model spreads what it learned over all its coordinates, and
+coordinates carry the most information, and a prefix of the vector is a usable vector on its own.
+Not every model is built like that. An ordinary model spreads what it learned over all its coordinates, and
 cutting its vector loses part of that with no promise about which part.
 
 The lab has one model trained that way. WordLlama's 256 numbers were trained so that the first 64

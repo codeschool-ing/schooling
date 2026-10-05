@@ -60,12 +60,13 @@ processes were running during this measurement, so another run prints other numb
 ## Batching on one thread
 
 The common advice is that larger batches are faster, and on a graphics card or many threads it
-usually holds: one call does many texts' arithmetic at once. **Here, on one thread, it held only up to a point.** Batch 8 ran at 245 texts a second against
-222 for batch 1, and then batch 32 fell to 200 and batch 150 to 193. Batching saves the overhead of each call, which is small,
-and costs **padding**, which is not. A batch is one rectangle as wide as its longest text, so every
-shorter ticket in it is filled out with `[PAD]` pieces, and the transformer does the full arithmetic
-on every one of them before the mask throws the result away. The larger the batch, the more likely
-it holds one long ticket that makes everything else in it pay.
+usually holds: one call does many texts' arithmetic at once. **Here, on one thread, it held only up
+to a point.** Batch 8 ran at 245 texts a second against 222 for batch 1, and then batch 32 fell to
+200 and batch 150 to 193. Batching saves the overhead of each call, which is small, and costs
+**padding**, which is not. A batch is one rectangle as wide as its longest text, so every shorter
+ticket in it is filled out with `[PAD]` pieces. The transformer does the full arithmetic on every
+one of them before the mask throws the result away. The larger the batch, the more likely it holds
+one long ticket that makes everything else in it pay.
 
 **Sorting the texts by length before batching removes most of the padding**: batch 32 went from 200
 texts a second to 231. sentence-transformers sorts by length inside

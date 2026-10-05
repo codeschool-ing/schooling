@@ -13,8 +13,8 @@ one.
 
 The books a reader finished are the nearest of all to her own vector, because they are what it was
 made from. `reader.py` already skipped them, and the program below shows where they would have
-landed. It is the most basic rule in a recommender and the easiest to lose, for instance when the list is cached and the reader finishes a
-book after the cache was built.
+landed. It is the most basic rule in a recommender and the easiest to lose, for instance when the
+list is cached and the reader finishes a book after the cache was built.
 
 ## One author taking over
 
@@ -26,8 +26,9 @@ series, one per genre, at most two from the same decade.
 ## The shop's own rules
 
 Some books cannot be offered today: out of stock, not licensed in the reader's country, withdrawn.
-Some should not be offered to this reader: an adult title on a child's account. **Those rules come from data a vector does not hold**, and they are checked against that data,
-outside the embedding.
+Some should not be offered to this reader: an adult title on a child's account. **Those rules come
+from data a vector does not hold**, and the code checks them against that data, outside the
+embedding.
 
 `filters.py` applies all three to Caio. The out-of-stock list is a single book written into the
 program, standing in for what a real shop would read from its warehouse:
@@ -85,8 +86,7 @@ and still science fiction and adventure.
 ## Filter while you walk, not after you cut
 
 **The loop walks down the full ranking and stops when it has five**; it never cuts the ranking
-first.
-With 60 books that costs nothing, since every book has a score already. With a million books and an
+first. With 60 books that costs nothing, since every book has a score already. With a million books and an
 index that returns only the nearest 50, it matters: if the rules remove 46 of those 50, the reader
 gets four recommendations, and asking the index for more is the only fix. Lesson 17 meets exactly
 this problem in vector databases, where a filter applied after the search returns fewer results

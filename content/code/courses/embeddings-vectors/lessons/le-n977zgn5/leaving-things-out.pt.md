@@ -27,8 +27,8 @@ por gênero, no máximo dois da mesma década.
 
 Alguns livros não podem ser oferecidos hoje: sem estoque, sem licença no país do leitor, retirados
 de venda. Alguns não devem ser oferecidos a esse leitor: um título adulto na conta de uma criança.
-**Essas regras vêm de dados que um vetor não guarda**, e são conferidas contra esses dados, fora
-do embedding.
+**Essas regras vêm de dados que um vetor não guarda**, e o código as confere contra esses dados,
+fora do embedding.
 
 `filters.py` aplica as três ao Caio. A lista de sem estoque é um único livro escrito no programa, no
 lugar do que uma loja de verdade leria do depósito:
@@ -85,8 +85,8 @@ mais abaixo na ordem e ainda ficção científica e aventura.
 
 ## Filtre enquanto desce, não depois de cortar
 
-**O laço desce pela ordem inteira e para quando tem cinco**; ele nunca corta a ordem antes. Com 60 livros
-isso não custa nada, já que todo livro já tem nota. Com um milhão de livros e um índice que devolve
+**O laço desce pela ordem inteira e para quando tem cinco**; ele nunca corta a ordem antes. Com 60
+livros isso não custa nada, já que todo livro já tem nota. Com um milhão de livros e um índice que devolve
 só os 50 mais próximos, faz diferença: se as regras tiram 46 desses 50, o leitor recebe quatro
 recomendações, e pedir mais ao índice é a única saída. A aula 17 encontra exatamente esse problema em
 bancos de vetores, onde um filtro aplicado depois da busca devolve menos resultados que os pedidos, e

@@ -80,7 +80,6 @@ ana@lab:~/emb$ curl -s $OPENAI_BASE_URL/embeddings -H "Authorization: Bearer $OP
 ```
 
 A resposta em números decimais tem 8.594 bytes; em base64, 2.203, cerca de um quarto. Escrito
-como texto, cada número ocupa mais de vinte caracteres; em base64, menos de seis.
-Multiplique isso por cada vetor de um lote de dois mil textos, depois por cada lote, e a economia é
+como texto, cada número ocupa mais de vinte caracteres; em base64, menos de seis. Multiplique isso por cada vetor de um lote de dois mil textos, depois por cada lote, e a economia é
 o motivo de o SDK pedir base64 sem que ninguém mande. Se você chamar o endpoint sem o SDK, peça
 base64 você mesmo e decodifique como `float32` little-endian, como fez `response.py`.

@@ -56,8 +56,8 @@ w11-w20 after adding w01-w10: flagged 0, mean score 0.368
 **Só quatro das vinte passam do corte**, e as quatro são sobre a assinatura: passar do mensal para
 o anual, comparar preços, pausar, desconto de estudante. A mensagem sobre cancelar a Unlimited fica
 com 0,554, logo abaixo da linha em 0,560, e as duas seguintes, sobre o que a
-Unlimited inclui e se ela pode ser compartilhada, vêm logo atrás.
-Mensagem por mensagem, o assunto novo quase todo passa.
+Unlimited inclui e se ela pode ser compartilhada, vêm logo atrás. Mensagem por mensagem, o assunto
+novo quase todo passa.
 
 Os números do lote não deixam passar. Contra as mensagens normais da primeira caixa de entrada:
 

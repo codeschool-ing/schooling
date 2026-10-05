@@ -9,13 +9,13 @@ runs on your processor, as often as you like, with nobody else involved.
 
 Four things follow from that, and they are the usual reasons to choose one.
 
-- **No bill per text.** Embedding the help centre a hundred times costs electricity. The cost moves
+- No bill per text. Embedding the help centre a hundred times costs electricity. The cost moves
   to the machine that runs it, which this lesson's last section measures.
-- **Nothing leaves.** A customer's message is embedded where it is stored. Lesson 1 argued that a
+- Nothing leaves. A customer's message is embedded where it is stored. Lesson 1 argued that a
   vector is personal data too; with an open model neither the text nor the vector crosses to a
   third party.
-- **It works offline**, and the latency is your own machine's rather than a round trip.
-- **It never changes under you.** A file with a checksum is the same model next year. A hosted
+- It works offline, and the latency is your own machine's rather than a round trip.
+- It never changes under you. A file with a checksum is the same model next year. A hosted
   model can be updated or retired by its provider, and every stored vector then has to be made
   again, which lesson 18 prices.
 

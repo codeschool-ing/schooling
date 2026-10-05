@@ -42,24 +42,24 @@ ana@lab:~/emb$ jq -c "{truncation: .truncation.max_length, padding: .padding.str
 **There are three different lengths in them, and none is 256.** 512 is the room the architecture
 has, the number of positions it holds a learned vector for. 512 again is what the tokenizer's
 configuration allows. 128 is what `tokenizer.json` truncates and pads to if nobody changes it.
-`minilm.py` and Chroma both change it to 256, and Chroma's source remarks on it in a comment: *for some
-reason sentence-transformers uses 256 even though the HF config has a max length of 128*. The 256
-is the model card's number and the one sentence-transformers applies, so it is the one this course
-uses.
+`minilm.py` and Chroma both change it to 256, and Chroma's source remarks on it in a comment: *for
+some reason sentence-transformers uses 256 even though the HF config has a max length of 128*. The
+256 is the model card's number and the one sentence-transformers applies, so it is the one this
+course uses.
 
-The lesson is not about this model. **A number in a configuration file describes the file; the
-card describes how the model was meant to be used.** Where the two disagree, a library that reads
-only the file can run the model with a different limit from the one it was published with, and
-the vectors come out different for every text longer than the smaller limit, with nothing to say so.
+This goes for every open model. **A number in a configuration file describes the file; the card
+describes how the model was meant to be used.** Where the two disagree, a library that reads only
+the file can run the model with a different limit from the one it was published with. Every text
+longer than the smaller limit then gets a different vector, and nothing says so.
 
 ## Prefixes: task types for open models
 
 all-MiniLM-L6-v2 is symmetric, so it takes no prefix. Many newer open models are trained
-asymmetrically, like the providers' models in lesson 8, and since there is no API parameter to
-carry the role, **the role goes into the text itself.** The E5 family expects every query to start
-with `query: ` and every document with `passage: `; Nomic's embedding models use `search_query: `
-and `search_document: `; the BGE models put an instruction in front of the query only. The card
-says which, and a model given texts without its prefix still returns vectors, just not the ones it was
+asymmetrically, like the providers' models in lesson 8, and since there is no API parameter to carry
+the role, **the role goes into the text itself.** The E5 family expects every query to start with
+`query: ` and every document with `passage: `; Nomic's embedding models use `search_query: ` and
+`search_document: `; the BGE models put an instruction in front of the query only. The card says
+which, and a model given texts without its prefix still returns vectors, just not the ones it was
 trained to produce.
 
 None of these models was run here, because all of them are downloaded from Hugging Face. They are
@@ -68,7 +68,7 @@ described so that you recognise the requirement when a card states it.
 ## Choosing a model to try
 
 The **MTEB leaderboard**, the Massive Text Embedding Benchmark, is where most people start. It runs
-hundreds of open and hosted models through the same tasks, retrieval, classification, clustering
-and more, in many languages, and ranks them. It is the right first filter: it removes models that
+hundreds of open and hosted models through the same tasks — retrieval, classification, clustering
+and more — in many languages, and ranks them. It is the right first filter: it removes models that
 are poor at everything. It is not the last one, because its tasks are other people's data, and the
 next section measures what happens when two models meet yours.

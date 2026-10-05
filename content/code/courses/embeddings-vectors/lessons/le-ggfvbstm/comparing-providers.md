@@ -29,9 +29,10 @@ voyage/voyage-3.5-lite         voyage                           0.020       -   
 mistral/mistral-embed          mistral                          0.100       -     -    8192
 ```
 
-`compare.py` keeps the three providers of lessons 7 and 8 and adds three columns: the bytes one
-float32 vector takes at the sheet's dimension, the bill for embedding a million documents of
-500 tokens each, which is half a billion tokens, and the gigabytes their million vectors take.
+`compare.py` keeps the three providers of lessons 7 and 8 and adds three columns. One is the bytes
+a float32 vector takes at the sheet's dimension. Another is the bill for embedding a million
+documents of 500 tokens each, which is half a billion tokens. The last is the gigabytes their
+million vectors take.
 
 ```schooling-example
 {
@@ -72,13 +73,13 @@ models; Cohere documents 1,024 for both. Only two of OpenAI's models have a batc
 
 ## What the sheet cannot say
 
-The four facts are not the whole choice. **Whether the model knows your language** is the first of
-the rest: lesson 1 measured an English model scoring a Portuguese title as unrelated, and three of the
-help centre's 40 articles are in Portuguese. embed-multilingual-v3.0 is named for exactly that, and
+The four facts are not the whole choice. **Whether the model knows your language** is the first
+of the rest: lesson 1 measured an English model scoring a Portuguese title as unrelated, and three
+of the help centre's 40 articles are in Portuguese. embed-multilingual-v3.0 is named for exactly that, and
 gemini-embedding-001 is documented as multilingual. **Whether it helps your search** is the second,
-and only a measurement on your own questions answers it, the one this lesson ran in `search.py` and
-`quantised.py`. And
-whether the data may leave the building at all is the question lesson 9 starts from.
+and only a measurement on your own questions answers it, the one this lesson ran in `search.py`
+and `quantised.py`. And whether the data may leave the building at all is the question lesson 9
+starts from.
 
 The fourth fact on the first list, what each API lets you say about the text, is the one lesson 7 and
 this lesson met call by call:

@@ -96,9 +96,14 @@ for id, title, distance in rows:
     print(f"{distance:.3f}  {1 - distance:.3f}  {id}  {title}")
 EOF_FILE
 put ops.sql <<'EOF_FILE'
-SELECT '[1,0]'::vector <-> '[0.6,0.8]' AS l2,
-       '[1,0]'::vector <=> '[0.6,0.8]' AS cosine_distance,
-       '[1,0]'::vector <#> '[0.6,0.8]' AS negative_inner_product;
+SELECT a.id,
+       a.embedding <-> q.embedding AS l2,
+       a.embedding <=> q.embedding AS cosine_distance,
+       a.embedding <#> q.embedding AS negative_inner_product
+FROM articles a, queries q
+WHERE q.id = 'q01'
+ORDER BY a.embedding <=> q.embedding
+LIMIT 3;
 EOF_FILE
 put recall.sql <<'EOF_FILE'
 SELECT q.id, q.text, top.id AS first, q.relevant
@@ -234,6 +239,9 @@ block ivfflat
 on 'psql -c "CREATE INDEX ON articles USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100)"'
 on 'python search.py "how do I get my money back"'
 
+block probes
+on 'psql -c "SELECT count(*) AS returned FROM (SELECT id FROM articles ORDER BY embedding <=> (SELECT embedding FROM queries WHERE id = '"'"'q01'"'"') LIMIT 3) AS top" -c "SHOW ivfflat.probes"'
+
 block ivfplan
 on 'psql -c "\d articles"'
 on 'psql -c "EXPLAIN (COSTS OFF) SELECT id FROM articles ORDER BY embedding <=> (SELECT embedding FROM queries WHERE id = '"'"'q01'"'"') LIMIT 3"'
@@ -241,10 +249,6 @@ on 'psql -c "EXPLAIN (COSTS OFF) SELECT id FROM articles ORDER BY embedding <=> 
 block dropivf
 on 'psql -c "DROP INDEX articles_embedding_idx1"'
 on 'python search.py "how do I get my money back"'
-
-block toowide
-on 'psql -c "CREATE TABLE wide (id integer, embedding vector(3072))"'
-on 'psql -c "CREATE INDEX ON wide USING hnsw (embedding vector_cosine_ops)"'
 
 block match
 on 'psql -f match.sql'

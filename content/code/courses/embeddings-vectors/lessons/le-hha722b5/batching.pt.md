@@ -95,8 +95,8 @@ textos da requisição, então filtre os textos vazios antes de mandar. E uma li
 
 ## Escolhendo o tamanho da fatia
 
-Dezesseis foi escolhido para que a central de ajuda precisasse de mais de uma requisição. Na
-prática, a fatia é limitada por três coisas: o limite de 2.048 entradas, os tokens da requisição
-(os limites de uso contam tokens por minuto além de requisições) e quanto trabalho você aceita
-repetir quando uma requisição falha. Seja qual for o tamanho, mantenha a ordenação por `index`
+Esta aula usa dezesseis para que a central de ajuda precise de mais de uma requisição. Na
+prática, três coisas limitam a fatia: o limite de 2.048 entradas, os tokens da requisição e quanto
+trabalho você aceita repetir quando uma requisição falha. Os tokens contam porque os limites de uso
+medem tokens por minuto, além de requisições. Seja qual for o tamanho, mantenha a ordenação por `index`
 dentro do laço, onde as posições de cada fatia ainda significam alguma coisa.

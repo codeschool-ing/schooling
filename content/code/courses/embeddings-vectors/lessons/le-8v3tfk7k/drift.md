@@ -56,7 +56,8 @@ w11-w20 after adding w01-w10: flagged 0, mean score 0.368
 **Only four of the twenty cross the cut-off**, and all four are about the subscription: moving
 from monthly to yearly, comparing prices, pausing it, a student discount. The message about
 cancelling Unlimited scores 0.554, just under the line at 0.560, and the next two, about what
-Unlimited includes and whether it can be shared, sit right behind it. Message by message, the new topic mostly passes.
+Unlimited includes and whether it can be shared, sit right behind it. Message by message, the new
+topic mostly passes.
 
 The batch numbers do not miss it. Against the normal messages of the first inbox:
 

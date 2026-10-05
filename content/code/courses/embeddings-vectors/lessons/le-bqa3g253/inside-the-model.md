@@ -4,8 +4,8 @@ version: 1
 ---
 
 `model.encode` looks like one operation, and it is four: **cut the text into pieces, run the
-transformer, average the pieces, scale the average to length 1.** sentence-transformers runs them as a
-short list of modules, a transformer with its tokenizer, a pooling module and a normalising one;
+transformer, average the pieces, scale the average to length 1.** sentence-transformers runs them as
+a short list of modules, a transformer with its tokenizer, a pooling module and a normalising one;
 `minilm.py` does the same with onnxruntime.
 
 ```schooling-figure
@@ -67,16 +67,16 @@ The transformer returned an array of shape `(2, 10, 384)`: for each of the two t
 384 numbers for each of the ten positions, padding included. Each has been through six layers in
 which every piece adjusts to the others, which is what lesson 1 called contextual.
 
-**Mean pooling** turns ten vectors into one by averaging them, and the mask decides which of the ten count.
-Multiplying by the mask zeroes the padding rows, and dividing by the mask's sum divides by the
-number of real pieces, seven here, rather than by ten. The line that skips the mask and averages
-all ten gives a vector whose dot product with the right one is 0.9189 after normalising: close, and
-wrong by a different amount for every text, depending on how much padding its batch happened to
-give it. That is a bug that changes a search result only when a short text shares a batch with a
+**Mean pooling** turns ten vectors into one by averaging them, and the mask decides which of the ten
+count. Multiplying by the mask zeroes the padding rows, and dividing by the mask's sum divides by
+the number of real pieces, seven here, rather than by ten. The line that skips the mask and averages
+all ten gives a vector whose dot product with the right one is 0.9189 after normalising. That is
+close, and it is wrong by a different amount for every text, depending on how much padding its batch
+happened to give it. The bug changes a search result only when a short text shares a batch with a
 long one.
 
-**Normalising** divides each pooled vector by its length. The model card's own example does it, and it
-is what lets every comparison in this course be a dot product.
+**Normalising** divides each pooled vector by its length. The model card's own example does it, and
+it is what lets every comparison in this course be a dot product.
 
 ## The same answer three ways
 

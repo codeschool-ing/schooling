@@ -129,8 +129,8 @@ Sixty books with five neighbours each is 300 neighbours. If neighbours were pick
 well above chance, and still fewer than a third. The blurbs describe plots, and plots cross genres.
 
 Putting the genre into the embedded text, as its first words, raises the count to **235**. That is
-not the model getting better. It is you telling it what to care about, and it is a choice with a
-cost: a genre written into every vector pulls each book towards its shelf and away from the
+not the model getting better. It is you telling it what to care about, and the choice has a cost. A
+genre written into every vector pulls each book towards its shelf and away from the
 mystery-on-the-moors kind of match, which some readers want.
 
 So the text that goes into the embedding is a design decision, like the columns of a table. Title

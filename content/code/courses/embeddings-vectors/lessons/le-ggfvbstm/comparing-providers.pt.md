@@ -30,10 +30,10 @@ voyage/voyage-3.5-lite         voyage                           0.020       -   
 mistral/mistral-embed          mistral                          0.100       -     -    8192
 ```
 
-`compare.py` fica com os três provedores das aulas 7 e 8 e acrescenta três colunas: os bytes que um
-vetor float32 ocupa na dimensão da planilha, a conta para transformar em vetores um milhão de
-documentos de 500 tokens cada, que é meio bilhão de tokens, e os gigabytes que esse milhão de vetores
-ocupa.
+`compare.py` fica com os três provedores das aulas 7 e 8 e acrescenta três colunas. Uma é os bytes
+que um vetor float32 ocupa na dimensão da planilha. Outra é a conta para transformar em vetores um
+milhão de documentos de 500 tokens cada, que é meio bilhão de tokens. A última é os gigabytes que
+esse milhão de vetores ocupa.
 
 ```schooling-example
 {

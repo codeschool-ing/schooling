@@ -5,7 +5,7 @@ version: 1
 
 A descrição mais simples de uma região é o seu centro. Tire a média dos vetores dos 150 chamados
 num único **centroide** e dê a cada mensagem da caixa de entrada uma nota pelo quanto ela aponta
-para longe dele: um menos o cosseno, de modo que 0 significa *igual ao chamado médio* e a nota
+para longe dele. A nota é um menos o cosseno, de modo que 0 significa *igual ao chamado médio* e a nota
 cresce conforme a mensagem se afasta.
 
 ```schooling-example

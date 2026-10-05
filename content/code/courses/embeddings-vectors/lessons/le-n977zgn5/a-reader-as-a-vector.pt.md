@@ -105,13 +105,13 @@ mistério gótico. Às vezes é um livro que não serve a nenhum dos dois humore
 dizer qual dos casos é, porque jogou fora o fato de que eram dois livros. Um sistema que queira
 manter os dois gostos os mantém separados: um vetor por grupo do que a leitora terminou, cada um
 buscado sozinho, e os resultados juntados. Isso é mais maquinário, e com dois livros terminados não
-há grupo para achar; a média é onde todo recomendador começa.
+há grupo para achar; a média é o ponto de partida.
 
 ## Tudo o que ela leu conta igual
 
 A média trata um livro que a Lia terminou semana passada e um que terminou há três anos como iguais,
 e um livro que ela adorou como um que ela largou na última página. Sistemas reais dão pesos à média:
 livros recentes pesam mais, livros avaliados pesam pela nota, livros devolvidos pesam contra. Cada
-peso é um palpite sobre o que a leitora quis dizer, e o jeito de escolher entre palpites é o mesmo
-que a aula 4 usou para classificadores: guarde uma parte do histórico de cada leitora e confira se
+peso é um palpite sobre o que a leitora quis dizer. Você escolhe entre palpites do jeito que a aula
+4 escolheu entre classificadores: guarde uma parte do histórico de cada leitora e confira se
 as recomendações teriam encontrado essa parte.

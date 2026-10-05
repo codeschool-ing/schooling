@@ -36,7 +36,7 @@ dele de que lado um texto está.
 | `CLUSTERING` | textos que vão ser agrupados, sem rótulos |
 
 Os cinco primeiros são os dois lados de uma busca, um tipo de documento e quatro de consulta, e
-essa é a regra que importa: **indexe com `RETRIEVAL_DOCUMENT`, busque com um dos tipos de consulta
+com eles vem uma regra: **indexe com `RETRIEVAL_DOCUMENT`, busque com um dos tipos de consulta
 e nunca indexe com um tipo de consulta.** Os três últimos são simétricos. Todo texto é do mesmo
 tipo, então os dois lados recebem o mesmo task type.
 

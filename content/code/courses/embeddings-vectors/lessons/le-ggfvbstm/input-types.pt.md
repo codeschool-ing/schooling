@@ -24,10 +24,10 @@ parâmetro `task`.
 
 ## Uma busca, escrita como deve ser
 
-Aqui está a busca da central de ajuda pelo SDK do Cohere: os artigos como `search_document`, as 24
-perguntas de clientes como `search_query`, e a medida que a aula 3 constrói, que conta uma pergunta
-como respondida quando um dos artigos relevantes dela fica em primeiro, ou entre os três primeiros.
-As duas últimas linhas mandam as perguntas com o tipo errado de propósito:
+`search.py` roda a busca da central de ajuda pelo SDK do Cohere: os artigos como
+`search_document`, as 24 perguntas de clientes como `search_query`, e a medida que a aula 3
+constrói. Essa medida conta uma pergunta como respondida quando um dos artigos relevantes dela fica
+em primeiro, ou entre os três primeiros. As duas últimas linhas mandam as perguntas com o tipo errado de propósito:
 
 ```schooling-example
 {
@@ -57,9 +57,9 @@ As duas últimas linhas mandam as perguntas com o tipo errado de propósito:
 
 **As três linhas são iguais, 19 na posição 1 e 22 entre os 3 primeiros.** O labembed transforma
 cada pergunta em vetor do mesmo jeito, chegue ela com o tipo que chegar, então as três rodadas
-compararam os mesmos vetores. É o resultado esperado neste laboratório e aquele de que se deve desconfiar em qualquer outro
-lugar. Contra um modelo assimétrico, a primeira linha é aquela para a
-qual ele foi treinado e as outras duas não, e um pipeline descuidado que indexa e pergunta com o
+compararam os mesmos vetores. É o resultado esperado neste laboratório e aquele de que se deve desconfiar em
+qualquer outro lugar. Contra um modelo assimétrico, a primeira linha é aquela para a qual ele foi
+treinado e as outras duas não, e um pipeline descuidado que indexa e pergunta com o
 mesmo tipo está errado de um jeito que nenhum erro acusa.
 
 É assim também que você descobre se o tipo importa para um modelo que está escolhendo. Rode a mesma

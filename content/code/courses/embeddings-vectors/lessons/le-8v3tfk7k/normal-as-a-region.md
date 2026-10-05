@@ -60,8 +60,8 @@ m40  shipping  0.091  Je n'arrive pas à me connecter à mon compte
 ```
 
 The question about boiling water at the top of Everest went to `account`, with a score of 0.034,
-which is next to nothing. The job application went to `shipping`. The scores are low and a careful
-reader could put a cut-off on them, but that cut-off is already a different method in disguise:
+which is next to nothing. The job application went to `shipping`. The scores are low, and a careful
+reader could put a cut-off on them. That cut-off is already a different method in disguise:
 it asks how far a message is from what the classifier knows, which is the question this lesson
 asks directly.
 
@@ -79,10 +79,10 @@ parcel lands inside it; a recipe question lands somewhere the tickets never went
 
 That needs two decisions, and the rest of the lesson takes them in turn:
 
-1. **How to measure the distance from a region.** The next section tries the obvious answer, the
+1. How to measure the distance from a region. The next section tries the obvious answer, the
    distance to the region's centre, and the one after it tries the distance to the nearest normal
    messages.
-2. **Where to cut.** A distance ranks the messages; it does not say which ones to flag. The section
+2. Where to cut. A distance ranks the messages; it does not say which ones to flag. The section
    on thresholds reads the cut-off from normal data.
 
 The `odd` field plays no part in any of it. A detector that needed it would need somebody to label

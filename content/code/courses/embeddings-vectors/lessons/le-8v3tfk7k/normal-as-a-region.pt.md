@@ -61,8 +61,8 @@ m40  shipping  0.091  Je n'arrive pas à me connecter à mon compte
 ```
 
 A pergunta sobre o ponto de ebulição da água no alto do Everest foi para `account`, com nota
-0,034, que é quase nada. A candidatura a emprego foi para `shipping`. As notas são baixas e um
-leitor cuidadoso poderia pôr um corte nelas, mas esse corte já é outro método disfarçado: ele
+0,034, que é quase nada. A candidatura a emprego foi para `shipping`. As notas são baixas, e um
+leitor cuidadoso poderia pôr um corte nelas. Só que esse corte já é outro método disfarçado: ele
 pergunta quão longe uma mensagem está do que o classificador conhece, que é a pergunta que esta
 aula faz diretamente.
 
@@ -81,9 +81,9 @@ lugar onde os chamados nunca foram.
 
 Isso pede duas decisões, e o resto da aula trata de cada uma:
 
-1. **Como medir a distância até uma região.** A próxima seção tenta a resposta óbvia, a distância
+1. Como medir a distância até uma região. A próxima seção tenta a resposta óbvia, a distância
    até o centro da região, e a seguinte tenta a distância até as mensagens normais mais próximas.
-2. **Onde cortar.** Uma distância ordena as mensagens; ela não diz quais marcar. A seção sobre
+2. Onde cortar. Uma distância ordena as mensagens; ela não diz quais marcar. A seção sobre
    limiares lê o corte em dados normais.
 
 O campo `odd` ("estranha") não entra em nada disso. Um detector que precisasse dele precisaria que

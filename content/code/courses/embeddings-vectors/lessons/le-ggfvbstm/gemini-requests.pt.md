@@ -7,10 +7,11 @@ A chamada de embedding de todo provedor tem o mesmo formato: entra texto, volta 
 e o que muda são os nomes das coisas. A aula 7 conheceu esse formato pelo SDK da OpenAI. Esta seção
 o conhece pelo do Google, `google-genai`, e três seções mais adiante pelo do Cohere.
 
-**Nenhum dos dois SDKs fala com o Google ou com o Cohere aqui.** Os dois falam com o **labembed**, um servidor pequeno escrito para este curso que escuta em
-`127.0.0.1:8500`. Ele responde às mesmas URLs com o mesmo JSON que os provedores respondem, de um
-jeito parecido o bastante para que as bibliotecas deles o aceitem sem modificação. Os vetores são reais, dos dois modelos que rodam nesta máquina,
-servidos com os nomes do próprio laboratório, `lab-minilm` (384 números) e `lab-wordllama` (256). O
+**Nenhum dos dois SDKs fala com o Google ou com o Cohere aqui.** Os dois falam com o
+**labembed**, um servidor pequeno escrito para este curso que escuta em `127.0.0.1:8500`. Ele
+responde às mesmas URLs com o mesmo JSON que os provedores respondem, de um jeito parecido o
+bastante para que as bibliotecas deles o aceitem sem modificação. Os vetores são reais, dos dois
+modelos que rodam nesta máquina, servidos com os nomes do próprio laboratório, `lab-minilm` (384 números) e `lab-wordllama` (256). O
 que ele não é: o modelo do Google. Ele recusa o nome `gemini-embedding-001` em vez de responder com
 outra coisa usando esse nome. Contra o Google, o código abaixo muda em três lugares — sem
 `http_options`, o nome real do modelo e a sua própria chave — e em nada mais.
@@ -60,18 +61,18 @@ lote de um. O log também mostra o `task_type` chegando como `null` na primeira 
 
 `output_dimensionality=128` pediu 128 números em vez dos 256 do modelo, e recebeu. O servidor fica
 com as 128 primeiras coordenadas e descarta o resto, o que só funciona com um modelo treinado para
-que as coordenadas iniciais carreguem sozinhas a maior parte do significado; a aula 7 mediu quanto
+que as coordenadas iniciais carreguem sozinhas a maior parte do significado. A aula 7 mediu quanto
 isso custa ao `lab-wordllama` nas 24 consultas. O `lab-minilm` não foi treinado assim, e pedir 128 a
 ele é recusado, como mostra a segunda recusa no fim desta seção.
 
 O modelo do próprio Google, **gemini-embedding-001**, devolve 3.072 números por padrão e é
 documentado como treinado exatamente para esse corte, com 768 e 1.536 como os tamanhos menores
-recomendados. A documentação acrescenta um detalhe fácil de perder: **só a saída cheia, de 3.072
-números, vem normalizada.** Uma mais curta são as primeiras coordenadas de um vetor unitário, que já
+recomendados. A documentação também diz que **só a saída cheia, de 3.072 números, vem
+normalizada.** Uma mais curta são as primeiras coordenadas de um vetor unitário, que já
 não tem comprimento 1, então o produto escalar entre duas delas deixa de ser um cosseno. A última
 parte de `gemini.py` divide cada vetor pelo próprio comprimento por esse motivo. O labembed
 renormaliza depois de cortar, e é por isso que os comprimentos impressos antes dessa linha já são
-1,0 e, aqui, a linha não muda nada; contra o Google, é ela que mantém cada nota na faixa da aula 2.
+1,0 e, aqui, a linha não muda nada. Contra o Google, é ela que mantém cada nota na faixa da aula 2.
 
 ## Quando uma requisição é recusada
 

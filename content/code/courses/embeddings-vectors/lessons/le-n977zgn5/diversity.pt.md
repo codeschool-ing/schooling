@@ -3,7 +3,7 @@ title: Diversidade
 version: 1
 ---
 
-Uma lista dos cinco livros mais próximos são cinco respostas à mesma pergunta, e livros que ficam
+A lista dos cinco livros mais próximos dá cinco respostas à mesma pergunta, e livros que ficam
 todos perto de um mesmo ponto não podem estar longe uns dos outros. Uma leitora que vê cinco
 sugestões quase iguais recebeu, na prática, uma só. O limite por autor da seção anterior é uma regra
 para um tipo de repetição. A **Relevância Marginal Máxima** (*Maximal Marginal Relevance*, MMR) é uma
@@ -18,8 +18,8 @@ A cada passo, cada livro que sobra recebe um valor:
 valor = lambda * semelhança com o leitor - (1 - lambda) * maior semelhança com um livro já escolhido
 ```
 
-O livro de maior valor é escolhido, e o passo se repete até a lista encher. `lambda`, escrito λ daqui em diante, é um botão
-entre 0 e 1. Em 1, o segundo termo some e a MMR é a ordem simples. Conforme ele desce, parecer com o
+O livro de maior valor é escolhido, e o passo se repete até a lista encher. `lambda`, escrito λ
+daqui em diante, é um botão entre 0 e 1. Em 1, o segundo termo some e a MMR é a ordem simples. Conforme ele desce, parecer com o
 que já está na lista custa mais, e um livro que traz algo novo pode passar à frente de um que está um
 pouco mais perto do leitor.
 

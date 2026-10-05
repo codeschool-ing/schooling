@@ -103,13 +103,13 @@ and a gothic mystery. Sometimes it is a book that suits neither of her moods. Th
 tell which, because it has thrown away the fact that there were two books. A system that wants to
 keep both tastes keeps them apart: one vector per cluster of what the reader finished, each
 searched on its own, and the results merged. That is more machinery, and with two finished books
-there is no cluster to find; the average is where every recommender starts.
+there is no cluster to find; the average is the place to start.
 
 ## Everything she read counts the same
 
 The average treats a book Lia finished last week and one she finished three years ago as equal,
 and a book she loved like one she abandoned at the last page. Real systems weight the average:
 recent books more, rated books by their rating, books returned for a refund negatively. Each weight
-is a guess about what the reader meant, and the way to choose between guesses is the one lesson 4
-used for classifiers: hold some of each reader's history back and check whether the recommendations
-would have found it.
+is a guess about what the reader meant. You choose between guesses the way lesson 4 chose between
+classifiers: hold some of each reader's history back and check whether the recommendations would
+have found it.

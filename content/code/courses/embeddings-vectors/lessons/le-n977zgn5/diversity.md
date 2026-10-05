@@ -4,8 +4,8 @@ version: 1
 ---
 
 A list of the five nearest books is five answers to one question, and books that all sit close to
-one point cannot be far from each other. A reader who sees five nearly identical
-suggestions has really been offered one. The author cap of the previous section is a rule for one
+one point cannot be far from each other. A reader who sees five nearly identical suggestions has
+really been offered one. The author cap of the previous section is a rule for one
 kind of sameness. **Maximal Marginal Relevance**, MMR, is a general one: pick the books one at a
 time, and make each new pick pay for how much it resembles the picks already made.
 
@@ -17,8 +17,9 @@ At each step, every remaining book gets a value:
 value = lambda * similarity to the reader - (1 - lambda) * highest similarity to any book already picked
 ```
 
-The book with the highest value is picked, and the step repeats until the list is full. `lambda`, written λ from here on, is a dial between 0 and 1. At 1, the second term vanishes and MMR is the plain ranking. As
-it falls, resemblance to what is already on the list costs more, and a book that brings something
+The book with the highest value is picked, and the step repeats until the list is full. `lambda`,
+written λ from here on, is a dial between 0 and 1. At 1, the second term vanishes and MMR is the
+plain ranking. As it falls, resemblance to what is already on the list costs more, and a book that brings something
 new can overtake one that is slightly closer to the reader.
 
 ```schooling-example
@@ -83,10 +84,10 @@ told: Persuasion resembles nothing already picked, and at that setting being dif
 much as being relevant.
 
 **The dial has no correct setting, and this catalogue shows why it has to be measured.** Between 0.7
-and 0.5 the list goes from barely changed to absurd in two steps. Where the useful middle sits depends on
-how similar the candidates are to each other, which depends on the catalogue and the model. In a
-catalogue holding forty editions of one classic, the penalty would bite at a far higher λ than here. The way
-to choose is the usual one: try a few settings, and measure what readers do with the lists.
+and 0.5 the list goes from barely changed to absurd in two steps. Where the useful middle sits
+depends on how similar the candidates are to each other, which depends on the catalogue and the
+model. In a catalogue holding forty editions of one classic, the penalty would bite at a far higher
+λ than here. The way to choose is the usual one: try a few settings, and measure what readers do with the lists.
 
 ## What MMR does not see
 

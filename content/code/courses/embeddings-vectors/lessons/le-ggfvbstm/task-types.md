@@ -33,8 +33,9 @@ lands near its answers rather than near other questions that sound like it. This
 | `CLASSIFICATION` | texts that will be features for a classifier, as in lesson 4 |
 | `CLUSTERING` | texts that will be grouped, with no labels |
 
-The first five are the two sides of a search, one document type and four query types, and that is the rule that matters: **index with
-`RETRIEVAL_DOCUMENT`, search with one of the query types, and never index with a query type.** The
+The first five are the two sides of a search, one document type and four query types, and they
+come with one rule: **index with `RETRIEVAL_DOCUMENT`, search with one of the query types, and
+never index with a query type.** The
 last three are symmetric. Every text is the same kind of thing, so both sides get the same type.
 
 Which type a vector was made with is part of what the vector is, in the same way lesson 1 made the
@@ -71,12 +72,12 @@ way whatever it says:
 ```
 
 The four vectors for *can I pay in three parts* are identical to the last bit, and the log shows
-that the server received four different task types. gemini-embedding-001 is documented to
-embed them differently; how much was not measured here, because no request reached Google, and no
-number in this course stands in for one.
+that the server received four different task types. gemini-embedding-001 is documented to embed them
+differently; how much was not measured here, because no request reached Google, and no number in
+this course stands in for one.
 
 The consequence for what you write is the opposite of the lab's behaviour. **Pass the task type
 everywhere, even where it makes no difference today.** Code that indexes with `RETRIEVAL_DOCUMENT`
 and searches with `RETRIEVAL_QUERY` is correct against a symmetric model and against an asymmetric
-one. Switching models later then changes one name rather than every call site. The invalid type in the previous section, `SEARCH_QUERY`, is refused with a 400 for the same
-reason: a type the model does not know is a mistake worth hearing about at the first request.
+one. Switching models later then changes one name rather than every call site. The invalid type in
+the previous section, `SEARCH_QUERY`, is refused with a 400 for the same reason: a type the model does not know is a mistake worth hearing about at the first request.

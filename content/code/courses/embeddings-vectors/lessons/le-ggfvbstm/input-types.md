@@ -23,10 +23,10 @@ name `task`.
 
 ## A search, written the way it should be
 
-Here is the help centre's search through Cohere's SDK: the articles as `search_document`, the 24
-customer questions as `search_query`, and the measure lesson 3 builds, which counts a question as
-answered when one of its relevant articles is ranked first, or among the first three. The last
-two lines send the questions with the wrong type on purpose:
+`search.py` runs the help centre's search through Cohere's SDK: the articles as
+`search_document`, the 24 customer questions as `search_query`, and the measure lesson 3 builds.
+That measure counts a question as answered when one of its relevant articles is ranked first, or
+among the first three. The last two lines send the questions with the wrong type on purpose:
 
 ```schooling-example
 {
@@ -54,9 +54,9 @@ two lines send the questions with the wrong type on purpose:
 }
 ```
 
-**All three lines are the same, 19 at rank 1 and 22 in the top 3.** labembed embeds every question the same
-way whatever type it arrives with, so the three runs compared the same vectors. That is the expected result in this lab and the one to distrust everywhere else. Against an
-asymmetric model the first line is the one it was trained for and the other two are not, and a
+**All three lines are the same, 19 at rank 1 and 22 in the top 3.** labembed embeds every question
+the same way whatever type it arrives with, so the three runs compared the same vectors. That is the
+expected result in this lab and the one to distrust everywhere else. Against an asymmetric model the first line is the one it was trained for and the other two are not, and a
 careless pipeline that indexes and asks with the same type is wrong in a way no error reports.
 
 This is also how you find out whether the type matters for a model you are choosing. Run the same
@@ -68,5 +68,5 @@ Either way the code keeps the right pair, because the next model may be the othe
 
 A vector stored without its type is a vector somebody will one day compare with the wrong kind.
 Lesson 11 gives every stored vector a record with metadata beside it, and that is where these go:
-**the model, the input type or task type, and the dimension setting** when the provider has one. Three fields are cheap. Re-embedding a collection because nobody can tell how it
-was made is not.
+**the model, the input type or task type, and the dimension setting** when the provider has one.
+Three fields are cheap. Re-embedding a collection because nobody can tell how it was made is not.

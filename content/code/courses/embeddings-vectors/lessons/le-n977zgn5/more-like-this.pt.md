@@ -133,7 +133,7 @@ Sessenta livros com cinco vizinhos cada dão 300 vizinhos. Se os vizinhos fossem
 do acaso, e ainda menos de um terço. As sinopses descrevem enredos, e enredos atravessam gêneros.
 
 Pôr o gênero no texto, como primeiras palavras, sobe a contagem para **235**. Isso não é o modelo
-melhorando. É você dizendo a ele com o que se importar, e é uma escolha com custo: um gênero escrito
+melhorando. É você dizendo a ele com o que se importar, e a escolha tem um custo. Um gênero escrito
 em todo vetor puxa cada livro para a sua prateleira e o afasta do tipo de semelhança
 mistério-nas-charnecas, que alguns leitores querem.
 

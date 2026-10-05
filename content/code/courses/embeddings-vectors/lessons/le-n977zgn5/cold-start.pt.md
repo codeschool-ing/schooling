@@ -5,8 +5,8 @@ version: 1
 
 Um recomendador é fácil de julgar com leitores de histórico longo. Os casos difíceis ficam nas
 pontas: um livro que ninguém leu ainda, e um leitor que não leu nada. Os dois se chamam **partida a
-frio** (*cold start*), e o método desta aula lida com eles de jeitos bem diferentes, um bem e o
-outro de jeito nenhum.
+frio** (*cold start*), e o método desta aula lida bem com um deles e com o outro de jeito
+nenhum.
 
 ```schooling-example
 {
@@ -62,7 +62,7 @@ Marcos asked for ghost stories:
 
 *The Lost World* (*O mundo perdido*) não está no catálogo. A sinopse dele, escrita no programa, vira
 vetor do mesmo jeito que as outras sessenta, e o livro está pronto para ser recomendado antes de
-vender um exemplar: o vizinho mais próximo é *Journey to the Centre of the Earth*, com 0,643, outro
+vender um exemplar. O vizinho mais próximo é *Journey to the Centre of the Earth*, com 0,643, outro
 professor numa expedição a um mundo pré-histórico perdido. A segunda metade do programa pergunta ao
 vetor de cada leitor em que posição o livro novo ficaria entre os que ele ainda não leu. **O Caio o
 veria em primeiro.**
@@ -70,7 +70,7 @@ veria em primeiro.**
 A Íris o veria em terceiro, com 0,374, e ela terminou *Walden*, *Meditations* (*Meditações*) e *On
 the Origin of Species* (*A origem das espécies*). Um professor que encontra dinossauros ainda vivos
 provavelmente fica perto, aos olhos do modelo, de um livro sobre espécies que mudam ao longo das
-gerações, e se uma leitora de filosofia quer uma aventura é algo que só ela pode dizer. É um palpite
+gerações. Se uma leitora de filosofia quer uma aventura, só ela pode dizer. É um palpite
 razoável, feito no primeiro dia, só com texto.
 
 Essa é a força da recomendação **baseada em conteúdo**, que é tudo o que esta aula construiu: a

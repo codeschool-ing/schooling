@@ -3,10 +3,10 @@ title: A requisição
 version: 1
 ---
 
-Todo vetor até aqui veio de um modelo rodando no notebook da Ana. A maioria das equipes não roda o
-seu: manda texto para um provedor por HTTP, recebe vetores de volta e paga por token. O endpoint de
-embeddings da OpenAI é o mais copiado deles, e esta aula o chama com a biblioteca Python da própria
-OpenAI, `openai`.
+Todo vetor até aqui veio de um modelo rodando no notebook da Ana. Muitas equipes não rodam o
+próprio: mandam texto para um provedor por HTTP, recebem vetores de volta e pagam por token. Esta
+aula chama o endpoint de embeddings da OpenAI, cujo formato outros provedores copiam, com a
+biblioteca Python da própria OpenAI, `openai`.
 
 ## Quem responde nesta máquina
 

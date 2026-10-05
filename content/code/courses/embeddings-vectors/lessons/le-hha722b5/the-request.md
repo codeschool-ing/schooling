@@ -3,10 +3,9 @@ title: The request
 version: 1
 ---
 
-Every vector so far came from a model running on Ana's laptop. Most teams do not run their own: they
-send text to a provider over HTTP and get vectors back, and pay per token. OpenAI's embeddings
-endpoint is the most widely copied of these, and this lesson calls it with OpenAI's own Python
-library, `openai`.
+Every vector so far came from a model running on Ana's laptop. Many teams do not run their own: they
+send text to a provider over HTTP, get vectors back, and pay per token. This lesson calls OpenAI's
+embeddings endpoint, whose format other providers copy, with OpenAI's own Python library, `openai`.
 
 ## What is answering on this machine
 

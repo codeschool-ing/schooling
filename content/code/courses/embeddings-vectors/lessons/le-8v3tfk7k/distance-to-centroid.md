@@ -4,8 +4,9 @@ version: 1
 ---
 
 The simplest description of a region is its centre. Average the 150 tickets' vectors into one
-**centroid**, and score every inbox message by how far it points from it: one minus the cosine,
-so that 0 means *exactly like the average ticket* and the score grows as a message turns away.
+**centroid**, and score every inbox message by how far it points from it. The score is one
+minus the cosine, so 0 means *exactly like the average ticket* and the score grows as a message
+turns away.
 
 ```schooling-example
 {
@@ -49,8 +50,8 @@ with a score above 1, which means its cosine with the average ticket is slightly
 is a good start for so little code.
 
 The eighth is the problem. **The free-iPhone spam, m33, comes 16th**, below eight ordinary messages
-about fonts, shipping to Argentina and two-factor codes. A detector set to flag the top eight would let it
-through and flag the complaint about the reading app's font instead.
+about fonts, shipping to Argentina and two-factor codes. A detector set to flag the top eight
+would let it through and flag the complaint about the reading app's font instead.
 
 ## Why one centre misses it
 

@@ -95,8 +95,8 @@ rather than cut down; the slicing in `embed_all` is the fix.
 
 ## Choosing the slice size
 
-Sixteen was chosen so that the help centre would need more than one request. In practice the
-slice is bounded by three things: the 2,048-input limit, the tokens in the request (rate limits are
-counted in tokens per minute as well as requests), and how much work you are willing to repeat
-when one request fails. Whatever the size, keep the sort by `index` inside the loop, where each slice's own positions still mean
-something.
+This lesson uses sixteen so that the help centre needs more than one request. In practice three
+things bound the slice: the 2,048-input limit, the tokens in the request, and how much work you are
+willing to repeat when one request fails. The tokens count because rate limits are measured in
+tokens per minute as well as in requests. Whatever the size, keep the sort by `index` inside the
+loop, where each slice's own positions still mean something.

@@ -5,11 +5,11 @@ version: 1
 
 Um leaderboard responde *qual modelo vai bem, em média, em muitas tarefas que não são as suas*. A
 pergunta que você tem é mais estreita: **qual modelo acha o artigo certo para as perguntas dos seus
-clientes.** O único jeito de respondê-la é a medida que este curso vem rodando desde a aula 3, nas 24
-perguntas que o curso anotou com os artigos que as respondem.
+clientes.** O único jeito de respondê-la é a medida que este curso vem rodando desde a aula 3, nas
+24 perguntas que o curso anotou com os artigos que as respondem.
 
-Aqui estão os dois modelos que o laboratório roda, lado a lado, com as perguntas que cada um errou na
-posição 1:
+Aqui estão os dois modelos que o laboratório roda, lado a lado, com as perguntas que cada um errou
+na posição 1:
 
 ```schooling-example
 {
@@ -43,30 +43,30 @@ para quem tem na cabeça a imagem de que o maior e mais sofisticado sempre ganha
 ## O que isso não mostra
 
 Leia a última coluna antes da primeira. **Os dois modelos erraram perguntas diferentes.** O MiniLM
-errou q01, q08, q17, q19 e q21; o WordLlama errou q02, q11, q13 e q23; nenhuma pergunta está nas duas
-listas. Então a diferença de uma na posição 1 não é um modelo sendo melhor na mesma coisa. São dois
-modelos com pontos cegos diferentes, e quatro ou cinco perguntas decidindo o placar.
+errou q01, q08, q17, q19 e q21; o WordLlama errou q02, q11, q13 e q23; nenhuma pergunta está nas
+duas listas. Então a diferença de uma na posição 1 não é um modelo sendo melhor na mesma coisa. São
+dois modelos com pontos cegos diferentes, e quatro ou cinco perguntas decidindo o placar.
 
 Três limites decorrem disso, e cada um é um motivo para não generalizar:
 
-- **24 perguntas é pouco.** Uma pergunta vale uns quatro pontos do placar, e duas perguntas
-  reescritas poderiam inverter a ordem na posição 1.
-- **Um domínio só.** A central de ajuda de uma livraria tem artigos curtos, escritos de forma simples
-  e num registro só. A aula 1 mostrou o WordLlama avaliando *the dog bit the man* ("o cachorro mordeu
-  o homem") e *the man bit the dog* como o mesmo texto, e um corpus em que a ordem das palavras importa
-  poderia inverter o resultado.
-- **Os artigos são curtos.** Nenhum passa de 102 pedaços, então o limite do MiniLM nunca entrou em
-  jogo, nem qualquer vantagem que um modelo contextual tenha em textos longos.
+- 24 perguntas é pouco. Uma pergunta vale uns quatro pontos do placar, e duas perguntas reescritas
+  poderiam inverter a ordem na posição 1.
+- Um domínio só. A central de ajuda de uma livraria tem artigos curtos, escritos de forma simples e
+  num registro só. A aula 1 mostrou o WordLlama avaliando *the dog bit the man* ("o cachorro mordeu
+  o homem") e *the man bit the dog* como o mesmo texto, e um corpus em que a ordem das palavras
+  importa poderia inverter o resultado.
+- Os artigos são curtos. Nenhum passa de 102 pedaços, então o limite do MiniLM nunca entrou em jogo,
+  nem qualquer vantagem que um modelo contextual tenha em textos longos.
 
 Então o resultado não é *o WordLlama é o melhor modelo*. É **nesta central de ajuda, com estas
-perguntas, o modelo mais barato é bom o bastante**, e é exatamente nesse tipo de afirmação que a
+perguntas, o modelo mais barato é bom o bastante**, e é nesse tipo de afirmação que a
 escolha de um modelo deve se apoiar. A aula 10 acrescenta o lado do custo, e a próxima seção mede a
 velocidade que faz isso importar.
 
 ## Montando o seu próprio conjunto
 
-Vinte e quatro perguntas são um começo, não um fim. O conjunto útil cresce com o uso real: as
-perguntas que os clientes digitaram e que não acharam nada útil, cada uma anotada com o artigo que
-deveria tê-la respondido. **Guarde o conjunto junto do código, rode-o sempre que o modelo, a divisão
-em trechos ou o texto mudarem**, e compare modelos nele antes de compará-los em qualquer outra coisa.
-A aula 16 usa a mesma medida para escolher quantos resultados devolver.
+Vinte e quatro perguntas são um começo. O conjunto útil cresce com o uso real: as perguntas que os
+clientes digitaram e que não acharam nada útil, cada uma anotada com o artigo que deveria tê-la
+respondido. **Guarde o conjunto junto do código, rode-o sempre que o modelo, a divisão em trechos ou
+o texto mudarem**, e compare modelos nele antes de compará-los em qualquer outra coisa. A aula 16
+usa a mesma medida para escolher quantos resultados devolver.
