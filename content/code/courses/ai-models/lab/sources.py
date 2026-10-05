@@ -90,6 +90,10 @@ DOCS = {
 PAGES = {
     "claude-models": "https://platform.claude.com/docs/en/about-claude/models/overview",
     "claude-pricing": "https://platform.claude.com/docs/en/about-claude/pricing",
+    "claude-caching": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+    "claude-errors": "https://platform.claude.com/docs/en/api/errors",
+    "claude-rate-limits": "https://platform.claude.com/docs/en/api/rate-limits",
+    "claude-versioning": "https://platform.claude.com/docs/en/api/versioning",
 }
 
 

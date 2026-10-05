@@ -101,6 +101,11 @@ SEEN = {}        # key -> deque of request times
 TURNS = {}       # (model, case) -> how many times it was asked, for the unstable cases
 STORED = {}      # response id -> (input items, output text), for previous_response_id
 LOADED = {}      # Ollama: model -> when keep_alive lets it go (epoch seconds)
+CACHED = {}      # Anthropic prompt caching: hash of a cached prefix -> when it expires
+# The shortest prefix each model will cache, in tokens: the course's numbers,
+# shaped like the per-model minimums Anthropic documents. Below it, a request
+# marked for caching is processed without caching, and nothing says so.
+CACHE_MIN = {"standin-large": 1024, "standin-small": 2048}
 
 
 def load(name):
@@ -467,13 +472,38 @@ class Handler(BaseHTTPRequestHandler):
                           f"maximum allowed number of output tokens for {req['model']}")
         return count(req.get("system"), msgs)
 
+    def cache(self, req, n_in):
+        """Prompt caching: the prefix up to the last block marked cache_control, if it is long
+        enough. Returns (written, read) token counts; input_tokens is what remains after them."""
+        system, msgs = req.get("system"), req["messages"]
+        marks = []
+        if isinstance(system, list) and any(isinstance(b, dict) and b.get("cache_control") for b in system):
+            marks.append((system, [], max(i for i, b in enumerate(system) if b.get("cache_control"))))
+        for i, m in enumerate(msgs):
+            blocks = m.get("content")
+            if isinstance(blocks, list) and any(isinstance(b, dict) and b.get("cache_control") for b in blocks):
+                marks.append((system, msgs[:i + 1], i))
+        if not marks:
+            return 0, 0
+        sys_part, msg_part, _ = marks[-1]
+        prefix = count(sys_part, msg_part)
+        if prefix < CACHE_MIN.get(req["model"], 10 ** 9) or prefix > n_in:
+            return 0, 0
+        ttl = 3600 if '"ttl": "1h"' in json.dumps([sys_part, msg_part]) else 300
+        key = hashlib.sha256(json.dumps([req["model"], sys_part, msg_part], sort_keys=True).encode()).hexdigest()
+        now = time.time()
+        hit = CACHED.get(key, 0) > now
+        CACHED[key] = now + ttl  # a hit refreshes the lifetime
+        return (0, prefix) if hit else (prefix, 0)
+
     def messages(self, req, headers, record):
         self.check_anthropic(req)
         toks, reason, n_in = self.produce(req["model"], req.get("system"), req["messages"], req["max_tokens"],
                                           req.get("temperature"), record)
         stop = {"end": "end_turn", "length": "max_tokens"}[reason]
-        usage = {"input_tokens": n_in, "output_tokens": len(toks),
-                 "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0}
+        written, read = self.cache(req, n_in)
+        usage = {"input_tokens": n_in - written - read, "output_tokens": len(toks),
+                 "cache_creation_input_tokens": written, "cache_read_input_tokens": read}
         record["usage"] = usage
         mid = "msg_lab_%04d" % self.n
         if not req.get("stream"):
