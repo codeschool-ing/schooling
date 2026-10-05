@@ -70,8 +70,8 @@ oferece.
 
 Os três grupos se separam sozinhos. Nada disse ao modelo a categoria de cada artigo; as categorias
 saíram do significado dos títulos. Dois pontos ficam onde não se esperaria, e os dois fazem sentido
-quando se lê o título: **Damaged books on arrival** ("livros danificados na chegada") é um artigo de
-entrega que fala de livros, então escorrega para os e-books; **Refunds for e-books** ("reembolso de
+quando se lê o título. **Damaged books on arrival** ("livros danificados na chegada") é um artigo de
+entrega que fala de livros, então escorrega para os e-books. **Refunds for e-books** ("reembolso de
 e-books") é um artigo de e-book que fala de dinheiro, então escorrega para os pagamentos.
 
 Trate a figura como um esboço e não como uma medida. Os dois eixos guardaram 0,317 da variância, um

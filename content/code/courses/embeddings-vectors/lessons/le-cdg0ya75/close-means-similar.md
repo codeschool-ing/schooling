@@ -68,8 +68,8 @@ analysis, the same method any statistics library offers.
 
 The three groups separate on their own. Nothing told the model which category an article belongs
 to; the categories came out of the meaning of the titles. Two points sit where you would not
-expect them, and both make sense once you read the title: **Damaged books on arrival** is a
-shipping article that talks about books, so it drifts towards the e-books; **Refunds for e-books**
+expect them, and both make sense once you read the title. **Damaged books on arrival** is a
+shipping article that talks about books, so it drifts towards the e-books. **Refunds for e-books**
 is an e-book article about money, so it drifts towards the payments.
 
 Treat the picture as a sketch and not a measurement. The two axes kept 0.317 of the variance, a
