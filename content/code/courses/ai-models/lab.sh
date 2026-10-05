@@ -13,7 +13,9 @@
 #   /opt/aimodels-cohere  Cohere's SDK on its own: it pins an older
 #                         huggingface_hub than the one lesson 19 uses
 #   /opt/aimodels/node    Node.js packages: Transformers.js for lesson 13,
-#                         js-tiktoken for the token counter
+#                         js-tiktoken for the token counter, and Playwright,
+#                         which drives the headless Chromium `browse` opens
+#                         (lab/browse.mjs) in place of ana clicking
 #   127.0.0.1:8500        standin, which answers in place of eight providers
 #   127.0.0.1:11434       standin again, where Ollama listens
 #   /var/log/standin      every request standin received, one JSON line each,
@@ -56,9 +58,9 @@ NODEDIR=$VENV/node
 LOGDIR=/var/log/standin
 TZ_LAB=America/Sao_Paulo
 PYLIBS="anthropic==1.11.0 openai==3.24.0 google-genai==2.28.0 huggingface_hub==2.1.1
-  mistralai==3.0.0 ollama==0.6.3 tiktoken==0.14.0 numpy==2.4.6 jsonschema==4.26.0"
+  mistralai==3.0.0 ollama==0.6.3 tiktoken==0.14.0 numpy==2.4.6 jsonschema==4.26.0 onnx==1.23.1"
 COHERELIBS="cohere==7.2.0"
-JSLIBS="js-tiktoken@1.0.21 @huggingface/transformers@4.3.0"
+JSLIBS="js-tiktoken@1.0.21 @huggingface/transformers@4.3.0 playwright@1.56.0"
 
 # The environment every command of ana's runs in. The keys are the lab's and
 # open nothing anywhere else; the base URLs are what point each SDK at standin.
@@ -87,6 +89,8 @@ OPENROUTER_API_KEY=sk-or-lab-key-0001
 OLLAMA_HOST=http://127.0.0.1:11434
 PYTHONDONTWRITEBYTECODE=1
 EOF
+  # Where Playwright finds its Chromium, when the machine says (lab/browse.mjs).
+  [ -z "${PLAYWRIGHT_BROWSERS_PATH:-}" ] || echo "PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH" >> "$ENVFILE"
 }
 
 need() {
@@ -115,6 +119,11 @@ install_lab() {
   install -m 0755 "$HERE/lab/sheet.py" $VENV/bin/sheet
   install -m 0755 "$HERE/lab/sources.py" $VENV/bin/sources
   install -m 0755 "$HERE/lab/wire.py" $VENV/bin/wire
+  install -m 0755 "$HERE/lab/train_sorter.py" $VENV/bin/train-sorter
+  mkdir -p $NODEDIR
+  install -m 0644 "$HERE/lab/browse.mjs" $NODEDIR/browse.mjs
+  printf '#!/bin/sh\nexec node %s "$@"\n' $NODEDIR/browse.mjs > $VENV/bin/browse
+  chmod 0755 $VENV/bin/browse
 }
 
 # The two things fetched from the network, once, so that every command in the
@@ -132,7 +141,8 @@ build_node() {
   mkdir -p $NODEDIR $SHARE/tiktoken
   # --ignore-scripts: onnxruntime-node's install script fetches GPU libraries
   # from a host this machine cannot reach. The CPU runtime is inside the
-  # package itself, and the CPU is all lesson 13 uses.
+  # package itself, and the CPU is all lesson 13 uses. Playwright's own
+  # script would download a Chromium; the machine already has one.
   ( cd $NODEDIR && { [ -f package.json ] || npm init -y >/dev/null; } && npm install --silent --ignore-scripts $JSLIBS )
   ( cd $NODEDIR && node -e '
     const fs = require("fs"), crypto = require("crypto");
@@ -160,6 +170,9 @@ build_desk() {
   rm -rf /home/ana/desk
   runuser -u ana -- mkdir -p /home/ana/desk/cases /home/ana/desk/prompts /home/ana/desk/lab
   install -o ana -m 0644 "$HERE/lab/cases.jsonl" /home/ana/desk/cases/triage.jsonl
+  # A project's own node_modules, as `npm install` would leave it: Node's
+  # `import` looks for packages beside the program, not in NODE_PATH.
+  runuser -u ana -- ln -s $NODEDIR/node_modules /home/ana/desk/node_modules
   runuser -u ana -- tee /home/ana/desk/prompts/triage.txt >/dev/null <<'EOF'
 You sort the e-mail of Lantern Books, an online bookshop.
 Answer with exactly one label and nothing else:

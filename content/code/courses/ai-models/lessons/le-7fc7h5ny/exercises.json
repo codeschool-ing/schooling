@@ -1,0 +1,398 @@
+[
+  {
+    "id": "ex-k8vmtkqr",
+    "version": 1,
+    "section": "runtime",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Transformers.js, which half does the arithmetic of the model?",
+    "hint": "The half that executes a graph.",
+    "choices": [
+      {
+        "text": "The tokenizer, which also turns numbers back into labels",
+        "correct": false,
+        "why": "Labels come from config.json, through the library."
+      },
+      {
+        "text": "ONNX Runtime",
+        "correct": true,
+        "why": "Right: native in Node, WebAssembly in a browser."
+      },
+      {
+        "text": "The Hub, which runs it remotely",
+        "correct": false,
+        "why": "Nothing is fetched from the Hub here."
+      },
+      {
+        "text": "config.json, which holds the architecture",
+        "correct": false,
+        "why": "It names the architecture; it computes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-tt8wzphx",
+    "version": 1,
+    "section": "runtime",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each dtype to the file Transformers.js asks for.",
+    "hint": "The suffix table.",
+    "pairs": [
+      {
+        "left": "fp32",
+        "right": "onnx/model.onnx"
+      },
+      {
+        "left": "q8",
+        "right": "onnx/model_quantized.onnx"
+      },
+      {
+        "left": "q4",
+        "right": "onnx/model_q4.onnx"
+      },
+      {
+        "left": "fp16",
+        "right": "onnx/model_fp16.onnx"
+      }
+    ],
+    "right_distractors": [
+      "onnx/model_fp32.onnx"
+    ]
+  },
+  {
+    "id": "ex-rxnqq89v",
+    "version": 1,
+    "section": "runtime",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ana's program names no dtype. In Node on the CPU it loads model.onnx. Which file does the same call ask for in a browser running WebAssembly?",
+    "hint": "DEFAULT_DEVICE_DTYPE_MAPPING.",
+    "choices": [
+      {
+        "text": "model.onnx, as in Node",
+        "correct": false,
+        "why": "The browser's default is q8."
+      },
+      {
+        "text": "model_fp16.onnx, because browsers prefer half precision",
+        "correct": false,
+        "why": "The mapping says q8 for wasm."
+      },
+      {
+        "text": "model_quantized.onnx",
+        "correct": true,
+        "why": "Right: q8 on wasm."
+      },
+      {
+        "text": "model_q4.onnx",
+        "correct": false,
+        "why": "q4 is never a default here."
+      }
+    ]
+  },
+  {
+    "id": "ex-bs5gw27s",
+    "version": 1,
+    "section": "files",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ana's model gives each of its 224 vocabulary words five numbers, one per label, and adds one bias per label. How many numbers is that?",
+    "hint": "224 × 5 + 5.",
+    "value": 1125,
+    "tolerance": 0,
+    "unit": "numbers"
+  },
+  {
+    "id": "ex-0c3zmvch",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "config.json says model_type: bert, and ana's model is no BERT. Why does Transformers.js load it anyway?",
+    "hint": "What does the loading code need from the graph?",
+    "choices": [
+      {
+        "text": "It checks the weights and corrects the type",
+        "correct": false,
+        "why": "It checks nothing; it believes the file."
+      },
+      {
+        "text": "The graph has the inputs and output that code expects",
+        "correct": true,
+        "why": "Right: input_ids, attention_mask, logits."
+      },
+      {
+        "text": "Any model_type loads any ONNX file",
+        "correct": false,
+        "why": "The type picks the loading code."
+      },
+      {
+        "text": "Because train-sorter downloaded a BERT",
+        "correct": false,
+        "why": "Nothing was downloaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfp90597",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The order number 20488 became [UNK]. What does the model make of it?",
+    "hint": "What does an unknown token carry?",
+    "choices": [
+      {
+        "text": "It reads it as an order, so it leans to order-status",
+        "correct": false,
+        "why": "It cannot read it at all."
+      },
+      {
+        "text": "It treats it as the nearest word it knows",
+        "correct": false,
+        "why": "There is no nearest; it is one token for everything unknown."
+      },
+      {
+        "text": "Nothing: [UNK] carries no evidence",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It refuses the e-mail",
+        "correct": false,
+        "why": "It sorts it on the other words."
+      }
+    ]
+  },
+  {
+    "id": "ex-jq33q0ad",
+    "version": 1,
+    "section": "files",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The file that turns the model's fourth number into product-question is ___ (name the file).",
+    "hint": "It holds id2label.",
+    "blanks": [
+      {
+        "accept": [
+          "config.json"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xrh8w2qh",
+    "version": 1,
+    "section": "node",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "c36 was sorted address-change with a score of 0.502. What does the score tell ana?",
+    "hint": "Confidence or accuracy?",
+    "choices": [
+      {
+        "text": "The model was unsure of this one",
+        "correct": true,
+        "why": "Right: a score is confidence, not accuracy."
+      },
+      {
+        "text": "That half of the ten held-out cases are right",
+        "correct": false,
+        "why": "The score is about one e-mail."
+      },
+      {
+        "text": "That address-change is right half the time",
+        "correct": false,
+        "why": "That would need many cases."
+      },
+      {
+        "text": "Nothing; scores are random",
+        "correct": false,
+        "why": "The same input gives the same score."
+      }
+    ]
+  },
+  {
+    "id": "ex-dq5da2dd",
+    "version": 1,
+    "section": "node",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Seven of ten held-out cases were right. What can ana conclude about the model's accuracy?",
+    "hint": "Lesson 5 section 06.",
+    "choices": [
+      {
+        "text": "It is 70%",
+        "correct": false,
+        "why": "That is this sample's rate, not the model's."
+      },
+      {
+        "text": "It is worse than any chat model",
+        "correct": false,
+        "why": "Nothing compared them."
+      },
+      {
+        "text": "It is at least 90% on the training cases, so it is fine",
+        "correct": false,
+        "why": "Training cases say nothing about new ones."
+      },
+      {
+        "text": "Roughly 40% to 89%: too wide to decide",
+        "correct": true,
+        "why": "Right: the Wilson interval on ten cases."
+      }
+    ]
+  },
+  {
+    "id": "ex-e733stpg",
+    "version": 1,
+    "section": "browser",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After ana pressed the button, how many requests carried the e-mail's text?",
+    "hint": "Look for a request after the click.",
+    "choices": [
+      {
+        "text": "One, to the page's server",
+        "correct": false,
+        "why": "There is no request after the click."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right: it ran in the browser."
+      },
+      {
+        "text": "One, to the Hub",
+        "correct": false,
+        "why": "Remote models were off."
+      },
+      {
+        "text": "Nine, one per file",
+        "correct": false,
+        "why": "Those loaded the page, the runtime and the model."
+      }
+    ]
+  },
+  {
+    "id": "ex-xey9s0xr",
+    "version": 1,
+    "section": "browser",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The page fetched 27,507,633 bytes and the runtime's .wasm was 26,861,777 of them. What percentage of the total was the .wasm? Answer to one decimal place.",
+    "hint": "Divide and multiply by 100.",
+    "value": 97.7,
+    "tolerance": 0.05,
+    "unit": "%"
+  },
+  {
+    "id": "ex-c43gptxs",
+    "version": 1,
+    "section": "browser",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does sort.html set wasmPaths to a path on its own server?",
+    "hint": "Where does the library look otherwise?",
+    "choices": [
+      {
+        "text": "The runtime is faster from the same host",
+        "correct": false,
+        "why": "Speed is not the argument."
+      },
+      {
+        "text": "Without it the page uses the Hub's servers to run the model",
+        "correct": false,
+        "why": "The runtime runs in the browser either way."
+      },
+      {
+        "text": "Otherwise a public CDN learns who opened the page",
+        "correct": true,
+        "why": "Right: cdn.jsdelivr.net, a third party."
+      },
+      {
+        "text": "The .wasm file is not allowed on a CDN",
+        "correct": false,
+        "why": "No such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-3qkjct4t",
+    "version": 1,
+    "section": "browser",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "ana's page works in Node tests and then shows 'loading the model…' forever in a browser. Which change fixes it, given her repository has only model.onnx?",
+    "hint": "Which file did the browser ask for?",
+    "choices": [
+      {
+        "text": "Pass dtype: \"fp32\" to the pipeline",
+        "correct": true,
+        "why": "Right: the same file in both."
+      },
+      {
+        "text": "Set allowRemoteModels to true",
+        "correct": false,
+        "why": "That fetches from the Hub, which she wanted to avoid."
+      },
+      {
+        "text": "Rename config.json",
+        "correct": false,
+        "why": "The missing file is the quantized model."
+      },
+      {
+        "text": "Use a larger model",
+        "correct": false,
+        "why": "Size is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-jevmg4vt",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these move to the visitor's side when a model runs in the page? Choose all that apply.",
+    "hint": "Section 05's price column.",
+    "choices": [
+      {
+        "text": "Downloading the runtime and the model",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The memory the model needs",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A per-token bill",
+        "correct": false,
+        "why": "There is none."
+      },
+      {
+        "text": "Choosing the model's licence",
+        "correct": false,
+        "why": "The licence belongs to the model."
+      }
+    ]
+  }
+]
