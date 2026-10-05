@@ -1,0 +1,735 @@
+[
+  {
+    "id": "ex-qfx846he",
+    "version": 1,
+    "section": "chroma",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`load.py` passed ids, documents and metadata to `col.add`, and no vectors. Where did the 40 vectors come from?",
+    "hint": "Look at what `same.py` compared.",
+    "choices": [
+      {
+        "text": "Chroma ran its default embedding function on the texts",
+        "correct": true,
+        "why": "Right. With no `embeddings` argument, Chroma embeds the documents itself, and `same.py` found its stored vector equal to `minilm.embed`'s to the eighth decimal."
+      },
+      {
+        "text": "Chroma kept only the texts and makes a vector each time a query arrives",
+        "correct": false,
+        "why": "The vectors are made when the records are written: `same.py` read a stored vector back with `include=[\"embeddings\"]`."
+      },
+      {
+        "text": "Chroma sent the texts to labembed, the lab's stand-in provider",
+        "correct": false,
+        "why": "The default embedding function runs an ONNX file inside the Python process; nothing in `load.py` talks to port 8500."
+      },
+      {
+        "text": "Chroma hashed each text into 384 numbers",
+        "correct": false,
+        "why": "A hash would not land within 3.7e-08 of the model's vector. The numbers came from the model."
+      }
+    ]
+  },
+  {
+    "id": "ex-7m3ry5g7",
+    "version": 1,
+    "section": "chroma",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`same.py` compared Chroma's stored vector for h15 with `minilm.embed` of the same text and found a largest difference of about 3.7e-08. What does that show?",
+    "hint": "Where did `minilm.py` get its model file?",
+    "choices": [
+      {
+        "text": "Chroma compresses vectors a little when it stores them",
+        "correct": false,
+        "why": "A compressed vector would differ far more than in the eighth decimal, and the stored array had all 384 numbers in float32."
+      },
+      {
+        "text": "Both are the same model, and the gap is rounding",
+        "correct": true,
+        "why": "Right. `minilm.py` runs Chroma's own ONNX export, so the only difference is two programs doing the same arithmetic in a slightly different order."
+      },
+      {
+        "text": "They are different models that happen to agree closely",
+        "correct": false,
+        "why": "Two different models give unrelated coordinates, as lesson 1 showed; agreement to the eighth decimal is the same model."
+      },
+      {
+        "text": "Chroma normalises the vector and `minilm.py` does not",
+        "correct": false,
+        "why": "Both return unit-length vectors. Normalising one and not the other would change every number, not the eighth decimal."
+      }
+    ]
+  },
+  {
+    "id": "ex-x4h2mh0j",
+    "version": 1,
+    "section": "chroma",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A nightly job re-imports the help centre into Chroma with `col.add`, using the article ids. An article was edited yesterday. What does the collection hold for it after tonight's run?",
+    "hint": "`change.py` called `add` twice with the same id.",
+    "choices": [
+      {
+        "text": "The edited text, because `add` replaces a record with the same id",
+        "correct": false,
+        "why": "That is what `upsert` does. `change.py`'s second `add` left 'Gift cards by email.' in place."
+      },
+      {
+        "text": "The old text and its old vector, and no error was raised",
+        "correct": true,
+        "why": "Right. `add` with an existing id changes nothing and says nothing, so the job keeps the first version of every article for ever."
+      },
+      {
+        "text": "Both versions, under the same id",
+        "correct": false,
+        "why": "The count stayed at 41 after the second `add`: one record per id."
+      },
+      {
+        "text": "Nothing for that article, because the import stops with a duplicate-id error",
+        "correct": false,
+        "why": "No error was raised; the program carried on to the `upsert` line."
+      }
+    ]
+  },
+  {
+    "id": "ex-5q8pb0y2",
+    "version": 1,
+    "section": "chroma",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`dims.py` queried the collection with a 256-number WordLlama vector and Chroma refused. What would happen with a vector from another model that also returns 384 numbers?",
+    "hint": "What exactly did the error message compare?",
+    "choices": [
+      {
+        "text": "Chroma would refuse, because it records which model made the collection",
+        "correct": false,
+        "why": "The check is the dimension: 'expecting embedding with dimension of 384, got 256'. Another 384-number vector passes it."
+      },
+      {
+        "text": "Chroma would convert the vector into the collection's model first",
+        "correct": false,
+        "why": "There is no conversion between models; their coordinates have nothing to do with each other."
+      },
+      {
+        "text": "Chroma would answer, and the ranking would mean nothing",
+        "correct": true,
+        "why": "Right. The size matches, so the query runs, but the two models' coordinates are unrelated, as lesson 1 warned. The database cannot tell."
+      },
+      {
+        "text": "Chroma would answer correctly, since both have 384 dimensions",
+        "correct": false,
+        "why": "Equal dimension does not make two models comparable; lesson 1 said so of any two models."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzww3pgw",
+    "version": 1,
+    "section": "chroma",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To insert a record when its id is new and overwrite it when the id already exists, call Chroma's ___ method.",
+    "hint": "`change.py` used it after the second `add` failed to change anything.",
+    "blanks": [
+      {
+        "accept": [
+          "upsert",
+          "upsert()",
+          "col.upsert"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z6hwyzkn",
+    "version": 1,
+    "section": "chroma-on-disk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Marginalia wants a backup of the help-centre collection kept with `PersistentClient`. What does it need to copy, while nothing is writing?",
+    "hint": "Where did the listing find the files?",
+    "choices": [
+      {
+        "text": "The `chroma` directory",
+        "correct": true,
+        "why": "Right. The directory is the whole database: the SQLite file and the index directory beside it."
+      },
+      {
+        "text": "`chroma.sqlite3` on its own",
+        "correct": false,
+        "why": "The index lives in the directory beside it, named by the segment's id; copying one file leaves the other behind."
+      },
+      {
+        "text": "An export of the vectors, since the texts can be rebuilt from them",
+        "correct": false,
+        "why": "A vector cannot be read back as its text. The documents are stored separately, in the SQLite file."
+      },
+      {
+        "text": "Nothing, since Chroma keeps a copy on its own servers",
+        "correct": false,
+        "why": "`PersistentClient` has no server; the directory on Marginalia's disk is the only copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-9aps6vhz",
+    "version": 1,
+    "section": "chroma-on-disk",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`inside.py` counted 160 rows in `embedding_metadata` for 40 records with three metadata keys each. How many rows would 100 records with five metadata keys each give, with the document stored the same way?",
+    "hint": "The document is stored as one more key.",
+    "value": 600,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-zjvzzy93",
+    "version": 1,
+    "section": "chroma-on-disk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`embeddings_queue` had 45 rows after `load.py` and `change.py`. Why 45 and not 40?",
+    "hint": "Read the last five rows `inside.py` printed.",
+    "choices": [
+      {
+        "text": "It keeps one row per version of each record, and h41 had five versions",
+        "correct": false,
+        "why": "h41 had two texts, and two of the five rows are not h41's changes at all: one is the ignored `add`, one is the `update` of h99."
+      },
+      {
+        "text": "Deleted records stay in it as five markers",
+        "correct": false,
+        "why": "Only one of the five rows is a delete. The others are two adds, an upsert and an update."
+      },
+      {
+        "text": "It counts one row per article plus one per category",
+        "correct": false,
+        "why": "There are six categories, which would make 46, and the rows `inside.py` printed name writes, not categories."
+      },
+      {
+        "text": "It logs each write call, and `change.py` made five, including two that changed nothing",
+        "correct": true,
+        "why": "Right. The 40 adds of `load.py` and the add, add, upsert, update and delete of `change.py`, each recorded like any other write."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjnb71zz",
+    "version": 1,
+    "section": "chroma-on-disk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `grow.py`, `data_level0.bin` was 167,600 bytes at 40 records and still 167,600 at 940. A colleague concludes that 900 records were lost. What would you tell them?",
+    "hint": "Look at the line `grow.py` printed first.",
+    "choices": [
+      {
+        "text": "They were lost, and only a restart would bring them back",
+        "correct": false,
+        "why": "`col.count()` printed 940, which Chroma could not report for records it had lost."
+      },
+      {
+        "text": "In the write log; the index files wait for 1,000 writes",
+        "correct": true,
+        "why": "Right. `sync_threshold` is 1,000, and the file changed between 940 and 1,040 records. The file's size says nothing about the count."
+      },
+      {
+        "text": "They were stored in a second index directory the listing did not show",
+        "correct": false,
+        "why": "`grow` held one collection and one segment directory; the growth arrived in the same file at 1,040."
+      },
+      {
+        "text": "They fit in the empty slots, since the file had room for a hundred records",
+        "correct": false,
+        "why": "A hundred slots cannot hold 940 records; the file was simply not rewritten until the threshold."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhmhe67x",
+    "version": 1,
+    "section": "chroma-on-disk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `chroma run` serving the directory, `remote.py` passed `query_texts`. Which program turned the question into a vector?",
+    "hint": "Where does the Python client's embedding function run?",
+    "choices": [
+      {
+        "text": "The `chroma run` server, which loaded all-MiniLM-L6-v2",
+        "correct": false,
+        "why": "The server never loaded a model: the Python client embeds before it sends anything."
+      },
+      {
+        "text": "`remote.py` itself, through the collection's embedding function",
+        "correct": true,
+        "why": "Right. The client runs the embedding function, and the question crossed the network as 384 numbers."
+      },
+      {
+        "text": "labembed, on port 8500",
+        "correct": false,
+        "why": "Nothing in `remote.py` or the collection points at labembed; Chroma's default function runs in-process."
+      },
+      {
+        "text": "No program: the server searched the text with its full-text table",
+        "correct": false,
+        "why": "The answers came with distances, which a full-text match does not produce; it was a vector search."
+      }
+    ]
+  },
+  {
+    "id": "ex-56xryzy2",
+    "version": 1,
+    "section": "chroma-distances",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team tested `distance < 0.6` on a cosine collection, then ran the same code against a collection created with no configuration. Search now returns nothing, and nothing errors. Why?",
+    "hint": "What is the default space, and where did h18 land in it?",
+    "choices": [
+      {
+        "text": "The new collection's index is still being built",
+        "correct": false,
+        "why": "A collection answers as soon as records are added; `distances.py` queried its new ones immediately."
+      },
+      {
+        "text": "The new collection used a different embedding model",
+        "correct": false,
+        "why": "Even with the same vectors, as in `distances.py`, the numbers change: the space changed, not the model."
+      },
+      {
+        "text": "The default space is squared L2, where the best article sat at 1.1089",
+        "correct": true,
+        "why": "Right. `l2` gives 2 − 2 × similarity, so the same articles sit above 1, and a cut-off of 0.6 keeps none of them."
+      },
+      {
+        "text": "The default space returns similarities, so the comparison must be reversed",
+        "correct": false,
+        "why": "The default `l2` returns a distance too, smaller is closer; only the scale differs."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1sb07a9",
+    "version": 1,
+    "section": "chroma-distances",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `distances.py` create two new collections instead of switching `help` to another space?",
+    "hint": "What did `space.py` try?",
+    "choices": [
+      {
+        "text": "Chroma allows one space per directory",
+        "correct": false,
+        "why": "One directory held `help`, `help_l2` and `help_ip`, in three spaces."
+      },
+      {
+        "text": "The space can be changed only while the collection is empty",
+        "correct": false,
+        "why": "`modify` does not accept `space` at all; the error listed the fields it does accept."
+      },
+      {
+        "text": "Changing the space would delete the documents",
+        "correct": false,
+        "why": "There was no change to make: Chroma refused before anything happened."
+      },
+      {
+        "text": "A collection's space is fixed when it is created",
+        "correct": true,
+        "why": "Right. `space.py`'s `modify` was refused, and the field list omitted `space`. Another space means another collection."
+      }
+    ]
+  },
+  {
+    "id": "ex-rq0ykwpx",
+    "version": 1,
+    "section": "chroma-distances",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two unit vectors have a dot product of 0.30. What distance does a Chroma collection created with no configuration return between them?",
+    "hint": "The default space is `l2`, and it is squared.",
+    "value": 1.4,
+    "tolerance": 0.001,
+    "unit": ""
+  },
+  {
+    "id": "ex-fjn9xey6",
+    "version": 1,
+    "section": "chroma-distances",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia's help collection was created in the `l2` space and has to measure cosine instead. Put the steps in order.",
+    "hint": "The old collection is the last thing to go.",
+    "items": [
+      "Create a new collection with the cosine space",
+      "Add every record's id, document, metadata and vector to it",
+      "Point the search code at the new collection",
+      "Delete the old collection"
+    ],
+    "trap": "Deleting first leaves the search with nothing, and there is no `modify` that changes a space in place."
+  },
+  {
+    "id": "ex-fgxwgqr8",
+    "version": 1,
+    "section": "pinecone",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `pine.py`, what does a namespace do?",
+    "hint": "The English and Portuguese articles went to different places in one index.",
+    "choices": [
+      {
+        "text": "Sets the region where the index is stored",
+        "correct": false,
+        "why": "The region is in `ServerlessSpec`, chosen once for the whole index."
+      },
+      {
+        "text": "Partitions one index, so a query sees only the namespace it names",
+        "correct": true,
+        "why": "Right. `en` and `pt` are two partitions of `help`, and a query names exactly one."
+      },
+      {
+        "text": "Names the embedding model that the index uses",
+        "correct": false,
+        "why": "`pine.py` embeds the texts itself; a namespace says nothing about a model."
+      },
+      {
+        "text": "Lists the metadata keys a filter is allowed to read",
+        "correct": false,
+        "why": "Filters read the metadata of each record; the namespace decides which records are searched at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5v8erng",
+    "version": 1,
+    "section": "pinecone",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia moves its search from a Chroma cosine collection to a Pinecone cosine index and keeps the rule 'show an article when its number is below 0.6'. What goes wrong?",
+    "hint": "Which way does Pinecone's number point?",
+    "choices": [
+      {
+        "text": "Nothing, since both use cosine and return the same numbers",
+        "correct": false,
+        "why": "Chroma returns 1 − similarity and Pinecone the similarity itself; the same metric, opposite conventions."
+      },
+      {
+        "text": "Pinecone's numbers run from 0 to 2, so the rule lets too few through",
+        "correct": false,
+        "why": "That is the range of Chroma's cosine distance. Pinecone's cosine score is a similarity, highest for the closest."
+      },
+      {
+        "text": "It is a similarity there, so the rule now keeps the weakest matches",
+        "correct": true,
+        "why": "Right. For a cosine index the best match has the highest score, so the old rule selects the articles furthest from the question."
+      },
+      {
+        "text": "Pinecone refuses thresholds and accepts only `top_k`",
+        "correct": false,
+        "why": "The client returns each match's score; what you do with it afterwards is your program's choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-382ms9v9",
+    "version": 1,
+    "section": "pinecone",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Pinecone, a partition inside one index that a query names, such as `en` in `pine.py`, is called a ___.",
+    "hint": "The three Portuguese articles were upserted into another one.",
+    "blanks": [
+      {
+        "accept": [
+          "namespace",
+          "namespaces"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1pdk0b21",
+    "version": 1,
+    "section": "weaviate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `alpha=0.5` in Weaviate's `query.hybrid` ask for?",
+    "hint": "1 and 0 are the two pure searches.",
+    "choices": [
+      {
+        "text": "Only results closer than a distance of 0.5",
+        "correct": false,
+        "why": "That would be a distance limit; `alpha` weighs two searches against each other."
+      },
+      {
+        "text": "Half the results from the keyword list, half from the vector list",
+        "correct": false,
+        "why": "The two lists are fused into one ranking, not taken in halves."
+      },
+      {
+        "text": "Equal weight for the keyword search and the vector search",
+        "correct": true,
+        "why": "Right. 1 is a pure vector search and 0 a pure keyword search; 0.5 weighs the two equally."
+      },
+      {
+        "text": "A vector search over half the collection, chosen at random",
+        "correct": false,
+        "why": "Nothing is sampled. `alpha` balances BM25 against the vector distance."
+      }
+    ]
+  },
+  {
+    "id": "ex-560s4gcj",
+    "version": 1,
+    "section": "weaviate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Weaviate collection uses `Configure.Vectors.text2vec_openai(...)` instead of `self_provided`. What changes for Marginalia?",
+    "hint": "Who calls the provider?",
+    "choices": [
+      {
+        "text": "Marginalia's program must send vectors with every query",
+        "correct": false,
+        "why": "That is `self_provided`. With a vectorizer module a query can arrive as text through `near_text`."
+      },
+      {
+        "text": "The server calls OpenAI for each insert and text query",
+        "correct": true,
+        "why": "Right. The embedding moves to the server: it holds the provider's key and the provider bills each call."
+      },
+      {
+        "text": "Weaviate stops using HNSW and searches by keyword",
+        "correct": false,
+        "why": "The vectorizer only decides who makes the vectors; the vector index is configured separately."
+      },
+      {
+        "text": "The vectors are computed once by Weaviate and never again",
+        "correct": false,
+        "why": "Every inserted object and every text query is embedded by the module, so the calls continue."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvc0f184",
+    "version": 1,
+    "section": "comparing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia moves its help-centre search from `PersistentClient` to `chroma run` on a server. What becomes the team's job that was not before?",
+    "hint": "`remote.py` used the same collection methods.",
+    "choices": [
+      {
+        "text": "Rewriting the search code for another API",
+        "correct": false,
+        "why": "`remote.py` changed only the constructor; every collection call stayed the same."
+      },
+      {
+        "text": "Choosing a new embedding model",
+        "correct": false,
+        "why": "The client still runs the same default function; the model did not change."
+      },
+      {
+        "text": "Keeping a server process running, upgraded, monitored and backed up",
+        "correct": true,
+        "why": "Right. On a server you run, the process and its files are yours to operate."
+      },
+      {
+        "text": "Paying Chroma for every query",
+        "correct": false,
+        "why": "`chroma run` is open-source software on your machine; paying per use is the hosted shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-g080wt5t",
+    "version": 1,
+    "section": "comparing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of making vectors with where the model runs.",
+    "hint": "One place on the right is not where any model runs.",
+    "pairs": [
+      {
+        "left": "Chroma's default embedding function",
+        "right": "Inside your Python program"
+      },
+      {
+        "left": "A Weaviate vectorizer module",
+        "right": "The Weaviate server calls a provider"
+      },
+      {
+        "left": "Weaviate's self_provided",
+        "right": "Your code, before it sends the vectors"
+      },
+      {
+        "left": "A Pinecone index with an integrated model",
+        "right": "On Pinecone's side, with one of its models"
+      }
+    ],
+    "right_distractors": [
+      "Inside the HNSW index file"
+    ]
+  },
+  {
+    "id": "ex-nbtpt3wm",
+    "version": 1,
+    "section": "comparing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia is choosing where the vectors of its customers' messages will live: a Chroma directory or a hosted service. Which questions decide it? Choose all that apply.",
+    "hint": "Think about who operates it and what leaves the building.",
+    "choices": [
+      {
+        "text": "Who will operate the database and be woken when it fails",
+        "correct": true,
+        "why": "Yes. A directory is yours to run; a hosted service is the provider's."
+      },
+      {
+        "text": "Whether these vectors may leave Marginalia's machines",
+        "correct": true,
+        "why": "Yes. Lesson 1 said a message's vector is personal data like the message, so where it goes is a privacy question."
+      },
+      {
+        "text": "How many programs must reach the data at once",
+        "correct": true,
+        "why": "Yes. One program can own a directory; many programs need a server, yours or the provider's."
+      },
+      {
+        "text": "Which of the two is faster on forty articles",
+        "correct": false,
+        "why": "At forty articles there is nothing to measure; any of them, or NumPy, is fast enough."
+      },
+      {
+        "text": "Whether the vectors are stored as float32",
+        "correct": false,
+        "why": "All of them store numbers; the format does not decide where the database runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-s861rzpt",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a Chroma collection created with the cosine space, the number a query returns equals one minus the ___ of the two vectors.",
+    "hint": "Lesson 1 called it a score.",
+    "blanks": [
+      {
+        "accept": [
+          "similarity",
+          "cosine similarity",
+          "dot product"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mhej5dt6",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting with what a query returns under it.",
+    "hint": "Two of them give the same number for unit vectors.",
+    "pairs": [
+      {
+        "left": "Chroma, space cosine",
+        "right": "1 − cosine similarity, smaller is closer"
+      },
+      {
+        "left": "Chroma, space ip",
+        "right": "1 − dot product, smaller is closer"
+      },
+      {
+        "left": "Chroma, space l2",
+        "right": "Squared Euclidean distance"
+      },
+      {
+        "left": "Pinecone, metric cosine",
+        "right": "The similarity, highest first"
+      }
+    ],
+    "right_distractors": [
+      "The angle between the vectors in degrees"
+    ]
+  },
+  {
+    "id": "ex-zxbq91p7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Marginalia serves its Chroma directory with `chroma run` and searches it from another program. Put the steps in order.",
+    "hint": "The question becomes numbers before it travels.",
+    "items": [
+      "Start chroma run with the path of the directory",
+      "Connect to it with HttpClient and get the collection",
+      "The client embeds the question with the collection's function",
+      "The server searches the index and returns ids and distances"
+    ],
+    "trap": "The server does not embed the question: the Python client does it before sending anything."
+  },
+  {
+    "id": "ex-359escdc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The three Portuguese articles must never appear for an English question in Pinecone, even if somebody forgets a filter. Which design does that?",
+    "hint": "One of these needs every query to remember something.",
+    "choices": [
+      {
+        "text": "A metadata field lang set to pt, and a filter on it in each query",
+        "correct": false,
+        "why": "That works only while every query carries the filter; one query without it sees all the articles."
+      },
+      {
+        "text": "A different metric for the Portuguese records",
+        "correct": false,
+        "why": "An index has one metric, fixed at creation, for every record in it."
+      },
+      {
+        "text": "Upserting the Portuguese vectors with smaller values",
+        "correct": false,
+        "why": "Changing the numbers would only distort the ranking; it separates nothing."
+      },
+      {
+        "text": "A namespace of their own, while English questions query only en",
+        "correct": true,
+        "why": "Right. A query names one namespace and never sees the others, so forgetting a filter cannot leak them."
+      }
+    ]
+  }
+]

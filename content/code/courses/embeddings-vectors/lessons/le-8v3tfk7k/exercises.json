@@ -1,0 +1,711 @@
+[
+  {
+    "id": "ex-a5y22az6",
+    "version": 1,
+    "section": "normal-as-a-region",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Lesson 4's nearest-centroid classifier was given the eight odd inbox messages. What did it do with the question about boiling water on Everest?",
+    "hint": "Look at the label column of forced.py's output.",
+    "choices": [
+      {
+        "text": "Gave it a label, account, with a score of 0.034",
+        "correct": true,
+        "why": "Right. A classifier chooses among the labels it was built with; it has no way to answer none of these."
+      },
+      {
+        "text": "Refused it, because the score was below zero",
+        "correct": false,
+        "why": "Nothing in the classifier refuses. It takes the highest score, however low, and 0.034 is above zero anyway."
+      },
+      {
+        "text": "Put it in a sixth group for unknown messages",
+        "correct": false,
+        "why": "There is no sixth group. The classifier was built from five labels and can only output those five."
+      },
+      {
+        "text": "Raised an error because the text is not about books",
+        "correct": false,
+        "why": "The model embeds any text. Nothing checks the subject, which is why the question got a label at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jxn7az1",
+    "version": 1,
+    "section": "normal-as-a-region",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson not train a sixth label, odd, from the eight odd messages and add it to the classifier?",
+    "hint": "Read the eight messages side by side.",
+    "choices": [
+      {
+        "text": "Eight examples are too few for any classifier to learn from",
+        "correct": false,
+        "why": "Lesson 4's centroids were built from 20 examples a label and worked. Small numbers are not the main obstacle here."
+      },
+      {
+        "text": "A label needs exactly as many examples as the others",
+        "correct": false,
+        "why": "Classifiers can learn from unbalanced labels. The problem is what the examples have in common, not how many there are."
+      },
+      {
+        "text": "They share nothing, and next week's odd ones will differ",
+        "correct": true,
+        "why": "Right. Spam, French, noise and a CV are not one category, so a label trained on them would learn these eight and miss the next ones."
+      },
+      {
+        "text": "Odd messages cannot be embedded by an English model",
+        "correct": false,
+        "why": "They can: every one of them got a vector and a score. Only two are in other languages, and even those get vectors."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dxmnjnj",
+    "version": 1,
+    "section": "normal-as-a-region",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Anomaly detection with embeddings turns the question around: embed the messages known to be ___, and score each new message by its distance from the region they occupy.",
+    "hint": "The 150 tickets are examples of it.",
+    "blanks": [
+      {
+        "accept": [
+          "normal"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6cdevkkt",
+    "version": 1,
+    "section": "distance-to-centroid",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "centroid.py scores a message as one minus its cosine with the centroid. What does a score of 0 mean?",
+    "hint": "Cosine is 1 for the same direction.",
+    "choices": [
+      {
+        "text": "It points the way the average ticket points",
+        "correct": true,
+        "why": "Right. A cosine of 1 gives a score of 0, and the score grows as the message turns away from the centroid."
+      },
+      {
+        "text": "The message has nothing to do with any ticket",
+        "correct": false,
+        "why": "That is the other end: unrelated texts have a cosine near 0, so a score near 1."
+      },
+      {
+        "text": "The message is an exact copy of one of the tickets",
+        "correct": false,
+        "why": "A copy of one ticket matches that ticket, not the average of 150. Its score against the centroid would be well above 0."
+      },
+      {
+        "text": "The score could not be computed",
+        "correct": false,
+        "why": "0 is an ordinary score here. Nothing in the program signals failure with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5znx5b8",
+    "version": 1,
+    "section": "distance-to-centroid",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The mean of the 150 ticket vectors, each of length 1, has a length of 0.425. What does that say about the tickets?",
+    "hint": "When would the mean of unit vectors have length 1?",
+    "choices": [
+      {
+        "text": "The model returned vectors shorter than 1 for some tickets",
+        "correct": false,
+        "why": "Every all-MiniLM-L6-v2 vector has length 1. The shortening happens in the averaging, not in the model."
+      },
+      {
+        "text": "They point in several different directions",
+        "correct": true,
+        "why": "Right. Vectors pointing the same way would average to length 1; five kinds of ticket pull the mean in five directions and it shrinks."
+      },
+      {
+        "text": "A quarter of the tickets are near-duplicates of each other",
+        "correct": false,
+        "why": "Duplicates point the same way, which keeps the mean long. The short mean comes from spread, not from repetition."
+      },
+      {
+        "text": "The centroid cannot be used until it is made longer than 1",
+        "correct": false,
+        "why": "It is divided by its length to get back to 1, but that is a convenience: the ranking by cosine would be the same either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-655jhdw2",
+    "version": 1,
+    "section": "distance-to-centroid",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two unit vectors are at right angles to each other (their dot product is 0). What is the length of their mean, to three decimal places?",
+    "hint": "The mean is (a + b) / 2. Its squared length is (1 + 0 + 0 + 1) / 4.",
+    "value": 0.707,
+    "tolerance": 0.002,
+    "unit": ""
+  },
+  {
+    "id": "ex-vdjwz55q",
+    "version": 1,
+    "section": "distance-to-centroid",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Against the centroid, the free-iPhone spam (m33) came 16th, below eight normal messages. Which explanation does the lesson give?",
+    "hint": "Where does the centroid sit relative to the five groups?",
+    "choices": [
+      {
+        "text": "Spam is always written to look like a customer message",
+        "correct": false,
+        "why": "Most of the spam in the inbox scored high. The issue is where the centroid sits, not a property of spam in general."
+      },
+      {
+        "text": "The centroid lies between the five groups, where no ticket is",
+        "correct": true,
+        "why": "Right. Distance to the average of five topics is not distance to any one of them, and the spam scored 0.321 against the returns centroid."
+      },
+      {
+        "text": "m33 is longer than the other odd messages, and long texts score lower",
+        "correct": false,
+        "why": "Length does not move a score here: every vector has length 1, whatever the text."
+      },
+      {
+        "text": "The model was trained on spam, so it treats spam as normal",
+        "correct": false,
+        "why": "Nothing in the lesson says what the model was trained on beyond English pairs, and a model does not flag or pass anything; the score does."
+      }
+    ]
+  },
+  {
+    "id": "ex-e1bmpdkw",
+    "version": 1,
+    "section": "distance-to-centroid",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order these inbox messages as centroid.py ranked them, from the highest score (furthest from normal) down.",
+    "hint": "The Everest question scored above 1.",
+    "items": [
+      "What is the boiling point of water at the top of Mount Everest?",
+      "Meu pedido ainda não chegou e já faz duas semanas, alguém pode me ajudar?",
+      "Je n'arrive pas à me connecter à mon compte depuis ce matin.",
+      "Can you recommend a good recipe for vegetable lasagne?"
+    ],
+    "trap": "The Portuguese message scored above the French one, though both are in a language the model does not know."
+  },
+  {
+    "id": "ex-cp1b3007",
+    "version": 1,
+    "section": "nearest-neighbour-distance",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With k=5, what is a message's score in knn.py?",
+    "hint": "Sort its similarities to the tickets.",
+    "choices": [
+      {
+        "text": "One minus its similarity to the fifth most similar ticket",
+        "correct": true,
+        "why": "Right. The k-th largest similarity is the k-th nearest ticket, and one minus it is the distance."
+      },
+      {
+        "text": "The mean distance to every ticket",
+        "correct": false,
+        "why": "That would compare against all 150 at once, which is close to what the centroid does. k=5 looks at one particular neighbour."
+      },
+      {
+        "text": "The share of its five nearest tickets that are odd",
+        "correct": false,
+        "why": "The reference contains only normal tickets, so there is nothing odd to count. The score is a distance, not a vote."
+      },
+      {
+        "text": "Its distance to the centroid of the five ticket labels",
+        "correct": false,
+        "why": "The labels play no part in knn.py. Five is the k, not the number of categories."
+      }
+    ]
+  },
+  {
+    "id": "ex-shtvh4bd",
+    "version": 1,
+    "section": "nearest-neighbour-distance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After one spam message was added to the normal set, m33 fell to 20th with k=1 but stayed 9th with k=5. Why the difference?",
+    "hint": "Which neighbour does each k look at?",
+    "choices": [
+      {
+        "text": "k=5 ignores any message that looks like spam",
+        "correct": false,
+        "why": "Neither score knows what spam is. They differ only in which neighbour they measure."
+      },
+      {
+        "text": "Adding a message changes the model, and k=5 is less affected",
+        "correct": false,
+        "why": "The model does not change. Only the reference set changed, by one vector."
+      },
+      {
+        "text": "The planted spam became its single nearest neighbour",
+        "correct": true,
+        "why": "Right. One bad message in the reference can hide its look-alikes from k=1; a larger k needs several before it is fooled."
+      },
+      {
+        "text": "k=5 scores are always higher, so m33 stays near the top",
+        "correct": false,
+        "why": "Higher scores for everyone do not change a rank by themselves. m33 kept its rank because its own fifth neighbour stayed far."
+      }
+    ]
+  },
+  {
+    "id": "ex-0s7mprpm",
+    "version": 1,
+    "section": "nearest-neighbour-distance",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia's reference grows to a million normal tickets. How does the cost of scoring one new message change for each method?",
+    "hint": "Count the comparisons each one makes.",
+    "choices": [
+      {
+        "text": "Both stay the same, because a vector has 384 numbers whatever the reference size",
+        "correct": false,
+        "why": "The vector size is fixed, but the number of vectors compared is not, for one of the methods."
+      },
+      {
+        "text": "The centroid grows with the reference and the nearest neighbours do not",
+        "correct": false,
+        "why": "The other way round: the centroid is computed once and is a single vector to compare with."
+      },
+      {
+        "text": "The centroid stays one comparison; the nearest neighbours need a million, or an index",
+        "correct": true,
+        "why": "Right. k-nearest-neighbour scoring is a vector search over the reference, which is what lessons 11 to 15 make fast."
+      },
+      {
+        "text": "Both grow, but the centroid grows faster because the mean is recomputed",
+        "correct": false,
+        "why": "The mean is computed once when the reference is built, not for every message scored."
+      }
+    ]
+  },
+  {
+    "id": "ex-eq2m4y3h",
+    "version": 1,
+    "section": "nearest-neighbour-distance",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of computing a message's k-nearest-neighbour score in order.",
+    "hint": "The reference is embedded before anything is compared with it.",
+    "items": [
+      "Embed the normal messages once, as the reference",
+      "Embed the new message",
+      "Take its dot product with every reference vector",
+      "Sort those similarities and take the k-th largest",
+      "Subtract it from 1 to get the score"
+    ],
+    "trap": "Sorting comes after the dot products, not before: there is nothing to sort until every similarity exists."
+  },
+  {
+    "id": "ex-rkcvzj90",
+    "version": 1,
+    "section": "setting-a-threshold",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does threshold.py score the 50 test tickets against the 100 training tickets instead of scoring all 150 against themselves?",
+    "hint": "Look at the first line of its output.",
+    "choices": [
+      {
+        "text": "Scoring 150 against 150 is too slow",
+        "correct": false,
+        "why": "It is 22,500 dot products, which takes no time at all. Speed is not the reason."
+      },
+      {
+        "text": "Each ticket would find itself",
+        "correct": true,
+        "why": "Right. The first line shows a highest score of 0.000. A cut-off read from those scores would flag almost everything."
+      },
+      {
+        "text": "The test tickets are odd and the training ones are normal",
+        "correct": false,
+        "why": "All 150 tickets are normal. The test ones are held out so that they are normal messages the reference has not seen."
+      },
+      {
+        "text": "Lesson 4 used the test tickets up, so they cannot be in the reference",
+        "correct": false,
+        "why": "Nothing is used up. They are kept out of the reference here for the same reason lesson 4 kept them out of training."
+      }
+    ]
+  },
+  {
+    "id": "ex-16yes66y",
+    "version": 1,
+    "section": "setting-a-threshold",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The cut-off is set at the 95th percentile of the held-out normal scores. What does that promise?",
+    "hint": "A percentile describes the data it was read from.",
+    "choices": [
+      {
+        "text": "95% of the odd messages that arrive will be caught",
+        "correct": false,
+        "why": "The percentile was read from normal messages only. How many odd ones get caught can only be measured with known odd messages."
+      },
+      {
+        "text": "Exactly 5% of all of tomorrow's messages will be flagged",
+        "correct": false,
+        "why": "Tomorrow's flags depend on how many odd messages arrive. And even for normal ones it is roughly one in twenty, not exactly."
+      },
+      {
+        "text": "About one normal message in twenty lands above it",
+        "correct": true,
+        "why": "Right. That is the false-alarm rate it was chosen for; it says nothing about recall."
+      },
+      {
+        "text": "A score above it is at least 95% likely to be odd",
+        "correct": false,
+        "why": "A score is not a probability, as lesson 2 said. The percentile is a position among normal scores."
+      }
+    ]
+  },
+  {
+    "id": "ex-yegddbzk",
+    "version": 1,
+    "section": "setting-a-threshold",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With k=5 at the 90th percentile, threshold.py flagged 11 messages, and 8 of them were odd. What is the precision, as a fraction with two decimals?",
+    "hint": "Precision is odd flagged divided by all flagged.",
+    "value": 0.73,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-j7328gpz",
+    "version": 1,
+    "section": "setting-a-threshold",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With k=5 at the 99th percentile, threshold.py missed m33 and m37 and flagged nothing by mistake. There are 8 odd messages. What is the recall, as a fraction with two decimals?",
+    "hint": "Recall is odd flagged divided by all odd.",
+    "value": 0.75,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-5wwwa893",
+    "version": 1,
+    "section": "setting-a-threshold",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each term to what it counts on the inbox.",
+    "hint": "Two of them are rates, two are single messages.",
+    "pairs": [
+      {
+        "left": "precision",
+        "right": "Of the flagged messages, the share that were odd"
+      },
+      {
+        "left": "recall",
+        "right": "Of the odd messages, the share that were flagged"
+      },
+      {
+        "left": "false alarm",
+        "right": "A normal message above the line"
+      },
+      {
+        "left": "miss",
+        "right": "An odd message below the line"
+      }
+    ],
+    "right_distractors": [
+      "Of all messages, the share that were normal"
+    ]
+  },
+  {
+    "id": "ex-6trqyqya",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In week 2, only four of the twenty messages crossed the cut-off. Why does the lesson still say the inbox changed?",
+    "hint": "Look at the batch numbers rather than the flags.",
+    "choices": [
+      {
+        "text": "Four flags in a day is above the 5% the threshold allows",
+        "correct": false,
+        "why": "The threshold's 5% is about normal messages in general, and four of twenty is not a test of it. The batch numbers are the evidence."
+      },
+      {
+        "text": "The mean rose, and 11 of 20 were nearest each other",
+        "correct": true,
+        "why": "Right. The batch moved away from the reference, and its messages resemble each other more than anything known: a new topic."
+      },
+      {
+        "text": "The four flagged messages were spam disguised as subscription questions",
+        "correct": false,
+        "why": "They were real customers asking about the subscription. None of week 2's messages is spam."
+      },
+      {
+        "text": "The model was updated between the two weeks",
+        "correct": false,
+        "why": "The same model scored both weeks. What changed was what customers wrote about."
+      }
+    ]
+  },
+  {
+    "id": "ex-jp94argr",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cut-off is read from the scores of normal messages that the reference never saw, which the lesson calls ___ data.",
+    "hint": "The 50 test tickets were kept out of the reference for this.",
+    "blanks": [
+      {
+        "accept": [
+          "held-out",
+          "held out",
+          "heldout"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jef0s10a",
+    "version": 1,
+    "section": "drift",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When the data a system sees moves away from the data it was built on, as week 2's inbox did, it is called ___.",
+    "hint": "A word for slowly moving away from a course.",
+    "blanks": [
+      {
+        "accept": [
+          "drift",
+          "data drift",
+          "concept drift"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zc06hqt8",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To stop the subscription questions setting off the detector, a colleague proposes putting everything received each day into the reference, automatically. What is the risk?",
+    "hint": "What happened to k=1 when one spam message was in the reference?",
+    "choices": [
+      {
+        "text": "The reference grows and scoring becomes slower",
+        "correct": false,
+        "why": "It does grow, and that is a cost, but it is not the danger. The danger is what the reference then calls normal."
+      },
+      {
+        "text": "Spam that gets in once becomes normal, and its look-alikes stop being flagged",
+        "correct": true,
+        "why": "Right. Anything in the reference stops being flagged, which is how one planted spam hid m33 from k=1. Add messages somebody has read."
+      },
+      {
+        "text": "The model has to be retrained every day",
+        "correct": false,
+        "why": "Nothing retrains the model. The reference is a list of vectors, and adding to it changes no weights."
+      },
+      {
+        "text": "The threshold stops being a percentile",
+        "correct": false,
+        "why": "The threshold can be read again from held-out data at any time. The problem is what was let into the reference."
+      }
+    ]
+  },
+  {
+    "id": "ex-6exay02v",
+    "version": 1,
+    "section": "what-it-cannot-see",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A refund request for 4,800 on order 1182 scored well under the cut-off. Why could the detector not flag it?",
+    "hint": "What does an embedding capture best, according to lesson 1?",
+    "choices": [
+      {
+        "text": "The amount has a comma, which the model ignores",
+        "correct": false,
+        "why": "Punctuation is not the issue. Even written without the comma, an amount is not something the vectors compare."
+      },
+      {
+        "text": "Refund requests are excluded from scoring",
+        "correct": false,
+        "why": "Every message is scored the same way. This one scored low because it reads like the refund tickets."
+      },
+      {
+        "text": "Its subject is an ordinary refund, and the vector does not weigh amounts",
+        "correct": true,
+        "why": "Right. The detector measures distance of subject, and the suspicious part is a number inside a normal subject."
+      },
+      {
+        "text": "The threshold was set too high on purpose to avoid false alarms",
+        "correct": false,
+        "why": "No line in the k=1 table would flag it: it sits among the normal scores, not just above them."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5q19pz5",
+    "version": 1,
+    "section": "what-it-cannot-see",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same late-order complaint passes in English and is flagged in Portuguese. What is the flag really reporting?",
+    "hint": "Only one thing differs between the two versions.",
+    "choices": [
+      {
+        "text": "That Portuguese-speaking customers write more unusual complaints",
+        "correct": false,
+        "why": "The two messages say the same thing. Only the language differs, and so only the language explains the flag."
+      },
+      {
+        "text": "That the message is spam written in Portuguese to avoid filters",
+        "correct": false,
+        "why": "It is an ordinary complaint about a late order, and its English version passes."
+      },
+      {
+        "text": "A fault in the threshold, which should be lower for other languages",
+        "correct": false,
+        "why": "Moving the line would not fix it: the Portuguese vector is far from the shipping tickets because the model cannot read it."
+      },
+      {
+        "text": "That the model was trained on one language only",
+        "correct": true,
+        "why": "Right. The anomaly belongs to the model, as lesson 1's −0.015 showed; a multilingual model would pass it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5907xe9j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A bank wants to detect fraudulent transfer requests in its support chat with this lesson's method, scoring each message against a year of normal chats. What will it catch and miss?",
+    "hint": "Ask whether the fraud changes the subject of the message.",
+    "choices": [
+      {
+        "text": "It will catch fraud, since fraudulent requests are rare and rare means far from normal",
+        "correct": false,
+        "why": "Rare in the bank's records does not mean far in meaning. A fraudulent transfer request reads like any transfer request."
+      },
+      {
+        "text": "Off-topic chats caught; fraud phrased normally passes",
+        "correct": true,
+        "why": "Right. The detector measures subject. Fraud inside a normal subject needs checks on amounts, accounts and history."
+      },
+      {
+        "text": "It will catch nothing, because a bank's chats are too varied for a reference",
+        "correct": false,
+        "why": "Variety is what k-nearest-neighbour scoring handles: several groups, each with near neighbours. Off-topic chats would still stand out."
+      },
+      {
+        "text": "It will catch everything once the threshold is set at the 99th percentile",
+        "correct": false,
+        "why": "A higher line only flags fewer messages. No position of the line sees an amount."
+      }
+    ]
+  },
+  {
+    "id": "ex-ds9nqc4q",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's detector scores messages by k=1 distance to the normal tickets, with an English-only model. Which of these would it flag? Choose all that apply.",
+    "hint": "Ask whether each one changes the subject, or the language, rather than the details.",
+    "choices": [
+      {
+        "text": "A message asking for a pasta recipe",
+        "correct": true,
+        "why": "Yes. A recipe question has no near neighbour among the tickets, like the lasagne message in the inbox."
+      },
+      {
+        "text": "A delivery complaint written in Spanish",
+        "correct": true,
+        "why": "Yes, for the model's reasons: an English model cannot place Spanish near the shipping tickets, as with the Portuguese complaint."
+      },
+      {
+        "text": "A refund request for an amount twenty times the order total",
+        "correct": false,
+        "why": "No. It is an ordinary refund request by subject, and the vector does not weigh the amount."
+      },
+      {
+        "text": "A request to send the account's password to a new address",
+        "correct": false,
+        "why": "No. It reads as an account question, which is a normal subject, however dangerous the request is."
+      }
+    ]
+  },
+  {
+    "id": "ex-cbmgakw8",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each choice from the lesson to the weakness it showed on Marginalia's data.",
+    "hint": "One weakness belongs to no choice.",
+    "pairs": [
+      {
+        "left": "Distance to one centroid",
+        "right": "Missed the spam, which sat near the middle of five groups"
+      },
+      {
+        "left": "k=1 nearest neighbour",
+        "right": "Fooled by one spam message slipped into the reference"
+      },
+      {
+        "left": "k=5 nearest neighbour",
+        "right": "A narrower gap between the last odd and the first normal message"
+      },
+      {
+        "left": "A cut-off picked from today's scores",
+        "right": "Looks good only on the messages it was picked from"
+      }
+    ],
+    "right_distractors": [
+      "Cannot rank the messages at all"
+    ]
+  }
+]

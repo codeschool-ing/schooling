@@ -1,0 +1,481 @@
+{
+  "ex-a5y22az6": {
+    "prompt": "O classificador por centroide mais próximo da aula 4 recebeu as oito mensagens estranhas da caixa de entrada. O que ele fez com a pergunta sobre a água fervendo no Everest?",
+    "hint": "Veja a coluna de rótulos na saída de forced.py.",
+    "choices": [
+      {
+        "text": "Deu um rótulo, account, com nota 0,034",
+        "why": "Certo. Um classificador escolhe entre os rótulos com que foi construído; ele não tem como responder nenhum destes."
+      },
+      {
+        "text": "Recusou, porque a nota ficou abaixo de zero",
+        "why": "Nada no classificador recusa. Ele pega a maior nota, por mais baixa que seja, e 0,034 está acima de zero de qualquer jeito."
+      },
+      {
+        "text": "Pôs num sexto grupo de mensagens desconhecidas",
+        "why": "Não existe sexto grupo. O classificador foi feito com cinco rótulos e só sabe devolver esses cinco."
+      },
+      {
+        "text": "Deu erro porque o texto não fala de livros",
+        "why": "O modelo transforma qualquer texto em vetor. Nada confere o assunto, e é por isso que a pergunta ganhou um rótulo."
+      }
+    ]
+  },
+  "ex-8jxn7az1": {
+    "prompt": "Por que a aula não treina um sexto rótulo, estranha, com as oito mensagens estranhas e o acrescenta ao classificador?",
+    "hint": "Leia as oito mensagens lado a lado.",
+    "choices": [
+      {
+        "text": "Oito exemplos são poucos demais para qualquer classificador aprender",
+        "why": "Os centroides da aula 4 foram feitos com 20 exemplos por rótulo e funcionaram. Números pequenos não são o obstáculo principal aqui."
+      },
+      {
+        "text": "Um rótulo precisa de exatamente tantos exemplos quanto os outros",
+        "why": "Classificadores aprendem com rótulos desequilibrados. O problema é o que os exemplos têm em comum, não quantos são."
+      },
+      {
+        "text": "Elas não têm nada em comum, e as da semana que vem serão outras",
+        "why": "Certo. Spam, francês, ruído e um currículo não são uma categoria, então um rótulo treinado nelas aprenderia estas oito e deixaria passar as próximas."
+      },
+      {
+        "text": "Mensagens estranhas não viram vetor num modelo inglês",
+        "why": "Viram: cada uma ganhou um vetor e uma nota. Só duas estão em outras línguas, e mesmo essas ganham vetores."
+      }
+    ]
+  },
+  "ex-8dxmnjnj": {
+    "prompt": "A detecção de anomalias com embeddings inverte a pergunta: transforme em vetores as mensagens que se sabe serem ___ e dê a cada mensagem nova uma nota pela distância até a região que elas ocupam.",
+    "hint": "Os 150 chamados são exemplos disso.",
+    "blanks": [
+      {
+        "accept": [
+          "normais",
+          "normal"
+        ]
+      }
+    ]
+  },
+  "ex-6cdevkkt": {
+    "prompt": "centroid.py dá a uma mensagem a nota um menos o cosseno dela com o centroide. O que significa nota 0?",
+    "hint": "O cosseno é 1 para a mesma direção.",
+    "choices": [
+      {
+        "text": "Ela aponta para onde aponta o chamado médio",
+        "why": "Certo. Cosseno 1 dá nota 0, e a nota cresce conforme a mensagem se afasta do centroide."
+      },
+      {
+        "text": "A mensagem não tem nada a ver com nenhum chamado",
+        "why": "Essa é a outra ponta: textos sem relação têm cosseno perto de 0, logo nota perto de 1."
+      },
+      {
+        "text": "A mensagem é uma cópia exata de um dos chamados",
+        "why": "Uma cópia de um chamado casa com aquele chamado, não com a média de 150. A nota dela contra o centroide ficaria bem acima de 0."
+      },
+      {
+        "text": "A nota não pôde ser calculada",
+        "why": "0 é uma nota comum aqui. Nada no programa usa esse valor para indicar falha."
+      }
+    ]
+  },
+  "ex-e5znx5b8": {
+    "prompt": "A média dos vetores dos 150 chamados, cada um de comprimento 1, tem comprimento 0,425. O que isso diz sobre os chamados?",
+    "hint": "Quando a média de vetores de comprimento 1 teria comprimento 1?",
+    "choices": [
+      {
+        "text": "O modelo devolveu vetores mais curtos que 1 para alguns chamados",
+        "why": "Todo vetor do all-MiniLM-L6-v2 tem comprimento 1. O encurtamento acontece na média, não no modelo."
+      },
+      {
+        "text": "Eles apontam em várias direções diferentes",
+        "why": "Certo. Vetores apontando para o mesmo lado teriam média de comprimento 1; cinco tipos de chamado puxam a média em cinco direções e ela encolhe."
+      },
+      {
+        "text": "Um quarto dos chamados são quase cópias uns dos outros",
+        "why": "Cópias apontam para o mesmo lado, o que mantém a média comprida. A média curta vem do espalhamento, não da repetição."
+      },
+      {
+        "text": "O centroide não pode ser usado enquanto não ficar maior que 1",
+        "why": "Ele é dividido pelo comprimento para voltar a 1, mas isso é comodidade: a ordenação por cosseno seria a mesma de qualquer jeito."
+      }
+    ]
+  },
+  "ex-655jhdw2": {
+    "prompt": "Dois vetores de comprimento 1 formam um ângulo reto (o produto escalar deles é 0). Qual é o comprimento da média deles, com três casas decimais?",
+    "hint": "A média é (a + b) / 2. O quadrado do comprimento dela é (1 + 0 + 0 + 1) / 4.",
+    "unit": ""
+  },
+  "ex-vdjwz55q": {
+    "prompt": "Contra o centroide, o spam do iPhone grátis (m33) ficou em 16º, abaixo de oito mensagens normais. Que explicação a aula dá?",
+    "hint": "Onde fica o centroide em relação aos cinco grupos?",
+    "choices": [
+      {
+        "text": "Spam é sempre escrito para parecer mensagem de cliente",
+        "why": "A maior parte do spam da caixa de entrada teve nota alta. O problema é onde o centroide fica, não uma propriedade do spam em geral."
+      },
+      {
+        "text": "O centroide fica entre os cinco grupos, onde não há chamado",
+        "why": "Certo. A distância até a média de cinco assuntos não é a distância até nenhum deles, e o spam teve 0,321 contra o centroide de devoluções."
+      },
+      {
+        "text": "A m33 é mais longa que as outras estranhas, e textos longos têm nota menor",
+        "why": "O tamanho não mexe na nota aqui: todo vetor tem comprimento 1, seja qual for o texto."
+      },
+      {
+        "text": "O modelo foi treinado com spam, então trata spam como normal",
+        "why": "Nada na aula diz com o que o modelo foi treinado além de pares em inglês, e o modelo não marca nem libera nada; quem faz isso é a nota."
+      }
+    ]
+  },
+  "ex-e1bmpdkw": {
+    "prompt": "Ordene estas mensagens da caixa de entrada como centroid.py as classificou, da nota mais alta (mais longe do normal) para baixo.",
+    "hint": "A pergunta do Everest teve nota acima de 1.",
+    "items": [
+      "What is the boiling point of water at the top of Mount Everest?",
+      "Meu pedido ainda não chegou e já faz duas semanas, alguém pode me ajudar?",
+      "Je n'arrive pas à me connecter à mon compte depuis ce matin.",
+      "Can you recommend a good recipe for vegetable lasagne?"
+    ],
+    "trap": "A mensagem em português ficou acima da francesa, embora as duas estejam em línguas que o modelo não conhece."
+  },
+  "ex-cp1b3007": {
+    "prompt": "Com k=5, qual é a nota de uma mensagem em knn.py?",
+    "hint": "Ordene as similaridades dela com os chamados.",
+    "choices": [
+      {
+        "text": "Um menos a similaridade dela com o quinto chamado mais parecido",
+        "why": "Certo. A k-ésima maior similaridade é o k-ésimo chamado mais próximo, e um menos ela é a distância."
+      },
+      {
+        "text": "A distância média até todos os chamados",
+        "why": "Isso compararia com os 150 de uma vez, perto do que o centroide faz. k=5 olha um vizinho específico."
+      },
+      {
+        "text": "A fração dos cinco chamados mais próximos que são estranhos",
+        "why": "A referência só tem chamados normais, então não há estranhos para contar. A nota é uma distância, não uma votação."
+      },
+      {
+        "text": "A distância até o centroide dos cinco rótulos de chamado",
+        "why": "Os rótulos não entram em knn.py. Cinco é o k, não o número de categorias."
+      }
+    ]
+  },
+  "ex-shtvh4bd": {
+    "prompt": "Depois que uma mensagem de spam entrou no conjunto normal, a m33 caiu para 20º com k=1, mas ficou em 9º com k=5. Por que a diferença?",
+    "hint": "Qual vizinho cada k olha?",
+    "choices": [
+      {
+        "text": "k=5 ignora qualquer mensagem com cara de spam",
+        "why": "Nenhuma das duas notas sabe o que é spam. Elas só diferem em qual vizinho medem."
+      },
+      {
+        "text": "Acrescentar uma mensagem muda o modelo, e k=5 sofre menos",
+        "why": "O modelo não muda. Só a referência mudou, em um vetor."
+      },
+      {
+        "text": "O spam plantado virou o vizinho mais próximo dela",
+        "why": "Certo. Uma mensagem ruim na referência pode esconder as parecidas com ela de k=1; um k maior precisa de várias antes de ser enganado."
+      },
+      {
+        "text": "As notas com k=5 são sempre mais altas, então a m33 fica perto do topo",
+        "why": "Notas mais altas para todo mundo não mudam uma posição por si só. A m33 manteve a posição porque o quinto vizinho dela continuou longe."
+      }
+    ]
+  },
+  "ex-0s7mprpm": {
+    "prompt": "A referência da Marginalia cresce para um milhão de chamados normais. Como muda o custo de pontuar uma mensagem nova em cada método?",
+    "hint": "Conte as comparações que cada um faz.",
+    "choices": [
+      {
+        "text": "Os dois ficam iguais, porque um vetor tem 384 números seja qual for o tamanho da referência",
+        "why": "O tamanho do vetor é fixo, mas o número de vetores comparados não é, num dos métodos."
+      },
+      {
+        "text": "O centroide cresce com a referência e os vizinhos mais próximos não",
+        "why": "É o contrário: o centroide é calculado uma vez e é um único vetor para comparar."
+      },
+      {
+        "text": "O centroide continua uma comparação; os vizinhos precisam de um milhão, ou de um índice",
+        "why": "Certo. Pontuar por k vizinhos mais próximos é uma busca vetorial na referência, que é o que as aulas 11 a 15 tornam rápido."
+      },
+      {
+        "text": "Os dois crescem, mas o centroide cresce mais rápido porque a média é recalculada",
+        "why": "A média é calculada uma vez, quando a referência é montada, não a cada mensagem pontuada."
+      }
+    ]
+  },
+  "ex-eq2m4y3h": {
+    "prompt": "Ponha em ordem os passos para calcular a nota por k vizinhos mais próximos de uma mensagem.",
+    "hint": "A referência vira vetor antes de qualquer comparação com ela.",
+    "items": [
+      "Transformar as mensagens normais em vetores uma vez, como referência",
+      "Transformar a mensagem nova em vetor",
+      "Tirar o produto escalar dela com cada vetor da referência",
+      "Ordenar essas similaridades e pegar a k-ésima maior",
+      "Subtrair de 1 para ter a nota"
+    ],
+    "trap": "Ordenar vem depois dos produtos escalares, não antes: não há o que ordenar enquanto todas as similaridades não existirem."
+  },
+  "ex-rkcvzj90": {
+    "prompt": "Por que threshold.py pontua os 50 chamados de teste contra os 100 de treino, em vez de pontuar os 150 contra eles mesmos?",
+    "hint": "Veja a primeira linha da saída.",
+    "choices": [
+      {
+        "text": "Pontuar 150 contra 150 é lento demais",
+        "why": "São 22.500 produtos escalares, que não levam tempo nenhum. Velocidade não é o motivo."
+      },
+      {
+        "text": "Cada um acharia a si mesmo",
+        "why": "Certo. A primeira linha mostra a maior nota em 0.000. Um corte lido nessas notas marcaria quase tudo."
+      },
+      {
+        "text": "Os chamados de teste são estranhos e os de treino são normais",
+        "why": "Os 150 chamados são normais. Os de teste ficam separados para serem mensagens normais que a referência não viu."
+      },
+      {
+        "text": "A aula 4 gastou os chamados de teste, então eles não podem estar na referência",
+        "why": "Nada se gasta. Eles ficam fora da referência aqui pelo mesmo motivo que a aula 4 os deixou fora do treino."
+      }
+    ]
+  },
+  "ex-16yes66y": {
+    "prompt": "O corte fica no percentil 95 das notas normais separadas. O que isso promete?",
+    "hint": "Um percentil descreve os dados em que foi lido.",
+    "choices": [
+      {
+        "text": "95% das mensagens estranhas serão pegas",
+        "why": "O percentil foi lido só em mensagens normais. Quantas estranhas serão pegas só se mede com estranhas conhecidas."
+      },
+      {
+        "text": "Exatamente 5% das mensagens de amanhã serão marcadas",
+        "why": "As marcas de amanhã dependem de quantas estranhas chegarem. E mesmo para as normais é cerca de uma em vinte, não exatamente."
+      },
+      {
+        "text": "Cerca de uma mensagem normal em vinte fica acima dela",
+        "why": "Certo. Essa é a taxa de alarmes falsos para a qual ele foi escolhido; não diz nada sobre a revocação."
+      },
+      {
+        "text": "Uma nota acima dele tem pelo menos 95% de chance de ser estranha",
+        "why": "Uma nota não é uma probabilidade, como disse a aula 2. O percentil é uma posição entre notas normais."
+      }
+    ]
+  },
+  "ex-yegddbzk": {
+    "prompt": "Com k=5 no percentil 90, threshold.py marcou 11 mensagens, e 8 delas eram estranhas. Qual é a precisão, como fração com duas casas decimais?",
+    "hint": "A precisão é estranhas marcadas dividido por todas as marcadas.",
+    "unit": ""
+  },
+  "ex-j7328gpz": {
+    "prompt": "Com k=5 no percentil 99, threshold.py deixou passar m33 e m37 e não marcou nada por engano. Há 8 mensagens estranhas. Qual é a revocação, como fração com duas casas decimais?",
+    "hint": "A revocação é estranhas marcadas dividido por todas as estranhas.",
+    "unit": ""
+  },
+  "ex-5wwwa893": {
+    "prompt": "Ligue cada termo ao que ele conta na caixa de entrada.",
+    "hint": "Dois são taxas, dois são mensagens individuais.",
+    "pairs": [
+      {
+        "left": "precisão",
+        "right": "Das mensagens marcadas, a fração que era estranha"
+      },
+      {
+        "left": "revocação",
+        "right": "Das mensagens estranhas, a fração que foi marcada"
+      },
+      {
+        "left": "alarme falso",
+        "right": "Uma mensagem normal acima da linha"
+      },
+      {
+        "left": "mensagem que passa",
+        "right": "Uma mensagem estranha abaixo da linha"
+      }
+    ],
+    "right_distractors": [
+      "De todas as mensagens, a fração que era normal"
+    ]
+  },
+  "ex-6trqyqya": {
+    "prompt": "Na semana 2, só quatro das vinte mensagens passaram do corte. Por que a aula ainda diz que a caixa de entrada mudou?",
+    "hint": "Olhe os números do lote em vez das marcas.",
+    "choices": [
+      {
+        "text": "Quatro marcas num dia passam dos 5% que o limiar permite",
+        "why": "Os 5% do limiar falam de mensagens normais em geral, e quatro em vinte não testa isso. Os números do lote é que são a evidência."
+      },
+      {
+        "text": "A média subiu, e 11 de 20 ficaram mais perto entre si",
+        "why": "Certo. O lote se afastou da referência, e as mensagens dele se parecem mais entre si do que com qualquer coisa conhecida: um assunto novo."
+      },
+      {
+        "text": "As quatro mensagens marcadas eram spam disfarçado de pergunta sobre a assinatura",
+        "why": "Eram clientes de verdade perguntando sobre a assinatura. Nenhuma mensagem da semana 2 é spam."
+      },
+      {
+        "text": "O modelo foi atualizado entre as duas semanas",
+        "why": "O mesmo modelo pontuou as duas semanas. O que mudou foi o assunto do que os clientes escreveram."
+      }
+    ]
+  },
+  "ex-jp94argr": {
+    "prompt": "Um corte é lido nas notas de mensagens normais que a referência nunca viu, que em inglês se chamam dados ___.",
+    "hint": "Os 50 chamados de teste ficaram fora da referência para isso.",
+    "blanks": [
+      {
+        "accept": [
+          "held-out",
+          "held out",
+          "heldout",
+          "separados"
+        ]
+      }
+    ]
+  },
+  "ex-jef0s10a": {
+    "prompt": "Quando os dados que um sistema vê se afastam dos dados sobre os quais ele foi construído, como a caixa de entrada da semana 2, isso se chama ___.",
+    "hint": "Uma palavra para se afastar aos poucos de um rumo.",
+    "blanks": [
+      {
+        "accept": [
+          "deriva",
+          "drift",
+          "deriva de dados"
+        ]
+      }
+    ]
+  },
+  "ex-zc06hqt8": {
+    "prompt": "Para que as perguntas sobre a assinatura parem de disparar o detector, um colega propõe pôr automaticamente na referência tudo o que for recebido a cada dia. Qual é o risco?",
+    "hint": "O que aconteceu com k=1 quando havia um spam na referência?",
+    "choices": [
+      {
+        "text": "A referência cresce e a pontuação fica mais lenta",
+        "why": "Ela cresce, e isso custa, mas não é o perigo. O perigo é o que a referência passa a chamar de normal."
+      },
+      {
+        "text": "Um spam que chega uma vez vira normal, e os parecidos com ele deixam de ser marcados",
+        "why": "Certo. Tudo o que está na referência deixa de ser marcado, e foi assim que um spam plantado escondeu a m33 de k=1. Acrescente mensagens que alguém leu."
+      },
+      {
+        "text": "O modelo precisa ser retreinado todo dia",
+        "why": "Nada retreina o modelo. A referência é uma lista de vetores, e acrescentar a ela não muda nenhum peso."
+      },
+      {
+        "text": "O limiar deixa de ser um percentil",
+        "why": "O limiar pode ser lido de novo em dados separados a qualquer momento. O problema é o que entrou na referência."
+      }
+    ]
+  },
+  "ex-6exay02v": {
+    "prompt": "Um pedido de reembolso de 4.800 para o pedido 1182 ficou bem abaixo do corte. Por que o detector não conseguiu marcá-lo?",
+    "hint": "O que um embedding captura melhor, segundo a aula 1?",
+    "choices": [
+      {
+        "text": "O valor tem uma vírgula, que o modelo ignora",
+        "why": "A pontuação não é o problema. Mesmo escrito sem vírgula, um valor não é algo que os vetores comparem."
+      },
+      {
+        "text": "Pedidos de reembolso ficam fora da pontuação",
+        "why": "Toda mensagem é pontuada do mesmo jeito. Esta teve nota baixa porque se parece com os chamados de reembolso."
+      },
+      {
+        "text": "O assunto é um reembolso comum, e o vetor não pesa valores",
+        "why": "Certo. O detector mede distância de assunto, e a parte suspeita é um número dentro de um assunto normal."
+      },
+      {
+        "text": "O limiar foi posto alto de propósito para evitar alarmes falsos",
+        "why": "Nenhuma linha da tabela de k=1 a marcaria: ela fica entre as notas normais, não logo acima delas."
+      }
+    ]
+  },
+  "ex-b5q19pz5": {
+    "prompt": "A mesma reclamação de pedido atrasado passa em inglês e é marcada em português. O que a marca está de fato relatando?",
+    "hint": "Só uma coisa muda entre as duas versões.",
+    "choices": [
+      {
+        "text": "Que clientes que falam português escrevem reclamações mais incomuns",
+        "why": "As duas mensagens dizem a mesma coisa. Só a língua muda, e então só a língua explica a marca."
+      },
+      {
+        "text": "Que a mensagem é spam escrito em português para fugir de filtros",
+        "why": "É uma reclamação comum sobre um pedido atrasado, e a versão em inglês passa."
+      },
+      {
+        "text": "Um defeito no limiar, que deveria ser mais baixo para outras línguas",
+        "why": "Mover a linha não resolve: o vetor em português fica longe dos chamados de entrega porque o modelo não sabe lê-lo."
+      },
+      {
+        "text": "Que o modelo foi treinado numa língua só",
+        "why": "Certo. A anomalia é do modelo, como mostrou o −0,015 da aula 1; um modelo multilíngue a deixaria passar."
+      }
+    ]
+  },
+  "ex-5907xe9j": {
+    "prompt": "Um banco quer detectar pedidos de transferência fraudulentos no chat de suporte com o método desta aula, pontuando cada mensagem contra um ano de chats normais. O que ele vai pegar e o que vai deixar passar?",
+    "hint": "Pergunte se a fraude muda o assunto da mensagem.",
+    "choices": [
+      {
+        "text": "Vai pegar fraude, já que pedidos fraudulentos são raros e raro quer dizer longe do normal",
+        "why": "Raro nos registros do banco não quer dizer longe em significado. Um pedido de transferência fraudulento se lê como qualquer pedido de transferência."
+      },
+      {
+        "text": "Pega chats fora do assunto; fraude com cara normal passa",
+        "why": "Certo. O detector mede assunto. Fraude dentro de um assunto normal pede verificações de valores, contas e histórico."
+      },
+      {
+        "text": "Não vai pegar nada, porque os chats de um banco variam demais para uma referência",
+        "why": "Variedade é o que a nota por k vizinhos mais próximos aguenta: vários grupos, cada um com vizinhos perto. Chats fora do assunto continuariam se destacando."
+      },
+      {
+        "text": "Vai pegar tudo quando o limiar ficar no percentil 99",
+        "why": "Uma linha mais alta só marca menos mensagens. Nenhuma posição da linha enxerga um valor."
+      }
+    ]
+  },
+  "ex-ds9nqc4q": {
+    "prompt": "O detector da Ana pontua mensagens pela distância k=1 aos chamados normais, com um modelo só de inglês. Quais destas ele marcaria? Marque todas as que se aplicam.",
+    "hint": "Pergunte se cada uma muda o assunto, ou a língua, e não os detalhes.",
+    "choices": [
+      {
+        "text": "Uma mensagem pedindo uma receita de macarrão",
+        "why": "Sim. Uma pergunta de receita não tem vizinho próximo entre os chamados, como a mensagem da lasanha na caixa de entrada."
+      },
+      {
+        "text": "Uma reclamação de entrega escrita em espanhol",
+        "why": "Sim, pelos motivos do modelo: um modelo inglês não consegue pôr espanhol perto dos chamados de entrega, como na reclamação em português."
+      },
+      {
+        "text": "Um pedido de reembolso de vinte vezes o valor do pedido",
+        "why": "Não. Pelo assunto é um pedido de reembolso comum, e o vetor não pesa o valor."
+      },
+      {
+        "text": "Um pedido para mandar a senha da conta para um endereço novo",
+        "why": "Não. Ele se lê como uma pergunta de conta, que é um assunto normal, por mais perigoso que seja o pedido."
+      }
+    ]
+  },
+  "ex-cbmgakw8": {
+    "prompt": "Ligue cada escolha da aula à fraqueza que ela mostrou nos dados da Marginalia.",
+    "hint": "Uma fraqueza não pertence a nenhuma escolha.",
+    "pairs": [
+      {
+        "left": "Distância a um único centroide",
+        "right": "Deixou passar o spam, que ficava perto do meio de cinco grupos"
+      },
+      {
+        "left": "Vizinho mais próximo com k=1",
+        "right": "Enganado por um spam posto na referência"
+      },
+      {
+        "left": "Vizinho mais próximo com k=5",
+        "right": "Uma folga menor entre a última estranha e a primeira normal"
+      },
+      {
+        "left": "Um corte escolhido nas notas de hoje",
+        "right": "Só fica bonito nas mensagens em que foi escolhido"
+      }
+    ],
+    "right_distractors": [
+      "Não consegue ordenar as mensagens"
+    ]
+  }
+}

@@ -1,0 +1,2068 @@
+{
+  "ex-g0hq1yyc": {
+    "prompt": "Uma cliente busca 'money back' (dinheiro de volta) na central de ajuda, e o artigo de que ela precisa diz 'refund' (reembolso). Por que uma busca por embeddings o encontra e uma busca por palavra-chave não?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Ela compara significados, e o treino pôs as duas formas perto uma da outra",
+        "why": "Certo. Os vetores de textos que significam coisas parecidas apontam em direções parecidas, sejam quais forem as palavras."
+      },
+      {
+        "text": "Ela mantém uma lista de sinônimos que inclui refund",
+        "why": "Nenhuma lista de sinônimos está envolvida. Esse é o truque mantido à mão que os embeddings substituem."
+      },
+      {
+        "text": "Ela ignora as palavras e busca por categoria",
+        "why": "Ela nunca vê uma categoria. As categorias da figura da aula saíram do significado dos títulos."
+      },
+      {
+        "text": "Ela lê cada artigo junto com a pergunta da cliente usando um modelo de linguagem, um de cada vez",
+        "why": "Uma busca por embeddings compara vetores guardados com o vetor da pergunta; nenhum modelo lê os artigos na hora da busca."
+      }
+    ]
+  },
+  "ex-kbbgdssd": {
+    "prompt": "Um modelo devolve 1536 números por texto, cada um um float32. Quantos bytes ocupa um vetor?",
+    "hint": "Aula 1: quatro bytes por número.",
+    "unit": "bytes"
+  },
+  "ex-pkw3zhvn": {
+    "prompt": "O WordLlama dá exatamente o mesmo vetor para 'the dog bit the man' e 'the man bit the dog'. Que tipo de modelo se comporta assim?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Um modelo contextual com poucas camadas",
+        "why": "Mesmo poucas camadas deixam os pedaços verem os vizinhos, então a ordem moveria um pouco o vetor."
+      },
+      {
+        "text": "Um estático, que tira a média de vetores fixos de token",
+        "why": "Certo. As duas frases têm os mesmos tokens, e a média dos mesmos vetores não depende da ordem."
+      },
+      {
+        "text": "Qualquer modelo cujos vetores são normalizados para comprimento 1",
+        "why": "O all-MiniLM-L6-v2 também normaliza e deu 0,9795 ao par, não 1,0. Normalizar não apaga a ordem."
+      },
+      {
+        "text": "Um modelo multilíngue ao qual se pergunta sobre uma frase em inglês",
+        "why": "O suporte a línguas não tem nada a ver com a ordem; a causa é como o vetor é montado a partir dos tokens."
+      }
+    ]
+  },
+  "ex-47zscg47": {
+    "prompt": "Uma equipe quer marcar as mensagens de clientes que NÃO pedem reembolso, usando a similaridade com 'I want a refund' e um limiar. Por que isso vai falhar?",
+    "hint": "Aula 1, o que um embedding não é.",
+    "choices": [
+      {
+        "text": "O limiar teria de ser diferente para cada cliente",
+        "why": "O problema não são os clientes: os próprios vetores põem uma negação perto da frase que ela nega."
+      },
+      {
+        "text": "Mensagens curtas sempre têm nota maior que as longas",
+        "why": "Não é o tamanho que decide a nota aqui; 'I do not want a refund' é mais longa e teve 0,892."
+      },
+      {
+        "text": "Uma frase negada fica mais perto que uma paráfrase, então nenhum limiar as separa",
+        "why": "Certo. A negação muda a afirmação e mantém o assunto, e o assunto é o que o embedding captura melhor."
+      },
+      {
+        "text": "As notas de similaridade só existem entre textos do mesmo tamanho",
+        "why": "Todo texto dá um vetor da mesma dimensão, então quaisquer dois podem ser comparados."
+      }
+    ]
+  },
+  "ex-hmmh1hzv": {
+    "prompt": "Treinar um modelo com pares de textos que andam juntos, aproximando cada par e afastando o resto do lote, se chama treino ___.",
+    "hint": "Aula 1.",
+    "blanks": [
+      {
+        "accept": [
+          "contrastivo",
+          "contrastive"
+        ]
+      }
+    ]
+  },
+  "ex-91bqkykr": {
+    "prompt": "Quais destas afirmações sobre um embedding são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "O mesmo texto no mesmo modelo sempre dá o mesmo vetor",
+        "why": "Sim. Não há aleatoriedade na inferência, e é isso que permite reaproveitar um vetor guardado."
+      },
+      {
+        "text": "O vetor da mensagem de uma cliente deve ser tratado como dado pessoal",
+        "why": "Sim. A pesquisa sobre inversão reconstruiu textos curtos a partir dos vetores."
+      },
+      {
+        "text": "Dois modelos da mesma dimensão produzem vetores comparáveis",
+        "why": "As coordenadas de um modelo não têm nada a ver com as do outro; a dimensão só deixa a conta rodar."
+      },
+      {
+        "text": "Cada coordenada mede uma propriedade do texto que tem nome",
+        "why": "A informação está espalhada por todas as coordenadas; nenhuma significa algo sozinha."
+      }
+    ]
+  },
+  "ex-32qrx82t": {
+    "prompt": "Uma colega dá notas a vetores do all-MiniLM-L6-v2 com a fórmula completa do cosseno, outra com o produto escalar simples `D @ q`. Como os resultados se comparam?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "O produto escalar põe artigos longos mais acima, então as listas diferem",
+        "why": "Isso só acontece quando os comprimentos diferem. Todo vetor que este modelo devolve tem comprimento 1."
+      },
+      {
+        "text": "Os números e a ordem são os mesmos",
+        "why": "Certo. Com os dois comprimentos iguais a 1, dividir por eles não muda nada, então o produto escalar é o cosseno."
+      },
+      {
+        "text": "O cosseno é sempre maior, embora a ordem coincida",
+        "why": "Dividir por 1 × 1 deixa o produto escalar exatamente como estava."
+      },
+      {
+        "text": "A ordem se inverte, porque um deles é uma distância",
+        "why": "Nenhum dos dois é distância: os dois são similaridades, maior é mais perto."
+      }
+    ]
+  },
+  "ex-d30eysyj": {
+    "prompt": "O `<=>` do pgvector devolve 1 para dois vetores. Qual é a similaridade de cosseno deles, e o que isso diz sobre eles?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "1: apontam para o mesmo lado",
+        "why": "Isso seria uma distância de cosseno 0. O `<=>` devolve um menos a similaridade."
+      },
+      {
+        "text": "−1: apontam em direções opostas",
+        "why": "Setas opostas têm distância de cosseno 2."
+      },
+      {
+        "text": "0, então são perpendiculares",
+        "why": "Certo. A distância de cosseno é 1 − similaridade de cosseno, então distância 1 é similaridade 0: setas em ângulo reto."
+      },
+      {
+        "text": "Não dá para saber sem os comprimentos dos vetores",
+        "why": "A distância de cosseno já divide os comprimentos; ela depende só do ângulo."
+      }
+    ]
+  },
+  "ex-3zw35rfk": {
+    "prompt": "Um índice foi criado com distância L2 e guarda vetores normalizados. Alguém propõe reconstruí-lo com produto interno para ter resultados melhores. O que muda na ordem?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Nada: para vetores de comprimento 1 as duas medidas dão a mesma ordem",
+        "why": "Certo. Para vetores de comprimento 1 a distância ao quadrado é 2 − 2 × o produto escalar, então as ordens coincidem. A reconstrução compra uma conta mais barata, não resultados melhores."
+      },
+      {
+        "text": "Os melhores resultados melhoram, porque o modelo foi treinado com produto interno",
+        "why": "A medida do treino importa, mas com vetores normalizados as três medidas ordenam igual."
+      },
+      {
+        "text": "A ordem se inverte, porque o produto interno é uma similaridade",
+        "why": "O banco cuida do sentido; o melhor primeiro continua sendo o melhor primeiro."
+      },
+      {
+        "text": "Documentos longos passam a ganhar",
+        "why": "Todo vetor tem comprimento 1, então nenhum documento é mais comprido que outro."
+      }
+    ]
+  },
+  "ex-yhaq62k6": {
+    "prompt": "Um par de chamados tem nota 0,35 num modelo, e outro par tem 0,55 num modelo diferente. Qual par é mais relacionado?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "O segundo par, já que 0,55 é maior",
+        "why": "As notas de cada modelo ficam na sua própria faixa. Um número maior vindo de outro modelo não é uma correspondência mais próxima."
+      },
+      {
+        "text": "O primeiro par, já que notas mais baixas são mais raras",
+        "why": "A raridade depende da faixa de cada modelo, que a pergunta não dá."
+      },
+      {
+        "text": "Nenhum: os dois estão abaixo de 0,6, então não têm relação",
+        "why": "Com o all-MiniLM-L6-v2, só 6,0% dos pares de chamados chegam a 0,4. Um corte fixo como 0,6 não quer dizer nada entre modelos."
+      },
+      {
+        "text": "Não dá para saber: compare cada nota com a faixa do próprio modelo",
+        "why": "Certo. Notas não se comparam entre modelos; situe cada uma na distribuição do seu próprio modelo, no mesmo tipo de texto."
+      }
+    ]
+  },
+  "ex-xrsshgbg": {
+    "prompt": "Dois vetores de comprimento 1 têm similaridade de cosseno de 0,68. Qual é o quadrado da distância L2 entre eles?",
+    "hint": "Aula 2."
+  },
+  "ex-37x7tv3c": {
+    "prompt": "Ordene estas medianas e médias que `crowded.py` mediu, da mais baixa para a mais alta.",
+    "hint": "Aula 2.",
+    "items": [
+      "Mediana dos pares de setas aleatórias",
+      "Mediana dos pares de chamados do WordLlama",
+      "Mediana dos pares de chamados do MiniLM",
+      "Média do MiniLM para pares com o mesmo rótulo"
+    ],
+    "trap": "As setas aleatórias ficam mais baixo, em torno de zero: chamados reais dividem um assunto, então até a faixa mais baixa do WordLlama fica acima delas."
+  },
+  "ex-yjj4cp7b": {
+    "prompt": "A Marginalia troca o all-MiniLM-L6-v2 por outro modelo de embedding. O que precisa acontecer com `index.npy`?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Nada, desde que o novo modelo também devolva 384 números",
+        "why": "Dimensões iguais não tornam comparáveis os vetores de dois modelos."
+      },
+      {
+        "text": "Só os artigos editados depois da troca precisam de vetores novos",
+        "why": "Todo vetor guardado veio do modelo antigo, então nenhum pode ser comparado com uma pergunta do novo."
+      },
+      {
+        "text": "Todo artigo vira vetor de novo com o novo modelo, e as perguntas também",
+        "why": "Certo. Perguntas e documentos precisam vir do mesmo modelo, então o índice inteiro é reconstruído."
+      },
+      {
+        "text": "Os vetores antigos são normalizados de novo para combinar com o novo modelo",
+        "why": "Normalizar muda comprimentos, não de qual modelo vieram as direções."
+      }
+    ]
+  },
+  "ex-pvysd567": {
+    "prompt": "Uma equipe julga a nova busca pedindo a cinco colegas que a testem e digam se os resultados parecem bons. O que falta?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Um grupo maior de colegas",
+        "why": "Mais opiniões depois do fato ainda medem impressões, não se o documento certo voltou."
+      },
+      {
+        "text": "Perguntas com as respostas decididas antes de a busca rodar",
+        "why": "Certo. Julgamentos de relevância permitem contar o recall@1 e o recall@3 e comparar duas versões nas mesmas condições."
+      },
+      {
+        "text": "Uma máquina mais rápida para o teste",
+        "why": "A velocidade não tem nada a ver com os resultados estarem certos."
+      },
+      {
+        "text": "Pedir aos colegas que deem nota de 1 a 10 a cada resultado",
+        "why": "Notas dadas olhando os resultados continuam sendo opiniões formadas depois do fato, e não se comparam entre versões."
+      }
+    ]
+  },
+  "ex-pccah826": {
+    "prompt": "Um cliente cola o código de erro `E-4471` na busca de ajuda. Ele aparece em exatamente um artigo. Qual busca é mais confiável para essa consulta?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "A busca por embedding, porque entende o que o código quer dizer",
+        "why": "Um código quase não tem significado para situar; na aula a busca por embedding deixou o artigo com `4.90` na posição 11."
+      },
+      {
+        "text": "Qualquer uma, já que as duas leem os mesmos artigos",
+        "why": "Elas ordenam por coisas diferentes, e nos textos exatos diferiram muito: 8 de 8 em primeiro contra 3 de 8."
+      },
+      {
+        "text": "A busca por palavras: um texto exato e raro ganha um idf alto",
+        "why": "Certo. Um artigo entre muitos o contém, então o BM25 põe esse artigo primeiro e não combina mais nada."
+      },
+      {
+        "text": "Nenhuma, até o código ser traduzido em palavras",
+        "why": "O BM25 não precisa de tradução; ele combina o texto como está."
+      }
+    ]
+  },
+  "ex-begdhem6": {
+    "prompt": "Com `k = 60` e pesos iguais, o documento A está em primeiro na lista por embedding e não aparece na lista por palavras; o documento B está em primeiro na lista por palavras e não aparece na lista por embedding. Como eles terminam depois da fusão?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "A ganha, porque a busca por embedding foi a mais forte nas perguntas da aula",
+        "why": "A RRF não sabe qual lista é melhor; com pesos iguais um primeiro lugar vale o mesmo em qualquer uma."
+      },
+      {
+        "text": "B ganha, porque as combinações por palavras são exatas",
+        "why": "Exatidão não entra na fórmula; só posições e pesos."
+      },
+      {
+        "text": "Os dois saem, porque cada um falta numa lista",
+        "why": "Um documento que falta numa lista só não ganha nada dela; fica com o que a outra lista dá."
+      },
+      {
+        "text": "Empatam, cada um com 1/61",
+        "why": "Certo. Cada um ganha 1/(60 + 1) da lista em que está e nada da outra."
+      }
+    ]
+  },
+  "ex-cd14wdxk": {
+    "prompt": "A fração das perguntas de teste em que um documento relevante aparece entre os k primeiros resultados se chama ___ em k.",
+    "hint": "Aula 3.",
+    "blanks": [
+      {
+        "accept": [
+          "recall",
+          "revocação",
+          "revocacao"
+        ]
+      }
+    ]
+  },
+  "ex-caf3bafb": {
+    "prompt": "Quais destes passos pertencem à metade da busca que roda antes, uma vez por artigo? Marque todas as que se aplicam.",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Transformar cada artigo em vetor",
+        "why": "Sim. É o passo lento, e um artigo que não mudou mantém o vetor."
+      },
+      {
+        "text": "Guardar os vetores com os ids na mesma ordem",
+        "why": "Sim. A matriz e os ids são gravados juntos quando o índice é construído."
+      },
+      {
+        "text": "Transformar a pergunta do cliente em vetor",
+        "why": "Não. A pergunta só existe quando o cliente a digita."
+      },
+      {
+        "text": "Ordenar as notas e ficar com as k primeiras",
+        "why": "Não. As notas só existem depois que uma pergunta é comparada com os vetores guardados."
+      }
+    ]
+  },
+  "ex-70qnzg5x": {
+    "prompt": "A equipe da Marginalia separa tickets novos à mão todo dia. Qual método deixa os tickets separados hoje melhorarem as previsões de amanhã sem treino nenhum no meio?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "k vizinhos mais próximos: cada ticket separado é mais um vetor guardado",
+        "why": "Isso. Aprender é acrescentar; a comparação de amanhã inclui as linhas de hoje."
+      },
+      {
+        "text": "Regressão logística, cujos pesos se ajustam sozinhos quando chegam tickets",
+        "why": "Os pesos só mudam quando ela é ajustada de novo; tickets novos pedem um novo treino."
+      },
+      {
+        "text": "Classificação zero-shot, que aprende com os rótulos que a equipe acrescenta",
+        "why": "O zero-shot não lê rótulo nenhum; compara os tickets com descrições escritas."
+      },
+      {
+        "text": "Centroides, que mantêm as médias de ontem fixas seja o que for acrescentado",
+        "why": "Um centroide que nunca muda ignora os tickets novos; incluí-los exige recalcular a média."
+      }
+    ]
+  },
+  "ex-6t8vefa9": {
+    "prompt": "No método dos centroides, o que é o centroide de cada setor?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "O ticket de treino mais perto do meio dos 100",
+        "why": "Isso seria um ticket para o conjunto todo; um centroide é calculado por setor, e é uma média, não um ticket."
+      },
+      {
+        "text": "O nome do setor, transformado em vetor como uma palavra",
+        "why": "Essa é a redação de nomes puros do zero-shot, que acertou 39; o centroide vem de tickets rotulados."
+      },
+      {
+        "text": "A média normalizada dos vetores de treino daquele setor",
+        "why": "Isso. Um vetor por setor, recolocado no comprimento 1 para que os produtos escalares comparem direções."
+      },
+      {
+        "text": "O ticket de teste sobre o qual o classificador tem mais dúvida",
+        "why": "Tickets de teste nunca entram num centroide; ficam de fora para medi-lo."
+      }
+    ]
+  },
+  "ex-0mpq2z62": {
+    "prompt": "Amanhã a Marginalia abre um sexto setor, de vales-presente, e nenhum ticket foi rotulado para ele ainda. Qual é o jeito mais rápido de começar a mandar tickets para lá?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Treinar de novo a regressão logística com os cinco setores existentes",
+        "why": "Um modelo treinado com cinco setores só responde com esses cinco; nunca viu o sexto."
+      },
+      {
+        "text": "Tirar a média dos tickets de ontem para fazer um centroide de vales",
+        "why": "Sem rótulos não há como saber quais tickets de ontem eram sobre vales-presente."
+      },
+      {
+        "text": "Aumentar o k para que mais vizinhos votem",
+        "why": "Nenhum ticket guardado tem o rótulo novo, então nenhuma votação pode escolhê-lo."
+      },
+      {
+        "text": "Acrescentar uma frase descrevendo o setor a um classificador zero-shot",
+        "why": "Isso. Um rótulo novo no zero-shot é uma descrição a mais; os exemplos rotulados podem vir depois."
+      }
+    ]
+  },
+  "ex-7rzmyjp2": {
+    "prompt": "O setor de reembolsos não pode receber tickets que são de outro lugar, mesmo que alguns dos seus se percam. Qual número dele a equipe deve acompanhar?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "A revocação dele",
+        "why": "Revocação é quantos tickets do próprio setor chegaram a ele; é o número para um setor que não pode deixar escapar nada."
+      },
+      {
+        "text": "A precisão dele",
+        "why": "Isso. Precisão é quantos dos tickets mandados ao setor pertencem a ele."
+      },
+      {
+        "text": "A taxa de acerto geral do classificador",
+        "why": "Um número para todos os setores esconde para onde vão os erros; a matriz de confusão e os números por setor mostram."
+      },
+      {
+        "text": "O support dele no relatório",
+        "why": "Support é só quantos tickets de teste o setor tem, dez cada aqui; não mede nada do classificador."
+      }
+    ]
+  },
+  "ex-q6sgnp4y": {
+    "prompt": "Um conjunto de teste tem 40 tickets. Quantos pontos percentuais de acerto vale um único ticket?",
+    "hint": "Aula 4: em 50 tickets, um valia dois pontos.",
+    "unit": "%"
+  },
+  "ex-r11dhte5": {
+    "prompt": "Ligue cada método a quantos dos 50 tickets de teste ele separou certo com os vetores do MiniLM e os 100 tickets de treino.",
+    "hint": "Aula 4.",
+    "pairs": [
+      {
+        "left": "vizinho mais próximo, k=1",
+        "right": "46"
+      },
+      {
+        "left": "vizinhos mais próximos, k=3",
+        "right": "42"
+      },
+      {
+        "left": "centroides",
+        "right": "47"
+      },
+      {
+        "left": "zero-shot com descrições",
+        "right": "43"
+      }
+    ],
+    "right_distractors": [
+      "50"
+    ]
+  },
+  "ex-2krbxyam": {
+    "prompt": "Por que um recomendador feito sobre a média de uma leitora precisa pular os livros que ela terminou?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "O modelo dá nota exatamente zero a um livro terminado",
+        "why": "O modelo não sabe nada de quem leu o quê; livros terminados têm nota alta, não zero."
+      },
+      {
+        "text": "Livros terminados saem do catálogo automaticamente",
+        "why": "Nada os tira; eles ficam para todos os outros leitores, e por isso o pulo é por leitor."
+      },
+      {
+        "text": "O vetor dela é feito deles, então eles têm as notas mais altas",
+        "why": "Isso. Os três livros que o Caio terminou ficaram no topo da própria ordem dele até filters.py pulá-los."
+      },
+      {
+        "text": "Eles só aparecem quando a MMR está desligada",
+        "why": "Aparecem com ou sem MMR; mmr.py os tirou do conjunto antes de escolher qualquer coisa."
+      }
+    ]
+  },
+  "ex-eamvvz9j": {
+    "prompt": "O vetor de uma leitora é a média normalizada dos dois livros que ela terminou, que tratam de coisas diferentes. Quais livros não lidos ele põe primeiro?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Livros razoavelmente perto dos dois livros dela",
+        "why": "Isso. A nota contra a média é a soma das duas notas, escalada; Wuthering Heights liderou a lista da Lia assim."
+      },
+      {
+        "text": "Livros muito perto de um dos dois, seja qual for a nota contra o outro",
+        "why": "Um livro perto de um e longe do outro tem soma baixa; Sense and Sensibility ficou fora da lista da Lia por isso."
+      },
+      {
+        "text": "Livros do gênero do último livro que ela terminou",
+        "why": "A média ignora ordem e gênero; ela só soma semelhanças."
+      },
+      {
+        "text": "Os livros que mais leitores terminaram",
+        "why": "Essa é a saída por popularidade para um leitor sem livros, não o que a média faz."
+      }
+    ]
+  },
+  "ex-mtr5h2bn": {
+    "prompt": "Uma loja tem trinta edições de Pride and Prejudice com sinopses quase iguais, e as cinco recomendações de uma fã de Austen são cinco edições do mesmo romance. Que mudança resolve isso?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Mostrar cinquenta recomendações em vez de cinco",
+        "why": "As edições continuariam ocupando o topo da lista; uma lista maior só esconde o problema mais abaixo."
+      },
+      {
+        "text": "Escrever o gênero na frente de toda sinopse antes de gerar os vetores",
+        "why": "Isso aproxima livros de um mesmo gênero, então as edições continuariam tão perto umas das outras quanto antes."
+      },
+      {
+        "text": "Normalizar a média da leitora uma segunda vez",
+        "why": "Um vetor de comprimento 1 normalizado de novo é o mesmo vetor; nada na lista muda."
+      },
+      {
+        "text": "MMR com λ abaixo de 1, ou uma regra de uma edição por título",
+        "why": "Isso. As edições se parecem entre si, que é exatamente o que a MMR penaliza; uma regra sobre o campo de título pega isso direto."
+      }
+    ]
+  },
+  "ex-zw04wxan": {
+    "prompt": "Para o Marcos, que não terminou nada, a aula mostrou os livros mais terminados. Por que essa lista é uma evidência fraca nesta loja?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Livros populares não têm vetor, então não podem ser ordenados",
+        "why": "Todo livro do catálogo tem vetor; a popularidade só não o usa."
+      },
+      {
+        "text": "Ela se apoia em poucas contagens: o primeiro foi terminado por 3",
+        "why": "Isso. Com doze leitores, popularidade são umas poucas contagens; com milhares, vira um padrão sensato."
+      },
+      {
+        "text": "A popularidade é calculada a partir das sinopses, que são curtas",
+        "why": "A popularidade conta quem terminou o quê e nunca lê uma sinopse."
+      },
+      {
+        "text": "As contagens mudam toda vez que o modelo roda",
+        "why": "Contar livros terminados não envolve modelo nenhum e dá a mesma resposta toda vez."
+      }
+    ]
+  },
+  "ex-9c28ngy6": {
+    "prompt": "Com λ = 0,6, a semelhança de um livro com o leitor é 0,50 e a maior semelhança dele com um livro já escolhido é 0,70. Qual é o valor MMR dele?",
+    "hint": "Aula 5: λ vezes o primeiro, menos (1 − λ) vezes o segundo.",
+    "unit": ""
+  },
+  "ex-1hr2gsde": {
+    "prompt": "Ordene uma rodada da MMR do jeito que mmr.py a executa, e o que vem depois.",
+    "hint": "Aula 5.",
+    "items": [
+      "Calcular a semelhança de cada livro restante com o leitor",
+      "Subtrair a penalidade pela maior semelhança com um livro já escolhido",
+      "Escolher o livro de maior valor",
+      "Passá-lo do conjunto para a lista",
+      "Repetir até a lista ter cinco"
+    ],
+    "trap": "A penalidade é calculada antes da escolha, contra os livros que já estão na lista, nunca contra o conjunto inteiro."
+  },
+  "ex-g1r9zxh5": {
+    "prompt": "Por que a detecção de anomalias com embeddings pontua mensagens pela distância até os dados normais, em vez de treinar um rótulo para as estranhas?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "As estranhas não têm nada em comum, e tipos novos continuam chegando",
+        "why": "Certo. Spam, línguas estrangeiras e ruído não formam uma categoria, então não há nada estável de que aprender um rótulo."
+      },
+      {
+        "text": "Distâncias são mais baratas de calcular que a previsão de um classificador",
+        "why": "O custo não é o motivo. Os classificadores da aula 4 também eram baratos; eles só não sabem responder nenhuma destas."
+      },
+      {
+        "text": "Um classificador recusa mensagens que nunca viu",
+        "why": "É o contrário: o classificador da aula 6 deu a cada mensagem estranha um dos cinco rótulos."
+      },
+      {
+        "text": "Mensagens normais não podem ser rotuladas",
+        "why": "Foram rotuladas: os 150 chamados têm um de cinco rótulos cada. As estranhas é que não podem ser descritas."
+      }
+    ]
+  },
+  "ex-g1ajw2z1": {
+    "prompt": "As mensagens normais de uma loja se dividem em cinco assuntos distintos. Que nota tende a separar melhor as estranhas, e por quê?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "A distância até a média de todas as mensagens, porque usa cada uma delas",
+        "why": "A média fica entre os cinco assuntos, onde nenhuma mensagem real mora; foi assim que o spam se escondeu em 16º na aula 6."
+      },
+      {
+        "text": "O k-ésimo vizinho normal mais próximo, já que cada assunto mantém vizinhos próprios",
+        "why": "Certo. Uma mensagem normal tem um vizinho perto no próprio assunto, esteja onde estiver; uma estranha não tem nenhum."
+      },
+      {
+        "text": "A distância até a mensagem normal mais longa",
+        "why": "O tamanho não entra: os vetores têm todos comprimento 1. Nada na aula pontua contra uma mensagem escolhida."
+      },
+      {
+        "text": "A fração de mensagens normais dentro de 0,5, porque um raio fixo é objetivo",
+        "why": "Um raio fixo é um número escolhido à mão, e as notas se amontoam diferente em cada modelo, como mostrou a aula 2."
+      }
+    ]
+  },
+  "ex-r89e8996": {
+    "prompt": "A Ana põe o corte no percentil 99 das notas normais separadas em vez do 90. O que ela troca?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Menos alarmes falsos, com o risco de deixar passar mais estranhas",
+        "why": "Certo. Com k=5 na aula 6, o percentil 99 não marcou nada por engano e deixou passar duas estranhas."
+      },
+      {
+        "text": "Mais alarmes falsos, para pegar todas as estranhas",
+        "why": "Esse é o lado do percentil 90: três normais marcadas, todas as estranhas pegas."
+      },
+      {
+        "text": "Nada, porque um percentil de dados normais não diz nada sobre o efeito do corte",
+        "why": "Ele move a linha, e a linha decide tanto quantas normais quanto quantas estranhas são marcadas."
+      },
+      {
+        "text": "Um detector mais lento, porque um percentil mais alto compara mais mensagens",
+        "why": "Toda mensagem é pontuada igual, seja qual for a linha. Só a decisão depois da nota muda."
+      }
+    ]
+  },
+  "ex-4s0yj25p": {
+    "prompt": "Um detector marca 10 mensagens, 6 das quais são de fato estranhas, e havia 8 estranhas ao todo. Qual é a revocação dele, como fração com duas casas decimais?",
+    "hint": "Aula 6.",
+    "unit": ""
+  },
+  "ex-bq8vkw9v": {
+    "prompt": "Um produto novo é lançado e muitos clientes perguntam sobre ele. As marcas por mensagem quase não sobem, mas a maioria das mensagens novas tem o vizinho mais próximo entre elas mesmas. Qual é a leitura certa?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Uma campanha de spam, já que mensagens parecidas chegaram juntas",
+        "why": "Mensagens parecidas chegando juntas também é a cara de um assunto novo. Leia-as: na aula 6 eram clientes perguntando sobre uma assinatura."
+      },
+      {
+        "text": "O detector quebrou e deve ser refeito do zero",
+        "why": "Ele está funcionando: descreve fielmente o normal antigo. O que mudou foi o tráfego, não o detector."
+      },
+      {
+        "text": "Um assunto novo: deriva, a tratar com uma categoria nova e uma base refeita com mensagens revisadas",
+        "why": "Certo. Não é uma anomalia em nenhuma mensagem; a referência precisa aprender o novo normal, com mensagens que alguém leu."
+      },
+      {
+        "text": "Nada, porque só as mensagens marcadas importam",
+        "why": "Os números do lote são justamente o que revela um assunto que as marcas por mensagem subcontam."
+      }
+    ]
+  },
+  "ex-afnj3wpn": {
+    "prompt": "Quais destas um detector que mede a distância até mensagens normais, com um modelo de embeddings só de inglês, deve marcar? Marque todas as que se aplicam.",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Uma mensagem que é só teclado batido a esmo",
+        "why": "Sim. Ruído não tem vizinho próximo entre chamados reais; a linha de teclado da aula 6 ficou entre as estranhas."
+      },
+      {
+        "text": "Uma candidatura a emprego mandada ao endereço de suporte",
+        "why": "Sim. O assunto dela fica longe de todos os chamados, como mostrou a m37."
+      },
+      {
+        "text": "Um pedido de reembolso de um valor muito acima do preço do pedido",
+        "why": "Não. Pelo assunto é um pedido de reembolso comum; o vetor não pesa valores."
+      },
+      {
+        "text": "Uma pergunta comum sobre entrega escrita em bom inglês",
+        "why": "Não. É exatamente disso que a referência é feita."
+      }
+    ]
+  },
+  "ex-4syttvny": {
+    "prompt": "Uma resposta de embeddings tem três vetores. Que campo liga cada vetor ao texto de onde veio?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "`index`",
+        "why": "Certo. É a posição do texto na lista `input`; ordene ou busque por ele em vez de confiar na ordem."
+      },
+      {
+        "text": "`usage`, que lista os tokens de cada texto",
+        "why": "`usage` tem totais da requisição inteira, não uma entrada por texto."
+      },
+      {
+        "text": "`model`, repetido em cada vetor",
+        "why": "`model` aparece uma vez, para a resposta toda, e nomeia o modelo, não o texto."
+      },
+      {
+        "text": "`object`, que traz o próprio texto",
+        "why": "`object` só diz embedding. O texto nunca volta."
+      }
+    ]
+  },
+  "ex-5zgj2pm6": {
+    "prompt": "A Ana chama o endpoint de embeddings com `requests` puro, sem o SDK, e recebe uma lista JSON de números decimais. O que encolheria a resposta, e o que ela precisa fazer depois?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Mandar menos textos por requisição; nada mais muda",
+        "why": "Isso encolhe cada resposta diminuindo o trabalho, não a codificação. Os mesmos vetores continuam viajando como texto decimal comprido."
+      },
+      {
+        "text": "Pedir `dimensions=1`, já que um número sempre basta",
+        "why": "Uma coordenada não é um vetor utilizável, e o lab-minilm recusa o parâmetro de qualquer jeito."
+      },
+      {
+        "text": "Comprimir o texto de entrada antes de mandar",
+        "why": "A entrada é pequena; o tamanho está nos vetores que voltam."
+      },
+      {
+        "text": "Pedir `encoding_format=\"base64\"` e decodificar como float32 little-endian",
+        "why": "Certo. É o que o SDK faz sozinho; a aula 7 mediu 8.594 bytes contra 2.203 para um vetor."
+      }
+    ]
+  },
+  "ex-sxgd9w08": {
+    "prompt": "Um lote de 1.000 descrições de produtos é recusado com 400, e uma descrição nele é uma string vazia. Qual é a correção certa?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Repetir a mesma requisição até o servidor aceitar",
+        "why": "Um 400 diz que a requisição está errada; ela falha igual toda vez, e é por isso que o SDK não a repete."
+      },
+      {
+        "text": "Tirar os textos vazios antes de montar cada lote",
+        "why": "Certo. Uma string vazia faz o servidor recusar a requisição inteira, não só aquela posição."
+      },
+      {
+        "text": "Dividir o lote em requisições de um texto cada",
+        "why": "O lote está bem abaixo do limite de 2.048 entradas. Dividir só multiplica requisições; a vazia continua falhando."
+      },
+      {
+        "text": "Trocar para um modelo que aceite o parâmetro `dimensions`",
+        "why": "A recusa é sobre a entrada, não sobre o tamanho da saída."
+      }
+    ]
+  },
+  "ex-45r19692": {
+    "prompt": "Uma equipe corta vetores guardados de 1.536 números para 512, guardando os 512 primeiros, e compara consultas cortadas do mesmo jeito pelo produto escalar. A busca fica visivelmente pior que pedir `dimensions=512` à API. O que ela provavelmente pulou?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Converter os vetores para float64 antes",
+        "why": "A precisão não é o problema; float32 funcionou em todos os tamanhos na aula 7."
+      },
+      {
+        "text": "Transformar os documentos de novo em vetores com o mesmo modelo",
+        "why": "O prefixo de um vetor de um modelo treinado para isso é utilizável sem refazer os vetores; a API faz o mesmo corte."
+      },
+      {
+        "text": "Escolher outro tokenizador para as consultas",
+        "why": "Consultas e documentos passaram pelo mesmo modelo; tokenizadores decidem tokens, não esta ordenação."
+      },
+      {
+        "text": "Normalizar cada vetor cortado de volta para comprimento 1",
+        "why": "Certo. Vetores cortados guardam frações diferentes do comprimento, e os mais longos ganham por serem longos; na aula 7 o corte normalizado bateu exatamente com a API."
+      }
+    ]
+  },
+  "ex-tx8h3hwc": {
+    "prompt": "Pelo preço da planilha do LiteLLM, US$ 0,130 por milhão de tokens para o text-embedding-3-large, quanto custa transformar em vetores 4 milhões de pedaços de 250 tokens cada, em dólares americanos?",
+    "hint": "Aula 7.",
+    "unit": "USD"
+  },
+  "ex-qmh70v34": {
+    "prompt": "Com os padrões do cliente, um provedor responde 429 às duas primeiras requisições de uma chamada e 200 à terceira. O que o código que chamou observa?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Um RateLimitError, que ele precisa capturar e repetir sozinho",
+        "why": "O SDK repete o 429 até max_retries antes de lançar; aqui a terceira tentativa deu certo."
+      },
+      {
+        "text": "O vetor, devolvido sem erro depois de um pequeno atraso",
+        "why": "Certo. Na aula 7 a chamada voltou em 2,2 s e o programa nunca viu as recusas; só o registro do servidor viu."
+      },
+      {
+        "text": "Dois avisos impressos, depois o vetor",
+        "why": "O SDK não imprimiu nada; as recusas só apareceram no registro do servidor."
+      },
+      {
+        "text": "Uma resposta vazia, já que a primeira requisição falhou",
+        "why": "A resposta trouxe os 384 números da tentativa que deu certo."
+      }
+    ]
+  },
+  "ex-pxnx7ban": {
+    "prompt": "Uma equipe passa o código de embedding para o SDK do cohere e chama `co.embed(model=..., texts=...)` exatamente como antes, sem mais nada. O que acontece?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O Cohere preenche `search_document` e transforma os textos",
+        "why": "Não há padrão: os modelos a partir da versão 3 exigem o parâmetro, e o SDK impõe isso."
+      },
+      {
+        "text": "O Python levanta um TypeError antes de qualquer requisição",
+        "why": "Isso. `input_type` é um argumento nomeado obrigatório do `embed` do SDK."
+      },
+      {
+        "text": "O servidor responde com um 400 que nomeia o campo que falta",
+        "why": "É o que recebe uma requisição HTTP escrita à mão. Pelo SDK, a chamada nem sai do Python."
+      },
+      {
+        "text": "Funciona, porque `input_type` só muda o que a chamada cobra",
+        "why": "O input type diz para que serve o texto; não tem nada a ver com a cobrança."
+      }
+    ]
+  },
+  "ex-pf56s7xz": {
+    "prompt": "Um índice guarda vetores `ubinary` do Cohere. Que comparação os ordena corretamente contra uma consulta codificada do mesmo jeito?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Um produto escalar dos bytes empacotados, lidos como números comuns",
+        "why": "Cada byte empacota oito coordenadas sem relação; multiplicar bytes como números as mistura numa nota sem sentido."
+      },
+      {
+        "text": "Similaridade de cosseno depois de transformar cada byte num float",
+        "why": "Mesmo problema: o byte são oito bits, não um valor, então o float dele não significa nada."
+      },
+      {
+        "text": "Quantos bits diferem, menos querendo dizer mais perto",
+        "why": "Isso, a distância de Hamming; o quantised.py trocou o sinal para que mais alto fosse mais perto."
+      },
+      {
+        "text": "A distância euclidiana entre os valores dos bytes",
+        "why": "Distâncias entre bytes empacotados medem o empacotamento, não as coordenadas."
+      }
+    ]
+  },
+  "ex-kevvyzk9": {
+    "prompt": "O `gemini.py` pediu 128 números ao `lab-wordllama`, e os comprimentos saíram 1.0. Por que você não pode contar com isso contra o gemini-embedding-001 em 768?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O labembed renormaliza ao cortar; o Google, não",
+        "why": "Isso. O comportamento do laboratório escondeu o passo; a última parte do gemini.py existe por causa do Google."
+      },
+      {
+        "text": "Toda API de embedding devolve vetores unitários, então pode",
+        "why": "O Google documenta o contrário para os tamanhos cortados, e alguns modelos devolvem vetores de qualquer comprimento."
+      },
+      {
+        "text": "O SDK normaliza toda resposta que recebe",
+        "why": "O SDK repassa os valores; quem normalizou foi o servidor do laboratório."
+      },
+      {
+        "text": "As 128 primeiras coordenadas do WordLlama por acaso têm comprimento 1",
+        "why": "Um prefixo de um vetor unitário é mais curto que 1. O servidor dividiu pelo comprimento depois de cortar."
+      }
+    ]
+  },
+  "ex-793x5n45": {
+    "prompt": "Por que o Cohere pergunta para que serve cada texto?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Para escolher a faixa de preço da chamada",
+        "why": "A conta conta tokens; o input type não a muda."
+      },
+      {
+        "text": "Para detectar em que língua o texto está",
+        "why": "A língua não tem nada a ver com o input type; ele nomeia o papel do texto."
+      },
+      {
+        "text": "Para pôr perguntas perto das respostas",
+        "why": "Isso. A busca é assimétrica, e o modelo fica sabendo de que lado cada texto está."
+      },
+      {
+        "text": "Para decidir quantos números o vetor vai ter",
+        "why": "Isso é o `output_dimension`, um parâmetro separado."
+      }
+    ]
+  },
+  "ex-sqsjy7ce": {
+    "prompt": "A Marginalia guarda um milhão de vetores do lab-minilm na forma `ubinary`. Quantos megabytes são, contando um megabyte como 1.000.000 de bytes e nada além dos vetores?",
+    "hint": "Aula 8.",
+    "unit": "MB"
+  },
+  "ex-r76qyp7a": {
+    "prompt": "Quais destes o labembed aceitou e depois ignorou nesta aula? Escolha todos os que se aplicam.",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O `task_type` do Gemini",
+        "why": "Isso. O tasks.py recebeu vetores idênticos para quatro task types, e o log registrou os quatro."
+      },
+      {
+        "text": "O `input_type` do Cohere",
+        "why": "Isso. O search.py achou 19 e 22 com qualquer tipo com que as perguntas foram mandadas."
+      },
+      {
+        "text": "O `output_dimensionality` mandado para o `lab-wordllama`",
+        "why": "Ele foi respeitado: os vetores voltaram com 128 números."
+      },
+      {
+        "text": "O nome de modelo de um provedor, como `gemini-embedding-001`",
+        "why": "Ele foi recusado com um 404, não ignorado."
+      },
+      {
+        "text": "O limite de 96 textos por chamada do Cohere",
+        "why": "Ele foi aplicado: 97 textos receberam um 400."
+      }
+    ]
+  },
+  "ex-40qkj1mp": {
+    "prompt": "O pooling de um colega divide os vetores somados pelo número de posições, e não pela soma da máscara. Com textos transformados um por vez, ele bate exatamente com o `minilm.py`. Por quê?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Normalizar depois esconde qualquer diferença no divisor",
+        "why": "Normalizar esconde um fator constante, mas aqui as linhas de preenchimento também mudam a soma; isso aparece num lote."
+      },
+      {
+        "text": "Sozinho não há preenchimento, e as contagens batem",
+        "why": "Isso. A máscara é toda de uns, e o defeito só aparece quando um lote preenche um texto mais curto."
+      },
+      {
+        "text": "O tokenizador tira o preenchimento antes de o transformer rodar",
+        "why": "O preenchimento entra no transformer; a máscara é como as linhas dele ficam fora da média."
+      },
+      {
+        "text": "O onnxruntime aplica sozinho a máscara ao pooling",
+        "why": "O modelo devolve um vetor por posição; o pooling é trabalho do seu código, como o inside.py fez."
+      }
+    ]
+  },
+  "ex-wea4whzr": {
+    "prompt": "Qual arquivo da exportação do Chroma do all-MiniLM-L6-v2 é o próprio transformer?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "tokenizer.json",
+        "why": "Esse arquivo traz o tokenizador e as configurações padrão dele, o 128 entre elas."
+      },
+      {
+        "text": "model.onnx",
+        "why": "Isso, 90.387.606 bytes de pesos que o onnxruntime executa."
+      },
+      {
+        "text": "vocab.txt",
+        "why": "É a lista de pedaços de palavra que o tokenizador pode produzir."
+      },
+      {
+        "text": "config.json",
+        "why": "Ele descreve a arquitetura, como 384 números e 6 camadas, mas não guarda pesos."
+      }
+    ]
+  },
+  "ex-7x6fkf1d": {
+    "prompt": "A Marginalia transforma descrições de e-books de 2.000 palavras inteiras com o all-MiniLM-L6-v2. Clientes dizem que perguntas sobre o fim das descrições não acham nada. Qual é a causa mais provável?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Só 254 pedaços são lidos; os finais ficam de fora",
+        "why": "Isso. Tudo depois do corte é descartado em silêncio, então nenhum vetor descreve os finais."
+      },
+      {
+        "text": "O modelo foi treinado em inglês, e as descrições também são em inglês",
+        "why": "Texto em inglês é o que ele lê melhor; a língua não é o problema aqui."
+      },
+      {
+        "text": "O mean pooling dá menos peso aos últimos pedaços de um texto",
+        "why": "Todo pedaço real dentro do limite conta igual; os finais simplesmente estão fora dele."
+      },
+      {
+        "text": "O Chroma recusa textos tão longos, então as descrições nunca foram guardadas",
+        "why": "O Chroma 1.5.9 aceitou o texto longo em length.py e o cortou em silêncio, como o minilm.py faz."
+      }
+    ]
+  },
+  "ex-k0438xrp": {
+    "prompt": "Você roda um modelo publicado fora da biblioteca com que ele foi publicado. O que deve fazer antes de confiar nos vetores dele?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Conferir que todo vetor tem comprimento 1",
+        "why": "Um vetor sem um passo de pooling ainda pode ser normalizado; comprimento 1 não prova nada sobre o resto."
+      },
+      {
+        "text": "Conferir que a saída tem a dimensão do card",
+        "why": "Um pooling errado ou um limite de tamanho errado ainda dão a dimensão certa."
+      },
+      {
+        "text": "Comparar alguns vetores com uma implementação de referência",
+        "why": "Isso. O inside.py fez isso contra o minilm.py e o Chroma, com diferença de 1.4901161e-08."
+      },
+      {
+        "text": "Medir o tempo, já que um modelo errado é mais lento",
+        "why": "A velocidade não diz nada sobre os vetores estarem certos."
+      }
+    ]
+  },
+  "ex-jgtqnwvk": {
+    "prompt": "O card de um modelo E5 pede `query: ` no começo de toda consulta e ___ no começo de todo documento.",
+    "hint": "Aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "passage:",
+          "passage"
+        ]
+      }
+    ]
+  },
+  "ex-cqgjyyj8": {
+    "prompt": "Ligue cada modelo ao jeito de dizer a ele se um texto é consulta ou documento.",
+    "hint": "Aula 9.",
+    "pairs": [
+      {
+        "left": "E5",
+        "right": "`query: ` ou `passage: ` escrito no texto"
+      },
+      {
+        "left": "Modelos de embedding da Nomic",
+        "right": "`search_query: ` ou `search_document: ` no texto"
+      },
+      {
+        "left": "BGE",
+        "right": "Uma instrução só na frente da consulta"
+      },
+      {
+        "left": "all-MiniLM-L6-v2",
+        "right": "Nada: ele é simétrico"
+      }
+    ],
+    "right_distractors": [
+      "Um campo `task_type` na requisição"
+    ]
+  },
+  "ex-ergawqtj": {
+    "prompt": "A Marginalia leva a busca da central de ajuda para o jina-embeddings-v3. Que `task` ela deve mandar com os artigos, e qual com as perguntas dos clientes?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "text-matching para os dois, já que os dois lados são texto",
+        "why": "text-matching é para dois textos comparados em pé de igualdade; uma pergunta e o artigo que a responde não são isso."
+      },
+      {
+        "text": "retrieval.passage para os artigos, retrieval.query para as perguntas",
+        "why": "Certo. Busca assimétrica: o modelo usa um conjunto diferente de pesos de tarefa para o texto a encontrar e para a pergunta."
+      },
+      {
+        "text": "retrieval.document para os artigos, retrieval.query para as perguntas",
+        "why": "retrieval.document é o deslize com cara de Gemini; a Jina o recusa com 422 e chama esse lado de passage."
+      },
+      {
+        "text": "classification para os artigos, porque cada um tem uma categoria",
+        "why": "A categoria é metadado; classification serve para textos que vão ser rotulados, não para busca."
+      }
+    ]
+  },
+  "ex-941kpxrv": {
+    "prompt": "O arquivo de pesos do WordLlama é umas cinco vezes e meia menor que o `model.onnx` do MiniLM. O que falta nele?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Metade do vocabulário",
+        "why": "A tabela tem 32.000 linhas, uma por token; nada foi cortado do vocabulário."
+      },
+      {
+        "text": "O tokenizador, que é baixado à parte a cada chamada",
+        "why": "O tokenizador vem com o pacote e é carregado uma vez; não é ele a diferença de tamanho."
+      },
+      {
+        "text": "As camadas: ele é só uma tabela de vetores de token",
+        "why": "Certo. O arquivo do MiniLM é quase todo pesos de seis camadas; um modelo estático busca linhas e tira a média."
+      },
+      {
+        "text": "Nada: o arquivo é comprimido e se expande para o mesmo tamanho",
+        "why": "O tamanho é exatamente 32.000 × 256 × 2 bytes mais um cabeçalho; é uma tabela simples, não uma rede comprimida."
+      }
+    ]
+  },
+  "ex-fqhcnjzp": {
+    "prompt": "No meio de uma migração, um bug faz a busca transformar as perguntas em vetor com o modelo antigo enquanto lê da coleção nova. O que os clientes veem?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Resultados com cara de normais, ordenados por ruído, se as dimensões baterem",
+        "why": "Certo. Mesma dimensão significa nenhum erro; o caso misturado de switch.py acertou 1 de 24, mais ou menos o acaso."
+      },
+      {
+        "text": "Um erro em toda consulta",
+        "why": "Só se as dimensões forem diferentes, como WordLlama contra MiniLM. Vetores do mesmo tamanho se multiplicam sem reclamar."
+      },
+      {
+        "text": "Resultados um pouco piores, já que os dois modelos sabem inglês",
+        "why": "Saber a mesma língua não dá o mesmo sistema de coordenadas; as notas entre modelos não medem nada."
+      },
+      {
+        "text": "Os resultados antigos, porque a coleção antiga ainda recebe escritas",
+        "why": "As leituras apontam para a coleção nova; a antiga estar em dia não ajuda uma consulta que nunca chega a ela."
+      }
+    ]
+  },
+  "ex-qdatjcmv": {
+    "prompt": "A tabela de preços lista o `bge-base-en-v1.5` da Together com entrada máxima de 512 tokens. O que isso significa para os artigos mais longos da Marginalia?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Nada: a hospedagem divide textos longos e tira a média por você",
+        "why": "Nada na tabela diz isso; um limite é um limite, e o que passa dele é cortado ou recusado."
+      },
+      {
+        "text": "O texto além do limite precisa ser cortado em pedaços antes",
+        "why": "Certo. Barato por token, mas um artigo longo precisa ser dividido antes de caber, ou o fim dele se perde."
+      },
+      {
+        "text": "Ele devolve vetores de 512 dimensões para textos longos",
+        "why": "512 é o limite de entrada em tokens; a tabela lista 768 dimensões para este modelo."
+      },
+      {
+        "text": "Artigos longos custam 512 vezes mais",
+        "why": "O preço é por token; o limite diz quantos tokens uma entrada pode ter, não quanto custam."
+      }
+    ]
+  },
+  "ex-80sgqd99": {
+    "prompt": "A tabela do WordLlama tem 32.000 linhas de 256 números, guardados com 2 bytes por número. Quantos bytes tem a tabela, sem o cabeçalho do arquivo?",
+    "hint": "Aula 10.",
+    "unit": "bytes"
+  },
+  "ex-hvcx6rbd": {
+    "prompt": "O campo da Jina que faz os pedaços de uma requisição passarem juntos pelo modelo, para que o vetor de cada um tenha visto os vizinhos, se chama ___.",
+    "hint": "Aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "late_chunking",
+          "late chunking"
+        ]
+      }
+    ]
+  },
+  "ex-ggm3ap3v": {
+    "prompt": "Por que este curso chama a busca exata de régua para os métodos mais rápidos?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Porque é o método mais rápido em qualquer tamanho",
+        "why": "Ela lê todos os vetores; brute.py a mediu crescendo com a quantidade."
+      },
+      {
+        "text": "Ela devolve os vizinhos de verdade",
+        "why": "Certo. Qualquer coisa aproximada é julgada por quantas vezes concorda com a busca exata."
+      },
+      {
+        "text": "Porque os bancos proíbem busca aproximada em coleções pequenas",
+        "why": "Nenhum banco proíbe; em coleções pequenas a busca exata é só a escolha melhor."
+      },
+      {
+        "text": "Porque as notas dela são maiores que as de qualquer índice",
+        "why": "As notas vêm dos vetores; um índice calcula as mesmas notas para os vetores que acha."
+      }
+    ]
+  },
+  "ex-6brhejqg": {
+    "prompt": "Um armazenamento apaga milhares de registros por dia e nunca é compactado. O que acontece com as buscas?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Registros apagados começam a aparecer nos resultados",
+        "why": "A marca alive os mantém fora de todo resultado; a lápide continua respeitada."
+      },
+      {
+        "text": "Nada, porque uma lápide não ocupa espaço",
+        "why": "O vetor fica no array: as linhas continuaram 41 com 39 vivas até o salvamento."
+      },
+      {
+        "text": "Ficam mais lentas, já que linhas mortas ainda são lidas",
+        "why": "Certo. Cada lápide ainda é multiplicada por toda consulta e depois jogada fora."
+      },
+      {
+        "text": "O armazenamento recusa escritas novas até ser compactado",
+        "why": "O tinystore nunca recusa uma escrita por isso; ele continua acrescentando linhas."
+      }
+    ]
+  },
+  "ex-dq2kcqyc": {
+    "prompt": "Por que um banco vetorial não pode transformar a pergunta da cliente em vetor com antecedência, como faz com os artigos?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Porque perguntas são curtas demais para virar bons vetores",
+        "why": "Textos curtos viram vetores sem problema; o MiniLM tratou todas as perguntas do curso."
+      },
+      {
+        "text": "A pergunta só existe quando é feita",
+        "why": "Certo. Então transformá-la em vetor é pago a cada consulta, e em path.py foi o maior passo."
+      },
+      {
+        "text": "Porque o modelo muda de uma consulta para a outra",
+        "why": "O modelo da coleção é fixo; o mesmo modelo transforma toda pergunta."
+      },
+      {
+        "text": "Porque as perguntas precisam de outro modelo, diferente do dos artigos",
+        "why": "O contrário: a pergunta tem que usar o próprio modelo da coleção, senão as notas não significam nada."
+      }
+    ]
+  },
+  "ex-ek5wm0t0": {
+    "prompt": "Os artigos da Marginalia já moram no sistema de conteúdo dela, editados todo dia. O armazenamento vetorial deveria guardar uma cópia de cada texto?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Sim, sempre, senão a busca não tem o que devolver",
+        "why": "A busca devolve ids; o texto pode vir do sistema de conteúdo pelo id."
+      },
+      {
+        "text": "Não: um armazenamento vetorial recusa registros sem metadados",
+        "why": "Texto e metadados são partes separadas, e o texto é opcional."
+      },
+      {
+        "text": "É uma troca: uma busca a menos, contra duas cópias que divergem",
+        "why": "Certo. A cópia poupa uma busca; guardar só o id evita um texto velho no armazenamento."
+      },
+      {
+        "text": "Sim, porque o vetor pode ser refeito a partir do texto depois",
+        "why": "Refazer exige o modelo, não uma segunda cópia; o sistema de conteúdo já guarda o texto."
+      }
+    ]
+  },
+  "ex-h104e9yj": {
+    "prompt": "brute.py mediu 129,16 ms por consulta exata sobre um milhão de vetores num núcleo. Supondo que quatro núcleos respondam cada um nesse ritmo, quantas consultas por segundo eles respondem juntos?",
+    "hint": "Aula 11.",
+    "unit": "consultas/s"
+  },
+  "ex-ewrf6sz3": {
+    "prompt": "Quais destas coisas uma coleção fixa quando é criada? Marque todas as que se aplicam.",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "O modelo de onde vêm os vetores",
+        "why": "Sim. Uma coleção, um modelo."
+      },
+      {
+        "text": "A dimensão",
+        "why": "Sim. 384 para o MiniLM, e um vetor de outro tamanho é recusado."
+      },
+      {
+        "text": "Como os vetores são comparados",
+        "why": "Sim. Mudar a comparação significa uma coleção nova."
+      },
+      {
+        "text": "Quantos registros ela vai guardar",
+        "why": "Registros entram e saem à vontade; a quantidade muda o tempo todo."
+      },
+      {
+        "text": "O texto de cada artigo",
+        "why": "Textos mudam e são transformados de novo por upsert; nada os fixa."
+      }
+    ]
+  },
+  "ex-na06phch": {
+    "prompt": "Uma coleção do Chroma foi criada com `configuration={\"hnsw\": {\"space\": \"cosine\"}}`. Uma consulta devolve 0,30 para um artigo. Qual é a similaridade cosseno desse artigo com a pergunta?",
+    "choices": [
+      {
+        "text": "0,30",
+        "why": "Isso lê a distância como nota. O Chroma devolve uma distância, menor é mais perto."
+      },
+      {
+        "text": "0,70",
+        "why": "Certo. No espaço cosseno o Chroma devolve um menos a similaridade, então 1 − 0,30 = 0,70."
+      },
+      {
+        "text": "0,85",
+        "why": "Isso seria o espaço l2, em que o número é 2 − 2 × similaridade. Esta coleção é cosseno."
+      },
+      {
+        "text": "Não dá para saber sem os vetores",
+        "why": "O espaço cosseno define o número exatamente: um menos a similaridade."
+      }
+    ],
+    "hint": "Aula 12."
+  },
+  "ex-80mt549w": {
+    "prompt": "A Marginalia guarda a central de ajuda no Chroma e passa ela mesma `embeddings=`, calculados com o WordLlama cortado em 384 números, numa coleção preenchida antes com vetores do all-MiniLM-L6-v2. O que o Chroma faz?",
+    "choices": [
+      {
+        "text": "Recusa, porque a coleção registra o nome do modelo",
+        "why": "O Chroma confere a dimensão, não o modelo. Os dois dão 384 números."
+      },
+      {
+        "text": "Aceita, e as buscas passam a misturar dois espaços sem relação",
+        "why": "Certo. O tamanho bate, então nada reclama, e as coordenadas dos dois modelos significam coisas diferentes."
+      },
+      {
+        "text": "Converte para o espaço do MiniLM antes de guardar",
+        "why": "Nenhum banco consegue traduzir entre as coordenadas de dois modelos."
+      },
+      {
+        "text": "Aceita e recalcula os documentos para combinar",
+        "why": "Passar `embeddings=` dispensa a função de embedding; o Chroma guarda o que recebe."
+      }
+    ],
+    "hint": "Aula 12."
+  },
+  "ex-magvt5ny": {
+    "prompt": "Um colega estima o número de registros de uma coleção do Chroma pelo tamanho do arquivo `data_level0.bin`. Por que isso não é confiável?",
+    "choices": [
+      {
+        "text": "O arquivo guarda só os documentos, não os vetores",
+        "why": "Os documentos ficam no chroma.sqlite3; os .bin são o índice HNSW com os vetores."
+      },
+      {
+        "text": "O Chroma comprime o arquivo de um jeito diferente a cada vez",
+        "why": "Os tamanhos eram múltiplos exatos de um tamanho de posição; nada foi comprimido."
+      },
+      {
+        "text": "O tamanho de cada registro depende do tamanho do texto",
+        "why": "Toda posição tem o mesmo tamanho: um vetor de 384 números mais as ligações."
+      },
+      {
+        "text": "O arquivo tem folga e só é regravado depois de muitas escritas",
+        "why": "Certo. Ele ficou em 167.600 bytes de 40 a 940 registros; as escritas recentes esperavam no registro do SQLite."
+      }
+    ],
+    "hint": "Aula 12."
+  },
+  "ex-e612k9t0": {
+    "prompt": "O que um índice do Pinecone dá que um diretório do `PersistentClient` do Chroma não dá?",
+    "choices": [
+      {
+        "text": "Distâncias em que menor é mais perto",
+        "why": "Essa é a convenção do Chroma. A nota cosseno do Pinecone é uma similaridade, a mais alta primeiro."
+      },
+      {
+        "text": "Um modelo de embedding padrão aplicado a `documents=`",
+        "why": "Essa é a função padrão do Chroma; o índice comum do Pinecone recebe vetores calculados por você."
+      },
+      {
+        "text": "Um banco que ninguém do seu time precisa rodar",
+        "why": "Certo. O Pinecone opera o índice; um diretório é seu para manter, guardar cópia e servir."
+      },
+      {
+        "text": "Uma dimensão que pode mudar depois da criação",
+        "why": "O Pinecone fixa a dimensão e a métrica na criação, como o espaço do Chroma."
+      }
+    ],
+    "hint": "Aula 12."
+  },
+  "ex-01jvyhv2": {
+    "prompt": "Uma consulta híbrida do Weaviate na central de ajuda roda com `alpha=1`. Com o que ela buscou?",
+    "choices": [
+      {
+        "text": "Só com as notas BM25 de palavras",
+        "why": "Isso é `alpha=0`. Em 1 o lado das palavras não tem peso."
+      },
+      {
+        "text": "Só com o lado vetorial",
+        "why": "Certo. Um alpha de 1 é uma busca puramente vetorial, e 0 uma busca puramente por palavras."
+      },
+      {
+        "text": "Com os dois, com o mesmo peso",
+        "why": "Peso igual é 0,5."
+      },
+      {
+        "text": "Com a lista que devolvesse mais resultados",
+        "why": "O alpha é um peso fixo entre os dois, não uma escolha feita a cada consulta."
+      }
+    ],
+    "hint": "Aula 12."
+  },
+  "ex-n6htas41": {
+    "prompt": "Ligue cada chamada do Chroma ao que ela fez com um id que já existia, ou não, na aula 12.",
+    "pairs": [
+      {
+        "left": "add com um id existente",
+        "right": "Manteve o registro antigo e não levantou nada"
+      },
+      {
+        "left": "upsert com um id existente",
+        "right": "Substituiu o texto e o vetor"
+      },
+      {
+        "left": "update com um id inexistente",
+        "right": "Não fez nada e não levantou nada"
+      },
+      {
+        "left": "delete com um id existente",
+        "right": "Removeu o registro e baixou a contagem"
+      }
+    ],
+    "right_distractors": [
+      "Levantou um erro de id duplicado"
+    ],
+    "hint": "Aula 12."
+  },
+  "ex-v3va2bbn": {
+    "prompt": "A Marginalia guarda os vetores dos 40 artigos num `IndexFlatIP` do FAISS. Onde precisam ficar os títulos dos artigos?",
+    "choices": [
+      {
+        "text": "No índice, como um campo ao lado de cada vetor",
+        "why": "O FAISS guarda vetores e, com IndexIDMap, inteiros. Ele não tem campos."
+      },
+      {
+        "text": "Em outro lugar, com o id como chave",
+        "why": "Certo. Um dicionário, um arquivo ou um banco, mantido em sincronia com o índice pelo seu programa."
+      },
+      {
+        "text": "No arquivo do FAISS gravado pelo write_index",
+        "why": "Esse arquivo guarda os vetores, os ids e um cabeçalho; o tamanho dele não somou nada além disso."
+      },
+      {
+        "text": "Num payload anexado na hora da busca",
+        "why": "Payloads são do Qdrant; o FAISS não tem nada parecido."
+      }
+    ],
+    "hint": "Aula 13."
+  },
+  "ex-z1afhery": {
+    "prompt": "Um índice plano do FAISS guarda 50.000 vetores de 384 números float32. Ignorando o cabeçalho, quantos bytes tem o arquivo?",
+    "unit": "bytes",
+    "hint": "Aula 13."
+  },
+  "ex-p0kgtygf": {
+    "prompt": "Antes de adicionar um único vetor a um índice `IVF64,Flat`, do que o FAISS precisa?",
+    "choices": [
+      {
+        "text": "De uma lista de ids para cada vetor",
+        "why": "Ids são o que o IndexIDMap acrescenta; o IVF funciona com ou sem eles."
+      },
+      {
+        "text": "De uma GPU",
+        "why": "O faiss-cpu o construiu e consultou no laboratório."
+      },
+      {
+        "text": "De um segundo índice, plano, para conferir os resultados",
+        "why": "O índice plano do factory.py estava lá para medir o recall, não porque o IVF exija."
+      },
+      {
+        "text": "De treino com vetores de exemplo",
+        "why": "Certo. As células vêm de agrupar dados parecidos com os que o índice vai guardar."
+      }
+    ],
+    "hint": "Aula 13."
+  },
+  "ex-q3d7wy4z": {
+    "prompt": "A Marginalia leva uma busca do LanceDB sem `distance_type` para o Qdrant com `Distance.COSINE` e mantém a regra 'mostrar resultados abaixo de 1,15'. O que acontece?",
+    "choices": [
+      {
+        "text": "Funciona igual, já que os dois mediram os mesmos vetores",
+        "why": "Mesmos vetores, números diferentes: o padrão do LanceDB era L2 ao quadrado, o do Qdrant é a similaridade."
+      },
+      {
+        "text": "Nada passa, já que as notas do Qdrant ficam acima de 1,15",
+        "why": "Similaridades cosseno de vetores unitários nunca passam de 1."
+      },
+      {
+        "text": "Todos passam, até o pior, já que a similaridade vai no máximo a 1",
+        "why": "Certo. O Qdrant devolve similaridades, no máximo 1, então todas ficam abaixo de 1,15, seja qual for a qualidade."
+      },
+      {
+        "text": "O Qdrant recusa o limiar",
+        "why": "O cliente devolve notas; o que o programa faz com elas é escolha dele."
+      }
+    ],
+    "hint": "Aula 13."
+  },
+  "ex-29jrspvk": {
+    "prompt": "Um job noturno regrava do zero uma tabela do LanceDB com 100.000 linhas, e o disco vai enchendo semana após semana. Por quê?",
+    "choices": [
+      {
+        "text": "O LanceDB guarda cada vetor duas vezes, uma por coluna",
+        "why": "O vetor é uma coluna só; nada se repete dentro de uma versão."
+      },
+      {
+        "text": "O grafo HNSW cresce a cada busca",
+        "why": "Buscas não gravam nada; versões nascem de escritas."
+      },
+      {
+        "text": "Uma versão por noite, cada uma com seus arquivos",
+        "why": "Certo. Versões antigas continuam legíveis até serem limpas, por exemplo com optimize(cleanup_older_than=...)."
+      },
+      {
+        "text": "Linhas apagadas ficam como marcadores dentro do mesmo arquivo",
+        "why": "O LanceDB não muda arquivo que já gravou; um delete cria uma versão nova que lista outros arquivos."
+      }
+    ],
+    "hint": "Aula 13."
+  },
+  "ex-6c2fh2sy": {
+    "prompt": "Uma bateria de testes roda contra o modo local do Qdrant (`QdrantClient(path=...)`). Sobre quais destes um resultado verde não diz nada a respeito do servidor do Qdrant? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "A velocidade de uma busca HNSW",
+        "why": "Sim. O modo local busca de forma exata num array do NumPy e não constrói índice HNSW."
+      },
+      {
+        "text": "Se os filtros usam um índice de payload",
+        "why": "Sim. O modo local ignora índices de payload com um aviso."
+      },
+      {
+        "text": "Vários programas usando os dados ao mesmo tempo",
+        "why": "Sim. O modo local recusou um segundo processo; um servidor é feito para muitos clientes."
+      },
+      {
+        "text": "Se os ids precisam ser inteiros ou UUIDs",
+        "why": "Essa regra é do Qdrant nos dois, então os testes a cobrem."
+      },
+      {
+        "text": "O formato das chamadas que o programa faz",
+        "why": "A API do cliente é a mesma; mudar o construtor é a única diferença."
+      }
+    ],
+    "hint": "Aula 13."
+  },
+  "ex-p2h6zxw8": {
+    "prompt": "A Marginalia já roda PostgreSQL. O que instalar o pgvector acrescenta a esse banco?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Um processo servidor separado que guarda os vetores ao lado do PostgreSQL",
+        "why": "O pgvector é uma extensão dentro do PostgreSQL, o mesmo mecanismo que o PostGIS usa. Os vetores moram em tabelas comuns."
+      },
+      {
+        "text": "Um tipo de coluna, operadores de distância e dois tipos de índice",
+        "why": "Certo. `vector`, os operadores `<->`, `<=>` e `<#>`, e HNSW e IVFFlat."
+      },
+      {
+        "text": "Um modelo que transforma texto em vetor dentro do banco",
+        "why": "O pgvector guarda e compara vetores que outra coisa calculou; a aula gerou os vetores com o all-MiniLM-L6-v2 no Python."
+      },
+      {
+        "text": "Uma API web para buscar a partir do navegador",
+        "why": "Isso é o que o Supabase acrescenta em volta do PostgreSQL. O pgvector fala SQL."
+      }
+    ]
+  },
+  "ex-vbmkaesc": {
+    "prompt": "Uma coluna é declarada `vector(1024)` no pgvector 0.6.0. Quantos bytes `pg_column_size` informa para um vetor guardado?",
+    "hint": "Aula 14: quatro bytes por número, mais um cabeçalho de oito.",
+    "unit": "bytes"
+  },
+  "ex-y28w1fjw": {
+    "prompt": "Um teste insere um documento numa coleção do MongoDB Atlas e roda `$vectorSearch` por ele logo em seguida. Às vezes o documento não aparece nos resultados. Por quê?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "`$vectorSearch` não era o primeiro estágio do pipeline",
+        "why": "Isso é recusado de saída, toda vez; não faz um documento aparecer e sumir."
+      },
+      {
+        "text": "O vetor foi guardado como array simples em vez de um tipo vetor",
+        "why": "No Atlas o vetor é um campo de array comum; é assim que ele deve ser guardado."
+      },
+      {
+        "text": "O índice se atualiza em segundo plano",
+        "why": "Certo. O MongoDB descreve esses índices como eventualmente consistentes, então uma gravação não pode ser buscada na hora, ao contrário de uma linha do pgvector na mesma transação."
+      },
+      {
+        "text": "`numCandidates` era menor que a coleção",
+        "why": "Ele deve mesmo ser menor que a coleção; limita quantos vizinhos a busca reúne, não quais documentos estão indexados."
+      }
+    ]
+  },
+  "ex-4y05nnq6": {
+    "prompt": "Uma tabela de dois milhões de linhas tem um índice HNSW com `vector_cosine_ops`. A aplicação busca com `ORDER BY 1 - (embedding <=> $1) DESC LIMIT 10`, e toda busca leva segundos. Qual é a causa?",
+    "hint": "Aula 14, o operador e o índice.",
+    "choices": [
+      {
+        "text": "O índice precisa de `vector_ip_ops` para uma similaridade",
+        "why": "A classe de produto interno atende `<#>`. A consulta usa `<=>`; o que está errado é o formato em volta dele."
+      },
+      {
+        "text": "O HNSW não dá conta de uma tabela de dois milhões de linhas, só de menores",
+        "why": "Tamanho é para isso que serve um índice; a tabela de 20.000 linhas passou para uma varredura de índice assim que a consulta teve o formato certo."
+      },
+      {
+        "text": "O `ORDER BY` não tem um formato que o índice atende",
+        "why": "Certo. O planejador não percebe que a expressão ordena como `embedding <=> $1` crescente; escreva isso, e calcule a similaridade na lista do `SELECT`."
+      },
+      {
+        "text": "`LIMIT 10` está acima de `hnsw.ef_search`",
+        "why": "Dez está abaixo do padrão de 40, e um `ef_search` curto devolve menos linhas, não linhas mais lentas."
+      }
+    ]
+  },
+  "ex-yssfpr5q": {
+    "prompt": "A parte do `CREATE INDEX` que nomeia a distância para a qual um índice é construído, como `vector_l2_ops`, é a sua ___ de operadores.",
+    "hint": "Aula 14.",
+    "blanks": [
+      {
+        "accept": [
+          "classe",
+          "class",
+          "opclass"
+        ]
+      }
+    ]
+  },
+  "ex-n4d5yywd": {
+    "prompt": "Quais destas afirmações sobre o Supabase são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Cada projeto é um banco PostgreSQL que oferece o pgvector",
+        "why": "Sim. A coluna, os operadores e os índices funcionam lá como em qualquer PostgreSQL."
+      },
+      {
+        "text": "O cliente dele manda a busca ao banco como texto SQL",
+        "why": "O cliente conversa com uma API gerada a partir do esquema, e é por isso que a busca vai para uma função chamada com `rpc`."
+      },
+      {
+        "text": "A segurança em nível de linha vale dentro de uma função de busca que roda com os direitos de quem chama",
+        "why": "Sim. Uma função `SECURITY INVOKER` ordena só as linhas que as políticas de quem chama permitem."
+      },
+      {
+        "text": "A chave service_role é segura numa página web, já que as políticas ainda valem para ela",
+        "why": "Essa chave ignora a segurança em nível de linha por completo; ela fica num servidor."
+      }
+    ]
+  },
+  "ex-7b9jatnb": {
+    "prompt": "Um índice IVF com 1.024 células recebe uma consulta. Com o que ele compara a consulta primeiro?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Com todos os vetores guardados, e depois descarta a maioria",
+        "why": "Isso é busca exata. O IVF existe para evitar ler todos os vetores."
+      },
+      {
+        "text": "Com os 1.024 centros das células",
+        "why": "Certo. Os centros decidem quais nprobe células são buscadas, e só os vetores arquivados nelas são comparados depois disso."
+      },
+      {
+        "text": "Com o ponto de entrada na camada de cima do grafo",
+        "why": "Ponto de entrada é coisa do HNSW. O IVF tem células e centros, não camadas."
+      },
+      {
+        "text": "Com uma amostra aleatória dos vetores, sorteada de novo a cada consulta",
+        "why": "Nada é aleatório na hora da consulta; as células ficaram fixas quando o k-means treinou o índice."
+      }
+    ]
+  },
+  "ex-j0qn3aas": {
+    "prompt": "A quantização escalar com SQ8 guarda um byte por número. Quantos bytes ela guarda para um vetor de 768 dimensões, contando só o código?",
+    "hint": "Aula 15.",
+    "unit": "bytes"
+  },
+  "ex-et9me8fc": {
+    "prompt": "Subir o ef de um índice HNSW de 40 para 160 aumentou o recall@10 e também o tempo por consulta. Por que os dois?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Um ef maior reconstrói o grafo com mais ligações antes de cada busca",
+        "why": "O ef é um parâmetro da consulta; as ligações foram fixadas pelo M e pelo ef_construction quando o índice foi construído."
+      },
+      {
+        "text": "Um ef maior troca a busca no grafo por busca exata",
+        "why": "A busca fica no grafo com qualquer ef; mesmo com 320 ela comparou bem menos vetores que a busca exata compara."
+      },
+      {
+        "text": "A busca mantém uma lista maior de candidatos na camada 0, então expande e compara mais vetores",
+        "why": "Certo. Uma lista maior deixa a busca passar de becos sem saída e achar mais vizinhos verdadeiros, e cada candidato a mais expandido custa comparações."
+      },
+      {
+        "text": "Cada vetor é lido com mais precisão",
+        "why": "Os vetores são float32 com qualquer ef. Precisão é o que a quantização muda, não o ef."
+      }
+    ]
+  },
+  "ex-ej09chjb": {
+    "prompt": "Um serviço de busca mede recall@10 de 0,99 do seu índice HNSW contra a busca exata, e mesmo assim os clientes dizem que os resultados muitas vezes não ajudam. O que o 0,99 diz sobre onde procurar?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Subir o ef até o recall chegar a 1,000",
+        "why": "Com 0,99 o índice já devolve quase exatamente o que a busca exata devolve, então a busca exata daria aos clientes os mesmos resultados que não ajudam."
+      },
+      {
+        "text": "O índice está perdendo os artigos relevantes e deve ser reconstruído com um M maior",
+        "why": "O recall aqui diz que o índice concorda com a busca exata; uma reconstrução não acrescenta relevância que a busca exata não tem."
+      },
+      {
+        "text": "Não no índice, que já coincide com a busca exata",
+        "why": "Certo. Recall contra a busca exata mede só o índice. Se os vetores mais próximos são boas respostas é uma pergunta sobre os embeddings e os dados."
+      },
+      {
+        "text": "Trocar para IVF, que chegou a 0,99 antes",
+        "why": "Isso foi uma propriedade de um conjunto de vetores, e só faria os mesmos resultados chegarem mais rápido."
+      }
+    ]
+  },
+  "ex-qhpmrvqm": {
+    "prompt": "Cortar um vetor em pedaços e guardar cada pedaço como o número do mais próximo de 256 valores aprendidos pelo k-means se chama quantização por ___.",
+    "hint": "Aula 15.",
+    "blanks": [
+      {
+        "accept": [
+          "produto",
+          "product"
+        ]
+      }
+    ]
+  },
+  "ex-3qex8mk9": {
+    "prompt": "Quais destes parâmetros do HNSW ficam fixos depois que o índice é construído? Marque todas as que se aplicam.",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "M, o número de ligações por vetor",
+        "why": "Sim. As ligações fazem parte do grafo; mudar o M significa construir o índice de novo."
+      },
+      {
+        "text": "ef_construction, a lista de candidatos usada ao inserir",
+        "why": "Sim. Ele decidiu quais ligações cada vetor recebeu, e essas ligações ficam até uma reconstrução."
+      },
+      {
+        "text": "ef, a lista de candidatos usada ao buscar",
+        "why": "O ef é escolhido por consulta e pode mudar de uma consulta para a outra sem mexer no índice."
+      },
+      {
+        "text": "k, o número de resultados devolvidos",
+        "why": "O k faz parte de cada consulta. A aula 16 mostra como ele interage com o ef."
+      }
+    ]
+  },
+  "ex-mgenpp22": {
+    "prompt": "Uma busca da central de ajuda devolve 5 artigos para toda pergunta, inclusive 'what time is it in Tokyo'. A gerente de produto quer 'nenhum resultado' quando nada serve. O que você acrescenta?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "k = 1, para mostrar só o melhor artigo",
+        "why": "k = 1 ainda devolve um artigo para toda pergunta. Nenhum valor de k devolve nada."
+      },
+      {
+        "text": "Uma nota de corte, medida em perguntas do assunto e fora dele",
+        "why": "Certo. Só um corte olha as notas em si, e ele precisa vir de notas medidas nos dois tipos de pergunta."
+      },
+      {
+        "text": "Um hnsw.ef_search mais alto",
+        "why": "Isso decide quantos candidatos o índice guarda, não se algum deles é bom o bastante."
+      },
+      {
+        "text": "Um reranqueador que reordena os cinco artigos por uma nota melhor",
+        "why": "Um reranqueador muda a ordem dos cinco, e cinco continuam voltando."
+      }
+    ]
+  },
+  "ex-6rsn1dee": {
+    "prompt": "Você escolheu um corte de 0,30 com o all-MiniLM-L6-v2. A equipe troca para outro modelo de embedding e mantém 0,30. O que você deve esperar?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "O mesmo comportamento, já que os dois modelos devolvem cossenos",
+        "why": "Os dois devolvem cossenos, e cada um os espalha de um jeito: o 0,25 da aula guardou 24 respostas num modelo e 21 no outro."
+      },
+      {
+        "text": "Mais resultados, já que um modelo mais novo dá notas mais altas a tudo",
+        "why": "Nada medido diz que as notas de um modelo sobem com a idade dele. Elas mudam, numa direção que só uma medida mostra."
+      },
+      {
+        "text": "Nada confiável até medir de novo",
+        "why": "Certo. Um corte pertence a um modelo num corpus; com um modelo novo ele precisa ser escolhido de novo a partir de notas novas."
+      },
+      {
+        "text": "Menos resultados, já que os cortes acompanham o número de dimensões",
+        "why": "Nenhuma regra assim apareceu. Os dois modelos da aula têm 384 e 256 dimensões e as notas deles não seguem isso."
+      }
+    ]
+  },
+  "ex-e5gywkwy": {
+    "prompt": "Pela coluna de tokens de `recall_k.py`, quantos tokens a mais por pergunta custa repassar os 8 primeiros artigos em vez dos 3 primeiros?",
+    "hint": "Aula 16.",
+    "unit": "tokens"
+  },
+  "ex-nnzw5wwa": {
+    "prompt": "No pgvector 0.6.0 do laboratório, com hnsw.ef_search no padrão, uma consulta pelo índice HNSW tem LIMIT 25. No máximo, quantas linhas ela pode devolver?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "40, o tamanho da lista de candidatos",
+        "why": "O LIMIT continua valendo: 40 candidatos são produzidos e o LIMIT fica com 25."
+      },
+      {
+        "text": "Menos de 25, como com LIMIT 100",
+        "why": "O LIMIT 100 ficou curto porque 100 é mais que 40. Um LIMIT de 25 cabe nos 40 candidatos."
+      },
+      {
+        "text": "25",
+        "why": "Certo. A varredura entrega até 40 candidatos, o que basta para preencher um LIMIT de 25; a falta começa acima de 40."
+      },
+      {
+        "text": "Nenhuma: um erro é levantado quando o LIMIT está abaixo do ef_search",
+        "why": "Esse erro não existe; o LIMIT 100, acima dele, também devolveu linhas em silêncio."
+      }
+    ]
+  },
+  "ex-mqhm4ph4": {
+    "prompt": "Uma busca traz 10 candidatos com uma primeira passada rápida e os reranqueia com um avaliador muito melhor. Qual artigo ela nunca consegue pôr em primeiro?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Um que a primeira passada pôs em décimo",
+        "why": "Décimo ainda está entre os candidatos, e subir um artigo assim é para isso que serve o reranqueamento."
+      },
+      {
+        "text": "Um que a primeira passada deixou fora dos 10",
+        "why": "Certo. O reranqueamento só reordena o que recebe, então o recall da primeira passada limita a busca toda."
+      },
+      {
+        "text": "Um cuja nota na primeira passada ficou abaixo de zero",
+        "why": "Uma nota negativa na primeira passada não impede o avaliador melhor de pô-lo em primeiro, desde que ele seja candidato."
+      },
+      {
+        "text": "Um que o avaliador melhor e a primeira passada avaliam bem",
+        "why": "Esse é o artigo com mais chance de terminar em primeiro. A concordância entre os dois é o que o reranqueamento com dois modelos da aula usou."
+      }
+    ]
+  },
+  "ex-aph4szrc": {
+    "prompt": "Quais destes crescem com k? Marque todos os que se aplicam.",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Os tokens entregues a um modelo de linguagem",
+        "why": "Sim. Cada artigo a mais é lido e pago: 55 tokens com k = 1, 544 com k = 10 na aula."
+      },
+      {
+        "text": "O custo de transformar a pergunta em vetor",
+        "why": "A pergunta vira vetor uma vez, seja qual for o k."
+      },
+      {
+        "text": "O trabalho de um reranqueador sobre os candidatos",
+        "why": "Sim. Um avaliador mais lento gasta tempo por candidato que recebe."
+      },
+      {
+        "text": "A largura de busca do hnswlib, quando k passa do ef",
+        "why": "Sim. Ele busca com o maior entre ef e k, então um k grande alarga a busca sozinho."
+      },
+      {
+        "text": "O número de perguntas encontradas na posição 1",
+        "why": "O encontrado na posição 1 não depende de k; ficou em 19 para o all-MiniLM-L6-v2."
+      }
+    ]
+  },
+  "ex-ndj5mx7b": {
+    "prompt": "Um site de receitas no pgvector 0.6.0 pede ao índice HNSW 10 receitas WHERE vegetarian, com hnsw.ef_search em 40. Duas receitas em cem são vegetarianas. O que ele recebe?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "10, porque o WHERE roda antes do índice",
+        "why": "O plano da aula pôs o Filter debaixo do Index Scan: ele roda sobre o que o índice entrega."
+      },
+      {
+        "text": "0 ou 1 linha, na maior parte das vezes",
+        "why": "Certo. 40 candidatos vezes dois em cem dá menos de uma receita vegetariana em média."
+      },
+      {
+        "text": "Um erro, já que o filtro é estreito demais para o índice",
+        "why": "Nada falha. As consultas em português da aula devolveram listas curtas sem erro e sem aviso."
+      },
+      {
+        "text": "10 linhas, mas mais devagar que uma consulta sem filtro",
+        "why": "Não é o tempo que dá errado aqui; é a contagem."
+      }
+    ]
+  },
+  "ex-q55emawn": {
+    "prompt": "O mesmo site de receitas quer 10 receitas vegetarianas sempre que existirem 10, no pgvector 0.6.0. Que mudança garante isso?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Subir o hnsw.ef_search para 400",
+        "why": "Isso tornou a falta mais rara na aula, e a linha de consulta 7 ainda recebeu 3 de 10."
+      },
+      {
+        "text": "Escrever LIMIT 100 e ficar com as 10 primeiras que voltarem",
+        "why": "O LIMIT não é o limite; a varredura ainda entrega no máximo ef_search candidatos antes do filtro."
+      },
+      {
+        "text": "Um índice HNSW parcial WHERE vegetarian",
+        "why": "Certo. Toda linha dele passa, então nada é filtrado depois da varredura; o índice parcial da aula devolveu 10 para todas as consultas."
+      },
+      {
+        "text": "Rodar ANALYZE na tabela",
+        "why": "O ANALYZE atualiza as estatísticas do planejador. A tabela da aula tinha sido analisada e ainda assim veio curta."
+      }
+    ]
+  },
+  "ex-wc0e5v12": {
+    "prompt": "Quando um pré-filtro exato é uma escolha ruim?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Quando o filtro deixa passar pouquíssimas linhas",
+        "why": "É aí que ele brilha: a aula buscou 2.000 linhas em 0,7 ms."
+      },
+      {
+        "text": "Quando o filtro deixa passar quase todas as linhas",
+        "why": "Certo. Ele vira uma busca de força bruta sobre quase a coleção inteira: 178.000 linhas levaram 83,3 ms na aula."
+      },
+      {
+        "text": "Quando k é pequeno",
+        "why": "O k quase não muda o custo; quem decide é o número de linhas que passam."
+      },
+      {
+        "text": "Quando o campo de metadados é uma data e não uma palavra",
+        "why": "O tipo do campo muda como ele é comparado, não quantas linhas são buscadas depois."
+      }
+    ]
+  },
+  "ex-e7rx03et": {
+    "prompt": "Uma equipe acrescenta `WHERE shop = %s` a toda consulta de busca, preenchido a partir da sessão autenticada. Que risco continua que a segurança em nível de linha eliminaria?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "O cliente ainda consegue escolher a loja",
+        "why": "Não aqui: o valor vem da sessão no servidor, que é o que a aula pede."
+      },
+      {
+        "text": "Uma cláusula WHERE é mais lenta que uma política",
+        "why": "Uma política é uma condição que o PostgreSQL acrescenta à consulta; a velocidade não é a diferença."
+      },
+      {
+        "text": "O HNSW ignora cláusulas WHERE em colunas de texto",
+        "why": "O filtro de idioma da aula, numa coluna de texto, rodou; rodou depois do índice, o que é outra questão."
+      },
+      {
+        "text": "A próxima consulta escrita sem ele mostra as linhas de todas as lojas",
+        "why": "Certo. A fronteira mora em cada consulta, então uma que a esquece vaza; uma política é um lugar só abaixo de todas, e sem loja definida ela falha."
+      }
+    ]
+  },
+  "ex-65cpvqyz": {
+    "prompt": "No Qdrant, os metadados guardados com cada ponto se chamam ___.",
+    "hint": "Aula 17.",
+    "blanks": [
+      {
+        "accept": [
+          "payload"
+        ]
+      }
+    ]
+  },
+  "ex-d09skfjy": {
+    "prompt": "Ligue cada situação à abordagem que a aula indica.",
+    "hint": "Aula 17.",
+    "pairs": [
+      {
+        "left": "Um filtro deixa passar 1% das linhas",
+        "right": "Filtrar primeiro e buscar no subconjunto de forma exata"
+      },
+      {
+        "left": "Um filtro deixa passar 95% das linhas",
+        "right": "Buscar no índice e depois filtrar os candidatos"
+      },
+      {
+        "left": "Clientes nunca podem ver as linhas uns dos outros",
+        "right": "Uma política no banco, ou uma coleção para cada um"
+      },
+      {
+        "left": "Um idioma é filtrado o tempo todo",
+        "right": "Um índice parcial para esse valor"
+      }
+    ],
+    "right_distractors": [
+      "Subir o k até a página encher"
+    ]
+  },
+  "ex-ej6jkdf0": {
+    "prompt": "Os mesmos 20.000 vetores de 384 dimensões ocuparam 1536.0 bytes por vetor num arquivo `.npy` e 1.676 bytes por linha numa tabela do pgvector. De onde vem a diferença?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "O pgvector guarda cada número como float64",
+        "why": "Isso dobraria o vetor para mais de 3.000 bytes. O pgvector guarda floats de quatro bytes, mais um cabeçalho pequeno."
+      },
+      {
+        "text": "Cabeçalhos, e páginas que só aceitam linhas inteiras",
+        "why": "Certo. O vetor ganha um cabeçalho, a linha ganha outro e um ponteiro, e o espaço que sobra no fim de cada página de 8 KB é desperdiçado."
+      },
+      {
+        "text": "O índice da chave primária é contado dentro de cada linha",
+        "why": "A chave primária era a coluna indexes, separada, com 466.944 bytes para a tabela inteira."
+      },
+      {
+        "text": "O PostgreSQL guarda o texto de cada vetor ao lado dele",
+        "why": "A tabela só tinha um id e o vetor; não havia texto nenhum para guardar."
+      }
+    ]
+  },
+  "ex-sxa300ag": {
+    "prompt": "Uma equipe vai guardar 1.000.000 de vetores de 768 dimensões no pgvector com um índice HNSW. Qual estimativa do disco necessário tem o formato certo?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Uns 3 GB, os números float32 crus",
+        "why": "Isso conta os números uma vez. A tabela os guarda com o custo extra das linhas e o índice HNSW guarda a própria cópia."
+      },
+      {
+        "text": "Um pouco mais de 3 GB, já que um índice só acrescenta ligações",
+        "why": "Isso vale para o arquivo do hnswlib, que guarda os vetores uma vez. O índice do pgvector guarda cada vetor de novo."
+      },
+      {
+        "text": "Mais que o dobro dos números crus: a tabela e o índice têm cópias",
+        "why": "Certo. Na aula, só o índice HNSW já era maior por linha que a tabela com 384 dimensões."
+      },
+      {
+        "text": "Menos que os números crus, já que o PostgreSQL comprime valores grandes",
+        "why": "O pgvector 0.6.0 declara o tipo como STORAGE external: levado para fora da linha e nunca comprimido."
+      }
+    ]
+  },
+  "ex-91vyxdvb": {
+    "prompt": "A Marginalia arquiva 60% dos trechos da central de ajuda numa tarde e apaga as linhas deles de uma tabela do pgvector com índice HNSW. O que traz o índice de volta ao tamanho do que restou?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Um REINDEX da tabela",
+        "why": "Certo. Reconstruir a partir das linhas restantes foi o que cortou os índices pela metade na aula; o CONCURRENTLY mantém as buscas funcionando enquanto isso."
+      },
+      {
+        "text": "Um VACUUM simples, que devolve o espaço liberado",
+        "why": "O VACUUM levou mais de dois minutos na aula e não mudou tamanho nenhum: ele guarda o espaço liberado dentro dos arquivos para reaproveitar."
+      },
+      {
+        "text": "Nada, porque o DELETE tira as entradas do índice na hora",
+        "why": "Depois do DELETE todos os tamanhos ficaram exatamente iguais; as linhas só são marcadas como mortas."
+      },
+      {
+        "text": "Aumentar o hnsw.ef_search para o grafo pular as linhas apagadas",
+        "why": "O ef_search muda quanto do grafo uma consulta explora. Ele não grava nada nem libera nada."
+      }
+    ]
+  },
+  "ex-vx1qqk6v": {
+    "prompt": "Uma equipe precisa que os vetores ocupem cerca de um quarto do tamanho em float32 e quer que os vizinhos mais próximos de cada texto mudem o mínimo possível. Pelas medições da aula, o que tentar primeiro?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Manter só o primeiro quarto das dimensões",
+        "why": "O WordLlama cortado em 64 das 256 dimensões manteve 0,642 dos vizinhos: menos números custam muito mais que menos bits."
+      },
+      {
+        "text": "int8",
+        "why": "Certo. Um quarto dos bytes mais uma escala por vetor, e 0,995 dos vizinhos mantidos nos dois modelos."
+      },
+      {
+        "text": "Códigos binários, um bit por número",
+        "why": "Isso é um trinta e dois avos do tamanho, não um quarto, e manteve só 0,705 e 0,600 dos vizinhos."
+      },
+      {
+        "text": "float16 aplicado duas vezes",
+        "why": "Esse passo não existe: o float16 é um formato fixo de dois bytes, que corta o tamanho pela metade uma vez."
+      }
+    ]
+  },
+  "ex-1qaswe3f": {
+    "prompt": "Ao preço da tabela de US$ 0,02 por milhão de tokens para o text-embedding-3-small, quanto custa transformar em vetores 500.000 trechos de 400 tokens, em dólares?",
+    "hint": "Aula 18.",
+    "unit": "USD"
+  },
+  "ex-hebg0t6e": {
+    "prompt": "No pgvector 0.6.0 do laboratório, um índice HNSW é recusado numa coluna de vetores com mais de ___ dimensões, então vetores de 3072 números precisam ser encurtados antes.",
+    "hint": "Aula 18.",
+    "blanks": [
+      {
+        "accept": [
+          "2000",
+          "2.000",
+          "2,000"
+        ]
+      }
+    ]
+  }
+}

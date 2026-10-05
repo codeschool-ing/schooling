@@ -1,0 +1,82 @@
+---
+title: Um espaço apertado
+version: 1
+---
+
+Um cosseno vai de −1 a 1, então é natural ler 0 como *sem relação*, 1 como *a mesma coisa* e 0,4
+como *não muito parecido*. Medidas em textos reais, nenhuma dessas leituras se sustenta.
+`crowded.py` dá nota a todos os pares dos 150 chamados de clientes em `data/tickets.jsonl`, com os
+dois modelos do curso, e põe um terceiro conjunto ao lado: 150 setas aleatórias em 384 dimensões.
+
+```schooling-example
+{
+  "language": "python",
+  "file": "crowded.py",
+  "parts": [
+    {
+      "code": "import json\nimport numpy as np\nfrom minilm import embed\nfrom wordllama import WordLlama\n\ntickets = [json.loads(line) for line in open(\"data/tickets.jsonl\")]\ntexts = [t[\"text\"] for t in tickets]\nlabels = np.array([t[\"label\"] for t in tickets])\nupper = np.triu_indices(len(texts), 1)\nsame = (labels[:, None] == labels[None, :])[upper]",
+      "note": "Os 150 chamados e seus rótulos. `triu_indices` escolhe cada par uma vez, deixando de fora um chamado contra ele mesmo, e `same` diz quais pares têm o mesmo rótulo."
+    },
+    {
+      "code": "rng = np.random.default_rng(0)\nnoise = rng.standard_normal((len(texts), 384))\nnoise /= np.linalg.norm(noise, axis=1, keepdims=True)\nmodels = {\"minilm\": embed(texts),\n          \"wordllama\": WordLlama.load().embed(texts, norm=True),\n          \"random\": noise}",
+      "note": "Três conjuntos de 150 vetores de comprimento 1: os do MiniLM, os do WordLlama normalizados e setas aleatórias em 384 dimensões com uma semente fixa."
+    },
+    {
+      "code": "print(f\"{len(same)} pairs, {same.sum()} of them with the same label\")\nprint(\"            5%  median    95%    max  same label  different  above 0.4\")\nfor name, V in models.items():\n    s = (V @ V.T)[upper]\n    p5, p50, p95 = np.percentile(s, [5, 50, 95])\n    print(f\"{name:9} {p5:6.3f} {p50:6.3f} {p95:6.3f} {s.max():6.3f}\"\n          f\"  {s[same].mean():10.3f} {s[~same].mean():10.3f} {(s > 0.4).mean():10.1%}\")",
+      "note": "Para cada conjunto, o percentil 5, a mediana, o percentil 95 e o máximo das notas de todos os pares, a média dos pares com o mesmo rótulo e com rótulos diferentes, e a fração acima de 0,4."
+    },
+    {
+      "code": "bins = np.arange(-0.25, 1.0001, 0.05)\nfor name in (\"minilm\", \"wordllama\"):\n    V = models[name]\n    print(name, \" \".join(map(str, np.histogram((V @ V.T)[upper], bins)[0])))",
+      "note": "As contagens para a figura: quantos pares caem em cada faixa de 0,05, de −0,25 a 1."
+    }
+  ]
+}
+```
+
+```
+ana@lab:~/emb$ python crowded.py
+11175 pairs, 2175 of them with the same label
+            5%  median    95%    max  same label  different  above 0.4
+minilm    -0.004  0.158  0.415  0.934       0.277      0.151       6.0%
+wordllama -0.061  0.076  0.305  0.893       0.173      0.073       1.8%
+random    -0.083  0.000  0.085  0.216      -0.001      0.001       0.0%
+minilm 0 0 7 122 494 1080 1640 1923 1793 1371 975 653 444 294 160 124 44 25 9 6 7 2 1 1 0
+wordllama 3 24 144 560 1385 2216 2302 1787 1108 682 385 236 145 95 45 25 17 6 5 4 0 0 1 0 0
+```
+
+## Uma faixa estreita, e não em torno de zero
+
+**Os 11.175 pares de chamados se amontoam numa faixa estreita.** Com o all-MiniLM-L6-v2, os 90% do
+meio vão de −0,004 a 0,415 e a mediana é 0,158. Quase nenhum par é negativo, e o mais alto dos
+11.175 é 0,934. Com o WordLlama a faixa é mais baixa e igualmente estreita: de −0,061 a 0,305,
+mediana 0,076.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 360\" role=\"img\" aria-label=\"Um histograma da similaridade de cosseno dos 11.175 pares entre os 150 chamados, em faixas de 0,05 de -0,25 a 1. A barra mais alta do MiniLM é a faixa de 0,10 a 0,15; a mais alta do WordLlama é a faixa de 0,05 a 0,10. Poucos pares dos dois modelos ficam abaixo de 0, e muito poucos acima de 0,5. Um colchete perto de zero mostra onde caem 90% dos pares de vetores aleatórios de 384 dimensões, entre -0,083 e 0,085. Uma linha tracejada marca 0,4.\"><path d=\"M152.8 38 L236.2 38\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M152.8 33 L152.8 43\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M236.2 33 L236.2 43\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"194.5\" y=\"24\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">90% dos pares aleatórios</text><path d=\"M70 191.7 L690 191.7\" stroke=\"var(--wire)\" stroke-width=\"0.8\" fill=\"none\"></path><text x=\"62\" y=\"191.7\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">1000</text><path d=\"M70 83.3 L690 83.3\" stroke=\"var(--wire)\" stroke-width=\"0.8\" fill=\"none\"></path><text x=\"62\" y=\"83.3\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">2000</text><text x=\"62\" y=\"300\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">0</text><text x=\"62\" y=\"22\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">pares</text><path d=\"M70 300 L690 300\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><path d=\"M94.8 300 L94.8 305\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"94.8\" y=\"316\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">-0.2</text><path d=\"M194 300 L194 305\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"194\" y=\"316\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">0.0</text><path d=\"M293.2 300 L293.2 305\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"293.2\" y=\"316\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">0.2</text><path d=\"M392.4 300 L392.4 305\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"392.4\" y=\"316\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">0.4</text><path d=\"M491.6 300 L491.6 305\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"491.6\" y=\"316\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">0.6</text><path d=\"M590.8 300 L590.8 305\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"590.8\" y=\"316\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">0.8</text><path d=\"M690 300 L690 305\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"690\" y=\"316\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">1.0</text><text x=\"380\" y=\"340\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper-dim)\">similaridade de cosseno entre dois chamados</text><rect x=\"82.9\" y=\"299.7\" width=\"10.9\" height=\"0.3\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"107.7\" y=\"297.4\" width=\"10.9\" height=\"2.6\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"120.6\" y=\"299.2\" width=\"10.9\" height=\"0.8\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"132.5\" y=\"284.4\" width=\"10.9\" height=\"15.6\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"145.4\" y=\"286.8\" width=\"10.9\" height=\"13.2\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"157.3\" y=\"239.3\" width=\"10.9\" height=\"60.7\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"170.2\" y=\"246.5\" width=\"10.9\" height=\"53.5\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"182.1\" y=\"150\" width=\"10.9\" height=\"150\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"195\" y=\"183\" width=\"10.9\" height=\"117\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"206.9\" y=\"59.9\" width=\"10.9\" height=\"240.1\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"219.8\" y=\"122.3\" width=\"10.9\" height=\"177.7\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"231.7\" y=\"50.6\" width=\"10.9\" height=\"249.4\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"244.6\" y=\"91.7\" width=\"10.9\" height=\"208.3\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"256.5\" y=\"106.4\" width=\"10.9\" height=\"193.6\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"269.4\" y=\"105.8\" width=\"10.9\" height=\"194.2\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"281.3\" y=\"180\" width=\"10.9\" height=\"120\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"294.2\" y=\"151.5\" width=\"10.9\" height=\"148.5\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"306.1\" y=\"226.1\" width=\"10.9\" height=\"73.9\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"319\" y=\"194.4\" width=\"10.9\" height=\"105.6\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"330.9\" y=\"258.3\" width=\"10.9\" height=\"41.7\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"343.8\" y=\"229.3\" width=\"10.9\" height=\"70.7\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"355.7\" y=\"274.4\" width=\"10.9\" height=\"25.6\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"368.6\" y=\"251.9\" width=\"10.9\" height=\"48.1\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"380.5\" y=\"284.3\" width=\"10.9\" height=\"15.7\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"393.4\" y=\"268.1\" width=\"10.9\" height=\"31.9\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"405.3\" y=\"289.7\" width=\"10.9\" height=\"10.3\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"418.2\" y=\"282.7\" width=\"10.9\" height=\"17.3\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"430.1\" y=\"295.1\" width=\"10.9\" height=\"4.9\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"443\" y=\"286.6\" width=\"10.9\" height=\"13.4\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"454.9\" y=\"297.3\" width=\"10.9\" height=\"2.7\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"467.8\" y=\"295.2\" width=\"10.9\" height=\"4.8\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"479.7\" y=\"298.2\" width=\"10.9\" height=\"1.8\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"492.6\" y=\"297.3\" width=\"10.9\" height=\"2.7\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"504.5\" y=\"299.4\" width=\"10.9\" height=\"0.6\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"517.4\" y=\"299\" width=\"10.9\" height=\"1\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"529.3\" y=\"299.5\" width=\"10.9\" height=\"0.5\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"542.2\" y=\"299.4\" width=\"10.9\" height=\"0.6\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"554.1\" y=\"299.6\" width=\"10.9\" height=\"0.4\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"567\" y=\"299.2\" width=\"10.9\" height=\"0.8\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"591.8\" y=\"299.8\" width=\"10.9\" height=\"0.2\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"616.6\" y=\"299.9\" width=\"10.9\" height=\"0.1\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"628.5\" y=\"299.9\" width=\"10.9\" height=\"0.1\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></rect><rect x=\"641.4\" y=\"299.9\" width=\"10.9\" height=\"0.1\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"0\"></rect><path d=\"M392.4 36 L392.4 300\" stroke=\"var(--paper)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"5 4\"></path><text x=\"398.4\" y=\"44\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">0.4</text><rect x=\"500\" y=\"66\" width=\"12\" height=\"12\" rx=\"0\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"518\" y=\"72\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">all-MiniLM-L6-v2</text><rect x=\"500\" y=\"90\" width=\"12\" height=\"12\" rx=\"0\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"518\" y=\"96\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">WordLlama</text></svg>", "caption": "Todos os pares dos 150 chamados, avaliados por cada modelo. Nenhum dos dois usa a faixa de -1 a 1: as notas se amontoam numa faixa logo acima de zero, e a faixa de cada modelo fica num lugar diferente.", "same": ["all-MiniLM-L6-v2", "WordLlama"]}
+```
+
+As setas aleatórias mostram como é *sem relação* neste espaço. Em 384 dimensões, duas setas
+apontando para qualquer lado são quase perpendiculares: 90% dos pares aleatórios caem entre −0,083
+e 0,085, em torno de uma mediana de 0,000. Os chamados não se espalham assim. Todos são clientes
+escrevendo em inglês para uma livraria, então todas as setas se inclinam para a mesma região, e até
+dois chamados com rótulos diferentes dão 0,151 em média no MiniLM. A diferença entre relacionado e
+não relacionado é uma diferença **dentro da faixa**: 0,277 em média para dois chamados com o mesmo
+rótulo contra 0,151 para dois com rótulos diferentes.
+
+## O que quer dizer uma nota 0,4
+
+**Para o all-MiniLM-L6-v2, 0,4 é alto**: só 6,0% dos pares ficam acima. Para o WordLlama o mesmo
+0,4 é mais raro ainda, 1,8% dos pares. O número é o mesmo e o significado não, e daí saem três
+coisas.
+
+- **Uma nota não é uma probabilidade.** 0,4 não quer dizer 40% de chance de que dois textos tenham
+  relação. É uma posição numa faixa cuja largura e lugar pertencem a um modelo.
+- **Um limite não viaja.** Um corte escolhido para um modelo está errado para outro, e errado de
+  novo para o mesmo modelo num tipo diferente de texto, em que a faixa se move. A aula 16 escolhe um
+  a partir dos seus próprios dados.
+- **Notas não se comparam entre modelos.** 0,30 no WordLlama é uma correspondência mais forte que
+  0,30 no MiniLM.
+
+O que vale dentro de um modelo e de uma coleção é a **ordem**: o artigo com a nota maior é o mais
+próximo. A aula 3 constrói a busca em cima disso, e a julga por onde a resposta certa cai na
+ordem, nunca pelo tamanho da nota.

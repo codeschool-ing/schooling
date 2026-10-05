@@ -1,0 +1,695 @@
+[
+  {
+    "id": "ex-gm1ydmry",
+    "version": 1,
+    "section": "brute-force",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the time of one exact search grow with the number of stored vectors?",
+    "hint": "Look at the last column brute.py printed.",
+    "choices": [
+      {
+        "text": "Because sorting the scores is the expensive part",
+        "correct": false,
+        "why": "brute.py does not even sort them all: argpartition picks the ten best. The work that grows is the dot products."
+      },
+      {
+        "text": "Each query reads all of them, one multiply-add per coordinate",
+        "correct": true,
+        "why": "Right. The multiply-adds column is the vector count times 384, and the time follows it."
+      },
+      {
+        "text": "Because random vectors are slower to compare than embedded texts",
+        "correct": false,
+        "why": "The arithmetic is the same whatever the numbers mean; that is why brute.py could use random ones."
+      },
+      {
+        "text": "Because the query's vector gets longer as the collection grows",
+        "correct": false,
+        "why": "The query has 384 numbers whatever the collection's size; it is the number of vectors it meets that grows."
+      }
+    ]
+  },
+  {
+    "id": "ex-0w156qmn",
+    "version": 1,
+    "section": "brute-force",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `brute.py`, ten times the vectors took 8.9 times as long from 10,000 to 100,000, but 22 times as long from 100,000 to 1,000,000. What is the likeliest reason?",
+    "hint": "Look at the memory column.",
+    "choices": [
+      {
+        "text": "A million vectors need more multiply-adds per vector",
+        "correct": false,
+        "why": "Every vector costs 384 multiply-adds at every size; the last column grows exactly tenfold."
+      },
+      {
+        "text": "argpartition becomes the slow step past a hundred thousand scores",
+        "correct": false,
+        "why": "Picking ten from a list is cheap next to computing the list; nothing in the output points at it."
+      },
+      {
+        "text": "1536 MB per query: memory sets the pace",
+        "correct": true,
+        "why": "Right. Every query reads all 1536 MB; at that size the processor waits for memory, and the multiplications are no longer the limit."
+      },
+      {
+        "text": "The program switched to several threads for the large size",
+        "correct": false,
+        "why": "brute.py fixes one thread before importing NumPy, for every size."
+      }
+    ]
+  },
+  {
+    "id": "ex-4r0x0t9f",
+    "version": 1,
+    "section": "brute-force",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A library's help centre has 5,000 articles embedded with MiniLM and answers about three searches a second. Which search should it use?",
+    "hint": "Compare with the 10,000 row of brute.py.",
+    "choices": [
+      {
+        "text": "Exact search: at this size it is fast and never misses",
+        "correct": true,
+        "why": "Right. brute.py searched twice as many vectors in 0.66 ms on one core; an index would add building and tuning for nothing."
+      },
+      {
+        "text": "An approximate index, because exact search is only for testing",
+        "correct": false,
+        "why": "Exact search is the method that returns the true nearest vectors; it is the right choice whenever reading everything is cheap enough."
+      },
+      {
+        "text": "A hosted vector database, because 5,000 vectors do not fit in memory",
+        "correct": false,
+        "why": "5,000 vectors of 384 float32 numbers take under 8 MB."
+      },
+      {
+        "text": "Keyword search, because embeddings are too slow at three searches a second",
+        "correct": false,
+        "why": "The search over 5,000 vectors takes well under a millisecond; three a second is nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-45yyv6h4",
+    "version": 1,
+    "section": "brute-force",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many multiply-adds does one exact search take over 50,000 vectors of 384 numbers?",
+    "hint": "One per number stored.",
+    "value": 19200000,
+    "tolerance": 0,
+    "unit": "multiply-adds"
+  },
+  {
+    "id": "ex-y6xmhy6x",
+    "version": 1,
+    "section": "brute-force",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many megabytes do 2,000,000 vectors of 384 float32 numbers take, counting a megabyte as 1,000,000 bytes?",
+    "hint": "brute.py printed 1536 MB for one million.",
+    "value": 3072,
+    "tolerance": 1,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-g2chmdg5",
+    "version": 1,
+    "section": "what-a-database-adds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The help centre's vectors are in a NumPy matrix and their ids in a separate list. A row is inserted into the matrix and not into the list. What happens?",
+    "hint": "Row numbers are the only link between the two.",
+    "choices": [
+      {
+        "text": "NumPy raises an error because the two lengths differ",
+        "correct": false,
+        "why": "NumPy knows nothing about the list; nothing compares their lengths unless you write the check."
+      },
+      {
+        "text": "From that row on, searches name the wrong articles",
+        "correct": true,
+        "why": "Right. The match between rows and ids is by position, and it shifted silently. A store with ids keeps them in the record."
+      },
+      {
+        "text": "Only the new row is wrong; the others still match their ids",
+        "correct": false,
+        "why": "Every row after the inserted one moved by one, so every id after it points at a neighbour's vector."
+      },
+      {
+        "text": "The scores change, but the ranking stays correct",
+        "correct": false,
+        "why": "The scores are right for the vectors; it is the names attached to them that are wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvax6fem",
+    "version": 1,
+    "section": "what-a-database-adds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`vectors.npy` held 40 vectors of 384 `float32` numbers and was 61568 bytes. What are the 128 bytes beyond 40 × 1,536?",
+    "hint": "Every .npy file starts the same way.",
+    "choices": [
+      {
+        "text": "The ids of the 40 articles",
+        "correct": false,
+        "why": "The ids are in records.json; the .npy file holds only the array."
+      },
+      {
+        "text": "An index that speeds up the search",
+        "correct": false,
+        "why": "The small store has no index; its search reads every vector."
+      },
+      {
+        "text": "The vector length of each record, stored for checking",
+        "correct": false,
+        "why": "Forty lengths of 4 bytes would be 160 bytes, and the store keeps no lengths: it normalises instead."
+      },
+      {
+        "text": "NumPy's header in front of the array",
+        "correct": true,
+        "why": "Right. It records the shape and the number type, so np.load can rebuild the array."
+      }
+    ]
+  },
+  {
+    "id": "ex-67krfs8v",
+    "version": 1,
+    "section": "what-a-database-adds",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many bytes would `vectors.npy` be for 1,000 MiniLM vectors, with the same 128-byte header?",
+    "hint": "Each vector is 384 numbers of 4 bytes.",
+    "value": 1536128,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-6v4k1yzb",
+    "version": 1,
+    "section": "the-data-model",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of a record to what it is for.",
+    "hint": "One description is a property of the collection, not of a record.",
+    "pairs": [
+      {
+        "left": "id",
+        "right": "The join back to the source"
+      },
+      {
+        "left": "vector",
+        "right": "The only part the search compares"
+      },
+      {
+        "left": "metadata",
+        "right": "What a filter reads"
+      },
+      {
+        "left": "text",
+        "right": "What a person reads after the search"
+      }
+    ],
+    "right_distractors": [
+      "The model every vector in it came from"
+    ]
+  },
+  {
+    "id": "ex-knvedrv5",
+    "version": 1,
+    "section": "the-data-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`refuse.py` searched with an all-MiniLM-L6-v2 vector but said `model=\"lab-minilm\"`, labembed's name for the same model, and the store refused. Why is refusing the right behaviour?",
+    "hint": "What could the store accept if it ignored names?",
+    "choices": [
+      {
+        "text": "Because lab-minilm gives different vectors from all-MiniLM-L6-v2",
+        "correct": false,
+        "why": "labembed runs the same minilm.py; the vectors are the same. The refusal is about the name, not the numbers."
+      },
+      {
+        "text": "Ignoring names would let another model's vectors through silently",
+        "correct": true,
+        "why": "Right. The store compares names because it cannot compare weights, and a name that differs is the only warning it gets."
+      },
+      {
+        "text": "Because the vector's dimension did not match the collection's",
+        "correct": false,
+        "why": "Both are 384; the first refusal in refuse.py was the dimension one, with WordLlama's 256."
+      },
+      {
+        "text": "Because searches must use the newest record's model",
+        "correct": false,
+        "why": "The rule is per collection, not per record: every record in it came from all-MiniLM-L6-v2."
+      }
+    ]
+  },
+  {
+    "id": "ex-hbnvgc6m",
+    "version": 1,
+    "section": "the-data-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia's collection was created to compare by dot product of unit vectors. Somebody wants Euclidean distance instead. What has to happen?",
+    "hint": "Which three things does a collection fix once?",
+    "choices": [
+      {
+        "text": "Pass a different metric with each query",
+        "correct": false,
+        "why": "The comparison belongs to the collection: Chroma takes it as a space at creation and pgvector builds it into the index."
+      },
+      {
+        "text": "Re-embed the articles with a model trained for distances",
+        "correct": false,
+        "why": "The model is not the problem; the same vectors work with either comparison."
+      },
+      {
+        "text": "Create a new collection",
+        "correct": true,
+        "why": "Right. A new one, with the new comparison: it is fixed at creation, like the model and the dimension. For unit vectors the ranking would not even change, as lesson 2 showed."
+      },
+      {
+        "text": "Edit the metric field of every record",
+        "correct": false,
+        "why": "Records carry no metric; it is a property of the whole collection."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2t5q3dp",
+    "version": 1,
+    "section": "the-data-model",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Besides the model and the comparison, a collection fixes at creation how many numbers every vector has: its ___.",
+    "hint": "MiniLM's is 384.",
+    "blanks": [
+      {
+        "accept": [
+          "dimension",
+          "dimensionality",
+          "dimensions"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6tfb485f",
+    "version": 1,
+    "section": "writes-and-deletes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `delete(\"h18\")`, `writes.py` printed `rows 41 alive 39`. What is in the row that held h18?",
+    "hint": "The delete changed one flag.",
+    "choices": [
+      {
+        "text": "Its vector, marked dead, until the next save",
+        "correct": true,
+        "why": "Right. A tombstone: still multiplied by every query and then discarded, until save() writes only the live rows."
+      },
+      {
+        "text": "Nothing: the row was removed and the others moved up",
+        "correct": false,
+        "why": "Then the rows would be 40. They stayed at 41, because moving rows is what the tombstone avoids."
+      },
+      {
+        "text": "A vector of zeros, so it scores zero against every query",
+        "correct": false,
+        "why": "The vector is untouched; it is the alive flag that keeps it out of the results, with a score of minus infinity."
+      },
+      {
+        "text": "The edited h15, which took the free row",
+        "correct": false,
+        "why": "The edit was appended as a new row before the delete; nothing reuses a dead row."
+      }
+    ]
+  },
+  {
+    "id": "ex-xd4t9na6",
+    "version": 1,
+    "section": "writes-and-deletes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do vector databases mark a deleted record instead of removing it at once?",
+    "hint": "Think about what removing it from the middle would disturb.",
+    "choices": [
+      {
+        "text": "So that a delete can be undone later",
+        "correct": false,
+        "why": "Some may offer that, but it is not the reason; a delete is meant to stick, and compaction makes it permanent."
+      },
+      {
+        "text": "Removing means moving rows or relinking an index; a mark is instant",
+        "correct": true,
+        "why": "Right. The cost is deferred to a compaction or a rebuild, done once for many deletes."
+      },
+      {
+        "text": "Because the law requires keeping deleted data for a time",
+        "correct": false,
+        "why": "Nothing in how a store works depends on that; if anything, personal data has to be removed for real, which compaction does."
+      },
+      {
+        "text": "Because a deleted vector still improves the scores of its neighbours",
+        "correct": false,
+        "why": "A dead row is discarded from every result; it adds work and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8q61xd1",
+    "version": 1,
+    "section": "writes-and-deletes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the upsert the usual write in vector databases?",
+    "hint": "Think of a job that re-embeds everything every night.",
+    "choices": [
+      {
+        "text": "It is faster than an insert because it skips the vector",
+        "correct": false,
+        "why": "An upsert carries the vector like any write; the difference is what happens when the id exists."
+      },
+      {
+        "text": "It recomputes the vector from the text by itself",
+        "correct": false,
+        "why": "Neither tinystore nor most databases embed on upsert; the caller passes the vector, which is why it can be stale."
+      },
+      {
+        "text": "A write is safe to repeat, existing id or not",
+        "correct": true,
+        "why": "Right. The nightly job upserts all 40 articles without first asking which ones exist."
+      },
+      {
+        "text": "It deletes the old vector from memory at once",
+        "correct": false,
+        "why": "In tinystore the old row stays as a tombstone until save(); rows went from 40 to 41."
+      }
+    ]
+  },
+  {
+    "id": "ex-adspcer0",
+    "version": 1,
+    "section": "writes-and-deletes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To save an API call, a developer rewrites h15 to say refunds are now given only as store credit, and upserts the new text with the vector already stored. What does the help centre do afterwards?",
+    "hint": "Which of the two arguments does the search compare?",
+    "choices": [
+      {
+        "text": "The store notices the mismatch and refuses the upsert",
+        "correct": false,
+        "why": "upsert checks the dimension and nothing else; no store can tell whether a vector belongs to a text."
+      },
+      {
+        "text": "The search finds h15 for questions about store credit",
+        "correct": false,
+        "why": "That would need the new text's vector. The stored vector still describes refunds to the card."
+      },
+      {
+        "text": "Nothing changes, since a vector and its text are stored together",
+        "correct": false,
+        "why": "Stored together is not computed together: the text changed and its vector did not."
+      },
+      {
+        "text": "Card-refund questions still find h15, which now says store credit only",
+        "correct": true,
+        "why": "Right. The vector answers for the old text and the person reads the new one. Re-embed in the same step as every text change."
+      }
+    ]
+  },
+  {
+    "id": "ex-e1vp34zb",
+    "version": 1,
+    "section": "writes-and-deletes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A write that replaces the record when its id exists and adds it when it does not is called an ___.",
+    "hint": "Update and insert, in one word.",
+    "blanks": [
+      {
+        "accept": [
+          "upsert"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3kw90qx6",
+    "version": 1,
+    "section": "writes-and-deletes",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happened to the gift article, h18, across `index.py` and `writes.py`.",
+    "hint": "It was on disk twice: once with it, once without.",
+    "items": [
+      "Upserted with its vector and saved by index.py",
+      "Loaded back from disk by writes.py",
+      "Marked dead by delete, row still in the array",
+      "Left out of the files when save() compacted"
+    ],
+    "trap": "The delete did not remove the row: rows stayed at 41 until the save."
+  },
+  {
+    "id": "ex-98y5qeh4",
+    "version": 1,
+    "section": "the-query-path",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `path.py`, which step of the query took the most time?",
+    "hint": "Read the three timings.",
+    "choices": [
+      {
+        "text": "Searching the 39 vectors",
+        "correct": false,
+        "why": "That took 0.155 ms, a rounding error beside the first step at this size."
+      },
+      {
+        "text": "Embedding the question",
+        "correct": true,
+        "why": "Right. 9.043 ms: running the model on the question costs more than everything after it."
+      },
+      {
+        "text": "Fetching the texts by id",
+        "correct": false,
+        "why": "0.005 ms: a lookup in a list is the cheapest step."
+      },
+      {
+        "text": "Applying the language filter",
+        "correct": false,
+        "why": "The filter is part of the search call, which took 0.155 ms in total."
+      }
+    ]
+  },
+  {
+    "id": "ex-9y67z4eh",
+    "version": 1,
+    "section": "the-query-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same store grows to a million vectors and keeps exact search. Using this lesson's measurements, which step would now dominate a query?",
+    "hint": "brute.py timed a million on one core.",
+    "choices": [
+      {
+        "text": "Embedding the question, which grows with the collection",
+        "correct": false,
+        "why": "The question is one text whatever the collection's size; its cost stays near the 9.043 ms path.py measured."
+      },
+      {
+        "text": "Fetching the texts, because there are a million of them",
+        "correct": false,
+        "why": "Only the top few are fetched, by id, whatever the size."
+      },
+      {
+        "text": "None: all three grow by the same factor",
+        "correct": false,
+        "why": "Only the search reads every vector; the other two do not depend on the count."
+      },
+      {
+        "text": "The search, at about 129 ms",
+        "correct": true,
+        "why": "Right. brute.py measured 129.16 ms for a million; that is the step an approximate index replaces."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ed56s7w",
+    "version": 1,
+    "section": "the-query-path",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps of a query in a vector database in order.",
+    "hint": "The text a person reads comes last, through the id.",
+    "items": [
+      "Embed the question with the collection's model",
+      "Find candidate vectors",
+      "Drop the candidates that fail the filter",
+      "Rerank the survivors, if a reranker is used",
+      "Fetch the texts of the ids that remain"
+    ],
+    "trap": "The texts are not fetched before the search: the search answers with ids, and only those ids are looked up."
+  },
+  {
+    "id": "ex-60p87fza",
+    "version": 1,
+    "section": "the-query-path",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia moves its help centre to 5,000 articles, embeds questions through a hosted API, and customers say search feels slow. Where should the investigation start?",
+    "hint": "Which step grows with the collection, and which one crosses the internet?",
+    "choices": [
+      {
+        "text": "Add an approximate index, since the search is always the slow part",
+        "correct": false,
+        "why": "At 5,000 vectors exact search takes well under a millisecond; path.py showed the search was the small step."
+      },
+      {
+        "text": "Fetch fewer texts per query",
+        "correct": false,
+        "why": "Fetching by id took 0.005 ms; it is the cheapest step."
+      },
+      {
+        "text": "Time the embedding call, round trip included",
+        "correct": true,
+        "why": "Right. Embedding was already the largest step locally, and a hosted API adds a trip over the internet that no database tuning touches."
+      },
+      {
+        "text": "Switch to a smaller model, because 384 dimensions are too many to compare",
+        "correct": false,
+        "why": "Comparing 384 numbers per vector is the cheap part; the measurement should come before any change."
+      }
+    ]
+  },
+  {
+    "id": "ex-zypxanyg",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a vector database add over a NumPy matrix saved as a `.npy` file? Choose all that apply.",
+    "hint": "Two of these no store can give.",
+    "choices": [
+      {
+        "text": "An id kept in the same record as its vector",
+        "correct": true,
+        "why": "Yes. The record carries its id, so no separate list can drift out of order."
+      },
+      {
+        "text": "Changing or deleting one record without rebuilding the rest",
+        "correct": true,
+        "why": "Yes. Upsert and delete work on one id, with tombstones and compaction behind them."
+      },
+      {
+        "text": "Filters on metadata in the same query",
+        "correct": true,
+        "why": "Yes. The metadata sits beside the vector, so the filter is part of the search."
+      },
+      {
+        "text": "Scores more accurate than exact search",
+        "correct": false,
+        "why": "Exact search is the reference; an approximate index can only match it or fall short."
+      },
+      {
+        "text": "Vectors that stay valid when the model changes",
+        "correct": false,
+        "why": "A new model means new vectors in any database; lesson 10's migration is the same everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2hp590d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team tries an approximate index on 10,000 of its vectors. How should it judge whether the index's answers are good enough?",
+    "hint": "What is the yardstick this lesson named?",
+    "choices": [
+      {
+        "text": "By its speed alone, since an index exists to be fast",
+        "correct": false,
+        "why": "A fast index that returns the wrong neighbours is worse than a slow correct one; speed is half the measurement."
+      },
+      {
+        "text": "By the share of its top results that match exact search's",
+        "correct": true,
+        "why": "Right. On the same queries, exact search returns the true nearest vectors, so it is the reference; lesson 15 names this measure."
+      },
+      {
+        "text": "By the scores it returns: higher scores mean better answers",
+        "correct": false,
+        "why": "Scores depend on the vectors, not on the index; an index that misses the best match returns lower scores without saying so."
+      },
+      {
+        "text": "By the size of the index file",
+        "correct": false,
+        "why": "Size is a cost, not a measure of whether the answers are right."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcddjy1y",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each term to what it means in this lesson.",
+    "hint": "One description belongs to none of them.",
+    "pairs": [
+      {
+        "left": "Collection",
+        "right": "Records of one model, one dimension, one comparison"
+      },
+      {
+        "left": "Upsert",
+        "right": "Replace the record if the id exists, add it if not"
+      },
+      {
+        "left": "Tombstone",
+        "right": "A deleted record still in place, marked dead"
+      },
+      {
+        "left": "Compaction",
+        "right": "Rewriting the store without the dead records"
+      }
+    ],
+    "right_distractors": [
+      "A list of ids kept beside a NumPy matrix"
+    ]
+  }
+]

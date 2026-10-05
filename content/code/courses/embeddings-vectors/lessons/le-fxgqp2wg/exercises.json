@@ -1,0 +1,685 @@
+[
+  {
+    "id": "ex-e6jr7xgm",
+    "version": 1,
+    "section": "what-metadata-is-for",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why not write 'Language: Portuguese' into each article's text before embedding, instead of storing a language field?",
+    "hint": "Is 'is this in Portuguese' a matter of degree?",
+    "choices": [
+      {
+        "text": "Because a longer text takes more tokens to embed",
+        "correct": false,
+        "why": "A few words cost almost nothing. The problem is what a similarity score can and cannot answer."
+      },
+      {
+        "text": "Because the model would refuse the extra words",
+        "correct": false,
+        "why": "A model embeds any text it is given. It would embed the label and blend it into the meaning."
+      },
+      {
+        "text": "It is a yes-or-no question; similarity gives degrees",
+        "correct": true,
+        "why": "Right. A label in the text nudges a vector; a field tested by a filter answers exactly, every time."
+      },
+      {
+        "text": "Because Portuguese articles have no vectors in an English model",
+        "correct": false,
+        "why": "They have vectors, 384 numbers like any text; lesson 1 showed they land as noise to an English model, which is one more reason a label would not help."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qapr426",
+    "version": 1,
+    "section": "what-metadata-is-for",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By the counts `jq` printed, how many of the help centre's articles are NOT in the payments category?",
+    "hint": "All the articles, minus the payments ones.",
+    "value": 34,
+    "tolerance": 0,
+    "unit": "articles"
+  },
+  {
+    "id": "ex-f9qa1n4x",
+    "version": 1,
+    "section": "what-metadata-is-for",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each metadata field to the question it answers for a search.",
+    "hint": "One question belongs to the vector, not to any field.",
+    "pairs": [
+      {
+        "left": "Language",
+        "right": "Can this reader read it?"
+      },
+      {
+        "left": "Date",
+        "right": "Is it current?"
+      },
+      {
+        "left": "Stock",
+        "right": "Can they buy it?"
+      },
+      {
+        "left": "Tenant",
+        "right": "Are they allowed to see it?"
+      }
+    ],
+    "right_distractors": [
+      "Is it about the same subject as the question?"
+    ]
+  },
+  {
+    "id": "ex-tana2fm3",
+    "version": 1,
+    "section": "post-filtering",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "'I was charged twice' with the filter category = 'payments' and k = 3: the post-filter returned 2 articles. Why not 3?",
+    "hint": "Look at what the three nearest were.",
+    "choices": [
+      {
+        "text": "The payments category has only two articles",
+        "correct": false,
+        "why": "It has six, and the pre-filter found a third, h25."
+      },
+      {
+        "text": "A returns article filled one of the 3",
+        "correct": true,
+        "why": "Right. The filter ran on the 3 already picked and dropped one; post-filtering never goes back for more."
+      },
+      {
+        "text": "The third payments article scored below zero",
+        "correct": false,
+        "why": "h25 scored 0.112, above zero. A score is not what removed it; it was never among the first three."
+      },
+      {
+        "text": "k counts the filtered-out article as one of the 3",
+        "correct": false,
+        "why": "k picked three articles; the filter then removed one. Nothing counts it, it is simply gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdehg0dw",
+    "version": 1,
+    "section": "post-filtering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `ten.sql`, every query asked pgvector for 10 Portuguese rows and got 0 or 1. What produced that?",
+    "hint": "Read where the Filter line sits in the plan.",
+    "choices": [
+      {
+        "text": "The table had fewer than 10 Portuguese rows",
+        "correct": false,
+        "why": "One row in 50 of 5,000 is 100 Portuguese rows, and the partial index later returned 10 for every query."
+      },
+      {
+        "text": "The planner ignored the WHERE clause",
+        "correct": false,
+        "why": "The plan shows the Filter line, and every row returned was Portuguese. The WHERE ran, just after the index."
+      },
+      {
+        "text": "The index yielded its 40 nearest candidates and the filter kept the Portuguese ones",
+        "correct": true,
+        "why": "Right. ef_search caps the candidates at 40, and one in fifty of them is Portuguese: less than one on average."
+      },
+      {
+        "text": "Random vectors cannot be filtered by language",
+        "correct": false,
+        "why": "The language is an ordinary column; the vectors being random changes nothing about how WHERE works."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbm7e94k",
+    "version": 1,
+    "section": "post-filtering",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pgvector's HNSW scan yields 40 candidates and one row in 50 is Portuguese. On average, how many Portuguese rows survive the filter?",
+    "hint": "40 times the share that passes.",
+    "value": 0.8,
+    "tolerance": 0.01,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-4d46ak8k",
+    "version": 1,
+    "section": "post-filtering",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Running the search, keeping its k nearest and only then dropping the ones that fail the condition is called ___.",
+    "hint": "The filter comes after.",
+    "blanks": [
+      {
+        "accept": [
+          "post-filtering",
+          "postfiltering",
+          "post filtering",
+          "post-filter",
+          "postfilter"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-carj7yqc",
+    "version": 1,
+    "section": "post-filtering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With hnsw.ef_search at 400, query row 7 still got only 3 of its 10 Portuguese rows. What follows for a page that must show 10?",
+    "hint": "Was 400 a guarantee for the other rows, or a better chance?",
+    "choices": [
+      {
+        "text": "Raise it to 1,000 and the problem is gone",
+        "correct": false,
+        "why": "A wider list makes a shortfall rarer. Nothing in it promises that the walk meets 10 Portuguese rows."
+      },
+      {
+        "text": "Move the filter elsewhere",
+        "correct": true,
+        "why": "Right. A pre-filter, a partial index or a filter applied during the walk returns 10 whenever 10 pass; ef_search only improves the odds."
+      },
+      {
+        "text": "Row 7 has fewer than 10 Portuguese neighbours",
+        "correct": false,
+        "why": "Every row has the same 100 Portuguese rows to choose from; the partial index returned 10 for row 7."
+      },
+      {
+        "text": "The index is broken and has to be rebuilt",
+        "correct": false,
+        "why": "Nothing is broken. An approximate walk visits part of the graph, and on that part only 3 passed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2405x2tz",
+    "version": 1,
+    "section": "post-filtering",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens in pgvector 0.6.0 to a query with WHERE lang = 'pt' that the planner sends through the HNSW index.",
+    "hint": "The filter is not first.",
+    "items": [
+      "The index walks its graph from the entry point",
+      "It yields up to ef_search candidates, nearest first",
+      "PostgreSQL tests lang on each candidate",
+      "LIMIT keeps at most 10 that passed",
+      "The query returns what is left, maybe fewer than 10"
+    ],
+    "trap": "The language test does not come before the walk: that would be a pre-filter, which is what the partial index did."
+  },
+  {
+    "id": "ex-zj1ysa77",
+    "version": 1,
+    "section": "pre-filtering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`prefilter_cost.py` took 0.7 ms for lang = 'pt' and 83.3 ms for lang = 'en'. Why the difference?",
+    "hint": "Count the rows each one searched.",
+    "choices": [
+      {
+        "text": "English text takes longer to compare than Portuguese",
+        "correct": false,
+        "why": "These are random vectors with a label. The arithmetic per row is the same whatever the label says."
+      },
+      {
+        "text": "The English query had to sort all 10 results",
+        "correct": false,
+        "why": "Both sorted 10. The difference is in how many rows were scored before that."
+      },
+      {
+        "text": "The first run was cold, and English ran later",
+        "correct": false,
+        "why": "Each time is the best of 20 runs, so a cold start is not in it."
+      },
+      {
+        "text": "It searched 178,000 rows exactly instead of 2,000",
+        "correct": true,
+        "why": "Right. A pre-filter is an exact search over what passes, and its cost follows the size of that subset."
+      }
+    ]
+  },
+  {
+    "id": "ex-b06cvndv",
+    "version": 1,
+    "section": "pre-filtering",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many times longer did the pre-filtered query take for lang = 'en' than for lang = 'pt'? Round to a whole number.",
+    "hint": "83.3 ms against 0.7 ms.",
+    "value": 119,
+    "tolerance": 1,
+    "unit": "times"
+  },
+  {
+    "id": "ex-gndd3fva",
+    "version": 1,
+    "section": "pre-filtering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the partial index `WHERE lang = 'pt'` was built, what did `ten.sql` return?",
+    "hint": "Which queries can use an index built with that condition?",
+    "choices": [
+      {
+        "text": "10 Portuguese rows for every query, and the Spanish column unchanged",
+        "correct": true,
+        "why": "Right. Every row in the partial index already passes, so the Portuguese query has nothing to filter out; the Spanish one still goes through the full index and its filter."
+      },
+      {
+        "text": "10 rows in both columns",
+        "correct": false,
+        "why": "The Spanish counts stayed between 2 and 6. The new index covers lang = 'pt' and nothing else."
+      },
+      {
+        "text": "The same counts as before, since the planner kept the old index",
+        "correct": false,
+        "why": "The Portuguese column went from 0 or 1 to 10 in every row, so the planner did use the new index."
+      },
+      {
+        "text": "An error, since a table may have only one HNSW index",
+        "correct": false,
+        "why": "CREATE INDEX printed CREATE INDEX, and the table then had two HNSW indexes."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmrhmfsq",
+    "version": 1,
+    "section": "pre-filtering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table stores documents for 20,000 customers, filtered by customer_id. Someone proposes one partial HNSW index per customer. What is wrong with that?",
+    "hint": "A partial index exists for each value you give it.",
+    "choices": [
+      {
+        "text": "Partial indexes cannot use a vector operator",
+        "correct": false,
+        "why": "The lesson built one with vector_cosine_ops and the planner used it."
+      },
+      {
+        "text": "Twenty thousand indexes to build and maintain",
+        "correct": true,
+        "why": "Right. A partial index suits a field with a few values that matter; a value per customer wants the other designs in the tenants section."
+      },
+      {
+        "text": "A partial index returns fewer than k rows, like a post-filter",
+        "correct": false,
+        "why": "The opposite: every row in it passes, so it returned 10 of 10 in ten.sql."
+      },
+      {
+        "text": "It would leak documents between customers",
+        "correct": false,
+        "why": "Each index covers only its own customer's rows. The cost is the number of indexes, not a leak."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezjj08j7",
+    "version": 1,
+    "section": "filters-in-the-index",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `lance_filter.py`, `prefilter=False` returned an empty list. Why?",
+    "hint": "What were the 3 nearest articles to the English question?",
+    "choices": [
+      {
+        "text": "LanceDB cannot filter on a text column",
+        "correct": false,
+        "why": "With prefilter=True the same filter on the same column returned three articles."
+      },
+      {
+        "text": "The table had no index, so filtering was switched off",
+        "correct": false,
+        "why": "There was no vector index, and the search ran exactly; the filter ran too, after it."
+      },
+      {
+        "text": "It filtered the 3 nearest, all of them English",
+        "correct": true,
+        "why": "Right. That is post-filtering: the same empty list post_filter gave in filtered.py."
+      },
+      {
+        "text": "The cosine metric ranks Portuguese articles last",
+        "correct": false,
+        "why": "The metric does not look at languages. The three Portuguese rows were simply not among the three nearest."
+      }
+    ]
+  },
+  {
+    "id": "ex-0drxtnac",
+    "version": 1,
+    "section": "filters-in-the-index",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Qdrant in local mode warned that payload indexes have no effect. What does that tell you about the filtered query it then ran?",
+    "hint": "How does local mode search?",
+    "choices": [
+      {
+        "text": "The filter was ignored, so the results are unfiltered",
+        "correct": false,
+        "why": "The results were h40, h39 and h38, the three Portuguese articles. The filter ran; the index for it was what went unused."
+      },
+      {
+        "text": "The query fell back to a post-filter and lost results",
+        "correct": false,
+        "why": "It returned all three Portuguese articles with k = 3, which a post-filter on this question does not."
+      },
+      {
+        "text": "It scored every point and masked out those failing the filter, exactly",
+        "correct": true,
+        "why": "Right. Local mode is exact and needs no index for the filter; the payload index matters to the server's HNSW graph."
+      },
+      {
+        "text": "The collection has to be created again with the index in place",
+        "correct": false,
+        "why": "Recreating it changes nothing in local mode. The warning says to use the server if you need payload indexes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ktpqfsmw",
+    "version": 1,
+    "section": "filters-in-the-index",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In LanceDB, `.where(\"lang = 'pt'\", ___=True)` applies the condition before the vector search.",
+    "hint": "The parameter's name says when.",
+    "blanks": [
+      {
+        "accept": [
+          "prefilter"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qcabzc9n",
+    "version": 1,
+    "section": "filters-in-the-index",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these returned the three Portuguese articles for 'how do I return a book' with the language filter and k = 3? Choose all that apply.",
+    "hint": "Two of them filter after the three nearest are picked.",
+    "choices": [
+      {
+        "text": "Chroma with where",
+        "correct": true,
+        "why": "Yes: h40, h39 and h38, the condition deciding which records could be returned."
+      },
+      {
+        "text": "LanceDB with prefilter=False",
+        "correct": false,
+        "why": "It returned an empty list: the three nearest were English."
+      },
+      {
+        "text": "Qdrant local with a Filter",
+        "correct": true,
+        "why": "Yes: it scores every point and masks out the rest."
+      },
+      {
+        "text": "pre_filter in store.py",
+        "correct": true,
+        "why": "Yes: it searched only the three Portuguese rows."
+      },
+      {
+        "text": "post_filter in store.py",
+        "correct": false,
+        "why": "It returned []: the filter came after the three English articles."
+      }
+    ]
+  },
+  {
+    "id": "ex-1se7cpbv",
+    "version": 1,
+    "section": "filters-in-the-index",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "By Qdrant's documentation of filterable HNSW, why does a narrow filter not leave its server short of results the way it left pgvector 0.6.0?",
+    "hint": "Where does the condition get checked?",
+    "choices": [
+      {
+        "text": "Its default candidate list is far larger than 40",
+        "correct": false,
+        "why": "A larger list would only make a shortfall rarer, as ef_search 400 did. The difference is where the condition is checked."
+      },
+      {
+        "text": "It checks the condition during the walk, or searches a small subset exactly",
+        "correct": true,
+        "why": "Right. Rejected points do not use up the result list, and a narrow filter is served by an exact search over the few points that pass."
+      },
+      {
+        "text": "It keeps a separate collection for each payload value",
+        "correct": false,
+        "why": "That is the one-collection-per-tenant design, which you choose yourself. Filterable HNSW works inside one collection."
+      },
+      {
+        "text": "It returns fewer results too, and pads them with unfiltered ones",
+        "correct": false,
+        "why": "Padding with rows that fail the filter would break the filter's meaning. Nothing in the lesson describes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3tx58pva",
+    "version": 1,
+    "section": "tenants-and-permissions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`tenant_search.py` with no shop named failed with an error. Why is that the behaviour you want?",
+    "hint": "Compare it with what an empty filter does in most code.",
+    "choices": [
+      {
+        "text": "Errors are cheaper than empty result sets",
+        "correct": false,
+        "why": "Cost is not the point. What matters is what a forgotten tenant gets to see."
+      },
+      {
+        "text": "A connection that names no shop gets nothing",
+        "correct": true,
+        "why": "Right. The policy compares each row with app.shop, and with no app.shop the query cannot run, so a forgotten setting fails instead of leaking."
+      },
+      {
+        "text": "It shows the helpdesk role has no SELECT permission",
+        "correct": false,
+        "why": "helpdesk has SELECT; the same role returned rows as soon as a shop was set."
+      },
+      {
+        "text": "The table has no rows for a missing shop, so PostgreSQL reports it",
+        "correct": false,
+        "why": "PostgreSQL reported an unknown setting, not a missing shop. A query that finds no rows returns an empty result, not an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jxem666",
+    "version": 1,
+    "section": "tenants-and-permissions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia's API accepts `{\"query\": ..., \"shop\": ...}` in the request body and passes `shop` to the vector search as a filter. What is the flaw?",
+    "hint": "Who decides the value of shop?",
+    "choices": [
+      {
+        "text": "A JSON body is slower to parse than a query string",
+        "correct": false,
+        "why": "Speed is not the issue; any channel the client fills has the same flaw."
+      },
+      {
+        "text": "The filter should be applied before the search",
+        "correct": false,
+        "why": "Pre- or post-, a filter whose value the client chooses filters for whatever the client asks."
+      },
+      {
+        "text": "Vector databases cannot filter on a text field like shop",
+        "correct": false,
+        "why": "All four engines in this lesson filtered on text fields such as lang."
+      },
+      {
+        "text": "The shop is chosen by the client, so any shop is open",
+        "correct": true,
+        "why": "Right. The tenant has to come from the signed-in session on the server; a value in the request is a claim."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0fhcpmq",
+    "version": 1,
+    "section": "tenants-and-permissions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `tenant_search.py` switch to the role helpdesk instead of searching as ana?",
+    "hint": "Who does row-level security apply to?",
+    "choices": [
+      {
+        "text": "Owners and superusers skip RLS",
+        "correct": true,
+        "why": "Right. As ana the search would see every shop's rows; the policy binds a role that is neither owner nor superuser."
+      },
+      {
+        "text": "ana cannot read the vector type",
+        "correct": false,
+        "why": "ana created the extension and loaded the table with vectors in shops.py."
+      },
+      {
+        "text": "helpdesk is faster because it has fewer permissions",
+        "correct": false,
+        "why": "Permissions do not change the speed of a query. They change which rows the policy lets through."
+      },
+      {
+        "text": "app.shop can be set only by a role named helpdesk",
+        "correct": false,
+        "why": "Any role can set a custom setting; it is the policy, not the setting, that needs a role it applies to."
+      }
+    ]
+  },
+  {
+    "id": "ex-gexrep45",
+    "version": 1,
+    "section": "tenants-and-permissions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "PostgreSQL's ___ security adds a policy's condition to every query on a table.",
+    "hint": "It works per row.",
+    "blanks": [
+      {
+        "accept": [
+          "row-level",
+          "row level",
+          "rowlevel"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1c4062hq",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each search that ran in this lesson to how its filter was applied.",
+    "hint": "One description matches none of them.",
+    "pairs": [
+      {
+        "left": "Chroma with where",
+        "right": "The condition chose which records could be returned"
+      },
+      {
+        "left": "LanceDB with prefilter=False",
+        "right": "The 3 nearest were filtered afterwards"
+      },
+      {
+        "left": "Qdrant in local mode",
+        "right": "Every point scored, the filter applied as a mask"
+      },
+      {
+        "left": "pgvector through the full HNSW index",
+        "right": "Each candidate the index yielded was tested"
+      }
+    ],
+    "right_distractors": [
+      "The filter was handed to a reranker"
+    ]
+  },
+  {
+    "id": "ex-sg6mywe7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order these pre-filtered queries from `prefilter_cost.py` from fastest to slowest.",
+    "hint": "The time follows the rows searched.",
+    "items": [
+      "lang = 'pt', 2,000 rows",
+      "lang = 'es', 20,000 rows",
+      "lang = 'en', 178,000 rows"
+    ],
+    "trap": "The narrowest filter is the fastest, not the slowest: a pre-filter does less work the more the filter removes."
+  },
+  {
+    "id": "ex-e2dpzvhj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop shows 'books like this one, in stock' with k = 10 over an HNSW index, and 95% of its books are in stock. Which way of filtering fits?",
+    "hint": "Apply this lesson's rule about filter width.",
+    "choices": [
+      {
+        "text": "An exact pre-filter, since only it is correct",
+        "correct": false,
+        "why": "It is correct and searches 95% of the books by brute force for every page view, which is the wide-filter case where pre-filtering is slow."
+      },
+      {
+        "text": "Search, then filter",
+        "correct": true,
+        "why": "Right. With 95% passing, a post-filter over the candidates loses about one in twenty, and widening the candidate list a little covers it."
+      },
+      {
+        "text": "A partial index for each book",
+        "correct": false,
+        "why": "A partial index is per value of a condition, not per book; one per book would be thousands of tiny indexes."
+      },
+      {
+        "text": "Row-level security on the stock column",
+        "correct": false,
+        "why": "Stock is not a permission. Row-level security is for who may see a row, and here everyone may."
+      }
+    ]
+  }
+]

@@ -1,0 +1,483 @@
+{
+  "ex-yf3b9wzb": {
+    "prompt": "Por que `jina.py` não precisa de um SDK da Jina para chamar o endpoint de embeddings da Jina?",
+    "hint": "Compare a requisição e a resposta com as da aula 7.",
+    "choices": [
+      {
+        "text": "A requisição e a resposta copiam o formato do /v1/embeddings da OpenAI",
+        "why": "Certo. Um POST com token bearer, model e input no corpo, data[i].embedding e usage na resposta: qualquer cliente HTTP fala isso."
+      },
+      {
+        "text": "Porque o labembed converte cada requisição para o formato próprio da Jina antes",
+        "why": "O labembed responde ao formato que recebe; ele não converte nada. Contra a api.jina.ai o mesmo programa funciona porque a própria Jina aceita esse formato."
+      },
+      {
+        "text": "O httpx é a biblioteca cliente oficial da Jina",
+        "why": "O httpx é um cliente HTTP genérico que o pacote openai instalou. Nada nele é da Jina."
+      },
+      {
+        "text": "A Jina devolve texto puro, então não há nada para decodificar",
+        "why": "A Jina devolve JSON com os vetores como listas de números, igual à OpenAI com encoding_format float."
+      }
+    ]
+  },
+  "ex-q1pcqp15": {
+    "prompt": "`jina.py` imprimiu `query and passage identical: True`. O que essa linha estabelece?",
+    "hint": "Quem calculou os dois vetores?",
+    "choices": [
+      {
+        "text": "Que o campo task da Jina não muda nada em modelo nenhum",
+        "why": "Ela não mostra nada sobre os modelos da Jina: nenhuma requisição chegou à Jina. O jina-embeddings-v3 usa pesos diferentes por tarefa, então os dois vetores dele diferem."
+      },
+      {
+        "text": "Só que o labembed ignora a tarefa",
+        "why": "Certo. Os dois modelos do laboratório são simétricos: o labembed confere e registra a tarefa e calcula o mesmo vetor assim mesmo. É um fato sobre o laboratório, não sobre a Jina."
+      },
+      {
+        "text": "Que retrieval.query e retrieval.passage são dois nomes para uma tarefa só",
+        "why": "A Jina documenta as duas como tarefas diferentes, uma para a pergunta e outra para o texto que a responde; essa é a razão de ser da busca assimétrica."
+      },
+      {
+        "text": "Que a segunda requisição foi respondida de um cache",
+        "why": "O labembed calcula cada vetor em cada requisição; o log mostra três requisições bem-sucedidas separadas."
+      }
+    ]
+  },
+  "ex-zxr9y8bw": {
+    "prompt": "Um serviço registra \"requisição ruim, bug nosso\" quando uma chamada de embedding devolve 400, e \"fora do ar no fornecedor, tentar depois\" para qualquer outro erro. O que ele registra quando `task` vem com erro de digitação numa chamada à Jina?",
+    "hint": "Veja o status na terceira linha da saída de jina.py.",
+    "choices": [
+      {
+        "text": "\"requisição ruim, bug nosso\", já que um campo errado é uma requisição malformada",
+        "why": "Isso estaria certo se o status fosse 400. A recusa da Jina volta como 422, que essa verificação não reconhece."
+      },
+      {
+        "text": "A mensagem de fora do ar, e o pedido se repete à toa",
+        "why": "Certo. O status é 422, então a verificação cai no ramo de fora do ar, e repetir a chamada não conserta um nome de tarefa errado."
+      },
+      {
+        "text": "Nada, porque a Jina ignora campos que não conhece",
+        "why": "Esse é o comportamento do labembed com late_chunking, um campo que ele não implementa. task é conferido, e um valor errado é recusado."
+      },
+      {
+        "text": "\"requisição ruim, bug nosso\", porque o labembed responde 400 a toda recusa",
+        "why": "O labembed respondeu esta com 422; o jina-log mostra status 422 para a requisição recusada."
+      }
+    ]
+  },
+  "ex-djzxb8n3": {
+    "prompt": "O que o `late_chunking` da Jina muda, comparado com transformar cada pedaço de um documento em vetor separadamente?",
+    "hint": "Onde acontece o corte entre os pedaços, antes das camadas ou depois?",
+    "choices": [
+      {
+        "text": "Cada pedaço ainda vira vetor sozinho, só que mais tarde, depois que o documento é guardado",
+        "why": "Late se refere a onde o corte acontece dentro do modelo, não a quando a requisição é feita."
+      },
+      {
+        "text": "O documento inteiro recebe um vetor, copiado para cada pedaço",
+        "why": "Cada pedaço ainda recebe o próprio vetor; o que muda é o que as camadas viram antes da média."
+      },
+      {
+        "text": "Os pedaços passam juntos pelas camadas e só se separam na média",
+        "why": "Certo. O vetor de cada pedaço é a média dos próprios pedaços de palavra, mas eles foram calculados com os pedaços vizinhos à vista."
+      },
+      {
+        "text": "O modelo decide onde cortar o documento",
+        "why": "Os pedaços continuam sendo os seus, enviados na lista de input. O modelo só os lê juntos."
+      }
+    ]
+  },
+  "ex-7k52wrg5": {
+    "prompt": "No corpo de uma requisição à Jina, o campo cujos valores incluem `retrieval.query` e `separation` se chama ___.",
+    "hint": "Ele diz ao modelo para que serve o texto.",
+    "blanks": [
+      {
+        "accept": [
+          "task"
+        ]
+      }
+    ]
+  },
+  "ex-5kw819c7": {
+    "prompt": "Ligue cada tarefa da Jina ao texto a que ela se destina.",
+    "hint": "Uma descrição não pertence a tarefa nenhuma.",
+    "pairs": [
+      {
+        "left": "retrieval.query",
+        "right": "A pergunta de busca de uma cliente"
+      },
+      {
+        "left": "retrieval.passage",
+        "right": "Um artigo de ajuda que a busca deve encontrar"
+      },
+      {
+        "left": "text-matching",
+        "right": "Dois textos comparados em pé de igualdade"
+      },
+      {
+        "left": "separation",
+        "right": "Textos a serem agrupados em clusters"
+      }
+    ],
+    "right_distractors": [
+      "Detectar em que língua está um texto"
+    ]
+  },
+  "ex-qwekqsvw": {
+    "prompt": "`prices.py` imprime `-` na coluna dims para `voyage/voyage-3.5`. O que o traço quer dizer?",
+    "hint": "De quem é a tabela?",
+    "choices": [
+      {
+        "text": "O voyage-3.5 devolve vetores sem tamanho fixo",
+        "why": "Um modelo devolve uma dimensão para todo texto; o traço diz que a tabela não tem valor, não que o modelo não tem."
+      },
+      {
+        "text": "A tabela não registra dimensão para ele",
+        "why": "Certo. Uma lacuna na tabela de um terceiro é uma pergunta para a documentação do próprio fornecedor."
+      },
+      {
+        "text": "A dimensão é zero até uma requisição pedir uma",
+        "why": "Nada na tabela diz isso, e nenhum modelo devolve zero números por padrão."
+      },
+      {
+        "text": "A Voyage só vende com o desconto de lote, que a tabela deixa de fora",
+        "why": "A coluna batch é outra coluna, e também está com traço. Nenhum dos traços diz algo sobre como a Voyage vende."
+      }
+    ]
+  },
+  "ex-sk7xp3jn": {
+    "prompt": "`sheet.py` achou 149 linhas de embedding, e a única linha com o nome da Jina tem o modo `rerank`. O que isso implica para este curso?",
+    "hint": "Um reranker não é um modelo de embedding.",
+    "choices": [
+      {
+        "text": "Os modelos de embedding da Jina são gratuitos, por isso não têm linha de preço",
+        "why": "Uma linha que falta é um dado que falta, não um preço zero."
+      },
+      {
+        "text": "A Jina vende rerankers e nenhum modelo de embedding",
+        "why": "jina.py usa o endpoint de embeddings documentado da Jina; a tabela simplesmente não lista esses modelos."
+      },
+      {
+        "text": "Ele não tem como citar um preço de embedding da Jina a partir da sua única fonte",
+        "why": "Certo. Todo preço aqui vem da tabela do LiteLLM num commit, e essa tabela não tem linha de embedding da Jina."
+      },
+      {
+        "text": "O preço de embedding da Jina é o preço do reranker",
+        "why": "Um reranker é outro modelo fazendo outro trabalho; o preço dele não diz nada sobre embeddings."
+      }
+    ]
+  },
+  "ex-m2xa9dm3": {
+    "prompt": "A Marginalia paga a Together por token pelo `bge-base-en-v1.5`. O que ela mantém que não manteria com um modelo que só o fabricante serve?",
+    "hint": "Quem mais tem os pesos?",
+    "choices": [
+      {
+        "text": "A opção de rodar ela mesma os mesmos pesos abertos se um dia deixar a hospedagem",
+        "why": "Certo. Os pesos são públicos, então o modelo não depende de a hospedagem continuar existindo ou manter o preço."
+      },
+      {
+        "text": "A garantia de que os vetores da hospedagem batem com os das máquinas dela",
+        "why": "Isso depende de a hospedagem rodar o modelo com a mesma precisão, e é uma pergunta a fazer antes de misturar."
+      },
+      {
+        "text": "Entradas de 32.000 tokens",
+        "why": "Esse é o limite da Voyage. A tabela lista 512 tokens para o bge-base-en-v1.5."
+      },
+      {
+        "text": "Textos dos clientes que nunca saem dos servidores dela",
+        "why": "Um modelo hospedado recebe todo texto enviado a ele, seja quem for que fez os pesos."
+      }
+    ]
+  },
+  "ex-f75qyr5s": {
+    "prompt": "Um modelo treinado para um tipo de texto, como o `voyage-law-2` para contratos ou o `voyage-code-3` para programas, se chama modelo de ___.",
+    "hint": "A palavra para uma área de conhecimento.",
+    "blanks": [
+      {
+        "accept": [
+          "domínio",
+          "dominio",
+          "domain"
+        ]
+      }
+    ]
+  },
+  "ex-794mdr7q": {
+    "prompt": "Segundo `static.py`, o que é o modelo do WordLlama?",
+    "hint": "Veja o formato impresso na primeira linha.",
+    "choices": [
+      {
+        "text": "Seis camadas de transformer pequenas o bastante para rodar numa CPU",
+        "why": "Isso descreve o MiniLM. O WordLlama não tem camadas, e é isso que o torna estático."
+      },
+      {
+        "text": "Uma tabela de 32.000 linhas de 256 números",
+        "why": "Certo. Uma linha por token: o vetor de um texto é a média das linhas dos tokens dele, normalizada, e o programa o refez à mão."
+      },
+      {
+        "text": "Uma lista de sinônimos para cada palavra",
+        "why": "Nenhuma lista de palavras está envolvida; as linhas são números aprendidos no treino."
+      },
+      {
+        "text": "Um arquivo ONNX como o do MiniLM, cinco vezes menor",
+        "why": "O arquivo é uma tabela de números em formato safetensors, e não há rede nenhuma nele para rodar."
+      }
+    ]
+  },
+  "ex-ph273bgm": {
+    "prompt": "Em `misses.py`, o WordLlama deu a *Is there a cheaper postage option for a single paperback?* o rótulo de um ticket sobre trocar um paperback por capa dura. Por quê?",
+    "hint": "O que pesa numa média de uma dúzia de vetores de token?",
+    "choices": [
+      {
+        "text": "O WordLlama viu mais perguntas de devolução que de entrega no treino",
+        "why": "Nada na aula mede a mistura de treino dele, e o erro se explica pelas palavras que os dois tickets compartilham."
+      },
+      {
+        "text": "O ticket de treino sobre a capa dura estava com o rótulo errado",
+        "why": "É uma pergunta de devolução e está rotulada como returns; o MiniLM achou outro ticket, de entrega."
+      },
+      {
+        "text": "O WordLlama corta todo texto depois dos primeiros tokens",
+        "why": "Ele lê todos os tokens; static.py tirou a média dos 14 desta frase."
+      },
+      {
+        "text": "Uma palavra em comum pesa muito numa média que ignora como as palavras se combinam",
+        "why": "Certo. paperback puxa as duas médias para o mesmo lado, e sem camadas nada separa frete de troca."
+      }
+    ]
+  },
+  "ex-5kzm5t01": {
+    "prompt": "`speed.py` mediu o MiniLM em 723,6 ms para os 150 tickets. Quantos textos por segundo são?",
+    "hint": "Divida os textos pelos segundos.",
+    "unit": "textos/s"
+  },
+  "ex-qpv7wfek": {
+    "prompt": "Aos 26.489 textos por segundo que `speed.py` mediu para o WordLlama, quantos segundos levariam 1.000.000 de textos desse tipo nesta máquina?",
+    "hint": "Um milhão dividido pela taxa.",
+    "unit": "s"
+  },
+  "ex-6wykz3nv": {
+    "prompt": "Ponha em ordem o que `static.py` faz à mão para refazer o vetor do WordLlama de uma frase.",
+    "hint": "A divisão pelo comprimento vem por último, como em todo modelo que o curso roda.",
+    "items": [
+      "Dividir a frase em ids de token",
+      "Pegar a linha de cada token na tabela",
+      "Tirar a média das linhas",
+      "Dividir pelo comprimento"
+    ],
+    "trap": "Nada roda entre a busca na tabela e a média: uma camada ali faria dele um modelo contextual."
+  },
+  "ex-n32jj5yn": {
+    "prompt": "Em `switch.py`, o modelo B é o modelo A girado, e sozinho ele acerta 19 de 24, como o A. Por que as perguntas de B contra os artigos de A acertam 1?",
+    "hint": "Uma rotação mantém os ângulos entre os vetores de B. O que ela faz com as coordenadas?",
+    "choices": [
+      {
+        "text": "A rotação fez de B um modelo pior",
+        "why": "B acertou 19 de 24 sozinho, igual ao A; uma rotação não muda nenhum produto escalar dentro de um modelo."
+      },
+      {
+        "text": "As coordenadas significam coisas diferentes",
+        "why": "Certo. Então um produto escalar entre eles não mede nada: as notas ficam numa faixa de ruído, de -0.151 a 0.210, sem nada se destacando."
+      },
+      {
+        "text": "Os vetores perderam o comprimento 1 na rotação",
+        "why": "Uma rotação mantém todo comprimento; o problema é a direção para onde cada coordenada aponta agora."
+      },
+      {
+        "text": "Dimensões diferentes, então o NumPy embaralhou as coordenadas",
+        "why": "Os dois têm 384 dimensões, e é por isso que nenhum erro apareceu. O ValueError veio dos 256 do WordLlama."
+      }
+    ]
+  },
+  "ex-mdms3re1": {
+    "prompt": "Numa migração, por que continuar escrevendo na coleção antiga por um tempo depois que as leituras passam para a nova?",
+    "hint": "Pense no dia em que algo dá errado com o modelo novo.",
+    "choices": [
+      {
+        "text": "As consultas ainda são comparadas com as duas coleções e as notas juntadas",
+        "why": "Isso misturaria dois modelos num ranking, que é a falha que switch.py mediu. As leituras indicam uma coleção."
+      },
+      {
+        "text": "O modelo antigo precisa continuar aprendendo com os documentos novos",
+        "why": "Um modelo não aprende com os documentos que transforma em vetor; os pesos dele são fixos."
+      },
+      {
+        "text": "Para que voltar atrás seja uma mudança só, sem nada faltando",
+        "why": "Certo. Se o modelo novo decepcionar, a coleção antiga está completa e atualizada, e a busca volta a apontar para ela."
+      },
+      {
+        "text": "Apagar uma coleção só é permitido quando ela não recebe mais escritas",
+        "why": "Nada proíbe isso; o motivo é manter o caminho de volta aberto, não uma regra do banco."
+      }
+    ]
+  },
+  "ex-maqrj5zm": {
+    "prompt": "O passo de preenchimento transforma de novo em vetor 100.000 artigos com o MiniLM, aos 207 textos por segundo que `speed.py` mediu. Quantos minutos leva nesta máquina?",
+    "hint": "Primeiro os segundos, depois divida por 60.",
+    "unit": "min"
+  },
+  "ex-9mppaq7e": {
+    "prompt": "Ponha em ordem os passos de levar uma busca em produção para um modelo novo.",
+    "hint": "As leituras só mudam depois que a coleção nova está completa e medida.",
+    "items": [
+      "Criar uma coleção nova e escrever cada documento novo nas duas",
+      "Transformar de novo em vetor os documentos existentes na coleção nova",
+      "Medir a coleção nova com os julgamentos de relevância",
+      "Apontar a busca para a coleção nova",
+      "Apagar a coleção antiga"
+    ],
+    "trap": "Preencher antes da escrita dupla deixa um buraco: os documentos escritos durante o preenchimento ficariam faltando na coleção nova."
+  },
+  "ex-x3m49pgt": {
+    "prompt": "O fato a guardar ao lado de cada vetor, para que uma consulta só seja comparada com vetores comparáveis, é qual ___ o produziu.",
+    "hint": "Nome e versão.",
+    "blanks": [
+      {
+        "accept": [
+          "modelo",
+          "modelo de embedding",
+          "model"
+        ]
+      }
+    ]
+  },
+  "ex-gtbsgmcb": {
+    "prompt": "A Jina publica os pesos do jina-embeddings-v3 sob CC BY-NC 4.0. O que isso significa para a Marginalia, uma loja?",
+    "hint": "NC quer dizer não comercial.",
+    "choices": [
+      {
+        "text": "Qualquer peso aberto é livre para rodar em produção",
+        "why": "Pesos abertos são um download, não uma licença de uso; a licença é outra pergunta, e aqui ela diz não comercial."
+      },
+      {
+        "text": "Testar tudo bem, mas produção exige um acordo com a Jina ou a API dela",
+        "why": "Certo. Uma licença não comercial impede rodar os pesos no produto da loja sem um acordo à parte."
+      },
+      {
+        "text": "Os vetores que ele produz pertencem à Jina e não podem ser guardados",
+        "why": "A licença trata dos pesos, não dos vetores que você calcula; o problema é rodar o modelo comercialmente."
+      },
+      {
+        "text": "Só o código tem restrição; os pesos são MIT como os do WordLlama",
+        "why": "É o contrário no exemplo da aula: a licença citada é a dos pesos. O pacote do WordLlama é que declara MIT."
+      }
+    ]
+  },
+  "ex-frg7vvhc": {
+    "prompt": "Um leaderboard põe o modelo X acima do Y na média. Nas 24 perguntas da Marginalia, Y acerta um artigo em primeiro a mais que X. Qual é a conclusão correta?",
+    "hint": "Quanto vale uma pergunta em 24?",
+    "choices": [
+      {
+        "text": "Y é melhor para a Marginalia, porque os dados dela decidem",
+        "why": "Os dados dela decidem, sim, mas uma pergunta em 24 está dentro do ruído; é preciso mais julgamentos ou olhar as falhas."
+      },
+      {
+        "text": "X é melhor, porque o leaderboard tira a média de muito mais dados",
+        "why": "Mais dados, mas não os da Marginalia; WordLlama e MiniLM trocaram de lugar entre duas tarefas do próprio curso."
+      },
+      {
+        "text": "Uma pergunta em 24 ainda não separa nada",
+        "why": "Certo. Vinte e quatro perguntas pegam um modelo claramente errado, não uma diferença de um: acrescente julgamentos e leia os erros, que dizem mais que a contagem."
+      },
+      {
+        "text": "Escolha o mais barato dos dois, já que a qualidade empatou",
+        "why": "O preço vem por último, depois que a medição disse alguma coisa; aqui ela ainda não disse."
+      }
+    ]
+  },
+  "ex-w0p9mzw8": {
+    "prompt": "Um marketplace precisa achar anúncios quase duplicados entre 50 milhões de títulos curtos de produto toda noite, em servidores só com CPU. Qual é o primeiro modelo razoável a testar?",
+    "hint": "Textos curtos, quantidade enorme, sem GPU.",
+    "choices": [
+      {
+        "text": "Uma API hospedada de transformer, já que só transformers comparam bem textos curtos",
+        "why": "O WordLlama foi tão bem ou melhor que o MiniLM nas perguntas curtas da central de ajuda; e 50 milhões de títulos por noite é uma conta grande e muito tráfego."
+      },
+      {
+        "text": "Um modelo estático, conferido antes numa amostra de duplicatas conhecidas",
+        "why": "Certo. Textos curtos cujas palavras carregam o sentido são onde uma média se sustenta, e a velocidade cabe no volume; a amostra é o que confirma."
+      },
+      {
+        "text": "O MiniLM numa thread só, como minilm.py o roda",
+        "why": "Aos 207 textos por segundo medidos aqui, 50 milhões de títulos levam muito mais que uma noite."
+      },
+      {
+        "text": "Qualquer modelo, porque um trabalho noturno não tem limite de tempo",
+        "why": "Ele precisa terminar antes da rodada da noite seguinte, e as velocidades medidas diferem em duas ordens de grandeza."
+      }
+    ]
+  },
+  "ex-xmhjzpmj": {
+    "prompt": "Um time troca um modelo de 1536 dimensões por outro de 1536 dimensões, transforma só os artigos novos com ele e mantém tudo numa coleção só. O que eles veem?",
+    "hint": "switch.py mediu o caso sem erro.",
+    "choices": [
+      {
+        "text": "Um erro de dimensão na primeira consulta",
+        "why": "As dimensões batem, então a conta roda; o ValueError de switch.py precisou de 256 contra 384."
+      },
+      {
+        "text": "Resultados e notas como sempre, com os artigos antigos ordenados por ruído",
+        "why": "Certo. Nada falha; consultas novas encontram vetores antigos de outro sistema de coordenadas, como B contra A em switch.py."
+      },
+      {
+        "text": "O mesmo ranking de antes, porque a dimensão não mudou",
+        "why": "A dimensão é a quantidade de números, não o significado deles; as coordenadas de dois modelos não têm relação."
+      },
+      {
+        "text": "Os artigos antigos sempre em primeiro, porque foram guardados antes",
+        "why": "A ordem de armazenamento não entra num produto escalar; os artigos antigos são ordenados por ruído, alto ou baixo."
+      }
+    ]
+  },
+  "ex-yrr9rrbg": {
+    "prompt": "Ligue cada linha da tabela de preços ao tipo de oferta que ela é.",
+    "hint": "Um dos tipos não tem linha aqui.",
+    "pairs": [
+      {
+        "left": "voyage/voyage-law-2",
+        "right": "Um modelo treinado para um tipo de texto"
+      },
+      {
+        "left": "novita/baai/bge-m3",
+        "right": "Um modelo aberto vendido por uma empresa de hospedagem"
+      },
+      {
+        "left": "jina-reranker-v2-base-multilingual",
+        "right": "Um modelo que dá nova nota a uma lista curta de resultados"
+      },
+      {
+        "left": "text-embedding-3-small",
+        "right": "Um modelo geral vendido por quem o fez"
+      }
+    ],
+    "right_distractors": [
+      "Um modelo estático sem camadas"
+    ]
+  },
+  "ex-xj8ewccy": {
+    "prompt": "Quais destas são perguntas de sim ou não que eliminam um modelo antes de qualquer medição? Marque todas as que se aplicam.",
+    "hint": "Uma pergunta com resposta medida pertence à segunda passada.",
+    "choices": [
+      {
+        "text": "Mandar os textos para uma API hospedada é permitido?",
+        "why": "Sim. Se não for, todo modelo hospedado está fora, seja qual for a nota."
+      },
+      {
+        "text": "A licença dos pesos permite uso comercial?",
+        "why": "Sim. Um modelo que você não tem permissão de rodar não vale a medição."
+      },
+      {
+        "text": "Ele foi treinado nas línguas dos textos?",
+        "why": "Sim. A aula 1 mostrou um modelo inglês tratando um título em português como sem relação com a tradução."
+      },
+      {
+        "text": "Ele acha mais artigos certos em primeiro nas nossas 24 perguntas?",
+        "why": "Essa é a medição da segunda passada, feita só nos modelos que sobreviveram à primeira."
+      },
+      {
+        "text": "Ele é o mais barato da tabela?",
+        "why": "O preço vem por último, depois da medição; um modelo barato que perde perguntas não sai mais barato."
+      }
+    ]
+  }
+}

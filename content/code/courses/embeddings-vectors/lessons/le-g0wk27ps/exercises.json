@@ -1,0 +1,678 @@
+[
+  {
+    "id": "ex-7yq4jwbn",
+    "version": 1,
+    "section": "nearest-neighbours",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does every program in this lesson keep the 50 test tickets out of what a method may learn from?",
+    "hint": "Think about what the score is supposed to tell you.",
+    "choices": [
+      {
+        "text": "Because embedding all 150 tickets at once would go past the model's 256-piece limit",
+        "correct": false,
+        "why": "The 256-piece limit applies to one text, not to a batch; tickets.py embeds each split in one call without trouble."
+      },
+      {
+        "text": "Because the test tickets carry no label in the file",
+        "correct": false,
+        "why": "They carry one, as the head of the file shows; the label is what the score is counted against."
+      },
+      {
+        "text": "So that the score says how the method handles messages it has never seen",
+        "correct": true,
+        "why": "Right. A method scored on tickets it learned from is scored on its memory, which says nothing about tomorrow's messages."
+      },
+      {
+        "text": "So that k-nearest neighbours has fewer tickets to compare and runs faster",
+        "correct": false,
+        "why": "Speed has nothing to do with it. The split exists so that the measurement is honest."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2ct0eac",
+    "version": 1,
+    "section": "nearest-neighbours",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`knn.py` computes `S = Xte @ Xtr.T` with 50 test tickets and 100 training tickets. How many dot products does that one line compute?",
+    "hint": "One for every pair of a test ticket and a training ticket.",
+    "value": 5000,
+    "tolerance": 0,
+    "unit": "dot products"
+  },
+  {
+    "id": "ex-8q63y62s",
+    "version": 1,
+    "section": "nearest-neighbours",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "k-NN scored 46 of 50 with `k=1` and 42 with `k=3`. How can three neighbours do worse than one?",
+    "hint": "A vote changes nothing while the neighbours agree.",
+    "choices": [
+      {
+        "text": "With `k=3` the vectors are averaged before comparing, which blurs them",
+        "correct": false,
+        "why": "Nothing is averaged in knn.py; the labels of the nearest k are counted, and the vectors are left as they are."
+      },
+      {
+        "text": "With `k=3` each test ticket is compared with only three training tickets",
+        "correct": false,
+        "why": "Every test ticket is still compared with all 100; k only decides how many of the nearest are counted."
+      },
+      {
+        "text": "A larger `k` uses a less precise number type for the scores",
+        "correct": false,
+        "why": "The scores are the same float32 dot products for every k; only the vote changes."
+      },
+      {
+        "text": "When the three disagree, two tickets further away outvote the nearest one",
+        "correct": true,
+        "why": "Right. With k=1 the nearest ticket decides alone; with k=3 a pair of further tickets with another label wins the count."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qasfrkf",
+    "version": 1,
+    "section": "nearest-neighbours",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia decides that from next month every refund request, for a printed book or an e-book, goes to a new refunds desk. What does the k-NN classifier in this lesson need?",
+    "hint": "Separate what the vectors hold from what the labels hold.",
+    "choices": [
+      {
+        "text": "Every ticket embedded again, because the vectors were computed with the old labels",
+        "correct": false,
+        "why": "The embedding model never saw a label. The vectors describe the text, and the text has not changed."
+      },
+      {
+        "text": "The stored refund tickets relabelled; no vector changes and nothing is trained",
+        "correct": true,
+        "why": "Right. k-NN copies labels from stored tickets. Relabel those, and new refund tickets get the new desk from their neighbours; the vectors never depended on the labels."
+      },
+      {
+        "text": "Nothing at all, because the refund tickets are already close to each other",
+        "correct": false,
+        "why": "Being close is why they will move together, but they move to whatever label they carry; until they are relabelled they carry the old ones."
+      },
+      {
+        "text": "A new embedding model trained on refund tickets until they form their own cluster",
+        "correct": false,
+        "why": "The refund tickets already sit together, as t054's neighbours showed; what is missing is a label, not a model."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5xq9jte",
+    "version": 1,
+    "section": "nearest-neighbours",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Giving a ticket the most frequent label among the k closest labelled tickets is called k-nearest ___.",
+    "hint": "The closest tickets are next door to it.",
+    "blanks": [
+      {
+        "accept": [
+          "neighbours",
+          "neighbors",
+          "neighbour",
+          "neighbor"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0gqws4dk",
+    "version": 1,
+    "section": "centroids",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `centroids.py` divide each centroid by its own length before comparing?",
+    "hint": "Lesson 2's trap with vectors of different lengths.",
+    "choices": [
+      {
+        "text": "Because NumPy's `mean` returns a vector 384 times too large",
+        "correct": false,
+        "why": "The mean is a correct average; it comes out shorter than 1, not larger, because the vectors point in different directions."
+      },
+      {
+        "text": "So that no desk wins dot products just because its average came out longer",
+        "correct": true,
+        "why": "Right. After the division all five centroids have length 1, and the dot product compares directions only."
+      },
+      {
+        "text": "To turn the five scores into probabilities that add up to 1",
+        "correct": false,
+        "why": "That is what logistic regression does with its scores. A normalised centroid still gives cosines, which do not add up to anything."
+      },
+      {
+        "text": "Because the ticket vectors were not of length 1 to begin with",
+        "correct": false,
+        "why": "Every vector from all-MiniLM-L6-v2 has length 1; it is their average that does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2kx4fah",
+    "version": 1,
+    "section": "centroids",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before renormalising, the returns centroid had length 0.592 and the payments centroid 0.526. What does the difference say?",
+    "hint": "Twenty arrows added up: when is the sum longest?",
+    "choices": [
+      {
+        "text": "Returns has more training tickets than payments",
+        "correct": false,
+        "why": "Both have 20. The mean divides by the count, so the count does not set the length anyway."
+      },
+      {
+        "text": "The payments tickets are shorter texts",
+        "correct": false,
+        "why": "Every ticket vector has length 1 whatever the length of its text; the centroid's length comes from the directions."
+      },
+      {
+        "text": "The returns centroid will win more comparisons after renormalising",
+        "correct": false,
+        "why": "After renormalising all five have length 1, which is the point of doing it; the old length no longer counts."
+      },
+      {
+        "text": "Returns tickets point in more similar directions",
+        "correct": true,
+        "why": "Right. Vectors that agree add up to a longer average; the more varied a desk, the shorter its centroid."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dg75cth",
+    "version": 1,
+    "section": "centroids",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two unit vectors have a dot product of 0.5. What is the length of their average, to three decimals?",
+    "hint": "The squared length of a + b is a·a + 2a·b + b·b. Then halve the length.",
+    "value": 0.866,
+    "tolerance": 0.002,
+    "unit": ""
+  },
+  {
+    "id": "ex-9br10aq0",
+    "version": 1,
+    "section": "centroids",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`centroids.py` also prints, for each desk, the training ticket furthest from that desk's centroid. What is that list good for?",
+    "hint": "Why do you need my date of birth? was the furthest account ticket.",
+    "choices": [
+      {
+        "text": "A list for a person to check",
+        "correct": true,
+        "why": "Right. The least typical tickets are where a wrong label or a desk that is really two groups shows up first."
+      },
+      {
+        "text": "Deleting those tickets automatically, because they lower the accuracy",
+        "correct": false,
+        "why": "Nothing showed they lower it, and the date-of-birth ticket was correctly labelled; deleting unusual examples throws away exactly the cases that are hard."
+      },
+      {
+        "text": "Choosing each desk's prototype for the report",
+        "correct": false,
+        "why": "The prototype is the nearest ticket, the most typical one; the furthest is the opposite."
+      },
+      {
+        "text": "Choosing the value of `k` for k-nearest neighbours",
+        "correct": false,
+        "why": "k is chosen by measuring accuracy at several values, as knn.py did; the centroid distances say nothing about it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6x3f3nbt",
+    "version": 1,
+    "section": "a-trained-classifier",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A logistic regression like the one in `trained.py` is trained on WordLlama's 256-number vectors to sort tickets into six desks. How many numbers does it learn?",
+    "hint": "One weight per coordinate per desk, and one constant per desk.",
+    "value": 1542,
+    "tolerance": 0,
+    "unit": "numbers"
+  },
+  {
+    "id": "ex-pk9gkvg6",
+    "version": 1,
+    "section": "a-trained-classifier",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On MiniLM's vectors, logistic regression and centroids both scored 47 of 50. Which explanation fits what the lesson measured?",
+    "hint": "Look at what the embedding had already done before training started.",
+    "choices": [
+      {
+        "text": "Logistic regression ignores the vectors and reads the words of each ticket",
+        "correct": false,
+        "why": "It only ever sees the 384 numbers per ticket; it has no access to the words."
+      },
+      {
+        "text": "`max_iter=1000` stopped the training before it had finished",
+        "correct": false,
+        "why": "max_iter is a ceiling raised so that the solver can finish; it finished, in milliseconds, without a warning."
+      },
+      {
+        "text": "The vectors already separate the desks, and 20 tickets a desk leave little to learn",
+        "correct": true,
+        "why": "Right. A learned weighting can only fix what the space gets wrong, and here it gets little wrong; with weaker vectors the gap opened."
+      },
+      {
+        "text": "A trained model and a centroid always tie when every desk has the same number of tickets",
+        "correct": false,
+        "why": "On WordLlama's vectors with 20 per desk, also balanced, they scored 44 and 42."
+      }
+    ]
+  },
+  {
+    "id": "ex-950709ct",
+    "version": 1,
+    "section": "a-trained-classifier",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On WordLlama's vectors with 20 tickets per desk, the nearest neighbour scored 40, centroids 42 and logistic regression 44. What does that support?",
+    "hint": "Compare it with the same row for MiniLM, where the three scored 46, 47 and 47.",
+    "choices": [
+      {
+        "text": "WordLlama is a better model than MiniLM for classifying tickets",
+        "correct": false,
+        "why": "Every WordLlama score is below the MiniLM score for the same method; it is the weaker of the two here."
+      },
+      {
+        "text": "Learned weights help more when the vectors separate less well",
+        "correct": true,
+        "why": "Right. On MiniLM's sharper vectors the three were within one ticket; on WordLlama's, training gained two over the centroids."
+      },
+      {
+        "text": "Logistic regression needs fewer examples than centroids do",
+        "correct": false,
+        "why": "The table says otherwise: with 2 per desk on WordLlama, centroids scored 39 and logistic regression 36."
+      },
+      {
+        "text": "A static model cannot be used for nearest-neighbour classification",
+        "correct": false,
+        "why": "It was used: 40 of 50 is a working classifier, only a weaker one."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1tpfh3n",
+    "version": 1,
+    "section": "a-trained-classifier",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The team wants tickets the classifier is unsure about to go to a person instead of a desk. t027 got 0.388 for payments and 0.368 for shipping. What should they do?",
+    "hint": "A probability from this model is a ranking of its confidence.",
+    "choices": [
+      {
+        "text": "Send every ticket under 0.5 to a person, because below that the model is wrong more often than right",
+        "correct": false,
+        "why": "That reads the probability as a promise of accuracy, which nobody measured; with five desks a top probability under 0.5 can still be right most of the time."
+      },
+      {
+        "text": "Switch to k-nearest neighbours, which reports its confidence more precisely",
+        "correct": false,
+        "why": "k-NN as written here returns a label and nothing else; it reports no confidence at all."
+      },
+      {
+        "text": "Train again until every test ticket's top probability is above 0.9",
+        "correct": false,
+        "why": "Training on the test tickets until they look certain is learning from the test set; the scores would then measure memory."
+      },
+      {
+        "text": "Choose a cut-off from how often low-probability tickets are wrong on held-out labelled data",
+        "correct": true,
+        "why": "Right. Whether 0.388 is low enough to worry about is a measurement on your own data, like any threshold."
+      }
+    ]
+  },
+  {
+    "id": "ex-6r3vmkda",
+    "version": 1,
+    "section": "zero-shot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which method of this lesson is zero-shot classification, as `zeroshot.py` does it, closest to?",
+    "hint": "What are the five vectors each ticket is compared with?",
+    "choices": [
+      {
+        "text": "Logistic regression, with the descriptions used as learned weights",
+        "correct": false,
+        "why": "Nothing is learned in zeroshot.py: the descriptions are embedded and compared by dot product, with no weights fitted."
+      },
+      {
+        "text": "k-nearest neighbours with `k=5`, one neighbour per desk",
+        "correct": false,
+        "why": "k-NN with k=5 takes the five nearest training tickets, which may all be from one desk; zero-shot always compares with exactly one text per desk."
+      },
+      {
+        "text": "Centroids, with sentences in place of averages",
+        "correct": true,
+        "why": "Right. Each ticket goes to the nearest of five vectors, one per desk; only where those vectors come from is different."
+      },
+      {
+        "text": "Keyword search for the desk names inside each ticket",
+        "correct": false,
+        "why": "No word is matched: the bare names scored 39 by meaning, and returns or account appear in few of the tickets."
+      }
+    ]
+  },
+  {
+    "id": "ex-4kr22k1b",
+    "version": 1,
+    "section": "zero-shot",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the three wordings `zeroshot.py` tried, from the most test tickets right to the fewest.",
+    "hint": "One sentence listing what a desk covers did best.",
+    "items": [
+      "A sentence describing what each desk covers",
+      "The bare desk names",
+      "One example message per desk"
+    ],
+    "trap": "The example messages are not in the middle: one particular ticket per desk scored worst, 35, below the bare names' 39."
+  },
+  {
+    "id": "ex-bmhxv9js",
+    "version": 1,
+    "section": "zero-shot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana tries ten wordings of the five descriptions on the 50 test tickets and reports the best one's score, 45. What is wrong with that 45?",
+    "hint": "Where did the choice of wording come from?",
+    "choices": [
+      {
+        "text": "The wording was chosen for its score on those same 50 tickets",
+        "correct": true,
+        "why": "Right. Choosing among ten by their test score is learning from the test set through a person; the 45 will not hold on new tickets as it is."
+      },
+      {
+        "text": "Nothing, because zero-shot uses no labels and so cannot learn from the test set",
+        "correct": false,
+        "why": "The labels of the test set were used, to score each wording; the choice of wording carries what they said."
+      },
+      {
+        "text": "A score of 45 is impossible without labelled training tickets",
+        "correct": false,
+        "why": "Nothing makes it impossible; the best wording here already reached 43 with no training ticket."
+      },
+      {
+        "text": "Each wording needs a test set of its own, of 50 different tickets",
+        "correct": false,
+        "why": "The wordings can share a test set if none of them is chosen by it; the trouble is the choosing, not the sharing."
+      }
+    ]
+  },
+  {
+    "id": "ex-5gpjv5qg",
+    "version": 1,
+    "section": "zero-shot",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Sorting tickets with only a short text describing each desk, and no labelled example at all, is called ___ classification.",
+    "hint": "The number of examples it needs.",
+    "blanks": [
+      {
+        "accept": [
+          "zero-shot",
+          "zero shot",
+          "zeroshot"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v2qtbstg",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the confusion matrix `measure.py` printed, what does a number off the diagonal count?",
+    "hint": "Rows are the real desk, columns the chosen one.",
+    "choices": [
+      {
+        "text": "Tickets from the training set that the classifier saw twice",
+        "correct": false,
+        "why": "The matrix is built from the 50 test tickets only, each counted once."
+      },
+      {
+        "text": "Tickets whose top probability was under 0.5",
+        "correct": false,
+        "why": "The matrix counts labels, not probabilities; t027 is off the diagonal because its label was wrong, whatever its probability."
+      },
+      {
+        "text": "Desks that received no tickets",
+        "correct": false,
+        "why": "A desk with no tickets would show a column of zeros; every number is a count of tickets, on or off the diagonal."
+      },
+      {
+        "text": "Tickets sent to a desk their label does not name",
+        "correct": true,
+        "why": "Right. The row says where the ticket belongs and the column where it went; off the diagonal the two differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-gqrgwq4q",
+    "version": 1,
+    "section": "measuring",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A classifier sends 12 tickets to the returns desk, and 9 of them really are returns. The test set has 10 returns tickets in all. What is the returns desk's precision, as a percentage?",
+    "hint": "Precision asks about the tickets the desk received.",
+    "value": 75,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-yz4d24p0",
+    "version": 1,
+    "section": "measuring",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each measure in `measure.py`'s output to the question it answers.",
+    "hint": "Two of them are about a single desk, from opposite sides.",
+    "pairs": [
+      {
+        "left": "recall",
+        "right": "How many of a desk's own tickets reached it?"
+      },
+      {
+        "left": "precision",
+        "right": "How many tickets sent to a desk belong there?"
+      },
+      {
+        "left": "confusion matrix",
+        "right": "Where did each desk's tickets go?"
+      },
+      {
+        "left": "f1-score",
+        "right": "Precision and recall in one number"
+      }
+    ],
+    "right_distractors": [
+      "How fast is the classifier?"
+    ]
+  },
+  {
+    "id": "ex-jpvfnzc5",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two of the trained classifier's three mistakes, t024 and t027, are tickets that honestly fit two desks. What is the useful next step?",
+    "hint": "Whose boundary is unclear: the model's or the team's?",
+    "choices": [
+      {
+        "text": "Add those tickets to the training set and measure again on the same 50",
+        "correct": false,
+        "why": "Then the method has learned from its test tickets, and the new score measures memory of those two."
+      },
+      {
+        "text": "Agree a rule for two-desk tickets and relabel before tuning",
+        "correct": true,
+        "why": "Right. A classifier can only learn the boundaries the labels draw; if people would disagree on these tickets, the rule is the thing to fix first."
+      },
+      {
+        "text": "Switch to an embedding model with more dimensions",
+        "correct": false,
+        "why": "The model placed t027 between payments and shipping because it is about both; more dimensions do not settle which desk the team wants."
+      },
+      {
+        "text": "Drop ambiguous tickets from the test set so that the score reflects the model",
+        "correct": false,
+        "why": "Real queues contain ambiguous tickets; a test set without them reports a score the classifier will not get in use."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1vx8edy",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On another set of 50 test tickets, method A scores 47 and method B scores 46. What can you conclude about the two?",
+    "hint": "One ticket is two points out of a hundred.",
+    "choices": [
+      {
+        "text": "A is two points better, so A should go into production",
+        "correct": false,
+        "why": "Two points here is one ticket, well within what a different draw of 50 could change."
+      },
+      {
+        "text": "B is better, because fewer right answers means less overfitting",
+        "correct": false,
+        "why": "A lower test score is not evidence of anything good; overfitting shows as a test score below a training score, which nobody measured here."
+      },
+      {
+        "text": "Nothing reliable about which is better: they differ by a single ticket",
+        "correct": true,
+        "why": "Right. On another 50 tickets drawn the same way the order could flip; settling it needs more test data or cross-validation."
+      },
+      {
+        "text": "A is at least as good as B on every desk",
+        "correct": false,
+        "why": "A total says nothing about the desks; A could be better on three desks and worse on two, as the confusion matrix would show."
+      }
+    ]
+  },
+  {
+    "id": "ex-rztn13pg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put in order what happens when a new ticket is sorted with centroids, starting from the labelled training tickets.",
+    "hint": "The centroids are ready before the new ticket arrives.",
+    "items": [
+      "Embed the labelled training tickets",
+      "Average the vectors of each desk",
+      "Divide each average by its length",
+      "Embed the new ticket",
+      "Score it against the five centroids and keep the highest"
+    ],
+    "trap": "Renormalising comes right after averaging and before any comparison; a centroid compared at its old length wins by length."
+  },
+  {
+    "id": "ex-bpxjn3v7",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of k-nearest neighbours as `knn.py` does it? Choose all that apply.",
+    "hint": "Think about what it stores and what it computes.",
+    "choices": [
+      {
+        "text": "A newly sorted ticket can be used with no training run, by adding its vector",
+        "correct": true,
+        "why": "Yes. Learning is appending: tomorrow's comparison simply includes one more row."
+      },
+      {
+        "text": "Each decision can be traced back to the stored tickets that made it",
+        "correct": true,
+        "why": "Yes. neighbours.py did exactly that for t021 and t054."
+      },
+      {
+        "text": "It keeps every labelled vector and compares each new ticket with all of them",
+        "correct": true,
+        "why": "Yes. That is its cost, and why at scale it becomes the search problem of lessons 11 and 15."
+      },
+      {
+        "text": "It returns a probability for each desk alongside the label",
+        "correct": false,
+        "why": "That is logistic regression's predict_proba; knn.py returns the winning label only."
+      },
+      {
+        "text": "Changing a stored ticket's label means embedding every ticket again",
+        "correct": false,
+        "why": "The vectors do not depend on the labels; changing a label changes one entry of ytr and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5mdw8ka",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each method to what a new ticket is compared with, or scored by.",
+    "hint": "Count the vectors each one keeps.",
+    "pairs": [
+      {
+        "left": "k-nearest neighbours",
+        "right": "Every labelled training ticket"
+      },
+      {
+        "left": "centroids",
+        "right": "One average vector per desk"
+      },
+      {
+        "left": "zero-shot",
+        "right": "One written description per desk"
+      },
+      {
+        "left": "logistic regression",
+        "right": "Learned weights for each coordinate"
+      }
+    ],
+    "right_distractors": [
+      "The 50 test tickets"
+    ]
+  }
+]

@@ -1,0 +1,479 @@
+{
+  "ex-0whk7pmv": {
+    "prompt": "O código da Ana funciona contra o labembed. O que ela muda para rodá-lo contra o serviço de verdade da OpenAI?",
+    "hint": "A aula lista o que muda e diz que nada mais muda.",
+    "choices": [
+      {
+        "text": "Reescrever as chamadas com `requests`, já que o SDK só fala com o laboratório",
+        "why": "O SDK é a biblioteca da própria OpenAI; o laboratório foi feito para que ele não precise de mudança. O endereço padrão dele é o da OpenAI."
+      },
+      {
+        "text": "Tirar OPENAI_BASE_URL, usar a própria chave e pedir text-embedding-3-small",
+        "why": "Certo. A URL base, a chave e o nome do modelo são as únicas diferenças; as chamadas continuam iguais."
+      },
+      {
+        "text": "Instalar outra versão do pacote openai",
+        "why": "A mesma versão fala com os dois. Nada no pacote é específico do laboratório."
+      },
+      {
+        "text": "Acrescentar `encoding_format=\"base64\"` em cada chamada",
+        "why": "O SDK já acrescenta isso sozinho, contra o laboratório e contra a OpenAI."
+      }
+    ]
+  },
+  "ex-fdxaccmn": {
+    "prompt": "Qual descrição do labembed bate com a aula?",
+    "hint": "Separe o que é real do que é imitado.",
+    "choices": [
+      {
+        "text": "Uma gravação de respostas reais da OpenAI, repetida a cada requisição",
+        "why": "Nada foi gravado da OpenAI; nenhum provedor estava ao alcance. Cada vetor é calculado quando a requisição chega."
+      },
+      {
+        "text": "O servidor de código aberto da própria OpenAI, rodando localmente",
+        "why": "A OpenAI não publica um servidor assim. O labembed foi escrito para o curso."
+      },
+      {
+        "text": "Um servidor do curso, no formato da OpenAI, com vetores reais",
+        "why": "Certo. O formato é imitado; os vetores vêm do all-MiniLM-L6-v2 e do WordLlama, com nomes do próprio laboratório."
+      },
+      {
+        "text": "Um proxy que repassa as requisições à OpenAI e guarda os vetores",
+        "why": "Ele não repassa nada a ninguém. A máquina não conseguia falar com a OpenAI."
+      }
+    ]
+  },
+  "ex-bxc59jts": {
+    "prompt": "No laboratório, pedir `text-embedding-3-small` lançou `NotFoundError` com status 404. Por quê?",
+    "hint": "Leia a mensagem que o labembed mandou de volta.",
+    "choices": [
+      {
+        "text": "O modelo foi aposentado pela OpenAI",
+        "why": "O text-embedding-3-small está na planilha de preços e é o nome a usar contra a OpenAI. A recusa é do laboratório."
+      },
+      {
+        "text": "A chave do ambiente não tem acesso a esse modelo",
+        "why": "Um problema de chave é um 401, como mostrou a primeira recusa. Isto foi um 404 sobre o nome do modelo."
+      },
+      {
+        "text": "O laboratório recusa de propósito os nomes de modelos reais da OpenAI",
+        "why": "Certo. Ele serve lab-minilm e lab-wordllama e mais nada, de propósito."
+      },
+      {
+        "text": "O SDK escreve o nome de outro jeito e o servidor não o acha",
+        "why": "O SDK manda o nome exatamente como foi escrito, como o corpo cru da requisição mostrou na seção seguinte."
+      }
+    ]
+  },
+  "ex-vn8ms031": {
+    "prompt": "Com curl, a chave vai no cabeçalho `Authorization: ___ $OPENAI_API_KEY`.",
+    "hint": "A mesma palavra aparece antes de toda chave da OpenAI nesse cabeçalho.",
+    "blanks": [
+      {
+        "accept": [
+          "Bearer"
+        ]
+      }
+    ]
+  },
+  "ex-8mrrvqsy": {
+    "prompt": "Onde, numa resposta de embeddings, está o vetor do segundo texto da lista de entrada?",
+    "hint": "Veja o que response.py imprimiu para cada objeto.",
+    "choices": [
+      {
+        "text": "No objeto de `data` cujo `index` é 1",
+        "why": "Certo. Cada objeto traz a posição do seu texto, contando do 0, e o seu `embedding`."
+      },
+      {
+        "text": "Em `usage`, ao lado da contagem de tokens",
+        "why": "`usage` só tem contagens de tokens. Os vetores ficam em `data`."
+      },
+      {
+        "text": "Numa segunda resposta, já que a API devolve uma resposta por texto",
+        "why": "Uma requisição com três textos devolveu uma resposta com três objetos em `data`."
+      },
+      {
+        "text": "Em `model`, que lista os vetores que o modelo produziu",
+        "why": "`model` é só o nome do modelo, lab-minilm aqui."
+      }
+    ]
+  },
+  "ex-pr1a75ac": {
+    "prompt": "Os objetos de `data` voltaram na ordem das entradas. Por que a aula ainda ordena por `index`?",
+    "hint": "Como seria um erro se a ordem algum dia mudasse?",
+    "choices": [
+      {
+        "text": "Ordenar deixa os vetores normalizados",
+        "why": "Ordenar muda a ordem deles, não os valores. Eles já chegam com comprimento 1."
+      },
+      {
+        "text": "O índice nomeia o texto; a ordem só coincide",
+        "why": "Certo. Arquivado pela posição, um vetor fora do lugar ficaria no artigo errado sem erro nenhum."
+      },
+      {
+        "text": "O SDK os devolve em ordem inversa se não forem ordenados",
+        "why": "response.py os imprimiu na ordem 0, 1, 2 sem ordenar."
+      },
+      {
+        "text": "Ordenar é exigido antes de guardar os vetores",
+        "why": "Nada exige isso. É o jeito de garantir que cada vetor fique com o texto certo."
+      }
+    ]
+  },
+  "ex-8v2tarcy": {
+    "prompt": "O corpo cru da requisição mostrou `\"encoding_format\": \"base64\"`, que o código da Ana nunca escreveu. O que aconteceu?",
+    "hint": "Compare o que passou pela rede com o que o SDK entregou.",
+    "choices": [
+      {
+        "text": "O laboratório reescreveu a requisição porque não sabe mandar floats",
+        "why": "O labembed manda floats quando pedido: a primeira chamada com curl, sem encoding_format, recebeu uma lista de números."
+      },
+      {
+        "text": "O SDK pediu base64 para encolher a resposta e depois decodificou em floats",
+        "why": "Certo. Os bytes decodificados bateram exatamente com a lista do SDK, e a resposta em base64 era bem menor."
+      },
+      {
+        "text": "Base64 é exigido pela API da OpenAI, então todo cliente precisa mandá-lo",
+        "why": "O padrão é float; o curl recebeu números sem pedir. Base64 é uma opção que o SDK escolhe."
+      },
+      {
+        "text": "O SDK comprime o texto de entrada antes de mandá-lo",
+        "why": "A entrada foi como texto comum no corpo JSON. O base64 vale para os vetores que voltam."
+      }
+    ]
+  },
+  "ex-97kgq3np": {
+    "prompt": "O text-embedding-3-small devolve 1.536 números. Mandado como float32 little-endian e codificado em base64 (4 caracteres para cada 3 bytes), quantos caracteres tem um vetor?",
+    "hint": "Primeiro os bytes: 4 por float32.",
+    "unit": "caracteres"
+  },
+  "ex-jap8bn4m": {
+    "prompt": "Ponha em ordem o que acontece com um vetor entre o servidor e a lista de floats da Ana, quando ela chama o SDK.",
+    "hint": "A requisição sai antes de o vetor existir.",
+    "items": [
+      "O SDK manda a requisição com encoding_format igual a base64",
+      "O servidor calcula o vetor",
+      "O servidor escreve os bytes float32 dele como texto base64 no JSON",
+      "O SDK decodifica o base64 de volta em bytes",
+      "O SDK lê os bytes como float32 little-endian e devolve uma lista"
+    ],
+    "trap": "O texto base64 é escrito pelo servidor e decodificado pelo SDK: a decodificação vem depois que o JSON chega, não antes de a requisição sair."
+  },
+  "ex-3426ac9t": {
+    "prompt": "Um lote de 500 textos tem uma string vazia. O que acontece com a requisição?",
+    "hint": "Veja a primeira linha de limits.py.",
+    "choices": [
+      {
+        "text": "A string vazia ganha um vetor de zeros e o resto vira vetor",
+        "why": "Não existe vetor de zeros: o servidor recusou a requisição com um 400."
+      },
+      {
+        "text": "A string vazia é pulada e voltam 499 vetores",
+        "why": "Nada é pulado. O índice de todos os outros vetores ficaria ambíguo, e o servidor recusa em vez disso."
+      },
+      {
+        "text": "A requisição inteira é recusada com 400",
+        "why": "Certo. Um texto em branco perde os outros 499, então filtre os vazios antes de mandar."
+      },
+      {
+        "text": "O SDK tenta de novo até o servidor aceitar",
+        "why": "Um 400 não é repetido: mandar a mesma requisição de novo dá a mesma resposta."
+      }
+    ]
+  },
+  "ex-kf062kma": {
+    "prompt": "O tiktoken contou 2.205 tokens na central de ajuda, mas o registro do labembed somou outro número. Por quê?",
+    "hint": "Quem contou cada número, e com o quê?",
+    "choices": [
+      {
+        "text": "O labembed conta caracteres, não tokens",
+        "why": "Ele conta tokens, mas com outro tokenizador. Caracteres dariam um número muito maior."
+      },
+      {
+        "text": "O tiktoken pula os títulos dos artigos",
+        "why": "batch.py contou título e corpo juntos, o mesmo texto que foi mandado."
+      },
+      {
+        "text": "Cada contagem usa o tokenizador de outro modelo",
+        "why": "Certo. Uma fatura é contada com o tokenizador do provedor, então estime com o contador do provedor e confira com usage."
+      },
+      {
+        "text": "Algumas requisições foram mandadas duas vezes e contadas duas vezes",
+        "why": "O registro mostra exatamente três requisições, com 16, 16 e 8 textos. Nada se repetiu."
+      }
+    ]
+  },
+  "ex-xnwphah4": {
+    "prompt": "Os modelos text-embedding-3 da OpenAI contam tokens com a codificação ___ do tiktoken.",
+    "hint": "O nome começa com cl e termina com base.",
+    "blanks": [
+      {
+        "accept": [
+          "cl100k_base",
+          "cl100k"
+        ]
+      }
+    ]
+  },
+  "ex-28m99ze0": {
+    "prompt": "O que `dimensions=128` pede a um modelo text-embedding-3?",
+    "hint": "Compare com o que dims.py mediu.",
+    "choices": [
+      {
+        "text": "128 números, normalizados para comprimento 1",
+        "why": "Certo. O servidor guarda as 128 primeiras coordenadas e divide pelo comprimento delas, e por isso os vetores da API e os normalizados à mão bateram."
+      },
+      {
+        "text": "Os 128 textos mais parecidos com a entrada",
+        "why": "Isso é uma busca, que o endpoint de embeddings não faz. Ele devolve vetores, não vizinhos."
+      },
+      {
+        "text": "Um vetor calculado por um modelo menor e mais barato",
+        "why": "Mesmo modelo, mesmo preço por token; a requisição nomeia o modelo, e o parâmetro só encurta a saída."
+      },
+      {
+        "text": "Um vetor com 128 bits por número em vez de 32",
+        "why": "Os números continuam float32. O parâmetro muda quantos são."
+      }
+    ]
+  },
+  "ex-q25d46jc": {
+    "prompt": "A Ana guarda ela mesma os 64 primeiros dos 256 números do WordLlama e ordena pelo produto escalar sem normalizar. O que dá errado?",
+    "hint": "O que dims.py imprimiu sobre os comprimentos?",
+    "choices": [
+      {
+        "text": "Nada: o produto escalar ignora o comprimento",
+        "why": "O produto escalar cresce com o comprimento, como mostrou a aula 2. É por isso que os comprimentos importam aqui."
+      },
+      {
+        "text": "Os vetores passam a ter 64 bytes cada, pequenos demais para comparar",
+        "why": "64 números float32 são 256 bytes, e os vetores de 64 números da API se compararam bem."
+      },
+      {
+        "text": "A busca quebra porque os comprimentos diferem",
+        "why": "Nada quebra. A ordenação piora em silêncio, o que é mais difícil de notar."
+      },
+      {
+        "text": "Os vetores cortados têm comprimentos diferentes, e os longos ganham por serem longos",
+        "why": "Certo. Normalizados, os mesmos vetores cortados batem com os da API, pergunta por pergunta."
+      }
+    ]
+  },
+  "ex-42e7fexg": {
+    "prompt": "Uma equipe guarda vetores de 768 números de um modelo aberto e planeja cortá-los para 256 para economizar espaço, como faz `dimensions`. O que ela deve conferir antes?",
+    "hint": "Por que o lab-wordllama podia ser cortado e o lab-minilm não?",
+    "choices": [
+      {
+        "text": "Que os vetores são float32 e não float16",
+        "why": "O tipo do número não decide se um prefixo é útil. O que decide é como o modelo foi treinado."
+      },
+      {
+        "text": "Se o modelo foi feito para ser cortado",
+        "why": "Certo. Sem esse treino, um prefixo guarda uma parte qualquer do que o modelo aprendeu. Meçam também o recall com 256 nas próprias perguntas."
+      },
+      {
+        "text": "Que 256 divide 768 exatamente",
+        "why": "Qualquer tamanho de prefixo pode ser guardado. Divisibilidade não tem nada a ver com o que as coordenadas carregam."
+      },
+      {
+        "text": "Se o banco de dados tem um tipo de coluna para 256 números",
+        "why": "O armazenamento aceita qualquer tamanho. A pergunta é se o vetor menor ainda acha os documentos certos."
+      }
+    ]
+  },
+  "ex-d48majrk": {
+    "prompt": "Quantos bytes ocupa um vetor com `dimensions=128`, guardado em float32?",
+    "hint": "dims.py imprimiu os bytes de cada tamanho.",
+    "unit": "bytes"
+  },
+  "ex-gc83p7xv": {
+    "prompt": "Ligue cada jeito de obter um vetor do WordLlama ao recall@3 dele nas 24 perguntas, como dims.py mediu.",
+    "hint": "Cortar à mão sem normalizar foi o pior.",
+    "pairs": [
+      {
+        "left": "dimensions=256",
+        "right": "24 de 24"
+      },
+      {
+        "left": "dimensions=128",
+        "right": "23 de 24"
+      },
+      {
+        "left": "dimensions=64",
+        "right": "21 de 24"
+      },
+      {
+        "left": "cortado em 64 à mão, sem normalizar",
+        "right": "20 de 24"
+      }
+    ],
+    "right_distractors": [
+      "22 de 24"
+    ]
+  },
+  "ex-gqgxxgf5": {
+    "prompt": "Pelo preço da planilha do LiteLLM, US$ 0,020 por milhão de tokens para o text-embedding-3-small, quanto custa transformar em vetores 2 milhões de pedaços de 300 tokens cada, em dólares americanos?",
+    "hint": "Primeiro o total de tokens, depois divida por um milhão.",
+    "unit": "USD"
+  },
+  "ex-4s3dzc5n": {
+    "prompt": "A planilha lista o text-embedding-3-small a 0,020 e o preço em lote a 0,010 por milhão de tokens. O que o preço menor compra a menos?",
+    "hint": "Como a Batch API devolve os resultados?",
+    "choices": [
+      {
+        "text": "Menos dimensões em cada vetor",
+        "why": "O modelo e os vetores são os mesmos; só muda como e quando eles são entregues."
+      },
+      {
+        "text": "Velocidade: o resultado chega em até um dia",
+        "why": "Certo. Você envia um arquivo de requisições e recolhe os resultados depois."
+      },
+      {
+        "text": "Precisão, porque as requisições em lote usam um modelo mais antigo",
+        "why": "O preço em lote aparece para o mesmo nome de modelo. Nada diz que outro modelo responde."
+      },
+      {
+        "text": "Novas tentativas: requisições em lote que falham não são repetidas",
+        "why": "A aula não diz nada sobre isso, e não é para isso que serve a diferença de preço."
+      }
+    ]
+  },
+  "ex-89gm1vqf": {
+    "prompt": "A Ana orça US$ 10,00 para transformar em vetores um milhão de documentos de 500 tokens com o text-embedding-3-small. Seis meses depois a fatura está maior. Qual explicação bate com a aula?",
+    "hint": "O que mais vira vetor além dos documentos, uma vez?",
+    "choices": [
+      {
+        "text": "Pedaços sobrepostos e cada consulta somaram tokens",
+        "why": "Certo. As duas coisas somam tokens que a conta única nunca incluiu."
+      },
+      {
+        "text": "O SDK manda cada vetor duas vezes, em base64 e em floats",
+        "why": "Ele só pede base64 e decodifica localmente. Só tokens são cobrados, não bytes."
+      },
+      {
+        "text": "Vetores são cobrados por dimensão, e 1.536 é mais que o esperado",
+        "why": "Uma API de embeddings cobra tokens de entrada. O número de dimensões não entra no preço da planilha."
+      },
+      {
+        "text": "Repetições de requisições recusadas foram cobradas como se tivessem dado certo",
+        "why": "Uma requisição recusada não devolve vetor. Os custos extras da aula vêm de mais texto, não de recusas."
+      }
+    ]
+  },
+  "ex-efqt2fg4": {
+    "prompt": "O labembed foi ajustado para recusar as duas próximas requisições com 429. O que o programa da Ana viu ao chamar `embeddings.create` uma vez?",
+    "hint": "Compare a saída do programa com o registro.",
+    "choices": [
+      {
+        "text": "Um RateLimitError na primeira recusa",
+        "why": "O SDK repete o 429 sozinho, até max_retries, antes de lançar qualquer coisa."
+      },
+      {
+        "text": "Dois avisos, depois o vetor",
+        "why": "Nada foi impresso ou lançado sobre as recusas; elas só aparecem no registro do servidor."
+      },
+      {
+        "text": "Uma resposta normal, um pouco atrasada",
+        "why": "Certo. Três requisições chegaram ao servidor; o programa viu uma chamada bem-sucedida que demorou mais."
+      },
+      {
+        "text": "Um vetor vazio, porque a requisição foi recusada",
+        "why": "A resposta tinha os 384 números. A terceira tentativa deu certo."
+      }
+    ]
+  },
+  "ex-tsjbmp18": {
+    "prompt": "Qual destas falhas o SDK openai repete sozinho?",
+    "hint": "Mandar a mesma requisição de novo mudaria a resposta?",
+    "choices": [
+      {
+        "text": "400, porque a entrada tinha uma string vazia",
+        "why": "A própria requisição está errada, então falharia de novo. O registro mostrou uma única requisição para ela."
+      },
+      {
+        "text": "401, porque a chave está errada",
+        "why": "Uma chave errada continua errada. O SDK lança AuthenticationError na hora."
+      },
+      {
+        "text": "404, porque o nome do modelo é desconhecido",
+        "why": "Um modelo desconhecido continua desconhecido. O SDK lança NotFoundError na hora."
+      },
+      {
+        "text": "429, porque a conta passou do limite de uso",
+        "why": "Certo. A requisição está certa e o momento é que está errado, então esperar e repetir pode dar certo."
+      }
+    ]
+  },
+  "ex-3w8fy2t2": {
+    "prompt": "Com três falhas na fila do labembed, ponha em ordem o que aconteceu durante uma chamada.",
+    "hint": "max_retries é 2.",
+    "items": [
+      "A primeira tentativa é recusada com 429",
+      "O SDK espera cerca de um segundo",
+      "A primeira repetição é recusada com 429",
+      "A segunda repetição é recusada com 429",
+      "O SDK lança RateLimitError"
+    ],
+    "trap": "Não há terceira repetição: max_retries 2 quer dizer duas repetições depois da primeira tentativa, três requisições ao todo."
+  },
+  "ex-ntaydg5v": {
+    "prompt": "A Ana escreve um processo noturno que transforma cada artigo de ajuda em vetor pelo SDK. Quais destas coisas fazem parte dele? Marque todas as que se aplicam.",
+    "hint": "Pense em quais falhas cada uma evita, e quais causa.",
+    "choices": [
+      {
+        "text": "Tirar os textos vazios antes de montar cada lote",
+        "why": "Sim. Uma string vazia faz o servidor recusar a requisição inteira."
+      },
+      {
+        "text": "Pôr os vetores de cada fatia na ordem do index",
+        "why": "Sim. O índice é o que liga um vetor ao seu texto."
+      },
+      {
+        "text": "Embrulhar cada chamada num laço próprio de três tentativas",
+        "why": "Não. O SDK já repete os 429; o laço dela multiplicaria as tentativas num provedor que já está recusando."
+      },
+      {
+        "text": "Pedir dimensions=128 ao lab-minilm para economizar espaço",
+        "why": "Não. O lab-minilm tem um tamanho fixo e recusa o parâmetro com um 400."
+      }
+    ]
+  },
+  "ex-5y434pzj": {
+    "prompt": "Ligue cada exceção que o SDK lançou nesta aula ao status HTTP por trás dela.",
+    "hint": "Um dos status nunca apareceu.",
+    "pairs": [
+      {
+        "left": "AuthenticationError",
+        "right": "401"
+      },
+      {
+        "left": "NotFoundError",
+        "right": "404"
+      },
+      {
+        "left": "BadRequestError",
+        "right": "400"
+      },
+      {
+        "left": "RateLimitError",
+        "right": "429"
+      }
+    ],
+    "right_distractors": [
+      "500"
+    ]
+  },
+  "ex-xtw246s5": {
+    "prompt": "Com os padrões do cliente, uma chamada chega ao servidor no máximo ___ vezes antes de o SDK desistir de um 429.",
+    "hint": "A primeira tentativa, mais max_retries.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "três",
+          "tres"
+        ]
+      }
+    ]
+  }
+}

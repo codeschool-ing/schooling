@@ -1,0 +1,686 @@
+[
+  {
+    "id": "ex-ss730d4t",
+    "version": 1,
+    "section": "dimensions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`rotate.py` turned all 40 article vectors by the same random rotation. Every coordinate changed, and no score between two articles moved by more than `7.0e-07`. What does that show?",
+    "hint": "Ask what a search actually reads: the coordinates, or the scores between vectors.",
+    "choices": [
+      {
+        "text": "The rotation damaged the model, since the coordinates that held the meaning are now different",
+        "correct": false,
+        "why": "That assumes the meaning lives in individual coordinates. Every score came through unchanged, so nothing a search uses was damaged."
+      },
+      {
+        "text": "The meaning is in how the vectors sit relative to each other, which a rotation keeps",
+        "correct": true,
+        "why": "Right. A rotation preserves every angle and every length, so every dot product. The orientation of the axes carries nothing, so no single coordinate can."
+      },
+      {
+        "text": "The scores survived only because the vectors have length 1",
+        "correct": false,
+        "why": "A rotation keeps the dot product of any two vectors, whatever their lengths. Length 1 is not what protected the scores."
+      },
+      {
+        "text": "The random rotation was too small to change anything",
+        "correct": false,
+        "why": "It changed every coordinate: the first four numbers of the first article are completely different afterwards. It was a full turn of the space."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rkzbs5y",
+    "version": 1,
+    "section": "dimensions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants a cheap refund detector: find which of the 384 coordinates is largest in the refund articles, and flag any message whose vector is high on that coordinate. Why is that a weak plan?",
+    "hint": "Think about the rotated copy of the model.",
+    "choices": [
+      {
+        "text": "A message must first be translated into English",
+        "correct": false,
+        "why": "Language is a separate limit of this model. The plan would be weak even for English messages."
+      },
+      {
+        "text": "Coordinates are integers and cannot be compared like that",
+        "correct": false,
+        "why": "They are float32 numbers and can be compared. The problem is what a single one of them means."
+      },
+      {
+        "text": "The axes are arbitrary, and a rotated model would spread that meaning everywhere",
+        "correct": true,
+        "why": "Right. Whatever a coordinate seems to track is a coincidence of orientation. Compare whole vectors, or train a classifier on them as lesson 4 does."
+      },
+      {
+        "text": "It works, but only with 1536 dimensions, where each coordinate has room for one topic",
+        "correct": false,
+        "why": "More dimensions do not make the axes meaningful. A rotation turns a 1536-dimension space as easily as a 384-dimension one."
+      }
+    ]
+  },
+  {
+    "id": "ex-96gtwb2s",
+    "version": 1,
+    "section": "dimensions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A model returns vectors of 3072 dimensions, stored as float32. How many bytes does one vector take?",
+    "hint": "A float32 is four bytes, as for the 384 of all-MiniLM-L6-v2.",
+    "value": 12288,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-fvfrvkth",
+    "version": 1,
+    "section": "dot-product-by-hand",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the dot product of `(3, 0, -1)` and `(1, 2, 4)`?",
+    "hint": "Multiply coordinate by coordinate, then add. One product is negative.",
+    "value": -1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-7yang2rv",
+    "version": 1,
+    "section": "dot-product-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bug multiplies one article's vector by 3 before it is stored. Search scores articles with the plain dot product. What happens to that article?",
+    "hint": "`dot.py` doubled a vector. What happened to its score?",
+    "choices": [
+      {
+        "text": "Nothing, because its direction is unchanged",
+        "correct": false,
+        "why": "That is true of the cosine, which divides the length out. The plain dot product does not."
+      },
+      {
+        "text": "It drops, because a longer vector is further from every query",
+        "correct": false,
+        "why": "Its dot products grow, not shrink. Being longer counts in its favour with this score."
+      },
+      {
+        "text": "Its every score triples, so it climbs above articles that fit the query better",
+        "correct": true,
+        "why": "Right. The dot product grows with length, and the article now wins comparisons on size. Normalising when storing removes the effect."
+      },
+      {
+        "text": "Its scores triple, but every other article's do too, so the ranking stays the same",
+        "correct": false,
+        "why": "Only this article's vector was multiplied. The others keep their scores, so the ranking changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-cg462na8",
+    "version": 1,
+    "section": "cosine",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two arrows that point in exactly opposite directions have a cosine similarity of ___.",
+    "hint": "The bottom of the cosine's range.",
+    "blanks": [
+      {
+        "accept": [
+          "-1",
+          "−1",
+          "-1.0",
+          "minus one",
+          "minus 1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5pdfy15m",
+    "version": 1,
+    "section": "cosine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cosine.py` printed 0.8889 for `a` against `b`, and 0.8889 again for `2a` against `b`. Why did doubling change nothing?",
+    "hint": "Look at what the formula divides by.",
+    "choices": [
+      {
+        "text": "Rounding to four places hid the change",
+        "correct": false,
+        "why": "The two values are exactly equal, not nearly equal: the doubling cancels in the formula, before any rounding."
+      },
+      {
+        "text": "Dividing by the length of `2a` cancels the doubling",
+        "correct": true,
+        "why": "Right. The dot product doubles to 16 and the length doubles to 6, so the ratio stays 8/9. Only the direction is left in the score."
+      },
+      {
+        "text": "NumPy normalises every array before it multiplies",
+        "correct": false,
+        "why": "`dot.py` showed `(2 * a) @ b` as 16, so NumPy does not normalise anything by itself."
+      },
+      {
+        "text": "The cosine only reads the first two coordinates of each vector",
+        "correct": false,
+        "why": "It uses all of them: the dot product and both lengths run over every coordinate."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0re1csw",
+    "version": 1,
+    "section": "cosine",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Lesson 1's two-axis picture of nineteen titles kept only 0.317 of the variance, yet the figure in this section draws the angle between two 384-number vectors exactly. How can both be true?",
+    "hint": "How many points does each picture have to hold?",
+    "choices": [
+      {
+        "text": "Two arrows always share one plane; nineteen points do not",
+        "correct": true,
+        "why": "Right. Two vectors span a flat plane whatever the dimension, so their angle can be drawn as it is. Nineteen points spread over far more directions than two axes can hold."
+      },
+      {
+        "text": "The figure uses the vectors `a` and `b`, which have only three numbers",
+        "correct": false,
+        "why": "The section says the same is true for two 384-number vectors. Three numbers is just the example; the argument does not depend on it."
+      },
+      {
+        "text": "This figure is also a projection, and its angle is only approximately right",
+        "correct": false,
+        "why": "No projection is involved: the plane through two arrows contains both of them completely."
+      },
+      {
+        "text": "Principal component analysis loses information and the cosine does not",
+        "correct": false,
+        "why": "That is true but answers nothing: the question is why two vectors can be drawn without loss and nineteen cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-fs81f4th",
+    "version": 1,
+    "section": "cosine",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the cosine similarity of `a = (2, 1, 2)` and `e = (0, 3, 4)`? Give three decimal places.",
+    "hint": "`|a|` is 3, as in `cosine.py`. Work out `|e|` and the dot product.",
+    "value": 0.733,
+    "tolerance": 0.002
+  },
+  {
+    "id": "ex-ynybydkx",
+    "version": 1,
+    "section": "euclidean",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For all 24 questions, `euclid.py` found that ranking the 40 articles by smallest L2 distance gave exactly the order of largest cosine. Why?",
+    "hint": "The squared distance has the cosine inside it.",
+    "choices": [
+      {
+        "text": "L2 distance and cosine similarity are the same number written two ways",
+        "correct": false,
+        "why": "They are different numbers: for the gift article the cosine is 0.446 and the distance 1.053. One is a function of the other, which is enough for the order."
+      },
+      {
+        "text": "all-MiniLM-L6-v2 was trained with L2 distance",
+        "correct": false,
+        "why": "The agreement does not depend on training; it is arithmetic that holds for any vectors of length 1."
+      },
+      {
+        "text": "For unit vectors, squared distance is 2 − 2 cos θ",
+        "correct": true,
+        "why": "Right. A larger cosine always means a smaller distance, so sorting one way by one is sorting the other way by the other."
+      },
+      {
+        "text": "The help centre is too small for the two orders to diverge",
+        "correct": false,
+        "why": "Size has nothing to do with it. The identity holds for every pair of unit vectors, in a collection of any size."
+      }
+    ]
+  },
+  {
+    "id": "ex-as9n6ny2",
+    "version": 1,
+    "section": "euclidean",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order these articles by their L2 distance to *how do I get my money back*, as `euclid.py` printed them, from the smallest distance to the largest.",
+    "hint": "Smallest distance is the best match.",
+    "items": [
+      "Returning a gift",
+      "When your refund arrives",
+      "Charged twice for one order",
+      "How to return a book"
+    ],
+    "trap": "The order is not reversed from the cosine's: the highest cosine has the smallest distance, so the gift article, top by cosine, has the smallest distance too."
+  },
+  {
+    "id": "ex-dxrba70r",
+    "version": 1,
+    "section": "euclidean",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A search function returns L2 distances. The code sorts them from largest to smallest and shows the top three. What does the customer see?",
+    "hint": "Which way does a distance point?",
+    "choices": [
+      {
+        "text": "The three articles least like the question",
+        "correct": true,
+        "why": "Right. A larger distance is further away, so sorting from the top puts the worst matches first. It looks reasonable on screen, which is why it survives."
+      },
+      {
+        "text": "The three best articles, since a larger number is better",
+        "correct": false,
+        "why": "That is true for a similarity. For a distance, lower is closer."
+      },
+      {
+        "text": "The three best articles, but in reverse order",
+        "correct": false,
+        "why": "Reversing the whole order puts the worst at the top, not the best three at the bottom of the top three."
+      },
+      {
+        "text": "An error, because distances are sorted in ascending order",
+        "correct": false,
+        "why": "Nothing stops code from sorting numbers either way. That is what makes the mistake quiet."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9vsmnab",
+    "version": 1,
+    "section": "normalised-vectors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With WordLlama and no normalisation, the single word *refund* has a vector of length 9.104, while the 40 articles range from 1.212 to 2.280. Why?",
+    "hint": "A text's vector is an average of its tokens' vectors.",
+    "choices": [
+      {
+        "text": "Refund is the most important word in the help centre, so the model makes it longer",
+        "correct": false,
+        "why": "WordLlama does not know which words matter to Marginalia. The length comes from averaging, not from importance."
+      },
+      {
+        "text": "Averaging many token vectors that point different ways gives a shorter arrow; one token is not averaged",
+        "correct": true,
+        "why": "Right. Arrows that disagree partly cancel in an average. The length measures that disagreement, which has nothing to do with relevance."
+      },
+      {
+        "text": "WordLlama normalises long texts but leaves single words alone",
+        "correct": false,
+        "why": "With `norm` left off it normalises nothing. The articles are short because of the average, not because of a rule."
+      },
+      {
+        "text": "Short texts carry more meaning per word, and the length records it",
+        "correct": false,
+        "why": "Length here is arithmetic, not meaning. A longer vector won a comparison it should have lost in the next part of the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnf1wbt9",
+    "version": 1,
+    "section": "normalised-vectors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Asked *discount for a classroom set*, the raw WordLlama dot product ranks Audiobooks above the schools article. Which change fixes it for every question?",
+    "hint": "What made Audiobooks win?",
+    "choices": [
+      {
+        "text": "Normalise every stored vector and each query, then keep using the dot product",
+        "correct": true,
+        "why": "Right. With every length at 1 the dot product is the cosine, and the cosine put the schools article first, 0.247 against 0.212."
+      },
+      {
+        "text": "Switch to L2 distance on the same raw vectors",
+        "correct": false,
+        "why": "L2 on unnormalised vectors is pulled by length too, in a different way. The identity with cosine holds only for unit vectors."
+      },
+      {
+        "text": "Remove Audiobooks from the help centre",
+        "correct": false,
+        "why": "That fixes one question. The article ranked first changed on five of the 24, so the cause is in every comparison."
+      },
+      {
+        "text": "Multiply the query vector by a larger number",
+        "correct": false,
+        "why": "Scaling the query scales every article's score by the same factor and changes no ranking."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnvb241k",
+    "version": 1,
+    "section": "normalised-vectors",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Dividing a vector by its own length, so that its length becomes 1, is called ___ the vector.",
+    "hint": "WordLlama does it when you pass `norm=True`.",
+    "blanks": [
+      {
+        "accept": [
+          "normalising",
+          "normalizing",
+          "normalisation",
+          "normalization",
+          "normalise",
+          "normalize"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kmqjg498",
+    "version": 1,
+    "section": "which-metric",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pgvector's `<#>` returned −8 for two vectors whose inner product is 8. Why the minus sign?",
+    "hint": "Which way does pgvector sort?",
+    "choices": [
+      {
+        "text": "Something went wrong in the extension, and it should have printed 8",
+        "correct": false,
+        "why": "It is documented behaviour, and it is deliberate: the operator is a distance, not a similarity."
+      },
+      {
+        "text": "The vectors were not normalised",
+        "correct": false,
+        "why": "Normalising changes the size of the inner product, not its sign. `<#>` negates it for any vectors."
+      },
+      {
+        "text": "It negates the inner product so that sorting from smallest up puts the best match first",
+        "correct": true,
+        "why": "Right. pgvector, like most vector databases, sorts distances in ascending order. Flipping the sign makes the most similar vector the smallest number."
+      },
+      {
+        "text": "A negative result means the two vectors point in opposite directions",
+        "correct": false,
+        "why": "The two vectors are 27.3 degrees apart and their cosine is 0.8889. The sign comes from the operator, not from the geometry."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggtyct2t",
+    "version": 1,
+    "section": "which-metric",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each pgvector operator to what it returned for `[2,1,2]` and `[1,2,2]`.",
+    "hint": "Two of the three are distances in the usual sense; the third is a similarity turned into one.",
+    "pairs": [
+      {
+        "left": "`<->`",
+        "right": "The L2 distance, 1.414"
+      },
+      {
+        "left": "`<=>`",
+        "right": "One minus the cosine similarity"
+      },
+      {
+        "left": "`<#>`",
+        "right": "The inner product with its sign flipped"
+      }
+    ],
+    "right_distractors": [
+      "The cosine similarity itself, 0.8889"
+    ]
+  },
+  {
+    "id": "ex-nfsqtejh",
+    "version": 1,
+    "section": "which-metric",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves its search from a library that returns cosine similarity to one that returns cosine distance, and keeps the rule *show only results above 0.3*. What do customers get?",
+    "hint": "Write the new number in terms of the old one.",
+    "choices": [
+      {
+        "text": "Exactly the same results, because cosine distance and cosine similarity are the same measure",
+        "correct": false,
+        "why": "They rank the same way in opposite directions. The threshold now sits on a different scale."
+      },
+      {
+        "text": "Slightly more results, since distances run from 0 to 2",
+        "correct": false,
+        "why": "The range is right but the effect is not just a few more: the rule now selects from the wrong end."
+      },
+      {
+        "text": "An error, because a distance cannot be compared with 0.3",
+        "correct": false,
+        "why": "A distance is a number like any other, and the comparison runs silently. That is the danger."
+      },
+      {
+        "text": "Only results with a cosine below 0.7: mostly the poor matches, with the best ones dropped",
+        "correct": true,
+        "why": "Right. Distance above 0.3 means similarity below 0.7, so the rule keeps what is far and drops what is near. Know which kind of number you hold before setting a threshold."
+      }
+    ]
+  },
+  {
+    "id": "ex-nnjvtvfj",
+    "version": 1,
+    "section": "crowded-space",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia shows a related article whenever its MiniLM score is above 0.4, which 6.0% of ticket pairs pass. It switches to WordLlama and keeps 0.4. What happens?",
+    "hint": "Where does WordLlama's band sit?",
+    "choices": [
+      {
+        "text": "Fewer pass: 1.8% of WordLlama's pairs are above 0.4",
+        "correct": true,
+        "why": "Right. WordLlama's band is lower, so the same number is a stricter cut. A threshold belongs to one model."
+      },
+      {
+        "text": "Nothing changes, since a cosine means the same in every model",
+        "correct": false,
+        "why": "The range is the same, −1 to 1, but where real scores fall is not: WordLlama's median is 0.076 against MiniLM's 0.158."
+      },
+      {
+        "text": "More pairs pass, since WordLlama vectors are shorter",
+        "correct": false,
+        "why": "Both sets were normalised before scoring, so length plays no part. The band is lower, not higher."
+      },
+      {
+        "text": "Every pair passes, since WordLlama's scores are probabilities",
+        "correct": false,
+        "why": "No embedding score is a probability, and most WordLlama pairs score near 0.076."
+      }
+    ]
+  },
+  {
+    "id": "ex-agcq90p7",
+    "version": 1,
+    "section": "crowded-space",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ninety per cent of the pairs of random arrows in 384 dimensions scored between −0.083 and 0.085. What does that show?",
+    "hint": "Random arrows know nothing about bookshops.",
+    "choices": [
+      {
+        "text": "That the random generator was badly seeded and drew vectors too close together",
+        "correct": false,
+        "why": "Any seed gives the same picture. Nearly perpendicular is what random directions in many dimensions look like."
+      },
+      {
+        "text": "That random vectors are similar to the tickets",
+        "correct": false,
+        "why": "The tickets sit higher: their median with MiniLM is 0.158, where the random pairs' is 0.000."
+      },
+      {
+        "text": "In 384 dimensions, unrelated directions are nearly perpendicular",
+        "correct": true,
+        "why": "Right. The tickets do not look like that, because they share a subject and lean into one region. That is why their band sits above zero."
+      },
+      {
+        "text": "That a cosine of 0.085 is the point above which two texts are related",
+        "correct": false,
+        "why": "It is the edge of what chance produces between random arrows, and says nothing about texts."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cr1rc2h",
+    "version": 1,
+    "section": "crowded-space",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A product manager wants to show customers *87% match* next to each article, using the MiniLM cosine times 100. What is wrong with that?",
+    "hint": "What would 0.4 mean for this model?",
+    "choices": [
+      {
+        "text": "Nothing, if the score is rounded to whole numbers",
+        "correct": false,
+        "why": "Rounding does not change what the number is. The issue is reading a cosine as a percentage at all."
+      },
+      {
+        "text": "The cosine has to be squared first to become a percentage",
+        "correct": false,
+        "why": "No arithmetic turns this score into a probability. Its meaning depends on where one model's band sits."
+      },
+      {
+        "text": "Cosines can be negative, and percentages cannot",
+        "correct": false,
+        "why": "That is a detail. Even the positive scores are not percentages: 0.4 is in the top 6.0% of pairs, not a 40% match."
+      },
+      {
+        "text": "A cosine is a position in one model's band, not a probability; 0.4 is already high here",
+        "correct": true,
+        "why": "Right. Customers would read 40% as a weak match when it is among the strongest pairs. Show the ranking, or a label chosen from your own data."
+      }
+    ]
+  },
+  {
+    "id": "ex-camyw2bz",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For vectors from all-MiniLM-L6-v2, which of these give the same ranking as sorting by cosine similarity from highest to lowest? Choose all that apply.",
+    "hint": "Its vectors all have length 1.",
+    "choices": [
+      {
+        "text": "The dot product, sorted from highest to lowest",
+        "correct": true,
+        "why": "Yes. With lengths of 1, the dot product is the cosine."
+      },
+      {
+        "text": "L2 distance, sorted from lowest to highest",
+        "correct": true,
+        "why": "Yes. For unit vectors the squared distance is 2 − 2 cos θ, and `euclid.py` found the same order for 24 of 24 questions."
+      },
+      {
+        "text": "pgvector's `<#>`, sorted from lowest to highest",
+        "correct": true,
+        "why": "Yes. It is the dot product with the sign flipped, so ascending order is the dot product's descending order."
+      },
+      {
+        "text": "L1 distance, sorted from lowest to highest",
+        "correct": false,
+        "why": "No. It matched the cosine's full order for none of the 24 questions, though it agreed on the first article for 23."
+      },
+      {
+        "text": "Cosine distance, sorted from highest to lowest",
+        "correct": false,
+        "why": "No. Cosine distance is 1 minus the similarity, so highest first gives the worst matches first."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8tj25j9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia adopts a model that does not normalise its vectors. Put the steps of storing the help centre and answering one question in order.",
+    "hint": "One step happens before anything is stored, and its twin happens before any comparison.",
+    "items": [
+      "Embed every article",
+      "Divide each article vector by its length",
+      "Store the vectors",
+      "Embed the customer's question",
+      "Divide the question vector by its length",
+      "Take dot products and sort from highest to lowest"
+    ],
+    "trap": "Normalising the articles happens once, before they are stored, not again on every search; only the question is normalised at query time."
+  },
+  {
+    "id": "ex-0ngk418a",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Multiplying two vectors coordinate by coordinate and adding up the products gives their ___.",
+    "hint": "`dot.py` wrote it with `@`.",
+    "blanks": [
+      {
+        "accept": [
+          "dot product",
+          "scalar product",
+          "inner product"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-narhdv4w",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each term to what it means in this lesson.",
+    "hint": "Four terms, four meanings, one spare.",
+    "pairs": [
+      {
+        "left": "Dimension",
+        "right": "How many coordinates every vector of a model has"
+      },
+      {
+        "left": "Cosine similarity",
+        "right": "The dot product with both lengths divided out"
+      },
+      {
+        "left": "L2 distance",
+        "right": "The length of the difference between two vectors"
+      },
+      {
+        "left": "Normalised vector",
+        "right": "A vector divided by its own length"
+      }
+    ],
+    "right_distractors": [
+      "The probability that two texts mean the same"
+    ]
+  }
+]
