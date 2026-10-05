@@ -1,0 +1,371 @@
+{
+  "ex-6x71t123": {
+    "prompt": "Qual das quatro perguntas desta seção a Tarefa consegue responder só com a camada de métricas?",
+    "hint": "A linha de métricas não tem texto nenhum.",
+    "choices": [
+      {
+        "text": "Se as respostas pioraram depois que o prompt de sistema mudou em agosto",
+        "why": "Isso exige exemplos de prompts e respostas; contagens não mostram uma resposta pior."
+      },
+      {
+        "text": "Quanto o assistente custa e se está ficando mais lento",
+        "why": "Certo: chamadas, tokens e milissegundos são tudo o que a camada de métricas guarda, e tudo o que essa pergunta exige."
+      },
+      {
+        "text": "Por que o assistente disse algo errado a um cliente específico",
+        "why": "Isso exige o prompt e a resposta exatos, que só a camada bruta tem."
+      },
+      {
+        "text": "Se uma conta está abusando do assistente",
+        "why": "As métricas são por dia e por superfície, sem conta nenhuma."
+      }
+    ]
+  },
+  "ex-0b34grm4": {
+    "prompt": "Por que a aula dá ao texto bruto o menor prazo das três camadas?",
+    "hint": "Quais perguntas precisam de texto ligado a uma pessoa, e quando elas aparecem?",
+    "choices": [
+      {
+        "text": "Texto bruto ocupa mais disco, então custa mais guardar",
+        "why": "Disco é barato; o custo do texto bruto é o que ele contém, não o tamanho."
+      },
+      {
+        "text": "A LGPD fixa trinta dias como limite para transcrições de chat",
+        "why": "A LGPD não fixa número. A finalidade fixa, e trinta dias é escolha da Tarefa."
+      },
+      {
+        "text": "Quem precisa de texto ligado a uma pessoa pergunta sobre fatos recentes",
+        "why": "Certo: depurar uma resposta e investigar abuso olham os últimos dias ou semanas."
+      },
+      {
+        "text": "Respostas não podem ser comparadas entre versões do modelo depois de um mês",
+        "why": "Comparar versões é a pergunta de qualidade, e ela usa a camada com redação por meses."
+      }
+    ]
+  },
+  "ex-9h956n8s": {
+    "prompt": "Quais destes um registro de chamada deve trazer para que uma resposta ruim possa ser explicada depois? Marque todas as que se aplicam.",
+    "hint": "O que muda entre duas chamadas, e o que é igual em todas?",
+    "choices": [
+      {
+        "text": "O id da requisição",
+        "why": "Sim: é por ele que uma reclamação chega a um registro."
+      },
+      {
+        "text": "O nome do modelo",
+        "why": "Sim: o mesmo prompt pode ter outra resposta em outro modelo."
+      },
+      {
+        "text": "Um identificador da versão do prompt de sistema",
+        "why": "Sim: as instruções mudam mais que o modelo, e a resposta depende delas."
+      },
+      {
+        "text": "O texto inteiro do prompt de sistema, em toda chamada",
+        "why": "Milhares de tokens idênticos em cada registro; um id de versão aponta para o mesmo texto guardado uma vez."
+      },
+      {
+        "text": "O CPF do cliente, para achar a conta",
+        "why": "O id da conta já acha a conta, sem pôr um número de documento no log."
+      }
+    ]
+  },
+  "ex-6adwq7r6": {
+    "prompt": "Um cliente digita o código de segurança do cartão no chat de suporte. Por quanto tempo a camada bruta pode guardá-lo?",
+    "hint": "Não é uma questão de quantos dias.",
+    "choices": [
+      {
+        "text": "Trinta dias, como todo o resto do texto que a camada bruta guarda",
+        "why": "O limite da camada bruta é para texto que ela pode guardar; este não é."
+      },
+      {
+        "text": "Nenhum: as bandeiras proíbem mantê-lo depois da autorização",
+        "why": "Certo: o PCI DSS proíbe guardá-lo depois da autorização, criptografado ou não."
+      },
+      {
+        "text": "Até o pagamento para o qual foi digitado ser compensado no banco",
+        "why": "A compensação é quando as regras dizem que ele já devia ter sumido."
+      },
+      {
+        "text": "Enquanto o arquivo em que ele está estiver criptografado em repouso",
+        "why": "Criptografia não muda nada: a regra cobre cópias criptografadas também."
+      }
+    ]
+  },
+  "ex-2cp950zg": {
+    "prompt": "Algo idêntico em toda chamada, como as definições de ferramentas ou a temperatura, entra no log como uma ___ à configuração, e a configuração é guardada uma vez.",
+    "hint": "Poucos bytes que apontam para a coisa de verdade.",
+    "blanks": [
+      {
+        "accept": [
+          "referência",
+          "referencia",
+          "id de versão",
+          "id"
+        ]
+      }
+    ]
+  },
+  "ex-67dv523x": {
+    "prompt": "Por que o `guard scan` deixa `123.456.789-00` sem redação no `rq-0004`?",
+    "hint": "Veja o que o detector de CPF confere depois do formato.",
+    "choices": [
+      {
+        "text": "Ele está na resposta, e o scanner só lê prompts",
+        "why": "O scanner lê os dois; esse número casou no prompt e na resposta."
+      },
+      {
+        "text": "Números de pedido estão numa lista de formatos que o scanner sabe ignorar",
+        "why": "Não existe essa lista. A conta decide."
+      },
+      {
+        "text": "Os dígitos verificadores estão errados, então não é um CPF válido",
+        "why": "Certo: o formato casa e a conta não, então ele sai como LEAVE."
+      },
+      {
+        "text": "Números com pontos só são redigidos com --strict",
+        "why": "Os pontos não fazem diferença; o --strict tira o teste dos dígitos, não uma regra sobre pontos."
+      }
+    ]
+  },
+  "ex-sj8zwn2z": {
+    "prompt": "Por que fazer a redação no momento em que cada registro é gravado, e não num job noturno sobre o log?",
+    "hint": "Pense no que acontece com um log entre ser gravado e a noite chegar.",
+    "choices": [
+      {
+        "text": "Um job noturno não consegue ler arquivos que ainda estão recebendo linhas",
+        "why": "Consegue; o problema é o que já foi copiado até lá."
+      },
+      {
+        "text": "Backups e logs enviados nesse meio-tempo nunca são alcançados pelo job",
+        "why": "Certo: cada um é uma cópia do texto sem redação que o job posterior não toca."
+      },
+      {
+        "text": "Dígitos verificadores só podem ser conferidos enquanto a requisição está aberta",
+        "why": "A conferência é aritmética sobre o texto e funciona a qualquer hora."
+      },
+      {
+        "text": "A camada com redação só pode ser gravada depois que a bruta é apagada",
+        "why": "As duas são gravadas lado a lado; a bruta é apagada pela varredura, depois."
+      }
+    ]
+  },
+  "ex-1z5nr19a": {
+    "prompt": "Quais destes os detectores do laboratório deixariam na camada com redação? Marque todas as que se aplicam.",
+    "hint": "Um padrão acha o que tem padrão.",
+    "choices": [
+      {
+        "text": "O nome e o endereço de um cliente num pedido de bio",
+        "why": "Sim: nenhum padrão reconhece um nome, e o rq-0012 manteve os dois."
+      },
+      {
+        "text": "Um e-mail que o modelo repete na resposta",
+        "why": "O scanner lê respostas além de prompts, então ele é redigido."
+      },
+      {
+        "text": "Um telefone escrito como 21 99876 5432",
+        "why": "Sim: o padrão espera hífen ou nada ali, e o rq-0022 o manteve."
+      },
+      {
+        "text": "O código de segurança digitado depois do número do cartão",
+        "why": "Sim: o número virou [CARD] e o CVV 123 ficou no rq-0005."
+      },
+      {
+        "text": "Uma chave de acesso da AWS colada no chat",
+        "why": "Tem formato fixo, e o rq-0018 saiu como [SECRET]."
+      }
+    ]
+  },
+  "ex-2pnhkx20": {
+    "prompt": "O `guard scan` acha algo em 11 dos 22 registros, e o `guard scan --strict` em 13. Quantos registros a retirada dos dígitos verificadores acrescenta?",
+    "hint": "Subtraia.",
+    "unit": "registros"
+  },
+  "ex-a5nabwzn": {
+    "prompt": "A Tarefa envia a camada com redação a um fornecedor externo de análise e a guarda por 180 dias. Um colega propõe --strict só para essa camada. O que se ganha e o que se perde?",
+    "hint": "O --strict tira a conta.",
+    "choices": [
+      {
+        "text": "CPFs digitados errado param de chegar ao fornecedor, e os números de pedido também",
+        "why": "Certo: todo formato de CPF some, o válido e o errado, e os números de pedido vão junto."
+      },
+      {
+        "text": "Nada se perde, já que o modo estrito só acrescenta casamentos que passam nos dígitos verificadores",
+        "why": "É o contrário: o estrito acrescenta os que falham neles."
+      },
+      {
+        "text": "Nomes e endereços também saem, ao custo de mais processamento",
+        "why": "O estrito muda só os detectores de números. Nomes continuam achados por nada."
+      },
+      {
+        "text": "A camada bruta passa a poder ser guardada por 180 dias também",
+        "why": "A camada bruta não tem redação nenhuma, com ou sem estrito."
+      }
+    ]
+  },
+  "ex-eh5qb80e": {
+    "prompt": "O `guard sweep --check` sai com 1 na máquina da Tarefa. O que isso diz à equipe?",
+    "hint": "O --check não apaga nada; compara idades com limites.",
+    "choices": [
+      {
+        "text": "A varredura apagou um arquivo que uma retenção devia ter protegido",
+        "why": "O --check relata o que ainda está lá, não o que foi apagado."
+      },
+      {
+        "text": "Uma retenção passou da data final e precisa ser estendida",
+        "why": "Uma retenção vencida torna o arquivo um atrasado comum; o código de saída não diz nada sobre retenções."
+      },
+      {
+        "text": "Há arquivos além do limite, então a varredura está falhando ou nunca rodou",
+        "why": "Certo: vistas de fora as duas coisas são iguais, e este é o alarme para ambas."
+      },
+      {
+        "text": "O arquivo de política e o de retenções se contradizem",
+        "why": "Não podem; uma retenção é uma exceção que a política lê."
+      }
+    ]
+  },
+  "ex-g371n7dt": {
+    "prompt": "Ponha em ordem os passos para colocar um armazenamento de logs existente sob uma política de retenção.",
+    "hint": "Nada é apagado antes de alguém ler o que seria.",
+    "items": [
+      "Escrever um limite para cada camada, com a finalidade que o define",
+      "Registrar as retenções que investigações abertas exigem",
+      "Rodar a varredura com --dry-run e ler o que ela apagaria",
+      "Agendar a varredura, com o --check ao lado como alarme"
+    ]
+  },
+  "ex-at9q0mpy": {
+    "prompt": "Associe cada campo de uma entrada do `holds.json` ao que ele serve.",
+    "hint": "Uma das respostas da direita não pertence a campo nenhum.",
+    "pairs": [
+      {
+        "left": "`file`",
+        "right": "Quais dados a varredura deve deixar em paz"
+      },
+      {
+        "left": "`case`",
+        "right": "A investigação de que os dados são prova"
+      },
+      {
+        "left": "`until`",
+        "right": "Quando o relógio volta a correr"
+      },
+      {
+        "left": "`reason`",
+        "right": "Por que é guardado, para quem ler depois"
+      }
+    ],
+    "right_distractors": [
+      "Quem pode abrir o arquivo"
+    ]
+  },
+  "ex-t8awfq10": {
+    "prompt": "Antes da varredura, o `raw/2026-03-10.jsonl` tem 204 dias e o limite da camada bruta é 30. Com quantos dias de atraso ele está?",
+    "hint": "Idade menos limite.",
+    "unit": "dias"
+  },
+  "ex-b9bkqyd6": {
+    "prompt": "A Tarefa guarda backups noturnos por 365 dias, e a camada bruta está neles. A varredura roda toda noite sem falhar. Quanto tempo um registro bruto pode de fato sobreviver?",
+    "hint": "Onde mais o registro existe?",
+    "choices": [
+      {
+        "text": "Trinta dias, porque a varredura aplica a política toda noite",
+        "why": "A varredura apaga o arquivo no armazenamento de logs; os backups guardaram suas cópias."
+      },
+      {
+        "text": "Cerca de um ano, enquanto um backup antigo ainda o contiver",
+        "why": "Certo: a camada bruta vive tanto quanto o backup mais longo que a contém."
+      },
+      {
+        "text": "Trinta dias e uma noite, até o próximo backup não contê-lo mais",
+        "why": "O próximo backup o deixa de fora, mas os 364 anteriores ainda o têm."
+      },
+      {
+        "text": "Até o fornecedor do modelo apagar a cópia dele do prompt",
+        "why": "A cópia do fornecedor é outra; a pergunta é sobre as da própria Tarefa."
+      }
+    ]
+  },
+  "ex-47trbspk": {
+    "prompt": "Quais cópias de um prompt a varredura da Tarefa deixa intactas? Marque todas as que se aplicam.",
+    "hint": "A varredura apaga arquivos num diretório.",
+    "choices": [
+      {
+        "text": "As cópias dentro dos backups noturnos",
+        "why": "Sim: um backup guarda o que o armazenamento tinha na noite em que foi feito."
+      },
+      {
+        "text": "Os arquivos com redação com mais de 180 dias",
+        "why": "Esses são trabalho da própria varredura; ela apagou dois deles."
+      },
+      {
+        "text": "O texto recebido por um fornecedor de observabilidade",
+        "why": "Sim: o fornecedor o guarda pelo prazo dele."
+      },
+      {
+        "text": "Os registros das chamadas no fornecedor do modelo",
+        "why": "Sim: esses seguem os termos do fornecedor, e a aula 22 trata deles."
+      }
+    ]
+  },
+  "ex-78v4bw1r": {
+    "prompt": "Associe cada pergunta à camada da Tarefa que consegue respondê-la por mais tempo.",
+    "hint": "A camada com menos coisa dentro que ainda responde.",
+    "pairs": [
+      {
+        "left": "Por que o assistente respondeu assim a este cliente ontem?",
+        "right": "bruta, por 30 dias"
+      },
+      {
+        "left": "As respostas pioraram depois da mudança de prompt de agosto?",
+        "right": "com redação, por 180 dias"
+      },
+      {
+        "left": "Quantos tokens a superfície de chat usou no ano passado?",
+        "right": "métricas, por 730 dias"
+      }
+    ],
+    "right_distractors": [
+      "nenhuma: a pergunta não pode ser registrada"
+    ]
+  },
+  "ex-834aq775": {
+    "prompt": "Um cliente pede à Tarefa que apague os dados dele. As chamadas dele aparecem nas três camadas. Quais camadas o pedido alcança?",
+    "hint": "Leia o que uma linha de métricas contém.",
+    "choices": [
+      {
+        "text": "Só a bruta, já que a redação tirou os dados pessoais da outra camada",
+        "why": "A camada com redação ainda nomeia a conta, e uma conta é uma pessoa."
+      },
+      {
+        "text": "A bruta e a com redação, porque as duas nomeiam a conta e as métricas não",
+        "why": "Certo: a linha de métricas é uma contagem por dia e superfície, sem ninguém dentro."
+      },
+      {
+        "text": "As três, porque as métricas contam as chamadas desse cliente",
+        "why": "Elas contam chamadas sem dizer de quem; nada nelas leva de volta ao cliente."
+      },
+      {
+        "text": "Nenhuma, porque logs guardados por segurança ficam fora do pedido",
+        "why": "Uma finalidade de segurança pode justificar guardar alguns registros, mas precisa ser argumentada; ela não põe os logs fora da lei."
+      }
+    ]
+  },
+  "ex-5p83j4ff": {
+    "prompt": "Uma retenção que nomeia arquivo, caso e motivo, mas nenhuma data ___, é uma segunda política de retenção que ninguém escreveu.",
+    "hint": "O campo se chama until.",
+    "blanks": [
+      {
+        "accept": [
+          "final",
+          "de fim",
+          "de término",
+          "limite",
+          "de expiração",
+          "de expiracao",
+          "de termino"
+        ]
+      }
+    ]
+  }
+}

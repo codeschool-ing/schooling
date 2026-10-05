@@ -1,0 +1,540 @@
+[
+  {
+    "id": "ex-6x71t123",
+    "version": 1,
+    "section": "what-to-keep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of the four questions in this section can Tarefa answer from the metrics tier alone?",
+    "hint": "The metrics line has no text in it.",
+    "choices": [
+      {
+        "text": "Whether answers got worse after the system prompt changed in August",
+        "correct": false,
+        "why": "That needs examples of prompts and replies; counts cannot show a worse answer."
+      },
+      {
+        "text": "What the assistant costs and whether it is getting slower",
+        "correct": true,
+        "why": "Right: calls, tokens and milliseconds are all the metrics tier holds, and all this question needs."
+      },
+      {
+        "text": "Why the assistant told one particular client something wrong",
+        "correct": false,
+        "why": "That needs the exact prompt and output, which only the raw tier has."
+      },
+      {
+        "text": "Whether one account is abusing the assistant",
+        "correct": false,
+        "why": "The metrics are per day and surface, with no account in them."
+      }
+    ]
+  },
+  {
+    "id": "ex-0b34grm4",
+    "version": 1,
+    "section": "what-to-keep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson give the raw text the shortest lifetime of the three tiers?",
+    "hint": "Which questions need text tied to a person, and when do they come up?",
+    "choices": [
+      {
+        "text": "Raw text takes the most disk space, so it costs the most to keep",
+        "correct": false,
+        "why": "Disk is cheap; the cost of raw text is what it contains, not its size."
+      },
+      {
+        "text": "The LGPD sets thirty days as the limit for chat transcripts",
+        "correct": false,
+        "why": "The LGPD sets no number. The purpose sets it, and thirty days is Tarefa's choice."
+      },
+      {
+        "text": "The questions that need text tied to a person are about recent events",
+        "correct": true,
+        "why": "Right: debugging a reply and investigating abuse both look at the last days or weeks."
+      },
+      {
+        "text": "Replies cannot be compared across model versions once a month has passed",
+        "correct": false,
+        "why": "Comparing versions is the quality question, and it uses the redacted tier for months."
+      }
+    ]
+  },
+  {
+    "id": "ex-9h956n8s",
+    "version": 1,
+    "section": "what-to-keep",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these should a call record carry so that a bad reply can be explained later? Choose all that apply.",
+    "hint": "What changes between two calls, and what is the same on every call?",
+    "choices": [
+      {
+        "text": "The request id",
+        "correct": true,
+        "why": "Yes: it is how a complaint is traced to one record."
+      },
+      {
+        "text": "The name of the model",
+        "correct": true,
+        "why": "Yes: the same prompt can be answered differently by another model."
+      },
+      {
+        "text": "An identifier for the version of the system prompt",
+        "correct": true,
+        "why": "Yes: the instructions change more often than the model, and the reply depends on them."
+      },
+      {
+        "text": "The full text of the system prompt, on every call",
+        "correct": false,
+        "why": "Thousands of identical tokens on every record; a version id points at the same text kept once."
+      },
+      {
+        "text": "The client's CPF, so that the account can be found",
+        "correct": false,
+        "why": "The account id already finds the account, without putting a document number in the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-6adwq7r6",
+    "version": 1,
+    "section": "what-to-keep",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A client types their card's security code into the support chat. How long may the raw tier keep it?",
+    "hint": "It is not a question of how many days.",
+    "choices": [
+      {
+        "text": "Thirty days, like everything else in the raw tier's text",
+        "correct": false,
+        "why": "The raw tier's limit is for text it may keep at all; this is not such text."
+      },
+      {
+        "text": "None: card rules forbid keeping it after authorisation",
+        "correct": true,
+        "why": "Right: the PCI DSS forbids keeping it after authorisation, encrypted or not."
+      },
+      {
+        "text": "Until the payment it was typed for has cleared at the bank",
+        "correct": false,
+        "why": "Clearing the payment is when the rules say it must already be gone."
+      },
+      {
+        "text": "For as long as the file holding it is encrypted at rest",
+        "correct": false,
+        "why": "Encryption does not change it: the rule covers encrypted copies too."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cp950zg",
+    "version": 1,
+    "section": "what-to-keep",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Something identical on every call, such as the tool definitions or the temperature, is logged as a ___ to the configuration, and the configuration itself is kept once.",
+    "hint": "A few bytes that point at the real thing.",
+    "blanks": [
+      {
+        "accept": [
+          "reference",
+          "pointer",
+          "version id",
+          "id"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-67dv523x",
+    "version": 1,
+    "section": "redaction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `guard scan` leave `123.456.789-00` in `rq-0004` unredacted?",
+    "hint": "Look at what the CPF detector checks after the shape.",
+    "choices": [
+      {
+        "text": "It sits in the output, and the scanner reads only prompts",
+        "correct": false,
+        "why": "The scanner reads both; this number matched in the prompt and in the output."
+      },
+      {
+        "text": "Order numbers are on a list of formats the scanner knows to skip",
+        "correct": false,
+        "why": "There is no such list. The arithmetic decides."
+      },
+      {
+        "text": "Its check digits are wrong, so it is not a valid CPF",
+        "correct": true,
+        "why": "Right: the shape matches and the arithmetic does not, so it is reported as LEAVE."
+      },
+      {
+        "text": "Numbers written with dots are redacted only under --strict",
+        "correct": false,
+        "why": "The dots make no difference; --strict drops the check-digit test, not a rule about dots."
+      }
+    ]
+  },
+  {
+    "id": "ex-sj8zwn2z",
+    "version": 1,
+    "section": "redaction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why redact as each record is written rather than in a nightly job over the log?",
+    "hint": "Think about what happens to a log between being written and the night.",
+    "choices": [
+      {
+        "text": "A nightly job cannot read files that are still being appended to",
+        "correct": false,
+        "why": "It can; the problem is what has already been copied by then."
+      },
+      {
+        "text": "Backups and shipped logs made in between are never reached by the job",
+        "correct": true,
+        "why": "Right: each of those is a copy of the unredacted text that the later job does not touch."
+      },
+      {
+        "text": "Check digits can only be verified while the client's request is still open",
+        "correct": false,
+        "why": "The check is arithmetic on the text and works at any time."
+      },
+      {
+        "text": "The redacted tier cannot be written until the raw tier is deleted",
+        "correct": false,
+        "why": "The two are written side by side; the raw tier is deleted by the sweep, later."
+      }
+    ]
+  },
+  {
+    "id": "ex-1z5nr19a",
+    "version": 1,
+    "section": "redaction",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would the lab's detectors leave in the redacted tier? Choose all that apply.",
+    "hint": "A pattern finds what has a pattern.",
+    "choices": [
+      {
+        "text": "A client's name and street address in a request for a bio",
+        "correct": true,
+        "why": "Yes: no pattern recognises a name, and rq-0012 kept both."
+      },
+      {
+        "text": "An e-mail address that the model repeats in its reply",
+        "correct": false,
+        "why": "The scanner reads outputs as well as prompts, so it is redacted."
+      },
+      {
+        "text": "A phone number written as 21 99876 5432",
+        "correct": true,
+        "why": "Yes: the pattern expects a hyphen or nothing there, and rq-0022 kept it."
+      },
+      {
+        "text": "The security code typed after a card number",
+        "correct": true,
+        "why": "Yes: the number became [CARD] and CVV 123 stayed in rq-0005."
+      },
+      {
+        "text": "An AWS access key pasted into the chat",
+        "correct": false,
+        "why": "It has a fixed shape, and rq-0018 was redacted as [SECRET]."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pnhkx20",
+    "version": 1,
+    "section": "redaction",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`guard scan` finds something in 11 of the 22 records, and `guard scan --strict` in 13. How many records does dropping the check digits add?",
+    "hint": "Subtract.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "records"
+  },
+  {
+    "id": "ex-a5nabwzn",
+    "version": 1,
+    "section": "redaction",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Tarefa sends its redacted tier to an outside analytics vendor and keeps it for 180 days. A colleague proposes --strict for that tier only. What is gained and what is lost?",
+    "hint": "--strict drops the arithmetic.",
+    "choices": [
+      {
+        "text": "Mistyped CPFs stop reaching the vendor, and so do order numbers",
+        "correct": true,
+        "why": "Right: every CPF shape goes, the valid and the mistyped, and the order numbers go with them."
+      },
+      {
+        "text": "Nothing is lost, since strict mode only adds matches that pass the check digits",
+        "correct": false,
+        "why": "It is the opposite: strict adds the matches that fail them."
+      },
+      {
+        "text": "Names and addresses are removed as well, at the cost of more processing",
+        "correct": false,
+        "why": "Strict changes the number detectors only. Names are still found by nothing."
+      },
+      {
+        "text": "The raw tier becomes safe to keep for 180 days too",
+        "correct": false,
+        "why": "The raw tier is not redacted at all, strict or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-eh5qb80e",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`guard sweep --check` exits 1 on Tarefa's machine. What does that tell the team?",
+    "hint": "--check deletes nothing; it compares ages with limits.",
+    "choices": [
+      {
+        "text": "The sweep deleted a file that one of the holds should have protected",
+        "correct": false,
+        "why": "--check reports what is still there, not what was removed."
+      },
+      {
+        "text": "A hold has passed its end date and somebody needs to extend it",
+        "correct": false,
+        "why": "An expired hold makes its file an ordinary overdue file; the exit code says nothing about holds."
+      },
+      {
+        "text": "Files are past their limit: the sweep is failing or never ran",
+        "correct": true,
+        "why": "Right: from the outside the two look the same, and this is the alarm for both."
+      },
+      {
+        "text": "The policy file and the holds file contradict each other",
+        "correct": false,
+        "why": "They cannot; a hold is an exception the policy reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-g371n7dt",
+    "version": 1,
+    "section": "retention",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of bringing an existing log store under a retention policy in order.",
+    "hint": "Nothing is deleted before somebody has read what would be.",
+    "items": [
+      "Write a limit for each tier, with the purpose that sets it",
+      "Record the holds that open investigations need",
+      "Run the sweep with --dry-run and read what it would delete",
+      "Schedule the sweep, with --check beside it as the alarm"
+    ]
+  },
+  {
+    "id": "ex-at9q0mpy",
+    "version": 1,
+    "section": "retention",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of an entry in `holds.json` to what it is for.",
+    "hint": "One of the right-hand answers belongs to no field.",
+    "pairs": [
+      {
+        "left": "`file`",
+        "right": "Which data the sweep must leave alone"
+      },
+      {
+        "left": "`case`",
+        "right": "The investigation the data is evidence for"
+      },
+      {
+        "left": "`until`",
+        "right": "When the clock starts again"
+      },
+      {
+        "left": "`reason`",
+        "right": "Why it is kept, for whoever reads it next"
+      }
+    ],
+    "right_distractors": [
+      "Who is allowed to open the file"
+    ]
+  },
+  {
+    "id": "ex-t8awfq10",
+    "version": 1,
+    "section": "retention",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before the sweep, `raw/2026-03-10.jsonl` is 204 days old and the raw tier's limit is 30. By how many days is it overdue?",
+    "hint": "Age minus limit.",
+    "value": 174,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-b9bkqyd6",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Tarefa keeps nightly backups for 365 days, and the raw tier is in them. The sweep runs every night without fail. How long can a raw record actually survive?",
+    "hint": "Where else does the record exist?",
+    "choices": [
+      {
+        "text": "Thirty days, because the sweep applies the policy every night",
+        "correct": false,
+        "why": "The sweep deletes the file in the log store; the backups kept their copies."
+      },
+      {
+        "text": "About a year, because the backups keep what the sweep deletes",
+        "correct": true,
+        "why": "Right: the raw tier lives as long as the longest backup that contains it."
+      },
+      {
+        "text": "Thirty days plus one night, until the next backup no longer contains it",
+        "correct": false,
+        "why": "The next backup leaves it out, but the 364 earlier backups still hold it."
+      },
+      {
+        "text": "Until the model provider deletes its own copy of the prompt",
+        "correct": false,
+        "why": "The provider's copy is a separate one; this question is about Tarefa's own."
+      }
+    ]
+  },
+  {
+    "id": "ex-47trbspk",
+    "version": 1,
+    "section": "retention",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which copies of a prompt does Tarefa's sweep leave untouched? Choose all that apply.",
+    "hint": "The sweep deletes files in one directory.",
+    "choices": [
+      {
+        "text": "The copies inside the nightly backups",
+        "correct": true,
+        "why": "Yes: a backup holds what the store held on the night it was taken."
+      },
+      {
+        "text": "The redacted files older than 180 days",
+        "correct": false,
+        "why": "Those are the sweep's own work; it deleted two of them."
+      },
+      {
+        "text": "The text received by an observability vendor",
+        "correct": true,
+        "why": "Yes: the vendor keeps it for its own period."
+      },
+      {
+        "text": "The model provider's records of the calls",
+        "correct": true,
+        "why": "Yes: those are governed by the provider's terms, and lesson 22 is about them."
+      }
+    ]
+  },
+  {
+    "id": "ex-78v4bw1r",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the tier at Tarefa that can answer it for the longest.",
+    "hint": "The tier with the least in it that still answers.",
+    "pairs": [
+      {
+        "left": "Why did the assistant answer this client that way yesterday?",
+        "right": "raw, for 30 days"
+      },
+      {
+        "left": "Did replies get worse after the August prompt change?",
+        "right": "redacted, for 180 days"
+      },
+      {
+        "left": "How many tokens did the chat surface use last year?",
+        "right": "metrics, for 730 days"
+      }
+    ],
+    "right_distractors": [
+      "none: the question must not be logged"
+    ]
+  },
+  {
+    "id": "ex-834aq775",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A client asks Tarefa to delete their data. Their calls appear in all three tiers. Which tiers does the request reach?",
+    "hint": "Read what a metrics line contains.",
+    "choices": [
+      {
+        "text": "Only raw, since redaction removed the personal data from the other tier",
+        "correct": false,
+        "why": "The redacted tier still names the account, and an account is a person."
+      },
+      {
+        "text": "Raw and redacted, because both of them name the account and the metrics do not",
+        "correct": true,
+        "why": "Right: the metrics line is a count per day and surface, with nobody in it."
+      },
+      {
+        "text": "All three, because the metrics count this client's calls",
+        "correct": false,
+        "why": "They count calls without saying whose; nothing in them leads back to the client."
+      },
+      {
+        "text": "None, because logs kept for security are outside the request",
+        "correct": false,
+        "why": "A security purpose may justify keeping some records, but it has to be argued; it does not put the logs outside the law."
+      }
+    ]
+  },
+  {
+    "id": "ex-5p83j4ff",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A hold that names a file, a case and a reason but no ___ date is a second retention policy that nobody wrote down.",
+    "hint": "The field is called until.",
+    "blanks": [
+      {
+        "accept": [
+          "end",
+          "expiry",
+          "expiration",
+          "final"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

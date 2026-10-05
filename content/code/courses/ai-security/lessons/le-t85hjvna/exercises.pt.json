@@ -1,0 +1,311 @@
+{
+  "ex-8ted9nbn": {
+    "prompt": "Sem end-user IDs, o que um fornecedor vê quando um usuário da Tarefa abusa do assistente?",
+    "hint": "O que uma chave de API identifica?",
+    "choices": [
+      {
+        "text": "A conta, dentro da Tarefa, que enviou cada requisição",
+        "why": "O fornecedor não tem como saber as contas da Tarefa se a Tarefa não disser."
+      },
+      {
+        "text": "O endereço IP do usuário, que o identifica para ele",
+        "why": "As requisições saem dos servidores da Tarefa; o endereço do usuário nunca chega ao fornecedor."
+      },
+      {
+        "text": "Uma série de requisições ruins vindas da chave da Tarefa",
+        "why": "Certo: a chave nomeia o cliente, e todos os usuários a compartilham."
+      },
+      {
+        "text": "Nada, porque a detecção de abuso precisa de um end-user ID para funcionar",
+        "why": "A detecção roda sobre as requisições; o que falta é alguém mais específico que a Tarefa para culpar."
+      }
+    ]
+  },
+  "ex-bqrnxsze": {
+    "prompt": "Quais destes um end-user ID torna possível? Marque todas as que se aplicam.",
+    "hint": "Dois lugares foram citados: o fornecedor e a Tarefa.",
+    "choices": [
+      {
+        "text": "O fornecedor apontar um usuário em vez de restringir a chave inteira",
+        "why": "Sim: essa é a metade do fornecedor."
+      },
+      {
+        "text": "A Tarefa limitar e cobrar cada usuário separadamente",
+        "why": "Sim: o identificador é o que um limite por usuário conta."
+      },
+      {
+        "text": "A Tarefa responder \"quem enviou isto?\" pelos próprios logs",
+        "why": "Sim: se cada chamada o registrou, como a aula 21 recomenda."
+      },
+      {
+        "text": "O fornecedor devolver ao usuário final os dados dele quando pedidos",
+        "why": "O fornecedor não consegue nomear a pessoa; pedidos de dados vão à Tarefa, que é a controladora."
+      }
+    ]
+  },
+  "ex-9pymzrnh": {
+    "prompt": "Na Messages API da Anthropic, o identificador do usuário final vai em `metadata.___`.",
+    "hint": "Duas palavras unidas por um sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "user_id"
+        ]
+      }
+    ]
+  },
+  "ex-88xpjtpb": {
+    "prompt": "Por que a aula põe o identificador do usuário final num campo próprio em vez de escrevê-lo no prompt?",
+    "hint": "Quem lê o prompt?",
+    "choices": [
+      {
+        "text": "Texto dentro do prompt não é cobrado, então o campo não custa nada a mais",
+        "why": "Todo token do prompt é cobrado; esse não é o motivo."
+      },
+      {
+        "text": "Fornecedores recusam qualquer prompt que contenha um identificador",
+        "why": "Não recusam; ele só estaria no lugar errado."
+      },
+      {
+        "text": "O campo é criptografado pelo fornecedor e o prompt não",
+        "why": "Os dois viajam do mesmo jeito; a diferença é quem os lê."
+      },
+      {
+        "text": "O modelo lê o prompt; os sistemas do fornecedor leem o campo",
+        "why": "Certo: o modelo não precisa saber quem pergunta, e as verificações de abuso precisam."
+      }
+    ]
+  },
+  "ex-3gdq6zam": {
+    "prompt": "Por que o SHA-256 de um e-mail é um end-user ID fraco?",
+    "hint": "O hash não pode ser invertido. Ele precisa ser?",
+    "choices": [
+      {
+        "text": "O SHA-256 foi quebrado e pode ser invertido",
+        "why": "Não foi; o ataque nunca o inverte."
+      },
+      {
+        "text": "Qualquer um faz o hash de endereços prováveis e compara",
+        "why": "Certo: o `guard reverse` achou o endereço do Marcos no 257º palpite."
+      },
+      {
+        "text": "Endereços diferentes costumam dar o mesmo hash no SHA-256",
+        "why": "Colisão não é o problema; adivinhar é."
+      },
+      {
+        "text": "O hash muda toda vez que o endereço é digitado com maiúsculas",
+        "why": "O laboratório converte para minúsculas antes, e isso tornaria o id instável, não reversível."
+      }
+    ]
+  },
+  "ex-60jv13jg": {
+    "prompt": "Depois de quantos palpites o `guard reverse` achou o endereço por trás do hash simples?",
+    "hint": "Leia a linha que ele imprimiu.",
+    "unit": "palpites"
+  },
+  "ex-7dabw5aj": {
+    "prompt": "O que a chave secreta de um HMAC acrescenta que um hash simples não tem?",
+    "hint": "Tente conferir um palpite sem ela.",
+    "choices": [
+      {
+        "text": "Ela deixa o hash mais longo, e ele demora demais para calcular",
+        "why": "O tamanho foi cortado para 20 caracteres; o que importa é a chave."
+      },
+      {
+        "text": "Ela criptografa o identificador para a Tarefa decifrá-lo depois",
+        "why": "Um HMAC é um hash; a Tarefa o recalcula, e ninguém o decifra."
+      },
+      {
+        "text": "Conferir um palpite exige a chave; sem ela a lista não serve",
+        "why": "Certo: o mesmo dicionário não achou nada."
+      },
+      {
+        "text": "Ela muda o identificador a cada chamada, então nada pode ser ligado",
+        "why": "Ele é estável de propósito; ligar as chamadas de um usuário é a ideia."
+      }
+    ]
+  },
+  "ex-5dp10n4b": {
+    "prompt": "A Tarefa envia as requisições da mesma conta a dois fornecedores. Por que o laboratório usa uma chave diferente para cada?",
+    "hint": "Imagine os registros dos dois fornecedores num lugar só.",
+    "choices": [
+      {
+        "text": "Fornecedores recusam identificadores que outro fornecedor já viu",
+        "why": "Eles não têm como saber; o motivo está do lado da Tarefa."
+      },
+      {
+        "text": "Uma chave só produziria identificadores longos demais para o segundo fornecedor",
+        "why": "O tamanho é o mesmo, qualquer que seja a chave."
+      },
+      {
+        "text": "Uma chave só pode ser usada com um modelo por vez",
+        "why": "Uma chave é só bytes; nada a prende a um modelo."
+      },
+      {
+        "text": "Para os dois conjuntos de identificadores não poderem ser cruzados",
+        "why": "Certo: `ac-7Q2M` é `eu-fe47…` num e `eu-4805…` no outro."
+      }
+    ]
+  },
+  "ex-h62vgdse": {
+    "prompt": "A Tarefa troca a chave do HMAC todo mês, por calendário. O que decorre disso? Marque todas as que se aplicam.",
+    "hint": "O identificador é função da conta e da chave.",
+    "choices": [
+      {
+        "text": "Todo usuário ganha um identificador novo a cada mês",
+        "why": "Sim: mude a chave e toda saída muda."
+      },
+      {
+        "text": "O histórico de abuso de um usuário no fornecedor é cortado a cada troca",
+        "why": "Sim: o identificador do mês passado e o deste parecem duas pessoas."
+      },
+      {
+        "text": "A Tarefa não consegue mais achar qual conta enviou as requisições do mês passado",
+        "why": "Consegue, se guardou a chave antiga ou o identificador ao lado de cada conta."
+      },
+      {
+        "text": "Os identificadores antigos passam a ser reversíveis com um dicionário",
+        "why": "Sem a chave antiga eles continuam tão opacos quanto antes."
+      }
+    ]
+  },
+  "ex-099gnnns": {
+    "prompt": "Só com o limite da chave, 60 por minuto, quantas requisições os cinco usuários que não rodavam script perderam ao todo?",
+    "hint": "Some a coluna refused de todos menos o script.",
+    "unit": "requisições"
+  },
+  "ex-6cwxwj9p": {
+    "prompt": "Só com o limite da chave, por que o script ainda passou 97 requisições?",
+    "hint": "Quem chega com mais frequência quando a janela reabre?",
+    "choices": [
+      {
+        "text": "O fornecedor dá prioridade às requisições que chegam com mais frequência",
+        "why": "Ninguém tem prioridade; o script só chega mais."
+      },
+      {
+        "text": "Um limite compartilhado recusa quem chega com ele cheio, e o script chega mais",
+        "why": "Certo: um orçamento compartilhado vai sobretudo para quem mais pede."
+      },
+      {
+        "text": "O identificador do script estava ausente, então o limite não se aplicou",
+        "why": "Toda requisição trazia o identificador; o limite da chave o ignora."
+      },
+      {
+        "text": "Noventa e sete é a cota do fornecedor para qualquer usuário final",
+        "why": "O único limite daquela execução era 60 por minuto na chave inteira."
+      }
+    ]
+  },
+  "ex-eee8hxyp": {
+    "prompt": "Por que o limite por usuário fica bem abaixo do limite da chave?",
+    "hint": "E se ele também fosse 60?",
+    "choices": [
+      {
+        "text": "Para um usuário só não gastar o orçamento que todos dividem",
+        "why": "Certo: com 60 por usuário, um script ainda encheria a chave."
+      },
+      {
+        "text": "Fornecedores exigem que ele seja no máximo um terço do limite da chave",
+        "why": "Não existe essa regra; o terço é escolha da Tarefa."
+      },
+      {
+        "text": "Porque um limite menor deixa cada requisição mais barata",
+        "why": "O preço por requisição não depende do limite."
+      },
+      {
+        "text": "Para usuários legítimos serem recusados de vez em quando, como aviso",
+        "why": "Na segunda execução nenhum usuário legítimo foi recusado."
+      }
+    ]
+  },
+  "ex-v52g92mk": {
+    "prompt": "Um usuário manda dez requisições por dia, cada uma com um contrato inteiro colado. Nenhum limite de requisições é atingido, e a conta sobe. O que a aula acrescenta?",
+    "hint": "Contagem não é custo.",
+    "choices": [
+      {
+        "text": "Um limite de requisições menor por usuário, como cinco por dia no máximo",
+        "why": "As requisições são poucas; os tokens em cada uma é que são o problema."
+      },
+      {
+        "text": "Moderar cada requisição antes de enviá-la",
+        "why": "Colar um contrato não é abuso que uma categoria de moderação marcaria."
+      },
+      {
+        "text": "Um orçamento diário de tokens por usuário, com o mesmo identificador",
+        "why": "Certo: um limite de requisições limita o ritmo, e um orçamento de tokens limita a conta."
+      },
+      {
+        "text": "Tirar o end-user ID para o fornecedor cobrar menos da Tarefa",
+        "why": "A cobrança é por token, diga o identificador o que disser."
+      }
+    ]
+  },
+  "ex-0mwea5mk": {
+    "prompt": "Uma requisição recusada por um limite de taxa recebe o código HTTP ___, com um cabeçalho Retry-After.",
+    "hint": "Too Many Requests.",
+    "blanks": [
+      {
+        "accept": [
+          "429"
+        ]
+      }
+    ]
+  },
+  "ex-aad954wg": {
+    "prompt": "Ponha em ordem a vida de uma requisição pelo assistente da Tarefa.",
+    "hint": "O fornecedor a vê por último.",
+    "items": [
+      "Calcular o identificador do usuário com a chave do HMAC",
+      "Conferir o limite e o orçamento de tokens do usuário",
+      "Enviar a requisição ao fornecedor com o identificador no campo dele",
+      "Registrar a chamada pelo identificador, não pelo e-mail"
+    ]
+  },
+  "ex-ydnv15bp": {
+    "prompt": "Associe cada candidato a end-user ID ao que há de errado com ele, ou de certo.",
+    "hint": "Uma descrição da direita não serve para nenhum.",
+    "pairs": [
+      {
+        "left": "marcos.teixeira@example.com.br",
+        "right": "Dado pessoal em toda requisição"
+      },
+      {
+        "left": "SHA-256 do e-mail",
+        "right": "Revertido adivinhando endereços"
+      },
+      {
+        "left": "HMAC do id da conta, uma chave por fornecedor",
+        "right": "Estável, opaco e impossível de cruzar entre fornecedores"
+      },
+      {
+        "left": "Um valor aleatório novo em cada chamada",
+        "right": "Não liga duas chamadas, então ninguém pode ser responsabilizado"
+      }
+    ],
+    "right_distractors": [
+      "Recusado pela API de todo fornecedor"
+    ]
+  },
+  "ex-dsn14qeg": {
+    "prompt": "Um fornecedor escreve que requisições marcadas com `eu-e60a7d3c4b19f8e25d07` violaram as políticas dele. O que permite à Tarefa agir em minutos?",
+    "hint": "O identificador precisa levar de volta a uma conta.",
+    "choices": [
+      {
+        "text": "Perguntar ao fornecedor a que conta da Tarefa o identificador pertence",
+        "why": "O fornecedor nunca conheceu as contas da Tarefa; essa era a ideia."
+      },
+      {
+        "text": "Uma coluna indexada de identificadores no banco da própria Tarefa",
+        "why": "Certo: uma consulta, em vez de recalcular o identificador de todas as contas."
+      },
+      {
+        "text": "Reverter o identificador com um dicionário dos e-mails da Tarefa",
+        "why": "Um HMAC não se reverte assim, e a entrada era um id de conta."
+      },
+      {
+        "text": "Trocar a chave do HMAC para o identificador antigo parar de funcionar",
+        "why": "Isso muda o identificador de todos e não acha ninguém."
+      }
+    ]
+  }
+}

@@ -1,0 +1,465 @@
+[
+  {
+    "id": "ex-8ted9nbn",
+    "version": 1,
+    "section": "why-an-id",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without end-user IDs, what does a provider see when one of Tarefa's users abuses the assistant?",
+    "hint": "What does an API key identify?",
+    "choices": [
+      {
+        "text": "The account inside Tarefa that sent each request",
+        "correct": false,
+        "why": "The provider has no way to know Tarefa's accounts unless Tarefa tells it."
+      },
+      {
+        "text": "The user's IP address, which identifies the person to it",
+        "correct": false,
+        "why": "The requests come from Tarefa's servers; the user's address never reaches the provider."
+      },
+      {
+        "text": "A stream of bad requests from Tarefa's key",
+        "correct": true,
+        "why": "Right: the key names the customer, and every user shares it."
+      },
+      {
+        "text": "Nothing at all, because abuse detection needs an end-user ID to run",
+        "correct": false,
+        "why": "Detection runs on the requests; what it lacks is somebody narrower than Tarefa to blame."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqrnxsze",
+    "version": 1,
+    "section": "why-an-id",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does an end-user ID make possible? Choose all that apply.",
+    "hint": "Two places were named: the provider, and Tarefa.",
+    "choices": [
+      {
+        "text": "The provider pointing at one user instead of restricting the whole key",
+        "correct": true,
+        "why": "Yes: that is the provider's half."
+      },
+      {
+        "text": "Tarefa limiting and billing each user separately",
+        "correct": true,
+        "why": "Yes: the identifier is what a limit per user counts by."
+      },
+      {
+        "text": "Tarefa answering \"who sent this?\" from its own logs",
+        "correct": true,
+        "why": "Yes: if every call recorded it, as lesson 21 recommends."
+      },
+      {
+        "text": "The provider sending the end user's own data back to them on request",
+        "correct": false,
+        "why": "The provider cannot name the person; requests for data go to Tarefa as controller."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pymzrnh",
+    "version": 1,
+    "section": "why-an-id",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Anthropic's Messages API, the end user's identifier goes in `metadata.___`.",
+    "hint": "Two words joined by an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "user_id"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-88xpjtpb",
+    "version": 1,
+    "section": "why-an-id",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson keep the end user's identifier in its own field rather than writing it into the prompt?",
+    "hint": "Who reads the prompt?",
+    "choices": [
+      {
+        "text": "Text inside a prompt is not billed, so the field costs nothing extra",
+        "correct": false,
+        "why": "Every token of the prompt is billed; that is not the reason."
+      },
+      {
+        "text": "Providers reject a prompt that has an identifier written into its text",
+        "correct": false,
+        "why": "They do not; it would simply be in the wrong place."
+      },
+      {
+        "text": "The field is encrypted by the provider and the prompt is not",
+        "correct": false,
+        "why": "Both travel the same way; the difference is who reads them."
+      },
+      {
+        "text": "The model reads the prompt; the provider's systems read the field",
+        "correct": true,
+        "why": "Right: the model does not need to know who is asking, and the abuse checks do."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gdq6zam",
+    "version": 1,
+    "section": "pseudonymous-ids",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the SHA-256 of an e-mail address a weak end-user ID?",
+    "hint": "The hash cannot be run backwards. Does it need to be?",
+    "choices": [
+      {
+        "text": "SHA-256 has been broken and can be run backwards",
+        "correct": false,
+        "why": "It has not; the attack never runs it backwards."
+      },
+      {
+        "text": "Anybody can hash a list of likely addresses and compare",
+        "correct": true,
+        "why": "Right: `guard reverse` found Marcos's address on the 257th guess."
+      },
+      {
+        "text": "Two different addresses often produce the same hash",
+        "correct": false,
+        "why": "Collisions are not the problem; guessing is."
+      },
+      {
+        "text": "The hash changes each time the address is typed with capitals",
+        "correct": false,
+        "why": "The lab lowercases first, and that would make it unstable rather than reversible."
+      }
+    ]
+  },
+  {
+    "id": "ex-60jv13jg",
+    "version": 1,
+    "section": "pseudonymous-ids",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After how many guesses did `guard reverse` find the address behind the plain hash?",
+    "hint": "Read the line it printed.",
+    "value": 257,
+    "tolerance": 0,
+    "unit": "guesses"
+  },
+  {
+    "id": "ex-7dabw5aj",
+    "version": 1,
+    "section": "pseudonymous-ids",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the secret key in an HMAC add that a plain hash lacks?",
+    "hint": "Try checking a guess without it.",
+    "choices": [
+      {
+        "text": "It makes the hash longer, so it takes too long to compute",
+        "correct": false,
+        "why": "The length was cut to 20 characters; the key is what matters."
+      },
+      {
+        "text": "It encrypts the identifier so that Tarefa can decrypt it later",
+        "correct": false,
+        "why": "An HMAC is a hash; Tarefa recomputes it, and nobody decrypts it."
+      },
+      {
+        "text": "Checking any guess needs the key, so a list is useless",
+        "correct": true,
+        "why": "Right: the same dictionary found nothing."
+      },
+      {
+        "text": "It changes the identifier on every call, so nothing can be linked",
+        "correct": false,
+        "why": "It is stable on purpose; linking a user's calls is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dp10n4b",
+    "version": 1,
+    "section": "pseudonymous-ids",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Tarefa sends the same account's requests to two providers. Why does the lab use a different key for each?",
+    "hint": "Imagine both providers' records in one place.",
+    "choices": [
+      {
+        "text": "Providers reject identifiers that another provider has already seen",
+        "correct": false,
+        "why": "They have no way to know; the reason is on Tarefa's side."
+      },
+      {
+        "text": "One key would produce identifiers too long for the second provider",
+        "correct": false,
+        "why": "The length is the same whatever the key."
+      },
+      {
+        "text": "A key can only be used with one model at a time",
+        "correct": false,
+        "why": "A key is just bytes; nothing ties it to a model."
+      },
+      {
+        "text": "So the two sets of identifiers cannot be joined to each other",
+        "correct": true,
+        "why": "Right: `ac-7Q2M` is `eu-fe47…` at one and `eu-4805…` at the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-h62vgdse",
+    "version": 1,
+    "section": "pseudonymous-ids",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Tarefa rotates its HMAC key on a fixed schedule every month. What follows? Choose all that apply.",
+    "hint": "The identifier is a function of the account and the key.",
+    "choices": [
+      {
+        "text": "Every user gets a new identifier each month",
+        "correct": true,
+        "why": "Yes: change the key and every output changes."
+      },
+      {
+        "text": "The provider's abuse history for a user is cut off at each rotation",
+        "correct": true,
+        "why": "Yes: last month's identifier and this month's look like two people."
+      },
+      {
+        "text": "Tarefa can no longer find which account sent last month's requests",
+        "correct": false,
+        "why": "It can, if it kept last month's key or stored each identifier beside its account."
+      },
+      {
+        "text": "The old identifiers become reversible with a dictionary",
+        "correct": false,
+        "why": "Without the old key they are as opaque as before."
+      }
+    ]
+  },
+  {
+    "id": "ex-099gnnns",
+    "version": 1,
+    "section": "per-user-limits",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With only the key's limit of 60 a minute, how many requests did the five users who were not running a script lose between them?",
+    "hint": "Add the refused column for every user except the script.",
+    "value": 11,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-6cwxwj9p",
+    "version": 1,
+    "section": "per-user-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With only the key's limit, why did the script still get 97 requests through?",
+    "hint": "Who arrives most often when the window reopens?",
+    "choices": [
+      {
+        "text": "The provider gives priority to the requests that arrive most often",
+        "correct": false,
+        "why": "Nobody is given priority; the script simply arrives more."
+      },
+      {
+        "text": "A shared limit refuses whoever arrives when full, and the script arrives most",
+        "correct": true,
+        "why": "Right: a shared budget goes mostly to whoever asks most."
+      },
+      {
+        "text": "The script's identifier was missing, so the limit did not apply to it",
+        "correct": false,
+        "why": "Every request carried its identifier; the key's limit ignores it."
+      },
+      {
+        "text": "Ninety-seven is the provider's allowance for any single end user",
+        "correct": false,
+        "why": "The only limit in that run was 60 a minute on the whole key."
+      }
+    ]
+  },
+  {
+    "id": "ex-eee8hxyp",
+    "version": 1,
+    "section": "per-user-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the per-user limit set well below the key's limit?",
+    "hint": "What if it were 60 too?",
+    "choices": [
+      {
+        "text": "So no single user uses up the budget everybody shares",
+        "correct": true,
+        "why": "Right: at 60 per user, one script could still fill the key."
+      },
+      {
+        "text": "Providers require it to be at most a third of the key's limit",
+        "correct": false,
+        "why": "No such rule; the third is Tarefa's choice."
+      },
+      {
+        "text": "Because a lower limit makes each request cheaper",
+        "correct": false,
+        "why": "Price per request does not depend on the limit."
+      },
+      {
+        "text": "So that legitimate users are refused now and then, as a warning",
+        "correct": false,
+        "why": "In the second run no legitimate user was refused at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-v52g92mk",
+    "version": 1,
+    "section": "per-user-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A user sends ten requests a day, each with a whole contract pasted in. No request limit is ever reached, and the bill climbs. What does the lesson add?",
+    "hint": "Count is not cost.",
+    "choices": [
+      {
+        "text": "A lower request limit per user, such as five a day",
+        "correct": false,
+        "why": "The requests are few; the tokens in each are the problem."
+      },
+      {
+        "text": "Moderating each request before it is sent",
+        "correct": false,
+        "why": "Pasting a contract is not abuse a moderation category would flag."
+      },
+      {
+        "text": "A daily token budget per user, on the same identifier",
+        "correct": true,
+        "why": "Right: a request limit bounds the rate, and a token budget bounds the bill."
+      },
+      {
+        "text": "Removing the end-user ID so the provider bills Tarefa less",
+        "correct": false,
+        "why": "The bill is per token whatever the identifier says."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mwea5mk",
+    "version": 1,
+    "section": "per-user-limits",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A request refused by a rate limit gets the HTTP status code ___, with a Retry-After header.",
+    "hint": "Too Many Requests.",
+    "blanks": [
+      {
+        "accept": [
+          "429"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-aad954wg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of one request through Tarefa's assistant in order.",
+    "hint": "The provider sees it last.",
+    "items": [
+      "Compute the user's identifier with the HMAC key",
+      "Check the user's limit and token budget",
+      "Send the request to the provider with the identifier in its field",
+      "Log the call under the identifier, not the e-mail"
+    ]
+  },
+  {
+    "id": "ex-ydnv15bp",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each candidate end-user ID to what is wrong with it, or right.",
+    "hint": "One description on the right fits none of them.",
+    "pairs": [
+      {
+        "left": "marcos.teixeira@example.com.br",
+        "right": "Personal data in every request"
+      },
+      {
+        "left": "SHA-256 of the e-mail address",
+        "right": "Reversed by guessing addresses"
+      },
+      {
+        "left": "HMAC of the account id, one key per provider",
+        "right": "Stable, opaque, and not joinable across providers"
+      },
+      {
+        "left": "A random value made fresh on every call",
+        "right": "Links no two calls, so nobody can be blamed"
+      }
+    ],
+    "right_distractors": [
+      "Rejected by every provider's API"
+    ]
+  },
+  {
+    "id": "ex-dsn14qeg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A provider writes that requests tagged `eu-e60a7d3c4b19f8e25d07` broke its policies. What lets Tarefa act within minutes?",
+    "hint": "The identifier has to lead back to an account.",
+    "choices": [
+      {
+        "text": "Asking the provider which account the identifier belongs to",
+        "correct": false,
+        "why": "The provider never knew Tarefa's accounts; that was the point."
+      },
+      {
+        "text": "An indexed column of identifiers in Tarefa's own database",
+        "correct": true,
+        "why": "Right: one lookup, instead of recomputing the identifier for every account."
+      },
+      {
+        "text": "Reversing the identifier with a dictionary of Tarefa's e-mail addresses",
+        "correct": false,
+        "why": "An HMAC does not reverse that way, and the input was an account id."
+      },
+      {
+        "text": "Rotating the HMAC key so that the identifier stops working",
+        "correct": false,
+        "why": "That changes every user's identifier and finds nobody."
+      }
+    ]
+  }
+]
