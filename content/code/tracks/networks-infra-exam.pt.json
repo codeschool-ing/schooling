@@ -1,0 +1,2971 @@
+{
+  "ex-1ehmm7eh": {
+    "prompt": "Dentro do escritório, um app de relatórios trava por cerca de um minuto sempre que a porta do banco de dados está bloqueada, e os usuários acham que ele caiu. A equipe de firewall pergunta que ação de regra usar nessa porta na rede interna. O que a aula recomenda?",
+    "hint": "Redes e Protocolos, aula 3.",
+    "choices": [
+      {
+        "text": "Descartar, para quem varre a rede descobrir pouco sobre a máquina",
+        "why": "Esse é o motivo do drop no lado da internet; aqui dentro ele deixa programas legítimos pendurados."
+      },
+      {
+        "text": "Rejeitar com um reset TCP, para o app falhar na hora com um erro claro",
+        "why": "Isso."
+      },
+      {
+        "text": "Descartar e aumentar o timeout do app para a resposta ter tempo de chegar",
+        "why": "Tentativa descartada não recebe resposta com timeout algum; esperar mais só estica o travamento."
+      },
+      {
+        "text": "Aceitar a porta e deixar o login do próprio banco recusar clientes indesejados",
+        "why": "Isso tira o bloqueio de vez, e não foi o que a equipe pediu."
+      }
+    ]
+  },
+  "ex-j3srvz9g": {
+    "prompt": "Uma filial diz que cópias de arquivos para a matriz se arrastam a uma fração da velocidade do link, embora as páginas acabem carregando e nada conste como fora do ar. No servidor de arquivos Linux, qual leitura a aula faz primeiro?",
+    "hint": "Redes e Protocolos, aula 3.",
+    "choices": [
+      {
+        "text": "`nstat -az TcpRetransSegs`, para ver se há segmentos sendo reenviados",
+        "why": "Isso."
+      },
+      {
+        "text": "`ss -tan state time-wait`, já que uma pilha de conexões fechadas deixa o servidor lento",
+        "why": "Milhares de linhas TIME-WAIT indicam um servidor ocupado, não quebrado."
+      },
+      {
+        "text": "`ss -tulpn`, para confirmar que o serviço de arquivos ainda escuta na porta",
+        "why": "As cópias estão andando, então algo escuta; a questão é o que acontece com os pacotes delas."
+      },
+      {
+        "text": "`dig` nos resolvedores dos dois escritórios, pois transferência lenta começa por nome lento",
+        "why": "O nome é resolvido antes de a conexão abrir; ele não atrasa bytes que já estão passando."
+      }
+    ]
+  },
+  "ex-nvnv37pb": {
+    "prompt": "Depois do handshake de três vias, um cliente envia a primeira requisição: 512 bytes, começando no número de sequência relativo 1. Contando como a captura da aula, que número o servidor põe no `ack` dessa requisição?",
+    "hint": "Redes e Protocolos, aula 3."
+  },
+  "ex-d4drb24v": {
+    "prompt": "Sua empresa mantém o DNS autoritativo de example.com no ns1. O servidor de e-mail de um parceiro reclama que 192.0.2.80 não devolve um nome adequado na consulta reversa. Onde o registro `PTR` dele é alterado?",
+    "hint": "Redes e Protocolos, aula 4.",
+    "choices": [
+      {
+        "text": "Com quem detém aquele bloco de IPs, como o seu provedor",
+        "why": "Isso."
+      },
+      {
+        "text": "Na zona example.com do ns1, ao lado do registro A do www",
+        "why": "O nome reverso fica sob in-addr.arpa, que acompanha os endereços, não o seu domínio."
+      },
+      {
+        "text": "Num registro TXT de example.com, que os servidores de e-mail parceiros leem como nome reverso",
+        "why": "O TXT carrega regras como o SPF; a consulta reversa pede um PTR sob in-addr.arpa."
+      },
+      {
+        "text": "No registrador, que publica o nome reverso de cada domínio que vende",
+        "why": "O registrador vende o nome; as zonas reversas pertencem a quem é dono do bloco de endereços."
+      }
+    ]
+  },
+  "ex-gmhgbjem": {
+    "prompt": "Você acrescenta um registro no arquivo de zona do servidor primário de example.com e recarrega; `dig @` no primário mostra o registro. Horas depois o servidor secundário ainda responde com a zona antiga, e o log dele não mostra transferência. O que provavelmente ficou esquecido?",
+    "hint": "Redes e Protocolos, aula 4.",
+    "choices": [
+      {
+        "text": "Esperar o TTL do registro vencer, depois do qual o secundário pergunta de novo",
+        "why": "O TTL diz por quanto tempo os resolvedores guardam uma resposta, não quando o secundário copia a zona."
+      },
+      {
+        "text": "Rodar o named-checkzone, que avisa os outros servidores da versão nova da zona",
+        "why": "O named-checkzone confere o arquivo atrás de erros; ele não avisa servidor nenhum."
+      },
+      {
+        "text": "Aumentar o número de série do SOA, que é como os secundários notam a mudança",
+        "why": "Isso."
+      },
+      {
+        "text": "Limpar o cache do resolvedor com unbound-control para o secundário enxergar",
+        "why": "Isso esvazia a cópia de um resolvedor; o secundário pega a zona do primário, não de um resolvedor."
+      }
+    ]
+  },
+  "ex-4vc1jygc": {
+    "prompt": "O `tcpdump -e arp` mostrou duas respostas a um pedido pelo 192.168.10.10 do servidor de arquivos, e o MAC da resposta errada levou você a uma impressora instalada hoje cedo com esse número digitado à mão. Depois de tirá-lo da impressora, o que evita que isso se repita?",
+    "hint": "Redes e Protocolos, aula 10.",
+    "choices": [
+      {
+        "text": "Limpar a tabela de vizinhos de cada PC toda manhã com `ip neigh flush`",
+        "why": "Limpar só zera em quem o PC acreditou; com dois donos do mesmo endereço a disputa recomeça."
+      },
+      {
+        "text": "Aparelhos fixos recebem números fora da faixa do DHCP, ou uma reserva no DHCP",
+        "why": "Isso."
+      },
+      {
+        "text": "Mudar o servidor de arquivos para uma porta do switch longe da que a impressora usa",
+        "why": "Os dois continuam na mesma rede e os dois continuam respondendo ao mesmo pedido ARP."
+      },
+      {
+        "text": "Uma regra no roteador bloqueando respostas ARP que vêm de impressoras",
+        "why": "O ARP fica na rede local e é respondido antes de qualquer roteador ver; a correção está no endereçamento."
+      }
+    ]
+  },
+  "ex-2yd62aw1": {
+    "prompt": "Uma captura foi gravada na máquina com defeito com `tcpdump -w /tmp/web.pcap host 192.0.2.80`. Para imprimi-la depois, com os mesmos filtros à disposição, o comando é `tcpdump -n ___ /tmp/web.pcap`.",
+    "hint": "Redes e Protocolos, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "-r"
+        ]
+      }
+    ]
+  },
+  "ex-63h3mmfk": {
+    "prompt": "De casa você precisa de um shell no www, que só aceita SSH vindo do escritório. O hábito de um colega é `ssh -A office` e, de lá, `ssh www`. O que a aula faz no lugar, e por quê?",
+    "hint": "Redes e Protocolos, aula 7.",
+    "choices": [
+      {
+        "text": "`ssh -A` como sugerido, já que o agente guarda a chave cifrada no servidor",
+        "why": "Com `-A`, quem for root no servidor do escritório usa o seu agente enquanto você está conectado."
+      },
+      {
+        "text": "Copiar a chave privada para o servidor do escritório, para o segundo salto dispensar agente",
+        "why": "A chave privada fica na máquina onde foi gerada; uma cópia num servidor é uma cópia que o root dele leva."
+      },
+      {
+        "text": "`ssh -J office www`: o servidor do meio só repassa bytes, e a sua chave não sai de casa",
+        "why": "Isso."
+      },
+      {
+        "text": "Pedir que o firewall do www libere o seu endereço de casa e usar `ssh www` direto",
+        "why": "Isso alarga uma regra sensata para um endereço que ninguém confere; o jump host mantém uma porta só."
+      }
+    ]
+  },
+  "ex-2dqyyyea": {
+    "prompt": "A Ana roda `ssh -f -N -L 5432:10.0.0.7:5432 office` no notebook. O banco em 10.0.0.7 responde a partir do servidor do escritório e não é alcançável do notebook. Ela então aponta o cliente do banco para `127.0.0.1:5432` no notebook. O que acontece?",
+    "hint": "Redes e Protocolos, aula 7.",
+    "choices": [
+      {
+        "text": "Falha, porque o próprio notebook não tem rota até 10.0.0.7",
+        "why": "O destino do `-L` é visto a partir do servidor; o notebook só fala com a própria porta e com o sshd."
+      },
+      {
+        "text": "Chega à porta 5432 do próprio notebook, onde nenhum banco escuta",
+        "why": "Agora é o ssh que escuta nessa porta, e leva o que chegar lá até o servidor."
+      },
+      {
+        "text": "Conecta: o sshd no servidor do escritório abre o último trecho até 10.0.0.7",
+        "why": "Isso."
+      },
+      {
+        "text": "Conecta, e o banco registra o endereço do notebook como cliente",
+        "why": "A última conexão é feita pelo sshd no servidor, então o banco enxerga o servidor."
+      }
+    ]
+  },
+  "ex-2pc7a39c": {
+    "prompt": "Num cliente Linux, `cat /proc/sys/net/ipv4/ip_local_port_range` imprime `32768   60999`, a faixa de onde o kernel tira as portas de origem. No máximo, quantas conexões esse cliente mantém abertas ao mesmo tempo para um mesmo endereço e porta de servidor, a partir do seu único endereço?",
+    "hint": "Redes e Protocolos, aula 2.",
+    "unit": "conexões"
+  },
+  "ex-4tccqn5j": {
+    "prompt": "O servidor do escritório foi reinstalado no fim de semana, e agora `ssh office` recusa com `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!`. Ponha os passos na ordem em que a aula os faz.",
+    "hint": "Redes e Protocolos, aula 7.",
+    "items": [
+      "Anotar a impressão digital que o aviso diz que o servidor mandou",
+      "Ler a impressão digital do próprio servidor com `ssh-keygen -lf` no console dele",
+      "Remover a entrada antiga com `ssh-keygen -R 192.168.10.10`",
+      "Conectar de novo e aceitar a chave, como numa primeira conexão"
+    ],
+    "trap": "Remover a linha antiga antes de comparar as impressões digitais transforma um aviso sem explicação num sim digitado às cegas."
+  },
+  "ex-3gcymknq": {
+    "prompt": "Um ping atravessa o roteador do escritório, que também faz NAT, e é capturado dos dois lados dele. Associe cada parte da requisição ao que o roteador fez com ela.",
+    "hint": "Redes e Protocolos, aula 2.",
+    "pairs": [
+      {
+        "left": "os endereços MAC",
+        "right": "trocados, com um par novo para o próximo enlace"
+      },
+      {
+        "left": "o TTL",
+        "right": "um a menos do que antes do roteador"
+      },
+      {
+        "left": "o id do IP",
+        "right": "o mesmo número dos dois lados"
+      },
+      {
+        "left": "o endereço de origem",
+        "right": "reescrito para o endereço público do escritório"
+      }
+    ],
+    "right_distractors": [
+      "aumentado em um no roteador"
+    ]
+  },
+  "ex-ba9kvqfb": {
+    "prompt": "Um backup noturno roda numa única conexão TCP, num link de 1 Gbps até um site a 40 ms de ida e volta. Pelo produto banda-atraso da aula, quantos megabytes precisam estar em trânsito para manter esse link cheio?",
+    "hint": "Fundamentos da Web e Internet, aula 3.",
+    "unit": "MB"
+  },
+  "ex-nff85wye": {
+    "prompt": "Num escritório pequeno, um ping até o provedor leva 15 ms com a linha parada e 400 ms enquanto o backup noturno sobe, e as chamadas de vídeo se desmancham nesse horário. O gerente propõe um plano com o dobro de banda. O que a aula recomenda no lugar?",
+    "hint": "Fundamentos da Web e Internet, aula 3.",
+    "choices": [
+      {
+        "text": "O plano maior: uma linha duas vezes mais larga esvazia a fila duas vezes mais rápido",
+        "why": "Uma linha mais larga enche mais devagar e depois forma a mesma fila; o atraso volta."
+      },
+      {
+        "text": "Reduzir o buffer do roteador a zero, para os pacotes não esperarem",
+        "why": "Sem buffer, rajadas comuns viram perdas; é o buffer que impede uma rajada de virar perda."
+      },
+      {
+        "text": "Gerência inteligente de fila, ou limitar a linha um pouco abaixo da capacidade",
+        "why": "Isso."
+      },
+      {
+        "text": "Um jitter buffer maior no app de vídeo, até as chamadas pararem de falhar",
+        "why": "Um jitter buffer maior soma o próprio atraso a cada palavra e deixa a fila de 400 ms no lugar."
+      }
+    ]
+  },
+  "ex-mx5m9750": {
+    "prompt": "O registro do suporte tem quatro reclamações que dizem \"a internet está lenta\". Associe cada uma ao número de que, segundo a aula, ela realmente trata.",
+    "hint": "Fundamentos da Web e Internet, aula 3.",
+    "pairs": [
+      {
+        "left": "Downloads grandes demoram demais",
+        "right": "banda"
+      },
+      {
+        "left": "Tudo parece arrastado, mas os arquivos chegam bem",
+        "right": "latência"
+      },
+      {
+        "left": "A chamada falha só enquanto alguém baixa algo",
+        "right": "fila"
+      },
+      {
+        "left": "A voz sai picotada e fica cortando",
+        "right": "jitter e perda"
+      }
+    ],
+    "right_distractors": [
+      "o MTU"
+    ]
+  },
+  "ex-3fcadbkf": {
+    "prompt": "Um traceroute até um site lento mostra o salto 6 com 180 ms, enquanto os saltos 7 a 11, que ficam depois dele, estão todos perto de 25 ms. O que a aula conclui sobre o salto 6?",
+    "hint": "Fundamentos da Web e Internet, aula 3.",
+    "choices": [
+      {
+        "text": "É o gargalo, e o provedor que o opera deve ser acionado",
+        "why": "Os saltos seguintes carregariam o atraso dele; com 25 ms, o caminho pelo salto 6 está bem."
+      },
+      {
+        "text": "O roteador dele responde às sondas por último; o tráfego que passa por ele vai bem",
+        "why": "Isso."
+      },
+      {
+        "text": "Os 180 ms são distância: o salto 6 é o primeiro roteador em outro continente",
+        "why": "Um salto causado por distância permanece em todos os saltos seguintes; aqui ele volta a 25 ms."
+      },
+      {
+        "text": "O roteador dele está sobrecarregado e descartando tráfego, por isso o site está lento",
+        "why": "O tráfego que passa por ele chega ao salto 11 em 25 ms; lenta é só a resposta do próprio roteador à sonda."
+      }
+    ]
+  },
+  "ex-x8p918hg": {
+    "prompt": "A tabela de um roteador tem três linhas: `10.0.0.0 – 10.255.255.255` para o roteador A, `10.20.0.0 – 10.20.255.255` para o roteador B, e todo o resto para o gateway padrão. Para onde ele entrega um pacote para `10.20.5.9`?",
+    "hint": "Fundamentos da Web e Internet, aula 2.",
+    "choices": [
+      {
+        "text": "Ao roteador A, a linha que aparece primeiro na tabela",
+        "why": "A ordem não decide; vence a linha mais específica que casa."
+      },
+      {
+        "text": "Ao roteador B",
+        "why": "Isso."
+      },
+      {
+        "text": "Ao roteador A, já que a linha dele cobre mais destinos",
+        "why": "A faixa mais larga é a mais vaga; vence a mais estreita."
+      },
+      {
+        "text": "Ao gateway padrão, porque duas linhas casam ao mesmo tempo",
+        "why": "O padrão é para endereços que linha alguma cobre; este é coberto duas vezes, e vence a mais estreita."
+      }
+    ]
+  },
+  "ex-agmd7vhd": {
+    "prompt": "Num Wi-Fi com perdas, uma página que carrega trinta arquivos por uma única conexão HTTP/2 fica congelando e depois aparece toda de uma vez. Que explicação a aula dá, e o que muda isso?",
+    "hint": "Fundamentos da Web e Internet, aula 2.",
+    "choices": [
+      {
+        "text": "O MTU é grande demais para o Wi-Fi; o HTTP/3 resolve mandando pacotes menores",
+        "why": "Uma falha de MTU faz transferências grandes travarem de vez; a mudança do HTTP/3 é a recuperação por fluxo."
+      },
+      {
+        "text": "Bloqueio de cabeça de fila; o HTTP/3 reenvia por fluxo, e uma perda trava um arquivo",
+        "why": "Isso."
+      },
+      {
+        "text": "O UDP está perdendo os arquivos; passar a página para TCP reenviaria o que se perde",
+        "why": "O HTTP/2 já roda sobre TCP, e é a entrega em ordem do TCP que segura os outros arquivos."
+      },
+      {
+        "text": "Bufferbloat no ponto de acesso; um buffer maior suavizaria os congelamentos",
+        "why": "Um buffer maior soma atraso; travar e depois despejar vem da entrega em ordem esperando um pacote perdido."
+      }
+    ]
+  },
+  "ex-85wz6maa": {
+    "prompt": "Um site renova o certificado automaticamente pela verificação via HTTP. Para apertar a segurança, a equipe de rede fechou a porta 80 na borda, já que os visitantes usam HTTPS. Três meses depois o certificado venceu. O que deu errado, e o que permite manter a 80 fechada?",
+    "hint": "Fundamentos da Web e Internet, aula 9.",
+    "choices": [
+      {
+        "text": "O programa de renovação espera alguém aprovar cada renovação, e ninguém aprovou",
+        "why": "O protocolo é automático; falhou porque a autoridade não alcançou o site por HTTP."
+      },
+      {
+        "text": "Fechar a 80 quebrou o redirecionamento para HTTPS, e sites sem ele são recusados",
+        "why": "A autoridade pede um arquivo na porta 80; o redirecionamento não é o que ela confere."
+      },
+      {
+        "text": "Renovou, mas o servidor ainda segura o certificado antigo na memória",
+        "why": "Uma falha real em outros casos, mas aqui nem houve renovação: a verificação não alcançou a porta 80."
+      },
+      {
+        "text": "A autoridade busca um arquivo por HTTP puro; checar por DNS dispensa a porta 80",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-nfjt7ba2": {
+    "prompt": "Uma loja fica atrás de uma CDN que termina o TLS na borda e fala HTTP puro com a origem. Uma cliente pergunta se o cadeado significa que o número do cartão dela vai cifrado até o servidor da própria loja. Qual é a resposta exata?",
+    "hint": "Fundamentos da Web e Internet, aula 9.",
+    "choices": [
+      {
+        "text": "Não: ele descreve o trecho dela até a borda; o segundo trecho é uma escolha de configuração",
+        "why": "Isso."
+      },
+      {
+        "text": "Sim: a CDN cifra de novo com o mesmo certificado, então os dois trechos estão cobertos",
+        "why": "Neste arranjo o segundo trecho é HTTP puro; o cadeado não fala dele."
+      },
+      {
+        "text": "Sim: a CDN repassa os bytes cifrados dela sem lê-los",
+        "why": "Terminar significa que a borda decifra e abre uma segunda conexão; ela lê a requisição."
+      },
+      {
+        "text": "Não: o TLS protege a barra de endereço, e os campos do formulário viajam à parte",
+        "why": "Tudo na requisição vai na mesma conexão cifrada até a borda; a brecha é o segundo trecho."
+      }
+    ]
+  },
+  "ex-b2ebdsre": {
+    "prompt": "Durante um pico de tráfego, `ss -tlnp` num servidor web mostra o listener da porta 443 com `Recv-Q 511` e `Send-Q 511`. O que esse par diz?",
+    "hint": "Linux e Linha de Comando, aula 11.",
+    "choices": [
+      {
+        "text": "Há 511 bytes esperando confirmação de clientes que ficaram mudos",
+        "why": "Num socket LISTEN as colunas contam conexões, não bytes; bytes são das conexões estabelecidas."
+      },
+      {
+        "text": "As duas filas batem, o que indica que o servidor está dando conta",
+        "why": "Iguais significa que a fila chegou ao máximo; esse é o sinal de sobrecarga."
+      },
+      {
+        "text": "O backlog está cheio: o programa demora a aceitar, e conexões novas são descartadas",
+        "why": "Isso."
+      },
+      {
+        "text": "A placa de rede ficou sem descritores e o driver está atrasado",
+        "why": "Isso é o contador `missed` do `ip -s link`; o Recv-Q de um listener fala do programa."
+      }
+    ]
+  },
+  "ex-x2trwvkh": {
+    "prompt": "O `ip -s link show eth0` tem três contadores de recepção que indicam problema. Associe cada um ao que, segundo a aula, ele aponta.",
+    "hint": "Linux e Linha de Comando, aula 11.",
+    "pairs": [
+      {
+        "left": "`errors`",
+        "right": "um cabo ou uma placa: quadros malformados, checksums que falham"
+      },
+      {
+        "left": "`dropped`",
+        "right": "um buffer: o pacote estava bom e não tinha onde ficar"
+      },
+      {
+        "left": "`missed`",
+        "right": "o driver: a placa não tinha descritor livre"
+      }
+    ],
+    "right_distractors": [
+      "uma regra de firewall que descartou o pacote"
+    ]
+  },
+  "ex-b7mxhfh6": {
+    "prompt": "Uma linha do cron puxa a configuração de todos os switches a cada cinco minutos. Numa tarde os switches respondem devagar, uma execução leva sete minutos, e à noite uma dúzia de cópias disputa o disco. Com que linha a aula termina?",
+    "hint": "Linux e Linha de Comando, aula 13.",
+    "choices": [
+      {
+        "text": "`*/5 * * * * /usr/bin/flock -w 600 /tmp/pull.lock /usr/local/bin/pull.sh`",
+        "why": "Esperar enfileira as execuções; uma pulada volta em cinco minutos, uma enfileirada continua na fila à meia-noite."
+      },
+      {
+        "text": "`*/5 * * * * /usr/bin/flock -n /tmp/pull.lock /usr/local/bin/pull.sh`",
+        "why": "Sem `-E 0` uma trava ocupada sai com 1, e o monitoramento acusa como falha um job que funciona."
+      },
+      {
+        "text": "`*/5 * * * * /usr/bin/flock -E 0 -n /tmp/pull.lock /usr/local/bin/pull.sh`",
+        "why": "Isso."
+      },
+      {
+        "text": "`*/5 * * * * [ -f /tmp/pull.pid ] || /usr/local/bin/pull.sh`, com o script gravando o PID",
+        "why": "Conferir e gravar são dois passos, e um job morto deixa o arquivo para trás, então ele para de rodar de vez."
+      }
+    ]
+  },
+  "ex-kn4er1hs": {
+    "prompt": "Um servidor Ubuntu roda em UTC. O crontab dele começa com `CRON_TZ=America/Sao_Paulo` e depois `0 3 * * * /usr/local/bin/backup.sh`, pensado para as três da manhã em São Paulo (UTC−3). Quando o backup roda de fato?",
+    "hint": "Linux e Linha de Comando, aula 13.",
+    "choices": [
+      {
+        "text": "Às 03:00 em São Paulo, que são 06:00 UTC",
+        "why": "No cron do Debian e do Ubuntu, o CRON_TZ chega ao job como variável e o agendador o ignora."
+      },
+      {
+        "text": "Às 03:00 UTC, que é meia-noite em São Paulo",
+        "why": "Isso."
+      },
+      {
+        "text": "Não roda: o cron rejeita um crontab com uma variável que ele não conhece",
+        "why": "A variável é aceita e exportada para o job; nada avisa você."
+      },
+      {
+        "text": "Às 03:00 no fuso de quem editou o crontab por último",
+        "why": "O cron usa o fuso da máquina, de /etc/localtime, não o de quem editou."
+      }
+    ]
+  },
+  "ex-wt3pjppq": {
+    "prompt": "O `switches.txt` lista o endereço de gerência de cada switch, um por linha, sem ordem definida. Você suspeita que dois switches receberam o mesmo endereço. Que comando aponta as colisões?",
+    "hint": "Linux e Linha de Comando, aula 8.",
+    "choices": [
+      {
+        "text": "`sort switches.txt | uniq -d`",
+        "why": "Isso."
+      },
+      {
+        "text": "`uniq -d switches.txt | sort`",
+        "why": "O uniq só compara linhas vizinhas; sem ordenar, dois endereços iguais distantes escapam."
+      },
+      {
+        "text": "`sort -u switches.txt`",
+        "why": "Isso imprime cada endereço uma vez e joga fora o fato de alguns aparecerem duas."
+      },
+      {
+        "text": "`sort -n switches.txt | uniq -u`",
+        "why": "O `-u` mantém as linhas que aparecem uma única vez, o contrário do que você quer."
+      }
+    ]
+  },
+  "ex-1p5kxmpx": {
+    "prompt": "O `sort` puro imprime `1024` antes de `22` e `443`, porque compara caracteres e não valores. Para ordenar uma lista de portas pelo valor, o comando é `sort ___`.",
+    "hint": "Linux e Linha de Comando, aula 8.",
+    "blanks": [
+      {
+        "accept": [
+          "-n",
+          "--numeric-sort",
+          "-g"
+        ]
+      }
+    ]
+  },
+  "ex-sxvqzv8t": {
+    "prompt": "`down=0; cat switches.txt | while read -r ip; do ping -c1 -W1 \"$ip\" >/dev/null || down=$((down+1)); done; echo \"$down down\"` imprime `0 down`, embora dois switches estejam desligados. Por quê?",
+    "hint": "Linux e Linha de Comando, aula 9.",
+    "choices": [
+      {
+        "text": "O `ping -c1` devolve sucesso num timeout, então o contador fica parado",
+        "why": "O ping sai com código diferente de zero quando não há resposta; a contagem aconteceu, num processo filho."
+      },
+      {
+        "text": "O `$((down+1))` trata `down` como texto, então a soma sai vazia",
+        "why": "A expansão aritmética lê como número; a soma estava certa dentro do subshell."
+      },
+      {
+        "text": "O laço roda num subshell, então a contagem se perde quando o pipe termina",
+        "why": "Isso."
+      },
+      {
+        "text": "O `read -r` para no primeiro endereço inalcançável e encerra o laço antes",
+        "why": "O read para no fim do arquivo; um ping que falha não mexe na entrada do laço."
+      }
+    ]
+  },
+  "ex-ezdfn487": {
+    "prompt": "O `hosts.txt` vem de uma ferramenta de inventário que não põe quebra de linha depois da última linha. Quais destes laços imprimem todos os hosts, inclusive o último? Marque todas as que se aplicam.",
+    "hint": "Linux e Linha de Comando, aula 9.",
+    "choices": [
+      {
+        "text": "`while IFS= read -r h || [ -n \"$h\" ]; do echo \"$h\"; done < hosts.txt`",
+        "why": "Isso."
+      },
+      {
+        "text": "`cat hosts.txt | while IFS= read -r h || [ -n \"$h\" ]; do echo \"$h\"; done`",
+        "why": "Isso: o subshell perde variáveis, e imprimir não depende delas."
+      },
+      {
+        "text": "`while IFS= read -r h; do echo \"$h\"; done < hosts.txt`",
+        "why": "O read falha no fim do arquivo antes da quebra, então o último host é lido e não impresso."
+      },
+      {
+        "text": "`while IFS= read -r h; do echo \"$h\"; done < <(cat hosts.txt)`",
+        "why": "A substituição de processo evita o subshell, não a quebra que falta; o último read ainda falha."
+      }
+    ]
+  },
+  "ex-g4zw4c11": {
+    "prompt": "Antes de uma janela de mudança você quer ler o `firewall.conf` como estava dois commits atrás, sem mexer na cópia em disco que o script de deploy usa. Qual comando?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4.",
+    "choices": [
+      {
+        "text": "`git restore --source=HEAD~2 firewall.conf`",
+        "why": "Isso grava a versão antiga no disco, justamente o arquivo que o deploy lê."
+      },
+      {
+        "text": "`git show HEAD~2:firewall.conf`",
+        "why": "Isso."
+      },
+      {
+        "text": "`git reset --soft HEAD~2`",
+        "why": "Isso volta o branch dois commits; reescreve o histórico em vez de mostrar um arquivo."
+      },
+      {
+        "text": "`git revert HEAD~2`",
+        "why": "Isso cria um commit novo desfazendo um antigo: nada para ler, e algo para desfazer."
+      }
+    ]
+  },
+  "ex-x83dbr7e": {
+    "prompt": "Depois de uma tarde ruim no seu repositório local de configurações de switches, a quais destes o `git reflog` ainda leva você de volta? Marque todas as que se aplicam.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 4.",
+    "choices": [
+      {
+        "text": "Um commit que o `git commit --amend` substituiu",
+        "why": "Isso."
+      },
+      {
+        "text": "Commits que o `git reset --hard HEAD~2` deixou para trás",
+        "why": "Isso: estão fora de qualquer branch, e continuam lá."
+      },
+      {
+        "text": "Um commit de um branch que você já apagou",
+        "why": "Isso: os commits de um branch apagado continuam achados por semanas."
+      },
+      {
+        "text": "Uma edição que o `git restore` descartou antes de ir para o staging",
+        "why": "Ela nunca foi commitada, então o Git nunca teve uma cópia."
+      },
+      {
+        "text": "Mudanças não commitadas que o `git reset --hard` sobrescreveu",
+        "why": "O reflog guarda commits; o que não foi commitado se perdeu."
+      }
+    ]
+  },
+  "ex-7g722x0w": {
+    "prompt": "O Git não diz nada sobre `backups/core-sw1.cfg`, embora o arquivo esteja ali. Para ver qual linha do `.gitignore` o esconde: `git ___ -v backups/core-sw1.cfg`.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "check-ignore"
+        ]
+      }
+    ]
+  },
+  "ex-gm70rpdx": {
+    "prompt": "O `.gitignore` do repositório tem `*.cfg`, porque as configs geradas a partir de templates são refeitas a cada execução. Um arquivo, `templates/base.cfg`, é escrito à mão e precisa ser commitado. O que você acrescenta?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "Uma linha `/templates/base.cfg`, que ancora o arquivo na raiz",
+        "why": "A barra inicial ancora um padrão; sozinha ela é mais uma coisa a ignorar, não uma exceção."
+      },
+      {
+        "text": "Nada: o `git add .` pega também os arquivos ignorados",
+        "why": "O `git add .` pula os ignorados; deixá-los de fora é para isso que serve ignorar."
+      },
+      {
+        "text": "Uma linha `!templates/base.cfg` abaixo da regra `*.cfg`",
+        "why": "Isso."
+      },
+      {
+        "text": "`git rm --cached templates/base.cfg`, para o Git voltar a rastreá-lo",
+        "why": "O `rm --cached` para de rastrear um arquivo; é o movimento contrário."
+      }
+    ]
+  },
+  "ex-cjy5p0r4": {
+    "prompt": "O seu repositório de automação traz o repositório da equipe de templates como submódulo em `templates/`. Eles enviaram uma correção para o `main` deles ontem, e mesmo assim as configs geradas ainda usam o template antigo, inclusive depois de `git pull` no seu repositório. Por quê?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 10.",
+    "choices": [
+      {
+        "text": "O `git pull` ignora submódulos; `git submodule update --init` traz o `main` mais novo deles",
+        "why": "O `update --init` faz checkout do commit fixado, que ainda é o antigo."
+      },
+      {
+        "text": "A correção está no histórico deles, mas o Git LFS segura o template antigo até ser buscado",
+        "why": "LFS trata de arquivos grandes; um submódulo fica fixado num commit exato."
+      },
+      {
+        "text": "O seu projeto registra um commit deles e fica nele até alguém movê-lo e commitar",
+        "why": "Isso."
+      },
+      {
+        "text": "O push deles foi recusado, porque um submódulo é só leitura para a equipe dona",
+        "why": "Eles enviaram para o próprio repositório normalmente; o seu projeto aponta para um commit mais antigo."
+      }
+    ]
+  },
+  "ex-e19wema3": {
+    "prompt": "O servidor de automação faz deploy do commit que a tag `v2.3` indicar. Você descobre que a `v2.3`, já na cópia compartilhada, foi posta no commit errado. O que a aula faz?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "choices": [
+      {
+        "text": "Apagar a `v2.3` e enviá-la de novo no commit certo, para o nome ficar arrumado",
+        "why": "Pessoas e máquinas já usaram a `v2.3`; movê-la dá um número de versão a dois commits."
+      },
+      {
+        "text": "Deixar a `v2.3` quieta e marcar o commit certo como `v2.3.1`",
+        "why": "Isso."
+      },
+      {
+        "text": "Dar `git push --force` no commit certo, que arrasta a tag junto",
+        "why": "O force move um branch, e mover uma versão publicada é o que a aula descarta."
+      },
+      {
+        "text": "Recriar a `v2.3` como tag leve, que pode apontar para outro lugar",
+        "why": "Leve significa menos detalhes registrados; continua um nome fixo para um commit."
+      }
+    ]
+  },
+  "ex-w9djzbqx": {
+    "prompt": "Um colega enviou uma correção para o `main` compartilhado há dez minutos. No seu notebook, `git status` diz `Your branch is up to date with 'origin/main'`. O que explica isso?",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 7.",
+    "choices": [
+      {
+        "text": "O push dele ainda não chegou ao servidor; um push leva alguns minutos para cair",
+        "why": "O push termina quando o comando volta; o servidor já tem o commit."
+      },
+      {
+        "text": "Ele enviou para outro branch, já que o `status` consulta o servidor sobre o `main`",
+        "why": "O `status` não consulta ninguém; compara com o seu marcador, que só anda com fetch ou pull."
+      },
+      {
+        "text": "O seu `main` já tem o commit dele, que o Git mesclou por você",
+        "why": "O Git não fala com o remoto por conta própria; nada foi mesclado."
+      },
+      {
+        "text": "O `origin/main` é o seu marcador do último fetch, e o `git fetch` o atualiza",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-j7thzaza": {
+    "prompt": "O chamado #41 pede monitoramento nos switches novos. Para o chamado ser encerrado automaticamente quando o pull request for mesclado, a descrição dele diz `___ #41`, enquanto os commits dizem `Refs #41`, que só cria o vínculo.",
+    "hint": "Git e Trabalho em Equipe: Versionamento, Revisão e Processo, aula 12.",
+    "blanks": [
+      {
+        "accept": [
+          "Closes",
+          "Close",
+          "Fixes",
+          "Resolves"
+        ]
+      }
+    ]
+  },
+  "ex-2p0vd3j1": {
+    "prompt": "Um job do cron pede a lista de equipamentos à API de uma controladora de rede a cada quinze minutos com `requests.get(url)`. Numa manhã uma dúzia de cópias ainda está rodando: a controladora aceitou as conexões e depois não mandou nada. O que a aula acrescenta a essa chamada?",
+    "hint": "Python, aula 21.",
+    "choices": [
+      {
+        "text": "`r.raise_for_status()` logo depois, para o silêncio virar um `HTTPError`",
+        "why": "O raise_for_status lê um código de status, e um servidor mudo não manda nenhum."
+      },
+      {
+        "text": "`timeout=(3, 10)`, para um servidor mudo virar uma exceção",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma `Session`, cuja conexão reaproveitada dá menos motivo para a controladora travar",
+        "why": "A Session economiza handshakes; sem timeout ela espera um servidor mudo como qualquer chamada."
+      },
+      {
+        "text": "Um adaptador de retry para 502, 503 e 504, repetindo a chamada até responder",
+        "why": "Um retry precisa de uma resposta ou de um erro para reagir; sem timeout a primeira chamada não termina."
+      }
+    ]
+  },
+  "ex-azm2g6t3": {
+    "prompt": "Um script acessa a API de uma controladora por uma `Session` com adaptador de retry. Pela aula, quais destas respostas vale a pena repetir? Marque todas as que se aplicam.",
+    "hint": "Python, aula 21.",
+    "choices": [
+      {
+        "text": "`429 Too Many Requests`",
+        "why": "Isso."
+      },
+      {
+        "text": "`503 Service Unavailable`",
+        "why": "Isso."
+      },
+      {
+        "text": "`502 Bad Gateway`",
+        "why": "Isso."
+      },
+      {
+        "text": "`404 Not Found`",
+        "why": "Um 404 vai dizer o mesmo da próxima vez; repetir só repete."
+      },
+      {
+        "text": "`400 Bad Request`",
+        "why": "A própria requisição está errada, e falha igual quantas vezes for enviada."
+      }
+    ]
+  },
+  "ex-kp5xqw6k": {
+    "prompt": "`re.findall(r\"(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\", line)` roda numa linha de log com dois endereços IPv4. O que ele devolve?",
+    "hint": "Python, aula 10.",
+    "choices": [
+      {
+        "text": "Uma lista com os dois endereços, como strings do tipo `'10.0.0.1'`",
+        "why": "Isso é o findall sem grupo; com grupos ele devolve os grupos, e quatro deles formam tuplas."
+      },
+      {
+        "text": "Uma lista de oito strings, os octetos um atrás do outro",
+        "why": "Com dois ou mais grupos cada casamento vira uma tupla; os octetos não são achatados."
+      },
+      {
+        "text": "Um `Match` do primeiro endereço, lido com `.group(1)` a `.group(4)`",
+        "why": "Isso é o que o search devolve; o findall devolve todos os casamentos, numa lista."
+      },
+      {
+        "text": "Uma lista de duas tuplas, cada uma com quatro strings",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-rbhv8xm9": {
+    "prompt": "Um script marca linhas de configuração que contêm um endereço digitado pelo operador: `re.search(addr, line)` com `addr = \"10.0.0.1\"`. Ele também marca linhas com o host `ip-10-0-0-1`. O que a aula faz?",
+    "hint": "Python, aula 10.",
+    "choices": [
+      {
+        "text": "Usar `re.match`, que compara a linha inteira em vez de procurar nela",
+        "why": "O match só se ancora no início, e os pontos dele continuam casando qualquer caractere."
+      },
+      {
+        "text": "Acrescentar `re.IGNORECASE`, já que o nome do host está em minúsculas",
+        "why": "Maiúsculas não são o problema; um ponto sem escape casa os hífens."
+      },
+      {
+        "text": "Compilar com `re.compile` antes, para os pontos serem lidos como pontos",
+        "why": "Compilar dá nome e guarda o padrão; não muda o que um ponto significa."
+      },
+      {
+        "text": "Passar `re.escape(addr)`, para cada ponto ali valer como ponto literal",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-mr6hm5ns": {
+    "prompt": "Um job noturno grava o inventário de equipamentos com `json.dump(data, f, indent=2)` num arquivo versionado no git. Toda noite o diff mostra os campos em outra ordem, embora nenhum equipamento tenha mudado. A aula acrescenta `___` a essa chamada.",
+    "hint": "Python, aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "sort_keys=True",
+          "sort_keys = True"
+        ]
+      }
+    ]
+  },
+  "ex-9z1wvzyc": {
+    "prompt": "Um coletor regrava `state.json` a cada minuto com `open(path, \"w\")`, e outro processo lê esse arquivo ao iniciar. Depois de uma queda de energia, o outro processo quebra num arquivo vazio. O que a aula muda?",
+    "hint": "Python, aula 9.",
+    "choices": [
+      {
+        "text": "Gravar em `state.tmp` ao lado e depois `tmp.replace(path)` sobre o nome real",
+        "why": "Isso."
+      },
+      {
+        "text": "Abrir com `\"a\"` em vez de `\"w\"`, para o conteúdo antigo ficar no lugar",
+        "why": "Acrescentar empilha o estado de cada minuto num arquivo, que deixa de ser um documento JSON."
+      },
+      {
+        "text": "Chamar `json.dump` com `indent=2`, para um arquivo parcial continuar legível",
+        "why": "Indentação é para pessoas e diffs; um arquivo pela metade é inválido do mesmo jeito."
+      },
+      {
+        "text": "Envolver a gravação em `try`/`except OSError` e registrar o que deu errado",
+        "why": "Uma queda de energia não levanta nada no programa; o `\"w\"` truncou o arquivo antes do primeiro byte."
+      }
+    ]
+  },
+  "ex-717zzveq": {
+    "prompt": "O `requirements.txt` tem uma linha, `requests==2.31.0`. O deploy passou na segunda; na quinta ele falha dentro do `urllib3`, e ninguém mudou nada. O que aconteceu, e o que a aula usa para impedir isso?",
+    "hint": "Python, aula 18.",
+    "choices": [
+      {
+        "text": "O requests lançou uma correção, e `~=2.31.0` o teria segurado",
+        "why": "O `==2.31.0` já segura o requests; quem mudou de versão foi o urllib3."
+      },
+      {
+        "text": "O índice serviu um arquivo corrompido, que o `--require-hashes` sozinho teria pego",
+        "why": "Hashes pegam bytes diferentes numa mesma versão; aqui um urllib3 mais novo foi instalado legitimamente."
+      },
+      {
+        "text": "Uma dependência do requests mudou; um lock file do pip-compile fixa todos os pacotes",
+        "why": "Isso."
+      },
+      {
+        "text": "O build usou `pip` em vez de `python -m pip`, então instalou no lugar errado",
+        "why": "Isso falharia no import em qualquer dia; aqui a instalação funcionou e trouxe um urllib3 mais novo."
+      }
+    ]
+  },
+  "ex-aww826t0": {
+    "prompt": "Um script reúne todos os equipamentos de uma API de controladora que pagina os resultados com um link `next`. Ponha as linhas de dentro do `while url:` na ordem da aula.",
+    "hint": "Python, aula 21.",
+    "items": [
+      "`r = s.get(url, timeout=10)`",
+      "`r.raise_for_status()`",
+      "`page = r.json()`",
+      "`rows += page[\"results\"]`",
+      "`url = page[\"next\"]`"
+    ],
+    "trap": "Chamar `.json()` antes de `raise_for_status()` falha numa página de erro de um jeito confuso, em vez de dizer o status."
+  },
+  "ex-ak97w87g": {
+    "prompt": "Numa entrevista para uma vaga júnior de infraestrutura perguntam como você montaria a rede de um escritório de vinte pessoas. Que abertura a aula mais valoriza?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 14.",
+    "choices": [
+      {
+        "text": "Um desenho redundante de cara, com dois firewalls, um segundo provedor e três VLANs",
+        "why": "Peças que ninguém pediu soam decoradas; o escritório mais simples que funciona vem antes."
+      },
+      {
+        "text": "A marca e o modelo de cada aparelho que você compraria, com preços",
+        "why": "A pergunta é sobre pensar num sistema, não sobre fazer compras."
+      },
+      {
+        "text": "Como ela cresceria para mil pessoas, já que é aí que quebra",
+        "why": "Crescimento é a última etapa, numa frase; perguntar vem primeiro."
+      },
+      {
+        "text": "Algumas perguntas antes (aparelhos, o que não pode cair, se há servidor), depois o desenho mais simples",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-eg7cfbh9": {
+    "prompt": "Um exercício para casa pede que você conserte uma máquina virtual quebrada, com tempo sugerido de três horas. Às três horas o DNS e o servidor web funcionam, e o backup noturno ainda não está configurado. O que a aula manda fazer?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13.",
+    "choices": [
+      {
+        "text": "Parar e entregar o runbook com uma nota sobre o backup que falta e o próximo passo",
+        "why": "Isso."
+      },
+      {
+        "text": "Continuar até o backup funcionar, já que uma resposta completa vale uma noite a mais",
+        "why": "Quem avalia compara com o que cabe no tempo sugerido e observa como você trata um prazo."
+      },
+      {
+        "text": "Pedir uma semana a mais, para mandar algo terminado",
+        "why": "Uma entrega perfeita e atrasada costuma ser pior que uma incompleta no prazo."
+      },
+      {
+        "text": "Mandar o que funciona e deixar o backup fora da nota, já que o enunciado talvez não confira",
+        "why": "Dizer o que você não fez é justamente para que serve a última linha da nota."
+      }
+    ]
+  },
+  "ex-c1zdtkaa": {
+    "prompt": "Três candidaturas seguidas para vagas júnior de NOC terminaram logo depois da conversa de triagem com o recrutador. Onde a aula olha primeiro?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 19.",
+    "choices": [
+      {
+        "text": "No exercício ao vivo, praticado em voz alta com alguém olhando",
+        "why": "Essa é a correção quando a entrevista técnica vive falhando; estas pararam antes."
+      },
+      {
+        "text": "Na seção de habilidades do currículo, somando as ferramentas de cada anúncio",
+        "why": "O currículo rendeu a ligação; recusa na triagem quase sempre é desencontro prático."
+      },
+      {
+        "text": "Nas respostas que você deu sobre salário, contrato, turnos e local",
+        "why": "Isso."
+      },
+      {
+        "text": "Na própria área, já que três seguidas dizem que a vaga está fora de alcance",
+        "why": "A mesma etapa falhando de novo é sinal sobre essa etapa, não sobre a área."
+      }
+    ]
+  },
+  "ex-jrq15xp6": {
+    "prompt": "Você tem a entrevista final numa empresa semana que vem, enquanto outra de que você também gosta ainda está duas etapas atrás. O que a aula sugere?",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 19.",
+    "choices": [
+      {
+        "text": "Pausar o processo mais lento até a primeira responder, para não fazer malabarismo",
+        "why": "Parar por um processo é o erro caro; o funil esvazia."
+      },
+      {
+        "text": "Não dizer nada a nenhuma, porque citar outro processo parece deslealdade",
+        "why": "A aula chama isso de normal, e o jeito honesto de alinhar dois processos."
+      },
+      {
+        "text": "Contar à mais lenta sobre a final e perguntar a data da decisão dela",
+        "why": "Isso."
+      },
+      {
+        "text": "Desistir da mais lenta, já que a final mostra onde querem você",
+        "why": "Até uma proposta ser assinada, mantenha os outros processos vivos."
+      }
+    ]
+  },
+  "ex-8mems6k1": {
+    "prompt": "No fim de entrevistas para vagas júnior de redes você ouve estas respostas. Associe cada uma ao que a aula enxerga nela.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 16.",
+    "pairs": [
+      {
+        "left": "\"Aqui você vai ter muita autonomia.\"",
+        "right": "um alerta: o júnior chega à autonomia aos poucos"
+      },
+      {
+        "left": "\"As duas últimas pessoas nesta vaga saíram rápido.\"",
+        "right": "perguntar o que aconteceu com elas"
+      },
+      {
+        "left": "\"A gente não mede isso de verdade.\" (sobre sucesso)",
+        "right": "você vai ser julgado por impressões"
+      },
+      {
+        "left": "\"A parte mais difícil são os usuários.\"",
+        "right": "não é ruim por si, e vale uma pergunta a mais"
+      }
+    ],
+    "right_distractors": [
+      "um time que recebe bem quem chega"
+    ]
+  },
+  "ex-p85c8y93": {
+    "prompt": "Muitas empresas brasileiras recebem currículos por um formulário na página de carreiras que alimenta um sistema de recrutamento, que extrai o texto. O ponto prático da aula: mandar um PDF gerado de um documento, cujo texto possa ser ___, e não uma imagem escaneada.",
+    "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 3.",
+    "blanks": [
+      {
+        "accept": [
+          "selecionado",
+          "copiado",
+          "selecionável",
+          "pesquisado"
+        ]
+      }
+    ]
+  },
+  "ex-weqv6rgh": {
+    "prompt": "Um PC deveria ser 192.168.4.20/24 com gateway 192.168.4.1, mas alguém digitou /22. A internet continua funcionando. Quais destinos param de responder, com uma linha INCOMPLETE no `ip neigh` para cada um que se tenta?",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 12.",
+    "choices": [
+      {
+        "text": "Tudo fora de 192.168.4.0/24, já que um /22 deixa o gateway fora da sub-rede do próprio PC.",
+        "why": "192.168.4.1 está dentro de 192.168.4.0/22, então o gateway segue funcionando, como a internet mostra."
+      },
+      {
+        "text": "Os vizinhos em 192.168.4.x, porque o endereço de broadcast mudou para 192.168.7.255.",
+        "why": "As respostas ARP dos vizinhos reais continuam chegando; falham os endereços que a máscara maior acrescentou."
+      },
+      {
+        "text": "192.168.5.0 a 192.168.7.255: o PC agora acha que estão no seu cabo e pergunta por eles via ARP ali.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nenhum por muito tempo: o roteador vê que a rota mais longa é a dele e corrige o PC.",
+        "why": "O pacote nem chega ao roteador; o PC o manda direto para o próprio cabo."
+      }
+    ]
+  },
+  "ex-41f76qwa": {
+    "prompt": "Um plano tirado de um só bloco precisa de uma LAN de 62 hosts, uma LAN de 63 hosts e um enlace ponto a ponto em /30. Cada LAN recebe o menor prefixo que a comporta. Quantos endereços o plano usa no total?",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 13.",
+    "unit": "endereços"
+  },
+  "ex-0d16jx30": {
+    "prompt": "Um roteador de filial tem 172.16.8.0/24 e 172.16.9.0/24 e uma rota padrão para a matriz, que chega à filial por um único resumo, 172.16.8.0/22 via filial. Um ping da matriz para 172.16.10.5, não usado, volta `Time to live exceeded`. Que mudança resolve?",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 13.",
+    "choices": [
+      {
+        "text": "`ip route add unreachable 172.16.8.0/22` no roteador da matriz, para o resumo nunca mandar embora os endereços não usados.",
+        "why": "O descarte fica no roteador dono das sub-redes dentro do resumo; na matriz ele brigaria com o próprio resumo."
+      },
+      {
+        "text": "Trocar a rota padrão da filial por uma rota só para o prefixo da própria matriz.",
+        "why": "Isso para este laço, mas também isola a filial de tudo o mais que a rota padrão alcançava."
+      },
+      {
+        "text": "`ip route add unreachable 172.16.8.0/22` na filial.",
+        "why": "Isso."
+      },
+      {
+        "text": "Aumentar o TTL nos hosts da matriz para o pacote durar o bastante até chegar.",
+        "why": "O pacote gira entre dois roteadores; um TTL maior só o deixa girar por mais tempo."
+      }
+    ]
+  },
+  "ex-en459hw2": {
+    "prompt": "Um roteador tem uma rota estática para 10.50.0.0/16 e ouve 10.50.1.0/24 tanto do RIP quanto do OSPF, com as distâncias administrativas padrão. Qual rota leva um pacote para 10.50.1.7?",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 14.",
+    "choices": [
+      {
+        "text": "O /16 estático, já que uma rota estática com distância 1 é mais confiável que qualquer coisa aprendida por protocolo.",
+        "why": "A distância só compara rotas para o mesmo prefixo; o /24, mais longo, foi escolhido antes de a confiança entrar."
+      },
+      {
+        "text": "O /24 do RIP, porque a contagem de saltos é comparada antes do custo do OSPF.",
+        "why": "Métricas de dois protocolos não se comparam; a distância 110 do OSPF vence os 120 do RIP."
+      },
+      {
+        "text": "O /24 do OSPF.",
+        "why": "Isso."
+      },
+      {
+        "text": "A que tiver sido instalada por último entre as três.",
+        "why": "A ordem de chegada não tem papel na escolha da rota."
+      }
+    ]
+  },
+  "ex-5m31srka": {
+    "prompt": "Coloque as perguntas que um roteador faz, quando várias rotas poderiam levar um pacote, na ordem em que ele as faz.",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 14.",
+    "items": [
+      "Qual rota tem o prefixo mais longo?",
+      "Entre essas, qual fonte tem a menor distância administrativa?",
+      "Entre essas, qual rota tem a menor métrica?"
+    ],
+    "trap": "A confiança só é perguntada entre rotas para o mesmo prefixo, e uma métrica só ao lado de outra da mesma fonte."
+  },
+  "ex-8f2gxt2s": {
+    "prompt": "r1 tem uma rota padrão via ra com métrica 100 e outra via rb com métrica 200. O software de ra trava, mas a porta continua acesa e o cabo de r1 até ele mantém o sinal. O que acontece com o tráfego de r1?",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 14.",
+    "choices": [
+      {
+        "text": "Continua indo para ra e se perde lá, com a rota via rb sem uso.",
+        "why": "Isso."
+      },
+      {
+        "text": "O kernel marca a rota via ra como `dead linkdown` e passa o tráfego para rb em cerca de um segundo.",
+        "why": "Essa marcação vem da perda de sinal na porta do próprio r1, e aqui a porta continua ativa."
+      },
+      {
+        "text": "As duas rotas passam a ser usadas ao mesmo tempo até ra voltar.",
+        "why": "Métricas diferentes significam que uma rota é escolhida; nada aqui divide o tráfego."
+      },
+      {
+        "text": "r1 responde `Destination Net Unreachable` a todo remetente até alguém remover a rota via ra.",
+        "why": "r1 ainda tem uma rota em que acredita, então encaminha em vez de recusar."
+      }
+    ]
+  },
+  "ex-ncn9379d": {
+    "prompt": "No EIGRP, a LAN de pc2 está ligada tanto a r2 quanto a r5. O melhor caminho de r1 até ela é via r2, com FD 30720; r5 informa uma distância de 28160 para a mesma LAN e custaria 33280 no total para r1. O que r5 é para r1 nessa rede?",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 16.",
+    "choices": [
+      {
+        "text": "Nenhum reserva, porque o total dele, 33280, é maior que os 30720 atuais.",
+        "why": "A condição compara a distância informada pelo vizinho, 28160, com a FD de r1, 30720, e 28160 é menor."
+      },
+      {
+        "text": "Um segundo sucessor, dividindo o tráfego com r2 a partir de agora.",
+        "why": "Sucessor é um melhor caminho; 33280 não é igual a 30720, então r5 espera em vez de dividir."
+      },
+      {
+        "text": "Uma rota que r1 teria de pedir entrando em estado active se r2 falhar, como no anel.",
+        "why": "Isso era o anel, onde o outro vizinho estava mais longe; aqui r5 está colado à LAN."
+      },
+      {
+        "text": "Um sucessor viável (feasible successor), usado na hora se r2 falhar.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-wt360a4w": {
+    "prompt": "Duas falhas de OSPF com os timers padrão: numa o cabo até um vizinho é puxado; na outra um switch entre os dois roteadores morre mas continua acendendo as duas portas. Quanto custa cada uma?",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 16.",
+    "choices": [
+      {
+        "text": "Os dois custam uns 40 segundos, porque o OSPF só fica sabendo de falha pela falta de hellos.",
+        "why": "Um cabo puxado derruba o sinal, que o roteador percebe na hora sem esperar hellos."
+      },
+      {
+        "text": "O cabo puxado custa 40 segundos; o switch morto é notado na hora porque os hellos falham.",
+        "why": "Está invertido: a falta de hellos só é notada quando o timer dead se esgota."
+      },
+      {
+        "text": "As duas se resolvem nos 10 segundos de um intervalo de hello.",
+        "why": "Um vizinho é declarado morto após 40 segundos de silêncio, quatro hellos, não um."
+      },
+      {
+        "text": "O cabo puxado custa um recálculo em instantes; o switch morto custa antes até 40 segundos do intervalo dead.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-2zwda4fw": {
+    "prompt": "Uma empresa repete o próprio AS três vezes no anúncio para o provedor A, para o tráfego entrar pelo provedor B. O tráfego dos clientes do próprio A continua chegando pelo enlace com A. Qual o motivo mais provável?",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 17.",
+    "choices": [
+      {
+        "text": "A dá às rotas vindas dos seus clientes uma local preference maior, e ela é comparada antes do tamanho do caminho.",
+        "why": "Isso."
+      },
+      {
+        "text": "A repetição só funciona com um ROA no RPKI.",
+        "why": "A validação de origem confere quem origina o prefixo; não tem papel no tamanho do caminho."
+      },
+      {
+        "text": "A descarta o anúncio repetido como laço, porque o AS da empresa aparece nele mais de uma vez.",
+        "why": "Um roteador descarta caminho com o próprio AS; o número da empresa repetido não é o de A."
+      },
+      {
+        "text": "A tabela da própria empresa ainda prefere A para o tráfego de saída.",
+        "why": "A escolha de saída é da empresa; a de entrada é de A, e é dela que a pergunta trata."
+      }
+    ]
+  },
+  "ex-b4n0b3p6": {
+    "prompt": "Uma empresa pequena com dois provedores não pode nunca carregar tráfego entre eles. Quais medidas barram esse vazamento de rotas? Marque todas as que se aplicam.",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 17.",
+    "choices": [
+      {
+        "text": "Um route map de saída em cada sessão que permite o prefixo da própria empresa e nega o resto.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um filtro de entrada em cada provedor que aceita da empresa só o que ela tem direito de anunciar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um ROA para o bloco da empresa, já que a validação de origem marcaria as rotas vazadas como inválidas.",
+        "why": "Rotas vazadas mantêm o AS de origem verdadeiro, e a validação de origem confere só esse último AS."
+      },
+      {
+        "text": "Repetir o AS da empresa no anúncio para os dois provedores.",
+        "why": "Um caminho mais longo torna o vazamento menos atraente onde nada supera o tamanho, e a local preference real supera."
+      }
+    ]
+  },
+  "ex-bxzj0mbj": {
+    "prompt": "A rede de uma sala de reuniões tem um pool de 100 endereços e lease de um dia. Cerca de quarenta visitantes entram e saem por hora, e no fim da manhã os novos aparecem com endereços 169.254.x.x. Qual é a correção que a aula indica?",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 10.",
+    "choices": [
+      {
+        "text": "Criar uma reserva para o MAC de cada visitante, para o mesmo notebook receber de volta o mesmo endereço.",
+        "why": "Reservas amarram endereços a placas com antecedência; tiram endereços do pool em vez de liberá-los."
+      },
+      {
+        "text": "Encurtar o lease para cerca de uma hora.",
+        "why": "Isso."
+      },
+      {
+        "text": "Antecipar o rebind para os clientes procurarem outro servidor mais cedo.",
+        "why": "O rebind mantém o endereço do cliente; não devolve nada ao pool."
+      },
+      {
+        "text": "Configurar o roteador para encaminhar os broadcasts DHCP ao servidor de outro andar, que tem endereços sobrando.",
+        "why": "Roteador não encaminha broadcast, e o pool do outro andar é de outra sub-rede."
+      }
+    ]
+  },
+  "ex-c7ndvf9k": {
+    "prompt": "Associe cada porta de switch à proteção de spanning tree que a aula dá a ela.",
+    "hint": "Endereçamento, Roteamento e Comutação, aula 20.",
+    "pairs": [
+      {
+        "left": "Uma porta com um PC de mesa",
+        "right": "BPDU guard"
+      },
+      {
+        "left": "O cabo de um switch de distribuição até um switch de acesso",
+        "right": "root guard"
+      },
+      {
+        "left": "Uma porta voltada para a rede de outra organização, cuja árvore não pode se fundir com a nossa",
+        "right": "BPDU filter"
+      },
+      {
+        "left": "Qualquer porta, para limitar o estrago de um laço que se forme mesmo assim",
+        "right": "storm control"
+      }
+    ],
+    "right_distractors": [
+      "um forward delay de 4 segundos",
+      "prioridade 4096"
+    ]
+  },
+  "ex-jdf2wz00": {
+    "prompt": "O hq agora limita o MSS a 1380 no wg0, e a regra `hardening`, que descarta todo destination unreachable que o hq envia, continua carregada. Quais afirmações continuam verdadeiras? Marque todas as que se aplicam.",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 21.",
+    "choices": [
+      {
+        "text": "Um programa UDP que manda pacotes de tamanho cheio com Don't Fragment perde esses pacotes no túnel, sem mensagem de volta.",
+        "why": "Isso."
+      },
+      {
+        "text": "Quando o hq não consegue entregar a um host para um cliente, o cliente vê um timeout onde teria recebido um erro.",
+        "why": "Isso."
+      },
+      {
+        "text": "Downloads TCP do servidor de arquivos para a filial continuam travando depois do handshake.",
+        "why": "O clamping é justamente o que consertou o TCP: os segmentos agora cabem no túnel de 1420 bytes."
+      },
+      {
+        "text": "Um `ping -M do -s 1400` através do túnel agora recebe resposta.",
+        "why": "O MTU do túnel continua 1420 e o MSS é uma opção do TCP; um ping de 1428 bytes continua descartado."
+      }
+    ]
+  },
+  "ex-zry7vhxz": {
+    "prompt": "Um download pelo túnel travava enquanto páginas pequenas carregavam. Depois da mudança no hq, como se confirma a correção, pelo método da aula?",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 21.",
+    "choices": [
+      {
+        "text": "Pingar o servidor de arquivos a partir da filial.",
+        "why": "Pings pequenos passavam o tempo todo; um teste que já passava antes da correção não prova nada sobre ela."
+      },
+      {
+        "text": "Rodar o mesmo download que falhava e ver o arquivo inteiro chegar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Carregar de novo a página pequena, que testa o túnel, o nome e o servidor web numa requisição só.",
+        "why": "A página pequena cabia num pacote e funcionou o tempo todo, então não mostra que a falha de tamanho sumiu."
+      },
+      {
+        "text": "Ver se o `wg show` lista um handshake recente com a filial.",
+        "why": "O túnel esteve de pé o tempo todo; a falha era o tamanho dos pacotes que passavam por ele."
+      }
+    ]
+  },
+  "ex-x0y3dfrc": {
+    "prompt": "Associe o que o cliente imprimiu ao lugar onde o método da aula olha em seguida.",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 21.",
+    "pairs": [
+      {
+        "left": "ping: nenhuma resposta e nenhum erro",
+        "right": "`ip -br link` e `ethtool` no cliente"
+      },
+      {
+        "left": "curl: Couldn't connect to server, depois de 3057 ms",
+        "right": "`ip route` e `ip neigh` no cliente"
+      },
+      {
+        "left": "curl: Could not resolve host",
+        "right": "`dig`, depois `dig @` o servidor esperado"
+      },
+      {
+        "left": "curl: Couldn't connect to server, depois de 0 ms",
+        "right": "`ss -tln` no servidor"
+      },
+      {
+        "left": "status HTTP 404",
+        "right": "o log da própria aplicação"
+      }
+    ],
+    "right_distractors": [
+      "`iperf3 -R` em direção ao servidor",
+      "`mtr` até o endereço do servidor"
+    ]
+  },
+  "ex-p6q6xnm3": {
+    "prompt": "Em roteadores Cisco, o hq (prioridade 150) é o master do gateway e acompanha o seu link com o ISP baixando a prioridade para 90 quando o link cai. O hq2 tem prioridade 100 e preempção desligada. O link com o ISP cai. O que acontece?",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 15.",
+    "choices": [
+      {
+        "text": "O hq2 assume na hora, já que 100 agora é maior que 90.",
+        "why": "Com a preempção desligada, uma prioridade maior não basta para tirar o endereço de um master vivo."
+      },
+      {
+        "text": "O hq continua sendo o gateway sem ter para onde mandar o tráfego do escritório.",
+        "why": "Isso."
+      },
+      {
+        "text": "O hq entra em estado de falha e entrega o endereço, como faz o `track_interface` do keepalived.",
+        "why": "Isso é o keepalived saindo da eleição; esta regra no estilo Cisco só baixa a prioridade."
+      },
+      {
+        "text": "Os dois roteadores respondem pelo endereço virtual até o link do hq voltar, num split brain.",
+        "why": "O hq continua mandando hellos, então o hq2 ouve um master e fica em standby."
+      }
+    ]
+  },
+  "ex-yenhaxj3": {
+    "prompt": "Um único link de ISP com 99,9% fica em série com um par de balanceadores, cada um com 99,9%, qualquer um capaz de carregar a carga, falhando de forma independente. Num ano de 365 dias, 525.600 minutos, quantos minutos a cadeia fica fora, arredondando para o minuto?",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 14.",
+    "unit": "minutos"
+  },
+  "ex-a0dxx0ph": {
+    "prompt": "Dois firewalls num par de failover ficam em circuitos de energia e switches separados. Os dois param no mesmo minuto, logo depois de uma mudança de regra enviada aos dois. O que a conta de disponibilidade tinha suposto?",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 14.",
+    "choices": [
+      {
+        "text": "Que um failover entre os dois não leva tempo nenhum.",
+        "why": "O tempo de failover custa segundos por evento; aqui os dois caíram juntos, então não havia para onde ir."
+      },
+      {
+        "text": "Que o heartbeat entre eles nunca se perde.",
+        "why": "Um heartbeat perdido leva a split brain, dois nós ativos, e não a dois nós parados."
+      },
+      {
+        "text": "Que os dois falham de forma independente, e uma configuração compartilhada é uma falha de modo comum.",
+        "why": "Isso."
+      },
+      {
+        "text": "Que duas partes em série multiplicam suas disponibilidades, o que um par lado a lado não faz.",
+        "why": "Um par fica em paralelo, e essa regra está certa; o que falhou foi a suposição por trás dela."
+      }
+    ]
+  },
+  "ex-k9bh23bb": {
+    "prompt": "Um banco de dados replica de forma síncrona para um segundo site, e um backup é feito toda noite às 02:00. Às 14:00 alguém apaga uma tabela por engano. Quantos dados se perdem, no melhor caso, nessa falha?",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 17.",
+    "choices": [
+      {
+        "text": "Nada, já que a replicação síncrona confirma cada escrita nos dois sites.",
+        "why": "Ela confirma a exclusão nos dois sites com a mesma fidelidade de qualquer outra escrita."
+      },
+      {
+        "text": "Cerca de doze horas: a réplica também apagou aqueles dados, e a cópia das 02:00 é a boa mais nova.",
+        "why": "Isso."
+      },
+      {
+        "text": "Alguns segundos, o atraso da replicação.",
+        "why": "Atraso é da replicação assíncrona e da perda de um site; aqui a cópia está em dia e errada."
+      },
+      {
+        "text": "O que foi escrito entre a exclusão e o momento em que a réplica é promovida a primária.",
+        "why": "Promover a réplica não traz nada de volta; ela tem a mesma tabela faltando."
+      }
+    ]
+  },
+  "ex-zkkzqprb": {
+    "prompt": "Um SLO de 99,9% num mês de 30 dias deixa um orçamento de erro de 43,20 minutos. Cada failover automático do VRRP custa 3,264 segundos. Quantos failovers inteiros cabem no orçamento do mês?",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 17.",
+    "unit": "failovers"
+  },
+  "ex-cbc0j8qr": {
+    "prompt": "Um escritório dá prioridade EF à voz na fila de subida do seu roteador. As chamadas ficam limpas enquanto alguém faz upload, e picotam enquanto alguém baixa um arquivo grande. O que o curso faz a respeito?",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 18.",
+    "choices": [
+      {
+        "text": "Marcar os downloads como CS1 nos switches do escritório para o provedor colocá-los atrás da voz.",
+        "why": "Uma marca não faz nada até alguém lê-la, e a fila do provedor não é você quem configura."
+      },
+      {
+        "text": "Dar à classe prioritária uma fatia maior do uplink.",
+        "why": "O download enche a fila na ponta do provedor, antes de o uplink entrar na história."
+      },
+      {
+        "text": "Moldar (shaping) o tráfego que entra no roteador um pouco abaixo da taxa da linha, para a fila se formar onde estão as classes.",
+        "why": "Isso."
+      },
+      {
+        "text": "Pedir ao provedor que aplique policing na linha na taxa do contrato.",
+        "why": "Um policer descarta o que passa da taxa; não dá à voz lugar à frente do download."
+      }
+    ]
+  },
+  "ex-n3pfkgv0": {
+    "prompt": "Um shaper ajustado um pouco abaixo do que o contrato do provedor permite traz o ___ para dentro do seu roteador, e esse é o único lugar onde as suas classes de QoS podem agir.",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 20.",
+    "blanks": [
+      {
+        "accept": [
+          "gargalo",
+          "o gargalo",
+          "fila",
+          "a fila"
+        ]
+      }
+    ]
+  },
+  "ex-z1nhztyj": {
+    "prompt": "Um analisador numa porta espelho de 1 Gbit/s captura um uplink movimentado de 10 Gbit/s. A captura tem buracos em fluxos TCP que as duas pontas nunca retransmitiram. Qual é a explicação mais provável?",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 11.",
+    "choices": [
+      {
+        "text": "O switch descartou cópias para as quais não havia espaço na porta do analisador.",
+        "why": "Isso."
+      },
+      {
+        "text": "O uplink está perdendo pacotes sob carga, e o analisador mostra onde.",
+        "why": "Perda real faria os remetentes retransmitirem; dados que ninguém reenviou foram entregues."
+      },
+      {
+        "text": "O filtro de captura era estreito demais e tirou parte de cada fluxo antes de ser gravada.",
+        "why": "Um filtro de captura mantém ou descarta tipos inteiros de pacote; não abre buracos aleatórios num fluxo."
+      },
+      {
+        "text": "O tshark rodou sem o privilégio de captura, então decodificou só alguns pacotes.",
+        "why": "Sem o privilégio, a captura nem começa."
+      }
+    ]
+  },
+  "ex-2qj8m6g9": {
+    "prompt": "Duas lojas usam a mesma rede, 192.168.20.0/24, e no hq cada uma é um peer WireGuard com `AllowedIPs = 192.168.20.0/24`. O que acontece?",
+    "hint": "VPNs, Wireless e Alta Disponibilidade, aula 4.",
+    "choices": [
+      {
+        "text": "O hq distribui o tráfego entre as duas lojas, como um balanceador faria.",
+        "why": "Um pacote de saída precisa de exatamente uma resposta para qual chave o cifra."
+      },
+      {
+        "text": "As duas funcionam, porque os pacotes de cada loja se distinguem pelo endereço público do endpoint.",
+        "why": "O endpoint diz para onde mandar, não a quem pertence a faixa interna; a faixa tem um dono só."
+      },
+      {
+        "text": "O hq recusa o segundo peer com um erro apontando a sobreposição.",
+        "why": "Nada recusa: dar a faixa a um segundo peer a tira em silêncio do primeiro."
+      },
+      {
+        "text": "A faixa passa para o peer configurado por último, e só essa loja é alcançada.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-z7hbt0s0": {
+    "prompt": "Um serviço responde a uma pergunta UDP de 50 bytes com uma resposta de 2.000 bytes. Alguém manda a ele 2 Mbit/s dessas perguntas com o endereço de uma vítima forjado como origem. Quantos Mbit/s de respostas chegam à vítima?",
+    "hint": "Segurança de Redes, aula 6.",
+    "unit": "Mbit/s"
+  },
+  "ex-92kaqthd": {
+    "prompt": "O servidor DNS de uma empresa na internet responde perguntas sobre qualquer nome, vindas de qualquer um. Que risco a aula aponta nisso?",
+    "hint": "Segurança de Redes, aula 6.",
+    "choices": [
+      {
+        "text": "A tabela de conexões dele enche de handshakes pela metade.",
+        "why": "Handshakes pela metade são um SYN flood de TCP; as perguntas aqui são pequenos pacotes UDP."
+      },
+      {
+        "text": "Estranhos o usam para mirar respostas amplificadas numa vítima cujo endereço eles forjam.",
+        "why": "Isso."
+      },
+      {
+        "text": "Qualquer um consegue ler nele os nomes internos da empresa, o que ajuda um invasor a planejar o próximo passo.",
+        "why": "O risco que a aula aponta é para os outros: o servidor vira refletor no ataque de outra pessoa."
+      },
+      {
+        "text": "As respostas dele ficam mais lentas para os próprios visitantes da empresa.",
+        "why": "Carga não é a preocupação; ser usado para inundar um terceiro é."
+      }
+    ]
+  },
+  "ex-phva0gq5": {
+    "prompt": "Que regra na borda de uma empresa impede a rede dela de mandar os pacotes forjados de que um ataque por reflexão é feito?",
+    "hint": "Segurança de Redes, aula 6.",
+    "choices": [
+      {
+        "text": "Descartar o que sai com endereço de origem que não seja um dos nossos.",
+        "why": "Isso."
+      },
+      {
+        "text": "Descartar respostas UDP de entrada maiores que a pergunta que as gerou.",
+        "why": "Isso age sobre o que chega; as perguntas forjadas saem da rede intactas."
+      },
+      {
+        "text": "Ligar SYN cookies nos servidores da empresa.",
+        "why": "SYN cookies ajudam um servidor sob SYN flood; não fazem nada sobre o que sai."
+      },
+      {
+        "text": "Limitar as conexões novas por endereço de origem a poucas por vez.",
+        "why": "Um limite por origem doma um cliente barulhento que chega; não confere a origem do que sai."
+      }
+    ]
+  },
+  "ex-wtdz2ew1": {
+    "prompt": "As regras de um firewall descartam toda mensagem ICMP que passa por ele ou é enviada a ele. Quais destas coisas quebram? Marque todas as que se aplicam.",
+    "hint": "Segurança de Redes, aula 5.",
+    "choices": [
+      {
+        "text": "A descoberta de MTU do caminho: pacotes grandes somem e transferências travam no meio.",
+        "why": "Isso."
+      },
+      {
+        "text": "O traceroute além do firewall.",
+        "why": "Isso."
+      },
+      {
+        "text": "O ping para o firewall.",
+        "why": "Isso."
+      },
+      {
+        "text": "O handshake de três vias do TCP com um servidor web atrás dele.",
+        "why": "O handshake é TCP; quem decide são as regras de TCP, não o ICMP."
+      },
+      {
+        "text": "A resolução de nomes por UDP 53.",
+        "why": "Perguntas e respostas DNS são UDP; descartar ICMP não mexe nelas."
+      }
+    ]
+  },
+  "ex-jpqhgkqe": {
+    "prompt": "Coloque uma mudança no arquivo de regras do firewall na ordem em que o curso a faz.",
+    "hint": "Segurança de Redes, aula 5.",
+    "items": [
+      "Editar o arquivo e fazer commit com o motivo, para revisão",
+      "Conferir contra o kernel em execução com `nft -c -f`",
+      "Carregar como uma transação só com `nft -f`",
+      "Ler as regras de volta e testar a matriz a partir de cada zona"
+    ],
+    "trap": "O arquivo é a fonte e é revisado primeiro; a conferência vem antes da carga, e só regras carregadas podem ser lidas de volta."
+  },
+  "ex-n374z2af": {
+    "prompt": "`nft -f rules.nft` para com um erro de sintaxe na linha 7 de um arquivo de 40 linhas. O que o firewall fica rodando depois?",
+    "hint": "Segurança de Redes, aula 5.",
+    "choices": [
+      {
+        "text": "As linhas 1 a 6 do arquivo novo, sem o resto.",
+        "why": "A carga é uma transação: todas as linhas valem, ou nenhuma vale."
+      },
+      {
+        "text": "Nenhuma regra, com política accept, até um arquivo correto ser carregado.",
+        "why": "Uma carga que falha não muda nada; o conjunto em execução fica como estava."
+      },
+      {
+        "text": "O arquivo novo com a linha 7 pulada e as outras 39 aplicadas na ordem.",
+        "why": "O nft não pula linha ruim; o arquivo inteiro é recusado."
+      },
+      {
+        "text": "As regras que tinha antes do comando.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-s007kf57": {
+    "prompt": "Chega um feed de ameaças com três endereços vistos varrendo atrás de segredos expostos. O que a aula faz com ele primeiro?",
+    "hint": "Segurança de Redes, aula 23.",
+    "choices": [
+      {
+        "text": "Inserir uma regra de descarte para eles no topo da chain forward.",
+        "why": "Bloquear é o segundo uso; olhar para trás vem antes."
+      },
+      {
+        "text": "Escrever uma assinatura do Suricata para cada endereço e carregá-la no sensor da DMZ para alertar na próxima visita.",
+        "why": "Isso só vigia o futuro; a primeira pergunta é se eles já conversaram com a gente."
+      },
+      {
+        "text": "Procurar esses endereços nos registros de fluxo e de descartes guardados.",
+        "why": "Isso."
+      },
+      {
+        "text": "Denunciar os endereços aos provedores que os anunciam, pedindo que as máquinas sejam limpas.",
+        "why": "Não está no fluxo da aula; o feed é conferido primeiro contra os registros da própria empresa."
+      }
+    ]
+  },
+  "ex-20sqt9vh": {
+    "prompt": "Por que o set que guarda os endereços de um feed de ameaças tem `timeout 1d`, renovado enquanto o feed ainda lista cada um?",
+    "hint": "Segurança de Redes, aula 23.",
+    "choices": [
+      {
+        "text": "Endereços mudam de dono, então um bloqueio deve cair quando seu motivo some.",
+        "why": "Isso."
+      },
+      {
+        "text": "Para manter o set curto o bastante para o firewall consultá-lo na velocidade da linha.",
+        "why": "O motivo dado é a reatribuição: endereços de nuvem mudam, e um endereço pode estar na frente de uma rede móvel."
+      },
+      {
+        "text": "Para o log de descartes poder ser rotacionado uma vez por dia.",
+        "why": "Rotação de log não tem relação com quanto tempo um elemento fica num set."
+      },
+      {
+        "text": "Porque o feed é publicado uma vez por dia e uma entrada vencida avisa o firewall para buscar o próximo arquivo.",
+        "why": "O firewall não busca nada; o timeout só remove uma entrada que ninguém renovou."
+      }
+    ]
+  },
+  "ex-phvm9zma": {
+    "prompt": "Um IPS inline fica no link do segmento de pagamentos, e o software dele para numa noite. Que comportamento a aula diz que combina com esse link?",
+    "hint": "Segurança de Redes, aula 14.",
+    "choices": [
+      {
+        "text": "Falhar aberto, para os pagamentos seguirem e a lacuna ser revista de manhã.",
+        "why": "Falhar aberto combina com um link em que a disponibilidade vem primeiro, como a porta de entrada da loja."
+      },
+      {
+        "text": "Um bypass de hardware que junta as duas portas.",
+        "why": "Um bypass transforma um IPS parado num cabo, o que é falhar aberto."
+      },
+      {
+        "text": "Continuar bloqueando com as regras que estavam carregadas no kernel quando o programa parou.",
+        "why": "A inspeção é o programa; sem ele, o link ou para ou passa sem inspeção."
+      },
+      {
+        "text": "Falhar fechado: os pagamentos param até ele voltar, já que ali tráfego sem inspeção é pior que nenhum.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6780njrk": {
+    "prompt": "A equipe pode abrir TCP 443 para a internet, e o NGFW também nega a aplicação SSH. Alguém roda `ssh` para um servidor seu que escuta na porta 443. O que uma captura da tentativa mostra?",
+    "hint": "Segurança de Redes, aula 2.",
+    "choices": [
+      {
+        "text": "O SYN é descartado, já que o firewall já sabe que o cliente é ssh.",
+        "why": "Nada num SYN nomeia a aplicação; o motor precisa dos primeiros bytes de dados."
+      },
+      {
+        "text": "A sessão inteira funciona, porque a regra de porta da 443 é conferida primeiro e aceita.",
+        "why": "A regra de aplicação estreita a regra de porta; ela vale assim que o protocolo é reconhecido."
+      },
+      {
+        "text": "Um alerta TLS mandado de volta pelo firewall, que esperava um ClientHello na porta 443 e recebeu uma linha de texto.",
+        "why": "O firewall identifica e descarta; não responde como servidor TLS."
+      },
+      {
+        "text": "O handshake se completa e a saudação do SSH passa antes de o fluxo ser cortado.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ax1c07qr": {
+    "prompt": "Toda requisição a uma aplicação agora exige um certificado de cliente válido. Um colega propõe apagar as regras que mantêm a LAN da equipe longe do banco de dados, já que agora a identidade decide. O que a aula responde?",
+    "hint": "Segurança de Redes, aula 20.",
+    "choices": [
+      {
+        "text": "Apagá-las, porque no Zero Trust o lugar de onde vem a requisição não pesa nada.",
+        "why": "A localização deixa de ser suficiente, não necessária; passar pelo firewall continua contando."
+      },
+      {
+        "text": "Mantê-las: passar pelo firewall continua necessário, mesmo não sendo mais suficiente.",
+        "why": "Isso."
+      },
+      {
+        "text": "Mantê-las até a chave da autoridade certificadora ir para hardware, e então apagá-las.",
+        "why": "Nenhum marco aposenta a camada de rede; tirá-la deixa um controle onde havia dois."
+      },
+      {
+        "text": "Trocá-las por uma VPN em que toda a equipe precise entrar antes de chegar ao banco.",
+        "why": "Uma VPN volta a dar confiança pela localização, que é a suposição que o Zero Trust abandona."
+      }
+    ]
+  },
+  "ex-q004kby1": {
+    "prompt": "Complete a regra de ICMP do curso na chain input do fw: `icmp type { destination-unreachable, echo-request, time-exceeded } ___ rate 10/second burst 5 packets accept`",
+    "hint": "Segurança de Redes, aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "limit"
+        ]
+      }
+    ]
+  },
+  "ex-83zdfrmh": {
+    "prompt": "Associe cada coisa encontrada depois de uma mudança feita à mão ao tipo de erro que a aula nomeia.",
+    "hint": "Automação de Redes, aula 1.",
+    "pairs": [
+      {
+        "left": "`192.0.12.0/24` digitado onde se pediu `192.0.2.0/24`",
+        "right": "um valor errado que é válido"
+      },
+      {
+        "left": "Um dos três roteadores nunca foi mexido",
+        "right": "uma omissão"
+      },
+      {
+        "left": "Um roteador ficou especial, uma tecla de cada vez, sem ninguém decidir isso",
+        "right": "deriva (drift)"
+      }
+    ],
+    "right_distractors": [
+      "um erro de sintaxe que o roteador recusa"
+    ]
+  },
+  "ex-j94zwcfw": {
+    "prompt": "Duas amostras gNMI do `in-octets` de uma interface, com carimbo do dispositivo a 10 segundos uma da outra, marcam 1.250.000.000 e 1.262.500.000. Qual foi a taxa média entre elas, em Mbit/s?",
+    "hint": "Automação de Redes, aula 4.",
+    "unit": "Mbit/s"
+  },
+  "ex-d5van21y": {
+    "prompt": "Todo tempo no gNMI é em nanossegundos, então uma assinatura que amostra a cada cinco segundos define `sample_interval` como ___.",
+    "hint": "Automação de Redes, aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "5000000000",
+          "5_000_000_000",
+          "5.000.000.000"
+        ]
+      }
+    ]
+  },
+  "ex-g9z73sb6": {
+    "prompt": "Associe cada problema à verificação, no conjunto da aula, que existe para pegá-lo.",
+    "hint": "Automação de Redes, aula 13.",
+    "pairs": [
+      {
+        "left": "Uma chave digitada `adress` no YAML de um roteador",
+        "right": "o modelo de dados"
+      },
+      {
+        "left": "Um mesmo endereço dado a interfaces de dois roteadores diferentes",
+        "right": "um teste offline sobre os arquivos de todos os roteadores de uma vez"
+      },
+      {
+        "left": "Um arquivo com a indentação quebrada",
+        "right": "yamllint"
+      },
+      {
+        "left": "Um cabo desconectado entre core1 e edge1",
+        "right": "uma pós-verificação online"
+      }
+    ],
+    "right_distractors": [
+      "o compare_config do NAPALM",
+      "o play recap do Ansible"
+    ]
+  },
+  "ex-0ae4se90": {
+    "prompt": "Uma pós-verificação depois de um deploy descobre que o uplink de um roteador de filial novo está num /30 diferente do vizinho, e nenhuma adjacência se forma. Os dados são corrigidos e a pós-verificação passa. O que o hábito da aula acrescenta em seguida?",
+    "hint": "Automação de Redes, aula 13.",
+    "choices": [
+      {
+        "text": "Uma janela de novas tentativas maior para a pós-verificação, para o protocolo ter tempo de convergir da próxima vez.",
+        "why": "A adjacência nunca se formou por causa dos dados, não porque a verificação rodou cedo demais."
+      },
+      {
+        "text": "Uma pré-verificação, já que a rede estava doente antes da mudança.",
+        "why": "A própria mudança causou a falha; uma pré-verificação teria passado."
+      },
+      {
+        "text": "Nada: o teste online pegou o problema, que é a função dele.",
+        "why": "Essa resposta vale para o que nenhum arquivo mostra, como um cabo; este estava nos dados."
+      },
+      {
+        "text": "Um teste offline que teria pegado o problema a partir dos arquivos.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-t2y151h3": {
+    "prompt": "Durante um incidente, uma engenheira acrescenta à mão uma rota estática no edge1. O pipeline renderiza configurações inteiras a partir dos dados e as envia com replace no próximo merge na main. O que deve acontecer antes desse merge?",
+    "hint": "Automação de Redes, aula 10.",
+    "choices": [
+      {
+        "text": "A rota entra nos dados, para a configuração renderizada trazê-la.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada: um replace acrescenta o que falta e deixa uma linha a mais onde está.",
+        "why": "O arquivo renderizado é a configuração inteira; uma rota que não está nos dados é removida pelo envio."
+      },
+      {
+        "text": "Um backup do edge1, porque o job noturno devolve a rota depois que o envio a remover.",
+        "why": "Um backup registra o que o roteador roda; não restaura nada a menos que alguém rode uma restauração."
+      },
+      {
+        "text": "Tirar o edge1 do pipeline até a revisão do incidente, para a rota feita à mão sobreviver ao deploy.",
+        "why": "Isso deixa o edge1 derivando fora de revisão; os dados são onde a intenção da rede fica escrita."
+      }
+    ]
+  },
+  "ex-af7q2nkc": {
+    "prompt": "Backups noturnos de todos os roteadores vão para o Git. A descrição do edge1 mudou para `guest wifi` entre o backup de terça e o de quarta. O que esse histórico consegue dizer? Marque todas as que se aplicam.",
+    "hint": "Automação de Redes, aula 11.",
+    "choices": [
+      {
+        "text": "Que a configuração em execução mudou, e em qual linha.",
+        "why": "Isso."
+      },
+      {
+        "text": "O dia dentro do qual a mudança foi feita.",
+        "why": "Isso."
+      },
+      {
+        "text": "Quem digitou a mudança.",
+        "why": "Para isso, os logs do próprio roteador, o accounting do servidor AAA ou um ticket de mudança."
+      },
+      {
+        "text": "Por que a mudança foi feita.",
+        "why": "Um backup mostra o que roda, não o motivo; um ticket é que guarda isso."
+      }
+    ]
+  },
+  "ex-xwqwrxnx": {
+    "prompt": "Um script lê contadores de interface por RESTCONF e recebe `\"in-octets\": \"123456789012\"`, entre aspas, e subtrair duas amostras dá TypeError. Por que o dispositivo manda esse número como texto?",
+    "hint": "Automação de Redes, aula 6.",
+    "choices": [
+      {
+        "text": "O codificador JSON do dispositivo tem defeito e deve ser reportado ao fabricante.",
+        "why": "Ele segue o padrão; o script é que precisa converter com `int()`."
+      },
+      {
+        "text": "A RFC 7951 escreve os tipos de 64 bits do YANG como texto, já que muitos parsers JSON perdem precisão acima de 2 elevado a 53.",
+        "why": "Isso."
+      },
+      {
+        "text": "Texto preserva os zeros à esquerda de um contador.",
+        "why": "Contadores não têm zeros à esquerda que importem; a questão é o tamanho do inteiro."
+      },
+      {
+        "text": "Texto mantém estável a ordem das chaves quando duas respostas são comparadas linha a linha.",
+        "why": "A ordem das chaves é questão de `sort_keys`, e não tem relação com o tipo de um valor."
+      }
+    ]
+  },
+  "ex-0d4mm5cj": {
+    "prompt": "Depois de uma troca de senha, o cliente de API do laboratório recebe 401 de todos os roteadores. O que o método `request` dele faz com o primeiro?",
+    "hint": "Automação de Redes, aula 2.",
+    "choices": [
+      {
+        "text": "Levanta uma exceção na hora, já que repete um 429 e mais nada.",
+        "why": "Isso."
+      },
+      {
+        "text": "Espera os segundos do `Retry-After` e tenta até mais três vezes.",
+        "why": "Esse laço é para o 429, rápido demais; um 401 é problema de credencial que esperar não resolve."
+      },
+      {
+        "text": "Faz login de novo para pegar um token novo e repete a requisição com ele.",
+        "why": "O cliente faz login uma vez, no início; nada no `request` faz login de novo."
+      },
+      {
+        "text": "Devolve `None`, e quem chamou segue para o próximo roteador como se aquele não tivesse dados para dar.",
+        "why": "O `raise_for_status()` transforma todo status de erro em exceção, para nada falhar em silêncio."
+      }
+    ]
+  },
+  "ex-gems66v6": {
+    "prompt": "O roteador assina cada webhook com um HMAC cuja chave é um segredo que ele divide com o receptor. Segurança de Redes diz que, quando um terceiro precisa conferir quem produziu uma mensagem, o HMAC não basta. Por que aqui basta?",
+    "hint": "Automação de Redes, aula 7.",
+    "choices": [
+      {
+        "text": "Só a outra ponta confere, e ela tem a mesma chave; ninguém de fora verifica nada.",
+        "why": "Isso."
+      },
+      {
+        "text": "A entrega viaja por TLS, que assina o corpo para quem quiser conferir depois.",
+        "why": "O TLS protege a conexão enquanto ela dura; não deixa prova presa ao corpo."
+      },
+      {
+        "text": "O id da entrega torna inofensivo um evento forjado, porque o receptor age sobre cada id uma vez só.",
+        "why": "O id torna inofensiva uma nova tentativa; uma falsificação com id novo é um evento novo."
+      },
+      {
+        "text": "O `hmac.compare_digest` transforma o HMAC numa assinatura que um terceiro também poderia conferir.",
+        "why": "Ele só compara em tempo constante, para a comparação não vazar nada; a chave continua compartilhada."
+      }
+    ]
+  },
+  "ex-mjtvbvw0": {
+    "prompt": "Duas engenheiras pedem ao NetBox, no mesmo instante, o próximo endereço livre de 203.0.113.0/26, com `available_ips.create`. Por que as duas não recebem o .2, como poderia acontecer com uma planilha compartilhada?",
+    "hint": "Automação de Redes, aula 12.",
+    "choices": [
+      {
+        "text": "A escolha e o registro acontecem juntos, numa requisição só no servidor.",
+        "why": "Isso."
+      },
+      {
+        "text": "Cada token de API recebe uma fatia própria do prefixo quando é criado.",
+        "why": "Tokens dizem quem está pedindo; não carregam fatia de prefixo nenhum."
+      },
+      {
+        "text": "A segunda requisição falha com erro, e o script escolhe o próximo endereço e tenta de novo.",
+        "why": "Nada falha: cada requisição simplesmente recebe um endereço livre diferente."
+      },
+      {
+        "text": "O NetBox pinga cada candidato antes e pula os que respondem, de modo que um endereço já em uso na rede fica de fora.",
+        "why": "O NetBox lê os próprios registros, não a rede; livre quer dizer não registrado."
+      }
+    ]
+  },
+  "ex-rwbmc5x3": {
+    "prompt": "No desenho do laboratório, o controlador guarda a política de que h3 não pode alcançar h1. Um switch novo entra. Como ele recebe essa regra?",
+    "hint": "Automação de Redes, aula 15.",
+    "choices": [
+      {
+        "text": "Enviada a ele no momento da conexão, do único lugar onde a regra vive.",
+        "why": "Isso."
+      },
+      {
+        "text": "Alguém digita a regra no switch novo, como foi feito nos outros.",
+        "why": "A graça do desenho é que a regra é escrita uma vez só, no controlador."
+      },
+      {
+        "text": "Ele copia a tabela de fluxos do vizinho a que está ligado.",
+        "why": "Switches recebem fluxos do controlador, não uns dos outros."
+      },
+      {
+        "text": "Ele aprende com o primeiro pacote que h3 manda para h1, que repassa ao controlador para decidir.",
+        "why": "O fluxo de descarte é instalado na conexão, antes de qualquer pacote; o packet-in é o caminho da aplicação de aprendizado."
+      }
+    ]
+  },
+  "ex-gjrf0qj0": {
+    "prompt": "Os testes de uma engenheira passam no notebook dela, onde um arquivo de dados corrigido está sem commit na cópia de trabalho. O servidor recusa o push dela com os mesmos testes falhando. Por quê?",
+    "hint": "Automação de Redes, aula 14.",
+    "choices": [
+      {
+        "text": "O hook testa exatamente o que foi enviado, extraído num diretório limpo, onde aquela versão consertada não está.",
+        "why": "Isso."
+      },
+      {
+        "text": "O servidor roda uma versão mais nova do pytest que o notebook dela.",
+        "why": "A diferença é o arquivo, que nunca saiu da cópia de trabalho dela."
+      },
+      {
+        "text": "O hook consulta os roteadores, e a rede discorda dos dados dela.",
+        "why": "O `pre-receive` roda os testes offline; a rede é verificada depois do deploy."
+      },
+      {
+        "text": "Só a `main` é testada; um push para branch é recusado até ser mesclado.",
+        "why": "Toda branch enviada é testada; só a `main` é implantada."
+      }
+    ]
+  },
+  "ex-mrqd24eq": {
+    "prompt": "Uma branch passou pelo modelo, pelos testes offline e pela checagem das duas pontas de cada enlace, e espera como pull request. O que sobra para quem revisa?",
+    "hint": "Automação de Redes, aula 14.",
+    "choices": [
+      {
+        "text": "Rodar os testes de novo à mão, caso o hook tenha deixado escapar algo.",
+        "why": "O hook já testou o commit como foi enviado; repetir não acrescenta nada."
+      },
+      {
+        "text": "Conferir a indentação do YAML.",
+        "why": "O yamllint confere o layout; a pessoa acrescenta o que nenhuma ferramenta sabe."
+      },
+      {
+        "text": "Se é a mudança certa, como se aquela LAN fica mesmo no primeiro andar.",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada, então o merge pode muito bem ser automático quando os testes ficam verdes.",
+        "why": "Testes sabem que os dados estão bem formados, não se a intenção está certa; essa é a parte da revisão."
+      }
+    ]
+  },
+  "ex-857578d9": {
+    "prompt": "A VPC A tem peering com a VPC B, e a B com a VPC C, na AWS. As faixas não se sobrepõem e toda tabela de rotas aponta para o seu peering. Uma instância em A ainda não alcança uma em C. Por quê?",
+    "hint": "Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "Os security groups de B descartam o tráfego que só está de passagem a caminho de outra VPC.",
+        "why": "Security groups ficam em interfaces; nada em B entra na história, porque peering não repassa tráfego."
+      },
+      {
+        "text": "As três VPCs estão em zonas diferentes, e um peering cobre uma zona.",
+        "why": "Uma VPC abrange as zonas da sua região; não são as zonas que limitam um peering."
+      },
+      {
+        "text": "C não tem NAT gateway para o caminho de volta.",
+        "why": "NAT é uma saída para a internet; VPCs com peering conversam por endereço privado, sem NAT."
+      },
+      {
+        "text": "Peering não é transitivo: A precisa de um peering próprio com C.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-jtvcrnd7": {
+    "prompt": "Numa instância, `curl localhost:8080` funciona. De outra instância na mesma VPC, `nc -zv -w 3 10.0.32.10 8080` responde \"Connection refused\" na hora. Qual é a causa mais provável?",
+    "hint": "Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "O security group não tem regra que permita a 8080 a partir do endereço ou do grupo da outra instância.",
+        "why": "Um security group descarta em silêncio, o que dá timeout; uma recusa quer dizer que o pacote chegou à máquina."
+      },
+      {
+        "text": "A tabela de rotas da sub-rede não tem rota para o internet gateway.",
+        "why": "As duas instâncias estão dentro da VPC, e a rota local leva esse tráfego."
+      },
+      {
+        "text": "A network ACL nega a resposta para a porta efêmera.",
+        "why": "Uma resposta perdida numa ACL deixa o cliente esperando um timeout, não recusado na hora."
+      },
+      {
+        "text": "O serviço está preso a `127.0.0.1:8080`, como o `ss -tln` mostraria.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-an0a4psa": {
+    "prompt": "A network ACL de entrada de uma sub-rede diz: regra 100 permite TCP 443 de `0.0.0.0/0`; regra 120 nega tudo de `198.51.100.0/24`; `*` nega o resto. Chega um pedido de `198.51.100.7` para a porta 443. O que acontece?",
+    "hint": "Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "Ele é descartado, porque uma negação pesa mais que uma permissão, sejam quais forem os números.",
+        "why": "É assim que o deny explícito funciona no IAM; a network ACL para no primeiro casamento pela numeração."
+      },
+      {
+        "text": "Ele é descartado pela regra `*`, já que as duas regras numeradas se contradizem.",
+        "why": "As regras não são comparadas entre si; decide o menor número que casar."
+      },
+      {
+        "text": "Ele entra, porque a regra 100 casa primeiro e as outras nem são lidas.",
+        "why": "Isso."
+      },
+      {
+        "text": "Depende do security group da instância, que tem precedência sobre a ACL.",
+        "why": "Os dois filtros valem um depois do outro; o grupo não anula o que a ACL deixa passar ou descarta."
+      }
+    ]
+  },
+  "ex-rgfpz9jc": {
+    "prompt": "Uma equipe coloca uma network ACL na sua sub-rede privada: na saída, a regra 100 permite TCP 443 para `0.0.0.0/0`; na entrada, a regra 100 permite TCP 22 vinda do escritório. As instâncias saem para a internet por um NAT gateway. A partir daí as atualizações de pacotes dão timeout. O que falta?",
+    "hint": "Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "Uma regra de saída para a porta 80, além da 443.",
+        "why": "Pode valer para alguns espelhos, mas não explicaria a falha das atualizações por HTTPS também."
+      },
+      {
+        "text": "Uma regra no security group deixando as respostas voltarem.",
+        "why": "O grupo tem estado e já deixa as respostas entrarem; é a ACL que julga cada uma de novo."
+      },
+      {
+        "text": "Uma rota da sub-rede privada direto para o internet gateway.",
+        "why": "Isso tornaria a sub-rede pública, e as respostas ainda dariam com a mesma ACL."
+      },
+      {
+        "text": "Uma regra de entrada para TCP 1024 a 65535, onde as respostas chegam.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-kxagnhpb": {
+    "prompt": "O security group do banco permite TCP 5432 de `10.0.16.7/32`, o endereço do servidor de aplicação. Durante a noite o grupo de autoscaling trocou esse servidor, e agora a aplicação dá timeout ao falar com o banco. Qual é a correção que se sustenta?",
+    "hint": "Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "Ampliar a origem para `10.0.0.0/16`, para que qualquer endereço da VPC chegue à 5432.",
+        "why": "Funciona e expõe o banco a tudo na VPC, não só à aplicação."
+      },
+      {
+        "text": "Acrescentar uma regra de saída no grupo do banco para as respostas.",
+        "why": "Security groups têm estado; as respostas nunca foram o problema."
+      },
+      {
+        "text": "Fixar o servidor novo em `10.0.16.7` na mão.",
+        "why": "A próxima troca quebra de novo; endereços num grupo de autoscaling não ficam parados."
+      },
+      {
+        "text": "Admitir o que carregar o grupo próprio do app, e não um IP.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6d5tezbc": {
+    "prompt": "Uma API atrás de um application load balancer registra o endereço de origem de cada conexão, e toda linha mostra um entre poucos endereços `10.0.x.x`. A segurança precisa do cliente real. Onde ele está?",
+    "hint": "Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "Nos VPC flow logs, que registram o cliente junto do endereço do próprio alvo.",
+        "why": "O load balancer abre a própria conexão com o alvo, então os pacotes que o alvo vê vêm dele."
+      },
+      {
+        "text": "No cabeçalho `X-Forwarded-For` que o load balancer acrescenta.",
+        "why": "Isso."
+      },
+      {
+        "text": "Em lugar nenhum: um balanceador de camada 7 descarta esse dado ao terminar o TLS.",
+        "why": "Ele repassa num cabeçalho, justamente porque a conexão não carrega mais esse dado."
+      },
+      {
+        "text": "Na porta de origem, que o balanceador mantém da conexão do cliente.",
+        "why": "A conexão do alvo é uma nova, do balanceador, com a porta e o endereço dele."
+      }
+    ]
+  },
+  "ex-k8k69y6k": {
+    "prompt": "Instâncias numa sub-rede privada copiam vários terabytes para o S3 na mesma região toda noite, e a conta mostra uma linha grande de processamento do NAT gateway. O que tira essa linha?",
+    "hint": "Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "Mudar as instâncias de backup para uma sub-rede pública, para pularem o NAT.",
+        "why": "Abre uma entrada para máquinas que não precisam de nenhuma, e cada uma pagaria um endereço público."
+      },
+      {
+        "text": "Um segundo NAT gateway na outra zona, dividindo o tráfego.",
+        "why": "A cobrança é por gigabyte processado; dois gateways processam os mesmos bytes e somam uma taxa por hora."
+      },
+      {
+        "text": "Uma VPN site-to-site entre a sub-rede e o serviço de armazenamento.",
+        "why": "Uma VPN liga a VPC a uma rede sua; não é caminho para os serviços do provedor."
+      },
+      {
+        "text": "Um gateway endpoint para o S3: uma rota na tabela da sub-rede, sem custo.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-detqgxbt": {
+    "prompt": "Uma VPC `10.0.0.0/16` na AWS é dividida em sub-redes `/20`. Quantos endereços de uma delas podem ser entregues a máquinas?",
+    "hint": "Nuvem e Serverless, aula 6.",
+    "unit": "endereços"
+  },
+  "ex-3t4z69gv": {
+    "prompt": "Associe cada peça de uma VPC ao que ela dá às sub-redes que a usam.",
+    "hint": "Nuvem e Serverless, aula 6.",
+    "pairs": [
+      {
+        "left": "internet gateway",
+        "right": "entrada e saída para instâncias com endereço público"
+      },
+      {
+        "left": "NAT gateway",
+        "right": "uma saída para a internet que não é uma entrada"
+      },
+      {
+        "left": "gateway endpoint",
+        "right": "um caminho privado até o S3 ou o DynamoDB"
+      },
+      {
+        "left": "VPC peering",
+        "right": "os endereços privados de uma outra VPC"
+      },
+      {
+        "left": "transit gateway",
+        "right": "um hub ao qual muitas VPCs se ligam"
+      }
+    ],
+    "right_distractors": [
+      "um túnel cifrado até o escritório pela internet"
+    ]
+  },
+  "ex-1azjwxtx": {
+    "prompt": "Na AWS, os servidores e o banco de uma aplicação devem sobreviver à perda de uma zona de disponibilidade. Do que o desenho de sub-redes precisa, e por quê?",
+    "hint": "Nuvem e Serverless, aula 6.",
+    "choices": [
+      {
+        "text": "Duas sub-redes por papel, uma em cada zona: na AWS a sub-rede fica numa zona.",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma sub-rede grande por papel, já que uma sub-rede abrange todas as zonas da região.",
+        "why": "Esse é o modelo do Google Cloud e do Azure; na AWS a sub-rede carrega a zona."
+      },
+      {
+        "text": "Uma segunda VPC em outra zona, com peering para a primeira.",
+        "why": "Uma VPC já abrange as zonas da região; uma segunda acrescenta ligações sem acrescentar zonas."
+      },
+      {
+        "text": "Sub-redes `/28`, que saem mais baratas para repetir em cada zona do que blocos maiores.",
+        "why": "Uma /28 não economiza nada que valha e deixa 11 endereços usáveis, que acabam rápido."
+      }
+    ]
+  },
+  "ex-a09tgk9b": {
+    "prompt": "A Ana muda uma linha, o `cidr_block` de `aws_subnet.a`, de `10.20.1.0/24` para `10.20.3.0/24`. O plan diz `Plan: 2 to add, 0 to change, 2 to destroy`, e `aws_instance.web` está entre as substituições. Por que a instância é substituída?",
+    "hint": "Infraestrutura como Código, aula 6.",
+    "choices": [
+      {
+        "text": "O endereço privado dela fica fora da faixa nova, e o provider marca o endereço como alterado.",
+        "why": "O plan aponta `subnet_id` como causa; o endereço é consequência da troca, não o gatilho."
+      },
+      {
+        "text": "O id que ela referencia é novo, e `subnet_id` força recriar quando muda.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Terraform substitui todo recurso de uma configuração sempre que um deles é substituído.",
+        "why": "A VPC da mesma configuração fica; só segue o que referencia o id substituído."
+      },
+      {
+        "text": "O lock file fixou um provider antigo.",
+        "why": "Nenhuma versão mudou; a causa é a referência da instância para a sub-rede."
+      }
+    ]
+  },
+  "ex-gb765e3k": {
+    "prompt": "Um security group declara `name = \"web\"` e `create_before_destroy = true`. A Ana edita a descrição e aplica, e a AWS responde `InvalidGroup.Duplicate: The security group 'web' already exists`. Qual é a correção que a aula dá?",
+    "hint": "Infraestrutura como Código, aula 6.",
+    "choices": [
+      {
+        "text": "Tirar o `create_before_destroy`, para que o grupo antigo seja destruído antes e libere o nome.",
+        "why": "Numa conta real a AWS recusa apagar um grupo ainda preso a uma instância, então essa ordem também falha."
+      },
+      {
+        "text": "Usar `name_prefix`, para o antigo e o novo coexistirem.",
+        "why": "Isso."
+      },
+      {
+        "text": "Rodar `terraform state rm` no grupo e aplicar de novo.",
+        "why": "O grupo antigo continuaria na AWS, desconhecido do estado, e o nome ainda colidiria."
+      },
+      {
+        "text": "Acrescentar `ignore_changes = [description]`.",
+        "why": "Isso esconde a edição em vez de fazê-la; a descrição na AWS nunca mudaria."
+      }
+    ]
+  },
+  "ex-sehymp3v": {
+    "prompt": "Um colega abriu a porta 22 no grupo `web` na mão. Antes de decidir se vence o arquivo ou o mundo, a Ana quer ver só o que mudou lá fora desde que o estado foi gravado, sem proposta misturada. Ela roda `terraform plan -___`.",
+    "hint": "Infraestrutura como Código, aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "refresh-only",
+          "-refresh-only",
+          "refresh-only=true"
+        ]
+      }
+    ]
+  },
+  "ex-yxrfz3f2": {
+    "prompt": "A loja escreve cada regra como um `aws_vpc_security_group_ingress_rule` próprio. Alguém acrescenta na mão uma regra para a porta 3389, e o `terraform plan -detailed-exitcode` noturno continua saindo com 0. Por quê?",
+    "hint": "Infraestrutura como Código, aula 7.",
+    "choices": [
+      {
+        "text": "O código 0 quer dizer que achou mudanças, e o job lê ao contrário.",
+        "why": "Com `-detailed-exitcode`, 2 quer dizer mudanças; 0 quer dizer nenhuma."
+      },
+      {
+        "text": "O plan pula o refresh à noite porque o estado está travado pelo agendador.",
+        "why": "Todo plan começa lendo os recursos reais; uma trava presa faz ele falhar, não pular."
+      },
+      {
+        "text": "A porta 3389 é do Windows, que o provider da AWS não modela.",
+        "why": "Para o provider uma regra é uma regra, seja qual for a porta."
+      },
+      {
+        "text": "Recursos por regra comparam só as regras que o Terraform criou.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-zcajhn7v": {
+    "prompt": "Um runner de CI foi recolhido no meio de um `terraform apply`, e desde então todo plan falha com `Error acquiring the state lock`. Coloque em ordem a saída da aula 7.",
+    "hint": "Infraestrutura como Código, aula 7.",
+    "items": [
+      "ler `Who`, `Operation` e `Created` no `Lock Info` do erro",
+      "ter certeza de que a execução dona da trava morreu mesmo",
+      "rodar `terraform force-unlock` com o `ID` da trava",
+      "rodar o plan de novo"
+    ],
+    "trap": "Destravar antes de ter certeza de que o dono morreu deixa um segundo escritor entrar ao lado de uma execução que só está lenta."
+  },
+  "ex-vk7h3eqy": {
+    "prompt": "A Ana roda `terraform plan -var-file=dev.tfvars` e vê o `cidr_block` da VPC indo `\"10.20.0.0/16\" -> \"10.21.0.0/16\" # forces replacement`, com 4 para destruir. O dev usa `10.21.0.0/16`. Qual é a explicação mais provável?",
+    "hint": "Infraestrutura como Código, aula 11.",
+    "choices": [
+      {
+        "text": "Alguém mudou a VPC do dev na mão, e o plan está corrigindo o drift.",
+        "why": "O dev já é 10.21; o plan parte de 10.20, que é a faixa de outro ambiente."
+      },
+      {
+        "text": "O workspace selecionado ainda é `prod`.",
+        "why": "Isso."
+      },
+      {
+        "text": "O arquivo de valores tem um erro de digitação na faixa.",
+        "why": "O valor novo é a faixa certa do dev; é o valor antigo que não pertence ao dev."
+      },
+      {
+        "text": "Uma atualização de provider mudou o jeito de comparar faixas de VPC.",
+        "why": "Nada no plan aponta para versão; a faixa de partida é de outro ambiente."
+      }
+    ]
+  },
+  "ex-hs4stspa": {
+    "prompt": "Um pull request muda a restrição do `random` em `versions.tf` e o `.terraform.lock.hcl`, e não toca em nenhum bloco de recurso. Um revisor aprova dizendo que não há nada a revisar. O que a aula diz?",
+    "hint": "Infraestrutura como Código, aula 9.",
+    "choices": [
+      {
+        "text": "O diff do lock file é a atualização do provider, e uma versão nova pode mudar padrões ou transformar um update numa substituição.",
+        "why": "Isso."
+      },
+      {
+        "text": "O lock file é gerado, então pertence ao `.gitignore`, e não à revisão.",
+        "why": "Ele fixa a versão exata que toda execução usa, e é por isso que o diff dele é revisado."
+      },
+      {
+        "text": "O revisor tem razão: o próximo plan pode mostrar qualquer efeito.",
+        "why": "O efeito chega sem edição em recurso, então é revisado como uma mudança à parte."
+      },
+      {
+        "text": "Só o hash `h1:` importa, e quem confere é o `terraform validate`.",
+        "why": "A versão mudou, e essa é a mudança; o validate não julga isso."
+      }
+    ]
+  },
+  "ex-h3kr8zad": {
+    "prompt": "Uma trava de segurança reprova o pipeline em qualquer destroy. Quais destas mudanças passam por ela e só são pegas por quem lê os valores do plan? Marque todas as que se aplicam.",
+    "hint": "Infraestrutura como Código, aula 9.",
+    "choices": [
+      {
+        "text": "O `cidr_ipv4` de uma regra de SSH indo de `203.0.113.0/24` para `0.0.0.0/0`.",
+        "why": "Isso."
+      },
+      {
+        "text": "O `Action` de uma política de role indo de `s3:GetObject` para `s3:*`.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um banco substituído por causa de um argumento `# forces replacement`.",
+        "why": "Uma substituição conta como destroy, então a trava já barra."
+      },
+      {
+        "text": "Um bloco de recurso renomeado sem bloco `moved`.",
+        "why": "O endereço antigo é destruído, e a trava vê isso."
+      }
+    ]
+  },
+  "ex-b3rcvkw7": {
+    "prompt": "Toda execução de um playbook termina com `changed=1` em todo host, por causa de uma tarefa `ansible.builtin.command: nginx -t`. Por que isso importa, e o que resolve?",
+    "hint": "Infraestrutura como Código, aula 18.",
+    "choices": [
+      {
+        "text": "Quer dizer que a configuração do nginx é regravada a cada execução; um argumento `creates:` impede isso.",
+        "why": "O `nginx -t` não grava nada, e o `creates` é para um comando que de fato cria um arquivo."
+      },
+      {
+        "text": "`changed_when: false`: um resumo que nunca zera esconde as mudanças reais.",
+        "why": "Isso."
+      },
+      {
+        "text": "É inofensivo, e o `--check` relataria a mesma coisa.",
+        "why": "Ninguém lê um resumo que nunca zera, e esse é o dano."
+      },
+      {
+        "text": "O host está com drift, então a tarefa deveria virar um handler.",
+        "why": "Nada sofreu drift; o módulo não tem como saber que o comando não mudou nada."
+      }
+    ]
+  },
+  "ex-v2djscv6": {
+    "prompt": "Alguém acrescenta um cron job no `web1` na mão. A execução seguinte do playbook da loja informa `changed=0` nos dois hosts. O que isso diz à Ana?",
+    "hint": "Infraestrutura como Código, aula 18.",
+    "choices": [
+      {
+        "text": "O Ansible removeu o job, porque tudo fora do playbook é drift.",
+        "why": "Sem arquivo de estado e sem tarefa citando o job, o Ansible não tem nada mandando removê-lo."
+      },
+      {
+        "text": "Nada, nem a favor nem contra: só se confere o que está escrito nas tarefas.",
+        "why": "Isso."
+      },
+      {
+        "text": "O job é inofensivo, senão a execução teria marcado o `web1` como falho.",
+        "why": "A execução nunca olhou para ele, então um resumo limpo não prova nada sobre ele."
+      },
+      {
+        "text": "O `web1` estava inacessível, então o resultado dele foi copiado do `web2`.",
+        "why": "Um host inacessível entra em `unreachable`, não aparece como ok."
+      }
+    ]
+  },
+  "ex-2psf09x5": {
+    "prompt": "Três servidores web sobem em três dias diferentes a partir do Ubuntu puro, e cada um instala o nginx pelo user data. Eles mostram três versões diferentes do nginx. O que a aula tira disso?",
+    "hint": "Infraestrutura como Código, aula 20.",
+    "choices": [
+      {
+        "text": "Os espelhos do repositório discordam entre si, e fixar um espelho específico resolve.",
+        "why": "Um espelho só ainda oferece o que estiver atual no dia em que cada máquina sobe."
+      },
+      {
+        "text": "O cloud-init rodou o script uma vez só.",
+        "why": "Rodar uma vez por máquina é o esperado; a diferença é o dia em que cada uma rodou."
+      },
+      {
+        "text": "Cada boot instala o que o repositório oferecia no dia; uma imagem assada não.",
+        "why": "Isso."
+      },
+      {
+        "text": "Assar só encurtaria o tempo de boot, e as três versões continuariam diferentes.",
+        "why": "O ponto da aula é que os dois não dão o mesmo resultado; uma imagem assada fixa a versão."
+      }
+    ]
+  },
+  "ex-6tgmsjp3": {
+    "prompt": "O `user_data` de uma instância baixa `s3://shop-boot-dev/boot.sh`, escrito dentro da string, de um bucket que a mesma configuração cria. Numa conta real ela às vezes sobe sem a configuração. Que correção a aula prefere?",
+    "hint": "Infraestrutura como Código, aula 6.",
+    "choices": [
+      {
+        "text": "Acrescentar `depends_on = [aws_s3_object.script]` à instância.",
+        "why": "Funciona, mas diz espere e não diz por quê; a aula prefere uma referência sempre que existe uma."
+      },
+      {
+        "text": "Rodar `terraform apply -parallelism=1`, para os recursos serem criados um de cada vez.",
+        "why": "Um de cada vez, numa ordem qualquer, ainda não garante o bucket antes; o grafo não tem a aresta."
+      },
+      {
+        "text": "Marcar a instância com `create_before_destroy` para o bucket ser criado antes.",
+        "why": "Isso ordena a substituição de um recurso, não dois recursos sem relação."
+      },
+      {
+        "text": "Montar o caminho a partir de `aws_s3_object.script.bucket` e `.key`.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-1qtp9j7z": {
+    "prompt": "Associe cada pergunta de saúde ao que acontece quando a resposta é não.",
+    "hint": "Observabilidade e Operação, aula 14.",
+    "pairs": [
+      {
+        "left": "liveness",
+        "right": "o contêiner é morto e iniciado de novo"
+      },
+      {
+        "left": "readiness",
+        "right": "o tráfego deixa de ir para ele até dizer sim"
+      },
+      {
+        "left": "startup",
+        "right": "as outras duas sondas esperam"
+      },
+      {
+        "left": "a sonda de fora",
+        "right": "nada por si só: é uma medição"
+      }
+    ],
+    "right_distractors": [
+      "o nó inteiro é esvaziado e reiniciado"
+    ]
+  },
+  "ex-wb7bvc4c": {
+    "prompt": "O objetivo de um serviço é 99,9%, e na última hora 1,44% das requisições falharam. Qual é a taxa de queima?",
+    "hint": "Observabilidade e Operação, aula 16."
+  },
+  "ex-ecp85p6k": {
+    "prompt": "Um switch reinicia e os checkouts falham por quarenta segundos. Logo depois, a taxa de queima é 34,6 em um minuto e 5,9 em cinco; o page rápido exige as duas acima de 14,4. O que a regra faz, e por que isso está certo?",
+    "hint": "Observabilidade e Operação, aula 16.",
+    "choices": [
+      {
+        "text": "Ela aciona, porque uma janela acima do limite prova que o orçamento está queimando rápido.",
+        "why": "A regra exige as duas; a janela curta sozinha dispara a cada soluço."
+      },
+      {
+        "text": "Abre um ticket no lugar, já que 5,9 está acima do 3 do alerta lento em todas as janelas que ele usa.",
+        "why": "O alerta lento lê a sua própria janela mais longa, e a taxa de trinta minutos ali ficou abaixo de 1."
+      },
+      {
+        "text": "Não aciona: a janela longa diz que o estrago foi pequeno.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ela oscila entre disparado e resolvido até a janela de cinco minutos esvaziar.",
+        "why": "Oscilar exige a condição valer e quebrar; aqui a janela de cinco minutos nunca passou de 14,4."
+      }
+    ]
+  },
+  "ex-28h96mek": {
+    "prompt": "O `up` do exporter `node` de um host está em 0 há dez minutos. Os checkouts estão todos dando certo. Pelo teste da aula 16, o que esse alerta deveria ser?",
+    "hint": "Observabilidade e Operação, aula 16.",
+    "choices": [
+      {
+        "text": "Um ticket: uma causa, que vale uma olhada no horário de trabalho.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um page, já que um alvo que parou de responder quer dizer dado sendo perdido agora mesmo.",
+        "why": "Ninguém está sendo prejudicado agora e nada precisa ser feito antes de amanhecer, que é o teste do page."
+      },
+      {
+        "text": "Um page encaminhado de lado para a equipe dona do host.",
+        "why": "Escalar de lado leva um page à equipe certa; não torna uma causa urgente."
+      },
+      {
+        "text": "Alerta nenhum, porque o SLI já cobre todas as causas.",
+        "why": "O SLI cobre o page; as causas ainda vão para uma fila que alguém lê."
+      }
+    ]
+  },
+  "ex-zy9asnpb": {
+    "prompt": "Na borda, uma equipe acrescenta um label `client_ip` ao contador de requisições, e dezenas de milhares de endereços passam por ali todo dia. Onde a aula 6 diz que esse detalhe deve ficar?",
+    "hint": "Observabilidade e Operação, aula 6.",
+    "choices": [
+      {
+        "text": "No contador, mas com scrape menos frequente para as séries continuarem baratas.",
+        "why": "Cada valor continua sendo uma série que vive na memória; o intervalo não muda a contagem."
+      },
+      {
+        "text": "Num span ou numa linha de log, já que um valor de label é uma série nova que continua existindo.",
+        "why": "Isso."
+      },
+      {
+        "text": "Num histograma em vez de contador, cujos buckets absorvem os valores.",
+        "why": "Um histograma multiplica séries pelos buckets; o label custaria mais, não menos."
+      },
+      {
+        "text": "Num label `job`, que o Prometheus acrescenta de qualquer jeito.",
+        "why": "O `job` nomeia a configuração de scrape; enchê-lo de endereços dá a mesma cardinalidade."
+      }
+    ]
+  },
+  "ex-bzjqbefv": {
+    "prompt": "Um host que roda um exporter fica sem energia. Como o Prometheus puxa, ele percebe: o scrape falha, e uma métrica que o Prometheus mantém para todo alvo, 1 ou 0 a cada scrape, cai para 0. Essa métrica se chama ___.",
+    "hint": "Observabilidade e Operação, aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "up"
+        ]
+      }
+    ]
+  },
+  "ex-vg65mqt4": {
+    "prompt": "Coloque os momentos de um incidente na ordem entre a qual os intervalos são medidos.",
+    "hint": "Observabilidade e Operação, aula 18.",
+    "items": [
+      "a falha começa",
+      "um alerta dispara",
+      "uma pessoa diz \"está comigo\"",
+      "os usuários deixam de ser prejudicados",
+      "o incidente é encerrado"
+    ],
+    "trap": "A mitigação vem antes do encerramento: os usuários deixam de ser prejudicados com o rollback, e o incidente é encerrado depois."
+  },
+  "ex-805q5n5d": {
+    "prompt": "Durante um incidente, um papel registra o que é tentado, decidido e observado, com horários, e não faz mais nada. Esse papel é o ___.",
+    "hint": "Observabilidade e Operação, aula 17.",
+    "blanks": [
+      {
+        "accept": [
+          "escriba"
+        ]
+      }
+    ]
+  },
+  "ex-ahkrbscy": {
+    "prompt": "Uma equipe de redes põe um proxy reverso novo entre `storefront` e `orders` que só repassa uma lista fixa de cabeçalhos. Desde então todo checkout aparece no Jaeger como dois traces separados. Qual é a causa mais provável?",
+    "hint": "Observabilidade e Operação, aula 4.",
+    "choices": [
+      {
+        "text": "O proxy acrescenta latência, e o Jaeger divide um trace cujos spans ficam longe demais no tempo.",
+        "why": "Spans se juntam por ids, não pela proximidade no tempo."
+      },
+      {
+        "text": "O `orders` agora vê o proxy como chamador e o registra como raiz.",
+        "why": "O proxy não cria span aqui; o que falta é o contexto que o proxy descartou."
+      },
+      {
+        "text": "O proxy reescreve o terceiro campo do cabeçalho com o próprio span id.",
+        "why": "Reescrever o campo do pai manteria o trace id, e o trace continuaria um só."
+      },
+      {
+        "text": "O `traceparent` não está na lista, então o `orders` começa um trace novo.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-c31bcqte": {
+    "prompt": "Às três da manhã ninguém está comprando, e o caminho do checkout está quebrado. Por que o page de taxa de queima não consegue disparar, e em que a aula 16 se apoia no lugar?",
+    "hint": "Observabilidade e Operação, aula 16.",
+    "choices": [
+      {
+        "text": "A taxa de queima ignora o tráfego, então dispara como sempre e nada mais é preciso.",
+        "why": "Ela ignora o volume, mas sem requisições a razão não tem o que dividir."
+      },
+      {
+        "text": "O Alertmanager emudece os pages de madrugada, a menos que um silêncio seja retirado.",
+        "why": "Silêncios são criados por pessoas para uma janela; nada emudece pages pelo relógio."
+      },
+      {
+        "text": "A janela de uma hora ainda está cheia de requisições do dia, que diluem as falhas.",
+        "why": "Às três da manhã a última hora não tem tráfego do dia; o problema é que não tem tráfego nenhum."
+      },
+      {
+        "text": "Nada sobre nada é indefinido; um checkout sintético falhando é o sinal.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-xe8jjw23": {
+    "prompt": "Duas quedas de mesma duração atingem a mesma loja: uma às quatro da manhã, outra na hora do almoço. Como elas se comparam diante do orçamento de erros?",
+    "hint": "Observabilidade e Operação, aula 15.",
+    "choices": [
+      {
+        "text": "A do meio-dia custa muito mais, porque o que se conta são checkouts com falha.",
+        "why": "Isso."
+      },
+      {
+        "text": "Gastam o mesmo, porque o orçamento é um número de minutos por janela.",
+        "why": "O orçamento é contado em checkouts que falharam, e os minutos são só um jeito de imaginá-lo."
+      },
+      {
+        "text": "A da madrugada gasta mais, porque menos requisições fazem cada falha pesar mais.",
+        "why": "O orçamento é uma fração de todos os checkouts da janela, e a queda da madrugada derruba bem menos deles."
+      },
+      {
+        "text": "Nenhuma conta, já que uma queda fica de fora do SLI.",
+        "why": "Uma queda é exatamente o que o SLI mede."
+      }
+    ]
+  },
+  "ex-1wkk9p9b": {
+    "prompt": "Uma mudança de firewall isola três réplicas do banco por cinco minutos. A liveness delas abre uma conexão TCP com `db:5432`. Quais destas coisas acontecem? Marque todas as que se aplicam.",
+    "hint": "Observabilidade e Operação, aula 14.",
+    "choices": [
+      {
+        "text": "Toda réplica é reiniciada, mais ou menos ao mesmo tempo, mais de uma vez.",
+        "why": "Isso."
+      },
+      {
+        "text": "Requisições em andamento são derrubadas a cada reinício.",
+        "why": "Isso."
+      },
+      {
+        "text": "O Kubernetes espera mais entre reinícios a cada vez, o que atrasa a volta quando o banco retorna.",
+        "why": "Isso."
+      },
+      {
+        "text": "Os reinícios reconectam as réplicas ao banco mais cedo do que esperar faria.",
+        "why": "Um reinício não traz de volta nem o caminho de rede nem o banco."
+      },
+      {
+        "text": "O tráfego vai para as réplicas saudáveis enquanto as outras reiniciam.",
+        "why": "As três falham a mesma sonda ao mesmo tempo, então não há réplica saudável para onde ir."
+      }
+    ]
+  },
+  "ex-5dw1e2bc": {
+    "prompt": "Antes de mandar chamados de suporte a um modelo, um script aplica os padrões da aula 11, entre eles `(?:\\d[ -]?){13,19}` para cartões. Um chamado traz um cartão escrito `4111.1111.1111.1111`. O que acontece?",
+    "hint": "IA no Desenvolvimento, aula 11.",
+    "choices": [
+      {
+        "text": "Ele sai com a requisição: um padrão pega formatos, não significado.",
+        "why": "Isso."
+      },
+      {
+        "text": "Ele vira `[CARD]`, já que o padrão conta dígitos seja qual for o separador.",
+        "why": "O padrão aceita espaço ou hífen entre os dígitos, não ponto."
+      },
+      {
+        "text": "O provedor recusa a requisição, porque números de cartão são barrados na API.",
+        "why": "O próprio log da aula mostra o provedor recebendo o número quando nada o removeu."
+      },
+      {
+        "text": "O padrão `SECRET` pega no lugar.",
+        "why": "Esse padrão procura palavras como token ou password seguidas de um valor."
+      }
+    ]
+  },
+  "ex-yzq47kwd": {
+    "prompt": "Uma equipe monta um agente para operação de rede com três ferramentas: ler os contadores de uma interface, ler a configuração de um equipamento e enviar uma configuração. Quais arranjos seguem as regras da aula 7? Marque todas as que se aplicam.",
+    "hint": "IA no Desenvolvimento, aula 7.",
+    "choices": [
+      {
+        "text": "O host pergunta a uma pessoa antes do envio, mostrando os argumentos exatos.",
+        "why": "Isso."
+      },
+      {
+        "text": "O agente roda com credenciais próprias, restritas ao que as ferramentas precisam.",
+        "why": "Isso."
+      },
+      {
+        "text": "Toda chamada e todo resultado são registrados, com quem aprovou o quê.",
+        "why": "Isso."
+      },
+      {
+        "text": "O prompt de sistema diz ao modelo para não enviar sem aprovação, então o host não precisa conferir.",
+        "why": "Os limites ficam abaixo do modelo, onde as escolhas dele não chegam."
+      },
+      {
+        "text": "O agente usa a sessão do próprio engenheiro, que já tem o acesso certo.",
+        "why": "A aula diz credenciais do próprio agente, nunca as do desenvolvedor."
+      }
+    ]
+  },
+  "ex-mgaphhs8": {
+    "prompt": "Um modelo redige respostas a chamados de clientes, e o host oferece todas as ferramentas da aplicação, inclusive uma que faz reembolsos. Qual mudança vale seja qual for a redação do chamado?",
+    "hint": "IA no Desenvolvimento, aula 11.",
+    "choices": [
+      {
+        "text": "Uma frase no prompt de sistema mandando o modelo ignorar instruções que estejam dentro dos chamados.",
+        "why": "Isso pede ao modelo que se comporte; a primeira versão da aula tinha isso e pagou mesmo assim."
+      },
+      {
+        "text": "Um filtro que apaga frases como \"ignore as instruções anteriores\" antes da requisição.",
+        "why": "Depende da redação, que é justamente o que a pergunta exclui."
+      },
+      {
+        "text": "Um modelo maior, que segue melhor as instruções.",
+        "why": "Nenhum modelo é confiável para ignorar instruções que vêm nos dados."
+      },
+      {
+        "text": "Oferecer à tarefa de redação só as ferramentas que leem.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-tpqxf1r4": {
+    "prompt": "Um script envolve a chamada do SDK num laço próprio que tenta de novo qualquer exceção cinco vezes. Uma requisição continua falhando com 400. O que a aula 10 diz que está errado?",
+    "hint": "IA no Desenvolvimento, aula 10.",
+    "choices": [
+      {
+        "text": "O laço repete o que o tempo não conserta, e ainda multiplica as esperas do próprio SDK.",
+        "why": "Isso."
+      },
+      {
+        "text": "Cinco é pouco; um 400 passa quando a carga do provedor cai.",
+        "why": "Sobrecarga é 529 ou 5xx; um 400 é uma requisição errada que vai continuar errada."
+      },
+      {
+        "text": "O laço deveria respeitar o `retry-after`, que todo 400 traz.",
+        "why": "O `retry-after` vem com um 429, limite de taxa; não diz nada sobre requisição malformada."
+      },
+      {
+        "text": "Nada, desde que as esperas cresçam com jitter.",
+        "why": "O backoff espaça as tentativas; não conserta uma requisição errada."
+      }
+    ]
+  },
+  "ex-zsxtcr4h": {
+    "prompt": "Os SDKs esperam mais antes de cada nova tentativa e somam uma parte aleatória, para que dois clientes que falharam juntos não tentem de novo juntos. Isso é backoff exponencial com ___.",
+    "hint": "IA no Desenvolvimento, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "jitter"
+        ]
+      }
+    ]
+  },
+  "ex-as5y6bv7": {
+    "prompt": "O `ansible-playbook` falha numa tarefa de um roteador, e um engenheiro pede ajuda a um assistente. Pela aula 5, quais destes itens devem ir no pedido? Marque todas as que se aplicam.",
+    "hint": "IA no Desenvolvimento, aula 5.",
+    "choices": [
+      {
+        "text": "O comando que produziu a falha.",
+        "why": "Isso."
+      },
+      {
+        "text": "O erro e o traceback, sem edição.",
+        "why": "Isso."
+      },
+      {
+        "text": "As versões envolvidas, e o que já foi tentado.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um resumo do erro nas palavras do engenheiro, no lugar do próprio erro.",
+        "why": "Uma descrição obriga o modelo a adivinhar; a evidência traz detalhes que ninguém lembra de citar."
+      },
+      {
+        "text": "A senha de enable do roteador, para o modelo poder reproduzir a sessão.",
+        "why": "Segredos ficam fora do prompt; o modelo precisa do erro, não das credenciais."
+      }
+    ]
+  },
+  "ex-33zqte5f": {
+    "prompt": "Um assistente escreve um bloco de Terraform com um argumento que o provider removeu numa versão posterior ao corte de treino do modelo. O que a aula 1 recomenda?",
+    "hint": "IA no Desenvolvimento, aula 1.",
+    "choices": [
+      {
+        "text": "Pôr a documentação da versão em uso no contexto, e conferir o resultado com algo que não seja um modelo.",
+        "why": "Isso."
+      },
+      {
+        "text": "Perguntar ao modelo se ele tem certeza, já que um modelo grande sabe dizer \"não sei\".",
+        "why": "Isso é comportamento aprendido, não medição; o modelo não tem sinal do que está reconstruindo."
+      },
+      {
+        "text": "Baixar a temperatura para 0, para a resposta ser a mais provável e por isso a correta.",
+        "why": "A continuação mais provável de um texto de treino antigo continua sendo o argumento antigo."
+      },
+      {
+        "text": "Trocar para um provedor cujo modelo conheça Terraform.",
+        "why": "Todo modelo tem um corte, e esse argumento mudou depois dele."
+      }
+    ]
+  },
+  "ex-h8e0era2": {
+    "prompt": "Um modelo tem janela de 2.048 tokens e permite no máximo 512 de saída por resposta. Um prompt tem 1.717 tokens. Qual é o maior `max_tokens` que a requisição pode levar sem ser recusada?",
+    "hint": "IA no Desenvolvimento, aula 2.",
+    "unit": "tokens"
+  },
+  "ex-mc2dp71j": {
+    "prompt": "Pela aula 3, quais destes fazem um projeto de portfólio forte para quem contrata um engenheiro de redes júnior? Marque todas as que se aplicam.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 3.",
+    "choices": [
+      {
+        "text": "Uma rede de laboratório montada a partir de arquivos de configuração sob controle de versão.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um diagrama da topologia desse laboratório.",
+        "why": "Isso."
+      },
+      {
+        "text": "Um teste que prova que o laboratório faz failover quando um enlace cai.",
+        "why": "Isso."
+      },
+      {
+        "text": "Capturas de tela da interface web de cada equipamento, configurado na mão, um ajuste por vez.",
+        "why": "Ninguém reproduz um laboratório configurado na mão, e o revisor abre as configurações."
+      },
+      {
+        "text": "Uma lista dos cursos e certificados concluídos, no topo do README.",
+        "why": "Uma lista é uma afirmação; o revisor abre o que está mais perto do trabalho da primeira semana."
+      }
+    ]
+  },
+  "ex-zb8y2xdz": {
+    "prompt": "O teste de failover do seu laboratório passou em toda execução desde que você o escreveu, depois que a redundância já estava pronta. Como a aula 12 diz para descobrir se ele perceberia um failover quebrado?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Rodá-lo a cada push, para uma falha aparecer como um X vermelho.",
+        "why": "Rodar mais vezes não mostra que ele é capaz de falhar."
+      },
+      {
+        "text": "Acrescentar mais testes em volta até a cobertura da configuração chegar a uma porcentagem alta.",
+        "why": "Cobertura conta linhas executadas, não se este teste reclama quando a garantia some."
+      },
+      {
+        "text": "Lê-lo de novo na manhã seguinte.",
+        "why": "Distância ajuda numa revisão; não prova que o teste morde."
+      },
+      {
+        "text": "Remover o caminho redundante de propósito, ver o teste ficar vermelho e depois restaurar.",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-31mnab3v": {
+    "prompt": "Você planeja uma rede de laboratório com três segmentos, roteamento entre eles, monitoração e um teste de failover. O que o walking skeleton da aula 5 diz para ter funcionando nos primeiros dias?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 5.",
+    "choices": [
+      {
+        "text": "Todos os segmentos totalmente desenhados e documentados, para nada precisar ser refeito depois.",
+        "why": "Esse é o caminho camada por camada, em que nada roda até a última camada ficar pronta."
+      },
+      {
+        "text": "A pilha de monitoração, já que ela vai mostrar todo problema depois.",
+        "why": "Uma camada pronta primeiro ainda é uma camada; o esqueleto é uma fatia por todas elas."
+      },
+      {
+        "text": "A fatia mais fina de ponta a ponta: dois segmentos que se alcançam, montados com os arquivos do repositório, ainda sem acabamento.",
+        "why": "Isso."
+      },
+      {
+        "text": "O teste de failover, escrito antes de existir qualquer equipamento.",
+        "why": "Testes vêm depois que algo funciona, na ordem do esqueleto."
+      }
+    ]
+  },
+  "ex-v183y6ke": {
+    "prompt": "Seis semanas não bastam para o plano do seu projeto de laboratório de rede: um painel web com contas e papéis, o teste de failover, um diagrama e um README. Pela aula 6, o que sai primeiro?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 6.",
+    "choices": [
+      {
+        "text": "O diagrama, que um revisor consegue desenhar a partir das configurações.",
+        "why": "O diagrama é a primeira coisa que o revisor dessa área abre."
+      },
+      {
+        "text": "O teste de failover, a maior peça de trabalho isolada.",
+        "why": "Ele é o ponto do projeto, e o ponto nunca entra na lista de cortes."
+      },
+      {
+        "text": "O login e as permissões, já que toda tela e todo teste se multiplicam por eles.",
+        "why": "Isso."
+      },
+      {
+        "text": "O README, que pode ser escrito depois do prazo.",
+        "why": "O README é o que faz o projeto ser entendido; cortá-lo esconde o trabalho."
+      }
+    ]
+  },
+  "ex-n0qxw863": {
+    "prompt": "Na trilha de redes, o que a aula 15 diz que \"implantado\" significa para o seu projeto?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 15.",
+    "choices": [
+      {
+        "text": "Rodou uma vez do começo ao fim no seu notebook, registrado numa captura de tela.",
+        "why": "Implantado quer dizer que alguém o vê funcionando sem você, no mês que vem e hoje."
+      },
+      {
+        "text": "Um ambiente que continua no ar, documentado o bastante para ser refeito, e com uma restauração testada.",
+        "why": "Isso."
+      },
+      {
+        "text": "Acessível pela internet com um domínio próprio.",
+        "why": "O deploy do próprio curso fica numa rede privada de laboratório; domínio não é o critério."
+      },
+      {
+        "text": "Integrado à main com o CI verde.",
+        "why": "Um CI verde diz que os testes passaram, não que algo está no ar para outra pessoa."
+      }
+    ]
+  },
+  "ex-geqmz3v5": {
+    "prompt": "Você termina uma mudança no roteamento do seu laboratório às onze da noite e vai integrar o pull request você mesmo. Associe cada tipo de distância da aula 10 ao que você faz.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 10.",
+    "pairs": [
+      {
+        "left": "tempo",
+        "right": "ler o diff na manhã seguinte"
+      },
+      {
+        "left": "uma vista diferente",
+        "right": "ler na página de pull request do site de hospedagem"
+      },
+      {
+        "left": "uma ordem diferente",
+        "right": "ler os testes primeiro, depois o código"
+      }
+    ],
+    "right_distractors": [
+      "pedir a um assistente que aprove"
+    ]
+  },
+  "ex-x0p9k2db": {
+    "prompt": "Separar as funcionalidades de um projeto em must, should, could e won't, pelas iniciais, se chama ___.",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "MoSCoW",
+          "método MoSCoW"
+        ]
+      }
+    ]
+  },
+  "ex-e79xr2jx": {
+    "prompt": "Seu projeto de laboratório inclui uma pequena ferramenta que distribui sub-redes e recusa uma que se sobreponha a outra já entregue. Qual teste se paga, pela aula 12?",
+    "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 12.",
+    "choices": [
+      {
+        "text": "Um que confere se o `ipaddress` do Python lê `10.0.16.0/20` direito.",
+        "why": "A biblioteca tem os próprios testes; este não prova nada sobre a sua regra."
+      },
+      {
+        "text": "Um que confere se o getter devolve a sub-rede que recebeu.",
+        "why": "Getters só movem um valor; uma falha ali seria visível, não errada."
+      },
+      {
+        "text": "Um retrato da página de saída da ferramenta, comparado a cada execução.",
+        "why": "O leiaute exato muda toda hora, e você vê as falhas dele de qualquer jeito."
+      },
+      {
+        "text": "Um teste da regra na borda: um bloco que divide um endereço é recusado, e o bloco logo depois é aceito.",
+        "why": "Isso."
+      }
+    ]
+  }
+}

@@ -1,0 +1,4062 @@
+[
+  {
+    "id": "ex-1ehmm7eh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Inside the office, a reporting app hangs for about a minute whenever its database port is blocked, and users think it has crashed. The firewall team asks which rule action to use for that port on the internal network. What does the lesson recommend?",
+    "hint": "Networks and Protocols, lesson 3.",
+    "choices": [
+      {
+        "text": "Drop, so that a stranger scanning the network learns little about the machine",
+        "correct": false,
+        "why": "That is why drop suits the internet side; inside, it leaves legitimate programs hanging."
+      },
+      {
+        "text": "Reject with a TCP reset, so the app fails at once with a clear error",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Drop, and raise the app's timeout so the reply has time to arrive",
+        "correct": false,
+        "why": "A dropped attempt gets no reply at any timeout; a longer wait only stretches the hang."
+      },
+      {
+        "text": "Accept the port and let the database's own login turn away unwanted clients",
+        "correct": false,
+        "why": "That removes the block altogether, which is not what the team asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3srvz9g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A branch office says file copies to head office crawl at a fraction of the line's speed, though pages do load in the end and nothing is reported down. On the Linux file server, which reading does the lesson take first?",
+    "hint": "Networks and Protocols, lesson 3.",
+    "choices": [
+      {
+        "text": "`nstat -az TcpRetransSegs`, to see whether segments are being resent",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`ss -tan state time-wait`, since a pile of closed connections slows a server",
+        "correct": false,
+        "why": "Thousands of TIME-WAIT lines mean a busy server, not a broken one."
+      },
+      {
+        "text": "`ss -tulpn`, to confirm that the file service is still listening on its port",
+        "correct": false,
+        "why": "The copies are running, so something is listening; the question is what happens to their packets."
+      },
+      {
+        "text": "`dig` against both offices' resolvers, as slow transfers begin with slow names",
+        "correct": false,
+        "why": "A name is looked up before the connection opens; it does not slow bytes already flowing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvnv37pb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "After the three-way handshake, a client sends its first request: 512 bytes, starting at relative sequence number 1. Counting the way the lesson's capture does, what number does the server put in its `ack` for that request?",
+    "hint": "Networks and Protocols, lesson 3.",
+    "value": 513,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-d4drb24v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your company runs the authoritative DNS for example.com on ns1. A partner's mail server complains that 192.0.2.80 gives no proper name when looked up backwards. Where does the `PTR` record for it get changed?",
+    "hint": "Networks and Protocols, lesson 4.",
+    "choices": [
+      {
+        "text": "With whoever holds that block of IPs, such as your provider",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In the example.com zone on ns1, next to the A record for www",
+        "correct": false,
+        "why": "The reverse name lives under in-addr.arpa, which follows the addresses, not your domain."
+      },
+      {
+        "text": "In a TXT record on example.com, which partner mail servers read as the reverse name",
+        "correct": false,
+        "why": "TXT carries rules such as SPF; a reverse lookup asks for a PTR under in-addr.arpa."
+      },
+      {
+        "text": "At the registrar, which publishes the reverse name for each domain it sells",
+        "correct": false,
+        "why": "A registrar sells the name; reverse zones belong to whoever owns the address block."
+      }
+    ]
+  },
+  {
+    "id": "ex-gmhgbjem",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "You add a record to the zone file on example.com's primary server and reload it; `dig @` the primary shows the record. Hours later the secondary server still answers from the old zone, and its log shows no transfer. What was most likely forgotten?",
+    "hint": "Networks and Protocols, lesson 4.",
+    "choices": [
+      {
+        "text": "Waiting out the record's TTL, after which the secondary asks again",
+        "correct": false,
+        "why": "The TTL says how long resolvers may keep an answer, not when a secondary copies the zone."
+      },
+      {
+        "text": "Running named-checkzone, which signals the new version of the zone to other servers",
+        "correct": false,
+        "why": "named-checkzone checks the file for mistakes; it tells no other server anything."
+      },
+      {
+        "text": "Raising the SOA serial number, which is how secondaries notice a change",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Flushing the resolver's cache with unbound-control so the secondary sees it",
+        "correct": false,
+        "why": "That empties one resolver's copy; a secondary takes zone data from the primary, not from a resolver."
+      }
+    ]
+  },
+  {
+    "id": "ex-4vc1jygc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`tcpdump -e arp` showed two replies to one request for the file server's 192.168.10.10, and the MAC in the wrong one led you to a printer installed this morning with that number typed in by hand. After taking it off the printer, what keeps this from happening again?",
+    "hint": "Networks and Protocols, lesson 10.",
+    "choices": [
+      {
+        "text": "Flushing the neighbour table on each PC every morning with `ip neigh flush`",
+        "correct": false,
+        "why": "Flushing only resets whom a PC believed; with two owners of one address the race starts again."
+      },
+      {
+        "text": "Fixed devices get numbers outside the DHCP range, or a DHCP reservation",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Moving the file server to a switch port far from the one the printer uses",
+        "correct": false,
+        "why": "Both are still on one network and both still answer the same ARP request."
+      },
+      {
+        "text": "A rule on the router blocking ARP replies that come from printers",
+        "correct": false,
+        "why": "ARP stays on the local network and is answered before any router sees it; the fix is in the addressing."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yd62aw1",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A capture was saved on the faulty machine with `tcpdump -w /tmp/web.pcap host 192.0.2.80`. To print it back later, with the same filters available, the command is `tcpdump -n ___ /tmp/web.pcap`.",
+    "hint": "Networks and Protocols, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "-r"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-63h3mmfk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "From home you need a shell on www, which accepts SSH only from the office. A colleague's habit is `ssh -A office`, then `ssh www` from there. What does the lesson do instead, and why?",
+    "hint": "Networks and Protocols, lesson 7.",
+    "choices": [
+      {
+        "text": "`ssh -A` as suggested, since the agent keeps the key encrypted on the server",
+        "correct": false,
+        "why": "With `-A`, whoever is root on the office server can use your agent while you are connected."
+      },
+      {
+        "text": "Copy the private key to the office server, so the second hop needs no agent",
+        "correct": false,
+        "why": "A private key stays on the machine it was made on; a copy on a server is a copy its root can take."
+      },
+      {
+        "text": "`ssh -J office www`: the office server relays bytes, and your key stays home",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Ask for www's firewall to let your home address in, then use `ssh www` directly",
+        "correct": false,
+        "why": "That widens a sensible rule to an address nobody else checks; the jump host keeps one door."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dqyyyea",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ana runs `ssh -f -N -L 5432:10.0.0.7:5432 office` on her laptop. The database at 10.0.0.7 answers from the office server and is not reachable from the laptop. She then points her database client at `127.0.0.1:5432` on the laptop. What happens?",
+    "hint": "Networks and Protocols, lesson 7.",
+    "choices": [
+      {
+        "text": "It fails, because the laptop itself has no route to 10.0.0.7",
+        "correct": false,
+        "why": "The destination in `-L` is seen from the server; the laptop talks only to its own port and to sshd."
+      },
+      {
+        "text": "It reaches the laptop's own port 5432, where no database is listening",
+        "correct": false,
+        "why": "ssh is listening on that port now, and carries whatever arrives there to the server."
+      },
+      {
+        "text": "It connects: sshd on the office server opens the last leg to 10.0.0.7",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It connects, and the database records the laptop's address as the client",
+        "correct": false,
+        "why": "The last connection is made by sshd on the server, so the database sees the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pc7a39c",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "On a Linux client, `cat /proc/sys/net/ipv4/ip_local_port_range` prints `32768   60999`, the range the kernel picks source ports from. At most how many connections can this client hold open at once to one server's address and port, from its single address?",
+    "hint": "Networks and Protocols, lesson 2.",
+    "value": 28232,
+    "tolerance": 0,
+    "unit": "connections"
+  },
+  {
+    "id": "ex-4tccqn5j",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The office server was reinstalled over the weekend, and `ssh office` now refuses with `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!`. Put the steps in the order the lesson takes them.",
+    "hint": "Networks and Protocols, lesson 7.",
+    "items": [
+      "Note the fingerprint the warning says the server sent",
+      "Read the server's own fingerprint with `ssh-keygen -lf` at its console",
+      "Remove the old entry with `ssh-keygen -R 192.168.10.10`",
+      "Connect again and accept the key, as on a first connection"
+    ],
+    "trap": "Removing the old line before comparing fingerprints turns an unexplained warning into a yes typed blind."
+  },
+  {
+    "id": "ex-3gcymknq",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "One ping crosses the office router, which also does NAT, and is captured on both of its sides. Match each part of the request to what the router did to it.",
+    "hint": "Networks and Protocols, lesson 2.",
+    "pairs": [
+      {
+        "left": "the MAC addresses",
+        "right": "replaced, with a new pair for the next link"
+      },
+      {
+        "left": "the TTL",
+        "right": "one lower than before the router"
+      },
+      {
+        "left": "the IP id",
+        "right": "the same number on both sides"
+      },
+      {
+        "left": "the source address",
+        "right": "rewritten to the office's public address"
+      }
+    ],
+    "right_distractors": [
+      "raised by one at the router"
+    ]
+  },
+  {
+    "id": "ex-ba9kvqfb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A nightly backup runs over one TCP connection on a 1 Gbps link to a site 40 ms away, round trip. By the lesson's bandwidth-delay product, how many megabytes have to be in flight to keep that link full?",
+    "hint": "Web and Internet Fundamentals, lesson 3.",
+    "value": 5,
+    "tolerance": 0.25,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-nff85wye",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a small office, a ping to the provider takes 15 ms when the line is quiet and 400 ms while the nightly backup uploads, and video calls break up during that time. The manager proposes a plan with twice the bandwidth. What does the lesson recommend instead?",
+    "hint": "Web and Internet Fundamentals, lesson 3.",
+    "choices": [
+      {
+        "text": "The bigger plan: a line twice as wide empties its queue twice as fast",
+        "correct": false,
+        "why": "A wider line fills more slowly and then builds the same queue; the delay comes back."
+      },
+      {
+        "text": "Shrinking the router's buffer to nothing, so a packet does not wait at all",
+        "correct": false,
+        "why": "Without a buffer, ordinary bursts turn into losses; the buffer is what stops a burst becoming a loss."
+      },
+      {
+        "text": "Smart queue management, or shaping the line a little under its capacity",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A bigger jitter buffer in the video app, until the calls stop breaking up",
+        "correct": false,
+        "why": "A bigger jitter buffer adds its own delay to every word and leaves the 400 ms queue in place."
+      }
+    ]
+  },
+  {
+    "id": "ex-mx5m9750",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "The helpdesk log holds four complaints that each say \"the internet is slow\". Match each one to the number the lesson says it is really about.",
+    "hint": "Web and Internet Fundamentals, lesson 3.",
+    "pairs": [
+      {
+        "left": "Large downloads take too long",
+        "right": "bandwidth"
+      },
+      {
+        "left": "Everything feels sluggish, yet files arrive fine",
+        "right": "latency"
+      },
+      {
+        "left": "The call breaks only while somebody downloads",
+        "right": "queuing"
+      },
+      {
+        "left": "The voice is choppy and keeps cutting out",
+        "right": "jitter and loss"
+      }
+    ],
+    "right_distractors": [
+      "the MTU"
+    ]
+  },
+  {
+    "id": "ex-3fcadbkf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A traceroute to a slow site shows hop 6 at 180 ms, while hops 7 to 11, which lie beyond it, are all around 25 ms. What does the lesson make of hop 6?",
+    "hint": "Web and Internet Fundamentals, lesson 3.",
+    "choices": [
+      {
+        "text": "It is the bottleneck, and the provider that runs it should be called",
+        "correct": false,
+        "why": "The hops after it would carry its delay too; at 25 ms, the path through hop 6 is fine."
+      },
+      {
+        "text": "Its router answers probes last of all; traffic through it is fine",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The 180 ms is distance: hop 6 is the first router on another continent",
+        "correct": false,
+        "why": "A jump caused by distance stays for every hop after it; here it drops back to 25 ms."
+      },
+      {
+        "text": "Its router is overloaded and dropping traffic, which is why the site is slow",
+        "correct": false,
+        "why": "Traffic crossing it reaches hop 11 in 25 ms; what is slow is the router's own reply to the probe."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8p918hg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A router's table has three lines: `10.0.0.0 – 10.255.255.255` to router A, `10.20.0.0 – 10.20.255.255` to router B, and everything else to the default gateway. Where does it hand a packet for `10.20.5.9`?",
+    "hint": "Web and Internet Fundamentals, lesson 2.",
+    "choices": [
+      {
+        "text": "To router A, the line that comes first in the table",
+        "correct": false,
+        "why": "Order does not decide; the most specific matching line wins."
+      },
+      {
+        "text": "To router B",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To router A, as its line covers more destinations",
+        "correct": false,
+        "why": "The wider range is the vaguer one; the narrower match wins."
+      },
+      {
+        "text": "To the default gateway, since two lines match it at once",
+        "correct": false,
+        "why": "The default is for addresses no line covers; this one is covered twice, and the narrower line wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-agmd7vhd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On a lossy Wi-Fi link, a page that loads thirty files over one HTTP/2 connection keeps freezing, then appearing all at once. Which explanation does the lesson give, and what changes it?",
+    "hint": "Web and Internet Fundamentals, lesson 2.",
+    "choices": [
+      {
+        "text": "The MTU is too big for Wi-Fi; HTTP/3 fixes it by sending smaller packets",
+        "correct": false,
+        "why": "An MTU fault makes large transfers hang outright; HTTP/3's change is recovery per stream."
+      },
+      {
+        "text": "Head-of-line blocking; HTTP/3 resends per stream, so a loss stalls one file",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "UDP is losing the files; moving the page to TCP would resend what is lost",
+        "correct": false,
+        "why": "HTTP/2 already runs on TCP, and TCP's in-order delivery is what holds the other files back."
+      },
+      {
+        "text": "Bufferbloat in the access point; a larger buffer would smooth the freezes",
+        "correct": false,
+        "why": "A larger buffer adds delay; stall-then-burst comes from in-order delivery waiting on one lost packet."
+      }
+    ]
+  },
+  {
+    "id": "ex-85wz6maa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A site renews its certificate automatically using the HTTP check. To tighten things, the network team closed port 80 at the edge, since visitors all use HTTPS. Three months later the certificate expired. What went wrong, and what lets port 80 stay closed?",
+    "hint": "Web and Internet Fundamentals, lesson 9.",
+    "choices": [
+      {
+        "text": "The renewal program waits for a person to approve each renewal, and nobody did",
+        "correct": false,
+        "why": "The protocol is automatic; it failed because the authority could not reach the site over HTTP."
+      },
+      {
+        "text": "Closing 80 broke the redirect to HTTPS, and sites without one are refused",
+        "correct": false,
+        "why": "The authority asks for a file on port 80; a redirect is not what it checks."
+      },
+      {
+        "text": "It renewed, but the server still holds the old certificate in memory",
+        "correct": false,
+        "why": "A real failure elsewhere, but here no renewal happened: the check could not reach port 80."
+      },
+      {
+        "text": "The authority fetches a file over plain HTTP; a DNS check works with 80 shut",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfjt7ba2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A shop sits behind a CDN that terminates TLS at the edge and talks plain HTTP to the origin. A customer asks whether the padlock means her card number is encrypted all the way to the shop's own server. What is the accurate answer?",
+    "hint": "Web and Internet Fundamentals, lesson 9.",
+    "choices": [
+      {
+        "text": "No: it describes her hop to the edge; the second hop is a setting somebody chose",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Yes: the CDN re-encrypts with the same certificate, so both hops are covered",
+        "correct": false,
+        "why": "In this arrangement the second hop is plain HTTP; the padlock says nothing about it."
+      },
+      {
+        "text": "Yes: the CDN forwards her encrypted bytes without reading them",
+        "correct": false,
+        "why": "Terminating means the edge decrypts and opens a second connection; it reads the request."
+      },
+      {
+        "text": "No: TLS protects the address bar, while form fields travel apart",
+        "correct": false,
+        "why": "Everything in the request shares the encrypted connection to the edge; the gap is the second hop."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2ebdsre",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "During a traffic spike, `ss -tlnp` on a web server shows the listener on port 443 with `Recv-Q 511` and `Send-Q 511`. What does that pair say?",
+    "hint": "Linux and the Command Line, lesson 11.",
+    "choices": [
+      {
+        "text": "511 bytes are waiting to be acknowledged by clients that went quiet",
+        "correct": false,
+        "why": "On a LISTEN socket the columns count connections, not bytes; bytes are for established ones."
+      },
+      {
+        "text": "Both queues match, which is the sign that the server is keeping pace",
+        "correct": false,
+        "why": "Equal means the queue has reached its maximum; that is the overload sign."
+      },
+      {
+        "text": "The backlog is full: the program is slow to accept, and new connections are dropped",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The network card has run out of descriptors and its driver is behind",
+        "correct": false,
+        "why": "That is the `missed` counter of `ip -s link`; Recv-Q on a listener is about the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2trwvkh",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "`ip -s link show eth0` has three receive counters that mean trouble. Match each to what the lesson says it points at.",
+    "hint": "Linux and the Command Line, lesson 11.",
+    "pairs": [
+      {
+        "left": "`errors`",
+        "right": "a cable or a card: malformed frames, failed checksums"
+      },
+      {
+        "left": "`dropped`",
+        "right": "a buffer: the packet was fine and had nowhere to go"
+      },
+      {
+        "left": "`missed`",
+        "right": "the driver: the card had no descriptor free"
+      }
+    ],
+    "right_distractors": [
+      "a firewall rule that discarded the packet"
+    ]
+  },
+  {
+    "id": "ex-b7mxhfh6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A cron line pulls every switch's configuration each five minutes. One afternoon the switches answer slowly, a run takes seven minutes, and by evening a dozen copies are fighting over the disk. Which line does the lesson end up with?",
+    "hint": "Linux and the Command Line, lesson 13.",
+    "choices": [
+      {
+        "text": "`*/5 * * * * /usr/bin/flock -w 600 /tmp/pull.lock /usr/local/bin/pull.sh`",
+        "correct": false,
+        "why": "Waiting queues the runs up; a skipped run comes back in five minutes, a queued one is still queued at midnight."
+      },
+      {
+        "text": "`*/5 * * * * /usr/bin/flock -n /tmp/pull.lock /usr/local/bin/pull.sh`",
+        "correct": false,
+        "why": "Without `-E 0` a busy lock exits 1, and monitoring reports a working job as failed."
+      },
+      {
+        "text": "`*/5 * * * * /usr/bin/flock -E 0 -n /tmp/pull.lock /usr/local/bin/pull.sh`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`*/5 * * * * [ -f /tmp/pull.pid ] || /usr/local/bin/pull.sh`, with the script writing its PID",
+        "correct": false,
+        "why": "Check and write are two steps, and a killed job leaves the file behind, so it stops running for good."
+      }
+    ]
+  },
+  {
+    "id": "ex-kn4er1hs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An Ubuntu server runs in UTC. Its crontab starts with `CRON_TZ=America/Sao_Paulo`, then `0 3 * * * /usr/local/bin/backup.sh`, meant for three in the morning in São Paulo (UTC−3). When does the backup actually run?",
+    "hint": "Linux and the Command Line, lesson 13.",
+    "choices": [
+      {
+        "text": "At 03:00 in São Paulo, which is 06:00 UTC",
+        "correct": false,
+        "why": "On Debian and Ubuntu's cron, CRON_TZ reaches the job as a variable and the scheduler ignores it."
+      },
+      {
+        "text": "At 03:00 UTC, which is midnight in São Paulo",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It does not run: cron rejects a crontab holding a variable it does not know",
+        "correct": false,
+        "why": "The variable is accepted and exported into the job; nothing warns you."
+      },
+      {
+        "text": "At 03:00 in the time zone of whoever last edited the crontab",
+        "correct": false,
+        "why": "Cron uses the machine's zone, from /etc/localtime, not the editor's."
+      }
+    ]
+  },
+  {
+    "id": "ex-wt3pjppq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`switches.txt` lists the management address of each switch, one per line, in no particular order. You suspect two switches were given the same address. Which command names the collisions?",
+    "hint": "Linux and the Command Line, lesson 8.",
+    "choices": [
+      {
+        "text": "`sort switches.txt | uniq -d`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`uniq -d switches.txt | sort`",
+        "correct": false,
+        "why": "uniq compares adjacent lines only; unsorted, two equal addresses far apart are missed."
+      },
+      {
+        "text": "`sort -u switches.txt`",
+        "correct": false,
+        "why": "That prints each address once and throws away the fact that some appeared twice."
+      },
+      {
+        "text": "`sort -n switches.txt | uniq -u`",
+        "correct": false,
+        "why": "`-u` keeps the lines that appear exactly once, which is the opposite of what you want."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p5kxmpx",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Plain `sort` prints `1024` before `22` and `443`, because it compares characters rather than values. To order a list of port numbers by value, the command is `sort ___`.",
+    "hint": "Linux and the Command Line, lesson 8.",
+    "blanks": [
+      {
+        "accept": [
+          "-n",
+          "--numeric-sort",
+          "-g"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sxvqzv8t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`down=0; cat switches.txt | while read -r ip; do ping -c1 -W1 \"$ip\" >/dev/null || down=$((down+1)); done; echo \"$down down\"` prints `0 down`, though two switches are switched off. Why?",
+    "hint": "Linux and the Command Line, lesson 9.",
+    "choices": [
+      {
+        "text": "`ping -c1` returns success on a timeout, so the counter stays put",
+        "correct": false,
+        "why": "ping exits non-zero when no reply comes; the counting happened, in a child process."
+      },
+      {
+        "text": "`$((down+1))` treats `down` as text, so the sum comes out empty",
+        "correct": false,
+        "why": "Arithmetic expansion reads it as a number; the sum was right inside the subshell."
+      },
+      {
+        "text": "The loop runs in a subshell, so its count is lost when the pipe ends",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`read -r` stops at the first unreachable address and ends the loop early",
+        "correct": false,
+        "why": "read stops at end of file; a failing ping does not touch the loop's input."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezdfn487",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "`hosts.txt` comes from an inventory tool that leaves no newline after the last line. Which of these loops print every host, the last one included? Choose all that apply.",
+    "hint": "Linux and the Command Line, lesson 9.",
+    "choices": [
+      {
+        "text": "`while IFS= read -r h || [ -n \"$h\" ]; do echo \"$h\"; done < hosts.txt`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`cat hosts.txt | while IFS= read -r h || [ -n \"$h\" ]; do echo \"$h\"; done`",
+        "correct": true,
+        "why": "Right: the subshell loses variables, and printing needs none."
+      },
+      {
+        "text": "`while IFS= read -r h; do echo \"$h\"; done < hosts.txt`",
+        "correct": false,
+        "why": "read fails at end of file before a newline, so the last host is read and never printed."
+      },
+      {
+        "text": "`while IFS= read -r h; do echo \"$h\"; done < <(cat hosts.txt)`",
+        "correct": false,
+        "why": "Process substitution avoids the subshell, not the missing newline; the last read still fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4zw4c11",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Before a change window you want to read `firewall.conf` as it was two commits ago, without touching the copy on disk that the deploy script uses. Which command?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4.",
+    "choices": [
+      {
+        "text": "`git restore --source=HEAD~2 firewall.conf`",
+        "correct": false,
+        "why": "That writes the old version onto the disk, which is the very file the deploy reads."
+      },
+      {
+        "text": "`git show HEAD~2:firewall.conf`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git reset --soft HEAD~2`",
+        "correct": false,
+        "why": "That moves the branch back two commits; it rewrites history rather than showing a file."
+      },
+      {
+        "text": "`git revert HEAD~2`",
+        "correct": false,
+        "why": "That makes a new commit undoing an old one: nothing to read, and something to undo."
+      }
+    ]
+  },
+  {
+    "id": "ex-x83dbr7e",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "After a bad afternoon in your local repository of switch configurations, which of these can `git reflog` still lead you back to? Choose all that apply.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4.",
+    "choices": [
+      {
+        "text": "A commit that `git commit --amend` replaced",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Commits that `git reset --hard HEAD~2` stepped past",
+        "correct": true,
+        "why": "Right: they are on no branch, and still there."
+      },
+      {
+        "text": "A commit on a branch you have since deleted",
+        "correct": true,
+        "why": "Right: a deleted branch's commits stay findable for weeks."
+      },
+      {
+        "text": "An edit that `git restore` threw away before it was staged",
+        "correct": false,
+        "why": "It was never committed, so Git never held a copy of it."
+      },
+      {
+        "text": "Uncommitted changes that `git reset --hard` wrote over",
+        "correct": false,
+        "why": "The reflog keeps commits; what was never committed is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-7g722x0w",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Git says nothing about `backups/core-sw1.cfg`, though the file is right there. To see which `.gitignore` line hides it: `git ___ -v backups/core-sw1.cfg`.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "check-ignore"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gm70rpdx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The repository's `.gitignore` has `*.cfg`, because configs rendered from templates are rebuilt on every run. One file, `templates/base.cfg`, is written by hand and has to be committed. What do you add?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "choices": [
+      {
+        "text": "A line `/templates/base.cfg`, which anchors the file to the root",
+        "correct": false,
+        "why": "A leading slash anchors a pattern; written alone it is one more thing to ignore, not an exception."
+      },
+      {
+        "text": "Nothing: `git add .` picks up ignored files as well",
+        "correct": false,
+        "why": "`git add .` skips ignored files; keeping them out of it is what ignoring is for."
+      },
+      {
+        "text": "A line `!templates/base.cfg` below the `*.cfg` rule",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git rm --cached templates/base.cfg`, so Git tracks it again",
+        "correct": false,
+        "why": "`rm --cached` stops tracking a file; it is the opposite move."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjy5p0r4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your automation repository holds the templates team's repository as a submodule in `templates/`. They pushed a fix to their `main` yesterday, yet your rendered configs still use the old template, even after `git pull` in your repository. Why?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10.",
+    "choices": [
+      {
+        "text": "`git pull` skips submodules; `git submodule update --init` brings their latest `main`",
+        "correct": false,
+        "why": "`update --init` checks out the pinned commit, which is still the old one."
+      },
+      {
+        "text": "The fix is in their history, but Git LFS keeps the old template until it is fetched",
+        "correct": false,
+        "why": "LFS is about large files; a submodule is pinned to an exact commit."
+      },
+      {
+        "text": "Your project records one commit of theirs and stays on it until somebody moves it and commits",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Their push was refused, as a submodule is read-only to the team that owns it",
+        "correct": false,
+        "why": "They pushed to their own repository as usual; your project points at an older commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-e19wema3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The automation server deploys whichever commit the tag `v2.3` names. You find that `v2.3`, already on the shared copy, was put on the wrong commit. What does the lesson do?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "choices": [
+      {
+        "text": "Delete `v2.3` and push it again on the right commit, so the name stays tidy",
+        "correct": false,
+        "why": "People and machines already built from `v2.3`; moving it gives one version number to two commits."
+      },
+      {
+        "text": "Leave `v2.3` alone and tag the right commit `v2.3.1`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git push --force` the right commit, which drags the tag along with it",
+        "correct": false,
+        "why": "Force moves a branch, and moving a published version is what the lesson rules out."
+      },
+      {
+        "text": "Recreate `v2.3` as a lightweight tag, which is free to point elsewhere",
+        "correct": false,
+        "why": "Lightweight means fewer details recorded; it is still a fixed name for one commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9djzbqx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A colleague pushed a fix to the shared `main` ten minutes ago. On your laptop, `git status` says `Your branch is up to date with 'origin/main'`. What explains it?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 7.",
+    "choices": [
+      {
+        "text": "His push has not reached the server yet; a push takes a few minutes to land",
+        "correct": false,
+        "why": "A push is complete when it returns; the server already has the commit."
+      },
+      {
+        "text": "He pushed to some other branch, since `status` asks the server about `main`",
+        "correct": false,
+        "why": "`status` asks nobody; it compares with your bookmark, which moves only on fetch or pull."
+      },
+      {
+        "text": "Your `main` already holds his commit, which Git merged in for you",
+        "correct": false,
+        "why": "Git does not contact a remote on its own; nothing was merged."
+      },
+      {
+        "text": "`origin/main` is your bookmark from the last fetch, and `git fetch` moves it",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7thzaza",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Ticket #41 asks for monitoring on the new switches. For the ticket to be shut automatically when the pull request is merged, its description says `___ #41`, while the commits say `Refs #41`, which only links.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 12.",
+    "blanks": [
+      {
+        "accept": [
+          "Closes",
+          "Close",
+          "Fixes",
+          "Resolves"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2p0vd3j1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A cron job asks a network controller's API for the device list every fifteen minutes with `requests.get(url)`. One morning a dozen copies are still running: the controller accepted the connections and then sent nothing. What does the lesson add to that call?",
+    "hint": "Python, lesson 21.",
+    "choices": [
+      {
+        "text": "`r.raise_for_status()` right after it, so the silence turns into an `HTTPError`",
+        "correct": false,
+        "why": "raise_for_status reads a status code, and a silent server sends none."
+      },
+      {
+        "text": "`timeout=(3, 10)`, so a silent server raises an exception",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A `Session`, whose reused connection gives the controller less to stall on",
+        "correct": false,
+        "why": "A Session saves handshakes; with no timeout it waits on a silent server like any call."
+      },
+      {
+        "text": "A retry adapter for 502, 503 and 504, repeating the call until it answers",
+        "correct": false,
+        "why": "A retry needs a response or an error to react to; with no timeout the first call does not end."
+      }
+    ]
+  },
+  {
+    "id": "ex-azm2g6t3",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A script reaches a controller's API through a `Session` with a retry adapter. By the lesson, which of these responses are worth retrying? Choose all that apply.",
+    "hint": "Python, lesson 21.",
+    "choices": [
+      {
+        "text": "`429 Too Many Requests`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`503 Service Unavailable`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`502 Bad Gateway`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`404 Not Found`",
+        "correct": false,
+        "why": "A 404 will say the same thing next time; retrying only repeats it."
+      },
+      {
+        "text": "`400 Bad Request`",
+        "correct": false,
+        "why": "The request itself is wrong, and it fails the same way however often it is sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-kp5xqw6k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`re.findall(r\"(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)\", line)` runs on a log line holding two IPv4 addresses. What does it return?",
+    "hint": "Python, lesson 10.",
+    "choices": [
+      {
+        "text": "A list of the two addresses, as strings like `'10.0.0.1'`",
+        "correct": false,
+        "why": "That is findall with no group; with groups it returns the groups, and four of them make tuples."
+      },
+      {
+        "text": "A list of eight strings, the octets one after another",
+        "correct": false,
+        "why": "With two or more groups each match becomes one tuple; the octets are not flattened."
+      },
+      {
+        "text": "A `Match` for the first address, read with `.group(1)` to `.group(4)`",
+        "correct": false,
+        "why": "That is what search returns; findall returns every match, in a list."
+      },
+      {
+        "text": "A list of two tuples, each of four strings",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbhv8xm9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A script flags configuration lines that contain an address the operator types: `re.search(addr, line)` with `addr = \"10.0.0.1\"`. It also flags lines naming the host `ip-10-0-0-1`. What does the lesson do?",
+    "hint": "Python, lesson 10.",
+    "choices": [
+      {
+        "text": "Use `re.match`, which compares the whole line instead of searching in it",
+        "correct": false,
+        "why": "match is anchored at the start only, and its dots still match any character."
+      },
+      {
+        "text": "Add `re.IGNORECASE`, since the host name is written in lower case",
+        "correct": false,
+        "why": "Case is not the problem; an unescaped dot matches the hyphens."
+      },
+      {
+        "text": "Compile it with `re.compile` first, so that dots are read as dots",
+        "correct": false,
+        "why": "Compiling names and caches a pattern; it does not change what a dot means."
+      },
+      {
+        "text": "Pass `re.escape(addr)`, so that each dot in it is taken literally",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-mr6hm5ns",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A nightly job writes the device inventory with `json.dump(data, f, indent=2)` into a file kept in git. Every night the diff shows fields in a different order, although no device changed. The lesson adds `___` to that call.",
+    "hint": "Python, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "sort_keys=True",
+          "sort_keys = True"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9z1wvzyc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A collector rewrites `state.json` every minute with `open(path, \"w\")`, and another process reads that file when it starts. After a power cut, the other process crashes on an empty file. What does the lesson change?",
+    "hint": "Python, lesson 9.",
+    "choices": [
+      {
+        "text": "Write to `state.tmp` beside it, then `tmp.replace(path)` onto the real name",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Open with `\"a\"` instead of `\"w\"`, so the old content stays in place",
+        "correct": false,
+        "why": "Appending piles each minute's state into one file, which stops being one JSON document."
+      },
+      {
+        "text": "Call `json.dump` with `indent=2`, so a partial file is still readable",
+        "correct": false,
+        "why": "Indentation is for people and diffs; a half-written file is invalid either way."
+      },
+      {
+        "text": "Wrap the write in `try`/`except OSError` and log what went wrong",
+        "correct": false,
+        "why": "A power cut raises nothing in the program; `\"w\"` truncated the file before the first byte."
+      }
+    ]
+  },
+  {
+    "id": "ex-717zzveq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`requirements.txt` holds one line, `requests==2.31.0`. The deploy was green on Monday; on Thursday it fails inside `urllib3`, and nobody changed anything. What happened, and what does the lesson use to stop it?",
+    "hint": "Python, lesson 18.",
+    "choices": [
+      {
+        "text": "requests released a fix, and `~=2.31.0` would have held it still",
+        "correct": false,
+        "why": "`==2.31.0` already holds requests; the version that moved was urllib3's."
+      },
+      {
+        "text": "The index served a corrupted file, which `--require-hashes` alone would have caught",
+        "correct": false,
+        "why": "Hashes catch different bytes under one version; here a newer urllib3 was installed legitimately."
+      },
+      {
+        "text": "A dependency of requests moved; a lock file from pip-compile pins every package",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The build used `pip` instead of `python -m pip`, so it installed in the wrong place",
+        "correct": false,
+        "why": "That fails at import on any day; here the install worked and pulled a newer urllib3."
+      }
+    ]
+  },
+  {
+    "id": "ex-aww826t0",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A script collects every device from a controller API that pages its results with a `next` link. Put the lines inside `while url:` in the lesson's order.",
+    "hint": "Python, lesson 21.",
+    "items": [
+      "`r = s.get(url, timeout=10)`",
+      "`r.raise_for_status()`",
+      "`page = r.json()`",
+      "`rows += page[\"results\"]`",
+      "`url = page[\"next\"]`"
+    ],
+    "trap": "Calling `.json()` before `raise_for_status()` fails on an error page somewhere confusing, instead of naming the status."
+  },
+  {
+    "id": "ex-ak97w87g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In an interview for a junior infrastructure role you are asked how you would set up the network for a twenty-person office. Which opening does the lesson reward most?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 14.",
+    "choices": [
+      {
+        "text": "A redundant design at once, with two firewalls, a second provider and three VLANs",
+        "correct": false,
+        "why": "Parts nobody asked for read as recited; the simplest office that works comes first."
+      },
+      {
+        "text": "The brand and model of each device you would buy, with prices",
+        "correct": false,
+        "why": "The question is about thinking through a system, not about shopping."
+      },
+      {
+        "text": "How it would grow to a thousand people, since that is where it breaks",
+        "correct": false,
+        "why": "Growth is the last stage, in one sentence; asking comes first."
+      },
+      {
+        "text": "A few questions first (devices, what must stay up, is there a server), then the plainest drawing",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-eg7cfbh9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A take-home asks you to fix a broken virtual machine, suggested time three hours. At three hours DNS and the web server work, and the nightly backup is still not set up. What does the lesson say to do?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 13.",
+    "choices": [
+      {
+        "text": "Stop, and hand in the runbook with a note on the missing backup and the next step",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Keep going until the backup works, as a complete answer is worth an extra evening",
+        "correct": false,
+        "why": "The reviewer compares with what fits the suggested time, and watches how you treat a deadline."
+      },
+      {
+        "text": "Ask for a week's extension, so that what you send is finished",
+        "correct": false,
+        "why": "A late, perfect submission is usually worse than an on-time, incomplete one."
+      },
+      {
+        "text": "Send what works and leave the backup out of the note, as the brief may not check it",
+        "correct": false,
+        "why": "Saying what you did not do is exactly what the note's last line is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1zdtkaa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Three applications in a row for junior NOC roles ended right after the recruiter's screening call. Where does the lesson look first?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 19.",
+    "choices": [
+      {
+        "text": "At the live exercise, practised aloud with somebody watching",
+        "correct": false,
+        "why": "That is the fix when the technical interview keeps failing; these ended earlier."
+      },
+      {
+        "text": "At the CV's skills section, adding the tools named in each advert",
+        "correct": false,
+        "why": "The CV got you the call; a screening rejection is most often a practical mismatch."
+      },
+      {
+        "text": "At the answers you gave on salary, contract, shifts and location",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "At the field itself, since three in a row says the role is out of reach",
+        "correct": false,
+        "why": "The same stage failing again is a signal about that stage, not about the field."
+      }
+    ]
+  },
+  {
+    "id": "ex-jrq15xp6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "You have a final interview at one company next week, while another that you also like is still two steps behind. What does the lesson suggest?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 19.",
+    "choices": [
+      {
+        "text": "Pause the slower process until the first one answers, to avoid juggling",
+        "correct": false,
+        "why": "Stopping for one process is the costly mistake; the funnel empties."
+      },
+      {
+        "text": "Say nothing to either, as mentioning another process looks disloyal",
+        "correct": false,
+        "why": "The lesson calls it normal, and the honest way to make two processes line up."
+      },
+      {
+        "text": "Tell the slower one about the final and ask for their decision date",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Withdraw from the slower one, since the final shows where you are wanted",
+        "correct": false,
+        "why": "Until an offer is signed, keep the other processes alive."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mems6k1",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "At the end of interviews for junior network roles you hear these answers. Match each to what the lesson reads in it.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 16.",
+    "pairs": [
+      {
+        "left": "\"You'll be very independent here.\"",
+        "right": "a warning: a junior grows into independence"
+      },
+      {
+        "left": "\"The last two people in this role left quickly.\"",
+        "right": "ask what happened to them"
+      },
+      {
+        "left": "\"We don't really measure that.\" (on success)",
+        "right": "you will be judged on impressions"
+      },
+      {
+        "left": "\"The hardest part is the users.\"",
+        "right": "not bad in itself, and worth a follow-up"
+      }
+    ],
+    "right_distractors": [
+      "a team that onboards people well"
+    ]
+  },
+  {
+    "id": "ex-p85c8y93",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Many Brazilian companies take CVs through a careers-page form that feeds a tracking system, which extracts the text. The lesson's practical point: send a PDF made from a document, whose text can be ___, rather than a scanned image.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 3.",
+    "blanks": [
+      {
+        "accept": [
+          "selected",
+          "copied",
+          "selectable",
+          "searched"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-weqv6rgh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A PC should be 192.168.4.20/24 with gateway 192.168.4.1, but somebody typed /22. The internet still works. Which destinations stop answering, with an INCOMPLETE line in `ip neigh` for each one tried?",
+    "hint": "Addressing, Routing and Switching, lesson 12.",
+    "choices": [
+      {
+        "text": "Everything outside 192.168.4.0/24, since a /22 leaves the gateway outside the PC's own subnet.",
+        "correct": false,
+        "why": "192.168.4.1 is inside 192.168.4.0/22, so the gateway still works, as the internet shows."
+      },
+      {
+        "text": "Its neighbours in 192.168.4.x, because the broadcast address moved to 192.168.7.255.",
+        "correct": false,
+        "why": "Unicast ARP replies from real neighbours still arrive; the failures are the addresses the wider mask added."
+      },
+      {
+        "text": "192.168.5.0 to 192.168.7.255: the PC now thinks they share its cable and asks ARP for them there.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "None for long: the router sees the longer route is its own and corrects the PC.",
+        "correct": false,
+        "why": "The packet never reaches the router; the PC sends it straight onto its own cable."
+      }
+    ]
+  },
+  {
+    "id": "ex-41f76qwa",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A plan cut from one block needs a LAN of 62 hosts, a LAN of 63 hosts and one point-to-point link on a /30. Each LAN gets the smallest prefix that holds it. How many addresses does the plan use in total?",
+    "hint": "Addressing, Routing and Switching, lesson 13.",
+    "value": 196,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-0d16jx30",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A branch router holds 172.16.8.0/24 and 172.16.9.0/24 and a default route to head office, which reaches the branch through one summary, 172.16.8.0/22 via the branch. A ping from head office to 172.16.10.5, unused, comes back `Time to live exceeded`. Which change fixes it?",
+    "hint": "Addressing, Routing and Switching, lesson 13.",
+    "choices": [
+      {
+        "text": "`ip route add unreachable 172.16.8.0/22` on the head-office router, so the summary never sends the unused addresses away.",
+        "correct": false,
+        "why": "The discard belongs on the router that owns the subnets inside the summary; on head office it would stand against the summary itself."
+      },
+      {
+        "text": "Replace the branch's default with a route to head office's own prefix and nothing else.",
+        "correct": false,
+        "why": "It stops this loop but also cuts the branch off from everything else the default reached."
+      },
+      {
+        "text": "`ip route add unreachable 172.16.8.0/22` on the branch.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Raise the TTL on head office's hosts so the packet lasts long enough to arrive.",
+        "correct": false,
+        "why": "The packet circles between two routers; a larger TTL only lets it circle longer."
+      }
+    ]
+  },
+  {
+    "id": "ex-en459hw2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A router holds a static route for 10.50.0.0/16 and hears 10.50.1.0/24 from both RIP and OSPF, with default administrative distances. Which route carries a packet for 10.50.1.7?",
+    "hint": "Addressing, Routing and Switching, lesson 14.",
+    "choices": [
+      {
+        "text": "The static /16, since a static route at distance 1 is trusted above anything a protocol learned.",
+        "correct": false,
+        "why": "Distance only compares routes to the same prefix; the longer /24 was chosen before trust came up."
+      },
+      {
+        "text": "RIP's /24, because a hop count is compared before OSPF's cost.",
+        "correct": false,
+        "why": "Metrics from two protocols are never compared; OSPF's distance of 110 beats RIP's 120."
+      },
+      {
+        "text": "OSPF's /24.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Whichever of the three was installed most recently.",
+        "correct": false,
+        "why": "The order of arrival plays no part in choosing a route."
+      }
+    ]
+  },
+  {
+    "id": "ex-5m31srka",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put the questions a router asks, when several routes could carry a packet, in the order it asks them.",
+    "hint": "Addressing, Routing and Switching, lesson 14.",
+    "items": [
+      "Which route has the longest prefix?",
+      "Among those, which source has the lowest administrative distance?",
+      "Among those, which route has the lowest metric?"
+    ],
+    "trap": "Trust is only asked about between routes to the same prefix, and a metric only next to a metric from the same source."
+  },
+  {
+    "id": "ex-8f2gxt2s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "r1 has a default via ra at metric 100 and another via rb at metric 200. ra's software hangs, but its port stays lit and r1's cable to it keeps its signal. What happens to r1's traffic?",
+    "hint": "Addressing, Routing and Switching, lesson 14.",
+    "choices": [
+      {
+        "text": "It keeps going to ra and is lost there, with rb's route left unused.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The kernel marks ra's route `dead linkdown` and moves the traffic to rb within a second or so.",
+        "correct": false,
+        "why": "That marking comes from a lost signal on r1's own port, and here the port stays up."
+      },
+      {
+        "text": "Both routes are used at once until ra recovers.",
+        "correct": false,
+        "why": "Different metrics mean one route is chosen; nothing here splits the traffic."
+      },
+      {
+        "text": "r1 answers `Destination Net Unreachable` to every sender until somebody removes ra's route.",
+        "correct": false,
+        "why": "r1 still has a route it believes in, so it forwards rather than refusing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ncn9379d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In EIGRP, pc2's LAN is cabled to both r2 and r5. r1's best path to it is through r2, with FD 30720; r5 reports a distance of 28160 for the same LAN and would cost r1 33280 in total. What is r5 to r1 for that network?",
+    "hint": "Addressing, Routing and Switching, lesson 16.",
+    "choices": [
+      {
+        "text": "Not a backup at all, because its total of 33280 is higher than the current 30720.",
+        "correct": false,
+        "why": "The condition compares the neighbour's reported distance, 28160, with r1's FD of 30720, and 28160 is lower."
+      },
+      {
+        "text": "A second successor, sharing the traffic with r2 from now on.",
+        "correct": false,
+        "why": "A successor is a best path; 33280 is not equal to 30720, so r5 waits rather than shares."
+      },
+      {
+        "text": "A route r1 has to ask for by going active if r2 fails, as in the ring.",
+        "correct": false,
+        "why": "That was the ring, where the other neighbour was further away; here r5 is next to the LAN."
+      },
+      {
+        "text": "A feasible successor, used at once if r2 fails.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-wt360a4w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Two OSPF failures with default timers: in one the cable to a neighbour is pulled; in the other a switch between the two routers dies while still lighting both ports. What does each cost?",
+    "hint": "Addressing, Routing and Switching, lesson 16.",
+    "choices": [
+      {
+        "text": "Both cost about 40 seconds, because OSPF only learns of a failure from missing hellos.",
+        "correct": false,
+        "why": "A pulled cable drops the signal, which the router sees at once without waiting for hellos."
+      },
+      {
+        "text": "The pull costs 40 seconds; the dead switch is noticed at once because hellos fail.",
+        "correct": false,
+        "why": "Reversed: missing hellos are only noticed when the dead timer runs out."
+      },
+      {
+        "text": "Both are over in the 10 seconds of one hello interval.",
+        "correct": false,
+        "why": "A neighbour is declared dead after 40 seconds of silence, four hellos, not one."
+      },
+      {
+        "text": "The pull costs a recalculation within moments; the dead switch costs up to the 40-second dead interval first.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-2zwda4fw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A company prepends its own AS three times towards provider A so that traffic enters through provider B. Traffic from A's own customers still arrives over the link to A. What is the likeliest reason?",
+    "hint": "Addressing, Routing and Switching, lesson 17.",
+    "choices": [
+      {
+        "text": "A gives routes from its customers a higher local preference, and that is compared before the path length.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Prepending only works with a ROA in RPKI.",
+        "correct": false,
+        "why": "Origin validation checks who originates a prefix; it plays no part in path length."
+      },
+      {
+        "text": "A drops the prepended announcement as a loop, because the company's AS appears in it more than once.",
+        "correct": false,
+        "why": "A router drops a path holding its own AS; the company's number repeated is not A's."
+      },
+      {
+        "text": "The company's own table still prefers A for outbound traffic.",
+        "correct": false,
+        "why": "Outbound choice is the company's; inbound is A's, and that is what the question is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4n0b3p6",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A small company with two providers must never carry traffic between them. Which measures stand in the way of that route leak? Choose all that apply.",
+    "hint": "Addressing, Routing and Switching, lesson 17.",
+    "choices": [
+      {
+        "text": "An outbound route map on each session that permits the company's own prefix and denies the rest.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An inbound filter at each provider that accepts from the company only what it is entitled to announce.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A ROA for the company's block, since route origin validation would mark the leaked routes invalid.",
+        "correct": false,
+        "why": "Leaked routes keep their real origin AS, and origin validation checks only that last AS."
+      },
+      {
+        "text": "Prepending the company's AS towards both providers.",
+        "correct": false,
+        "why": "A longer path makes the leak less attractive where nothing outranks length, which real local preference does."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxzj0mbj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A meeting-room network has a pool of 100 addresses and a one-day lease. About forty visitors come and go every hour, and by late morning new ones show 169.254.x.x addresses. What is the fix the lesson points to?",
+    "hint": "Addressing, Routing and Switching, lesson 10.",
+    "choices": [
+      {
+        "text": "Add a reservation for each visitor's MAC address so that the same laptop gets the same address back.",
+        "correct": false,
+        "why": "Reservations tie addresses to cards ahead of time; they take addresses out of the pool rather than freeing them."
+      },
+      {
+        "text": "Shorten the lease to about an hour.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Move the rebind point earlier so clients look for another server sooner.",
+        "correct": false,
+        "why": "Rebinding keeps a client's address; it returns nothing to the pool."
+      },
+      {
+        "text": "Set the router to forward DHCP broadcasts to a second floor's server, which has spare addresses of its own.",
+        "correct": false,
+        "why": "A router does not forward broadcasts, and the other floor's pool is for another subnet."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7ndvf9k",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each switch port to the spanning-tree protection the lesson gives it.",
+    "hint": "Addressing, Routing and Switching, lesson 20.",
+    "pairs": [
+      {
+        "left": "A port with a desk PC on it",
+        "right": "BPDU guard"
+      },
+      {
+        "left": "A distribution switch's cable down to an access switch",
+        "right": "root guard"
+      },
+      {
+        "left": "A port facing another organisation's network, whose tree must not merge with ours",
+        "right": "BPDU filter"
+      },
+      {
+        "left": "Any port, to cap the damage of a loop that forms anyway",
+        "right": "storm control"
+      }
+    ],
+    "right_distractors": [
+      "a forward delay of 4 seconds",
+      "priority 4096"
+    ]
+  },
+  {
+    "id": "ex-jdf2wz00",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "hq now clamps the MSS to 1380 on wg0, and the `hardening` rule that drops every destination unreachable hq sends is still loaded. Which statements are still true? Choose all that apply.",
+    "hint": "VPNs, Wireless and High Availability, lesson 21.",
+    "choices": [
+      {
+        "text": "A UDP program sending full-size packets with Don't Fragment set loses them at the tunnel, with no message back.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "When hq cannot deliver to a host for a client, the client sees a timeout where it would have had an error.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "TCP downloads from the file server to the branch still stall after the handshake.",
+        "correct": false,
+        "why": "Clamping is exactly what fixed TCP: segments are now sized to fit the 1420-byte tunnel."
+      },
+      {
+        "text": "`ping -M do -s 1400` across the tunnel now gets its reply.",
+        "correct": false,
+        "why": "The tunnel's MTU is still 1420 and the MSS is a TCP option; a 1428-byte ping is still dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-zry7vhxz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A download through the tunnel used to hang while small pages loaded. After the change on hq, how is the fix confirmed, by the lesson's method?",
+    "hint": "VPNs, Wireless and High Availability, lesson 21.",
+    "choices": [
+      {
+        "text": "Ping the file server from the branch.",
+        "correct": false,
+        "why": "Small pings crossed all along; a test that passed before the fix proves nothing about it."
+      },
+      {
+        "text": "Run the same download that failed and see the whole file arrive.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Load the small page again, which exercises the tunnel, the name and the web server in one request.",
+        "correct": false,
+        "why": "The small page fitted in one packet and worked throughout, so it cannot show a size fault is gone."
+      },
+      {
+        "text": "Check that `wg show` lists a recent handshake for the branch.",
+        "correct": false,
+        "why": "The tunnel was up throughout; the fault was the size of the packets crossing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-x0y3dfrc",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match what the client printed to where the lesson's method looks next.",
+    "hint": "VPNs, Wireless and High Availability, lesson 21.",
+    "pairs": [
+      {
+        "left": "ping: no reply and no error at all",
+        "right": "`ip -br link` and `ethtool` on the client"
+      },
+      {
+        "left": "curl: Couldn't connect to server, after 3057 ms",
+        "right": "`ip route` and `ip neigh` on the client"
+      },
+      {
+        "left": "curl: Could not resolve host",
+        "right": "`dig`, then `dig @` the expected server"
+      },
+      {
+        "left": "curl: Couldn't connect to server, after 0 ms",
+        "right": "`ss -tln` on the server"
+      },
+      {
+        "left": "HTTP status 404",
+        "right": "the application's own log"
+      }
+    ],
+    "right_distractors": [
+      "`iperf3 -R` towards the server",
+      "`mtr` to the server's address"
+    ]
+  },
+  {
+    "id": "ex-p6q6xnm3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On Cisco routers, hq (priority 150) is the gateway's master and tracks its ISP link by lowering its priority to 90 when the link goes down. hq2 has priority 100 and preemption off. The ISP link fails. What happens?",
+    "hint": "VPNs, Wireless and High Availability, lesson 15.",
+    "choices": [
+      {
+        "text": "hq2 takes over at once, since 100 is now above 90.",
+        "correct": false,
+        "why": "With preemption off, a higher priority is not enough to take the address from a live master."
+      },
+      {
+        "text": "hq stays the gateway with nowhere to send the office's traffic.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "hq goes into a fault state and gives the address up, as keepalived's `track_interface` does.",
+        "correct": false,
+        "why": "That is keepalived leaving the election; this Cisco-style rule only lowers the priority."
+      },
+      {
+        "text": "Both routers answer for the virtual address until hq's link returns, in a split brain.",
+        "correct": false,
+        "why": "hq still sends hellos, so hq2 hears a master and stays standby."
+      }
+    ]
+  },
+  {
+    "id": "ex-yenhaxj3",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "One ISP link at 99.9% sits in series with a pair of load balancers, each 99.9%, either able to carry the load and failing independently. Over a 365-day year of 525,600 minutes, how many minutes is the chain down, to the nearest minute?",
+    "hint": "VPNs, Wireless and High Availability, lesson 14.",
+    "value": 526,
+    "tolerance": 1,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-a0dxx0ph",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Two firewalls in a failover pair sit on separate power circuits and separate switches. Both stop in the same minute, right after one rule change was pushed to the two of them. What had the availability arithmetic assumed?",
+    "hint": "VPNs, Wireless and High Availability, lesson 14.",
+    "choices": [
+      {
+        "text": "That a failover between the two takes no time.",
+        "correct": false,
+        "why": "Failover time costs seconds per event; here both failed together, so there was nothing to fail over to."
+      },
+      {
+        "text": "That the heartbeat between them can never be lost.",
+        "correct": false,
+        "why": "A lost heartbeat leads to split brain, two active nodes, not to two dead ones."
+      },
+      {
+        "text": "That the two fail independently, and a shared configuration is a common-mode failure.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "That two parts in series multiply their availabilities, which a pair placed side by side does not do.",
+        "correct": false,
+        "why": "A pair is in parallel, and that rule is right; what failed is the assumption behind it."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9bh23bb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A database replicates synchronously to a second site, and a backup is taken every night at 02:00. At 14:00 somebody drops a table by mistake. How much data is lost, at best, for this failure?",
+    "hint": "VPNs, Wireless and High Availability, lesson 17.",
+    "choices": [
+      {
+        "text": "Nothing, since synchronous replication confirms every write on both sites.",
+        "correct": false,
+        "why": "It confirms the deletion on both sites as faithfully as any other write."
+      },
+      {
+        "text": "About twelve hours: the replica dropped the table too, so the 02:00 copy is the newest good one.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A few seconds, the replication lag.",
+        "correct": false,
+        "why": "Lag belongs to asynchronous replication and to a lost site; here the copy is up to date and wrong."
+      },
+      {
+        "text": "Whatever was written between the drop and the moment the replica is promoted to primary.",
+        "correct": false,
+        "why": "Promoting the replica brings back nothing; it holds the same missing table."
+      }
+    ]
+  },
+  {
+    "id": "ex-zkkzqprb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "An SLO of 99.9% over a 30-day month leaves an error budget of 43.20 minutes. Each automatic VRRP failover costs 3.264 seconds. How many whole failovers fit in the month's budget?",
+    "hint": "VPNs, Wireless and High Availability, lesson 17.",
+    "value": 794,
+    "tolerance": 0,
+    "unit": "failovers"
+  },
+  {
+    "id": "ex-cbc0j8qr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An office gives voice EF priority in its router's uplink queue. Calls stay clear while somebody uploads, and break up while somebody downloads a large file. What does the course do about it?",
+    "hint": "VPNs, Wireless and High Availability, lesson 18.",
+    "choices": [
+      {
+        "text": "Mark downloads CS1 on the office switches so the provider puts them behind voice.",
+        "correct": false,
+        "why": "A mark does nothing until something reads it, and the provider's queue is not configured by you."
+      },
+      {
+        "text": "Give the priority class a larger share of the uplink.",
+        "correct": false,
+        "why": "The download fills the queue at the provider's end of the line, before the uplink is involved."
+      },
+      {
+        "text": "Shape the incoming traffic in the router a little below the line's rate, so the queue forms where the classes are.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Ask the provider to police the line at the contract rate.",
+        "correct": false,
+        "why": "A policer drops what exceeds the rate; it gives voice no place ahead of the download."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3pfkgv0",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A shaper set a little below what the provider's contract allows moves the ___ into your own router, and that is the only place your QoS classes can act.",
+    "hint": "VPNs, Wireless and High Availability, lesson 20.",
+    "blanks": [
+      {
+        "accept": [
+          "bottleneck",
+          "the bottleneck",
+          "queue",
+          "the queue"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z1nhztyj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An analyser on a 1 Gbit/s mirror port captures a busy 10 Gbit/s uplink. The capture has gaps in TCP streams that the two ends never retransmitted. What is the likeliest explanation?",
+    "hint": "VPNs, Wireless and High Availability, lesson 11.",
+    "choices": [
+      {
+        "text": "The switch dropped copies it had no room for on the analyser's port.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The uplink is losing packets under load, and the analyser shows where.",
+        "correct": false,
+        "why": "Real loss would make the senders retransmit; data nobody resent was delivered."
+      },
+      {
+        "text": "The capture filter was too narrow and removed part of each stream before it was recorded.",
+        "correct": false,
+        "why": "A capture filter keeps or drops whole kinds of packet; it does not punch random holes in a stream."
+      },
+      {
+        "text": "tshark was run without the capture privilege, so it decoded only some packets.",
+        "correct": false,
+        "why": "Without the privilege the capture does not start at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qj8m6g9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two shops are both numbered 192.168.20.0/24, and on hq each is a WireGuard peer with `AllowedIPs = 192.168.20.0/24`. What happens?",
+    "hint": "VPNs, Wireless and High Availability, lesson 4.",
+    "choices": [
+      {
+        "text": "hq spreads the traffic between both shops, as a balancer would.",
+        "correct": false,
+        "why": "An outgoing packet needs exactly one answer to which key encrypts it."
+      },
+      {
+        "text": "Both work, because each shop's packets are told apart by its public endpoint address.",
+        "correct": false,
+        "why": "The endpoint says where to send, not which inner range belongs to whom; the range has one owner."
+      },
+      {
+        "text": "hq refuses the second peer with an error naming the overlap.",
+        "correct": false,
+        "why": "Nothing refuses it: giving the range to a second peer silently takes it from the first."
+      },
+      {
+        "text": "The range moves to the peer configured last, and only that shop is reached.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-z7hbt0s0",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A service answers a 50-byte UDP question with a 2,000-byte answer. Somebody sends it 2 Mbit/s of such questions with a victim's address forged as the source. How many Mbit/s of answers reach the victim?",
+    "hint": "Network Security, lesson 6.",
+    "value": 80,
+    "tolerance": 0,
+    "unit": "Mbit/s"
+  },
+  {
+    "id": "ex-92kaqthd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A company's DNS server on the internet answers questions about any name, from anybody. What risk does the lesson name for that?",
+    "hint": "Network Security, lesson 6.",
+    "choices": [
+      {
+        "text": "Its connection table fills with half-open handshakes.",
+        "correct": false,
+        "why": "Half-open handshakes are a TCP SYN flood; the questions here are small UDP packets."
+      },
+      {
+        "text": "Strangers use it to aim amplified replies at a victim whose address they forge.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Anybody can read the company's internal names from it, which helps an intruder plan where to go next.",
+        "correct": false,
+        "why": "The risk the lesson names is to others: the server becomes a reflector in somebody else's attack."
+      },
+      {
+        "text": "Its answers are slower for the company's own visitors.",
+        "correct": false,
+        "why": "Load is not the concern; being used to flood a third party is."
+      }
+    ]
+  },
+  {
+    "id": "ex-phva0gq5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which rule on a company's border keeps its network from sending the forged packets a reflection attack is built from?",
+    "hint": "Network Security, lesson 6.",
+    "choices": [
+      {
+        "text": "Drop anything leaving whose source address is not one of our own.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Drop incoming UDP answers that are larger than the question that caused them.",
+        "correct": false,
+        "why": "That acts on what arrives; the forged questions leave the network untouched."
+      },
+      {
+        "text": "Turn on SYN cookies on the company's servers.",
+        "correct": false,
+        "why": "SYN cookies help a server under a SYN flood; they do nothing about what leaves."
+      },
+      {
+        "text": "Limit new connections per source address to a few at a time.",
+        "correct": false,
+        "why": "A per-source limit tames one noisy client arriving; it does not check outgoing sources."
+      }
+    ]
+  },
+  {
+    "id": "ex-wtdz2ew1",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A firewall's rules drop every ICMP message passing through it or sent to it. Which of these break? Choose all that apply.",
+    "hint": "Network Security, lesson 5.",
+    "choices": [
+      {
+        "text": "Path MTU discovery: large packets vanish and transfers stall partway.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "traceroute beyond the firewall.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "ping to the firewall.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The TCP three-way handshake to a web server behind it.",
+        "correct": false,
+        "why": "The handshake is TCP; it is decided by the TCP rules, not by ICMP."
+      },
+      {
+        "text": "Name resolution over UDP 53.",
+        "correct": false,
+        "why": "DNS questions and answers are UDP; dropping ICMP leaves them alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-jpqhgkqe",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put a change to the firewall's rules file in the order the course does it.",
+    "hint": "Network Security, lesson 5.",
+    "items": [
+      "Edit the file and commit it with a reason, for review",
+      "Check it against the running kernel with `nft -c -f`",
+      "Load it as one transaction with `nft -f`",
+      "Read the rules back and test the matrix from each zone"
+    ],
+    "trap": "The file is the source and is reviewed first; a check comes before a load, and only loaded rules can be read back."
+  },
+  {
+    "id": "ex-n374z2af",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "`nft -f rules.nft` stops with a syntax error on line 7 of a 40-line file. What is the firewall running afterwards?",
+    "hint": "Network Security, lesson 5.",
+    "choices": [
+      {
+        "text": "Lines 1 to 6 of the new file, with the rest missing.",
+        "correct": false,
+        "why": "Loading is one transaction: every line takes effect, or none does."
+      },
+      {
+        "text": "No rules, with an accept policy, until a correct file is loaded.",
+        "correct": false,
+        "why": "A failed load changes nothing; the running set stays as it was."
+      },
+      {
+        "text": "The new file with line 7 skipped and the other 39 lines applied in their order.",
+        "correct": false,
+        "why": "nft never skips a bad line; the whole file is refused."
+      },
+      {
+        "text": "The rules it had before the command.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-s007kf57",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A threat feed arrives naming three addresses seen scanning for exposed secrets. What does the lesson do with it first?",
+    "hint": "Network Security, lesson 23.",
+    "choices": [
+      {
+        "text": "Insert a drop rule for them at the top of the forward chain.",
+        "correct": false,
+        "why": "Blocking is the second use; looking back comes before it."
+      },
+      {
+        "text": "Write a Suricata signature for each address and load it on the DMZ sensor so it alerts on their next visit.",
+        "correct": false,
+        "why": "That only watches the future; the first question is whether they already talked to us."
+      },
+      {
+        "text": "Search the stored flow records and drops for those addresses.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Report the addresses to the providers that announce them, asking for the machines to be cleaned.",
+        "correct": false,
+        "why": "Not in the lesson's workflow; the feed is first checked against the company's own records."
+      }
+    ]
+  },
+  {
+    "id": "ex-20sqt9vh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does the set that holds a threat feed's addresses carry `timeout 1d`, refreshed while the feed still lists each one?",
+    "hint": "Network Security, lesson 23.",
+    "choices": [
+      {
+        "text": "Addresses change hands, so a block should fall away once its reason is gone.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To keep the set short enough for the firewall to search it at line rate.",
+        "correct": false,
+        "why": "The reason given is reassignment: cloud addresses move, and one address can front a mobile network."
+      },
+      {
+        "text": "So the log of drops can be rotated once a day.",
+        "correct": false,
+        "why": "Log rotation is unrelated to how long an element stays in a set."
+      },
+      {
+        "text": "Because a feed is published once a day and an expired entry tells the firewall to fetch the next file.",
+        "correct": false,
+        "why": "The firewall fetches nothing; the timeout only removes an entry nobody refreshed."
+      }
+    ]
+  },
+  {
+    "id": "ex-phvm9zma",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An inline IPS sits on the link to the payment segment, and its software stops one night. Which behaviour does the lesson say suits this link?",
+    "hint": "Network Security, lesson 14.",
+    "choices": [
+      {
+        "text": "Fail open, so payments keep flowing and the gap is reviewed in the morning.",
+        "correct": false,
+        "why": "Failing open suits a link where availability comes first, such as the shop's front door."
+      },
+      {
+        "text": "A hardware bypass that joins the two ports.",
+        "correct": false,
+        "why": "A bypass turns a failed IPS into a cable, which is failing open."
+      },
+      {
+        "text": "Keep blocking with whatever rules were loaded in the kernel when the program stopped.",
+        "correct": false,
+        "why": "The inspection is the program; with it gone, the link either stops or flows uninspected."
+      },
+      {
+        "text": "Fail closed: payments stop until it is back, since uninspected traffic is worse there than none.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6780njrk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Staff may open TCP 443 to the internet, and the NGFW also denies the SSH application. Somebody runs `ssh` to a server of theirs that listens on port 443. What does a capture of the attempt show?",
+    "hint": "Network Security, lesson 2.",
+    "choices": [
+      {
+        "text": "The SYN is dropped, since the firewall already knows the client is ssh.",
+        "correct": false,
+        "why": "Nothing in a SYN names the application; the engine needs the first bytes of payload."
+      },
+      {
+        "text": "The whole session works, because the port rule for 443 is checked first and accepts it.",
+        "correct": false,
+        "why": "The application rule narrows the port rule; it still applies once the protocol is recognised."
+      },
+      {
+        "text": "A TLS alert sent back by the firewall, which expected a ClientHello on port 443 and received a line of text.",
+        "correct": false,
+        "why": "The firewall identifies and drops; it does not answer as a TLS server."
+      },
+      {
+        "text": "The handshake completes and the SSH greeting passes before the flow is cut.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ax1c07qr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Every request to an application now needs a valid client certificate. A colleague proposes deleting the rules that keep the staff LAN away from the database, since identity now decides. What does the lesson answer?",
+    "hint": "Network Security, lesson 20.",
+    "choices": [
+      {
+        "text": "Delete them, because in Zero Trust where a request comes from carries no weight.",
+        "correct": false,
+        "why": "Location stops being sufficient, not necessary; passing the firewall still counts."
+      },
+      {
+        "text": "Keep them: passing the firewall stays necessary, though no longer sufficient.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Keep them until the certificate authority's key is moved into hardware, then delete them.",
+        "correct": false,
+        "why": "No milestone retires the network layer; dropping it leaves one control where there were two."
+      },
+      {
+        "text": "Replace them with a VPN that every member of staff must join before reaching the database.",
+        "correct": false,
+        "why": "A VPN grants trust by location again, which is the assumption Zero Trust drops."
+      }
+    ]
+  },
+  {
+    "id": "ex-q004kby1",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Complete the course's ICMP rule on fw's input chain: `icmp type { destination-unreachable, echo-request, time-exceeded } ___ rate 10/second burst 5 packets accept`",
+    "hint": "Network Security, lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "limit"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-83zdfrmh",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each thing found after a change made by hand to the kind of mistake the lesson names.",
+    "hint": "Network Automation, lesson 1.",
+    "pairs": [
+      {
+        "left": "`192.0.12.0/24` typed where `192.0.2.0/24` was asked for",
+        "right": "a wrong value that is valid"
+      },
+      {
+        "left": "One of the three routers was never touched",
+        "right": "an omission"
+      },
+      {
+        "left": "One router became special, one keystroke at a time, with nobody deciding it",
+        "right": "drift"
+      }
+    ],
+    "right_distractors": [
+      "a syntax error the router refuses"
+    ]
+  },
+  {
+    "id": "ex-j94zwcfw",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Two gNMI samples of an interface's `in-octets`, stamped by the device 10 seconds apart, read 1,250,000,000 and 1,262,500,000. What was the average rate between them, in Mbit/s?",
+    "hint": "Network Automation, lesson 4.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "Mbit/s"
+  },
+  {
+    "id": "ex-d5van21y",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Every time in gNMI is in nanoseconds, so a subscription that samples every five seconds sets `sample_interval` to ___.",
+    "hint": "Network Automation, lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "5000000000",
+          "5_000_000_000",
+          "5,000,000,000"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g9z73sb6",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each problem to the check, in the lesson's set, that is there to catch it.",
+    "hint": "Network Automation, lesson 13.",
+    "pairs": [
+      {
+        "left": "A key typed `adress` in one router's YAML",
+        "right": "the data model"
+      },
+      {
+        "left": "One address given to interfaces on two different routers",
+        "right": "an offline test over every router's file at once"
+      },
+      {
+        "left": "A file whose indentation is broken",
+        "right": "yamllint"
+      },
+      {
+        "left": "A cable unplugged between core1 and edge1",
+        "right": "an online post-check"
+      }
+    ],
+    "right_distractors": [
+      "NAPALM's compare_config",
+      "Ansible's play recap"
+    ]
+  },
+  {
+    "id": "ex-0ae4se90",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A post-check after a deploy finds that a new branch router's uplink sits in a different /30 from its neighbour's, so no adjacency forms. The data is fixed and the post-check passes. What does the lesson's habit add next?",
+    "hint": "Network Automation, lesson 13.",
+    "choices": [
+      {
+        "text": "A longer retry window for the post-check, so the protocol has time to converge next time.",
+        "correct": false,
+        "why": "The adjacency never formed because of the data, not because the check ran too early."
+      },
+      {
+        "text": "A pre-check, since the network was unhealthy before the change.",
+        "correct": false,
+        "why": "The change itself caused the failure; a pre-check would have passed."
+      },
+      {
+        "text": "Nothing: the online test caught it, which is its job.",
+        "correct": false,
+        "why": "That answer is for what no file can show, such as a cable; this one was in the data."
+      },
+      {
+        "text": "An offline test that would have caught it from the files.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2y151h3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "During an incident an engineer adds a static route to edge1 by hand. The pipeline renders whole configurations from the data and pushes them with replace at the next merge to main. What should happen before that merge?",
+    "hint": "Network Automation, lesson 10.",
+    "choices": [
+      {
+        "text": "The route goes into the data, so the rendered configuration carries it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: a replace adds what is missing and leaves an extra line where it is.",
+        "correct": false,
+        "why": "The rendered file is the whole configuration; a route not in the data is removed by the push."
+      },
+      {
+        "text": "A backup of edge1, because the nightly job puts the route back after the push removes it.",
+        "correct": false,
+        "why": "A backup records what the router runs; it restores nothing unless somebody runs a restore."
+      },
+      {
+        "text": "Take edge1 out of the pipeline until the incident review, so the hand-made route survives the deploy.",
+        "correct": false,
+        "why": "That keeps edge1 drifting outside review; the data is where the network's intent is written."
+      }
+    ]
+  },
+  {
+    "id": "ex-af7q2nkc",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Nightly backups of every router are committed to Git. edge1's description changed to `guest wifi` between Tuesday's and Wednesday's backups. What can that history tell you? Choose all that apply.",
+    "hint": "Network Automation, lesson 11.",
+    "choices": [
+      {
+        "text": "That the running configuration changed, and in which line.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The day within which the change was made.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Who typed the change.",
+        "correct": false,
+        "why": "For that, the router's own logs, the AAA server's accounting or a change ticket."
+      },
+      {
+        "text": "Why the change was made.",
+        "correct": false,
+        "why": "A backup shows what runs, not the reason; a ticket carries that."
+      }
+    ]
+  },
+  {
+    "id": "ex-xwqwrxnx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A script reads interface counters over RESTCONF and gets `\"in-octets\": \"123456789012\"`, in quotes, so subtracting two samples raises a TypeError. Why does the device send that number as a string?",
+    "hint": "Network Automation, lesson 6.",
+    "choices": [
+      {
+        "text": "The device's JSON encoder is faulty and should be reported to the vendor.",
+        "correct": false,
+        "why": "It follows the standard; the script has to convert with `int()` itself."
+      },
+      {
+        "text": "RFC 7951 writes YANG's 64-bit types as strings, since many JSON parsers lose precision above 2 to the power 53.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A string keeps leading zeros in a counter.",
+        "correct": false,
+        "why": "Counters carry no leading zeros worth keeping; the issue is the size of the integer."
+      },
+      {
+        "text": "Strings keep the reply's key order stable when two replies are diffed line by line.",
+        "correct": false,
+        "why": "Key order is a matter of `sort_keys`, and it has nothing to do with how a value is typed."
+      }
+    ]
+  },
+  {
+    "id": "ex-0d4mm5cj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "After a password rotation, the lab's API client gets 401 from every router. What does its `request` method do with the first one?",
+    "hint": "Network Automation, lesson 2.",
+    "choices": [
+      {
+        "text": "Raises an exception at once, since it retries a 429 and nothing else.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Waits the seconds in `Retry-After` and tries up to three more times.",
+        "correct": false,
+        "why": "That loop is for 429, too fast; a 401 is a credential problem that waiting cannot fix."
+      },
+      {
+        "text": "Logs in again for a fresh token and repeats the request with it.",
+        "correct": false,
+        "why": "The client logs in once, at the start; nothing in `request` logs in again."
+      },
+      {
+        "text": "Returns `None`, and the caller carries on to the next router as if that one had no data to give.",
+        "correct": false,
+        "why": "`raise_for_status()` turns every error status into an exception, so nothing fails silently."
+      }
+    ]
+  },
+  {
+    "id": "ex-gems66v6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The router signs each webhook with an HMAC keyed by a secret it shares with the receiver. Network Security says that when a third party has to check who produced a message, an HMAC falls short. Why is it enough here?",
+    "hint": "Network Automation, lesson 7.",
+    "choices": [
+      {
+        "text": "Only the other end ever checks, and it holds the same key; no outsider has to verify.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The delivery travels over TLS, which signs the body for anyone who checks it later.",
+        "correct": false,
+        "why": "TLS protects the connection while it lasts; it leaves no proof attached to the body."
+      },
+      {
+        "text": "The delivery id makes a forged event harmless, because the receiver acts on each id once.",
+        "correct": false,
+        "why": "The id makes a retry harmless; a forgery with a new id is a new event."
+      },
+      {
+        "text": "`hmac.compare_digest` turns the HMAC into a signature that a third party could also check.",
+        "correct": false,
+        "why": "It only compares in constant time, so the comparison leaks nothing; the key is still shared."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjtvbvw0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Two engineers each ask NetBox for the next free address in 203.0.113.0/26 at the same moment, with `available_ips.create`. Why do they not both get .2, as they might from a shared spreadsheet?",
+    "hint": "Network Automation, lesson 12.",
+    "choices": [
+      {
+        "text": "The choice and the record happen together, in one request on the server.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each API token is given its own slice of the prefix when it is created.",
+        "correct": false,
+        "why": "Tokens say who is asking; they carry no share of any prefix."
+      },
+      {
+        "text": "The second request fails with an error, and the script picks the next address and tries again.",
+        "correct": false,
+        "why": "Nothing fails: each request is simply handed a different free address."
+      },
+      {
+        "text": "NetBox pings each candidate first and skips any that answer, so an address already in use on the network is passed over.",
+        "correct": false,
+        "why": "NetBox reads its own records, not the network; free means unrecorded."
+      }
+    ]
+  },
+  {
+    "id": "ex-rwbmc5x3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In the lab's design the controller holds the policy that h3 may not reach h1. A new switch joins. How does it get that rule?",
+    "hint": "Network Automation, lesson 15.",
+    "choices": [
+      {
+        "text": "Pushed to it on connection, from the one place the rule lives.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Somebody types it on the new switch, as was done on the others.",
+        "correct": false,
+        "why": "The point of the design is that the rule is written once, in the controller."
+      },
+      {
+        "text": "It copies the flow table of the neighbour it is cabled to.",
+        "correct": false,
+        "why": "Switches take flows from the controller, not from each other."
+      },
+      {
+        "text": "It learns it from the first packet h3 sends towards h1, which it passes to the controller to decide.",
+        "correct": false,
+        "why": "The drop flow is installed on connection, before any packet; packet-in is the learning application's path."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjrf0qj0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An engineer's tests pass on her laptop, where a corrected data file sits uncommitted in her working copy. The server refuses her push with the same tests failing. Why?",
+    "hint": "Network Automation, lesson 14.",
+    "choices": [
+      {
+        "text": "The hook tests the commit itself, unpacked into a fresh directory, where the fixed file does not exist.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The server runs a newer version of pytest than her laptop does.",
+        "correct": false,
+        "why": "The difference is the file, which never left her working copy."
+      },
+      {
+        "text": "The hook asks the routers, and the network disagrees with her data.",
+        "correct": false,
+        "why": "`pre-receive` runs the offline tests; the network is checked after deployment."
+      },
+      {
+        "text": "Only `main` is tested; a push to a branch is refused until it is merged.",
+        "correct": false,
+        "why": "Every branch pushed is tested; only `main` is deployed."
+      }
+    ]
+  },
+  {
+    "id": "ex-mrqd24eq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A branch has passed the model, the offline tests and the check on both ends of every link, and waits as a pull request. What is left for the person reviewing it?",
+    "hint": "Network Automation, lesson 14.",
+    "choices": [
+      {
+        "text": "Running the tests again by hand, in case the hook missed something.",
+        "correct": false,
+        "why": "The hook already tested the commit as pushed; repeating it adds nothing."
+      },
+      {
+        "text": "Checking the YAML's indentation.",
+        "correct": false,
+        "why": "yamllint checks the layout; a person adds what no tool knows."
+      },
+      {
+        "text": "Whether it is the right change, such as whether that LAN really is on the first floor.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, so the merge may as well be automatic once the tests are green.",
+        "correct": false,
+        "why": "Tests know the data is well formed, not whether the intent is right; that is the review's part."
+      }
+    ]
+  },
+  {
+    "id": "ex-857578d9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "VPC A is peered with VPC B, and B with VPC C, on AWS. The ranges do not overlap and every route table points at its peering. An instance in A still cannot reach one in C. Why?",
+    "hint": "Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "B's security groups drop traffic that is passing through on its way to another VPC.",
+        "correct": false,
+        "why": "Security groups sit on interfaces; nothing in B is involved, because a peering does not carry traffic onward."
+      },
+      {
+        "text": "The three VPCs are in different zones, and a peering covers one zone.",
+        "correct": false,
+        "why": "A VPC spans the zones of its region; zones are not what limits a peering."
+      },
+      {
+        "text": "C has no NAT gateway for the return path.",
+        "correct": false,
+        "why": "NAT is a way out to the internet; peered VPCs talk by private address with no NAT."
+      },
+      {
+        "text": "Peering is not transitive: A needs its own peering to C.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtvcrnd7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On an instance, `curl localhost:8080` works. From another instance in the same VPC, `nc -zv -w 3 10.0.32.10 8080` answers \"Connection refused\" at once. What is the likeliest cause?",
+    "hint": "Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "The security group has no rule allowing 8080 from the other instance's address or group.",
+        "correct": false,
+        "why": "A security group drops in silence, which is a timeout; a refusal means the packet reached the machine."
+      },
+      {
+        "text": "The subnet's route table lacks a route to the internet gateway.",
+        "correct": false,
+        "why": "Both instances are inside the VPC, and the local route carries that traffic."
+      },
+      {
+        "text": "The network ACL denies the reply to the ephemeral port.",
+        "correct": false,
+        "why": "A reply lost to an ACL leaves the client waiting for a timeout, not refused straight away."
+      },
+      {
+        "text": "The service is bound to `127.0.0.1:8080`, as `ss -tln` would show.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-an0a4psa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A subnet's inbound network ACL reads: rule 100 allows TCP 443 from `0.0.0.0/0`; rule 120 denies everything from `198.51.100.0/24`; `*` denies the rest. A request arrives from `198.51.100.7` to port 443. What happens?",
+    "hint": "Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "It is dropped, because a deny outweighs an allow whatever their numbers are.",
+        "correct": false,
+        "why": "That is how an explicit deny works in IAM; a network ACL stops at its first match by number."
+      },
+      {
+        "text": "It is dropped by the `*` rule, since the two numbered rules contradict each other.",
+        "correct": false,
+        "why": "The rules are not compared with each other; the lowest number that matches decides."
+      },
+      {
+        "text": "It is let in, because rule 100 matches first and the rest are not read.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It depends on the instance's security group, which takes precedence over the ACL.",
+        "correct": false,
+        "why": "Both filters apply in turn; the group cannot overrule what the ACL lets through or drops."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgfpz9jc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team adds a network ACL to its private subnet: outbound, rule 100 allows TCP 443 to `0.0.0.0/0`; inbound, rule 100 allows TCP 22 from the office. The instances reach the internet through a NAT gateway. From then on their package updates time out. What is missing?",
+    "hint": "Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "An outbound rule for port 80 as well as 443.",
+        "correct": false,
+        "why": "Possibly true for some mirrors, but it would not explain HTTPS updates failing as well."
+      },
+      {
+        "text": "A security group rule letting the replies back in.",
+        "correct": false,
+        "why": "The group is stateful and already lets replies in; the ACL is the one that judges them again."
+      },
+      {
+        "text": "A route from the private subnet straight to the internet gateway.",
+        "correct": false,
+        "why": "That would make the subnet public, and the replies would still meet the same ACL."
+      },
+      {
+        "text": "An inbound rule for TCP 1024 to 65535, where the replies land.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxagnhpb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The database's security group allows TCP 5432 from `10.0.16.7/32`, the application server's address. Overnight the autoscaling group replaced that server, and the application now times out talking to the database. What is the durable fix?",
+    "hint": "Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "Widen the source to `10.0.0.0/16`, so any address in the VPC reaches 5432.",
+        "correct": false,
+        "why": "It works and exposes the database to everything in the VPC, not only the application."
+      },
+      {
+        "text": "Add an outbound rule on the database's group for the replies.",
+        "correct": false,
+        "why": "Security groups are stateful; the replies were never the problem."
+      },
+      {
+        "text": "Pin the new server to `10.0.16.7` by hand.",
+        "correct": false,
+        "why": "The next replacement breaks it again; addresses in an autoscaling group do not stay put."
+      },
+      {
+        "text": "Admit whatever carries the app's own group, instead of one IP.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6d5tezbc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An API behind an application load balancer logs the source address of each connection, and every line shows one of a few `10.0.x.x` addresses. Security needs the real client. Where is it?",
+    "hint": "Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "In the VPC flow logs, which record the client against the target's own address.",
+        "correct": false,
+        "why": "The load balancer opens its own connection to the target, so the packets the target sees come from it."
+      },
+      {
+        "text": "In the `X-Forwarded-For` header the load balancer adds.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nowhere: a layer 7 balancer discards it when it ends TLS.",
+        "correct": false,
+        "why": "It passes it on in a header, precisely because the connection no longer carries it."
+      },
+      {
+        "text": "In the source port, which the balancer keeps from the client's connection.",
+        "correct": false,
+        "why": "The target's connection is a new one from the balancer, with its port and its address."
+      }
+    ]
+  },
+  {
+    "id": "ex-k8k69y6k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Instances in a private subnet copy several terabytes to S3 in the same region every night, and the bill shows a large NAT gateway processing line. What removes that line?",
+    "hint": "Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "Moving the backup instances to a public subnet so that they skip the NAT.",
+        "correct": false,
+        "why": "It opens a way in to machines that need none, and each would pay for a public address."
+      },
+      {
+        "text": "A second NAT gateway in the other zone, splitting the traffic.",
+        "correct": false,
+        "why": "The charge is per gigabyte processed; two gateways process the same bytes and add an hourly fee."
+      },
+      {
+        "text": "A site-to-site VPN between the subnet and the storage service.",
+        "correct": false,
+        "why": "A VPN joins the VPC to a network you own; it is not a path to the provider's services."
+      },
+      {
+        "text": "A gateway endpoint for S3: a route in the subnet's table, at no charge.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-detqgxbt",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A VPC `10.0.0.0/16` on AWS is carved into `/20` subnets. How many addresses in one of them can be handed to machines?",
+    "hint": "Cloud and Serverless, lesson 6.",
+    "value": 4091,
+    "tolerance": 0,
+    "unit": "addresses"
+  },
+  {
+    "id": "ex-3t4z69gv",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each piece of a VPC to what it gives the subnets that use it.",
+    "hint": "Cloud and Serverless, lesson 6.",
+    "pairs": [
+      {
+        "left": "internet gateway",
+        "right": "a way in and out for instances with a public address"
+      },
+      {
+        "left": "NAT gateway",
+        "right": "a way out to the internet that is not a way in"
+      },
+      {
+        "left": "gateway endpoint",
+        "right": "a private path to S3 or DynamoDB"
+      },
+      {
+        "left": "VPC peering",
+        "right": "private addresses of one other VPC"
+      },
+      {
+        "left": "transit gateway",
+        "right": "a hub that many VPCs attach to"
+      }
+    ],
+    "right_distractors": [
+      "an encrypted tunnel to the office over the internet"
+    ]
+  },
+  {
+    "id": "ex-1azjwxtx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On AWS, an application's servers and database should survive the loss of one availability zone. What does the subnet layout need, and why?",
+    "hint": "Cloud and Serverless, lesson 6.",
+    "choices": [
+      {
+        "text": "Two subnets per role, one in each zone: an AWS subnet sits in one zone.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "One large subnet per role, since a subnet spans every zone of its region.",
+        "correct": false,
+        "why": "That is Google Cloud's and Azure's model; on AWS the subnet carries the zone."
+      },
+      {
+        "text": "A second VPC in another zone, peered with the first.",
+        "correct": false,
+        "why": "A VPC already spans its region's zones; a second one adds joins without adding zones."
+      },
+      {
+        "text": "Subnets of `/28`, which are cheaper to repeat in each zone than larger blocks.",
+        "correct": false,
+        "why": "A /28 saves nothing worth having and leaves 11 usable addresses, which fill up fast."
+      }
+    ]
+  },
+  {
+    "id": "ex-a09tgk9b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ana changes one line, the `cidr_block` of `aws_subnet.a`, from `10.20.1.0/24` to `10.20.3.0/24`. The plan says `Plan: 2 to add, 0 to change, 2 to destroy`, and `aws_instance.web` is among the replacements. Why is the instance replaced?",
+    "hint": "Infrastructure as Code, lesson 6.",
+    "choices": [
+      {
+        "text": "Its private address falls outside the new range, so the provider marks the address as changed.",
+        "correct": false,
+        "why": "The plan names `subnet_id` as the cause; the address is a consequence of the move, not the trigger."
+      },
+      {
+        "text": "The id it references is new, and `subnet_id` forces a rebuild when it moves.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Terraform replaces every resource in a configuration whenever one of them is replaced.",
+        "correct": false,
+        "why": "The VPC in the same configuration stays; only what references the replaced id follows it."
+      },
+      {
+        "text": "The lock file pinned an older provider.",
+        "correct": false,
+        "why": "No version changed; the cause is the reference from the instance to the subnet."
+      }
+    ]
+  },
+  {
+    "id": "ex-gb765e3k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A security group declares `name = \"web\"` and `create_before_destroy = true`. Ana edits its description and applies, and AWS answers `InvalidGroup.Duplicate: The security group 'web' already exists`. What is the fix the lesson gives?",
+    "hint": "Infrastructure as Code, lesson 6.",
+    "choices": [
+      {
+        "text": "Remove `create_before_destroy`, so that the old group is destroyed first and frees the name.",
+        "correct": false,
+        "why": "On a real account AWS refuses to delete a group still attached to an instance, so that order fails too."
+      },
+      {
+        "text": "Use `name_prefix`, so the old and new groups coexist.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Run `terraform state rm` on the group and apply again.",
+        "correct": false,
+        "why": "The old group would still exist in AWS, unknown to the state, and the name would still clash."
+      },
+      {
+        "text": "Add `ignore_changes = [description]`.",
+        "correct": false,
+        "why": "That hides the edit rather than making it; the description in AWS would never change."
+      }
+    ]
+  },
+  {
+    "id": "ex-sehymp3v",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A colleague opened port 22 on the `web` group by hand. Before deciding whether the file or the world wins, Ana wants to see only what changed out there since the state was written, with no proposal mixed in. She runs `terraform plan -___`.",
+    "hint": "Infrastructure as Code, lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "refresh-only",
+          "-refresh-only",
+          "refresh-only=true"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yxrfz3f2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop writes each rule as its own `aws_vpc_security_group_ingress_rule`. Somebody adds a rule for port 3389 by hand, and the nightly `terraform plan -detailed-exitcode` keeps exiting 0. Why?",
+    "hint": "Infrastructure as Code, lesson 7.",
+    "choices": [
+      {
+        "text": "Exit code 0 means changes were found, and the job reads it the wrong way round.",
+        "correct": false,
+        "why": "With `-detailed-exitcode`, 2 means changes; 0 means none."
+      },
+      {
+        "text": "The plan skips the refresh at night because the state is locked by the scheduler.",
+        "correct": false,
+        "why": "Every plan starts by reading the real resources back; a held lock makes it fail, not skip."
+      },
+      {
+        "text": "Port 3389 belongs to Windows, which the AWS provider does not model.",
+        "correct": false,
+        "why": "A rule is a rule to the provider whatever the port is for."
+      },
+      {
+        "text": "Per-rule resources compare only the rules Terraform created.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-zcajhn7v",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A CI runner was reclaimed in the middle of `terraform apply`, and every plan since fails with `Error acquiring the state lock`. Put lesson 7's way out in order.",
+    "hint": "Infrastructure as Code, lesson 7.",
+    "items": [
+      "read `Who`, `Operation` and `Created` in the error's `Lock Info`",
+      "make sure the run that holds the lock is really dead",
+      "run `terraform force-unlock` with the lock's `ID`",
+      "run the plan again"
+    ],
+    "trap": "Unlocking before making sure the holder is dead lets a second writer in beside a run that is merely slow."
+  },
+  {
+    "id": "ex-vk7h3eqy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Ana runs `terraform plan -var-file=dev.tfvars` and sees the VPC's `cidr_block` going `\"10.20.0.0/16\" -> \"10.21.0.0/16\" # forces replacement`, with 4 to destroy. Dev uses `10.21.0.0/16`. What is the likeliest explanation?",
+    "hint": "Infrastructure as Code, lesson 11.",
+    "choices": [
+      {
+        "text": "Someone changed dev's VPC by hand, and the plan is correcting the drift.",
+        "correct": false,
+        "why": "Dev already is 10.21; the plan starts from 10.20, which is another environment's range."
+      },
+      {
+        "text": "The selected workspace is still `prod`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The values file has a typo in its range.",
+        "correct": false,
+        "why": "The new value is dev's correct range; it is the old value that does not belong to dev."
+      },
+      {
+        "text": "A provider upgrade changed how VPC ranges are compared.",
+        "correct": false,
+        "why": "Nothing in the plan points at a version; the starting range is another environment's."
+      }
+    ]
+  },
+  {
+    "id": "ex-hs4stspa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A pull request changes the `random` constraint in `versions.tf` and `.terraform.lock.hcl`, and touches no resource block. A reviewer approves it as having nothing to review. What does the lesson say?",
+    "hint": "Infrastructure as Code, lesson 9.",
+    "choices": [
+      {
+        "text": "The diff of the lock file is the provider upgrade, and a new version can change defaults or turn an update into a replacement.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The lock file is generated, so it belongs in `.gitignore` rather than in the review.",
+        "correct": false,
+        "why": "It pins the exact version every run uses, which is why its diff is reviewed."
+      },
+      {
+        "text": "The reviewer is right: the next plan can show any effect.",
+        "correct": false,
+        "why": "The effect arrives with no edit to a resource, so it is reviewed as a change of its own."
+      },
+      {
+        "text": "Only the `h1:` hash matters, and it is checked by `terraform validate`.",
+        "correct": false,
+        "why": "The version moved, and that is the change; validate does not judge it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3kr8zad",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A guard fails the pipeline on any destroy. Which of these changes pass it and are caught only by somebody reading the values in the plan? Choose all that apply.",
+    "hint": "Infrastructure as Code, lesson 9.",
+    "choices": [
+      {
+        "text": "An SSH rule's `cidr_ipv4` going from `203.0.113.0/24` to `0.0.0.0/0`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A role policy's `Action` going from `s3:GetObject` to `s3:*`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A database replaced because of a `# forces replacement` argument.",
+        "correct": false,
+        "why": "A replacement counts as a destroy, so the guard already stops it."
+      },
+      {
+        "text": "A resource block renamed with no `moved` block.",
+        "correct": false,
+        "why": "The old address is destroyed, which the guard sees."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3rcvkw7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Every run of a playbook ends with `changed=1` on every host, from a task `ansible.builtin.command: nginx -t`. Why does it matter, and what fixes it?",
+    "hint": "Infrastructure as Code, lesson 18.",
+    "choices": [
+      {
+        "text": "It means nginx's configuration is rewritten on each run; a `creates:` argument stops that.",
+        "correct": false,
+        "why": "`nginx -t` writes nothing, and `creates` is for a command that does make a file."
+      },
+      {
+        "text": "`changed_when: false`: a summary that never reads zero hides the real changes.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is harmless, and `--check` would report the same thing.",
+        "correct": false,
+        "why": "Nobody reads a summary that is never zero, which is the harm."
+      },
+      {
+        "text": "The host is drifting, so the task should become a handler.",
+        "correct": false,
+        "why": "Nothing drifts; the module cannot know that the command made no change."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2djscv6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Somebody adds a cron job to `web1` by hand. The next run of the shop's playbook reports `changed=0` on both hosts. What does that tell Ana?",
+    "hint": "Infrastructure as Code, lesson 18.",
+    "choices": [
+      {
+        "text": "Ansible removed the job, because anything outside the playbook is drift.",
+        "correct": false,
+        "why": "With no state file and no task naming the job, Ansible has nothing telling it to remove it."
+      },
+      {
+        "text": "Nothing either way: only what is written in its tasks gets checked.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The job is harmless, or the run would have marked `web1` as failed.",
+        "correct": false,
+        "why": "The run never looked at it, so a clean recap proves nothing about it."
+      },
+      {
+        "text": "`web1` was unreachable, so its result was copied from `web2`.",
+        "correct": false,
+        "why": "An unreachable host is counted as `unreachable`, not reported as ok."
+      }
+    ]
+  },
+  {
+    "id": "ex-2psf09x5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Three web servers are launched on three different days from plain Ubuntu, and each installs nginx from its user data. They report three different nginx versions. What does the lesson draw from it?",
+    "hint": "Infrastructure as Code, lesson 20.",
+    "choices": [
+      {
+        "text": "The archive mirrors disagree with each other, and pinning a single mirror fixes it.",
+        "correct": false,
+        "why": "One mirror still offers whatever is current on the day each machine boots."
+      },
+      {
+        "text": "cloud-init ran the script only once.",
+        "correct": false,
+        "why": "Running once per machine is expected; the difference is the day each one ran."
+      },
+      {
+        "text": "Each boot installs what the archive offered that day; a baked image would not.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Baking would only shorten the boot time, and the three versions would still differ.",
+        "correct": false,
+        "why": "The lesson's point is that the two do not give the same result; a baked image fixes the version."
+      }
+    ]
+  },
+  {
+    "id": "ex-6tgmsjp3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An instance's `user_data` downloads `s3://shop-boot-dev/boot.sh`, written into the string, from a bucket the same configuration creates. On a real account it sometimes boots without its configuration. What does the lesson prefer as the fix?",
+    "hint": "Infrastructure as Code, lesson 6.",
+    "choices": [
+      {
+        "text": "Add `depends_on = [aws_s3_object.script]` to the instance.",
+        "correct": false,
+        "why": "It works, but it says wait and not why; the lesson prefers a reference wherever one exists."
+      },
+      {
+        "text": "Run `terraform apply -parallelism=1`, so resources are created one at a time.",
+        "correct": false,
+        "why": "One at a time in some order still need not be the bucket first; the graph has no edge."
+      },
+      {
+        "text": "Mark the instance `create_before_destroy` so the bucket is created first.",
+        "correct": false,
+        "why": "That orders a replacement of one resource, not two unrelated resources."
+      },
+      {
+        "text": "Build the path from `aws_s3_object.script.bucket` and `.key`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qtp9j7z",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each health question to what happens when its answer is no.",
+    "hint": "Observability and Operations, lesson 14.",
+    "pairs": [
+      {
+        "left": "liveness",
+        "right": "the container is killed and started again"
+      },
+      {
+        "left": "readiness",
+        "right": "traffic stops going to it until it says yes"
+      },
+      {
+        "left": "startup",
+        "right": "the other two probes wait"
+      },
+      {
+        "left": "the probe from outside",
+        "right": "nothing by itself: it is a measurement"
+      }
+    ],
+    "right_distractors": [
+      "the whole node is drained and rebooted"
+    ]
+  },
+  {
+    "id": "ex-wb7bvc4c",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A service's objective is 99.9%, and over the last hour 1.44% of its requests failed. What is the burn rate?",
+    "hint": "Observability and Operations, lesson 16.",
+    "value": 14.4,
+    "tolerance": 0.05,
+    "unit": ""
+  },
+  {
+    "id": "ex-ecp85p6k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A switch reboots and checkouts fail for forty seconds. Just after, the burn rate is 34.6 over one minute and 5.9 over five; the fast page needs both above 14.4. What does the rule do, and why is that right?",
+    "hint": "Observability and Operations, lesson 16.",
+    "choices": [
+      {
+        "text": "It pages, because one window above the threshold proves the budget is burning fast.",
+        "correct": false,
+        "why": "The rule needs both; the short window alone fires on every blip."
+      },
+      {
+        "text": "It opens a ticket instead, since 5.9 is above the slow alert's 3 over every window it uses.",
+        "correct": false,
+        "why": "The slow alert reads its own longer window, and the thirty-minute rate there was under 1."
+      },
+      {
+        "text": "No page: the long window says the damage was small.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It flaps between firing and resolved until the five-minute window empties.",
+        "correct": false,
+        "why": "Flapping needs the condition to hold and break; here the five-minute window never crossed 14.4."
+      }
+    ]
+  },
+  {
+    "id": "ex-28h96mek",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`up` for the `node` exporter on one host has been 0 for ten minutes. Checkouts are all succeeding. By lesson 16's test, what should that alert be?",
+    "hint": "Observability and Operations, lesson 16.",
+    "choices": [
+      {
+        "text": "A ticket: a cause, worth a look during working hours.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A page, since a target that stopped answering means data is being lost right now.",
+        "correct": false,
+        "why": "Nobody is hurt now and nothing must be done before morning, which is the test for a page."
+      },
+      {
+        "text": "A page routed sideways to the team that owns the host.",
+        "correct": false,
+        "why": "Sideways escalation moves a page to the right team; it does not make a cause urgent."
+      },
+      {
+        "text": "No alert at all, because the SLI already covers every cause.",
+        "correct": false,
+        "why": "The SLI covers the paging; causes still go to a queue somebody reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-zy9asnpb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "At the edge, a team adds a `client_ip` label to its request counter, and tens of thousands of addresses pass through each day. Where does lesson 6 say that detail belongs?",
+    "hint": "Observability and Operations, lesson 6.",
+    "choices": [
+      {
+        "text": "On the counter, but scraped less often so that the series stay cheap.",
+        "correct": false,
+        "why": "Each value is still a series that lives in memory; the interval does not change the count."
+      },
+      {
+        "text": "In a span or a log line, since a label value is a new series that lives on.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In a histogram rather than a counter, whose buckets absorb the values.",
+        "correct": false,
+        "why": "A histogram multiplies series by its buckets; the label would cost more, not less."
+      },
+      {
+        "text": "In a `job` label, which Prometheus adds anyway.",
+        "correct": false,
+        "why": "`job` names the scrape configuration; overloading it with addresses is the same cardinality."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzjqbefv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A host that runs an exporter loses power. Because Prometheus pulls, it notices: the scrape fails, and a metric Prometheus keeps for every target, 1 or 0 on every scrape, drops to 0. That metric is called ___.",
+    "hint": "Observability and Operations, lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "up"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vg65mqt4",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put the moments of an incident in the order its intervals are measured between.",
+    "hint": "Observability and Operations, lesson 18.",
+    "items": [
+      "the failure starts",
+      "an alert fires",
+      "a person says \"I have it\"",
+      "users stop being hurt",
+      "the incident is closed"
+    ],
+    "trap": "Mitigation comes before closing: users stop being hurt by the rollback, and the incident is closed later."
+  },
+  {
+    "id": "ex-805q5n5d",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "During an incident, one role records what is tried, decided and observed, with times, and does nothing else. That role is the ___.",
+    "hint": "Observability and Operations, lesson 17.",
+    "blanks": [
+      {
+        "accept": [
+          "scribe"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ahkrbscy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A network team puts a new reverse proxy between `storefront` and `orders` that forwards only a fixed list of headers. From that day every checkout shows up in Jaeger as two separate traces. What is the likeliest cause?",
+    "hint": "Observability and Operations, lesson 4.",
+    "choices": [
+      {
+        "text": "The proxy adds latency, and Jaeger splits a trace whose spans are too far apart in time.",
+        "correct": false,
+        "why": "Spans join by ids, not by how close they are in time."
+      },
+      {
+        "text": "`orders` now sees the proxy as its caller and records it as the root.",
+        "correct": false,
+        "why": "The proxy creates no span here; what is missing is the context the proxy dropped."
+      },
+      {
+        "text": "The proxy rewrites the third field of the header with its own span id.",
+        "correct": false,
+        "why": "Rewriting the parent field would still keep the trace id, so the trace would stay one."
+      },
+      {
+        "text": "`traceparent` is not on the list, so `orders` starts a new trace.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-c31bcqte",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "At three in the morning nobody is buying, and the checkout path is broken. Why can the burn-rate page not fire, and what does lesson 16 rely on instead?",
+    "hint": "Observability and Operations, lesson 16.",
+    "choices": [
+      {
+        "text": "The burn rate ignores traffic, so it fires as usual and nothing else is needed.",
+        "correct": false,
+        "why": "It ignores the volume, but with no requests the ratio has nothing to divide."
+      },
+      {
+        "text": "Alertmanager mutes pages at night unless a silence is lifted.",
+        "correct": false,
+        "why": "Silences are added by people for a window; nothing mutes pages by the clock."
+      },
+      {
+        "text": "The one-hour window is still full of daytime requests, which dilute the failures.",
+        "correct": false,
+        "why": "At three in the morning the last hour holds no daytime traffic; the problem is that it holds none."
+      },
+      {
+        "text": "Nothing over nothing is undefined; a failing synthetic checkout is the signal.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-xe8jjw23",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Two outages of the same length hit the same shop: one at four in the morning, one at lunchtime. How do they compare against the error budget?",
+    "hint": "Observability and Operations, lesson 15.",
+    "choices": [
+      {
+        "text": "The midday one costs far more, since failed checkouts are what is counted.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They spend the same, because the budget is a number of minutes per window.",
+        "correct": false,
+        "why": "The budget is counted in failed checkouts, and the minutes are only a way of picturing it."
+      },
+      {
+        "text": "The night one spends more, since fewer requests make each failure a bigger share.",
+        "correct": false,
+        "why": "The budget is a share of all checkouts in the window, and the night outage fails far fewer of them."
+      },
+      {
+        "text": "Neither counts, as an outage is excluded from the SLI.",
+        "correct": false,
+        "why": "An outage is exactly what the SLI measures."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wkk9p9b",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A firewall change cuts three replicas off from their database for five minutes. Their liveness probe opens a TCP connection to `db:5432`. Which of these happen? Choose all that apply.",
+    "hint": "Observability and Operations, lesson 14.",
+    "choices": [
+      {
+        "text": "Every replica is restarted, at about the same moment, more than once.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Requests in flight are dropped at each restart.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Kubernetes waits longer between restarts each time, which delays recovery once the database returns.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The restarts reconnect the replicas to the database sooner than waiting would.",
+        "correct": false,
+        "why": "A restart cannot bring the network path or the database back."
+      },
+      {
+        "text": "Traffic moves to the healthy replicas while the others restart.",
+        "correct": false,
+        "why": "All three fail the same probe at once, so there is no healthy replica to move to."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dw1e2bc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Before sending support tickets to a model, a script applies lesson 11's patterns, including `(?:\\d[ -]?){13,19}` for cards. A ticket carries a card written `4111.1111.1111.1111`. What happens?",
+    "hint": "AI in Development, lesson 11.",
+    "choices": [
+      {
+        "text": "It leaves with the request: a pattern catches formats, not meaning.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is replaced by `[CARD]`, since the pattern counts digits whatever separates them.",
+        "correct": false,
+        "why": "The pattern allows a space or a hyphen between digits, not a dot."
+      },
+      {
+        "text": "The provider refuses the request, because card numbers are blocked at the API.",
+        "correct": false,
+        "why": "The lesson's own log shows the provider receiving the number when nothing removed it."
+      },
+      {
+        "text": "The `SECRET` pattern catches it instead.",
+        "correct": false,
+        "why": "That pattern looks for words such as token or password followed by a value."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzq47kwd",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A team builds an agent for network operations with three tools: read an interface's counters, read a device's configuration, and push a configuration. Which arrangements follow lesson 7's rules? Choose all that apply.",
+    "hint": "AI in Development, lesson 7.",
+    "choices": [
+      {
+        "text": "The host asks a person before the push, showing the exact arguments.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The agent runs with credentials of its own, scoped to what its tools need.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Every call and every result is logged, with who approved what.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The system prompt tells the model never to push without approval, so the host need not check.",
+        "correct": false,
+        "why": "Limits are enforced below the model, where its choices cannot reach."
+      },
+      {
+        "text": "The agent borrows the engineer's own session, which already has the right access.",
+        "correct": false,
+        "why": "The lesson says the agent's own credentials, never the developer's."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgaphhs8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A model drafts replies to customers' tickets, and the host offers it every tool the application has, including one that issues refunds. Which change holds however a ticket is worded?",
+    "hint": "AI in Development, lesson 11.",
+    "choices": [
+      {
+        "text": "A sentence in the system prompt telling the model to ignore instructions found inside tickets.",
+        "correct": false,
+        "why": "That asks the model to behave; the lesson's first version had exactly that and still paid."
+      },
+      {
+        "text": "A filter that deletes phrases like \"ignore previous instructions\" before the request.",
+        "correct": false,
+        "why": "It depends on the wording, which is the property the question rules out."
+      },
+      {
+        "text": "A larger model, which follows its instructions better.",
+        "correct": false,
+        "why": "No model can be relied on to ignore instructions in the data."
+      },
+      {
+        "text": "Offer the drafting task only the tools that read.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-tpqxf1r4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A script wraps the SDK call in its own loop that retries any exception five times. One request keeps failing with 400. What does lesson 10 say is wrong?",
+    "hint": "AI in Development, lesson 10.",
+    "choices": [
+      {
+        "text": "The loop retries what time cannot fix, and multiplies the SDK's own waits on top.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Five is too few; a 400 clears once the provider's load drops.",
+        "correct": false,
+        "why": "Overload is 529 or 5xx; a 400 is a request that is wrong and will be wrong again."
+      },
+      {
+        "text": "The loop should honour `retry-after`, which every 400 carries.",
+        "correct": false,
+        "why": "`retry-after` comes with a 429, a rate limit; it says nothing about a malformed request."
+      },
+      {
+        "text": "Nothing, as long as the waits grow with jitter.",
+        "correct": false,
+        "why": "Backoff spaces retries out; it does not make a wrong request right."
+      }
+    ]
+  },
+  {
+    "id": "ex-zsxtcr4h",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The SDKs wait longer before each retry and add a random part, so that two clients that failed together do not retry together. That is exponential backoff with ___.",
+    "hint": "AI in Development, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "jitter"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-as5y6bv7",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`ansible-playbook` fails on a router task, and an engineer asks an assistant for help. By lesson 5, which of these belong in the request? Choose all that apply.",
+    "hint": "AI in Development, lesson 5.",
+    "choices": [
+      {
+        "text": "The command that produced the failure.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The error and the traceback, unedited.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The versions involved, and what was already tried.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A summary of the error in the engineer's own words instead of the error itself.",
+        "correct": false,
+        "why": "A description makes the model guess; the evidence carries details nobody thinks to mention."
+      },
+      {
+        "text": "The router's enable password, so the model can reproduce the session.",
+        "correct": false,
+        "why": "Secrets stay out of a prompt; the model needs the error, not the credentials."
+      }
+    ]
+  },
+  {
+    "id": "ex-33zqte5f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An assistant writes a Terraform block using an argument the provider removed in a release after the model's training cutoff. What does lesson 1 recommend?",
+    "hint": "AI in Development, lesson 1.",
+    "choices": [
+      {
+        "text": "Put the docs of the version in use into the context, and check the result against something that is not a model.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Ask the model whether it is sure, since a large model can say \"I don't know\".",
+        "correct": false,
+        "why": "That is a learnt behaviour, not a measurement; the model has no signal for what it is reconstructing."
+      },
+      {
+        "text": "Lower the temperature to 0, so the answer is the most likely and so the correct one.",
+        "correct": false,
+        "why": "The most likely continuation of old training text is still the old argument."
+      },
+      {
+        "text": "Switch to a provider whose model knows Terraform.",
+        "correct": false,
+        "why": "Any model has a cutoff, and this argument changed after it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8e0era2",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A model has a window of 2,048 tokens and allows at most 512 out per reply. A prompt is 1,717 tokens. What is the largest `max_tokens` the request can carry without being refused?",
+    "hint": "AI in Development, lesson 2.",
+    "value": 331,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-mc2dp71j",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "By lesson 3, which of these make a strong portfolio project for somebody hiring a junior network engineer? Choose all that apply.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 3.",
+    "choices": [
+      {
+        "text": "A lab network built from configuration files kept under version control.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A topology diagram of that lab.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A test that proves the lab fails over when a link goes down.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Screenshots of each device's web interface, configured by hand one setting at a time.",
+        "correct": false,
+        "why": "Nobody else can reproduce a lab configured by hand, and the reviewer opens the configurations."
+      },
+      {
+        "text": "A list of the courses and certificates finished, at the top of the README.",
+        "correct": false,
+        "why": "A list is a claim; the reviewer opens what is closest to a first week's work."
+      }
+    ]
+  },
+  {
+    "id": "ex-zb8y2xdz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your lab's failover test has passed on every run since you wrote it, after the redundancy was already in place. How does lesson 12 say to find out whether it would notice a broken failover?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 12.",
+    "choices": [
+      {
+        "text": "Run it on every push, so a failure would show up as a red cross.",
+        "correct": false,
+        "why": "Running it more often does not show that it can fail at all."
+      },
+      {
+        "text": "Add more tests around it until coverage of the configuration reaches a high percentage.",
+        "correct": false,
+        "why": "Coverage counts lines run, not whether this test objects when the guarantee is gone."
+      },
+      {
+        "text": "Read it again the next morning.",
+        "correct": false,
+        "why": "Distance helps a review; it does not prove the test bites."
+      },
+      {
+        "text": "Remove the redundant path on purpose, watch the test go red, then restore it.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-31mnab3v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "You plan a lab network with three segments, routing between them, monitoring and a failover test. What does lesson 5's walking skeleton say to have working in the first days?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 5.",
+    "choices": [
+      {
+        "text": "Every segment fully designed and documented, so that nothing has to be redone later.",
+        "correct": false,
+        "why": "That is the layer-by-layer route, where nothing runs until the last layer is done."
+      },
+      {
+        "text": "The monitoring stack, since it will show every later problem.",
+        "correct": false,
+        "why": "One layer done first is still a layer; the skeleton is a slice through all of them."
+      },
+      {
+        "text": "The thinnest slice end to end: two segments that reach each other, built from the files in the repository, with no polish yet.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The failover test, written before any device exists.",
+        "correct": false,
+        "why": "Tests come after something works, in the skeleton's order."
+      }
+    ]
+  },
+  {
+    "id": "ex-v183y6ke",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Six weeks are not enough for your network lab project's plan: a web dashboard with accounts and roles, the failover test, a diagram and a README. By lesson 6, what goes first?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 6.",
+    "choices": [
+      {
+        "text": "The diagram, which a reviewer can draw from the configurations.",
+        "correct": false,
+        "why": "The diagram is the first thing this field's reviewer opens."
+      },
+      {
+        "text": "The failover test, the largest single piece of work.",
+        "correct": false,
+        "why": "It is the project's point, and the point is never on the cutting list."
+      },
+      {
+        "text": "The sign-in and permissions, since every screen and test multiplies by them.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The README, which can be written after the deadline.",
+        "correct": false,
+        "why": "The README is what gets the project understood; cutting it hides the work."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0qxw863",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On the networks track, what does lesson 15 say \"deployed\" means for your project?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "choices": [
+      {
+        "text": "It ran once from start to finish on your own laptop, recorded in a screenshot.",
+        "correct": false,
+        "why": "Deployed means somebody can see it working without you, next month as well as today."
+      },
+      {
+        "text": "An environment that keeps running, is documented well enough to rebuild, and has a restore that was tested.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Reachable from the internet under a domain of its own.",
+        "correct": false,
+        "why": "The course's own deploy is on a private lab network; a domain is not the test."
+      },
+      {
+        "text": "Merged to main with a green CI run.",
+        "correct": false,
+        "why": "A green run says the tests passed, not that anything is up for somebody else."
+      }
+    ]
+  },
+  {
+    "id": "ex-geqmz3v5",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "You finish a change to your lab's routing at eleven at night and will merge the pull request yourself. Match each of lesson 10's kinds of distance to what you do.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 10.",
+    "pairs": [
+      {
+        "left": "time",
+        "right": "read the diff the next morning"
+      },
+      {
+        "left": "a different view",
+        "right": "read it on the hosting site's pull-request page"
+      },
+      {
+        "left": "a different order",
+        "right": "read the tests first, then the code"
+      }
+    ],
+    "right_distractors": [
+      "ask an assistant to approve it"
+    ]
+  },
+  {
+    "id": "ex-x0p9k2db",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Sorting a project's features into must, should, could and won't, by their initials, is called ___.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "MoSCoW",
+          "MoSCoW method"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e79xr2jx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Your lab project includes a small tool that hands out subnets and refuses one that overlaps a subnet already given. Which test earns its keep, by lesson 12?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 12.",
+    "choices": [
+      {
+        "text": "One that checks Python's `ipaddress` parses `10.0.16.0/20` correctly.",
+        "correct": false,
+        "why": "The library has its own tests; this one proves nothing about your rule."
+      },
+      {
+        "text": "One that checks the getter returns the subnet it was given.",
+        "correct": false,
+        "why": "Getters only move a value; a failure there would be visible, not wrong."
+      },
+      {
+        "text": "A snapshot of the tool's output page, compared on every run.",
+        "correct": false,
+        "why": "The exact layout changes often, and you see its failures anyway."
+      },
+      {
+        "text": "A test for the rule at its edge: a block sharing one address is refused, and the block right after it is accepted.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  }
+]
