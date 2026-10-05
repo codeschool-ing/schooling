@@ -84,6 +84,10 @@ DOCS = {
                         "docs/hub/model-cards.md"),
     "hub-models": ("huggingface/hub-docs", "08175d0f6f70d4aa3d1c40404e6aa8c9172f6ec6",
                    "docs/hub/models-the-hub.md"),
+    "hf-providers": ("huggingface/hub-docs", "08175d0f6f70d4aa3d1c40404e6aa8c9172f6ec6",
+                     "docs/inference-providers/index.md"),
+    "hf-pricing": ("huggingface/hub-docs", "08175d0f6f70d4aa3d1c40404e6aa8c9172f6ec6",
+                   "docs/inference-providers/pricing.md"),
     "hf-tasks": ("huggingface/huggingface.js", "3064743fce9a4b29b4d9c4ab4c38217526de2c2f",
                  "packages/tasks/src/pipelines.ts"),
 }

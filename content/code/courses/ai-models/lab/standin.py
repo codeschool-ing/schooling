@@ -90,6 +90,15 @@ ROUTES = {
     "standin/small": {"base": "standin-small", "providers": ["standin-east"],
                       "prompt": "0.00000025", "completion": "0.00000125"},
 }
+# Hugging Face's router: the same two models, each provider with a throughput
+# (tokens per second) and a price per million output tokens, both the course's.
+# ":fastest" (the default) takes the highest throughput, ":cheapest" the lowest
+# output price, ":preferred" the account's order, which here is the list's.
+HF_ROUTES = {
+    "standin/large": {"base": "standin-large",
+                      "providers": {"standin-east": (40, 15.0), "standin-west": (80, 18.0)}},
+    "standin/small": {"base": "standin-small", "providers": {"standin-east": (120, 1.25)}},
+}
 # Which upstream providers keep what they are sent, for data_collection: "deny".
 # The course's own rule, standing for the Data Policy tag OpenRouter shows.
 STORES = {"standin-east": True, "standin-west": False}
@@ -400,7 +409,9 @@ class Handler(BaseHTTPRequestHandler):
             n = self.check_anthropic(req, need_max=False)
             record["input_tokens"] = n
             return self.send_json(200, {"input_tokens": n}, headers)
-        if path in ("/v1/chat/completions", "/hf/v1/chat/completions"):
+        if path == "/hf/v1/chat/completions":
+            return self.hf_router(req, headers, record)
+        if path == "/v1/chat/completions":
             return self.chat(req, headers, record)
         if path == "/openrouter/api/v1/chat/completions":
             return self.openrouter(req, headers, record)
@@ -606,6 +617,27 @@ class Handler(BaseHTTPRequestHandler):
         record["routed"] = {"tried": tried}
         raise Refusal(503, "provider_unavailable", "No allowed providers are available for the selected model. "
                       + "; ".join(tried))
+
+    def hf_router(self, req, headers, record):
+        name, _, suffix = (req.get("model") or "").partition(":")
+        route = HF_ROUTES.get(name)
+        if not route:
+            raise Refusal(400, "model_not_supported", f"The requested model '{name}' is not supported by any provider you have enabled.")
+        ups = route["providers"]
+        policy = suffix or "fastest"
+        if policy == "fastest":
+            up = max(ups, key=lambda p: ups[p][0])
+        elif policy == "cheapest":
+            up = min(ups, key=lambda p: ups[p][1])
+        elif policy == "preferred":
+            up = next(iter(ups))
+        elif policy in ups:
+            up = policy
+        else:
+            raise Refusal(400, "model_not_supported",
+                          f"The requested model '{name}' is not supported by provider '{policy}'.")
+        record["routed"] = {"model": name, "provider": up, "policy": policy}
+        return self.chat(req, headers, record, extra={"model": route["base"], "shown": name})
 
     # -- OpenAI Responses
     def responses_api(self, req, headers, record):
