@@ -55,6 +55,8 @@ DOCS = {
     "mistral-inference-licence": ("mistralai/mistral-inference", "9eaeb91c17450e09021b6065a1d5cc69876507c8",
                                   "LICENSE"),
     "ollama-api": ("ollama/ollama", "42e911bc3d05798cad729cb474bf62f378cb2e26", "docs/api.md"),
+    "litellm-cost": ("BerriAI/litellm", "21881c571181fc0e409dd717b8a277e5b43152a7",
+                     "litellm/litellm_core_utils/llm_cost_calc/utils.py"),
     "hub-model-cards": ("huggingface/hub-docs", "08175d0f6f70d4aa3d1c40404e6aa8c9172f6ec6",
                         "docs/hub/model-cards.md"),
     "hub-models": ("huggingface/hub-docs", "08175d0f6f70d4aa3d1c40404e6aa8c9172f6ec6",
