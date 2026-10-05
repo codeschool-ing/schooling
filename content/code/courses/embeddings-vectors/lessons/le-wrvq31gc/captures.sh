@@ -177,6 +177,7 @@ for p in client.query_points("help", query=q, query_filter=ebooks, limit=3).poin
     print(f"{p.score:.4f}  {p.id}  {p.payload['title']}")
 EOF_FILE
 put qd_local.py <<'EOF_FILE'
+import warnings
 from qdrant_client import QdrantClient
 from qdrant_client.models import PayloadSchemaType, PointStruct
 
@@ -189,7 +190,11 @@ try:
     client.query_points("help", query=[0.1] * 256, limit=3)
 except Exception as e:
     print(type(e).__name__ + ":", e)
-client.create_payload_index("help", field_name="category", field_schema=PayloadSchemaType.KEYWORD)
+with warnings.catch_warnings(record=True) as said:
+    warnings.simplefilter("always")
+    client.create_payload_index("help", field_name="category",
+                                field_schema=PayloadSchemaType.KEYWORD)
+print("warning:", said[0].message)
 print("indexed vectors:", client.get_collection("help").indexed_vectors_count)
 EOF_FILE
 put two.py <<'EOF_FILE'
@@ -233,6 +238,8 @@ on 'python qd.py'
 
 block qdrant-local
 on 'python qd_local.py'
+
+block qdrant-files
 on 'find qdrant -type f | sort'
 
 block two

@@ -1,0 +1,710 @@
+[
+  {
+    "id": "ex-0whk7pmv",
+    "version": 1,
+    "section": "the-request",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana's code works against labembed. What does she change to run it against OpenAI's real service?",
+    "hint": "The lesson lists what changes and says nothing else does.",
+    "choices": [
+      {
+        "text": "Rewrite the calls with `requests`, since the SDK only talks to the lab",
+        "correct": false,
+        "why": "The SDK is OpenAI's own library; the lab was built so that it needs no changes. Its default address is OpenAI's."
+      },
+      {
+        "text": "Drop OPENAI_BASE_URL, use her own key, and name text-embedding-3-small",
+        "correct": true,
+        "why": "Right. The base URL, the key and the model name are the only differences; the calls stay the same."
+      },
+      {
+        "text": "Install a different version of the openai package",
+        "correct": false,
+        "why": "The same version talks to both. Nothing in the package is specific to the lab."
+      },
+      {
+        "text": "Add `encoding_format=\"base64\"` to every call",
+        "correct": false,
+        "why": "The SDK already adds it on its own, against the lab and against OpenAI alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdxaccmn",
+    "version": 1,
+    "section": "the-request",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which description of labembed matches the lesson?",
+    "hint": "Separate what is real from what is imitated.",
+    "choices": [
+      {
+        "text": "A recording of real OpenAI responses, replayed for each request",
+        "correct": false,
+        "why": "Nothing was recorded from OpenAI; no provider could be reached. Every vector is computed when the request arrives."
+      },
+      {
+        "text": "OpenAI's own open-source server, run locally",
+        "correct": false,
+        "why": "OpenAI publishes no such server. labembed was written for the course."
+      },
+      {
+        "text": "A course-written server in OpenAI's format, serving real vectors from two local models",
+        "correct": true,
+        "why": "Right. The wire format is imitated; the vectors come from all-MiniLM-L6-v2 and WordLlama, under the lab's own names."
+      },
+      {
+        "text": "A proxy that forwards requests to OpenAI and caches the vectors",
+        "correct": false,
+        "why": "It forwards nothing anywhere. The machine could not reach OpenAI at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxc59jts",
+    "version": 1,
+    "section": "the-request",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, asking for `text-embedding-3-small` raised `NotFoundError` with status 404. Why?",
+    "hint": "Read the message labembed sent back.",
+    "choices": [
+      {
+        "text": "The model was retired by OpenAI",
+        "correct": false,
+        "why": "text-embedding-3-small is on the price sheet and is the name to use against OpenAI. The refusal is the lab's."
+      },
+      {
+        "text": "The key in the environment has no access to that model",
+        "correct": false,
+        "why": "A key problem is a 401, as the first refusal showed. This was a 404 about the model name."
+      },
+      {
+        "text": "labembed refuses real model names so that no lab vector passes as OpenAI's",
+        "correct": true,
+        "why": "Right. It serves lab-minilm and lab-wordllama and nothing else, on purpose."
+      },
+      {
+        "text": "The SDK spells the name differently and the server cannot find it",
+        "correct": false,
+        "why": "The SDK sends the name exactly as written, as the raw request body showed in the next section."
+      }
+    ]
+  },
+  {
+    "id": "ex-vn8ms031",
+    "version": 1,
+    "section": "the-request",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With curl, the key travels in the header `Authorization: ___ $OPENAI_API_KEY`.",
+    "hint": "The same word appears before every OpenAI key in that header.",
+    "blanks": [
+      {
+        "accept": [
+          "Bearer"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8mrrvqsy",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where in an embeddings response is the vector for the second text of the input list?",
+    "hint": "Look at what response.py printed for each object.",
+    "choices": [
+      {
+        "text": "In the `data` object whose `index` is 1",
+        "correct": true,
+        "why": "Right. Each object carries the position of its text, counting from 0, and its `embedding`."
+      },
+      {
+        "text": "In `usage`, next to the token count",
+        "correct": false,
+        "why": "`usage` holds only counts of tokens. The vectors are in `data`."
+      },
+      {
+        "text": "In a second response, since the API returns one response per text",
+        "correct": false,
+        "why": "One request with three texts returned one response with three objects in `data`."
+      },
+      {
+        "text": "In `model`, which lists the vectors the model produced",
+        "correct": false,
+        "why": "`model` is just the model's name, lab-minilm here."
+      }
+    ]
+  },
+  {
+    "id": "ex-pr1a75ac",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The objects in `data` came back in the order of the inputs. Why does the lesson still sort by `index`?",
+    "hint": "What would a mistake look like if the order ever differed?",
+    "choices": [
+      {
+        "text": "Sorting makes the vectors normalised",
+        "correct": false,
+        "why": "Sorting changes their order, not their values. They arrive at length 1 already."
+      },
+      {
+        "text": "The index is the field that names the text; position is an arrangement nobody checks",
+        "correct": true,
+        "why": "Right. Filed by position, a vector out of place would sit under the wrong article and raise no error."
+      },
+      {
+        "text": "The SDK returns them in reverse order unless they are sorted",
+        "correct": false,
+        "why": "response.py printed them in order 0, 1, 2 without sorting."
+      },
+      {
+        "text": "Sorting is required before the vectors can be stored",
+        "correct": false,
+        "why": "Nothing requires it. It is how you make sure each vector is stored against the right text."
+      }
+    ]
+  },
+  {
+    "id": "ex-8v2tarcy",
+    "version": 1,
+    "section": "the-response",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The raw request body showed `\"encoding_format\": \"base64\"`, which Ana's code never wrote. What happened?",
+    "hint": "Compare what crossed the wire with what the SDK handed over.",
+    "choices": [
+      {
+        "text": "The lab rewrote the request because it cannot send floats",
+        "correct": false,
+        "why": "labembed sends floats when asked: the first curl call, with no encoding_format, got a list of numbers."
+      },
+      {
+        "text": "The SDK asked for base64 to shrink the response, then decoded it into floats",
+        "correct": true,
+        "why": "Right. The decoded bytes matched the SDK's list exactly, and the base64 answer was much smaller."
+      },
+      {
+        "text": "Base64 is required by OpenAI's API, so every client must send it",
+        "correct": false,
+        "why": "The default is float; curl got numbers without asking. Base64 is an option the SDK chooses."
+      },
+      {
+        "text": "The SDK compresses the input text before sending it",
+        "correct": false,
+        "why": "The input went as plain text in the JSON body. Base64 applies to the vectors coming back."
+      }
+    ]
+  },
+  {
+    "id": "ex-97kgq3np",
+    "version": 1,
+    "section": "the-response",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "text-embedding-3-small returns 1,536 numbers. Sent as little-endian float32 and encoded in base64 (4 characters for every 3 bytes), how many characters is one vector?",
+    "hint": "First the bytes: 4 per float32.",
+    "value": 8192,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-jap8bn4m",
+    "version": 1,
+    "section": "the-response",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to one vector between the server and Ana's list of floats, when she calls the SDK.",
+    "hint": "The request leaves before the vector exists.",
+    "items": [
+      "The SDK sends the request with encoding_format set to base64",
+      "The server computes the vector",
+      "The server writes its float32 bytes as base64 text in the JSON",
+      "The SDK decodes the base64 back into bytes",
+      "The SDK reads the bytes as little-endian float32 and returns a list"
+    ],
+    "trap": "The base64 text is written by the server and decoded by the SDK: decoding comes after the JSON arrives, not before the request leaves."
+  },
+  {
+    "id": "ex-3426ac9t",
+    "version": 1,
+    "section": "batching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A batch of 500 texts includes one empty string. What happens to the request?",
+    "hint": "Look at limits.py's first line.",
+    "choices": [
+      {
+        "text": "The empty string gets a zero vector and the rest are embedded",
+        "correct": false,
+        "why": "There is no zero vector: the server refused the request with a 400."
+      },
+      {
+        "text": "The empty string is skipped and 499 vectors come back",
+        "correct": false,
+        "why": "Nothing is skipped. The index of every other vector would then be ambiguous, and the server refuses instead."
+      },
+      {
+        "text": "The whole request is refused with 400",
+        "correct": true,
+        "why": "Right. One blank text loses the other 499, so filter empty texts out before sending."
+      },
+      {
+        "text": "The SDK retries until the server accepts it",
+        "correct": false,
+        "why": "A 400 is not retried: sending the same request again gets the same answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-kf062kma",
+    "version": 1,
+    "section": "batching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "tiktoken counted 2,205 tokens in the help centre, but labembed's log added up to a different number. Why?",
+    "hint": "Who counted each number, and with what?",
+    "choices": [
+      {
+        "text": "labembed counts characters, not tokens",
+        "correct": false,
+        "why": "It counts tokens, but with a different tokeniser. Characters would give a far larger number."
+      },
+      {
+        "text": "tiktoken skips the titles of the articles",
+        "correct": false,
+        "why": "batch.py counted title and body together, the same text that was sent."
+      },
+      {
+        "text": "Each count uses a different model's tokeniser",
+        "correct": true,
+        "why": "Right. A bill is counted with the provider's tokeniser, so estimate with the provider's counter and check against usage."
+      },
+      {
+        "text": "Some requests were sent twice and counted twice",
+        "correct": false,
+        "why": "The log shows exactly three requests, 16, 16 and 8 texts. Nothing was repeated."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnwphah4",
+    "version": 1,
+    "section": "batching",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "OpenAI's text-embedding-3 models count tokens with tiktoken's ___ encoding.",
+    "hint": "Its name starts with cl and ends with base.",
+    "blanks": [
+      {
+        "accept": [
+          "cl100k_base",
+          "cl100k"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-28m99ze0",
+    "version": 1,
+    "section": "dimensions-parameter",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `dimensions=128` ask a text-embedding-3 model for?",
+    "hint": "Compare with what dims.py measured.",
+    "choices": [
+      {
+        "text": "A vector of 128 numbers, renormalised to length 1",
+        "correct": true,
+        "why": "Right. The server keeps the first 128 coordinates and divides by their length, which is why the API's vectors and the hand-renormalised ones matched."
+      },
+      {
+        "text": "The 128 texts most similar to the input",
+        "correct": false,
+        "why": "That is a search, which the embeddings endpoint does not do. It returns vectors, not neighbours."
+      },
+      {
+        "text": "A vector computed by a smaller, cheaper model",
+        "correct": false,
+        "why": "Same model, same price per token; the request names the model, and the parameter only shortens its output."
+      },
+      {
+        "text": "A vector with 128 bits per number instead of 32",
+        "correct": false,
+        "why": "The numbers stay float32. The parameter changes how many there are."
+      }
+    ]
+  },
+  {
+    "id": "ex-q25d46jc",
+    "version": 1,
+    "section": "dimensions-parameter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana keeps the first 64 of WordLlama's 256 numbers herself and ranks by dot product without renormalising. What goes wrong?",
+    "hint": "What did dims.py print about the lengths?",
+    "choices": [
+      {
+        "text": "Nothing: a dot product ignores length",
+        "correct": false,
+        "why": "A dot product grows with length, as lesson 2 showed. That is why the lengths matter here."
+      },
+      {
+        "text": "The vectors become 64 bytes each, too small to compare",
+        "correct": false,
+        "why": "64 float32 numbers are 256 bytes, and the API's 64-number vectors compared fine."
+      },
+      {
+        "text": "The search crashes because the lengths differ",
+        "correct": false,
+        "why": "Nothing crashes. The ranking quietly gets worse, which is harder to notice."
+      },
+      {
+        "text": "The cut vectors have different lengths, so long ones win for being long",
+        "correct": true,
+        "why": "Right. Renormalised, the same cut vectors match the API's, question for question."
+      }
+    ]
+  },
+  {
+    "id": "ex-42e7fexg",
+    "version": 1,
+    "section": "dimensions-parameter",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team stores 768-number vectors from an open model and plans to cut them to 256 to save space, the way `dimensions` does. What should they check first?",
+    "hint": "Why could lab-wordllama be cut and lab-minilm not?",
+    "choices": [
+      {
+        "text": "That the vectors are float32 and not float16",
+        "correct": false,
+        "why": "The number type does not decide whether a prefix is useful. How the model was trained does."
+      },
+      {
+        "text": "Whether the model was trained so that its first coordinates work alone",
+        "correct": true,
+        "why": "Right. Without that training a prefix keeps an arbitrary part of what the model learned. Measure recall at 256 on their own questions too."
+      },
+      {
+        "text": "That 256 divides 768 exactly",
+        "correct": false,
+        "why": "Any prefix length can be kept. Divisibility has nothing to do with what the coordinates carry."
+      },
+      {
+        "text": "Whether their database has a column type for 256 numbers",
+        "correct": false,
+        "why": "Storage can hold any length. The question is whether the shorter vector still finds the right documents."
+      }
+    ]
+  },
+  {
+    "id": "ex-d48majrk",
+    "version": 1,
+    "section": "dimensions-parameter",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes does one vector take with `dimensions=128`, stored as float32?",
+    "hint": "dims.py printed the bytes for each size.",
+    "value": 512,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-gc83p7xv",
+    "version": 1,
+    "section": "dimensions-parameter",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of getting a WordLlama vector to its recall@3 on the 24 questions, as dims.py measured.",
+    "hint": "Cutting by hand without renormalising did worst.",
+    "pairs": [
+      {
+        "left": "dimensions=256",
+        "right": "24 of 24"
+      },
+      {
+        "left": "dimensions=128",
+        "right": "23 of 24"
+      },
+      {
+        "left": "dimensions=64",
+        "right": "21 of 24"
+      },
+      {
+        "left": "cut to 64 by hand, not renormalised",
+        "right": "20 of 24"
+      }
+    ],
+    "right_distractors": [
+      "22 of 24"
+    ]
+  },
+  {
+    "id": "ex-gqgxxgf5",
+    "version": 1,
+    "section": "cost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At LiteLLM's sheet price of $0.020 per million tokens for text-embedding-3-small, what does it cost to embed 2 million chunks of 300 tokens each, in US dollars?",
+    "hint": "First the total tokens, then divide by a million.",
+    "value": 12,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-4s3dzc5n",
+    "version": 1,
+    "section": "cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sheet lists text-embedding-3-small at 0.020 and its batch price at 0.010 per million tokens. What does the lower price buy less of?",
+    "hint": "How does the Batch API return results?",
+    "choices": [
+      {
+        "text": "Fewer dimensions in each vector",
+        "correct": false,
+        "why": "The model and its vectors are the same; only how and when they are delivered changes."
+      },
+      {
+        "text": "Speed: results come back later, within a day, instead of in the response",
+        "correct": true,
+        "why": "Right. You upload a file of requests and collect the results afterwards."
+      },
+      {
+        "text": "Accuracy, because batch requests use an older model",
+        "correct": false,
+        "why": "The batch price is listed for the same model name. Nothing says a different model answers."
+      },
+      {
+        "text": "Retries: failed batch requests are not retried",
+        "correct": false,
+        "why": "The lesson says nothing about that, and it is not what the price difference is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-89gm1vqf",
+    "version": 1,
+    "section": "cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana budgets $10.00 to embed a million 500-token documents with text-embedding-3-small. Six months later the bill is higher. Which explanation fits the lesson?",
+    "hint": "What else gets embedded besides the documents, once?",
+    "choices": [
+      {
+        "text": "Overlapping chunks re-embedded text, and every user query was embedded too",
+        "correct": true,
+        "why": "Right. Both add tokens the one-off calculation never counted."
+      },
+      {
+        "text": "The SDK sends each vector twice, once as base64 and once as floats",
+        "correct": false,
+        "why": "It asks for base64 only and decodes it locally. Only tokens are billed, not bytes."
+      },
+      {
+        "text": "Vectors are billed per dimension, and 1,536 is more than expected",
+        "correct": false,
+        "why": "An embedding API bills input tokens. The number of dimensions does not appear on the sheet's price."
+      },
+      {
+        "text": "Retries of rate-limited requests were billed as successful ones",
+        "correct": false,
+        "why": "A refused request returns no vector. The lesson's extra costs come from more text, not from refusals."
+      }
+    ]
+  },
+  {
+    "id": "ex-efqt2fg4",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "labembed was set to refuse the next two requests with 429. What did Ana's program see when it called `embeddings.create` once?",
+    "hint": "Compare the program's output with the log.",
+    "choices": [
+      {
+        "text": "A RateLimitError on the first refusal",
+        "correct": false,
+        "why": "The SDK retries 429 by itself, up to max_retries, before raising anything."
+      },
+      {
+        "text": "Two warnings, then the vector",
+        "correct": false,
+        "why": "Nothing was printed or raised about the refusals; they appear only in the server's log."
+      },
+      {
+        "text": "A normal answer, a little late",
+        "correct": true,
+        "why": "Right. Three requests reached the server; the program saw one successful call that took longer."
+      },
+      {
+        "text": "An empty vector, because the request was refused",
+        "correct": false,
+        "why": "The answer had all 384 numbers. The third attempt succeeded."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsjbmp18",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these failures does the openai SDK retry by itself?",
+    "hint": "Would sending the same request again change the answer?",
+    "choices": [
+      {
+        "text": "400, because the input contained an empty string",
+        "correct": false,
+        "why": "The request itself is wrong, so it would fail again. The log showed a single request for it."
+      },
+      {
+        "text": "401, because the key is wrong",
+        "correct": false,
+        "why": "A wrong key stays wrong. The SDK raises AuthenticationError at once."
+      },
+      {
+        "text": "404, because the model name is unknown",
+        "correct": false,
+        "why": "An unknown model stays unknown. The SDK raises NotFoundError at once."
+      },
+      {
+        "text": "429, because the account is over its rate limit",
+        "correct": true,
+        "why": "Right. The request is fine and the moment is wrong, so waiting and retrying can succeed."
+      }
+    ]
+  },
+  {
+    "id": "ex-3w8fy2t2",
+    "version": 1,
+    "section": "errors-and-retries",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With three failures queued in labembed, put what happened during one call in order.",
+    "hint": "max_retries is 2.",
+    "items": [
+      "The first attempt is refused with 429",
+      "The SDK waits about a second",
+      "The first retry is refused with 429",
+      "The second retry is refused with 429",
+      "The SDK raises RateLimitError"
+    ],
+    "trap": "There is no third retry: max_retries 2 means two retries after the first attempt, three requests in all."
+  },
+  {
+    "id": "ex-ntaydg5v",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana writes a nightly job that embeds every help article through the SDK. Which of these belong in it? Choose all that apply.",
+    "hint": "Think about which failures each one prevents, and which it causes.",
+    "choices": [
+      {
+        "text": "Drop empty texts before building each batch",
+        "correct": true,
+        "why": "Yes. One empty string makes the server refuse the whole request."
+      },
+      {
+        "text": "Put each slice's vectors in the order of their index",
+        "correct": true,
+        "why": "Yes. The index is what ties a vector to its text."
+      },
+      {
+        "text": "Wrap each call in her own loop of three attempts",
+        "correct": false,
+        "why": "No. The SDK already retries 429s; her loop would multiply the attempts on a provider that is already refusing."
+      },
+      {
+        "text": "Ask lab-minilm for dimensions=128 to save space",
+        "correct": false,
+        "why": "No. lab-minilm has one fixed size and refuses the parameter with a 400."
+      }
+    ]
+  },
+  {
+    "id": "ex-5y434pzj",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each exception the SDK raised in this lesson to the HTTP status behind it.",
+    "hint": "One status never came up.",
+    "pairs": [
+      {
+        "left": "AuthenticationError",
+        "right": "401"
+      },
+      {
+        "left": "NotFoundError",
+        "right": "404"
+      },
+      {
+        "left": "BadRequestError",
+        "right": "400"
+      },
+      {
+        "left": "RateLimitError",
+        "right": "429"
+      }
+    ],
+    "right_distractors": [
+      "500"
+    ]
+  },
+  {
+    "id": "ex-xtw246s5",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the client's default settings, one call reaches the server at most ___ times before the SDK gives up on a 429.",
+    "hint": "The first attempt, plus max_retries.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "three"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
