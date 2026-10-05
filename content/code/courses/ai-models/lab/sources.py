@@ -11,6 +11,7 @@ course was recorded on could reach when the providers' own sites could not.
     sources quote NAME PATTERN    the lines that match PATTERN (a regular
                                   expression, case-insensitive), each with its
                                   line number, wrapped at 88 columns
+    sources lines NAME FROM TO    lines FROM to TO, exactly as they are
     sources words NAME            how long the document is
     sources fetch                 read every document into the cache, once
 
@@ -67,7 +68,7 @@ def fetch(name):
 
 def main():
     args = sys.argv[1:]
-    if not args or args[0] not in ("list", "quote", "words", "fetch"):
+    if not args or args[0] not in ("list", "quote", "lines", "words", "fetch"):
         sys.exit(__doc__)
     if args[0] == "fetch":
         for name in DOCS:
@@ -85,6 +86,11 @@ def main():
     print(f"# {repo}@{commit[:8]} {path}")
     if args[0] == "words":
         print(f"{len(text.split()):,} words, {len(text.splitlines()):,} lines")
+        return
+    if args[0] == "lines":
+        lines = text.splitlines()
+        for i in range(int(args[2]), int(args[3]) + 1):
+            print(f"{i:4}| {lines[i - 1]}".rstrip())
         return
     pattern = re.compile(args[2], re.I)
     hits = 0
