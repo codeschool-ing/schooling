@@ -10,9 +10,9 @@ it really adds.
 
 ## Four bytes a number
 
-Every coordinate is a `float32`, so a vector costs **4 × d bytes**, whatever text it came from:
-1,536 bytes for the 384 numbers of all-MiniLM-L6-v2 (lesson 1 printed it), 6,144 for the 1536 of
-text-embedding-3-small, and twice that again for the 3072 of text-embedding-3-large or
+Every coordinate is a `float32`, so a vector costs **4 × d bytes**, whatever text it came from.
+That is 1,536 bytes for the 384 numbers of all-MiniLM-L6-v2 (lesson 1 printed it), 6,144 for the
+1536 of text-embedding-3-small, and twice that again for the 3072 of text-embedding-3-large or
 gemini-embedding-001. The dimension is printed in the `dims` column of the price sheet that section 05 of this lesson
 quotes, and it is the one number on that sheet that you pay for every month rather than once.
 
@@ -66,7 +66,7 @@ ana@lab:~/emb$ python files.py
 
 **A file costs 4 × d bytes per vector and nothing more.** NumPy's `.npy` puts a header of 128
 bytes in front of the whole array and FAISS's flat index 45, so over 20,000 vectors neither moves
-the per-vector column off 1536.0 or 6144.0. That is the floor: the numbers, laid end to end.
+the per-vector column off `1536.0` or `6144.0`. That is the floor: the numbers, laid end to end.
 
 ## In PostgreSQL, a row costs more than its vector
 
@@ -120,16 +120,16 @@ ana@lab:~/emb$ psql -f sizes.sql
 
 The two rows pay their overhead in different ways, so read them apart.
 
-**At 384 dimensions a row costs 1676 bytes to hold 1536 bytes of numbers.** pgvector stores a
-vector as its 4 × d bytes plus a header of 8, PostgreSQL adds its own header and a pointer to
-every row, and a page of 8 KB only takes whole rows, so the space left at the end of each page is
+**At 384 dimensions a row costs 1,676 bytes to hold 1,536 bytes of numbers.** pgvector stores a
+vector as its 4 × d bytes plus a header of 8, and PostgreSQL adds its own header and a pointer to
+every row. A page of 8 KB only takes whole rows, so the space left at the end of each page is
 wasted. `indexes` is the primary key, 466,944 bytes in both tables.
 
 **At 1536 dimensions the table proper is almost empty.** `heap` is 1,212,416 bytes and `toast` is
 163,840,000. A vector of 1536 dimensions, over 6 KB, is too big to share a page with its
 neighbours, so PostgreSQL moves it out of the row into the table's **TOAST** storage, cut into chunks, and leaves a pointer
 behind. pgvector 0.6.0 declares its type `STORAGE external`, which means moved out and never
-compressed. Counting everything, a row costs 8371 bytes for 6,144 bytes of numbers.
+compressed. Counting everything, a row costs 8,371 bytes for 6,144 bytes of numbers.
 
 Nothing here is a defect, and both overheads are fixed per row. What it means in practice is that
 **the raw arithmetic understates what a database will hold**, so when you budget, multiply by

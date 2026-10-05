@@ -1,18 +1,19 @@
 ---
-title: What reindexing costs
+title: O que custa reindexar
 version: 1
 ---
 
-Lesson 1 said that vectors from two models cannot be compared, and lesson 10 drew the migration
-plan that follows from it. The consequence for the budget is blunt: **changing the model means
-embedding every document again and building every index again**, and for a while keeping both.
-Teams tend to price that as the token bill alone. It is three bills, and on short texts the token
-bill is the smallest.
+A aula 1 disse que vetores de dois modelos não podem ser comparados, e a aula 10 traçou o plano de
+migração que vem disso. A consequência para o orçamento é direta: **trocar de modelo quer dizer
+transformar todos os documentos em vetores de novo e construir todos os índices de novo**, e por um
+tempo manter os dois. As equipes costumam calcular só a conta de tokens. São três contas, e em
+textos curtos a de tokens é a menor.
 
-## The tokens
+## Os tokens
 
-Prices in this course come from one place, LiteLLM's sheet at commit b9e71e990aed, which
-`prices.py` reads; the providers' own pages were out of reach from the machine this was recorded on.
+Os preços deste curso vêm de um só lugar, a tabela do LiteLLM no commit b9e71e990aed, que o
+`prices.py` lê; as páginas dos próprios provedores estavam fora de alcance na máquina em que isto
+foi gravado.
 
 ```
 ana@lab:~/emb$ python3 prices.py
@@ -31,9 +32,9 @@ mistral/mistral-embed          mistral                          0.100       -   
 ana@lab:~/emb$ python3 prices.py --json > prices.json
 ```
 
-The second command saves the same rows as JSON for a program to read. This one counts the tokens
-in every text the lab has that is not a question, times the local model on them, and scales both
-to a million:
+O segundo comando grava as mesmas linhas em JSON para um programa ler. Este aqui conta os tokens de
+todo texto do laboratório que não é pergunta, mede o tempo do modelo local sobre eles e escala as
+duas coisas para um milhão:
 
 ```schooling-example
 {
@@ -42,15 +43,15 @@ to a million:
   "parts": [
     {
       "code": "import json\nimport time\nimport tiktoken\nfrom minilm import embed\n\nrows = lambda f: [json.loads(l) for l in open(f\"data/{f}.jsonl\")]\ntexts = ([h[\"title\"] + \". \" + h[\"body\"] for h in rows(\"help\")]\n         + [b[\"title\"] + \". \" + b[\"blurb\"] for b in rows(\"books\")]\n         + [t[\"text\"] for t in rows(\"tickets\")])\nenc = tiktoken.get_encoding(\"cl100k_base\")\ntokens = sum(len(enc.encode(t)) for t in texts)\nprint(f\"{len(texts)} texts, {tokens:,} tokens, {tokens / len(texts):.1f} per text\")",
-      "note": "Every text in `data/` that is not a question, counted in cl100k_base tokens, the encoding OpenAI's text-embedding-3 models are billed in."
+      "note": "Todo texto de `data/` que não é pergunta, contado em tokens do cl100k_base, a codificação pela qual os modelos text-embedding-3 da OpenAI são cobrados."
     },
     {
       "code": "t = time.perf_counter()\nembed(texts)\ntook = time.perf_counter() - t\nrate = len(texts) / took\nprint(f\"all-MiniLM-L6-v2 on one core: {took:.2f} s, {rate:.0f} texts per second\")",
-      "note": "Embed them all once with the local model and time it. `minilm.py` runs on one thread, so this is one core's rate."
+      "note": "Transforma todos em vetores uma vez com o modelo local e mede o tempo. `minilm.py` roda numa só thread, então essa é a taxa de um núcleo."
     },
     {
       "code": "N = 1_000_000\nper = tokens / len(texts)\nprint(f\"{N:,} texts like these = {N * per:,.0f} tokens\")\nprint(f\"  here, one core:  {N / rate / 3600:5.1f} hours\")\nfor p in json.load(open(\"prices.json\")):\n    if p[\"model\"].startswith((\"text-embedding-3\", \"gemini\", \"cohere\", \"voyage\")):\n        print(f\"  {p['model']:28} ${N * per / 1e6 * p['usd_per_mtok']:8.2f}\")",
-      "note": "Scale to a million texts of the same average length: hours on this core, and dollars on each priced model in the sheet."
+      "note": "Escala para um milhão de textos do mesmo tamanho médio: horas neste núcleo e dólares em cada modelo com preço na tabela."
     }
   ]
 }
@@ -70,17 +71,19 @@ all-MiniLM-L6-v2 on one core: 2.48 s, 101 texts per second
   voyage/voyage-3.5-lite       $    0.45
 ```
 
-**A million texts like these cost $0.45 on text-embedding-3-small and $3.41 on
-gemini-embedding-001.** These texts are short, 22.7 tokens on average, so the bill scales with your
-own average length: chunks ten times longer cost ten times as much. Even so, the order of magnitude
-is dollars per million, and **it is rarely the token bill that makes a migration expensive.**
+**Um milhão de textos como estes custam US$ 0,45 no text-embedding-3-small e US$ 3,41 no
+gemini-embedding-001.** Estes textos são curtos, 22,7 tokens em média, então a conta acompanha o
+tamanho médio dos seus: trechos dez vezes mais longos custam dez vezes mais. Mesmo assim, a ordem de
+grandeza é de dólares por milhão, e **raramente é a conta de tokens que torna uma migração cara.**
 
-The local model has no bill and a clock instead: 101 texts a second on one core, 2.8 hours for the
-million. That is one core of this machine; more cores divide it, and longer texts multiply it.
+O modelo local não tem conta e tem um relógio no lugar: 101 textos por segundo num núcleo, 2,8 horas
+para o milhão. Isso é um núcleo desta máquina; mais núcleos dividem o tempo, e textos mais longos o
+multiplicam.
 
-## The index
+## O índice
 
-The vectors then have to go into a new index, and an HNSW index is built one insertion at a time:
+Depois os vetores precisam entrar num índice novo, e um índice HNSW é construído uma inserção de
+cada vez:
 
 ```python
 import time
@@ -108,21 +111,22 @@ ana@lab:~/emb$ python rebuild.py
  40,000 vectors    4.76 s   119.0 µs per vector
 ```
 
-Eight times the vectors took 4.76 s against 0.54 s, so **the build grows at least in proportion
-to the count**, because each insertion searches a graph that is bigger than the last one did. The
-per-vector column wanders from run to run on a machine doing other work, so read the totals. In
-pgvector the same build on 20,000 rows took `7385.761 ms` at 384 dimensions and `46553.018 ms` at 1536
-(section 03 of this lesson); dimension multiplies the cost of every comparison the build makes.
+Oito vezes mais vetores levaram 4,76 s contra 0,54 s, então **a construção cresce pelo menos na
+proporção da quantidade**, porque cada inserção busca num grafo maior do que a anterior encontrou. A
+coluna por vetor oscila de uma execução para outra numa máquina ocupada com outras coisas, então leia
+os totais. No pgvector a mesma construção sobre 20.000 linhas levou `7385.761 ms` com 384 dimensões e
+`46553.018 ms` com 1536 (seção 03 desta aula); a dimensão multiplica o custo de cada comparação que a
+construção faz.
 
-## Both at once
+## Os dois ao mesmo tempo
 
-A migration that does not stop the search keeps the old vectors and their index serving while the
-new ones are written and built, and only then moves the reads across. For that window **you store
-both sets**: the old model's rows and index plus the new model's, at the new model's dimension.
-Moving from 384 to 1536 dimensions in pgvector, with HNSW, takes a row from 1,676 + 2,048 bytes to
-8,371 + 8,192, and during the move you hold the sum. Section 07 of this lesson prices exactly that
-for a larger corpus.
+Uma migração que não para a busca mantém os vetores antigos e o índice deles servindo enquanto os
+novos são escritos e construídos, e só então muda as leituras. Nessa janela **você guarda os dois
+conjuntos**: as linhas e o índice do modelo antigo mais os do novo, na dimensão do novo. Passar de
+384 para 1536 dimensões no pgvector, com HNSW, leva uma linha de 1.676 + 2.048 bytes para 8.371 + 8.192,
+e durante a mudança você guarda a soma. A seção 07 desta aula calcula exatamente isso para um acervo
+maior.
 
-So reindexing costs tokens or hours of a CPU, the time to build the new index, and a period of
-double storage. Of the three, the last is the one to plan capacity for, because it arrives all at
-once and has to fit beside a system that is still serving.
+Então reindexar custa tokens ou horas de CPU, o tempo de construir o índice novo e um período de
+armazenamento em dobro. Das três, a última é a que pede planejamento de capacidade, porque chega de
+uma vez e precisa caber ao lado de um sistema que continua servindo.

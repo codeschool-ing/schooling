@@ -1,0 +1,481 @@
+{
+  "ex-7ym6a72k": {
+    "prompt": "`files.py` imprimiu `1536.0 per vector` tanto para `v384.npy` quanto para `flat384.faiss`. O que isso diz sobre um arquivo plano?",
+    "hint": "Compare com os bytes na memória, na linha de cima.",
+    "choices": [
+      {
+        "text": "Ele guarda só os números, mais um cabeçalho curto e nada além disso",
+        "why": "Certo. 4 × 384 dá 1.536, e os poucos bytes de cabeçalho que cada formato acrescenta somem quando divididos por 20.000 vetores."
+      },
+      {
+        "text": "O FAISS e o NumPy comprimem os vetores para o mesmo tamanho ao gravar",
+        "why": "Nenhum dos dois comprime nada aqui: os dois arquivos têm o tamanho que os vetores ocupam na memória, 30.720.000 bytes, mais um cabeçalho pequeno."
+      },
+      {
+        "text": "O tamanho depende dos valores aleatórios que synth.py sorteou",
+        "why": "Um float32 ocupa quatro bytes seja qual for o valor, e é por isso que a aula pôde medir tamanhos com vetores aleatórios."
+      },
+      {
+        "text": "Um índice plano do FAISS guarda cada vetor junto com os vizinhos dele",
+        "why": "Isso é um índice em grafo. Um índice plano é uma lista simples de vetores, comparados um a um na hora da busca."
+      }
+    ]
+  },
+  "ex-tcqvkq44": {
+    "prompt": "Na tabela de 1536 dimensões, `sizes.sql` mostrou `heap` com 1.212.416 bytes e `toast` com 163.840.000. Por que o heap é tão pequeno?",
+    "hint": "Qual o tamanho de um vetor de 1536 números float32, e qual o de uma página?",
+    "choices": [
+      {
+        "text": "O pgvector comprimiu os vetores dentro do heap",
+        "why": "O pgvector 0.6.0 declara o tipo como STORAGE external: levado para fora da linha e nunca comprimido. Os bytes estão no toast, não encolheram."
+      },
+      {
+        "text": "Os vetores ainda não tinham sido carregados quando sizes.sql rodou",
+        "why": "load.py já tinha impresso 20000 rows para v1536, e sizes.sql também contou 20000."
+      },
+      {
+        "text": "Cada vetor é grande demais para caber na linha e fica guardado fora dela",
+        "why": "Certo. Mais de 6 KB de números não cabem numa página de 8 KB junto com outros, então o PostgreSQL os leva para o armazenamento TOAST e deixa um ponteiro na linha."
+      },
+      {
+        "text": "O VACUUM ANALYZE levou os vetores para o índice da chave primária",
+        "why": "Um índice sobre id guarda ids. A coluna indexes tinha 466.944 bytes nas duas tabelas, pequena demais para guardar os vetores."
+      }
+    ]
+  },
+  "ex-pvdf2y92": {
+    "prompt": "Um modelo devolve 1024 números por texto em float32. Quantos bytes um vetor ocupa num arquivo plano, sem contar o cabeçalho do arquivo?",
+    "hint": "Um float32 tem quatro bytes, e um arquivo plano não acrescenta nada por vetor.",
+    "unit": "bytes"
+  },
+  "ex-exkbd30d": {
+    "prompt": "Quando um valor do pgvector é grande demais para ficar na linha, o PostgreSQL o leva para fora, para o armazenamento ___ da tabela, e deixa um ponteiro no lugar.",
+    "hint": "É a coluna que tinha 163.840.000 bytes na tabela de 1536 dimensões.",
+    "blanks": [
+      {
+        "accept": [
+          "TOAST"
+        ]
+      }
+    ]
+  },
+  "ex-f4cdfz34": {
+    "prompt": "O índice HNSW sobre `v384` ficou com 2.048 bytes por linha, mais que os 1.676 da tabela. O que há nele?",
+    "hint": "Para comparar uma consulta com um vetor, o índice precisa de alguma coisa.",
+    "choices": [
+      {
+        "text": "Uma cópia de cada vetor e as ligações para os vizinhos",
+        "why": "Certo. O pgvector guarda o vetor dentro do índice ao lado das ligações do grafo, então o índice é mais uma cópia mais as ligações."
+      },
+      {
+        "text": "O texto de cada linha, para mostrar resultados sem consultar a tabela",
+        "why": "A tabela nem tem coluna de texto, só id e embedding, e mesmo assim o índice pesa mais que ela."
+      },
+      {
+        "text": "Cada vetor guardado como float64, o que dobra o tamanho",
+        "why": "Dobrar 1.536 daria mais de 3.000 bytes por linha. O índice guarda os mesmos números de quatro bytes."
+      },
+      {
+        "text": "Uma entrada pequena por dimensão, 384 por linha",
+        "why": "Um índice HNSW tem um elemento por vetor, não por coordenada; o tamanho vem do vetor e das ligações dele."
+      }
+    ]
+  },
+  "ex-qg0fysst": {
+    "prompt": "O arquivo do hnswlib tinha 1,10 vez o arquivo plano com 384 dimensões e 1,02 vez com 1536, com o mesmo `M`. Por que a proporção cai?",
+    "hint": "O que o M decide, e ele depende da dimensão?",
+    "choices": [
+      {
+        "text": "O hnswlib guarda menos ligações para vetores mais longos",
+        "why": "O número de ligações é definido pelo M, que foi 16 nas duas execuções; a dimensão não o muda."
+      },
+      {
+        "text": "As ligações ocupam mais ou menos os mesmos bytes por vetor em qualquer tamanho",
+        "why": "Certo. Um custo fixo por vetor pesa um décimo diante de 1.536 bytes e bem menos diante de 6.144."
+      },
+      {
+        "text": "Vetores mais longos comprimem melhor quando o hnswlib os salva",
+        "why": "Nada é comprimido: o arquivo de 1536 tem 6.292,6 bytes por vetor, mais que os 6.144 bytes de números."
+      },
+      {
+        "text": "O índice de 1536 dimensões foi construído com um ef_construction menor",
+        "why": "graphs.py usa ef_construction=64 nos dois, e esse parâmetro afeta a qualidade e o tempo da construção, não o tamanho guardado."
+      }
+    ]
+  },
+  "ex-rwcxv7zd": {
+    "prompt": "Uma equipe quer um índice HNSW sobre os vetores de 3072 números do text-embedding-3-large no pgvector 0.6.0 do laboratório, sem atualizar. O que lhes dá um índice?",
+    "hint": "O erro citou um limite. Qual destas opções muda o que ele limita?",
+    "choices": [
+      {
+        "text": "Aumentar o maintenance_work_mem até a construção ter espaço",
+        "why": "A memória muda a velocidade da construção. A recusa foi sobre a coluna: mais de 2000 dimensões para hnsw."
+      },
+      {
+        "text": "Guardar a coluna como halfvec para cortar o tamanho pela metade",
+        "why": "O halfvec chegou no pgvector 0.7.0. O 0.6.0 do laboratório só tem vector, guardado em float32."
+      },
+      {
+        "text": "Cortar cada um para no máximo 2.000 coordenadas, renormalizando",
+        "why": "Certo. Com o parâmetro dimensions ou cortando e renormalizando, a coluna cabe no limite; a aula 7 e a seção 04 mediram o que encurtar custa."
+      },
+      {
+        "text": "Usar vector_l2_ops em vez de vector_cosine_ops",
+        "why": "A classe de operadores escolhe a distância. O limite de dimensões vale para o índice qualquer que seja a distância."
+      }
+    ]
+  },
+  "ex-0xrm3de3": {
+    "prompt": "Ligue cada forma de guardar os 20.000 vetores de 384 dimensões aos bytes por vetor que esta aula mediu para ela.",
+    "hint": "O arquivo plano é o piso; o índice do pgvector guarda o vetor mais as ligações.",
+    "pairs": [
+      {
+        "left": "arquivo plano do FAISS",
+        "right": "1536.0"
+      },
+      {
+        "left": "linha da tabela no pgvector",
+        "right": "1676"
+      },
+      {
+        "left": "índice HNSW do pgvector",
+        "right": "2048"
+      },
+      {
+        "left": "arquivo HNSW do hnswlib",
+        "right": "1684.6"
+      }
+    ],
+    "right_distractors": [
+      "6292.6"
+    ]
+  },
+  "ex-v46gp3ar": {
+    "prompt": "Guardar os vetores em float16 cortou os bytes pela metade. Quanto da vizinhança completa isso manteve?",
+    "hint": "Leia a coluna top-10 kept nas linhas de float16.",
+    "choices": [
+      {
+        "text": "Mais ou menos metade, acompanhando os bytes",
+        "why": "Essa é a imagem proporcional que a seção quis testar. Cortar os bytes desse jeito não mudou quase nada."
+      },
+      {
+        "text": "Tudo no MiniLM, 0,999 no WordLlama",
+        "why": "Certo. O float16 guarda precisão suficiente para os dez vizinhos mais próximos de cada texto ficarem onde estavam."
+      },
+      {
+        "text": "Nenhuma das 24 perguntas pôde mais ser respondida",
+        "why": "Os dois modelos responderam às 24 perguntas exatamente como em float32: 19 e 22 no MiniLM, 20 e 24 no WordLlama."
+      },
+      {
+        "text": "0,705 no MiniLM e 0,600 no WordLlama",
+        "why": "Essas são as linhas de binário, um bit por número, não as de float16."
+      }
+    ]
+  },
+  "ex-3b32qdd0": {
+    "prompt": "Em binário, o `r@3` do MiniLM foi de 22/24 para 23/24, enquanto ele manteve só 0,705 dos vizinhos do top-10. O que concluir?",
+    "hint": "Quantas perguntas o r@3 conta, e quantos textos a outra coluna cobre?",
+    "choices": [
+      {
+        "text": "Vetores binários buscam melhor que float32 neste modelo",
+        "why": "Quase um terço dos vizinhos de cada texto mudou. Uma pergunta a mais em 24 está dentro do que o acaso mexe."
+      },
+      {
+        "text": "As 24 perguntas são poucas demais para ver a mudança",
+        "why": "Certo. A medida de vizinhos, sobre todos os textos do conjunto, enxergou a mudança com clareza; um conjunto julgado pequeno não."
+      },
+      {
+        "text": "A medida em float32 tinha um defeito que o binário corrigiu",
+        "why": "O float32 é a referência das duas colunas, e ele reproduziu os 19 e 22 da aula 3."
+      },
+      {
+        "text": "O binário mantém os mesmos vizinhos, então o recall só pode ficar igual ou subir",
+        "why": "Ele manteve 0,705 deles, então uns três em cada dez vizinhos eram outros."
+      }
+    ]
+  },
+  "ex-x4aeapb3": {
+    "prompt": "Você pode gastar uns 256 bytes por vetor no WordLlama. Pelo `shrink.py`, qual escolha mantém mais da vizinhança completa?",
+    "hint": "Várias linhas custam uns 256 bytes. Compare a última coluna delas.",
+    "choices": [
+      {
+        "text": "As 64 primeiras dimensões, em float32",
+        "why": "256 bytes e 0,642 mantidos: cortar números custou muito mais do que cortar bits."
+      },
+      {
+        "text": "Qualquer uma, já que bytes iguais carregam a mesma informação",
+        "why": "As linhas perto de 256 bytes mantiveram entre 0,642 e 0,995, então bytes iguais não dão vizinhanças iguais."
+      },
+      {
+        "text": "As 128 primeiras dimensões, em float16",
+        "why": "256 bytes e 0,772 mantidos: melhor que 64 dimensões, ainda bem abaixo das 256 dimensões completas em int8."
+      },
+      {
+        "text": "As 256 dimensões completas, guardadas em int8",
+        "why": "Certo. 260 bytes e 0,995 mantidos. No mesmo tamanho, menos bits por número ganham de menos números neste modelo."
+      }
+    ]
+  },
+  "ex-ynr3hxc9": {
+    "prompt": "Os 384 números do MiniLM são guardados em int8, um byte cada, mais uma escala float32 por vetor, como faz `shrink.py`. Quantos bytes por vetor isso dá?",
+    "hint": "Conte a escala também: um float32 tem quatro bytes.",
+    "unit": "bytes"
+  },
+  "ex-0xq95ar1": {
+    "prompt": "Ordene estas formas dos vetores do WordLlama pelo quanto mantiveram da vizinhança completa de 256 dimensões, da que mais manteve para a que menos manteve.",
+    "hint": "Bits por número custam pouco até o binário; dimensões custam a cada passo.",
+    "items": [
+      "256 dimensões em int8",
+      "128 dimensões em float32",
+      "64 dimensões em float32",
+      "256 dimensões em binário",
+      "64 dimensões em binário"
+    ],
+    "trap": "256 dimensões em binário não fica acima de 64 em float32: 0,600 contra 0,642, mesmo o binário mantendo todas as dimensões."
+  },
+  "ex-hgxxnvfe": {
+    "prompt": "`reembed.py` calculou US$ 0,45 para um milhão de textos como os do laboratório no text-embedding-3-small. O que isso diz sobre migrar um acervo para um modelo novo?",
+    "hint": "Compare esse valor com as outras duas contas que a seção cita.",
+    "choices": [
+      {
+        "text": "A conta de tokens raramente é a parte que torna uma migração cara de verdade",
+        "why": "Certo. Refazer os vetores custa dólares por milhão de textos curtos; o índice novo e o armazenamento em dobro são os custos maiores."
+      },
+      {
+        "text": "Migrações saem baratas no geral, já que os tokens são o custo todo",
+        "why": "Os tokens são uma de três contas. O índice precisa ser construído de novo e os dois conjuntos de vetores ficam guardados por um tempo."
+      },
+      {
+        "text": "Modelos hospedados sempre saem mais baratos que rodar um localmente",
+        "why": "O modelo local não tem conta nenhuma, só tempo: 2,8 horas num núcleo para o mesmo milhão."
+      },
+      {
+        "text": "Trechos mais longos custariam o mesmo, porque o preço é por texto",
+        "why": "O preço é por token, então trechos dez vezes mais longos custam dez vezes mais."
+      }
+    ]
+  },
+  "ex-4tazp10c": {
+    "prompt": "No `rebuild.py`, oito vezes mais vetores levaram 4,76 s contra 0,54 s. Por que uma construção HNSW não fica mais barata por vetor quando cresce?",
+    "hint": "O que envolve acrescentar um vetor ao grafo?",
+    "choices": [
+      {
+        "text": "O hnswlib usa menos threads em índices maiores",
+        "why": "Nada em rebuild.py define as threads, e a máquina tinha os mesmos 4 núcleos em todos os tamanhos."
+      },
+      {
+        "text": "Cada inserção é uma busca num grafo que não para de crescer",
+        "why": "Certo. Cada vetor acrescentado precisa achar seus vizinhos entre todos os já inseridos, então os últimos custam mais."
+      },
+      {
+        "text": "Vetores aleatórios são mais difíceis de posicionar que embeddings de verdade",
+        "why": "Os quatro tamanhos usam o mesmo tipo de vetor, então isso não mudaria o custo por vetor entre eles."
+      },
+      {
+        "text": "O arquivo precisa ser gravado de novo depois de cada inserção",
+        "why": "rebuild.py nunca salva o índice; o tempo é só o da construção."
+      }
+    ]
+  },
+  "ex-bwac9nap": {
+    "prompt": "Uma busca passa do MiniLM (384 dimensões) para um modelo de 1536 dimensões no pgvector com HNSW, sem sair do ar. O que você precisa guardar durante a mudança?",
+    "hint": "As leituras só mudam quando o índice novo está pronto.",
+    "choices": [
+      {
+        "text": "Só as linhas novas; as antigas podem sair assim que o preenchimento começa",
+        "why": "As linhas e o índice antigos são o que atende as buscas até o índice novo ficar pronto e as leituras mudarem."
+      },
+      {
+        "text": "Só as linhas antigas, até um momento em que todo vetor é convertido para 1536 dimensões",
+        "why": "Um vetor de 384 números não pode ser convertido num de 1536; cada texto precisa virar vetor de novo pelo modelo novo."
+      },
+      {
+        "text": "As linhas e os índices dos dois modelos",
+        "why": "Certo. De 1.676 + 2.048 bytes por linha para 8.371 + 8.192, e durante a mudança você guarda a soma."
+      },
+      {
+        "text": "As linhas novas, com o índice antigo mantido para responder às consultas",
+        "why": "Um índice construído sobre vetores de 384 dimensões não busca vetores de 1536, e de qualquer forma ele guarda a própria cópia dos vetores antigos."
+      }
+    ]
+  },
+  "ex-wwjcmdqs": {
+    "prompt": "`tombstones.py` apagou um vetor sim, outro não, do índice do hnswlib e salvou de novo. O que aconteceu com o arquivo?",
+    "hint": "Compare as linhas built e deleted.",
+    "choices": [
+      {
+        "text": "Caiu pela metade, já que metade dos vetores saiu",
+        "why": "O arquivo continuou com 33.691.896 bytes. O hnswlib não tira um vetor apagado do grafo."
+      },
+      {
+        "text": "Cresceu, porque cada exclusão é registrada",
+        "why": "O tamanho foi exatamente o mesmo antes e depois. Nada é acrescentado por uma exclusão além de uma marca."
+      },
+      {
+        "text": "Ficou do mesmo tamanho",
+        "why": "Certo. Os vetores apagados só são marcados; as buscas os pulam, mas eles continuam com as vagas e os bytes."
+      },
+      {
+        "text": "Foi regravado sem os ids apagados e depois completado até o tamanho original",
+        "why": "Não há regravação. A contagem continuou em 20000 elementos porque os marcados ainda estão no índice."
+      }
+    ]
+  },
+  "ex-0p6g08q3": {
+    "prompt": "No `vacuum.sql`, o VACUUM levou `128811.541 ms` e todos os tamanhos ficaram iguais. O que esse tempo comprou?",
+    "hint": "O que o VACUUM precisa fazer dentro de um índice HNSW para cada linha morta?",
+    "choices": [
+      {
+        "text": "Nada ainda: o VACUUM só agenda a limpeza para depois",
+        "why": "O VACUUM faz o trabalho quando roda. O que ele não faz é devolver o espaço liberado."
+      },
+      {
+        "text": "Tirou as entradas mortas e consertou as ligações que apontavam para elas",
+        "why": "Certo. O espaço liberado fica dentro dos arquivos para linhas novas, então os tamanhos não mudam; foi o REINDEX que os encolheu."
+      },
+      {
+        "text": "Reconstruiu os dois índices a partir das 10.000 linhas restantes",
+        "why": "Isso foi o REINDEX, em 6291.040 ms, e ele cortou os índices pela metade."
+      },
+      {
+        "text": "Devolveu as páginas liberadas ao sistema operacional",
+        "why": "O VACUUM simples guarda o espaço para reaproveitar dentro da tabela e dos índices; o heap continuou com 32.768.000 bytes."
+      }
+    ]
+  },
+  "ex-yhzmp2ga": {
+    "prompt": "Dois modelos devolvem 768 números cada. O alias é trocado para a coleção do modelo novo, mas o código continua transformando as perguntas em vetor com o modelo antigo. O que acontece?",
+    "hint": "No `alias.py` o descompasso falhou porque 384 não é 256.",
+    "choices": [
+      {
+        "text": "O Qdrant recusa a consulta com um erro de formato",
+        "why": "Isso aconteceu no alias.py só porque as dimensões eram diferentes. Com 768 contra 768 a conta funciona."
+      },
+      {
+        "text": "O alias rejeita consultas de outro modelo",
+        "why": "Um alias é um nome para uma coleção. Ele não sabe nada sobre qual modelo produziu o vetor da consulta."
+      },
+      {
+        "text": "Os resultados voltam sem erro, e estão errados",
+        "why": "Certo. Vetores de dois modelos não são comparáveis, então as notas não medem nada e parecem normais. É por isso que o nome do modelo anda junto com a versão."
+      },
+      {
+        "text": "As notas ficam um pouco menores, mas a ordem é a mesma",
+        "why": "As coordenadas de dois modelos não têm nada a ver uma com a outra, então não há motivo para a ordem sobreviver."
+      }
+    ]
+  },
+  "ex-q36b02jh": {
+    "prompt": "O hnswlib não tira do grafo um vetor apagado; só o marca, deixando o que se chama de ___.",
+    "hint": "Uma marca sobre algo que já se foi.",
+    "blanks": [
+      {
+        "accept": [
+          "lápide",
+          "lapide",
+          "lápides",
+          "tombstone",
+          "tombstones"
+        ]
+      }
+    ]
+  },
+  "ex-3fncyh99": {
+    "prompt": "Ponha em ordem os passos para mudar uma busca para um modelo novo sem tirá-la do ar.",
+    "hint": "O alias só muda quando a coleção nova consegue responder.",
+    "items": [
+      "Criar uma coleção versionada nova para o modelo novo",
+      "Transformar todo documento em vetor com o modelo novo dentro dela",
+      "Construir o índice da coleção nova",
+      "Apontar o alias e o embedding da consulta para a versão nova",
+      "Apagar a coleção antiga"
+    ],
+    "trap": "Apontar o alias antes de o índice estar pronto manda buscas para uma coleção que ainda não responde; apagar a antiga antes da troca deixa nada servindo."
+  },
+  "ex-jdc49atj": {
+    "prompt": "No orçamento de dois milhões de trechos, qual parte precisa caber na memória para as buscas continuarem rápidas?",
+    "hint": "Uma busca salta por uma estrutura página por página.",
+    "choices": [
+      {
+        "text": "O índice HNSW, 16,38 GB",
+        "why": "Certo. Uma busca percorre o grafo de página em página, e cada página fora da memória é uma leitura do disco."
+      },
+      {
+        "text": "A conta de tokens, US$ 12,00",
+        "why": "Isso é dinheiro pago uma vez ao provedor, não algo guardado na memória."
+      },
+      {
+        "text": "O texto dos trechos",
+        "why": "O texto só é buscado para os poucos resultados devolvidos; a busca em si percorre o índice."
+      },
+      {
+        "text": "Os vetores float32 crus, 12,29 GB, mantidos num arquivo separado",
+        "why": "Neste orçamento os vetores ficam no Postgres; o valor cru é o que os números sozinhos ocupariam, não uma cópia separada para carregar."
+      }
+    ]
+  },
+  "ex-ctrk3txy": {
+    "prompt": "O preço em lote do text-embedding-3-large na tabela é US$ 0,065 por milhão de tokens. Quanto custaria transformar em vetores os dois milhões de trechos de 300 tokens nesse preço, em dólares?",
+    "hint": "budget.py contou os tokens: 600.000.000.",
+    "unit": "USD"
+  },
+  "ex-20906avd": {
+    "prompt": "Um nome estável que a aplicação consulta, apontado para a coleção versionada que estiver no ar, é o que o Qdrant chama de ___.",
+    "hint": "alias.py troca um de help_v1 para help_v2.",
+    "blanks": [
+      {
+        "accept": [
+          "alias",
+          "apelido"
+        ]
+      }
+    ]
+  },
+  "ex-bjpbd0m0": {
+    "prompt": "Ligue cada forma de encolher os 256 números float32 do WordLlama ao que `shrink.py` mediu para ela.",
+    "hint": "Duas delas custam os mesmos bytes e mantêm vizinhanças bem diferentes.",
+    "pairs": [
+      {
+        "left": "float16",
+        "right": "Metade dos bytes, 0,999 mantido"
+      },
+      {
+        "left": "int8 com escala",
+        "right": "Cerca de um quarto dos bytes, 0,995 mantido"
+      },
+      {
+        "left": "binário",
+        "right": "Um trinta e dois avos dos bytes, 0,600 mantido"
+      },
+      {
+        "left": "as 64 primeiras dimensões",
+        "right": "Um quarto dos bytes, 0,642 mantido"
+      }
+    ],
+    "right_distractors": [
+      "O dobro dos bytes, 1,000 mantido"
+    ]
+  },
+  "ex-43d7arey": {
+    "prompt": "Quais destas opções diminuem o armazenamento mensal de vetores no pgvector? Marque todas as que se aplicam.",
+    "hint": "Armazenamento mensal é linhas vezes bytes por linha, para cada cópia guardada.",
+    "choices": [
+      {
+        "text": "Um modelo, ou uma configuração, com menos dimensões",
+        "why": "Sim. Toda linha de bytes acompanha a dimensão, na tabela e no índice."
+      },
+      {
+        "text": "Um REINDEX depois que boa parte das linhas foi apagada",
+        "why": "Sim. No vacuum.sql ele cortou os dois índices pela metade, enquanto o VACUUM sozinho não mudou tamanho nenhum."
+      },
+      {
+        "text": "Pagar o preço em lote no primeiro embedding",
+        "why": "Isso corta pela metade uma conta de tokens que se paga uma vez. Não guarda nada a menos."
+      },
+      {
+        "text": "Rodar VACUUM depois de cada exclusão",
+        "why": "O VACUUM guarda o espaço liberado dentro dos arquivos para reaproveitar; todos os tamanhos ficaram iguais depois dele."
+      }
+    ]
+  }
+}

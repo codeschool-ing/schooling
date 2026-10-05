@@ -50,8 +50,8 @@ add:      The number of elements exceeds the specified limit
 replaced: 20000 elements 33691896 bytes
 ```
 
-**Half the vectors were deleted and the index did not get smaller.** It still holds 20000 elements
-and its file is still 33691896 bytes, the same as before the delete. Searches skip the marked
+**Half the vectors were deleted and the index did not get smaller.** It still holds 20,000 elements
+and its file is still 33,691,896 bytes, the same as before the delete. Searches skip the marked
 ones, so none of the 1,000 results named a deleted id; they still walk through them on the way.
 And the space is not free for new vectors either, unless the index was created with
 `allow_replace_deleted=True` and the new ones are added with `replace_deleted=True`. Then 5,000 new
@@ -123,19 +123,19 @@ Timing is off.
 
 Three readings, in the order they happened.
 
-**After the delete, nothing changed size.** 10000 rows, and the table and both indexes exactly as
-large as with 20000.
+**After the delete, nothing changed size.** 10,000 rows, and the table and both indexes exactly as
+large as with 20,000.
 
-**VACUUM took 128811.541 ms and still nothing changed size.** It removed the dead rows from the
+**VACUUM took `128811.541 ms` and still nothing changed size.** It removed the dead rows from the
 indexes, and for an HNSW index that means repairing the links of every neighbour that pointed at
 one, which is why it is slow. The space it freed stays inside the files, ready for new rows, and
 is not given back.
 
-**REINDEX took 6291.040 ms and halved both indexes**, to 20488192 and 16891904 bytes, because it
-built them again from the 10000 rows that are left. `CONCURRENTLY` builds the new copies beside the
+**REINDEX took `6291.040 ms` and halved both indexes**, to 20,488,192 and 16,891,904 bytes, because it
+built them again from the 10,000 rows that are left. `CONCURRENTLY` builds the new copies beside the
 old ones and swaps them in, so searches keep working throughout; for that time, the index exists
 twice. pgvector's own documentation suggests reindexing before vacuuming an HNSW index for this
-reason. The table keeps its 32768000 bytes either way: its free space is reused by the next
+reason. The table keeps its 32,768,000 bytes either way: its free space is reused by the next
 inserts.
 
 **So rebuild when a large share has been deleted or replaced**, not on a timer. A graph full of
