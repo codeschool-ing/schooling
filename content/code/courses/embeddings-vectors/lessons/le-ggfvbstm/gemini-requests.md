@@ -54,7 +54,7 @@ text, so keep the list you sent.
 
 The log line labembed wrote for each request shows something the code does not. **The SDK sent
 both calls to `:batchEmbedContents`**, the endpoint for several texts, even the one with a single
-title: the method name is singular and the request on the wire is a batch of one. It also shows
+title. The method name is singular and the request on the wire is a batch of one. It also shows
 `task_type` arriving as `null` on the first call and as `RETRIEVAL_DOCUMENT` on the second, which
 is the next section's subject.
 
