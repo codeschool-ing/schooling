@@ -23,6 +23,8 @@ shapes of eight APIs, closely enough that each SDK talks to it unmodified.
     port 11434
     POST /api/chat  /api/generate  GET /api/tags  POST /api/show  GET /api/ps
     POST /v1/chat/completions                   Ollama, and its OpenAI shape
+    port 1234
+    GET  /v1/models  POST /v1/chat/completions  LM Studio's OpenAI-compatible server
 
 WHICH PROVIDER A REQUEST IS FOR is decided by its key, the way it is in the
 world: /v1/chat/completions is the same path at OpenAI and at Mistral, and only
@@ -94,6 +96,7 @@ COUNTER = itertools.count(1)
 SEEN = {}        # key -> deque of request times
 TURNS = {}       # (model, case) -> how many times it was asked, for the unstable cases
 STORED = {}      # response id -> (input items, output text), for previous_response_id
+LOADED = {}      # Ollama: model -> when keep_alive lets it go (epoch seconds)
 
 
 def load(name):
@@ -239,6 +242,8 @@ class Handler(BaseHTTPRequestHandler):
     def provider(self, path):
         if self.server.server_port == 11434:
             return "ollama"
+        if self.server.server_port == 1234:
+            return "lmstudio"
         if path.startswith("/openrouter/"):
             return "openrouter"
         if path.startswith("/hf/"):
@@ -251,7 +256,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def gate(self, provider):
         """The key, the injected failures and the rate limit, in that order."""
-        if provider == "ollama":
+        if provider in ("ollama", "lmstudio"):
             return {}
         key = self.key()
         if KEYS.get(key) != provider:
@@ -352,6 +357,8 @@ class Handler(BaseHTTPRequestHandler):
     def route(self, method, path, provider, req, headers, record):
         if provider == "ollama":
             return self.ollama(method, path, req, record)
+        if provider == "lmstudio":
+            return self.lmstudio(method, path, req, record)
         if method == "GET" and path == "/v1/models":
             return self.list_models(provider, headers)
         if method == "GET" and path == "/v1beta/models":
@@ -685,7 +692,18 @@ class Handler(BaseHTTPRequestHandler):
                  "details": {"format": "standin", "family": "standin", "parameter_size": "none",
                              "quantization_level": "none"}} for m in local]})
         if method == "GET" and path == "/api/ps":
-            return self.send_json(200, {"models": []})
+            now = time.time()
+            return self.send_json(200, {"models": [
+                {"name": m + ":latest", "model": m + ":latest", "size": 0,
+                 "digest": hashlib.sha256(m.encode()).hexdigest(),
+                 "details": {"format": "standin", "family": "standin"},
+                 "expires_at": time.strftime("%Y-%m-%dT%H:%M:%S-03:00", time.localtime(t)), "size_vram": 0}
+                for m, t in sorted(LOADED.items()) if t > now]})
+        if method == "GET" and path == "/v1/models":
+            # created is when the model was last modified, the same instant /api/tags gives
+            return self.send_json(200, {"object": "list", "data": [
+                {"id": m + ":latest", "object": "model", "created": 1789390931, "owned_by": "library"}
+                for m in local]})
         if method == "GET" and path in ("/", "/api/version"):
             return self.send_json(200, {"version": "standin"})
         if method != "POST":
@@ -702,13 +720,26 @@ class Handler(BaseHTTPRequestHandler):
                                         "details": {"format": "standin", "family": "standin"},
                                         "model_info": {"standin.context_length": MODELS[name]["window"]}})
         opts = req.get("options") or {}
+        # keep_alive, as docs/api.md describes it: how long the model stays
+        # loaded after this request, 5m when absent, 0 to unload now
+        alive = req.get("keep_alive", "5m")
+        if isinstance(alive, str):
+            unit = {"s": 1, "m": 60, "h": 3600}.get(alive[-1:], 1)
+            alive = float(alive.rstrip("smh") or 0) * unit
+        if alive == 0:
+            LOADED.pop(name, None)
+        else:
+            LOADED[name] = time.time() + (alive if alive > 0 else 10 ** 9)
+        if path == "/api/generate" and not req.get("prompt") and not req.get("system"):
+            return self.send_json(200, {"model": req["model"], "created_at": time.strftime("%Y-%m-%dT%H:%M:%S-03:00"),
+                                        "response": "", "done": True, "done_reason": "unload" if alive == 0 else "load"})
         if path == "/api/chat":
             system, rest = self.split_chat(req.get("messages") or [])
         elif path == "/api/generate":
             system, rest = req.get("system"), [{"role": "user", "content": req.get("prompt", "")}]
         else:
             raise Refusal(404, "not_found_error", "404 page not found")
-        window = opts.get("num_ctx", 2048)
+        window = opts.get("num_ctx", 4096)  # docs/faq.mdx: "a context window size of 4096 tokens"
         rest_trimmed = rest
         while len(rest_trimmed) > 1 and count(system, rest_trimmed) > window:
             rest_trimmed = rest_trimmed[1:]
@@ -740,9 +771,20 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write((json.dumps(dict(final, **piece(""))) + "\n").encode())
 
 
+    # -- LM Studio's server, on its own port: the OpenAI shape and one model
+    def lmstudio(self, method, path, req, record):
+        if method == "GET" and path == "/v1/models":
+            return self.send_json(200, {"object": "list", "data": [{"id": "standin-local", "object": "model"}]})
+        if method == "POST" and path == "/v1/chat/completions":
+            if req.get("model") != "standin-local":
+                raise Refusal(404, "model_not_found", f"Model '{req.get('model')}' not found")
+            return self.chat(req, {}, record)
+        raise Refusal(404, "not_found", f"Unexpected endpoint or method. ({method} {path})")
+
+
 def main():
     servers = []
-    for port in (int(os.environ.get("STANDIN_PORT", "8500")), 11434):
+    for port in (int(os.environ.get("STANDIN_PORT", "8500")), 11434, 1234):
         srv = ThreadingHTTPServer(("127.0.0.1", port), Handler)
         srv.daemon_threads = True
         servers.append(srv)

@@ -18,6 +18,7 @@
 #                         (lab/browse.mjs) in place of ana clicking
 #   127.0.0.1:8500        standin, which answers in place of eight providers
 #   127.0.0.1:11434       standin again, where Ollama listens
+#   127.0.0.1:1234        and again, where LM Studio's server listens
 #   /var/log/standin      every request standin received, one JSON line each,
 #                         which `wire` prints back (lab/wire.py)
 #
