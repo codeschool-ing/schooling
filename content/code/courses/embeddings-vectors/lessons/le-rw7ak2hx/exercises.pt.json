@@ -1,0 +1,488 @@
+{
+  "ex-j20det0d": {
+    "prompt": "`make_set.py` monta os seus 100.000 vetores como misturas de 334 embeddings reais, em vez de sortear vetores uniformemente aleatórios. Por que isso importa para testar um índice aproximado?",
+    "hint": "Em que um índice aproximado aposta?",
+    "choices": [
+      {
+        "text": "Vetores aleatórios demorariam demais para gerar nesse tamanho",
+        "why": "Números aleatórios são a coisa mais barata de fazer; uniform.py fez 100.000 deles na mesma execução. A velocidade de geração nunca foi o motivo."
+      },
+      {
+        "text": "Elas preservam as vizinhanças que textos de verdade formam, e o índice depende delas",
+        "why": "Certo. Em 384 dimensões, pontos uniformemente aleatórios ficam quase à mesma distância uns dos outros, então não há estrutura para células ou ligações aproveitarem."
+      },
+      {
+        "text": "O FAISS se recusa a indexar vetores que não foram produzidos por algum modelo de embedding",
+        "why": "O FAISS guarda quaisquer números float32 que receber; uniform.py indexou vetores aleatórios sem reclamação, e só o recall sofreu."
+      },
+      {
+        "text": "Vetores misturados são mais curtos, então toda busca roda mais rápido",
+        "why": "Cada mistura é dividida pelo seu comprimento, exatamente como os vetores aleatórios. Os dois conjuntos são vetores unitários de 384 números."
+      }
+    ]
+  },
+  "ex-7h8jmb95": {
+    "prompt": "`exact.py` mediu 2.492 ms por consulta para a busca exata sobre 100.000 vetores. Se o tempo continuar acompanhando a quantidade, cerca de quantos milissegundos por consulta 400.000 vetores levariam no mesmo núcleo?",
+    "hint": "Quatro vezes os vetores.",
+    "unit": "ms"
+  },
+  "ex-wnqbrfgg": {
+    "prompt": "Um colega propõe tornar a busca exata sublinear escrevendo os produtos escalares num código mais rápido. O que está errado no plano?",
+    "hint": "Conte as comparações, não a velocidade delas.",
+    "choices": [
+      {
+        "text": "Cada comparação fica mais barata, mas ainda há uma por vetor guardado",
+        "why": "Certo. A busca exata precisa comparar a consulta com todos os vetores para ter certeza dos 10 primeiros; só pular vetores muda a forma, e pular é o que torna uma busca aproximada."
+      },
+      {
+        "text": "Nada mesmo: código compilado transforma o custo linear num custo logarítmico",
+        "why": "Compilar muda a constante na frente, os 20,7 a 28,5 ns por vetor, e não como o total cresce com a quantidade."
+      },
+      {
+        "text": "Os produtos escalares já são feitos pelo banco, então código não os muda",
+        "why": "O FAISS os calcula no seu processo, e aritmética mais rápida deixa cada um mais barato. O problema é quantos eles são."
+      },
+      {
+        "text": "A busca exata é limitada pela rede, não pela aritmética",
+        "why": "exact.py rodou inteiro num processo, sem rede nenhuma, e o tempo dele ainda cresceu com o número de vetores."
+      }
+    ]
+  },
+  "ex-f06shrsp": {
+    "prompt": "Nesta aula, o que diz um recall@10 de 0,841 para o `HNSW32`?",
+    "hint": "Com o que o índice é comparado?",
+    "choices": [
+      {
+        "text": "Que 84,1% das perguntas das clientes acharam um artigo relevante",
+        "why": "Esse é o recall da aula 3, medido contra os julgamentos do curso sobre qual artigo é o certo. Este nunca olha para relevância."
+      },
+      {
+        "text": "Na média o índice devolveu 8,41 dos 10 primeiros da busca exata",
+        "why": "Certo. Recall aqui é concordância com a busca exata sobre os mesmos vetores, na média das 1.000 consultas."
+      },
+      {
+        "text": "O índice leu 84,1% dos vetores antes de parar",
+        "why": "O HNSW lê uma fração mínima da coleção; o recall conta quantos vizinhos verdadeiros foram achados, não quanto foi lido."
+      },
+      {
+        "text": "A nota de cada vetor devolvido foi 0,841 da nota verdadeira",
+        "why": "O recall conta ids que coincidem. As notas foram medidas à parte: 0,4593 na média contra 0,4750."
+      }
+    ]
+  },
+  "ex-5s32v6x1": {
+    "prompt": "A busca exata sobre um décimo aleatório da coleção chegou a um recall@10 de 0,104. Por que vale a pena imprimir esse número?",
+    "hint": "Todo índice lê só uma parte da coleção.",
+    "choices": [
+      {
+        "text": "Ele prova que amostrar é um bom índice aproximado",
+        "why": "Ler um décimo para achar um décimo dos vizinhos é o pior que uma leitura parcial faz na média; um índice existe para superar isso."
+      },
+      {
+        "text": "Ele mostra que o gabarito foi calculado errado",
+        "why": "Um décimo aleatório deve guardar cerca de um décimo de quaisquer dez vetores, e 0,104 é exatamente isso. Ele confirma que a medida funciona."
+      },
+      {
+        "text": "É a base: ler uma fração às cegas acha essa fração, e um índice tem de superar a própria fração",
+        "why": "Certo. O HNSW32 leu bem menos de um décimo e achou 0,841, que é o valor de adivinhar onde estão os vizinhos."
+      },
+      {
+        "text": "É o recall que todo índice alcança com os parâmetros padrão",
+        "why": "O HNSW32 com os padrões do FAISS chegou a 0,841 na mesma execução. Os padrões variam por índice e nenhum é ajustado para um décimo."
+      }
+    ]
+  },
+  "ex-bveg0fd7": {
+    "prompt": "Duas equipes usam o mesmo índice HNSW com recall@10 de 0,84. Uma entrega os 10 primeiros trechos a um modelo de linguagem; a outra verifica se um arquivo enviado é cópia exata de um já guardado. Qual equipe deveria se preocupar?",
+    "hint": "Pense no que substitui uma perda.",
+    "choices": [
+      {
+        "text": "A do modelo de linguagem, porque 16% dos trechos dela são irrelevantes",
+        "why": "Um vizinho perdido foi substituído por um um pouco mais longe, 0,4593 contra 0,4750 na média, e não por um trecho sem relação."
+      },
+      {
+        "text": "Nenhuma, já que 0,84 é um recall alto",
+        "why": "Nenhuma exigência serve para toda aplicação. Para uma verificação de duplicatas, perder a única cópia é uma resposta errada, diga a média o que disser."
+      },
+      {
+        "text": "As duas igualmente, porque o recall é o mesmo número para ambas",
+        "why": "O número é o mesmo; o que uma perda custa é diferente. Uma aplicação tolera um substituto próximo e a outra tem exatamente uma resposta certa."
+      },
+      {
+        "text": "A de duplicatas, cuja única cópia não tem substituto",
+        "why": "Certo. Dez trechos perdem pouco quando um é trocado por um vizinho próximo, mas a verificação de duplicatas falha sempre que a sua única cópia é o vetor perdido."
+      }
+    ]
+  },
+  "ex-k4rq00sm": {
+    "prompt": "`ivf.py` tentou adicionar vetores a um índice IVF antes de chamar `train`, e o FAISS recusou. Por quê?",
+    "hint": "Para onde vai cada vetor quando é adicionado?",
+    "choices": [
+      {
+        "text": "Ainda não há células onde arquivá-los",
+        "why": "Certo. O treino é a execução do k-means que acha os 1.024 centros; enquanto eles não existem, não há célula onde pôr um vetor."
+      },
+      {
+        "text": "O índice precisa medir quanto tempo uma busca leva antes de aceitar dados",
+        "why": "O treino acha as células; ele não mede tempo nenhum. Os tempos de ivf.py vêm de bench.timed, depois."
+      },
+      {
+        "text": "O FAISS exige que os vetores sejam normalizados pelo `train`",
+        "why": "make_set.py normalizou os vetores ele mesmo. train não os altera; aprende centros a partir deles."
+      },
+      {
+        "text": "Só é permitido adicionar em lotes de 1.024",
+        "why": "1.024 é o número de células, não um tamanho de lote; add recebeu os 100.000 vetores numa chamada só depois do treino."
+      }
+    ]
+  },
+  "ex-4887wask": {
+    "prompt": "Ponha em ordem o que acontece com um índice IVF, do índice vazio até a resposta de uma consulta.",
+    "hint": "Dois passos acontecem uma vez, antes de qualquer consulta; três acontecem em toda consulta.",
+    "items": [
+      "Rodar k-means em vetores de exemplo para achar os centros",
+      "Arquivar cada vetor guardado sob o centro mais próximo",
+      "Comparar a consulta com todos os centros",
+      "Buscar de forma exata os vetores das nprobe células mais próximas",
+      "Devolver os 10 melhores vetores achados nessas células"
+    ],
+    "trap": "Arquivar não pode vir antes do k-means: sem centros não há onde arquivar. E a consulta encontra os centros antes de qualquer vetor guardado, que é toda a economia."
+  },
+  "ex-75mhrc4x": {
+    "prompt": "Com `nprobe` 1, o índice IVF achou 0,749 dos vizinhos verdadeiros. Onde estava a maior parte dos que ele perdeu?",
+    "hint": "A figura desenha uma consulta perto de uma fronteira.",
+    "choices": [
+      {
+        "text": "Em células pequenas demais para guardar dez vetores",
+        "why": "Existem células pequenas (a menor guardava 1), mas uma consulta busca na célula mais próxima seja qual for o tamanho; o problema é qual célula é a mais próxima."
+      },
+      {
+        "text": "Nos vetores que foram adicionados depois do treino",
+        "why": "Os 100.000 vetores foram adicionados logo depois do treino, e as perdas aconteceram mesmo assim."
+      },
+      {
+        "text": "Além de uma fronteira, na célula vizinha",
+        "why": "Certo. O centro mais próximo decide qual célula é buscada, e uma consulta perto de uma fronteira tem vizinhos verdadeiros arquivados sob o outro centro. Com nprobe 2 já chegou a 0,931."
+      },
+      {
+        "text": "Entre os vetores que o índice comprimiu além da conta",
+        "why": "O IndexIVFFlat guarda cada vetor inteiro; nada é comprimido. Compressão é o assunto da seção de quantização."
+      }
+    ]
+  },
+  "ex-tt0akjqh": {
+    "prompt": "Em 100.000 vetores unitários uniformemente aleatórios, o mesmo índice IVF buscou em 64 das suas 1.024 células e achou só 0,241 dos vizinhos verdadeiros. O que você deve concluir?",
+    "hint": "Compare com o 0,990 com quatro células nas misturas.",
+    "choices": [
+      {
+        "text": "O IVF está quebrado no FAISS 1.15.1 e deve ser evitado",
+        "why": "O mesmo código chegou a 0,990 com quatro células no conjunto de misturas, na mesma aula. O índice funciona; estes dados não lhe dão com o que trabalhar."
+      },
+      {
+        "text": "Sem vizinhanças para juntar, nenhuma célula guarda os vizinhos verdadeiros juntos, então teste com dados parecidos com os seus",
+        "why": "Certo. Pontos aleatórios em 384 dimensões ficam quase equidistantes (a melhor nota mediana foi 0,219), e um índice aproximado medido neles parece pior do que será com embeddings."
+      },
+      {
+        "text": "1.024 células são demais; com menos, o recall chegaria a 1,000",
+        "why": "Menos células são células maiores, então cada sondagem lê mais da coleção, mas a falta de estrutura continua. O teste não diz nada sobre um nlist melhor."
+      },
+      {
+        "text": "Vetores aleatórios precisam de treino com mais dados do que as misturas",
+        "why": "Os dois foram treinados nos seus próprios 100.000 vetores. Nenhum treino desenha fronteiras em volta de vizinhanças que não existem."
+      }
+    ]
+  },
+  "ex-brmcmfxv": {
+    "prompt": "No FAISS, o número de células que um índice IVF busca para cada consulta é definido por ___.",
+    "hint": "O pgvector chama o mesmo parâmetro de `ivfflat.probes`.",
+    "blanks": [
+      {
+        "accept": [
+          "nprobe"
+        ]
+      }
+    ]
+  },
+  "ex-2y69wy8p": {
+    "prompt": "`layers.py` imprimiu 100.000 vetores na camada 0 e 6.374 na camada 1. Quais vetores estão na camada 0?",
+    "hint": "Olhe a contagem.",
+    "choices": [
+      {
+        "text": "Só os que não foram escolhidos para uma camada mais alta",
+        "why": "Então a camada 0 teria 100.000 menos 6.374. Todo vetor está na camada 0, e alguns estão também em camadas mais altas."
+      },
+      {
+        "text": "Todos",
+        "why": "Certo. A camada de baixo guarda todos os vetores com ligações curtas; as de cima guardam alguns, sorteados, com ligações longas."
+      },
+      {
+        "text": "Os vetores mais próximos do ponto de entrada",
+        "why": "A camada de um vetor é sorteada quando ele é inserido, e não decidida pela distância a coisa alguma."
+      },
+      {
+        "text": "Os 16 vizinhos de cada vetor",
+        "why": "16 é o número de ligações por vetor, uma propriedade do grafo, e não uma seleção de vetores para uma camada."
+      }
+    ]
+  },
+  "ex-p06697bj": {
+    "prompt": "Por que o HNSW põe alguns vetores em camadas de cima em vez de buscar num único grafo plano de vizinhos próximos?",
+    "hint": "Quão longe uns dos outros ficam os vetores de uma camada esparsa?",
+    "choices": [
+      {
+        "text": "Para que todo vetor fique guardado duas vezes, como cópia de segurança",
+        "why": "As camadas de cima repetem alguns vetores com ligações extras, mas o motivo é o caminho da busca, não a redundância."
+      },
+      {
+        "text": "Porque um grafo plano não comporta mais de 2M ligações por vetor",
+        "why": "O limite de ligações por vetor vale em toda camada. As camadas existem para dar saltos longos à busca."
+      },
+      {
+        "text": "Para agrupar os vetores por assunto, um assunto por camada",
+        "why": "A camada é sorteada; a camada 3 tem vinte vetores de qualquer lugar do espaço, e não um assunto."
+      },
+      {
+        "text": "As ligações de uma camada esparsa são saltos longos, então poucos passos cruzam o espaço antes que as curtas assumam",
+        "why": "Certo. Num grafo plano, um vetor distante fica a muitos passos curtos; o rastreio foi de 0,050 a 0,479 em cinco passos por quatro camadas de cima."
+      }
+    ]
+  },
+  "ex-w46vf00c": {
+    "prompt": "Ponha em ordem os passos de uma busca no HNSW.",
+    "hint": "Ela começa no único vetor da camada de cima.",
+    "items": [
+      "Começar no ponto de entrada, na camada de cima",
+      "Ir para o vizinho mais perto da consulta até nenhum estar mais perto",
+      "Descer uma camada e continuar a partir do mesmo vetor",
+      "Na camada 0, manter uma lista dos ef melhores candidatos e expandi-los",
+      "Devolver os k melhores vetores da lista"
+    ],
+    "trap": "A lista de ef candidatos é usada na camada 0, e não na descida; as camadas de cima são percorridas de forma gulosa, um vetor de cada vez."
+  },
+  "ex-6s6v585r": {
+    "prompt": "Toda busca no HNSW começa no único vetor da camada de cima, chamado ponto de ___.",
+    "hint": "É por onde a busca entra.",
+    "blanks": [
+      {
+        "accept": [
+          "entrada",
+          "entry"
+        ]
+      }
+    ]
+  },
+  "ex-3gv2yrjh": {
+    "prompt": "A Marginalia acrescenta artigos de ajuda toda semana, por anos. Qual índice continua funcionando sem que alguém o reconstrua periodicamente, e por quê?",
+    "hint": "Um deles se comprometeu com a sua estrutura na hora do treino.",
+    "choices": [
+      {
+        "text": "O IVF, porque as células dele são pequenas o bastante para absorver vetores novos",
+        "why": "Vetores novos são arquivados sob centros treinados com os dados antigos; se os artigos novos falam de algo novo, eles lotam poucas células desenhadas para outra coisa."
+      },
+      {
+        "text": "Os dois igualmente, porque nenhum dos dois guarda o texto dos vetores",
+        "why": "Nenhum guarda texto, mas isso não tem nada a ver com como vetores novos se encaixam na estrutura que cada índice montou."
+      },
+      {
+        "text": "O HNSW, porque inserir liga o vetor novo como qualquer outro",
+        "why": "Certo. O HNSW não precisa de treino, então um vetor acrescentado anos depois é ligado aos seus vizinhos reais, enquanto os centros do IVF ficam onde os dados de treino os puseram."
+      },
+      {
+        "text": "O IVF, porque o HNSW tem de ser reconstruído a cada inserção",
+        "why": "O HNSW recebe vetores um de cada vez; inserir é exatamente como o índice foi construído desde o início."
+      }
+    ]
+  },
+  "ex-h29qzftw": {
+    "prompt": "Ligue cada parâmetro ao que ele decide.",
+    "hint": "Dois ficam fixos quando o índice é construído.",
+    "pairs": [
+      {
+        "left": "M",
+        "right": "Quantas ligações cada vetor recebe"
+      },
+      {
+        "left": "ef_construction",
+        "right": "Quantos candidatos uma inserção considera ao escolher ligações"
+      },
+      {
+        "left": "ef",
+        "right": "Quantos candidatos uma consulta mantém na camada 0"
+      },
+      {
+        "left": "nprobe",
+        "right": "Quantas células uma consulta no IVF busca"
+      }
+    ],
+    "right_distractors": [
+      "Em quantos bytes cada número é guardado"
+    ]
+  },
+  "ex-6nkgn9ah": {
+    "prompt": "Com `M` 16, um índice construído com `ef_construction` 40 tinha os mesmos 1.684 bytes por vetor que um construído com 200, e mesmo assim chegou a 0,842 em vez de 0,938 com `ef` 40. O que difere entre os dois grafos?",
+    "hint": "O número de ligações é o mesmo.",
+    "choices": [
+      {
+        "text": "A construção mais curta pulou alguns vetores, então a coleção ficou menor",
+        "why": "Os dois índices guardam os 100.000 vetores; o tamanho do arquivo por vetor é idêntico."
+      },
+      {
+        "text": "A construção mais rápida guardou os vetores com menos precisão",
+        "why": "O hnswlib guarda float32 nos dois; o ef_construction não muda nada nos números, e é por isso que o tamanho bateu."
+      },
+      {
+        "text": "O segundo índice usa outra métrica",
+        "why": "Os dois foram criados com space=\"ip\" no mesmo laço de params.py; só o ef_construction mudou."
+      },
+      {
+        "text": "Para quais vetores as ligações apontam",
+        "why": "Certo. Cada inserção escolheu as ligações numa lista de 40 candidatos em vez de 200, então algumas ligações vão para vizinhos piores, e buscar com mais afinco depois não as substitui."
+      }
+    ]
+  },
+  "ex-j4b2z10h": {
+    "prompt": "Um serviço roda o hnswlib com `M` 16 e `ef` 40 e mede recall@10 de 0,938 contra a busca exata. O produto quer 0,99 até amanhã. O que deve mudar primeiro?",
+    "hint": "Qual dos três muda sem mexer no índice?",
+    "choices": [
+      {
+        "text": "Subir o `M` para 32 e reconstruir esta noite",
+        "why": "O M 32 chegou só a 0,963 com ef 40 e custa uma reconstrução; o ef 160 no índice atual chegou a 0,993."
+      },
+      {
+        "text": "Passar para `ef_construction` 400, mantendo o `M`",
+        "why": "O ef_construction também é um parâmetro de construção, então exige reconstruir, e ele melhora as ligações em vez de deixar a consulta olhar mais longe."
+      },
+      {
+        "text": "Subir o `ef` e medir até o recall passar de 0,99",
+        "why": "Certo. O ef é escolhido por consulta, então muda sem reconstruir; em ef_sweep.py foi preciso 160 para chegar a 0,993, com 0,289 ms em vez de 0,141."
+      },
+      {
+        "text": "Devolver k=40 resultados em vez de 10 e ficar com os 10 primeiros",
+        "why": "No hnswlib, pedir mais que o ef alarga a busca até k, como a aula 16 mostrou, então isso é um jeito torto de subir o ef com trabalho extra por cima."
+      }
+    ]
+  },
+  "ex-38ahjk1g": {
+    "prompt": "O hnswlib dá a cada vetor até 2M ligações na camada 0 e guarda cada ligação em 4 bytes. Quantos bytes por vetor a passagem de `M` 24 para `M` 48 acrescenta na camada 0?",
+    "hint": "De 16 para 32 acrescentou 128.",
+    "unit": "bytes"
+  },
+  "ex-wbc4x5qg": {
+    "prompt": "O que o `SQ8` do FAISS guarda para cada um dos 384 números de um vetor?",
+    "hint": "Os bytes por vetor dele foram 384.",
+    "choices": [
+      {
+        "text": "Um byte dizendo em que ponto da faixa da sua coordenada o número cai",
+        "why": "Certo. O treino registra a faixa de cada coordenada, e cada número vira um byte dentro dela: um quarto do tamanho do float32."
+      },
+      {
+        "text": "O número do mais próximo de 256 valores típicos para um pedaço de 4 números",
+        "why": "Isso é quantização por produto, o PQ96, que codifica pedaços de vários números; o SQ8 codifica cada número sozinho."
+      },
+      {
+        "text": "Só o sinal, como um bit",
+        "why": "Um bit por número é quantização binária, 48 bytes para 384 números; o SQ8 usou 384 bytes."
+      },
+      {
+        "text": "O float32 inteiro, mais um byte com a célula a que ele pertence",
+        "why": "Isso seria maior que os 1.536 bytes do IVF1024,Flat, e não um quarto deles."
+      }
+    ]
+  },
+  "ex-046bekjh": {
+    "prompt": "O `PQ16` guardou 0,230 dos vizinhos verdadeiros nestas misturas. Por que a quantização por produto perdeu tanto aqui?",
+    "hint": "Lembre das duas medianas da primeira seção.",
+    "choices": [
+      {
+        "text": "Os códigos foram treinados em 40.000 vetores em vez dos 100.000",
+        "why": "O SQ8 foi treinado nos mesmos 40.000 e guardou 0,987. A amostra era grande o bastante; os códigos é que são grosseiros demais para estes dados."
+      },
+      {
+        "text": "Os dez mais próximos de uma consulta ficam a poucos centésimos, e códigos de 16 bytes borram mais que isso",
+        "why": "Certo. A melhor nota e a décima, na mediana, foram 0,508 e 0,470; um código que não separa notas tão próximas reordena os vizinhos."
+      },
+      {
+        "text": "O nprobe 16 buscou em poucas células demais para o PQ",
+        "why": "O IVF1024,Flat com as mesmas 16 células guardou 0,999, então a perda não veio das células."
+      },
+      {
+        "text": "O PQ ignora os centros das células e busca em todos os vetores",
+        "why": "O PQ só muda como cada vetor é guardado; as mesmas 16 células foram buscadas, e os códigos eram as diferenças em relação aos centros delas."
+      }
+    ]
+  },
+  "ex-abmzt539": {
+    "prompt": "Uma coleção de 1.000.000 de vetores é guardada num índice IVF como códigos `PQ48`. Quantos megabytes ocupam só os códigos, contando um megabyte como 1.000.000 de bytes?",
+    "hint": "A coluna bytes/vector diz 48.",
+    "unit": "MB"
+  },
+  "ex-4w75w96v": {
+    "prompt": "A central de ajuda da Marginalia nunca vai ter mais de 5.000 trechos de artigos, buscados algumas vezes por segundo. Que índice ela deve usar?",
+    "hint": "A aula 11 e a primeira seção desta mediram a busca exata.",
+    "choices": [
+      {
+        "text": "HNSW com `M` 32, pelo melhor recall por milissegundo",
+        "why": "Com 5.000 vetores a busca exata leva uma fração pequena dos 0,303 ms medidos com 12.500, e o HNSW acrescenta tempo de construção, memória e um recall abaixo de 1."
+      },
+      {
+        "text": "IVF com 1.024 células, buscando com `nprobe` 4",
+        "why": "1.024 células para 5.000 vetores dão cerca de cinco por célula, e o índice precisa de treino e ainda perde vizinhos."
+      },
+      {
+        "text": "Busca exata: rápida nesse tamanho, nunca erra",
+        "why": "Certo. Ler todos os vetores é um custo linear, e 5.000 vetores o mantêm pequeno; um índice aproximado só compensa quando a coleção é grande o bastante para a leitura doer."
+      },
+      {
+        "text": "IVF com `PQ16`, para manter a memória pequena",
+        "why": "5.000 vetores completos são 7,68 MB a 1.536 bytes cada, e o PQ16 guardou 0,230 dos vizinhos com os dados desta aula."
+      }
+    ]
+  },
+  "ex-esc590tr": {
+    "prompt": "Quais destas afirmações valem para os índices aproximados desta aula? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma captura.",
+    "choices": [
+      {
+        "text": "Cada um tem um parâmetro que troca tempo por consulta por recall",
+        "why": "Sim. nprobe no IVF e ef no HNSW; as duas curvas da figura sobem e achatam."
+      },
+      {
+        "text": "Um índice IVF precisa ser treinado antes de aceitar vetores",
+        "why": "Sim. O FAISS recusou o add com 'is_trained' failed até o k-means achar os centros."
+      },
+      {
+        "text": "O HNSW devolve a resposta exata sempre que o `ef` é pelo menos k",
+        "why": "ef 10 com k 10 achou 0,772 dos vizinhos verdadeiros. ef de pelo menos k é um mínimo, e não uma garantia."
+      },
+      {
+        "text": "A quantização por produto guarda recall na proporção dos bytes que guarda",
+        "why": "O PQ96 guardou um dezesseis avos dos bytes e 0,693 dos vizinhos, o PQ16 cerca de um centésimo e 0,230: a perda segue os quase empates dos dados, não uma proporção."
+      }
+    ]
+  },
+  "ex-trv170jv": {
+    "prompt": "Ligue cada índice ao custo que ele carrega.",
+    "hint": "Uma descrição não serve para nenhum.",
+    "pairs": [
+      {
+        "left": "Flat",
+        "right": "Toda consulta lê todos os vetores"
+      },
+      {
+        "left": "IVF",
+        "right": "Precisa de treino, e as células envelhecem quando os dados mudam"
+      },
+      {
+        "left": "HNSW",
+        "right": "Uma busca por vetor para construir, e apagar é difícil"
+      },
+      {
+        "left": "Códigos PQ",
+        "right": "Quase empates voltam na ordem errada"
+      }
+    ],
+    "right_distractors": [
+      "Precisa de uma ida e volta pela rede por vetor"
+    ]
+  }
+}

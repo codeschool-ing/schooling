@@ -1,0 +1,665 @@
+[
+  {
+    "id": "ex-a16cj6xt",
+    "version": 1,
+    "section": "words-are-not-enough",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`grep -i \"money back\"` over the help centre returned the article about returning a gift and missed the refund articles. Why?",
+    "hint": "Look at what grep compares.",
+    "choices": [
+      {
+        "text": "grep matches exact characters, and only the gift article contains that exact string",
+        "correct": true,
+        "why": "Right. The refund articles say refund, and a string search has no way to know that refund and money back describe the same thing."
+      },
+      {
+        "text": "The refund articles are kept in a different file from the gift one",
+        "correct": false,
+        "why": "All 40 articles are in data/help.jsonl, and the second grep counted 8 lines that mention a refund in that same file."
+      },
+      {
+        "text": "grep ignores the body of each line and reads only the titles",
+        "correct": false,
+        "why": "grep reads whole lines, and the gift article matched on its body: the words money back are in its last sentence."
+      },
+      {
+        "text": "The search needed to be case-sensitive to find them",
+        "correct": false,
+        "why": "-i makes it case-insensitive, which can only find more lines. Case was never the problem; the words were."
+      }
+    ]
+  },
+  {
+    "id": "ex-qjb11h9z",
+    "version": 1,
+    "section": "words-are-not-enough",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A shop keeps a hand-written list of synonyms for its search: refund = money back, parcel = box. A customer types 'the box never showed up'. What is the list still missing?",
+    "hint": "The article's title is A parcel marked as delivered that never arrived.",
+    "choices": [
+      {
+        "text": "A synonym for parcel, since box is the customer's word for it",
+        "correct": false,
+        "why": "The list already has parcel = box. The problem is the rest of the sentence."
+      },
+      {
+        "text": "That showed up and arrived name one event",
+        "correct": true,
+        "why": "Right. A synonym list works word by word; the match here is between two phrasings of an event, which is a matter of meaning, and it is what an embedding compares."
+      },
+      {
+        "text": "Stemming, so that arrived matches arrive",
+        "correct": false,
+        "why": "Stemming would let arrive match arrived, but the customer wrote neither. It cannot connect showed up to arrived."
+      },
+      {
+        "text": "Spelling correction for showed",
+        "correct": false,
+        "why": "Nothing is misspelt. Both phrasings are correct English that share no words."
+      }
+    ]
+  },
+  {
+    "id": "ex-h50ch26q",
+    "version": 1,
+    "section": "a-list-of-numbers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`first.py` printed `(384,) float32`. What would it print for a three-paragraph article instead of a four-word title?",
+    "hint": "The 384 belongs to something other than the text.",
+    "choices": [
+      {
+        "text": "A bigger shape",
+        "correct": false,
+        "why": "The vector does not grow with the text. That would make two texts of different lengths impossible to compare coordinate by coordinate."
+      },
+      {
+        "text": "(384,) float32 again",
+        "correct": true,
+        "why": "Right. The dimension is a property of the model. Every text that goes through all-MiniLM-L6-v2 comes out as 384 numbers."
+      },
+      {
+        "text": "Several vectors of 384, one per paragraph",
+        "correct": false,
+        "why": "embed returns one vector per text it is given. A program could split the article into paragraphs first, as lesson 3 does, but that is a choice made before the model."
+      },
+      {
+        "text": "An error, because the model reads only four words",
+        "correct": false,
+        "why": "The model reads up to 256 word pieces. A three-paragraph article fits, and lesson 9 shows what happens past the limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-mcnt1crd",
+    "version": 1,
+    "section": "a-list-of-numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first coordinate of the refund title's vector is -0.0865. What does that number tell you about the title?",
+    "hint": "Where does the section say the meaning lives?",
+    "choices": [
+      {
+        "text": "Nothing nameable; the meaning is in the whole vector",
+        "correct": true,
+        "why": "Right. The information is spread over all 384 coordinates, and it shows up when the vector is compared with other vectors from the same model."
+      },
+      {
+        "text": "That the title is slightly negative in tone, since the number is below zero",
+        "correct": false,
+        "why": "No coordinate is a sentiment score. The sign of one number among 384 means nothing taken alone."
+      },
+      {
+        "text": "How strongly the title is about money",
+        "correct": false,
+        "why": "The model was never told what each coordinate should measure, and none of them lines up with a topic you could name."
+      },
+      {
+        "text": "The position of the word refund in the model's own vocabulary",
+        "correct": false,
+        "why": "Vocabulary positions are whole numbers used inside the tokeniser. The vector holds the result of the model's arithmetic, not an index."
+      }
+    ]
+  },
+  {
+    "id": "ex-esymx4nt",
+    "version": 1,
+    "section": "a-list-of-numbers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A model returns vectors of 768 dimensions as float32. How many bytes does one vector take?",
+    "hint": "A float32 is four bytes.",
+    "value": 3072,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-p1mk5qdb",
+    "version": 1,
+    "section": "a-list-of-numbers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia embeds 10,000 articles with all-MiniLM-L6-v2 and keeps the vectors as float32. How many megabytes is that, counting a megabyte as 1,000,000 bytes and nothing but the vectors?",
+    "hint": "One vector is the 1,536 bytes first.py printed.",
+    "value": 15.36,
+    "tolerance": 0.01,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-8xgbcd8t",
+    "version": 1,
+    "section": "a-list-of-numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Vectors for the help centre were computed in January and stored. In June the same model, at the same version, embeds a new question. Can the question be compared with the stored vectors?",
+    "hint": "Is there anything random in the model when it runs?",
+    "choices": [
+      {
+        "text": "Only if the stored vectors are computed again on the same day as the question",
+        "correct": false,
+        "why": "The model has no randomness at inference: the January vectors are exactly what it would produce in June."
+      },
+      {
+        "text": "Yes: the same text through the same model gives the same vector",
+        "correct": true,
+        "why": "Right. That is what makes it possible to compute a document's vector once and keep it. It holds for as long as the model does not change."
+      },
+      {
+        "text": "No, embeddings expire after a few months",
+        "correct": false,
+        "why": "Nothing in a vector ages. What breaks a stored vector is a change of model, not the passing of time."
+      },
+      {
+        "text": "Yes, but only for questions of exactly the same length",
+        "correct": false,
+        "why": "Every text gives 384 numbers whatever its length, so length never stops a comparison."
+      }
+    ]
+  },
+  {
+    "id": "ex-jb83x6nn",
+    "version": 1,
+    "section": "close-means-similar",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`near.py` scores articles with the dot product. Why is that the same as the cosine of the angle for this model?",
+    "hint": "first.py printed one more line.",
+    "choices": [
+      {
+        "text": "Because the model returns exactly 384 numbers",
+        "correct": false,
+        "why": "The dimension has nothing to do with it. What matters is the length of each vector."
+      },
+      {
+        "text": "Each vector has length 1",
+        "correct": true,
+        "why": "Right. The cosine is the dot product divided by both lengths, and dividing by 1 changes nothing. Lesson 2 builds the formula."
+      },
+      {
+        "text": "Because NumPy's @ operator computes a cosine",
+        "correct": false,
+        "why": "@ computes a plain dot product. It equals the cosine here only because of something about the vectors."
+      },
+      {
+        "text": "Because the texts being compared are all in English",
+        "correct": false,
+        "why": "The language of the text has no bearing on the arithmetic between two vectors."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vv9vx86",
+    "version": 1,
+    "section": "close-means-similar",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `near.py`, the article about returning a gift scored 0.446 and the article that answers the question scored 0.438. What does that show?",
+    "hint": "What does the score measure?",
+    "choices": [
+      {
+        "text": "The program has a bug that mixes up the order of the ids before printing",
+        "correct": false,
+        "why": "The program pairs each score with its own id before sorting. The order is what the model computed."
+      },
+      {
+        "text": "Embeddings rank by closeness of meaning, and a gift returned for money is close",
+        "correct": true,
+        "why": "Right. The score says how near two texts are in meaning, not which one answers. Lesson 3 measures how often the best answer lands first and how often in the top three."
+      },
+      {
+        "text": "The model prefers shorter articles and pushes the long ones down",
+        "correct": false,
+        "why": "Nothing in the output connects score with length, and the gift article is not the shortest of the six."
+      },
+      {
+        "text": "Keyword search is better than embeddings for this question",
+        "correct": false,
+        "why": "Keyword search found only the gift article. The embedding put all four money-back articles above the unrelated ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-7k3dzk1z",
+    "version": 1,
+    "section": "close-means-similar",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order these articles as `near.py` ranked them against 'how do I get my money back', from the highest score to the lowest.",
+    "hint": "The four money-back articles came first, and the gift article led them.",
+    "items": [
+      "Returning a gift",
+      "When your refund arrives",
+      "How to return a book",
+      "Two-step sign-in",
+      "Delivery times and costs"
+    ],
+    "trap": "Two-step sign-in is not last: Delivery times and costs scored -0.016, below it."
+  },
+  {
+    "id": "ex-0wsf61rq",
+    "version": 1,
+    "section": "close-means-similar",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the two-axis picture, two article titles look very close together. What can you conclude about their vectors?",
+    "hint": "How much of the variance did the two axes keep?",
+    "choices": [
+      {
+        "text": "That they are close in 384 dimensions too, since a projection keeps distances",
+        "correct": false,
+        "why": "A projection to two axes keeps only part of the spread, 0.317 of the variance here. Points close on paper can be further apart in the full space."
+      },
+      {
+        "text": "Nothing certain: compute their dot product to know",
+        "correct": true,
+        "why": "Right. The picture shows that a structure exists, and the real comparison is the score between the two vectors."
+      },
+      {
+        "text": "That they belong to the same category",
+        "correct": false,
+        "why": "Categories tend to group, but Damaged books on arrival sits away from its own category. Position in the picture is not a label."
+      },
+      {
+        "text": "That one of them is a duplicate",
+        "correct": false,
+        "why": "Two different texts can be near in meaning without being copies, and the picture cannot even guarantee they are near."
+      }
+    ]
+  },
+  {
+    "id": "ex-4c2ydzr1",
+    "version": 1,
+    "section": "learned-not-written",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How did all-MiniLM-L6-v2 come to place 'money back' near 'refund'?",
+    "hint": "Contrastive.",
+    "choices": [
+      {
+        "text": "Its authors gave it a dictionary of synonyms to follow",
+        "correct": false,
+        "why": "No list of synonyms went into it. That is the hand-kept list the first section said embeddings replace."
+      },
+      {
+        "text": "Training on matching pairs pulled them close",
+        "correct": true,
+        "why": "Right. The two phrasings kept turning up on both sides of matching pairs, so training placed them near each other."
+      },
+      {
+        "text": "It looks up the definitions of both words each time it runs",
+        "correct": false,
+        "why": "The model looks nothing up when it runs. Everything it knows was fixed in its weights during training."
+      },
+      {
+        "text": "It counts how often the two words appear in the help centre",
+        "correct": false,
+        "why": "The model never saw Marginalia's articles before this lesson. It brings what it learned to them."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgx0axg6",
+    "version": 1,
+    "section": "learned-not-written",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Training that pulls the vectors of matching pairs together and pushes them away from the other texts in the batch is called ___ training.",
+    "hint": "Every step sets one right partner against many wrong ones.",
+    "blanks": [
+      {
+        "accept": [
+          "contrastive"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-517kjvgb",
+    "version": 1,
+    "section": "learned-not-written",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "WordLlama scored 'the dog bit the man' and 'the man bit the dog' as 1.0. Why is that the expected result for this model and not a malfunction?",
+    "hint": "Look at the token list order.py printed.",
+    "choices": [
+      {
+        "text": "Same five tokens; an average ignores order",
+        "correct": true,
+        "why": "Right. A static model looks each token up and averages, and an average does not depend on order."
+      },
+      {
+        "text": "WordLlama rounds every score above 0.99 to 1.0",
+        "correct": false,
+        "why": "The 1.0 is exact: the two vectors are identical, so there is nothing to round."
+      },
+      {
+        "text": "Its vectors have only 256 dimensions, too few to tell them apart",
+        "correct": false,
+        "why": "Fewer dimensions can blur meaning, but they cannot make two different vectors identical. The cause is how the vector is built."
+      },
+      {
+        "text": "It reads only the first word of each sentence",
+        "correct": false,
+        "why": "It reads all five tokens; the last line of the output lists them. It just averages them."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgzm8sbw",
+    "version": 1,
+    "section": "learned-not-written",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A model that gives each token one fixed vector, whatever surrounds it, and averages them is called a ___ model.",
+    "hint": "The opposite of contextual.",
+    "blanks": [
+      {
+        "accept": [
+          "static"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7ax2hk29",
+    "version": 1,
+    "section": "learned-not-written",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens inside all-MiniLM-L6-v2 between a text and its vector.",
+    "hint": "The average comes late, and the division by the length comes last.",
+    "items": [
+      "Split the text into word pieces",
+      "Give each piece a starting vector",
+      "Run six layers in which every piece looks at the others",
+      "Average the pieces' vectors",
+      "Divide by the length so it is 1"
+    ],
+    "trap": "The average is not taken before the layers: that would be a static model. The layers work on the pieces one by one, and only their results are averaged."
+  },
+  {
+    "id": "ex-eyjjhzsg",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "'I want a refund' and 'I do not want a refund' scored 0.892. A support team wants to route only the messages that ask for a refund. What should it conclude?",
+    "hint": "What does an embedding capture best?",
+    "choices": [
+      {
+        "text": "A similarity threshold set above 0.9 will separate the two kinds of message",
+        "correct": false,
+        "why": "The negated sentence scored 0.892 and the paraphrase scored 0.627. No threshold puts the paraphrase in and the negation out."
+      },
+      {
+        "text": "Use a different similarity formula",
+        "correct": false,
+        "why": "The vectors themselves are close; any formula over them inherits that. The limit is in what the model encoded."
+      },
+      {
+        "text": "Similarity tracks the subject, not the assertion; a classifier must decide",
+        "correct": true,
+        "why": "Right. Negation changes what a sentence says while leaving its subject alone. Lesson 4 trains a classifier for exactly this kind of decision."
+      },
+      {
+        "text": "Translate the messages into Portuguese before embedding them",
+        "correct": false,
+        "why": "This model scores Portuguese as unrelated to English, so translation would make matters worse, and it does nothing about negation."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1yxe2w1",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "'How to return a book' against 'Como devolver um livro' scored -0.015 with all-MiniLM-L6-v2. What would bring the two titles close together?",
+    "hint": "The cause is what the model was trained on.",
+    "choices": [
+      {
+        "text": "A multilingual model",
+        "correct": true,
+        "why": "Right. This model was trained on English pairs, and a model trained on pairs across languages would place a title and its translation together."
+      },
+      {
+        "text": "Normalising both vectors to length 1 before comparing",
+        "correct": false,
+        "why": "They already have length 1. Normalising changes no direction, so the score would not move."
+      },
+      {
+        "text": "Lower-casing the Portuguese title so the pieces match",
+        "correct": false,
+        "why": "The tokeniser lower-cases everything already. The problem is that the model has no pairs for Portuguese."
+      },
+      {
+        "text": "Adding more Portuguese articles to the help centre",
+        "correct": false,
+        "why": "The model does not learn from the documents it embeds. Its vectors were fixed by training."
+      }
+    ]
+  },
+  {
+    "id": "ex-cq4q9b16",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team replaces all-MiniLM-L6-v2 with another model that also returns 384 numbers. What happens to the vectors already stored?",
+    "hint": "Same dimension does not mean same space.",
+    "choices": [
+      {
+        "text": "They keep working, since the dimension matches",
+        "correct": false,
+        "why": "A matching dimension only means the multiplication runs. The coordinates of one model have nothing to do with those of the other."
+      },
+      {
+        "text": "They work for English texts and fail for the rest",
+        "correct": false,
+        "why": "Language has nothing to do with it: every comparison between the two models' vectors is meaningless, in any language."
+      },
+      {
+        "text": "Every one has to be embedded again",
+        "correct": true,
+        "why": "Right. A vector only means something next to vectors from the same model. Lesson 18 prices that re-embedding."
+      },
+      {
+        "text": "They need to be renormalised once, then they work",
+        "correct": false,
+        "why": "Renormalising changes lengths, not directions. The directions belong to the old model and stay meaningless to the new one."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nmq94kd",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A vendor offers to store Marginalia's message vectors on its servers, saying that 'only numbers leave your systems, never the customers' words'. What is wrong with the argument?",
+    "hint": "What did the 2023 paper on inversion do?",
+    "choices": [
+      {
+        "text": "Nothing; a vector cannot be turned back into any text at all",
+        "correct": false,
+        "why": "Research on embedding inversion trained a model that rebuilt many short texts word for word from their vectors."
+      },
+      {
+        "text": "The vectors are larger than the texts, so the transfer costs more",
+        "correct": false,
+        "why": "They are larger, but that is a matter of cost. The argument is about what the vendor can learn, and size does not answer it."
+      },
+      {
+        "text": "The vendor could only read the vectors with the same model",
+        "correct": false,
+        "why": "The model is public, and an inversion model trained against it is exactly what the research built. Knowing the model makes recovery easier, not impossible."
+      },
+      {
+        "text": "Vectors give away part of the text they came from, so they are personal data too",
+        "correct": true,
+        "why": "Right. A vector of a customer's message is personal data like the message, and goes under the same rules about who reads it and how long it is kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-ed52q2vg",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each pair `limits.py` scored to what it showed.",
+    "hint": "One pair is there as a control.",
+    "pairs": [
+      {
+        "left": "I want a refund / I do not want a refund",
+        "right": "Opposite assertions about one subject score as close"
+      },
+      {
+        "left": "How to return a book / Como devolver um livro",
+        "right": "An English model treats Portuguese as unrelated"
+      },
+      {
+        "left": "How to return a book / How to return a lamp",
+        "right": "A different object, same action: middling score"
+      },
+      {
+        "left": "I want a refund / Please give me my money back",
+        "right": "The same request in other words"
+      }
+    ],
+    "right_distractors": [
+      "Two models cannot be compared"
+    ]
+  },
+  {
+    "id": "ex-arm59f2d",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia stores the vector of every help article to search them next year. Which of these must be kept beside each vector for that to work? Choose all that apply.",
+    "hint": "Think about what a vector cannot say about itself.",
+    "choices": [
+      {
+        "text": "Which model and version produced it",
+        "correct": true,
+        "why": "Yes. Without it nobody knows which questions can be compared with the vector, or when it has to be recomputed."
+      },
+      {
+        "text": "The article's id, to find the text again",
+        "correct": true,
+        "why": "Yes. A search returns vectors, and a reader needs the article; the id is the join."
+      },
+      {
+        "text": "The vector's length",
+        "correct": false,
+        "why": "It can be computed from the vector at any time, and for this model it is always 1."
+      },
+      {
+        "text": "The first coordinate on its own, as a summary",
+        "correct": false,
+        "why": "One coordinate says nothing by itself; the meaning is in the whole vector."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzkgzaj1",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each term to what it means in this lesson.",
+    "hint": "Four terms, four definitions, one spare.",
+    "pairs": [
+      {
+        "left": "Dimension",
+        "right": "How many numbers a model returns for any text"
+      },
+      {
+        "left": "Static model",
+        "right": "Averages fixed token vectors, so order is lost"
+      },
+      {
+        "left": "Contextual model",
+        "right": "Lets the pieces adjust to each other before averaging"
+      },
+      {
+        "left": "Projection",
+        "right": "A flat picture that keeps part of the spread"
+      }
+    ],
+    "right_distractors": [
+      "A list of synonyms kept by hand"
+    ]
+  },
+  {
+    "id": "ex-6jqwpvbs",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The number of values a model returns for every text, 384 for all-MiniLM-L6-v2, is called its ___.",
+    "hint": "Lesson 2 is named after it.",
+    "blanks": [
+      {
+        "accept": [
+          "dimension",
+          "dimensionality",
+          "dimensions"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,685 @@
+[
+  {
+    "id": "ex-kf4jdm0z",
+    "version": 1,
+    "section": "what-k-means",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Asked 'do you sell concert tickets?', `search.py` returned three articles, though Marginalia sells no tickets. Why?",
+    "hint": "Look at what `search` does after sorting.",
+    "choices": [
+      {
+        "text": "The model judged the gift card article to be about tickets",
+        "correct": false,
+        "why": "It judged it nearer than the other 39, at 0.252. Nearest is not the same as about tickets: the scores are low, and something had to come third."
+      },
+      {
+        "text": "It keeps the three nearest whatever they score",
+        "correct": true,
+        "why": "Right. A top-k search sorts and keeps k. There are always three nearest articles, so it always returns three, and it has no way to say that none of them fits."
+      },
+      {
+        "text": "k was too large: with k = 1 it would have returned nothing",
+        "correct": false,
+        "why": "With k = 1 it returns one article, Orders for schools and libraries at 0.293. k changes how many come back, never whether anything does."
+      },
+      {
+        "text": "The vectors were not normalised, so short queries match anything",
+        "correct": false,
+        "why": "all-MiniLM-L6-v2 returns unit vectors already. Normalising changes no ranking here; the three results come from asking for three."
+      }
+    ]
+  },
+  {
+    "id": "ex-1vjxrhm8",
+    "version": 1,
+    "section": "what-k-means",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For 'the box never showed up', the password article scored 0.300, more than the best article for the concert question, 0.293. What does that say about scores?",
+    "hint": "Is the password article an answer to either question?",
+    "choices": [
+      {
+        "text": "The password article is somewhat relevant to a missing box",
+        "correct": false,
+        "why": "It has nothing to do with a box that never came; it filled second place because k was 3. A score of 0.300 here is noise."
+      },
+      {
+        "text": "The box question is better covered by the help centre than the concert one, by 0.007",
+        "correct": false,
+        "why": "The box question is covered, but by its first result at 0.458, not by the password article. Comparing noise across questions says nothing about coverage."
+      },
+      {
+        "text": "A score ranks articles for one question; it is no grade on a fixed scale",
+        "correct": true,
+        "why": "Right. Unrelated texts still land in a band of small positive scores in 384 dimensions, so the same number is noise for one question and the best match for another."
+      },
+      {
+        "text": "Scores are percentages, so both are about 30% relevant",
+        "correct": false,
+        "why": "A cosine is not a probability or a percentage. 0.300 says the password article was nearer than 37 others to that question, and nothing about how relevant it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kdazy48",
+    "version": 1,
+    "section": "what-k-means",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A search that sorts every score and keeps the first k is called a ___ search.",
+    "hint": "The name this lesson gives it: a word and a letter joined by a hyphen.",
+    "blanks": [
+      {
+        "accept": [
+          "top-k",
+          "top k",
+          "topk"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h752br7b",
+    "version": 1,
+    "section": "what-k-means",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change lets the concert question come back with no articles at all?",
+    "hint": "Something has to look at how high the scores are.",
+    "choices": [
+      {
+        "text": "Setting k to 1",
+        "correct": false,
+        "why": "k = 1 still returns the single nearest article. No value of k above zero returns nothing."
+      },
+      {
+        "text": "A model with more dimensions, which separates topics better",
+        "correct": false,
+        "why": "A bigger model gives different scores, and a top-k search over them still returns k articles."
+      },
+      {
+        "text": "Sorting the scores from the lowest up",
+        "correct": false,
+        "why": "That returns the three least similar articles: still three, and worse ones."
+      },
+      {
+        "text": "A minimum score, measured, below which results are dropped",
+        "correct": true,
+        "why": "Right. A cut-off is the only dial here that looks at the scores themselves, so it is the only one that can return an empty list."
+      }
+    ]
+  },
+  {
+    "id": "ex-q50p5nat",
+    "version": 1,
+    "section": "choosing-k",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By `recall_k.py`'s table, how many more of the 24 questions does all-MiniLM-L6-v2 find at k = 10 than at k = 1?",
+    "hint": "Read the first and the last row of the minilm column.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "questions"
+  },
+  {
+    "id": "ex-r2wr3k2g",
+    "version": 1,
+    "section": "choosing-k",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By `recall_k.py`'s tokens column, how many times as many tokens does k = 10 hand on as k = 3? Two decimal places.",
+    "hint": "544 against 162.",
+    "value": 3.36,
+    "tolerance": 0.02,
+    "unit": "times"
+  },
+  {
+    "id": "ex-merbybh9",
+    "version": 1,
+    "section": "choosing-k",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "all-MiniLM-L6-v2 puts the answer to 'my order came in pieces' at position 12. What does the lesson suggest for it?",
+    "hint": "What would a k of 12 cost every other question?",
+    "choices": [
+      {
+        "text": "A second model: WordLlama has all 24 by k = 3",
+        "correct": true,
+        "why": "Right. The question is one this model ranks badly, so the fix is a scorer that ranks it well, alone or with the first one in a rerank."
+      },
+      {
+        "text": "Raising k to 12, since that catches every question",
+        "correct": false,
+        "why": "It catches this one and hands on twelve articles for every question to rescue it, four times the tokens of k = 3."
+      },
+      {
+        "text": "A lower score cut-off, so that its answer is not dropped",
+        "correct": false,
+        "why": "A cut-off only removes results; it cannot move an article from position 12 into the first three."
+      },
+      {
+        "text": "Raising hnsw.ef_search, so the index looks further",
+        "correct": false,
+        "why": "This search is exact NumPy over 40 articles, with no index. Position 12 is the model's ranking, not the index's."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzen65dh",
+    "version": 1,
+    "section": "choosing-k",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `recall_k.py` show for all-MiniLM-L6-v2 between k = 4 and k = 10?",
+    "hint": "Look at the minilm column from the fourth row down.",
+    "choices": [
+      {
+        "text": "One more question found with each step, up to 24",
+        "correct": false,
+        "why": "The column stays at 23 from k = 4 to k = 10. Extra results found no further answers."
+      },
+      {
+        "text": "No new question found, while the tokens kept growing",
+        "correct": true,
+        "why": "Right. Found stays at 23 while the tokens go from 217 to 544. Past the bend the curve is flat and the cost is not."
+      },
+      {
+        "text": "Fewer questions found, because noise pushed answers out",
+        "correct": false,
+        "why": "Found-at-k never falls as k grows: a larger k keeps everything a smaller one had and adds more."
+      },
+      {
+        "text": "The same count as WordLlama at every k",
+        "correct": false,
+        "why": "WordLlama reached 24 at k = 3; all-MiniLM-L6-v2 stopped at 23."
+      }
+    ]
+  },
+  {
+    "id": "ex-xre4pmgb",
+    "version": 1,
+    "section": "choosing-k",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia's help centre grows from 40 articles to 4,000, same model. The team had chosen k = 3 from the curve. What should they do?",
+    "hint": "Whose property is the curve?",
+    "choices": [
+      {
+        "text": "Keep 3: k belongs to the model, which has not changed",
+        "correct": false,
+        "why": "The curve belongs to the model and the corpus together. More articles means more near-misses competing for the first places."
+      },
+      {
+        "text": "Multiply it by 100, since the corpus grew a hundredfold",
+        "correct": false,
+        "why": "k is about how far down the ranking the answers sit, not a share of the corpus. Three hundred results would drown any reader."
+      },
+      {
+        "text": "Measure found-at-k again on questions over the new articles",
+        "correct": true,
+        "why": "Right. The curve was measured on 40 articles and holds for them. On 4,000 it is expected to climb more slowly, and only a new measurement says where it flattens."
+      },
+      {
+        "text": "Drop to k = 1, since a larger corpus has an exact match for more questions",
+        "correct": false,
+        "why": "More articles add competitors as well as answers. Nothing measured here says the first place gets more reliable."
+      }
+    ]
+  },
+  {
+    "id": "ex-3kfy85pj",
+    "version": 1,
+    "section": "score-thresholds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For all-MiniLM-L6-v2, which of the cut-offs `threshold.py` tried turns away all 8 off-topic questions and keeps the most answers?",
+    "hint": "The concert question's best score was 0.293.",
+    "choices": [
+      {
+        "text": "0.25",
+        "correct": false,
+        "why": "It keeps all 24 answers but lets the concert question through at 0.293: seven of eight turned away."
+      },
+      {
+        "text": "0.20",
+        "correct": false,
+        "why": "Only four of the eight off-topic questions score below it."
+      },
+      {
+        "text": "0.35",
+        "correct": false,
+        "why": "It turns away all eight, but keeps 20 answers against 22 at the lower cut-off that also turns them all away."
+      },
+      {
+        "text": "0.30",
+        "correct": true,
+        "why": "Right. 8 of 8 turned away and 22 of 24 kept. The two lost answers are the price of refusing the strangers."
+      }
+    ]
+  },
+  {
+    "id": "ex-shtq4pbd",
+    "version": 1,
+    "section": "score-thresholds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague swaps all-MiniLM-L6-v2 for WordLlama and keeps the cut-off of 0.25. On the help centre, what happens?",
+    "hint": "Read the WordLlama half of the output.",
+    "choices": [
+      {
+        "text": "Nothing changes, since 0.25 is a cosine in both models",
+        "correct": false,
+        "why": "Both are cosines, and each model spreads its scores differently. The same number keeps 24 answers in one and 21 in the other."
+      },
+      {
+        "text": "Every off-topic question is turned away, and 3 answers are lost",
+        "correct": true,
+        "why": "Right. WordLlama's right articles go as low as 0.139, so 21 of 24 survive, while its best off-topic score is 0.243, under the line."
+      },
+      {
+        "text": "All 24 answers are kept and the concert question gets through, as before",
+        "correct": false,
+        "why": "That was all-MiniLM-L6-v2 at 0.25. WordLlama's numbers are different: 21 kept, 8 turned away."
+      },
+      {
+        "text": "Every question returns nothing, since WordLlama's scores are all lower",
+        "correct": false,
+        "why": "Most of WordLlama's right-article scores are above 0.25, up to 0.687. Lower at the bottom is not lower everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-4tsp9qk0",
+    "version": 1,
+    "section": "score-thresholds",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia measured a cut-off of 0.30 on its help centre. Which of these changes mean measuring it again? Choose all that apply.",
+    "hint": "Ask whether the change moves the scores.",
+    "choices": [
+      {
+        "text": "Switching to another embedding model",
+        "correct": true,
+        "why": "Yes. Every score changes, and this lesson measured the same 0.25 meaning different things in two models."
+      },
+      {
+        "text": "Raising k from 3 to 5",
+        "correct": false,
+        "why": "k decides how many results are kept, not what any of them scores. The cut-off applies to the same scores."
+      },
+      {
+        "text": "Embedding chunks of articles instead of whole ones",
+        "correct": true,
+        "why": "Yes. A different document is a different vector, so every score moves."
+      },
+      {
+        "text": "Adding a few thousand articles",
+        "correct": true,
+        "why": "Yes. More articles bring near-misses that raise the best score an off-topic question can find."
+      },
+      {
+        "text": "Running the search on a faster server",
+        "correct": false,
+        "why": "The same model on the same text gives the same vector on any machine, so the scores do not move."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0mwfqh6",
+    "version": 1,
+    "section": "score-thresholds",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Unlike k, a minimum score, or ___, lets a search return nothing at all.",
+    "hint": "The word for a line a score has to reach.",
+    "blanks": [
+      {
+        "accept": [
+          "threshold",
+          "cut-off",
+          "cutoff",
+          "cut off"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j302gzsj",
+    "version": 1,
+    "section": "k-and-the-index",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab's pgvector 0.6.0, with `hnsw.ef_search` left at its default, how many rows did `LIMIT 100` return through the HNSW index?",
+    "hint": "The default is what `SHOW` printed.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-8bv1xzjb",
+    "version": 1,
+    "section": "k-and-the-index",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What showed that the 40 rows were the index's doing and not the table's?",
+    "hint": "Find the run that did not use the index.",
+    "choices": [
+      {
+        "text": "EXPLAIN showed a sequential scan over 40 rows",
+        "correct": false,
+        "why": "EXPLAIN showed an Index Scan on points_embedding_idx, which is the index at work, not a table of 40 rows."
+      },
+      {
+        "text": "count(*) over the whole table printed 40",
+        "correct": false,
+        "why": "No query counted the table. fill.py inserted 2,000 rows, and the count was of what the LIMIT query returned."
+      },
+      {
+        "text": "With index scans off, the same query returned 100",
+        "correct": true,
+        "why": "Right. Without the index PostgreSQL sorts every row exactly, and all 100 came back. The table had them all along."
+      },
+      {
+        "text": "Raising the LIMIT to 200 returned 80",
+        "correct": false,
+        "why": "That was not run, and it would not happen: the scan is bounded by ef_search, so LIMIT 200 at the default still yields 40 at most."
+      }
+    ]
+  },
+  {
+    "id": "ex-ngtst69b",
+    "version": 1,
+    "section": "k-and-the-index",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `ef.py`, hnswlib had its search breadth set to 10 and was asked for 100 neighbours. What happened?",
+    "hint": "Read both numbers it printed.",
+    "choices": [
+      {
+        "text": "It returned 10, the size of its candidate list",
+        "correct": false,
+        "why": "That is pgvector's behaviour, not hnswlib's. hnswlib printed got 100."
+      },
+      {
+        "text": "It raised an error, since ef must be at least k",
+        "correct": false,
+        "why": "No error: the program printed its line and exited normally."
+      },
+      {
+        "text": "It returned 100 and still reported ef as 10",
+        "correct": true,
+        "why": "Right. It searches with the larger of ef and k for that query and leaves the setting alone, so a large k costs more without anybody touching ef."
+      },
+      {
+        "text": "It returned 100 and changed its ef setting to 100 from then on",
+        "correct": false,
+        "why": "index.ef printed 10 after the query. The wider search applied to that query only."
+      }
+    ]
+  },
+  {
+    "id": "ex-5b89ybxt",
+    "version": 1,
+    "section": "k-and-the-index",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A page on pgvector 0.6.0 lists the 50 articles nearest the one being read. After an HNSW index is added, it lists 40. Nobody changed the query. What fixes it?",
+    "hint": "The number 40 is a default somewhere.",
+    "choices": [
+      {
+        "text": "Rebuilding the index with a larger M",
+        "correct": false,
+        "why": "M sets how many links each node keeps. The rows a query returns are bounded by the search list, ef_search, which is still 40."
+      },
+      {
+        "text": "Setting hnsw.ef_search to at least 50 for that query",
+        "correct": true,
+        "why": "Right. The scan stops when its ef_search candidates run out, so it has to hold at least as many as the LIMIT, and more for good recall."
+      },
+      {
+        "text": "Writing LIMIT 60 so that 50 survive",
+        "correct": false,
+        "why": "The LIMIT is not the bound. With ef_search at 40, LIMIT 60 still returns 40."
+      },
+      {
+        "text": "Upgrading the column to more dimensions",
+        "correct": false,
+        "why": "The dimension has nothing to do with how many rows the scan yields; the cap comes from the search list."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5ezrvmx",
+    "version": 1,
+    "section": "reranking",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a retrieve-then-rerank search in order.",
+    "hint": "The slow scorer never sees the whole collection.",
+    "items": [
+      "Embed the question",
+      "Fetch 20 candidates with the fast pass",
+      "Score each candidate with the slower scorer",
+      "Sort the candidates by the new score",
+      "Hand the best 5 on"
+    ],
+    "trap": "The slower scorer does not come first: it would then have to score the whole collection, which is what the fast pass exists to avoid."
+  },
+  {
+    "id": "ex-paasqve7",
+    "version": 1,
+    "section": "reranking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a cross-encoder used on a few candidates and not on a whole collection?",
+    "hint": "What can a bi-encoder store that a cross-encoder cannot?",
+    "choices": [
+      {
+        "text": "Its vectors are too large to keep for every document",
+        "correct": false,
+        "why": "A cross-encoder produces no stored vectors at all. Its output is one score per question and document pair."
+      },
+      {
+        "text": "It reads only English",
+        "correct": false,
+        "why": "Language is a property of the training data of any model, cross-encoder or not. It is not what limits where it runs."
+      },
+      {
+        "text": "Each pair costs a model run, and none of it is computed ahead",
+        "correct": true,
+        "why": "Right. It reads question and document together, so nothing can be precomputed: a million documents would be a million runs per question."
+      },
+      {
+        "text": "Its scores are worse than a dot product's on long lists",
+        "correct": false,
+        "why": "The scores are the reason to use it. The limit is cost, not quality."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv6tn0rk",
+    "version": 1,
+    "section": "reranking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Bits alone found 16 questions at rank 1; the first 5 by bits, reranked by the floats, found 19. What did the rerank change?",
+    "hint": "The candidates were the same five.",
+    "choices": [
+      {
+        "text": "The order of the five, by the full vectors' scores",
+        "correct": true,
+        "why": "Right. The bits put the right article among the first five but not always first; the exact scores sorted those five correctly."
+      },
+      {
+        "text": "Which five articles were candidates",
+        "correct": false,
+        "why": "The candidates came from the bits in both rows. The rerank only reordered them."
+      },
+      {
+        "text": "The bits themselves, recomputed with more precision",
+        "correct": false,
+        "why": "The codes stayed 48 bytes each. The rerank read the float vectors kept beside them."
+      },
+      {
+        "text": "The model, from all-MiniLM-L6-v2 to WordLlama",
+        "correct": false,
+        "why": "That was the second experiment. The first used one model, its bits and its floats."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9hthcps",
+    "version": 1,
+    "section": "reranking",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of a two-stage search to what it does.",
+    "hint": "One description belongs to none of them.",
+    "pairs": [
+      {
+        "left": "First pass",
+        "right": "Fetches a generous set of candidates cheaply"
+      },
+      {
+        "left": "Rerank",
+        "right": "Reorders a few candidates with a better scorer"
+      },
+      {
+        "left": "Bi-encoder",
+        "right": "Embeds question and document apart, so documents are stored"
+      },
+      {
+        "left": "Cross-encoder",
+        "right": "Reads question and document together and outputs one score"
+      }
+    ],
+    "right_distractors": [
+      "Sets the number of dimensions of the vectors"
+    ]
+  },
+  {
+    "id": "ex-n4qaa34e",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each dial to what it controls.",
+    "hint": "One description is left over.",
+    "pairs": [
+      {
+        "left": "k",
+        "right": "How many results a search asks for"
+      },
+      {
+        "left": "hnsw.ef_search",
+        "right": "How many candidates pgvector's HNSW scan keeps"
+      },
+      {
+        "left": "Score cut-off",
+        "right": "The lowest score a result may have"
+      },
+      {
+        "left": "Rerank depth",
+        "right": "How many candidates the slower scorer sees"
+      }
+    ],
+    "right_distractors": [
+      "How many bytes each vector takes"
+    ]
+  },
+  {
+    "id": "ex-r6mak5ef",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these setups by how many of the 24 questions they found at rank 1, fewest first.",
+    "hint": "16, 19, 20 and 23.",
+    "items": [
+      "all-MiniLM-L6-v2 bits only",
+      "all-MiniLM-L6-v2 floats, every article",
+      "WordLlama only",
+      "WordLlama's 10, reranked by both models"
+    ],
+    "trap": "The full floats are not the best: WordLlama alone found one more, and the two models together three more than that."
+  },
+  {
+    "id": "ex-pbhvy4m3",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In pgvector 0.6.0, an HNSW query with LIMIT 100 returns at most as many rows as the setting hnsw.___ allows.",
+    "hint": "Its default is 40.",
+    "blanks": [
+      {
+        "accept": [
+          "ef_search"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-reqgyf2f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia's chat assistant is handed the top 10 articles for every question, and it sometimes quotes one that has nothing to do with the question. By this lesson's measurements, which change goes most directly at that?",
+    "hint": "Where did the curve flatten, and what was everything after it?",
+    "choices": [
+      {
+        "text": "Hand on 20, so the right article is in there every time",
+        "correct": false,
+        "why": "The curve was already flat by k = 4. Ten more articles bring more noise to quote and no new answers."
+      },
+      {
+        "text": "A cut-off of 0.8, to keep only strong matches",
+        "correct": false,
+        "why": "No right article scored 0.8; the best was 0.686. That cut-off would hand on nothing at all for any of the 24 questions."
+      },
+      {
+        "text": "Fetch 10, rerank them, hand on 2 or 3",
+        "correct": true,
+        "why": "Right. The first stage keeps the recall of a wide k, and the assistant reads only the few the better scorer ranks first, so there is less noise to quote."
+      },
+      {
+        "text": "Lower hnsw.ef_search, so the index returns fewer rows",
+        "correct": false,
+        "why": "That cuts rows at random from the assistant's point of view, by the index's search breadth rather than by relevance, and it may cut the right article too."
+      }
+    ]
+  }
+]

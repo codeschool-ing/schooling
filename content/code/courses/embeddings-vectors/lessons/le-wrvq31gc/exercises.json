@@ -1,0 +1,717 @@
+[
+  {
+    "id": "ex-w3me33ab",
+    "version": 1,
+    "section": "faiss",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`flat.py` printed `positions: [17 14 21]`. What are those numbers?",
+    "hint": "The program needed a list of its own to turn them into h18, h15 and h22.",
+    "choices": [
+      {
+        "text": "Where the vectors sit in the index, counting from 0",
+        "correct": true,
+        "why": "Right. 17 is the 18th vector added, and only the `ids` list kept beside the index says it is h18."
+      },
+      {
+        "text": "The ids h17, h14 and h21",
+        "correct": false,
+        "why": "The articles were h18, h15 and h22. FAISS knows none of your ids; the numbers only look like them."
+      },
+      {
+        "text": "The distances of the three nearest articles",
+        "correct": false,
+        "why": "The scores came back separately, as 0.4456, 0.4376 and 0.3994; these are integers."
+      },
+      {
+        "text": "How many words each article shares with the question",
+        "correct": false,
+        "why": "FAISS never sees a word. It compares vectors and reports where the nearest ones are."
+      }
+    ]
+  },
+  {
+    "id": "ex-ms3zsw0e",
+    "version": 1,
+    "section": "faiss",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `ids.py` turn h15 into 15 before adding it to `IndexIDMap`?",
+    "hint": "What type does `add_with_ids` take?",
+    "choices": [
+      {
+        "text": "FAISS sorts vectors by id, and strings cannot be sorted",
+        "correct": false,
+        "why": "Strings sort perfectly well. The reason is the type FAISS stores: one 64-bit integer per vector."
+      },
+      {
+        "text": "`IndexIDMap` stores 64-bit integers, and a string is not one",
+        "correct": true,
+        "why": "Right. Each vector gets one integer, and the file grew by 39 × 8 bytes for them."
+      },
+      {
+        "text": "A number makes the stored vector shorter",
+        "correct": false,
+        "why": "The vector is 1,536 bytes either way; the id is stored beside it, 8 bytes each."
+      },
+      {
+        "text": "FAISS needs every id to equal the vector's position",
+        "correct": false,
+        "why": "Then `IndexIDMap` would be pointless; after removing 18 the ids 15, 22 and 14 came back, not positions."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4wgtgb2",
+    "version": 1,
+    "section": "faiss",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ids.py` wrote 39 vectors of 384 float32 numbers with 64-bit ids. Ignoring the header, how many bytes would 1,000 such vectors and their ids take?",
+    "hint": "One vector is 1,536 bytes and one id is 8.",
+    "value": 1544000,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-t0f0ad0q",
+    "version": 1,
+    "section": "faiss",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program uses FAISS positions as its article ids and deletes an article by rebuilding the index without it. What happens to searches afterwards, if the program's list of ids is not rebuilt too?",
+    "hint": "A flat index numbers vectors in the order they were added.",
+    "choices": [
+      {
+        "text": "FAISS keeps a gap at the deleted position, so nothing changes",
+        "correct": false,
+        "why": "A rebuilt index has no memory of the old one; its positions are simply 0 to n − 1 again."
+      },
+      {
+        "text": "FAISS raises an error because the list and the index differ in length",
+        "correct": false,
+        "why": "FAISS never sees the list. It answers with positions, and the program looks them up wherever they point."
+      },
+      {
+        "text": "The deleted article keeps coming back from a cache",
+        "correct": false,
+        "why": "There is no cache of results. The search is fresh every time; the mistake is in the translation of positions."
+      },
+      {
+        "text": "Every result after the deleted article names the wrong article",
+        "correct": true,
+        "why": "Right. The positions after it shift down by one, and the old list turns each into the article before it, with no error anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvbdcag6",
+    "version": 1,
+    "section": "faiss",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`wrong.py` added a 256-number vector to an index of 384 dimensions. What did FAISS report?",
+    "hint": "Compare it with what Chroma said in lesson 12.",
+    "choices": [
+      {
+        "text": "A ValueError naming both dimensions",
+        "correct": false,
+        "why": "That is closer to Chroma's message. FAISS raised an assertion with nothing in it."
+      },
+      {
+        "text": "Nothing, after padding the vector with zeros",
+        "correct": false,
+        "why": "It refused the vector; the program printed the exception."
+      },
+      {
+        "text": "An AssertionError with an empty message",
+        "correct": true,
+        "why": "Right. The mistake was caught and not explained: a library spends nothing on telling you what went wrong."
+      },
+      {
+        "text": "A warning, and the vector was cut to fit",
+        "correct": false,
+        "why": "No vector was stored; the call raised an exception."
+      }
+    ]
+  },
+  {
+    "id": "ex-p242q6ky",
+    "version": 1,
+    "section": "faiss-indexes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of the four indexes in `factory.py` needed training before taking any vector, and why?",
+    "hint": "Read the second column, then think about what 64 cells are made from.",
+    "choices": [
+      {
+        "text": "The two IVF ones: their cells come from clustering",
+        "correct": true,
+        "why": "Right. Both IVF indexes printed True: the 64 cells have to be found from data like the data they will hold."
+      },
+      {
+        "text": "HNSW32, because its graph has to be learned first",
+        "correct": false,
+        "why": "The graph is built as vectors are added; `needs training` printed False for HNSW32."
+      },
+      {
+        "text": "All four, since every index is fitted to its data",
+        "correct": false,
+        "why": "Flat and HNSW32 printed False. A flat index has nothing to fit."
+      },
+      {
+        "text": "Only IVF64,PQ16, because compressing needs a dictionary",
+        "correct": false,
+        "why": "Its compression does train, but IVF64,Flat printed True as well, for its cells."
+      }
+    ]
+  },
+  {
+    "id": "ex-573s0cx2",
+    "version": 1,
+    "section": "faiss-indexes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`IVF64,PQ16` keeps each vector in 16 bytes instead of 1,536. By what factor are the vectors' own bytes smaller?",
+    "hint": "Divide one by the other.",
+    "value": 96,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-zkqvrh04",
+    "version": 1,
+    "section": "faiss-indexes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague reads `factory.py`'s output and concludes that PQ is useless, since its recall was 0.210. What is wrong with that conclusion?",
+    "hint": "What were the 20,000 vectors, and which settings did the search use?",
+    "choices": [
+      {
+        "text": "Nothing, since compression loses four fifths of the neighbours on any data",
+        "correct": false,
+        "why": "The loss depends on the data: here the noisy copies of each text were packed so tightly that 16 bytes could not order them."
+      },
+      {
+        "text": "It is true of this data at default settings",
+        "correct": true,
+        "why": "Right. The vectors were noisy copies of 310 real ones, and the search used FAISS's defaults; both change the number."
+      },
+      {
+        "text": "Recall is the wrong measure for a compressed index",
+        "correct": false,
+        "why": "Recall against the exact answer is exactly how an approximate index is judged; lesson 15 uses it too."
+      },
+      {
+        "text": "PQ16 was never trained, so its result is not valid",
+        "correct": false,
+        "why": "It printed `needs training: True` and the program trained it before adding."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhs2p80k",
+    "version": 1,
+    "section": "faiss-indexes",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of a FAISS factory string with what it means.",
+    "hint": "One meaning on the right belongs to none of them.",
+    "pairs": [
+      {
+        "left": "Flat",
+        "right": "Every vector kept as it is, compared with the query"
+      },
+      {
+        "left": "HNSW32",
+        "right": "A graph of links between neighbours"
+      },
+      {
+        "left": "IVF64",
+        "right": "The space split into 64 cells"
+      },
+      {
+        "left": "PQ16",
+        "right": "Each vector compressed to 16 bytes"
+      }
+    ],
+    "right_distractors": [
+      "The index kept on a GPU"
+    ]
+  },
+  {
+    "id": "ex-k7kdta9f",
+    "version": 1,
+    "section": "lancedb",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`lance_load.py`'s first search returned 1.1089 for h18. Why not lesson 1's 0.4456?",
+    "hint": "The same number appeared in lesson 12, in one of Chroma's spaces.",
+    "choices": [
+      {
+        "text": "LanceDB used a different embedding model",
+        "correct": false,
+        "why": "The vectors came from `minilm.embed`, the same as lesson 1's; only the measure changed."
+      },
+      {
+        "text": "The vectors were stored as float16",
+        "correct": false,
+        "why": "The schema says `fixed_size_list<item: float>[384]`: 32-bit floats."
+      },
+      {
+        "text": "LanceDB adds up the three results' distances",
+        "correct": false,
+        "why": "Each row has its own `_distance`; h15 and h22 came back with theirs."
+      },
+      {
+        "text": "LanceDB's default is squared L2, not similarity",
+        "correct": true,
+        "why": "Right. 2 − 2 × 0.4456 is about 1.1089. With `distance_type(\"cosine\")` it returned cosine distances instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-saw5qd6m",
+    "version": 1,
+    "section": "lancedb",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the delete in `lance_versions.py`, the directory still held a data file containing h41. Why?",
+    "hint": "`checkout(2)` still counted 41 rows.",
+    "choices": [
+      {
+        "text": "The delete failed and nobody was told",
+        "correct": false,
+        "why": "Version 3 counted 40 rows: the delete worked, by writing a new version."
+      },
+      {
+        "text": "LanceDB removes files only when the process exits",
+        "correct": false,
+        "why": "The file was still there in a later command, after `lance_versions.py` had exited."
+      },
+      {
+        "text": "Version 2 still lists it",
+        "correct": true,
+        "why": "Right. A delete makes a new version and changes no file; `optimize(cleanup_older_than=...)` is what removes old ones."
+      },
+      {
+        "text": "That file also holds the other 40 rows",
+        "correct": false,
+        "why": "Version 1 had one data file and version 2 two; h41 went into a file of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-gr324v1k",
+    "version": 1,
+    "section": "lancedb",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every write to a LanceDB table, a delete included, creates a new ___ of the table, and `checkout` can go back to an older one.",
+    "hint": "`lance_versions.py` printed one per write.",
+    "blanks": [
+      {
+        "accept": [
+          "version",
+          "versions"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m4xym1ae",
+    "version": 1,
+    "section": "lancedb",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Last night's import into a LanceDB table went wrong. Put in order the steps to read the table as it was before it.",
+    "hint": "You need a number before you can go anywhere.",
+    "items": [
+      "List the table's versions",
+      "Pick the version made before the import",
+      "Check that version out",
+      "Read from it, then return to the latest"
+    ],
+    "trap": "Checking out comes after choosing: `checkout` needs the version number that `list_versions` gives."
+  },
+  {
+    "id": "ex-4xnwste7",
+    "version": 1,
+    "section": "qdrant",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `QdrantClient(path=\"qdrant\")` run?",
+    "hint": "No server was started anywhere in this lesson.",
+    "choices": [
+      {
+        "text": "A Python version of Qdrant's API inside the program",
+        "correct": true,
+        "why": "Right. Local mode keeps the data in a directory and answers the same calls in-process."
+      },
+      {
+        "text": "The Qdrant server, started in the background",
+        "correct": false,
+        "why": "The server is a separate program the lab could not fetch; nothing was started."
+      },
+      {
+        "text": "A connection to Qdrant Cloud",
+        "correct": false,
+        "why": "That needs a URL and a key. `path=` names a directory on this machine."
+      },
+      {
+        "text": "Chroma's server under another name",
+        "correct": false,
+        "why": "Chroma and Qdrant are separate projects; the client here is Qdrant's own."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5tvmpbf",
+    "version": 1,
+    "section": "qdrant",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Local mode answered a 256-number query with NumPy's 'shapes (40,384) and (256,) not aligned'. What does that show?",
+    "hint": "Whose message is it?",
+    "choices": [
+      {
+        "text": "The Qdrant server rejected the query",
+        "correct": false,
+        "why": "No server was running. The message came from NumPy, inside the program."
+      },
+      {
+        "text": "Local mode searches a NumPy array, exactly",
+        "correct": true,
+        "why": "Right. The query was multiplied against all 40 vectors at once, which is also why `indexed vectors` was 0."
+      },
+      {
+        "text": "The collection had been created with 256 dimensions",
+        "correct": false,
+        "why": "It was created with `size=384`, and the shapes in the message say 384 too."
+      },
+      {
+        "text": "NumPy is the storage engine of the Qdrant server",
+        "correct": false,
+        "why": "The server is written in Rust. NumPy is what the Python local mode uses."
+      }
+    ]
+  },
+  {
+    "id": "ex-jwtrvqqf",
+    "version": 1,
+    "section": "qdrant",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test creates a payload index on `category` in Qdrant's local mode and checks that a filtered query returns the right articles. What has it not shown about a Qdrant server?",
+    "hint": "Read the warning `qd_local.py` printed.",
+    "choices": [
+      {
+        "text": "Whether the payload can hold the article's title",
+        "correct": false,
+        "why": "The title came back in every result's payload; that much the test showed."
+      },
+      {
+        "text": "Whether a `must` condition keeps only matching points",
+        "correct": false,
+        "why": "The filtered query returned only e-book articles, so the condition was applied."
+      },
+      {
+        "text": "Whether the collection keeps 384 dimensions",
+        "correct": false,
+        "why": "The dimension is checked in both, and the 256-number query was refused."
+      },
+      {
+        "text": "Whether a filter is answered from the index or point by point",
+        "correct": true,
+        "why": "Right. Local mode ignores payload indexes and checks every point; how a server's filter uses its index is untested."
+      }
+    ]
+  },
+  {
+    "id": "ex-29haq9qy",
+    "version": 1,
+    "section": "qdrant",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Qdrant, the JSON object stored with each point, which a filter reads, is called its ___.",
+    "hint": "Qdrant's word for metadata.",
+    "blanks": [
+      {
+        "accept": [
+          "payload",
+          "payloads"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kbqhcy5s",
+    "version": 1,
+    "section": "qdrant",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Qdrant refused a point with the id h15. Why?",
+    "hint": "`qd.py` stored 15 and put the article id somewhere else.",
+    "choices": [
+      {
+        "text": "Local mode takes integers only, and the server takes strings",
+        "correct": false,
+        "why": "The rule is Qdrant's, server and local alike: an unsigned integer or a UUID."
+      },
+      {
+        "text": "A point with that id already existed",
+        "correct": false,
+        "why": "Existing ids are overwritten by `upsert`; the message said the id is not a valid UUID."
+      },
+      {
+        "text": "Qdrant ids are unsigned integers or UUIDs",
+        "correct": true,
+        "why": "Right. So `qd.py` used 15 as the id and kept \"h15\" in the payload as `article`."
+      },
+      {
+        "text": "An id has to start with a digit",
+        "correct": false,
+        "why": "A string starting with a digit is refused too, unless it is a UUID."
+      }
+    ]
+  },
+  {
+    "id": "ex-jv4yyfpy",
+    "version": 1,
+    "section": "library-or-server",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Loading `random.faiss` cost one process 29 MB. Four web workers each load it at start. About how many MB do the four copies take?",
+    "hint": "Each process holds its own copy.",
+    "value": 116,
+    "tolerance": 4,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-dsv9m6yj",
+    "version": 1,
+    "section": "library-or-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `two.py`, a second process added a row to the LanceDB table, and the first process still counted 40. Why?",
+    "hint": "Look at the version numbers each line printed.",
+    "choices": [
+      {
+        "text": "It still read version 3, its own",
+        "correct": true,
+        "why": "Right. A reader keeps its version until it checks out the latest, which is what `checkout_latest()` did."
+      },
+      {
+        "text": "The second process's write failed",
+        "correct": false,
+        "why": "It printed 41 rows and version 4, and after `checkout_latest()` the first process saw them."
+      },
+      {
+        "text": "LanceDB allows one writer and dropped the row quietly",
+        "correct": false,
+        "why": "The row was kept: version 4 counted 41 for both processes in the end."
+      },
+      {
+        "text": "Counting reads only the first data file",
+        "correct": false,
+        "why": "Version 2 earlier counted 41 rows across two data files."
+      }
+    ]
+  },
+  {
+    "id": "ex-8p5mem75",
+    "version": 1,
+    "section": "library-or-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia's search will run in eight worker processes over a catalogue growing to millions of vectors, updated all day. Which shape fits?",
+    "hint": "Count the copies, and ask who sees an update.",
+    "choices": [
+      {
+        "text": "A FAISS file that every worker loads and reloads each hour",
+        "correct": false,
+        "why": "Eight copies of millions of vectors in memory, each up to an hour stale, and something else must write the file."
+      },
+      {
+        "text": "A server that all eight workers query",
+        "correct": true,
+        "why": "Right. One copy, kept current, and a process whose job is to serve it; the cost is running it."
+      },
+      {
+        "text": "Qdrant's local mode opened by every worker",
+        "correct": false,
+        "why": "`two.py` showed the second process refused: local mode allows one owner."
+      },
+      {
+        "text": "LanceDB opened by every worker, never checking out the latest",
+        "correct": false,
+        "why": "Each worker would keep reading the version it opened and miss the day's updates."
+      }
+    ]
+  },
+  {
+    "id": "ex-qw7zayvt",
+    "version": 1,
+    "section": "library-or-server",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these run inside your own program, with no server anywhere? Choose all that apply.",
+    "hint": "Look at what each constructor was given: a path or a URL.",
+    "choices": [
+      {
+        "text": "A FAISS index",
+        "correct": true,
+        "why": "Yes. It is a library and lives in the process's memory."
+      },
+      {
+        "text": "A LanceDB table opened with `lancedb.connect(\"lance\")`",
+        "correct": true,
+        "why": "Yes. A directory and a library, no server."
+      },
+      {
+        "text": "Qdrant with `QdrantClient(path=\"qdrant\")`",
+        "correct": true,
+        "why": "Yes. Local mode is Python inside the program."
+      },
+      {
+        "text": "Qdrant with `QdrantClient(url=\"http://localhost:6333\")`",
+        "correct": false,
+        "why": "That is a client of a Qdrant server, even on the same machine."
+      },
+      {
+        "text": "A Pinecone index",
+        "correct": false,
+        "why": "Pinecone runs only as a service, reached over the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-1q9vyj8x",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting with what its search returns.",
+    "hint": "Two of them put the highest number first.",
+    "pairs": [
+      {
+        "left": "FAISS IndexFlatIP",
+        "right": "Inner product, highest first"
+      },
+      {
+        "left": "LanceDB with no distance_type",
+        "right": "Squared L2 distance, smallest first"
+      },
+      {
+        "left": "Qdrant, Distance.COSINE",
+        "right": "Cosine similarity, highest first"
+      },
+      {
+        "left": "LanceDB, distance_type cosine",
+        "right": "One minus the similarity, smallest first"
+      }
+    ],
+    "right_distractors": [
+      "The angle between the vectors in degrees"
+    ]
+  },
+  {
+    "id": "ex-1hxdf0h7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the four indexes of `factory.py` by the size they took once written, smallest first.",
+    "hint": "Compression made one of them a thirtieth of the others.",
+    "items": [
+      "IVF64,PQ16",
+      "Flat",
+      "IVF64,Flat",
+      "HNSW32"
+    ],
+    "trap": "IVF64,Flat is a little larger than Flat, not smaller: it keeps every vector whole and adds its 64 centroids and the ids of each cell."
+  },
+  {
+    "id": "ex-hqpgaaar",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these needs a separate store for the article titles, because it keeps nothing but vectors and numbers?",
+    "hint": "One of them returned positions.",
+    "choices": [
+      {
+        "text": "LanceDB",
+        "correct": false,
+        "why": "The title was a column of the table, returned with every result."
+      },
+      {
+        "text": "Qdrant",
+        "correct": false,
+        "why": "The title travelled in each point's payload."
+      },
+      {
+        "text": "Chroma",
+        "correct": false,
+        "why": "Lesson 12's collection kept the documents and the metadata itself."
+      },
+      {
+        "text": "FAISS",
+        "correct": true,
+        "why": "Right. It keeps vectors and, with `IndexIDMap`, integers; everything else lives elsewhere, keyed by them."
+      }
+    ]
+  },
+  {
+    "id": "ex-caw6p90n",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Wrapped in `IndexIDMap`, a FAISS index returns your own 64-bit ___ instead of the vectors' positions.",
+    "hint": "`ids.py` passed them with `add_with_ids`.",
+    "blanks": [
+      {
+        "accept": [
+          "ids",
+          "id",
+          "integers",
+          "integer ids",
+          "identifiers"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

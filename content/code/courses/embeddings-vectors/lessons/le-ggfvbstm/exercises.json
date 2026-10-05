@@ -1,0 +1,716 @@
+[
+  {
+    "id": "ex-y34z0cf5",
+    "version": 1,
+    "section": "gemini-requests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In this lesson, `google-genai` and `cohere` send every request to labembed. What is labembed?",
+    "hint": "Read what it refuses.",
+    "choices": [
+      {
+        "text": "A course-written server running two local models",
+        "correct": true,
+        "why": "Right. The SDKs are real and unmodified, and the vectors are real, from all-MiniLM-L6-v2 and WordLlama; the models are not Google's or Cohere's."
+      },
+      {
+        "text": "Google's gemini-embedding-001, downloaded and run locally",
+        "correct": false,
+        "why": "labembed refuses the name gemini-embedding-001 with a 404. It serves only lab-minilm and lab-wordllama."
+      },
+      {
+        "text": "A proxy that forwards each request to Google or Cohere and logs it",
+        "correct": false,
+        "why": "No request left the machine. The providers' APIs were unreachable, which is why the stand-in exists."
+      },
+      {
+        "text": "A mock that returns random numbers of the right length",
+        "correct": false,
+        "why": "The vectors are computed by two real models for every request, which is why the searches in this lesson find the right articles."
+      }
+    ]
+  },
+  {
+    "id": "ex-aj86x3jw",
+    "version": 1,
+    "section": "gemini-requests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You call `embed_content` with a list of three titles. How do you tell which returned embedding belongs to which title?",
+    "hint": "Compare with the OpenAI response from lesson 7.",
+    "choices": [
+      {
+        "text": "Each embedding carries an `index` field naming its input",
+        "correct": false,
+        "why": "That is OpenAI's response. Gemini's embeddings carry `values` and nothing that points back to the input."
+      },
+      {
+        "text": "By position: `r.embeddings` is in the order the titles were sent",
+        "correct": true,
+        "why": "Yes. The order is the only link, so keep the list you sent beside the response."
+      },
+      {
+        "text": "Each embedding repeats the text it was made from",
+        "correct": false,
+        "why": "Neither the SDK object nor the JSON carries the text back; only the numbers return."
+      },
+      {
+        "text": "Sort the embeddings by their first value to restore the order",
+        "correct": false,
+        "why": "A coordinate on its own means nothing (lesson 1), and sorting by it would scramble the order rather than recover it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ekt6dyw",
+    "version": 1,
+    "section": "gemini-requests",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague moves from labembed to Google, asks gemini-embedding-001 for `output_dimensionality=768`, and ranks articles by the raw dot product of the returned values. What goes wrong?",
+    "hint": "In the lab the lengths printed 1.0. Who made them 1.0?",
+    "choices": [
+      {
+        "text": "Nothing: the dot product of any two embeddings is already a cosine",
+        "correct": false,
+        "why": "Only for unit vectors. labembed renormalises after truncating; Google documents that it does not for sizes below 3,072."
+      },
+      {
+        "text": "The request fails, since the model accepts only its full 3,072",
+        "correct": false,
+        "why": "768 is one of the sizes Google recommends for this model, and the request succeeds."
+      },
+      {
+        "text": "The vectors are not unit length, so the dot product is not a cosine",
+        "correct": true,
+        "why": "Right. A truncated unit vector is shorter than 1, by a different amount for each text, so the dot product stops being a cosine. The last part of gemini.py is the fix."
+      },
+      {
+        "text": "A dot product must be replaced by Hamming distance for truncated vectors",
+        "correct": false,
+        "why": "Hamming distance compares bits. These are still float vectors; they only need normalising."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwd12z3n",
+    "version": 1,
+    "section": "gemini-requests",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Google documents that only gemini-embedding-001's full 3,072-number output comes back ___, so a shorter one must be divided by its own length.",
+    "hint": "It is what makes a dot product a cosine.",
+    "blanks": [
+      {
+        "accept": [
+          "normalised",
+          "normalized",
+          "unit length",
+          "unit-length",
+          "unit"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n9kavm2w",
+    "version": 1,
+    "section": "task-types",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a model trained for asymmetric search embed a query differently from a document?",
+    "hint": "Compare *can I pay in three parts* with *Payment methods we accept*.",
+    "choices": [
+      {
+        "text": "Queries are embedded with fewer numbers to keep searches cheap",
+        "correct": false,
+        "why": "Both sides come out at the same dimension, or they could not be compared at all."
+      },
+      {
+        "text": "A question and the passage answering it are different texts",
+        "correct": true,
+        "why": "Yes. Trained on question and answer pairs with the side marked, it puts a question near its answers rather than near similar questions."
+      },
+      {
+        "text": "Documents are usually in another language from the queries",
+        "correct": false,
+        "why": "Language has nothing to do with it. The help centre's questions and articles are both English and still differ in role."
+      },
+      {
+        "text": "Documents are longer than the model's input limit and have to be cut",
+        "correct": false,
+        "why": "The input limit applies to every text whatever its type; the type says what the text is for, not how long it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-b0sbsneh",
+    "version": 1,
+    "section": "task-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`tasks.py` embedded one question as `RETRIEVAL_QUERY`, `RETRIEVAL_DOCUMENT`, `SEMANTIC_SIMILARITY` and `CLASSIFICATION`, and every difference printed 0.0. What does that show?",
+    "hint": "The log shows what the server received.",
+    "choices": [
+      {
+        "text": "Task types change nothing for any model, Google's included",
+        "correct": false,
+        "why": "Only labembed was measured. gemini-embedding-001 is documented to embed the types differently, and no request reached it."
+      },
+      {
+        "text": "The SDK dropped the task type before sending the request",
+        "correct": false,
+        "why": "The log recorded four different task types arriving, so the SDK sent them."
+      },
+      {
+        "text": "labembed's models are symmetric, so the type changes nothing",
+        "correct": true,
+        "why": "Right. Neither lab model has a query side and a document side, so there is no second way to embed the text."
+      },
+      {
+        "text": "The server cached the vector from the first call and returned it three more times",
+        "correct": false,
+        "why": "labembed computes every request; the vectors are identical because the model has only one way to embed a text."
+      }
+    ]
+  },
+  {
+    "id": "ex-125n03ab",
+    "version": 1,
+    "section": "task-types",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a help-centre search with Gemini task types in order, from building the index to answering a customer.",
+    "hint": "Indexing happens before anybody asks.",
+    "items": [
+      "Embed every article with `RETRIEVAL_DOCUMENT`",
+      "Store the vectors with the model and task type beside them",
+      "Embed the customer's question with `RETRIEVAL_QUERY`",
+      "Score the question's vector against the stored ones",
+      "Return the three best articles"
+    ],
+    "trap": "The question is not embedded before the articles are stored: the index is built once, ahead of time, and each question is embedded when it arrives."
+  },
+  {
+    "id": "ex-2hcfafzf",
+    "version": 1,
+    "section": "task-types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team indexes its articles with `SEMANTIC_SIMILARITY` and searches them with `RETRIEVAL_QUERY` against gemini-embedding-001. What happens?",
+    "hint": "Ask what each call, on its own, looks like to the API.",
+    "choices": [
+      {
+        "text": "The second call fails with a 400, since the types do not match",
+        "correct": false,
+        "why": "Each request names one valid type, and the API sees one request at a time. Nothing compares the two."
+      },
+      {
+        "text": "Every call succeeds, and the mismatch goes unreported",
+        "correct": true,
+        "why": "Yes. The mismatch lives between two calls, so only a measurement on the team's own questions would show it."
+      },
+      {
+        "text": "Nothing changes, because every task type gives the same vector",
+        "correct": false,
+        "why": "That is labembed, whose models are symmetric. Google's model is documented to embed the types differently."
+      },
+      {
+        "text": "The search refuses to run until the index is rebuilt with a query type",
+        "correct": false,
+        "why": "Nothing in the API knows how the index was built, and indexing with a query type would be the wrong fix anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-dr0rjj4t",
+    "version": 1,
+    "section": "cohere-requests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`co.embed(model=\"lab-minilm\", texts=[\"Audiobooks\"])` raised a `TypeError`. Where was the call refused?",
+    "hint": "A TypeError is a Python exception about arguments.",
+    "choices": [
+      {
+        "text": "In labembed, which answered with a 400",
+        "correct": false,
+        "why": "The 400 came from the hand-written curl request. The SDK call never reached the server."
+      },
+      {
+        "text": "In Python, by the SDK, before any request was built",
+        "correct": true,
+        "why": "Right. `input_type` is a required keyword argument of `embed`, so Python refused the call."
+      },
+      {
+        "text": "At Cohere's servers, which reject requests from the lab",
+        "correct": false,
+        "why": "No request went to Cohere; every request in this lesson went to labembed."
+      },
+      {
+        "text": "In the operating system, because port 8500 was closed",
+        "correct": false,
+        "why": "The same script's next call reached the server and got a 400, so the port was open."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zk1nj5j",
+    "version": 1,
+    "section": "cohere-requests",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job embeds 1,000 product descriptions through Cohere's endpoint with the slicing loop from `embed_all`, 96 texts per call. How many calls does it make?",
+    "hint": "The last call takes whatever is left over.",
+    "value": 11,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-n8xw95m0",
+    "version": 1,
+    "section": "cohere-requests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A batch job against Cohere gets a 400 saying `too many texts: 120 (the limit is 96)`. What is the right fix?",
+    "hint": "Will the same request ever succeed?",
+    "choices": [
+      {
+        "text": "Retry the same call after a short pause, as for a 429",
+        "correct": false,
+        "why": "A 429 is about timing and passes; this 400 is about the request itself, and the same call fails every time."
+      },
+      {
+        "text": "Switch `input_type` to `classification`, which accepts more texts",
+        "correct": false,
+        "why": "The limit is per call, whatever the input type."
+      },
+      {
+        "text": "Ask for `int8` instead of `float` so that more texts fit",
+        "correct": false,
+        "why": "The limit counts texts in, not bytes out."
+      },
+      {
+        "text": "Cut the list into slices of at most 96 and send one call per slice",
+        "correct": true,
+        "why": "Yes. That is `embed_all`: the error is a bug in the slice size, and the fix is in the loop."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e3h77xs",
+    "version": 1,
+    "section": "cohere-requests",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The cohere SDK puts the ordinary 32-bit vectors in `r.embeddings.___`, with a trailing underscore because the plain word is a Python built-in.",
+    "hint": "The attribute is named after the encoding, plus one character.",
+    "blanks": [
+      {
+        "accept": [
+          "float_"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-53swfdq1",
+    "version": 1,
+    "section": "input-types",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each Cohere `input_type` to the text it is meant for.",
+    "hint": "Two of them are the sides of a search.",
+    "pairs": [
+      {
+        "left": "search_document",
+        "right": "An article stored so it can be found"
+      },
+      {
+        "left": "search_query",
+        "right": "What a customer types into the search box"
+      },
+      {
+        "left": "classification",
+        "right": "A ticket that will be a classifier's input"
+      },
+      {
+        "left": "clustering",
+        "right": "One of many messages grouped with no labels"
+      }
+    ],
+    "right_distractors": [
+      "A vector reduced to one bit per coordinate"
+    ]
+  },
+  {
+    "id": "ex-pn21qjvy",
+    "version": 1,
+    "section": "input-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`search.py` found 19 at rank 1 and 22 in the top 3 with queries sent as `search_query`, `search_document` and `clustering` alike. What can you conclude?",
+    "hint": "Which server answered, and what does it do with the type?",
+    "choices": [
+      {
+        "text": "Input types never matter, so production code can leave them out",
+        "correct": false,
+        "why": "Cohere requires the parameter, and against an asymmetric model the wrong type is a silent loss. One symmetric model says nothing about the rest."
+      },
+      {
+        "text": "Only that labembed ignores the type",
+        "correct": true,
+        "why": "Right. labembed embeds a text the same way whatever the type, so the three runs compared identical vectors."
+      },
+      {
+        "text": "`clustering` is as good as `search_query` for search with Cohere's models",
+        "correct": false,
+        "why": "No Cohere model was measured. The run shows only what a symmetric model does."
+      },
+      {
+        "text": "24 questions are too few for any difference between types to show",
+        "correct": false,
+        "why": "The vectors were identical, so no number of questions would have shown a difference here."
+      }
+    ]
+  },
+  {
+    "id": "ex-ktfgaqpr",
+    "version": 1,
+    "section": "input-types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia trains lesson 4's logistic regression on Cohere vectors of 100 tickets embedded as `classification`. A new ticket arrives to be labelled. Which `input_type` should it be embedded with?",
+    "hint": "Is classification a pair of sides, or one kind of text?",
+    "choices": [
+      {
+        "text": "`search_query`, because a new ticket is like a question asked of the training set",
+        "correct": false,
+        "why": "Classification is not a search. The classifier reads features, and they have to be made the same way as the ones it was trained on."
+      },
+      {
+        "text": "`search_document`, because the new ticket will be stored afterwards",
+        "correct": false,
+        "why": "Storing it later does not change what this vector is for now: an input to the classifier."
+      },
+      {
+        "text": "`classification`, like the rest",
+        "correct": true,
+        "why": "Yes. Classification is symmetric: every ticket is the same kind of text, so the new one is embedded exactly like the training set."
+      },
+      {
+        "text": "`clustering`, because the new ticket has no label yet",
+        "correct": false,
+        "why": "Clustering is for grouping without any labels. Here a trained classifier with labels is waiting for a feature vector like the ones it learned from."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8q0f4tv",
+    "version": 1,
+    "section": "quantised-outputs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A lab-wordllama vector has 256 coordinates. How many bytes does its `ubinary` form take?",
+    "hint": "One bit per coordinate, eight bits to a byte.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-hn0hmfxq",
+    "version": 1,
+    "section": "quantised-outputs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `quantised.py`, MiniLM's binary vectors put 23 of the 24 queries in the top 3, against 22 for float. What is the right reading?",
+    "hint": "How many queries is the difference?",
+    "choices": [
+      {
+        "text": "Binary vectors are more accurate than float ones for this model",
+        "correct": false,
+        "why": "One query out of 24 moving is within chance; it does not show binary is better."
+      },
+      {
+        "text": "The float run had a bug that the binary run avoided",
+        "correct": false,
+        "why": "Both runs scored the same vectors in different encodings, and float gave the same 22 as `search.py`."
+      },
+      {
+        "text": "One query in 24 moving is chance, and shows nothing more",
+        "correct": true,
+        "why": "Right. The honest conclusion is that the binary form cost nothing this small measurement can see."
+      },
+      {
+        "text": "Hamming distance is a better measure than the dot product for every model",
+        "correct": false,
+        "why": "WordLlama's binary run fell from 20 to 15 at rank 1, so it is not better for every model."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bhsejd7",
+    "version": 1,
+    "section": "quantised-outputs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `quantised.py` convert int8 vectors to 32-bit integers before taking the dot product?",
+    "hint": "What is the largest sum 384 products of numbers near 127 can reach?",
+    "choices": [
+      {
+        "text": "NumPy refuses to multiply two int8 arrays",
+        "correct": false,
+        "why": "NumPy multiplies them happily, in int8, and that is the problem: the result wraps around silently."
+      },
+      {
+        "text": "The sum of hundreds of products of numbers up to 127 does not fit in eight bits",
+        "correct": true,
+        "why": "Yes. One product alone can reach 16,129; in int8 the sum would overflow and wrap without an error."
+      },
+      {
+        "text": "Converting makes the result a cosine",
+        "correct": false,
+        "why": "The int8 dot product is not a cosine in any type; it only has to rank in the same order."
+      },
+      {
+        "text": "Cohere returns int8 vectors as 32-bit integers anyway",
+        "correct": false,
+        "why": "They arrive as lists of small whole numbers, and the program stores them as int8 on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvqe1mq2",
+    "version": 1,
+    "section": "quantised-outputs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Binary encoding took WordLlama from 20 to 15 at rank 1 and MiniLM from 19 to 16. Which explanation fits what the lesson measured?",
+    "hint": "Count the bits each binary vector has.",
+    "choices": [
+      {
+        "text": "WordLlama is a static model, and static models cannot be binarised",
+        "correct": false,
+        "why": "Its binary vectors were made and searched; they found 15 at rank 1. The loss is a matter of degree."
+      },
+      {
+        "text": "labembed's int8 scaling damaged WordLlama's vectors before they were binarised",
+        "correct": false,
+        "why": "The binary form is made from the signs of the float vector, not from the int8 one, and WordLlama's int8 run lost nothing at rank 1."
+      },
+      {
+        "text": "WordLlama's float vectors are not unit length, so its bits are wrong",
+        "correct": false,
+        "why": "labembed normalises every lab-wordllama vector, and the sign of a coordinate does not depend on the length anyway."
+      },
+      {
+        "text": "Its 256 coordinates leave fewer bits to separate close articles than 384 do",
+        "correct": true,
+        "why": "Right. One bit per coordinate keeps only a sign, and with fewer coordinates more articles land at nearly the same distance."
+      }
+    ]
+  },
+  {
+    "id": "ex-jfdphp03",
+    "version": 1,
+    "section": "comparing-providers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the sheet's price for gemini-embedding-001, how many dollars does embedding 40 million tokens cost?",
+    "hint": "The price is per million tokens.",
+    "value": 6,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-acp1g5k3",
+    "version": 1,
+    "section": "comparing-providers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where do the prices in this lesson come from?",
+    "hint": "The prices are pinned to something.",
+    "choices": [
+      {
+        "text": "The providers' own pricing pages, fetched on the day of recording",
+        "correct": false,
+        "why": "Those pages could not be reached from the recording machine; the lesson says so."
+      },
+      {
+        "text": "labembed's `billed_units`, multiplied by a rate the lab sets",
+        "correct": false,
+        "why": "`billed_units` counts the lab's own tokens and carries no price at all."
+      },
+      {
+        "text": "A third party's sheet, pinned to one commit",
+        "correct": true,
+        "why": "Right. Pinning commit b9e71e990aed makes the sheet read the same next year, even if the providers' prices change."
+      },
+      {
+        "text": "Token counts from tiktoken, times OpenAI's published rate for every provider",
+        "correct": false,
+        "why": "Each provider has its own row and its own price on the sheet; tiktoken counts tokens and knows no prices."
+      }
+    ]
+  },
+  {
+    "id": "ex-g7p7j6qn",
+    "version": 1,
+    "section": "comparing-providers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An article runs to 3,000 tokens and you want it embedded whole, as one input. Which model on the sheet reads that much?",
+    "hint": "Read the `max in` column.",
+    "choices": [
+      {
+        "text": "gemini-embedding-001",
+        "correct": false,
+        "why": "It reads 2,048 tokens, so the end of a 3,000-token article would not be in the vector."
+      },
+      {
+        "text": "embed-english-v3.0",
+        "correct": false,
+        "why": "The sheet gives it 512 tokens, far below 3,000."
+      },
+      {
+        "text": "text-embedding-3-small",
+        "correct": true,
+        "why": "Yes. The sheet gives it 8,191 input tokens, enough for the article in one piece."
+      },
+      {
+        "text": "embed-multilingual-v3.0",
+        "correct": false,
+        "why": "Like the English v3 model, it reads 512 tokens."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qzvyz87",
+    "version": 1,
+    "section": "comparing-providers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each parameter to what it does and whose API it belongs to.",
+    "hint": "Two of them belong to Google.",
+    "pairs": [
+      {
+        "left": "`dimensions`",
+        "right": "OpenAI: return fewer numbers per vector"
+      },
+      {
+        "left": "`output_dimensionality`",
+        "right": "Google: return fewer numbers per vector"
+      },
+      {
+        "left": "`task_type`",
+        "right": "Google: say what the text is for, optionally"
+      },
+      {
+        "left": "`input_type`",
+        "right": "Cohere: say what the text is for, required"
+      }
+    ],
+    "right_distractors": [
+      "OpenAI: say what the text is for"
+    ]
+  },
+  {
+    "id": "ex-7ssdy1z6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia stores Cohere vectors of its help centre to search them for years. Which of these should be stored beside each vector? Choose all that apply.",
+    "hint": "What would a later query need to know to be made the same way?",
+    "choices": [
+      {
+        "text": "The model that produced it",
+        "correct": true,
+        "why": "Yes. Vectors from different models cannot be compared, so a query must be made by the same one."
+      },
+      {
+        "text": "The `input_type` it was embedded with",
+        "correct": true,
+        "why": "Yes. It decides which type the queries need, and it is invisible in the numbers."
+      },
+      {
+        "text": "The encoding it was stored in, such as `int8`",
+        "correct": true,
+        "why": "Yes. The encoding decides how every later query has to be scored against it."
+      },
+      {
+        "text": "The tokens the call was billed for",
+        "correct": false,
+        "why": "That is a fact about the invoice. No later query needs it to be compared correctly."
+      },
+      {
+        "text": "The HTTP status of the request that made it",
+        "correct": false,
+        "why": "A stored vector came from a successful request by definition, so the status says nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-wefwmtm7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order these vectors from the most bytes to the fewest.",
+    "hint": "Four bytes per float, one per int8, one bit per binary coordinate.",
+    "items": [
+      "A gemini-embedding-001 float vector of 3,072 numbers",
+      "A lab-minilm float vector",
+      "A lab-minilm int8 vector",
+      "A lab-wordllama ubinary vector"
+    ],
+    "trap": "The lab-minilm int8 vector, 384 bytes, is not smaller than the binary one: a lab-wordllama ubinary vector is 32 bytes."
+  },
+  {
+    "id": "ex-mdd3z2v7",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Binary vectors are compared by counting the bit positions where they differ, a measure called the ___ distance.",
+    "hint": "Named after a mathematician who worked on error-correcting codes.",
+    "blanks": [
+      {
+        "accept": [
+          "Hamming"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

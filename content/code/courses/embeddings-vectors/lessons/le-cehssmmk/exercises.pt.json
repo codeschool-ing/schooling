@@ -1,0 +1,466 @@
+{
+  "ex-ss730d4t": {
+    "prompt": "`rotate.py` girou os 40 vetores de artigos pela mesma rotação aleatória. Todas as coordenadas mudaram, e nenhuma nota entre dois artigos se mexeu mais que `7.0e-07`. O que isso mostra?",
+    "hint": "Pergunte o que uma busca de fato lê: as coordenadas ou as notas entre vetores.",
+    "choices": [
+      {
+        "text": "A rotação estragou o modelo, já que as coordenadas que guardavam o significado agora são outras",
+        "why": "Isso supõe que o significado mora em coordenadas individuais. Todas as notas passaram sem mudança, então nada que uma busca usa foi estragado."
+      },
+      {
+        "text": "O significado está na posição dos vetores uns em relação aos outros, que a rotação preserva",
+        "why": "Certo. Uma rotação preserva todo ângulo e todo comprimento, logo todo produto escalar. A orientação dos eixos não carrega nada, então nenhuma coordenada sozinha pode carregar."
+      },
+      {
+        "text": "As notas sobreviveram só porque os vetores têm comprimento 1",
+        "why": "Uma rotação preserva o produto escalar de quaisquer dois vetores, seja qual for o comprimento. Não foi o comprimento 1 que protegeu as notas."
+      },
+      {
+        "text": "A rotação aleatória foi pequena demais para mudar alguma coisa",
+        "why": "Ela mudou todas as coordenadas: os quatro primeiros números do primeiro artigo saem completamente diferentes. Foi um giro completo do espaço."
+      }
+    ]
+  },
+  "ex-9rkzbs5y": {
+    "prompt": "Um colega quer um detector barato de reembolso: achar qual das 384 coordenadas é a maior nos artigos de reembolso e marcar qualquer mensagem cujo vetor seja alto nessa coordenada. Por que esse plano é fraco?",
+    "hint": "Pense na cópia girada do modelo.",
+    "choices": [
+      {
+        "text": "A mensagem precisa ser traduzida para o inglês antes",
+        "why": "A língua é um limite à parte deste modelo. O plano seria fraco mesmo para mensagens em inglês."
+      },
+      {
+        "text": "As coordenadas são inteiros e não podem ser comparadas assim",
+        "why": "São números float32 e podem ser comparados. O problema é o que um deles sozinho significa."
+      },
+      {
+        "text": "Os eixos são arbitrários, e um modelo girado espalharia esse significado por todas",
+        "why": "Certo. O que uma coordenada parece acompanhar é uma coincidência da orientação. Compare vetores inteiros, ou treine um classificador sobre eles, como a aula 4 faz."
+      },
+      {
+        "text": "Funciona, mas só com 1536 dimensões, em que cada coordenada tem espaço para um assunto",
+        "why": "Mais dimensões não dão sentido aos eixos. Uma rotação gira um espaço de 1536 dimensões tão fácil quanto um de 384."
+      }
+    ]
+  },
+  "ex-96gtwb2s": {
+    "prompt": "Um modelo devolve vetores de 3072 dimensões, guardados como float32. Quantos bytes ocupa um vetor?",
+    "hint": "Um float32 tem quatro bytes, como nos 384 do all-MiniLM-L6-v2.",
+    "unit": "bytes"
+  },
+  "ex-fvfrvkth": {
+    "prompt": "Qual é o produto escalar de `(3, 0, -1)` e `(1, 2, 4)`?",
+    "hint": "Multiplique coordenada por coordenada e some. Um dos produtos é negativo."
+  },
+  "ex-7yang2rv": {
+    "prompt": "Um bug multiplica o vetor de um artigo por 3 antes de guardá-lo. A busca dá nota aos artigos com o produto escalar simples. O que acontece com esse artigo?",
+    "hint": "`dot.py` dobrou um vetor. O que aconteceu com a nota?",
+    "choices": [
+      {
+        "text": "Nada, porque a direção não mudou",
+        "why": "Isso vale para o cosseno, que divide o comprimento. O produto escalar simples não divide."
+      },
+      {
+        "text": "Ele cai, porque um vetor mais comprido fica mais longe de toda consulta",
+        "why": "Os produtos escalares dele crescem, não diminuem. Ser mais comprido conta a favor dele nesta nota."
+      },
+      {
+        "text": "Todas as notas dele triplicam, e ele passa à frente de artigos mais adequados",
+        "why": "Certo. O produto escalar cresce com o comprimento, e o artigo agora ganha comparações pelo tamanho. Normalizar ao guardar elimina o efeito."
+      },
+      {
+        "text": "As notas dele triplicam, mas as de todos os outros também, então a ordem continua igual",
+        "why": "Só o vetor deste artigo foi multiplicado. Os outros mantêm as notas, então a ordem muda."
+      }
+    ]
+  },
+  "ex-cg462na8": {
+    "prompt": "Duas setas que apontam em direções exatamente opostas têm similaridade de cosseno de ___.",
+    "hint": "O fundo da faixa do cosseno.",
+    "blanks": [
+      {
+        "accept": [
+          "-1",
+          "−1",
+          "-1,0",
+          "-1.0",
+          "menos um",
+          "menos 1"
+        ]
+      }
+    ]
+  },
+  "ex-5pdfy15m": {
+    "prompt": "`cosine.py` imprimiu 0.8889 para `a` contra `b`, e 0.8889 de novo para `2a` contra `b`. Por que dobrar não mudou nada?",
+    "hint": "Veja pelo que a fórmula divide.",
+    "choices": [
+      {
+        "text": "O arredondamento para quatro casas escondeu a mudança",
+        "why": "Os dois valores são exatamente iguais, não quase iguais: a dobra se cancela na fórmula, antes de qualquer arredondamento."
+      },
+      {
+        "text": "Dividir pelo comprimento de `2a` cancela a dobra",
+        "why": "Certo. O produto escalar dobra para 16 e o comprimento dobra para 6, então a razão continua 8/9. Só a direção fica na nota."
+      },
+      {
+        "text": "O NumPy normaliza todo array antes de multiplicar",
+        "why": "`dot.py` mostrou `(2 * a) @ b` como 16, então o NumPy não normaliza nada sozinho."
+      },
+      {
+        "text": "O cosseno só lê as duas primeiras coordenadas de cada vetor",
+        "why": "Ele usa todas: o produto escalar e os dois comprimentos percorrem todas as coordenadas."
+      }
+    ]
+  },
+  "ex-e0re1csw": {
+    "prompt": "A figura de dois eixos da aula 1, com dezenove títulos, guardou só 0,317 da variância, mas a figura desta seção desenha exatamente o ângulo entre dois vetores de 384 números. Como as duas coisas podem ser verdade?",
+    "hint": "Quantos pontos cada figura precisa caber?",
+    "choices": [
+      {
+        "text": "Duas setas sempre cabem num plano; dezenove pontos não",
+        "why": "Certo. Dois vetores formam um plano qualquer que seja a dimensão, então o ângulo pode ser desenhado como é. Dezenove pontos se espalham em muito mais direções do que dois eixos comportam."
+      },
+      {
+        "text": "A figura usa os vetores `a` e `b`, que têm só três números",
+        "why": "A seção diz que o mesmo vale para dois vetores de 384 números. Três números é só o exemplo; o argumento não depende disso."
+      },
+      {
+        "text": "Esta figura também é uma projeção, e o ângulo dela é só aproximadamente certo",
+        "why": "Não há projeção nenhuma: o plano que passa por duas setas contém as duas por inteiro."
+      },
+      {
+        "text": "A análise de componentes principais perde informação e o cosseno não",
+        "why": "Isso é verdade, mas não responde nada: a pergunta é por que dois vetores podem ser desenhados sem perda e dezenove não."
+      }
+    ]
+  },
+  "ex-fs81f4th": {
+    "prompt": "Qual é a similaridade de cosseno de `a = (2, 1, 2)` e `e = (0, 3, 4)`? Dê três casas decimais.",
+    "hint": "`|a|` é 3, como em `cosine.py`. Calcule `|e|` e o produto escalar."
+  },
+  "ex-ynybydkx": {
+    "prompt": "Para as 24 perguntas, `euclid.py` viu que ordenar os 40 artigos pela menor distância L2 dá exatamente a ordem do maior cosseno. Por quê?",
+    "hint": "A distância ao quadrado tem o cosseno dentro dela.",
+    "choices": [
+      {
+        "text": "Distância L2 e similaridade de cosseno são o mesmo número escrito de dois jeitos",
+        "why": "São números diferentes: para o artigo do presente o cosseno é 0,446 e a distância é 1,053. Um é função do outro, e isso basta para a ordem."
+      },
+      {
+        "text": "O all-MiniLM-L6-v2 foi treinado com distância L2",
+        "why": "A concordância não depende do treino; é aritmética que vale para quaisquer vetores de comprimento 1."
+      },
+      {
+        "text": "Para vetores unitários, a distância ao quadrado é 2 − 2 cos θ",
+        "why": "Certo. Um cosseno maior sempre significa uma distância menor, então ordenar num sentido por um é ordenar no outro sentido pelo outro."
+      },
+      {
+        "text": "A central de ajuda é pequena demais para as duas ordens divergirem",
+        "why": "O tamanho não tem nada a ver. A identidade vale para todo par de vetores de comprimento 1, numa coleção de qualquer tamanho."
+      }
+    ]
+  },
+  "ex-as9n6ny2": {
+    "prompt": "Ordene estes artigos pela distância L2 até *how do I get my money back*, como `euclid.py` os imprimiu, da menor distância para a maior.",
+    "hint": "A menor distância é a melhor correspondência.",
+    "items": [
+      "Returning a gift",
+      "When your refund arrives",
+      "Charged twice for one order",
+      "How to return a book"
+    ],
+    "trap": "A ordem não é a inversa da do cosseno: o maior cosseno tem a menor distância, então o artigo do presente, primeiro no cosseno, também tem a menor distância."
+  },
+  "ex-dxrba70r": {
+    "prompt": "Uma função de busca devolve distâncias L2. O código as ordena da maior para a menor e mostra as três primeiras. O que o cliente vê?",
+    "hint": "Para que lado aponta uma distância?",
+    "choices": [
+      {
+        "text": "Os três artigos menos parecidos com a pergunta",
+        "why": "Certo. Uma distância maior está mais longe, então ordenar de cima põe as piores correspondências primeiro. Parece razoável na tela, e é por isso que sobrevive."
+      },
+      {
+        "text": "Os três melhores artigos, já que um número maior é sempre melhor",
+        "why": "Isso vale para uma similaridade. Numa distância, menor é mais perto."
+      },
+      {
+        "text": "Os três melhores artigos, mas em ordem invertida",
+        "why": "Inverter a ordem inteira põe o pior no topo, e não os três melhores de trás para a frente."
+      },
+      {
+        "text": "Um erro, porque distâncias precisam ser ordenadas em ordem crescente",
+        "why": "Nada impede um código de ordenar números para qualquer lado. É isso que deixa o erro silencioso."
+      }
+    ]
+  },
+  "ex-a9vsmnab": {
+    "prompt": "Com o WordLlama e sem normalizar, a palavra *refund* sozinha tem um vetor de comprimento 9,104, enquanto os 40 artigos vão de 1,212 a 2,280. Por quê?",
+    "hint": "O vetor de um texto é a média dos vetores dos seus tokens.",
+    "choices": [
+      {
+        "text": "Refund é a palavra mais importante da central de ajuda, então o modelo a deixa mais comprida",
+        "why": "O WordLlama não sabe quais palavras importam para a Marginalia. O comprimento vem da média, não da importância."
+      },
+      {
+        "text": "A média de muitos vetores de token apontando para lados diferentes dá uma seta mais curta; um token não entra em média",
+        "why": "Certo. Setas que discordam se cancelam em parte numa média. O comprimento mede essa discordância, que não tem nada a ver com relevância."
+      },
+      {
+        "text": "O WordLlama normaliza textos longos mas deixa palavras sozinhas como estão",
+        "why": "Com `norm` desligado ele não normaliza nada. Os artigos são curtos por causa da média, não por causa de uma regra."
+      },
+      {
+        "text": "Textos curtos carregam mais significado por palavra, e o comprimento registra isso",
+        "why": "O comprimento aqui é aritmética, não significado. Um vetor mais comprido ganhou uma comparação que devia ter perdido na parte seguinte do programa."
+      }
+    ]
+  },
+  "ex-rnf1wbt9": {
+    "prompt": "Diante de *discount for a classroom set*, a nota pura do WordLlama põe Audiobooks acima do artigo das escolas. Que mudança corrige isso para toda pergunta?",
+    "hint": "O que fez Audiobooks ganhar?",
+    "choices": [
+      {
+        "text": "Normalizar todo vetor guardado e cada consulta, e continuar usando o produto escalar",
+        "why": "Certo. Com todo comprimento em 1, o produto escalar é o cosseno, e o cosseno pôs o artigo das escolas em primeiro, 0,247 contra 0,212."
+      },
+      {
+        "text": "Trocar para a distância L2 nos mesmos vetores sem normalizar",
+        "why": "A L2 em vetores não normalizados também é puxada pelo comprimento, de outro jeito. A identidade com o cosseno só vale para vetores de comprimento 1."
+      },
+      {
+        "text": "Tirar Audiobooks da central de ajuda",
+        "why": "Isso corrige uma pergunta. O artigo em primeiro mudou em cinco das 24, então a causa está em toda comparação."
+      },
+      {
+        "text": "Multiplicar o vetor da consulta por um número maior",
+        "why": "Escalar a consulta escala a nota de todos os artigos pelo mesmo fator e não muda nenhuma ordem."
+      }
+    ]
+  },
+  "ex-mnvb241k": {
+    "prompt": "Dividir um vetor pelo próprio comprimento, para que o comprimento vire 1, se chama ___ o vetor.",
+    "hint": "O WordLlama faz isso quando você passa `norm=True`.",
+    "blanks": [
+      {
+        "accept": [
+          "normalizar",
+          "normalização",
+          "normalizacao",
+          "normalising",
+          "normalizing",
+          "normalise",
+          "normalize"
+        ]
+      }
+    ]
+  },
+  "ex-kmqjg498": {
+    "prompt": "O `<#>` do pgvector devolveu −8 para dois vetores cujo produto interno é 8. Por que o sinal de menos?",
+    "hint": "Para que lado o pgvector ordena?",
+    "choices": [
+      {
+        "text": "Algo deu errado na extensão, e ela devia ter impresso 8",
+        "why": "É um comportamento documentado e de propósito: o operador é uma distância, não uma similaridade."
+      },
+      {
+        "text": "Os vetores não estavam normalizados",
+        "why": "Normalizar muda o tamanho do produto interno, não o sinal. O `<#>` o inverte para quaisquer vetores."
+      },
+      {
+        "text": "Ele troca o sinal para que ordenar do menor para cima ponha o melhor resultado primeiro",
+        "why": "Certo. O pgvector, como a maioria dos bancos de vetores, ordena distâncias em ordem crescente. Trocar o sinal faz do vetor mais parecido o menor número."
+      },
+      {
+        "text": "Um resultado negativo quer dizer que os dois vetores apontam em direções opostas",
+        "why": "Os dois vetores estão a 27,3 graus um do outro e o cosseno deles é 0,8889. O sinal vem do operador, não da geometria."
+      }
+    ]
+  },
+  "ex-ggtyct2t": {
+    "prompt": "Ligue cada operador do pgvector ao que ele devolveu para `[2,1,2]` e `[1,2,2]`.",
+    "hint": "Dois dos três são distâncias no sentido comum; o terceiro é uma similaridade transformada em distância.",
+    "pairs": [
+      {
+        "left": "`<->`",
+        "right": "A distância L2, 1,414"
+      },
+      {
+        "left": "`<=>`",
+        "right": "Um menos a similaridade de cosseno"
+      },
+      {
+        "left": "`<#>`",
+        "right": "O produto interno com o sinal trocado"
+      }
+    ],
+    "right_distractors": [
+      "A própria similaridade de cosseno, 0,8889"
+    ]
+  },
+  "ex-nfsqtejh": {
+    "prompt": "Uma equipe passa a busca de uma biblioteca que devolve similaridade de cosseno para outra que devolve distância de cosseno, e mantém a regra *mostrar só resultados acima de 0,3*. O que os clientes recebem?",
+    "hint": "Escreva o número novo em função do antigo.",
+    "choices": [
+      {
+        "text": "Exatamente os mesmos resultados, porque distância e similaridade de cosseno são a mesma medida",
+        "why": "Elas ordenam igual, em sentidos opostos. O limite agora está numa escala diferente."
+      },
+      {
+        "text": "Um pouco mais de resultados, já que distâncias vão de 0 a 2",
+        "why": "A faixa está certa, mas o efeito não é só alguns a mais: a regra agora escolhe pela ponta errada."
+      },
+      {
+        "text": "Um erro, porque uma distância não pode ser comparada com 0,3",
+        "why": "Uma distância é um número como outro qualquer, e a comparação roda em silêncio. Esse é o perigo."
+      },
+      {
+        "text": "Só resultados com cosseno abaixo de 0,7: quase só correspondências ruins, sem as melhores",
+        "why": "Certo. Distância acima de 0,3 quer dizer similaridade abaixo de 0,7, então a regra fica com o que está longe e descarta o que está perto. Saiba que tipo de número você tem antes de pôr um limite."
+      }
+    ]
+  },
+  "ex-nnjvtvfj": {
+    "prompt": "A Marginalia mostra um artigo relacionado sempre que a nota do MiniLM passa de 0,4, o que 6,0% dos pares de chamados passam. Ela troca para o WordLlama e mantém 0,4. O que acontece?",
+    "hint": "Onde fica a faixa do WordLlama?",
+    "choices": [
+      {
+        "text": "Passam menos: só 1,8% dos pares do WordLlama ficam acima de 0,4",
+        "why": "Certo. A faixa do WordLlama é mais baixa, então o mesmo número é um corte mais rígido. Um limite pertence a um modelo."
+      },
+      {
+        "text": "Nada muda, já que um cosseno quer dizer o mesmo em todo modelo",
+        "why": "A faixa possível é a mesma, de −1 a 1, mas onde as notas reais caem não é: a mediana do WordLlama é 0,076 contra 0,158 do MiniLM."
+      },
+      {
+        "text": "Mais pares passam, já que os vetores do WordLlama são mais curtos",
+        "why": "Os dois conjuntos foram normalizados antes das notas, então o comprimento não entra. A faixa é mais baixa, não mais alta."
+      },
+      {
+        "text": "Todos os pares passam, já que as notas do WordLlama são probabilidades",
+        "why": "Nenhuma nota de embedding é uma probabilidade, e a maioria dos pares do WordLlama fica perto de 0,076."
+      }
+    ]
+  },
+  "ex-agcq90p7": {
+    "prompt": "Noventa por cento dos pares de setas aleatórias em 384 dimensões ficaram entre −0,083 e 0,085. O que isso mostra?",
+    "hint": "Setas aleatórias não sabem nada de livrarias.",
+    "choices": [
+      {
+        "text": "Que o gerador aleatório recebeu uma semente ruim e tirou vetores perto demais",
+        "why": "Qualquer semente dá o mesmo retrato. Quase perpendicular é como direções aleatórias ficam em muitas dimensões."
+      },
+      {
+        "text": "Que vetores aleatórios são parecidos com os chamados",
+        "why": "Os chamados ficam mais alto: a mediana deles no MiniLM é 0,158, e a dos pares aleatórios é 0,000."
+      },
+      {
+        "text": "Que em 384 dimensões direções sem relação são quase perpendiculares",
+        "why": "Certo. Os chamados não ficam assim, porque dividem um assunto e se inclinam para uma região. É por isso que a faixa deles fica acima de zero."
+      },
+      {
+        "text": "Que um cosseno de 0,085 é o ponto a partir do qual dois textos têm relação",
+        "why": "É a borda do que o acaso produz entre setas aleatórias, e não diz nada sobre textos."
+      }
+    ]
+  },
+  "ex-2cr1rc2h": {
+    "prompt": "Uma gerente de produto quer mostrar aos clientes *87% de correspondência* ao lado de cada artigo, usando o cosseno do MiniLM vezes 100. O que há de errado nisso?",
+    "hint": "O que 0,4 quer dizer para este modelo?",
+    "choices": [
+      {
+        "text": "Nada, se a nota for arredondada para números inteiros",
+        "why": "Arredondar não muda o que o número é. O problema é ler um cosseno como porcentagem."
+      },
+      {
+        "text": "O cosseno precisa ser elevado ao quadrado antes para virar porcentagem",
+        "why": "Nenhuma conta transforma esta nota numa probabilidade. O significado dela depende de onde fica a faixa de um modelo."
+      },
+      {
+        "text": "Cossenos podem ser negativos, e porcentagens não",
+        "why": "Isso é um detalhe. Mesmo as notas positivas não são porcentagens: 0,4 está entre os 6,0% de pares mais altos, não é 40% de correspondência."
+      },
+      {
+        "text": "Um cosseno é uma posição na faixa de um modelo, não uma probabilidade; 0,4 já é alto aqui",
+        "why": "Certo. Os clientes leriam 40% como uma correspondência fraca, quando está entre os pares mais fortes. Mostre a ordem, ou um rótulo escolhido a partir dos seus dados."
+      }
+    ]
+  },
+  "ex-camyw2bz": {
+    "prompt": "Para vetores do all-MiniLM-L6-v2, quais destes dão a mesma ordem que ordenar pela similaridade de cosseno da maior para a menor? Marque todas as que se aplicam.",
+    "hint": "Os vetores dele têm todos comprimento 1.",
+    "choices": [
+      {
+        "text": "O produto escalar, do maior para o menor",
+        "why": "Sim. Com comprimentos 1, o produto escalar é o cosseno."
+      },
+      {
+        "text": "A distância L2, da menor para a maior",
+        "why": "Sim. Para vetores de comprimento 1 a distância ao quadrado é 2 − 2 cos θ, e `euclid.py` achou a mesma ordem em 24 das 24 perguntas."
+      },
+      {
+        "text": "O `<#>` do pgvector, do menor para o maior",
+        "why": "Sim. É o produto escalar com o sinal trocado, então a ordem crescente é a ordem decrescente do produto escalar."
+      },
+      {
+        "text": "A distância L1, da menor para a maior",
+        "why": "Não. Ela coincidiu com a ordem completa do cosseno em nenhuma das 24 perguntas, embora tenha concordado no primeiro artigo em 23."
+      },
+      {
+        "text": "A distância de cosseno, da maior para a menor",
+        "why": "Não. A distância de cosseno é 1 menos a similaridade, então a maior primeiro dá as piores correspondências primeiro."
+      }
+    ]
+  },
+  "ex-f8tj25j9": {
+    "prompt": "A Marginalia adota um modelo que não normaliza os vetores. Ponha em ordem os passos para guardar a central de ajuda e responder uma pergunta.",
+    "hint": "Um passo acontece antes de qualquer coisa ser guardada, e o gêmeo dele acontece antes de qualquer comparação.",
+    "items": [
+      "Transformar cada artigo em vetor",
+      "Dividir cada vetor de artigo pelo comprimento",
+      "Guardar os vetores",
+      "Transformar a pergunta do cliente em vetor",
+      "Dividir o vetor da pergunta pelo comprimento",
+      "Tirar os produtos escalares e ordenar do maior para o menor"
+    ],
+    "trap": "A normalização dos artigos acontece uma vez, antes de guardar, e não de novo a cada busca; só a pergunta é normalizada na hora da consulta."
+  },
+  "ex-0ngk418a": {
+    "prompt": "Multiplicar dois vetores coordenada por coordenada e somar os produtos dá o ___ deles.",
+    "hint": "`dot.py` o escreveu com `@`.",
+    "blanks": [
+      {
+        "accept": [
+          "produto escalar",
+          "produto interno",
+          "dot product",
+          "inner product"
+        ]
+      }
+    ]
+  },
+  "ex-narhdv4w": {
+    "prompt": "Ligue cada termo ao que ele significa nesta aula.",
+    "hint": "Quatro termos, quatro significados, um sobrando.",
+    "pairs": [
+      {
+        "left": "Dimensão",
+        "right": "Quantas coordenadas todo vetor de um modelo tem"
+      },
+      {
+        "left": "Similaridade de cosseno",
+        "right": "O produto escalar com os dois comprimentos divididos"
+      },
+      {
+        "left": "Distância L2",
+        "right": "O comprimento da diferença entre dois vetores"
+      },
+      {
+        "left": "Vetor normalizado",
+        "right": "Um vetor dividido pelo próprio comprimento"
+      }
+    ],
+    "right_distractors": [
+      "A probabilidade de que dois textos queiram dizer o mesmo"
+    ]
+  }
+}

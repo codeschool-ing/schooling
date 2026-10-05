@@ -1,0 +1,456 @@
+{
+  "ex-c9hgewzg": {
+    "prompt": "`pg_column_size(embedding)` imprimiu `1544` para um `vector(384)`. Os 384 números ocupam 1.536 bytes. O que são os outros 8?",
+    "hint": "A seção diz o que os bytes extras guardam.",
+    "choices": [
+      {
+        "text": "O id do artigo, guardado dentro do valor",
+        "why": "O id é uma coluna própria, `id text`. O valor do vetor guarda números e um pouco de controle sobre eles, nada de outras colunas."
+      },
+      {
+        "text": "Um cabeçalho do pgvector, com tamanho e dimensão",
+        "why": "Certo. Todo valor de vetor leva um cabeçalho curto de 8 bytes ao lado dos seus 4 × d bytes de float32."
+      },
+      {
+        "text": "Duas coordenadas float64 a mais, postas pelo Python",
+        "why": "O psycopg manda o que `register_vector` codifica, e o pgvector guarda toda coordenada como float32; nada acrescenta coordenadas, e `vector_dims` imprimiu 384."
+      },
+      {
+        "text": "O cabeçalho e o ponteiro que o PostgreSQL põe na frente de cada linha que guarda",
+        "why": "Esse custo existe mas pertence à linha, que a aula 18 pesa. `pg_column_size` mediu só este valor."
+      }
+    ]
+  },
+  "ex-2tffes5h": {
+    "prompt": "Um modelo devolve 768 dimensões e a coluna é `vector(768)` no pgvector 0.6.0. O que `pg_column_size` informa para um vetor guardado?",
+    "hint": "Quatro bytes por número, mais o cabeçalho que a seção mediu.",
+    "unit": "bytes"
+  },
+  "ex-s03q01nt": {
+    "prompt": "A tabela `articles` foi preenchida com o all-MiniLM-L6-v2. Um script posterior guarda o vetor de um artigo vindo de outro modelo que também devolve 384 números. O que o PostgreSQL faz?",
+    "hint": "O que exatamente `vector(384)` confere?",
+    "choices": [
+      {
+        "text": "Recusa com `expected 384 dimensions`",
+        "why": "Esse erro exige um tamanho diferente. Os dois modelos devolvem 384 números, então a conferência de tamanho passa."
+      },
+      {
+        "text": "Recusa, porque o pgvector registra que modelo escreveu a coluna",
+        "why": "O pgvector guarda números e uma dimensão. Nada no tipo nomeia um modelo, e é por isso que a seção manda pôr o nome do modelo no esquema você mesmo."
+      },
+      {
+        "text": "Guarda sem erro e sem aviso nenhum",
+        "why": "Certo. Só o tamanho é conferido, e um vetor de outro modelo com a mesma dimensão não significa nada ao lado dos outros, embora pareça igual a eles."
+      },
+      {
+        "text": "Guarda e normaliza em relação aos outros vetores da coluna",
+        "why": "Nenhuma conversão acontece. O pgvector guarda os números que recebe, e nenhuma conta leva o espaço de um modelo para o de outro."
+      }
+    ]
+  },
+  "ex-9c1rbqxm": {
+    "prompt": "Para descobrir qual pgvector roda num PostgreSQL que você não instalou, leia a coluna ___ de `pg_extension` para `vector`.",
+    "hint": "A resposta do laboratório foi 0.6.0.",
+    "blanks": [
+      {
+        "accept": [
+          "extversion"
+        ]
+      }
+    ]
+  },
+  "ex-gp2hfebf": {
+    "prompt": "Um produto interno maior quer dizer mais parecido, e mesmo assim `ORDER BY embedding <#> q` põe a linha mais parecida primeiro. Por quê?",
+    "hint": "Veja o sinal na última coluna de `ops.sql`.",
+    "choices": [
+      {
+        "text": "O PostgreSQL ordena de forma decrescente quando o operador é `<#>`",
+        "why": "`ORDER BY` sem `DESC` é crescente para todo operador; nada de especial acontece com este."
+      },
+      {
+        "text": "`<#>` é a distância de cosseno com outro nome",
+        "why": "`<=>` é a distância de cosseno. `<#>` imprimiu `-0.44556307792663574` para h18, um número negativo, o que nenhuma distância é."
+      },
+      {
+        "text": "Ele devolve esse número com o sinal trocado, em negativo",
+        "why": "Certo. Trocar o sinal faz menor querer dizer mais perto, a ordem que uma varredura de índice percorre, e assim a mesma ordenação crescente serve para os três operadores."
+      },
+      {
+        "text": "Os vetores são guardados com o sinal trocado quando `register_vector` os manda",
+        "why": "Os vetores chegam como o modelo os fez; a coluna de comprimento imprimiu 1.0000 e `<=>` deu distâncias positivas comuns."
+      }
+    ]
+  },
+  "ex-yx2rk4sp": {
+    "prompt": "Dois vetores de comprimento 1 têm distância de cosseno, `<=>`, de 0,25. O que `<#>` devolve para o mesmo par?",
+    "hint": "A seção relaciona o produto interno negativo com a distância de cosseno.",
+    "unit": ""
+  },
+  "ex-5xse8mdy": {
+    "prompt": "`recall.sql` devolveu cinco linhas para as 24 perguntas de teste. O que essas cinco linhas dizem?",
+    "hint": "Leia o `WHERE` de fora.",
+    "choices": [
+      {
+        "text": "Cinco perguntas puseram em primeiro um artigo fora da sua lista de relevantes, então 19 das 24 acertaram na posição 1",
+        "why": "Certo. A busca lateral acha o primeiro artigo de cada pergunta, e o `WHERE` fica só com os erros."
+      },
+      {
+        "text": "Cinco perguntas não têm artigo relevante na tabela",
+        "why": "Toda linha mostra uma lista `relevant`, e os artigos nela estão em `articles`; o erro está na ordenação."
+      },
+      {
+        "text": "O join `LATERAL` para depois de cinco perguntas",
+        "why": "Ele rodou para as 24. O `LIMIT 1` fica dentro da subconsulta e limita a busca de cada pergunta a um artigo."
+      },
+      {
+        "text": "Cinco artigos nunca foram devolvidos para pergunta nenhuma",
+        "why": "A consulta lista perguntas, não artigos, e h09 aparece duas vezes entre as cinco linhas."
+      }
+    ]
+  },
+  "ex-esk97t97": {
+    "prompt": "Ponha em ordem o que acontece quando `search.py` responde uma pergunta.",
+    "hint": "Dois passos acontecem no Python, três no PostgreSQL e um no Python de novo.",
+    "items": [
+      "Transformar a pergunta em vetor com o all-MiniLM-L6-v2",
+      "Mandar o vetor como parâmetro da consulta",
+      "Calcular `<=>` entre ele e o vetor de cada linha",
+      "Ordenar as linhas por essa distância, da menor para a maior",
+      "Ficar com as três primeiras com `LIMIT`",
+      "Imprimir um menos cada distância como similaridade"
+    ],
+    "trap": "Os vetores dos artigos nunca viajam até o Python: a distância e a ordenação acontecem dentro do PostgreSQL, e só três linhas voltam."
+  },
+  "ex-n40r1tjq": {
+    "prompt": "Depois de `CREATE INDEX ... USING hnsw` nos 40 artigos, o `EXPLAIN` ainda mostra `Seq Scan on articles`. Por quê?",
+    "hint": "Quem escolhe o plano, e com base em quê?",
+    "choices": [
+      {
+        "text": "O índice ainda está sendo construído em segundo plano",
+        "why": "`CREATE INDEX` já tinha retornado quando o `EXPLAIN` rodou; o índice estava completo e pronto."
+      },
+      {
+        "text": "Índices HNSW precisam de `SET enable_seqscan = off` antes que o planejador os considere",
+        "why": "Na tabela de 20.000 linhas o mesmo tipo de índice foi usado sem mudar configuração nenhuma."
+      },
+      {
+        "text": "O planejador estimou que ler 40 linhas custa menos que percorrer o grafo",
+        "why": "Certo. O planejador escolhe o plano mais barato que consegue estimar, e uma tabela que cabe em poucas páginas sai mais barata lida inteira."
+      },
+      {
+        "text": "A consulta usou `<=>`, e o índice foi construído para `<->`",
+        "why": "O índice foi construído com `vector_cosine_ops`, que é a classe de `<=>`; o operador combinava."
+      }
+    ]
+  },
+  "ex-0x7jp722": {
+    "prompt": "Um índice foi construído `USING hnsw (embedding vector_cosine_ops)`. Qual destas consultas o planejador consegue atender com ele?",
+    "hint": "Operador, direção e um `LIMIT`.",
+    "choices": [
+      {
+        "text": "`ORDER BY 1 - (embedding <=> q) DESC LIMIT 5`",
+        "why": "A mesma ordem no papel, mas o planejador não faz a álgebra; `unused.sql` recebeu um `Seq Scan` exatamente por isso."
+      },
+      {
+        "text": "`ORDER BY embedding <=> q LIMIT 5`",
+        "why": "Certo. Coluna, o operador que a classe nomeia, o valor, crescente, e um limite: o único formato que o índice atende."
+      },
+      {
+        "text": "`ORDER BY embedding <-> q LIMIT 5`",
+        "why": "`<->` é a distância L2, atendida por `vector_l2_ops`. `unused.sql` mostrou o índice de cosseno ignorado para ela."
+      },
+      {
+        "text": "`ORDER BY embedding <=> q DESC LIMIT 5`",
+        "why": "Decrescente pede as linhas mais distantes primeiro, que não é para onde o índice caminha."
+      }
+    ]
+  },
+  "ex-8h97epyk": {
+    "prompt": "Com um índice IVFFlat de `lists = 100` nos 40 artigos, `search.py` imprimiu uma linha em vez de três. O que explica isso?",
+    "hint": "Dois números: quantos grupos existem e quantos uma consulta visita.",
+    "choices": [
+      {
+        "text": "O IVFFlat devolve só a linha mais próxima, qualquer que seja o `LIMIT`",
+        "why": "Numa tabela grande o bastante para os seus grupos, uma varredura IVFFlat preenche o `LIMIT`; a linha única veio do estado deste índice, não do método."
+      },
+      {
+        "text": "O índice HNSW na mesma coluna entrou em conflito com ele",
+        "why": "Dois índices numa coluna não interferem. O planejador escolheu um, o IVFFlat, e a resposta dele veio curta."
+      },
+      {
+        "text": "A consulta buscou em um único grupo entre cem, e esse grupo guardava um artigo",
+        "why": "Certo. `ivfflat.probes` valia 1, e cem grupos aprendidos de 40 linhas deixam cada um quase vazio."
+      },
+      {
+        "text": "O NOTICE interrompeu metade da construção do índice",
+        "why": "O `NOTICE` era um aviso e o `CREATE INDEX` terminou; o índice tinha todas as linhas, em grupos que a consulta quase não visitou."
+      }
+    ]
+  },
+  "ex-6r1ageew": {
+    "prompt": "Ligue cada operador à classe de operadores de que um índice precisa para ser usado com ele.",
+    "hint": "A classe nomeia a distância.",
+    "pairs": [
+      {
+        "left": "`<->`",
+        "right": "`vector_l2_ops`"
+      },
+      {
+        "left": "`<#>`",
+        "right": "`vector_ip_ops`"
+      },
+      {
+        "left": "`<=>`",
+        "right": "`vector_cosine_ops`"
+      }
+    ],
+    "right_distractors": [
+      "`vector_dims_ops`"
+    ]
+  },
+  "ex-s4d1wah4": {
+    "prompt": "Uma varredura IVFFlat olha em tantos grupos quanto a configuração `ivfflat.___` diz, e o pgvector 0.6.0 a deixa em 1 a menos que você mude.",
+    "hint": "A seção mostrou com `SHOW`.",
+    "blanks": [
+      {
+        "accept": [
+          "probes"
+        ]
+      }
+    ]
+  },
+  "ex-n4rea68m": {
+    "prompt": "Sem índice, o plano da busca em `noise` mostrou `Parallel Seq Scan ... rows=6667 loops=3`. Mais ou menos quantas linhas foram lidas no total?",
+    "hint": "`rows` é por loop, e houve três loops.",
+    "unit": "linhas"
+  },
+  "ex-vcchkpsq": {
+    "prompt": "Por que o guia do Supabase põe a busca vetorial dentro de uma função SQL e a chama com `rpc`?",
+    "hint": "O que um cliente do Supabase manda?",
+    "choices": [
+      {
+        "text": "O pgvector no Supabase só funciona dentro de funções",
+        "why": "A coluna, os operadores e os índices funcionam em qualquer SQL lá. A função existe por causa do cliente."
+      },
+      {
+        "text": "A API gerada não tem como ordenar por um operador do pgvector",
+        "why": "Certo. O cliente conversa com uma API que filtra e ordena por colunas, e uma função chamada por ela roda o SQL que a API não consegue expressar."
+      },
+      {
+        "text": "Funções rodam mais rápido, porque o PostgreSQL guarda em cache os vetores que elas já leram",
+        "why": "A função não põe nada em cache. `LANGUAGE sql STABLE` deixa o planejador tratá-la como a consulta dentro dela, que tem a mesma velocidade."
+      },
+      {
+        "text": "Para o modelo de embedding rodar nos servidores do Supabase",
+        "why": "A função recebe um vetor já calculado. O programa transforma a pergunta em vetor do lado de quem chama, com o mesmo modelo dos artigos."
+      }
+    ]
+  },
+  "ex-0qag1h2v": {
+    "prompt": "Uma equipe declara sua função de busca como `SECURITY DEFINER`, com um administrador como dono, para que ela 'sempre funcione'. A tabela `articles` tem uma política de segurança em nível de linha por loja. O que mudou?",
+    "hint": "Com os direitos de quem a função roda agora?",
+    "choices": [
+      {
+        "text": "Nada, porque as políticas são conferidas na tabela seja quem for que rode a consulta",
+        "why": "As políticas valem para o papel que roda a consulta, e uma função `SECURITY DEFINER` roda como o dono, cujo papel a política talvez não restrinja."
+      },
+      {
+        "text": "A função passa a recusar toda chamada do navegador",
+        "why": "Direitos do definidor ampliam o que a função lê; não impedem ninguém de chamá-la."
+      },
+      {
+        "text": "Só a velocidade: funções de definidor pulam o planejador",
+        "why": "O planejador roda de qualquer jeito. O que muda é de quem são as políticas que valem."
+      },
+      {
+        "text": "Qualquer um que chame busca nos artigos de todas as lojas por ela",
+        "why": "Certo. A função roda com os direitos do dono e pula as políticas de quem chama, então a busca virou um jeito de contorná-las."
+      }
+    ]
+  },
+  "ex-nyq9zwsp": {
+    "prompt": "`match_articles` declara seu parâmetro como `vector(384)`. Quem chama passa um vetor de 256 números. O que acontece?",
+    "hint": "A seção rodou exatamente isso.",
+    "choices": [
+      {
+        "text": "A chamada é recusada com `expected 384 dimensions, not 256`",
+        "why": "Esse é o erro da coluna num INSERT. O tamanho do parâmetro de uma função é ignorado, então o vetor entra."
+      },
+      {
+        "text": "Ele entra, e `<=>` falha com `different vector dimensions 384 and 256`",
+        "why": "Certo. O PostgreSQL ignora o tamanho escrito num parâmetro, e o operador se recusa a comparar vetores de tamanhos diferentes."
+      },
+      {
+        "text": "Ele é completado com zeros até 384 e avaliado",
+        "why": "Nada completa um vetor. A captura `matchdims` terminou num erro, sem linhas."
+      },
+      {
+        "text": "A função devolve zero linhas, porque nada passa do limiar",
+        "why": "Nenhuma linha chegou a ser avaliada; a própria comparação falhou."
+      }
+    ]
+  },
+  "ex-nzxeebkq": {
+    "prompt": "Em `$vectorSearch`, `numCandidates` faz o papel de qual configuração do pgvector?",
+    "hint": "Os dois decidem o quão longe uma busca aproximada olha antes de ficar com os melhores.",
+    "choices": [
+      {
+        "text": "`hnsw.ef_search`",
+        "why": "Certo. Os dois definem o tamanho da lista de candidatos que uma busca do tipo HNSW reúne; o Atlas recebe o valor em cada consulta, o pgvector como configuração da sessão."
+      },
+      {
+        "text": "O `LIMIT` da consulta",
+        "why": "`limit` tem campo próprio em `$vectorSearch`, e `numCandidates` não pode ser menor que ele."
+      },
+      {
+        "text": "O `lists` dado no `CREATE INDEX`",
+        "why": "`lists` é fixado quando um índice IVFFlat é construído. `numCandidates` muda a cada consulta."
+      },
+      {
+        "text": "A dimensão em `vector(384)`",
+        "why": "A dimensão é `numDimensions` na definição do índice do Atlas, não um campo da consulta."
+      }
+    ]
+  },
+  "ex-wfjatrg1": {
+    "prompt": "Uma equipe leva sua busca do pgvector para o Atlas, com um índice `cosine`, e mantém a regra 'descartar resultados abaixo de 0,4', ajustada sobre `1 - (a <=> b)`. O que acontece com os resultados?",
+    "hint": "A nota do Atlas é (1 + cosseno) / 2.",
+    "choices": [
+      {
+        "text": "Nada muda; um cosseno é um cosseno",
+        "why": "O Atlas não devolve o cosseno. A nota dele é reescalada para ir de 0 a 1."
+      },
+      {
+        "text": "Quase nada passa, porque as notas do Atlas são mais baixas",
+        "why": "A reescala sobe as notas para todo cosseno abaixo de 1, então o limiar deixa passar mais, não menos."
+      },
+      {
+        "text": "Passa muito mais, já que 0,4 lá é só um cosseno de −0,2",
+        "why": "Certo. (1 + c) / 2 = 0,4 dá c = −0,2, então resultados que o pgvector teria descartado como sem relação agora passam."
+      },
+      {
+        "text": "A consulta falha até o limiar ser dado como distância",
+        "why": "`$vectorSearch` não tem campo de limiar; a regra é código da própria equipe, e roda sobre a nota que voltar."
+      }
+    ]
+  },
+  "ex-gnyjj6n2": {
+    "prompt": "No MongoDB Atlas a busca vetorial é um estágio de um pipeline de agregação, chamado ___, e ele tem de ser o primeiro estágio do pipeline.",
+    "hint": "O nome começa com um cifrão.",
+    "blanks": [
+      {
+        "accept": [
+          "$vectorSearch",
+          "vectorSearch"
+        ]
+      }
+    ]
+  },
+  "ex-w4jrtz11": {
+    "prompt": "`edit.py` atualizou o corpo do artigo de reembolso e depois tentou guardar um vetor do WordLlama na mesma transação. O que o corpo do artigo dizia depois?",
+    "hint": "A segunda linha da saída.",
+    "choices": [
+      {
+        "text": "O texto novo, com o vetor antigo ao lado",
+        "why": "Isso é o que dois sistemas deixariam. Aqui as duas atualizações estavam numa transação, e o erro desfez as duas."
+      },
+      {
+        "text": "O texto antigo, como se o script nunca tivesse rodado",
+        "why": "Certo. O vetor foi recusado, o PostgreSQL desfez a transação inteira, e o corpo ainda dizia três dias úteis."
+      },
+      {
+        "text": "Nada; a linha foi apagada pela atualização que falhou",
+        "why": "Um `UPDATE` que falha não apaga nada. A conexão nova leu a linha de volta."
+      },
+      {
+        "text": "O texto novo, com um vetor truncado em 256 números",
+        "why": "O pgvector não trunca; recusou o valor com `expected 384 dimensions, not 256`."
+      }
+    ]
+  },
+  "ex-qj5qpnjj": {
+    "prompt": "Uma equipe confere se a busca usa o índice HNSW rodando `EXPLAIN` numa cópia de homologação com 300 linhas, e vê `Seq Scan`. A produção tem dois milhões de linhas. O que devem concluir?",
+    "hint": "O plano que o planejador escolhe depende do que ele estima.",
+    "choices": [
+      {
+        "text": "O índice está quebrado e precisa ser reconstruído",
+        "why": "Um `Seq Scan` numa tabela pequena é a escolha certa do planejador, como foi nos 40 artigos; não diz nada sobre a saúde do índice."
+      },
+      {
+        "text": "Nada sobre a produção; o plano tem de ser conferido numa tabela do mesmo tamanho que a de produção",
+        "why": "Certo. A escolha segue o tamanho da tabela, então uma cópia pequena é respondida com uma leitura completa, com índice ou sem."
+      },
+      {
+        "text": "A produção também vai ler todas as linhas, já que um plano não muda com o tamanho da tabela",
+        "why": "Muda sim: a mesma consulta nas 20.000 linhas de `noise` passou para um `Index Scan`."
+      },
+      {
+        "text": "A classe de operadores está errada para a consulta",
+        "why": "Uma classe errada dá `Seq Scan` em qualquer tamanho, e por isso se confere na tabela grande; um resultado com 300 linhas sozinho não separa os dois casos."
+      }
+    ]
+  },
+  "ex-adv9w2x7": {
+    "prompt": "A Marginalia guarda os vetores da central de ajuda numa coluna do PostgreSQL que guarda seus pedidos. O que disto ela recebe sem construir mais nada? Marque todas as que se aplicam.",
+    "hint": "Pense no que o resto dos dados já tem.",
+    "choices": [
+      {
+        "text": "Um texto e seu vetor salvos ou desfeitos juntos",
+        "why": "Sim. Os dois estão numa linha e numa transação, como `edit.py` mostrou."
+      },
+      {
+        "text": "Vetores nos mesmos backups que os textos",
+        "why": "Sim. O `pg_dump` e qualquer outro backup do banco incluem a coluna."
+      },
+      {
+        "text": "A garantia de que uma busca `LIMIT 10` pelo índice sempre devolve 10 linhas",
+        "why": "Um índice aproximado pode devolver menos linhas, como o IVFFlat fez aqui e como a aula 16 mostra para o HNSW."
+      },
+      {
+        "text": "Joins entre resultados de busca e as outras tabelas, num comando só",
+        "why": "Sim. `recall.sql` juntou as perguntas aos artigos; pedidos ou estoque se juntam do mesmo jeito."
+      },
+      {
+        "text": "Uma verificação de que todo vetor veio do mesmo modelo",
+        "why": "A coluna confere só a dimensão. Dois modelos de 384 dimensões passam igualmente."
+      }
+    ]
+  },
+  "ex-qyk7esty": {
+    "prompt": "Ligue cada descrição ao sistema que ela descreve.",
+    "hint": "A aula 13 apresentou a única biblioteca entre eles.",
+    "pairs": [
+      {
+        "left": "Uma coluna `vector(384)` recusa um vetor curto no INSERT",
+        "right": "PostgreSQL com pgvector"
+      },
+      {
+        "left": "`numDimensions` fica num índice definido ao lado da coleção",
+        "right": "MongoDB Atlas"
+      },
+      {
+        "left": "Uma função SQL chamada por HTTPS via `rpc`",
+        "right": "Supabase"
+      },
+      {
+        "left": "Um índice no seu próprio processo, sem metadados e sem servidor",
+        "right": "FAISS"
+      }
+    ],
+    "right_distractors": [
+      "Pinecone"
+    ]
+  },
+  "ex-b4dkd673": {
+    "prompt": "Ponha em ordem os passos para acrescentar busca com IVFFlat a um banco PostgreSQL que já existe.",
+    "hint": "Um tipo de índice aprende com as linhas que existem quando ele é construído.",
+    "items": [
+      "`CREATE EXTENSION vector`",
+      "Acrescentar uma tabela ou coluna do tipo `vector(384)`",
+      "Carregar os vetores",
+      "`CREATE INDEX ... USING ivfflat`",
+      "Rodar `EXPLAIN` na busca sobre a tabela completa"
+    ],
+    "trap": "O índice vem depois da carga: o IVFFlat aprende seus grupos com as linhas presentes no `CREATE INDEX`, e nos 40 artigos ele imprimiu um `NOTICE` e perdeu linhas. O HNSW poderia ter sido criado antes."
+  }
+}

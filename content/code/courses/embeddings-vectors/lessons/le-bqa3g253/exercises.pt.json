@@ -1,0 +1,484 @@
+{
+  "ex-s1dr58r4": {
+    "prompt": "O advogado da Marginalia decide que nenhuma mensagem de cliente, nem nada calculado a partir dela, pode sair dos servidores da empresa. Que jeito de transformar as mensagens em vetores se encaixa?",
+    "hint": "A aula 1 disse o que é o vetor de uma mensagem.",
+    "choices": [
+      {
+        "text": "Um provedor hospedado, pedindo menos dimensões",
+        "why": "Menos números continuam sendo calculados nos servidores do provedor a partir da mensagem, que precisa ser mandada para lá antes."
+      },
+      {
+        "text": "Um provedor hospedado, com o task type certo",
+        "why": "O task type muda como o vetor é feito, não onde. O texto continua indo para o provedor."
+      },
+      {
+        "text": "Um modelo aberto rodando na máquina da Marginalia",
+        "why": "Isso. O texto vira vetor onde está guardado, e nem ele nem o vetor vão para outro lugar."
+      },
+      {
+        "text": "A saída int8 do Cohere, que carrega menos do texto",
+        "why": "Toda codificação é calculada pelo Cohere depois que o texto chega lá, e um vetor é dado pessoal em qualquer codificação."
+      }
+    ]
+  },
+  "ex-2bet8q1s": {
+    "prompt": "Por que `st.py`, a versão com sentence-transformers, foi mostrado na aula mas nunca rodado?",
+    "hint": "Leia as duas linhas que o curl imprimiu.",
+    "choices": [
+      {
+        "text": "O sentence-transformers não suporta o all-MiniLM-L6-v2",
+        "why": "O modelo foi publicado pelo projeto sentence-transformers e é um dos mais conhecidos dele."
+      },
+      {
+        "text": "huggingface.co recusou o download desta máquina",
+        "why": "Isso. O 403 com `host_not_allowed` veio da rede, e o índice do PyTorch também estava fora de alcance."
+      },
+      {
+        "text": "Ele precisa de uma chave de API que o curso não pode distribuir",
+        "why": "Um modelo aberto não precisa de chave; o download é público. O obstáculo foi a rede."
+      },
+      {
+        "text": "O programa tem um erro que a aula deixa de propósito",
+        "why": "O código segue a API documentada da biblioteca. Ele não rodou porque o modelo não pôde ser baixado, não por causa do código."
+      }
+    ]
+  },
+  "ex-9xq1wvrz": {
+    "prompt": "Sem sentence-transformers nem PyTorch, como este laboratório roda o all-MiniLM-L6-v2?",
+    "hint": "Veja o que o `lab.sh` baixou e de onde.",
+    "choices": [
+      {
+        "text": "Uma cópia menor, retreinada para o curso na central de ajuda",
+        "why": "Nada foi retreinado. Os pesos são os publicados, e o checksum diz isso."
+      },
+      {
+        "text": "O WordLlama, servido com o nome do MiniLM",
+        "why": "O WordLlama é o outro modelo, com 256 números. Os vetores de 384 números vêm dos pesos do próprio MiniLM."
+      },
+      {
+        "text": "A exportação ONNX do Chroma, rodada pelo onnxruntime",
+        "why": "Isso. O lab.sh a buscou no armazenamento do Chroma e a conferiu contra o SHA-256 que está no código do Chroma."
+      },
+      {
+        "text": "O PyTorch instalado de um espelho que o laboratório alcançava no lugar do índice oficial",
+        "why": "O PyTorch nem foi instalado; o onnxruntime roda o arquivo ONNX sem ele."
+      }
+    ]
+  },
+  "ex-z2pcypj5": {
+    "prompt": "`model.onnx` tem 90.387.606 bytes. Se quase tudo são pesos float32, cerca de quantos milhões de números ele guarda? Responda com uma casa decimal.",
+    "hint": "Um float32 ocupa quatro bytes.",
+    "unit": "milhões"
+  },
+  "ex-91bpqrjw": {
+    "prompt": "Ponha em ordem o que acontece com um título dentro do `encode` quando ele vira vetor num lote com um título mais longo.",
+    "hint": "A máscara é montada antes de o transformer rodar e usada de novo depois.",
+    "items": [
+      "Dividir cada texto em pedaços de palavra",
+      "Preencher o texto mais curto e montar a máscara de atenção",
+      "Rodar o transformer: um vetor por posição",
+      "Tirar a média dos vetores onde a máscara é 1",
+      "Dividir a média pelo próprio comprimento"
+    ],
+    "trap": "A normalização vem por último, depois do pooling: dividir o vetor de cada pedaço pelo comprimento antes daria outra média."
+  },
+  "ex-ecmzvb3t": {
+    "prompt": "Em `inside.py`, a máscara do primeiro título saiu `[1, 1, 1, 1, 1, 1, 1, 0, 0, 0]`. O que os zeros marcam?",
+    "hint": "Conte os pedaços de *When your refund arrives*.",
+    "choices": [
+      {
+        "text": "Palavras que o modelo considera sem importância",
+        "why": "O modelo nunca decide importância com a máscara; ela é fixada antes de o transformer rodar."
+      },
+      {
+        "text": "Posições de preenchimento, não pedaços do título",
+        "why": "Isso. O lote tem dez de largura por causa do título mais longo, e as três últimas posições deste são [PAD]."
+      },
+      {
+        "text": "As coordenadas do vetor a descartar",
+        "why": "A máscara tem uma entrada por posição, dez aqui, e não uma por coordenada, 384."
+      },
+      {
+        "text": "Os marcadores [CLS] e [SEP]",
+        "why": "Os marcadores são posições reais com 1; são a primeira e a sétima entradas."
+      }
+    ]
+  },
+  "ex-tc7g5pyc": {
+    "prompt": "Uma colega escreve o próprio pooling, que tira a média de todas as posições, preenchimento incluído. Ele passa nos testes dela, que transformam um texto por vez. Quando os resultados dela dão errado?",
+    "hint": "Quando um texto tem algum preenchimento?",
+    "choices": [
+      {
+        "text": "Nunca, porque normalizar depois anula o preenchimento",
+        "why": "Normalizar muda a escala do vetor; não remove o que o preenchimento acrescentou. O inside.py mediu 0,9189, não 1."
+      },
+      {
+        "text": "Só em textos com mais de 256 pedaços",
+        "why": "Textos longos são cortados, não preenchidos. O preenchimento completa textos curtos até o mais longo do lote."
+      },
+      {
+        "text": "Sempre que um texto curto divide o lote com um mais longo",
+        "why": "Isso. Sozinho, um texto não tem preenchimento e o defeito é invisível; num lote, o quanto o vetor dele erra depende dos vizinhos."
+      },
+      {
+        "text": "Sempre, na mesma medida para todo texto, então as ordens não mudam",
+        "why": "A medida depende de quanto preenchimento cada texto recebeu, então muda por texto e as ordens podem mudar."
+      }
+    ]
+  },
+  "ex-btnfcx9a": {
+    "prompt": "Transformar os vetores dos pedaços de um texto num vetor só tirando a média deles, sem contar o preenchimento, se chama mean ___.",
+    "hint": "O sentence-transformers o mantém num módulo próprio, entre o transformer e a normalização.",
+    "blanks": [
+      {
+        "accept": [
+          "pooling"
+        ]
+      }
+    ]
+  },
+  "ex-w3dhkjt6": {
+    "prompt": "O que o `minilm.py` faz com um texto de 407 pedaços de palavra?",
+    "hint": "Veja o que o vetor disse sobre uma frase acrescentada no fim.",
+    "choices": [
+      {
+        "text": "Levanta um erro com o limite",
+        "why": "Nenhum erro apareceu. Esse é o perigo: nada avisa você."
+      },
+      {
+        "text": "Devolve dois vetores, um para cada metade",
+        "why": "Um texto dá um vetor. Dividir um texto longo é algo que você faz antes, de propósito."
+      },
+      {
+        "text": "Lê os primeiros 256, marcadores incluídos, e ignora o resto",
+        "why": "Isso, em silêncio, como o sentence-transformers faz com este modelo."
+      },
+      {
+        "text": "Lê todos os pedaços, mas cada um conta menos",
+        "why": "O texto depois do limite não conta menos; não conta nada. Acrescentar uma frase ali não mudou nada."
+      }
+    ]
+  },
+  "ex-m1wvw88f": {
+    "prompt": "Em `length.py`, uma frase acrescentada depois do texto longo deixou o vetor igual, e a mesma frase acrescentada antes mudou o vetor. Por quê?",
+    "hint": "Onde fica o corte?",
+    "choices": [
+      {
+        "text": "O modelo dá mais peso ao começo de um texto do que ao fim",
+        "why": "Dentro do limite, o mean pooling pesa igual todo pedaço real. A diferença é quais pedaços estão dentro do limite."
+      },
+      {
+        "text": "Depois do corte nada é lido; o que vem antes o move",
+        "why": "Isso. Só 254 pedaços de texto são lidos; pedaços novos no começo ocupam lugares entre eles."
+      },
+      {
+        "text": "A frase do fim repetia palavras que já estavam no texto",
+        "why": "Uma palavra repetida dentro do limite ainda mudaria a média. Ela não mudou nada porque estava fora do limite."
+      },
+      {
+        "text": "O Chroma tinha guardado em cache o vetor do texto longo",
+        "why": "Esses dois vetores vieram do minilm.py, que não guarda nada; o Chroma só foi comparado no fim."
+      }
+    ]
+  },
+  "ex-kc9p9mnv": {
+    "prompt": "O all-MiniLM-L6-v2 lê 256 pedaços, `[CLS]` e `[SEP]` incluídos. Um documento tem 600 pedaços de texto, sem contar esses dois. Quantos dos pedaços dele não estão no vetor?",
+    "hint": "Dois dos 256 lugares ficam com os marcadores.",
+    "unit": "pedaços"
+  },
+  "ex-ab9b89cc": {
+    "prompt": "A Marginalia planeja versões em português de artigos longos, com tantas palavras quanto as inglesas. O que a saída de `length.py` sugere?",
+    "hint": "Compare h38 com h03 em palavras e em pedaços.",
+    "choices": [
+      {
+        "text": "O limite é o mesmo número de palavras em toda língua",
+        "why": "O limite é em pedaços, e o h38 precisou de 102 pedaços para 48 palavras, enquanto o h03 precisou de 65 para 53."
+      },
+      {
+        "text": "O limite conta caracteres, então os acentos o gastam mais rápido",
+        "why": "O limite conta pedaços de palavra do tokenizador, não caracteres."
+      },
+      {
+        "text": "Frases em português são mais longas, então são recusadas",
+        "why": "Nada é recusado; o texto depois do limite é descartado em silêncio, em qualquer língua."
+      },
+      {
+        "text": "Chegam ao corte antes: mais pedaços por palavra",
+        "why": "Isso. Um vocabulário inglês tem menos palavras inteiras em português, então os mesmos 254 pedaços comportam menos delas."
+      }
+    ]
+  },
+  "ex-ywpat2fj": {
+    "prompt": "O `config.json` diz 512 posições, o `tokenizer.json` corta em 128, e o model card diz 256. Que limite um pipeline com este modelo deve assumir?",
+    "hint": "Que fonte descreve como o modelo deveria ser usado?",
+    "choices": [
+      {
+        "text": "512, porque é o espaço que a arquitetura tem",
+        "why": "É quantas posições ela comporta, não como ela foi publicada para ser usada."
+      },
+      {
+        "text": "128, porque é o arquivo que o tokenizador de fato lê",
+        "why": "O minilm.py e o Chroma o substituem, como o sentence-transformers faz. Ler só o arquivo dá vetores diferentes dos do modelo publicado."
+      },
+      {
+        "text": "256, o número do card",
+        "why": "Isso. É o número que o sentence-transformers aplica, e o card é a descrição do uso pretendido do modelo."
+      },
+      {
+        "text": "O menor deles, por segurança",
+        "why": "Usar 128 muda todo vetor de um texto com mais de 128 pedaços. Seguro seria seguir a configuração publicada."
+      }
+    ]
+  },
+  "ex-7t7614ek": {
+    "prompt": "Ligue cada linha de um model card à pergunta que ela responde.",
+    "hint": "Uma das respostas é de uma página de provedor hospedado, não de um card.",
+    "pairs": [
+      {
+        "left": "Dimensão",
+        "right": "Quanto cada vetor custa para guardar"
+      },
+      {
+        "left": "Tamanho máximo de sequência",
+        "right": "Onde cai o corte silencioso"
+      },
+      {
+        "left": "Línguas",
+        "right": "Se um texto em português significa algo para ele"
+      },
+      {
+        "left": "Licença",
+        "right": "Se você pode usá-lo num produto"
+      }
+    ],
+    "right_distractors": [
+      "Quanto cada requisição é cobrada"
+    ]
+  },
+  "ex-ttzpgc2s": {
+    "prompt": "O card de um modelo E5 diz que consultas começam com `query: ` e documentos com `passage: `. O seu código de indexação esqueceu o prefixo nos documentos. O que acontece?",
+    "hint": "O que o modelo precisaria saber para recusar?",
+    "choices": [
+      {
+        "text": "O modelo recusa qualquer texto sem o prefixo",
+        "why": "Um modelo é uma função de texto para números; ele não tem como recusar. Transforma o que chegar."
+      },
+      {
+        "text": "Devolve vetores para os quais não foi treinado, sem aviso",
+        "why": "Isso. Como um task type errado na aula 8, o erro é silencioso, e só uma medida nas suas perguntas o mostra."
+      },
+      {
+        "text": "Nada muda, porque o prefixo é só um rótulo para pessoas",
+        "why": "O prefixo é parte do texto que o modelo lê; o card o pede porque ele estava nos dados de treino."
+      },
+      {
+        "text": "O tokenizador acrescenta o prefixo sozinho quando ele falta",
+        "why": "Tokenizadores cortam texto em pedaços; não sabem o papel de um texto. O prefixo é você quem põe."
+      }
+    ]
+  },
+  "ex-06395w8m": {
+    "prompt": "A página publicada com os pesos de um modelo aberto, que diz a dimensão, os limites, as línguas e a licença dele, é o model ___ dele.",
+    "hint": "O equivalente de um provedor hospedado é uma página de preços.",
+    "blanks": [
+      {
+        "accept": [
+          "card",
+          "cartão"
+        ]
+      }
+    ]
+  },
+  "ex-d9wz95p4": {
+    "prompt": "Nas 24 perguntas, o MiniLM pôs o artigo certo em primeiro 19 vezes e o WordLlama 20, e nenhuma pergunta foi errada pelos dois. O que isso diz?",
+    "hint": "Veja as duas listas de erros.",
+    "choices": [
+      {
+        "text": "O WordLlama é o melhor modelo de embedding em geral",
+        "why": "Um domínio e 24 perguntas não dizem nada em geral, e os erros mostram que a diferença é de poucas perguntas."
+      },
+      {
+        "text": "Os dois modelos se comportam igual em toda pergunta",
+        "why": "Eles erraram perguntas diferentes, então em quatro ou cinco perguntas cada um se comportou de outro jeito."
+      },
+      {
+        "text": "O MiniLM rodou sem normalizar, o que lhe custou uma pergunta",
+        "why": "O inside.py conferiu o minilm.py contra duas outras implementações; os vetores dele são normalizados."
+      },
+      {
+        "text": "Pontos cegos diferentes, e poucas perguntas decidindo",
+        "why": "Isso. Uma pergunta vale uns quatro pontos; o placar esconde que cada modelo erra em outro lugar."
+      }
+    ]
+  },
+  "ex-xkb0c3gz": {
+    "prompt": "A equipe jurídica da Marginalia quer buscar nos contratos com fornecedores, cada um com milhares de palavras de linguagem densa. O `bench.py` justifica escolher o WordLlama para isso?",
+    "hint": "O que foi medido, e em que textos?",
+    "choices": [
+      {
+        "text": "Sim: ele venceu o MiniLM na posição 1 e entre os 3 primeiros",
+        "why": "Venceu, em artigos curtos de ajuda e perguntas de clientes. Contratos são outro domínio e outro tamanho."
+      },
+      {
+        "text": "Não: nada aqui mediu contratos",
+        "why": "Isso. Um resultado num corpus autoriza uma escolha para aquele corpus. Os contratos precisam do próprio conjunto de perguntas."
+      },
+      {
+        "text": "Sim, porque o leaderboard do MTEB põe os modelos estáticos em primeiro",
+        "why": "A aula não afirmou nada sobre onde o leaderboard os põe, e um leaderboard é dado de outras pessoas, de qualquer forma."
+      },
+      {
+        "text": "Não, porque um modelo estático não consegue representar vocabulário jurídico",
+        "why": "Nada medido aqui diz isso. A resposta honesta é que ele não foi medido em contratos."
+      }
+    ]
+  },
+  "ex-aqhtnjpe": {
+    "prompt": "O que cada número da saída de `bench.py` conta?",
+    "hint": "É a medida da aula 3.",
+    "choices": [
+      {
+        "text": "Perguntas achadas na posição 1 e entre as 3 primeiras",
+        "why": "Isso: 19 e 22 para o MiniLM, 20 e 24 para o WordLlama, de 24 perguntas."
+      },
+      {
+        "text": "Artigos que cada modelo transformou sem erro",
+        "why": "Todo artigo virou vetor; os números contam perguntas, de 24."
+      },
+      {
+        "text": "A nota de cosseno média entre cada pergunta e o artigo dela",
+        "why": "Nenhuma nota é impressa. O programa conta perguntas respondidas pela ordenação."
+      },
+      {
+        "text": "Quantos pedaços cada modelo leu nas perguntas",
+        "why": "Pedaços são assunto da seção sobre tamanho. O bench.py conta perguntas achadas na posição 1 e entre as 3 primeiras."
+      }
+    ]
+  },
+  "ex-45mr5w42": {
+    "prompt": "Numa thread só, o MiniLM transformou os tickets a 245 textos por segundo em lotes de 8 e a 193 num lote só de 150. Por que o lote grande perdeu?",
+    "hint": "O que um lote faz com um ticket curto ao lado de um longo?",
+    "choices": [
+      {
+        "text": "Um lote de 150 não cabe na memória e a máquina usa swap",
+        "why": "150 tickets curtos ocupam muito pouca memória. O custo é de conta, não de memória."
+      },
+      {
+        "text": "O onnxruntime recusa lotes maiores que 32 e os divide devagar",
+        "why": "Nada foi recusado nem dividido; o lote de 150 rodou numa chamada só."
+      },
+      {
+        "text": "Todo ticket é preenchido até o mais longo, e o preenchimento também é calculado",
+        "why": "Isso. O transformer trabalha em toda posição, preenchimento incluído, antes de a máscara descartá-la."
+      },
+      {
+        "text": "O lote grande rodou com menos threads que os pequenos",
+        "why": "Toda rodada usou a mesma thread única; o minilm.py define isso."
+      }
+    ]
+  },
+  "ex-pxjdbvfq": {
+    "prompt": "Na taxa mais rápida do MiniLM que o `speed.py` imprimiu, 245 textos por segundo num núcleo, quantos segundos leva transformar 50.000 tickets em vetores?",
+    "hint": "Textos divididos pela taxa.",
+    "unit": "s"
+  },
+  "ex-vsjw3xkv": {
+    "prompt": "Por que o WordLlama transformou os tickets 89 vezes mais rápido que a linha mais rápida do MiniLM?",
+    "hint": "A aula 1 traçou a diferença entre os dois tipos de modelo.",
+    "choices": [
+      {
+        "text": "Ele rodou nos quatro processadores, e o MiniLM em um",
+        "why": "A diferença é bem maior que quatro, e o motivo é o próprio trabalho: não há transformer para rodar."
+      },
+      {
+        "text": "Os vetores dele são binários, mais rápidos de calcular",
+        "why": "Os vetores do WordLlama aqui são floats comuns, 256 deles."
+      },
+      {
+        "text": "Ele tira a média de vetores fixos de uma tabela, sem camadas",
+        "why": "Isso. Uma busca e uma média, contra seis camadas em que cada pedaço presta atenção em todos os outros."
+      },
+      {
+        "text": "Ele lembrou dos tickets da primeira das três rodadas",
+        "why": "Nada fica em cache entre as rodadas; cada uma transforma os 150 tickets de novo."
+      }
+    ]
+  },
+  "ex-qz7azdwy": {
+    "prompt": "Ordenar os textos por ___ antes de dividi-los em lotes tira a maior parte do preenchimento.",
+    "hint": "O que decide quantos pedaços [PAD] um texto curto recebe?",
+    "blanks": [
+      {
+        "accept": [
+          "tamanho",
+          "comprimento",
+          "length",
+          "size"
+        ]
+      }
+    ]
+  },
+  "ex-hkcx9x5q": {
+    "prompt": "Quais destes são motivos para rodar um modelo aberto de embedding na sua própria máquina? Escolha todos os que se aplicam.",
+    "hint": "Pense em dinheiro, dados e mudança.",
+    "choices": [
+      {
+        "text": "Nem o texto nem o vetor saem da sua máquina",
+        "why": "Isso. É o que permite cumprir uma regra de privacidade."
+      },
+      {
+        "text": "Não há conta por texto, só o custo da máquina",
+        "why": "Isso. O custo passa para o seu processador, que a seção de velocidade mediu."
+      },
+      {
+        "text": "O arquivo do modelo fica igual até você mudá-lo",
+        "why": "Isso. Um checksum o fixa; um modelo hospedado pode ser atualizado ou aposentado sem você querer."
+      },
+      {
+        "text": "Modelos abertos são sempre mais precisos que os hospedados",
+        "why": "Nada no curso mediu isso, e os leaderboards mostram os dois tipos em todos os níveis."
+      },
+      {
+        "text": "Rodar localmente tira o limite de tamanho da entrada",
+        "why": "O limite é do modelo. O all-MiniLM-L6-v2 lê 256 pedaços onde quer que rode."
+      }
+    ]
+  },
+  "ex-3q5tmgjc": {
+    "prompt": "Ordene estes textos do que tem menos pedaços de palavra para o que tem mais, como o `length.py` mediu.",
+    "hint": "Os artigos em português ocupam mais pedaços do que o número de palavras sugere.",
+    "items": [
+      "h03, inglês, 53 palavras",
+      "h40, português, 44 palavras",
+      "h39, português, 44 palavras",
+      "h38, português, 48 palavras",
+      "Os corpos de entrega juntos"
+    ],
+    "trap": "O h03 não fica no meio: com o maior número de palavras dos quatro artigos, ele tem menos pedaços, 65."
+  },
+  "ex-hr7w9gdb": {
+    "prompt": "Ligue cada número desta aula ao que ele é.",
+    "hint": "Três deles são comprimentos, e eles discordam.",
+    "pairs": [
+      {
+        "left": "384",
+        "right": "Números em todo vetor do all-MiniLM-L6-v2"
+      },
+      {
+        "left": "256",
+        "right": "Pedaços que o model card diz que ele lê"
+      },
+      {
+        "left": "128",
+        "right": "Onde o tokenizer.json corta se ninguém mudar"
+      },
+      {
+        "left": "512",
+        "right": "Posições para as quais a arquitetura tem espaço"
+      }
+    ],
+    "right_distractors": [
+      "Textos por chamada que o Cohere aceita"
+    ]
+  }
+}

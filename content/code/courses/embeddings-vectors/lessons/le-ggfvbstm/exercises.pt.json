@@ -1,0 +1,485 @@
+{
+  "ex-y34z0cf5": {
+    "prompt": "Nesta aula, `google-genai` e `cohere` mandam toda requisição para o labembed. O que é o labembed?",
+    "hint": "Leia o que ele recusa.",
+    "choices": [
+      {
+        "text": "Um servidor escrito para o curso, com dois modelos locais",
+        "why": "Isso. Os SDKs são reais e não foram modificados, e os vetores são reais, do all-MiniLM-L6-v2 e do WordLlama; os modelos não são os do Google nem os do Cohere."
+      },
+      {
+        "text": "O gemini-embedding-001 do Google, baixado e rodando localmente",
+        "why": "O labembed recusa o nome gemini-embedding-001 com um 404. Ele só serve lab-minilm e lab-wordllama."
+      },
+      {
+        "text": "Um proxy que repassa cada requisição ao Google ou ao Cohere e a registra",
+        "why": "Nenhuma requisição saiu da máquina. As APIs dos provedores estavam inacessíveis, e é por isso que o substituto existe."
+      },
+      {
+        "text": "Um simulador que devolve números aleatórios do tamanho certo",
+        "why": "Os vetores são calculados por dois modelos reais a cada requisição, e é por isso que as buscas desta aula acham os artigos certos."
+      }
+    ]
+  },
+  "ex-aj86x3jw": {
+    "prompt": "Você chama `embed_content` com uma lista de três títulos. Como saber qual embedding devolvido pertence a qual título?",
+    "hint": "Compare com a resposta da OpenAI na aula 7.",
+    "choices": [
+      {
+        "text": "Cada embedding traz um campo `index` com a entrada dele",
+        "why": "Essa é a resposta da OpenAI. Os embeddings do Gemini trazem `values` e nada que aponte de volta para a entrada."
+      },
+      {
+        "text": "Pela posição: `r.embeddings` vem na ordem em que os títulos foram mandados",
+        "why": "Isso. A ordem é a única ligação, então guarde a lista que você mandou ao lado da resposta."
+      },
+      {
+        "text": "Cada embedding repete o texto de onde veio",
+        "why": "Nem o objeto do SDK nem o JSON trazem o texto de volta; só os números voltam."
+      },
+      {
+        "text": "Ordene os embeddings pelo primeiro valor para recuperar a ordem",
+        "why": "Uma coordenada sozinha não significa nada (aula 1), e ordenar por ela embaralharia a ordem em vez de recuperá-la."
+      }
+    ]
+  },
+  "ex-9ekt6dyw": {
+    "prompt": "Um colega sai do labembed para o Google, pede ao gemini-embedding-001 `output_dimensionality=768` e ordena artigos pelo produto escalar cru dos valores devolvidos. O que dá errado?",
+    "hint": "No laboratório, os comprimentos impressos foram 1,0. Quem os fez 1,0?",
+    "choices": [
+      {
+        "text": "Nada: o produto escalar de dois embeddings quaisquer já é um cosseno",
+        "why": "Só para vetores unitários. O labembed renormaliza depois de cortar; o Google documenta que não faz isso para tamanhos abaixo de 3.072."
+      },
+      {
+        "text": "A requisição falha, porque o modelo só aceita os 3.072 cheios",
+        "why": "768 é um dos tamanhos que o Google recomenda para este modelo, e a requisição dá certo."
+      },
+      {
+        "text": "Os vetores não têm comprimento 1, e o produto escalar não é um cosseno",
+        "why": "Isso. Um vetor unitário cortado fica mais curto que 1, numa medida diferente para cada texto, então o produto escalar deixa de ser um cosseno. A última parte de gemini.py é a correção."
+      },
+      {
+        "text": "O produto escalar tem de ser trocado pela distância de Hamming em vetores cortados",
+        "why": "A distância de Hamming compara bits. Estes ainda são vetores float; só precisam ser normalizados."
+      }
+    ]
+  },
+  "ex-qwd12z3n": {
+    "prompt": "O Google documenta que só a saída cheia de 3.072 números do gemini-embedding-001 vem ___, então uma mais curta precisa ser dividida pelo próprio comprimento.",
+    "hint": "É o que faz de um produto escalar um cosseno.",
+    "blanks": [
+      {
+        "accept": [
+          "normalizada",
+          "normalizado",
+          "unitária",
+          "unitario",
+          "comprimento 1",
+          "normalised",
+          "normalized"
+        ]
+      }
+    ]
+  },
+  "ex-n9kavm2w": {
+    "prompt": "Por que um modelo treinado para busca assimétrica transforma uma consulta em vetor de um jeito diferente de um documento?",
+    "hint": "Compare *can I pay in three parts* com *Payment methods we accept*.",
+    "choices": [
+      {
+        "text": "As consultas viram vetores com menos números, para a busca sair barata",
+        "why": "Os dois lados saem com a mesma dimensão, senão nem poderiam ser comparados."
+      },
+      {
+        "text": "Pergunta e trecho que a responde são textos de tipos diferentes",
+        "why": "Isso. Treinado com pares de pergunta e resposta com o lado marcado, ele põe uma pergunta perto das respostas dela, e não perto de perguntas parecidas."
+      },
+      {
+        "text": "Os documentos geralmente estão em outra língua que as consultas",
+        "why": "A língua não tem nada a ver com isso. As perguntas e os artigos da central de ajuda estão em inglês e ainda assim têm papéis diferentes."
+      },
+      {
+        "text": "Os documentos passam do limite de entrada do modelo e precisam ser cortados",
+        "why": "O limite de entrada vale para todo texto, seja qual for o tipo; o tipo diz para que o texto serve, não o tamanho dele."
+      }
+    ]
+  },
+  "ex-b0sbsneh": {
+    "prompt": "`tasks.py` transformou uma pergunta em vetor como `RETRIEVAL_QUERY`, `RETRIEVAL_DOCUMENT`, `SEMANTIC_SIMILARITY` e `CLASSIFICATION`, e toda diferença impressa foi 0.0. O que isso mostra?",
+    "hint": "O log mostra o que o servidor recebeu.",
+    "choices": [
+      {
+        "text": "Task types não mudam nada em nenhum modelo, inclusive o do Google",
+        "why": "Só o labembed foi medido. O gemini-embedding-001 é documentado como um modelo que trata os tipos de jeitos diferentes, e nenhuma requisição chegou a ele."
+      },
+      {
+        "text": "O SDK descartou o task type antes de mandar a requisição",
+        "why": "O log registrou quatro task types diferentes chegando, então o SDK os mandou."
+      },
+      {
+        "text": "Os modelos do labembed são simétricos, e o tipo não muda nada",
+        "why": "Isso. Nenhum modelo do laboratório tem um lado de consulta e um de documento, então não há um segundo jeito de transformar o texto em vetor."
+      },
+      {
+        "text": "O servidor guardou o vetor da primeira chamada e o devolveu mais três vezes",
+        "why": "O labembed calcula cada requisição; os vetores são idênticos porque o modelo só tem um jeito de transformar um texto em vetor."
+      }
+    ]
+  },
+  "ex-125n03ab": {
+    "prompt": "Ponha em ordem os passos de uma busca na central de ajuda com os task types do Gemini, de montar o índice a responder um cliente.",
+    "hint": "A indexação acontece antes de alguém perguntar.",
+    "items": [
+      "Transformar cada artigo em vetor com `RETRIEVAL_DOCUMENT`",
+      "Guardar os vetores com o modelo e o task type ao lado",
+      "Transformar a pergunta do cliente em vetor com `RETRIEVAL_QUERY`",
+      "Pontuar o vetor da pergunta contra os guardados",
+      "Devolver os três melhores artigos"
+    ],
+    "trap": "A pergunta não vira vetor antes de os artigos serem guardados: o índice é montado uma vez, com antecedência, e cada pergunta vira vetor quando chega."
+  },
+  "ex-2hcfafzf": {
+    "prompt": "Uma equipe indexa os artigos com `SEMANTIC_SIMILARITY` e busca neles com `RETRIEVAL_QUERY` contra o gemini-embedding-001. O que acontece?",
+    "hint": "Pergunte como cada chamada, sozinha, parece para a API.",
+    "choices": [
+      {
+        "text": "A segunda chamada falha com um 400, porque os tipos não combinam",
+        "why": "Cada requisição nomeia um tipo válido, e a API vê uma requisição por vez. Nada compara as duas."
+      },
+      {
+        "text": "Toda chamada dá certo, e o descompasso passa sem aviso",
+        "why": "Isso. O descompasso está entre duas chamadas, então só uma medida nas perguntas da própria equipe o mostraria."
+      },
+      {
+        "text": "Nada muda, porque todo task type dá o mesmo vetor",
+        "why": "Esse é o labembed, cujos modelos são simétricos. O modelo do Google é documentado como um que trata os tipos de jeitos diferentes."
+      },
+      {
+        "text": "A busca se recusa a rodar até o índice ser refeito com um tipo de consulta",
+        "why": "Nada na API sabe como o índice foi montado, e indexar com um tipo de consulta seria a correção errada, de qualquer forma."
+      }
+    ]
+  },
+  "ex-dr0rjj4t": {
+    "prompt": "`co.embed(model=\"lab-minilm\", texts=[\"Audiobooks\"])` levantou um `TypeError`. Onde a chamada foi recusada?",
+    "hint": "Um TypeError é uma exceção do Python sobre argumentos.",
+    "choices": [
+      {
+        "text": "No labembed, que respondeu com um 400",
+        "why": "O 400 veio da requisição escrita à mão com curl. A chamada do SDK nunca chegou ao servidor."
+      },
+      {
+        "text": "No Python, pelo SDK, antes de montar qualquer requisição",
+        "why": "Isso. `input_type` é um argumento nomeado obrigatório de `embed`, então o Python recusou a chamada."
+      },
+      {
+        "text": "Nos servidores do Cohere, que rejeitam requisições do laboratório",
+        "why": "Nenhuma requisição foi ao Cohere; toda requisição desta aula foi ao labembed."
+      },
+      {
+        "text": "No sistema operacional, porque a porta 8500 estava fechada",
+        "why": "A chamada seguinte do mesmo script chegou ao servidor e recebeu um 400, então a porta estava aberta."
+      }
+    ]
+  },
+  "ex-4zk1nj5j": {
+    "prompt": "Um job transforma 1.000 descrições de produto em vetores pelo endpoint do Cohere com o laço de fatias de `embed_all`, 96 textos por chamada. Quantas chamadas ele faz?",
+    "hint": "A última chamada leva o que sobrar.",
+    "unit": "chamadas"
+  },
+  "ex-n8xw95m0": {
+    "prompt": "Um processamento em lote contra o Cohere recebe um 400 dizendo `too many texts: 120 (the limit is 96)`. Qual é a correção certa?",
+    "hint": "A mesma requisição vai dar certo algum dia?",
+    "choices": [
+      {
+        "text": "Repetir a mesma chamada depois de uma pausa curta, como num 429",
+        "why": "Um 429 é questão de momento e passa; este 400 é sobre a própria requisição, e a mesma chamada falha toda vez."
+      },
+      {
+        "text": "Trocar `input_type` para `classification`, que aceita mais textos",
+        "why": "O limite é por chamada, seja qual for o input type."
+      },
+      {
+        "text": "Pedir `int8` em vez de `float` para caberem mais textos",
+        "why": "O limite conta textos que entram, não bytes que saem."
+      },
+      {
+        "text": "Cortar a lista em fatias de no máximo 96, uma chamada por fatia",
+        "why": "Isso. É o `embed_all`: o erro é um defeito no tamanho da fatia, e a correção está no laço."
+      }
+    ]
+  },
+  "ex-4e3h77xs": {
+    "prompt": "O SDK do cohere põe os vetores comuns de 32 bits em `r.embeddings.___`, com um sublinhado no fim porque a palavra pura é um nome embutido do Python.",
+    "hint": "O atributo leva o nome da codificação, mais um caractere.",
+    "blanks": [
+      {
+        "accept": [
+          "float_"
+        ]
+      }
+    ]
+  },
+  "ex-53swfdq1": {
+    "prompt": "Ligue cada `input_type` do Cohere ao texto a que ele se destina.",
+    "hint": "Dois deles são os lados de uma busca.",
+    "pairs": [
+      {
+        "left": "search_document",
+        "right": "Um artigo guardado para ser encontrado"
+      },
+      {
+        "left": "search_query",
+        "right": "O que um cliente digita na caixa de busca"
+      },
+      {
+        "left": "classification",
+        "right": "Um ticket que vai ser entrada de um classificador"
+      },
+      {
+        "left": "clustering",
+        "right": "Uma de muitas mensagens agrupadas sem rótulos"
+      }
+    ],
+    "right_distractors": [
+      "Um vetor reduzido a um bit por coordenada"
+    ]
+  },
+  "ex-pn21qjvy": {
+    "prompt": "`search.py` achou 19 na posição 1 e 22 entre os 3 primeiros com as consultas mandadas como `search_query`, `search_document` e `clustering`, igualmente. O que dá para concluir?",
+    "hint": "Que servidor respondeu, e o que ele faz com o tipo?",
+    "choices": [
+      {
+        "text": "Input types não importam, e o código de produção pode omiti-los",
+        "why": "O Cohere exige o parâmetro, e contra um modelo assimétrico o tipo errado é uma perda silenciosa. Um modelo simétrico não diz nada sobre os outros."
+      },
+      {
+        "text": "Só que o labembed ignora o tipo",
+        "why": "Isso. O labembed transforma um texto em vetor do mesmo jeito seja qual for o tipo, então as três rodadas compararam vetores idênticos."
+      },
+      {
+        "text": "`clustering` é tão bom quanto `search_query` para buscar com os modelos do Cohere",
+        "why": "Nenhum modelo do Cohere foi medido. A rodada só mostra o que um modelo simétrico faz."
+      },
+      {
+        "text": "24 perguntas são poucas demais para mostrar diferença entre os tipos",
+        "why": "Os vetores eram idênticos, então nenhuma quantidade de perguntas mostraria diferença aqui."
+      }
+    ]
+  },
+  "ex-ktfgaqpr": {
+    "prompt": "A Marginalia treina a regressão logística da aula 4 com vetores do Cohere de 100 tickets transformados como `classification`. Chega um ticket novo para rotular. Com que `input_type` ele deve virar vetor?",
+    "hint": "Classificação é um par de lados, ou um tipo só de texto?",
+    "choices": [
+      {
+        "text": "`search_query`, porque um ticket novo é como uma pergunta feita ao conjunto de treino",
+        "why": "Classificar não é buscar. O classificador lê atributos, e eles têm de ser feitos do mesmo jeito que os do treino."
+      },
+      {
+        "text": "`search_document`, porque o ticket novo vai ser guardado depois",
+        "why": "Guardá-lo depois não muda para que este vetor serve agora: entrada do classificador."
+      },
+      {
+        "text": "`classification`, como os demais",
+        "why": "Isso. Classificação é simétrica: todo ticket é o mesmo tipo de texto, então o novo vira vetor exatamente como o conjunto de treino."
+      },
+      {
+        "text": "`clustering`, porque o ticket novo ainda não tem rótulo",
+        "why": "Clustering é para agrupar sem nenhum rótulo. Aqui há um classificador treinado com rótulos esperando um vetor de atributos como os que ele aprendeu."
+      }
+    ]
+  },
+  "ex-w8q0f4tv": {
+    "prompt": "Um vetor do lab-wordllama tem 256 coordenadas. Quantos bytes ocupa a forma `ubinary` dele?",
+    "hint": "Um bit por coordenada, oito bits por byte.",
+    "unit": "bytes"
+  },
+  "ex-hn0hmfxq": {
+    "prompt": "Em `quantised.py`, os vetores binários do MiniLM puseram 23 das 24 consultas entre os 3 primeiros, contra 22 do float. Qual é a leitura certa?",
+    "hint": "A diferença é de quantas consultas?",
+    "choices": [
+      {
+        "text": "Vetores binários são mais precisos que os float neste modelo",
+        "why": "Uma consulta em 24 mudando de lugar está dentro do acaso; não mostra que o binário é melhor."
+      },
+      {
+        "text": "A rodada float tinha um defeito que a binária evitou",
+        "why": "As duas rodadas pontuaram os mesmos vetores em codificações diferentes, e o float deu os mesmos 22 de `search.py`."
+      },
+      {
+        "text": "Uma consulta em 24 mudando é acaso, e não mostra mais nada",
+        "why": "Isso. A conclusão honesta é que a forma binária não custou nada que esta medida pequena consiga ver."
+      },
+      {
+        "text": "A distância de Hamming é uma medida melhor que o produto escalar para todo modelo",
+        "why": "A rodada binária do WordLlama caiu de 20 para 15 na posição 1, então ela não é melhor para todo modelo."
+      }
+    ]
+  },
+  "ex-0bhsejd7": {
+    "prompt": "Por que `quantised.py` converte os vetores int8 para inteiros de 32 bits antes do produto escalar?",
+    "hint": "Qual é a maior soma que 384 produtos de números perto de 127 podem atingir?",
+    "choices": [
+      {
+        "text": "O NumPy se recusa a multiplicar dois arrays int8",
+        "why": "O NumPy os multiplica sem problema, em int8, e esse é o problema: o resultado dá a volta em silêncio."
+      },
+      {
+        "text": "A soma de centenas de produtos de números até 127 não cabe em oito bits",
+        "why": "Isso. Um produto sozinho chega a 16.129; em int8 a soma estouraria e daria a volta sem erro."
+      },
+      {
+        "text": "Converter faz do resultado um cosseno",
+        "why": "O produto escalar em int8 não é um cosseno em tipo nenhum; ele só precisa ordenar na mesma ordem."
+      },
+      {
+        "text": "O Cohere devolve os vetores int8 como inteiros de 32 bits mesmo",
+        "why": "Eles chegam como listas de números inteiros pequenos, e o programa os guarda como int8 de propósito."
+      }
+    ]
+  },
+  "ex-tvqe1mq2": {
+    "prompt": "A codificação binária levou o WordLlama de 20 para 15 na posição 1 e o MiniLM de 19 para 16. Que explicação combina com o que a aula mediu?",
+    "hint": "Conte os bits de cada vetor binário.",
+    "choices": [
+      {
+        "text": "O WordLlama é um modelo estático, e modelos estáticos não podem ser binarizados",
+        "why": "Os vetores binários dele foram feitos e buscados; acharam 15 na posição 1. A perda é questão de grau."
+      },
+      {
+        "text": "A escala int8 do labembed estragou os vetores do WordLlama antes da binarização",
+        "why": "A forma binária sai dos sinais do vetor float, não do int8, e a rodada int8 do WordLlama não perdeu nada na posição 1."
+      },
+      {
+        "text": "Os vetores float do WordLlama não têm comprimento 1, então os bits saem errados",
+        "why": "O labembed normaliza todo vetor do lab-wordllama, e o sinal de uma coordenada não depende do comprimento, de qualquer forma."
+      },
+      {
+        "text": "As 256 coordenadas dele deixam menos bits para separar artigos parecidos do que 384",
+        "why": "Isso. Um bit por coordenada guarda só um sinal, e com menos coordenadas mais artigos caem quase à mesma distância."
+      }
+    ]
+  },
+  "ex-jfdphp03": {
+    "prompt": "Pelo preço da planilha para o gemini-embedding-001, quantos dólares custa transformar 40 milhões de tokens em vetores?",
+    "hint": "O preço é por milhão de tokens.",
+    "unit": "USD"
+  },
+  "ex-acp1g5k3": {
+    "prompt": "De onde vêm os preços desta aula?",
+    "hint": "Os preços estão fixados em alguma coisa.",
+    "choices": [
+      {
+        "text": "Das páginas de preço dos próprios provedores, lidas no dia da gravação",
+        "why": "Essas páginas não puderam ser acessadas da máquina da gravação; a aula diz isso."
+      },
+      {
+        "text": "Do `billed_units` do labembed, multiplicado por uma tarifa do laboratório",
+        "why": "`billed_units` conta os tokens do próprio laboratório e não traz preço nenhum."
+      },
+      {
+        "text": "De uma planilha de terceiros, fixada num commit",
+        "why": "Isso. Fixar o commit b9e71e990aed faz a planilha dizer o mesmo no ano que vem, mesmo que os preços dos provedores mudem."
+      },
+      {
+        "text": "De contagens de tokens do tiktoken, vezes a tarifa publicada pela OpenAI para todo provedor",
+        "why": "Cada provedor tem a sua linha e o seu preço na planilha; o tiktoken conta tokens e não conhece preço nenhum."
+      }
+    ]
+  },
+  "ex-g7p7j6qn": {
+    "prompt": "Um artigo tem 3.000 tokens e você quer transformá-lo em vetor inteiro, como uma entrada só. Que modelo da planilha lê tudo isso?",
+    "hint": "Leia a coluna `max in`.",
+    "choices": [
+      {
+        "text": "gemini-embedding-001",
+        "why": "Ele lê 2.048 tokens, então o fim de um artigo de 3.000 tokens não estaria no vetor."
+      },
+      {
+        "text": "embed-english-v3.0",
+        "why": "A planilha dá a ele 512 tokens, muito abaixo de 3.000."
+      },
+      {
+        "text": "text-embedding-3-small",
+        "why": "Isso. A planilha dá a ele 8.191 tokens de entrada, o suficiente para o artigo inteiro."
+      },
+      {
+        "text": "embed-multilingual-v3.0",
+        "why": "Como o modelo v3 inglês, ele lê 512 tokens."
+      }
+    ]
+  },
+  "ex-1qzvyz87": {
+    "prompt": "Ligue cada parâmetro ao que ele faz e à API a que pertence.",
+    "hint": "Dois deles são do Google.",
+    "pairs": [
+      {
+        "left": "`dimensions`",
+        "right": "OpenAI: devolver menos números por vetor"
+      },
+      {
+        "left": "`output_dimensionality`",
+        "right": "Google: devolver menos números por vetor"
+      },
+      {
+        "left": "`task_type`",
+        "right": "Google: dizer para que serve o texto, opcional"
+      },
+      {
+        "left": "`input_type`",
+        "right": "Cohere: dizer para que serve o texto, obrigatório"
+      }
+    ],
+    "right_distractors": [
+      "OpenAI: dizer para que serve o texto"
+    ]
+  },
+  "ex-7ssdy1z6": {
+    "prompt": "A Marginalia guarda vetores do Cohere da sua central de ajuda para buscar neles por anos. Quais destes devem ser guardados ao lado de cada vetor? Escolha todos os que se aplicam.",
+    "hint": "O que uma consulta futura precisaria saber para ser feita do mesmo jeito?",
+    "choices": [
+      {
+        "text": "O modelo que o produziu",
+        "why": "Isso. Vetores de modelos diferentes não podem ser comparados, então uma consulta tem de ser feita pelo mesmo modelo."
+      },
+      {
+        "text": "O `input_type` com que ele virou vetor",
+        "why": "Isso. Ele decide que tipo as consultas precisam, e não aparece nos números."
+      },
+      {
+        "text": "A codificação em que foi guardado, como `int8`",
+        "why": "Isso. A codificação decide como cada consulta futura tem de ser pontuada contra ele."
+      },
+      {
+        "text": "Os tokens cobrados pela chamada",
+        "why": "Isso é um fato da fatura. Nenhuma consulta futura precisa disso para ser comparada corretamente."
+      },
+      {
+        "text": "O status HTTP da requisição que o fez",
+        "why": "Um vetor guardado veio de uma requisição bem-sucedida por definição, então o status não diz nada."
+      }
+    ]
+  },
+  "ex-wefwmtm7": {
+    "prompt": "Ordene estes vetores do que tem mais bytes para o que tem menos.",
+    "hint": "Quatro bytes por float, um por int8, um bit por coordenada binária.",
+    "items": [
+      "Um vetor float do gemini-embedding-001 com 3.072 números",
+      "Um vetor float do lab-minilm",
+      "Um vetor int8 do lab-minilm",
+      "Um vetor ubinary do lab-wordllama"
+    ],
+    "trap": "O vetor int8 do lab-minilm, de 384 bytes, não é menor que o binário: um vetor ubinary do lab-wordllama tem 32 bytes."
+  },
+  "ex-mdd3z2v7": {
+    "prompt": "Vetores binários são comparados contando as posições de bit em que diferem, uma medida chamada distância de ___.",
+    "hint": "Leva o nome de um matemático que trabalhou com códigos corretores de erro.",
+    "blanks": [
+      {
+        "accept": [
+          "Hamming"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,457 @@
+{
+  "ex-c88xc3tt": {
+    "prompt": "`python bm25.py \"MG-20481937\"` imprimiu um artigo e mais nada. Por que só um?",
+    "hint": "Veja quais artigos têm nota acima de zero.",
+    "choices": [
+      {
+        "text": "O BM25 sempre devolve exatamente um resultado para um código",
+        "why": "Ele devolve todo artigo com nota acima de zero. Para outra pergunta ele imprimiu três."
+      },
+      {
+        "text": "Só esse artigo contém o texto",
+        "why": "Certo. Uma palavra presente em um artigo de 40 tem idf alto, e um artigo que não divide nenhuma palavra com a consulta fica fora da lista."
+      },
+      {
+        "text": "O número do pedido foi encontrado pelo significado, o que deixa um candidato",
+        "why": "O BM25 não sabe nada de significado. Ele achou o texto exato, que o tokenizador manteve inteiro."
+      },
+      {
+        "text": "Os outros artigos eram longos demais, e o `b` os removeu",
+        "why": "O `b` reduz uma nota pelo tamanho; nunca remove um artigo. Os outros não tinham nenhuma palavra em comum."
+      }
+    ]
+  },
+  "ex-p1c3q836": {
+    "prompt": "Para *get rid of my profile for good*, o BM25 ordenou um artigo de presente, um de escolas e um de vale-presente. A resposta é *Closing your account*. O que deu errado?",
+    "hint": "Compare as palavras da pergunta com as palavras da resposta.",
+    "choices": [
+      {
+        "text": "A resposta divide só uma palavra comum com a pergunta, e o BM25 compara apenas palavras",
+        "why": "Certo. Closing your account divide *for* com a pergunta e mais nada. Palavras que querem dizer o mesmo sem ser o mesmo texto são invisíveis para ele."
+      },
+      {
+        "text": "O `k1` do BM25 estava baixo demais para uma pergunta de sete palavras",
+        "why": "O `k1` limita quanto as repetições de uma palavra ajudam. Nenhum valor dele cria uma combinação que não existe."
+      },
+      {
+        "text": "Os artigos sobre presentes são mais longos, então ganharam pelo tamanho",
+        "why": "O BM25 desconta documentos longos por meio do `b`. Os três ganharam porque dividem *get*, *for* e *of*."
+      },
+      {
+        "text": "A pergunta tem um erro de digitação que o BM25 não conseguiu corrigir",
+        "why": "Não há erro de digitação. As palavras do cliente e as do artigo são simplesmente outras."
+      }
+    ]
+  },
+  "ex-twwz9nsm": {
+    "prompt": "Ligue cada parte do BM25 ao que ela faz.",
+    "hint": "Três partes, três efeitos, e um que sobra porque o BM25 não faz.",
+    "pairs": [
+      {
+        "left": "`idf`",
+        "right": "Uma palavra que poucos artigos contêm vale mais"
+      },
+      {
+        "left": "`k1`",
+        "right": "Uma palavra repetida ajuda, menos a cada repetição"
+      },
+      {
+        "left": "`b`",
+        "right": "Um documento mais longo que a média tem a nota reduzida"
+      }
+    ],
+    "right_distractors": [
+      "Palavras de significado parecido são combinadas"
+    ]
+  },
+  "ex-ayd9nkgt": {
+    "prompt": "Uma reconstrução grava um `index.npy` novo com os artigos em outra ordem e deixa o `ids.json` antigo no lugar. O que a próxima busca faz?",
+    "hint": "O que a matriz sabe sobre as próprias linhas?",
+    "choices": [
+      {
+        "text": "Dá um erro, porque os dois arquivos não combinam mais",
+        "why": "Nada confere um contra o outro: os dois continuam carregando, e o número de linhas é o mesmo."
+      },
+      {
+        "text": "Devolve os artigos certos, já que os vetores em si estão corretos",
+        "why": "Os vetores estão corretos, mas chegam ao cliente por meio de `ids`, que agora dá o artigo errado para a maioria das linhas."
+      },
+      {
+        "text": "Devolve artigos errados com notas perfeitamente boas, e nada reclama",
+        "why": "Certo. A matriz não sabe de qual artigo é uma linha; os ids dizem, e agora estão errados. Grave e troque os dois juntos, ou guarde id e vetor num registro só."
+      },
+      {
+        "text": "Devolve os mesmos resultados, porque o NumPy mantém a ordem do arquivo original",
+        "why": "O `np.save` grava a ordem que a matriz tiver. A ordem nova é a que fica no disco."
+      }
+    ]
+  },
+  "ex-4vr4ysq9": {
+    "prompt": "Quantos bytes ocupam os vetores de 1.000 artigos numa matriz como `index.npy`, com 384 números float32 cada, contando só os números e não o cabeçalho do arquivo?",
+    "hint": "40 artigos ocuparam 40 × 384 × 4 bytes antes do cabeçalho.",
+    "unit": "bytes"
+  },
+  "ex-zgsf7dgd": {
+    "prompt": "Por que os artigos viram vetores antes, e não quando um cliente faz a busca?",
+    "hint": "Qual passo é lento, e o resultado dele muda?",
+    "choices": [
+      {
+        "text": "Porque o modelo só consegue transformar um texto por busca",
+        "why": "`index.py` transformou os 40 numa chamada só. Dá para fazer em lotes a qualquer momento; o motivo é custo e repetição."
+      },
+      {
+        "text": "Porque um vetor só vale no dia em que foi calculado",
+        "why": "Um artigo que não mudou dá o mesmo vetor toda vez (aula 1). É exatamente por isso que ele pode ser guardado."
+      },
+      {
+        "text": "Calcular o vetor é o passo lento, e o resultado não muda",
+        "why": "Certo. Só a pergunta precisa virar vetor na hora da busca; o resto foi calculado quando o artigo foi escrito."
+      },
+      {
+        "text": "Porque a pergunta e os artigos precisam de modelos diferentes",
+        "why": "Eles precisam do mesmo modelo, senão os vetores não podem ser comparados."
+      }
+    ]
+  },
+  "ex-pqa3p0fg": {
+    "prompt": "Para *the box never showed up*, a busca devolveu o artigo do pacote com 0,458, depois *Resetting your password* com 0,300 e *Wrong book in the parcel* com 0,290. Por que esses dois estão ali?",
+    "hint": "Quantos resultados a busca pediu?",
+    "choices": [
+      {
+        "text": "O modelo acha que redefinir a senha tem a ver com uma caixa sumida",
+        "why": "Ele deu uma nota bem abaixo da do artigo do pacote. A pergunta é por que uma combinação fraca foi devolvida."
+      },
+      {
+        "text": "O índice está corrompido para esses dois artigos",
+        "why": "As notas deles são notas baixas comuns. Nada nelas sugere um índice quebrado."
+      },
+      {
+        "text": "Uma busca sempre devolve `k` resultados",
+        "why": "Certo. `k=3` dá três sempre. A aula 16 trata de cortar uma lista e de escolher `k`."
+      },
+      {
+        "text": "Os dois falam de pacote, então são em parte relevantes",
+        "why": "Resetting your password não fala de pacote. Eles são só os seguintes mais próximos entre 40."
+      }
+    ]
+  },
+  "ex-zs94farh": {
+    "prompt": "Ponha em ordem o que `search.py` faz com a pergunta de um cliente.",
+    "hint": "Os números de linha viram artigos só no final.",
+    "items": [
+      "Transformar a pergunta em vetor com o mesmo modelo",
+      "Dar nota contra cada vetor guardado com `D @ q`",
+      "Ordenar as notas da maior para baixo",
+      "Ficar com as `k` primeiras",
+      "Transformar cada número de linha num id de artigo"
+    ],
+    "trap": "A ordenação vem antes de ficar com `k`: os três melhores só são conhecidos depois que todas as notas foram calculadas e ordenadas."
+  },
+  "ex-p3zxhbgm": {
+    "prompt": "Comparar uma pergunta com todos os vetores guardados, sem pular nenhum, para que os primeiros resultados sejam precisamente os mais próximos, se chama busca ___.",
+    "hint": "A aula 11 mede onde ela começa a doer; também é chamada de força bruta.",
+    "blanks": [
+      {
+        "accept": [
+          "exata",
+          "exact"
+        ]
+      }
+    ]
+  },
+  "ex-4ce7v908": {
+    "prompt": "O que o recall@3 conta em `evaluate.py`?",
+    "hint": "Veja o `[:k]` em `recall`.",
+    "choices": [
+      {
+        "text": "Quantos dos três primeiros resultados são relevantes, na média das perguntas",
+        "why": "Isso está mais perto da precisão. O recall@3 pergunta se um artigo relevante está entre os três."
+      },
+      {
+        "text": "As perguntas com um artigo relevante em algum lugar entre os três primeiros",
+        "why": "Certo. Uma pergunta conta uma vez se qualquer das respostas estiver entre os três primeiros, seja o que for que esteja junto."
+      },
+      {
+        "text": "A nota média dos três melhores artigos",
+        "why": "As notas nem são usadas; só onde o artigo relevante cai na ordem."
+      },
+      {
+        "text": "O número de artigos que um cliente lê antes de achar a resposta",
+        "why": "Ele não conta artigos lidos. Conta perguntas respondidas entre os três primeiros."
+      }
+    ]
+  },
+  "ex-6crdecyc": {
+    "prompt": "A busca por embedding pôs o artigo certo em primeiro em 19 das 24 perguntas. Qual é o recall@1 dela em porcentagem, com uma casa decimal?",
+    "hint": "19 dividido por 24.",
+    "unit": "%"
+  },
+  "ex-4hkg1kkj": {
+    "prompt": "Depois de uma mudança no jeito de transformar os artigos em vetores, o recall@1 nas 24 perguntas vai de 19 para 18. O que você deve concluir?",
+    "hint": "Quanto vale uma pergunta aqui?",
+    "choices": [
+      {
+        "text": "A mudança deixou a busca uns quatro pontos pior, então desfaça",
+        "why": "Quatro pontos são uma pergunta. Uma pergunta só pode virar por motivos sem relação com a mudança, então isso ainda não é evidência."
+      },
+      {
+        "text": "Nada ainda: uma pergunta em 24 está dentro do que um conjunto pequeno não consegue separar",
+        "why": "Certo. Cada pergunta vale uns quatro pontos. Veja qual pergunta mudou e por quê, e meça em mais perguntas antes de decidir."
+      },
+      {
+        "text": "A mudança ajudou, já que o recall@3 importa mais que o recall@1",
+        "why": "Nada no cenário diz que o recall@3 mudou. E escolher o número que convém é como uma mudança ruim vai para o ar."
+      },
+      {
+        "text": "Os julgamentos de relevância estão errados e devem ser reescritos para combinar com a busca",
+        "why": "Os julgamentos são escritos antes de a busca rodar justamente para não serem dobrados a favor dela. Reescrevê-los para encaixar no resultado não mede nada."
+      }
+    ]
+  },
+  "ex-vs58hskg": {
+    "prompt": "A busca por embedding pôs o artigo que contém `4.90` na posição 11, e o BM25 o pôs em primeiro. Por que a busca por embedding teve dificuldade com ele?",
+    "hint": "O que veio primeiro para `4.90`, e como esse artigo escreve o preço?",
+    "choices": [
+      {
+        "text": "O MiniLM recusa números e devolve uma ordem aleatória para eles",
+        "why": "Ele devolveu uma ordem com um primeiro lugar claro, o artigo de entrega em português com 0,254. Nada foi recusado."
+      },
+      {
+        "text": "O artigo de entrega em inglês é longo demais para o modelo ler",
+        "why": "Todo artigo tem umas quarenta palavras, bem abaixo do que o modelo lê."
+      },
+      {
+        "text": "O BM25 recebeu a resposta de antemão",
+        "why": "O BM25 achou o texto exato `4.90`, que um artigo em inglês contém. Não recebeu mais nada."
+      },
+      {
+        "text": "Uma sequência de dígitos tem pouco significado para situar, e `4,90` em português pareceu tão perto quanto",
+        "why": "Certo. Quase não há o que entender num preço, só um texto para achar, que é a força da busca por palavras."
+      }
+    ]
+  },
+  "ex-azzpzdgs": {
+    "prompt": "Para *make the letters bigger when reading*, a página com h35, h36 e h37 teve 0,199 inteira, e o artigo sobre fontes dentro dela teve 0,431. Por que a diferença?",
+    "hint": "Onde fica um vetor só para três assuntos?",
+    "choices": [
+      {
+        "text": "A página era mais longa do que o modelo consegue ler, e o artigo de fontes foi cortado",
+        "why": "A página mais longa tem 175 pedaços de palavra e o modelo lê 256. Toda palavra entrou."
+      },
+      {
+        "text": "Uma página sobre três assuntos ganha um ponto entre eles, perto de nenhum",
+        "why": "Certo. O vetor da página é puxado para empréstimo e audiolivros além de fontes, então uma pergunta sobre fontes combina fraco com ele."
+      },
+      {
+        "text": "A busca em pedaços usou um modelo melhor que a busca na página inteira",
+        "why": "Os três métodos usaram o all-MiniLM-L6-v2. Só o corte mudou."
+      },
+      {
+        "text": "As notas de pedaços são sempre maiores porque pedaços são textos mais curtos",
+        "why": "Não é o tamanho que aumenta uma nota, é o foco. Um pedaço curto sobre o assunto errado também tem nota baixa."
+      }
+    ]
+  },
+  "ex-ep6x31a4": {
+    "prompt": "A Marginalia acrescenta um manual de devoluções de 2.000 palavras, transformado inteiro em vetor com o all-MiniLM-L6-v2. Perguntas sobre o último capítulo nunca o encontram. Que mudança resolve os dois motivos de uma vez?",
+    "hint": "Um motivo é sobre quanto o modelo lê; o outro é sobre o que um vetor consegue guardar.",
+    "choices": [
+      {
+        "text": "Trocar por um modelo com mais dimensões e manter um vetor por manual",
+        "why": "Mais dimensões não fazem o modelo ler além do limite, e um vetor só continua misturando todos os capítulos."
+      },
+      {
+        "text": "Repetir o título do último capítulo várias vezes no começo do manual",
+        "why": "Isso empurra outro texto para além do limite e faz o vetor pender para um capítulo."
+      },
+      {
+        "text": "Cortar em pedaços nos títulos e devolver o manual",
+        "why": "Certo. Cada pedaço cabe nos 256 pedaços de palavra que o modelo lê, e cada um trata de um assunto, então o último capítulo ganha um vetor próprio e nítido."
+      },
+      {
+        "text": "Aumentar `k` para que voltem mais resultados",
+        "why": "O vetor único do manual não captura o assunto do último capítulo, então uma lista maior de resultados não chega até ele com segurança."
+      }
+    ]
+  },
+  "ex-wgzj1qkb": {
+    "prompt": "Janelas que dividem algumas palavras em cada borda, para que uma frase que cruza um limite fique inteira em pelo menos uma delas, têm ___.",
+    "hint": "`windows()` divide 10 das 40 palavras com a janela seguinte.",
+    "blanks": [
+      {
+        "accept": [
+          "sobreposição",
+          "sobreposicao",
+          "overlap"
+        ]
+      }
+    ]
+  },
+  "ex-8kr9fpr2": {
+    "prompt": "Cortadas nos limites dos artigos, as páginas puseram a certa em primeiro em 21 perguntas; cortadas em janelas de 40 palavras, em 19. O que isso sugere?",
+    "hint": "Qual dos dois cortes sabia onde um assunto termina?",
+    "choices": [
+      {
+        "text": "Janelas são sempre piores, então nunca use",
+        "why": "Janelas são a ferramenta para texto sem marcas onde cortar. Aqui o texto tinha marcas, e elas se saíram melhor."
+      },
+      {
+        "text": "40 palavras é demais; janelas de 10 palavras ganhariam",
+        "why": "Nada mediu janelas menores, e pedaços muito pequenos perdem o contexto que dá sentido a uma frase."
+      },
+      {
+        "text": "Um limite traçado pelo autor separa assuntos melhor que uma contagem de palavras",
+        "why": "Certo. Um artigo, um título ou um parágrafo já termina onde termina um assunto; uma janela corta onde a contagem cair."
+      },
+      {
+        "text": "A sobreposição de 10 palavras confundiu o modelo, que viu a mesma frase duas vezes",
+        "why": "A sobreposição mantém frases inteiras; não engana o modelo. As janelas perderam porque cortaram no meio dos assuntos."
+      }
+    ]
+  },
+  "ex-5kapmc2h": {
+    "prompt": "Por que a fusão por posição recíproca junta as duas ordens pela posição, em vez de somar a nota do BM25 ao cosseno?",
+    "hint": "O BM25 imprimiu 4,11 para um artigo; a busca por embedding imprimiu 0,446 para outro.",
+    "choices": [
+      {
+        "text": "Posições são mais baratas de calcular que notas, o que conta na hora da busca",
+        "why": "As duas buscas calculam as notas de qualquer jeito. A questão é o que somá-las significaria."
+      },
+      {
+        "text": "As escalas são diferentes, e a maior decidiria a soma",
+        "why": "Certo. Uma nota do BM25 de várias unidades afogaria um cosseno abaixo de 1. As posições vão 1, 2, 3 nas duas listas."
+      },
+      {
+        "text": "Cossenos são distâncias, e distâncias não podem ser somadas a notas",
+        "why": "Um cosseno é uma similaridade, maior é mais perto, como uma nota do BM25. O problema são as escalas, não o sentido."
+      },
+      {
+        "text": "Somar notas é proibido pela fórmula do BM25",
+        "why": "Nada proíbe; só sai um número dominado por uma das duas buscas."
+      }
+    ]
+  },
+  "ex-ytjk9qtf": {
+    "prompt": "Com `k = 60` e pesos iguais, qual é a nota RRF de um artigo em 1º na busca por palavras e em 3º na busca por embedding? Dê quatro casas decimais.",
+    "hint": "As posições começam em 1, então o primeiro lugar soma 1/61."
+  },
+  "ex-xksj0ywn": {
+    "prompt": "Para *how fast is shipping*, a busca por embedding pôs o artigo certo em primeiro e o BM25 o pôs em nono. Depois da fusão ele ficou em segundo, atrás de um artigo que as duas listas puseram em segundo. O que isso mostra sobre a RRF?",
+    "hint": "Compare 1/62 + 1/62 com 1/69 + 1/61.",
+    "choices": [
+      {
+        "text": "A RRF tem um bug quando um documento falta numa das listas",
+        "why": "O artigo certo estava nas duas listas, em nono e em primeiro. A conta fez exatamente o que a fórmula diz."
+      },
+      {
+        "text": "A RRF sempre prefere a primeira escolha da busca por palavras",
+        "why": "A primeira escolha da busca por palavras nem está entre os três primeiros da fusão. A RRF não prefere lista nenhuma."
+      },
+      {
+        "text": "A busca por embedding estava errada, e a fusão a corrigiu",
+        "why": "Delivery times and costs é a resposta que o curso marcou para esta pergunta. A fusão empurrou a resposta certa para baixo."
+      },
+      {
+        "text": "Ela premia a concordância: dois segundos lugares valem mais que um primeiro e um nono",
+        "why": "Certo. É a RRF funcionando como foi desenhada, e é por isso que a fusão pode piorar uma busca forte quando a outra é fraca naquela pergunta."
+      }
+    ]
+  },
+  "ex-daf08z2j": {
+    "prompt": "Com pesos iguais, a busca híbrida achou em primeiro 7 dos 8 textos exatos, mas só 11 das 24 perguntas comuns, contra 19 da busca por embedding sozinha. Qual é o próximo passo sensato?",
+    "hint": "Qual ferramenta desta aula decide entre configurações?",
+    "choices": [
+      {
+        "text": "Abandonar a busca híbrida, já que ela perdeu nas perguntas comuns",
+        "why": "Sem ela, cinco dos oito textos exatos perdem o primeiro lugar. Os clientes que colam um número de pedido também existem."
+      },
+      {
+        "text": "Escolher os pesos com os seus próprios julgamentos, incluindo textos exatos",
+        "why": "Certo. Reduzir à metade o peso das palavras aqui manteve 7 de 8 e deu 15 e 22 nas perguntas comuns. Suas próprias perguntas decidem onde fica o ajuste."
+      },
+      {
+        "text": "Aumentar `k` para 1000 para que as posições importem menos",
+        "why": "Nada na aula mediu isso, e um `k` enorme achata as duas listas em votos iguais em vez de acertar o equilíbrio."
+      },
+      {
+        "text": "Usar só o BM25, já que ele foi perfeito nos textos exatos",
+        "why": "Ele pôs o artigo certo em primeiro em só 10 das 24 perguntas comuns, que são a maior parte do tráfego."
+      }
+    ]
+  },
+  "ex-4yhsekkm": {
+    "prompt": "Em quais destas consultas o BM25 pôs o artigo certo mais acima do que a busca por embedding? Marque todas as que se aplicam.",
+    "hint": "`evaluate.py` imprimiu as duas posições dos textos exatos.",
+    "choices": [
+      {
+        "text": "`4.90`",
+        "why": "Sim. O BM25 o pôs em primeiro e a busca por embedding em 11º."
+      },
+      {
+        "text": "`Visa`",
+        "why": "Sim. Primeiro contra segundo."
+      },
+      {
+        "text": "`cash on delivery`",
+        "why": "Sim. Primeiro contra segundo."
+      },
+      {
+        "text": "`MG-20481937`",
+        "why": "Não. As duas puseram o artigo do número de pedido em primeiro."
+      },
+      {
+        "text": "*get rid of my profile for good*",
+        "why": "Não. Os três primeiros do BM25 nem incluíram Closing your account, e a busca por embedding foi feita para frases assim."
+      }
+    ]
+  },
+  "ex-90018sg4": {
+    "prompt": "Ordene as quatro buscas que `hybrid.py` mediu pelo número de perguntas comuns, das 24, em que puseram o artigo certo em primeiro, da que mais acertou para a que menos acertou.",
+    "hint": "A busca por embedding sozinha liderou; o BM25 sozinho ficou por último.",
+    "items": [
+      "Busca por embedding sozinha",
+      "Híbrida, peso das palavras pela metade",
+      "Híbrida, pesos iguais",
+      "BM25 sozinho"
+    ],
+    "trap": "A híbrida com pesos iguais não é a segunda: reduzir o peso das palavras à metade recuperou quatro das perguntas que a fusão igual tinha perdido, 15 contra 11."
+  },
+  "ex-3r2g3qd2": {
+    "prompt": "Juntar várias ordens dando a cada documento 1/(k + posição) de cada lista e somando se chama ___ por posição recíproca.",
+    "hint": "RRF, o F.",
+    "blanks": [
+      {
+        "accept": [
+          "fusão",
+          "fusao",
+          "fusion"
+        ]
+      }
+    ]
+  },
+  "ex-d4p7pas7": {
+    "prompt": "Ligue cada técnica desta aula ao problema de que ela trata.",
+    "hint": "Quatro técnicas, quatro problemas, um sobrando.",
+    "pairs": [
+      {
+        "left": "Busca por palavras (BM25)",
+        "right": "Um número de pedido colado na caixa de busca"
+      },
+      {
+        "left": "Busca por embedding",
+        "right": "Uma pergunta escrita com palavras diferentes das da resposta"
+      },
+      {
+        "left": "Corte em pedaços",
+        "right": "Uma página longa que trata de vários assuntos"
+      },
+      {
+        "left": "Fusão por posição recíproca",
+        "right": "Duas ordens cujas notas estão em escalas diferentes"
+      }
+    ],
+    "right_distractors": [
+      "Transformar uma nota na probabilidade de uma combinação"
+    ]
+  }
+}
