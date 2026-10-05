@@ -14,6 +14,7 @@ comes out next year.
     sheet provider NAME [--mode chat]   one provider's models
     sheet where TEXT                    every entry whose name contains TEXT
     sheet show NAME                     everything the sheet says about one
+    sheet compare NAME...               one row per named entry, in that order
     sheet cost NAME IN OUT              what IN input and OUT output tokens cost
     sheet retiring [--provider P]       entries with a deprecation date, soonest first
     sheet pick [--provider P] [--min-window N] [--needs a,b] [--max-in X]
@@ -69,6 +70,7 @@ def window(e):
 
 
 def table(rows):
+    """V vision, F function calling, S response schema, C prompt caching, R reasoning, P PDF input."""
     print(f"{'model':44} {'window':>10} {'max out':>8} {'in $/M':>8} {'out $/M':>8}  VFSCRP")
     for k, e in rows:
         out = e.get("max_output_tokens")
@@ -84,6 +86,7 @@ def main():
     a = sub.add_parser("provider"); a.add_argument("name"); a.add_argument("--mode", default="chat")
     a = sub.add_parser("where"); a.add_argument("text")
     a = sub.add_parser("show"); a.add_argument("name")
+    a = sub.add_parser("compare"); a.add_argument("names", nargs="+")
     a = sub.add_parser("cost"); a.add_argument("name"); a.add_argument("tin", type=int); a.add_argument("tout", type=int)
     a = sub.add_parser("retiring"); a.add_argument("--provider"); a.add_argument("--mode", default="chat")
     a = sub.add_parser("pick")
@@ -113,6 +116,11 @@ def main():
             sys.exit(f"sheet: no entry named {args.name}")
         for k, v in sorted(d[args.name].items()):
             print(f"{k:42} {v}")
+    elif args.cmd == "compare":
+        missing = [n for n in args.names if n not in d]
+        if missing:
+            sys.exit("sheet: no entry named " + ", ".join(missing))
+        table([(n, d[n]) for n in args.names])
     elif args.cmd == "cost":
         e = d[args.name]
         cin = Decimal(str(e["input_cost_per_token"])) * args.tin

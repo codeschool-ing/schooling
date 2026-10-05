@@ -47,6 +47,7 @@ import hashlib
 import itertools
 import json
 import os
+import random
 import re
 import sys
 import threading
@@ -87,7 +88,7 @@ ROUTES = {
                       "prompt": "0.00000025", "completion": "0.00000125"},
 }
 
-CONFIG = {"rpm": 50, "fail_next": None, "fail_count": 0, "down": []}
+CONFIG = {"rpm": 50, "fail_next": None, "fail_count": 0, "down": [], "jitter": 0}
 LOCK = threading.Lock()
 COUNTER = itertools.count(1)
 SEEN = {}        # key -> deque of request times
@@ -148,12 +149,12 @@ def answer(model, system, messages, temperature):
             user = text_of(m.get("content"))
             break
     whole = text_of(system) + "\n" + user
-    for case in load("cases.jsonl"):
-        if case["text"] in user:
-            return case_answer(model, case, whole, temperature)
     for r in load("replies.json"):
         if all(s.lower() in whole.lower() for s in r["when"]):
             return r["reply"], r["id"]
+    for case in load("cases.jsonl"):
+        if case["text"] in user:
+            return case_answer(model, case, whole, temperature)
     return (f"This reply was written by the course's stand-in, not by a model. "
             f"{model} answers every prompt it has no reply for with this sentence."), "none"
 
@@ -418,9 +419,14 @@ class Handler(BaseHTTPRequestHandler):
         record.update(model=model, rule=rule)
         return toks, reason, n_in
 
+    def first(self, model):
+        """Time to the first token. With "jitter" set, it is stretched by a random factor whose
+        tail is long, the way a shared service's is; the draw is seeded by the request number."""
+        extra = random.Random(self.n).expovariate(1.0) * CONFIG["jitter"] if CONFIG["jitter"] else 0
+        return MODELS[model]["ttft"] * (1 + extra)
+
     def wait(self, model, n_out):
-        spec = MODELS[model]
-        time.sleep(spec["ttft"] + spec["per_token"] * n_out)
+        time.sleep(self.first(model) + MODELS[model]["per_token"] * n_out)
 
     # -- Anthropic
     def check_anthropic(self, req, need_max=True):
@@ -459,7 +465,7 @@ class Handler(BaseHTTPRequestHandler):
                 "stop_sequence": None, "usage": usage}, headers)
         spec = MODELS[req["model"]]
         self.start_stream()
-        time.sleep(spec["ttft"])
+        time.sleep(self.first(req["model"]))
         self.event("message_start", {"type": "message_start", "message": {
             "id": mid, "type": "message", "role": "assistant", "model": req["model"], "content": [],
             "stop_reason": None, "stop_sequence": None, "usage": dict(usage, output_tokens=1)}})
@@ -506,7 +512,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(200, body, headers)
         spec = MODELS[model]
         self.start_stream()
-        time.sleep(spec["ttft"])
+        time.sleep(self.first(model))
         base = {"id": cid, "object": "chat.completion.chunk", "created": int(time.time()), "model": shown}
         self.event(None, dict(base, choices=[{"index": 0, "delta": {"role": "assistant", "content": ""},
                                               "finish_reason": None}]))
@@ -589,7 +595,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(200, response, headers)
         spec = MODELS[model]
         self.start_stream()
-        time.sleep(spec["ttft"])
+        time.sleep(self.first(model))
         seq = itertools.count(0)
         self.event("response.created", {"type": "response.created", "sequence_number": next(seq),
                                          "response": dict(response, status="in_progress", output=[], usage=None)})
@@ -634,7 +640,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_json(200, resp("".join(toks), finish))
         spec = MODELS[model]
         self.start_stream()
-        time.sleep(spec["ttft"])
+        time.sleep(self.first(model))
         for k, p in enumerate(toks):
             time.sleep(spec["per_token"])
             self.event(None, resp(p, finish if k == len(toks) - 1 else None))
@@ -725,7 +731,7 @@ class Handler(BaseHTTPRequestHandler):
             self.wait(name, len(toks))
             return self.send_json(200, dict(final, **piece("".join(toks))))
         self.start_stream("application/x-ndjson")
-        time.sleep(spec["ttft"])
+        time.sleep(self.first(name))
         for p in toks:
             time.sleep(spec["per_token"])
             line = dict({"model": req["model"], "created_at": final["created_at"], "done": False}, **piece(p))
