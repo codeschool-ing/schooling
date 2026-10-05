@@ -73,6 +73,9 @@
 # Recorded on Ubuntu 24.04 with Python 3.11, Node.js 22 and PostgreSQL 16,
 # TZ=America/Sao_Paulo.
 set -euo pipefail
+# The capture scripts hold a lock on fd 9 while they run. The daemons started
+# here must not inherit it, or they hold it for as long as they live.
+exec 9>&-
 
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 VENV=/opt/emb

@@ -142,13 +142,17 @@ def rate(f, items, runs=3):
         f(items)
         best = min(best, time.perf_counter() - t)
     return len(items) / best
+minilm = []
 for b in (1, 8, 32, 150):
-    r = rate(lambda t: embed(t, batch=b), texts)
-    print(f"all-MiniLM-L6-v2  batch {b:3}           {r:7.0f} texts/s")
-r = rate(lambda t: embed(t, batch=32), sorted(texts, key=len))
-print(f"all-MiniLM-L6-v2  batch  32, sorted   {r:7.0f} texts/s")
-r = rate(lambda t: wl.embed(t, norm=True), texts)
-print(f"WordLlama         batch  64           {r:7.0f} texts/s")
+    minilm.append(rate(lambda t: embed(t, batch=b), texts))
+    print(f"all-MiniLM-L6-v2  batch {b:3}           {minilm[-1]:7.0f} texts/s")
+minilm.append(rate(lambda t: embed(t, batch=32), sorted(texts, key=len)))
+print(f"all-MiniLM-L6-v2  batch  32, sorted   {minilm[-1]:7.0f} texts/s")
+static = rate(lambda t: wl.embed(t, norm=True), texts)
+print(f"WordLlama         batch  64           {static:7.0f} texts/s")
+fastest = max(minilm)
+print(f"WordLlama / fastest MiniLM: {static / fastest:.0f} times")
+print(f"a million texts at the fastest MiniLM rate: {1e6 / fastest / 60:.0f} minutes")
 EOF_FILE
 
 block hf
