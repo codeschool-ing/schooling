@@ -59,7 +59,8 @@ Recall de 0,993, porque alguns vizinhos de verdade estavam numa célula ao lado.
 **`IVF64,PQ16`** usa as mesmas células e comprime cada vetor em 16 bytes em vez de 1.536, por
 quantização de produto. O índice inteiro tem 972.212 bytes, cerca de um trigésimo do `Flat`. O recall dele
 aqui, 0,210, é o preço: as cópias ruidosas de um texto ficam tão juntas que 16 bytes não conseguem
-mantê-las na ordem certa. Com vetores menos apertados a perda é menor, e a aula 15 mede isso direito.
+mantê-las na ordem certa. A aula 15 mede a quantização de produto em vários tamanhos, com outro
+conjunto, e ali 16 bytes também perdem a maior parte da ordem.
 
 **Esses recalls pertencem a estes dados e às configurações de busca padrão do FAISS**, que visitam
 uma célula de um índice IVF e mantêm 16 candidatos numa busca HNSW. Cada um dos índices aproximados

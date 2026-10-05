@@ -58,8 +58,8 @@ data it will hold. Recall 0.993, because a few true neighbours sat in a cell nex
 **`IVF64,PQ16`** uses the same cells and compresses every vector to 16 bytes instead of 1,536, by
 product quantisation. The whole index is 972,212 bytes, about a thirtieth of `Flat`. Its recall here,
 0.210, is the price: the noisy copies of one text sit so close together that 16 bytes cannot keep
-them in the right order. On vectors less tightly packed the loss is smaller, and lesson 15 measures
-it properly.
+them in the right order. Lesson 15 measures product quantisation at several sizes on a different
+set, and 16 bytes lose most of the order there too.
 
 **These recalls belong to this data and to FAISS's default search settings**, which visit one cell
 of an IVF index and keep 16 candidates in an HNSW search. Every one of the approximate indexes has a

@@ -1611,6 +1611,111 @@
       }
     ]
   },
+  "ex-7b9jatnb": {
+    "prompt": "Um índice IVF com 1.024 células recebe uma consulta. Com o que ele compara a consulta primeiro?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Com todos os vetores guardados, e depois descarta a maioria",
+        "why": "Isso é busca exata. O IVF existe para evitar ler todos os vetores."
+      },
+      {
+        "text": "Com os 1.024 centros das células",
+        "why": "Certo. Os centros decidem quais nprobe células são buscadas, e só os vetores arquivados nelas são comparados depois disso."
+      },
+      {
+        "text": "Com o ponto de entrada na camada de cima do grafo",
+        "why": "Ponto de entrada é coisa do HNSW. O IVF tem células e centros, não camadas."
+      },
+      {
+        "text": "Com uma amostra aleatória dos vetores, sorteada de novo a cada consulta",
+        "why": "Nada é aleatório na hora da consulta; as células ficaram fixas quando o k-means treinou o índice."
+      }
+    ]
+  },
+  "ex-j0qn3aas": {
+    "prompt": "A quantização escalar com SQ8 guarda um byte por número. Quantos bytes ela guarda para um vetor de 768 dimensões, contando só o código?",
+    "hint": "Aula 15.",
+    "unit": "bytes"
+  },
+  "ex-et9me8fc": {
+    "prompt": "Subir o ef de um índice HNSW de 40 para 160 aumentou o recall@10 e também o tempo por consulta. Por que os dois?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Um ef maior reconstrói o grafo com mais ligações antes de cada busca",
+        "why": "O ef é um parâmetro da consulta; as ligações foram fixadas pelo M e pelo ef_construction quando o índice foi construído."
+      },
+      {
+        "text": "Um ef maior troca a busca no grafo por busca exata",
+        "why": "A busca fica no grafo com qualquer ef; mesmo com 320 ela comparou bem menos vetores que a busca exata compara."
+      },
+      {
+        "text": "A busca mantém uma lista maior de candidatos na camada 0, então expande e compara mais vetores",
+        "why": "Certo. Uma lista maior deixa a busca passar de becos sem saída e achar mais vizinhos verdadeiros, e cada candidato a mais expandido custa comparações."
+      },
+      {
+        "text": "Cada vetor é lido com mais precisão",
+        "why": "Os vetores são float32 com qualquer ef. Precisão é o que a quantização muda, não o ef."
+      }
+    ]
+  },
+  "ex-ej09chjb": {
+    "prompt": "Um serviço de busca mede recall@10 de 0,99 do seu índice HNSW contra a busca exata, e mesmo assim os clientes dizem que os resultados muitas vezes não ajudam. O que o 0,99 diz sobre onde procurar?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Subir o ef até o recall chegar a 1,000",
+        "why": "Com 0,99 o índice já devolve quase exatamente o que a busca exata devolve, então a busca exata daria aos clientes os mesmos resultados que não ajudam."
+      },
+      {
+        "text": "O índice está perdendo os artigos relevantes e deve ser reconstruído com um M maior",
+        "why": "O recall aqui diz que o índice concorda com a busca exata; uma reconstrução não acrescenta relevância que a busca exata não tem."
+      },
+      {
+        "text": "Não no índice, que já coincide com a busca exata",
+        "why": "Certo. Recall contra a busca exata mede só o índice. Se os vetores mais próximos são boas respostas é uma pergunta sobre os embeddings e os dados."
+      },
+      {
+        "text": "Trocar para IVF, que chegou a 0,99 antes",
+        "why": "Isso foi uma propriedade de um conjunto de vetores, e só faria os mesmos resultados chegarem mais rápido."
+      }
+    ]
+  },
+  "ex-qhpmrvqm": {
+    "prompt": "Cortar um vetor em pedaços e guardar cada pedaço como o número do mais próximo de 256 valores aprendidos pelo k-means se chama quantização por ___.",
+    "hint": "Aula 15.",
+    "blanks": [
+      {
+        "accept": [
+          "produto",
+          "product"
+        ]
+      }
+    ]
+  },
+  "ex-3qex8mk9": {
+    "prompt": "Quais destes parâmetros do HNSW ficam fixos depois que o índice é construído? Marque todas as que se aplicam.",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "M, o número de ligações por vetor",
+        "why": "Sim. As ligações fazem parte do grafo; mudar o M significa construir o índice de novo."
+      },
+      {
+        "text": "ef_construction, a lista de candidatos usada ao inserir",
+        "why": "Sim. Ele decidiu quais ligações cada vetor recebeu, e essas ligações ficam até uma reconstrução."
+      },
+      {
+        "text": "ef, a lista de candidatos usada ao buscar",
+        "why": "O ef é escolhido por consulta e pode mudar de uma consulta para a outra sem mexer no índice."
+      },
+      {
+        "text": "k, o número de resultados devolvidos",
+        "why": "O k faz parte de cada consulta. A aula 16 mostra como ele interage com o ef."
+      }
+    ]
+  },
   "ex-mgenpp22": {
     "prompt": "Uma busca da central de ajuda devolve 5 artigos para toda pergunta, inclusive 'what time is it in Tokyo'. A gerente de produto quer 'nenhum resultado' quando nada serve. O que você acrescenta?",
     "hint": "Aula 16.",

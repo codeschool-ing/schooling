@@ -1,0 +1,721 @@
+[
+  {
+    "id": "ex-j20det0d",
+    "version": 1,
+    "section": "exact-is-linear",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`make_set.py` builds its 100,000 vectors as blends of 334 real embeddings rather than drawing uniformly random vectors. Why does that matter for testing an approximate index?",
+    "hint": "What does an approximate index bet on?",
+    "choices": [
+      {
+        "text": "Random vectors would take too long to generate at that size",
+        "correct": false,
+        "why": "Random numbers are the cheapest thing to make; uniform.py made 100,000 of them in the same run. Speed of generation was never the reason."
+      },
+      {
+        "text": "They keep the neighbourhoods real texts form, and an index relies on them",
+        "correct": true,
+        "why": "Right. In 384 dimensions uniformly random points sit at almost the same distance from each other, so there is no structure for cells or links to exploit."
+      },
+      {
+        "text": "FAISS refuses to index vectors that were not produced by an embedding model of some kind",
+        "correct": false,
+        "why": "FAISS stores whatever float32 numbers it is given; uniform.py indexed random vectors without complaint, and only the recall suffered."
+      },
+      {
+        "text": "Blended vectors are shorter, so every search runs faster",
+        "correct": false,
+        "why": "Every blend is divided by its length, exactly like the random vectors. Both sets are unit vectors of 384 numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-7h8jmb95",
+    "version": 1,
+    "section": "exact-is-linear",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`exact.py` measured 2.492 ms per query for exact search over 100,000 vectors. If the time keeps following the count, about how many milliseconds per query would 400,000 vectors take on the same core?",
+    "hint": "Four times the vectors.",
+    "value": 9.968,
+    "tolerance": 0.5,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-wnqbrfgg",
+    "version": 1,
+    "section": "exact-is-linear",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague proposes making exact search sublinear by writing the dot products in faster code. What is wrong with the plan?",
+    "hint": "Count the comparisons, not their speed.",
+    "choices": [
+      {
+        "text": "Each comparison gets cheaper, but there is still one per stored vector",
+        "correct": true,
+        "why": "Right. Exact search has to compare the query with every vector to be sure of the top 10; only skipping vectors changes the shape, and skipping is what makes a search approximate."
+      },
+      {
+        "text": "Nothing at all: compiled code turns the linear cost into a logarithmic one",
+        "correct": false,
+        "why": "Compiling changes the constant in front, the 20.7 to 28.5 ns per vector, not how the total grows with the count."
+      },
+      {
+        "text": "Dot products are already done by the database, so code cannot change them",
+        "correct": false,
+        "why": "FAISS computes them in your process, and faster arithmetic does make each one cheaper. The issue is how many there are."
+      },
+      {
+        "text": "Exact search is limited by the network, not the arithmetic",
+        "correct": false,
+        "why": "exact.py ran entirely in one process with no network involved, and its time still grew with the number of vectors."
+      }
+    ]
+  },
+  {
+    "id": "ex-f06shrsp",
+    "version": 1,
+    "section": "recall",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In this lesson, what does a recall@10 of 0.841 for `HNSW32` say?",
+    "hint": "What is the index compared with?",
+    "choices": [
+      {
+        "text": "That 84.1% of the customers' questions found a relevant article",
+        "correct": false,
+        "why": "That is lesson 3's recall, measured against the course's own judgements of which article is right. This one never looks at relevance."
+      },
+      {
+        "text": "On average the index returned 8.41 of exact search's top 10",
+        "correct": true,
+        "why": "Right. Recall here is agreement with exact search over the same vectors, averaged over the 1,000 queries."
+      },
+      {
+        "text": "The index read 84.1% of the vectors before stopping",
+        "correct": false,
+        "why": "HNSW reads a tiny fraction of the collection; recall counts how many true neighbours were found, not how much was read."
+      },
+      {
+        "text": "Each returned vector's score was 0.841 of the true score",
+        "correct": false,
+        "why": "Recall counts ids that match. The scores were measured separately: 0.4593 on average against 0.4750."
+      }
+    ]
+  },
+  {
+    "id": "ex-5s32v6x1",
+    "version": 1,
+    "section": "recall",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Exact search over a random tenth of the collection reached a recall@10 of 0.104. Why is that number worth printing?",
+    "hint": "Any index reads only part of the collection.",
+    "choices": [
+      {
+        "text": "It proves that sampling is a good approximate index",
+        "correct": false,
+        "why": "Reading a tenth to find a tenth of the neighbours is the worst a partial read can do on average; an index exists to beat it."
+      },
+      {
+        "text": "It shows the ground truth was computed wrongly",
+        "correct": false,
+        "why": "A random tenth should hold about a tenth of any ten vectors, and 0.104 is exactly that. It confirms the measurement works."
+      },
+      {
+        "text": "It is the baseline: reading a fraction blindly finds that fraction, and an index has to beat its own fraction",
+        "correct": true,
+        "why": "Right. HNSW32 read far less than a tenth and found 0.841, which is the value of guessing where the neighbours are."
+      },
+      {
+        "text": "It is the recall every index reaches with default settings",
+        "correct": false,
+        "why": "HNSW32 with FAISS's defaults reached 0.841 in the same run. Defaults vary by index and none of them is set to a tenth."
+      }
+    ]
+  },
+  {
+    "id": "ex-bveg0fd7",
+    "version": 1,
+    "section": "recall",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two teams use the same HNSW index at recall@10 0.84. One hands the top 10 passages to a language model; the other checks whether an uploaded file is an exact copy of one already stored. Which team should worry?",
+    "hint": "Think about what a miss is replaced with.",
+    "choices": [
+      {
+        "text": "The language-model team, because 16% of its passages are irrelevant",
+        "correct": false,
+        "why": "A missed neighbour was replaced by one slightly further away, 0.4593 against 0.4750 on average, not by an unrelated passage."
+      },
+      {
+        "text": "Neither, since 0.84 is a high recall",
+        "correct": false,
+        "why": "No bar fits every application. For a duplicate check, missing the one copy is a wrong answer, whatever the average says."
+      },
+      {
+        "text": "Both equally, because recall is the same number for both",
+        "correct": false,
+        "why": "The number is the same; what a miss costs differs. One application tolerates a near substitute and the other has exactly one right answer."
+      },
+      {
+        "text": "The duplicate check, whose one copy cannot be swapped",
+        "correct": true,
+        "why": "Right. Ten passages lose little when one is swapped for a near neighbour, but the duplicate check fails whenever its single copy is the vector missed."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4rq00sm",
+    "version": 1,
+    "section": "ivf",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ivf.py` tried to add vectors to an IVF index before calling `train`, and FAISS refused. Why?",
+    "hint": "Where does each vector go when it is added?",
+    "choices": [
+      {
+        "text": "There are no cells to file them in yet",
+        "correct": true,
+        "why": "Right. Training is the k-means run that finds the 1,024 centres; until they exist there is no cell to put a vector in."
+      },
+      {
+        "text": "The index has to measure how long a search takes before it accepts data",
+        "correct": false,
+        "why": "Training finds the cells; it does not time anything. The timings in ivf.py come from bench.timed afterwards."
+      },
+      {
+        "text": "FAISS requires the vectors to be normalised by `train`",
+        "correct": false,
+        "why": "make_set.py normalised the vectors itself. train does not change them; it learns centres from them."
+      },
+      {
+        "text": "Adding is only allowed in batches of 1,024",
+        "correct": false,
+        "why": "1,024 is the number of cells, not a batch size; add took all 100,000 vectors in one call once the index was trained."
+      }
+    ]
+  },
+  {
+    "id": "ex-4887wask",
+    "version": 1,
+    "section": "ivf",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens with an IVF index, from an empty index to the answer to one query.",
+    "hint": "Two steps happen once, before any query; three happen for every query.",
+    "items": [
+      "Run k-means on example vectors to find the centres",
+      "File every stored vector under its nearest centre",
+      "Compare the query with every centre",
+      "Search the vectors of the nprobe nearest cells exactly",
+      "Return the 10 best vectors found in those cells"
+    ],
+    "trap": "Filing cannot come before k-means: without centres there is nowhere to file. And the query meets the centres before any stored vector, which is the whole saving."
+  },
+  {
+    "id": "ex-75mhrc4x",
+    "version": 1,
+    "section": "ivf",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `nprobe` 1 the IVF index found 0.749 of the true neighbours. Where were most of the ones it missed?",
+    "hint": "The figure draws a query near a border.",
+    "choices": [
+      {
+        "text": "In cells too small to hold ten vectors",
+        "correct": false,
+        "why": "Small cells exist (the smallest held 1), but a query searches its nearest cell whatever its size; the problem is which cell is nearest."
+      },
+      {
+        "text": "In the vectors that were added after training",
+        "correct": false,
+        "why": "All 100,000 vectors were added right after training, and the misses happened anyway."
+      },
+      {
+        "text": "Across a border, in the next cell",
+        "correct": true,
+        "why": "Right. The nearest centre decides which cell is searched, and a query near a border has true neighbours filed under the other centre. nprobe 2 already reached 0.931."
+      },
+      {
+        "text": "Among vectors the index had compressed too far",
+        "correct": false,
+        "why": "IndexIVFFlat keeps every vector whole; nothing is compressed. Compression is the quantisation section's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-tt0akjqh",
+    "version": 1,
+    "section": "ivf",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On 100,000 uniformly random unit vectors, the same IVF index searched 64 of its 1,024 cells and found only 0.241 of the true neighbours. What should you conclude?",
+    "hint": "Compare with the 0.990 at four cells on the blends.",
+    "choices": [
+      {
+        "text": "IVF is broken in FAISS 1.15.1 and should be avoided",
+        "correct": false,
+        "why": "The same code reached 0.990 at four cells on the blended set in the same lesson. The index works; this data gives it nothing to work with."
+      },
+      {
+        "text": "Without neighbourhoods to gather, no cell holds the true neighbours together, so benchmark on data shaped like yours",
+        "correct": true,
+        "why": "Right. Random points in 384 dimensions are nearly equidistant (the median best score was 0.219), and an approximate index measured on them looks worse than it will be on embeddings."
+      },
+      {
+        "text": "1,024 cells is too many; with fewer, recall would reach 1.000",
+        "correct": false,
+        "why": "Fewer cells means bigger cells, so each probe reads more of the collection, but the lack of structure remains. The test says nothing about a better nlist."
+      },
+      {
+        "text": "Random vectors need training on more data than the blends did",
+        "correct": false,
+        "why": "Both were trained on their own 100,000 vectors. No amount of training draws borders around neighbourhoods that do not exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-brmcmfxv",
+    "version": 1,
+    "section": "ivf",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In FAISS, the number of cells an IVF index searches for each query is set by ___.",
+    "hint": "pgvector calls the same setting `ivfflat.probes`.",
+    "blanks": [
+      {
+        "accept": [
+          "nprobe"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2y69wy8p",
+    "version": 1,
+    "section": "hnsw-graph",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`layers.py` printed 100,000 vectors on layer 0 and 6,374 on layer 1. Which vectors are on layer 0?",
+    "hint": "Look at the count.",
+    "choices": [
+      {
+        "text": "Only the ones that were not chosen for a higher layer",
+        "correct": false,
+        "why": "Then layer 0 would hold 100,000 minus 6,374. Every vector is on layer 0, and some are on higher layers as well."
+      },
+      {
+        "text": "All of them",
+        "correct": true,
+        "why": "Right. The bottom layer holds every vector with short links; the upper layers hold a random few, with long ones."
+      },
+      {
+        "text": "The vectors nearest the entry point",
+        "correct": false,
+        "why": "Layer membership is drawn at random when a vector is inserted, not by distance to anything."
+      },
+      {
+        "text": "The 16 neighbours of each vector",
+        "correct": false,
+        "why": "16 is the number of links per vector, a property of the graph, not a selection of vectors for a layer."
+      }
+    ]
+  },
+  {
+    "id": "ex-p06697bj",
+    "version": 1,
+    "section": "hnsw-graph",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does HNSW put a few vectors on upper layers instead of searching one flat graph of near neighbours?",
+    "hint": "How far apart are the vectors on a sparse layer?",
+    "choices": [
+      {
+        "text": "So that every vector is stored twice, as a backup",
+        "correct": false,
+        "why": "Upper layers repeat a few vectors with extra links, but the reason is the search path, not redundancy."
+      },
+      {
+        "text": "Because a flat graph cannot hold more than 2M links per vector",
+        "correct": false,
+        "why": "The limit on links per vector applies on every layer. The layers exist to give the search long jumps."
+      },
+      {
+        "text": "To group the vectors by topic, one topic per layer",
+        "correct": false,
+        "why": "Layer membership is random; layer 3 is twenty vectors from anywhere in the space, not a topic."
+      },
+      {
+        "text": "A sparse layer's links are long jumps, so a few steps cross the space before the short links take over",
+        "correct": true,
+        "why": "Right. On one flat graph, a far vector is many short steps away; the trace went from 0.050 to 0.479 in five steps across four upper layers."
+      }
+    ]
+  },
+  {
+    "id": "ex-w46vf00c",
+    "version": 1,
+    "section": "hnsw-graph",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of one HNSW search in order.",
+    "hint": "It starts at the single vector on the top layer.",
+    "items": [
+      "Start at the entry point on the top layer",
+      "Move to whichever neighbour is closer to the query until none is",
+      "Drop one layer and continue from the same vector",
+      "On layer 0, keep a list of the ef best candidates and expand them",
+      "Return the k best vectors on the list"
+    ],
+    "trap": "The list of ef candidates is used on layer 0, not on the way down; the upper layers are walked greedily, one vector at a time."
+  },
+  {
+    "id": "ex-6s6v585r",
+    "version": 1,
+    "section": "hnsw-graph",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every HNSW search begins at the one vector on the top layer, called the ___ point.",
+    "hint": "It is where the search goes in.",
+    "blanks": [
+      {
+        "accept": [
+          "entry"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3gv2yrjh",
+    "version": 1,
+    "section": "hnsw-graph",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia adds help articles every week for years. Which index keeps working without anyone rebuilding it on a schedule, and why?",
+    "hint": "One of them committed to its structure at training time.",
+    "choices": [
+      {
+        "text": "IVF, because its cells are small enough to absorb new vectors",
+        "correct": false,
+        "why": "New vectors are filed under centres trained on the old data; if the new articles are about something new, they crowd a few cells drawn for something else."
+      },
+      {
+        "text": "Both equally, because neither of them stores the vectors' text",
+        "correct": false,
+        "why": "Neither stores text, but that has nothing to do with how new vectors fit the structure each index built."
+      },
+      {
+        "text": "HNSW, because inserting links a vector in like any other",
+        "correct": true,
+        "why": "Right. HNSW needs no training, so a vector added years later is linked to its real neighbours, while IVF's centres stay where the training data put them."
+      },
+      {
+        "text": "IVF, because HNSW has to be rebuilt after every insert",
+        "correct": false,
+        "why": "HNSW takes vectors one at a time; insertion is exactly how the index was built in the first place."
+      }
+    ]
+  },
+  {
+    "id": "ex-h29qzftw",
+    "version": 1,
+    "section": "hnsw-parameters",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting to what it decides.",
+    "hint": "Two are fixed when the index is built.",
+    "pairs": [
+      {
+        "left": "M",
+        "right": "How many links each vector gets"
+      },
+      {
+        "left": "ef_construction",
+        "right": "How many candidates an insert considers when choosing links"
+      },
+      {
+        "left": "ef",
+        "right": "How many candidates a query keeps on layer 0"
+      },
+      {
+        "left": "nprobe",
+        "right": "How many cells an IVF query searches"
+      }
+    ],
+    "right_distractors": [
+      "How many bytes each number is stored in"
+    ]
+  },
+  {
+    "id": "ex-6nkgn9ah",
+    "version": 1,
+    "section": "hnsw-parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `M` 16, an index built with `ef_construction` 40 had the same 1,684 bytes a vector as one built with 200, yet reached 0.842 instead of 0.938 at `ef` 40. What differs between the two graphs?",
+    "hint": "The number of links is the same.",
+    "choices": [
+      {
+        "text": "The shorter build skipped some vectors, so the collection is smaller",
+        "correct": false,
+        "why": "Both indexes hold all 100,000 vectors; the file size per vector is identical."
+      },
+      {
+        "text": "The faster build stored the vectors at lower precision",
+        "correct": false,
+        "why": "hnswlib stores float32 in both; ef_construction changes nothing about the numbers, which is why the size matched."
+      },
+      {
+        "text": "The second index uses a different metric",
+        "correct": false,
+        "why": "Both were created with space=\"ip\" in the same loop of params.py; only ef_construction changed."
+      },
+      {
+        "text": "Which vectors the links point to",
+        "correct": true,
+        "why": "Right. Each insert chose its links from a list of 40 candidates instead of 200, so some links go to worse neighbours, and searching harder later cannot replace them."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4b2z10h",
+    "version": 1,
+    "section": "hnsw-parameters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service runs hnswlib with `M` 16 at `ef` 40 and measures recall@10 0.938 against exact search. Product wants 0.99 by tomorrow. What should change first?",
+    "hint": "Which of the three can change without touching the index?",
+    "choices": [
+      {
+        "text": "Raise `M` to 32 and rebuild tonight",
+        "correct": false,
+        "why": "M 32 reached only 0.963 at ef 40 and costs a rebuild; ef 160 on the existing index reached 0.993."
+      },
+      {
+        "text": "Switch to `ef_construction` 400, keeping `M`",
+        "correct": false,
+        "why": "ef_construction is also a build setting, so it needs a rebuild, and it improves links rather than letting a query look further."
+      },
+      {
+        "text": "Raise `ef` and measure until recall passes 0.99",
+        "correct": true,
+        "why": "Right. ef is chosen per query, so it changes without a rebuild; in ef_sweep.py it took 160 to reach 0.993, at 0.289 ms instead of 0.141."
+      },
+      {
+        "text": "Return k=40 results instead of 10 and keep the top 10",
+        "correct": false,
+        "why": "In hnswlib, asking for more than ef widens the search to k, as lesson 16 showed, so this is a roundabout way of raising ef with extra work on top."
+      }
+    ]
+  },
+  {
+    "id": "ex-38ahjk1g",
+    "version": 1,
+    "section": "hnsw-parameters",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "hnswlib gives each vector up to 2M links on layer 0 and stores each link as 4 bytes. How many bytes a vector does going from `M` 24 to `M` 48 add on layer 0?",
+    "hint": "From 16 to 32 it added 128.",
+    "value": 192,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-wbc4x5qg",
+    "version": 1,
+    "section": "quantisation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does FAISS's `SQ8` store for each of a vector's 384 numbers?",
+    "hint": "Its bytes per vector were 384.",
+    "choices": [
+      {
+        "text": "One byte saying where the number falls in its coordinate's range",
+        "correct": true,
+        "why": "Right. Training records each coordinate's range, and every number becomes one byte within it: a quarter of float32's size."
+      },
+      {
+        "text": "The number of the nearest of 256 typical values for a piece of 4 numbers",
+        "correct": false,
+        "why": "That is product quantisation, PQ96, which codes pieces of several numbers; SQ8 codes each number on its own."
+      },
+      {
+        "text": "Its sign only, as one bit",
+        "correct": false,
+        "why": "One bit per number is binary quantisation, 48 bytes for 384 numbers; SQ8 used 384 bytes."
+      },
+      {
+        "text": "The full float32, plus a byte with the cell it belongs to",
+        "correct": false,
+        "why": "That would be larger than IVF1024,Flat's 1,536 bytes, not a quarter of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-046bekjh",
+    "version": 1,
+    "section": "quantisation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`PQ16` kept 0.230 of the true neighbours on these blends. Why did product quantisation lose so much here?",
+    "hint": "Recall the two medians from the first section.",
+    "choices": [
+      {
+        "text": "The codes were trained on 40,000 vectors instead of all 100,000",
+        "correct": false,
+        "why": "SQ8 was trained on the same 40,000 and kept 0.987. The sample was large enough; the codes are too coarse for this data."
+      },
+      {
+        "text": "A query's ten nearest score within a few hundredths of each other, and 16-byte codes blur scores by more",
+        "correct": true,
+        "why": "Right. The median best and tenth scores were 0.508 and 0.470; a code that cannot separate scores that close reorders the neighbours."
+      },
+      {
+        "text": "nprobe 16 searched too few cells for PQ",
+        "correct": false,
+        "why": "IVF1024,Flat with the same 16 cells kept 0.999, so the cells were not where the loss came from."
+      },
+      {
+        "text": "PQ ignores the cell centres and searches every vector",
+        "correct": false,
+        "why": "PQ only changes how each vector is stored; the same 16 cells were searched, and the codes were the residuals from their centres."
+      }
+    ]
+  },
+  {
+    "id": "ex-abmzt539",
+    "version": 1,
+    "section": "quantisation",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A collection of 1,000,000 vectors is stored in an IVF index as `PQ48` codes. How many megabytes do the codes alone take, counting a megabyte as 1,000,000 bytes?",
+    "hint": "The bytes/vector column says 48.",
+    "value": 48,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-4w75w96v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia's help centre will never hold more than 5,000 article chunks, searched a few times a second. Which index should it use?",
+    "hint": "Lesson 11 and the first section of this one measured exact search.",
+    "choices": [
+      {
+        "text": "HNSW with `M` 32, for the best recall per millisecond",
+        "correct": false,
+        "why": "At 5,000 vectors exact search takes a small fraction of the 0.303 ms measured at 12,500, and HNSW adds build time, memory and a recall below 1."
+      },
+      {
+        "text": "IVF with 1,024 cells, searched with `nprobe` 4",
+        "correct": false,
+        "why": "1,024 cells for 5,000 vectors leaves about five per cell, and the index needs training and still misses neighbours."
+      },
+      {
+        "text": "Exact search: fast at that size, never wrong",
+        "correct": true,
+        "why": "Right. Reading every vector is a linear cost, and 5,000 vectors keep it tiny; an approximate index only pays off when the collection is large enough that the reading hurts."
+      },
+      {
+        "text": "IVF with `PQ16`, to keep memory small",
+        "correct": false,
+        "why": "5,000 full vectors are 7.68 MB at 1,536 bytes each, and PQ16 kept 0.230 of the neighbours on this lesson's data."
+      }
+    ]
+  },
+  {
+    "id": "ex-esc590tr",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the approximate indexes in this lesson? Choose all that apply.",
+    "hint": "Check each one against a capture.",
+    "choices": [
+      {
+        "text": "Each has a setting that trades time per query for recall",
+        "correct": true,
+        "why": "Yes. nprobe for IVF and ef for HNSW; both curves in the figure climb and flatten."
+      },
+      {
+        "text": "An IVF index must be trained before it accepts vectors",
+        "correct": true,
+        "why": "Yes. FAISS refused the add with 'is_trained' failed until k-means had found the centres."
+      },
+      {
+        "text": "HNSW returns the exact answer whenever `ef` is at least k",
+        "correct": false,
+        "why": "ef 10 with k 10 found 0.772 of the true neighbours. ef at least k is a minimum, not a guarantee."
+      },
+      {
+        "text": "Product quantisation keeps recall in proportion to the bytes it keeps",
+        "correct": false,
+        "why": "PQ96 kept a sixteenth of the bytes and 0.693 of the neighbours, PQ16 about a hundredth and 0.230: the loss follows the data's near-ties, not a proportion."
+      }
+    ]
+  },
+  {
+    "id": "ex-trv170jv",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each index to the cost it carries.",
+    "hint": "One description fits none of them.",
+    "pairs": [
+      {
+        "left": "Flat",
+        "right": "Every query reads every vector"
+      },
+      {
+        "left": "IVF",
+        "right": "Needs training, and cells go stale as data drifts"
+      },
+      {
+        "left": "HNSW",
+        "right": "A search per vector to build, and deletes are hard"
+      },
+      {
+        "left": "PQ codes",
+        "right": "Near-ties come back in the wrong order"
+      }
+    ],
+    "right_distractors": [
+      "Needs a network round trip per vector"
+    ]
+  }
+]

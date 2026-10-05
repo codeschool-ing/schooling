@@ -96,4 +96,4 @@ Every approximate index has a setting that reads more of the collection for more
 rest of this lesson turns those settings and measures both sides. The method does not change:
 **choose the recall you need, then find the cheapest setting that reaches it on your data**, with
 ground truth from exact search over a sample of your own queries. Exact search over 1,000 queries
-took seconds here, even though serving every customer that way is what the index is for.
+took seconds here, even though serving every customer that way is what the index exists to avoid.

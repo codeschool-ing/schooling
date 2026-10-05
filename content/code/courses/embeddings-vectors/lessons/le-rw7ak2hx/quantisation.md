@@ -5,9 +5,10 @@ version: 1
 
 Every index so far kept each vector whole: 384 numbers of 4 bytes, 1,536 bytes a vector, read and
 multiplied in full whenever the search reaches it. **Quantisation replaces the vector with a
-shorter code** and computes the score from the code. It is easy to assume the loss is in proportion
-to the bytes removed, so that a quarter of the size keeps about a quarter of the quality. The two
-methods below show that the loss depends on how the code is built, far more than on how small it is.
+shorter code** and computes the score from the code. It is easy to picture that as a slider on
+which every byte removed costs the same amount of quality. The measurement below is not a straight
+line: the first three quarters of the bytes cost almost nothing, and every step after that costs a
+great deal.
 
 ## Two ways to make a code
 
@@ -20,9 +21,9 @@ coordinate's range it falls. FAISS calls it `SQ8`: 384 bytes a vector, a quarter
 it. Each piece is then stored as one byte, the number of the typical value nearest to it, so the
 vector becomes 96 bytes. `PQ48` uses 48 pieces of 8, and `PQ16` 16 pieces of 24. Inside an IVF
 index, FAISS codes each vector's difference from its cell's centre rather than the vector itself,
-which leaves less to code. To score a query against a code, the search first compares the query's pieces with all 256 typical values of each
-position, once per query, and then each vector's score is a sum of 96 numbers looked up in that
-table instead of 384 multiplications.
+which leaves less to code. To score a query against a code, the search first compares the query's
+pieces with all 256 typical values of each position, once per query. After that, each vector's score
+is a sum of 96 numbers looked up in that table instead of 384 multiplications.
 
 ## What each one keeps
 
@@ -51,9 +52,9 @@ as long as the cells alone.
 0.693; `PQ48` kept 0.450 and `PQ16` 0.230. Its training was the slow step of this whole lesson,
 60.8 s for `PQ96`, because it is 96 separate k-means runs. Lesson 13 saw 16-byte codes lose most of
 the neighbours on tightly packed copies of real vectors and expected looser ones to lose less; on
-these blends they lost nearly as much. The reason is the narrow band the exact-search section measured. A
-query's ten nearest vectors score within a few hundredths of each other, and a code that blurs
-every score by more than that reorders them. The neighbourhood is still found; its order is not.
+these blends they lost nearly as much. The reason is the narrow band the exact-search section
+measured. A query's ten nearest vectors score within a few hundredths of each other, and a code that
+blurs every score by more than that reorders them. The neighbourhood is still found; its order is not.
 
 That is why product quantisation is rarely the last step. The usual design keeps the codes in
 memory to choose a few hundred candidates fast, and keeps the full vectors somewhere cheaper, such

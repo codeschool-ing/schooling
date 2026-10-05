@@ -60,8 +60,16 @@ lesson.
 
 ## The time follows the count
 
-`bench.py`, which the next section shows, loads the three files and times a search on one core.
-`exact.py` runs exact search over the first 12,500, 25,000, 50,000 and 100,000 vectors:
+Every time in this lesson was measured on this machine, with other work running beside it:
+
+```
+ana@lab:~/emb$ nproc; grep -m1 "model name" /proc/cpuinfo
+4
+model name	: Intel(R) Xeon(R) Processor @ 2.10GHz
+```
+
+`bench.py`, which the next section shows, loads the three files and times a search on one of those
+four cores. `exact.py` runs exact search over the first 12,500, 25,000, 50,000 and 100,000 vectors:
 
 ```schooling-example
 {
@@ -80,8 +88,8 @@ lesson.
 **Eight times the vectors took 8.2 times as long**, from 0.303 ms to 2.492 ms, and the cost per
 vector stays between 20.7 and 28.5 ns, which is the noise of a machine shared with other work. These
 times are a batch of 1,000 queries divided by 1,000, which lets the processor use each vector it
-loads for many queries at once; lesson 11 timed one query at a time with NumPy, so its times are
-larger and are not comparable with these.
+loads for many queries at once. Lesson 11 timed one query at a time with NumPy, so its times measure
+something else and are not comparable with these.
 
 What does not change is the shape. Exact search over 100,000 vectors makes 100,000 comparisons per
 query, each of them 384 multiply-adds, and no cleverness in the arithmetic makes that number

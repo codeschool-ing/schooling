@@ -2231,6 +2231,154 @@
     ]
   },
   {
+    "id": "ex-7b9jatnb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "An IVF index with 1,024 cells receives a query. What does it compare the query with first?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Every stored vector, then it discards most of them",
+        "correct": false,
+        "why": "That is exact search. IVF exists to avoid reading every vector."
+      },
+      {
+        "text": "The 1,024 cell centres",
+        "correct": true,
+        "why": "Right. The centres decide which nprobe cells are searched, and only the vectors filed in those cells are compared after that."
+      },
+      {
+        "text": "The entry point on the top layer of the graph",
+        "correct": false,
+        "why": "An entry point belongs to HNSW. IVF has cells and centres, no layers."
+      },
+      {
+        "text": "A random sample of the vectors, chosen again for each query",
+        "correct": false,
+        "why": "Nothing is random at query time; the cells were fixed when k-means trained the index."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0qn3aas",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "Scalar quantisation with SQ8 stores one byte per number. How many bytes does it store for one vector of 768 dimensions, counting only the code?",
+    "hint": "Lesson 15.",
+    "value": 768,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-et9me8fc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Raising ef on an HNSW index from 40 to 160 raised recall@10 and also the time per query. Why both?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "A larger ef rebuilds the graph with more links before each search",
+        "correct": false,
+        "why": "ef is a query-time setting; the links were fixed by M and ef_construction when the index was built."
+      },
+      {
+        "text": "A larger ef switches the search from the graph to exact search",
+        "correct": false,
+        "why": "The search stays on the graph at every ef; even at 320 it compared far fewer vectors than exact search does."
+      },
+      {
+        "text": "The search keeps a longer list of candidates on layer 0, so it expands and compares more vectors",
+        "correct": true,
+        "why": "Right. A longer list lets the search step past dead ends and find more true neighbours, and every extra candidate expanded costs comparisons."
+      },
+      {
+        "text": "Each vector is read at a higher precision",
+        "correct": false,
+        "why": "The vectors are float32 at every ef. Precision is what quantisation changes, not ef."
+      }
+    ]
+  },
+  {
+    "id": "ex-ej09chjb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A search service measures recall@10 of 0.99 for its HNSW index against exact search, yet customers say the results are often unhelpful. What does the 0.99 tell you about where to look?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Raise ef until recall reaches 1.000",
+        "correct": false,
+        "why": "At 0.99 the index already returns almost exactly what exact search returns, so exact search would give the customers the same unhelpful results."
+      },
+      {
+        "text": "The index is losing the relevant articles and should be rebuilt with a larger M",
+        "correct": false,
+        "why": "Recall here says the index agrees with exact search; a rebuild cannot add relevance that exact search does not have."
+      },
+      {
+        "text": "Not at the index, which already matches exact search",
+        "correct": true,
+        "why": "Right. Recall against exact search measures only the index. Whether the nearest vectors are good answers is a question about the embeddings and the data."
+      },
+      {
+        "text": "Switch to IVF, which reached 0.99 sooner",
+        "correct": false,
+        "why": "That was a property of one set of vectors, and it would only make the same results arrive faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhpmrvqm",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Cutting a vector into pieces and storing each piece as the number of the nearest of 256 values learned by k-means is called ___ quantisation.",
+    "hint": "Lesson 15.",
+    "blanks": [
+      {
+        "accept": [
+          "product"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3qex8mk9",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these HNSW settings are fixed once the index is built? Choose all that apply.",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "M, the number of links per vector",
+        "correct": true,
+        "why": "Yes. The links are part of the graph; changing M means building the index again."
+      },
+      {
+        "text": "ef_construction, the candidate list used while inserting",
+        "correct": true,
+        "why": "Yes. It decided which links each vector got, and those links stay until a rebuild."
+      },
+      {
+        "text": "ef, the candidate list used while searching",
+        "correct": false,
+        "why": "ef is chosen per query and can change between one query and the next without touching the index."
+      },
+      {
+        "text": "k, the number of results returned",
+        "correct": false,
+        "why": "k is part of each query. Lesson 16 shows how it interacts with ef."
+      }
+    ]
+  },
+  {
     "id": "ex-mgenpp22",
     "version": 1,
     "type": "quiz",
