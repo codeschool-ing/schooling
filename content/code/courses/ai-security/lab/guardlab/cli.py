@@ -18,6 +18,10 @@ course.
     guard score FILE                the stand-in scorer over a set of profiles
     guard counterfactual FILE       the same, with each CEP moved to the
                                     other end of the country
+    guard moderate TEXT             the stand-in moderation endpoint's scores
+    guard modeval FILE --category C (--threshold T [--show] | --sweep |
+                  --review R --block B)
+                                    the endpoint measured against labels
 """
 import argparse
 import datetime as dt
@@ -271,6 +275,64 @@ def cmd_counterfactual(a):
         ", ".join("%s %d" % kv for kv in flips.items()) or "none"))
 
 
+# ---- moderation -------------------------------------------------------------
+
+def cmd_moderate(a):
+    from . import moderation as m
+    print(json.dumps(m.moderate(a.text)))
+
+
+def ratio(a, b):
+    return "%.2f" % (a / b) if b else "  - "
+
+
+def cmd_modeval(a):
+    from . import moderation as m
+    rows = m.load(a.file)
+    cat = a.category
+    pos = sum(1 for r in rows if cat in r["labels"])
+    print("category %s: %d of %d messages labelled %s by a person" % (
+        cat, pos, len(rows), cat))
+    if a.sweep:
+        print("threshold  flagged  precision  recall")
+        for t in [x / 10 for x in range(1, 10)]:
+            tp, fp, fn, tn = m.confusion(rows, cat, t)
+            print("     %.1f      %3d       %s    %s" % (
+                t, tp + fp, ratio(tp, tp + fp), ratio(tp, tp + fn)))
+        return 0
+    if a.block is not None:
+        lanes = {"block": [0, 0], "review": [0, 0], "publish": [0, 0]}
+        for r in rows:
+            s = m.moderate(r["text"])[cat]
+            lane = "block" if s >= a.block else "review" if s >= a.review else "publish"
+            lanes[lane][0 if cat in r["labels"] else 1] += 1
+            if a.show and (lane == "block") != (cat in r["labels"]) and lane != "review":
+                print("  %-7s %s %.2f  %s" % (lane, r["id"], s, r["text"]))
+        print("lane     score        labelled yes  labelled no")
+        print("block    >= %.2f            %3d          %3d" % (a.block, *lanes["block"]))
+        print("review   %.2f-%.2f          %3d          %3d" % (a.review, a.block, *lanes["review"]))
+        print("publish  <  %.2f            %3d          %3d" % (a.review, *lanes["publish"]))
+        return 0
+    tp, fp, fn, tn = m.confusion(rows, cat, a.threshold)
+    print("threshold %.2f" % a.threshold)
+    print("              labelled yes  labelled no")
+    print("flagged               %3d          %3d" % (tp, fp))
+    print("not flagged           %3d          %3d" % (fn, tn))
+    print("precision %s   recall %s" % (ratio(tp, tp + fp), ratio(tp, tp + fn)))
+    for lang in sorted({r["lang"] for r in rows}):
+        sub = [r for r in rows if r["lang"] == lang]
+        ltp, _, lfn, _ = m.confusion(sub, cat, a.threshold)
+        print("  recall, messages in %s: %d of %d" % (lang, ltp, ltp + lfn))
+    if a.show:
+        for r in rows:
+            s = m.moderate(r["text"])[cat]
+            flagged, labelled = s >= a.threshold, cat in r["labels"]
+            if flagged != labelled:
+                print("  %s %s %.2f  %s" % ("FALSE POSITIVE" if flagged else "MISSED        ",
+                                           r["id"], s, r["text"]))
+    return 0
+
+
 # ---- the lab's own setup --------------------------------------------------
 
 def cmd_build(a):
@@ -360,6 +422,20 @@ def main(argv=None):
     s = sub.add_parser("counterfactual")
     s.add_argument("file")
     s.set_defaults(fn=cmd_counterfactual)
+
+    s = sub.add_parser("moderate")
+    s.add_argument("text")
+    s.set_defaults(fn=cmd_moderate)
+
+    s = sub.add_parser("modeval")
+    s.add_argument("file")
+    s.add_argument("--category", required=True)
+    s.add_argument("--threshold", type=float, default=0.5)
+    s.add_argument("--show", action="store_true")
+    s.add_argument("--sweep", action="store_true")
+    s.add_argument("--review", type=float)
+    s.add_argument("--block", type=float)
+    s.set_defaults(fn=cmd_modeval)
 
     s = sub.add_parser("_build")
     s.set_defaults(fn=cmd_build)
