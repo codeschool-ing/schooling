@@ -19,6 +19,7 @@ The wrapping is this program's, so a long paragraph fits a page; the words
 are the document's. Standard library only.
 """
 import os
+import signal
 import re
 import sys
 import textwrap
@@ -38,7 +39,9 @@ DOCS = {
                      "Tongyi Qianwen LICENSE AGREEMENT"),
     "deepseek-v3-licence": ("deepseek-ai/DeepSeek-V3", "9b4e9788e4a3a731f7567338ed15d3ec549ce03b",
                             "LICENSE-MODEL"),
+    "deepseek-v3-readme": ("deepseek-ai/DeepSeek-V3", "9b4e9788e4a3a731f7567338ed15d3ec549ce03b", "README.md"),
     "deepseek-r1-licence": ("deepseek-ai/DeepSeek-R1", "0cf78561f1d51c84a21b2190626b21116d5c68bb", "LICENSE"),
+    "deepseek-r1-readme": ("deepseek-ai/DeepSeek-R1", "0cf78561f1d51c84a21b2190626b21116d5c68bb", "README.md"),
     "gemma-readme": ("google-deepmind/gemma", "e2e0a7d39d117b3bff6a773815ee9b1244733ef7", "README.md"),
     "gemma-code-licence": ("google-deepmind/gemma", "e2e0a7d39d117b3bff6a773815ee9b1244733ef7", "LICENSE"),
     "mistral-inference-licence": ("mistralai/mistral-inference", "9eaeb91c17450e09021b6065a1d5cc69876507c8",
@@ -67,6 +70,7 @@ def fetch(name):
 
 
 def main():
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)  # a pipe into head is not an error
     args = sys.argv[1:]
     if not args or args[0] not in ("list", "quote", "lines", "words", "fetch"):
         sys.exit(__doc__)

@@ -15,6 +15,7 @@ comes out next year.
     sheet where TEXT                    every entry whose name contains TEXT
     sheet show NAME                     everything the sheet says about one
     sheet cost NAME IN OUT              what IN input and OUT output tokens cost
+    sheet retiring [--provider P]       entries with a deprecation date, soonest first
     sheet pick [--provider P] [--min-window N] [--needs a,b] [--max-in X]
                                         filter, then sort by input price; an
                                         entry priced 0 is left out, because
@@ -25,6 +26,7 @@ Prices are dollars per million tokens (MTok). Standard library only.
 import argparse
 import json
 import os
+import signal
 import sys
 import urllib.request
 from collections import Counter
@@ -75,6 +77,7 @@ def table(rows):
 
 
 def main():
+    signal.signal(signal.SIGPIPE, signal.SIG_DFL)  # a pipe into head is not an error
     p = argparse.ArgumentParser(prog="sheet")
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("count")
@@ -82,6 +85,7 @@ def main():
     a = sub.add_parser("where"); a.add_argument("text")
     a = sub.add_parser("show"); a.add_argument("name")
     a = sub.add_parser("cost"); a.add_argument("name"); a.add_argument("tin", type=int); a.add_argument("tout", type=int)
+    a = sub.add_parser("retiring"); a.add_argument("--provider"); a.add_argument("--mode", default="chat")
     a = sub.add_parser("pick")
     a.add_argument("--provider"); a.add_argument("--min-window", type=int, default=0)
     a.add_argument("--needs", default=""); a.add_argument("--max-in", type=Decimal)
@@ -116,6 +120,13 @@ def main():
         print(f"{args.tin:,} in  x ${mtok(e['input_cost_per_token'])}/M = ${cin:.4f}")
         print(f"{args.tout:,} out x ${mtok(e['output_cost_per_token'])}/M = ${cout:.4f}")
         print(f"total ${cin + cout:.4f}")
+    elif args.cmd == "retiring":
+        rows = [(e["deprecation_date"], k, e.get("litellm_provider", "")) for k, e in d.items()
+                if e.get("deprecation_date") and e.get("mode") == args.mode
+                and (not args.provider or e.get("litellm_provider") == args.provider)]
+        print(f"{len(rows)} entries carry a deprecation date")
+        for date, k, prov in sorted(rows):
+            print(f"{date}  {k[:50]:50} {prov}")
     elif args.cmd == "pick":
         needs = [n for n in args.needs.split(",") if n]
         rows = []
