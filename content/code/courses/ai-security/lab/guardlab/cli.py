@@ -9,6 +9,10 @@ course.
     guard redact FILE [--strict]    the same records with them replaced
     guard sweep [--now DATE] [--dry-run | --check]
                                     the retention policy, applied
+    guard minimise TICKET --purpose NAME [--sensitive remove]
+                                    what a third-party model is sent
+    guard restore VAULT REPLY       its reply, with the placeholders put back
+    guard sensitive TEXT            what the sensitive-data word list sees
 """
 import argparse
 import datetime as dt
@@ -133,6 +137,59 @@ def cmd_sweep(a):
     return 0
 
 
+# ---- minimise and restore -------------------------------------------------
+
+def cmd_minimise(a):
+    from . import minimise as m
+    with open(a.ticket, encoding="utf-8") as fh:
+        raw = fh.read()
+    ticket = json.loads(raw)
+    purpose = load("data/purposes.json")[a.purpose]
+    out, vault, report = m.minimise(ticket, purpose, a.sensitive == "remove")
+    print("purpose    %s: %s" % (a.purpose, purpose["what"]))
+    for label, text in report:
+        print("%-10s %s" % (label, text))
+    if out is None:
+        print("NOTHING WRITTEN: sensitive data in the text. Remove it with "
+              "--sensitive remove, or record the legal basis that allows "
+              "sending it (LGPD art. 11) and change the purpose.")
+        return 3
+    body = json.dumps(out, ensure_ascii=False, indent=1) + "\n"
+    name = ticket["ticket"] + ".json"
+    for folder, data in (("outbox", body),
+                         ("vault", json.dumps(vault.by_token, ensure_ascii=False,
+                                              indent=1) + "\n")):
+        os.makedirs(os.path.join(HOME, folder), exist_ok=True)
+        with open(os.path.join(HOME, folder, name), "w", encoding="utf-8") as fh:
+            fh.write(data)
+    print("%-10s %d -> %d" % ("bytes", len(raw.encode()), len(body.encode())))
+    print("%-10s outbox/%s (to the provider), vault/%s (stays here)" % (
+        "wrote", name, name))
+    return 0
+
+
+def cmd_sensitive(a):
+    from . import minimise as m
+    found = m.sensitive_terms(a.text)
+    if not found:
+        print("nothing found")
+    for cat, words in found.items():
+        print("%s: %s" % (cat, ", ".join(words)))
+
+
+def cmd_restore(a):
+    from . import minimise as m
+    with open(a.vault, encoding="utf-8") as fh:
+        vault = json.load(fh)
+    with open(a.reply, encoding="utf-8") as fh:
+        text, unknown = m.restore(fh.read(), vault)
+    sys.stdout.write(text)
+    if unknown:
+        print("UNKNOWN placeholder(s), left as they were: " + ", ".join(unknown))
+        return 4
+    return 0
+
+
 # ---- the lab's own setup --------------------------------------------------
 
 def cmd_build(a):
@@ -190,6 +247,21 @@ def main(argv=None):
     g.add_argument("--dry-run", action="store_true")
     g.add_argument("--check", action="store_true")
     s.set_defaults(fn=cmd_sweep)
+
+    s = sub.add_parser("minimise")
+    s.add_argument("ticket")
+    s.add_argument("--purpose", required=True)
+    s.add_argument("--sensitive", choices=["hold", "remove"], default="hold")
+    s.set_defaults(fn=cmd_minimise)
+
+    s = sub.add_parser("restore")
+    s.add_argument("vault")
+    s.add_argument("reply")
+    s.set_defaults(fn=cmd_restore)
+
+    s = sub.add_parser("sensitive")
+    s.add_argument("text")
+    s.set_defaults(fn=cmd_sensitive)
 
     s = sub.add_parser("_build")
     s.set_defaults(fn=cmd_build)

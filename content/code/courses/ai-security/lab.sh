@@ -16,21 +16,29 @@
 # WHAT IS IN IT
 #
 #   guardlab/      the tools, in Python's standard library: detect.py (what
-#                  counts as personal data in free text) and cli.py (every
-#                  command)
+#                  counts as personal data in free text), minimise.py (what
+#                  a ticket loses before a third-party model sees it) and
+#                  cli.py (every command)
 #   bin/guard      the command line
 #   logs/raw/      the assistant's call log, one file per day, word for word
 #   logs/redacted/ the same records with personal data replaced
 #   logs/metrics/  counts per day: calls, tokens, the slowest call
 #   retention.json how long each of the three is kept
 #   holds.json     files a sweep must not delete, and why
-#   data/          what the logs and the rest were built from
+#   data/          what the logs and the rest were built from, and the
+#                  inputs of later lessons: a support ticket, the purposes
+#                  it may be sent to a model for, a reply to restore
+#   outbox/ vault/ written by `guard minimise`: what would be sent, and the
+#                  placeholders that stay behind
 #
 # WHAT IS WRITTEN BY THE COURSE AND NOT MEASURED
 #
 #   - Every record in the log, prompts AND replies, was written by the
 #     course. No model produced any of the replies; they are there so the
 #     tools have something realistic to read.
+#   - data/reply-4471.txt is what the course wrote in place of a model's
+#     reply to the minimised ticket. No model was called; it exists so that
+#     `guard restore` has placeholders to put back.
 #   - Every CPF, card number, phone number, e-mail address and key in them
 #     is invented. The CPFs have valid check digits on purpose, the cards are
 #     the networks' published test numbers, and the AWS key is the one
