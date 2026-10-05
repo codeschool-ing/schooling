@@ -41,15 +41,19 @@ processes were running during this measurement, so another run prints other numb
       "note": "Texts per second for one embedding function: run it three times and keep the fastest, which is the run least disturbed by anything else."
     },
     {
-      "code": "for b in (1, 8, 32, 150):\n    r = rate(lambda t: embed(t, batch=b), texts)\n    print(f\"all-MiniLM-L6-v2  batch {b:3}           {r:7.0f} texts/s\")",
+      "code": "minilm = []\nfor b in (1, 8, 32, 150):\n    minilm.append(rate(lambda t: embed(t, batch=b), texts))\n    print(f\"all-MiniLM-L6-v2  batch {b:3}           {minilm[-1]:7.0f} texts/s\")",
       "note": "MiniLM at four batch sizes, the last of them all 150 tickets at once."
     },
     {
-      "code": "r = rate(lambda t: embed(t, batch=32), sorted(texts, key=len))\nprint(f\"all-MiniLM-L6-v2  batch  32, sorted   {r:7.0f} texts/s\")\nr = rate(lambda t: wl.embed(t, norm=True), texts)\nprint(f\"WordLlama         batch  64           {r:7.0f} texts/s\")",
+      "code": "minilm.append(rate(lambda t: embed(t, batch=32), sorted(texts, key=len)))\nprint(f\"all-MiniLM-L6-v2  batch  32, sorted   {minilm[-1]:7.0f} texts/s\")\nstatic = rate(lambda t: wl.embed(t, norm=True), texts)\nprint(f\"WordLlama         batch  64           {static:7.0f} texts/s\")",
       "note": "Batch 32 again, with the tickets sorted by length first, and WordLlama at its default batch of 64."
+    },
+    {
+      "code": "fastest = max(minilm)\nprint(f\"WordLlama / fastest MiniLM: {static / fastest:.0f} times\")\nprint(f\"a million texts at the fastest MiniLM rate: {1e6 / fastest / 60:.0f} minutes\")",
+      "note": "The two numbers the section uses: how many times faster the static model was than the fastest MiniLM line, and how long a million texts would take at that MiniLM rate."
     }
   ],
-  "output": "ana@lab:~/emb$ python speed.py\nall-MiniLM-L6-v2  batch   1               292 texts/s\nall-MiniLM-L6-v2  batch   8               218 texts/s\nall-MiniLM-L6-v2  batch  32               209 texts/s\nall-MiniLM-L6-v2  batch 150               198 texts/s\nall-MiniLM-L6-v2  batch  32, sorted       309 texts/s\nWordLlama         batch  64             25561 texts/s"
+  "output": "ana@lab:~/emb$ python speed.py\nall-MiniLM-L6-v2  batch   1               222 texts/s\nall-MiniLM-L6-v2  batch   8               245 texts/s\nall-MiniLM-L6-v2  batch  32               200 texts/s\nall-MiniLM-L6-v2  batch 150               193 texts/s\nall-MiniLM-L6-v2  batch  32, sorted       231 texts/s\nWordLlama         batch  64             21776 texts/s\nWordLlama / fastest MiniLM: 89 times\na million texts at the fastest MiniLM rate: 68 minutes"
 }
 ```
 
