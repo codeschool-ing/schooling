@@ -1,0 +1,587 @@
+[
+  {
+    "id": "ex-48z5nw5t",
+    "version": 1,
+    "section": "symptoms-not-causes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson replace `PaymentsFailing` as a page?",
+    "hint": "Cause or symptom?",
+    "choices": [
+      {
+        "text": "It pages on one cause, not on what customers feel",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because payments never fails in production",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "Because Alertmanager cannot route alerts about payments",
+        "correct": false,
+        "why": "It routes by labels."
+      },
+      {
+        "text": "Because its threshold of 2% is too high for any service",
+        "correct": false,
+        "why": "The threshold is not the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-t32ryevr",
+    "version": 1,
+    "section": "symptoms-not-causes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which question decides whether an alert should be a page?",
+    "hint": "About the person woken up.",
+    "choices": [
+      {
+        "text": "Is the cause known?",
+        "correct": false,
+        "why": "Pages often come before the cause is known."
+      },
+      {
+        "text": "Did the metric change by more than 10%?",
+        "correct": false,
+        "why": "A change is not a need to act."
+      },
+      {
+        "text": "Must somebody act now, before morning?",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Is the service owned by the on-call team?",
+        "correct": false,
+        "why": "Ownership routes; it does not decide urgency."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3m2sxz9",
+    "version": 1,
+    "section": "symptoms-not-causes",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each signal to the severity the lesson gives it.",
+    "hint": "Customers hurt now, or something to look at.",
+    "pairs": [
+      {
+        "left": "checkouts failing fast enough to empty the budget in two days",
+        "right": "page"
+      },
+      {
+        "left": "a scrape target down for a minute",
+        "right": "ticket"
+      },
+      {
+        "left": "checkouts failing fast enough to empty the budget in nine days",
+        "right": "ticket, from the slow-burn rule"
+      }
+    ]
+  },
+  {
+    "id": "ex-ebx6ygx5",
+    "version": 1,
+    "section": "burn-rate",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The objective is 99.5%. Over the last hour 2% of checkouts failed. What is the burn rate?",
+    "hint": "Error ratio over allowed ratio.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-phvwf9j7",
+    "version": 1,
+    "section": "burn-rate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At a burn rate of 14.4 sustained, how long does a 28-day budget last?",
+    "hint": "28 divided by 14.4.",
+    "choices": [
+      {
+        "text": "14.4 hours",
+        "correct": false,
+        "why": "Days, not hours."
+      },
+      {
+        "text": "About a week, the usual time to notice",
+        "correct": false,
+        "why": "That is a burn of 4."
+      },
+      {
+        "text": "28 days",
+        "correct": false,
+        "why": "That is a burn of 1."
+      },
+      {
+        "text": "About two days",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2k0xett",
+    "version": 1,
+    "section": "burn-rate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At four in the morning nobody is buying, and checkout is broken. What does the burn-rate alert do?",
+    "hint": "Nothing over nothing.",
+    "choices": [
+      {
+        "text": "It fires, since every request fails and the ratio becomes one",
+        "correct": false,
+        "why": "There are no requests."
+      },
+      {
+        "text": "Nothing: with no traffic the ratio is undefined",
+        "correct": true,
+        "why": "Right; the synthetic probe covers this."
+      },
+      {
+        "text": "It fires twice, once per window",
+        "correct": false,
+        "why": "It cannot fire."
+      },
+      {
+        "text": "It fires a ticket instead of a page, since the night is quiet",
+        "correct": false,
+        "why": "Neither fires."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1yn53yp",
+    "version": 1,
+    "section": "two-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the fast alert need the burn rate high over both 5 minutes and 1 minute?",
+    "hint": "Size and recency.",
+    "choices": [
+      {
+        "text": "To fire twice as often",
+        "correct": false,
+        "why": "It fires less often."
+      },
+      {
+        "text": "Because Prometheus cannot evaluate a 5-minute rate alone",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "The long window says it is big; the short one says it is still happening",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To average the two numbers into one threshold",
+        "correct": false,
+        "why": "Both must pass; nothing is averaged."
+      }
+    ]
+  },
+  {
+    "id": "ex-tb3x65gc",
+    "version": 1,
+    "section": "two-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 40-second blip sends the 1-minute burn rate far above 14.4. Why does nobody get paged?",
+    "hint": "The other window.",
+    "choices": [
+      {
+        "text": "The 5-minute burn rate stayed under the threshold",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The pager was down",
+        "correct": false,
+        "why": "It was up."
+      },
+      {
+        "text": "Alertmanager drops alerts shorter than a minute before routing them",
+        "correct": false,
+        "why": "It has no such rule."
+      },
+      {
+        "text": "The rule has `for: 5m`",
+        "correct": false,
+        "why": "It has no `for`."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1aa707c",
+    "version": 1,
+    "section": "two-windows",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the fast rule have no `for:` clause?",
+    "hint": "What would `for:` add?",
+    "choices": [
+      {
+        "text": "Because `for:` is not allowed on recording rules",
+        "correct": false,
+        "why": "These are alerting rules."
+      },
+      {
+        "text": "Because the pager adds its own delay",
+        "correct": false,
+        "why": "It adds none."
+      },
+      {
+        "text": "Because Alertmanager waits five minutes before sending anything",
+        "correct": false,
+        "why": "`group_wait` is ten seconds."
+      },
+      {
+        "text": "The long window already filters blips, and `for` would only delay real pages",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pb3065x4",
+    "version": 1,
+    "section": "writing-the-rule",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which belong in a page's annotations? Choose all that apply.",
+    "hint": "For the person woken up.",
+    "choices": [
+      {
+        "text": "The consequence for users, in words",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The current measurement",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A link to the runbook",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The PromQL expression and its threshold",
+        "correct": false,
+        "why": "That is in the rule, not for a phone at 3 am."
+      }
+    ]
+  },
+  {
+    "id": "ex-9nss5w0q",
+    "version": 1,
+    "section": "writing-the-rule",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a runbook?",
+    "hint": "The page links to it.",
+    "choices": [
+      {
+        "text": "The log of every page ever sent",
+        "correct": false,
+        "why": "That is the pager's history."
+      },
+      {
+        "text": "A short page: what the alert means, what to check, how to roll back, whom to call",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The YAML file of the alert rules",
+        "correct": false,
+        "why": "That is the rule."
+      },
+      {
+        "text": "The schedule of who is on call",
+        "correct": false,
+        "why": "That is the rota."
+      }
+    ]
+  },
+  {
+    "id": "ex-d99bjz3w",
+    "version": 1,
+    "section": "routing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab's routes, where does an alert with `severity=\"ticket\"` go?",
+    "hint": "The default receiver.",
+    "choices": [
+      {
+        "text": "To the `tickets` receiver, the route's default",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To the pager, like every alert that has no severity at all",
+        "correct": false,
+        "why": "Only pages go there."
+      },
+      {
+        "text": "Nowhere: tickets are dropped",
+        "correct": false,
+        "why": "They go to the default receiver."
+      },
+      {
+        "text": "To Prometheus, which stores it until a person reads the ticket queue",
+        "correct": false,
+        "why": "Alertmanager sends; it does not return alerts."
+      }
+    ]
+  },
+  {
+    "id": "ex-7j19fm3n",
+    "version": 1,
+    "section": "routing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During the incident the ticket alert is `suppressed` with an `inhibitedBy` id. Why?",
+    "hint": "The inhibit rule.",
+    "choices": [
+      {
+        "text": "The ticket was silenced by hand",
+        "correct": false,
+        "why": "A silence shows in `silencedBy`."
+      },
+      {
+        "text": "The ticket rule failed to evaluate",
+        "correct": false,
+        "why": "It was active."
+      },
+      {
+        "text": "A page with the same `slo` is firing, so the ticket is held back",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Tickets are only sent in working hours",
+        "correct": false,
+        "why": "No time rule is configured."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsfr472h",
+    "version": 1,
+    "section": "routing",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Alertmanager collects related alerts into one notification using the route's `group____` setting.",
+    "hint": "By which labels?",
+    "blanks": [
+      {
+        "accept": [
+          "_by"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yhjrtpc2",
+    "version": 1,
+    "section": "silences",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes a silence better than raising the alert's threshold during maintenance?",
+    "hint": "What happens afterwards.",
+    "choices": [
+      {
+        "text": "A silence also stops Prometheus evaluating the rule",
+        "correct": false,
+        "why": "The rule is still evaluated."
+      },
+      {
+        "text": "A silence deletes the alert's history",
+        "correct": false,
+        "why": "It deletes nothing."
+      },
+      {
+        "text": "A threshold cannot be changed without a restart",
+        "correct": false,
+        "why": "A reload is enough."
+      },
+      {
+        "text": "It ends by itself and records who and why",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9jk2h63",
+    "version": 1,
+    "section": "silences",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The silence ran out while the burn rate was still high. What happens?",
+    "hint": "Silence the page, not the problem.",
+    "choices": [
+      {
+        "text": "Nothing until the alert resolves and fires again",
+        "correct": false,
+        "why": "It is still firing."
+      },
+      {
+        "text": "The page is sent, which is correct",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The silence extends itself by another twenty minutes",
+        "correct": false,
+        "why": "Silences do not extend."
+      },
+      {
+        "text": "The alert is turned into a ticket",
+        "correct": false,
+        "why": "Its severity does not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-7yt75rn4",
+    "version": 1,
+    "section": "fatigue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is alert fatigue?",
+    "hint": "What frequent noise does to people.",
+    "choices": [
+      {
+        "text": "Prometheus slowing down under too many rules",
+        "correct": false,
+        "why": "It is about people."
+      },
+      {
+        "text": "The pager's battery running out",
+        "correct": false,
+        "why": "Not what it means."
+      },
+      {
+        "text": "People ignoring pages because most of them needed no action",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Alertmanager dropping repeated notifications once a group grows past its limit",
+        "correct": false,
+        "why": "That is grouping."
+      }
+    ]
+  },
+  {
+    "id": "ex-02660g1b",
+    "version": 1,
+    "section": "fatigue",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the weekly review, a page fired twice at night and needed no action either time. What should the team do that week?",
+    "hint": "A page that fails the test.",
+    "choices": [
+      {
+        "text": "Change the alert: its threshold, its severity, or delete it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, since two pages a week is within the limit of two incidents a shift",
+        "correct": false,
+        "why": "The limit is not the test."
+      },
+      {
+        "text": "Ask the on-call person to acknowledge faster",
+        "correct": false,
+        "why": "Speed was not the problem."
+      },
+      {
+        "text": "Add a second page to confirm the first",
+        "correct": false,
+        "why": "That doubles the noise."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2zh31hv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happened during the lab's incident in order.",
+    "hint": "The pager's log.",
+    "items": [
+      "Payments starts failing one charge in ten",
+      "The page fires",
+      "The page flaps to resolved, and the ticket goes out",
+      "A silence is added for the maintenance",
+      "The fault is removed and the page resolves"
+    ]
+  },
+  {
+    "id": "ex-bh6vyqdh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team pages on CPU above 90%, disk above 80% and payments' error ratio above 2%, and is woken three times a week. What should it change first?",
+    "hint": "Symptom, then causes as tickets.",
+    "choices": [
+      {
+        "text": "Raise every threshold by ten points",
+        "correct": false,
+        "why": "Still causes, still paging."
+      },
+      {
+        "text": "Add a fourth page for memory",
+        "correct": false,
+        "why": "More causes, more noise."
+      },
+      {
+        "text": "Route all three to a chat channel nobody reads",
+        "correct": false,
+        "why": "That hides them."
+      },
+      {
+        "text": "Page on a burn rate of the user-facing SLO; make the three causes tickets",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  }
+]

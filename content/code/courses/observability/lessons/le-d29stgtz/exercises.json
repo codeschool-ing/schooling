@@ -1,0 +1,576 @@
+[
+  {
+    "id": "ex-ym4h9wc0",
+    "version": 1,
+    "section": "no-data-of-its-own",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Grafana container is deleted with its volume. What is lost?",
+    "hint": "Where does each data point live?",
+    "choices": [
+      {
+        "text": "Every metric, log and trace of the last week",
+        "correct": false,
+        "why": "Those live in Prometheus, Loki and Jaeger."
+      },
+      {
+        "text": "Its own state: users, settings, unprovisioned dashboards",
+        "correct": true,
+        "why": "Right. In the lab even the dashboards and data sources come back from files."
+      },
+      {
+        "text": "The Prometheus data source and its history",
+        "correct": false,
+        "why": "The data source is a pointer; the history is in Prometheus."
+      },
+      {
+        "text": "Nothing, because Grafana keeps a copy inside Prometheus",
+        "correct": false,
+        "why": "Grafana stores nothing in Prometheus."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0pexy5e",
+    "version": 1,
+    "section": "no-data-of-its-own",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the provisioning file set each data source's `uid` itself?",
+    "hint": "Dashboards refer to it.",
+    "choices": [
+      {
+        "text": "Grafana refuses data sources without a written `uid`",
+        "correct": false,
+        "why": "It would generate one."
+      },
+      {
+        "text": "So dashboards naming it work on any Grafana that loads the file",
+        "correct": true,
+        "why": "Right. A generated id exists only on the Grafana that generated it."
+      },
+      {
+        "text": "To hide the data source's address from viewers",
+        "correct": false,
+        "why": "The `url` is a separate field."
+      },
+      {
+        "text": "Because `uid`s are encrypted and names are not",
+        "correct": false,
+        "why": "Neither is encrypted."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd83mkbf",
+    "version": 1,
+    "section": "no-data-of-its-own",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Grafana, a backend it knows how to query, such as Prometheus or Loki, is called a data ___.",
+    "hint": "Where the data comes from.",
+    "blanks": [
+      {
+        "accept": [
+          "source"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sb5mkwgw",
+    "version": 1,
+    "section": "asking-through-grafana",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same expression asked through Grafana and of Prometheus gave 5.084 both times. What did Grafana add?",
+    "hint": "Look at the shape of the answer.",
+    "choices": [
+      {
+        "text": "A correction for the time zone",
+        "correct": false,
+        "why": "The value is the same; only the timestamp's unit differs."
+      },
+      {
+        "text": "Only a different format for the answer",
+        "correct": true,
+        "why": "Right: frames, with the time in milliseconds. Nothing was computed in Grafana."
+      },
+      {
+        "text": "A cache that made it ten times faster",
+        "correct": false,
+        "why": "Nothing was measured that would say so."
+      },
+      {
+        "text": "Its own estimate, averaged with Prometheus's",
+        "correct": false,
+        "why": "Grafana computes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypm6yr2f",
+    "version": 1,
+    "section": "asking-through-grafana",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard is slow to load. Where is the fix most likely to be?",
+    "hint": "Who runs the queries?",
+    "choices": [
+      {
+        "text": "In more memory for the Grafana container",
+        "correct": false,
+        "why": "Grafana mostly waits on the data sources."
+      },
+      {
+        "text": "In a newer browser",
+        "correct": false,
+        "why": "Drawing is rarely the slow part."
+      },
+      {
+        "text": "In the queries, or a recording rule",
+        "correct": true,
+        "why": "Right: a slow dashboard is almost always a slow query."
+      },
+      {
+        "text": "In fewer users allowed to log in",
+        "correct": false,
+        "why": "That treats the symptom with a policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-ckmrchy2",
+    "version": 1,
+    "section": "service-accounts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What should a deploy pipeline use to annotate dashboards?",
+    "hint": "Not a person's password.",
+    "choices": [
+      {
+        "text": "The admin password, stored in the pipeline's variables",
+        "correct": false,
+        "why": "A leak would give away everything."
+      },
+      {
+        "text": "A service account's token with a small role",
+        "correct": true,
+        "why": "Right, revocable on its own."
+      },
+      {
+        "text": "An anonymous request, since annotations are harmless",
+        "correct": false,
+        "why": "Anonymous writes let anybody mark anything."
+      },
+      {
+        "text": "The personal account of whoever set the pipeline up",
+        "correct": false,
+        "why": "It breaks when that person leaves."
+      }
+    ]
+  },
+  {
+    "id": "ex-0w6dtrrh",
+    "version": 1,
+    "section": "service-accounts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The robot's token got 200 on the search and 403 on deleting the Prometheus data source. What does the 403 show?",
+    "hint": "Editor is not Admin.",
+    "choices": [
+      {
+        "text": "That the token had expired",
+        "correct": false,
+        "why": "The search right before it worked."
+      },
+      {
+        "text": "That the data source did not exist",
+        "correct": false,
+        "why": "That would be a 404."
+      },
+      {
+        "text": "That its role does not allow it",
+        "correct": true,
+        "why": "Right. A leaked token cannot remove what every dashboard depends on."
+      },
+      {
+        "text": "That Grafana blocks deletes during business hours",
+        "correct": false,
+        "why": "There is no such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-p35ks820",
+    "version": 1,
+    "section": "dashboards-as-code",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the main gain of keeping a dashboard as a file in version control?",
+    "hint": "Who changed what?",
+    "choices": [
+      {
+        "text": "History, review, and a way back",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It loads faster than a clicked one",
+        "correct": false,
+        "why": "Speed is the same."
+      },
+      {
+        "text": "It needs no data source",
+        "correct": false,
+        "why": "Every panel still queries one."
+      },
+      {
+        "text": "Grafana can only draw provisioned panels in color",
+        "correct": false,
+        "why": "Not a thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-jc35vxvt",
+    "version": 1,
+    "section": "dashboards-as-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Saving over the provisioned dashboard through the API returned 400. Why does Grafana refuse?",
+    "hint": "What would the next reading of the file do?",
+    "choices": [
+      {
+        "text": "The token lacked the Editor role",
+        "correct": false,
+        "why": "It was an Editor."
+      },
+      {
+        "text": "The file would undo the edit at the next read",
+        "correct": true,
+        "why": "Right. Change the file instead."
+      },
+      {
+        "text": "Dashboards cannot be changed once created",
+        "correct": false,
+        "why": "Unprovisioned ones can."
+      },
+      {
+        "text": "The new title was too short",
+        "correct": false,
+        "why": "Length was not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-q02w371d",
+    "version": 1,
+    "section": "dashboards-as-code",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of changing a query on the provisioned dashboard in order.",
+    "hint": "The file is the source.",
+    "items": [
+      "Edit the query in `shop.json`",
+      "Open a pull request",
+      "A reviewer reads the change",
+      "Once merged and deployed, provisioning reloads the file"
+    ]
+  },
+  {
+    "id": "ex-cxns8f4s",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where do the values of the dashboard's `$job` variable come from?",
+    "hint": "They are not in the file.",
+    "choices": [
+      {
+        "text": "A list typed into `shop.json`",
+        "correct": false,
+        "why": "The file has a query, not a list."
+      },
+      {
+        "text": "Prometheus, asked on each load",
+        "correct": true,
+        "why": "Right: `label_values(...)`."
+      },
+      {
+        "text": "Grafana's user list",
+        "correct": false,
+        "why": "Users are not jobs."
+      },
+      {
+        "text": "The annotations tagged `deploy`",
+        "correct": false,
+        "why": "Annotations mark times, not jobs."
+      }
+    ]
+  },
+  {
+    "id": "ex-qzjf5t07",
+    "version": 1,
+    "section": "variables",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new service starts next month and publishes `http_server_requests_total`. What must change in the dashboard for it to appear?",
+    "hint": "Where does the list come from?",
+    "choices": [
+      {
+        "text": "A new panel per service",
+        "correct": false,
+        "why": "The variable makes one set of panels serve all."
+      },
+      {
+        "text": "Its name added to the variable's list",
+        "correct": false,
+        "why": "The list is a query, not a list."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: it appears in `label_values` on its own."
+      },
+      {
+        "text": "A restart of Grafana",
+        "correct": false,
+        "why": "The query runs on every load."
+      }
+    ]
+  },
+  {
+    "id": "ex-z46nbcz1",
+    "version": 1,
+    "section": "annotations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an annotation on a dashboard record?",
+    "hint": "The graph shows what the system did.",
+    "choices": [
+      {
+        "text": "Something people did, at a time",
+        "correct": true,
+        "why": "Right: a deploy, a change, an incident."
+      },
+      {
+        "text": "A metric too rare to graph",
+        "correct": false,
+        "why": "Annotations are not metrics."
+      },
+      {
+        "text": "A comment explaining a panel's query",
+        "correct": false,
+        "why": "That is a panel description."
+      },
+      {
+        "text": "An alert that fired",
+        "correct": false,
+        "why": "Alerts can be drawn as annotations, but that is not what the deploy marks are."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1q7aew1",
+    "version": 1,
+    "section": "annotations",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The rollback was annotated at 120 s; the p99 line returned to 0.05 s at 180 s. How many seconds did the panel keep showing slow checkouts after they were fast again?",
+    "hint": "Subtract.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-mkgd33gv",
+    "version": 1,
+    "section": "annotations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the line stay high for a minute after the rollback?",
+    "hint": "What is each point?",
+    "choices": [
+      {
+        "text": "Grafana redraws panels once a minute",
+        "correct": false,
+        "why": "The data came from Prometheus directly."
+      },
+      {
+        "text": "The rollback took a minute to deploy",
+        "correct": false,
+        "why": "The fault file was removed at once."
+      },
+      {
+        "text": "Each point is a rate over the minute before it",
+        "correct": true,
+        "why": "Right, and that minute still held slow checkouts."
+      },
+      {
+        "text": "Payments kept a queue of slow requests",
+        "correct": false,
+        "why": "There was none."
+      }
+    ]
+  },
+  {
+    "id": "ex-0n4qc7wp",
+    "version": 1,
+    "section": "dashboards-that-lie",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same failures showed as 5.9% over `[1m]` and 1.7% over `[10m]`. Which statement is right?",
+    "hint": "Neither is wrong.",
+    "choices": [
+      {
+        "text": "`[10m]` is correct and `[1m]` is noise",
+        "correct": false,
+        "why": "Both are correct averages over their windows."
+      },
+      {
+        "text": "`[1m]` is correct and `[10m]` is a bug",
+        "correct": false,
+        "why": "Same answer."
+      },
+      {
+        "text": "Both are true; the panel should say which window",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The difference means some failures were lost",
+        "correct": false,
+        "why": "The same failures are spread over different periods."
+      }
+    ]
+  },
+  {
+    "id": "ex-mfjgjfn5",
+    "version": 1,
+    "section": "dashboards-that-lie",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a dashboard mislead? Choose all that apply.",
+    "hint": "Five in the section.",
+    "choices": [
+      {
+        "text": "Drawing missing data as zero",
+        "correct": true,
+        "why": "Yes: unknown is not zero."
+      },
+      {
+        "text": "A y-axis starting near the values",
+        "correct": true,
+        "why": "Yes: it turns a small change into a cliff."
+      },
+      {
+        "text": "The mean instead of percentiles",
+        "correct": true,
+        "why": "Yes: it hides the slow ones."
+      },
+      {
+        "text": "Annotations marking deploys",
+        "correct": false,
+        "why": "They make a dashboard more honest."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fvafkjc",
+    "version": 1,
+    "section": "dashboards-that-lie",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each letter of the RED method to its panel in the shop's dashboard.",
+    "hint": "Rate, errors, duration.",
+    "pairs": [
+      {
+        "left": "R",
+        "right": "Requests per second, by status code"
+      },
+      {
+        "left": "E",
+        "right": "Share of requests failing (5xx)"
+      },
+      {
+        "left": "D",
+        "right": "Duration, 50th and 99th percentile"
+      }
+    ],
+    "right_distractors": [
+      "Memory used by the process"
+    ]
+  },
+  {
+    "id": "ex-gy7b9d3g",
+    "version": 1,
+    "section": "dashboards-that-lie",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a resource such as a disk or a queue, the method's three panels are utilisation, saturation and ___.",
+    "hint": "The E of USE.",
+    "blanks": [
+      {
+        "accept": [
+          "errors"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cmdhg4kg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During an incident, a teammate says \"the rollback did nothing, checkouts are still slow\" thirty seconds after it. What do you check first?",
+    "hint": "How old is each point?",
+    "choices": [
+      {
+        "text": "Whether the rollback deployed the right version",
+        "correct": false,
+        "why": "Worth checking, after the obvious."
+      },
+      {
+        "text": "The panel's window",
+        "correct": true,
+        "why": "Right: a one-minute rate still holds the slow minute."
+      },
+      {
+        "text": "Whether Grafana needs restarting",
+        "correct": false,
+        "why": "Grafana draws what Prometheus answers."
+      },
+      {
+        "text": "Whether the annotation was saved",
+        "correct": false,
+        "why": "The mark does not change the line."
+      }
+    ]
+  }
+]

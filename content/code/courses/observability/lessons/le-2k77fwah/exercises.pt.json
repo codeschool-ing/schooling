@@ -1,0 +1,420 @@
+{
+  "ex-7nzx4kj9": {
+    "prompt": "Ligue cada sonda ao que acontece quando ela falha.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "liveness",
+        "right": "o contêiner é reiniciado"
+      },
+      {
+        "left": "readiness",
+        "right": "o tráfego para de chegar a ele"
+      },
+      {
+        "left": "startup",
+        "right": "as outras sondas esperam"
+      }
+    ]
+  },
+  "ex-0c17t6gt": {
+    "prompt": "O que uma sonda de liveness pode verificar?",
+    "hint": "O que um reinício consegue consertar?",
+    "choices": [
+      {
+        "text": "Que o próprio processo ainda responde",
+        "why": "Isso."
+      },
+      {
+        "text": "Que o banco que ele usa está acessível e respondendo a consultas",
+        "why": "Um reinício não traz um banco de volta."
+      },
+      {
+        "text": "Que todo serviço que ele chama está pronto",
+        "why": "Isso o reinicia por falhas dos outros."
+      },
+      {
+        "text": "Que os checkouts dão certo de ponta a ponta",
+        "why": "Isso é uma verificação sintética."
+      }
+    ]
+  },
+  "ex-jh0e1g0x": {
+    "prompt": "Por que é razoável a readiness verificar o banco, quando a liveness não deve?",
+    "hint": "O que cada falha causa.",
+    "choices": [
+      {
+        "text": "A readiness roda menos, então a verificação sai mais barata",
+        "why": "A frequência não é o motivo."
+      },
+      {
+        "text": "A readiness é verificada só durante deploys",
+        "why": "Ela roda o tempo todo."
+      },
+      {
+        "text": "Falhar nela tira o tráfego, o que ajuda; um reinício não ajudaria",
+        "why": "Isso."
+      },
+      {
+        "text": "A liveness não tem acesso à rede",
+        "why": "Tem."
+      }
+    ]
+  },
+  "ex-78m1avva": {
+    "prompt": "Com o banco parado, o `/health` da vitrine responde ok. O que isso diz sobre a loja?",
+    "hint": "O que o endpoint verifica?",
+    "choices": [
+      {
+        "text": "Que os checkouts estão funcionando",
+        "why": "Eles estavam falhando."
+      },
+      {
+        "text": "Que o banco voltou sozinho depois do comando de parada",
+        "why": "Ele ainda estava parado."
+      },
+      {
+        "text": "Que a sonda está quebrada",
+        "why": "Ela funciona; pergunta pouco."
+      },
+      {
+        "text": "Só que um processo está no ar e respondendo",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-8cseew5p": {
+    "prompt": "O `probe_success` está em 1 enquanto quase todo checkout falha. Que sinal deveria acionar alguém?",
+    "hint": "A razão da aula 5.",
+    "choices": [
+      {
+        "text": "O `probe_success`, depois de ficar em 0 por cinco minutos",
+        "why": "Ele nunca foi a 0."
+      },
+      {
+        "text": "A taxa de erros dos checkouts",
+        "why": "Isso: o sintoma que os clientes sentem."
+      },
+      {
+        "text": "O uso de CPU da vitrine",
+        "why": "CPU não diz nada sobre pedidos com falha."
+      },
+      {
+        "text": "O número de contêineres rodando",
+        "why": "Estavam todos rodando."
+      }
+    ]
+  },
+  "ex-7wk4c0rv": {
+    "prompt": "Por que a readiness da vitrine não pergunta a readiness do `orders`?",
+    "hint": "A figura.",
+    "choices": [
+      {
+        "text": "Porque chamadas HTTP não são permitidas numa sonda",
+        "why": "São permitidas."
+      },
+      {
+        "text": "Porque o `orders` não tem endpoint de readiness",
+        "why": "Ele tem `/ready`."
+      },
+      {
+        "text": "Tiraria a vitrine do ar por uma falha que ela não tem",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque a vitrine não tem dependências",
+        "why": "Ela depende do orders."
+      }
+    ]
+  },
+  "ex-eydnnfvp": {
+    "prompt": "O `/ready` do orders abre uma conexão com o banco e uma com o broker a cada sonda. Quando isso importa?",
+    "hint": "Multiplique.",
+    "choices": [
+      {
+        "text": "Com muitas cópias sondadas a cada poucos segundos",
+        "why": "Isso."
+      },
+      {
+        "text": "Nunca, já que conexões são de graça",
+        "why": "Não são."
+      },
+      {
+        "text": "Só quando o banco está fora",
+        "why": "Custa com o banco no ar também."
+      },
+      {
+        "text": "Quando o banco está fora, já que conexões que falham demoram mais",
+        "why": "Custa com o banco no ar também."
+      }
+    ]
+  },
+  "ex-frdmrxxh": {
+    "prompt": "Que código de status o `/ready` devolve quando uma dependência falha?",
+    "hint": "Agora não.",
+    "choices": [
+      {
+        "text": "200, com a falha no corpo",
+        "why": "O veredito vai no código."
+      },
+      {
+        "text": "404",
+        "why": "O endpoint existe."
+      },
+      {
+        "text": "500",
+        "why": "Não é o que o código devolve."
+      },
+      {
+        "text": "503",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-3pr8vtaq": {
+    "prompt": "O Docker marca o contêiner do orders como unhealthy. O que o Docker faz a respeito?",
+    "hint": "`RestartCount`.",
+    "choices": [
+      {
+        "text": "Reinicia o contêiner depois de três falhas seguidas, como o Kubernetes",
+        "why": "A contagem ficou em 0."
+      },
+      {
+        "text": "Nada além de registrar; a política de reinício ignora a saúde",
+        "why": "Isso."
+      },
+      {
+        "text": "Para de mandar tráfego a ele",
+        "why": "O Docker não roteia tráfego por saúde."
+      },
+      {
+        "text": "Para os contêineres que dependem dele",
+        "why": "Ele não para nada."
+      }
+    ]
+  },
+  "ex-8k2gtxhk": {
+    "prompt": "O Compose pode fazer um serviço esperar outro com `depends_on` e `condition: service____`, usando o status que o healthcheck dele relata.",
+    "hint": "O status que o Docker relata.",
+    "blanks": [
+      {
+        "accept": [
+          "healthy"
+        ]
+      }
+    ]
+  },
+  "ex-dcm9nbjz": {
+    "prompt": "O que o `start_period` faz num healthcheck do Docker?",
+    "hint": "Como uma sonda de startup.",
+    "choices": [
+      {
+        "text": "Falhas durante ele não contam para unhealthy",
+        "why": "Isso."
+      },
+      {
+        "text": "Atrasa o início do contêiner até a primeira verificação passar",
+        "why": "Não muda nada no início."
+      },
+      {
+        "text": "Define com que frequência a verificação roda",
+        "why": "Isso é o `interval`."
+      },
+      {
+        "text": "Define quanto uma verificação pode levar antes de contar como falha",
+        "why": "Isso é o `timeout`."
+      }
+    ]
+  },
+  "ex-a6e2qyjb": {
+    "prompt": "A sonda de readiness de um pod falha. O que acontece com ele?",
+    "hint": "O endpoint slice.",
+    "choices": [
+      {
+        "text": "Ele é reiniciado",
+        "why": "Isso é liveness."
+      },
+      {
+        "text": "É apagado e trocado por um pod novo no mesmo nó, com outro nome",
+        "why": "Ele fica."
+      },
+      {
+        "text": "É marcado não pronto e o Service para de mandar para ele",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada acontece até a sonda de liveness falhar também e confirmar",
+        "why": "Elas agem de forma independente."
+      }
+    ]
+  },
+  "ex-e93z2kmn": {
+    "prompt": "Depois de um reinício por liveness, por que o pod web volta a ficar saudável?",
+    "hint": "Onde estava o arquivo marcador?",
+    "choices": [
+      {
+        "text": "O Kubernetes apagou o arquivo marcador antes de reiniciar, como faz com arquivos em /tmp",
+        "why": "Ele não apaga nada."
+      },
+      {
+        "text": "A sonda foi desligada depois do reinício",
+        "why": "Ela ainda roda."
+      },
+      {
+        "text": "O pod foi para outro nó",
+        "why": "É o mesmo pod."
+      },
+      {
+        "text": "Um contêiner novo começa com sistema de arquivos novo, sem o `/tmp/stuck`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-zamx02hw": {
+    "prompt": "Uma sonda de liveness roda a cada 3 segundos e falha depois de 3 falhas seguidas. Mais ou menos quantos segundos se passam entre o processo travar e a decisão de matar? Responda ao segundo mais próximo.",
+    "hint": "Três períodos.",
+    "unit": "segundos"
+  },
+  "ex-vta8bha0": {
+    "prompt": "Uma sonda de liveness verifica o banco. O banco cai por dez minutos. O que acontece?",
+    "hint": "Toda cópia verifica o mesmo banco.",
+    "choices": [
+      {
+        "text": "Uma cópia reinicia e as outras continuam servindo",
+        "why": "Todas falham juntas."
+      },
+      {
+        "text": "Toda cópia reinicia, de novo e de novo, com esperas crescentes entre os reinícios",
+        "why": "Isso."
+      },
+      {
+        "text": "Os pods vão para um nó onde o banco está acessível",
+        "why": "O banco está fora em todo lugar."
+      },
+      {
+        "text": "O Kubernetes pausa a sonda até o banco voltar",
+        "why": "Não existe essa regra."
+      }
+    ]
+  },
+  "ex-6q2prn92": {
+    "prompt": "Por que reiniciar toda cópia piora uma queda do banco?",
+    "hint": "O que acontece quando ele volta.",
+    "choices": [
+      {
+        "text": "Apaga os dados que os serviços guardavam no banco",
+        "why": "Reinícios não apagam nada lá."
+      },
+      {
+        "text": "Reinícios são cobrados pelo provedor de nuvem",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "As cópias ficam em espera, e depois todas reconectam juntas quando ele volta",
+        "why": "Isso."
+      },
+      {
+        "text": "O banco recusa conexões de pods que reiniciaram, até um operador aprová-los",
+        "why": "Ele não sabe."
+      }
+    ]
+  },
+  "ex-ay2v1egf": {
+    "prompt": "Por que um checkout sintético é uma verificação de fora melhor que o `/health`?",
+    "hint": "O que um cliente faz.",
+    "choices": [
+      {
+        "text": "Percorre o caminho que um cliente faz, por toda dependência",
+        "why": "Isso."
+      },
+      {
+        "text": "É mais barato de rodar, já que não precisa de banco próprio para guardar resultados",
+        "why": "É mais caro."
+      },
+      {
+        "text": "Não precisa de sondador, já que o Prometheus faz a requisição ele mesmo a cada scrape",
+        "why": "O blackbox exporter o roda."
+      },
+      {
+        "text": "Nunca cria dados",
+        "why": "Toda sonda era um pedido real."
+      }
+    ]
+  },
+  "ex-kd50tgz0": {
+    "prompt": "Todo checkout sintético é um pedido real de uma chaleira. O que um sistema real deve fazer sobre isso? Escolha todas as que se aplicam.",
+    "hint": "Marque e mantenha fora.",
+    "choices": [
+      {
+        "text": "Marcar as requisições sintéticas para poderem ser distinguidas",
+        "why": "Sim."
+      },
+      {
+        "text": "Mantê-las fora dos relatórios de negócio",
+        "why": "Sim."
+      },
+      {
+        "text": "Usar um cartão de teste que não cobra ninguém",
+        "why": "Sim."
+      },
+      {
+        "text": "Rodá-la só uma vez por dia para ninguém perceber",
+        "why": "Isso anula a verificação."
+      }
+    ]
+  },
+  "ex-9q2wxttb": {
+    "prompt": "O que uma sonda de fora consegue ver que nenhuma de dentro consegue?",
+    "hint": "O caminho até o serviço.",
+    "choices": [
+      {
+        "text": "A memória do processo",
+        "why": "Isso é de dentro."
+      },
+      {
+        "text": "A profundidade da fila, lida de fora da rede do próprio broker pelo sondador",
+        "why": "Isso é métrica do broker."
+      },
+      {
+        "text": "As consultas lentas do banco, que a sonda cronometra do lado do cliente",
+        "why": "Isso é o log do banco."
+      },
+      {
+        "text": "DNS, certificados e a rede entre o cliente e você",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-3vcyp0vf": {
+    "prompt": "Os pods de uma equipe reiniciam toda noite no mesmo horário, todos juntos. A liveness verifica o Redis, que tem backup nessa hora. Qual é a correção?",
+    "hint": "O que cada sonda pode verificar?",
+    "choices": [
+      {
+        "text": "Aumentar o `failureThreshold` até o backup caber",
+        "why": "A sonda continuaria errada."
+      },
+      {
+        "text": "Passar a verificação do Redis para a readiness e manter a liveness local",
+        "why": "Isso."
+      },
+      {
+        "text": "Tirar todas as sondas do deployment",
+        "why": "Isso perde as úteis."
+      },
+      {
+        "text": "Mudar o backup para a tarde",
+        "why": "Os reinícios iriam junto."
+      }
+    ]
+  },
+  "ex-rz75b728": {
+    "prompt": "Todo pod de um serviço reinicia no mesmo momento. Ponha a investigação em ordem.",
+    "hint": "Do sintoma à sonda.",
+    "items": [
+      "Ver a contagem de reinícios subindo em todo pod",
+      "Ler os eventos: a sonda de liveness falhou",
+      "Ler o que a sonda de liveness verifica",
+      "Passar a verificação da dependência para a readiness"
+    ]
+  }
+}

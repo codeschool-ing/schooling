@@ -1,0 +1,932 @@
+[
+  {
+    "id": "ex-g7y86v77",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a trace view, why does the longest bar rarely answer where the time went?",
+    "hint": "What does a parent do while its children run?",
+    "choices": [
+      {
+        "text": "Because the longest bar is usually an internal span, which nobody instruments",
+        "correct": false,
+        "why": "The longest is usually the root, a server span."
+      },
+      {
+        "text": "Because it is usually the root, which lasts as long as the children it waits for",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because Jaeger draws bars on a logarithmic scale",
+        "correct": false,
+        "why": "The scale is linear."
+      },
+      {
+        "text": "Because a span's duration is only an estimate made by the store",
+        "correct": false,
+        "why": "The service measures it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdks2w5v",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a span's self time?",
+    "hint": "The part that belongs to nobody below.",
+    "choices": [
+      {
+        "text": "The time between the span's start and its first child's start",
+        "correct": false,
+        "why": "Only one of the gaps."
+      },
+      {
+        "text": "The span's duration as measured by the store rather than by the service",
+        "correct": false,
+        "why": "Same duration, different clock; not self time."
+      },
+      {
+        "text": "Its duration minus the time spent inside its children",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The time its service spent on the CPU",
+        "correct": false,
+        "why": "Self time includes waiting on anything uninstrumented."
+      }
+    ]
+  },
+  {
+    "id": "ex-nazmwyfr",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`POST /orders` shows 25 ms of self time that no child accounts for. What is the most likely explanation?",
+    "hint": "Lesson 4 said what nothing instruments.",
+    "choices": [
+      {
+        "text": "Work nobody instrumented: publishing to RabbitMQ over a new connection",
+        "correct": true,
+        "why": "Right: self time is where uninstrumented work shows up."
+      },
+      {
+        "text": "The clock difference between the orders container and the payments container",
+        "correct": false,
+        "why": "Same host, same clock."
+      },
+      {
+        "text": "The time the mailer spent sending the confirmation e-mail",
+        "correct": false,
+        "why": "That ran after the parent ended and is not subtracted."
+      },
+      {
+        "text": "Jaeger rounding every child down to the nearest millisecond",
+        "correct": false,
+        "why": "Rounding is under a millisecond per span."
+      }
+    ]
+  },
+  {
+    "id": "ex-xj4jz7y1",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A child span starts after its parent has ended. How much should it reduce the parent's self time?",
+    "hint": "The overlap.",
+    "choices": [
+      {
+        "text": "Its whole duration",
+        "correct": false,
+        "why": "The parent was not waiting for it."
+      },
+      {
+        "text": "Half its duration",
+        "correct": false,
+        "why": "There is no overlap to split."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: none of it falls inside the parent."
+      },
+      {
+        "text": "Its duration plus the gap before it",
+        "correct": false,
+        "why": "That would make self time negative."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8rk7kzy",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of reading a slow trace in order.",
+    "hint": "Find the work, then ask about it.",
+    "items": [
+      "Find the trace, by an id from a log or by a search",
+      "Compute each span's self time",
+      "Pick the span with the most self time on the critical path",
+      "Read that span's attributes and its log lines"
+    ]
+  },
+  {
+    "id": "ex-jx6j0s37",
+    "version": 1,
+    "section": "critical-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A handler calls prices (280 ms) and stock (120 ms) at the same time. Stock is made twice as fast. What happens to the request?",
+    "hint": "Which call does the request wait for?",
+    "choices": [
+      {
+        "text": "It becomes 60 ms faster",
+        "correct": false,
+        "why": "Stock was not what it waited for."
+      },
+      {
+        "text": "It takes as long as before",
+        "correct": true,
+        "why": "Right: stock had slack."
+      },
+      {
+        "text": "It becomes half as long",
+        "correct": false,
+        "why": "Only stock changed."
+      },
+      {
+        "text": "It becomes slower, because stock now finishes before prices does and has to wait",
+        "correct": false,
+        "why": "Finishing early costs nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-930s85dy",
+    "version": 1,
+    "section": "critical-path",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the parallel example, prices takes 280 ms and stock 120 ms. How many milliseconds of slack does stock have?",
+    "hint": "The difference.",
+    "value": 160,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-sb7gfrrz",
+    "version": 1,
+    "section": "critical-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How do you find the critical path of a request in its trace?",
+    "hint": "Start at the end.",
+    "choices": [
+      {
+        "text": "Follow the spans with the most self time from the root down",
+        "correct": false,
+        "why": "Self time can sit off the critical path."
+      },
+      {
+        "text": "Follow the first child of every span",
+        "correct": false,
+        "why": "The first to start is not the last to finish."
+      },
+      {
+        "text": "From the root's end, step into the child that finished last, and repeat",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Pick the spans marked as errors",
+        "correct": false,
+        "why": "Errors and the critical path are different questions."
+      }
+    ]
+  },
+  {
+    "id": "ex-te1j77s8",
+    "version": 1,
+    "section": "critical-path",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two calls are made parallel to save time. What should you read next in the new traces?",
+    "hint": "The path moved.",
+    "choices": [
+      {
+        "text": "Nothing: a parallel request has no critical path",
+        "correct": false,
+        "why": "Every request has one."
+      },
+      {
+        "text": "The sibling that is now slowest, which the critical path runs through",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The faster sibling, since parallel calls compete for the CPU and it now takes longer",
+        "correct": false,
+        "why": "The slower one ends the request."
+      },
+      {
+        "text": "The root, whose self time is now all of the request",
+        "correct": false,
+        "why": "The root still waits for its children."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrp15d8t",
+    "version": 1,
+    "section": "critical-path",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Is the mailer on the critical path of the checkout?",
+    "hint": "Did the customer wait for it?",
+    "choices": [
+      {
+        "text": "Yes, every span in the trace is on it",
+        "correct": false,
+        "why": "Only what ends the request."
+      },
+      {
+        "text": "No, but it is on the path of when the e-mail arrives",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only while the queue is empty",
+        "correct": false,
+        "why": "The checkout never waits for the mailer."
+      },
+      {
+        "text": "Yes, whenever the mailer happens to be the slowest service in the trace",
+        "correct": false,
+        "why": "Speed does not put it on the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vexb7nq",
+    "version": 1,
+    "section": "jaeger",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A search in Jaeger for slow checkouts returns nothing for an hour you know was slow. Which explanation fits the section?",
+    "hint": "What the store kept.",
+    "choices": [
+      {
+        "text": "The search form only accepts the last fifteen minutes",
+        "correct": false,
+        "why": "The window is yours to choose."
+      },
+      {
+        "text": "Slow traces are never exported, by design",
+        "correct": false,
+        "why": "Nothing filters on duration by default."
+      },
+      {
+        "text": "The traces were not kept: sampled out, expired, or lost on a restart",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Jaeger searches by trace id only",
+        "correct": false,
+        "why": "It searches by service, operation, duration and tags."
+      }
+    ]
+  },
+  {
+    "id": "ex-yr9at8zy",
+    "version": 1,
+    "section": "jaeger",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could you search the shop's checkouts by product?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "Jaeger reads the request body of every span",
+        "correct": false,
+        "why": "It sees only what the span carries."
+      },
+      {
+        "text": "The storefront writes `shop.sku` on its span",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Automatic instrumentation adds the product to every span",
+        "correct": false,
+        "why": "It knows nothing about products."
+      },
+      {
+        "text": "The Collector copies it from the logs",
+        "correct": false,
+        "why": "The span carries it from the start."
+      }
+    ]
+  },
+  {
+    "id": "ex-wje8m4f3",
+    "version": 1,
+    "section": "jaeger",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a Jaeger search filter on? Choose all that apply.",
+    "hint": "The fields of the form.",
+    "choices": [
+      {
+        "text": "The service",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The operation name",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A minimum duration",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The customer's IP address, when no span carries it",
+        "correct": false,
+        "why": "Only what somebody wrote."
+      },
+      {
+        "text": "A line of the service's source code",
+        "correct": false,
+        "why": "Spans carry no source."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5n24zx9",
+    "version": 1,
+    "section": "zipkin",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The lab exports every span to both Jaeger and Zipkin. Where is that choice made?",
+    "hint": "Not in the services.",
+    "choices": [
+      {
+        "text": "In each service's SDK, with two exporters",
+        "correct": false,
+        "why": "The services send OTLP once."
+      },
+      {
+        "text": "In Jaeger, which forwards a copy to Zipkin",
+        "correct": false,
+        "why": "Neither store forwards."
+      },
+      {
+        "text": "In the Collector's configuration",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In Grafana's data sources",
+        "correct": false,
+        "why": "Grafana reads; it routes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ze6x3yk",
+    "version": 1,
+    "section": "zipkin",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each span kind to the side it records.",
+    "hint": "The Zipkin transcript.",
+    "pairs": [
+      {
+        "left": "CLIENT",
+        "right": "making a call"
+      },
+      {
+        "left": "SERVER",
+        "right": "answering a call"
+      },
+      {
+        "left": "CONSUMER",
+        "right": "taking a message"
+      },
+      {
+        "left": "no kind",
+        "right": "internal work"
+      }
+    ]
+  },
+  {
+    "id": "ex-d5txtgxn",
+    "version": 1,
+    "section": "zipkin",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Zipkin's dependency graph shows storefront → orders → payments, but no mailer. Why?",
+    "hint": "How edges are built.",
+    "choices": [
+      {
+        "text": "The mailer's spans are in a different trace from the checkout's",
+        "correct": false,
+        "why": "They are in the same trace."
+      },
+      {
+        "text": "Zipkin drops spans that start more than a second after the root",
+        "correct": false,
+        "why": "The trace above shows them."
+      },
+      {
+        "text": "No producer span and no broker named, so the queue makes no edge",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The mailer was stopped during the window",
+        "correct": false,
+        "why": "It ran for most of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1pqtvzf",
+    "version": 1,
+    "section": "zipkin",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dependency graph built from traces lacks an edge you expected. What does that tell you first?",
+    "hint": "The map draws what is recorded.",
+    "choices": [
+      {
+        "text": "That the two services never talk to each other",
+        "correct": false,
+        "why": "Maybe; the instrumentation comes first."
+      },
+      {
+        "text": "That the instrumentation may not record that call",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "That the store may have run out of memory",
+        "correct": false,
+        "why": "A whole edge, not random spans."
+      },
+      {
+        "text": "That the graph needs a longer lookback to be drawn at all",
+        "correct": false,
+        "why": "The other edges are there."
+      }
+    ]
+  },
+  {
+    "id": "ex-r1f0t7se",
+    "version": 1,
+    "section": "the-queue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The checkout's trace lists as 26 seconds long, yet the customer waited 0.44 s. Which number describes the customer?",
+    "hint": "Which span did they wait for?",
+    "choices": [
+      {
+        "text": "The root span's duration",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The trace's length, from first start to last end",
+        "correct": false,
+        "why": "That includes the queue."
+      },
+      {
+        "text": "The mailer's span",
+        "correct": false,
+        "why": "The customer never waited for it."
+      },
+      {
+        "text": "The sum of every span's duration",
+        "correct": false,
+        "why": "Nested spans would be counted twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-8hyekse2",
+    "version": 1,
+    "section": "the-queue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During the mailer's stop, why did the oldest messages wait longest?",
+    "hint": "When were they taken?",
+    "choices": [
+      {
+        "text": "RabbitMQ delivers the newest messages first",
+        "correct": false,
+        "why": "A queue is first in, first out."
+      },
+      {
+        "text": "All were taken in one burst at restart, oldest first",
+        "correct": true,
+        "why": "Right: the oldest had been there longest."
+      },
+      {
+        "text": "The oldest messages were larger",
+        "correct": false,
+        "why": "They are the same size."
+      },
+      {
+        "text": "The mailer retries old messages three times before it takes the new ones",
+        "correct": false,
+        "why": "Nothing failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-325b8ng3",
+    "version": 1,
+    "section": "the-queue",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Between two real hosts, a queue wait computed from two spans comes out as −3 ms. What is it?",
+    "hint": "Two clocks.",
+    "choices": [
+      {
+        "text": "A message delivered before it was published",
+        "correct": false,
+        "why": "Impossible; the clocks disagree."
+      },
+      {
+        "text": "Clock skew between the hosts, noise around a short wait",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A bug in the propagation of the context between the two services",
+        "correct": false,
+        "why": "The spans did join."
+      },
+      {
+        "text": "A message that skipped the queue entirely",
+        "correct": false,
+        "why": "Every message passes through it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pv4bckn1",
+    "version": 1,
+    "section": "the-queue",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A trace store measures a trace from its first span's start to its last span's ___.",
+    "hint": "The opposite of start.",
+    "blanks": [
+      {
+        "accept": [
+          "end"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hydc4a07",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A failed checkout has four red spans. Which one is the origin?",
+    "hint": "Depth.",
+    "choices": [
+      {
+        "text": "The root, because the customer saw the error there",
+        "correct": false,
+        "why": "It reports what came from below."
+      },
+      {
+        "text": "The first one in the list Zipkin returns",
+        "correct": false,
+        "why": "The list's order is not depth."
+      },
+      {
+        "text": "The deepest red span with no red child",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The one with the longest duration",
+        "correct": false,
+        "why": "Errors are not about duration."
+      }
+    ]
+  },
+  {
+    "id": "ex-prgah607",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service catches an exception and answers 200. What does its trace show?",
+    "hint": "A red span is marked by somebody.",
+    "choices": [
+      {
+        "text": "No error anywhere, unless the code sets the status itself",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A red span, since the SDK records every exception",
+        "correct": false,
+        "why": "Only one that escapes the span."
+      },
+      {
+        "text": "An error on the caller's span only",
+        "correct": false,
+        "why": "The caller got a 200."
+      },
+      {
+        "text": "A gap in the trace where the span should be",
+        "correct": false,
+        "why": "The span is there, green."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6m9c5v9",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The deepest red span is payments, naming a card network that nobody instruments. What does that mean for the diagnosis?",
+    "hint": "The deepest place you can see.",
+    "choices": [
+      {
+        "text": "The fault is certainly in the payments code",
+        "correct": false,
+        "why": "It may be one step beyond."
+      },
+      {
+        "text": "The fault may lie beyond what the traces can see",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The trace may be broken and should be discarded",
+        "correct": false,
+        "why": "It is accurate up to its edge."
+      },
+      {
+        "text": "The orders span is the real origin",
+        "correct": false,
+        "why": "It is above payments."
+      }
+    ]
+  },
+  {
+    "id": "ex-ahyyyevg",
+    "version": 1,
+    "section": "exemplars",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is an exemplar?",
+    "hint": "It sits beside a count.",
+    "choices": [
+      {
+        "text": "A histogram bucket that has been sampled",
+        "correct": false,
+        "why": "It is a trace id, not a bucket."
+      },
+      {
+        "text": "The trace id of one real request, kept beside a bucket's count",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A typical log line attached to a dashboard",
+        "correct": false,
+        "why": "Logs are not involved."
+      },
+      {
+        "text": "The example value an alert keeps beside its rule, showing what made it fire",
+        "correct": false,
+        "why": "That is not what the word means here."
+      }
+    ]
+  },
+  {
+    "id": "ex-xtf2whxk",
+    "version": 1,
+    "section": "exemplars",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which pieces had to agree for exemplars to reach Prometheus? Choose all that apply.",
+    "hint": "Three pieces.",
+    "choices": [
+      {
+        "text": "The code observes with the current trace id",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The scrape asks for and gets OpenMetrics",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Prometheus runs with exemplar storage enabled",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Jaeger is configured to push ids to Prometheus",
+        "correct": false,
+        "why": "Jaeger is not involved."
+      },
+      {
+        "text": "Loki indexes the trace id",
+        "correct": false,
+        "why": "Not for exemplars."
+      }
+    ]
+  },
+  {
+    "id": "ex-5gjdbkpy",
+    "version": 1,
+    "section": "exemplars",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the storefront expose no exemplars while orders does?",
+    "hint": "When the measurement is taken.",
+    "choices": [
+      {
+        "text": "The storefront is not scraped by Prometheus",
+        "correct": false,
+        "why": "It is scraped."
+      },
+      {
+        "text": "The storefront's spans are sampled out",
+        "correct": false,
+        "why": "Nothing is sampled yet."
+      },
+      {
+        "text": "Its span has ended by the time the duration is observed",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The storefront answers only in the classic text format",
+        "correct": false,
+        "why": "It shares `web.py` with orders."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0r60v4d",
+    "version": 1,
+    "section": "exemplars",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A scrape receives the classic text format instead of OpenMetrics. What happens to exemplars?",
+    "hint": "What each format can carry.",
+    "choices": [
+      {
+        "text": "They arrive in a separate file",
+        "correct": false,
+        "why": "There is no such file."
+      },
+      {
+        "text": "They are not sent at all",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They arrive as extra labels on each bucket",
+        "correct": false,
+        "why": "That would multiply series."
+      },
+      {
+        "text": "They arrive but Grafana cannot draw them",
+        "correct": false,
+        "why": "They never arrive."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4mpfs22",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A latency graph shows a slow bucket filling up. Put the steps from that graph to a cause in order.",
+    "hint": "Each step uses one join of the lesson.",
+    "items": [
+      "Click an exemplar dot in the slow bucket",
+      "Open the trace it names in Jaeger",
+      "Find the span on the critical path with the most self time",
+      "Read that span's attributes and the log lines with its trace id"
+    ]
+  },
+  {
+    "id": "ex-jkf3kea6",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the place in this lesson that answers it.",
+    "hint": "One per section.",
+    "pairs": [
+      {
+        "left": "Which services call which, and how often?",
+        "right": "Zipkin's dependency graph"
+      },
+      {
+        "left": "Which checkouts took over 400 ms in the last hour?",
+        "right": "a Jaeger search"
+      },
+      {
+        "left": "Which request is behind this point on the graph?",
+        "right": "an exemplar"
+      },
+      {
+        "left": "How long did the confirmations sit in RabbitMQ?",
+        "right": "the gap between two spans across the queue"
+      }
+    ]
+  },
+  {
+    "id": "ex-jjmncw4c",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A trace reads: root 900 ms, self 5; `GET /price` 850 ms, self 840; `GET /stock` 300 ms, self 300, run in parallel with `GET /price`. Which change shortens the request most?",
+    "hint": "Which span is on the critical path, and whose time is its own?",
+    "choices": [
+      {
+        "text": "Making `GET /stock` twice as fast, because it is the second biggest",
+        "correct": false,
+        "why": "It has slack; the request does not wait for it."
+      },
+      {
+        "text": "Making the work inside `GET /price` faster",
+        "correct": true,
+        "why": "Right: on the critical path, and its own."
+      },
+      {
+        "text": "Removing the root's five milliseconds of self time",
+        "correct": false,
+        "why": "Five of 900."
+      },
+      {
+        "text": "Running `GET /stock` before `GET /price` instead of beside it",
+        "correct": false,
+        "why": "That adds 300 ms to the path."
+      }
+    ]
+  }
+]

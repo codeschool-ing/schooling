@@ -1,0 +1,599 @@
+[
+  {
+    "id": "ex-tk007vqz",
+    "version": 1,
+    "section": "what-a-log-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The services wrote 2.5 MB in ten minutes and Elasticsearch stored 2.7 MB. Why can a store hold more than it was sent?",
+    "hint": "What does it keep for each line?",
+    "choices": [
+      {
+        "text": "It keeps two copies of every line for safety, one on each of two nodes",
+        "correct": false,
+        "why": "The single node has no replica allocated."
+      },
+      {
+        "text": "It keeps the line, its parsed fields and the index over them",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The Collector adds a timestamp to every line",
+        "correct": false,
+        "why": "A few bytes, not a tenth more."
+      },
+      {
+        "text": "Elasticsearch never compresses",
+        "correct": false,
+        "why": "It does compress; the index still costs space."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgvyey0t",
+    "version": 1,
+    "section": "what-a-log-costs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "2.5 MB in ten minutes is how many MB a day? Answer to the nearest ten.",
+    "hint": "144 ten-minute periods in a day.",
+    "value": 360,
+    "tolerance": 10,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-vt2shx13",
+    "version": 1,
+    "section": "what-a-log-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which number does a hosted log product usually bill on first?",
+    "hint": "The section's table.",
+    "choices": [
+      {
+        "text": "Gigabytes ingested",
+        "correct": true,
+        "why": "Right, often with a second price for keeping."
+      },
+      {
+        "text": "The number of services sending",
+        "correct": false,
+        "why": "Volume, not senders."
+      },
+      {
+        "text": "The number of people reading",
+        "correct": false,
+        "why": "Rarely the main price."
+      },
+      {
+        "text": "The number of distinct messages",
+        "correct": false,
+        "why": "Bytes, not variety."
+      }
+    ]
+  },
+  {
+    "id": "ex-pf5ybymt",
+    "version": 1,
+    "section": "retention",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Elasticsearch, the policy that moves indices through phases until deletion is called index ___ management.",
+    "hint": "ILM.",
+    "blanks": [
+      {
+        "accept": [
+          "lifecycle"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4ee3r6qc",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Who deletes Loki's chunks once they are older than `retention_period`?",
+    "hint": "One component, on its passes.",
+    "choices": [
+      {
+        "text": "The Collector, before sending",
+        "correct": false,
+        "why": "The Collector does not know retention."
+      },
+      {
+        "text": "Grafana, when nobody has viewed them",
+        "correct": false,
+        "why": "Grafana stores no logs."
+      },
+      {
+        "text": "Loki's compactor",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Docker, when the container restarts",
+        "correct": false,
+        "why": "The chunks are Loki's."
+      }
+    ]
+  },
+  {
+    "id": "ex-134dnyx2",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A company must keep an audit trail for five years. What should that mean for its web services' debug logs?",
+    "hint": "Different logs, different periods.",
+    "choices": [
+      {
+        "text": "Keep them five years too, to be safe",
+        "correct": false,
+        "why": "Five years of debug lines is cost and risk with no purpose."
+      },
+      {
+        "text": "Nothing: audit is a separate stream with its own retention",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Delete them daily, so that the audit store always has room to grow",
+        "correct": false,
+        "why": "Retention is chosen by usefulness, not by another store's room."
+      },
+      {
+        "text": "Move them to the audit store",
+        "correct": false,
+        "why": "That mixes purposes and access rules."
+      }
+    ]
+  },
+  {
+    "id": "ex-shet4k0r",
+    "version": 1,
+    "section": "what-never",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these must never be written to a log? Choose all that apply.",
+    "hint": "The table.",
+    "choices": [
+      {
+        "text": "An `Authorization` header",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A wrong password typed at sign-in",
+        "correct": true,
+        "why": "Yes: usually a right one with a typo."
+      },
+      {
+        "text": "An order id",
+        "correct": false,
+        "why": "An internal id is what a log should carry."
+      },
+      {
+        "text": "A customer's CPF",
+        "correct": true,
+        "why": "Yes: personal data that identifies directly."
+      },
+      {
+        "text": "The route that was called",
+        "correct": false,
+        "why": "Harmless and useful."
+      }
+    ]
+  },
+  {
+    "id": "ex-bq28zrrs",
+    "version": 1,
+    "section": "what-never",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "According to the LGPD, which of these is sensitive personal data?",
+    "hint": "Stricter rules still.",
+    "choices": [
+      {
+        "text": "An e-mail address",
+        "correct": false,
+        "why": "Personal, but not in the sensitive list."
+      },
+      {
+        "text": "An order's total",
+        "correct": false,
+        "why": "Not personal on its own."
+      },
+      {
+        "text": "A health condition",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A trace id",
+        "correct": false,
+        "why": "It identifies a request, not a person."
+      }
+    ]
+  },
+  {
+    "id": "ex-vh6ps9ek",
+    "version": 1,
+    "section": "what-never",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A support engineer needs to find a customer's failed orders from the logs. What should the lines carry?",
+    "hint": "Something that means nothing outside the system.",
+    "choices": [
+      {
+        "text": "The customer's e-mail, so the search is easy",
+        "correct": false,
+        "why": "That copies personal data into every store."
+      },
+      {
+        "text": "The customer's name and CPF, hashed",
+        "correct": false,
+        "why": "A hash of a CPF can be reversed by trying them all."
+      },
+      {
+        "text": "The account's internal id",
+        "correct": true,
+        "why": "Right: looked up in the system that owns the data."
+      },
+      {
+        "text": "Nothing about the customer at all",
+        "correct": false,
+        "why": "Then the question is unanswerable."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gwb9z76",
+    "version": 1,
+    "section": "a-leak",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What turned the leaky debug line into a leak?",
+    "hint": "It was harmless while it was off.",
+    "choices": [
+      {
+        "text": "Turning `DEBUG` on",
+        "correct": true,
+        "why": "Right, plus the line itself."
+      },
+      {
+        "text": "The checkout failing",
+        "correct": false,
+        "why": "It succeeded."
+      },
+      {
+        "text": "Loki indexing the body",
+        "correct": false,
+        "why": "Loki indexes no line content."
+      },
+      {
+        "text": "The test card being invalid",
+        "correct": false,
+        "why": "It worked as a test card."
+      }
+    ]
+  },
+  {
+    "id": "ex-5nt0er0f",
+    "version": 1,
+    "section": "a-leak",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did nobody notice the leak when it happened?",
+    "hint": "What failed?",
+    "choices": [
+      {
+        "text": "Loki hides secrets from searches",
+        "correct": false,
+        "why": "The search found it at once."
+      },
+      {
+        "text": "Nothing failed or warned",
+        "correct": true,
+        "why": "Right: a leak is a success, as far as the system knows."
+      },
+      {
+        "text": "The line was written at `ERROR`",
+        "correct": false,
+        "why": "It was `DEBUG`."
+      },
+      {
+        "text": "Debug lines are not shipped",
+        "correct": false,
+        "why": "It reached Loki and Elasticsearch."
+      }
+    ]
+  },
+  {
+    "id": "ex-m193mpp4",
+    "version": 1,
+    "section": "at-the-source",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the filter remove the `card` field entirely but only mask the number in the note?",
+    "hint": "Two lists.",
+    "choices": [
+      {
+        "text": "The note was shorter",
+        "correct": false,
+        "why": "Length is not the rule."
+      },
+      {
+        "text": "`card` is a secret name; the note is free text matched by pattern",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The note was not JSON",
+        "correct": false,
+        "why": "It was a string field."
+      },
+      {
+        "text": "Masking only works on the second card",
+        "correct": false,
+        "why": "Both shapes match."
+      }
+    ]
+  },
+  {
+    "id": "ex-av2k5d61",
+    "version": 1,
+    "section": "at-the-source",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A token is logged in a field called `x_api_credential`. What does the shop's filter do with it?",
+    "hint": "Names on the list, shapes by pattern.",
+    "choices": [
+      {
+        "text": "Lets it through",
+        "correct": true,
+        "why": "Right: not a listed name, and no card shape."
+      },
+      {
+        "text": "Removes it, because it contains \"credential\"",
+        "correct": false,
+        "why": "The check is the exact name."
+      },
+      {
+        "text": "Masks it to the last four characters",
+        "correct": false,
+        "why": "Only card-shaped digits are masked."
+      },
+      {
+        "text": "Refuses to write the line",
+        "correct": false,
+        "why": "The filter returns True."
+      }
+    ]
+  },
+  {
+    "id": "ex-mpwk7w3v",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which Collector function rewrote the body?",
+    "hint": "A pattern, replaced.",
+    "choices": [
+      {
+        "text": "`merge_maps`",
+        "correct": false,
+        "why": "That merges parsed fields."
+      },
+      {
+        "text": "`ParseJSON`",
+        "correct": false,
+        "why": "That parses."
+      },
+      {
+        "text": "`replace_pattern`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`set`",
+        "correct": false,
+        "why": "That sets one value."
+      }
+    ]
+  },
+  {
+    "id": "ex-r491g40w",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the `replace_pattern` statements come before `merge_maps(... ParseJSON(body) ...)`?",
+    "hint": "Where do the fields come from?",
+    "choices": [
+      {
+        "text": "OTTL runs statements in reverse order",
+        "correct": false,
+        "why": "In order."
+      },
+      {
+        "text": "So the parsed fields come from the cleaned text",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`merge_maps` deletes the body once it has read the fields out of it",
+        "correct": false,
+        "why": "The body stays."
+      },
+      {
+        "text": "Patterns are faster on parsed JSON",
+        "correct": false,
+        "why": "They ran on the raw body."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vt63b6c",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The Collector masked the line in Loki, yet `docker compose logs` still showed the token. Why?",
+    "hint": "Where is the container's own log?",
+    "choices": [
+      {
+        "text": "The Collector failed silently",
+        "correct": false,
+        "why": "Loki shows it worked."
+      },
+      {
+        "text": "Docker re-adds secrets it finds",
+        "correct": false,
+        "why": "Docker stores what it was given."
+      },
+      {
+        "text": "That copy was written before the line reached the Collector",
+        "correct": true,
+        "why": "Right: the pipeline only cleans what passes through it."
+      },
+      {
+        "text": "`docker compose logs` reads from Loki",
+        "correct": false,
+        "why": "It reads Docker's own copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cv0east",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a Collector configuration file, a dollar sign is written twice, as in `$$1`, because the Collector ___ `$` in its files.",
+    "hint": "Environment variables.",
+    "blanks": [
+      {
+        "accept": [
+          "expands"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-psz4fg00",
+    "version": 1,
+    "section": "erasure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Loki answered the delete request with `204` and listed it as `received`. When are the lines gone?",
+    "hint": "Who rewrites chunks?",
+    "choices": [
+      {
+        "text": "Immediately, as the 204 says",
+        "correct": false,
+        "why": "204 means accepted, not done."
+      },
+      {
+        "text": "After the compactor processes it",
+        "correct": true,
+        "why": "Right, following a grace period."
+      },
+      {
+        "text": "At the next restart of Loki",
+        "correct": false,
+        "why": "Restarts do not process deletes."
+      },
+      {
+        "text": "Never: Loki cannot delete",
+        "correct": false,
+        "why": "It can, through the compactor."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0shqj7e",
+    "version": 1,
+    "section": "erasure",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three checkouts leaked the token: one unprotected, one masked in the code, one masked in the Collector. How many documents did Elasticsearch's delete find?",
+    "hint": "Only one reached it unmasked.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "documents"
+  },
+  {
+    "id": "ex-e555kjmc",
+    "version": 1,
+    "section": "erasure",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After deleting the leaked lines from Loki and Elasticsearch, where can copies remain? Choose all that apply.",
+    "hint": "Copies nobody asked about.",
+    "choices": [
+      {
+        "text": "The container's log on the machine",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Backups of either store",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A ticket somebody pasted a line into",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Prometheus's time series",
+        "correct": false,
+        "why": "Metrics never held the line."
+      }
+    ]
+  },
+  {
+    "id": "ex-9t9t4z9r",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the defences from the one that covers the most copies to the one that covers the fewest.",
+    "hint": "The earlier, the more it covers.",
+    "items": [
+      "Not logging the object at all",
+      "A filter in the code",
+      "Redaction in the Collector",
+      "Deleting from the stores afterwards"
+    ]
+  }
+]

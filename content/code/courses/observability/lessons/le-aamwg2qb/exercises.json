@@ -1,0 +1,582 @@
+[
+  {
+    "id": "ex-6axp1sar",
+    "version": 1,
+    "section": "shipping",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the shop not send its logs straight to Loki over HTTP?",
+    "hint": "What would each service then have to do?",
+    "choices": [
+      {
+        "text": "Loki does not accept HTTP",
+        "correct": false,
+        "why": "The Collector reaches it over HTTP."
+      },
+      {
+        "text": "Retrying and buffering in every service",
+        "correct": true,
+        "why": "Right: the service would also change with the store. A shipper outside it does this once."
+      },
+      {
+        "text": "HTTP would expose the logs to the internet",
+        "correct": false,
+        "why": "The lab's network is local."
+      },
+      {
+        "text": "Python cannot write JSON over HTTP",
+        "correct": false,
+        "why": "It can."
+      }
+    ]
+  },
+  {
+    "id": "ex-2zs94bkm",
+    "version": 1,
+    "section": "shipping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To add Elasticsearch and Graylog, what changed?",
+    "hint": "The diff.",
+    "choices": [
+      {
+        "text": "The Collector's configuration, and an input in Graylog",
+        "correct": true,
+        "why": "Right. No service changed."
+      },
+      {
+        "text": "Every service's logging setup",
+        "correct": false,
+        "why": "The services still print JSON to stdout."
+      },
+      {
+        "text": "Docker's logging driver, once per store",
+        "correct": false,
+        "why": "Docker still hands lines to one place."
+      },
+      {
+        "text": "The traces pipeline",
+        "correct": false,
+        "why": "It was untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-tgm8dmj1",
+    "version": 1,
+    "section": "shipping",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Compose reads `compose.___.yaml` on top of `compose.yaml` when it exists.",
+    "hint": "It overrides.",
+    "blanks": [
+      {
+        "accept": [
+          "override"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-35b3yq9h",
+    "version": 1,
+    "section": "loki-streams",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Loki index?",
+    "hint": "Not the lines.",
+    "choices": [
+      {
+        "text": "Every field of every line",
+        "correct": false,
+        "why": "That is Elasticsearch."
+      },
+      {
+        "text": "The labels of each stream",
+        "correct": true,
+        "why": "Right. Lines are compressed and scanned when asked."
+      },
+      {
+        "text": "The trace id of each line",
+        "correct": false,
+        "why": "It is in the line, unindexed."
+      },
+      {
+        "text": "Only the ERROR lines",
+        "correct": false,
+        "why": "Every line is stored the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-rx059t1a",
+    "version": 1,
+    "section": "loki-streams",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The lab's Loki had one label, `service_name`, with four values. How many streams?",
+    "hint": "One per label set.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "streams"
+  },
+  {
+    "id": "ex-dsc650vs",
+    "version": 1,
+    "section": "loki-streams",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone adds `trace_id` as a Loki label to make trace searches fast. What happens?",
+    "hint": "One stream per label value.",
+    "choices": [
+      {
+        "text": "Searches by trace id get fast and nothing else changes",
+        "correct": false,
+        "why": "The index stops being small."
+      },
+      {
+        "text": "A stream per request",
+        "correct": true,
+        "why": "Right: the index grows with traffic, lesson 6's cardinality in logs."
+      },
+      {
+        "text": "Loki refuses labels longer than 16 characters",
+        "correct": false,
+        "why": "The problem is count, not length."
+      },
+      {
+        "text": "Lines lose their trace id field",
+        "correct": false,
+        "why": "The line stays as it was."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jtvmjkt",
+    "version": 1,
+    "section": "logql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `| json` do in a LogQL query?",
+    "hint": "A parser stage.",
+    "choices": [
+      {
+        "text": "Makes Loki store the line as JSON",
+        "correct": false,
+        "why": "It changes nothing stored."
+      },
+      {
+        "text": "Indexes the fields for next time",
+        "correct": false,
+        "why": "Nothing is indexed by a query."
+      },
+      {
+        "text": "Turns fields into labels",
+        "correct": true,
+        "why": "Right, for the later stages, at query time."
+      },
+      {
+        "text": "Validates the lines and drops broken ones",
+        "correct": false,
+        "why": "Malformed lines get an error label, they are not deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzqyz9kf",
+    "version": 1,
+    "section": "logql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why put `|= \"approved\\\": false\"` in front of `| json` on a large range?",
+    "hint": "Which stage is cheaper per line?",
+    "choices": [
+      {
+        "text": "Filtering is cheaper than parsing",
+        "correct": true,
+        "why": "Right: fewer lines reach the parser."
+      },
+      {
+        "text": "The parser only works after a filter",
+        "correct": false,
+        "why": "It works on its own, as the lesson ran it."
+      },
+      {
+        "text": "Filters make the result exact",
+        "correct": false,
+        "why": "Both give the same answer; one is faster."
+      },
+      {
+        "text": "Loki indexes the filtered text",
+        "correct": false,
+        "why": "It indexes no text."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2f1h5pk",
+    "version": 1,
+    "section": "logql",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In five minutes payments logged 615 \"charge decided\" and 32 \"card network unavailable\". What share of charges failed, in per cent, to one decimal?",
+    "hint": "Failures over all charges.",
+    "value": 4.9,
+    "tolerance": 0.1,
+    "unit": "percent"
+  },
+  {
+    "id": "ex-37270f9v",
+    "version": 1,
+    "section": "logql",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard panel computes errors per minute with `count_over_time` over every service, refreshed every 15 s. What is the better design?",
+    "hint": "Asked every fifteen seconds.",
+    "choices": [
+      {
+        "text": "Raise the refresh to every 5 s",
+        "correct": false,
+        "why": "That triples the cost."
+      },
+      {
+        "text": "Add a label per error message to Loki",
+        "correct": false,
+        "why": "More streams, same scanning."
+      },
+      {
+        "text": "Use the services' own error counters in Prometheus",
+        "correct": true,
+        "why": "Right: metrics from logs suit questions nobody planned for."
+      },
+      {
+        "text": "Move the panel to Kibana",
+        "correct": false,
+        "why": "Same query cost, different screen."
+      }
+    ]
+  },
+  {
+    "id": "ex-96gnfwdh",
+    "version": 1,
+    "section": "elasticsearch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `term` query for the exact string \"card network unavailable\" found nothing. Why?",
+    "hint": "How is a text field stored?",
+    "choices": [
+      {
+        "text": "The documents had not been indexed yet",
+        "correct": false,
+        "why": "Thirty were found right after by another query."
+      },
+      {
+        "text": "The field is text, indexed by its words",
+        "correct": true,
+        "why": "Right: `match_phrase` matches the phrase."
+      },
+      {
+        "text": "`term` is case-sensitive and the text was capitalised",
+        "correct": false,
+        "why": "The text is lowercase."
+      },
+      {
+        "text": "Elasticsearch drops lines with spaces",
+        "correct": false,
+        "why": "Not so."
+      }
+    ]
+  },
+  {
+    "id": "ex-wtntnan8",
+    "version": 1,
+    "section": "elasticsearch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `order_id` arrive in Elasticsearch as `600.0`?",
+    "hint": "Look at the mapping.",
+    "choices": [
+      {
+        "text": "The shop logs it as a decimal",
+        "correct": false,
+        "why": "The shop logs `600`."
+      },
+      {
+        "text": "A float mapping",
+        "correct": true,
+        "why": "Right: decided from the doubles the Collector forwards."
+      },
+      {
+        "text": "Elasticsearch stores every number as text",
+        "correct": false,
+        "why": "It would not print `.0` then."
+      },
+      {
+        "text": "Graylog changed it before Elasticsearch saw it",
+        "correct": false,
+        "why": "Graylog writes to OpenSearch, not to this Elasticsearch."
+      }
+    ]
+  },
+  {
+    "id": "ex-nggyf0yn",
+    "version": 1,
+    "section": "elasticsearch",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does indexing every field on the way in buy Elasticsearch? Choose all that apply.",
+    "hint": "And what does it cost?",
+    "choices": [
+      {
+        "text": "Aggregations answered from the index",
+        "correct": true,
+        "why": "Yes: the count by service read no line."
+      },
+      {
+        "text": "Fast searches on any field",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Less memory than Loki",
+        "correct": false,
+        "why": "It used far more."
+      },
+      {
+        "text": "Cheaper writes",
+        "correct": false,
+        "why": "Writes are where it pays."
+      }
+    ]
+  },
+  {
+    "id": "ex-vvjewp32",
+    "version": 1,
+    "section": "graylog",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does Graylog keep the log lines themselves?",
+    "hint": "Two companions.",
+    "choices": [
+      {
+        "text": "In MongoDB",
+        "correct": false,
+        "why": "MongoDB keeps its configuration."
+      },
+      {
+        "text": "In OpenSearch",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In Loki",
+        "correct": false,
+        "why": "Loki is a separate store in this lab."
+      },
+      {
+        "text": "In Graylog's own files",
+        "correct": false,
+        "why": "It stores them in OpenSearch."
+      }
+    ]
+  },
+  {
+    "id": "ex-16306fse",
+    "version": 1,
+    "section": "graylog",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each store to the name it gave the shop's `order_id`.",
+    "hint": "Every store renames on the way in.",
+    "pairs": [
+      {
+        "left": "Elasticsearch",
+        "right": "`attributes.order_id`"
+      },
+      {
+        "left": "Graylog",
+        "right": "`otel_attributes_order_id`"
+      },
+      {
+        "left": "Loki",
+        "right": "`order_id`, inside the line"
+      }
+    ],
+    "right_distractors": [
+      "`orderId`"
+    ]
+  },
+  {
+    "id": "ex-jfwpj66f",
+    "version": 1,
+    "section": "graylog",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An alert is copied from Graylog to Elasticsearch and never fires. What is the first thing to check?",
+    "hint": "Names before logic.",
+    "choices": [
+      {
+        "text": "Whether Elasticsearch supports alerts",
+        "correct": false,
+        "why": "Plausible, but names break first."
+      },
+      {
+        "text": "The field names in the query",
+        "correct": true,
+        "why": "Right: `otel_attributes_` against `attributes.`."
+      },
+      {
+        "text": "The time zone of both servers",
+        "correct": false,
+        "why": "Both store UTC."
+      },
+      {
+        "text": "Whether the lines were sampled",
+        "correct": false,
+        "why": "Both received every line."
+      }
+    ]
+  },
+  {
+    "id": "ex-2t7r8rgv",
+    "version": 1,
+    "section": "one-failure-three-stores",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Loki found one line for the failed checkout and the other two found three. Why?",
+    "hint": "Look at the Loki selector.",
+    "choices": [
+      {
+        "text": "Loki dropped two lines",
+        "correct": false,
+        "why": "They were in other streams."
+      },
+      {
+        "text": "The Loki query only selected payments' stream",
+        "correct": true,
+        "why": "Right. Without the label it would find all three."
+      },
+      {
+        "text": "Elasticsearch and Graylog duplicate lines",
+        "correct": false,
+        "why": "The three lines are three different services'."
+      },
+      {
+        "text": "Loki only keeps ERROR lines",
+        "correct": false,
+        "why": "It keeps every level."
+      }
+    ]
+  },
+  {
+    "id": "ex-vak1jbtg",
+    "version": 1,
+    "section": "one-failure-three-stores",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Graylog used 719.7 MiB, OpenSearch 991.8 MiB and MongoDB 113.4 MiB. How many MiB together, to the nearest whole number?",
+    "hint": "Add.",
+    "value": 1825,
+    "tolerance": 1,
+    "unit": "MiB"
+  },
+  {
+    "id": "ex-1mat2hkc",
+    "version": 1,
+    "section": "one-failure-three-stores",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the capture wait 45 seconds before searching for the newest failure?",
+    "hint": "The exporter's batches.",
+    "choices": [
+      {
+        "text": "The newest lines take a while to reach Elasticsearch",
+        "correct": true,
+        "why": "Right: its exporter sends in batches."
+      },
+      {
+        "text": "Jaeger only shows traces older than 45 seconds",
+        "correct": false,
+        "why": "Jaeger answered lesson 1 within seconds."
+      },
+      {
+        "text": "Loki compresses lines for 45 seconds before storing",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "Graylog needs to restart its input",
+        "correct": false,
+        "why": "The input ran throughout."
+      }
+    ]
+  },
+  {
+    "id": "ex-kv0mn0d5",
+    "version": 1,
+    "section": "choosing",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the three stores by the memory they used in the lab, smallest first.",
+    "hint": "Count Graylog with its companions.",
+    "items": [
+      "Loki",
+      "Elasticsearch",
+      "Graylog with OpenSearch and MongoDB"
+    ]
+  },
+  {
+    "id": "ex-p90h5w5h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team already runs Prometheus and Grafana and mostly searches logs by service and trace id. Which store fits best?",
+    "hint": "Few labels, cheap writes.",
+    "choices": [
+      {
+        "text": "Graylog, for its streams and roles",
+        "correct": false,
+        "why": "Possible, at more cost than they need."
+      },
+      {
+        "text": "Loki",
+        "correct": true,
+        "why": "Right: labels for the service, a line filter for the id."
+      },
+      {
+        "text": "Elasticsearch, for its aggregations",
+        "correct": false,
+        "why": "They do not need them."
+      },
+      {
+        "text": "None: keep `docker compose logs`",
+        "correct": false,
+        "why": "That only reaches one machine."
+      }
+    ]
+  }
+]

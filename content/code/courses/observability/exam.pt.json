@@ -1,0 +1,2058 @@
+{
+  "ex-8zfyhb9s": {
+    "prompt": "Um painel mostra taxas de requisições, mas ninguém sabe dizer que serviço deixou um checkout lento. Que sinal falta?",
+    "hint": "Aula 1. Qual sinal diz onde?",
+    "choices": [
+      {
+        "text": "Rastros",
+        "why": "Isso: um rastro diz onde uma requisição gastou o tempo."
+      },
+      {
+        "text": "Mais métricas, separadas por host e por processo",
+        "why": "Métricas agregam e perdem a requisição individual."
+      },
+      {
+        "text": "Uma linha de log escrita pelo balanceador no fim de cada requisição",
+        "why": "Isso só vê o lado de fora da requisição."
+      },
+      {
+        "text": "Uma verificação de disponibilidade de outro país",
+        "why": "Não vê nada de dentro."
+      }
+    ]
+  },
+  "ex-t8ehjvz2": {
+    "prompt": "O que liga uma linha de log ao rastro da mesma requisição?",
+    "hint": "Aula 1. O triângulo.",
+    "choices": [
+      {
+        "text": "O timestamp, casado ao milissegundo com cada span",
+        "why": "Horários colidem sob carga."
+      },
+      {
+        "text": "O nome do serviço, que os dois levam como label",
+        "why": "Muitas requisições dividem um serviço."
+      },
+      {
+        "text": "O trace id escrito na linha",
+        "why": "Isso."
+      },
+      {
+        "text": "O id do processo do contêiner que escreveu os dois",
+        "why": "Muitas requisições dividem um processo."
+      }
+    ]
+  },
+  "ex-9p59r1c7": {
+    "prompt": "Por que nenhum produto de observabilidade consegue mostrar um número que o serviço nunca produziu?",
+    "hint": "Aula 1. De onde vêm os sinais.",
+    "choices": [
+      {
+        "text": "Porque as licenças dos produtos proíbem estimar valores ausentes",
+        "why": "Não é questão de licença."
+      },
+      {
+        "text": "Porque a rede descarta o que não vai por OTLP",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "Porque métricas só são calculadas uma vez por dia",
+        "why": "Não são."
+      },
+      {
+        "text": "Todo sinal existe porque o código foi escrito para emiti-lo",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-6bxqmz00": {
+    "prompt": "Um histograma relata um percentil 99 de 0,4975 s. O que é esse número?",
+    "hint": "Aulas 1 e 6. Interpolado.",
+    "choices": [
+      {
+        "text": "A duração da requisição mais lenta da janela, medida com toda a exatidão",
+        "why": "Um histograma não guarda requisição individual."
+      },
+      {
+        "text": "Uma estimativa dentro de um bucket, não o tempo de alguma requisição",
+        "why": "Isso."
+      },
+      {
+        "text": "A média do um por cento mais lento das requisições",
+        "why": "Não é uma média."
+      },
+      {
+        "text": "O limite superior do último bucket",
+        "why": "É interpolado dentro de um bucket."
+      }
+    ]
+  },
+  "ex-0wcayebd": {
+    "prompt": "Monitoramento e observabilidade respondem perguntas diferentes. Que par combina com eles?",
+    "hint": "Aula 1. Perguntas conhecidas, perguntas novas.",
+    "choices": [
+      {
+        "text": "Monitoramento usa métricas; observabilidade usa logs, e os dois nunca se encontram",
+        "why": "Os dois usam todos os sinais."
+      },
+      {
+        "text": "Monitoramento é para operações; observabilidade é só para desenvolvedores",
+        "why": "Não é divisão por equipe."
+      },
+      {
+        "text": "Monitoramento: algo conhecido está errado? Observabilidade: por quê, numa pergunta que ninguém planejou?",
+        "why": "Isso."
+      },
+      {
+        "text": "São dois nomes para a mesma coisa",
+        "why": "A aula os separa."
+      }
+    ]
+  },
+  "ex-3tjjjdh6": {
+    "prompt": "A API do OpenTelemetry está instalada, mas nenhum SDK. O que acontece quando o código inicia um span?",
+    "hint": "Aula 2. Duas peças de propósito.",
+    "choices": [
+      {
+        "text": "Nada: nenhum erro, e nada registrado",
+        "why": "Isso."
+      },
+      {
+        "text": "O programa quebra com um erro de importação na primeira chamada",
+        "why": "A API funciona sozinha."
+      },
+      {
+        "text": "O span fica guardado até um SDK ser instalado",
+        "why": "Nada é guardado."
+      },
+      {
+        "text": "O span é impresso na saída padrão",
+        "why": "Não sem um exportador."
+      }
+    ]
+  },
+  "ex-4445ryd6": {
+    "prompt": "Por que um serviço usa o batch span processor em vez do simple?",
+    "hint": "Aula 2. 1,85 segundo contra 0,08.",
+    "choices": [
+      {
+        "text": "O simple descarta todo span com status de erro",
+        "why": "Não descarta."
+      },
+      {
+        "text": "O batch comprime spans para não ocuparem memória",
+        "why": "Eles ainda ocupam memória."
+      },
+      {
+        "text": "O simple só funciona com o Jaeger",
+        "why": "Funciona com qualquer exportador."
+      },
+      {
+        "text": "Exporta fora do caminho da requisição, em lotes",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-rdqw5pjd": {
+    "prompt": "O pai de um span filho está faltando no rastro. O que normalmente deu errado no código?",
+    "hint": "Aula 2. Nada nomeou um pai.",
+    "choices": [
+      {
+        "text": "O span filho era curto demais para o armazenamento guardar",
+        "why": "Spans curtos são guardados."
+      },
+      {
+        "text": "O contexto pai nunca foi passado para onde o filho começou",
+        "why": "Isso."
+      },
+      {
+        "text": "Dois spans não podem dividir um serviço, então o armazenamento descartou um",
+        "why": "Podem."
+      },
+      {
+        "text": "O span pai foi amostrado a uma taxa diferente do filho",
+        "why": "Amostragem é a aula 12, e segue o pai."
+      }
+    ]
+  },
+  "ex-6a384rxm": {
+    "prompt": "Que nome de span segue a regra da aula 2?",
+    "hint": "Aula 2. O nome diz que tipo de trabalho.",
+    "choices": [
+      {
+        "text": "`GET /orders/{id}`",
+        "why": "Isso."
+      },
+      {
+        "text": "`GET /orders/1011`",
+        "why": "Uma operação por pedido."
+      },
+      {
+        "text": "`order 1011 for customer ana`",
+        "why": "Isso pertence aos atributos."
+      },
+      {
+        "text": "`handler`",
+        "why": "Não diz nada sobre o trabalho."
+      }
+    ]
+  },
+  "ex-tawzfrcq": {
+    "prompt": "Uma cobrança é recusada pela rede de cartões, e o span do payments a registra. O span deve ser marcado como erro?",
+    "hint": "Aula 2. Uma falha é do próprio span.",
+    "choices": [
+      {
+        "text": "Sim, toda recusa em qualquer lugar é erro para todo span acima",
+        "why": "Quem chama decide o próprio status."
+      },
+      {
+        "text": "Sim, porque o status HTTP será 4xx",
+        "why": "Um 4xx não é erro do servidor."
+      },
+      {
+        "text": "Não: o span fez o trabalho certo, e a recusa é um resultado",
+        "why": "Isso."
+      },
+      {
+        "text": "Só se o cliente reclamar",
+        "why": "O status é definido quando o span termina."
+      }
+    ]
+  },
+  "ex-2vqjsbw0": {
+    "prompt": "Como o `opentelemetry-instrument` acrescenta spans a um programa que ninguém mudou?",
+    "hint": "Aula 3. Antes de o programa rodar.",
+    "choices": [
+      {
+        "text": "Reescreve os arquivos-fonte no disco antes de o processo iniciá-los",
+        "why": "Nada muda no disco."
+      },
+      {
+        "text": "Lê o tráfego de rede e monta spans a partir dos pacotes",
+        "why": "Não é assim que funciona."
+      },
+      {
+        "text": "Pede ao kernel um rastro de toda chamada de sistema",
+        "why": "Não é o que faz."
+      },
+      {
+        "text": "Substitui funções de bibliotecas em memória: monkey-patching",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-z05xgefj": {
+    "prompt": "O que a instrumentação automática não consegue registrar sozinha?",
+    "hint": "Aula 3. Sobre o que era a requisição.",
+    "choices": [
+      {
+        "text": "A rota HTTP e o código de status de cada requisição",
+        "why": "Ela registra isso."
+      },
+      {
+        "text": "Que produto o cliente comprou",
+        "why": "Isso: significado de negócio precisa de código."
+      },
+      {
+        "text": "A consulta SQL, com placeholders",
+        "why": "Ela registra isso."
+      },
+      {
+        "text": "A chamada HTTP de saída para outro serviço",
+        "why": "Ela registra isso."
+      }
+    ]
+  },
+  "ex-d2yr9c45": {
+    "prompt": "A aula 3 mediu 25,1 ms contra 24,1 ms na mediana, com e sem instrumentação. Qual é a conclusão certa?",
+    "hint": "Aula 3. Uma rodada, uma máquina.",
+    "choices": [
+      {
+        "text": "A instrumentação acrescenta quatro por cento a toda requisição em produção",
+        "why": "Uma rodada diz menos que isso."
+      },
+      {
+        "text": "A instrumentação deixa requisições mais rápidas na segunda rodada",
+        "why": "Não foi o medido."
+      },
+      {
+        "text": "A diferença está perto do ruído entre duas rodadas",
+        "why": "Isso."
+      },
+      {
+        "text": "A mediana é a estatística errada, então nada pode ser dito",
+        "why": "Algo pode ser dito."
+      }
+    ]
+  },
+  "ex-wzymnc2g": {
+    "prompt": "Um serviço com instrumentação automática chama outro por uma biblioteca cliente que nada instrumenta. O que aparece nos rastros?",
+    "hint": "Aulas 3 e 4.",
+    "choices": [
+      {
+        "text": "Dois rastros para uma requisição",
+        "why": "Isso."
+      },
+      {
+        "text": "Um rastro, com uma lacuna onde estava a chamada",
+        "why": "O contexto não atravessou."
+      },
+      {
+        "text": "Um span de erro marcado pelo SDK",
+        "why": "Nada falha."
+      },
+      {
+        "text": "Nada de nenhum dos dois serviços",
+        "why": "Cada um ainda registra o seu."
+      }
+    ]
+  },
+  "ex-689y5p90": {
+    "prompt": "Quando misturar instrumentação automática e manual é a resposta certa?",
+    "hint": "Aula 3. A resposta de costume.",
+    "choices": [
+      {
+        "text": "Nunca, porque dois SDKs num processo entram em conflito",
+        "why": "É um SDK só."
+      },
+      {
+        "text": "Só em serviços Java, onde existem agentes",
+        "why": "O Python também mistura."
+      },
+      {
+        "text": "Só durante uma migração, e depois uma das duas é removida",
+        "why": "A mistura é uma escolha duradoura."
+      },
+      {
+        "text": "Como divisão duradoura: o agente para as bibliotecas, código escrito à mão para atributos e spans de negócio",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-9dtx0gvk": {
+    "prompt": "Que cabeçalho leva o contexto do rastro entre os serviços da loja?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "`X-Request-Id`",
+        "why": "Não é o cabeçalho W3C."
+      },
+      {
+        "text": "`traceparent`",
+        "why": "Isso."
+      },
+      {
+        "text": "`Authorization`",
+        "why": "Esse leva credenciais."
+      },
+      {
+        "text": "`baggage`, o único que o OpenTelemetry manda por padrão",
+        "why": "O traceparent leva o rastro."
+      }
+    ]
+  },
+  "ex-x2wxz0g5": {
+    "prompt": "Num `traceparent`, que campo muda a cada salto e qual nunca muda?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "O span id do pai muda; o trace id fica",
+        "why": "Isso."
+      },
+      {
+        "text": "O trace id muda; o span id fica",
+        "why": "O contrário."
+      },
+      {
+        "text": "Os dois mudam a cada salto, para proteger a privacidade de quem chama",
+        "why": "O trace id precisa ficar."
+      },
+      {
+        "text": "Nenhum muda; só os flags mudam",
+        "why": "O span id muda."
+      }
+    ]
+  },
+  "ex-vqcz49q1": {
+    "prompt": "Como um rastro atravessa o RabbitMQ na loja?",
+    "hint": "Aula 4. Onde está o portador.",
+    "choices": [
+      {
+        "text": "O RabbitMQ acrescenta o trace id a toda mensagem sozinho",
+        "why": "Ele não sabe de rastros."
+      },
+      {
+        "text": "O mailer adivinha o rastro pelo id do pedido",
+        "why": "Nada adivinha."
+      },
+      {
+        "text": "O contexto é injetado nos cabeçalhos da mensagem e extraído pelo consumidor",
+        "why": "Isso."
+      },
+      {
+        "text": "O rastro para na fila e um novo começa",
+        "why": "Só quando ninguém o carrega."
+      }
+    ]
+  },
+  "ex-3n1z83xt": {
+    "prompt": "Por que o relatório noturno se liga aos pedidos em vez de virar filho deles?",
+    "hint": "Aula 4. Vinte e duas requisições.",
+    "choices": [
+      {
+        "text": "Spans filhos não são permitidos em jobs agendados",
+        "why": "São."
+      },
+      {
+        "text": "Links são mais rápidos de exportar que pais",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "Os pedidos já foram apagados quando o job roda",
+        "why": "Não foram."
+      },
+      {
+        "text": "Uma execução é causada por muitas requisições; links relacionam rastros sem juntá-los",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-c4pgfanw": {
+    "prompt": "O que nunca pode ir para a baggage?",
+    "hint": "Aula 4. Ela viaja para todo lado.",
+    "choices": [
+      {
+        "text": "O id do tenant, usado para rotear requisições",
+        "why": "Esse é um uso típico."
+      },
+      {
+        "text": "Qualquer coisa pessoal ou secreta",
+        "why": "Isso: chega a todo serviço e terceiro no caminho."
+      },
+      {
+        "text": "O nome de um feature flag",
+        "why": "Esse é um uso típico."
+      },
+      {
+        "text": "Qualquer valor maior que uma palavra",
+        "why": "Tamanho não é a regra."
+      }
+    ]
+  },
+  "ex-p0hn76gt": {
+    "prompt": "Como o Prometheus obtém as métricas da loja?",
+    "hint": "Aula 5. Quem manda?",
+    "choices": [
+      {
+        "text": "Cada serviço empurra as métricas ao Prometheus a cada quinze segundos",
+        "why": "Isso é push; o Prometheus puxa."
+      },
+      {
+        "text": "O Collector repassa toda métrica a partir dos logs",
+        "why": "Não neste laboratório."
+      },
+      {
+        "text": "Faz scrape do `/metrics` de cada alvo num intervalo",
+        "why": "Isso."
+      },
+      {
+        "text": "Lê a saída padrão dos contêineres",
+        "why": "É para lá que vão os logs."
+      }
+    ]
+  },
+  "ex-saqesxgk": {
+    "prompt": "Um contador foi de 339 para 123 entre dois scrapes. O que o `rate()` faz disso?",
+    "hint": "Aula 5. Um reinício.",
+    "choices": [
+      {
+        "text": "Um reinício do contador: conta de novo a partir do zero, não uma queda",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma taxa negativa, que relata como erro no próprio log",
+        "why": "Ele trata reinícios."
+      },
+      {
+        "text": "Ignora a série até ela crescer de novo",
+        "why": "Ele continua contando."
+      },
+      {
+        "text": "Um gauge: deixa de tratá-lo como contador",
+        "why": "O tipo não muda."
+      }
+    ]
+  },
+  "ex-c03g8bzw": {
+    "prompt": "Por que alertar sobre a fração de requisições que falham em vez da taxa de erros?",
+    "hint": "Aula 5. O tráfego muda.",
+    "choices": [
+      {
+        "text": "Taxas não podem ser calculadas sobre erros",
+        "why": "Podem."
+      },
+      {
+        "text": "Uma fração é mais barata de guardar em janelas longas",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "O Alertmanager só aceita números entre 0 e 1",
+        "why": "Aceita qualquer um."
+      },
+      {
+        "text": "Uma taxa cresce com o tráfego; uma fração diz quão ruim é para cada requisição",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-0tx7jkfj": {
+    "prompt": "Por que o relatório noturno empurra um timestamp ao Pushgateway em vez de ser coletado?",
+    "hint": "Aula 5. Um job que termina.",
+    "choices": [
+      {
+        "text": "Porque o Prometheus não faz scrape de programas Python",
+        "why": "Os serviços são Python."
+      },
+      {
+        "text": "Termina antes de qualquer scrape; o timestamp diz quando deu certo pela última vez",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque o relatório não tem acesso à rede",
+        "why": "Tem."
+      },
+      {
+        "text": "Porque timestamps não podem ser expostos no `/metrics`",
+        "why": "Podem."
+      }
+    ]
+  },
+  "ex-n054rmfh": {
+    "prompt": "Uma regra de alerta com `for: 2m` está verdadeira há um minuto. Em que estado ela está?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Pending",
+        "why": "Isso."
+      },
+      {
+        "text": "Disparando, e o Alertmanager já foi avisado",
+        "why": "Ainda não."
+      },
+      {
+        "text": "Inativa, até passarem dois minutos",
+        "why": "Ela está pendente."
+      },
+      {
+        "text": "Resolvida",
+        "why": "Ela ainda é verdadeira."
+      }
+    ]
+  },
+  "ex-cptbk6y0": {
+    "prompt": "Que tipo de métrica deve contar requisições atendidas?",
+    "hint": "Aula 6. Só sobe.",
+    "choices": [
+      {
+        "text": "Gauge, para poder ser zerado à mão todo dia",
+        "why": "O tipo errado quebra a matemática."
+      },
+      {
+        "text": "Summary",
+        "why": "Esse mede tamanhos ou durações."
+      },
+      {
+        "text": "Counter",
+        "why": "Isso."
+      },
+      {
+        "text": "Histograma com um bucket",
+        "why": "Um counter é a ferramenta."
+      }
+    ]
+  },
+  "ex-a2s1x0yc": {
+    "prompt": "Por que percentis de dois summaries não podem ser combinados num só?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Porque summaries não guardam contagem de observações",
+        "why": "Guardam contagem."
+      },
+      {
+        "text": "Porque o Prometheus proíbe `sum` em summaries",
+        "why": "Não é proibido."
+      },
+      {
+        "text": "Porque cada summary usa uma unidade diferente",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "Percentis não podem ser somados nem ter média tirada",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-n3hwhj1w": {
+    "prompt": "Um label `user_id` é acrescentado a um contador de requisições com 20 000 usuários. O que acontece com as séries?",
+    "hint": "Aula 6. Toda combinação.",
+    "choices": [
+      {
+        "text": "Uma série por nome de label, então uma a mais",
+        "why": "Por valor, não por nome."
+      },
+      {
+        "text": "Uma série por usuário, vezes toda outra combinação de labels",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada, desde que o intervalo de scrape seja longo o bastante para absorver",
+        "why": "O intervalo não muda a cardinalidade."
+      },
+      {
+        "text": "O Prometheus recusa o scrape",
+        "why": "Ele aceita, e paga."
+      }
+    ]
+  },
+  "ex-zp9gp31r": {
+    "prompt": "Onde a aula põe a correção de um label que explodiu a cardinalidade?",
+    "hint": "Aula 6. Relabel é um curativo.",
+    "choices": [
+      {
+        "text": "No Prometheus, com uma regra que descarta o label no scrape",
+        "why": "O scrape ainda traz toda amostra."
+      },
+      {
+        "text": "No Grafana, escondendo as séries",
+        "why": "Elas ainda são guardadas."
+      },
+      {
+        "text": "No código que define o label",
+        "why": "Isso."
+      },
+      {
+        "text": "No banco, apagando séries velhas",
+        "why": "Novas continuam chegando."
+      }
+    ]
+  },
+  "ex-hnqg95c8": {
+    "prompt": "Os buckets de um histograma são 0,25 s e 0,5 s, e o percentil 99 sai 0,4975 s. Quanto você deve confiar na terceira casa decimal?",
+    "hint": "Aula 6. Interpolação.",
+    "choices": [
+      {
+        "text": "Pouco: o valor é interpolado entre dois buckets",
+        "why": "Isso."
+      },
+      {
+        "text": "Totalmente: o Prometheus guarda toda observação",
+        "why": "Ele guarda contagens por bucket."
+      },
+      {
+        "text": "Nada: percentis de histogramas são aleatórios de um scrape para o outro",
+        "why": "São estimativas, não aleatórios."
+      },
+      {
+        "text": "Só se o intervalo de scrape for de um segundo",
+        "why": "O intervalo não é a questão."
+      }
+    ]
+  },
+  "ex-0df2r2fm": {
+    "prompt": "Onde o Grafana guarda as métricas que desenha?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "No próprio banco de séries temporais",
+        "why": "Ele não guarda nenhuma."
+      },
+      {
+        "text": "No armazenamento local do navegador",
+        "why": "Não."
+      },
+      {
+        "text": "No JSON do painel",
+        "why": "Esse guarda consultas, não dados."
+      },
+      {
+        "text": "Em lugar nenhum: pergunta às fontes de dados a cada desenho",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-c7g35jej": {
+    "prompt": "Por que o robô de deploy usa um token de service account em vez da senha de admin?",
+    "hint": "Aula 7. 200 na busca, 403 no delete.",
+    "choices": [
+      {
+        "text": "Tokens são mais rápidos de verificar que senhas",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "Recebe só as permissões de que precisa, e revogá-lo não afeta mais nada",
+        "why": "Isso."
+      },
+      {
+        "text": "O Grafana proíbe admins de criar anotações",
+        "why": "Não proíbe."
+      },
+      {
+        "text": "A senha de admin expira todo dia",
+        "why": "Não expira."
+      }
+    ]
+  },
+  "ex-ysencrf6": {
+    "prompt": "Um painel mostra 1,7% de erros em dez minutos durante uma queda em que uma cobrança em dez falhou. O que escondeu a queda?",
+    "hint": "Aula 7. A janela.",
+    "choices": [
+      {
+        "text": "Uma média longa: os minutos tranquilos diluíram os ruins",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma média entre hosts",
+        "why": "A janela, não os hosts."
+      },
+      {
+        "text": "Uma série ausente mostrada como zero",
+        "why": "A série estava lá."
+      },
+      {
+        "text": "O painel usou a fonte de dados errada",
+        "why": "Mesma fonte."
+      }
+    ]
+  },
+  "ex-pv973chh": {
+    "prompt": "O que uma anotação do Grafana registra?",
+    "hint": "Aula 7. O que as pessoas fizeram.",
+    "choices": [
+      {
+        "text": "O valor de uma métrica num momento, copiado do Prometheus",
+        "why": "Anotações não são métricas."
+      },
+      {
+        "text": "O texto de todo alerta que o Alertmanager mandou",
+        "why": "Não sozinha."
+      },
+      {
+        "text": "Um momento e o que alguém fez nele, como um deploy",
+        "why": "Isso."
+      },
+      {
+        "text": "Um comentário no JSON de um painel",
+        "why": "É guardada com um horário."
+      }
+    ]
+  },
+  "ex-mdm0he8h": {
+    "prompt": "Uma série some porque um serviço parou de exportá-la. O que um painel normalmente mostra, e por que isso é perigoso?",
+    "hint": "Aula 7. Ausente parece zero.",
+    "choices": [
+      {
+        "text": "Um aviso de erro, que deixa as pessoas em pânico",
+        "why": "Normalmente não mostra erro."
+      },
+      {
+        "text": "O último valor, congelado, que parece que o serviço está bem",
+        "why": "O Prometheus a marca como velha."
+      },
+      {
+        "text": "Um pico, pelo contador reiniciando",
+        "why": "Nenhum reinício aconteceu."
+      },
+      {
+        "text": "Uma linha reta ou nada, que se lê como zero erros",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-xz72x3h6": {
+    "prompt": "Onde um serviço em contêiner deve escrever as linhas de log?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Num arquivo dentro do contêiner, rotacionado diariamente",
+        "why": "Perde-se com o contêiner."
+      },
+      {
+        "text": "Na saída padrão, e em nenhum outro lugar",
+        "why": "Isso."
+      },
+      {
+        "text": "Direto para o Elasticsearch por HTTP",
+        "why": "A plataforma coleta o stdout."
+      },
+      {
+        "text": "No syslog do host",
+        "why": "Não neste desenho."
+      }
+    ]
+  },
+  "ex-q0h475j4": {
+    "prompt": "O que o nível `ERROR` deve significar?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Qualquer coisa inesperada, por menor que seja",
+        "why": "Isso enche o nível de ruído."
+      },
+      {
+        "text": "Que o serviço está prestes a cair e precisa ser reiniciado",
+        "why": "Não necessariamente."
+      },
+      {
+        "text": "Que alguém tem algo a fazer a respeito",
+        "why": "Isso."
+      },
+      {
+        "text": "Que o cliente viu um 4xx",
+        "why": "Um 4xx muitas vezes é esperado."
+      }
+    ]
+  },
+  "ex-k1w3zqp9": {
+    "prompt": "Uma exceção é capturada, registrada, relançada e registrada de novo por quem chamou. O que a aula 8 recomenda?",
+    "hint": "Uma vez, onde é tratada.",
+    "choices": [
+      {
+        "text": "Registrar uma vez, onde é tratada",
+        "why": "Isso."
+      },
+      {
+        "text": "Registrar em todo nível para nada se perder",
+        "why": "Essas são as dezessete linhas."
+      },
+      {
+        "text": "Nunca registrar exceções, só as mensagens",
+        "why": "A pilha é útil."
+      },
+      {
+        "text": "Registrar só no serviço mais externo",
+        "why": "Onde é tratada."
+      }
+    ]
+  },
+  "ex-sg7wvjsp": {
+    "prompt": "Por que um campo deve se chamar `duration_ms` em vez de `duration`?",
+    "hint": "Aula 8. A unidade no nome.",
+    "choices": [
+      {
+        "text": "O Elasticsearch rejeita nomes de campo sem sublinhado",
+        "why": "Não rejeita."
+      },
+      {
+        "text": "Nomes curtos comprimem pior",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "`duration` é uma palavra reservada no JSON",
+        "why": "Não é."
+      },
+      {
+        "text": "A unidade faz parte do significado, e quem lê não deve adivinhar",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-5dq21q6m": {
+    "prompt": "Amostrar linhas `INFO` a uma em dez guardou 95 de 990. Para que serve um log amostrado?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Achar o que aconteceu com um pedido específico, procurando pelo id dele",
+        "why": "Essa linha pode ter sumido."
+      },
+      {
+        "text": "Que tipos de coisa acontecem, e em que proporção",
+        "why": "Isso."
+      },
+      {
+        "text": "Contar erros exatamente",
+        "why": "Erros não são amostrados, e contar é das métricas."
+      },
+      {
+        "text": "Nada; amostrar logs está sempre errado",
+        "why": "Tem um uso."
+      }
+    ]
+  },
+  "ex-rjc2vqcs": {
+    "prompt": "O que o Loki indexa para cada linha?",
+    "hint": "Aula 9. Streams.",
+    "choices": [
+      {
+        "text": "Só os labels do stream",
+        "why": "Isso."
+      },
+      {
+        "text": "Todo campo de toda linha",
+        "why": "Isso é o Elasticsearch."
+      },
+      {
+        "text": "Nada",
+        "why": "Labels são indexados."
+      },
+      {
+        "text": "O texto completo, palavra por palavra",
+        "why": "Esse é o jeito do Elasticsearch."
+      }
+    ]
+  },
+  "ex-mrggyh72": {
+    "prompt": "Por que um armazenamento da loja ocupou 80 MB de memória e outro 1,5 GB para os mesmos logs?",
+    "hint": "Aula 9. Onde cada um paga.",
+    "choices": [
+      {
+        "text": "O Elasticsearch guarda duas cópias de tudo",
+        "why": "Um nó único guarda uma."
+      },
+      {
+        "text": "O Loki comprime logs e o Elasticsearch nunca comprime, então o disco dele enche",
+        "why": "Os dois comprimem."
+      },
+      {
+        "text": "O Loki indexa só labels; o Elasticsearch indexa todo campo",
+        "why": "Isso."
+      },
+      {
+        "text": "O Loki descartou a maioria das linhas",
+        "why": "Ele as guardou."
+      }
+    ]
+  },
+  "ex-c5wfvdg0": {
+    "prompt": "Uma consulta LogQL filtra por um campo JSON que ninguém indexou. Como o Loki responde?",
+    "hint": "Aula 9. Um parser na consulta.",
+    "choices": [
+      {
+        "text": "Recusa a consulta",
+        "why": "Ele responde."
+      },
+      {
+        "text": "Indexa o campo na hora e guarda o índice",
+        "why": "Não guarda índice."
+      },
+      {
+        "text": "Pergunta ao Elasticsearch",
+        "why": "São separados."
+      },
+      {
+        "text": "Lê as linhas do stream e interpreta cada uma na hora da consulta",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ynzfg3q8": {
+    "prompt": "O que o Graylog acrescenta por cima do OpenSearch?",
+    "hint": "Aula 9. O produto em volta.",
+    "choices": [
+      {
+        "text": "Um formato de índice mais rápido",
+        "why": "O OpenSearch indexa."
+      },
+      {
+        "text": "Entradas, streams, usuários e alertas: o produto em volta do armazenamento",
+        "why": "Isso."
+      },
+      {
+        "text": "Armazenamento de rastros",
+        "why": "Não é o papel dele aqui."
+      },
+      {
+        "text": "Um motor de métricas que substitui o Prometheus",
+        "why": "Não substitui."
+      }
+    ]
+  },
+  "ex-81m3m1wp": {
+    "prompt": "Uma equipe escolhe um armazenamento de logs. Que pergunta importa mais, segundo a aula 9?",
+    "hint": "Onde cada um paga.",
+    "choices": [
+      {
+        "text": "Qual tem mais estrelas no GitHub",
+        "why": "Não é critério."
+      },
+      {
+        "text": "Qual é o mais novo",
+        "why": "Não é critério."
+      },
+      {
+        "text": "Como a equipe vai buscar, e quanto custaria indexar tudo",
+        "why": "Isso."
+      },
+      {
+        "text": "Qual o provedor de nuvem hospeda",
+        "why": "Um fator, não o principal."
+      }
+    ]
+  },
+  "ex-65677n56": {
+    "prompt": "Por quanto tempo logs devem ser guardados?",
+    "hint": "Aula 10. Não é uma pergunta técnica.",
+    "choices": [
+      {
+        "text": "O tempo que a finalidade exige, decidido por tipo de log",
+        "why": "Isso."
+      },
+      {
+        "text": "Enquanto o disco permitir",
+        "why": "Isso não é um motivo."
+      },
+      {
+        "text": "Para sempre, caso sejam necessários",
+        "why": "Custo e risco sem finalidade."
+      },
+      {
+        "text": "Exatamente trinta dias, como a LGPD exige",
+        "why": "A LGPD não fixa esse número."
+      }
+    ]
+  },
+  "ex-k6vm1m4g": {
+    "prompt": "O que um log deve levar no lugar do CPF de um cliente?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "O CPF com hash MD5",
+        "why": "Fácil de reverter."
+      },
+      {
+        "text": "Só os quatro últimos dígitos do CPF, em toda linha que o serviço escreve",
+        "why": "Ainda é dado pessoal."
+      },
+      {
+        "text": "O nome do cliente no lugar",
+        "why": "Também é dado pessoal."
+      },
+      {
+        "text": "Um identificador que não significa nada fora do sistema",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-sxbytek1": {
+    "prompt": "A redação roda no Collector. Que cópia de um segredo ela não consegue remover?",
+    "hint": "Aula 10. Antes do Collector.",
+    "choices": [
+      {
+        "text": "A do Loki",
+        "why": "O Collector limpa o que repassa."
+      },
+      {
+        "text": "O log do próprio contêiner na máquina",
+        "why": "Isso."
+      },
+      {
+        "text": "A do Elasticsearch",
+        "why": "Idem."
+      },
+      {
+        "text": "Nenhuma; o Collector vê toda cópia que o contêiner escreve",
+        "why": "O log do contêiner vem primeiro."
+      }
+    ]
+  },
+  "ex-ed10dcxm": {
+    "prompt": "Por que apagar uma linha vazada do Loki ou do Elasticsearch nunca termina?",
+    "hint": "Aula 10. Cópias.",
+    "choices": [
+      {
+        "text": "Existem cópias em outros lugares: backups, o log do contêiner, outros armazenamentos",
+        "why": "Isso."
+      },
+      {
+        "text": "Os dois armazenamentos proíbem exclusões",
+        "why": "Permitem."
+      },
+      {
+        "text": "Linhas apagadas voltam depois de um reinício",
+        "why": "Não voltam."
+      },
+      {
+        "text": "A exclusão leva anos para rodar",
+        "why": "Não é o motivo."
+      }
+    ]
+  },
+  "ex-bdf0m5hn": {
+    "prompt": "Um filtro por nome de campo remove `card` e `authorization`. Que vazamento ele ainda pode deixar passar?",
+    "hint": "Aula 10. Nomes na lista.",
+    "choices": [
+      {
+        "text": "Um número de cartão escrito no campo `card` do corpo",
+        "why": "Esse nome está na lista."
+      },
+      {
+        "text": "O cabeçalho `Authorization`",
+        "why": "Na lista."
+      },
+      {
+        "text": "Um token num campo chamado `x_api_credential`",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma senha no campo `card`",
+        "why": "Removida pelo nome."
+      }
+    ]
+  },
+  "ex-mmrqd0q1": {
+    "prompt": "Numa visão de rastro, que span costuma ser a barra mais longa?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "O span que fez mais trabalho",
+        "why": "A duração inclui espera."
+      },
+      {
+        "text": "A chamada ao banco",
+        "why": "Normalmente curta."
+      },
+      {
+        "text": "O último span a começar",
+        "why": "Não necessariamente longo."
+      },
+      {
+        "text": "A raiz",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-4eaw6x21": {
+    "prompt": "O span raiz de um checkout levou 439 ms e a espera da rede de cartões, 400 ms. Deixar o `INSERT` dez vezes mais rápido economiza quanto do checkout?",
+    "hint": "Aula 11. O INSERT levou cerca de um milissegundo.",
+    "choices": [
+      {
+        "text": "Uns dez por cento",
+        "why": "O INSERT era minúsculo."
+      },
+      {
+        "text": "Menos de um milissegundo",
+        "why": "Isso."
+      },
+      {
+        "text": "Uns quarenta milissegundos",
+        "why": "Ele levou um."
+      },
+      {
+        "text": "Nada, porque o INSERT está fora do caminho crítico",
+        "why": "Está nele, só é curto."
+      }
+    ]
+  },
+  "ex-sxhzft42": {
+    "prompt": "Por que o grafo de dependências do Zipkin não mostrou aresta para o mailer?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "O mailer exporta só para o Jaeger",
+        "why": "O Collector manda todo span aos dois."
+      },
+      {
+        "text": "Os spans do mailer chegam tarde demais para a janela do grafo",
+        "why": "Chegam em milissegundos."
+      },
+      {
+        "text": "Nenhum span de produtor ou broker foi registrado, então nada faz par com o span consumidor",
+        "why": "Isso."
+      },
+      {
+        "text": "O Zipkin só desenha serviços que respondem HTTP",
+        "why": "Também desenha arestas de mensageria, quando registradas."
+      }
+    ]
+  },
+  "ex-cn06py01": {
+    "prompt": "Um checkout que falhou tem quatro spans vermelhos. Por onde você começa a ler?",
+    "hint": "Aula 11. O fundo da coluna.",
+    "choices": [
+      {
+        "text": "No span vermelho mais profundo sem filho vermelho",
+        "why": "Isso."
+      },
+      {
+        "text": "Na raiz, onde o cliente viu a falha",
+        "why": "Ela relata o que veio de baixo."
+      },
+      {
+        "text": "No span de maior duração",
+        "why": "Erros não são sobre duração."
+      },
+      {
+        "text": "Em qualquer span que o Zipkin liste primeiro na tela dele",
+        "why": "A ordem não é profundidade."
+      }
+    ]
+  },
+  "ex-smn28qb2": {
+    "prompt": "Por que a vitrine não expõe exemplares e o orders expõe?",
+    "hint": "Aula 11. Quando a duração é observada.",
+    "choices": [
+      {
+        "text": "A vitrine responde só no formato de texto clássico",
+        "why": "Elas dividem o `web.py`."
+      },
+      {
+        "text": "O Prometheus não faz scrape da vitrine",
+        "why": "Faz."
+      },
+      {
+        "text": "Exemplares só são permitidos em rotas POST",
+        "why": "Checkout é um POST."
+      },
+      {
+        "text": "O span escrito à mão da vitrine já terminou quando a métrica é registrada",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-j3rj3zfx": {
+    "prompt": "Onde a amostragem na cabeça decide se guarda um rastro?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "No Collector, depois de o rastro terminar",
+        "why": "Isso é amostragem na cauda."
+      },
+      {
+        "text": "No serviço que inicia o rastro, antes de qualquer coisa acontecer",
+        "why": "Isso."
+      },
+      {
+        "text": "No Jaeger, quando o rastro é guardado",
+        "why": "Tarde demais para a cabeça."
+      },
+      {
+        "text": "Em cada serviço de forma independente, por sorteio",
+        "why": "A decisão viaja a partir da raiz."
+      }
+    ]
+  },
+  "ex-rg8zhtv0": {
+    "prompt": "A vitrine amostra um em dez e os outros serviços usam `parentbased_always_on`. O que um rastro guardado contém?",
+    "hint": "Aula 12. Quem obedece.",
+    "choices": [
+      {
+        "text": "Todo span de todo serviço, porque eles seguem o flag",
+        "why": "Isso."
+      },
+      {
+        "text": "Só o span da vitrine",
+        "why": "Os outros seguem o flag."
+      },
+      {
+        "text": "Um span em dez de cada serviço",
+        "why": "O rastro inteiro é guardado ou descartado."
+      },
+      {
+        "text": "Todo span, mais uma cópia de cada um no rastro próprio de cada serviço",
+        "why": "Há um rastro."
+      }
+    ]
+  },
+  "ex-q8q8wzzz": {
+    "prompt": "O que mantém exatas as taxas e as razões de erro da loja enquanto a amostragem na cauda descarta nove rastros em dez?",
+    "hint": "Aula 12. Contar antes de descartar.",
+    "choices": [
+      {
+        "text": "Contar os rastros que o Jaeger guardou e multiplicar por dez para estimar o resto",
+        "why": "A amostra é enviesada."
+      },
+      {
+        "text": "Uma cláusula `for:` em todo alerta",
+        "why": "Sem relação."
+      },
+      {
+        "text": "O conector spanmetrics, alimentado com todo span antes do amostrador",
+        "why": "Isso."
+      },
+      {
+        "text": "Amostrar os logs na mesma taxa",
+        "why": "Isso não restaura contagens."
+      }
+    ]
+  },
+  "ex-dxmxdy4m": {
+    "prompt": "Por que todo span de um rastro precisa chegar ao mesmo Collector para a amostragem na cauda?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Collectors não conseguem falar com o Jaeger ao mesmo tempo",
+        "why": "Conseguem."
+      },
+      {
+        "text": "O trace id é diferente em cada Collector",
+        "why": "É o mesmo."
+      },
+      {
+        "text": "O OTLP recusa spans divididos entre hosts",
+        "why": "Não recusa."
+      },
+      {
+        "text": "A decisão precisa de tudo reunido num lugar só",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-am9kvn3c": {
+    "prompt": "Com amostragem na cauda, um exemplar abre como \"trace not found\". O que aconteceu?",
+    "hint": "Aula 12. Quem escolheu o exemplar.",
+    "choices": [
+      {
+        "text": "O Prometheus perdeu os labels do exemplar",
+        "why": "O id está intacto."
+      },
+      {
+        "text": "O histograma escolheu uma requisição cujo rastro o amostrador depois descartou",
+        "why": "Isso."
+      },
+      {
+        "text": "O Jaeger expira rastros depois de um minuto",
+        "why": "Não no laboratório."
+      },
+      {
+        "text": "O exemplar aponta para um span, não um rastro",
+        "why": "Ele leva um trace id."
+      }
+    ]
+  },
+  "ex-mjqqtp97": {
+    "prompt": "O que um rastreador de erros como o Sentry registra?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Toda requisição, com a duração",
+        "why": "Isso é rastreamento."
+      },
+      {
+        "text": "Toda métrica do host",
+        "why": "Isso é monitoramento de infraestrutura."
+      },
+      {
+        "text": "Exceções, com a pilha, as variáveis locais e o contexto",
+        "why": "Isso."
+      },
+      {
+        "text": "Só as linhas de log em `ERROR`",
+        "why": "Ele registra exceções."
+      }
+    ]
+  },
+  "ex-e7vcbypv": {
+    "prompt": "Por que um número de cartão chegou ao evento do rastreador de erros na aula 13?",
+    "hint": "Ninguém o escreveu ali.",
+    "choices": [
+      {
+        "text": "O SDK manda variáveis locais por padrão, e o cartão era uma delas",
+        "why": "Isso."
+      },
+      {
+        "text": "As breadcrumbs registraram o corpo da requisição",
+        "why": "Os logs não o mencionaram."
+      },
+      {
+        "text": "O `send_default_pii` estava ligado no script",
+        "why": "Estava desligado."
+      },
+      {
+        "text": "O Collector o copiou de um span",
+        "why": "O Collector não entrou."
+      }
+    ]
+  },
+  "ex-c0s4hz6m": {
+    "prompt": "Como o laboratório manda todo rastro a um produto hospedado além do Jaeger?",
+    "hint": "Aula 13. Um lugar.",
+    "choices": [
+      {
+        "text": "Cada serviço ganha um segundo exportador e a chave do fornecedor",
+        "why": "Nada muda nos serviços."
+      },
+      {
+        "text": "O Jaeger repassa uma cópia de todo rastro que guarda",
+        "why": "Não repassa."
+      },
+      {
+        "text": "Um cron copia o banco do Jaeger toda noite",
+        "why": "Não é assim que funciona."
+      },
+      {
+        "text": "Mais um exportador no Collector, com a chave vinda do ambiente",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-0s3n5hq1": {
+    "prompt": "Que unidade da conta de um produto hospedado cresce quando uma equipe acrescenta um label `order_id` a uma métrica?",
+    "hint": "Aulas 6 e 13.",
+    "choices": [
+      {
+        "text": "Hosts",
+        "why": "As máquinas não mudaram."
+      },
+      {
+        "text": "Séries de métricas customizadas",
+        "why": "Isso."
+      },
+      {
+        "text": "Assentos de usuários",
+        "why": "Ninguém foi acrescentado."
+      },
+      {
+        "text": "Gigabytes de logs ingeridos por mês",
+        "why": "Nenhum log mudou."
+      }
+    ]
+  },
+  "ex-wb1sgyte": {
+    "prompt": "Uma equipe quer manter a opção de sair do fornecedor. O que a aula 13 diz para manter fora do código de negócio?",
+    "hint": "Onde o código do fornecedor pode morar.",
+    "choices": [
+      {
+        "text": "A biblioteca de instrumentação própria do fornecedor",
+        "why": "Isso."
+      },
+      {
+        "text": "A API do OpenTelemetry",
+        "why": "É ela que mantém a portabilidade."
+      },
+      {
+        "text": "Os nomes de atributo das convenções semânticas nos spans",
+        "why": "Todo fornecedor os lê."
+      },
+      {
+        "text": "Qualquer logging",
+        "why": "Logging não é o aprisionamento."
+      }
+    ]
+  },
+  "ex-bncn9sxt": {
+    "prompt": "O que uma sonda de liveness deve verificar?",
+    "hint": "Aula 14. O que um reinício conserta.",
+    "choices": [
+      {
+        "text": "Que o banco está acessível",
+        "why": "Um reinício não conserta o banco."
+      },
+      {
+        "text": "Que todo serviço abaixo está pronto",
+        "why": "Isso espalha falhas."
+      },
+      {
+        "text": "Que o próprio processo ainda responde",
+        "why": "Isso."
+      },
+      {
+        "text": "Que os checkouts dão certo de ponta a ponta",
+        "why": "Isso é uma verificação sintética."
+      }
+    ]
+  },
+  "ex-0by3wzx4": {
+    "prompt": "O Docker marca um contêiner como unhealthy. O que o Docker faz em seguida numa máquina só?",
+    "hint": "Aula 14. `RestartCount`.",
+    "choices": [
+      {
+        "text": "Reinicia o contêiner depois de três falhas",
+        "why": "Não reinicia nada."
+      },
+      {
+        "text": "Remove o contêiner da rede",
+        "why": "Não remove."
+      },
+      {
+        "text": "Para os contêineres que dependem dele",
+        "why": "Não para nada."
+      },
+      {
+        "text": "Nada além de registrar o status",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-nvwcf3zw": {
+    "prompt": "A sonda de readiness de um pod do Kubernetes falha. O que muda?",
+    "hint": "Aula 14. O endpoint slice.",
+    "choices": [
+      {
+        "text": "O pod é reiniciado",
+        "why": "Isso é liveness."
+      },
+      {
+        "text": "O Service para de mandar tráfego a ele; o pod continua rodando",
+        "why": "Isso."
+      },
+      {
+        "text": "O pod é apagado e substituído",
+        "why": "Ele fica."
+      },
+      {
+        "text": "Nada até a liveness também falhar",
+        "why": "Agem de forma independente."
+      }
+    ]
+  },
+  "ex-wcxvd9p4": {
+    "prompt": "Uma sonda de liveness verifica o banco, que cai por dez minutos. O que acontece com um serviço de três réplicas?",
+    "hint": "Aula 14. A sonda que mata.",
+    "choices": [
+      {
+        "text": "Uma réplica reinicia enquanto as outras atendem",
+        "why": "Todas falham na mesma sonda."
+      },
+      {
+        "text": "O Kubernetes pausa a sonda até o banco voltar",
+        "why": "Não existe essa regra."
+      },
+      {
+        "text": "As três reiniciam juntas, de novo e de novo",
+        "why": "Isso."
+      },
+      {
+        "text": "As réplicas vão para um nó que alcança o banco",
+        "why": "Ele está fora em todo lugar."
+      }
+    ]
+  },
+  "ex-pej29an2": {
+    "prompt": "Por que um checkout sintético é uma verificação de fora melhor que o `/health`?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Segue o caminho do cliente por toda dependência",
+        "why": "Isso."
+      },
+      {
+        "text": "Não custa nada e não cria dados",
+        "why": "Toda sonda é um pedido real."
+      },
+      {
+        "text": "Roda dentro do contêiner",
+        "why": "Roda de fora."
+      },
+      {
+        "text": "Substitui a taxa de erros",
+        "why": "Um cobre o outro."
+      }
+    ]
+  },
+  "ex-frwm144r": {
+    "prompt": "O que é um SLO?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "A fração de eventos bons, medida",
+        "why": "Isso é o SLI."
+      },
+      {
+        "text": "Um contrato com reembolso quando descumprido",
+        "why": "Isso é um SLA."
+      },
+      {
+        "text": "O número de falhas que restam no mês",
+        "why": "Isso é o orçamento."
+      },
+      {
+        "text": "Uma meta para um SLI numa janela",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ynbnvr8y": {
+    "prompt": "Um objetivo de 99,9% em 28 dias permite quantos minutos de queda total? Responda ao minuto mais próximo.",
+    "hint": "Aula 15. 40320 minutos em 28 dias.",
+    "unit": "minutos"
+  },
+  "ex-63yyb0ah": {
+    "prompt": "O SLI de disponibilidade de uma janela é 99,7% contra um objetivo de 99,5%. Que fração do orçamento foi gasta?",
+    "hint": "Aula 15. 0,3 de 0,5.",
+    "choices": [
+      {
+        "text": "0,2%",
+        "why": "Essa é a distância entre os dois."
+      },
+      {
+        "text": "60%",
+        "why": "Isso."
+      },
+      {
+        "text": "40%",
+        "why": "Isso é o que resta."
+      },
+      {
+        "text": "99,7%",
+        "why": "Isso é o SLI."
+      }
+    ]
+  },
+  "ex-m54054f2": {
+    "prompt": "Por que o SLI de disponibilidade da loja conta um cartão recusado como evento bom?",
+    "hint": "Aula 15. Falha de quem?",
+    "choices": [
+      {
+        "text": "O sistema respondeu certo; a falha não foi nossa",
+        "why": "Isso."
+      },
+      {
+        "text": "Cartões recusados são raros demais para contar",
+        "why": "75 em cinco minutos."
+      },
+      {
+        "text": "A vitrine não os distingue de pedidos feitos, no próprio contador",
+        "why": "Distingue."
+      },
+      {
+        "text": "São tentados de novo até dar certo",
+        "why": "Nada os repete."
+      }
+    ]
+  },
+  "ex-ww09766m": {
+    "prompt": "O orçamento de uma equipe acabou com dez dias de janela pela frente. O que uma boa política de orçamento a faz fazer?",
+    "hint": "Aula 15. Mecânica, combinada antes.",
+    "choices": [
+      {
+        "text": "Fazer uma reunião para decidir se desacelera",
+        "why": "A política já decidiu."
+      },
+      {
+        "text": "Descobrir quem gastou",
+        "why": "É sobre ritmo, não pessoas."
+      },
+      {
+        "text": "Lançar só correções e trabalho de confiabilidade até ele se recuperar",
+        "why": "Isso."
+      },
+      {
+        "text": "Baixar o objetivo até o orçamento ficar positivo, e depois subi-lo de volta",
+        "why": "Isso esconde o problema."
+      }
+    ]
+  },
+  "ex-j31bf6c5": {
+    "prompt": "Que alerta deve acordar alguém de noite?",
+    "hint": "Aula 16. Sintoma, não causa.",
+    "choices": [
+      {
+        "text": "CPU acima de 90% num host por cinco minutos",
+        "why": "Uma causa que pode não prejudicar ninguém."
+      },
+      {
+        "text": "Um disco em 80% que enche alguns por cento por semana",
+        "why": "Isso é um ticket."
+      },
+      {
+        "text": "Um alvo de scrape fora por um minuto",
+        "why": "Isso é um ticket."
+      },
+      {
+        "text": "Checkouts falhando rápido o bastante para esvaziar o orçamento em dois dias",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-1ghp8gdp": {
+    "prompt": "O objetivo é 99,5% e 3% dos checkouts estão falhando. Qual é a taxa de queima?",
+    "hint": "Aula 16. 3% sobre 0,5%.",
+    "unit": "vezes"
+  },
+  "ex-ejtqzcvq": {
+    "prompt": "Por que o alerta de queima rápida precisa de uma janela longa e uma curta acima do limite?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Para disparar duas vezes mais",
+        "why": "Dispara menos."
+      },
+      {
+        "text": "A longa prova que o estrago é grande; a curta, que ainda está acontecendo",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque o Prometheus tira a média das duas num valor só",
+        "why": "As duas são verificadas separadamente."
+      },
+      {
+        "text": "Porque uma janela não pode ser avaliada sozinha",
+        "why": "Pode."
+      }
+    ]
+  },
+  "ex-6etwg8zv": {
+    "prompt": "No laboratório, um page e um ticket disparam sobre o mesmo objetivo. O que a inibição faz?",
+    "hint": "Aula 16. O mesmo `slo`.",
+    "choices": [
+      {
+        "text": "Apaga a regra do ticket do Prometheus",
+        "why": "Não muda nenhuma regra."
+      },
+      {
+        "text": "Transforma o ticket num segundo page",
+        "why": "O contrário."
+      },
+      {
+        "text": "Segura o ticket enquanto o page dispara",
+        "why": "Isso."
+      },
+      {
+        "text": "Atrasa o page até alguém ter lido o ticket",
+        "why": "O page vai na hora."
+      }
+    ]
+  },
+  "ex-0nr69zvr": {
+    "prompt": "Um silêncio é acrescentado para vinte minutos de manutenção, e a falha dura mais que ele. O que acontece quando ele acaba?",
+    "hint": "Aula 16. Silencie o page, não o problema.",
+    "choices": [
+      {
+        "text": "O page é mandado, como deve ser",
+        "why": "Isso."
+      },
+      {
+        "text": "Nada até alguém renovar o silêncio",
+        "why": "O alerta ainda está disparando."
+      },
+      {
+        "text": "O alerta é apagado e precisa ser recriado",
+        "why": "Silêncios não apagam nada."
+      },
+      {
+        "text": "O silêncio se renova enquanto o alerta dispara",
+        "why": "Não se renova."
+      }
+    ]
+  },
+  "ex-9wpd4732": {
+    "prompt": "Quem deve ser o comandante do incidente durante um SEV-1?",
+    "hint": "Aula 17. Não quem está depurando.",
+    "choices": [
+      {
+        "text": "A pessoa que melhor conhece o serviço que falhou, para consertar e comandar ao mesmo tempo",
+        "why": "Comandar e depurar entram em conflito."
+      },
+      {
+        "text": "A pessoa mais sênior da gestão disponível",
+        "why": "Senioridade não é o papel."
+      },
+      {
+        "text": "Quem escreveu a versão que quebrou",
+        "why": "Isso é culpa, não papel."
+      },
+      {
+        "text": "Alguém que não depura, e coordena a resposta",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-8mbf1902": {
+    "prompt": "O que decide a severidade de um incidente?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Quão difícil é a correção",
+        "why": "Não é a visão dos usuários."
+      },
+      {
+        "text": "O impacto nos usuários",
+        "why": "Isso."
+      },
+      {
+        "text": "Que equipe é dona do serviço que falhou",
+        "why": "Dono roteia, não define severidade."
+      },
+      {
+        "text": "O número de alertas que dispararam",
+        "why": "Alertas não são impacto."
+      }
+    ]
+  },
+  "ex-avppr68q": {
+    "prompt": "Uma versão saiu três minutos antes do page. O que a resposta deve fazer primeiro?",
+    "hint": "Aula 17. Mitigar primeiro.",
+    "choices": [
+      {
+        "text": "Reverter a versão, e entender depois",
+        "why": "Isso."
+      },
+      {
+        "text": "Ler o código da versão até achar o bug",
+        "why": "Os clientes esperam enquanto isso."
+      },
+      {
+        "text": "Escrever o postmortem enquanto os detalhes estão frescos na memória de todos",
+        "why": "Isso vem depois do incidente."
+      },
+      {
+        "text": "Subir o limite do alerta para o page parar",
+        "why": "Isso o esconde."
+      }
+    ]
+  },
+  "ex-6v1pj57f": {
+    "prompt": "O que pertence a uma atualização de status para clientes?",
+    "hint": "Aula 17. Nas palavras deles.",
+    "choices": [
+      {
+        "text": "Os nomes dos serviços e os códigos de erro",
+        "why": "Não é para clientes."
+      },
+      {
+        "text": "O fornecedor cuja queda causou isso",
+        "why": "Sem culpados na página de status."
+      },
+      {
+        "text": "O que está afetado, o que fazer, e quando vem a próxima atualização",
+        "why": "Isso."
+      },
+      {
+        "text": "Um palpite da causa raiz, para tranquilizar",
+        "why": "Diga o que se sabe."
+      }
+    ]
+  },
+  "ex-axggbwk0": {
+    "prompt": "Por que montar a linha do tempo a partir das anotações e do log do pager, e não da memória das pessoas?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Memória não é admissível numa revisão sem culpados",
+        "why": "Ela também é fonte."
+      },
+      {
+        "text": "Anotações registram a causa de cada evento",
+        "why": "Registram o que foi feito."
+      },
+      {
+        "text": "O log do pager é o único registro que a lei aceita numa auditoria",
+        "why": "Não existe essa regra."
+      },
+      {
+        "text": "Foram escritas no momento, com horários exatos",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-czb6ffxk": {
+    "prompt": "Por que um postmortem é sem culpados?",
+    "hint": "Aula 18. Método, não gentileza.",
+    "choices": [
+      {
+        "text": "Porque ninguém comete erros",
+        "why": "As pessoas cometem."
+      },
+      {
+        "text": "As pessoas só relatam o que fizeram com honestidade quando isso não lhes custa nada",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque a lei proíbe nomear pessoas",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "Porque atribuir culpa leva tempo demais",
+        "why": "Não é o motivo."
+      }
+    ]
+  },
+  "ex-17fzw04a": {
+    "prompt": "O que um postmortem lista em vez de uma única causa raiz?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "As pessoas envolvidas, por senioridade",
+        "why": "Não é sem culpados."
+      },
+      {
+        "text": "Todo alerta que disparou no mês",
+        "why": "Não é relevante."
+      },
+      {
+        "text": "Fatores contribuintes, incluindo as defesas que funcionaram",
+        "why": "Isso."
+      },
+      {
+        "text": "Os cinco porquês, e nada mais",
+        "why": "Uma cadeia perde o resto."
+      }
+    ]
+  },
+  "ex-kqfxs7x9": {
+    "prompt": "Nove incidentes levaram vinte minutos cada e um levou nove horas. Por que o tempo médio de resolução engana?",
+    "hint": "Aula 18. Durações assimétricas.",
+    "choices": [
+      {
+        "text": "Cerca de uma hora e quinze não descreve nenhum dos dez incidentes",
+        "why": "Isso."
+      },
+      {
+        "text": "A média não pode ser calculada para durações",
+        "why": "Pode."
+      },
+      {
+        "text": "O incidente longo deve ser excluído",
+        "why": "Ele é o mais importante."
+      },
+      {
+        "text": "Médias são sempre menores que medianas",
+        "why": "Aqui ela é maior."
+      }
+    ]
+  },
+  "ex-nw7gsg88": {
+    "prompt": "De onde vêm as ações de um postmortem?",
+    "hint": "Aula 18. Defesas ausentes.",
+    "choices": [
+      {
+        "text": "Da pessoa que causou o incidente",
+        "why": "Não é sem culpados."
+      },
+      {
+        "text": "Dos alertas que dispararam",
+        "why": "Alertas são um fator."
+      },
+      {
+        "text": "Da equipe de suporte do fornecedor de nuvem",
+        "why": "Não é a fonte."
+      },
+      {
+        "text": "Das defesas ausentes, não só do gatilho",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-30t8v7z9": {
+    "prompt": "Uma equipe de três quer manter uma escala dia e noite. O que a aula 18 diz?",
+    "hint": "Cinco ou seis pessoas.",
+    "choices": [
+      {
+        "text": "Três bastam se cada um pegar uma semana em três",
+        "why": "Vezes demais para se recuperar."
+      },
+      {
+        "text": "É uma troca que exige pages muito raros",
+        "why": "Isso."
+      },
+      {
+        "text": "É impossível e não deve ser tentado",
+        "why": "É uma troca, não impossível."
+      },
+      {
+        "text": "Funciona se ninguém for pago pelo plantão",
+        "why": "O contrário."
+      }
+    ]
+  },
+  "ex-hme4pwh1": {
+    "prompt": "O que um service mesh produz sem nenhuma mudança no código da aplicação?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Contagens de requisições, latências e status por par de serviços",
+        "why": "Isso."
+      },
+      {
+        "text": "Atributos de negócio como o produto comprado",
+        "why": "O proxy não consegue saber isso."
+      },
+      {
+        "text": "Rastros completos por todos os serviços",
+        "why": "A aplicação precisa passar o contexto."
+      },
+      {
+        "text": "Linhas de log com stack traces",
+        "why": "Não de um proxy."
+      }
+    ]
+  },
+  "ex-t891b0gk": {
+    "prompt": "Um proxy repete as falhas do payments, e a vitrine não relata erros. Com o que a equipe deve tomar cuidado?",
+    "hint": "Aula 19. Dois lados discordam.",
+    "choices": [
+      {
+        "text": "Nada: o problema está resolvido",
+        "why": "O payments ainda está falhando."
+      },
+      {
+        "text": "As métricas da vitrine estão quebradas",
+        "why": "Estão corretas."
+      },
+      {
+        "text": "O serviço que falha ainda falha, e recebe mais carga que antes",
+        "why": "Isso."
+      },
+      {
+        "text": "O proxy parou de contar erros",
+        "why": "Ele conta as novas tentativas."
+      }
+    ]
+  },
+  "ex-tpegkn5j": {
+    "prompt": "O que a autenticação STRICT do Istio faz com um pod sem sidecar?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Injeta um sidecar nele automaticamente",
+        "why": "Não em outro namespace."
+      },
+      {
+        "text": "Deixa passar, mas registra um aviso",
+        "why": "Isso é o modo permissivo."
+      },
+      {
+        "text": "Move-o para o namespace do mesh",
+        "why": "Não."
+      },
+      {
+        "text": "Recusa as conexões dele, já que ele não apresenta certificado",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-tc3avtwc": {
+    "prompt": "Por que um timeout de rota muitas vezes deixa um sistema mais saudável?",
+    "hint": "Aula 19. Uma falha rápida.",
+    "choices": [
+      {
+        "text": "Faz requisições lentas darem certo",
+        "why": "Elas falham."
+      },
+      {
+        "text": "Libera quem espera em vez de segurar as threads dele",
+        "why": "Isso."
+      },
+      {
+        "text": "Esconde falhas de toda métrica",
+        "why": "O 504 é contado."
+      },
+      {
+        "text": "Repete até a dependência responder",
+        "why": "Isso não é timeout."
+      }
+    ]
+  },
+  "ex-eqhsaypq": {
+    "prompt": "Uma equipe roda cinco serviços em Python e quer telemetria melhor. O que a aula 19 recomenda?",
+    "hint": "Onde os sinais são mais ricos.",
+    "choices": [
+      {
+        "text": "Instalar o Istio primeiro, já que dá telemetria de graça",
+        "why": "O código dá sinais mais ricos."
+      },
+      {
+        "text": "Linkerd, porque usa menos memória que o Istio",
+        "why": "Ainda é um mesh pelo motivo errado."
+      },
+      {
+        "text": "OpenTelemetry no código, e um mesh só quando os outros motivos dele aparecerem",
+        "why": "Isso."
+      },
+      {
+        "text": "Nenhuma telemetria até haver mais serviços",
+        "why": "O incidente não vai esperar."
+      }
+    ]
+  }
+}

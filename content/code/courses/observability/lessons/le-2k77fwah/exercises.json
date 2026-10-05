@@ -1,0 +1,618 @@
+[
+  {
+    "id": "ex-7nzx4kj9",
+    "version": 1,
+    "section": "three-questions",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each probe to what happens when it fails.",
+    "hint": "The section's table.",
+    "pairs": [
+      {
+        "left": "liveness",
+        "right": "the container is restarted"
+      },
+      {
+        "left": "readiness",
+        "right": "traffic stops reaching it"
+      },
+      {
+        "left": "startup",
+        "right": "the other probes wait"
+      }
+    ]
+  },
+  {
+    "id": "ex-0c17t6gt",
+    "version": 1,
+    "section": "three-questions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What may a liveness probe check?",
+    "hint": "What can a restart fix?",
+    "choices": [
+      {
+        "text": "That the process itself still answers",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "That the database it uses is reachable and answering queries",
+        "correct": false,
+        "why": "A restart cannot bring a database back."
+      },
+      {
+        "text": "That every service it calls is ready",
+        "correct": false,
+        "why": "That restarts it for others' failures."
+      },
+      {
+        "text": "That checkouts succeed end to end",
+        "correct": false,
+        "why": "That is a synthetic check."
+      }
+    ]
+  },
+  {
+    "id": "ex-jh0e1g0x",
+    "version": 1,
+    "section": "three-questions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is it reasonable for readiness to check the database, when liveness should not?",
+    "hint": "What each failure causes.",
+    "choices": [
+      {
+        "text": "Readiness runs less often, so the check is cheaper",
+        "correct": false,
+        "why": "Frequency is not the reason."
+      },
+      {
+        "text": "Readiness is checked only during deploys",
+        "correct": false,
+        "why": "It runs all the time."
+      },
+      {
+        "text": "Failing it moves traffic away, which helps; a restart would not",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Liveness has no access to the network",
+        "correct": false,
+        "why": "It does."
+      }
+    ]
+  },
+  {
+    "id": "ex-78m1avva",
+    "version": 1,
+    "section": "the-probe-that-lies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the database stopped, the storefront's `/health` answers ok. What does that tell you about the shop?",
+    "hint": "What does the endpoint check?",
+    "choices": [
+      {
+        "text": "That checkouts are working",
+        "correct": false,
+        "why": "They were failing."
+      },
+      {
+        "text": "That the database came back by itself after the stop command",
+        "correct": false,
+        "why": "It was still stopped."
+      },
+      {
+        "text": "That the probe is broken",
+        "correct": false,
+        "why": "It works; it asks too little."
+      },
+      {
+        "text": "Only that one process is up and responding",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cseew5p",
+    "version": 1,
+    "section": "the-probe-that-lies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`probe_success` is 1 while nearly every checkout fails. Which signal should page somebody?",
+    "hint": "Lesson 5's ratio.",
+    "choices": [
+      {
+        "text": "`probe_success`, after it has been 0 for five minutes",
+        "correct": false,
+        "why": "It never went to 0."
+      },
+      {
+        "text": "The checkouts' error ratio",
+        "correct": true,
+        "why": "Right: the symptom customers feel."
+      },
+      {
+        "text": "The storefront's CPU usage",
+        "correct": false,
+        "why": "CPU says nothing about failed orders."
+      },
+      {
+        "text": "The number of running containers",
+        "correct": false,
+        "why": "They were all running."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wk4c0rv",
+    "version": 1,
+    "section": "a-truthful-check",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the storefront's readiness not ask `orders`' readiness?",
+    "hint": "The figure.",
+    "choices": [
+      {
+        "text": "Because HTTP calls are not allowed in a probe",
+        "correct": false,
+        "why": "They are allowed."
+      },
+      {
+        "text": "Because `orders` has no readiness endpoint",
+        "correct": false,
+        "why": "It has `/ready`."
+      },
+      {
+        "text": "It would take the storefront out for a failure it does not have",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because the storefront has no dependencies",
+        "correct": false,
+        "why": "It depends on orders."
+      }
+    ]
+  },
+  {
+    "id": "ex-eydnnfvp",
+    "version": 1,
+    "section": "a-truthful-check",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The orders `/ready` check opens a database and a broker connection on every probe. When does that matter?",
+    "hint": "Multiply.",
+    "choices": [
+      {
+        "text": "With many copies probed every few seconds",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Never, since connections are free",
+        "correct": false,
+        "why": "They are not."
+      },
+      {
+        "text": "Only when the database is down",
+        "correct": false,
+        "why": "It costs when the database is up too."
+      },
+      {
+        "text": "When the database is down, since failed connections take longer",
+        "correct": false,
+        "why": "It costs when the database is up too."
+      }
+    ]
+  },
+  {
+    "id": "ex-frdmrxxh",
+    "version": 1,
+    "section": "a-truthful-check",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What status code does `/ready` return when a dependency fails?",
+    "hint": "Not now.",
+    "choices": [
+      {
+        "text": "200, with the failure in the body",
+        "correct": false,
+        "why": "The verdict goes in the code."
+      },
+      {
+        "text": "404",
+        "correct": false,
+        "why": "The endpoint exists."
+      },
+      {
+        "text": "500",
+        "correct": false,
+        "why": "Not the one the code returns."
+      },
+      {
+        "text": "503",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-3pr8vtaq",
+    "version": 1,
+    "section": "docker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Docker marks the orders container unhealthy. What does Docker do about it?",
+    "hint": "`RestartCount`.",
+    "choices": [
+      {
+        "text": "It restarts the container after three failures in a row, like Kubernetes",
+        "correct": false,
+        "why": "The count stayed 0."
+      },
+      {
+        "text": "Nothing but record it; a restart policy ignores health",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It stops sending it traffic",
+        "correct": false,
+        "why": "Docker routes no traffic by health."
+      },
+      {
+        "text": "It stops the containers that depend on it",
+        "correct": false,
+        "why": "It stops nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-8k2gtxhk",
+    "version": 1,
+    "section": "docker",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Compose can make one service wait for another with `depends_on` and `condition: service____`, using the status its healthcheck reports.",
+    "hint": "The status Docker reports.",
+    "blanks": [
+      {
+        "accept": [
+          "healthy"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dcm9nbjz",
+    "version": 1,
+    "section": "docker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `start_period` in a Docker healthcheck do?",
+    "hint": "Like a startup probe.",
+    "choices": [
+      {
+        "text": "Failures during it do not count towards unhealthy",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It delays the container's start until the first check has passed",
+        "correct": false,
+        "why": "It changes nothing about starting."
+      },
+      {
+        "text": "It sets how often the check runs",
+        "correct": false,
+        "why": "That is `interval`."
+      },
+      {
+        "text": "It sets how long one check may take before it counts as failed",
+        "correct": false,
+        "why": "That is `timeout`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6e2qyjb",
+    "version": 1,
+    "section": "kubernetes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pod's readiness probe fails. What happens to it?",
+    "hint": "The endpoint slice.",
+    "choices": [
+      {
+        "text": "It is restarted",
+        "correct": false,
+        "why": "That is liveness."
+      },
+      {
+        "text": "It is deleted and replaced by a new pod on the same node, with a new name",
+        "correct": false,
+        "why": "It stays."
+      },
+      {
+        "text": "It is marked not ready and the Service stops sending to it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing happens until the liveness probe fails as well and confirms it",
+        "correct": false,
+        "why": "They act independently."
+      }
+    ]
+  },
+  {
+    "id": "ex-e93z2kmn",
+    "version": 1,
+    "section": "kubernetes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a liveness restart, why does the web pod become healthy again?",
+    "hint": "Where was the marker file?",
+    "choices": [
+      {
+        "text": "Kubernetes deleted the marker file before restarting, as it does with files in /tmp",
+        "correct": false,
+        "why": "It deletes nothing."
+      },
+      {
+        "text": "The probe was turned off after the restart",
+        "correct": false,
+        "why": "It still runs."
+      },
+      {
+        "text": "The pod moved to another node",
+        "correct": false,
+        "why": "It is the same pod."
+      },
+      {
+        "text": "A new container starts with a fresh filesystem, without `/tmp/stuck`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-zamx02hw",
+    "version": 1,
+    "section": "kubernetes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A liveness probe runs every 3 seconds and fails after 3 consecutive failures. About how many seconds pass between the process getting stuck and the kill decision? Answer to the nearest second.",
+    "hint": "Three periods.",
+    "value": 9,
+    "tolerance": 3,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-vta8bha0",
+    "version": 1,
+    "section": "the-probe-that-kills",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A liveness probe checks the database. The database goes down for ten minutes. What happens?",
+    "hint": "Every copy checks the same database.",
+    "choices": [
+      {
+        "text": "One copy restarts and the others keep serving",
+        "correct": false,
+        "why": "They all fail together."
+      },
+      {
+        "text": "Every copy restarts, again and again, with growing delays between",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The pods move to a node where the database is reachable",
+        "correct": false,
+        "why": "The database is down everywhere."
+      },
+      {
+        "text": "Kubernetes pauses the probe until the database returns",
+        "correct": false,
+        "why": "It has no such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-6q2prn92",
+    "version": 1,
+    "section": "the-probe-that-kills",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does restarting every copy make a database outage worse?",
+    "hint": "What happens when it comes back.",
+    "choices": [
+      {
+        "text": "It deletes the data the services were holding in the database",
+        "correct": false,
+        "why": "Restarts delete nothing there."
+      },
+      {
+        "text": "Restarts are billed by the cloud provider",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "Copies sit in back-off, then all reconnect at once when it returns",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The database refuses connections from pods that restarted, until an operator approves them",
+        "correct": false,
+        "why": "It does not know."
+      }
+    ]
+  },
+  {
+    "id": "ex-ay2v1egf",
+    "version": 1,
+    "section": "from-outside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a synthetic checkout a better outside check than `/health`?",
+    "hint": "What a customer does.",
+    "choices": [
+      {
+        "text": "It walks the path a customer takes, through every dependency",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is cheaper to run, since it needs no database of its own to store results",
+        "correct": false,
+        "why": "It is more expensive."
+      },
+      {
+        "text": "It needs no prober, since Prometheus runs the request itself on each scrape",
+        "correct": false,
+        "why": "The blackbox exporter runs it."
+      },
+      {
+        "text": "It never creates data",
+        "correct": false,
+        "why": "Every probe was a real order."
+      }
+    ]
+  },
+  {
+    "id": "ex-kd50tgz0",
+    "version": 1,
+    "section": "from-outside",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every synthetic checkout is a real order of a kettle. What should a real system do about that? Choose all that apply.",
+    "hint": "Mark it and keep it out.",
+    "choices": [
+      {
+        "text": "Mark synthetic requests so they can be told apart",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Keep them out of business reports",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Use a test card that charges nobody",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Run it only once a day so nobody notices",
+        "correct": false,
+        "why": "That defeats the check."
+      }
+    ]
+  },
+  {
+    "id": "ex-9q2wxttb",
+    "version": 1,
+    "section": "from-outside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can a probe from outside see that no probe inside can?",
+    "hint": "The path to the service.",
+    "choices": [
+      {
+        "text": "The process's memory",
+        "correct": false,
+        "why": "That is inside."
+      },
+      {
+        "text": "The queue depth, read from outside the broker's own network by the prober",
+        "correct": false,
+        "why": "That is the broker's metric."
+      },
+      {
+        "text": "The database's slow queries, which the probe times from the customer's side",
+        "correct": false,
+        "why": "That is the database's log."
+      },
+      {
+        "text": "DNS, certificates and the network between the customer and you",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-3vcyp0vf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's pods restart every night at the same time, all together. Liveness checks Redis, which is backed up at that hour. What is the fix?",
+    "hint": "What may each probe check?",
+    "choices": [
+      {
+        "text": "Increase `failureThreshold` until the backup fits",
+        "correct": false,
+        "why": "The probe would still be wrong."
+      },
+      {
+        "text": "Move the Redis check to readiness and keep liveness local",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Remove all probes from the deployment",
+        "correct": false,
+        "why": "That loses the useful ones."
+      },
+      {
+        "text": "Move the backup to the afternoon",
+        "correct": false,
+        "why": "The restarts would move with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rz75b728",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every pod of a service restarts at the same moment. Put the investigation in order.",
+    "hint": "From the symptom to the probe.",
+    "items": [
+      "See the restart count climbing on every pod",
+      "Read the events: the liveness probe failed",
+      "Read what the liveness probe checks",
+      "Move the dependency check to readiness"
+    ]
+  }
+]

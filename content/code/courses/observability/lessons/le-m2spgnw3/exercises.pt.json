@@ -1,0 +1,374 @@
+{
+  "ex-w21e4gfj": {
+    "prompt": "O que um service mesh põe ao lado de cada serviço?",
+    "hint": "O plano de dados.",
+    "choices": [
+      {
+        "text": "Um proxy por onde passa toda requisição",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma cópia do banco",
+        "why": "Não é o que um mesh acrescenta."
+      },
+      {
+        "text": "Um SDK do OpenTelemetry compilado no binário",
+        "why": "Isso é código; um mesh não precisa de nenhum."
+      },
+      {
+        "text": "Uma segunda instância do serviço",
+        "why": "Não é uma réplica."
+      }
+    ]
+  },
+  "ex-5m5sp8sb": {
+    "prompt": "Ligue cada peça do Istio ao que ela faz.",
+    "hint": "Leva, configura, redireciona.",
+    "pairs": [
+      {
+        "left": "os proxies Envoy",
+        "right": "levam toda requisição: o plano de dados"
+      },
+      {
+        "left": "istiod",
+        "right": "configura os proxies e emite certificados"
+      },
+      {
+        "left": "istio-init",
+        "right": "aponta o tráfego do pod para o proxy dele"
+      }
+    ],
+    "right_distractors": [
+      "guarda os rastros que os proxies registram"
+    ]
+  },
+  "ex-yyp37nkm": {
+    "prompt": "O que o proxy de um mesh não consegue saber sobre um checkout?",
+    "hint": "Requisições, não significado.",
+    "choices": [
+      {
+        "text": "O código de status da resposta",
+        "why": "O proxy vê."
+      },
+      {
+        "text": "Quanto tempo levou para responder",
+        "why": "O proxy cronometra."
+      },
+      {
+        "text": "Que produto foi comprado",
+        "why": "Isso."
+      },
+      {
+        "text": "Que serviço chamou qual",
+        "why": "O proxy vê as duas pontas."
+      }
+    ]
+  },
+  "ex-peaqjzf3": {
+    "prompt": "Por que um mesh não consegue produzir um rastro completo sozinho?",
+    "hint": "O cabeçalho da aula 4.",
+    "choices": [
+      {
+        "text": "Proxies não conseguem registrar spans",
+        "why": "Conseguem."
+      },
+      {
+        "text": "Rastros precisam de um banco dentro do proxy",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "O mesh criptografa o cabeçalho `traceparent`",
+        "why": "Ele o leva, criptografado na rede, legível pelos proxies."
+      },
+      {
+        "text": "Só a aplicação sabe que chamada de saída pertence a que requisição de entrada",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-c19edawa": {
+    "prompt": "De onde o laboratório leu os histogramas de latência do Envoy?",
+    "hint": "A porta de administração.",
+    "choices": [
+      {
+        "text": "Do `/metrics` da vitrine",
+        "why": "Esse é o da própria aplicação."
+      },
+      {
+        "text": "Da porta de administração do Envoy, em formato Prometheus",
+        "why": "Isso."
+      },
+      {
+        "text": "Do Jaeger",
+        "why": "Não são histogramas."
+      },
+      {
+        "text": "Do log de acesso, contando linhas",
+        "why": "A porta de administração os serve."
+      }
+    ]
+  },
+  "ex-v32xvgkm": {
+    "prompt": "Com o Envoy repetindo 5xx, o payments falha uma cobrança em dez. O que a vitrine relata?",
+    "hint": "A nova tentativa deu certo.",
+    "choices": [
+      {
+        "text": "Um checkout em dez falhando",
+        "why": "A nova tentativa escondeu."
+      },
+      {
+        "text": "Um em vinte, metade das falhas",
+        "why": "Toda nova tentativa deu certo."
+      },
+      {
+        "text": "Nenhum checkout com falha",
+        "why": "Isso."
+      },
+      {
+        "text": "O dobro de checkouts de antes",
+        "why": "As novas tentativas vão ao payments, não à vitrine."
+      }
+    ]
+  },
+  "ex-m69jv4x5": {
+    "prompt": "Por que repetir uma cobrança é perigoso numa API de pagamento real?",
+    "hint": "Duas vezes.",
+    "choices": [
+      {
+        "text": "Um sucesso que chegou tarde poderia ser cobrado de novo",
+        "why": "Isso; uma chave de idempotência evita."
+      },
+      {
+        "text": "Novas tentativas são mais lentas que a primeira",
+        "why": "Não é o perigo."
+      },
+      {
+        "text": "A rede de cartões proíbe novas tentativas por regra",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "O Envoy descarta o corpo da requisição ao mandá-la outra vez pela rede",
+        "why": "Não descarta."
+      }
+    ]
+  },
+  "ex-mr06dk8f": {
+    "prompt": "A taxa de erros do payments é 10% e a da vitrine é 0. Qual deve acionar alguém?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "A do payments, já que os erros são reais",
+        "why": "Reais, mas nenhum cliente os sente."
+      },
+      {
+        "text": "As duas, por segurança",
+        "why": "Isso é ruído."
+      },
+      {
+        "text": "A da vitrine, porque o zero dela esconde as falhas",
+        "why": "Ela está correta."
+      },
+      {
+        "text": "Nenhuma aciona; a do payments é um ticket",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ag4nm1va": {
+    "prompt": "O payments leva 2,5 s e o timeout da rota é 2 s. O que o Envoy devolve?",
+    "hint": "O flag do log de acesso.",
+    "choices": [
+      {
+        "text": "Um 200 depois de 2,5 segundos",
+        "why": "O timeout dispara antes."
+      },
+      {
+        "text": "Um 504 depois de 2 segundos, com flag `UT`",
+        "why": "Isso."
+      },
+      {
+        "text": "Um 503 do payments, depois de uma nova tentativa do Envoy",
+        "why": "O prazo acabou."
+      },
+      {
+        "text": "Nada até o payments responder",
+        "why": "É o que um timeout evita."
+      }
+    ]
+  },
+  "ex-gjkny5a0": {
+    "prompt": "Por que cada pod mostra `2/2` depois da injeção?",
+    "hint": "O que foi acrescentado.",
+    "choices": [
+      {
+        "text": "O sidecar Envoy roda ao lado da aplicação",
+        "why": "Isso."
+      },
+      {
+        "text": "O Kubernetes roda duas réplicas da aplicação em cada pod",
+        "why": "Pods não guardam réplicas."
+      },
+      {
+        "text": "O manifesto pediu dois contêineres",
+        "why": "Pediu um."
+      },
+      {
+        "text": "Um contêiner é cópia de reserva do outro",
+        "why": "Não é reserva."
+      }
+    ]
+  },
+  "ex-2mwn54v1": {
+    "prompt": "O que o `istio-init` faz?",
+    "hint": "As regras de rede.",
+    "choices": [
+      {
+        "text": "Inicia a aplicação",
+        "why": "A aplicação inicia sozinha."
+      },
+      {
+        "text": "Baixa os certificados do istiod",
+        "why": "O proxy faz isso."
+      },
+      {
+        "text": "Configura a rede do pod para toda conexão passar pelo proxy",
+        "why": "Isso."
+      },
+      {
+        "text": "Exporta rastros para o Jaeger",
+        "why": "Não é o papel dele."
+      }
+    ]
+  },
+  "ex-mn1637t1": {
+    "prompt": "No modo permissivo, um pod sem sidecar chama um servidor no mesh. O que acontece?",
+    "hint": "O primeiro `200`.",
+    "choices": [
+      {
+        "text": "É recusado com um 403",
+        "why": "Não no modo permissivo."
+      },
+      {
+        "text": "É redirecionado ao istiod para obter um certificado",
+        "why": "Não."
+      },
+      {
+        "text": "É respondido só depois de obter um certificado",
+        "why": "Ele não tem proxy para obter um."
+      },
+      {
+        "text": "É respondido em texto puro",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-5tez1mpb": {
+    "prompt": "Depois do modo STRICT, por que a falha do pod de fora não aparece em nenhum contador de requisições?",
+    "hint": "Ela nunca virou requisição.",
+    "choices": [
+      {
+        "text": "O proxy apaga requisições que falharam das estatísticas",
+        "why": "Ele nunca contou nenhuma."
+      },
+      {
+        "text": "A conexão foi derrubada antes de existir requisição HTTP",
+        "why": "Isso."
+      },
+      {
+        "text": "Contadores só existem para 200",
+        "why": "Não é assim."
+      },
+      {
+        "text": "O Prometheus não fazia scrape do cluster",
+        "why": "Não é o motivo."
+      }
+    ]
+  },
+  "ex-56jkgz1g": {
+    "prompt": "A identidade do workload em `source_principal` é escrita no formato ___, começando com `spiffe://`.",
+    "hint": "A mesma palavra do esquema.",
+    "blanks": [
+      {
+        "accept": [
+          "SPIFFE"
+        ]
+      }
+    ]
+  },
+  "ex-qt03f037": {
+    "prompt": "Que proxy o Linkerd usa?",
+    "hint": "Escrito para o mesh.",
+    "choices": [
+      {
+        "text": "Envoy, configurado do mesmo jeito que o do Istio",
+        "why": "O Linkerd tem o próprio."
+      },
+      {
+        "text": "Nginx",
+        "why": "Não é o do Linkerd."
+      },
+      {
+        "text": "O próprio, escrito em Rust para o mesh",
+        "why": "Isso."
+      },
+      {
+        "text": "Um proxy JVM, o mesmo da primeira versão dele",
+        "why": "Esse foi substituído."
+      }
+    ]
+  },
+  "ex-r0xf637c": {
+    "prompt": "Por que o custo de recursos de um mesh com sidecars cresce com o número de pods, e não com o tráfego?",
+    "hint": "Um por pod.",
+    "choices": [
+      {
+        "text": "Todo pod leva o próprio proxy, ocupado ou não",
+        "why": "Isso."
+      },
+      {
+        "text": "Tráfego é de graça dentro de um cluster",
+        "why": "Não é o motivo."
+      },
+      {
+        "text": "O plano de controle cobra por pod",
+        "why": "Ele não cobra nada."
+      },
+      {
+        "text": "Proxies dormem quando não há tráfego para levar",
+        "why": "Ainda usam memória."
+      }
+    ]
+  },
+  "ex-yxz0ke4n": {
+    "prompt": "Quando um mesh tem mais chance de valer o custo?",
+    "hint": "Várias condições ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "Um punhado de serviços numa linguagem, de uma equipe",
+        "why": "Ali o código sai mais barato."
+      },
+      {
+        "text": "Qualquer sistema que usa Kubernetes",
+        "why": "Kubernetes sozinho não é motivo."
+      },
+      {
+        "text": "Um sistema cujo único problema são consultas lentas no banco",
+        "why": "Um mesh não vê consultas."
+      },
+      {
+        "text": "Muitos serviços em várias linguagens, com criptografia exigida entre eles",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-z947x4zd": {
+    "prompt": "Ponha em ordem o caminho de uma requisição no mesh, do cliente ao servidor.",
+    "hint": "Dois proxies.",
+    "items": [
+      "A aplicação cliente manda uma requisição HTTP comum",
+      "O proxy do cliente abre TLS mútuo com o proxy do servidor",
+      "O proxy do servidor confere o certificado e registra a requisição",
+      "A aplicação servidora recebe HTTP comum"
+    ]
+  }
+}

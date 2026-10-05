@@ -1,0 +1,544 @@
+[
+  {
+    "id": "ex-w21e4gfj",
+    "version": 1,
+    "section": "what-a-mesh-does",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a service mesh put beside every service?",
+    "hint": "The data plane.",
+    "choices": [
+      {
+        "text": "A proxy that every request passes through",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A copy of the database",
+        "correct": false,
+        "why": "Not what a mesh adds."
+      },
+      {
+        "text": "An OpenTelemetry SDK compiled into the binary",
+        "correct": false,
+        "why": "That is code; a mesh needs none."
+      },
+      {
+        "text": "A second instance of the service",
+        "correct": false,
+        "why": "Not a replica."
+      }
+    ]
+  },
+  {
+    "id": "ex-5m5sp8sb",
+    "version": 1,
+    "section": "what-a-mesh-does",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of Istio to what it does.",
+    "hint": "Carries, configures, redirects.",
+    "pairs": [
+      {
+        "left": "the Envoy proxies",
+        "right": "carry every request: the data plane"
+      },
+      {
+        "left": "istiod",
+        "right": "configures the proxies and issues certificates"
+      },
+      {
+        "left": "istio-init",
+        "right": "points the pod's traffic at its proxy"
+      }
+    ],
+    "right_distractors": [
+      "stores the traces the proxies record"
+    ]
+  },
+  {
+    "id": "ex-yyp37nkm",
+    "version": 1,
+    "section": "what-a-mesh-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can a mesh's proxy not know about a checkout?",
+    "hint": "Requests, not meaning.",
+    "choices": [
+      {
+        "text": "The status code of its response",
+        "correct": false,
+        "why": "The proxy sees it."
+      },
+      {
+        "text": "How long it took to answer",
+        "correct": false,
+        "why": "The proxy times it."
+      },
+      {
+        "text": "Which product was bought",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Which service called which",
+        "correct": false,
+        "why": "The proxy sees both ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-peaqjzf3",
+    "version": 1,
+    "section": "what-a-mesh-does",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a mesh not produce a complete trace by itself?",
+    "hint": "Lesson 4's header.",
+    "choices": [
+      {
+        "text": "Proxies cannot record spans",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "Traces need a database inside the proxy",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "The mesh encrypts the `traceparent` header",
+        "correct": false,
+        "why": "It carries it, encrypted on the wire, readable to the proxies."
+      },
+      {
+        "text": "Only the application knows which outgoing call belongs to which incoming request",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-c19edawa",
+    "version": 1,
+    "section": "envoy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where did the lab read Envoy's latency histograms from?",
+    "hint": "The admin port.",
+    "choices": [
+      {
+        "text": "From the storefront's `/metrics`",
+        "correct": false,
+        "why": "That is the app's own."
+      },
+      {
+        "text": "From Envoy's admin port, in Prometheus format",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "From Jaeger",
+        "correct": false,
+        "why": "Not histograms."
+      },
+      {
+        "text": "From the access log, by counting lines",
+        "correct": false,
+        "why": "The admin port serves them."
+      }
+    ]
+  },
+  {
+    "id": "ex-v32xvgkm",
+    "version": 1,
+    "section": "retries-and-timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With Envoy retrying 5xx, payments fails one charge in ten. What does the storefront report?",
+    "hint": "The retry succeeded.",
+    "choices": [
+      {
+        "text": "One checkout in ten failing",
+        "correct": false,
+        "why": "The retry hid it."
+      },
+      {
+        "text": "One in twenty, half the failures",
+        "correct": false,
+        "why": "Every retry succeeded."
+      },
+      {
+        "text": "No failed checkouts",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Twice as many checkouts as before",
+        "correct": false,
+        "why": "Retries go to payments, not the storefront."
+      }
+    ]
+  },
+  {
+    "id": "ex-m69jv4x5",
+    "version": 1,
+    "section": "retries-and-timeouts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is retrying a charge dangerous for a real payment API?",
+    "hint": "Twice.",
+    "choices": [
+      {
+        "text": "A late success could be charged a second time",
+        "correct": true,
+        "why": "Right; an idempotency key prevents it."
+      },
+      {
+        "text": "Retries are slower than the first attempt",
+        "correct": false,
+        "why": "Not the danger."
+      },
+      {
+        "text": "The card network forbids retries by rule",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "Envoy drops the request body when it sends the request again",
+        "correct": false,
+        "why": "It does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-mr06dk8f",
+    "version": 1,
+    "section": "retries-and-timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Payments' error ratio is 10% and the storefront's is 0. Which should page somebody?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "Payments', since its errors are real",
+        "correct": false,
+        "why": "Real, but no customer feels them."
+      },
+      {
+        "text": "Both, to be safe",
+        "correct": false,
+        "why": "That is noise."
+      },
+      {
+        "text": "The storefront's, because its zero is hiding the failures",
+        "correct": false,
+        "why": "It is accurate."
+      },
+      {
+        "text": "Neither page; payments' ratio is a ticket",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ag4nm1va",
+    "version": 1,
+    "section": "retries-and-timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Payments takes 2.5 s and the route's timeout is 2 s. What does Envoy return?",
+    "hint": "The access log's flag.",
+    "choices": [
+      {
+        "text": "A 200 after 2.5 seconds",
+        "correct": false,
+        "why": "The timeout fires first."
+      },
+      {
+        "text": "A 504 after 2 seconds, flagged `UT`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A 503 from payments, after one retry by Envoy",
+        "correct": false,
+        "why": "The deadline was spent."
+      },
+      {
+        "text": "Nothing until payments answers",
+        "correct": false,
+        "why": "That is what a timeout prevents."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjkny5a0",
+    "version": 1,
+    "section": "istio",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does each pod show `2/2` after injection?",
+    "hint": "What was added.",
+    "choices": [
+      {
+        "text": "The Envoy sidecar runs beside the application",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Kubernetes runs two replicas of the application in each pod",
+        "correct": false,
+        "why": "Pods do not hold replicas."
+      },
+      {
+        "text": "The manifest asked for two containers",
+        "correct": false,
+        "why": "It asked for one."
+      },
+      {
+        "text": "One container is a backup of the other",
+        "correct": false,
+        "why": "Not a backup."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mwn54v1",
+    "version": 1,
+    "section": "istio",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `istio-init` do?",
+    "hint": "The network rules.",
+    "choices": [
+      {
+        "text": "It starts the application",
+        "correct": false,
+        "why": "The app starts itself."
+      },
+      {
+        "text": "It downloads the certificates from istiod",
+        "correct": false,
+        "why": "The proxy does that."
+      },
+      {
+        "text": "It sets the pod's network so every connection passes through the proxy",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It exports traces to Jaeger",
+        "correct": false,
+        "why": "Not its role."
+      }
+    ]
+  },
+  {
+    "id": "ex-mn1637t1",
+    "version": 1,
+    "section": "mutual-tls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In permissive mode, a pod with no sidecar calls a meshed server. What happens?",
+    "hint": "The first `200`.",
+    "choices": [
+      {
+        "text": "It is refused with a 403",
+        "correct": false,
+        "why": "Not in permissive mode."
+      },
+      {
+        "text": "It is redirected to istiod for a certificate",
+        "correct": false,
+        "why": "No."
+      },
+      {
+        "text": "It is answered only after it gets a certificate",
+        "correct": false,
+        "why": "It has no proxy to get one."
+      },
+      {
+        "text": "It is answered in plain text",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tez1mpb",
+    "version": 1,
+    "section": "mutual-tls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After STRICT mode, why does the outside pod's failure appear in no request counter?",
+    "hint": "It never became a request.",
+    "choices": [
+      {
+        "text": "The proxy deletes failed requests from its statistics",
+        "correct": false,
+        "why": "It never counted one."
+      },
+      {
+        "text": "The connection was reset before any HTTP request existed",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Counters are only kept for 200s",
+        "correct": false,
+        "why": "Not so."
+      },
+      {
+        "text": "Prometheus was not scraping the cluster",
+        "correct": false,
+        "why": "Not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-56jkgz1g",
+    "version": 1,
+    "section": "mutual-tls",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The workload identity in `source_principal` is written in the ___ format, starting `spiffe://`.",
+    "hint": "The same word as the scheme.",
+    "blanks": [
+      {
+        "accept": [
+          "SPIFFE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qt03f037",
+    "version": 1,
+    "section": "linkerd",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What proxy does Linkerd use?",
+    "hint": "Written for the mesh.",
+    "choices": [
+      {
+        "text": "Envoy, configured the same way as Istio's",
+        "correct": false,
+        "why": "Linkerd has its own."
+      },
+      {
+        "text": "Nginx",
+        "correct": false,
+        "why": "Not Linkerd's."
+      },
+      {
+        "text": "Its own, written in Rust for the mesh",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A JVM proxy, the same one as in its first version",
+        "correct": false,
+        "why": "That was replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0xf637c",
+    "version": 1,
+    "section": "worth-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a sidecar mesh's resource cost grow with the number of pods rather than with traffic?",
+    "hint": "One per pod.",
+    "choices": [
+      {
+        "text": "Every pod carries its own proxy, busy or not",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Traffic is free inside a cluster",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "The control plane charges per pod",
+        "correct": false,
+        "why": "It charges nothing."
+      },
+      {
+        "text": "Proxies sleep when there is no traffic to carry",
+        "correct": false,
+        "why": "They still use memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-yxz0ke4n",
+    "version": 1,
+    "section": "worth-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When is a mesh most likely worth its cost?",
+    "hint": "Several conditions at once.",
+    "choices": [
+      {
+        "text": "A handful of services in one language, owned by one team",
+        "correct": false,
+        "why": "Code is cheaper there."
+      },
+      {
+        "text": "Any system that uses Kubernetes",
+        "correct": false,
+        "why": "Kubernetes alone is no reason."
+      },
+      {
+        "text": "A system whose only problem is slow database queries",
+        "correct": false,
+        "why": "A mesh does not see queries."
+      },
+      {
+        "text": "Many services in several languages, with encryption required between them",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-z947x4zd",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the path of a meshed request from client to server in order.",
+    "hint": "Two proxies.",
+    "items": [
+      "The client application sends a plain HTTP request",
+      "The client's proxy opens mutual TLS to the server's proxy",
+      "The server's proxy checks the certificate and records the request",
+      "The server application receives plain HTTP"
+    ]
+  }
+]
