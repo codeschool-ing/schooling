@@ -75,10 +75,9 @@ customers and articles use different words, and only one of the two searches is 
 The eight exact strings tell the other story. They were written for this lesson: an order number,
 a price, brand names and phrases copied from an article, the kind of thing a customer pastes rather
 than types. **BM25 put the right article first for all 8; the embedding search for 3.** It did find
-the order number, `Pix` and `EPUB`, but `4.90`, a delivery price, left its article at rank 11. A
-string of digits has little meaning for a model to place, and the article that came first for it,
-as the last lines of the section *Hybrid search* show, was the Portuguese delivery article, which
-writes the same price as `4,90`.
+the order number, `Pix` and `EPUB`, but `4.90`, a delivery price, left its article at rank 11. A string of digits has little meaning for a model to place. What came first for
+it, as the last lines of the section *Hybrid search* show, was the Portuguese delivery article,
+which writes the same price as `4,90`.
 
 ## How far 24 questions go
 

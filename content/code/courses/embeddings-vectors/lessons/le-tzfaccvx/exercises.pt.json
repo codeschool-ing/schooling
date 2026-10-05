@@ -1,0 +1,471 @@
+{
+  "ex-gm1ydmry": {
+    "prompt": "Por que o tempo de uma busca exata cresce com o número de vetores guardados?",
+    "hint": "Veja a última coluna que brute.py imprimiu.",
+    "choices": [
+      {
+        "text": "Porque ordenar as notas é a parte cara",
+        "why": "brute.py nem ordena todas: o argpartition separa as dez melhores. O trabalho que cresce são os produtos escalares."
+      },
+      {
+        "text": "Cada consulta lê todos eles, uma multiplicação com soma por coordenada",
+        "why": "Certo. A coluna de multiplicações é a quantidade de vetores vezes 384, e o tempo acompanha."
+      },
+      {
+        "text": "Porque vetores aleatórios são mais lentos de comparar",
+        "why": "A aritmética é a mesma, signifiquem os números o que for; é por isso que brute.py pôde usar aleatórios."
+      },
+      {
+        "text": "Porque o vetor da consulta fica mais longo à medida que a coleção cresce",
+        "why": "A consulta tem 384 números seja qual for o tamanho da coleção; o que cresce é o número de vetores que ela encontra."
+      }
+    ]
+  },
+  "ex-0w156qmn": {
+    "prompt": "Em `brute.py`, dez vezes mais vetores levaram 8,9 vezes mais tempo de 10.000 para 100.000, mas 22 vezes mais de 100.000 para 1.000.000. Qual é o motivo mais provável?",
+    "hint": "Veja a coluna de memória.",
+    "choices": [
+      {
+        "text": "Um milhão de vetores exigem mais multiplicações por vetor",
+        "why": "Todo vetor custa 384 multiplicações com soma em qualquer tamanho; a última coluna cresce exatamente dez vezes."
+      },
+      {
+        "text": "O argpartition vira o passo lento depois de cem mil notas",
+        "why": "Separar dez de uma lista é barato perto de calcular a lista; nada na saída aponta para ele."
+      },
+      {
+        "text": "1.536 MB por consulta: a memória dita o ritmo",
+        "why": "Certo. Cada consulta lê os 1.536 MB inteiros; nesse tamanho o processador espera pela memória, e as multiplicações deixam de ser o limite."
+      },
+      {
+        "text": "O programa passou a usar várias threads no tamanho grande",
+        "why": "brute.py fixa uma thread antes de importar o NumPy, para todos os tamanhos."
+      }
+    ]
+  },
+  "ex-4r0x0t9f": {
+    "prompt": "A central de ajuda de uma biblioteca tem 5.000 artigos transformados em vetor com o MiniLM e responde umas três buscas por segundo. Que busca ela deveria usar?",
+    "hint": "Compare com a linha de 10.000 de brute.py.",
+    "choices": [
+      {
+        "text": "Busca exata: neste tamanho ela é rápida e nunca erra",
+        "why": "Certo. brute.py buscou o dobro de vetores em 0,66 ms num núcleo; um índice acrescentaria construção e ajuste por nada."
+      },
+      {
+        "text": "Um índice aproximado, porque busca exata serve só para testes",
+        "why": "A busca exata é o método que devolve os vizinhos de verdade; é a escolha certa sempre que ler tudo sai barato o bastante."
+      },
+      {
+        "text": "Um banco vetorial hospedado, porque 5.000 vetores não cabem na memória",
+        "why": "5.000 vetores de 384 números float32 ocupam menos de 8 MB."
+      },
+      {
+        "text": "Busca por palavra-chave, porque embeddings são lentos demais a três buscas por segundo",
+        "why": "A busca em 5.000 vetores leva bem menos de um milissegundo; três por segundo não é nada."
+      }
+    ]
+  },
+  "ex-45yyv6h4": {
+    "prompt": "Quantas multiplicações com soma uma busca exata faz sobre 50.000 vetores de 384 números?",
+    "hint": "Uma por número guardado.",
+    "unit": "multiplicações"
+  },
+  "ex-y6xmhy6x": {
+    "prompt": "Quantos megabytes ocupam 2.000.000 de vetores de 384 números float32, contando um megabyte como 1.000.000 de bytes?",
+    "hint": "brute.py imprimiu 1536 MB para um milhão.",
+    "unit": "MB"
+  },
+  "ex-g2chmdg5": {
+    "prompt": "Os vetores da central de ajuda estão numa matriz do NumPy e os ids numa lista separada. Uma linha é inserida na matriz e não na lista. O que acontece?",
+    "hint": "Os números de linha são a única ligação entre os dois.",
+    "choices": [
+      {
+        "text": "O NumPy levanta um erro porque os dois tamanhos diferem",
+        "why": "O NumPy não sabe nada da lista; nada compara os tamanhos a menos que você escreva a verificação."
+      },
+      {
+        "text": "Daquela linha em diante, as buscas apontam os artigos errados",
+        "why": "Certo. A ligação entre linhas e ids é por posição, e ela se deslocou em silêncio. Um armazenamento com ids os guarda no registro."
+      },
+      {
+        "text": "Só a linha nova fica errada; as outras continuam batendo com os ids",
+        "why": "Toda linha depois da inserida andou uma posição, então todo id depois dela aponta para o vetor do vizinho."
+      },
+      {
+        "text": "As notas mudam, mas o ranking continua correto",
+        "why": "As notas estão certas para os vetores; os nomes ligados a eles é que estão errados."
+      }
+    ]
+  },
+  "ex-zvax6fem": {
+    "prompt": "`vectors.npy` guardava 40 vetores de 384 números `float32` e tinha 61568 bytes. O que são os 128 bytes além de 40 × 1.536?",
+    "hint": "Todo arquivo .npy começa do mesmo jeito.",
+    "choices": [
+      {
+        "text": "Os ids dos 40 artigos",
+        "why": "Os ids estão em records.json; o arquivo .npy guarda só o array."
+      },
+      {
+        "text": "Um índice que acelera a busca",
+        "why": "O armazenamento pequeno não tem índice; a busca dele lê todos os vetores."
+      },
+      {
+        "text": "O comprimento do vetor de cada registro, guardado para conferência",
+        "why": "Quarenta comprimentos de 4 bytes dariam 160 bytes, e o armazenamento não guarda comprimentos: ele normaliza."
+      },
+      {
+        "text": "O cabeçalho do NumPy",
+        "why": "Certo. Ele vem na frente do array e registra o formato e o tipo de número, para que o np.load consiga reconstruir o array."
+      }
+    ]
+  },
+  "ex-67krfs8v": {
+    "prompt": "Quantos bytes teria `vectors.npy` para 1.000 vetores do MiniLM, com o mesmo cabeçalho de 128 bytes?",
+    "hint": "Cada vetor são 384 números de 4 bytes.",
+    "unit": "bytes"
+  },
+  "ex-6v4k1yzb": {
+    "prompt": "Ligue cada parte de um registro ao que ela serve.",
+    "hint": "Uma descrição é propriedade da coleção, não de um registro.",
+    "pairs": [
+      {
+        "left": "id",
+        "right": "A ligação de volta à fonte"
+      },
+      {
+        "left": "vetor",
+        "right": "A única parte que a busca compara"
+      },
+      {
+        "left": "metadados",
+        "right": "O que um filtro lê"
+      },
+      {
+        "left": "texto",
+        "right": "O que uma pessoa lê depois da busca"
+      }
+    ],
+    "right_distractors": [
+      "O modelo de onde veio todo vetor dela"
+    ]
+  },
+  "ex-knvedrv5": {
+    "prompt": "`refuse.py` buscou com um vetor do all-MiniLM-L6-v2 mas disse `model=\"lab-minilm\"`, o nome que o labembed dá ao mesmo modelo, e o armazenamento recusou. Por que recusar é o comportamento certo?",
+    "hint": "O que o armazenamento poderia aceitar se ignorasse nomes?",
+    "choices": [
+      {
+        "text": "Porque o lab-minilm dá vetores diferentes dos do all-MiniLM-L6-v2",
+        "why": "O labembed roda o mesmo minilm.py; os vetores são os mesmos. A recusa é sobre o nome, não sobre os números."
+      },
+      {
+        "text": "Ignorar nomes deixaria passar vetores de outro modelo em silêncio",
+        "why": "Certo. O armazenamento compara nomes porque não consegue comparar pesos, e um nome diferente é o único aviso que ele tem."
+      },
+      {
+        "text": "Porque a dimensão do vetor não batia com a da coleção",
+        "why": "As duas são 384; a recusa de dimensão foi a primeira de refuse.py, com os 256 do WordLlama."
+      },
+      {
+        "text": "Porque a busca precisa usar o modelo do registro mais novo",
+        "why": "A regra é por coleção, não por registro: todo registro dela veio do all-MiniLM-L6-v2."
+      }
+    ]
+  },
+  "ex-hbnvgc6m": {
+    "prompt": "A coleção da Marginalia foi criada para comparar por produto escalar de vetores de comprimento 1. Alguém quer distância euclidiana. O que precisa acontecer?",
+    "hint": "Quais três coisas uma coleção fixa uma vez?",
+    "choices": [
+      {
+        "text": "Passar outra métrica em cada consulta",
+        "why": "A comparação pertence à coleção: o Chroma a recebe como space na criação e o pgvector a embute no índice."
+      },
+      {
+        "text": "Transformar de novo os artigos com um modelo treinado para distâncias",
+        "why": "O modelo não é o problema; os mesmos vetores funcionam com qualquer das duas comparações."
+      },
+      {
+        "text": "Criar uma coleção nova",
+        "why": "Certo. Uma nova, com a comparação nova: ela é fixada na criação, como o modelo e a dimensão. Para vetores de comprimento 1 o ranking nem mudaria, como a aula 2 mostrou."
+      },
+      {
+        "text": "Editar o campo de métrica de cada registro",
+        "why": "Registros não carregam métrica; ela é propriedade da coleção inteira."
+      }
+    ]
+  },
+  "ex-b2t5q3dp": {
+    "prompt": "Além do modelo e da comparação, uma coleção fixa na criação quantos números todo vetor tem: a ___ dela.",
+    "hint": "A do MiniLM é 384.",
+    "blanks": [
+      {
+        "accept": [
+          "dimensão",
+          "dimensao",
+          "dimensionalidade",
+          "dimension"
+        ]
+      }
+    ]
+  },
+  "ex-6tfb485f": {
+    "prompt": "Depois de `delete(\"h18\")`, `writes.py` imprimiu `rows 41 alive 39`. O que há na linha que guardava o h18?",
+    "hint": "A remoção mudou uma marca.",
+    "choices": [
+      {
+        "text": "O vetor dele, marcado como morto, até o próximo salvamento",
+        "why": "Certo. Uma lápide: ainda multiplicada por toda consulta e depois descartada, até save() gravar só as linhas vivas."
+      },
+      {
+        "text": "Nada: a linha foi removida e as outras subiram",
+        "why": "Aí as linhas seriam 40. Elas continuaram 41, porque mover linhas é o que a lápide evita."
+      },
+      {
+        "text": "Um vetor de zeros, para que tenha nota zero contra toda consulta",
+        "why": "O vetor não foi tocado; é a marca alive que o mantém fora dos resultados, com nota menos infinito."
+      },
+      {
+        "text": "O h15 editado, que ocupou a linha livre",
+        "why": "A edição foi acrescentada como linha nova antes da remoção; nada reaproveita uma linha morta."
+      }
+    ]
+  },
+  "ex-xd4t9na6": {
+    "prompt": "Por que bancos vetoriais marcam um registro apagado em vez de removê-lo na hora?",
+    "hint": "Pense no que removê-lo do meio perturbaria.",
+    "choices": [
+      {
+        "text": "Para que uma remoção possa ser desfeita depois",
+        "why": "Alguns até oferecem isso, mas não é o motivo; uma remoção é para valer, e a compactação a torna permanente."
+      },
+      {
+        "text": "Remover move linhas ou refaz ligações; marcar é instantâneo",
+        "why": "Certo. O custo fica para uma compactação ou reconstrução, feita uma vez para muitas remoções."
+      },
+      {
+        "text": "Porque a lei exige guardar dados apagados por um tempo",
+        "why": "Nada no funcionamento de um armazenamento depende disso; ao contrário, dado pessoal precisa ser removido de verdade, o que a compactação faz."
+      },
+      {
+        "text": "Porque um vetor apagado ainda melhora as notas dos vizinhos",
+        "why": "Uma linha morta é descartada de todo resultado; ela acrescenta trabalho e nada mais."
+      }
+    ]
+  },
+  "ex-r8q61xd1": {
+    "prompt": "Por que o upsert é a escrita comum nos bancos vetoriais?",
+    "hint": "Pense num trabalho que transforma tudo em vetor de novo toda noite.",
+    "choices": [
+      {
+        "text": "Ele é mais rápido que um insert porque pula o vetor",
+        "why": "Um upsert leva o vetor como qualquer escrita; a diferença é o que acontece quando o id existe."
+      },
+      {
+        "text": "Ele recalcula o vetor a partir do texto sozinho",
+        "why": "Nem o tinystore nem a maioria dos bancos transformam em vetor no upsert; quem chama passa o vetor, e é por isso que ele pode ficar velho."
+      },
+      {
+        "text": "Repetir a escrita é seguro, exista o id ou não",
+        "why": "Certo. O trabalho noturno faz upsert dos 40 artigos sem antes perguntar quais existem."
+      },
+      {
+        "text": "Ele apaga o vetor antigo da memória na hora",
+        "why": "No tinystore a linha antiga fica como lápide até save(); as linhas foram de 40 para 41."
+      }
+    ]
+  },
+  "ex-adspcer0": {
+    "prompt": "Para economizar uma chamada de API, um desenvolvedor reescreve o h15 para dizer que reembolsos agora são só em crédito na loja, e faz upsert do texto novo com o vetor já guardado. O que a central de ajuda faz depois?",
+    "hint": "Qual dos dois argumentos a busca compara?",
+    "choices": [
+      {
+        "text": "O armazenamento percebe a diferença e recusa o upsert",
+        "why": "upsert confere a dimensão e mais nada; nenhum armazenamento consegue dizer se um vetor pertence a um texto."
+      },
+      {
+        "text": "A busca acha o h15 para perguntas sobre crédito na loja",
+        "why": "Isso exigiria o vetor do texto novo. O vetor guardado ainda descreve reembolsos no cartão."
+      },
+      {
+        "text": "Nada muda, já que um vetor e o texto dele são guardados juntos",
+        "why": "Guardados juntos não é calculados juntos: o texto mudou e o vetor dele não."
+      },
+      {
+        "text": "Perguntas de reembolso no cartão ainda acham o h15, que agora diz só crédito na loja",
+        "why": "Certo. O vetor responde pelo texto antigo e a pessoa lê o novo. Transforme em vetor no mesmo passo de toda mudança de texto."
+      }
+    ]
+  },
+  "ex-e1vp34zb": {
+    "prompt": "Uma escrita que substitui o registro quando o id existe e o acrescenta quando não existe se chama ___.",
+    "hint": "Update e insert, numa palavra só.",
+    "blanks": [
+      {
+        "accept": [
+          "upsert"
+        ]
+      }
+    ]
+  },
+  "ex-3kw90qx6": {
+    "prompt": "Ponha em ordem o que aconteceu com o artigo do presente, h18, entre `index.py` e `writes.py`.",
+    "hint": "Ele esteve no disco duas vezes: uma com ele, outra sem.",
+    "items": [
+      "Entrou por upsert com o vetor e foi salvo por index.py",
+      "Carregado de volta do disco por writes.py",
+      "Marcado como morto pelo delete, linha ainda no array",
+      "Deixado de fora dos arquivos quando save() compactou"
+    ],
+    "trap": "O delete não removeu a linha: as linhas continuaram 41 até o salvamento."
+  },
+  "ex-98y5qeh4": {
+    "prompt": "Em `path.py`, qual passo da consulta levou mais tempo?",
+    "hint": "Leia os três tempos.",
+    "choices": [
+      {
+        "text": "Buscar nos 39 vetores",
+        "why": "Isso levou 0,155 ms, um erro de arredondamento perto do primeiro passo neste tamanho."
+      },
+      {
+        "text": "Transformar a pergunta em vetor",
+        "why": "Certo. 9,043 ms: rodar o modelo sobre a pergunta custa mais que tudo o que vem depois."
+      },
+      {
+        "text": "Pegar os textos pelo id",
+        "why": "0,005 ms: uma busca numa lista é o passo mais barato."
+      },
+      {
+        "text": "Aplicar o filtro de língua",
+        "why": "O filtro faz parte da chamada de busca, que levou 0,155 ms no total."
+      }
+    ]
+  },
+  "ex-9y67z4eh": {
+    "prompt": "O mesmo armazenamento cresce para um milhão de vetores e mantém a busca exata. Pelas medições desta aula, que passo passaria a dominar uma consulta?",
+    "hint": "brute.py mediu um milhão num núcleo.",
+    "choices": [
+      {
+        "text": "Transformar a pergunta em vetor, que cresce com a coleção",
+        "why": "A pergunta é um texto só, seja qual for o tamanho da coleção; o custo fica perto dos 9,043 ms que path.py mediu."
+      },
+      {
+        "text": "Pegar os textos, porque são um milhão",
+        "why": "Só os poucos primeiros são buscados, pelo id, seja qual for o tamanho."
+      },
+      {
+        "text": "Nenhum: os três crescem pelo mesmo fator",
+        "why": "Só a busca lê todos os vetores; os outros dois não dependem da quantidade."
+      },
+      {
+        "text": "A busca, com uns 129 ms",
+        "why": "Certo. brute.py mediu 129,16 ms para um milhão; é o passo que um índice aproximado substitui."
+      }
+    ]
+  },
+  "ex-1ed56s7w": {
+    "prompt": "Ponha em ordem os passos de uma consulta num banco vetorial.",
+    "hint": "O texto que a pessoa lê vem por último, pelo id.",
+    "items": [
+      "Transformar a pergunta em vetor com o modelo da coleção",
+      "Achar vetores candidatos",
+      "Descartar os candidatos que não passam no filtro",
+      "Reordenar os que sobraram, se houver um reranker",
+      "Pegar os textos dos ids que restaram"
+    ],
+    "trap": "Os textos não são buscados antes da busca: a busca responde com ids, e só esses ids são procurados."
+  },
+  "ex-60p87fza": {
+    "prompt": "A Marginalia leva a central de ajuda para 5.000 artigos, transforma as perguntas em vetor por uma API hospedada, e os clientes dizem que a busca está lenta. Por onde a investigação deve começar?",
+    "hint": "Que passo cresce com a coleção, e qual atravessa a internet?",
+    "choices": [
+      {
+        "text": "Acrescentar um índice aproximado, já que a busca é sempre a parte lenta",
+        "why": "Com 5.000 vetores a busca exata leva bem menos de um milissegundo; path.py mostrou que a busca era o passo pequeno."
+      },
+      {
+        "text": "Buscar menos textos por consulta",
+        "why": "Pegar pelo id levou 0,005 ms; é o passo mais barato."
+      },
+      {
+        "text": "Medir a chamada de embedding, com a ida e volta",
+        "why": "Certo. Transformar em vetor já era o maior passo localmente, e uma API hospedada acrescenta uma ida pela internet que nenhum ajuste de banco toca."
+      },
+      {
+        "text": "Trocar por um modelo menor, porque 384 dimensões são demais para comparar",
+        "why": "Comparar 384 números por vetor é a parte barata; a medição deve vir antes de qualquer mudança."
+      }
+    ]
+  },
+  "ex-zypxanyg": {
+    "prompt": "Quais destas coisas um banco vetorial acrescenta em relação a uma matriz do NumPy salva num arquivo `.npy`? Marque todas as que se aplicam.",
+    "hint": "Duas destas nenhum armazenamento consegue dar.",
+    "choices": [
+      {
+        "text": "Um id guardado no mesmo registro que o vetor",
+        "why": "Sim. O registro carrega o id, então nenhuma lista separada consegue sair de ordem."
+      },
+      {
+        "text": "Alterar ou apagar um registro sem reconstruir o resto",
+        "why": "Sim. Upsert e delete trabalham num id, com lápides e compactação por trás."
+      },
+      {
+        "text": "Filtros nos metadados na mesma consulta",
+        "why": "Sim. Os metadados ficam ao lado do vetor, então o filtro faz parte da busca."
+      },
+      {
+        "text": "Notas mais precisas que as da busca exata",
+        "why": "A busca exata é a referência; um índice aproximado só pode igualá-la ou ficar abaixo."
+      },
+      {
+        "text": "Vetores que continuam válidos quando o modelo muda",
+        "why": "Um modelo novo significa vetores novos em qualquer banco; a migração da aula 10 é a mesma em todo lugar."
+      }
+    ]
+  },
+  "ex-t2hp590d": {
+    "prompt": "Um time testa um índice aproximado em 10.000 dos seus vetores. Como ele deve julgar se as respostas do índice são boas o bastante?",
+    "hint": "Qual é a régua que esta aula nomeou?",
+    "choices": [
+      {
+        "text": "Só pela velocidade, já que um índice existe para ser rápido",
+        "why": "Um índice rápido que devolve os vizinhos errados é pior que um lento e correto; velocidade é metade da medição."
+      },
+      {
+        "text": "Por quanto os primeiros resultados batem com os da busca exata",
+        "why": "Certo. Nas mesmas consultas, a busca exata devolve os vizinhos de verdade, então é a referência; a aula 15 dá nome a essa medida."
+      },
+      {
+        "text": "Pelas notas que ele devolve: notas maiores querem dizer respostas melhores",
+        "why": "As notas dependem dos vetores, não do índice; um índice que perde o melhor resultado devolve notas menores sem avisar."
+      },
+      {
+        "text": "Pelo tamanho do arquivo do índice",
+        "why": "Tamanho é custo, não uma medida de se as respostas estão certas."
+      }
+    ]
+  },
+  "ex-jcddjy1y": {
+    "prompt": "Ligue cada termo ao que ele significa nesta aula.",
+    "hint": "Uma descrição não pertence a nenhum.",
+    "pairs": [
+      {
+        "left": "Coleção",
+        "right": "Registros de um modelo, uma dimensão, uma comparação"
+      },
+      {
+        "left": "Upsert",
+        "right": "Substituir o registro se o id existe, acrescentar se não"
+      },
+      {
+        "left": "Lápide",
+        "right": "Um registro apagado ainda no lugar, marcado como morto"
+      },
+      {
+        "left": "Compactação",
+        "right": "Regravar o armazenamento sem os registros mortos"
+      }
+    ],
+    "right_distractors": [
+      "Uma lista de ids guardada ao lado de uma matriz do NumPy"
+    ]
+  }
+}

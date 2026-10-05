@@ -9,7 +9,7 @@ both. **Hybrid search** runs the two side by side and merges their rankings into
 
 ## Merge ranks, not scores
 
-Adding the two scores does not work. BM25 printed 3.22 and 8.12 earlier in this lesson; the
+Adding the two scores does not work. BM25 printed 3.22 and 4.11 earlier in this lesson; the
 embedding search prints cosines like 0.446. The numbers live on different scales, and a sum would
 be decided by whichever scale happens to be larger.
 

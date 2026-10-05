@@ -49,12 +49,12 @@ in the same order from all of them.
 
 **A point is an id, a vector and a payload.** The payload is Qdrant's word for metadata, any JSON
 object, and the filter reads it: `must` is a list of conditions that all have to hold, and
-`MatchValue` asks for an exact value. Qdrant also has `should` and `must_not`, which make the other
-two halves of boolean logic.
+`MatchValue` asks for an exact value. Qdrant also has `should`, where at least one condition has to
+hold, and `must_not`.
 
 ## Where local mode shows
 
-Three things went differently from what a server would do:
+Three more calls, and only the first behaves as a server would:
 
 ```schooling-example
 {

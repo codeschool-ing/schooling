@@ -44,9 +44,9 @@ ana@lab:~/emb$ ls -l index.npy ids.json
 -rw-r--r-- 1 ana ana 61568 Oct  5 14:20 index.npy
 ```
 
-The whole help centre took 0.77 seconds on this machine. That is nothing for 40 articles and it is
-not nothing for four million, which is why the expensive half belongs offline, where it can be
-batched and retried without a customer waiting (lesson 7 sends it to a provider in batches).
+The whole help centre took 0.77 seconds on this machine. That is nothing for 40 articles and a real cost for four million. So the expensive half belongs
+offline, where it can be batched and retried without a customer waiting; lesson 7 sends it to a
+provider in batches.
 
 ## Two files that must stay together
 

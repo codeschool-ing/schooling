@@ -49,12 +49,12 @@ voltaram na mesma ordem em todos eles.
 
 **Um ponto é um id, um vetor e um payload.** Payload é a palavra do Qdrant para metadados, qualquer
 objeto JSON, e o filtro lê o payload: `must` é uma lista de condições que precisam valer todas, e
-`MatchValue` pede um valor exato. O Qdrant também tem `should` e `must_not`, as outras duas metades da
-lógica booleana.
+`MatchValue` pede um valor exato. O Qdrant também tem `should`, em que pelo menos uma condição precisa
+valer, e `must_not`.
 
 ## Onde o modo local aparece
 
-Três coisas saíram diferentes do que um servidor faria:
+Mais três chamadas, e só a primeira se comporta como num servidor:
 
 ```schooling-example
 {

@@ -93,9 +93,9 @@ total 80
 **Two files, and each one is easy to account for.** `vectors.npy` is 61568 bytes: 40 vectors of
 384 `float32` numbers is 40 × 1,536 = 61,440 bytes, and the other 128 are the header NumPy writes
 in front of every array. `records.json` holds the ids, the metadata, the texts, and the model's
-name and dimension. Chroma's persistent directory in lesson 12 holds the same things in an SQLite
-file and a set of index files, and LanceDB in lesson 13 holds them in columnar files; neither will
-be as readable as this, and neither holds anything this one does not, apart from the index.
+name and dimension. Chroma's persistent directory in lesson 12 keeps the same ingredients in an
+SQLite file and a set of index files, and LanceDB in lesson 13 keeps them in columnar files. Neither
+is as easy to read as this, and the main thing each adds is the index.
 
 Searching it is the line of lesson 3 again, behind a function that knows which rows are records:
 

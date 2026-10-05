@@ -78,9 +78,9 @@ Os oito textos exatos contam a outra história. Eles foram escritos para esta au
 pedido, um preço, nomes de marcas e frases copiadas de um artigo, o tipo de coisa que um cliente
 cola em vez de digitar. **O BM25 pôs o artigo certo em primeiro em todos os 8; a busca por embedding
 em 3.** Ela achou o número do pedido, `Pix` e `EPUB`, mas `4.90`, um preço de entrega, deixou o
-artigo na posição 11. Uma sequência de dígitos tem pouco significado para um modelo situar, e o
-artigo que veio primeiro para ela, como as últimas linhas da seção *Busca híbrida* mostram, foi o
-artigo de entrega em português, que escreve o mesmo preço como `4,90`.
+artigo na posição 11. Uma sequência de dígitos tem pouco significado para um modelo situar. O que veio
+primeiro para ela, como as últimas linhas da seção *Busca híbrida* mostram, foi o artigo de
+entrega em português, que escreve o mesmo preço como `4,90`.
 
 ## Até onde vão 24 perguntas
 

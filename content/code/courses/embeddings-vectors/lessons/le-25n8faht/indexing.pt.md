@@ -44,9 +44,9 @@ ana@lab:~/emb$ ls -l index.npy ids.json
 -rw-r--r-- 1 ana ana 61568 Oct  5 14:20 index.npy
 ```
 
-A central de ajuda inteira levou 0,77 segundo nesta máquina. Isso não é nada para 40 artigos e não é
-pouco para quatro milhões, e é por isso que a metade cara fica fora da hora da busca, onde pode ser
-feita em lotes e repetida sem um cliente esperando (a aula 7 a manda para um provedor em lotes).
+A central de ajuda inteira levou 0,77 segundo nesta máquina. Isso não é nada para 40 artigos e é um custo de verdade para quatro milhões. Então a metade cara
+fica fora da hora da busca, onde pode ser feita em lotes e repetida sem um cliente esperando; a
+aula 7 a manda para um provedor em lotes.
 
 ## Dois arquivos que precisam andar juntos
 

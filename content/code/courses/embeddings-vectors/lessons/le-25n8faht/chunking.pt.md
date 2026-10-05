@@ -55,7 +55,7 @@ one article      37 vectors  right page first 21/24  mean best 0.511  q15: h35 h
 **Transformadas inteiras em vetor, as páginas puseram a certa em primeiro em 18 perguntas de 24.
 Cortadas nos limites dos artigos, em 21.** A melhor nota por pergunta também subiu, de 0,411 em
 média para 0,511. A pergunta q15, *make the letters bigger when reading* ("aumentar as letras na
-leitura"), mostra isso numa linha: os três métodos acharam a página certa, a que contém h35, h36 e
+leitura"), mostra isso numa linha. Os três métodos acharam a página certa, a que contém h35, h36 e
 h37, mas a página inteira combinou com 0,199 e o artigo sobre fontes dentro dela com 0,431. A
 resposta sempre esteve lá; um vetor do tamanho da página a tinha diluído.
 

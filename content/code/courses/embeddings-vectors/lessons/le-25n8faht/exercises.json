@@ -1,0 +1,675 @@
+[
+  {
+    "id": "ex-c88xc3tt",
+    "version": 1,
+    "section": "keyword-search",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`python bm25.py \"MG-20481937\"` printed one article and nothing else. Why only one?",
+    "hint": "Look at which articles have a score above zero.",
+    "choices": [
+      {
+        "text": "BM25 always returns exactly one result for a code",
+        "correct": false,
+        "why": "It returns every article with a score above zero. For a different question it printed three."
+      },
+      {
+        "text": "Only that article contains the string",
+        "correct": true,
+        "why": "Right. A word found in one article out of 40 has a high idf, and an article sharing no word with the query is left out of the list entirely."
+      },
+      {
+        "text": "The order number was matched by meaning, which leaves one candidate",
+        "correct": false,
+        "why": "BM25 knows nothing about meaning. It matched the exact string, kept whole by the tokeniser."
+      },
+      {
+        "text": "The other articles were too long, and `b` removed them",
+        "correct": false,
+        "why": "`b` scales a score down for length; it never removes an article. The others had no matching word at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1c3q836",
+    "version": 1,
+    "section": "keyword-search",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For *get rid of my profile for good*, BM25 ranked a gift article, a schools article and a gift-card article. The answer is *Closing your account*. What went wrong?",
+    "hint": "Compare the words of the question with the words of the answer.",
+    "choices": [
+      {
+        "text": "The answer shares only a common word with the question, and BM25 compares nothing but words",
+        "correct": true,
+        "why": "Right. Closing your account shares *for* with the question and nothing else. Words that mean the same thing without being the same string are invisible to it."
+      },
+      {
+        "text": "BM25's `k1` was set too low for a seven-word question",
+        "correct": false,
+        "why": "`k1` limits how much repeats of a word help. No setting of it creates a match that is not there."
+      },
+      {
+        "text": "The articles about gifts are longer, so they won on length",
+        "correct": false,
+        "why": "BM25 discounts long documents through `b`. The three won because they share *get*, *for* and *of*."
+      },
+      {
+        "text": "The question has a typo that BM25 could not correct",
+        "correct": false,
+        "why": "There is no typo. The customer's words and the article's words are simply different ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-twwz9nsm",
+    "version": 1,
+    "section": "keyword-search",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of BM25 to what it does.",
+    "hint": "Three parts, three effects, one spare that BM25 does not do.",
+    "pairs": [
+      {
+        "left": "`idf`",
+        "right": "A word few articles contain counts more"
+      },
+      {
+        "left": "`k1`",
+        "right": "A repeated word helps, less with each repeat"
+      },
+      {
+        "left": "`b`",
+        "right": "A document longer than average is scored down"
+      }
+    ],
+    "right_distractors": [
+      "Words with similar meanings are matched"
+    ]
+  },
+  {
+    "id": "ex-ayd9nkgt",
+    "version": 1,
+    "section": "indexing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A rebuild writes a new `index.npy` with the articles in a different order and leaves the old `ids.json` in place. What does the next search do?",
+    "hint": "What does the matrix know about its own rows?",
+    "choices": [
+      {
+        "text": "It raises an error, because the two files no longer match",
+        "correct": false,
+        "why": "Nothing checks them against each other: both still load, and the row count is the same."
+      },
+      {
+        "text": "It returns the right articles, since the vectors themselves are correct",
+        "correct": false,
+        "why": "The vectors are correct, but they reach the customer through `ids`, which now names the wrong article for most rows."
+      },
+      {
+        "text": "It returns wrong articles with perfectly good scores, and nothing complains",
+        "correct": true,
+        "why": "Right. The matrix does not know which article a row is; the ids say, and they are now wrong. Write and replace the two together, or keep id and vector in one record."
+      },
+      {
+        "text": "It returns the same results, because NumPy keeps the order of the original file",
+        "correct": false,
+        "why": "`np.save` writes whatever order the matrix has. The new order is the one on disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-4vr4ysq9",
+    "version": 1,
+    "section": "indexing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes do the vectors of 1,000 articles take in a matrix like `index.npy`, 384 float32 numbers each, counting only the numbers and not the file's header?",
+    "hint": "40 articles took 40 × 384 × 4 bytes before the header.",
+    "value": 1536000,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-zgsf7dgd",
+    "version": 1,
+    "section": "indexing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are the articles embedded ahead of time rather than when a customer searches?",
+    "hint": "Which step is slow, and does its result change?",
+    "choices": [
+      {
+        "text": "Because the model can only embed one text per search",
+        "correct": false,
+        "why": "`index.py` embedded all 40 in one call. Batching is possible at any time; the reason is cost and repetition."
+      },
+      {
+        "text": "Because a vector is only valid on the day it was computed",
+        "correct": false,
+        "why": "An unchanged article gives the same vector every time (lesson 1). That is exactly why it can be stored."
+      },
+      {
+        "text": "Embedding is the slow step, and its result does not change",
+        "correct": true,
+        "why": "Right. Only the question has to be embedded at search time; everything else was computed when the article was written."
+      },
+      {
+        "text": "Because the question and the articles need different models",
+        "correct": false,
+        "why": "They need the same model, or the vectors cannot be compared."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqa3p0fg",
+    "version": 1,
+    "section": "querying",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For *the box never showed up*, the search returned the parcel article at 0.458, then *Resetting your password* at 0.300 and *Wrong book in the parcel* at 0.290. Why are those two there?",
+    "hint": "How many results did the search ask for?",
+    "choices": [
+      {
+        "text": "The model thinks a password reset is about a missing box",
+        "correct": false,
+        "why": "It scored it far below the parcel article. The question is why a weak match was returned at all."
+      },
+      {
+        "text": "The index is corrupt for those two articles",
+        "correct": false,
+        "why": "Their scores are ordinary low scores. Nothing about them suggests a broken index."
+      },
+      {
+        "text": "A search always returns `k` results",
+        "correct": true,
+        "why": "Right. `k=3` always gives three. Lesson 16 deals with cutting a list short and choosing `k`."
+      },
+      {
+        "text": "They both mention a parcel, so they are partly relevant",
+        "correct": false,
+        "why": "Resetting your password does not mention a parcel. They are simply the next closest of 40."
+      }
+    ]
+  },
+  {
+    "id": "ex-zs94farh",
+    "version": 1,
+    "section": "querying",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put in order what `search.py` does with a customer's question.",
+    "hint": "The row numbers become articles at the very end.",
+    "items": [
+      "Embed the question with the same model",
+      "Score it against every stored vector with `D @ q`",
+      "Sort the scores from the highest down",
+      "Keep the first `k`",
+      "Turn each row number into an article id"
+    ],
+    "trap": "The sort comes before keeping `k`: the best three cannot be known until every score is computed and sorted."
+  },
+  {
+    "id": "ex-p3zxhbgm",
+    "version": 1,
+    "section": "querying",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Comparing a question with every stored vector, skipping none, so that the top results are precisely the closest, is called ___ search.",
+    "hint": "Lesson 11 measures where it starts to hurt; it is also called brute-force.",
+    "blanks": [
+      {
+        "accept": [
+          "exact"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4ce7v908",
+    "version": 1,
+    "section": "measuring-search",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does recall@3 count in `evaluate.py`?",
+    "hint": "Look at the `[:k]` in `recall`.",
+    "choices": [
+      {
+        "text": "How many of the top three results are relevant, averaged over the questions",
+        "correct": false,
+        "why": "That is closer to precision. Recall@3 asks whether a relevant article is among the three at all."
+      },
+      {
+        "text": "The questions with a relevant article somewhere in the top three",
+        "correct": true,
+        "why": "Right. A question counts once if any of its answers is in the first three, whatever else is there."
+      },
+      {
+        "text": "The average score of the three best articles",
+        "correct": false,
+        "why": "Scores are not used at all; only where the relevant article lands in the ranking."
+      },
+      {
+        "text": "The number of articles a customer reads before finding the answer",
+        "correct": false,
+        "why": "It does not count articles read. It counts questions answered within the first three."
+      }
+    ]
+  },
+  {
+    "id": "ex-6crdecyc",
+    "version": 1,
+    "section": "measuring-search",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The embedding search put the right article first for 19 of the 24 questions. What is its recall@1 as a percentage, to one decimal place?",
+    "hint": "19 divided by 24.",
+    "value": 79.2,
+    "tolerance": 0.1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-4hkg1kkj",
+    "version": 1,
+    "section": "measuring-search",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a change to how articles are embedded, recall@1 on the 24 questions moves from 19 to 18. What should you conclude?",
+    "hint": "How much is one question worth here?",
+    "choices": [
+      {
+        "text": "The change made the search about four points worse, so revert it",
+        "correct": false,
+        "why": "Four points is one question. A single question can flip for reasons unrelated to the change, so this is not yet evidence."
+      },
+      {
+        "text": "Nothing yet: one question in 24 is within what a small set cannot separate",
+        "correct": true,
+        "why": "Right. Each question is about four points. Look at which question changed and why, and measure on more questions before deciding."
+      },
+      {
+        "text": "The change helped, since recall@3 matters more than recall@1",
+        "correct": false,
+        "why": "Nothing in the scenario says recall@3 moved. And picking whichever number suits is how a bad change gets shipped."
+      },
+      {
+        "text": "The relevance judgements are wrong and should be rewritten to match the search",
+        "correct": false,
+        "why": "Judgements are written before the search runs so they cannot be bent towards it. Rewriting them to fit the result measures nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-vs58hskg",
+    "version": 1,
+    "section": "measuring-search",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The embedding search put the article holding `4.90` at rank 11, while BM25 put it first. Why did the embedding search struggle with it?",
+    "hint": "What came first for `4.90`, and how does that article write the price?",
+    "choices": [
+      {
+        "text": "MiniLM refuses numbers and returns a random ranking for them",
+        "correct": false,
+        "why": "It returned a ranking with a clear first place, the Portuguese delivery article at 0.254. Nothing was refused."
+      },
+      {
+        "text": "The English delivery article is too long for the model to read",
+        "correct": false,
+        "why": "Every article is about forty words, far below what the model reads."
+      },
+      {
+        "text": "BM25 was given the answer in advance",
+        "correct": false,
+        "why": "BM25 matched the exact string `4.90`, which one English article contains. It was told nothing else."
+      },
+      {
+        "text": "A string of digits carries little meaning to place, and `4,90` in Portuguese looked as close",
+        "correct": true,
+        "why": "Right. There is almost nothing to understand in a price, only a string to find, which is keyword search's strength."
+      }
+    ]
+  },
+  {
+    "id": "ex-azzpzdgs",
+    "version": 1,
+    "section": "chunking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For *make the letters bigger when reading*, the page holding h35, h36 and h37 scored 0.199 as a whole, and the article about fonts inside it scored 0.431. Why the gap?",
+    "hint": "Where does one vector for three subjects land?",
+    "choices": [
+      {
+        "text": "The page was longer than the model can read, so the fonts article was cut off",
+        "correct": false,
+        "why": "The longest page is 175 word pieces and the model reads 256. Every word went in."
+      },
+      {
+        "text": "A page about three subjects gets one point between them, close to none",
+        "correct": true,
+        "why": "Right. The page's vector is pulled towards lending and audiobooks as well as fonts, so a question about fonts matches it weakly."
+      },
+      {
+        "text": "The chunked search used a better model than the whole-page search",
+        "correct": false,
+        "why": "All three methods used all-MiniLM-L6-v2. Only the cut changed."
+      },
+      {
+        "text": "Chunk scores are always higher because chunks are shorter texts",
+        "correct": false,
+        "why": "Length is not what raises a score; focus is. A short chunk about the wrong subject scores low too."
+      }
+    ]
+  },
+  {
+    "id": "ex-ep6x31a4",
+    "version": 1,
+    "section": "chunking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Marginalia adds a returns manual of 2,000 words, embedded whole with all-MiniLM-L6-v2. Questions about its last chapter never find it. Which change addresses both reasons at once?",
+    "hint": "One reason is about how much the model reads; the other is about what one vector can hold.",
+    "choices": [
+      {
+        "text": "Switch to a model with more dimensions and keep one vector per manual",
+        "correct": false,
+        "why": "More dimensions do not make the model read past its limit, and one vector still blurs every chapter together."
+      },
+      {
+        "text": "Repeat the last chapter's title several times at the start of the manual",
+        "correct": false,
+        "why": "That pushes other text past the limit instead and makes the vector lean towards one chapter."
+      },
+      {
+        "text": "Cut it into chunks at its headings and return the manual",
+        "correct": true,
+        "why": "Right. Each chunk is within the 256 word pieces the model reads, and each is about one subject, so the last chapter gets its own sharp vector."
+      },
+      {
+        "text": "Raise `k` so that more results come back",
+        "correct": false,
+        "why": "The manual's single vector misses the last chapter's subject entirely, so a longer list of results does not reach it reliably."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgzj1qkb",
+    "version": 1,
+    "section": "chunking",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Windows that share a few words at each edge, so that a sentence crossing a boundary stays whole in at least one of them, are said to ___.",
+    "hint": "`windows()` shares 10 of its 40 words with the next window.",
+    "blanks": [
+      {
+        "accept": [
+          "overlap"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8kr9fpr2",
+    "version": 1,
+    "section": "chunking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Cut at the article boundaries, the pages put the right one first for 21 questions; cut into 40-word windows, 19. What does that suggest?",
+    "hint": "Which of the two cuts knew where one subject ends?",
+    "choices": [
+      {
+        "text": "Windows are always worse, so never use them",
+        "correct": false,
+        "why": "Windows are the tool for text with no marks to cut at. Here the text had marks, and they did better."
+      },
+      {
+        "text": "40 words is too many; 10-word windows would win",
+        "correct": false,
+        "why": "Nothing measured smaller windows, and very small chunks lose the context that makes a sentence mean something."
+      },
+      {
+        "text": "A boundary the author drew separates subjects better than a word count",
+        "correct": true,
+        "why": "Right. An article, a heading or a paragraph already ends where a subject ends; a window cuts wherever the count falls."
+      },
+      {
+        "text": "The overlap of 10 words confused the model, which saw the same sentence twice",
+        "correct": false,
+        "why": "Overlap keeps sentences whole; it does not mislead the model. The windows lost because they cut across subjects."
+      }
+    ]
+  },
+  {
+    "id": "ex-5kapmc2h",
+    "version": 1,
+    "section": "hybrid-search",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does reciprocal rank fusion combine the two rankings by position instead of adding BM25's score to the cosine?",
+    "hint": "BM25 printed 4.11 for one article; the embedding search printed 0.446 for another.",
+    "choices": [
+      {
+        "text": "Positions are cheaper to compute than scores, which matters at search time",
+        "correct": false,
+        "why": "Both searches compute their scores anyway. The issue is what adding them would mean."
+      },
+      {
+        "text": "Different scales: the larger one would decide the sum",
+        "correct": true,
+        "why": "Right. A BM25 score of several units would drown a cosine below 1. Ranks run 1, 2, 3 in both lists."
+      },
+      {
+        "text": "Cosines are distances, and distances cannot be added to scores",
+        "correct": false,
+        "why": "A cosine is a similarity, higher is closer, like a BM25 score. The problem is their scales, not their direction."
+      },
+      {
+        "text": "Adding scores is forbidden by the BM25 formula",
+        "correct": false,
+        "why": "Nothing forbids it; it just produces a number dominated by one of the two searches."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytjk9qtf",
+    "version": 1,
+    "section": "hybrid-search",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `k = 60` and equal weights, what is the RRF score of an article ranked 1st by the keyword search and 3rd by the embedding search? Give four decimal places.",
+    "hint": "Ranks start at 1, so first place adds 1/61.",
+    "value": 0.0323,
+    "tolerance": 0.0001
+  },
+  {
+    "id": "ex-xksj0ywn",
+    "version": 1,
+    "section": "hybrid-search",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For *how fast is shipping*, the embedding search ranked the right article first and BM25 ranked it ninth. After fusion it came second, behind an article both lists ranked second. What does that show about RRF?",
+    "hint": "Compare 1/62 + 1/62 with 1/69 + 1/61.",
+    "choices": [
+      {
+        "text": "RRF has a bug when a document is missing from one list",
+        "correct": false,
+        "why": "The right article was in both lists, ninth and first. The arithmetic did exactly what the formula says."
+      },
+      {
+        "text": "RRF always prefers the keyword search's first choice",
+        "correct": false,
+        "why": "The keyword search's first choice is not even in the fused top three. RRF prefers no list."
+      },
+      {
+        "text": "The embedding search was wrong, and fusion corrected it",
+        "correct": false,
+        "why": "Delivery times and costs is the answer the course marked for this question. Fusion moved the right answer down."
+      },
+      {
+        "text": "It rewards agreement: two second places outweigh one first and one ninth",
+        "correct": true,
+        "why": "Right. That is RRF working as designed, and it is why fusion can make a strong ranker worse when the other one is weak on that question."
+      }
+    ]
+  },
+  {
+    "id": "ex-daf08z2j",
+    "version": 1,
+    "section": "hybrid-search",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With equal weights, hybrid search found 7 of the 8 exact strings first but only 11 of the 24 ordinary questions, against 19 for the embedding search alone. What is the sound next step?",
+    "hint": "Which tool from this lesson decides between settings?",
+    "choices": [
+      {
+        "text": "Drop hybrid search, since it lost on the ordinary questions",
+        "correct": false,
+        "why": "Without it, five of the eight exact strings miss first place. The customers who paste an order number are real too."
+      },
+      {
+        "text": "Choose the weights on your own judgements, exact strings included",
+        "correct": true,
+        "why": "Right. Halving the keyword weight here kept 7 of 8 and gave 15 and 22 on the ordinary questions. Your own questions decide where the dial goes."
+      },
+      {
+        "text": "Raise `k` to 1000 so that ranks matter less",
+        "correct": false,
+        "why": "Nothing in the lesson measured that, and a huge `k` flattens both lists towards equal votes rather than fixing the balance."
+      },
+      {
+        "text": "Use only BM25, since it was perfect on the exact strings",
+        "correct": false,
+        "why": "It found the right article first for only 10 of the 24 ordinary questions, which are most of the traffic."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yhsekkm",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For which of these queries did BM25 put the right article higher than the embedding search did? Choose all that apply.",
+    "hint": "`evaluate.py` printed both ranks for the exact strings.",
+    "choices": [
+      {
+        "text": "`4.90`",
+        "correct": true,
+        "why": "Yes. BM25 put it first and the embedding search 11th."
+      },
+      {
+        "text": "`Visa`",
+        "correct": true,
+        "why": "Yes. First against second."
+      },
+      {
+        "text": "`cash on delivery`",
+        "correct": true,
+        "why": "Yes. First against second."
+      },
+      {
+        "text": "`MG-20481937`",
+        "correct": false,
+        "why": "No. Both put the order-number article first."
+      },
+      {
+        "text": "*get rid of my profile for good*",
+        "correct": false,
+        "why": "No. BM25's top three did not include Closing your account at all, while the embedding search was built for wording like this."
+      }
+    ]
+  },
+  {
+    "id": "ex-90018sg4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the four searches `hybrid.py` measured by how many of the 24 ordinary questions they answered with the right article first, from most to fewest.",
+    "hint": "The embedding search alone led; BM25 alone came last.",
+    "items": [
+      "Embedding search alone",
+      "Hybrid, keyword weight halved",
+      "Hybrid, equal weights",
+      "BM25 alone"
+    ],
+    "trap": "Equal-weight hybrid is not second: halving the keyword weight recovered four of the questions equal fusion had lost, 15 against 11."
+  },
+  {
+    "id": "ex-3r2g3qd2",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Merging several rankings by giving each document 1/(k + rank) from every list and adding them up is called reciprocal rank ___.",
+    "hint": "RRF, the F.",
+    "blanks": [
+      {
+        "accept": [
+          "fusion"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d4p7pas7",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each technique from this lesson to the problem it handles.",
+    "hint": "Four techniques, four problems, one spare.",
+    "pairs": [
+      {
+        "left": "Keyword search (BM25)",
+        "right": "An order number pasted into the search box"
+      },
+      {
+        "left": "Embedding search",
+        "right": "A question worded differently from its answer"
+      },
+      {
+        "left": "Chunking",
+        "right": "A long page that covers several subjects"
+      },
+      {
+        "left": "Reciprocal rank fusion",
+        "right": "Two rankings whose scores are on different scales"
+      }
+    ],
+    "right_distractors": [
+      "Turning a score into the probability of a match"
+    ]
+  }
+]

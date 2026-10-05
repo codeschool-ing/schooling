@@ -72,8 +72,8 @@ measures what that does to the results.
 a slower, better model before keeping the best few. Lesson 16 describes it. The small
 store has no such step.
 
-**5. Return ids, then fetch what they point to.** The search's own answer is ids and scores;
-the text a person reads is a lookup by id, here in a Python list and in a real system in the
+**5. Return ids, then fetch what they point to.** The search's own answer is ids and scores.
+The text a person reads is a lookup by id, here in a Python list and in a real system in the
 database or in the shop's own tables. It is the cheapest step and the one where a stale copy shows
 up, if the text and its vector were not written together.
 

@@ -24,7 +24,7 @@ search by meaning, it is worth building the one it has to beat.
     },
     {
       "code": "def bm25(query, k1=1.5, b=0.75):\n    scores = [0.0] * len(docs)\n    for w in words(query):\n        if w not in df:\n            continue\n        idf = math.log(1 + (len(docs) - df[w] + 0.5) / (df[w] + 0.5))\n        for i, d in enumerate(docs):\n            tf = d.count(w)\n            scores[i] += idf * tf * (k1 + 1) / (tf + k1 * (1 - b + b * len(d) / average))\n    return scores",
-      "note": "BM25 itself. For each word of the query found in the help centre, `idf` is high for a rare word and low for a common one; `tf` is how often the word appears in this article, damped by `k1` and scaled by the article's length against the average through `b`. The two defaults are the usual ones."
+      "note": "BM25 itself. For each word of the query found in the help centre, `idf` is high for a rare word and low for a common one; `tf` is how often the word appears in this article, damped by `k1` and scaled by the article's length against the average through `b`. The two defaults are common choices."
     },
     {
       "code": "def keyword_search(query):\n    scores = bm25(query)\n    found = [i for i in range(len(docs)) if scores[i] > 0]\n    return sorted(found, key=lambda i: -scores[i])",

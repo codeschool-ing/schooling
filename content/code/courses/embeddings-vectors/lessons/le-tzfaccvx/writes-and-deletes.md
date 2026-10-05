@@ -75,7 +75,7 @@ the vector is still there, still multiplied by every query and then discarded. A
 standing in for something deleted, is called a **tombstone**.
 
 Tombstones are not laziness. Removing a row from the middle of an array means moving every row after
-it, and in a real index it is worse: an approximate index, which lesson 15 builds, is a structure
+it, and in a real index it is worse. An approximate index, which lesson 15 builds, is a structure
 of links between vectors, and taking one vector out of it means repairing every link that passed
 through it. Marking it dead is instant. The cost is paid later, all at once.
 

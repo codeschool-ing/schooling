@@ -54,8 +54,7 @@ one article      37 vectors  right page first 21/24  mean best 0.511  q15: h35 h
 
 **Embedded whole, the pages put the right one first for 18 questions out of 24. Cut at the
 article boundaries, 21.** The best score per question also rose, from 0.411 on average to 0.511.
-Question q15, *make the letters bigger when reading*, shows it in one line: all three methods found
-the right page, the one holding h35, h36 and h37, but the whole page matched at 0.199 and the
+Question q15, *make the letters bigger when reading*, shows it in one line. All three methods found the right page, the one holding h35, h36 and h37, but the whole page matched at 0.199 and the
 article about fonts inside it at 0.431. The answer was always there; a page-sized vector had
 watered it down.
 

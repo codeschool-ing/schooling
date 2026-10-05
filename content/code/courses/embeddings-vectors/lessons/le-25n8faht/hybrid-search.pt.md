@@ -10,8 +10,8 @@ ordens numa só.
 
 ## Junte posições, não notas
 
-Somar as duas notas não funciona. O BM25 imprimiu 3.22 e 8.12 nesta aula; a busca por embedding
-imprime cossenos como 0.446. Os números vivem em escalas diferentes, e uma soma seria decidida pela
+Somar as duas notas não funciona. O BM25 imprimiu 3,22 e 4,11 nesta aula; a busca por embedding
+imprime cossenos como 0,446. Os números vivem em escalas diferentes, e uma soma seria decidida pela
 escala que por acaso fosse maior.
 
 As posições estão na mesma escala nas duas listas. A **fusão por posição recíproca** (*reciprocal
