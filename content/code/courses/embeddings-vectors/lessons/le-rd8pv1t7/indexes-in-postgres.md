@@ -121,9 +121,9 @@ LIMIT 3;
 ```
 
 **Before, three processes read about 6,667 rows each and sorted them; after, one index scan
-returned the three rows.** The two `Execution Time` lines, `21.706 ms` and `9.546 ms`, are this
+returned the three rows.** The two `Execution Time` lines, `15.740 ms` and `3.587 ms`, are this
 run's, on a machine other people were using, and the gap between them grows with the table: the
-sequential scan reads every row and the index scan does not. The build took `7294.254 ms`, once, and
+sequential scan reads every row and the index scan does not. The build took `8262.853 ms`, once, and
 every later insert pays a little of that again to add itself to the graph. Lesson 18 weighs the
 index on disk.
 

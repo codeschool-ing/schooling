@@ -1,0 +1,679 @@
+[
+  {
+    "id": "ex-c9hgewzg",
+    "version": 1,
+    "section": "pgvector",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`pg_column_size(embedding)` printed `1544` for a `vector(384)`. The 384 numbers take 1,536 bytes. What are the other 8?",
+    "hint": "The section says what the extra bytes hold.",
+    "choices": [
+      {
+        "text": "The article's id, stored inside the value",
+        "correct": false,
+        "why": "The id is its own column, `id text`. The vector value holds numbers and a little bookkeeping about them, nothing from other columns."
+      },
+      {
+        "text": "A pgvector header holding size and dimension",
+        "correct": true,
+        "why": "Right. Every vector value carries a short header of 8 bytes beside its 4 × d bytes of float32."
+      },
+      {
+        "text": "Two extra float64 coordinates added by Python",
+        "correct": false,
+        "why": "psycopg sends what `register_vector` encodes, and pgvector stores every coordinate as float32; nothing adds coordinates, and `vector_dims` printed 384."
+      },
+      {
+        "text": "The row header and pointer PostgreSQL adds in front of every row it stores",
+        "correct": false,
+        "why": "That overhead is real but belongs to the row, which lesson 18 weighs. `pg_column_size` measured only this one value."
+      }
+    ]
+  },
+  {
+    "id": "ex-2tffes5h",
+    "version": 1,
+    "section": "pgvector",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A model returns 768 dimensions and the column is `vector(768)` in pgvector 0.6.0. What does `pg_column_size` report for one stored vector?",
+    "hint": "Four bytes a number, plus the header the section measured.",
+    "value": 3080,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-s03q01nt",
+    "version": 1,
+    "section": "pgvector",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `articles` table was filled with all-MiniLM-L6-v2. A later script stores one article's vector from a different model that also returns 384 numbers. What does PostgreSQL do?",
+    "hint": "What exactly does `vector(384)` check?",
+    "choices": [
+      {
+        "text": "Refuses it with `expected 384 dimensions`",
+        "correct": false,
+        "why": "That error needs a different length. Both models return 384 numbers, so the length check passes."
+      },
+      {
+        "text": "Refuses it, because pgvector records which model wrote the column",
+        "correct": false,
+        "why": "pgvector stores numbers and a dimension. Nothing in the type names a model, which is why the section says to put the model's name in the schema yourself."
+      },
+      {
+        "text": "Stores it with no error and no warning at all",
+        "correct": true,
+        "why": "Right. Only the length is checked, and a vector from another model of the same dimension is meaningless beside the others while looking exactly like them."
+      },
+      {
+        "text": "Stores it and normalises it to the column's other vectors",
+        "correct": false,
+        "why": "No conversion happens. pgvector keeps the numbers it receives, and no arithmetic maps one model's space onto another's."
+      }
+    ]
+  },
+  {
+    "id": "ex-9c1rbqxm",
+    "version": 1,
+    "section": "pgvector",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To find out which pgvector a PostgreSQL you did not install is running, read the ___ column of `pg_extension` for `vector`.",
+    "hint": "The lab's answer was 0.6.0.",
+    "blanks": [
+      {
+        "accept": [
+          "extversion"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gp2hfebf",
+    "version": 1,
+    "section": "querying-in-sql",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A larger inner product means more similar, yet `ORDER BY embedding <#> q` puts the most similar row first. Why?",
+    "hint": "Look at the sign in the last column of `ops.sql`.",
+    "choices": [
+      {
+        "text": "PostgreSQL sorts descending when the operator is `<#>`",
+        "correct": false,
+        "why": "`ORDER BY` without `DESC` is ascending for every operator; nothing special happens for this one."
+      },
+      {
+        "text": "`<#>` is the cosine distance under another name",
+        "correct": false,
+        "why": "`<=>` is the cosine distance. `<#>` printed `-0.44556307792663574` for h18, a negative number, which no distance is."
+      },
+      {
+        "text": "It returns that number with its sign flipped",
+        "correct": true,
+        "why": "Right. Flipping the sign makes smaller mean closer, the order an index scan walks, so the same ascending sort works for all three operators."
+      },
+      {
+        "text": "The vectors are stored negated when `register_vector` sends them",
+        "correct": false,
+        "why": "The vectors arrive as the model made them; the length column printed 1.0000 and `<=>` gave ordinary positive distances."
+      }
+    ]
+  },
+  {
+    "id": "ex-yx2rk4sp",
+    "version": 1,
+    "section": "querying-in-sql",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two vectors of length 1 have a cosine distance, `<=>`, of 0.25. What does `<#>` return for the same pair?",
+    "hint": "The section relates the negative inner product to the cosine distance.",
+    "value": -0.75,
+    "tolerance": 0.001,
+    "unit": ""
+  },
+  {
+    "id": "ex-5xse8mdy",
+    "version": 1,
+    "section": "querying-in-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`recall.sql` returned five rows for the 24 test questions. What do the five rows tell you?",
+    "hint": "Read the outer `WHERE`.",
+    "choices": [
+      {
+        "text": "Five questions put an article outside their relevant list first, so 19 of 24 were right at rank 1",
+        "correct": true,
+        "why": "Right. The lateral search finds each question's first article, and the `WHERE` keeps only the misses."
+      },
+      {
+        "text": "Five questions have no relevant article in the table",
+        "correct": false,
+        "why": "Every row shows a `relevant` list, and the articles named in it are in `articles`; the miss is in the ranking."
+      },
+      {
+        "text": "The `LATERAL` join stops after five questions",
+        "correct": false,
+        "why": "It ran for all 24. The `LIMIT 1` is inside the subquery and limits each question's search to one article."
+      },
+      {
+        "text": "Five articles were never returned for any question",
+        "correct": false,
+        "why": "The query lists questions, not articles, and h09 appears twice among the five rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-esk97t97",
+    "version": 1,
+    "section": "querying-in-sql",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put in order what happens when `search.py` answers one question.",
+    "hint": "Two steps happen in Python, three in PostgreSQL, and one in Python again.",
+    "items": [
+      "Embed the question with all-MiniLM-L6-v2",
+      "Send the vector as a query parameter",
+      "Compute `<=>` between it and every row's vector",
+      "Sort the rows by that distance, smallest first",
+      "Keep the first three with `LIMIT`",
+      "Print one minus each distance as the similarity"
+    ],
+    "trap": "The vectors of the articles never travel to Python: the distance and the sort both happen inside PostgreSQL, and only three rows come back."
+  },
+  {
+    "id": "ex-n40r1tjq",
+    "version": 1,
+    "section": "indexes-in-postgres",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `CREATE INDEX ... USING hnsw` on the 40 articles, `EXPLAIN` still shows `Seq Scan on articles`. Why?",
+    "hint": "Who chooses the plan, and on what grounds?",
+    "choices": [
+      {
+        "text": "The index is still being built in the background",
+        "correct": false,
+        "why": "`CREATE INDEX` had returned before `EXPLAIN` ran; the index was complete and ready."
+      },
+      {
+        "text": "HNSW indexes need `SET enable_seqscan = off` before the planner will consider them",
+        "correct": false,
+        "why": "On the 20,000-row table the same kind of index was used with no setting changed."
+      },
+      {
+        "text": "The planner estimated that reading 40 rows costs less than walking the graph",
+        "correct": true,
+        "why": "Right. The planner picks the cheapest plan it can estimate, and a table that fits in a few pages is cheapest to read whole."
+      },
+      {
+        "text": "The query used `<=>`, and the index was built for `<->`",
+        "correct": false,
+        "why": "The index was built with `vector_cosine_ops`, which is the class for `<=>`; the operator matched."
+      }
+    ]
+  },
+  {
+    "id": "ex-0x7jp722",
+    "version": 1,
+    "section": "indexes-in-postgres",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An index was built `USING hnsw (embedding vector_cosine_ops)`. Which of these queries is the planner able to answer with it?",
+    "hint": "Operator, direction and a `LIMIT`.",
+    "choices": [
+      {
+        "text": "`ORDER BY 1 - (embedding <=> q) DESC LIMIT 5`",
+        "correct": false,
+        "why": "The same order on paper, but the planner does not do the algebra; `unused.sql` got a `Seq Scan` for exactly this."
+      },
+      {
+        "text": "`ORDER BY embedding <=> q LIMIT 5`",
+        "correct": true,
+        "why": "Right. Column, the operator the class names, the value, ascending, and a limit: the one shape the index serves."
+      },
+      {
+        "text": "`ORDER BY embedding <-> q LIMIT 5`",
+        "correct": false,
+        "why": "`<->` is the L2 distance, served by `vector_l2_ops`. `unused.sql` showed the cosine index ignored for it."
+      },
+      {
+        "text": "`ORDER BY embedding <=> q DESC LIMIT 5`",
+        "correct": false,
+        "why": "Descending asks for the farthest rows first, which is not what the index walks towards."
+      }
+    ]
+  },
+  {
+    "id": "ex-8h97epyk",
+    "version": 1,
+    "section": "indexes-in-postgres",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With an IVFFlat index of `lists = 100` on the 40 articles, `search.py` printed one row instead of three. What explains it?",
+    "hint": "Two numbers: how many groups exist and how many a query visits.",
+    "choices": [
+      {
+        "text": "IVFFlat returns only the nearest row whatever the `LIMIT`",
+        "correct": false,
+        "why": "On a table big enough for its groups, an IVFFlat scan fills the `LIMIT`; the one row came from this index's state, not from the method."
+      },
+      {
+        "text": "The HNSW index on the same column conflicted with it",
+        "correct": false,
+        "why": "Two indexes on one column do not interfere. The planner picked one, the IVFFlat, and its answer was short."
+      },
+      {
+        "text": "The query searched one group of a hundred, and it held one article",
+        "correct": true,
+        "why": "Right. `ivfflat.probes` was 1, and a hundred groups learnt from 40 rows leave each one nearly empty."
+      },
+      {
+        "text": "The NOTICE aborted half of the index build",
+        "correct": false,
+        "why": "The `NOTICE` was a warning and `CREATE INDEX` completed; the index held every row, in groups the query mostly did not visit."
+      }
+    ]
+  },
+  {
+    "id": "ex-6r1ageew",
+    "version": 1,
+    "section": "indexes-in-postgres",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each operator to the operator class an index needs for it to be used.",
+    "hint": "The class names the distance.",
+    "pairs": [
+      {
+        "left": "`<->`",
+        "right": "`vector_l2_ops`"
+      },
+      {
+        "left": "`<#>`",
+        "right": "`vector_ip_ops`"
+      },
+      {
+        "left": "`<=>`",
+        "right": "`vector_cosine_ops`"
+      }
+    ],
+    "right_distractors": [
+      "`vector_dims_ops`"
+    ]
+  },
+  {
+    "id": "ex-s4d1wah4",
+    "version": 1,
+    "section": "indexes-in-postgres",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An IVFFlat scan looks in as many of its groups as the setting `ivfflat.___` says, and pgvector 0.6.0 sets it to 1 unless you change it.",
+    "hint": "The section showed it with `SHOW`.",
+    "blanks": [
+      {
+        "accept": [
+          "probes"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n4rea68m",
+    "version": 1,
+    "section": "indexes-in-postgres",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without an index, the plan for the `noise` search showed `Parallel Seq Scan ... rows=6667 loops=3`. About how many rows were read in total?",
+    "hint": "`rows` is per loop, and there were three loops.",
+    "value": 20001,
+    "tolerance": 1,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-vcchkpsq",
+    "version": 1,
+    "section": "supabase",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does Supabase's guide put the vector search inside a SQL function and call it with `rpc`?",
+    "hint": "What does a Supabase client send?",
+    "choices": [
+      {
+        "text": "pgvector on Supabase works only inside functions",
+        "correct": false,
+        "why": "The column, the operators and the indexes work in any SQL there. The function exists for the client's sake."
+      },
+      {
+        "text": "The generated API has no way to order by a pgvector operator",
+        "correct": true,
+        "why": "Right. The client talks to an API that filters and sorts by columns, and a function called through it runs the SQL the API cannot express."
+      },
+      {
+        "text": "Functions run faster, because PostgreSQL caches the vectors they have already read",
+        "correct": false,
+        "why": "Nothing is cached by the function. `LANGUAGE sql STABLE` lets the planner treat it like the query inside it, which is the same speed."
+      },
+      {
+        "text": "So the embedding model runs on Supabase's servers",
+        "correct": false,
+        "why": "The function takes a vector already computed. The program embeds the question on the caller's side, with the same model as the articles."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qag1h2v",
+    "version": 1,
+    "section": "supabase",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team declares its search function `SECURITY DEFINER`, owned by an administrator, so that it 'always works'. The `articles` table has a row-level security policy per shop. What has changed?",
+    "hint": "Whose rights does the function run with now?",
+    "choices": [
+      {
+        "text": "Nothing, because policies are checked on the table whoever runs the query",
+        "correct": false,
+        "why": "Policies apply to the role running the query, and a `SECURITY DEFINER` function runs as its owner, whose role the policy may not restrict."
+      },
+      {
+        "text": "The function now refuses every call from the browser",
+        "correct": false,
+        "why": "Definer rights widen what the function reads; they do not stop anybody from calling it."
+      },
+      {
+        "text": "Only the speed: definer functions skip the planner",
+        "correct": false,
+        "why": "The planner runs either way. What changes is whose policies apply."
+      },
+      {
+        "text": "Any caller searches every shop's articles through it",
+        "correct": true,
+        "why": "Right. The function runs with its owner's rights and skips the caller's policies, so the search became a way round them."
+      }
+    ]
+  },
+  {
+    "id": "ex-nyq9zwsp",
+    "version": 1,
+    "section": "supabase",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`match_articles` declares its parameter as `vector(384)`. A caller passes a vector of 256 numbers. What happens?",
+    "hint": "The section ran exactly this.",
+    "choices": [
+      {
+        "text": "The call is refused with `expected 384 dimensions, not 256`",
+        "correct": false,
+        "why": "That is the column's error on an INSERT. A function's parameter size is ignored, so the vector gets in."
+      },
+      {
+        "text": "It gets in, and `<=>` fails with `different vector dimensions 384 and 256`",
+        "correct": true,
+        "why": "Right. PostgreSQL ignores the size written on a parameter, and the operator refuses to compare vectors of different lengths."
+      },
+      {
+        "text": "It is padded with zeros to 384 and scored",
+        "correct": false,
+        "why": "Nothing pads a vector. The `matchdims` capture ended in an error, with no rows."
+      },
+      {
+        "text": "The function returns zero rows, because nothing passes the threshold",
+        "correct": false,
+        "why": "No row was scored at all; the comparison itself failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-nzxeebkq",
+    "version": 1,
+    "section": "mongodb-atlas",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `$vectorSearch`, `numCandidates` plays the part of which pgvector setting?",
+    "hint": "Both decide how wide an approximate search looks before it keeps the best.",
+    "choices": [
+      {
+        "text": "`hnsw.ef_search`",
+        "correct": true,
+        "why": "Right. Both size the list of candidates an HNSW-style search gathers; Atlas takes it in every query, pgvector as a session setting."
+      },
+      {
+        "text": "The `LIMIT` of the query",
+        "correct": false,
+        "why": "`limit` has its own field in `$vectorSearch`, and `numCandidates` cannot be smaller than it."
+      },
+      {
+        "text": "The `lists` given at `CREATE INDEX`",
+        "correct": false,
+        "why": "`lists` is fixed when an IVFFlat index is built. `numCandidates` changes per query."
+      },
+      {
+        "text": "The dimension in `vector(384)`",
+        "correct": false,
+        "why": "The dimension is `numDimensions` in Atlas's index definition, not a field of the query."
+      }
+    ]
+  },
+  {
+    "id": "ex-wfjatrg1",
+    "version": 1,
+    "section": "mongodb-atlas",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves its search from pgvector to Atlas, with a `cosine` index, and keeps its rule 'drop results under 0.4', tuned on `1 - (a <=> b)`. What happens to the results?",
+    "hint": "Atlas's score is (1 + cosine) / 2.",
+    "choices": [
+      {
+        "text": "Nothing changes; a cosine is a cosine",
+        "correct": false,
+        "why": "Atlas does not return the cosine. Its score is rescaled to run from 0 to 1."
+      },
+      {
+        "text": "Almost nothing passes, because Atlas scores run lower",
+        "correct": false,
+        "why": "The rescaling moves scores up for every cosine below 1, so the threshold lets more through, not less."
+      },
+      {
+        "text": "Far more passes, since 0.4 there is only a cosine of −0.2",
+        "correct": true,
+        "why": "Right. (1 + c) / 2 = 0.4 gives c = −0.2, so results that pgvector would have dropped as unrelated now pass."
+      },
+      {
+        "text": "The query fails until the threshold is given as a distance",
+        "correct": false,
+        "why": "`$vectorSearch` has no threshold field at all; the rule is the team's own code, and it runs on whatever score comes back."
+      }
+    ]
+  },
+  {
+    "id": "ex-gnyjj6n2",
+    "version": 1,
+    "section": "mongodb-atlas",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In MongoDB Atlas the vector search is a stage of an aggregation pipeline, called ___, and it has to be the pipeline's first stage.",
+    "hint": "Its name starts with a dollar sign.",
+    "blanks": [
+      {
+        "accept": [
+          "$vectorSearch",
+          "vectorSearch"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w4jrtz11",
+    "version": 1,
+    "section": "one-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`edit.py` updated the refund article's body, then tried to store a WordLlama vector in the same transaction. What did the article's body read afterwards?",
+    "hint": "The second line of the output.",
+    "choices": [
+      {
+        "text": "The new text, with the old vector beside it",
+        "correct": false,
+        "why": "That is what two systems would leave. Here both updates were in one transaction, and the error rolled back both."
+      },
+      {
+        "text": "The old text, as if the script had never run",
+        "correct": true,
+        "why": "Right. The vector was refused, PostgreSQL rolled back the whole transaction, and the body still said three working days."
+      },
+      {
+        "text": "Nothing; the row was deleted by the failed update",
+        "correct": false,
+        "why": "A failed `UPDATE` does not delete. The fresh connection read the row back."
+      },
+      {
+        "text": "The new text with a vector truncated to 256 numbers",
+        "correct": false,
+        "why": "pgvector does not truncate; it refused the value with `expected 384 dimensions, not 256`."
+      }
+    ]
+  },
+  {
+    "id": "ex-qj5qpnjj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team checks that its search uses the HNSW index by running `EXPLAIN` against a staging copy of 300 rows, and sees `Seq Scan`. Production has two million rows. What should they conclude?",
+    "hint": "Which plan the planner picks depends on what it estimates.",
+    "choices": [
+      {
+        "text": "The index is broken and must be rebuilt",
+        "correct": false,
+        "why": "A `Seq Scan` on a small table is the planner's correct choice, as it was on the 40 articles; it says nothing about the index's health."
+      },
+      {
+        "text": "Nothing about production; the plan has to be checked on a table of production's size",
+        "correct": true,
+        "why": "Right. The choice follows the table's size, so a small copy is answered with a full read whatever the index."
+      },
+      {
+        "text": "Production will also read every row, since a plan does not change with the table's size",
+        "correct": false,
+        "why": "It does change: the same query on 20,000 rows of `noise` switched to an `Index Scan`."
+      },
+      {
+        "text": "The operator class is wrong for the query",
+        "correct": false,
+        "why": "A wrong class gives a `Seq Scan` at every size, which is why it is checked on the large table; a 300-row result alone cannot tell the two apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-adv9w2x7",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Marginalia keeps its help-centre vectors in a column of the PostgreSQL that holds its orders. Which of these does it get without building anything more? Choose all that apply.",
+    "hint": "Think about what the rest of the data already has.",
+    "choices": [
+      {
+        "text": "A text and its vector saved or rolled back together",
+        "correct": true,
+        "why": "Yes. Both are in one row and one transaction, as `edit.py` showed."
+      },
+      {
+        "text": "Vectors in the same backups as the texts",
+        "correct": true,
+        "why": "Yes. `pg_dump` and every other backup of the database include the column."
+      },
+      {
+        "text": "A guarantee that a `LIMIT 10` search through the index always returns 10 rows",
+        "correct": false,
+        "why": "An approximate index can return fewer rows, as the IVFFlat did here and as lesson 16 shows for HNSW."
+      },
+      {
+        "text": "Joins between search results and the other tables, in one statement",
+        "correct": true,
+        "why": "Yes. `recall.sql` joined the questions to the articles; orders or stock join the same way."
+      },
+      {
+        "text": "A check that every vector came from the same model",
+        "correct": false,
+        "why": "The column checks only the dimension. Two models of 384 dimensions pass it alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-qyk7esty",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each description to the system it describes.",
+    "hint": "Lesson 13 met the one library among them.",
+    "pairs": [
+      {
+        "left": "A `vector(384)` column refuses a short vector at INSERT",
+        "right": "PostgreSQL with pgvector"
+      },
+      {
+        "left": "`numDimensions` lives in an index defined beside the collection",
+        "right": "MongoDB Atlas"
+      },
+      {
+        "left": "A SQL function called over HTTPS through `rpc`",
+        "right": "Supabase"
+      },
+      {
+        "left": "An index in your own process, with no metadata and no server",
+        "right": "FAISS"
+      }
+    ],
+    "right_distractors": [
+      "Pinecone"
+    ]
+  },
+  {
+    "id": "ex-b4dkd673",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the steps for adding IVFFlat search to an existing PostgreSQL database.",
+    "hint": "One index type learns from the rows that exist when it is built.",
+    "items": [
+      "`CREATE EXTENSION vector`",
+      "Add a table or column of type `vector(384)`",
+      "Load the vectors",
+      "`CREATE INDEX ... USING ivfflat`",
+      "`EXPLAIN` the search on the full table"
+    ],
+    "trap": "The index comes after the load: IVFFlat learns its groups from the rows present at `CREATE INDEX`, and on the 40 articles it printed a `NOTICE` and lost rows. HNSW could have been created earlier."
+  }
+]

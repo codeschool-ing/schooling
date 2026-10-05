@@ -10,8 +10,8 @@ database into a vector store. It is an extension, the same mechanism PostGIS use
 types, and it adds three things: a column type called `vector`, operators that measure the distance
 between two vectors, and two kinds of index.
 
-Lesson 2 installed it in a scratch database to compare three distances on paper. Here it holds the
-help centre. The lab runs PostgreSQL 16 with the pgvector package Ubuntu 24.04 ships, and the schema
+Lesson 2 installed it to compare three distances on two small vectors. Here it holds the help
+centre. The lab runs PostgreSQL 16 with the pgvector package Ubuntu 24.04 ships, and the schema
 is two ordinary tables:
 
 ```schooling-example

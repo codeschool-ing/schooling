@@ -51,7 +51,7 @@ the query inside it. The function is ordinary schema: it goes in a migration wit
 it changes when the query does.
 
 From the application, the call names the function and passes its arguments as JSON. The vector
-travels as a JSON array of 384 numbers and arrives as a `vector(384)`, because that is the type of the
+travels as a JSON array of 384 numbers and arrives as a `vector`, because that is the type of the
 parameter:
 
 ```python

@@ -94,6 +94,6 @@ the other; convert it, or tune it again on the scores the new system returns.
 pgvector's index is part of the table: the `INSERT` that adds a row adds it to the index in the same
 transaction, and the next query finds it. **Atlas keeps its search indexes up to date from the
 collection in the background**, and MongoDB's documentation calls them eventually consistent. A
-document written a moment ago may not be found by `$vectorSearch` yet, and a newly created index
-cannot be queried until its first build has finished, and the driver's `list_search_indexes()`
-reports when it can. A test that inserts and immediately searches has to wait for that.
+document written a moment ago may not be found by `$vectorSearch` yet. A newly created index cannot
+be queried until its first build has finished; the driver's `list_search_indexes()` reports when it
+can. A test that inserts and immediately searches has to wait for that.

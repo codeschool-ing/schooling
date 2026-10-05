@@ -2082,6 +2082,155 @@
     "hint": "Lesson 13."
   },
   {
+    "id": "ex-p2h6zxw8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Marginalia already runs PostgreSQL. What does installing pgvector add to that database?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "A separate server process that keeps the vectors beside PostgreSQL",
+        "correct": false,
+        "why": "pgvector is an extension inside PostgreSQL, the same mechanism PostGIS uses. The vectors live in ordinary tables."
+      },
+      {
+        "text": "A column type, distance operators and two kinds of index",
+        "correct": true,
+        "why": "Right. `vector`, the operators `<->`, `<=>` and `<#>`, and HNSW and IVFFlat."
+      },
+      {
+        "text": "A model that embeds text inside the database",
+        "correct": false,
+        "why": "pgvector stores and compares vectors that something else computed; the lesson embedded with all-MiniLM-L6-v2 in Python."
+      },
+      {
+        "text": "A web API for searching from a browser",
+        "correct": false,
+        "why": "That is what Supabase adds around PostgreSQL. pgvector itself speaks SQL."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbmkaesc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A column is declared `vector(1024)` in pgvector 0.6.0. How many bytes does `pg_column_size` report for one stored vector?",
+    "hint": "Lesson 14: four bytes a number, plus a header of eight.",
+    "value": 4104,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-y28w1fjw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A test inserts a document into a MongoDB Atlas collection and runs `$vectorSearch` for it straight away. Sometimes the document is missing from the results. Why?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "`$vectorSearch` was not the first stage of the pipeline",
+        "correct": false,
+        "why": "That is refused outright, every time; it does not make one document come and go."
+      },
+      {
+        "text": "The vector was stored as a plain array rather than a vector type",
+        "correct": false,
+        "why": "In Atlas the vector is an ordinary array field; that is how it is meant to be stored."
+      },
+      {
+        "text": "The index catches up in the background",
+        "correct": true,
+        "why": "Right. MongoDB describes these indexes as eventually consistent, so a write is not searchable at once, unlike a pgvector row in the same transaction."
+      },
+      {
+        "text": "`numCandidates` was smaller than the collection",
+        "correct": false,
+        "why": "It is meant to be smaller than the collection; it bounds how many neighbours the search gathers, not which documents are indexed."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y05nnq6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A table of two million rows has an HNSW index with `vector_cosine_ops`. The application searches with `ORDER BY 1 - (embedding <=> $1) DESC LIMIT 10`, and every search takes seconds. What is the cause?",
+    "hint": "Lesson 14, the operator and the index.",
+    "choices": [
+      {
+        "text": "The index needs `vector_ip_ops` for a similarity",
+        "correct": false,
+        "why": "The inner-product class serves `<#>`. The query uses `<=>`; what is wrong is the shape around it."
+      },
+      {
+        "text": "HNSW cannot serve a table of two million rows, only smaller ones",
+        "correct": false,
+        "why": "Size is what an index is for; the 20,000-row table switched to an index scan as soon as the query had the right shape."
+      },
+      {
+        "text": "The `ORDER BY` is not a shape the index serves",
+        "correct": true,
+        "why": "Right. The planner does not see that the expression sorts like `embedding <=> $1` ascending; write that, and compute the similarity in the `SELECT` list."
+      },
+      {
+        "text": "`LIMIT 10` is above `hnsw.ef_search`",
+        "correct": false,
+        "why": "Ten is below the default of 40, and a short `ef_search` returns fewer rows, not slower ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-yssfpr5q",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "The part of `CREATE INDEX` that names the distance an index is built for, such as `vector_l2_ops`, is its operator ___.",
+    "hint": "Lesson 14.",
+    "blanks": [
+      {
+        "accept": [
+          "class",
+          "opclass"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n4d5yywd",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these statements about Supabase are true? Choose all that apply.",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "Each project is a PostgreSQL database that offers pgvector",
+        "correct": true,
+        "why": "Yes. The column, the operators and the indexes work there as they do in any PostgreSQL."
+      },
+      {
+        "text": "Its client sends the search to the database as SQL text",
+        "correct": false,
+        "why": "The client talks to an API generated from the schema, which is why the search goes into a function called with `rpc`."
+      },
+      {
+        "text": "Row-level security applies inside a search function that runs with the caller's rights",
+        "correct": true,
+        "why": "Yes. A `SECURITY INVOKER` function sorts only the rows the caller's policies allow."
+      },
+      {
+        "text": "The service_role key is safe in a web page, since policies still apply to it",
+        "correct": false,
+        "why": "That key bypasses row-level security entirely; it belongs on a server."
+      }
+    ]
+  },
+  {
     "id": "ex-mgenpp22",
     "version": 1,
     "type": "quiz",

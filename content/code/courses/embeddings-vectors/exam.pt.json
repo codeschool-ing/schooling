@@ -1505,6 +1505,112 @@
     ],
     "hint": "Aula 13."
   },
+  "ex-p2h6zxw8": {
+    "prompt": "A Marginalia já roda PostgreSQL. O que instalar o pgvector acrescenta a esse banco?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Um processo servidor separado que guarda os vetores ao lado do PostgreSQL",
+        "why": "O pgvector é uma extensão dentro do PostgreSQL, o mesmo mecanismo que o PostGIS usa. Os vetores moram em tabelas comuns."
+      },
+      {
+        "text": "Um tipo de coluna, operadores de distância e dois tipos de índice",
+        "why": "Certo. `vector`, os operadores `<->`, `<=>` e `<#>`, e HNSW e IVFFlat."
+      },
+      {
+        "text": "Um modelo que transforma texto em vetor dentro do banco",
+        "why": "O pgvector guarda e compara vetores que outra coisa calculou; a aula gerou os vetores com o all-MiniLM-L6-v2 no Python."
+      },
+      {
+        "text": "Uma API web para buscar a partir do navegador",
+        "why": "Isso é o que o Supabase acrescenta em volta do PostgreSQL. O pgvector fala SQL."
+      }
+    ]
+  },
+  "ex-vbmkaesc": {
+    "prompt": "Uma coluna é declarada `vector(1024)` no pgvector 0.6.0. Quantos bytes `pg_column_size` informa para um vetor guardado?",
+    "hint": "Aula 14: quatro bytes por número, mais um cabeçalho de oito.",
+    "unit": "bytes"
+  },
+  "ex-y28w1fjw": {
+    "prompt": "Um teste insere um documento numa coleção do MongoDB Atlas e roda `$vectorSearch` por ele logo em seguida. Às vezes o documento não aparece nos resultados. Por quê?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "`$vectorSearch` não era o primeiro estágio do pipeline",
+        "why": "Isso é recusado de saída, toda vez; não faz um documento aparecer e sumir."
+      },
+      {
+        "text": "O vetor foi guardado como array simples em vez de um tipo vetor",
+        "why": "No Atlas o vetor é um campo de array comum; é assim que ele deve ser guardado."
+      },
+      {
+        "text": "O índice se atualiza em segundo plano",
+        "why": "Certo. O MongoDB descreve esses índices como eventualmente consistentes, então uma gravação não pode ser buscada na hora, ao contrário de uma linha do pgvector na mesma transação."
+      },
+      {
+        "text": "`numCandidates` era menor que a coleção",
+        "why": "Ele deve mesmo ser menor que a coleção; limita quantos vizinhos a busca reúne, não quais documentos estão indexados."
+      }
+    ]
+  },
+  "ex-4y05nnq6": {
+    "prompt": "Uma tabela de dois milhões de linhas tem um índice HNSW com `vector_cosine_ops`. A aplicação busca com `ORDER BY 1 - (embedding <=> $1) DESC LIMIT 10`, e toda busca leva segundos. Qual é a causa?",
+    "hint": "Aula 14, o operador e o índice.",
+    "choices": [
+      {
+        "text": "O índice precisa de `vector_ip_ops` para uma similaridade",
+        "why": "A classe de produto interno atende `<#>`. A consulta usa `<=>`; o que está errado é o formato em volta dele."
+      },
+      {
+        "text": "O HNSW não dá conta de uma tabela de dois milhões de linhas, só de menores",
+        "why": "Tamanho é para isso que serve um índice; a tabela de 20.000 linhas passou para uma varredura de índice assim que a consulta teve o formato certo."
+      },
+      {
+        "text": "O `ORDER BY` não tem um formato que o índice atende",
+        "why": "Certo. O planejador não percebe que a expressão ordena como `embedding <=> $1` crescente; escreva isso, e calcule a similaridade na lista do `SELECT`."
+      },
+      {
+        "text": "`LIMIT 10` está acima de `hnsw.ef_search`",
+        "why": "Dez está abaixo do padrão de 40, e um `ef_search` curto devolve menos linhas, não linhas mais lentas."
+      }
+    ]
+  },
+  "ex-yssfpr5q": {
+    "prompt": "A parte do `CREATE INDEX` que nomeia a distância para a qual um índice é construído, como `vector_l2_ops`, é a sua ___ de operadores.",
+    "hint": "Aula 14.",
+    "blanks": [
+      {
+        "accept": [
+          "classe",
+          "class",
+          "opclass"
+        ]
+      }
+    ]
+  },
+  "ex-n4d5yywd": {
+    "prompt": "Quais destas afirmações sobre o Supabase são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Cada projeto é um banco PostgreSQL que oferece o pgvector",
+        "why": "Sim. A coluna, os operadores e os índices funcionam lá como em qualquer PostgreSQL."
+      },
+      {
+        "text": "O cliente dele manda a busca ao banco como texto SQL",
+        "why": "O cliente conversa com uma API gerada a partir do esquema, e é por isso que a busca vai para uma função chamada com `rpc`."
+      },
+      {
+        "text": "A segurança em nível de linha vale dentro de uma função de busca que roda com os direitos de quem chama",
+        "why": "Sim. Uma função `SECURITY INVOKER` ordena só as linhas que as políticas de quem chama permitem."
+      },
+      {
+        "text": "A chave service_role é segura numa página web, já que as políticas ainda valem para ela",
+        "why": "Essa chave ignora a segurança em nível de linha por completo; ela fica num servidor."
+      }
+    ]
+  },
   "ex-mgenpp22": {
     "prompt": "Uma busca da central de ajuda devolve 5 artigos para toda pergunta, inclusive 'what time is it in Tokyo'. A gerente de produto quer 'nenhum resultado' quando nada serve. O que você acrescenta?",
     "hint": "Aula 16.",
