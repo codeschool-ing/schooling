@@ -93,4 +93,4 @@ ou dividir o documento.
 
 Um lembrete sobre a ferramenta: a tabela registra esses níveis; o `sheet cost` os ignora. **Uma
 calculadora de custo que só conhece o preço normal está certa até o dia em que erra feio**, que é um
-motivo de a aula 21 ler a conta que o provedor de fato manda.
+motivo de a aula 21 contar o que cada resposta informa em vez do que uma calculadora prevê.

@@ -93,4 +93,4 @@ section 07), or split the document.
 
 A reminder about the tool: the sheet records these tiers; `sheet cost` ignores them. **A cost
 calculator that knows only the standard rate is right until the day it is badly wrong**, which is a
-reason lesson 21 reads the bill the provider actually sends.
+reason lesson 21 counts what each response reports rather than what a calculator predicts.

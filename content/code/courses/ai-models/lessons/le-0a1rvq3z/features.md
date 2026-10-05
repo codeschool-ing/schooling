@@ -41,7 +41,7 @@ budget.
 
 **Effort** is a second setting on the newer models: how hard the model works on a reply, from low
 to max. The defaults differ, `high` on Fable and Sonnet and `medium` on
-Opus, and Haiku does not support it. Lesson 17 shows where it goes in a request. For choosing, the
+Opus, and Haiku does not support it. For choosing, the
 consequence is that **a model's cost and latency depend on a setting**, and an evaluation has to
 record the effort it ran at, as section 08 of lesson 5 recorded the temperature.
 
@@ -82,5 +82,5 @@ Sonnet caching it and Haiku silently charging full price, and the bill, not an e
 - **Batch** halves every price above (the `_batches` lines), for work that can wait hours.
 - **Vision and tool use** are supported by every model in the table, in the page's own words, and
   the sheet's `VFSCRP` adds structured output, caching, reasoning and PDF input for all four.
-- Anthropic's API is reached in lesson 17, where the request shape, the version header and the
-  parameters the SDK actually accepts are shown.
+- Anthropic's API is reached in lesson 17, where the request shape, the version header, the
+  retries and the cache's usage fields are shown.

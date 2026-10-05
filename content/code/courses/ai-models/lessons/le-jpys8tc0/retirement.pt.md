@@ -61,8 +61,8 @@ O padrão é o mesmo em todo lugar:
   respondendo, e o que responde pode mudar numa data que ninguém avisou a você.
 
 Então fixe um identificador datado em produção quando existir, registre qual no projeto, e ponha a
-data de aposentadoria num calendário com a avaliação da aula 5 anexada a ela. A aula 21 volta a isso
-como tarefa de operação.
+data de aposentadoria num calendário com a avaliação da aula 5 anexada a ela. A seção 04 da aula 8
+volta a isso com um provedor que aposenta modelos em lote.
 
 ## Um modelo aberto muda quando você o muda
 

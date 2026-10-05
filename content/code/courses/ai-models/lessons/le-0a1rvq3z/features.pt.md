@@ -41,7 +41,7 @@ raciocínio *extended*, mais antigo, que a requisição liga e para o qual defin
 
 **Effort** (esforço) é uma segunda configuração dos modelos novos: o quanto o modelo se dedica a uma
 resposta, de low a max. Os padrões diferem, `high` no Fable e no Sonnet e
-`medium` no Opus, e o Haiku não suporta. A aula 17 mostra onde ele entra numa requisição. Para
+`medium` no Opus, e o Haiku não suporta. Para
 escolher, a consequência é que **o custo e a latência de um modelo dependem de uma configuração**, e
 uma avaliação precisa registrar o esforço com que rodou, como a seção 08 da aula 5 registrou a
 temperatura.
@@ -86,5 +86,5 @@ avisaria seria a conta, não um erro.
 - **Visão e uso de ferramentas** são suportados por todos os modelos da tabela, nas palavras da
   própria página, e o `VFSCRP` da tabela do LiteLLM acrescenta saída estruturada, cache, raciocínio
   e entrada de PDF para os quatro.
-- A API da Anthropic aparece na aula 17, onde ficam o formato da requisição, o cabeçalho de versão e
-  os parâmetros que o SDK de fato aceita.
+- A API da Anthropic aparece na aula 17, onde ficam o formato da requisição, o cabeçalho de versão,
+  as novas tentativas e os campos de uso do cache.

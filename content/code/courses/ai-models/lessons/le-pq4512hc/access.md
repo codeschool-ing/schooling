@@ -31,8 +31,7 @@ Three groups, read from the `provider` column.
 `vertex_ai` and `vertex_ai-language-models` are Vertex AI, Google Cloud's platform, reached with a
 cloud project's credentials. **The prices are identical** at this commit. The difference is the one
 lesson 6 section 04 drew for Claude on the clouds: an account, a contract, regions and access rules
-in Google Cloud, against a key and a simpler sign-up in AI Studio. Lesson 18 calls the Gemini API
-and notes where Vertex differs.
+in Google Cloud, against a key and a simpler sign-up in AI Studio. Lesson 18 calls the Gemini API.
 
 **Resellers at the same price.** OpenRouter, DeepInfra and Perplexity list Flash 3.5 at Google's
 own $1.50 and $9. A closed model resold has no room to undercut its maker, as lesson 2 found for

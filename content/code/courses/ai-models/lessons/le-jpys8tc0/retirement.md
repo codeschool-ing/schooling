@@ -59,8 +59,8 @@ The pattern is the same everywhere:
   what answers can change on a date you were not told about.
 
 So pin a dated identifier in production when one exists, record which one in the project, and put
-the retirement date in a calendar with the evaluation of lesson 5 attached to it. Lesson 21
-returns to this as an operational task.
+the retirement date in a calendar with the evaluation of lesson 5 attached to it. Lesson 8
+section 04 returns to this with a provider retiring models in bulk.
 
 ## An open model changes when you change it
 
