@@ -1,0 +1,455 @@
+{
+  "ex-a16cj6xt": {
+    "prompt": "`grep -i \"money back\"` na central de ajuda devolveu o artigo sobre devolver um presente e não achou os artigos de reembolso. Por quê?",
+    "hint": "Veja o que o grep compara.",
+    "choices": [
+      {
+        "text": "O grep casa caracteres exatos, e só o artigo do presente contém exatamente essa sequência",
+        "why": "Certo. Os artigos de reembolso dizem refund, e uma busca por sequência de caracteres não tem como saber que refund e money back descrevem a mesma coisa."
+      },
+      {
+        "text": "Os artigos de reembolso ficam num arquivo diferente do artigo do presente",
+        "why": "Os 40 artigos estão em data/help.jsonl, e o segundo grep contou 8 linhas que mencionam reembolso nesse mesmo arquivo."
+      },
+      {
+        "text": "O grep ignora o corpo de cada linha e lê só os títulos",
+        "why": "O grep lê linhas inteiras, e o artigo do presente casou pelo corpo: as palavras money back estão na última frase dele."
+      },
+      {
+        "text": "A busca precisava diferenciar maiúsculas para achá-los",
+        "why": "O -i ignora maiúsculas, o que só pode achar mais linhas. O problema nunca foi a caixa das letras; foram as palavras."
+      }
+    ]
+  },
+  "ex-qjb11h9z": {
+    "prompt": "Uma loja mantém à mão uma lista de sinônimos para a busca: refund = money back, parcel = box. Uma cliente digita 'the box never showed up' (a caixa nunca apareceu). O que ainda falta à lista?",
+    "hint": "O título do artigo é A parcel marked as delivered that never arrived.",
+    "choices": [
+      {
+        "text": "Um sinônimo para parcel, já que box é a palavra que a cliente usa",
+        "why": "A lista já tem parcel = box. O problema é o resto da frase."
+      },
+      {
+        "text": "Que showed up e arrived nomeiam o mesmo fato",
+        "why": "Certo. Uma lista de sinônimos trabalha palavra por palavra; aqui a correspondência é entre dois jeitos de contar um acontecimento, uma questão de significado, e é isso que um embedding compara."
+      },
+      {
+        "text": "Radicalização, para arrived casar com arrive",
+        "why": "A radicalização faria arrive casar com arrived, mas a cliente não escreveu nenhum dos dois. Ela não liga showed up a arrived."
+      },
+      {
+        "text": "Correção ortográfica para showed",
+        "why": "Nada está escrito errado. As duas formas são inglês correto e não dividem nenhuma palavra."
+      }
+    ]
+  },
+  "ex-h50ch26q": {
+    "prompt": "`first.py` imprimiu `(384,) float32`. O que ele imprimiria para um artigo de três parágrafos em vez de um título de quatro palavras?",
+    "hint": "O 384 pertence a outra coisa que não o texto.",
+    "choices": [
+      {
+        "text": "Um formato maior",
+        "why": "O vetor não cresce com o texto. Se crescesse, dois textos de tamanhos diferentes não poderiam ser comparados coordenada por coordenada."
+      },
+      {
+        "text": "(384,) float32 de novo",
+        "why": "Certo. A dimensão é uma propriedade do modelo. Todo texto que passa pelo all-MiniLM-L6-v2 sai como 384 números."
+      },
+      {
+        "text": "Vários vetores de 384, um por parágrafo",
+        "why": "embed devolve um vetor por texto recebido. Um programa poderia dividir o artigo em parágrafos antes, como a aula 3 faz, mas essa é uma escolha feita antes do modelo."
+      },
+      {
+        "text": "Um erro, porque o modelo lê só quatro palavras",
+        "why": "O modelo lê até 256 pedaços de palavra. Um artigo de três parágrafos cabe, e a aula 9 mostra o que acontece depois do limite."
+      }
+    ]
+  },
+  "ex-mcnt1crd": {
+    "prompt": "A primeira coordenada do vetor do título de reembolso é -0.0865. O que esse número diz sobre o título?",
+    "hint": "Onde a seção diz que o significado está?",
+    "choices": [
+      {
+        "text": "Nada que tenha nome; o sentido está no vetor inteiro",
+        "why": "Certo. A informação está espalhada pelas 384 coordenadas, e aparece quando o vetor é comparado com outros vetores do mesmo modelo."
+      },
+      {
+        "text": "Que o título tem um tom um pouco negativo, já que o número é menor que zero",
+        "why": "Nenhuma coordenada é uma nota de sentimento. O sinal de um número entre 384 não significa nada sozinho."
+      },
+      {
+        "text": "O quanto o título fala de dinheiro",
+        "why": "Ninguém disse ao modelo o que cada coordenada deveria medir, e nenhuma delas corresponde a um assunto que se possa nomear."
+      },
+      {
+        "text": "A posição da palavra refund no vocabulário do próprio modelo",
+        "why": "As posições no vocabulário são números inteiros usados dentro do tokenizador. O vetor guarda o resultado das contas do modelo, não um índice."
+      }
+    ]
+  },
+  "ex-esymx4nt": {
+    "prompt": "Um modelo devolve vetores de 768 dimensões em float32. Quantos bytes ocupa um vetor?",
+    "hint": "Um float32 tem quatro bytes.",
+    "unit": "bytes"
+  },
+  "ex-p1mk5qdb": {
+    "prompt": "A Marginalia transforma 10.000 artigos em vetores com o all-MiniLM-L6-v2 e guarda os vetores em float32. Quantos megabytes são, contando um megabyte como 1.000.000 de bytes e nada além dos vetores?",
+    "hint": "Um vetor são os 1.536 bytes que first.py imprimiu.",
+    "unit": "MB"
+  },
+  "ex-8xgbcd8t": {
+    "prompt": "Os vetores da central de ajuda foram calculados em janeiro e guardados. Em junho, o mesmo modelo, na mesma versão, transforma uma pergunta nova em vetor. A pergunta pode ser comparada com os vetores guardados?",
+    "hint": "Existe algo aleatório no modelo quando ele roda?",
+    "choices": [
+      {
+        "text": "Só se os vetores guardados forem calculados de novo no mesmo dia da pergunta",
+        "why": "O modelo não tem aleatoriedade na inferência: os vetores de janeiro são exatamente o que ele produziria em junho."
+      },
+      {
+        "text": "Sim: o mesmo texto no mesmo modelo dá o mesmo vetor",
+        "why": "Certo. É isso que permite calcular o vetor de um documento uma vez e guardá-lo. Vale enquanto o modelo não mudar."
+      },
+      {
+        "text": "Não, embeddings vencem depois de alguns meses",
+        "why": "Nada num vetor envelhece. O que quebra um vetor guardado é a troca de modelo, não a passagem do tempo."
+      },
+      {
+        "text": "Sim, mas só para perguntas exatamente do mesmo tamanho",
+        "why": "Todo texto dá 384 números seja qual for o tamanho, então o tamanho nunca impede uma comparação."
+      }
+    ]
+  },
+  "ex-jb83x6nn": {
+    "prompt": "`near.py` dá as notas com o produto escalar. Por que isso é o mesmo que o cosseno do ângulo, para este modelo?",
+    "hint": "first.py imprimiu mais uma linha.",
+    "choices": [
+      {
+        "text": "Porque o modelo devolve exatamente 384 números",
+        "why": "A dimensão não tem nada a ver com isso. O que importa é o comprimento de cada vetor."
+      },
+      {
+        "text": "Todo vetor tem comprimento 1",
+        "why": "Certo. O cosseno é o produto escalar dividido pelos dois comprimentos, e dividir por 1 não muda nada. A aula 2 monta a fórmula."
+      },
+      {
+        "text": "Porque o operador @ do NumPy calcula um cosseno",
+        "why": "O @ calcula um produto escalar simples. Ele é igual ao cosseno aqui só por causa de uma característica dos vetores."
+      },
+      {
+        "text": "Porque os textos comparados estão todos em inglês",
+        "why": "A língua do texto não interfere na aritmética entre dois vetores."
+      }
+    ]
+  },
+  "ex-0vv9vx86": {
+    "prompt": "Em `near.py`, o artigo sobre devolver um presente teve nota 0.446 e o artigo que responde à pergunta teve 0.438. O que isso mostra?",
+    "hint": "O que a nota mede?",
+    "choices": [
+      {
+        "text": "O programa tem um erro que embaralha a ordem dos ids antes de imprimir",
+        "why": "O programa junta cada nota ao próprio id antes de ordenar. A ordem é a que o modelo calculou."
+      },
+      {
+        "text": "O embedding ordena por sentido, e aquele artigo também fala de reaver dinheiro",
+        "why": "Certo. A nota diz o quanto dois textos estão perto em significado, não qual deles responde. A aula 3 mede com que frequência a melhor resposta fica em primeiro e com que frequência fica entre as três primeiras."
+      },
+      {
+        "text": "O modelo prefere artigos mais curtos e empurra os longos para baixo",
+        "why": "Nada na saída liga nota a tamanho, e o artigo do presente não é o mais curto dos seis."
+      },
+      {
+        "text": "A busca por palavra-chave é melhor que embeddings para esta pergunta",
+        "why": "A busca por palavra-chave achou só o artigo do presente. O embedding pôs os quatro artigos sobre dinheiro de volta acima dos sem relação."
+      }
+    ]
+  },
+  "ex-7k3dzk1z": {
+    "prompt": "Ordene estes artigos como `near.py` os classificou contra 'how do I get my money back', da nota mais alta para a mais baixa.",
+    "hint": "Os quatro artigos sobre dinheiro de volta vieram primeiro, e o do presente liderou.",
+    "items": [
+      "Returning a gift",
+      "When your refund arrives",
+      "How to return a book",
+      "Two-step sign-in",
+      "Delivery times and costs"
+    ],
+    "trap": "Two-step sign-in não é o último: Delivery times and costs teve -0.016, abaixo dele."
+  },
+  "ex-0wsf61rq": {
+    "prompt": "Na figura de dois eixos, dois títulos de artigo parecem muito próximos. O que se pode concluir sobre os vetores deles?",
+    "hint": "Quanto da variância os dois eixos guardaram?",
+    "choices": [
+      {
+        "text": "Que estão perto em 384 dimensões também, já que uma projeção mantém as distâncias",
+        "why": "Uma projeção para dois eixos guarda só parte do espalhamento, 0,317 da variância aqui. Pontos perto no papel podem estar mais longe no espaço completo."
+      },
+      {
+        "text": "Nada certo: calcule o produto escalar para saber",
+        "why": "Certo. A figura mostra que existe uma estrutura, e a comparação de verdade é a nota entre os dois vetores."
+      },
+      {
+        "text": "Que pertencem à mesma categoria",
+        "why": "As categorias tendem a se agrupar, mas Damaged books on arrival fica longe da própria categoria. A posição na figura não é um rótulo."
+      },
+      {
+        "text": "Que um deles é duplicado",
+        "why": "Dois textos diferentes podem estar perto em significado sem ser cópias, e a figura nem garante que estejam perto."
+      }
+    ]
+  },
+  "ex-4c2ydzr1": {
+    "prompt": "Como o all-MiniLM-L6-v2 passou a pôr 'money back' perto de 'refund'?",
+    "hint": "Contrastivo.",
+    "choices": [
+      {
+        "text": "Os autores deram a ele um dicionário de sinônimos para seguir",
+        "why": "Nenhuma lista de sinônimos entrou nele. Essa é a lista mantida à mão que a primeira seção disse que os embeddings substituem."
+      },
+      {
+        "text": "O treino com pares que combinam os aproximou",
+        "why": "Certo. Os dois jeitos de dizer apareciam o tempo todo nos dois lados de pares que combinavam, então o treino os pôs perto um do outro."
+      },
+      {
+        "text": "Ele consulta as definições das duas palavras toda vez que roda",
+        "why": "O modelo não consulta nada quando roda. Tudo o que ele sabe ficou fixo nos pesos durante o treino."
+      },
+      {
+        "text": "Ele conta quantas vezes as duas palavras aparecem na central de ajuda",
+        "why": "O modelo nunca viu os artigos da Marginalia antes desta aula. Ele leva até eles o que aprendeu."
+      }
+    ]
+  },
+  "ex-hgx0axg6": {
+    "prompt": "O treino que aproxima os vetores de pares que combinam e os afasta dos outros textos do lote se chama treino ___.",
+    "hint": "Cada passo põe um parceiro certo contra muitos errados.",
+    "blanks": [
+      {
+        "accept": [
+          "contrastivo",
+          "contrastive"
+        ]
+      }
+    ]
+  },
+  "ex-517kjvgb": {
+    "prompt": "O WordLlama deu 1.0 para 'the dog bit the man' e 'the man bit the dog'. Por que esse é o resultado esperado para este modelo e não um defeito?",
+    "hint": "Veja a lista de tokens que order.py imprimiu.",
+    "choices": [
+      {
+        "text": "Mesmos cinco tokens; a média ignora a ordem",
+        "why": "Certo. Um modelo estático busca cada token e tira a média, e uma média não depende da ordem."
+      },
+      {
+        "text": "O WordLlama arredonda para 1.0 qualquer nota acima de 0.99",
+        "why": "O 1.0 é exato: os dois vetores são idênticos, então não há nada a arredondar."
+      },
+      {
+        "text": "Os vetores dele têm só 256 dimensões, poucas demais para distingui-las",
+        "why": "Menos dimensões podem borrar o significado, mas não tornam idênticos dois vetores diferentes. A causa é o jeito como o vetor é montado."
+      },
+      {
+        "text": "Ele lê só a primeira palavra de cada frase",
+        "why": "Ele lê os cinco tokens; a última linha da saída os lista. Ele só tira a média deles."
+      }
+    ]
+  },
+  "ex-cgzm8sbw": {
+    "prompt": "Um modelo que dá a cada token um vetor fixo, seja o que for que o cerque, e tira a média deles se chama modelo ___.",
+    "hint": "O contrário de contextual.",
+    "blanks": [
+      {
+        "accept": [
+          "estático",
+          "estatico",
+          "static"
+        ]
+      }
+    ]
+  },
+  "ex-7ax2hk29": {
+    "prompt": "Ponha em ordem o que acontece dentro do all-MiniLM-L6-v2 entre um texto e o seu vetor.",
+    "hint": "A média vem tarde, e a divisão pelo comprimento vem por último.",
+    "items": [
+      "Dividir o texto em pedaços de palavra",
+      "Dar a cada pedaço um vetor inicial",
+      "Passar por seis camadas em que cada pedaço olha os outros",
+      "Tirar a média dos vetores dos pedaços",
+      "Dividir pelo comprimento para que ele seja 1"
+    ],
+    "trap": "A média não é tirada antes das camadas: isso seria um modelo estático. As camadas trabalham sobre os pedaços um a um, e só os resultados entram na média."
+  },
+  "ex-eyjjhzsg": {
+    "prompt": "'I want a refund' e 'I do not want a refund' tiveram 0.892. Uma equipe de suporte quer encaminhar só as mensagens que pedem reembolso. O que ela deve concluir?",
+    "hint": "O que um embedding captura melhor?",
+    "choices": [
+      {
+        "text": "Um limiar de similaridade acima de 0,9 vai separar os dois tipos de mensagem",
+        "why": "A frase negada teve 0,892 e a paráfrase 0,627. Nenhum limiar deixa a paráfrase dentro e a negação fora."
+      },
+      {
+        "text": "Usar outra fórmula de similaridade",
+        "why": "Os próprios vetores estão perto; qualquer fórmula sobre eles herda isso. O limite está no que o modelo codificou."
+      },
+      {
+        "text": "A similaridade segue o assunto, não a afirmação; um classificador deve decidir",
+        "why": "Certo. A negação muda o que a frase diz sem mexer no assunto. A aula 4 treina um classificador para exatamente esse tipo de decisão."
+      },
+      {
+        "text": "Traduzir as mensagens para o português antes de transformá-las em vetor",
+        "why": "Este modelo trata português como sem relação com inglês, então traduzir pioraria as coisas, e não resolve nada sobre a negação."
+      }
+    ]
+  },
+  "ex-p1yxe2w1": {
+    "prompt": "'How to return a book' contra 'Como devolver um livro' teve -0.015 no all-MiniLM-L6-v2. O que aproximaria os dois títulos?",
+    "hint": "A causa é aquilo com que o modelo foi treinado.",
+    "choices": [
+      {
+        "text": "Um modelo multilíngue",
+        "why": "Certo. Este modelo foi treinado com pares em inglês, e um modelo treinado com pares entre línguas poria um título e sua tradução juntos."
+      },
+      {
+        "text": "Normalizar os dois vetores para comprimento 1 antes de comparar",
+        "why": "Eles já têm comprimento 1. Normalizar não muda nenhuma direção, então a nota não se mexeria."
+      },
+      {
+        "text": "Pôr o título em português em minúsculas para os pedaços casarem",
+        "why": "O tokenizador já põe tudo em minúsculas. O problema é que o modelo não tem pares em português."
+      },
+      {
+        "text": "Acrescentar mais artigos em português à central de ajuda",
+        "why": "O modelo não aprende com os documentos que transforma em vetor. Os vetores dele ficaram fixos no treino."
+      }
+    ]
+  },
+  "ex-cq4q9b16": {
+    "prompt": "Uma equipe troca o all-MiniLM-L6-v2 por outro modelo que também devolve 384 números. O que acontece com os vetores já guardados?",
+    "hint": "Mesma dimensão não quer dizer mesmo espaço.",
+    "choices": [
+      {
+        "text": "Continuam funcionando, já que a dimensão é a mesma",
+        "why": "Uma dimensão igual só significa que a multiplicação roda. As coordenadas de um modelo não têm nada a ver com as do outro."
+      },
+      {
+        "text": "Funcionam para textos em inglês e falham nos outros",
+        "why": "A língua não tem nada a ver com isso: toda comparação entre vetores dos dois modelos não tem sentido, em qualquer língua."
+      },
+      {
+        "text": "Todos precisam ser gerados de novo",
+        "why": "Certo. Um vetor só significa algo ao lado de vetores do mesmo modelo. A aula 18 põe preço nisso."
+      },
+      {
+        "text": "Precisam ser renormalizados uma vez, e então funcionam",
+        "why": "Renormalizar muda comprimentos, não direções. As direções são do modelo antigo e continuam sem sentido para o novo."
+      }
+    ]
+  },
+  "ex-3nmq94kd": {
+    "prompt": "Um fornecedor se oferece para guardar os vetores das mensagens da Marginalia nos servidores dele, dizendo que 'só números saem dos seus sistemas, nunca as palavras dos clientes'. O que há de errado no argumento?",
+    "hint": "O que fez o artigo de 2023 sobre inversão?",
+    "choices": [
+      {
+        "text": "Nada; um vetor não pode ser transformado de volta em texto nenhum",
+        "why": "A pesquisa sobre inversão de embeddings treinou um modelo que reconstruiu muitos textos curtos palavra por palavra a partir dos vetores."
+      },
+      {
+        "text": "Os vetores são maiores que os textos, então a transferência custa mais",
+        "why": "São maiores, mas isso é questão de custo. O argumento é sobre o que o fornecedor consegue saber, e o tamanho não responde."
+      },
+      {
+        "text": "O fornecedor só leria os vetores com o mesmo modelo",
+        "why": "O modelo é público, e um modelo de inversão treinado contra ele é exatamente o que a pesquisa construiu. Conhecer o modelo facilita a recuperação, não a impede."
+      },
+      {
+        "text": "Os vetores entregam parte do texto de onde vieram, então também são dados pessoais",
+        "why": "Certo. O vetor da mensagem de uma cliente é dado pessoal como a mensagem, e fica sob as mesmas regras sobre quem lê e por quanto tempo fica guardado."
+      }
+    ]
+  },
+  "ex-ed52q2vg": {
+    "prompt": "Ligue cada par avaliado por `limits.py` ao que ele mostrou.",
+    "hint": "Um dos pares está lá como controle.",
+    "pairs": [
+      {
+        "left": "I want a refund / I do not want a refund",
+        "right": "Afirmações opostas sobre um assunto ficam perto"
+      },
+      {
+        "left": "How to return a book / Como devolver um livro",
+        "right": "Um modelo inglês trata o português como sem relação"
+      },
+      {
+        "left": "How to return a book / How to return a lamp",
+        "right": "Outro objeto, mesma ação: nota intermediária"
+      },
+      {
+        "left": "I want a refund / Please give me my money back",
+        "right": "O mesmo pedido com outras palavras"
+      }
+    ],
+    "right_distractors": [
+      "Dois modelos não podem ser comparados"
+    ]
+  },
+  "ex-arm59f2d": {
+    "prompt": "A Marginalia guarda o vetor de cada artigo de ajuda para buscá-los no ano que vem. O que precisa ficar guardado ao lado de cada vetor para isso funcionar? Marque todas as que se aplicam.",
+    "hint": "Pense no que um vetor não consegue dizer sobre si mesmo.",
+    "choices": [
+      {
+        "text": "Qual modelo e versão o produziu",
+        "why": "Sim. Sem isso ninguém sabe quais perguntas podem ser comparadas com o vetor, nem quando ele precisa ser recalculado."
+      },
+      {
+        "text": "O id do artigo, para achar o texto de novo",
+        "why": "Sim. Uma busca devolve vetores, e o leitor precisa do artigo; o id é a ligação."
+      },
+      {
+        "text": "O comprimento do vetor",
+        "why": "Ele pode ser calculado a partir do vetor a qualquer momento, e para este modelo é sempre 1."
+      },
+      {
+        "text": "Só a primeira coordenada, como resumo",
+        "why": "Uma coordenada sozinha não diz nada; o significado está no vetor inteiro."
+      }
+    ]
+  },
+  "ex-jzkgzaj1": {
+    "prompt": "Ligue cada termo ao que ele significa nesta aula.",
+    "hint": "Quatro termos, quatro definições, uma sobrando.",
+    "pairs": [
+      {
+        "left": "Dimensão",
+        "right": "Quantos números um modelo devolve para qualquer texto"
+      },
+      {
+        "left": "Modelo estático",
+        "right": "Tira a média de vetores fixos de token, e a ordem se perde"
+      },
+      {
+        "left": "Modelo contextual",
+        "right": "Deixa os pedaços se ajustarem uns aos outros antes da média"
+      },
+      {
+        "left": "Projeção",
+        "right": "Uma figura plana que guarda parte do espalhamento"
+      }
+    ],
+    "right_distractors": [
+      "Uma lista de sinônimos mantida à mão"
+    ]
+  },
+  "ex-6jqwpvbs": {
+    "prompt": "A quantidade de valores que um modelo devolve para cada texto, 384 no all-MiniLM-L6-v2, se chama a ___ dele.",
+    "hint": "A aula 2 leva o nome dela.",
+    "blanks": [
+      {
+        "accept": [
+          "dimensão",
+          "dimensao",
+          "dimensionalidade",
+          "dimension"
+        ]
+      }
+    ]
+  }
+}
