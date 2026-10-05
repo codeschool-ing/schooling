@@ -89,6 +89,9 @@ ROUTES = {
     "standin/small": {"base": "standin-small", "providers": ["standin-east"],
                       "prompt": "0.00000025", "completion": "0.00000125"},
 }
+# Which upstream providers keep what they are sent, for data_collection: "deny".
+# The course's own rule, standing for the Data Policy tag OpenRouter shows.
+STORES = {"standin-east": True, "standin-west": False}
 
 CONFIG = {"rpm": 50, "fail_next": None, "fail_count": 0, "down": [], "jitter": 0}
 LOCK = threading.Lock()
@@ -546,6 +549,10 @@ class Handler(BaseHTTPRequestHandler):
             ups = list(route["providers"])
             if prefs.get("order"):
                 ups = [p for p in prefs["order"] if p in ups] + [p for p in ups if p not in prefs["order"]]
+            if prefs.get("data_collection") == "deny":
+                kept = [p for p in ups if not STORES.get(p, True)]
+                tried += [f"{name} at {p}: stores data" for p in ups if p not in kept]
+                ups = kept
             if prefs.get("allow_fallbacks") is False:
                 ups = ups[:1]
             for up in ups:

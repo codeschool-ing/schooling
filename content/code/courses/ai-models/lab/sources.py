@@ -34,6 +34,7 @@ import urllib.parse
 import urllib.request
 
 CACHE = os.environ.get("SOURCES_CACHE", "/opt/aimodels/share/sources")
+OPENROUTER = ("OpenRouterTeam/docs", "3e840a212de62b09cfc34fc9f1a7f55af0d36aa7")
 LLAMA = ("meta-llama/llama-models", "0e0b8c519242d5833d8c11bffc1232b77ad7f301")
 DOCS = {
     "llama3.1-licence": LLAMA + ("models/llama3_1/LICENSE",),
@@ -71,6 +72,12 @@ DOCS = {
     "lmstudio-ps": ("lmstudio-ai/docs", "9b8bc2004f04880a0ca7cbb19932ea8eb390c2d5", "3_cli/0_local-models/ps.md"),
     "lmstudio-import": ("lmstudio-ai/docs", "9b8bc2004f04880a0ca7cbb19932ea8eb390c2d5",
                         "0_app/5_advanced/import-model.md"),
+    "openrouter-faq": OPENROUTER + ("faq.mdx",),
+    "openrouter-fees": OPENROUTER + ("snippets/exports/constants.mdx",),
+    "openrouter-routing": OPENROUTER + ("guides/routing/provider-selection.mdx",),
+    "openrouter-fallbacks": OPENROUTER + ("guides/routing/model-fallbacks.mdx",),
+    "openrouter-usage": OPENROUTER + ("cookbook/administration/usage-accounting.mdx",),
+    "openrouter-limits": OPENROUTER + ("api_reference/limits.mdx",),
     "litellm-cost": ("BerriAI/litellm", "21881c571181fc0e409dd717b8a277e5b43152a7",
                      "litellm/litellm_core_utils/llm_cost_calc/utils.py"),
     "hub-model-cards": ("huggingface/hub-docs", "08175d0f6f70d4aa3d1c40404e6aa8c9172f6ec6",
