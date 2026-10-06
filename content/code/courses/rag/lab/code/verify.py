@@ -3,13 +3,13 @@ import re
 from minilm import embed
 
 CLOSE = 0.75
-norm = lambda t: " ".join(t.split())
+norm = lambda t: " ".join(t.replace("|", " ").split())
 
 
 def claims(reply):
     """(sentence, source number or None) for every sentence of a reply."""
     out = []
-    for sentence in re.split(r"(?<=[.!?\]])\s+(?=[A-Z])", reply.strip()):
+    for sentence in re.split(r"(?<=\])\s+|(?<=[.!?])\s+(?=[A-Z])", reply.strip()):
         m = re.match(r"(.*?)\s*\[(\d+)\]$", sentence)
         out.append((m.group(1), int(m.group(2))) if m else (sentence, None))
     return out

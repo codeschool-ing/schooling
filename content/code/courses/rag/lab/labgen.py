@@ -41,7 +41,7 @@ THE RULES OF extract-1, in the order it applies them.
      and within 0.12 of the best one, at most three, best first, each copied
      word for word and followed by the number of its source. If no sentence
      reaches 0.53, the reply is the sentence the system prompt asks for after
-     `If the sources do not answer, reply:`, or "The sources do not say."
+     `If the sources do not answer ...:`, or "The sources do not say."
 
   4. CLOSED BOOK. With no sources and no earlier turns, the reply comes from
      memory.json: sentences written by the course as what extract-1 "learnt
@@ -235,7 +235,7 @@ def rule_sources(system, messages, documents):
     order = np.argsort(-scores, kind="stable")
     best = float(scores[order[0]])
     if best < FLOOR:
-        m = re.search(r"If the sources do not answer, reply:\s*\"?([^\"\n]+)\"?", text_of(system))
+        m = re.search(r"If the sources do not answer[^:\n]*:\s*\"?([^\"\n]+)\"?", text_of(system))
         return (m.group(1).strip() if m else NOT_FOUND), []
     chosen = [pool[i] for i in order if scores[i] >= FLOOR and scores[i] >= best - SPREAD][:MOST]
     parts = [s + (f" [{label}]" if label else "") for s, label, *_ in chosen]
