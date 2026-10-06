@@ -1,0 +1,575 @@
+[
+  {
+    "id": "ex-eh6f4n0f",
+    "version": 1,
+    "section": "methods",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is a method of `Rect` declared in Go?",
+    "hint": "Look at where `Area` sat in `~/methods`.",
+    "choices": [
+      {
+        "text": "Inside the braces of `type Rect struct { … }`, after the fields",
+        "correct": false,
+        "why": "That is where Java and Python put methods. A Go struct's declaration lists fields and nothing else."
+      },
+      {
+        "text": "At package level, as a function with `(r Rect)` before its name",
+        "correct": true,
+        "why": "Right. The receiver is the extra parameter in front of the name, and the method can sit in any file of the package."
+      },
+      {
+        "text": "In a `class Rect` block that wraps the struct",
+        "correct": false,
+        "why": "Go has no `class` keyword at all; lesson 1 counted the keywords."
+      },
+      {
+        "text": "In any package that imports `Rect`",
+        "correct": false,
+        "why": "A method must be declared in the package that defines the type; another package gets `cannot define new methods on non-local type`."
+      }
+    ]
+  },
+  {
+    "id": "ex-02w4w1mg",
+    "version": 1,
+    "section": "methods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`type Number = int` is followed by `func (n Number) Triple() int`. What does the compiler say?",
+    "hint": "What does the `=` make `Number`?",
+    "choices": [
+      {
+        "text": "Nothing: `Number` is a type of this package, so it may have methods",
+        "correct": false,
+        "why": "That holds for `type Number int`. With the `=`, `Number` is another name for `int`, which no package of yours defines."
+      },
+      {
+        "text": "`cannot define new methods on non-local type Number`",
+        "correct": true,
+        "why": "Right. An alias is not a new type, so a method on it is a method on `int`, and that is refused."
+      },
+      {
+        "text": "That a method's receiver must be a struct",
+        "correct": false,
+        "why": "`Celsius` is a `float64` and has a method; any type the package defines can have them."
+      },
+      {
+        "text": "That `Triple` is already declared on `int`",
+        "correct": false,
+        "why": "`int` has no methods at all. The refusal is about where the type comes from, not about the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-aeyxqk1w",
+    "version": 1,
+    "section": "methods",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `func (c Celsius) ToFahrenheit() Fahrenheit`, the `(c Celsius)` written before the method's name is its ___.",
+    "hint": "It is the value the method is called on.",
+    "blanks": [
+      {
+        "accept": [
+          "receiver"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2bsfrqxv",
+    "version": 1,
+    "section": "methods",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`type Span time.Duration` compiles, and then `s.Hours()` on a `Span` is refused. Why?",
+    "hint": "What does a defined type take from the type it is built on?",
+    "choices": [
+      {
+        "text": "`Hours` is unexported and cannot be reached from `main`",
+        "correct": false,
+        "why": "It starts with a capital letter and `time.Duration(s).Hours()` worked from `main`."
+      },
+      {
+        "text": "Methods of `time` types only work on values made by the `time` package",
+        "correct": false,
+        "why": "Who made the value does not matter. `time.Duration(s)` was made in `main` and had `Hours`."
+      },
+      {
+        "text": "A defined type gets the values and operators of `time.Duration`, and none of its methods",
+        "correct": true,
+        "why": "Right: `type Span has no field or method Hours`. Converting back to `time.Duration` gets them."
+      },
+      {
+        "text": "`Span` was declared without methods of its own, so it may not call any",
+        "correct": false,
+        "why": "`Span` has `Days`, and the call to `Hours` is still refused, because `Hours` belongs to `time.Duration`."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvwgjnsd",
+    "version": 1,
+    "section": "methods",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Weekday` has a `String` method returning the day's name. What does `fmt.Printf(\"%d\", Saturday)` print?",
+    "hint": "Which verbs did the method change?",
+    "choices": [
+      {
+        "text": "`Saturday`, since `fmt` calls `String` for every verb",
+        "correct": false,
+        "why": "It does for `Println`, `%v` and `%s`. `%d` asks for the number."
+      },
+      {
+        "text": "`%!d(main.Weekday=Saturday)`, a wrong-verb complaint",
+        "correct": false,
+        "why": "`%d` suits a `Weekday`, whose underlying type is `int`, so there is nothing to complain about."
+      },
+      {
+        "text": "`6`",
+        "correct": true,
+        "why": "Right. The constant is still the number 6; the method only changes how `%v` and `%s` show it."
+      },
+      {
+        "text": "Nothing: the program panics",
+        "correct": false,
+        "why": "The output line was `Saturday Saturday 6`, with no panic."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvw0kva2",
+    "version": 1,
+    "section": "methods",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `package main`, which of these may be given a method? Choose all that apply.",
+    "hint": "The type must be defined in the same package, and an alias defines nothing.",
+    "choices": [
+      {
+        "text": "`type Celsius float64`",
+        "correct": true,
+        "why": "Yes: a defined type of this package, built on a number."
+      },
+      {
+        "text": "`type Names []string`",
+        "correct": true,
+        "why": "Yes. A defined slice type is a type of this package like any other."
+      },
+      {
+        "text": "`time.Duration`",
+        "correct": false,
+        "why": "No: it belongs to the `time` package."
+      },
+      {
+        "text": "`type Count = int`",
+        "correct": false,
+        "why": "No. The alias is `int`, which is predeclared."
+      }
+    ]
+  },
+  {
+    "id": "ex-1e6fe0b5",
+    "version": 1,
+    "section": "when-a-receiver",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `strings.ToUpper(s)` a function rather than a method you call as `s.ToUpper()`?",
+    "hint": "Who defines the type `string`?",
+    "choices": [
+      {
+        "text": "Functions run faster than methods",
+        "correct": false,
+        "why": "A method call is a function call with the receiver as the first parameter; speed is not the reason."
+      },
+      {
+        "text": "`string` is predeclared, so a method on it is refused in every package",
+        "correct": true,
+        "why": "Right. By section 02's rule, `strings` has no way to declare `s.ToUpper()`."
+      },
+      {
+        "text": "Methods are only allowed on struct types",
+        "correct": false,
+        "why": "`Celsius`, a number, had `ToFahrenheit`, and `time.Weekday`, an `int`, has `String`."
+      },
+      {
+        "text": "Go style forbids methods in the standard library",
+        "correct": false,
+        "why": "The same package has `Builder`, `Reader` and `Replacer`, each with methods."
+      }
+    ]
+  },
+  {
+    "id": "ex-jfd31v40",
+    "version": 1,
+    "section": "when-a-receiver",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two functions named `Area`, one taking a `Rect` and one a `Circle`, are refused. Two methods named `Area`, one on each type, compile. Why the difference?",
+    "hint": "Where does a method's name live?",
+    "choices": [
+      {
+        "text": "Methods are overloaded by receiver type, and functions by nothing",
+        "correct": false,
+        "why": "Go has no overloading of either. Each `Area` is a different method because it belongs to a different type."
+      },
+      {
+        "text": "The two methods were in different files",
+        "correct": false,
+        "why": "They were in the same file, `main.go`; files of one package share a scope anyway."
+      },
+      {
+        "text": "A method's name belongs to its type, and a function's to the package",
+        "correct": true,
+        "why": "Right: `Area redeclared in this block` for the functions, nothing for the methods."
+      },
+      {
+        "text": "The compiler renames methods to `RectArea` and `CircleArea` itself",
+        "correct": false,
+        "why": "No renaming happens; `%T` of `Rect.Area` printed `func(main.Rect) float64`, a method of `Rect`."
+      }
+    ]
+  },
+  {
+    "id": "ex-5spyhyc7",
+    "version": 1,
+    "section": "when-a-receiver",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Instead of a `String` method, `Weekday` gets `func WeekdayName(d Weekday) string` in the same package. What does `fmt.Println(Saturday)` print?",
+    "hint": "What does `fmt` look for?",
+    "choices": [
+      {
+        "text": "`Saturday`: `fmt` finds a function that takes a `Weekday`",
+        "correct": false,
+        "why": "`fmt` cannot see your package's functions. It looks for a method named `String` on the value's type."
+      },
+      {
+        "text": "`6`",
+        "correct": true,
+        "why": "Right. A function nobody calls changes nothing, and lesson 6 printed the same `0 1 6` without one."
+      },
+      {
+        "text": "A compile error, as `Weekday` has no `String`",
+        "correct": false,
+        "why": "Nothing requires a `String` method; without one `fmt` prints the number."
+      },
+      {
+        "text": "`main.Weekday(6)`, the type and the number",
+        "correct": false,
+        "why": "`Println` adds no type name to a number; it printed `0 1 6` in lesson 6."
+      }
+    ]
+  },
+  {
+    "id": "ex-hv7dy8n0",
+    "version": 1,
+    "section": "when-a-receiver",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A package defines `type Money int64`, in cents. It needs `fmt` to print a `Money` as `R$ 19,90`, and it needs the total of a `[]Money`. Which design fits section 03?",
+    "hint": "One of the two has to be found by `fmt`; the other is about many values.",
+    "choices": [
+      {
+        "text": "Both functions, `Format(m Money)` and `Total(items []Money)`, as `strings` does",
+        "correct": false,
+        "why": "`fmt` never calls `Format`; `fmt.Println(price)` would print the number of cents."
+      },
+      {
+        "text": "A `String` method on `Money`, and `Total` as a function taking `[]Money`",
+        "correct": true,
+        "why": "Right. `fmt` has to find `String` on the type; a total is about many values, with none of them in charge."
+      },
+      {
+        "text": "Both methods on `Money`, with `Total` called on the first item as `items[0].Total(items)`",
+        "correct": false,
+        "why": "It compiles, and the receiver plays no part in it, which is the sign a function was wanted."
+      },
+      {
+        "text": "A method `String` on `int64`, so every amount prints as money",
+        "correct": false,
+        "why": "`int64` is not your type: `cannot define new methods on non-local type int64`."
+      }
+    ]
+  },
+  {
+    "id": "ex-pa24ryjr",
+    "version": 1,
+    "section": "when-a-receiver",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For which of these is a plain function the natural choice? Choose all that apply.",
+    "hint": "A method needs one value of a type you own in charge.",
+    "choices": [
+      {
+        "text": "Counting the vowels in a `string`",
+        "correct": true,
+        "why": "Yes: `string` cannot have your methods, as `strings` shows."
+      },
+      {
+        "text": "Deciding whether two `Rect` values overlap",
+        "correct": true,
+        "why": "Yes. Both rectangles play the same part, and `Overlap(a, b)` says so."
+      },
+      {
+        "text": "Making `fmt.Println` show a `Celsius` as `21.5C`",
+        "correct": false,
+        "why": "No: `fmt` finds a `String` method and nothing else."
+      },
+      {
+        "text": "Computing a `Rect`'s area from its own two fields",
+        "correct": false,
+        "why": "No. That is one value's own data, the first reason for a method."
+      }
+    ]
+  },
+  {
+    "id": "ex-byw8hy81",
+    "version": 1,
+    "section": "method-values",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`r` is a `Rect`. What is the type of `r.Area`, written without brackets?",
+    "hint": "The receiver is already inside it.",
+    "choices": [
+      {
+        "text": "`float64`, the area",
+        "correct": false,
+        "why": "Without the brackets nothing is called. The value is the method itself, with `r` filled in."
+      },
+      {
+        "text": "`func(main.Rect) float64`",
+        "correct": false,
+        "why": "That is `Rect.Area`, the method expression, which still needs a `Rect` as its parameter."
+      },
+      {
+        "text": "`func() float64`",
+        "correct": true,
+        "why": "Right: a method value, a function with the receiver bound, as `%T` printed."
+      },
+      {
+        "text": "A compile error: a method must be called",
+        "correct": false,
+        "why": "`area := r.Area` compiled and ran, and `area()` printed 12."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wtx1cre",
+    "version": 1,
+    "section": "method-values",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`r := Rect{W: 3, H: 4}`, then `area := r.Area`, then `r.H = 5`. What does `area()` return?",
+    "hint": "When was the receiver copied?",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "square units"
+  },
+  {
+    "id": "ex-faevxevy",
+    "version": 1,
+    "section": "method-values",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Using section 04's `Shift`, what does `strings.Map(Shift(1).Rotate, \"abc z\")` return?",
+    "hint": "`Rotate` wraps from `z` back to `a` and leaves non-letters alone.",
+    "choices": [
+      {
+        "text": "`abc z`, since a method value cannot carry its 1",
+        "correct": false,
+        "why": "It does: `Shift(13).Rotate` carried its 13 and turned `hello` into `uryyb`."
+      },
+      {
+        "text": "`bcd!a`",
+        "correct": false,
+        "why": "The space is not a lower-case letter, so `Rotate` returns it unchanged."
+      },
+      {
+        "text": "`bcd {`",
+        "correct": false,
+        "why": "`{` comes after `z` in ASCII, and `% 26` is there to wrap back to `a` instead."
+      },
+      {
+        "text": "`bcd a`",
+        "correct": true,
+        "why": "Right. Each letter moves one place, `z` wraps to `a`, and the space stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1mdpsa8",
+    "version": 1,
+    "section": "method-values",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Employee` declares its own `Greet`, yet `e.Introduce()` printed `Hello, I am Ana.` without `from Acme`. Why?",
+    "hint": "What is the receiver of the promoted `Introduce`?",
+    "choices": [
+      {
+        "text": "Go always prefers the method of the deeper, embedded type",
+        "correct": false,
+        "why": "The shallower wins: `e.Greet()` found `Employee`'s. The question is what `Introduce` calls inside."
+      },
+      {
+        "text": "`Introduce` runs on `e.Person`, so its `p.Greet()` is `Person`'s",
+        "correct": true,
+        "why": "Right. A promoted method receives the embedded value and cannot know an `Employee` is around it."
+      },
+      {
+        "text": "`Employee.Greet` has a different signature, so it does not override",
+        "correct": false,
+        "why": "Both are `Greet() string`. Nothing in Go overrides, whatever the signature."
+      },
+      {
+        "text": "`Person`'s methods were compiled before `Employee` existed",
+        "correct": false,
+        "why": "Declaration order does not matter in a package; what matters is that `p` is a `Person`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jnat1nyc",
+    "version": 1,
+    "section": "method-values",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`r` is a `Rect` with a method `Area() float64`. Match each spelling to what it is.",
+    "hint": "Two of them call, two of them do not.",
+    "pairs": [
+      {
+        "left": "`r.Area()`",
+        "right": "a call, giving a `float64`"
+      },
+      {
+        "left": "`r.Area`",
+        "right": "a method value of type `func() float64`"
+      },
+      {
+        "left": "`Rect.Area`",
+        "right": "a method expression of type `func(main.Rect) float64`"
+      },
+      {
+        "left": "`Rect.Area(r)`",
+        "right": "the same call as `r.Area()`, with the receiver as first argument"
+      }
+    ],
+    "right_distractors": [
+      "a method promoted from an embedded `Rect`"
+    ]
+  },
+  {
+    "id": "ex-zxrak5s6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the pieces of `Rect`'s `Area` method in the order they are written.",
+    "hint": "The receiver comes before the name.",
+    "items": [
+      "`func`",
+      "`(r Rect)`",
+      "`Area()`",
+      "`float64`",
+      "`{ return r.W * r.H }`"
+    ]
+  },
+  {
+    "id": "ex-7ws2b33p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Contractor` embeds `Person`. You add `func (c Contractor) Greet() string` returning `\"Hi from \" + c.Agency`. What does `c.Introduce()` print now for Caio?",
+    "hint": "Who is the receiver of `Introduce`?",
+    "choices": [
+      {
+        "text": "`Hi from Temps.`",
+        "correct": false,
+        "why": "That would need `Introduce` to call `Contractor`'s `Greet`, and its receiver is the embedded `Person`."
+      },
+      {
+        "text": "`Hello, I am Caio.`",
+        "correct": true,
+        "why": "Right. Adding a `Greet` to the outer type changes `c.Greet()` and leaves the promoted `Introduce` exactly as it was."
+      },
+      {
+        "text": "A compile error: `Greet` is ambiguous",
+        "correct": false,
+        "why": "Ambiguity needs two of the same name at the same depth; here one is at depth 0 and wins."
+      },
+      {
+        "text": "`Hi from Temps`, followed by `Hello, I am Caio.`",
+        "correct": false,
+        "why": "Nothing calls both. `Introduce` makes one call, to `p.Greet()`, on a `Person`."
+      }
+    ]
+  },
+  {
+    "id": "ex-hf32kwr3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A package `geo` defines `Point`. In `package main` you want a type with a `Distance` method that still has `Point`'s own methods. Which declaration gives you that?",
+    "hint": "Combine section 02's rule with lesson 16.",
+    "choices": [
+      {
+        "text": "`func (p geo.Point) Distance(q geo.Point) float64`",
+        "correct": false,
+        "why": "`geo.Point` is not defined in `main`: `cannot define new methods on non-local type`."
+      },
+      {
+        "text": "`type Place = geo.Point` and a method on `Place`",
+        "correct": false,
+        "why": "An alias is `geo.Point` itself, refused for the same reason as `Number = int`."
+      },
+      {
+        "text": "`type Place struct{ geo.Point }` and a method on `Place`",
+        "correct": true,
+        "why": "Right. `Place` is defined in `main`, so it may have methods, and `Point`'s own are promoted to it."
+      },
+      {
+        "text": "`type Place geo.Point`, which keeps every method of `Point` and adds `Distance`",
+        "correct": false,
+        "why": "It compiles, but keeps none of `Point`'s methods, as `Span` lost `Hours`, so it is not what was asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3ekc8ng",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `~/methods-embed`, how many different methods can be called as `e.X()` on an `Employee`, counting promoted ones but not `e.Person.X()`?",
+    "hint": "`Person`'s `Greet` is hidden behind `Employee`'s.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "methods"
+  }
+]

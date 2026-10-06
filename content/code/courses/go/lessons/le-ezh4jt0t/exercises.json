@@ -1,0 +1,570 @@
+[
+  {
+    "id": "ex-2n8gejrb",
+    "version": 1,
+    "section": "array-to-slice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`a := [4]int{1, 2, 3, 4}`, `s := a[:]`, then `s[0] = 100`. What does `fmt.Println(a)` print?",
+    "hint": "How many sets of four `int`s are there?",
+    "choices": [
+      {
+        "text": "`[1 2 3 4]`, because `a[:]` made a copy",
+        "correct": false,
+        "why": "Slicing never copies; `s` points at `a`'s first element."
+      },
+      {
+        "text": "`[100 2 3 4]`, changed through `s`",
+        "correct": true,
+        "why": "Right. There is one array, and `s` is a view of all of it."
+      },
+      {
+        "text": "Nothing: an array cannot be sliced, so it does not compile",
+        "correct": false,
+        "why": "Lesson 11 sliced arrays, and `a[:]` ran and printed `[100 2 3 4]`."
+      },
+      {
+        "text": "`[100 1 2 3 4]`",
+        "correct": false,
+        "why": "An assignment to `s[0]` replaces element 0; it does not insert."
+      }
+    ]
+  },
+  {
+    "id": "ex-eaqq2mm9",
+    "version": 1,
+    "section": "array-to-slice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `hex.EncodeToString(sha256.Sum256(data)[:])` refused by the compiler?",
+    "hint": "Where would the slice point?",
+    "choices": [
+      {
+        "text": "`hex.EncodeToString` takes an array, not a slice",
+        "correct": false,
+        "why": "It takes a `[]byte`; passing it `sum` itself is what the other error refused."
+      },
+      {
+        "text": "The returned array is stored nowhere, so it is unaddressable",
+        "correct": true,
+        "why": "Right. A slice points into an array that lives somewhere, and a call's result does not yet."
+      },
+      {
+        "text": "`[:]` works on slices only, never on arrays",
+        "correct": false,
+        "why": "`a[:]` on an array variable compiled and ran in section 02."
+      },
+      {
+        "text": "Slicing would copy 32 bytes, and Go never copies implicitly",
+        "correct": false,
+        "why": "Slicing copies nothing; the trouble is that there is nothing stored to point at."
+      }
+    ]
+  },
+  {
+    "id": "ex-9te8v2cj",
+    "version": 1,
+    "section": "array-to-slice",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The compiler calls the result of a call, not yet stored in any variable, an ___ value, and refuses to slice it.",
+    "hint": "The error said `cannot slice … value`.",
+    "blanks": [
+      {
+        "accept": [
+          "unaddressable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cmyk122z",
+    "version": 1,
+    "section": "array-to-slice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`a` is a `[4]int` and `s := a[:]`. What are `len(s)` and `cap(s)`?",
+    "hint": "The slice reaches exactly as far as the array.",
+    "choices": [
+      {
+        "text": "4 and 8, leaving room to append",
+        "correct": false,
+        "why": "The capacity cannot exceed the array, and this array has four elements."
+      },
+      {
+        "text": "4 and 4, the size of the array",
+        "correct": true,
+        "why": "Right: the run printed `4 4`, so the first append has to copy."
+      },
+      {
+        "text": "0 and 4, an empty view with room for four",
+        "correct": false,
+        "why": "That would be `a[:0]`. With no numbers the view covers the whole array."
+      },
+      {
+        "text": "4 and 0",
+        "correct": false,
+        "why": "A capacity is never less than the length."
+      }
+    ]
+  },
+  {
+    "id": "ex-hf0vqg0f",
+    "version": 1,
+    "section": "array-to-slice",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`sum := sha256.Sum256(data)`. Which of these compile? Choose all that apply.",
+    "hint": "`sum` is a variable holding a `[32]byte`.",
+    "choices": [
+      {
+        "text": "`hex.EncodeToString(sum[:])`",
+        "correct": true,
+        "why": "Yes, it printed 64 hexadecimal digits."
+      },
+      {
+        "text": "`hex.EncodeToString(sum[:4])`",
+        "correct": true,
+        "why": "Yes. Any slice expression on the variable gives a `[]byte`; this one covers the first four bytes."
+      },
+      {
+        "text": "`hex.EncodeToString(sum)`",
+        "correct": false,
+        "why": "Refused: `cannot use sum (variable of type [32]byte) as []byte value`."
+      },
+      {
+        "text": "`hex.EncodeToString([]byte(sum))`",
+        "correct": false,
+        "why": "An array does not convert to a slice with `T(x)`; the slice expression is the only way across."
+      }
+    ]
+  },
+  {
+    "id": "ex-83hch12e",
+    "version": 1,
+    "section": "slice-to-array",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these copies a slice's first four elements into a new array?",
+    "hint": "One of them is an array type; one is a pointer type.",
+    "choices": [
+      {
+        "text": "`(*[4]int)(s)`",
+        "correct": false,
+        "why": "That is a pointer into the slice's own array; writing through it changed `s`."
+      },
+      {
+        "text": "`[4]int(s)`",
+        "correct": true,
+        "why": "Right. After `c[0] = 100`, `s` still started with 1."
+      },
+      {
+        "text": "`s[:4]`",
+        "correct": false,
+        "why": "That is another slice over the same array, and slicing never copies."
+      },
+      {
+        "text": "`s[0:4:4]`",
+        "correct": false,
+        "why": "A full slice expression limits the capacity; it is still a view of the same array."
+      }
+    ]
+  },
+  {
+    "id": "ex-10e9g6b7",
+    "version": 1,
+    "section": "slice-to-array",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`s := []int{1, 2, 3, 4, 5, 6}` and `p := (*[4]int)(s)`. After `p[0] = 100`, what does `s` print?",
+    "hint": "A pointer conversion copies nothing.",
+    "choices": [
+      {
+        "text": "`[100 2 3 4 5 6]`",
+        "correct": true,
+        "why": "Right. `p` points at the first four elements of the array `s` views."
+      },
+      {
+        "text": "`[1 2 3 4 5 6]`",
+        "correct": false,
+        "why": "That is what the array conversion `[4]int(s)` leaves; the pointer shares."
+      },
+      {
+        "text": "`[100 2 3 4]`",
+        "correct": false,
+        "why": "That is `*p`. The conversion does not shorten `s`, which keeps all six."
+      },
+      {
+        "text": "Nothing: it panics, as `s` has six elements and not four",
+        "correct": false,
+        "why": "Longer is fine; only a slice shorter than the array panics."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fsmjv25",
+    "version": 1,
+    "section": "slice-to-array",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens when `[4]int(s)` runs with `len(s) == 2`?",
+    "hint": "The compiler does not know a slice's length.",
+    "choices": [
+      {
+        "text": "The build fails with a conversion error",
+        "correct": false,
+        "why": "The length is only known at run time, so the program compiled."
+      },
+      {
+        "text": "The last two elements are zero",
+        "correct": false,
+        "why": "Go does not pad. Padding would hide a short read, and the conversion refuses instead."
+      },
+      {
+        "text": "A panic: `cannot convert slice with length 2 to array or pointer to array with length 4`",
+        "correct": true,
+        "why": "Right, and the same message covers the pointer conversion."
+      },
+      {
+        "text": "It returns a `[2]int`",
+        "correct": false,
+        "why": "The array type is written in the conversion; its length is not negotiable."
+      }
+    ]
+  },
+  {
+    "id": "ex-38n1zj6z",
+    "version": 1,
+    "section": "slice-to-array",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `go` line in `go.mod` to what it lets `[4]int(s)` and `(*[4]int)(s)` do.",
+    "hint": "The pointer conversion is the older of the two.",
+    "pairs": [
+      {
+        "left": "`go 1.16`",
+        "right": "Neither compiles"
+      },
+      {
+        "left": "`go 1.19`",
+        "right": "Only the pointer conversion compiles"
+      },
+      {
+        "left": "`go 1.27.1`",
+        "right": "Both compile"
+      }
+    ],
+    "right_distractors": [
+      "Only the array conversion compiles"
+    ]
+  },
+  {
+    "id": "ex-1rv8z2e3",
+    "version": 1,
+    "section": "slice-to-array",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A parser does `id := [16]byte(buf)` for each record, then reads the next record into the same `buf`. Does `id` change?",
+    "hint": "Which conversion was it?",
+    "choices": [
+      {
+        "text": "Yes: `id` points into `buf`'s array, so the next record shows through it",
+        "correct": false,
+        "why": "That is `(*[16]byte)(buf)`. An array type, not a pointer type, means a copy."
+      },
+      {
+        "text": "No: the conversion copied sixteen bytes into `id`",
+        "correct": true,
+        "why": "Right. `id` is an array, a value of its own, like `c` in section 03."
+      },
+      {
+        "text": "Only if `buf` is longer than sixteen bytes",
+        "correct": false,
+        "why": "A longer `buf` still gives a copy of the first sixteen; the length decides only whether it panics."
+      },
+      {
+        "text": "It does not compile: a slice needs a pointer conversion",
+        "correct": false,
+        "why": "Since Go 1.20 a slice converts to an array type directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-jrya59b0",
+    "version": 1,
+    "section": "slice-to-array",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`raw` has length 3 and capacity 8. What does `[4]byte(raw[:4])` do?",
+    "hint": "Which check does `raw[:4]` pass, and which does it skip?",
+    "choices": [
+      {
+        "text": "Panics, since `raw` holds only three bytes",
+        "correct": false,
+        "why": "That is what `[4]byte(raw)` does. `raw[:4]` stretches the slice to four first, inside the capacity."
+      },
+      {
+        "text": "Converts, taking one byte that lies past `raw`'s length",
+        "correct": true,
+        "why": "Right. `short[:4]` printed four bytes from a three-byte slice, with no complaint."
+      },
+      {
+        "text": "Fails to compile, because 4 is more than `len(raw)`",
+        "correct": false,
+        "why": "The compiler knows neither the length nor the capacity of a slice."
+      },
+      {
+        "text": "Panics at `raw[:4]` with `index out of range`",
+        "correct": false,
+        "why": "A reslice is checked against the capacity, 8 here, and 4 is within it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2chepv2g",
+    "version": 1,
+    "section": "where-it-matters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why may `[32]byte` be a map key when `[]byte` may not?",
+    "hint": "A map has to compare keys.",
+    "choices": [
+      {
+        "text": "Arrays take less memory than slices, so they hash faster",
+        "correct": false,
+        "why": "A `[32]byte` is bigger than a slice header. Size is not the rule; comparability is."
+      },
+      {
+        "text": "Arrays compare with `==`; slices only with `nil`",
+        "correct": true,
+        "why": "Right. A map needs keys it can compare, and `x == y` on two slices was refused."
+      },
+      {
+        "text": "Only types from the standard library may be keys",
+        "correct": false,
+        "why": "`string` and `[32]byte` are both built from the language, and the rule is about `==`."
+      },
+      {
+        "text": "A slice key would need `make` first",
+        "correct": false,
+        "why": "`make` does not make a slice comparable; nothing does."
+      }
+    ]
+  },
+  {
+    "id": "ex-29rprnv5",
+    "version": 1,
+    "section": "where-it-matters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the duplicate finder, why was `d.txt` (`hello` and a newline) not reported as a copy of `a.txt`?",
+    "hint": "What does the key compare?",
+    "choices": [
+      {
+        "text": "The map compared the file names it stored as values, and those names differ",
+        "correct": false,
+        "why": "The key is the checksum; the names are only the values stored under it."
+      },
+      {
+        "text": "`==` on arrays compares only the first elements",
+        "correct": false,
+        "why": "It compares every element; that is why `c.txt` matched `a.txt` exactly."
+      },
+      {
+        "text": "The extra byte gives a different 32-byte checksum, so a different key",
+        "correct": true,
+        "why": "Right: three different contents, and `d.txt` was one of them."
+      },
+      {
+        "text": "Its checksum was a slice, and slices are never equal",
+        "correct": false,
+        "why": "`Sum256` returns a `[32]byte` for every file, and arrays compare."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9fxrs4v",
+    "version": 1,
+    "section": "where-it-matters",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these compare the contents of two `[]byte` values `x` and `y`? Choose all that apply.",
+    "hint": "The operator is refused; two functions are not.",
+    "choices": [
+      {
+        "text": "`bytes.Equal(x, y)`",
+        "correct": true,
+        "why": "Yes, it printed `true`."
+      },
+      {
+        "text": "`x == y`",
+        "correct": false,
+        "why": "Refused: `slice can only be compared to nil`."
+      },
+      {
+        "text": "`slices.Equal(x, y)`",
+        "correct": true,
+        "why": "Yes, for slices of any comparable element type, `byte` included."
+      },
+      {
+        "text": "`len(x) == len(y)`",
+        "correct": false,
+        "why": "That compares two lengths; `hello` and `world` would pass it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1e2w77nz",
+    "version": 1,
+    "section": "where-it-matters",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Comparing two slices with `==` is refused with: `slice can only be compared to ___`.",
+    "hint": "The one comparison lesson 12 used on slices.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-negdnzsx",
+    "version": 1,
+    "section": "where-it-matters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need a set of IPv4 addresses read from packets as `[]byte`. Which map type does the job?",
+    "hint": "Four bytes, compared by value.",
+    "choices": [
+      {
+        "text": "`map[[]byte]bool`, keyed by the slice as it arrives",
+        "correct": false,
+        "why": "A slice cannot be a key at all; lesson 14 shows the refusal."
+      },
+      {
+        "text": "`map[*[4]byte]bool`, so that no key is copied",
+        "correct": false,
+        "why": "Pointers compare by address, so the same address read twice gives two different keys."
+      },
+      {
+        "text": "`map[[4]byte]bool`, keyed by `[4]byte(raw)`",
+        "correct": true,
+        "why": "Right. The conversion copies the four bytes into a comparable value."
+      },
+      {
+        "text": "`map[[32]byte]bool`, keyed by `sha256.Sum256(raw)`",
+        "correct": false,
+        "why": "It works, but hashing four bytes into 32 adds a step the address does not need."
+      }
+    ]
+  },
+  {
+    "id": "ex-1g271j0h",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bytes for an IPv4 address arrive in `raw []byte` from the network. Put the steps in a safe order.",
+    "hint": "The conversion panics on a short slice.",
+    "items": [
+      "Check that `len(raw)` is at least 4",
+      "Convert with `[4]byte(raw)`",
+      "Pass the array to `netip.AddrFrom4`"
+    ]
+  },
+  {
+    "id": "ex-a2gkjege",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`a := [4]int{1, 2, 3, 4}`, `s := a[:]`, `b := [4]int(s)`, then `b[0] = 9`. Which of `a`, `s` and `b` now start with 9?",
+    "hint": "One step shares and one step copies.",
+    "choices": [
+      {
+        "text": "All three",
+        "correct": false,
+        "why": "That needs both steps to share, and the conversion to an array copies."
+      },
+      {
+        "text": "Only `b`",
+        "correct": true,
+        "why": "Right. `a` and `s` share one array, and `b` is a copy taken out of it."
+      },
+      {
+        "text": "`s` and `b`, but not `a`",
+        "correct": false,
+        "why": "`s` is a view of `a`; nothing can change one without the other."
+      },
+      {
+        "text": "`a` and `b`, as `s` is a separate copy",
+        "correct": false,
+        "why": "Slicing never copies, and `b` is the only separate copy here."
+      }
+    ]
+  },
+  {
+    "id": "ex-zctcnycb",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each expression, where `a` is a `[4]int` and `s` a `[]int`, to what it gives you.",
+    "hint": "Two share and one copies.",
+    "pairs": [
+      {
+        "left": "`a[:]`",
+        "right": "A slice over the same array"
+      },
+      {
+        "left": "`[4]int(s)`",
+        "right": "A new array holding a copy"
+      },
+      {
+        "left": "`(*[4]int)(s)`",
+        "right": "A pointer into the slice's array"
+      }
+    ],
+    "right_distractors": [
+      "A new slice over a copied array"
+    ]
+  },
+  {
+    "id": "ex-a745e763",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many hexadecimal digits does `hex.EncodeToString(sum[:])` print for a SHA-256 checksum?",
+    "hint": "Two digits for each byte of a `[32]byte`.",
+    "value": 64,
+    "tolerance": 0,
+    "unit": "digits"
+  }
+]

@@ -1,0 +1,666 @@
+{
+  "ex-fv1bvphr": {
+    "prompt": "O que é uma costura (seam), nesta aula?",
+    "choices": [
+      {
+        "text": "Um comentário que marca código ainda sem testes",
+        "why": "A costura está na forma do código, não num comentário."
+      },
+      {
+        "text": "Um lugar onde o colaborador é entregue de fora",
+        "why": "Certo. Um argumento como carrier ou opener, onde o teste passa um dublê."
+      },
+      {
+        "text": "A linha onde um teste unitário termina e um de integração começa",
+        "why": "Isso é uma fronteira entre camadas, outra ideia."
+      },
+      {
+        "text": "A junção entre dois commits que um merge produz",
+        "why": "Nada a ver com controle de versão aqui."
+      }
+    ]
+  },
+  "ex-pqe7z5zs": {
+    "prompt": "price constrói o próprio CarrierClient dentro do corpo da função. O que um teste deixa de conseguir fazer?",
+    "choices": [
+      {
+        "text": "Chamar price",
+        "why": "Consegue chamar; cada chamada só vai à rede."
+      },
+      {
+        "text": "Decidir o que a transportadora responde",
+        "why": "Certo. Com o cliente criado dentro, não há onde entregar um stub."
+      },
+      {
+        "text": "Medir quanto tempo price leva",
+        "why": "Medir continua possível, e mais lento."
+      },
+      {
+        "text": "Conferir a regra de frete grátis pelo subtotal",
+        "why": "Essa conferência acontece antes de a transportadora ser consultada, então o teste a alcança de qualquer jeito."
+      }
+    ]
+  },
+  "ex-sh3jg82k": {
+    "prompt": "Passar um colaborador como parâmetro em vez de criá-lo dentro tem um nome pomposo: ___ de dependência.",
+    "blanks": [
+      {
+        "accept": [
+          "injeção",
+          "injecao"
+        ]
+      }
+    ]
+  },
+  "ex-wmtra4gs": {
+    "prompt": "No teste de recusa, por que o mailer é None?",
+    "choices": [
+      {
+        "text": "O pedido é barrado antes de esse argumento ser usado",
+        "why": "Certo. None é um dummy: exigido pela assinatura, e explodiria se fosse usado."
+      },
+      {
+        "text": "Porque o SmtpMailer não pode ser importado nos testes",
+        "why": "Pode; o passo 6 o importa para montar um mock com autospec."
+      },
+      {
+        "text": "Para o teste mandar e-mail real pelo servidor padrão",
+        "why": "None não tem método send; nada é enviado."
+      },
+      {
+        "text": "Porque place ignora o argumento mailer",
+        "why": "place o usa, depois da conferência de recusa."
+      }
+    ]
+  },
+  "ex-0mmk7c8n": {
+    "prompt": "Um teste da recusa constrói SmtpMailer(\"smtp.example\", 25) em vez de passar None. Que risco isso acrescenta?",
+    "choices": [
+      {
+        "text": "Nenhum, os dois são equivalentes",
+        "why": "Só são equivalentes enquanto a recusa ficar acima da linha do e-mail."
+      },
+      {
+        "text": "O teste deixa de importar o pytest",
+        "why": "Construir um objeto não tem relação com imports."
+      },
+      {
+        "text": "Se a conferência descer para depois do e-mail, o teste alcança um servidor real",
+        "why": "Certo. Aí ele manda e-mail ou trava num timeout, onde None teria falhado alto."
+      },
+      {
+        "text": "A recusa deixa de ser levantada",
+        "why": "A recusa não depende de qual mailer é passado."
+      }
+    ]
+  },
+  "ex-7ytqp9j8": {
+    "prompt": "O que o StubCarrier faz quando foi construído com um erro?",
+    "choices": [
+      {
+        "text": "Registra o erro numa lista para o teste ler",
+        "why": "Isso seria um spy; o stub não guarda nada."
+      },
+      {
+        "text": "Levanta o erro quando rate é chamado",
+        "why": "Certo. Levanta o erro que recebeu, o que põe price no ramo de reserva."
+      },
+      {
+        "text": "Chama a transportadora real e repassa o erro que recebe",
+        "why": "Um stub não tem rede nem lógica."
+      },
+      {
+        "text": "Tenta de novo duas vezes e depois devolve o preço da tabela",
+        "why": "Novas tentativas não estão no stub, e a tabela é a reserva de price."
+      }
+    ]
+  },
+  "ex-qtsvhejt": {
+    "prompt": "Com a transportadora simulada atrasando três segundos e o timeout do cliente em 2 s, quantos segundos reais a sessão levou, segundo o time?",
+    "unit": "segundos"
+  },
+  "ex-h5hn3g43": {
+    "prompt": "Por que o teste de timeout com stub fica na camada rápida e a sessão contra a transportadora lenta não?",
+    "choices": [
+      {
+        "text": "O stub levanta o erro na hora; o timeout real espera dois segundos",
+        "why": "Certo. O mesmo ramo de price, alcançado sem espera."
+      },
+      {
+        "text": "Porque o teste com stub confere outro ramo de price",
+        "why": "Os dois chegam ao ramo de reserva."
+      },
+      {
+        "text": "Porque o pytest pula testes que dormem",
+        "why": "O pytest não pula nada por dormir."
+      },
+      {
+        "text": "Porque a transportadora simulada é escrita em outra linguagem",
+        "why": "Também é Python; o custo é a espera."
+      }
+    ]
+  },
+  "ex-8sb36td8": {
+    "prompt": "O teste com spy compara lines == [a linha esperada]. O que isso pega que \"timed out\" in lines[0] não pegaria?",
+    "choices": [
+      {
+        "text": "Uma reserva que devolve o preço errado",
+        "why": "O teste com spy não olha o preço."
+      },
+      {
+        "text": "Uma transportadora que responde devagar demais para o timeout",
+        "why": "O stub falha na hora; velocidade não está neste teste."
+      },
+      {
+        "text": "Uma segunda linha inesperada",
+        "why": "Certo. Comparar a lista inteira falha com qualquer linha a mais ou a menos."
+      },
+      {
+        "text": "Um log vazio, quando price não registra nada",
+        "why": "lines[0] numa lista vazia levanta IndexError, então isso é pego de qualquer jeito."
+      }
+    ]
+  },
+  "ex-4nkgmnnm": {
+    "prompt": "Alguém apaga a chamada log(...) em price. Qual dos quatro testes de test_carrier.py fica vermelho?",
+    "choices": [
+      {
+        "text": "O preço da transportadora vence quando ela responde",
+        "why": "A transportadora respondeu, então nada é registrado de qualquer jeito."
+      },
+      {
+        "text": "A tabela é usada quando a transportadora cai",
+        "why": "Ele passa um log que descarta linhas e confere só o preço."
+      },
+      {
+        "text": "A reserva é registrada com o motivo",
+        "why": "Certo. É o único teste que lê o que foi registrado."
+      },
+      {
+        "text": "Pedido grátis nunca consulta a transportadora",
+        "why": "Não há reserva num pedido grátis."
+      }
+    ]
+  },
+  "ex-0sa31ar0": {
+    "prompt": "Um spy registra chamadas; com um spy, quem lê o registro e faz a verificação é o ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "teste"
+        ]
+      }
+    ]
+  },
+  "ex-xc3kvst4": {
+    "prompt": "Por que test_a_free_order_never_asks_the_carrier precisa de um dublê que registre chamadas?",
+    "choices": [
+      {
+        "text": "Porque a transportadora é lenta demais para chamar num teste",
+        "why": "Velocidade não é o motivo; o ponto é uma chamada que não pode acontecer."
+      },
+      {
+        "text": "O valor devolvido é 0 de qualquer jeito",
+        "why": "Certo. Só o registro de chamadas mostra que a API paga não foi consultada."
+      },
+      {
+        "text": "Porque o pytest exige um mock quando uma função devolve zero",
+        "why": "O pytest não exige nada disso."
+      },
+      {
+        "text": "Para conferir que o CEP foi normalizado",
+        "why": "O teste afirma que não houve chamada, então nenhum CEP é conferido."
+      }
+    ]
+  },
+  "ex-pr6ga3jp": {
+    "prompt": "SmtpMailer.send virou deliver. Com um mock.Mock() simples, o teste do pedido passou. Por quê?",
+    "choices": [
+      {
+        "text": "Um Mock simples aceita qualquer nome de método",
+        "why": "Certo. Respondeu a send tão feliz quanto responderia a sned."
+      },
+      {
+        "text": "Porque o pytest guarda o SmtpMailer antigo entre execuções",
+        "why": "O teste nem tocou no SmtpMailer."
+      },
+      {
+        "text": "Porque orders.place também foi renomeado",
+        "why": "place continuava chamando send; esse é o defeito."
+      },
+      {
+        "text": "Porque a troca de nome não chegou ao arquivo em disco",
+        "why": "git diff --stat mostrou a mudança."
+      }
+    ]
+  },
+  "ex-a0e01eqq": {
+    "prompt": "Com create_autospec(SmtpMailer, instance=True), que erro o teste do pedido levantou depois da troca de nome?",
+    "choices": [
+      {
+        "text": "TypeError: falta o argumento body",
+        "why": "Os argumentos nem chegaram a ser vistos; faltava o atributo."
+      },
+      {
+        "text": "AttributeError: Mock object has no attribute 'send'",
+        "why": "Certo. O mesmo erro que a produção levantaria, achado na camada rápida."
+      },
+      {
+        "text": "AssertionError: esperava send chamado uma vez",
+        "why": "O teste parou antes da verificação, na própria chamada."
+      },
+      {
+        "text": "ConnectionRefusedError vindo do smtplib",
+        "why": "Um mock com autospec não abre conexão."
+      }
+    ]
+  },
+  "ex-r6z0ksnn": {
+    "prompt": "Quais destas afirmações valem para um unittest.mock.Mock() simples? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Registra toda chamada feita a ele",
+        "why": "Certo. call_args e call_count leem esse registro."
+      },
+      {
+        "text": "Responde a um nome de método que nunca viu",
+        "why": "Certo. mailer.sned(...) funcionou na captura."
+      },
+      {
+        "text": "Recusa chamadas que a classe real não tem",
+        "why": "Isso é o create_autospec, não um Mock simples."
+      },
+      {
+        "text": "Repassa a chamada ao objeto real depois",
+        "why": "Um Mock substitui o objeto; nada é repassado."
+      }
+    ]
+  },
+  "ex-ywd5zfy1": {
+    "prompt": "O que faz do FakeOrders um fake e não um stub?",
+    "choices": [
+      {
+        "text": "Ele está num arquivo chamado fakes.py",
+        "why": "O nome do arquivo é convenção; o comportamento decide."
+      },
+      {
+        "text": "Levanta erros sob demanda",
+        "why": "Levantar sob demanda é o que o stub faz."
+      },
+      {
+        "text": "Guarda o que recebeu e distribui ids",
+        "why": "Certo. Tem comportamento real, por um atalho: uma lista no lugar da tabela."
+      },
+      {
+        "text": "Confere as chamadas feitas a ele com métodos de verificação",
+        "why": "Isso é um mock."
+      }
+    ]
+  },
+  "ex-89cmhmbj": {
+    "prompt": "FakeOrders.add começa os ids em 0 enquanto a tabela real começa em 1. Os testes com o fake passam. O que mantém fake e real de acordo?",
+    "choices": [
+      {
+        "text": "A revisão de código, já que os dois arquivos são curtos",
+        "why": "A memória é justamente o que falhou; a aula pede outra coisa."
+      },
+      {
+        "text": "Um mock do fake",
+        "why": "Um dublê de um dublê não confere nada da tabela real."
+      },
+      {
+        "text": "Cobertura de 100% em fakes.py",
+        "why": "Cobertura diz que as linhas rodaram, não que concordam com a tabela."
+      },
+      {
+        "text": "Um conjunto de testes rodado contra os dois",
+        "why": "Certo. Parametrizado sobre o fake e a implementação real, o teste do primeiro id falha para o fake."
+      }
+    ]
+  },
+  "ex-j1vwva61": {
+    "prompt": "Ligue cada colaborador real a um fake conhecido.",
+    "pairs": [
+      {
+        "left": "Servidor SMTP",
+        "right": "Mailpit"
+      },
+      {
+        "left": "Armazenamento S3",
+        "right": "MinIO"
+      },
+      {
+        "left": "O relógio",
+        "right": "Um relógio que o teste avança"
+      }
+    ],
+    "right_distractors": [
+      "Pact"
+    ]
+  },
+  "ex-s7xb99gq": {
+    "prompt": "Ligue cada dublê ao seu exemplo no shipquote.",
+    "pairs": [
+      {
+        "left": "dummy",
+        "right": "mailer=None"
+      },
+      {
+        "left": "stub",
+        "right": "StubCarrier(cents=1999)"
+      },
+      {
+        "left": "spy",
+        "right": "log=lines.append"
+      },
+      {
+        "left": "fake",
+        "right": "FakeOrders()"
+      }
+    ],
+    "right_distractors": [
+      "CarrierClient(URL, token)"
+    ]
+  },
+  "ex-2a8r2gdr": {
+    "prompt": "Um teste é sobre o preço devolvido para um CEP, e a transportadora está no caminho. Qual dublê cabe?",
+    "choices": [
+      {
+        "text": "Um mock afirmando que rate foi chamado com o CEP",
+        "why": "Isso confere uma chamada, e este teste é sobre um resultado."
+      },
+      {
+        "text": "Um stub",
+        "why": "Certo. Define o que a transportadora diz; a verificação é sobre o preço."
+      },
+      {
+        "text": "Uma transportadora dummy igual a None",
+        "why": "price chama rate nela, então None falharia."
+      },
+      {
+        "text": "A transportadora real, pela simulada do laboratório a cada execução",
+        "why": "Lento, e trabalho de teste de contrato, não deste."
+      }
+    ]
+  },
+  "ex-nz6eq3y4": {
+    "prompt": "Os nomes dummy, stub, spy, mock e fake vêm do livro xUnit Test ___ , de Gerard Meszaros.",
+    "blanks": [
+      {
+        "accept": [
+          "Patterns"
+        ]
+      }
+    ]
+  },
+  "ex-0vt5pma2": {
+    "prompt": "mock.patch(\"urllib.request.urlopen\") não alcançou o CarrierClient. Por quê?",
+    "choices": [
+      {
+        "text": "Porque patch só funciona dentro de fixtures do pytest",
+        "why": "patch funciona como gerenciador de contexto em qualquer lugar."
+      },
+      {
+        "text": "A porta 9 é reservada e o sistema bloqueou o patch",
+        "why": "A porta só explica a recusa; o patch falhou antes."
+      },
+      {
+        "text": "O argumento padrão pegou o urlopen real na importação",
+        "why": "Certo. Padrões são avaliados uma vez, quando a função é definida."
+      },
+      {
+        "text": "Porque o urllib não pode ser alterado no Python 3.13",
+        "why": "Pode; a questão é quando o nome foi consultado."
+      }
+    ]
+  },
+  "ex-eqmx0qpb": {
+    "prompt": "Um módulo faz from urllib.request import urlopen e chama urlopen(...). O módulo é shipquote/fetch.py. Qual alvo o patch precisa?",
+    "choices": [
+      {
+        "text": "\"urllib.request.urlopen\"",
+        "why": "O módulo guarda a própria cópia da referência."
+      },
+      {
+        "text": "\"shipquote.fetch.urlopen\"",
+        "why": "Certo. Altere o nome onde ele é consultado."
+      },
+      {
+        "text": "\"urllib.urlopen\"",
+        "why": "Esse nome não existe no Python 3."
+      },
+      {
+        "text": "\"shipquote.urllib.request.urlopen\"",
+        "why": "shipquote não tem atributo urllib."
+      }
+    ]
+  },
+  "ex-tbw7z5v6": {
+    "prompt": "Como o patch que errou o alvo apareceu na execução?",
+    "choices": [
+      {
+        "text": "Como um aviso de que o alvo do patch não foi usado",
+        "why": "Esse aviso não existe; esse é o perigo."
+      },
+      {
+        "text": "Como um erro de conexão, três exceções abaixo",
+        "why": "Certo. Um patch que erra falha como outra coisa, ou passa contra um serviço real."
+      },
+      {
+        "text": "Como um teste pulado",
+        "why": "Rodou e falhou."
+      },
+      {
+        "text": "Como aprovado, já que o servidor da porta 9 respondeu",
+        "why": "Nada escuta na porta 9; foi recusado."
+      }
+    ]
+  },
+  "ex-5xa7xa2s": {
+    "prompt": "A transportadora agora responde price_cents. O que os quatro testes com stub fizeram?",
+    "choices": [
+      {
+        "text": "Passaram",
+        "why": "Certo. Nunca falam com a transportadora, então a mudança dela não os alcança."
+      },
+      {
+        "text": "Falharam com KeyError: 'cents'",
+        "why": "Esse foi o teste de contrato."
+      },
+      {
+        "text": "Foram pulados porque CARRIER_URL estava definida",
+        "why": "Só os de contrato pulam, e só quando ela não está definida."
+      },
+      {
+        "text": "Estouraram o tempo depois de dois segundos cada",
+        "why": "Stubs respondem na hora."
+      }
+    ]
+  },
+  "ex-ntvtn1mj": {
+    "prompt": "Por que um pipeline que nunca define CARRIER_URL é um problema, se toda execução é verde?",
+    "choices": [
+      {
+        "text": "Porque os stubs passam a chamar a transportadora real",
+        "why": "Stubs nunca chamam nada."
+      },
+      {
+        "text": "Porque o pytest reprova uma execução com testes pulados",
+        "why": "Um teste pulado não reprova a execução; esse é o ponto."
+      },
+      {
+        "text": "Os testes de contrato são pulados toda vez, e o contrato nunca é conferido",
+        "why": "Certo. Um teste pulado não é um teste aprovado."
+      },
+      {
+        "text": "Porque o token é impresso no log",
+        "why": "Nada é impresso quando nada roda."
+      }
+    ]
+  },
+  "ex-gtm60vcd": {
+    "prompt": "O pytest imprime os motivos de testes pulados quando recebe a opção -r___ .",
+    "blanks": [
+      {
+        "accept": [
+          "s"
+        ]
+      }
+    ]
+  },
+  "ex-kgx8tybb": {
+    "prompt": "A sandbox de um fornecedor cobra por chamada e cai duas vezes por semana. Onde rodam os testes de contrato?",
+    "choices": [
+      {
+        "text": "A cada push, para pegar o desvio na hora",
+        "why": "Isso paga por push e fica vermelho sempre que a sandbox cai."
+      },
+      {
+        "text": "Em lugar nenhum; os stubs bastam",
+        "why": "Aí nada percebe os stubs ficando desatualizados."
+      },
+      {
+        "text": "Num agendamento, com a falha lida como stubs desatualizados",
+        "why": "Certo. Toda noite contra o ambiente de teste, como sugere a seção 10."
+      },
+      {
+        "text": "Contra a produção, com o CEP de um cliente real",
+        "why": "Produção não é ambiente de teste."
+      }
+    ]
+  },
+  "ex-c03vwn7t": {
+    "prompt": "Um teste de place afirma cada chamada em ordem e quebra quando place é refatorado com o mesmo resultado. Que sintoma é esse, na aula?",
+    "choices": [
+      {
+        "text": "O teste espelha a implementação",
+        "why": "Certo. Ele repete o código, então falha em mudanças que mantiveram o comportamento."
+      },
+      {
+        "text": "O dublê se afastou do real",
+        "why": "Desvio é um dublê ficando velho; aqui o código mudou de forma."
+      },
+      {
+        "text": "O teste é instável",
+        "why": "Falha toda vez, pelo mesmo motivo."
+      },
+      {
+        "text": "A suíte tem forma de cone de sorvete",
+        "why": "Isso é sobre camadas, não sobre mocks."
+      }
+    ]
+  },
+  "ex-qwvefgtv": {
+    "prompt": "Ponha as perguntas do checklist na ordem da aula.",
+    "items": [
+      "O real é lento, caro ou indisponível?",
+      "Esta chamada é o comportamento?",
+      "O que mantém este dublê honesto?"
+    ],
+    "trap": "Se um dublê é necessário vem primeiro; como mantê-lo honesto vem por último."
+  },
+  "ex-yygxfhr7": {
+    "prompt": "Por que brl e freight nunca são substituídos por mocks nos testes do shipquote?",
+    "choices": [
+      {
+        "text": "Porque são funções privadas",
+        "why": "São públicas; não é esse o motivo."
+      },
+      {
+        "text": "Porque o unittest.mock não substitui funções de módulo",
+        "why": "Substitui; é uma escolha não fazer."
+      },
+      {
+        "text": "São rápidas e determinísticas, e as reais não custam nada",
+        "why": "Certo. Dublê é para o que é lento, caro ou imprevisível."
+      },
+      {
+        "text": "Porque não têm testes próprios",
+        "why": "As duas têm testes unitários."
+      }
+    ]
+  },
+  "ex-ps3f4x6h": {
+    "prompt": "Um colaborador novo devolve taxas de câmbio de uma API de banco central atualizada de hora em hora. Um teste de preço em euros precisa ser determinístico. Qual dublê, e o que o mantém honesto?",
+    "choices": [
+      {
+        "text": "Um Mock simples, mantido honesto por assert_called_once_with",
+        "why": "Uma verificação de chamada confere a chamada, não a forma da resposta real."
+      },
+      {
+        "text": "Um stub com taxa fixa, mais um teste de contrato agendado",
+        "why": "Certo. O stub fixa a taxa; o teste de contrato confere que a API real ainda responde nesse formato."
+      },
+      {
+        "text": "A API real, mantida honesta repetindo quando a taxa muda",
+        "why": "Repetir não deixa fixa uma taxa que se move."
+      },
+      {
+        "text": "Um dummy, já que a taxa não importa",
+        "why": "O preço depende da taxa, então importa."
+      }
+    ]
+  },
+  "ex-yr89dkcv": {
+    "prompt": "Ligue cada falha ao hábito que a pega.",
+    "pairs": [
+      {
+        "left": "Um método renomeado ainda chamado por um Mock simples",
+        "right": "create_autospec"
+      },
+      {
+        "left": "Uma resposta mudada da transportadora",
+        "right": "Um teste de contrato"
+      },
+      {
+        "left": "Um patch que erra o alvo",
+        "right": "Uma costura"
+      }
+    ],
+    "right_distractors": [
+      "Um timeout maior"
+    ]
+  },
+  "ex-s9tgfdjb": {
+    "prompt": "Quais destas situações são bons motivos para usar um dublê? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "O colaborador cobra por chamada",
+        "why": "Certo. Custo por chamada é um dos motivos do checklist."
+      },
+      {
+        "text": "A resposta do colaborador muda com a hora do dia",
+        "why": "Certo. Não determinismo faz o teste passar ou falhar pelo relógio."
+      },
+      {
+        "text": "O colaborador é uma função pura que responde em microssegundos",
+        "why": "Aí o real é mais barato que um dublê."
+      },
+      {
+        "text": "Você precisa que o colaborador falhe sob demanda",
+        "why": "Certo. Um stub que levanta um erro alcança um ramo que o real raramente percorre."
+      }
+    ]
+  },
+  "ex-rvq2669s": {
+    "prompt": "Na captura do desvio de contrato, o que a produção teria feito com cada cotação?",
+    "choices": [
+      {
+        "text": "Respondido 500 a todo cliente",
+        "why": "price captura o CarrierError e recorre à reserva."
+      },
+      {
+        "text": "Respondido com price_cents no corpo",
+        "why": "O cliente nunca lê price_cents."
+      },
+      {
+        "text": "Cotado pela tabela, escrevendo uma linha de log a cada vez",
+        "why": "Certo. A reserva esconde a quebra dos clientes; a linha de log é o único rastro."
+      },
+      {
+        "text": "Tentado de novo até a transportadora responder cents",
+        "why": "Não há nova tentativa em price."
+      }
+    ]
+  }
+}

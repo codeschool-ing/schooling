@@ -1,0 +1,610 @@
+[
+  {
+    "id": "ex-ef59shye",
+    "version": 1,
+    "section": "basics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`x` is an `int`. What is the type of `p` after `p := &x`?",
+    "hint": "`%T` printed it in section 02.",
+    "choices": [
+      {
+        "text": "`&int`",
+        "correct": false,
+        "why": "`&` makes an address in an expression; in a type, \"pointer to\" is written with `*`."
+      },
+      {
+        "text": "`*int`",
+        "correct": true,
+        "why": "Right. `*int` is \"pointer to an `int`\", and `%T` printed exactly that."
+      },
+      {
+        "text": "`int`, a second variable holding 21",
+        "correct": false,
+        "why": "That is what `p := x` would make. `&x` is the address, not a copy of the number."
+      },
+      {
+        "text": "`pointer`, a type of its own shared by every address",
+        "correct": false,
+        "why": "A Go pointer carries the type it points at; `*int` and `*string` are different types."
+      }
+    ]
+  },
+  {
+    "id": "ex-x0zxpz56",
+    "version": 1,
+    "section": "basics",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `x := 21` and `p := &x`, the statement `___ = 30` sets `x` to 30 without naming `x`.",
+    "hint": "Follow the pointer, on the left of `=`.",
+    "blanks": [
+      {
+        "accept": [
+          "*p"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-de9yccye",
+    "version": 1,
+    "section": "basics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var p *int` followed by `fmt.Println(*p)`. What happens?",
+    "hint": "What is a pointer's zero value, and what is at that address?",
+    "choices": [
+      {
+        "text": "It prints 0, the zero value of an `int`",
+        "correct": false,
+        "why": "There is no `int` to read: `p` is nil and points at no variable at all."
+      },
+      {
+        "text": "It prints `<nil>`",
+        "correct": false,
+        "why": "That is what printing `p` itself gives. `*p` tries to follow it."
+      },
+      {
+        "text": "It panics: invalid memory address or nil pointer dereference",
+        "correct": true,
+        "why": "Right. Following a nil pointer stops the program, at run time, with exit status 2."
+      },
+      {
+        "text": "The compiler refuses `*p`, because it sees a pointer that was never given a value",
+        "correct": false,
+        "why": "It compiled; whether `p` is nil is only known while the program runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-m2yjhq54",
+    "version": 1,
+    "section": "basics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`p := &nums[0]` points into an array of three `int`. Why does the compiler refuse `p++`?",
+    "hint": "Read the error: `non-numeric type *int`.",
+    "choices": [
+      {
+        "text": "Because `p++` might step past the end of the array",
+        "correct": false,
+        "why": "The refusal has nothing to do with where `p` points; `p++` is refused on any pointer."
+      },
+      {
+        "text": "Because a pointer is not a number, and Go has no pointer arithmetic",
+        "correct": true,
+        "why": "Right. To reach the next element you index the array, `nums[1]`."
+      },
+      {
+        "text": "Because `++` is reserved for variables declared with `var`",
+        "correct": false,
+        "why": "`*a++` worked in section 02 on a pointer from a function; `++` cares about the type, not the declaration."
+      },
+      {
+        "text": "Because arrays are values, so their elements have no addresses",
+        "correct": false,
+        "why": "`&nums[0]` compiled on the line before; array elements do have addresses."
+      }
+    ]
+  },
+  {
+    "id": "ex-ss43e8d5",
+    "version": 1,
+    "section": "basics",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`func newPlayer(name string) *Player { p := Player{Name: name}; return &p }`. A reviewer used to C says the returned pointer dangles once the function returns. What is true?",
+    "hint": "What did `newCounter` print in section 02?",
+    "choices": [
+      {
+        "text": "It dangles; the function has to use `new(Player)` instead",
+        "correct": false,
+        "why": "`new(Player)` and `&p` give the same guarantee: the variable lives while it is reachable."
+      },
+      {
+        "text": "It is safe for structs, and it would dangle for an `int`",
+        "correct": false,
+        "why": "`newCounter` returned the address of a local `int`, and both counters kept working."
+      },
+      {
+        "text": "It is safe: `p` lives for as long as the returned pointer reaches it",
+        "correct": true,
+        "why": "Right. A Go variable lives while something can reach it; lesson 24 shows where the compiler puts it."
+      },
+      {
+        "text": "The compiler refuses to return the address of a local variable",
+        "correct": false,
+        "why": "`newCounter` did exactly that and compiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwas49bb",
+    "version": 1,
+    "section": "with-structs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`p` is a `*Player`. What does `p.Score++` do?",
+    "hint": "Go has no `->`.",
+    "choices": [
+      {
+        "text": "It changes a copy of the player, as lesson 22's `win` did",
+        "correct": false,
+        "why": "Lesson 22's `win` received a `Player`. Through a pointer the change reaches the player it points at."
+      },
+      {
+        "text": "Nothing: it is refused, and the field needs `(*p).Score++`",
+        "correct": false,
+        "why": "The long form compiles too, and nobody writes it, because the dot follows the pointer."
+      },
+      {
+        "text": "It moves `p` to the next field of the struct",
+        "correct": false,
+        "why": "There is no pointer arithmetic; `++` applies to the field."
+      },
+      {
+        "text": "It increments the `Score` of the player `p` points at",
+        "correct": true,
+        "why": "Right. `p.Score` on a pointer means `(*p).Score`."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vx16agm",
+    "version": 1,
+    "section": "with-structs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bia := &Player{Name: \"Bia\", Score: 1}` and `twin := &Player{Name: \"Bia\", Score: 1}`. What do `bia == twin` and `*bia == *twin` print?",
+    "hint": "One compares addresses, the other compares structs.",
+    "choices": [
+      {
+        "text": "`true true`, since the two players are equal",
+        "correct": false,
+        "why": "The players are equal, and they are two variables, so their addresses differ."
+      },
+      {
+        "text": "`false true`",
+        "correct": true,
+        "why": "Right. Two `&Player{...}` make two variables; following both compares the fields."
+      },
+      {
+        "text": "`false false`, because pointers to structs are never equal",
+        "correct": false,
+        "why": "`p == &x` was `true` in section 02: pointers are equal when they lead to one variable."
+      },
+      {
+        "text": "A compile error: structs cannot be compared",
+        "correct": false,
+        "why": "A struct whose fields are comparable compares with `==`, field by field."
+      }
+    ]
+  },
+  {
+    "id": "ex-3g9m9wpd",
+    "version": 1,
+    "section": "with-structs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ana` is a variable of type `Player`. Which of these expressions have the type `*Player`? Choose all that apply.",
+    "hint": "Section 03 named three ways to get one.",
+    "choices": [
+      {
+        "text": "`&ana`",
+        "correct": true,
+        "why": "Yes: the address of a variable that already exists."
+      },
+      {
+        "text": "`&Player{Name: \"Bia\"}`",
+        "correct": true,
+        "why": "Yes: a struct made on the spot, and its address."
+      },
+      {
+        "text": "`new(Player)`",
+        "correct": true,
+        "why": "Yes: a zero `Player` and its address."
+      },
+      {
+        "text": "`Player{}`",
+        "correct": false,
+        "why": "No: that is a `Player` value, with no address taken."
+      },
+      {
+        "text": "`*ana`",
+        "correct": false,
+        "why": "No: `*` follows a pointer, and `ana` is not one, so this does not compile."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fcnfzjp",
+    "version": 1,
+    "section": "with-structs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Options{Limit: &10}` is refused with `cannot take address of 10`. Why?",
+    "hint": "What does `&` need on its right?",
+    "choices": [
+      {
+        "text": "`Limit` is a `*int`, and 10 is an untyped constant that has no type yet",
+        "correct": false,
+        "why": "The message is about the address, not the type; `new(10)` turns the same constant into an `int` happily."
+      },
+      {
+        "text": "`&` needs a variable, and a constant is not one",
+        "correct": true,
+        "why": "Right. Before Go 1.26 the fix was `n := 10` and `&n`; now `new(10)` makes the variable."
+      },
+      {
+        "text": "`&` is not allowed inside a struct literal",
+        "correct": false,
+        "why": "`Limit: &n` inside the literal is the older, working form."
+      },
+      {
+        "text": "Pointer fields are only set after the struct is made",
+        "correct": false,
+        "why": "A literal sets them like any other field: `Options{Limit: new(10)}` ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5wze0ka",
+    "version": 1,
+    "section": "with-structs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`new(10)` compiles in a module whose `go` line says 1.___ or later.",
+    "hint": "The compiler said so when the line was set to 1.25.",
+    "blanks": [
+      {
+        "accept": [
+          "26"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-04jg5b63",
+    "version": 1,
+    "section": "with-maps-and-slices",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the compiler refuse `&ages[\"ana\"]` on a `map[string]int`?",
+    "hint": "What does `grow` do to the old table?",
+    "choices": [
+      {
+        "text": "Because map values are constants once stored",
+        "correct": false,
+        "why": "`ages[\"ana\"] = 31` changes one; the refusal is about the address."
+      },
+      {
+        "text": "Because a map moves its entries to a new table when it grows",
+        "correct": true,
+        "why": "Right. A pointer to an element would lead into a table the map had discarded."
+      },
+      {
+        "text": "Because a map is a pointer already, so `&` would be redundant",
+        "correct": false,
+        "why": "The map value is a pointer to the table; an element inside the table is something else."
+      },
+      {
+        "text": "Because only struct elements of a map have addresses",
+        "correct": false,
+        "why": "`players[\"ana\"].Score = 11` was refused too: no element of a map is a variable."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmje29my",
+    "version": 1,
+    "section": "with-maps-and-slices",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`players` is a `map[string]Player`, and `players[\"ana\"].Score = 11` is refused. Which of these compiles and changes Ana's score?",
+    "hint": "Treat the stored struct as a value: read it, change it, put it back.",
+    "choices": [
+      {
+        "text": "`(&players[\"ana\"]).Score = 11`",
+        "correct": false,
+        "why": "A map element has no address, so `&players[\"ana\"]` is refused too."
+      },
+      {
+        "text": "`players[\"ana\"]->Score = 11`",
+        "correct": false,
+        "why": "Go has no `->`; that is C's spelling."
+      },
+      {
+        "text": "`p := players[\"ana\"]; p.Score = 11; players[\"ana\"] = p`",
+        "correct": true,
+        "why": "Right. The copy is a variable, so its field is assignable, and storing it back replaces the entry."
+      },
+      {
+        "text": "`*players[\"ana\"].Score = 11`",
+        "correct": false,
+        "why": "`Score` is an `int`, not a pointer, so there is nothing for `*` to follow."
+      }
+    ]
+  },
+  {
+    "id": "ex-p183ngky",
+    "version": 1,
+    "section": "with-maps-and-slices",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`nums := make([]int, 3, 10)`, `first := &nums[0]`, `nums = append(nums, 4)`, `*first = 100`. What is `nums[0]`?",
+    "hint": "Compare the capacity here with section 04's.",
+    "choices": [
+      {
+        "text": "100, because `append` had room and did not move the slice",
+        "correct": true,
+        "why": "Right. With capacity 10, the 4 went into the same array, and `first` still points into it."
+      },
+      {
+        "text": "0, because `append` always moves a slice to a new array",
+        "correct": false,
+        "why": "It moves only when the capacity is used up; lesson 12 showed both cases."
+      },
+      {
+        "text": "A panic, because `first` points at a stale element",
+        "correct": false,
+        "why": "Even a stale pointer does not panic; and here it is not stale at all."
+      },
+      {
+        "text": "0, since `first` was taken before the append and still points at the old array",
+        "correct": false,
+        "why": "When it was taken matters only if the append moved the slice, and with room to spare it did not."
+      }
+    ]
+  },
+  {
+    "id": "ex-azm2czaf",
+    "version": 1,
+    "section": "with-maps-and-slices",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens in `~/pointers-stale` in order, from the pointer being taken to the write that `nums` never sees.",
+    "hint": "The slice starts full: length 3, capacity 3.",
+    "items": [
+      "`first := &nums[0]` points into the slice's array",
+      "`append` finds no room past the length",
+      "`append` copies the three elements to a new array and adds 4",
+      "`nums` is assigned the slice over the new array",
+      "`*first = 100` writes into the old array"
+    ]
+  },
+  {
+    "id": "ex-dmf0xkf6",
+    "version": 1,
+    "section": "with-maps-and-slices",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`addTo(s *[]int, v int)` appends through a pointer. Which shape does the standard library use for functions that grow a slice?",
+    "hint": "Look at `append` itself, and at `slices.Insert`.",
+    "choices": [
+      {
+        "text": "Taking `*[]T`, so callers do not have to assign anything",
+        "correct": false,
+        "why": "That is `addTo`'s shape; `append` and `slices.Insert` take a slice and return one."
+      },
+      {
+        "text": "Returning the new slice, which the caller stores",
+        "correct": true,
+        "why": "Right. `s = append(s, v)` shows at the call that `s` changes."
+      },
+      {
+        "text": "Returning a pointer to the new array",
+        "correct": false,
+        "why": "A slice already carries that pointer, with its length and capacity."
+      },
+      {
+        "text": "Neither: slices are passed by reference, so the caller sees the growth",
+        "correct": false,
+        "why": "Lesson 22 took that picture apart; the caller's length is in the caller's own slice value."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xr1x4mm",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of syntax with what it means.",
+    "hint": "The star means one thing in a type and another in an expression.",
+    "pairs": [
+      {
+        "left": "`&x`",
+        "right": "the address of the variable x"
+      },
+      {
+        "left": "`*p` in an expression",
+        "right": "the variable that p points at"
+      },
+      {
+        "left": "`*int` in a type",
+        "right": "pointer to an int"
+      },
+      {
+        "left": "`nil` as a pointer",
+        "right": "a pointer that leads to no variable"
+      }
+    ],
+    "right_distractors": [
+      "the int stored right after x in memory"
+    ]
+  },
+  {
+    "id": "ex-3r90q89t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`func reset(p *Player) { p = &Player{} }` is called as `reset(&ana)`, with Ana's score at 10. What is `ana.Score` afterwards?",
+    "hint": "Did the function write through `p`, or to `p`?",
+    "choices": [
+      {
+        "text": "0, because the function received Ana's address and replaced what was there",
+        "correct": false,
+        "why": "It received the address and then replaced its copy of it, without writing through it."
+      },
+      {
+        "text": "10, because the function only changed its own copy of the pointer",
+        "correct": true,
+        "why": "Right. It is lesson 22's `replace` again: assigning to a parameter never reaches the caller; `*p = Player{}` would."
+      },
+      {
+        "text": "A panic, because the new player is freed on return",
+        "correct": false,
+        "why": "Nothing panics; the new player is simply unreachable once `reset` returns."
+      },
+      {
+        "text": "A compile error: a pointer parameter is read-only",
+        "correct": false,
+        "why": "A parameter is an ordinary variable, pointer or not, and assigning to it compiles."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbqq80c6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`byName := map[string]*Player{\"ana\": &ana}`, then `byName[\"ana\"].Score = 50`. What is `ana.Score`?",
+    "hint": "What did the map store: a player, or an address?",
+    "choices": [
+      {
+        "text": "Unchanged, because a map stores a copy of what you put in it",
+        "correct": false,
+        "why": "It stored a copy of the pointer, and the copy leads to `ana` itself."
+      },
+      {
+        "text": "Nothing: assigning to a field through a map is refused",
+        "correct": false,
+        "why": "That refusal is for `map[string]Player`. Here the element is a pointer, and the field belongs to a variable."
+      },
+      {
+        "text": "50",
+        "correct": true,
+        "why": "Right. The map holds `&ana`, so the dot follows it to `ana` and writes there."
+      },
+      {
+        "text": "Unchanged until the map is stored back with `byName[\"ana\"] = p`",
+        "correct": false,
+        "why": "Storing back is the fix for a map of structs; with pointers the write has already landed."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9dx02t8",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In a module whose `go` line is 1.27.1, which of these compile? `nums` is a `[]int`, `ages` a `map[string]int`, `ana` a `Player` and `p := &ana`. Choose all that apply.",
+    "hint": "Addresses of slice elements, yes; of map elements, no; arithmetic, never.",
+    "choices": [
+      {
+        "text": "`q := &nums[1]`",
+        "correct": true,
+        "why": "Yes: a slice element is a variable with an address."
+      },
+      {
+        "text": "`a := &ages[\"ana\"]`",
+        "correct": false,
+        "why": "No: a map element has no address, because the map moves it."
+      },
+      {
+        "text": "`p.Score = 3`",
+        "correct": true,
+        "why": "Yes: the dot follows `p` to `ana`."
+      },
+      {
+        "text": "`p = p + 1`",
+        "correct": false,
+        "why": "No: Go has no pointer arithmetic."
+      },
+      {
+        "text": "`n := new(42)`",
+        "correct": true,
+        "why": "Yes: `new` takes an expression from Go 1.26 on."
+      }
+    ]
+  },
+  {
+    "id": "ex-wq0cstdz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When should a function take a `*Player` instead of a `Player`?",
+    "hint": "Section 03 gave two reasons, both from lesson 22.",
+    "choices": [
+      {
+        "text": "Every time, because copying a struct is slow",
+        "correct": false,
+        "why": "Lesson 22 measured a small struct copying inside the cost of the call."
+      },
+      {
+        "text": "Whenever it reads more than one field of the player it was given",
+        "correct": false,
+        "why": "Reading fields works the same on a copy; the number of fields read is not the question."
+      },
+      {
+        "text": "When it must change the caller's player, or the struct is large",
+        "correct": true,
+        "why": "Right. Otherwise the copy keeps the caller's player out of the function's reach."
+      },
+      {
+        "text": "Never: pointers to structs are unsafe in Go",
+        "correct": false,
+        "why": "Go pointers have no arithmetic and keep their target alive; `win(&ana)` is ordinary Go."
+      }
+    ]
+  }
+]

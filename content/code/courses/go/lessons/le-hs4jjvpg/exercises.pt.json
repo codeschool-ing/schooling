@@ -1,0 +1,390 @@
+{
+  "ex-qba0k5gg": {
+    "prompt": "`week` é um `[7]string` e `mid := week[2:4]`. Quanto valem `len(mid)` e `cap(mid)`?",
+    "hint": "A capacidade é contada a partir de onde a slice começa.",
+    "choices": [
+      {
+        "text": "2 e 7, o comprimento do array inteiro",
+        "why": "Isso conta do começo do array. A capacidade de uma slice é contada do começo dela, `wed`, o que deixa 5."
+      },
+      {
+        "text": "2 e 5",
+        "why": "Isso. `wed` e `thu` são o comprimento; de `wed` a `sun` é até onde ela alcança, cinco elementos."
+      },
+      {
+        "text": "2 e 2, já que uma slice não tem espaço além do comprimento",
+        "why": "`mid[:5]` imprimiu `fri`, `sat` e `sun`: o espaço além do comprimento estava lá o tempo todo."
+      },
+      {
+        "text": "3 e 5, porque `[2:4]` inclui o índice 4",
+        "why": "O segundo número é onde a slice para, antes dele: `[2:4]` são os índices 2 e 3."
+      }
+    ]
+  },
+  "ex-gb0dast5": {
+    "prompt": "`mid` tem comprimento 2 e capacidade 5. Qual destes roda sem pânico?",
+    "hint": "Um índice e um novo fatiamento são conferidos contra números diferentes.",
+    "choices": [
+      {
+        "text": "`mid[3]`, já que o índice 3 está dentro da capacidade",
+        "why": "Um índice é conferido só contra o comprimento: a execução parou com `index out of range [3] with length 2`."
+      },
+      {
+        "text": "`mid[:5]`",
+        "why": "Isso. Fatiar de novo para cima é legal até a capacidade, e 5 é a capacidade."
+      },
+      {
+        "text": "`mid[:6]`, os seis dias a partir de `wed`",
+        "why": "A partir de `wed` são só cinco: `slice bounds out of range [:6] with capacity 5`."
+      },
+      {
+        "text": "`mid[2]`",
+        "why": "O índice 2 é igual ao comprimento, e um índice precisa ser menor que o comprimento."
+      }
+    ]
+  },
+  "ex-7ad7468n": {
+    "prompt": "Um índice `s[i]` é conferido contra `len(s)`; um novo fatiamento `s[:j]` é conferido contra `___(s)`.",
+    "hint": "A segunda mensagem de pânico disse o nome.",
+    "blanks": [
+      {
+        "accept": [
+          "cap"
+        ]
+      }
+    ]
+  },
+  "ex-4dv9bcj1": {
+    "prompt": "Um programa para com `panic: runtime error: slice bounds out of range [:8] with capacity 6`. O que isso diz?",
+    "hint": "Qual dos dois números esta mensagem cita?",
+    "choices": [
+      {
+        "text": "A slice tinha comprimento 6 e foi indexada em 8",
+        "why": "Um índice além do comprimento dá `index out of range … with length`. Esta mensagem é a do novo fatiamento."
+      },
+      {
+        "text": "O array por trás da slice tem exatamente seis elementos ao todo",
+        "why": "A capacidade conta do começo da slice; o array tem seis dali em diante e qualquer número antes."
+      },
+      {
+        "text": "Algo pediu comprimento 8 a uma slice cujo array tinha 6 elementos restantes",
+        "why": "Isso. `[:8]` pediu comprimento 8, e a partir do começo da slice o array tinha espaço para 6."
+      },
+      {
+        "text": "O compilador deixou passar um 8 constante que ele sempre pega",
+        "why": "O compilador também deixou `mid[3]` passar: comprimento e capacidade de uma slice só são conhecidos na execução."
+      }
+    ]
+  },
+  "ex-mjdk99z4": {
+    "prompt": "O que o `append` faz quando a slice que recebe não tem capacidade sobrando?",
+    "hint": "Nada numa slice se redimensiona.",
+    "choices": [
+      {
+        "text": "Estende o mesmo array no lugar, como cresce um array dinâmico",
+        "why": "Um array nunca muda de tamanho. É essa a imagem que a seção 03 substitui."
+      },
+      {
+        "text": "Entra em pânico com `slice bounds out of range`",
+        "why": "Isso é fatiar além da capacidade à mão. O `append` abre espaço em vez disso."
+      },
+      {
+        "text": "Aloca um array maior, copia os elementos, devolve uma slice sobre ele",
+        "why": "Isso, e essa slice nova é o motivo de o resultado do `append` precisar ser guardado."
+      },
+      {
+        "text": "Aloca um array exatamente um elemento maior",
+        "why": "Dois mil appends mudaram a capacidade só doze vezes; o array novo é bem maior."
+      }
+    ]
+  },
+  "ex-qjegzjsf": {
+    "prompt": "A capacidade foi de 512 para 848, onde a linha 341 de `nextslicecap` calcula 832. Por quê?",
+    "hint": "832 `int`s são 6.656 bytes.",
+    "choices": [
+      {
+        "text": "Acima de 512 o runtime multiplica por um 1,66 fixo",
+        "why": "848/512 é coincidência do arredondamento: os passos seguintes são 1,51 e 1,40, não um fator fixo."
+      },
+      {
+        "text": "O alocador arredonda 6.656 bytes para uma classe de 6.784 bytes",
+        "why": "Isso. 6.784 bytes são 848 `int`s, e o `append` usa o array inteiro que recebeu."
+      },
+      {
+        "text": "O buffer de 32 bytes do compilador deu espaço para mais 16",
+        "why": "Esse buffer só serve os primeiros elementos, e 32 bytes são quatro `int`s, não dezesseis."
+      },
+      {
+        "text": "O laço pediu 848 acrescentando 336 elementos numa chamada",
+        "why": "O laço acrescenta um de cada vez, então as linhas 329 e 330 nunca se aplicam aqui."
+      }
+    ]
+  },
+  "ex-s0caxq5x": {
+    "prompt": "Um teste de um colega afirma que, depois de cinco appends numa `[]int` nil, `cap(s)` é 8. O que há de errado?",
+    "hint": "Quem escolhe a capacidade, e o que a documentação promete?",
+    "choices": [
+      {
+        "text": "Nada: dobrar abaixo de 256 torna o 8 certo",
+        "why": "O mesmo laço começou 1, 2, 3, 4 num programa e 4 em outro; o compilador decide os primeiros passos."
+      },
+      {
+        "text": "Testa uma escolha do compilador e do runtime, que a documentação nunca promete",
+        "why": "Isso. O `append` promete um array grande o bastante e nada sobre o tamanho."
+      },
+      {
+        "text": "A capacidade depois de cinco appends é sempre exatamente cinco",
+        "why": "As duas execuções capturadas imprimiram 8 no comprimento 5; a capacidade anda à frente de propósito."
+      },
+      {
+        "text": "`cap` conta bytes, então 8 quer dizer um `int`",
+        "why": "`cap` conta elementos: 848 elementos eram 6.784 bytes na tabela de classes de tamanho."
+      }
+    ]
+  },
+  "ex-85n00gv8": {
+    "prompt": "Quais destes o `go doc builtin.append` promete? Marque todos os que se aplicam.",
+    "hint": "Leia as cinco frases, não o runtime.",
+    "choices": [
+      {
+        "text": "Com capacidade suficiente, o destino é fatiado de novo no lugar",
+        "why": "Sim: \"If it has sufficient capacity, the destination is resliced\"."
+      },
+      {
+        "text": "Sem capacidade suficiente, um array novo é alocado",
+        "why": "Sim, com essas palavras, e é por isso que o resultado precisa ser guardado."
+      },
+      {
+        "text": "A capacidade nova é o dobro da antiga",
+        "why": "Isso é o `nextslicecap` abaixo de 256, detalhe de implementação; a documentação não fala de tamanho."
+      },
+      {
+        "text": "O array antigo é liberado assim que é copiado",
+        "why": "Nada diz isso, e a seção 05 mostra outras slices ainda lendo um array antigo."
+      }
+    ]
+  },
+  "ex-9cmb0640": {
+    "prompt": "O que é `make([]string, 3)`?",
+    "hint": "O único número é o comprimento.",
+    "choices": [
+      {
+        "text": "Uma slice vazia com espaço para três strings",
+        "why": "Isso é `make([]string, 0, 3)`. Com um número só, a slice já guarda três elementos."
+      },
+      {
+        "text": "Três strings vazias: comprimento 3, capacidade 3",
+        "why": "Isso. É por isso que três appends depois deixaram seis elementos."
+      },
+      {
+        "text": "Uma slice nil que vai crescer até três strings com append",
+        "why": "O `make` sempre aloca; slice nil é o que `var s []string` dá."
+      },
+      {
+        "text": "Um array do tipo `[3]string`",
+        "why": "O `make` devolve o tipo que recebeu, uma slice; o array fica por trás."
+      }
+    ]
+  },
+  "ex-y2p63q5r": {
+    "prompt": "`upper := make([]string, 3)`, depois três chamadas `upper = append(upper, name)`. Quanto vale `len(upper)`?",
+    "hint": "Onde o `append` escreve?",
+    "choices": [
+      {
+        "text": "3",
+        "why": "Valeria para `make([]string, 0, 3)`. Aqui os três nomes vieram depois de três strings vazias."
+      },
+      {
+        "text": "6",
+        "why": "Isso: `6 [   ANA BIA CAIO]`, três strings vazias e depois os nomes."
+      },
+      {
+        "text": "0",
+        "why": "Um `make` com comprimento 3 começa em 3, e cada append soma um."
+      },
+      {
+        "text": "9",
+        "why": "Cada `append` acrescentou um elemento, não três."
+      }
+    ]
+  },
+  "ex-5aa9p2md": {
+    "prompt": "Quais destes distinguem uma slice nil de uma vazia que não é nil? Marque todos os que se aplicam.",
+    "hint": "Olhe as cinco linhas que o programa imprimiu.",
+    "choices": [
+      {
+        "text": "`s == nil`",
+        "why": "Sim: `true false` para as duas."
+      },
+      {
+        "text": "`len(s)`",
+        "why": "Os dois comprimentos imprimiram 0."
+      },
+      {
+        "text": "`json.Marshal(s)`",
+        "why": "Sim: `null` para a nil, `[]` para a vazia."
+      },
+      {
+        "text": "`fmt.Println(s)`",
+        "why": "As duas imprimiram `[]`."
+      }
+    ]
+  },
+  "ex-g1b74vxv": {
+    "prompt": "Para encher uma slice com `n` elementos usando append, alocando exatamente um array, escreva `s := make([]int, 0, ___)`.",
+    "hint": "Comprimento primeiro, capacidade depois.",
+    "blanks": [
+      {
+        "accept": [
+          "n"
+        ]
+      }
+    ]
+  },
+  "ex-tfkgzwhz": {
+    "prompt": "Um handler monta `var tags []string` a partir de linhas do banco e devolve como JSON. Um usuário sem tags recebe `\"tags\": null`, e o front-end quer `[]`. O que resolve?",
+    "hint": "O que o `json.Marshal` imprimiu para os dois tipos de vazio?",
+    "choices": [
+      {
+        "text": "Escrever `tags = append(tags)` antes de serializar",
+        "why": "Sem nada a acrescentar, o `append` devolve a slice como estava, ainda nil."
+      },
+      {
+        "text": "Nada em Go: o `encoding/json` escreve toda slice vazia como `null`",
+        "why": "Ele escreveu `[]` para `[]string{}`; só a slice nil virou `null`."
+      },
+      {
+        "text": "Conferir `tags == nil` e devolver um erro",
+        "why": "Um usuário sem tags não é um erro, e o front-end continua sem receber lista."
+      },
+      {
+        "text": "Começar de `tags := []string{}`",
+        "why": "Isso. Uma slice vazia que não é nil vira `[]`, com ou sem linhas acrescentadas."
+      }
+    ]
+  },
+  "ex-jxj9fmb6": {
+    "prompt": "`nums := []int{1, 2, 3, 4, 5}` e `head := nums[:2]`. Depois de `head = append(head, 99)`, o que `nums` imprime?",
+    "hint": "`head` tem espaço até a capacidade 5.",
+    "choices": [
+      {
+        "text": "`[1 2 3 4 5]`",
+        "why": "Isso exigiria que o `append` copiasse, e ele só copia quando não há espaço."
+      },
+      {
+        "text": "`[1 2 99 4 5]`",
+        "why": "Isso. O 99 foi para o índice 2 do array que as duas slices usam."
+      },
+      {
+        "text": "`[1 2 99 3 4 5]`",
+        "why": "O `append` escreve na próxima posição; ele nunca empurra elementos para inserir."
+      },
+      {
+        "text": "`[1 2 3 4 5 99]`",
+        "why": "Ele escreve depois do comprimento de `head`, 2, não do de `nums`."
+      }
+    ]
+  },
+  "ex-ssk8afar": {
+    "prompt": "`s` tem comprimento 5 e capacidade 5. Quais são o comprimento e a capacidade de `s[1:3:4]`?",
+    "hint": "Os dois são contados a partir do primeiro número.",
+    "choices": [
+      {
+        "text": "2 e 4, o próprio terceiro número",
+        "why": "A capacidade é `c - a`, contada do começo da slice como toda capacidade: 4 − 1."
+      },
+      {
+        "text": "2 e 3",
+        "why": "Isso: comprimento 3 − 1, capacidade 4 − 1."
+      },
+      {
+        "text": "3 e 4",
+        "why": "Isso lê os números como comprimentos a partir do índice 0, mas a slice começa no índice 1."
+      },
+      {
+        "text": "2 e 4, já que a capacidade vai até o fim de `s`",
+        "why": "Sem o terceiro número iria; com ele, a capacidade para no índice 4."
+      }
+    ]
+  },
+  "ex-p86hfs9v": {
+    "prompt": "`func with(base []string, s string) []string { return append(base, s) }` é chamada duas vezes com o mesmo `base`, de comprimento 3 e capacidade 8. O que acontece com o primeiro resultado?",
+    "hint": "É o bug do `path` dentro de uma função.",
+    "choices": [
+      {
+        "text": "Nada: cada chamada recebe uma cópia de `base`, e portanto do array",
+        "why": "A slice é copiada, mas ela guarda um ponteiro para o array, e o array não é copiado."
+      },
+      {
+        "text": "A segunda chamada entra em pânico porque o índice 3 está em uso",
+        "why": "Nada registra quais posições estão em uso; o `append` escreve no espaço e segue."
+      },
+      {
+        "text": "O último elemento dele vira o `s` da segunda chamada",
+        "why": "Isso. Os dois appends escreveram o índice 3 do mesmo array, como `docs` e `music`."
+      },
+      {
+        "text": "O segundo resultado tem os dois sufixos, um depois do outro",
+        "why": "Cada chamada acrescenta depois do comprimento de `base`, 3, então os dois caem no mesmo índice."
+      }
+    ]
+  },
+  "ex-r4w4yypp": {
+    "prompt": "`s` guarda cinco elementos e tem capacidade 5. Ligue cada slice ao que o próximo `append` nela faz.",
+    "hint": "Veja quanto espaço cada uma tem, e de quem é esse espaço.",
+    "pairs": [
+      {
+        "left": "`s[:2]`",
+        "right": "Escreve no array que `s` lê"
+      },
+      {
+        "left": "`s[:2:2]`",
+        "right": "Copia para um array novo antes"
+      },
+      {
+        "left": "`slices.Clone(s[:2])`",
+        "right": "Trabalha num array que nenhuma outra slice vê"
+      }
+    ],
+    "right_distractors": [
+      "Entra em pânico, porque a capacidade acabou"
+    ]
+  },
+  "ex-7dv8hs9m": {
+    "prompt": "Ponha em ordem o que o `append(s, x)` faz quando `len(s) == cap(s)`.",
+    "hint": "Tamanho primeiro, depois memória, depois dados.",
+    "items": [
+      "Calcula uma capacidade nova a partir da antiga",
+      "Arredonda para uma classe de tamanho e aloca esse array",
+      "Copia os elementos existentes para o array novo",
+      "Escreve `x` depois deles e devolve a slice nova"
+    ]
+  },
+  "ex-60w904gt": {
+    "prompt": "Usando a linha 341 de `nextslicecap`, que capacidade a fórmula dá quando uma slice cheia de capacidade 1.024 precisa de espaço para mais um, antes de qualquer arredondamento?",
+    "hint": "Um quarto da capacidade antiga, mais 192, somado a ela.",
+    "unit": "elementos"
+  },
+  "ex-zvy6jc6j": {
+    "prompt": "Uma função recebe `buf []byte` de quem a chama e quer uma cópia com uma quebra de linha no fim, sem nenhum risco de mudar os dados de quem chamou. Qual é seguro?",
+    "hint": "Qual deixa o `append` sem espaço no array de quem chamou?",
+    "choices": [
+      {
+        "text": "`append(buf, '\\n')`, porque `buf` já é uma cópia",
+        "why": "O cabeçalho é uma cópia; o array é de quem chamou. Com capacidade sobrando, a quebra de linha cai nele."
+      },
+      {
+        "text": "`append(buf[:], '\\n')`, porque `[:]` copia a slice",
+        "why": "Fatiar nunca copia: `buf[:]` é a mesma visão com a mesma capacidade."
+      },
+      {
+        "text": "`append(buf[:len(buf):len(buf)], '\\n')`",
+        "why": "Isso. Com a capacidade cortada no comprimento, o `append` precisa copiar antes."
+      },
+      {
+        "text": "`append(buf[0:len(buf)], '\\n')`, já que dá o comprimento",
+        "why": "Dois números só fixam o comprimento; a capacidade ainda vai até o fim do array."
+      }
+    ]
+  }
+}

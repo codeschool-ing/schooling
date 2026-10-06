@@ -1,0 +1,651 @@
+{
+  "ex-tj3579sn": {
+    "prompt": "Na fixture do store, quando roda o código depois do yield?",
+    "choices": [
+      {
+        "text": "Antes do teste, como parte da preparação",
+        "why": "A preparação é a parte antes do yield."
+      },
+      {
+        "text": "Depois do teste, passe ou falhe",
+        "why": "Certo. A desmontagem roda de qualquer jeito, então a conexão fecha mesmo depois de uma falha."
+      },
+      {
+        "text": "Depois do teste, e só quando ele passou",
+        "why": "Uma verificação que falha não pula a desmontagem da fixture."
+      },
+      {
+        "text": "Uma vez no fim da sessão inteira",
+        "why": "Isso seria uma fixture de sessão; esta é por função."
+      }
+    ]
+  },
+  "ex-mh2773xk": {
+    "prompt": "Na execução com --setup-show dos três testes do store, quantas vezes a fixture store foi montada?"
+  },
+  "ex-ynhhh5cw": {
+    "prompt": "Por que um close() no fim do corpo de um teste é menos confiável que a desmontagem depois do yield?",
+    "choices": [
+      {
+        "text": "Porque close() é mais lento dentro de um teste",
+        "why": "Velocidade não é a questão."
+      },
+      {
+        "text": "Porque o pytest apaga o corpo do teste depois que ele roda",
+        "why": "O pytest não apaga nada disso."
+      },
+      {
+        "text": "Uma verificação que falha para o teste antes do close",
+        "why": "Certo. As linhas depois do assert que falha são puladas; a desmontagem da fixture não."
+      },
+      {
+        "text": "Porque o SQLite recusa um close vindo de código de teste",
+        "why": "O SQLite não sabe quem chama close."
+      }
+    ]
+  },
+  "ex-f610t1gt": {
+    "prompt": "Uma fixture definida num arquivo chamado ___ fica disponível para todo arquivo de teste ao lado dele, sem import.",
+    "blanks": [
+      {
+        "accept": [
+          "conftest.py",
+          "conftest"
+        ]
+      }
+    ]
+  },
+  "ex-cttq3e85": {
+    "prompt": "A fixture store virou de escopo de módulo ainda pedindo tmp_path. O que o pytest fez?",
+    "choices": [
+      {
+        "text": "Recusou com ScopeMismatch antes de o teste rodar",
+        "why": "Certo. Uma fixture de módulo não pode depender de uma de função que ela sobreviveria."
+      },
+      {
+        "text": "Rodou os testes, todos dividindo um tmp_path",
+        "why": "Nem chegou até aí."
+      },
+      {
+        "text": "Ampliou o tmp_path para escopo de módulo em silêncio",
+        "why": "O pytest não muda o escopo de uma fixture por você."
+      },
+      {
+        "text": "Pulou os testes do store com um aviso",
+        "why": "Reportou erros, não testes pulados."
+      }
+    ]
+  },
+  "ex-th2nmg2c": {
+    "prompt": "Com o store de escopo de módulo, test_a_new_store_has_no_quotes falhou no arquivo inteiro e passou sozinho. Por quê?",
+    "choices": [
+      {
+        "text": "Porque -k roda os testes com um Python novo",
+        "why": "É o mesmo interpretador; a diferença é o que rodou antes."
+      },
+      {
+        "text": "Testes anteriores encheram o store compartilhado",
+        "why": "Certo. Sozinho, nada rodou antes, então o store estava vazio."
+      },
+      {
+        "text": "Porque recent está quebrado para dez linhas",
+        "why": "recent funciona; o store simplesmente não estava vazio."
+      },
+      {
+        "text": "Porque o CHECK falhou nesse teste",
+        "why": "Esse teste não insere nada."
+      }
+    ]
+  },
+  "ex-b354m6en": {
+    "prompt": "Nessa execução, quantos ids o store compartilhado tinha quando o teste novo o leu?",
+    "hint": "O insert recusado pelo CHECK não gravou nada."
+  },
+  "ex-dw6rbsr6": {
+    "prompt": "Quando ampliar o escopo de uma fixture é seguro, pela regra da aula? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Montá-la é caro de forma mensurável",
+        "why": "Certo. É a primeira condição."
+      },
+      {
+        "text": "Os testes não conseguem alterá-la, ou cada um desfaz o que mudou",
+        "why": "Certo. É a segunda condição."
+      },
+      {
+        "text": "Ela é usada por mais de três testes",
+        "why": "Uma contagem de usos não diz nada sobre estado compartilhado."
+      },
+      {
+        "text": "Os testes que a usam passam hoje",
+        "why": "Também passavam na captura, até um ser acrescentado."
+      }
+    ]
+  },
+  "ex-sw5tdqbn": {
+    "prompt": "Quantos arquivos quotes.db os três testes do store deixaram em pytest-current?",
+    "choices": [
+      {
+        "text": "Um, compartilhado pelos três testes",
+        "why": "Cada teste teve o próprio diretório."
+      },
+      {
+        "text": "Três, um por diretório de teste",
+        "why": "Certo. Um banco por teste, nenhum compartilhado."
+      },
+      {
+        "text": "Nenhum; o tmp_path é apagado na hora",
+        "why": "O pytest guarda as três últimas execuções de propósito."
+      },
+      {
+        "text": "Seis, porque cada teste também guarda uma cópia",
+        "why": "Não há cópias."
+      }
+    ]
+  },
+  "ex-0pk64erp": {
+    "prompt": "Por que o pytest guarda os diretórios das três últimas execuções em vez de apagá-los na hora?",
+    "choices": [
+      {
+        "text": "Para a próxima execução ser mais rápida reaproveitando arquivos",
+        "why": "Cada execução começa com diretórios novos e vazios."
+      },
+      {
+        "text": "Porque o Linux não permite apagar arquivos durante a execução",
+        "why": "O Linux permite; é uma escolha."
+      },
+      {
+        "text": "Para inspecionar os arquivos de um teste que falhou",
+        "why": "Certo. E as mais antigas são apagadas, para o disco não encher."
+      },
+      {
+        "text": "Para testes de usuários diferentes dividirem dados",
+        "why": "O diretório é por usuário, o que os mantém separados."
+      }
+    ]
+  },
+  "ex-wp5e977s": {
+    "prompt": "Ligue cada recurso compartilhado à sua versão por teste.",
+    "pairs": [
+      {
+        "left": "um caminho de arquivo fixo",
+        "right": "tmp_path"
+      },
+      {
+        "left": "a porta 8080",
+        "right": "a porta 0"
+      },
+      {
+        "left": "uma variável de ambiente deixada definida",
+        "right": "monkeypatch.setenv"
+      }
+    ],
+    "right_distractors": [
+      "scope=\"session\""
+    ]
+  },
+  "ex-ezs9j2rw": {
+    "prompt": "Qual desenho quebra quando o código testado faz commit por conta própria?",
+    "choices": [
+      {
+        "text": "Uma transação por teste, desfeita no fim",
+        "why": "Certo. Um commit dentro do código encerra a transação que a fixture pretendia desfazer."
+      },
+      {
+        "text": "Um esquema novo por execução",
+        "why": "Esse desenho pega o comportamento do commit."
+      },
+      {
+        "text": "Testes que só olham as próprias linhas",
+        "why": "Commits não atrapalham testes que leem só as próprias linhas."
+      },
+      {
+        "text": "Um arquivo SQLite separado por teste",
+        "why": "Cada arquivo é um banco próprio, e os commits ficam dentro dele."
+      }
+    ]
+  },
+  "ex-vdwkvk0q": {
+    "prompt": "Por que o CLAUDE.md deste repositório proíbe inserir um valor único fixo num teste?",
+    "choices": [
+      {
+        "text": "Porque índices únicos deixam o PostgreSQL lento",
+        "why": "Velocidade não é o argumento."
+      },
+      {
+        "text": "Porque valores fixos são um risco de segurança",
+        "why": "A regra é sobre colisões, não segredos."
+      },
+      {
+        "text": "Porque o go test se recusa a inserir o mesmo valor duas vezes",
+        "why": "Quem recusa é o banco, e só quando dois pacotes disputam."
+      },
+      {
+        "text": "Dois pacotes rodando em paralelo colidem no índice único",
+        "why": "Certo. Qual perde é questão de tempo."
+      }
+    ]
+  },
+  "ex-dw6eqjx2": {
+    "prompt": "Restrinja cada verificação às linhas que o teste gravou: WHERE tenant_id = $1, não count( ___ ).",
+    "blanks": [
+      {
+        "accept": [
+          "*"
+        ]
+      }
+    ]
+  },
+  "ex-gj9ngg96": {
+    "prompt": "O que a_quote(cep=\"0131010\") devolve?",
+    "choices": [
+      {
+        "text": "Um erro, porque o CEP é inválido",
+        "why": "A fábrica não valida; o banco valida, depois."
+      },
+      {
+        "text": "A cotação padrão, com esse CEP",
+        "why": "Certo. As sobrescritas trocam os padrões; o resto continua válido."
+      },
+      {
+        "text": "Uma cotação só com o campo cep",
+        "why": "Os outros três campos mantêm os padrões."
+      },
+      {
+        "text": "O id de uma linha gravada",
+        "why": "A fábrica monta um dicionário; store.save o grava."
+      }
+    ]
+  },
+  "ex-dvbvs56b": {
+    "prompt": "Por que a fábrica monta created_at a partir de um contador?",
+    "choices": [
+      {
+        "text": "Para coincidir com a hora real em que o teste rodou",
+        "why": "É uma data fixa com minuto variável, não a hora real."
+      },
+      {
+        "text": "Porque o SQLite exige timestamps únicos",
+        "why": "O SQLite não tem essa regra; o store ordena por ele."
+      },
+      {
+        "text": "Para duas cotações seguidas não empatarem",
+        "why": "Certo. O store ordena por created_at, então empates fariam a ordem depender do id."
+      },
+      {
+        "text": "Para cada execução da suíte gerar dados diferentes",
+        "why": "O contador recomeça a cada execução; os dados são os mesmos toda vez."
+      }
+    ]
+  },
+  "ex-98tkt5qd": {
+    "prompt": "Uma coluna carrier é acrescentada a quotes. Quantos testes do store precisam mudar, com a fábrica em uso?",
+    "choices": [
+      {
+        "text": "Os três, porque cada um grava uma cotação",
+        "why": "Cada um grava via a_quote, que ganha um padrão novo."
+      },
+      {
+        "text": "Nenhum",
+        "why": "Certo. Só um teste sobre transportadoras nomearia o campo novo."
+      },
+      {
+        "text": "Só o teste do CHECK",
+        "why": "O teste do CHECK é sobre o CEP."
+      },
+      {
+        "text": "Dois, os que comparam ids",
+        "why": "Comparar ids não envolve a coluna nova."
+      }
+    ]
+  },
+  "ex-gped09gd": {
+    "prompt": "O que é um convidado misterioso (mystery guest)?",
+    "choices": [
+      {
+        "text": "Um teste que ninguém lembra de ter escrito",
+        "why": "Autoria não é a questão."
+      },
+      {
+        "text": "Uma fixture que roda sem ser pedida",
+        "why": "Fixtures rodam quando nomeadas; o termo é sobre dados."
+      },
+      {
+        "text": "Dado escondido de que o resultado depende",
+        "why": "Certo. O teste passa e ninguém sabe dizer por que o valor esperado está certo."
+      },
+      {
+        "text": "Uma conta de usuário criada só para teste",
+        "why": "Isso é dado de teste, não o problema."
+      }
+    ]
+  },
+  "ex-ys0bfr93": {
+    "prompt": "Ligue cada tipo de valor a onde ele pertence.",
+    "pairs": [
+      {
+        "left": "A verificação depende dele",
+        "right": "No teste, pelo nome"
+      },
+      {
+        "left": "Qualquer valor válido serve",
+        "right": "No padrão da fábrica"
+      },
+      {
+        "left": "Precisa diferir do de outro teste",
+        "right": "Gerado pela fábrica"
+      }
+    ],
+    "right_distractors": [
+      "Numa variável global"
+    ]
+  },
+  "ex-c7ynvcm7": {
+    "prompt": "test_heavy_parcel usa a_quote() sem sobrescritas e espera 2190. O peso padrão da fábrica muda para 800 g por causa de outro teste. O que acontece?",
+    "hint": "800 g é uma faixa extra, não duas.",
+    "choices": [
+      {
+        "text": "Nada; a fábrica só é usada pelos testes do store",
+        "why": "Este teste também a usa, e depende do peso dela."
+      },
+      {
+        "text": "Falha, por um motivo que nenhuma linha dele mostra",
+        "why": "Certo. 800 g custa 1740, e os 1200 g de que dependia moravam em outro arquivo."
+      },
+      {
+        "text": "Passa, já que 800 g e 1200 g estão na mesma faixa",
+        "why": "800 g é uma faixa extra, 1200 g são duas."
+      },
+      {
+        "text": "O pytest avisa que a fábrica mudou",
+        "why": "O pytest não sabe nada de fábricas."
+      }
+    ]
+  },
+  "ex-syd6tnty": {
+    "prompt": "Quando a base da zona N passou de 2990 para 3090, quantas linhas da tabela publicada falharam?"
+  },
+  "ex-jdj7q7mt": {
+    "prompt": "O teste da tabela falha depois de uma mudança de preço no código. O que a falha estabelece?",
+    "choices": [
+      {
+        "text": "Que o código está errado e precisa ser revertido",
+        "why": "Talvez a mudança fosse intencional e a tabela é que precise mudar."
+      },
+      {
+        "text": "Que o CSV está errado e precisa ser regerado",
+        "why": "Regerar sem ler aceita o que o código fizer."
+      },
+      {
+        "text": "Que os dois lados divergem, e alguém precisa escolher",
+        "why": "Certo. O teste não tem como saber; ele impede que os dois se afastem em silêncio."
+      },
+      {
+        "text": "Que a transportadora mudou os preços",
+        "why": "A tabela é da loja, não da transportadora."
+      }
+    ]
+  },
+  "ex-r14t7h4s": {
+    "prompt": "Por que guardar a tabela da loja num CSV e não numa lista dentro do teste?",
+    "choices": [
+      {
+        "text": "A equipe dona dos números consegue revisá-lo",
+        "why": "Certo. Um arquivo que o negócio abre mantém a promessa e o código num só lugar."
+      },
+      {
+        "text": "Arquivos CSV são lidos mais rápido que listas Python",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O parametrize só aceita dados de arquivos",
+        "why": "A aula 1 passou uma lista para ele."
+      },
+      {
+        "text": "Para os testes serem pulados quando o arquivo faltar",
+        "why": "Um arquivo ausente seria um erro, não um teste pulado."
+      }
+    ]
+  },
+  "ex-hwwr3pmt": {
+    "prompt": "Saída esperada guardada ao lado do código e comparada a cada execução muitas vezes se chama arquivo dourado ou ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "snapshot"
+        ]
+      }
+    ]
+  },
+  "ex-qb5j9by0": {
+    "prompt": "Como a aula chama um teste que passa ou falha sem mudança nenhuma entre uma vez e outra?",
+    "choices": [
+      {
+        "text": "Pulado",
+        "why": "Um teste pulado não roda."
+      },
+      {
+        "text": "Instável",
+        "why": "Certo. Ensina todo mundo a repetir até ficar verde."
+      },
+      {
+        "text": "Dourado",
+        "why": "Arquivo dourado é saída esperada guardada."
+      },
+      {
+        "text": "Parametrizado",
+        "why": "Isso é um teste rodado sobre muitas linhas."
+      }
+    ]
+  },
+  "ex-7kttkmky": {
+    "prompt": "Por que dispatch_date recebe o momento como argumento em vez de ler o relógio?",
+    "choices": [
+      {
+        "text": "Porque ler o relógio é lento em Python",
+        "why": "É rápido; o problema é que ele muda."
+      },
+      {
+        "text": "Porque datetime.now não aceita fuso horário",
+        "why": "Aceita; não é esse o motivo."
+      },
+      {
+        "text": "Porque a camada HTTP não tem relógio",
+        "why": "A camada de fora é justamente onde o relógio real é lido."
+      },
+      {
+        "text": "Para o teste dar a mesma resposta a qualquer hora",
+        "why": "Certo. O relógio vira uma entrada, como a transportadora da aula 2."
+      }
+    ]
+  },
+  "ex-9w32hk1h": {
+    "prompt": "Quais destas são fontes de não determinismo citadas na aula? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Iterar sobre um set",
+        "why": "Certo. A ordem não é garantida."
+      },
+      {
+        "text": "Ler os.environ sem o teste definir",
+        "why": "Certo. A resposta depende da máquina."
+      },
+      {
+        "text": "Comparar dois inteiros com ==",
+        "why": "Comparação de inteiros é exata."
+      },
+      {
+        "text": "random sem semente fixa",
+        "why": "Certo. Números diferentes a cada execução."
+      }
+    ]
+  },
+  "ex-gpn5qs9n": {
+    "prompt": "Contra o split ingênuo, que menor entrada com falha o Hypothesis relatou?",
+    "choices": [
+      {
+        "text": "10000 centavos em 3 parcelas",
+        "why": "É o exemplo da aula 1, que a versão ingênua divide em 3333, 3333, 3334."
+      },
+      {
+        "text": "2 centavos em 4 parcelas",
+        "why": "Certo. round(0.5) é 0, então as partes são 0, 0, 0 e 2."
+      },
+      {
+        "text": "0 centavo em 1 parcela",
+        "why": "Isso vira [0], que cumpre as duas propriedades."
+      },
+      {
+        "text": "1 centavo em 24 parcelas",
+        "why": "O Hypothesis encolheu para um exemplo menor que esse."
+      }
+    ]
+  },
+  "ex-8s27xatv": {
+    "prompt": "Por que a propriedade da soma continuou passando contra o split ingênuo?",
+    "choices": [
+      {
+        "text": "Porque o Hypothesis só tentou totais divisíveis pelas partes",
+        "why": "Tentou cem entradas variadas."
+      },
+      {
+        "text": "Porque a propriedade está escrita errada",
+        "why": "Está correta; só é verdadeira para esta versão."
+      },
+      {
+        "text": "A última parcela absorve a sobra",
+        "why": "Certo. O defeito está em quão igual é a divisão, que a outra propriedade confere."
+      },
+      {
+        "text": "Porque round() sempre arredonda para baixo em Python",
+        "why": "O Python arredonda metades para o par, e foi assim que 0,5 virou 0."
+      }
+    ]
+  },
+  "ex-9yzj3kg1": {
+    "prompt": "O Hypothesis reduz uma entrada com falha à mais simples que ainda falha. Esse passo se chama ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "encolhimento",
+          "shrinking",
+          "shrink"
+        ]
+      }
+    ]
+  },
+  "ex-w9yhy5et": {
+    "prompt": "Por que os testes do shipquote usam bia@example.org?",
+    "choices": [
+      {
+        "text": "Porque pertence a uma testadora da loja",
+        "why": "Não pertence a ninguém."
+      },
+      {
+        "text": "O domínio é reservado pelo RFC 2606 e não entrega a ninguém",
+        "why": "Certo. O RFC 2606 o reserva junto com example.com e example.net."
+      },
+      {
+        "text": "Porque o SMTP recusa outros domínios em testes",
+        "why": "O SMTP não sabe nada de testes."
+      },
+      {
+        "text": "Porque a LGPD exige .org em todo endereço de teste",
+        "why": "A lei não diz nada sobre domínios."
+      }
+    ]
+  },
+  "ex-q8ktehqg": {
+    "prompt": "Ordene as respostas da aula para 'precisamos de dados de produção', da mais para a menos preferida.",
+    "items": [
+      "Reproduzir a forma, não o dado",
+      "Anonimizar antes de copiar",
+      "Levar o teste até o dado"
+    ],
+    "trap": "Anonimizar ainda copia dados, então escrever um caso de fábrica com a forma vem primeiro."
+  },
+  "ex-1n85fq70": {
+    "prompt": "Um teste que falha imprime o registro inteiro do cliente que usou, num log de CI que muita gente lê. O registro veio de uma cópia da produção. Qual problema é a preocupação principal da aula?",
+    "choices": [
+      {
+        "text": "O log fica longo demais para ler",
+        "why": "Tamanho é incômodo, não o risco."
+      },
+      {
+        "text": "Dados pessoais foram publicados a todo mundo que lê o log",
+        "why": "Certo. Dado de teste deve ser fabricado, e aí não há nada pessoal para imprimir."
+      },
+      {
+        "text": "O teste é instável",
+        "why": "Nada sugere que passa e falha ao acaso."
+      },
+      {
+        "text": "O registro não está no formato da fábrica",
+        "why": "O formato não vem ao caso."
+      }
+    ]
+  },
+  "ex-pcfqdyd6": {
+    "prompt": "Uma suíte divide um PostgreSQL. Um teste afirma SELECT count(*) FROM quotes = 1 depois de gravar uma cotação. Passa localmente e falha na CI. Qual correção a aula recomenda?",
+    "choices": [
+      {
+        "text": "Dar TRUNCATE em quotes no começo do teste",
+        "why": "Isso apaga as linhas de outros testes no meio da execução deles."
+      },
+      {
+        "text": "Repetir o teste até passar",
+        "why": "Isso esconde a falha, que é o que a instabilidade ensina."
+      },
+      {
+        "text": "Verificar pelo id que o save devolveu",
+        "why": "Certo. Restrinja a verificação às linhas que o teste gravou."
+      },
+      {
+        "text": "Rodar a suíte da CI um pacote por vez",
+        "why": "Deixa a suíte lenta e o teste continua frágil."
+      }
+    ]
+  },
+  "ex-h0n3w43s": {
+    "prompt": "Ligue cada ferramenta ao problema que ela resolve nesta aula.",
+    "pairs": [
+      {
+        "left": "uma fábrica",
+        "right": "Ruído nos dados de cada teste"
+      },
+      {
+        "left": "tmp_path",
+        "right": "Arquivos compartilhados entre testes"
+      },
+      {
+        "left": "uma semente fixa",
+        "right": "Dados aleatórios impossíveis de repetir"
+      },
+      {
+        "left": "Hypothesis",
+        "right": "Casos em que ninguém pensou"
+      }
+    ]
+  },
+  "ex-bfvnqvy9": {
+    "prompt": "Um teste de relatório lê datetime.now() e afirma que o título diz 'segunda-feira'. O que ele vai fazer?",
+    "choices": [
+      {
+        "text": "Passar todo dia, já que o título é gerado",
+        "why": "Gerado a partir do relógio, que muda."
+      },
+      {
+        "text": "Passar às segundas e falhar no resto da semana",
+        "why": "Certo. O relógio é uma entrada que ele não controla."
+      },
+      {
+        "text": "Falhar todos os dias da semana",
+        "why": "Às segundas ele passa."
+      },
+      {
+        "text": "Ser pulado pelo pytest por não ser determinístico",
+        "why": "O pytest não detecta isso."
+      }
+    ]
+  }
+}

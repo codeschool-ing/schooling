@@ -1,0 +1,557 @@
+[
+  {
+    "id": "ex-h718aj92",
+    "version": 1,
+    "section": "integers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What range of values does an `int8` hold?",
+    "hint": "Eight bits, one of them spent on the sign.",
+    "choices": [
+      {
+        "text": "0 to 255",
+        "correct": false,
+        "why": "That is `uint8`, which gives up the negative numbers."
+      },
+      {
+        "text": "−127 to 127, the same distance each way",
+        "correct": false,
+        "why": "The range is not symmetric: zero takes one of the 256 values, and the extra one goes to the negative side."
+      },
+      {
+        "text": "−128 to 127",
+        "correct": true,
+        "why": "Right. `go doc math.MaxInt` printed `MinInt8` as −128 and `MaxInt8` as 127."
+      },
+      {
+        "text": "−256 to 255",
+        "correct": false,
+        "why": "That would need nine bits. Eight bits make 256 values in all, split across both signs."
+      }
+    ]
+  },
+  {
+    "id": "ex-0n187keg",
+    "version": 1,
+    "section": "integers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the lab's amd64 the program printed `int is 64 bits`. What did the same source print when built with `GOARCH=386`?",
+    "hint": "386 is 32-bit x86.",
+    "choices": [
+      {
+        "text": "`int is 64 bits`, because an `int` is 64 bits wherever Go runs",
+        "correct": false,
+        "why": "That is `int64`. Plain `int` follows the platform, which is why `MaxInt` says \"depending on intSize\"."
+      },
+      {
+        "text": "`int is 32 bits`",
+        "correct": true,
+        "why": "Right, and the largest `int` it printed was 2147483647."
+      },
+      {
+        "text": "`int is 16 bits`",
+        "correct": false,
+        "why": "No platform Go supports in the lab's run gave 16; the 32-bit build printed 32."
+      },
+      {
+        "text": "Nothing: the build fails, because `int` has no size on 386",
+        "correct": false,
+        "why": "It built and ran. `int` always has a size; the size depends on the platform."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtxvwm5s",
+    "version": 1,
+    "section": "integers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`var small int8 = 127`, then `small++`, then `fmt.Println(small)`. What happens?",
+    "hint": "The addition happens while the program runs.",
+    "choices": [
+      {
+        "text": "It prints `128`",
+        "correct": false,
+        "why": "128 does not fit in an `int8`, whose largest value is 127."
+      },
+      {
+        "text": "It prints `-128`, having wrapped round past the top",
+        "correct": true,
+        "why": "Right. Run-time overflow wraps around to the smallest value, silently."
+      },
+      {
+        "text": "It panics with an overflow error",
+        "correct": false,
+        "why": "Go panics on an integer divided by zero, not on overflow. Overflow wraps with no message."
+      },
+      {
+        "text": "The compiler refuses the `small++`",
+        "correct": false,
+        "why": "The compiler refuses constants that do not fit; a variable's value is not known to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-26xpdz79",
+    "version": 1,
+    "section": "integers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program keeps the number of retries left in `var left uint = 2` and, by mistake, runs `left -= 3`. What does `left` hold now?",
+    "hint": "An unsigned type has no −1 to land on.",
+    "choices": [
+      {
+        "text": "−1",
+        "correct": false,
+        "why": "A `uint` cannot hold a negative number; that is the whole difference from `int`."
+      },
+      {
+        "text": "0, because an unsigned value stops at zero",
+        "correct": false,
+        "why": "Nothing in Go stops at the edge. Integer arithmetic wraps, in both directions."
+      },
+      {
+        "text": "18446744073709551615, the largest value a `uint` holds",
+        "correct": true,
+        "why": "Right. 2 − 3 wraps round to the top, as `0 − 1` did in the section."
+      },
+      {
+        "text": "Nothing: the program panics at the subtraction",
+        "correct": false,
+        "why": "Overflow is silent in Go; only dividing an integer by zero panics among these operations."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0svrn48",
+    "version": 1,
+    "section": "integers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many different values can an `int16` hold, counting zero?",
+    "hint": "Sixteen bits, each 0 or 1.",
+    "value": 65536,
+    "tolerance": 0,
+    "unit": "values"
+  },
+  {
+    "id": "ex-ec0mrrvd",
+    "version": 1,
+    "section": "integers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `fmt.Println(-17 / 5, -17 % 5)` print?",
+    "hint": "Truncated toward zero; the remainder keeps the sign of −17.",
+    "choices": [
+      {
+        "text": "`-4 3`",
+        "correct": false,
+        "why": "That is a language that rounds down, as Python does. Go truncates toward zero."
+      },
+      {
+        "text": "`-3 2`",
+        "correct": false,
+        "why": "The quotient is right; the remainder takes the sign of the number divided, so it is negative."
+      },
+      {
+        "text": "`-3.4 0`",
+        "correct": false,
+        "why": "Two integers divide into an integer; only a float operand keeps the fraction."
+      },
+      {
+        "text": "`-3 -2`",
+        "correct": true,
+        "why": "Right. −3.4 truncates to −3, and −3 × 5 + (−2) is −17."
+      }
+    ]
+  },
+  {
+    "id": "ex-phaqtkk3",
+    "version": 1,
+    "section": "integers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the compiler refuse? Choose all that apply.",
+    "hint": "The compiler can only judge what it can work out before the program runs.",
+    "choices": [
+      {
+        "text": "`var b int8 = 128`",
+        "correct": true,
+        "why": "Yes: a constant that does not fit is an error, \"(overflows)\"."
+      },
+      {
+        "text": "`fmt.Println(10 / 0)`",
+        "correct": true,
+        "why": "Yes: \"invalid operation: division by zero\", because both operands are constants."
+      },
+      {
+        "text": "`d := 0` and then `fmt.Println(10 / d)`",
+        "correct": false,
+        "why": "It builds; the division panics when it runs, with exit status 2."
+      },
+      {
+        "text": "`var x int8 = 127` and then `x++`",
+        "correct": false,
+        "why": "It builds and wraps to −128 at run time, with no message."
+      }
+    ]
+  },
+  {
+    "id": "ex-m6gt56r3",
+    "version": 1,
+    "section": "integers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Dividing an integer by a variable that holds zero stops the program with a ___, and it exits with status 2.",
+    "hint": "The first word the program printed.",
+    "blanks": [
+      {
+        "accept": [
+          "panic"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-krr401ar",
+    "version": 1,
+    "section": "floats",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`a, b := 0.1, 0.2` and then `fmt.Println(a+b == 0.3)`. What does it print?",
+    "hint": "The addition happens at run time, in `float64`.",
+    "choices": [
+      {
+        "text": "`true`",
+        "correct": false,
+        "why": "That is what the constant sum gives. In variables the sum is 0.30000000000000004."
+      },
+      {
+        "text": "`false`",
+        "correct": true,
+        "why": "Right. Neither 0.1 nor 0.2 is stored exactly, and their sum misses 0.3."
+      },
+      {
+        "text": "Nothing: comparing floats with `==` is a compile error",
+        "correct": false,
+        "why": "It compiles. That is what makes it dangerous: the compiler allows it, and it is nearly always the wrong test."
+      },
+      {
+        "text": "It panics with a precision error",
+        "correct": false,
+        "why": "Floats never panic over precision; the result is just a little off."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5yzytya",
+    "version": 1,
+    "section": "floats",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `fmt.Println(0.1 + 0.2)` print `0.3`, when the same sum in two variables prints `0.30000000000000004`?",
+    "hint": "Who does the addition in the first case?",
+    "choices": [
+      {
+        "text": "The compiler adds the two constants exactly and converts only the result",
+        "correct": true,
+        "why": "Right. Untyped constants are exact (lesson 5); the rounding happens once, at the end."
+      },
+      {
+        "text": "`Println` rounds every float to one decimal place",
+        "correct": false,
+        "why": "It printed `0.30000000000000004` for the variables, so it does not round to one place."
+      },
+      {
+        "text": "Go stores literals in decimal and variables in binary",
+        "correct": false,
+        "why": "A literal that reaches the program is a `float64` like any other; the difference is when the sum is done."
+      },
+      {
+        "text": "In `float64`, 0.1 + 0.2 is exactly 0.3",
+        "correct": false,
+        "why": "The variable version shows it is not: the `==` with 0.3 was `false`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4h8r0c6",
+    "version": 1,
+    "section": "floats",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How do you test whether a `float64` called `v` is NaN?",
+    "hint": "NaN is not equal to anything.",
+    "choices": [
+      {
+        "text": "`v == math.NaN()`",
+        "correct": false,
+        "why": "That is always `false`, even when `v` is NaN, because NaN is not equal to itself."
+      },
+      {
+        "text": "`math.IsInf(v, 0)`",
+        "correct": false,
+        "why": "That asks about the two infinities. NaN is a different value, and `IsInf` says `false` for it."
+      },
+      {
+        "text": "`math.IsNaN(v)`",
+        "correct": true,
+        "why": "Right. It is the test the section used, and it printed `true` for `zero / zero`."
+      },
+      {
+        "text": "`v > math.MaxFloat64`",
+        "correct": false,
+        "why": "NaN is not a very large number. Every ordering comparison with it is `false`, this one too."
+      }
+    ]
+  },
+  {
+    "id": "ex-ny9yq05y",
+    "version": 1,
+    "section": "floats",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`zero := 0.0` and then `fmt.Println(1 / zero)`. What happens?",
+    "hint": "Floats and integers part ways here.",
+    "choices": [
+      {
+        "text": "It panics: integer divide by zero",
+        "correct": false,
+        "why": "That panic is for integers. A float division by zero has an answer in IEEE 754."
+      },
+      {
+        "text": "It prints `+Inf`",
+        "correct": true,
+        "why": "Right. Positive divided by zero is positive infinity, and the program carries on."
+      },
+      {
+        "text": "It prints `NaN`",
+        "correct": false,
+        "why": "NaN came from `zero / zero`, which has no sensible answer; `1 / zero` has one."
+      },
+      {
+        "text": "The compiler refuses the division",
+        "correct": false,
+        "why": "`zero` is a variable, so the compiler cannot know it is zero; only constants are checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgnvg35d",
+    "version": 1,
+    "section": "floats",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop adds its prices in `float64`. The screen shows `30.00`, but the check `total == 30.0` fails, so the order is never marked as paid. What is the fix?",
+    "hint": "What did `%.2f` hide in section 03?",
+    "choices": [
+      {
+        "text": "Use `float32`, which keeps fewer digits and so rounds the error away",
+        "correct": false,
+        "why": "Fewer bits make the error larger, not smaller; 0.1 is not exact in either format."
+      },
+      {
+        "text": "Keep every amount as an integer number of cents",
+        "correct": true,
+        "why": "Right. Integer cents add exactly, and `==` on them means what it says."
+      },
+      {
+        "text": "Add 0.0000001 to the total before comparing",
+        "correct": false,
+        "why": "The error can fall on either side of 30, so a nudge in one direction fixes some totals and breaks others."
+      },
+      {
+        "text": "Nothing in Go: the prices must have been typed wrong",
+        "correct": false,
+        "why": "Ten correct prices of 0.10 already gave 0.9999999999999999. The arithmetic, not the input, is off."
+      }
+    ]
+  },
+  {
+    "id": "ex-5csn30f3",
+    "version": 1,
+    "section": "floats",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the three fields of a `float64` in the order its 64 bits store them, from the first bit printed by `%064b`.",
+    "hint": "The figure of section 03.",
+    "items": [
+      "the sign, 1 bit",
+      "the exponent, 11 bits",
+      "the fraction, 52 bits"
+    ]
+  },
+  {
+    "id": "ex-6ejx9mrt",
+    "version": 1,
+    "section": "floats",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the figure, the exponent field of `0.1` holds 1019. The exponent it stands for is 1019 minus 1023. What power of 2 is that?",
+    "hint": "Subtract.",
+    "value": -4,
+    "tolerance": 0,
+    "unit": "power of 2"
+  },
+  {
+    "id": "ex-b95azbez",
+    "version": 1,
+    "section": "complex",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `math.Sqrt(-1)` return?",
+    "hint": "`math` works among the real numbers.",
+    "choices": [
+      {
+        "text": "`(0+1i)`",
+        "correct": false,
+        "why": "That is `cmplx.Sqrt(-1)`. The package you call decides which numbers the answer may be."
+      },
+      {
+        "text": "`NaN`",
+        "correct": true,
+        "why": "Right. Among the reals −1 has no square root, so the answer is not a number."
+      },
+      {
+        "text": "It panics, because −1 has no square root",
+        "correct": false,
+        "why": "Float functions do not panic over an impossible answer; they return NaN and carry on."
+      },
+      {
+        "text": "`-1`",
+        "correct": false,
+        "why": "No real number squared gives −1, and the function does not return its argument back."
+      }
+    ]
+  },
+  {
+    "id": "ex-zr5h3n6d",
+    "version": 1,
+    "section": "complex",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `z := complex(3, 4)`, `real(z)` is 3 and `___(z)` is 4.",
+    "hint": "The built-in that gives the imaginary part.",
+    "blanks": [
+      {
+        "accept": [
+          "imag"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jhfve5nb",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each literal to the type Go gives it when nothing else says.",
+    "hint": "The `%T` line of section 02.",
+    "pairs": [
+      {
+        "left": "`42`",
+        "right": "`int`"
+      },
+      {
+        "left": "`4.2`",
+        "right": "`float64`"
+      },
+      {
+        "left": "`2i`",
+        "right": "`complex128`"
+      }
+    ],
+    "right_distractors": [
+      "`float32`",
+      "`int64`"
+    ]
+  },
+  {
+    "id": "ex-dnfspxts",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A network protocol puts a port number, 0 to 65535, in two bytes of its header. Which type should the field that holds it have?",
+    "hint": "The size is part of the meaning, and so is the range.",
+    "choices": [
+      {
+        "text": "`int16`, because two bytes are sixteen bits",
+        "correct": false,
+        "why": "Sixteen bits is right, but a signed `int16` stops at 32767, and half the ports would come out negative."
+      },
+      {
+        "text": "`uint16`",
+        "correct": true,
+        "why": "Right. Sixteen bits, no sign, and its range is exactly 0 to 65535."
+      },
+      {
+        "text": "`int`, since counting and indexing use `int`",
+        "correct": false,
+        "why": "`int` is the default for counters, and a header field is the case where the size is part of the meaning."
+      },
+      {
+        "text": "`uint8`, the type of a byte",
+        "correct": false,
+        "why": "One byte holds 0 to 255; a port needs two."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6awehzz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`var c uint8 = 200` and then `c += 100`. What does `c` hold?",
+    "hint": "A `uint8` goes round after 255, and 256 values make one full turn.",
+    "choices": [
+      {
+        "text": "`300`",
+        "correct": false,
+        "why": "300 does not fit in eight bits; the largest `uint8` is 255."
+      },
+      {
+        "text": "`255`, because the value stops at the top",
+        "correct": false,
+        "why": "Go does not saturate. It wraps, as `127 + 1` did in an `int8`."
+      },
+      {
+        "text": "`44`",
+        "correct": true,
+        "why": "Right. 300 − 256 is 44: one full turn of 256 values, and the rest."
+      },
+      {
+        "text": "Nothing: the compiler refuses `c += 100`",
+        "correct": false,
+        "why": "`c` is a variable, so the sum is not a constant the compiler can check."
+      }
+    ]
+  }
+]

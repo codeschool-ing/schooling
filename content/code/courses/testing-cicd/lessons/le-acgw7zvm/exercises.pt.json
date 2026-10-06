@@ -1,0 +1,573 @@
+{
+  "ex-c813j442": {
+    "prompt": "O que separa entrega contínua de implantação contínua?",
+    "choices": [
+      {
+        "text": "Se os testes rodam a cada push",
+        "why": "As duas rodam; isso é integração."
+      },
+      {
+        "text": "Quem põe um release em produção",
+        "why": "Certo. Na entrega uma pessoa escolhe; na implantação ele vai sozinho."
+      },
+      {
+        "text": "Se existe ambiente de homologação",
+        "why": "As duas podem ter."
+      },
+      {
+        "text": "Quantas vezes por dia a equipe implanta",
+        "why": "A frequência decorre da escolha; não a define."
+      }
+    ]
+  },
+  "ex-777g99bs": {
+    "prompt": "Uma equipe consegue publicar qualquer commit verde em uma hora, mas escolhe publicar às quintas. O que ela pratica?",
+    "choices": [
+      {
+        "text": "Implantação contínua",
+        "why": "Uma pessoa escolhe o momento, então não é implantação."
+      },
+      {
+        "text": "Nenhuma, porque espera",
+        "why": "Esperar por escolha é permitido; precisar de uma semana de preparo não."
+      },
+      {
+        "text": "Entrega contínua",
+        "why": "Certo. Publicar é rotina; quando é uma decisão."
+      },
+      {
+        "text": "Só integração contínua",
+        "why": "Ela também tem um release implantável o tempo todo."
+      }
+    ]
+  },
+  "ex-xsh6j8m7": {
+    "prompt": "Ordene as práticas da que promete menos à que promete mais.",
+    "items": [
+      "Integração contínua",
+      "Entrega contínua",
+      "Implantação contínua"
+    ],
+    "trap": "A entrega acrescenta um release implantável; a implantação tira a pessoa do último passo."
+  },
+  "ex-4fqjj6hg": {
+    "prompt": "Por que montar o artefato uma vez em vez de uma por ambiente?",
+    "choices": [
+      {
+        "text": "Para economizar disco no runner",
+        "why": "Espaço não é o argumento."
+      },
+      {
+        "text": "Para a produção rodar o que foi testado",
+        "why": "Certo. Um segundo build é uma segunda coisa que ninguém testou."
+      },
+      {
+        "text": "Porque o git archive só roda uma vez por tag",
+        "why": "Roda quantas vezes você quiser."
+      },
+      {
+        "text": "Porque a produção não tem compilador",
+        "why": "O shipquote nem é compilado; o argumento é sobre ser o mesmo."
+      }
+    ]
+  },
+  "ex-2h1yh6k0": {
+    "prompt": "O artefato foi apagado e montado de novo a partir do mesmo commit. O que o SHA-256 dele fez?",
+    "choices": [
+      {
+        "text": "Mudou, porque a hora do build é outra",
+        "why": "O git archive usa a hora do commit, não o relógio."
+      },
+      {
+        "text": "Ficou igual",
+        "why": "Certo. O build é reproduzível."
+      },
+      {
+        "text": "Mudou só nos últimos caracteres",
+        "why": "Um hash muda inteiro ou não muda."
+      },
+      {
+        "text": "Não pôde ser calculado de novo",
+        "why": "Foi impresso das duas vezes."
+      }
+    ]
+  },
+  "ex-ah34tjcm": {
+    "prompt": "Um build que dá os mesmos bytes a partir do mesmo commit toda vez se chama ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "reproduzível",
+          "reproduzivel"
+        ]
+      }
+    ]
+  },
+  "ex-8x1tqxfd": {
+    "prompt": "Onde a versão do shipquote é escrita?",
+    "choices": [
+      {
+        "text": "No pyproject.toml, à mão antes de cada release",
+        "why": "O pyproject diz version 0 e nunca é editado para um release."
+      },
+      {
+        "text": "Na tag do git, e em mais nenhum lugar",
+        "why": "Certo. O build a carimba no artefato."
+      },
+      {
+        "text": "Numa constante em version.py",
+        "why": "version.py lê um arquivo carimbado, ou diz dev."
+      },
+      {
+        "text": "Nos argumentos do script de deploy",
+        "why": "O deploy a lê do nome do artefato."
+      }
+    ]
+  },
+  "ex-1het58vx": {
+    "prompt": "Como o build chamou o commit um depois de v1.4.0, sem tag própria?",
+    "choices": [
+      {
+        "text": "1.4.1",
+        "why": "Ninguém marcou 1.4.1; inventar seria mentira."
+      },
+      {
+        "text": "1.4.0",
+        "why": "Isso deixaria outro commit passar pelo release."
+      },
+      {
+        "text": "dev-7c77050",
+        "why": "Certo. Não é release, e ainda diz exatamente qual commit."
+      },
+      {
+        "text": "latest",
+        "why": "latest não nomeia nada em particular."
+      }
+    ]
+  },
+  "ex-hkb7az0g": {
+    "prompt": "Ligue cada tipo de release à parte da versão semântica que ele aumenta.",
+    "pairs": [
+      {
+        "left": "Uma correção que não muda nada de que os clientes dependem",
+        "right": "PATCH"
+      },
+      {
+        "left": "Um recurso novo que não quebra nada",
+        "right": "MINOR"
+      },
+      {
+        "left": "Uma mudança que pode quebrar clientes",
+        "right": "MAJOR"
+      }
+    ],
+    "right_distractors": [
+      "BUILD"
+    ]
+  },
+  "ex-0tjnvzp6": {
+    "prompt": "Uma cópia do shipquote que ninguém montou responde /version com a palavra ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "dev"
+        ]
+      }
+    ]
+  },
+  "ex-tf5mw0xk": {
+    "prompt": "Ponha em ordem os estágios de um pipeline de entrega.",
+    "items": [
+      "Montar o artefato",
+      "Testá-lo",
+      "Implantar na homologação e fazer smoke test",
+      "Passar pela barreira",
+      "Implantar o mesmo artefato na produção"
+    ],
+    "trap": "A barreira vem depois da homologação: a decisão é sobre um artefato já provado implantável."
+  },
+  "ex-yqghqfxr": {
+    "prompt": "O que um deploy em produção deveria ensinar à equipe, idealmente?",
+    "choices": [
+      {
+        "text": "Nada de novo, apenas uma confirmação",
+        "why": "Certo. Mesmo artefato, mesmo comando, mesmo smoke test, outra configuração."
+      },
+      {
+        "text": "Se os testes unitários passam",
+        "why": "Rodaram estágios atrás."
+      },
+      {
+        "text": "Se o artefato pode ser montado",
+        "why": "Foi montado uma vez, no começo."
+      },
+      {
+        "text": "Como usuários reagem a um release quebrado",
+        "why": "É isso que os estágios anteriores existem para evitar."
+      }
+    ]
+  },
+  "ex-f1vm0b25": {
+    "prompt": "O workflow de release deste repositório não tem homologação. Qual dos jobs dele é o mais parecido com uma barreira?",
+    "choices": [
+      {
+        "text": "Deploy, porque move o serviço",
+        "why": "Deploy é o que a barreira protegeria."
+      },
+      {
+        "text": "Publish, porque cria o release",
+        "why": "Publish monta; não decide nada."
+      },
+      {
+        "text": "Tag e Checks, que recusam antes",
+        "why": "Certo. A barreira dele é um conjunto de regras, não uma pessoa."
+      },
+      {
+        "text": "Nenhum; ele não tem verificações",
+        "why": "Ele chama o workflow de CI inteiro."
+      }
+    ]
+  },
+  "ex-wamvtcf7": {
+    "prompt": "Por que o deploy.sh desempacota cada release no próprio diretório e troca um link?",
+    "choices": [
+      {
+        "text": "Para economizar disco",
+        "why": "Usa mais espaço, guardando releases antigos."
+      },
+      {
+        "text": "Troca atômica, release antigo guardado",
+        "why": "Certo. Nenhum momento meio velho, meio novo, e voltar é outra troca."
+      },
+      {
+        "text": "Porque o tar não consegue sobrescrever arquivos",
+        "why": "Consegue; esse é o risco evitado."
+      },
+      {
+        "text": "Para homologação e produção dividirem um diretório",
+        "why": "Cada ambiente tem o seu."
+      }
+    ]
+  },
+  "ex-p8hpxafd": {
+    "prompt": "Em que porta a homologação respondeu?"
+  },
+  "ex-ah9hdcbd": {
+    "prompt": "O que o deploy.sh faz quando um ambiente não tem config.env?",
+    "choices": [
+      {
+        "text": "Usa a porta 8080 por padrão",
+        "why": "Sem padrões: uma porta adivinhada é como a produção pega a errada."
+      },
+      {
+        "text": "Copia a configuração da homologação",
+        "why": "Ambientes nunca pegam a configuração uns dos outros."
+      },
+      {
+        "text": "Para com uma mensagem de erro",
+        "why": "Certo. Recusa antes de mexer em qualquer coisa."
+      },
+      {
+        "text": "Cria um vazio e continua",
+        "why": "Isso começaria sem porta nenhuma."
+      }
+    ]
+  },
+  "ex-feq0b9ff": {
+    "prompt": "Quais duas perguntas o smoke test do shipquote faz?",
+    "choices": [
+      {
+        "text": "Os testes unitários passam, e a cobertura está acima de 80%?",
+        "why": "Esses são estágios anteriores."
+      },
+      {
+        "text": "Está no ar, e é a versão que pretendíamos?",
+        "why": "Certo. /health e /version."
+      },
+      {
+        "text": "O banco está migrado, e o cache está aquecido?",
+        "why": "Nenhuma das duas é feita por este script."
+      },
+      {
+        "text": "Os usuários estão felizes, e a latência está baixa?",
+        "why": "Isso é observar a produção, aulas 10 e 11."
+      }
+    ]
+  },
+  "ex-v21cbbf5": {
+    "prompt": "O deploy do preview falhou. O que estava errado?",
+    "choices": [
+      {
+        "text": "O hash do artefato não bateu",
+        "why": "Essa verificação passou; o processo começou."
+      },
+      {
+        "text": "A porta era 84OO, com letras",
+        "why": "Certo. O int() recusou e o processo morreu."
+      },
+      {
+        "text": "A versão era dev",
+        "why": "O artefato era 1.4.0."
+      },
+      {
+        "text": "A homologação já usava a porta",
+        "why": "A homologação usava 8200."
+      }
+    ]
+  },
+  "ex-52761h5e": {
+    "prompt": "Por que a aula chama o smoke test de teste do código que só roda numa implantação?",
+    "choices": [
+      {
+        "text": "Porque os testes unitários são apagados antes do deploy",
+        "why": "Continuam; só nunca rodam o main()."
+      },
+      {
+        "text": "Roda o main() com a configuração real",
+        "why": "Certo. A aula 4 deixou o main() na conta por esse motivo."
+      },
+      {
+        "text": "Porque é escrito em shell, não em Python",
+        "why": "A linguagem não é o ponto."
+      },
+      {
+        "text": "Porque cobre todas as rotas da API",
+        "why": "Pergunta duas."
+      }
+    ]
+  },
+  "ex-chq24x14": {
+    "prompt": "Quais destes cabem num smoke test rodado contra a produção? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Perguntar /health",
+        "why": "Certo."
+      },
+      {
+        "text": "Uma cotação real para um CEP conhecido",
+        "why": "Certo. Prova que o caminho principal funciona, não só que o processo responde."
+      },
+      {
+        "text": "Fazer um pedido de teste que manda e-mail a um cliente",
+        "why": "Nada que grave dados que um cliente possa ver."
+      },
+      {
+        "text": "Uma chamada paga à transportadora",
+        "why": "Nada que custe dinheiro."
+      }
+    ]
+  },
+  "ex-ny7db40r": {
+    "prompt": "O artefato copiado para /tmp ganhou um byte. O que o deploy.sh fez?",
+    "choices": [
+      {
+        "text": "Implantou, já que o nome estava certo",
+        "why": "O nome não é o que se confere."
+      },
+      {
+        "text": "Recusou; o SHA-256 não bateu",
+        "why": "Certo. Antes de desempacotar qualquer coisa, com código 1."
+      },
+      {
+        "text": "Remontou a partir do commit",
+        "why": "Deploys nunca montam."
+      },
+      {
+        "text": "Implantou e falhou no smoke test",
+        "why": "Nem chegou até lá."
+      }
+    ]
+  },
+  "ex-qz0tv1ny": {
+    "prompt": "Quando vale ter uma pessoa na barreira, pela aula?",
+    "choices": [
+      {
+        "text": "Sempre, porque pessoas são mais cuidadosas que pipelines",
+        "why": "Uma aprovação sempre dada é um atraso."
+      },
+      {
+        "text": "Nunca, porque toda barreira deveria ser automática",
+        "why": "Algum conhecimento ainda não está no pipeline."
+      },
+      {
+        "text": "Quando ela sabe algo que o pipeline não sabe",
+        "why": "Certo. Uma campanha daqui a uma hora, uma transportadora migrando hoje à noite."
+      },
+      {
+        "text": "Quando os testes são instáveis",
+        "why": "Testes instáveis se corrigem, não se vigiam."
+      }
+    ]
+  },
+  "ex-8x52c7zb": {
+    "prompt": "No GitHub Actions, um job espera aprovação quando declara ___ : production.",
+    "blanks": [
+      {
+        "accept": [
+          "environment"
+        ]
+      }
+    ]
+  },
+  "ex-6wrpab6h": {
+    "prompt": "Quais destes são motivos que a aula dá para não implantar toda mudança automaticamente? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Uma loja de apps revisa cada release",
+        "why": "Certo."
+      },
+      {
+        "text": "Uma pessoa nomeada precisa aprovar por contrato",
+        "why": "Certo."
+      },
+      {
+        "text": "O software roda nos aparelhos dos clientes",
+        "why": "Certo. Ninguém reverte um aparelho no bolso de alguém."
+      },
+      {
+        "text": "A equipe usa Python",
+        "why": "A linguagem não tem nada a ver."
+      }
+    ]
+  },
+  "ex-v0mabd3b": {
+    "prompt": "Uma mudança precisa entrar no ar às 9:00 da Black Friday. O que a aula sugere em vez de implantar às 9:00?",
+    "choices": [
+      {
+        "text": "Congelar todos os deploys na semana",
+        "why": "Um congelamento transforma publicar num evento, o oposto do objetivo."
+      },
+      {
+        "text": "Implantar antes, atrás de uma flag",
+        "why": "Certo. Implantar e liberar viram atos separados."
+      },
+      {
+        "text": "Implantar às 8:59 e pular o smoke test",
+        "why": "Isso acrescenta risco no pior momento."
+      },
+      {
+        "text": "Montar o artefato às 9:00",
+        "why": "Montar é o começo do pipeline, não um interruptor de lançamento."
+      }
+    ]
+  },
+  "ex-ff97b8rt": {
+    "prompt": "Que pergunta, pela aula, decide se uma equipe tem entrega contínua?",
+    "choices": [
+      {
+        "text": "Implantamos mais de uma vez por dia?",
+        "why": "Frequência é escolha, não a propriedade."
+      },
+      {
+        "text": "Daria para publicar a main agora, já?",
+        "why": "Certo. Quem aperta o botão é outra escolha."
+      },
+      {
+        "text": "Usamos GitHub Actions ou GitLab CI?",
+        "why": "Ferramentas não decidem."
+      },
+      {
+        "text": "Nossa cobertura está acima de uma meta?",
+        "why": "A aula 4 argumentou contra metas."
+      }
+    ]
+  },
+  "ex-9dxphky0": {
+    "prompt": "Por que renomear uma coluna no mesmo release do código quebra um rollback?",
+    "choices": [
+      {
+        "text": "Porque rollbacks nunca mexem no banco",
+        "why": "É exatamente por isso que o código velho encontra o esquema novo."
+      },
+      {
+        "text": "O que voltou procura um nome que sumiu",
+        "why": "Certo. O código volta; os dados migrados não."
+      },
+      {
+        "text": "Porque o SQLite não renomeia colunas",
+        "why": "Renomeia; o problema é o momento."
+      },
+      {
+        "text": "Porque o hash do artefato muda",
+        "why": "O artefato não tem relação com o estado do esquema."
+      }
+    ]
+  },
+  "ex-qtstxsxw": {
+    "prompt": "Ordene os passos de expandir e contrair para renomear cents para price_cents.",
+    "items": [
+      "Acrescentar price_cents",
+      "Gravar as duas colunas",
+      "Preencher as linhas antigas",
+      "Ler price_cents",
+      "Apagar cents"
+    ],
+    "trap": "Ler a coluna nova antes de preenchê-la mostraria preços vazios nas linhas antigas."
+  },
+  "ex-yxr7ka71": {
+    "prompt": "Durante o passo 4, ler a coluna nova, um release ruim é revertido para o código do passo 2. É seguro?",
+    "choices": [
+      {
+        "text": "Sim, as duas colunas seguem atualizadas",
+        "why": "Certo. O código do passo 2 lê cents, que o passo 4 ainda grava."
+      },
+      {
+        "text": "Não, porque cents foi apagada no passo 4",
+        "why": "cents só é apagada no passo de contrair."
+      },
+      {
+        "text": "Não, porque rollbacks precisam de uma migração reversa",
+        "why": "Esse padrão existe para não precisarem."
+      },
+      {
+        "text": "Só se o artefato for remontado",
+        "why": "O rollback reaproveita um artefato anterior."
+      }
+    ]
+  },
+  "ex-0d6byh62": {
+    "prompt": "Ligue cada verificação da entrega do laboratório ao erro que pegou ou pegaria.",
+    "pairs": [
+      {
+        "left": "sha256sum --check",
+        "right": "Um artefato alterado no caminho"
+      },
+      {
+        "left": "o smoke test",
+        "right": "Uma porta com a letra O"
+      },
+      {
+        "left": "o prefixo dev-",
+        "right": "Um build sem tag passando por release"
+      },
+      {
+        "left": "a conferência de /version",
+        "right": "Um restart que deixou a versão antiga rodando"
+      }
+    ]
+  },
+  "ex-v4cpfx9a": {
+    "prompt": "Uma equipe remonta o artefato no job de produção 'por segurança'. Uma dependência lançada uma hora antes tem um defeito. O que acontece?",
+    "choices": [
+      {
+        "text": "A homologação pegou, já que rodou os testes",
+        "why": "A homologação testou o build anterior, sem a dependência nova."
+      },
+      {
+        "text": "A produção roda um build que ninguém testou",
+        "why": "Certo. Monte uma vez, promova os mesmos bytes."
+      },
+      {
+        "text": "A verificação do hash o recusa",
+        "why": "Um build novo grava o próprio hash novo."
+      },
+      {
+        "text": "Nada, já que as dependências estão fixadas no artefato",
+        "why": "É a remontagem que pega a versão nova."
+      }
+    ]
+  },
+  "ex-ypfsysb5": {
+    "prompt": "Expandir e contrair transformou uma renomeação de coluna em quantos releases?"
+  }
+}

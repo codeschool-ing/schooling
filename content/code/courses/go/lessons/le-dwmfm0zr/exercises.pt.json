@@ -1,0 +1,384 @@
+{
+  "ex-t58aq55h": {
+    "prompt": "O que faz dois arquivos `.go` serem parte do mesmo pacote?",
+    "hint": "`count.go` e `top.go` são ambos `text`.",
+    "choices": [
+      {
+        "text": "Um deles importa o outro",
+        "why": "Um arquivo nunca importa outro arquivo; `top.go` usou `Counts` sem import nenhum."
+      },
+      {
+        "text": "Estão no mesmo diretório",
+        "why": "Isso. O diretório é o pacote, e todos os arquivos dele têm de dar a mesma cláusula `package`."
+      },
+      {
+        "text": "Os nomes dos arquivos começam com o nome do pacote",
+        "why": "Nomes de arquivo não significam nada para o compilador: `count.go` e `top.go` pertencem ambos a `text`."
+      },
+      {
+        "text": "Estão listados juntos no `go.mod`",
+        "why": "O `go.mod` nomeia o módulo e os requisitos dele, não os pacotes nem os arquivos."
+      }
+    ]
+  },
+  "ex-q3t9m3xs": {
+    "prompt": "O módulo `example.com/shop` tem um pacote no diretório `store/price`. O que outro pacote escreve para importá-lo?",
+    "hint": "Caminho do módulo, depois o diretório.",
+    "choices": [
+      {
+        "text": "`\"store/price\"`",
+        "why": "Um caminho sem ponto no primeiro elemento é procurado na biblioteca padrão, como a lição 38 mostrou."
+      },
+      {
+        "text": "`\"example.com/shop/price\"`",
+        "why": "O diretório inteiro vai depois do caminho do módulo, `store` incluído."
+      },
+      {
+        "text": "`\"example.com/shop/store/price\"`",
+        "why": "Isso: o caminho do módulo, do `go.mod`, seguido do diretório."
+      },
+      {
+        "text": "`\"price\"`, o nome do pacote",
+        "why": "O nome é o que o código escreve antes de um ponto; a linha de import escreve o caminho."
+      }
+    ]
+  },
+  "ex-9ckxpfyf": {
+    "prompt": "Os arquivos de `math/rand/v2` começam com `package ___`, então um arquivo que o importa chama `rand.N`.",
+    "hint": "O `go list -f \"{{.Name}}\"` o imprimiu.",
+    "blanks": [
+      {
+        "accept": [
+          "rand"
+        ]
+      }
+    ]
+  },
+  "ex-qd140r6r": {
+    "prompt": "`count.go` importa `strings`. Um arquivo novo, `text/f.go`, no mesmo pacote, chama `strings.Fields` e não importa nada. O que acontece?",
+    "hint": "Os imports pertencem ao pacote ou ao arquivo?",
+    "choices": [
+      {
+        "text": "Compila: o pacote já importa `strings`",
+        "why": "Nomes declarados num pacote são compartilhados entre os arquivos dele; imports não."
+      },
+      {
+        "text": "É recusado com `undefined: strings`",
+        "why": "Isso. Cada arquivo importa o que usa, como `top.go` importou `cmp` e `slices` para si."
+      },
+      {
+        "text": "Compila, e o `go vet` pede o import",
+        "why": "Este nem chega ao `vet`: o compilador não consegue resolver `strings` naquele arquivo."
+      },
+      {
+        "text": "É recusado com `found packages text and f`",
+        "why": "Esse erro precisa de duas cláusulas `package`; `f.go` diz `package text` como os outros."
+      }
+    ]
+  },
+  "ex-0xr32ndc": {
+    "prompt": "Quais destes podem ficar juntos num diretório? Escolha todos os que se aplicam.",
+    "hint": "Um diretório, um pacote.",
+    "choices": [
+      {
+        "text": "`a.go` e `b.go`, ambos dizendo `package text`",
+        "why": "Sim, como `count.go` e `top.go`."
+      },
+      {
+        "text": "`text.go` dizendo `package text` e `words.go` dizendo `package words`",
+        "why": "Recusado: `found packages text (count.go) and words (words.go)`."
+      },
+      {
+        "text": "Arquivos com qualquer nome, todos dizendo `package main`",
+        "why": "Sim. Nomes de arquivo não significam nada para o compilador; a cláusula `package` é que precisa concordar."
+      },
+      {
+        "text": "Dois programas, cada um num arquivo com `package main` e o próprio `func main`",
+        "why": "Os dois arquivos seriam um pacote só com `main` declarado duas vezes. Dois programas precisam de dois diretórios, como `cmd/` lhes dá."
+      }
+    ]
+  },
+  "ex-ndpt7mb3": {
+    "prompt": "Um repositório precisa de dois programas, `server` e `migrate`, que dividem código para ler um banco de dados. Que arranjo segue a seção 02?",
+    "hint": "Cada programa é um `package main` próprio.",
+    "choices": [
+      {
+        "text": "`server.go` e `migrate.go` na raiz, cada um com `func main`",
+        "why": "Um diretório é um pacote, então as duas funções `main` colidiriam."
+      },
+      {
+        "text": "Um `main.go` só, que olha `os.Args` para decidir qual programa é",
+        "why": "Isso gera um binário, não dois; `go install ./cmd/...` deu dois porque havia dois diretórios."
+      },
+      {
+        "text": "`cmd/server`, `cmd/migrate`, e a parte comum num pacote ao lado de `cmd`",
+        "why": "Isso, a forma do `wordy`: um diretório por programa, e o pacote comum importado pelos dois."
+      },
+      {
+        "text": "Dois módulos, um por programa, cada um com uma cópia do código",
+        "why": "Cópias se afastam com o tempo; um módulo com um pacote comum é o que o `wordy` fez."
+      }
+    ]
+  },
+  "ex-xd867md0": {
+    "prompt": "Qual destes nomes, declarados em `text`, o `cmd/wordtop` pode usar?",
+    "hint": "Olhe a primeira letra.",
+    "choices": [
+      {
+        "text": "`byCount`",
+        "why": "Letra minúscula, então visível só dentro de `text`: o `cmd/peek` recebeu `undefined: text.byCount`."
+      },
+      {
+        "text": "`Top`",
+        "why": "Isso. Começa com letra maiúscula, então é exportado."
+      },
+      {
+        "text": "`_Top`",
+        "why": "`_` não é letra maiúscula, então o nome não é exportado, seja o que vier depois."
+      },
+      {
+        "text": "`entries`",
+        "why": "Um método não exportado: `cannot refer to unexported method entries`."
+      }
+    ]
+  },
+  "ex-dj9qsgps": {
+    "prompt": "Um nome que começa com letra maiúscula é ___, e todo pacote que importa o pacote dele pode usá-lo.",
+    "hint": "A palavra que `go/token` usa para isso.",
+    "blanks": [
+      {
+        "accept": [
+          "exportado",
+          "exported"
+        ]
+      }
+    ]
+  },
+  "ex-brmszv3n": {
+    "prompt": "O `cmd/peek` está no mesmo módulo que `text`. Por que `c.entries()` foi recusado mesmo assim?",
+    "hint": "Onde a fronteira é traçada?",
+    "choices": [
+      {
+        "text": "Métodos são privados do tipo a menos que declarados `public`",
+        "why": "Go não tem essa palavra-chave; a primeira letra é a regra inteira."
+      },
+      {
+        "text": "`text` é uma biblioteca e `cmd/peek` é um programa",
+        "why": "Um programa pode usar todo nome exportado de uma biblioteca; `Top` funcionou a partir do `cmd/wordtop`."
+      },
+      {
+        "text": "Um nome minúsculo fica escondido de todo outro pacote, e `cmd/peek` é um deles",
+        "why": "Isso. A fronteira é o pacote, não o módulo."
+      },
+      {
+        "text": "`entries` é declarado em `top.go` e o `cmd/peek` não importa nada desse arquivo",
+        "why": "Nada importa um arquivo; dentro de `text`, `count.go` poderia chamar `entries` à vontade."
+      }
+    ]
+  },
+  "ex-4egm8v4n": {
+    "prompt": "Uma struct `Config` tem um campo, `host string`, com a tag `json:\"host\"`. O `json.Unmarshal` preenche uma `Config` a partir de `{\"host\":\"db\"}`. O que `err` e `cfg.host` guardam depois?",
+    "hint": "O `count` da seção 03 teve o mesmo destino.",
+    "choices": [
+      {
+        "text": "`err` é nil e `cfg.host` é `\"db\"`, porque a tag nomeia a chave",
+        "why": "Uma tag não torna um campo visível para o `encoding/json`; o `count` ficou em 0 com a tag dele."
+      },
+      {
+        "text": "`err` é nil, e `cfg.host` continua sendo `\"\"`",
+        "why": "Isso. O campo é pulado em silêncio; só o `go vet` acusa a tag num campo não exportado."
+      },
+      {
+        "text": "`err` informa que `host` não é exportado",
+        "why": "As duas direções devolveram erro nil na seção 03; nada reclama em tempo de execução."
+      },
+      {
+        "text": "O programa não compila até `host` virar maiúsculo",
+        "why": "Compila e roda; a tag é só uma string para o compilador."
+      }
+    ]
+  },
+  "ex-a3pwcf80": {
+    "prompt": "Você escreve uma função auxiliar que divide uma linha de um arquivo, usada por duas funções do mesmo pacote e por mais nada. Como ela deve se chamar?",
+    "hint": "Quem precisa vê-la?",
+    "choices": [
+      {
+        "text": "`splitLine`",
+        "why": "Isso. Nada de fora precisa dela, então ela fica fora da API e pode mudar à vontade."
+      },
+      {
+        "text": "`SplitLine`, para poder ser testada e documentada depois",
+        "why": "Pôr maiúscula a torna uma promessa a todo importador; faça isso no dia em que outro pacote precisar dela."
+      },
+      {
+        "text": "`SplitLine`, já que os dois chamadores estão em arquivos diferentes",
+        "why": "Os arquivos de um pacote compartilham todo nome, seja qual for a caixa: `top.go` usou `Counts` de `count.go`."
+      },
+      {
+        "text": "Tanto faz: a caixa de um nome é questão de estilo em Go",
+        "why": "A caixa é a regra de acesso; o `cmd/peek` foi recusado três vezes por causa dela."
+      }
+    ]
+  },
+  "ex-f2ey8r4z": {
+    "prompt": "Por que Go recusa `fold` importar `text` enquanto `text` importa `fold`?",
+    "hint": "O que precisa acontecer com um pacote importado antes de quem o importa?",
+    "choices": [
+      {
+        "text": "Dois pacotes de um módulo só podem se importar mutuamente por `internal`",
+        "why": "O `fold` já está em `internal`, e o ciclo foi recusado mesmo assim."
+      },
+      {
+        "text": "Cada um precisa ser compilado e inicializado antes do outro, e nenhum pode ser o primeiro",
+        "why": "Isso: `import cycle not allowed`, seja qual for o número de pacotes no laço."
+      },
+      {
+        "text": "Deixaria o binário grande demais",
+        "why": "Cada pacote é compilado uma vez, não importa quem o importe; o tamanho não é o motivo."
+      },
+      {
+        "text": "O `go vet` o acusa como provável erro",
+        "why": "Nem chega ao `vet`: o `go build` o recusou com status de saída 1."
+      }
+    ]
+  },
+  "ex-fvqcvxzw": {
+    "prompt": "Que pacotes podem importar `example.com/wordy/internal/fold`?",
+    "hint": "Ache o pai de `internal`.",
+    "choices": [
+      {
+        "text": "Qualquer pacote do módulo `example.com/wordy`",
+        "why": "Isso: o pai de `internal` é a raiz do módulo, então o módulo inteiro está dentro da árvore."
+      },
+      {
+        "text": "Só pacotes no próprio diretório `internal`",
+        "why": "`text` o importa de fora desse diretório, e é permitido."
+      },
+      {
+        "text": "Qualquer pacote num workspace que liste o `wordy`",
+        "why": "O `example.com/other` estava no workspace e foi recusado."
+      },
+      {
+        "text": "Qualquer pacote, desde que os nomes que usa sejam exportados",
+        "why": "`fold.Word` é exportado, e o `example.com/other` foi recusado mesmo assim."
+      }
+    ]
+  },
+  "ex-m7q356mf": {
+    "prompt": "Em `example.com/wordy`, um pacote fica em `text/internal/cache`. Que pacote pode importá-lo?",
+    "hint": "A árvore começa no pai de `internal`, que já não é a raiz do módulo.",
+    "choices": [
+      {
+        "text": "`cmd/wordtop`",
+        "why": "A regra é sobre a árvore, não sobre o módulo: `cmd/wordtop` está fora de `text`, e é recusado."
+      },
+      {
+        "text": "`text` e os pacotes abaixo dele",
+        "why": "Isso. O pai de `internal` é `text`, então só `text` e os pacotes abaixo dele podem."
+      },
+      {
+        "text": "Todo pacote do módulo, como com `internal/fold`",
+        "why": "O `internal/fold` tinha a raiz do módulo como pai; este tem `text`."
+      },
+      {
+        "text": "Nenhum: `internal` só pode ficar na raiz de um módulo",
+        "why": "Um elemento `internal` pode aparecer em qualquer parte de um caminho; a regra acha o pai dele onde quer que esteja."
+      }
+    ]
+  },
+  "ex-vtbmvvkh": {
+    "prompt": "Ponha em ordem o que rodou em `~/pkgs-init` antes e durante `main`.",
+    "hint": "Um pacote importado termina antes de quem o importa começar.",
+    "items": [
+      "O `init` de `reg`",
+      "A variável de pacote `greeting` de `main`",
+      "O `init` de `main`",
+      "A função `main`"
+    ]
+  },
+  "ex-8s836zmm": {
+    "prompt": "Associe cada linha de import ao que ela faz.",
+    "hint": "Quatro formas, quatro efeitos.",
+    "pairs": [
+      {
+        "left": "`\"strings\"`",
+        "right": "Associa o nome `strings`"
+      },
+      {
+        "left": "`str \"strings\"`",
+        "right": "Associa o nome `str` no lugar"
+      },
+      {
+        "left": "`_ \"image/png\"`",
+        "right": "Roda o `init` do pacote e não associa nome"
+      },
+      {
+        "left": "`. \"strings\"`",
+        "right": "Põe todo nome exportado dentro do arquivo"
+      }
+    ],
+    "right_distractors": [
+      "Carrega o pacote só quando uma função o usa pela primeira vez"
+    ]
+  },
+  "ex-dqw9hy8m": {
+    "prompt": "O `image/png` registra o decodificador dele numa função chamada ___, que roda sozinha quando o pacote é importado.",
+    "hint": "A linha 1052 de `reader.go`.",
+    "blanks": [
+      {
+        "accept": [
+          "init"
+        ]
+      }
+    ]
+  },
+  "ex-c4hvecfd": {
+    "prompt": "Quais destes o `go build` recusa? Escolha todos os que se aplicam.",
+    "hint": "Duas são regras sobre o grafo ou o diretório; uma é sobre um nome não usado.",
+    "choices": [
+      {
+        "text": "O pacote `a` importa `b`, `b` importa `c`, e `c` importa `a`",
+        "why": "Sim: um ciclo passando por três pacotes é um ciclo."
+      },
+      {
+        "text": "Importar `crypto/rand` e `math/rand/v2` sem alias",
+        "why": "Sim: `rand redeclared in this block`."
+      },
+      {
+        "text": "Um pacote cujo nome difere do último elemento do caminho",
+        "why": "Permitido: `math/rand/v2` diz `package rand`."
+      },
+      {
+        "text": "Um import em branco de um pacote que o arquivo nunca nomeia",
+        "why": "É para isso que serve o `_`: o `image/png` foi importado assim e o programa rodou."
+      }
+    ]
+  },
+  "ex-mfzdtfr8": {
+    "prompt": "A Ana acrescenta `cmd/wordjson/main.go`, um terceiro programa, ao `example.com/wordy`. Quantas linhas o `go list ./...` imprime agora?",
+    "hint": "Uma linha por pacote, um pacote por diretório com arquivos Go.",
+    "unit": "pacotes"
+  },
+  "ex-qk9zcx8s": {
+    "prompt": "`text` importa `fold`, e uma função nova em `fold` precisa ler um `text.Counts`. Que mudança compila e mantém o grafo apontando para um lado só?",
+    "hint": "Algo tem de mudar de lugar, não a linha de import.",
+    "choices": [
+      {
+        "text": "Importar `text` em `fold` com um alias",
+        "why": "Um alias renomeia o import; a seta de volta para cima continua lá, e o ciclo continua recusado."
+      },
+      {
+        "text": "Um import em branco de `text` em `fold`, para nada ser nomeado",
+        "why": "Um import em branco continua sendo um import, e `fold` não poderia usar `Counts` por ele de todo jeito."
+      },
+      {
+        "text": "Fazer a função receber um `map[string]int`, ou movê-la para `text`",
+        "why": "Isso. Qualquer um dos dois tira a seta de `fold` de volta para `text`."
+      },
+      {
+        "text": "Tirar o `fold` de `internal`",
+        "why": "O `internal` decide quem pode importar o `fold`, não se um ciclo é permitido."
+      }
+    ]
+  }
+}

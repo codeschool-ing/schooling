@@ -1,0 +1,390 @@
+{
+  "ex-2n8gejrb": {
+    "prompt": "`a := [4]int{1, 2, 3, 4}`, `s := a[:]`, depois `s[0] = 100`. O que `fmt.Println(a)` imprime?",
+    "hint": "Quantos conjuntos de quatro `int`s existem?",
+    "choices": [
+      {
+        "text": "`[1 2 3 4]`, porque `a[:]` fez uma cópia",
+        "why": "Fatiar nunca copia; `s` aponta para o primeiro elemento de `a`."
+      },
+      {
+        "text": "`[100 2 3 4]`, mudado por meio de `s`",
+        "why": "Isso. Existe um array só, e `s` é uma visão dele inteiro."
+      },
+      {
+        "text": "Nada: array não pode ser fatiado, então não compila",
+        "why": "A lição 11 fatiou arrays, e `a[:]` rodou e imprimiu `[100 2 3 4]`."
+      },
+      {
+        "text": "`[100 1 2 3 4]`",
+        "why": "Uma atribuição a `s[0]` substitui o elemento 0; não insere."
+      }
+    ]
+  },
+  "ex-eaqq2mm9": {
+    "prompt": "Por que `hex.EncodeToString(sha256.Sum256(data)[:])` é recusado pelo compilador?",
+    "hint": "Para onde a slice apontaria?",
+    "choices": [
+      {
+        "text": "`hex.EncodeToString` recebe um array, não uma slice",
+        "why": "Ele recebe um `[]byte`; passar o próprio `sum` é o que o outro erro recusou."
+      },
+      {
+        "text": "O array devolvido não está guardado em lugar nenhum, então é não endereçável",
+        "why": "Isso. Uma slice aponta para um array que mora em algum lugar, e o resultado de uma chamada ainda não mora."
+      },
+      {
+        "text": "`[:]` só funciona em slices, nunca em arrays",
+        "why": "`a[:]` numa variável array compilou e rodou na seção 02."
+      },
+      {
+        "text": "Fatiar copiaria 32 bytes, e Go nunca copia implicitamente",
+        "why": "Fatiar não copia nada; o problema é não haver nada guardado para onde apontar."
+      }
+    ]
+  },
+  "ex-9te8v2cj": {
+    "prompt": "O compilador chama o resultado de uma chamada, ainda não guardado em variável nenhuma, de valor ___, e se recusa a fatiá-lo.",
+    "hint": "O erro dizia `cannot slice … value`.",
+    "blanks": [
+      {
+        "accept": [
+          "não endereçável",
+          "nao enderecavel",
+          "unaddressable"
+        ]
+      }
+    ]
+  },
+  "ex-cmyk122z": {
+    "prompt": "`a` é um `[4]int` e `s := a[:]`. Quanto valem `len(s)` e `cap(s)`?",
+    "hint": "A slice alcança exatamente até onde o array vai.",
+    "choices": [
+      {
+        "text": "4 e 8, deixando espaço para append",
+        "why": "A capacidade não passa do array, e este array tem quatro elementos."
+      },
+      {
+        "text": "4 e 4, o tamanho do array",
+        "why": "Isso: a execução imprimiu `4 4`, então o primeiro append precisa copiar."
+      },
+      {
+        "text": "0 e 4, uma visão vazia com espaço para quatro",
+        "why": "Isso seria `a[:0]`. Sem números, a visão cobre o array inteiro."
+      },
+      {
+        "text": "4 e 0",
+        "why": "A capacidade nunca é menor que o comprimento."
+      }
+    ]
+  },
+  "ex-hf0vqg0f": {
+    "prompt": "`sum := sha256.Sum256(data)`. Quais destes compilam? Marque todos os que se aplicam.",
+    "hint": "`sum` é uma variável que guarda um `[32]byte`.",
+    "choices": [
+      {
+        "text": "`hex.EncodeToString(sum[:])`",
+        "why": "Sim, imprimiu 64 dígitos hexadecimais."
+      },
+      {
+        "text": "`hex.EncodeToString(sum[:4])`",
+        "why": "Sim. Qualquer expressão de fatia na variável dá um `[]byte`; esta cobre os quatro primeiros bytes."
+      },
+      {
+        "text": "`hex.EncodeToString(sum)`",
+        "why": "Recusado: `cannot use sum (variable of type [32]byte) as []byte value`."
+      },
+      {
+        "text": "`hex.EncodeToString([]byte(sum))`",
+        "why": "Um array não vira slice com `T(x)`; a expressão de fatia é o único caminho."
+      }
+    ]
+  },
+  "ex-83hch12e": {
+    "prompt": "Qual destes copia os quatro primeiros elementos de uma slice para um array novo?",
+    "hint": "Um deles é um tipo array; outro é um tipo ponteiro.",
+    "choices": [
+      {
+        "text": "`(*[4]int)(s)`",
+        "why": "Isso é um ponteiro para o próprio array da slice; escrever por ele mudou `s`."
+      },
+      {
+        "text": "`[4]int(s)`",
+        "why": "Isso. Depois de `c[0] = 100`, `s` ainda começava com 1."
+      },
+      {
+        "text": "`s[:4]`",
+        "why": "Isso é outra slice sobre o mesmo array, e fatiar nunca copia."
+      },
+      {
+        "text": "`s[0:4:4]`",
+        "why": "Uma expressão de fatia completa limita a capacidade; continua sendo uma visão do mesmo array."
+      }
+    ]
+  },
+  "ex-10e9g6b7": {
+    "prompt": "`s := []int{1, 2, 3, 4, 5, 6}` e `p := (*[4]int)(s)`. Depois de `p[0] = 100`, o que `s` imprime?",
+    "hint": "Uma conversão para ponteiro não copia nada.",
+    "choices": [
+      {
+        "text": "`[100 2 3 4 5 6]`",
+        "why": "Isso. `p` aponta para os quatro primeiros elementos do array que `s` enxerga."
+      },
+      {
+        "text": "`[1 2 3 4 5 6]`",
+        "why": "Isso é o que a conversão para array `[4]int(s)` deixa; o ponteiro divide."
+      },
+      {
+        "text": "`[100 2 3 4]`",
+        "why": "Isso é `*p`. A conversão não encurta `s`, que fica com os seis."
+      },
+      {
+        "text": "Nada: entra em pânico, pois `s` tem seis elementos e não quatro",
+        "why": "Mais longa tudo bem; só uma slice mais curta que o array entra em pânico."
+      }
+    ]
+  },
+  "ex-0fsmjv25": {
+    "prompt": "O que acontece quando `[4]int(s)` roda com `len(s) == 2`?",
+    "hint": "O compilador não sabe o comprimento de uma slice.",
+    "choices": [
+      {
+        "text": "O build falha com um erro de conversão",
+        "why": "O comprimento só é conhecido na execução, então o programa compilou."
+      },
+      {
+        "text": "Os dois últimos elementos ficam zero",
+        "why": "Go não completa. Completar esconderia uma leitura curta, e a conversão recusa em vez disso."
+      },
+      {
+        "text": "Um pânico: `cannot convert slice with length 2 to array or pointer to array with length 4`",
+        "why": "Isso, e a mesma mensagem vale para a conversão para ponteiro."
+      },
+      {
+        "text": "Devolve um `[2]int`",
+        "why": "O tipo array está escrito na conversão; o comprimento dele não se negocia."
+      }
+    ]
+  },
+  "ex-38n1zj6z": {
+    "prompt": "Ligue cada linha `go` do `go.mod` ao que ela permite para `[4]int(s)` e `(*[4]int)(s)`.",
+    "hint": "A conversão para ponteiro é a mais antiga das duas.",
+    "pairs": [
+      {
+        "left": "`go 1.16`",
+        "right": "Nenhuma compila"
+      },
+      {
+        "left": "`go 1.19`",
+        "right": "Só a conversão para ponteiro compila"
+      },
+      {
+        "left": "`go 1.27.1`",
+        "right": "As duas compilam"
+      }
+    ],
+    "right_distractors": [
+      "Só a conversão para array compila"
+    ]
+  },
+  "ex-1rv8z2e3": {
+    "prompt": "Um parser faz `id := [16]byte(buf)` para cada registro, e depois lê o próximo registro no mesmo `buf`. O `id` muda?",
+    "hint": "Qual conversão foi?",
+    "choices": [
+      {
+        "text": "Sim: `id` aponta para o array de `buf`, então o próximo registro aparece nele",
+        "why": "Isso é `(*[16]byte)(buf)`. Um tipo array, e não ponteiro, quer dizer cópia."
+      },
+      {
+        "text": "Não: a conversão copiou dezesseis bytes para `id`",
+        "why": "Isso. `id` é um array, um valor só dele, como o `c` da seção 03."
+      },
+      {
+        "text": "Só se `buf` tiver mais de dezesseis bytes",
+        "why": "Um `buf` mais longo ainda dá uma cópia dos dezesseis primeiros; o comprimento só decide se há pânico."
+      },
+      {
+        "text": "Não compila: slice precisa de conversão para ponteiro",
+        "why": "Desde Go 1.20 uma slice vira tipo array diretamente."
+      }
+    ]
+  },
+  "ex-jrya59b0": {
+    "prompt": "`raw` tem comprimento 3 e capacidade 8. O que `[4]byte(raw[:4])` faz?",
+    "hint": "Qual conferência `raw[:4]` passa, e qual ele pula?",
+    "choices": [
+      {
+        "text": "Entra em pânico, já que `raw` guarda só três bytes",
+        "why": "É o que `[4]byte(raw)` faz. `raw[:4]` estica a slice para quatro antes, dentro da capacidade."
+      },
+      {
+        "text": "Converte, pegando um byte que fica além do comprimento de `raw`",
+        "why": "Isso. `short[:4]` imprimiu quatro bytes de uma slice de três, sem reclamação."
+      },
+      {
+        "text": "Não compila, porque 4 é mais que `len(raw)`",
+        "why": "O compilador não sabe nem o comprimento nem a capacidade de uma slice."
+      },
+      {
+        "text": "Entra em pânico em `raw[:4]` com `index out of range`",
+        "why": "Um novo fatiamento é conferido contra a capacidade, 8 aqui, e 4 está dentro dela."
+      }
+    ]
+  },
+  "ex-2chepv2g": {
+    "prompt": "Por que `[32]byte` pode ser chave de map e `[]byte` não pode?",
+    "hint": "Um map precisa comparar chaves.",
+    "choices": [
+      {
+        "text": "Arrays ocupam menos memória que slices, então o hash sai mais rápido",
+        "why": "Um `[32]byte` é maior que o cabeçalho de uma slice. A regra não é tamanho, é comparabilidade."
+      },
+      {
+        "text": "Arrays se comparam com `==`; slices só com `nil`",
+        "why": "Isso. Um map precisa de chaves que consiga comparar, e `x == y` entre duas slices foi recusado."
+      },
+      {
+        "text": "Só tipos da biblioteca padrão podem ser chave",
+        "why": "`string` e `[32]byte` vêm ambos da linguagem, e a regra é sobre `==`."
+      },
+      {
+        "text": "Uma chave slice precisaria de `make` antes",
+        "why": "O `make` não torna uma slice comparável; nada torna."
+      }
+    ]
+  },
+  "ex-29rprnv5": {
+    "prompt": "No localizador de duplicatas, por que `d.txt` (`hello` e uma quebra de linha) não foi apontado como cópia de `a.txt`?",
+    "hint": "O que a chave compara?",
+    "choices": [
+      {
+        "text": "O map comparou os nomes de arquivo guardados como valores, e esses nomes diferem",
+        "why": "A chave é o checksum; os nomes são só os valores guardados sob ela."
+      },
+      {
+        "text": "`==` em arrays compara só os primeiros elementos",
+        "why": "Compara todos os elementos; é por isso que `c.txt` casou exatamente com `a.txt`."
+      },
+      {
+        "text": "O byte a mais dá outro checksum de 32 bytes, portanto outra chave",
+        "why": "Isso: três conteúdos diferentes, e `d.txt` era um deles."
+      },
+      {
+        "text": "O checksum dele era uma slice, e slices nunca são iguais",
+        "why": "O `Sum256` devolve um `[32]byte` para todo arquivo, e arrays se comparam."
+      }
+    ]
+  },
+  "ex-m9fxrs4v": {
+    "prompt": "Quais destes comparam o conteúdo de dois valores `[]byte`, `x` e `y`? Marque todos os que se aplicam.",
+    "hint": "O operador é recusado; duas funções não são.",
+    "choices": [
+      {
+        "text": "`bytes.Equal(x, y)`",
+        "why": "Sim, imprimiu `true`."
+      },
+      {
+        "text": "`x == y`",
+        "why": "Recusado: `slice can only be compared to nil`."
+      },
+      {
+        "text": "`slices.Equal(x, y)`",
+        "why": "Sim, para slices de qualquer tipo de elemento comparável, `byte` incluído."
+      },
+      {
+        "text": "`len(x) == len(y)`",
+        "why": "Isso compara dois comprimentos; `hello` e `world` passariam."
+      }
+    ]
+  },
+  "ex-1e2w77nz": {
+    "prompt": "Comparar duas slices com `==` é recusado com: `slice can only be compared to ___`.",
+    "hint": "A única comparação que a lição 12 usou em slices.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ]
+      }
+    ]
+  },
+  "ex-negdnzsx": {
+    "prompt": "Você precisa de um conjunto de endereços IPv4 lidos de pacotes como `[]byte`. Qual tipo de map resolve?",
+    "hint": "Quatro bytes, comparados pelo valor.",
+    "choices": [
+      {
+        "text": "`map[[]byte]bool`, com a slice como chegou de chave",
+        "why": "Uma slice não pode ser chave de jeito nenhum; a lição 14 mostra a recusa."
+      },
+      {
+        "text": "`map[*[4]byte]bool`, para que nenhuma chave seja copiada",
+        "why": "Ponteiros se comparam pelo endereço, então o mesmo IP lido duas vezes dá duas chaves diferentes."
+      },
+      {
+        "text": "`map[[4]byte]bool`, com `[4]byte(raw)` de chave",
+        "why": "Isso. A conversão copia os quatro bytes para um valor comparável."
+      },
+      {
+        "text": "`map[[32]byte]bool`, com `sha256.Sum256(raw)` de chave",
+        "why": "Funciona, mas transformar quatro bytes em 32 acrescenta um passo de que o endereço não precisa."
+      }
+    ]
+  },
+  "ex-1g271j0h": {
+    "prompt": "Os bytes de um endereço IPv4 chegam em `raw []byte` pela rede. Ponha os passos numa ordem segura.",
+    "hint": "A conversão entra em pânico numa slice curta.",
+    "items": [
+      "Conferir que `len(raw)` é pelo menos 4",
+      "Converter com `[4]byte(raw)`",
+      "Passar o array para `netip.AddrFrom4`"
+    ]
+  },
+  "ex-a2gkjege": {
+    "prompt": "`a := [4]int{1, 2, 3, 4}`, `s := a[:]`, `b := [4]int(s)`, depois `b[0] = 9`. Quais de `a`, `s` e `b` começam agora com 9?",
+    "hint": "Um passo divide e outro copia.",
+    "choices": [
+      {
+        "text": "Os três",
+        "why": "Isso exigiria que os dois passos dividissem, e a conversão para array copia."
+      },
+      {
+        "text": "Só `b`",
+        "why": "Isso. `a` e `s` dividem um array, e `b` é uma cópia tirada dele."
+      },
+      {
+        "text": "`s` e `b`, mas não `a`",
+        "why": "`s` é uma visão de `a`; nada muda um sem mudar o outro."
+      },
+      {
+        "text": "`a` e `b`, já que `s` é uma cópia à parte",
+        "why": "Fatiar nunca copia, e `b` é a única cópia à parte aqui."
+      }
+    ]
+  },
+  "ex-zctcnycb": {
+    "prompt": "Ligue cada expressão, onde `a` é um `[4]int` e `s` uma `[]int`, ao que ela entrega.",
+    "hint": "Duas dividem e uma copia.",
+    "pairs": [
+      {
+        "left": "`a[:]`",
+        "right": "Uma slice sobre o mesmo array"
+      },
+      {
+        "left": "`[4]int(s)`",
+        "right": "Um array novo com uma cópia"
+      },
+      {
+        "left": "`(*[4]int)(s)`",
+        "right": "Um ponteiro para o array da slice"
+      }
+    ],
+    "right_distractors": [
+      "Uma slice nova sobre um array copiado"
+    ]
+  },
+  "ex-a745e763": {
+    "prompt": "Quantos dígitos hexadecimais o `hex.EncodeToString(sum[:])` imprime para um checksum SHA-256?",
+    "hint": "Dois dígitos para cada byte de um `[32]byte`.",
+    "unit": "dígitos"
+  }
+}

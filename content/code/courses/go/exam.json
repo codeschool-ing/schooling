@@ -1,0 +1,2489 @@
+[
+  {
+    "id": "ex-sqfwskbg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Building `cmd/go` took 21.332 seconds from an empty cache and 0.837 seconds straight after. What made the second build fast?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "The output went to `/dev/null`, so nothing had to be linked",
+        "correct": false,
+        "why": "Both builds wrote to `/dev/null`; that only throws the result away, and the first one was slow all the same."
+      },
+      {
+        "text": "Every one of the 334 packages was already compiled, waiting in the build cache",
+        "correct": true,
+        "why": "Right. `go clean -cache` had emptied it before the first build; the second found all 334 packages compiled."
+      },
+      {
+        "text": "The second build used all four processors and the first used one",
+        "correct": false,
+        "why": "The first build is the one whose `user` time, 57 seconds, shows several processors busy at once."
+      },
+      {
+        "text": "Go only compiles the source files edited since the previous build",
+        "correct": false,
+        "why": "The unit the cache keeps is a compiled package, not an edited file, and nothing was edited between the two runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4c8qeh2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On the lab's x86-64 machine you run `GOOS=linux GOARCH=arm64 go build` on the program `why` and copy the result to a 64-bit ARM Linux server. What does it print there?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "`compiled for linux/amd64`, since that is the machine that compiled it",
+        "correct": false,
+        "why": "`runtime.GOOS` and `runtime.GOARCH` name the target of the build, and the target was arm64."
+      },
+      {
+        "text": "Nothing: `Exec format error`, as in the lab",
+        "correct": false,
+        "why": "The lab refused it because the lab is x86-64. An ARM server is the machine the binary was built for."
+      },
+      {
+        "text": "`compiled for linux/arm64`",
+        "correct": true,
+        "why": "Right. The two values are fixed at compile time and report the system the binary was built for, wherever it runs."
+      },
+      {
+        "text": "An error about the missing Go installation on the server",
+        "correct": false,
+        "why": "A Go binary carries its runtime inside it; nothing of Go has to be installed where it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7gzak3s",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A colleague runs `file` on a Go binary and reads `dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2`. Going by lesson 1, which of these can explain it? Choose all that apply.",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "The program uses `net`, which keeps a route through the C library",
+        "correct": true,
+        "why": "Yes. `lookup` imported `net` and came out needing `libc.so.6`."
+      },
+      {
+        "text": "It was a native build on a machine with a C compiler on the `PATH`",
+        "correct": true,
+        "why": "Yes. That is when `go doc cmd/cgo` says cgo is enabled, and the lab had `gcc`."
+      },
+      {
+        "text": "It was built with `CGO_ENABLED=0`",
+        "correct": false,
+        "why": "That is the fix, not the cause: the same `lookup` built with it came out `statically linked`."
+      },
+      {
+        "text": "Every Go binary links the Go runtime as a shared library",
+        "correct": false,
+        "why": "The runtime is inside the file; `why` carried it and `ldd` found no shared library at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cdqsk9z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Suppose go1.28.0 comes out in February 2027, on the calendar lesson 2 describes. Which versions then receive fix releases?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "1.26, 1.27 and 1.28, the last three",
+        "correct": false,
+        "why": "Three would mean support until three newer releases exist; the rule says two."
+      },
+      {
+        "text": "Only 1.27 and 1.28",
+        "correct": true,
+        "why": "Right. Once 1.28 exists, 1.26 has two newer releases and stops, as 1.25 did when 1.27 arrived."
+      },
+      {
+        "text": "Only 1.28, the newest",
+        "correct": false,
+        "why": "On 18 August 2026 fix releases came out for 1.25 and 1.26 alongside 1.27.0, so more than the newest is looked after."
+      },
+      {
+        "text": "Every version since Go 1, because of the compatibility promise",
+        "correct": false,
+        "why": "The promise is about source code compiling on new releases, not about fixing old ones forever."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezyer6kf",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "Go releases a new version every six months and supports each until two newer ones exist. About how many months is a release supported?",
+    "hint": "Lesson 2.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "months"
+  },
+  {
+    "id": "ex-4qx7xcns",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Besides the `go` line, a `go.mod` may carry a ___ line naming the release the module would rather be built with, which can be newer than the minimum.",
+    "hint": "Lesson 2.",
+    "blanks": [
+      {
+        "accept": [
+          "toolchain"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qrm5yahk",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A setting can come from three places, and the go command reads them in a fixed order, the last one winning. Put them in that order, first read first.",
+    "hint": "Lesson 3.",
+    "items": [
+      "the `go.env` file inside `GOROOT`",
+      "your own file, written by `go env -w`",
+      "the environment of the shell"
+    ]
+  },
+  {
+    "id": "ex-1tfdrps7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A blog post tells you to move your project, which has its own `go.mod`, from `~/projects/api` into `~/go/src` or it will not build. What is true?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "It is needed so that the go command can find the project's imports",
+        "correct": false,
+        "why": "That was GOPATH mode, the legacy behaviour `go help gopath` describes; it is not what a module uses."
+      },
+      {
+        "text": "The advice is out of date: a module builds wherever it sits",
+        "correct": true,
+        "why": "Right. A directory with a `go.mod` at its root says what its code is called, which is why `~/hello` built in lesson 4."
+      },
+      {
+        "text": "It is only needed for `go install`, which writes into `GOPATH`",
+        "correct": false,
+        "why": "`go install` puts the binary in `~/go/bin`; where the source sits does not matter to it, as lesson 4 showed from `~/hello`."
+      },
+      {
+        "text": "It is true, because `~/go/src` is where `GOMODCACHE` points",
+        "correct": false,
+        "why": "`GOMODCACHE` is `~/go/pkg/mod`, read-only downloads; and today `~/go` has no `src` at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9fr1m80",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "`go env ___` lists every setting that differs from the defaults, wherever it came from; in the lab it printed only `GOTOOLCHAIN='local'`.",
+    "hint": "Lesson 3.",
+    "blanks": [
+      {
+        "accept": [
+          "-changed",
+          "changed"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wzt471nt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In the directory `~/work`, a `go.mod` says `module example.com/tools/report`. What file does `go build` leave there?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "`work`, after the directory",
+        "correct": false,
+        "why": "The directory's name plays no part; it is the module path that names the binary."
+      },
+      {
+        "text": "`main`, after the package that builds into a program",
+        "correct": false,
+        "why": "Every program's package is `main`, so that name would tell no two programs apart."
+      },
+      {
+        "text": "`report`, after the last element of that path",
+        "correct": true,
+        "why": "Right. `go build` names the binary after the last element of the module path, as `hello` was named."
+      },
+      {
+        "text": "Nothing: the binary stays in the build cache",
+        "correct": false,
+        "why": "That is `go run`. `go build` leaves the binary next to the source."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mzdbfk8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A function declares `total := 0` and never uses `total`. Of the compiler, `gofmt` and `go vet`, what happens?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "The compiler refuses to build it at all: `declared and not used: total`",
+        "correct": true,
+        "why": "Right. A local variable declared and never used is refused like an unused import."
+      },
+      {
+        "text": "It builds, and `go vet` reports the variable",
+        "correct": false,
+        "why": "`go vet` is for what is valid Go and nearly always a bug; this is not valid Go, so it never gets that far."
+      },
+      {
+        "text": "`gofmt` deletes the line when it lays out the file",
+        "correct": false,
+        "why": "`gofmt` changes layout only: spaces, tabs, blank lines. It never removes a statement."
+      },
+      {
+        "text": "Nothing: an unused variable is legal and costs nothing",
+        "correct": false,
+        "why": "Go makes it an error on purpose, because an unused variable is often a typo for one that is used."
+      }
+    ]
+  },
+  {
+    "id": "ex-z88c79v3",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "prompt": "Which of these are true of `go run .`? Choose all that apply.",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "It compiles the program to a binary before running it",
+        "correct": true,
+        "why": "Yes. Go has no interpreter; `go run` compiles and then runs the binary."
+      },
+      {
+        "text": "It keeps the binary in the build cache",
+        "correct": true,
+        "why": "Yes, which is why the second run took 44 milliseconds."
+      },
+      {
+        "text": "It reads the source and runs it line by line, like an interpreter",
+        "correct": false,
+        "why": "It looks like that and is not: the first run spent four seconds compiling."
+      },
+      {
+        "text": "It leaves the binary in the current directory, next to `go.mod`",
+        "correct": false,
+        "why": "That is `go build`. After `go run` there is no file you can find."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1cehqw8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A package declares `const answer int = 42`, and `main` says `var exact float64 = answer`. What happens?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "It compiles, because 42 fits in a `float64`",
+        "correct": false,
+        "why": "Fitting is the test for an untyped constant. This one was given the type `int`, and the type is what is checked."
+      },
+      {
+        "text": "The compiler refuses to use an `int` constant as a `float64` value",
+        "correct": true,
+        "why": "Right. Like the `int8` case: a typed constant keeps its type, and Go does not turn one numeric type into another by itself."
+      },
+      {
+        "text": "It compiles, and `exact` holds 42.0 converted at run time",
+        "correct": false,
+        "why": "Go never converts on your behalf, at compile time or at run time."
+      },
+      {
+        "text": "It compiles only if `exact` is declared with `:=` instead",
+        "correct": false,
+        "why": "`exact := answer` would compile, and give `exact` the type `int`, so it would not be a `float64` at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-4rfgkqp3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Inside one function: `x, err := first()` and, two lines below in the same block, `x, err := second()`. What does the compiler say?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Nothing: `:=` with two names assigns whichever already exist",
+        "correct": false,
+        "why": "That holds when at least one name on the left is new. Here both already exist."
+      },
+      {
+        "text": "`declared and not used: x`, because the first `x` was replaced before being read",
+        "correct": false,
+        "why": "Whether `x` is read is a separate question; the second line is refused before that matters."
+      },
+      {
+        "text": "`no new variables on left side of :=`",
+        "correct": true,
+        "why": "Right. `:=` with several names needs at least one of them new; the fix is `x, err = second()`."
+      },
+      {
+        "text": "Nothing: the second line declares a new `x` and a new `err` that shadow the first",
+        "correct": false,
+        "why": "Shadowing needs an inner block. In the same block a name cannot be declared twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-zs4n2x5x",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A package-level variable that nothing reads compiles. Inside a function, an unread `count` is refused with: `declared and not ___: count`.",
+    "hint": "Lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "used"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yjxm297g",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`const ( A = iota * 10; B; C; D )`, one name per line. What is the value of `C`?",
+    "hint": "Lesson 6.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-a9p8vrj1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`var cfg *Config` is declared at the top of `main`. Inside `if debug { cfg, err := load(); if err != nil { return }; fmt.Println(\"loaded\", cfg.Name) }`, and after the `if`, `run(cfg)`. With `debug` true and `load` succeeding, what does `run` receive?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "The `*Config` that `load` returned",
+        "correct": false,
+        "why": "That one went into a second `cfg`, declared by `:=` inside the `if` block and gone at its closing brace."
+      },
+      {
+        "text": "`nil`, the zero value of the outer `cfg`",
+        "correct": true,
+        "why": "Right. Both names were new to the `if` block, so `:=` declared both, the same shape as the shadowed `err` of `total`."
+      },
+      {
+        "text": "Nothing: the compiler refuses the inner `cfg` as declared and not used",
+        "correct": false,
+        "why": "It would, if nothing read it. The block prints `cfg.Name`, so the inner `cfg` is used, and nothing complains, as `go vet` exited 0 on `total`."
+      },
+      {
+        "text": "Nothing: `:=` cannot redeclare a name that exists outside the block",
+        "correct": false,
+        "why": "It can, and that is the trouble: an inner block may reuse an outer name and hide it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8f5awvrf",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each declaration with what `fmt.Printf(\"%#v\", v)` prints for it before anything is assigned.",
+    "hint": "Lesson 6.",
+    "pairs": [
+      {
+        "left": "`var v string`",
+        "right": "`\"\"`"
+      },
+      {
+        "left": "`var v []int`",
+        "right": "`[]int(nil)`"
+      },
+      {
+        "left": "`var v [2]int`",
+        "right": "`[2]int{0, 0}`"
+      },
+      {
+        "left": "`var v bool`",
+        "right": "`false`"
+      }
+    ],
+    "right_distractors": [
+      "`undefined`"
+    ]
+  },
+  {
+    "id": "ex-cpqgeatg",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`var x int16 = 32767`, then `x++`, then `fmt.Println(x)`. What does it print?",
+    "hint": "Lesson 7.",
+    "value": -32768,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-45b3mwvc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which of these builds, and then wraps around when it runs?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "`const limit int8 = 127` and then `next := limit + 1`",
+        "correct": false,
+        "why": "`limit` is a typed constant, so the sum is a constant too, and the compiler refuses it: `overflows int8`."
+      },
+      {
+        "text": "`var v int8 = 127` and then `v = v + 1`",
+        "correct": true,
+        "why": "Right. `v` is a variable, so nothing is known until run time, and 127 + 1 in an `int8` silently becomes −128."
+      },
+      {
+        "text": "`var small int8 = 128`",
+        "correct": false,
+        "why": "128 is a constant the compiler can check, and it refused it with `(overflows)`."
+      },
+      {
+        "text": "`fmt.Println(1 << 100)`, which wraps to 0",
+        "correct": false,
+        "why": "An untyped constant that has to become an `int` and does not fit is a compile error, never a wrapped value."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3msrahe",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put these types in order of the largest value each can hold, smallest first.",
+    "hint": "Lesson 7.",
+    "items": [
+      "`int8`",
+      "`uint8`",
+      "`int16`",
+      "`uint16`"
+    ]
+  },
+  {
+    "id": "ex-68mvankg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`s` is a string that may be empty. What does `if len(s) > 0 && s[0] == '#' {` do when `s` is `\"\"`?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "It panics, because `s[0]` does not exist in an empty string",
+        "correct": false,
+        "why": "It would if it were evaluated. `&&` found its left side false and never looked at the right one."
+      },
+      {
+        "text": "It does not compile, because `s[0]` is a byte and `'#'` a rune",
+        "correct": false,
+        "why": "`'#'` is an untyped rune constant, 35, and it fits in a byte, so the comparison compiles."
+      },
+      {
+        "text": "The condition is simply false, and `s[0]` is never evaluated at all",
+        "correct": true,
+        "why": "Right. Short-circuit evaluation: the length test guards the index, as `people > 0` guarded the division."
+      },
+      {
+        "text": "Both sides are evaluated first, so the answer depends on what `s[0]` holds",
+        "correct": false,
+        "why": "`&&` stops as soon as the answer is known; in Go the order of the two tests is part of the meaning."
+      }
+    ]
+  },
+  {
+    "id": "ex-7d87q925",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Plain ASCII takes one byte, `é` two and `€` three. What does `len(\"a€é\")` return?",
+    "hint": "Lesson 8.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-k1v0ygd9",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`count` is an `int`, and `tests` and `lint` are `bool`. Which of these lines does the compiler refuse? Choose all that apply.",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "`if count {`",
+        "correct": true,
+        "why": "Refused: `non-boolean condition in if statement`. No type but `bool` stands where a condition goes."
+      },
+      {
+        "text": "`pair := 'ab'`",
+        "correct": true,
+        "why": "Refused: `more than one character in rune literal`. Single quotes hold one rune."
+      },
+      {
+        "text": "`odd := tests != lint`",
+        "correct": false,
+        "why": "Compiles. `!=` between two booleans is Go's exclusive or."
+      },
+      {
+        "text": "`var b byte = 'é'`",
+        "correct": false,
+        "why": "Compiles, because 233 fits in a byte. That is the trap: the byte holds the code point, not the `c3 a9` of a string."
+      },
+      {
+        "text": "`ready := bool(count)`",
+        "correct": true,
+        "why": "Refused: `cannot convert count (variable of type int) to type bool`. There is no conversion from a number to a truth value."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hebw7gt",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "What does `strings.Index(\"São Paulo\", \"Paulo\")` return? (`ã` is stored like `é`.)",
+    "hint": "Lesson 9.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-vjbg1923",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 9 says when to reach for a `strings.Builder`. Which of these is that case?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Joining a first name and a surname once, for a greeting",
+        "correct": false,
+        "why": "Once, `+` costs nothing worth saving: join a few strings with `+`."
+      },
+      {
+        "text": "Building a report out of 50,000 lines, one on every turn of a loop",
+        "correct": true,
+        "why": "Right. `+=` in a loop copies everything built so far on every turn, which is how 100,000 rounds took 3.7 seconds."
+      },
+      {
+        "text": "Changing the first letter of a string to upper case in place",
+        "correct": false,
+        "why": "Nothing changes a string in place; a Builder makes a new string too, and `\"H\" + s[1:]` is the simple way."
+      },
+      {
+        "text": "Keeping only the first 80 bytes of a large string",
+        "correct": false,
+        "why": "That is the case for `strings.Clone`, which copies a small substring so the large one can go."
+      }
+    ]
+  },
+  {
+    "id": "ex-kcz5mf26",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A raw literal cannot hold a backquote, because the backquote ends it. A string that needs one is written in ___ quotes.",
+    "hint": "Lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "double"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jf2aaegf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A package has `type Feet float64`, `type Meters float64` and `func ToMeters(f Feet) Meters { return Meters(f) }`. What does `ToMeters(10)` return?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "It does not compile, since `Feet` cannot become `Meters`",
+        "correct": false,
+        "why": "Two types with the same underlying type convert into each other; only mixing them without a conversion is refused."
+      },
+      {
+        "text": "3.048, converted by the type system",
+        "correct": false,
+        "why": "Nothing in the language knows how feet relate to metres, as nothing knew how Celsius relates to Fahrenheit."
+      },
+      {
+        "text": "10 metres: the conversion relabelled the number and did no arithmetic",
+        "correct": true,
+        "why": "Right. A conversion changes the type and never the number, like `Fahrenheit(boil)` printing 100. The arithmetic has to be written."
+      },
+      {
+        "text": "10, after a vet warning about lost precision",
+        "correct": false,
+        "why": "Nothing is lost and nothing warns; the program is valid and simply says the wrong thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-mf1wmfpw",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "`n` is an `int` holding 130. What does `fmt.Println(int8(n))` print?",
+    "hint": "Lesson 10.",
+    "value": -126,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-n2fq00bg",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "`strconv.Atoi(\" 42\")` refused the leading space and returned 0 with the error `strconv.Atoi: parsing \" 42\": invalid ___`.",
+    "hint": "Lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "syntax"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q2495skm",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`p := [2]int{1, 2}` and `q := []int{1, 2}`. Which of these compile? Choose all that apply.",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "`fmt.Println(p == [2]int{1, 2})`",
+        "correct": true,
+        "why": "Compiles: two arrays of the same type compare element by element."
+      },
+      {
+        "text": "`fmt.Println(q == nil)`",
+        "correct": true,
+        "why": "Compiles: `nil` is the one thing a slice may be compared to."
+      },
+      {
+        "text": "`fmt.Println(q == []int{1, 2})`",
+        "correct": false,
+        "why": "Refused: `slice can only be compared to nil`. `slices.Equal` compares the elements."
+      },
+      {
+        "text": "`var r [3]int = p`",
+        "correct": false,
+        "why": "Refused: the length is part of the type, and a `[2]int` is not a `[3]int`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ewrr3at1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`s := []int{1, 2, 3}`, then `t := s` and `t[0] = 9`. What does `fmt.Println(s)` print?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "`[1 2 3]`, because assigning copies the elements",
+        "correct": false,
+        "why": "That is what assigning an array does. A slice copies its three words, and the pointer leads to the same array."
+      },
+      {
+        "text": "`[9 2 3]`",
+        "correct": true,
+        "why": "Right. `t` is a second slice over the one array, as the parameter of `setFirst` was."
+      },
+      {
+        "text": "Nothing: `t := s` is refused, since slices cannot be copied",
+        "correct": false,
+        "why": "Slices can be assigned freely; it is `==` between two of them that is refused."
+      },
+      {
+        "text": "`[9 2 3]` only if `s` was sliced from a named array",
+        "correct": false,
+        "why": "A slice literal builds an array too; it simply has no name. Sharing works the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8s251v2",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "`s == u` between two `[]int` is refused with `invalid operation: s == u (slice can only be compared to ___)`.",
+    "hint": "Lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cj6jcynj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`base := []int{1, 2, 3}` has length 3 and capacity 3. Then `a := append(base, 4)` and `b := append(base, 5)`. What does `fmt.Println(a, b)` print?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "`[1 2 3 5] [1 2 3 5]`, because both appends wrote into one array",
+        "correct": false,
+        "why": "That was `path`, which had spare capacity. `base` has none, so neither append can write into its array."
+      },
+      {
+        "text": "`[1 2 3 4] [1 2 3 5]`",
+        "correct": true,
+        "why": "Right. With length equal to capacity, each `append` allocates a new array and copies first, so `a` and `b` share nothing."
+      },
+      {
+        "text": "`[1 2 3 4] [1 2 3 4 5]`, since `b` is appended after `a`",
+        "correct": false,
+        "why": "Both appends start from `base`, which still has length 3; `a` is never their input."
+      },
+      {
+        "text": "It panics on the second append, past the capacity",
+        "correct": false,
+        "why": "`append` never panics for lack of room; it allocates a bigger array. Only an index or a reslice is checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-es0tt699",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "`s := make([]int, 2, 5)`. Match each line to what happens.",
+    "hint": "Lesson 12.",
+    "pairs": [
+      {
+        "left": "`fmt.Println(s[3])`",
+        "right": "`panic: runtime error: index out of range [3] with length 2`"
+      },
+      {
+        "left": "`fmt.Println(s[:6])`",
+        "right": "`panic: runtime error: slice bounds out of range [:6] with capacity 5`"
+      },
+      {
+        "left": "`fmt.Println(s[:4])`",
+        "right": "it prints `[0 0 0 0]`"
+      },
+      {
+        "left": "`fmt.Println(make([]int, 5, 2))`",
+        "right": "`invalid argument: length and capacity swapped`"
+      }
+    ],
+    "right_distractors": [
+      "it prints `[0 0]` and stops at the length"
+    ]
+  },
+  {
+    "id": "ex-0y016cz2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which line makes an empty slice with room for 100 `int`s, ready to `append` to without allocating again?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "`s := make([]int, 100)`",
+        "correct": false,
+        "why": "That is 100 zeros already, not room: an `append` would land at position 100."
+      },
+      {
+        "text": "`s := make([]int, 100, 0)`",
+        "correct": false,
+        "why": "Length first, then capacity: with constants the compiler refuses this as `length and capacity swapped`."
+      },
+      {
+        "text": "`s := make([]int, 0, 100)`",
+        "correct": true,
+        "why": "Right. Length 0, capacity 100: one array, and `append` never leaves it for the first 100 elements."
+      },
+      {
+        "text": "`var s [100]int`, with `append` writing into it",
+        "correct": false,
+        "why": "That is an array, with a fixed length, and `append` takes a slice."
+      }
+    ]
+  },
+  {
+    "id": "ex-sh69t4yg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`raw := []byte{192, 168, 0, 10, 0, 80}` holds six bytes. What does `[4]byte(raw)` do?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "It panics, because the slice is longer than the array",
+        "correct": false,
+        "why": "Only shorter panics. Longer is fine: the conversion takes what it needs."
+      },
+      {
+        "text": "It copies the first four bytes into a new array; the other two are not read at all",
+        "correct": true,
+        "why": "Right. That is how `netip.AddrFrom4([4]byte(raw))` printed `192.168.0.10`."
+      },
+      {
+        "text": "It is refused, because the compiler cannot see that `raw` has four bytes",
+        "correct": false,
+        "why": "The compiler accepts it and leaves the length check to run time, where a short slice panics."
+      },
+      {
+        "text": "It gives an array that shares the slice's first four bytes",
+        "correct": false,
+        "why": "Sharing is what `(*[4]byte)(raw)`, the pointer conversion, does; the array conversion copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-beeddrcs",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "With the `go` line moved back, go1.27.1 named the release each conversion needs. Converting a slice to an array pointer, `(*[4]int)(s)`, requires Go 1.N or later. What is N?",
+    "hint": "Lesson 13.",
+    "value": 17,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-6apnrgpc",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "`var m map[string]int` is declared and never made. Match each line to what it gives.",
+    "hint": "Lesson 14.",
+    "pairs": [
+      {
+        "left": "`v, ok := m[\"x\"]`",
+        "right": "`0` and `false`"
+      },
+      {
+        "left": "`fmt.Println(m == nil)`",
+        "right": "`true`"
+      },
+      {
+        "left": "`m[\"x\"] = 1`",
+        "right": "`panic: assignment to entry in nil map`"
+      },
+      {
+        "left": "`fmt.Println(len(m))`",
+        "right": "`0`"
+      }
+    ],
+    "right_distractors": [
+      "a compile error, since `m` was never made"
+    ]
+  },
+  {
+    "id": "ex-dhw1vmkb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A map literal lists `\"ana\": 31` and, three lines further down, `\"ana\": 32`. What happens?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "The map holds 32, the last value written",
+        "correct": false,
+        "why": "That is what two assignments `ages[\"ana\"] = …` do. In a literal, one value would be thrown away unseen, so it is refused."
+      },
+      {
+        "text": "The map holds 31, and the second pair is ignored",
+        "correct": false,
+        "why": "Ignoring it silently is exactly what the compiler refuses to do."
+      },
+      {
+        "text": "It panics when the literal is built at run time",
+        "correct": false,
+        "why": "Both keys are constants written in the source, so the compiler sees the clash before anything runs."
+      },
+      {
+        "text": "The compiler refuses it: `duplicate key \"ana\" in map literal`",
+        "correct": true,
+        "why": "Right. A key appears once, and a literal naming one twice does not compile."
+      }
+    ]
+  },
+  {
+    "id": "ex-2j3a5n4s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A tool writes a settings file by walking a `map[string]string` with `range`. Every run produces a different file from the same settings, and reviewers see diffs nobody made. What fixes it?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "Building the map with `make(map[string]string, n)` and the right size",
+        "correct": false,
+        "why": "The size only reserves room; every walk still starts at a random place."
+      },
+      {
+        "text": "Inserting the keys in alphabetical order",
+        "correct": false,
+        "why": "A map keeps no insertion order; on a small map the order comes out rotated, and on a big one it is shuffled."
+      },
+      {
+        "text": "Taking `slices.Sorted(maps.Keys(m))` and walking that slice",
+        "correct": true,
+        "why": "Right. The map answers what each value is; the sorted slice of keys answers in what order."
+      },
+      {
+        "text": "Keeping the settings under eight keys so they fit in one group",
+        "correct": false,
+        "why": "Even then the start is random: four keys gave three different first keys in six runs, and the group is not a promise of the language."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfysnqcx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A `Session` struct has a field `Token string` that other packages must read, and it must never appear in the JSON the service logs. Which declaration does that?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "``Token string `json:\"-\"` ``",
+        "correct": true,
+        "why": "Right. A tag of `-` keeps the field out always, and the capital T keeps it visible to other packages."
+      },
+      {
+        "text": "`token string`, in lower case, with no tag",
+        "correct": false,
+        "why": "It would stay out of the JSON, and out of every other package too, which the field needs."
+      },
+      {
+        "text": "``Token string `json:\"token,omitempty\"` ``",
+        "correct": false,
+        "why": "`omitempty` drops the field only while it is empty; a real token would go out."
+      },
+      {
+        "text": "``Token string `json:\"token,omitzero\"` ``, which hides any value",
+        "correct": false,
+        "why": "`omitzero` drops the field when it holds its zero value, and a filled token is not zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5km3sry",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Which of these struct tags does `go vet` report? Choose all that apply.",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "``json: \"name\"``",
+        "correct": true,
+        "why": "Reported: the space after the colon makes the whole tag unreadable, `bad syntax for struct tag value`."
+      },
+      {
+        "text": "``json:\"email, omitempty\"``",
+        "correct": true,
+        "why": "Reported: `suspicious space in struct tag value`. The option would be ` omitempty`, which is no option."
+      },
+      {
+        "text": "``json:\"email,omitempty\"``",
+        "correct": false,
+        "why": "Correct as written: a key, a comma and the option, with no space."
+      },
+      {
+        "text": "``json:\"-\"``",
+        "correct": false,
+        "why": "A valid tag: it keeps the field out of the JSON always."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8jvyr4c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`Person` has a field `Name`; `User` embeds `Person`; `Admin` embeds `User`. Nothing else declares `Name`. For `a` an `Admin`, what does `a.Name` do?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "It is refused: promotion only reaches one level down",
+        "correct": false,
+        "why": "The search goes level by level for as far as it has to; there is no limit of one."
+      },
+      {
+        "text": "It reads `a.User.Person.Name`, two levels down",
+        "correct": true,
+        "why": "Right. `Admin` has no `Name`, nor has `User` at its own level, so the search goes one level further and finds the only one."
+      },
+      {
+        "text": "It is ambiguous, because `User` and `Person` both lead to `Name`",
+        "correct": false,
+        "why": "Ambiguity needs two fields of one name at the same depth. Here there is one `Name`, reached through a chain."
+      },
+      {
+        "text": "It reads a copy of the name that `Admin` keeps at its own level",
+        "correct": false,
+        "why": "Promotion copies nothing; `%+v` would show `Name` nested inside `Person` inside `User`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xse72fmm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a `go 1.27.1` module, `e := Employee{Person: Person{Name: \"Ana\"}, Email: \"ana@example.com\"}`, where `Email` is a field of `Person`. What happens?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "It compiles, and `Email` is merged into the `Person` given",
+        "correct": false,
+        "why": "No merging: the two forms would write the same field twice, so they cannot be mixed for one embedded struct."
+      },
+      {
+        "text": "It compiles, and the `Email` written last wins",
+        "correct": false,
+        "why": "Neither wins; the literal is refused before any value is built."
+      },
+      {
+        "text": "It is refused, because promoted fields cannot be set in a literal",
+        "correct": false,
+        "why": "Since Go 1.27 they can, as `Employee{Name: \"Ana\", Email: …, Company: …}` showed; the trouble is mixing the two forms."
+      },
+      {
+        "text": "Refused: `cannot specify promoted field Email and enclosing embedded field Person`",
+        "correct": true,
+        "why": "Right. Either the whole `Person` or its promoted fields, not both."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgxsyb30",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`n := 81`, then `for n > 1 { n /= 3 }`. How many times does the body run?",
+    "hint": "Lesson 17.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-atsvja8z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`€` is three bytes of UTF-8. What values does `i` take in `for i := range \"€uro\"`?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "0, 1, 2 and 3, one per character",
+        "correct": false,
+        "why": "That would be a count of characters. `range` over a string gives the byte offset where each rune starts."
+      },
+      {
+        "text": "0 to 5, one per byte",
+        "correct": false,
+        "why": "That is the three-clause loop over `len(s)`. `range` decodes the UTF-8 and visits each rune once."
+      },
+      {
+        "text": "0, 3, 4 and 5",
+        "correct": true,
+        "why": "Right. The `€` starts at 0 and takes three bytes, so `u` starts at 3, as the `!` after `é` started at 5 in `café`."
+      },
+      {
+        "text": "0, 1, 2 and 3, plus U+FFFD for the bytes that do not fit",
+        "correct": false,
+        "why": "U+FFFD appears only for bytes that are not UTF-8, like `\\xff`; a valid `€` decodes as one rune."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhv487e8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A `range` over a map adds a new key for each key it visits. What does Go say about the keys added during the loop?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Each may be visited or skipped; the specification leaves it open",
+        "correct": true,
+        "why": "Right. Which is why new entries belong in a second map, copied over when the loop is done."
+      },
+      {
+        "text": "None are visited, because `range` reads a map once, as it reads a slice once",
+        "correct": false,
+        "why": "Reading once is the slice's rule. For a map, an entry created during the walk can turn up."
+      },
+      {
+        "text": "All are visited, so the loop can never end",
+        "correct": false,
+        "why": "Nothing promises that they are visited, and nothing promises that they are not."
+      },
+      {
+        "text": "It panics, as changing a map during a walk always does",
+        "correct": false,
+        "why": "Deleting during a walk is explicitly allowed, and adding does not panic either; it is only unpredictable."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6k6a2p7",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "The grid search of lesson 18 keeps its plain `break` (no label) and runs on `{{30, 1}, {2, 3}, {40, 50}}`, printing a `found` line whenever a value is above 20. How many `found` lines does it print?",
+    "hint": "Lesson 18.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-jdzxee2k",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each compiler message to the mistake behind it.",
+    "hint": "Lesson 18.",
+    "pairs": [
+      {
+        "left": "`break is not in a loop, switch, or select`",
+        "right": "a helper function tries to end its caller's loop"
+      },
+      {
+        "left": "`label search defined and not used`",
+        "right": "a label that no `break` or `continue` names"
+      },
+      {
+        "left": "`invalid break label inner`",
+        "right": "a `break` naming a loop that does not enclose it"
+      },
+      {
+        "left": "`goto done jumps over declaration of msg`",
+        "right": "a jump past a variable still in scope at the label"
+      }
+    ],
+    "right_distractors": [
+      "a `continue` inside a `switch` inside a `for`"
+    ]
+  },
+  {
+    "id": "ex-x2sgn8k7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A `switch ext := strings.ToLower(filepath.Ext(name)); ext { … }` ends, and the next line is `fmt.Println(ext)`. What happens?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "It prints the extension of the last name tested",
+        "correct": false,
+        "why": "That would need `ext` to outlive the `switch`; an initialiser's names stop at its closing brace."
+      },
+      {
+        "text": "The build fails with `undefined: ext`, because the name ended at the closing brace",
+        "correct": true,
+        "why": "Right. As with `if`, a name declared before the value belongs to the statement, the way `n` did after the `if` chain."
+      },
+      {
+        "text": "It prints an empty string, the zero value of `ext`",
+        "correct": false,
+        "why": "There is no `ext` there to have a zero value; the name does not exist after the `switch`."
+      },
+      {
+        "text": "It compiles only if the `default` case also used `ext`",
+        "correct": false,
+        "why": "Using it inside a case is fine and changes nothing about where the name ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-27pv7p5t",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "`n := 50`, then `switch { case n > 10: fmt.Println(\"A\"); fallthrough; case n > 20: fmt.Println(\"B\"); case n > 30: fmt.Println(\"C\"); default: fmt.Println(\"D\") }`, one statement per line. How many lines does it print?",
+    "hint": "Lesson 19.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-caaybsws",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A tagless `switch` turns a score into a grade: 90 and above is a distinction, 50 and above a pass, anything else a fail. Put its three cases in the order that gives 95 a distinction.",
+    "hint": "Lesson 19.",
+    "items": [
+      "`case score >= 90: return \"distinction\"`",
+      "`case score >= 50: return \"pass\"`",
+      "`default: return \"fail\"`"
+    ]
+  },
+  {
+    "id": "ex-z8jv0e6d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Somebody coming from Python writes `func greet(name string, greeting string = \"Hello\")`. What does the compiler say?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Nothing: `greeting` is optional, and `greet(\"Ana\")` uses `Hello`",
+        "correct": false,
+        "why": "Go has no default values for parameters; every argument has to be passed."
+      },
+      {
+        "text": "`greet redeclared in this block`",
+        "correct": false,
+        "why": "That is the message for two functions of one name, Go's refusal of overloading."
+      },
+      {
+        "text": "`syntax error: unexpected = in parameter list; possibly missing comma or )`",
+        "correct": true,
+        "why": "Right. A default value is not part of Go's grammar at all."
+      },
+      {
+        "text": "`go vet` warns that the default hides an argument",
+        "correct": false,
+        "why": "It never gets to `go vet`: the file does not even parse."
+      }
+    ]
+  },
+  {
+    "id": "ex-vgb9hkqe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`parse(s string) (int, error)` is called as `if n := parse(s); n > 0 { … }`. What happens?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "`n` gets the `int`, and the error is dropped",
+        "correct": false,
+        "why": "Go never drops a result by itself; dropping one is written as `_`."
+      },
+      {
+        "text": "`assignment mismatch: 1 variable but parse returns 2 values`",
+        "correct": true,
+        "why": "Right. One name on the left and two values on the right, which is what stops a forgotten error from compiling."
+      },
+      {
+        "text": "`n` holds both values, as a tuple of type `(int, error)`",
+        "correct": false,
+        "why": "Go has no tuples; `(int, error)` is a list of results, not a type a variable can have."
+      },
+      {
+        "text": "It compiles, because an `if` initialiser may take the first result only",
+        "correct": false,
+        "why": "An initialiser is an ordinary short declaration and follows the same rule as `q := divmod(17, 5)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ca3exv8",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "With lesson 21's `counter`: `next := counter()`, then `next()` twice, then `other := counter()` and `other()` once. What does `fmt.Println(next() + other())` print?",
+    "hint": "Lesson 21.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-c8mxqe9d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A module whose `go.mod` says `go 1.24` has `name := name` as the first line of a `for _, name := range names` body, before a closure that uses `name`. What does deleting that line change?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "Every closure then prints the last name, as under `go 1.21`",
+        "correct": false,
+        "why": "That was the behaviour of a module at 1.21. From 1.22 each turn already declares its own `name`."
+      },
+      {
+        "text": "The build fails, because the closure loses the variable it captured",
+        "correct": false,
+        "why": "The closure captures the loop's `name` instead, which exists on every turn."
+      },
+      {
+        "text": "Nothing at all: since 1.22 each turn has its own `name`",
+        "correct": true,
+        "why": "Right. In a module at 1.22 or later the copy is harmless and can go."
+      },
+      {
+        "text": "The closures start taking a snapshot of `name` instead of the variable",
+        "correct": false,
+        "why": "A closure never takes a snapshot; it always holds a variable. What changed in 1.22 is how many variables the loop makes."
+      }
+    ]
+  },
+  {
+    "id": "ex-py5t5her",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`type Config struct { Port int; Labels map[string]string }` and `func tweak(c Config) { c.Port = 9; c.Labels[\"env\"] = \"prod\" }`. After `tweak(cfg)`, what does the caller's `cfg` show?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "Neither change, because the whole struct was copied",
+        "correct": false,
+        "why": "The struct was copied, and so was the map's 8-byte pointer, which still leads to the caller's table."
+      },
+      {
+        "text": "Both changes, because structs holding maps are passed by reference",
+        "correct": false,
+        "why": "Nothing in Go is passed by reference; `Port` lives in the copy and stays 9 there only."
+      },
+      {
+        "text": "The new label, and the old port",
+        "correct": true,
+        "why": "Right. A copy of a struct is as deep as its own fields: `Port` was copied, and `Labels` copied a pointer to one shared table."
+      },
+      {
+        "text": "The new port, and not the label",
+        "correct": false,
+        "why": "It is the other way round: writing to the map goes through the shared pointer, and the `int` is a private copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rxrcys3",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "On the lab's machine, a variable `v` of type `any` holds a 1,024-byte `Record`. How many bytes does `unsafe.Sizeof(v)` report?",
+    "hint": "Lesson 22.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-mft2y8nq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`x, y := 1, 2` and then `swap(&x, &y)`. Which `swap` leaves `x` at 2 and `y` at 1?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "`func swap(a, b *int) { a, b = b, a }`",
+        "correct": false,
+        "why": "This exchanges the function's two copies of the addresses; nothing is written at the other end of either."
+      },
+      {
+        "text": "`func swap(a, b *int) { t := *a; a = b; b = &t }`",
+        "correct": false,
+        "why": "It reads `*a` and then only reassigns its local pointers; neither `x` nor `y` is ever written."
+      },
+      {
+        "text": "`func swap(a, b *int) { *a, *b = *b, *a }`",
+        "correct": true,
+        "why": "Right. `*a` and `*b` are the caller's variables, and assigning to them is how a function reaches the caller."
+      },
+      {
+        "text": "`func swap(a, b int) { a, b = b, a }`",
+        "correct": false,
+        "why": "This one does not even compile with `&x`, and with `x` it would swap two private copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vz9qer2",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "With lesson 23's `newCounter() *int`: `a := newCounter()`, `b := a`, then `*a++` and `*b++`. What does `fmt.Println(*a)` print?",
+    "hint": "Lesson 23.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-msqqx437",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The Go 1.27.1 compiler moves a declared variable to the heap, whatever escape analysis found, once it is larger than `MaxStackVarSize`. How many KiB is that?",
+    "hint": "Lesson 24.",
+    "value": 128,
+    "tolerance": 0,
+    "unit": "KiB"
+  },
+  {
+    "id": "ex-mw1am913",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "The runtime's `mgc.go` calls its collector \"a concurrent mark and sweep\". What does concurrent mean there?",
+    "hint": "Lesson 24.",
+    "choices": [
+      {
+        "text": "Young values are collected separately from old ones",
+        "correct": false,
+        "why": "That would be generational, and the same file says the collector is non-generational."
+      },
+      {
+        "text": "Marking happens while the program keeps running",
+        "correct": true,
+        "why": "Right. The program stops twice per collection, briefly; in `gc 3` the mark's 0.29 ms ran beside it."
+      },
+      {
+        "text": "Live values are moved together to close the gaps",
+        "correct": false,
+        "why": "That would be compacting, and Go's collector never moves a value on the heap."
+      },
+      {
+        "text": "The whole program is paused while every pointer is followed",
+        "correct": false,
+        "why": "That is the frozen-program picture the trace refutes: the stops took 0.027 and 0.058 ms."
+      }
+    ]
+  },
+  {
+    "id": "ex-4j60mjqt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your module has a package `temp` that defines `type Celsius float64`. In `package main` of the same module you write `func (c temp.Celsius) Kelvin() float64`. What happens?",
+    "hint": "Lesson 25.",
+    "choices": [
+      {
+        "text": "It compiles, because both packages belong to your module",
+        "correct": false,
+        "why": "The rule is about the package, not the module: a method goes in the package that defines the type."
+      },
+      {
+        "text": "It is refused: `cannot define new methods on non-local type temp.Celsius`",
+        "correct": true,
+        "why": "Right. As with `time.Duration`, only the package that defines a type may give it methods; `main` can define its own type on top."
+      },
+      {
+        "text": "It compiles, because `Celsius` is a defined type and not an alias",
+        "correct": false,
+        "why": "Being defined matters only inside the package that defines it; elsewhere it is non-local all the same."
+      },
+      {
+        "text": "It compiles, and `Kelvin` is added to `temp` for every importer",
+        "correct": false,
+        "why": "Importing a package can never add a method to its types; that is the point of the rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-0g9enjnv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "`r.Area` without brackets is a method value of type `func() float64`. `Rect.Area`, named through the type, is a method ___ of type `func(main.Rect) float64`.",
+    "hint": "Lesson 25.",
+    "blanks": [
+      {
+        "accept": [
+          "expression"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5mz5hq5m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`Inc` has the receiver `*Counter`, and `list` is a `[]Counter` of two zero counters. After `for _, c := range list { c.Inc() }`, what does `fmt.Println(list)` print?",
+    "hint": "Lesson 26.",
+    "choices": [
+      {
+        "text": "`[{0} {0}]`",
+        "correct": true,
+        "why": "Right. `c` is a copy of each element; `c.Inc()` takes `&c` and counts that copy. `list[i].Inc()` would reach the elements."
+      },
+      {
+        "text": "`[{1} {1}]`, because a pointer method changes what it is called on",
+        "correct": false,
+        "why": "It changes the variable it is called on, and that variable is the loop's copy, not the element."
+      },
+      {
+        "text": "Nothing: `cannot call pointer method Inc on Counter`",
+        "correct": false,
+        "why": "That refusal is for a map element or a literal. `c` is an ordinary variable, so the automatic `&` applies."
+      },
+      {
+        "text": "`[{2} {2}]`, since `c` is the same variable on both turns",
+        "correct": false,
+        "why": "Even shared, it would be one copy counted twice, and the slice would still read zeros."
+      }
+    ]
+  },
+  {
+    "id": "ex-9k9fxnag",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Type `T` has `func (t T) A()` and `func (t *T) B()`, and `t` is a variable of type `T`. Which statements are true? Choose all that apply.",
+    "hint": "Lesson 26.",
+    "choices": [
+      {
+        "text": "The method set of `*T` holds both `A` and `B`",
+        "correct": true,
+        "why": "Yes. From an address the compiler can always reach the value and copy it for `A`."
+      },
+      {
+        "text": "`t.B()` compiles",
+        "correct": true,
+        "why": "Yes. `t` is a variable, so Go rewrites the call as `(&t).B()`."
+      },
+      {
+        "text": "The method set of `T` holds both `A` and `B`",
+        "correct": false,
+        "why": "Only `A`. The pointer method needs an address that a value in an interface does not have."
+      },
+      {
+        "text": "`var x interface{ B() } = t` compiles",
+        "correct": false,
+        "why": "Refused: `T does not implement … (method B has pointer receiver)`. `&t` would compile."
+      }
+    ]
+  },
+  {
+    "id": "ex-cr78ceb4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A `Grid` type holds a `[1000][1000]float64`, and all of its methods only read it. Going by lesson 26's four questions, which receiver should they have?",
+    "hint": "Lesson 26.",
+    "choices": [
+      {
+        "text": "A value receiver, since nothing changes the grid",
+        "correct": false,
+        "why": "Question 1 alone would allow it; question 3 overrules it, because every call would copy eight million bytes."
+      },
+      {
+        "text": "A pointer on every one of them, since each call would otherwise copy eight million bytes",
+        "correct": true,
+        "why": "Right. A type that carries a large array takes a pointer, and one kind of receiver per type keeps its method sets whole."
+      },
+      {
+        "text": "Value receivers on small methods and pointers on slow ones",
+        "correct": false,
+        "why": "The copy is of the receiver, not of the method's work, and mixing kinds leaves the value's method set incomplete."
+      },
+      {
+        "text": "Either: the compiler passes large receivers by pointer anyway",
+        "correct": false,
+        "why": "Nothing does that; lesson 22 measured 350,746 ns to pass an 8,000,000-byte array by value."
+      }
+    ]
+  },
+  {
+    "id": "ex-w25f7zkn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The build stops with `Disk does not implement Store (wrong type for method Get)`, then `have Get(string) []byte` and `want Get(string) ([]byte, error)`. What is wrong with `Disk`?",
+    "hint": "Lesson 27.",
+    "choices": [
+      {
+        "text": "It has no method called `Get` at all",
+        "correct": false,
+        "why": "That would read `missing method Get`. `wrong type` means the name is there."
+      },
+      {
+        "text": "It never declared that it implements `Store`",
+        "correct": false,
+        "why": "Nothing in Go declares that; a type fits by having the methods, and the message is about one of them."
+      },
+      {
+        "text": "Its `Get` has a pointer receiver and a value was passed",
+        "correct": false,
+        "why": "That case ends in `(method Get has pointer receiver)`, not in a `have` and a `want`."
+      },
+      {
+        "text": "Its `Get` returns only `[]byte`, where `Store` asks for `[]byte` and an `error`",
+        "correct": true,
+        "why": "Right. `have` is what the type declares and `want` what the interface asks; the results must match in type and order."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2n45yec",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`NewCache()` is declared to return a `Cache` interface listing `Get` and `Set`. The concrete type it builds also has a `Stats()` method. What does a caller of `NewCache` lose?",
+    "hint": "Lesson 27.",
+    "choices": [
+      {
+        "text": "Nothing: the interface holds the concrete value, so `c.Stats()` can still be called",
+        "correct": false,
+        "why": "Through a `Cache`, the compiler allows only what `Cache` lists; `Stats` is not in it."
+      },
+      {
+        "text": "`Stats`, which it can no longer call without a type assertion",
+        "correct": true,
+        "why": "Right. The same reason `os.Open` returns an `*os.File`: return the concrete type, and the caller keeps every method."
+      },
+      {
+        "text": "The ability to pass the cache where a `Cache` is asked for",
+        "correct": false,
+        "why": "That is the one thing it keeps. A concrete result could be passed there too, which is why returning one costs nothing."
+      },
+      {
+        "text": "Speed, since every call through an interface is checked at run time",
+        "correct": false,
+        "why": "Whether a value fits is checked at compile time, at the point of use; the cost lesson 27 names is the lost methods."
+      }
+    ]
+  },
+  {
+    "id": "ex-r27mc0t1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`{\"ids\": [1, 2]}` is decoded with `json.Unmarshal` into a `map[string]any`. What does `fmt.Printf(\"%T\", doc[\"ids\"])` print?",
+    "hint": "Lesson 28.",
+    "choices": [
+      {
+        "text": "`[]int`, since both numbers are whole",
+        "correct": false,
+        "why": "`Unmarshal` cannot know you meant integers; with no struct to say so, every JSON number is a `float64`."
+      },
+      {
+        "text": "`[]float64`, one float per number",
+        "correct": false,
+        "why": "Each element is a `float64`, but nothing promises the next one is, so the slice is of interfaces."
+      },
+      {
+        "text": "`[]interface {}`",
+        "correct": true,
+        "why": "Right. A JSON array becomes a `[]any`, and `%T` spells `any` by its long name, as `tags` printed."
+      },
+      {
+        "text": "`[]any`, the name the documentation uses",
+        "correct": false,
+        "why": "The type is that one, but `%T` prints `any` as `interface {}`, its long name."
+      }
+    ]
+  },
+  {
+    "id": "ex-z50e944s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`var buf *bytes.Buffer` is never assigned, and then `var w io.Writer = buf`. What does `fmt.Println(w != nil)` print?",
+    "hint": "Lesson 28.",
+    "choices": [
+      {
+        "text": "`false`, because `buf` is nil and `w` holds `buf`",
+        "correct": false,
+        "why": "That is the wrong picture: `w` holds a type as well, `*bytes.Buffer`, so it is not the interface's nil."
+      },
+      {
+        "text": "`true`",
+        "correct": true,
+        "why": "Right. `== nil` on an interface asks whether both words are empty, and the type word is filled; `%v` would still print `<nil>`."
+      },
+      {
+        "text": "Nothing: a nil pointer cannot be assigned to an interface",
+        "correct": false,
+        "why": "It can, and the compiler and `go vet` both accept it; that is why the mistake is hard to see."
+      },
+      {
+        "text": "It panics, because comparing reads through the nil pointer",
+        "correct": false,
+        "why": "Comparing an interface with nil reads no field; the panic comes only when something follows the pointer."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2tzwpax",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "`var a any = 2` and then `var n int = a` is refused with a message that ends by naming the way out: `need type ___`.",
+    "hint": "Lesson 28.",
+    "blanks": [
+      {
+        "accept": [
+          "assertion"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mj7hv42p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`var r io.Reader = strings.NewReader(\"text\")`, then `w, ok := r.(io.Writer)`. What happens?",
+    "hint": "Lesson 29.",
+    "choices": [
+      {
+        "text": "It panics, because a `*strings.Reader` cannot be written to",
+        "correct": false,
+        "why": "The single-result form would panic. With `ok` on the left, a wrong guess is an answer, not a stop."
+      },
+      {
+        "text": "It is refused as an impossible type assertion",
+        "correct": false,
+        "why": "`io.Writer` is an interface, and some value inside an `io.Reader` could have `Write`, so the compiler cannot rule it out."
+      },
+      {
+        "text": "`ok` is false, `w` is nil, and nothing panics",
+        "correct": true,
+        "why": "Right. The value inside has no `Write`, so the capability question answers no, as it did for `os.Stdout` and `Flush`."
+      },
+      {
+        "text": "`ok` is true, since every reader in `io` can also write",
+        "correct": false,
+        "why": "`io.Reader` promises `Read` and nothing else; a `*strings.Reader` reads a string and cannot be written to."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8w7mjjz",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 29's `kind` has `case nil`, `case int, float64`, `case string` and `default`. It is called on each of `nil`, `7`, `int64(7)`, `\"7\"`, `7.0` and a nil `*int`. How many of the six calls reach `default`?",
+    "hint": "Lesson 29.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-t1kp3ps8",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Lesson 30 compared four ways to write one job for several types. Match each to what the caller pays.",
+    "hint": "Lesson 30.",
+    "pairs": [
+      {
+        "left": "a copy per type, like `sort.Ints`",
+        "right": "nothing, if a copy exists for their type"
+      },
+      {
+        "left": "`any` and a type switch, like `SumAny`",
+        "right": "a copy into `[]any`, and a result in one fixed type"
+      },
+      {
+        "left": "an interface, like `sort.Sort`",
+        "right": "three methods on their type"
+      },
+      {
+        "left": "a type parameter, like `Sum[T]`",
+        "right": "nothing, and the result comes back in their own type"
+      }
+    ],
+    "right_distractors": [
+      "a panic on every call, even with the right type"
+    ]
+  },
+  {
+    "id": "ex-0n16f64q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A program needs a `Cache` that holds values of whatever type each caller picks, and a `Save` that writes its output wherever it is told, file or buffer. Going by lesson 30, which gets a type parameter?",
+    "hint": "Lesson 30.",
+    "choices": [
+      {
+        "text": "Both, since each works with several types",
+        "correct": false,
+        "why": "`Save` does something different per destination; that is behaviour, and an interface like `io.Writer` says it."
+      },
+      {
+        "text": "`Save`, and the cache stores `any`",
+        "correct": false,
+        "why": "That is the wrong way round: `any` in the cache brings back the run-time assertions of `SumAny`."
+      },
+      {
+        "text": "Neither: an interface serves a container just as well",
+        "correct": false,
+        "why": "An interface lists methods; a cache needs to give back the very type that went in, which is what `T` links."
+      },
+      {
+        "text": "The `Cache`; `Save` takes an `io.Writer`",
+        "correct": true,
+        "why": "Right. A container does the same thing whatever the type, so it is generic; writing is behaviour, so it takes an interface."
+      }
+    ]
+  },
+  {
+    "id": "ex-kp2sczax",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`func Biggest[T int | float64](a, b T) T` is called as `top := Biggest(3, 2.5)`. What is `T` for this call?",
+    "hint": "Lesson 31.",
+    "choices": [
+      {
+        "text": "`int`, taken from the first argument",
+        "correct": false,
+        "why": "That is what happened with the typed variable `count`. `3` is an untyped constant and has not chosen a type yet."
+      },
+      {
+        "text": "`float64`, the only type in the list both constants fit",
+        "correct": true,
+        "why": "Right. Untyped constants leave the compiler free to pick one type for both; `%T` printed `float64`, and `top` printed `3`."
+      },
+      {
+        "text": "None: the call is refused because the two arguments differ",
+        "correct": false,
+        "why": "That refusal was for `Biggest(count, price)`, two typed variables. Constants can still agree."
+      },
+      {
+        "text": "`any`, because the arguments are of mixed kinds",
+        "correct": false,
+        "why": "`T` may only be `int` or `float64` here, and it is one type per call."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjc3ehbr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`type Email string`, and `func Join[T string](xs []T) string`. What happens to `Join([]Email{\"a@x\", \"b@x\"})`?",
+    "hint": "Lesson 31.",
+    "choices": [
+      {
+        "text": "It compiles, since an `Email` is stored exactly like a `string`",
+        "correct": false,
+        "why": "Stored alike is not the same type: the constraint holds `string` itself, as `int | float64` held `float64` and refused `Celsius`."
+      },
+      {
+        "text": "It compiles, and `T` is inferred as `string`",
+        "correct": false,
+        "why": "Inference reads `T` off the argument, a `[]Email`, so `T` would be `Email`, which is then checked against the constraint."
+      },
+      {
+        "text": "It panics at run time, when the first `Email` is converted",
+        "correct": false,
+        "why": "A generic call is checked when compiling; nothing is left to convert or to fail at run time."
+      },
+      {
+        "text": "It is refused; writing the constraint as `~string` would accept it",
+        "correct": true,
+        "why": "Right. `~string` is every type whose underlying type is `string`, `Email` included."
+      }
+    ]
+  },
+  {
+    "id": "ex-9e8j068r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A module whose `go.mod` says `go 1.26` declares `func (s *Stack[T]) Map[U any](f func(T) U) *Stack[U]`, and it is built with go1.27.1. What happens?",
+    "hint": "Lesson 31.",
+    "choices": [
+      {
+        "text": "It is refused: `generic method requires go1.27 or later`",
+        "correct": true,
+        "why": "Right. A method with type parameters of its own needs a module at `go 1.27` or later, whatever compiler builds it."
+      },
+      {
+        "text": "It builds, because the compiler is go1.27.1",
+        "correct": false,
+        "why": "The `go` line decides which version of the language the module is written in, as it did for `new(10)` and generics under 1.17."
+      },
+      {
+        "text": "It builds, but `Map` cannot satisfy any interface",
+        "correct": false,
+        "why": "That is true of generic methods in a `go 1.27` module; here the method does not compile at all."
+      },
+      {
+        "text": "It is refused, because a method may never declare type parameters",
+        "correct": false,
+        "why": "Since Go 1.27 one may; the same file ran and printed `*main.Stack[string]` with the `go` line at 1.27.1."
+      }
+    ]
+  },
+  {
+    "id": "ex-ks0jhhg0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`func check(text string) error` declares `var le *LineError` at the top, sets it only when a line is bad, and ends with `return le`. Given good text, what does the caller's `err == nil` say?",
+    "hint": "Lesson 32.",
+    "choices": [
+      {
+        "text": "`true`, because the result type is `error`, which fixed `~/errors-nil`",
+        "correct": false,
+        "why": "The fix was `return nil` with an `error` result. Returning a nil `*LineError` variable still fills the type word."
+      },
+      {
+        "text": "`false`: an interface holding a `*LineError` is never nil",
+        "correct": true,
+        "why": "Right. An interface is nil only when both words are empty, and `return le` stores the type `*LineError` with a nil pointer."
+      },
+      {
+        "text": "Nothing: the compiler refuses a `*LineError` returned as an `error`",
+        "correct": false,
+        "why": "`*LineError` has `Error() string`, so it is an `error`; the compiler and `go vet` both accept this."
+      },
+      {
+        "text": "It panics on `return le`, because `le` is nil",
+        "correct": false,
+        "why": "Returning a nil pointer reads nothing through it; the panic in lesson 32 came later, from calling `Error`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bfmhr646",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "For a failed `strconv.Atoi`, `fmt.Println(err)` printed exactly the text that `err.___()` returns.",
+    "hint": "Lesson 32.",
+    "blanks": [
+      {
+        "accept": [
+          "Error"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nj0s167b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does `fmt.Println(errors.New(\"age %d is negative\"))` print?",
+    "hint": "Lesson 33.",
+    "choices": [
+      {
+        "text": "`age %!d(MISSING) is negative`",
+        "correct": false,
+        "why": "That is how `fmt` reports a verb with no argument. `errors.New` is not `fmt`, and reads no verbs at all."
+      },
+      {
+        "text": "`age %d is negative`, verb and all",
+        "correct": true,
+        "why": "Right. `errors.New` takes no verbs; a message with a value in it is a job for `fmt.Errorf`."
+      },
+      {
+        "text": "Nothing: the compiler refuses a verb in `errors.New`",
+        "correct": false,
+        "why": "The text is just a string to the compiler, and to `errors.New`."
+      },
+      {
+        "text": "`age 0 is negative`, with the zero value filled in",
+        "correct": false,
+        "why": "Nothing fills the `%d`; there is no argument and no formatting step."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbpmh1rf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does `fmt.Println(errors.Join(errors.New(\"disk full\"), nil))` print?",
+    "hint": "Lesson 33.",
+    "choices": [
+      {
+        "text": "`<nil>`, because one of the errors given is nil",
+        "correct": false,
+        "why": "`Join` returns nil only if every value is nil; here one is not."
+      },
+      {
+        "text": "`disk full` and then `<nil>` on a second line",
+        "correct": false,
+        "why": "Nil values are discarded before anything is joined, so there is no second line."
+      },
+      {
+        "text": "`disk full`",
+        "correct": true,
+        "why": "Right. Any nil error values are discarded, and one message has no newline to add."
+      },
+      {
+        "text": "It panics, because `Join` cannot wrap a nil error",
+        "correct": false,
+        "why": "The documentation says what happens to nil values: they are discarded, quietly."
+      }
+    ]
+  },
+  {
+    "id": "ex-2zy4mkd0",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "`j := errors.Join(fmt.Errorf(\"save: %w\", fs.ErrPermission), errors.New(\"disk full\"))`. Which of these are true? Choose all that apply.",
+    "hint": "Lesson 34.",
+    "choices": [
+      {
+        "text": "`errors.Is(j, fs.ErrPermission)` is `true`",
+        "correct": true,
+        "why": "Yes. `errors.Is` walks the whole tree, each branch in turn and each branch down its chain."
+      },
+      {
+        "text": "`errors.Unwrap(j)` returns `nil`",
+        "correct": true,
+        "why": "Yes. A joined error has `Unwrap() []error`, and `errors.Unwrap` only calls the single-error form."
+      },
+      {
+        "text": "`j == fs.ErrPermission` is `true`",
+        "correct": false,
+        "why": "`==` compares the outermost value, a `*errors.joinError`, which is not `fs.ErrPermission`."
+      },
+      {
+        "text": "`errors.Is(j, fs.ErrNotExist)` is `true`, since some file error is inside",
+        "correct": false,
+        "why": "It asks for that one error, and a permission problem is not a missing file."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfmfyf0b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A library must still build with Go 1.25, and needs the `*fs.PathError` out of a wrapped error. Which call does it use?",
+    "hint": "Lesson 34.",
+    "choices": [
+      {
+        "text": "`errors.AsType[*fs.PathError](err)`, the form the documentation prefers",
+        "correct": false,
+        "why": "Under go1.25.0 `go doc` answered `no symbol AsType in package errors`; it arrived in 1.26."
+      },
+      {
+        "text": "`var pe *fs.PathError` and `errors.As(err, &pe)`",
+        "correct": true,
+        "why": "Right. `errors.As` is the form in every module that had to build with an older Go."
+      },
+      {
+        "text": "`err.(*fs.PathError)`, a type assertion",
+        "correct": false,
+        "why": "An assertion asks about the outside value only, and outside is a `*fmt.wrapError`."
+      },
+      {
+        "text": "`errors.Is(err, &fs.PathError{})`",
+        "correct": false,
+        "why": "`errors.Is` looks for a value, and a fresh `&fs.PathError{}` is a pointer no chain contains; finding a type is `As`'s job."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ngf89nn",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A loop reads from an `io.Reader` with `n, err := r.Read(buf)`. Put what it does with each call's results in the order lesson 35's loop does it.",
+    "hint": "Lesson 35.",
+    "items": [
+      "use the `n` bytes in `buf[:n]`",
+      "leave the loop if `err == io.EOF`",
+      "report any other non-nil `err` as a failure and return"
+    ]
+  },
+  {
+    "id": "ex-bqavy548",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A package `auth` can fail because a token has expired. Callers must branch on that case and tell the user when the token expired. Going by lesson 35's table, what should `auth` return?",
+    "hint": "Lesson 35.",
+    "choices": [
+      {
+        "text": "A sentinel, `var ErrExpired = errors.New(\"token expired\")`",
+        "correct": false,
+        "why": "A sentinel answers yes or no; it carries no time, and reading one out of the message is what lesson 34 warned against."
+      },
+      {
+        "text": "An opaque error from `fmt.Errorf` with the time in its message",
+        "correct": false,
+        "why": "Opaque is for failures nobody branches on, and the caller here has to branch and read data."
+      },
+      {
+        "text": "An error type with the expiry time in a field, found with `errors.As`",
+        "correct": true,
+        "why": "Right. Callers branch and need data, which is the error-type row, as with `*fs.PathError`."
+      },
+      {
+        "text": "Nothing: an expired token is an answer, like zero pears in stock",
+        "correct": false,
+        "why": "Zero pears is a real count; an expired token means the call could not do what was asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-pfbbf0d9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A program checks every line of its input against a pattern that is written in its source and never changes. How should it compile that pattern, going by lesson 36?",
+    "hint": "Lesson 36.",
+    "choices": [
+      {
+        "text": "With `regexp.Compile`, returning the error up to `main` like any failure",
+        "correct": false,
+        "why": "That is for a pattern a user typed, which can be wrong on any run. A pattern in the source is wrong only through a bug."
+      },
+      {
+        "text": "`regexp.MustCompile`, in a package-level variable",
+        "correct": true,
+        "why": "Right. A mistake in it panics on the first run, before `main`, at the programmer's desk."
+      },
+      {
+        "text": "With `regexp.Compile` and the error discarded with `_`, since it cannot fail",
+        "correct": false,
+        "why": "It can fail, through a typo like `^[a-z+$`, and then the program would run with a nil `*Regexp`."
+      },
+      {
+        "text": "Inside a deferred `recover`, so a bad pattern cannot crash it",
+        "correct": false,
+        "why": "That would hide a bug; recover belongs inside a package's own panics or at the boundary of one job."
+      }
+    ]
+  },
+  {
+    "id": "ex-bw680dba",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`Sum`'s deferred function is changed to recover every panic and return it as the error, with no check on `parseError`. With the `s[0]` bug of `~/panic-sumbug`, what does `Sum(\"1++3\")` give its caller?",
+    "hint": "Lesson 36.",
+    "choices": [
+      {
+        "text": "A crash with `[recovered, repanicked]`, as before",
+        "correct": false,
+        "why": "That came from the line that panicked again; without the check, nothing panics again."
+      },
+      {
+        "text": "`4` and a nil error, skipping the empty term",
+        "correct": false,
+        "why": "A recovered function does not resume where it stopped; it returns what its named results hold."
+      },
+      {
+        "text": "An ordinary error reporting the index out of range, as if the input were bad",
+        "correct": true,
+        "why": "Right. The bug becomes a parsing error the caller shows a user, and no trace ever reaches anybody who would fix it."
+      },
+      {
+        "text": "Nothing: `recover` refuses runtime errors and lets them through",
+        "correct": false,
+        "why": "`recover` stops any panic it is called in; only fatal errors, like a stack overflow, escape it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jmf28m7",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`main` starts with `defer fmt.Println(\"deferred: cleaning up\")` and then calls `os.Exit(3)`. With what exit status does the program end?",
+    "hint": "Lesson 36.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-beph3dfj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A trace taken with `debug.Stack()` inside `price`'s deferred function has a frame named `main.price.func1()`. What is that frame?",
+    "hint": "Lesson 37.",
+    "choices": [
+      {
+        "text": "A closure with no name, so the compiler made one up",
+        "correct": true,
+        "why": "Right. A function literal has no name of its own, so the compiler gives it one built from the enclosing function."
+      },
+      {
+        "text": "The first call `price` made, where the panic happened",
+        "correct": false,
+        "why": "The panic happened in `unitPrice`, further down the trace, at line 22."
+      },
+      {
+        "text": "An inlined copy of `price`",
+        "correct": false,
+        "why": "Inlined frames are printed with `(...)` and no offset; this one is a call of its own."
+      },
+      {
+        "text": "A goroutine `price` started to recover the panic",
+        "correct": false,
+        "why": "The recover runs in the same goroutine; a recover in another goroutine could not stop this panic at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-56p77v88",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "`GOTRACEBACK=___` keeps the panic's message and exit status 2 and leaves out every goroutine's stack trace.",
+    "hint": "Lesson 37.",
+    "blanks": [
+      {
+        "accept": [
+          "none",
+          "0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bpn6csg4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`go mod graph` showed `golang.org/x/text` requiring `golang.org/x/tools`, yet `go.sum` had no line for `x/tools`. Why?",
+    "hint": "Lesson 38.",
+    "choices": [
+      {
+        "text": "`tidy` removes indirect requirements from `go.sum`",
+        "correct": false,
+        "why": "`tidy` keeps the hashes the build needs; it removed `x/text`'s lines only when nothing imported it."
+      },
+      {
+        "text": "No package the program imports lives in it, so it was never downloaded",
+        "correct": true,
+        "why": "Right. The empty cache of the first `tidy` received `x/text` and nothing else."
+      },
+      {
+        "text": "The checksum database had no record of `x/tools`",
+        "correct": false,
+        "why": "The database is asked only about a version being downloaded, and `x/tools` never was."
+      },
+      {
+        "text": "Minimal version selection skipped it, because v0.51.0 is newer",
+        "correct": false,
+        "why": "MVS picked v0.49.0 for the graph; it chooses versions, not whether a module is fetched."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6w452b8",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each message the go command printed in lesson 38 to its cause.",
+    "hint": "Lesson 38.",
+    "pairs": [
+      {
+        "left": "`malformed module path \"my accents\": invalid char ' '`",
+        "right": "a space in the name given to `go mod init`"
+      },
+      {
+        "left": "`package hello/greet is not in std`",
+        "right": "a module path whose first element has no dot"
+      },
+      {
+        "left": "`checksum mismatch` and `SECURITY ERROR`",
+        "right": "a hash in `go.sum` that the bytes do not match"
+      },
+      {
+        "left": "`inconsistent vendoring`",
+        "right": "`go.mod` and `vendor/modules.txt` naming different versions"
+      }
+    ],
+    "right_distractors": [
+      "a module proxy that could not be reached"
+    ]
+  },
+  {
+    "id": "ex-pwrsc2vw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A module has a `vendor` directory, but its `go.mod` still says `go 1.13`. Going by lesson 38, what does a plain `go build` do with `vendor`?",
+    "hint": "Lesson 38.",
+    "choices": [
+      {
+        "text": "Uses it, as it always does when the directory exists",
+        "correct": false,
+        "why": "Existing is half the condition; the other half is the `go` line."
+      },
+      {
+        "text": "Refuses to build until `go mod vendor` is run again",
+        "correct": false,
+        "why": "That refusal is for `go.mod` and `modules.txt` disagreeing about versions."
+      },
+      {
+        "text": "Does not use it by itself, since that needs a `go` line of 1.14 or later",
+        "correct": true,
+        "why": "Right. `modload/init.go` switches to `vendor` when the go line is at least 1.14 and the directory exists."
+      },
+      {
+        "text": "Deletes it, because old modules cannot vendor",
+        "correct": false,
+        "why": "The go command does not delete your files; the directory just goes unread."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwze8p8p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A file imports both `crypto/rand` and `math/rand/v2`, and the build stops with `rand redeclared in this block`. What fixes it?",
+    "hint": "Lesson 39.",
+    "choices": [
+      {
+        "text": "A dot import of one of them, so its names need no prefix",
+        "correct": false,
+        "why": "Both packages still clash, now through bare names, and every reader loses track of where `N` comes from."
+      },
+      {
+        "text": "A blank import, `_ \"crypto/rand\"`",
+        "correct": false,
+        "why": "`_` binds no name, so the file could no longer call `crypto/rand` at all."
+      },
+      {
+        "text": "An alias for one of them, like `crand \"crypto/rand\"`",
+        "correct": true,
+        "why": "Right. Both packages are called `rand`, and an alias written before the path gives one another name in this file."
+      },
+      {
+        "text": "Moving one import into a different file of the same package",
+        "correct": false,
+        "why": "That works only if no file needs both; the file that uses both still has the clash."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wsx8af2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A file has `. \"strings\"` among its imports and declares its own `func Title(s string) string`. What happens?",
+    "hint": "Lesson 39.",
+    "choices": [
+      {
+        "text": "The file's `Title` wins, as an inner name hides an outer one",
+        "correct": false,
+        "why": "A dot import puts `strings`' names into the file itself, the same level as your declaration, so there is nothing to hide behind."
+      },
+      {
+        "text": "It is refused: `Title already declared through dot-import of package strings`",
+        "correct": true,
+        "why": "Right. Every exported name of `strings` becomes one this file may not declare."
+      },
+      {
+        "text": "It compiles, and calls to `Title` go to `strings.Title`",
+        "correct": false,
+        "why": "The compiler will not pick between two declarations of one name; it refuses."
+      },
+      {
+        "text": "It compiles only if `Title` is unexported, as `title`",
+        "correct": false,
+        "why": "That would avoid the clash, but the question is the file as written, and it is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3ka5q98",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your module requires `example.com/lib v1.2.3`. The module has published v1.2.7, v1.3.0 and, under the path `example.com/lib/v2`, v2.0.0. Which version does `go get example.com/lib@patch` choose?",
+    "hint": "Lesson 40.",
+    "choices": [
+      {
+        "text": "v1.2.7",
+        "correct": true,
+        "why": "Right. `patch` is the newest with the same major and minor numbers as the one you have."
+      },
+      {
+        "text": "v1.3.0, the newest release of `example.com/lib`",
+        "correct": false,
+        "why": "That is what `latest` or `upgrade` would pick; `patch` keeps the minor number."
+      },
+      {
+        "text": "v2.0.0, since it is the newest of all three",
+        "correct": false,
+        "why": "v2 lives at another path, and no query on `example.com/lib` ever crosses a major version."
+      },
+      {
+        "text": "v1.2.3 again, because `patch` only reinstalls the version you have",
+        "correct": false,
+        "why": "`go get` installs nothing, and `patch` moves to the newest patch release when there is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqsxwqjp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Once the code that used a module is deleted, `go get github.com/mattn/go-runewidth@___` removes the requirement from `go.mod`.",
+    "hint": "Lesson 40.",
+    "blanks": [
+      {
+        "accept": [
+          "none"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

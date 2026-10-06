@@ -1,0 +1,396 @@
+{
+  "ex-jqher51k": {
+    "prompt": "`func (c Counter) Reset() { c.n = 0 }` é chamada como `c.Reset()` sobre um `Counter` cujo `n` vale 5. Quanto vale `c.n` depois?",
+    "hint": "O que um receptor por valor guarda?",
+    "choices": [
+      {
+        "text": "0, porque `Reset` zerou o campo",
+        "why": "Ela zerou o campo da sua própria cópia. O `c` de quem chamou nunca foi entregue ao método."
+      },
+      {
+        "text": "5",
+        "why": "Isso. O receptor é uma cópia feita para a chamada, como `IncByValue` mostrou: contou até 1 e `c.n` ficou em 0."
+      },
+      {
+        "text": "Nada: atribuir a um campo de um receptor por valor é erro de compilação",
+        "why": "O compilador aceita sem dizer nada, e é isso que torna o bug fácil de escrever."
+      },
+      {
+        "text": "Entra em pânico, já que o método escreve numa cópia que não existe mais",
+        "why": "A cópia existe durante a chamada inteira; só é descartada quando o método retorna."
+      }
+    ]
+  },
+  "ex-qsss1g7q": {
+    "prompt": "`c` é uma variável do tipo `Counter`, e `Inc` tem o receptor `*Counter`. Por que `c.Inc()` compila?",
+    "hint": "O que se pode tomar de uma variável?",
+    "choices": [
+      {
+        "text": "`Inc` roda sobre uma cópia de `c`, como um método por valor rodaria",
+        "why": "Então `c.n` não teria chegado a 2. O método recebeu o endereço do próprio `c`."
+      },
+      {
+        "text": "Um método de ponteiro aceita qualquer valor do seu tipo, então nenhum endereço entra",
+        "why": "Um elemento de map e um literal também são valores do tipo, e a mesma chamada sobre eles foi recusada."
+      },
+      {
+        "text": "O compilador a reescreve como `(&c).Inc()`",
+        "why": "Isso. `c` é uma variável, então tem endereço, e o compilador o toma por você."
+      },
+      {
+        "text": "Go converte o `Counter` em `*Counter` copiando-o para um lugar novo",
+        "why": "Um ponteiro para uma cópia perderia a mudança do mesmo jeito que um receptor por valor; `c.n` chegou a 2."
+      }
+    ]
+  },
+  "ex-px3z1xvq": {
+    "prompt": "Um receptor é o primeiro ___ do método, e como todos os outros recebe uma cópia do que lhe é dado.",
+    "hint": "O `%T` imprimiu `func(main.Counter)` para `Counter.IncByValue`.",
+    "blanks": [
+      {
+        "accept": [
+          "parâmetro",
+          "parametro",
+          "argumento"
+        ]
+      }
+    ]
+  },
+  "ex-0wk0nh37": {
+    "prompt": "`Inc` tem o receptor `*Counter`. Quais destas chamadas compilam? Escolha todas as que se aplicam.",
+    "hint": "Quais delas têm um endereço que Go entrega?",
+    "choices": [
+      {
+        "text": "`c.Inc()`, em que `c` é uma variável local `Counter`",
+        "why": "Sim. Uma variável tem endereço, e o compilador escreve `(&c).Inc()`."
+      },
+      {
+        "text": "`list[0].Inc()`, em que `list` é um `[]Counter`",
+        "why": "Sim. Um elemento de slice mora num array que não sai do lugar; a linha 20 compilou."
+      },
+      {
+        "text": "`byName[\"ana\"].Inc()`, em que `byName` é um `map[string]Counter`",
+        "why": "Recusada: as entradas de um map se movem quando ele cresce, então Go nunca entrega o endereço delas."
+      },
+      {
+        "text": "`Counter{}.Inc()`",
+        "why": "Recusada: um literal nunca foi guardado numa variável, então não há nada cujo endereço possa ser tomado."
+      }
+    ]
+  },
+  "ex-3w3h3405": {
+    "prompt": "`IncByValue` tem receptor por valor. Depois de `p := &c`, o que `p.IncByValue()` entrega ao método?",
+    "hint": "O programa imprimiu 3 dentro e 2 depois.",
+    "choices": [
+      {
+        "text": "Uma cópia do `Counter` para onde `p` aponta",
+        "why": "Isso. A chamada é `(*p).IncByValue()`, e um receptor por valor copia o que recebe."
+      },
+      {
+        "text": "O ponteiro `p`, então desta vez a contagem chega a `c`",
+        "why": "`c.n` ficou em 2 depois da chamada, então o método não escreveu através de `p`."
+      },
+      {
+        "text": "Uma cópia do endereço em `p`",
+        "why": "Isso é o que um receptor ponteiro receberia. O método é declarado em `Counter`, então recebe um `Counter`."
+      },
+      {
+        "text": "Nada: um método por valor não pode ser chamado através de um ponteiro",
+        "why": "Pode, e o programa chamou: o compilador segue o ponteiro por você."
+      }
+    ]
+  },
+  "ex-f657sr6k": {
+    "prompt": "Quais métodos estão no conjunto de métodos de `*Money`?",
+    "hint": "Leia a segunda linha da tabela.",
+    "choices": [
+      {
+        "text": "Só os declarados com o receptor `*Money`, o próprio tipo ponteiro",
+        "why": "A partir de um endereço o compilador alcança o valor, então os métodos por valor também estão nele."
+      },
+      {
+        "text": "Só os declarados com o receptor `Money`",
+        "why": "Esse é o conjunto de métodos de `Money`. O do ponteiro tem esses e mais."
+      },
+      {
+        "text": "Todos os declarados com o receptor `Money` e com `*Money`",
+        "why": "Isso. O ponteiro tem os dois tipos; o valor tem só os seus."
+      },
+      {
+        "text": "Todo método de todo tipo do pacote",
+        "why": "Um conjunto de métodos pertence a um tipo: métodos declarados em outros tipos nunca estão nele."
+      }
+    ]
+  },
+  "ex-de8hqeeb": {
+    "prompt": "Com `func (m *Money) String() string`, por que `fmt.Println(price)` imprimiu `{1990}`?",
+    "hint": "O que o `fmt` recebeu, e o que ele pergunta a isso?",
+    "choices": [
+      {
+        "text": "`Println` só chama `String` com o verbo `%s` de `Printf`",
+        "why": "O `Println` imprimiu `R$ 19,90` para `&price`, então ele chama `String` quando o valor tem um."
+      },
+      {
+        "text": "Recebeu um `Money`, e `String` não está no conjunto de métodos de `Money`",
+        "why": "Isso. O método pertence a `*Money`, então o valor não satisfez `fmt.Stringer`."
+      },
+      {
+        "text": "O método `String` devolveu um erro, então o `fmt` recorreu aos campos",
+        "why": "`String` devolve uma string e nenhum erro; `price.String()` imprimiu `R$ 19,90`."
+      },
+      {
+        "text": "O `fmt` só consegue chamar métodos de tipos da biblioteca padrão",
+        "why": "Com receptor por valor o mesmo `Money` imprimiu `R$ 19,90` três vezes."
+      }
+    ]
+  },
+  "ex-7w0vcesh": {
+    "prompt": "`Money` tem `func (m *Money) String() string`, e `price` é uma variável `Money`. Ligue cada linha ao que ela faz.",
+    "hint": "A seção 03 executou cada uma delas.",
+    "pairs": [
+      {
+        "left": "`fmt.Println(price)`",
+        "right": "imprime os campos, `{1990}`"
+      },
+      {
+        "left": "`fmt.Println(&price)`",
+        "right": "imprime `R$ 19,90`"
+      },
+      {
+        "left": "`price.String()`",
+        "right": "compila, com `&price` tomado por você"
+      },
+      {
+        "left": "`var s fmt.Stringer = price`",
+        "right": "recusada: o método tem receptor ponteiro"
+      }
+    ],
+    "right_distractors": [
+      "entra em pânico em tempo de execução"
+    ]
+  },
+  "ex-04cf1f8h": {
+    "prompt": "`Temp` tem `func (t Temp) String() string` e `t` é um `Temp`. `var s fmt.Stringer = &t` compila?",
+    "hint": "É o contrário do caso de `Money`.",
+    "choices": [
+      {
+        "text": "Não: um método por valor não pode ser alcançado a partir de um ponteiro",
+        "why": "`p.IncByValue()` alcançou um na seção 02; o compilador segue o ponteiro."
+      },
+      {
+        "text": "Não: precisa de `var s fmt.Stringer = *&t`",
+        "why": "Isso guardaria um `Temp`, o que também funciona, mas o ponteiro nunca foi o problema."
+      },
+      {
+        "text": "Sim: o conjunto de métodos de `*Temp` inclui todos os métodos de `Temp`",
+        "why": "Isso. Com receptor por valor, `t` e `&t` satisfazem, como `&price` fez quando `String` passou a receber valor."
+      },
+      {
+        "text": "Só se `Temp` também declarar um método ponteiro com o mesmo nome",
+        "why": "Um tipo não pode ter dois métodos com o mesmo nome, e aqui não precisa."
+      }
+    ]
+  },
+  "ex-72syds5a": {
+    "prompt": "Por que Go deixa os métodos de ponteiro fora do conjunto de métodos de um valor?",
+    "hint": "Pense na cópia que o `fmt` guarda.",
+    "choices": [
+      {
+        "text": "Porque chamar através de um ponteiro é mais lento do que chamar sobre um valor",
+        "why": "Velocidade não tem nada a ver; a regra é sobre o que uma mudança alcançaria."
+      },
+      {
+        "text": "O que fica numa interface é uma cópia sem endereço que sirva, então mudá-la não alcançaria ninguém",
+        "why": "Isso. Seria o bug da seção 02, invisível; Go recusa em vez disso."
+      },
+      {
+        "text": "Porque o coletor de lixo não consegue seguir um ponteiro guardado numa interface",
+        "why": "`&price` foi guardado numa interface e imprimiu sem problema; o coletor o segue como qualquer outro ponteiro."
+      },
+      {
+        "text": "É uma sobra de antes do Go 1, mantida por compatibilidade",
+        "why": "Ela decorre do que uma cópia é, e seria a regra certa numa linguagem projetada hoje."
+      }
+    ]
+  },
+  "ex-52mm2znd": {
+    "prompt": "Uma struct tem um campo `sync.Mutex`. Que receptor os métodos dela devem ter?",
+    "hint": "O que é a cópia de uma trava?",
+    "choices": [
+      {
+        "text": "Ponteiro, em todo método",
+        "why": "Isso. A cópia de uma trava é outra trava, e o `go vet` recusou `Hits` por copiar uma."
+      },
+      {
+        "text": "Valor nos métodos que só leem, ponteiro nos outros",
+        "why": "`Hits` só lia, e foi exatamente o método que o `go vet` apontou."
+      },
+      {
+        "text": "Valor em todo método, para que cada chamada tenha a sua própria trava",
+        "why": "Uma trava só sua não protege nada: mais ninguém a segura."
+      },
+      {
+        "text": "Qualquer um: o programa imprimiu a contagem certa com receptor por valor",
+        "why": "Imprimiu 2 só porque nada mais rodava ao mesmo tempo; o `go vet` recusou mesmo assim."
+      }
+    ]
+  },
+  "ex-2x625b68": {
+    "prompt": "`time.Time` tem 43 métodos com receptor por valor e quatro com ponteiro. O que os quatro têm em comum?",
+    "hint": "Leia os nomes: GobDecode, UnmarshalBinary, UnmarshalJSON, UnmarshalText.",
+    "choices": [
+      {
+        "text": "São os métodos mais lentos, então um ponteiro poupa tempo",
+        "why": "Um `Time` é pequeno; o receptor é escolhido pelo que o método faz com ele."
+      },
+      {
+        "text": "Foram acrescentados depois e ninguém os trocou de volta",
+        "why": "São ponteiros de propósito, e um receptor por valor os tornaria inúteis."
+      },
+      {
+        "text": "Leem um `Time` e o transformam em bytes",
+        "why": "Esse é o outro sentido, `MarshalJSON` e os irmãos, que recebem valor."
+      },
+      {
+        "text": "Cada um decodifica bytes no receptor, então cada um deve sobrescrevê-lo",
+        "why": "Isso. É a pergunta 1: um método que muda o receptor precisa de ponteiro."
+      }
+    ]
+  },
+  "ex-0hepwj09": {
+    "prompt": "Quais destes tipos devem receber receptores ponteiro? Escolha todos os que se aplicam.",
+    "hint": "Faça as quatro perguntas da seção 04 a cada um.",
+    "choices": [
+      {
+        "text": "Um `Cart` cujo método `Add` acrescenta ao campo `Items`",
+        "why": "Sim: `Add` muda o receptor, então todo método de `Cart` recebe ponteiro."
+      },
+      {
+        "text": "Um `Point{X, Y float64}` cujos métodos devolvem pontos novos",
+        "why": "Pequeno e usado como número, sem nada mudado no lugar: valor, como `time.Time`."
+      },
+      {
+        "text": "Um `Cache` com um `sync.Mutex` e um map",
+        "why": "Sim: uma trava não pode ser copiada, faça o que fizer cada método."
+      },
+      {
+        "text": "Um `Frame` que carrega um array `[1 << 20]byte`",
+        "why": "Sim: toda chamada com receptor por valor copiaria um mebibyte, um tamanho que a lição 22 mediu na casa das centenas de microssegundos."
+      }
+    ]
+  },
+  "ex-362hkavm": {
+    "prompt": "`Len` e `String` de `strings.Builder` só leem o builder, e mesmo assim recebem `*Builder`. O que um receptor por valor neles quebraria?",
+    "hint": "A documentação dele diz o que não pode acontecer com ele.",
+    "choices": [
+      {
+        "text": "Nada: só rodariam um pouco mais devagar",
+        "why": "O custo não é velocidade. Cada chamada copiaria um valor que o tipo diz não poder ser copiado."
+      },
+      {
+        "text": "Toda chamada copiaria um `Builder` não vazio, o que a documentação proíbe",
+        "why": "Isso. \"Do not copy a non-zero Builder\" é a pergunta 2, então todo método recebe ponteiro."
+      },
+      {
+        "text": "`Len` sempre devolveria 0, como `IncByValue` sempre deixava 0",
+        "why": "Uma cópia guarda o mesmo comprimento do original; ler uma cópia dá o número certo."
+      },
+      {
+        "text": "O compilador recusaria um tipo que mistura os dois tipos de receptor",
+        "why": "Misturar compila, como `time.Time` mostra; é conselho, não regra da linguagem."
+      }
+    ]
+  },
+  "ex-15zcs9bs": {
+    "prompt": "O `go vet` imprimiu `Hits passes lock by value: example.com/stats.Stats contains sync.Mutex`. Qual é a correção?",
+    "hint": "A linha 19 é o receptor.",
+    "choices": [
+      {
+        "text": "Nada: o programa imprimiu a contagem certa, 2",
+        "why": "Estava certo só porque nada mais rodava ao mesmo tempo; com travas, esse é o caso que importa."
+      },
+      {
+        "text": "Tirar `Lock` e `Unlock` de `Hits`, já que ele só lê",
+        "why": "Ler enquanto outra parte do programa escreve é justamente para o que a trava existe."
+      },
+      {
+        "text": "Declará-lo `func (s *Stats) Hits() int`",
+        "why": "Isso. Com receptor ponteiro o método usa a trava de quem chamou em vez de uma cópia."
+      },
+      {
+        "text": "Fazer o campo `mu *sync.Mutex`, para que as cópias o compartilhem",
+        "why": "Calaria o `go vet`, mas `Hits` ainda leria `hits` de uma cópia; o receptor é o que está errado."
+      }
+    ]
+  },
+  "ex-xtkqbc90": {
+    "prompt": "Com o `Counter` da seção 02, um programa executa `var c Counter`, depois `c.Inc()`, `c.IncByValue()`, `c.Inc()`, `p := &c` e `p.IncByValue()`. Quanto vale `c.n` no fim?",
+    "hint": "Conte só as chamadas que recebem um endereço.",
+    "unit": "contagem"
+  },
+  "ex-heewxsk8": {
+    "prompt": "`String` é declarado em `*Money`. Ponha em ordem o que acontece durante `fmt.Println(price)`.",
+    "hint": "Começa pelo argumento e termina no que é impresso.",
+    "items": [
+      "`price` é copiado para um argumento do tipo `any`",
+      "o `fmt` pergunta se esse valor satisfaz `fmt.Stringer`",
+      "não satisfaz, porque `String` não está no conjunto de métodos de `Money`",
+      "o `fmt` imprime os campos, `{1990}`"
+    ]
+  },
+  "ex-q3jf4s5c": {
+    "prompt": "`func (m *Money) Add(c int64)` soma centavos, e `prices` é um `map[string]Money`. `prices[\"tea\"].Add(50)` é recusado. Que mudança faz a chamada compilar e atualizar o map?",
+    "hint": "O que o map precisa guardar para que o elemento dele já seja um endereço?",
+    "choices": [
+      {
+        "text": "Dar a `Add` um receptor por valor",
+        "why": "Compilaria, e somaria os centavos a uma cópia: o map nunca mudaria."
+      },
+      {
+        "text": "Escrever `(&prices[\"tea\"]).Add(50)`",
+        "why": "Isso pede o endereço de um elemento de map, e a lição 23 viu isso recusado."
+      },
+      {
+        "text": "Trocar o tipo do elemento por um ponteiro, como `byName` fez",
+        "why": "Isso. Com `map[string]*Money` cada elemento é um endereço, e `Add` escreve através dele."
+      },
+      {
+        "text": "Chamar através de uma variável: `m := prices[\"tea\"]; m.Add(50)`",
+        "why": "Compila, mas `m` é uma cópia do elemento; sem guardar `m` de volta o map não muda."
+      }
+    ]
+  },
+  "ex-70f7032t": {
+    "prompt": "Complete a mensagem do compilador: `Money does not implement fmt.Stringer (method String has ___ receiver)`.",
+    "hint": "A seção 03 a imprimiu.",
+    "blanks": [
+      {
+        "accept": [
+          "pointer"
+        ]
+      }
+    ]
+  },
+  "ex-gh7nfs5t": {
+    "prompt": "`Account` tem `func (a Account) Balance() int64` e `func (a *Account) Deposit(c int64)`, e `acct` é um `Account`. Uma interface lista só `Balance() int64`, outra só `Deposit(int64)`. Qual pode guardar o próprio `acct`?",
+    "hint": "Qual método está no conjunto de métodos de `Account`?",
+    "choices": [
+      {
+        "text": "As duas, já que `acct.Deposit(50)` compila",
+        "why": "Essa chamada compila porque `acct` é uma variável; um valor guardado numa interface não tem endereço."
+      },
+      {
+        "text": "Só a que lista `Balance`; a outra precisa de `&acct`",
+        "why": "Isso. Um tipo misturado satisfaz uma interface ou não dependendo de qual método ela nomeia."
+      },
+      {
+        "text": "Nenhuma, porque um tipo com receptores misturados não satisfaz interface alguma",
+        "why": "Misturar compila; `Balance` está no conjunto de métodos de `Account` e isso basta para a primeira."
+      },
+      {
+        "text": "A que lista `Deposit`, porque os métodos de ponteiro também pertencem ao valor",
+        "why": "É o contrário: ao conjunto de métodos do valor faltam os métodos de ponteiro."
+      }
+    ]
+  }
+}

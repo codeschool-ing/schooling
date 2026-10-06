@@ -1,0 +1,567 @@
+[
+  {
+    "id": "ex-w0v9wy08",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `labels := Map(ages, strconv.Itoa)`, where does the compiler find the type for `U`?",
+    "hint": "`Map` is declared `func Map[T, U any](xs []T, f func(T) U) []U`.",
+    "choices": [
+      {
+        "text": "In `labels`, the variable the result goes into",
+        "correct": false,
+        "why": "Inference never looks outside the call; `labels` gets its type from the result, not the other way round."
+      },
+      {
+        "text": "In the type of `strconv.Itoa`, `func(int) string`",
+        "correct": true,
+        "why": "Right. It matches `func(T) U` with `T` as `int` and `U` as `string`."
+      },
+      {
+        "text": "Nowhere, so `U` becomes `any`",
+        "correct": false,
+        "why": "A type parameter that cannot be inferred is an error, never a silent `any`; and `%T` printed `[]string`."
+      },
+      {
+        "text": "In the import of `strconv`, which declares string types",
+        "correct": false,
+        "why": "An import says which package a name comes from; the type comes from the function's signature."
+      }
+    ]
+  },
+  {
+    "id": "ex-x20gq4d5",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the compiler do with `var labels []string = Make(2)`, where `func Make[T any](n int) []T`?",
+    "hint": "Where does `T` appear in `Make`'s parameters?",
+    "choices": [
+      {
+        "text": "Compiles, with `T` read from the type of `labels`",
+        "correct": false,
+        "why": "That is the common belief the section names; line 19 of `~/generic2-infer` refutes it."
+      },
+      {
+        "text": "Compiles, and `Make` returns an empty `[]string`",
+        "correct": false,
+        "why": "It never gets as far as running: `T` has no value, so there is no `Make` to call."
+      },
+      {
+        "text": "Refuses it: `cannot infer T`",
+        "correct": true,
+        "why": "Right. `T` is only in the result, and inference reads the arguments; write `Make[string](2)`."
+      },
+      {
+        "text": "Compiles with `T` as `any`, then fails to assign `[]any` to `labels`",
+        "correct": false,
+        "why": "There is no default to `any`; the first and only error is `cannot infer T`."
+      }
+    ]
+  },
+  {
+    "id": "ex-hv5xt3nv",
+    "version": 1,
+    "section": "functions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Filling in a type parameter, as `Make[string](2)` does by naming `string` at the call, is called explicit ___.",
+    "hint": "The section bolds the word.",
+    "blanks": [
+      {
+        "accept": [
+          "instantiation"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-89dcjj8a",
+    "version": 1,
+    "section": "functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `Biggest(count, price)` refused, with `count` an `int` and `price` a `float64`?",
+    "hint": "`Biggest(3, 2.5)` compiled two lines earlier.",
+    "choices": [
+      {
+        "text": "`Biggest` cannot compare two `float64` values",
+        "correct": false,
+        "why": "It compared `3` and `2.5` as `float64` and printed `3 float64`."
+      },
+      {
+        "text": "`count` fixed `T` as `int`, and `price` is another type",
+        "correct": true,
+        "why": "Right: `type float64 of price does not match inferred type int for T`. One `T` per call, and Go converts nothing for you."
+      },
+      {
+        "text": "Typed variables cannot be passed to a generic function, only constants",
+        "correct": false,
+        "why": "`Biggest(float64(count), price)` passed two typed values and ran."
+      },
+      {
+        "text": "The compiler picked `float64` for both, then refused `count`",
+        "correct": false,
+        "why": "That choice is only possible for untyped constants; here the first argument already had a type, `int`."
+      }
+    ]
+  },
+  {
+    "id": "ex-yny72nzq",
+    "version": 1,
+    "section": "functions",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `Map` and `Make` as declared in `~/generic2`, which of these lines compile? Choose every one that does.",
+    "hint": "Is there an argument to read each type parameter from, or is it written?",
+    "choices": [
+      {
+        "text": "`toText := Map[int, string]`",
+        "correct": true,
+        "why": "Yes: every type filled in, so it is an ordinary function value."
+      },
+      {
+        "text": "`Map[int](ages, strconv.Itoa)`",
+        "correct": true,
+        "why": "Yes: `T` is written and `U` is still read off `strconv.Itoa`."
+      },
+      {
+        "text": "`names := Make(2)`",
+        "correct": false,
+        "why": "No: `cannot infer T`, since `T` appears only in the result."
+      },
+      {
+        "text": "`toText := Map`",
+        "correct": false,
+        "why": "No: `cannot use generic function Map without instantiation`."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2vfcrwq",
+    "version": 1,
+    "section": "functions",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`func Map[T, U any](xs []T, f func(T) U) []U` is called as `Map[int](ages, strconv.Itoa)`. How many of its type parameters did the compiler infer?",
+    "hint": "The brackets at the call fill them in order, and may stop early.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "type parameters"
+  },
+  {
+    "id": "ex-70v04mhk",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the constraint after a type parameter's name, such as `comparable` or `int | float64`?",
+    "hint": "The section says it in its first bold sentence.",
+    "choices": [
+      {
+        "text": "Bracket syntax with no relation to interfaces",
+        "correct": false,
+        "why": "That is how it looks, and the section starts by correcting it: `Number` was declared with `type … interface`."
+      },
+      {
+        "text": "A list of types every argument is converted into",
+        "correct": false,
+        "why": "Nothing is converted; a `Celsius` came back as `main.Celsius`."
+      },
+      {
+        "text": "An interface, read as the set of types allowed for `T`",
+        "correct": true,
+        "why": "Right. The body is allowed whatever every type in that set supports."
+      },
+      {
+        "text": "A check run on each value as the program runs",
+        "correct": false,
+        "why": "Constraints are checked by the compiler; `Index[T any]` was refused before anything ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfp21x0r",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`func Index[T any](xs []T, v T) int` uses `x == v` and is refused. Where is the error reported, and why?",
+    "hint": "The message was on line 7.",
+    "choices": [
+      {
+        "text": "Inside `Index`: some type in the set `any` describes has no `==`",
+        "correct": true,
+        "why": "Right. The body is checked once, against the whole set, before any call."
+      },
+      {
+        "text": "At the call, because strings cannot be compared with `==`",
+        "correct": false,
+        "why": "Strings compare fine; with `comparable` the same call printed `1`."
+      },
+      {
+        "text": "At the call, because the slice and the value have different types",
+        "correct": false,
+        "why": "`[]string` and `string` make `T` a `string` consistently; the error was in the body, line 7."
+      },
+      {
+        "text": "Inside `Index`, because `==` never works on a type parameter",
+        "correct": false,
+        "why": "It works whenever the constraint allows it: `Index[T comparable]` compiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-pm784vqv",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Sum[T int | float64]` refuses a `[]Celsius`. What change lets `Sum` take it and still return a `Celsius`?",
+    "hint": "The compiler's message suggested it.",
+    "choices": [
+      {
+        "text": "Convert each reading to `float64` before calling `Sum`",
+        "correct": false,
+        "why": "That compiles, but the result is a `float64`, and the unit lesson 10 attached is gone."
+      },
+      {
+        "text": "Replace the union with `any`",
+        "correct": false,
+        "why": "Then `total += x` is refused, because `+` is not defined on every type `any` holds."
+      },
+      {
+        "text": "Write the constraint as `~int | ~float64`",
+        "correct": true,
+        "why": "Right. `~float64` holds every type whose underlying type is `float64`, and the total printed `62 main.Celsius`."
+      },
+      {
+        "text": "Give `Celsius` a method named `Add`",
+        "correct": false,
+        "why": "A union lists types, not methods; a method changes nothing about whether `Celsius` is in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5g8739v",
+    "version": 1,
+    "section": "constraints",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a constraint, `___float64` is the set of every type whose underlying type is `float64`, `Celsius` included.",
+    "hint": "One character, the one the compiler said was possibly missing.",
+    "blanks": [
+      {
+        "accept": [
+          "~"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-msc0p08q",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these interfaces can be the type of an ordinary variable?",
+    "hint": "What did `var n Number = 3` say?",
+    "choices": [
+      {
+        "text": "`interface{ ~int | ~float64 }`",
+        "correct": false,
+        "why": "A union makes it constraint-only: `cannot use type Number outside a type constraint`."
+      },
+      {
+        "text": "`interface{ int }`, a union of one type",
+        "correct": false,
+        "why": "One type is still a type element, and any type element makes the interface a constraint only."
+      },
+      {
+        "text": "`interface{ String() string }`",
+        "correct": true,
+        "why": "Right. An interface of methods only works both ways, as `fmt.Stringer` did in `ShowAll` and `ShowEach`."
+      },
+      {
+        "text": "`comparable`",
+        "correct": false,
+        "why": "Its documentation says it may only be used as a type parameter constraint, not as the type of a variable."
+      }
+    ]
+  },
+  {
+    "id": "ex-qpev9cjg",
+    "version": 1,
+    "section": "constraints",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each constraint to the set of types it allows.",
+    "hint": "The figure draws three of them as nested boxes.",
+    "pairs": [
+      {
+        "left": "`any`",
+        "right": "every type, so the body can do very little"
+      },
+      {
+        "left": "`comparable`",
+        "right": "the types that `==` works on"
+      },
+      {
+        "left": "`int | float64`",
+        "right": "exactly `int` and `float64`"
+      },
+      {
+        "left": "`~int | ~float64`",
+        "right": "those two, and types like `Celsius` built on them"
+      }
+    ],
+    "right_distractors": [
+      "only the types that have a `String` method"
+    ]
+  },
+  {
+    "id": "ex-77dne1p6",
+    "version": 1,
+    "section": "types",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `Pop` declare `var zero T` instead of returning a literal when the stack is empty?",
+    "hint": "Which literal would be zero for a `string`, an `int` and a pointer at once?",
+    "choices": [
+      {
+        "text": "Go requires every `return` to name a variable",
+        "correct": false,
+        "why": "`return top, true` returns a variable and a constant; there is no such rule."
+      },
+      {
+        "text": "No literal is zero for every type, and `var` gives `T`'s own",
+        "correct": true,
+        "why": "Right. `0`, `\"\"` and `nil` each fit some types; `var zero T` fits all of them, and gave `\"\"` for a `Stack[string]`."
+      },
+      {
+        "text": "`nil` would work just as well for these stacks; `var` is only the convention people follow",
+        "correct": false,
+        "why": "`nil` is not a `string` or an `int`, so `return nil, false` would be refused for those stacks."
+      },
+      {
+        "text": "To reserve room in memory for the next `Push`",
+        "correct": false,
+        "why": "`zero` is a local value that is returned and forgotten; `Push` uses `append`."
+      }
+    ]
+  },
+  {
+    "id": "ex-jy4b1d0g",
+    "version": 1,
+    "section": "types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `var s Stack` refused, when `var words Stack[string]` is fine?",
+    "hint": "Read the first error of `~/generic2-stackbad`.",
+    "choices": [
+      {
+        "text": "A generic type's zero value cannot be used, so it needs `&Stack{}`",
+        "correct": false,
+        "why": "`var words Stack[string]` used the zero value and pushed onto it; `&Stack{}` is refused for the same reason as `var s Stack`."
+      },
+      {
+        "text": "`Stack` is not a type until its type parameter is filled in",
+        "correct": true,
+        "why": "Right: `cannot use generic type Stack[T any] without instantiation`. There is nothing to infer `T` from."
+      },
+      {
+        "text": "`Stack` has no exported fields",
+        "correct": false,
+        "why": "Exported names matter between packages, lesson 39; this is all one package."
+      },
+      {
+        "text": "`T` defaults to `any`, and an `any` stack must be written `Stack[any]`",
+        "correct": false,
+        "why": "There is no default; a type argument is always written for a generic type."
+      }
+    ]
+  },
+  {
+    "id": "ex-0v5028ps",
+    "version": 1,
+    "section": "types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Stack[T any]` needs a `Contains` that uses `==`. Which repair keeps a `Stack[[]int]` legal?",
+    "hint": "Who pays for the stricter constraint in each repair?",
+    "choices": [
+      {
+        "text": "Declare the type as `Stack[T comparable]`",
+        "correct": false,
+        "why": "That makes the method legal and forbids every stack of slices, `Stack[[]int]` included."
+      },
+      {
+        "text": "Write the receiver as `(s *Stack[T comparable])`",
+        "correct": false,
+        "why": "The receiver does not repeat the constraint, and writing one there is a syntax error."
+      },
+      {
+        "text": "Make it a function: `func Contains[T comparable](s *Stack[T], v T) bool`",
+        "correct": true,
+        "why": "Right. The stack stays `any`, and only `Contains` asks for more; a `Stack[[]int]` exists and cannot be passed to it."
+      },
+      {
+        "text": "Compare `any(x) == any(v)` inside the method",
+        "correct": false,
+        "why": "That compiles and moves the failure to run time: comparing two `[]int` held in `any` panics with `comparing uncomparable type []int`."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfb8w1cc",
+    "version": 1,
+    "section": "types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the compiler say to `type Mapper interface { Map[U any](f func(int) U) *Stack[U] }`?",
+    "hint": "A method may have type parameters. May an interface's method?",
+    "choices": [
+      {
+        "text": "Nothing: it compiles when the `go` line is 1.27 or later",
+        "correct": false,
+        "why": "The `go` line governs methods with type parameters on types; in an interface they are refused whatever it says."
+      },
+      {
+        "text": "`interface method must have no type parameters`",
+        "correct": true,
+        "why": "Right, and `undefined: U` follows, because the brackets that would have declared it were refused."
+      },
+      {
+        "text": "It compiles, but only for `U` constrained by `any`",
+        "correct": false,
+        "why": "The constraint in the capture was `any`, and it was still refused."
+      },
+      {
+        "text": "It compiles if the interface itself is declared `Mapper[U any]`",
+        "correct": false,
+        "why": "That would be a type parameter of the interface, a different thing; the method itself still may not declare one."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5wj3xwx",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these constraints from the smallest set of types to the largest.",
+    "hint": "The figure in section 03 draws three of them nested; the fourth holds everything.",
+    "items": [
+      "`int | float64`",
+      "`~int | ~float64`",
+      "`cmp.Ordered`",
+      "`any`"
+    ]
+  },
+  {
+    "id": "ex-6z518z36",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`type IDs []int`. What type does `slices.Clone(ids)` return for `ids` of type `IDs`?",
+    "hint": "`func Clone[S ~[]E, E any](s S) S`.",
+    "choices": [
+      {
+        "text": "`[]int`, because `Clone` works on plain slices",
+        "correct": false,
+        "why": "That is what `CloneFlat` did with `[]E`; `Clone` returns `S`, the caller's own type."
+      },
+      {
+        "text": "`IDs`",
+        "correct": true,
+        "why": "Right. `S` is `IDs`, whose underlying type is `[]int`, and the result is an `S`, as `Names` came back as `main.Names`."
+      },
+      {
+        "text": "`[]any`, since `E` is constrained by `any`",
+        "correct": false,
+        "why": "`any` is the constraint on `E`, not its value; `E` is `int` here."
+      },
+      {
+        "text": "Nothing: `IDs` is refused, since `S` must be exactly `[]E`",
+        "correct": false,
+        "why": "Exactly `[]E` would be a union without `~`; the `~` is there to admit types like `IDs`."
+      }
+    ]
+  },
+  {
+    "id": "ex-qds4rpe3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`*Stack[int]` has `Map[U any](f func(int) U) *Stack[U]`. Does it satisfy `interface { Map(f func(int) string) *Stack[string] }`?",
+    "hint": "Read the `have` and `want` lines.",
+    "choices": [
+      {
+        "text": "Yes, with `U` inferred as `string` from the interface",
+        "correct": false,
+        "why": "Inference reads a call's arguments; an interface is not a call, and the compiler printed `wrong type for method Map`."
+      },
+      {
+        "text": "Yes, as long as the module's `go` line says 1.27 or later",
+        "correct": false,
+        "why": "The `go` line allows the method to exist; it does not make it satisfy anything. The capture ran under 1.27.1."
+      },
+      {
+        "text": "No: a method with type parameters satisfies no interface method",
+        "correct": true,
+        "why": "Right. An interface asks for one signature a value has now; a generic method is a family that exists only per call."
+      },
+      {
+        "text": "Only after an explicit conversion to the interface type",
+        "correct": false,
+        "why": "A conversion to an interface needs the same method set; it cannot add what the assignment lacked."
+      }
+    ]
+  },
+  {
+    "id": "ex-3x9mh5md",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A method cannot narrow `Stack[T any]`'s constraint, so a search using `==` becomes a function: `func Contains[T ___](s *Stack[T], v T) bool`.",
+    "hint": "The predeclared constraint for types that `==` works on.",
+    "blanks": [
+      {
+        "accept": [
+          "comparable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
