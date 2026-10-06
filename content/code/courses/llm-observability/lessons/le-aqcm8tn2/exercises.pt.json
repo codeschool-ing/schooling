@@ -1,0 +1,469 @@
+{
+  "ex-tr0ze6zz": {
+    "prompt": "O que uma plataforma de observabilidade de LLM sabe que um backend de rastreamento genérico não sabe?",
+    "choices": [
+      {
+        "text": "Quanto tempo cada span levou",
+        "why": "Todo backend de rastreamento sabe isso."
+      },
+      {
+        "text": "Quais spans pertencem a qual trace",
+        "why": "Essa é a definição de trace, conhecida por todos."
+      },
+      {
+        "text": "O que é uma chamada a modelo",
+        "why": "Certo: o prompt, a resposta, os tokens e o preço, e em volta usuários, sessões, notas, conjuntos de dados e prompts."
+      },
+      {
+        "text": "Se um span terminou em erro",
+        "why": "O status faz parte de todo span."
+      }
+    ]
+  },
+  "ex-2sqa896p": {
+    "prompt": "Um span de busca sem entrada é ilegível no tree.py. O que acontece com ele no Langfuse?",
+    "choices": [
+      {
+        "text": "O Langfuse preenche a entrada a partir do prompt",
+        "why": "Ele mostra o que recebeu; nada mais."
+      },
+      {
+        "text": "O Langfuse recusa spans sem atributo de entrada",
+        "why": "Ele aceitou todo span que o assistente mandou."
+      },
+      {
+        "text": "Ele é fundido na geração que vem depois",
+        "why": "As observações continuam separadas."
+      },
+      {
+        "text": "Continua ilegível, numa tela mais bonita",
+        "why": "Certo. Decidir o que registrar é trabalho da aplicação."
+      }
+    ]
+  },
+  "ex-w5x1d248": {
+    "prompt": "Associe cada contêiner do Langfuse ao que ele guarda ou faz.",
+    "pairs": [
+      {
+        "left": "clickhouse",
+        "right": "traces, observações e notas"
+      },
+      {
+        "left": "postgres",
+        "right": "projetos, chaves, preços de modelos"
+      },
+      {
+        "left": "redis",
+        "right": "a fila entre web e worker"
+      },
+      {
+        "left": "minio",
+        "right": "cada lote, como chegou"
+      }
+    ],
+    "right_distractors": [
+      "os pesos do modelo"
+    ]
+  },
+  "ex-rrsxazxc": {
+    "prompt": "Por que as capturas esperam vinte segundos depois de cada reprodução antes de perguntar à API do Langfuse?",
+    "choices": [
+      {
+        "text": "O worker arquiva os spans depois",
+        "why": "Certo: entram na fila, são arquivados, e só então aparecem. Mandado agora não está na API agora."
+      },
+      {
+        "text": "Porque o Langfuse limita cada projeto a um pedido a cada vinte segundos",
+        "why": "Não existe esse limite; a API respondeu na hora."
+      },
+      {
+        "text": "Porque a reprodução continua rodando ao fundo",
+        "why": "O replay.py termina antes de o prompt voltar."
+      },
+      {
+        "text": "Porque o ClickHouse reinicia depois de cada lote",
+        "why": "Ele fica de pé o tempo todo."
+      }
+    ]
+  },
+  "ex-j8txdqmf": {
+    "prompt": "Uma equipe pequena sem ninguém para cuidar de bancos precisa manter o texto dos clientes dentro da empresa. O que segue desta aula?",
+    "choices": [
+      {
+        "text": "Usar um serviço hospedado, já que rodar seis contêineres é demais",
+        "why": "Dados vêm primeiro: hospedado significa que o texto sai."
+      },
+      {
+        "text": "Auto-hospedar, e aceitar que rodá-lo agora é trabalho de alguém",
+        "why": "Certo. A questão dos dados decide; o trabalho de operação tem de ser arranjado."
+      },
+      {
+        "text": "Parar de rastrear",
+        "why": "Isso joga fora tudo o que as aulas 1 a 5 construíram."
+      },
+      {
+        "text": "Mandar só as contagens de tokens a um serviço hospedado e não guardar mais nada",
+        "why": "Aí o texto necessário para depurar não fica em lugar nenhum."
+      }
+    ]
+  },
+  "ex-08z4mg6p": {
+    "prompt": "Do que o assistente precisou para começar a mandar os spans ao Langfuse?",
+    "choices": [
+      {
+        "text": "O SDK do Langfuse em cada função",
+        "why": "Nenhum código mudou."
+      },
+      {
+        "text": "Reescrever os spans no formato do Langfuse",
+        "why": "O Langfuse lê OpenTelemetry diretamente."
+      },
+      {
+        "text": "Duas variáveis de ambiente",
+        "why": "Certo: o endpoint OTLP e o cabeçalho. O telemetry.py acrescenta o exportador quando o endpoint está definido."
+      },
+      {
+        "text": "Um exportador novo escrito para o curso",
+        "why": "É o exportador OTLP do próprio SDK."
+      }
+    ]
+  },
+  "ex-fjk3nzzc": {
+    "prompt": "Por que o Langfuse classificou o span raiz ask como GENERATION?",
+    "choices": [
+      {
+        "text": "Porque era o span mais longo",
+        "why": "A duração não entra na classificação."
+      },
+      {
+        "text": "Porque é a raiz",
+        "why": "Raízes são spans a menos que algo diga o contrário."
+      },
+      {
+        "text": "Porque o Langfuse trata todo trace como uma geração",
+        "why": "Ele listou embed e search como outros tipos."
+      },
+      {
+        "text": "Porque leva gen_ai.request.model",
+        "why": "Certo. Um span com modelo parece chamada a modelo para uma ferramenta que lê a convenção ao pé da letra."
+      }
+    ]
+  },
+  "ex-rnvbvtdd": {
+    "prompt": "O Langfuse achou a sessão mas não o usuário. Por quê?",
+    "choices": [
+      {
+        "text": "O pseudônimo estava criptografado",
+        "why": "Era um valor comum; o problema era o nome."
+      },
+      {
+        "text": "session.id é um nome que ele lê; user.hash não",
+        "why": "Certo. Nomes desconhecidos ficam como metadados e não servem para nada."
+      },
+      {
+        "text": "A reprodução não tinha usuários",
+        "why": "Todo pedido leva um usuário."
+      },
+      {
+        "text": "Usuários precisam de uma conta no Langfuse cada um",
+        "why": "O usuário de um trace é só um valor."
+      }
+    ]
+  },
+  "ex-j1z7w5eq": {
+    "prompt": "O Langfuse mostra horários em UTC. Um trace às 03:03 na tela dele aconteceu a que hora em São Paulo? Dê a hora, de 0 a 23.",
+    "unit": "h"
+  },
+  "ex-ta3pe6jg": {
+    "prompt": "Por que os nomes do Langfuse são acrescentados por um processador na borda em vez de escritos pelo assistant.py?",
+    "choices": [
+      {
+        "text": "São nomes de uma ferramenta",
+        "why": "Certo: ruído em qualquer outro lugar. Um adaptador pequeno mantém a escolha da ferramenta reversível."
+      },
+      {
+        "text": "Porque o assistant.py não consegue definir atributos depois de começar",
+        "why": "Ele define o app.reply no fim de todo pedido."
+      },
+      {
+        "text": "Porque processadores rodam mais rápido",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Porque o Langfuse os proíbe em código de aplicação",
+        "why": "Ele os documenta exatamente para esse uso."
+      }
+    ]
+  },
+  "ex-d4ehjsq2": {
+    "prompt": "Por que o processador conseguiu copiar a pergunta para langfuse.trace.input mas não a resposta para a saída?",
+    "choices": [
+      {
+        "text": "A resposta é longa demais para um atributo",
+        "why": "Ela já está em app.reply."
+      },
+      {
+        "text": "A resposta vem no fim",
+        "why": "Certo. O on_start vê aquilo com que o span foi criado, e no fim o span é somente leitura no SDK de Python."
+      },
+      {
+        "text": "O Langfuse ignora saídas vindas do OpenTelemetry",
+        "why": "Ele lê langfuse.trace.output quando presente."
+      },
+      {
+        "text": "A resposta é limpa",
+        "why": "A limpeza muda o texto; não impede a cópia."
+      }
+    ]
+  },
+  "ex-nkqw5ey1": {
+    "prompt": "Os traces de sábado continuaram custando 0 depois de os preços serem acrescentados. Por quê?",
+    "choices": [
+      {
+        "text": "Os traces de sábado não tinham gerações",
+        "why": "A maioria chamou o modelo."
+      },
+      {
+        "text": "O preço de sábado era zero no prices.json",
+        "why": "Era 1,50 e 6,00."
+      },
+      {
+        "text": "Tráfego de fim de semana é gratuito",
+        "why": "Essa regra não existe em lugar nenhum do laboratório."
+      },
+      {
+        "text": "O Langfuse dá preço a uma geração quando a recebe",
+        "why": "Certo. Acrescentar um preço depois não reprecifica o que está guardado."
+      }
+    ]
+  },
+  "ex-6k0b3ymt": {
+    "prompt": "O total do Langfuse para a sexta foi 0,101728 e o do costs.py 0,10177554. O que era a diferença?",
+    "choices": [
+      {
+        "text": "Os embeddings, para os quais o Langfuse não tinha preço",
+        "why": "Certo. A diferença diz o nome do que faltava a um dos dois."
+      },
+      {
+        "text": "Arredondamento no ponto flutuante do Langfuse",
+        "why": "Arredondamento não produz cinco milionésimos de dólar com tantos pedidos."
+      },
+      {
+        "text": "Traces de sábado vazando para a sexta",
+        "why": "Os de sábado custam 0 no Langfuse e não estavam no spans.jsonl."
+      },
+      {
+        "text": "O corte de preço não sendo aplicado",
+        "why": "Os dois sistemas aplicaram o preço de outubro."
+      }
+    ]
+  },
+  "ex-sgxttcnz": {
+    "prompt": "Por que os polegares puderam ser mandados como notas com um laço simples?",
+    "choices": [
+      {
+        "text": "O Langfuse os associa aos traces pelo horário",
+        "why": "Ele associa pelo id de trace que recebe."
+      },
+      {
+        "text": "As notas foram ligadas só às sessões",
+        "why": "Foram ligadas a traces."
+      },
+      {
+        "text": "Já tinham o id de trace",
+        "why": "Certo, e o id de trace do OpenTelemetry é o do Langfuse. Ligados por id desde o começo."
+      },
+      {
+        "text": "Polegares são uma função embutida do Langfuse que dispensa ids",
+        "why": "Toda nota diz a que se refere."
+      }
+    ]
+  },
+  "ex-qk2n7jvx": {
+    "prompt": "Um valor ligado a um trace no Langfuse, como um polegar ou o veredito de um juiz, se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "nota",
+          "score"
+        ]
+      }
+    ]
+  },
+  "ex-8skhxmxc": {
+    "prompt": "Por que o SDK do LangSmith foi apontado para um gravador em vez de para o LangSmith?",
+    "choices": [
+      {
+        "text": "O SDK não consegue falar com o LangSmith a partir de Python",
+        "why": "É um SDK de Python feito para isso."
+      },
+      {
+        "text": "O serviço é hospedado",
+        "why": "Certo, e auto-hospedar é para clientes corporativos. O que o gravador guarda é exatamente o que teria saído."
+      },
+      {
+        "text": "O gravador é mais rápido",
+        "why": "Velocidade nunca foi o motivo."
+      },
+      {
+        "text": "O LangSmith só aceita programas LangChain",
+        "why": "O @traceable funciona em qualquer função."
+      }
+    ]
+  },
+  "ex-yaben2zm": {
+    "prompt": "O que o SDK do LangSmith mandou sem limpeza? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "O e-mail do cliente, nas entradas",
+        "why": "Certo."
+      },
+      {
+        "text": "A resposta inteira do modelo",
+        "why": "Certo."
+      },
+      {
+        "text": "As variáveis de ambiente que o configuraram",
+        "why": "Certo."
+      },
+      {
+        "text": "A chave da API da OpenAI",
+        "why": "Nada nos corpos gravados a trazia."
+      }
+    ]
+  },
+  "ex-krq6m2sh": {
+    "prompt": "Nos termos do LangSmith, o que são um post e um patch do mesmo run?",
+    "choices": [
+      {
+        "text": "Duas novas tentativas de um pedido",
+        "why": "Nada falhou; os dois fazem parte de todo run."
+      },
+      {
+        "text": "Dois runs diferentes que compartilham um id por acaso",
+        "why": "Mesmo id, mesmo run, de propósito."
+      },
+      {
+        "text": "O começo do run com as entradas, e o fim com as saídas",
+        "why": "Certo. Um run é mandado duas vezes."
+      },
+      {
+        "text": "Um envio e a cópia comprimida",
+        "why": "A compressão foi desligada."
+      }
+    ]
+  },
+  "ex-a8t7qxz7": {
+    "prompt": "Com hide_inputs igual a redact(str(v)), o que deu errado com as mensagens do run do modelo?",
+    "choices": [
+      {
+        "text": "O endereço continuou lá",
+        "why": "Ele foi trocado por [email]."
+      },
+      {
+        "text": "O run nem foi mandado",
+        "why": "O sent.py o imprimiu."
+      },
+      {
+        "text": "A resposta do modelo foi limpa também",
+        "why": "O hide_outputs rodou, mas a resposta não tinha nada a remover."
+      },
+      {
+        "text": "A lista de mensagens virou o texto de uma lista",
+        "why": "Certo. Um gancho cuidadoso limpa dentro da estrutura."
+      }
+    ]
+  },
+  "ex-a8kze69q": {
+    "prompt": "Qual pergunta esta aula põe primeiro ao escolher entre as duas plataformas?",
+    "choices": [
+      {
+        "text": "Para onde os dados têm permissão de ir",
+        "why": "Certo. Todo trace leva o que os clientes digitaram."
+      },
+      {
+        "text": "Qual tem mais funcionalidades",
+        "why": "Funcionalidades vêm por último."
+      },
+      {
+        "text": "Qual a equipe já usou antes",
+        "why": "Familiaridade não está na lista."
+      },
+      {
+        "text": "Qual é mais barata por trace",
+        "why": "Preço importa depois de dados e operação."
+      }
+    ]
+  },
+  "ex-z3ecwner": {
+    "prompt": "O que tornou a escolha de ferramenta reversível nesta aula?",
+    "choices": [
+      {
+        "text": "A função de exportação do Langfuse",
+        "why": "Exportar ajuda a sair de uma ferramenta; não mantém o código livre dela."
+      },
+      {
+        "text": "Rodar as duas ferramentas ao mesmo tempo",
+        "why": "Rodar as duas dobra o trabalho e não decide nada."
+      },
+      {
+        "text": "Usar LangChain em todo lugar",
+        "why": "O assistente nem usa LangChain."
+      },
+      {
+        "text": "OpenTelemetry no código, e os nomes da ferramenta num adaptador pequeno",
+        "why": "Certo. Os mesmos spans foram para um arquivo e para o Langfuse."
+      }
+    ]
+  },
+  "ex-nr16d9n6": {
+    "prompt": "Coloque em ordem o caminho de um span até a API do Langfuse.",
+    "items": [
+      "o exportador o manda por OTLP ao web",
+      "o web guarda o lote no armazenamento de objetos e enfileira uma tarefa",
+      "o worker o arquiva no ClickHouse",
+      "a API o devolve"
+    ]
+  },
+  "ex-7ngjgdcd": {
+    "prompt": "Associe cada palavra à ferramenta que a usa para a mesma ideia.",
+    "pairs": [
+      {
+        "left": "observation",
+        "right": "a palavra do Langfuse para span"
+      },
+      {
+        "left": "run",
+        "right": "a palavra do LangSmith para span"
+      },
+      {
+        "left": "generation",
+        "right": "um span que o Langfuse toma por chamada a modelo"
+      }
+    ],
+    "right_distractors": [
+      "a palavra do OpenTelemetry para resposta"
+    ]
+  },
+  "ex-jm743hy3": {
+    "prompt": "Um relatório por dia do Langfuse e um do bill.py discordam a cada meia-noite. Qual está certo?",
+    "choices": [
+      {
+        "text": "O Langfuse, porque calcula o custo na ingestão",
+        "why": "Quando o custo é calculado não tem nada a ver com o dia em que cai."
+      },
+      {
+        "text": "O bill.py, porque usa Decimal",
+        "why": "Precisão não é a diferença aqui."
+      },
+      {
+        "text": "Os dois",
+        "why": "Certo. Um conta dias em UTC e o outro em São Paulo: mesmos eventos, meias-noites diferentes."
+      },
+      {
+        "text": "Nenhum: um deles perdeu spans",
+        "why": "Os totais bateram, a menos dos embeddings."
+      }
+    ]
+  }
+}

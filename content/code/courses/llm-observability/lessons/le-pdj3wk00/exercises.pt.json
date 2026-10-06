@@ -1,0 +1,429 @@
+{
+  "ex-er2zjvzs": {
+    "prompt": "Por que uma chamada a modelo é o caso mais difícil para a regra de que corpos de pedido ficam fora dos logs?",
+    "choices": [
+      {
+        "text": "Os fornecedores de modelo exigem que o cliente registre todo prompt",
+        "why": "Nenhum fornecedor exige isso; é uma decisão de quem roda a aplicação."
+      },
+      {
+        "text": "Prompts são grandes demais para caber numa linha de log comum",
+        "why": "O tamanho não é a questão; o que eles carregam é."
+      },
+      {
+        "text": "O OpenTelemetry não registra um corpo de pedido a não ser num span",
+        "why": "Ele registra texto tanto em logs quanto em spans."
+      },
+      {
+        "text": "O corpo é o que se observa",
+        "why": "Certo. Sem a pergunta, um trace não consegue explicar uma resposta errada."
+      }
+    ]
+  },
+  "ex-xbffgnrw": {
+    "prompt": "Associe cada trabalho a por quanto tempo ele precisa do texto.",
+    "pairs": [
+      {
+        "left": "depurar uma resposta ruim",
+        "right": "até a reclamação ser encerrada"
+      },
+      {
+        "left": "contar e alertar",
+        "right": "nunca: números bastam"
+      },
+      {
+        "left": "avaliar qualidade",
+        "right": "até a avaliação rodar"
+      }
+    ],
+    "right_distractors": [
+      "enquanto a conta existir"
+    ]
+  },
+  "ex-2jnk04vq": {
+    "prompt": "Uma equipe limpa a mensagem do cliente antes de montar o prompt, e registra a resposta do modelo como ela vem. O que ainda pode vazar?",
+    "choices": [
+      {
+        "text": "Nada, já que a entrada estava limpa",
+        "why": "As fontes recuperadas e a resposta nunca foram limpas."
+      },
+      {
+        "text": "A chave da API, que a resposta repete",
+        "why": "A chave não está no que o modelo lê, então ele não pode repeti-la."
+      },
+      {
+        "text": "O que as fontes recuperadas carregam, pela resposta",
+        "why": "Certo. O prompt carrega mais que o cliente escreveu, e a resposta pode repetir qualquer parte."
+      },
+      {
+        "text": "O id de trace do span",
+        "why": "Um id de trace não é dado pessoal; identifica um pedido."
+      }
+    ]
+  },
+  "ex-bbjvnrxk": {
+    "prompt": "Quantos dos 217 pedidos de order da semana traziam algo que o redact() removeria?",
+    "unit": "pedidos"
+  },
+  "ex-nrczygz8": {
+    "prompt": "A varredura não achou nada a remover nos pedidos de help e achou algo em todos os de order. O que isso sugere para uma política de retenção?",
+    "choices": [
+      {
+        "text": "Decidir por funcionalidade: o risco se concentra",
+        "why": "Certo. Dados pessoais se concentram onde a funcionalidade é sobre uma pessoa em particular."
+      },
+      {
+        "text": "Tratar todo trace igual, já que a média é baixa",
+        "why": "A média esconde que uma funcionalidade concentra quase todo o risco."
+      },
+      {
+        "text": "Parar de registrar a funcionalidade help, que não tem nada que valha guardar",
+        "why": "O texto dela é o que permite depurar uma resposta errada, e não traz dado pessoal."
+      },
+      {
+        "text": "Limpar só a funcionalidade summary, usada pela equipe",
+        "why": "A funcionalidade order também trouxe dado pessoal em todo pedido."
+      }
+    ]
+  },
+  "ex-c0s04z7r": {
+    "prompt": "O que o scan.py não contou, embora esteja nas mensagens de order?",
+    "choices": [
+      {
+        "text": "Endereços de e-mail",
+        "why": "Ele contou 107."
+      },
+      {
+        "text": "Nomes",
+        "why": "Certo. Um nome não tem forma para um padrão achar."
+      },
+      {
+        "text": "Números de pedido",
+        "why": "Ele contou 341."
+      },
+      {
+        "text": "Telefones escritos com código do país",
+        "why": "Ele contou 110 desses."
+      }
+    ]
+  },
+  "ex-y9scq4ez": {
+    "prompt": "Por que um marcador como [email] é melhor que uma fileira de asteriscos?",
+    "choices": [
+      {
+        "text": "É mais curto, então o span fica pequeno",
+        "why": "O tamanho não é o ponto; o que ele mantém é."
+      },
+      {
+        "text": "É reversível por quem tem a chave",
+        "why": "Nada em [email] pode ser revertido; o endereço sumiu."
+      },
+      {
+        "text": "Mantém o fato de que um endereço foi dado",
+        "why": "Certo. A frase continua legível e o fato sobrevive sem o valor."
+      },
+      {
+        "text": "Ferramentas de rastreamento rejeitam asteriscos em atributos",
+        "why": "Elas aceitam qualquer texto."
+      }
+    ]
+  },
+  "ex-t2ke4dzv": {
+    "prompt": "O que é um canário, num teste de remoção?",
+    "choices": [
+      {
+        "text": "Uma mensagem real de cliente guardada para testar os padrões",
+        "why": "Isso guardaria exatamente o que o teste existe para proteger."
+      },
+      {
+        "text": "O primeiro span de cada trace",
+        "why": "Isso é a raiz, não um canário."
+      },
+      {
+        "text": "Um padrão que casa com tudo",
+        "why": "Isso removeria todo atributo e não testaria nada."
+      },
+      {
+        "text": "Um valor enviado de propósito que nunca deve aparecer nos spans exportados",
+        "why": "Certo. A ausência dele é a evidência de que a remoção está ligada."
+      }
+    ]
+  },
+  "ex-wex60ewh": {
+    "prompt": "Uma equipe decide guardar os spans como estão e limpá-los toda noite no backend. Qual problema isso NÃO tem?",
+    "choices": [
+      {
+        "text": "Cópias feitas antes da limpeza guardam o original",
+        "why": "Tem este: filas, buffers e backups feitos antes da noite."
+      },
+      {
+        "text": "Os traces não podem ser buscados pelo id",
+        "why": "Certo, esse está bem: o id de trace fica intacto de qualquer jeito. Os outros três são reais."
+      },
+      {
+        "text": "O backend não sabe do atributo novo do mês que vem",
+        "why": "Tem este também."
+      },
+      {
+        "text": "Quem pergunta o que se guarda tem direito às cópias sujas também",
+        "why": "Tem este também."
+      }
+    ]
+  },
+  "ex-hqw43dg8": {
+    "prompt": "Onde o leak.py põe a sua segunda rede?",
+    "choices": [
+      {
+        "text": "Num invólucro em volta do exportador",
+        "why": "Certo. Todo span passa por ali, seja quem for que o fez."
+      },
+      {
+        "text": "No prompt, antes da chamada",
+        "why": "Essa é a primeira rede, e só cobre o que o assistente escreve."
+      },
+      {
+        "text": "No backend de rastreamento",
+        "why": "A essa altura o original já saiu do processo."
+      },
+      {
+        "text": "No SDK da OpenAI",
+        "why": "O SDK fica intacto; o OpenInference o instrumenta e o invólucro fica depois."
+      }
+    ]
+  },
+  "ex-fsex43z1": {
+    "prompt": "Por que o invólucro constrói um span novo em vez de editar os atributos do que recebe?",
+    "choices": [
+      {
+        "text": "Editar mudaria o id de trace de todo span que tocasse",
+        "why": "Atributos e ids são separados; a cópia mantém os ids como estão."
+      },
+      {
+        "text": "Spans novos são mais rápidos de exportar que os antigos",
+        "why": "Velocidade não tem nada a ver."
+      },
+      {
+        "text": "O OpenInference trava os spans que escreve para ninguém mais ler",
+        "why": "Nada é travado; qualquer exportador os recebe."
+      },
+      {
+        "text": "Um span terminado é somente leitura no SDK de Python",
+        "why": "Certo. Então o exportador passa adiante uma cópia limpa."
+      }
+    ]
+  },
+  "ex-5jyngtm2": {
+    "prompt": "Sem o invólucro, quantas vezes o endereço de e-mail apareceu no raw.jsonl?",
+    "unit": "vezes"
+  },
+  "ex-vmpvjr5g": {
+    "prompt": "Associe cada frase ao que o redact() fez com ela.",
+    "pairs": [
+      {
+        "left": "my email is joana dot prado at example dot com",
+        "right": "deixou como estava"
+      },
+      {
+        "left": "Is ISBN 978-0-14-143951-8 in stock?",
+        "right": "removeu o livro como cartão"
+      },
+      {
+        "left": "card 4111 1111 1111 1111, expires 09/28",
+        "right": "removeu o cartão e manteve a validade"
+      }
+    ],
+    "right_distractors": [
+      "removeu o nome"
+    ]
+  },
+  "ex-hyzsk96g": {
+    "prompt": "O Presidio removeu o número de pedido MG-20481937. Por que isso não prova que ele trata números de pedido?",
+    "choices": [
+      {
+        "text": "A nota dele foi baixa demais para contar, abaixo do limiar da aula",
+        "why": "Teve 0,85, bem acima de 0,5."
+      },
+      {
+        "text": "Ele o rotulou como data, então a remoção foi sorte",
+        "why": "Certo. Outro formato de número de pedido pode não parecer data."
+      },
+      {
+        "text": "O Presidio remove todo número que vê, seja qual for",
+        "why": "Ele deixou a validade com 0,5, e o ISBN."
+      },
+      {
+        "text": "Ele só o removeu na segunda execução",
+        "why": "Ele o removeu nas duas execuções."
+      }
+    ]
+  },
+  "ex-sga3ed60": {
+    "prompt": "Subir o limiar do Presidio de 0 para 0,5 manteve o ISBN. O que mais isso mudou?",
+    "choices": [
+      {
+        "text": "O telefone, com 0,40, agora vaza",
+        "why": "Certo. Não existe limiar que remova tudo o que é pessoal e nada mais."
+      },
+      {
+        "text": "Mais nada; o limiar só afeta ISBNs",
+        "why": "Ele vale para todo achado, de qualquer tipo."
+      },
+      {
+        "text": "Os nomes deixaram de ser achados",
+        "why": "Tiveram 0,85 e continuaram sendo achados."
+      },
+      {
+        "text": "O endereço de e-mail deixou de ser achado",
+        "why": "Teve 1,00."
+      }
+    ]
+  },
+  "ex-2yqb5bj1": {
+    "prompt": "Achar nomes em texto livre exige ___ de entidades nomeadas, que o Presidio faz com um modelo do spaCy.",
+    "blanks": [
+      {
+        "accept": [
+          "reconhecimento"
+        ]
+      }
+    ]
+  },
+  "ex-sk8atnhd": {
+    "prompt": "Por que o hash sem chave de u021 pôde ser revertido em menos de um milissegundo?",
+    "choices": [
+      {
+        "text": "O SHA-256 está quebrado",
+        "why": "Não está; nada no hash foi atacado."
+      },
+      {
+        "text": "Dezesseis caracteres é pouco",
+        "why": "Mesmo o hash inteiro cai do mesmo jeito; o tamanho não é o problema."
+      },
+      {
+        "text": "Os ids seguem uma forma conhecida, então cada palpite é hasheado e comparado",
+        "why": "Certo. Fazer hash de um valor adivinhável só acrescenta um passo."
+      },
+      {
+        "text": "A chave foi impressa",
+        "why": "Não havia chave: esse era o ponto da primeira linha."
+      }
+    ]
+  },
+  "ex-x04sa7yv": {
+    "prompt": "Nos termos da LGPD, o que é o pseudônimo com chave em user.hash?",
+    "choices": [
+      {
+        "text": "Dado anonimizado, fora da lei",
+        "why": "Quem tem a chave consegue revertê-lo, então não é anônimo."
+      },
+      {
+        "text": "Dado pseudonimizado, ainda pessoal",
+        "why": "Certo. O armazém de traces precisa ser tratado de acordo."
+      },
+      {
+        "text": "Dado pessoal sensível, como saúde ou religião",
+        "why": "Nada num id de usuário diz algo desse tipo."
+      },
+      {
+        "text": "Uma credencial, como uma senha ou um token",
+        "why": "Ele não dá acesso a nada."
+      }
+    ]
+  },
+  "ex-hpw5w28m": {
+    "prompt": "A chave do pseudônimo é trocada todo mês. O que continua funcionando?",
+    "choices": [
+      {
+        "text": "Seguir uma pessoa por um ano de traces",
+        "why": "Os pseudônimos de cada mês não se ligam mais com os do mês seguinte."
+      },
+      {
+        "text": "Ler o id de usuário de volta do trace sem a chave",
+        "why": "Isso nunca funcionou, com ou sem troca."
+      },
+      {
+        "text": "Contar por usuário dentro de um mês",
+        "why": "Certo. Com uma mesma chave, a mesma pessoa recebe o mesmo valor."
+      },
+      {
+        "text": "Apagar o texto de uma pessoa depois de jogar fora a chave daquele mês",
+        "why": "Sem a chave ninguém acha quais spans são dela; em vez disso, a ligação some."
+      }
+    ]
+  },
+  "ex-35vnsf4r": {
+    "prompt": "Com o PSEUDONYM_KEY vazio, o assistente lançou um erro. Por que isso é melhor do que recorrer a um hash sem chave?",
+    "choices": [
+      {
+        "text": "Um recurso alternativo escreveria ids reversíveis em todo span, em silêncio",
+        "why": "Certo. Passaria em todo teste que não olha os valores."
+      },
+      {
+        "text": "Erros são mais baratos que hashes",
+        "why": "Custo não tem nada a ver."
+      },
+      {
+        "text": "O SDK exige que todo atributo seja definido",
+        "why": "Um atributo ausente é permitido."
+      },
+      {
+        "text": "O cliente veria o hash",
+        "why": "O hash fica só no span."
+      }
+    ]
+  },
+  "ex-ydkzg22r": {
+    "prompt": "Depois que o expire.py rodou com um dia de vida, quantos spans raiz ainda traziam uma pergunta?",
+    "unit": "spans"
+  },
+  "ex-chqgc7ab": {
+    "prompt": "Um cliente pede à loja que apague o que ela guarda sobre ele, e o texto expira em cinco dias. O que deve acontecer?",
+    "choices": [
+      {
+        "text": "Nada; a expiração resolve em cinco dias",
+        "why": "O pedido é devido agora, não quando o agendamento chegar lá."
+      },
+      {
+        "text": "Todo span do armazém é apagado",
+        "why": "Isso destrói as contagens de todo mundo por um pedido."
+      },
+      {
+        "text": "A chave é trocada",
+        "why": "A troca corta ligações futuras; não apaga o que já está guardado."
+      },
+      {
+        "text": "O texto dele é apagado agora, achado pelo pseudônimo",
+        "why": "Certo. Faça o hash do id com a chave e apague o texto desses spans; as contagens ficam."
+      }
+    ]
+  },
+  "ex-a754s8ee": {
+    "prompt": "Coloque as proteções da aula na ordem em que as palavras de um cliente as encontram, da primeira à última.",
+    "items": [
+      "redact() quando o atributo é definido",
+      "o invólucro que limpa em volta do exportador",
+      "o job de expiração que tira o texto depois da data"
+    ]
+  },
+  "ex-jsaws1fy": {
+    "prompt": "Quais destes ficam num span depois que o expire.py tirou o texto dele? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "As contagens de tokens",
+        "why": "Certo."
+      },
+      {
+        "text": "O resultado",
+        "why": "Certo."
+      },
+      {
+        "text": "A pergunta",
+        "why": "É isso que foi removido."
+      },
+      {
+        "text": "A duração",
+        "why": "Certo."
+      }
+    ]
+  }
+}

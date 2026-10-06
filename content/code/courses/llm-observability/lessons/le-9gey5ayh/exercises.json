@@ -1,0 +1,650 @@
+[
+  {
+    "id": "ex-02jp6mn7",
+    "version": 1,
+    "section": "three-clocks",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each clock of a streamed call to what it decides.",
+    "pairs": [
+      {
+        "left": "time to first token",
+        "right": "how long the screen stays empty"
+      },
+      {
+        "left": "time per output token",
+        "right": "how long a long answer takes once started"
+      },
+      {
+        "left": "the whole call",
+        "right": "how long a worker and a connection are held"
+      }
+    ],
+    "right_distractors": [
+      "how many tokens the prompt had"
+    ]
+  },
+  {
+    "id": "ex-k84xa62t",
+    "version": 1,
+    "section": "three-clocks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In stream.py's run, how many milliseconds passed before the first piece arrived?",
+    "value": 244,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-5knaymwp",
+    "version": 1,
+    "section": "three-clocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does recording the time to first token need a streamed call?",
+    "choices": [
+      {
+        "text": "Non-streamed calls carry no usage",
+        "correct": false,
+        "why": "They do carry usage; it is the timing they lose."
+      },
+      {
+        "text": "OpenTelemetry keeps events on streamed spans and drops them on others, so there would be no first-token event",
+        "correct": false,
+        "why": "Any span can carry events."
+      },
+      {
+        "text": "Without streaming, the first and last tokens arrive together",
+        "correct": true,
+        "why": "Right. The client cannot see when the provider produced the first one."
+      },
+      {
+        "text": "Providers charge less for streaming",
+        "correct": false,
+        "why": "Price does not depend on streaming."
+      }
+    ]
+  },
+  {
+    "id": "ex-s2ff0ky6",
+    "version": 1,
+    "section": "three-clocks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team shortens its prompt by half and the answers stay the same length. Which clock moves most?",
+    "choices": [
+      {
+        "text": "Time to first token",
+        "correct": true,
+        "why": "Right. The first token waits for the prompt to be read; the rest does not."
+      },
+      {
+        "text": "Time per output token",
+        "correct": false,
+        "why": "It is a property of the model and the provider's load, not of the prompt."
+      },
+      {
+        "text": "The clocks stay as they were, because the prompt is read in parallel with the reply being written out",
+        "correct": false,
+        "why": "The prompt is read before the first token, and that is what the first clock measures."
+      },
+      {
+        "text": "The number of output tokens",
+        "correct": false,
+        "why": "The answers stayed the same length, as the question says."
+      }
+    ]
+  },
+  {
+    "id": "ex-r28ddn9k",
+    "version": 1,
+    "section": "percentiles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The week's first-token mean was 353 ms, median 290, p99 4,257. Why is the mean a poor summary?",
+    "choices": [
+      {
+        "text": "It was computed on too few calls",
+        "correct": false,
+        "why": "1,108 calls is plenty; the problem is the shape."
+      },
+      {
+        "text": "Means cannot be computed on milliseconds",
+        "correct": false,
+        "why": "They can; it is just the wrong summary for a tail."
+      },
+      {
+        "text": "It includes the failed calls",
+        "correct": false,
+        "why": "latency.py excludes failed calls."
+      },
+      {
+        "text": "It describes nobody",
+        "correct": true,
+        "why": "Right: too high for the typical call, far too low for the slow one. A tight body and a long tail are two populations a mean blends."
+      }
+    ]
+  },
+  {
+    "id": "ex-8t4gfwg5",
+    "version": 1,
+    "section": "percentiles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a p99 call not a rare customer's problem?",
+    "choices": [
+      {
+        "text": "Because p99 is defined over customers, not calls",
+        "correct": false,
+        "why": "latency.py computes it over calls."
+      },
+      {
+        "text": "Because a session holds many calls, so many sessions meet one",
+        "correct": true,
+        "why": "Right. Ten calls give about one chance in ten of at least one p99."
+      },
+      {
+        "text": "Because the slow calls are all from one user",
+        "correct": false,
+        "why": "The cold starts fall at random, on anybody."
+      },
+      {
+        "text": "Because p99 is the same as the median under load",
+        "correct": false,
+        "why": "Here it was nearly fifteen times the median."
+      }
+    ]
+  },
+  {
+    "id": "ex-vme1r1s0",
+    "version": 1,
+    "section": "percentiles",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What was the median time per output token after the first, in the week's model calls?",
+    "value": 26,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-0x7xtkcf",
+    "version": 1,
+    "section": "what-sets-the-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Over the week, what did the length of a whole model call follow most closely?",
+    "choices": [
+      {
+        "text": "The number of output tokens",
+        "correct": true,
+        "why": "Right. From under 20 to over 80 tokens, the median went from 555 to 2,498 ms."
+      },
+      {
+        "text": "The number of input tokens",
+        "correct": false,
+        "why": "Input moved the first token by about a tenth of a second across all groups."
+      },
+      {
+        "text": "The hour of the day",
+        "correct": false,
+        "why": "labobs' timing does not depend on the hour."
+      },
+      {
+        "text": "The feature that made the request",
+        "correct": false,
+        "why": "Only through how long each feature's answers are."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4hpwvpe",
+    "version": 1,
+    "section": "what-sets-the-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Sixteen calls waited over 3 s for a first token, in every input-size group. What does that suggest?",
+    "choices": [
+      {
+        "text": "Long prompts cause cold starts",
+        "correct": false,
+        "why": "They appeared at every prompt size, short ones included."
+      },
+      {
+        "text": "The output was very long in those calls",
+        "correct": false,
+        "why": "The first token comes before any output exists."
+      },
+      {
+        "text": "A bug in drivers.py that grouped them wrongly",
+        "correct": false,
+        "why": "The grouping is by the span's own token count; the 16 are counted separately anyway."
+      },
+      {
+        "text": "A cause outside the request",
+        "correct": true,
+        "why": "Right. Slowness that ignores size points at the provider, the network or a queue."
+      }
+    ]
+  },
+  {
+    "id": "ex-xxgczn22",
+    "version": 1,
+    "section": "what-sets-the-time",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each goal to the lever this lesson pairs with it.",
+    "pairs": [
+      {
+        "left": "cheaper",
+        "right": "fewer sources in the prompt"
+      },
+      {
+        "left": "finish sooner",
+        "right": "shorter answers"
+      },
+      {
+        "left": "hurt less in the tail",
+        "right": "a timeout and a retry"
+      }
+    ],
+    "right_distractors": [
+      "a higher temperature"
+    ]
+  },
+  {
+    "id": "ex-mje2qd3t",
+    "version": 1,
+    "section": "failures",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With 30% of attempts refused, two of ten attempts failed and none of ten requests did. Why?",
+    "choices": [
+      {
+        "text": "The failures were in the embedding, which does not count",
+        "correct": false,
+        "why": "They were in chat spans."
+      },
+      {
+        "text": "Each failure was retried, and the retry worked",
+        "correct": true,
+        "why": "Right. The attempt error rate is the provider's health; the request rate is the customer's."
+      },
+      {
+        "text": "errors.py ignores failures",
+        "correct": false,
+        "why": "It counted two."
+      },
+      {
+        "text": "Refusals are not errors",
+        "correct": false,
+        "why": "A 503 is an error on the span."
+      }
+    ]
+  },
+  {
+    "id": "ex-97h0c2hr",
+    "version": 1,
+    "section": "failures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The attempt error rate rises and the request error rate stays flat. What is the lesson's reading?",
+    "choices": [
+      {
+        "text": "An incident: page somebody now",
+        "correct": false,
+        "why": "That is for both rising together."
+      },
+      {
+        "text": "Nothing to see, since no customer was affected",
+        "correct": false,
+        "why": "The retries are being spent, and they run out."
+      },
+      {
+        "text": "A warning: the retries are absorbing a provider problem",
+        "correct": true,
+        "why": "Right. It is the time to look, before they run out."
+      },
+      {
+        "text": "A bug in the retry loop",
+        "correct": false,
+        "why": "The loop is working exactly as intended when this happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-nc7m0bp6",
+    "version": 1,
+    "section": "failures",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the SDK's own retries, the trace showed one 1,835 ms span and no error. What did labobs' log show?",
+    "choices": [
+      {
+        "text": "One request that took 1,835 ms",
+        "correct": false,
+        "why": "There were three requests."
+      },
+      {
+        "text": "Three successes",
+        "correct": false,
+        "why": "Requests 2362 and 2363 were refused."
+      },
+      {
+        "text": "Two refusals with 503 and then a success",
+        "correct": true,
+        "why": "Right. The SDK hid both failures inside one successful span."
+      },
+      {
+        "text": "Nothing, because the SDK retries locally",
+        "correct": false,
+        "why": "Every retry is a new request to the provider."
+      }
+    ]
+  },
+  {
+    "id": "ex-sq7jxr7g",
+    "version": 1,
+    "section": "failures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Besides retrying in your own code, how can a team keep the SDK's retries and still see each attempt?",
+    "choices": [
+      {
+        "text": "Instrument underneath, at the HTTP level",
+        "correct": true,
+        "why": "Right. Each request the SDK sends becomes its own span."
+      },
+      {
+        "text": "Raise max_retries so that failures become rarer than they were before",
+        "correct": false,
+        "why": "More retries hide more failures."
+      },
+      {
+        "text": "Lower the timeout until the retries stop happening",
+        "correct": false,
+        "why": "A timeout does not reveal a refusal; it adds another kind of failure."
+      },
+      {
+        "text": "Read the response headers for a retry count",
+        "correct": false,
+        "why": "The final response does not say how many attempts preceded it."
+      }
+    ]
+  },
+  {
+    "id": "ex-t22wpwp0",
+    "version": 1,
+    "section": "a-reply-cut-short",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the assistant tell a stream that was cut from one that finished?",
+    "choices": [
+      {
+        "text": "The reply is shorter than usual",
+        "correct": false,
+        "why": "Short replies are normal; length proves nothing."
+      },
+      {
+        "text": "The HTTP status is 500",
+        "correct": false,
+        "why": "The stream began with 200; the status was sent before any text."
+      },
+      {
+        "text": "The citations are missing",
+        "correct": false,
+        "why": "A finished reply can lack citations too."
+      },
+      {
+        "text": "No finish reason ever arrived",
+        "correct": true,
+        "why": "Right. A finished stream ends with one; a dropped one does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-5742e56f",
+    "version": 1,
+    "section": "a-reply-cut-short",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A streamed reply is shown on screen as it arrives, gets cut, and is retried. What does the customer see if the screen was not built for it?",
+    "choices": [
+      {
+        "text": "Nothing different from a slow answer",
+        "correct": false,
+        "why": "That is true only when the reply is shown complete."
+      },
+      {
+        "text": "The beginning, then the text restarting or doubled",
+        "correct": true,
+        "why": "Right. A retry of a streamed reply is a visible stutter."
+      },
+      {
+        "text": "An error page with the trace id",
+        "correct": false,
+        "why": "The retry succeeded; no error reached the screen."
+      },
+      {
+        "text": "Only the second attempt",
+        "correct": false,
+        "why": "The first six pieces were already on screen."
+      }
+    ]
+  },
+  {
+    "id": "ex-shgat6f7",
+    "version": 1,
+    "section": "a-reply-cut-short",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The assistant records how far a cut stream got in the attribute app.partial____.",
+    "blanks": [
+      {
+        "accept": [
+          "pieces"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xx428kyx",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a 1 s timeout on the whole call a bad choice for this assistant?",
+    "choices": [
+      {
+        "text": "It is longer than the SDK default",
+        "correct": false,
+        "why": "The default is ten minutes."
+      },
+      {
+        "text": "It never fires",
+        "correct": false,
+        "why": "It would fire constantly."
+      },
+      {
+        "text": "It cuts long answers too",
+        "correct": true,
+        "why": "Right. More than half the week took over a second because it had more to say."
+      },
+      {
+        "text": "Timeouts cannot be set on streams",
+        "correct": false,
+        "why": "They can, as a limit on each read."
+      }
+    ]
+  },
+  {
+    "id": "ex-6rymdzcg",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "timeout.py's two-second timeout fired on a call that was about to take four. What does the SDK's timeout actually bound?",
+    "choices": [
+      {
+        "text": "The whole call from start to finish",
+        "correct": false,
+        "why": "A long stream with no long gap would not trip it."
+      },
+      {
+        "text": "The number of retries",
+        "correct": false,
+        "why": "That is max_retries, a separate setting."
+      },
+      {
+        "text": "The provider's own processing time, reported back",
+        "correct": false,
+        "why": "The client cannot see the provider's processing time; it sees only bytes arriving or not."
+      },
+      {
+        "text": "The connection and each read: for a stream, the first piece and the gaps",
+        "correct": true,
+        "why": "Right. It is the HTTP client's timeout, not a limit on the whole call."
+      }
+    ]
+  },
+  {
+    "id": "ex-2kyw65qg",
+    "version": 1,
+    "section": "timeouts",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the OpenAI SDK's default timeout, in minutes?",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-f3ek6rka",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of the cut-stream trace in the order they happened.",
+    "items": [
+      "the first attempt delivers six pieces",
+      "the stream ends with no finish reason",
+      "the assistant waits half a second",
+      "the second attempt delivers the whole reply"
+    ]
+  },
+  {
+    "id": "ex-djzmedxm",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong on a model-call span for latency work? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "The time to the first token",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The output token count",
+        "correct": true,
+        "why": "Right: time follows it."
+      },
+      {
+        "text": "The input token count",
+        "correct": true,
+        "why": "Right: the first token follows it."
+      },
+      {
+        "text": "The mean latency of the week",
+        "correct": false,
+        "why": "A span is one call; a week's summary is computed from many spans."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvyx2xcg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 3 found the input was most of the cost. What does lesson 4 find the output is most of?",
+    "choices": [
+      {
+        "text": "The time",
+        "correct": true,
+        "why": "Right. Every output token adds its 25 ms or so."
+      },
+      {
+        "text": "The cost as well, once the price of output is counted properly",
+        "correct": false,
+        "why": "Input stayed most of the cost even at four times cheaper per token."
+      },
+      {
+        "text": "The failures, since long outputs are cut more often",
+        "correct": false,
+        "why": "No such pattern was measured here."
+      },
+      {
+        "text": "The tokens sent to the embedding model",
+        "correct": false,
+        "why": "The embedding reads the question, not the output."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ct0tg4w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which error rate describes what the customers experienced?",
+    "choices": [
+      {
+        "text": "The attempt error rate",
+        "correct": false,
+        "why": "That one is the provider's health; retries can hide it from customers."
+      },
+      {
+        "text": "The request error rate",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The rate of cold starts in the week, as labobs' rules set it",
+        "correct": false,
+        "why": "Cold starts are slow, not failed."
+      },
+      {
+        "text": "The share of refusals by the floor",
+        "correct": false,
+        "why": "A refusal is an answer, not an error."
+      }
+    ]
+  }
+]

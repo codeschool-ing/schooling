@@ -1,0 +1,89 @@
+# Langfuse 3.225.11, self-hosted, for lesson 6 of llm-observability.
+#
+# Six containers: Langfuse's web server (the screens, the API and the OTLP
+# endpoint at /api/public/otel) and its worker (which moves what arrives into
+# ClickHouse); PostgreSQL for users, projects and settings; ClickHouse for the
+# traces themselves; Redis as the queue between the two; and an S3-compatible
+# store (MinIO) where every incoming event is kept before it is processed.
+#
+# Every secret below is the lab's and opens nothing anywhere else. A real
+# deployment generates its own SALT, ENCRYPTION_KEY (64 hex characters, from
+# `openssl rand -hex 32`) and NEXTAUTH_SECRET, and keeps them out of the file.
+#
+# Each image is pinned to the digest it was recorded with. MinIO's own images
+# are no longer published on Docker Hub; this is Bitnami's build of it.
+#
+# The LANGFUSE_INIT_* variables create the organisation, the project, its two
+# API keys and one user when the server first starts, so the lab needs no
+# sign-up screen. The web server is published on 127.0.0.1 only.
+x-env: &env
+  DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
+  SALT: lab-salt-not-a-secret
+  ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
+  TELEMETRY_ENABLED: "false"
+  CLICKHOUSE_MIGRATION_URL: clickhouse://clickhouse:9000
+  CLICKHOUSE_URL: http://clickhouse:8123
+  CLICKHOUSE_USER: clickhouse
+  CLICKHOUSE_PASSWORD: clickhouse
+  CLICKHOUSE_CLUSTER_ENABLED: "false"
+  LANGFUSE_S3_EVENT_UPLOAD_BUCKET: langfuse
+  LANGFUSE_S3_EVENT_UPLOAD_REGION: auto
+  LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: minio
+  LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: miniosecret
+  LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: http://minio:9000
+  LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE: "true"
+  LANGFUSE_S3_EVENT_UPLOAD_PREFIX: events/
+  LANGFUSE_S3_MEDIA_UPLOAD_BUCKET: langfuse
+  LANGFUSE_S3_MEDIA_UPLOAD_REGION: auto
+  LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: minio
+  LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: miniosecret
+  LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://minio:9000
+  LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE: "true"
+  LANGFUSE_S3_MEDIA_UPLOAD_PREFIX: media/
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  REDIS_AUTH: redissecret
+services:
+  worker:
+    image: langfuse/langfuse-worker:3@sha256:8a28c946bb5401eef488153fa294db5a79bd99dd5c90db8e4d39559374c9ebd3
+    depends_on: [postgres, minio, redis, clickhouse]
+    environment: *env
+  web:
+    image: langfuse/langfuse:3@sha256:a343f64e035eb01aeea358703a0428945d909d01e19452509a5a830862dda878
+    depends_on: [postgres, minio, redis, clickhouse]
+    ports: ["127.0.0.1:3000:3000"]
+    environment:
+      <<: *env
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: lab-nextauth-not-a-secret
+      LANGFUSE_INIT_ORG_ID: marginalia
+      LANGFUSE_INIT_ORG_NAME: Marginalia
+      LANGFUSE_INIT_PROJECT_ID: support
+      LANGFUSE_INIT_PROJECT_NAME: support-assistant
+      LANGFUSE_INIT_PROJECT_PUBLIC_KEY: pk-lf-lab-0001
+      LANGFUSE_INIT_PROJECT_SECRET_KEY: sk-lf-lab-0001
+      LANGFUSE_INIT_USER_EMAIL: ana@marginalia.example
+      LANGFUSE_INIT_USER_NAME: Ana
+      LANGFUSE_INIT_USER_PASSWORD: lab-password-0001
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.8@sha256:0152dd511befe6a2c2ef53e930726179669b08116da78500b37c51c96ff5ee77
+    user: "101:101"
+    environment:
+      CLICKHOUSE_DB: default
+      CLICKHOUSE_USER: clickhouse
+      CLICKHOUSE_PASSWORD: clickhouse
+  minio:
+    image: bitnamilegacy/minio:2025.7.23@sha256:8935e75fa5d11295c17171e4aa49efe390a1193cd7f12e4d21b92af9ffef09d7
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: miniosecret
+      MINIO_DEFAULT_BUCKETS: langfuse
+  redis:
+    image: redis:7@sha256:17e1d479466f88e2d8fe48f21f44aba1572bf3bbc207be16b09870072b83b005
+    command: ["--requirepass", "redissecret"]
+  postgres:
+    image: postgres:17@sha256:c6222b54873a2fb19591cb06b93ef2825c03cdb680396e3600f24921f340f630
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres

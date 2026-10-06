@@ -1,0 +1,642 @@
+[
+  {
+    "id": "ex-vrsn34yx",
+    "version": 1,
+    "section": "a-proxy-not-an-sdk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an application change to send its model calls through Helicone?",
+    "choices": [
+      {
+        "text": "Every function that calls the model, to wrap it in a span",
+        "correct": false,
+        "why": "That is what an SDK asks for; a proxy asks for none of it."
+      },
+      {
+        "text": "The model it asks for",
+        "correct": false,
+        "why": "The model stays the same."
+      },
+      {
+        "text": "Its base URL, and a header with the key",
+        "correct": true,
+        "why": "Right. Nothing else in the program changes."
+      },
+      {
+        "text": "Its database",
+        "correct": false,
+        "why": "A gateway never sees the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-9bm3gc9h",
+    "version": 1,
+    "section": "a-proxy-not-an-sdk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 5 found the cause of the order refusals in the search span. What would a gateway alone have shown?",
+    "choices": [
+      {
+        "text": "The top score of each search",
+        "correct": false,
+        "why": "The search never crosses the gateway."
+      },
+      {
+        "text": "Fewer model calls, and nothing about why",
+        "correct": true,
+        "why": "Right. Refusals before the model are calls that never happened."
+      },
+      {
+        "text": "The customers' thumbs down on each refused order question",
+        "correct": false,
+        "why": "Feedback goes to the application, not through the gateway."
+      },
+      {
+        "text": "Every chunk the search kept",
+        "correct": false,
+        "why": "Only the prompt that carried them, when there was one."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kgedvnh",
+    "version": 1,
+    "section": "a-proxy-not-an-sdk",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Helicone header to what it tells the gateway.",
+    "pairs": [
+      {
+        "left": "Helicone-User-Id",
+        "right": "who the request is for"
+      },
+      {
+        "left": "Helicone-Session-Id",
+        "right": "which chain of calls it belongs to"
+      },
+      {
+        "left": "Helicone-Property-Feature",
+        "right": "a custom property to filter by"
+      },
+      {
+        "left": "Helicone-Target-Url",
+        "right": "where to forward the request"
+      }
+    ],
+    "right_distractors": [
+      "the price of the model"
+    ]
+  },
+  {
+    "id": "ex-te8vrf6d",
+    "version": 1,
+    "section": "a-proxy-not-an-sdk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of lesson 3's gaps does a gateway close that tracing in the application cannot?",
+    "choices": [
+      {
+        "text": "Uninstrumented calls",
+        "correct": true,
+        "why": "Right: calls made with the key by code nobody instrumented. There is no way to the provider except through it."
+      },
+      {
+        "text": "Taxes and exchange",
+        "correct": false,
+        "why": "No piece of software in the path knows those."
+      },
+      {
+        "text": "The embedding's price",
+        "correct": false,
+        "why": "Both can count embedding tokens."
+      },
+      {
+        "text": "Separating a price change from a change in usage",
+        "correct": false,
+        "why": "That needs tokens and prices kept apart, which either can do."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnt5maw5",
+    "version": 1,
+    "section": "a-proxy-not-an-sdk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the cost of moving caching, limits and retries into a gateway?",
+    "choices": [
+      {
+        "text": "The application can no longer stream the reply to the screen",
+        "correct": false,
+        "why": "Gateways pass streams through."
+      },
+      {
+        "text": "The provider charges more for requests that arrive through a proxy",
+        "correct": false,
+        "why": "The provider cannot tell and does not charge differently."
+      },
+      {
+        "text": "Traces stop working",
+        "correct": false,
+        "why": "Tracing in the application is untouched."
+      },
+      {
+        "text": "A service on the path of every answer",
+        "correct": true,
+        "why": "Right: its latency, its outages, and every prompt in its logs."
+      }
+    ]
+  },
+  {
+    "id": "ex-80d92n2y",
+    "version": 1,
+    "section": "helicone-in-the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did Helicone refuse to forward the lab's request?",
+    "choices": [
+      {
+        "text": "The request had no Helicone key",
+        "correct": false,
+        "why": "The message names the API base, not the key."
+      },
+      {
+        "text": "extract-1 is not a model it knows",
+        "correct": false,
+        "why": "It refused before reading the model."
+      },
+      {
+        "text": "Its domain is not allowed",
+        "correct": true,
+        "why": "Right. The gateway forwards only to providers on its list."
+      },
+      {
+        "text": "The gateway was still starting",
+        "correct": false,
+        "why": "Its health check had just answered healthy."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1ktwsye",
+    "version": 1,
+    "section": "helicone-in-the-lab",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team builds its own gateway that forwards to whatever URL a header names. What have they built?",
+    "choices": [
+      {
+        "text": "An open relay",
+        "correct": true,
+        "why": "Right, for server-side request forgery. Anybody who can reach it can make it call internal services."
+      },
+      {
+        "text": "A flexible router, which is what a gateway is for",
+        "correct": false,
+        "why": "Flexibility here is the vulnerability."
+      },
+      {
+        "text": "A cache",
+        "correct": false,
+        "why": "Forwarding is not caching."
+      },
+      {
+        "text": "A load balancer",
+        "correct": false,
+        "why": "A balancer forwards to a fixed set of its own backends."
+      }
+    ]
+  },
+  {
+    "id": "ex-04t0mkpa",
+    "version": 1,
+    "section": "helicone-in-the-lab",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On which port did Helicone's gateway answer in the lab?",
+    "value": 8585,
+    "tolerance": 0,
+    "unit": "port"
+  },
+  {
+    "id": "ex-vgxh069r",
+    "version": 1,
+    "section": "phoenix",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the lab need to run Phoenix?",
+    "choices": [
+      {
+        "text": "Six containers, like Langfuse",
+        "correct": false,
+        "why": "Phoenix runs as one process."
+      },
+      {
+        "text": "A Python package",
+        "correct": true,
+        "why": "Right, with its data in SQLite."
+      },
+      {
+        "text": "An Arize account",
+        "correct": false,
+        "why": "That is for AX, which was not run."
+      },
+      {
+        "text": "A ClickHouse server and a queue to feed it",
+        "correct": false,
+        "why": "That is Langfuse's design, not Phoenix's."
+      }
+    ]
+  },
+  {
+    "id": "ex-mzbt3hpz",
+    "version": 1,
+    "section": "phoenix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The assistant writes no OpenInference names. How did its chat spans become LLM spans in Phoenix?",
+    "choices": [
+      {
+        "text": "By the span's name, which starts with chat",
+        "correct": false,
+        "why": "The root, named ask, became LLM too, by its attribute."
+      },
+      {
+        "text": "OpenInference was installed in the assistant, which rewrote its spans before they left",
+        "correct": false,
+        "why": "replay.py loaded no instrumentor."
+      },
+      {
+        "text": "Every span is LLM unless marked otherwise",
+        "correct": false,
+        "why": "search and generate came out UNKNOWN."
+      },
+      {
+        "text": "Phoenix translated the gen_ai attributes",
+        "correct": true,
+        "why": "Right. The two conventions are converging from both sides."
+      }
+    ]
+  },
+  {
+    "id": "ex-1jg1dmq8",
+    "version": 1,
+    "section": "phoenix",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Langfuse and Phoenix both took the root ask for a model call. Where does the lesson say the fix belongs?",
+    "choices": [
+      {
+        "text": "In an adapter per tool",
+        "correct": false,
+        "why": "Two tools reading it the same way says the attribute is misplaced."
+      },
+      {
+        "text": "In the tools, which should read conventions less literally",
+        "correct": false,
+        "why": "Reading a convention literally is what a convention is for."
+      },
+      {
+        "text": "In assistant.py",
+        "correct": true,
+        "why": "Right: the release's model under a name of its own on the root, and gen_ai.* only on spans that are model calls."
+      },
+      {
+        "text": "Nowhere: it is harmless",
+        "correct": false,
+        "why": "A count of generations would count every request twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdvph52z",
+    "version": 1,
+    "section": "phoenix",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "If the root carried app.model instead of gen_ai.request.model, which reading in this course would change?",
+    "choices": [
+      {
+        "text": "Lesson 3's costs",
+        "correct": false,
+        "why": "costs.py prices spans with tokens, and the root has none."
+      },
+      {
+        "text": "The trace ids",
+        "correct": false,
+        "why": "Attributes do not touch ids."
+      },
+      {
+        "text": "The latency percentiles of lesson 4",
+        "correct": false,
+        "why": "latency.py reads chat spans by name."
+      },
+      {
+        "text": "What Langfuse and Phoenix count as model calls",
+        "correct": true,
+        "why": "Right. The roots stop being generations and LLM spans."
+      }
+    ]
+  },
+  {
+    "id": "ex-adjb7j49",
+    "version": 1,
+    "section": "phoenix",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Phoenix has a span kind made for a search step, which shows the documents retrieved: ___.",
+    "blanks": [
+      {
+        "accept": [
+          "RETRIEVER"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ws35t3w0",
+    "version": 1,
+    "section": "annotations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Phoenix records the kind of annotator behind each annotation. Which kind were the thumbs?",
+    "choices": [
+      {
+        "text": "LLM",
+        "correct": false,
+        "why": "No model gave them."
+      },
+      {
+        "text": "HUMAN",
+        "correct": true,
+        "why": "Right. Lessons 8 to 10 add CODE and LLM."
+      },
+      {
+        "text": "CODE",
+        "correct": false,
+        "why": "No rule gave them."
+      },
+      {
+        "text": "USER",
+        "correct": false,
+        "why": "Phoenix has no such kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-86jfscyr",
+    "version": 1,
+    "section": "annotations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Phoenix annotates spans, and a thumb carries a trace id. How did px_thumbs.py bridge them?",
+    "choices": [
+      {
+        "text": "A lookup in spans.jsonl",
+        "correct": true,
+        "why": "Right: each trace's root span, found there. Both ids were written by OpenTelemetry and are the same in Phoenix."
+      },
+      {
+        "text": "It matched by time",
+        "correct": false,
+        "why": "Nothing here joins by time."
+      },
+      {
+        "text": "Phoenix converts trace ids to span ids",
+        "correct": false,
+        "why": "The script did the lookup itself."
+      },
+      {
+        "text": "It annotated every span in the trace",
+        "correct": false,
+        "why": "One annotation per root span."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmrj20fb",
+    "version": 1,
+    "section": "annotations",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many thumbs from Sunday were sent to Phoenix as annotations?",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "thumbs"
+  },
+  {
+    "id": "ex-8ajcs1y8",
+    "version": 1,
+    "section": "annotations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What made moving the thumbs from Langfuse's scores to Phoenix's annotations a loop?",
+    "choices": [
+      {
+        "text": "The thumbs were joined by id from the start",
+        "correct": true,
+        "why": "Right. The feedback is not tied to any tool."
+      },
+      {
+        "text": "Both tools share a database",
+        "correct": false,
+        "why": "They share nothing."
+      },
+      {
+        "text": "Phoenix imports Langfuse scores",
+        "correct": false,
+        "why": "The script read feedback.jsonl, not Langfuse."
+      },
+      {
+        "text": "Both use the same word for a score",
+        "correct": false,
+        "why": "One says score, the other annotation."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zv8g71g",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For one assistant built by one team, which half does this lesson say cannot be skipped?",
+    "choices": [
+      {
+        "text": "The gateway",
+        "correct": false,
+        "why": "It is the half to add when there are several applications and one bill."
+      },
+      {
+        "text": "Both, from the first day",
+        "correct": false,
+        "why": "The lesson orders them, by what each can see."
+      },
+      {
+        "text": "Neither, until the traffic is large",
+        "correct": false,
+        "why": "The failures in lesson 5 appeared at a thousand requests a week."
+      },
+      {
+        "text": "Tracing inside the application",
+        "correct": true,
+        "why": "Right. The failures found so far were in steps a gateway cannot see."
+      }
+    ]
+  },
+  {
+    "id": "ex-vq0gh248",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How can a request in a gateway's logs lead to the trace that made it?",
+    "choices": [
+      {
+        "text": "The gateway guesses from the timestamp and the user",
+        "correct": false,
+        "why": "A guess by time is the join this course refuses."
+      },
+      {
+        "text": "A trace id in a header",
+        "correct": true,
+        "why": "Right: the application passes it on each request. Joined by id, as everything else."
+      },
+      {
+        "text": "The provider returns the trace id",
+        "correct": false,
+        "why": "The provider never sees it unless it is sent."
+      },
+      {
+        "text": "The gateway writes spans of its own into the same trace",
+        "correct": false,
+        "why": "Only if it is told which trace, which is the header."
+      }
+    ]
+  },
+  {
+    "id": "ex-qx9qb30e",
+    "version": 1,
+    "section": "choosing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a gateway do that a tracer cannot? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "Answer a repeated request from a cache",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Refuse a user over a rate limit",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Retry on another provider",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Record the search step's top score",
+        "correct": false,
+        "why": "The search never crosses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xdg5bggw",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to how spans or requests reach it in this lab.",
+    "pairs": [
+      {
+        "left": "Phoenix",
+        "right": "OTLP from the assistant"
+      },
+      {
+        "left": "Helicone",
+        "right": "requests sent to it instead of the provider"
+      },
+      {
+        "left": "LangSmith",
+        "right": "its SDK, pointed at a recorder"
+      }
+    ],
+    "right_distractors": [
+      "a file on the shared disk"
+    ]
+  },
+  {
+    "id": "ex-j8nmykn2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Phoenix's prompt-token total include the embeddings?",
+    "choices": [
+      {
+        "text": "The embeddings were sent to extract-1",
+        "correct": false,
+        "why": "They went to lab-minilm."
+      },
+      {
+        "text": "A bug in px_spans.py",
+        "correct": false,
+        "why": "The script reads the column as Phoenix fills it."
+      },
+      {
+        "text": "That is how it books what an embedding reads",
+        "correct": true,
+        "why": "Right. A total across kinds would then mix two prices."
+      },
+      {
+        "text": "The chat spans were labelled EMBEDDING",
+        "correct": false,
+        "why": "They were LLM."
+      }
+    ]
+  },
+  {
+    "id": "ex-34yv3312",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the path of a request through a gateway in order.",
+    "items": [
+      "the application sends the request to the gateway",
+      "the gateway checks the target is an allowed provider",
+      "the gateway forwards it and records the reply",
+      "the application receives the reply"
+    ]
+  }
+]

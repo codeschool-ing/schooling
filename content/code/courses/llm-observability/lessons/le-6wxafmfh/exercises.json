@@ -1,0 +1,664 @@
+[
+  {
+    "id": "ex-339yt1ey",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these in the lab is NOT a real piece of software doing its real job?",
+    "choices": [
+      {
+        "text": "OpenTelemetry's SDK",
+        "correct": false,
+        "why": "The SDK is the real one, and so is every span it writes."
+      },
+      {
+        "text": "PostgreSQL with pgvector, which holds the chunks",
+        "correct": false,
+        "why": "The database and its similarity search are real."
+      },
+      {
+        "text": "The openai Python SDK the assistant calls through",
+        "correct": false,
+        "why": "The SDK is real and unmodified; only the server it talks to is the lab's."
+      },
+      {
+        "text": "extract-1, the model that answers the customers",
+        "correct": true,
+        "why": "Right. It copies sentences by written rules; it is a stand-in for a language model."
+      }
+    ]
+  },
+  {
+    "id": "ex-z81m8np4",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the timings in this course come from rules written by the course?",
+    "choices": [
+      {
+        "text": "No provider was reachable, so the stand-in imitates the wait",
+        "correct": true,
+        "why": "Right. labobs imitates the shape of a provider's waiting, by numbers written at the top of labobs.py."
+      },
+      {
+        "text": "Because real providers answer instantly, and the course wanted a delay to study",
+        "correct": false,
+        "why": "They do not: a first token takes time, and each token after it takes more."
+      },
+      {
+        "text": "Because a model call cannot be timed from inside the SDK that makes it",
+        "correct": false,
+        "why": "It is measured in every span of this lesson."
+      },
+      {
+        "text": "Because OpenTelemetry rounds every duration to whole seconds",
+        "correct": false,
+        "why": "It records nanoseconds; nothing is rounded."
+      }
+    ]
+  },
+  {
+    "id": "ex-vszke4vz",
+    "version": 1,
+    "section": "the-lab",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In releases.json, the similarity below which a chunk is not shown to the model is called the ___.",
+    "blanks": [
+      {
+        "accept": [
+          "floor"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p2kwmnx5",
+    "version": 1,
+    "section": "one-call",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a span record that a log line with a timestamp does not?",
+    "choices": [
+      {
+        "text": "The model's reply, word for word, with its finish reason",
+        "correct": false,
+        "why": "A log line can carry the reply as well as a span can."
+      },
+      {
+        "text": "Its parent, and the trace it belongs to",
+        "correct": true,
+        "why": "Right. The ids are what let a tool rebuild the tree and find every span of one request."
+      },
+      {
+        "text": "The time the operation happened",
+        "correct": false,
+        "why": "A timestamp is exactly what a log line has."
+      },
+      {
+        "text": "Whether the answer was right",
+        "correct": false,
+        "why": "Neither does: the span in this section is perfect and the answer is wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-dc2740pn",
+    "version": 1,
+    "section": "one-call",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "one_call.py's span had status UNSET and finish reason stop, and the reply said gift cards last one year. What does that show?",
+    "choices": [
+      {
+        "text": "That the span was written wrongly and the attributes cannot be trusted",
+        "correct": false,
+        "why": "Every attribute on it is correct. The call did succeed."
+      },
+      {
+        "text": "That the provider returned an error the SDK swallowed without saying",
+        "correct": false,
+        "why": "An error would have set the status to ERROR; this one is UNSET."
+      },
+      {
+        "text": "That a successful call and a right answer are different facts",
+        "correct": true,
+        "why": "Right. The trace records what happened; whether it was right takes evaluation, lessons 8 to 13."
+      },
+      {
+        "text": "That the model ran out of tokens",
+        "correct": false,
+        "why": "That would show as finish reason length, not stop."
+      }
+    ]
+  },
+  {
+    "id": "ex-df7sffp9",
+    "version": 1,
+    "section": "one-call",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each gen_ai attribute to what it says.",
+    "pairs": [
+      {
+        "left": "gen_ai.request.model",
+        "right": "the model the code asked for"
+      },
+      {
+        "left": "gen_ai.response.model",
+        "right": "the model that actually answered"
+      },
+      {
+        "left": "gen_ai.usage.output_tokens",
+        "right": "how many tokens the reply took"
+      },
+      {
+        "left": "gen_ai.operation.name",
+        "right": "what kind of call it was, such as chat"
+      }
+    ],
+    "right_distractors": [
+      "how long the call took"
+    ]
+  },
+  {
+    "id": "ex-sj6cb9xk",
+    "version": 1,
+    "section": "one-call",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team asks for the alias of a model, and its spans record only gen_ai.request.model. What will they be unable to see?",
+    "choices": [
+      {
+        "text": "How many tokens each call used, since those are counted per model name",
+        "correct": false,
+        "why": "Token counts are separate attributes and do not depend on the model name."
+      },
+      {
+        "text": "The day the alias began pointing at a different snapshot",
+        "correct": true,
+        "why": "Right. Only the response model says which snapshot answered; the request says the same alias every day."
+      },
+      {
+        "text": "Which calls failed",
+        "correct": false,
+        "why": "Failures are in the span's status, whatever the model attributes say."
+      },
+      {
+        "text": "Which feature made each call",
+        "correct": false,
+        "why": "That was never in a model attribute; it is the root span's app.feature."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0ckzj35",
+    "version": 1,
+    "section": "the-chain",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the assistant's steps for an answered question in the order their spans start.",
+    "items": [
+      "embed",
+      "search",
+      "generate",
+      "check_citations"
+    ]
+  },
+  {
+    "id": "ex-4d3btga7",
+    "version": 1,
+    "section": "the-chain",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the delivery question's trace, how many milliseconds did the chat extract-1 span take?",
+    "value": 723,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-eemcskm0",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A trace's root took 900 ms and its children add up to 600 ms, one after the other. What is the first thing to suspect?",
+    "choices": [
+      {
+        "text": "The clock of the machine is wrong",
+        "correct": false,
+        "why": "A wrong clock shifts every span alike; it does not open a gap between them."
+      },
+      {
+        "text": "The model was slow",
+        "correct": false,
+        "why": "A slow model shows as a long chat span, which would be counted among the children."
+      },
+      {
+        "text": "The spans ran in parallel",
+        "correct": false,
+        "why": "Children in parallel would add up to MORE than the root, not less."
+      },
+      {
+        "text": "Some work runs in code that opens no span",
+        "correct": true,
+        "why": "Right. Time inside the root that no child covers was spent somewhere nobody instrumented."
+      }
+    ]
+  },
+  {
+    "id": "ex-4d53azwb",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the assistant retry in its own code instead of letting the SDK retry?",
+    "choices": [
+      {
+        "text": "So that each attempt is a span of its own, with its own error and its own time",
+        "correct": true,
+        "why": "Right. A retry inside the SDK happens inside one span and leaves no trace of itself."
+      },
+      {
+        "text": "Because the SDK cannot retry",
+        "correct": false,
+        "why": "It can, and by default it does."
+      },
+      {
+        "text": "Because retrying in Python is cheaper than retrying in the SDK",
+        "correct": false,
+        "why": "The cost is the same requests either way."
+      },
+      {
+        "text": "To make the answer faster",
+        "correct": false,
+        "why": "Where the retry lives does not change how long it waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-znpjpz63",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The delivery answer was wrong. Which attribute pointed at the reason?",
+    "choices": [
+      {
+        "text": "gen_ai.usage.output_tokens = 13",
+        "correct": false,
+        "why": "A short reply is not a wrong one."
+      },
+      {
+        "text": "app.time_to_first_token_ms",
+        "correct": false,
+        "why": "Time says nothing about which sources the model read."
+      },
+      {
+        "text": "app.search.kept = 1",
+        "correct": true,
+        "why": "Right. Only one chunk cleared the floor, and it was about express delivery."
+      },
+      {
+        "text": "gen_ai.operation.name = chat",
+        "correct": false,
+        "why": "Every model call here is a chat."
+      }
+    ]
+  },
+  {
+    "id": "ex-p406mdv4",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The student-discount trace has no generate span. What does that tell you?",
+    "choices": [
+      {
+        "text": "The model read the sources and refused to answer",
+        "correct": false,
+        "why": "The model was never called. A model's refusal would have a generate span."
+      },
+      {
+        "text": "The trace was cut off before it finished",
+        "correct": false,
+        "why": "check_citations ran after the missing step, so the request finished."
+      },
+      {
+        "text": "No chunk cleared the floor",
+        "correct": true,
+        "why": "Right. The refusal came from the code, cost no model tokens, and took 46 ms."
+      },
+      {
+        "text": "The span exporter dropped the span on its way to the file",
+        "correct": false,
+        "why": "Nothing here drops spans; the step simply did not run."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqzec9k6",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong on a retrieval span? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "How many results came back",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "How many cleared the floor",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The ids of the chunks kept",
+        "correct": true,
+        "why": "Right. An id finds the text whenever it is needed."
+      },
+      {
+        "text": "The full text of every chunk returned",
+        "correct": false,
+        "why": "The ids are enough to find them, and the text is what lesson 2 is careful about."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxjb59j4",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two refusals look the same on screen. One trace has a generate span and one does not. Where is each fixed?",
+    "choices": [
+      {
+        "text": "Both in the prompt, since a refusal is a sentence the prompt asks for",
+        "correct": false,
+        "why": "The one without a generate span never reached a prompt."
+      },
+      {
+        "text": "Both in the search, which decides what the model gets to read",
+        "correct": false,
+        "why": "The one with a generate span got past the search."
+      },
+      {
+        "text": "Neither: a refusal is always right",
+        "correct": false,
+        "why": "A refusal to a question the documents answer is a wrong answer."
+      },
+      {
+        "text": "One in the search, the other in the prompt or sources",
+        "correct": true,
+        "why": "Right. One was stopped by the floor; the other read sources and judged they did not answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-htjcr5gy",
+    "version": 1,
+    "section": "instrumenting-the-sdk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the OpenInference instrumentor record without being asked?",
+    "choices": [
+      {
+        "text": "Nothing but the duration",
+        "correct": false,
+        "why": "It recorded far more: the messages, the reply, the tokens."
+      },
+      {
+        "text": "The whole prompt and the whole reply, as attributes on the span, by default",
+        "correct": true,
+        "why": "Right. It is the default, and lesson 2 is about what that means in production."
+      },
+      {
+        "text": "Only a hash of the prompt, so the text cannot be read back",
+        "correct": false,
+        "why": "The text is there in input.value and llm.input_messages."
+      },
+      {
+        "text": "The API key",
+        "correct": false,
+        "why": "No key appears in its attributes."
+      }
+    ]
+  },
+  {
+    "id": "ex-aj0ydba4",
+    "version": 1,
+    "section": "instrumenting-the-sdk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "OpenInference wrote llm.token_count.prompt; the hand-written span wrote gen_ai.usage.input_tokens. What does the difference mean in practice?",
+    "choices": [
+      {
+        "text": "A tool must read the names it writes",
+        "correct": true,
+        "why": "Right. Same fact, two names: which one a tool understands decides whether it sees the tokens at all."
+      },
+      {
+        "text": "They measure different tokens: one counts the prompt and one the whole input",
+        "correct": false,
+        "why": "Both read the same usage field of the reply."
+      },
+      {
+        "text": "One of them is wrong",
+        "correct": false,
+        "why": "Both are correct in their own convention."
+      },
+      {
+        "text": "OpenTelemetry forbids the llm prefix",
+        "correct": false,
+        "why": "Nothing forbids it; it is simply another convention."
+      }
+    ]
+  },
+  {
+    "id": "ex-pvmssjsb",
+    "version": 1,
+    "section": "instrumenting-the-sdk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Before the first customer's message goes through a newly installed instrumentation library, what is the one check this lesson asks for?",
+    "choices": [
+      {
+        "text": "Benchmark its overhead under the traffic of a normal day",
+        "correct": false,
+        "why": "Worth knowing, but it is not the risk this section is about."
+      },
+      {
+        "text": "Make one call and read the span it writes",
+        "correct": true,
+        "why": "Right. It shows which convention it uses and whether it keeps the text, in a minute."
+      },
+      {
+        "text": "Read its licence and the list of packages it depends on",
+        "correct": false,
+        "why": "A licence does not say what the library records by default."
+      },
+      {
+        "text": "Turn off every other exporter",
+        "correct": false,
+        "why": "The others are not the question; what this one keeps is."
+      }
+    ]
+  },
+  {
+    "id": "ex-s23ftfd4",
+    "version": 1,
+    "section": "trace-ids",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A thumbs down arrives from the browser a few seconds after a reply. What should it be joined to the reply by?",
+    "choices": [
+      {
+        "text": "The trace id that came back with the reply, sent along with the click",
+        "correct": true,
+        "why": "Right. Two requests can share words and a second, never a trace id."
+      },
+      {
+        "text": "The user and the time, to the second, of the last reply they got",
+        "correct": false,
+        "why": "The same person can ask twice in a minute, and the join lands on the wrong answer."
+      },
+      {
+        "text": "The text of the question",
+        "correct": false,
+        "why": "Many people ask the same words."
+      },
+      {
+        "text": "The order of arrival",
+        "correct": false,
+        "why": "Requests overlap; position says nothing about which reply a click is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ekafz5t",
+    "version": 1,
+    "section": "trace-ids",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many spans did the gift card trace have in spans.jsonl?",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "spans"
+  },
+  {
+    "id": "ex-hphrb58n",
+    "version": 1,
+    "section": "trace-ids",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A support screen shows customers the first eight characters of the trace id. What must the screen that opens a trace from it check?",
+    "choices": [
+      {
+        "text": "Nothing: the id itself is the permission",
+        "correct": false,
+        "why": "An id is a handle, not a secret, and a trace with the question on it is the conversation."
+      },
+      {
+        "text": "That all 32 characters were typed",
+        "correct": false,
+        "why": "Length is not access control."
+      },
+      {
+        "text": "Who is asking, and whether they are allowed to see it",
+        "correct": true,
+        "why": "Right. The same check as for the conversation itself."
+      },
+      {
+        "text": "That the trace is less than a day old",
+        "correct": false,
+        "why": "Age says nothing about who may read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7p507bk",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each span of the assistant to what it measures.",
+    "pairs": [
+      {
+        "left": "embed",
+        "right": "turning the question into a vector"
+      },
+      {
+        "left": "search",
+        "right": "the query against the chunks in PostgreSQL"
+      },
+      {
+        "left": "chat extract-1",
+        "right": "one attempt at the model"
+      },
+      {
+        "left": "ask",
+        "right": "the whole request, from question to reply"
+      }
+    ],
+    "right_distractors": [
+      "the customer reading the reply"
+    ]
+  },
+  {
+    "id": "ex-pny2etgq",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A span opened while another is current takes that one as its ___, and that is what turns spans into a tree.",
+    "blanks": [
+      {
+        "accept": [
+          "parent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-eq021g7m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A trace shows a generate span with three chat children, the first two marked as errors. What happened?",
+    "choices": [
+      {
+        "text": "The model answered three times",
+        "correct": false,
+        "why": "Two of the three attempts failed; only one could have answered."
+      },
+      {
+        "text": "Three customers asked at once and their spans were merged into one trace",
+        "correct": false,
+        "why": "Three customers are three traces, each with its own root."
+      },
+      {
+        "text": "The citations were checked three times, once per source in the prompt",
+        "correct": false,
+        "why": "That would be check_citations spans, not chat spans."
+      },
+      {
+        "text": "The provider refused twice and the third attempt was answered",
+        "correct": true,
+        "why": "Right. One span per attempt is exactly what the assistant's retry loop writes."
+      }
+    ]
+  }
+]
