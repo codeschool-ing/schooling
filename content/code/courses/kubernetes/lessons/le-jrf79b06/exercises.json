@@ -1,0 +1,240 @@
+[
+  {
+    "id": "ex-srtpscwe",
+    "version": 1,
+    "section": "statefulset",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`pg-0` was deleted, and the new `pg-0` still had the `orders` table. Why?",
+    "hint": "Whose is the claim `data-pg-0`?",
+    "choices": [
+      {
+        "text": "PostgreSQL copied it from a replica",
+        "correct": false,
+        "why": "There was only one copy."
+      },
+      {
+        "text": "The StatefulSet backed it up before deleting",
+        "correct": false,
+        "why": "A StatefulSet takes no backups."
+      },
+      {
+        "text": "The new pod mounted the same claim",
+        "correct": true,
+        "why": "Right. The claim belongs to the name `pg-0`, not to the pod."
+      },
+      {
+        "text": "The data was in an `emptyDir`",
+        "correct": false,
+        "why": "An `emptyDir` dies with its pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-nnk9v0kq",
+    "version": 1,
+    "section": "statefulset",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `clusterIP: None` give the `pg` Service?",
+    "hint": "How did the backup Job reach the database?",
+    "choices": [
+      {
+        "text": "A DNS name per pod, such as `pg-0.pg`",
+        "correct": true,
+        "why": "Right. A headless Service resolves straight to the pods."
+      },
+      {
+        "text": "Access from outside the cluster",
+        "correct": false,
+        "why": "That is a NodePort or LoadBalancer."
+      },
+      {
+        "text": "Encryption of the connection",
+        "correct": false,
+        "why": "A Service does not encrypt anything."
+      },
+      {
+        "text": "Nothing; the Service is ignored",
+        "correct": false,
+        "why": "The StatefulSet names it in `serviceName`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qhytavc",
+    "version": 1,
+    "section": "statefulset",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A StatefulSet with `volumeClaimTemplates` is deleted by mistake. With the default settings, what happens to the claims?",
+    "hint": "Losing a database to a typo is the risk being avoided.",
+    "choices": [
+      {
+        "text": "They are deleted with it",
+        "correct": false,
+        "why": "Only if the retention policy says so."
+      },
+      {
+        "text": "They move to the default namespace",
+        "correct": false,
+        "why": "Claims never change namespace."
+      },
+      {
+        "text": "They are turned into `emptyDir` volumes",
+        "correct": false,
+        "why": "Nothing converts a claim."
+      },
+      {
+        "text": "They stay",
+        "correct": true,
+        "why": "Right, and a new StatefulSet with the same name mounts them again."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e39tber",
+    "version": 1,
+    "section": "protecting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these does the volume behind `data-pg-0` NOT protect against?",
+    "hint": "The volume holds the database's current files.",
+    "choices": [
+      {
+        "text": "The pod being deleted",
+        "correct": false,
+        "why": "The capture showed the data survive that."
+      },
+      {
+        "text": "A `DROP TABLE` by mistake",
+        "correct": true,
+        "why": "Right. The volume faithfully keeps the dropped state; only a copy elsewhere brings it back."
+      },
+      {
+        "text": "The container restarting",
+        "correct": false,
+        "why": "The pod and its volume stay."
+      },
+      {
+        "text": "A rolling update of the StatefulSet",
+        "correct": false,
+        "why": "The new pod mounts the same claim."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvskyw0d",
+    "version": 1,
+    "section": "protecting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the manifest raise `terminationGracePeriodSeconds` to 60?",
+    "hint": "What happens when the grace period runs out?",
+    "choices": [
+      {
+        "text": "To make deletion faster",
+        "correct": false,
+        "why": "A longer grace period can only make it slower."
+      },
+      {
+        "text": "PostgreSQL refuses to start without it",
+        "correct": false,
+        "why": "It starts with the default too."
+      },
+      {
+        "text": "To let a checkpoint finish before SIGKILL",
+        "correct": true,
+        "why": "Right. A killed database starts slower, recovering from its log."
+      },
+      {
+        "text": "To give the backup Job time to run",
+        "correct": false,
+        "why": "The Job is separate from the pod's shutdown."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkfnwbwc",
+    "version": 1,
+    "section": "inside-or-outside",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team on one cloud wants daily backups, a standby replica and automatic failover with the least work. What does the lesson recommend?",
+    "hint": "Who runs failover in each column of the table?",
+    "choices": [
+      {
+        "text": "A StatefulSet with three replicas",
+        "correct": false,
+        "why": "A StatefulSet does no failover or backups."
+      },
+      {
+        "text": "The provider's managed database",
+        "correct": true,
+        "why": "Right. Those come as settings there."
+      },
+      {
+        "text": "A CronJob running `pg_dump` and nothing else",
+        "correct": false,
+        "why": "That covers backups only."
+      },
+      {
+        "text": "An `emptyDir` with a large size limit",
+        "correct": false,
+        "why": "It dies with the pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-8gmx2efn",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the PostgreSQL manifest with what it gives.",
+    "hint": "The list in the first section.",
+    "pairs": [
+      {
+        "left": "`volumeClaimTemplates`",
+        "right": "A claim of its own per pod"
+      },
+      {
+        "left": "`clusterIP: None`",
+        "right": "A DNS name per pod"
+      },
+      {
+        "left": "`terminationGracePeriodSeconds`",
+        "right": "Time to shut down cleanly"
+      }
+    ],
+    "right_distractors": [
+      "Automatic failover"
+    ]
+  },
+  {
+    "id": "ex-pz4z16p9",
+    "version": 1,
+    "section": "protecting",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "PostgreSQL's own tool for a logical copy of a database is ___.",
+    "hint": "The backup Job ran it.",
+    "blanks": [
+      {
+        "accept": [
+          "pg_dump"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

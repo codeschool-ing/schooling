@@ -1,0 +1,166 @@
+{
+  "ex-srtpscwe": {
+    "prompt": "`pg-0` foi apagado, e o `pg-0` novo ainda tinha a tabela `orders`. Por quê?",
+    "hint": "De quem é o claim `data-pg-0`?",
+    "choices": [
+      {
+        "text": "O PostgreSQL copiou de uma réplica",
+        "why": "Só havia uma cópia."
+      },
+      {
+        "text": "O StatefulSet fez backup antes de apagar",
+        "why": "Um StatefulSet não faz backup."
+      },
+      {
+        "text": "O pod novo montou o mesmo claim",
+        "why": "Isso. O claim pertence ao nome `pg-0`, não ao pod."
+      },
+      {
+        "text": "Os dados estavam num `emptyDir`",
+        "why": "Um `emptyDir` morre com o pod."
+      }
+    ]
+  },
+  "ex-nnk9v0kq": {
+    "prompt": "O que `clusterIP: None` dá ao Service `pg`?",
+    "hint": "Como o Job de backup alcançou o banco?",
+    "choices": [
+      {
+        "text": "Um nome de DNS por pod, como `pg-0.pg`",
+        "why": "Isso. Um Service headless resolve direto para os pods."
+      },
+      {
+        "text": "Acesso de fora do cluster",
+        "why": "Isso é NodePort ou LoadBalancer."
+      },
+      {
+        "text": "Criptografia da conexão",
+        "why": "Um Service não criptografa nada."
+      },
+      {
+        "text": "Nada; o Service é ignorado",
+        "why": "O StatefulSet o nomeia em `serviceName`."
+      }
+    ]
+  },
+  "ex-1qhytavc": {
+    "prompt": "Um StatefulSet com `volumeClaimTemplates` é apagado por engano. Com as configurações padrão, o que acontece com os claims?",
+    "hint": "Perder um banco por um erro de digitação é o risco evitado.",
+    "choices": [
+      {
+        "text": "São apagados junto",
+        "why": "Só se a política de retenção mandar."
+      },
+      {
+        "text": "Vão para o namespace default",
+        "why": "Claims nunca mudam de namespace."
+      },
+      {
+        "text": "Viram volumes `emptyDir`",
+        "why": "Nada converte um claim."
+      },
+      {
+        "text": "Ficam",
+        "why": "Isso, e um StatefulSet novo com o mesmo nome os monta de novo."
+      }
+    ]
+  },
+  "ex-4e39tber": {
+    "prompt": "Contra qual destes o volume por trás de `data-pg-0` NÃO protege?",
+    "hint": "O volume guarda os arquivos atuais do banco.",
+    "choices": [
+      {
+        "text": "O pod ser apagado",
+        "why": "A captura mostrou os dados sobreviverem a isso."
+      },
+      {
+        "text": "Um `DROP TABLE` por engano",
+        "why": "Isso. O volume guarda fielmente o estado sem a tabela; só uma cópia em outro lugar a traz de volta."
+      },
+      {
+        "text": "O container reiniciar",
+        "why": "O pod e o volume ficam."
+      },
+      {
+        "text": "Um rolling update do StatefulSet",
+        "why": "O pod novo monta o mesmo claim."
+      }
+    ]
+  },
+  "ex-nvskyw0d": {
+    "prompt": "Por que o manifesto aumentou `terminationGracePeriodSeconds` para 60?",
+    "hint": "O que acontece quando o prazo acaba?",
+    "choices": [
+      {
+        "text": "Para apagar mais rápido",
+        "why": "Um prazo maior só pode deixar mais lento."
+      },
+      {
+        "text": "O PostgreSQL não sobe sem isso",
+        "why": "Ele sobe com o padrão também."
+      },
+      {
+        "text": "Para um checkpoint terminar antes do SIGKILL",
+        "why": "Isso. Um banco morto sobe mais devagar, se recuperando pelo log."
+      },
+      {
+        "text": "Para dar tempo ao Job de backup",
+        "why": "O Job é separado do desligamento do pod."
+      }
+    ]
+  },
+  "ex-fkfnwbwc": {
+    "prompt": "Uma equipe numa nuvem quer backups diários, uma réplica de prontidão e failover automático com o menor trabalho. O que a lição recomenda?",
+    "hint": "Quem cuida do failover em cada coluna da tabela?",
+    "choices": [
+      {
+        "text": "Um StatefulSet com três réplicas",
+        "why": "Um StatefulSet não faz failover nem backup."
+      },
+      {
+        "text": "O banco gerenciado do provedor",
+        "why": "Isso. Ali isso vem como configuração."
+      },
+      {
+        "text": "Um CronJob rodando `pg_dump` e nada mais",
+        "why": "Isso cobre só backups."
+      },
+      {
+        "text": "Um `emptyDir` com limite grande",
+        "why": "Ele morre com o pod."
+      }
+    ]
+  },
+  "ex-8gmx2efn": {
+    "prompt": "Ligue cada parte do manifesto do PostgreSQL ao que ela dá.",
+    "hint": "A lista da primeira seção.",
+    "pairs": [
+      {
+        "left": "`volumeClaimTemplates`",
+        "right": "Um claim próprio por pod"
+      },
+      {
+        "left": "`clusterIP: None`",
+        "right": "Um nome de DNS por pod"
+      },
+      {
+        "left": "`terminationGracePeriodSeconds`",
+        "right": "Tempo para desligar direito"
+      }
+    ],
+    "right_distractors": [
+      "Failover automático"
+    ]
+  },
+  "ex-pz4z16p9": {
+    "prompt": "A ferramenta do próprio PostgreSQL para uma cópia lógica de um banco é o ___.",
+    "hint": "O Job de backup a rodou.",
+    "blanks": [
+      {
+        "accept": [
+          "pg_dump"
+        ]
+      }
+    ]
+  }
+}
