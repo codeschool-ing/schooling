@@ -16,9 +16,7 @@ n é grande", o que está errado.
 
 ## "30 basta" não é uma lei
 
-Para as cestas, as médias de 30 ainda tinham assimetria de 0,34. Para populações com caudas muito pesadas —
-rendas num país, valores de sinistros de seguro, número de seguidores por conta —, as médias de amostras de
-30, ou de 300, ainda podem ser visivelmente assimétricas, e uma aproximação normal pode subestimar quantas
+Para as cestas, as médias de 30 ainda tinham assimetria de 0,34. Algumas populações têm caudas muito pesadas: rendas num país, valores de sinistros de seguro, número de seguidores por conta. Para elas, as médias de amostras de 30, ou de 300, ainda podem ser visivelmente assimétricas, e uma aproximação normal pode subestimar quantas
 vezes uma média amostral cai longe. Quanto mais pesadas as caudas, maior a amostra precisa ser. Para algumas
 distribuições extremas, cujo desvio padrão é infinito, o teorema nem se aplica.
 

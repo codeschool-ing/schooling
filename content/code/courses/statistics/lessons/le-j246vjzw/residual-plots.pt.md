@@ -3,7 +3,7 @@ title: O gráfico de resíduos
 version: 1
 ---
 
-Um **gráfico de resíduos** desenha o resíduo de cada observação contra o seu **valor previsto**. É a checagem mais útil de uma regressão, e leva poucos segundos para ler.
+Um **gráfico de resíduos** desenha o resíduo de cada observação contra o seu **valor previsto**. É a primeira checagem a fazer em qualquer regressão, e leva poucos segundos para ler.
 
 ## Um saudável
 

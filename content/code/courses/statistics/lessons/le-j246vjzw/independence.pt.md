@@ -23,7 +23,7 @@ Resíduos correlacionados positivamente fazem os dados parecerem mais informativ
 
 ## Consertando
 
-**Ponha a variável que falta no modelo.** Acrescentar uma variável para os horários de pico, 1 para uma entrega que saiu durante o almoço ou o pico da noite e 0 nos outros casos, dá a ela um coeficiente de **3,45 minutos**, baixa o desvio padrão dos resíduos de 3,24 para **2,77** minutos, e corta a autocorrelação de defasagem 1 para **0,14**.
+**Ponha a variável que falta no modelo.** Acrescente uma variável para os horários de pico: 1 para uma entrega que saiu durante o almoço ou o pico da noite, 0 nos outros casos. O coeficiente dela é **3,45 minutos**, o desvio padrão dos resíduos cai de 3,24 para **2,77** minutos, e a autocorrelação de defasagem 1 cai para **0,14**.
 
 **Leve o agrupamento em conta.** Quando as observações vêm em grupos, como várias entregas de cada entregador ou vários pedidos de cada cliente, observações do mesmo grupo tendem a se parecer. Métodos para isso, como erros padrão agrupados ou modelos multinível, estão além deste curso; reconhecer que os dados têm grupos é o primeiro passo.
 

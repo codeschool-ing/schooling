@@ -23,7 +23,7 @@ Positively correlated residuals make the data look more informative than it is. 
 
 ## Fixing it
 
-**Put the missing variable in the model.** Adding a variable for the rush periods, 1 for a delivery that left during lunch or the evening peak and 0 otherwise, gives it a coefficient of **3.45 minutes**, lowers the residual standard deviation from 3.24 to **2.77** minutes, and cuts the lag-1 autocorrelation to **0.14**.
+**Put the missing variable in the model.** Add a variable for the rush periods: 1 for a delivery that left during lunch or the evening peak, 0 otherwise. Its coefficient is **3.45 minutes**, the residual standard deviation falls from 3.24 to **2.77** minutes, and the lag-1 autocorrelation drops to **0.14**.
 
 **Account for the grouping.** When observations come in groups, such as several deliveries by each courier or several orders from each customer, observations in the same group tend to be alike. Methods for this, such as clustered standard errors or multilevel models, are beyond this course; recognising that the data has groups is the first step.
 

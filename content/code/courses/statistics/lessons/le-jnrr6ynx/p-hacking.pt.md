@@ -10,8 +10,7 @@ enganado.
 ## Vinte ajustes que não fazem nada
 
 Imagine que a equipe de marketing da Horta experimenta vinte pequenas mudanças no site — uma cor de botão
-nova, uma foto diferente, uma oferta reescrita — e para cada uma compara as cestas de 50 visitantes que
-viram a mudança com as de 50 que não viram. Suponha que nenhuma das mudanças faça nada. Cada teste tem 5% de
+nova, uma foto diferente, uma oferta reescrita. Para cada uma, compara as cestas de 50 visitantes que viram a mudança com as de 50 que não viram. Suponha que nenhuma das mudanças faça nada. Cada teste tem 5% de
 chance de um resultado "significativo" por acidente.
 
 A chance de **pelo menos um** dos vinte sair significativo é

@@ -11,7 +11,7 @@ The baskets are just as skewed with 400 of them as with 40. The theorem is about
 
 ## "30 is enough" is not a law
 
-For the baskets, means of 30 still had a skewness of 0.34. For populations with very heavy tails — incomes in a country, the sizes of insurance claims, the number of followers per account — the means of samples of 30, or of 300, can still be noticeably skewed, and a normal approximation can understate how often a sample mean lands far out. The heavier the tails, the larger the sample needs to be. For a few extreme distributions, whose standard deviation is infinite, the theorem does not apply at all.
+For the baskets, means of 30 still had a skewness of 0.34. Some populations have very heavy tails: incomes in a country, the sizes of insurance claims, the number of followers per account. For them, the means of samples of 30, or of 300, can still be noticeably skewed, and a normal approximation can understate how often a sample mean lands far out. The heavier the tails, the larger the sample needs to be. For a few extreme distributions, whose standard deviation is infinite, the theorem does not apply at all.
 
 ## It needs random, independent observations
 

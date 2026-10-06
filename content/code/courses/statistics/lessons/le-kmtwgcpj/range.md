@@ -20,7 +20,7 @@ The range uses exactly two values, the extremes, and ignores everything between 
 
 ## Where the range is still the right tool
 
-The range answers one question perfectly: **what were the limits?** For a quality check — did any bag weigh under 4.9 kg? did any delivery take longer than an hour? — the extremes are the whole point, and the range, or simply the minimum and the maximum, is what to report.
+The range answers one question perfectly: **what were the limits?** Did any bag weigh under 4.9 kg? Did any delivery take longer than an hour? For a quality check like that, the extremes are the whole point, and the range, or simply the minimum and the maximum, is what to report.
 
 It is also a quick sanity check on any column. Horta's twelve delivery times run from 27.5 to 61 minutes, a range of 33.5. A range of 330 would point at a typing error before any other calculation was made.
 

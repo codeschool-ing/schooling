@@ -19,7 +19,7 @@ Essa última frase é o que torna a aleatorização especial. Ajustar por confun
 
 ## A Horta já fez alguns
 
-O teste da página de pagamento da aula 16 foi aleatorizado: cada visitante viu a página antiga ou a nova por sorteio. É por isso que o resultado, 13,1% contra 11,0%, pode ser lido como a página nova **causando** mais compras, e não só andando junto com elas. O teste da roteirização da aula 13 não foi aleatorizado do mesmo jeito, já que toda entrega do teste usou o sistema novo, então ele dependeu da comparação com a média anterior de 40 minutos, e uma mudança no trânsito no mesmo período teria se confundido com ele.
+O teste da página de pagamento da aula 16 foi aleatorizado: cada visitante viu a página antiga ou a nova por sorteio. É por isso que o resultado, 13,1% contra 11,0%, pode ser lido como a página nova **causando** mais compras, e não só andando junto com elas. O teste da roteirização da aula 13 não foi aleatorizado do mesmo jeito: toda entrega do teste usou o sistema novo. Ele dependeu da comparação com a média anterior de 40 minutos, então uma mudança no trânsito no mesmo período teria se confundido com ele.
 
 ## Boas práticas
 

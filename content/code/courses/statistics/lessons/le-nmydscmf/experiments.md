@@ -19,7 +19,7 @@ That last clause is what makes randomisation special. Adjusting for confounders,
 
 ## Horta has already run some
 
-The checkout page test of lesson 16 was randomised: each visitor was shown the old page or the new one at random. That is why its result, 13.1% against 11.0%, can be read as the new page **causing** more purchases, not merely going with them. The routing trial of lesson 13 was not randomised in the same way, since every delivery in the trial used the new system, so it relied on comparing with the earlier mean of 40 minutes, and a change in traffic over the same period would have been confounded with it.
+The checkout page test of lesson 16 was randomised: each visitor was shown the old page or the new one at random. That is why its result, 13.1% against 11.0%, can be read as the new page **causing** more purchases, not merely going with them. The routing trial of lesson 13 was not randomised in the same way: every delivery in the trial used the new system. It relied on comparing with the earlier mean of 40 minutes, so a change in traffic over the same period would have been confounded with it.
 
 ## Good practice
 

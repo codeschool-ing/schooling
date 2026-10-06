@@ -7,7 +7,7 @@ A significance level of 5% means that, when the null hypothesis is true, 5% of t
 
 ## Twenty tweaks that do nothing
 
-Imagine Horta's marketing team tries twenty small changes to the website — a new button colour, a different photo, a reworded offer — and for each one compares the baskets of 50 visitors who saw the change with 50 who did not. Suppose none of the changes does anything. Each test has a 5% chance of a "significant" result by accident.
+Imagine Horta's marketing team tries twenty small changes to the website — a new button colour, a different photo, a reworded offer. For each one, it compares the baskets of 50 visitors who saw the change with 50 who did not. Suppose none of the changes does anything. Each test has a 5% chance of a "significant" result by accident.
 
 The chance that **at least one** of the twenty comes out significant is
 

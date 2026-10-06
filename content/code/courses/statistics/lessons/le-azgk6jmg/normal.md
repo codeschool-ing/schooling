@@ -31,4 +31,4 @@ No real data is exactly normal: weights cannot be negative, and the normal curve
 
 ## What is not normal
 
-Baskets, waiting times, incomes and anything else with a long tail are not normal, and treating them as normal gives nonsense: a normal model of Horta's baskets, with mean R$ 82.78 and standard deviation R$ 58.89, would predict that 8% of baskets cost less than nothing. A model that predicts impossible values is telling you it does not fit.
+Baskets, waiting times, incomes and anything else with a long tail are not normal, and treating them as normal gives nonsense. A normal model of Horta's baskets, with mean R$ 82.78 and standard deviation R$ 58.89, would predict that 8% of baskets cost less than nothing. A model that predicts impossible values is telling you it does not fit.

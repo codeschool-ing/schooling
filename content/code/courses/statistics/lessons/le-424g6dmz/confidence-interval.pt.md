@@ -34,8 +34,7 @@ a média verdadeira em 95% das amostras.
 | 95% | 1,960 | de R$ 57,64 a R$ 107,13 |
 | 99% | 2,576 | mais largo |
 
-Mais confiança custa largura. Um intervalo de 99% pega a verdade mais vezes porque é mais largo; um de 100%
-iria de zero ao infinito e não diria nada. 95% é uma convenção, escolhida por ser um equilíbrio razoável, e
+Mais confiança custa largura. Um intervalo de 99% pega a verdade mais vezes porque é mais largo. Um de 100% iria de zero ao infinito e não diria nada. 95% é uma convenção, escolhida por ser um equilíbrio razoável, e
 a aula 13 apresenta a gêmea dela, o nível de significância de 5%.
 
 ## Do que ele precisa

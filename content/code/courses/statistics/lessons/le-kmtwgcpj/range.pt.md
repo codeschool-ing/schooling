@@ -28,9 +28,7 @@ estranha para uma medida de dispersão, e as duas próximas medidas não a têm.
 
 ## Onde a amplitude ainda é a ferramenta certa
 
-A amplitude responde perfeitamente a uma pergunta: **quais foram os limites?** Para uma checagem de
-qualidade — algum saco pesou menos de 4,9 kg? alguma entrega passou de uma hora? — os extremos são o
-ponto todo, e a amplitude, ou simplesmente o mínimo e o máximo, é o que informar.
+A amplitude responde perfeitamente a uma pergunta: **quais foram os limites?** Algum saco pesou menos de 4,9 kg? Alguma entrega passou de uma hora? Para uma checagem de qualidade assim, os extremos são o ponto todo, e a amplitude, ou simplesmente o mínimo e o máximo, é o que informar.
 
 Ela também é uma conferência rápida de qualquer coluna. Os doze tempos de entrega da Horta vão de 27,5 a
 61 minutos, uma amplitude de 33,5. Uma amplitude de 330 apontaria um erro de digitação antes de qualquer

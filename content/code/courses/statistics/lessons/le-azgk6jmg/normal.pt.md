@@ -47,7 +47,6 @@ vezes é otimista demais, como as caudas pesadas da aula 7 mostraram.
 
 ## O que não é normal
 
-Cestas, tempos de espera, rendas e qualquer outra coisa com cauda longa não são normais, e tratá-las como
-normais dá absurdos: um modelo normal das cestas da Horta, com média R$ 82,78 e desvio padrão R$ 58,89,
+Cestas, tempos de espera, rendas e qualquer outra coisa com cauda longa não são normais, e tratá-las como normais dá absurdos. Um modelo normal das cestas da Horta, com média R$ 82,78 e desvio padrão R$ 58,89,
 preveria que 8% das cestas custam menos que nada. Um modelo que prevê valores impossíveis está dizendo que
 não se ajusta.

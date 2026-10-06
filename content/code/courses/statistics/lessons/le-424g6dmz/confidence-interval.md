@@ -27,7 +27,7 @@ The true mean, R$ 82.78, is inside. In real life you would not know that; you wo
 | 95% | 1.960 | R$ 57.64 to R$ 107.13 |
 | 99% | 2.576 | wider |
 
-More confidence costs width. A 99% interval catches the truth more often because it is wider; a 100% interval would run from zero to infinity and say nothing. 95% is a convention, chosen because it is a reasonable balance, and lesson 13 meets its twin, the significance level of 5%.
+More confidence costs width. A 99% interval catches the truth more often because it is wider. A 100% interval would run from zero to infinity and say nothing. 95% is a convention, chosen because it is a reasonable balance, and lesson 13 meets its twin, the significance level of 5%.
 
 ## What it needs
 

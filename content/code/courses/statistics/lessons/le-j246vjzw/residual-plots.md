@@ -3,7 +3,7 @@ title: The residual plot
 version: 1
 ---
 
-A **residual plot** draws each observation's residual against its **predicted value**. It is the single most useful check of a regression, and it takes a few seconds to read.
+A **residual plot** draws each observation's residual against its **predicted value**. It is the first check to run on any regression, and it takes a few seconds to read.
 
 ## A healthy one
 
