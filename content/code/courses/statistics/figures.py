@@ -1372,6 +1372,88 @@ def l10_strata(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 11
+
+@figure('l11-clt', 11)
+def l11_clt(lang):
+    b = S.BASKETS
+    mu, sig = S.mean(b), S.sd(b, False)
+    ns = (1, 5, 30, 100)
+    t = {'en': dict(
+        label='Four histograms on the same scale, from R$ 0 to R$ 440, each of 2,000 sample means '
+              'drawn from Horta’s 400 baskets. With samples of 1, the histogram is the baskets '
+              'themselves: a peak on the left and a long right tail. With samples of 5 the means '
+              'are less skewed and narrower. With samples of 30 they form a nearly symmetric bell, '
+              'and with samples of 100 a narrow bell centred on R$ 82.78. From 5 upwards a normal '
+              'curve is drawn over each histogram.',
+        row='means of samples of {}', x='mean basket of the sample, in reais',
+        cap='The population never changes shape. The means of samples drawn from it do: wider '
+            'samples give means that are more symmetric and more tightly gathered around R$ 82.78.'),
+        'pt': dict(
+        label='Quatro histogramas na mesma escala, de R$ 0 a R$ 440, cada um com 2.000 médias '
+              'amostrais tiradas das 400 cestas da Horta. Com amostras de 1, o histograma são as '
+              'próprias cestas: um pico à esquerda e uma cauda longa à direita. Com amostras de 5, as '
+              'médias são menos assimétricas e mais estreitas. Com amostras de 30, formam um sino '
+              'quase simétrico, e com amostras de 100, um sino estreito centrado em R$ 82,78. De 5 '
+              'para cima, uma curva normal está desenhada sobre cada histograma.',
+        row='médias de amostras de {}', x='cesta média da amostra, em reais',
+        cap='A população nunca muda de forma. As médias das amostras tiradas dela mudam: amostras '
+            'maiores dão médias mais simétricas e mais juntas em torno de R$ 82,78.')}[lang]
+    f = Fig('l11-clt', 660, 460, t['label'])
+    edges = [i * 5 for i in range(89)]
+    for row, n in enumerate(ns):
+        ms = S.sample_means(b, n, 2000, 1100 + n)
+        counts = histogram(ms, edges)
+        y0 = 30 + row * 100
+        top = max(counts) * 1.08
+        p = Plot(f, 40, y0 + 12, 630, y0 + 82, 0, 440, 0, top)
+        p.bars(edges, counts)
+        f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim')
+        if n >= 5:
+            se = sig / math.sqrt(n)
+            dens = lambda x, se=se: 2000 * 5 * S.normal_pdf((x - mu) / se) / se
+            lo, hi = max(0, mu - 4 * se), min(440, mu + 4 * se)
+            p.curve(dens, lo, hi, stroke='--amber', width=1.8)
+        f.text(630, y0 + 16, t['row'].format(n), size=10, anchor='end', weight='600')
+    q = Plot(f, 40, 0, 630, 420, 0, 440, 0, 1)
+    q.xaxis(range(0, 441, 40), label=t['x'])
+    return f, t['cap']
+
+
+@figure('l11-shrink', 11)
+def l11_shrink(lang):
+    b = S.BASKETS
+    sig = S.sd(b, False)
+    pts = [(n, S.sd(S.sample_means(b, n, 2000, 1100 + n))) for n in S.CLT_N]
+    t = {'en': dict(
+        label='The standard deviation of 2,000 sample means plotted against the sample size, from 1 '
+              'to 100. The simulated points, 58.07, 41.75, 26.56, 19.22, 10.67 and 5.78, sit on the '
+              'curve sigma over the square root of n, which starts at 58.82 and falls steeply, then '
+              'more and more slowly.',
+        y='spread of the sample means, R$', x='sample size n', curve='σ ÷ √n', sim='2,000 simulated samples',
+        cap='Four times the sample, half the spread. The first few extra baskets buy a lot of '
+            'precision; after that each one buys less.'),
+        'pt': dict(
+        label='O desvio padrão de 2.000 médias amostrais em função do tamanho da amostra, de 1 a 100. '
+              'Os pontos simulados, 58,07, 41,75, 26,56, 19,22, 10,67 e 5,78, ficam sobre a curva sigma '
+              'sobre a raiz de n, que começa em 58,82 e cai depressa, depois cada vez mais devagar.',
+        y='dispersão das médias amostrais, R$', x='tamanho da amostra n', curve='σ ÷ √n', sim='2.000 amostras simuladas',
+        cap='Quatro vezes a amostra, metade da dispersão. As primeiras cestas a mais compram muita '
+            'precisão; depois disso cada uma compra menos.')}[lang]
+    f = Fig('l11-shrink', 620, 280, t['label'])
+    p = Plot(f, 70, 40, 590, 220, 0, 100, 0, 60)
+    p.yaxis(range(0, 61, 10), label=t['y'])
+    p.xaxis(range(0, 101, 10), label=t['x'])
+    p.curve(lambda n: sig / math.sqrt(n), 1, 100, stroke='--phosphor', width=2)
+    for n, v in pts:
+        f.circle(p.sx(n), p.sy(v), 5, fill='--amber', stroke='--paper', width=0.8)
+    f.line(400, 60, 422, 60, stroke='--phosphor', width=2)
+    f.text(428, 60, t['curve'], size=10, anchor='start', fill='--phosphor')
+    f.circle(411, 80, 5, fill='--amber', stroke='--paper', width=0.8)
+    f.text(428, 80, t['sim'], size=10, anchor='start', fill='--amber')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

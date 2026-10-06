@@ -778,6 +778,34 @@ def l10():
     show('all 60 near deliveries: mean (bias stays)', mean(near))
 
 
+def sample_means(pop, n, reps, seed):
+    """Means of `reps` samples of size n drawn WITH replacement, so draws are independent."""
+    d = Draw(seed)
+    return [mean([pop[d.index(len(pop))] for _ in range(n)]) for _ in range(reps)]
+
+
+CLT_N = (1, 2, 5, 10, 30, 100)
+
+
+@lesson(11)
+def l11():
+    b = BASKETS
+    sig = sd(b, False)
+    show('population: mean, sigma, skewness', f'{mean(b):.4f} {sig:.4f} {skewness(b):.4f}')
+    for n in CLT_N:
+        ms = sample_means(b, n, 2000, 1100 + n)
+        show(f'n = {n:>3}: mean of means, sd of means, sigma/sqrt(n), skew',
+             f'{mean(ms):.4f} {sd(ms):.4f} {sig / math.sqrt(n):.4f} {skewness(ms):.4f}')
+        within = sum(1 for m in ms if abs(m - mean(b)) <= 2 * sig / math.sqrt(n)) / len(ms)
+        show(f'n = {n:>3}: share within 2 sigma/sqrt(n) of the mean', within)
+    # dice: the sum of k dice
+    show('one die: mean, sd', f'{3.5} {math.sqrt(35 / 12):.4f}')
+    # medians of samples of 30, for contrast
+    d = Draw(1199)
+    meds = [median([b[d.index(400)] for _ in range(30)]) for _ in range(2000)]
+    show('medians of samples of 30: mean, sd', f'{mean(meds):.4f} {sd(meds):.4f}')
+
+
 def main():
     picked = [int(a) for a in sys.argv[1:]] or sorted(SHEET)
     for n in picked:
