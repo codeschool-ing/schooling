@@ -8,6 +8,9 @@
  *
  *   probe [--width W] [--height H] [--dpr D] [--mobile] PAGE STEP...
  *
+ * --hold-images keeps every image request waiting until a `release` step, so
+ * that a page can be measured as it is before its pictures arrive.
+ *
  * --mobile behaves like a phone's browser: it honours the viewport meta tag,
  * and without one it lays the page out 980 pixels wide and shrinks it to fit.
  *
@@ -27,7 +30,8 @@
  *   send SEL              presses SEL and prints the request the form made
  *   top X Y               the element painted on top at a point
  *   img SEL               which file an <img> chose, and its pixel size
- *   fetched               every file the page has asked for so far
+ *   fetched               every file the page has asked for so far, once each
+ *   release               lets the images held by --hold-images arrive
  *   scroll Y              scrolls the page to Y
  *   at MS                 freezes every animation at MS milliseconds
  *   width W               resizes the window to W pixels wide
@@ -50,6 +54,7 @@ const opt = { width: 1024, height: 768, dpr: 1, mobile: false };
 while (argv[0]?.startsWith('--')) {
   const k = argv.shift().slice(2);
   if (k === 'mobile') opt.mobile = true;
+  else if (k === 'hold-images') opt.hold = true;
   else opt[k] = Number(argv.shift());
 }
 const file = argv.shift();
@@ -72,6 +77,7 @@ const page = await context.newPage();
 const fetched = [];
 let sent = null;
 let opened = false;
+const held = [];
 await page.route('**/*', async (route) => {
   const req = route.request();
   const url = new URL(req.url());
@@ -80,7 +86,11 @@ await page.route('**/*', async (route) => {
     return route.continue();
   }
   if (url.protocol === 'file:' && req.method() === 'GET' && !req.isNavigationRequest()) {
-    fetched.push(basename(url.pathname) + url.search);
+    const f = basename(url.pathname) + url.search;
+    if (!fetched.includes(f)) fetched.push(f);
+    if (opt.hold && req.resourceType() === 'image') {
+      return new Promise((done) => held.push(() => route.continue().then(done)));
+    }
     return route.continue();
   }
   /* Anything else is a request the page made somewhere: a form being sent,
@@ -93,8 +103,10 @@ await page.route('**/*', async (route) => {
 });
 page.on('pageerror', (e) => console.log('page error: ' + e.message));
 
-await page.goto('file://' + resolve(file));
-await page.evaluate(() => document.fonts.ready);
+await page.goto('file://' + resolve(file), { waitUntil: opt.hold ? 'domcontentloaded' : 'load' });
+/* document.fonts.ready also waits for the page's pending loads in Chromium,
+   so with images held it would wait for ever; those pages use no web fonts. */
+if (!opt.hold) await page.evaluate(() => document.fonts.ready);
 
 /* What an element is called in the output: its tag, then its id or its first
    class, then its position among the matches when there is more than one. */
@@ -229,14 +241,24 @@ const steps = {
     for (const el of await page.$$(sel)) {
       const v = await el.evaluate(async (e) => {
         if (!e.complete) await new Promise((r) => e.addEventListener('load', r, { once: true }));
-        return { src: e.currentSrc.split('/').pop(), w: e.naturalWidth, h: e.naturalHeight,
+        /* naturalWidth on an <img> with srcset is already divided by the
+           density the browser assumed, so the file is measured on its own. */
+        const f = new Image();
+        f.src = e.currentSrc;
+        await f.decode();
+        return { src: e.currentSrc.split('/').pop(), w: f.naturalWidth, h: f.naturalHeight,
                  rw: e.getBoundingClientRect().width };
       });
-      console.log(`${await label(el)}  chose ${v.src} (${v.w}×${v.h}), drawn ${n(v.rw)} wide`);
+      console.log(`${await label(el)}  chose ${v.src} (${v.w}×${v.h} pixels), drawn ${n(v.rw)} wide`);
     }
   },
   async fetched() {
     console.log(fetched.length ? fetched.join('\n') : 'nothing fetched');
+  },
+  async release() {
+    while (held.length) await held.shift()();
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(100);
   },
   async scroll(y) {
     await page.evaluate((v) => window.scrollTo(0, v), Number(y));
