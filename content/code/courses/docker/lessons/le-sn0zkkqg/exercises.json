@@ -1,0 +1,492 @@
+[
+  {
+    "id": "ex-9fcp4yyq",
+    "version": 1,
+    "section": "namespaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`readlink /proc/<pid>/ns/net` gives `net:[4026532266]` for the container and `net:[4026531833]` for Ana's shell. What does that tell her?",
+    "hint": "When do two processes show the same number?",
+    "choices": [
+      {
+        "text": "They are in different network namespaces",
+        "correct": true,
+        "why": "Right. The same namespace shows the same number; these differ."
+      },
+      {
+        "text": "The container's network is faster",
+        "correct": false,
+        "why": "The numbers identify namespaces; they measure nothing."
+      },
+      {
+        "text": "The container has 4026532266 network interfaces",
+        "correct": false,
+        "why": "It had two, `lo` and `eth0`; the number names the namespace."
+      },
+      {
+        "text": "The two processes share a network but have different firewalls",
+        "correct": false,
+        "why": "Sharing a namespace would show the same number."
+      }
+    ]
+  },
+  {
+    "id": "ex-jsddd7c6",
+    "version": 1,
+    "section": "namespaces",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`lsns` showed the container's `user` namespace shared with 89 host processes. What follows for a process running as root inside it?",
+    "hint": "Which wall is missing?",
+    "choices": [
+      {
+        "text": "It is an unprivileged user on the host, because Docker remaps root by default",
+        "correct": false,
+        "why": "That remapping is a user namespace, and this container has none of its own."
+      },
+      {
+        "text": "It cannot run, since root is forbidden in containers by the kernel",
+        "correct": false,
+        "why": "It ran: `sleep 600` as root."
+      },
+      {
+        "text": "It is the host's root, held back only by the other walls",
+        "correct": true,
+        "why": "Right. Lesson 21 is about the other walls and adding this one."
+      },
+      {
+        "text": "It belongs to user `kthreadd`",
+        "correct": false,
+        "why": "`kthreadd` is just the first process listed in that shared namespace."
+      }
+    ]
+  },
+  {
+    "id": "ex-01vyj1bj",
+    "version": 1,
+    "section": "namespaces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the host, `ls /sys/class/net` lists a `veth…` interface that appeared with the container. What is it?",
+    "hint": "A cable has two ends.",
+    "choices": [
+      {
+        "text": "A second network card Docker added to the machine",
+        "correct": false,
+        "why": "No hardware was added; it is virtual."
+      },
+      {
+        "text": "One end of a virtual cable",
+        "correct": true,
+        "why": "Right: the host's end, and the container's `eth0` is the other. Lesson 23 follows it to the `docker0` bridge."
+      },
+      {
+        "text": "The container's loopback, seen from outside",
+        "correct": false,
+        "why": "The container's `lo` stays inside its namespace."
+      },
+      {
+        "text": "A VPN Docker opens to Docker Hub",
+        "correct": false,
+        "why": "Nothing about it reaches outside the machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-va8wef84",
+    "version": 1,
+    "section": "namespaces",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana runs `sudo nsenter --target $PID --uts --net sh -c \"hostname; ip -brief addr\"`. Whose files does the `ip` program come from?",
+    "hint": "Which namespaces were entered, and which were not?",
+    "choices": [
+      {
+        "text": "The host's: the mount namespace was not entered",
+        "correct": true,
+        "why": "Right. Only UTS and network were entered, so files and programs stayed the host's."
+      },
+      {
+        "text": "The container's, because `nsenter` copies the program in",
+        "correct": false,
+        "why": "Nothing is copied; the program is found in the filesystem of whichever mount namespace the process is in."
+      },
+      {
+        "text": "Alpine's busybox, which is why it printed `-brief` output",
+        "correct": false,
+        "why": "Alpine's `ip` refused `-brief` in this very lesson; this one is the host's iproute2."
+      },
+      {
+        "text": "Neither; `nsenter` has a built-in `ip`",
+        "correct": false,
+        "why": "`nsenter` only joins namespaces and runs the program it is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-mfe901yz",
+    "version": 1,
+    "section": "namespaces",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each namespace to what it gives a container its own copy of.",
+    "hint": "Four kinds from `lsns`.",
+    "pairs": [
+      {
+        "left": "pid",
+        "right": "Process numbers, starting again at 1"
+      },
+      {
+        "left": "net",
+        "right": "Network interfaces, addresses and routes"
+      },
+      {
+        "left": "uts",
+        "right": "The host name"
+      },
+      {
+        "left": "mnt",
+        "right": "The list of mounted filesystems"
+      }
+    ],
+    "right_distractors": [
+      "The amount of memory it may use"
+    ]
+  },
+  {
+    "id": "ex-fkh05nrz",
+    "version": 1,
+    "section": "cgroups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cpu.cfs_quota_us` is 50000 and `cpu.cfs_period_us` is 100000. What does the container get?",
+    "hint": "Divide one by the other, and think in time.",
+    "choices": [
+      {
+        "text": "Processor number 0 out of the four",
+        "correct": false,
+        "why": "The limit is time, not a particular processor."
+      },
+      {
+        "text": "Half the machine's four processors",
+        "correct": false,
+        "why": "That would be `--cpus 2`. 50000 of 100000 is half of one processor's time."
+      },
+      {
+        "text": "50 ms of CPU time in every 100 ms period",
+        "correct": true,
+        "why": "Right: half of one processor's worth of time, which is `--cpus 0.5`."
+      },
+      {
+        "text": "A 50% chance of being scheduled",
+        "correct": false,
+        "why": "Scheduling is not a lottery here; the quota is a fixed budget per period."
+      }
+    ]
+  },
+  {
+    "id": "ex-3x078a15",
+    "version": 1,
+    "section": "cgroups",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana started a container with `--memory 64m`. What number does `memory.limit_in_bytes` hold?",
+    "hint": "m means mebibytes: 1024 × 1024 bytes.",
+    "value": 67108864,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-jfjwfpf4",
+    "version": 1,
+    "section": "cgroups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container exits with code 137 and `docker inspect` shows `OOMKilled=false`. What is the best reading?",
+    "hint": "137 is 128 plus a signal number.",
+    "choices": [
+      {
+        "text": "It ran out of memory, and Docker recorded it the wrong way",
+        "correct": false,
+        "why": "That would show `OOMKilled=true`."
+      },
+      {
+        "text": "A `SIGKILL` from something other than the memory limit",
+        "correct": true,
+        "why": "Right. 137 says signal 9; `false` says it was not the memory limit."
+      },
+      {
+        "text": "It exited normally after running for 137 seconds",
+        "correct": false,
+        "why": "An exit code is not a duration."
+      },
+      {
+        "text": "It hit the limit on the number of processes it may start",
+        "correct": false,
+        "why": "A process limit refuses a fork; it does not kill the container."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5b9tz7j",
+    "version": 1,
+    "section": "cgroups",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each limit to what happens when a container reaches it.",
+    "hint": "One refuses, one kills, one makes you wait.",
+    "pairs": [
+      {
+        "left": "pids.max",
+        "right": "A new process cannot be created"
+      },
+      {
+        "left": "the memory limit",
+        "right": "The kernel kills a process with `SIGKILL`"
+      },
+      {
+        "left": "the CPU quota",
+        "right": "The processes wait for the next period"
+      }
+    ],
+    "right_distractors": [
+      "Docker restarts the container with a higher limit"
+    ]
+  },
+  {
+    "id": "ex-89e6c9wz",
+    "version": 1,
+    "section": "cgroups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On a cgroup v2 machine, where would Ana look for the memory limit of a container?",
+    "hint": "v2 keeps one tree.",
+    "choices": [
+      {
+        "text": "In a file called `memory.max`",
+        "correct": true,
+        "why": "Right: in the container's single cgroup directory. Same limit, another file name, one directory for every controller."
+      },
+      {
+        "text": "`memory.limit_in_bytes` under `/sys/fs/cgroup/memory/docker/`",
+        "correct": false,
+        "why": "That is the v1 layout the lab machine shows."
+      },
+      {
+        "text": "In `/proc/meminfo` inside the container",
+        "correct": false,
+        "why": "Lesson 2 showed that file reports the host's memory."
+      },
+      {
+        "text": "Nowhere; v2 has no memory limits",
+        "correct": false,
+        "why": "It has them, with a different file name."
+      }
+    ]
+  },
+  {
+    "id": "ex-1b2kpvyw",
+    "version": 1,
+    "section": "union-filesystem",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `rm /etc/motd` inside the container, what does the upper layer hold at `etc/motd`?",
+    "hint": "Look at the first character of the `ls -l` line.",
+    "choices": [
+      {
+        "text": "Nothing; the file was removed from Alpine's layer",
+        "correct": false,
+        "why": "Lower layers are never written; the original is still in snapshot 110."
+      },
+      {
+        "text": "A copy of `motd` whose contents were replaced by a note saying it was deleted",
+        "correct": false,
+        "why": "It is not a regular file at all."
+      },
+      {
+        "text": "A whiteout: a character device numbered `0, 0` that hides the file below",
+        "correct": true,
+        "why": "Right. Overlayfs hides the lower file when it sees the whiteout first."
+      },
+      {
+        "text": "A symbolic link to `/dev/null`",
+        "correct": false,
+        "why": "The `ls -l` line starts with `c`, a character device, not `l`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xydpj9vs",
+    "version": 1,
+    "section": "union-filesystem",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An image ships a 2 GB file, and a container appends one line to it. What does the upper layer gain?",
+    "hint": "What has to happen before a lower file can change?",
+    "choices": [
+      {
+        "text": "One line",
+        "correct": false,
+        "why": "Lower layers cannot be changed, so the file has to be copied up before it is written."
+      },
+      {
+        "text": "A whole 2 GB copy, with the line added",
+        "correct": true,
+        "why": "Right. The first write copies the file up, and the copy is what changes."
+      },
+      {
+        "text": "Nothing, because the write is refused",
+        "correct": false,
+        "why": "The write succeeds; it lands on a copy."
+      },
+      {
+        "text": "A link to the original in the image's layer",
+        "correct": false,
+        "why": "A link could not hold the change; overlayfs copies the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8aa7n5m",
+    "version": 1,
+    "section": "union-filesystem",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which files did Docker write into the small layer between Alpine's and the container's own? Choose all that apply.",
+    "hint": "Things that differ per container but are not the program's writes.",
+    "choices": [
+      {
+        "text": "`etc/hostname`",
+        "correct": true,
+        "why": "Yes: the name the container was given."
+      },
+      {
+        "text": "`etc/hosts`",
+        "correct": true,
+        "why": "Yes, along with the DNS settings in `etc/resolv.conf`."
+      },
+      {
+        "text": "`.dockerenv`",
+        "correct": true,
+        "why": "Yes: an empty marker file."
+      },
+      {
+        "text": "`tmp/new.txt`",
+        "correct": false,
+        "why": "That was Ana's write; it is in the upper layer."
+      },
+      {
+        "text": "`bin/busybox`",
+        "correct": false,
+        "why": "That comes from Alpine's own layer."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekjkn5vp",
+    "version": 1,
+    "section": "union-filesystem",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the layers of `web` from the top of the stack, which overlayfs reads first, to the bottom.",
+    "hint": "Writes land at the top.",
+    "items": [
+      "The upper layer, snapshot 212",
+      "Docker's per-container layer, snapshot 211",
+      "Alpine's image layer, snapshot 110"
+    ]
+  },
+  {
+    "id": "ex-az67qpmn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A container's application starts 500 threads and then fails with \"Resource temporarily unavailable\". The machine has plenty of memory. Which mechanism stopped it?",
+    "hint": "Threads are counted like processes.",
+    "choices": [
+      {
+        "text": "The PID namespace",
+        "correct": false,
+        "why": "A namespace changes what a process sees, not how many it may have."
+      },
+      {
+        "text": "The memory cgroup",
+        "correct": false,
+        "why": "That kills; this refused."
+      },
+      {
+        "text": "The pids cgroup's limit",
+        "correct": true,
+        "why": "Right. Each thread counts against `pids.max`, and the refusal is that error."
+      },
+      {
+        "text": "Overlayfs, which allows a limited number of open files",
+        "correct": false,
+        "why": "That would be a different error, and the filesystem has no thread limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-4sskjxan",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each question about a container to the kernel feature that answers it.",
+    "hint": "Sight, use, files.",
+    "pairs": [
+      {
+        "left": "What can it see?",
+        "right": "Namespaces"
+      },
+      {
+        "left": "How much can it use?",
+        "right": "Cgroups"
+      },
+      {
+        "left": "Where do its files come from?",
+        "right": "Overlayfs layers"
+      }
+    ],
+    "right_distractors": [
+      "A hypervisor"
+    ]
+  },
+  {
+    "id": "ex-8qz1nw0f",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A common way for a program to tell it is running in a Docker container is to check for an empty file at the root of the filesystem called ___.",
+    "hint": "Docker writes it into the per-container layer.",
+    "blanks": [
+      {
+        "accept": [
+          ".dockerenv",
+          "/.dockerenv"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

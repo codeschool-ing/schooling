@@ -55,6 +55,8 @@ JSON
 }
 
 tools() {
+  # iproute2 for `ip` and `ss`, which the networking lessons read
+  command -v ip >/dev/null || { apt-get update -qq && apt-get install -y -qq iproute2 >/dev/null; }
   id ana >/dev/null 2>&1 || useradd --create-home --shell /bin/bash ana
   getent group docker >/dev/null || groupadd docker
   usermod -aG docker ana

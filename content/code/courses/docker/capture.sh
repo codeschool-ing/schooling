@@ -25,14 +25,14 @@ if [ -z "${IN_LAB:-}" ]; then
 fi
 cd /home/ana || exit 1
 
-prompt() {
-  local here=${PWD/#\/home\/ana/\~}
+prompt() { # keeps $?, so a command can read the status of the one before it
+  local rc=$? here=${PWD/#\/home\/ana/\~}
   printf 'ana@vm:%s$ %s\n' "$here" "$1"
+  return $rc
 }
-run() {
+run() { # returns what the command returned, so `run 'echo $?'` can show it
   prompt "$1"
   eval "$1" 2>&1 </dev/null
-  return 0
 }
 quiet() { eval "$1" >/dev/null 2>&1 </dev/null || true; }
 put() { # also printed between file markers, so the lesson quotes the file
