@@ -170,7 +170,7 @@ def invoice(spec, out, truth):
 
     def put(xy, text, font, anchor="la"):
         d.text(xy, text, font=font, fill=(20, 20, 20), anchor=anchor)
-        lines.append(text)
+        lines.append((xy[1], d.textbbox(xy, text, font=font, anchor=anchor)[0], text))
     put((90, 90), spec["supplier"][0], big)
     for i, s in enumerate(spec["supplier"][1:]):
         put((90, 160 + i * 34), s, f)
@@ -222,8 +222,13 @@ def invoice(spec, out, truth):
                    "subtotal": subtotal, "shipping": spec["shipping"], "total": total}, fh, indent=1,
                   ensure_ascii=False)
         fh.write("\n")
+    # The text as it is read: row by row, top to bottom, and left to right
+    # inside a row. Two pieces of text share a row when they sit at one height.
+    rows = {}
+    for y, x, text in lines:
+        rows.setdefault(y, []).append((x, text))
     with open(os.path.join(truth, "invoice-0931.txt"), "w") as fh:
-        fh.write("\n".join(lines) + "\n")
+        fh.write("\n".join(" ".join(t for _, t in sorted(rows[y])) for y in sorted(rows)) + "\n")
 
 
 def cover(out):
