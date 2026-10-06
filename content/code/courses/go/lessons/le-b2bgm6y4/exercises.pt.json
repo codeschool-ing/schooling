@@ -1,0 +1,398 @@
+{
+  "ex-y2tf9sf6": {
+    "prompt": "Qual destes literais guarda uma tabulação de verdade entre `a` e `b`?",
+    "hint": "Onde uma barra invertida começa um escape?",
+    "choices": [
+      {
+        "text": "`` `a\\tb` ``",
+        "why": "Entre crases nada é escape, então isto são quatro caracteres: `a`, uma barra invertida, `t`, `b`."
+      },
+      {
+        "text": "`\"a\\tb\"`",
+        "why": "Isso. Entre aspas duplas `\\t` é um caractere só, a tabulação."
+      },
+      {
+        "text": "`\"a\\\\tb\"`, porque a barra dobrada reforça o escape",
+        "why": "`\\\\` é uma barra invertida escapada, então a string guarda uma barra seguida de `t`."
+      },
+      {
+        "text": "`'a\\tb'`, porque aspas simples também mantêm escapes",
+        "why": "Aspas simples fazem um literal de rune, e três caracteres num só é recusado, como a lição 8 mostrou."
+      }
+    ]
+  },
+  "ex-bhxqcm91": {
+    "prompt": "O que acontece com `path := \"C:\\new\\table\"`?",
+    "hint": "`\\n` e `\\t` são escapes que Go conhece?",
+    "choices": [
+      {
+        "text": "O compilador recusa com unknown escape",
+        "why": "Esse foi o `\\d`, que não é escape. `\\n` e `\\t` são, então isto compila."
+      },
+      {
+        "text": "Compila, e a string guarda uma quebra de linha e uma tabulação",
+        "why": "Isso. Nada reclama, o `go vet` saiu com 0, e o `fmt.Println` imprimiu `C:` numa linha só dele."
+      },
+      {
+        "text": "Compila, mas o `go vet` aponta os escapes suspeitos",
+        "why": "O `go vet` não imprimiu nada e saiu com 0; os escapes são válidos, então não há o que ver."
+      },
+      {
+        "text": "Compila, e o caminho fica guardado exatamente como digitado",
+        "why": "É o que o literal bruto `` `C:\\new\\table` `` faz. As aspas duplas transformaram duas barras em escapes."
+      }
+    ]
+  },
+  "ex-h5awncgy": {
+    "prompt": "Quanto é `len(`` `\\d+\\.\\d+` ``)`?",
+    "hint": "Num literal bruto cada barra invertida é um byte.",
+    "unit": "bytes"
+  },
+  "ex-sje40hvp": {
+    "prompt": "Um literal de string escrito entre ___ não tem escapes e pode ocupar várias linhas.",
+    "hint": "O caractere da tecla à esquerda do 1 em muitos teclados.",
+    "blanks": [
+      {
+        "accept": [
+          "crases",
+          "crase"
+        ]
+      }
+    ]
+  },
+  "ex-1ds9r12x": {
+    "prompt": "Qual destas linhas o compilador recusa?",
+    "hint": "Uma barra invertida vem seguida de uma letra que não é escape.",
+    "choices": [
+      {
+        "text": "`p := `` `\\d+` ``",
+        "why": "Num literal bruto a barra invertida é só uma barra, então isto compila."
+      },
+      {
+        "text": "`p := \"\\\\d+\"`",
+        "why": "`\\\\` é um escape válido para uma barra, então a string é `\\d+` e compila."
+      },
+      {
+        "text": "`p := \"\\d+\"`",
+        "why": "Isso: unknown escape. `\\d` significa algo para uma expressão regular e nada para Go."
+      },
+      {
+        "text": "`p := \"\\x41\"`, porque um escape hexadecimal precisa indicar um code point inteiro",
+        "why": "`\\x41` é um byte, 65, e imprimiu `A` em `~/strings-lit`."
+      }
+    ]
+  },
+  "ex-p1qps70e": {
+    "prompt": "Ligue cada escape, entre aspas duplas, ao que ele põe na string.",
+    "hint": "A tabela da seção 01.",
+    "pairs": [
+      {
+        "left": "`\\n`",
+        "right": "uma quebra de linha"
+      },
+      {
+        "left": "`\\\\`",
+        "right": "uma barra invertida"
+      },
+      {
+        "left": "`\\x41`",
+        "right": "o byte 65, dado em hexadecimal"
+      },
+      {
+        "left": "`\\u20ac`",
+        "right": "o símbolo do euro, guardado como seus bytes UTF-8"
+      }
+    ],
+    "right_distractors": [
+      "uma crase"
+    ]
+  },
+  "ex-64cyt8av": {
+    "prompt": "`s := \"hello\"`. O que Go faz com `s[0] = 'H'`?",
+    "hint": "Os bytes de uma string podem mudar?",
+    "choices": [
+      {
+        "text": "Muda o primeiro byte de `s` no lugar",
+        "why": "Isso é um array de C. Os bytes de uma string Go ficam fixos quando ela é criada."
+      },
+      {
+        "text": "Compila e entra em pânico quando a linha executa",
+        "why": "A recusa vem antes: é erro de compilação, e nada executa."
+      },
+      {
+        "text": "Recusa compilar: cannot assign to `s[0]`",
+        "why": "Isso. `s[0]` pode ser lido e nunca atribuído."
+      },
+      {
+        "text": "Muda uma cópia da string, e `s` continua dizendo hello",
+        "why": "Nenhuma cópia é feita também: a atribuição é recusada antes de o programa existir."
+      }
+    ]
+  },
+  "ex-yz49v8as": {
+    "prompt": "`t := s`, depois `s = \"H\" + s[1:]`, com `s` começando como `\"hello, world\"`. O que `fmt.Println(t)` imprime?",
+    "hint": "Algo escreveu nos bytes a que `t` se refere?",
+    "choices": [
+      {
+        "text": "`Hello, world`, porque `t` e `s` compartilham os bytes",
+        "why": "Elas compartilhavam bytes, mas `s` recebeu bytes novos do `+`; os antigos nunca mudaram."
+      },
+      {
+        "text": "`hello, world`",
+        "why": "Isso. `s` agora guarda uma string nova, e `t` continua com a antiga."
+      },
+      {
+        "text": "Nada: a atribuição a `s` é erro de compilação",
+        "why": "Atribuir uma string nova a uma variável é permitido; só escrever nos bytes de uma string é recusado."
+      },
+      {
+        "text": "Uma linha vazia, porque a string antiga foi liberada quando `s` mudou",
+        "why": "Memória para a qual algo ainda aponta nunca é liberada; `t` mantém os bytes antigos vivos."
+      }
+    ]
+  },
+  "ex-pkr29mz6": {
+    "prompt": "Na máquina amd64 do laboratório, o que `unsafe.Sizeof(book)` dá para uma string com um livro inteiro?",
+    "hint": "Quanto deu para `\"a\"`?",
+    "choices": [
+      {
+        "text": "O número de bytes do livro",
+        "why": "Isso é `len(book)`. O valor string só aponta para esses bytes."
+      },
+      {
+        "text": "24, um ponteiro, um comprimento e uma capacidade",
+        "why": "Uma string não tem capacidade, já que nada pode ser acrescentado nela no lugar; são duas palavras, não três."
+      },
+      {
+        "text": "16: um ponteiro e um comprimento, 8 bytes cada",
+        "why": "Isso, seja qual for o texto; deu 16 também para `\"a\"`."
+      },
+      {
+        "text": "8, o tamanho só do ponteiro para o texto",
+        "why": "O comprimento viaja junto com o ponteiro, e por isso o `len` não custa nada; juntos são 16."
+      }
+    ]
+  },
+  "ex-hd4tm72n": {
+    "prompt": "Um programa lê um log de 1 GB numa string `log` e guarda só `first := log[:80]` num mapa que vive enquanto o programa viver. Quanto do log fica na memória?",
+    "hint": "Para onde uma substring aponta?",
+    "choices": [
+      {
+        "text": "80 bytes, porque recortar copia o pedaço que pega",
+        "why": "Recortar não copia nada: `w` começava sete bytes depois de `t`, dentro dos mesmos bytes."
+      },
+      {
+        "text": "O gigabyte inteiro, porque `first` aponta para dentro dele; `strings.Clone(first)` guardaria 80 bytes",
+        "why": "Isso. É o caso que o `go doc strings.Clone` cita: guardar uma substring pequena de uma string muito maior."
+      },
+      {
+        "text": "Nada: `first` deixa de valer quando `log` não é mais usado",
+        "why": "Isso é um ponteiro pendurado de C. Go mantém os bytes vivos enquanto algo apontar para eles."
+      },
+      {
+        "text": "80 bytes, porque o coletor de lixo apara o que nenhuma substring cobre",
+        "why": "O coletor libera alocações inteiras, nunca parte de uma; o gigabyte é uma alocação só."
+      }
+    ]
+  },
+  "ex-3hv96j5t": {
+    "prompt": "Por que 100.000 voltas de `s += \"ab\"` levaram segundos quando um `strings.Builder` levou milissegundos?",
+    "hint": "O que o `+` faz com a string montada até ali?",
+    "choices": [
+      {
+        "text": "Cada `+=` copiou a string inteira montada até ali para memória nova",
+        "why": "Isso: 2 bytes, depois 4, até 200.000, uns 10 bilhões de bytes movidos no total."
+      },
+      {
+        "text": "Cada `+=` conferiu se o resultado era UTF-8 válido",
+        "why": "O `+` não confere nada; uma string pode guardar quaisquer bytes. O custo é a cópia."
+      },
+      {
+        "text": "O laço `for range` é lento, e a versão com Builder o evitou",
+        "why": "Os dois programas rodaram o mesmo laço 100.000 vezes; só o que acontecia dentro mudava."
+      },
+      {
+        "text": "Strings são comparadas a cada `+=`, e comparar cresce com o tamanho",
+        "why": "Nada é comparado. O `+=` monta uma string nova e copia os dois lados para ela."
+      }
+    ]
+  },
+  "ex-29awbjyv": {
+    "prompt": "`s := \"café\"`. O que é `s[3]`?",
+    "hint": "Indexar uma string conta em bytes.",
+    "choices": [
+      {
+        "text": "A rune `'é'`",
+        "why": "O `é` começa no byte 3 mas ocupa dois; indexar dá só o primeiro deles."
+      },
+      {
+        "text": "O byte 195, a primeira metade do `é`",
+        "why": "Isso: um `uint8`, que o `%c` desenhou como o caractere errado, `Ã`."
+      },
+      {
+        "text": "A string `\"é\"`",
+        "why": "Um índice dá um byte, nunca uma string; uma string viria de um recorte, `s[3:5]`."
+      },
+      {
+        "text": "O byte 102, o `f`",
+        "why": "Esse é `s[2]`. Os índices começam em 0, então `s[3]` é o quarto byte."
+      }
+    ]
+  },
+  "ex-7mz6mqyw": {
+    "prompt": "`s := \"café\"`. Quais destas são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "O `é` tem dois bytes.",
+    "choices": [
+      {
+        "text": "`len(s)` é 5",
+        "why": "Sim: três bytes ASCII e dois para o `é`."
+      },
+      {
+        "text": "`utf8.RuneCountInString(s)` é 4",
+        "why": "Sim: quatro runes, sendo o `é` pré-composto uma só."
+      },
+      {
+        "text": "`s[:4]` é UTF-8 válido",
+        "why": "Termina no byte `\\xc3` sozinho, e o `utf8.ValidString` disse `false`."
+      },
+      {
+        "text": "`s[4]` é a letra `é`",
+        "why": "`s[4]` é 169, a segunda metade do `é`, e ainda por cima um byte."
+      }
+    ]
+  },
+  "ex-yh7xhwdg": {
+    "prompt": "O que `strings.Index(\"café au lait\", \"au\")` devolve?",
+    "hint": "Conte bytes, não caracteres.",
+    "choices": [
+      {
+        "text": "5, o número de caracteres antes de `au`",
+        "why": "Cinco caracteres, mas o `é` tem dois bytes, e o `strings` responde em bytes."
+      },
+      {
+        "text": "6, a posição em bytes",
+        "why": "Isso: c, a, f, dois bytes de `é` e um espaço vêm antes."
+      },
+      {
+        "text": "7, contando a partir de 1",
+        "why": "As posições começam em 0, como os índices."
+      },
+      {
+        "text": "4, o número de runes em `café`",
+        "why": "Isso conta só `café`, e em runes; a resposta é uma posição de byte na string inteira."
+      }
+    ]
+  },
+  "ex-p3sr7p48": {
+    "prompt": "Um servidor recebe um nome pela rede e `utf8.RuneCountInString(name)` devolve 10. O que isso diz?",
+    "hint": "O que ele respondeu para `\"\\xff\\xfe\"`?",
+    "choices": [
+      {
+        "text": "O nome é UTF-8 válido com 10 caracteres",
+        "why": "Nada disso decorre: bytes inválidos contam como uma rune cada, e runes não são caracteres."
+      },
+      {
+        "text": "O nome tem 10 bytes",
+        "why": "Isso o `len` diria; runes e bytes só coincidem em ASCII."
+      },
+      {
+        "text": "O nome não tem bytes inválidos, senão a contagem daria erro",
+        "why": "Ele devolve um número e nenhum erro; `\"\\xff\\xfe\"` deu 2."
+      },
+      {
+        "text": "Pouco, até `utf8.ValidString(name)` ser verdadeiro; aí ele tem 10 runes",
+        "why": "Isso. Confira a validade primeiro, e lembre que runes ainda não são caracteres como o leitor os vê."
+      }
+    ]
+  },
+  "ex-ndp3f6as": {
+    "prompt": "Ponha estes literais na ordem do que o `len` devolve para eles, do menor para o maior.",
+    "hint": "Escapes só funcionam entre aspas duplas; o símbolo do euro tem três bytes.",
+    "items": [
+      "`\"\\n\"`",
+      "`` `\\n` ``",
+      "`\"\\u20ac\"`",
+      "`` `\\u20ac` ``"
+    ]
+  },
+  "ex-pe812gbv": {
+    "prompt": "Ligue cada tarefa à ferramenta para ela.",
+    "hint": "Três da seção 03, uma da seção 02.",
+    "pairs": [
+      {
+        "left": "o tamanho de uma string em bytes",
+        "right": "`len(s)`"
+      },
+      {
+        "left": "o número de runes",
+        "right": "`utf8.RuneCountInString(s)`"
+      },
+      {
+        "left": "se bytes vindos de fora são UTF-8",
+        "right": "`utf8.ValidString(s)`"
+      },
+      {
+        "left": "uma string longa montada num laço",
+        "right": "`strings.Builder`"
+      }
+    ],
+    "right_distractors": [
+      "`strings.Clone(s)`"
+    ]
+  },
+  "ex-4gvv2b01": {
+    "prompt": "`s` é uma variável string. Qual destas linhas compila?",
+    "hint": "Atribuir à variável não é o mesmo que escrever na string.",
+    "choices": [
+      {
+        "text": "`s[0]++`",
+        "why": "Incrementar um byte de uma string é escrever nela: cannot assign to `s[0]`."
+      },
+      {
+        "text": "`s[0] = 'H'`",
+        "why": "Os bytes de uma string não podem ser atribuídos; o compilador recusou exatamente esta linha."
+      },
+      {
+        "text": "`s = \"H\" + s[1:]`",
+        "why": "Isso. Monta uma string nova e a dá à variável; nenhum byte da antiga muda."
+      },
+      {
+        "text": "`s[0] = \"H\"`, porque o lado direito também é string",
+        "why": "Uma string à direita não muda nada: atribuir a `s[0]` é recusado seja qual for o valor."
+      }
+    ]
+  },
+  "ex-kmh5kfxp": {
+    "prompt": "`utf8.___(\"\\xff\\xfe\")` devolve `false`, porque esses dois bytes não começam caractere nenhum.",
+    "hint": "A função que a seção 03 manda chamar em texto vindo de fora.",
+    "blanks": [
+      {
+        "accept": [
+          "ValidString"
+        ]
+      }
+    ]
+  },
+  "ex-mn7ngk73": {
+    "prompt": "Uma tela mostra os 9 primeiros bytes de um nome com `name[:9]`. O que dá errado com `\"Conceição Silva\"`?",
+    "hint": "Conte os bytes de `ç` e `ã`.",
+    "choices": [
+      {
+        "text": "Entra em pânico, porque `name` tem letras fora do ASCII",
+        "why": "Recortar dentro do comprimento nunca entra em pânico, sejam quais forem os bytes; o resultado só fica errado."
+      },
+      {
+        "text": "Devolve os 9 primeiros caracteres, `Conceição`",
+        "why": "Isso precisaria de 11 bytes, já que `ç` e `ã` ocupam dois cada."
+      },
+      {
+        "text": "Corta o `ã` ao meio e o resultado não é UTF-8 válido",
+        "why": "Isso: `Conceiç` e o primeiro byte do `ã` sozinho, o mesmo corte de `s[:4]` em `café`."
+      },
+      {
+        "text": "Não compila, porque recortar uma string exige o pacote `utf8`",
+        "why": "Recortar faz parte da linguagem; `s[:3]` e `s[:4]` compilaram sem import nenhum."
+      }
+    ]
+  }
+}
