@@ -1,0 +1,559 @@
+{
+  "ex-t1v8fft8": {
+    "prompt": "Qual é a principal diferença entre o banco PostgreSQL da rede e o warehouse que a Ana constrói a partir dele?",
+    "hint": "Pense em para que cada um serve.",
+    "choices": [
+      {
+        "text": "Um registra; o outro responde perguntas",
+        "why": "Isso. Os mesmos dados, projetos opostos: um para gravar, outro para ler."
+      },
+      {
+        "text": "O warehouse guarda dados que os caixas nunca veem, comprados de fornecedores de fora",
+        "why": "Não. O warehouse é carregado a partir do banco da rede; os dados são os mesmos."
+      },
+      {
+        "text": "O warehouse é um backup para o caso de o PostgreSQL falhar",
+        "why": "Não. Um backup restaura o mesmo projeto; o warehouse é outro projeto."
+      },
+      {
+        "text": "O PostgreSQL é um software mais novo",
+        "why": "Não. A escolha do motor não é a diferença de que o curso trata."
+      }
+    ]
+  },
+  "ex-d5rynv5m": {
+    "prompt": "Por que o curso recomenda rodar o `lab.sh` dentro de uma máquina virtual?",
+    "hint": "Veja o que o script muda na máquina.",
+    "choices": [
+      {
+        "text": "O DuckDB se recusa a rodar fora de uma máquina virtual",
+        "why": "Não. O DuckDB é um programa só e roda em qualquer lugar, até num navegador."
+      },
+      {
+        "text": "Os dados são grandes demais para um notebook",
+        "why": "Não. O laboratório inteiro ocupa cerca de um gigabyte de disco."
+      },
+      {
+        "text": "Ele cria um usuário e um servidor de banco",
+        "why": "Isso. São mudanças que você prefere manter longe do computador em que trabalha."
+      },
+      {
+        "text": "Uma máquina virtual deixa as consultas do PostgreSQL mais rápidas que uma cópia instalada",
+        "why": "Não. Uma máquina virtual acrescenta uma camada; não acelera nada."
+      }
+    ]
+  },
+  "ex-3ddmnjwp": {
+    "prompt": "Os arquivos CSV gerados ocupam 97 MB e o PostgreSQL os guarda em 802 MB. Cerca de quantas vezes o banco é maior que os arquivos? Dê uma casa decimal.",
+    "hint": "Divida o maior pelo menor."
+  },
+  "ex-mjje4ta7": {
+    "prompt": "O caixa pede o pedido 900001 pelo número. Que tipo de pergunta é essa?",
+    "hint": "Quantos pedidos a pergunta nomeia?",
+    "choices": [
+      {
+        "text": "Uma pergunta sobre muitas coisas ao longo de um período",
+        "why": "Não. Isso descreve o relatório do gerente, que não nomeia pedido nenhum."
+      },
+      {
+        "text": "Uma pergunta sobre uma coisa, agora",
+        "why": "Isso. Um pedido, pela chave, como está hoje."
+      },
+      {
+        "text": "Uma consulta analítica que resume uma tabela",
+        "why": "Não. Nada é resumido; volta um pedido e suas linhas."
+      },
+      {
+        "text": "Uma carga em lote vinda de outro sistema",
+        "why": "Não. Uma carga grava muitas linhas; isto lê um pedido."
+      }
+    ]
+  },
+  "ex-3c8hez6j": {
+    "prompt": "A busca do caixa e o relatório do gerente são SQL sobre as mesmas tabelas. O que difere entre eles?",
+    "hint": "A lição diz que não é a dificuldade.",
+    "choices": [
+      {
+        "text": "O relatório usa outro dialeto de SQL",
+        "why": "Não. Os dois rodaram no mesmo PostgreSQL, no mesmo SQL."
+      },
+      {
+        "text": "O relatório é mais difícil de escrever corretamente",
+        "why": "Não. O ponto da lição é que diferem na forma, não na dificuldade."
+      },
+      {
+        "text": "Só a busca do caixa lê de um índice",
+        "why": "Verdade nesses dois planos, mas é consequência da forma, não a diferença em si."
+      },
+      {
+        "text": "A forma: quantas linhas cada um toca, e se grava",
+        "why": "Isso. Um punhado de linhas agora contra todas as linhas resumidas."
+      }
+    ]
+  },
+  "ex-hsgkmw6s": {
+    "prompt": "O que significa o T de OLTP, e o que ele é?",
+    "hint": "Uma unidade de trabalho que acontece inteira ou não acontece.",
+    "choices": [
+      {
+        "text": "Table (tabela): a unidade em que tudo num banco relacional é guardado",
+        "why": "Não. Os dois tipos de banco têm tabelas."
+      },
+      {
+        "text": "Time (tempo): o momento em que uma linha foi gravada",
+        "why": "Não. O tempo importa mais ao warehouse que ao caixa."
+      },
+      {
+        "text": "Transaction (transação): unidade de trabalho, tudo ou nada",
+        "why": "Isso. Processamento de transações online: muitas transações pequenas por segundo."
+      },
+      {
+        "text": "Transfer (transferência): copiar dados de um sistema para outro toda noite",
+        "why": "Não. Copiar entre sistemas é o que carrega um warehouse."
+      }
+    ]
+  },
+  "ex-vtwqq73n": {
+    "prompt": "Quantas páginas de 8 kB o PostgreSQL leu para buscar o pedido 900001 e suas duas linhas?",
+    "hint": "Some os dois index scans."
+  },
+  "ex-3h7nagk2": {
+    "prompt": "`order_lines` cresce de 900 mil linhas para 9 milhões. O que acontece com o custo de buscar as linhas de um pedido pelo número?",
+    "hint": "Qual a profundidade de uma árvore B sobre um milhão de chaves?",
+    "choices": [
+      {
+        "text": "Quase nada: um nível a mais na árvore",
+        "why": "Isso. A árvore ganha um nível a cada grande múltiplo de chaves."
+      },
+      {
+        "text": "Cresce dez vezes, como a tabela que lê",
+        "why": "Não. Isso seria uma varredura; a busca percorre a árvore, não a tabela."
+      },
+      {
+        "text": "Cai, porque um índice usado com mais frequência fica na memória e não no disco",
+        "why": "Não. O uso não deixa uma árvore mais rasa."
+      },
+      {
+        "text": "Dobra",
+        "why": "Não. Nada numa árvore B dobra com dez vezes mais chaves."
+      }
+    ]
+  },
+  "ex-5zsb8dze": {
+    "prompt": "Quais destes fazem parte do projeto do banco operacional da rede? Marque todos os que se aplicam.",
+    "hint": "Pense no que serve a um caixa.",
+    "choices": [
+      {
+        "text": "A cidade do cliente guardada uma vez, em `customers`",
+        "why": "Sim. A normalização faz de uma mudança um `UPDATE` de uma linha."
+      },
+      {
+        "text": "Uma chave estrangeira que recusa uma linha de um livro inexistente",
+        "why": "Sim. A linha ruim é recusada enquanto quem digitou ainda está ali."
+      },
+      {
+        "text": "Toda cidade em que o cliente já morou, guardada em `customers`",
+        "why": "Não. A linha guarda o valor atual; o antigo é sobrescrito."
+      },
+      {
+        "text": "Totais por mês pré-calculados para relatórios",
+        "why": "Não. Nada no esquema da rede serve a um relatório."
+      }
+    ]
+  },
+  "ex-g4m40186": {
+    "prompt": "O plano do relatório diz `temp read=14555 written=14571`. O que aconteceu?",
+    "hint": "Arquivos temporários são gravados em disco.",
+    "choices": [
+      {
+        "text": "O relatório gravou suas oito linhas numa tabela temporária",
+        "why": "Não. Oito linhas são poucos bytes; isto são catorze mil páginas."
+      },
+      {
+        "text": "O PostgreSQL leu páginas de outro servidor",
+        "why": "Não. Há um servidor só no laboratório."
+      },
+      {
+        "text": "O cache estava frio",
+        "why": "Não. Cache frio aparece como `read`, não `temp`; o plano diz `shared hit`."
+      },
+      {
+        "text": "Parte do trabalho não coube na memória de uma operação, então foi para o disco e voltou",
+        "why": "Isso. Cerca de 119 MB gravados em arquivos temporários e relidos."
+      }
+    ]
+  },
+  "ex-kybmkjtx": {
+    "prompt": "O relatório precisava de cinco colunas de `order_lines`. Por que o PostgreSQL carregou as outras pela memória também?",
+    "hint": "Como um banco por linhas organiza os dados?",
+    "choices": [
+      {
+        "text": "Porque a consulta dizia `SELECT *`",
+        "why": "Não. A consulta nomeou as colunas."
+      },
+      {
+        "text": "Porque guarda linhas inteiras juntas, todas as colunas de uma linha na mesma página",
+        "why": "Isso. Para ler uma coluna de uma linha, lê a página que guarda a linha inteira."
+      },
+      {
+        "text": "Porque um índice cobria as outras colunas",
+        "why": "Não. O relatório varreu as tabelas, não um índice."
+      },
+      {
+        "text": "Porque a junção precisa de todas as colunas para comparar linhas",
+        "why": "Não. Uma junção compara só as chaves."
+      }
+    ]
+  },
+  "ex-kvaxfdx7": {
+    "prompt": "Ligue cada característica à carga que ela descreve.",
+    "hint": "Um lado grava o dia todo; o outro lê em grandes goles.",
+    "pairs": [
+      {
+        "left": "Milhares de escritas pequenas por segundo",
+        "right": "Transacional (OLTP)"
+      },
+      {
+        "left": "Um total sobre milhões de linhas, agrupado por algumas colunas",
+        "right": "Analítica (OLAP)"
+      },
+      {
+        "left": "Dados chegando em lotes de outros sistemas",
+        "right": "Carga de um warehouse"
+      }
+    ],
+    "right_distractors": [
+      "Backup de um banco"
+    ]
+  },
+  "ex-5pxzv2zd": {
+    "prompt": "Uma réplica de leitura tira os relatórios do banco primário. Que problema ela deixa no lugar?",
+    "hint": "O que exatamente a réplica copia?",
+    "choices": [
+      {
+        "text": "O passado sobrescrito",
+        "why": "Isso. A réplica copia as mesmas linhas de estado atual, então o histórico continua perdido."
+      },
+      {
+        "text": "Relatórios atrasando os caixas",
+        "why": "Não. Esse é justamente o problema que a réplica resolve."
+      },
+      {
+        "text": "Relatórios lendo dados com uma noite inteira de atraso",
+        "why": "Não. A réplica acompanha o primário uma fração de segundo atrás."
+      },
+      {
+        "text": "O custo de uma segunda licença",
+        "why": "Não. O PostgreSQL não cobra licença; e não é isso que a lição pesou."
+      }
+    ]
+  },
+  "ex-aq5ke9bc": {
+    "prompt": "Os relatórios de uma loja rodam no banco de produção e levam dois segundos hoje. Por que a lição espera que o problema piore mesmo que a loja não cresça?",
+    "hint": "Compare o que cada carga lê no quinto ano.",
+    "choices": [
+      {
+        "text": "Índices ficam lentos à medida que envelhecem",
+        "why": "Não. Nada na lição envelhece um índice."
+      },
+      {
+        "text": "Os caixas gravam mais linhas a cada ano",
+        "why": "Não. Uma loja que não cresce grava as mesmas linhas por dia."
+      },
+      {
+        "text": "Os relatórios leem o histórico inteiro, e ele fica mais longo todo mês",
+        "why": "Isso. O trabalho do caixa é estável; o do relatório cresce a cada mês guardado."
+      },
+      {
+        "text": "O PostgreSQL limita um banco a dois anos de dados",
+        "why": "Não. Esse limite não existe."
+      }
+    ]
+  },
+  "ex-30xj1pcy": {
+    "prompt": "Por que as linhas de pedido guardaram o preço de 2024 de *The Salt Season IV* quando `books` não guardou?",
+    "hint": "O que o caixa escreveu em cada linha?",
+    "choices": [
+      {
+        "text": "O PostgreSQL guarda versões antigas de cada linha",
+        "why": "Não. Versões antigas de linha são limpas; o preço na linha é uma coluna."
+      },
+      {
+        "text": "Cada linha registrou o preço cobrado, no momento da venda",
+        "why": "Isso. Um fato registrado quando aconteceu guarda o seu valor."
+      },
+      {
+        "text": "Um gatilho copiou o preço antigo para as linhas quando `books` mudou",
+        "why": "Não. Não há gatilho; o preço foi gravado junto com a linha."
+      },
+      {
+        "text": "O aumento foi desfeito",
+        "why": "Não. `books` mostra o preço novo, R$ 159,90."
+      }
+    ]
+  },
+  "ex-s85bzfdk": {
+    "prompt": "Em quantos reais subiu o preço de *The Salt Season IV* entre 2024 e 2025?",
+    "hint": "Subtraia o preço de 2024 do atual.",
+    "unit": "BRL"
+  },
+  "ex-ntgycpat": {
+    "prompt": "O cliente 2123 se mudou de Minas Gerais para o Paraná em abril de 2025. Um relatório de vendas de 2024 pelo estado do cliente roda sobre `customers`. Onde os pedidos de 2024 dele são contados?",
+    "hint": "A linha guarda um estado.",
+    "choices": [
+      {
+        "text": "Em Minas Gerais, onde o cliente morava então",
+        "why": "Essa é a resposta certa para a pergunta, e não o que este relatório dá."
+      },
+      {
+        "text": "Metade em cada estado",
+        "why": "Não. Nada divide um pedido entre estados."
+      },
+      {
+        "text": "Em lugar nenhum: a junção interna descarta todos",
+        "why": "Não. A linha do cliente existe, então a junção mantém todos os pedidos."
+      },
+      {
+        "text": "No Paraná, onde a linha diz",
+        "why": "Isso. A junção encontra `PR`, seja qual for a data do pedido."
+      }
+    ]
+  },
+  "ex-8te557fz": {
+    "prompt": "Um fato registrado no momento em que aconteceu guarda o seu valor. A descrição de alguma coisa guarda só o seu valor mais ___.",
+    "hint": "O contrário do primeiro.",
+    "blanks": [
+      {
+        "accept": [
+          "recente",
+          "atual"
+        ]
+      }
+    ]
+  },
+  "ex-w7zhqvbz": {
+    "prompt": "Qual das quatro propriedades de Inmon diz que o warehouse guarda o passado?",
+    "hint": "Cada linha sabe o período que descreve.",
+    "choices": [
+      {
+        "text": "Orientado a assunto",
+        "why": "Não. Essa é sobre organizar pelo que o negócio pergunta."
+      },
+      {
+        "text": "Integrado",
+        "why": "Não. Essa é sobre uma definição única entre várias fontes."
+      },
+      {
+        "text": "Variante no tempo",
+        "why": "Isso. Cada linha pertence a um período, e os períodos são guardados."
+      },
+      {
+        "text": "Não volátil",
+        "why": "Perto: diz que quem lê não edita as linhas. Guardar cada período é a outra."
+      }
+    ]
+  },
+  "ex-qf4ybzjs": {
+    "prompt": "A consulta ao warehouse nunca menciona pedidos cancelados nem como a receita é calculada, e ainda assim chega aos mesmos totais do PostgreSQL. Por quê?",
+    "hint": "Quando essas decisões foram tomadas?",
+    "choices": [
+      {
+        "text": "Foram decididas uma vez, quando o warehouse foi carregado",
+        "why": "Isso. A tabela fato guarda só vendas válidas, com a receita já calculada."
+      },
+      {
+        "text": "O DuckDB filtra pedidos cancelados por padrão",
+        "why": "Não. O DuckDB não sabe nada sobre pedidos."
+      },
+      {
+        "text": "Os totais coincidem por acaso",
+        "why": "Não. Oito totais iguais até o centavo não são acaso."
+      },
+      {
+        "text": "A tabela fato é uma cópia de `order_lines` sem nada removido nem calculado",
+        "why": "Não. Aí os cancelados seriam contados e a receita precisaria ser calculada."
+      }
+    ]
+  },
+  "ex-bzdxbqs2": {
+    "prompt": "O PostgreSQL respondeu ao relatório em 1.607,639 ms e o warehouse em 0,020 s. Cerca de quantas vezes o warehouse foi mais rápido? Dê um número inteiro.",
+    "hint": "Ponha os dois em milissegundos antes."
+  },
+  "ex-cx950enk": {
+    "prompt": "Ligue cada tabela do warehouse da Ana ao que as linhas dela são.",
+    "hint": "Tabelas `fact_` são eventos; tabelas `dim_` são contexto.",
+    "pairs": [
+      {
+        "left": "fact_sales",
+        "right": "Uma linha de um pedido"
+      },
+      {
+        "left": "fact_inventory",
+        "right": "Uma contagem de estoque no fim do mês"
+      },
+      {
+        "left": "dim_book",
+        "right": "Um livro e o que o descreve"
+      },
+      {
+        "left": "dim_date",
+        "right": "Um dia do calendário"
+      }
+    ],
+    "right_distractors": [
+      "Um usuário do banco"
+    ]
+  },
+  "ex-6xwk0yjs": {
+    "prompt": "Que custo o warehouse carrega e não consegue eliminar pelo projeto?",
+    "hint": "Ele é uma cópia.",
+    "choices": [
+      {
+        "text": "Precisa dos mesmos índices do banco operacional",
+        "why": "Não. Ele é projetado para varreduras, e a lição 8 mostra que precisa de poucos índices."
+      },
+      {
+        "text": "Suas consultas são mais lentas que as do banco operacional",
+        "why": "Não. O relatório rodou oitenta vezes mais rápido lá."
+      },
+      {
+        "text": "Ele não consegue guardar histórico",
+        "why": "Não. Guardar histórico é um dos trabalhos dele."
+      },
+      {
+        "text": "Está tão atual quanto a última carga",
+        "why": "Isso. Uma cópia tem a idade do momento em que foi feita."
+      }
+    ]
+  },
+  "ex-4jfzn45e": {
+    "prompt": "Ligue cada necessidade ao que a atende.",
+    "hint": "Cada um dos quatro resolve uma parte diferente do problema.",
+    "pairs": [
+      {
+        "left": "Os relatórios atrasam os caixas, e nada mais está errado",
+        "right": "Uma réplica de leitura"
+      },
+      {
+        "left": "Cada mudança numa linha precisa chegar a outro sistema assim que acontece",
+        "right": "Captura de mudanças (CDC)"
+      },
+      {
+        "left": "Vendas pelo estado em que o cliente morava na época",
+        "right": "Um warehouse"
+      },
+      {
+        "left": "O pedido 900001 está pago?",
+        "right": "O banco operacional"
+      }
+    ]
+  },
+  "ex-k92a7260": {
+    "prompt": "Ponha em ordem o caminho de uma venda pelos sistemas da Ana, do primeiro ao último.",
+    "hint": "Ela é gravada antes de ser copiada, e copiada antes de ser lida.",
+    "items": [
+      "O caixa grava o pedido no PostgreSQL",
+      "A carga noturna o copia para o warehouse",
+      "O relatório do gerente o lê da tabela fato"
+    ],
+    "trap": "Um relatório rodado à tarde não vê as vendas da manhã: elas chegam ao warehouse na próxima carga."
+  },
+  "ex-5k9cbcy0": {
+    "prompt": "O que a captura de mudanças muda num warehouse?",
+    "hint": "Ela lê o próprio log do banco.",
+    "choices": [
+      {
+        "text": "O modelo: fatos e dimensões deixam de ser necessários quando toda mudança chega em fluxo",
+        "why": "Não. A lição diz que o CDC muda como ele é carregado, não o que ele é."
+      },
+      {
+        "text": "Como é carregado: continuamente, com cada estado intermediário de uma linha",
+        "why": "Isso. Inclusive a cidade antiga antes de um update, o que a torna uma fonte rica de histórico."
+      },
+      {
+        "text": "Onde roda: no banco primário",
+        "why": "Não. O CDC envia as mudanças para outro lugar."
+      },
+      {
+        "text": "Nada; é outro nome para réplica",
+        "why": "Não. Uma réplica copia o estado atual; o CDC entrega cada mudança como um evento."
+      }
+    ]
+  },
+  "ex-428e5cej": {
+    "prompt": "Um fornecedor diz que o banco HTAP dele dispensa a rede de ter um modelo dimensional. Qual é a melhor resposta?",
+    "hint": "Separe onde os dados ficam do que eles significam.",
+    "choices": [
+      {
+        "text": "O pipeline some; o modelo é sobre significado, e quem se mudou continua sendo uma linha",
+        "why": "Isso. Histórico e definições comuns são necessários onde quer que os dados morem fisicamente."
+      },
+      {
+        "text": "Bancos HTAP são lentos demais para análise",
+        "why": "Não. Eles mantêm uma cópia colunar justamente para a análise ser rápida."
+      },
+      {
+        "text": "O HTAP guarda cada linha duas vezes, uma por linha e outra por coluna, o que dobra o que a rede paga de armazenamento",
+        "why": "Um custo, talvez, mas não responde à afirmação sobre o modelo."
+      },
+      {
+        "text": "Um modelo dimensional é exigido por lei",
+        "why": "Não. Nenhuma lei pede isso."
+      }
+    ]
+  },
+  "ex-s773w1er": {
+    "prompt": "Um time de produto quer uma tela com os cinco últimos pedidos de cada cliente, atualizada conforme a compra. De onde ela deve ler, e por quê?",
+    "hint": "Aplique a regra da uma coisa, agora.",
+    "choices": [
+      {
+        "text": "O warehouse, porque o armazenamento colunar responde a qualquer consulta mais rápido que o PostgreSQL",
+        "why": "Não. Ele é mais rápido em varreduras; isto é uma busca, e o warehouse está uma noite atrás."
+      },
+      {
+        "text": "Um data lake",
+        "why": "Não. O lake da lição 10 é para arquivos em escala, não para uma tela por cliente."
+      },
+      {
+        "text": "O banco operacional: um cliente, agora",
+        "why": "Isso. Uma pergunta sobre uma coisa agora pertence ao lado operacional."
+      },
+      {
+        "text": "Qualquer um; os dados são idênticos",
+        "why": "Não. O warehouse não tem nada desde a última carga."
+      }
+    ]
+  },
+  "ex-qshp0snt": {
+    "prompt": "Pedem à Ana a \"receita de 2024 pela região do cliente\" e ela só tem o banco operacional. O que ela deve dizer sobre os números que consegue produzir?",
+    "hint": "Quem se mudou?",
+    "choices": [
+      {
+        "text": "São exatos, porque todo pedido guardou o cliente a que pertencia, acontecesse o que acontecesse depois",
+        "why": "O pedido guardou o cliente, não onde o cliente morava."
+      },
+      {
+        "text": "O total está certo; a divisão põe quem se mudou onde mora hoje",
+        "why": "Isso. 1.404 pedidos de 2024 ficam num estado para onde o comprador ainda não tinha se mudado."
+      },
+      {
+        "text": "Nada pode ser produzido até existir um warehouse",
+        "why": "Não. Um número pode ser produzido; ele precisa da ressalva."
+      },
+      {
+        "text": "Tanto o total quanto a divisão estão errados",
+        "why": "Não. Mudar um cliente não move dinheiro; o total não se altera."
+      }
+    ]
+  },
+  "ex-6qqamn60": {
+    "prompt": "Ordene pelo número de páginas de 8 kB que o PostgreSQL tocou em cada um, do menor para o maior.",
+    "hint": "Uma busca, um relatório completo e o despejo em disco.",
+    "items": [
+      "Buscar o pedido 900001 e suas linhas",
+      "As páginas do relatório lidas da memória",
+      "As páginas do relatório gravadas em arquivos temporários"
+    ],
+    "trap": "O despejo é maior que o lido da memória: 14.571 páginas gravadas contra 12.518 lidas."
+  }
+}
