@@ -1,0 +1,314 @@
+{
+  "ex-vsdhm2cg": {
+    "prompt": "A Ana escreve `/notes.txt` num container, roda `docker stop` e depois `docker start`. O arquivo está lá?",
+    "hint": "Parar encerra o processo. E a camada?",
+    "choices": [
+      {
+        "text": "Não, parar um container apaga a camada de escrita, como um reboot faz com a RAM",
+        "why": "A camada é mantida; o `cat` imprimiu `first note` depois do start."
+      },
+      {
+        "text": "Sim",
+        "why": "Isso. Um container parado mantém a camada de escrita; só a remoção a apaga."
+      },
+      {
+        "text": "Só se ela tiver feito commit para uma imagem antes",
+        "why": "Não é preciso commit para parar e iniciar."
+      },
+      {
+        "text": "Só se o container tiver sido iniciado com `--rm`",
+        "why": "O `--rm` faz o contrário: remove o container quando ele para."
+      }
+    ]
+  },
+  "ex-hg52zv32": {
+    "prompt": "Depois de `docker rm -f notes`, a Ana roda de novo `docker run -d --name notes alpine:3.22 sleep 3600` e o arquivo sumiu. Por que reusar o nome não o traz de volta?",
+    "hint": "O que o `docker rm` apagou?",
+    "choices": [
+      {
+        "text": "Nomes ficam reservados por uma hora depois da remoção",
+        "why": "O nome foi reusado na hora; é só um rótulo num container novo."
+      },
+      {
+        "text": "A imagem foi atualizada no Docker Hub entre as duas execuções",
+        "why": "A mesma imagem foi usada nas duas vezes."
+      },
+      {
+        "text": "A camada antiga foi junto com o container antigo",
+        "why": "Isso: o novo é outro container. O nome é um rótulo, não o container."
+      },
+      {
+        "text": "O Alpine limpa o `/` a cada início",
+        "why": "O arquivo sobreviveu a um stop e start do mesmo container."
+      }
+    ]
+  },
+  "ex-38b7dp3y": {
+    "prompt": "Ligue cada letra da saída do `docker diff` ao significado.",
+    "hint": "Três letras, três tipos de mudança.",
+    "pairs": [
+      {
+        "left": "`A`",
+        "right": "O caminho foi acrescentado"
+      },
+      {
+        "left": "`C`",
+        "right": "O caminho foi alterado"
+      },
+      {
+        "left": "`D`",
+        "right": "O caminho foi apagado"
+      }
+    ],
+    "right_distractors": [
+      "O caminho foi copiado da imagem"
+    ]
+  },
+  "ex-vsdxk73w": {
+    "prompt": "O `docker ps` não mostra nada, e mesmo assim o disco continua enchendo. Que comando revelaria containers que ainda guardam camadas de escrita?",
+    "hint": "O `docker ps` lista um tipo só.",
+    "choices": [
+      {
+        "text": "`docker image ls`, que lista todas as camadas da máquina",
+        "why": "Ele lista imagens, não as camadas de escrita dos containers."
+      },
+      {
+        "text": "`docker diff` sem argumento",
+        "why": "O `diff` precisa de um container, que é o que estamos procurando."
+      },
+      {
+        "text": "`docker volume ls`",
+        "why": "Volumes ficam separados das camadas de escrita."
+      },
+      {
+        "text": "`docker ps -a`",
+        "why": "Isso. Ele também lista os containers parados, cada um com a sua camada."
+      }
+    ]
+  },
+  "ex-36cw9zfr": {
+    "prompt": "Onde a tabela `loans` do primeiro container `db` estava guardada de verdade?",
+    "hint": "Leia o `Config.Volumes` da imagem.",
+    "choices": [
+      {
+        "text": "Num volume anônimo que o Docker criou para ele",
+        "why": "Isso, e é por isso que deu para resgatá-la depois."
+      },
+      {
+        "text": "Na camada de escrita do container",
+        "why": "A imagem declara `/var/lib/postgresql/data` como volume, então os dados foram para lá."
+      },
+      {
+        "text": "Na imagem `postgres:17`",
+        "why": "Imagens são somente leitura; containers nunca escrevem nelas."
+      },
+      {
+        "text": "No Docker Hub, que faz backup de containers de banco",
+        "why": "Nada dos dados de um container sai da máquina."
+      }
+    ]
+  },
+  "ex-20rjkwkb": {
+    "prompt": "O segundo container `db`, iniciado com o mesmo comando, tinha um banco vazio. Por quê?",
+    "hint": "O que o Docker montou para ele?",
+    "choices": [
+      {
+        "text": "O PostgreSQL apaga os dados quando recebe `SIGKILL`",
+        "why": "Os dados continuavam no disco e foram lidos depois."
+      },
+      {
+        "text": "Ele recebeu um volume anônimo novo, que estava vazio",
+        "why": "Isso. Nada mandou o Docker reusar o primeiro."
+      },
+      {
+        "text": "O volume do primeiro container foi apagado pelo `docker rm -f`",
+        "why": "Ele sobreviveu; a Ana o montou no `rescued`."
+      },
+      {
+        "text": "O `POSTGRES_PASSWORD` zera o banco a cada vez",
+        "why": "A senha só importa quando o diretório de dados está vazio."
+      }
+    ]
+  },
+  "ex-9xkzf31t": {
+    "prompt": "Uma semana depois, o Bruno roda `docker volume prune` para liberar disco, sem nenhum container usando o primeiro volume anônimo. O que acontece com os dados dos empréstimos se a Ana não o tivesse montado de novo?",
+    "hint": "O que o prune remove por padrão?",
+    "choices": [
+      {
+        "text": "Ficam, porque volumes nunca passam pelo prune",
+        "why": "O prune existe para remover volumes sem uso."
+      },
+      {
+        "text": "São movidos para a imagem",
+        "why": "Nada move dados para imagens."
+      },
+      {
+        "text": "São apagados",
+        "why": "Isso: o prune remove volumes anônimos que nenhum container usa, que é o que um banco órfão é."
+      },
+      {
+        "text": "São arquivados em `/var/lib/docker/trash`",
+        "why": "Não existe esse arquivo; a remoção é definitiva."
+      }
+    ]
+  },
+  "ex-040fa3ex": {
+    "prompt": "Para todo container de banco novo reusar os mesmos dados, dê um nome ao volume: `docker run -v ___:/var/lib/postgresql/data postgres:17`, em que a lacuna é um nome como `pgdata`. Como se chama esse tipo de volume?",
+    "hint": "O oposto de anônimo.",
+    "blanks": [
+      {
+        "accept": [
+          "nomeado",
+          "volume nomeado",
+          "um volume nomeado"
+        ]
+      }
+    ]
+  },
+  "ex-8a3d33vm": {
+    "prompt": "Ponha em ordem o resgate da tabela sumida feito pela Ana.",
+    "hint": "Ache, libere, monte, leia.",
+    "items": [
+      "Listar os volumes e ver dois anônimos",
+      "Inspecionar o `db` em execução para saber qual volume ele usa",
+      "Remover o `db`, para nada mais usar os dados do PostgreSQL",
+      "Iniciar um container novo com o outro volume montado em `/var/lib/postgresql/data`",
+      "Consultar `loans` e ver a linha"
+    ]
+  },
+  "ex-94yvm9kh": {
+    "prompt": "Ligue cada tipo de estado ao lugar onde a aula diz que ele mora.",
+    "hint": "Só um deles pode morar na camada de escrita.",
+    "pairs": [
+      {
+        "left": "Os arquivos do banco",
+        "right": "Um volume nomeado"
+      },
+      {
+        "left": "Uma senha",
+        "right": "Um arquivo de segredo, nunca a imagem"
+      },
+      {
+        "left": "Os logs da aplicação",
+        "right": "A saída padrão, recolhida pelo motor"
+      },
+      {
+        "left": "Um cache que ela consegue refazer",
+        "right": "A camada de escrita, ou tmpfs"
+      }
+    ],
+    "right_distractors": [
+      "Um `docker commit` depois de cada mudança"
+    ]
+  },
+  "ex-3h7hv6ej": {
+    "prompt": "O `docker history notes:snapshot` descreve a camada do commit como `sleep 3600`. Que problema isso revela?",
+    "hint": "Como o `/notes.txt` chegou ali?",
+    "choices": [
+      {
+        "text": "O commit falhou e o arquivo não está lá",
+        "why": "O arquivo está na imagem; o histórico só não diz como."
+      },
+      {
+        "text": "O `sleep` não pode rodar numa imagem",
+        "why": "É só o comando que o container estava rodando."
+      },
+      {
+        "text": "Commits são limitados a 8.19kB",
+        "why": "Esse era só o tamanho desta camada."
+      },
+      {
+        "text": "A imagem não registra nada sobre como o arquivo foi feito, então ninguém consegue reconstruí-la nem revisá-la",
+        "why": "Isso. Um Dockerfile escreve os passos; um commit não."
+      }
+    ]
+  },
+  "ex-n938vt7v": {
+    "prompt": "Quando o `docker commit` é a ferramenta certa?",
+    "hint": "Evidência, não produto.",
+    "choices": [
+      {
+        "text": "Guardar o estado de um container quebrado como evidência",
+        "why": "Isso: como evidência do que deu errado, não como algo para rodar."
+      },
+      {
+        "text": "Para lançar uma versão nova da aplicação no ambiente de produção",
+        "why": "Uma versão precisa de uma receita que alguém consiga refazer; isso é um Dockerfile."
+      },
+      {
+        "text": "Para fazer backup de um container de banco toda noite no mesmo horário",
+        "why": "Os dados pertencem a um volume, e volumes têm os próprios backups (aula 8)."
+      },
+      {
+        "text": "Para mudar a configuração de um container rodando",
+        "why": "A configuração é definida quando o container é criado; o commit captura arquivos."
+      }
+    ]
+  },
+  "ex-qv6mcb38": {
+    "prompt": "Antes de remover um container que roda há muito tempo, que conferências dizem à Ana se algo vai se perder? Escolha todas as que se aplicam.",
+    "hint": "As três perguntas da aula.",
+    "choices": [
+      {
+        "text": "Se o `docker diff` lista alguma coisa que importa",
+        "why": "Sim: isso é a camada de escrita, que vai junto com o container."
+      },
+      {
+        "text": "Se as montagens dele incluem um volume anônimo",
+        "why": "Sim: ele vai ficar órfão, e depois passar pelo prune."
+      },
+      {
+        "text": "Se a imagem é a tag mais nova",
+        "why": "A imagem não é o que se perde; ela fica."
+      },
+      {
+        "text": "Se um container novo com a mesma imagem e as mesmas opções daria o mesmo resultado",
+        "why": "Sim: se não, alguma coisa mora só neste."
+      }
+    ]
+  },
+  "ex-7dp6epyp": {
+    "prompt": "Depois de `docker stop notes`, o status diz `Exited (137)`. O que o 137 quer dizer aqui?",
+    "hint": "A aula 4 decifrou o número.",
+    "choices": [
+      {
+        "text": "O container ficou sem memória enquanto estava dormindo",
+        "why": "Nada usou memória; o `sleep` estava esperando."
+      },
+      {
+        "text": "O `sleep` ignorou o sinal educado e depois foi morto",
+        "why": "Isso: SIGKILL, sinal 9, depois de dez segundos. A aula 11 explica por quê."
+      },
+      {
+        "text": "O código de erro interno do Docker para qualquer container parado",
+        "why": "É o status de saída do processo, 128 mais o sinal."
+      },
+      {
+        "text": "O arquivo `/notes.txt` tinha 137 bytes",
+        "why": "Código de saída não é tamanho."
+      }
+    ]
+  },
+  "ex-qgqycqkf": {
+    "prompt": "A Ana roda um PostgreSQL descartável com `docker run --rm -e POSTGRES_PASSWORD=x postgres:17` e o para. O que acontece com o volume anônimo que ele usou?",
+    "hint": "O que o `--rm` limpa além do container?",
+    "choices": [
+      {
+        "text": "Fica, órfão, como os desta aula",
+        "why": "Isso acontece com o `docker rm`; o `--rm` também remove volumes anônimos."
+      },
+      {
+        "text": "Recebe o nome do container",
+        "why": "Volumes anônimos mantêm o hash até serem removidos."
+      },
+      {
+        "text": "É removido junto com o container",
+        "why": "Isso. O `--rm` também limpa os volumes anônimos do container."
+      },
+      {
+        "text": "Entra na imagem por commit",
+        "why": "Nada escreve numa imagem."
+      }
+    ]
+  }
+}
