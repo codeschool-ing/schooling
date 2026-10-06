@@ -3,7 +3,7 @@ title: Uma mensagem de cliente, três programas
 version: 1
 ---
 
-Bia, cliente da Marginalia, escreve: *"Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"* ("Oi, sou a Bia. Meu pedido M-1042 chegou em 24 de setembro. Ainda posso devolvê-lo?"). Aqui estão três programas respondendo a ela no laboratório, cada um fazendo o trabalho do jeito do seu tipo. **As palavras do modelo nesta seção foram escritas pelo curso**, como a seção 07 explica; os programas, os dados e a busca são reais.
+Bia, cliente da Marginalia, escreve: *"Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"* ("Oi, sou a Bia. Meu pedido M-1042 chegou em 24 de setembro. Ainda posso devolvê-lo?"). Aqui estão três programas respondendo a essa mensagem no laboratório, cada um fazendo o trabalho do jeito do seu tipo. **As palavras do modelo nesta seção foram escritas pelo curso**, como a seção 07 explica; os programas, os dados e a busca são reais.
 
 ## Automação
 

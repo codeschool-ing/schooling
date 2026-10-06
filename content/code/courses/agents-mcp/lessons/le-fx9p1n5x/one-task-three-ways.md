@@ -3,7 +3,7 @@ title: One customer message, three programs
 version: 1
 ---
 
-Bia, a customer of Marginalia, writes: *"Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"* Here are three programs answering her in the lab, each doing the job the way its kind does it. **The model's words in this section were written by the course**, as section 07 explains; the programs, the data and the search are real.
+Bia, a customer of Marginalia, writes: *"Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"* Here are three programs answering that message in the lab, each doing the job the way its kind does it. **The model's words in this section were written by the course**, as section 07 explains; the programs, the data and the search are real.
 
 ## Automation
 
